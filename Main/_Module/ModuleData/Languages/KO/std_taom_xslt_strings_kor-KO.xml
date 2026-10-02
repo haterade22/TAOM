@@ -659,7 +659,7 @@
     <string id="aom_lord_1_12_name" text="핀다리엘" />
     <string id="aom_lord_1_14_name" text="사우론의 입" />
     <string id="aom_lord_1_15_name" text="앙그마르의 마술사왕" />
-    <string id="aom_lord_1_155_name" text="나즈굴, 어둠의 원수" />
+    <string id="aom_lord_1_155_name" text="나즈굴, 암흑 원수" />
     <string id="aom_lord_1_16_name" text="나즈굴, 움바르의 기사" />
     <string id="aom_lord_1_17_name" text="사우론" />
     <string id="aom_lord_1_177_name" text="코르가스" />
@@ -891,7 +891,7 @@
     <string id="aom_lord_4_181_name" text="아르타문드" />
     <string id="aom_lord_4_19_name" text="아셀라" />
     <string id="aom_lord_4_20_name" text="바르문드" />
-    <string id="aom_lord_4_21_name" text="쿠스래드 오르들라킹" />
+    <string id="aom_lord_4_21_name" text="쿠스레드 오르들라킹" />
     <string id="aom_lord_4_22_name" text="울프 켈문딩" />
     <string id="aom_lord_4_23_name" text="마르하스 마르하드" />
     <string id="aom_lord_4_24_name" text="그리마 그림모딩" />
@@ -1147,12 +1147,12 @@
     <string id="TAOM_hero_1_47_1" text="미나는 모르도르의 어둠의 힘을 섬긴다." />
     <string id="TAOM_hero_1_47_2" text="카시레아는 그림자의 하인이다." />
     <string id="TAOM_hero_1_47_3" text="콜람베아는 모르도르의 어둠 속에 산다." />
-    <string id="TAOM_hero_1_15" text="앙마르의 마술사 왕, 나즈굴의 군주는 사우론의 가장 무서운 하인이다. 그는 한때 인간의 위대한 왕이었으나, 힘의 반지로 인해 불멸의 망령으로 타락했다." />
-    <string id="TAOM_hero_1_155" text="어둠의 원수는 전투에서 나즈굴을 지휘하며, 마술사 왕 다음가는 자이다." />
+    <string id="TAOM_hero_1_15" text="앙마르의 마술사왕, 나즈굴의 군주는 사우론의 가장 무서운 종복이다. 한때 인간들의 위대한 왕이었으나 힘의 반지에 타락하여 불사의 망령이 되었다." />
+    <string id="TAOM_hero_1_155" text="암흑 원수는 전장에서 나즈굴을 지휘하며, 마술사왕 다음가는 자이다." />
     <string id="TAOM_hero_1_16" text="움바르의 기사는 반지를 받기 전 한때 해적의 영주였다." />
     <string id="TAOM_hero_1_28" text="배신자는 타락하기 전 한때 동부의 왕이었다." />
     <string id="TAOM_hero_1_38" text="불멸자는 불멸을 추구했으나 영원한 예속만을 발견한 마법사 왕이었다." />
-    <string id="TAOM_hero_1_48" text="동부인 카무르, 아홉 중 둘째는 힘의 반지를 받기 전 룬에서 위대한 왕국을 통치했다." />
+    <string id="TAOM_hero_1_48" text="동부인 카물은 아홉 중 둘째로, 힘의 반지를 받기 전에는 룬에서 위대한 왕국을 다스렸다." />
     <string id="TAOM_hero_1_48_1" text="오염된 자는 그가 달리는 곳마다 타락을 퍼뜨린다." />
     <string id="TAOM_hero_1_48_2" text="북부인의 그림자는 추운 땅에서 사냥한다." />
     <string id="TAOM_hero_1_48_3" text="움바르의 그림자는 남부 해안을 배회한다." />
@@ -1288,9 +1288,9 @@
     <string id="TAOM_hero_3_22_2" text="수나는 젊은 궁수들을 훈련시킵니다." />
     <string id="TAOM_hero_3_22_3" text="자누와는 부족의 뛰어난 궁수입니다." />
     <string id="TAOM_hero_3_22_4" text="하자라는 사막의 감시탑을 지킵니다." />
-    <string id="TAOM_hero_4_1" text="로한의 왕 세오덴은 에도라스의 메두셀드에서 통치한다. 한때 사루만의 하인 그리마에게 현혹되었으나, 간달프에 의해 해방되어 헬름 협곡과 펠렌노르 평원에서 그의 백성을 영광으로 이끌었다." />
-    <string id="TAOM_hero_4_2" text="엘프힐드는 로한의 왕비였으며, 세오드레드의 어머니였다. 그녀는 출산 중 사망했으며, 이는 세오덴의 치세에 그림자를 드리운 슬픔이었다." />
-    <string id="TAOM_hero_4_7" text="세오드레드는 세오덴 왕의 외아들이자 로한의 왕자였다. 그는 사루만의 우루크-하이에 맞서 이센 여울을 방어하다 전사했다." />
+    <string id="TAOM_hero_4_1" text="로한의 왕 세오덴은 에도라스의 메두셀드에서 통치한다. 한때 사루만의 종복 그리마에게 홀렸으나 간달프에 의해 풀려나 헬름협곡과 펠렌노르 평원에서 백성을 영광으로 이끌었다." />
+    <string id="TAOM_hero_4_2" text="엘프힐드는 로한의 왕비이자 세오드레드의 어머니였다. 그녀는 출산 중에 세상을 떠났고, 그 슬픔은 세오덴의 치세에 그늘을 드리웠다." />
+    <string id="TAOM_hero_4_7" text="세오드레드는 세오덴 왕의 외아들이자 로한의 왕자였다. 그는 사루만의 우루크하이에 맞서 아이센 여울목을 지키다 전사했다." />
     <string id="TAOM_hero_4_10" text="엘뤼스는 로히림 궁정의 귀부인입니다." />
     <string id="TAOM_hero_4_13" text="로문드는 왕실 근위대의 대장으로 복무합니다." />
     <string id="TAOM_hero_4_14" text="모르콘은 왕실 가솔의 신임받는 대장입니다." />
@@ -1299,18 +1299,18 @@
     <string id="TAOM_hero_4_3_3" text="세오드윈은 세오덴 왕의 누이이자 에오메르와 에오윈의 어머니였다. 그녀는 남편 에오문드가 오크에게 살해된 후 슬픔으로 사망했다." />
     <string id="TAOM_hero_4_3" text="알드릭은 이스트폴드에 회당을 두고 에도라스의 소집에 응해 말을 달린다. 그는 대가문 출신이 아닌 평범한 기수이며, 그렇기에 신뢰받는다." />
     <string id="TAOM_hero_rohan_10_1" text="이스트폴드의 에오문드는 마크의 원수로서 말을 달렸고, 왕의 누이 세오드윈과 혼인했다. 오르크들이 에민 무일에서 그를 베어 넘겼고, 그의 두 자녀는 세오덴의 보호 아래 들어갔다." />
-    <string id="TAOM_hero_4_3_1" text="에오메르 에아디그는 제3원수이자 세오덴의 조카이며 왕위 계승자이다. 그는 동부 평원의 기병들을 맹렬한 충성심으로 이끈다." />
+    <string id="TAOM_hero_4_3_1" text="행운아 에오메르는 마크의 제3원수이며, 세오덴의 조카이자 왕위 계승자이다. 그는 뜨거운 충성심으로 동부 구릉의 기사들을 이끈다." />
     <string id="TAOM_hero_4_4" text="엘실드는 에오포링의 귀부인입니다." />
     <string id="TAOM_hero_4_8" text="푸른하르드는 에오메르 휘하의 신임받는 기사로 복무합니다." />
     <string id="TAOM_hero_4_11" text="리에나는 왕실 가솔을 섬깁니다." />
     <string id="TAOM_hero_4_6" text="그림슬라드의 그림볼드는 서부 평원의 기병들을 지휘한다. 맹렬한 전사로서 이센 여울을 지켰으며, 후에 펠렌노르에서 영웅적으로 전사했다." />
-    <string id="TAOM_hero_4_6_1" text="Deorwyn은 그림볼드의 지휘권을 계승할 후계자이다." />
+    <string id="TAOM_hero_4_6_1" text="데오르윈은 그림볼드의 지휘권을 이을 후계자이다." />
     <string id="TAOM_hero_4_5" text="운세리는 웨스트폴드 기사단의 대장으로 복무합니다." />
     <string id="TAOM_hero_4_9" text="토문드는 웨스트폴드 기사 중대를 지휘합니다." />
     <string id="TAOM_hero_4_12" text="실빈드는 웨스트폴드의 방패처녀입니다." />
     <string id="TAOM_hero_4_121" text="라산드는 웨스트폴드 수비대에서 복무합니다." />
     <string id="TAOM_hero_4_16" text="서부 평원의 영주 에르켄브란드는 뿔성의 요새를 지휘한다. 그는 간달프와 함께 헬름 협곡에 도착하여 전투의 흐름을 역전시켰다." />
-    <string id="TAOM_hero_4_16_1" text="Merthu는 에르켄브란드의 아내이자 뿔성의 영주 부인이다." />
+    <string id="TAOM_hero_4_16_1" text="메르수는 에르켄브란드의 아내이자 나팔산성의 부인이다." />
     <string id="TAOM_hero_4_17" text="엘벳은 에르켄브란드의 가솔로 복무합니다." />
     <string id="TAOM_hero_4_18" text="아말군은 에르켄브란드의 후계자입니다." />
     <string id="TAOM_hero_4_181" text="아르타문드는 나팔산성 수비대의 대장으로 복무합니다." />
@@ -1326,7 +1326,7 @@
     <string id="TAOM_hero_4_23_1" text="울프윈은 마르하스의 딸로, 숙련된 기병이다." />
     <string id="TAOM_hero_4_23_2" text="엘레두란은 왕의 군대를 위해 군마를 훈련한다." />
     <string id="TAOM_hero_4_23_3" text="엘레두란 2세는 말 관리인으로 복무한다." />
-    <string id="TAOM_hero_4_24" text="그리마 벌레혀는 세오덴의 조언자였지만, 실제로는 사루만의 간첩이었다. 그의 속삭이는 거짓말은 왕의 마음을 오염시켰으나 간달프가 그 마법을 깨뜨렸다." />
+    <string id="TAOM_hero_4_24" text="뱀혓바닥 그리마는 세오덴의 고문이었으나 실은 사루만의 첩자였다. 그의 속삭이는 거짓말은 간달프가 주술을 깨뜨릴 때까지 왕의 정신을 좀먹었다." />
     <string id="TAOM_hero_4_24_1" text="아달트루드는 그리마 그림모딩이 사루만에게 마음을 돌리기 전에 그와 혼인했다. 그녀는 에도라스에 회당을 지키고 있으나, 기수들은 더 이상 그곳을 찾지 않는다." />
     <string id="TAOM_hero_4_24_2" text="구돈헬다는 그리마 그림모딩의 맏딸이다. 그녀는 아버지의 이름이 에도라스에서 어떤 문도 열어주지 않는다는 것을 일찍 배웠다." />
     <string id="TAOM_hero_4_24_3" text="그리마 그림모딩의 둘째 딸 잉군데는 아무도 함께 출진하지 않는 가문의 말들을 돌본다." />
@@ -1343,7 +1343,7 @@
     <string id="TAOM_hero_4_28" text="모르카르가스의 파스트헬름은 남부 초소를 지휘한다." />
     <string id="TAOM_hero_4_28_1" text="모르카르는 파스트헬름의 아들이다." />
     <string id="TAOM_hero_4_28_2" text="헤레스위스는 남부 초소 사령관의 딸이다." />
-    <string id="TAOM_hero_5_1" text="칸드의 대장군 바르굴은 용맹한 바리아그 기병들을 이끈다. 모르도르와의 동맹으로 그의 전사들은 중간계의 전쟁에서 곤도르에 맞서 싸운다." />
+    <string id="TAOM_hero_5_1" text="칸드의 대장군 바르굴은 사나운 바리아그 기병들을 이끈다. 모르도르와의 동맹으로 그의 전사들은 가운데땅의 전쟁에서 곤도르를 향해 진군한다." />
     <string id="TAOM_hero_5_1_1" text="카즈나는 대군벌 가문의 딸이다. 그녀는 그의 수행단과 함께 말을 달리지만, 아직 아이여서 창을 들지 않는다." />
     <string id="TAOM_hero_5_3" text="에르게온은 신속한 기병 전술로 유명한 동부 바리아그 부족들을 이끄는 족장이다." />
     <string id="TAOM_hero_5_3_1" text="라나온은 에르게온의 전단의 후계자이다." />
@@ -1384,17 +1384,17 @@
     <string id="TAOM_hero_6_1" text="룬의 로케-칸 자믹 자미안은 동방인들의 황금 왕국을 통치한다. 그의 조상들은 사우론을 섬겼으며, 그는 그 어두운 동맹을 이어가며 서방의 땅을 정복하는 꿈을 꾼다." />
     <string id="TAOM_hero_6_2" text="마라이아는 로케-칸의 아내이자 황금 왕국의 여왕이다." />
     <string id="TAOM_hero_6_3" text="바가이는 왕실 근위대의 대장으로 복무한다." />
-    <string id="TAOM_hero_6_4" text="구르틸름 살루리안은 룬의 서부 군대를 지휘한다. 남편이 죽은 후, 그녀는 강철 같은 결의로 지휘권을 잡았다." />
+    <string id="TAOM_hero_6_4" text="구르틸름 살루리안은 룬의 서부 군대를 지휘한다. 남편이 죽은 뒤 그녀는 쇠 같은 결의로 지휘권을 잡았다." />
     <string id="TAOM_hero_6_5" text="이르보 니카티안은 동부 초원의 유명한 기마 궁수인 아르키트 씨족을 이끈다." />
     <string id="TAOM_hero_6_51" text="카다는 아르키트 씨족의 후계자이다." />
     <string id="TAOM_hero_6_6" text="수란은 남부 부족의 전사들을 지휘한다." />
     <string id="TAOM_hero_6_7" text="차간은 룬의 왕자이자 황금 왕국의 후계자이다." />
-    <string id="TAOM_hero_6_8" text="에수르는 구르틸름의 군대의 전사이다." />
-    <string id="TAOM_hero_6_81" text="나얀타이는 구르틸름의 군대에서 대장으로 복무한다." />
+    <string id="TAOM_hero_6_8" text="에수르는 구르틸름 군세의 전사이다." />
+    <string id="TAOM_hero_6_81" text="나얀타이는 구르틸름 군대의 지휘관으로 복무한다." />
     <string id="TAOM_hero_6_9" text="테문은 아르키트 씨족의 전사이다." />
     <string id="TAOM_hero_6_10" text="알리진은 왕실 가문의 왕자이다." />
     <string id="TAOM_hero_6_101" text="볼라트는 왕실에서 복무한다." />
-    <string id="TAOM_hero_6_11" text="야나는 구르틸름의 군대의 귀족이다." />
+    <string id="TAOM_hero_6_11" text="야나는 구르틸름 군세의 귀족이다." />
     <string id="TAOM_hero_6_12" text="아바가이는 아르키트 영지의 후계자이다." />
     <string id="TAOM_hero_6_13" text="보르투는 왕실 가문의 귀족이다." />
     <string id="TAOM_hero_6_15" text="오라구르는 아르키트 기마 궁수들을 이끈다." />
@@ -1403,10 +1403,10 @@
     <string id="TAOM_hero_6_16" text="아크보스 카르미안은 룬의 남부 국경을 지휘한다." />
     <string id="TAOM_hero_6_16_1" text="참부이는 아크보스의 아내이다." />
     <string id="TAOM_hero_6_16_2" text="우나겐은 아크보스의 지휘권의 후계자이다." />
-    <string id="TAOM_hero_6_17" text="암두르 암두리드는 동부 초원의 강력한 씨족을 이끈다." />
+    <string id="TAOM_hero_6_17" text="암두르 암두리드는 동방 초원의 강력한 씨족을 이끈다." />
     <string id="TAOM_hero_6_17_1" text="에르게네는 암두르의 아내이다." />
     <string id="TAOM_hero_6_17_2" text="예숨은 암두리드 영지의 후계자이다." />
-    <string id="TAOM_hero_6_18" text="루스칸 쿤돌라르는 서부 지방의 전사들을 지휘한다." />
+    <string id="TAOM_hero_6_18" text="루스칸 쿤돌라르는 서부 속주의 전사들을 지휘한다." />
     <string id="TAOM_hero_6_18_1" text="틸룬은 루스칸의 아내이다." />
     <string id="TAOM_hero_6_18_2" text="차군은 쿤돌라르의 후계자이다." />
     <string id="TAOM_hero_6_19" text="바케랄탄 쿤돌라르는 루스칸의 형제로, 기병 정찰대를 지휘한다." />
@@ -1419,7 +1419,7 @@
     <string id="TAOM_hero_6_21_1" text="에사체이는 몰룩의 아내이다." />
     <string id="TAOM_hero_6_22" text="샤칼 2세 샤칼리안은 룬 해의 부유한 교역 일족을 다스린다." />
     <string id="TAOM_hero_6_22_1" text="에셀렌은 샤칼의 아내이다." />
-    <string id="TAOM_hero_6_23" text="후즈-마르고즈 후즈는 서부 변경의 요새 수비대를 지휘한다." />
+    <string id="TAOM_hero_6_23" text="후즈마르고즈 후즈는 서부 변경의 요새 수비대를 지휘한다." />
     <string id="TAOM_hero_6_24" text="니카스 아데키그는 룬으로 들어오는 남부 고갯길을 지킨다." />
     <string id="TAOM_hero_A9_l" text="카라단은 남쪽 황무지의 하라드림 족장으로, 그 자리에 비해 젊어 연장자들의 주목을 받고 있다." />
     <string id="TAOM_hero_A9_s" text="시카는 남쪽 황무지 족장의 아내로, 그의 야영지들의 물 장부를 관리한다." />
@@ -1478,5 +1478,41 @@
     <string id="TAOM_hero_SE9_s_bn" text="파라진은 검은 누메노르인 여마법사이며, 남편이 출정할 때마다 키리스 나르길의 실질적인 권력자다. 그 이름은 누메노르의 마지막 왕을 떠올리게 한다." />
     <string id="TAOM_hero_SE9_c1_bn" text="지구르벨은 키리스 나르길의 후계자이며 암흑의 기술을 익혔다. 그 이름은 '마법사를 사랑하는 자'를 뜻하는데, 누메노르는 사우론의 정체를 알기 전에 그를 그렇게 불렀다." />
     <string id="TAOM_hero_SE9_c2_bn" text="짐라진은 검의 군주의 둘째 아이이며, 두 남매 중 더 위험한 쪽이다. 그녀는 어머니의 재능은 물려받았으나 인내심은 전혀 물려받지 못했다." />
+    <string id="3UucAOBW" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이다." />
+    <string id="62vceTar" text="나는 {CLAN_NAME} 가문의 {CONVERSATION_CHARACTER.LINK}이다." />
+    <string id="99gE1ZoY" text="나는 {FACTION} 소속의 {CONVERSATION_CHARACTER.LINK}이다." />
+    <string id="AxMrFoea" text="{TOWN_NAME}이(가) {FACTION_NAME}의 {LORD.LINK}이(가) 이끄는 군세에 포위되었습니다!" />
+    <string id="EHFibjkM" text="{TOWN_NAME}이(가) {FACTION_NAME}의 {LORD.LINK}이(가) 이끄는 군대에 포위되었습니다!" />
+    <string id="ExbVzTZA" text="{CLAN}이(가) {KINGDOM}와(과) 함께 싸우기로 계약했습니다." />
+    <string id="FFXqPFwl" text="나는 블란디아 왕국의 연대기에서 가장 빛나는 가문 중 하나인 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이다." />
+    <string id="JJAWbuNT" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이다. 사람들은 우리 조상이 영웅들의 시대에 서쪽에서 이 땅으로 온 황금 배에 탔던 이들 중 하나라고 말하지. 물론 그 배에 탔다고 하는 사람들이 전부 진짜 탔다면, 무게 때문에 배가 뒤집혔을 거야." />
+    <string id="L2GbDVja" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}입니다, {?PLAYER.GENDER}부인{?}주군{\?}이시여. 모실 수 있어 영광입니다." />
+    <string id="Nq2dyiO1" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이다. 스터지아의 영웅담에서 여러 번 들어보았을 이름이지." />
+    <string id="PBgLvyOa" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이다. 우리 조상들은 먼 북쪽에서 내려와 제후들의 데나르를 받고 이 땅을 지키겠다는 맹세를 한 이들 중 하나였고, 우리는 그 맹세를 지켜왔다." />
+    <string id="S0oFKYfB" text="{CLAN}은(는) 더 이상 {KINGDOM}을(를) 섬기지 않습니다." />
+    <string id="S1vGzr8z" text="나는 아세라이의 가문인 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
+    <string id="SLAkSrb5" text="{FACTION1_NAME}이(가) {FACTION2_NAME}에 선전포고했습니다." />
+    <string id="TsYCa2fZ" text="{FACTION1}과(와) {FACTION2}이(가) 화평을 맺었습니다." />
+    <string id="U4p70l9B" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
+    <string id="U770Bvy8" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오. 우리 가문의 명성은 바타니아의 노래 속에서 그 누구에게도 뒤지지 않소." />
+    <string id="Ua0T0A7t" text="나는 바타니아의 유서 깊은 혈통 중 하나인 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
+    <string id="WH8P3Y5F" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
+    <string id="a8584KD0" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오. 초원의 서사시에서 우리 씨족의 이름을 들어보았을 것이오. 우리는 쿠자이트의 어머니인 위대한 암늑대의 열두 아들 중 하나의 이름을 잇고 있소." />
+    <string id="cMO9JXvk" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오. 우리는 {LIEGE_TITLE}께 봉토를 받아 영지를 지키며, 충성의 맹세를 지키고 있소." />
+    <string id="dC8acIya" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
+    <string id="dfAE3liA" text="{CLAN_NAME} 가문이 {FACTION}에 합류했습니다." />
+    <string id="dlkg2jQf" text="나는 스터지아의 유서 깊은 혈통 중 하나인 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
+    <string id="eyxfHmCU" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오. 우리 가문은 여러 세대에 걸쳐 블란디아의 왕들을 섬겨왔소." />
+    <string id="hJFCi1zu" text="{FACTION1}과(와) {FACTION2}이(가) 화평을 맺었습니다." />
+    <string id="hP57Caab" text="{VICTOR_FACTION}의 {VICTOR_PARTY}이(가) {DEFEATED_FACTION}의 {DEFEATED_PARTY}을(를) 물리쳤습니다." />
+    <string id="hbWhfoWH" text="{SETTLEMENT}이(가) {FACTION_NAME}의 {LORD.LINK}에게 약탈당했습니다" />
+    <string id="hopvV6Ch" text="{FACTION1_NAME}의 {RULER_NAME}이(가) {FACTION2_NAME}에 선전포고했습니다." />
+    <string id="kqwNCCbZ" text="{TOWN_NAME}이(가) {FACTION_NAME}의 {LORD.LINK}이(가) 이끄는 군대에 포위되었습니다!" />
+    <string id="l2nEIZV5" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
+    <string id="nbVW2cJ8" text="{SETTLEMENT}이(가) {FACTION_NAME}의 {LORD.LINK}이(가) 이끄는 군대에 약탈당했습니다" />
+    <string id="pn79h0aj" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오. 우리는 보르티오스 황제에게서 직접 작위를 받았소. 하기야 그때 그는 우리 약탈선에 갇혀 있었으니 선택의 여지가 별로 없었지만, 분명 우리 핏줄의 고귀함을 알아본 것이오." />
+    <string id="rhTUDKhJ" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오. 바타니아의 씨족 중 우리 술잔 수집품에 제 용사의 두개골을 바치지 않은 곳은 없소." />
+    <string id="z2yr4mc6" text="나는 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오. 우리 씨족은 여러 세대에 걸쳐 쿠자이트 칸국을 충성스럽게 섬겨왔소." />
+    <string id="zZ9FQJRI" text="나는 아세라이 혈통 중 가장 오래되고 고귀한 {CLAN_NAME}의 {CONVERSATION_CHARACTER.LINK}이오." />
   </strings>
 </base>

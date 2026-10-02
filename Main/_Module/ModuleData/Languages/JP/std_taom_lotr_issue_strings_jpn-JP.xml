@@ -319,19 +319,19 @@
     <string id="taom_lotr_issue_combat_fallback_accept" text="何をすればいい?" />
     <string id="taom_lotr_issue_pers_fallback_desc" text="捕虜の引き渡しを求める者がいる。" />
     <string id="taom_lotr_issue_pers_fallback_brief" text="旅人よ、屈強な者の手が要るのだ。" />
-    <string id="taom_lotr_issue_armourer_title" text="The Armourer's Commission" />
-    <string id="taom_lotr_issue_armourer_desc" text="The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it." />
-    <string id="taom_lotr_issue_armourer_brief" text="The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with." />
-    <string id="taom_lotr_issue_armourer_accept" text="What would you need?" />
-    <string id="taom_lotr_issue_armourer_expl" text="Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade." />
-    <string id="taom_lotr_issue_armourer_soln" text="I will bring you the steel." />
-    <string id="taom_lotr_issue_armourer_task" text="Bring {ITEM} to the armourer ({COUNT})" />
-    <string id="taom_lotr_issue_seam_title" text="The Deep Seam" />
-    <string id="taom_lotr_issue_seam_desc" text="The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in." />
-    <string id="taom_lotr_issue_seam_brief" text="My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together." />
-    <string id="taom_lotr_issue_seam_accept" text="What would you need?" />
-    <string id="taom_lotr_issue_seam_expl" text="Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me." />
-    <string id="taom_lotr_issue_seam_soln" text="I will bring you the timber." />
-    <string id="taom_lotr_issue_seam_task" text="Bring {ITEM} to the headman ({COUNT})" />
+    <string id="taom_lotr_issue_armourer_title" text="甲冑師の依頼" />
+    <string id="taom_lotr_issue_armourer_desc" text="{ISSUE_SETTLEMENT}の甲冑師の親方は、重厚な鎧を半ばまで鍛えたものの、仕上げる鋼がない。" />
+    <string id="taom_lotr_issue_armourer_brief" text="戦が良質の鋼を一本残らず奪っていき、わしの鍛冶場には届かん。金床の上には矢をも弾く鎧があるが、仕上げる材料が何も残っておらんのだ。" />
+    <string id="taom_lotr_issue_armourer_accept" text="何が必要なのだ？" />
+    <string id="taom_lotr_issue_armourer_expl" text="{ITEM}を{COUNT}荷分持ってきてくれ。仕上がった鎧はあんたのものだ。鋼には鋼を、公正な取引だ。" />
+    <string id="taom_lotr_issue_armourer_soln" text="鋼を持ってこよう。" />
+    <string id="taom_lotr_issue_armourer_task" text="甲冑師に{ITEM}を届ける（{COUNT}）" />
+    <string id="taom_lotr_issue_seam_title" text="深き鉱脈" />
+    <string id="taom_lotr_issue_seam_desc" text="{ISSUE_SETTLEMENT}の鉱夫たちが、領主の鎧に用いられる稀少な金属の鉱脈を掘り当てたが、坑道が崩れる前に坑木が要る。" />
+    <string id="taom_lotr_issue_seam_brief" text="鉱夫たちが運よく見つけたのだ。名高い甲冑師が幾らでも払う金属の鉱脈をな。だが坑道は古く、支える良い木材がなければ、彼らも鉱脈もろとも埋もれてしまう。" />
+    <string id="taom_lotr_issue_seam_accept" text="何が必要なのだ？" />
+    <string id="taom_lotr_issue_seam_expl" text="坑道のために{ITEM}を{COUNT}荷分持ってきてくれ。掘り出したものの最初の分はあんたにやろう。わしよりあんたにこそ価値があるものだ。" />
+    <string id="taom_lotr_issue_seam_soln" text="木材を持ってこよう。" />
+    <string id="taom_lotr_issue_seam_task" text="{ITEM}を村長に届ける（{COUNT}）" />
   </strings>
 </base>

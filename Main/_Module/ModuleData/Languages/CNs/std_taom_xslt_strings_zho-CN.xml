@@ -644,7 +644,7 @@
     <string id="TAOM_clan_khuzait_9" text="博佐尔加尼斯" />
     <string id="aom_lord_1_1_name" text="布雷宁·伍尔夫，铁手" />
     <string id="aom_lord_1_2_name" text="芙蕾雅·狼心" />
-    <string id="aom_lord_1_3_name" text="高伍尔夫，野猪" />
+    <string id="aom_lord_1_3_name" text="戈伍尔夫，野猪" />
     <string id="aom_lord_1_4_name" text="布伦希尔德·铁爪" />
     <string id="aom_lord_1_5_name" text="野人奥斯里克" />
     <string id="aom_lord_1_6_name" text="牛角托瓦尔德" />
@@ -659,7 +659,7 @@
     <string id="aom_lord_1_12_name" text="芬达瑞尔" />
     <string id="aom_lord_1_14_name" text="索伦之口" />
     <string id="aom_lord_1_15_name" text="安格马巫王" />
-    <string id="aom_lord_1_155_name" text="戒灵,黑暗元帅" />
+    <string id="aom_lord_1_155_name" text="纳兹古尔，黑暗元帅" />
     <string id="aom_lord_1_16_name" text="戒灵,昂巴骑士" />
     <string id="aom_lord_1_17_name" text="索伦" />
     <string id="aom_lord_1_177_name" text="科尔加斯" />
@@ -873,7 +873,7 @@
     <string id="aom_lord_4_2_name" text="埃尔芙希尔德" />
     <string id="aom_lord_4_4_name" text="埃尔希尔德" />
     <string id="aom_lord_4_5_name" text="温塞里" />
-    <string id="aom_lord_4_6_name" text="格林伯德·格里明加斯" />
+    <string id="aom_lord_4_6_name" text="格里姆伯德·格里明加斯" />
     <string id="aom_lord_4_7_name" text="希优德雷德·伊欧林" />
     <string id="aom_lord_4_8_name" text="弗恩哈德" />
     <string id="aom_lord_4_9_name" text="索蒙德" />
@@ -891,14 +891,14 @@
     <string id="aom_lord_4_181_name" text="阿尔萨蒙德" />
     <string id="aom_lord_4_19_name" text="阿塞拉" />
     <string id="aom_lord_4_20_name" text="瓦尔蒙德" />
-    <string id="aom_lord_4_21_name" text="库斯雷德·奥德拉辛" />
+    <string id="aom_lord_4_21_name" text="库斯莱德·奥德拉辛" />
     <string id="aom_lord_4_22_name" text="伍尔夫·塞尔蒙丁" />
     <string id="aom_lord_4_23_name" text="马尔哈斯·马尔哈德" />
     <string id="aom_lord_4_24_name" text="葛力马·格里莫丁" />
     <string id="aom_lord_4_25_name" text="卢坎德" />
     <string id="aom_lord_4_26_name" text="佩里克" />
     <string id="aom_lord_4_27_name" text="埃勒·埃塞拉芬" />
-    <string id="aom_lord_4_28_name" text="法斯泰尔姆·莫卡加斯" />
+    <string id="aom_lord_4_28_name" text="法斯赫尔姆·莫卡加斯" />
     <string id="aom_lord_4_3_1_name" text="伊欧墨·伊欧弗林" />
     <string id="aom_lord_4_6_1_name" text="迪奥温·格里明加斯" />
     <string id="aom_lord_4_16_1_name" text="梅尔苏·费兰丁" />
@@ -1147,12 +1147,12 @@
     <string id="TAOM_hero_1_47_1" text="米娜为魔多的黑暗力量效力。" />
     <string id="TAOM_hero_1_47_2" text="卡西瑞娅是阴影的仆从。" />
     <string id="TAOM_hero_1_47_3" text="科兰贝娅栖身于魔多的黑暗之中。" />
-    <string id="TAOM_hero_1_15" text="安格马巫王,戒灵之首,是索伦最可怕的仆从。他曾是人类的伟大君王,被力量之戒腐化成了不死的幽灵。" />
-    <string id="TAOM_hero_1_155" text="黑暗元帅在战斗中指挥戒灵,仅次于巫王。" />
+    <string id="TAOM_hero_1_15" text="安格玛巫王，纳兹古尔之首，是索伦最可怖的仆从。他曾是人类的伟大君王，却被他的力量之戒腐化，成为不死的幽魂。" />
+    <string id="TAOM_hero_1_155" text="黑暗元帅在战场上统率纳兹古尔，地位仅次于巫王。" />
     <string id="TAOM_hero_1_16" text="昂巴骑士在获得戒指之前曾是海盗领主。" />
     <string id="TAOM_hero_1_28" text="背叛者在堕落之前曾是东方的国王。" />
     <string id="TAOM_hero_1_38" text="不朽者曾是追求永生的术士之王,却只找到了永恒的奴役。" />
-    <string id="TAOM_hero_1_48" text="东夷卡穆尔,戒灵中的次席,在接受力量之戒前曾统治着鲁恩的一个伟大王国。" />
+    <string id="TAOM_hero_1_48" text="东夷人卡姆尔，九戒灵中的次席，在接受力量之戒之前曾统治如恩的一个强大王国。" />
     <string id="TAOM_hero_1_48_1" text="污染者所到之处都传播腐化。" />
     <string id="TAOM_hero_1_48_2" text="北方人的阴影在寒冷之地猎杀。" />
     <string id="TAOM_hero_1_48_3" text="昂巴之影出没于南方海岸。" />
@@ -1288,29 +1288,29 @@
     <string id="TAOM_hero_3_22_2" text="苏娜训练年轻的弓箭手。" />
     <string id="TAOM_hero_3_22_3" text="扎努瓦是部落中一名技艺高超的弓箭手。" />
     <string id="TAOM_hero_3_22_4" text="哈贾拉守卫着沙漠中的瞭望塔。" />
-    <string id="TAOM_hero_4_1" text="洛汗国王希优顿从伊多拉斯的金殿梅杜塞尔德进行统治。他曾被萨鲁曼的仆人葛力马蛊惑,后被甘道夫解救,并率领他的人民在圣盔谷和帕兰诺平原上赢得荣耀。" />
-    <string id="TAOM_hero_4_2" text="艾尔菲尔德曾是洛汗的王后,希优德的母亲。她死于难产,这悲伤为希优顿的统治蒙上了阴影。" />
-    <string id="TAOM_hero_4_7" text="希优德是希优顿国王的独子,洛汗王子。他在艾森河渡口保卫战中阵亡,对抗萨鲁曼的强兽人。" />
+    <string id="TAOM_hero_4_1" text="洛汗国王希奥顿，在伊多拉斯的金殿梅杜塞德执掌王权。他一度受萨鲁曼仆从葛力马的蛊惑，后被甘道夫解救，率领他的子民在圣盔谷与佩兰诺平野赢得荣耀。" />
+    <string id="TAOM_hero_4_2" text="埃尔芙希尔德曾是洛汗王后，希奥德瑞德之母。她死于分娩，这份悲恸笼罩了希奥顿的统治。" />
+    <string id="TAOM_hero_4_7" text="希奥德瑞德是希奥顿王的独子，洛汗王子。他在艾森河渡口抵御萨鲁曼的乌鲁克族时阵亡。" />
     <string id="TAOM_hero_4_10" text="埃利斯是洛希尔宫廷中的一位贵族女士。" />
     <string id="TAOM_hero_4_13" text="罗蒙德担任皇家卫队的队长。" />
     <string id="TAOM_hero_4_14" text="莫尔孔是国王家族中一位值得信赖的队长。" />
     <string id="TAOM_hero_4_141" text="阿莫尔孔与他的族人一同在卫队中服役。" />
-    <string id="TAOM_hero_4_15" text="埃尔杜兰德是希优顿家族的一名骑士。" />
+    <string id="TAOM_hero_4_15" text="埃尔杜兰德是希奥顿王室的骑士。" />
     <string id="TAOM_hero_4_3_3" text="希优德温是希优顿国王的姐妹,伊欧墨和伊欧温的母亲。她的丈夫伊欧蒙德被半兽人杀害后,她悲痛而死。" />
     <string id="TAOM_hero_4_3" text="阿德里克在东伏尔德拥有一座厅堂，随伊多拉斯的召集出征。他只是个出身寻常的骑手，并无显赫家世，也正因如此受人信赖。" />
     <string id="TAOM_hero_rohan_10_1" text="东伏尔德的伊奥蒙德曾任马克的元帅，娶了国王之妹希奥德温。半兽人在埃敏莫伊尔将他杀死，他的两个孩子从此由希奥顿抚养。" />
-    <string id="TAOM_hero_4_3_1" text="伊欧墨·伊阿迪格,骠骑国第三元帅,是希优顿的外甥和王位继承人。他以无比的忠诚率领着东谷的骑士们。" />
+    <string id="TAOM_hero_4_3_1" text="「幸运者」伊奥梅尔，马克的第三元帅，是希奥顿的外甥与王位继承人。他以炽烈的忠诚统率东谷的骑士。" />
     <string id="TAOM_hero_4_4" text="埃尔希尔德是伊欧佛林家族的一位贵族女士。" />
-    <string id="TAOM_hero_4_8" text="弗恩哈德是伊欧墨麾下一位值得信赖的骑士。" />
+    <string id="TAOM_hero_4_8" text="弗恩哈德是伊奥梅尔麾下深受信任的骑士。" />
     <string id="TAOM_hero_4_11" text="莉娜在王室家族中服役。" />
     <string id="TAOM_hero_4_6" text="格里姆斯莱德的格林伯德指挥着西谷的骑士。他是一位勇猛的战士,曾坚守艾森河渡口,后来在帕兰诺平原英勇战死。" />
-    <string id="TAOM_hero_4_6_1" text="迪奥温是格林伯德指挥权的继承人。" />
+    <string id="TAOM_hero_4_6_1" text="迪奥温是格里姆伯德统领之位的继承人。" />
     <string id="TAOM_hero_4_5" text="昂瑟里担任西谷骑士的队长。" />
     <string id="TAOM_hero_4_9" text="索蒙德指挥着西谷骑士的一支队伍。" />
     <string id="TAOM_hero_4_12" text="西尔温德是西谷的一名盾女。" />
     <string id="TAOM_hero_4_121" text="拉桑德在西谷守备队中服役。" />
     <string id="TAOM_hero_4_16" text="西谷领主埃肯布兰德指挥着号角堡要塞。他与甘道夫一起抵达圣盔谷,扭转了战局。" />
-    <string id="TAOM_hero_4_16_1" text="梅尔苏是埃肯布兰德的妻子,号角堡的女主人。" />
+    <string id="TAOM_hero_4_16_1" text="梅尔苏是埃肯布兰德之妻，号角堡的夫人。" />
     <string id="TAOM_hero_4_17" text="埃尔贝特在埃肯布兰德的家族中服役。" />
     <string id="TAOM_hero_4_18" text="阿马尔贡是埃肯布兰德的继承人。" />
     <string id="TAOM_hero_4_181" text="阿萨蒙德担任号角堡守备队的队长。" />
@@ -1326,7 +1326,7 @@
     <string id="TAOM_hero_4_23_1" text="伍尔夫温是马尔哈斯的女儿,一名技艺高超的骑手。" />
     <string id="TAOM_hero_4_23_2" text="埃勒杜兰为国王的军队训练战马。" />
     <string id="TAOM_hero_4_23_3" text="年轻的埃勒杜兰担任马匹管理员。" />
-    <string id="TAOM_hero_4_24" text="葛力马·巧言曾是希优顿的顾问,暗中是萨鲁曼的间谍。他低语的谎言毒害了国王的心智,直到甘道夫打破了魔咒。" />
+    <string id="TAOM_hero_4_24" text="巧言葛力马曾是希奥顿的谋士，实则是萨鲁曼的密探。他低语的谎言毒害了国王的心智，直到甘道夫破除了这道咒缚。" />
     <string id="TAOM_hero_4_24_1" text="阿达尔特露德在格里马·格里默丁的谋议尚未转向萨鲁曼之前便嫁给了他。她在伊多拉斯守着一座厅堂，骑手们早已不再登门。" />
     <string id="TAOM_hero_4_24_2" text="古顿海尔达是格里马·格里默丁的长女。她很早就明白，父亲的名字在伊多拉斯打不开任何一扇门。" />
     <string id="TAOM_hero_4_24_3" text="英贡德是格里马·格里默丁的次女，照料着一个无人愿与之并骑出征的家族的马匹。" />
@@ -1343,7 +1343,7 @@
     <string id="TAOM_hero_4_28" text="莫卡加斯之子法斯特海姆指挥南方哨所。" />
     <string id="TAOM_hero_4_28_1" text="莫卡是法斯特海姆之子。" />
     <string id="TAOM_hero_4_28_2" text="赫蕾西丝是南方哨所指挥官的女儿。" />
-    <string id="TAOM_hero_5_1" text="瓦尔古尔,坎德的最高战争领主,率领凶悍的瓦瑞格骑兵。他与魔多的联盟使他的战士在中土大陆的战争中对抗刚铎。" />
+    <string id="TAOM_hero_5_1" text="康德的大统领瓦尔古尔，统率凶悍的瓦里亚格骑兵。他与魔多的结盟使其战士在中洲之战中与刚铎为敌。" />
     <string id="TAOM_hero_5_1_1" text="卡兹娜出自大战酋之家。她随他的亲卫队出行，不过仍是个孩子，尚未持矛。" />
     <string id="TAOM_hero_5_3" text="埃尔盖昂是一位酋长,率领东方的瓦瑞格部族,以其迅捷的骑兵战术闻名。" />
     <string id="TAOM_hero_5_3_1" text="拉纳昂是埃尔盖昂战团的继承人。" />
@@ -1384,17 +1384,17 @@
     <string id="TAOM_hero_6_1" text="扎米克·扎米安,鲁恩的洛克汗,统治着东夷人的黄金国度。他的祖先曾侍奉索隆,他延续着那黑暗的同盟,梦想着征服西方的土地。" />
     <string id="TAOM_hero_6_2" text="玛拉雅是洛克汗的妻子,黄金国度的王后。" />
     <string id="TAOM_hero_6_3" text="巴盖担任皇家卫队的队长。" />
-    <string id="TAOM_hero_6_4" text="古尔蒂尔姆·萨卢里安统帅鲁恩的西方军队。在丈夫死后,她以钢铁般的决心接管了指挥权。" />
+    <string id="TAOM_hero_6_4" text="古尔提尔姆·萨鲁里安统率如恩的西方大军。丈夫死后，她以铁一般的决心接掌了军权。" />
     <string id="TAOM_hero_6_5" text="伊尔博·尼卡提安率领阿尔基特氏族,东部草原上著名的马弓手。" />
     <string id="TAOM_hero_6_51" text="哈达是阿尔基特氏族的继承人。" />
     <string id="TAOM_hero_6_6" text="苏兰统帅南方部落的战士。" />
     <string id="TAOM_hero_6_7" text="查干是鲁恩的王子,黄金国度的继承人。" />
-    <string id="TAOM_hero_6_8" text="埃苏尔是古尔蒂尔姆军中的战士。" />
-    <string id="TAOM_hero_6_81" text="纳颜泰担任古尔蒂尔姆军中的队长。" />
+    <string id="TAOM_hero_6_8" text="埃苏尔是古尔提尔姆麾下的战士。" />
+    <string id="TAOM_hero_6_81" text="纳扬台在古尔提尔姆军中担任队长。" />
     <string id="TAOM_hero_6_9" text="特蒙是阿尔基特氏族的战士。" />
     <string id="TAOM_hero_6_10" text="阿里金是王室的王子。" />
     <string id="TAOM_hero_6_101" text="博拉特在王室家族中服务。" />
-    <string id="TAOM_hero_6_11" text="雅娜是古尔蒂尔姆军中的贵族。" />
+    <string id="TAOM_hero_6_11" text="雅娜是古尔提尔姆麾下的贵族。" />
     <string id="TAOM_hero_6_12" text="阿巴盖是阿尔基特领地的继承人。" />
     <string id="TAOM_hero_6_13" text="博尔图是王室的贵族。" />
     <string id="TAOM_hero_6_15" text="奥拉古尔率领阿尔基特马弓手。" />
@@ -1403,13 +1403,13 @@
     <string id="TAOM_hero_6_16" text="阿克沃斯·卡米安统帅鲁恩的南部边境。" />
     <string id="TAOM_hero_6_16_1" text="钱布伊是阿克沃斯的妻子。" />
     <string id="TAOM_hero_6_16_2" text="乌纳根是阿克沃斯麾下的继承人。" />
-    <string id="TAOM_hero_6_17" text="阿姆杜尔·阿姆杜里德率领东部草原上的强大氏族。" />
-    <string id="TAOM_hero_6_17_1" text="埃尔格内是阿姆杜尔的妻子。" />
-    <string id="TAOM_hero_6_17_2" text="耶苏姆是阿姆杜里德领地的继承人。" />
-    <string id="TAOM_hero_6_18" text="卢斯坎·孔多拉统帅西部行省的战士。" />
-    <string id="TAOM_hero_6_18_1" text="蒂伦是卢斯坎的妻子。" />
+    <string id="TAOM_hero_6_17" text="阿姆杜尔·阿姆杜瑞德统领东方草原上的一个强大氏族。" />
+    <string id="TAOM_hero_6_17_1" text="埃尔格涅是阿姆杜尔之妻。" />
+    <string id="TAOM_hero_6_17_2" text="耶苏姆是阿姆杜瑞德领地的继承人。" />
+    <string id="TAOM_hero_6_18" text="卢斯坎·昆多拉统率西部各省的战士。" />
+    <string id="TAOM_hero_6_18_1" text="提伦是卢斯坎之妻。" />
     <string id="TAOM_hero_6_18_2" text="查贡是孔多拉的继承人。" />
-    <string id="TAOM_hero_6_19" text="瓦赫拉尔坦·昆多拉尔是卢斯坎的兄弟,指挥骑兵斥候。" />
+    <string id="TAOM_hero_6_19" text="瓦赫拉尔坦·昆多拉是卢斯坎之弟，统率骑兵斥候。" />
     <string id="TAOM_hero_6_19_1" text="索哈泰是瓦赫拉尔坦的妻子。" />
     <string id="TAOM_hero_6_19_2" text="科尔特是瓦赫拉尔坦斥候队的继承人。" />
     <string id="TAOM_hero_6_20" text="库鲁布拉·马沙基安统帅鲁恩北方部落。" />
@@ -1419,7 +1419,7 @@
     <string id="TAOM_hero_6_21_1" text="埃萨切伊是莫卢克的妻子。" />
     <string id="TAOM_hero_6_22" text="沙哈尔二世·沙哈利安统治鲁恩海的一个富有的贸易氏族。" />
     <string id="TAOM_hero_6_22_1" text="埃塞伦是沙哈尔的妻子。" />
-    <string id="TAOM_hero_6_23" text="胡兹-玛戈兹·胡兹指挥西部边境沿线的要塞驻军。" />
+    <string id="TAOM_hero_6_23" text="胡兹-马尔戈兹·胡兹统领西部边疆沿线的要塞守军。" />
     <string id="TAOM_hero_6_24" text="尼卡斯·阿德基格守卫通往鲁恩的南方关隘。" />
     <string id="TAOM_hero_A9_l" text="卡拉丹是南方荒原的哈拉德酋长，就任此职尚显年轻，为年长者所密切注视。" />
     <string id="TAOM_hero_A9_s" text="提卡是南方荒原酋长之妻，掌管其各处营地的水量账目。" />
@@ -1478,5 +1478,41 @@
     <string id="TAOM_hero_SE9_s_bn" text="法拉津是黑努门诺尔女巫，每当丈夫出征，奇立斯纳吉尔的实权便掌握在她手中。她的名字令人想起努门诺尔的末代君王。" />
     <string id="TAOM_hero_SE9_c1_bn" text="齐古尔贝尔是奇立斯纳吉尔的继承人，受过黑暗法术的训练。他的名字意为“慕巫者”，那正是努门诺尔在识破索伦真面目之前对他的称呼。" />
     <string id="TAOM_hero_SE9_c2_bn" text="齐姆拉津是剑主的次女，也是姐弟二人中更危险的一个。她继承了母亲的天赋，却毫无母亲的耐心。" />
+    <string id="3UucAOBW" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。" />
+    <string id="62vceTar" text="我是{CONVERSATION_CHARACTER.LINK}，来自{CLAN_NAME}。" />
+    <string id="99gE1ZoY" text="我是{CONVERSATION_CHARACTER.LINK}，来自{FACTION}。" />
+    <string id="AxMrFoea" text="{TOWN_NAME}正被{FACTION_NAME}的{LORD.LINK}所率领的军队围攻！" />
+    <string id="EHFibjkM" text="{TOWN_NAME}正被{FACTION_NAME}的{LORD.LINK}所统率的大军围攻！" />
+    <string id="ExbVzTZA" text="{CLAN}已签约与{KINGDOM}并肩作战。" />
+    <string id="FFXqPFwl" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}，这是维兰迪亚王国史册上最显赫的家族之一。" />
+    <string id="JJAWbuNT" text="我是{CONVERSATION_CHARACTER.LINK}，出身{CLAN_NAME}。据说我们的祖先位列那些在英雄纪元乘黄金船只自西方来到此地的人之中。当然，若是所有自称曾在那些船上的人都真在船上，船早就被压翻了。" />
+    <string id="L2GbDVja" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}，{?PLAYER.GENDER}夫人{?}大人{\?}，能为您效力是我的荣幸。" />
+    <string id="Nq2dyiO1" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}，这个名字你定然在斯特吉亚人的萨迦中听过许多次。" />
+    <string id="PBgLvyOa" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。我们的先祖是那些从极北之地南下、领取诸侯的第纳尔并立誓守卫这片土地的人，而我们始终信守着那誓言。" />
+    <string id="S0oFKYfB" text="{CLAN}不再效力于{KINGDOM}。" />
+    <string id="S1vGzr8z" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}，那是阿塞莱人的一个氏族。" />
+    <string id="SLAkSrb5" text="{FACTION1_NAME}向{FACTION2_NAME}宣战。" />
+    <string id="TsYCa2fZ" text="{FACTION1}与{FACTION2}已经议和。" />
+    <string id="U4p70l9B" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。" />
+    <string id="U770Bvy8" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。在巴旦尼亚人的歌谣中，我们家族的声名无人能及。" />
+    <string id="Ua0T0A7t" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}，那是巴旦尼亚人最古老的血脉之一。" />
+    <string id="WH8P3Y5F" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。" />
+    <string id="a8584KD0" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。我相信你在草原的史诗中听过我们氏族的名字。我们承袭着库塞特人之母——那头伟大母狼的十二子之一的名号。" />
+    <string id="cMO9JXvk" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。我们的领地受封于{LIEGE_TITLE}，我们恪守效忠的誓言。" />
+    <string id="dC8acIya" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。" />
+    <string id="dfAE3liA" text="{CLAN_NAME}氏族已加入{FACTION}。" />
+    <string id="dlkg2jQf" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}，那是斯特吉亚人最古老的血脉之一。" />
+    <string id="eyxfHmCU" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。我们家族世代效忠瓦兰迪亚诸王。" />
+    <string id="hJFCi1zu" text="{FACTION1}与{FACTION2}已经议和。" />
+    <string id="hP57Caab" text="{VICTOR_FACTION}的{VICTOR_PARTY}击败了{DEFEATED_FACTION}的{DEFEATED_PARTY}。" />
+    <string id="hbWhfoWH" text="{SETTLEMENT}遭到{FACTION_NAME}的{LORD.LINK}劫掠" />
+    <string id="hopvV6Ch" text="{FACTION1_NAME}的{RULER_NAME}向{FACTION2_NAME}宣战。" />
+    <string id="kqwNCCbZ" text="{TOWN_NAME}正被{FACTION_NAME}的{LORD.LINK}所率的军队围攻！" />
+    <string id="l2nEIZV5" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。" />
+    <string id="nbVW2cJ8" text="{SETTLEMENT}遭到{FACTION_NAME}的{LORD.LINK}所率军队的劫掠" />
+    <string id="pn79h0aj" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。我们的封号是沃提奥斯皇帝亲自授予的。当然，当时他被扣在我们的一艘劫掠船上，也由不得他选择，但我相信他认可我们血脉的高贵。" />
+    <string id="rhTUDKhJ" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。巴旦尼亚人没有哪个氏族不曾为我们的酒杯收藏贡献过一位勇士的头骨。" />
+    <string id="z2yr4mc6" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}。我们氏族世代忠诚地效力于库塞特汗国。" />
+    <string id="zZ9FQJRI" text="我是{CLAN_NAME}的{CONVERSATION_CHARACTER.LINK}，那是阿塞莱人中最古老、最高贵的血脉。" />
   </strings>
 </base>

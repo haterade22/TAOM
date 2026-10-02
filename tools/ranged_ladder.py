@@ -1028,15 +1028,21 @@ _STRIP_REF_RE = re.compile(r"^(?:Item|EquipmentRoster)\.")
 # Rosters the game applies to the player at runtime, which no NPCCharacter names: character
 # creation, the career start, and the enlistment quartermaster (EnlistmentRosterResolver).
 PLAYER_ROSTER_PREFIXES = ("player_char_creation_", "player_career_", "enlist_")
+# The FactionUI picker's legends (#704) are occupation="NotAssigned" is_hero="false", so they fail
+# every check below, yet their gear reaches the player at runtime through the hero preset copy
+# (FactionPresetService) exactly like a Lord's own kit does. Treat every NPCCharacter in this one
+# file as hero-class too.
+PICKER_CHARACTERS_FILE = "faction_ui_picker_characters.xml"
 
 
 def hero_launchers(moduledata, launchers: dict) -> dict[str, list[str]]:
-    """{launcher id: [character ids]} for every hero-class character (a Lord, a Wanderer or any
-    is_hero NPCCharacter outside troops/) that can carry the launcher: its own equipment, the
-    battle EquipmentRosters it names by EquipmentSet id, the templates lords.xslt hands to the
-    vanilla lords it retags ("lords.xslt" as the character), and the player's start and career
-    rosters (the roster id as the character). Civilian sets are skipped. The `Equipment` tag is
-    matched in either case: the equipment-set files use `<Equipment>`, the characters `<equipment>`."""
+    """{launcher id: [character ids]} for every hero-class character (a Lord, a Wanderer, any
+    is_hero NPCCharacter outside troops/, or any NPCCharacter in PICKER_CHARACTERS_FILE) that can
+    carry the launcher: its own equipment, the battle EquipmentRosters it names by EquipmentSet
+    id, the templates lords.xslt hands to the vanilla lords it retags ("lords.xslt" as the
+    character), and the player's start and career rosters (the roster id as the character).
+    Civilian sets are skipped. The `Equipment` tag is matched in either case: the equipment-set
+    files use `<Equipment>`, the characters `<equipment>`."""
     import xml.etree.ElementTree as ET
     md = Path(moduledata)
 
@@ -1081,8 +1087,10 @@ def hero_launchers(moduledata, launchers: dict) -> dict[str, list[str]]:
     for path, root in docs:
         if path.parent.name == "troops":
             continue
+        is_picker_file = path.name == PICKER_CHARACTERS_FILE
         for c in root.iter("NPCCharacter"):
-            if not (c.get("occupation") in ("Lord", "Wanderer") or c.get("is_hero") == "true"):
+            if not (is_picker_file or c.get("occupation") in ("Lord", "Wanderer")
+                    or c.get("is_hero") == "true"):
                 continue
             carried = ids_in(c)
             for es in c.iter("EquipmentSet"):

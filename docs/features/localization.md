@@ -97,7 +97,8 @@ Each language dir follows the same 3-file pattern.
 
 ## Tests
 
-`TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs`: structural contract tests (includes per-file existence checks for `taom_troop_name_strings`, `taom_lord_name_strings`, `taom_clan_name_strings`, and `taom_kingdom_name_strings`, added 2026-09-17 alongside the others below):
+`TAOM.Tests/Infrastructure/Localization/LanguageDataXmlTests.cs`: structural contract tests (includes per-file existence checks for `taom_troop_name_strings`, `taom_lord_name_strings`, `taom_clan_name_strings`, and `taom_kingdom_name_strings`, added 2026-09-17, and the data-row
+`AllLanguageDirs_HaveDataTextStringsFile` for the five data-text files of 2026-10-01, alongside the others below):
 
 | Test | What it guards |
 |------|----------------|
@@ -173,11 +174,14 @@ Bannerlord must already support the language natively (it must have an entry in 
 | Content | Reason | Workaround |
 |---------|--------|------------|
 | CharacterCreation JSON narratives | Custom C# loader, not TextObject-based | Requires code changes to inject translated content |
-| XSLT-modified action/comment strings | Reuse vanilla hash IDs — vanilla language packs handle them | None needed; vanilla translations still apply |
+| XSLT-modified action/comment strings | Where the stylesheet keeps a vanilla id, vanilla's language packs translate it. The 36 overrides that write a new key with TAOM's own English are registered in `taom_xslt_strings.xml` (2026-10-01) and translated like any other row | None needed |
 | Tolkien proper nouns (Gondor, Aragorn) | Convention — not translated in official LOTR | None — leave as English |
 | Equipment/item names | Owned by LOTRLOME_Armory module | Translate in that module |
-| Custom clan-hero biographies (`characters/heroes.xml` `text=`) | 6/465 keys registered; the file carries no `name=` at all, so hero names come from procedural generation elsewhere | Open, no tracking issue as of 2026-09-17 |
-| Female notable names (22 inline `NPCCharacter` names, no strings row) | Different source file (notable templates), untouched by the troop/lord/clan/kingdom fix below | Tracked by #478 (open) |
+| `custom_settlements.xml` and the repo `settlements.xml` | Never loaded: the first is registered nowhere in `SubModule.xml`, the second is a stale copy of TAOM_Map's (whose own `loc_settlements.xml` files are translated) | None; translating them would change nothing in game |
+
+Hero biographies and NPC names used to sit in this table; since 2026-10-01 they are generated into
+`taom_hero_text_strings.xml` and `taom_character_name_strings.xml` (with culture text, career data and
+Custom Battle scene names) and translated like the rest.
 
 ## Performance
 

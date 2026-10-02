@@ -1,0 +1,612 @@
+<Brushes>
+
+  <!-- Difficulty screen dropdown reskin, THIRD approach (2026-09-30) - the first two both overrode NATIVE
+       brush names (SPOptions.Dropdown.*/Standard.DropdownItem), which turned out to be globally shared: the
+       main menu's own unrelated Options screen uses the same native widget/brush names, so that override broke
+       options there too (user: "I now dont see some options anymore in the my options from the main menu") and
+       had to be fully reverted. This time: TAOMDropdown.xml (Prefabs folder) is a full PRIVATE COPY of the
+       native Standard.DropdownWithHorizontalControl.xml, referenced only from TAOMOptionsStage.xml, whose
+       internal brush references are all renamed to this "TAOM.Dropdown.*" prefix below - names nothing else in
+       the game could ever resolve to, so this can't leak anywhere else again. Same visual design as the
+       earlier (confirmed-working) attempt: fs_dropdown_box_9 (own asset, gold border) for the box/extension,
+       FS_Garamond for the value/item text (distinct from the CC.SecTitle header label above it), AI-generated
+       gold arrow glyphs (ImagineArt) for the prev/next buttons, and a gold hover wash for list items. Arrow
+       sprites re-cropped 2026-09-30 (user: "the arrows seem sort of silly") - the button they fill is a fixed
+       60x70 box, and the first crop's own aspect didn't match that, so the brush's fill-the-widget stretch
+       squished a clean chevron into a diamond-ish blob; re-cropped onto a canvas matching that exact 60:70
+       ratio (content itself keeps ITS OWN proportions, just padded within the matching canvas) so no more
+       stretch-distortion. Plain sprites now (no .nine) - nine-slicing them earlier was only ever a hypothesis
+       test for a bug that turned out to be the cross-screen brush collision, not something these actually
+       need. -->
+  <!-- FIX (2026-10-01, user real-screenshot report: the box showed a light woven/cross-hatch texture instead
+       of a clean dark fill, even after a full restart confirmed the brush itself was resolving). fs_dropdown_box_9
+       was a genuine PNG stretched via 9-slice across a much wider box than it was drawn for - swapped to
+       BlankWhiteSquare_9 (a flat, dither-free native sprite already proven artifact-free at any stretch width,
+       same one used for the checkbox/Narrative option rows/Banner Editor slider) with an explicit dark Color
+       tint standing in for the old baked-in dark PNG color. Same Style/ColorFactor feedback kept unchanged. -->
+  <!-- FIX (2026-10-03, Custom Battle report: these 4 brushes rendered as a plain unstyled grey/white box in
+       TAOM_CustomBattle, while this exact TAOMDropdown.xml prefab is confirmed working on the Options/
+       Difficulty screen in TAOM_FactionUI, and brand-new brushes using a simpler always-visible-layer pattern
+       (TAOM.CB.Slider.Fill etc.) rendered correctly in the SAME Custom Battle screen. The one structural
+       difference: these 4 used an "IsHidden=true on the base layer, each Style reveals it" indirection
+       (copied from native CustomBattle.Slider.* brushes) that every other working brush in this project does
+       NOT use. Simplified to the same plain "layer always visible, Style only adjusts ColorFactor/AlphaFactor"
+       technique as everything else - removes the one real structural outlier rather than guessing further. -->
+  <!-- FIX round 2 (2026-10-03): still showed a missing-texture checkerboard in Custom Battle after dropping
+       IsHidden. The one remaining difference from the proven-working TAOM.CB.Slider.* brushes: these had
+       ExtendTop/Bottom/Left/Right="10" nine-slice attributes stacked on top of the "_9" sprite variant - the
+       slider brushes use a plain stretch with no Extend at all. BlankWhiteSquare_9 is a flat solid-color
+       swatch, so nine-slicing adds no visual value anyway (no border art to preserve) - dropped entirely,
+       converging on the exact same plain-stretch technique already confirmed rendering correctly. -->
+  <!-- FIX (2026-10-03, user real screenshot: "the background of those selectors should be transparent so you
+       can see the stone texture behind it") - this is the CLOSED dropdown box specifically (a different brush
+       from TAOM.Dropdown.Item.Text/TAOM.DropdownItem, which only affect the OPEN list after clicking - that's
+       why the earlier Narrative-style fix didn't show up here). Was fully opaque (no AlphaFactor at all, same
+       as a solid black box). Added AlphaFactor so the panel's own cc_panel_bg stone texture shows through,
+       matching the frameless language used elsewhere in this project, while staying dark enough for the gold
+       text to stay readable. -->
+  <Brush Name="TAOM.Dropdown.Center">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#14120DFF" />
+    </Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="0.85" AlphaFactor="0.45" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.7" AlphaFactor="0.6" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.3" AlphaFactor="0.6" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" ColorFactor="0.6" AlphaFactor="0.4" /></Style>
+    </Styles>
+    <SoundProperties>
+      <EventSounds>
+        <EventSound EventName="Click" Audio="dropdown" />
+      </EventSounds>
+    </SoundProperties>
+  </Brush>
+  <!-- Same transparency fix as TAOM.Dropdown.Center above, kept a bit more opaque (0.75 vs 0.45) since this
+       is the OPEN list background - several stacked lines of text need more contrast than a single closed-box
+       line does. -->
+  <Brush Name="TAOM.Dropdown.Extension">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#14120DFF" />
+    </Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="0.95" AlphaFactor="0.75" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.Dropdown.Left.Button">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="fs_dropdown_arrow_left" />
+    </Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.85" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.8" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.2" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.4" /></Style>
+    </Styles>
+    <SoundProperties>
+      <EventSounds>
+        <EventSound EventName="Click" Audio="dropdown" />
+      </EventSounds>
+    </SoundProperties>
+  </Brush>
+  <Brush Name="TAOM.Dropdown.Right.Button">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="fs_dropdown_arrow_right" />
+    </Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.85" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.8" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.2" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.4" /></Style>
+    </Styles>
+    <SoundProperties>
+      <EventSounds>
+        <EventSound EventName="Click" Audio="dropdown" />
+      </EventSounds>
+    </SoundProperties>
+  </Brush>
+  <Brush Name="TAOM.Dropdown.Center.Text" Font="FS_Garamond" FontSize="16" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#F2E2B0FF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" />
+      <Style Name="Disabled" FontColor="#F2E2B080" TextGlowColor="#00000000" />
+    </Styles>
+  </Brush>
+  <!-- Dropdown list items restyled to match Narrative Stage's own option-row language (2026-10-03, user
+       request) - see TAOMDropdown.xml's own comment on its item template for the full story. Color values
+       copied exactly from CC.NarrativeOption/CC.NarrativeOptionAccent, not just "similar" ones, so the two
+       screens' selectors genuinely read as the same design language. -->
+  <Brush Name="TAOM.Dropdown.Item.Text" Font="FS_Garamond" FontSize="16" TextHorizontalAlignment="Left">
+    <Styles>
+      <Style Name="Default" FontColor="#8F8670FF" TextGlowColor="#000000B0" TextGlowRadius="0.1" TextBlur="0.05" />
+      <Style Name="Hovered" FontColor="#EFE7D2FF" TextGlowColor="#000000B0" TextGlowRadius="0.1" TextBlur="0.05" />
+      <Style Name="Selected" FontColor="#F6E7B4FF" TextGlowColor="#000000C0" TextGlowRadius="0.15" TextBlur="0.05" />
+      <Style Name="Disabled" FontColor="#8F867080" TextGlowColor="#00000000" />
+    </Styles>
+  </Brush>
+  <Brush Name="TAOM.DropdownItem">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#F6E7B4FF" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="0.3" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0.6" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+    </Styles>
+  </Brush>
+  <!-- FIX (2026-10-01, user real-screenshot report: "Enable Birth and Aging" checkbox rendered as a plain
+       unstyled white square even after a full restart). Root cause found by diffing against
+       Native\GUI\Prefabs\CharCreation\CharacterCreationOptionsStage.xml: the native checkbox's outer
+       ButtonWidget ALWAYS carries a Brush (SPOptions.Checkbox.Empty.Button); our reskin's version
+       (TAOMOptionsStage.xml) dropped Brush= entirely, relying only on loose hand-built child widgets for the
+       visual, on the assumption a ButtonWidget with no Brush just renders nothing of its own. It doesn't - with
+       no Brush at all it appears to fall back to some native default placeholder (a plain white square) drawn
+       over/instead of the children. This brush is a permanently-invisible placeholder (every style keeps
+       AlphaFactor 0) so the ButtonWidget has "a Brush" to satisfy whatever internal check wants one, while every
+       real visual (dark fill, gold border bars, gold toggle square) stays exactly as already built, unchanged,
+       via the loose children. -->
+  <Brush Name="TAOM.Checkbox.Empty">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" AlphaFactor="0" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+    </Styles>
+  </Brush>
+  <!-- Character creation skin (face generator and later stages). Gold #C9AB69/#D6BA75, cream #EFE7D2, near black panels. Fonts: this module's FS_* fonts. -->
+
+  <Brush Name="CC.Title" Font="FS_CinzelWide" FontSize="26" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#EFE7D2FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" /></Styles>
+  </Brush>
+
+  <Brush Name="CC.Label" Font="FS_CinzelWide" FontSize="17" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#D9CBA0FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" /></Styles>
+  </Brush>
+
+  <Brush Name="CC.Value" Font="FS_CinzelWide" FontSize="20" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#EFE7D2FF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" /></Styles>
+  </Brush>
+
+  <Brush Name="CC.KeyText" Font="FS_Garamond" FontSize="20" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E9E1CCFF" /></Styles>
+  </Brush>
+
+  <!-- Sized/muted down 2026-09-26 (user request: "more subtle, so it looks more elegant, bit smaller") - was
+       22pt at near-white E6DDC2 with a strong glow, reading more like a loading-screen tip than a quiet
+       decorative accent. FontSize 22->16, color dimmed and given a lower alpha (CC instead of FF) rather than
+       just a darker opaque color, glow softened to match (radius/alpha both reduced) so it recedes into the
+       scene instead of competing with the actual UI content. -->
+  <Brush Name="CC.Quote" Font="FS_CinzelWide" FontSize="16" TextHorizontalAlignment="Left" TextVerticalAlignment="Top">
+    <Styles><Style Name="Default" FontColor="#D9CFAECC" TextGlowColor="#00000090" TextGlowRadius="0.12" TextBlur="0.12" /></Styles>
+  </Brush>
+
+  <Brush Name="CC.QuoteSub" Font="FS_Garamond" FontSize="13" TextHorizontalAlignment="Left" TextVerticalAlignment="Top">
+    <Styles><Style Name="Default" FontColor="#9C9478AA" TextGlowColor="#00000090" TextGlowRadius="0.12" TextBlur="0.12" /></Styles>
+  </Brush>
+
+  <!-- top ribbon text tabs (2026-09-23 redesign, replaces the CC.Tab.* icon-medallion brushes below - those are
+       kept, unused, in case any future round wants icons back). One brush shared by all 7 TabToggleWidgets in
+       TAOMFaceGen.xml's ribbon - the widget itself carries no sprite/background, just this text child, and
+       relies on UpdateChildrenStates="true" (set on each TabToggleWidget) to propagate its own Selected/Hovered
+       interaction state down to this brush, the same mechanism CC.BtnText already relies on for Back/Next. -->
+  <Brush Name="CC.TabText" Font="FS_CinzelWide" FontSize="16" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#8F8670FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" />
+      <Style Name="Hovered" FontColor="#D9CBA0FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" />
+      <Style Name="Pressed" FontColor="#F6E7B4FF" TextGlowColor="#000000C0" TextGlowRadius="0.2" TextBlur="0.1" />
+      <Style Name="Selected" FontColor="#F6E7B4FF" TextGlowColor="#000000C0" TextGlowRadius="0.2" TextBlur="0.1" />
+    </Styles>
+  </Brush>
+
+  <!-- small diamond marker under the active ribbon tab (2026-09-23, Phase 3 polish). TabToggleWidget has no
+       bindable @IsSelected of its own to drive an IsVisible - it only propagates Default/Hovered/Pressed/
+       Selected STYLE STATE to children via UpdateChildrenStates="true" (same mechanism CC.TabText already
+       relies on), so this is a brush (alpha-only per state) on a small child ImageWidget, not a data binding. -->
+  <Brush Name="CC.TabAccent">
+    <Layers><BrushLayer Name="Default" Sprite="fs_bullet" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="0.35" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+    </Styles>
+  </Brush>
+
+  <!-- Back/Next pill buttons (2026-09-23 redesign, replaces CC.BtnBack/CC.BtnNext below - those are kept,
+       unused, in case of a revert). Copied from FactionSelect.xml's Preview.Confirm/Preview.ConfirmText
+       verbatim - same fs_confirm sprite, already deployed, no new art. -->
+  <Brush Name="CC.Confirm">
+    <Layers><BrushLayer Name="Default" Sprite="fs_confirm" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="1.2" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="0.85" /></Style>
+      <!-- Added 2026-09-25 for the Review Stage's Next button, whose @CanAdvance can genuinely be false in a
+           way the user needs to notice (empty/invalid name field) - every earlier screen using this brush
+           always had CanAdvance effectively true-looking with no visible feedback either way, so this gap
+           existed but was never actually exercised until now. -->
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.4" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="CC.ConfirmText" Font="FS_CinzelWide" FontSize="22" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#DEC98FFF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" />
+      <Style Name="Hovered" FontColor="#F2E2B0FF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" />
+      <Style Name="Pressed" FontColor="#C9AB69FF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" />
+      <Style Name="Disabled" FontColor="#DEC98FFF" TextAlphaFactor="0.4" />
+    </Styles>
+  </Brush>
+
+  <!-- Same colours/glow as CC.ConfirmText, smaller FontSize - TAOMNarrativeStage.xml's Back/Next/Random
+       buttons are shrunk from FaceGen's own Confirm-button size to fit three across the gap between its two
+       side panels (2026-09-26, user: "make the text a little bit smaller so that they fit better inside the
+       buttons"), so they need their own smaller text scale. A dedicated brush rather than editing
+       CC.ConfirmText directly, since that brush is shared with FaceGen's own full-size Confirm buttons, which
+       fit fine as-is and weren't asked to change. -->
+  <Brush Name="CC.ConfirmTextSmall" Font="FS_CinzelWide" FontSize="15" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#DEC98FFF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" />
+      <Style Name="Hovered" FontColor="#F2E2B0FF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" />
+      <Style Name="Pressed" FontColor="#C9AB69FF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" />
+      <Style Name="Disabled" FontColor="#DEC98FFF" TextAlphaFactor="0.4" />
+    </Styles>
+  </Brush>
+
+  <!-- Translucent variant of CC.Confirm for TAOMNarrativeStage.xml's Back/Next only (2026-09-26, user: "still
+       has no opacity on the background of those buttons" - CC.Confirm itself is Default AlphaFactor=1, fully
+       opaque, and is shared with FaceGen's/Review Stage's own Confirm buttons which weren't asked to change,
+       hence a dedicated brush rather than editing CC.Confirm directly). Same fs_confirm sprite/ColorFactor
+       hover-brighten behaviour, just lower alpha at rest so it reads consistent with the option rows' own
+       translucent look (CC.NarrativeOptionTextFrame) that the user just confirmed looks good. -->
+  <Brush Name="CC.NarrativeConfirm">
+    <Layers><BrushLayer Name="Default" Sprite="fs_confirm" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.55" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="0.85" ColorFactor="1.2" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="0.85" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.35" /></Style>
+    </Styles>
+  </Brush>
+
+  <!-- Random button background (2026-09-30, user: "the button doesnt look like its in the same style as the
+       rest" - TAOMNarrativeStage.xml's Random button, sitting between Back/Next). It couldn't just reuse
+       CC.NarrativeConfirm/fs_confirm like Back/Next do: fs_confirm is a wide decorative banner with thin
+       tapering line flourishes baked into its art at a fixed ~7.27:1 aspect ratio, and the gap between Back's
+       right edge and Next's left edge (~248px) is narrower than fs_confirm would need at a legible height
+       (~291px at 40px tall) - stretching it to fit would visibly warp those flourishes. It had instead been
+       using CC.NarrativeOptionTextFrame, a flat single-color BlankWhiteSquare_9 wash with square corners and
+       no real border art (itself a leftover brush, marked unused elsewhere in this file since round 13) - a
+       plain rectangle next to two ornate pill banners, which is what read as "different style". cc_section_9
+       is a NATIVE Bannerlord sprite (no custom art needed - already used by this project's own CC.DropList for
+       FaceGen's dropdown panels), a proper nine-sliced bordered box that can resize to any aspect ratio without
+       distorting, so it actually looks like real game UI here instead of a flat color swatch. -->
+  <!-- #704 port: cc_section_9 ships nowhere (not in Kysaro's package, the game GUI or any module), so this and CC.DropList use his cc_card_9, the nine-sliced card CC.DropItem already uses. Ask Kysaro for cc_section.png to restore the original look. -->
+  <Brush Name="CC.NarrativeRandomBox">
+    <Layers><BrushLayer Name="Default" Sprite="cc_card_9" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.7" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="1.2" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="0.85" /></Style>
+    </Styles>
+  </Brush>
+
+  <!-- selection cards (gender, hair and beard grids) -->
+  <Brush Name="CC.Card">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="cc_card_9" />
+      <BrushLayer Name="Selected" Sprite="cc_card_sel_9" />
+    </Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="1" /><BrushLayer Name="Selected" IsHidden="true" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.5" /><BrushLayer Name="Selected" IsHidden="true" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.8" /><BrushLayer Name="Selected" IsHidden="true" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" IsHidden="true" /><BrushLayer Name="Selected" ColorFactor="1" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.5" /><BrushLayer Name="Selected" IsHidden="true" /></Style>
+    </Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="checkbox" /></EventSounds></SoundProperties>
+  </Brush>
+
+  <Brush Name="CC.GenderM">
+    <Layers><BrushLayer Name="Default" Sprite="cc_g_male" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.7" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0.8" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="1.2" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.4" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="CC.GenderF">
+    <Layers><BrushLayer Name="Default" Sprite="cc_g_female" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.7" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0.8" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="1.2" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.4" /></Style>
+    </Styles>
+  </Brush>
+
+  <!-- Gender button ring (2026-09-26, exact-match reference request: circular gender buttons instead of the
+       square CC.Card frame). cc_gender_ring/_sel are procedurally-drawn thin gold rings (System.Drawing, not
+       AI-generated - simple geometric shapes don't need it), mirroring CC.Card's exact Default/Selected/Hovered/
+       Pressed/Disabled layer-swap pattern so the button still gets a real Selected-state visual. -->
+  <Brush Name="CC.GenderRing">
+    <Layers>
+      <BrushLayer Name="Default" Sprite="cc_gender_ring" />
+      <BrushLayer Name="Selected" Sprite="cc_gender_ring_sel" />
+    </Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="1" /><BrushLayer Name="Selected" IsHidden="true" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.5" /><BrushLayer Name="Selected" IsHidden="true" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.8" /><BrushLayer Name="Selected" IsHidden="true" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" IsHidden="true" /><BrushLayer Name="Selected" ColorFactor="1" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.5" /><BrushLayer Name="Selected" IsHidden="true" /></Style>
+    </Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="checkbox" /></EventSounds></SoundProperties>
+  </Brush>
+  <!-- centered small-caps label under a gender ring/tool icon - CC.SecTitle is Left-aligned (built for
+       full-width section headers), so this is a separate Center-aligned brush rather than reusing it. -->
+  <Brush Name="CC.IconLabel" Font="FS_CinzelWide" FontSize="13" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#D9BC78FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" /></Styles>
+  </Brush>
+  <!-- smaller variant for the tools row, where 7 icons (vs the gender row's 2) leave much tighter horizontal
+       room per label. -->
+  <Brush Name="CC.ToolLabel" Font="FS_CinzelWide" FontSize="10" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#B8A876FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" /></Styles>
+  </Brush>
+
+  <!-- tool strip buttons (one brush per glyph) -->
+  <Brush Name="CC.Tool.Random"><Layers><BrushLayer Name="Glyph" Sprite="cc_g_random" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Glyph" AlphaFactor="0.8" /></Style><Style Name="Hovered"><BrushLayer Name="Glyph" AlphaFactor="1" ColorFactor="1.3" /></Style><Style Name="Pressed"><BrushLayer Name="Glyph" AlphaFactor="0.7" /></Style><Style Name="Disabled"><BrushLayer Name="Glyph" AlphaFactor="0.3" /></Style></Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="transfer" /></EventSounds></SoundProperties></Brush>
+  <Brush Name="CC.Tool.RandomAll"><Layers><BrushLayer Name="Glyph" Sprite="cc_g_random_all" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Glyph" AlphaFactor="0.8" /></Style><Style Name="Hovered"><BrushLayer Name="Glyph" AlphaFactor="1" ColorFactor="1.3" /></Style><Style Name="Pressed"><BrushLayer Name="Glyph" AlphaFactor="0.7" /></Style><Style Name="Disabled"><BrushLayer Name="Glyph" AlphaFactor="0.3" /></Style></Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="transfer" /></EventSounds></SoundProperties></Brush>
+  <Brush Name="CC.Tool.Reset"><Layers><BrushLayer Name="Glyph" Sprite="cc_g_reset" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Glyph" AlphaFactor="0.8" /></Style><Style Name="Hovered"><BrushLayer Name="Glyph" AlphaFactor="1" ColorFactor="1.3" /></Style><Style Name="Pressed"><BrushLayer Name="Glyph" AlphaFactor="0.7" /></Style><Style Name="Disabled"><BrushLayer Name="Glyph" AlphaFactor="0.3" /></Style></Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="transfer" /></EventSounds></SoundProperties></Brush>
+  <Brush Name="CC.Tool.ResetAll"><Layers><BrushLayer Name="Glyph" Sprite="cc_g_reset_all" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Glyph" AlphaFactor="0.8" /></Style><Style Name="Hovered"><BrushLayer Name="Glyph" AlphaFactor="1" ColorFactor="1.3" /></Style><Style Name="Pressed"><BrushLayer Name="Glyph" AlphaFactor="0.7" /></Style><Style Name="Disabled"><BrushLayer Name="Glyph" AlphaFactor="0.3" /></Style></Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="transfer" /></EventSounds></SoundProperties></Brush>
+  <Brush Name="CC.Tool.Undo"><Layers><BrushLayer Name="Glyph" Sprite="cc_g_undo" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Glyph" AlphaFactor="0.8" /></Style><Style Name="Hovered"><BrushLayer Name="Glyph" AlphaFactor="1" ColorFactor="1.3" /></Style><Style Name="Pressed"><BrushLayer Name="Glyph" AlphaFactor="0.7" /></Style><Style Name="Disabled"><BrushLayer Name="Glyph" AlphaFactor="0.3" /></Style></Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="transfer" /></EventSounds></SoundProperties></Brush>
+  <Brush Name="CC.Tool.Redo"><Layers><BrushLayer Name="Glyph" Sprite="cc_g_redo" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Glyph" AlphaFactor="0.8" /></Style><Style Name="Hovered"><BrushLayer Name="Glyph" AlphaFactor="1" ColorFactor="1.3" /></Style><Style Name="Pressed"><BrushLayer Name="Glyph" AlphaFactor="0.7" /></Style><Style Name="Disabled"><BrushLayer Name="Glyph" AlphaFactor="0.3" /></Style></Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="transfer" /></EventSounds></SoundProperties></Brush>
+  <Brush Name="CC.Tool.Cloth"><Layers><BrushLayer Name="Glyph" Sprite="cc_g_cloth" /></Layers>
+    <Styles><Style Name="Default"><BrushLayer Name="Glyph" AlphaFactor="0.8" /></Style><Style Name="Hovered"><BrushLayer Name="Glyph" AlphaFactor="1" ColorFactor="1.3" /></Style><Style Name="Pressed"><BrushLayer Name="Glyph" AlphaFactor="0.7" /></Style><Style Name="Disabled"><BrushLayer Name="Glyph" AlphaFactor="0.3" /></Style></Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="transfer" /></EventSounds></SoundProperties></Brush>
+
+  <Brush Name="CC.Voice">
+    <Layers><BrushLayer Name="Default" Sprite="cc_g_voice" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.8" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="1.2" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0.6" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.4" /></Style>
+    </Styles>
+  </Brush>
+
+  <Brush Name="CC.ArrowL">
+    <Layers><BrushLayer Name="Default" Sprite="cc_arrow_l" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.8" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="1.25" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="0.8" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.35" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="CC.ArrowR">
+    <Layers><BrushLayer Name="Default" Sprite="cc_arrow_r" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.8" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="1.25" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="0.8" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.35" /></Style>
+    </Styles>
+  </Brush>
+
+  <!-- colour swatches: ColorButtonWidget tints the box layer, selection adds a gold frame -->
+  <Brush Name="CC.ColorCard">
+    <Layers><BrushLayer Name="Default" Sprite="cc_colorbox_9" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="1" AlphaFactor="0.85" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.15" AlphaFactor="1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.8" AlphaFactor="1" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="1" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.5" /></Style>
+    </Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="popup" /></EventSounds></SoundProperties>
+  </Brush>
+  <Brush Name="CC.ColorCard.Sel">
+    <Layers><BrushLayer Name="Default" Sprite="cc_colorbox_sel_9" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" IsHidden="true" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" IsHidden="true" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" IsHidden="true" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" IsHidden="true" /></Style>
+    </Styles>
+  </Brush>
+
+  <Brush Name="CC.SliderHandle">
+    <Layers><BrushLayer Name="Default" Sprite="cc_slider_handle" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="1" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.2" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.8" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.5" /></Style>
+    </Styles>
+  </Brush>
+
+  <Brush Name="CC.ScrollHandle">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="1" AlphaFactor="0.7" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.2" AlphaFactor="1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.8" /></Style>
+    </Styles>
+  </Brush>
+
+  <!-- dropdown (race selector) -->
+  <Brush Name="CC.DropCenter">
+    <Layers><BrushLayer Name="Default" Sprite="cc_drop" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="1" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1.5" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" ColorFactor="0.8" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0.5" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="CC.DropList">
+    <Layers><BrushLayer Name="Default" Sprite="cc_card_9" /></Layers>
+  </Brush>
+  <Brush Name="CC.DropItem">
+    <Layers><BrushLayer Name="Default" Sprite="cc_card_9" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="0.6" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+    </Styles>
+  </Brush>
+  <Brush Name="CC.DropText" Font="FS_CinzelWide" FontSize="19" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#EFE7D2FF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" /></Styles>
+  </Brush>
+  <Brush Name="CC.DropItemText" Font="FS_CinzelWide" FontSize="17" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#E1D9C4FF" />
+      <Style Name="Hovered" FontColor="#F6E7B4FF" />
+      <Style Name="Selected" FontColor="#F6E7B4FF" />
+      <Style Name="Disabled" FontColor="#E1D9C4FF" TextAlphaFactor="0.4" />
+    </Styles>
+  </Brush>
+
+  <Brush Name="CC.SecTitle" Font="FS_CinzelWide" FontSize="17" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#D9BC78FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" /></Styles>
+  </Brush>
+  <Brush Name="CC.RowLabel" Font="FS_CinzelWide" FontSize="15" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#D9CBA0FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" /></Styles>
+  </Brush>
+
+  <!-- Narrative stage (Family/Childhood/Adolescence/Youth/Young Adulthood/Starting Age - all 6 share one
+       screen, see TAOMNarrativeStage.xml) - 2026-09-24. Body-text brushes use FS_Garamond, matching this
+       project's own established lesson that Garamond suits paragraph/list body text while CinzelWide suits
+       short tracked headers/labels (CC.Title above is reused as-is for @Title, no new header brush needed). -->
+  <Brush Name="CC.NarrativeBody" Font="FS_Garamond" FontSize="19" TextHorizontalAlignment="Left" TextVerticalAlignment="Top">
+    <Styles><Style Name="Default" FontColor="#E6DDC2FF" TextGlowColor="#000000C0" TextGlowRadius="0.15" TextBlur="0.1" /></Styles>
+  </Brush>
+
+  <!-- one option row's clickable text. Default is muted (same #8F8670 CC.TabText uses for an unselected tab),
+       Hovered/Selected both go bright gold - Selected stays gold rather than getting a second distinct colour
+       since the accent bar (CC.NarrativeOptionAccent below) is what actually marks the pick, not the text tint alone. -->
+  <Brush Name="CC.NarrativeOption" Font="FS_Garamond" FontSize="19" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#8F8670FF" TextGlowColor="#000000B0" TextGlowRadius="0.1" TextBlur="0.05" />
+      <Style Name="Hovered" FontColor="#EFE7D2FF" TextGlowColor="#000000B0" TextGlowRadius="0.1" TextBlur="0.05" />
+      <Style Name="Selected" FontColor="#F6E7B4FF" TextGlowColor="#000000C0" TextGlowRadius="0.15" TextBlur="0.05" />
+    </Styles>
+  </Brush>
+
+  <!-- REVERTED 2026-09-26 (user, after seeing the cc_card_9-whole-row version): "Dont like what you did with
+       the frame... take that same [icon border] size to put a border around the text" - a single card frame
+       around the ENTIRE row (icon + text + diamond all inside one box) wasn't it. The actual per-user-request
+       framing now lives on the TEXT LABEL specifically, via its own dedicated rectangular border widget (see
+       the ItemTemplate below) - NOT this brush. FIX round 3 (user: "behind that I see a low opacity
+       rectangular shape also, i gues we can get rid of that?"): the row's own background wash (this brush,
+       covering the whole row) was still showing faintly at rest behind the new text box, reading as a stray
+       leftover rectangle now that framing is handled explicitly by the text box itself. Default alpha dropped
+       to 0 (fully invisible at rest). FIX round 4 (user: "when hovering over them i can still see the ugly
+       brownish rectangular shape from before... nice they have a little effect when hovering but not that
+       one"): Hovered/Pressed/Selected were still using their old alpha values, so the exact wash just asked to
+       be removed was still appearing on hover/selection. Dropped ALL states to 0 - this brush no longer draws
+       anything at all. Hover/selection feedback now comes entirely from CC.NarrativeOptionTextFrame below
+       (the text box's own border brightening) plus the pre-existing accent bar and text-color change, not from
+       a whole-row wash. -->
+  <!-- Option row text-box fill (round 13 replacement for the separate CC.NarrativeOptionTextFrame border,
+       see that brush's own note): the state-driven hover/selected brighten now lives directly on the
+       fs_tile_stone_9 texture itself via AlphaFactor/ColorFactor, so there's only ever ONE border - the
+       texture's own baked-in gold edge - not two overlapping ones. -->
+  <Brush Name="CC.NarrativeOptionFill">
+    <!-- FIX round 16 (user, marked up screenshot: still a visible thick double border - fs_tile_stone_9's own
+         baked-in gold edge was STILL bleeding through even at a 14px inset; round 15's fix only added a second,
+         correctly-thin border alongside it, it didn't remove the first one). Swapped to ld_bar_stone - same
+         dark stone material/look, used elsewhere in this project as a loading-bar fill, but with NO gold edge
+         baked in and no .nine sidecar at all (plain stretch, zero 9-slice scaling ambiguity to fight this
+         time). The hand-built 2px bars from round 15 are now the ONLY border. -->
+    <Layers><BrushLayer Name="Default" Sprite="ld_bar_stone" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.85" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="1.15" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="0.9" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="1.3" /></Style>
+    </Styles>
+  </Brush>
+
+  <Brush Name="CC.NarrativeOptionRow">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+    </Styles>
+    <SoundProperties><EventSounds><EventSound EventName="Click" Audio="checkbox" /></EventSounds></SoundProperties>
+  </Brush>
+
+  <!-- thin left-edge accent bar, only visible once a row is selected (same on/off-by-state idea as CC.TabAccent). -->
+  <Brush Name="CC.NarrativeOptionAccent">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#F6E7B4FF" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="0.3" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+    </Styles>
+  </Brush>
+
+  <!-- decorative top-ribbon label for the one "active" entry (2026-09-24 chrome pass, TAOMNarrativeStage.xml's
+       new static Character/Origins/Skills/Stats bar). Unlike CC.TabText (whose Selected style only ever applies
+       via a real TabToggleWidget's UpdateChildrenStates propagation), this bar has no real tab-switching behind
+       it yet - it's atmospheric chrome, not a feature - so "Origins" needs its own always-gold brush rather than
+       relying on a STATE that nothing will ever set. -->
+  <Brush Name="CC.TabTextActive" Font="FS_CinzelWide" FontSize="16" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#F6E7B4FF" TextGlowColor="#000000C0" TextGlowRadius="0.2" TextBlur="0.1" /></Styles>
+  </Brush>
+
+  <!-- once an option is picked: its own description + stat gain/loss summary, floating over the scene (mirrors
+       native's own placement/purpose). Colours copied from FactionSelect.xml's Preview.RowPos/RowNeg verbatim,
+       matching this project's established habit of small intentional brush duplication across screens rather
+       than a cross-file brush reference (Gauntlet brushes don't support importing from another file's brush). -->
+  <Brush Name="CC.NarrativeSelDesc" Font="FS_Garamond" FontSize="19" TextHorizontalAlignment="Center" TextVerticalAlignment="Top">
+    <Styles><Style Name="Default" FontColor="#E6DDC2FF" TextGlowColor="#000000D0" TextGlowRadius="0.2" TextBlur="0.15" /></Styles>
+  </Brush>
+  <Brush Name="CC.NarrativePositive" Font="FS_Garamond" FontSize="19" TextHorizontalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#B4D796FF" TextGlowColor="#000000C0" TextGlowRadius="0.2" TextBlur="0.15" /></Styles>
+  </Brush>
+  <Brush Name="CC.NarrativeNegative" Font="FS_Garamond" FontSize="19" TextHorizontalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#F0796AFF" TextGlowColor="#000000C0" TextGlowRadius="0.2" TextBlur="0.15" /></Styles>
+  </Brush>
+
+  <!-- Review Stage (2026-09-25) - final character-creation screen, recaps every choice made across all prior
+       narrative stages plus the name-entry field. Same gold/cream/Garamond-body language as everywhere else. -->
+  <Brush Name="CC.ReviewValue" Font="FS_Garamond" FontSize="18" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#EFE7D2FF" TextGlowColor="#000000B0" TextGlowRadius="0.1" TextBlur="0.05" /></Styles>
+  </Brush>
+  <Brush Name="CC.ReviewDesc" Font="FS_Garamond" FontSize="15" TextHorizontalAlignment="Center" TextVerticalAlignment="Top">
+    <Styles><Style Name="Default" FontColor="#B8AE92FF" TextGlowColor="#000000B0" TextGlowRadius="0.1" TextBlur="0.05" /></Styles>
+  </Brush>
+  <Brush Name="CC.NameInput" Font="FS_CinzelWide" FontSize="19" TextHorizontalAlignment="Left" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#F6E7B4FF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" /></Styles>
+  </Brush>
+
+  <!-- Character Customization flat-panel redesign (2026-09-25) - cc_flat_panel_9 (pure flat colour, no
+       photographic crop/stretch, unlike the stone panels used everywhere else in this project) is referenced
+       DIRECTLY via Sprite= on the panel widgets themselves, not through a brush - a Brush-wrapped reference to
+       this same sprite silently failed to render (same unexplained class of bug as CC.NarrativeOptionDiamond
+       from round 2 of the Narrative Stage work: direct Sprite= renders fine, Brush= referencing the identical
+       sprite does not). Not chasing the root cause further, consistent with how that earlier instance was
+       handled. -->
+
+</Brushes>

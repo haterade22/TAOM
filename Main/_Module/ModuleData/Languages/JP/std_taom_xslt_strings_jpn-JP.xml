@@ -644,7 +644,7 @@
     <string id="TAOM_clan_khuzait_9" text="ボゾルガニス" />
     <string id="aom_lord_1_1_name" text="ブレニン・ウルフ、鉄の手" />
     <string id="aom_lord_1_2_name" text="フレイヤ・ウルフハート" />
-    <string id="aom_lord_1_3_name" text="ゴルウルフ、猪" />
+    <string id="aom_lord_1_3_name" text="猪のゴルウルフ" />
     <string id="aom_lord_1_4_name" text="ブリュンヒルド・アイアンクロー" />
     <string id="aom_lord_1_5_name" text="オスリック・ザ・ワイルド" />
     <string id="aom_lord_1_6_name" text="トールヴァルド・オックスホーン" />
@@ -659,7 +659,7 @@
     <string id="aom_lord_1_12_name" text="フィンダリエル" />
     <string id="aom_lord_1_14_name" text="サウロンの口" />
     <string id="aom_lord_1_15_name" text="アングマールの魔王" />
-    <string id="aom_lord_1_155_name" text="ナズグール、闇の司令官" />
+    <string id="aom_lord_1_155_name" text="ナズグル、闇の司令官" />
     <string id="aom_lord_1_16_name" text="ナズグール、ウンバールの騎士" />
     <string id="aom_lord_1_17_name" text="サウロン" />
     <string id="aom_lord_1_177_name" text="コルガス" />
@@ -891,14 +891,14 @@
     <string id="aom_lord_4_181_name" text="アルサムンド" />
     <string id="aom_lord_4_19_name" text="アセラ" />
     <string id="aom_lord_4_20_name" text="ヴァルムンド" />
-    <string id="aom_lord_4_21_name" text="クスレード・オルドラキング" />
+    <string id="aom_lord_4_21_name" text="クスレッド・オルドラシング" />
     <string id="aom_lord_4_22_name" text="ウルフ・ケルムンディング" />
     <string id="aom_lord_4_23_name" text="マルハス・マルハド" />
     <string id="aom_lord_4_24_name" text="グリマ・グリモーディング" />
     <string id="aom_lord_4_25_name" text="ルカンド" />
     <string id="aom_lord_4_26_name" text="ペリック" />
-    <string id="aom_lord_4_27_name" text="エレ・エセルラフィング" />
-    <string id="aom_lord_4_28_name" text="ファストヘルム・モルカーガス" />
+    <string id="aom_lord_4_27_name" text="エッレ・エセルラフィング" />
+    <string id="aom_lord_4_28_name" text="ファストヘルム・モルカルガス" />
     <string id="aom_lord_4_3_1_name" text="エオメル・エオフォリング" />
     <string id="aom_lord_4_6_1_name" text="デオルウィン・グリミンガス" />
     <string id="aom_lord_4_16_1_name" text="メルスー・フェランディング" />
@@ -1147,12 +1147,12 @@
     <string id="TAOM_hero_1_47_1" text="ミナはモルドールの闇の力に仕えている。" />
     <string id="TAOM_hero_1_47_2" text="カシレアは影の僕である。" />
     <string id="TAOM_hero_1_47_3" text="コランベアはモルドールの闇の中に住んでいる。" />
-    <string id="TAOM_hero_1_15" text="アングマールの魔王、ナズグルの長は、サウロンの最も恐るべき僕である。彼はかつて人間の偉大なる王であったが、力の指輪によって不死の幽鬼へと堕落した。" />
-    <string id="TAOM_hero_1_155" text="闇の元帥は戦いにおいてナズグルを指揮し、魔王に次ぐ地位にある。" />
+    <string id="TAOM_hero_1_15" text="アングマールの魔王、ナズグルの長は、サウロンの最も恐ろしい僕である。かつては人間の偉大な王であったが、力の指輪によって堕落し、不死の亡霊となった。" />
+    <string id="TAOM_hero_1_155" text="闇の司令官は戦場でナズグルを指揮し、魔王に次ぐ地位にある。" />
     <string id="TAOM_hero_1_16" text="ウンバールの騎士は指輪を受け取る前、海賊の領主であった。" />
     <string id="TAOM_hero_1_28" text="裏切り者は堕落する前、東方の王であった。" />
     <string id="TAOM_hero_1_38" text="不死者は不老不死を求めた魔術師王であったが、見出したのは永遠の隷属のみであった。" />
-    <string id="TAOM_hero_1_48" text="東夷のカムール、九人の指輪の幽鬼の第二位は、力の指輪を受け取る前、ルーンの偉大なる王国を統治していた。" />
+    <string id="TAOM_hero_1_48" text="東夷のカムール、九人の第二位は、力の指輪を受け取る前はルーンの大王国を治めていた。" />
     <string id="TAOM_hero_1_48_1" text="汚れし者は騎行する先々に堕落を広める。" />
     <string id="TAOM_hero_1_48_2" text="北国人の影は寒冷の地で狩りをする。" />
     <string id="TAOM_hero_1_48_3" text="ウンバールの影は南方の海岸に出没する。" />
@@ -1288,29 +1288,29 @@
     <string id="TAOM_hero_3_22_2" text="スナは若き弓兵たちを訓練する。" />
     <string id="TAOM_hero_3_22_3" text="ザヌワは部族の熟練した弓兵である。" />
     <string id="TAOM_hero_3_22_4" text="ハジャラは砂漠の監視塔を守る。" />
-    <string id="TAOM_hero_4_1" text="ローハンの王セオデンは、エドラスのメドゥセルドから統治する。かつてサルマンの従僕グリマに惑わされていたが、ガンダルフによって解放され、ヘルム峡谷とペレンノール野の戦いで民を栄光へと導いた。" />
-    <string id="TAOM_hero_4_2" text="エルフヒルドはローハンの王妃であり、セオドレドの母であった。彼女は出産時に亡くなり、その悲しみはセオデンの治世に影を落とした。" />
-    <string id="TAOM_hero_4_7" text="セオドレドはセオデン王の一人息子であり、ローハンの王子であった。彼はサルマンのウルク=ハイに対してアイゼンの浅瀬を守って倒れた。" />
+    <string id="TAOM_hero_4_1" text="ローハンの王セオデンは、エドラスの黄金館メドゥセルドより国を治める。かつてサルマンの僕グリマに惑わされていたが、ガンダルフに解き放たれ、ヘルム峡谷とペレンノール野にて民を栄光へと導いた。" />
+    <string id="TAOM_hero_4_2" text="エルフヒルドはローハンの王妃であり、セオドレドの母であった。出産の折に世を去り、その悲しみはセオデンの治世に影を落とした。" />
+    <string id="TAOM_hero_4_7" text="セオドレドはセオデン王の一人息子であり、ローハンの王子であった。サルマンのウルク=ハイからアイゼンの浅瀬を守って戦死した。" />
     <string id="TAOM_hero_4_10" text="エリスはロヒアリムの宮廷の貴婦人である。" />
     <string id="TAOM_hero_4_13" text="ロムンドは王の親衛隊の隊長として仕える。" />
     <string id="TAOM_hero_4_14" text="モルコンは王の側近として信頼される隊長である。" />
     <string id="TAOM_hero_4_141" text="アモルコンは親衛隊で親族とともに仕える。" />
-    <string id="TAOM_hero_4_15" text="エルドゥランドはセオデンの側近の騎士である。" />
+    <string id="TAOM_hero_4_15" text="エルドゥランドはセオデンの家臣の騎手である。" />
     <string id="TAOM_hero_4_3_3" text="セオドウィンはセオデン王の妹であり、エオメルとエオウィンの母であった。夫エオムンドがオークに殺された後、悲しみのあまり世を去った。" />
     <string id="TAOM_hero_4_3" text="アルドリックはイーストフォールドに館を持ち、エドラスの召集に馬で加わる。名門の出ではない平凡な騎士だが、それゆえに信を得ている。" />
     <string id="TAOM_hero_rohan_10_1" text="イーストフォールドのエオムンドはマークの元帥として馬を駆り、王の妹セオドウィンを妻とした。オークがエミュン・ムイルで彼を討ち、二人の子はセオデンの手に委ねられた。" />
-    <string id="TAOM_hero_4_3_1" text="エオメル・エアディグは辺境領第三元帥であり、セオデンの甥にして王位継承者である。彼は東谷の騎士たちを激しい忠誠心をもって率いる。" />
+    <string id="TAOM_hero_4_3_1" text="エオメル・エアディグ、マークの第三の元帥はセオデンの甥であり王位継承者である。熱烈な忠誠をもって東谷の騎士たちを率いる。" />
     <string id="TAOM_hero_4_4" text="エルシルドはエオフォリングの貴婦人である。" />
-    <string id="TAOM_hero_4_8" text="フルンハードはエオメルの指揮下で信頼される騎士として仕える。" />
+    <string id="TAOM_hero_4_8" text="フルンハルドはエオメルの指揮下にある信頼厚き騎手である。" />
     <string id="TAOM_hero_4_11" text="リエナは王家に仕える。" />
     <string id="TAOM_hero_4_6" text="グリムスラーデのグリンボルドは西谷の騎士たちを指揮する。勇猛な戦士であり、アイゼンの浅瀬を守り抜き、後にペレンノール野で英雄的な死を遂げた。" />
-    <string id="TAOM_hero_4_6_1" text="デオルウィンはグリンボルドの指揮を継ぐ後継者である。" />
+    <string id="TAOM_hero_4_6_1" text="デオルウィンはグリムボルドの指揮を継ぐ者である。" />
     <string id="TAOM_hero_4_5" text="ウンセリーは西谷の騎士の隊長として仕える。" />
     <string id="TAOM_hero_4_9" text="トムンドは西谷の騎士隊を指揮する。" />
     <string id="TAOM_hero_4_12" text="シルヴィンドは西谷の盾の乙女である。" />
     <string id="TAOM_hero_4_121" text="ラサンドは西谷の守備隊に仕える。" />
     <string id="TAOM_hero_4_16" text="西谷領主エルケンブランドは角笛城の要塞を指揮する。彼はヘルム峡谷でガンダルフとともに到着し、戦局を覆した。" />
-    <string id="TAOM_hero_4_16_1" text="メルスはエルケンブランドの妻であり、角笛城の貴婦人である。" />
+    <string id="TAOM_hero_4_16_1" text="メルスーはエルケンブランドの妻であり、角笛城の奥方である。" />
     <string id="TAOM_hero_4_17" text="エルベトはエルケンブランドの側近に仕える。" />
     <string id="TAOM_hero_4_18" text="アマルグンはエルケンブランドの後継者である。" />
     <string id="TAOM_hero_4_181" text="アルサムンドは角笛城守備隊の隊長として仕える。" />
@@ -1326,7 +1326,7 @@
     <string id="TAOM_hero_4_23_1" text="ウルフウィンはマルハスの娘であり、熟練の騎手である。" />
     <string id="TAOM_hero_4_23_2" text="エレドゥランは王の軍のために軍馬を訓練する。" />
     <string id="TAOM_hero_4_23_3" text="若きエレドゥランは馬番として仕える。" />
-    <string id="TAOM_hero_4_24" text="蛇の舌グリマはセオデンの顧問であったが、密かにサルマンのスパイであった。彼の囁く嘘は王の心を毒したが、ガンダルフがその呪縛を解いた。" />
+    <string id="TAOM_hero_4_24" text="蛇の舌グリマはセオデンの助言者であったが、密かにサルマンの密偵であった。その囁く偽りは王の心を蝕んだが、ついにガンダルフが呪縛を解いた。" />
     <string id="TAOM_hero_4_24_1" text="アダルトルードは、グリマ・グリムモーディングがサルマンに仕えるようになる前に彼と結ばれた。エドラスに館を守るが、騎士たちはもはやそこを訪れない。" />
     <string id="TAOM_hero_4_24_2" text="グドンヘルダはグリマ・グリムモーディングの長女である。父の名がエドラスではいかなる扉も開かぬことを、早くから学んだ。" />
     <string id="TAOM_hero_4_24_3" text="イングンデはグリマ・グリムモーディングの次女で、誰も共に出陣しない家の馬の世話をしている。" />
@@ -1343,7 +1343,7 @@
     <string id="TAOM_hero_4_28" text="ファストヘルム・モルカルガスは南の監視所を指揮する。" />
     <string id="TAOM_hero_4_28_1" text="モルカルはファストヘルムの息子である。" />
     <string id="TAOM_hero_4_28_2" text="ヘレスウィズは南の監視隊長の娘である。" />
-    <string id="TAOM_hero_5_1" text="カンドの大将軍ヴァルグルは、獰猛なヴァリアグの騎馬兵を率いる。モルドールとの同盟により、彼の戦士たちは中つ国の戦いでゴンドールに立ち向かう。" />
+    <string id="TAOM_hero_5_1" text="カンドの大将軍ヴァルグールは、勇猛なヴァリアグの騎兵を率いる。モルドールとの同盟により、その戦士たちは中つ国の戦いでゴンドールに立ち向かう。" />
     <string id="TAOM_hero_5_1_1" text="カズナは大将軍の家の娘である。彼の従士とともに馬を駆るが、まだ幼く槍を持たぬ。" />
     <string id="TAOM_hero_5_3" text="エルゲオンは東方のヴァリアグ氏族を率いる族長であり、その迅速な騎兵戦術で知られている。" />
     <string id="TAOM_hero_5_3_1" text="ラナオンはエルゲオンの戦団の後継者である。" />
@@ -1384,17 +1384,17 @@
     <string id="TAOM_hero_6_1" text="ルーンのロケ・カン、ザミク・ザミアンは東夷の黄金の国を統治している。彼の祖先はサウロンに仕えており、彼もその暗黒の同盟を続け、西方の地を征服することを夢見ている。" />
     <string id="TAOM_hero_6_2" text="マライアはロケ・カンの妻であり、黄金の国の女王である。" />
     <string id="TAOM_hero_6_3" text="バガイは王室護衛隊の隊長を務めている。" />
-    <string id="TAOM_hero_6_4" text="グルティルム・サルリアンはルーンの西方軍を指揮している。夫の死後、彼女は鉄の決意をもって指揮権を引き継いだ。" />
+    <string id="TAOM_hero_6_4" text="グールティルム・サルリアンはルーンの西方軍を指揮する。夫の死後、鉄の決意をもって指揮権を握った。" />
     <string id="TAOM_hero_6_5" text="イルボ・ニカティアンは東部草原の名高い騎馬弓兵、アルキト氏族を率いている。" />
     <string id="TAOM_hero_6_51" text="カダはアルキト氏族の後継者である。" />
     <string id="TAOM_hero_6_6" text="スランは南部部族の戦士たちを指揮している。" />
     <string id="TAOM_hero_6_7" text="チャガンはルーンの王子であり、黄金の国の後継者である。" />
-    <string id="TAOM_hero_6_8" text="エスルはグルティルムの軍の戦士である。" />
-    <string id="TAOM_hero_6_81" text="ナヤンタイはグルティルムの軍の隊長を務めている。" />
+    <string id="TAOM_hero_6_8" text="エスルはグールティルムの軍勢の戦士である。" />
+    <string id="TAOM_hero_6_81" text="ナヤンタイはグールティルムの軍の隊長を務める。" />
     <string id="TAOM_hero_6_9" text="テムンはアルキト氏族の戦士である。" />
     <string id="TAOM_hero_6_10" text="アリジンは王家の王子である。" />
     <string id="TAOM_hero_6_101" text="ボラトは王室に仕えている。" />
-    <string id="TAOM_hero_6_11" text="ヤナはグルティルムの軍の貴族である。" />
+    <string id="TAOM_hero_6_11" text="ヤナはグールティルムの軍勢の貴族である。" />
     <string id="TAOM_hero_6_12" text="アバガイはアルキトの所領の後継者である。" />
     <string id="TAOM_hero_6_13" text="ボルトゥは王家の貴族である。" />
     <string id="TAOM_hero_6_15" text="オラグルはアルキトの騎馬弓兵を率いている。" />
@@ -1403,13 +1403,13 @@
     <string id="TAOM_hero_6_16" text="アクヴォス・カルミアンはルーンの南部国境を指揮している。" />
     <string id="TAOM_hero_6_16_1" text="チャンブイはアクヴォスの妻である。" />
     <string id="TAOM_hero_6_16_2" text="ウナゲンはアクヴォスの指揮権の後継者である。" />
-    <string id="TAOM_hero_6_17" text="アムドゥール・アムドゥリドは東部草原の強力な氏族を率いている。" />
-    <string id="TAOM_hero_6_17_1" text="エルゲネはアムドゥルの妻である。" />
-    <string id="TAOM_hero_6_17_2" text="イェスムはアムドゥリド家の領地の後継者である。" />
-    <string id="TAOM_hero_6_18" text="ルスカン・クンドラルは西部諸州の戦士たちを指揮する。" />
-    <string id="TAOM_hero_6_18_1" text="ティルンはルスカンの妻である。" />
+    <string id="TAOM_hero_6_17" text="アムドゥール・アムドゥリドは東方の草原の有力な氏族を率いる。" />
+    <string id="TAOM_hero_6_17_1" text="エルゲネはアムドゥールの妻である。" />
+    <string id="TAOM_hero_6_17_2" text="イェスムはアムドゥリドの所領の継承者である。" />
+    <string id="TAOM_hero_6_18" text="ルースカン・クンドラルは西方諸州の戦士たちを指揮する。" />
+    <string id="TAOM_hero_6_18_1" text="ティルンはルースカンの妻である。" />
     <string id="TAOM_hero_6_18_2" text="チャグンはクンドラル家の後継者である。" />
-    <string id="TAOM_hero_6_19" text="ヴァケラルタン・クンドラルはルスカンの兄弟で、騎兵斥候を指揮する。" />
+    <string id="TAOM_hero_6_19" text="ヴァケラルタン・クンドラルはルースカンの兄弟であり、騎馬斥候を指揮する。" />
     <string id="TAOM_hero_6_19_1" text="ソカタイはヴァケラルタンの妻である。" />
     <string id="TAOM_hero_6_19_2" text="コルテはヴァケラルタンの斥候隊の後継者である。" />
     <string id="TAOM_hero_6_20" text="クルブラ・マシャキアンはルーンの北部部族を指揮する。" />
@@ -1419,7 +1419,7 @@
     <string id="TAOM_hero_6_21_1" text="エサチェイはモッルクの妻である。" />
     <string id="TAOM_hero_6_22" text="シャカル二世・シャカリアンはルーンの海沿いの裕福な交易一族を統治する。" />
     <string id="TAOM_hero_6_22_1" text="エセレンはシャカルの妻である。" />
-    <string id="TAOM_hero_6_23" text="フズ=マルゴズ・フズは西部辺境沿いの要塞守備隊を指揮する。" />
+    <string id="TAOM_hero_6_23" text="フーズ=マルゴーズ・フーズは西の辺境の砦の守備隊を指揮する。" />
     <string id="TAOM_hero_6_24" text="ニカス・アデキグはルーンへの南部峠を守る。" />
     <string id="TAOM_hero_A9_l" text="カラダンは南の荒地のハラドリムの族長であり、その任には若く、年長者たちに厳しく見張られている。" />
     <string id="TAOM_hero_A9_s" text="ティカは南の荒地の族長の妻であり、彼の野営地の水の記録を管理している。" />
@@ -1478,5 +1478,41 @@
     <string id="TAOM_hero_SE9_s_bn" text="ファラズィーンは黒きヌーメノール人の女魔術師であり、夫が出陣している間はキリス・ナルギルの真の支配者である。その名は最後のヌーメノール王を思わせる。" />
     <string id="TAOM_hero_SE9_c1_bn" text="ジグールベールはキリス・ナルギルの継嗣であり、闇の術を学んでいる。その名は「魔術師を愛する者」を意味する――ヌーメノールがサウロンの本性を知る前に彼をそう呼んでいたのである。" />
     <string id="TAOM_hero_SE9_c2_bn" text="ジムラズィーンは剣の主の二番目の子であり、二人のうちより危険な方である。母の才を受け継ぎながら、その忍耐は少しも受け継いでいない。" />
+    <string id="3UucAOBW" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。" />
+    <string id="62vceTar" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。" />
+    <string id="99gE1ZoY" text="私は{FACTION}の{CONVERSATION_CHARACTER.LINK}だ。" />
+    <string id="AxMrFoea" text="{TOWN_NAME}が{FACTION_NAME}の{LORD.LINK}率いる軍勢に包囲された！" />
+    <string id="EHFibjkM" text="{TOWN_NAME}が{FACTION_NAME}の{LORD.LINK}率いる軍に包囲された！" />
+    <string id="ExbVzTZA" text="{CLAN}は{KINGDOM}と共に戦う契約を結んだ。" />
+    <string id="FFXqPFwl" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。我が家はヴランディア王国の年代記に名を連ねる最も輝かしい一族の一つだ。" />
+    <string id="JJAWbuNT" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。我らの祖先は、英雄の時代に西方からこの地へ来た黄金の船に乗っていた者の一人だという。もっとも、あの船に乗っていたと言われる者が皆本当に乗っていたなら、重みで転覆していただろうがな。" />
+    <string id="L2GbDVja" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}でございます、{?PLAYER.GENDER}奥方様{?}閣下{\?}。お仕えできて光栄です。" />
+    <string id="Nq2dyiO1" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。スターシアの叙事詩で幾度となく耳にしたであろう名だ。" />
+    <string id="PBgLvyOa" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。我らの先祖は遥か北方より来たり、諸侯のデナールを受けてこの地を守る誓いを立てた者たちの一人だった。我らはその誓いを今も守り続けている。" />
+    <string id="S0oFKYfB" text="{CLAN}はもはや{KINGDOM}に仕えていない。" />
+    <string id="S1vGzr8z" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}、アセライの氏族の者だ。" />
+    <string id="SLAkSrb5" text="{FACTION1_NAME}が{FACTION2_NAME}に宣戦布告した。" />
+    <string id="TsYCa2fZ" text="{FACTION1}と{FACTION2}は和平を結んだ。" />
+    <string id="U4p70l9B" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。" />
+    <string id="U770Bvy8" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。我が一族の名声はバタニアの歌において並ぶ者がない。" />
+    <string id="Ua0T0A7t" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}、バタニアの古き血統のひとつだ。" />
+    <string id="WH8P3Y5F" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。" />
+    <string id="a8584KD0" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。草原の叙事詩で我が氏族の名を聞いたことがあるだろう。我らはクーザイトの母たる偉大な牝狼の十二の息子の一人の名を継いでいる。" />
+    <string id="cMO9JXvk" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。我らは{LIEGE_TITLE}より封土を受け、忠誠の誓いを重んじている。" />
+    <string id="dC8acIya" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。" />
+    <string id="dfAE3liA" text="{CLAN_NAME}氏族が{FACTION}に加わった。" />
+    <string id="dlkg2jQf" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}、スターシアの古き血統のひとつだ。" />
+    <string id="eyxfHmCU" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。我が一族は幾世代にもわたりヴランディアの王に仕えてきた。" />
+    <string id="hJFCi1zu" text="{FACTION1}と{FACTION2}は和平を結んだ。" />
+    <string id="hP57Caab" text="{VICTOR_FACTION}の{VICTOR_PARTY}が{DEFEATED_FACTION}の{DEFEATED_PARTY}を破った。" />
+    <string id="hbWhfoWH" text="{SETTLEMENT}が{FACTION_NAME}の{LORD.LINK}に略奪された" />
+    <string id="hopvV6Ch" text="{FACTION1_NAME}の{RULER_NAME}が{FACTION2_NAME}に宣戦布告した。" />
+    <string id="kqwNCCbZ" text="{TOWN_NAME}が{FACTION_NAME}の{LORD.LINK}率いる軍に包囲された！" />
+    <string id="l2nEIZV5" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}だ。" />
+    <string id="nbVW2cJ8" text="{SETTLEMENT}が{FACTION_NAME}の{LORD.LINK}率いる軍に略奪された" />
+    <string id="pn79h0aj" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。我らは皇帝ヴォルティオス自らより称号を賜った。もっとも、その時彼は我らの襲撃船の一隻に囚われていたので選択の余地はなかったがな。それでも我らの血の高貴さを認めたに違いない。" />
+    <string id="rhTUDKhJ" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。バタニアの氏族で、我らの杯の収集に闘士の頭蓋骨を捧げていない者はいない。" />
+    <string id="z2yr4mc6" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}。我が氏族は幾世代にもわたりクーザイト・ハン国に忠実に仕えてきた。" />
+    <string id="zZ9FQJRI" text="私は{CLAN_NAME}の{CONVERSATION_CHARACTER.LINK}、アセライの血統の中で最も古く高貴なる家の者だ。" />
   </strings>
 </base>

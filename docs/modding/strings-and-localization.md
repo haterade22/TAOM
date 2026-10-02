@@ -246,7 +246,7 @@ added 4 files registering troop/lord/clan/kingdom names that were previously inl
 
 | Number | Command |
 |---|---|
-| 17 English key-bearing XML files outside `Languages/` (13 pre-existing + `taom_troop_name_strings.xml`, `taom_lord_name_strings.xml`, `taom_clan_name_strings.xml`, `taom_kingdom_name_strings.xml`), holding 11,173 distinct translation keys (2026-09-17) | a python ElementTree walk of `Main/_Module/ModuleData`, skipping `Languages/`, keying each `<string>` by its `{=KEY}` prefix or its `id` |
+| 22 English key-bearing XML files outside `Languages/` (13 pre-existing + the 4 name files of 2026-09-17 + `taom_culture_text_strings.xml`, `taom_hero_text_strings.xml`, `taom_career_data_strings.xml`, `taom_character_name_strings.xml`, `taom_battle_scene_strings.xml` of 2026-10-01), holding 16,034 distinct translation keys (2026-10-01; 11,173 on 2026-09-17) | a python ElementTree walk of `Main/_Module/ModuleData`, skipping `Languages/`, keying each `<string>` by its `{=KEY}` prefix or its `id` |
 | Per-file row counts and prefixes in the ownership table (2657, 2050, 1446, 1337, 966, 836, 988, 308, 252, 119, 115, 60, 34, 29, 24, 22, 13) (2026-09-17) | the same walk, counting rows and prefix groups per file |
 | 19 `<XmlName id="GameText">` rows in `SubModule.xml` (2026-09-17); 8 XSLT files at the ModuleData root | `rg -n 'GameText' Main/_Module/SubModule.xml` and `ls Main/_Module/ModuleData/*.xslt` |
 | 12 language directories, 18 files in each (one `language_data.xml` plus 17 `std_taom_*`), and 17 `<LanguageFile>` rows in every `language_data.xml` (2026-09-17) | `ls -d Main/_Module/ModuleData/Languages/*/` and `grep -c '<LanguageFile' <dir>/language_data.xml` |

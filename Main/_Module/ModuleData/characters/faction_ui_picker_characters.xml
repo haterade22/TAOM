@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+  <!-- #704: Faction/hero picker display characters (Kysaro's TAOM_FactionUI port). Each is read
+       by id directly from the picker's C# service; none is a basic troop, none is in any
+       notable_templates / taom_wanderers / party-template / upgrade list, so nothing ever spawns
+       one in the world. occupation="NotAssigned" is the engine's own sentinel for "no spawner role"
+       (TaleWorlds.CampaignSystem.Occupation): grepped against every TAOM Occupation.* usage in
+       Main/ (CastleNotableMaintainer, TaomNotableSpawnModel, TaomPartyWageModel, LotrIssueService,
+       the hero-commission/startup adapters) and none reads NotAssigned, Lord iterates only
+       is_hero="true" heroes via Occupation.Lord checks, and vanilla's own notable/wanderer pools are
+       explicit culture template lists (xml-data.md "Culture NPC Naming Convention"), not an
+       enumeration of every NPCCharacter. is_hidden_encyclopedia keeps them off the Encyclopedia list
+       too, mirroring characters/creature_bandits.xml's same-purpose "never normally visible" pattern.
+       Each BodyProperties key is borrowed verbatim from an existing TAOM character of the same race
+       and sex, named in its own comment; Kysaro re-tunes the face in the editor later. -->
+
+  <!-- Gandalf: borrowed body from lord_1_7 (Denethor II, lords.xslt), the only aged Gondor/human
+       male lord with a real (non-placeholder) face key. Robes only: a sword, no Head, no Gloves. -->
+  <NPCCharacter id="taom_fui_gandalf"
+                name="{=taom_fui_gandalf_name}Gandalf"
+                age="90"
+                voice="earnest"
+                race="human"
+                is_female="false"
+                is_hero="false"
+                is_hidden_encyclopedia="true"
+                default_group="Infantry"
+                culture="Culture.gondor"
+                occupation="NotAssigned"
+                face_mesh_cache="true">
+    <face>
+      <BodyProperties version="4" weight="0.4583" build="0.1343" key="0002540F007010024A6A02B8F08300011060730012EEF7017B0B010E7E918F4500927603091485F7000000000000000000000000000000000000000021342142" />
+      <hair_tags>
+        <hair_tag name="empire" />
+      </hair_tags>
+      <beard_tags>
+        <beard_tag name="empire" />
+      </beard_tags>
+      <tattoo_tags>
+        <tattoo_tag name="Cleanface" />
+      </tattoo_tags>
+    </face>
+    <!-- #704 lens7-xml #3: full 18-skill sheet so the picker doesn't zero every unlisted skill
+         (PresetAppearanceAdapter.CopySkills calls SetInitialSkillLevel for every skill). Source:
+         Saruman the White (lord_I1_0, characters/lords.xml); his own values already equal or
+         exceed every skill this legend used to list. -->
+    <skills>
+      <skill id="OneHanded" value="220" />
+      <skill id="TwoHanded" value="160" />
+      <skill id="Polearm" value="220" />
+      <skill id="Bow" value="100" />
+      <skill id="Crossbow" value="80" />
+      <skill id="Throwing" value="140" />
+      <skill id="Riding" value="150" />
+      <skill id="Athletics" value="170" />
+      <skill id="Crafting" value="280" />
+      <skill id="Scouting" value="240" />
+      <skill id="Tactics" value="380" />
+      <skill id="Roguery" value="180" />
+      <skill id="Charm" value="325" />
+      <skill id="Leadership" value="390" />
+      <skill id="Trade" value="240" />
+      <skill id="Steward" value="400" />
+      <skill id="Medicine" value="200" />
+      <skill id="Engineering" value="300" />
+    </skills>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
+        <equipment slot="Body" id="Item.monk_robe" />
+        <equipment slot="Cape" id="Item.sk_gd_ano_cape_noble_a" />
+        <!-- lens7-xml #12: boots for the robe, same pairing vanilla's own monk_robe rosters use
+             (e.g. SandBox spc_notable_empire_6/7/8). -->
+        <equipment slot="Leg" id="Item.strapped_shoes" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
+        <equipment slot="Body" id="Item.monk_robe" />
+        <equipment slot="Cape" id="Item.sk_gd_ano_cape_noble_a" />
+        <equipment slot="Leg" id="Item.strapped_shoes" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Isildur: borrowed body from lord_1_11_1 (Calion), an adult male Gondor lord. Gear is the
+       existing gondor_lord_lamedon_1 noble-lord kit (Main/_Module/ModuleData/equipmentsets/
+       taom_equipment_sets_gondor.xml) with the Head swapped to gondor_king_crown, the single most
+       ornate Gondor/Arnor headpiece the Armory defines. -->
+  <NPCCharacter id="taom_fui_isildur"
+                name="{=taom_fui_isildur_name}Isildur"
+                age="35"
+                voice="earnest"
+                race="human"
+                is_female="false"
+                is_hero="false"
+                is_hidden_encyclopedia="true"
+                default_group="Cavalry"
+                culture="Culture.gondor"
+                occupation="NotAssigned"
+                face_mesh_cache="true">
+    <face>
+      <BodyProperties version="4" age="27.11" weight="0.0486" build="0.5741" key="000A240D8000368300802F541370F012ACFA80F5B172060707683B067F945E01009916030905C6140000000000000000000000000000000000000000331C9002" />
+      <hair_tags>
+        <hair_tag name="empire" />
+      </hair_tags>
+      <beard_tags>
+        <beard_tag name="empire" />
+      </beard_tags>
+      <tattoo_tags>
+        <tattoo_tag name="Cleanface" />
+      </tattoo_tags>
+    </face>
+    <!-- #704 lens7-xml #3: full 18-skill sheet (see Gandalf's comment above for why). Source:
+         Boromir (lord_1_75, lords.xslt), a top Gondor warlord; this legend's own Riding, Charm
+         and Steward were higher than his and are kept. -->
+    <skills>
+      <skill id="OneHanded" value="325" />
+      <skill id="TwoHanded" value="210" />
+      <skill id="Polearm" value="290" />
+      <skill id="Bow" value="210" />
+      <skill id="Crossbow" value="210" />
+      <skill id="Throwing" value="210" />
+      <skill id="Riding" value="240" />
+      <skill id="Athletics" value="315" />
+      <skill id="Crafting" value="210" />
+      <skill id="Scouting" value="210" />
+      <skill id="Tactics" value="320" />
+      <skill id="Roguery" value="210" />
+      <skill id="Charm" value="230" />
+      <skill id="Leadership" value="336" />
+      <skill id="Trade" value="210" />
+      <skill id="Steward" value="280" />
+      <skill id="Medicine" value="210" />
+      <skill id="Engineering" value="210" />
+    </skills>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+        <equipment slot="Item1" id="Item.sm_gd_shield_a1" />
+        <equipment slot="Head" id="Item.gondor_king_crown" />
+        <equipment slot="Body" id="Item.sk_gd_lam_nob_chest_lord_a" />
+        <equipment slot="Cape" id="Item.sk_gd_lam_pauld_cape_noble_lord_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_lam_nob_bracer_heavy_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+        <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+        <equipment slot="Horse" id="Item.charger" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Head" id="Item.gondor_king_crown" />
+        <equipment slot="Body" id="Item.sk_gd_lam_nob_chest_lord_a" />
+        <equipment slot="Cape" id="Item.sk_gd_lam_pauld_cape_noble_lord_a" />
+        <equipment slot="Gloves" id="Item.sk_gd_lam_nob_bracer_heavy_a" />
+        <equipment slot="Leg" id="Item.sk_gd_ano_grvs_noble_elite_a" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Brand: borrowed body from lord_2_7_1 (Mimir), a Dale (Culture.sturgia) male lord with a real
+       face key (lord_S8_u/lord_S9_l/lord_S9_c/lord_S9_u all carry only a "PLACEHOLDER FACE KEY"
+       comment). Gear references the EXISTING dale_bat_template_medium_c / dale_civ_template_default_c
+       rosters (Main/_Module/ModuleData/equipmentsets/taom_equipment_sets_dale.xml, not edited here):
+       sword-and-shield chivalry-tier noble kit, no bow. -->
+  <NPCCharacter id="taom_fui_brand"
+                name="{=taom_fui_brand_name}Brand"
+                age="38"
+                voice="earnest"
+                race="human"
+                is_female="false"
+                is_hero="false"
+                is_hidden_encyclopedia="true"
+                default_group="Cavalry"
+                culture="Culture.sturgia"
+                occupation="NotAssigned"
+                face_mesh_cache="true">
+    <face>
+      <BodyProperties version="4" weight="0.5089" build="0.4047" key="0000500440B4008E9E895C86B34CA389699869B8B28B576979538AC46CB4C7740076880307C60384000000000000000000000000000000000000000000F05000" />
+      <hair_tags>
+        <hair_tag name="sturgia" />
+      </hair_tags>
+      <beard_tags>
+        <beard_tag name="sturgia" />
+      </beard_tags>
+      <tattoo_tags>
+        <tattoo_tag name="Cleanface" />
+      </tattoo_tags>
+    </face>
+    <!-- #704 lens7-xml #3: full 18-skill sheet (see Gandalf's comment above for why). Source: the
+         standard adult Dale lord sheet (SkillSet.taom_dale_lord_skills, e.g. lord_2_4_1); this
+         legend's own OneHanded, Riding, Leadership and Steward were higher and are kept.
+         lord_2_1 (Bard II) is vanilla's lord re-themed by lords.xslt, with no TAOM-authored sheet;
+         this is the nearest TAOM adult Dale lord sheet. -->
+    <skills>
+      <skill id="OneHanded" value="240" />
+      <skill id="TwoHanded" value="155" />
+      <skill id="Polearm" value="205" />
+      <skill id="Bow" value="260" />
+      <skill id="Crossbow" value="120" />
+      <skill id="Throwing" value="170" />
+      <skill id="Riding" value="220" />
+      <skill id="Athletics" value="240" />
+      <skill id="Crafting" value="110" />
+      <skill id="Scouting" value="230" />
+      <skill id="Tactics" value="242" />
+      <skill id="Roguery" value="80" />
+      <skill id="Charm" value="200" />
+      <skill id="Leadership" value="260" />
+      <skill id="Trade" value="210" />
+      <skill id="Steward" value="240" />
+      <skill id="Medicine" value="140" />
+      <skill id="Engineering" value="170" />
+    </skills>
+    <Equipments>
+      <EquipmentSet id="dale_bat_template_medium_c" />
+      <EquipmentSet id="dale_civ_template_default_c" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Bard: borrowed body from lord_2_15_4 (Bovan), another real-faced Dale male lord. Gear
+       references the EXISTING dale_bat_template_medium_a / dale_civ_template_default_a rosters
+       (same file as Brand, not edited here): longbow + bodkin arrows, bow-armed per spec. -->
+  <NPCCharacter id="taom_fui_bard"
+                name="{=taom_fui_bard_name}Bard the Bowman"
+                age="42"
+                voice="earnest"
+                race="human"
+                is_female="false"
+                is_hero="false"
+                is_hidden_encyclopedia="true"
+                default_group="Ranged"
+                culture="Culture.sturgia"
+                occupation="NotAssigned"
+                face_mesh_cache="true">
+    <face>
+      <BodyProperties version="4" weight="0.6" build="0.6" key="00164C02C0882342BAB7B9566DA53AD368A6628171B9A586A7883546559D974501977613094979CE000000000000000000000000000000000000000041341002" />
+      <hair_tags>
+        <hair_tag name="sturgia" />
+      </hair_tags>
+      <beard_tags>
+        <beard_tag name="sturgia" />
+      </beard_tags>
+      <tattoo_tags>
+        <tattoo_tag name="Cleanface" />
+      </tattoo_tags>
+    </face>
+    <!-- #704 lens7-xml #3: full 18-skill sheet (see Gandalf's comment above for why). Source: the
+         standard adult Dale lord sheet (SkillSet.taom_dale_lord_skills, e.g. lord_2_4_1); this
+         legend's own Leadership and Steward were higher and are kept, Bow ties. -->
+    <skills>
+      <skill id="OneHanded" value="215" />
+      <skill id="TwoHanded" value="155" />
+      <skill id="Polearm" value="205" />
+      <skill id="Bow" value="260" />
+      <skill id="Crossbow" value="120" />
+      <skill id="Throwing" value="170" />
+      <skill id="Riding" value="215" />
+      <skill id="Athletics" value="240" />
+      <skill id="Crafting" value="110" />
+      <skill id="Scouting" value="230" />
+      <skill id="Tactics" value="242" />
+      <skill id="Roguery" value="80" />
+      <skill id="Charm" value="200" />
+      <skill id="Leadership" value="240" />
+      <skill id="Trade" value="210" />
+      <skill id="Steward" value="220" />
+      <skill id="Medicine" value="140" />
+      <skill id="Engineering" value="170" />
+    </skills>
+    <Equipments>
+      <EquipmentSet id="dale_bat_template_medium_a" />
+      <EquipmentSet id="dale_civ_template_default_a" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Tauriel: borrowed body from lord_R1_5 (Arwen), an adult female elf; Mirkwood's own armour
+       catalogue has only one helmet/body mesh (see haldir_bat_equipment's comment in
+       taom_equipment_sets_mirkwood.xml), so gear is the same Rivendell silver archer kit used for
+       Arwen and Haldir there. Unmounted, light armour, bow-armed. -->
+  <NPCCharacter id="taom_fui_tauriel"
+                name="{=taom_fui_tauriel_name}Tauriel"
+                age="30"
+                voice="earnest"
+                race="elf"
+                is_female="true"
+                is_hero="false"
+                is_hidden_encyclopedia="true"
+                default_group="Ranged"
+                culture="Culture.mirkwood"
+                occupation="NotAssigned"
+                face_mesh_cache="true">
+    <face>
+      <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0002000FC00010029A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D244003" />
+      <hair_tags>
+        <hair_tag name="battania" />
+      </hair_tags>
+      <tattoo_tags>
+        <tattoo_tag name="Cleanface" />
+      </tattoo_tags>
+    </face>
+    <!-- #704 lens7-xml #3: full 18-skill sheet (see Gandalf's comment above for why). Source:
+         Legolas (lord_M1_11, characters/lords.xml), a ranged Mirkwood elf lord; his own values
+         already equal or exceed every skill this legend used to list. -->
+    <skills>
+      <skill id="OneHanded" value="285" />
+      <skill id="TwoHanded" value="242" />
+      <skill id="Polearm" value="238" />
+      <skill id="Bow" value="330" />
+      <skill id="Crossbow" value="238" />
+      <skill id="Throwing" value="260" />
+      <skill id="Riding" value="265" />
+      <skill id="Athletics" value="305" />
+      <skill id="Crafting" value="238" />
+      <skill id="Scouting" value="295" />
+      <skill id="Tactics" value="299" />
+      <skill id="Roguery" value="238" />
+      <skill id="Charm" value="238" />
+      <skill id="Leadership" value="310" />
+      <skill id="Trade" value="238" />
+      <skill id="Steward" value="338" />
+      <skill id="Medicine" value="238" />
+      <skill id="Engineering" value="238" />
+    </skills>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.highelf_longbowd" />
+        <equipment slot="Item1" id="Item.wm_elven_arrow_v2_d" />
+        <!-- lens7-xml #4: a melee sidearm for when the bow runs dry, same named Mirkwood blade
+             Legolas carries (taom_equipment_sets_mirkwood.xml, legolas_bat_equipment). -->
+        <equipment slot="Item2" id="Item.wm_legolas_sword" />
+        <equipment slot="Head" id="Item.rivendell_helmet_archer_tier1_silver" />
+        <equipment slot="Body" id="Item.rivendell_body_silver_c" />
+        <equipment slot="Cape" id="Item.rivendell_pauldron_tier1_cape_silver" />
+        <equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+        <equipment slot="Leg" id="Item.rivendell_boots_greaves1_silver" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Head" id="Item.rivendell_helmet_archer_tier1_silver" />
+        <equipment slot="Body" id="Item.rivendell_body_silver_c" />
+        <equipment slot="Cape" id="Item.rivendell_pauldron_tier1_cape_silver" />
+        <equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+        <equipment slot="Leg" id="Item.rivendell_boots_greaves1_silver" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Thorin: borrowed body from lord_E1_1 (Dáin II Ironfoot), an adult male dwarf. Gear references
+       the EXISTING dain_bat_equipment / dain_civ_equipment rosters (Main/_Module/ModuleData/
+       equipmentsets/taom_equipment_sets_erebor.xml, not edited here): Dáin's own bespoke kit, the
+       most royal/elite Erebor gear already authored. -->
+  <NPCCharacter id="taom_fui_thorin"
+                name="{=taom_fui_thorin_name}Thorin Oakenshield"
+                age="45"
+                voice="earnest"
+                race="dwarf"
+                is_female="false"
+                is_hero="false"
+                is_hidden_encyclopedia="true"
+                default_group="Infantry"
+                culture="Culture.erebor"
+                occupation="NotAssigned"
+                face_mesh_cache="true">
+    <face>
+      <BodyProperties version="4" age="25.22" weight="0.4699" build="1" key="00000007800021C88F8870F099200F450000857877777878FFFFEFFF7000000200BF76030BFFEFFF00000000000000000000000000000000000000000F6C0140" />
+      <hair_tags>
+        <hair_tag name="sturgia" />
+      </hair_tags>
+      <beard_tags>
+        <beard_tag name="sturgia" />
+      </beard_tags>
+      <tattoo_tags>
+        <tattoo_tag name="Cleanface" />
+      </tattoo_tags>
+    </face>
+    <!-- #704 lens7-xml #3: full 18-skill sheet (see Gandalf's comment above for why). Source:
+         Dáin II Ironfoot (lord_E1_1, characters/lords.xml); his own values already equal or
+         exceed every skill this legend used to list. -->
+    <skills>
+      <skill id="OneHanded" value="275" />
+      <skill id="TwoHanded" value="280" />
+      <skill id="Polearm" value="240" />
+      <skill id="Bow" value="130" />
+      <skill id="Crossbow" value="180" />
+      <skill id="Throwing" value="140" />
+      <skill id="Riding" value="150" />
+      <skill id="Athletics" value="250" />
+      <skill id="Crafting" value="275" />
+      <skill id="Scouting" value="180" />
+      <skill id="Tactics" value="405" />
+      <skill id="Roguery" value="80" />
+      <skill id="Charm" value="230" />
+      <skill id="Leadership" value="417" />
+      <skill id="Trade" value="240" />
+      <skill id="Steward" value="348" />
+      <skill id="Medicine" value="170" />
+      <skill id="Engineering" value="275" />
+    </skills>
+    <Equipments>
+      <EquipmentSet id="dain_bat_equipment" />
+      <EquipmentSet id="dain_civ_equipment" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Azog: borrowed body from lord_G1_1 (Azgar), an adult male Gundabad lord; race="pale_uruk" is
+       the race Gundabad's orc lords use (lord_G1_1 through lord_G1_8). Gear references the EXISTING
+       gundabad_bat_template_medium_a / gundabad_civ_template_default_a rosters (Main/_Module/
+       ModuleData/equipmentsets/taom_equipment_sets_gundabad.xml, not edited here), Azgar's own
+       chieftain-tier elite kit. -->
+  <NPCCharacter id="taom_fui_azog"
+                name="{=taom_fui_azog_name}Azog the Defiler"
+                age="40"
+                voice="earnest"
+                race="pale_uruk"
+                is_female="false"
+                is_hero="false"
+                is_hidden_encyclopedia="true"
+                default_group="Infantry"
+                culture="Culture.gundabad"
+                occupation="NotAssigned"
+                face_mesh_cache="true">
+    <face>
+      <BodyProperties version="4" age="22.01" weight="0.2084" build="0.5231" key="0000F00FC00030008771188F38770F8801F188778888888888888888546AF0F900C836030C8888880000000000000000000000000000000000000000439C0140" />
+      <hair_tags>
+        <hair_tag name="battania" />
+      </hair_tags>
+      <beard_tags>
+        <beard_tag name="battania" />
+      </beard_tags>
+      <tattoo_tags>
+        <tattoo_tag name="Cleanface" />
+      </tattoo_tags>
+    </face>
+    <!-- #704 lens7-xml #3: full 18-skill sheet (see Gandalf's comment above for why). Source:
+         Azgar (lord_G1_1, characters/lords.xml); this legend's own OneHanded, TwoHanded and
+         Leadership were higher and are kept. -->
+    <skills>
+      <skill id="OneHanded" value="280" />
+      <skill id="TwoHanded" value="280" />
+      <skill id="Polearm" value="240" />
+      <skill id="Bow" value="170" />
+      <skill id="Crossbow" value="110" />
+      <skill id="Throwing" value="190" />
+      <skill id="Riding" value="190" />
+      <skill id="Athletics" value="265" />
+      <skill id="Crafting" value="140" />
+      <skill id="Scouting" value="240" />
+      <skill id="Tactics" value="255" />
+      <skill id="Roguery" value="240" />
+      <skill id="Charm" value="180" />
+      <skill id="Leadership" value="260" />
+      <skill id="Trade" value="140" />
+      <skill id="Steward" value="147" />
+      <skill id="Medicine" value="90" />
+      <skill id="Engineering" value="180" />
+    </skills>
+    <Equipments>
+      <EquipmentSet id="gundabad_bat_template_medium_a" />
+      <EquipmentSet id="gundabad_civ_template_default_a" equipmentType="Civilian" />
+    </Equipments>
+  </NPCCharacter>
+
+  <!-- Gil-galad: borrowed body from lord_LN1_1 (Círdan), an adult male Lindon elf (its key is the
+       same generic high-elf face Elrond's lord_R1_1 also carries). Gear is the gold-tier Rivendell
+       kit (same items as rivendell_bat_template_medium_a) with Item0 swapped from sword to
+       wm_rivendell_spear_a01, since a Rivendell/Lindon spear exists in the Armory. -->
+  <NPCCharacter id="taom_fui_gilgalad"
+                name="{=taom_fui_gilgalad_name}Gil-galad"
+                age="50"
+                voice="earnest"
+                race="elf"
+                is_female="false"
+                is_hero="false"
+                is_hidden_encyclopedia="true"
+                default_group="Infantry"
+                culture="Culture.lindon"
+                occupation="NotAssigned"
+                face_mesh_cache="true">
+    <face>
+      <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0005000FC00016039A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
+      <hair_tags>
+        <hair_tag name="battania" />
+      </hair_tags>
+      <beard_tags>
+        <beard_tag name="battania" />
+      </beard_tags>
+      <tattoo_tags>
+        <tattoo_tag name="Cleanface" />
+      </tattoo_tags>
+    </face>
+    <!-- #704 lens7-xml #3: full 18-skill sheet (see Gandalf's comment above for why). Source:
+         Círdan (lord_LN1_1, characters/lords.xml); his own values already equal or exceed every
+         skill this legend used to list. -->
+    <skills>
+      <skill id="OneHanded" value="290" />
+      <skill id="TwoHanded" value="250" />
+      <skill id="Polearm" value="295" />
+      <skill id="Bow" value="295" />
+      <skill id="Crossbow" value="200" />
+      <skill id="Throwing" value="210" />
+      <skill id="Riding" value="280" />
+      <skill id="Athletics" value="290" />
+      <skill id="Crafting" value="270" />
+      <skill id="Scouting" value="290" />
+      <skill id="Tactics" value="351" />
+      <skill id="Roguery" value="120" />
+      <skill id="Charm" value="285" />
+      <skill id="Leadership" value="362" />
+      <skill id="Trade" value="240" />
+      <skill id="Steward" value="385" />
+      <skill id="Medicine" value="275" />
+      <skill id="Engineering" value="240" />
+    </skills>
+    <Equipments>
+      <EquipmentRoster>
+        <equipment slot="Item0" id="Item.wm_rivendell_spear_a01" />
+        <equipment slot="Item1" id="Item.wm_rivendell_shield_a02" />
+        <equipment slot="Head" id="Item.rivendell_helmet_gold" />
+        <equipment slot="Body" id="Item.rivendell_body_gold_a" />
+        <equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+        <equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+        <equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+        <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+        <equipment slot="Horse" id="Item.charger" />
+      </EquipmentRoster>
+      <EquipmentRoster civilian="true">
+        <equipment slot="Head" id="Item.rivendell_helmet_gold" />
+        <equipment slot="Body" id="Item.rivendell_body_gold_a" />
+        <equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape" />
+        <equipment slot="Gloves" id="Item.rivendell_gloves_gold" />
+        <equipment slot="Leg" id="Item.rivendell_boots_greaves3" />
+        <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+        <equipment slot="Horse" id="Item.charger" />
+      </EquipmentRoster>
+    </Equipments>
+  </NPCCharacter>
+
+</NPCCharacters>

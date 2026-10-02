@@ -45,7 +45,7 @@
     <string id="taom_fc_no_room_body" text="지금은 동료를 더 받을 자리가 없습니다. {TROOP_NAME}의 승급은 나중에 다시 제안됩니다." />
     <string id="taom_fc_offer_body" text="{TROOP_NAME}이(가) 전투에서 두각을 나타냈습니다. 동료로 승급시키겠습니까?" />
     <string id="taom_fc_offer_title" text="전장 승진" />
-    <string id="taom_fc_rename_body" text="{TROOP_NAME}에게 이름을 지어 주거나, 전장에서 쓰던 이름을 그대로 두십시오." />
+    <string id="taom_fc_rename_body" text="{TROOP_NAME}에게 이름을 지어주거나, 전장에서 쓰던 이름을 그대로 두십시오." />
     <string id="taom_fc_rename_title" text="새 동료의 이름 짓기" />
     <string id="taom_fc_cancel" text="취소" />
     <string id="taom_fc_dismiss" text="자네의 임명은 끝났네. 대열로 돌아가게." />
@@ -101,7 +101,7 @@
     <string id="taom_enlist_section_sup" text="치중대" />
     <string id="taom_enlist_trust_known" text="알려진 자" />
     <string id="taom_enlist_trust_new" text="검증되지 않음" />
-    <string id="taom_enlist_trust_poor" text="평판이 나쁨" />
+    <string id="taom_enlist_trust_poor" text="평판이 나쁜" />
     <string id="taom_enlist_trust_solid" text="좋은 평판" />
     <string id="taom_enlist_trust_trusted" text="신뢰받음" />
     <string id="taom_enlist_grade_distinguished" text="눈부신 활약" />

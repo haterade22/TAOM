@@ -259,6 +259,11 @@ def english_source_files(module: str) -> list[tuple[Path, str]]:
             ("taom_lord_name_strings.xml",                    "std_taom_lord_name_strings_{locale}.xml"),
             ("taom_clan_name_strings.xml",                    "std_taom_clan_name_strings_{locale}.xml"),
             ("taom_kingdom_name_strings.xml",                 "std_taom_kingdom_name_strings_{locale}.xml"),
+            ("taom_culture_text_strings.xml",                 "std_taom_culture_text_strings_{locale}.xml"),
+            ("taom_hero_text_strings.xml",                    "std_taom_hero_text_strings_{locale}.xml"),
+            ("taom_career_data_strings.xml",                  "std_taom_career_data_strings_{locale}.xml"),
+            ("taom_character_name_strings.xml",               "std_taom_character_name_strings_{locale}.xml"),
+            ("taom_battle_scene_strings.xml",                 "std_taom_battle_scene_strings_{locale}.xml"),
         ]:
             src = REPO_ROOT / "Main" / "_Module" / "ModuleData" / src_name
             if src.exists():

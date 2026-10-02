@@ -467,6 +467,15 @@ All four are simulation-relevant for co-op under the include-by-default rule, an
   `Hero.MainHero`, so no new crash surface. Any fallback chain must still tolerate a null clan home
   settlement.
 - **Enlistment.** Cannot collide: no enlistment record can exist during character creation.
+- **Kysaro's faction screen (#704).** When FactionUI's faction and hero picker is shown on the culture
+  stage, it takes this feature's place for that character creation (Mike, 2026-10-01: Kysaro's design):
+  `FactionScreenLauncher` calls `IPlayerSwitchPolicyProvider.SetSuppressedForCharacterCreation(true)`,
+  and `Current` then reads `Disabled`, so the panel never attaches and the 1100 handover does nothing.
+  The flag is cleared when the screen declines (toggle off, nothing playable, a failure) and on
+  `SubModule.OnGameEnd`, so the next character creation offers the switcher again when the screen is
+  off. It is separate from the `DisableForSession` latch, which nothing in FactionUI touches. The
+  picker's own hero copy runs from a finalize handler at priority 1060, between TAOM's 1050 and this
+  feature's 1100; `FactionPresetHandlerPriorityTests` pins the order.
 
 ## Verification
 

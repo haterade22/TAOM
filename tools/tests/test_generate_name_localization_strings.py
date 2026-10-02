@@ -119,6 +119,56 @@ class BuildCategoryEntriesTests(unittest.TestCase):
                 del gen.CATEGORIES["_test_cat"]
 
 
+class ExcludedIdsTests(unittest.TestCase):
+    def test_ExcludedIds_KeyInAnotherCategoryOutput_Excluded(self):
+        # A key one generated file already carries must not get a second row from another category:
+        # the language that loads both keeps only the later row.
+        with tempfile.TemporaryDirectory() as td:
+            tdir = Path(td)
+            other_out = write(tdir / "other.xml", '<strings><string id="k_other" text="{=k_other}X" /></strings>')
+            own_out = write(tdir / "own.xml", '<strings><string id="k_own" text="{=k_own}Y" /></strings>')
+            gen.CATEGORIES["_test_other"] = {"sources": lambda: [], "output": other_out, "header": "t"}
+            gen.CATEGORIES["_test_own"] = {"sources": lambda: [], "output": own_out, "header": "t"}
+            try:
+                ids = gen.excluded_ids("_test_own", existing_sources=[])
+                self.assertIn("k_other", ids)
+                self.assertNotIn("k_own", ids)
+            finally:
+                del gen.CATEGORIES["_test_other"], gen.CATEGORIES["_test_own"]
+
+
+class DataTextCategoriesTests(unittest.TestCase):
+    """The five data-text families registered in the full translation run of 2026-10-01."""
+
+    def test_Categories_DataTextFamilies_HaveTheirOwnOutputFiles(self):
+        expected = {
+            "culture_text": "taom_culture_text_strings.xml",
+            "hero_text": "taom_hero_text_strings.xml",
+            "career_data": "taom_career_data_strings.xml",
+            "character_name": "taom_character_name_strings.xml",
+            "battle_scene": "taom_battle_scene_strings.xml",
+        }
+        for cat, out in expected.items():
+            self.assertIn(cat, gen.CATEGORIES)
+            self.assertEqual(gen.CATEGORIES[cat]["output"].name, out)
+
+    def test_CharacterNameSources_ExcludeFilesOtherCategoriesOwn(self):
+        names = {p.name for p in gen.CATEGORIES["character_name"]["sources"]()}
+        self.assertIn("taom_wanderers.xml", names)
+        self.assertIn("named_companions.xml", names)
+        self.assertTrue(any(n.startswith("npcs_") for n in names))
+        for owned in ("lords.xml", "clans.xml", "heroes.xml"):
+            self.assertNotIn(owned, names)
+
+    def test_CategorySources_NeverIncludeUnloadedSettlementFiles(self):
+        # settlements.xml in the repo shadows TAOM_Map's live file; custom_settlements.xml is
+        # registered nowhere in SubModule.xml. Neither reaches the engine.
+        for cat, spec in gen.CATEGORIES.items():
+            names = {p.name for p in spec["sources"]()}
+            self.assertNotIn("settlements.xml", names, cat)
+            self.assertNotIn("custom_settlements.xml", names, cat)
+
+
 class BuildXmlTests(unittest.TestCase):
     def test_BuildXml_Entries_ProducesBareStringsRoot(self):
         """The English source files at ModuleData root use a bare <strings> root, NOT the

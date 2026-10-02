@@ -33,11 +33,16 @@
 				<Trait id="Valor" value="2"/>
 			</Traits>
 			<Equipments>
+				<!-- #704: battle gear is Faramir's bespoke kit (faramir_bat_equipment) minus the
+				     Head slot, with Aragorn's own strider_sword kept in place of Faramir's sword. -->
 				<EquipmentRoster>
 				<equipment slot="Item0" id="Item.strider_sword" />
-				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a"/>
-				<equipment slot="Gloves" id="Item.sk_gd_ano_gloves_a"/>
-				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a"/>
+				<equipment slot="Item2" id="Item.wm_ithilien_bow_c" />
+				<equipment slot="Item3" id="Item.wm_elven_arrow_v2_d" />
+				<equipment slot="Body" id="Item.faramir_armor" />
+				<equipment slot="Gloves" id="Item.faramir_bracers" />
+				<equipment slot="Leg" id="Item.ithilien_boots_heavy" />
+				<equipment slot="Cape" id="Item.ithilien_cloak_var" />
 				</EquipmentRoster>
 				<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.strider_sword" />

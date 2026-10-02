@@ -1,0 +1,1529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Korean" />
+  </tags>
+  <strings>
+    <string id="aom_abanissa_lord_1" text="대담한 아바니사 족장" />
+    <string id="aom_abanissa_lord_2" text="신중한 아바니사 족장" />
+    <string id="aom_bcg_arena" text="투기장 관리인" />
+    <string id="aom_bcg_armed_trader" text="무장한 고블린 상인" />
+    <string id="aom_bcg_armorer" text="갑옷장인" />
+    <string id="aom_bcg_barber" text="이발사" />
+    <string id="aom_bcg_beggar" text="거지" />
+    <string id="aom_bcg_blacksmith" text="대장장이" />
+    <string id="aom_bcg_caravan_guard" text="고블린 대상 호위병" />
+    <string id="aom_bcg_caravan_master" text="고블린 대상주" />
+    <string id="aom_bcg_dancer" text="무희" />
+    <string id="aom_bcg_female_beggar" text="거지" />
+    <string id="aom_bcg_gamehost" text="도박장 주인" />
+    <string id="aom_bcg_gang_bodyguard" text="조직 호위병" />
+    <string id="aom_bcg_gear_dummy" text="장비 인형" />
+    <string id="aom_bcg_guard" text="경비병" />
+    <string id="aom_bcg_headman_1" text="반항적인 고블린 대장" />
+    <string id="aom_bcg_headman_2" text="보수적인 블루크레이그 장로" />
+    <string id="aom_bcg_headman_3" text="교활한 고블린 촌장" />
+    <string id="aom_bcg_merchant" text="상인" />
+    <string id="aom_bcg_musician" text="악사" />
+    <string id="aom_bcg_notable_0" text="신중한 블루크레이그 상인" />
+    <string id="aom_bcg_notable_0b" text="약삭빠른 고블린 흥정꾼" />
+    <string id="aom_bcg_notable_1" text="무자비한 블루크레이그 보급상" />
+    <string id="aom_bcg_notable_10" text="으르렁대는 블루크레이그 단속꾼" />
+    <string id="aom_bcg_notable_11" text="위협적인 블루크레이그 폭력배" />
+    <string id="aom_bcg_notable_12" text="음모를 꾸미는 블루크레이그 갈취꾼" />
+    <string id="aom_bcg_notable_13" text="섬뜩한 고블린 살인청부업자" />
+    <string id="aom_bcg_notable_1b" text="냉혹한 고블린 병참관" />
+    <string id="aom_bcg_notable_2" text="기민한 블루크레이그 보급 책임자" />
+    <string id="aom_bcg_notable_21" text="퉁명스러운 블루크레이그 감독관" />
+    <string id="aom_bcg_notable_22" text="붙임성 있는 고블린 현장 감독" />
+    <string id="aom_bcg_notable_23" text="잔혹한 고블린 노예 감독" />
+    <string id="aom_bcg_notable_2b" text="경계심 많은 고블린 축재가" />
+    <string id="aom_bcg_notable_3" text="자수성가한 블루크레이그 상인" />
+    <string id="aom_bcg_notable_3b" text="쾌활한 고블린 행상" />
+    <string id="aom_bcg_notable_4" text="음모를 꾸미는 블루크레이그 폭리상" />
+    <string id="aom_bcg_notable_4b" text="교활한 고블린 거래상" />
+    <string id="aom_bcg_notable_5" text="광신적인 고블린 전쟁 선창자" />
+    <string id="aom_bcg_notable_6" text="엄격한 블루크레이그 감독관" />
+    <string id="aom_bcg_notable_7" text="음침한 블루크레이그 신비가" />
+    <string id="aom_bcg_notable_8" text="무뚝뚝한 블루크레이그 대장장이" />
+    <string id="aom_bcg_notable_9" text="활달한 고블린 대장장이 우두머리" />
+    <string id="aom_bcg_notable_gl1" text="수호적인 고블린 구덩이 군주" />
+    <string id="aom_bcg_notable_gl4" text="야수 같은 고블린 폭력배" />
+    <string id="aom_bcg_practice_1" text="연습 투사" />
+    <string id="aom_bcg_practice_2" text="연습 투사" />
+    <string id="aom_bcg_practice_3" text="연습 투사" />
+    <string id="aom_bcg_practice_dummy" text="연습용 허수아비" />
+    <string id="aom_bcg_prison_guard" text="간수" />
+    <string id="aom_bcg_ransom_broker" text="몸값 중개인" />
+    <string id="aom_bcg_shop_worker" text="상점 일꾼" />
+    <string id="aom_bcg_tavern_wench" text="주점 하녀" />
+    <string id="aom_bcg_tavernkeeper" text="주점 주인" />
+    <string id="aom_bcg_townsman" text="마을 남자" />
+    <string id="aom_bcg_townsman_child" text="마을 남자" />
+    <string id="aom_bcg_townsman_infant" text="마을 남자" />
+    <string id="aom_bcg_townsman_teen" text="마을 남자" />
+    <string id="aom_bcg_townswoman" text="마을 여자" />
+    <string id="aom_bcg_townswoman_child" text="마을 여자" />
+    <string id="aom_bcg_townswoman_infant" text="마을 여자" />
+    <string id="aom_bcg_townswoman_teen" text="마을 여자" />
+    <string id="aom_bcg_vet_caravan_guard" text="고블린 베테랑 대상 호위병" />
+    <string id="aom_bcg_village_woman" text="마을 여인" />
+    <string id="aom_bcg_village_woman_child" text="마을 아이" />
+    <string id="aom_bcg_village_woman_teen" text="마을 청소년" />
+    <string id="aom_bcg_villager" text="노예" />
+    <string id="aom_bcg_villager_child" text="마을 아이" />
+    <string id="aom_bcg_villager_teen" text="마을 청소년" />
+    <string id="aom_bcg_warg_merchant" text="와르그 상인" />
+    <string id="aom_bcg_weaponsmith" text="무기 대장장이" />
+    <string id="aom_bluecraig_lord_1" text="대담한 블루크레이그 족장" />
+    <string id="aom_bluecraig_lord_2" text="신중한 블루크레이그 족장" />
+    <string id="aom_dg_arena" text="투기장 주인" />
+    <string id="aom_dg_armed_trader" text="돌 굴두르 무장 상인" />
+    <string id="aom_dg_armorer" text="갑옷 장인" />
+    <string id="aom_dg_barber" text="이발사" />
+    <string id="aom_dg_beggar" text="거지" />
+    <string id="aom_dg_blacksmith" text="대장장이" />
+    <string id="aom_dg_caravan_guard" text="돌 굴두르 대상 호위병" />
+    <string id="aom_dg_caravan_master" text="돌 굴두르 대상 지휘자" />
+    <string id="aom_dg_dancer" text="무희" />
+    <string id="aom_dg_female_beggar" text="거지" />
+    <string id="aom_dg_gamehost" text="도박장 주인" />
+    <string id="aom_dg_gang_bodyguard" text="조직 호위병" />
+    <string id="aom_dg_gear_dummy" text="장비 인형" />
+    <string id="aom_dg_guard" text="경비병" />
+    <string id="aom_dg_headman_1" text="반항적인 돌 굴두르 대장" />
+    <string id="aom_dg_headman_2" text="보수적인 암흑 오크 장로" />
+    <string id="aom_dg_headman_3" text="교활한 돌 굴두르 촌장" />
+    <string id="aom_dg_merchant" text="상인" />
+    <string id="aom_dg_musician" text="악사" />
+    <string id="aom_dg_notable_0" text="조심스러운 돌 굴두르 상인" />
+    <string id="aom_dg_notable_0b" text="음침한 돌 굴두르 흥정꾼" />
+    <string id="aom_dg_notable_1" text="무자비한 암흑 오크 보급업자" />
+    <string id="aom_dg_notable_10" text="냉혹한 오크 집행자" />
+    <string id="aom_dg_notable_11" text="위협적인 암흑 오크 폭력배" />
+    <string id="aom_dg_notable_12" text="음모를 꾸미는 암흑 오크 갈취꾼" />
+    <string id="aom_dg_notable_13" text="위협적인 돌 굴두르 암살자" />
+    <string id="aom_dg_notable_1b" text="냉정한 돌 굴두르 보급관" />
+    <string id="aom_dg_notable_2" text="약삭빠른 암흑 오크 보급 책임자" />
+    <string id="aom_dg_notable_21" text="퉁명스러운 암흑 오크 감독관" />
+    <string id="aom_dg_notable_22" text="붙임성 있는 돌 굴두르 현장 감독" />
+    <string id="aom_dg_notable_23" text="음울한 돌 굴두르 집행자" />
+    <string id="aom_dg_notable_2b" text="경계심 많은 돌 굴두르 축재자" />
+    <string id="aom_dg_notable_3" text="자수성가한 암흑 오크 거래상" />
+    <string id="aom_dg_notable_3b" text="쾌활한 돌 굴두르 행상인" />
+    <string id="aom_dg_notable_4" text="음모를 꾸미는 암흑 오크 폭리꾼" />
+    <string id="aom_dg_notable_4b" text="교활한 돌 굴두르 상인" />
+    <string id="aom_dg_notable_5" text="광신적인 돌 굴두르 전투 선창자" />
+    <string id="aom_dg_notable_6" text="엄격한 암흑 오크 감독자" />
+    <string id="aom_dg_notable_7" text="침울한 암흑 오크 신비술사" />
+    <string id="aom_dg_notable_8" text="퉁명스러운 암흑 오크 장인" />
+    <string id="aom_dg_notable_9" text="퇴임하는 돌 굴두르 대장장이" />
+    <string id="aom_dg_notable_gl1" text="비호하는 돌 굴두르 집행자" />
+    <string id="aom_dg_notable_gl10" text="교활한 암흑 오르크 전략가" />
+    <string id="aom_dg_notable_gl11" text="잔혹한 돌 굴두르 군주" />
+    <string id="aom_dg_notable_gl12" text="치밀한 암흑 오르크 집행자" />
+    <string id="aom_dg_notable_gl13" text="철권의 돌 굴두르 수장" />
+    <string id="aom_dg_notable_gl4" text="짐승 같은 돌 굴두르 폭력배" />
+    <string id="aom_dg_notable_gl5" text="음흉한 돌 굴두르 집행자" />
+    <string id="aom_dg_notable_gl6" text="비열한 돌 굴두르 노예상" />
+    <string id="aom_dg_notable_gl7" text="가학적인 돌 굴두르 부관" />
+    <string id="aom_dg_notable_gl8" text="냉혹한 암흑 오르크 전쟁군주" />
+    <string id="aom_dg_notable_gl9" text="무자비한 돌 굴두르 살인청부업자" />
+    <string id="aom_dg_practice_1" text="연습 전사" />
+    <string id="aom_dg_practice_2" text="연습 전사" />
+    <string id="aom_dg_practice_3" text="연습 전사" />
+    <string id="aom_dg_practice_dummy" text="연습용 허수아비" />
+    <string id="aom_dg_prison_guard" text="간수" />
+    <string id="aom_dg_ransom_broker" text="몸값 중개인" />
+    <string id="aom_dg_shop_worker" text="상점 일꾼" />
+    <string id="aom_dg_tavern_wench" text="선술집 여종업원" />
+    <string id="aom_dg_tavernkeeper" text="선술집 주인" />
+    <string id="aom_dg_townsman" text="마을 남자" />
+    <string id="aom_dg_townsman_child" text="마을 남자" />
+    <string id="aom_dg_townsman_infant" text="마을 남자" />
+    <string id="aom_dg_townsman_teen" text="마을 남자" />
+    <string id="aom_dg_townswoman" text="마을 여자" />
+    <string id="aom_dg_townswoman_child" text="마을 여자" />
+    <string id="aom_dg_townswoman_infant" text="마을 여자" />
+    <string id="aom_dg_townswoman_teen" text="마을 여자" />
+    <string id="aom_dg_vet_caravan_guard" text="돌 굴두르 베테랑 대상 호위병" />
+    <string id="aom_dg_village_woman" text="마을 여인" />
+    <string id="aom_dg_village_woman_child" text="마을 아이" />
+    <string id="aom_dg_village_woman_teen" text="마을 청소년" />
+    <string id="aom_dg_villager" text="노예" />
+    <string id="aom_dg_villager_child" text="마을 아이" />
+    <string id="aom_dg_villager_teen" text="마을 청소년" />
+    <string id="aom_dg_warg_merchant" text="와르그 상인" />
+    <string id="aom_dg_weaponsmith" text="무기 대장장이" />
+    <string id="aom_dl_arena" text="투기장 관리자" />
+    <string id="aom_dl_armed_trader" text="데일 무장 상인" />
+    <string id="aom_dl_armorer" text="갑옷장인" />
+    <string id="aom_dl_barber" text="이발사" />
+    <string id="aom_dl_beggar" text="거지" />
+    <string id="aom_dl_blacksmith" text="대장장이" />
+    <string id="aom_dl_caravan_guard" text="데일 대상 호위병" />
+    <string id="aom_dl_caravan_master" text="데일 대상주" />
+    <string id="aom_dl_dancer" text="무희" />
+    <string id="aom_dl_edu_1" text="데일 젊은이" />
+    <string id="aom_dl_edu_2" text="데일 젊은이" />
+    <string id="aom_dl_edu_3" text="데일 젊은이" />
+    <string id="aom_dl_edu_4" text="데일 젊은이" />
+    <string id="aom_dl_edu_5" text="데일 젊은이" />
+    <string id="aom_dl_edu_6" text="데일 젊은이" />
+    <string id="aom_dl_female_beggar" text="거지" />
+    <string id="aom_dl_gamehost" text="도박장 주인" />
+    <string id="aom_dl_gang_bodyguard" text="조직 호위병" />
+    <string id="aom_dl_gear_dummy" text="장비 인형" />
+    <string id="aom_dl_guard" text="경비병" />
+    <string id="aom_dl_headman_1" text="굳건한 데일 촌장" />
+    <string id="aom_dl_headman_2" text="보수적인 바르드인 촌장" />
+    <string id="aom_dl_headman_3" text="약삭빠른 데일 촌장" />
+    <string id="aom_dl_horse_merchant" text="말 상인" />
+    <string id="aom_dl_merchant" text="상인" />
+    <string id="aom_dl_musician" text="악사" />
+    <string id="aom_dl_notable_0" text="신중한 바르드인 교역상" />
+    <string id="aom_dl_notable_0b" text="약삭빠른 너른골 호수마을 상인" />
+    <string id="aom_dl_notable_1" text="무자비한 데일 모피 상인" />
+    <string id="aom_dl_notable_10" text="냉소적인 바르드인 무법자" />
+    <string id="aom_dl_notable_11" text="위협적인 데일 집행자" />
+    <string id="aom_dl_notable_12" text="교활한 데일 밀수꾼" />
+    <string id="aom_dl_notable_13" text="위험한 호수마을 모략가" />
+    <string id="aom_dl_notable_1b" text="냉정한 바르드인 상인" />
+    <string id="aom_dl_notable_2" text="데일 보석상" />
+    <string id="aom_dl_notable_21" text="풍파에 닳은 바르드인 지주" />
+    <string id="aom_dl_notable_22" text="온화한 데일 장로" />
+    <string id="aom_dl_notable_2b" text="현명한 바르드인 상인" />
+    <string id="aom_dl_notable_3" text="자수성가한 데일 상인" />
+    <string id="aom_dl_notable_3b" text="유쾌한 호수마을 상인" />
+    <string id="aom_dl_notable_4" text="약삭빠른 바르드인 상인" />
+    <string id="aom_dl_notable_4b" text="음흉한 데일 상인" />
+    <string id="aom_dl_notable_5" text="독실한 데일의 장로" />
+    <string id="aom_dl_notable_6" text="엄격한 바르드인 전승지기" />
+    <string id="aom_dl_notable_7" text="데일의 전통 수호자" />
+    <string id="aom_dl_notable_8" text="숙련된 바르드인 대장장이" />
+    <string id="aom_dl_notable_9" text="재능 있는 데일의 장인" />
+    <string id="aom_dl_notable_gl1" text="대담한 호수마을 두목" />
+    <string id="aom_dl_notable_gl4" text="무자비한 바르드인 폭력배" />
+    <string id="aom_dl_practice_1" text="연습 전투원" />
+    <string id="aom_dl_practice_2" text="연습 전투원" />
+    <string id="aom_dl_practice_3" text="연습 전투원" />
+    <string id="aom_dl_practice_dummy" text="연습용 허수아비" />
+    <string id="aom_dl_prison_guard" text="간수" />
+    <string id="aom_dl_ransom_broker" text="몸값 중개인" />
+    <string id="aom_dl_shop_worker" text="상점 점원" />
+    <string id="aom_dl_tavern_wench" text="주점 여급" />
+    <string id="aom_dl_tavernkeeper" text="주점 주인" />
+    <string id="aom_dl_townsman" text="남자 주민" />
+    <string id="aom_dl_townsman_child" text="남자 주민" />
+    <string id="aom_dl_townsman_infant" text="남자 주민" />
+    <string id="aom_dl_townsman_teen" text="남자 주민" />
+    <string id="aom_dl_townswoman" text="여자 주민" />
+    <string id="aom_dl_townswoman_child" text="여자 주민" />
+    <string id="aom_dl_townswoman_infant" text="여자 주민" />
+    <string id="aom_dl_townswoman_teen" text="여자 주민" />
+    <string id="aom_dl_vet_caravan_guard" text="데일 베테랑 대상 호위병" />
+    <string id="aom_dl_village_woman" text="마을 여인" />
+    <string id="aom_dl_village_woman_child" text="마을 아이" />
+    <string id="aom_dl_village_woman_teen" text="마을 청소년" />
+    <string id="aom_dl_villager" text="마을 주민" />
+    <string id="aom_dl_villager_child" text="마을 아이" />
+    <string id="aom_dl_villager_teen" text="마을 청소년" />
+    <string id="aom_dl_weaponsmith" text="무기 대장장이" />
+    <string id="aom_dn_arena" text="투기장 관리인" />
+    <string id="aom_dn_armed_trader" text="던랜드 무장 상인" />
+    <string id="aom_dn_armorer" text="갑옷 장인" />
+    <string id="aom_dn_barber" text="이발사" />
+    <string id="aom_dn_beggar" text="거지" />
+    <string id="aom_dn_blacksmith" text="대장장이" />
+    <string id="aom_dn_caravan_guard" text="던랜드 대상 호위병" />
+    <string id="aom_dn_caravan_master" text="던랜드 대상주" />
+    <string id="aom_dn_dancer" text="무희" />
+    <string id="aom_dn_female_beggar" text="걸인" />
+    <string id="aom_dn_gamehost" text="내기 주최자" />
+    <string id="aom_dn_gang_bodyguard" text="조직 호위병" />
+    <string id="aom_dn_gear_dummy" text="장비 인형" />
+    <string id="aom_dn_guard" text="경비병" />
+    <string id="aom_dn_headman_1" text="거만한 던랜드인 촌장" />
+    <string id="aom_dn_headman_2" text="신중한 씨족 촌장" />
+    <string id="aom_dn_headman_3" text="교활한 산사람 촌장" />
+    <string id="aom_dn_horse_merchant" text="말 상인" />
+    <string id="aom_dn_merchant" text="거래상" />
+    <string id="aom_dn_musician" text="악사" />
+    <string id="aom_dn_notable_0" text="약삭빠른 산사람 거래상" />
+    <string id="aom_dn_notable_0b" text="교활한 던랜드인 행상인" />
+    <string id="aom_dn_notable_1" text="사나운 씨족 상인" />
+    <string id="aom_dn_notable_10" text="비웃는 산사람 조직 두목" />
+    <string id="aom_dn_notable_11" text="잔혹한 던랜드인 해결사" />
+    <string id="aom_dn_notable_12" text="음흉한 던랜드인 밀수꾼" />
+    <string id="aom_dn_notable_13" text="위협적인 씨족 조직 두목" />
+    <string id="aom_dn_notable_1b" text="차가운 눈빛의 산지 거래상" />
+    <string id="aom_dn_notable_2" text="과묵한 던랜드인 중개상" />
+    <string id="aom_dn_notable_21" text="풍파를 겪은 산사람 지주" />
+    <string id="aom_dn_notable_22" text="존경받는 던랜드인 원로" />
+    <string id="aom_dn_notable_2b" text="신중한 산사람 보급상" />
+    <string id="aom_dn_notable_3" text="자수성가한 던랜드인 상인" />
+    <string id="aom_dn_notable_3b" text="쾌활한 산사람 상인" />
+    <string id="aom_dn_notable_4" text="입담 사나운 씨족 거래상" />
+    <string id="aom_dn_notable_4b" text="교활한 던랜드인 상인" />
+    <string id="aom_dn_notable_5" text="광기 어린 산지 설교자" />
+    <string id="aom_dn_notable_6" text="엄격한 던랜드인 원로" />
+    <string id="aom_dn_notable_7" text="던랜드 전통의 수호자" />
+    <string id="aom_dn_notable_8" text="무뚝뚝한 던랜드인 대장장이" />
+    <string id="aom_dn_notable_9" text="숙련된 산사람 장인" />
+    <string id="aom_dn_notable_gl1" text="교활한 씨족 두목" />
+    <string id="aom_dn_notable_gl4" text="흉포한 산지 깡패" />
+    <string id="aom_dn_practice_1" text="연습 상대" />
+    <string id="aom_dn_practice_2" text="연습 상대" />
+    <string id="aom_dn_practice_3" text="연습 상대" />
+    <string id="aom_dn_practice_dummy" text="연습용 인형" />
+    <string id="aom_dn_prison_guard" text="간수" />
+    <string id="aom_dn_ransom_broker" text="몸값 중개인" />
+    <string id="aom_dn_shop_worker" text="상점 일꾼" />
+    <string id="aom_dn_tavern_wench" text="주점 하녀" />
+    <string id="aom_dn_tavernkeeper" text="주점 주인" />
+    <string id="aom_dn_townsman" text="마을 남자" />
+    <string id="aom_dn_townsman_child" text="마을 남자" />
+    <string id="aom_dn_townsman_infant" text="마을 남자" />
+    <string id="aom_dn_townsman_teen" text="마을 남자" />
+    <string id="aom_dn_townswoman" text="마을 여자" />
+    <string id="aom_dn_townswoman_child" text="마을 여자" />
+    <string id="aom_dn_townswoman_infant" text="마을 여자" />
+    <string id="aom_dn_townswoman_teen" text="마을 여자" />
+    <string id="aom_dn_vet_caravan_guard" text="던랜드 숙련 대상 호위병" />
+    <string id="aom_dn_village_woman" text="마을 여인" />
+    <string id="aom_dn_village_woman_child" text="마을 아이" />
+    <string id="aom_dn_village_woman_teen" text="마을 청소년" />
+    <string id="aom_dn_villager" text="마을 사람" />
+    <string id="aom_dn_villager_child" text="마을 아이" />
+    <string id="aom_dn_villager_teen" text="마을 청소년" />
+    <string id="aom_dn_weaponsmith" text="무기 장인" />
+    <string id="aom_dolguldur_lord_1" text="대담한 돌 굴두르 대장" />
+    <string id="aom_dolguldur_lord_2" text="신중한 돌 굴두르 대장" />
+    <string id="aom_er_arena" text="투기장 관리인" />
+    <string id="aom_er_armed_trader" text="에레보르 무장 상인" />
+    <string id="aom_er_armorer" text="갑옷 장인" />
+    <string id="aom_er_barber" text="이발사" />
+    <string id="aom_er_beggar" text="거지" />
+    <string id="aom_er_blacksmith" text="대장장이" />
+    <string id="aom_er_caravan_guard" text="에레보르 대상 호위병" />
+    <string id="aom_er_caravan_master" text="에레보르 대상 두목" />
+    <string id="aom_er_dancer" text="무희" />
+    <string id="aom_er_female_beggar" text="거지" />
+    <string id="aom_er_gamehost" text="도박장 주인" />
+    <string id="aom_er_gang_bodyguard" text="조직 호위병" />
+    <string id="aom_er_gear_dummy" text="장비 인형" />
+    <string id="aom_er_guard" text="경비병" />
+    <string id="aom_er_headman_1" text="반항적인 난쟁이 촌장" />
+    <string id="aom_er_headman_2" text="보수적인 난쟁이 촌장" />
+    <string id="aom_er_headman_3" text="교활한 난쟁이 촌장" />
+    <string id="aom_er_horse_merchant" text="말 상인" />
+    <string id="aom_er_merchant" text="상인" />
+    <string id="aom_er_musician" text="악사" />
+    <string id="aom_er_notable_0" text="신중한 난쟁이 상인" />
+    <string id="aom_er_notable_0b" text="난쟁이 포도주 상인" />
+    <string id="aom_er_notable_1" text="무자비한 난쟁이 무역상" />
+    <string id="aom_er_notable_10" text="냉소적인 난쟁이 패거리 두목" />
+    <string id="aom_er_notable_11" text="위협적인 난쟁이 해결사" />
+    <string id="aom_er_notable_12" text="교활한 난쟁이 밀수꾼" />
+    <string id="aom_er_notable_13" text="험악한 난쟁이 패거리 두목" />
+    <string id="aom_er_notable_1b" text="냉정한 난쟁이 상인" />
+    <string id="aom_er_notable_2" text="난쟁이 보석상" />
+    <string id="aom_er_notable_21" text="무뚝뚝한 난쟁이 지주" />
+    <string id="aom_er_notable_22" text="온화한 난쟁이 장로" />
+    <string id="aom_er_notable_2b" text="신중한 난쟁이 광석 상인" />
+    <string id="aom_er_notable_3" text="자수성가한 난쟁이 상인" />
+    <string id="aom_er_notable_3b" text="익살스러운 난쟁이 상인" />
+    <string id="aom_er_notable_4" text="빈틈없는 난쟁이 상인" />
+    <string id="aom_er_notable_4b" text="음흉한 난쟁이 상인" />
+    <string id="aom_er_notable_5" text="열성적인 난쟁이 학자" />
+    <string id="aom_er_notable_6" text="엄격한 난쟁이 장로" />
+    <string id="aom_er_notable_7" text="난쟁이 전통 수호자" />
+    <string id="aom_er_notable_8" text="무뚝뚝한 난쟁이 대장장이" />
+    <string id="aom_er_notable_9" text="사교적인 난쟁이 장인" />
+    <string id="aom_er_notable_gl1" text="비호하는 난쟁이 조직 두목" />
+    <string id="aom_er_notable_gl4" text="야수 같은 난쟁이 깡패" />
+    <string id="aom_er_practice_1" text="연습 전사" />
+    <string id="aom_er_practice_2" text="연습 전사" />
+    <string id="aom_er_practice_3" text="연습 전사" />
+    <string id="aom_er_practice_dummy" text="연습용 허수아비" />
+    <string id="aom_er_prison_guard" text="간수" />
+    <string id="aom_er_ransom_broker" text="몸값 중개인" />
+    <string id="aom_er_shop_worker" text="상점 점원" />
+    <string id="aom_er_tavern_wench" text="선술집 하녀" />
+    <string id="aom_er_tavernkeeper" text="선술집 주인" />
+    <string id="aom_er_town_child" text="마을 아이" />
+    <string id="aom_er_town_teen" text="마을 청소년" />
+    <string id="aom_er_townsman" text="마을 사람" />
+    <string id="aom_er_townsman_child" text="마을 사람" />
+    <string id="aom_er_townsman_infant" text="마을 사람" />
+    <string id="aom_er_townsman_teen" text="마을 사람" />
+    <string id="aom_er_townswoman" text="도시 여인" />
+    <string id="aom_er_townswoman_child" text="도시 여인" />
+    <string id="aom_er_townswoman_infant" text="도시 여인" />
+    <string id="aom_er_townswoman_teen" text="도시 여인" />
+    <string id="aom_er_vet_caravan_guard" text="에레보르 숙련 대상 호위병" />
+    <string id="aom_er_village_child" text="마을 아이" />
+    <string id="aom_er_village_teen" text="마을 청소년" />
+    <string id="aom_er_village_woman" text="마을 여인" />
+    <string id="aom_er_village_woman_child" text="마을 아이" />
+    <string id="aom_er_village_woman_teen" text="마을 청소년" />
+    <string id="aom_er_villager" text="마을 주민" />
+    <string id="aom_er_villager_child" text="마을 아이" />
+    <string id="aom_er_villager_teen" text="마을 청소년" />
+    <string id="aom_er_weaponsmith" text="무기 대장장이" />
+    <string id="aom_erebor_lord_1" text="대담한 난쟁이 영주" />
+    <string id="aom_erebor_lord_2" text="신중한 난쟁이 영주" />
+    <string id="aom_gb_arena" text="투기장 관리인" />
+    <string id="aom_gb_armed_trader" text="군다바드 무장 상인" />
+    <string id="aom_gb_armorer" text="갑옷 장인" />
+    <string id="aom_gb_barber" text="이발사" />
+    <string id="aom_gb_beggar" text="거지" />
+    <string id="aom_gb_blacksmith" text="대장장이" />
+    <string id="aom_gb_caravan_guard" text="군다바드 대상 호위병" />
+    <string id="aom_gb_caravan_master" text="군다바드 대상주" />
+    <string id="aom_gb_dancer" text="무희" />
+    <string id="aom_gb_female_beggar" text="거지" />
+    <string id="aom_gb_gamehost" text="도박장 주인" />
+    <string id="aom_gb_gang_bodyguard" text="조직 경호원" />
+    <string id="aom_gb_gear_dummy" text="장비 인형" />
+    <string id="aom_gb_guard" text="경비병" />
+    <string id="aom_gb_headman_1" text="반항적인 군다바드 대장" />
+    <string id="aom_gb_headman_2" text="보수적인 오르크 장로" />
+    <string id="aom_gb_headman_3" text="교활한 군다바드 촌장" />
+    <string id="aom_gb_merchant" text="상인" />
+    <string id="aom_gb_musician" text="악사" />
+    <string id="aom_gb_notable_0" text="신중한 창백한 오르크 상인" />
+    <string id="aom_gb_notable_0b" text="교활한 군다바드 흥정꾼" />
+    <string id="aom_gb_notable_1" text="무자비한 오르크 보급업자" />
+    <string id="aom_gb_notable_10" text="으르렁대는 오르크 집행자" />
+    <string id="aom_gb_notable_11" text="위협적인 창백한 오르크 폭력배" />
+    <string id="aom_gb_notable_12" text="음모를 꾸미는 오크 갈취꾼" />
+    <string id="aom_gb_notable_13" text="위협적인 군다바드 살인청부업자" />
+    <string id="aom_gb_notable_1b" text="냉정한 군다바드 보급관" />
+    <string id="aom_gb_notable_2" text="약삭빠른 창백한 오크 보급 책임자" />
+    <string id="aom_gb_notable_21" text="무뚝뚝한 창백한 오크 감독관" />
+    <string id="aom_gb_notable_22" text="붙임성 있는 군다바드 현장 두목" />
+    <string id="aom_gb_notable_23" text="잔혹한 군다바드 노예 감독" />
+    <string id="aom_gb_notable_2b" text="경계심 많은 군다바드 축재자" />
+    <string id="aom_gb_notable_3" text="자수성가한 오크 상인" />
+    <string id="aom_gb_notable_3b" text="유쾌한 군다바드 행상인" />
+    <string id="aom_gb_notable_4" text="음모를 꾸미는 창백한 오크 폭리상" />
+    <string id="aom_gb_notable_4b" text="교활한 군다바드 교역상" />
+    <string id="aom_gb_notable_5" text="광신적인 군다바드 전쟁 선창자" />
+    <string id="aom_gb_notable_6" text="엄격한 창백한 오크 작업 감독" />
+    <string id="aom_gb_notable_7" text="음울한 오크 신비주의자" />
+    <string id="aom_gb_notable_8" text="무뚝뚝한 창백한 오크 대장장이" />
+    <string id="aom_gb_notable_9" text="사교적인 군다바드 대장간 주인" />
+    <string id="aom_gb_notable_gl1" text="보호적인 군다바드 구덩이 영주" />
+    <string id="aom_gb_notable_gl4" text="야수 같은 군다바드 폭력배" />
+    <string id="aom_gb_practice_1" text="연습 전사" />
+    <string id="aom_gb_practice_2" text="연습 전사" />
+    <string id="aom_gb_practice_3" text="연습 전사" />
+    <string id="aom_gb_practice_dummy" text="연습용 허수아비" />
+    <string id="aom_gb_prison_guard" text="간수" />
+    <string id="aom_gb_ransom_broker" text="몸값 중개인" />
+    <string id="aom_gb_shop_worker" text="상점 일꾼" />
+    <string id="aom_gb_tavern_wench" text="주점 종업원" />
+    <string id="aom_gb_tavernkeeper" text="주점 주인" />
+    <string id="aom_gb_townsman" text="마을 남자" />
+    <string id="aom_gb_townsman_child" text="마을 남자" />
+    <string id="aom_gb_townsman_infant" text="마을 남자" />
+    <string id="aom_gb_townsman_teen" text="마을 남자" />
+    <string id="aom_gb_townswoman" text="마을 여자" />
+    <string id="aom_gb_townswoman_child" text="마을 여자" />
+    <string id="aom_gb_townswoman_infant" text="마을 여자" />
+    <string id="aom_gb_townswoman_teen" text="마을 여자" />
+    <string id="aom_gb_vet_caravan_guard" text="군다바드 베테랑 대상 호위병" />
+    <string id="aom_gb_village_woman" text="마을 여인" />
+    <string id="aom_gb_village_woman_child" text="마을 아이" />
+    <string id="aom_gb_village_woman_teen" text="마을 청소년" />
+    <string id="aom_gb_villager" text="노예" />
+    <string id="aom_gb_villager_child" text="마을 아이" />
+    <string id="aom_gb_villager_teen" text="마을 청소년" />
+    <string id="aom_gb_warg_merchant" text="와르그 상인" />
+    <string id="aom_gb_weaponsmith" text="무기 장인" />
+    <string id="aom_gd_arena" text="투기장 관리인" />
+    <string id="aom_gd_armed_trader" text="곤도르 무장 상인" />
+    <string id="aom_gd_armorer" text="갑옷 장인" />
+    <string id="aom_gd_barber" text="이발사" />
+    <string id="aom_gd_beggar" text="거지" />
+    <string id="aom_gd_blacksmith" text="대장장이" />
+    <string id="aom_gd_caravan_guard" text="곤도르 대상 호위병" />
+    <string id="aom_gd_caravan_master" text="곤도르 대상주" />
+    <string id="aom_gd_dancer" text="무희" />
+    <string id="aom_gd_female_beggar" text="거지" />
+    <string id="aom_gd_gamehost" text="도박장 주인" />
+    <string id="aom_gd_gang_bodyguard" text="조직 호위병" />
+    <string id="aom_gd_gear_dummy" text="장비 인형" />
+    <string id="aom_gd_guard" text="경비병" />
+    <string id="aom_gd_headman_1" text="반항적인 곤도르 촌장" />
+    <string id="aom_gd_headman_2" text="보수적인 곤도르 촌장" />
+    <string id="aom_gd_headman_3" text="교활한 곤도르 촌장" />
+    <string id="aom_gd_horse_merchant" text="말 상인" />
+    <string id="aom_gd_merchant" text="상인" />
+    <string id="aom_gd_musician" text="악사" />
+    <string id="aom_gd_notable_0" text="신중한 곤도르 상인" />
+    <string id="aom_gd_notable_0b" text="곤도르 포도주 상인" />
+    <string id="aom_gd_notable_1" text="무자비한 곤도르 상인" />
+    <string id="aom_gd_notable_10" text="냉소적인 곤도르 무법자" />
+    <string id="aom_gd_notable_11" text="위압적인 곤도르 해결사" />
+    <string id="aom_gd_notable_12" text="교활한 곤도르 밀수업자" />
+    <string id="aom_gd_notable_13" text="위협적인 곤도르 음모가" />
+    <string id="aom_gd_notable_1b" text="냉정한 곤도르 상인" />
+    <string id="aom_gd_notable_2" text="미나스 티리스 보석상" />
+    <string id="aom_gd_notable_21" text="엄격한 곤도르 지주" />
+    <string id="aom_gd_notable_22" text="온화한 곤도르 원로" />
+    <string id="aom_gd_notable_2b" text="현명한 곤도르 상인" />
+    <string id="aom_gd_notable_3" text="자수성가한 곤도르 상인" />
+    <string id="aom_gd_notable_3b" text="유쾌한 곤도르 상인" />
+    <string id="aom_gd_notable_4" text="영리한 곤도르 상인" />
+    <string id="aom_gd_notable_4b" text="교활한 곤도르 상인" />
+    <string id="aom_gd_notable_5" text="열성적인 곤도르 학자" />
+    <string id="aom_gd_notable_6" text="엄격한 곤도르 영주" />
+    <string id="aom_gd_notable_7" text="곤도르의 전통 수호자" />
+    <string id="aom_gd_notable_8" text="무뚝뚝한 미나스 티리스 장인" />
+    <string id="aom_gd_notable_9" text="재능 있는 곤도르 장인" />
+    <string id="aom_gd_notable_gl1" text="비호하는 곤도르 조직 두목" />
+    <string id="aom_gd_notable_gl4" text="무자비한 곤도르 폭력배" />
+    <string id="aom_gd_practice_1" text="연습 전사" />
+    <string id="aom_gd_practice_2" text="연습 전사" />
+    <string id="aom_gd_practice_3" text="연습 전사" />
+    <string id="aom_gd_practice_dummy" text="연습용 허수아비" />
+    <string id="aom_gd_prison_guard" text="간수" />
+    <string id="aom_gd_ransom_broker" text="몸값 중개인" />
+    <string id="aom_gd_shop_worker" text="상점 점원" />
+    <string id="aom_gd_tavern_wench" text="주점 여급" />
+    <string id="aom_gd_tavernkeeper" text="주점 주인" />
+    <string id="aom_gd_townsman" text="도시 주민" />
+    <string id="aom_gd_townsman_child" text="도시 주민" />
+    <string id="aom_gd_townsman_infant" text="도시 주민" />
+    <string id="aom_gd_townsman_teen" text="도시 주민" />
+    <string id="aom_gd_townswoman" text="도시 여인" />
+    <string id="aom_gd_townswoman_child" text="도시 여인" />
+    <string id="aom_gd_townswoman_infant" text="도시 여인" />
+    <string id="aom_gd_townswoman_teen" text="도시 여인" />
+    <string id="aom_gd_vet_caravan_guard" text="곤도르 숙련 대상 호위병" />
+    <string id="aom_gd_village_woman" text="마을 여인" />
+    <string id="aom_gd_village_woman_child" text="마을 아이" />
+    <string id="aom_gd_village_woman_teen" text="마을 청소년" />
+    <string id="aom_gd_villager" text="마을 주민" />
+    <string id="aom_gd_villager_child" text="마을 아이" />
+    <string id="aom_gd_villager_teen" text="마을 청소년" />
+    <string id="aom_gd_weaponsmith" text="무기 대장장이" />
+    <string id="aom_gob_arena" text="투기장 관리자" />
+    <string id="aom_gob_armed_trader" text="고블린 무장 상인" />
+    <string id="aom_gob_armorer" text="갑옷 장인" />
+    <string id="aom_gob_barber" text="이발사" />
+    <string id="aom_gob_beggar" text="거지" />
+    <string id="aom_gob_blacksmith" text="대장장이" />
+    <string id="aom_gob_caravan_guard" text="고블린 대상 호위병" />
+    <string id="aom_gob_caravan_master" text="고블린 대상 상단주" />
+    <string id="aom_gob_dancer" text="무희" />
+    <string id="aom_gob_female_beggar" text="거지" />
+    <string id="aom_gob_gamehost" text="도박장 주인" />
+    <string id="aom_gob_gang_bodyguard" text="조직 호위병" />
+    <string id="aom_gob_gear_dummy" text="장비 인형" />
+    <string id="aom_gob_guard" text="경비병" />
+    <string id="aom_gob_headman_1" text="반항적인 고블린 두목" />
+    <string id="aom_gob_headman_2" text="보수적인 고블린 장로" />
+    <string id="aom_gob_headman_3" text="교활한 고블린 촌장" />
+    <string id="aom_gob_merchant" text="상인" />
+    <string id="aom_gob_musician" text="악사" />
+    <string id="aom_gob_notable_0" text="신중한 고블린 상인" />
+    <string id="aom_gob_notable_0b" text="약삭빠른 고블린 흥정꾼" />
+    <string id="aom_gob_notable_1" text="무자비한 고블린 보급업자" />
+    <string id="aom_gob_notable_10" text="으르렁대는 고블린 집행자" />
+    <string id="aom_gob_notable_11" text="위협적인 고블린 폭력배" />
+    <string id="aom_gob_notable_12" text="음모를 꾸미는 고블린 갈취꾼" />
+    <string id="aom_gob_notable_13" text="섬뜩한 고블린 암살자" />
+    <string id="aom_gob_notable_1b" text="냉혹한 고블린 보급관" />
+    <string id="aom_gob_notable_2" text="기민한 고블린 보급 책임자" />
+    <string id="aom_gob_notable_21" text="무뚝뚝한 고블린 감독관" />
+    <string id="aom_gob_notable_22" text="붙임성 있는 고블린 현장 감독" />
+    <string id="aom_gob_notable_23" text="잔혹한 고블린 노예 감시자" />
+    <string id="aom_gob_notable_2b" text="경계심 많은 고블린 비축꾼" />
+    <string id="aom_gob_notable_3" text="자수성가한 고블린 거래상" />
+    <string id="aom_gob_notable_3b" text="쾌활한 고블린 행상인" />
+    <string id="aom_gob_notable_4" text="음모를 꾸미는 고블린 폭리상" />
+    <string id="aom_gob_notable_4b" text="교활한 고블린 상인" />
+    <string id="aom_gob_notable_5" text="광신적인 고블린 전쟁 창가자" />
+    <string id="aom_gob_notable_6" text="엄격한 고블린 작업 감독" />
+    <string id="aom_gob_notable_7" text="음침한 고블린 신비술사" />
+    <string id="aom_gob_notable_8" text="무뚝뚝한 고블린 대장장이" />
+    <string id="aom_gob_notable_9" text="활달한 고블린 대장간 주인" />
+    <string id="aom_gob_notable_gl1" text="비호하는 고블린 투기장 주인" />
+    <string id="aom_gob_notable_gl4" text="짐승 같은 고블린 깡패" />
+    <string id="aom_gob_practice_1" text="연습 투사" />
+    <string id="aom_gob_practice_2" text="연습 투사" />
+    <string id="aom_gob_practice_3" text="연습 투사" />
+    <string id="aom_gob_practice_dummy" text="연습용 인형" />
+    <string id="aom_gob_prison_guard" text="간수" />
+    <string id="aom_gob_ransom_broker" text="몸값 중개인" />
+    <string id="aom_gob_shop_worker" text="상점 점원" />
+    <string id="aom_gob_tavern_wench" text="주점 여급" />
+    <string id="aom_gob_tavernkeeper" text="주점 주인" />
+    <string id="aom_gob_townsman" text="도시 남자" />
+    <string id="aom_gob_townsman_child" text="도시 남자" />
+    <string id="aom_gob_townsman_infant" text="도시 남자" />
+    <string id="aom_gob_townsman_teen" text="도시 남자" />
+    <string id="aom_gob_townswoman" text="도시 여자" />
+    <string id="aom_gob_townswoman_child" text="도시 여자" />
+    <string id="aom_gob_townswoman_infant" text="도시 여자" />
+    <string id="aom_gob_townswoman_teen" text="도시 여자" />
+    <string id="aom_gob_vet_caravan_guard" text="고블린 베테랑 대상 호위병" />
+    <string id="aom_gob_village_woman" text="마을 여인" />
+    <string id="aom_gob_village_woman_child" text="마을 아이" />
+    <string id="aom_gob_village_woman_teen" text="마을 청소년" />
+    <string id="aom_gob_villager" text="노예" />
+    <string id="aom_gob_villager_child" text="마을 아이" />
+    <string id="aom_gob_villager_teen" text="마을 청소년" />
+    <string id="aom_gob_warg_merchant" text="와르그 상인" />
+    <string id="aom_gob_weaponsmith" text="무기 대장장이" />
+    <string id="aom_goblin_lord_1" text="대담한 고블린 족장" />
+    <string id="aom_goblin_lord_2" text="신중한 고블린 족장" />
+    <string id="aom_gondor_lord_1" text="대담한 곤도르 영주" />
+    <string id="aom_gondor_lord_2" text="신중한 곤도르 영주" />
+    <string id="aom_gundabad_lord_1" text="대담한 군다바드 대장" />
+    <string id="aom_gundabad_lord_2" text="신중한 군다바드 대장" />
+    <string id="aom_hd_arena" text="투기장 관리인" />
+    <string id="aom_hd_armed_trader" text="하라드 무장 상인" />
+    <string id="aom_hd_armorer" text="갑옷 장인" />
+    <string id="aom_hd_barber" text="이발사" />
+    <string id="aom_hd_beggar" text="거지" />
+    <string id="aom_hd_blacksmith" text="대장장이" />
+    <string id="aom_hd_caravan_guard" text="하라드 대상 호위병" />
+    <string id="aom_hd_caravan_master" text="하라드 대상주" />
+    <string id="aom_hd_dancer" text="무희" />
+    <string id="aom_hd_female_beggar" text="거지" />
+    <string id="aom_hd_gamehost" text="도박장 주인" />
+    <string id="aom_hd_gang_bodyguard" text="조직 경호원" />
+    <string id="aom_hd_gear_dummy" text="장비 인형" />
+    <string id="aom_hd_guard" text="경비병" />
+    <string id="aom_hd_headman_1" text="자존심 강한 하라드림 촌장" />
+    <string id="aom_hd_headman_2" text="보수적인 사막 촌장" />
+    <string id="aom_hd_headman_3" text="교활한 하라드림 촌장" />
+    <string id="aom_hd_horse_merchant" text="말 상인" />
+    <string id="aom_hd_merchant" text="상인" />
+    <string id="aom_hd_musician" text="악사" />
+    <string id="aom_hd_notable_0" text="약삭빠른 사막 상인" />
+    <string id="aom_hd_notable_0b" text="하라드림 향신료 상인" />
+    <string id="aom_hd_notable_1" text="교활한 하라드림 상인" />
+    <string id="aom_hd_notable_10" text="무자비한 하라드림 밀수꾼" />
+    <string id="aom_hd_notable_11" text="위압적인 사막 집행자" />
+    <string id="aom_hd_notable_12" text="교활한 하라드림 장물아비" />
+    <string id="aom_hd_notable_13" text="위협적인 하라드림 패거리 두목" />
+    <string id="aom_hd_notable_1b" text="차가운 눈빛의 하라드림 상인" />
+    <string id="aom_hd_notable_2" text="하라드림 비단 상인" />
+    <string id="aom_hd_notable_21" text="풍파에 찌든 오아시스 지주" />
+    <string id="aom_hd_notable_22" text="상냥한 하라드림 원로" />
+    <string id="aom_hd_notable_2b" text="신중한 하라드림 보석 상인" />
+    <string id="aom_hd_notable_3" text="자수성가한 하라드림 상인" />
+    <string id="aom_hd_notable_3b" text="유쾌한 사막 상인" />
+    <string id="aom_hd_notable_4" text="약삭빠른 하라드림 대상 우두머리" />
+    <string id="aom_hd_notable_4b" text="음흉한 하라드림 상인" />
+    <string id="aom_hd_notable_5" text="사나운 태양 사제" />
+    <string id="aom_hd_notable_6" text="엄격한 하라드림 원로" />
+    <string id="aom_hd_notable_7" text="사막 전통의 수호자" />
+    <string id="aom_hd_notable_8" text="솜씨 좋은 하라드림 금속공" />
+    <string id="aom_hd_notable_9" text="창의적인 하라드림 장인" />
+    <string id="aom_hd_notable_gl1" text="부하를 감싸는 하라드림 두목" />
+    <string id="aom_hd_notable_gl4" text="짐승 같은 하라드림 폭력배" />
+    <string id="aom_hd_practice_1" text="연습 상대" />
+    <string id="aom_hd_practice_2" text="연습 상대" />
+    <string id="aom_hd_practice_3" text="연습 상대" />
+    <string id="aom_hd_practice_dummy" text="연습용 인형" />
+    <string id="aom_hd_prison_guard" text="간수" />
+    <string id="aom_hd_ransom_broker" text="몸값 중개인" />
+    <string id="aom_hd_shop_worker" text="상점 일꾼" />
+    <string id="aom_hd_tavern_wench" text="주점 여급" />
+    <string id="aom_hd_tavernkeeper" text="주점 주인" />
+    <string id="aom_hd_townsman" text="도시 주민" />
+    <string id="aom_hd_townsman_child" text="도시 주민" />
+    <string id="aom_hd_townsman_infant" text="도시 주민" />
+    <string id="aom_hd_townsman_teen" text="도시 주민" />
+    <string id="aom_hd_townswoman" text="도시 여인" />
+    <string id="aom_hd_townswoman_child" text="도시 여인" />
+    <string id="aom_hd_townswoman_infant" text="도시 여인" />
+    <string id="aom_hd_townswoman_teen" text="도시 여인" />
+    <string id="aom_hd_vet_caravan_guard" text="하라드 노련한 대상 호위병" />
+    <string id="aom_hd_village_woman" text="마을 여인" />
+    <string id="aom_hd_villager" text="마을 주민" />
+    <string id="aom_hd_villager_f_child" text="마을 아이" />
+    <string id="aom_hd_villager_f_teen" text="마을 청소년" />
+    <string id="aom_hd_villager_m_child" text="마을 아이" />
+    <string id="aom_hd_villager_m_teen" text="마을 청소년" />
+    <string id="aom_hd_weaponsmith" text="무기 장인" />
+    <string id="aom_ig_arena" text="투기장 관리자" />
+    <string id="aom_ig_armed_trader" text="아이센가드 무장 상인" />
+    <string id="aom_ig_armorer" text="갑옷 장인" />
+    <string id="aom_ig_barber" text="이발사" />
+    <string id="aom_ig_beggar" text="거지" />
+    <string id="aom_ig_blacksmith" text="대장장이" />
+    <string id="aom_ig_caravan_guard" text="아이센가드 대상 호위병" />
+    <string id="aom_ig_caravan_master" text="아이센가드 대상주" />
+    <string id="aom_ig_dancer" text="무희" />
+    <string id="aom_ig_female_beggar" text="거지" />
+    <string id="aom_ig_gamehost" text="도박장 주인" />
+    <string id="aom_ig_gang_bodyguard" text="갱단 호위병" />
+    <string id="aom_ig_gear_dummy" text="장비 더미" />
+    <string id="aom_ig_guard" text="경비병" />
+    <string id="aom_ig_headman_1" text="반항적인 우루크 구덩이 대장" />
+    <string id="aom_ig_headman_2" text="보수적인 우루크 장로" />
+    <string id="aom_ig_headman_3" text="교활한 우루크 촌장" />
+    <string id="aom_ig_merchant" text="상인" />
+    <string id="aom_ig_musician" text="악사" />
+    <string id="aom_ig_notable_0" text="신중한 우루크 상인" />
+    <string id="aom_ig_notable_0b" text="간교한 우루크 감독관" />
+    <string id="aom_ig_notable_1" text="무자비한 우루크 보급업자" />
+    <string id="aom_ig_notable_10" text="냉소적인 우루크 갈취꾼" />
+    <string id="aom_ig_notable_11" text="위협적인 우루크 집행자" />
+    <string id="aom_ig_notable_12" text="음모를 꾸미는 아이센가드 폭력배" />
+    <string id="aom_ig_notable_13" text="위협적인 우루크 살인청부업자" />
+    <string id="aom_ig_notable_1b" text="냉혹한 우루크 보급관" />
+    <string id="aom_ig_notable_2" text="약삭빠른 우루크 보급 책임자" />
+    <string id="aom_ig_notable_21" text="퉁명스러운 우루크 감독관" />
+    <string id="aom_ig_notable_22" text="붙임성 있는 우루크 야전 대장" />
+    <string id="aom_ig_notable_23" text="엄격한 우루크 훈련 교관" />
+    <string id="aom_ig_notable_2b" text="경계심 많은 아이센가드 비축자" />
+    <string id="aom_ig_notable_3" text="자수성가한 우루크 상인" />
+    <string id="aom_ig_notable_3b" text="쾌활한 우루크 행상인" />
+    <string id="aom_ig_notable_4" text="음모를 꾸미는 우루크 축재자" />
+    <string id="aom_ig_notable_4b" text="교활한 우루크 폭리꾼" />
+    <string id="aom_ig_notable_5" text="광신적인 우루크 전투 창가자" />
+    <string id="aom_ig_notable_6" text="엄격한 우루크 작업 감독" />
+    <string id="aom_ig_notable_7" text="음울한 우루크 신비술사" />
+    <string id="aom_ig_notable_8" text="퉁명스러운 우루크 대장장이" />
+    <string id="aom_ig_notable_9" text="사교적인 우루크 단조장" />
+    <string id="aom_ig_notable_gl1" text="보호심 강한 우루크 투기장 두목" />
+    <string id="aom_ig_notable_gl10" text="잔혹한 우루크 군주" />
+    <string id="aom_ig_notable_gl11" text="계산적인 우루크 전략가" />
+    <string id="aom_ig_notable_gl12" text="철권의 우루크 대장" />
+    <string id="aom_ig_notable_gl4" text="짐승 같은 우루크 난폭자" />
+    <string id="aom_ig_notable_gl5" text="사악한 우루크 노예상" />
+    <string id="aom_ig_notable_gl6" text="가학적인 우루크 감독관" />
+    <string id="aom_ig_notable_gl7" text="냉혈한 우루크 부관" />
+    <string id="aom_ig_notable_gl8" text="무자비한 우루크 투기장 주인" />
+    <string id="aom_ig_notable_gl9" text="교활한 우루크 전쟁군주" />
+    <string id="aom_ig_practice_1" text="연습 대련자" />
+    <string id="aom_ig_practice_2" text="연습 대련자" />
+    <string id="aom_ig_practice_3" text="연습 대련자" />
+    <string id="aom_ig_practice_dummy" text="연습용 허수아비" />
+    <string id="aom_ig_prison_guard" text="간수" />
+    <string id="aom_ig_ransom_broker" text="몸값 중개인" />
+    <string id="aom_ig_shop_worker" text="상점 일꾼" />
+    <string id="aom_ig_tavern_wench" text="주점 여급" />
+    <string id="aom_ig_tavernkeeper" text="주점 주인" />
+    <string id="aom_ig_townsman" text="마을 사람" />
+    <string id="aom_ig_townsman_child" text="마을 사람" />
+    <string id="aom_ig_townsman_infant" text="마을 사람" />
+    <string id="aom_ig_townsman_teen" text="마을 사람" />
+    <string id="aom_ig_townswoman" text="도시 여인" />
+    <string id="aom_ig_townswoman_child" text="도시 여인" />
+    <string id="aom_ig_townswoman_infant" text="도시 여인" />
+    <string id="aom_ig_townswoman_teen" text="도시 여인" />
+    <string id="aom_ig_vet_caravan_guard" text="아이센가드 노련한 대상 호위병" />
+    <string id="aom_ig_village_woman" text="마을 여인" />
+    <string id="aom_ig_villager" text="마을 사람" />
+    <string id="aom_ig_villager_f_child" text="마을 아이" />
+    <string id="aom_ig_villager_f_teen" text="마을 청소년" />
+    <string id="aom_ig_villager_m_child" text="마을 아이" />
+    <string id="aom_ig_villager_m_teen" text="마을 청소년" />
+    <string id="aom_ig_warg_merchant" text="와르그 상인" />
+    <string id="aom_ig_weaponsmith" text="무기 장인" />
+    <string id="aom_isengard_lord_1" text="대담한 우루크하이 대장" />
+    <string id="aom_isengard_lord_2" text="신중한 우루크하이 대장" />
+    <string id="aom_kh_arena" text="투기장 관리인" />
+    <string id="aom_kh_armed_trader" text="칸드 무장 상인" />
+    <string id="aom_kh_armorer" text="갑옷 장인" />
+    <string id="aom_kh_barber" text="이발사" />
+    <string id="aom_kh_beggar" text="거지" />
+    <string id="aom_kh_blacksmith" text="대장장이" />
+    <string id="aom_kh_caravan_guard" text="칸드 대상 호위병" />
+    <string id="aom_kh_caravan_master" text="칸드 대상 단장" />
+    <string id="aom_kh_dancer" text="무희" />
+    <string id="aom_kh_edu_1" text="칸드 젊은이" />
+    <string id="aom_kh_edu_2" text="칸드 젊은이" />
+    <string id="aom_kh_edu_3" text="칸드 젊은이" />
+    <string id="aom_kh_edu_4" text="칸드 젊은이" />
+    <string id="aom_kh_edu_5" text="칸드 젊은이" />
+    <string id="aom_kh_edu_6" text="칸드 젊은이" />
+    <string id="aom_kh_female_beggar" text="거지" />
+    <string id="aom_kh_gamehost" text="도박장 주인" />
+    <string id="aom_kh_gang_bodyguard" text="조직 경호원" />
+    <string id="aom_kh_gear_dummy" text="장비 인형" />
+    <string id="aom_kh_guard" text="경비병" />
+    <string id="aom_kh_headman_1" text="자존심 강한 바리아그 촌장" />
+    <string id="aom_kh_headman_2" text="보수적인 칸드 촌장" />
+    <string id="aom_kh_headman_3" text="약삭빠른 바리아그 촌장" />
+    <string id="aom_kh_horse_merchant" text="말 상인" />
+    <string id="aom_kh_merchant" text="상인" />
+    <string id="aom_kh_musician" text="악사" />
+    <string id="aom_kh_notable_0" text="교활한 바리아그 상인" />
+    <string id="aom_kh_notable_0b" text="대담한 칸드 상인" />
+    <string id="aom_kh_notable_1" text="무자비한 바리아그 향신료 상인" />
+    <string id="aom_kh_notable_10" text="냉소적인 칸드 무법자" />
+    <string id="aom_kh_notable_11" text="위압적인 바리아그 집행자" />
+    <string id="aom_kh_notable_12" text="간교한 바리아그 밀수꾼" />
+    <string id="aom_kh_notable_13" text="위협적인 칸드 모략가" />
+    <string id="aom_kh_notable_1b" text="냉정한 칸드 상인" />
+    <string id="aom_kh_notable_2" text="칸드 보석 상인" />
+    <string id="aom_kh_notable_21" text="풍파를 겪은 칸드 지주" />
+    <string id="aom_kh_notable_22" text="온화한 바리아그 장로" />
+    <string id="aom_kh_notable_2b" text="현명한 바리아그 상인" />
+    <string id="aom_kh_notable_3" text="자수성가한 칸드 상인" />
+    <string id="aom_kh_notable_3b" text="쾌활한 바리아그 상인" />
+    <string id="aom_kh_notable_4" text="빈틈없는 바리아그 상인" />
+    <string id="aom_kh_notable_4b" text="음흉한 칸드 상인" />
+    <string id="aom_kh_notable_5" text="사나운 바리아그 전쟁 사제" />
+    <string id="aom_kh_notable_6" text="엄격한 칸드 장로" />
+    <string id="aom_kh_notable_7" text="칸드 의례 수호자" />
+    <string id="aom_kh_notable_8" text="숙련된 칸드 금속 세공사" />
+    <string id="aom_kh_notable_9" text="재능 있는 바리아그 장인" />
+    <string id="aom_kh_notable_gl1" text="무자비한 바리아그 밀수꾼" />
+    <string id="aom_kh_notable_gl4" text="무자비한 칸드 폭력배" />
+    <string id="aom_kh_practice_1" text="연습 상대" />
+    <string id="aom_kh_practice_2" text="연습 상대" />
+    <string id="aom_kh_practice_3" text="연습 상대" />
+    <string id="aom_kh_practice_dummy" text="연습용 인형" />
+    <string id="aom_kh_prison_guard" text="간수" />
+    <string id="aom_kh_ransom_broker" text="몸값 중개인" />
+    <string id="aom_kh_shop_worker" text="상점 일꾼" />
+    <string id="aom_kh_tavern_wench" text="주점 하녀" />
+    <string id="aom_kh_tavernkeeper" text="주점 주인" />
+    <string id="aom_kh_townsman" text="마을 주민" />
+    <string id="aom_kh_townsman_child" text="마을 주민" />
+    <string id="aom_kh_townsman_infant" text="마을 주민" />
+    <string id="aom_kh_townsman_teen" text="마을 주민" />
+    <string id="aom_kh_townswoman" text="마을 여인" />
+    <string id="aom_kh_townswoman_child" text="마을 여인" />
+    <string id="aom_kh_townswoman_infant" text="마을 여인" />
+    <string id="aom_kh_townswoman_teen" text="도시 여인" />
+    <string id="aom_kh_vet_caravan_guard" text="칸드 숙련 대상 호위병" />
+    <string id="aom_kh_village_woman" text="마을 여인" />
+    <string id="aom_kh_village_woman_child" text="마을 아이" />
+    <string id="aom_kh_village_woman_teen" text="마을 청소년" />
+    <string id="aom_kh_villager" text="마을 주민" />
+    <string id="aom_kh_villager_child" text="마을 아이" />
+    <string id="aom_kh_villager_teen" text="마을 청소년" />
+    <string id="aom_kh_weaponsmith" text="무기장인" />
+    <string id="aom_lindon_lord_1" text="미슬론드의 대담한 요정 영주" />
+    <string id="aom_lindon_lord_2" text="미슬론드의 신중한 요정 영주" />
+    <string id="aom_ln_armed_trader" text="린돈 무장 상인" />
+    <string id="aom_ln_caravan_guard" text="린돈 대상 호위병" />
+    <string id="aom_ln_caravan_master" text="린돈 대상주" />
+    <string id="aom_ln_vet_caravan_guard" text="린돈 숙련 대상 호위병" />
+    <string id="aom_lothlorien_lord_1" text="로슬로리엔의 대담한 요정 영주" />
+    <string id="aom_lothlorien_lord_2" text="로슬로리엔의 신중한 요정 영주" />
+    <string id="aom_lt_headman_1" text="반항적인 로리엔 촌장" />
+    <string id="aom_lt_headman_2" text="보수적인 로리엔 촌장" />
+    <string id="aom_lt_headman_3" text="교활한 로리엔 촌장" />
+    <string id="aom_lt_notable_0" text="신중한 황금 숲 상인" />
+    <string id="aom_lt_notable_0b" text="갈라드림 포도주 상인" />
+    <string id="aom_lt_notable_1" text="약삭빠른 로리엔 비단 상인" />
+    <string id="aom_lt_notable_10" text="냉소적인 로리엔 국경 수비병" />
+    <string id="aom_lt_notable_11" text="위협적인 갈라드림 집행자" />
+    <string id="aom_lt_notable_12" text="교활한 로리엔 그림자 정찰병" />
+    <string id="aom_lt_notable_13" text="섬뜩한 갈라드림 집행자" />
+    <string id="aom_lt_notable_1b" text="차가운 요정 상인" />
+    <string id="aom_lt_notable_2" text="갈라드림 보석 상인" />
+    <string id="aom_lt_notable_21" text="무뚝뚝한 로리엔 토지관리인" />
+    <string id="aom_lt_notable_22" text="원만한 로리엔 장로" />
+    <string id="aom_lt_notable_2b" text="신중한 로리엔 약초 상인" />
+    <string id="aom_lt_notable_3" text="자수성가한 로리엔 상인" />
+    <string id="aom_lt_notable_3b" text="익살스러운 갈라드림 상인" />
+    <string id="aom_lt_notable_4" text="약삭빠른 황금 숲 보급상" />
+    <string id="aom_lt_notable_4b" text="교활한 요정 상인" />
+    <string id="aom_lt_notable_5" text="카라스 갈라돈의 현명한 요정" />
+    <string id="aom_lt_notable_6" text="엄격한 로리엔 전승지기" />
+    <string id="aom_lt_notable_7" text="말로른 숲의 수호자" />
+    <string id="aom_lt_notable_8" text="무뚝뚝한 갈라드림 활장인" />
+    <string id="aom_lt_notable_9" text="말로른 장인" />
+    <string id="aom_lt_notable_gl1" text="수호적인 갈라드림 파수꾼" />
+    <string id="aom_lt_notable_gl4" text="무자비한 로리엔 보초" />
+    <string id="aom_lt_practice_dummy" text="연습용 허수아비" />
+    <string id="aom_mirkwood_lord_1" text="대담한 어둠숲의 요정 영주" />
+    <string id="aom_mirkwood_lord_2" text="신중한 어둠숲의 요정 영주" />
+    <string id="aom_mistymountainorcs_lord_1" text="대담한 안개산맥 대장" />
+    <string id="aom_mistymountainorcs_lord_2" text="신중한 안개산맥 대장" />
+    <string id="aom_mk_arena" text="투기장 관리인" />
+    <string id="aom_mk_armed_trader" text="어둠숲 무장 상인" />
+    <string id="aom_mk_armorer" text="갑옷 장인" />
+    <string id="aom_mk_barber" text="이발사" />
+    <string id="aom_mk_beggar" text="거지" />
+    <string id="aom_mk_blacksmith" text="대장장이" />
+    <string id="aom_mk_caravan_guard" text="어둠숲 대상 호위병" />
+    <string id="aom_mk_caravan_master" text="어둠숲 대상 우두머리" />
+    <string id="aom_mk_dancer" text="무희" />
+    <string id="aom_mk_female_beggar" text="거지" />
+    <string id="aom_mk_gamehost" text="놀이판 주인" />
+    <string id="aom_mk_gang_bodyguard" text="조직 경호원" />
+    <string id="aom_mk_gear_dummy" text="장비 허수아비" />
+    <string id="aom_mk_guard" text="경비병" />
+    <string id="aom_mk_headman_1" text="반항적인 숲지대 촌장" />
+    <string id="aom_mk_headman_2" text="보수적인 실반 촌장" />
+    <string id="aom_mk_headman_3" text="교활한 숲지대 촌장" />
+    <string id="aom_mk_horse_merchant" text="말 상인" />
+    <string id="aom_mk_merchant" text="상인" />
+    <string id="aom_mk_musician" text="악사" />
+    <string id="aom_mk_notable_0" text="조심스러운 숲지대 상인" />
+    <string id="aom_mk_notable_0b" text="실반 포도주 상인" />
+    <string id="aom_mk_notable_1" text="엄격한 숲지대 교역상" />
+    <string id="aom_mk_notable_10" text="냉소적인 숲속 무법자" />
+    <string id="aom_mk_notable_11" text="위압적인 숲지대 해결사" />
+    <string id="aom_mk_notable_12" text="교활한 숲지대 밀수꾼" />
+    <string id="aom_mk_notable_13" text="위협적인 숲속 모략가" />
+    <string id="aom_mk_notable_1b" text="초연한 실반 상인" />
+    <string id="aom_mk_notable_2" text="숲지대 약초 상인" />
+    <string id="aom_mk_notable_21" text="엄격한 숲지대 지주" />
+    <string id="aom_mk_notable_22" text="온화한 실반 장로" />
+    <string id="aom_mk_notable_2b" text="현명한 실반 상인" />
+    <string id="aom_mk_notable_3" text="자수성가한 숲의 상인" />
+    <string id="aom_mk_notable_3b" text="쾌활한 숲의 교역상" />
+    <string id="aom_mk_notable_4" text="약삭빠른 숲의 상인" />
+    <string id="aom_mk_notable_4b" text="교활한 실반 상인" />
+    <string id="aom_mk_notable_5" text="열정적인 숲의 학자" />
+    <string id="aom_mk_notable_6" text="엄격한 실반 장로" />
+    <string id="aom_mk_notable_7" text="숲의 전통 수호자" />
+    <string id="aom_mk_notable_8" text="무뚝뚝한 숲의 장인" />
+    <string id="aom_mk_notable_9" text="재능 있는 숲의 공예가" />
+    <string id="aom_mk_notable_gl1" text="수호적인 숲의 두목" />
+    <string id="aom_mk_notable_gl4" text="무자비한 실반 추방자" />
+    <string id="aom_mk_practice_1" text="연습 전사" />
+    <string id="aom_mk_practice_2" text="연습 전사" />
+    <string id="aom_mk_practice_3" text="연습 전사" />
+    <string id="aom_mk_practice_dummy" text="연습용 허수아비" />
+    <string id="aom_mk_prison_guard" text="간수" />
+    <string id="aom_mk_ransom_broker" text="몸값 중개인" />
+    <string id="aom_mk_shop_worker" text="상점 점원" />
+    <string id="aom_mk_tavern_wench" text="선술집 여종업원" />
+    <string id="aom_mk_tavernkeeper" text="선술집 주인" />
+    <string id="aom_mk_townsman" text="마을 남자" />
+    <string id="aom_mk_townsman_child" text="마을 남자" />
+    <string id="aom_mk_townsman_infant" text="마을 남자" />
+    <string id="aom_mk_townsman_teen" text="마을 남자" />
+    <string id="aom_mk_townswoman" text="마을 여자" />
+    <string id="aom_mk_townswoman_child" text="마을 여자" />
+    <string id="aom_mk_townswoman_infant" text="마을 여자" />
+    <string id="aom_mk_townswoman_teen" text="마을 여자" />
+    <string id="aom_mk_vet_caravan_guard" text="어둠숲 베테랑 대상 호위병" />
+    <string id="aom_mk_village_woman" text="마을 여인" />
+    <string id="aom_mk_village_woman_child" text="마을 아이" />
+    <string id="aom_mk_village_woman_teen" text="마을 청소년" />
+    <string id="aom_mk_villager" text="마을 주민" />
+    <string id="aom_mk_villager_child" text="마을 아이" />
+    <string id="aom_mk_villager_teen" text="마을 청소년" />
+    <string id="aom_mk_weaponsmith" text="무기 장인" />
+    <string id="aom_mmo_arena" text="투기장 관리인" />
+    <string id="aom_mmo_armed_trader" text="오크 무장 상인" />
+    <string id="aom_mmo_armorer" text="갑옷 장인" />
+    <string id="aom_mmo_barber" text="이발사" />
+    <string id="aom_mmo_beggar" text="거지" />
+    <string id="aom_mmo_blacksmith" text="대장장이" />
+    <string id="aom_mmo_caravan_guard" text="오크 대상 호위병" />
+    <string id="aom_mmo_caravan_master" text="오크 대상 두목" />
+    <string id="aom_mmo_dancer" text="무희" />
+    <string id="aom_mmo_female_beggar" text="거지" />
+    <string id="aom_mmo_gamehost" text="도박장 주인" />
+    <string id="aom_mmo_gang_bodyguard" text="조직 호위병" />
+    <string id="aom_mmo_gear_dummy" text="장비 인형" />
+    <string id="aom_mmo_guard" text="경비병" />
+    <string id="aom_mmo_headman_1" text="반항적인 오크 대장" />
+    <string id="aom_mmo_headman_2" text="보수적인 오크 장로" />
+    <string id="aom_mmo_headman_3" text="교활한 오크 촌장" />
+    <string id="aom_mmo_merchant" text="상인" />
+    <string id="aom_mmo_musician" text="악사" />
+    <string id="aom_mmo_notable_0" text="신중한 오크 상인" />
+    <string id="aom_mmo_notable_0b" text="약삭빠른 오크 흥정꾼" />
+    <string id="aom_mmo_notable_1" text="무자비한 오크 보급상" />
+    <string id="aom_mmo_notable_10" text="으르렁대는 오크 집행자" />
+    <string id="aom_mmo_notable_11" text="위협적인 오크 폭력배" />
+    <string id="aom_mmo_notable_12" text="음모를 꾸미는 오크 갈취꾼" />
+    <string id="aom_mmo_notable_13" text="섬뜩한 오크 암살자" />
+    <string id="aom_mmo_notable_1b" text="냉정한 오크 병참관" />
+    <string id="aom_mmo_notable_2" text="기민한 오크 보급 책임자" />
+    <string id="aom_mmo_notable_21" text="퉁명스러운 오크 감독관" />
+    <string id="aom_mmo_notable_22" text="붙임성 있는 오크 현장 감독" />
+    <string id="aom_mmo_notable_23" text="잔혹한 오크 노예 감시자" />
+    <string id="aom_mmo_notable_2b" text="경계심 많은 오크 축재자" />
+    <string id="aom_mmo_notable_3" text="자수성가한 오크 거래상" />
+    <string id="aom_mmo_notable_3b" text="쾌활한 오크 행상" />
+    <string id="aom_mmo_notable_4" text="음모를 꾸미는 오크 폭리상" />
+    <string id="aom_mmo_notable_4b" text="교활한 오크 상인" />
+    <string id="aom_mmo_notable_5" text="광신적인 오크 전쟁 선창자" />
+    <string id="aom_mmo_notable_6" text="엄격한 오크 작업 감독" />
+    <string id="aom_mmo_notable_7" text="음울한 오크 신비가" />
+    <string id="aom_mmo_notable_8" text="퉁명스러운 오크 대장장이" />
+    <string id="aom_mmo_notable_9" text="사교적인 오크 제련장" />
+    <string id="aom_mmo_notable_gl1" text="비호하는 오크 투기장 군주" />
+    <string id="aom_mmo_notable_gl4" text="야수 같은 오크 깡패" />
+    <string id="aom_mmo_practice_1" text="연습 전사" />
+    <string id="aom_mmo_practice_2" text="연습 전사" />
+    <string id="aom_mmo_practice_3" text="연습 전사" />
+    <string id="aom_mmo_practice_dummy" text="연습용 허수아비" />
+    <string id="aom_mmo_prison_guard" text="간수" />
+    <string id="aom_mmo_ransom_broker" text="몸값 중개인" />
+    <string id="aom_mmo_shop_worker" text="상점 일꾼" />
+    <string id="aom_mmo_tavern_wench" text="주점 여종업원" />
+    <string id="aom_mmo_tavernkeeper" text="주점 주인" />
+    <string id="aom_mmo_townsman" text="마을 남자" />
+    <string id="aom_mmo_townsman_child" text="마을 남자" />
+    <string id="aom_mmo_townsman_infant" text="마을 남자" />
+    <string id="aom_mmo_townsman_teen" text="마을 남자" />
+    <string id="aom_mmo_townswoman" text="마을 여자" />
+    <string id="aom_mmo_townswoman_child" text="마을 여자" />
+    <string id="aom_mmo_townswoman_infant" text="마을 여자" />
+    <string id="aom_mmo_townswoman_teen" text="마을 여자" />
+    <string id="aom_mmo_vet_caravan_guard" text="오르크 베테랑 대상 호위병" />
+    <string id="aom_mmo_village_woman" text="촌락 여인" />
+    <string id="aom_mmo_village_woman_child" text="촌락 아이" />
+    <string id="aom_mmo_village_woman_teen" text="촌락 청소년" />
+    <string id="aom_mmo_villager" text="노예" />
+    <string id="aom_mmo_villager_child" text="촌락 아이" />
+    <string id="aom_mmo_villager_teen" text="촌락 청소년" />
+    <string id="aom_mmo_warg_merchant" text="와르그 상인" />
+    <string id="aom_mmo_weaponsmith" text="무기 대장장이" />
+    <string id="aom_mordor_lord_1" text="대담한 모르도르 대장" />
+    <string id="aom_mordor_lord_2" text="신중한 모르도르 대장" />
+    <string id="aom_mr_arena" text="투기장 관리인" />
+    <string id="aom_mr_armed_trader" text="모르도르 무장 상인" />
+    <string id="aom_mr_armorer" text="갑옷 장인" />
+    <string id="aom_mr_barber" text="이발사" />
+    <string id="aom_mr_beggar" text="거지" />
+    <string id="aom_mr_blacksmith" text="대장장이" />
+    <string id="aom_mr_caravan_guard" text="모르도르 대상 호위병" />
+    <string id="aom_mr_caravan_master" text="모르도르 대상 두목" />
+    <string id="aom_mr_dancer" text="무희" />
+    <string id="aom_mr_female_beggar" text="거지" />
+    <string id="aom_mr_gamehost" text="놀이판 주인" />
+    <string id="aom_mr_gang_bodyguard" text="조직 경호원" />
+    <string id="aom_mr_gear_dummy" text="장비 허수아비" />
+    <string id="aom_mr_guard" text="경비병" />
+    <string id="aom_mr_headman_1" text="반항적인 모르도르 촌장" />
+    <string id="aom_mr_headman_2" text="보수적인 모르도르 촌장" />
+    <string id="aom_mr_headman_3" text="교활한 모르도르 촌장" />
+    <string id="aom_mr_merchant" text="상인" />
+    <string id="aom_mr_musician" text="악사" />
+    <string id="aom_mr_notable_0" text="약삭빠른 모르도르 노예상" />
+    <string id="aom_mr_notable_0b" text="모르도르 구덩이 보급자" />
+    <string id="aom_mr_notable_1" text="무자비한 모르도르 무기상" />
+    <string id="aom_mr_notable_10" text="모르도르 구덩이 두목" />
+    <string id="aom_mr_notable_11" text="위협적인 모르도르 감독관" />
+    <string id="aom_mr_notable_12" text="약삭빠른 모르도르 밀수꾼" />
+    <string id="aom_mr_notable_13" text="위협적인 모르도르 군벌" />
+    <string id="aom_mr_notable_1b" text="차가운 눈빛의 모르도르 상인" />
+    <string id="aom_mr_notable_2" text="모르도르 광석상" />
+    <string id="aom_mr_notable_21" text="무뚝뚝한 모르도르 야영지 우두머리" />
+    <string id="aom_mr_notable_22" text="경계심 많은 모르도르 장로" />
+    <string id="aom_mr_notable_23" text="음침한 모르도르 약탈자" />
+    <string id="aom_mr_notable_2b" text="조심스러운 모르도르 보급 운반꾼" />
+    <string id="aom_mr_notable_3" text="자수성가한 모르도르 상인" />
+    <string id="aom_mr_notable_3b" text="음모를 꾸미는 모르도르 상인" />
+    <string id="aom_mr_notable_4" text="빈틈없는 모르도르 보급상" />
+    <string id="aom_mr_notable_4b" text="교활한 모르도르 암거래상" />
+    <string id="aom_mr_notable_5" text="암흑의 군주의 전령" />
+    <string id="aom_mr_notable_6" text="엄격한 모르도르 전쟁 사제" />
+    <string id="aom_mr_notable_7" text="어둠의 의식 수호자" />
+    <string id="aom_mr_notable_8" text="무뚝뚝한 모르도르 구덩이 감시자" />
+    <string id="aom_mr_notable_9" text="모르도르 대장장이 장인" />
+    <string id="aom_mr_notable_gl1" text="암흑의 군주의 집행자" />
+    <string id="aom_mr_notable_gl4" text="짐승 같은 모르도르 폭력배" />
+    <string id="aom_mr_practice_1" text="연습 상대" />
+    <string id="aom_mr_practice_2" text="연습 상대" />
+    <string id="aom_mr_practice_3" text="연습 상대" />
+    <string id="aom_mr_practice_dummy" text="연습용 인형" />
+    <string id="aom_mr_prison_guard" text="간수" />
+    <string id="aom_mr_ransom_broker" text="몸값 중개인" />
+    <string id="aom_mr_shop_worker" text="상점 일꾼" />
+    <string id="aom_mr_tavern_wench" text="주점 여급" />
+    <string id="aom_mr_tavernkeeper" text="주점 주인" />
+    <string id="aom_mr_townsman" text="주민" />
+    <string id="aom_mr_townsman_child" text="도시민" />
+    <string id="aom_mr_townsman_infant" text="도시민" />
+    <string id="aom_mr_townsman_teen" text="도시민" />
+    <string id="aom_mr_townswoman" text="도시 여인" />
+    <string id="aom_mr_townswoman_child" text="도시 여인" />
+    <string id="aom_mr_townswoman_infant" text="도시 여인" />
+    <string id="aom_mr_townswoman_teen" text="도시 여인" />
+    <string id="aom_mr_vet_caravan_guard" text="모르도르 고참 대상 호위병" />
+    <string id="aom_mr_village_woman" text="마을 여인" />
+    <string id="aom_mr_village_woman_child" text="마을 아이" />
+    <string id="aom_mr_village_woman_teen" text="마을 청소년" />
+    <string id="aom_mr_villager" text="노예" />
+    <string id="aom_mr_villager_child" text="마을 아이" />
+    <string id="aom_mr_villager_teen" text="마을 청소년" />
+    <string id="aom_mr_warg_merchant" text="와르그 상인" />
+    <string id="aom_mr_weaponsmith" text="무기 장인" />
+    <string id="aom_rh_arena" text="투기장 관리인" />
+    <string id="aom_rh_armed_trader" text="루 무장 상인" />
+    <string id="aom_rh_armorer" text="갑옷 장인" />
+    <string id="aom_rh_barber" text="이발사" />
+    <string id="aom_rh_beggar" text="거지" />
+    <string id="aom_rh_blacksmith" text="대장장이" />
+    <string id="aom_rh_caravan_guard" text="루 대상 호위병" />
+    <string id="aom_rh_caravan_master" text="루 대상 우두머리" />
+    <string id="aom_rh_dancer" text="무희" />
+    <string id="aom_rh_female_beggar" text="거지" />
+    <string id="aom_rh_gamehost" text="노름판 주인" />
+    <string id="aom_rh_gang_bodyguard" text="조직 호위병" />
+    <string id="aom_rh_gear_dummy" text="장비 더미" />
+    <string id="aom_rh_guard" text="경비병" />
+    <string id="aom_rh_headman_1" text="대담한 동부인 촌장" />
+    <string id="aom_rh_headman_2" text="보수적인 초원 촌장" />
+    <string id="aom_rh_headman_3" text="교활한 동부인 촌장" />
+    <string id="aom_rh_horse_merchant" text="말 상인" />
+    <string id="aom_rh_merchant" text="상인" />
+    <string id="aom_rh_musician" text="악사" />
+    <string id="aom_rh_notable_0" text="약삭빠른 동방 상인" />
+    <string id="aom_rh_notable_0b" text="동부인 포도주 상인" />
+    <string id="aom_rh_notable_1" text="자부심 강한 동부인 상인" />
+    <string id="aom_rh_notable_10" text="무자비한 동부인 밀수꾼" />
+    <string id="aom_rh_notable_11" text="위압적인 초원의 집행자" />
+    <string id="aom_rh_notable_12" text="교활한 동부인 장물아비" />
+    <string id="aom_rh_notable_13" text="위협적인 동부인 조직 두목" />
+    <string id="aom_rh_notable_1b" text="냉정한 동부인 상인" />
+    <string id="aom_rh_notable_2" text="동부인 모피 상인" />
+    <string id="aom_rh_notable_21" text="풍파에 단련된 초원의 지주" />
+    <string id="aom_rh_notable_22" text="온화한 동부인 장로" />
+    <string id="aom_rh_notable_2b" text="신중한 동부인 광석 상인" />
+    <string id="aom_rh_notable_3" text="자수성가한 동부인 상인" />
+    <string id="aom_rh_notable_3b" text="쾌활한 초원의 상인" />
+    <string id="aom_rh_notable_4" text="빈틈없는 동부인 대상 두목" />
+    <string id="aom_rh_notable_4b" text="음흉한 동부인 상인" />
+    <string id="aom_rh_notable_5" text="신비로운 초원의 주술사" />
+    <string id="aom_rh_notable_6" text="엄격한 동부인 장로" />
+    <string id="aom_rh_notable_7" text="동방 전통의 수호자" />
+    <string id="aom_rh_notable_8" text="숙련된 동부인 대장장이" />
+    <string id="aom_rh_notable_9" text="창의적인 동부인 장인" />
+    <string id="aom_rh_notable_gl1" text="사나운 동부인 두목" />
+    <string id="aom_rh_notable_gl4" text="짐승 같은 동부인 폭력배" />
+    <string id="aom_rh_practice_1" text="연습 상대" />
+    <string id="aom_rh_practice_2" text="연습 상대" />
+    <string id="aom_rh_practice_3" text="연습 상대" />
+    <string id="aom_rh_practice_dummy" text="연습용 허수아비" />
+    <string id="aom_rh_prison_guard" text="간수" />
+    <string id="aom_rh_ransom_broker" text="몸값 중개인" />
+    <string id="aom_rh_shop_worker" text="상점 점원" />
+    <string id="aom_rh_tavern_wench" text="선술집 여종업원" />
+    <string id="aom_rh_tavernkeeper" text="선술집 주인" />
+    <string id="aom_rh_townsman" text="도시 주민" />
+    <string id="aom_rh_townsman_child" text="도시 주민" />
+    <string id="aom_rh_townsman_infant" text="도시 주민" />
+    <string id="aom_rh_townsman_teen" text="도시 주민" />
+    <string id="aom_rh_townswoman" text="도시 여인" />
+    <string id="aom_rh_townswoman_child" text="도시 여인" />
+    <string id="aom_rh_townswoman_infant" text="도시 여인" />
+    <string id="aom_rh_townswoman_teen" text="도시 여인" />
+    <string id="aom_rh_vet_caravan_guard" text="룬의 베테랑 대상 호위병" />
+    <string id="aom_rh_village_woman" text="마을 여인" />
+    <string id="aom_rh_villager" text="마을 사람" />
+    <string id="aom_rh_villager_f_child" text="마을 아이" />
+    <string id="aom_rh_villager_f_teen" text="마을 청소년" />
+    <string id="aom_rh_villager_m_child" text="마을 아이" />
+    <string id="aom_rh_villager_m_teen" text="마을 청소년" />
+    <string id="aom_rh_weaponsmith" text="무기 대장장이" />
+    <string id="aom_rivendell_lord_1" text="임라드리스의 대담한 요정 영주" />
+    <string id="aom_rivendell_lord_2" text="임라드리스의 신중한 요정 영주" />
+    <string id="aom_roh_armed_trader" text="무장 상인" />
+    <string id="aom_roh_armorer" text="갑옷 장인" />
+    <string id="aom_roh_barber" text="이발사" />
+    <string id="aom_roh_beggar" text="거지" />
+    <string id="aom_roh_blacksmith" text="대장장이" />
+    <string id="aom_roh_caravan_guard" text="대상 호위병" />
+    <string id="aom_roh_caravan_master" text="대상 우두머리" />
+    <string id="aom_roh_female_beggar" text="거지" />
+    <string id="aom_roh_female_dancer" text="무희" />
+    <string id="aom_roh_gangleader_bg" text="호위병" />
+    <string id="aom_roh_gear_dummy" text="장비 더미" />
+    <string id="aom_roh_gear_practice_dummy" text="장비 연습용 허수아비" />
+    <string id="aom_roh_guard" text="경비병" />
+    <string id="aom_roh_headman_1" text="굳건한 로히림 촌장" />
+    <string id="aom_roh_headman_2" text="신중한 리더마크 촌장" />
+    <string id="aom_roh_headman_3" text="교활한 마술사(馬術士) 촌장" />
+    <string id="aom_roh_horse_merchant" text="말 상인" />
+    <string id="aom_roh_merchant" text="상인" />
+    <string id="aom_roh_musician" text="악사" />
+    <string id="aom_roh_notable_0" text="신중한 리더마크 상인" />
+    <string id="aom_roh_notable_0b" text="로한의 포도주 상인" />
+    <string id="aom_roh_notable_1" text="자부심 강한 기마군주의 상인" />
+    <string id="aom_roh_notable_10" text="비웃는 로한의 조직 두목" />
+    <string id="aom_roh_notable_11" text="잔혹한 리더마크 집행자" />
+    <string id="aom_roh_notable_12" text="교활한 로한의 밀수꾼" />
+    <string id="aom_roh_notable_13" text="위협적인 리더마크 조직 우두머리" />
+    <string id="aom_roh_notable_1b" text="냉정한 로한의 거래상" />
+    <string id="aom_roh_notable_2" text="과묵한 리더마크 보급상" />
+    <string id="aom_roh_notable_21" text="풍파를 겪은 로한의 지주" />
+    <string id="aom_roh_notable_22" text="존경받는 리더마크 원로" />
+    <string id="aom_roh_notable_2b" text="신중한 로한의 곡물 상인" />
+    <string id="aom_roh_notable_3" text="자수성가한 로한의 상인" />
+    <string id="aom_roh_notable_3b" text="쾌활한 리더마크 상인" />
+    <string id="aom_roh_notable_4" text="빈틈없는 로한의 상인" />
+    <string id="aom_roh_notable_4b" text="교활한 기마군주의 상인" />
+    <string id="aom_roh_notable_5" text="독실한 로히림 원로" />
+    <string id="aom_roh_notable_6" text="엄격한 리더마크의 현자" />
+    <string id="aom_roh_notable_7" text="로히림 전통의 수호자" />
+    <string id="aom_roh_notable_8" text="숙련된 로히림 대장장이" />
+    <string id="aom_roh_notable_9" text="재능 있는 리더마크의 장인" />
+    <string id="aom_roh_notable_gl1" text="대담한 리더마크의 두목" />
+    <string id="aom_roh_notable_gl4" text="잔혹한 기마군주의 폭력배" />
+    <string id="aom_roh_prison_guard" text="간수" />
+    <string id="aom_roh_ransom_broker" text="몸값 중개인" />
+    <string id="aom_roh_shop_worker" text="상점 일꾼" />
+    <string id="aom_roh_tavern_wench" text="주점 여종업원" />
+    <string id="aom_roh_taverngamehost" text="주점 놀이 주최자" />
+    <string id="aom_roh_tavernkeeper" text="주점 주인" />
+    <string id="aom_roh_tournament_master" text="토너먼트 관리자" />
+    <string id="aom_roh_townsman" text="도시 주민" />
+    <string id="aom_roh_townsman_child" text="도시 주민" />
+    <string id="aom_roh_townsman_infant" text="도시 주민" />
+    <string id="aom_roh_townsman_teen" text="도시 주민" />
+    <string id="aom_roh_townswoman" text="도시 여인" />
+    <string id="aom_roh_townswoman_child" text="도시 여인" />
+    <string id="aom_roh_townswoman_infant" text="도시 여인" />
+    <string id="aom_roh_townswoman_teen" text="도시 여인" />
+    <string id="aom_roh_vet_caravan_guard" text="숙련 대상 호위병" />
+    <string id="aom_roh_village_woman" text="마을 여인" />
+    <string id="aom_roh_village_woman_child" text="마을 소녀" />
+    <string id="aom_roh_village_woman_teen" text="마을 소녀" />
+    <string id="aom_roh_villager" text="마을 주민" />
+    <string id="aom_roh_villager_child" text="마을 주민" />
+    <string id="aom_roh_villager_teen" text="마을 주민" />
+    <string id="aom_roh_weaponsmith" text="무기 대장장이" />
+    <string id="aom_roh_wpractice_1" text="무기 연습 인형 1단계" />
+    <string id="aom_roh_wpractice_2" text="무기 연습 인형 2단계" />
+    <string id="aom_roh_wpractice_3" text="무기 연습 인형 3단계" />
+    <string id="aom_rv_arena" text="투기장 관리자" />
+    <string id="aom_rv_armed_trader" text="깊은골 무장 상인" />
+    <string id="aom_rv_armorer" text="갑옷 장인" />
+    <string id="aom_rv_barber" text="이발사" />
+    <string id="aom_rv_beggar" text="거지" />
+    <string id="aom_rv_blacksmith" text="대장장이" />
+    <string id="aom_rv_caravan_guard" text="깊은골 대상 호위병" />
+    <string id="aom_rv_caravan_master" text="깊은골 대상주" />
+    <string id="aom_rv_dancer" text="무희" />
+    <string id="aom_rv_female_beggar" text="걸인" />
+    <string id="aom_rv_gamehost" text="도박장 주인" />
+    <string id="aom_rv_gang_bodyguard" text="조직 호위병" />
+    <string id="aom_rv_gear_dummy" text="장비 인형" />
+    <string id="aom_rv_guard" text="경비병" />
+    <string id="aom_rv_headman_1" text="반항적인 요정 촌장" />
+    <string id="aom_rv_headman_2" text="보수적인 요정 촌장" />
+    <string id="aom_rv_headman_3" text="교활한 요정 촌장" />
+    <string id="aom_rv_horse_merchant" text="말 상인" />
+    <string id="aom_rv_merchant" text="상인" />
+    <string id="aom_rv_musician" text="악사" />
+    <string id="aom_rv_notable_0" text="신중한 요정 상인" />
+    <string id="aom_rv_notable_0b" text="요정 포도주 양조가" />
+    <string id="aom_rv_notable_1" text="엄격한 요정 교역상" />
+    <string id="aom_rv_notable_10" text="냉소적인 요정 무법자" />
+    <string id="aom_rv_notable_11" text="위협적인 요정 집행자" />
+    <string id="aom_rv_notable_12" text="교활한 요정 밀수꾼" />
+    <string id="aom_rv_notable_13" text="음험한 요정 모사꾼" />
+    <string id="aom_rv_notable_1b" text="초연한 요정 상인" />
+    <string id="aom_rv_notable_2" text="요정 보석상" />
+    <string id="aom_rv_notable_21" text="엄격한 요정 지주" />
+    <string id="aom_rv_notable_22" text="상냥한 요정 장로" />
+    <string id="aom_rv_notable_2b" text="현명한 요정 상인" />
+    <string id="aom_rv_notable_3" text="자수성가한 요정 상인" />
+    <string id="aom_rv_notable_3b" text="요정 교역 지식인" />
+    <string id="aom_rv_notable_4" text="빈틈없는 요정 상인" />
+    <string id="aom_rv_notable_4b" text="교활한 요정 상인" />
+    <string id="aom_rv_notable_5" text="열성적인 요정 현자" />
+    <string id="aom_rv_notable_6" text="엄격한 요정 장로" />
+    <string id="aom_rv_notable_7" text="요정 전통 수호자" />
+    <string id="aom_rv_notable_8" text="꼼꼼한 요정 대장장이" />
+    <string id="aom_rv_notable_9" text="재능 있는 요정 장인" />
+    <string id="aom_rv_notable_gl1" text="비호하는 요정 두목" />
+    <string id="aom_rv_notable_gl4" text="무자비한 요정 추방자" />
+    <string id="aom_rv_practice_1" text="연습 전사" />
+    <string id="aom_rv_practice_2" text="연습 전사" />
+    <string id="aom_rv_practice_3" text="연습 전사" />
+    <string id="aom_rv_practice_dummy" text="연습용 허수아비" />
+    <string id="aom_rv_prison_guard" text="간수" />
+    <string id="aom_rv_ransom_broker" text="몸값 중개인" />
+    <string id="aom_rv_shop_worker" text="상점 일꾼" />
+    <string id="aom_rv_tavern_wench" text="주점 여급" />
+    <string id="aom_rv_tavernkeeper" text="주점 주인" />
+    <string id="aom_rv_town_child" text="도시 아이" />
+    <string id="aom_rv_town_teen" text="도시 청소년" />
+    <string id="aom_rv_townsman" text="도시 남자" />
+    <string id="aom_rv_townsman_child" text="도시 남자" />
+    <string id="aom_rv_townsman_infant" text="도시 남자" />
+    <string id="aom_rv_townsman_teen" text="도시 남자" />
+    <string id="aom_rv_townswoman" text="도시 여자" />
+    <string id="aom_rv_townswoman_child" text="도시 여자" />
+    <string id="aom_rv_townswoman_infant" text="도시 여자" />
+    <string id="aom_rv_townswoman_teen" text="도시 여자" />
+    <string id="aom_rv_vet_caravan_guard" text="깊은골 베테랑 대상 호위병" />
+    <string id="aom_rv_village_child" text="마을 아이" />
+    <string id="aom_rv_village_teen" text="마을 청소년" />
+    <string id="aom_rv_village_woman" text="마을 여인" />
+    <string id="aom_rv_village_woman_child" text="마을 아이" />
+    <string id="aom_rv_village_woman_teen" text="마을 청소년" />
+    <string id="aom_rv_villager" text="마을 주민" />
+    <string id="aom_rv_villager_child" text="마을 아이" />
+    <string id="aom_rv_villager_teen" text="마을 청소년" />
+    <string id="aom_rv_weaponsmith" text="무기 대장장이" />
+    <string id="aom_shaghana_lord_1" text="대담한 샤가나 족장" />
+    <string id="aom_shaghana_lord_2" text="신중한 샤가나 족장" />
+    <string id="aom_spc_wanderer_ab_0_name" text="{FIRSTNAME} 팍사르달" />
+    <string id="aom_spc_wanderer_ab_1_name" text="{FIRSTNAME} 호셰드반" />
+    <string id="aom_spc_wanderer_ab_2_name" text="{FIRSTNAME} 바스나르탈" />
+    <string id="aom_spc_wanderer_ab_3_name" text="{FIRSTNAME} 고라제샨" />
+    <string id="aom_spc_wanderer_ab_4_name" text="{FIRSTNAME} 아자다프렌" />
+    <string id="aom_spc_wanderer_ab_5_name" text="{FIRSTNAME} 아르타시미르" />
+    <string id="aom_spc_wanderer_ab_6_name" text="{FIRSTNAME} 아르다크벤" />
+    <string id="aom_spc_wanderer_ab_7_name" text="{FIRSTNAME} 티르다란" />
+    <string id="aom_spc_wanderer_ab_8_name" text="{FIRSTNAME} 팍심두르" />
+    <string id="aom_spc_wanderer_ab_9_name" text="{FIRSTNAME} 바샨키르" />
+    <string id="aom_spc_wanderer_bluecraig_0_name" text="뼈를 씹는 자 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_bluecraig_1_name" text="해골 쪼개는 자 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_bluecraig_2_name" text="{FIRSTNAME} 피의송곳니" />
+    <string id="aom_spc_wanderer_bluecraig_3_name" text="{FIRSTNAME} 쇠흉터" />
+    <string id="aom_spc_wanderer_bluecraig_4_name" text="{FIRSTNAME} 분노발톱" />
+    <string id="aom_spc_wanderer_bluecraig_5_name" text="{FIRSTNAME} 살점가르개" />
+    <string id="aom_spc_wanderer_bluecraig_6_name" text="{FIRSTNAME} 그림자잠행자" />
+    <string id="aom_spc_wanderer_bluecraig_7_name" text="{FIRSTNAME} 파멸의낙인" />
+    <string id="aom_spc_wanderer_bluecraig_8_name" text="{FIRSTNAME} 피의처녀" />
+    <string id="aom_spc_wanderer_bluecraig_9_name" text="{FIRSTNAME} 잔혹한칼날" />
+    <string id="aom_spc_wanderer_dolguldur_0_name" text="{FIRSTNAME} 가쉬낙" />
+    <string id="aom_spc_wanderer_dolguldur_1_name" text="{FIRSTNAME} 크림굴" />
+    <string id="aom_spc_wanderer_dolguldur_2_name" text="{FIRSTNAME} 두르바툭" />
+    <string id="aom_spc_wanderer_dolguldur_3_name" text="{FIRSTNAME} 나즈가쉬" />
+    <string id="aom_spc_wanderer_dolguldur_4_name" text="{FIRSTNAME} 그림바르그" />
+    <string id="aom_spc_wanderer_dolguldur_5_name" text="{FIRSTNAME} 샤르쿨" />
+    <string id="aom_spc_wanderer_dolguldur_6_name" text="{FIRSTNAME} 아즈고스" />
+    <string id="aom_spc_wanderer_dolguldur_7_name" text="{FIRSTNAME} 루그두쉬" />
+    <string id="aom_spc_wanderer_dolguldur_8_name" text="{FIRSTNAME} 크림파쉬" />
+    <string id="aom_spc_wanderer_dolguldur_9_name" text="{FIRSTNAME} 고르바그" />
+    <string id="aom_spc_wanderer_dunland_0_name" text="{FIRSTNAME} 브레그호른" />
+    <string id="aom_spc_wanderer_dunland_1_name" text="{FIRSTNAME} 케르딕" />
+    <string id="aom_spc_wanderer_dunland_2_name" text="{FIRSTNAME} 둔헤레" />
+    <string id="aom_spc_wanderer_dunland_3_name" text="{FIRSTNAME} 울프가르" />
+    <string id="aom_spc_wanderer_dunland_4_name" text="{FIRSTNAME} 에오를룬드" />
+    <string id="aom_spc_wanderer_dunland_5_name" text="{FIRSTNAME} 그림볼드" />
+    <string id="aom_spc_wanderer_dunland_6_name" text="{FIRSTNAME} 할드레드" />
+    <string id="aom_spc_wanderer_dunland_7_name" text="{FIRSTNAME} 브리칸" />
+    <string id="aom_spc_wanderer_dunland_8_name" text="{FIRSTNAME} 모르카르" />
+    <string id="aom_spc_wanderer_dunland_9_name" text="{FIRSTNAME} 수링웨실" />
+    <string id="aom_spc_wanderer_erebor_0_name" text="{FIRSTNAME} 비트 바루카즈" />
+    <string id="aom_spc_wanderer_erebor_10_name" text="{FIRSTNAME} 비트 노린" />
+    <string id="aom_spc_wanderer_erebor_11_name" text="{FIRSTNAME} 비트 카르" />
+    <string id="aom_spc_wanderer_erebor_1_name" text="{FIRSTNAME} 비트 두라쿤" />
+    <string id="aom_spc_wanderer_erebor_2_name" text="{FIRSTNAME} 비트 가밀자르" />
+    <string id="aom_spc_wanderer_erebor_3_name" text="{FIRSTNAME} 비트 부즈룬" />
+    <string id="aom_spc_wanderer_erebor_4_name" text="{FIRSTNAME} 비트 사린" />
+    <string id="aom_spc_wanderer_erebor_5_name" text="{FIRSTNAME} 비트 바린" />
+    <string id="aom_spc_wanderer_erebor_6_name" text="{FIRSTNAME} 비트 아르간" />
+    <string id="aom_spc_wanderer_erebor_7_name" text="{FIRSTNAME} 비트 고르" />
+    <string id="aom_spc_wanderer_erebor_8_name" text="{FIRSTNAME} 비트 로인" />
+    <string id="aom_spc_wanderer_erebor_9_name" text="{FIRSTNAME} 비트 가린" />
+    <string id="aom_spc_wanderer_goblin_0_name" text="뼈 씹는 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_goblin_1_name" text="두개골 쪼개는 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_goblin_2_name" text="피엄니 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_goblin_3_name" text="쇠흉터 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_goblin_4_name" text="분노발톱 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_goblin_5_name" text="살갗 찢는 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_goblin_6_name" text="그림자 잠복자 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_goblin_7_name" text="파멸의 낙인 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_goblin_8_name" text="피의 처녀 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_goblin_9_name" text="잔혹한 칼날 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_gondor_0_name" text="{FIRSTNAME} 칼렌도리오나스" />
+    <string id="aom_spc_wanderer_gondor_10_name" text="{FIRSTNAME} 모르베길리오나스" />
+    <string id="aom_spc_wanderer_gondor_11_name" text="{FIRSTNAME} 아란두리오나스" />
+    <string id="aom_spc_wanderer_gondor_12_name" text="{FIRSTNAME} 텔레마리오나스" />
+    <string id="aom_spc_wanderer_gondor_1_name" text="{FIRSTNAME} 미나스티리오나스" />
+    <string id="aom_spc_wanderer_gondor_2_name" text="{FIRSTNAME} 에렐리오나스" />
+    <string id="aom_spc_wanderer_gondor_3_name" text="{FIRSTNAME} 모르살리오나스" />
+    <string id="aom_spc_wanderer_gondor_4_name" text="{FIRSTNAME} 돌마리오나스" />
+    <string id="aom_spc_wanderer_gondor_5_name" text="{FIRSTNAME} 타르킬리오나스" />
+    <string id="aom_spc_wanderer_gondor_6_name" text="{FIRSTNAME} 라우레시오나스" />
+    <string id="aom_spc_wanderer_gondor_7_name" text="{FIRSTNAME} 펠라르기리오나스" />
+    <string id="aom_spc_wanderer_gondor_8_name" text="{FIRSTNAME} 포로스티리오나스" />
+    <string id="aom_spc_wanderer_gondor_9_name" text="{FIRSTNAME} 발란딜리오나스" />
+    <string id="aom_spc_wanderer_gundabad_0_name" text="뼈 씹는 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_gundabad_1_name" text="두개골 쪼개는 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_gundabad_2_name" text="피엄니 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_gundabad_3_name" text="쇠흉터 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_gundabad_4_name" text="분노발톱 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_gundabad_5_name" text="살갗 찢는 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_gundabad_6_name" text="그림자 잠복자 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_gundabad_7_name" text="파멸의 낙인 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_gundabad_8_name" text="피의 처녀 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_gundabad_9_name" text="잔혹한 칼날 {FIRSTNAME}" />
+    <string id="aom_spc_wanderer_harad_0_name" text="{FIRSTNAME} 알하루샨" />
+    <string id="aom_spc_wanderer_harad_1_name" text="{FIRSTNAME} 이븐 카물" />
+    <string id="aom_spc_wanderer_harad_2_name" text="{FIRSTNAME} 알수텍" />
+    <string id="aom_spc_wanderer_harad_3_name" text="{FIRSTNAME} 이븐 마루샨" />
+    <string id="aom_spc_wanderer_harad_4_name" text="{FIRSTNAME} 알파흐란" />
+    <string id="aom_spc_wanderer_harad_5_name" text="{FIRSTNAME} 이븐 자르케시" />
+    <string id="aom_spc_wanderer_harad_6_name" text="{FIRSTNAME} 알라샤딘" />
+    <string id="aom_spc_wanderer_harad_7_name" text="{FIRSTNAME} 이븐 술라단" />
+    <string id="aom_spc_wanderer_harad_8_name" text="{FIRSTNAME} 알마크타르" />
+    <string id="aom_spc_wanderer_harad_9_name" text="{FIRSTNAME} 이븐 타라칸" />
+    <string id="aom_spc_wanderer_isengard_0_name" text="{FIRSTNAME} 브라쿨" />
+    <string id="aom_spc_wanderer_isengard_1_name" text="{FIRSTNAME} 아르가쉬" />
+    <string id="aom_spc_wanderer_isengard_2_name" text="{FIRSTNAME} 드루즈각" />
+    <string id="aom_spc_wanderer_isengard_3_name" text="{FIRSTNAME} 그라쿠르즈" />
+    <string id="aom_spc_wanderer_isengard_4_name" text="{FIRSTNAME} 스루마그" />
+    <string id="aom_spc_wanderer_isengard_5_name" text="{FIRSTNAME} 스카르눅" />
+    <string id="aom_spc_wanderer_isengard_6_name" text="{FIRSTNAME} 브루작" />
+    <string id="aom_spc_wanderer_isengard_7_name" text="{FIRSTNAME} 크룰다쉬" />
+    <string id="aom_spc_wanderer_isengard_8_name" text="{FIRSTNAME} 우르즈막" />
+    <string id="aom_spc_wanderer_isengard_9_name" text="{FIRSTNAME} 고르훌" />
+    <string id="aom_spc_wanderer_lindon_0_name" text="{FIRSTNAME} 에레스텔리오나스" />
+    <string id="aom_spc_wanderer_lindon_1_name" text="{FIRSTNAME} 칼렌글로리오나스" />
+    <string id="aom_spc_wanderer_lindon_2_name" text="{FIRSTNAME} 놀도리오나스" />
+    <string id="aom_spc_wanderer_lindon_3_name" text="{FIRSTNAME} 린도니오나스" />
+    <string id="aom_spc_wanderer_lindon_4_name" text="{FIRSTNAME} 아란위오나스" />
+    <string id="aom_spc_wanderer_lindon_5_name" text="{FIRSTNAME} 켈레브린디오나스" />
+    <string id="aom_spc_wanderer_lindon_6_name" text="{FIRSTNAME} 이실리오나스" />
+    <string id="aom_spc_wanderer_lindon_7_name" text="{FIRSTNAME} 길도리오나스" />
+    <string id="aom_spc_wanderer_lindon_8_name" text="{FIRSTNAME} 페레딜리오나스" />
+    <string id="aom_spc_wanderer_lindon_9_name" text="{FIRSTNAME} 에아렌딜리오나스" />
+    <string id="aom_spc_wanderer_lothlorien_0_name" text="{FIRSTNAME} 카라시오나스" />
+    <string id="aom_spc_wanderer_lothlorien_1_name" text="{FIRSTNAME} 님로시오나스" />
+    <string id="aom_spc_wanderer_lothlorien_2_name" text="{FIRSTNAME} 말로리오나스" />
+    <string id="aom_spc_wanderer_lothlorien_3_name" text="{FIRSTNAME} 암로시오나스" />
+    <string id="aom_spc_wanderer_lothlorien_4_name" text="{FIRSTNAME} 켈레보르니오나스" />
+    <string id="aom_spc_wanderer_lothlorien_5_name" text="{FIRSTNAME} 갈라드리오나스" />
+    <string id="aom_spc_wanderer_lothlorien_6_name" text="{FIRSTNAME} 님로델리오나스" />
+    <string id="aom_spc_wanderer_lothlorien_7_name" text="{FIRSTNAME} 케리니오나스" />
+    <string id="aom_spc_wanderer_lothlorien_8_name" text="{FIRSTNAME} 할디리오나스" />
+    <string id="aom_spc_wanderer_lothlorien_9_name" text="{FIRSTNAME} 오로페리오나스" />
+    <string id="aom_spc_wanderer_mirkwood_0_name" text="{FIRSTNAME} 타와리오나스" />
+    <string id="aom_spc_wanderer_mirkwood_1_name" text="{FIRSTNAME} 갈라델리오나스" />
+    <string id="aom_spc_wanderer_mirkwood_2_name" text="{FIRSTNAME} 라스갈리오나스" />
+    <string id="aom_spc_wanderer_mirkwood_3_name" text="{FIRSTNAME} 스란두일리오나스" />
+    <string id="aom_spc_wanderer_mirkwood_4_name" text="{FIRSTNAME} 레골리오나스" />
+    <string id="aom_spc_wanderer_mirkwood_5_name" text="{FIRSTNAME} 모르넬리오나스" />
+    <string id="aom_spc_wanderer_mirkwood_6_name" text="{FIRSTNAME} 팔라스갈리오나스" />
+    <string id="aom_spc_wanderer_mirkwood_7_name" text="{FIRSTNAME} 켈레비오나스" />
+    <string id="aom_spc_wanderer_mirkwood_8_name" text="{FIRSTNAME} 아라니오나스" />
+    <string id="aom_spc_wanderer_mirkwood_9_name" text="{FIRSTNAME} 브레실리오나스" />
+    <string id="aom_spc_wanderer_mistymountainorcs_0_name" text="{FIRSTNAME} 뼈씹개" />
+    <string id="aom_spc_wanderer_mistymountainorcs_1_name" text="{FIRSTNAME} 두개골쪼개기" />
+    <string id="aom_spc_wanderer_mistymountainorcs_2_name" text="{FIRSTNAME} 피송곳니" />
+    <string id="aom_spc_wanderer_mistymountainorcs_3_name" text="{FIRSTNAME} 쇠흉터" />
+    <string id="aom_spc_wanderer_mistymountainorcs_4_name" text="{FIRSTNAME} 분노발톱" />
+    <string id="aom_spc_wanderer_mistymountainorcs_5_name" text="{FIRSTNAME} 살갗찢개" />
+    <string id="aom_spc_wanderer_mistymountainorcs_6_name" text="{FIRSTNAME} 그림자잠복꾼" />
+    <string id="aom_spc_wanderer_mistymountainorcs_7_name" text="{FIRSTNAME} 파멸의낙인" />
+    <string id="aom_spc_wanderer_mistymountainorcs_8_name" text="{FIRSTNAME} 피의처녀" />
+    <string id="aom_spc_wanderer_mistymountainorcs_9_name" text="{FIRSTNAME} 잔혹한칼날" />
+    <string id="aom_spc_wanderer_mordor_0_name" text="{FIRSTNAME} 두르자크" />
+    <string id="aom_spc_wanderer_mordor_10_name" text="{FIRSTNAME} 루크다르" />
+    <string id="aom_spc_wanderer_mordor_11_name" text="{FIRSTNAME} 모르누크" />
+    <string id="aom_spc_wanderer_mordor_12_name" text="{FIRSTNAME} 스카르눌" />
+    <string id="aom_spc_wanderer_mordor_13_name" text="{FIRSTNAME} 자굴" />
+    <string id="aom_spc_wanderer_mordor_14_name" text="{FIRSTNAME} 둠라드" />
+    <string id="aom_spc_wanderer_mordor_1_name" text="{FIRSTNAME} 모르굴킨" />
+    <string id="aom_spc_wanderer_mordor_2_name" text="{FIRSTNAME} 아시라쿨" />
+    <string id="aom_spc_wanderer_mordor_3_name" text="{FIRSTNAME} 크룰마르" />
+    <string id="aom_spc_wanderer_mordor_4_name" text="{FIRSTNAME} 고르사크" />
+    <string id="aom_spc_wanderer_mordor_5_name" text="{FIRSTNAME} 샤그루크" />
+    <string id="aom_spc_wanderer_mordor_6_name" text="{FIRSTNAME} 우즈고스" />
+    <string id="aom_spc_wanderer_mordor_7_name" text="{FIRSTNAME} 둠펠" />
+    <string id="aom_spc_wanderer_mordor_8_name" text="{FIRSTNAME} 아자리데스" />
+    <string id="aom_spc_wanderer_mordor_9_name" text="{FIRSTNAME} 나즈가르스" />
+    <string id="aom_spc_wanderer_rhun_0_name" text="{FIRSTNAME} 카마쿨" />
+    <string id="aom_spc_wanderer_rhun_1_name" text="{FIRSTNAME} 도르다간" />
+    <string id="aom_spc_wanderer_rhun_2_name" text="{FIRSTNAME} 발크호스" />
+    <string id="aom_spc_wanderer_rhun_3_name" text="{FIRSTNAME} 와이나가르" />
+    <string id="aom_spc_wanderer_rhun_4_name" text="{FIRSTNAME} 쿨단" />
+    <string id="aom_spc_wanderer_rhun_5_name" text="{FIRSTNAME} 보르타간" />
+    <string id="aom_spc_wanderer_rhun_6_name" text="{FIRSTNAME} 바르다미르" />
+    <string id="aom_spc_wanderer_rhun_7_name" text="{FIRSTNAME} 울가리온" />
+    <string id="aom_spc_wanderer_rhun_8_name" text="{FIRSTNAME} 칸다가르" />
+    <string id="aom_spc_wanderer_rhun_9_name" text="{FIRSTNAME} 루나가르" />
+    <string id="aom_spc_wanderer_rivendell_0_name" text="{FIRSTNAME} 에레스텔리오나스" />
+    <string id="aom_spc_wanderer_rivendell_1_name" text="{FIRSTNAME} 칼렌글로리오나스" />
+    <string id="aom_spc_wanderer_rivendell_2_name" text="{FIRSTNAME} 놀도리오나스" />
+    <string id="aom_spc_wanderer_rivendell_3_name" text="{FIRSTNAME} 린도니오나스" />
+    <string id="aom_spc_wanderer_rivendell_4_name" text="{FIRSTNAME} 아란위오나스" />
+    <string id="aom_spc_wanderer_rivendell_5_name" text="{FIRSTNAME} 켈레브린디오나스" />
+    <string id="aom_spc_wanderer_rivendell_6_name" text="{FIRSTNAME} 이실리오나스" />
+    <string id="aom_spc_wanderer_rivendell_7_name" text="{FIRSTNAME} 길도리오나스" />
+    <string id="aom_spc_wanderer_rivendell_8_name" text="{FIRSTNAME} 페레딜리오나스" />
+    <string id="aom_spc_wanderer_rivendell_9_name" text="{FIRSTNAME} 에아렌딜리오나스" />
+    <string id="aom_spc_wanderer_rohan_0_name" text="{FIRSTNAME} 울프가리그" />
+    <string id="aom_spc_wanderer_rohan_1_name" text="{FIRSTNAME} 오스릭다른" />
+    <string id="aom_spc_wanderer_rohan_2_name" text="{FIRSTNAME} 세인그림" />
+    <string id="aom_spc_wanderer_rohan_3_name" text="{FIRSTNAME} 프리스와인손" />
+    <string id="aom_spc_wanderer_rohan_4_name" text="{FIRSTNAME} 레오프스타닝" />
+    <string id="aom_spc_wanderer_rohan_5_name" text="{FIRSTNAME} 헤레브란딩" />
+    <string id="aom_spc_wanderer_rohan_6_name" text="{FIRSTNAME} 고드릭손" />
+    <string id="aom_spc_wanderer_rohan_7_name" text="{FIRSTNAME} 셀레드웨인" />
+    <string id="aom_spc_wanderer_rohan_8_name" text="{FIRSTNAME} 하르딩가르" />
+    <string id="aom_spc_wanderer_rohan_9_name" text="{FIRSTNAME} 울프헤오르탄" />
+    <string id="aom_spc_wanderer_sh_0_name" text="{FIRSTNAME} 알에자르키" />
+    <string id="aom_spc_wanderer_sh_1_name" text="{FIRSTNAME} 이븐쿠마라크" />
+    <string id="aom_spc_wanderer_sh_2_name" text="{FIRSTNAME} 알타임" />
+    <string id="aom_spc_wanderer_sh_3_name" text="{FIRSTNAME} 이븐자야크" />
+    <string id="aom_spc_wanderer_sh_4_name" text="{FIRSTNAME} 알셀라르" />
+    <string id="aom_spc_wanderer_sh_5_name" text="{FIRSTNAME} 이븐우자르" />
+    <string id="aom_spc_wanderer_sh_6_name" text="{FIRSTNAME} 알아란" />
+    <string id="aom_spc_wanderer_sh_7_name" text="{FIRSTNAME} 이븐바누그" />
+    <string id="aom_spc_wanderer_sh_8_name" text="{FIRSTNAME} 알아캄" />
+    <string id="aom_spc_wanderer_sh_9_name" text="{FIRSTNAME} 이븐샤카르" />
+    <string id="aom_spc_wanderer_umbar_0_name" text="{FIRSTNAME} 카스타미르" />
+    <string id="aom_spc_wanderer_umbar_1_name" text="{FIRSTNAME} 상가햐도" />
+    <string id="aom_spc_wanderer_umbar_2_name" text="{FIRSTNAME} 앙가마이테" />
+    <string id="aom_spc_wanderer_umbar_3_name" text="{FIRSTNAME} 푸이누르" />
+    <string id="aom_spc_wanderer_umbar_4_name" text="{FIRSTNAME} 헤루모르" />
+    <string id="aom_spc_wanderer_umbar_5_name" text="{FIRSTNAME} 에아르닐" />
+    <string id="aom_spc_wanderer_umbar_6_name" text="{FIRSTNAME} 펠렌두르" />
+    <string id="aom_spc_wanderer_umbar_7_name" text="{FIRSTNAME} 팔라스투르" />
+    <string id="aom_spc_wanderer_umbar_8_name" text="{FIRSTNAME} 햐르멘다킬" />
+    <string id="aom_spc_wanderer_umbar_9_name" text="{FIRSTNAME} 키랸딜" />
+    <string id="aom_um_headman_1" text="반항적인 움바르 촌장" />
+    <string id="aom_um_headman_2" text="보수적인 움바르 촌장" />
+    <string id="aom_um_headman_3" text="교활한 움바르 촌장" />
+    <string id="aom_um_notable_0" text="약삭빠른 해적 상인" />
+    <string id="aom_um_notable_0b" text="움바르 항구 보급업자" />
+    <string id="aom_um_notable_1" text="무자비한 해적 밀수업자" />
+    <string id="aom_um_notable_10" text="해적 부두 우두머리" />
+    <string id="aom_um_notable_11" text="위압적인 해적 집행자" />
+    <string id="aom_um_notable_12" text="교활한 해적 밀수업자" />
+    <string id="aom_um_notable_13" text="위협적인 해적 군벌" />
+    <string id="aom_um_notable_1b" text="차가운 눈빛의 움바르 무역상" />
+    <string id="aom_um_notable_2" text="움바르 향신료 상인" />
+    <string id="aom_um_notable_21" text="퉁명스러운 움바르 지주" />
+    <string id="aom_um_notable_22" text="상냥한 움바르 장로" />
+    <string id="aom_um_notable_2b" text="조심스러운 움바르 보급 운반꾼" />
+    <string id="aom_um_notable_3" text="자수성가한 해적 무역상" />
+    <string id="aom_um_notable_3b" text="음모를 꾸미는 움바르 상인" />
+    <string id="aom_um_notable_4" text="빈틈없는 움바르 항만장" />
+    <string id="aom_um_notable_4b" text="교활한 해적 암거래상" />
+    <string id="aom_um_notable_5" text="검은 배의 선장 사제" />
+    <string id="aom_um_notable_6" text="엄격한 움바르 바다 사제" />
+    <string id="aom_um_notable_7" text="해적 전통의 수호자" />
+    <string id="aom_um_notable_8" text="퉁명스러운 움바르 조선공" />
+    <string id="aom_um_notable_9" text="해적 밧줄장인" />
+    <string id="aom_um_notable_gl1" text="검은 배의 선장" />
+    <string id="aom_um_notable_gl4" text="야수 같은 움바르 폭력배" />
+    <string id="aom_umbar_lord_1" text="대담한 움바르의 해적 영주" />
+    <string id="aom_umbar_lord_2" text="신중한 움바르의 해적 영주" />
+    <string id="nc_aragorn_name" text="아라고른" />
+    <string id="nc_balakhor_name" text="전승의 대가 발라코르" />
+    <string id="nc_blackrose_name" text="블랙로즈" />
+    <string id="nc_gimli_name" text="김리" />
+    <string id="nc_hart_name" text="월드의 에오하르트" />
+    <string id="nc_haterade_name" text="하테라데" />
+    <string id="nc_igor_name" text="길 잃은 자 이고르 팔룬" />
+    <string id="nc_legolas_name" text="레골라스" />
+    <string id="nc_leovsilva_name" text="실반의 레오블라스" />
+    <string id="nc_maztog_name" text="마즈토그, 마부의 공포" />
+    <string id="nc_rcmcplayz_name" text="대장장이 루쿠마지그카미즈" />
+    <string id="nc_solus_name" text="돌무덤의 솔루스" />
+    <string id="nc_spartan_name" text="스파르탄 벨렉사르" />
+    <string id="nc_swan_name" text="지도 제작자 스완" />
+    <string id="nc_thyrell_name" text="황금의 시렐" />
+    <string id="nc_whitegoat_name" text="길잡이 화이트고트" />
+    <string id="nc_yotthani_name" text="타노르" />
+    <string id="taom_spider_creature_name" text="거미 기수" />
+    <string id="taom_spider_rider_brown_name" text="대거미 기수" />
+    <string id="taom_spider_rider_pale_name" text="창백한 거미 기수" />
+  </strings>
+</base>

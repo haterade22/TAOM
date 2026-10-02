@@ -1,0 +1,32 @@
+<Prefab>
+  <Parameters>
+    <Parameter Name="NavigationMinIndex" DefaultValue="" />
+    <Parameter Name="NavigationMaxIndex" DefaultValue="" />
+  </Parameters>
+  <Window>
+    <SelectorWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" CurrentSelectedIndex="@SelectedIndex" Container="ColorGrid">
+      <Children>
+
+        <!-- ColumnCount 12->8 (2026-09-26, user report: skin/hair/tattoo color swatches all cut off on the right,
+             scrollbar pushed toward the middle of the panel) - this native-derived file still used its original
+             12-column layout (12x45=540px wide), sized for a much wider page than this project's current 400px
+             TabControl content column; the same "never revisited after multiple width-narrowing rounds" issue
+             already found and fixed once this session in TFGProperty.xml and the BodyPage property row template.
+             8x45=360, fits with margin to spare. Shared by TFGSkinTone/Hair/Taint color pickers, so this one fix
+             covers all three at once. -->
+        <NavigatableGridWidget Id="ColorGrid" DataSource = "{ItemList}" WidthSizePolicy = "CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" HorizontalAlignment="Center" ColumnCount="8" DefaultCellHeight="45" DefaultCellWidth="45" MinIndex="*NavigationMinIndex" MaxIndex="*NavigationMaxIndex">
+          <ItemTemplate>
+
+            <ColorButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="44" SuggestedHeight="44" MarginLeft="1" MarginRight="1" Brush="CC.ColorCard" ColorToApply="@StringItem" ButtonType="Radio" UpdateChildrenStates="true" DoNotUseCustomScaleAndChildren="true" DominantSelectedState="true" IsSelected="@IsSelected">
+              <Children>
+                <ButtonWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CC.ColorCard.Sel" DominantSelectedState="true" IsSelected="@IsSelected"/>
+              </Children>
+            </ColorButtonWidget>
+
+          </ItemTemplate>
+        </NavigatableGridWidget>
+
+      </Children>
+    </SelectorWidget>
+  </Window>
+</Prefab>

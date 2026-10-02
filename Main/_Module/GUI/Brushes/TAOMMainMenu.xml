@@ -1,0 +1,37 @@
+<Brushes>
+  <!-- Main menu. Colours: cream #E9E1CC, gold #C9AB69. Same fonts as the faction screen. -->
+
+  <Brush Name="MM.Tagline" Font="FS_CinzelWide" FontSize="14">
+    <Styles><Style Name="Default" FontColor="#C9AB69FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" /></Styles>
+  </Brush>
+
+  <!-- menu entry: no plate. A soft warm glow fades in behind the entry (and the text warms up) slowly while hovered -->
+  <Brush Name="MM.Button" TransitionDuration="0.55">
+    <Layers><BrushLayer Name="Default" Sprite="mm_glow" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Disabled"><BrushLayer Name="Default" AlphaFactor="0" /></Style>
+    </Styles>
+  </Brush>
+
+  <!-- the featured entry (Enter The Age Of Men): applied to that one entry by Features/FactionUI/UI/MainMenuWidgets.cs -->
+  <Brush Name="MM.ButtonText.Featured" Font="FS_Garamond" FontSize="35" TransitionDuration="0.55">
+    <Styles>
+      <Style Name="Default" FontColor="#F5E6B6FF" TextGlowColor="#E2BE7838" TextGlowRadius="0.25" TextBlur="0.2" />
+      <Style Name="Hovered" FontColor="#FFF3C8FF" TextGlowColor="#E2BE7866" TextGlowRadius="0.35" TextBlur="0.3" />
+      <Style Name="Pressed" FontColor="#D8BC78FF" TextGlowColor="#E2BE7855" TextGlowRadius="0.3" TextBlur="0.25" />
+      <Style Name="Disabled" FontColor="#E1D9C4FF" TextAlphaFactor="0.35" />
+    </Styles>
+  </Brush>
+
+  <Brush Name="MM.ButtonText" Font="FS_Garamond" FontSize="25" TransitionDuration="0.55">
+    <Styles>
+      <Style Name="Default" FontColor="#E1D9C4FF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" />
+      <Style Name="Hovered" FontColor="#F6E7B4FF" TextGlowColor="#E2BE7855" TextGlowRadius="0.3" TextBlur="0.25" />
+      <Style Name="Pressed" FontColor="#D8BC78FF" TextGlowColor="#E2BE7855" TextGlowRadius="0.3" TextBlur="0.25" />
+      <Style Name="Disabled" FontColor="#E1D9C4FF" TextAlphaFactor="0.35" />
+    </Styles>
+  </Brush>
+</Brushes>

@@ -1,0 +1,33 @@
+<Prefab>
+  <!-- Kysaro's themed loading window (#704), loaded in place of the native LoadingWindow by GauntletLayerLoadMoviePatch, with the
+       same view model (LoadingWindowViewModel). FrontEndSpriteService.EnsureResident registers ld_bar_stone, the FS_* fonts and the
+       TAOMLoading brushes before this movie is built, so the stone bars and the module fonts are referenced directly here (Kysaro's
+       module assigned them every frame from two OnLateUpdate patches, because his window was built before his assets existed).
+       Bars: 70 px top, 100 px bottom, the bottom one covering the credit strip baked into the newer loading paintings. -->
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="false" DoNotPassEventsToChildren="true" Sprite="BlankWhiteSquare_9" Color="#000000FF" IsVisible="false" DoNotUseCustomScale="true">
+      <Children>
+        <LoadingWindowWidget Id="LoadingImage" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1920" SuggestedHeight="1080" ImageName="@LoadingImageName" IsVisible="false" HorizontalAlignment="Center" VerticalAlignment="Center" IsActive="@Enabled" DoNotUseCustomScale="true">
+          <Children>
+
+            <Widget Id="TopBarFill" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="70" VerticalAlignment="Top" Sprite="ld_bar_stone" Color="#FFFFFFFF" DoNotUseCustomScale="true" />
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Top" MarginTop="68" Sprite="BlankWhiteSquare_9" Color="#C9AB69D0" DoNotUseCustomScale="true" />
+
+            <!-- bottom bar: the loading text (TAOM's shader-compile progress in single player; mode and map in multiplayer) -->
+            <Widget Id="BottomBarFill" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="100" VerticalAlignment="Bottom" Sprite="ld_bar_stone" Color="#FFFFFFFF" DoNotUseCustomScale="true" />
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Bottom" MarginBottom="98" Sprite="BlankWhiteSquare_9" Color="#C9AB69D0" DoNotUseCustomScale="true" />
+
+            <ListPanel WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1400" SuggestedHeight="94" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="2" StackLayout.LayoutMethod="VerticalCentered" DoNotUseCustomScale="true">
+              <Children>
+                <TextWidget Id="DescriptionTextWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="LD.Quote.FS" Text="@DescriptionText" ClipContents="false" MarginBottom="8" DoNotUseCustomScale="true" />
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="LD.Title.Sub" Text="@GameModeText" IsVisible="@IsMultiplayer" MarginBottom="4" DoNotUseCustomScale="true" />
+                <TextWidget Id="TitleTextWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="LD.Attrib.FS" Text="@TitleText" DoNotUseCustomScale="true" />
+              </Children>
+            </ListPanel>
+
+          </Children>
+        </LoadingWindowWidget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

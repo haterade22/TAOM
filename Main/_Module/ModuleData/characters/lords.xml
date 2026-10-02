@@ -19919,6 +19919,7 @@
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_I4_1" race="uruk_hai" name="{=aom_lord_I4_1_name}Lurtz, Uruk-hai Commander" age="25" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_I4_1_skills">
+        <!-- #704: bespoke gear, see lurtz_bat_equipment / lurtz_civ_equipment -->
         <face>
             <BodyProperties version="4" age="22.09" weight="0.6829" build="0.6343" key="0002F00FC0CC3003FF80F0F006FFF01F000077E1BE3E700F0111EFEE80100012009AA60309FFE00B0000000000000000000000000000000000000000432C0042" />
             <hair_tags>
@@ -19962,8 +19963,8 @@
             <Trait id="Authoritarian" value="2" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="isengard_bat_template_medium_a" />
-            <EquipmentSet id="isengard_civ_template_a" equipmentType="Civilian" />
+            <EquipmentSet id="lurtz_bat_equipment" />
+            <EquipmentSet id="lurtz_civ_equipment" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_I4_11" race="uruk_hai" name="{=aom_lord_I4_11_name}Lurtz Child" age="10" voice="earnest" is_hero="true" culture="Culture.isengard" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">
@@ -22700,8 +22701,8 @@
             <Trait id="Authoritarian" value="1" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="lothlorien_bat_template_medium_b" />
-            <EquipmentSet id="lothlorien_civ_template_default_b" equipmentType="Civilian" />
+            <EquipmentSet id="celeborn_bat_equipment" />
+            <EquipmentSet id="celeborn_civ_equipment" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_L1_3" race="elf" name="{=aom_lord_L1_3_name}Galadion" age="10" voice="ironic" culture="Culture.lothlorien" occupation="Lord" is_hero="true" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_berserker_skills_rookie">
@@ -23801,6 +23802,7 @@
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_M3_3" race="elf" name="{=aom_lord_M3_3_name}Haldir" age="25" voice="earnest" default_group="Infantry" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_elf_warrior_skills">
+        <!-- #704: bespoke gear, see haldir_bat_equipment / haldir_civ_equipment -->
         <face>
             <BodyProperties version="4" age="30" weight="0.037" build="0.3634" key="00001C00000000031980F72F6853461660648330588B86016756B50C88A64A7500B516030B01EA0000000000000000000000000000000000000000003B6C4002" />
             <hair_tags>
@@ -23844,8 +23846,8 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="mirkwood_bat_template_medium_e" />
-            <EquipmentSet id="mirkwood_civ_template_default_e" equipmentType="Civilian" />
+            <EquipmentSet id="haldir_bat_equipment" />
+            <EquipmentSet id="haldir_civ_equipment" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_M3_4" race="elf" name="{=aom_lord_M3_4_name}Aredhel" age="27" is_female="true" voice="earnest" default_group="Ranged" is_hero="true" culture="Culture.mirkwood" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_elf_lady_skills">
@@ -27691,6 +27693,7 @@
     </NPCCharacter>
     <!-- Culture.rivendell -->
     <NPCCharacter id="lord_R1_1" race="elf" name="{=aom_lord_R1_1_name}Elrond" age="28" voice="earnest" is_hero="true" is_female="false" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_canonical_lord_R1_1_skills">
+        <!-- #704: bespoke gear, see elrond_bat_equipment / elrond_civ_equipment -->
         <face>
             <BodyProperties version="4" age="22.01" weight="0.2" build="0.74" key="0005000FC00016039A797961AA0103D841B0830030ECF600921531198EF3BC94009B3603098C7F4732430001330223550000000000001977000000004D245002" />
             <hair_tags>
@@ -27734,8 +27737,8 @@
             <Trait id="Authoritarian" value="1" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="rivendell_bat_template_medium_a" />
-            <EquipmentSet id="rivendell_civ_template_default_a" equipmentType="Civilian" />
+            <EquipmentSet id="elrond_bat_equipment" />
+            <EquipmentSet id="elrond_civ_equipment" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_R1_2" race="elf" name="{=aom_lord_R1_2_name}Celebrían" age="20" voice="earnest" is_hero="true" is_female="true" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.taom_elf_queen_skills">
@@ -27920,8 +27923,8 @@
             <Trait id="Authoritarian" value="0" />
         </Traits>
         <Equipments>
-            <EquipmentSet id="rivendell_bat_template_medium_e" />
-            <EquipmentSet id="rivendell_civ_template_default_e" equipmentType="Civilian" />
+            <EquipmentSet id="arwen_bat_equipment" />
+            <EquipmentSet id="arwen_civ_equipment" equipmentType="Civilian" />
         </Equipments>
     </NPCCharacter>
     <NPCCharacter id="lord_R1_11" race="elf" name="{=aom_lord_R1_11_name}Argon" age="11" voice="earnest" is_female="false" is_hero="true" culture="Culture.rivendell" occupation="Lord" default_group="Infantry" face_mesh_cache="true" skill_template="SkillSet.spc_swordsman_skills_rookie">

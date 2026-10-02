@@ -1,0 +1,24 @@
+{
+  "_readme": "Which character the faction screen's 3D viewport shows for each faction (#704, Kysaro). Key = faction key from factionmap/factions.json, value = any character id (a lord like lord_1_7, or a troop id). Remove a line to fall back to the faction culture's elite troop. Read once per game launch: restart the game after editing.",
+
+  "stewardship_of_gondor":      "lord_1_7",
+  "dominion_of_mordor":         "lord_1_17",
+  "clans_of_dunland":           "lord_1_1",
+  "kingdom_of_dale":            "lord_2_1",
+  "taskralan_of_harwan":        "lord_3_1",
+  "kingdom_of_rohan":           "lord_4_1",
+  "khudorom_of_khand":          "lord_5_1",
+  "golden_realm_of_rhun":       "lord_6_1",
+  "kingdom_of_erebor":          "lord_E1_1",
+  "kingdom_of_imladris":        "lord_R1_1",
+  "kingdom_of_lasgalen":        "lord_M1_1",
+  "kingdom_of_lothlorien":      "lord_L1_1",
+  "dominion_of_isengard":       "lord_I1_1",
+  "overlordship_of_gundabad":   "lord_G1_1",
+  "havens_of_umbar":            "lord_U1_1",
+  "overlordship_of_dol_guldur": "lord_1_48",
+  "goblins_of_goblin_town":     "lord_GB1_1",
+  "goblins_of_blue_craig":      "lord_BC1_1",
+  "high_kingdom_of_lindon":     "lord_LN1_1",
+  "kingdom_of_moria":           "lord_MM1_1"
+}

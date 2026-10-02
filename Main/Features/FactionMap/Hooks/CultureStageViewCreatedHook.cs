@@ -20,6 +20,7 @@ public class CultureStageViewCreatedHook : IOnCultureStageViewCreated
     private readonly ILandmarkService _landmarkService;
     private readonly ICultureSettingService _cultureSettingService;
     private readonly ICultureStageProgressionService _progressionService;
+    private readonly ICultureStageMovieOverride _movieOverride;
     private readonly IModLogger _logger;
 
     private static FactionSelectionVM? _factionVM;
@@ -34,8 +35,10 @@ public class CultureStageViewCreatedHook : IOnCultureStageViewCreated
         ILandmarkService landmarkService,
         ICultureSettingService cultureSettingService,
         ICultureStageProgressionService progressionService,
+        ICultureStageMovieOverride movieOverride,
         IModLogger logger)
     {
+        _movieOverride = movieOverride;
         _configProvider = configProvider;
         _registry = registry;
         _selectionService = selectionService;
@@ -123,7 +126,9 @@ public class CultureStageViewCreatedHook : IOnCultureStageViewCreated
 
             _progressionService.LoadFactionMapResources();
 
-            var newMovie = gauntletLayer.LoadMovie("CharacterCreationCultureStage", _factionVM);
+            // #704: Kysaro's faction screen, when enabled, takes the stage and drives _factionVM.
+            var newMovie = _movieOverride.TryLoad(gauntletLayer, _factionVM, regions, factions)
+                ?? gauntletLayer.LoadMovie("CharacterCreationCultureStage", _factionVM);
             movieField?.SetValue(viewInstance, newMovie);
 
             _logger.LogInfo($"FactionMap injected (movie={newMovie != null})");

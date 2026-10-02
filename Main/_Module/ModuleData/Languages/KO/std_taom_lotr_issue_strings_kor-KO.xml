@@ -319,19 +319,19 @@
     <string id="taom_lotr_issue_combat_fallback_accept" text="무엇을 해야 하오?" />
     <string id="taom_lotr_issue_pers_fallback_desc" text="누군가 포로를 운반해 줄 사람을 찾고 있다." />
     <string id="taom_lotr_issue_pers_fallback_brief" text="나그네여, 나는 튼튼한 일손이 필요하오." />
-    <string id="taom_lotr_issue_armourer_title" text="The Armourer's Commission" />
-    <string id="taom_lotr_issue_armourer_desc" text="The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it." />
-    <string id="taom_lotr_issue_armourer_brief" text="The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with." />
-    <string id="taom_lotr_issue_armourer_accept" text="What would you need?" />
-    <string id="taom_lotr_issue_armourer_expl" text="Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade." />
-    <string id="taom_lotr_issue_armourer_soln" text="I will bring you the steel." />
-    <string id="taom_lotr_issue_armourer_task" text="Bring {ITEM} to the armourer ({COUNT})" />
-    <string id="taom_lotr_issue_seam_title" text="The Deep Seam" />
-    <string id="taom_lotr_issue_seam_desc" text="The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in." />
-    <string id="taom_lotr_issue_seam_brief" text="My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together." />
-    <string id="taom_lotr_issue_seam_accept" text="What would you need?" />
-    <string id="taom_lotr_issue_seam_expl" text="Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me." />
-    <string id="taom_lotr_issue_seam_soln" text="I will bring you the timber." />
-    <string id="taom_lotr_issue_seam_task" text="Bring {ITEM} to the headman ({COUNT})" />
+    <string id="taom_lotr_issue_armourer_title" text="갑옷장인의 의뢰" />
+    <string id="taom_lotr_issue_armourer_desc" text="{ISSUE_SETTLEMENT}의 갑옷 명장이 반쯤 벼려낸 중갑을 두고도 마무리할 강철이 없습니다." />
+    <string id="taom_lotr_issue_armourer_brief" text="전쟁이 좋은 강철을 한 덩이도 남기지 않고 가져가 내 대장간엔 닿지도 않소. 모루 위에 화살도 튕겨낼 갑옷이 놓여 있건만, 마무리할 것이 없구려." />
+    <string id="taom_lotr_issue_armourer_accept" text="무엇이 필요하오?" />
+    <string id="taom_lotr_issue_armourer_expl" text="{ITEM}을(를) {COUNT}짐 가져다주시오. 그러면 완성된 갑옷은 당신 것이오. 강철에는 강철로, 공정한 거래 아니겠소." />
+    <string id="taom_lotr_issue_armourer_soln" text="강철을 가져다 드리지요." />
+    <string id="taom_lotr_issue_armourer_task" text="갑옷장인에게 {ITEM} 가져다주기 ({COUNT})" />
+    <string id="taom_lotr_issue_seam_title" text="깊은 광맥" />
+    <string id="taom_lotr_issue_seam_desc" text="{ISSUE_SETTLEMENT}의 광부들이 영주의 갑옷을 만드는 희귀 금속 광맥을 찾아냈으나, 갱도가 무너지기 전에 목재가 필요합니다." />
+    <string id="taom_lotr_issue_seam_brief" text="내 광부들이 운 좋게 찾아냈소. 위대한 갑옷장인들이 값을 아끼지 않는 그 금속의 광맥 말이오. 허나 갱도가 낡아서, 떠받칠 좋은 목재가 없으면 광부들과 광맥을 함께 묻어버릴 것이오." />
+    <string id="taom_lotr_issue_seam_accept" text="무엇이 필요하오?" />
+    <string id="taom_lotr_issue_seam_expl" text="갱도에 쓸 {ITEM}을(를) {COUNT}짐 가져다주시오. 그러면 캐낸 것의 첫 몫을 드리겠소. 그건 나보다 당신에게 더 값진 물건이오." />
+    <string id="taom_lotr_issue_seam_soln" text="목재를 가져다 드리지요." />
+    <string id="taom_lotr_issue_seam_task" text="촌장에게 {ITEM} 가져다주기 ({COUNT})" />
   </strings>
 </base>

@@ -1,0 +1,43 @@
+<Prefab>
+  <Parameters>
+    <Parameter Name="GridDataSource" DefaultValue="GridDataSource" />
+    <Parameter Name="NavigationMinIndex" DefaultValue="" />
+    <Parameter Name="NavigationMaxIndex" DefaultValue="" />
+  </Parameters>
+  <Window>
+    <!-- Internal ScrollablePanel/scrollbar REMOVED 2026-09-26 (user request/choice: "make grids tall enough to
+         not need their own scroll" rather than live with the nested-scroll UX problem - hovering a grid stole the
+         mouse wheel from the page's own outer scroll, and a first attempt at just guessing a bigger fixed height
+         for the CALLER (TFGFaceCosmetic.xml's TFGHair/TFGTaint) didn't actually work - "the scroll is still
+         overlapping with the 2 other scrolls" - because TFGHair.xml splits a fixed total height roughly evenly
+         between its own two grids regardless of real item counts, so no fixed guess could reliably eliminate the
+         need for internal scroll on both at once.
+         Proper fix instead of a bigger guess: this prefab no longer scrolls internally AT ALL - just a plain
+         CoverChildren grid that renders every item and reports its own TRUE natural height upward. Callers
+         (TFGHair.xml/TFGTaint.xml) now use HeightSizePolicy="CoverChildren" too instead of a dictated height, so
+         the whole chain up to TFGFaceCosmetic.xml's own outer page scroll sizes itself from real content - no
+         more guessing a number, and only ONE scrollable area exists on the page (the outer one), which is exactly
+         what "make grids tall enough" was meant to achieve. Confirmed this doesn't hit the "StretchToParent child
+         inside a CoverChildren parent" circular-sizing bug documented earlier this session, since nothing in this
+         file uses StretchToParent anymore - CoverChildren all the way through. -->
+    <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" DoNotUseCustomScaleAndChildren="true">
+      <Children>
+
+        <!-- Card size: 104 (native) -> 148 ("too small" feedback) -> 120 (RightPanel 900->650) -> 116
+             (RightPanel narrowed again 650->542). Column count dropped 4->3 to keep cards from shrinking back
+             toward the original "too small" 104. 3x124(cell)=372, fits inside the ~386px available (TabControl's
+             400 content width minus TFGFaceCosmetic's own 6px scrollbar). -->
+        <NavigatableGridWidget Id="Grid" DataSource="*GridDataSource" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" ColumnCount="3" DefaultCellHeight="124" DefaultCellWidth="124" LayoutImp="GridLayout" MinIndex="*NavigationMinIndex" MaxIndex="*NavigationMaxIndex">
+          <ItemTemplate>
+            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="116" SuggestedHeight="116" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="CC.Card" ButtonType="Radio" Command.Click="ExecuteAction" IsSelected="@IsSelected" DoNotUseCustomScaleAndChildren="true">
+              <Children>
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="2" MarginRight="2" MarginTop="2" MarginBottom="2" Sprite="@ImagePath" AlphaFactor="0.8" />
+              </Children>
+            </ButtonWidget>
+          </ItemTemplate>
+        </NavigatableGridWidget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

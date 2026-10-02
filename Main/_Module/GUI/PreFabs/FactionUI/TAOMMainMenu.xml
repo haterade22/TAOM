@@ -1,0 +1,99 @@
+<Prefab>
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+      <Children>
+
+        <!-- LEFT PANEL -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="350" SuggestedHeight="1040" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="109" Sprite="mm_panel">
+          <Children>
+
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="176" SuggestedHeight="208" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="34" Sprite="mm_logo" DoNotAcceptEvents="true" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="300" SuggestedHeight="16" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="244" Sprite="mm_divider" DoNotAcceptEvents="true" />
+            <!-- TITLE: baked image, plus four narrow clipped windows onto a bright copy of it. The game module slides the windows
+                 across (ids Shimmer0..3 / ShimmerImg0..3) every few seconds, which reads as a soft light passing over the letters. -->
+            <Widget Id="TitleBox" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="310" SuggestedHeight="92" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="262" DoNotAcceptEvents="true">
+              <Children>
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="mm_title" DoNotAcceptEvents="true" />
+                <Widget Id="Shimmer0" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="14" HorizontalAlignment="Left" PositionXOffset="-200" ClipContents="true" AlphaFactor="0.30" DoNotAcceptEvents="true">
+                  <Children><Widget Id="ShimmerImg0" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="310" HorizontalAlignment="Left" PositionXOffset="200" Sprite="mm_title_shine" DoNotAcceptEvents="true" /></Children>
+                </Widget>
+                <Widget Id="Shimmer1" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="28" HorizontalAlignment="Left" PositionXOffset="-200" ClipContents="true" AlphaFactor="0.30" DoNotAcceptEvents="true">
+                  <Children><Widget Id="ShimmerImg1" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="310" HorizontalAlignment="Left" PositionXOffset="200" Sprite="mm_title_shine" DoNotAcceptEvents="true" /></Children>
+                </Widget>
+                <Widget Id="Shimmer2" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="42" HorizontalAlignment="Left" PositionXOffset="-200" ClipContents="true" AlphaFactor="0.30" DoNotAcceptEvents="true">
+                  <Children><Widget Id="ShimmerImg2" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="310" HorizontalAlignment="Left" PositionXOffset="200" Sprite="mm_title_shine" DoNotAcceptEvents="true" /></Children>
+                </Widget>
+                <Widget Id="Shimmer3" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="56" HorizontalAlignment="Left" PositionXOffset="-200" ClipContents="true" AlphaFactor="0.30" DoNotAcceptEvents="true">
+                  <Children><Widget Id="ShimmerImg3" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="310" HorizontalAlignment="Left" PositionXOffset="200" Sprite="mm_title_shine" DoNotAcceptEvents="true" /></Children>
+                </Widget>
+              </Children>
+            </Widget>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="300" SuggestedHeight="16" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="352" Sprite="mm_divider" DoNotAcceptEvents="true" />
+
+            <!-- MENU ENTRIES: the game's own list (whatever mods add appears here); each one runs its own action -->
+            <Widget Id="MenuHost" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="430" VerticalAlignment="Top" MarginTop="382" MarginLeft="20" MarginRight="20">
+              <Children>
+                <NavigationScopeTargeter ScopeID="InitialScreen" ScopeParent="..\MenuItems" ScopeMovements="Vertical" HasCircularMovement="true" />
+                <NavigatableListPanel Id="MenuItems" DataSource="{MenuOptions}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" StackLayout.LayoutMethod="VerticalTopToBottom">
+                  <ItemTemplate>
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="40" MarginTop="1" MarginBottom="1" IsHidden="@IsHidden">
+                      <Children>
+                        <ButtonWidget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="310" SuggestedHeight="40" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="MM.Button" Command.Click="ExecuteAction" IsDisabled="@IsDisabled">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="14" MarginRight="14" Brush="MM.ButtonText" Text="@NameText" />
+                            <!-- Restored from vanilla Native/GUI/Prefabs/InitialScreen.xml:61 (lens7-xml #10):
+                                 explains a disabled entry on hover. Same DataSource/Command names, same
+                                 IsDisabled="true" on the hint itself so it never blocks the button's own click. -->
+                            <HintWidget DataSource="{EnabledHint}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" />
+                          </Children>
+                        </ButtonWidget>
+                        <!-- Restored from vanilla InitialScreen.xml:65 (lens7-xml #10): sibling of the button,
+                             same DisabledHint DataSource vanilla's own MenuOptions item VM already exposes. -->
+                        <HintWidget DataSource="{DisabledHint}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsDisabled="true" />
+                      </Children>
+                    </Widget>
+                  </ItemTemplate>
+                </NavigatableListPanel>
+              </Children>
+            </Widget>
+
+            <!-- bottom illustration -->
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="300" SuggestedHeight="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="252" Sprite="mm_divider" DoNotAcceptEvents="true" />
+            <!-- TAGLINE: handwriting with a light sweep (TagShimmer0..3 windows onto the bright copy), same mechanism as the title -->
+            <Widget Id="TaglineBox" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="170" SuggestedHeight="130" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="100" DoNotAcceptEvents="true">
+              <Children>
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="mm_tagline" DoNotAcceptEvents="true" />
+                <Widget Id="TagShimmer0" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="10" HorizontalAlignment="Left" PositionXOffset="-300" ClipContents="true" AlphaFactor="0.35" DoNotAcceptEvents="true">
+                  <Children><Widget Id="TagShimmerImg0" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="170" HorizontalAlignment="Left" PositionXOffset="300" Sprite="mm_tagline_shine" DoNotAcceptEvents="true" /></Children>
+                </Widget>
+                <Widget Id="TagShimmer1" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="20" HorizontalAlignment="Left" PositionXOffset="-300" ClipContents="true" AlphaFactor="0.35" DoNotAcceptEvents="true">
+                  <Children><Widget Id="TagShimmerImg1" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="170" HorizontalAlignment="Left" PositionXOffset="300" Sprite="mm_tagline_shine" DoNotAcceptEvents="true" /></Children>
+                </Widget>
+                <Widget Id="TagShimmer2" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="30" HorizontalAlignment="Left" PositionXOffset="-300" ClipContents="true" AlphaFactor="0.35" DoNotAcceptEvents="true">
+                  <Children><Widget Id="TagShimmerImg2" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="170" HorizontalAlignment="Left" PositionXOffset="300" Sprite="mm_tagline_shine" DoNotAcceptEvents="true" /></Children>
+                </Widget>
+                <Widget Id="TagShimmer3" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="40" HorizontalAlignment="Left" PositionXOffset="-300" ClipContents="true" AlphaFactor="0.35" DoNotAcceptEvents="true">
+                  <Children><Widget Id="TagShimmerImg3" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="170" HorizontalAlignment="Left" PositionXOffset="300" Sprite="mm_tagline_shine" DoNotAcceptEvents="true" /></Children>
+                </Widget>
+              </Children>
+            </Widget>
+
+          </Children>
+        </Widget>
+
+        <!-- profile / download notices, as in the native menu -->
+        <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="72" MarginRight="30" IsVisible="@IsProfileSelectionEnabled" DoNotAcceptEvents="true">
+          <Children>
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush="MM.Tagline" Text="@ProfileName" />
+          </Children>
+        </Widget>
+        <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="80" IsVisible="@IsDownloadingContent" DoNotAcceptEvents="true">
+          <Children>
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" Brush="MM.Tagline" Text="@DownloadingText" />
+          </Children>
+        </Widget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

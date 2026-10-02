@@ -659,7 +659,7 @@
     <string id="aom_lord_1_12_name" text="Findariel" />
     <string id="aom_lord_1_14_name" text="Sauron'un Ağzı" />
     <string id="aom_lord_1_15_name" text="Angmar Cadı-Kralı" />
-    <string id="aom_lord_1_155_name" text="Nazgûl, Kara Marşal" />
+    <string id="aom_lord_1_155_name" text="Nazgûl, Kara Mareşal" />
     <string id="aom_lord_1_16_name" text="Nazgûl, Umbar Şövalyesi" />
     <string id="aom_lord_1_17_name" text="Sauron" />
     <string id="aom_lord_1_177_name" text="Khorgath" />
@@ -1147,12 +1147,12 @@
     <string id="TAOM_hero_1_47_1" text="Mina, Mordor'un karanlık güçlerine hizmet eder." />
     <string id="TAOM_hero_1_47_2" text="Casyrea, Gölge'nin bir hizmetkarıdır." />
     <string id="TAOM_hero_1_47_3" text="Colambea, Mordor'un karanlığında yaşar." />
-    <string id="TAOM_hero_1_15" text="Angmar Cadı-Kralı, Nazgûl'ün Lordu, Sauron'un en korkunç hizmetkarıdır. Bir zamanlar İnsanların büyük bir kralıyken, Güç Yüzüğü tarafından ölümsüz bir hayalete dönüştürülmüştür." />
-    <string id="TAOM_hero_1_155" text="Karanlık Mareşal, Cadı-Kral'dan sonra ikinci sırada olmak üzere savaşta Nazgûl'lere komuta eder." />
+    <string id="TAOM_hero_1_15" text="Angmar'ın Cadı-Kralı, Nazgûlların Efendisi, Sauron'un en korkunç hizmetkârıdır. Bir zamanlar İnsanların büyük bir kralıydı; Güç Yüzüğü onu ölümsüz bir hortlağa dönüştürdü." />
+    <string id="TAOM_hero_1_155" text="Kara Mareşal, savaşta Nazgûllara komuta eder; yalnızca Cadı-Kral'dan sonra gelir." />
     <string id="TAOM_hero_1_16" text="Umbar Şövalyesi, Yüzük'ü almadan önce Korsanların bir lorduydu." />
     <string id="TAOM_hero_1_28" text="Hain, yozlaşmadan önce Doğu'da bir kraldı." />
     <string id="TAOM_hero_1_38" text="Ölümsüz, ölümsüzlük arayan ancak yalnızca ebedi kölelik bulan bir büyücü-kraldı." />
-    <string id="TAOM_hero_1_48" text="Doğulu Khamûl, Dokuzların ikincisi, bir Güç Yüzüğü'nü kabul etmeden önce Rhûn'da büyük bir krallığı yönetiyordu." />
+    <string id="TAOM_hero_1_48" text="Doğulu Khamûl, Dokuzlar'ın ikincisi, bir Güç Yüzüğü'nü kabul etmeden önce Rhun'da büyük bir krallığı yönetiyordu." />
     <string id="TAOM_hero_1_48_1" text="Kirlenmiş, gittiği her yere yozlaşmayı yayar." />
     <string id="TAOM_hero_1_48_2" text="Kuzey İnsanlarının Gölgesi, soğuk topraklarda avlanır." />
     <string id="TAOM_hero_1_48_3" text="Umbar'ın Gölgesi, güney kıyılarında dolaşır." />
@@ -1289,19 +1289,19 @@
     <string id="TAOM_hero_3_22_3" text="Zanuwa kabilenin yetenekli bir okçusudur." />
     <string id="TAOM_hero_3_22_4" text="Hajara çöl gözetleme kulelerini korur." />
     <string id="TAOM_hero_4_1" text="Rohan Kralı Théoden, Edoras'taki Meduseld'den hükmeder. Bir zamanlar Saruman'ın hizmetkarı Gríma tarafından büyülenen kral, Gandalf tarafından kurtarıldı ve halkını Helm Derini ve Pelennor Ovaları'nda zafere taşıdı." />
-    <string id="TAOM_hero_4_2" text="Elfhild Rohan kraliçesi, Théodred'in annesiydi. Doğum sırasında öldü ve bu acı Théoden'in saltanatına gölge düşürdü." />
-    <string id="TAOM_hero_4_7" text="Théodred, Kral Théoden'in tek oğlu ve Rohan Prensi'ydi. Saruman'ın Uruk-hai'lerine karşı Isen Geçitleri'ni savunurken düştü." />
+    <string id="TAOM_hero_4_2" text="Elfhild Rohan'ın kraliçesi, Théodred'in annesiydi. Doğum sırasında öldü; bu acı Théoden'in saltanatını gölgeledi." />
+    <string id="TAOM_hero_4_7" text="Théodred, Kral Théoden'in tek oğlu, Rohan'ın Prensiydi. Isen Geçitleri'ni Saruman'ın Uruk-hailerine karşı savunurken düştü." />
     <string id="TAOM_hero_4_10" text="Elys Rohirrim sarayının soylu bir hanımefendisidir." />
     <string id="TAOM_hero_4_13" text="Romund Kraliyet Muhafızları'nda kaptan olarak hizmet eder." />
     <string id="TAOM_hero_4_14" text="Morcon kralın ev halkının güvenilir bir kaptanıdır." />
     <string id="TAOM_hero_4_141" text="Amorcon muhafızlarda akrabasının yanında hizmet eder." />
-    <string id="TAOM_hero_4_15" text="Erdurand Théoden'in ev halkının bir atlısıdır." />
+    <string id="TAOM_hero_4_15" text="Erdurand, Théoden'in maiyetinden bir binicidir." />
     <string id="TAOM_hero_4_3_3" text="Théodwyn, Kral Théoden'in kız kardeşi ve Éomer ile Éowyn'in annesiydi. Kocası Éomund Orklar tarafından öldürüldükten sonra kederden öldü." />
     <string id="TAOM_hero_4_3" text="Aldric, Doğukat'ta bir salonun sahibidir ve Edoras'ın toplanmasında at sürer. Büyük bir hanedandan gelmeyen sıradan bir atlıdır; bu yüzden güvenilir." />
     <string id="TAOM_hero_rohan_10_1" text="Doğukat'lı Éomund, Mark'ın Mareşali olarak at sürdü ve kralın kız kardeşi Théodwyn ile evlendi. Orklar onu Emyn Muil'de öldürdü ve iki çocuğu Théoden'in himayesine geçti." />
-    <string id="TAOM_hero_4_3_1" text="Éomer Éadig, Mark'ın Üçüncü Mareşali, Théoden'in yeğeni ve tahtın varisidir. Doğu Ovası'nın atlılarına ateşli bir sadakatle önderlik eder." />
+    <string id="TAOM_hero_4_3_1" text="Éomer Eadig, Mark'ın Üçüncü Mareşali, Théoden'in yeğeni ve tahtın vârisidir. Eastfold binicilerini çetin bir sadakatle yönetir." />
     <string id="TAOM_hero_4_4" text="Elthild Eoforing'in soylu bir hanımefendisidir." />
-    <string id="TAOM_hero_4_8" text="Furnhard Éomer'in komutası altında güvenilir bir atlı olarak hizmet eder." />
+    <string id="TAOM_hero_4_8" text="Furnhard, Éomer'in emri altında güvenilir bir binici olarak hizmet eder." />
     <string id="TAOM_hero_4_11" text="Liena kraliyet ev halkına hizmet eder." />
     <string id="TAOM_hero_4_6" text="Grimslade'li Grimbold, Batı Ovası atlılarına komuta eder. Yiğit bir savaşçı olan Grimbold, Isen Geçitleri'ni tuttu ve daha sonra Pelennor'da kahramanca öldü." />
     <string id="TAOM_hero_4_6_1" text="Déorwyn Grimbold'un komutasının varisidir." />
@@ -1478,5 +1478,41 @@
     <string id="TAOM_hero_SE9_s_bn" text="Pharazîn bir Kara Númenorlu büyücüdür ve kocası sefere çıktığında Cirith Nargil'deki gerçek otoritedir. Adı, Númenor'un son Kralını anımsatır." />
     <string id="TAOM_hero_SE9_c1_bn" text="Zigûrbêl, Cirith Nargil'in varisidir ve kara sanatlarda eğitilmiştir. Adı Büyücü-Sever anlamına gelir; Númenor, onun ne olduğunu öğrenmeden önce Sauron'a böyle derdi." />
     <string id="TAOM_hero_SE9_c2_bn" text="Zimrazîn, Kılıç-Efendi'nin ikinci çocuğudur ve ikisinin daha tehlikeli olanıdır. Annesinin yeteneklerine sahiptir, sabrına ise hiç." />
+    <string id="3UucAOBW" text="Ben {CLAN_NAME}'den {CONVERSATION_CHARACTER.LINK}." />
+    <string id="62vceTar" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den." />
+    <string id="99gE1ZoY" text="Ben {CONVERSATION_CHARACTER.LINK}, {FACTION}'den." />
+    <string id="AxMrFoea" text="{TOWN_NAME}, {FACTION_NAME}'den {LORD.LINK} önderliğindeki kuvvetler tarafından kuşatıldı!" />
+    <string id="EHFibjkM" text="{TOWN_NAME}, {FACTION_NAME}'den {LORD.LINK} önderliğindeki ordu tarafından kuşatıldı!" />
+    <string id="ExbVzTZA" text="{CLAN}, {KINGDOM} saflarında savaşmak üzere anlaşma yaptı." />
+    <string id="FFXqPFwl" text="Ben {CONVERSATION_CHARACTER.LINK}, Vlandiya krallığının tarihindeki en şanlı ailelerden biri olan {CLAN_NAME}'den." />
+    <string id="JJAWbuNT" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den. Derler ki atamız, Kahramanlar Çağı'nda Batı'dan bu topraklara gelen altın gemilerdekiler arasındaymış. Elbette, o gemilerde olduğu söylenen herkes gerçekten o gemilerde olsaydı, ağırlıktan batarlardı." />
+    <string id="L2GbDVja" text="Ben {CLAN_NAME}'den {CONVERSATION_CHARACTER.LINK}, {?PLAYER.GENDER}leydim{?}lordum{\?}, size hizmet etmekten onur duyarım." />
+    <string id="Nq2dyiO1" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den; Sturgia destanlarında adını defalarca duymuş olmalısınız." />
+    <string id="PBgLvyOa" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den. Atalarımız, prenslerin dinarını almak ve bu toprakları savunmaya yemin etmek için uzak kuzeyden gelenler arasındaydı ve biz o yemine sadık kaldık." />
+    <string id="S0oFKYfB" text="{CLAN} artık {KINGDOM}'e hizmet etmiyor." />
+    <string id="S1vGzr8z" text="Ben {CONVERSATION_CHARACTER.LINK}, bir Aserai boyu olan {CLAN_NAME}'den." />
+    <string id="SLAkSrb5" text="{FACTION1_NAME}, {FACTION2_NAME}'e savaş ilan etti." />
+    <string id="TsYCa2fZ" text="{FACTION1} ile {FACTION2} barış yaptı." />
+    <string id="U4p70l9B" text="Ben {CLAN_NAME}'den {CONVERSATION_CHARACTER.LINK}." />
+    <string id="U770Bvy8" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den. Ailemizin şöhreti Battania şarkılarında eşsizdir." />
+    <string id="Ua0T0A7t" text="Ben {CONVERSATION_CHARACTER.LINK}, Battanialıların kadim soylarından biri olan {CLAN_NAME}'den." />
+    <string id="WH8P3Y5F" text="Ben {CLAN_NAME}'den {CONVERSATION_CHARACTER.LINK}." />
+    <string id="a8584KD0" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den. Eminim boyumuzun adını bozkır destanlarında duymuşsunuzdur. Khuzaitlerin anası büyük dişi kurdun 12 oğlundan birinin adını taşıyoruz." />
+    <string id="cMO9JXvk" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den. Topraklarımızı {LIEGE_TITLE}'den tımar olarak tutuyoruz ve bağlılık yeminlerimize sadığız." />
+    <string id="dC8acIya" text="Ben {CLAN_NAME}'den {CONVERSATION_CHARACTER.LINK}." />
+    <string id="dfAE3liA" text="{CLAN_NAME} boyu {FACTION}'e katıldı." />
+    <string id="dlkg2jQf" text="Ben {CONVERSATION_CHARACTER.LINK}, Sturgialıların kadim soylarından biri olan {CLAN_NAME}'den." />
+    <string id="eyxfHmCU" text="Ben {CONVERSATION_CHARACTER.LINK}, {CLAN_NAME}'den. Ailemiz nesiller boyu Vlandiya krallarına hizmet etti." />
+    <string id="hJFCi1zu" text="{FACTION1} ile {FACTION2} barış yaptı." />
+    <string id="hP57Caab" text="{VICTOR_FACTION}'den {VICTOR_PARTY}, {DEFEATED_FACTION}'den {DEFEATED_PARTY}'yi yendi." />
+    <string id="hbWhfoWH" text="{SETTLEMENT}, {FACTION_NAME}'den {LORD.LINK} tarafından yağmalanıyor" />
+    <string id="hopvV6Ch" text="{FACTION1_NAME} hükümdarı {RULER_NAME}, {FACTION2_NAME} ulusuna savaş ilan etti." />
+    <string id="kqwNCCbZ" text="{TOWN_NAME}, {FACTION_NAME} mensubu {LORD.LINK} önderliğindeki ordu tarafından kuşatıldı!" />
+    <string id="l2nEIZV5" text="Ben {CLAN_NAME} mensubu {CONVERSATION_CHARACTER.LINK}." />
+    <string id="nbVW2cJ8" text="{SETTLEMENT}, {FACTION_NAME} mensubu {LORD.LINK} önderliğindeki ordu tarafından yağmalanıyor" />
+    <string id="pn79h0aj" text="Ben {CLAN_NAME} mensubu {CONVERSATION_CHARACTER.LINK}. Unvanımızı bizzat İmparator Vortios'tan aldık. Pek de seçeneği yoktu ya, o sırada akın gemilerimizden birinde esir tutuluyordu, ama eminim kanımızın asaletini fark etmiştir." />
+    <string id="rhTUDKhJ" text="Ben {CLAN_NAME} mensubu {CONVERSATION_CHARACTER.LINK}. Battanialıların, şampiyonlarından birinin kafatasını içki kupası koleksiyonumuza katmamış tek bir klanı yoktur." />
+    <string id="z2yr4mc6" text="Ben {CLAN_NAME} mensubu {CONVERSATION_CHARACTER.LINK}. Klanımız nesillerdir Khuzait Hanlığı'na sadakatle hizmet eder." />
+    <string id="zZ9FQJRI" text="Ben Aserai soylarının en kadim ve en asili olan {CLAN_NAME} mensubu {CONVERSATION_CHARACTER.LINK}." />
   </strings>
 </base>

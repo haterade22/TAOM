@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Polish" />
+  </tags>
+  <strings>
+    <string id="aom_taom_dale_castle_001_forceatmo_name" text="[Dale] Zamek Westoft" />
+    <string id="aom_taom_dwarven_moria_w_forceatmo_name" text="[Góry Mgliste] Zachodnia Moria" />
+    <string id="aom_taom_gondor_castle_001_forceatmo_name" text="[Gondor] Zamek Barad Faen" />
+    <string id="aom_taom_gondor_castle_002_forceatmo_name" text="[Gondor] Zamek Bergraw" />
+    <string id="aom_taom_gondor_castle_003_forceatmo_name" text="[Gondor] Zamek Melgobas" />
+    <string id="aom_taom_gondor_town_dolamroth_forceatmo_name" text="[Gondor] Dol Amroth" />
+    <string id="aom_taom_gondor_town_lossarnach_forceatmo_name" text="[Gondor] Miasto Lossarnach" />
+    <string id="aom_taom_gondor_town_minas_tirith_forceatmo_name" text="[Gondor] Minas Tirith" />
+    <string id="aom_taom_gondor_town_osgiliath_e_forceatmo_name" text="[Gondor] Osgiliath (Wschód)" />
+    <string id="aom_taom_gondor_town_osgiliath_w_forceatmo_name" text="[Gondor] Osgiliath (Zachód)" />
+    <string id="aom_taom_gondor_village_001_forceatmo_name" text="[Gondor] Wioska Gondoru A" />
+    <string id="aom_taom_gondor_village_002_forceatmo_name" text="[Gondor] Wioska Camloth" />
+    <string id="aom_taom_gondor_village_003_forceatmo_name" text="[Gondor] Wioska Dinadab" />
+    <string id="aom_taom_gondor_village_004_forceatmo_name" text="[Gondor] Wioska Mereham" />
+    <string id="aom_taom_isengard_town_orthanc_forceatmo_name" text="[Isengard] Orthanc" />
+    <string id="aom_taom_mordor_battle_001_forceatmo_name" text="[Mordor] Równiny Mordoru I" />
+    <string id="aom_taom_mordor_battle_002_forceatmo_name" text="[Mordor] Równiny Mordoru II" />
+    <string id="aom_taom_mordor_battle_003_forceatmo_name" text="[Mordor] Równiny Mordoru III" />
+    <string id="aom_taom_mordor_battle_004_forceatmo_name" text="[Mordor] Równiny Mordoru IV" />
+    <string id="aom_taom_mordor_battle_black_gates_forceatmo_name" text="[Mordor] Czarna Brama" />
+    <string id="aom_taom_mordor_battle_dead_marshes_forceatmo_name" text="[Mordor] Martwe Bagna" />
+    <string id="aom_taom_mordor_town_goblin_town_forceatmo_name" text="[Mordor] Goblinie Miasto" />
+    <string id="aom_taom_mordor_town_minas_forceatmo_name" text="[Mordor] Minas Morgul" />
+    <string id="aom_taom_rohan_battle_001_forceatmo_name" text="[Rohan] Równiny Rohanu" />
+    <string id="aom_taom_rohan_battle_fords_of_isen_forceatmo_name" text="[Rohan] Brody Isen" />
+    <string id="aom_taom_rohan_castle_helms_deep_forceatmo_name" text="[Rohan] Helmowy Jar – nocny deszcz" />
+    <string id="aom_taom_rohan_edoras_town_forceatmo_name" text="[Rohan] Edoras" />
+  </strings>
+</base>

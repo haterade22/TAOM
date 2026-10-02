@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Simplified Chinese" />
+  </tags>
+  <strings>
+    <string id="aom_taom_dale_castle_001_forceatmo_name" text="[河谷邦] 西奥夫特城堡" />
+    <string id="aom_taom_dwarven_moria_w_forceatmo_name" text="[迷雾山脉] 西摩瑞亚" />
+    <string id="aom_taom_gondor_castle_001_forceatmo_name" text="[刚铎] 巴拉德·法恩城堡" />
+    <string id="aom_taom_gondor_castle_002_forceatmo_name" text="[刚铎] 贝格劳城堡" />
+    <string id="aom_taom_gondor_castle_003_forceatmo_name" text="[刚铎] 梅尔戈巴斯城堡" />
+    <string id="aom_taom_gondor_town_dolamroth_forceatmo_name" text="[刚铎] 多阿姆洛斯" />
+    <string id="aom_taom_gondor_town_lossarnach_forceatmo_name" text="[刚铎] 洛沙那赫城镇" />
+    <string id="aom_taom_gondor_town_minas_tirith_forceatmo_name" text="[刚铎] 米那斯提力斯" />
+    <string id="aom_taom_gondor_town_osgiliath_e_forceatmo_name" text="[刚铎] 奥斯吉利亚斯(东)" />
+    <string id="aom_taom_gondor_town_osgiliath_w_forceatmo_name" text="[刚铎] 奥斯吉利亚斯(西)" />
+    <string id="aom_taom_gondor_village_001_forceatmo_name" text="[刚铎] 刚铎村庄A" />
+    <string id="aom_taom_gondor_village_002_forceatmo_name" text="[刚铎] 卡姆洛斯村" />
+    <string id="aom_taom_gondor_village_003_forceatmo_name" text="[刚铎] 迪纳达布村" />
+    <string id="aom_taom_gondor_village_004_forceatmo_name" text="[刚铎] 梅勒哈姆村" />
+    <string id="aom_taom_isengard_town_orthanc_forceatmo_name" text="[艾森加德] 欧散克塔" />
+    <string id="aom_taom_mordor_battle_001_forceatmo_name" text="[魔多] 魔多平原 I" />
+    <string id="aom_taom_mordor_battle_002_forceatmo_name" text="[魔多] 魔多平原 II" />
+    <string id="aom_taom_mordor_battle_003_forceatmo_name" text="[魔多] 魔多平原 III" />
+    <string id="aom_taom_mordor_battle_004_forceatmo_name" text="[魔多] 魔多平原 IV" />
+    <string id="aom_taom_mordor_battle_black_gates_forceatmo_name" text="[魔多] 黑门" />
+    <string id="aom_taom_mordor_battle_dead_marshes_forceatmo_name" text="[魔多] 死亡沼泽" />
+    <string id="aom_taom_mordor_town_goblin_town_forceatmo_name" text="[魔多] 半兽人城" />
+    <string id="aom_taom_mordor_town_minas_forceatmo_name" text="[魔多] 米那斯魔古尔" />
+    <string id="aom_taom_rohan_battle_001_forceatmo_name" text="[洛汗] 洛汗平原" />
+    <string id="aom_taom_rohan_battle_fords_of_isen_forceatmo_name" text="[洛汗] 艾森河渡口" />
+    <string id="aom_taom_rohan_castle_helms_deep_forceatmo_name" text="[洛汗] 圣盔谷 - 夜雨" />
+    <string id="aom_taom_rohan_edoras_town_forceatmo_name" text="[洛汗] 伊多拉斯" />
+  </strings>
+</base>

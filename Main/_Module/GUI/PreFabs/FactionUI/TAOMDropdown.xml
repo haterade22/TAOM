@@ -1,0 +1,161 @@
+<Prefab>
+  <!-- Private copy of Native\GUI\Prefabs\Standard\Standard.DropdownWithHorizontalControl.xml, made 2026-09-30
+       after TWO failed attempts to reskin the Difficulty screen's dropdowns by overriding the NATIVE brush
+       names that widget references (SPOptions.Dropdown.*, Standard.DropdownItem): those brush names are
+       globally shared, so overriding them by name also silently reskinned/broke the main menu's own unrelated
+       Options screen (same native widget, same brush names) - user report: "I now dont see some options
+       anymore in the my options from the main menu". Confirmed via decompile (TaleWorlds.GauntletUI.
+       PrefabSystem.WidgetFactory) that prefab-file-as-child-widget-tag is a fully generic, filename-based
+       mechanism open to any module's own Prefabs/*.xml - no C# registration needed, and this project already
+       does exactly this elsewhere (TFGGrid.xml, TFGDropdown.xml, TAOMGainedProperties.xml etc., all referenced
+       as child tags the same way). This file is IDENTICAL in structure to the native one, with every brush
+       name it references renamed to a "TAOM.Dropdown.*" prefix unique to this file - nothing else in the game
+       or any other mod could ever resolve to those names, so this can't leak into any other screen. Referenced
+       from TAOMOptionsStage.xml as <TAOMDropdown .../> instead of <Standard.DropdownWithHorizontalControl .../>.
+       The IsFlatDesign branching the native version has (choosing between SPOptions.* and Flat.*/MPLobby.*
+       brush families) is dropped entirely - this copy only ever needs its own TAOM.Dropdown.* brushes, no
+       native fallback. Parameters/structure otherwise preserved byte-for-byte so it keeps working with the
+       same SelectorVM data source the native one expects. -->
+  <Parameters>
+    <Parameter Name="SelectorDataSource" DefaultValue="SelectorDataSource" />
+    <Parameter Name="ShowNextAndPrevious" DefaultValue="true" />
+    <Parameter Name="IsCustomWidth" DefaultValue="false" />
+    <Parameter Name="CustomWidth" DefaultValue="0" />
+    <Parameter Name="IsEnabled" DefaultValue="true" />
+    <Parameter Name="HintDataSource" DefaultValue="" />
+    <Parameter Name="OnDropdownClick" DefaultValue="" />
+  </Parameters>
+  <Constants>
+    <!-- FIX (2026-10-01): these used to be BrushValueType="Width"/"Height" reads off the brush's own sprite -
+         i.e. the widget's SIZE was derived from whatever raw pixel dimensions the referenced PNG happened to
+         have. That's exactly what silently broke this dropdown's height: switching TAOM.Dropdown.Center's
+         sprite from the hand-drawn fs_dropdown_box_9 (80x44) to the native BlankWhiteSquare_9 (a generic 25x25
+         tinting swatch, see Brushes\CharCreation.xml's own comment) quietly shrank DropdownCenter.Height from
+         44 to 25, squashing every option row. Sizing must never be coupled to which sprite a brush happens to
+         reference. Hardcoded to literal values matching the ORIGINAL fs_dropdown_box.png design size (80x44) so
+         the layout is stable regardless of what the brush underneath actually renders. -->
+    <Constant Name="DropdownCenter.Brush.Width" Value="80" />
+    <Constant Name="DropdownCenter.Height" Value="44" />
+    <Constant Name="Extension.Brush.Width" Value="80" />
+
+    <Constant Name="Extension.Width" BooleanCheck="*IsCustomWidth" OnTrue="*CustomWidth" OnFalse="!Extension.Brush.Width" />
+    <Constant Name="DropdownCenter.Width" BooleanCheck="*IsCustomWidth" OnTrue="*CustomWidth" OnFalse="!DropdownCenter.Brush.Width" />
+  </Constants>
+  <Variables>
+  </Variables>
+  <VisualDefinitions>
+  </VisualDefinitions>
+  <Window>
+    <!--This prefab assumes that you're using SelectorVM as the DataSource-->
+    <!--It would not work with other models-->
+    <ListPanel Id="HorizontalControlParent" DataSource="*SelectorDataSource" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren">
+      <Children>
+
+        <!--Previous Button-->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="43" VerticalAlignment="Center" DoNotAcceptEvents="true" IsVisible="*ShowNextAndPrevious">
+          <Children>
+            <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="60" SuggestedHeight="70" VerticalAlignment="Center" HorizontalAlignment="Center" Command.Click="ExecuteSelectPreviousItem" Brush="TAOM.Dropdown.Left.Button" IsEnabled="*IsEnabled"/>
+          </Children>
+        </Widget>
+
+        <!--Type Selection-->
+        <AnimatedDropdownWidget Id="DropdownParent"  WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="!DropdownCenter.Width" HorizontalAlignment="Center" VerticalAlignment="Center" DropdownContainerWidget="DropdownClipWidget\DropdownContainerWidget"  ListPanel="DropdownClipWidget\DropdownContainerWidget\ScrollablePanel\ClipRect\PrimaryUsageSelectorList" Button="DropdownButtonContainer\DropdownButton" CurrentSelectedIndex="@SelectedIndex" TextWidget="DropdownButtonContainer\DropdownButton\SelectedTextWidget" DropdownClipWidget="DropdownClipWidget" ScrollbarWidget="DropdownClipWidget\DropdownContainerWidget\VerticalScrollbar" Command.OnDropdownClick="*OnDropdownClick" >
+          <Children>
+
+            <Widget Id="DropdownButtonContainer" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="!DropdownCenter.Height" HorizontalAlignment="Center" VerticalAlignment="Center">
+              <Children>
+                <ButtonWidget Id="DropdownButton" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotPassEventsToChildren="true"  Brush="TAOM.Dropdown.Center" IsEnabled="*IsEnabled">
+                  <Children>
+                    <!-- FIX (2026-10-01): TAOM.Dropdown.Center's own fill (BlankWhiteSquare_9, dark-tinted) is a
+                         flat solid color with no border baked in - unlike the old fs_dropdown_box_9 PNG (which
+                         DID draw its own border but produced a 9-slice stretch artifact at this box's real
+                         width, see that brush's own fix comment). Adding the same hairline-border technique
+                         already proven on the checkbox/Narrative option rows/Banner Editor slider (thin
+                         BlankWhiteSquare_9 bars, absolute pixel size, immune to any sprite/stretch issues)
+                         instead of trying to bake a border into another PNG. -->
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Top" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.7" DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.7" DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.7" DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.7" DoNotAcceptEvents="true" />
+                    <ScrollingRichTextWidget Id="SelectedTextWidget" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" MarginLeft="7" MarginRight="7" PositionYOffset="1" Brush="TAOM.Dropdown.Center.Text" IsAutoScrolling="false"  ScrollOnHoverWidget="..\..\DropdownButton"/>
+                    <HintWidget DataSource="*HintDataSource" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                  </Children>
+                </ButtonWidget>
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsDisabled="*IsEnabled">
+                  <Children>
+                    <HintWidget DataSource="*HintDataSource" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                  </Children>
+                </Widget>
+              </Children>
+            </Widget>
+
+            <!--Dropdown Visual-->
+            <Widget Id="DropdownClipWidget" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" ClipContents="true" WidgetToCopyHeightFrom="DropdownContainerWidget\ScrollablePanel">
+              <Children>
+
+                <BrushWidget Id="DropdownContainerWidget" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" VerticalAlignment="Bottom" SuggestedWidth="!Extension.Width" SuggestedHeight="380" HorizontalAlignment="Center" Brush="TAOM.Dropdown.Extension" >
+                  <Children>
+
+                    <!-- same hairline border as the closed dropdown button above, for visual consistency. -->
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="1" VerticalAlignment="Top" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.5" DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.5" DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.5" DoNotAcceptEvents="true" />
+
+                    <ScrollablePanel Id="ScrollablePanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" AutoHideScrollBars="true" ClipRect="ClipRect" MarginBottom="20" VerticalAlignment="Bottom" InnerPanel="ClipRect\PrimaryUsageSelectorList" VerticalScrollbar="..\VerticalScrollbar">
+                      <Children>
+                        <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" ClipContents="true" MaxHeight="348">
+                          <Children>
+
+                            <ListPanel Id="PrimaryUsageSelectorList" DataSource="{ItemList}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <ItemTemplate>
+                                <!-- FIX (2026-10-03, user: "can we make [the Difficulty screen selectors] match
+                                     the origins screen buttons" - i.e. Narrative Stage's own option-row look:
+                                     frameless, muted/bright/gold text states + a thin gold accent bar marking
+                                     the current pick, instead of a flat translucent wash over the whole row.
+                                     TAOM.DropdownItem repurposed as the accent-bar brush (same Default
+                                     invisible/Hovered 0.3/Selected 1.0 state logic as CC.NarrativeOptionAccent);
+                                     TAOM.Dropdown.Item.Text now state-driven (muted/bright/gold) and
+                                     left-aligned to match CC.NarrativeOption exactly, instead of a flat color
+                                     centered. Scaled down from Narrative's 90px rows to this dropdown's 29px
+                                     row height - same visual language, not a literal copy of the geometry. -->
+                                <DropdownItemButtonWidget Id="DropdownItemButton" DoNotUseCustomScale="true" DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="29" MarginLeft="10" MarginRight="10" HorizontalAlignment="Center" VerticalAlignment="Bottom" ButtonType="Radio" UpdateChildrenStates="true" CanBeSelected="@CanBeSelected" Brush="Standard.DropdownItem.SoundBrush">
+                                  <Children>
+                                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="3" HorizontalAlignment="Left" Brush="TAOM.DropdownItem" DoNotAcceptEvents="true" />
+                                    <ScrollingRichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Left" MarginLeft="14" MarginRight="7" VerticalAlignment="Center" Brush="TAOM.Dropdown.Item.Text" Text="@StringItem" IsAutoScrolling="false" ScrollOnHoverWidget="..\..\DropdownItemButton"/>
+                                    <HintWidget DataSource="{Hint}" DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                                  </Children>
+                                </DropdownItemButtonWidget>
+                              </ItemTemplate>
+                            </ListPanel>
+                          </Children>
+                        </Widget>
+
+                      </Children>
+                    </ScrollablePanel>
+
+                    <ScrollbarWidget Id="VerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="8" HorizontalAlignment="Right" VerticalAlignment="Center" MarginTop="8" MarginBottom="18" MarginRight="5" AlignmentAxis="Vertical" Handle="VerticalScrollbarHandle" IsVisible="false" MaxValue="100" MinValue="0">
+                      <Children>
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="4" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" AlphaFactor="0.2" Color="#5A4033FF" />
+                        <ImageWidget Id="VerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="8" SuggestedHeight="10" HorizontalAlignment="Center" Brush="FaceGen.Scrollbar.Handle" />
+                      </Children>
+                    </ScrollbarWidget>
+
+                  </Children>
+                </BrushWidget>
+              </Children>
+            </Widget>
+
+          </Children>
+        </AnimatedDropdownWidget>
+
+        <!--Next Button-->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="43" VerticalAlignment="Center" DoNotAcceptEvents="true" IsVisible="*ShowNextAndPrevious">
+          <Children>
+            <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="60" SuggestedHeight="70" VerticalAlignment="Center" HorizontalAlignment="Center" Command.Click="ExecuteSelectNextItem" Brush="TAOM.Dropdown.Right.Button" IsEnabled="*IsEnabled"/>
+          </Children>
+        </Widget>
+
+      </Children>
+    </ListPanel>
+  </Window>
+</Prefab>

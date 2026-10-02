@@ -1,0 +1,500 @@
+<Prefab>
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="@BackgroundSprite">
+      <Children>
+
+        <!-- SCRIMS: soft dark gradients so text sits directly on the scene (no panel frames) -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1000" HorizontalAlignment="Left" Sprite="fs_scrim_l" />
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="1000" HorizontalAlignment="Right" Sprite="fs_scrim_r" />
+
+        <!-- CENTER: the 3D character. The widget is far taller than the screen on purpose: the full body is rendered
+             into it, so only the upper body (head to waist) lands on screen. Drag to rotate. Hidden (IsVisible=
+             @ShowCharacterViewport) for factions with a painted portrait instead (TEST, Isengard only so far). -->
+        <Widget Id="CharacterViewportWrapper" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginTop="@ViewportOffset" IsVisible="@ShowCharacterViewport"><Children>
+        <CharacterTableauWidget DataSource="{Character}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1250" SuggestedHeight="2040" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="-168" BannerCodeText="@BannerCodeText" CharStringId="@CharStringId" EquipmentCode="@EquipmentCode" BodyProperties="@BodyProperties" IsFemale="@IsFemale" MountCreationKey="@MountCreationKey" Race="@Race" StanceIndex="@StanceIndex" ArmorColor1="@ArmorColor1" ArmorColor2="@ArmorColor2" IsTableauEnabled="@IsTableauEnabled" DoNotUseCustomScale="true" />
+        </Children></Widget>
+
+        <!-- PAINTED PORTRAIT (TEST, Isengard only, 2026-09-22): shown instead of the 3D viewport for factions with
+             FactionInfo.PaintedPortraitSprite set. Slides in from behind the right column and fades in
+             (src\PortraitReveal.cs drives PositionXOffset/AlphaFactor each frame - Gauntlet can't animate a
+             transition on its own). AlphaFactor starts at 0; the reveal always resets and replays it from there. -->
+        <!-- SuggestedWidth bound per-faction (2026-09-29, user: "fix the proportions... look at the actual image
+             on it") - height stays fixed at 850, width varies to preserve each image's own real content aspect
+             ratio (FactionCatalog.PaintedPortraitWidths) instead of stretching every faction's art into one box. -->
+        <!-- SuggestedHeight bound to @PaintedPortraitHeight instead of a hardcoded 850 (2026-09-30, user:
+             "the gondor soldier seems horizontally stretched a little") - "make it bigger" requests used to
+             only ever adjust PaintedPortraitWidth (via FactionCatalog.PaintedPortraitWidths), silently
+             stretching the image wider with no matching height increase since every faction shared this same
+             literal 850. Now driven by FactionCatalog.PaintedPortraitScales, which scales width and height
+             together - see ViewModels.cs's PaintedPortraitHeight/DefaultPaintedPortraitHeight. -->
+        <Widget Id="FactionPortrait" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="@PaintedPortraitWidth" SuggestedHeight="@PaintedPortraitHeight" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="0" IsVisible="@HasPaintedPortrait" Sprite="@PaintedPortraitSprite" AlphaFactor="0" DoNotUseCustomScale="true" DoNotAcceptEvents="true" />
+
+        <!-- HERO PORTRAIT (2026-09-29, user: "once you click on the special character button for Sauron, the
+             image fades/slides in from the right"): same slide+fade mechanism as FACTION PORTRAIT above
+             (src\HeroPortraitReveal.cs), but keyed to picking a specific special-character tile with hand-made
+             art (FactionCatalog.SpecialCharacters' PortraitSprite column) rather than to the faction itself.
+             Declared AFTER FactionPortrait so it draws on top when both would apply. -->
+        <!-- SuggestedWidth bound per-hero (2026-09-29, user: "fix the proportions... look at the actual image on
+             it to determine whether its too tall or small") - height stays fixed at 900, width varies to
+             preserve each hero's own reveal image's real (transparent-padding-trimmed) content aspect ratio
+             instead of stretching every image into one box - see FactionCatalog.SpecialCharacters' RevealWidth
+             field and FactionScreenVM.SelectedHeroPortraitWidth. -->
+        <!-- SuggestedHeight now also bound per-hero (2026-09-30, user: "the special character images are too
+             big") - RevealScale (FactionCatalog.SpecialCharacters) shrinks both dimensions together for
+             characters whose source photo frames them more tightly than the others. -->
+        <Widget Id="HeroPortrait" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="@SelectedHeroPortraitWidth" SuggestedHeight="@SelectedHeroPortraitHeight" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="0" IsVisible="@HasSelectedHeroPortrait" Sprite="@SelectedHeroPortraitSprite" AlphaFactor="0" DoNotUseCustomScale="true" DoNotAcceptEvents="true" />
+
+        <!-- HERO PORTRAIT, SECOND SLOT (2026-09-30, user: "switching between... one specialized [character] into
+             a different specialized one of that same faction, the fade out keeps being the one from the initial
+             one"): HeroPortrait above is a single widget whose Sprite gets overwritten immediately on every pick,
+             so once a SECOND hero is chosen there's nothing left holding the FIRST hero's image for an outgoing
+             fade to act on. This twin widget lets FactionScreenVM.ShowHeroPortrait alternate which slot receives
+             the newly-picked hero's art, leaving the other slot untouched (still showing the previous hero) for
+             src\HeroPortraitReveal.cs to animate out for real - see that file for the crossfade logic. -->
+        <Widget Id="HeroPortraitB" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="@SelectedHeroPortraitWidthB" SuggestedHeight="@SelectedHeroPortraitHeightB" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="0" IsVisible="@HasSelectedHeroPortraitB" Sprite="@SelectedHeroPortraitSpriteB" AlphaFactor="0" DoNotUseCustomScale="true" DoNotAcceptEvents="true" />
+
+        <!-- GROUND FOG: two drifting layers (driven each frame by src\FogDrift.cs - Gauntlet prefabs can't loop an
+             animation on their own). No real 3D scene exists on this screen for a true particle system
+             (CharacterTableauWidget renders into its own offscreen target, not a SceneLayer), so this 2D parallax
+             drift is the practical substitute. Far layer first (behind/dimmer, higher up), near layer on top. -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true" DoNotAcceptEvents="true">
+          <Children>
+            <Widget Id="FogFarA" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="2200" SuggestedHeight="560" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginBottom="40" Sprite="fs_fog_far" DoNotUseCustomScale="true" />
+            <Widget Id="FogFarB" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="2200" SuggestedHeight="560" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginBottom="40" Sprite="fs_fog_far" DoNotUseCustomScale="true" />
+            <Widget Id="FogA" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="2200" SuggestedHeight="460" HorizontalAlignment="Left" VerticalAlignment="Bottom" Sprite="fs_fog_near" DoNotUseCustomScale="true" />
+            <Widget Id="FogB" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="2200" SuggestedHeight="460" HorizontalAlignment="Left" VerticalAlignment="Bottom" Sprite="fs_fog_near" DoNotUseCustomScale="true" />
+          </Children>
+        </Widget>
+
+        <!-- TOP STRIP with the faction emblem tiles. Every tile sizes itself from its own data, so the row fits any number of factions. -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="130" VerticalAlignment="Top" Sprite="fs_strip" />
+
+        <ListPanel DataSource="{Factions}" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="112" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="8" StackLayout.LayoutMethod="HorizontalLeftToRight">
+          <ItemTemplate>
+            <ButtonWidget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="@ButtonWidth" SuggestedHeight="112" Command.Click="ExecuteSelectFaction" Command.HoverBegin="ExecuteHoverBegin" Command.HoverEnd="ExecuteHoverEnd" IsSelected="@IsSelected">
+              <Children>
+                <Widget IsVisible="@IsSelected" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="@GlowSize" SuggestedHeight="@GlowSize" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="fs_tile_glow" />
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="@TileSize" SuggestedHeight="@TileSize" HorizontalAlignment="Center" VerticalAlignment="Center" AlphaFactor="@FrameAlpha" Sprite="fs_tile_9" />
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="@IconSize" SuggestedHeight="@IconSize" HorizontalAlignment="Center" VerticalAlignment="Center" AlphaFactor="@IconAlpha" Sprite="@IconSprite" />
+                <Widget IsVisible="@IsSelected" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="14" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="-14" Sprite="fs_diamond" />
+              </Children>
+            </ButtonWidget>
+          </ItemTemplate>
+        </ListPanel>
+
+        <!-- FACTION NAME: tracked capitals with a hairline and a small diamond under it -->
+        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="1300" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="152" Brush="Preview.Title" Text="@HoveredFactionName" />
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="800" SuggestedHeight="16" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="214" Sprite="fs_divider_wide" />
+
+        <!-- LEFT COLUMN: what the faction is -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="480" HorizontalAlignment="Left" MarginLeft="96" MarginTop="322" MarginBottom="40" DataSource="{Selected}">
+          <Children>
+            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalTopToBottom">
+              <Children>
+                <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="Preview.BodyLeft" Text="@Description" />
+
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="420" SuggestedHeight="16" HorizontalAlignment="Left" MarginTop="16" MarginBottom="12" Sprite="fs_divider" />
+
+                <!-- strengths -->
+                <ListPanel IsVisible="@HasStrengths" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                  <Children>
+                    <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="8" Brush="Preview.Section" LocalizedText="{=taom_fui_strengths}Strengths" />
+                    <ListPanel DataSource="{Strengths}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <ItemTemplate>
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="3">
+                          <Children>
+                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="14" VerticalAlignment="Top" MarginTop="8" MarginLeft="1" Sprite="fs_bullet" />
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="26" Brush="Preview.RowPos" Text="@Text" />
+                          </Children>
+                        </Widget>
+                      </ItemTemplate>
+                    </ListPanel>
+                  </Children>
+                </ListPanel>
+
+                <Widget IsVisible="@HasWeaknesses" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="420" SuggestedHeight="16" HorizontalAlignment="Left" MarginTop="10" MarginBottom="12" Sprite="fs_divider" />
+
+                <!-- weaknesses -->
+                <ListPanel IsVisible="@HasWeaknesses" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                  <Children>
+                    <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="8" Brush="Preview.Section" LocalizedText="{=taom_fui_weaknesses}Weaknesses" />
+                    <ListPanel DataSource="{Weaknesses}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <ItemTemplate>
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="3">
+                          <Children>
+                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="14" VerticalAlignment="Top" MarginTop="8" MarginLeft="1" Sprite="fs_bullet" />
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="26" Brush="Preview.RowNeg" Text="@Text" />
+                          </Children>
+                        </Widget>
+                      </ItemTemplate>
+                    </ListPanel>
+                  </Children>
+                </ListPanel>
+
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" MarginTop="14" MarginBottom="10" Sprite="fs_divider_thin" />
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="Preview.Difficulty" Text="@DifficultyText" />
+              </Children>
+            </ListPanel>
+          </Children>
+        </Widget>
+
+        <!-- RIGHT COLUMN (Characters/Browse More/Benefits) is declared at the very end of this file, right
+             before CONFIRM - see that comment for why (a real, reproduced click-swallowing bug tied to
+             document position, not a layout choice). -->
+
+        <!-- MINIMAP POPUP + its close-catcher MOVED to the very end of this document (2026-09-30, user
+             screenshot: "expanded map should be over everything, its now under the buttons") - this file's own
+             draw order rule (later declaration = drawn on top - see the RIGHT COLUMN comment below for where
+             that was first pinned down) meant the popup, declared way up here, was rendering BEHIND the right
+             column and minimap button, both declared much later. Moved the whole block (CLOSE CATCHER +
+             MINIMAP POPUP, unchanged internally) to right after the right column's own closing tag, the last
+             thing in the document, so it now draws on top of literally everything - including buttons that are
+             themselves declared late specifically to guarantee their own clickability. Its own click handling
+             (MinimapPopupMap, MinimapCloseCatcher) doesn't depend on being early - this file's established
+             lesson is the opposite: being LATE is what makes a widget here reliably clickable, never a risk. -->
+
+        <!-- MINIMAP: its own framed piece of UI, a thin gold border with the real Middle-earth map filling the
+             whole interior edge-to-edge (no stone mat gap - user asked for the map to fill the frame entirely).
+             Same MarginRight/width as the RIGHT COLUMN above it, so it reads as sitting directly beneath that
+             panel rather than floating independently. Wrapped in a ButtonWidget (Id="MinimapButton") so
+             MinimapPopup.cs can find its screen position: click toggles the bigger centered popup open/closed
+             (src\MinimapPopup.cs, reads this widget's live GlobalPosition each time - no C# change needed when
+             this margin moves). HoverBegin/End here are ONLY a cosmetic "click me" glow (MinimapGlowAlpha
+             on FactionScreenVM) - deliberately not wired to MinimapPopup at all, so this can't reintroduce
+             the open/close flicker hovering caused there before.
+             MarginBottom 100 (was 44, 2026-09-23): pushed up to close the gap under the right column above it
+             (paired with that column's own MarginTop nudge back down) - see the right column's comment for
+             the full reasoning. -->
+        <ButtonWidget Id="MinimapButton" DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="480" SuggestedHeight="230" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="96" MarginBottom="100" Sprite="fs_minimap_frame" Command.Click="ExecuteMinimapClick" Command.HoverBegin="ExecuteMinimapHoverBegin" Command.HoverEnd="ExecuteMinimapHoverEnd">
+          <Children>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="472" SuggestedHeight="222" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="2" MarginTop="2" Sprite="fs_minimap" DataSource="{Selected}">
+              <Children>
+                <Widget Id="MinimapPin" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="28" SuggestedHeight="49" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="@MapPinMarginLeft" MarginTop="@MapPinMarginTop" Sprite="fs_pin" />
+              </Children>
+            </Widget>
+            <!-- hover glow wash, on top of the map, below the pin z-order-wise doesn't matter since it's a
+                 flat tint - DoNotAcceptEvents so it never competes with the button's own click/hover -->
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true" Sprite="BlankWhiteSquare_9" Color="#F0D080FF" AlphaFactor="@MinimapGlowAlpha" />
+          </Children>
+        </ButtonWidget>
+
+        <!-- HOME: back to the main menu, bottom left (label fades in on hover) -->
+        <ButtonWidget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="76" SuggestedHeight="76" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginLeft="48" MarginBottom="44" Brush="Preview.RoundButton" Command.Click="ExecuteBack">
+          <Children>
+            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" MarginLeft="92" Brush="Preview.HoverOnly" Text="@BackLabel" />
+          </Children>
+        </ButtonWidget>
+
+        <!-- CONFIRM -->
+        <ButtonWidget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="640" SuggestedHeight="88" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="44" Brush="Preview.Confirm" Command.Click="ExecuteConfirm">
+          <Children><FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginBottom="12" Brush="Preview.ConfirmText" LocalizedText="{=taom_fui_confirm}Confirm" /></Children>
+        </ButtonWidget>
+
+        <!-- RIGHT COLUMN: heroes and benefits. MOVED HERE (2026-09-29, was originally declared right after the
+             faction ribbon/faction-name area, roughly where the LEFT COLUMN still is): every interactive
+             control inside this panel (Heroes grid tiles, the Leader/Lord/Wanderer Browse More buttons,
+             BrowseList grid tiles) silently failed to receive clicks at its old position, confirmed via 4
+             rounds of isolated test buttons - a plain button with the SAME attributes as the proven-working
+             CONFIRM button below STILL failed to fire there, while an identical button declared at the very
+             end of the document (after Confirm) fired every time. The exact widget responsible for
+             intercepting/absorbing those clicks was never conclusively identified (MinimapCloseCatcher was
+             the leading suspect - a full-screen invisible click-catcher declared between the old position and
+             here - but no corroborating log evidence of it firing was found either), but the FIX empirically
+             works regardless: this whole column, unchanged internally, just moved to the end of the document
+             so nothing declared after it can shadow it. Margins are unchanged (Right-aligned, MarginRight=96,
+             MarginTop=230, MarginBottom=290) so it still renders in exactly the same screen position as
+             before - margins are relative to the shared root, not to sibling declaration order, so moving a
+             widget's position IN THE DOCUMENT never moves it visually. If anything else on this screen needs
+             to be clickable in the future, declare it late here (after MinimapButton at minimum) rather than
+             assuming document order doesn't matter for hit-testing - it demonstrably does somewhere in this
+             file. MarginTop history before the move: 322 -> 262 -> 185 (2026-09-23, from a marked-screenshot
+             measurement) -> 230 (2026-09-23, same day, user follow-up: 185 overshot - nudged back down partway,
+             paired with pushing the minimap UP, its own MarginBottom 44 -> 100, to close the empty gap between
+             this column's actual content and the minimap from BOTH sides at once). Left column keeps
+             MarginTop=322 - not raised, wasn't reported as an issue. -->
+        <!-- MarginBottom 290 -> 340 (2026-09-30, user screenshot: Benefits text visibly overlapping the
+             minimap for longer-benefits-list factions like Mordor, even after round 36's spacing trims and
+             the Browse More section collapsing when not in use). The minimap's own top edge sits at 330 from
+             the screen bottom (MarginBottom 100 + height 230) - the old 290 left only a 40px gap, which this
+             session's added content (Characters grid, Browse More) apparently eats into for any faction with
+             a longer-than-average Benefits list, regardless of the ScrollablePanel/ClipRect's own clipping
+             (never conclusively proven faulty, but also never proven reliable enough to trust at a 40px
+             margin). 340 guarantees a real 10px gap even if that clip has any slop - content that doesn't fit
+             now genuinely needs a scroll instead of visually reaching the minimap, which is the correct
+             trade-off (a scrollbar already exists for exactly this). -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="480" HorizontalAlignment="Right" MarginRight="96" MarginTop="230" MarginBottom="340">
+          <Children>
+            <ScrollablePanel Id="RightColumnScroll" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\VerticalList" VerticalScrollbar="..\VerticalScrollbar">
+              <Children>
+                <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                  <Children>
+                    <ListPanel Id="VerticalList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                      <Children>
+
+                        <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="6" Brush="Preview.Section" LocalizedText="{=taom_fui_characters}Characters" />
+                        <!-- ListPanel, not GridWidget (2026-09-29): GridWidget+ItemTemplate silently never
+                             received clicks here even after the document-position fix below - see that fix's
+                             own comment. ListPanel+ItemTemplate is the SAME repeater mechanism already proven
+                             working for the faction ribbon at the top of this screen, just with a horizontal
+                             StackLayout instead of GridLayout - the exact root cause inside GridLayout/GridWidget
+                             was never pinned down, but swapping the container type fixed every tile immediately.
+                             Tile width trimmed 76->70 and margin added so up to 6 tiles (the curated max, for
+                             stewardship_of_gondor) still fit within this column's 480px width without wrapping,
+                             which ListPanel (unlike GridWidget) does not do on its own. -->
+                        <ListPanel DataSource="{Heroes}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                          <ItemTemplate>
+                            <!-- Tile size trimmed 70->62, margin 8->6 (2026-09-30, user screenshot: "the special
+                                 characters squares last one seems to be cut off") - Gondor now has 6 named
+                                 characters (Gandalf/Aragorn/Boromir/Faramir/Denethor II/Isildur) plus Custom
+                                 Character = 7 tiles, more than this row's 480px column was sized for (tuned
+                                 for a 6-tile max back when 70+8 was chosen - see the comment below). 7*62+6*6=470,
+                                 fits with a small margin; still readable at this size. -->
+                            <ButtonWidget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="62" SuggestedHeight="62" MarginRight="6" HorizontalAlignment="Left" VerticalAlignment="Center" Command.Click="ExecuteSelectHero" IsSelected="@IsSelected" IsEnabled="@IsAvailable">
+                              <Children>
+                                <!-- BrushWidget moved to draw FIRST (2026-09-30, user: "it seems to be above the
+                                     special character buttons") - Preview.HeroFrame picked up a dark fill layer
+                                     for the Leader/Lord/Wanderer tabs, and being declared after the portrait here
+                                     meant that fill painted on top of each tile's portrait image instead of behind
+                                     it, same ordering bug as those tabs had. -->
+                                <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Preview.HeroFrame" />
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="@PortraitSprite" IsVisible="@IsCustom" />
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="@PortraitSprite" IsVisible="@HasPortrait" DoNotAcceptEvents="true" />
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="cc_card_9" IsVisible="@ShowPlaceholder" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="4" Brush="Preview.TileHoverName" Text="@Name" />
+                              </Children>
+                            </ButtonWidget>
+                          </ItemTemplate>
+                        </ListPanel>
+
+                        <!-- Compact tabs with a subtle border (2026-09-30, user: "having a slight border around
+                             it would be nice in the style of the rest of the UI" - a follow-up to the previous
+                             plain-text-only version, which read as TOO bare). Reuses Preview.HeroFrame, the
+                             SAME border brush every hero tile already uses (Default alpha 0.55 - already fairly
+                             subtle - brightening on Hover/Selected), sized to hug the padded text
+                             (WidthSizePolicy=CoverChildren) rather than the old fixed 120px box, so it's still
+                             compact. Text itself still uses Preview.TabText (dim -> hover -> bright gold) with
+                             the thin active-tab underline kept too - belt and suspenders for "which tab is
+                             active" clarity.
+                             MarginTop=16 (2026-09-30, user: "the faction screen has the text Browse More, can
+                             get rid of that") - the "Browse More" section label above these tabs was removed
+                             as dead weight (the tabs are self-explanatory on their own); this keeps roughly the
+                             same visual gap the label used to take up, without the redundant text. -->
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="16" MarginBottom="10" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                          <Children>
+                            <!-- Leader hidden when the faction's actual leader is already one of the curated
+                                 Characters tiles above (2026-09-29, user: "Sauron is a special character but
+                                 also selectable as leader... in those cases Leader category can be removed
+                                 entirely") - FactionScreenVM.ShowLeaderCategory compares
+                                 FactionCatalog.LoadFactionLeader against that faction's own SpecialCharacters
+                                 HeroIds. -->
+                            <!-- FIX (2026-09-30, user screenshot: "Lord"'s own border stretched to fill almost
+                                 the entire row, pushing Wanderer off past the clipped edge, "the right side is
+                                 cut off on the buttons") - WidthSizePolicy=CoverChildren on the button combined
+                                 with a WidthSizePolicy=StretchToParent child (the BrushWidget border added last
+                                 round) is exactly the "StretchToParent child inside a CoverChildren parent"
+                                 circular-sizing bug already documented elsewhere in this project's history
+                                 (TFGGrid.xml) - the parent can't size itself from a child that's simultaneously
+                                 trying to size itself from the parent, and it resolves to something huge instead
+                                 of erroring. Fixed by going back to a small FIXED width instead of CoverChildren
+                                 (sidesteps the circular dependency entirely - StretchToParent children are safe
+                                 once the parent's own size is no longer derived from them), sized to comfortably
+                                 fit "Wanderer" (the longest label) without being anywhere near the old 120px
+                                 boxes. -->
+                            <!-- Width bumped 92->108 (2026-09-30, user: "text size in leaders/lords/wanderers is
+                                 different because the text is trying to fit the button size") - all three
+                                 buttons already shared the same width, but "Wanderer" (8 chars) was tight enough
+                                 against 92px that GauntletUI's TextWidget auto-shrinks its rendered font size to
+                                 avoid overflow, while "Lord"/"Leader" had room to stay at Preview.TabText's full
+                                 FontSize=17 - same brush, visibly different sizes. 108 gives "Wanderer" enough
+                                 clearance that none of the three ever need to shrink, so all three render at the
+                                 same size. -->
+                            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" SuggestedWidth="108" HeightSizePolicy="Fixed" SuggestedHeight="26" MarginRight="8" Command.Click="ExecuteBrowseLeader" IsSelected="@IsLeaderCategorySelected" IsVisible="@ShowLeaderCategory" UpdateChildrenStates="true">
+                              <Children>
+                                <!-- BrushWidget moved before the text (2026-09-30, user: "the text... seems to be
+                                     underneath the black opacity fill of the button, put it over it") - children
+                                     draw in declaration order, so the fill was painting on top of the text instead
+                                     of behind it. -->
+                                <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Preview.HeroFrame" />
+                                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Preview.TabText" LocalizedText="{=taom_fui_leader}Leader" />
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Bottom" IsVisible="@IsLeaderCategorySelected" Sprite="fs_divider_thin" />
+                              </Children>
+                            </ButtonWidget>
+                            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" SuggestedWidth="108" HeightSizePolicy="Fixed" SuggestedHeight="26" MarginRight="8" Command.Click="ExecuteBrowseLord" IsSelected="@IsLordCategorySelected" UpdateChildrenStates="true">
+                              <Children>
+                                <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Preview.HeroFrame" />
+                                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Preview.TabText" LocalizedText="{=taom_fui_lord}Lord" />
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Bottom" IsVisible="@IsLordCategorySelected" Sprite="fs_divider_thin" />
+                              </Children>
+                            </ButtonWidget>
+                            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" SuggestedWidth="108" HeightSizePolicy="Fixed" SuggestedHeight="26" Command.Click="ExecuteBrowseWanderer" IsSelected="@IsWandererCategorySelected" UpdateChildrenStates="true">
+                              <Children>
+                                <BrushWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Preview.HeroFrame" />
+                                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Preview.TabText" LocalizedText="{=taom_fui_wanderer}Wanderer" />
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Bottom" IsVisible="@IsWandererCategorySelected" Sprite="fs_divider_thin" />
+                              </Children>
+                            </ButtonWidget>
+                          </Children>
+                        </ListPanel>
+                        <!-- Compact stacked rows, not square tiles (2026-09-29, user: "the text in the buttons
+                             for wanderers lords, dont need to be big square buttons they can be smaller buttons
+                             stacked on top of eachother") - also ListPanel instead of GridWidget for the same
+                             click-reliability reason as the Characters list above. Row height/margin trimmed
+                             slightly (2026-09-30, part of the same vertical-space squeeze as the tabs above). -->
+                        <ListPanel DataSource="{BrowseList}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                          <ItemTemplate>
+                            <ButtonWidget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="30" MarginBottom="3" Command.Click="ExecuteSelectHero" IsSelected="@IsSelected" Brush="Preview.HeroFrame">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="12" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="Preview.BodyLeft" Text="@Name" />
+                              </Children>
+                            </ButtonWidget>
+                          </ItemTemplate>
+                        </ListPanel>
+
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="420" SuggestedHeight="16" HorizontalAlignment="Left" MarginTop="10" MarginBottom="10" Sprite="fs_divider" />
+
+                        <Widget DataSource="{Selected}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren">
+                          <Children>
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <Children>
+                                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="8" Brush="Preview.Section" LocalizedText="{=taom_fui_benefits}Benefits" />
+                                <ListPanel DataSource="{Benefits}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                  <ItemTemplate>
+                                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="3">
+                                      <Children>
+                                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="14" VerticalAlignment="Top" MarginTop="8" MarginLeft="1" Sprite="fs_bullet" />
+                                        <TextWidget IsVisible="@IsPositive" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="26" Brush="Preview.RowPos" Text="@Text" />
+                                        <TextWidget IsVisible="@IsNegative" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="26" Brush="Preview.RowNeg" Text="@Text" />
+                                      </Children>
+                                    </Widget>
+                                  </ItemTemplate>
+                                </ListPanel>
+                              </Children>
+                            </ListPanel>
+                          </Children>
+                        </Widget>
+
+                      </Children>
+                    </ListPanel>
+                  </Children>
+                </Widget>
+              </Children>
+            </ScrollablePanel>
+            <ScrollbarWidget Id="VerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="6" HorizontalAlignment="Right" VerticalAlignment="Center" MarginTop="4" MarginBottom="4" AlignmentAxis="Vertical" Handle="VerticalScrollbarHandle" MaxValue="100" MinValue="0">
+              <Children>
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="3" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.2" />
+                <ImageWidget Id="VerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="10" SuggestedWidth="6" HorizontalAlignment="Center" Brush="Preview.ScrollHandle" />
+              </Children>
+            </ScrollbarWidget>
+          </Children>
+        </Widget>
+
+        <!-- CLOSE CATCHER (MinimapPopup.cs): an invisible full-screen click-catcher that closes the popup
+             when the player clicks anywhere else on the screen. Declared here, immediately BEFORE the popup,
+             so it renders/hit-tests BEHIND the popup (and its own clickable map) but IN FRONT of everything
+             declared earlier (scrims, character viewport, fog, faction ribbon, right column, minimap button)
+             - a click that lands on the popup's own map area is caught by that map's ButtonWidget first,
+             never reaching this; a click anywhere else falls through to this and closes the popup. Reuses
+             ExecuteMinimapClick (the same toggle the small map itself uses) rather than a separate command,
+             since toggling while open always means "close". IsVisible mirrors the popup's own (MinimapPopup.
+             Tick) so this is only present - and thus only catches clicks - while the popup actually is. -->
+        <ButtonWidget Id="MinimapCloseCatcher" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsVisible="false" Command.Click="ExecuteMinimapClick" />
+
+        <!-- MINIMAP POPUP (MinimapPopup.cs): starts the same size/position as the small map below and grows,
+             fades in and slides to the centre of the screen when the small map is clicked (click again to
+             close) - Gauntlet can't animate this declaratively, so SuggestedWidth/Height/AlphaFactor/
+             PositionXOffset/PositionYOffset/IsVisible are all driven every frame from C#, the same pattern
+             as PortraitReveal/FogDrift. IsVisible starts false so it never blocks the character viewport
+             behind it (this widget sits centered on screen, same place, the whole time) while closed; it
+             is otherwise a visual overlay, made clickable by MinimapPopupMap below once open. (Toggling
+             DoNotAcceptEvents at runtime instead of IsVisible was tried first and didn't reliably re-enable
+             hit-testing on the child button once set back to accepting - IsVisible is the more fundamental
+             property, already proven elsewhere in this prefab to control rendering AND interactivity
+             together.) -->
+        <Widget Id="MinimapPopup" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="480" SuggestedHeight="230" HorizontalAlignment="Center" VerticalAlignment="Center" AlphaFactor="0" IsVisible="false" DoNotUseCustomScale="true" Sprite="fs_minimap_frame_big">
+          <Children>
+            <!-- clicking the map jumps to whichever faction's capital is nearest the click point
+                 (FactionScreenVM.ExecuteMinimapMapClick, via MinimapPopup.TryGetNormalizedClickPoint).
+                 DataSource="{Selected}" lives on the PIN below, not here - putting it on this ButtonWidget
+                 itself was the actual bug: it rebinds command lookup too, so Command.Click was resolving
+                 against FactionDetailVM (which has no such method) instead of the outer VM, and silently
+                 never fired.
+                 Margin 4 (was 8, 2026-09-23): fs_minimap_frame_big.png's gold border line is only solidly
+                 opaque out to about 3-4px from the image edge before fading to fully transparent by ~6px
+                 (checked by sampling pixel alpha directly) - an 8px margin left a visible gap of empty
+                 transparent frame between the border and the map's own edge, reported as "the border isn't
+                 connecting with the map". 4px sits right where the border fades out. If MarginLeft/Top/
+                 Right/Bottom here ever change again, BigMapWidth/BigMapHeight in ViewModels.cs's
+                 FactionDetailVM constructor MUST be updated to match (960/460 minus these margins) - the pin
+                 margin math can't read this widget's actual size itself, only a hardcoded copy of it. -->
+            <ButtonWidget Id="MinimapPopupMap" DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="4" MarginTop="4" MarginRight="4" MarginBottom="4" Sprite="fs_minimap_big" Command.Click="ExecuteMinimapMapClick">
+              <Children>
+                <!-- ALL-factions faint overlay (fs_territories_all.png) REMOVED 2026-09-23 per user request -
+                     they only want a highlight to show up when a faction is actually clicked/selected, not a
+                     permanent faint wash of every faction's alignment color the moment the map opens. The
+                     bold per-selection highlight right below is untouched. fs_territories_all.png itself is
+                     left in Sprites (unused) in case this is ever wanted back - just re-add the widget below:
+                     <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="fs_territories_all" DoNotAcceptEvents="true" /> -->
+                <!-- bold territory highlight for the selected faction (fs_territory_<key>.png, hand-drawn to
+                     match this exact map art - see FactionCatalog.cs) - hidden entirely (HasTerritory)
+                     until a faction actually has one -->
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DataSource="{Selected}" IsVisible="@HasTerritory" Sprite="@TerritorySprite" DoNotAcceptEvents="true" />
+
+                <!-- Click-here markers, one per faction capital (2026-09-26, user request: "add small squares
+                     on the expanded map where the pinpoints are so people see they can click there to go to
+                     that faction"). Purely visual (DoNotAcceptEvents) rather than individually clickable -
+                     MinimapPopupMap itself is DoNotPassEventsToChildren="true" (all clicks resolve to its own
+                     ExecuteMinimapMapClick nearest-capital handler, deliberately, so any click near a marker
+                     already does the right thing without needing a second, redundant per-marker click path.
+                     DataSource="{Factions}" reuses the SAME list already bound for the faction ribbon at the
+                     top of this screen; MapMarginLeftBig/TopBig (FactionItemVM) reuse the exact
+                     BigMapWidth/Height contract FactionDetailVM's own pin margins already use, just centred
+                     on the point instead of tip-anchored like the taller pin sprite.
+                     FIX (2026-09-26, user report: "not readable... also not in the right places"): the
+                     repeater container was a ListPanel - ListPanel's own constructor ALWAYS sets
+                     LayoutImp = StackLayout (confirmed via decompile, TaleWorlds.GauntletUI.BaseTypes.ListPanel),
+                     unconditionally, with no "None"/free-position option in the LayoutMethod enum - so every
+                     marker was being stacked top-to-bottom in a tight column instead of using its own
+                     MarginLeft/MarginTop, which explains BOTH complaints (wrong position AND a cluttered,
+                     illegible pile of overlapping squares). Switched the container to a plain Widget - it has
+                     no forced LayoutImp, and GauntletPreview's own mock-binding scanner (MockVm.cs) recognises
+                     ItemTemplate-repeating generically on any element, not just ListPanel, confirming this
+                     works as a repeater too. Also bumped 16->20px and alpha 0.75->0.9 for legibility against
+                     the busy map texture. -->
+                <!-- Color-coded by faction alignment (2026-09-26, user request: "make the good factions green
+                     and the bad ones red and the neutral ones yellow but bright so its noticeable") -
+                     MarkerColor (FactionItemVM) reads FactionCatalog's own hand-authored alignment
+                     classification - see that class's own comment for the reasoning/judgment calls made. -->
+                <!-- FIX 2026-09-26 (user: "make the map squares somewhat more appealing, seem very flat in
+                     comparison to the rest"): was a single flat BlankWhiteSquare_9 fill - now a small "jewel in
+                     a gold setting" built from 4 stacked layers, same plain-rectangle technique throughout (no
+                     new assets), matching this project's own established taste for glow+border+highlight
+                     (e.g. the faction ribbon's own GlowSize/FrameAlpha/IconAlpha layering in ViewModels.cs):
+                     a soft colored glow bloom, a thin gold border/setting (matching this project's usual gold),
+                     the bright alignment-colored core, and a tiny white glint for a bit of shine. The outer
+                     positioning Widget stays the ORIGINAL 10x10 (so MapMarginLeftBig/TopBig's centering math,
+                     tuned for that size, still lands correctly) - the larger inner layers simply overflow it
+                     via Center alignment, the same "glow bigger than its own slot" pattern already used for
+                     the ribbon tiles. -->
+                <Widget DataSource="{Factions}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+                  <ItemTemplate>
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="10" SuggestedHeight="10" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="@MapMarginLeftBig" MarginTop="@MapMarginTopBig" DoNotAcceptEvents="true">
+                      <Children>
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="22" SuggestedHeight="22" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="@MarkerColor" AlphaFactor="0.30" DoNotAcceptEvents="true" />
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="13" SuggestedHeight="13" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.95" DoNotAcceptEvents="true" />
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="9" SuggestedHeight="9" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="@MarkerColor" AlphaFactor="1" DoNotAcceptEvents="true" />
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="3" SuggestedHeight="3" HorizontalAlignment="Center" VerticalAlignment="Center" PositionXOffset="-2" PositionYOffset="-2" Sprite="BlankWhiteSquare_9" Color="#FFFFFFFF" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+                      </Children>
+                    </Widget>
+                  </ItemTemplate>
+                </Widget>
+
+                <Widget Id="MinimapPopupPin" DataSource="{Selected}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="70" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="@MapPinMarginLeftBig" MarginTop="@MapPinMarginTopBig" Sprite="fs_pin" AlphaFactor="0" />
+              </Children>
+            </ButtonWidget>
+          </Children>
+        </Widget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

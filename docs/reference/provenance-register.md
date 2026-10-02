@@ -83,7 +83,12 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | module audio | `ModuleSounds` `taom_music_module_sounds.xml` | UNKNOWN | redistributed | `Main/_Module/ModuleSounds/**` | uncleared |
 | Aniron (Pete Klassen) | `aniron` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/aniron.{fnt,bfnt}` | uncleared |
 | Minion Pro (Adobe) | `minionpro` `Minion Pro` | Adobe commercial, redistribution NOT granted by a desktop licence | redistributed | `Main/_Module/GUI/Fonts/minionpro.{fnt,bfnt}` | uncleared |
-| Ringbearer | `ringbearer` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/ringbearer.{fnt,bfnt}` | uncleared |
+| Ringbearer | `ringbearer` `FS_Ringbearer` | Pete Klassen freeware: free distribution only with the original archive, private use only, no modification (see detail) | redistributed | `Main/_Module/GUI/Fonts/ringbearer.{fnt,bfnt}` `Main/_Module/GUI/FactionUI/RuntimeFonts/FS_Ringbearer/**` | uncleared |
+| Cinzel (The Cinzel Project Authors) | `Cinzel` `FS_CinzelWide` | OFL-1.1, no Reserved Font Name | redistributed | `Main/_Module/GUI/FactionUI/RuntimeFonts/FS_CinzelWide/**` (licence text beside it) | cleared |
+| EB Garamond (The EB Garamond Project Authors) | `EB Garamond` `FS_Garamond` | OFL-1.1, no Reserved Font Name | redistributed | `Main/_Module/GUI/FactionUI/RuntimeFonts/FS_Garamond/**` (licence text beside it) | cleared |
+| Kysaro's TAOM_FactionUI, code | `TAOM_FactionUI` | UNKNOWN | behavioural-port | `Main/Features/FactionUI/**` `Main/Adapters/{FrontEnd*,IFrontEnd*,MenuMusicAdapter,IMenuMusicAdapter,PresetAppearanceAdapter,IPresetAppearanceAdapter,FactionRosterAdapter,IFactionRosterAdapter,RosterEntry,NinePatch}.cs` (see detail) | uncleared |
+| Kysaro's TAOM_FactionUI, layout and tuning data | `Kysaro` | UNKNOWN | data-port | `Main/_Module/GUI/Prefabs/FactionUI/**` `Main/_Module/GUI/Brushes/TAOM{MainMenu,Loading,CharCreation,FactionScreen}.xml` `Main/_Module/ModuleData/FactionUI/**` | uncleared |
+| Kysaro's TAOM_FactionUI, art | none published | UNKNOWN | redistributed | `Main/_Module/GUI/FactionUI/{RuntimeSprites,LoadingScreens}/**` `Main/_Module/Videos/FactionUI/**` | uncleared |
 | Khuzdul vocabulary (J.R.R. Tolkien) | `Khuzdul` `Khazad` `Baruk` `khuzdul-lexicon` | UNKNOWN | verbatim-port | `docs/audio/khuzdul-lexicon.html` `docs/audio/vo-script-dwarves.html` | uncleared |
 | Cave Troll Lightweight (Fab) | `Cave Troll Lightweight` `cave_troll_lightweight` | purchased-asset, code terms informal | data-port | `tools/oneoff/ue_export_cave_troll.py` `tools/blender/retarget_mannequin_to_human.py`; the retargeted `anim_troll_*` clips in `LOTRLOME_Armory` (live, outside the repo) | cleared |
 | Animalia - Elk (male), Animalia - Moose (male) (Fab) | `Animalia` `Elk_M` `Moose_M` `animalia_elk` `animalia_moose` | purchased-asset, code terms informal | data-port | `tools/blender/reskin_animalia_to_horse.py` `tools/blender/retarget_animalia_to_horse.py` `tools/blender/animalia_to_horse_map.json` `tools/blender/measure_animalia_clips.py` `tools/blender/animalia_elk_clip_measure.json` `tools/blender/animalia_moose_clip_measure.json` `tools/gen_animalia_anim_clips.ps1` `docs/features/animalia-elk-moose.md`; meshes, clips and textures in `LOTRLOME_Armory/AssetSources/creature/elk/` and their Kit packages in `LOTRLOME_Armory/Assets/creature/elk/` (live, outside the repo) | cleared |
@@ -437,12 +442,47 @@ it the only row in this register naming a specifically commercial rights holder,
 unknown-terms rows around it.
 
 `aniron` and `ringbearer` are display faces associated with the Lord of the Rings films. Terms
-unrecorded.
+unrecorded for `aniron`.
+
+Ringbearer's terms are now on file: the faction UI merged from Kysaro's module (#704) ships a second
+copy of the face, converted to a runtime bitmap font (`FS_Ringbearer`), with the author's readme beside
+it. The readme allows distribution "free of charge only, and only with the complete contents of the
+original archive", for "private use only", and forbids "commercial use and/or modification". A bitmap
+conversion shipped without the original archive meets none of the three conditions, so both copies
+stay uncleared. The faction UI's other two faces, Cinzel and EB Garamond, are OFL-1.1 and cleared.
 
 **What would clear this row:** confirm each face's redistribution terms, or substitute
 freely-licensed display faces. Substitution is a small change (three files, plus whatever GUI
 references them by name) and removes the exposure outright. Given that TAOM ships free and
 non-commercially, that is likely the cheaper path for `minionpro` in particular.
+
+### Kysaro's TAOM_FactionUI (UNCLEARED)
+
+Kysaro, TAOM's lead scener and lead UI designer, built the module TAOM_FactionUI v0.1.0 for TAOM on
+Bannerlord v1.5.3 and sent it to the maintainer on 2026-10-01 (the folder arrived as `HateradeUI`): a
+compiled DLL and PDB with its prefabs, brushes, tuning files, images, fonts and videos, and no source.
+It was merged into TAOM's Main module the same day (#704, the maintainer's decision).
+
+- **Code (`behavioural-port`).** The DLL was decompiled with ilspycmd, and its behaviour was rebuilt in
+  TAOM's architecture (patch, service, adapter) while reading the decompile, which rules out
+  `clean-room`. Several behaviours were changed on purpose: images load on demand, a hero pick's name
+  and skills are copied only at the end of character creation, Player Switcher is suppressed per
+  character creation instead of disabled for the session, and English string matches became
+  localized ones.
+- **Layout and tuning data (`data-port`).** His prefabs (23 ship; five unused ones were removed), the
+  four brush files and the six JSON files under `ModuleData/FactionUI/`, edited in place for
+  localization, binding fixes and validation.
+- **Art (`redistributed`).** The 261 runtime sprites, the ten loading screens and the menu and splash
+  videos ship as delivered.
+- **Fonts** have their own rows (Cinzel, EB Garamond, Ringbearer).
+
+Nothing on file records terms. Kysaro made the module for TAOM, which makes a grant likely, but a
+likely grant is not a recorded one, so the three rows are `UNKNOWN`. **What would clear them:** a
+written OK from Kysaro covering the code port and the art. Separately, the review that preceded the
+port noted that several faction and hero portraits resemble the film cast; whether that matters for a
+free, non-commercial release is the maintainer's call. Not covered because not ported: his replacement
+`character_menu_new` scene (its assets are missing), the face generator backdrop and the loading-screen
+quotes (both off in his own shipped configuration).
 
 ### NativeSkinFixes (UNCLEARED, and the highest-priority row here)
 

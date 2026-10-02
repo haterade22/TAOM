@@ -42,10 +42,10 @@
     <string id="taom_fc_confirm_name" text="Confirmer" />
     <string id="taom_fc_decline" text="Pas encore" />
     <string id="taom_fc_keep_name" text="Conserver le nom par défaut" />
-    <string id="taom_fc_no_room_body" text="Il n'y a plus de place pour un autre compagnon pour le moment. La promotion de {TROOP_NAME} sera proposée à nouveau plus tard." />
-    <string id="taom_fc_offer_body" text="{TROOP_NAME} s'est distingué au combat. En faire un compagnon ?" />
+    <string id="taom_fc_no_room_body" text="Il n'y a pas de place pour un autre compagnon en ce moment. La promotion de {TROOP_NAME} sera proposée à nouveau plus tard." />
+    <string id="taom_fc_offer_body" text="{TROOP_NAME} s'est distingué au combat. Le promouvoir au rang de compagnon ?" />
     <string id="taom_fc_offer_title" text="Promotion sur le champ de bataille" />
-    <string id="taom_fc_rename_body" text="Donnez un nom à {TROOP_NAME}, ou conservez celui qu'il portait au combat." />
+    <string id="taom_fc_rename_body" text="Donnez un nom à {TROOP_NAME}, ou gardez celui qu'il portait au combat." />
     <string id="taom_fc_rename_title" text="Nommer le nouveau compagnon" />
     <string id="taom_fc_cancel" text="Annuler" />
     <string id="taom_fc_dismiss" text="Votre charge prend fin. Retournez dans le rang." />

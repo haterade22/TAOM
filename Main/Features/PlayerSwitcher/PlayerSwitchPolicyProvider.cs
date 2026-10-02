@@ -13,15 +13,18 @@ public class PlayerSwitchPolicyProvider : IPlayerSwitchPolicyProvider
 {
     private readonly IModLogger _logger;
     private bool _disabledForSession;
+    private bool _suppressedForCharacterCreation;
 
     public PlayerSwitchPolicyProvider(IModLogger logger)
     {
         _logger = logger;
     }
 
-    public PlayerSwitchPolicy Current => _disabledForSession
+    public PlayerSwitchPolicy Current => _disabledForSession || _suppressedForCharacterCreation
         ? PlayerSwitchPolicy.Disabled
         : ReadSettings();
+
+    public void SetSuppressedForCharacterCreation(bool suppressed) => _suppressedForCharacterCreation = suppressed;
 
     public void DisableForSession(string reason)
     {

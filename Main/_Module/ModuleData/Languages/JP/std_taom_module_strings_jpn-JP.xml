@@ -1287,20 +1287,20 @@
     <string id="taom_faction_clans_of_andrast_name" text="アンドラストの氏族" />
     <string id="taom_faction_clans_of_druwaith_iaur_desc" text="ドルワイス=イアウルの氏族。" />
     <string id="taom_faction_clans_of_druwaith_iaur_name" text="ドルワイス=イアウルの氏族" />
-    <string id="taom_faction_clans_of_dunland_bonus_0" text="森林速度ペナルティ50%軽減+視界範囲15%増加(バタニア流用)" />
+    <string id="taom_faction_clans_of_dunland_bonus_0" text="森林での速度低下が50%軽減＋視界範囲15%（森林育ち）" />
     <string id="taom_faction_clans_of_dunland_bonus_1" text="平原での部隊速度+10%(丘陵行軍者)" />
     <string id="taom_faction_clans_of_dunland_bonus_2" text="部隊規模上限+5%(丘陵部族徴兵)" />
     <string id="taom_faction_clans_of_dunland_bonus_3" text="村の志願兵再出現率+10%(丘陵部族募兵)" />
-    <string id="taom_faction_clans_of_dunland_bonus_4" text="街の熟練民兵出現確率+20%(バタニア流用)" />
-    <string id="taom_faction_clans_of_dunland_bonus_5" text="建設速度-10%(バタニア流用)" />
-    <string id="taom_faction_clans_of_dunland_desc" text="ローハンの宿敵、ドゥンランドの丘人。バタニアの森林伝統とTAOMの丘陵行軍者・丘陵部族徴兵が融合した、安価で素早く激情的な戦団は平原と森林を問わず進軍する。バタニアの鍛冶は遅いが、戦団は違う。" />
+    <string id="taom_faction_clans_of_dunland_bonus_4" text="都市の熟練民兵出現確率+20%（鍛えられた丘の民）" />
+    <string id="taom_faction_clans_of_dunland_bonus_5" text="建設速度-10%（粗末な工房）" />
+    <string id="taom_faction_clans_of_dunland_desc" text="ローヒアリムの古き敵、ダンランドの丘の民。深い森と高地の荒野で幾世代も暮らし、丘の行軍者と丘の部族徴集兵を育てた。安価で素早く、怒りに満ちた戦団は平原でも森でも進軍する。鍛冶は遅いが、彼らの戦団は決して遅くない。" />
     <string id="taom_faction_clans_of_dunland_name" text="ドゥンランドの氏族" />
     <string id="taom_faction_clans_of_dunland_perk_0_desc" text="平原での部隊速度+10%、部隊規模+5%――ドゥンランドの戦団は迅速に地を駆ける。" />
     <string id="taom_faction_clans_of_dunland_perk_0_name" text="丘陵行軍者" />
     <string id="taom_faction_clans_of_dunland_perk_1_desc" text="+10% 村の志願兵再出現率 — 村は親族で素早く満たされる。" />
     <string id="taom_faction_clans_of_dunland_perk_1_name" text="丘陵部族の徴募" />
-    <string id="taom_faction_clans_of_dunland_perk_2_desc" text="森林速度ペナルティが50%軽減+視界15%、都市のベテラン民兵出現確率+20%;建設速度-10%。" />
-    <string id="taom_faction_clans_of_dunland_perk_2_name" text="バタニア森林の血統" />
+    <string id="taom_faction_clans_of_dunland_perk_2_desc" text="幾世代にもわたる森林育ち：森林での速度低下が50%軽減＋視界15%、都市の熟練民兵出現確率+20%、建設速度-10%。" />
+    <string id="taom_faction_clans_of_dunland_perk_2_name" text="森林育ち" />
     <string id="taom_faction_clans_of_dunland_strength_0" text="安価で迅速な戦団" />
     <string id="taom_faction_clans_of_dunland_strength_1" text="森林と平原の機動力" />
     <string id="taom_faction_clans_of_dunland_strength_2" text="安定した村の徴募" />
@@ -1315,7 +1315,7 @@
     <string id="taom_faction_clans_of_dunland_trait_1" text="野性の丘陵戦士" />
     <string id="taom_faction_clans_of_dunland_trait_2" text="丘陵部族の徴募兵" />
     <string id="taom_faction_clans_of_dunland_trait_3" text="サルマンの手駒" />
-    <string id="taom_faction_clans_of_dunland_weakness_0" text="バタニア由来の建設遅延" />
+    <string id="taom_faction_clans_of_dunland_weakness_0" text="粗末な工房が建設を遅らせる" />
     <string id="taom_faction_clans_of_dunland_weakness_1" text="サルマンの手駒 — 外交の脆弱性" />
     <string id="taom_faction_clans_of_dunland_weakness_2" text="ローハンとアイゼンガルドに挟まれた位置" />
     <string id="taom_faction_clans_of_forochel_desc" text="フォロヘルの氷の湾近くの凍てつく北方荒地に散らばるオーク部族。ロッソスや北方に足を踏み入れる者を襲う野蛮な略奪者。" />
@@ -1462,23 +1462,23 @@
     <string id="taom_faction_goblins_of_goblin_town_weakness_2" text="すべての自由の民に憎まれている" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_0" text="草原での部隊速度+10%(東夷の偵察騎兵)" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_1" text="部隊規模上限+5%(東夷の軍勢)" />
-    <string id="taom_faction_golden_realm_of_rhun_bonus_2" text="騎馬ユニットの徴募・昇格コスト-10%(クザイト、継承)" />
-    <string id="taom_faction_golden_realm_of_rhun_bonus_3" text="馬、ラバ、牛、羊の村生産量+25%(クザイト、継承)" />
-    <string id="taom_faction_golden_realm_of_rhun_bonus_4" text="街の税収入-20%(クザイト、継承)" />
+    <string id="taom_faction_golden_realm_of_rhun_bonus_2" text="騎乗兵の徴募・昇級費用-10%（草原の騎馬術）" />
+    <string id="taom_faction_golden_realm_of_rhun_bonus_3" text="村の馬・ラバ・牛・羊の生産+25%（草原の牧人）" />
+    <string id="taom_faction_golden_realm_of_rhun_bonus_4" text="都市の税収-20%（遊牧的統治）" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_5" text="入植地忠誠度-0.5/日(東夷の貢納)" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_6" text="略奪ダメージ+15%(草原略奪者の教義)" />
-    <string id="taom_faction_golden_realm_of_rhun_desc" text="東方平原の東夷。クザイトの騎兵伝統を継承し、TAOMの東夷の偵察騎兵による草原速度と東夷の軍勢による部隊規模を組み合わせる。数と貢納で到来する重騎兵。" />
+    <string id="taom_faction_golden_realm_of_rhun_desc" text="東方の平原の東夷。根深い草原騎兵の伝統が、東夷の斥候騎兵の速さと東夷の大軍の数と結びつく。重騎兵が大挙して到来し、槍とともに貢物をもたらす。" />
     <string id="taom_faction_golden_realm_of_rhun_name" text="ルーンの黄金の国" />
     <string id="taom_faction_golden_realm_of_rhun_perk_0_desc" text="草原での部隊速度+10% — ルーンの海の騎手たちは平原を速く横断する。" />
     <string id="taom_faction_golden_realm_of_rhun_perk_0_name" text="東夷の偵察騎兵" />
     <string id="taom_faction_golden_realm_of_rhun_perk_1_desc" text="部隊規模上限+5% — モルドールの呼びかけに応えて大軍が集結する。" />
     <string id="taom_faction_golden_realm_of_rhun_perk_1_name" text="東夷の軍勢" />
-    <string id="taom_faction_golden_realm_of_rhun_perk_2_desc" text="クザイトから継承:騎馬コスト-10%、動物村生産+25%;街税収-20%。" />
-    <string id="taom_faction_golden_realm_of_rhun_perk_2_name" text="クザイト草原の血統" />
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_desc" text="草原の騎馬術により騎乗費用-10%、村の家畜生産+25%。遊牧的統治の代償として都市税収-20%。" />
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_name" text="草原の騎馬術" />
     <string id="taom_faction_golden_realm_of_rhun_strength_0" text="重騎兵の大群" />
     <string id="taom_faction_golden_realm_of_rhun_strength_1" text="大規模な軍隊" />
     <string id="taom_faction_golden_realm_of_rhun_strength_2" text="貢納と交易網" />
-    <string id="taom_faction_golden_realm_of_rhun_strength_3" text="クザイト草原の遺産" />
+    <string id="taom_faction_golden_realm_of_rhun_strength_3" text="根深い草原騎兵の伝統" />
     <string id="taom_faction_golden_realm_of_rhun_su_0_desc" text="精鋭重装騎兵。" />
     <string id="taom_faction_golden_realm_of_rhun_su_0_name" text="東夷カタフラクト" />
     <string id="taom_faction_golden_realm_of_rhun_su_1_desc" text="精鋭東方重歩兵。" />
@@ -1492,7 +1492,7 @@
     <string id="taom_faction_golden_realm_of_rhun_weakness_0" text="脆弱な歩兵" />
     <string id="taom_faction_golden_realm_of_rhun_weakness_1" text="分裂した部族" />
     <string id="taom_faction_golden_realm_of_rhun_weakness_2" text="モルドールへの長い補給線" />
-    <string id="taom_faction_golden_realm_of_rhun_weakness_3" text="クザイト由来の町税-20%" />
+    <string id="taom_faction_golden_realm_of_rhun_weakness_3" text="遊牧的統治により都市税収-20%" />
     <string id="taom_faction_havens_of_umbar_bonus_0" text="隊商費用-25%(海賊交易)" />
     <string id="taom_faction_havens_of_umbar_bonus_1" text="関税収入+15%(海賊交易網)" />
     <string id="taom_faction_havens_of_umbar_bonus_2" text="戦闘名声+8%(海賊の栄光)" />
@@ -1556,21 +1556,21 @@
     <string id="taom_faction_high_kingdom_of_lindon_weakness_0" text="エルフの誇りが影響力コストを上昇させる" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="衰退する民 — 補充兵が少ない" />
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="草原での部隊速度+10%(草原戦車兵)" />
-    <string id="taom_faction_khudorom_of_khand_bonus_1" text="森林速度ペナルティ50%軽減+視界範囲15%(バッタニア、継承)" />
-    <string id="taom_faction_khudorom_of_khand_bonus_2" text="町での熟練民兵出現確率+20%(バッタニア、継承)" />
-    <string id="taom_faction_khudorom_of_khand_bonus_3" text="建設速度-10%(バッタニア、継承)" />
+    <string id="taom_faction_khudorom_of_khand_bonus_1" text="森林での速度低下が50%軽減＋視界範囲15%（森林民兵）" />
+    <string id="taom_faction_khudorom_of_khand_bonus_2" text="都市の熟練民兵出現確率+20%（鍛えられた徴集兵）" />
+    <string id="taom_faction_khudorom_of_khand_bonus_3" text="建設速度-10%（粗末な工房）" />
     <string id="taom_faction_khudorom_of_khand_bonus_4" text="+8% 戦闘名声(傭兵プレミアム)" />
     <string id="taom_faction_khudorom_of_khand_bonus_5" text="-10% 関税収入(モルドールへの貢納)" />
     <string id="taom_faction_khudorom_of_khand_bonus_6" text="-10% 部隊食糧消費(草原の耐久力)" />
     <string id="taom_faction_khudorom_of_khand_bonus_7" text="+5% 部隊サイズ上限(戦車兵機動力)" />
-    <string id="taom_faction_khudorom_of_khand_desc" text="カンドのヴァリアグ。バッタニアの森林民兵の伝統を継承。TAOMの草原戦車兵が草原での部隊速度+10%を追加。傭兵団は最も高い報酬を払う者のために戦う。" />
+    <string id="taom_faction_khudorom_of_khand_desc" text="カンドのヴァリアグ。森林民兵の伝統が、草原の戦車兵の開けた土地での速度+10%と融合する。傭兵団は最も多くの金貨を払う者のために戦う。" />
     <string id="taom_faction_khudorom_of_khand_name" text="カンドのクドロム" />
     <string id="taom_faction_khudorom_of_khand_perk_0_desc" text="草原での部隊速度+10% — ヴァリアグの戦車は速く進む。" />
     <string id="taom_faction_khudorom_of_khand_perk_0_name" text="草原戦車兵" />
     <string id="taom_faction_khudorom_of_khand_perk_1_desc" text="傭兵隊長は報酬を払う者のために戦う — だが彼らは取り分を確保する。" />
     <string id="taom_faction_khudorom_of_khand_perk_1_name" text="傭兵の伝統" />
-    <string id="taom_faction_khudorom_of_khand_perk_2_desc" text="継承:森林速度ペナルティ50%軽減+視界範囲15%、町での熟練民兵出現確率+20%、建設速度-10%。" />
-    <string id="taom_faction_khudorom_of_khand_perk_2_name" text="バッタニアの森の血統" />
+    <string id="taom_faction_khudorom_of_khand_perk_2_desc" text="森林民兵の習慣が受け継がれる：森林での速度低下が50%軽減＋視界範囲15%、都市の熟練民兵出現確率+20%、建設速度-10%。" />
+    <string id="taom_faction_khudorom_of_khand_perk_2_name" text="森林民兵" />
     <string id="taom_faction_khudorom_of_khand_strength_0" text="草原と森林での機動性" />
     <string id="taom_faction_khudorom_of_khand_strength_1" text="熟練村落" />
     <string id="taom_faction_khudorom_of_khand_strength_2" text="傭兵の伝統" />
@@ -1585,7 +1585,7 @@
     <string id="taom_faction_khudorom_of_khand_trait_1" text="ヴァリアグの戦士" />
     <string id="taom_faction_khudorom_of_khand_trait_2" text="傭兵団" />
     <string id="taom_faction_khudorom_of_khand_trait_3" text="戦車兵の伝統" />
-    <string id="taom_faction_khudorom_of_khand_weakness_0" text="バタニアの遅い建設" />
+    <string id="taom_faction_khudorom_of_khand_weakness_0" text="粗末な工房が建設を遅らせる" />
     <string id="taom_faction_khudorom_of_khand_weakness_1" text="脆弱な居住地" />
     <string id="taom_faction_khudorom_of_khand_weakness_2" text="傭兵隊長は金貨に忠実で、主君には忠実ではない" />
     <string id="taom_faction_kingdom_of_angaladh_desc" text="アンガラズ王国。" />
@@ -1601,23 +1601,23 @@
     <string id="taom_faction_kingdom_of_cardolan_trait_1" text="塚山丘陵" />
     <string id="taom_faction_kingdom_of_cardolan_trait_2" text="北方の野伏" />
     <string id="taom_faction_kingdom_of_dale_bonus_0" text="平地での部隊速度+10%(谷間の商人)" />
-    <string id="taom_faction_kingdom_of_dale_bonus_1" text="村の穀物生産+10%(スタージア継承)" />
-    <string id="taom_faction_kingdom_of_dale_bonus_2" text="軍の影響力コスト-50%(スタージア継承)" />
-    <string id="taom_faction_kingdom_of_dale_bonus_3" text="王国の決定からの関係ペナルティ+20%(スタージア継承)" />
+    <string id="taom_faction_kingdom_of_dale_bonus_1" text="村の穀物生産+10%（長湖の実り）" />
+    <string id="taom_faction_kingdom_of_dale_bonus_2" text="軍の影響力コスト-50%（湖の町の招集）" />
+    <string id="taom_faction_kingdom_of_dale_bonus_3" text="王国決議による関係悪化+20%（頑固な評議会）" />
     <string id="taom_faction_kingdom_of_dale_bonus_4" text="+10% 関税収入(ドワーフ交易同盟)" />
     <string id="taom_faction_kingdom_of_dale_bonus_5" text="+10% 戦闘名声(黒い矢の伝統)" />
     <string id="taom_faction_kingdom_of_dale_bonus_6" text="-0.5 入植地忠誠度/日(小領土の脆弱性)" />
-    <string id="taom_faction_kingdom_of_dale_desc" text="エレボールの麓に再建されたバルドの都市。継承したスタージアの穀物豊富とスタージアの低コスト軍隊伝統がTAOMの谷間の商人平地速度ボーナスと組み合わさる――しかしスタージアの王国決定ペナルティは諸刃の剣。ドワーフとの繁栄した交易同盟が谷間の国を豊かで準備万端に保つ。" />
+    <string id="taom_faction_kingdom_of_dale_desc" text="エレボールの麓に再建されたバルドの都市。長湖の豊かな穀物と、低コストで軍を招集する強靭な伝統が、谷間の商人たちの開けた土地での速さと結びつく。もっともデイルの評議会は誇り高いだけに頑固でもある。ドワーフとの繁栄した交易同盟が都市を富ませ、備えを整えさせている。" />
     <string id="taom_faction_kingdom_of_dale_name" text="谷間の国" />
     <string id="taom_faction_kingdom_of_dale_perk_0_desc" text="平地での部隊速度+10%――長湖町の隊商は速く移動する。" />
     <string id="taom_faction_kingdom_of_dale_perk_0_name" text="谷間の商人" />
     <string id="taom_faction_kingdom_of_dale_perk_1_desc" text="エレボールとの交易がボーナス収入と武器供給を提供する。" />
     <string id="taom_faction_kingdom_of_dale_perk_1_name" text="ドワーフ同盟" />
-    <string id="taom_faction_kingdom_of_dale_perk_2_desc" text="継承したスタージアの村の穀物+10%と軍の影響力コスト-50%;王国の決定での関係ペナルティ+20%。" />
-    <string id="taom_faction_kingdom_of_dale_perk_2_name" text="スタージアの穀物と軍の系譜" />
+    <string id="taom_faction_kingdom_of_dale_perk_2_desc" text="長湖の村の穀物+10%と湖の町の招集による軍の影響力コスト-50%が結びつく。王国決議による関係悪化+20%。" />
+    <string id="taom_faction_kingdom_of_dale_perk_2_name" text="長湖の実りと湖の町の招集" />
     <string id="taom_faction_kingdom_of_dale_strength_0" text="エレボールとの交易" />
     <string id="taom_faction_kingdom_of_dale_strength_1" text="強力な弓術の伝統" />
-    <string id="taom_faction_kingdom_of_dale_strength_2" text="低コストの軍隊召集(スタージア)" />
+    <string id="taom_faction_kingdom_of_dale_strength_2" text="安価な軍の招集（湖の町の招集）" />
     <string id="taom_faction_kingdom_of_dale_strength_3" text="穀物が豊富な村" />
     <string id="taom_faction_kingdom_of_dale_su_0_desc" text="バルドの遺産を継ぐ射手。" />
     <string id="taom_faction_kingdom_of_dale_su_0_name" text="黒矢の野伏" />
@@ -1631,7 +1631,7 @@
     <string id="taom_faction_kingdom_of_dale_trait_3" text="谷間の商人" />
     <string id="taom_faction_kingdom_of_dale_weakness_0" text="狭小な領土" />
     <string id="taom_faction_kingdom_of_dale_weakness_1" text="東夷からの圧力" />
-    <string id="taom_faction_kingdom_of_dale_weakness_2" text="スタージア王国決定ペナルティ" />
+    <string id="taom_faction_kingdom_of_dale_weakness_2" text="頑固な評議会が外交を難しくする" />
     <string id="taom_faction_kingdom_of_dorwinion_desc" text="ルーン海北西岸のワイン栽培地ドルウィニオン。自由の民と東方の間に位置する繁栄した交易王国。" />
     <string id="taom_faction_kingdom_of_dorwinion_name" text="ドルウィニオン王国" />
     <string id="taom_faction_kingdom_of_dorwinion_trait_0" text="名高い葡萄園" />
@@ -1966,25 +1966,25 @@
     <string id="taom_faction_stronghold_of_narager_trait_1" text="東方荒野" />
     <string id="taom_faction_taskralan_of_harwan_bonus_0" text="砂漠での部隊速度+10%(太陽の子ら)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_1" text="部隊規模上限+5%(ハラドリムの戦闘集団)" />
-    <string id="taom_faction_taskralan_of_harwan_bonus_2" text="隊商建設コスト-30%+貿易ペナルティ-10%(アセライの商人、継承)" />
-    <string id="taom_faction_taskralan_of_harwan_bonus_3" text="砂漠での速度ペナルティなし(アセライの砂漠、継承)" />
-    <string id="taom_faction_taskralan_of_harwan_bonus_4" text="日毎の兵士給与+5%(アセライの給与、継承)" />
+    <string id="taom_faction_taskralan_of_harwan_bonus_2" text="隊商の設立費用-30%＋交易ペナルティ-10%（砂漠の隊商交易）" />
+    <string id="taom_faction_taskralan_of_harwan_bonus_3" text="砂漠での速度低下なし（砂漠生まれ）" />
+    <string id="taom_faction_taskralan_of_harwan_bonus_4" text="兵士の日々の賃金+5%（傭兵の慣習）" />
     <string id="taom_faction_taskralan_of_harwan_bonus_5" text="+5 部隊士気(ムマキル使い)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_6" text="-15% 部隊食糧消費(砂漠の耐久力)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_7" text="+15% 略奪ダメージ(遠ハラドの獰猛さ)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_8" text="+15% 軍隊影響力コスト(分裂した部族)" />
-    <string id="taom_faction_taskralan_of_harwan_desc" text="ハルワンのハラドリム、太陽の子ら。アセライの砂漠適応力を継承。TAOMの「太陽の子ら」は砂漠での部隊速度+10%を追加。ハラドリムの戦闘集団は継承された隊商経済に加えて部隊規模を増加させる。ムーマキルが南方の平原を支配する。" />
+    <string id="taom_faction_taskralan_of_harwan_desc" text="ハルワンのハラドリム、太陽の子ら。長き砂漠の伝統が「太陽の子ら」の移動速度+10%とハラドリム戦団の大人数を支え、繁栄する隊商経済がそれを成り立たせている。ムマキルが南の平原を支配する。" />
     <string id="taom_faction_taskralan_of_harwan_name" text="ハルワンのタスクラーラン" />
     <string id="taom_faction_taskralan_of_harwan_perk_0_desc" text="砂漠での部隊速度+10%――灼熱の砂に生まれし者。" />
     <string id="taom_faction_taskralan_of_harwan_perk_0_name" text="太陽の子ら" />
     <string id="taom_faction_taskralan_of_harwan_perk_1_desc" text="部隊規模上限+5%――部族の戦闘集団がモルドールの呼び声に応えて共に騎行する。" />
     <string id="taom_faction_taskralan_of_harwan_perk_1_name" text="ハラドリムの戦闘集団" />
-    <string id="taom_faction_taskralan_of_harwan_perk_2_desc" text="継承されたアセライの商人(隊商-30%、貿易ペナルティ-10%)とアセライの砂漠(砂漠での速度ペナルティなし)。日毎の給与+5%。" />
-    <string id="taom_faction_taskralan_of_harwan_perk_2_name" text="アセライ砂漠の血統" />
+    <string id="taom_faction_taskralan_of_harwan_perk_2_desc" text="砂漠隊商交易（隊商費-30%、交易ペナルティ-10%）と砂漠生まれ（砂漠での速度ペナルティなし）は継続。日給+5%。" />
+    <string id="taom_faction_taskralan_of_harwan_perk_2_name" text="砂漠の隊商交易と砂漠生まれ" />
     <string id="taom_faction_taskralan_of_harwan_strength_0" text="ムーマキルの戦獣" />
     <string id="taom_faction_taskralan_of_harwan_strength_1" text="砂漠での機動力" />
     <string id="taom_faction_taskralan_of_harwan_strength_2" text="大規模な戦団" />
-    <string id="taom_faction_taskralan_of_harwan_strength_3" text="アセライの隊商伝統" />
+    <string id="taom_faction_taskralan_of_harwan_strength_3" text="繁栄する隊商経済" />
     <string id="taom_faction_taskralan_of_harwan_su_0_desc" text="壊滅的な戦獣。" />
     <string id="taom_faction_taskralan_of_harwan_su_0_name" text="ムマキルの戦闘塔" />
     <string id="taom_faction_taskralan_of_harwan_su_1_desc" text="遥か南方の長弓精鋭。" />
@@ -1998,7 +1998,7 @@
     <string id="taom_faction_taskralan_of_harwan_weakness_0" text="寒冷気候ペナルティ" />
     <string id="taom_faction_taskralan_of_harwan_weakness_1" text="部族間の内紛" />
     <string id="taom_faction_taskralan_of_harwan_weakness_2" text="鍛冶職人と城壁が少ない" />
-    <string id="taom_faction_taskralan_of_harwan_weakness_3" text="アセライ由来の兵士賃金+5%" />
+    <string id="taom_faction_taskralan_of_harwan_weakness_3" text="高くつく傭兵の慣習(兵の賃金+5%)" />
     <string id="taom_faction_taskralan_of_shaghana_desc" text="シャグハナのタスクラーラン。" />
     <string id="taom_faction_taskralan_of_shaghana_name" text="シャグハナのタスクラーラン" />
     <string id="taom_faction_wildmen_of_enedwaith_desc" text="アルノールとゴンドールの間にあるエネドワイスの荒野。王に仕えず、狩人と牧人として暮らす散在する人間の氏族の故郷。" />
@@ -2676,104 +2676,172 @@
     <string id="taom_oob_autoassign_done" text="隊長を任命しました：{COUNT}名。" />
     <string id="taom_oob_autoassign_not_general" text="この戦の総大将のみが英雄を任命できます。" />
     <string id="taom_oob_autoassign_none" text="空いている隊長の席に適した英雄がいません。" />
-    <string id="taom_bandit_mirkwood_spiders_name" text="Spiders of Mirkwood" />
-    <string id="taom_spider_brood_forest_name" text="Giant Spider" />
-    <string id="taom_spider_brood_brown_name" text="Great Spider" />
-    <string id="taom_spider_brood_pale_name" text="Pale Broodmother" />
-    <string id="taom_bandit_wild_trolls_name" text="Wild Trolls" />
-    <string id="taom_troll_bandit_cave_name" text="Cave Troll" />
-    <string id="taom_troll_bandit_hill_name" text="Hill Troll" />
-    <string id="taom_armoury_visit_news" text="A master armourer has come to {TOWN}. For the next {DAYS} days its armoury stocks and forges as a finer one would." />
-    <string id="taom_armoury_menu" text="Visit the armoury" />
-    <string id="taom_armoury_menu_tip" text="This town's armoury works to level {LEVEL} of 3." />
-    <string id="taom_armoury_coop_guest" text="The armourer works only for the host of this campaign." />
-    <string id="taom_armoury_nothing" text="You carry nothing this armourer can improve. Bring a piece of armour and the metals its next form needs." />
-    <string id="taom_armoury_title" text="The Armoury of {TOWN}" />
-    <string id="taom_armoury_desc" text="This armoury works to level {LEVEL} of 3. Heavy pieces need level {HEAVY}, elite pieces level {ELITE}, and lord kit a master armourer at level {LORD}. The piece keeps its quality." />
-    <string id="taom_armoury_choose" text="Choose" />
-    <string id="taom_armoury_leave" text="Leave" />
-    <string id="taom_armoury_confirm_title" text="Improve {SOURCE}?" />
-    <string id="taom_armoury_confirm_body" text="The armourer will rework it into {TARGET} for {PRICE}." />
-    <string id="taom_armoury_confirm_yes" text="Have it done" />
-    <string id="taom_armoury_cancel" text="Cancel" />
-    <string id="taom_armour_class_light" text="light" />
-    <string id="taom_armour_class_medium" text="medium" />
-    <string id="taom_armour_class_heavy" text="heavy" />
-    <string id="taom_armour_class_elite" text="elite" />
-    <string id="taom_armour_class_lord" text="lord" />
-    <string id="taom_armour_class_other" text="fine" />
-    <string id="taom_armoury_offer" text="{SOURCE} into {TARGET} ({CLASS})" />
-    <string id="taom_armoury_gold" text="{GOLD} gold" />
-    <string id="taom_armoury_amount" text="{COUNT} {ITEM}" />
-    <string id="taom_armoury_block_level" text="This armoury cannot work {CLASS} pieces: it needs level {NEED}, and this one is level {LEVEL}." />
-    <string id="taom_armoury_block_gold" text="You cannot pay it: {PRICE}." />
-    <string id="taom_armoury_block_metal" text="You lack the metals: {PRICE}." />
-    <string id="taom_armoury_block_resource" text="Your people's treasure falls short: {PRICE}." />
-    <string id="taom_armoury_cost" text="Costs {PRICE}." />
-    <string id="taom_armoury_done" text="The armourer hands you {TARGET}." />
-    <string id="taom_armoury_gone" text="You no longer carry {SOURCE}." />
-    <string id="taom_armoury_short_gold" text="You no longer have the gold for it." />
-    <string id="taom_armoury_short_metal" text="You no longer have the metals for it." />
-    <string id="taom_armoury_short_resource" text="Your people's treasure no longer covers it." />
-    <string id="taom_lh_event_title" text="A Lord's Harness Unclaimed" />
-    <string id="taom_lh_event_body" text="Among the spoils of the field lies {ITEM}, the harness of {LORD}'s household. It is yours by right of arms, though his kin would take its return as a courtesy." />
-    <string id="taom_lh_event_take" text="Take it" />
-    <string id="taom_lh_event_return" text="Send it to his kin" />
-    <string id="taom_lg_hands_title" text="The Lord's Gauntlets" />
-    <string id="taom_lg_hands_desc" text="A master armourer forges a lord's gauntlets only for hands that have proved themselves in battle. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with them." />
-    <string id="taom_lg_task_kills" text="Strike down enemies with your own hand" />
-    <string id="taom_lg_task_battles" text="Win battles" />
-    <string id="taom_lg_legs_title" text="The Lord's Greaves" />
-    <string id="taom_lg_legs_desc" text="Greaves fit for a lord are earned in the press of battle, not bought. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with them." />
-    <string id="taom_lg_shoulders_title" text="The Lord's Mantle" />
-    <string id="taom_lg_shoulders_desc" text="A lord's mantle marks one who stands where the fighting is thickest. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lg_head_title" text="The Lord's Helm" />
-    <string id="taom_lg_head_desc" text="A lord's helm is forged for a name that other lords fear. Strike down enemies with your own hand, take an enemy lord captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lg_task_lords" text="Take enemy lords captive" />
-    <string id="taom_lg_body_title" text="The Lord's Harness" />
-    <string id="taom_lg_body_desc" text="The lord's harness is the last armour a master armourer forges, and only for a proven captain. Strike down enemies with your own hand, take enemy lords captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lg_weapon_title" text="The Lord's Weapon" />
-    <string id="taom_lg_weapon_desc" text="The finest weapons of your people go to those whose deeds match the names they carry. Strike down enemies with your own hand, take enemy lords captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lm_gondor" text="Númenórean Steel" />
-    <string id="taom_lm_vlandia" text="Eorling Steel" />
-    <string id="taom_lm_erebor" text="Erebor Dwarf-steel" />
-    <string id="taom_lm_sturgia" text="Dale-forged Steel" />
-    <string id="taom_lm_rivendell" text="Noldorin Silver-steel" />
-    <string id="taom_lm_mirkwood" text="Greenwood Silver" />
-    <string id="taom_lm_mordor" text="Barad-dûr Black Iron" />
-    <string id="taom_lm_isengard" text="Isengard Forge-iron" />
-    <string id="taom_lm_dolguldur" text="Dol Guldur Shadow-iron" />
-    <string id="taom_lm_gundabad" text="Gundabad Orc-steel" />
-    <string id="taom_lm_khuzait" text="Rhûnic Gilt-bronze" />
-    <string id="taom_lm_aserai" text="Haradric Bronze" />
-    <string id="taom_lm_empire" text="Dunland Bog-iron" />
-    <string id="taom_lg_piece_hands" text="lord's gauntlets" />
-    <string id="taom_lg_piece_legs" text="lord's greaves" />
-    <string id="taom_lg_piece_shoulders" text="lord's mantle" />
-    <string id="taom_lg_piece_head" text="lord's helm" />
-    <string id="taom_lg_piece_body" text="lord's harness" />
-    <string id="taom_lg_piece_weapon" text="lord's weapon" />
-    <string id="taom_lg_claim_level" text="Only a master armourer, at a level {LORD} armoury, can fit your {PIECE}." />
-    <string id="taom_lg_take_tip_deeds" text="Do the deeds its quest asks: enemies struck down with your own hand and battles won, and on the higher rungs lords taken captive." />
-    <string id="taom_lg_take_tip" text="Do the deeds its quest asks: enemies struck down with your own hand and battles won, and on the higher rungs lords taken captive; or bring the armourer {AMOUNT} instead." />
-    <string id="taom_lg_claim" text="Claim your {PIECE}" />
-    <string id="taom_lg_take" text="Take up the commission for your {PIECE}" />
-    <string id="taom_lg_handin" text="Hand over {AMOUNT} for your {PIECE}" />
-    <string id="taom_lg_handin_tip" text="You carry {CARRIED} of the {NEEDED} needed." />
-    <string id="taom_lg_start_failed" text="The armourer cannot take up your commission today." />
-    <string id="taom_lg_handin_title" text="Hand over the materials?" />
-    <string id="taom_lg_handin_body" text="The armourer takes them, and a master armourer at a level {LORD} armoury will fit you with your {PIECE}." />
-    <string id="taom_lg_handin_short" text="You no longer carry the materials." />
-    <string id="taom_lg_handin_done" text="The armourer takes the materials. Your {PIECE} waits at any level {LORD} armoury." />
-    <string id="taom_lg_claim_none" text="The armourer has no {PIECE} for your people yet." />
-    <string id="taom_lg_claim_title" text="Your {PIECE}" />
-    <string id="taom_lg_claim_desc" text="The master armourer will fit you with one of these. Choose it." />
-    <string id="taom_lg_claimed" text="The master armourer fits you with {ITEM}." />
-    <string id="taom_lg_drop" text="Among the spoils you find {AMOUNT}." />
-    <string id="taom_lg_ready" text="Your deeds are known. A master armourer, at a level {LORD} armoury, will now fit you with your {PIECE}." />
+    <string id="taom_bandit_mirkwood_spiders_name" text="闇の森の蜘蛛" />
+    <string id="taom_spider_brood_forest_name" text="巨大蜘蛛" />
+    <string id="taom_spider_brood_brown_name" text="大蜘蛛" />
+    <string id="taom_spider_brood_pale_name" text="蒼白の母蜘蛛" />
+    <string id="taom_bandit_wild_trolls_name" text="野生のトロル" />
+    <string id="taom_troll_bandit_cave_name" text="洞窟トロル" />
+    <string id="taom_troll_bandit_hill_name" text="丘トロル" />
+    <string id="taom_armoury_visit_news" text="熟練の甲冑師が{TOWN}に訪れた。今後{DAYS}日の間、この町の武具庫はより優れたものとして品を揃え、鍛え上げる。" />
+    <string id="taom_armoury_menu" text="武具庫を訪れる" />
+    <string id="taom_armoury_menu_tip" text="この町の武具庫は3段階中、第{LEVEL}段階の仕事を行う。" />
+    <string id="taom_armoury_coop_guest" text="甲冑師はこのキャンペーンのホストのためにのみ働く。" />
+    <string id="taom_armoury_nothing" text="この甲冑師が改良できる品をあなたは持っていない。鎧の一部と、その次の形に必要な金属を持ってくるがよい。" />
+    <string id="taom_armoury_title" text="{TOWN}の武具庫" />
+    <string id="taom_armoury_desc" text="この武具庫は3段階中、第{LEVEL}段階の仕事を行う。重装の品には第{HEAVY}段階、精鋭の品には第{ELITE}段階、領主の装具には第{LORD}段階の熟練甲冑師が必要だ。品の質は保たれる。" />
+    <string id="taom_armoury_choose" text="選ぶ" />
+    <string id="taom_armoury_leave" text="立ち去る" />
+    <string id="taom_armoury_confirm_title" text="{SOURCE}を改良するか?" />
+    <string id="taom_armoury_confirm_body" text="甲冑師は{PRICE}でこれを{TARGET}に打ち直すだろう。" />
+    <string id="taom_armoury_confirm_yes" text="やらせる" />
+    <string id="taom_armoury_cancel" text="取りやめる" />
+    <string id="taom_armour_class_light" text="軽装" />
+    <string id="taom_armour_class_medium" text="中装" />
+    <string id="taom_armour_class_heavy" text="重装" />
+    <string id="taom_armour_class_elite" text="精鋭" />
+    <string id="taom_armour_class_lord" text="領主" />
+    <string id="taom_armour_class_other" text="上質" />
+    <string id="taom_armoury_offer" text="{SOURCE}を{TARGET}へ({CLASS})" />
+    <string id="taom_armoury_gold" text="{GOLD}ゴールド" />
+    <string id="taom_armoury_amount" text="{ITEM}×{COUNT}" />
+    <string id="taom_armoury_block_level" text="この武具庫では{CLASS}の品を扱えない。第{NEED}段階が必要だが、ここは第{LEVEL}段階だ。" />
+    <string id="taom_armoury_block_gold" text="支払えない:{PRICE}。" />
+    <string id="taom_armoury_block_metal" text="金属が足りない:{PRICE}。" />
+    <string id="taom_armoury_block_resource" text="あなたの民の蓄えが足りない:{PRICE}。" />
+    <string id="taom_armoury_cost" text="費用は{PRICE}。" />
+    <string id="taom_armoury_done" text="甲冑師が{TARGET}をあなたに手渡す。" />
+    <string id="taom_armoury_gone" text="あなたはもう{SOURCE}を持っていない。" />
+    <string id="taom_armoury_short_gold" text="もうそれに払う金がない。" />
+    <string id="taom_armoury_short_metal" text="もうそれに要る金属がない。" />
+    <string id="taom_armoury_short_resource" text="あなたの民の蓄えではもう賄えない。" />
+    <string id="taom_lh_event_title" text="持ち主なき領主の具足" />
+    <string id="taom_lh_event_body" text="戦場の戦利品の中に{ITEM}、{LORD}の家中の具足が横たわっている。武によって得た当然のあなたの物だが、その一族は返還を礼節と受け取るだろう。" />
+    <string id="taom_lh_event_take" text="受け取る" />
+    <string id="taom_lh_event_return" text="縁者のもとへ送る" />
+    <string id="taom_lg_hands_title" text="領主の篭手" />
+    <string id="taom_lg_hands_desc" text="熟練の甲冑師が領主の篭手を鍛えるのは、戦場でその力を証した手のためだけだ。自らの手で敵を討ち、戦に勝利せよ。あるいは甲冑師に自らの民の領主級の素材を持ち込め。さすれば熟練の甲冑師がそれを仕立ててくれよう。" />
+    <string id="taom_lg_task_kills" text="自らの手で敵を討ち倒す" />
+    <string id="taom_lg_task_battles" text="戦に勝利する" />
+    <string id="taom_lg_legs_title" text="領主の脛当て" />
+    <string id="taom_lg_legs_desc" text="領主にふさわしい脛当ては、金で買うものではなく戦の只中で勝ち取るものだ。自らの手で敵を討ち、戦に勝利せよ。あるいは甲冑師に自らの民の領主級の素材を持ち込め。さすれば熟練の甲冑師がそれを仕立ててくれよう。" />
+    <string id="taom_lg_shoulders_title" text="領主の肩掛け" />
+    <string id="taom_lg_shoulders_desc" text="領主の肩掛けは、戦の最も激しき場に立つ者の証である。自らの手で敵を討ち、戦に勝利せよ。あるいは甲冑師に自らの民の領主級の素材を持ち込め。さすれば熟練の甲冑師がそれを仕立ててくれよう。" />
+    <string id="taom_lg_head_title" text="領主の兜" />
+    <string id="taom_lg_head_desc" text="領主の兜は、他の領主たちが恐れる名のために鍛えられる。自らの手で敵を討ち、敵の領主を捕らえ、戦に勝利せよ。あるいは甲冑師に自らの民の領主級の素材を持ち込め。さすれば熟練の甲冑師がそれを仕立ててくれよう。" />
+    <string id="taom_lg_task_lords" text="敵の領主を捕虜にする" />
+    <string id="taom_lg_body_title" text="領主の鎧" />
+    <string id="taom_lg_body_desc" text="領主の鎧は熟練の甲冑師が最後に鍛える品であり、実績ある将にのみ与えられる。自らの手で敵を討ち、敵の領主を捕らえ、戦に勝利せよ。あるいは甲冑師に自らの民の領主級の素材を持ち込め。さすれば熟練の甲冑師がそれを仕立ててくれよう。" />
+    <string id="taom_lg_weapon_title" text="領主の武器" />
+    <string id="taom_lg_weapon_desc" text="汝の民の最上の武器は、その名にふさわしい功績を挙げた者の手に渡る。自らの手で敵を討ち、敵の領主を捕らえ、戦に勝利せよ。あるいは甲冑師に自らの民の領主級の素材を持ち込め。さすれば熟練の甲冑師がそれを仕立ててくれよう。" />
+    <string id="taom_lm_gondor" text="ヌーメノール鋼" />
+    <string id="taom_lm_vlandia" text="エオル家の鋼" />
+    <string id="taom_lm_erebor" text="エレボールのドワーフ鋼" />
+    <string id="taom_lm_sturgia" text="デイル鍛えの鋼" />
+    <string id="taom_lm_rivendell" text="ノルドール銀鋼" />
+    <string id="taom_lm_mirkwood" text="緑森の銀" />
+    <string id="taom_lm_mordor" text="バラド=ドゥーアの黒鉄" />
+    <string id="taom_lm_isengard" text="アイゼンガルドの鍛鉄" />
+    <string id="taom_lm_dolguldur" text="ドル・グルドゥアの影鉄" />
+    <string id="taom_lm_gundabad" text="グンダバドのオーク鋼" />
+    <string id="taom_lm_khuzait" text="ルーンの金張り青銅" />
+    <string id="taom_lm_aserai" text="ハラドの青銅" />
+    <string id="taom_lm_empire" text="ダンランドの沼鉄" />
+    <string id="taom_lg_piece_hands" text="領主の篭手" />
+    <string id="taom_lg_piece_legs" text="領主の脛当て" />
+    <string id="taom_lg_piece_shoulders" text="領主の肩掛け" />
+    <string id="taom_lg_piece_head" text="領主の兜" />
+    <string id="taom_lg_piece_body" text="領主の鎧" />
+    <string id="taom_lg_piece_weapon" text="領主の武器" />
+    <string id="taom_lg_claim_level" text="{PIECE}を仕立てられるのは、レベル{LORD}の武具工房にいる熟練の甲冑師だけだ。" />
+    <string id="taom_lg_take_tip_deeds" text="その依頼が求める功を成せ。自らの手で敵を討ち、戦に勝利し、さらに上の段階では領主を捕虜とせよ。" />
+    <string id="taom_lg_take_tip" text="その依頼が求める功を成せ。自らの手で敵を討ち、戦に勝利し、さらに上の段階では領主を捕虜とせよ。あるいは甲冑師に{AMOUNT}を持ち込め。" />
+    <string id="taom_lg_claim" text="{PIECE}を受け取る" />
+    <string id="taom_lg_take" text="{PIECE}の依頼を引き受ける" />
+    <string id="taom_lg_handin" text="{PIECE}のために{AMOUNT}を引き渡す" />
+    <string id="taom_lg_handin_tip" text="必要な{NEEDED}のうち{CARRIED}を所持しています。" />
+    <string id="taom_lg_start_failed" text="武具師は今日あなたの依頼を引き受けられない。" />
+    <string id="taom_lg_handin_title" text="素材を引き渡しますか？" />
+    <string id="taom_lg_handin_body" text="武具師はそれらを受け取った。レベル{LORD}の武具庫にいる熟練の武具師が、あなたに{PIECE}を仕立ててくれるだろう。" />
+    <string id="taom_lg_handin_short" text="素材はもう所持していません。" />
+    <string id="taom_lg_handin_done" text="武具師が素材を受け取った。あなたの{PIECE}はレベル{LORD}の武具庫で待っている。" />
+    <string id="taom_lg_claim_none" text="武具師はまだあなたの民のための{PIECE}を持っていない。" />
+    <string id="taom_lg_claim_title" text="あなたの{PIECE}" />
+    <string id="taom_lg_claim_desc" text="熟練の武具師がこの中の一つを仕立ててくれる。選びなさい。" />
+    <string id="taom_lg_claimed" text="熟練の武具師があなたに{ITEM}を仕立てた。" />
+    <string id="taom_lg_drop" text="戦利品の中から{AMOUNT}を見つけた。" />
+    <string id="taom_lg_ready" text="あなたの功績は知れ渡っている。レベル{LORD}の武具庫にいる熟練の武具師が、今やあなたに{PIECE}を仕立ててくれるだろう。" />
     <string id="taom_realm_borders_entering" text="{REALM}の領土に入りました。" />
     <string id="taom_realm_borders_mode_alignment" text="地図に自由の民と影の勢力を表示しています。" />
     <string id="taom_realm_borders_mode_war" text="地図に味方と敵を表示しています。" />
     <string id="taom_realm_borders_mode_political" text="地図に国々を表示しています。" />
+  <string id="taom_fui_gandalf_name" text="ガンダルフ" />
+  <string id="taom_fui_isildur_name" text="イシルドゥア" />
+  <string id="taom_fui_brand_name" text="ブランド" />
+  <string id="taom_fui_bard_name" text="弓の名手バルド" />
+  <string id="taom_fui_tauriel_name" text="タウリエル" />
+  <string id="taom_fui_thorin_name" text="トーリン・オーケンシールド" />
+  <string id="taom_fui_azog_name" text="汚らわしきアゾグ" />
+  <string id="taom_fui_gilgalad_name" text="ギル＝ガラド" />
+  <string id="taom_fui_quote_gold" text="黄金すべてが輝くとはかぎらぬ、さすらう者すべてが道に迷っているのではない。" />
+  <string id="taom_fui_quote_gold_by" text="－ ビルボ・バギンズ" />
+  <string id="taom_fui_quote_light" text="影の中から光が生まれいでん。" />
+  <string id="taom_fui_quote_light_by" text="－ ビルボ・バギンズ" />
+  <string id="taom_fui_quote_smallest" text="どんなに小さき者でも、未来の行方を変えることができる。" />
+  <string id="taom_fui_quote_smallest_by" text="－ ガラドリエル" />
+  <string id="taom_fui_quote_foul" text="わしは見かけは醜いが、心は正しい。" />
+  <string id="taom_fui_quote_foul_by" text="－ アラゴルン" />
+  <string id="taom_fui_wanderer" text="さすらい人" />
+  <string id="taom_fui_back_to_menu" text="メインメニュー" />
+  <string id="taom_fui_custom_character" text="カスタムキャラクター" />
+  <string id="taom_fui_banner" text="バナー" />
+  <string id="taom_fui_back" text="戻る" />
+  <string id="taom_fui_clan_name" text="氏族名" />
+  <string id="taom_fui_identity" text="素性" />
+  <string id="taom_fui_head" text="頭部" />
+  <string id="taom_fui_body" text="身体" />
+  <string id="taom_fui_details" text="詳細" />
+  <string id="taom_fui_strengths" text="長所" />
+  <string id="taom_fui_weaknesses" text="短所" />
+  <string id="taom_fui_confirm" text="決定" />
+  <string id="taom_fui_characters" text="キャラクター" />
+  <string id="taom_fui_leader" text="指導者" />
+  <string id="taom_fui_lord" text="領主" />
+  <string id="taom_fui_benefits" text="恩恵" />
+  <string id="taom_fui_base_attributes" text="基本能力値" />
+  <string id="taom_fui_skills_and_attributes" text="技能と能力値" />
+  <string id="taom_fui_faction" text="勢力" />
+  <string id="taom_fui_character" text="キャラクター" />
+  <string id="taom_fui_origins" text="出自" />
+  <string id="taom_fui_random" text="ランダム" />
+  <string id="taom_fui_difficulty" text="難易度" />
+  <string id="taom_fui_review" text="確認" />
+  <string id="taom_fui_build" text="体格" />
+  <string id="taom_fui_skin_tone" text="肌の色" />
+  <string id="taom_fui_face" text="顔" />
+  <string id="taom_fui_eyes" text="目" />
+  <string id="taom_fui_nose" text="鼻" />
+  <string id="taom_fui_mouth" text="口" />
+  <string id="taom_fui_face_shape" text="顔の形" />
+  <string id="taom_fui_hair" text="髪" />
+  <string id="taom_fui_tattoos" text="入れ墨" />
+  <string id="taom_fui_gender" text="性別" />
+  <string id="taom_fui_male" text="男性" />
+  <string id="taom_fui_female" text="女性" />
+  <string id="taom_fui_race" text="種族" />
+  <string id="taom_fui_voice" text="声" />
+  <string id="taom_fui_randomize" text="ランダム化" />
+  <string id="taom_fui_randomize_all" text="すべてランダム化" />
+  <string id="taom_fui_default_outfit" text="初期装備" />
+  <string id="taom_fui_reset" text="リセット" />
+  <string id="taom_fui_reset_all" text="すべてリセット" />
+  <string id="taom_fui_undo" text="元に戻す" />
+  <string id="taom_fui_redo" text="やり直す" />
+  <string id="taom_bc_advice_title" text="TAOM：戦闘パフォーマンス設定" />
+  <string id="taom_bc_advice_body" text="あなたの{RAGDOLLS}または{CORPSES}の設定がTAOMの推奨値より高くなっています。高い値では大規模な戦闘でフリーズが報告されており、この二つを下げることで解消しました。推奨値：{RAGDOLLS} 5、{CORPSES} {LOW}。すでに低い設定はそのまま維持されます。今すぐ適用しますか？オプションの{PERFORMANCE}からいつでも元に戻せます。この通知はMODオプションのTAOM、パフォーマンスから無効にできます。" />
+  <string id="taom_bc_advice_apply" text="適用する" />
+  <string id="taom_bc_advice_keep" text="現在の設定を維持" />
+  <string id="taom_bc_advice_done" text="戦闘設定を保存しました。" />
+  <string id="taom_bc_advice_failed" text="戦闘設定を保存できませんでした。オプションの{PERFORMANCE}から手動で設定してください。" />
   </strings>
 </base>

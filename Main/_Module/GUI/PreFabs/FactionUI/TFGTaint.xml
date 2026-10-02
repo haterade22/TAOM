@@ -1,0 +1,12 @@
+<Window>
+  <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalTopToBottom">
+    <Children>
+      <NavigationScopeTargeter ScopeID="TaintColorScope" ScopeParent="..\TaintColor" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="12" HasCircularMovement="false" />
+      <TFGColorSelector Id="TaintColor" DataSource="{TattooColorSelector}" MarginTop="10" Parameter.NavigationMinIndex="0" Parameter.NavigationMaxIndex="1000" />
+      <Widget WidthSizePolicy="Fixed" SuggestedWidth="581" HeightSizePolicy="Fixed" SuggestedHeight="14" HorizontalAlignment="Center" Sprite="fs_divider_thin" />
+      
+      <NavigationScopeTargeter ScopeID="TaintSelectorScope" ScopeParent="..\TaintSelector" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="5" HasCircularMovement="false" />
+      <TFGGrid Id="TaintSelector" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginRight="3" Parameter.GridDataSource="{TaintTypes}" Parameter.NavigationMinIndex="1001" Parameter.NavigationMaxIndex="2000" />
+    </Children>
+  </ListPanel>
+</Window>

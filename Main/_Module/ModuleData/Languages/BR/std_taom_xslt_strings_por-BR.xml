@@ -644,7 +644,7 @@
     <string id="TAOM_clan_khuzait_9" text="Bozorganith" />
     <string id="aom_lord_1_1_name" text="Brenin Wulf, o Mão de Ferro" />
     <string id="aom_lord_1_2_name" text="Freya Coração de Lobo" />
-    <string id="aom_lord_1_3_name" text="Gorwulf, O Javali" />
+    <string id="aom_lord_1_3_name" text="Gorwulf, o Javali" />
     <string id="aom_lord_1_4_name" text="Brunhild Garra de Ferro" />
     <string id="aom_lord_1_5_name" text="Othric O Selvagem" />
     <string id="aom_lord_1_6_name" text="Torvald Chifre de Boi" />
@@ -659,7 +659,7 @@
     <string id="aom_lord_1_12_name" text="Findariel" />
     <string id="aom_lord_1_14_name" text="Boca de Sauron" />
     <string id="aom_lord_1_15_name" text="Rei Bruxo de Angmar" />
-    <string id="aom_lord_1_155_name" text="Nazgûl, O Marechal Sombrio" />
+    <string id="aom_lord_1_155_name" text="Nazgûl, o Marechal Negro" />
     <string id="aom_lord_1_16_name" text="Nazgûl, O Cavaleiro de Umbar" />
     <string id="aom_lord_1_17_name" text="Sauron" />
     <string id="aom_lord_1_177_name" text="Khorgath" />
@@ -1288,9 +1288,9 @@
     <string id="TAOM_hero_3_22_2" text="Suna treina jovens arqueiros." />
     <string id="TAOM_hero_3_22_3" text="Zanuwa é um arqueiro habilidoso da tribo." />
     <string id="TAOM_hero_3_22_4" text="Hajara guarda as torres de vigia do deserto." />
-    <string id="TAOM_hero_4_1" text="Théoden, Rei de Rohan, governa de Meduseld em Edoras. Outrora enfeitiçado pelo servo de Saruman, Gríma, foi libertado por Gandalf e conduziu seu povo à glória em Forte da Trombeta e nos Campos do Pelennor." />
-    <string id="TAOM_hero_4_2" text="Elfhild foi rainha de Rohan, mãe de Théodred. Ela morreu no parto, uma dor que ensombrou o reinado de Théoden." />
-    <string id="TAOM_hero_4_7" text="Théodred era o único filho do Rei Théoden, Príncipe de Rohan. Ele caiu defendendo os Vaus do Isen contra os Uruk-hai de Saruman." />
+    <string id="TAOM_hero_4_1" text="Théoden, Rei de Rohan, governa de Meduseld em Edoras. Outrora enfeitiçado por Gríma, servo de Saruman, foi libertado por Gandalf e conduziu seu povo à glória no Abismo de Helm e nos Campos de Pelennor." />
+    <string id="TAOM_hero_4_2" text="Elfhild foi rainha de Rohan, mãe de Théodred. Morreu no parto, uma dor que ensombreceu o reinado de Théoden." />
+    <string id="TAOM_hero_4_7" text="Théodred era o único filho do Rei Théoden, Príncipe de Rohan. Caiu defendendo os Vaus do Isen contra os Uruk-hai de Saruman." />
     <string id="TAOM_hero_4_10" text="Elys é uma dama nobre da corte dos Rohirrim." />
     <string id="TAOM_hero_4_13" text="Romund serve como capitão da Guarda Real." />
     <string id="TAOM_hero_4_14" text="Morcon é um capitão de confiança da casa do rei." />
@@ -1299,7 +1299,7 @@
     <string id="TAOM_hero_4_3_3" text="Théodwyn era irmã do Rei Théoden e mãe de Éomer e Éowyn. Ela morreu de tristeza após seu marido Éomund ser morto por Orcs." />
     <string id="TAOM_hero_4_3" text="Aldric mantém um salão na Folde Leste e cavalga na convocação de Edoras. É um simples cavaleiro sem grande linhagem, e por isso mesmo confiável." />
     <string id="TAOM_hero_rohan_10_1" text="Éomund da Folde Leste cavalgou como Marechal da Marca e desposou Théodwyn, irmã do rei. Orcs o abateram em Emyn Muil, e seus dois filhos passaram aos cuidados de Théoden." />
-    <string id="TAOM_hero_4_3_1" text="Éomer Éadig, Terceiro Marechal da Marca, é sobrinho de Théoden e herdeiro do trono. Ele lidera os cavaleiros do Folde Oriental com feroz lealdade." />
+    <string id="TAOM_hero_4_3_1" text="Éomer Éadig, Terceiro Marechal da Marca, é sobrinho de Théoden e herdeiro do trono. Lidera os cavaleiros do Folde Oriental com feroz lealdade." />
     <string id="TAOM_hero_4_4" text="Elthild é uma dama nobre dos Eoforing." />
     <string id="TAOM_hero_4_8" text="Furnhard serve como um cavaleiro de confiança sob o comando de Éomer." />
     <string id="TAOM_hero_4_11" text="Liena serve a casa real." />
@@ -1326,7 +1326,7 @@
     <string id="TAOM_hero_4_23_1" text="Wulfwynn é filha de Marhath, uma cavaleira habilidosa." />
     <string id="TAOM_hero_4_23_2" text="Eleduran treina cavalos de guerra para o exército do rei." />
     <string id="TAOM_hero_4_23_3" text="Eleduran, o jovem, serve como guardião de cavalos." />
-    <string id="TAOM_hero_4_24" text="Gríma Língua de Cobra foi conselheiro de Théoden, secretamente um espião de Saruman. Suas mentiras sussurradas envenenaram a mente do rei até que Gandalf quebrou o feitiço." />
+    <string id="TAOM_hero_4_24" text="Gríma Língua de Cobra era o conselheiro de Théoden, secretamente um espião de Saruman. Suas mentiras sussurradas envenenaram a mente do rei até que Gandalf rompesse o feitiço." />
     <string id="TAOM_hero_4_24_1" text="Adaltrud foi desposada por Gríma Grimmóding antes que seu conselho se voltasse a Saruman. Ela mantém um salão em Edoras que os cavaleiros já não visitam." />
     <string id="TAOM_hero_4_24_2" text="Gudonhelda é a filha mais velha de Gríma Grimmóding. Aprendeu cedo que o nome de seu pai não abre portas em Edoras." />
     <string id="TAOM_hero_4_24_3" text="Ingunde, segunda filha de Gríma Grimmóding, cuida dos cavalos de uma casa com a qual ninguém cavalga." />
@@ -1478,5 +1478,41 @@
     <string id="TAOM_hero_SE9_s_bn" text="Pharazîn é uma feiticeira númenoriana negra e a verdadeira autoridade em Cirith Nargil sempre que seu marido parte para a guerra. Seu nome evoca o último Rei de Númenor." />
     <string id="TAOM_hero_SE9_c1_bn" text="Zigûrbêl é herdeiro de Cirith Nargil e treinado nas artes negras. Seu nome significa Amante do Feiticeiro, que é como Númenor chamava Sauron antes de descobrir o que ele era." />
     <string id="TAOM_hero_SE9_c2_bn" text="Zimrazîn é a segunda filha do Senhor da Espada e a mais perigosa dos dois. Tem os talentos da mãe e nada de sua paciência." />
+    <string id="3UucAOBW" text="Eu sou {CONVERSATION_CHARACTER.LINK} de {CLAN_NAME}." />
+    <string id="62vceTar" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}." />
+    <string id="99gE1ZoY" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {FACTION}." />
+    <string id="AxMrFoea" text="{TOWN_NAME} foi sitiada por forças lideradas por {LORD.LINK} de {FACTION_NAME}!" />
+    <string id="EHFibjkM" text="{TOWN_NAME} foi sitiada pelo exército liderado por {LORD.LINK} de {FACTION_NAME}!" />
+    <string id="ExbVzTZA" text="{CLAN} firmou contrato para lutar ao lado de {KINGDOM}." />
+    <string id="FFXqPFwl" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}, uma das famílias mais ilustres nos anais do reino de Vlandia." />
+    <string id="JJAWbuNT" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Dizem que nosso ancestral estava entre os que vieram nos navios dourados que chegaram a esta terra do Oeste, no Tempo dos Heróis. Claro, se você acreditar que todos que dizem ter estado naqueles barcos realmente estavam, eles teriam afundado com o peso." />
+    <string id="L2GbDVja" text="Eu sou {CONVERSATION_CHARACTER.LINK} de {CLAN_NAME}, minha {?PLAYER.GENDER}senhora{?}meu senhor{\?}, e é uma honra servi-lo." />
+    <string id="Nq2dyiO1" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}, um nome que você certamente ouviu muitas vezes nas sagas dos stúrgios." />
+    <string id="PBgLvyOa" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Nossos ancestrais estavam entre os que vieram do extremo norte para receber o denar dos príncipes e jurar defender estas terras, e nos mantivemos fiéis a esse juramento." />
+    <string id="S0oFKYfB" text="{CLAN} não serve mais a {KINGDOM}." />
+    <string id="S1vGzr8z" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}, um clã dos aserai." />
+    <string id="SLAkSrb5" text="{FACTION1_NAME} declara guerra a {FACTION2_NAME}." />
+    <string id="TsYCa2fZ" text="{FACTION1} e {FACTION2} fizeram as pazes." />
+    <string id="U4p70l9B" text="Eu sou {CONVERSATION_CHARACTER.LINK} de {CLAN_NAME}." />
+    <string id="U770Bvy8" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. A fama de nossa família não é inferior a nenhuma nas canções dos batânios." />
+    <string id="Ua0T0A7t" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}, uma das antigas linhagens dos batânios." />
+    <string id="WH8P3Y5F" text="Eu sou {CONVERSATION_CHARACTER.LINK} de {CLAN_NAME}." />
+    <string id="a8584KD0" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Tenho certeza de que você já ouviu o nome de nosso clã nas epopeias da estepe. Levamos o nome de um dos 12 filhos da grande loba, mãe dos khuzaits." />
+    <string id="cMO9JXvk" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Mantemos nossas terras em feudo de {LIEGE_TITLE}, e honramos nossos juramentos de fidelidade." />
+    <string id="dC8acIya" text="Eu sou {CONVERSATION_CHARACTER.LINK} de {CLAN_NAME}." />
+    <string id="dfAE3liA" text="O clã {CLAN_NAME} juntou-se a {FACTION}." />
+    <string id="dlkg2jQf" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}, uma das antigas linhagens dos stúrgios." />
+    <string id="eyxfHmCU" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Nossa família serviu aos reis de Vlandia por gerações." />
+    <string id="hJFCi1zu" text="{FACTION1} e {FACTION2} fizeram as pazes." />
+    <string id="hP57Caab" text="{VICTOR_PARTY} de {VICTOR_FACTION} derrota {DEFEATED_PARTY} de {DEFEATED_FACTION}." />
+    <string id="hbWhfoWH" text="{SETTLEMENT} é saqueada por {LORD.LINK} de {FACTION_NAME}" />
+    <string id="hopvV6Ch" text="{RULER_NAME} de {FACTION1_NAME} declara guerra a {FACTION2_NAME}." />
+    <string id="kqwNCCbZ" text="{TOWN_NAME} foi sitiada por um exército liderado por {LORD.LINK} de {FACTION_NAME}!" />
+    <string id="l2nEIZV5" text="Eu sou {CONVERSATION_CHARACTER.LINK} de {CLAN_NAME}." />
+    <string id="nbVW2cJ8" text="{SETTLEMENT} é saqueada pelo exército liderado por {LORD.LINK} de {FACTION_NAME}" />
+    <string id="pn79h0aj" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Recebemos nosso título do próprio Imperador Vortios. Não que ele tivesse muita escolha, já que estava cativo em um de nossos navios de pilhagem na época, mas tenho certeza de que ele reconheceu a nobreza de nosso sangue." />
+    <string id="rhTUDKhJ" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Não há um clã batânio que não tenha contribuído com o crânio de um de seus campeões para nossa coleção de taças." />
+    <string id="z2yr4mc6" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}. Nosso clã serviu lealmente ao Canato Khuzait por gerações." />
+    <string id="zZ9FQJRI" text="Eu sou {CONVERSATION_CHARACTER.LINK}, de {CLAN_NAME}, a mais antiga e nobre das linhagens aserai." />
   </strings>
 </base>

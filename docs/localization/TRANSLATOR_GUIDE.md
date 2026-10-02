@@ -4,9 +4,9 @@ This guide is for anyone translating TAOM (Tales From the Age of Men) into anoth
 
 ## Overview
 
-TAOM ships with translatable strings across **three modules** and **seventeen file types** (13 pre-existing + 4 added 2026-09-17 for troop/lord/clan/kingdom names). Total: ~14,000 strings per language.
+TAOM ships with translatable strings across **three modules** and **twenty-two file types** (13 pre-existing, 4 added 2026-09-17 for troop/lord/clan/kingdom names, 5 added 2026-10-01 for the data text below). Total: ~19,600 strings per language.
 
-### TAOM module (17 files, ~11,209 strings)
+### TAOM module (22 files, 16,034 keys measured 2026-10-01)
 
 Located at `Main/_Module/ModuleData/Languages/<LANG>/`:
 
@@ -29,6 +29,11 @@ Located at `Main/_Module/ModuleData/Languages/<LANG>/`:
 | `std_taom_lord_name_strings_{locale}.xml` | Lord names not already covered via XSLT strings, generated from `characters/lords.xml` (added 2026-09-17) | 988 |
 | `std_taom_clan_name_strings_{locale}.xml` | Clan names not already covered via module strings, generated from `characters/clans.xml` (added 2026-09-17) | 115 |
 | `std_taom_kingdom_name_strings_{locale}.xml` | Original-12-kingdom identity text (name/short_name/title/ruler_title/desc), generated from `taom_spkingdoms.xml` (added 2026-09-17) | 60 |
+| `std_taom_culture_text_strings_{locale}.xml` | Culture names, descriptions and the male/female name lists heroes are named from, generated from `taom_spcultures.xml` (added 2026-10-01) | 1,793 |
+| `std_taom_hero_text_strings_{locale}.xml` | Hero biographies (encyclopedia text), generated from `characters/heroes.xml` (added 2026-10-01) | 460 |
+| `std_taom_career_data_strings_{locale}.xml` | Career, choice, rank, ability-template and career-quest names and descriptions, generated from `career_system/*.xml` (added 2026-10-01) | 792 |
+| `std_taom_character_name_strings_{locale}.xml` | Notable, townsfolk, wanderer, named-companion and creature names, generated from `characters/*.xml` (not lords, clans, heroes), `taom_wanderers.xml` and `named_companions.xml` (added 2026-10-01) | 1,519 |
+| `std_taom_battle_scene_strings_{locale}.xml` | Custom Battle scene names, generated from `custom_battle_scenes.xml` (added 2026-10-01) | 27 |
 
 ### TAOM_Map module (1 file, ~1,102 strings)
 
@@ -517,7 +522,7 @@ Untranslated entries fall back to English text — the game stays valid, just sh
 - **`CareerButtonPrefab` "Career" label** — embedded directly in a prefab XML and not currently routed through the localization system.
 - **Gender-agreement rejections** — morphologically rich languages (RU, JP, KO, TR, CN) often need more gender conditionals than English. The AI validator preserves English in those cases. Manual translation can fix these — they're available in the XML files just as the English fallback.
 - **Troop/lord/clan/kingdom names were outside the pipeline; closed 2026-09-17.** Every `{=aom_*_name}` in `troops/*.xml`, most of `characters/lords.xml` (179/1184 had been registered via `taom_xslt_strings.xml`), most of `characters/clans.xml` (25/140 via `taom_module_strings.xml`), and all of the original 12 LOTR kingdoms' identity text in `taom_spkingdoms.xml` (name/short_name/title/ruler_title/text) were inline defaults with no row in any strings source, language file or cache (found 2026-09-13 for troops while investigating #572, which assumed stale translations that never existed). `tools/generate_name_localization_strings.py` is the Case B pipeline extension: it extracts every such key, excludes whatever is already registered elsewhere (so a lord already covered via XSLT strings doesn't get a duplicate row), and writes four generated English master files (`taom_troop_name_strings.xml`, `taom_lord_name_strings.xml`, `taom_clan_name_strings.xml`, `taom_kingdom_name_strings.xml`) wired into `SubModule.xml`, all 12 `language_data.xml` files, the translator's source list, and `LanguageDataXmlTests`. 1,999 new keys (troop 836, lord 988, clan 115, kingdom 60) across all 12 languages.
-- **Two related gaps remain OPEN, found during the same 2026-09-17 pass, not fixed by it:** custom clan-hero biographies in `characters/heroes.xml` (`text=` attribute; the file carries no `name=` at all, so hero names come from procedural generation elsewhere) sit at 6/465 keys registered, tracked by no GitHub issue. Female notable names (22 inline `NPCCharacter` names with no strings row) are tracked by #478 (open) and are a different source file (notable templates, not lords/troops/clans/kingdoms); the generator above does not reach either.
+- **The two gaps that pass left open were closed on 2026-10-01** by five more generator categories: hero biographies (`characters/heroes.xml` `text=`, 6 of 465 keys registered before) are in `taom_hero_text_strings.xml`, and every inline NPC name in `characters/*.xml` other than lords and clans (the female notables of #478 included) is in `taom_character_name_strings.xml`, beside culture text, career data and Custom Battle scene names. Ten keys that two characters shared with different English (six Gundabad and Dol Guldur hero bios, four Lindon caravan names borrowing Rivendell's keys) were split first; `LocalizationKeyConsistencyTests.EveryNameKey_InTheNameGeneratorsSources_HasOneEnglishDefault` now scans every generator source, so a new shared key fails the build. Two data files are never sources because the engine never loads them: the repo `settlements.xml` (a stale copy of TAOM_Map's) and `custom_settlements.xml` (registered nowhere in `SubModule.xml`).
 - **Backlog cleared 2026-09-13.** With an API key present, one `--module all --sync-ids --apply` per language refilled every English row across the three modules (216 model entries per language, 0 failures, $3.71 total), including the `taom_feat_bcg_ps` name that the 2026-08-14 note above used to track. A dry run now reports 0 rows needing the model in every language. The 18 career survival pips (#498) needed the reset described under "Changing English Text That Is Already Translated" first; the RU cache is not in the translator's canonical `json.dump` layout, so evict from it by removing lines rather than re-dumping.
 
 ---

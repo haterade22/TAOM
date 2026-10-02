@@ -819,7 +819,7 @@
 	<Hero
 		id="lord_G5_6"
 		faction="Faction.clan_gundabad_5"
-		text="{=ulgrim_description}Ulgrim, a duplicate-named but distinct orc veteran, fights with the experience of long campaigns against Elves. His wisdom guides younger warriors." />
+		text="{=aom_lord_G5_6_description}Ulgrim, a duplicate-named but distinct orc veteran, fights with the experience of long campaigns against Elves. His wisdom guides younger warriors." />
 	<Hero
 		id="lord_G5_7"
 		faction="Faction.clan_gundabad_5"
@@ -828,7 +828,7 @@
 	<Hero
 		id="lord_G5_8"
 		faction="Faction.clan_gundabad_5"
-		text="{=borzak_description}Borzak is a defender orc, fortifying positions echoing the barricades at Helm's Deep. In Gundabad, his walls repel invasions from the deep." />
+		text="{=aom_lord_G5_8_description}Borzak is a defender orc, fortifying positions echoing the barricades at Helm's Deep. In Gundabad, his walls repel invasions from the deep." />
 	<Hero
 		id="lord_G5_9"
 		faction="Faction.clan_gundabad_5"
@@ -1081,7 +1081,7 @@
 	<Hero
 		id="lord_D1_9"
 		faction="Faction.clan_dolguldur_1"
-		text="{=thrulza_description}Thrulza, a venomous assassin, strikes from shadows, her methods evoking the stealthy orcs that captured Thorin's company in The Hobbit." />
+		text="{=aom_lord_D1_9_description}Thrulza, a venomous assassin, strikes from shadows, her methods evoking the stealthy orcs that captured Thorin's company in The Hobbit." />
 	<Hero
 		id="lord_D1_10"
 		faction="Faction.clan_dolguldur_1"
@@ -1213,11 +1213,11 @@
 	<Hero
 		id="lord_D4_9"
 		faction="Faction.clan_dolguldur_4"
-		text="{=urzok_description}Urzok, a void caller, summons voids, engulfing light as Dol Guldur's gloom." />
+		text="{=aom_lord_D4_9_description}Urzok, a void caller, summons voids, engulfing light as Dol Guldur's gloom." />
 	<Hero
 		id="lord_D4_10"
 		faction="Faction.clan_dolguldur_4"
-		text="{=vorzul_description}Vorzul, a phantom reaper, harvests souls, feeding Khamûl's insatiable hunger." />
+		text="{=aom_lord_D4_10_description}Vorzul, a phantom reaper, harvests souls, feeding Khamûl's insatiable hunger." />
 
 	<!-- Fell Beast Tribe -->
 	<Hero
@@ -1297,7 +1297,7 @@
 	<Hero
 		id="lord_D6_8"
 		faction="Faction.clan_dolguldur_6"
-		text="{=thalka_description}Thalka, a ritual master, performs sacrifices, empowering the clan with Sauron's dark rites." />
+		text="{=aom_lord_D6_8_description}Thalka, a ritual master, performs sacrifices, empowering the clan with Sauron's dark rites." />
 	<Hero
 		id="lord_D6_9"
 		faction="Faction.clan_dolguldur_6"

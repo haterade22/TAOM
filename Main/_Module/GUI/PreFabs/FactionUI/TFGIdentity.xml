@@ -1,0 +1,197 @@
+<Window>
+  <!-- New composite page (2026-09-25, user request: "move left panel into the right panel") - Gender/Race/Voice,
+       previously an always-visible persistent LEFT panel (added 2026-09-23), now folded into the tab system as
+       its own "IDENTITY" tab and made the FIRST tab (index 0) - see TAOMFaceGen.xml's own top-ribbon comment
+       for why: a safe, no-new-C# equivalent of "nothing customization-specific shows until you pick a tab",
+       since forcing a genuinely blank pre-click state would need confirming the VM's real default @Tab value,
+       which can't be verified without the user present. Bindings unchanged from their old home (already proven
+       this project that DataSource resolution doesn't depend on tree position) - @CanChangeGender/@GenderLbl/
+       @SelectedGender/@CanChangeRace/@RaceLbl/{RaceSelector}/{SoundPreset}/ExecuteHearCurrentVoiceSample all
+       resolve against the root FaceGenVM exactly as before. -->
+  <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+    <Children>
+      <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\VerticalList" VerticalScrollbar="..\VerticalScrollbar">
+        <Children>
+          <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+            <Children>
+              <ListPanel Id="VerticalList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" MarginTop="25">
+                <Children>
+
+                  <!-- Gender - circular ring buttons with a MALE/FEMALE label below each (2026-09-26,
+                       exact-match reference request). Labels are added as children of the ButtonWidget itself,
+                       positioned BELOW the button's own bounds via PositionYOffset (same off-bounds-child
+                       technique already used for the tab ribbon's InputKeyVisualWidget hints) rather than
+                       restructuring each button into a button+label wrapper. Since CoverChildren sizing is based
+                       on layout bounds, not render-time PositionYOffset, the outer section's MarginBottom is
+                       bumped 30->55 to leave room for the label, which otherwise wouldn't be accounted for and
+                       could visually crowd the RACE section below it. -->
+                  <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" IsVisible="@CanChangeGender" StackLayout.LayoutMethod="VerticalTopToBottom" MarginBottom="55">
+                    <Children>
+                      <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="CC.SecTitle" LocalizedText="{=taom_fui_gender}GENDER" />
+                      <Widget WidthSizePolicy="Fixed" SuggestedWidth="350" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Left" MarginTop="6" MarginBottom="14" Sprite="fs_divider" />
+                      <NavigationScopeTargeter ScopeID="GenderButtonsScope" ScopeParent="..\GenderButtons" ScopeMovements="Horizontal" HasCircularMovement="false" RightNavigationScope="None" />
+                      <ListPanel Id="GenderButtons" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" IntValue="@SelectedGender" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                        <Children>
+                          <ButtonWidget Id="MaleGenderButton" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="90" SuggestedHeight="90" Brush="CC.GenderRing" ButtonType="Radio" UpdateChildrenStates="true" GamepadNavigationIndex="0">
+                            <Children>
+                              <NavigationAutoScrollWidget TrackedWidget="..\." />
+                              <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="46" SuggestedHeight="46" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="CC.GenderM" />
+                              <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="90" HeightSizePolicy="Fixed" SuggestedHeight="18" HorizontalAlignment="Center" VerticalAlignment="Bottom" PositionYOffset="26" Brush="CC.IconLabel" LocalizedText="{=taom_fui_male}MALE" DoNotAcceptEvents="true" />
+                            </Children>
+                          </ButtonWidget>
+                          <ButtonWidget Id="FemaleGenderButton" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="90" SuggestedHeight="90" MarginLeft="20" Brush="CC.GenderRing" ButtonType="Radio" UpdateChildrenStates="true" GamepadNavigationIndex="1">
+                            <Children>
+                              <NavigationAutoScrollWidget TrackedWidget="..\." />
+                              <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="46" SuggestedHeight="46" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="CC.GenderF" />
+                              <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="90" HeightSizePolicy="Fixed" SuggestedHeight="18" HorizontalAlignment="Center" VerticalAlignment="Bottom" PositionYOffset="26" Brush="CC.IconLabel" LocalizedText="{=taom_fui_female}FEMALE" DoNotAcceptEvents="true" />
+                            </Children>
+                          </ButtonWidget>
+                        </Children>
+                      </ListPanel>
+                    </Children>
+                  </ListPanel>
+
+                  <!-- Race -->
+                  <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" IsVisible="@CanChangeRace" StackLayout.LayoutMethod="VerticalTopToBottom" MarginBottom="30">
+                    <Children>
+                      <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="CC.SecTitle" LocalizedText="{=taom_fui_race}RACE" />
+                      <Widget WidthSizePolicy="Fixed" SuggestedWidth="350" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Left" MarginTop="6" MarginBottom="14" Sprite="fs_divider" />
+                      <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center">
+                        <Children>
+                          <TFGDropdown Id="RaceSelection" Parameter.SelectorDataSource="{RaceSelector}" />
+                        </Children>
+                      </Widget>
+                    </Children>
+                  </ListPanel>
+
+                  <!-- Voice -->
+                  <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="CC.SecTitle" LocalizedText="{=taom_fui_voice}VOICE" />
+                  <Widget WidthSizePolicy="Fixed" SuggestedWidth="350" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Left" MarginTop="6" MarginBottom="14" Sprite="fs_divider" />
+                  <Widget WidthSizePolicy="Fixed" SuggestedWidth="210" HeightSizePolicy="Fixed" SuggestedHeight="44" HorizontalAlignment="Center" MarginBottom="30">
+                    <Children>
+                      <NavigationScopeTargeter ScopeID="VoiceTypeSelectionScope" ScopeParent="..\VoiceTypeSelection" ScopeMovements="Horizontal" />
+                      <NumericUpDownWidget Id="VoiceTypeSelection" DataSource="{SoundPreset}" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="150" SuggestedHeight="40" HorizontalAlignment="Left" VerticalAlignment="Center" DownButton="NumericDown" IsFlipUpButtonHorizontal="true" MaxValue="@Max" MinValue="@Min" ShowOneAdded="true" TextWidget="TextContainer\NumericText" UpButton="NumericUp" Value="@Value">
+                        <Children>
+                          <ButtonWidget Id="NumericDown" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="26" SuggestedHeight="34" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="CC.ArrowL" GamepadNavigationIndex="0" />
+                          <Widget Id="TextContainer" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="64" SuggestedHeight="34" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="cc_num">
+                            <Children><TextWidget Id="NumericText" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" HorizontalAlignment="Center" Brush="CC.Value" ClipContents="false" /></Children>
+                          </Widget>
+                          <ButtonWidget Id="NumericUp" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="26" SuggestedHeight="34" HorizontalAlignment="Right" VerticalAlignment="Center" Brush="CC.ArrowR" GamepadNavigationIndex="1" />
+                        </Children>
+                      </NumericUpDownWidget>
+                      <NavigationScopeTargeter ScopeID="VoiceTestButtonScope" ScopeParent="..\VoiceTestButton" />
+                      <ButtonWidget Id="VoiceTestButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="40" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="166" Brush="CC.Voice" Command.Click="ExecuteHearCurrentVoiceSample" GamepadNavigationIndex="0" />
+                    </Children>
+                  </Widget>
+
+                  <!-- Voice Pitch - moved here 2026-09-26 (user request) from the BODY tab's {BodyProperties} list,
+                       which also contains Height/Weight/Build sharing one ItemTemplate - see
+                       src\FilteredPropertyRow.cs for why a single VM-bound collection needs a code-level filter
+                       rather than a plain XML IsVisible binding to split one entry out. Row width/proportions
+                       match the same 2026-09-26 resize done in TFGBodyPage.xml's copy of this template. -->
+                  <NavigationScopeTargeter ScopeID="VoicePitchScope" ScopeParent="..\VoicePitchProperties" ScopeMovements="Vertical" />
+                  <NavigatableListPanel Id="VoicePitchProperties" DataSource="{BodyProperties}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" UpdateChildrenStates="true" ChildTarget="SliderHandle" MinIndex="5" MaxIndex="50">
+                    <ItemTemplate>
+                      <FilteredPropertyRow Name="@Name" ShowOnlyName="{=G6hYIR5k}Voice Pitch:" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="44">
+                        <Children>
+                          <NavigationTargetSwitcher WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" FromTarget="..\." ToTarget="..\List\ScrollBar\SliderHandle" />
+                          <ListPanel Id="List" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsEnabled="@IsEnabled" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                            <Children>
+                              <RichTextWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" SuggestedWidth="150" HeightSizePolicy="StretchToParent" MarginLeft="4" Brush="CC.RowLabel" Text="@Name" IsEnabled="false" />
+                              <SliderWidget Id="ScrollBar" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="230" SuggestedHeight="28" VerticalAlignment="Center" Filler="Filler" Handle="SliderHandle" MaxValueFloat="@Max" MinValueFloat="@Min" ValueFloat="@Value" IsDiscrete="@IsDiscrete" DoNotUpdateHandleSize="true" UpdateValueOnScroll="false" Command.MousePressed="AddCommand">
+                                <Children>
+                                  <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="237" SuggestedHeight="20" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="cc_slider_track_9" IsEnabled="false" />
+                                  <Widget Id="Filler" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="226" SuggestedHeight="14" VerticalAlignment="Center" Sprite="cc_slider_fill" ClipContents="true">
+                                    <Children>
+                                      <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="226" SuggestedHeight="14" HorizontalAlignment="Left" VerticalAlignment="Center" Sprite="cc_slider_fill" />
+                                    </Children>
+                                  </Widget>
+                                  <ImageWidget Id="SliderHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="16" SuggestedHeight="22" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="CC.SliderHandle" DoNotAcceptEvents="true" />
+                                </Children>
+                              </SliderWidget>
+                            </Children>
+                          </ListPanel>
+                        </Children>
+                      </FilteredPropertyRow>
+                    </ItemTemplate>
+                  </NavigatableListPanel>
+
+                </Children>
+              </ListPanel>
+            </Children>
+          </Widget>
+        </Children>
+      </ScrollablePanel>
+
+      <ScrollbarWidget Id="VerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="6" HorizontalAlignment="Right" VerticalAlignment="Center" MarginTop="4" MarginBottom="4" AlignmentAxis="Vertical" Handle="VerticalScrollbarHandle" MaxValue="100" MinValue="0">
+        <Children>
+          <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="3" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.2" />
+          <ImageWidget Id="VerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="10" SuggestedWidth="6" HorizontalAlignment="Center" Brush="CC.ScrollHandle" />
+        </Children>
+      </ScrollbarWidget>
+
+      <!-- Tools row (2026-09-26, MOVED HERE from TAOMFaceGen.xml - user report: "the tool icons stay on every
+           screen, they should only show up on the identity screen"). This page's own outer Widget is what
+           TabControl shows/hides per-tab (confirmed via decompile earlier this session), so anything placed here
+           - even outside the scrollable area, as a plain sibling of the ScrollablePanel above - only ever
+           renders while THIS tab is active, no new binding needed. MarginTop values (605/695) are these two rows'
+           OLD RightPanel-relative positions (800/890) minus 195, since TabControl (this page's own parent) sits
+           at MarginTop=195 within RightPanel - this keeps them landing at the exact same on-screen spot as
+           before, just now scoped to one tab. Un-clipped rendering below this page's nominal 590-tall bounds is
+           safe - already proven when these rows lived in TAOMFaceGen.xml at an equivalent out-of-bounds offset
+           with no clipping issue, since nothing in this chain sets ClipContents=true. -->
+      <NavigationScopeTargeter ScopeID="ExtensionButtonsScope" ScopeParent="..\ExtensionButtonsTop" ScopeMovements="Horizontal" HasCircularMovement="true" DownNavigationScope="ExtensionButtonsBottomScope" />
+      <NavigatableListPanel Id="ExtensionButtonsTop" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="44" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="605" StackLayout.LayoutMethod="HorizontalLeftToRight" MinIndex="0" MaxIndex="999" DoNotUseCustomScaleAndChildren="true">
+        <Children>
+          <ButtonWidget  DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="44" VerticalAlignment="Center" MarginLeft="0" Brush="CC.Tool.Random" Command.Click="ExecuteRandomize">
+            <Children>
+              <HintWidget DataSource="{RandomizeHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+              <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="90" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" PositionYOffset="20" Brush="CC.ToolLabel" LocalizedText="{=taom_fui_randomize}RANDOMIZE" DoNotAcceptEvents="true" />
+            </Children>
+          </ButtonWidget>
+          <ButtonWidget IsVisible="@AreAllTabsEnabled" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="44" VerticalAlignment="Center" MarginLeft="45" Brush="CC.Tool.RandomAll" Command.Click="ExecuteRandomizeAll">
+            <Children>
+              <HintWidget DataSource="{RandomizeAllHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+              <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="90" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" PositionYOffset="20" Brush="CC.ToolLabel" LocalizedText="{=taom_fui_randomize_all}RANDOMIZE ALL" DoNotAcceptEvents="true" />
+            </Children>
+          </ButtonWidget>
+          <ButtonWidget  DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="44" VerticalAlignment="Center" MarginLeft="20" Brush="CC.Tool.Cloth" Command.Click="ExecuteChangeClothing">
+            <Children>
+              <HintWidget DataSource="{ClothHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+              <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="100" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" PositionYOffset="20" Brush="CC.ToolLabel" LocalizedText="{=taom_fui_default_outfit}DEFAULT OUTFIT" DoNotAcceptEvents="true" />
+            </Children>
+          </ButtonWidget>
+        </Children>
+      </NavigatableListPanel>
+      <NavigationScopeTargeter ScopeID="ExtensionButtonsBottomScope" ScopeParent="..\ExtensionButtonsBottom" ScopeMovements="Horizontal" HasCircularMovement="true" UpNavigationScope="ExtensionButtonsScope" />
+      <NavigatableListPanel Id="ExtensionButtonsBottom" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="44" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="695" StackLayout.LayoutMethod="HorizontalLeftToRight" MinIndex="0" MaxIndex="999" DoNotUseCustomScaleAndChildren="true">
+        <Children>
+          <ButtonWidget  DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="44" VerticalAlignment="Center" MarginLeft="0" Brush="CC.Tool.Reset" Command.Click="ExecuteReset">
+            <Children>
+              <HintWidget DataSource="{ResetHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+              <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="80" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" PositionYOffset="20" Brush="CC.ToolLabel" LocalizedText="{=taom_fui_reset}RESET" DoNotAcceptEvents="true" />
+            </Children>
+          </ButtonWidget>
+          <ButtonWidget IsVisible="@AreAllTabsEnabled" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="44" VerticalAlignment="Center" MarginLeft="20" Brush="CC.Tool.ResetAll" Command.Click="ExecuteResetAll">
+            <Children>
+              <HintWidget DataSource="{ResetAllHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+              <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="84" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" PositionYOffset="20" Brush="CC.ToolLabel" LocalizedText="{=taom_fui_reset_all}RESET ALL" DoNotAcceptEvents="true" />
+            </Children>
+          </ButtonWidget>
+          <ButtonWidget IsEnabled="@IsUndoEnabled" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="44" VerticalAlignment="Center" MarginLeft="20" Brush="CC.Tool.Undo" Command.Click="ExecuteUndo">
+            <Children>
+              <HintWidget DataSource="{UndoHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+              <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="70" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" PositionYOffset="20" Brush="CC.ToolLabel" LocalizedText="{=taom_fui_undo}UNDO" DoNotAcceptEvents="true" />
+            </Children>
+          </ButtonWidget>
+          <ButtonWidget IsEnabled="@IsRedoEnabled" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="44" VerticalAlignment="Center" MarginLeft="20" Brush="CC.Tool.Redo" Command.Click="ExecuteRedo">
+            <Children>
+              <HintWidget DataSource="{RedoHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+              <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="70" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Center" VerticalAlignment="Bottom" PositionYOffset="20" Brush="CC.ToolLabel" LocalizedText="{=taom_fui_redo}REDO" DoNotAcceptEvents="true" />
+            </Children>
+          </ButtonWidget>
+        </Children>
+      </NavigatableListPanel>
+    </Children>
+  </Widget>
+</Window>

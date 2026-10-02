@@ -1,0 +1,1803 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Russian" />
+  </tags>
+  <strings>
+    <string id="aom_abanissa_clan_1" text="Дом Фахшарана" />
+    <string id="aom_abanissa_clan_2" text="Дом Хошэдхармы" />
+    <string id="aom_abanissa_clan_3" text="Дом Васнарада" />
+    <string id="aom_abanissa_clan_4" text="Дом Горазехана" />
+    <string id="aom_abanissa_clan_5" text="Дом Азадафрозана" />
+    <string id="aom_abanissa_clan_6" text="Дом Артахшасана" />
+    <string id="aom_abanissa_clan_7" text="Дом Ардачерана" />
+    <string id="aom_abanissa_clan_8" text="Дом Тирдаханы" />
+    <string id="aom_abanissa_female_name_1" text="Фахсара" />
+    <string id="aom_abanissa_female_name_10" text="Хорба" />
+    <string id="aom_abanissa_female_name_11" text="Фарзана" />
+    <string id="aom_abanissa_female_name_12" text="Маздана" />
+    <string id="aom_abanissa_female_name_13" text="Рушана" />
+    <string id="aom_abanissa_female_name_14" text="Бакура" />
+    <string id="aom_abanissa_female_name_15" text="Дария" />
+    <string id="aom_abanissa_female_name_16" text="Кирана" />
+    <string id="aom_abanissa_female_name_17" text="Аршана" />
+    <string id="aom_abanissa_female_name_18" text="Кавана" />
+    <string id="aom_abanissa_female_name_19" text="Джамши" />
+    <string id="aom_abanissa_female_name_2" text="Хошеда" />
+    <string id="aom_abanissa_female_name_20" text="Парвана" />
+    <string id="aom_abanissa_female_name_21" text="Бахрама" />
+    <string id="aom_abanissa_female_name_22" text="Сохраба" />
+    <string id="aom_abanissa_female_name_23" text="Хусрова" />
+    <string id="aom_abanissa_female_name_24" text="Ардавана" />
+    <string id="aom_abanissa_female_name_25" text="Рошдана" />
+    <string id="aom_abanissa_female_name_26" text="Манучех" />
+    <string id="aom_abanissa_female_name_27" text="Зобайда" />
+    <string id="aom_abanissa_female_name_28" text="Фархада" />
+    <string id="aom_abanissa_female_name_29" text="Нарима" />
+    <string id="aom_abanissa_female_name_3" text="Васнара" />
+    <string id="aom_abanissa_female_name_30" text="Тахмура" />
+    <string id="aom_abanissa_female_name_4" text="Гоража" />
+    <string id="aom_abanissa_female_name_5" text="Азаде" />
+    <string id="aom_abanissa_female_name_6" text="Арташна" />
+    <string id="aom_abanissa_female_name_7" text="Ардачех" />
+    <string id="aom_abanissa_female_name_8" text="Тирдана" />
+    <string id="aom_abanissa_female_name_9" text="Шарана" />
+    <string id="aom_abanissa_male_name_1" text="Факсар" />
+    <string id="aom_abanissa_male_name_10" text="Хорман" />
+    <string id="aom_abanissa_male_name_11" text="Фарзан" />
+    <string id="aom_abanissa_male_name_12" text="Маздан" />
+    <string id="aom_abanissa_male_name_13" text="Рушан" />
+    <string id="aom_abanissa_male_name_14" text="Бабак" />
+    <string id="aom_abanissa_male_name_15" text="Дарий" />
+    <string id="aom_abanissa_male_name_16" text="Киран" />
+    <string id="aom_abanissa_male_name_17" text="Аршан" />
+    <string id="aom_abanissa_male_name_18" text="Каван" />
+    <string id="aom_abanissa_male_name_19" text="Джамшид" />
+    <string id="aom_abanissa_male_name_2" text="Хошед" />
+    <string id="aom_abanissa_male_name_20" text="Парвиз" />
+    <string id="aom_abanissa_male_name_21" text="Бахрам" />
+    <string id="aom_abanissa_male_name_22" text="Сохраб" />
+    <string id="aom_abanissa_male_name_23" text="Хусров" />
+    <string id="aom_abanissa_male_name_24" text="Ардаван" />
+    <string id="aom_abanissa_male_name_25" text="Рошдан" />
+    <string id="aom_abanissa_male_name_26" text="Манух" />
+    <string id="aom_abanissa_male_name_27" text="Зобаид" />
+    <string id="aom_abanissa_male_name_28" text="Фархад" />
+    <string id="aom_abanissa_male_name_29" text="Нариман" />
+    <string id="aom_abanissa_male_name_3" text="Васнар" />
+    <string id="aom_abanissa_male_name_30" text="Тахмур" />
+    <string id="aom_abanissa_male_name_4" text="Горазе" />
+    <string id="aom_abanissa_male_name_5" text="Азадан" />
+    <string id="aom_abanissa_male_name_6" text="Арташ" />
+    <string id="aom_abanissa_male_name_7" text="Ардах" />
+    <string id="aom_abanissa_male_name_8" text="Тирдах" />
+    <string id="aom_abanissa_male_name_9" text="Шарун" />
+    <string id="aom_bluecraig_clan_1" text="Орда Синей Скалы" />
+    <string id="aom_bluecraig_clan_10" text="Налётчики Серых гор" />
+    <string id="aom_bluecraig_clan_11" text="Орда Эттенблат" />
+    <string id="aom_bluecraig_clan_12" text="Банда снага" />
+    <string id="aom_bluecraig_clan_13" text="Родня Скарнака" />
+    <string id="aom_bluecraig_clan_14" text="Клан Чернозуба" />
+    <string id="aom_bluecraig_clan_15" text="Бич Синих гор" />
+    <string id="aom_bluecraig_clan_2" text="Клан Синей Скалы" />
+    <string id="aom_bluecraig_clan_3" text="Волки Мглистых гор" />
+    <string id="aom_bluecraig_clan_4" text="Стая варгов" />
+    <string id="aom_bluecraig_clan_5" text="Орда каменных великанов" />
+    <string id="aom_bluecraig_clan_6" text="Остатки Ногрода" />
+    <string id="aom_bluecraig_clan_7" text="Выводок Устья Лун" />
+    <string id="aom_bluecraig_clan_8" text="Отродье Крейга" />
+    <string id="aom_bluecraig_clan_9" text="Боевой отряд Карн Дума" />
+    <string id="aom_bluecraig_desc" text="Гоблины Синего Утёса удерживают западные отроги Эред Луин, отрезанные от своих сородичей под Эред Луин всей ширью Эриадора. Они разоряют гномьи дороги и берега Лун, и эльфы Митлонда считают их ближайшим врагом." />
+    <string id="aom_bluecraig_female_name_1" text="Гральза" />
+    <string id="aom_bluecraig_female_name_10" text="Ульзара" />
+    <string id="aom_bluecraig_female_name_11" text="Борза" />
+    <string id="aom_bluecraig_female_name_12" text="Заргра" />
+    <string id="aom_bluecraig_female_name_13" text="Груша" />
+    <string id="aom_bluecraig_female_name_14" text="Дурша" />
+    <string id="aom_bluecraig_female_name_15" text="Тальра" />
+    <string id="aom_bluecraig_female_name_16" text="Ворла" />
+    <string id="aom_bluecraig_female_name_17" text="Наргул" />
+    <string id="aom_bluecraig_female_name_18" text="Турка" />
+    <string id="aom_bluecraig_female_name_19" text="Ульша" />
+    <string id="aom_bluecraig_female_name_2" text="Турка" />
+    <string id="aom_bluecraig_female_name_20" text="Музрак" />
+    <string id="aom_bluecraig_female_name_21" text="Кральша" />
+    <string id="aom_bluecraig_female_name_22" text="Гральша" />
+    <string id="aom_bluecraig_female_name_23" text="Дурша" />
+    <string id="aom_bluecraig_female_name_24" text="Транза" />
+    <string id="aom_bluecraig_female_name_25" text="Наргра" />
+    <string id="aom_bluecraig_female_name_26" text="Ульзира" />
+    <string id="aom_bluecraig_female_name_27" text="Борлия" />
+    <string id="aom_bluecraig_female_name_28" text="Зоргла" />
+    <string id="aom_bluecraig_female_name_29" text="Дурла" />
+    <string id="aom_bluecraig_female_name_3" text="Зульгара" />
+    <string id="aom_bluecraig_female_name_30" text="Музша" />
+    <string id="aom_bluecraig_female_name_31" text="Трульга" />
+    <string id="aom_bluecraig_female_name_32" text="Нарша" />
+    <string id="aom_bluecraig_female_name_33" text="Кральга" />
+    <string id="aom_bluecraig_female_name_34" text="Гринза" />
+    <string id="aom_bluecraig_female_name_35" text="Тальзия" />
+    <string id="aom_bluecraig_female_name_36" text="Воргла" />
+    <string id="aom_bluecraig_female_name_37" text="Ульзила" />
+    <string id="aom_bluecraig_female_name_38" text="Дуржа" />
+    <string id="aom_bluecraig_female_name_39" text="Наргула" />
+    <string id="aom_bluecraig_female_name_4" text="Воржа" />
+    <string id="aom_bluecraig_female_name_40" text="Тругла" />
+    <string id="aom_bluecraig_female_name_41" text="Музла" />
+    <string id="aom_bluecraig_female_name_42" text="Гральна" />
+    <string id="aom_bluecraig_female_name_43" text="Тарка" />
+    <string id="aom_bluecraig_female_name_44" text="Ульзара" />
+    <string id="aom_bluecraig_female_name_45" text="Кральза" />
+    <string id="aom_bluecraig_female_name_46" text="Дурка" />
+    <string id="aom_bluecraig_female_name_47" text="Труна" />
+    <string id="aom_bluecraig_female_name_48" text="Борза" />
+    <string id="aom_bluecraig_female_name_49" text="Зорга" />
+    <string id="aom_bluecraig_female_name_5" text="Дурга" />
+    <string id="aom_bluecraig_female_name_50" text="Нарлия" />
+    <string id="aom_bluecraig_female_name_6" text="Наргра" />
+    <string id="aom_bluecraig_female_name_7" text="Трульза" />
+    <string id="aom_bluecraig_female_name_8" text="Музра" />
+    <string id="aom_bluecraig_female_name_9" text="Кральза" />
+    <string id="aom_bluecraig_male_name_1" text="Азгар" />
+    <string id="aom_bluecraig_male_name_10" text="Мугзун" />
+    <string id="aom_bluecraig_male_name_11" text="Лурзок" />
+    <string id="aom_bluecraig_male_name_12" text="Зорга" />
+    <string id="aom_bluecraig_male_name_13" text="Трумак" />
+    <string id="aom_bluecraig_male_name_14" text="Наргот" />
+    <string id="aom_bluecraig_male_name_15" text="Борзак" />
+    <string id="aom_bluecraig_male_name_16" text="Друзнар" />
+    <string id="aom_bluecraig_male_name_17" text="Краглот" />
+    <string id="aom_bluecraig_male_name_18" text="Вурзаг" />
+    <string id="aom_bluecraig_male_name_19" text="Нарлог" />
+    <string id="aom_bluecraig_male_name_2" text="Дрозмак" />
+    <string id="aom_bluecraig_male_name_20" text="Тальруг" />
+    <string id="aom_bluecraig_male_name_21" text="Урзул" />
+    <string id="aom_bluecraig_male_name_22" text="Гралтак" />
+    <string id="aom_bluecraig_male_name_23" text="Воргрим" />
+    <string id="aom_bluecraig_male_name_24" text="Мазкор" />
+    <string id="aom_bluecraig_male_name_25" text="Скарнакат" />
+    <string id="aom_bluecraig_male_name_26" text="Луртак" />
+    <string id="aom_bluecraig_male_name_27" text="Тругол" />
+    <string id="aom_bluecraig_male_name_28" text="Нарзук" />
+    <string id="aom_bluecraig_male_name_29" text="Крузнор" />
+    <string id="aom_bluecraig_male_name_3" text="Каргот" />
+    <string id="aom_bluecraig_male_name_30" text="Тразгул" />
+    <string id="aom_bluecraig_male_name_31" text="Дурзак" />
+    <string id="aom_bluecraig_male_name_32" text="Зулгот" />
+    <string id="aom_bluecraig_male_name_33" text="Ворзак" />
+    <string id="aom_bluecraig_male_name_34" text="Крогар" />
+    <string id="aom_bluecraig_male_name_35" text="Трунак" />
+    <string id="aom_bluecraig_male_name_36" text="Гразар" />
+    <string id="aom_bluecraig_male_name_37" text="Нарзог" />
+    <string id="aom_bluecraig_male_name_38" text="Улгрим" />
+    <string id="aom_bluecraig_male_name_39" text="Вурлак" />
+    <string id="aom_bluecraig_male_name_4" text="Тразак" />
+    <string id="aom_bluecraig_male_name_40" text="Борзак" />
+    <string id="aom_bluecraig_male_name_41" text="Дурзор" />
+    <string id="aom_bluecraig_male_name_42" text="Музраг" />
+    <string id="aom_bluecraig_male_name_43" text="Гралтор" />
+    <string id="aom_bluecraig_male_name_44" text="Тарзог" />
+    <string id="aom_bluecraig_male_name_45" text="Врогнак" />
+    <string id="aom_bluecraig_male_name_46" text="Карнак" />
+    <string id="aom_bluecraig_male_name_47" text="Борзак" />
+    <string id="aom_bluecraig_male_name_48" text="Нарзул" />
+    <string id="aom_bluecraig_male_name_49" text="Трулгот" />
+    <string id="aom_bluecraig_male_name_5" text="Улгрим" />
+    <string id="aom_bluecraig_male_name_50" text="Друзмок" />
+    <string id="aom_bluecraig_male_name_6" text="Зоргат" />
+    <string id="aom_bluecraig_male_name_7" text="Грагор" />
+    <string id="aom_bluecraig_male_name_8" text="Дурмаш" />
+    <string id="aom_bluecraig_male_name_9" text="Воргот" />
+    <string id="aom_bluecraig_name" text="Гоблины Синей Скалы" />
+    <string id="aom_dolguldur_clan_1" text="Рабы Некроманта" />
+    <string id="aom_dolguldur_clan_10" text="Теневые разведчики" />
+    <string id="aom_dolguldur_clan_11" text="Грань порчи" />
+    <string id="aom_dolguldur_clan_12" text="Орда Тёмного Леса" />
+    <string id="aom_dolguldur_clan_13" text="Призрачная стража" />
+    <string id="aom_dolguldur_clan_14" text="Слуги Хамула" />
+    <string id="aom_dolguldur_clan_15" text="Сумеречные налётчики" />
+    <string id="aom_dolguldur_clan_2" text="Воинство Тени" />
+    <string id="aom_dolguldur_clan_3" text="Гарнизон Дол Гулдура" />
+    <string id="aom_dolguldur_clan_4" text="Моргульская дружина" />
+    <string id="aom_dolguldur_clan_5" text="Лиходейские следопыты" />
+    <string id="aom_dolguldur_clan_6" text="Наездники пауков" />
+    <string id="aom_dolguldur_clan_7" text="Стража Тёмного Колдуна" />
+    <string id="aom_dolguldur_clan_8" text="Выводок Амон Ланка" />
+    <string id="aom_dolguldur_clan_9" text="Хранители Крылатых Тварей" />
+    <string id="aom_dolguldur_desc" text="Дол Гулдур — крепость тени и злобы. Некогда твердыня Саурона в Лихолесье, ныне она управляется тёмными наместниками Некроманта. Войска Дол Гулдура — грозная смесь орков, варгов и тёмного колдовства. Этот оплот зла растлевает окружающий лес, распространяя гниль и отчаяние. Воины Дол Гулдура неумолимы, ведомые волей своего тёмного господина." />
+    <string id="aom_dolguldur_female_name_1" text="Трульза" />
+    <string id="aom_dolguldur_female_name_10" text="Казрия" />
+    <string id="aom_dolguldur_female_name_11" text="Наргула" />
+    <string id="aom_dolguldur_female_name_12" text="Лургра" />
+    <string id="aom_dolguldur_female_name_13" text="Дружка" />
+    <string id="aom_dolguldur_female_name_14" text="Тарзия" />
+    <string id="aom_dolguldur_female_name_15" text="Зулгара" />
+    <string id="aom_dolguldur_female_name_16" text="Дурла" />
+    <string id="aom_dolguldur_female_name_17" text="Нарзия" />
+    <string id="aom_dolguldur_female_name_18" text="Трульна" />
+    <string id="aom_dolguldur_female_name_19" text="Улша" />
+    <string id="aom_dolguldur_female_name_2" text="Нарша" />
+    <string id="aom_dolguldur_female_name_20" text="Воргла" />
+    <string id="aom_dolguldur_female_name_21" text="Музра" />
+    <string id="aom_dolguldur_female_name_22" text="Гральза" />
+    <string id="aom_dolguldur_female_name_23" text="Казла" />
+    <string id="aom_dolguldur_female_name_24" text="Нарша" />
+    <string id="aom_dolguldur_female_name_25" text="Талка" />
+    <string id="aom_dolguldur_female_name_26" text="Улза" />
+    <string id="aom_dolguldur_female_name_27" text="Дурзия" />
+    <string id="aom_dolguldur_female_name_28" text="Луржа" />
+    <string id="aom_dolguldur_female_name_29" text="Зорла" />
+    <string id="aom_dolguldur_female_name_3" text="Граша" />
+    <string id="aom_dolguldur_female_name_30" text="Трульра" />
+    <string id="aom_dolguldur_female_name_31" text="Ворза" />
+    <string id="aom_dolguldur_female_name_32" text="Нарзульра" />
+    <string id="aom_dolguldur_female_name_33" text="Музгра" />
+    <string id="aom_dolguldur_female_name_34" text="Дургра" />
+    <string id="aom_dolguldur_female_name_35" text="Наргра" />
+    <string id="aom_dolguldur_female_name_36" text="Тарзия" />
+    <string id="aom_dolguldur_female_name_37" text="Казрия" />
+    <string id="aom_dolguldur_female_name_38" text="Гральзия" />
+    <string id="aom_dolguldur_female_name_39" text="Урзара" />
+    <string id="aom_dolguldur_female_name_4" text="Дуржа" />
+    <string id="aom_dolguldur_female_name_40" text="Друзния" />
+    <string id="aom_dolguldur_female_name_41" text="Воргрия" />
+    <string id="aom_dolguldur_female_name_42" text="Трулзия" />
+    <string id="aom_dolguldur_female_name_43" text="Зулгора" />
+    <string id="aom_dolguldur_female_name_44" text="Нарзия" />
+    <string id="aom_dolguldur_female_name_45" text="Казния" />
+    <string id="aom_dolguldur_female_name_46" text="Лурзия" />
+    <string id="aom_dolguldur_female_name_47" text="Дурла" />
+    <string id="aom_dolguldur_female_name_48" text="Гральния" />
+    <string id="aom_dolguldur_female_name_49" text="Талка" />
+    <string id="aom_dolguldur_female_name_5" text="Заргра" />
+    <string id="aom_dolguldur_female_name_50" text="Ворла" />
+    <string id="aom_dolguldur_female_name_6" text="Талка" />
+    <string id="aom_dolguldur_female_name_7" text="Моргра" />
+    <string id="aom_dolguldur_female_name_8" text="Улзра" />
+    <string id="aom_dolguldur_female_name_9" text="Воржа" />
+    <string id="aom_dolguldur_male_name_1" text="Трангул" />
+    <string id="aom_dolguldur_male_name_10" text="Траргол" />
+    <string id="aom_dolguldur_male_name_11" text="Казраг" />
+    <string id="aom_dolguldur_male_name_12" text="Зоргрул" />
+    <string id="aom_dolguldur_male_name_13" text="Морзаг" />
+    <string id="aom_dolguldur_male_name_14" text="Дружак" />
+    <string id="aom_dolguldur_male_name_15" text="Талрук" />
+    <string id="aom_dolguldur_male_name_16" text="Лоргат" />
+    <string id="aom_dolguldur_male_name_17" text="Нарграш" />
+    <string id="aom_dolguldur_male_name_18" text="Урзок" />
+    <string id="aom_dolguldur_male_name_19" text="Ворзул" />
+    <string id="aom_dolguldur_male_name_2" text="Моргулаш" />
+    <string id="aom_dolguldur_male_name_20" text="Гральзук" />
+    <string id="aom_dolguldur_male_name_21" text="Дурморг" />
+    <string id="aom_dolguldur_male_name_22" text="Торзаг" />
+    <string id="aom_dolguldur_male_name_23" text="Крозар" />
+    <string id="aom_dolguldur_male_name_24" text="Зулгат" />
+    <string id="aom_dolguldur_male_name_25" text="Турнак" />
+    <string id="aom_dolguldur_male_name_26" text="Варгул" />
+    <string id="aom_dolguldur_male_name_27" text="Дарнаш" />
+    <string id="aom_dolguldur_male_name_28" text="Лурзаг" />
+    <string id="aom_dolguldur_male_name_29" text="Музкар" />
+    <string id="aom_dolguldur_male_name_3" text="Дразгор" />
+    <string id="aom_dolguldur_male_name_30" text="Трораш" />
+    <string id="aom_dolguldur_male_name_31" text="Горваш" />
+    <string id="aom_dolguldur_male_name_32" text="Нардук" />
+    <string id="aom_dolguldur_male_name_33" text="Зулгор" />
+    <string id="aom_dolguldur_male_name_34" text="Дулрук" />
+    <string id="aom_dolguldur_male_name_35" text="Тругаш" />
+    <string id="aom_dolguldur_male_name_36" text="Каргул" />
+    <string id="aom_dolguldur_male_name_37" text="Улзар" />
+    <string id="aom_dolguldur_male_name_38" text="Воргराш" />
+    <string id="aom_dolguldur_male_name_39" text="Дурзаг" />
+    <string id="aom_dolguldur_male_name_4" text="Заркаш" />
+    <string id="aom_dolguldur_male_name_40" text="Грорнак" />
+    <string id="aom_dolguldur_male_name_41" text="Лургаш" />
+    <string id="aom_dolguldur_male_name_42" text="Нарзул" />
+    <string id="aom_dolguldur_male_name_43" text="Таргол" />
+    <string id="aom_dolguldur_male_name_44" text="Моркаш" />
+    <string id="aom_dolguldur_male_name_45" text="Зортак" />
+    <string id="aom_dolguldur_male_name_46" text="Дургак" />
+    <string id="aom_dolguldur_male_name_47" text="Казгул" />
+    <string id="aom_dolguldur_male_name_48" text="Трург" />
+    <string id="aom_dolguldur_male_name_49" text="Зарлуг" />
+    <string id="aom_dolguldur_male_name_5" text="Горзаг" />
+    <string id="aom_dolguldur_male_name_50" text="Музрак" />
+    <string id="aom_dolguldur_male_name_6" text="Ултрак" />
+    <string id="aom_dolguldur_male_name_7" text="Вортак" />
+    <string id="aom_dolguldur_male_name_8" text="Нарзуг" />
+    <string id="aom_dolguldur_male_name_9" text="Дуркар" />
+    <string id="aom_dolguldur_name" text="Орки Дол Гулдура" />
+    <string id="aom_erebor_clan_1" text="Длиннобороды" />
+    <string id="aom_erebor_clan_10" text="Серебряный Топор" />
+    <string id="aom_erebor_clan_11" text="Дубощит" />
+    <string id="aom_erebor_clan_12" text="Молотопад" />
+    <string id="aom_erebor_clan_13" text="Глубокорыл" />
+    <string id="aom_erebor_clan_14" text="Камнекир" />
+    <string id="aom_erebor_clan_15" text="Седобород" />
+    <string id="aom_erebor_clan_2" text="Железностоп" />
+    <string id="aom_erebor_clan_3" text="Каменный Шлем" />
+    <string id="aom_erebor_clan_4" text="Широкозады" />
+    <string id="aom_erebor_clan_5" text="Огнебороды" />
+    <string id="aom_erebor_clan_6" text="Жёсткобороды" />
+    <string id="aom_erebor_clan_7" text="Черновласы" />
+    <string id="aom_erebor_clan_8" text="Железный Кулак" />
+    <string id="aom_erebor_clan_9" text="Голели" />
+    <string id="aom_erebor_desc" text="Долгобороды Эребора — гордый и трудолюбивый народ, обитающий в чертогах Одинокой горы. Непревзойдённые мастера ремесла и рудного дела, они славятся умением ковать оружие, доспехи и сокровища невиданной красоты. Ведомые своим Королём под Горой, гномы Эребора — народ стойкий, яростно оберегающий свою родину и её богатства." />
+    <string id="aom_erebor_female_name_1" text="Бриндис" />
+    <string id="aom_erebor_female_name_10" text="Карна" />
+    <string id="aom_erebor_female_name_11" text="Руна" />
+    <string id="aom_erebor_female_name_12" text="Лорита" />
+    <string id="aom_erebor_female_name_13" text="Тарва" />
+    <string id="aom_erebor_female_name_14" text="Балда" />
+    <string id="aom_erebor_female_name_15" text="Фрита" />
+    <string id="aom_erebor_female_name_16" text="Дральда" />
+    <string id="aom_erebor_female_name_17" text="Ворла" />
+    <string id="aom_erebor_female_name_18" text="Кирнис" />
+    <string id="aom_erebor_female_name_19" text="Гренда" />
+    <string id="aom_erebor_female_name_2" text="Харла" />
+    <string id="aom_erebor_female_name_20" text="Халвинн" />
+    <string id="aom_erebor_female_name_21" text="Бринис" />
+    <string id="aom_erebor_female_name_22" text="Морна" />
+    <string id="aom_erebor_female_name_23" text="Кильдра" />
+    <string id="aom_erebor_female_name_24" text="Зильна" />
+    <string id="aom_erebor_female_name_25" text="Трандис" />
+    <string id="aom_erebor_female_name_26" text="Оррина" />
+    <string id="aom_erebor_female_name_27" text="Дранна" />
+    <string id="aom_erebor_female_name_28" text="Нальдра" />
+    <string id="aom_erebor_female_name_29" text="Гальда" />
+    <string id="aom_erebor_female_name_3" text="Горла" />
+    <string id="aom_erebor_female_name_30" text="Тильва" />
+    <string id="aom_erebor_female_name_31" text="Зарвин" />
+    <string id="aom_erebor_female_name_32" text="Корла" />
+    <string id="aom_erebor_female_name_33" text="Воррин" />
+    <string id="aom_erebor_female_name_34" text="Тира" />
+    <string id="aom_erebor_female_name_35" text="Фринна" />
+    <string id="aom_erebor_female_name_36" text="Дрисла" />
+    <string id="aom_erebor_female_name_37" text="Бральда" />
+    <string id="aom_erebor_female_name_38" text="Орлит" />
+    <string id="aom_erebor_female_name_39" text="Тирла" />
+    <string id="aom_erebor_female_name_4" text="Тальдис" />
+    <string id="aom_erebor_female_name_40" text="Морна" />
+    <string id="aom_erebor_female_name_41" text="Гвинла" />
+    <string id="aom_erebor_female_name_42" text="Илрин" />
+    <string id="aom_erebor_female_name_43" text="Кильна" />
+    <string id="aom_erebor_female_name_44" text="Зандра" />
+    <string id="aom_erebor_female_name_45" text="Дрисна" />
+    <string id="aom_erebor_female_name_46" text="Халдира" />
+    <string id="aom_erebor_female_name_47" text="Каррил" />
+    <string id="aom_erebor_female_name_48" text="Тилла" />
+    <string id="aom_erebor_female_name_49" text="Залвин" />
+    <string id="aom_erebor_female_name_5" text="Фалдира" />
+    <string id="aom_erebor_female_name_50" text="Фринда" />
+    <string id="aom_erebor_female_name_6" text="Хильда" />
+    <string id="aom_erebor_female_name_7" text="Норвинн" />
+    <string id="aom_erebor_female_name_8" text="Дорна" />
+    <string id="aom_erebor_female_name_9" text="Зарлин" />
+    <string id="aom_erebor_male_name_1" text="Берлинг" />
+    <string id="aom_erebor_male_name_10" text="Дорвин" />
+    <string id="aom_erebor_male_name_11" text="Тулдор" />
+    <string id="aom_erebor_male_name_12" text="Гарлин" />
+    <string id="aom_erebor_male_name_13" text="Калдун" />
+    <string id="aom_erebor_male_name_14" text="Глони" />
+    <string id="aom_erebor_male_name_15" text="Таргрим" />
+    <string id="aom_erebor_male_name_16" text="Харвор" />
+    <string id="aom_erebor_male_name_17" text="Бриндал" />
+    <string id="aom_erebor_male_name_18" text="Олфар" />
+    <string id="aom_erebor_male_name_19" text="Драккар" />
+    <string id="aom_erebor_male_name_2" text="Друлин" />
+    <string id="aom_erebor_male_name_20" text="Воргин" />
+    <string id="aom_erebor_male_name_21" text="Калдан" />
+    <string id="aom_erebor_male_name_22" text="Фарин" />
+    <string id="aom_erebor_male_name_23" text="Талрин" />
+    <string id="aom_erebor_male_name_24" text="Халдин" />
+    <string id="aom_erebor_male_name_25" text="Фундин" />
+    <string id="aom_erebor_male_name_26" text="Скоргрим" />
+    <string id="aom_erebor_male_name_27" text="Брогрим" />
+    <string id="aom_erebor_male_name_28" text="Талфар" />
+    <string id="aom_erebor_male_name_29" text="Туби" />
+    <string id="aom_erebor_male_name_3" text="Горвин" />
+    <string id="aom_erebor_male_name_30" text="Гамил" />
+    <string id="aom_erebor_male_name_31" text="Рулвин" />
+    <string id="aom_erebor_male_name_32" text="Торгран" />
+    <string id="aom_erebor_male_name_33" text="Дари" />
+    <string id="aom_erebor_male_name_34" text="Бардрин" />
+    <string id="aom_erebor_male_name_35" text="Зарвин" />
+    <string id="aom_erebor_male_name_36" text="Оринор" />
+    <string id="aom_erebor_male_name_37" text="Карнил" />
+    <string id="aom_erebor_male_name_38" text="Тальгрим" />
+    <string id="aom_erebor_male_name_39" text="Фрондин" />
+    <string id="aom_erebor_male_name_4" text="Норин" />
+    <string id="aom_erebor_male_name_40" text="Дрор" />
+    <string id="aom_erebor_male_name_41" text="Халдор" />
+    <string id="aom_erebor_male_name_42" text="Веггир" />
+    <string id="aom_erebor_male_name_43" text="Ярн" />
+    <string id="aom_erebor_male_name_44" text="Уни" />
+    <string id="aom_erebor_male_name_45" text="Орран" />
+    <string id="aom_erebor_male_name_46" text="Бардорн" />
+    <string id="aom_erebor_male_name_47" text="Таран" />
+    <string id="aom_erebor_male_name_48" text="Нурун" />
+    <string id="aom_erebor_male_name_49" text="Хамисар" />
+    <string id="aom_erebor_male_name_5" text="Балрик" />
+    <string id="aom_erebor_male_name_50" text="Гормар" />
+    <string id="aom_erebor_male_name_6" text="Корин" />
+    <string id="aom_erebor_male_name_7" text="Рундрин" />
+    <string id="aom_erebor_male_name_8" text="Ханар" />
+    <string id="aom_erebor_male_name_9" text="Галар" />
+    <string id="aom_erebor_name" text="Гномы" />
+    <string id="aom_goblin_clan_1" text="Орда Гоблинтауна" />
+    <string id="aom_goblin_clan_10" text="Разбойники Серых гор" />
+    <string id="aom_goblin_clan_11" text="Орда Эттенмурс" />
+    <string id="aom_goblin_clan_12" text="Банда снага" />
+    <string id="aom_goblin_clan_13" text="Родичи Больга" />
+    <string id="aom_goblin_clan_14" text="Клан Чёрного Клыка" />
+    <string id="aom_goblin_clan_15" text="Бич Железных Холмов" />
+    <string id="aom_goblin_clan_2" text="Клан Гоблинтауна" />
+    <string id="aom_goblin_clan_3" text="Волки Мглистых гор" />
+    <string id="aom_goblin_clan_4" text="Стая варгов" />
+    <string id="aom_goblin_clan_5" text="Орда каменных великанов" />
+    <string id="aom_goblin_clan_6" text="Остатки Мории" />
+    <string id="aom_goblin_clan_7" text="Выводок Кирит Унгола" />
+    <string id="aom_goblin_clan_8" text="Дети Ангмара" />
+    <string id="aom_goblin_clan_9" text="Отряд Карн Дума" />
+    <string id="aom_goblin_desc" text="Гоблины Гоблинтауна кишат в туннелях под Высоким перевалом Мглистых гор. Поодиночке трусливые, но подавляющие числом, они бесконечно плодятся во тьме и выплёскиваются наружу, чтобы устраивать засады на путников горных дорог. Под началом Великого Гоблина и его вожаков они терзают эльфов, гномов и людей, служа растущей Тени ради добычи и злобы." />
+    <string id="aom_goblin_female_name_1" text="Гральза" />
+    <string id="aom_goblin_female_name_10" text="Ульзара" />
+    <string id="aom_goblin_female_name_11" text="Борза" />
+    <string id="aom_goblin_female_name_12" text="Заргра" />
+    <string id="aom_goblin_female_name_13" text="Груша" />
+    <string id="aom_goblin_female_name_14" text="Дурша" />
+    <string id="aom_goblin_female_name_15" text="Тальра" />
+    <string id="aom_goblin_female_name_16" text="Ворла" />
+    <string id="aom_goblin_female_name_17" text="Наргул" />
+    <string id="aom_goblin_female_name_18" text="Турка" />
+    <string id="aom_goblin_female_name_19" text="Ульша" />
+    <string id="aom_goblin_female_name_2" text="Турка" />
+    <string id="aom_goblin_female_name_20" text="Музрак" />
+    <string id="aom_goblin_female_name_21" text="Кральша" />
+    <string id="aom_goblin_female_name_22" text="Гральша" />
+    <string id="aom_goblin_female_name_23" text="Дурша" />
+    <string id="aom_goblin_female_name_24" text="Транза" />
+    <string id="aom_goblin_female_name_25" text="Наргра" />
+    <string id="aom_goblin_female_name_26" text="Ульзира" />
+    <string id="aom_goblin_female_name_27" text="Борлия" />
+    <string id="aom_goblin_female_name_28" text="Зоргла" />
+    <string id="aom_goblin_female_name_29" text="Дурла" />
+    <string id="aom_goblin_female_name_3" text="Зульгара" />
+    <string id="aom_goblin_female_name_30" text="Музша" />
+    <string id="aom_goblin_female_name_31" text="Трульга" />
+    <string id="aom_goblin_female_name_32" text="Нарша" />
+    <string id="aom_goblin_female_name_33" text="Кральга" />
+    <string id="aom_goblin_female_name_34" text="Гринза" />
+    <string id="aom_goblin_female_name_35" text="Тальзия" />
+    <string id="aom_goblin_female_name_36" text="Воргла" />
+    <string id="aom_goblin_female_name_37" text="Ульзила" />
+    <string id="aom_goblin_female_name_38" text="Дуржа" />
+    <string id="aom_goblin_female_name_39" text="Наргула" />
+    <string id="aom_goblin_female_name_4" text="Воржа" />
+    <string id="aom_goblin_female_name_40" text="Тругла" />
+    <string id="aom_goblin_female_name_41" text="Музла" />
+    <string id="aom_goblin_female_name_42" text="Гральна" />
+    <string id="aom_goblin_female_name_43" text="Тарка" />
+    <string id="aom_goblin_female_name_44" text="Ульзара" />
+    <string id="aom_goblin_female_name_45" text="Кральза" />
+    <string id="aom_goblin_female_name_46" text="Дурка" />
+    <string id="aom_goblin_female_name_47" text="Труна" />
+    <string id="aom_goblin_female_name_48" text="Борза" />
+    <string id="aom_goblin_female_name_49" text="Зорга" />
+    <string id="aom_goblin_female_name_5" text="Дурга" />
+    <string id="aom_goblin_female_name_50" text="Нарлия" />
+    <string id="aom_goblin_female_name_6" text="Наргра" />
+    <string id="aom_goblin_female_name_7" text="Трулза" />
+    <string id="aom_goblin_female_name_8" text="Музра" />
+    <string id="aom_goblin_female_name_9" text="Кралза" />
+    <string id="aom_goblin_male_name_1" text="Азгар" />
+    <string id="aom_goblin_male_name_10" text="Мугзун" />
+    <string id="aom_goblin_male_name_11" text="Лурзок" />
+    <string id="aom_goblin_male_name_12" text="Зорга" />
+    <string id="aom_goblin_male_name_13" text="Трумак" />
+    <string id="aom_goblin_male_name_14" text="Наргот" />
+    <string id="aom_goblin_male_name_15" text="Борзак" />
+    <string id="aom_goblin_male_name_16" text="Друзнар" />
+    <string id="aom_goblin_male_name_17" text="Краглот" />
+    <string id="aom_goblin_male_name_18" text="Вурзаг" />
+    <string id="aom_goblin_male_name_19" text="Нарлог" />
+    <string id="aom_goblin_male_name_2" text="Дрозмак" />
+    <string id="aom_goblin_male_name_20" text="Талруг" />
+    <string id="aom_goblin_male_name_21" text="Урзул" />
+    <string id="aom_goblin_male_name_22" text="Гралтак" />
+    <string id="aom_goblin_male_name_23" text="Воргрим" />
+    <string id="aom_goblin_male_name_24" text="Мазкор" />
+    <string id="aom_goblin_male_name_25" text="Болгат" />
+    <string id="aom_goblin_male_name_26" text="Луртак" />
+    <string id="aom_goblin_male_name_27" text="Тругол" />
+    <string id="aom_goblin_male_name_28" text="Нарзук" />
+    <string id="aom_goblin_male_name_29" text="Крузнор" />
+    <string id="aom_goblin_male_name_3" text="Каргот" />
+    <string id="aom_goblin_male_name_30" text="Тразгул" />
+    <string id="aom_goblin_male_name_31" text="Дурзак" />
+    <string id="aom_goblin_male_name_32" text="Зулгот" />
+    <string id="aom_goblin_male_name_33" text="Ворзак" />
+    <string id="aom_goblin_male_name_34" text="Крогар" />
+    <string id="aom_goblin_male_name_35" text="Трунак" />
+    <string id="aom_goblin_male_name_36" text="Гразар" />
+    <string id="aom_goblin_male_name_37" text="Нарзог" />
+    <string id="aom_goblin_male_name_38" text="Улгрим" />
+    <string id="aom_goblin_male_name_39" text="Вурлак" />
+    <string id="aom_goblin_male_name_4" text="Тразак" />
+    <string id="aom_goblin_male_name_40" text="Борзак" />
+    <string id="aom_goblin_male_name_41" text="Дурзор" />
+    <string id="aom_goblin_male_name_42" text="Музраг" />
+    <string id="aom_goblin_male_name_43" text="Гралтор" />
+    <string id="aom_goblin_male_name_44" text="Тарзог" />
+    <string id="aom_goblin_male_name_45" text="Врогнак" />
+    <string id="aom_goblin_male_name_46" text="Карнак" />
+    <string id="aom_goblin_male_name_47" text="Борзак" />
+    <string id="aom_goblin_male_name_48" text="Нарзул" />
+    <string id="aom_goblin_male_name_49" text="Трулгот" />
+    <string id="aom_goblin_male_name_5" text="Улгрим" />
+    <string id="aom_goblin_male_name_50" text="Друзмок" />
+    <string id="aom_goblin_male_name_6" text="Зоргат" />
+    <string id="aom_goblin_male_name_7" text="Грагор" />
+    <string id="aom_goblin_male_name_8" text="Дурмаш" />
+    <string id="aom_goblin_male_name_9" text="Воргот" />
+    <string id="aom_goblin_name" text="Гоблины" />
+    <string id="aom_gondor_clan_1" text="Дом Хурина" />
+    <string id="aom_gondor_clan_10" text="Дом Этира" />
+    <string id="aom_gondor_clan_11" text="Дом Анфаласа" />
+    <string id="aom_gondor_clan_12" text="Дом Ламедона" />
+    <string id="aom_gondor_clan_13" text="Дом Итилиэна" />
+    <string id="aom_gondor_clan_14" text="Дом Каир-Андроса" />
+    <string id="aom_gondor_clan_15" text="Дом Тарноста" />
+    <string id="aom_gondor_clan_2" text="Дом Дол-Амрота" />
+    <string id="aom_gondor_clan_3" text="Дом Анариона" />
+    <string id="aom_gondor_clan_4" text="Дом Лоссарнаха" />
+    <string id="aom_gondor_clan_5" text="Дом Пиннат-Гелина" />
+    <string id="aom_gondor_clan_6" text="Дом Мортонда" />
+    <string id="aom_gondor_clan_7" text="Дом Рингло" />
+    <string id="aom_gondor_clan_8" text="Дом Лебеннина" />
+    <string id="aom_gondor_clan_9" text="Дом Пеларгира" />
+    <string id="aom_gondor_desc" text="Народ Гондора — гордый и стойкий, наследники величайшего королевства людей в Средиземье. Основанный нуменорскими изгнанниками Исилдуром и Анарионом, Гондор стоит оплотом силы и надежды против надвигающейся тьмы Мордора. Его каменные города, увенчанные величественным Минас-Тиритом, — чудеса зодчества и стойкости. Ведомые благородными наместниками и доблестными военачальниками, они выставляют дисциплинированные войска непоколебимой пехоты и стремительных конных рыцарей — сияющий маяк непокорности перед лицом отчаяния." />
+    <string id="aom_gondor_female_name_1" text="Лотириэль" />
+    <string id="aom_gondor_female_name_10" text="Сильмариэн" />
+    <string id="aom_gondor_female_name_11" text="Эарвен" />
+    <string id="aom_gondor_female_name_12" text="Линдориэ" />
+    <string id="aom_gondor_female_name_13" text="Алмариан" />
+    <string id="aom_gondor_female_name_14" text="Эрендис" />
+    <string id="aom_gondor_female_name_15" text="Инзилбет" />
+    <string id="aom_gondor_female_name_16" text="Телвен" />
+    <string id="aom_gondor_female_name_17" text="Дэриэль" />
+    <string id="aom_gondor_female_name_18" text="Ниниэль" />
+    <string id="aom_gondor_female_name_19" text="Риан" />
+    <string id="aom_gondor_female_name_2" text="Ивриниэль" />
+    <string id="aom_gondor_female_name_20" text="Халет" />
+    <string id="aom_gondor_female_name_21" text="Анкалимэ" />
+    <string id="aom_gondor_female_name_22" text="Вардиэль" />
+    <string id="aom_gondor_female_name_23" text="Эледвен" />
+    <string id="aom_gondor_female_name_24" text="Нимродэль" />
+    <string id="aom_gondor_female_name_25" text="Каладвен" />
+    <string id="aom_gondor_female_name_26" text="Митреллас" />
+    <string id="aom_gondor_female_name_27" text="Эйлинель" />
+    <string id="aom_gondor_female_name_28" text="Аэрин" />
+    <string id="aom_gondor_female_name_29" text="Андрет" />
+    <string id="aom_gondor_female_name_3" text="Финдуилас" />
+    <string id="aom_gondor_female_name_30" text="Белдис" />
+    <string id="aom_gondor_female_name_31" text="Гилмит" />
+    <string id="aom_gondor_female_name_32" text="Рагнелль" />
+    <string id="aom_gondor_female_name_33" text="Анориэн" />
+    <string id="aom_gondor_female_name_34" text="Лоссиэль" />
+    <string id="aom_gondor_female_name_35" text="Идриль" />
+    <string id="aom_gondor_female_name_36" text="Ориэль" />
+    <string id="aom_gondor_female_name_37" text="Фаэрвель" />
+    <string id="aom_gondor_female_name_38" text="Келвен" />
+    <string id="aom_gondor_female_name_39" text="Браниэль" />
+    <string id="aom_gondor_female_name_4" text="Морвен" />
+    <string id="aom_gondor_female_name_40" text="Тириэль" />
+    <string id="aom_gondor_female_name_41" text="Варадис" />
+    <string id="aom_gondor_female_name_42" text="Дириэль" />
+    <string id="aom_gondor_female_name_43" text="Хеледис" />
+    <string id="aom_gondor_female_name_44" text="Менельвен" />
+    <string id="aom_gondor_female_name_45" text="Сириэль" />
+    <string id="aom_gondor_female_name_46" text="Эланор" />
+    <string id="aom_gondor_female_name_47" text="Хирвен" />
+    <string id="aom_gondor_female_name_48" text="Маллиэль" />
+    <string id="aom_gondor_female_name_49" text="Белвен" />
+    <string id="aom_gondor_female_name_5" text="Гилраэнь" />
+    <string id="aom_gondor_female_name_50" text="Анариэль" />
+    <string id="aom_gondor_female_name_6" text="Иорет" />
+    <string id="aom_gondor_female_name_7" text="Берутиэль" />
+    <string id="aom_gondor_female_name_8" text="Анвен" />
+    <string id="aom_gondor_female_name_9" text="Мириэль" />
+    <string id="aom_gondor_male_name_1" text="Боромир" />
+    <string id="aom_gondor_male_name_10" text="Кирион" />
+    <string id="aom_gondor_male_name_11" text="Эктелион" />
+    <string id="aom_gondor_male_name_12" text="Тургон" />
+    <string id="aom_gondor_male_name_13" text="Белектор" />
+    <string id="aom_gondor_male_name_14" text="Эрадан" />
+    <string id="aom_gondor_male_name_15" text="Хиргон" />
+    <string id="aom_gondor_male_name_16" text="Дерворин" />
+    <string id="aom_gondor_male_name_17" text="Дуинхир" />
+    <string id="aom_gondor_male_name_18" text="Форлонг" />
+    <string id="aom_gondor_male_name_19" text="Голасгил" />
+    <string id="aom_gondor_male_name_2" text="Фарамир" />
+    <string id="aom_gondor_male_name_20" text="Ангбор" />
+    <string id="aom_gondor_male_name_21" text="Мардил" />
+    <string id="aom_gondor_male_name_22" text="Ворондил" />
+    <string id="aom_gondor_male_name_23" text="Пелендур" />
+    <string id="aom_gondor_male_name_24" text="Херион" />
+    <string id="aom_gondor_male_name_25" text="Белегорн" />
+    <string id="aom_gondor_male_name_26" text="Баранор" />
+    <string id="aom_gondor_male_name_27" text="Ингольд" />
+    <string id="aom_gondor_male_name_28" text="Бергил" />
+    <string id="aom_gondor_male_name_29" text="Халлас" />
+    <string id="aom_gondor_male_name_3" text="Берегонд" />
+    <string id="aom_gondor_male_name_30" text="Эгальмот" />
+    <string id="aom_gondor_male_name_31" text="Кальмакил" />
+    <string id="aom_gondor_male_name_32" text="Телумехтар" />
+    <string id="aom_gondor_male_name_33" text="Альдамир" />
+    <string id="aom_gondor_male_name_34" text="Эльдакар" />
+    <string id="aom_gondor_male_name_35" text="Минардил" />
+    <string id="aom_gondor_male_name_36" text="Кириандил" />
+    <string id="aom_gondor_male_name_37" text="Тараннон" />
+    <string id="aom_gondor_male_name_38" text="Анардил" />
+    <string id="aom_gondor_male_name_39" text="Менельдил" />
+    <string id="aom_gondor_male_name_4" text="Имрахиль" />
+    <string id="aom_gondor_male_name_40" text="Эрнил" />
+    <string id="aom_gondor_male_name_41" text="Галадор" />
+    <string id="aom_gondor_male_name_42" text="Адрахиль" />
+    <string id="aom_gondor_male_name_43" text="Нармакил" />
+    <string id="aom_gondor_male_name_44" text="Дуилин" />
+    <string id="aom_gondor_male_name_45" text="Деруфин" />
+    <string id="aom_gondor_male_name_46" text="Хирлуин" />
+    <string id="aom_gondor_male_name_47" text="Иорлас" />
+    <string id="aom_gondor_male_name_48" text="Таргон" />
+    <string id="aom_gondor_male_name_49" text="Маблунг" />
+    <string id="aom_gondor_male_name_5" text="Хурин" />
+    <string id="aom_gondor_male_name_50" text="Дамрод" />
+    <string id="aom_gondor_male_name_6" text="Денетор" />
+    <string id="aom_gondor_male_name_7" text="Анарион" />
+    <string id="aom_gondor_male_name_8" text="Элендил" />
+    <string id="aom_gondor_male_name_9" text="Торонгил" />
+    <string id="aom_gondor_name" text="Гондорец" />
+    <string id="aom_gundabad_clan_1" text="Племя Горы Гундабад" />
+    <string id="aom_gundabad_clan_10" text="Налётчики Серых гор" />
+    <string id="aom_gundabad_clan_11" text="Орда Эттенблат" />
+    <string id="aom_gundabad_clan_12" text="Банда Снага" />
+    <string id="aom_gundabad_clan_13" text="Родичи Болга" />
+    <string id="aom_gundabad_clan_14" text="Клан Чёрного Клыка" />
+    <string id="aom_gundabad_clan_15" text="Бич Железных Холмов" />
+    <string id="aom_gundabad_clan_2" text="Клан Гоблинграда" />
+    <string id="aom_gundabad_clan_3" text="Волки Мглистых гор" />
+    <string id="aom_gundabad_clan_4" text="Стая варгов" />
+    <string id="aom_gundabad_clan_5" text="Орда каменных великанов" />
+    <string id="aom_gundabad_clan_6" text="Остатки Мории" />
+    <string id="aom_gundabad_clan_7" text="Выводок Кирит Унгола" />
+    <string id="aom_gundabad_clan_8" text="Дети Ангмара" />
+    <string id="aom_gundabad_clan_9" text="Ватага Карн Дума" />
+    <string id="aom_gundabad_desc" text="Орки Гундабада из Мглистых гор дики и неумолимы. Из древней твердыни Горы Гундабад они совершают набеги на окрестные земли, движимые жаждой мести и завоеваний. Под властью могучих вождей они собирают легионы гоблинов, варгов и троллей. Воины Гундабада грубы и хитры, они мастера засад и сокрушительного натиска." />
+    <string id="aom_gundabad_female_name_1" text="Гральза" />
+    <string id="aom_gundabad_female_name_10" text="Ульзара" />
+    <string id="aom_gundabad_female_name_11" text="Борза" />
+    <string id="aom_gundabad_female_name_12" text="Заргра" />
+    <string id="aom_gundabad_female_name_13" text="Груша" />
+    <string id="aom_gundabad_female_name_14" text="Дурша" />
+    <string id="aom_gundabad_female_name_15" text="Тальра" />
+    <string id="aom_gundabad_female_name_16" text="Ворла" />
+    <string id="aom_gundabad_female_name_17" text="Наргул" />
+    <string id="aom_gundabad_female_name_18" text="Турка" />
+    <string id="aom_gundabad_female_name_19" text="Улша" />
+    <string id="aom_gundabad_female_name_2" text="Турка" />
+    <string id="aom_gundabad_female_name_20" text="Музрак" />
+    <string id="aom_gundabad_female_name_21" text="Кралша" />
+    <string id="aom_gundabad_female_name_22" text="Гралша" />
+    <string id="aom_gundabad_female_name_23" text="Дурша" />
+    <string id="aom_gundabad_female_name_24" text="Транза" />
+    <string id="aom_gundabad_female_name_25" text="Наргра" />
+    <string id="aom_gundabad_female_name_26" text="Улзира" />
+    <string id="aom_gundabad_female_name_27" text="Борлия" />
+    <string id="aom_gundabad_female_name_28" text="Зоргла" />
+    <string id="aom_gundabad_female_name_29" text="Дурла" />
+    <string id="aom_gundabad_female_name_3" text="Зулгара" />
+    <string id="aom_gundabad_female_name_30" text="Музша" />
+    <string id="aom_gundabad_female_name_31" text="Трулга" />
+    <string id="aom_gundabad_female_name_32" text="Нарша" />
+    <string id="aom_gundabad_female_name_33" text="Кралга" />
+    <string id="aom_gundabad_female_name_34" text="Гринза" />
+    <string id="aom_gundabad_female_name_35" text="Талзия" />
+    <string id="aom_gundabad_female_name_36" text="Воргла" />
+    <string id="aom_gundabad_female_name_37" text="Улзила" />
+    <string id="aom_gundabad_female_name_38" text="Дуржа" />
+    <string id="aom_gundabad_female_name_39" text="Наргула" />
+    <string id="aom_gundabad_female_name_4" text="Вожа" />
+    <string id="aom_gundabad_female_name_40" text="Тругла" />
+    <string id="aom_gundabad_female_name_41" text="Музла" />
+    <string id="aom_gundabad_female_name_42" text="Грална" />
+    <string id="aom_gundabad_female_name_43" text="Тарка" />
+    <string id="aom_gundabad_female_name_44" text="Улзара" />
+    <string id="aom_gundabad_female_name_45" text="Кралза" />
+    <string id="aom_gundabad_female_name_46" text="Дурка" />
+    <string id="aom_gundabad_female_name_47" text="Труна" />
+    <string id="aom_gundabad_female_name_48" text="Борза" />
+    <string id="aom_gundabad_female_name_49" text="Зорга" />
+    <string id="aom_gundabad_female_name_5" text="Дурга" />
+    <string id="aom_gundabad_female_name_50" text="Нарлия" />
+    <string id="aom_gundabad_female_name_6" text="Наргра" />
+    <string id="aom_gundabad_female_name_7" text="Трулза" />
+    <string id="aom_gundabad_female_name_8" text="Музра" />
+    <string id="aom_gundabad_female_name_9" text="Кральза" />
+    <string id="aom_gundabad_male_name_1" text="Азгар" />
+    <string id="aom_gundabad_male_name_10" text="Мугзун" />
+    <string id="aom_gundabad_male_name_11" text="Лурзок" />
+    <string id="aom_gundabad_male_name_12" text="Зорга" />
+    <string id="aom_gundabad_male_name_13" text="Трумак" />
+    <string id="aom_gundabad_male_name_14" text="Наргот" />
+    <string id="aom_gundabad_male_name_15" text="Борзак" />
+    <string id="aom_gundabad_male_name_16" text="Друзнар" />
+    <string id="aom_gundabad_male_name_17" text="Краглот" />
+    <string id="aom_gundabad_male_name_18" text="Вурзаг" />
+    <string id="aom_gundabad_male_name_19" text="Нарлог" />
+    <string id="aom_gundabad_male_name_2" text="Дрозмак" />
+    <string id="aom_gundabad_male_name_20" text="Талруг" />
+    <string id="aom_gundabad_male_name_21" text="Урзул" />
+    <string id="aom_gundabad_male_name_22" text="Гралтак" />
+    <string id="aom_gundabad_male_name_23" text="Воргрим" />
+    <string id="aom_gundabad_male_name_24" text="Мазкор" />
+    <string id="aom_gundabad_male_name_25" text="Болгат" />
+    <string id="aom_gundabad_male_name_26" text="Луртак" />
+    <string id="aom_gundabad_male_name_27" text="Тругол" />
+    <string id="aom_gundabad_male_name_28" text="Нарзук" />
+    <string id="aom_gundabad_male_name_29" text="Крузнор" />
+    <string id="aom_gundabad_male_name_3" text="Каргот" />
+    <string id="aom_gundabad_male_name_30" text="Тразгул" />
+    <string id="aom_gundabad_male_name_31" text="Дурзак" />
+    <string id="aom_gundabad_male_name_32" text="Зулгот" />
+    <string id="aom_gundabad_male_name_33" text="Ворзак" />
+    <string id="aom_gundabad_male_name_34" text="Крогар" />
+    <string id="aom_gundabad_male_name_35" text="Трунак" />
+    <string id="aom_gundabad_male_name_36" text="Гразар" />
+    <string id="aom_gundabad_male_name_37" text="Нарзог" />
+    <string id="aom_gundabad_male_name_38" text="Ульгрим" />
+    <string id="aom_gundabad_male_name_39" text="Вурлак" />
+    <string id="aom_gundabad_male_name_4" text="Тразак" />
+    <string id="aom_gundabad_male_name_40" text="Борзак" />
+    <string id="aom_gundabad_male_name_41" text="Дурзор" />
+    <string id="aom_gundabad_male_name_42" text="Музраг" />
+    <string id="aom_gundabad_male_name_43" text="Гралтор" />
+    <string id="aom_gundabad_male_name_44" text="Тарзог" />
+    <string id="aom_gundabad_male_name_45" text="Врогнак" />
+    <string id="aom_gundabad_male_name_46" text="Карнак" />
+    <string id="aom_gundabad_male_name_47" text="Борзак" />
+    <string id="aom_gundabad_male_name_48" text="Нарзул" />
+    <string id="aom_gundabad_male_name_49" text="Трулгот" />
+    <string id="aom_gundabad_male_name_5" text="Улгрим" />
+    <string id="aom_gundabad_male_name_50" text="Друзмок" />
+    <string id="aom_gundabad_male_name_6" text="Зоргат" />
+    <string id="aom_gundabad_male_name_7" text="Грагор" />
+    <string id="aom_gundabad_male_name_8" text="Дурмаш" />
+    <string id="aom_gundabad_male_name_9" text="Воргот" />
+    <string id="aom_gundabad_name" text="Орки Гундабада" />
+    <string id="aom_isengard_clan_1" text="Белая Длань" />
+    <string id="aom_isengard_clan_10" text="Бойцы ям" />
+    <string id="aom_isengard_clan_11" text="Избранные Сарумана" />
+    <string id="aom_isengard_clan_12" text="Стража башни" />
+    <string id="aom_isengard_clan_13" text="Фангорнские грабители" />
+    <string id="aom_isengard_clan_14" text="Налётчики Западной Марки" />
+    <string id="aom_isengard_clan_15" text="Клан Чёрного Железа" />
+    <string id="aom_isengard_clan_2" text="Бойцы урук-хай" />
+    <string id="aom_isengard_clan_3" text="Авангард Изенгарда" />
+    <string id="aom_isengard_clan_4" text="Всадники на варгах" />
+    <string id="aom_isengard_clan_5" text="Отряд берсерков" />
+    <string id="aom_isengard_clan_6" text="Стража Ортханка" />
+    <string id="aom_isengard_clan_7" text="Легион Железного Кулака" />
+    <string id="aom_isengard_clan_8" text="Союзники из Дунланда" />
+    <string id="aom_isengard_clan_9" text="Дружина Нан-Курунир" />
+    <string id="aom_isengard_desc" text="Народ Изенгарда — это легионы Сарумана, выкованные промышленностью и движимые тёмной мечтой о господстве. Вокруг неприступной башни Ортханк обитают урук-хай, выведенные ради силы, выносливости и покорности. С машинами войны и хитростью своего владыки они сокрушают любое сопротивление с беспощадной точностью." />
+    <string id="aom_isengard_female_name_1" text="Гришна" />
+    <string id="aom_isengard_female_name_10" text="Дургра" />
+    <string id="aom_isengard_female_name_11" text="Гришка" />
+    <string id="aom_isengard_female_name_12" text="Урбазия" />
+    <string id="aom_isengard_female_name_13" text="Горла" />
+    <string id="aom_isengard_female_name_14" text="Казра" />
+    <string id="aom_isengard_female_name_15" text="Ворла" />
+    <string id="aom_isengard_female_name_16" text="Дуршка" />
+    <string id="aom_isengard_female_name_17" text="Зорлия" />
+    <string id="aom_isengard_female_name_18" text="Наршка" />
+    <string id="aom_isengard_female_name_19" text="Турза" />
+    <string id="aom_isengard_female_name_2" text="Тарза" />
+    <string id="aom_isengard_female_name_20" text="Лургра" />
+    <string id="aom_isengard_female_name_21" text="Морлина" />
+    <string id="aom_isengard_female_name_22" text="Дулгра" />
+    <string id="aom_isengard_female_name_23" text="Ворлиза" />
+    <string id="aom_isengard_female_name_24" text="Грилра" />
+    <string id="aom_isengard_female_name_25" text="Зарша" />
+    <string id="aom_isengard_female_name_26" text="Нарзулра" />
+    <string id="aom_isengard_female_name_27" text="Тарзия" />
+    <string id="aom_isengard_female_name_28" text="Дурва" />
+    <string id="aom_isengard_female_name_29" text="Казлиза" />
+    <string id="aom_isengard_female_name_3" text="Урзра" />
+    <string id="aom_isengard_female_name_30" text="Трулра" />
+    <string id="aom_isengard_female_name_31" text="Урзала" />
+    <string id="aom_isengard_female_name_32" text="Воргулия" />
+    <string id="aom_isengard_female_name_33" text="Мордрия" />
+    <string id="aom_isengard_female_name_34" text="Дурган" />
+    <string id="aom_isengard_female_name_35" text="Лургулия" />
+    <string id="aom_isengard_female_name_36" text="Наршка" />
+    <string id="aom_isengard_female_name_37" text="Зорния" />
+    <string id="aom_isengard_female_name_38" text="Тарлия" />
+    <string id="aom_isengard_female_name_39" text="Казрия" />
+    <string id="aom_isengard_female_name_4" text="Воргула" />
+    <string id="aom_isengard_female_name_40" text="Урбазия" />
+    <string id="aom_isengard_female_name_41" text="Грилиза" />
+    <string id="aom_isengard_female_name_42" text="Дуррина" />
+    <string id="aom_isengard_female_name_43" text="Воржа" />
+    <string id="aom_isengard_female_name_44" text="Нарвила" />
+    <string id="aom_isengard_female_name_45" text="Трулия" />
+    <string id="aom_isengard_female_name_46" text="Горлия" />
+    <string id="aom_isengard_female_name_47" text="Дурзия" />
+    <string id="aom_isengard_female_name_48" text="Казула" />
+    <string id="aom_isengard_female_name_49" text="Лурзия" />
+    <string id="aom_isengard_female_name_5" text="Дурлия" />
+    <string id="aom_isengard_female_name_50" text="Ворлия" />
+    <string id="aom_isengard_female_name_6" text="Мордрит" />
+    <string id="aom_isengard_female_name_7" text="Зарнаша" />
+    <string id="aom_isengard_female_name_8" text="Нарза" />
+    <string id="aom_isengard_female_name_9" text="Траша" />
+    <string id="aom_isengard_male_name_1" text="Грашнах" />
+    <string id="aom_isengard_male_name_10" text="Траск" />
+    <string id="aom_isengard_male_name_11" text="Дурмаш" />
+    <string id="aom_isengard_male_name_12" text="Грошнак" />
+    <string id="aom_isengard_male_name_13" text="Урбаш" />
+    <string id="aom_isengard_male_name_14" text="Горзул" />
+    <string id="aom_isengard_male_name_15" text="Казрук" />
+    <string id="aom_isengard_male_name_16" text="Ворзог" />
+    <string id="aom_isengard_male_name_17" text="Тургат" />
+    <string id="aom_isengard_male_name_18" text="Зограк" />
+    <string id="aom_isengard_male_name_19" text="Нарзуг" />
+    <string id="aom_isengard_male_name_2" text="Тарзог" />
+    <string id="aom_isengard_male_name_20" text="Друлак" />
+    <string id="aom_isengard_male_name_21" text="Грагнор" />
+    <string id="aom_isengard_male_name_22" text="Тарнак" />
+    <string id="aom_isengard_male_name_23" text="Урзрог" />
+    <string id="aom_isengard_male_name_24" text="Даргаш" />
+    <string id="aom_isengard_male_name_25" text="Зогрул" />
+    <string id="aom_isengard_male_name_26" text="Вораш" />
+    <string id="aom_isengard_male_name_27" text="Дураш" />
+    <string id="aom_isengard_male_name_28" text="Лурзар" />
+    <string id="aom_isengard_male_name_29" text="Наршак" />
+    <string id="aom_isengard_male_name_3" text="Лурдаг" />
+    <string id="aom_isengard_male_name_30" text="Таргаш" />
+    <string id="aom_isengard_male_name_31" text="Зарграт" />
+    <string id="aom_isengard_male_name_32" text="Моргаш" />
+    <string id="aom_isengard_male_name_33" text="Дуркаш" />
+    <string id="aom_isengard_male_name_34" text="Трарнак" />
+    <string id="aom_isengard_male_name_35" text="Горзуг" />
+    <string id="aom_isengard_male_name_36" text="Казлур" />
+    <string id="aom_isengard_male_name_37" text="Урброг" />
+    <string id="aom_isengard_male_name_38" text="Нарзул" />
+    <string id="aom_isengard_male_name_39" text="Турзак" />
+    <string id="aom_isengard_male_name_4" text="Урзак" />
+    <string id="aom_isengard_male_name_40" text="Лургрок" />
+    <string id="aom_isengard_male_name_41" text="Дурнак" />
+    <string id="aom_isengard_male_name_42" text="Воргаш" />
+    <string id="aom_isengard_male_name_43" text="Морзаг" />
+    <string id="aom_isengard_male_name_44" text="Торзок" />
+    <string id="aom_isengard_male_name_45" text="Урзлук" />
+    <string id="aom_isengard_male_name_46" text="Грагнар" />
+    <string id="aom_isengard_male_name_47" text="Казгул" />
+    <string id="aom_isengard_male_name_48" text="Ворзуг" />
+    <string id="aom_isengard_male_name_49" text="Нарбул" />
+    <string id="aom_isengard_male_name_5" text="Варкул" />
+    <string id="aom_isengard_male_name_50" text="Дурмуг" />
+    <string id="aom_isengard_male_name_6" text="Дургат" />
+    <string id="aom_isengard_male_name_7" text="Мордрук" />
+    <string id="aom_isengard_male_name_8" text="Зогаш" />
+    <string id="aom_isengard_male_name_9" text="Нарзуг" />
+    <string id="aom_isengard_name" text="Изенгард" />
+    <string id="aom_lindon_clan_1" text="Дом Кирдана" />
+    <string id="aom_lindon_clan_10" text="Дом Эльмота" />
+    <string id="aom_lindon_clan_11" text="Кирданат" />
+    <string id="aom_lindon_clan_12" text="Дом Салмара" />
+    <string id="aom_lindon_clan_13" text="Дом Нимлот" />
+    <string id="aom_lindon_clan_14" text="Дом Гил-галада" />
+    <string id="aom_lindon_clan_15" text="Дом Кирдана" />
+    <string id="aom_lindon_clan_2" text="Дом Фалатара" />
+    <string id="aom_lindon_clan_3" text="Дом Галдора" />
+    <string id="aom_lindon_clan_4" text="Дом Аэрандира" />
+    <string id="aom_lindon_clan_5" text="Дом Эреллонта" />
+    <string id="aom_lindon_clan_6" text="Гваит-и-Фалат" />
+    <string id="aom_lindon_clan_7" text="Дом Нимроса" />
+    <string id="aom_lindon_clan_8" text="Дом Гилдора" />
+    <string id="aom_lindon_clan_9" text="Дом Белегона" />
+    <string id="aom_lindon_desc" text="Фалатрим Линдона — последние корабелы синдар, живущие в Митлонде, где залив Лун встречается с морем. Кирдан хранит Серые Гавани с Первой Эпохи, и именно от его причалов белые корабли уходят на Запад." />
+    <string id="aom_lindon_female_name_1" text="Анариэль" />
+    <string id="aom_lindon_female_name_10" text="Силвен" />
+    <string id="aom_lindon_female_name_11" text="Итрелль" />
+    <string id="aom_lindon_female_name_12" text="Галадвен" />
+    <string id="aom_lindon_female_name_13" text="Мелинна" />
+    <string id="aom_lindon_female_name_14" text="Суилвен" />
+    <string id="aom_lindon_female_name_15" text="Калиндра" />
+    <string id="aom_lindon_female_name_16" text="Ардиэн" />
+    <string id="aom_lindon_female_name_17" text="Велиндра" />
+    <string id="aom_lindon_female_name_18" text="Этириэль" />
+    <string id="aom_lindon_female_name_19" text="Талиэль" />
+    <string id="aom_lindon_female_name_2" text="Эленна" />
+    <string id="aom_lindon_female_name_20" text="Караниэль" />
+    <string id="aom_lindon_female_name_21" text="Минлотвен" />
+    <string id="aom_lindon_female_name_22" text="Аэлириэль" />
+    <string id="aom_lindon_female_name_23" text="Фалинвен" />
+    <string id="aom_lindon_female_name_24" text="Тириэль" />
+    <string id="aom_lindon_female_name_25" text="Идриэль" />
+    <string id="aom_lindon_female_name_26" text="Эльванна" />
+    <string id="aom_lindon_female_name_27" text="Кирьявен" />
+    <string id="aom_lindon_female_name_28" text="Линдалвен" />
+    <string id="aom_lindon_female_name_29" text="Эретиэль" />
+    <string id="aom_lindon_female_name_3" text="Каленвен" />
+    <string id="aom_lindon_female_name_30" text="Сильмариэль" />
+    <string id="aom_lindon_female_name_31" text="Галадиэн" />
+    <string id="aom_lindon_female_name_32" text="Аэлинор" />
+    <string id="aom_lindon_female_name_33" text="Талвин" />
+    <string id="aom_lindon_female_name_34" text="Этирвен" />
+    <string id="aom_lindon_female_name_35" text="Нимлотиэль" />
+    <string id="aom_lindon_female_name_36" text="Суиленна" />
+    <string id="aom_lindon_female_name_37" text="Нолвин" />
+    <string id="aom_lindon_female_name_38" text="Татвен" />
+    <string id="aom_lindon_female_name_39" text="Калиндриэль" />
+    <string id="aom_lindon_female_name_4" text="Нимриэлла" />
+    <string id="aom_lindon_female_name_40" text="Итриэль" />
+    <string id="aom_lindon_female_name_41" text="Велвен" />
+    <string id="aom_lindon_female_name_42" text="Аэлинна" />
+    <string id="aom_lindon_female_name_43" text="Фалиниэль" />
+    <string id="aom_lindon_female_name_44" text="Эрелла" />
+    <string id="aom_lindon_female_name_45" text="Кариэль" />
+    <string id="aom_lindon_female_name_46" text="Лотанна" />
+    <string id="aom_lindon_female_name_47" text="Эллариэлла" />
+    <string id="aom_lindon_female_name_48" text="Галвинн" />
+    <string id="aom_lindon_female_name_49" text="Ниминдиэль" />
+    <string id="aom_lindon_female_name_5" text="Татриэль" />
+    <string id="aom_lindon_female_name_50" text="Сильвариэль" />
+    <string id="aom_lindon_female_name_6" text="Амариэль" />
+    <string id="aom_lindon_female_name_7" text="Валвен" />
+    <string id="aom_lindon_female_name_8" text="Элариэль" />
+    <string id="aom_lindon_female_name_9" text="Лотириэль" />
+    <string id="aom_lindon_male_name_1" text="Каленион" />
+    <string id="aom_lindon_male_name_10" text="Ородин" />
+    <string id="aom_lindon_male_name_11" text="Аэглир" />
+    <string id="aom_lindon_male_name_12" text="Этирион" />
+    <string id="aom_lindon_male_name_13" text="Анарион" />
+    <string id="aom_lindon_male_name_14" text="Келетир" />
+    <string id="aom_lindon_male_name_15" text="Фалинор" />
+    <string id="aom_lindon_male_name_16" text="Элродир" />
+    <string id="aom_lindon_male_name_17" text="Арадион" />
+    <string id="aom_lindon_male_name_18" text="Ворендил" />
+    <string id="aom_lindon_male_name_19" text="Мелианар" />
+    <string id="aom_lindon_male_name_2" text="Эрелион" />
+    <string id="aom_lindon_male_name_20" text="Татрин" />
+    <string id="aom_lindon_male_name_21" text="Галион" />
+    <string id="aom_lindon_male_name_22" text="Эледир" />
+    <string id="aom_lindon_male_name_23" text="Мардил" />
+    <string id="aom_lindon_male_name_24" text="Силонар" />
+    <string id="aom_lindon_male_name_25" text="Нимлотон" />
+    <string id="aom_lindon_male_name_26" text="Кириандир" />
+    <string id="aom_lindon_male_name_27" text="Артон" />
+    <string id="aom_lindon_male_name_28" text="Эльмирион" />
+    <string id="aom_lindon_male_name_29" text="Карадион" />
+    <string id="aom_lindon_male_name_3" text="Амарион" />
+    <string id="aom_lindon_male_name_30" text="Фингалор" />
+    <string id="aom_lindon_male_name_31" text="Эрендур" />
+    <string id="aom_lindon_male_name_32" text="Тирион" />
+    <string id="aom_lindon_male_name_33" text="Веландор" />
+    <string id="aom_lindon_male_name_34" text="Алатион" />
+    <string id="aom_lindon_male_name_35" text="Минрандир" />
+    <string id="aom_lindon_male_name_36" text="Галдорион" />
+    <string id="aom_lindon_male_name_37" text="Лотанор" />
+    <string id="aom_lindon_male_name_38" text="Тирандир" />
+    <string id="aom_lindon_male_name_39" text="Эреглин" />
+    <string id="aom_lindon_male_name_4" text="Нолиндир" />
+    <string id="aom_lindon_male_name_40" text="Таладир" />
+    <string id="aom_lindon_male_name_41" text="Анариндор" />
+    <string id="aom_lindon_male_name_42" text="Калинор" />
+    <string id="aom_lindon_male_name_43" text="Суилон" />
+    <string id="aom_lindon_male_name_44" text="Эларион" />
+    <string id="aom_lindon_male_name_45" text="Рилион" />
+    <string id="aom_lindon_male_name_46" text="Талорин" />
+    <string id="aom_lindon_male_name_47" text="Веланор" />
+    <string id="aom_lindon_male_name_48" text="Катанор" />
+    <string id="aom_lindon_male_name_49" text="Аранион" />
+    <string id="aom_lindon_male_name_5" text="Талион" />
+    <string id="aom_lindon_male_name_50" text="Латион" />
+    <string id="aom_lindon_male_name_51" text="Фалатар" />
+    <string id="aom_lindon_male_name_52" text="Аэрандир" />
+    <string id="aom_lindon_male_name_53" text="Эреллонт" />
+    <string id="aom_lindon_male_name_54" text="Белегон" />
+    <string id="aom_lindon_male_name_55" text="Нимрос" />
+    <string id="aom_lindon_male_name_56" text="Салмар" />
+    <string id="aom_lindon_male_name_57" text="Эльмот" />
+    <string id="aom_lindon_male_name_58" text="Нове" />
+    <string id="aom_lindon_male_name_59" text="Фалатар" />
+    <string id="aom_lindon_male_name_6" text="Салмар" />
+    <string id="aom_lindon_male_name_7" text="Саранион" />
+    <string id="aom_lindon_male_name_8" text="Итралион" />
+    <string id="aom_lindon_male_name_9" text="Валендил" />
+    <string id="aom_lindon_name" text="Эльфы Фалатрим" />
+    <string id="aom_lothlorien_clan_1" text="Дом Галадриэли" />
+    <string id="aom_lothlorien_clan_10" text="Клан Серебряного Потока" />
+    <string id="aom_lothlorien_clan_11" text="Братство Золотого Леса" />
+    <string id="aom_lothlorien_clan_12" text="Стража Керин Амрот" />
+    <string id="aom_lothlorien_clan_13" text="Клан Звездоткачей" />
+    <string id="aom_lothlorien_clan_14" text="Дом Халдира" />
+    <string id="aom_lothlorien_clan_15" text="Стража Лотланна" />
+    <string id="aom_lothlorien_clan_2" text="Дом Келеборна" />
+    <string id="aom_lothlorien_clan_3" text="Стража Галадрим" />
+    <string id="aom_lothlorien_clan_4" text="Хранители Границ" />
+    <string id="aom_lothlorien_clan_5" text="Круг Маллорна" />
+    <string id="aom_lothlorien_clan_6" text="Хранители Наита" />
+    <string id="aom_lothlorien_clan_7" text="Народ Карас Галадона" />
+    <string id="aom_lothlorien_clan_8" text="Родня Нимродели" />
+    <string id="aom_lothlorien_clan_9" text="Наследие Амрота" />
+    <string id="aom_lothlorien_desc" text="Эльфы Лотлориэна, известные как галадрим, — благородный и загадочный народ, обитающий в Золотом Лесу. Ведомые мудростью и силой Владычицы Галадриэли и Владыки Келеборна, они хранят один из последних оплотов эльфийской красоты и покоя в Средиземье. Галадрим — непревзойдённые лучники, сливающиеся воедино с золотыми меллорнами своей родины." />
+    <string id="aom_lothlorien_female_name_1" text="Каленвен" />
+    <string id="aom_lothlorien_female_name_10" text="Тауриэль" />
+    <string id="aom_lothlorien_female_name_11" text="Эленвен" />
+    <string id="aom_lothlorien_female_name_12" text="Рилвен" />
+    <string id="aom_lothlorien_female_name_13" text="Караниэль" />
+    <string id="aom_lothlorien_female_name_14" text="Эрилвен" />
+    <string id="aom_lothlorien_female_name_15" text="Анариэль" />
+    <string id="aom_lothlorien_female_name_16" text="Веларвен" />
+    <string id="aom_lothlorien_female_name_17" text="Талионвен" />
+    <string id="aom_lothlorien_female_name_18" text="Эринвен" />
+    <string id="aom_lothlorien_female_name_19" text="Нимриэль" />
+    <string id="aom_lothlorien_female_name_2" text="Лотриэль" />
+    <string id="aom_lothlorien_female_name_20" text="Галиндириэль" />
+    <string id="aom_lothlorien_female_name_21" text="Аэлириэль" />
+    <string id="aom_lothlorien_female_name_22" text="Калиндра" />
+    <string id="aom_lothlorien_female_name_23" text="Татриэль" />
+    <string id="aom_lothlorien_female_name_24" text="Эленис" />
+    <string id="aom_lothlorien_female_name_25" text="Талиндис" />
+    <string id="aom_lothlorien_female_name_26" text="Лотис" />
+    <string id="aom_lothlorien_female_name_27" text="Анарит" />
+    <string id="aom_lothlorien_female_name_28" text="Эредриэль" />
+    <string id="aom_lothlorien_female_name_29" text="Каранвен" />
+    <string id="aom_lothlorien_female_name_3" text="Эриндис" />
+    <string id="aom_lothlorien_female_name_30" text="Веланис" />
+    <string id="aom_lothlorien_female_name_31" text="Силвен" />
+    <string id="aom_lothlorien_female_name_32" text="Галориэль" />
+    <string id="aom_lothlorien_female_name_33" text="Талирис" />
+    <string id="aom_lothlorien_female_name_34" text="Нимлотис" />
+    <string id="aom_lothlorien_female_name_35" text="Аэлвен" />
+    <string id="aom_lothlorien_female_name_36" text="Рилиэль" />
+    <string id="aom_lothlorien_female_name_37" text="Каланис" />
+    <string id="aom_lothlorien_female_name_38" text="Линдариэль" />
+    <string id="aom_lothlorien_female_name_39" text="Эредвен" />
+    <string id="aom_lothlorien_female_name_4" text="Тариэль" />
+    <string id="aom_lothlorien_female_name_40" text="Талиндриэль" />
+    <string id="aom_lothlorien_female_name_41" text="Велиндис" />
+    <string id="aom_lothlorien_female_name_42" text="Силдис" />
+    <string id="aom_lothlorien_female_name_43" text="Тауренис" />
+    <string id="aom_lothlorien_female_name_44" text="Galadnis — Галаднис" />
+    <string id="aom_lothlorien_female_name_45" text="Анарвен" />
+    <string id="aom_lothlorien_female_name_46" text="Каранис" />
+    <string id="aom_lothlorien_female_name_47" text="Лотенис" />
+    <string id="aom_lothlorien_female_name_48" text="Эриндис" />
+    <string id="aom_lothlorien_female_name_49" text="Аэлинор" />
+    <string id="aom_lothlorien_female_name_5" text="Велиндра" />
+    <string id="aom_lothlorien_female_name_50" text="Ниминдриэль" />
+    <string id="aom_lothlorien_female_name_6" text="Нимлотвен" />
+    <string id="aom_lothlorien_female_name_7" text="Галадвен" />
+    <string id="aom_lothlorien_female_name_8" text="Аэлиндис" />
+    <string id="aom_lothlorien_female_name_9" text="Сильдриэль" />
+    <string id="aom_lothlorien_male_name_1" text="Каладион" />
+    <string id="aom_lothlorien_male_name_10" text="Элендор" />
+    <string id="aom_lothlorien_male_name_11" text="Сильдарион" />
+    <string id="aom_lothlorien_male_name_12" text="Тарион" />
+    <string id="aom_lothlorien_male_name_13" text="Анарион" />
+    <string id="aom_lothlorien_male_name_14" text="Рилиндир" />
+    <string id="aom_lothlorien_male_name_15" text="Калиндир" />
+    <string id="aom_lothlorien_male_name_16" text="Линдирион" />
+    <string id="aom_lothlorien_male_name_17" text="Эредор" />
+    <string id="aom_lothlorien_male_name_18" text="Галендир" />
+    <string id="aom_lothlorien_male_name_19" text="Фалинор" />
+    <string id="aom_lothlorien_male_name_2" text="Талирион" />
+    <string id="aom_lothlorien_male_name_20" text="Татарион" />
+    <string id="aom_lothlorien_male_name_21" text="Веландир" />
+    <string id="aom_lothlorien_male_name_22" text="Аэлендор" />
+    <string id="aom_lothlorien_male_name_23" text="Силион" />
+    <string id="aom_lothlorien_male_name_24" text="Тирион" />
+    <string id="aom_lothlorien_male_name_25" text="Ородион" />
+    <string id="aom_lothlorien_male_name_26" text="Нимлотон" />
+    <string id="aom_lothlorien_male_name_27" text="Кирьяндир" />
+    <string id="aom_lothlorien_male_name_28" text="Лотарион" />
+    <string id="aom_lothlorien_male_name_29" text="Анархир" />
+    <string id="aom_lothlorien_male_name_3" text="Эриндор" />
+    <string id="aom_lothlorien_male_name_30" text="Талион" />
+    <string id="aom_lothlorien_male_name_31" text="Арандир" />
+    <string id="aom_lothlorien_male_name_32" text="Каранор" />
+    <string id="aom_lothlorien_male_name_33" text="Веладан" />
+    <string id="aom_lothlorien_male_name_34" text="Рилион" />
+    <string id="aom_lothlorien_male_name_35" text="Галионор" />
+    <string id="aom_lothlorien_male_name_36" text="Эленор" />
+    <string id="aom_lothlorien_male_name_37" text="Таурандир" />
+    <string id="aom_lothlorien_male_name_38" text="Трандир" />
+    <string id="aom_lothlorien_male_name_39" text="Лотанор" />
+    <string id="aom_lothlorien_male_name_4" text="Галадион" />
+    <string id="aom_lothlorien_male_name_40" text="Суилион" />
+    <string id="aom_lothlorien_male_name_41" text="Эларион" />
+    <string id="aom_lothlorien_male_name_42" text="Таталион" />
+    <string id="aom_lothlorien_male_name_43" text="Каланор" />
+    <string id="aom_lothlorien_male_name_44" text="Велионор" />
+    <string id="aom_lothlorien_male_name_45" text="Эриндир" />
+    <string id="aom_lothlorien_male_name_46" text="Линдарион" />
+    <string id="aom_lothlorien_male_name_47" text="Аэрлиндир" />
+    <string id="aom_lothlorien_male_name_48" text="Карадион" />
+    <string id="aom_lothlorien_male_name_49" text="Галрандир" />
+    <string id="aom_lothlorien_male_name_5" text="Нимдор" />
+    <string id="aom_lothlorien_male_name_50" text="Тарлиндор" />
+    <string id="aom_lothlorien_male_name_6" text="Аэлиндир" />
+    <string id="aom_lothlorien_male_name_7" text="Каратион" />
+    <string id="aom_lothlorien_male_name_8" text="Веланор" />
+    <string id="aom_lothlorien_male_name_9" text="Таурион" />
+    <string id="aom_lothlorien_name" text="Эльфы Галадрим" />
+    <string id="aom_mirkwood_clan_1" text="Дом Трандуила" />
+    <string id="aom_mirkwood_clan_10" text="Стража Эмин Дуир" />
+    <string id="aom_mirkwood_clan_11" text="Гвардия Амон Ланк" />
+    <string id="aom_mirkwood_clan_12" text="Клан Серебряного Терна" />
+    <string id="aom_mirkwood_clan_13" text="Родичи Короля эльфов" />
+    <string id="aom_mirkwood_clan_14" text="Народ Быстротечной" />
+    <string id="aom_mirkwood_clan_15" text="Клан Зеленого Листа" />
+    <string id="aom_mirkwood_clan_2" text="Таварвайт" />
+    <string id="aom_mirkwood_clan_3" text="Стража Зеленолесья" />
+    <string id="aom_mirkwood_clan_4" text="Дозор Сильванов" />
+    <string id="aom_mirkwood_clan_5" text="Лесовики Дейла" />
+    <string id="aom_mirkwood_clan_6" text="Братство Галиона" />
+    <string id="aom_mirkwood_clan_7" text="Лесные Хранители" />
+    <string id="aom_mirkwood_clan_8" text="Клан Дубовой Ветви" />
+    <string id="aom_mirkwood_clan_9" text="Стражи Звездного Света" />
+    <string id="aom_mirkwood_desc" text="Сильванские эльфы Лихолесья, известного также как Лесное Королевство, — гордый и стойкий народ, для которого огромный лес стал домом. Под властью короля Трандуила они стали искусными охотниками и воинами, передвигаясь по сумрачным чащам с непревзойденной ловкостью и точностью. Эльфы Лихолесья — мастера лука, разящие быстро и беззвучно с ветвей деревьев." />
+    <string id="aom_mirkwood_female_name_1" text="Каленвен" />
+    <string id="aom_mirkwood_female_name_10" text="Тауриэль" />
+    <string id="aom_mirkwood_female_name_11" text="Эленвен" />
+    <string id="aom_mirkwood_female_name_12" text="Рильвен" />
+    <string id="aom_mirkwood_female_name_13" text="Караниэль" />
+    <string id="aom_mirkwood_female_name_14" text="Эрильвен" />
+    <string id="aom_mirkwood_female_name_15" text="Анариэль" />
+    <string id="aom_mirkwood_female_name_16" text="Веларвен" />
+    <string id="aom_mirkwood_female_name_17" text="Талионвен" />
+    <string id="aom_mirkwood_female_name_18" text="Эринвен" />
+    <string id="aom_mirkwood_female_name_19" text="Нимриэль" />
+    <string id="aom_mirkwood_female_name_2" text="Лотриэль" />
+    <string id="aom_mirkwood_female_name_20" text="Галиндириэль" />
+    <string id="aom_mirkwood_female_name_21" text="Аэлиндис" />
+    <string id="aom_mirkwood_female_name_22" text="Калиндра" />
+    <string id="aom_mirkwood_female_name_23" text="Татриэль" />
+    <string id="aom_mirkwood_female_name_24" text="Эленис" />
+    <string id="aom_mirkwood_female_name_25" text="Талиндис" />
+    <string id="aom_mirkwood_female_name_26" text="Лотис" />
+    <string id="aom_mirkwood_female_name_27" text="Анарит" />
+    <string id="aom_mirkwood_female_name_28" text="Эредриэль" />
+    <string id="aom_mirkwood_female_name_29" text="Каранвен" />
+    <string id="aom_mirkwood_female_name_3" text="Эринниэль" />
+    <string id="aom_mirkwood_female_name_30" text="Веланис" />
+    <string id="aom_mirkwood_female_name_31" text="Силвен" />
+    <string id="aom_mirkwood_female_name_32" text="Галориэль" />
+    <string id="aom_mirkwood_female_name_33" text="Талирис" />
+    <string id="aom_mirkwood_female_name_34" text="Нимлотис" />
+    <string id="aom_mirkwood_female_name_35" text="Аэлвен" />
+    <string id="aom_mirkwood_female_name_36" text="Рилиэль" />
+    <string id="aom_mirkwood_female_name_37" text="Каланис" />
+    <string id="aom_mirkwood_female_name_38" text="Линдариэль" />
+    <string id="aom_mirkwood_female_name_39" text="Эредвен" />
+    <string id="aom_mirkwood_female_name_4" text="Тариэль" />
+    <string id="aom_mirkwood_female_name_40" text="Талиндриэль" />
+    <string id="aom_mirkwood_female_name_41" text="Велиндис" />
+    <string id="aom_mirkwood_female_name_42" text="Силдис" />
+    <string id="aom_mirkwood_female_name_43" text="Тауренис" />
+    <string id="aom_mirkwood_female_name_44" text="Галаднис" />
+    <string id="aom_mirkwood_female_name_45" text="Анарвен" />
+    <string id="aom_mirkwood_female_name_46" text="Каранис" />
+    <string id="aom_mirkwood_female_name_47" text="Лотенис" />
+    <string id="aom_mirkwood_female_name_48" text="Эриндис" />
+    <string id="aom_mirkwood_female_name_49" text="Аэлинор" />
+    <string id="aom_mirkwood_female_name_5" text="Велиндра" />
+    <string id="aom_mirkwood_female_name_50" text="Ниминдриэль" />
+    <string id="aom_mirkwood_female_name_6" text="Нимлотвен" />
+    <string id="aom_mirkwood_female_name_7" text="Галадвен" />
+    <string id="aom_mirkwood_female_name_8" text="Аэриниэль" />
+    <string id="aom_mirkwood_female_name_9" text="Силдриэль" />
+    <string id="aom_mirkwood_male_name_1" text="Тарион" />
+    <string id="aom_mirkwood_male_name_10" text="Орофар" />
+    <string id="aom_mirkwood_male_name_11" text="Аэрлиндор" />
+    <string id="aom_mirkwood_male_name_12" text="Каранор" />
+    <string id="aom_mirkwood_male_name_13" text="Талиондир" />
+    <string id="aom_mirkwood_male_name_14" text="Веланар" />
+    <string id="aom_mirkwood_male_name_15" text="Линдорион" />
+    <string id="aom_mirkwood_male_name_16" text="Трандир" />
+    <string id="aom_mirkwood_male_name_17" text="Эрилион" />
+    <string id="aom_mirkwood_male_name_18" text="Сильмир" />
+    <string id="aom_mirkwood_male_name_19" text="Эредар" />
+    <string id="aom_mirkwood_male_name_2" text="Эриндир" />
+    <string id="aom_mirkwood_male_name_20" text="Галионор" />
+    <string id="aom_mirkwood_male_name_21" text="Нимладир" />
+    <string id="aom_mirkwood_male_name_22" text="Каленор" />
+    <string id="aom_mirkwood_male_name_23" text="Тауренион" />
+    <string id="aom_mirkwood_male_name_24" text="Арадир" />
+    <string id="aom_mirkwood_male_name_25" text="Элендар" />
+    <string id="aom_mirkwood_male_name_26" text="Ротион" />
+    <string id="aom_mirkwood_male_name_27" text="Доралин" />
+    <string id="aom_mirkwood_male_name_28" text="Веладан" />
+    <string id="aom_mirkwood_male_name_29" text="Талос" />
+    <string id="aom_mirkwood_male_name_3" text="Каленхир" />
+    <string id="aom_mirkwood_male_name_30" text="Эриндор" />
+    <string id="aom_mirkwood_male_name_31" text="Галрандир" />
+    <string id="aom_mirkwood_male_name_32" text="Анархир" />
+    <string id="aom_mirkwood_male_name_33" text="Лотандор" />
+    <string id="aom_mirkwood_male_name_34" text="Эрионор" />
+    <string id="aom_mirkwood_male_name_35" text="Калирион" />
+    <string id="aom_mirkwood_male_name_36" text="Нимрион" />
+    <string id="aom_mirkwood_male_name_37" text="Тарлиндор" />
+    <string id="aom_mirkwood_male_name_38" text="Каратир" />
+    <string id="aom_mirkwood_male_name_39" text="Силадан" />
+    <string id="aom_mirkwood_male_name_4" text="Лотарион" />
+    <string id="aom_mirkwood_male_name_40" text="Велионор" />
+    <string id="aom_mirkwood_male_name_41" text="Арвелион" />
+    <string id="aom_mirkwood_male_name_42" text="Линдарион" />
+    <string id="aom_mirkwood_male_name_43" text="Трандар" />
+    <string id="aom_mirkwood_male_name_44" text="Аэринор" />
+    <string id="aom_mirkwood_male_name_45" text="Рилендир" />
+    <string id="aom_mirkwood_male_name_46" text="Тауриэлан" />
+    <string id="aom_mirkwood_male_name_47" text="Каларнор" />
+    <string id="aom_mirkwood_male_name_48" text="Галрадир" />
+    <string id="aom_mirkwood_male_name_49" text="Велотар" />
+    <string id="aom_mirkwood_male_name_5" text="Нимхир" />
+    <string id="aom_mirkwood_male_name_50" text="Тарандир" />
+    <string id="aom_mirkwood_male_name_6" text="Галендир" />
+    <string id="aom_mirkwood_male_name_7" text="Таурандир" />
+    <string id="aom_mirkwood_male_name_8" text="Эленар" />
+    <string id="aom_mirkwood_male_name_9" text="Силдарион" />
+    <string id="aom_mirkwood_name" text="Лесные эльфы" />
+    <string id="aom_mistymountainorcs_clan_1" text="Воинство Мглистых гор" />
+    <string id="aom_mistymountainorcs_clan_10" text="Налётчики Серых гор" />
+    <string id="aom_mistymountainorcs_clan_11" text="Орда Эттенблат" />
+    <string id="aom_mistymountainorcs_clan_12" text="Банда снага" />
+    <string id="aom_mistymountainorcs_clan_13" text="Родичи Болга" />
+    <string id="aom_mistymountainorcs_clan_14" text="Клан Чёрного Клыка" />
+    <string id="aom_mistymountainorcs_clan_15" text="Бич Железных холмов" />
+    <string id="aom_mistymountainorcs_clan_2" text="Клан Гоблин-города" />
+    <string id="aom_mistymountainorcs_clan_3" text="Волки Мглистых гор" />
+    <string id="aom_mistymountainorcs_clan_4" text="Стая варгов" />
+    <string id="aom_mistymountainorcs_clan_5" text="Орда каменных великанов" />
+    <string id="aom_mistymountainorcs_clan_6" text="Остатки Мории" />
+    <string id="aom_mistymountainorcs_clan_7" text="Выводок Кирит Унгола" />
+    <string id="aom_mistymountainorcs_clan_8" text="Дети Ангмара" />
+    <string id="aom_mistymountainorcs_clan_9" text="Отряд Карн Дума" />
+    <string id="aom_mistymountainorcs_desc" text="Орки Мглистых гор — дикое воинство, обитающее среди высоких вершин и глубоких недр хребта. Движимые древней ненавистью к эльфам и гномам, они собирают огромные и скверно вооружённые полчища и обрушиваются на земли внизу, служа тёмным силам, что пробуждаются на Востоке." />
+    <string id="aom_mistymountainorcs_female_name_1" text="Гралза" />
+    <string id="aom_mistymountainorcs_female_name_10" text="Улзара" />
+    <string id="aom_mistymountainorcs_female_name_11" text="Борза" />
+    <string id="aom_mistymountainorcs_female_name_12" text="Заргра" />
+    <string id="aom_mistymountainorcs_female_name_13" text="Груша" />
+    <string id="aom_mistymountainorcs_female_name_14" text="Дурша" />
+    <string id="aom_mistymountainorcs_female_name_15" text="Талра" />
+    <string id="aom_mistymountainorcs_female_name_16" text="Ворла" />
+    <string id="aom_mistymountainorcs_female_name_17" text="Наргул" />
+    <string id="aom_mistymountainorcs_female_name_18" text="Турка" />
+    <string id="aom_mistymountainorcs_female_name_19" text="Улша" />
+    <string id="aom_mistymountainorcs_female_name_2" text="Турка" />
+    <string id="aom_mistymountainorcs_female_name_20" text="Музрак" />
+    <string id="aom_mistymountainorcs_female_name_21" text="Кралша" />
+    <string id="aom_mistymountainorcs_female_name_22" text="Гральша" />
+    <string id="aom_mistymountainorcs_female_name_23" text="Дурша" />
+    <string id="aom_mistymountainorcs_female_name_24" text="Транза" />
+    <string id="aom_mistymountainorcs_female_name_25" text="Наргра" />
+    <string id="aom_mistymountainorcs_female_name_26" text="Ульзира" />
+    <string id="aom_mistymountainorcs_female_name_27" text="Борлия" />
+    <string id="aom_mistymountainorcs_female_name_28" text="Зоргла" />
+    <string id="aom_mistymountainorcs_female_name_29" text="Дурла" />
+    <string id="aom_mistymountainorcs_female_name_3" text="Зульгара" />
+    <string id="aom_mistymountainorcs_female_name_30" text="Музша" />
+    <string id="aom_mistymountainorcs_female_name_31" text="Трульга" />
+    <string id="aom_mistymountainorcs_female_name_32" text="Нарша" />
+    <string id="aom_mistymountainorcs_female_name_33" text="Кральга" />
+    <string id="aom_mistymountainorcs_female_name_34" text="Гринза" />
+    <string id="aom_mistymountainorcs_female_name_35" text="Тальзия" />
+    <string id="aom_mistymountainorcs_female_name_36" text="Воргла" />
+    <string id="aom_mistymountainorcs_female_name_37" text="Ульзила" />
+    <string id="aom_mistymountainorcs_female_name_38" text="Дурша" />
+    <string id="aom_mistymountainorcs_female_name_39" text="Наргула" />
+    <string id="aom_mistymountainorcs_female_name_4" text="Воржа" />
+    <string id="aom_mistymountainorcs_female_name_40" text="Тругла" />
+    <string id="aom_mistymountainorcs_female_name_41" text="Музла" />
+    <string id="aom_mistymountainorcs_female_name_42" text="Гральна" />
+    <string id="aom_mistymountainorcs_female_name_43" text="Тарка" />
+    <string id="aom_mistymountainorcs_female_name_44" text="Ульзара" />
+    <string id="aom_mistymountainorcs_female_name_45" text="Кральза" />
+    <string id="aom_mistymountainorcs_female_name_46" text="Дурка" />
+    <string id="aom_mistymountainorcs_female_name_47" text="Труна" />
+    <string id="aom_mistymountainorcs_female_name_48" text="Борза" />
+    <string id="aom_mistymountainorcs_female_name_49" text="Зорга" />
+    <string id="aom_mistymountainorcs_female_name_5" text="Дурга" />
+    <string id="aom_mistymountainorcs_female_name_50" text="Нарлия" />
+    <string id="aom_mistymountainorcs_female_name_6" text="Наргра" />
+    <string id="aom_mistymountainorcs_female_name_7" text="Трульза" />
+    <string id="aom_mistymountainorcs_female_name_8" text="Музра" />
+    <string id="aom_mistymountainorcs_female_name_9" text="Кральза" />
+    <string id="aom_mistymountainorcs_male_name_1" text="Азгар" />
+    <string id="aom_mistymountainorcs_male_name_10" text="Мугзун" />
+    <string id="aom_mistymountainorcs_male_name_11" text="Лурзок" />
+    <string id="aom_mistymountainorcs_male_name_12" text="Зорга" />
+    <string id="aom_mistymountainorcs_male_name_13" text="Трумак" />
+    <string id="aom_mistymountainorcs_male_name_14" text="Наргот" />
+    <string id="aom_mistymountainorcs_male_name_15" text="Борзак" />
+    <string id="aom_mistymountainorcs_male_name_16" text="Друзнар" />
+    <string id="aom_mistymountainorcs_male_name_17" text="Краглот" />
+    <string id="aom_mistymountainorcs_male_name_18" text="Вурзаг" />
+    <string id="aom_mistymountainorcs_male_name_19" text="Нарлог" />
+    <string id="aom_mistymountainorcs_male_name_2" text="Дрозмак" />
+    <string id="aom_mistymountainorcs_male_name_20" text="Талруг" />
+    <string id="aom_mistymountainorcs_male_name_21" text="Урзул" />
+    <string id="aom_mistymountainorcs_male_name_22" text="Гралтак" />
+    <string id="aom_mistymountainorcs_male_name_23" text="Воргрим" />
+    <string id="aom_mistymountainorcs_male_name_24" text="Мазкор" />
+    <string id="aom_mistymountainorcs_male_name_25" text="Болгат" />
+    <string id="aom_mistymountainorcs_male_name_26" text="Луртак" />
+    <string id="aom_mistymountainorcs_male_name_27" text="Тругол" />
+    <string id="aom_mistymountainorcs_male_name_28" text="Нарзук" />
+    <string id="aom_mistymountainorcs_male_name_29" text="Крузнор" />
+    <string id="aom_mistymountainorcs_male_name_3" text="Каргот" />
+    <string id="aom_mistymountainorcs_male_name_30" text="Тразгул" />
+    <string id="aom_mistymountainorcs_male_name_31" text="Дурзак" />
+    <string id="aom_mistymountainorcs_male_name_32" text="Зулгот" />
+    <string id="aom_mistymountainorcs_male_name_33" text="Ворзак" />
+    <string id="aom_mistymountainorcs_male_name_34" text="Крогар" />
+    <string id="aom_mistymountainorcs_male_name_35" text="Трунак" />
+    <string id="aom_mistymountainorcs_male_name_36" text="Гразар" />
+    <string id="aom_mistymountainorcs_male_name_37" text="Нарзог" />
+    <string id="aom_mistymountainorcs_male_name_38" text="Улгрим" />
+    <string id="aom_mistymountainorcs_male_name_39" text="Вурлак" />
+    <string id="aom_mistymountainorcs_male_name_4" text="Тразак" />
+    <string id="aom_mistymountainorcs_male_name_40" text="Борзак" />
+    <string id="aom_mistymountainorcs_male_name_41" text="Дурзор" />
+    <string id="aom_mistymountainorcs_male_name_42" text="Музраг" />
+    <string id="aom_mistymountainorcs_male_name_43" text="Гралтор" />
+    <string id="aom_mistymountainorcs_male_name_44" text="Тарзог" />
+    <string id="aom_mistymountainorcs_male_name_45" text="Врогнак" />
+    <string id="aom_mistymountainorcs_male_name_46" text="Карнак" />
+    <string id="aom_mistymountainorcs_male_name_47" text="Борзак" />
+    <string id="aom_mistymountainorcs_male_name_48" text="Нарзул" />
+    <string id="aom_mistymountainorcs_male_name_49" text="Трулгот" />
+    <string id="aom_mistymountainorcs_male_name_5" text="Ульгрим" />
+    <string id="aom_mistymountainorcs_male_name_50" text="Друзмок" />
+    <string id="aom_mistymountainorcs_male_name_6" text="Зоргат" />
+    <string id="aom_mistymountainorcs_male_name_7" text="Грагор" />
+    <string id="aom_mistymountainorcs_male_name_8" text="Дурмаш" />
+    <string id="aom_mistymountainorcs_male_name_9" text="Воргот" />
+    <string id="aom_mistymountainorcs_name" text="Орки Мглистых гор" />
+    <string id="aom_mordor_clan_1" text="Легион Красного Ока" />
+    <string id="aom_mordor_clan_10" text="Железный Венец" />
+    <string id="aom_mordor_clan_11" text="Орда Удуна" />
+    <string id="aom_mordor_clan_12" text="Воинство Тьмы" />
+    <string id="aom_mordor_clan_13" text="Стража Барад-дура" />
+    <string id="aom_mordor_clan_14" text="Кузня Роковой горы" />
+    <string id="aom_mordor_clan_15" text="Гарнизон Дуртанга" />
+    <string id="aom_mordor_clan_2" text="Моргульские крысы" />
+    <string id="aom_mordor_clan_3" text="Чёрные урук-хай" />
+    <string id="aom_mordor_clan_4" text="Башенная стража" />
+    <string id="aom_mordor_clan_5" text="Отряд Горгорота" />
+    <string id="aom_mordor_clan_6" text="Свора Кирит-Унгола" />
+    <string id="aom_mordor_clan_7" text="Племя Пепельных гор" />
+    <string id="aom_mordor_clan_8" text="Рабы Нурна" />
+    <string id="aom_mordor_clan_9" text="Разбойники Литлада" />
+    <string id="aom_mordor_desc" text="Орки Мордора — жестокая и неумолимая сила, выведенная в тёмных ямах Барад-дура, чтобы служить воле Саурона. Свирепые и безжалостные, они идут на войну бесконечными ордами, сжимая грубое, но смертоносное оружие, выкованное в огне Роковой горы. Облачённые в зазубренные доспехи и несущие чёрные знамёна с Красным Оком, они сеют страх и разрушение везде, где ступают. Скованные железной волей своего Тёмного Властелина, орки Мордора разделены на отряды во главе с беспощадными вождями и едины лишь в жажде завоеваний." />
+    <string id="aom_mordor_female_name_1" text="Гулша" />
+    <string id="aom_mordor_female_name_10" text="Урга" />
+    <string id="aom_mordor_female_name_11" text="Лугша" />
+    <string id="aom_mordor_female_name_12" text="Горбул" />
+    <string id="aom_mordor_female_name_13" text="Нурша" />
+    <string id="aom_mordor_female_name_14" text="Пушга" />
+    <string id="aom_mordor_female_name_15" text="Шагра" />
+    <string id="aom_mordor_female_name_16" text="Мокша" />
+    <string id="aom_mordor_female_name_17" text="Душла" />
+    <string id="aom_mordor_female_name_18" text="Кримлуг" />
+    <string id="aom_mordor_female_name_19" text="Таруга" />
+    <string id="aom_mordor_female_name_2" text="Крумша" />
+    <string id="aom_mordor_female_name_20" text="Горша" />
+    <string id="aom_mordor_female_name_21" text="Булга" />
+    <string id="aom_mordor_female_name_22" text="Скурна" />
+    <string id="aom_mordor_female_name_23" text="Гулна" />
+    <string id="aom_mordor_female_name_24" text="Уфша" />
+    <string id="aom_mordor_female_name_25" text="Гримбул" />
+    <string id="aom_mordor_female_name_26" text="Нарга" />
+    <string id="aom_mordor_female_name_27" text="Кулша" />
+    <string id="aom_mordor_female_name_28" text="Дурбха" />
+    <string id="aom_mordor_female_name_29" text="Глубна" />
+    <string id="aom_mordor_female_name_3" text="Дурга" />
+    <string id="aom_mordor_female_name_30" text="Таркул" />
+    <string id="aom_mordor_female_name_31" text="Мугша" />
+    <string id="aom_mordor_female_name_32" text="Шракла" />
+    <string id="aom_mordor_female_name_33" text="Оргул" />
+    <string id="aom_mordor_female_name_34" text="Бургна" />
+    <string id="aom_mordor_female_name_35" text="Гашла" />
+    <string id="aom_mordor_female_name_36" text="Круша" />
+    <string id="aom_mordor_female_name_37" text="Лурга" />
+    <string id="aom_mordor_female_name_38" text="Дугша" />
+    <string id="aom_mordor_female_name_39" text="Скулба" />
+    <string id="aom_mordor_female_name_4" text="Мурзаг" />
+    <string id="aom_mordor_female_name_40" text="Гарбна" />
+    <string id="aom_mordor_female_name_41" text="Нурга" />
+    <string id="aom_mordor_female_name_42" text="Труша" />
+    <string id="aom_mordor_female_name_43" text="Улгна" />
+    <string id="aom_mordor_female_name_44" text="Гурбла" />
+    <string id="aom_mordor_female_name_45" text="Бушга" />
+    <string id="aom_mordor_female_name_46" text="Круга" />
+    <string id="aom_mordor_female_name_47" text="Шарул" />
+    <string id="aom_mordor_female_name_48" text="Мурша" />
+    <string id="aom_mordor_female_name_49" text="Дургла" />
+    <string id="aom_mordor_female_name_5" text="Скулга" />
+    <string id="aom_mordor_female_name_50" text="Гулбна" />
+    <string id="aom_mordor_female_name_6" text="Бурзха" />
+    <string id="aom_mordor_female_name_7" text="Гаша" />
+    <string id="aom_mordor_female_name_8" text="Тракна" />
+    <string id="aom_mordor_female_name_9" text="Груша" />
+    <string id="aom_mordor_male_name_1" text="Горбаг" />
+    <string id="aom_mordor_male_name_10" text="Болг" />
+    <string id="aom_mordor_male_name_11" text="Маухур" />
+    <string id="aom_mordor_male_name_12" text="Углук" />
+    <string id="aom_mordor_male_name_13" text="Гашнак" />
+    <string id="aom_mordor_male_name_14" text="Дургаш" />
+    <string id="aom_mordor_male_name_15" text="Кримпул" />
+    <string id="aom_mordor_male_name_16" text="Тракул" />
+    <string id="aom_mordor_male_name_17" text="Гримбурз" />
+    <string id="aom_mordor_male_name_18" text="Бурзаш" />
+    <string id="aom_mordor_male_name_19" text="Назгул" />
+    <string id="aom_mordor_male_name_2" text="Шаграт" />
+    <string id="aom_mordor_male_name_20" text="Гултрак" />
+    <string id="aom_mordor_male_name_21" text="Скулгат" />
+    <string id="aom_mordor_male_name_22" text="Оргаш" />
+    <string id="aom_mordor_male_name_23" text="Лугдуш" />
+    <string id="aom_mordor_male_name_24" text="Крумгат" />
+    <string id="aom_mordor_male_name_25" text="Тарук" />
+    <string id="aom_mordor_male_name_26" text="Горул" />
+    <string id="aom_mordor_male_name_27" text="Душгой" />
+    <string id="aom_mordor_male_name_28" text="Мокурз" />
+    <string id="aom_mordor_male_name_29" text="Ургаш" />
+    <string id="aom_mordor_male_name_3" text="Гришнах" />
+    <string id="aom_mordor_male_name_30" text="Пушнак" />
+    <string id="aom_mordor_male_name_31" text="Глобтрак" />
+    <string id="aom_mordor_male_name_32" text="Скурлаг" />
+    <string id="aom_mordor_male_name_33" text="Бурзгол" />
+    <string id="aom_mordor_male_name_34" text="Гашнак" />
+    <string id="aom_mordor_male_name_35" text="Дурбурз" />
+    <string id="aom_mordor_male_name_36" text="Крумлаг" />
+    <string id="aom_mordor_male_name_37" text="Таркул" />
+    <string id="aom_mordor_male_name_38" text="Шагрул" />
+    <string id="aom_mordor_male_name_39" text="Уфгаш" />
+    <string id="aom_mordor_male_name_4" text="Музгаш" />
+    <string id="aom_mordor_male_name_40" text="Муграт" />
+    <string id="aom_mordor_male_name_41" text="Лугрут" />
+    <string id="aom_mordor_male_name_42" text="Горлаг" />
+    <string id="aom_mordor_male_name_43" text="Нурзгаш" />
+    <string id="aom_mordor_male_name_44" text="Душгоб" />
+    <string id="aom_mordor_male_name_45" text="Гулбаг" />
+    <string id="aom_mordor_male_name_46" text="Кримгул" />
+    <string id="aom_mordor_male_name_47" text="Тракнул" />
+    <string id="aom_mordor_male_name_48" text="Скаруг" />
+    <string id="aom_mordor_male_name_49" text="Бургол" />
+    <string id="aom_mordor_male_name_5" text="Лагдуф" />
+    <string id="aom_mordor_male_name_50" text="Грубаш" />
+    <string id="aom_mordor_male_name_6" text="Радбуг" />
+    <string id="aom_mordor_male_name_7" text="Уфтхак" />
+    <string id="aom_mordor_male_name_8" text="Снага" />
+    <string id="aom_mordor_male_name_9" text="Готмог" />
+    <string id="aom_mordor_name" text="Мордор" />
+    <string id="aom_rivendell_clan_1" text="Дом Элронда" />
+    <string id="aom_rivendell_clan_10" text="Дом Эрестора" />
+    <string id="aom_rivendell_clan_11" text="Ламбенголмор" />
+    <string id="aom_rivendell_clan_12" text="Дом Линдира" />
+    <string id="aom_rivendell_clan_13" text="Дом Арвен" />
+    <string id="aom_rivendell_clan_14" text="Дом Гил-галада" />
+    <string id="aom_rivendell_clan_15" text="Дом Кирдана" />
+    <string id="aom_rivendell_clan_2" text="Дом Феанора" />
+    <string id="aom_rivendell_clan_3" text="Дом Финголфина" />
+    <string id="aom_rivendell_clan_4" text="Дом Финарфина" />
+    <string id="aom_rivendell_clan_5" text="Дом Тургона" />
+    <string id="aom_rivendell_clan_6" text="Гвайт-и-Мирдайн" />
+    <string id="aom_rivendell_clan_7" text="Дом Келебримбора" />
+    <string id="aom_rivendell_clan_8" text="Дом Гильдора" />
+    <string id="aom_rivendell_clan_9" text="Дом Глорфиндела" />
+    <string id="aom_rivendell_desc" text="Эльфы-нолдор Ривенделла — мудрый и древний народ, прославленный непревзойдёнными знаниями, искусством и доблестью. Под водительством владыки Элронда они хранят угасающую красоту и предания Древних Дней в сокрытом убежище Имладриса. Владея равно мечом и луком, нолдор сочетают воинское умение с изяществом и точностью, присущими их роду." />
+    <string id="aom_rivendell_female_name_1" text="Анариэль" />
+    <string id="aom_rivendell_female_name_10" text="Силвен" />
+    <string id="aom_rivendell_female_name_11" text="Итрелле" />
+    <string id="aom_rivendell_female_name_12" text="Галадвен" />
+    <string id="aom_rivendell_female_name_13" text="Мелинна" />
+    <string id="aom_rivendell_female_name_14" text="Суилвен" />
+    <string id="aom_rivendell_female_name_15" text="Калиндра" />
+    <string id="aom_rivendell_female_name_16" text="Ардиэн" />
+    <string id="aom_rivendell_female_name_17" text="Велиндра" />
+    <string id="aom_rivendell_female_name_18" text="Этириэль" />
+    <string id="aom_rivendell_female_name_19" text="Талиэль" />
+    <string id="aom_rivendell_female_name_2" text="Эленна" />
+    <string id="aom_rivendell_female_name_20" text="Караниэль" />
+    <string id="aom_rivendell_female_name_21" text="Минлотвен" />
+    <string id="aom_rivendell_female_name_22" text="Аэлириэль" />
+    <string id="aom_rivendell_female_name_23" text="Фалинвен" />
+    <string id="aom_rivendell_female_name_24" text="Тириэль" />
+    <string id="aom_rivendell_female_name_25" text="Идриэль" />
+    <string id="aom_rivendell_female_name_26" text="Эльванна" />
+    <string id="aom_rivendell_female_name_27" text="Кирьявен" />
+    <string id="aom_rivendell_female_name_28" text="Линдалвен" />
+    <string id="aom_rivendell_female_name_29" text="Эретиэль" />
+    <string id="aom_rivendell_female_name_3" text="Каленвен" />
+    <string id="aom_rivendell_female_name_30" text="Сильмариэль" />
+    <string id="aom_rivendell_female_name_31" text="Галадиэн" />
+    <string id="aom_rivendell_female_name_32" text="Аэлинор" />
+    <string id="aom_rivendell_female_name_33" text="Талвин" />
+    <string id="aom_rivendell_female_name_34" text="Этирвен" />
+    <string id="aom_rivendell_female_name_35" text="Арвениэль" />
+    <string id="aom_rivendell_female_name_36" text="Суиленна" />
+    <string id="aom_rivendell_female_name_37" text="Нолвин" />
+    <string id="aom_rivendell_female_name_38" text="Татвен" />
+    <string id="aom_rivendell_female_name_39" text="Калиндриэль" />
+    <string id="aom_rivendell_female_name_4" text="Нимриэлла" />
+    <string id="aom_rivendell_female_name_40" text="Итриэль" />
+    <string id="aom_rivendell_female_name_41" text="Велвен" />
+    <string id="aom_rivendell_female_name_42" text="Аэлинна" />
+    <string id="aom_rivendell_female_name_43" text="Фалиниэль" />
+    <string id="aom_rivendell_female_name_44" text="Эрелла" />
+    <string id="aom_rivendell_female_name_45" text="Кариэль" />
+    <string id="aom_rivendell_female_name_46" text="Лотанна" />
+    <string id="aom_rivendell_female_name_47" text="Элариэль" />
+    <string id="aom_rivendell_female_name_48" text="Галвинн" />
+    <string id="aom_rivendell_female_name_49" text="Ниминдиэль" />
+    <string id="aom_rivendell_female_name_5" text="Татриэль" />
+    <string id="aom_rivendell_female_name_50" text="Сильвариэль" />
+    <string id="aom_rivendell_female_name_6" text="Амариэль" />
+    <string id="aom_rivendell_female_name_7" text="Валвен" />
+    <string id="aom_rivendell_female_name_8" text="Элариэль" />
+    <string id="aom_rivendell_female_name_9" text="Лотириэль" />
+    <string id="aom_rivendell_male_name_1" text="Каленион" />
+    <string id="aom_rivendell_male_name_10" text="Ородин" />
+    <string id="aom_rivendell_male_name_11" text="Аэглир" />
+    <string id="aom_rivendell_male_name_12" text="Этирион" />
+    <string id="aom_rivendell_male_name_13" text="Анарион" />
+    <string id="aom_rivendell_male_name_14" text="Келетир" />
+    <string id="aom_rivendell_male_name_15" text="Фалинор" />
+    <string id="aom_rivendell_male_name_16" text="Элродир" />
+    <string id="aom_rivendell_male_name_17" text="Арадион" />
+    <string id="aom_rivendell_male_name_18" text="Ворендил" />
+    <string id="aom_rivendell_male_name_19" text="Мелианар" />
+    <string id="aom_rivendell_male_name_2" text="Эрелион" />
+    <string id="aom_rivendell_male_name_20" text="Татрин" />
+    <string id="aom_rivendell_male_name_21" text="Галион" />
+    <string id="aom_rivendell_male_name_22" text="Эледир" />
+    <string id="aom_rivendell_male_name_23" text="Мардил" />
+    <string id="aom_rivendell_male_name_24" text="Силонар" />
+    <string id="aom_rivendell_male_name_25" text="Нимлотон" />
+    <string id="aom_rivendell_male_name_26" text="Кириандир" />
+    <string id="aom_rivendell_male_name_27" text="Артон" />
+    <string id="aom_rivendell_male_name_28" text="Эльмирион" />
+    <string id="aom_rivendell_male_name_29" text="Карадион" />
+    <string id="aom_rivendell_male_name_3" text="Амарион" />
+    <string id="aom_rivendell_male_name_30" text="Фингалор" />
+    <string id="aom_rivendell_male_name_31" text="Эрендур" />
+    <string id="aom_rivendell_male_name_32" text="Тирион" />
+    <string id="aom_rivendell_male_name_33" text="Веландор" />
+    <string id="aom_rivendell_male_name_34" text="Алатион" />
+    <string id="aom_rivendell_male_name_35" text="Минрандир" />
+    <string id="aom_rivendell_male_name_36" text="Галдорион" />
+    <string id="aom_rivendell_male_name_37" text="Лотанор" />
+    <string id="aom_rivendell_male_name_38" text="Тирандир" />
+    <string id="aom_rivendell_male_name_39" text="Эреглин" />
+    <string id="aom_rivendell_male_name_4" text="Нолиндир" />
+    <string id="aom_rivendell_male_name_40" text="Таладир" />
+    <string id="aom_rivendell_male_name_41" text="Анариндор" />
+    <string id="aom_rivendell_male_name_42" text="Калинор" />
+    <string id="aom_rivendell_male_name_43" text="Суилон" />
+    <string id="aom_rivendell_male_name_44" text="Эларион" />
+    <string id="aom_rivendell_male_name_45" text="Рилион" />
+    <string id="aom_rivendell_male_name_46" text="Талорин" />
+    <string id="aom_rivendell_male_name_47" text="Веланор" />
+    <string id="aom_rivendell_male_name_48" text="Катанор" />
+    <string id="aom_rivendell_male_name_49" text="Аранион" />
+    <string id="aom_rivendell_male_name_5" text="Талион" />
+    <string id="aom_rivendell_male_name_50" text="Латион" />
+    <string id="aom_rivendell_male_name_51" text="Маэдрос" />
+    <string id="aom_rivendell_male_name_52" text="Маглор" />
+    <string id="aom_rivendell_male_name_53" text="Куруфин" />
+    <string id="aom_rivendell_male_name_54" text="Карантир" />
+    <string id="aom_rivendell_male_name_55" text="Келегорм" />
+    <string id="aom_rivendell_male_name_56" text="Амрас" />
+    <string id="aom_rivendell_male_name_57" text="Амрод" />
+    <string id="aom_rivendell_male_name_58" text="Финвэ" />
+    <string id="aom_rivendell_male_name_59" text="Феанор" />
+    <string id="aom_rivendell_male_name_6" text="Линдир" />
+    <string id="aom_rivendell_male_name_7" text="Саранион" />
+    <string id="aom_rivendell_male_name_8" text="Итралион" />
+    <string id="aom_rivendell_male_name_9" text="Валендил" />
+    <string id="aom_rivendell_name" text="Эльфы нолдор" />
+    <string id="aom_shaghana_clan_1" text="Эзаркия" />
+    <string id="aom_shaghana_clan_2" text="Кумаракнис" />
+    <string id="aom_shaghana_clan_3" text="Тайимака" />
+    <string id="aom_shaghana_clan_4" text="Зайякнури" />
+    <string id="aom_shaghana_clan_5" text="Селаркес" />
+    <string id="aom_shaghana_clan_6" text="Узхарес" />
+    <string id="aom_shaghana_clan_7" text="Аларанин" />
+    <string id="aom_shaghana_clan_8" text="Банугад" />
+    <string id="aom_shaghana_clan_9" text="Акаммес" />
+    <string id="aom_shaghana_female_name_1" text="Зарха" />
+    <string id="aom_shaghana_female_name_10" text="Зарима" />
+    <string id="aom_shaghana_female_name_11" text="Халима" />
+    <string id="aom_shaghana_female_name_12" text="Фадила" />
+    <string id="aom_shaghana_female_name_13" text="Назира" />
+    <string id="aom_shaghana_female_name_14" text="Самира" />
+    <string id="aom_shaghana_female_name_15" text="Рахима" />
+    <string id="aom_shaghana_female_name_16" text="Танира" />
+    <string id="aom_shaghana_female_name_17" text="Марзука" />
+    <string id="aom_shaghana_female_name_18" text="Зульфа" />
+    <string id="aom_shaghana_female_name_19" text="Юсра" />
+    <string id="aom_shaghana_female_name_2" text="Тасира" />
+    <string id="aom_shaghana_female_name_20" text="Халида" />
+    <string id="aom_shaghana_female_name_21" text="Ташима" />
+    <string id="aom_shaghana_female_name_22" text="Бакира" />
+    <string id="aom_shaghana_female_name_23" text="Назима" />
+    <string id="aom_shaghana_female_name_24" text="Самиха" />
+    <string id="aom_shaghana_female_name_25" text="Джалила" />
+    <string id="aom_shaghana_female_name_26" text="Разина" />
+    <string id="aom_shaghana_female_name_27" text="Карима" />
+    <string id="aom_shaghana_female_name_28" text="Шалхун" />
+    <string id="aom_shaghana_female_name_29" text="Ясмира" />
+    <string id="aom_shaghana_female_name_3" text="Накима" />
+    <string id="aom_shaghana_female_name_30" text="Зафира" />
+    <string id="aom_shaghana_female_name_4" text="Салима" />
+    <string id="aom_shaghana_female_name_5" text="Язира" />
+    <string id="aom_shaghana_female_name_6" text="Марза" />
+    <string id="aom_shaghana_female_name_7" text="Джалила" />
+    <string id="aom_shaghana_female_name_8" text="Рашима" />
+    <string id="aom_shaghana_female_name_9" text="Хадра" />
+    <string id="aom_shaghana_male_name_1" text="Заркан" />
+    <string id="aom_shaghana_male_name_10" text="Халуз" />
+    <string id="aom_shaghana_male_name_11" text="Фарун" />
+    <string id="aom_shaghana_male_name_12" text="Язур" />
+    <string id="aom_shaghana_male_name_13" text="Ташим" />
+    <string id="aom_shaghana_male_name_14" text="Бакрим" />
+    <string id="aom_shaghana_male_name_15" text="Зулхан" />
+    <string id="aom_shaghana_male_name_16" text="Намир" />
+    <string id="aom_shaghana_male_name_17" text="Рашун" />
+    <string id="aom_shaghana_male_name_18" text="Карим" />
+    <string id="aom_shaghana_male_name_19" text="Мазхар" />
+    <string id="aom_shaghana_male_name_2" text="Рахим" />
+    <string id="aom_shaghana_male_name_20" text="Тарек" />
+    <string id="aom_shaghana_male_name_21" text="Салуз" />
+    <string id="aom_shaghana_male_name_22" text="Юсуф" />
+    <string id="aom_shaghana_male_name_23" text="Зафар" />
+    <string id="aom_shaghana_male_name_24" text="Хакин" />
+    <string id="aom_shaghana_male_name_25" text="Мурак" />
+    <string id="aom_shaghana_male_name_26" text="Тарзан" />
+    <string id="aom_shaghana_male_name_27" text="Джадим" />
+    <string id="aom_shaghana_male_name_28" text="Кармаз" />
+    <string id="aom_shaghana_male_name_29" text="Шалун" />
+    <string id="aom_shaghana_male_name_3" text="Тадин" />
+    <string id="aom_shaghana_male_name_30" text="Рахим" />
+    <string id="aom_shaghana_male_name_4" text="Марзук" />
+    <string id="aom_shaghana_male_name_5" text="Нахель" />
+    <string id="aom_shaghana_male_name_6" text="Джалим" />
+    <string id="aom_shaghana_male_name_7" text="Азрак" />
+    <string id="aom_shaghana_male_name_8" text="Самир" />
+    <string id="aom_shaghana_male_name_9" text="Казан" />
+    <string id="aom_umbar_clan_1" text="Флот Чёрных Парусов" />
+    <string id="aom_umbar_clan_10" text="Южный союз" />
+    <string id="aom_umbar_clan_11" text="Клан Морского Волка" />
+    <string id="aom_umbar_clan_12" text="Разбойники залива Бельфалас" />
+    <string id="aom_umbar_clan_13" text="Изгнанники Пеларгира" />
+    <string id="aom_umbar_clan_14" text="Бич Дол Амрота" />
+    <string id="aom_umbar_clan_15" text="Клан Повелителя Ветров" />
+    <string id="aom_umbar_clan_2" text="Братство корсаров" />
+    <string id="aom_umbar_clan_3" text="Сыны Кастамира" />
+    <string id="aom_umbar_clan_4" text="Союзники-харадрим" />
+    <string id="aom_umbar_clan_5" text="Змеиная стража" />
+    <string id="aom_umbar_clan_6" text="Владыки бурь" />
+    <string id="aom_umbar_clan_7" text="Налётчики Красного прилива" />
+    <string id="aom_umbar_clan_8" text="Стража Гавани" />
+    <string id="aom_umbar_clan_9" text="Чёрные нуменорцы" />
+    <string id="aom_umbar_desc" text="Народ Умбара — мореходы-воины и корсары, властители морей к югу от Гондора. Происходя от нуменорских изгнанников, они славятся хитростью и свирепостью в бою. Под чёрными парусами их флоты разоряют побережья, вселяя страх в сердца врагов. Хотя они держат сторону Саурона, корсары Умбара яростно независимы и превыше всего ценят силу и хитрость." />
+    <string id="aom_umbar_female_name_1" text="Селара" />
+    <string id="aom_umbar_female_name_10" text="Калима" />
+    <string id="aom_umbar_female_name_11" text="Ашна" />
+    <string id="aom_umbar_female_name_12" text="Дарира" />
+    <string id="aom_umbar_female_name_13" text="Зарина" />
+    <string id="aom_umbar_female_name_14" text="Фахира" />
+    <string id="aom_umbar_female_name_15" text="Бахлия" />
+    <string id="aom_umbar_female_name_16" text="Сулина" />
+    <string id="aom_umbar_female_name_17" text="Мордхира" />
+    <string id="aom_umbar_female_name_18" text="Зульфара" />
+    <string id="aom_umbar_female_name_19" text="Азрия" />
+    <string id="aom_umbar_female_name_2" text="Вазра" />
+    <string id="aom_umbar_female_name_20" text="Харима" />
+    <string id="aom_umbar_female_name_21" text="Ральмира" />
+    <string id="aom_umbar_female_name_22" text="Тазира" />
+    <string id="aom_umbar_female_name_23" text="Хавина" />
+    <string id="aom_umbar_female_name_24" text="Зорина" />
+    <string id="aom_umbar_female_name_25" text="Малая" />
+    <string id="aom_umbar_female_name_26" text="Вотхира" />
+    <string id="aom_umbar_female_name_27" text="Арамира" />
+    <string id="aom_umbar_female_name_28" text="Назира" />
+    <string id="aom_umbar_female_name_29" text="Селина" />
+    <string id="aom_umbar_female_name_3" text="Рания" />
+    <string id="aom_umbar_female_name_30" text="Тазина" />
+    <string id="aom_umbar_female_name_31" text="Йорана" />
+    <string id="aom_umbar_female_name_32" text="Базира" />
+    <string id="aom_umbar_female_name_33" text="Харадья" />
+    <string id="aom_umbar_female_name_34" text="Шазира" />
+    <string id="aom_umbar_female_name_35" text="Зафина" />
+    <string id="aom_umbar_female_name_36" text="Кальзира" />
+    <string id="aom_umbar_female_name_37" text="Рамина" />
+    <string id="aom_umbar_female_name_38" text="Тарния" />
+    <string id="aom_umbar_female_name_39" text="Вирина" />
+    <string id="aom_umbar_female_name_4" text="Захара" />
+    <string id="aom_umbar_female_name_40" text="Дорнья" />
+    <string id="aom_umbar_female_name_41" text="Марзила" />
+    <string id="aom_umbar_female_name_42" text="Азрия" />
+    <string id="aom_umbar_female_name_43" text="Сельзира" />
+    <string id="aom_umbar_female_name_44" text="Зульфара" />
+    <string id="aom_umbar_female_name_45" text="Нажра" />
+    <string id="aom_umbar_female_name_46" text="Рахзара" />
+    <string id="aom_umbar_female_name_47" text="Тальзира" />
+    <string id="aom_umbar_female_name_48" text="Бардина" />
+    <string id="aom_umbar_female_name_49" text="Йорвайя" />
+    <string id="aom_umbar_female_name_5" text="Малира" />
+    <string id="aom_umbar_female_name_50" text="Аракара" />
+    <string id="aom_umbar_female_name_6" text="Тазия" />
+    <string id="aom_umbar_female_name_7" text="Йорина" />
+    <string id="aom_umbar_female_name_8" text="Рахзира" />
+    <string id="aom_umbar_female_name_9" text="Назира" />
+    <string id="aom_umbar_male_name_1" text="Харельд" />
+    <string id="aom_umbar_male_name_10" text="Халим" />
+    <string id="aom_umbar_male_name_11" text="Ашкар" />
+    <string id="aom_umbar_male_name_12" text="Дарион" />
+    <string id="aom_umbar_male_name_13" text="Зарит" />
+    <string id="aom_umbar_male_name_14" text="Фарим" />
+    <string id="aom_umbar_male_name_15" text="Бахран" />
+    <string id="aom_umbar_male_name_16" text="Сульдир" />
+    <string id="aom_umbar_male_name_17" text="Мордхак" />
+    <string id="aom_umbar_male_name_18" text="Зульфар" />
+    <string id="aom_umbar_male_name_19" text="Азрак" />
+    <string id="aom_umbar_male_name_2" text="Вардун" />
+    <string id="aom_umbar_male_name_20" text="Харум" />
+    <string id="aom_umbar_male_name_21" text="Рамлис" />
+    <string id="aom_umbar_male_name_22" text="Тарнис" />
+    <string id="aom_umbar_male_name_23" text="Хаврим" />
+    <string id="aom_umbar_male_name_24" text="Зорин" />
+    <string id="aom_umbar_male_name_25" text="Малрид" />
+    <string id="aom_umbar_male_name_26" text="Вотар" />
+    <string id="aom_umbar_male_name_27" text="Арамдир" />
+    <string id="aom_umbar_male_name_28" text="Назар" />
+    <string id="aom_umbar_male_name_29" text="Селрад" />
+    <string id="aom_umbar_male_name_3" text="Рашид" />
+    <string id="aom_umbar_male_name_30" text="Тазрин" />
+    <string id="aom_umbar_male_name_31" text="Йорхад" />
+    <string id="aom_umbar_male_name_32" text="Базрин" />
+    <string id="aom_umbar_male_name_33" text="Харадим" />
+    <string id="aom_umbar_male_name_34" text="Шазур" />
+    <string id="aom_umbar_male_name_35" text="Зафрид" />
+    <string id="aom_umbar_male_name_36" text="Калзар" />
+    <string id="aom_umbar_male_name_37" text="Рамир" />
+    <string id="aom_umbar_male_name_38" text="Тарнид" />
+    <string id="aom_umbar_male_name_39" text="Вирдак" />
+    <string id="aom_umbar_male_name_4" text="Зараш" />
+    <string id="aom_umbar_male_name_40" text="Дорнак" />
+    <string id="aom_umbar_male_name_41" text="Марзун" />
+    <string id="aom_umbar_male_name_42" text="Азрил" />
+    <string id="aom_umbar_male_name_43" text="Селкар" />
+    <string id="aom_umbar_male_name_44" text="Зулрин" />
+    <string id="aom_umbar_male_name_45" text="Назра" />
+    <string id="aom_umbar_male_name_46" text="Рахзир" />
+    <string id="aom_umbar_male_name_47" text="Талмир" />
+    <string id="aom_umbar_male_name_48" text="Бардум" />
+    <string id="aom_umbar_male_name_49" text="Йорвим" />
+    <string id="aom_umbar_male_name_5" text="Малкир" />
+    <string id="aom_umbar_male_name_50" text="Араказ" />
+    <string id="aom_umbar_male_name_6" text="Тарзон" />
+    <string id="aom_umbar_male_name_7" text="Йорвин" />
+    <string id="aom_umbar_male_name_8" text="Рохзар" />
+    <string id="aom_umbar_male_name_9" text="Назрин" />
+    <string id="aom_umbar_name" text="Умбар" />
+  </strings>
+</base>

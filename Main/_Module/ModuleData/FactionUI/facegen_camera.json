@@ -1,0 +1,7 @@
+{
+  "_note": "Kysaro's camera tuning for the themed character-creation screens (#704). x_offset moves the camera sideways and distance_offset away from the character, in scene metres (each within -3 to 3; a more negative x_offset moves the character right on screen). fov_offset widens the vertical field of view in radians (within -0.5 to 1); widening it too far bulges the picture, so zoom out with distance_offset first. Read once per launch: restart the game after editing. A value out of range or not a number reverts to 0 with a warning in the TAOM log.",
+  "FaceGen":   { "x_offset": -0.2, "distance_offset": 0, "fov_offset": 0 },
+  "Narrative": { "x_offset": -0.5, "distance_offset": 0.5, "fov_offset": 0.075 },
+  "Review":    { "x_offset": -0.6, "distance_offset": 0.5, "fov_offset": 0.075 },
+  "Options":   { "x_offset": 0, "distance_offset": 0, "fov_offset": 0 }
+}

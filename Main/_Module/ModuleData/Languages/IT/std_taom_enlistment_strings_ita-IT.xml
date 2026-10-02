@@ -45,7 +45,7 @@
     <string id="taom_fc_no_room_body" text="Al momento non c'è posto per un altro compagno. La promozione di {TROOP_NAME} verrà offerta di nuovo più avanti." />
     <string id="taom_fc_offer_body" text="{TROOP_NAME} si è distinto in battaglia. Promuoverlo a compagno?" />
     <string id="taom_fc_offer_title" text="Promozione sul campo" />
-    <string id="taom_fc_rename_body" text="Dai un nome a {TROOP_NAME}, oppure mantieni quello con cui è andato in battaglia." />
+    <string id="taom_fc_rename_body" text="Dai un nome a {TROOP_NAME}, o conserva quello che portava in battaglia." />
     <string id="taom_fc_rename_title" text="Dai un nome al nuovo compagno" />
     <string id="taom_fc_cancel" text="Annulla" />
     <string id="taom_fc_dismiss" text="Il tuo incarico è terminato. Torna tra i ranghi." />

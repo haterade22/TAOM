@@ -23,6 +23,11 @@ public static class FaceGenVM_Refresh_RaceFilter_Patch
         // dwarf or a Sauron preview back to the culture default the instant it was applied.
         if (ResolvePlayerSwitchSession()?.IsPreviewActive == true) return;
 
+        // #704. Likewise while a hero picked on the themed faction screen is applied: his race was
+        // copied onto the player before the face generator opened, and the face generator must show
+        // it, not the culture's first race.
+        if (ResolveFactionPresets()?.HasPick == true) return;
+
         try
         {
             FaceGenRaceSelectorRebuilder.Apply(__instance, ResolveFilterService());
@@ -48,6 +53,16 @@ public static class FaceGenVM_Refresh_RaceFilter_Patch
         try { _playerSwitchSession = IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchSession>(); }
         catch { /* IoC not ready */ }
         return _playerSwitchSession;
+    }
+
+    private static TAOM.Features.FactionUI.Presets.FactionPresetService _factionPresets;
+
+    private static TAOM.Features.FactionUI.Presets.FactionPresetService ResolveFactionPresets()
+    {
+        if (_factionPresets != null) return _factionPresets;
+        try { _factionPresets = IoC.Resolve<TAOM.Features.FactionUI.Presets.FactionPresetService>(); }
+        catch { /* IoC not ready */ }
+        return _factionPresets;
     }
 
     private static IModLogger ResolveLogger()

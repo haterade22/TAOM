@@ -1,0 +1,1529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Turkish" />
+  </tags>
+  <strings>
+    <string id="aom_abanissa_lord_1" text="Cesur Abanissa reisi" />
+    <string id="aom_abanissa_lord_2" text="Temkinli Abanissa reisi" />
+    <string id="aom_bcg_arena" text="Arena Ustası" />
+    <string id="aom_bcg_armed_trader" text="Silahlı Goblin Tüccar" />
+    <string id="aom_bcg_armorer" text="Zırhçı" />
+    <string id="aom_bcg_barber" text="Berber" />
+    <string id="aom_bcg_beggar" text="Dilenci" />
+    <string id="aom_bcg_blacksmith" text="Demirci" />
+    <string id="aom_bcg_caravan_guard" text="Goblin Kervan Muhafızı" />
+    <string id="aom_bcg_caravan_master" text="Goblin Kervan Başı" />
+    <string id="aom_bcg_dancer" text="Dansçı" />
+    <string id="aom_bcg_female_beggar" text="Dilenci" />
+    <string id="aom_bcg_gamehost" text="Oyun Sahibi" />
+    <string id="aom_bcg_gang_bodyguard" text="Çete Korumasi" />
+    <string id="aom_bcg_gear_dummy" text="Teçhizat Kuklası" />
+    <string id="aom_bcg_guard" text="Muhafız" />
+    <string id="aom_bcg_headman_1" text="Asi Goblin kaptanı" />
+    <string id="aom_bcg_headman_2" text="Tutucu bluecraig ihtiyarı" />
+    <string id="aom_bcg_headman_3" text="Sinsi Goblin muhtarı" />
+    <string id="aom_bcg_merchant" text="Tüccar" />
+    <string id="aom_bcg_musician" text="Müzisyen" />
+    <string id="aom_bcg_notable_0" text="Temkinli bluecraig tüccarı" />
+    <string id="aom_bcg_notable_0b" text="Kurnaz Goblin pazarlıkçısı" />
+    <string id="aom_bcg_notable_1" text="Acımasız bluecraig levazımcısı" />
+    <string id="aom_bcg_notable_10" text="Hırlayan bluecraig zorbası" />
+    <string id="aom_bcg_notable_11" text="Ürkütücü bluecraig kabadayısı" />
+    <string id="aom_bcg_notable_12" text="Entrikacı bluecraig haraççısı" />
+    <string id="aom_bcg_notable_13" text="Tehditkâr Goblin kesici" />
+    <string id="aom_bcg_notable_1b" text="Soğuk Goblin levazım subayı" />
+    <string id="aom_bcg_notable_2" text="Zeki bluecraig ikmal ustası" />
+    <string id="aom_bcg_notable_21" text="Ters bluecraig gözetmeni" />
+    <string id="aom_bcg_notable_22" text="Uysal Goblin tarla reisi" />
+    <string id="aom_bcg_notable_23" text="Gaddar Goblin köle sürücüsü" />
+    <string id="aom_bcg_notable_2b" text="İhtiyatlı Goblin istifçisi" />
+    <string id="aom_bcg_notable_3" text="Kendi yağıyla kavrulan bluecraig satıcısı" />
+    <string id="aom_bcg_notable_3b" text="Neşeli Goblin seyyar satıcısı" />
+    <string id="aom_bcg_notable_4" text="Entrikacı bluecraig vurguncusu" />
+    <string id="aom_bcg_notable_4b" text="Sinsi Goblin tüccarı" />
+    <string id="aom_bcg_notable_5" text="Fanatik Goblin savaş ozanı" />
+    <string id="aom_bcg_notable_6" text="Sert bluecraig angaryacısı" />
+    <string id="aom_bcg_notable_7" text="Düşünceli bluecraig gizemcisi" />
+    <string id="aom_bcg_notable_8" text="Ters bluecraig demircisi" />
+    <string id="aom_bcg_notable_9" text="Girişken Goblin ocak ustası" />
+    <string id="aom_bcg_notable_gl1" text="Koruyucu Goblin çukur lordu" />
+    <string id="aom_bcg_notable_gl4" text="Hayvani Goblin haydutu" />
+    <string id="aom_bcg_practice_1" text="Antrenman Dövüşçüsü" />
+    <string id="aom_bcg_practice_2" text="Antrenman Dövüşçüsü" />
+    <string id="aom_bcg_practice_3" text="Antrenman Dövüşçüsü" />
+    <string id="aom_bcg_practice_dummy" text="Antrenman Kuklası" />
+    <string id="aom_bcg_prison_guard" text="Zindan Muhafızı" />
+    <string id="aom_bcg_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_bcg_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_bcg_tavern_wench" text="Meyhane Kızı" />
+    <string id="aom_bcg_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_bcg_townsman" text="Kasabalı" />
+    <string id="aom_bcg_townsman_child" text="Kasabalı" />
+    <string id="aom_bcg_townsman_infant" text="Kasabalı" />
+    <string id="aom_bcg_townsman_teen" text="Kasabalı" />
+    <string id="aom_bcg_townswoman" text="Kasabalı Kadın" />
+    <string id="aom_bcg_townswoman_child" text="Kasabalı Kadın" />
+    <string id="aom_bcg_townswoman_infant" text="Kasabalı Kadın" />
+    <string id="aom_bcg_townswoman_teen" text="Kasabalı Kadın" />
+    <string id="aom_bcg_vet_caravan_guard" text="Tecrübeli Goblin Kervan Muhafızı" />
+    <string id="aom_bcg_village_woman" text="Köylü Kadın" />
+    <string id="aom_bcg_village_woman_child" text="Köy Çocuğu" />
+    <string id="aom_bcg_village_woman_teen" text="Köy Delikanlısı" />
+    <string id="aom_bcg_villager" text="Köle" />
+    <string id="aom_bcg_villager_child" text="Köy Çocuğu" />
+    <string id="aom_bcg_villager_teen" text="Köy Delikanlısı" />
+    <string id="aom_bcg_warg_merchant" text="Varg Taciri" />
+    <string id="aom_bcg_weaponsmith" text="Silah Ustası" />
+    <string id="aom_bluecraig_lord_1" text="Cesur Bluecraig reisi" />
+    <string id="aom_bluecraig_lord_2" text="Temkinli Bluecraig reisi" />
+    <string id="aom_dg_arena" text="Arena Ustası" />
+    <string id="aom_dg_armed_trader" text="Dol Guldur Silahlı Taciri" />
+    <string id="aom_dg_armorer" text="Zırh Ustası" />
+    <string id="aom_dg_barber" text="Berber" />
+    <string id="aom_dg_beggar" text="Dilenci" />
+    <string id="aom_dg_blacksmith" text="Demirci" />
+    <string id="aom_dg_caravan_guard" text="Dol Guldur Kervan Muhafızı" />
+    <string id="aom_dg_caravan_master" text="Dol Guldur Kervan Başı" />
+    <string id="aom_dg_dancer" text="Dansçı" />
+    <string id="aom_dg_female_beggar" text="Dilenci" />
+    <string id="aom_dg_gamehost" text="Oyun Sahibi" />
+    <string id="aom_dg_gang_bodyguard" text="Çete Korumacısı" />
+    <string id="aom_dg_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_dg_guard" text="Muhafız" />
+    <string id="aom_dg_headman_1" text="Asi Dol Guldur yüzbaşısı" />
+    <string id="aom_dg_headman_2" text="Tutucu kara ork ihtiyarı" />
+    <string id="aom_dg_headman_3" text="Sinsi Dol Guldur muhtarı" />
+    <string id="aom_dg_merchant" text="Tüccar" />
+    <string id="aom_dg_musician" text="Müzisyen" />
+    <string id="aom_dg_notable_0" text="Temkinli Dol Guldur tüccarı" />
+    <string id="aom_dg_notable_0b" text="Gölgeli Dol Guldur pazarlıkçısı" />
+    <string id="aom_dg_notable_1" text="Acımasız kara ork levazımcısı" />
+    <string id="aom_dg_notable_10" text="Sert bakışlı ork zorbası" />
+    <string id="aom_dg_notable_11" text="Ürkütücü kara ork kabadayısı" />
+    <string id="aom_dg_notable_12" text="Entrikacı kara ork haraççısı" />
+    <string id="aom_dg_notable_13" text="Tehditkâr Dol Guldur kesicisi" />
+    <string id="aom_dg_notable_1b" text="Soğuk Dol Guldur levazım subayı" />
+    <string id="aom_dg_notable_2" text="Kurnaz kara ork ikmal ustası" />
+    <string id="aom_dg_notable_21" text="Hırçın kara ork gözcüsü" />
+    <string id="aom_dg_notable_22" text="Uzlaşmacı Dol Guldur saha patronu" />
+    <string id="aom_dg_notable_23" text="Asık suratlı Dol Guldur zorbası" />
+    <string id="aom_dg_notable_2b" text="Temkinli Dol Guldur istifçisi" />
+    <string id="aom_dg_notable_3" text="Kendi yolunu açmış kara ork tüccarı" />
+    <string id="aom_dg_notable_3b" text="Şen Dol Guldur seyyar satıcısı" />
+    <string id="aom_dg_notable_4" text="Entrikacı kara ork vurguncusu" />
+    <string id="aom_dg_notable_4b" text="Sinsi Dol Guldur taciri" />
+    <string id="aom_dg_notable_5" text="Fanatik Dol Guldur savaş nâresi atıcısı" />
+    <string id="aom_dg_notable_6" text="Haşin kara ork angaryacısı" />
+    <string id="aom_dg_notable_7" text="Düşünceli kara ork gizemcisi" />
+    <string id="aom_dg_notable_8" text="Hırçın kara ork zanaatkârı" />
+    <string id="aom_dg_notable_9" text="Girişken Dol Guldur demirhane ustası" />
+    <string id="aom_dg_notable_gl1" text="Koruyucu Dol Guldur zorbası" />
+    <string id="aom_dg_notable_gl10" text="Kurnaz kara ork stratejisti" />
+    <string id="aom_dg_notable_gl11" text="Gaddar Dol Guldur hükümdarı" />
+    <string id="aom_dg_notable_gl12" text="Hesapçı kara ork zorbası" />
+    <string id="aom_dg_notable_gl13" text="Demir yumruklu Dol Guldur reisi" />
+    <string id="aom_dg_notable_gl4" text="Hayvani Dol Guldur haydutu" />
+    <string id="aom_dg_notable_gl5" text="Uğursuz Dol Guldur zorbası" />
+    <string id="aom_dg_notable_gl6" text="Alçak Dol Guldur köle tüccarı" />
+    <string id="aom_dg_notable_gl7" text="Sadist Dol Guldur yüzbaşısı" />
+    <string id="aom_dg_notable_gl8" text="Soğuk kara ork savaş ağası" />
+    <string id="aom_dg_notable_gl9" text="Acımasız Dol Guldur boğazkeseni" />
+    <string id="aom_dg_practice_1" text="Talim Dövüşçüsü" />
+    <string id="aom_dg_practice_2" text="Talim Dövüşçüsü" />
+    <string id="aom_dg_practice_3" text="Talim Dövüşçüsü" />
+    <string id="aom_dg_practice_dummy" text="Talim Mankeni" />
+    <string id="aom_dg_prison_guard" text="Zindan Muhafızı" />
+    <string id="aom_dg_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_dg_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_dg_tavern_wench" text="Meyhane Kızı" />
+    <string id="aom_dg_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_dg_townsman" text="Kasabalı" />
+    <string id="aom_dg_townsman_child" text="Kasabalı" />
+    <string id="aom_dg_townsman_infant" text="Kasabalı" />
+    <string id="aom_dg_townsman_teen" text="Kasabalı" />
+    <string id="aom_dg_townswoman" text="Kasabalı Kadın" />
+    <string id="aom_dg_townswoman_child" text="Kasabalı Kadın" />
+    <string id="aom_dg_townswoman_infant" text="Kasabalı Kadın" />
+    <string id="aom_dg_townswoman_teen" text="Kasabalı Kadın" />
+    <string id="aom_dg_vet_caravan_guard" text="Dol Guldur Kıdemli Kervan Muhafızı" />
+    <string id="aom_dg_village_woman" text="Köylü Kadın" />
+    <string id="aom_dg_village_woman_child" text="Köy Çocuğu" />
+    <string id="aom_dg_village_woman_teen" text="Köy Genci" />
+    <string id="aom_dg_villager" text="Köle" />
+    <string id="aom_dg_villager_child" text="Köy Çocuğu" />
+    <string id="aom_dg_villager_teen" text="Köy Genci" />
+    <string id="aom_dg_warg_merchant" text="Varg Tüccarı" />
+    <string id="aom_dg_weaponsmith" text="Silah Ustası" />
+    <string id="aom_dl_arena" text="Arena Ustası" />
+    <string id="aom_dl_armed_trader" text="Dale Silahlı Tüccarı" />
+    <string id="aom_dl_armorer" text="Zırh Ustası" />
+    <string id="aom_dl_barber" text="Berber" />
+    <string id="aom_dl_beggar" text="Dilenci" />
+    <string id="aom_dl_blacksmith" text="Demirci" />
+    <string id="aom_dl_caravan_guard" text="Dale Kervan Muhafızı" />
+    <string id="aom_dl_caravan_master" text="Dale Kervan Başı" />
+    <string id="aom_dl_dancer" text="Dansçı" />
+    <string id="aom_dl_edu_1" text="Dale Genci" />
+    <string id="aom_dl_edu_2" text="Dale Genci" />
+    <string id="aom_dl_edu_3" text="Dale Genci" />
+    <string id="aom_dl_edu_4" text="Dale Genci" />
+    <string id="aom_dl_edu_5" text="Dale Genci" />
+    <string id="aom_dl_edu_6" text="Dale Genci" />
+    <string id="aom_dl_female_beggar" text="Dilenci" />
+    <string id="aom_dl_gamehost" text="Oyun Sahibi" />
+    <string id="aom_dl_gang_bodyguard" text="Çete Korumasý" />
+    <string id="aom_dl_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_dl_guard" text="Muhafız" />
+    <string id="aom_dl_headman_1" text="Sadık Dale muhtarı" />
+    <string id="aom_dl_headman_2" text="Tutucu Bard'lı muhtar" />
+    <string id="aom_dl_headman_3" text="Kurnaz Dale muhtarı" />
+    <string id="aom_dl_horse_merchant" text="At Taciri" />
+    <string id="aom_dl_merchant" text="Tüccar" />
+    <string id="aom_dl_musician" text="Müzisyen" />
+    <string id="aom_dl_notable_0" text="Temkinli Bard tüccarı" />
+    <string id="aom_dl_notable_0b" text="Kurnaz Göl Kasabası taciri" />
+    <string id="aom_dl_notable_1" text="Acımasız Dale kürk taciri" />
+    <string id="aom_dl_notable_10" text="Alaycı Bard haydudu" />
+    <string id="aom_dl_notable_11" text="Ürkütücü Dale tahsildarı" />
+    <string id="aom_dl_notable_12" text="Kurnaz Dale kaçakçısı" />
+    <string id="aom_dl_notable_13" text="Tehditkâr Göl Kasabası dalavereci" />
+    <string id="aom_dl_notable_1b" text="Soğuk Bard tüccarı" />
+    <string id="aom_dl_notable_2" text="Dale mücevher taciri" />
+    <string id="aom_dl_notable_21" text="Yıpranmış Bard toprak sahibi" />
+    <string id="aom_dl_notable_22" text="Hoşgörülü Dale ihtiyarı" />
+    <string id="aom_dl_notable_2b" text="Bilge Bard tüccarı" />
+    <string id="aom_dl_notable_3" text="Kendi emeğiyle yükselmiş Dale tüccarı" />
+    <string id="aom_dl_notable_3b" text="Neşeli Göl Kasabası tüccarı" />
+    <string id="aom_dl_notable_4" text="Kurnaz Bard tüccarı" />
+    <string id="aom_dl_notable_4b" text="Hilekâr Dale tüccarı" />
+    <string id="aom_dl_notable_5" text="Dindar Dale ihtiyarı" />
+    <string id="aom_dl_notable_6" text="Sert Bard bilgi koruyucusu" />
+    <string id="aom_dl_notable_7" text="Dale gelenek koruyucusu" />
+    <string id="aom_dl_notable_8" text="Usta Bard demircisi" />
+    <string id="aom_dl_notable_9" text="Yetenekli Dale zanaatkârı" />
+    <string id="aom_dl_notable_gl1" text="Cüretkâr Göl Kasabası elebaşı" />
+    <string id="aom_dl_notable_gl4" text="Acımasız Bard kabadayısı" />
+    <string id="aom_dl_practice_1" text="Talim Savaşçısı" />
+    <string id="aom_dl_practice_2" text="Talim Savaşçısı" />
+    <string id="aom_dl_practice_3" text="Talim Savaşçısı" />
+    <string id="aom_dl_practice_dummy" text="Talim Mankeni" />
+    <string id="aom_dl_prison_guard" text="Zindan Gardiyanı" />
+    <string id="aom_dl_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_dl_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_dl_tavern_wench" text="Meyhane Hizmetçisi" />
+    <string id="aom_dl_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_dl_townsman" text="Kasabalı" />
+    <string id="aom_dl_townsman_child" text="Kasabalı" />
+    <string id="aom_dl_townsman_infant" text="Kasabalı" />
+    <string id="aom_dl_townsman_teen" text="Kasabalı" />
+    <string id="aom_dl_townswoman" text="Kasabalı Kadın" />
+    <string id="aom_dl_townswoman_child" text="Kasabalı Kadın" />
+    <string id="aom_dl_townswoman_infant" text="Kasabalı Kadın" />
+    <string id="aom_dl_townswoman_teen" text="Kasabalı Kadın" />
+    <string id="aom_dl_vet_caravan_guard" text="Dale Kıdemli Kervan Muhafızı" />
+    <string id="aom_dl_village_woman" text="Köylü Kadın" />
+    <string id="aom_dl_village_woman_child" text="Köy Çocuğu" />
+    <string id="aom_dl_village_woman_teen" text="Köy Genci" />
+    <string id="aom_dl_villager" text="Köylü" />
+    <string id="aom_dl_villager_child" text="Köy Çocuğu" />
+    <string id="aom_dl_villager_teen" text="Köy Genci" />
+    <string id="aom_dl_weaponsmith" text="Silah Ustası" />
+    <string id="aom_dn_arena" text="Arena Ustası" />
+    <string id="aom_dn_armed_trader" text="Dunland Silahlı Tüccarı" />
+    <string id="aom_dn_armorer" text="Zırh Ustası" />
+    <string id="aom_dn_barber" text="Berber" />
+    <string id="aom_dn_beggar" text="Dilenci" />
+    <string id="aom_dn_blacksmith" text="Demirci" />
+    <string id="aom_dn_caravan_guard" text="Dunland Kervan Muhafızı" />
+    <string id="aom_dn_caravan_master" text="Dunland Kervan Başı" />
+    <string id="aom_dn_dancer" text="Dansçı" />
+    <string id="aom_dn_female_beggar" text="Dilenci" />
+    <string id="aom_dn_gamehost" text="Oyun Sahibi" />
+    <string id="aom_dn_gang_bodyguard" text="Çete Korumacısı" />
+    <string id="aom_dn_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_dn_guard" text="Muhafız" />
+    <string id="aom_dn_headman_1" text="Gururlu dunlendingli muhtar" />
+    <string id="aom_dn_headman_2" text="Temkinli klan muhtarı" />
+    <string id="aom_dn_headman_3" text="Kurnaz tepeli muhtar" />
+    <string id="aom_dn_horse_merchant" text="At Tüccarı" />
+    <string id="aom_dn_merchant" text="Tüccar" />
+    <string id="aom_dn_musician" text="Müzisyen" />
+    <string id="aom_dn_notable_0" text="Açıkgöz tepeli tüccar" />
+    <string id="aom_dn_notable_0b" text="Kurnaz dunlendingli seyyar satıcı" />
+    <string id="aom_dn_notable_1" text="Sert klan taciri" />
+    <string id="aom_dn_notable_10" text="Alaycı tepeli çete reisi" />
+    <string id="aom_dn_notable_11" text="Gaddar dunlendingli tahsildar" />
+    <string id="aom_dn_notable_12" text="Sinsi dunlendingli kaçakçı" />
+    <string id="aom_dn_notable_13" text="Tehditkâr klan çete lideri" />
+    <string id="aom_dn_notable_1b" text="Soğuk bakışlı tepe tüccarı" />
+    <string id="aom_dn_notable_2" text="Sessiz Dunlandlı tüccar" />
+    <string id="aom_dn_notable_21" text="Yıpranmış tepeli toprak sahibi" />
+    <string id="aom_dn_notable_22" text="Saygın Dunlandlı ihtiyar" />
+    <string id="aom_dn_notable_2b" text="Temkinli tepeli erzakçı" />
+    <string id="aom_dn_notable_3" text="Kendi kendini yetiştirmiş Dunlandlı tacir" />
+    <string id="aom_dn_notable_3b" text="Neşeli tepeli tacir" />
+    <string id="aom_dn_notable_4" text="Sivri dilli klan taciri" />
+    <string id="aom_dn_notable_4b" text="Kurnaz Dunlandlı tacir" />
+    <string id="aom_dn_notable_5" text="Vahşi tepe vaizi" />
+    <string id="aom_dn_notable_6" text="Sert Dunlandlı ihtiyar" />
+    <string id="aom_dn_notable_7" text="Dunland geleneklerinin bekçisi" />
+    <string id="aom_dn_notable_8" text="Huysuz Dunlandlı demirci" />
+    <string id="aom_dn_notable_9" text="Usta tepeli zanaatkâr" />
+    <string id="aom_dn_notable_gl1" text="Kurnaz klan elebaşı" />
+    <string id="aom_dn_notable_gl4" text="Vahşi tepe kabadayısı" />
+    <string id="aom_dn_practice_1" text="Antrenman Dövüşçüsü" />
+    <string id="aom_dn_practice_2" text="Antrenman Dövüşçüsü" />
+    <string id="aom_dn_practice_3" text="Antrenman Dövüşçüsü" />
+    <string id="aom_dn_practice_dummy" text="Antrenman Mankeni" />
+    <string id="aom_dn_prison_guard" text="Zindan Muhafızı" />
+    <string id="aom_dn_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_dn_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_dn_tavern_wench" text="Meyhane Kızı" />
+    <string id="aom_dn_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_dn_townsman" text="Kasabalı" />
+    <string id="aom_dn_townsman_child" text="Kasabalı" />
+    <string id="aom_dn_townsman_infant" text="Kasabalı" />
+    <string id="aom_dn_townsman_teen" text="Kasabalı" />
+    <string id="aom_dn_townswoman" text="Kasabalı Kadın" />
+    <string id="aom_dn_townswoman_child" text="Kasabalı Kadın" />
+    <string id="aom_dn_townswoman_infant" text="Kasabalı Kadın" />
+    <string id="aom_dn_townswoman_teen" text="Kasabalı Kadın" />
+    <string id="aom_dn_vet_caravan_guard" text="Dunlandlı Kıdemli Kervan Muhafızı" />
+    <string id="aom_dn_village_woman" text="Köylü Kadın" />
+    <string id="aom_dn_village_woman_child" text="Köy Çocuğu" />
+    <string id="aom_dn_village_woman_teen" text="Köy Genci" />
+    <string id="aom_dn_villager" text="Köylü" />
+    <string id="aom_dn_villager_child" text="Köy Çocuğu" />
+    <string id="aom_dn_villager_teen" text="Köy Genci" />
+    <string id="aom_dn_weaponsmith" text="Silah Ustası" />
+    <string id="aom_dolguldur_lord_1" text="Cesur Dol Guldur kaptanı" />
+    <string id="aom_dolguldur_lord_2" text="Temkinli Dol Guldur kaptanı" />
+    <string id="aom_er_arena" text="Arena Ustası" />
+    <string id="aom_er_armed_trader" text="Erebor Silahlı Tüccarı" />
+    <string id="aom_er_armorer" text="Zırhçı" />
+    <string id="aom_er_barber" text="Berber" />
+    <string id="aom_er_beggar" text="Dilenci" />
+    <string id="aom_er_blacksmith" text="Demirci" />
+    <string id="aom_er_caravan_guard" text="Erebor Kervan Muhafızı" />
+    <string id="aom_er_caravan_master" text="Erebor Kervan Başı" />
+    <string id="aom_er_dancer" text="Dansçı" />
+    <string id="aom_er_female_beggar" text="Dilenci" />
+    <string id="aom_er_gamehost" text="Oyun Sahibi" />
+    <string id="aom_er_gang_bodyguard" text="Çete Korumacısı" />
+    <string id="aom_er_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_er_guard" text="Muhafız" />
+    <string id="aom_er_headman_1" text="Asi cüce muhtar" />
+    <string id="aom_er_headman_2" text="Tutucu cüce muhtar" />
+    <string id="aom_er_headman_3" text="Kurnaz cüce muhtar" />
+    <string id="aom_er_horse_merchant" text="At Taciri" />
+    <string id="aom_er_merchant" text="Tüccar" />
+    <string id="aom_er_musician" text="Müzisyen" />
+    <string id="aom_er_notable_0" text="Temkinli cüce tacir" />
+    <string id="aom_er_notable_0b" text="Cüce şarap üreticisi" />
+    <string id="aom_er_notable_1" text="Acımasız cüce tüccar" />
+    <string id="aom_er_notable_10" text="Alaycı cüce çete lideri" />
+    <string id="aom_er_notable_11" text="Korkutucu cüce tahsildar" />
+    <string id="aom_er_notable_12" text="Kurnaz cüce kaçakçı" />
+    <string id="aom_er_notable_13" text="Tehditkâr cüce çete lideri" />
+    <string id="aom_er_notable_1b" text="Soğuk cüce tacir" />
+    <string id="aom_er_notable_2" text="Cüce mücevher taciri" />
+    <string id="aom_er_notable_21" text="Ters cüce toprak sahibi" />
+    <string id="aom_er_notable_22" text="Uysal cüce ihtiyar" />
+    <string id="aom_er_notable_2b" text="Temkinli cüce cevher taciri" />
+    <string id="aom_er_notable_3" text="Kendi emeğiyle yükselmiş cüce tacir" />
+    <string id="aom_er_notable_3b" text="Şakacı cüce tacir" />
+    <string id="aom_er_notable_4" text="Zeki cüce tacir" />
+    <string id="aom_er_notable_4b" text="Hilekâr cüce tacir" />
+    <string id="aom_er_notable_5" text="Gayretli cüce bilge" />
+    <string id="aom_er_notable_6" text="Sert cüce ihtiyar" />
+    <string id="aom_er_notable_7" text="Cüce gelenek koruyucusu" />
+    <string id="aom_er_notable_8" text="Hırçın cüce demirci" />
+    <string id="aom_er_notable_9" text="Girişken cüce zanaatkâr" />
+    <string id="aom_er_notable_gl1" text="Koruyucu cüce çete lideri" />
+    <string id="aom_er_notable_gl4" text="Vahşi cüce haydut" />
+    <string id="aom_er_practice_1" text="Talim Dövüşçüsü" />
+    <string id="aom_er_practice_2" text="Talim Dövüşçüsü" />
+    <string id="aom_er_practice_3" text="Talim Dövüşçüsü" />
+    <string id="aom_er_practice_dummy" text="Talim Kuklası" />
+    <string id="aom_er_prison_guard" text="Zindan Gardiyanı" />
+    <string id="aom_er_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_er_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_er_tavern_wench" text="Meyhane Hizmetçisi" />
+    <string id="aom_er_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_er_town_child" text="Şehir Çocuğu" />
+    <string id="aom_er_town_teen" text="Şehirli Genç" />
+    <string id="aom_er_townsman" text="Şehirli" />
+    <string id="aom_er_townsman_child" text="Şehirli" />
+    <string id="aom_er_townsman_infant" text="Şehirli" />
+    <string id="aom_er_townsman_teen" text="Şehirli" />
+    <string id="aom_er_townswoman" text="Şehirli Kadın" />
+    <string id="aom_er_townswoman_child" text="Şehirli Kadın" />
+    <string id="aom_er_townswoman_infant" text="Şehirli Kadın" />
+    <string id="aom_er_townswoman_teen" text="Şehirli Kadın" />
+    <string id="aom_er_vet_caravan_guard" text="Erebor Kıdemli Kervan Muhafızı" />
+    <string id="aom_er_village_child" text="Köy Çocuğu" />
+    <string id="aom_er_village_teen" text="Köylü Genç" />
+    <string id="aom_er_village_woman" text="Köylü Kadın" />
+    <string id="aom_er_village_woman_child" text="Köy Çocuğu" />
+    <string id="aom_er_village_woman_teen" text="Köylü Genç" />
+    <string id="aom_er_villager" text="Köylü" />
+    <string id="aom_er_villager_child" text="Köy Çocuğu" />
+    <string id="aom_er_villager_teen" text="Köylü Genç" />
+    <string id="aom_er_weaponsmith" text="Silah Ustası" />
+    <string id="aom_erebor_lord_1" text="Cesur cüce lordu" />
+    <string id="aom_erebor_lord_2" text="Temkinli cüce lordu" />
+    <string id="aom_gb_arena" text="Arena Ustası" />
+    <string id="aom_gb_armed_trader" text="Gundabad Silahlı Tüccarı" />
+    <string id="aom_gb_armorer" text="Zırh Ustası" />
+    <string id="aom_gb_barber" text="Berber" />
+    <string id="aom_gb_beggar" text="Dilenci" />
+    <string id="aom_gb_blacksmith" text="Demirci" />
+    <string id="aom_gb_caravan_guard" text="Gundabad Kervan Muhafızı" />
+    <string id="aom_gb_caravan_master" text="Gundabad Kervan Ustası" />
+    <string id="aom_gb_dancer" text="Dansçı" />
+    <string id="aom_gb_female_beggar" text="Dilenci" />
+    <string id="aom_gb_gamehost" text="Oyun Sahibi" />
+    <string id="aom_gb_gang_bodyguard" text="Çete Korumacısı" />
+    <string id="aom_gb_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_gb_guard" text="Muhafız" />
+    <string id="aom_gb_headman_1" text="Asi Gundabad yüzbaşısı" />
+    <string id="aom_gb_headman_2" text="Tutucu ork ihtiyarı" />
+    <string id="aom_gb_headman_3" text="Sinsi Gundabad muhtarı" />
+    <string id="aom_gb_merchant" text="Tüccar" />
+    <string id="aom_gb_musician" text="Müzisyen" />
+    <string id="aom_gb_notable_0" text="Temkinli solgun ork tacir" />
+    <string id="aom_gb_notable_0b" text="Kurnaz Gundabad pazarlıkçısı" />
+    <string id="aom_gb_notable_1" text="Acımasız ork levazımcı" />
+    <string id="aom_gb_notable_10" text="Hırlayan ork tahsildarı" />
+    <string id="aom_gb_notable_11" text="Ürkütücü solgun ork kabadayısı" />
+    <string id="aom_gb_notable_12" text="Entrikacı ork haraççısı" />
+    <string id="aom_gb_notable_13" text="Tehditkâr Gundabad gırtlak kesicisi" />
+    <string id="aom_gb_notable_1b" text="Soğuk Gundabad levazım subayı" />
+    <string id="aom_gb_notable_2" text="Zeki solgun ork ikmal ustası" />
+    <string id="aom_gb_notable_21" text="Ters solgun ork gözcüsü" />
+    <string id="aom_gb_notable_22" text="Uyumlu Gundabad tarla patronu" />
+    <string id="aom_gb_notable_23" text="Zalim Gundabad köle sürücüsü" />
+    <string id="aom_gb_notable_2b" text="İhtiyatlı Gundabad istifçisi" />
+    <string id="aom_gb_notable_3" text="Kendi emeğiyle yükselmiş ork satıcı" />
+    <string id="aom_gb_notable_3b" text="Neşeli Gundabad seyyar satıcısı" />
+    <string id="aom_gb_notable_4" text="Entrikacı solgun ork vurguncusu" />
+    <string id="aom_gb_notable_4b" text="Sinsi Gundabad tacir" />
+    <string id="aom_gb_notable_5" text="Fanatik Gundabad savaş ozanı" />
+    <string id="aom_gb_notable_6" text="Sert solgun ork angaryacısı" />
+    <string id="aom_gb_notable_7" text="Düşünceli ork gizemcisi" />
+    <string id="aom_gb_notable_8" text="Ters solgun ork demircisi" />
+    <string id="aom_gb_notable_9" text="Girişken Gundabad ocak ustası" />
+    <string id="aom_gb_notable_gl1" text="Koruyucu Gundabad çukur lordu" />
+    <string id="aom_gb_notable_gl4" text="Hayvani Gundabad haydutu" />
+    <string id="aom_gb_practice_1" text="Talim Dövüşçüsü" />
+    <string id="aom_gb_practice_2" text="Talim Dövüşçüsü" />
+    <string id="aom_gb_practice_3" text="Talim Dövüşçüsü" />
+    <string id="aom_gb_practice_dummy" text="Talim Mankeni" />
+    <string id="aom_gb_prison_guard" text="Zindan Gardiyanı" />
+    <string id="aom_gb_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_gb_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_gb_tavern_wench" text="Meyhane Hizmetçisi" />
+    <string id="aom_gb_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_gb_townsman" text="Kasabalı" />
+    <string id="aom_gb_townsman_child" text="Kasabalı" />
+    <string id="aom_gb_townsman_infant" text="Kasabalı" />
+    <string id="aom_gb_townsman_teen" text="Kasabalı" />
+    <string id="aom_gb_townswoman" text="Kasabalı Kadın" />
+    <string id="aom_gb_townswoman_child" text="Kasabalı Kadın" />
+    <string id="aom_gb_townswoman_infant" text="Kasabalı Kadın" />
+    <string id="aom_gb_townswoman_teen" text="Kasabalı Kadın" />
+    <string id="aom_gb_vet_caravan_guard" text="Gundabad Kıdemli Kervan Muhafızı" />
+    <string id="aom_gb_village_woman" text="Köylü Kadın" />
+    <string id="aom_gb_village_woman_child" text="Köy Çocuğu" />
+    <string id="aom_gb_village_woman_teen" text="Köy Genci" />
+    <string id="aom_gb_villager" text="Köle" />
+    <string id="aom_gb_villager_child" text="Köy Çocuğu" />
+    <string id="aom_gb_villager_teen" text="Köy Genci" />
+    <string id="aom_gb_warg_merchant" text="Varg Tüccarı" />
+    <string id="aom_gb_weaponsmith" text="Silah Ustası" />
+    <string id="aom_gd_arena" text="Arena Ustası" />
+    <string id="aom_gd_armed_trader" text="Gondor Silahlı Tüccarı" />
+    <string id="aom_gd_armorer" text="Zırh Ustası" />
+    <string id="aom_gd_barber" text="Berber" />
+    <string id="aom_gd_beggar" text="Dilenci" />
+    <string id="aom_gd_blacksmith" text="Demirci" />
+    <string id="aom_gd_caravan_guard" text="Gondor Kervan Muhafızı" />
+    <string id="aom_gd_caravan_master" text="Gondor Kervan Başı" />
+    <string id="aom_gd_dancer" text="Dansçı" />
+    <string id="aom_gd_female_beggar" text="Dilenci" />
+    <string id="aom_gd_gamehost" text="Oyun Sahibi" />
+    <string id="aom_gd_gang_bodyguard" text="Çete Korumacısı" />
+    <string id="aom_gd_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_gd_guard" text="Muhafız" />
+    <string id="aom_gd_headman_1" text="Asi Gondorlu Muhtar" />
+    <string id="aom_gd_headman_2" text="Muhafazakâr Gondorlu muhtar" />
+    <string id="aom_gd_headman_3" text="Sinsi Gondorlu muhtar" />
+    <string id="aom_gd_horse_merchant" text="At Taciri" />
+    <string id="aom_gd_merchant" text="Tüccar" />
+    <string id="aom_gd_musician" text="Müzisyen" />
+    <string id="aom_gd_notable_0" text="İhtiyatlı Gondorlu tüccar" />
+    <string id="aom_gd_notable_0b" text="Gondorlu şarap üreticisi" />
+    <string id="aom_gd_notable_1" text="Acımasız Gondorlu tüccar" />
+    <string id="aom_gd_notable_10" text="Alaycı Gondorlu haydut" />
+    <string id="aom_gd_notable_11" text="Ürkütücü Gondorlu tahsildar" />
+    <string id="aom_gd_notable_12" text="Kurnaz Gondorlu kaçakçı" />
+    <string id="aom_gd_notable_13" text="Tehditkâr Gondorlu entrikacı" />
+    <string id="aom_gd_notable_1b" text="Soğuk Gondorlu tüccar" />
+    <string id="aom_gd_notable_2" text="Minas Tirith mücevher taciri" />
+    <string id="aom_gd_notable_21" text="Sert Gondorlu toprak sahibi" />
+    <string id="aom_gd_notable_22" text="Hoşsohbet Gondorlu ihtiyar" />
+    <string id="aom_gd_notable_2b" text="Bilge Gondorlu tüccar" />
+    <string id="aom_gd_notable_3" text="Kendi emeğiyle yükselmiş Gondorlu tüccar" />
+    <string id="aom_gd_notable_3b" text="Neşeli Gondorlu tüccar" />
+    <string id="aom_gd_notable_4" text="Zeki Gondorlu tüccar" />
+    <string id="aom_gd_notable_4b" text="Sinsi Gondorlu tüccar" />
+    <string id="aom_gd_notable_5" text="Gayretli Gondorlu bilgi ustası" />
+    <string id="aom_gd_notable_6" text="Sert Gondor lordu" />
+    <string id="aom_gd_notable_7" text="Gondorlu gelenek koruyucusu" />
+    <string id="aom_gd_notable_8" text="Ters Minas Tirithli zanaatkâr" />
+    <string id="aom_gd_notable_9" text="Yetenekli Gondorlu zanaatkâr" />
+    <string id="aom_gd_notable_gl1" text="Koruyucu Gondorlu çete lideri" />
+    <string id="aom_gd_notable_gl4" text="Acımasız Gondorlu kabadayı" />
+    <string id="aom_gd_practice_1" text="Talim Savaşçısı" />
+    <string id="aom_gd_practice_2" text="Talim Savaşçısı" />
+    <string id="aom_gd_practice_3" text="Talim Savaşçısı" />
+    <string id="aom_gd_practice_dummy" text="Talim Kuklası" />
+    <string id="aom_gd_prison_guard" text="Zindan Muhafızı" />
+    <string id="aom_gd_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_gd_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_gd_tavern_wench" text="Meyhane Kızı" />
+    <string id="aom_gd_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_gd_townsman" text="Kasabalı" />
+    <string id="aom_gd_townsman_child" text="Kasabalı" />
+    <string id="aom_gd_townsman_infant" text="Kasabalı" />
+    <string id="aom_gd_townsman_teen" text="Kasabalı" />
+    <string id="aom_gd_townswoman" text="Kasabalı Kadın" />
+    <string id="aom_gd_townswoman_child" text="Kasabalı Kadın" />
+    <string id="aom_gd_townswoman_infant" text="Kasabalı Kadın" />
+    <string id="aom_gd_townswoman_teen" text="Kasabalı Kadın" />
+    <string id="aom_gd_vet_caravan_guard" text="Gondor Kıdemli Kervan Muhafızı" />
+    <string id="aom_gd_village_woman" text="Köylü Kadın" />
+    <string id="aom_gd_village_woman_child" text="Köy Çocuğu" />
+    <string id="aom_gd_village_woman_teen" text="Köy Genci" />
+    <string id="aom_gd_villager" text="Köylü" />
+    <string id="aom_gd_villager_child" text="Köy Çocuğu" />
+    <string id="aom_gd_villager_teen" text="Köy Genci" />
+    <string id="aom_gd_weaponsmith" text="Silah Ustası" />
+    <string id="aom_gob_arena" text="Arena Ustası" />
+    <string id="aom_gob_armed_trader" text="Goblin Silahlı Tüccar" />
+    <string id="aom_gob_armorer" text="Zırh Ustası" />
+    <string id="aom_gob_barber" text="Berber" />
+    <string id="aom_gob_beggar" text="Dilenci" />
+    <string id="aom_gob_blacksmith" text="Demirci" />
+    <string id="aom_gob_caravan_guard" text="Goblin Kervan Muhafızı" />
+    <string id="aom_gob_caravan_master" text="Goblin Kervan Başı" />
+    <string id="aom_gob_dancer" text="Dansçı" />
+    <string id="aom_gob_female_beggar" text="Dilenci" />
+    <string id="aom_gob_gamehost" text="Oyun Sahibi" />
+    <string id="aom_gob_gang_bodyguard" text="Çete Korumacısı" />
+    <string id="aom_gob_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_gob_guard" text="Muhafız" />
+    <string id="aom_gob_headman_1" text="Asi Goblin kaptanı" />
+    <string id="aom_gob_headman_2" text="Tutucu goblin ihtiyarı" />
+    <string id="aom_gob_headman_3" text="Sinsi Goblin muhtarı" />
+    <string id="aom_gob_merchant" text="Tüccar" />
+    <string id="aom_gob_musician" text="Müzisyen" />
+    <string id="aom_gob_notable_0" text="Temkinli goblin tüccarı" />
+    <string id="aom_gob_notable_0b" text="Kurnaz Goblin pazarlıkçısı" />
+    <string id="aom_gob_notable_1" text="Acımasız goblin levazımcısı" />
+    <string id="aom_gob_notable_10" text="Hırlayan goblin tahsildarı" />
+    <string id="aom_gob_notable_11" text="Korkutucu goblin kabadayısı" />
+    <string id="aom_gob_notable_12" text="Entrikacı goblin haraççısı" />
+    <string id="aom_gob_notable_13" text="Tehditkâr Goblin kesici" />
+    <string id="aom_gob_notable_1b" text="Soğuk Goblin levazım subayı" />
+    <string id="aom_gob_notable_2" text="Kurnaz goblin ikmal ustası" />
+    <string id="aom_gob_notable_21" text="Ters goblin gözetmeni" />
+    <string id="aom_gob_notable_22" text="Uysal Goblin saha şefi" />
+    <string id="aom_gob_notable_23" text="Gaddar Goblin köle sürücüsü" />
+    <string id="aom_gob_notable_2b" text="Temkinli Goblin istifçisi" />
+    <string id="aom_gob_notable_3" text="Kendi yağıyla kavrulan goblin tüccarı" />
+    <string id="aom_gob_notable_3b" text="Şen Goblin seyyar satıcısı" />
+    <string id="aom_gob_notable_4" text="Entrikacı goblin vurguncusu" />
+    <string id="aom_gob_notable_4b" text="Sinsi Goblin taciri" />
+    <string id="aom_gob_notable_5" text="Fanatik Goblin savaş ozanı" />
+    <string id="aom_gob_notable_6" text="Sert goblin angaryacısı" />
+    <string id="aom_gob_notable_7" text="Düşünceli goblin mistiği" />
+    <string id="aom_gob_notable_8" text="Ters goblin demircisi" />
+    <string id="aom_gob_notable_9" text="Girişken Goblin ocak ustası" />
+    <string id="aom_gob_notable_gl1" text="Koruyucu Goblin çukur lordu" />
+    <string id="aom_gob_notable_gl4" text="Hayvani Goblin kabadayısı" />
+    <string id="aom_gob_practice_1" text="Talim Dövüşçüsü" />
+    <string id="aom_gob_practice_2" text="Talim Dövüşçüsü" />
+    <string id="aom_gob_practice_3" text="Talim Dövüşçüsü" />
+    <string id="aom_gob_practice_dummy" text="Talim Mankeni" />
+    <string id="aom_gob_prison_guard" text="Zindan Muhafızı" />
+    <string id="aom_gob_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_gob_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_gob_tavern_wench" text="Meyhane Kızı" />
+    <string id="aom_gob_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_gob_townsman" text="Kasabalı" />
+    <string id="aom_gob_townsman_child" text="Kasabalı" />
+    <string id="aom_gob_townsman_infant" text="Kasabalı" />
+    <string id="aom_gob_townsman_teen" text="Kasabalı" />
+    <string id="aom_gob_townswoman" text="Kasabalı Kadın" />
+    <string id="aom_gob_townswoman_child" text="Kasabalı Kadın" />
+    <string id="aom_gob_townswoman_infant" text="Kasabalı Kadın" />
+    <string id="aom_gob_townswoman_teen" text="Kasabalı Kadın" />
+    <string id="aom_gob_vet_caravan_guard" text="Tecrübeli Goblin Kervan Muhafızı" />
+    <string id="aom_gob_village_woman" text="Köy Kadını" />
+    <string id="aom_gob_village_woman_child" text="Köy Çocuğu" />
+    <string id="aom_gob_village_woman_teen" text="Köy Genci" />
+    <string id="aom_gob_villager" text="Köle" />
+    <string id="aom_gob_villager_child" text="Köy Çocuğu" />
+    <string id="aom_gob_villager_teen" text="Köy Genci" />
+    <string id="aom_gob_warg_merchant" text="Varg Taciri" />
+    <string id="aom_gob_weaponsmith" text="Silah Ustası" />
+    <string id="aom_goblin_lord_1" text="Cesur goblin reisi" />
+    <string id="aom_goblin_lord_2" text="Temkinli goblin reisi" />
+    <string id="aom_gondor_lord_1" text="Cesur Gondor lordu" />
+    <string id="aom_gondor_lord_2" text="Temkinli Gondor lordu" />
+    <string id="aom_gundabad_lord_1" text="Cesur Gundabad kaptanı" />
+    <string id="aom_gundabad_lord_2" text="Temkinli Gundabad kaptanı" />
+    <string id="aom_hd_arena" text="Arena Ustası" />
+    <string id="aom_hd_armed_trader" text="Harad Silahlı Tacir" />
+    <string id="aom_hd_armorer" text="Zırh Ustası" />
+    <string id="aom_hd_barber" text="Berber" />
+    <string id="aom_hd_beggar" text="Dilenci" />
+    <string id="aom_hd_blacksmith" text="Demirci" />
+    <string id="aom_hd_caravan_guard" text="Harad Kervan Muhafızı" />
+    <string id="aom_hd_caravan_master" text="Harad Kervan Başı" />
+    <string id="aom_hd_dancer" text="Dansçı" />
+    <string id="aom_hd_female_beggar" text="Dilenci" />
+    <string id="aom_hd_gamehost" text="Oyun Sahibi" />
+    <string id="aom_hd_gang_bodyguard" text="Çete Korumasi" />
+    <string id="aom_hd_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_hd_guard" text="Muhafız" />
+    <string id="aom_hd_headman_1" text="Gururlu Haradrim muhtarı" />
+    <string id="aom_hd_headman_2" text="Tutucu çöl muhtarı" />
+    <string id="aom_hd_headman_3" text="Kurnaz Haradrim muhtarı" />
+    <string id="aom_hd_horse_merchant" text="At Taciri" />
+    <string id="aom_hd_merchant" text="Tacir" />
+    <string id="aom_hd_musician" text="Müzisyen" />
+    <string id="aom_hd_notable_0" text="Zeki çöl taciri" />
+    <string id="aom_hd_notable_0b" text="Haradrim baharat satıcısı" />
+    <string id="aom_hd_notable_1" text="Kurnaz Haradrim tüccarı" />
+    <string id="aom_hd_notable_10" text="Acımasız Haradrim kaçakçısı" />
+    <string id="aom_hd_notable_11" text="Ürkütücü çöl tahsildarı" />
+    <string id="aom_hd_notable_12" text="Kurnaz Haradrim çalıntı malcısı" />
+    <string id="aom_hd_notable_13" text="Tehditkâr Haradrim çete lideri" />
+    <string id="aom_hd_notable_1b" text="Soğuk bakışlı Haradrim taciri" />
+    <string id="aom_hd_notable_2" text="Haradrim ipek tüccarı" />
+    <string id="aom_hd_notable_21" text="Yıpranmış vaha toprak sahibi" />
+    <string id="aom_hd_notable_22" text="Uzlaşmacı Haradrim ihtiyarı" />
+    <string id="aom_hd_notable_2b" text="Temkinli Haradrim mücevher taciri" />
+    <string id="aom_hd_notable_3" text="Kendi emeğiyle yükselmiş Haradrim tüccarı" />
+    <string id="aom_hd_notable_3b" text="Neşeli çöl tüccarı" />
+    <string id="aom_hd_notable_4" text="Kurnaz Haradrim kervan başı" />
+    <string id="aom_hd_notable_4b" text="Hilekâr Haradrim tüccarı" />
+    <string id="aom_hd_notable_5" text="Azılı güneş rahibi" />
+    <string id="aom_hd_notable_6" text="Sert bakışlı Haradrim ihtiyarı" />
+    <string id="aom_hd_notable_7" text="Çöl geleneklerinin koruyucusu" />
+    <string id="aom_hd_notable_8" text="Usta Haradrim madeni işçisi" />
+    <string id="aom_hd_notable_9" text="Yaratıcı Haradrim zanaatkârı" />
+    <string id="aom_hd_notable_gl1" text="Koruyucu Haradrim çete reisi" />
+    <string id="aom_hd_notable_gl4" text="Hayvani Haradrim kabadayısı" />
+    <string id="aom_hd_practice_1" text="Talim Dövüşçüsü" />
+    <string id="aom_hd_practice_2" text="Talim Dövüşçüsü" />
+    <string id="aom_hd_practice_3" text="Talim Dövüşçüsü" />
+    <string id="aom_hd_practice_dummy" text="Talim Mankeni" />
+    <string id="aom_hd_prison_guard" text="Zindan Muhafızı" />
+    <string id="aom_hd_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_hd_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_hd_tavern_wench" text="Meyhane Kızı" />
+    <string id="aom_hd_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_hd_townsman" text="Kasabalı" />
+    <string id="aom_hd_townsman_child" text="Kasabalı" />
+    <string id="aom_hd_townsman_infant" text="Kasabalı" />
+    <string id="aom_hd_townsman_teen" text="Kasabalı" />
+    <string id="aom_hd_townswoman" text="Kasabalı Kadın" />
+    <string id="aom_hd_townswoman_child" text="Kasabalı Kadın" />
+    <string id="aom_hd_townswoman_infant" text="Kasabalı Kadın" />
+    <string id="aom_hd_townswoman_teen" text="Kasabalı Kadın" />
+    <string id="aom_hd_vet_caravan_guard" text="Harad Kıdemli Kervan Muhafızı" />
+    <string id="aom_hd_village_woman" text="Köylü Kadın" />
+    <string id="aom_hd_villager" text="Köylü" />
+    <string id="aom_hd_villager_f_child" text="Köy Çocuğu" />
+    <string id="aom_hd_villager_f_teen" text="Köy Genci" />
+    <string id="aom_hd_villager_m_child" text="Köy Çocuğu" />
+    <string id="aom_hd_villager_m_teen" text="Köy Genci" />
+    <string id="aom_hd_weaponsmith" text="Silah Ustası" />
+    <string id="aom_ig_arena" text="Arena Ustası" />
+    <string id="aom_ig_armed_trader" text="Isengard Silahlı Tüccarı" />
+    <string id="aom_ig_armorer" text="Zırh Ustası" />
+    <string id="aom_ig_barber" text="Berber" />
+    <string id="aom_ig_beggar" text="Dilenci" />
+    <string id="aom_ig_blacksmith" text="Demirci" />
+    <string id="aom_ig_caravan_guard" text="Isengard Kervan Muhafızı" />
+    <string id="aom_ig_caravan_master" text="Isengard Kervan Başı" />
+    <string id="aom_ig_dancer" text="Dansçı" />
+    <string id="aom_ig_female_beggar" text="Dilenci" />
+    <string id="aom_ig_gamehost" text="Oyun Sahibi" />
+    <string id="aom_ig_gang_bodyguard" text="Çete Korumasi" />
+    <string id="aom_ig_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_ig_guard" text="Muhafız" />
+    <string id="aom_ig_headman_1" text="Asi Uruk çukur kaptanı" />
+    <string id="aom_ig_headman_2" text="Tutucu Uruk ihtiyarı" />
+    <string id="aom_ig_headman_3" text="Sinsi Uruk muhtarı" />
+    <string id="aom_ig_merchant" text="Tüccar" />
+    <string id="aom_ig_musician" text="Müzisyen" />
+    <string id="aom_ig_notable_0" text="Temkinli Uruk tüccarı" />
+    <string id="aom_ig_notable_0b" text="Kurnaz Uruk gözetmeni" />
+    <string id="aom_ig_notable_1" text="Acımasız Uruk levazımcısı" />
+    <string id="aom_ig_notable_10" text="Alaycı Uruk haraççısı" />
+    <string id="aom_ig_notable_11" text="Korkutucu Uruk zorbası" />
+    <string id="aom_ig_notable_12" text="Entrikacı Isengard haydutu" />
+    <string id="aom_ig_notable_13" text="Tehditkâr Uruk cani" />
+    <string id="aom_ig_notable_1b" text="Soğuk Uruk levazım subayı" />
+    <string id="aom_ig_notable_2" text="Zeki Uruk ikmal başı" />
+    <string id="aom_ig_notable_21" text="Ters Uruk gözetmeni" />
+    <string id="aom_ig_notable_22" text="Uyumlu Uruk saha kaptanı" />
+    <string id="aom_ig_notable_23" text="Sert Uruk talim ustası" />
+    <string id="aom_ig_notable_2b" text="İhtiyatlı Isengard stokçusu" />
+    <string id="aom_ig_notable_3" text="Kendi emeğiyle yükselmiş Uruk satıcısı" />
+    <string id="aom_ig_notable_3b" text="Neşeli Uruk seyyar satıcısı" />
+    <string id="aom_ig_notable_4" text="Entrikacı Uruk istifçisi" />
+    <string id="aom_ig_notable_4b" text="Sinsi Uruk vurguncusu" />
+    <string id="aom_ig_notable_5" text="Fanatik Uruk savaş ozanı" />
+    <string id="aom_ig_notable_6" text="Sert Uruk angaryacısı" />
+    <string id="aom_ig_notable_7" text="Düşünceli Uruk gizemcisi" />
+    <string id="aom_ig_notable_8" text="Ters Uruk demircisi" />
+    <string id="aom_ig_notable_9" text="Girişken Uruk ocak ustası" />
+    <string id="aom_ig_notable_gl1" text="Kollayıcı Uruk çukur patronu" />
+    <string id="aom_ig_notable_gl10" text="Gaddar Uruk derebeyi" />
+    <string id="aom_ig_notable_gl11" text="Hesapçı Uruk stratejisti" />
+    <string id="aom_ig_notable_gl12" text="Demir yumruklu Uruk yüzbaşı" />
+    <string id="aom_ig_notable_gl4" text="Hayvani Uruk kabadayı" />
+    <string id="aom_ig_notable_gl5" text="Gaddar Uruk köle tüccarı" />
+    <string id="aom_ig_notable_gl6" text="Sadist Uruk gözetmen" />
+    <string id="aom_ig_notable_gl7" text="Soğukkanlı Uruk teğmen" />
+    <string id="aom_ig_notable_gl8" text="Acımasız Uruk çukur ustası" />
+    <string id="aom_ig_notable_gl9" text="Kurnaz Uruk savaş ağası" />
+    <string id="aom_ig_practice_1" text="Antrenman Dövüşçüsü" />
+    <string id="aom_ig_practice_2" text="Antrenman Dövüşçüsü" />
+    <string id="aom_ig_practice_3" text="Antrenman Dövüşçüsü" />
+    <string id="aom_ig_practice_dummy" text="Antrenman Mankeni" />
+    <string id="aom_ig_prison_guard" text="Zindan Muhafızı" />
+    <string id="aom_ig_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_ig_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_ig_tavern_wench" text="Meyhane Kızı" />
+    <string id="aom_ig_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_ig_townsman" text="Şehirli" />
+    <string id="aom_ig_townsman_child" text="Şehirli" />
+    <string id="aom_ig_townsman_infant" text="Şehirli" />
+    <string id="aom_ig_townsman_teen" text="Şehirli" />
+    <string id="aom_ig_townswoman" text="Şehirli Kadın" />
+    <string id="aom_ig_townswoman_child" text="Şehirli Kadın" />
+    <string id="aom_ig_townswoman_infant" text="Şehirli Kadın" />
+    <string id="aom_ig_townswoman_teen" text="Şehirli Kadın" />
+    <string id="aom_ig_vet_caravan_guard" text="Isengard Veteran Kervan Muhafızı" />
+    <string id="aom_ig_village_woman" text="Köylü Kadın" />
+    <string id="aom_ig_villager" text="Köylü" />
+    <string id="aom_ig_villager_f_child" text="Köy Çocuğu" />
+    <string id="aom_ig_villager_f_teen" text="Köy Genci" />
+    <string id="aom_ig_villager_m_child" text="Köy Çocuğu" />
+    <string id="aom_ig_villager_m_teen" text="Köy Genci" />
+    <string id="aom_ig_warg_merchant" text="Warg Tüccarı" />
+    <string id="aom_ig_weaponsmith" text="Silah Ustası" />
+    <string id="aom_isengard_lord_1" text="Cesur Uruk-hai yüzbaşı" />
+    <string id="aom_isengard_lord_2" text="Temkinli Uruk-hai yüzbaşı" />
+    <string id="aom_kh_arena" text="Arena Ustası" />
+    <string id="aom_kh_armed_trader" text="Khand Silahlı Tüccarı" />
+    <string id="aom_kh_armorer" text="Zırh Ustası" />
+    <string id="aom_kh_barber" text="Berber" />
+    <string id="aom_kh_beggar" text="Dilenci" />
+    <string id="aom_kh_blacksmith" text="Demirci" />
+    <string id="aom_kh_caravan_guard" text="Khand Kervan Muhafızı" />
+    <string id="aom_kh_caravan_master" text="Khand Kervan Başı" />
+    <string id="aom_kh_dancer" text="Dansçı" />
+    <string id="aom_kh_edu_1" text="Khand Genci" />
+    <string id="aom_kh_edu_2" text="Khand Genci" />
+    <string id="aom_kh_edu_3" text="Khand Genci" />
+    <string id="aom_kh_edu_4" text="Khand Genci" />
+    <string id="aom_kh_edu_5" text="Khand Genci" />
+    <string id="aom_kh_edu_6" text="Khand Genci" />
+    <string id="aom_kh_female_beggar" text="Dilenci" />
+    <string id="aom_kh_gamehost" text="Oyun Sahibi" />
+    <string id="aom_kh_gang_bodyguard" text="Çete Korumasi" />
+    <string id="aom_kh_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_kh_guard" text="Muhafız" />
+    <string id="aom_kh_headman_1" text="Gururlu Variag muhtarı" />
+    <string id="aom_kh_headman_2" text="Tutucu Khand muhtarı" />
+    <string id="aom_kh_headman_3" text="Kurnaz Variag muhtarı" />
+    <string id="aom_kh_horse_merchant" text="At Taciri" />
+    <string id="aom_kh_merchant" text="Tüccar" />
+    <string id="aom_kh_musician" text="Müzisyen" />
+    <string id="aom_kh_notable_0" text="Açıkgöz Variag taciri" />
+    <string id="aom_kh_notable_0b" text="Cesur Khand tüccarı" />
+    <string id="aom_kh_notable_1" text="Acımasız Variag baharat taciri" />
+    <string id="aom_kh_notable_10" text="Alaycı Khand haydudu" />
+    <string id="aom_kh_notable_11" text="Korkutucu Variag tahsildarı" />
+    <string id="aom_kh_notable_12" text="Kurnaz Variag kaçakçısı" />
+    <string id="aom_kh_notable_13" text="Tehditkâr Khand entrikacısı" />
+    <string id="aom_kh_notable_1b" text="Soğuk Khand tüccarı" />
+    <string id="aom_kh_notable_2" text="Khand mücevher taciri" />
+    <string id="aom_kh_notable_21" text="Yıpranmış Khand toprak sahibi" />
+    <string id="aom_kh_notable_22" text="Uysal Variag ihtiyarı" />
+    <string id="aom_kh_notable_2b" text="Bilge Variag tüccarı" />
+    <string id="aom_kh_notable_3" text="Kendi emeğiyle yükselmiş Khand tüccarı" />
+    <string id="aom_kh_notable_3b" text="Neşeli Variag tüccarı" />
+    <string id="aom_kh_notable_4" text="Kurnaz Variag tüccarı" />
+    <string id="aom_kh_notable_4b" text="Sinsi Khand tüccarı" />
+    <string id="aom_kh_notable_5" text="Azgın Variag savaş rahibi" />
+    <string id="aom_kh_notable_6" text="Sert Khand ihtiyarı" />
+    <string id="aom_kh_notable_7" text="Khand ayin bekçisi" />
+    <string id="aom_kh_notable_8" text="Usta Khand metal işçisi" />
+    <string id="aom_kh_notable_9" text="Yetenekli Variag zanaatkâr" />
+    <string id="aom_kh_notable_gl1" text="Acımasız Variag kaçakçı" />
+    <string id="aom_kh_notable_gl4" text="Acımasız Khand haydudu" />
+    <string id="aom_kh_practice_1" text="Talim Dövüşçüsü" />
+    <string id="aom_kh_practice_2" text="Talim Dövüşçüsü" />
+    <string id="aom_kh_practice_3" text="Talim Dövüşçüsü" />
+    <string id="aom_kh_practice_dummy" text="Talim Mankeni" />
+    <string id="aom_kh_prison_guard" text="Zindan Muhafızı" />
+    <string id="aom_kh_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_kh_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_kh_tavern_wench" text="Meyhane Hizmetçisi" />
+    <string id="aom_kh_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_kh_townsman" text="Kasabalı" />
+    <string id="aom_kh_townsman_child" text="Kasabalı" />
+    <string id="aom_kh_townsman_infant" text="Kasabalı" />
+    <string id="aom_kh_townsman_teen" text="Kasabalı" />
+    <string id="aom_kh_townswoman" text="Kasabalı Kadın" />
+    <string id="aom_kh_townswoman_child" text="Kasabalı Kadın" />
+    <string id="aom_kh_townswoman_infant" text="Kasabalı Kadın" />
+    <string id="aom_kh_townswoman_teen" text="Kasabalı Kadın" />
+    <string id="aom_kh_vet_caravan_guard" text="Khand Kıdemli Kervan Muhafızı" />
+    <string id="aom_kh_village_woman" text="Köylü Kadın" />
+    <string id="aom_kh_village_woman_child" text="Köy Çocuğu" />
+    <string id="aom_kh_village_woman_teen" text="Köy Delikanlısı" />
+    <string id="aom_kh_villager" text="Köylü" />
+    <string id="aom_kh_villager_child" text="Köy Çocuğu" />
+    <string id="aom_kh_villager_teen" text="Köy Delikanlısı" />
+    <string id="aom_kh_weaponsmith" text="Silah Ustası" />
+    <string id="aom_lindon_lord_1" text="Mithlond'un cesur elf lordu" />
+    <string id="aom_lindon_lord_2" text="Mithlond'un ihtiyatlı elf lordu" />
+    <string id="aom_ln_armed_trader" text="Lindon Silahlı Tüccarı" />
+    <string id="aom_ln_caravan_guard" text="Lindon Kervan Muhafızı" />
+    <string id="aom_ln_caravan_master" text="Lindon Kervan Başı" />
+    <string id="aom_ln_vet_caravan_guard" text="Lindon Kıdemli Kervan Muhafızı" />
+    <string id="aom_lothlorien_lord_1" text="Lothlórien'in cesur elf lordu" />
+    <string id="aom_lothlorien_lord_2" text="Lothlórien'in ihtiyatlı elf lordu" />
+    <string id="aom_lt_headman_1" text="Asi Lórien muhtarı" />
+    <string id="aom_lt_headman_2" text="Tutucu Lórien muhtarı" />
+    <string id="aom_lt_headman_3" text="Kurnaz Lórien muhtarı" />
+    <string id="aom_lt_notable_0" text="Temkinli Altın Orman tüccarı" />
+    <string id="aom_lt_notable_0b" text="Galadhrim şarapçısı" />
+    <string id="aom_lt_notable_1" text="Kurnaz Lórien ipek taciri" />
+    <string id="aom_lt_notable_10" text="Alaycı Lórien sınır muhafızı" />
+    <string id="aom_lt_notable_11" text="Korkutucu Galadhrim zorbası" />
+    <string id="aom_lt_notable_12" text="Kurnaz Lórien gölge izcisi" />
+    <string id="aom_lt_notable_13" text="Tehditkâr Galadhrim zorbası" />
+    <string id="aom_lt_notable_1b" text="Soğuk elf tüccar" />
+    <string id="aom_lt_notable_2" text="Galadhrim mücevher taciri" />
+    <string id="aom_lt_notable_21" text="Hırçın Lórien toprak muhafızı" />
+    <string id="aom_lt_notable_22" text="Uzlaşmacı Lórien büyüğü" />
+    <string id="aom_lt_notable_2b" text="Temkinli Lórien şifalı ot taciri" />
+    <string id="aom_lt_notable_3" text="Kendi emeğiyle yükselmiş Lórien taciri" />
+    <string id="aom_lt_notable_3b" text="Şakacı Galadhrim tüccarı" />
+    <string id="aom_lt_notable_4" text="Kurnaz Altın Orman levazımcısı" />
+    <string id="aom_lt_notable_4b" text="Sinsi elf tüccar" />
+    <string id="aom_lt_notable_5" text="Caras Galadhon'un bilge elfi" />
+    <string id="aom_lt_notable_6" text="Sert Lórien bilgi koruyucusu" />
+    <string id="aom_lt_notable_7" text="Mallorn korularının bekçisi" />
+    <string id="aom_lt_notable_8" text="Hırçın Galadhrim yay ustası" />
+    <string id="aom_lt_notable_9" text="Mallorn zanaatkârı" />
+    <string id="aom_lt_notable_gl1" text="Koruyucu Galadhrim muhafızı" />
+    <string id="aom_lt_notable_gl4" text="Acımasız Lórien nöbetçisi" />
+    <string id="aom_lt_practice_dummy" text="Talim Kuklası" />
+    <string id="aom_mirkwood_lord_1" text="Cesur Karanlık Orman elf lordu" />
+    <string id="aom_mirkwood_lord_2" text="Temkinli Karanlık Orman elf lordu" />
+    <string id="aom_mistymountainorcs_lord_1" text="Cesur Sisli Dağlar kaptanı" />
+    <string id="aom_mistymountainorcs_lord_2" text="Temkinli Sisli Dağlar kaptanı" />
+    <string id="aom_mk_arena" text="Arena Ustası" />
+    <string id="aom_mk_armed_trader" text="Karanlık Orman Silahlı Tüccarı" />
+    <string id="aom_mk_armorer" text="Zırh Ustası" />
+    <string id="aom_mk_barber" text="Berber" />
+    <string id="aom_mk_beggar" text="Dilenci" />
+    <string id="aom_mk_blacksmith" text="Demirci" />
+    <string id="aom_mk_caravan_guard" text="Karanlık Orman Kervan Muhafızı" />
+    <string id="aom_mk_caravan_master" text="Karanlık Orman Kervan Başı" />
+    <string id="aom_mk_dancer" text="Dansçı" />
+    <string id="aom_mk_female_beggar" text="Dilenci" />
+    <string id="aom_mk_gamehost" text="Oyun Sahibi" />
+    <string id="aom_mk_gang_bodyguard" text="Çete Korumasi" />
+    <string id="aom_mk_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_mk_guard" text="Muhafız" />
+    <string id="aom_mk_headman_1" text="Asi orman muhtarı" />
+    <string id="aom_mk_headman_2" text="Muhafazakâr silvan muhtarı" />
+    <string id="aom_mk_headman_3" text="Sinsi orman muhtarı" />
+    <string id="aom_mk_horse_merchant" text="At Taciri" />
+    <string id="aom_mk_merchant" text="Tüccar" />
+    <string id="aom_mk_musician" text="Müzisyen" />
+    <string id="aom_mk_notable_0" text="Temkinli orman taciri" />
+    <string id="aom_mk_notable_0b" text="Silvan şarap üreticisi" />
+    <string id="aom_mk_notable_1" text="Sert orman taciri" />
+    <string id="aom_mk_notable_10" text="Alaycı orman haydudu" />
+    <string id="aom_mk_notable_11" text="Ürkütücü orman tahsildarı" />
+    <string id="aom_mk_notable_12" text="Kurnaz orman kaçakçısı" />
+    <string id="aom_mk_notable_13" text="Tehditkâr orman entrikacısı" />
+    <string id="aom_mk_notable_1b" text="Mesafeli silvan taciri" />
+    <string id="aom_mk_notable_2" text="Orman şifalı bitki satıcısı" />
+    <string id="aom_mk_notable_21" text="Sert orman toprak sahibi" />
+    <string id="aom_mk_notable_22" text="Uzlaşmacı silvan ihtiyarı" />
+    <string id="aom_mk_notable_2b" text="Bilge silvan taciri" />
+    <string id="aom_mk_notable_3" text="Kendi emeğiyle yükselmiş orman taciri" />
+    <string id="aom_mk_notable_3b" text="Neşeli orman taciri" />
+    <string id="aom_mk_notable_4" text="Zeki orman taciri" />
+    <string id="aom_mk_notable_4b" text="Sinsi silvan taciri" />
+    <string id="aom_mk_notable_5" text="Gayretli orman bilgini" />
+    <string id="aom_mk_notable_6" text="Sert silvan ihtiyarı" />
+    <string id="aom_mk_notable_7" text="Orman gelenekleri koruyucusu" />
+    <string id="aom_mk_notable_8" text="Huysuz orman zanaatkârı" />
+    <string id="aom_mk_notable_9" text="Yetenekli orman ustası" />
+    <string id="aom_mk_notable_gl1" text="Koruyucu orman elebaşısı" />
+    <string id="aom_mk_notable_gl4" text="Acımasız silvan sürgünü" />
+    <string id="aom_mk_practice_1" text="Talim Dövüşçüsü" />
+    <string id="aom_mk_practice_2" text="Talim Dövüşçüsü" />
+    <string id="aom_mk_practice_3" text="Talim Dövüşçüsü" />
+    <string id="aom_mk_practice_dummy" text="Talim Mankeni" />
+    <string id="aom_mk_prison_guard" text="Zindan Muhafızı" />
+    <string id="aom_mk_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_mk_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_mk_tavern_wench" text="Meyhane Kızı" />
+    <string id="aom_mk_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_mk_townsman" text="Kasabalı" />
+    <string id="aom_mk_townsman_child" text="Kasabalı" />
+    <string id="aom_mk_townsman_infant" text="Kasabalı" />
+    <string id="aom_mk_townsman_teen" text="Kasabalı" />
+    <string id="aom_mk_townswoman" text="Kasabalı Kadın" />
+    <string id="aom_mk_townswoman_child" text="Kasabalı Kadın" />
+    <string id="aom_mk_townswoman_infant" text="Kasabalı Kadın" />
+    <string id="aom_mk_townswoman_teen" text="Kasabalı Kadın" />
+    <string id="aom_mk_vet_caravan_guard" text="Karanlık Orman Kıdemli Kervan Muhafızı" />
+    <string id="aom_mk_village_woman" text="Köylü Kadın" />
+    <string id="aom_mk_village_woman_child" text="Köy Çocuğu" />
+    <string id="aom_mk_village_woman_teen" text="Köy Genci" />
+    <string id="aom_mk_villager" text="Köylü" />
+    <string id="aom_mk_villager_child" text="Köy Çocuğu" />
+    <string id="aom_mk_villager_teen" text="Köy Genci" />
+    <string id="aom_mk_weaponsmith" text="Silah Ustası" />
+    <string id="aom_mmo_arena" text="Arena Ustası" />
+    <string id="aom_mmo_armed_trader" text="Silahlı Ork Tüccar" />
+    <string id="aom_mmo_armorer" text="Zırh Ustası" />
+    <string id="aom_mmo_barber" text="Berber" />
+    <string id="aom_mmo_beggar" text="Dilenci" />
+    <string id="aom_mmo_blacksmith" text="Demirci" />
+    <string id="aom_mmo_caravan_guard" text="Ork Kervan Muhafızı" />
+    <string id="aom_mmo_caravan_master" text="Ork Kervan Başı" />
+    <string id="aom_mmo_dancer" text="Dansçı" />
+    <string id="aom_mmo_female_beggar" text="Dilenci" />
+    <string id="aom_mmo_gamehost" text="Oyun Sahibi" />
+    <string id="aom_mmo_gang_bodyguard" text="Çete Korumasi" />
+    <string id="aom_mmo_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_mmo_guard" text="Muhafız" />
+    <string id="aom_mmo_headman_1" text="Asi Ork kaptanı" />
+    <string id="aom_mmo_headman_2" text="Tutucu ork ihtiyarı" />
+    <string id="aom_mmo_headman_3" text="Sinsi Ork muhtarı" />
+    <string id="aom_mmo_merchant" text="Tüccar" />
+    <string id="aom_mmo_musician" text="Müzisyen" />
+    <string id="aom_mmo_notable_0" text="Temkinli ork tüccar" />
+    <string id="aom_mmo_notable_0b" text="Kurnaz Ork pazarlıkçı" />
+    <string id="aom_mmo_notable_1" text="Acımasız ork levazımcı" />
+    <string id="aom_mmo_notable_10" text="Hırlayan ork tahsildar" />
+    <string id="aom_mmo_notable_11" text="Korkutucu ork kabadayı" />
+    <string id="aom_mmo_notable_12" text="Entrikacı ork haraççı" />
+    <string id="aom_mmo_notable_13" text="Tehditkâr Ork katil" />
+    <string id="aom_mmo_notable_1b" text="Soğuk Ork levazımcı" />
+    <string id="aom_mmo_notable_2" text="Kurnaz ork ikmal ustası" />
+    <string id="aom_mmo_notable_21" text="Ters ork gözetmen" />
+    <string id="aom_mmo_notable_22" text="Uysal Ork saha şefi" />
+    <string id="aom_mmo_notable_23" text="Gaddar Ork köle sürücüsü" />
+    <string id="aom_mmo_notable_2b" text="Temkinli Ork istifçi" />
+    <string id="aom_mmo_notable_3" text="Kendi yolunu açmış ork tüccar" />
+    <string id="aom_mmo_notable_3b" text="Şen Ork seyyar satıcı" />
+    <string id="aom_mmo_notable_4" text="Entrikacı ork vurguncu" />
+    <string id="aom_mmo_notable_4b" text="Sinsi Ork tacir" />
+    <string id="aom_mmo_notable_5" text="Fanatik Ork savaş ozanı" />
+    <string id="aom_mmo_notable_6" text="Sert ork angaryacı" />
+    <string id="aom_mmo_notable_7" text="Somurtkan ork mistik" />
+    <string id="aom_mmo_notable_8" text="Ters ork demirci" />
+    <string id="aom_mmo_notable_9" text="Girişken Ork ocak ustası" />
+    <string id="aom_mmo_notable_gl1" text="Koruyucu Ork çukur lordu" />
+    <string id="aom_mmo_notable_gl4" text="Hayvani Ork kabadayı" />
+    <string id="aom_mmo_practice_1" text="Talim Dövüşçüsü" />
+    <string id="aom_mmo_practice_2" text="Talim Dövüşçüsü" />
+    <string id="aom_mmo_practice_3" text="Talim Dövüşçüsü" />
+    <string id="aom_mmo_practice_dummy" text="Talim Kuklası" />
+    <string id="aom_mmo_prison_guard" text="Zindan Gardiyanı" />
+    <string id="aom_mmo_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_mmo_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_mmo_tavern_wench" text="Meyhane Kızı" />
+    <string id="aom_mmo_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_mmo_townsman" text="Kasabalı" />
+    <string id="aom_mmo_townsman_child" text="Kasabalı" />
+    <string id="aom_mmo_townsman_infant" text="Kasabalı" />
+    <string id="aom_mmo_townsman_teen" text="Kasabalı" />
+    <string id="aom_mmo_townswoman" text="Kasabalı Kadın" />
+    <string id="aom_mmo_townswoman_child" text="Kasabalı Kadın" />
+    <string id="aom_mmo_townswoman_infant" text="Kasabalı Kadın" />
+    <string id="aom_mmo_townswoman_teen" text="Kasabalı Kadın" />
+    <string id="aom_mmo_vet_caravan_guard" text="Kıdemli Ork Kervan Muhafızı" />
+    <string id="aom_mmo_village_woman" text="Köylü Kadın" />
+    <string id="aom_mmo_village_woman_child" text="Köy Çocuğu" />
+    <string id="aom_mmo_village_woman_teen" text="Köylü Genç" />
+    <string id="aom_mmo_villager" text="Köle" />
+    <string id="aom_mmo_villager_child" text="Köy Çocuğu" />
+    <string id="aom_mmo_villager_teen" text="Köy Delikanlısı" />
+    <string id="aom_mmo_warg_merchant" text="Varg Tüccarı" />
+    <string id="aom_mmo_weaponsmith" text="Silah Ustası" />
+    <string id="aom_mordor_lord_1" text="Cesur Mordor kaptanı" />
+    <string id="aom_mordor_lord_2" text="Temkinli Mordor kaptanı" />
+    <string id="aom_mr_arena" text="Arena Ustası" />
+    <string id="aom_mr_armed_trader" text="Mordor Silahlı Tüccarı" />
+    <string id="aom_mr_armorer" text="Zırh Ustası" />
+    <string id="aom_mr_barber" text="Berber" />
+    <string id="aom_mr_beggar" text="Dilenci" />
+    <string id="aom_mr_blacksmith" text="Demirci" />
+    <string id="aom_mr_caravan_guard" text="Mordor Kervan Muhafızı" />
+    <string id="aom_mr_caravan_master" text="Mordor Kervan Başı" />
+    <string id="aom_mr_dancer" text="Dansçı" />
+    <string id="aom_mr_female_beggar" text="Dilenci" />
+    <string id="aom_mr_gamehost" text="Oyun Sahibi" />
+    <string id="aom_mr_gang_bodyguard" text="Çete Korumasi" />
+    <string id="aom_mr_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_mr_guard" text="Muhafız" />
+    <string id="aom_mr_headman_1" text="Asi Mordor muhtarı" />
+    <string id="aom_mr_headman_2" text="Tutucu Mordor muhtarı" />
+    <string id="aom_mr_headman_3" text="Sinsi Mordor muhtarı" />
+    <string id="aom_mr_merchant" text="Tüccar" />
+    <string id="aom_mr_musician" text="Müzisyen" />
+    <string id="aom_mr_notable_0" text="Kurnaz Mordor köle tüccarı" />
+    <string id="aom_mr_notable_0b" text="Mordor çukur levazımcısı" />
+    <string id="aom_mr_notable_1" text="Acımasız Mordor silah tüccarı" />
+    <string id="aom_mr_notable_10" text="Mordor çukur patronu" />
+    <string id="aom_mr_notable_11" text="Korkutucu Mordor angaryacısı" />
+    <string id="aom_mr_notable_12" text="Kurnaz Mordor kaçakçısı" />
+    <string id="aom_mr_notable_13" text="Tehditkâr Mordor savaş ağası" />
+    <string id="aom_mr_notable_1b" text="Soğuk bakışlı Mordor taciri" />
+    <string id="aom_mr_notable_2" text="Mordor cevher tüccarı" />
+    <string id="aom_mr_notable_21" text="Ters Mordor kamp lideri" />
+    <string id="aom_mr_notable_22" text="Tetikte Mordor ihtiyarı" />
+    <string id="aom_mr_notable_23" text="Kara düşünceli Mordor yağmacısı" />
+    <string id="aom_mr_notable_2b" text="Temkinli Mordor ikmal koşucusu" />
+    <string id="aom_mr_notable_3" text="Kendi emeğiyle yükselmiş Mordor taciri" />
+    <string id="aom_mr_notable_3b" text="Entrikacı Mordor tüccarı" />
+    <string id="aom_mr_notable_4" text="Kurnaz Mordor levazımcısı" />
+    <string id="aom_mr_notable_4b" text="Sinsi Mordor karaborsacısı" />
+    <string id="aom_mr_notable_5" text="Kara Lord'un habercisi" />
+    <string id="aom_mr_notable_6" text="Sert Mordor savaş rahibi" />
+    <string id="aom_mr_notable_7" text="Karanlık ayinlerin koruyucusu" />
+    <string id="aom_mr_notable_8" text="Hırçın Mordor çukur gözetmeni" />
+    <string id="aom_mr_notable_9" text="Mordor demirhane ustası" />
+    <string id="aom_mr_notable_gl1" text="Kara Lord'un infazcısı" />
+    <string id="aom_mr_notable_gl4" text="Hayvani Mordor haydutu" />
+    <string id="aom_mr_practice_1" text="Talim Dövüşçüsü" />
+    <string id="aom_mr_practice_2" text="Talim Dövüşçüsü" />
+    <string id="aom_mr_practice_3" text="Talim Dövüşçüsü" />
+    <string id="aom_mr_practice_dummy" text="Talim Kuklası" />
+    <string id="aom_mr_prison_guard" text="Zindan Gardiyanı" />
+    <string id="aom_mr_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_mr_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_mr_tavern_wench" text="Meyhane Hizmetçisi" />
+    <string id="aom_mr_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_mr_townsman" text="Kasabalı" />
+    <string id="aom_mr_townsman_child" text="Kasabalı" />
+    <string id="aom_mr_townsman_infant" text="Kasabalı" />
+    <string id="aom_mr_townsman_teen" text="Kasabalı" />
+    <string id="aom_mr_townswoman" text="Kasabalı Kadın" />
+    <string id="aom_mr_townswoman_child" text="Kasabalı Kadın" />
+    <string id="aom_mr_townswoman_infant" text="Kasabalı Kadın" />
+    <string id="aom_mr_townswoman_teen" text="Kasabalı Kadın" />
+    <string id="aom_mr_vet_caravan_guard" text="Mordor Kıdemli Kervan Muhafızı" />
+    <string id="aom_mr_village_woman" text="Köylü Kadın" />
+    <string id="aom_mr_village_woman_child" text="Köy Çocuğu" />
+    <string id="aom_mr_village_woman_teen" text="Köy Genci" />
+    <string id="aom_mr_villager" text="Köle" />
+    <string id="aom_mr_villager_child" text="Köy Çocuğu" />
+    <string id="aom_mr_villager_teen" text="Köy Genci" />
+    <string id="aom_mr_warg_merchant" text="Varg Tüccarı" />
+    <string id="aom_mr_weaponsmith" text="Silah Ustası" />
+    <string id="aom_rh_arena" text="Arena Ustası" />
+    <string id="aom_rh_armed_trader" text="Rhûn Silahlı Tüccarı" />
+    <string id="aom_rh_armorer" text="Zırh Ustası" />
+    <string id="aom_rh_barber" text="Berber" />
+    <string id="aom_rh_beggar" text="Dilenci" />
+    <string id="aom_rh_blacksmith" text="Demirci" />
+    <string id="aom_rh_caravan_guard" text="Rhûn Kervan Muhafızı" />
+    <string id="aom_rh_caravan_master" text="Rhûn Kervan Başı" />
+    <string id="aom_rh_dancer" text="Dansçı" />
+    <string id="aom_rh_female_beggar" text="Dilenci" />
+    <string id="aom_rh_gamehost" text="Oyun Sahibi" />
+    <string id="aom_rh_gang_bodyguard" text="Çete Korumacısı" />
+    <string id="aom_rh_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_rh_guard" text="Muhafız" />
+    <string id="aom_rh_headman_1" text="Cesur Doğulu muhtar" />
+    <string id="aom_rh_headman_2" text="Tutucu bozkır muhtarı" />
+    <string id="aom_rh_headman_3" text="Sinsi Doğulu muhtar" />
+    <string id="aom_rh_horse_merchant" text="At Taciri" />
+    <string id="aom_rh_merchant" text="Tüccar" />
+    <string id="aom_rh_musician" text="Müzisyen" />
+    <string id="aom_rh_notable_0" text="Kurnaz doğulu tüccar" />
+    <string id="aom_rh_notable_0b" text="Doğulu şarap taciri" />
+    <string id="aom_rh_notable_1" text="Gururlu Doğulu tüccar" />
+    <string id="aom_rh_notable_10" text="Acımasız Doğulu kaçakçı" />
+    <string id="aom_rh_notable_11" text="Korkutucu bozkır tahsildarı" />
+    <string id="aom_rh_notable_12" text="Kurnaz Doğulu çalıntı malcısı" />
+    <string id="aom_rh_notable_13" text="Tehditkâr Doğulu çete lideri" />
+    <string id="aom_rh_notable_1b" text="Soğuk Doğulu tüccar" />
+    <string id="aom_rh_notable_2" text="Doğulu kürk taciri" />
+    <string id="aom_rh_notable_21" text="Yıpranmış bozkır toprak sahibi" />
+    <string id="aom_rh_notable_22" text="Uzlaşmacı Doğulu ihtiyar" />
+    <string id="aom_rh_notable_2b" text="Temkinli Doğulu cevher taciri" />
+    <string id="aom_rh_notable_3" text="Kendi emeğiyle yükselmiş Doğulu tüccar" />
+    <string id="aom_rh_notable_3b" text="Neşeli bozkır tüccarı" />
+    <string id="aom_rh_notable_4" text="Zeki Doğulu kervan başı" />
+    <string id="aom_rh_notable_4b" text="Sinsi Doğulu tüccar" />
+    <string id="aom_rh_notable_5" text="Mistik bozkır şamanı" />
+    <string id="aom_rh_notable_6" text="Sert Doğulu ihtiyar" />
+    <string id="aom_rh_notable_7" text="Doğu geleneklerinin koruyucusu" />
+    <string id="aom_rh_notable_8" text="Usta Doğulu demirci" />
+    <string id="aom_rh_notable_9" text="Yaratıcı Doğulu zanaatkâr" />
+    <string id="aom_rh_notable_gl1" text="Azgın Doğulu elebaşı" />
+    <string id="aom_rh_notable_gl4" text="Vahşi Doğulu haydut" />
+    <string id="aom_rh_practice_1" text="Talim Dövüşçüsü" />
+    <string id="aom_rh_practice_2" text="Talim Savaşçısı" />
+    <string id="aom_rh_practice_3" text="Talim Savaşçısı" />
+    <string id="aom_rh_practice_dummy" text="Talim Mankeni" />
+    <string id="aom_rh_prison_guard" text="Zindan Gardiyanı" />
+    <string id="aom_rh_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_rh_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_rh_tavern_wench" text="Meyhane Kızı" />
+    <string id="aom_rh_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_rh_townsman" text="Kasabalı" />
+    <string id="aom_rh_townsman_child" text="Kasabalı" />
+    <string id="aom_rh_townsman_infant" text="Kasabalı" />
+    <string id="aom_rh_townsman_teen" text="Kasabalı" />
+    <string id="aom_rh_townswoman" text="Kasabalı Kadın" />
+    <string id="aom_rh_townswoman_child" text="Kasabalı Kadın" />
+    <string id="aom_rh_townswoman_infant" text="Kasabalı Kadın" />
+    <string id="aom_rh_townswoman_teen" text="Kasabalı Kadın" />
+    <string id="aom_rh_vet_caravan_guard" text="Rhûn Kıdemli Kervan Muhafızı" />
+    <string id="aom_rh_village_woman" text="Köylü Kadın" />
+    <string id="aom_rh_villager" text="Köylü" />
+    <string id="aom_rh_villager_f_child" text="Köy Çocuğu" />
+    <string id="aom_rh_villager_f_teen" text="Köy Genci" />
+    <string id="aom_rh_villager_m_child" text="Köy Çocuğu" />
+    <string id="aom_rh_villager_m_teen" text="Köy Genci" />
+    <string id="aom_rh_weaponsmith" text="Silah Ustası" />
+    <string id="aom_rivendell_lord_1" text="Imladris'in cesur elf lordu" />
+    <string id="aom_rivendell_lord_2" text="Imladris'in ihtiyatlı elf lordu" />
+    <string id="aom_roh_armed_trader" text="Silahlı Tüccar" />
+    <string id="aom_roh_armorer" text="Zırh Ustası" />
+    <string id="aom_roh_barber" text="Berber" />
+    <string id="aom_roh_beggar" text="Dilenci" />
+    <string id="aom_roh_blacksmith" text="Demirci" />
+    <string id="aom_roh_caravan_guard" text="Kervan Muhafızı" />
+    <string id="aom_roh_caravan_master" text="Kervan Başı" />
+    <string id="aom_roh_female_beggar" text="Dilenci" />
+    <string id="aom_roh_female_dancer" text="Dansçı" />
+    <string id="aom_roh_gangleader_bg" text="Korumacı" />
+    <string id="aom_roh_gear_dummy" text="Teçhizat Mankeni" />
+    <string id="aom_roh_gear_practice_dummy" text="Teçhizatlı Talim Mankeni" />
+    <string id="aom_roh_guard" text="Muhafız" />
+    <string id="aom_roh_headman_1" text="Sebatkâr Rohanlı muhtar" />
+    <string id="aom_roh_headman_2" text="Temkinli Riddermark muhtarı" />
+    <string id="aom_roh_headman_3" text="Kurnaz at-efendisi muhtar" />
+    <string id="aom_roh_horse_merchant" text="At Taciri" />
+    <string id="aom_roh_merchant" text="Tüccar" />
+    <string id="aom_roh_musician" text="Müzisyen" />
+    <string id="aom_roh_notable_0" text="Temkinli Riddermark taciri" />
+    <string id="aom_roh_notable_0b" text="Rohirrik şarapçı" />
+    <string id="aom_roh_notable_1" text="Gururlu at-efendisi tüccar" />
+    <string id="aom_roh_notable_10" text="Alaycı Rohirrik çete reisi" />
+    <string id="aom_roh_notable_11" text="Gaddar Riddermark zorbası" />
+    <string id="aom_roh_notable_12" text="Sinsi Rohirrik kaçakçı" />
+    <string id="aom_roh_notable_13" text="Tehditkâr Riddermark çete lideri" />
+    <string id="aom_roh_notable_1b" text="Soğuk Rohirrik satıcı" />
+    <string id="aom_roh_notable_2" text="Sessiz Riddermark erzakçısı" />
+    <string id="aom_roh_notable_21" text="Yıpranmış Rohirrik toprak sahibi" />
+    <string id="aom_roh_notable_22" text="Saygın Riddermark ihtiyarı" />
+    <string id="aom_roh_notable_2b" text="Temkinli Rohirrik tahıl taciri" />
+    <string id="aom_roh_notable_3" text="Kendi emeğiyle yükselmiş Rohirrik tüccar" />
+    <string id="aom_roh_notable_3b" text="Şen Riddermark tüccarı" />
+    <string id="aom_roh_notable_4" text="Açıkgöz Rohirrik tacir" />
+    <string id="aom_roh_notable_4b" text="Hilekâr at-efendisi tüccar" />
+    <string id="aom_roh_notable_5" text="Dindar Rohirrik ihtiyar" />
+    <string id="aom_roh_notable_6" text="Sert Riddermark bilgesi" />
+    <string id="aom_roh_notable_7" text="Rohirrik geleneklerin koruyucusu" />
+    <string id="aom_roh_notable_8" text="Usta Rohirrik demirci" />
+    <string id="aom_roh_notable_9" text="Yetenekli Riddermark zanaatkârı" />
+    <string id="aom_roh_notable_gl1" text="Cüretkâr Riddermark elebaşı" />
+    <string id="aom_roh_notable_gl4" text="Vahşi at-efendisi haydut" />
+    <string id="aom_roh_prison_guard" text="Zindan Gardiyanı" />
+    <string id="aom_roh_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_roh_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_roh_tavern_wench" text="Meyhane Hizmetçisi" />
+    <string id="aom_roh_taverngamehost" text="Meyhane Oyun Sahibi" />
+    <string id="aom_roh_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_roh_tournament_master" text="Turnuva Ustası" />
+    <string id="aom_roh_townsman" text="Kasabalı" />
+    <string id="aom_roh_townsman_child" text="Kasabalı" />
+    <string id="aom_roh_townsman_infant" text="Kasabalı" />
+    <string id="aom_roh_townsman_teen" text="Kasabalı" />
+    <string id="aom_roh_townswoman" text="Kasabalı Kadın" />
+    <string id="aom_roh_townswoman_child" text="Kasabalı Kadın" />
+    <string id="aom_roh_townswoman_infant" text="Kasabalı Kadın" />
+    <string id="aom_roh_townswoman_teen" text="Kasabalı Kadın" />
+    <string id="aom_roh_vet_caravan_guard" text="Kıdemli Kervan Muhafızı" />
+    <string id="aom_roh_village_woman" text="Köylü Kadın" />
+    <string id="aom_roh_village_woman_child" text="Köylü Kız" />
+    <string id="aom_roh_village_woman_teen" text="Köylü Kız" />
+    <string id="aom_roh_villager" text="Köylü" />
+    <string id="aom_roh_villager_child" text="Köylü" />
+    <string id="aom_roh_villager_teen" text="Köylü" />
+    <string id="aom_roh_weaponsmith" text="Silah Ustası" />
+    <string id="aom_roh_wpractice_1" text="Silah Talim Kuklası Aşama 1" />
+    <string id="aom_roh_wpractice_2" text="Silah Talim Kuklası Aşama 2" />
+    <string id="aom_roh_wpractice_3" text="Silah Talim Kuklası Aşama 3" />
+    <string id="aom_rv_arena" text="Arena Ustası" />
+    <string id="aom_rv_armed_trader" text="Ayrıkvadi Silahlı Tüccarı" />
+    <string id="aom_rv_armorer" text="Zırh Ustası" />
+    <string id="aom_rv_barber" text="Berber" />
+    <string id="aom_rv_beggar" text="Dilenci" />
+    <string id="aom_rv_blacksmith" text="Demirci" />
+    <string id="aom_rv_caravan_guard" text="Ayrıkvadi Kervan Muhafızı" />
+    <string id="aom_rv_caravan_master" text="Ayrıkvadi Kervan Başı" />
+    <string id="aom_rv_dancer" text="Dansçı" />
+    <string id="aom_rv_female_beggar" text="Dilenci" />
+    <string id="aom_rv_gamehost" text="Oyun Sahibi" />
+    <string id="aom_rv_gang_bodyguard" text="Çete Korumacısı" />
+    <string id="aom_rv_gear_dummy" text="Teçhizat Kuklası" />
+    <string id="aom_rv_guard" text="Muhafız" />
+    <string id="aom_rv_headman_1" text="Asi elf muhtar" />
+    <string id="aom_rv_headman_2" text="Tutucu elf muhtar" />
+    <string id="aom_rv_headman_3" text="Sinsi elf muhtar" />
+    <string id="aom_rv_horse_merchant" text="At Taciri" />
+    <string id="aom_rv_merchant" text="Tüccar" />
+    <string id="aom_rv_musician" text="Müzisyen" />
+    <string id="aom_rv_notable_0" text="Temkinli elf tüccar" />
+    <string id="aom_rv_notable_0b" text="Elf şarap üreticisi" />
+    <string id="aom_rv_notable_1" text="Sert elf tüccar" />
+    <string id="aom_rv_notable_10" text="Alaycı elf haydut" />
+    <string id="aom_rv_notable_11" text="Ürkütücü elf tahsildar" />
+    <string id="aom_rv_notable_12" text="Kurnaz elf kaçakçı" />
+    <string id="aom_rv_notable_13" text="Tehditkâr elf entrikacı" />
+    <string id="aom_rv_notable_1b" text="Mesafeli elf tüccar" />
+    <string id="aom_rv_notable_2" text="Elf mücevher taciri" />
+    <string id="aom_rv_notable_21" text="Sert elf toprak sahibi" />
+    <string id="aom_rv_notable_22" text="Uyumlu elf ihtiyar" />
+    <string id="aom_rv_notable_2b" text="Bilge elf tüccar" />
+    <string id="aom_rv_notable_3" text="Kendi emeğiyle yükselmiş elf tüccar" />
+    <string id="aom_rv_notable_3b" text="Ticaretin elf bilgini" />
+    <string id="aom_rv_notable_4" text="Kurnaz elf tüccar" />
+    <string id="aom_rv_notable_4b" text="Hilekâr elf tüccar" />
+    <string id="aom_rv_notable_5" text="Gayretli elf bilgini" />
+    <string id="aom_rv_notable_6" text="Sert elf ihtiyar" />
+    <string id="aom_rv_notable_7" text="Geleneklerin elf koruyucusu" />
+    <string id="aom_rv_notable_8" text="Titiz elf demirci" />
+    <string id="aom_rv_notable_9" text="Yetenekli elf zanaatkâr" />
+    <string id="aom_rv_notable_gl1" text="Koruyucu elf çete lideri" />
+    <string id="aom_rv_notable_gl4" text="Acımasız elf sürgün" />
+    <string id="aom_rv_practice_1" text="Antrenman Dövüşçüsü" />
+    <string id="aom_rv_practice_2" text="Antrenman Dövüşçüsü" />
+    <string id="aom_rv_practice_3" text="Antrenman Dövüşçüsü" />
+    <string id="aom_rv_practice_dummy" text="Antrenman Mankeni" />
+    <string id="aom_rv_prison_guard" text="Zindan Muhafızı" />
+    <string id="aom_rv_ransom_broker" text="Fidye Simsarı" />
+    <string id="aom_rv_shop_worker" text="Dükkân Çalışanı" />
+    <string id="aom_rv_tavern_wench" text="Meyhane Hizmetçisi" />
+    <string id="aom_rv_tavernkeeper" text="Meyhaneci" />
+    <string id="aom_rv_town_child" text="Şehir Çocuğu" />
+    <string id="aom_rv_town_teen" text="Şehirli Genç" />
+    <string id="aom_rv_townsman" text="Şehirli" />
+    <string id="aom_rv_townsman_child" text="Şehirli" />
+    <string id="aom_rv_townsman_infant" text="Şehirli" />
+    <string id="aom_rv_townsman_teen" text="Şehirli" />
+    <string id="aom_rv_townswoman" text="Şehirli Kadın" />
+    <string id="aom_rv_townswoman_child" text="Şehirli Kadın" />
+    <string id="aom_rv_townswoman_infant" text="Şehirli Kadın" />
+    <string id="aom_rv_townswoman_teen" text="Şehirli Kadın" />
+    <string id="aom_rv_vet_caravan_guard" text="Ayrıkvadi Veteran Kervan Muhafızı" />
+    <string id="aom_rv_village_child" text="Köy Çocuğu" />
+    <string id="aom_rv_village_teen" text="Köylü Genç" />
+    <string id="aom_rv_village_woman" text="Köylü Kadın" />
+    <string id="aom_rv_village_woman_child" text="Köy Çocuğu" />
+    <string id="aom_rv_village_woman_teen" text="Köy Genci" />
+    <string id="aom_rv_villager" text="Köylü" />
+    <string id="aom_rv_villager_child" text="Köy Çocuğu" />
+    <string id="aom_rv_villager_teen" text="Köy Genci" />
+    <string id="aom_rv_weaponsmith" text="Silah Ustası" />
+    <string id="aom_shaghana_lord_1" text="Cesur Shaghana reisi" />
+    <string id="aom_shaghana_lord_2" text="Temkinli Shaghana reisi" />
+    <string id="aom_spc_wanderer_ab_0_name" text="{FIRSTNAME} Phaxar-dal" />
+    <string id="aom_spc_wanderer_ab_1_name" text="{FIRSTNAME} Hoshed-van" />
+    <string id="aom_spc_wanderer_ab_2_name" text="{FIRSTNAME} Vasnar-tal" />
+    <string id="aom_spc_wanderer_ab_3_name" text="{FIRSTNAME} Goraze-shan" />
+    <string id="aom_spc_wanderer_ab_4_name" text="{FIRSTNAME} Azadaf-ren" />
+    <string id="aom_spc_wanderer_ab_5_name" text="{FIRSTNAME} Artash-mir" />
+    <string id="aom_spc_wanderer_ab_6_name" text="{FIRSTNAME} Ardach-ven" />
+    <string id="aom_spc_wanderer_ab_7_name" text="{FIRSTNAME} Tirdah-lan" />
+    <string id="aom_spc_wanderer_ab_8_name" text="{FIRSTNAME} Phaxim-dur" />
+    <string id="aom_spc_wanderer_ab_9_name" text="{FIRSTNAME} Vashan-kir" />
+    <string id="aom_spc_wanderer_bluecraig_0_name" text="{FIRSTNAME} Kemikçiğneyen" />
+    <string id="aom_spc_wanderer_bluecraig_1_name" text="{FIRSTNAME} Kafatasıyaran" />
+    <string id="aom_spc_wanderer_bluecraig_2_name" text="{FIRSTNAME} Kandişi" />
+    <string id="aom_spc_wanderer_bluecraig_3_name" text="{FIRSTNAME} Demiryara" />
+    <string id="aom_spc_wanderer_bluecraig_4_name" text="{FIRSTNAME} Öfkepençe" />
+    <string id="aom_spc_wanderer_bluecraig_5_name" text="{FIRSTNAME} Etyırtan" />
+    <string id="aom_spc_wanderer_bluecraig_6_name" text="{FIRSTNAME} Gölgesinsen" />
+    <string id="aom_spc_wanderer_bluecraig_7_name" text="{FIRSTNAME} Kıyametdamgalı" />
+    <string id="aom_spc_wanderer_bluecraig_8_name" text="{FIRSTNAME} Kanbakire" />
+    <string id="aom_spc_wanderer_bluecraig_9_name" text="{FIRSTNAME} Zalimkılıç" />
+    <string id="aom_spc_wanderer_dolguldur_0_name" text="{FIRSTNAME} Ghashnak" />
+    <string id="aom_spc_wanderer_dolguldur_1_name" text="{FIRSTNAME} Krimgul" />
+    <string id="aom_spc_wanderer_dolguldur_2_name" text="{FIRSTNAME} Durbatuk" />
+    <string id="aom_spc_wanderer_dolguldur_3_name" text="{FIRSTNAME} Nazgash" />
+    <string id="aom_spc_wanderer_dolguldur_4_name" text="{FIRSTNAME} Grimbarg" />
+    <string id="aom_spc_wanderer_dolguldur_5_name" text="{FIRSTNAME} Sharkul" />
+    <string id="aom_spc_wanderer_dolguldur_6_name" text="{FIRSTNAME} Azgoth" />
+    <string id="aom_spc_wanderer_dolguldur_7_name" text="{FIRSTNAME} Lugdush" />
+    <string id="aom_spc_wanderer_dolguldur_8_name" text="{FIRSTNAME} Krimpash" />
+    <string id="aom_spc_wanderer_dolguldur_9_name" text="{FIRSTNAME} Gorbag" />
+    <string id="aom_spc_wanderer_dunland_0_name" text="{FIRSTNAME} Breghorn" />
+    <string id="aom_spc_wanderer_dunland_1_name" text="{FIRSTNAME} Cerdic" />
+    <string id="aom_spc_wanderer_dunland_2_name" text="{FIRSTNAME} Dunhere" />
+    <string id="aom_spc_wanderer_dunland_3_name" text="{FIRSTNAME} Wulfgar" />
+    <string id="aom_spc_wanderer_dunland_4_name" text="{FIRSTNAME} Eorlund" />
+    <string id="aom_spc_wanderer_dunland_5_name" text="{FIRSTNAME} Grimbold" />
+    <string id="aom_spc_wanderer_dunland_6_name" text="{FIRSTNAME} Haldred" />
+    <string id="aom_spc_wanderer_dunland_7_name" text="{FIRSTNAME} Brychan" />
+    <string id="aom_spc_wanderer_dunland_8_name" text="{FIRSTNAME} Morcar" />
+    <string id="aom_spc_wanderer_dunland_9_name" text="{FIRSTNAME} Thuringwethil" />
+    <string id="aom_spc_wanderer_erebor_0_name" text="{FIRSTNAME} Bit Barukkhaz" />
+    <string id="aom_spc_wanderer_erebor_10_name" text="{FIRSTNAME} Bit Norin" />
+    <string id="aom_spc_wanderer_erebor_11_name" text="{FIRSTNAME} Bit Kár" />
+    <string id="aom_spc_wanderer_erebor_1_name" text="{FIRSTNAME} Bit Durakûn" />
+    <string id="aom_spc_wanderer_erebor_2_name" text="{FIRSTNAME} Bit Gamilzar" />
+    <string id="aom_spc_wanderer_erebor_3_name" text="{FIRSTNAME} Bit Buzrûn" />
+    <string id="aom_spc_wanderer_erebor_4_name" text="{FIRSTNAME} Bit Tharin" />
+    <string id="aom_spc_wanderer_erebor_5_name" text="{FIRSTNAME} Bit Barin" />
+    <string id="aom_spc_wanderer_erebor_6_name" text="{FIRSTNAME} Bit Argan" />
+    <string id="aom_spc_wanderer_erebor_7_name" text="{FIRSTNAME} Bit Gór" />
+    <string id="aom_spc_wanderer_erebor_8_name" text="{FIRSTNAME} Bit Lóin" />
+    <string id="aom_spc_wanderer_erebor_9_name" text="{FIRSTNAME} Bit Garin" />
+    <string id="aom_spc_wanderer_goblin_0_name" text="{FIRSTNAME} Kemikçiğneyen" />
+    <string id="aom_spc_wanderer_goblin_1_name" text="{FIRSTNAME} Kafatasıyaran" />
+    <string id="aom_spc_wanderer_goblin_2_name" text="{FIRSTNAME} Kandişi" />
+    <string id="aom_spc_wanderer_goblin_3_name" text="{FIRSTNAME} Demiryara" />
+    <string id="aom_spc_wanderer_goblin_4_name" text="{FIRSTNAME} Öfkepençe" />
+    <string id="aom_spc_wanderer_goblin_5_name" text="{FIRSTNAME} Etyırtan" />
+    <string id="aom_spc_wanderer_goblin_6_name" text="{FIRSTNAME} Gölgesinsi" />
+    <string id="aom_spc_wanderer_goblin_7_name" text="{FIRSTNAME} Kıyametdamgalı" />
+    <string id="aom_spc_wanderer_goblin_8_name" text="{FIRSTNAME} Kanlıbakire" />
+    <string id="aom_spc_wanderer_goblin_9_name" text="{FIRSTNAME} Zalimkılıç" />
+    <string id="aom_spc_wanderer_gondor_0_name" text="{FIRSTNAME} Calendorionath" />
+    <string id="aom_spc_wanderer_gondor_10_name" text="{FIRSTNAME} Morvegilionath" />
+    <string id="aom_spc_wanderer_gondor_11_name" text="{FIRSTNAME} Arandurionath" />
+    <string id="aom_spc_wanderer_gondor_12_name" text="{FIRSTNAME} Telemarionath" />
+    <string id="aom_spc_wanderer_gondor_1_name" text="{FIRSTNAME} Minastirionath" />
+    <string id="aom_spc_wanderer_gondor_2_name" text="{FIRSTNAME} Erelionath" />
+    <string id="aom_spc_wanderer_gondor_3_name" text="{FIRSTNAME} Morthalionath" />
+    <string id="aom_spc_wanderer_gondor_4_name" text="{FIRSTNAME} Dolmarionath" />
+    <string id="aom_spc_wanderer_gondor_5_name" text="{FIRSTNAME} Tarcilionath" />
+    <string id="aom_spc_wanderer_gondor_6_name" text="{FIRSTNAME} Laurethionath" />
+    <string id="aom_spc_wanderer_gondor_7_name" text="{FIRSTNAME} Pelargirionath" />
+    <string id="aom_spc_wanderer_gondor_8_name" text="{FIRSTNAME} Forostirionath" />
+    <string id="aom_spc_wanderer_gondor_9_name" text="{FIRSTNAME} Valandilionath" />
+    <string id="aom_spc_wanderer_gundabad_0_name" text="{FIRSTNAME} Kemikçiğneyen" />
+    <string id="aom_spc_wanderer_gundabad_1_name" text="{FIRSTNAME} Kafatasıyaran" />
+    <string id="aom_spc_wanderer_gundabad_2_name" text="{FIRSTNAME} Kandişi" />
+    <string id="aom_spc_wanderer_gundabad_3_name" text="{FIRSTNAME} Demiryara" />
+    <string id="aom_spc_wanderer_gundabad_4_name" text="{FIRSTNAME} Öfkepençe" />
+    <string id="aom_spc_wanderer_gundabad_5_name" text="{FIRSTNAME} Etyırtan" />
+    <string id="aom_spc_wanderer_gundabad_6_name" text="{FIRSTNAME} Gölgesinsi" />
+    <string id="aom_spc_wanderer_gundabad_7_name" text="{FIRSTNAME} Kıyametdamgalı" />
+    <string id="aom_spc_wanderer_gundabad_8_name" text="{FIRSTNAME} Kanlıbakire" />
+    <string id="aom_spc_wanderer_gundabad_9_name" text="{FIRSTNAME} Zalimkılıç" />
+    <string id="aom_spc_wanderer_harad_0_name" text="{FIRSTNAME} el-Haruşan" />
+    <string id="aom_spc_wanderer_harad_1_name" text="{FIRSTNAME} ibn Hamul" />
+    <string id="aom_spc_wanderer_harad_2_name" text="{FIRSTNAME} el-Sutek" />
+    <string id="aom_spc_wanderer_harad_3_name" text="{FIRSTNAME} ibn Maruşan" />
+    <string id="aom_spc_wanderer_harad_4_name" text="{FIRSTNAME} el-Fahran" />
+    <string id="aom_spc_wanderer_harad_5_name" text="{FIRSTNAME} ibn Zarkeş" />
+    <string id="aom_spc_wanderer_harad_6_name" text="{FIRSTNAME} el-Raşadin" />
+    <string id="aom_spc_wanderer_harad_7_name" text="{FIRSTNAME} ibn Suladan" />
+    <string id="aom_spc_wanderer_harad_8_name" text="{FIRSTNAME} el-Mahtar" />
+    <string id="aom_spc_wanderer_harad_9_name" text="{FIRSTNAME} ibn Tarakan" />
+    <string id="aom_spc_wanderer_isengard_0_name" text="{FIRSTNAME} Vrakhul" />
+    <string id="aom_spc_wanderer_isengard_1_name" text="{FIRSTNAME} Argaş" />
+    <string id="aom_spc_wanderer_isengard_2_name" text="{FIRSTNAME} Druzgak" />
+    <string id="aom_spc_wanderer_isengard_3_name" text="{FIRSTNAME} Grakhûrz" />
+    <string id="aom_spc_wanderer_isengard_4_name" text="{FIRSTNAME} Thrûmag" />
+    <string id="aom_spc_wanderer_isengard_5_name" text="{FIRSTNAME} Skarnûk" />
+    <string id="aom_spc_wanderer_isengard_6_name" text="{FIRSTNAME} Brûzhak" />
+    <string id="aom_spc_wanderer_isengard_7_name" text="{FIRSTNAME} Krûldaş" />
+    <string id="aom_spc_wanderer_isengard_8_name" text="{FIRSTNAME} Urzmak" />
+    <string id="aom_spc_wanderer_isengard_9_name" text="{FIRSTNAME} Gorhûl" />
+    <string id="aom_spc_wanderer_lindon_0_name" text="{FIRSTNAME} Erestelionath" />
+    <string id="aom_spc_wanderer_lindon_1_name" text="{FIRSTNAME} Calenglorionath" />
+    <string id="aom_spc_wanderer_lindon_2_name" text="{FIRSTNAME} Noldorionath" />
+    <string id="aom_spc_wanderer_lindon_3_name" text="{FIRSTNAME} Lindonionath" />
+    <string id="aom_spc_wanderer_lindon_4_name" text="{FIRSTNAME} Aranwionath" />
+    <string id="aom_spc_wanderer_lindon_5_name" text="{FIRSTNAME} Celebrindionath" />
+    <string id="aom_spc_wanderer_lindon_6_name" text="{FIRSTNAME} Ithilionath" />
+    <string id="aom_spc_wanderer_lindon_7_name" text="{FIRSTNAME} Gildorionath" />
+    <string id="aom_spc_wanderer_lindon_8_name" text="{FIRSTNAME} Peredhilionath" />
+    <string id="aom_spc_wanderer_lindon_9_name" text="{FIRSTNAME} Earendilionath" />
+    <string id="aom_spc_wanderer_lothlorien_0_name" text="{FIRSTNAME} Carasionath" />
+    <string id="aom_spc_wanderer_lothlorien_1_name" text="{FIRSTNAME} Nimrothionath" />
+    <string id="aom_spc_wanderer_lothlorien_2_name" text="{FIRSTNAME} Mallorionath" />
+    <string id="aom_spc_wanderer_lothlorien_3_name" text="{FIRSTNAME} Amrothionath" />
+    <string id="aom_spc_wanderer_lothlorien_4_name" text="{FIRSTNAME} Celebornionath" />
+    <string id="aom_spc_wanderer_lothlorien_5_name" text="{FIRSTNAME} Galadhrionath" />
+    <string id="aom_spc_wanderer_lothlorien_6_name" text="{FIRSTNAME} Nimlodelionath" />
+    <string id="aom_spc_wanderer_lothlorien_7_name" text="{FIRSTNAME} Cerinionath" />
+    <string id="aom_spc_wanderer_lothlorien_8_name" text="{FIRSTNAME} Haldhirionath" />
+    <string id="aom_spc_wanderer_lothlorien_9_name" text="{FIRSTNAME} Oropherionath" />
+    <string id="aom_spc_wanderer_mirkwood_0_name" text="{FIRSTNAME} Tawarionath" />
+    <string id="aom_spc_wanderer_mirkwood_1_name" text="{FIRSTNAME} Galadhelionath" />
+    <string id="aom_spc_wanderer_mirkwood_2_name" text="{FIRSTNAME} Lasgalionath" />
+    <string id="aom_spc_wanderer_mirkwood_3_name" text="{FIRSTNAME} Thranduilionath" />
+    <string id="aom_spc_wanderer_mirkwood_4_name" text="{FIRSTNAME} Legolionath" />
+    <string id="aom_spc_wanderer_mirkwood_5_name" text="{FIRSTNAME} Mornelionath" />
+    <string id="aom_spc_wanderer_mirkwood_6_name" text="{FIRSTNAME} Falasgalionath" />
+    <string id="aom_spc_wanderer_mirkwood_7_name" text="{FIRSTNAME} Celebionath" />
+    <string id="aom_spc_wanderer_mirkwood_8_name" text="{FIRSTNAME} Aranionath" />
+    <string id="aom_spc_wanderer_mirkwood_9_name" text="{FIRSTNAME} Brethilionath" />
+    <string id="aom_spc_wanderer_mistymountainorcs_0_name" text="{FIRSTNAME} Kemikçiğneyen" />
+    <string id="aom_spc_wanderer_mistymountainorcs_1_name" text="{FIRSTNAME} Kafatasıyaran" />
+    <string id="aom_spc_wanderer_mistymountainorcs_2_name" text="{FIRSTNAME} Kandişi" />
+    <string id="aom_spc_wanderer_mistymountainorcs_3_name" text="{FIRSTNAME} Demiryara" />
+    <string id="aom_spc_wanderer_mistymountainorcs_4_name" text="{FIRSTNAME} Öfkepençe" />
+    <string id="aom_spc_wanderer_mistymountainorcs_5_name" text="{FIRSTNAME} Etyırtan" />
+    <string id="aom_spc_wanderer_mistymountainorcs_6_name" text="{FIRSTNAME} Gölgesinsi" />
+    <string id="aom_spc_wanderer_mistymountainorcs_7_name" text="{FIRSTNAME} Kıyametdamgalı" />
+    <string id="aom_spc_wanderer_mistymountainorcs_8_name" text="{FIRSTNAME} Kanlıbakire" />
+    <string id="aom_spc_wanderer_mistymountainorcs_9_name" text="{FIRSTNAME} Zalimnamlu" />
+    <string id="aom_spc_wanderer_mordor_0_name" text="{FIRSTNAME} Dûrzakh" />
+    <string id="aom_spc_wanderer_mordor_10_name" text="{FIRSTNAME} Rûkdar" />
+    <string id="aom_spc_wanderer_mordor_11_name" text="{FIRSTNAME} Mornûk" />
+    <string id="aom_spc_wanderer_mordor_12_name" text="{FIRSTNAME} Skarnûl" />
+    <string id="aom_spc_wanderer_mordor_13_name" text="{FIRSTNAME} Zaghûl" />
+    <string id="aom_spc_wanderer_mordor_14_name" text="{FIRSTNAME} Dûmrad" />
+    <string id="aom_spc_wanderer_mordor_1_name" text="{FIRSTNAME} Morgûlkin" />
+    <string id="aom_spc_wanderer_mordor_2_name" text="{FIRSTNAME} Aşrakul" />
+    <string id="aom_spc_wanderer_mordor_3_name" text="{FIRSTNAME} Krûlmar" />
+    <string id="aom_spc_wanderer_mordor_4_name" text="{FIRSTNAME} Gorthak" />
+    <string id="aom_spc_wanderer_mordor_5_name" text="{FIRSTNAME} Şagrûk" />
+    <string id="aom_spc_wanderer_mordor_6_name" text="{FIRSTNAME} Uzgoth" />
+    <string id="aom_spc_wanderer_mordor_7_name" text="{FIRSTNAME} Dûmphêl" />
+    <string id="aom_spc_wanderer_mordor_8_name" text="{FIRSTNAME} Azaridêth" />
+    <string id="aom_spc_wanderer_mordor_9_name" text="{FIRSTNAME} Nazgarth" />
+    <string id="aom_spc_wanderer_rhun_0_name" text="{FIRSTNAME} Khamakul" />
+    <string id="aom_spc_wanderer_rhun_1_name" text="{FIRSTNAME} Dordagan" />
+    <string id="aom_spc_wanderer_rhun_2_name" text="{FIRSTNAME} Balkhoth" />
+    <string id="aom_spc_wanderer_rhun_3_name" text="{FIRSTNAME} Wainagar" />
+    <string id="aom_spc_wanderer_rhun_4_name" text="{FIRSTNAME} Khuldan" />
+    <string id="aom_spc_wanderer_rhun_5_name" text="{FIRSTNAME} Bortagan" />
+    <string id="aom_spc_wanderer_rhun_6_name" text="{FIRSTNAME} Vardamir" />
+    <string id="aom_spc_wanderer_rhun_7_name" text="{FIRSTNAME} Ulgarion" />
+    <string id="aom_spc_wanderer_rhun_8_name" text="{FIRSTNAME} Khandagar" />
+    <string id="aom_spc_wanderer_rhun_9_name" text="{FIRSTNAME} Rhunagar" />
+    <string id="aom_spc_wanderer_rivendell_0_name" text="{FIRSTNAME} Erestelionath" />
+    <string id="aom_spc_wanderer_rivendell_1_name" text="{FIRSTNAME} Calenglorionath" />
+    <string id="aom_spc_wanderer_rivendell_2_name" text="{FIRSTNAME} Noldorionath" />
+    <string id="aom_spc_wanderer_rivendell_3_name" text="{FIRSTNAME} Lindonionath" />
+    <string id="aom_spc_wanderer_rivendell_4_name" text="{FIRSTNAME} Aranwionath" />
+    <string id="aom_spc_wanderer_rivendell_5_name" text="{FIRSTNAME} Celebrindionath" />
+    <string id="aom_spc_wanderer_rivendell_6_name" text="{FIRSTNAME} Ithilionath" />
+    <string id="aom_spc_wanderer_rivendell_7_name" text="{FIRSTNAME} Gildorionath" />
+    <string id="aom_spc_wanderer_rivendell_8_name" text="{FIRSTNAME} Peredhilionath" />
+    <string id="aom_spc_wanderer_rivendell_9_name" text="{FIRSTNAME} Earendilionath" />
+    <string id="aom_spc_wanderer_rohan_0_name" text="{FIRSTNAME} Wulfgarig" />
+    <string id="aom_spc_wanderer_rohan_1_name" text="{FIRSTNAME} Osricdarn" />
+    <string id="aom_spc_wanderer_rohan_2_name" text="{FIRSTNAME} Thanegrím" />
+    <string id="aom_spc_wanderer_rohan_3_name" text="{FIRSTNAME} Frithwineson" />
+    <string id="aom_spc_wanderer_rohan_4_name" text="{FIRSTNAME} Leofstaning" />
+    <string id="aom_spc_wanderer_rohan_5_name" text="{FIRSTNAME} Herebranding" />
+    <string id="aom_spc_wanderer_rohan_6_name" text="{FIRSTNAME} Godricsson" />
+    <string id="aom_spc_wanderer_rohan_7_name" text="{FIRSTNAME} Thelredwain" />
+    <string id="aom_spc_wanderer_rohan_8_name" text="{FIRSTNAME} Hardingar" />
+    <string id="aom_spc_wanderer_rohan_9_name" text="{FIRSTNAME} Wulfheortan" />
+    <string id="aom_spc_wanderer_sh_0_name" text="{FIRSTNAME} el-Ezarki" />
+    <string id="aom_spc_wanderer_sh_1_name" text="{FIRSTNAME} ibn-Kûmarak" />
+    <string id="aom_spc_wanderer_sh_2_name" text="{FIRSTNAME} el-Taiym" />
+    <string id="aom_spc_wanderer_sh_3_name" text="{FIRSTNAME} ibn-Zayak" />
+    <string id="aom_spc_wanderer_sh_4_name" text="{FIRSTNAME} el-Selar" />
+    <string id="aom_spc_wanderer_sh_5_name" text="{FIRSTNAME} ibn-Uzhar" />
+    <string id="aom_spc_wanderer_sh_6_name" text="{FIRSTNAME} el-Âran" />
+    <string id="aom_spc_wanderer_sh_7_name" text="{FIRSTNAME} ibn-Banûg" />
+    <string id="aom_spc_wanderer_sh_8_name" text="{FIRSTNAME} el-Acam" />
+    <string id="aom_spc_wanderer_sh_9_name" text="{FIRSTNAME} ibn-Shakar" />
+    <string id="aom_spc_wanderer_umbar_0_name" text="{FIRSTNAME} Castamir" />
+    <string id="aom_spc_wanderer_umbar_1_name" text="{FIRSTNAME} Sangahyando" />
+    <string id="aom_spc_wanderer_umbar_2_name" text="{FIRSTNAME} Angamaitë" />
+    <string id="aom_spc_wanderer_umbar_3_name" text="{FIRSTNAME} Fuinur" />
+    <string id="aom_spc_wanderer_umbar_4_name" text="{FIRSTNAME} Herumor" />
+    <string id="aom_spc_wanderer_umbar_5_name" text="{FIRSTNAME} Earnil" />
+    <string id="aom_spc_wanderer_umbar_6_name" text="{FIRSTNAME} Pelendur" />
+    <string id="aom_spc_wanderer_umbar_7_name" text="{FIRSTNAME} Falastur" />
+    <string id="aom_spc_wanderer_umbar_8_name" text="{FIRSTNAME} Hyarmendacil" />
+    <string id="aom_spc_wanderer_umbar_9_name" text="{FIRSTNAME} Ciryandil" />
+    <string id="aom_um_headman_1" text="Asi Umbar muhtarı" />
+    <string id="aom_um_headman_2" text="Tutucu Umbar muhtarı" />
+    <string id="aom_um_headman_3" text="Sinsi Umbar muhtarı" />
+    <string id="aom_um_notable_0" text="Kurnaz korsan tüccar" />
+    <string id="aom_um_notable_0b" text="Umbar limanı erzakçısı" />
+    <string id="aom_um_notable_1" text="Acımasız korsan kaçakçı" />
+    <string id="aom_um_notable_10" text="Korsan rıhtım patronu" />
+    <string id="aom_um_notable_11" text="Ürkütücü korsan tahsildarı" />
+    <string id="aom_um_notable_12" text="Kurnaz korsan kaçakçı" />
+    <string id="aom_um_notable_13" text="Tehditkâr korsan savaş ağası" />
+    <string id="aom_um_notable_1b" text="Soğuk bakışlı Umbar taciri" />
+    <string id="aom_um_notable_2" text="Umbar baharat satıcısı" />
+    <string id="aom_um_notable_21" text="Ters huylu Umbar toprak sahibi" />
+    <string id="aom_um_notable_22" text="Uzlaşmacı Umbar ihtiyarı" />
+    <string id="aom_um_notable_2b" text="Temkinli Umbar ikmal taşıyıcısı" />
+    <string id="aom_um_notable_3" text="Kendi gayretiyle yükselmiş korsan tüccar" />
+    <string id="aom_um_notable_3b" text="Entrikacı Umbar tüccarı" />
+    <string id="aom_um_notable_4" text="Zeki Umbar liman reisi" />
+    <string id="aom_um_notable_4b" text="Sinsi korsan karaborsacı" />
+    <string id="aom_um_notable_5" text="Kara Gemi kaptan-rahibi" />
+    <string id="aom_um_notable_6" text="Sert Umbar deniz rahibi" />
+    <string id="aom_um_notable_7" text="Korsan geleneklerinin koruyucusu" />
+    <string id="aom_um_notable_8" text="Hırçın Umbar gemi ustası" />
+    <string id="aom_um_notable_9" text="Korsan halat ustası" />
+    <string id="aom_um_notable_gl1" text="Kara Gemi kaptanı" />
+    <string id="aom_um_notable_gl4" text="Vahşi Umbar kabadayısı" />
+    <string id="aom_umbar_lord_1" text="Umbar'ın cesur korsan lordu" />
+    <string id="aom_umbar_lord_2" text="Umbar'ın ihtiyatlı korsan lordu" />
+    <string id="nc_aragorn_name" text="Aragorn" />
+    <string id="nc_balakhor_name" text="Balakhôr, İrfan Üstadı" />
+    <string id="nc_blackrose_name" text="BlackRose" />
+    <string id="nc_gimli_name" text="Gimli" />
+    <string id="nc_hart_name" text="Éohart, Wold'lu" />
+    <string id="nc_haterade_name" text="Hatérade" />
+    <string id="nc_igor_name" text="Igor Fahlun, Kayıp" />
+    <string id="nc_legolas_name" text="Legolas" />
+    <string id="nc_leovsilva_name" text="Leovlas, Silvan'lardan" />
+    <string id="nc_maztog_name" text="Maztog, Seyislerin Kâbusu" />
+    <string id="nc_rcmcplayz_name" text="Rukumazig-khamîz, Demirci" />
+    <string id="nc_solus_name" text="Solus, Taş Yığını" />
+    <string id="nc_spartan_name" text="Belecthar, Spartalı" />
+    <string id="nc_swan_name" text="Swan, Haritacı" />
+    <string id="nc_thyrell_name" text="Thyrell, Altın" />
+    <string id="nc_whitegoat_name" text="Whitegoat, İz Sürücü" />
+    <string id="nc_yotthani_name" text="Thanor" />
+    <string id="taom_spider_creature_name" text="Örümcek Binicisi" />
+    <string id="taom_spider_rider_brown_name" text="Büyük Örümcek Binicisi" />
+    <string id="taom_spider_rider_pale_name" text="Solgun Örümcek Binicisi" />
+  </strings>
+</base>

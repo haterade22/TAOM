@@ -1,0 +1,24 @@
+{
+  "_readme": "Which kingdom each faction screen entry belongs to (#704, Kysaro): the Leader and Lords lists show that kingdom's ruler and lords. Key = faction key from factionmap/factions.json, value = kingdom id from spkingdoms.xslt. Read once per game launch: restart the game after editing.",
+
+  "stewardship_of_gondor":      "empire_w",
+  "dominion_of_mordor":         "empire_s",
+  "clans_of_dunland":           "empire",
+  "kingdom_of_dale":            "sturgia",
+  "taskralan_of_harwan":        "aserai",
+  "kingdom_of_rohan":           "vlandia",
+  "khudorom_of_khand":          "battania",
+  "golden_realm_of_rhun":       "khuzait",
+  "kingdom_of_erebor":          "erebor",
+  "kingdom_of_imladris":        "rivendell",
+  "kingdom_of_lasgalen":        "mirkwood",
+  "kingdom_of_lothlorien":      "lothlorien",
+  "dominion_of_isengard":       "isengard",
+  "overlordship_of_gundabad":   "gundabad",
+  "havens_of_umbar":            "umbar",
+  "overlordship_of_dol_guldur": "dolguldur",
+  "goblins_of_goblin_town":     "goblin",
+  "goblins_of_blue_craig":      "bluecraig",
+  "high_kingdom_of_lindon":     "lindon",
+  "kingdom_of_moria":           "mistymountainorcs"
+}

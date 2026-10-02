@@ -1,0 +1,225 @@
+<Prefab>
+  <!-- Review Stage screen (2026-09-25, CHROME REFRESH 2026-09-28) - the final character-creation screen:
+       recaps every choice made across Culture + all six Narrative Stages, lets the player set/randomize
+       their (character) name, then Next commits the name and ends character creation. Movie name
+       "CharacterCreationReviewStage", VM CharacterCreationReviewStageVM (decompile-confirmed).
+       CHROME REFRESH (2026-09-28, user: "after that there is a review screen, do that one as well" - said
+       right after praising the newer Banner Editor/Clan Naming chrome): this screen predates the
+       546-wide-cc_panel_bg/fs_strip-ribbon/corner-ornament convention every other CC screen now uses (it still
+       had the OLDER 694-wide cc_panel_main stone panel, a plain-text breadcrumb ribbon, 1000-wide scrims, no
+       corner ornament) - brought fully in line with that convention here. Every @-binding/{DataSource}/
+       Command name is preserved byte-for-byte from before (and from the native prefab before that) - only the
+       chrome/shell changed, not what's bound to what. Ledger now embedded in its own LeftPanel the exact same
+       way TAOMNarrativeStage.xml already does (TAOMGainedProperties with its own Sprite/margins overridden to
+       nest inside a matching 546-wide cc_panel_bg panel, instead of floating with its own default
+       fs_tile_stone_9 background) - the two ledger-bearing screens now look like a matched pair. Back/Next
+       sized/margined like Narrative Stage's own dual-panel buttons (240x33/260x36 @ MarginLeft/Right=586) -
+       this screen has a panel on BOTH sides now too (ledger left, content right), the same width constraint
+       that shrunk Narrative Stage's buttons down from FaceGen's single-panel size. Content column narrowed
+       600->400 (matching every other reskinned screen's content width) - the choice-summary ItemTemplate
+       already used MaxWidth="252" per text segment even before this pass, so it already assumed a column
+       narrower than the old 600. -->
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+      <Children>
+
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="746" HorizontalAlignment="Left" Sprite="fs_scrim_l" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="746" HorizontalAlignment="Right" Sprite="fs_scrim_r" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+
+        <!-- Ledger panel (skill/attribute list) - same LeftPanel construction as TAOMNarrativeStage.xml,
+             flush-left, 546x1080 cc_panel_bg. TAOMGainedProperties' own default Sprite/margins are overridden
+             here (Sprite="" MarginTop="0" MarginLeft="0") since it now sits inside this panel's own frame. -->
+        <Widget Id="LeftPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="546" SuggestedHeight="1080" HorizontalAlignment="Left" Sprite="cc_panel_bg" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true">
+          <Children>
+
+            <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="400" HeightSizePolicy="Fixed" SuggestedHeight="44" HorizontalAlignment="Center" MarginTop="98" Brush="CC.Title" LocalizedText="{=taom_fui_skills_and_attributes}Skills &amp; Attributes" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="310" SuggestedHeight="16" HorizontalAlignment="Center" MarginTop="152" Sprite="fs_divider_wide" DoNotAcceptEvents="true" />
+
+            <Widget Id="InnerPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="460" SuggestedHeight="760" MarginTop="195" HorizontalAlignment="Center" VerticalAlignment="Top">
+              <Children>
+                <TAOMGainedProperties DataSource="{GainedPropertiesController}" Sprite="" MarginTop="0" MarginLeft="0" HorizontalAlignment="Center" VerticalAlignment="Top" AlphaFactor="1" />
+              </Children>
+            </Widget>
+
+          </Children>
+        </Widget>
+
+        <!-- RIGHT: 546-wide cc_panel_bg, same Title/divider treatment as every other reskinned screen. -->
+        <Widget Id="RightPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="546" SuggestedHeight="1080" HorizontalAlignment="Right" Sprite="cc_panel_bg" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true">
+          <Children>
+
+            <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="400" HeightSizePolicy="Fixed" SuggestedHeight="44" HorizontalAlignment="Center" MarginTop="98" Brush="CC.Title" Text="@Title" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="310" SuggestedHeight="16" HorizontalAlignment="Center" MarginTop="152" Sprite="fs_divider_wide" DoNotAcceptEvents="true" />
+
+            <Widget Id="InnerPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="760" MarginTop="195" HorizontalAlignment="Center" VerticalAlignment="Top">
+              <Children>
+
+                <ScrollablePanel Id="ScrollablePanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" VerticalAlignment="Bottom" ClipRect="ClipRect" InnerPanel="ClipRect\List" VerticalScrollbar="..\VerticalScrollbar">
+                  <Children>
+
+                    <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                      <Children>
+
+                        <ListPanel Id="List" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" StackLayout.LayoutMethod="VerticalTopToBottom">
+                          <Children>
+
+                            <!-- Description -->
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="16" MarginRight="16" MarginBottom="16" HorizontalAlignment="Center" VerticalAlignment="Top" Brush="CC.NarrativeBody" Text="@Description" ClipContents="false" />
+
+                            <!-- Name entry: question label, input box (fs_tile_stone_9) + a randomize-name
+                                 button (CC.Tool.Random). -->
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="10" Brush="CC.SecTitle" Text="@NameTextQuestion" />
+                            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="24" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                              <Children>
+                                <!-- Border swapped from raw fs_tile_stone_9 (2026-09-30, user: "the border...
+                                     a bit too thick can be more subtle") - this project already hit the exact
+                                     same complaint on the Narrative Stage's option rows (see
+                                     CC.NarrativeOptionFill's own comment in Brushes\CharCreation.xml and
+                                     TAOMNarrativeStage.xml's option-row ItemTemplate): fs_tile_stone_9 has a
+                                     bold gold edge baked into the art itself, not adjustable via alpha. Same
+                                     proven fix reused here - CC.NarrativeOptionFill (ld_bar_stone, no baked-in
+                                     edge) for the fill, plus 4 genuinely thin 2px hairline bars as the only
+                                     border. -->
+                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="330" SuggestedHeight="56" VerticalAlignment="Center">
+                                  <Children>
+                                    <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="2" MarginRight="2" MarginTop="2" MarginBottom="2" Brush="CC.NarrativeOptionFill" DoNotAcceptEvents="true" />
+                                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Top" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+                                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+                                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+                                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+                                    <EditableTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" MarginLeft="18" MarginRight="18" Brush="CC.NameInput" Text="@Name" />
+                                  </Children>
+                                </Widget>
+                                <ButtonWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="34" SuggestedHeight="34" VerticalAlignment="Center" MarginLeft="16" Brush="CC.Tool.Random" Command.Click="ExecuteRandomizeName" />
+                              </Children>
+                            </ListPanel>
+
+                            <!-- Choice summary - one row per Culture/Narrative-Stage selection made so far. -->
+                            <NavigationScopeTargeter ScopeID="ReviewScope" ScopeParent="..\List" ScopeMovements="Horizontal" IsDefaultNavigationScope="true" />
+                            <ListPanel DataSource="{ReviewList}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="30" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <ItemTemplate>
+                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" MarginBottom="14" DoNotUseCustomScaleAndChildren="true">
+                                  <Children>
+
+                                    <!-- FIX (user screenshot: "text is cut off" - Title+Text used to sit SIDE
+                                         BY SIDE as unconstrained CoverChildren widgets in a centered row; fine
+                                         at the old 600-wide column, but at this pass's narrower 400-wide
+                                         column any @Text longer than a few words overflowed the panel on both
+                                         sides (visible clipping left AND right). Stacked vertically instead -
+                                         Title as a small caps label line, Text as StretchToParent body text
+                                         below it that wraps properly - so length can never overflow
+                                         horizontally, only grow the row's own height, which CoverChildren
+                                         already handles safely. -->
+                                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" IsHidden="@HasImage" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                      <Children>
+                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="4" Text="@Title" Brush="CC.RowLabel" />
+                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="16" MarginRight="16" Text="@Text" Brush="CC.ReviewValue" />
+                                      </Children>
+                                    </ListPanel>
+
+                                    <!-- Clan banner row - kept on native's own Review.Stage.Banner brush,
+                                         same reasoning as TAOMClanNaming.xml's own banner preview: not worth
+                                         rebuilding real banner-texture-compositing machinery that's out of
+                                         this project's scope. Constants BrushValueType lookup dropped for the
+                                         same FormatException-in-GauntletPreview reason noted before - plain
+                                         hardcoded Fixed size instead. Title+Text stacked the same way as the
+                                         non-image branch above, for the same overflow fix. -->
+                                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" IsVisible="@HasImage" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                      <Children>
+                                        <MaskedTextureWidget DataSource="{ImageIdentifier}" Brush="Review.Stage.Banner" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="120" SuggestedHeight="140" HorizontalAlignment="Center" AdditionalArgs="@AdditionalArgs" HideWhenNull="true" ImageId="@Id" TextureProviderName="@TextureProviderName" />
+                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="8" MarginBottom="4" Text="@Title" Brush="CC.RowLabel" />
+                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="16" MarginRight="16" Text="@Text" Brush="CC.ReviewValue" />
+                                      </Children>
+                                    </ListPanel>
+
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="2" Brush="CC.ReviewDesc" Text="@Description" />
+
+                                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="14" HorizontalAlignment="Center" MarginTop="10" IsHidden="@IsLastItem" Sprite="fs_diamond" AlphaFactor="0.5" DoNotAcceptEvents="true" />
+
+                                  </Children>
+                                </ListPanel>
+                              </ItemTemplate>
+                            </ListPanel>
+
+                          </Children>
+                        </ListPanel>
+
+                      </Children>
+                    </Widget>
+
+                  </Children>
+                </ScrollablePanel>
+
+                <ScrollbarWidget Id="VerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="4" HorizontalAlignment="Right" VerticalAlignment="Center" MarginTop="10" MarginBottom="10" AlignmentAxis="Vertical" Handle="VerticalScrollbarHandle" MaxValue="100" MinValue="0">
+                  <Children>
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" AlphaFactor="0.2" Color="#C9AB69FF" />
+                    <ImageWidget Id="VerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="4" SuggestedHeight="40" HorizontalAlignment="Center" Brush="CC.ScrollHandle" />
+                  </Children>
+                </ScrollbarWidget>
+
+              </Children>
+            </Widget>
+
+          </Children>
+        </Widget>
+
+        <!-- TOP RIBBON: same fs_strip chrome as every other reskinned CC screen. -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="90" VerticalAlignment="Top" Sprite="fs_strip" DoNotAcceptEvents="true" />
+        <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="200" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="20" Brush="CC.TabTextActive" LocalizedText="{=taom_fui_review}REVIEW" />
+
+        <!-- Corner ornaments on BOTH panels' inner edges - same dual-panel pattern TAOMNarrativeStage.xml
+             established (LeftPanel's inner edge is its RIGHT side since it's flush-left, needs the flipped
+             ornament; RightPanel's inner edge is its LEFT side, uses the original). -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="300" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="511" MarginTop="55" Sprite="cc_corner_ornament_l" AlphaFactor="0.8" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true" />
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="300" HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="511" MarginTop="55" Sprite="cc_corner_ornament" AlphaFactor="0.8" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true" />
+
+        <!-- Camera rotate-controls navigation target - preserved verbatim from native. -->
+        <NavigationScopeTargeter ScopeID="CharacterNavigationScope" ScopeParent="..\CharacterNavigationTarget" />
+        <Widget Id="CharacterNavigationTarget" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="50" VerticalAlignment="Center" HorizontalAlignment="Center" PositionXOffset="-280" GamepadNavigationIndex="0" />
+
+        <!-- Back/Next UNIFIED across every CC screen except Faction Select (2026-09-30) - resized 240x46/260x50
+             -> 320x51/350x55, MarginBottom 46/45 -> 44/43, and MarginLeft/Right refined to 113/98 (centering
+             320/350-wide buttons under each 546-wide panel - user: "should be more centered with the panels",
+             see TAOMFaceGen.xml's own Back/Next comment for the full math/history). Text brush switched
+             CC.ConfirmTextSmall -> CC.ConfirmText to match the now-larger shared button size. NextButton's
+             Disabled look still means something here (name field validation) - CC.Confirm/CC.ConfirmText's
+             Disabled styles. HintWidget shows @CannotAdvanceReasonHint on hover while disabled, same as
+             native. -->
+        <ButtonWidget Id="PrevButton" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="320" SuggestedHeight="51" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginLeft="113" MarginBottom="44" Brush="CC.Confirm" Command.Click="OnPreviousStage" UpdateChildrenStates="true" GamepadNavigationIndex="1000000">
+          <Children>
+            <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginBottom="7" Brush="CC.ConfirmText" LocalizedText="{=taom_fui_back}Back" />
+            <InputKeyVisualWidget DataSource="{CancelInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="24" SuggestedHeight="24" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="-16" KeyID="@KeyID" IsVisible="@IsVisible" />
+          </Children>
+        </ButtonWidget>
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="350" SuggestedHeight="55" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="98" MarginBottom="43">
+          <Children>
+            <ButtonWidget Id="NextButton" DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CC.Confirm" Command.Click="OnNextStage" IsEnabled="@CanAdvance" UpdateChildrenStates="true" GamepadNavigationIndex="1000001">
+              <Children>
+                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginBottom="8" Brush="CC.ConfirmText" Text="@NextStageText" />
+                <InputKeyVisualWidget DataSource="{DoneInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="24" SuggestedHeight="24" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="-16" KeyID="@KeyID" IsVisible="@IsVisible" />
+              </Children>
+            </ButtonWidget>
+            <HintWidget DoNotAcceptEvents="true" DataSource="{CannotAdvanceReasonHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+          </Children>
+        </Widget>
+
+        <!-- Gamepad-only camera control key hints, bottom-center in the gap between the two buttons. -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="700" SuggestedHeight="50" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="50" IsVisible="@CharacterGamepadControlsEnabled" DoNotAcceptEvents="true">
+          <Children>
+            <ListPanel DataSource="{CameraControlKeys}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" StackLayout.LayoutMethod="HorizontalCentered">
+              <ItemTemplate>
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginRight="18" DoNotAcceptEvents="true">
+                  <Children>
+                    <InputKeyVisualWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="32" VerticalAlignment="Center" MarginRight="6" KeyID="@KeyID" IsVisible="@IsVisible" />
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" Text="@KeyName" Brush="CC.KeyText" />
+                  </Children>
+                </ListPanel>
+              </ItemTemplate>
+            </ListPanel>
+          </Children>
+        </Widget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

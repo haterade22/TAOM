@@ -1,0 +1,349 @@
+<Prefab>
+  <!-- Narrative stage screen - the shared shell behind Family/Early Childhood/Adolescence/Youth/Young
+       Adulthood/Starting Age (all six use this exact same movie/prefab natively, only the VM's Title/
+       Description/SelectionList content differs per stage, driven by TAOM's own ModuleData\charactercreation\
+       *_menu.json files - untouched by this file).
+       LAYOUT PASS 4 (2026-09-26, user feedback on LAYOUT PASS 2/3 below): "the right panel just dont look
+       good... make the left panel also on the right like in my image" - BOTH panels now live on the right
+       side (ledger further from the edge, options panel flush right), leaving the ENTIRE left+center area
+       open for the character scene. This also naturally addresses the camera-centering complaint from PASS 3
+       (the camera itself is still native/unmovable - see LeftPanel's own comment - but a much wider open
+       canvas on the left makes wherever the fixed camera puts the characters read as comfortably framed,
+       without needing LAYOUT PASS 3's panel-width distortion hack, which is REVERTED this pass: both panels
+       are back to their own undistorted native sizes). A deliberate gap between the two right-side panels
+       holds the Next button, so it stays clear of both without needing a huge screen-spanning margin.
+       Z-ORDER FIX (same feedback): "both panels need to be beneath the top ribbon, the blending art needs to
+       be above top ribbon and panels" - PASS 2/3 had the ribbon declared BEFORE the panels, so a panel's own
+       top edge (LeftPanel was full screen height) drew OVER the ribbon wherever they overlapped. Reordered to
+       match FaceGen's own proven convention exactly: panels first, ribbon after (draws on top of panels),
+       corner ornament last (draws on top of both).
+       CHROME PASS (2026-09-26): this screen reuses TAOMFaceGen.xml's ribbon/corner-ornament chrome. The
+       ribbon's three entries are a real stage-jump breadcrumb (FACTION/CHARACTER jump to earlier character-
+       creation stages via StageJumpButton.cs; ORIGINS is this screen, inert) rather than FaceGen's own
+       tab-switching, since this screen has no tabs of its own.
+       Root widget type, PreviousButton/NextButton paths, and every @-binding/{DataSource} name below are
+       preserved byte-for-byte from the native prefab (Modules\Native\GUI\Prefabs\CharacterCreation\
+       CharacterCreationNarrativeStage.xml) - only the visual layer + ItemList's nesting path changed. See
+       C:\Users\Niels\.claude\plans\starry-tickling-seahorse.md for the full reasoning/research trail. -->
+  <Window>
+    <CharacterCreationNarrativeStageScreenWidget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" PreviousButton="PrevButton" NextButton="NextButton" ItemList="OptionsPanel\OptionsInnerPanel\OptionsScrollablePanel\OptionsClipRect\OptionsList\ItemList">
+      <Children>
+
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="746" HorizontalAlignment="Left" Sprite="fs_scrim_l" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="746" HorizontalAlignment="Right" Sprite="fs_scrim_r" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+
+        <!-- Traits gained this stage (e.g. Mercy/Valor). Same card-frame fix as the skill icons above -
+             EncyclopediaHeroTraitVisualWidget also just sets its own Sprite directly in native code
+             (SPGeneral\SPTraits\<id>_<value>, confirmed via decompile), no frame of its own. -->
+        <ListPanel DataSource="{GainedPropertiesController\GainedTraits}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" MarginRight="594" MarginTop="110" StackLayout.LayoutMethod="HorizontalRightToLeft" DoNotUseCustomScaleAndChildren="true">
+          <ItemTemplate>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="82" SuggestedHeight="83" MarginLeft="6">
+              <Children>
+                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="cc_card_9" DoNotAcceptEvents="true" />
+                <EncyclopediaHeroTraitVisualWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="74" SuggestedHeight="75" HorizontalAlignment="Center" VerticalAlignment="Center" TraitId="@TraitId" TraitValue="@Value">
+                  <Children>
+                    <HintWidget DataSource="{Hint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                  </Children>
+                </EncyclopediaHeroTraitVisualWidget>
+              </Children>
+            </Widget>
+          </ItemTemplate>
+        </ListPanel>
+
+        <!-- Ledger panel (skill/attribute list) - LAYOUT PASS 6 (2026-09-26, user report: "the left panel
+             isnt on the left side of the screen, move it left its overlapping the viewport"): LAYOUT PASS 4
+             positioned this via HorizontalAlignment="Right" + a computed MarginRight so it sat immediately
+             left of OptionsPanel - which left a dead gap between it and the TRUE screen edge while its own
+             right edge intruded further into the viewport than intended. Back to true flush-left
+             (HorizontalAlignment="Left", no margin) - the ledger sits at the real left edge, OptionsPanel
+             at the real right edge, character in the genuinely open middle. Native undistorted size (546x1080,
+             matching FaceGen's own cc_panel_bg usage exactly). -->
+        <Widget Id="LeftPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="546" SuggestedHeight="1080" HorizontalAlignment="Left" Sprite="cc_panel_bg" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true">
+          <Children>
+
+            <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="400" HeightSizePolicy="Fixed" SuggestedHeight="44" HorizontalAlignment="Center" MarginTop="98" Brush="CC.Title" LocalizedText="{=taom_fui_skills_and_attributes}Skills &amp; Attributes" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="310" SuggestedHeight="16" HorizontalAlignment="Center" MarginTop="152" Sprite="fs_divider_wide" DoNotAcceptEvents="true" />
+
+            <!-- No scroll here (user report: "the left panel with skills has a scrollbar, its not needed the
+                 entirety fits without having to scroll") - the ledger's real content (6 base-attribute groups
+                 + OtherSkills) is a fixed structure that comfortably fits this space with room to spare,
+                 confirmed from an in-game screenshot. Plain CoverChildren wrapper instead of ScrollablePanel/
+                 ClipRect/List/Scrollbar, same simplification already applied to TFGGrid.xml earlier this
+                 project when scroll turned out unnecessary there too. -->
+            <Widget Id="InnerPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="460" SuggestedHeight="760" MarginTop="195" HorizontalAlignment="Center" VerticalAlignment="Top">
+              <Children>
+
+                <TAOMGainedProperties DataSource="{GainedPropertiesController}" Sprite="" MarginTop="0" MarginLeft="0" HorizontalAlignment="Center" VerticalAlignment="Top" AlphaFactor="1" />
+
+              </Children>
+            </Widget>
+
+          </Children>
+        </Widget>
+
+        <!-- The life-stage choice panel - LAYOUT PASS 5 (2026-09-26, user feedback on LAYOUT PASS 4: "match
+             both panels' visual style"): now uses the SAME cc_panel_bg sprite/546x1080 size/Title+divider
+             treatment as LeftPanel above, instead of the previous round's custom chamfered/tabbed
+             cc_options_panel.png shape - the two panels read as a matching pair now, per the user's own
+             mirrored reference image showing the same panel look on both sides. cc_options_panel.png itself
+             is left in Sprites (unused) in case the tab-shaped look is ever wanted back for something else.
+             Static "Skills & Attributes" title mirrors as a dynamic "@Title" here (the stage name, e.g.
+             "Family") - same position/brush as LeftPanel's own title, giving this panel a proper header too
+             instead of relying solely on the in-content @Description/@SelectionText text. Structurally
+             identical content below the title to previous rounds (Description/SelectionText/option list/
+             selected-option summary all in one scrollable card) - only the outer shell has changed across
+             rounds, not what's inside it.
+             FLIPPED (2026-09-26, user request: "can you flip the image of the panel horizontally?"): uses
+             cc_panel_bg_r.png, a horizontally-mirrored copy of cc_panel_bg.png (System.Drawing RotateFlipType.
+             FlipX), so the two panels read as mirror images of each other (like two facing pages) rather than
+             identical copies - purely cosmetic, no layout/size change. -->
+        <Widget Id="OptionsPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="546" SuggestedHeight="1080" HorizontalAlignment="Right" Sprite="cc_panel_bg_r" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true">
+          <Children>
+
+            <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="400" HeightSizePolicy="Fixed" SuggestedHeight="44" HorizontalAlignment="Center" MarginTop="98" Brush="CC.Title" Text="@Title" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="310" SuggestedHeight="16" HorizontalAlignment="Center" MarginTop="152" Sprite="fs_divider_wide" DoNotAcceptEvents="true" />
+
+            <Widget Id="OptionsInnerPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="460" SuggestedHeight="760" MarginTop="195" HorizontalAlignment="Center" VerticalAlignment="Top">
+              <Children>
+
+                <ScrollablePanel Id="OptionsScrollablePanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" VerticalAlignment="Bottom" ClipRect="OptionsClipRect" InnerPanel="OptionsClipRect\OptionsList" VerticalScrollbar="..\OptionsVerticalScrollbar">
+                  <Children>
+
+                    <Widget Id="OptionsClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                      <Children>
+
+                        <ListPanel Id="OptionsList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Top" StackLayout.LayoutMethod="VerticalTopToBottom">
+                          <Children>
+
+                            <!-- Stage flavor text, always shown. -->
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginRight="16" MarginBottom="16" HorizontalAlignment="Center" VerticalAlignment="Top" Brush="CC.NarrativeBody" Text="@Description" ClipContents="false" />
+
+                            <!-- "Choose one..." prompt, hidden once an option is picked. -->
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="12" Brush="CC.NarrativeOption" IsHidden="@AnyItemSelected" Text="@SelectionText" />
+
+                            <NavigationScopeTargeter ScopeID="ItemsScope" ScopeParent="..\ItemList" ScopeMovements="Vertical" HasCircularMovement="true" IsDefaultNavigationScope="true" />
+                            <NavigatableListPanel Id="ItemList" DataSource="{SelectionList}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="16" VerticalAlignment="Bottom" StackLayout.LayoutMethod="VerticalTopToBottom" MinIndex="0" MaxIndex="1000" ParentPanel="..\..\..\..\OptionsScrollablePanel" AutoScrollTopOffset="70" AutoScrollBottomOffset="70">
+                              <ItemTemplate>
+                                <!-- frameless option row: near-invisible wash at rest, gold accent bar + bright
+                                     text once selected/hovered - see CC.NarrativeOption*/CC.NarrativeOptionRow
+                                     in Brushes\CharCreation.xml. Accent bar is Fixed height (matching MinHeight)
+                                     rather than StretchToParent, avoiding the project's documented
+                                     StretchToParent-inside-CoverChildren ballooning bug. -->
+                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MinHeight="90" MarginBottom="6" Brush="CC.NarrativeOptionRow" Command.Click="ExecuteSelect" IsSelected="@IsSelected" UpdateChildrenStates="true">
+                                  <Children>
+                                    <!-- FIX round 9 (user, in-game: "text frame still missing, also dont see any
+                                         hover effect" - round 8's geometry theory was wrong too): found the real
+                                         cause by comparing against CC.ScrollHandle (OptionsVerticalScrollbarHandle
+                                         below), which uses this EXACT same Brush pattern (a single BrushLayer
+                                         wrapping Sprite="BlankWhiteSquare_9") and is presumed fine - the one
+                                         structural difference is that it's declared as an ImageWidget, not a plain
+                                         Widget. Every single documented instance of "Brush= referencing a sprite
+                                         silently fails to render" in this project (this text frame, this accent
+                                         bar, the old row-end diamond, the cc_flat_panel_9 redesign) was declared
+                                         as a plain Widget. Strong working theory: plain Widget just doesn't draw a
+                                         Brush's sprite layer at all in this engine build - only purpose-built
+                                         renderable types (ImageWidget, ButtonWidget, TextWidget) do. Changed BOTH
+                                         this accent bar and the text frame below from Widget to ImageWidget
+                                         (Brush=/attributes otherwise unchanged) to test this directly instead of
+                                         re-guessing at geometry/nesting again. -->
+                                    <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="3" SuggestedHeight="90" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="CC.NarrativeOptionAccent" DoNotAcceptEvents="true" />
+                                    <!-- themed skill icon per option - see ThemeIconWidget.cs. Falls back to no
+                                         sprite if ActionText doesn't match a known skill. -->
+                                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="46" SuggestedHeight="46" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="10">
+                                      <Children>
+                                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="cc_card_9" DoNotAcceptEvents="true" />
+                                        <ThemeIconWidget ActionText="@ActionText" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="38" SuggestedHeight="38" HorizontalAlignment="Center" VerticalAlignment="Center" DoNotAcceptEvents="true" />
+                                      </Children>
+                                    </Widget>
+                                    <!-- FIX round 13 (user: two separate reports on real screenshots -
+                                         "That one is conflicting" (the CC.NarrativeOptionTextFrame border
+                                         doubling up on fs_tile_stone_9's own baked-in edge, see that brush's
+                                         note in Brushes\CharCreation.xml) and "some texts arent fitting" (a
+                                         longer ActionText - e.g. "You distinguished yourself at the defence of
+                                         Osgiliath," - wraps to 2 lines and gets clipped at the old Fixed 46
+                                         height, which was only ever sized for short single-line entries like
+                                         "Noble Houses of Gondor"). Both fixed together: the separate border
+                                         ImageWidget is gone (CC.NarrativeOptionFill puts the hover/selected
+                                         brighten on the texture itself instead, see that brush), and the box
+                                         height goes 46->78 (row MinHeight/accent bar 60->90 to match) - a plain
+                                         fixed bump rather than true auto-height-from-text-content, since this
+                                         exact row already has a documented StretchToParent-inside-CoverChildren
+                                         ballooning bug risk (see the ButtonWidget's own comment above) that a
+                                         dynamic CoverChildren-driven text box would likely re-trigger. 78 fits
+                                         two wrapped lines of this FontSize-19 text comfortably; short
+                                         single-line entries just get some extra empty space above/below, a
+                                         minor look-tightness trade rather than clipped/unreadable text. If some
+                                         stage's text is long enough to wrap a 3rd line, bump 78/90 further. -->
+                                    <!-- FIX round 16 (user, marked-up screenshot: "Still there Look i marked it
+                                         in red, that thick yellow one" - fs_tile_stone_9's own edge was STILL
+                                         showing at a 14px inset; round 15's 2px bars were correctly thin but
+                                         only ADDED a second border, didn't remove the first). Fill sprite
+                                         swapped to ld_bar_stone (see CC.NarrativeOptionFill in
+                                         Brushes\CharCreation.xml) - no baked-in edge at all, so inset shrunk
+                                         back down to 2px (just enough to sit inside the hand-built border bars,
+                                         no longer needs to hide anything). The 2px bars from round 15 are now
+                                         the ONLY border in this construction. -->
+                                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="78" HorizontalAlignment="Left" VerticalAlignment="Center" MarginLeft="66" MarginRight="40" DoNotPassEventsToChildren="true">
+                                      <Children>
+                                        <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="2" MarginRight="2" MarginTop="2" MarginBottom="2" Brush="CC.NarrativeOptionFill" DoNotAcceptEvents="true" />
+                                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Top" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+                                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+                                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+                                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="14" MarginRight="14" MarginTop="8" MarginBottom="8" VerticalAlignment="Center" Brush="CC.NarrativeOption" Text="@ActionText" />
+                                      </Children>
+                                    </Widget>
+                                    <!-- row-end diamond ornament: static direct Sprite=/AlphaFactor= rather than a
+                                         state-driven Brush= - a CC.* brush here silently failed to render for a
+                                         reason not tracked down; direct Sprite= is a confirmed-working full fix. -->
+                                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="16" SuggestedHeight="16" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="12" Sprite="fs_diamond" AlphaFactor="0.45" DoNotAcceptEvents="true" />
+                                  </Children>
+                                </ButtonWidget>
+                              </ItemTemplate>
+                            </NavigatableListPanel>
+
+                            <!-- Once an option is picked: its own description + stat gain/loss summary. IsVisible
+                                 lives on this OUTER wrapper (inherits the screen's own VM, where AnyItemSelected
+                                 actually lives) rather than the DataSource={SelectedOption} inner child - a real
+                                 scoping bug found earlier this session: once a widget's DataSource switches to a
+                                 child object, ALL of that widget's own @-bindings resolve against the CHILD, and
+                                 CharacterCreationOptionVM has no AnyItemSelected property, so the binding would
+                                 silently resolve false and stay hidden permanently even with a real selection. -->
+                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" IsVisible="@AnyItemSelected" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true">
+                              <Children>
+                                <Widget DataSource="{SelectedOption}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="8" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true">
+                                  <Children>
+                                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                      <Children>
+                                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="290" SuggestedHeight="2" Sprite="GradientDivider_9" Color="#C9AB69FF" MarginBottom="10" />
+                                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginRight="16" MarginBottom="10" Brush="CC.NarrativeSelDesc" Text="@DescriptionText" />
+                                        <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginRight="16" MarginBottom="6" Brush="CC.NarrativePositive" Text="@PositiveEffectText" />
+                                        <RichTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginRight="16" Brush="CC.NarrativeNegative" Text="@NegativeEffectText" />
+                                      </Children>
+                                    </ListPanel>
+                                  </Children>
+                                </Widget>
+                              </Children>
+                            </Widget>
+
+                          </Children>
+                        </ListPanel>
+
+                      </Children>
+                    </Widget>
+
+                  </Children>
+                </ScrollablePanel>
+
+                <ScrollbarWidget Id="OptionsVerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="4" HorizontalAlignment="Right" VerticalAlignment="Center" MarginTop="10" MarginBottom="10" AlignmentAxis="Vertical" Handle="OptionsVerticalScrollbarHandle" MaxValue="100" MinValue="0">
+                  <Children>
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" AlphaFactor="0.2" Color="#C9AB69FF" />
+                    <ImageWidget Id="OptionsVerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="4" SuggestedHeight="40" HorizontalAlignment="Center" Brush="CC.ScrollHandle" />
+                  </Children>
+                </ScrollbarWidget>
+
+              </Children>
+            </Widget>
+
+          </Children>
+        </Widget>
+
+        <!-- TOP RIBBON: full-width strip, copied verbatim from TAOMFaceGen.xml's own ribbon (same fs_strip
+             sprite/height/margins). Z-ORDER FIX (LAYOUT PASS 4): declared AFTER both panels now (was before
+             them), so it draws ON TOP of them wherever they overlap - matches FaceGen's own proven ordering
+             exactly (panel(s) first, ribbon after). FACTION/CHARACTER use StageJumpButton (real native
+             CharacterCreationManager.GoToStage jump, see that class's own comment for the stage-index
+             evidence); ORIGINS is plain static text since this screen already IS the origins/narrative
+             content - no click target needed. -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="90" VerticalAlignment="Top" Sprite="fs_strip" DoNotAcceptEvents="true" />
+        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="20" StackLayout.LayoutMethod="HorizontalSpaced">
+          <Children>
+            <StageJumpButton DoNotPassEventsToChildren="true" StageIndex="0" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="110" SuggestedHeight="50">
+              <Children>
+                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CC.TabText" LocalizedText="{=taom_fui_faction}FACTION" />
+              </Children>
+            </StageJumpButton>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="10" SuggestedHeight="10" VerticalAlignment="Center" Sprite="fs_diamond" AlphaFactor="0.6" />
+            <StageJumpButton DoNotPassEventsToChildren="true" StageIndex="1" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="130" SuggestedHeight="50">
+              <Children>
+                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CC.TabText" LocalizedText="{=taom_fui_character}CHARACTER" />
+              </Children>
+            </StageJumpButton>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="10" SuggestedHeight="10" VerticalAlignment="Center" Sprite="fs_diamond" AlphaFactor="0.6" />
+            <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="110" HeightSizePolicy="Fixed" SuggestedHeight="50" Brush="CC.TabTextActive" LocalizedText="{=taom_fui_origins}ORIGINS" />
+          </Children>
+        </ListPanel>
+
+        <!-- Corner ornaments ("the blending art") - LAYOUT PASS 6 (user report: "the art blending needs to be
+             on the other side of the panel and flipped horizontally. Also the right screen is missing the
+             blending art that the left panel has"). Both root-level siblings placed LAST so they draw on top
+             of the ribbon AND both panels (FaceGen's own proven convention). Key realization: the ornament
+             always decorates a panel's INNER edge - the one bordering the open viewport - not its outer edge
+             against the screen boundary (confirmed by FaceGen's own RightPanel: its ornament sits on the
+             panel's LEFT edge, which is the side facing the viewport, since the panel itself is on the
+             right). For the ledger (now flush LEFT), its inner/viewport-facing edge is on its RIGHT, so it
+             needs the FLIPPED ornament (cc_corner_ornament_l.png, a horizontally-mirrored copy made earlier
+             this project) anchored from the LEFT: MarginLeft = 0 (panel's own MarginLeft) + (546-35) = 511,
+             mirroring the exact "35px inside the panel's own edge" relationship the non-flipped version uses
+             elsewhere. OptionsPanel (flush RIGHT) uses the ORIGINAL non-flipped ornament on ITS left/inner
+             edge - the exact same formula FaceGen's own panel uses (MarginRight = 0 + (546-35) = 511) since
+             both panels now share the same 546 width and flush positioning. -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="300" HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="511" MarginTop="55" Sprite="cc_corner_ornament_l" AlphaFactor="0.8" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true" />
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="300" HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="511" MarginTop="55" Sprite="cc_corner_ornament" AlphaFactor="0.8" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true" />
+
+        <!-- Back/Next: FIX (2026-09-26, user: "back and next button for this screen they are too big, they are
+             overlapping"): copied FaceGen's own 466x64/509x70 sizing verbatim, which fit fine there since
+             FaceGen has open space on the left and only ONE 546-wide panel on the right. This screen has 546-wide
+             panels on BOTH sides, leaving only ~828px between them (1920-546-546) - Back(466)+Next(509)=975
+             alone already exceeds that gap before any margin is even added, so they were guaranteed to overlap
+             at FaceGen's size no matter how the margins were tuned. Shrunk both (same aspect ratio preserved,
+             7.2727:1, so fs_confirm.png never stretches off-ratio): Back 466x64->320x44, Next 509x70->350x48.
+             Margins tightened 594->586 (546+40, a slightly smaller panel-clearance gap than FaceGen's 48) -
+             Back spans ~586-906, Next spans ~984-1334 on a 1920-wide screen, leaving a clean ~78px gap between
+             them with no overlap. Text MarginBottom rescaled to the same ~0.14 ratio FaceGen's own buttons use. -->
+        <!-- FIX round 9d (user: "still has no opacity on the background of those buttons" + "the random button
+             is very small the text doesnt fit in it"): Back/Next now use CC.NarrativeConfirm (translucent
+             fs_confirm, see Brushes\CharCreation.xml) instead of the fully-opaque CC.Confirm. Shrunk Back/Next
+             again (260x36/290x40 -> 240x33/260x36, same 7.2727:1 aspect preserved) to open up more of the
+             inter-panel gap for Random, which was far too short at 22px tall for its text to fit - rather than
+             also being forced onto fs_confirm's fixed pill aspect ratio (which would demand an equally tiny
+             height to stay in the gap), Random gets its OWN background: the same translucent bordered-box
+             construction as the option rows' text frame (CC.NarrativeOptionTextFrame ImageWidget + a plain
+             inset fill Widget) - free to size however it needs since it isn't tied to fs_confirm's shape, and
+             already matches the exact "background of text with hovering... looks good" look the user just
+             confirmed. RandomButton's MarginLeft is the midpoint of the ACTUAL gap between Back's right edge
+             (586+240=826) and Next's left edge (1920-586-260=1074) - i.e. 950 - minus half its own width. -->
+        <!-- Back/Next UNIFIED across every CC screen except Faction Select (2026-09-30) - resized 240x46/260x50
+             -> 320x51/350x55, MarginBottom 46/45 -> 44/43, and MarginLeft/Right refined to 113/98 (centering
+             320/350-wide buttons under each 546-wide panel - user: "should be more centered with the panels",
+             see TAOMFaceGen.xml's own Back/Next comment for the full math/history). Text brush switched
+             CC.ConfirmTextSmall -> CC.ConfirmText to match the now-larger shared size. Brush stays
+             CC.NarrativeConfirm (translucent), not CC.Confirm - that was a deliberate, separately-requested
+             look for this screen (user: "still has no opacity on the background of those buttons"), and the
+             uniformity ask was about position/size, not this brush's own alpha.
+             RANDOM BUTTON moved back into the bottom row, centered (same session): it briefly moved to its own
+             row above Back/Next when those were still centred near the middle and left no horizontal room for
+             it; now that Back/Next sit further out, the centre is wide open again and Random can return to
+             sitting alongside them at the same vertical level. -->
+        <ButtonWidget Id="PrevButton" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="320" SuggestedHeight="51" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginLeft="113" MarginBottom="44" Brush="CC.NarrativeConfirm" Command.Click="OnPreviousStage" UpdateChildrenStates="true" GamepadNavigationIndex="1000000">
+          <Children>
+            <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginBottom="7" Brush="CC.ConfirmText" LocalizedText="{=taom_fui_back}Back" />
+            <InputKeyVisualWidget DataSource="{CancelInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="24" SuggestedHeight="24" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="-16" KeyID="@KeyID" IsVisible="@IsVisible" />
+          </Children>
+        </ButtonWidget>
+        <ButtonWidget Id="NextButton" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="350" SuggestedHeight="55" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="98" MarginBottom="43" Brush="CC.NarrativeConfirm" Command.Click="OnNextStage" IsEnabled="@CanAdvance" UpdateChildrenStates="true" GamepadNavigationIndex="1000001">
+          <Children>
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginBottom="8" Brush="CC.ConfirmText" Text="@NextStageText" />
+            <InputKeyVisualWidget DataSource="{DoneInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="24" SuggestedHeight="24" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="-16" KeyID="@KeyID" IsVisible="@IsVisible" />
+          </Children>
+        </ButtonWidget>
+        <NarrativeRandomButton DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="200" SuggestedHeight="40" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="49" Brush="CC.NarrativeRandomBox" UpdateChildrenStates="true" GamepadNavigationIndex="1000002">
+          <Children>
+            <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CC.ConfirmTextSmall" LocalizedText="{=taom_fui_random}Random" />
+          </Children>
+        </NarrativeRandomButton>
+
+      </Children>
+    </CharacterCreationNarrativeStageScreenWidget>
+  </Window>
+</Prefab>

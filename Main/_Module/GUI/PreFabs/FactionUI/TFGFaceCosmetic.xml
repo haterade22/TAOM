@@ -1,0 +1,64 @@
+﻿<Window>
+  <!-- New composite page (2026-09-25, flat-panel FaceGen redesign) - the reference's own "FACE" tab groups
+       Presets/Hair/Eye Color/Skin Tone/Tattoos/Scars on one page, unlike native Bannerlord's one-category-
+       per-tab structure. Confirmed safe to compose this way: each included piece's bindings resolve globally
+       against the root FaceGenVM regardless of where it sits in the tree (already proven this project for
+       Gender/Race/Voice). "Eye Color" has no dedicated matching control in Bannerlord (confirmed via direct
+       file read - Eyes customization is entirely shape-morph sliders) so it's not included here; those sliders
+       live in the new DETAILS tab instead (TFGDetails.xml), same as "Scars" - not confirmed as a category
+       distinct from Tattoos, so not split out.
+       TFGHair/TFGTaint are given a FIXED outer height rather than CoverChildren/StretchToParent: each already
+       contains its own internally-scrollable TFGGrid (its own ScrollablePanel+ScrollbarWidget), so bounding
+       their outer height here just controls how much of THIS page they occupy - the grid's own existing scroll
+       mechanism handles any overflow within that bound, same as it already did as a full-page tab. -->
+  <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+    <Children>
+      <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\VerticalList" VerticalScrollbar="..\VerticalScrollbar">
+        <Children>
+          <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+            <Children>
+              <ListPanel Id="VerticalList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                <Children>
+
+                  <!-- PRESETS section REMOVED (2026-09-28, user: "considering we have it now in the faction
+                       selection screen, can we remove that list from the character customization" - the new
+                       preset-hero grid on FactionSelect.xml (round 22, real named lords/wanderers per faction)
+                       now covers "start from a premade look" far better than this native face-type stepper
+                       ever did (a plain Prev/Next stepper through generic face templates, not even a real
+                       thumbnail grid - see TFGFacePreset.xml's own comment). TFGFacePreset.xml itself is left
+                       in place, unused, in case a stepper-style preset picker is ever wanted back for
+                       something else - just no longer referenced from this page. -->
+
+                  <!-- HAIR - height guess (670, then 1200) ABANDONED 2026-09-26 after it "still overlapped with
+                       the 2 other scrolls" - a fixed number could never reliably fit both HairTypes/BeardTypes at
+                       once since TFGHair.xml split it evenly regardless of real item counts. Proper fix: TFGGrid
+                       no longer scrolls internally at all (see its own file's comment) and everything in this
+                       chain is now CoverChildren, so this just sizes itself from the real content - no more
+                       guessing, and structurally can't under- or over-shoot. -->
+                  <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="CC.SecTitle" LocalizedText="{=taom_fui_hair}HAIR" />
+                  <Widget WidthSizePolicy="Fixed" SuggestedWidth="350" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Left" MarginTop="6" MarginBottom="14" Sprite="fs_divider" />
+                  <TFGHair IsEnabled="@IsHairEnabled" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="26" />
+
+                  <!-- SKIN TONE moved to the BODY tab 2026-09-26 (user request) - see TFGBodyPage.xml. -->
+
+                  <!-- TATTOOS / MARKINGS - same CoverChildren fix as Hair above, same reasoning. -->
+                  <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="CC.SecTitle" LocalizedText="{=taom_fui_tattoos}TATTOOS" />
+                  <Widget WidthSizePolicy="Fixed" SuggestedWidth="350" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Left" MarginTop="6" MarginBottom="10" Sprite="fs_divider" />
+                  <TFGTaint IsEnabled="@IsTaintEnabled" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="40" />
+
+                </Children>
+              </ListPanel>
+            </Children>
+          </Widget>
+        </Children>
+      </ScrollablePanel>
+
+      <ScrollbarWidget Id="VerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="6" HorizontalAlignment="Right" VerticalAlignment="Center" MarginTop="4" MarginBottom="4" AlignmentAxis="Vertical" Handle="VerticalScrollbarHandle" MaxValue="100" MinValue="0">
+        <Children>
+          <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="3" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.2" />
+          <ImageWidget Id="VerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="10" SuggestedWidth="6" HorizontalAlignment="Center" Brush="CC.ScrollHandle" />
+        </Children>
+      </ScrollbarWidget>
+    </Children>
+  </Widget>
+</Window>

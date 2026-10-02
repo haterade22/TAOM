@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Korean" />
+  </tags>
+  <strings>
+    <string id="aom_taom_dale_castle_001_forceatmo_name" text="[데일] 웨스토프트 성" />
+    <string id="aom_taom_dwarven_moria_w_forceatmo_name" text="[안개산맥] 서부 모리아" />
+    <string id="aom_taom_gondor_castle_001_forceatmo_name" text="[곤도르] 바라드 파엔 성" />
+    <string id="aom_taom_gondor_castle_002_forceatmo_name" text="[곤도르] 베르그로 성" />
+    <string id="aom_taom_gondor_castle_003_forceatmo_name" text="[곤도르] 멜고바스 성" />
+    <string id="aom_taom_gondor_town_dolamroth_forceatmo_name" text="[곤도르] 돌 암로스" />
+    <string id="aom_taom_gondor_town_lossarnach_forceatmo_name" text="[곤도르] 로사르나크 마을" />
+    <string id="aom_taom_gondor_town_minas_tirith_forceatmo_name" text="[곤도르] 미나스 티리스" />
+    <string id="aom_taom_gondor_town_osgiliath_e_forceatmo_name" text="[곤도르] 오스길리아스 (동부)" />
+    <string id="aom_taom_gondor_town_osgiliath_w_forceatmo_name" text="[곤도르] 오스길리아스 (서부)" />
+    <string id="aom_taom_gondor_village_001_forceatmo_name" text="[곤도르] 곤도르 마을 A" />
+    <string id="aom_taom_gondor_village_002_forceatmo_name" text="[곤도르] 캄로스 마을" />
+    <string id="aom_taom_gondor_village_003_forceatmo_name" text="[곤도르] 디나답 마을" />
+    <string id="aom_taom_gondor_village_004_forceatmo_name" text="[곤도르] 메레햄 마을" />
+    <string id="aom_taom_isengard_town_orthanc_forceatmo_name" text="[아이센가드] 오르상크" />
+    <string id="aom_taom_mordor_battle_001_forceatmo_name" text="[모르도르] 모르도르 평원 I" />
+    <string id="aom_taom_mordor_battle_002_forceatmo_name" text="[모르도르] 모르도르 평원 II" />
+    <string id="aom_taom_mordor_battle_003_forceatmo_name" text="[모르도르] 모르도르 평원 III" />
+    <string id="aom_taom_mordor_battle_004_forceatmo_name" text="[모르도르] 모르도르 평원 IV" />
+    <string id="aom_taom_mordor_battle_black_gates_forceatmo_name" text="[모르도르] 검은 성문" />
+    <string id="aom_taom_mordor_battle_dead_marshes_forceatmo_name" text="[모르도르] 죽음늪" />
+    <string id="aom_taom_mordor_town_goblin_town_forceatmo_name" text="[모르도르] 고블린 마을" />
+    <string id="aom_taom_mordor_town_minas_forceatmo_name" text="[모르도르] 미나스 모르굴" />
+    <string id="aom_taom_rohan_battle_001_forceatmo_name" text="[로한] 로한 평원" />
+    <string id="aom_taom_rohan_battle_fords_of_isen_forceatmo_name" text="[로한] 아이센 여울" />
+    <string id="aom_taom_rohan_castle_helms_deep_forceatmo_name" text="[로한] 헬름 협곡 - 밤비" />
+    <string id="aom_taom_rohan_edoras_town_forceatmo_name" text="[로한] 에도라스" />
+  </strings>
+</base>

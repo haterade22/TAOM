@@ -45,7 +45,7 @@
     <string id="taom_fc_no_room_body" text="今は新たな仲間を迎える余裕がない。{TROOP_NAME}の昇進は後ほど改めて提案される。" />
     <string id="taom_fc_offer_body" text="{TROOP_NAME}は戦いで武勲を立てた。仲間に昇進させるか?" />
     <string id="taom_fc_offer_title" text="戦場での昇進" />
-    <string id="taom_fc_rename_body" text="{TROOP_NAME}に名を与えるか、戦場で名乗っていた名をそのままにするか。" />
+    <string id="taom_fc_rename_body" text="{TROOP_NAME}に名を与えるか、戦場で名乗っていた名をそのまま残せ。" />
     <string id="taom_fc_rename_title" text="新たな仲間に名を" />
     <string id="taom_fc_cancel" text="キャンセル" />
     <string id="taom_fc_dismiss" text="お前の任を解く。隊列に戻れ。" />

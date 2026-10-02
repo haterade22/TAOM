@@ -1,0 +1,124 @@
+<Prefab>
+  <!-- Clan naming screen, right after the Banner editor (2026-09-28, user request: "Can you do the same for
+       the Clan name page that comes after"). Confirmed via decompile: movie "CharacterCreationClanNamingStage",
+       VM CharacterCreationClanNamingStageVM (TaleWorlds.CampaignSystem.ViewModelCollection.CharacterCreation).
+       Unlike BannerEditor, this is a normal CharacterCreationStageViewBase stage within the same flow (like
+       Narrative/Review Stage) - same MainMenuPatch.cs movie-swap mechanism, one more branch, nothing new
+       needed there structurally.
+       Root widget type and every @-binding/{DataSource}/Command name below are preserved byte-for-byte from
+       the native prefab (Modules\Native\GUI\Prefabs\CharacterCreation\CharacterCreationClanNamingStage.xml) -
+       only the visual layer changed. Reuses TAOMBannerEditor.xml's chrome (fs_scrim_l/r, 546-wide cc_panel_bg
+       RightPanel, fs_strip ribbon with a static label, cc_corner_ornament, CC.Confirm/CC.ConfirmText Back/Next
+       at the screen-edge positions) for visual consistency with the screen right before it, and
+       TAOMReviewStage.xml's own name-entry construction (fs_tile_stone_9 input box + CC.NameInput +
+       CC.SecTitle label) verbatim for the clan-name field, since it's the exact same kind of control already
+       proven on that screen.
+       Native's own <Constants> block computes the banner image's size from BrushValueType="Width"/"Height"
+       lookups on ClanNaming.Stage.Banner - TAOMReviewStage.xml already hit a FormatException from this exact
+       pattern in GauntletPreview (see that file's own Review.Stage.Banner comment) and replaced it with a
+       plain hardcoded Fixed size; done the same way here from the start rather than hitting the same crash
+       again. ClanNaming.Stage.Banner itself (the actual banner texture compositing) is left on its native
+       brush, same reasoning as Review Stage's clan-banner row: not worth rebuilding real rendering machinery
+       that's out of this project's scope.
+       No ScrollablePanel here (unlike native) - banner + label + input box + two short hint lines
+       comfortably fits without scrolling, same simplification already applied to TAOMNarrativeStage.xml's
+       ledger panel and TFGGrid.xml once their own scroll turned out unnecessary. -->
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+      <Children>
+
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="746" HorizontalAlignment="Left" Sprite="fs_scrim_l" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="746" HorizontalAlignment="Right" Sprite="fs_scrim_r" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+
+        <Widget Id="RightPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="546" SuggestedHeight="1080" HorizontalAlignment="Right" Sprite="cc_panel_bg" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true">
+          <Children>
+
+            <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="400" HeightSizePolicy="Fixed" SuggestedHeight="44" HorizontalAlignment="Center" MarginTop="98" Brush="CC.Title" Text="@Title" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="310" SuggestedHeight="16" HorizontalAlignment="Center" MarginTop="152" Sprite="fs_divider_wide" DoNotAcceptEvents="true" />
+            <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="400" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="172" Brush="CC.NarrativeBody" Text="@Description" />
+
+            <ListPanel WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="400" HorizontalAlignment="Center" MarginTop="250" StackLayout.LayoutMethod="VerticalTopToBottom">
+              <Children>
+
+                <MaskedTextureWidget DataSource="{ClanBanner}" Brush="ClanNaming.Stage.Banner" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="160" SuggestedHeight="200" MarginBottom="24" HorizontalAlignment="Center" AdditionalArgs="@AdditionalArgs" HideWhenNull="true" ImageId="@Id" TextureProviderName="@TextureProviderName" />
+
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="10" Brush="CC.SecTitle" Text="@ClanNameHeaderText" />
+                <!-- Border swapped from raw fs_tile_stone_9, same fix as TAOMReviewStage.xml's name field
+                     (2026-09-30, user: "that border is also quite thick, make that more subtle like you did
+                     with the review page") - fs_tile_stone_9 has a bold gold edge baked into the art itself,
+                     not adjustable via alpha. CC.NarrativeOptionFill (ld_bar_stone, no baked-in edge) for the
+                     fill, plus 4 genuinely thin 2px hairline bars as the only border. -->
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="360" SuggestedHeight="56" HorizontalAlignment="Center" MarginBottom="10">
+                  <Children>
+                    <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="2" MarginRight="2" MarginTop="2" MarginBottom="2" Brush="CC.NarrativeOptionFill" DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Top" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.55" DoNotAcceptEvents="true" />
+                    <EditableTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" HorizontalAlignment="Center" VerticalAlignment="Center" MarginLeft="18" MarginRight="18" Brush="CC.NameInput" Text="@ClanName" GamepadNavigationIndex="0" />
+                  </Children>
+                </Widget>
+                <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="360" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="16" Text="@ClanNameNotApplicableReason" Brush="CC.ReviewDesc" />
+
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="310" SuggestedHeight="16" HorizontalAlignment="Center" MarginBottom="16" Sprite="fs_divider_wide" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="360" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Text="@BottomHintText" Brush="CC.ReviewDesc" />
+
+              </Children>
+            </ListPanel>
+
+          </Children>
+        </Widget>
+
+        <!-- TOP RIBBON: same fs_strip chrome as every other reskinned CC screen. -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="90" VerticalAlignment="Top" Sprite="fs_strip" DoNotAcceptEvents="true" />
+        <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="200" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="20" Brush="CC.TabTextActive" LocalizedText="{=taom_fui_clan_name}CLAN NAME" />
+
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="300" HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="511" MarginTop="55" Sprite="cc_corner_ornament" AlphaFactor="0.8" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true" />
+
+        <!--Previous and Next Buttons: same CC.Confirm pill style/positioning convention as every other
+             reskinned CC screen. -->
+        <!-- Back/Next UNIFIED across every CC screen except Faction Select (2026-09-30) - refined to MarginLeft/
+             Right=113/98, centering 320/350-wide buttons under each 546-wide panel (user: "should be more
+             centered with the panels" - see TAOMFaceGen.xml's own Back/Next comment for the full math/history).
+             Size was already 320x51/350x55 here, unchanged. -->
+        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="320" SuggestedHeight="51" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginLeft="113" MarginBottom="44" Brush="CC.Confirm" Command.Click="OnPreviousStage" UpdateChildrenStates="true" GamepadNavigationIndex="1000000">
+          <Children>
+            <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginBottom="7" Brush="CC.ConfirmText" LocalizedText="{=taom_fui_back}Back" />
+            <InputKeyVisualWidget DataSource="{CancelInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="32" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="-22" KeyID="@KeyID" IsVisible="@IsVisible" />
+          </Children>
+        </ButtonWidget>
+        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="350" SuggestedHeight="55" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="98" MarginBottom="43" Brush="CC.Confirm" Command.Click="OnNextStage" IsEnabled="@CanAdvance" UpdateChildrenStates="true" GamepadNavigationIndex="1000001">
+          <Children>
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginBottom="8" Brush="CC.ConfirmText" Text="@NextStageText" />
+            <InputKeyVisualWidget DataSource="{DoneInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="32" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="-22" KeyID="@KeyID" IsVisible="@IsVisible" />
+          </Children>
+        </ButtonWidget>
+
+        <!-- Camera Controls Navigation (preserved byte-for-byte from native - gamepad rotation focus only). -->
+        <NavigationScopeTargeter ScopeID="CharacterNavigationScope" ScopeParent="..\CharacterNavigationTarget" />
+        <Widget Id="CharacterNavigationTarget" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="50" VerticalAlignment="Center" HorizontalAlignment="Center" PositionXOffset="-280" GamepadNavigationIndex="0" />
+
+        <!-- Input Key List (gamepad camera-control hints) -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" DoNotAcceptEvents="true">
+          <Children>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1000" SuggestedHeight="60" MarginLeft="100" IsVisible="@CharacterGamepadControlsEnabled">
+              <Children>
+                <ListPanel DataSource="{CameraControlKeys}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalCentered">
+                  <ItemTemplate>
+                    <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginLeft="15">
+                      <Children>
+                        <InputKeyVisualWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="50" VerticalAlignment="Center" KeyID="@KeyID" IsVisible="@IsVisible" />
+                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="60" SuggestedHeight="40" VerticalAlignment="Center" Text="@KeyName" Brush="CC.KeyText" />
+                      </Children>
+                    </ListPanel>
+                  </ItemTemplate>
+                </ListPanel>
+              </Children>
+            </Widget>
+          </Children>
+        </Widget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

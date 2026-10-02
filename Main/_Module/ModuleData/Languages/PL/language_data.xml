@@ -17,4 +17,9 @@
   <LanguageFile xml_path="PL/std_taom_lord_name_strings_pol-PL.xml" />
   <LanguageFile xml_path="PL/std_taom_clan_name_strings_pol-PL.xml" />
   <LanguageFile xml_path="PL/std_taom_kingdom_name_strings_pol-PL.xml" />
+  <LanguageFile xml_path="PL/std_taom_culture_text_strings_pol-PL.xml" />
+  <LanguageFile xml_path="PL/std_taom_hero_text_strings_pol-PL.xml" />
+  <LanguageFile xml_path="PL/std_taom_career_data_strings_pol-PL.xml" />
+  <LanguageFile xml_path="PL/std_taom_character_name_strings_pol-PL.xml" />
+  <LanguageFile xml_path="PL/std_taom_battle_scene_strings_pol-PL.xml" />
 </LanguageData>

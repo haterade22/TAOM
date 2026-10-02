@@ -1,0 +1,1803 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Korean" />
+  </tags>
+  <strings>
+    <string id="aom_abanissa_clan_1" text="팍스샤란 가문" />
+    <string id="aom_abanissa_clan_2" text="호셰다르마 가문" />
+    <string id="aom_abanissa_clan_3" text="바스나라드 가문" />
+    <string id="aom_abanissa_clan_4" text="고라제한 가문" />
+    <string id="aom_abanissa_clan_5" text="아자다프로잔 가문" />
+    <string id="aom_abanissa_clan_6" text="아르탁샤산 가문" />
+    <string id="aom_abanissa_clan_7" text="아르다케란 가문" />
+    <string id="aom_abanissa_clan_8" text="티르다하나 가문" />
+    <string id="aom_abanissa_female_name_1" text="팍사라" />
+    <string id="aom_abanissa_female_name_10" text="코르바" />
+    <string id="aom_abanissa_female_name_11" text="파르자나" />
+    <string id="aom_abanissa_female_name_12" text="마즈다나" />
+    <string id="aom_abanissa_female_name_13" text="루샤나" />
+    <string id="aom_abanissa_female_name_14" text="바쿠라" />
+    <string id="aom_abanissa_female_name_15" text="다리야" />
+    <string id="aom_abanissa_female_name_16" text="키라나" />
+    <string id="aom_abanissa_female_name_17" text="아르샤나" />
+    <string id="aom_abanissa_female_name_18" text="카바나" />
+    <string id="aom_abanissa_female_name_19" text="잠시" />
+    <string id="aom_abanissa_female_name_2" text="호셰다" />
+    <string id="aom_abanissa_female_name_20" text="파르바나" />
+    <string id="aom_abanissa_female_name_21" text="바흐라마" />
+    <string id="aom_abanissa_female_name_22" text="소흐라바" />
+    <string id="aom_abanissa_female_name_23" text="쿠스로바" />
+    <string id="aom_abanissa_female_name_24" text="아르다바나" />
+    <string id="aom_abanissa_female_name_25" text="로슈다나" />
+    <string id="aom_abanissa_female_name_26" text="마누체" />
+    <string id="aom_abanissa_female_name_27" text="조바이다" />
+    <string id="aom_abanissa_female_name_28" text="파르하다" />
+    <string id="aom_abanissa_female_name_29" text="나리마" />
+    <string id="aom_abanissa_female_name_3" text="바스나라" />
+    <string id="aom_abanissa_female_name_30" text="타흐무라" />
+    <string id="aom_abanissa_female_name_4" text="고라자" />
+    <string id="aom_abanissa_female_name_5" text="아자데" />
+    <string id="aom_abanissa_female_name_6" text="아르타슈나" />
+    <string id="aom_abanissa_female_name_7" text="아르다체" />
+    <string id="aom_abanissa_female_name_8" text="티르다나" />
+    <string id="aom_abanissa_female_name_9" text="샤라나" />
+    <string id="aom_abanissa_male_name_1" text="팍사르" />
+    <string id="aom_abanissa_male_name_10" text="코르만" />
+    <string id="aom_abanissa_male_name_11" text="파르잔" />
+    <string id="aom_abanissa_male_name_12" text="마즈단" />
+    <string id="aom_abanissa_male_name_13" text="루샨" />
+    <string id="aom_abanissa_male_name_14" text="바박" />
+    <string id="aom_abanissa_male_name_15" text="다리우스" />
+    <string id="aom_abanissa_male_name_16" text="키란" />
+    <string id="aom_abanissa_male_name_17" text="아르샨" />
+    <string id="aom_abanissa_male_name_18" text="카반" />
+    <string id="aom_abanissa_male_name_19" text="잠시드" />
+    <string id="aom_abanissa_male_name_2" text="호셰드" />
+    <string id="aom_abanissa_male_name_20" text="파르비즈" />
+    <string id="aom_abanissa_male_name_21" text="바흐람" />
+    <string id="aom_abanissa_male_name_22" text="소흐랍" />
+    <string id="aom_abanissa_male_name_23" text="후스로" />
+    <string id="aom_abanissa_male_name_24" text="아르다반" />
+    <string id="aom_abanissa_male_name_25" text="로슈단" />
+    <string id="aom_abanissa_male_name_26" text="마누치" />
+    <string id="aom_abanissa_male_name_27" text="조바이드" />
+    <string id="aom_abanissa_male_name_28" text="파르하드" />
+    <string id="aom_abanissa_male_name_29" text="나리만" />
+    <string id="aom_abanissa_male_name_3" text="바스나르" />
+    <string id="aom_abanissa_male_name_30" text="타흐무르" />
+    <string id="aom_abanissa_male_name_4" text="고라제" />
+    <string id="aom_abanissa_male_name_5" text="아자단" />
+    <string id="aom_abanissa_male_name_6" text="아르타쉬" />
+    <string id="aom_abanissa_male_name_7" text="아르다흐" />
+    <string id="aom_abanissa_male_name_8" text="티르다" />
+    <string id="aom_abanissa_male_name_9" text="샤룬" />
+    <string id="aom_bluecraig_clan_1" text="푸른 바위 무리" />
+    <string id="aom_bluecraig_clan_10" text="회색산맥 약탈자" />
+    <string id="aom_bluecraig_clan_11" text="에텐무어 무리" />
+    <string id="aom_bluecraig_clan_12" text="스나가 무리" />
+    <string id="aom_bluecraig_clan_13" text="스카르낙의 혈족" />
+    <string id="aom_bluecraig_clan_14" text="검은이빨 씨족" />
+    <string id="aom_bluecraig_clan_15" text="푸른산맥의 재앙" />
+    <string id="aom_bluecraig_clan_2" text="푸른 바위 씨족" />
+    <string id="aom_bluecraig_clan_3" text="안개산맥 늑대들" />
+    <string id="aom_bluecraig_clan_4" text="와르그 무리" />
+    <string id="aom_bluecraig_clan_5" text="돌거인 무리" />
+    <string id="aom_bluecraig_clan_6" text="노그로드 잔당" />
+    <string id="aom_bluecraig_clan_7" text="룬 하구의 족속" />
+    <string id="aom_bluecraig_clan_8" text="크레이그의 자손" />
+    <string id="aom_bluecraig_clan_9" text="카른 둠 전사단" />
+    <string id="aom_bluecraig_desc" text="푸른 바위산의 고블린들은 에레드 루인의 서쪽 지맥을 차지하고 있으며, 에리아도르의 넓은 땅에 가로막혀 에레드 루인 아래의 동족들과 단절되어 있다. 그들은 난쟁이 길과 룬 해안을 약탈하며, 미슬론드의 요정들은 이들을 더 가까운 적으로 여긴다." />
+    <string id="aom_bluecraig_female_name_1" text="그랄자" />
+    <string id="aom_bluecraig_female_name_10" text="울자라" />
+    <string id="aom_bluecraig_female_name_11" text="보르자" />
+    <string id="aom_bluecraig_female_name_12" text="자르그라" />
+    <string id="aom_bluecraig_female_name_13" text="그루샤" />
+    <string id="aom_bluecraig_female_name_14" text="두르샤" />
+    <string id="aom_bluecraig_female_name_15" text="탈라" />
+    <string id="aom_bluecraig_female_name_16" text="보를라" />
+    <string id="aom_bluecraig_female_name_17" text="나르굴" />
+    <string id="aom_bluecraig_female_name_18" text="투르카" />
+    <string id="aom_bluecraig_female_name_19" text="울샤" />
+    <string id="aom_bluecraig_female_name_2" text="투르카" />
+    <string id="aom_bluecraig_female_name_20" text="무즈라크" />
+    <string id="aom_bluecraig_female_name_21" text="크랄샤" />
+    <string id="aom_bluecraig_female_name_22" text="그랄샤" />
+    <string id="aom_bluecraig_female_name_23" text="두르샤" />
+    <string id="aom_bluecraig_female_name_24" text="트란자" />
+    <string id="aom_bluecraig_female_name_25" text="나르그라" />
+    <string id="aom_bluecraig_female_name_26" text="울지라" />
+    <string id="aom_bluecraig_female_name_27" text="보를리아" />
+    <string id="aom_bluecraig_female_name_28" text="조르글라" />
+    <string id="aom_bluecraig_female_name_29" text="두를라" />
+    <string id="aom_bluecraig_female_name_3" text="줄가라" />
+    <string id="aom_bluecraig_female_name_30" text="무즈샤" />
+    <string id="aom_bluecraig_female_name_31" text="트룰가" />
+    <string id="aom_bluecraig_female_name_32" text="나르샤" />
+    <string id="aom_bluecraig_female_name_33" text="크랄가" />
+    <string id="aom_bluecraig_female_name_34" text="그린자" />
+    <string id="aom_bluecraig_female_name_35" text="탈지아" />
+    <string id="aom_bluecraig_female_name_36" text="보르글라" />
+    <string id="aom_bluecraig_female_name_37" text="울질라" />
+    <string id="aom_bluecraig_female_name_38" text="두르자" />
+    <string id="aom_bluecraig_female_name_39" text="나르굴라" />
+    <string id="aom_bluecraig_female_name_4" text="보르자" />
+    <string id="aom_bluecraig_female_name_40" text="스루글라" />
+    <string id="aom_bluecraig_female_name_41" text="무즐라" />
+    <string id="aom_bluecraig_female_name_42" text="그랄나" />
+    <string id="aom_bluecraig_female_name_43" text="사르카" />
+    <string id="aom_bluecraig_female_name_44" text="울자라" />
+    <string id="aom_bluecraig_female_name_45" text="크랄자" />
+    <string id="aom_bluecraig_female_name_46" text="두르카" />
+    <string id="aom_bluecraig_female_name_47" text="스루나" />
+    <string id="aom_bluecraig_female_name_48" text="보르자" />
+    <string id="aom_bluecraig_female_name_49" text="조르가" />
+    <string id="aom_bluecraig_female_name_5" text="두르가" />
+    <string id="aom_bluecraig_female_name_50" text="나를리아" />
+    <string id="aom_bluecraig_female_name_6" text="나르그라" />
+    <string id="aom_bluecraig_female_name_7" text="스룰자" />
+    <string id="aom_bluecraig_female_name_8" text="무즈라" />
+    <string id="aom_bluecraig_female_name_9" text="크랄자" />
+    <string id="aom_bluecraig_male_name_1" text="아즈가르" />
+    <string id="aom_bluecraig_male_name_10" text="무그준" />
+    <string id="aom_bluecraig_male_name_11" text="루르조크" />
+    <string id="aom_bluecraig_male_name_12" text="조르가" />
+    <string id="aom_bluecraig_male_name_13" text="스루막" />
+    <string id="aom_bluecraig_male_name_14" text="나르고스" />
+    <string id="aom_bluecraig_male_name_15" text="보르자크" />
+    <string id="aom_bluecraig_male_name_16" text="드루즈나르" />
+    <string id="aom_bluecraig_male_name_17" text="크라글로스" />
+    <string id="aom_bluecraig_male_name_18" text="부르자그" />
+    <string id="aom_bluecraig_male_name_19" text="나를로그" />
+    <string id="aom_bluecraig_male_name_2" text="드로즈막" />
+    <string id="aom_bluecraig_male_name_20" text="살루그" />
+    <string id="aom_bluecraig_male_name_21" text="우르줄" />
+    <string id="aom_bluecraig_male_name_22" text="그랄사크" />
+    <string id="aom_bluecraig_male_name_23" text="보르그림" />
+    <string id="aom_bluecraig_male_name_24" text="마즈코르" />
+    <string id="aom_bluecraig_male_name_25" text="스카르나카스" />
+    <string id="aom_bluecraig_male_name_26" text="루르사크" />
+    <string id="aom_bluecraig_male_name_27" text="스루골" />
+    <string id="aom_bluecraig_male_name_28" text="나르주크" />
+    <string id="aom_bluecraig_male_name_29" text="크루즈노르" />
+    <string id="aom_bluecraig_male_name_3" text="카르고스" />
+    <string id="aom_bluecraig_male_name_30" text="스라즈굴" />
+    <string id="aom_bluecraig_male_name_31" text="두르작" />
+    <string id="aom_bluecraig_male_name_32" text="줄고스" />
+    <string id="aom_bluecraig_male_name_33" text="보르작" />
+    <string id="aom_bluecraig_male_name_34" text="크로가르" />
+    <string id="aom_bluecraig_male_name_35" text="스루낙" />
+    <string id="aom_bluecraig_male_name_36" text="그라자르" />
+    <string id="aom_bluecraig_male_name_37" text="나르조그" />
+    <string id="aom_bluecraig_male_name_38" text="울그림" />
+    <string id="aom_bluecraig_male_name_39" text="부를락" />
+    <string id="aom_bluecraig_male_name_4" text="스라작" />
+    <string id="aom_bluecraig_male_name_40" text="보르작" />
+    <string id="aom_bluecraig_male_name_41" text="두르조르" />
+    <string id="aom_bluecraig_male_name_42" text="무즈라그" />
+    <string id="aom_bluecraig_male_name_43" text="그랄소르" />
+    <string id="aom_bluecraig_male_name_44" text="사르조그" />
+    <string id="aom_bluecraig_male_name_45" text="브로그낙" />
+    <string id="aom_bluecraig_male_name_46" text="카르낙" />
+    <string id="aom_bluecraig_male_name_47" text="보르작" />
+    <string id="aom_bluecraig_male_name_48" text="나르줄" />
+    <string id="aom_bluecraig_male_name_49" text="스룰고스" />
+    <string id="aom_bluecraig_male_name_5" text="울그림" />
+    <string id="aom_bluecraig_male_name_50" text="드루즈목" />
+    <string id="aom_bluecraig_male_name_6" text="조르가스" />
+    <string id="aom_bluecraig_male_name_7" text="그라고르" />
+    <string id="aom_bluecraig_male_name_8" text="두르마시" />
+    <string id="aom_bluecraig_male_name_9" text="보르고스" />
+    <string id="aom_bluecraig_name" text="블루 크레이그 고블린" />
+    <string id="aom_dolguldur_clan_1" text="강령술사의 노예들" />
+    <string id="aom_dolguldur_clan_10" text="그림자 정찰대" />
+    <string id="aom_dolguldur_clan_11" text="타락의 칼날" />
+    <string id="aom_dolguldur_clan_12" text="어둠숲 무리" />
+    <string id="aom_dolguldur_clan_13" text="망령 근위대" />
+    <string id="aom_dolguldur_clan_14" text="카물의 종복들" />
+    <string id="aom_dolguldur_clan_15" text="황혼의 약탈자들" />
+    <string id="aom_dolguldur_clan_2" text="그림자 군세" />
+    <string id="aom_dolguldur_clan_3" text="돌 굴두르 수비대" />
+    <string id="aom_dolguldur_clan_4" text="모르굴 전투단" />
+    <string id="aom_dolguldur_clan_5" text="어둠숲 추적자들" />
+    <string id="aom_dolguldur_clan_6" text="거미 기수들" />
+    <string id="aom_dolguldur_clan_7" text="암흑 주술사의 호위대" />
+    <string id="aom_dolguldur_clan_8" text="아몬 랑크의 혈족" />
+    <string id="aom_dolguldur_clan_9" text="날개달린 괴수 사육사" />
+    <string id="aom_dolguldur_desc" text="돌 굴두르는 그림자와 악의의 요새이다. 한때 어둠숲에 있던 사우론의 거점이었던 이곳은 이제 강령술사의 어두운 부관들이 다스린다. 돌 굴두르의 군대는 오르크와 와르그, 그리고 어둠의 마법이 뒤섞인 두려운 존재들이다. 이 악의 보루는 주변의 숲을 타락시켜 부패와 절망을 퍼뜨린다. 돌 굴두르의 전사들은 어둠의 주인의 의지에 이끌려 결코 물러서지 않는다." />
+    <string id="aom_dolguldur_female_name_1" text="스룰자" />
+    <string id="aom_dolguldur_female_name_10" text="카즈리아" />
+    <string id="aom_dolguldur_female_name_11" text="나르굴라" />
+    <string id="aom_dolguldur_female_name_12" text="루르그라" />
+    <string id="aom_dolguldur_female_name_13" text="드루즈카" />
+    <string id="aom_dolguldur_female_name_14" text="사르지아" />
+    <string id="aom_dolguldur_female_name_15" text="줄가라" />
+    <string id="aom_dolguldur_female_name_16" text="두를라" />
+    <string id="aom_dolguldur_female_name_17" text="나르지아" />
+    <string id="aom_dolguldur_female_name_18" text="스룰나" />
+    <string id="aom_dolguldur_female_name_19" text="울샤" />
+    <string id="aom_dolguldur_female_name_2" text="나르샤" />
+    <string id="aom_dolguldur_female_name_20" text="보르글라" />
+    <string id="aom_dolguldur_female_name_21" text="무즈라" />
+    <string id="aom_dolguldur_female_name_22" text="그랄자" />
+    <string id="aom_dolguldur_female_name_23" text="카즐라" />
+    <string id="aom_dolguldur_female_name_24" text="나르샤" />
+    <string id="aom_dolguldur_female_name_25" text="살카" />
+    <string id="aom_dolguldur_female_name_26" text="울자" />
+    <string id="aom_dolguldur_female_name_27" text="두르지아" />
+    <string id="aom_dolguldur_female_name_28" text="루르자" />
+    <string id="aom_dolguldur_female_name_29" text="조를라" />
+    <string id="aom_dolguldur_female_name_3" text="그라샤" />
+    <string id="aom_dolguldur_female_name_30" text="스룰라" />
+    <string id="aom_dolguldur_female_name_31" text="보르자" />
+    <string id="aom_dolguldur_female_name_32" text="나르줄라" />
+    <string id="aom_dolguldur_female_name_33" text="무즈그라" />
+    <string id="aom_dolguldur_female_name_34" text="두르그라" />
+    <string id="aom_dolguldur_female_name_35" text="나르그라" />
+    <string id="aom_dolguldur_female_name_36" text="사르지아" />
+    <string id="aom_dolguldur_female_name_37" text="카즈리아" />
+    <string id="aom_dolguldur_female_name_38" text="그랄지아" />
+    <string id="aom_dolguldur_female_name_39" text="우르자라" />
+    <string id="aom_dolguldur_female_name_4" text="두르자" />
+    <string id="aom_dolguldur_female_name_40" text="드루즈니아" />
+    <string id="aom_dolguldur_female_name_41" text="보르그리아" />
+    <string id="aom_dolguldur_female_name_42" text="스룰지아" />
+    <string id="aom_dolguldur_female_name_43" text="줄고라" />
+    <string id="aom_dolguldur_female_name_44" text="나르지아" />
+    <string id="aom_dolguldur_female_name_45" text="카즈니아" />
+    <string id="aom_dolguldur_female_name_46" text="루르지아" />
+    <string id="aom_dolguldur_female_name_47" text="두를라" />
+    <string id="aom_dolguldur_female_name_48" text="그랄니아" />
+    <string id="aom_dolguldur_female_name_49" text="탈카" />
+    <string id="aom_dolguldur_female_name_5" text="자르그라" />
+    <string id="aom_dolguldur_female_name_50" text="보를라" />
+    <string id="aom_dolguldur_female_name_6" text="탈카" />
+    <string id="aom_dolguldur_female_name_7" text="모르그라" />
+    <string id="aom_dolguldur_female_name_8" text="울즈라" />
+    <string id="aom_dolguldur_female_name_9" text="보르자" />
+    <string id="aom_dolguldur_male_name_1" text="스랑굴" />
+    <string id="aom_dolguldur_male_name_10" text="스라르골" />
+    <string id="aom_dolguldur_male_name_11" text="카즈라그" />
+    <string id="aom_dolguldur_male_name_12" text="조르그룰" />
+    <string id="aom_dolguldur_male_name_13" text="모르자그" />
+    <string id="aom_dolguldur_male_name_14" text="드루자크" />
+    <string id="aom_dolguldur_male_name_15" text="탈루크" />
+    <string id="aom_dolguldur_male_name_16" text="로르가스" />
+    <string id="aom_dolguldur_male_name_17" text="나르그라쉬" />
+    <string id="aom_dolguldur_male_name_18" text="우르조크" />
+    <string id="aom_dolguldur_male_name_19" text="보르줄" />
+    <string id="aom_dolguldur_male_name_2" text="모르굴라쉬" />
+    <string id="aom_dolguldur_male_name_20" text="그랄주크" />
+    <string id="aom_dolguldur_male_name_21" text="두르모르그" />
+    <string id="aom_dolguldur_male_name_22" text="소르자그" />
+    <string id="aom_dolguldur_male_name_23" text="크로자르" />
+    <string id="aom_dolguldur_male_name_24" text="줄가스" />
+    <string id="aom_dolguldur_male_name_25" text="수르나크" />
+    <string id="aom_dolguldur_male_name_26" text="바르굴" />
+    <string id="aom_dolguldur_male_name_27" text="다르나쉬" />
+    <string id="aom_dolguldur_male_name_28" text="루르자그" />
+    <string id="aom_dolguldur_male_name_29" text="무즈카르" />
+    <string id="aom_dolguldur_male_name_3" text="드라즈고르" />
+    <string id="aom_dolguldur_male_name_30" text="스로르가쉬" />
+    <string id="aom_dolguldur_male_name_31" text="고르바쉬" />
+    <string id="aom_dolguldur_male_name_32" text="나르두크" />
+    <string id="aom_dolguldur_male_name_33" text="줄고르" />
+    <string id="aom_dolguldur_male_name_34" text="둘루크" />
+    <string id="aom_dolguldur_male_name_35" text="스루가쉬" />
+    <string id="aom_dolguldur_male_name_36" text="카르굴" />
+    <string id="aom_dolguldur_male_name_37" text="울자르" />
+    <string id="aom_dolguldur_male_name_38" text="보르그라쉬" />
+    <string id="aom_dolguldur_male_name_39" text="두르자그" />
+    <string id="aom_dolguldur_male_name_4" text="자르카쉬" />
+    <string id="aom_dolguldur_male_name_40" text="그로르나크" />
+    <string id="aom_dolguldur_male_name_41" text="루르가쉬" />
+    <string id="aom_dolguldur_male_name_42" text="나르줄" />
+    <string id="aom_dolguldur_male_name_43" text="사르골" />
+    <string id="aom_dolguldur_male_name_44" text="모르카쉬" />
+    <string id="aom_dolguldur_male_name_45" text="조르사크" />
+    <string id="aom_dolguldur_male_name_46" text="두르그라크" />
+    <string id="aom_dolguldur_male_name_47" text="카즈굴" />
+    <string id="aom_dolguldur_male_name_48" text="스루르그" />
+    <string id="aom_dolguldur_male_name_49" text="자를루그" />
+    <string id="aom_dolguldur_male_name_5" text="고르자그" />
+    <string id="aom_dolguldur_male_name_50" text="무즈라크" />
+    <string id="aom_dolguldur_male_name_6" text="울스라크" />
+    <string id="aom_dolguldur_male_name_7" text="보르사크" />
+    <string id="aom_dolguldur_male_name_8" text="나르주그" />
+    <string id="aom_dolguldur_male_name_9" text="두르카르" />
+    <string id="aom_dolguldur_name" text="돌 굴두르 오르크" />
+    <string id="aom_erebor_clan_1" text="긴수염" />
+    <string id="aom_erebor_clan_10" text="은도끼" />
+    <string id="aom_erebor_clan_11" text="참나무방패" />
+    <string id="aom_erebor_clan_12" text="해머펠" />
+    <string id="aom_erebor_clan_13" text="깊은굴착" />
+    <string id="aom_erebor_clan_14" text="돌곡괭이" />
+    <string id="aom_erebor_clan_15" text="회색수염" />
+    <string id="aom_erebor_clan_2" text="무쇠발" />
+    <string id="aom_erebor_clan_3" text="돌투구" />
+    <string id="aom_erebor_clan_4" text="넓은허리" />
+    <string id="aom_erebor_clan_5" text="불수염" />
+    <string id="aom_erebor_clan_6" text="뻣뻣수염" />
+    <string id="aom_erebor_clan_7" text="검은머리" />
+    <string id="aom_erebor_clan_8" text="무쇠주먹" />
+    <string id="aom_erebor_clan_9" text="골렐리" />
+    <string id="aom_erebor_desc" text="에레보르의 긴수염족은 외로운산의 전당에 거주하는 자부심 높고 근면한 종족이다. 세공과 채광의 명인인 그들은 무기와 갑옷, 그리고 비할 데 없이 아름다운 보물을 벼려내는 솜씨로 명성이 높다. 산아래의 왕이 이끄는 에레보르의 난쟁이들은 강인한 백성으로, 자신들의 고향과 그 부를 맹렬히 지켜낸다." />
+    <string id="aom_erebor_female_name_1" text="브륀디스" />
+    <string id="aom_erebor_female_name_10" text="카르나" />
+    <string id="aom_erebor_female_name_11" text="루나" />
+    <string id="aom_erebor_female_name_12" text="로리타" />
+    <string id="aom_erebor_female_name_13" text="타르바" />
+    <string id="aom_erebor_female_name_14" text="발다" />
+    <string id="aom_erebor_female_name_15" text="프리타" />
+    <string id="aom_erebor_female_name_16" text="드랄다" />
+    <string id="aom_erebor_female_name_17" text="보를라" />
+    <string id="aom_erebor_female_name_18" text="퀴르니스" />
+    <string id="aom_erebor_female_name_19" text="그렌다" />
+    <string id="aom_erebor_female_name_2" text="카를라" />
+    <string id="aom_erebor_female_name_20" text="할윈" />
+    <string id="aom_erebor_female_name_21" text="브뤼니스" />
+    <string id="aom_erebor_female_name_22" text="모르나" />
+    <string id="aom_erebor_female_name_23" text="킬드라" />
+    <string id="aom_erebor_female_name_24" text="쥘나" />
+    <string id="aom_erebor_female_name_25" text="트란디스" />
+    <string id="aom_erebor_female_name_26" text="오리나" />
+    <string id="aom_erebor_female_name_27" text="드란나" />
+    <string id="aom_erebor_female_name_28" text="날드라" />
+    <string id="aom_erebor_female_name_29" text="갈다" />
+    <string id="aom_erebor_female_name_3" text="고를라" />
+    <string id="aom_erebor_female_name_30" text="튈바" />
+    <string id="aom_erebor_female_name_31" text="자르뷘" />
+    <string id="aom_erebor_female_name_32" text="코를라" />
+    <string id="aom_erebor_female_name_33" text="보린" />
+    <string id="aom_erebor_female_name_34" text="튀라" />
+    <string id="aom_erebor_female_name_35" text="프륀나" />
+    <string id="aom_erebor_female_name_36" text="드리슬라" />
+    <string id="aom_erebor_female_name_37" text="브랄다" />
+    <string id="aom_erebor_female_name_38" text="오를리스" />
+    <string id="aom_erebor_female_name_39" text="티를라" />
+    <string id="aom_erebor_female_name_4" text="탈디스" />
+    <string id="aom_erebor_female_name_40" text="모르나" />
+    <string id="aom_erebor_female_name_41" text="귄라" />
+    <string id="aom_erebor_female_name_42" text="윌린" />
+    <string id="aom_erebor_female_name_43" text="킬나" />
+    <string id="aom_erebor_female_name_44" text="잔드라" />
+    <string id="aom_erebor_female_name_45" text="드리스나" />
+    <string id="aom_erebor_female_name_46" text="할디라" />
+    <string id="aom_erebor_female_name_47" text="카릴" />
+    <string id="aom_erebor_female_name_48" text="틸라" />
+    <string id="aom_erebor_female_name_49" text="잘윈" />
+    <string id="aom_erebor_female_name_5" text="팔디라" />
+    <string id="aom_erebor_female_name_50" text="프린다" />
+    <string id="aom_erebor_female_name_6" text="힐다" />
+    <string id="aom_erebor_female_name_7" text="노르윈" />
+    <string id="aom_erebor_female_name_8" text="도르나" />
+    <string id="aom_erebor_female_name_9" text="자를린" />
+    <string id="aom_erebor_male_name_1" text="베를링" />
+    <string id="aom_erebor_male_name_10" text="도르빈" />
+    <string id="aom_erebor_male_name_11" text="툴도르" />
+    <string id="aom_erebor_male_name_12" text="가를린" />
+    <string id="aom_erebor_male_name_13" text="칼둔" />
+    <string id="aom_erebor_male_name_14" text="글로니" />
+    <string id="aom_erebor_male_name_15" text="사르그림" />
+    <string id="aom_erebor_male_name_16" text="하르보르" />
+    <string id="aom_erebor_male_name_17" text="브린달" />
+    <string id="aom_erebor_male_name_18" text="올파르" />
+    <string id="aom_erebor_male_name_19" text="드라카르" />
+    <string id="aom_erebor_male_name_2" text="드룰린" />
+    <string id="aom_erebor_male_name_20" text="보르긴" />
+    <string id="aom_erebor_male_name_21" text="칼단" />
+    <string id="aom_erebor_male_name_22" text="파린" />
+    <string id="aom_erebor_male_name_23" text="살린" />
+    <string id="aom_erebor_male_name_24" text="할딘" />
+    <string id="aom_erebor_male_name_25" text="푼딘" />
+    <string id="aom_erebor_male_name_26" text="스코르그림" />
+    <string id="aom_erebor_male_name_27" text="브로그림" />
+    <string id="aom_erebor_male_name_28" text="살파르" />
+    <string id="aom_erebor_male_name_29" text="투비" />
+    <string id="aom_erebor_male_name_3" text="고르윈" />
+    <string id="aom_erebor_male_name_30" text="가밀" />
+    <string id="aom_erebor_male_name_31" text="룰빈" />
+    <string id="aom_erebor_male_name_32" text="소르그란" />
+    <string id="aom_erebor_male_name_33" text="다리" />
+    <string id="aom_erebor_male_name_34" text="바르드린" />
+    <string id="aom_erebor_male_name_35" text="자르빈" />
+    <string id="aom_erebor_male_name_36" text="오리노르" />
+    <string id="aom_erebor_male_name_37" text="카르닐" />
+    <string id="aom_erebor_male_name_38" text="탈그림" />
+    <string id="aom_erebor_male_name_39" text="프론딘" />
+    <string id="aom_erebor_male_name_4" text="노린" />
+    <string id="aom_erebor_male_name_40" text="드로르" />
+    <string id="aom_erebor_male_name_41" text="할도르" />
+    <string id="aom_erebor_male_name_42" text="베기르" />
+    <string id="aom_erebor_male_name_43" text="야른" />
+    <string id="aom_erebor_male_name_44" text="우니" />
+    <string id="aom_erebor_male_name_45" text="오란" />
+    <string id="aom_erebor_male_name_46" text="바르도른" />
+    <string id="aom_erebor_male_name_47" text="타란" />
+    <string id="aom_erebor_male_name_48" text="누룬" />
+    <string id="aom_erebor_male_name_49" text="하미사르" />
+    <string id="aom_erebor_male_name_5" text="발릭" />
+    <string id="aom_erebor_male_name_50" text="고르마르" />
+    <string id="aom_erebor_male_name_6" text="코린" />
+    <string id="aom_erebor_male_name_7" text="룬드린" />
+    <string id="aom_erebor_male_name_8" text="하나르" />
+    <string id="aom_erebor_male_name_9" text="갈라르" />
+    <string id="aom_erebor_name" text="난쟁이" />
+    <string id="aom_goblin_clan_1" text="고블린 마을 무리" />
+    <string id="aom_goblin_clan_10" text="회색산맥 약탈자" />
+    <string id="aom_goblin_clan_11" text="에텐무어스 무리" />
+    <string id="aom_goblin_clan_12" text="스나가 무리" />
+    <string id="aom_goblin_clan_13" text="볼그의 혈족" />
+    <string id="aom_goblin_clan_14" text="검은이빨 씨족" />
+    <string id="aom_goblin_clan_15" text="무쇠언덕의 재앙" />
+    <string id="aom_goblin_clan_2" text="고블린 마을 씨족" />
+    <string id="aom_goblin_clan_3" text="안개산맥의 늑대들" />
+    <string id="aom_goblin_clan_4" text="와르그 무리" />
+    <string id="aom_goblin_clan_5" text="돌거인 무리" />
+    <string id="aom_goblin_clan_6" text="모리아의 잔당" />
+    <string id="aom_goblin_clan_7" text="키리스 웅골의 새끼들" />
+    <string id="aom_goblin_clan_8" text="앙그마르의 자식들" />
+    <string id="aom_goblin_clan_9" text="카른 둠 전투단" />
+    <string id="aom_goblin_desc" text="고블린 마을의 고블린들은 안개산맥 높은고개 아래의 굴들을 들끓게 한다. 혼자서는 겁이 많지만 수로 압도하며, 어둠 속에서 끝없이 번식하여 산길의 여행자들을 기습하려 쏟아져 나온다. 대왕고블린과 그 수하 대장들 아래서 요정과 난쟁이, 인간을 가리지 않고 괴롭히며, 약탈과 악의를 위해 커져가는 암흑을 섬긴다." />
+    <string id="aom_goblin_female_name_1" text="그랄자" />
+    <string id="aom_goblin_female_name_10" text="울자라" />
+    <string id="aom_goblin_female_name_11" text="보르자" />
+    <string id="aom_goblin_female_name_12" text="자르그라" />
+    <string id="aom_goblin_female_name_13" text="그루샤" />
+    <string id="aom_goblin_female_name_14" text="두르샤" />
+    <string id="aom_goblin_female_name_15" text="탈라" />
+    <string id="aom_goblin_female_name_16" text="보를라" />
+    <string id="aom_goblin_female_name_17" text="나르굴" />
+    <string id="aom_goblin_female_name_18" text="투르카" />
+    <string id="aom_goblin_female_name_19" text="울샤" />
+    <string id="aom_goblin_female_name_2" text="투르카" />
+    <string id="aom_goblin_female_name_20" text="무즈라크" />
+    <string id="aom_goblin_female_name_21" text="크랄샤" />
+    <string id="aom_goblin_female_name_22" text="그랄샤" />
+    <string id="aom_goblin_female_name_23" text="두르샤" />
+    <string id="aom_goblin_female_name_24" text="트란자" />
+    <string id="aom_goblin_female_name_25" text="나르그라" />
+    <string id="aom_goblin_female_name_26" text="울지라" />
+    <string id="aom_goblin_female_name_27" text="보를리아" />
+    <string id="aom_goblin_female_name_28" text="조르글라" />
+    <string id="aom_goblin_female_name_29" text="두를라" />
+    <string id="aom_goblin_female_name_3" text="줄가라" />
+    <string id="aom_goblin_female_name_30" text="무즈샤" />
+    <string id="aom_goblin_female_name_31" text="트룰가" />
+    <string id="aom_goblin_female_name_32" text="나르샤" />
+    <string id="aom_goblin_female_name_33" text="크랄가" />
+    <string id="aom_goblin_female_name_34" text="그린자" />
+    <string id="aom_goblin_female_name_35" text="탈지아" />
+    <string id="aom_goblin_female_name_36" text="보르글라" />
+    <string id="aom_goblin_female_name_37" text="울질라" />
+    <string id="aom_goblin_female_name_38" text="두르자" />
+    <string id="aom_goblin_female_name_39" text="나르굴라" />
+    <string id="aom_goblin_female_name_4" text="보르자" />
+    <string id="aom_goblin_female_name_40" text="트루글라" />
+    <string id="aom_goblin_female_name_41" text="무즐라" />
+    <string id="aom_goblin_female_name_42" text="그랄나" />
+    <string id="aom_goblin_female_name_43" text="타르카" />
+    <string id="aom_goblin_female_name_44" text="울자라" />
+    <string id="aom_goblin_female_name_45" text="크랄자" />
+    <string id="aom_goblin_female_name_46" text="두르카" />
+    <string id="aom_goblin_female_name_47" text="트루나" />
+    <string id="aom_goblin_female_name_48" text="보르자" />
+    <string id="aom_goblin_female_name_49" text="조르가" />
+    <string id="aom_goblin_female_name_5" text="두르가" />
+    <string id="aom_goblin_female_name_50" text="나를리아" />
+    <string id="aom_goblin_female_name_6" text="나르그라" />
+    <string id="aom_goblin_female_name_7" text="스룰자" />
+    <string id="aom_goblin_female_name_8" text="무즈라" />
+    <string id="aom_goblin_female_name_9" text="크랄자" />
+    <string id="aom_goblin_male_name_1" text="아즈가르" />
+    <string id="aom_goblin_male_name_10" text="무그준" />
+    <string id="aom_goblin_male_name_11" text="루르조크" />
+    <string id="aom_goblin_male_name_12" text="조르가" />
+    <string id="aom_goblin_male_name_13" text="스루막" />
+    <string id="aom_goblin_male_name_14" text="나르고스" />
+    <string id="aom_goblin_male_name_15" text="보르자크" />
+    <string id="aom_goblin_male_name_16" text="드루즈나르" />
+    <string id="aom_goblin_male_name_17" text="크라글로스" />
+    <string id="aom_goblin_male_name_18" text="부르자그" />
+    <string id="aom_goblin_male_name_19" text="나를로그" />
+    <string id="aom_goblin_male_name_2" text="드로즈막" />
+    <string id="aom_goblin_male_name_20" text="살루그" />
+    <string id="aom_goblin_male_name_21" text="우르줄" />
+    <string id="aom_goblin_male_name_22" text="그랄사크" />
+    <string id="aom_goblin_male_name_23" text="보르그림" />
+    <string id="aom_goblin_male_name_24" text="마즈코르" />
+    <string id="aom_goblin_male_name_25" text="볼가스" />
+    <string id="aom_goblin_male_name_26" text="루르사크" />
+    <string id="aom_goblin_male_name_27" text="스루골" />
+    <string id="aom_goblin_male_name_28" text="나르주크" />
+    <string id="aom_goblin_male_name_29" text="크루즈노르" />
+    <string id="aom_goblin_male_name_3" text="카르고스" />
+    <string id="aom_goblin_male_name_30" text="스라즈굴" />
+    <string id="aom_goblin_male_name_31" text="두르자크" />
+    <string id="aom_goblin_male_name_32" text="줄고스" />
+    <string id="aom_goblin_male_name_33" text="보르자크" />
+    <string id="aom_goblin_male_name_34" text="크로가르" />
+    <string id="aom_goblin_male_name_35" text="스루나크" />
+    <string id="aom_goblin_male_name_36" text="그라자르" />
+    <string id="aom_goblin_male_name_37" text="나르조그" />
+    <string id="aom_goblin_male_name_38" text="울그림" />
+    <string id="aom_goblin_male_name_39" text="부를라크" />
+    <string id="aom_goblin_male_name_4" text="스라자크" />
+    <string id="aom_goblin_male_name_40" text="보르자크" />
+    <string id="aom_goblin_male_name_41" text="두르조르" />
+    <string id="aom_goblin_male_name_42" text="무즈라그" />
+    <string id="aom_goblin_male_name_43" text="그랄소르" />
+    <string id="aom_goblin_male_name_44" text="사르조그" />
+    <string id="aom_goblin_male_name_45" text="브로그나크" />
+    <string id="aom_goblin_male_name_46" text="카르나크" />
+    <string id="aom_goblin_male_name_47" text="보르자크" />
+    <string id="aom_goblin_male_name_48" text="나르줄" />
+    <string id="aom_goblin_male_name_49" text="스룰고스" />
+    <string id="aom_goblin_male_name_5" text="울그림" />
+    <string id="aom_goblin_male_name_50" text="드루즈모크" />
+    <string id="aom_goblin_male_name_6" text="조르가스" />
+    <string id="aom_goblin_male_name_7" text="그라고르" />
+    <string id="aom_goblin_male_name_8" text="두르마시" />
+    <string id="aom_goblin_male_name_9" text="보르고스" />
+    <string id="aom_goblin_name" text="고블린" />
+    <string id="aom_gondor_clan_1" text="후린 가문" />
+    <string id="aom_gondor_clan_10" text="에시르 가문" />
+    <string id="aom_gondor_clan_11" text="안팔라스 가문" />
+    <string id="aom_gondor_clan_12" text="라메돈 가문" />
+    <string id="aom_gondor_clan_13" text="이실리엔 가문" />
+    <string id="aom_gondor_clan_14" text="카이르 안드로스 가문" />
+    <string id="aom_gondor_clan_15" text="타르노스트 가문" />
+    <string id="aom_gondor_clan_2" text="돌 암로스 가문" />
+    <string id="aom_gondor_clan_3" text="아나리온 가문" />
+    <string id="aom_gondor_clan_4" text="로사르나크 가문" />
+    <string id="aom_gondor_clan_5" text="핀나스 겔린 가문" />
+    <string id="aom_gondor_clan_6" text="모르손드 가문" />
+    <string id="aom_gondor_clan_7" text="링글로 가문" />
+    <string id="aom_gondor_clan_8" text="레벤닌 가문" />
+    <string id="aom_gondor_clan_9" text="펠라르기르 가문" />
+    <string id="aom_gondor_desc" text="곤도르의 백성은 긍지 높고 굳건한 이들로, 가운데땅 인간 왕국 중 가장 위대한 나라의 후예이다. 누메노르의 망명자 이실두르와 아나리온이 세운 곤도르는 모르도르의 밀려오는 어둠에 맞서는 힘과 희망의 보루로 서 있다. 장엄한 미나스 티리스를 머리에 인 그 석조 도시들은 건축술과 인내의 경이이다. 고결한 섭정과 용맹한 지휘관들의 인도 아래, 그들은 흔들림 없는 보병과 빠른 기사들로 이루어진 규율 잡힌 군대를 일으키니, 절망 앞에서 빛나는 저항의 횃불이다." />
+    <string id="aom_gondor_female_name_1" text="로시리엘" />
+    <string id="aom_gondor_female_name_10" text="실마리엔" />
+    <string id="aom_gondor_female_name_11" text="에아르웬" />
+    <string id="aom_gondor_female_name_12" text="린도리에" />
+    <string id="aom_gondor_female_name_13" text="알마리안" />
+    <string id="aom_gondor_female_name_14" text="에렌디스" />
+    <string id="aom_gondor_female_name_15" text="인질베스" />
+    <string id="aom_gondor_female_name_16" text="텔웬" />
+    <string id="aom_gondor_female_name_17" text="다에리엘" />
+    <string id="aom_gondor_female_name_18" text="니니엘" />
+    <string id="aom_gondor_female_name_19" text="리안" />
+    <string id="aom_gondor_female_name_2" text="이브리니엘" />
+    <string id="aom_gondor_female_name_20" text="할레스" />
+    <string id="aom_gondor_female_name_21" text="안칼리메" />
+    <string id="aom_gondor_female_name_22" text="바르디엘" />
+    <string id="aom_gondor_female_name_23" text="엘레드웬" />
+    <string id="aom_gondor_female_name_24" text="님로델" />
+    <string id="aom_gondor_female_name_25" text="칼라드웬" />
+    <string id="aom_gondor_female_name_26" text="미스렐라스" />
+    <string id="aom_gondor_female_name_27" text="에일리넬" />
+    <string id="aom_gondor_female_name_28" text="아에린" />
+    <string id="aom_gondor_female_name_29" text="안드레스" />
+    <string id="aom_gondor_female_name_3" text="핀두일라스" />
+    <string id="aom_gondor_female_name_30" text="벨디스" />
+    <string id="aom_gondor_female_name_31" text="길미스" />
+    <string id="aom_gondor_female_name_32" text="라그넬" />
+    <string id="aom_gondor_female_name_33" text="아노리엔" />
+    <string id="aom_gondor_female_name_34" text="로시엘" />
+    <string id="aom_gondor_female_name_35" text="이드릴" />
+    <string id="aom_gondor_female_name_36" text="오리엘" />
+    <string id="aom_gondor_female_name_37" text="파에르벨" />
+    <string id="aom_gondor_female_name_38" text="켈웬" />
+    <string id="aom_gondor_female_name_39" text="브라니엘" />
+    <string id="aom_gondor_female_name_4" text="모르웬" />
+    <string id="aom_gondor_female_name_40" text="티리엘" />
+    <string id="aom_gondor_female_name_41" text="바라디스" />
+    <string id="aom_gondor_female_name_42" text="디리엘" />
+    <string id="aom_gondor_female_name_43" text="헬레디스" />
+    <string id="aom_gondor_female_name_44" text="메넬웬" />
+    <string id="aom_gondor_female_name_45" text="시리엘" />
+    <string id="aom_gondor_female_name_46" text="엘라노르" />
+    <string id="aom_gondor_female_name_47" text="히르웬" />
+    <string id="aom_gondor_female_name_48" text="말리엘" />
+    <string id="aom_gondor_female_name_49" text="벨웬" />
+    <string id="aom_gondor_female_name_5" text="길라엔" />
+    <string id="aom_gondor_female_name_50" text="아나리엘" />
+    <string id="aom_gondor_female_name_6" text="이오레스" />
+    <string id="aom_gondor_female_name_7" text="베루시엘" />
+    <string id="aom_gondor_female_name_8" text="안웬" />
+    <string id="aom_gondor_female_name_9" text="미리엘" />
+    <string id="aom_gondor_male_name_1" text="보로미르" />
+    <string id="aom_gondor_male_name_10" text="키리온" />
+    <string id="aom_gondor_male_name_11" text="엑셀리온" />
+    <string id="aom_gondor_male_name_12" text="투르곤" />
+    <string id="aom_gondor_male_name_13" text="벨렉소르" />
+    <string id="aom_gondor_male_name_14" text="에라단" />
+    <string id="aom_gondor_male_name_15" text="히르곤" />
+    <string id="aom_gondor_male_name_16" text="데르보린" />
+    <string id="aom_gondor_male_name_17" text="두인히르" />
+    <string id="aom_gondor_male_name_18" text="포를롱" />
+    <string id="aom_gondor_male_name_19" text="골라스길" />
+    <string id="aom_gondor_male_name_2" text="파라미르" />
+    <string id="aom_gondor_male_name_20" text="앙보르" />
+    <string id="aom_gondor_male_name_21" text="마르딜" />
+    <string id="aom_gondor_male_name_22" text="보론딜" />
+    <string id="aom_gondor_male_name_23" text="펠렌두르" />
+    <string id="aom_gondor_male_name_24" text="헤리온" />
+    <string id="aom_gondor_male_name_25" text="벨레고른" />
+    <string id="aom_gondor_male_name_26" text="바라노르" />
+    <string id="aom_gondor_male_name_27" text="잉골드" />
+    <string id="aom_gondor_male_name_28" text="베르길" />
+    <string id="aom_gondor_male_name_29" text="할라스" />
+    <string id="aom_gondor_male_name_3" text="베레곤드" />
+    <string id="aom_gondor_male_name_30" text="에갈모스" />
+    <string id="aom_gondor_male_name_31" text="칼마킬" />
+    <string id="aom_gondor_male_name_32" text="텔루메흐타르" />
+    <string id="aom_gondor_male_name_33" text="알다미르" />
+    <string id="aom_gondor_male_name_34" text="엘다카르" />
+    <string id="aom_gondor_male_name_35" text="미나르딜" />
+    <string id="aom_gondor_male_name_36" text="키리안딜" />
+    <string id="aom_gondor_male_name_37" text="타란논" />
+    <string id="aom_gondor_male_name_38" text="아나르딜" />
+    <string id="aom_gondor_male_name_39" text="메넬딜" />
+    <string id="aom_gondor_male_name_4" text="임라힐" />
+    <string id="aom_gondor_male_name_40" text="에르닐" />
+    <string id="aom_gondor_male_name_41" text="갈라도르" />
+    <string id="aom_gondor_male_name_42" text="아드라힐" />
+    <string id="aom_gondor_male_name_43" text="나르마킬" />
+    <string id="aom_gondor_male_name_44" text="두일린" />
+    <string id="aom_gondor_male_name_45" text="데루핀" />
+    <string id="aom_gondor_male_name_46" text="히를루인" />
+    <string id="aom_gondor_male_name_47" text="이오를라스" />
+    <string id="aom_gondor_male_name_48" text="타르곤" />
+    <string id="aom_gondor_male_name_49" text="마블룽" />
+    <string id="aom_gondor_male_name_5" text="후린" />
+    <string id="aom_gondor_male_name_50" text="담로드" />
+    <string id="aom_gondor_male_name_6" text="데네소르" />
+    <string id="aom_gondor_male_name_7" text="아나리온" />
+    <string id="aom_gondor_male_name_8" text="엘렌딜" />
+    <string id="aom_gondor_male_name_9" text="소롱길" />
+    <string id="aom_gondor_name" text="곤도르인" />
+    <string id="aom_gundabad_clan_1" text="궁다바드산 부족" />
+    <string id="aom_gundabad_clan_10" text="회색산맥 약탈자" />
+    <string id="aom_gundabad_clan_11" text="에텐무어스 무리" />
+    <string id="aom_gundabad_clan_12" text="스나가 무리" />
+    <string id="aom_gundabad_clan_13" text="볼그의 혈족" />
+    <string id="aom_gundabad_clan_14" text="검은이빨 씨족" />
+    <string id="aom_gundabad_clan_15" text="무쇠언덕의 재앙" />
+    <string id="aom_gundabad_clan_2" text="고블린 마을 씨족" />
+    <string id="aom_gundabad_clan_3" text="안개산맥 늑대들" />
+    <string id="aom_gundabad_clan_4" text="와르그 무리" />
+    <string id="aom_gundabad_clan_5" text="돌거인 무리" />
+    <string id="aom_gundabad_clan_6" text="모리아의 잔당" />
+    <string id="aom_gundabad_clan_7" text="키리스 웅골의 새끼들" />
+    <string id="aom_gundabad_clan_8" text="앙마르의 아이들" />
+    <string id="aom_gundabad_clan_9" text="카른 둠 전사단" />
+    <string id="aom_gundabad_desc" text="안개산맥의 궁다바드 오크들은 야만적이고 집요하다. 고대의 요새 궁다바드산에서 그들은 복수와 정복의 갈망에 이끌려 주변 땅을 약탈한다. 강력한 족장들의 지배 아래 그들은 고블린과 와르그, 트롤의 군단을 모은다. 궁다바드의 전사들은 거칠고 교활하며, 매복과 압도적인 물량 공세의 달인이다." />
+    <string id="aom_gundabad_female_name_1" text="그랄자" />
+    <string id="aom_gundabad_female_name_10" text="울자라" />
+    <string id="aom_gundabad_female_name_11" text="보르자" />
+    <string id="aom_gundabad_female_name_12" text="자르그라" />
+    <string id="aom_gundabad_female_name_13" text="그루샤" />
+    <string id="aom_gundabad_female_name_14" text="두르샤" />
+    <string id="aom_gundabad_female_name_15" text="살라" />
+    <string id="aom_gundabad_female_name_16" text="보를라" />
+    <string id="aom_gundabad_female_name_17" text="나르굴" />
+    <string id="aom_gundabad_female_name_18" text="투르카" />
+    <string id="aom_gundabad_female_name_19" text="울샤" />
+    <string id="aom_gundabad_female_name_2" text="투르카" />
+    <string id="aom_gundabad_female_name_20" text="무즈락" />
+    <string id="aom_gundabad_female_name_21" text="크랄샤" />
+    <string id="aom_gundabad_female_name_22" text="그랄샤" />
+    <string id="aom_gundabad_female_name_23" text="두르샤" />
+    <string id="aom_gundabad_female_name_24" text="스란자" />
+    <string id="aom_gundabad_female_name_25" text="나르그라" />
+    <string id="aom_gundabad_female_name_26" text="울지라" />
+    <string id="aom_gundabad_female_name_27" text="보를리아" />
+    <string id="aom_gundabad_female_name_28" text="조르글라" />
+    <string id="aom_gundabad_female_name_29" text="두를라" />
+    <string id="aom_gundabad_female_name_3" text="줄가라" />
+    <string id="aom_gundabad_female_name_30" text="무즈샤" />
+    <string id="aom_gundabad_female_name_31" text="스룰가" />
+    <string id="aom_gundabad_female_name_32" text="나르샤" />
+    <string id="aom_gundabad_female_name_33" text="크랄가" />
+    <string id="aom_gundabad_female_name_34" text="그린자" />
+    <string id="aom_gundabad_female_name_35" text="살지아" />
+    <string id="aom_gundabad_female_name_36" text="보르글라" />
+    <string id="aom_gundabad_female_name_37" text="울질라" />
+    <string id="aom_gundabad_female_name_38" text="두르자" />
+    <string id="aom_gundabad_female_name_39" text="나르굴라" />
+    <string id="aom_gundabad_female_name_4" text="보르자" />
+    <string id="aom_gundabad_female_name_40" text="스루글라" />
+    <string id="aom_gundabad_female_name_41" text="무즐라" />
+    <string id="aom_gundabad_female_name_42" text="그랄나" />
+    <string id="aom_gundabad_female_name_43" text="사르카" />
+    <string id="aom_gundabad_female_name_44" text="울자라" />
+    <string id="aom_gundabad_female_name_45" text="크랄자" />
+    <string id="aom_gundabad_female_name_46" text="두르카" />
+    <string id="aom_gundabad_female_name_47" text="스루나" />
+    <string id="aom_gundabad_female_name_48" text="보르자" />
+    <string id="aom_gundabad_female_name_49" text="조르가" />
+    <string id="aom_gundabad_female_name_5" text="두르가" />
+    <string id="aom_gundabad_female_name_50" text="나를리아" />
+    <string id="aom_gundabad_female_name_6" text="나르그라" />
+    <string id="aom_gundabad_female_name_7" text="스룰자" />
+    <string id="aom_gundabad_female_name_8" text="무즈라" />
+    <string id="aom_gundabad_female_name_9" text="크랄자" />
+    <string id="aom_gundabad_male_name_1" text="아즈가르" />
+    <string id="aom_gundabad_male_name_10" text="무그준" />
+    <string id="aom_gundabad_male_name_11" text="루르조크" />
+    <string id="aom_gundabad_male_name_12" text="조르가" />
+    <string id="aom_gundabad_male_name_13" text="스루막" />
+    <string id="aom_gundabad_male_name_14" text="나르고스" />
+    <string id="aom_gundabad_male_name_15" text="보르작" />
+    <string id="aom_gundabad_male_name_16" text="드루즈나르" />
+    <string id="aom_gundabad_male_name_17" text="크라글로스" />
+    <string id="aom_gundabad_male_name_18" text="부르자그" />
+    <string id="aom_gundabad_male_name_19" text="나를로그" />
+    <string id="aom_gundabad_male_name_2" text="드로즈막" />
+    <string id="aom_gundabad_male_name_20" text="살루그" />
+    <string id="aom_gundabad_male_name_21" text="우르줄" />
+    <string id="aom_gundabad_male_name_22" text="그랄삭" />
+    <string id="aom_gundabad_male_name_23" text="보르그림" />
+    <string id="aom_gundabad_male_name_24" text="마즈코르" />
+    <string id="aom_gundabad_male_name_25" text="볼가스" />
+    <string id="aom_gundabad_male_name_26" text="루르삭" />
+    <string id="aom_gundabad_male_name_27" text="스루골" />
+    <string id="aom_gundabad_male_name_28" text="나르주크" />
+    <string id="aom_gundabad_male_name_29" text="크루즈노르" />
+    <string id="aom_gundabad_male_name_3" text="카르고스" />
+    <string id="aom_gundabad_male_name_30" text="스라즈굴" />
+    <string id="aom_gundabad_male_name_31" text="두르작" />
+    <string id="aom_gundabad_male_name_32" text="줄고스" />
+    <string id="aom_gundabad_male_name_33" text="보르작" />
+    <string id="aom_gundabad_male_name_34" text="크로가르" />
+    <string id="aom_gundabad_male_name_35" text="스루낙" />
+    <string id="aom_gundabad_male_name_36" text="그라자르" />
+    <string id="aom_gundabad_male_name_37" text="나르조그" />
+    <string id="aom_gundabad_male_name_38" text="울그림" />
+    <string id="aom_gundabad_male_name_39" text="부를락" />
+    <string id="aom_gundabad_male_name_4" text="스라작" />
+    <string id="aom_gundabad_male_name_40" text="보르작" />
+    <string id="aom_gundabad_male_name_41" text="두르조르" />
+    <string id="aom_gundabad_male_name_42" text="무즈라그" />
+    <string id="aom_gundabad_male_name_43" text="그랄소르" />
+    <string id="aom_gundabad_male_name_44" text="사르조그" />
+    <string id="aom_gundabad_male_name_45" text="브로그나크" />
+    <string id="aom_gundabad_male_name_46" text="카르나크" />
+    <string id="aom_gundabad_male_name_47" text="보르자크" />
+    <string id="aom_gundabad_male_name_48" text="나르줄" />
+    <string id="aom_gundabad_male_name_49" text="쓰룰고스" />
+    <string id="aom_gundabad_male_name_5" text="울그림" />
+    <string id="aom_gundabad_male_name_50" text="드루즈목" />
+    <string id="aom_gundabad_male_name_6" text="조르가스" />
+    <string id="aom_gundabad_male_name_7" text="그라고르" />
+    <string id="aom_gundabad_male_name_8" text="두르마쉬" />
+    <string id="aom_gundabad_male_name_9" text="보르고스" />
+    <string id="aom_gundabad_name" text="군다바드 오크" />
+    <string id="aom_isengard_clan_1" text="하얀 손" />
+    <string id="aom_isengard_clan_10" text="투기장 전사단" />
+    <string id="aom_isengard_clan_11" text="사루만의 선택받은 자들" />
+    <string id="aom_isengard_clan_12" text="탑의 감시대" />
+    <string id="aom_isengard_clan_13" text="팡고른 약탈대" />
+    <string id="aom_isengard_clan_14" text="웨스트폴드 습격대" />
+    <string id="aom_isengard_clan_15" text="검은 쇠 씨족" />
+    <string id="aom_isengard_clan_2" text="전투 우루크하이" />
+    <string id="aom_isengard_clan_3" text="아이센가드 선봉대" />
+    <string id="aom_isengard_clan_4" text="와르그 기수단" />
+    <string id="aom_isengard_clan_5" text="광전사 무리" />
+    <string id="aom_isengard_clan_6" text="오르상크 근위대" />
+    <string id="aom_isengard_clan_7" text="무쇠주먹 군단" />
+    <string id="aom_isengard_clan_8" text="던랜드 동맹군" />
+    <string id="aom_isengard_clan_9" text="난 쿠루니르 전투단" />
+    <string id="aom_isengard_desc" text="아이센가드의 무리는 사루만의 군단으로, 공업의 힘으로 벼려졌고 지배를 향한 어두운 야망에 불타오른다. 난공불락의 오르상크 탑을 중심으로 한 아이센가드는 힘과 인내, 복종을 위해 길러진 우루크하이의 터전이다. 전쟁 기계와 주인의 교활함으로 그들은 모든 저항을 무자비한 정확함으로 짓밟는다." />
+    <string id="aom_isengard_female_name_1" text="그리쉬나" />
+    <string id="aom_isengard_female_name_10" text="두르그라" />
+    <string id="aom_isengard_female_name_11" text="그리쉬카" />
+    <string id="aom_isengard_female_name_12" text="우르바지아" />
+    <string id="aom_isengard_female_name_13" text="고를라" />
+    <string id="aom_isengard_female_name_14" text="카즈라" />
+    <string id="aom_isengard_female_name_15" text="보를라" />
+    <string id="aom_isengard_female_name_16" text="두르쉬카" />
+    <string id="aom_isengard_female_name_17" text="조를리아" />
+    <string id="aom_isengard_female_name_18" text="나르쉬카" />
+    <string id="aom_isengard_female_name_19" text="투르자" />
+    <string id="aom_isengard_female_name_2" text="타르자" />
+    <string id="aom_isengard_female_name_20" text="루르그라" />
+    <string id="aom_isengard_female_name_21" text="모를리나" />
+    <string id="aom_isengard_female_name_22" text="둘그라" />
+    <string id="aom_isengard_female_name_23" text="보를리자" />
+    <string id="aom_isengard_female_name_24" text="그릴라" />
+    <string id="aom_isengard_female_name_25" text="자르자" />
+    <string id="aom_isengard_female_name_26" text="나르줄라" />
+    <string id="aom_isengard_female_name_27" text="타르지아" />
+    <string id="aom_isengard_female_name_28" text="두르바" />
+    <string id="aom_isengard_female_name_29" text="카즐리자" />
+    <string id="aom_isengard_female_name_3" text="우르즈라" />
+    <string id="aom_isengard_female_name_30" text="스룰라" />
+    <string id="aom_isengard_female_name_31" text="우르잘라" />
+    <string id="aom_isengard_female_name_32" text="보르굴리아" />
+    <string id="aom_isengard_female_name_33" text="모르드리아" />
+    <string id="aom_isengard_female_name_34" text="두르간" />
+    <string id="aom_isengard_female_name_35" text="루르굴리아" />
+    <string id="aom_isengard_female_name_36" text="나르슈카" />
+    <string id="aom_isengard_female_name_37" text="조르니아" />
+    <string id="aom_isengard_female_name_38" text="타를리아" />
+    <string id="aom_isengard_female_name_39" text="카즈리아" />
+    <string id="aom_isengard_female_name_4" text="보르굴라" />
+    <string id="aom_isengard_female_name_40" text="우르바지아" />
+    <string id="aom_isengard_female_name_41" text="그릴리자" />
+    <string id="aom_isengard_female_name_42" text="두리나" />
+    <string id="aom_isengard_female_name_43" text="보르자" />
+    <string id="aom_isengard_female_name_44" text="나르빌라" />
+    <string id="aom_isengard_female_name_45" text="스룰리아" />
+    <string id="aom_isengard_female_name_46" text="고를리아" />
+    <string id="aom_isengard_female_name_47" text="두르지아" />
+    <string id="aom_isengard_female_name_48" text="카줄라" />
+    <string id="aom_isengard_female_name_49" text="루르지아" />
+    <string id="aom_isengard_female_name_5" text="두를리아" />
+    <string id="aom_isengard_female_name_50" text="보를리아" />
+    <string id="aom_isengard_female_name_6" text="모르드리스" />
+    <string id="aom_isengard_female_name_7" text="자르나샤" />
+    <string id="aom_isengard_female_name_8" text="나르자" />
+    <string id="aom_isengard_female_name_9" text="스라샤" />
+    <string id="aom_isengard_male_name_1" text="그라슈나크" />
+    <string id="aom_isengard_male_name_10" text="스라스크" />
+    <string id="aom_isengard_male_name_11" text="두르마쉬" />
+    <string id="aom_isengard_male_name_12" text="그로쉬나크" />
+    <string id="aom_isengard_male_name_13" text="우르바쉬" />
+    <string id="aom_isengard_male_name_14" text="고르줄" />
+    <string id="aom_isengard_male_name_15" text="카즈루크" />
+    <string id="aom_isengard_male_name_16" text="보르조그" />
+    <string id="aom_isengard_male_name_17" text="투그라스" />
+    <string id="aom_isengard_male_name_18" text="조르그라크" />
+    <string id="aom_isengard_male_name_19" text="나르주그" />
+    <string id="aom_isengard_male_name_2" text="타르조그" />
+    <string id="aom_isengard_male_name_20" text="드룰라크" />
+    <string id="aom_isengard_male_name_21" text="그라그노르" />
+    <string id="aom_isengard_male_name_22" text="타르나크" />
+    <string id="aom_isengard_male_name_23" text="우르즈로그" />
+    <string id="aom_isengard_male_name_24" text="다르가쉬" />
+    <string id="aom_isengard_male_name_25" text="조그룰" />
+    <string id="aom_isengard_male_name_26" text="보라쉬" />
+    <string id="aom_isengard_male_name_27" text="두라쉬" />
+    <string id="aom_isengard_male_name_28" text="루르자르" />
+    <string id="aom_isengard_male_name_29" text="나르샤크" />
+    <string id="aom_isengard_male_name_3" text="루르다그" />
+    <string id="aom_isengard_male_name_30" text="타르가쉬" />
+    <string id="aom_isengard_male_name_31" text="자르그라스" />
+    <string id="aom_isengard_male_name_32" text="모르가쉬" />
+    <string id="aom_isengard_male_name_33" text="두르카쉬" />
+    <string id="aom_isengard_male_name_34" text="스라르나크" />
+    <string id="aom_isengard_male_name_35" text="고르주그" />
+    <string id="aom_isengard_male_name_36" text="카즈루르" />
+    <string id="aom_isengard_male_name_37" text="우르브로그" />
+    <string id="aom_isengard_male_name_38" text="나르줄" />
+    <string id="aom_isengard_male_name_39" text="투르자크" />
+    <string id="aom_isengard_male_name_4" text="우르자크" />
+    <string id="aom_isengard_male_name_40" text="루르그로크" />
+    <string id="aom_isengard_male_name_41" text="두르나크" />
+    <string id="aom_isengard_male_name_42" text="보르가쉬" />
+    <string id="aom_isengard_male_name_43" text="모르자그" />
+    <string id="aom_isengard_male_name_44" text="토르조크" />
+    <string id="aom_isengard_male_name_45" text="우르즐루크" />
+    <string id="aom_isengard_male_name_46" text="그라그나르" />
+    <string id="aom_isengard_male_name_47" text="카즈굴" />
+    <string id="aom_isengard_male_name_48" text="보르주그" />
+    <string id="aom_isengard_male_name_49" text="나르불" />
+    <string id="aom_isengard_male_name_5" text="바르쿨" />
+    <string id="aom_isengard_male_name_50" text="두르무그" />
+    <string id="aom_isengard_male_name_6" text="두르가스" />
+    <string id="aom_isengard_male_name_7" text="모르드루크" />
+    <string id="aom_isengard_male_name_8" text="조가쉬" />
+    <string id="aom_isengard_male_name_9" text="나르주그" />
+    <string id="aom_isengard_name" text="아이센가드" />
+    <string id="aom_lindon_clan_1" text="키르단 가문" />
+    <string id="aom_lindon_clan_10" text="엘모스 가문" />
+    <string id="aom_lindon_clan_11" text="키르다나스" />
+    <string id="aom_lindon_clan_12" text="살마르 가문" />
+    <string id="aom_lindon_clan_13" text="님로스 가문" />
+    <string id="aom_lindon_clan_14" text="길갈라드 가문" />
+    <string id="aom_lindon_clan_15" text="키르단 가문" />
+    <string id="aom_lindon_clan_2" text="팔라사르 가문" />
+    <string id="aom_lindon_clan_3" text="갈도르 가문" />
+    <string id="aom_lindon_clan_4" text="아에란디르 가문" />
+    <string id="aom_lindon_clan_5" text="에렐론트 가문" />
+    <string id="aom_lindon_clan_6" text="과이스이팔라스" />
+    <string id="aom_lindon_clan_7" text="님로스 가문" />
+    <string id="aom_lindon_clan_8" text="길도르 가문" />
+    <string id="aom_lindon_clan_9" text="벨레곤 가문" />
+    <string id="aom_lindon_desc" text="린돈의 팔라스림은 신다르 조선공들의 마지막 후예로, 룬 만이 바다와 만나는 미슬론드에 거주한다. 키르단은 제1시대부터 회색항구를 지켜왔으며, 하얀 배들이 서녘으로 떠나는 곳이 바로 그의 부두이다." />
+    <string id="aom_lindon_female_name_1" text="아나리엘" />
+    <string id="aom_lindon_female_name_10" text="실웬" />
+    <string id="aom_lindon_female_name_11" text="이스렐레" />
+    <string id="aom_lindon_female_name_12" text="갈라드웬" />
+    <string id="aom_lindon_female_name_13" text="멜린나" />
+    <string id="aom_lindon_female_name_14" text="수일웬" />
+    <string id="aom_lindon_female_name_15" text="칼린드라" />
+    <string id="aom_lindon_female_name_16" text="아르디엔" />
+    <string id="aom_lindon_female_name_17" text="벨린드라" />
+    <string id="aom_lindon_female_name_18" text="에시리엘" />
+    <string id="aom_lindon_female_name_19" text="살리엘" />
+    <string id="aom_lindon_female_name_2" text="엘렌나" />
+    <string id="aom_lindon_female_name_20" text="카라니엘" />
+    <string id="aom_lindon_female_name_21" text="민로스웬" />
+    <string id="aom_lindon_female_name_22" text="아엘리리엘" />
+    <string id="aom_lindon_female_name_23" text="팔린웬" />
+    <string id="aom_lindon_female_name_24" text="티리엘" />
+    <string id="aom_lindon_female_name_25" text="이드리엘" />
+    <string id="aom_lindon_female_name_26" text="엘반나" />
+    <string id="aom_lindon_female_name_27" text="키랴웬" />
+    <string id="aom_lindon_female_name_28" text="린달웬" />
+    <string id="aom_lindon_female_name_29" text="에레시엘" />
+    <string id="aom_lindon_female_name_3" text="칼렌웬" />
+    <string id="aom_lindon_female_name_30" text="실마리엘" />
+    <string id="aom_lindon_female_name_31" text="갈라디엔" />
+    <string id="aom_lindon_female_name_32" text="아엘리노르" />
+    <string id="aom_lindon_female_name_33" text="살윈" />
+    <string id="aom_lindon_female_name_34" text="에시르웬" />
+    <string id="aom_lindon_female_name_35" text="님로시엘" />
+    <string id="aom_lindon_female_name_36" text="수일렌나" />
+    <string id="aom_lindon_female_name_37" text="놀윈" />
+    <string id="aom_lindon_female_name_38" text="타스웬" />
+    <string id="aom_lindon_female_name_39" text="칼린드리엘" />
+    <string id="aom_lindon_female_name_4" text="님리엘레" />
+    <string id="aom_lindon_female_name_40" text="이스리엘" />
+    <string id="aom_lindon_female_name_41" text="벨웬" />
+    <string id="aom_lindon_female_name_42" text="아엘린나" />
+    <string id="aom_lindon_female_name_43" text="팔리니엘" />
+    <string id="aom_lindon_female_name_44" text="에렐레" />
+    <string id="aom_lindon_female_name_45" text="카리엘" />
+    <string id="aom_lindon_female_name_46" text="로산나" />
+    <string id="aom_lindon_female_name_47" text="엘라리엘레" />
+    <string id="aom_lindon_female_name_48" text="갈윈" />
+    <string id="aom_lindon_female_name_49" text="니민디엘" />
+    <string id="aom_lindon_female_name_5" text="타스리엘" />
+    <string id="aom_lindon_female_name_50" text="실바리엘" />
+    <string id="aom_lindon_female_name_6" text="아마리엘" />
+    <string id="aom_lindon_female_name_7" text="발웬" />
+    <string id="aom_lindon_female_name_8" text="엘라리엘" />
+    <string id="aom_lindon_female_name_9" text="로시리엘" />
+    <string id="aom_lindon_male_name_1" text="칼레니온" />
+    <string id="aom_lindon_male_name_10" text="오로딘" />
+    <string id="aom_lindon_male_name_11" text="아에글리르" />
+    <string id="aom_lindon_male_name_12" text="에시리온" />
+    <string id="aom_lindon_male_name_13" text="아나리온" />
+    <string id="aom_lindon_male_name_14" text="켈레시르" />
+    <string id="aom_lindon_male_name_15" text="팔리노르" />
+    <string id="aom_lindon_male_name_16" text="엘로디르" />
+    <string id="aom_lindon_male_name_17" text="아라디온" />
+    <string id="aom_lindon_male_name_18" text="보렌딜" />
+    <string id="aom_lindon_male_name_19" text="멜리아나르" />
+    <string id="aom_lindon_male_name_2" text="에렐리온" />
+    <string id="aom_lindon_male_name_20" text="타스린" />
+    <string id="aom_lindon_male_name_21" text="갈리온" />
+    <string id="aom_lindon_male_name_22" text="엘레디르" />
+    <string id="aom_lindon_male_name_23" text="마르딜" />
+    <string id="aom_lindon_male_name_24" text="실로나르" />
+    <string id="aom_lindon_male_name_25" text="님로손" />
+    <string id="aom_lindon_male_name_26" text="키랸디르" />
+    <string id="aom_lindon_male_name_27" text="아르손" />
+    <string id="aom_lindon_male_name_28" text="엘미리온" />
+    <string id="aom_lindon_male_name_29" text="카라디온" />
+    <string id="aom_lindon_male_name_3" text="아마리온" />
+    <string id="aom_lindon_male_name_30" text="핑갈로르" />
+    <string id="aom_lindon_male_name_31" text="에렌두르" />
+    <string id="aom_lindon_male_name_32" text="티리온" />
+    <string id="aom_lindon_male_name_33" text="벨란도르" />
+    <string id="aom_lindon_male_name_34" text="알라시온" />
+    <string id="aom_lindon_male_name_35" text="민란디르" />
+    <string id="aom_lindon_male_name_36" text="갈도리온" />
+    <string id="aom_lindon_male_name_37" text="로사노르" />
+    <string id="aom_lindon_male_name_38" text="티란디르" />
+    <string id="aom_lindon_male_name_39" text="에레글린" />
+    <string id="aom_lindon_male_name_4" text="놀린디르" />
+    <string id="aom_lindon_male_name_40" text="살라디르" />
+    <string id="aom_lindon_male_name_41" text="아나린도르" />
+    <string id="aom_lindon_male_name_42" text="칼리노르" />
+    <string id="aom_lindon_male_name_43" text="수일론" />
+    <string id="aom_lindon_male_name_44" text="엘라리온" />
+    <string id="aom_lindon_male_name_45" text="릴리온" />
+    <string id="aom_lindon_male_name_46" text="살로린" />
+    <string id="aom_lindon_male_name_47" text="벨라노르" />
+    <string id="aom_lindon_male_name_48" text="카사노르" />
+    <string id="aom_lindon_male_name_49" text="아라니온" />
+    <string id="aom_lindon_male_name_5" text="살리온" />
+    <string id="aom_lindon_male_name_50" text="라시온" />
+    <string id="aom_lindon_male_name_51" text="팔라사르" />
+    <string id="aom_lindon_male_name_52" text="아에란디르" />
+    <string id="aom_lindon_male_name_53" text="에렐론트" />
+    <string id="aom_lindon_male_name_54" text="벨레곤" />
+    <string id="aom_lindon_male_name_55" text="님로스" />
+    <string id="aom_lindon_male_name_56" text="살마르" />
+    <string id="aom_lindon_male_name_57" text="엘모스" />
+    <string id="aom_lindon_male_name_58" text="노웨" />
+    <string id="aom_lindon_male_name_59" text="팔라사르" />
+    <string id="aom_lindon_male_name_6" text="살마르" />
+    <string id="aom_lindon_male_name_7" text="사라니온" />
+    <string id="aom_lindon_male_name_8" text="이스랄리온" />
+    <string id="aom_lindon_male_name_9" text="발란딜" />
+    <string id="aom_lindon_name" text="팔라스림 요정" />
+    <string id="aom_lothlorien_clan_1" text="갈라드리엘 가문" />
+    <string id="aom_lothlorien_clan_10" text="은빛개울 씨족" />
+    <string id="aom_lothlorien_clan_11" text="황금숲 동지회" />
+    <string id="aom_lothlorien_clan_12" text="케린 암로스 수비대" />
+    <string id="aom_lothlorien_clan_13" text="별엮는 자 씨족" />
+    <string id="aom_lothlorien_clan_14" text="할디르 가문" />
+    <string id="aom_lothlorien_clan_15" text="로슬란 근위대" />
+    <string id="aom_lothlorien_clan_2" text="켈레보른 가문" />
+    <string id="aom_lothlorien_clan_3" text="갈라드림 근위대" />
+    <string id="aom_lothlorien_clan_4" text="변경 감시대" />
+    <string id="aom_lothlorien_clan_5" text="말로른 모임" />
+    <string id="aom_lothlorien_clan_6" text="나이스 수호대" />
+    <string id="aom_lothlorien_clan_7" text="카라스 갈라돈 사람들" />
+    <string id="aom_lothlorien_clan_8" text="님로델의 혈족" />
+    <string id="aom_lothlorien_clan_9" text="암로스의 유산" />
+    <string id="aom_lothlorien_desc" text="갈라드림이라 불리는 로슬로리엔의 요정들은 황금숲에 거주하는 고귀하고 신비로운 종족이다. 갈라드리엘 여왕과 켈레보른 공의 지혜와 힘에 이끌려, 그들은 가운데땅에 남은 마지막 요정의 아름다움과 평온의 보루 중 하나를 지키는 수호자들이다. 갈라드림은 비할 데 없는 궁수들로, 고향의 황금빛 말로른 나무들 사이에 완벽하게 녹아든다." />
+    <string id="aom_lothlorien_female_name_1" text="칼렌웬" />
+    <string id="aom_lothlorien_female_name_10" text="타우리엘" />
+    <string id="aom_lothlorien_female_name_11" text="엘렌웬" />
+    <string id="aom_lothlorien_female_name_12" text="릴웬" />
+    <string id="aom_lothlorien_female_name_13" text="카라니엘" />
+    <string id="aom_lothlorien_female_name_14" text="에릴웬" />
+    <string id="aom_lothlorien_female_name_15" text="아나리엘" />
+    <string id="aom_lothlorien_female_name_16" text="벨라르웬" />
+    <string id="aom_lothlorien_female_name_17" text="살리온웬" />
+    <string id="aom_lothlorien_female_name_18" text="에륀웬" />
+    <string id="aom_lothlorien_female_name_19" text="님리엘" />
+    <string id="aom_lothlorien_female_name_2" text="로스리엘" />
+    <string id="aom_lothlorien_female_name_20" text="갈린디리엘" />
+    <string id="aom_lothlorien_female_name_21" text="아엘리리엘" />
+    <string id="aom_lothlorien_female_name_22" text="칼륀드라" />
+    <string id="aom_lothlorien_female_name_23" text="타스리엘" />
+    <string id="aom_lothlorien_female_name_24" text="엘레니스" />
+    <string id="aom_lothlorien_female_name_25" text="살린디스" />
+    <string id="aom_lothlorien_female_name_26" text="로시스" />
+    <string id="aom_lothlorien_female_name_27" text="아나리스" />
+    <string id="aom_lothlorien_female_name_28" text="에레드리엘" />
+    <string id="aom_lothlorien_female_name_29" text="카란웬" />
+    <string id="aom_lothlorien_female_name_3" text="에륀디스" />
+    <string id="aom_lothlorien_female_name_30" text="벨라니스" />
+    <string id="aom_lothlorien_female_name_31" text="실웬" />
+    <string id="aom_lothlorien_female_name_32" text="갈로리엘" />
+    <string id="aom_lothlorien_female_name_33" text="살리리스" />
+    <string id="aom_lothlorien_female_name_34" text="님로시스" />
+    <string id="aom_lothlorien_female_name_35" text="아엘웬" />
+    <string id="aom_lothlorien_female_name_36" text="릴리엘" />
+    <string id="aom_lothlorien_female_name_37" text="칼라니스" />
+    <string id="aom_lothlorien_female_name_38" text="린다리엘" />
+    <string id="aom_lothlorien_female_name_39" text="에레드웬" />
+    <string id="aom_lothlorien_female_name_4" text="사리엘" />
+    <string id="aom_lothlorien_female_name_40" text="살린드리엘" />
+    <string id="aom_lothlorien_female_name_41" text="벨린디스" />
+    <string id="aom_lothlorien_female_name_42" text="실디스" />
+    <string id="aom_lothlorien_female_name_43" text="타우레니스" />
+    <string id="aom_lothlorien_female_name_44" text="갈라드니스" />
+    <string id="aom_lothlorien_female_name_45" text="아나르웬" />
+    <string id="aom_lothlorien_female_name_46" text="카라니스" />
+    <string id="aom_lothlorien_female_name_47" text="로세니스" />
+    <string id="aom_lothlorien_female_name_48" text="에륀디스" />
+    <string id="aom_lothlorien_female_name_49" text="아엘리노르" />
+    <string id="aom_lothlorien_female_name_5" text="벨린드라" />
+    <string id="aom_lothlorien_female_name_50" text="님인드리엘" />
+    <string id="aom_lothlorien_female_name_6" text="님로스웬" />
+    <string id="aom_lothlorien_female_name_7" text="갈라드웬" />
+    <string id="aom_lothlorien_female_name_8" text="아엘린디스" />
+    <string id="aom_lothlorien_female_name_9" text="실드리엘" />
+    <string id="aom_lothlorien_male_name_1" text="칼라디온" />
+    <string id="aom_lothlorien_male_name_10" text="엘렌도르" />
+    <string id="aom_lothlorien_male_name_11" text="실다리온" />
+    <string id="aom_lothlorien_male_name_12" text="사리온" />
+    <string id="aom_lothlorien_male_name_13" text="아나리온" />
+    <string id="aom_lothlorien_male_name_14" text="릴린디르" />
+    <string id="aom_lothlorien_male_name_15" text="칼륀디르" />
+    <string id="aom_lothlorien_male_name_16" text="린디리온" />
+    <string id="aom_lothlorien_male_name_17" text="에레도르" />
+    <string id="aom_lothlorien_male_name_18" text="갈렌디르" />
+    <string id="aom_lothlorien_male_name_19" text="팔리노르" />
+    <string id="aom_lothlorien_male_name_2" text="살리리온" />
+    <string id="aom_lothlorien_male_name_20" text="타사리온" />
+    <string id="aom_lothlorien_male_name_21" text="벨란디르" />
+    <string id="aom_lothlorien_male_name_22" text="아엘렌도르" />
+    <string id="aom_lothlorien_male_name_23" text="실리온" />
+    <string id="aom_lothlorien_male_name_24" text="티리온" />
+    <string id="aom_lothlorien_male_name_25" text="오로디온" />
+    <string id="aom_lothlorien_male_name_26" text="님로손" />
+    <string id="aom_lothlorien_male_name_27" text="키랸디르" />
+    <string id="aom_lothlorien_male_name_28" text="로사리온" />
+    <string id="aom_lothlorien_male_name_29" text="아나르히르" />
+    <string id="aom_lothlorien_male_name_3" text="에린도르" />
+    <string id="aom_lothlorien_male_name_30" text="살리온" />
+    <string id="aom_lothlorien_male_name_31" text="아란디르" />
+    <string id="aom_lothlorien_male_name_32" text="카라노르" />
+    <string id="aom_lothlorien_male_name_33" text="벨라단" />
+    <string id="aom_lothlorien_male_name_34" text="릴리온" />
+    <string id="aom_lothlorien_male_name_35" text="갈리오노르" />
+    <string id="aom_lothlorien_male_name_36" text="엘레노르" />
+    <string id="aom_lothlorien_male_name_37" text="타우란디르" />
+    <string id="aom_lothlorien_male_name_38" text="스란디르" />
+    <string id="aom_lothlorien_male_name_39" text="로사노르" />
+    <string id="aom_lothlorien_male_name_4" text="갈라디온" />
+    <string id="aom_lothlorien_male_name_40" text="수일리온" />
+    <string id="aom_lothlorien_male_name_41" text="엘라리온" />
+    <string id="aom_lothlorien_male_name_42" text="타살리온" />
+    <string id="aom_lothlorien_male_name_43" text="칼라노르" />
+    <string id="aom_lothlorien_male_name_44" text="벨리오노르" />
+    <string id="aom_lothlorien_male_name_45" text="에륀디르" />
+    <string id="aom_lothlorien_male_name_46" text="린다리온" />
+    <string id="aom_lothlorien_male_name_47" text="아에를린디르" />
+    <string id="aom_lothlorien_male_name_48" text="카라디온" />
+    <string id="aom_lothlorien_male_name_49" text="갈란디르" />
+    <string id="aom_lothlorien_male_name_5" text="님도르" />
+    <string id="aom_lothlorien_male_name_50" text="타를린도르" />
+    <string id="aom_lothlorien_male_name_6" text="아엘린디르" />
+    <string id="aom_lothlorien_male_name_7" text="카라시온" />
+    <string id="aom_lothlorien_male_name_8" text="벨라노르" />
+    <string id="aom_lothlorien_male_name_9" text="타우리온" />
+    <string id="aom_lothlorien_name" text="갈라드림 요정" />
+    <string id="aom_mirkwood_clan_1" text="스란두일 가문" />
+    <string id="aom_mirkwood_clan_10" text="에뮌 두이르 파수대" />
+    <string id="aom_mirkwood_clan_11" text="아몬 랑크 수비대" />
+    <string id="aom_mirkwood_clan_12" text="은가시 씨족" />
+    <string id="aom_mirkwood_clan_13" text="요정왕의 혈족" />
+    <string id="aom_mirkwood_clan_14" text="달리는강 사람들" />
+    <string id="aom_mirkwood_clan_15" text="푸른잎 씨족" />
+    <string id="aom_mirkwood_clan_2" text="타와르와이스" />
+    <string id="aom_mirkwood_clan_3" text="어둠숲 수비대" />
+    <string id="aom_mirkwood_clan_4" text="실반 파수대" />
+    <string id="aom_mirkwood_clan_5" text="데일의 숲사람들" />
+    <string id="aom_mirkwood_clan_6" text="갈리온의 동료들" />
+    <string id="aom_mirkwood_clan_7" text="숲지기들" />
+    <string id="aom_mirkwood_clan_8" text="참나무가지 씨족" />
+    <string id="aom_mirkwood_clan_9" text="별빛 파수꾼들" />
+    <string id="aom_mirkwood_desc" text="숲의 왕국이라고도 불리는 어둠숲의 실반 요정들은 광대한 숲을 고향으로 삼은 긍지 높고 강인한 종족이다. 스란두일 왕의 통치 아래, 그들은 뛰어난 사냥꾼이자 전사로서 그늘진 숲속을 비할 데 없는 민첩함과 정확함으로 누빈다. 어둠숲의 요정들은 활의 명수로, 나무 위에서 소리 없이 재빠르게 적을 쓰러뜨린다." />
+    <string id="aom_mirkwood_female_name_1" text="칼렌웬" />
+    <string id="aom_mirkwood_female_name_10" text="타우리엘" />
+    <string id="aom_mirkwood_female_name_11" text="엘렌웬" />
+    <string id="aom_mirkwood_female_name_12" text="릴웬" />
+    <string id="aom_mirkwood_female_name_13" text="카라니엘" />
+    <string id="aom_mirkwood_female_name_14" text="에릴웬" />
+    <string id="aom_mirkwood_female_name_15" text="아나리엘" />
+    <string id="aom_mirkwood_female_name_16" text="벨라르웬" />
+    <string id="aom_mirkwood_female_name_17" text="살리온웬" />
+    <string id="aom_mirkwood_female_name_18" text="에륀웬" />
+    <string id="aom_mirkwood_female_name_19" text="님리엘" />
+    <string id="aom_mirkwood_female_name_2" text="로스리엘" />
+    <string id="aom_mirkwood_female_name_20" text="갈린디리엘" />
+    <string id="aom_mirkwood_female_name_21" text="아엘린디스" />
+    <string id="aom_mirkwood_female_name_22" text="칼린드라" />
+    <string id="aom_mirkwood_female_name_23" text="타스리엘" />
+    <string id="aom_mirkwood_female_name_24" text="엘레니스" />
+    <string id="aom_mirkwood_female_name_25" text="살린디스" />
+    <string id="aom_mirkwood_female_name_26" text="로시스" />
+    <string id="aom_mirkwood_female_name_27" text="아나리스" />
+    <string id="aom_mirkwood_female_name_28" text="에레드리엘" />
+    <string id="aom_mirkwood_female_name_29" text="카란웬" />
+    <string id="aom_mirkwood_female_name_3" text="에린니엘" />
+    <string id="aom_mirkwood_female_name_30" text="벨라니스" />
+    <string id="aom_mirkwood_female_name_31" text="실웬" />
+    <string id="aom_mirkwood_female_name_32" text="갈로리엘" />
+    <string id="aom_mirkwood_female_name_33" text="살리리스" />
+    <string id="aom_mirkwood_female_name_34" text="님로시스" />
+    <string id="aom_mirkwood_female_name_35" text="아엘웬" />
+    <string id="aom_mirkwood_female_name_36" text="릴리엘" />
+    <string id="aom_mirkwood_female_name_37" text="칼라니스" />
+    <string id="aom_mirkwood_female_name_38" text="린다리엘" />
+    <string id="aom_mirkwood_female_name_39" text="에레드웬" />
+    <string id="aom_mirkwood_female_name_4" text="사리엘" />
+    <string id="aom_mirkwood_female_name_40" text="살린드리엘" />
+    <string id="aom_mirkwood_female_name_41" text="벨린디스" />
+    <string id="aom_mirkwood_female_name_42" text="실디스" />
+    <string id="aom_mirkwood_female_name_43" text="타우레니스" />
+    <string id="aom_mirkwood_female_name_44" text="갈라드니스" />
+    <string id="aom_mirkwood_female_name_45" text="아나르웬" />
+    <string id="aom_mirkwood_female_name_46" text="카라니스" />
+    <string id="aom_mirkwood_female_name_47" text="로세니스" />
+    <string id="aom_mirkwood_female_name_48" text="에린디스" />
+    <string id="aom_mirkwood_female_name_49" text="아엘리노르" />
+    <string id="aom_mirkwood_female_name_5" text="벨린드라" />
+    <string id="aom_mirkwood_female_name_50" text="님인드리엘" />
+    <string id="aom_mirkwood_female_name_6" text="님로스웬" />
+    <string id="aom_mirkwood_female_name_7" text="갈라드웬" />
+    <string id="aom_mirkwood_female_name_8" text="아에리니엘" />
+    <string id="aom_mirkwood_female_name_9" text="실드리엘" />
+    <string id="aom_mirkwood_male_name_1" text="사리온" />
+    <string id="aom_mirkwood_male_name_10" text="오로파르" />
+    <string id="aom_mirkwood_male_name_11" text="아에를린도르" />
+    <string id="aom_mirkwood_male_name_12" text="카라노르" />
+    <string id="aom_mirkwood_male_name_13" text="살리온디르" />
+    <string id="aom_mirkwood_male_name_14" text="벨라나르" />
+    <string id="aom_mirkwood_male_name_15" text="린도리온" />
+    <string id="aom_mirkwood_male_name_16" text="스란디르" />
+    <string id="aom_mirkwood_male_name_17" text="에릴리온" />
+    <string id="aom_mirkwood_male_name_18" text="실미르" />
+    <string id="aom_mirkwood_male_name_19" text="에레다르" />
+    <string id="aom_mirkwood_male_name_2" text="에륀디르" />
+    <string id="aom_mirkwood_male_name_20" text="갈리오노르" />
+    <string id="aom_mirkwood_male_name_21" text="님라디르" />
+    <string id="aom_mirkwood_male_name_22" text="칼레노르" />
+    <string id="aom_mirkwood_male_name_23" text="타우레니온" />
+    <string id="aom_mirkwood_male_name_24" text="아라디르" />
+    <string id="aom_mirkwood_male_name_25" text="엘렌다르" />
+    <string id="aom_mirkwood_male_name_26" text="로시온" />
+    <string id="aom_mirkwood_male_name_27" text="도랄린" />
+    <string id="aom_mirkwood_male_name_28" text="벨라단" />
+    <string id="aom_mirkwood_male_name_29" text="살로스" />
+    <string id="aom_mirkwood_male_name_3" text="칼렌히르" />
+    <string id="aom_mirkwood_male_name_30" text="에륀도르" />
+    <string id="aom_mirkwood_male_name_31" text="갈란디르" />
+    <string id="aom_mirkwood_male_name_32" text="아나르히르" />
+    <string id="aom_mirkwood_male_name_33" text="로산도르" />
+    <string id="aom_mirkwood_male_name_34" text="에리오노르" />
+    <string id="aom_mirkwood_male_name_35" text="칼리리온" />
+    <string id="aom_mirkwood_male_name_36" text="님리온" />
+    <string id="aom_mirkwood_male_name_37" text="사를린도르" />
+    <string id="aom_mirkwood_male_name_38" text="카라시르" />
+    <string id="aom_mirkwood_male_name_39" text="실라단" />
+    <string id="aom_mirkwood_male_name_4" text="로사리온" />
+    <string id="aom_mirkwood_male_name_40" text="벨리오노르" />
+    <string id="aom_mirkwood_male_name_41" text="아르벨리온" />
+    <string id="aom_mirkwood_male_name_42" text="린다리온" />
+    <string id="aom_mirkwood_male_name_43" text="스란다르" />
+    <string id="aom_mirkwood_male_name_44" text="아에리노르" />
+    <string id="aom_mirkwood_male_name_45" text="릴렌디르" />
+    <string id="aom_mirkwood_male_name_46" text="타우리엘란" />
+    <string id="aom_mirkwood_male_name_47" text="칼라르노르" />
+    <string id="aom_mirkwood_male_name_48" text="갈라디르" />
+    <string id="aom_mirkwood_male_name_49" text="벨로타르" />
+    <string id="aom_mirkwood_male_name_5" text="님히르" />
+    <string id="aom_mirkwood_male_name_50" text="타란디르" />
+    <string id="aom_mirkwood_male_name_6" text="갈렌디르" />
+    <string id="aom_mirkwood_male_name_7" text="타우란디르" />
+    <string id="aom_mirkwood_male_name_8" text="엘레나르" />
+    <string id="aom_mirkwood_male_name_9" text="실다리온" />
+    <string id="aom_mirkwood_name" text="실반 요정" />
+    <string id="aom_mistymountainorcs_clan_1" text="안개산맥 군세" />
+    <string id="aom_mistymountainorcs_clan_10" text="회색산맥 약탈자" />
+    <string id="aom_mistymountainorcs_clan_11" text="에텐무어 무리" />
+    <string id="aom_mistymountainorcs_clan_12" text="스나가 무리" />
+    <string id="aom_mistymountainorcs_clan_13" text="볼그의 혈족" />
+    <string id="aom_mistymountainorcs_clan_14" text="검은이빨 씨족" />
+    <string id="aom_mistymountainorcs_clan_15" text="무쇠언덕의 재앙" />
+    <string id="aom_mistymountainorcs_clan_2" text="고블린 마을 씨족" />
+    <string id="aom_mistymountainorcs_clan_3" text="안개산맥 늑대들" />
+    <string id="aom_mistymountainorcs_clan_4" text="와르그 무리" />
+    <string id="aom_mistymountainorcs_clan_5" text="돌거인 무리" />
+    <string id="aom_mistymountainorcs_clan_6" text="모리아의 잔당" />
+    <string id="aom_mistymountainorcs_clan_7" text="키리스 웅골의 혈통" />
+    <string id="aom_mistymountainorcs_clan_8" text="앙그마르의 자식들" />
+    <string id="aom_mistymountainorcs_clan_9" text="카른 둠 전사단" />
+    <string id="aom_mistymountainorcs_desc" text="안개산맥의 오크들은 산맥의 높은 봉우리와 깊은 굴속에 거하는 야만적인 전쟁 무리다. 요정과 난쟁이를 향한 오랜 증오에 사로잡혀, 그들은 엉성하게 무장한 거대한 군단을 소집하여 아래 땅으로 쏟아져 내려오며, 동쪽에서 꿈틀거리는 암흑의 권능을 섬긴다." />
+    <string id="aom_mistymountainorcs_female_name_1" text="그랄자" />
+    <string id="aom_mistymountainorcs_female_name_10" text="울자라" />
+    <string id="aom_mistymountainorcs_female_name_11" text="보르자" />
+    <string id="aom_mistymountainorcs_female_name_12" text="자르그라" />
+    <string id="aom_mistymountainorcs_female_name_13" text="그루샤" />
+    <string id="aom_mistymountainorcs_female_name_14" text="두르샤" />
+    <string id="aom_mistymountainorcs_female_name_15" text="탈라" />
+    <string id="aom_mistymountainorcs_female_name_16" text="보를라" />
+    <string id="aom_mistymountainorcs_female_name_17" text="나르굴" />
+    <string id="aom_mistymountainorcs_female_name_18" text="투르카" />
+    <string id="aom_mistymountainorcs_female_name_19" text="울샤" />
+    <string id="aom_mistymountainorcs_female_name_2" text="투르카" />
+    <string id="aom_mistymountainorcs_female_name_20" text="무즈라크" />
+    <string id="aom_mistymountainorcs_female_name_21" text="크랄샤" />
+    <string id="aom_mistymountainorcs_female_name_22" text="그랄샤" />
+    <string id="aom_mistymountainorcs_female_name_23" text="두르샤" />
+    <string id="aom_mistymountainorcs_female_name_24" text="스란자" />
+    <string id="aom_mistymountainorcs_female_name_25" text="나르그라" />
+    <string id="aom_mistymountainorcs_female_name_26" text="울지라" />
+    <string id="aom_mistymountainorcs_female_name_27" text="보를리아" />
+    <string id="aom_mistymountainorcs_female_name_28" text="조르글라" />
+    <string id="aom_mistymountainorcs_female_name_29" text="두를라" />
+    <string id="aom_mistymountainorcs_female_name_3" text="줄가라" />
+    <string id="aom_mistymountainorcs_female_name_30" text="무즈샤" />
+    <string id="aom_mistymountainorcs_female_name_31" text="스룰가" />
+    <string id="aom_mistymountainorcs_female_name_32" text="나르샤" />
+    <string id="aom_mistymountainorcs_female_name_33" text="크랄가" />
+    <string id="aom_mistymountainorcs_female_name_34" text="그린자" />
+    <string id="aom_mistymountainorcs_female_name_35" text="살지아" />
+    <string id="aom_mistymountainorcs_female_name_36" text="보르글라" />
+    <string id="aom_mistymountainorcs_female_name_37" text="울질라" />
+    <string id="aom_mistymountainorcs_female_name_38" text="두르샤" />
+    <string id="aom_mistymountainorcs_female_name_39" text="나르굴라" />
+    <string id="aom_mistymountainorcs_female_name_4" text="보르자" />
+    <string id="aom_mistymountainorcs_female_name_40" text="스루글라" />
+    <string id="aom_mistymountainorcs_female_name_41" text="무즐라" />
+    <string id="aom_mistymountainorcs_female_name_42" text="그랄나" />
+    <string id="aom_mistymountainorcs_female_name_43" text="사르카" />
+    <string id="aom_mistymountainorcs_female_name_44" text="울자라" />
+    <string id="aom_mistymountainorcs_female_name_45" text="크랄자" />
+    <string id="aom_mistymountainorcs_female_name_46" text="두르카" />
+    <string id="aom_mistymountainorcs_female_name_47" text="스루나" />
+    <string id="aom_mistymountainorcs_female_name_48" text="보르자" />
+    <string id="aom_mistymountainorcs_female_name_49" text="조르가" />
+    <string id="aom_mistymountainorcs_female_name_5" text="두르가" />
+    <string id="aom_mistymountainorcs_female_name_50" text="나를리아" />
+    <string id="aom_mistymountainorcs_female_name_6" text="나르그라" />
+    <string id="aom_mistymountainorcs_female_name_7" text="스룰자" />
+    <string id="aom_mistymountainorcs_female_name_8" text="무즈라" />
+    <string id="aom_mistymountainorcs_female_name_9" text="크랄자" />
+    <string id="aom_mistymountainorcs_male_name_1" text="아즈가르" />
+    <string id="aom_mistymountainorcs_male_name_10" text="무그준" />
+    <string id="aom_mistymountainorcs_male_name_11" text="루르조크" />
+    <string id="aom_mistymountainorcs_male_name_12" text="조르가" />
+    <string id="aom_mistymountainorcs_male_name_13" text="스루막" />
+    <string id="aom_mistymountainorcs_male_name_14" text="나르고스" />
+    <string id="aom_mistymountainorcs_male_name_15" text="보르작" />
+    <string id="aom_mistymountainorcs_male_name_16" text="드루즈나르" />
+    <string id="aom_mistymountainorcs_male_name_17" text="크라글로스" />
+    <string id="aom_mistymountainorcs_male_name_18" text="부르자그" />
+    <string id="aom_mistymountainorcs_male_name_19" text="나를로그" />
+    <string id="aom_mistymountainorcs_male_name_2" text="드로즈막" />
+    <string id="aom_mistymountainorcs_male_name_20" text="살루그" />
+    <string id="aom_mistymountainorcs_male_name_21" text="우르줄" />
+    <string id="aom_mistymountainorcs_male_name_22" text="그랄삭" />
+    <string id="aom_mistymountainorcs_male_name_23" text="보르그림" />
+    <string id="aom_mistymountainorcs_male_name_24" text="마즈코르" />
+    <string id="aom_mistymountainorcs_male_name_25" text="볼가스" />
+    <string id="aom_mistymountainorcs_male_name_26" text="루르삭" />
+    <string id="aom_mistymountainorcs_male_name_27" text="스루골" />
+    <string id="aom_mistymountainorcs_male_name_28" text="나르죽" />
+    <string id="aom_mistymountainorcs_male_name_29" text="크루즈노르" />
+    <string id="aom_mistymountainorcs_male_name_3" text="카르고스" />
+    <string id="aom_mistymountainorcs_male_name_30" text="스라즈굴" />
+    <string id="aom_mistymountainorcs_male_name_31" text="두르작" />
+    <string id="aom_mistymountainorcs_male_name_32" text="줄고스" />
+    <string id="aom_mistymountainorcs_male_name_33" text="보르작" />
+    <string id="aom_mistymountainorcs_male_name_34" text="크로가르" />
+    <string id="aom_mistymountainorcs_male_name_35" text="스루낙" />
+    <string id="aom_mistymountainorcs_male_name_36" text="그라자르" />
+    <string id="aom_mistymountainorcs_male_name_37" text="나르조그" />
+    <string id="aom_mistymountainorcs_male_name_38" text="울그림" />
+    <string id="aom_mistymountainorcs_male_name_39" text="부를락" />
+    <string id="aom_mistymountainorcs_male_name_4" text="스라작" />
+    <string id="aom_mistymountainorcs_male_name_40" text="보르작" />
+    <string id="aom_mistymountainorcs_male_name_41" text="두르조르" />
+    <string id="aom_mistymountainorcs_male_name_42" text="무즈라그" />
+    <string id="aom_mistymountainorcs_male_name_43" text="그랄소르" />
+    <string id="aom_mistymountainorcs_male_name_44" text="사르조그" />
+    <string id="aom_mistymountainorcs_male_name_45" text="브로그낙" />
+    <string id="aom_mistymountainorcs_male_name_46" text="카르낙" />
+    <string id="aom_mistymountainorcs_male_name_47" text="보르작" />
+    <string id="aom_mistymountainorcs_male_name_48" text="나르줄" />
+    <string id="aom_mistymountainorcs_male_name_49" text="스룰고스" />
+    <string id="aom_mistymountainorcs_male_name_5" text="울그림" />
+    <string id="aom_mistymountainorcs_male_name_50" text="드루즈목" />
+    <string id="aom_mistymountainorcs_male_name_6" text="조르가스" />
+    <string id="aom_mistymountainorcs_male_name_7" text="그라고르" />
+    <string id="aom_mistymountainorcs_male_name_8" text="두르마시" />
+    <string id="aom_mistymountainorcs_male_name_9" text="보르고스" />
+    <string id="aom_mistymountainorcs_name" text="안개산맥 오크" />
+    <string id="aom_mordor_clan_1" text="붉은 눈 군단" />
+    <string id="aom_mordor_clan_10" text="무쇠 왕관" />
+    <string id="aom_mordor_clan_11" text="우둔 무리" />
+    <string id="aom_mordor_clan_12" text="그림자 군세" />
+    <string id="aom_mordor_clan_13" text="바랏두르 근위대" />
+    <string id="aom_mordor_clan_14" text="운명의 산 대장간" />
+    <string id="aom_mordor_clan_15" text="두르상 수비대" />
+    <string id="aom_mordor_clan_2" text="모르굴 쥐떼" />
+    <string id="aom_mordor_clan_3" text="검은 우루크" />
+    <string id="aom_mordor_clan_4" text="탑 수비대" />
+    <string id="aom_mordor_clan_5" text="고르고로스 전투단" />
+    <string id="aom_mordor_clan_6" text="키리스 웅골 무리" />
+    <string id="aom_mordor_clan_7" text="잿빛 산맥 부족" />
+    <string id="aom_mordor_clan_8" text="누른의 노예들" />
+    <string id="aom_mordor_clan_9" text="리슬라드 약탈자" />
+    <string id="aom_mordor_desc" text="모르도르의 오크들은 사우론의 뜻을 받들기 위해 바랏두르의 어두운 구덩이에서 길러진 잔혹하고 집요한 무리다. 잔인하고 야만적인 그들은 끝없는 떼를 이루어 전장으로 진군하며, 운명의 산 불길에서 벼려낸 조잡하지만 치명적인 무기를 휘두른다. 들쭉날쭉한 갑옷을 걸치고 붉은 눈이 새겨진 검은 깃발을 든 채, 그들이 밟는 곳마다 공포와 파괴를 몰고 온다. 암흑의 군주의 강철 같은 의지에 묶인 모르도르의 오크들은 무자비한 대장들이 이끄는 전투단으로 나뉘어 있으며, 오직 정복의 욕망으로만 하나가 된다." />
+    <string id="aom_mordor_female_name_1" text="굴샤" />
+    <string id="aom_mordor_female_name_10" text="우르가" />
+    <string id="aom_mordor_female_name_11" text="루그샤" />
+    <string id="aom_mordor_female_name_12" text="고르불" />
+    <string id="aom_mordor_female_name_13" text="누르자" />
+    <string id="aom_mordor_female_name_14" text="푸시가" />
+    <string id="aom_mordor_female_name_15" text="샤그라" />
+    <string id="aom_mordor_female_name_16" text="목샤" />
+    <string id="aom_mordor_female_name_17" text="두실라" />
+    <string id="aom_mordor_female_name_18" text="크림루그" />
+    <string id="aom_mordor_female_name_19" text="사루가" />
+    <string id="aom_mordor_female_name_2" text="크룸샤" />
+    <string id="aom_mordor_female_name_20" text="고르샤" />
+    <string id="aom_mordor_female_name_21" text="불가" />
+    <string id="aom_mordor_female_name_22" text="스쿠르나" />
+    <string id="aom_mordor_female_name_23" text="굴나" />
+    <string id="aom_mordor_female_name_24" text="우프샤" />
+    <string id="aom_mordor_female_name_25" text="그림불" />
+    <string id="aom_mordor_female_name_26" text="나르가" />
+    <string id="aom_mordor_female_name_27" text="쿨샤" />
+    <string id="aom_mordor_female_name_28" text="두르바" />
+    <string id="aom_mordor_female_name_29" text="글룹나" />
+    <string id="aom_mordor_female_name_3" text="두르가" />
+    <string id="aom_mordor_female_name_30" text="사르쿨" />
+    <string id="aom_mordor_female_name_31" text="묵샤" />
+    <string id="aom_mordor_female_name_32" text="슈라클라" />
+    <string id="aom_mordor_female_name_33" text="오르굴" />
+    <string id="aom_mordor_female_name_34" text="부르그나" />
+    <string id="aom_mordor_female_name_35" text="가슐라" />
+    <string id="aom_mordor_female_name_36" text="크루샤" />
+    <string id="aom_mordor_female_name_37" text="루르가" />
+    <string id="aom_mordor_female_name_38" text="둑샤" />
+    <string id="aom_mordor_female_name_39" text="스쿨바" />
+    <string id="aom_mordor_female_name_4" text="무르자그" />
+    <string id="aom_mordor_female_name_40" text="가르브나" />
+    <string id="aom_mordor_female_name_41" text="누르가" />
+    <string id="aom_mordor_female_name_42" text="스루샤" />
+    <string id="aom_mordor_female_name_43" text="울그나" />
+    <string id="aom_mordor_female_name_44" text="구르블라" />
+    <string id="aom_mordor_female_name_45" text="부슈가" />
+    <string id="aom_mordor_female_name_46" text="크루가" />
+    <string id="aom_mordor_female_name_47" text="샤룰" />
+    <string id="aom_mordor_female_name_48" text="무르샤" />
+    <string id="aom_mordor_female_name_49" text="두르글라" />
+    <string id="aom_mordor_female_name_5" text="스쿨가" />
+    <string id="aom_mordor_female_name_50" text="굴브나" />
+    <string id="aom_mordor_female_name_6" text="부르자" />
+    <string id="aom_mordor_female_name_7" text="가샤" />
+    <string id="aom_mordor_female_name_8" text="스라크나" />
+    <string id="aom_mordor_female_name_9" text="그루샤" />
+    <string id="aom_mordor_male_name_1" text="고르바그" />
+    <string id="aom_mordor_male_name_10" text="볼그" />
+    <string id="aom_mordor_male_name_11" text="마우후르" />
+    <string id="aom_mordor_male_name_12" text="우글룩" />
+    <string id="aom_mordor_male_name_13" text="가슈낙" />
+    <string id="aom_mordor_male_name_14" text="두르가슈" />
+    <string id="aom_mordor_male_name_15" text="크림풀" />
+    <string id="aom_mordor_male_name_16" text="스라쿨" />
+    <string id="aom_mordor_male_name_17" text="그림부르즈" />
+    <string id="aom_mordor_male_name_18" text="부르자쉬" />
+    <string id="aom_mordor_male_name_19" text="나즈굴" />
+    <string id="aom_mordor_male_name_2" text="샤그랏" />
+    <string id="aom_mordor_male_name_20" text="굴스락" />
+    <string id="aom_mordor_male_name_21" text="스쿨갓" />
+    <string id="aom_mordor_male_name_22" text="오르가쉬" />
+    <string id="aom_mordor_male_name_23" text="루그두쉬" />
+    <string id="aom_mordor_male_name_24" text="크룸갓" />
+    <string id="aom_mordor_male_name_25" text="사룩" />
+    <string id="aom_mordor_male_name_26" text="고룰" />
+    <string id="aom_mordor_male_name_27" text="두쉬고이" />
+    <string id="aom_mordor_male_name_28" text="모쿠르즈" />
+    <string id="aom_mordor_male_name_29" text="우르가쉬" />
+    <string id="aom_mordor_male_name_3" text="그리쉬나크" />
+    <string id="aom_mordor_male_name_30" text="푸쉬낙" />
+    <string id="aom_mordor_male_name_31" text="글롭스락" />
+    <string id="aom_mordor_male_name_32" text="스쿠를락" />
+    <string id="aom_mordor_male_name_33" text="부르즈골" />
+    <string id="aom_mordor_male_name_34" text="가쉬낙" />
+    <string id="aom_mordor_male_name_35" text="두르부르즈" />
+    <string id="aom_mordor_male_name_36" text="크룸락" />
+    <string id="aom_mordor_male_name_37" text="타르쿨" />
+    <string id="aom_mordor_male_name_38" text="샤그룰" />
+    <string id="aom_mordor_male_name_39" text="우프가쉬" />
+    <string id="aom_mordor_male_name_4" text="무즈가쉬" />
+    <string id="aom_mordor_male_name_40" text="무그라스" />
+    <string id="aom_mordor_male_name_41" text="루그랏" />
+    <string id="aom_mordor_male_name_42" text="고를락" />
+    <string id="aom_mordor_male_name_43" text="누르즈가쉬" />
+    <string id="aom_mordor_male_name_44" text="두쉬곱" />
+    <string id="aom_mordor_male_name_45" text="굴박" />
+    <string id="aom_mordor_male_name_46" text="크림굴" />
+    <string id="aom_mordor_male_name_47" text="스락눌" />
+    <string id="aom_mordor_male_name_48" text="스카룩" />
+    <string id="aom_mordor_male_name_49" text="부르골" />
+    <string id="aom_mordor_male_name_5" text="라그두프" />
+    <string id="aom_mordor_male_name_50" text="그루바쉬" />
+    <string id="aom_mordor_male_name_6" text="라드버그" />
+    <string id="aom_mordor_male_name_7" text="우프삭" />
+    <string id="aom_mordor_male_name_8" text="스나가" />
+    <string id="aom_mordor_male_name_9" text="고스모그" />
+    <string id="aom_mordor_name" text="모르도르" />
+    <string id="aom_rivendell_clan_1" text="엘론드 가문" />
+    <string id="aom_rivendell_clan_10" text="에레스토르 가문" />
+    <string id="aom_rivendell_clan_11" text="람벵골모르" />
+    <string id="aom_rivendell_clan_12" text="린디르 가문" />
+    <string id="aom_rivendell_clan_13" text="아르웬 가문" />
+    <string id="aom_rivendell_clan_14" text="길갈라드 가문" />
+    <string id="aom_rivendell_clan_15" text="키르단 가문" />
+    <string id="aom_rivendell_clan_2" text="페아노르 가문" />
+    <string id="aom_rivendell_clan_3" text="핑골핀 가문" />
+    <string id="aom_rivendell_clan_4" text="피나르핀 가문" />
+    <string id="aom_rivendell_clan_5" text="투르곤 가문" />
+    <string id="aom_rivendell_clan_6" text="과이스 이 미르다인" />
+    <string id="aom_rivendell_clan_7" text="켈레브림보르 가문" />
+    <string id="aom_rivendell_clan_8" text="길도르 가문" />
+    <string id="aom_rivendell_clan_9" text="글로르핀델 가문" />
+    <string id="aom_rivendell_desc" text="깊은골의 놀도르 요정들은 비할 데 없는 지식과 예술, 용맹으로 이름 높은 지혜롭고 유서 깊은 종족이다. 엘론드 공의 인도 아래, 그들은 사라져 가는 상고대의 아름다움과 전승을 임라드리스의 숨겨진 성소 안에 간직하고 있다. 검과 활 모두에 통달한 놀도르는 무예의 기술과 그들 종족 특유의 우아함과 정확성을 겸비하고 있다." />
+    <string id="aom_rivendell_female_name_1" text="아나리엘" />
+    <string id="aom_rivendell_female_name_10" text="실웬" />
+    <string id="aom_rivendell_female_name_11" text="이스렐레" />
+    <string id="aom_rivendell_female_name_12" text="갈라드웬" />
+    <string id="aom_rivendell_female_name_13" text="멜린나" />
+    <string id="aom_rivendell_female_name_14" text="수일웬" />
+    <string id="aom_rivendell_female_name_15" text="칼륀드라" />
+    <string id="aom_rivendell_female_name_16" text="아르디엔" />
+    <string id="aom_rivendell_female_name_17" text="벨린드라" />
+    <string id="aom_rivendell_female_name_18" text="에시리엘" />
+    <string id="aom_rivendell_female_name_19" text="살리엘" />
+    <string id="aom_rivendell_female_name_2" text="엘렌나" />
+    <string id="aom_rivendell_female_name_20" text="카라니엘" />
+    <string id="aom_rivendell_female_name_21" text="민로스웬" />
+    <string id="aom_rivendell_female_name_22" text="아엘리리엘" />
+    <string id="aom_rivendell_female_name_23" text="팔린웬" />
+    <string id="aom_rivendell_female_name_24" text="티리엘" />
+    <string id="aom_rivendell_female_name_25" text="이드리엘" />
+    <string id="aom_rivendell_female_name_26" text="엘반나" />
+    <string id="aom_rivendell_female_name_27" text="키랴웬" />
+    <string id="aom_rivendell_female_name_28" text="린달웬" />
+    <string id="aom_rivendell_female_name_29" text="에레시엘" />
+    <string id="aom_rivendell_female_name_3" text="칼렌웬" />
+    <string id="aom_rivendell_female_name_30" text="실마리엘" />
+    <string id="aom_rivendell_female_name_31" text="갈라디엔" />
+    <string id="aom_rivendell_female_name_32" text="아엘리노르" />
+    <string id="aom_rivendell_female_name_33" text="살윈" />
+    <string id="aom_rivendell_female_name_34" text="에시르웬" />
+    <string id="aom_rivendell_female_name_35" text="아르웨니엘" />
+    <string id="aom_rivendell_female_name_36" text="수일렌나" />
+    <string id="aom_rivendell_female_name_37" text="놀윈" />
+    <string id="aom_rivendell_female_name_38" text="타스웬" />
+    <string id="aom_rivendell_female_name_39" text="칼린드리엘" />
+    <string id="aom_rivendell_female_name_4" text="님리엘레" />
+    <string id="aom_rivendell_female_name_40" text="이스리엘" />
+    <string id="aom_rivendell_female_name_41" text="벨웬" />
+    <string id="aom_rivendell_female_name_42" text="아엘린나" />
+    <string id="aom_rivendell_female_name_43" text="팔리니엘" />
+    <string id="aom_rivendell_female_name_44" text="에렐레" />
+    <string id="aom_rivendell_female_name_45" text="카리엘" />
+    <string id="aom_rivendell_female_name_46" text="로산나" />
+    <string id="aom_rivendell_female_name_47" text="엘라리엘레" />
+    <string id="aom_rivendell_female_name_48" text="갈윈" />
+    <string id="aom_rivendell_female_name_49" text="니민디엘" />
+    <string id="aom_rivendell_female_name_5" text="타스리엘" />
+    <string id="aom_rivendell_female_name_50" text="실바리엘" />
+    <string id="aom_rivendell_female_name_6" text="아마리엘" />
+    <string id="aom_rivendell_female_name_7" text="발웬" />
+    <string id="aom_rivendell_female_name_8" text="엘라리엘" />
+    <string id="aom_rivendell_female_name_9" text="로시리엘" />
+    <string id="aom_rivendell_male_name_1" text="칼레니온" />
+    <string id="aom_rivendell_male_name_10" text="오로딘" />
+    <string id="aom_rivendell_male_name_11" text="아에글리르" />
+    <string id="aom_rivendell_male_name_12" text="에시리온" />
+    <string id="aom_rivendell_male_name_13" text="아나리온" />
+    <string id="aom_rivendell_male_name_14" text="켈레시르" />
+    <string id="aom_rivendell_male_name_15" text="팔리노르" />
+    <string id="aom_rivendell_male_name_16" text="엘로디르" />
+    <string id="aom_rivendell_male_name_17" text="아라디온" />
+    <string id="aom_rivendell_male_name_18" text="보렌딜" />
+    <string id="aom_rivendell_male_name_19" text="멜리아나르" />
+    <string id="aom_rivendell_male_name_2" text="에렐리온" />
+    <string id="aom_rivendell_male_name_20" text="타스린" />
+    <string id="aom_rivendell_male_name_21" text="갈리온" />
+    <string id="aom_rivendell_male_name_22" text="엘레디르" />
+    <string id="aom_rivendell_male_name_23" text="마르딜" />
+    <string id="aom_rivendell_male_name_24" text="실로나르" />
+    <string id="aom_rivendell_male_name_25" text="님로손" />
+    <string id="aom_rivendell_male_name_26" text="키리안디르" />
+    <string id="aom_rivendell_male_name_27" text="아르손" />
+    <string id="aom_rivendell_male_name_28" text="엘미리온" />
+    <string id="aom_rivendell_male_name_29" text="카라디온" />
+    <string id="aom_rivendell_male_name_3" text="아마리온" />
+    <string id="aom_rivendell_male_name_30" text="핀갈로르" />
+    <string id="aom_rivendell_male_name_31" text="에렌두르" />
+    <string id="aom_rivendell_male_name_32" text="티리온" />
+    <string id="aom_rivendell_male_name_33" text="벨란도르" />
+    <string id="aom_rivendell_male_name_34" text="알라시온" />
+    <string id="aom_rivendell_male_name_35" text="민란디르" />
+    <string id="aom_rivendell_male_name_36" text="갈도리온" />
+    <string id="aom_rivendell_male_name_37" text="로사노르" />
+    <string id="aom_rivendell_male_name_38" text="티란디르" />
+    <string id="aom_rivendell_male_name_39" text="에레글린" />
+    <string id="aom_rivendell_male_name_4" text="놀린디르" />
+    <string id="aom_rivendell_male_name_40" text="살라디르" />
+    <string id="aom_rivendell_male_name_41" text="아나린도르" />
+    <string id="aom_rivendell_male_name_42" text="칼리노르" />
+    <string id="aom_rivendell_male_name_43" text="수일론" />
+    <string id="aom_rivendell_male_name_44" text="엘라리온" />
+    <string id="aom_rivendell_male_name_45" text="릴리온" />
+    <string id="aom_rivendell_male_name_46" text="살로린" />
+    <string id="aom_rivendell_male_name_47" text="벨라노르" />
+    <string id="aom_rivendell_male_name_48" text="카사노르" />
+    <string id="aom_rivendell_male_name_49" text="아라니온" />
+    <string id="aom_rivendell_male_name_5" text="살리온" />
+    <string id="aom_rivendell_male_name_50" text="라시온" />
+    <string id="aom_rivendell_male_name_51" text="마에드로스" />
+    <string id="aom_rivendell_male_name_52" text="마글로르" />
+    <string id="aom_rivendell_male_name_53" text="쿠루핀" />
+    <string id="aom_rivendell_male_name_54" text="카란시르" />
+    <string id="aom_rivendell_male_name_55" text="켈레고름" />
+    <string id="aom_rivendell_male_name_56" text="암라스" />
+    <string id="aom_rivendell_male_name_57" text="암로드" />
+    <string id="aom_rivendell_male_name_58" text="핀웨" />
+    <string id="aom_rivendell_male_name_59" text="페아노르" />
+    <string id="aom_rivendell_male_name_6" text="린디르" />
+    <string id="aom_rivendell_male_name_7" text="사라니온" />
+    <string id="aom_rivendell_male_name_8" text="이스랄리온" />
+    <string id="aom_rivendell_male_name_9" text="발란딜" />
+    <string id="aom_rivendell_name" text="놀도르 요정" />
+    <string id="aom_shaghana_clan_1" text="에자르키아" />
+    <string id="aom_shaghana_clan_2" text="쿠마라크니스" />
+    <string id="aom_shaghana_clan_3" text="타이마캐" />
+    <string id="aom_shaghana_clan_4" text="자야크누리" />
+    <string id="aom_shaghana_clan_5" text="셀라르케스" />
+    <string id="aom_shaghana_clan_6" text="우즈하레스" />
+    <string id="aom_shaghana_clan_7" text="알라라닌" />
+    <string id="aom_shaghana_clan_8" text="바누간드" />
+    <string id="aom_shaghana_clan_9" text="아캄메스" />
+    <string id="aom_shaghana_female_name_1" text="자르카" />
+    <string id="aom_shaghana_female_name_10" text="자리마" />
+    <string id="aom_shaghana_female_name_11" text="할리마" />
+    <string id="aom_shaghana_female_name_12" text="파딜라" />
+    <string id="aom_shaghana_female_name_13" text="나지라" />
+    <string id="aom_shaghana_female_name_14" text="사미라" />
+    <string id="aom_shaghana_female_name_15" text="라키마" />
+    <string id="aom_shaghana_female_name_16" text="타니라" />
+    <string id="aom_shaghana_female_name_17" text="마르주카" />
+    <string id="aom_shaghana_female_name_18" text="줄파" />
+    <string id="aom_shaghana_female_name_19" text="유스라" />
+    <string id="aom_shaghana_female_name_2" text="타시라" />
+    <string id="aom_shaghana_female_name_20" text="칼리다" />
+    <string id="aom_shaghana_female_name_21" text="타시마" />
+    <string id="aom_shaghana_female_name_22" text="바키라" />
+    <string id="aom_shaghana_female_name_23" text="나지마" />
+    <string id="aom_shaghana_female_name_24" text="사미하" />
+    <string id="aom_shaghana_female_name_25" text="잘릴라" />
+    <string id="aom_shaghana_female_name_26" text="라지나" />
+    <string id="aom_shaghana_female_name_27" text="카리마" />
+    <string id="aom_shaghana_female_name_28" text="샬훈" />
+    <string id="aom_shaghana_female_name_29" text="야스미라" />
+    <string id="aom_shaghana_female_name_3" text="나키마" />
+    <string id="aom_shaghana_female_name_30" text="자피라" />
+    <string id="aom_shaghana_female_name_4" text="살리마" />
+    <string id="aom_shaghana_female_name_5" text="야지라" />
+    <string id="aom_shaghana_female_name_6" text="마르자" />
+    <string id="aom_shaghana_female_name_7" text="잘릴라" />
+    <string id="aom_shaghana_female_name_8" text="라시마" />
+    <string id="aom_shaghana_female_name_9" text="카드라" />
+    <string id="aom_shaghana_male_name_1" text="자르칸" />
+    <string id="aom_shaghana_male_name_10" text="할루즈" />
+    <string id="aom_shaghana_male_name_11" text="파룬" />
+    <string id="aom_shaghana_male_name_12" text="야주르" />
+    <string id="aom_shaghana_male_name_13" text="타심" />
+    <string id="aom_shaghana_male_name_14" text="바크림" />
+    <string id="aom_shaghana_male_name_15" text="줄칸" />
+    <string id="aom_shaghana_male_name_16" text="나미르" />
+    <string id="aom_shaghana_male_name_17" text="라순" />
+    <string id="aom_shaghana_male_name_18" text="카림" />
+    <string id="aom_shaghana_male_name_19" text="마즈하르" />
+    <string id="aom_shaghana_male_name_2" text="라힘" />
+    <string id="aom_shaghana_male_name_20" text="타렉" />
+    <string id="aom_shaghana_male_name_21" text="살루즈" />
+    <string id="aom_shaghana_male_name_22" text="유수프" />
+    <string id="aom_shaghana_male_name_23" text="자파르" />
+    <string id="aom_shaghana_male_name_24" text="하킨" />
+    <string id="aom_shaghana_male_name_25" text="무락" />
+    <string id="aom_shaghana_male_name_26" text="타르잔" />
+    <string id="aom_shaghana_male_name_27" text="자딤" />
+    <string id="aom_shaghana_male_name_28" text="카르마즈" />
+    <string id="aom_shaghana_male_name_29" text="샬룬" />
+    <string id="aom_shaghana_male_name_3" text="타딘" />
+    <string id="aom_shaghana_male_name_30" text="라힘" />
+    <string id="aom_shaghana_male_name_4" text="마르주크" />
+    <string id="aom_shaghana_male_name_5" text="나켈" />
+    <string id="aom_shaghana_male_name_6" text="잘림" />
+    <string id="aom_shaghana_male_name_7" text="아즈락" />
+    <string id="aom_shaghana_male_name_8" text="사미르" />
+    <string id="aom_shaghana_male_name_9" text="카잔" />
+    <string id="aom_umbar_clan_1" text="검은 돛 함대" />
+    <string id="aom_umbar_clan_10" text="남부인 동맹" />
+    <string id="aom_umbar_clan_11" text="바다늑대 씨족" />
+    <string id="aom_umbar_clan_12" text="벨팔라스 만의 약탈자들" />
+    <string id="aom_umbar_clan_13" text="펠라르기르 망명자들" />
+    <string id="aom_umbar_clan_14" text="돌 암로스의 재앙" />
+    <string id="aom_umbar_clan_15" text="바람군주 씨족" />
+    <string id="aom_umbar_clan_2" text="해적 형제단" />
+    <string id="aom_umbar_clan_3" text="카스타미르의 아들들" />
+    <string id="aom_umbar_clan_4" text="하라드림 동맹" />
+    <string id="aom_umbar_clan_5" text="뱀 근위대" />
+    <string id="aom_umbar_clan_6" text="폭풍의 군주들" />
+    <string id="aom_umbar_clan_7" text="붉은 조수 약탈단" />
+    <string id="aom_umbar_clan_8" text="항구 감시대" />
+    <string id="aom_umbar_clan_9" text="암흑 누메노르인" />
+    <string id="aom_umbar_desc" text="움바르의 사람들은 바다를 누비는 전사이자 해적으로, 곤도르 남쪽 바다의 지배자들이다. 누메노르 망명자들의 후예인 그들은 교활함과 전투에서의 사나움으로 이름 높다. 검은 돛을 올린 그들의 함대는 해안을 습격하며 적들의 가슴에 공포를 심는다. 그들의 충성은 사우론에게 향해 있으나, 움바르의 해적들은 지독히 독립적이며 무엇보다 힘과 교활함을 중히 여긴다." />
+    <string id="aom_umbar_female_name_1" text="셀라라" />
+    <string id="aom_umbar_female_name_10" text="칼리마" />
+    <string id="aom_umbar_female_name_11" text="아슈나" />
+    <string id="aom_umbar_female_name_12" text="다리라" />
+    <string id="aom_umbar_female_name_13" text="자리나" />
+    <string id="aom_umbar_female_name_14" text="파히라" />
+    <string id="aom_umbar_female_name_15" text="발리아" />
+    <string id="aom_umbar_female_name_16" text="술리나" />
+    <string id="aom_umbar_female_name_17" text="모르드히라" />
+    <string id="aom_umbar_female_name_18" text="줄파라" />
+    <string id="aom_umbar_female_name_19" text="아즈리야" />
+    <string id="aom_umbar_female_name_2" text="바즈라" />
+    <string id="aom_umbar_female_name_20" text="하리마" />
+    <string id="aom_umbar_female_name_21" text="랄미라" />
+    <string id="aom_umbar_female_name_22" text="타지라" />
+    <string id="aom_umbar_female_name_23" text="하비나" />
+    <string id="aom_umbar_female_name_24" text="조리나" />
+    <string id="aom_umbar_female_name_25" text="말라야" />
+    <string id="aom_umbar_female_name_26" text="보티라" />
+    <string id="aom_umbar_female_name_27" text="아라미라" />
+    <string id="aom_umbar_female_name_28" text="나지라" />
+    <string id="aom_umbar_female_name_29" text="셀리나" />
+    <string id="aom_umbar_female_name_3" text="라니야" />
+    <string id="aom_umbar_female_name_30" text="타지나" />
+    <string id="aom_umbar_female_name_31" text="조라나" />
+    <string id="aom_umbar_female_name_32" text="바지라" />
+    <string id="aom_umbar_female_name_33" text="하라댜" />
+    <string id="aom_umbar_female_name_34" text="샤지라" />
+    <string id="aom_umbar_female_name_35" text="자피나" />
+    <string id="aom_umbar_female_name_36" text="칼지라" />
+    <string id="aom_umbar_female_name_37" text="라미나" />
+    <string id="aom_umbar_female_name_38" text="타르니아" />
+    <string id="aom_umbar_female_name_39" text="비리나" />
+    <string id="aom_umbar_female_name_4" text="자하라" />
+    <string id="aom_umbar_female_name_40" text="도르냐" />
+    <string id="aom_umbar_female_name_41" text="마르질라" />
+    <string id="aom_umbar_female_name_42" text="아즈리야" />
+    <string id="aom_umbar_female_name_43" text="셀지라" />
+    <string id="aom_umbar_female_name_44" text="줄파라" />
+    <string id="aom_umbar_female_name_45" text="나즈라" />
+    <string id="aom_umbar_female_name_46" text="라자라" />
+    <string id="aom_umbar_female_name_47" text="탈지라" />
+    <string id="aom_umbar_female_name_48" text="바르디나" />
+    <string id="aom_umbar_female_name_49" text="조르바야" />
+    <string id="aom_umbar_female_name_5" text="말리라" />
+    <string id="aom_umbar_female_name_50" text="아라카라" />
+    <string id="aom_umbar_female_name_6" text="타지아" />
+    <string id="aom_umbar_female_name_7" text="조리나" />
+    <string id="aom_umbar_female_name_8" text="라지라" />
+    <string id="aom_umbar_female_name_9" text="나지라" />
+    <string id="aom_umbar_male_name_1" text="카렐드" />
+    <string id="aom_umbar_male_name_10" text="칼림" />
+    <string id="aom_umbar_male_name_11" text="아슈카르" />
+    <string id="aom_umbar_male_name_12" text="다리온" />
+    <string id="aom_umbar_male_name_13" text="자리스" />
+    <string id="aom_umbar_male_name_14" text="파림" />
+    <string id="aom_umbar_male_name_15" text="바란" />
+    <string id="aom_umbar_male_name_16" text="술디르" />
+    <string id="aom_umbar_male_name_17" text="모르닥" />
+    <string id="aom_umbar_male_name_18" text="줄파르" />
+    <string id="aom_umbar_male_name_19" text="아즈락" />
+    <string id="aom_umbar_male_name_2" text="바르둔" />
+    <string id="aom_umbar_male_name_20" text="하룸" />
+    <string id="aom_umbar_male_name_21" text="람리스" />
+    <string id="aom_umbar_male_name_22" text="타르니스" />
+    <string id="aom_umbar_male_name_23" text="하브림" />
+    <string id="aom_umbar_male_name_24" text="조린" />
+    <string id="aom_umbar_male_name_25" text="말리드" />
+    <string id="aom_umbar_male_name_26" text="보타르" />
+    <string id="aom_umbar_male_name_27" text="아람디르" />
+    <string id="aom_umbar_male_name_28" text="나자르" />
+    <string id="aom_umbar_male_name_29" text="셀라드" />
+    <string id="aom_umbar_male_name_3" text="라시드" />
+    <string id="aom_umbar_male_name_30" text="타즈린" />
+    <string id="aom_umbar_male_name_31" text="조르하드" />
+    <string id="aom_umbar_male_name_32" text="바즈린" />
+    <string id="aom_umbar_male_name_33" text="하라딤" />
+    <string id="aom_umbar_male_name_34" text="샤주르" />
+    <string id="aom_umbar_male_name_35" text="자프리드" />
+    <string id="aom_umbar_male_name_36" text="칼자르" />
+    <string id="aom_umbar_male_name_37" text="라미르" />
+    <string id="aom_umbar_male_name_38" text="타르니드" />
+    <string id="aom_umbar_male_name_39" text="비르닥" />
+    <string id="aom_umbar_male_name_4" text="자라쉬" />
+    <string id="aom_umbar_male_name_40" text="도르낙" />
+    <string id="aom_umbar_male_name_41" text="마르준" />
+    <string id="aom_umbar_male_name_42" text="아즈릴" />
+    <string id="aom_umbar_male_name_43" text="셀카르" />
+    <string id="aom_umbar_male_name_44" text="줄린" />
+    <string id="aom_umbar_male_name_45" text="나즈라" />
+    <string id="aom_umbar_male_name_46" text="라지르" />
+    <string id="aom_umbar_male_name_47" text="탈미르" />
+    <string id="aom_umbar_male_name_48" text="바르둠" />
+    <string id="aom_umbar_male_name_49" text="조르빔" />
+    <string id="aom_umbar_male_name_5" text="말키르" />
+    <string id="aom_umbar_male_name_50" text="아라카즈" />
+    <string id="aom_umbar_male_name_6" text="타르존" />
+    <string id="aom_umbar_male_name_7" text="조르빈" />
+    <string id="aom_umbar_male_name_8" text="로자르" />
+    <string id="aom_umbar_male_name_9" text="나즈린" />
+    <string id="aom_umbar_name" text="움바르" />
+  </strings>
+</base>

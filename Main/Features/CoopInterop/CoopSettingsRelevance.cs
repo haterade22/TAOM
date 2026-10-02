@@ -126,6 +126,15 @@ public static class CoopSettingsRelevance
         "RealmBordersDrawThroughTerrain", "RealmBordersNames", "RealmBordersCrossingNotices",
         "RealmBordersFillLands", "RealmBordersFillStrength", "RealmBordersBlendMode", "RealmBordersMaterial",
         "RealmBordersParchmentMap",
+        // Menus & Loading Screens (#704): the main menu, its video and music, loading pictures and
+        // skill icons, all drawn or played on this client only.
+        "FrontEndCustomMainMenu", "FrontEndHideGameVersion", "FrontEndMenuVideo", "FrontEndMuteMenuMusic",
+        "FrontEndCustomLoadingImages", "FrontEndSkillIcons",
+        "FrontEndCustomFaceGen", "FrontEndCustomNarrativeStage", "FrontEndCustomReviewStage",
+        "FrontEndCustomBannerEditor", "FrontEndCustomClanNaming", "FrontEndCustomOptionsStage",
+        // The faction picker shapes the local player's own character creation, which each peer runs
+        // for themselves; the co-op layer replicates the hero that results, not the screen.
+        "FrontEndFactionScreen",
         "RealmColourGondor", "RealmColourRohan", "RealmColourDunland", "RealmColourIsengard", "RealmColourMordor", "RealmColourHarad", "RealmColourUmbar", "RealmColourShaghana", "RealmColourAbanissa", "RealmColourKhand", "RealmColourRhun", "RealmColourDale", "RealmColourErebor", "RealmColourRivendell", "RealmColourLothlorien", "RealmColourMirkwood", "RealmColourLindon", "RealmColourDolGuldur", "RealmColourGundabad", "RealmColourMistyMountainOrcs", "RealmColourGoblins", "RealmColourBlueCraig", "RealmColourYourRealm",
     };
 

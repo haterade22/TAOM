@@ -55,7 +55,7 @@
 	</NPCCharacter>
 
 	<!-- Caravan Staff -->
-	<NPCCharacter id="caravan_master_lindon" race="elf" default_group="Infantry" level="26" name="{=aom_rv_caravan_master}Lindon Caravan Master" occupation="CaravanGuard" culture="Culture.lindon">
+	<NPCCharacter id="caravan_master_lindon" race="elf" default_group="Infantry" level="26" name="{=aom_ln_caravan_master}Lindon Caravan Master" occupation="CaravanGuard" culture="Culture.lindon">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />
@@ -75,7 +75,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="armed_trader_lindon" race="elf" default_group="Infantry" level="16" name="{=aom_rv_armed_trader}Lindon Armed Trader" occupation="CaravanGuard" culture="Culture.lindon">
+	<NPCCharacter id="armed_trader_lindon" race="elf" default_group="Infantry" level="16" name="{=aom_ln_armed_trader}Lindon Armed Trader" occupation="CaravanGuard" culture="Culture.lindon">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills>
 			<skill id="Athletics" value="40" />
@@ -91,7 +91,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="caravan_guard_lindon" race="elf" default_group="Infantry" level="21" name="{=aom_rv_caravan_guard}Lindon Caravan Guard" occupation="CaravanGuard" culture="Culture.lindon">
+	<NPCCharacter id="caravan_guard_lindon" race="elf" default_group="Infantry" level="21" name="{=aom_ln_caravan_guard}Lindon Caravan Guard" occupation="CaravanGuard" culture="Culture.lindon">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills>
 			<skill id="Athletics" value="50" />
@@ -110,7 +110,7 @@
 		</Equipments>
 	</NPCCharacter>
 
-	<NPCCharacter id="veteran_caravan_guard_lindon" race="elf" default_group="Infantry" level="26" name="{=aom_rv_vet_caravan_guard}Lindon Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.lindon">
+	<NPCCharacter id="veteran_caravan_guard_lindon" race="elf" default_group="Infantry" level="26" name="{=aom_ln_vet_caravan_guard}Lindon Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.lindon">
 		<face><face_key_template value="BodyProperty.fighter_rivendell" /></face>
 		<skills>
 			<skill id="Athletics" value="60" />

@@ -1,0 +1,123 @@
+<Brushes>
+  <!-- Colours: cream #E9E1CC, gold #C9AB69, dim gold #A8905A. Display type = wide-tracked Cinzel, body = Garamond.
+       (Body text was briefly switched to FS_CinzelWide too - user disliked the result: CinzelWide's tracked,
+       small-caps-styled lowercase reads fine for short headers/titles but flattens long body paragraphs/list
+       rows into the same look as the headers, losing the header/body contrast. Reverted to FS_Garamond.) -->
+
+  <Brush Name="Preview.Title" Font="FS_CinzelWide" FontSize="34">
+    <Styles><Style Name="Default" FontColor="#EFE7D2FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" /></Styles>
+  </Brush>
+
+  <Brush Name="Preview.Section" Font="FS_CinzelWide" FontSize="18" TextHorizontalAlignment="Left">
+    <Styles><Style Name="Default" FontColor="#C9AB69FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" /></Styles>
+  </Brush>
+
+  <!-- brightened + bigger + stronger glow (2026-09-23, user: hard to see) - was #B39C64 (a dim muted
+       gold-brown, close to the dark background's own tone) at only size 15 with a weak glow -->
+  <Brush Name="Preview.Difficulty" Font="FS_CinzelWide" FontSize="18">
+    <Styles><Style Name="Default" FontColor="#E9D19AFF" TextGlowColor="#000000D0" TextGlowRadius="0.22" TextBlur="0.1" /></Styles>
+  </Brush>
+
+  <Brush Name="Preview.BodyLeft" Font="FS_Garamond" FontSize="22" TextHorizontalAlignment="Left">
+    <Styles><Style Name="Default" FontColor="#E9E1CCFF" TextGlowColor="#000000C0" TextGlowRadius="0.2" TextBlur="0.15" /></Styles>
+  </Brush>
+
+  <Brush Name="Preview.RowPos" Font="FS_Garamond" FontSize="20" TextHorizontalAlignment="Left">
+    <Styles><Style Name="Default" FontColor="#B4D796FF" TextGlowColor="#000000C0" TextGlowRadius="0.2" TextBlur="0.15" /></Styles>
+  </Brush>
+
+  <Brush Name="Preview.RowNeg" Font="FS_Garamond" FontSize="20" TextHorizontalAlignment="Left">
+    <Styles><Style Name="Default" FontColor="#F0796AFF" TextGlowColor="#000000C0" TextGlowRadius="0.2" TextBlur="0.15" /></Styles>
+  </Brush>
+
+  <!-- Confirm: near-black plate with a gold outline (sprite carries the ornaments), label in tracked capitals -->
+  <Brush Name="Preview.Confirm">
+    <Layers><BrushLayer Name="Default" Sprite="fs_confirm" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="1.2" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="0.85" /></Style>
+    </Styles>
+  </Brush>
+
+  <Brush Name="Preview.ConfirmText" Font="FS_CinzelWide" FontSize="22">
+    <Styles>
+      <Style Name="Default" FontColor="#DEC98FFF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" />
+      <Style Name="Hovered" FontColor="#F2E2B0FF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" />
+      <Style Name="Pressed" FontColor="#C9AB69FF" TextGlowColor="#000000A0" TextGlowRadius="0.1" TextBlur="0.05" />
+    </Styles>
+  </Brush>
+
+  <!-- hero tiles -->
+  <!-- Fill layer added (2026-09-30, user: "the buttons for leaders/lords/wanderers are somewhat hard to see,
+       also the collapsed menus, perhaps we can have a low opacity background fill on them") - fs_hero_frame_9
+       is a 9-sliced BORDER sprite only, transparent in the middle, so text sat directly on whatever busy
+       faction art was behind it with nothing to darken/separate it. A plain dark BlankWhiteSquare_9 layer
+       drawn underneath (low alpha, brighter on hover/selected like the border already was) gives every user of
+       this brush - the Leader/Lord/Wanderer tab buttons above and the BrowseList rows below, both already
+       sharing this one brush - a subtle readable backing without redesigning either. -->
+  <Brush Name="Preview.HeroFrame">
+    <Layers>
+      <BrushLayer Name="Fill" Sprite="BlankWhiteSquare_9" Color="#000000FF" />
+      <BrushLayer Name="Default" Sprite="fs_hero_frame_9" />
+    </Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Fill" AlphaFactor="0.35" /><BrushLayer Name="Default" AlphaFactor="0.55" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Fill" AlphaFactor="0.45" /><BrushLayer Name="Default" AlphaFactor="1" /></Style>
+      <Style Name="Selected"><BrushLayer Name="Fill" AlphaFactor="0.55" /><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="1.3" /></Style>
+    </Styles>
+  </Brush>
+
+  <Brush Name="Preview.HoverOnly" Font="FS_Garamond" FontSize="24">
+    <Styles>
+      <Style Name="Default" FontColor="#EFE7D2FF" TextGlowColor="#000000C0" TextAlphaFactor="0" />
+      <Style Name="Hovered" FontColor="#EFE7D2FF" TextGlowColor="#000000C0" TextAlphaFactor="1" />
+    </Styles>
+  </Brush>
+
+  <!-- Small hover-only name label for the tiny 70x70 Characters tiles (2026-09-30, user: "the text inside the
+       special characters buttons is very big, like a soft hover over it should show a subtle text") -
+       Preview.HoverOnly already fades in on hover the way the user wants, but its own FontSize (24) was tuned
+       for the much bigger Home button label that also uses it - too large for a name squeezed under a 70px
+       portrait. Same hover-only behavior, smaller/dimmer text. -->
+  <Brush Name="Preview.TileHoverName" Font="FS_Garamond" FontSize="14">
+    <Styles>
+      <Style Name="Default" FontColor="#EFE7D2FF" TextGlowColor="#000000C0" TextAlphaFactor="0" />
+      <Style Name="Hovered" FontColor="#EFE7D2FF" TextGlowColor="#000000C0" TextAlphaFactor="1" />
+    </Styles>
+  </Brush>
+
+  <!-- Browse More category tabs (2026-09-30, user: "the button for lord and wanderer should be more appealing
+       and in line with the UI") - dim gold text that brightens on hover and turns fully bright when the category
+       is active, same font/weight as Preview.Section's headers rather than a boxed button - the underline divider
+       that marks the active tab is a separate sprite widget in the XML (fs_divider_thin, IsVisible tied to the
+       category's own selected state), not part of this brush. -->
+  <!-- Brightened (2026-09-30, user: "make the leader/lord/wanderer text brighter") - whole ramp shifted up,
+       Default/Hovered/Selected hierarchy kept intact. -->
+  <Brush Name="Preview.TabText" Font="FS_CinzelWide" FontSize="17" TextHorizontalAlignment="Center">
+    <Styles>
+      <Style Name="Default" FontColor="#C9AB69FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" />
+      <Style Name="Hovered" FontColor="#E0C888FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" />
+      <Style Name="Selected" FontColor="#FBEFC4FF" TextGlowColor="#000000B0" TextGlowRadius="0.2" TextBlur="0.1" />
+    </Styles>
+  </Brush>
+
+  <!-- scrollbar handle for the right column (benefits can run long; the column stops above the minimap) -->
+  <Brush Name="Preview.ScrollHandle">
+    <Layers><BrushLayer Name="Default" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" ColorFactor="1" AlphaFactor="0.7" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" ColorFactor="1" AlphaFactor="1" /></Style>
+    </Styles>
+  </Brush>
+
+  <!-- home button -->
+  <Brush Name="Preview.RoundButton">
+    <Layers><BrushLayer Name="Default" Sprite="fs_home" /></Layers>
+    <Styles>
+      <Style Name="Default"><BrushLayer Name="Default" AlphaFactor="0.92" /></Style>
+      <Style Name="Hovered"><BrushLayer Name="Default" AlphaFactor="1" ColorFactor="1.3" /></Style>
+      <Style Name="Pressed"><BrushLayer Name="Default" AlphaFactor="0.75" /></Style>
+    </Styles>
+  </Brush>
+</Brushes>

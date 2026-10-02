@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<strings>
+
+	<!-- Generated Custom Battle scene names: extracted from custom_battle_scenes.xml by tools/generate_name_localization_strings.py. Do not hand-edit; re-run the generator instead. -->
+	<string id="aom_taom_dale_castle_001_forceatmo_name" text="{=aom_taom_dale_castle_001_forceatmo_name}[Dale] Westoft Castle" />
+	<string id="aom_taom_dwarven_moria_w_forceatmo_name" text="{=aom_taom_dwarven_moria_w_forceatmo_name}[Misty Mountains] Western Moria" />
+	<string id="aom_taom_gondor_castle_001_forceatmo_name" text="{=aom_taom_gondor_castle_001_forceatmo_name}[Gondor] Barad Faen Castle" />
+	<string id="aom_taom_gondor_castle_002_forceatmo_name" text="{=aom_taom_gondor_castle_002_forceatmo_name}[Gondor] Bergraw Castle" />
+	<string id="aom_taom_gondor_castle_003_forceatmo_name" text="{=aom_taom_gondor_castle_003_forceatmo_name}[Gondor] Melgobas Castle" />
+	<string id="aom_taom_gondor_town_dolamroth_forceatmo_name" text="{=aom_taom_gondor_town_dolamroth_forceatmo_name}[Gondor] Dol Amroth" />
+	<string id="aom_taom_gondor_town_lossarnach_forceatmo_name" text="{=aom_taom_gondor_town_lossarnach_forceatmo_name}[Gondor] Lossarnach Town" />
+	<string id="aom_taom_gondor_town_minas_tirith_forceatmo_name" text="{=aom_taom_gondor_town_minas_tirith_forceatmo_name}[Gondor] Minas Tirith" />
+	<string id="aom_taom_gondor_town_osgiliath_e_forceatmo_name" text="{=aom_taom_gondor_town_osgiliath_e_forceatmo_name}[Gondor] Osgiliath (East)" />
+	<string id="aom_taom_gondor_town_osgiliath_w_forceatmo_name" text="{=aom_taom_gondor_town_osgiliath_w_forceatmo_name}[Gondor] Osgiliath (West)" />
+	<string id="aom_taom_gondor_village_001_forceatmo_name" text="{=aom_taom_gondor_village_001_forceatmo_name}[Gondor] Gondor Village A" />
+	<string id="aom_taom_gondor_village_002_forceatmo_name" text="{=aom_taom_gondor_village_002_forceatmo_name}[Gondor] Camloth Village" />
+	<string id="aom_taom_gondor_village_003_forceatmo_name" text="{=aom_taom_gondor_village_003_forceatmo_name}[Gondor] Dinadab Village" />
+	<string id="aom_taom_gondor_village_004_forceatmo_name" text="{=aom_taom_gondor_village_004_forceatmo_name}[Gondor] Mereham Village" />
+	<string id="aom_taom_isengard_town_orthanc_forceatmo_name" text="{=aom_taom_isengard_town_orthanc_forceatmo_name}[Isengard] Orthanc" />
+	<string id="aom_taom_mordor_battle_001_forceatmo_name" text="{=aom_taom_mordor_battle_001_forceatmo_name}[Mordor] Mordor Plains I" />
+	<string id="aom_taom_mordor_battle_002_forceatmo_name" text="{=aom_taom_mordor_battle_002_forceatmo_name}[Mordor] Mordor Plains II" />
+	<string id="aom_taom_mordor_battle_003_forceatmo_name" text="{=aom_taom_mordor_battle_003_forceatmo_name}[Mordor] Mordor Plains III" />
+	<string id="aom_taom_mordor_battle_004_forceatmo_name" text="{=aom_taom_mordor_battle_004_forceatmo_name}[Mordor] Mordor Plains IV" />
+	<string id="aom_taom_mordor_battle_black_gates_forceatmo_name" text="{=aom_taom_mordor_battle_black_gates_forceatmo_name}[Mordor] Black Gate" />
+	<string id="aom_taom_mordor_battle_dead_marshes_forceatmo_name" text="{=aom_taom_mordor_battle_dead_marshes_forceatmo_name}[Mordor] Dead Marshes" />
+	<string id="aom_taom_mordor_town_goblin_town_forceatmo_name" text="{=aom_taom_mordor_town_goblin_town_forceatmo_name}[Mordor] Goblin Town" />
+	<string id="aom_taom_mordor_town_minas_forceatmo_name" text="{=aom_taom_mordor_town_minas_forceatmo_name}[Mordor] Minas Morgul" />
+	<string id="aom_taom_rohan_battle_001_forceatmo_name" text="{=aom_taom_rohan_battle_001_forceatmo_name}[Rohan] Rohan Plains" />
+	<string id="aom_taom_rohan_battle_fords_of_isen_forceatmo_name" text="{=aom_taom_rohan_battle_fords_of_isen_forceatmo_name}[Rohan] Fords of Isen" />
+	<string id="aom_taom_rohan_castle_helms_deep_forceatmo_name" text="{=aom_taom_rohan_castle_helms_deep_forceatmo_name}[Rohan] Helms Deep - Night Rain" />
+	<string id="aom_taom_rohan_edoras_town_forceatmo_name" text="{=aom_taom_rohan_edoras_town_forceatmo_name}[Rohan] Edoras" />
+
+</strings>

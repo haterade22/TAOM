@@ -1287,20 +1287,20 @@
     <string id="taom_faction_clans_of_andrast_name" text="Klany Andrastu" />
     <string id="taom_faction_clans_of_druwaith_iaur_desc" text="Klany Drúwaith Iaur." />
     <string id="taom_faction_clans_of_druwaith_iaur_name" text="Klany Drúwaith Iaur" />
-    <string id="taom_faction_clans_of_dunland_bonus_0" text="50% mniejsza kara do szybkości w lasach + 15% zasięgu widzenia (zapożyczone od Battanów)" />
+    <string id="taom_faction_clans_of_dunland_bonus_0" text="50% mniejsza kara do prędkości w lasach + 15% zasięgu wzroku (Leśne wychowanie)" />
     <string id="taom_faction_clans_of_dunland_bonus_1" text="+10% szybkości drużyny na równinach (Wzgórzowi marszowi)" />
     <string id="taom_faction_clans_of_dunland_bonus_2" text="+5% limitu wielkości drużyny (Pobór plemion wzgórz)" />
     <string id="taom_faction_clans_of_dunland_bonus_3" text="+10% tempa odnawiania ochotników we wsiach (Rekrutacja plemion wzgórz)" />
-    <string id="taom_faction_clans_of_dunland_bonus_4" text="+20% szansy na weterańską milicję w miastach (zapożyczone od Battanów)" />
-    <string id="taom_faction_clans_of_dunland_bonus_5" text="-10% szybkości budowy (zapożyczone od Battanów)" />
-    <string id="taom_faction_clans_of_dunland_desc" text="Ludzie Wzgórz z Dunlandu, dawni wrogowie Rohirrimów. Battańskie tradycje leśne łączą się tu ze Wzgórzowymi marszowymi i poborem plemion wzgórz z TAOM — tanie, szybkie i wściekłe drużyny wojenne, które maszerują zarówno przez równiny, jak i lasy. Battańscy kowale są powolni, lecz drużyny wojenne bynajmniej nie." />
+    <string id="taom_faction_clans_of_dunland_bonus_4" text="+20% szansy na weterańską milicję w miastach (Zahartowani góracy)" />
+    <string id="taom_faction_clans_of_dunland_bonus_5" text="-10% prędkości budowy (Prymitywne warsztaty)" />
+    <string id="taom_faction_clans_of_dunland_desc" text="Górale z Dunlandu, odwieczni wrogowie Rohirrimów. Pokolenia spędzone w głębokich lasach i na wysokich wrzosowiskach ukształtowały Górskich Marszałków i Pospolite Ruszenie Górskich Plemion — tanie, szybkie i wściekłe hufce, które maszerują zarówno przez równiny, jak i lasy. Ich kowale są powolni, lecz ich hufce nie." />
     <string id="taom_faction_clans_of_dunland_name" text="Klany Dunlandu" />
     <string id="taom_faction_clans_of_dunland_perk_0_desc" text="+10% szybkości drużyny na równinach i +5% wielkości drużyny — dunlandzkie drużyny wojenne szybko pokonują dystanse." />
     <string id="taom_faction_clans_of_dunland_perk_0_name" text="Wzgórzowi marszowi" />
     <string id="taom_faction_clans_of_dunland_perk_1_desc" text="+10% tempa odnawiania ochotników we wsiach — wsie szybko zapełniają się kuzynami." />
     <string id="taom_faction_clans_of_dunland_perk_1_name" text="Rekrutacja plemion wzgórz" />
-    <string id="taom_faction_clans_of_dunland_perk_2_desc" text="Zapożyczone: 50% mniejsza kara do szybkości w lasach + 15% zasięgu widzenia oraz +20% szansy na weterańską milicję w miastach; -10% szybkości budowy." />
-    <string id="taom_faction_clans_of_dunland_perk_2_name" text="Battańska linia leśna" />
+    <string id="taom_faction_clans_of_dunland_perk_2_desc" text="Wielopokoleniowe leśne wychowanie: 50% mniejsza kara do prędkości w lasach + 15% wzroku oraz +20% szansy na weterańską milicję w miastach; -10% prędkości budowy." />
+    <string id="taom_faction_clans_of_dunland_perk_2_name" text="Leśne wychowanie" />
     <string id="taom_faction_clans_of_dunland_strength_0" text="Tanie, szybkie drużyny wojenne" />
     <string id="taom_faction_clans_of_dunland_strength_1" text="Mobilność w lasach i na równinach" />
     <string id="taom_faction_clans_of_dunland_strength_2" text="Stały napływ rekrutów ze wsi" />
@@ -1315,7 +1315,7 @@
     <string id="taom_faction_clans_of_dunland_trait_1" text="Dzicy wojownicy wzgórz" />
     <string id="taom_faction_clans_of_dunland_trait_2" text="Pobór plemion wzgórz" />
     <string id="taom_faction_clans_of_dunland_trait_3" text="Pionki Sarumana" />
-    <string id="taom_faction_clans_of_dunland_weakness_0" text="Powolna budowa zapożyczona od Battańczyków" />
+    <string id="taom_faction_clans_of_dunland_weakness_0" text="Prymitywne warsztaty spowalniają budowę" />
     <string id="taom_faction_clans_of_dunland_weakness_1" text="Pionki Sarumana — słaba dyplomacja" />
     <string id="taom_faction_clans_of_dunland_weakness_2" text="Wciśnięci między Rohan i Isengard" />
     <string id="taom_faction_clans_of_forochel_desc" text="Rozproszone plemiona orków na zmarzniętych pustkowiach północy, przy Lodowej Zatoce Forochel. Dzicy najeźdźcy polujący na Lossoth i każdego, kto zapuści się na północ." />
@@ -1462,23 +1462,23 @@
     <string id="taom_faction_goblins_of_goblin_town_weakness_2" text="Znienawidzone przez wszystkie Wolne Ludy" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_0" text="+10% szybkości drużyny na stepie (Ludzie ze Wschodu — zwiadowcy konni)" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_1" text="+5% limitu liczebności drużyny (Zastęp Ludzi ze Wschodu)" />
-    <string id="taom_faction_golden_realm_of_rhun_bonus_2" text="-10% kosztu rekrutacji i awansu jednostek konnych (Chuzaici, odziedziczone)" />
-    <string id="taom_faction_golden_realm_of_rhun_bonus_3" text="+25% produkcji koni, mułów, krów i owiec we wsiach (Chuzaici, odziedziczone)" />
-    <string id="taom_faction_golden_realm_of_rhun_bonus_4" text="-20% dochodów z podatków miejskich (Chuzaici, odziedziczone)" />
+    <string id="taom_faction_golden_realm_of_rhun_bonus_2" text="-10% kosztu rekrutacji i awansu jednostek konnych (Stepowe jeździectwo)" />
+    <string id="taom_faction_golden_realm_of_rhun_bonus_3" text="+25% produkcji koni, mułów, krów i owiec we wsiach (Pasterze stepu)" />
+    <string id="taom_faction_golden_realm_of_rhun_bonus_4" text="-20% dochodu z podatków miejskich (Koczownicze rządy)" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_5" text="-0,5 lojalności osady na dzień (Danina Ludzi ze Wschodu)" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_6" text="+15% obrażeń podczas grabieży (Doktryna stepowych najeźdźców)" />
-    <string id="taom_faction_golden_realm_of_rhun_desc" text="Ludzie ze Wschodu z równin wschodnich. Odziedziczone chuzajskie tradycje kawaleryjskie połączone z szybkością stepową Zwiadowców Ludzi ze Wschodu z TAOM oraz liczebnością Zastępu Ludzi ze Wschodu. Ciężka jazda, która przybywa w liczbie i z daniną." />
+    <string id="taom_faction_golden_realm_of_rhun_desc" text="Easterlingowie ze wschodnich równin. Głęboko zakorzeniona tradycja stepowej jazdy łączy się z szybkością Jeźdźców Zwiadowczych Wschodu i liczebnością Zastępu Easterlingów. Ciężka jazda, która przybywa w sile, niosąc zarówno daninę, jak i włócznie." />
     <string id="taom_faction_golden_realm_of_rhun_name" text="Złote Królestwo Rhûnu" />
     <string id="taom_faction_golden_realm_of_rhun_perk_0_desc" text="+10% szybkości drużyny na stepie — jeźdźcy Morza Rhûn szybko przemierzają równinę." />
     <string id="taom_faction_golden_realm_of_rhun_perk_0_name" text="Zwiadowcy Ludzi ze Wschodu" />
     <string id="taom_faction_golden_realm_of_rhun_perk_1_desc" text="+5% limitu liczebności drużyny — hordy zbierają się na wezwanie Mordoru." />
     <string id="taom_faction_golden_realm_of_rhun_perk_1_name" text="Zastęp Ludzi ze Wschodu" />
-    <string id="taom_faction_golden_realm_of_rhun_perk_2_desc" text="Odziedziczone po Chuzaitach: -10% kosztu jednostek konnych, +25% produkcji zwierząt we wsiach; -20% dochodów z podatków miejskich." />
-    <string id="taom_faction_golden_realm_of_rhun_perk_2_name" text="Stepowa linia Khuzaitów" />
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_desc" text="Stepowe jeździectwo daje -10% kosztu jednostek konnych i +25% produkcji zwierząt we wsiach; koczownicze rządy kosztują -20% podatków miejskich." />
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_name" text="Stepowe jeździectwo" />
     <string id="taom_faction_golden_realm_of_rhun_strength_0" text="Hordy ciężkiej jazdy" />
     <string id="taom_faction_golden_realm_of_rhun_strength_1" text="Wielkie armie" />
     <string id="taom_faction_golden_realm_of_rhun_strength_2" text="Trybut i sieci handlowe" />
-    <string id="taom_faction_golden_realm_of_rhun_strength_3" text="Stepowe dziedzictwo Khuzaitów" />
+    <string id="taom_faction_golden_realm_of_rhun_strength_3" text="Głęboko zakorzeniona tradycja stepowej jazdy" />
     <string id="taom_faction_golden_realm_of_rhun_su_0_desc" text="Elitarna opancerzona jazda." />
     <string id="taom_faction_golden_realm_of_rhun_su_0_name" text="Katafrakt Easterlingów" />
     <string id="taom_faction_golden_realm_of_rhun_su_1_desc" text="Elitarna wschodnia ciężka piechota." />
@@ -1492,7 +1492,7 @@
     <string id="taom_faction_golden_realm_of_rhun_weakness_0" text="Słaba piechota" />
     <string id="taom_faction_golden_realm_of_rhun_weakness_1" text="Podzielone klany" />
     <string id="taom_faction_golden_realm_of_rhun_weakness_2" text="Długie linie zaopatrzenia do Mordoru" />
-    <string id="taom_faction_golden_realm_of_rhun_weakness_3" text="Zapożyczone od Khuzaitów -20% podatku miejskiego" />
+    <string id="taom_faction_golden_realm_of_rhun_weakness_3" text="Koczownicze rządy kosztują -20% podatków miejskich" />
     <string id="taom_faction_havens_of_umbar_bonus_0" text="-25% kosztu karawan (Handel korsarski)" />
     <string id="taom_faction_havens_of_umbar_bonus_1" text="+15% dochodu z ceł (Korsarskie sieci handlowe)" />
     <string id="taom_faction_havens_of_umbar_bonus_2" text="+8% renomy z bitew (Chwała korsarzy)" />
@@ -1556,21 +1556,21 @@
     <string id="taom_faction_high_kingdom_of_lindon_weakness_0" text="Elfia duma podnosi koszty wpływów" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="Przemijający lud — niewielu następców" />
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="+10% prędkości drużyny na stepie (Stepowi rydwannicy)" />
-    <string id="taom_faction_khudorom_of_khand_bonus_1" text="50% mniejsza kara do prędkości w lasach + 15% zasięgu wzroku (battańskie, odziedziczone)" />
-    <string id="taom_faction_khudorom_of_khand_bonus_2" text="+20% szansy na doświadczoną milicję w miastach (battańskie, odziedziczone)" />
-    <string id="taom_faction_khudorom_of_khand_bonus_3" text="-10% szybkości budowy (battańskie, odziedziczone)" />
+    <string id="taom_faction_khudorom_of_khand_bonus_1" text="50% mniejsza kara do prędkości w lasach + 15% zasięgu wzroku (Leśna milicja)" />
+    <string id="taom_faction_khudorom_of_khand_bonus_2" text="+20% szansy na weterańską milicję w miastach (Zahartowane pospolite ruszenie)" />
+    <string id="taom_faction_khudorom_of_khand_bonus_3" text="-10% prędkości budowy (Prymitywne warsztaty)" />
     <string id="taom_faction_khudorom_of_khand_bonus_4" text="+8% renomy z bitew (Premia najemnicza)" />
     <string id="taom_faction_khudorom_of_khand_bonus_5" text="-10% dochodu z ceł (Danina dla Mordoru)" />
     <string id="taom_faction_khudorom_of_khand_bonus_6" text="-10% zużycia żywności przez drużynę (Stepowa wytrzymałość)" />
     <string id="taom_faction_khudorom_of_khand_bonus_7" text="+5% limitu wielkości drużyny (Mobilność rydwanników)" />
-    <string id="taom_faction_khudorom_of_khand_desc" text="Variagowie z Khandu. Odziedziczyli battańskie tradycje leśnej milicji; stepowi rydwannicy z TAOM dodają do tego +10% prędkości drużyny na stepie. Bandy najemników służą temu, kto płaci najwięcej." />
+    <string id="taom_faction_khudorom_of_khand_desc" text="Wariagowie z Khandu. Tradycja leśnej milicji łączy się z +10% prędkości Stepowych Rydwanników na otwartym terenie. Najemne bandy jeżdżą dla tego, kto zapłaci najwięcej." />
     <string id="taom_faction_khudorom_of_khand_name" text="Khudorom z Khandu" />
     <string id="taom_faction_khudorom_of_khand_perk_0_desc" text="+10% prędkości drużyny na stepie — rydwany Variagów pędzą szybko." />
     <string id="taom_faction_khudorom_of_khand_perk_0_name" text="Stepowi rydwannicy" />
     <string id="taom_faction_khudorom_of_khand_perk_1_desc" text="Kapitanowie najemników służą temu, kto płaci — ale zatrzymują swoją część." />
     <string id="taom_faction_khudorom_of_khand_perk_1_name" text="Tradycja najemnicza" />
-    <string id="taom_faction_khudorom_of_khand_perk_2_desc" text="Odziedziczone 50% mniejszej kary do prędkości w lasach + 15% zasięgu wzroku oraz +20% szansy na doświadczoną milicję w miastach; -10% szybkości budowy." />
-    <string id="taom_faction_khudorom_of_khand_perk_2_name" text="Battańskie dziedzictwo lasów" />
+    <string id="taom_faction_khudorom_of_khand_perk_2_desc" text="Nawyki leśnej milicji pozostają: 50% mniejsza kara do prędkości w lasach + 15% zasięgu wzroku oraz +20% szansy na weterańską milicję w miastach; -10% prędkości budowy." />
+    <string id="taom_faction_khudorom_of_khand_perk_2_name" text="Leśna milicja" />
     <string id="taom_faction_khudorom_of_khand_strength_0" text="Mobilność na stepie i w lasach" />
     <string id="taom_faction_khudorom_of_khand_strength_1" text="Doświadczone wioski" />
     <string id="taom_faction_khudorom_of_khand_strength_2" text="Tradycja najemnicza" />
@@ -1585,7 +1585,7 @@
     <string id="taom_faction_khudorom_of_khand_trait_1" text="Wojownicy Variagów" />
     <string id="taom_faction_khudorom_of_khand_trait_2" text="Bandy najemników" />
     <string id="taom_faction_khudorom_of_khand_trait_3" text="Tradycja rydwanników" />
-    <string id="taom_faction_khudorom_of_khand_weakness_0" text="Battańska powolna budowa" />
+    <string id="taom_faction_khudorom_of_khand_weakness_0" text="Prymitywne warsztaty spowalniają budowę" />
     <string id="taom_faction_khudorom_of_khand_weakness_1" text="Słabe osady" />
     <string id="taom_faction_khudorom_of_khand_weakness_2" text="Kapitanowie najemników są wierni monecie, nie władcy" />
     <string id="taom_faction_kingdom_of_angaladh_desc" text="Królestwo Angaladhu." />
@@ -1601,23 +1601,23 @@
     <string id="taom_faction_kingdom_of_cardolan_trait_1" text="Kurhany" />
     <string id="taom_faction_kingdom_of_cardolan_trait_2" text="Strażnicy Północy" />
     <string id="taom_faction_kingdom_of_dale_bonus_0" text="+10% szybkości drużyny na równinach (Kupcy z Doliny)" />
-    <string id="taom_faction_kingdom_of_dale_bonus_1" text="+10% produkcji zboża we wsiach (sturgijski, odziedziczony)" />
-    <string id="taom_faction_kingdom_of_dale_bonus_2" text="-50% kosztu wpływu na armię (sturgijski, odziedziczony)" />
-    <string id="taom_faction_kingdom_of_dale_bonus_3" text="+20% kary do relacji za decyzje królestwa (sturgijski, odziedziczony)" />
+    <string id="taom_faction_kingdom_of_dale_bonus_1" text="+10% produkcji zboża we wsiach (Żniwa Długiego Jeziora)" />
+    <string id="taom_faction_kingdom_of_dale_bonus_2" text="-50% kosztu wpływów na armię (Zaciąg z Miasta na Jeziorze)" />
+    <string id="taom_faction_kingdom_of_dale_bonus_3" text="+20% kary do relacji z decyzji królestwa (Uparta rada)" />
     <string id="taom_faction_kingdom_of_dale_bonus_4" text="+10% dochodu z ceł (Krasnoludzki sojusz handlowy)" />
     <string id="taom_faction_kingdom_of_dale_bonus_5" text="+10% chwały z bitew (Tradycja Czarnej Strzały)" />
     <string id="taom_faction_kingdom_of_dale_bonus_6" text="-0,5 lojalności osady na dzień (Niewielkie terytorium)" />
-    <string id="taom_faction_kingdom_of_dale_desc" text="Odbudowane przez Barda miasto pod Ereborem. Odziedziczona sturgijska obfitość zboża i tania tradycja zbierania armii łączą się z bonusem TAOM do szybkości na równinach (Kupcy z Doliny) — lecz sturgijskie kary za decyzje królestwa tną w obie strony. Kwitnący sojusz handlowy z krasnoludami utrzymuje Dale bogate i gotowe." />
+    <string id="taom_faction_kingdom_of_dale_desc" text="Odbudowane miasto Barda u stóp Ereboru. Bogate zboże Długiego Jeziora i twarda tradycja taniego zaciągu łączą się z szybkością Kupców z Doliny na otwartym terenie, choć rada Dale potrafi być równie uparta, co dumna. Kwitnący sojusz handlowy z krasnoludami utrzymuje miasto bogatym i gotowym." />
     <string id="taom_faction_kingdom_of_dale_name" text="Królestwo Dale" />
     <string id="taom_faction_kingdom_of_dale_perk_0_desc" text="+10% szybkości drużyny na równinach — karawany z Esgaroth podróżują szybko." />
     <string id="taom_faction_kingdom_of_dale_perk_0_name" text="Kupcy z Doliny" />
     <string id="taom_faction_kingdom_of_dale_perk_1_desc" text="Handel z Ereborem daje dodatkowy dochód i dostawy broni." />
     <string id="taom_faction_kingdom_of_dale_perk_1_name" text="Krasnoludzki sojusz" />
-    <string id="taom_faction_kingdom_of_dale_perk_2_desc" text="Odziedziczone sturgijskie +10% zboża we wsiach i -50% kosztu wpływu na armię; kara do relacji +20% przy decyzjach królestwa." />
-    <string id="taom_faction_kingdom_of_dale_perk_2_name" text="Sturgijskie dziedzictwo zboża i armii" />
+    <string id="taom_faction_kingdom_of_dale_perk_2_desc" text="+10% zboża we wsiach z Długiego Jeziora łączy się z -50% kosztu wpływów na armię z Zaciągu z Miasta na Jeziorze; kara do relacji +20% przy decyzjach królestwa." />
+    <string id="taom_faction_kingdom_of_dale_perk_2_name" text="Żniwa Długiego Jeziora i Zaciąg z Miasta na Jeziorze" />
     <string id="taom_faction_kingdom_of_dale_strength_0" text="Handel z Ereborem" />
     <string id="taom_faction_kingdom_of_dale_strength_1" text="Silna tradycja łucznicza" />
-    <string id="taom_faction_kingdom_of_dale_strength_2" text="Tanie zbieranie armii (sturgijskie)" />
+    <string id="taom_faction_kingdom_of_dale_strength_2" text="Tanie zbieranie armii (Zaciąg z Miasta na Jeziorze)" />
     <string id="taom_faction_kingdom_of_dale_strength_3" text="Wsie bogate w zboże" />
     <string id="taom_faction_kingdom_of_dale_su_0_desc" text="Łucznik dziedzictwa Barda." />
     <string id="taom_faction_kingdom_of_dale_su_0_name" text="Strażnik Czarnej Strzały" />
@@ -1631,7 +1631,7 @@
     <string id="taom_faction_kingdom_of_dale_trait_3" text="Kupcy z Doliny" />
     <string id="taom_faction_kingdom_of_dale_weakness_0" text="Niewielkie terytorium" />
     <string id="taom_faction_kingdom_of_dale_weakness_1" text="Napór Easterlingów" />
-    <string id="taom_faction_kingdom_of_dale_weakness_2" text="Sturgijska kara za decyzje królestwa" />
+    <string id="taom_faction_kingdom_of_dale_weakness_2" text="Uparta rada utrudnia dyplomację" />
     <string id="taom_faction_kingdom_of_dorwinion_desc" text="Winorodne królestwo Dorwinionu na północno-zachodnich brzegach Morza Rhûn. Zamożne państwo kupieckie uwięzione między Wolnymi Ludami a Wschodem." />
     <string id="taom_faction_kingdom_of_dorwinion_name" text="Królestwo Dorwinionu" />
     <string id="taom_faction_kingdom_of_dorwinion_trait_0" text="Słynne winnice" />
@@ -1966,25 +1966,25 @@
     <string id="taom_faction_stronghold_of_narager_trait_1" text="Wschodnie pustkowia" />
     <string id="taom_faction_taskralan_of_harwan_bonus_0" text="+10% szybkości drużyny na pustyni (Synowie Słońca)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_1" text="+5% limitu wielkości drużyny (Drużyny wojenne Haradrimów)" />
-    <string id="taom_faction_taskralan_of_harwan_bonus_2" text="-30% kosztu utworzenia karawany + -10% kary handlowej (Kupiec Aserai, dziedziczone)" />
-    <string id="taom_faction_taskralan_of_harwan_bonus_3" text="Brak kary do szybkości na pustyni (Pustynia Aserai, dziedziczone)" />
-    <string id="taom_faction_taskralan_of_harwan_bonus_4" text="+5% dziennego żołdu wojsk (Żołd Aserai, dziedziczone)" />
+    <string id="taom_faction_taskralan_of_harwan_bonus_2" text="-30% kosztu założenia karawany + -10% kary handlowej (Pustynny handel karawanowy)" />
+    <string id="taom_faction_taskralan_of_harwan_bonus_3" text="Brak kary do prędkości na pustyni (Zrodzeni z pustyni)" />
+    <string id="taom_faction_taskralan_of_harwan_bonus_4" text="+5% dziennego żołdu wojsk (Najemniczy obyczaj)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_5" text="+5 morale drużyny (Poganiacze mûmakil)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_6" text="-15% zużycia żywności przez drużynę (Pustynna wytrzymałość)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_7" text="+15% obrażeń przy grabieży (Dzikość Dalekiego Haradu)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_8" text="+15% kosztu wpływu na armię (Podzielone plemiona)" />
-    <string id="taom_faction_taskralan_of_harwan_desc" text="Haradrimowie z Harwanu, synowie słońca. Odziedziczyli pustynną wytrzymałość Aserai; Synowie Słońca z TAOM dodają +10% szybkości drużyny na pustyni; Drużyny wojenne Haradrimów zwiększają liczebność oddziału, wspartą odziedziczoną gospodarką karawanową. Mûmakile panują na południowych równinach." />
+    <string id="taom_faction_taskralan_of_harwan_desc" text="Haradrimowie z Harwanu, synowie słońca. Długie dziedzictwo pustyni daje Synom Słońca premię +10% do szybkości oraz liczniejsze drużyny wojenne Haradrimów, wsparte kwitnącą gospodarką karawan. Mumakile władają południowymi równinami." />
     <string id="taom_faction_taskralan_of_harwan_name" text="Taskralan Harwanu" />
     <string id="taom_faction_taskralan_of_harwan_perk_0_desc" text="+10% szybkości drużyny na pustyni — zrodzeni dla płonących piasków." />
     <string id="taom_faction_taskralan_of_harwan_perk_0_name" text="Synowie Słońca" />
     <string id="taom_faction_taskralan_of_harwan_perk_1_desc" text="+5% limitu wielkości drużyny — plemienne drużyny wojenne ruszają razem na wezwanie Mordoru." />
     <string id="taom_faction_taskralan_of_harwan_perk_1_name" text="Drużyny wojenne Haradrimów" />
-    <string id="taom_faction_taskralan_of_harwan_perk_2_desc" text="Odziedziczone: Kupiec Aserai (-30% karawany, -10% kary handlowej) oraz Pustynia Aserai (brak kary do szybkości na pustyni); +5% dziennego żołdu." />
-    <string id="taom_faction_taskralan_of_harwan_perk_2_name" text="Pustynne dziedzictwo Aserai" />
+    <string id="taom_faction_taskralan_of_harwan_perk_2_desc" text="Pustynny handel karawanowy (-30% koszt karawan, -10% kary handlowej) oraz Zrodzeni z pustyni (brak kary do szybkości na pustyni) pozostają w mocy; +5% do dziennego żołdu." />
+    <string id="taom_faction_taskralan_of_harwan_perk_2_name" text="Pustynny handel karawanowy i Zrodzeni z pustyni" />
     <string id="taom_faction_taskralan_of_harwan_strength_0" text="Bojowe bestie mûmakil" />
     <string id="taom_faction_taskralan_of_harwan_strength_1" text="Pustynna mobilność" />
     <string id="taom_faction_taskralan_of_harwan_strength_2" text="Liczniejsze drużyny wojenne" />
-    <string id="taom_faction_taskralan_of_harwan_strength_3" text="Karawanowa tradycja Aserai" />
+    <string id="taom_faction_taskralan_of_harwan_strength_3" text="Kwitnąca gospodarka karawan" />
     <string id="taom_faction_taskralan_of_harwan_su_0_desc" text="Niszczycielska bestia wojenna." />
     <string id="taom_faction_taskralan_of_harwan_su_0_name" text="Wieża bojowa na mûmaku" />
     <string id="taom_faction_taskralan_of_harwan_su_1_desc" text="Elita długich łuków z głębokiego południa." />
@@ -1998,7 +1998,7 @@
     <string id="taom_faction_taskralan_of_harwan_weakness_0" text="Kara za zimny klimat" />
     <string id="taom_faction_taskralan_of_harwan_weakness_1" text="Waśnie plemienne" />
     <string id="taom_faction_taskralan_of_harwan_weakness_2" text="Niewielu kowali i murów" />
-    <string id="taom_faction_taskralan_of_harwan_weakness_3" text="Zapożyczone od Aserai +5% do żołdu wojsk" />
+    <string id="taom_faction_taskralan_of_harwan_weakness_3" text="Kosztowny zwyczaj najemny (+5% żołdu wojsk)" />
     <string id="taom_faction_taskralan_of_shaghana_desc" text="Taskralan Shaghany." />
     <string id="taom_faction_taskralan_of_shaghana_name" text="Taskralan Shaghany" />
     <string id="taom_faction_wildmen_of_enedwaith_desc" text="Dzikie ziemie Enedwaith między Arnorem a Gondorem. Dom rozproszonych klanów Ludzi, którzy nie słuchają żadnego króla, żyjąc jako łowcy i pasterze." />
@@ -2676,104 +2676,172 @@
     <string id="taom_oob_autoassign_done" text="Przydzieleni dowódcy: {COUNT}." />
     <string id="taom_oob_autoassign_not_general" text="Tylko wódz tej bitwy może przydzielać bohaterów." />
     <string id="taom_oob_autoassign_none" text="Żaden bohater nie pasuje do wolnego stanowiska dowódcy." />
-    <string id="taom_bandit_mirkwood_spiders_name" text="Spiders of Mirkwood" />
-    <string id="taom_spider_brood_forest_name" text="Giant Spider" />
-    <string id="taom_spider_brood_brown_name" text="Great Spider" />
-    <string id="taom_spider_brood_pale_name" text="Pale Broodmother" />
-    <string id="taom_bandit_wild_trolls_name" text="Wild Trolls" />
-    <string id="taom_troll_bandit_cave_name" text="Cave Troll" />
-    <string id="taom_troll_bandit_hill_name" text="Hill Troll" />
-    <string id="taom_armoury_visit_news" text="A master armourer has come to {TOWN}. For the next {DAYS} days its armoury stocks and forges as a finer one would." />
-    <string id="taom_armoury_menu" text="Visit the armoury" />
-    <string id="taom_armoury_menu_tip" text="This town's armoury works to level {LEVEL} of 3." />
-    <string id="taom_armoury_coop_guest" text="The armourer works only for the host of this campaign." />
-    <string id="taom_armoury_nothing" text="You carry nothing this armourer can improve. Bring a piece of armour and the metals its next form needs." />
-    <string id="taom_armoury_title" text="The Armoury of {TOWN}" />
-    <string id="taom_armoury_desc" text="This armoury works to level {LEVEL} of 3. Heavy pieces need level {HEAVY}, elite pieces level {ELITE}, and lord kit a master armourer at level {LORD}. The piece keeps its quality." />
-    <string id="taom_armoury_choose" text="Choose" />
-    <string id="taom_armoury_leave" text="Leave" />
-    <string id="taom_armoury_confirm_title" text="Improve {SOURCE}?" />
-    <string id="taom_armoury_confirm_body" text="The armourer will rework it into {TARGET} for {PRICE}." />
-    <string id="taom_armoury_confirm_yes" text="Have it done" />
-    <string id="taom_armoury_cancel" text="Cancel" />
-    <string id="taom_armour_class_light" text="light" />
-    <string id="taom_armour_class_medium" text="medium" />
-    <string id="taom_armour_class_heavy" text="heavy" />
-    <string id="taom_armour_class_elite" text="elite" />
-    <string id="taom_armour_class_lord" text="lord" />
-    <string id="taom_armour_class_other" text="fine" />
-    <string id="taom_armoury_offer" text="{SOURCE} into {TARGET} ({CLASS})" />
-    <string id="taom_armoury_gold" text="{GOLD} gold" />
+    <string id="taom_bandit_mirkwood_spiders_name" text="Pająki z Mrocznej Puszczy" />
+    <string id="taom_spider_brood_forest_name" text="Gigantyczny pająk" />
+    <string id="taom_spider_brood_brown_name" text="Wielki pająk" />
+    <string id="taom_spider_brood_pale_name" text="Blada matka pomiotu" />
+    <string id="taom_bandit_wild_trolls_name" text="Dzikie trolle" />
+    <string id="taom_troll_bandit_cave_name" text="Troll jaskiniowy" />
+    <string id="taom_troll_bandit_hill_name" text="Troll górski" />
+    <string id="taom_armoury_visit_news" text="Do {TOWN} przybył mistrz płatnerski. Przez najbliższe {DAYS} dni tutejsza zbrojownia wyposaża i kuje jak znacznie lepsza." />
+    <string id="taom_armoury_menu" text="Odwiedź zbrojownię" />
+    <string id="taom_armoury_menu_tip" text="Zbrojownia tego miasta działa na poziomie {LEVEL} z 3." />
+    <string id="taom_armoury_coop_guest" text="Płatnerz pracuje wyłącznie dla gospodarza tej kampanii." />
+    <string id="taom_armoury_nothing" text="Nie masz przy sobie niczego, co ten płatnerz mógłby ulepszyć. Przynieś część zbroi oraz metale potrzebne do jej kolejnej postaci." />
+    <string id="taom_armoury_title" text="Zbrojownia miasta {TOWN}" />
+    <string id="taom_armoury_desc" text="Ta zbrojownia działa na poziomie {LEVEL} z 3. Ciężkie części wymagają poziomu {HEAVY}, elitarne poziomu {ELITE}, a pancerz lordowski mistrza płatnerskiego na poziomie {LORD}. Część zachowuje swoją jakość." />
+    <string id="taom_armoury_choose" text="Wybierz" />
+    <string id="taom_armoury_leave" text="Odejdź" />
+    <string id="taom_armoury_confirm_title" text="Ulepszyć {SOURCE}?" />
+    <string id="taom_armoury_confirm_body" text="Płatnerz przekuje to w {TARGET} za {PRICE}." />
+    <string id="taom_armoury_confirm_yes" text="Niech to zrobi" />
+    <string id="taom_armoury_cancel" text="Anuluj" />
+    <string id="taom_armour_class_light" text="lekkie" />
+    <string id="taom_armour_class_medium" text="średnie" />
+    <string id="taom_armour_class_heavy" text="ciężkie" />
+    <string id="taom_armour_class_elite" text="elitarne" />
+    <string id="taom_armour_class_lord" text="lordowskie" />
+    <string id="taom_armour_class_other" text="wyborne" />
+    <string id="taom_armoury_offer" text="{SOURCE} w {TARGET} ({CLASS})" />
+    <string id="taom_armoury_gold" text="{GOLD} złota" />
     <string id="taom_armoury_amount" text="{COUNT} {ITEM}" />
-    <string id="taom_armoury_block_level" text="This armoury cannot work {CLASS} pieces: it needs level {NEED}, and this one is level {LEVEL}." />
-    <string id="taom_armoury_block_gold" text="You cannot pay it: {PRICE}." />
-    <string id="taom_armoury_block_metal" text="You lack the metals: {PRICE}." />
-    <string id="taom_armoury_block_resource" text="Your people's treasure falls short: {PRICE}." />
-    <string id="taom_armoury_cost" text="Costs {PRICE}." />
-    <string id="taom_armoury_done" text="The armourer hands you {TARGET}." />
-    <string id="taom_armoury_gone" text="You no longer carry {SOURCE}." />
-    <string id="taom_armoury_short_gold" text="You no longer have the gold for it." />
-    <string id="taom_armoury_short_metal" text="You no longer have the metals for it." />
-    <string id="taom_armoury_short_resource" text="Your people's treasure no longer covers it." />
-    <string id="taom_lh_event_title" text="A Lord's Harness Unclaimed" />
-    <string id="taom_lh_event_body" text="Among the spoils of the field lies {ITEM}, the harness of {LORD}'s household. It is yours by right of arms, though his kin would take its return as a courtesy." />
-    <string id="taom_lh_event_take" text="Take it" />
-    <string id="taom_lh_event_return" text="Send it to his kin" />
-    <string id="taom_lg_hands_title" text="The Lord's Gauntlets" />
-    <string id="taom_lg_hands_desc" text="A master armourer forges a lord's gauntlets only for hands that have proved themselves in battle. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with them." />
-    <string id="taom_lg_task_kills" text="Strike down enemies with your own hand" />
-    <string id="taom_lg_task_battles" text="Win battles" />
-    <string id="taom_lg_legs_title" text="The Lord's Greaves" />
-    <string id="taom_lg_legs_desc" text="Greaves fit for a lord are earned in the press of battle, not bought. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with them." />
-    <string id="taom_lg_shoulders_title" text="The Lord's Mantle" />
-    <string id="taom_lg_shoulders_desc" text="A lord's mantle marks one who stands where the fighting is thickest. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lg_head_title" text="The Lord's Helm" />
-    <string id="taom_lg_head_desc" text="A lord's helm is forged for a name that other lords fear. Strike down enemies with your own hand, take an enemy lord captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lg_task_lords" text="Take enemy lords captive" />
-    <string id="taom_lg_body_title" text="The Lord's Harness" />
-    <string id="taom_lg_body_desc" text="The lord's harness is the last armour a master armourer forges, and only for a proven captain. Strike down enemies with your own hand, take enemy lords captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lg_weapon_title" text="The Lord's Weapon" />
-    <string id="taom_lg_weapon_desc" text="The finest weapons of your people go to those whose deeds match the names they carry. Strike down enemies with your own hand, take enemy lords captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lm_gondor" text="Númenórean Steel" />
-    <string id="taom_lm_vlandia" text="Eorling Steel" />
-    <string id="taom_lm_erebor" text="Erebor Dwarf-steel" />
-    <string id="taom_lm_sturgia" text="Dale-forged Steel" />
-    <string id="taom_lm_rivendell" text="Noldorin Silver-steel" />
-    <string id="taom_lm_mirkwood" text="Greenwood Silver" />
-    <string id="taom_lm_mordor" text="Barad-dûr Black Iron" />
-    <string id="taom_lm_isengard" text="Isengard Forge-iron" />
-    <string id="taom_lm_dolguldur" text="Dol Guldur Shadow-iron" />
-    <string id="taom_lm_gundabad" text="Gundabad Orc-steel" />
-    <string id="taom_lm_khuzait" text="Rhûnic Gilt-bronze" />
-    <string id="taom_lm_aserai" text="Haradric Bronze" />
-    <string id="taom_lm_empire" text="Dunland Bog-iron" />
-    <string id="taom_lg_piece_hands" text="lord's gauntlets" />
-    <string id="taom_lg_piece_legs" text="lord's greaves" />
-    <string id="taom_lg_piece_shoulders" text="lord's mantle" />
-    <string id="taom_lg_piece_head" text="lord's helm" />
-    <string id="taom_lg_piece_body" text="lord's harness" />
-    <string id="taom_lg_piece_weapon" text="lord's weapon" />
-    <string id="taom_lg_claim_level" text="Only a master armourer, at a level {LORD} armoury, can fit your {PIECE}." />
-    <string id="taom_lg_take_tip_deeds" text="Do the deeds its quest asks: enemies struck down with your own hand and battles won, and on the higher rungs lords taken captive." />
-    <string id="taom_lg_take_tip" text="Do the deeds its quest asks: enemies struck down with your own hand and battles won, and on the higher rungs lords taken captive; or bring the armourer {AMOUNT} instead." />
-    <string id="taom_lg_claim" text="Claim your {PIECE}" />
-    <string id="taom_lg_take" text="Take up the commission for your {PIECE}" />
-    <string id="taom_lg_handin" text="Hand over {AMOUNT} for your {PIECE}" />
-    <string id="taom_lg_handin_tip" text="You carry {CARRIED} of the {NEEDED} needed." />
-    <string id="taom_lg_start_failed" text="The armourer cannot take up your commission today." />
-    <string id="taom_lg_handin_title" text="Hand over the materials?" />
-    <string id="taom_lg_handin_body" text="The armourer takes them, and a master armourer at a level {LORD} armoury will fit you with your {PIECE}." />
-    <string id="taom_lg_handin_short" text="You no longer carry the materials." />
-    <string id="taom_lg_handin_done" text="The armourer takes the materials. Your {PIECE} waits at any level {LORD} armoury." />
-    <string id="taom_lg_claim_none" text="The armourer has no {PIECE} for your people yet." />
-    <string id="taom_lg_claim_title" text="Your {PIECE}" />
-    <string id="taom_lg_claim_desc" text="The master armourer will fit you with one of these. Choose it." />
-    <string id="taom_lg_claimed" text="The master armourer fits you with {ITEM}." />
-    <string id="taom_lg_drop" text="Among the spoils you find {AMOUNT}." />
-    <string id="taom_lg_ready" text="Your deeds are known. A master armourer, at a level {LORD} armoury, will now fit you with your {PIECE}." />
+    <string id="taom_armoury_block_level" text="Ta zbrojownia nie może obrabiać części klasy {CLASS}: wymagany jest poziom {NEED}, a ta ma poziom {LEVEL}." />
+    <string id="taom_armoury_block_gold" text="Nie możesz za to zapłacić: {PRICE}." />
+    <string id="taom_armoury_block_metal" text="Brakuje ci metali: {PRICE}." />
+    <string id="taom_armoury_block_resource" text="Skarbiec twojego ludu nie wystarcza: {PRICE}." />
+    <string id="taom_armoury_cost" text="Kosztuje {PRICE}." />
+    <string id="taom_armoury_done" text="Płatnerz wręcza ci {TARGET}." />
+    <string id="taom_armoury_gone" text="Nie masz już przy sobie {SOURCE}." />
+    <string id="taom_armoury_short_gold" text="Nie masz już na to złota." />
+    <string id="taom_armoury_short_metal" text="Nie masz już na to metali." />
+    <string id="taom_armoury_short_resource" text="Skarbiec twojego ludu już tego nie pokrywa." />
+    <string id="taom_lh_event_title" text="Nieodebrany pancerz lorda" />
+    <string id="taom_lh_event_body" text="Wśród łupów na polu bitwy leży {ITEM}, pancerz dworu {LORD}. Należy do ciebie prawem oręża, choć jego krewni przyjęliby zwrot jako wyraz kurtuazji." />
+    <string id="taom_lh_event_take" text="Zabierz go" />
+    <string id="taom_lh_event_return" text="Odeślij to jego krewnym" />
+    <string id="taom_lg_hands_title" text="Rękawice władcy" />
+    <string id="taom_lg_hands_desc" text="Mistrz płatnerski kuje rękawice władcy tylko dla rąk, które dowiodły swej wartości w boju. Powal wrogów własną ręką i wygrywaj bitwy albo przynieś płatnerzowi materiały godne władcy twego ludu; wtedy mistrz płatnerski dopasuje je dla ciebie." />
+    <string id="taom_lg_task_kills" text="Powal wrogów własną ręką" />
+    <string id="taom_lg_task_battles" text="Wygrywaj bitwy" />
+    <string id="taom_lg_legs_title" text="Nagolenice władcy" />
+    <string id="taom_lg_legs_desc" text="Nagolenic godnych władcy nie kupuje się — zdobywa się je w ścisku bitwy. Powal wrogów własną ręką i wygrywaj bitwy albo przynieś płatnerzowi materiały godne władcy twego ludu; wtedy mistrz płatnerski dopasuje je dla ciebie." />
+    <string id="taom_lg_shoulders_title" text="Płaszcz władcy" />
+    <string id="taom_lg_shoulders_desc" text="Płaszcz władcy wyróżnia tego, kto staje tam, gdzie walka jest najzacieklejsza. Powal wrogów własną ręką i wygrywaj bitwy albo przynieś płatnerzowi materiały godne władcy twego ludu; wtedy mistrz płatnerski dopasuje ci go." />
+    <string id="taom_lg_head_title" text="Hełm władcy" />
+    <string id="taom_lg_head_desc" text="Hełm władcy kuje się dla imienia, którego lękają się inni władcy. Powal wrogów własną ręką, weź wrogiego władcę do niewoli i wygrywaj bitwy albo przynieś płatnerzowi materiały godne władcy twego ludu; wtedy mistrz płatnerski dopasuje ci go." />
+    <string id="taom_lg_task_lords" text="Bierz wrogich władców do niewoli" />
+    <string id="taom_lg_body_title" text="Zbroja władcy" />
+    <string id="taom_lg_body_desc" text="Zbroja władcy to ostatni pancerz, jaki kuje mistrz płatnerski, i tylko dla sprawdzonego dowódcy. Powal wrogów własną ręką, bierz wrogich władców do niewoli i wygrywaj bitwy albo przynieś płatnerzowi materiały godne władcy twego ludu; wtedy mistrz płatnerski dopasuje ci ją." />
+    <string id="taom_lg_weapon_title" text="Oręż władcy" />
+    <string id="taom_lg_weapon_desc" text="Najprzedniejszy oręż twego ludu trafia do tych, których czyny dorównują noszonym przez nich imionom. Powal wrogów własną ręką, bierz wrogich władców do niewoli i wygrywaj bitwy albo przynieś płatnerzowi materiały godne władcy twego ludu; wtedy mistrz płatnerski dopasuje ci go." />
+    <string id="taom_lm_gondor" text="Stal númenorejska" />
+    <string id="taom_lm_vlandia" text="Stal Eorlingów" />
+    <string id="taom_lm_erebor" text="Krasnoludzka stal z Ereboru" />
+    <string id="taom_lm_sturgia" text="Stal kuta w Dale" />
+    <string id="taom_lm_rivendell" text="Noldorska srebrzysta stal" />
+    <string id="taom_lm_mirkwood" text="Srebro z Zielonego Lasu" />
+    <string id="taom_lm_mordor" text="Czarne żelazo z Barad-dûr" />
+    <string id="taom_lm_isengard" text="Kute żelazo z Isengardu" />
+    <string id="taom_lm_dolguldur" text="Cieniste żelazo z Dol Guldur" />
+    <string id="taom_lm_gundabad" text="Orkowa stal z Gundabadu" />
+    <string id="taom_lm_khuzait" text="Złocony brąz z Rhûnu" />
+    <string id="taom_lm_aserai" text="Brąz haradrimski" />
+    <string id="taom_lm_empire" text="Bagienne żelazo z Dunlandu" />
+    <string id="taom_lg_piece_hands" text="rękawice władcy" />
+    <string id="taom_lg_piece_legs" text="nagolenice władcy" />
+    <string id="taom_lg_piece_shoulders" text="płaszcz władcy" />
+    <string id="taom_lg_piece_head" text="hełm władcy" />
+    <string id="taom_lg_piece_body" text="zbroja władcy" />
+    <string id="taom_lg_piece_weapon" text="oręż władcy" />
+    <string id="taom_lg_claim_level" text="Tylko mistrz płatnerski, w zbrojowni poziomu {LORD}, może dopasować twoje {PIECE}." />
+    <string id="taom_lg_take_tip_deeds" text="Dokonaj czynów, których żąda zadanie: wrogowie powaleni własną ręką i wygrane bitwy, a na wyższych szczeblach władcy wzięci do niewoli." />
+    <string id="taom_lg_take_tip" text="Dokonaj czynów, których żąda zadanie: wrogowie powaleni własną ręką i wygrane bitwy, a na wyższych szczeblach władcy wzięci do niewoli; albo zamiast tego przynieś płatnerzowi {AMOUNT}." />
+    <string id="taom_lg_claim" text="Odbierz swoje {PIECE}" />
+    <string id="taom_lg_take" text="Przyjmij zlecenie na swoje {PIECE}" />
+    <string id="taom_lg_handin" text="Przekaż {AMOUNT} za swój {PIECE}" />
+    <string id="taom_lg_handin_tip" text="Niesiesz {CARRIED} z {NEEDED} potrzebnych." />
+    <string id="taom_lg_start_failed" text="Płatnerz nie może dziś przyjąć twojego zlecenia." />
+    <string id="taom_lg_handin_title" text="Przekazać materiały?" />
+    <string id="taom_lg_handin_body" text="Płatnerz je przyjmuje, a mistrz płatnerski w zbrojowni poziomu {LORD} dopasuje ci twój {PIECE}." />
+    <string id="taom_lg_handin_short" text="Nie niesiesz już tych materiałów." />
+    <string id="taom_lg_handin_done" text="Płatnerz przyjmuje materiały. Twój {PIECE} czeka w każdej zbrojowni poziomu {LORD}." />
+    <string id="taom_lg_claim_none" text="Płatnerz nie ma jeszcze {PIECE} dla twojego ludu." />
+    <string id="taom_lg_claim_title" text="Twój {PIECE}" />
+    <string id="taom_lg_claim_desc" text="Mistrz płatnerski dopasuje ci jedno z tych. Wybierz." />
+    <string id="taom_lg_claimed" text="Mistrz płatnerski dopasowuje ci {ITEM}." />
+    <string id="taom_lg_drop" text="Wśród łupów znajdujesz {AMOUNT}." />
+    <string id="taom_lg_ready" text="Twoje czyny są znane. Mistrz płatnerski w zbrojowni poziomu {LORD} dopasuje ci teraz twój {PIECE}." />
     <string id="taom_realm_borders_entering" text="Wkraczasz na ziemie: {REALM}." />
     <string id="taom_realm_borders_mode_alignment" text="Mapa pokazuje Wolne Ludy i Cień." />
     <string id="taom_realm_borders_mode_war" text="Mapa pokazuje twoich sojuszników i wrogów." />
     <string id="taom_realm_borders_mode_political" text="Mapa pokazuje królestwa." />
+  <string id="taom_fui_gandalf_name" text="Gandalf" />
+  <string id="taom_fui_isildur_name" text="Isildur" />
+  <string id="taom_fui_brand_name" text="Brand" />
+  <string id="taom_fui_bard_name" text="Bard Łucznik" />
+  <string id="taom_fui_tauriel_name" text="Tauriel" />
+  <string id="taom_fui_thorin_name" text="Thorin Dębowa Tarcza" />
+  <string id="taom_fui_azog_name" text="Azog Plugawca" />
+  <string id="taom_fui_gilgalad_name" text="Gil-galad" />
+  <string id="taom_fui_quote_gold" text="Nie wszystko złoto, co się świeci, nie każdy wędrowiec zbłądzi." />
+  <string id="taom_fui_quote_gold_by" text="- Bilbo Baggins" />
+  <string id="taom_fui_quote_light" text="Z mroku wystrzeli promień światła." />
+  <string id="taom_fui_quote_light_by" text="- Bilbo Baggins" />
+  <string id="taom_fui_quote_smallest" text="Nawet najmniejszy może odmienić bieg przyszłości." />
+  <string id="taom_fui_quote_smallest_by" text="- Galadriela" />
+  <string id="taom_fui_quote_foul" text="Wyglądam szpetnie, a czuję się szlachetnie." />
+  <string id="taom_fui_quote_foul_by" text="- Aragorn" />
+  <string id="taom_fui_wanderer" text="Wędrowiec" />
+  <string id="taom_fui_back_to_menu" text="Menu główne" />
+  <string id="taom_fui_custom_character" text="Własna postać" />
+  <string id="taom_fui_banner" text="PROPORZEC" />
+  <string id="taom_fui_back" text="Wstecz" />
+  <string id="taom_fui_clan_name" text="NAZWA RODU" />
+  <string id="taom_fui_identity" text="TOŻSAMOŚĆ" />
+  <string id="taom_fui_head" text="GŁOWA" />
+  <string id="taom_fui_body" text="CIAŁO" />
+  <string id="taom_fui_details" text="SZCZEGÓŁY" />
+  <string id="taom_fui_strengths" text="Mocne strony" />
+  <string id="taom_fui_weaknesses" text="Słabości" />
+  <string id="taom_fui_confirm" text="Potwierdź" />
+  <string id="taom_fui_characters" text="Postacie" />
+  <string id="taom_fui_leader" text="Przywódca" />
+  <string id="taom_fui_lord" text="Władca" />
+  <string id="taom_fui_benefits" text="Korzyści" />
+  <string id="taom_fui_base_attributes" text="Atrybuty bazowe" />
+  <string id="taom_fui_skills_and_attributes" text="Umiejętności i atrybuty" />
+  <string id="taom_fui_faction" text="FRAKCJA" />
+  <string id="taom_fui_character" text="POSTAĆ" />
+  <string id="taom_fui_origins" text="POCHODZENIE" />
+  <string id="taom_fui_random" text="Losowo" />
+  <string id="taom_fui_difficulty" text="POZIOM TRUDNOŚCI" />
+  <string id="taom_fui_review" text="PODSUMOWANIE" />
+  <string id="taom_fui_build" text="BUDOWA" />
+  <string id="taom_fui_skin_tone" text="ODCIEŃ SKÓRY" />
+  <string id="taom_fui_face" text="TWARZ" />
+  <string id="taom_fui_eyes" text="OCZY" />
+  <string id="taom_fui_nose" text="NOS" />
+  <string id="taom_fui_mouth" text="USTA" />
+  <string id="taom_fui_face_shape" text="KSZTAŁT TWARZY" />
+  <string id="taom_fui_hair" text="WŁOSY" />
+  <string id="taom_fui_tattoos" text="TATUAŻE" />
+  <string id="taom_fui_gender" text="PŁEĆ" />
+  <string id="taom_fui_male" text="MĘŻCZYZNA" />
+  <string id="taom_fui_female" text="KOBIETA" />
+  <string id="taom_fui_race" text="RASA" />
+  <string id="taom_fui_voice" text="GŁOS" />
+  <string id="taom_fui_randomize" text="LOSUJ" />
+  <string id="taom_fui_randomize_all" text="LOSUJ WSZYSTKO" />
+  <string id="taom_fui_default_outfit" text="DOMYŚLNY STRÓJ" />
+  <string id="taom_fui_reset" text="RESETUJ" />
+  <string id="taom_fui_reset_all" text="RESETUJ WSZYSTKO" />
+  <string id="taom_fui_undo" text="COFNIJ" />
+  <string id="taom_fui_redo" text="PONÓW" />
+  <string id="taom_bc_advice_title" text="TAOM: ustawienia wydajności bitew" />
+  <string id="taom_bc_advice_body" text="Twoja opcja {RAGDOLLS} lub {CORPSES} jest ustawiona wyżej, niż zaleca TAOM. Gracze zgłaszali zacięcia w wielkich bitwach przy wysokich wartościach, a obniżenie tych dwóch opcji je usuwało. Zalecane: {RAGDOLLS} 5, {CORPSES} {LOW}. Niższe ustawienie zostaje zachowane. Zastosować teraz? Możesz je w każdej chwili zmienić w Opcjach, {PERFORMANCE}. To powiadomienie można wyłączyć w Opcjach Modów, TAOM, Wydajność." />
+  <string id="taom_bc_advice_apply" text="Zastosuj" />
+  <string id="taom_bc_advice_keep" text="Zostaw moje" />
+  <string id="taom_bc_advice_done" text="Zapisano ustawienia bitew." />
+  <string id="taom_bc_advice_failed" text="Nie udało się zapisać ustawień bitew. Ustaw je ręcznie w Opcjach, {PERFORMANCE}." />
   </strings>
 </base>

@@ -1,0 +1,802 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Italian" />
+  </tags>
+  <strings>
+    <string id="taom_abanissa_house_guard_root_desc" text="Lame della Guardia d'Avorio conferisce +5% di danno in mischia e applica effetti di logoramento." />
+    <string id="taom_abanissa_ivory_rider_root_desc" text="Tuono di Zanne di Mûmakan conferisce +10% di danno da carica a cavallo e diffonde il terrore." />
+    <string id="taom_abanissa_jiret_javelineer_root_desc" text="Scarica di Jîret conferisce +5% di danno a distanza e accelera il lancio dei giavellotti." />
+    <string id="taom_ability_abanissa_house_guard" text="Lame della Guardia d'Avorio" />
+    <string id="taom_ability_abanissa_house_guard_tt" text="Ricopri le tue armi di tossine del deserto — conferisce +15% di danno in mischia e +10% di riduzione del danno agli alleati entro 50 m per 8 s." />
+    <string id="taom_ability_abanissa_ivory_rider" text="Tuono di Zanne di Mûmakan" />
+    <string id="taom_ability_abanissa_ivory_rider_tt" text="Incanala l'antico terrore di Mûmakan — conferisce +25% di danno da carica, +20% di velocità della cavalcatura e +10% di danno in mischia per 8 s." />
+    <string id="taom_ability_abanissa_jiret_javelineer" text="Scarica di Jîret" />
+    <string id="taom_ability_abanissa_jiret_javelineer_tt" text="Scatena una raffica infuocata di giavellotti — conferisce +20% di danno a distanza, +20% di velocità di lancio e +15% di velocità di movimento per 8 s." />
+    <string id="taom_ability_craig_crag_stalker" text="Dardo Avvelenato" />
+    <string id="taom_ability_craig_crag_stalker_tt" text="Ricopri i tuoi dardi con tossina di fungo delle caverne — conferisce +20% di danno a distanza, +20% di velocità di tiro e +15% di velocità di movimento per 8 s." />
+    <string id="taom_ability_craig_pit_driver" text="Frenesia della Rupe Azzurra" />
+    <string id="taom_ability_craig_pit_driver_tt" text="Sferza i tuoi troll fino alla frenesia — conferisce +15% di danno in mischia e +10% di riduzione del danno agli alleati entro 50 m per 8 s." />
+    <string id="taom_ability_craig_warg_master" text="Ululato dell'Alfa" />
+    <string id="taom_ability_craig_warg_master_tt" text="Afferma il tuo dominio con un ululato tonante del branco: +25% danni in carica, +20% velocità della cavalcatura e +10% danni in mischia per 8s." />
+    <string id="taom_ability_falathrim_blade_dancer" text="Trama di Luce Stellare" />
+    <string id="taom_ability_falathrim_blade_dancer_tt" text="Entra in una trance di combattimento noldorin: +15% danni in mischia e +10% riduzione dei danni agli alleati entro 50m per 8s." />
+    <string id="taom_ability_falathrim_mariner" text="Ultima Alleanza" />
+    <string id="taom_ability_falathrim_mariner_tt" text="Cavalca con il valore dell'Ultima Alleanza: +25% danni in carica, +20% velocità della cavalcatura e +10% danni in mischia per 8s." />
+    <string id="taom_ability_falathrim_sentinel" text="Vista Elfica" />
+    <string id="taom_ability_falathrim_sentinel_tt" text="Concentra l'antica percezione elfica: +20% danni a distanza, +20% velocità di tiro e +15% velocità di movimento per 8s." />
+    <string id="taom_ability_goblin_troll_driver" text="Frenesia di Città Goblin" />
+    <string id="taom_ability_goblin_troll_driver_tt" text="Spingi i tuoi troll alla frenesia: +15% danni in mischia e +10% riduzione dei danni agli alleati entro 50m per 8s." />
+    <string id="taom_ability_goblin_tunnel_stalker" text="Dardo Avvelenato" />
+    <string id="taom_ability_goblin_tunnel_stalker_tt" text="Ricopri i tuoi dardi di tossina di funghi delle caverne: +20% danni a distanza, +20% velocità di tiro e +15% velocità di movimento per 8s." />
+    <string id="taom_ability_goblin_warg_master" text="Ululato dell'Alfa" />
+    <string id="taom_ability_goblin_warg_master_tt" text="Afferma il tuo dominio con un ululato tonante del branco: +25% danni in carica, +20% velocità della cavalcatura e +10% danni in mischia per 8s." />
+    <string id="taom_ability_misty_deep_marksman" text="Dardo Avvelenato" />
+    <string id="taom_ability_misty_deep_marksman_tt" text="Ricopri i tuoi dardi di tossina di funghi delle caverne: +20% danni a distanza, +20% velocità di tiro e +15% velocità di movimento per 8s." />
+    <string id="taom_ability_misty_troll_goad" text="Frenesia di Moria" />
+    <string id="taom_ability_misty_troll_goad_tt" text="Spingi i tuoi troll alla frenesia: +15% danni in mischia e +10% riduzione dei danni agli alleati entro 50m per 8s." />
+    <string id="taom_ability_misty_warg_chieftain" text="Ululato dell'Alfa" />
+    <string id="taom_ability_misty_warg_chieftain_tt" text="Afferma il tuo dominio con un ululato tonante del branco: +25% danni in carica, +20% velocità della cavalcatura e +10% danni in mischia per 8s." />
+    <string id="taom_ability_shaghana_beast_rider" text="Corni di Mûmakan" />
+    <string id="taom_ability_shaghana_beast_rider_tt" text="Incanala l'antico terrore di Mûmakan: +25% danni in carica, +20% velocità della cavalcatura e +10% danni in mischia per 8s." />
+    <string id="taom_ability_shaghana_chatak_javelineer" text="Salva di Chatâk" />
+    <string id="taom_ability_shaghana_chatak_javelineer_tt" text="Scatena una pioggia infuocata di giavellotti: +20% danni a distanza, +20% velocità di tiro e +15% velocità di movimento per 8s." />
+    <string id="taom_ability_shaghana_zajana_tribesman" text="Lame al Veleno di Serpente" />
+    <string id="taom_ability_shaghana_zajana_tribesman_tt" text="Ricopri le tue armi di tossine del deserto: +15% danni in mischia e +10% riduzione dei danni agli alleati entro 50m per 8s." />
+    <string id="taom_ahg_t1a_key" text="Raggio delle Lame d'Avorio aumentato, la tossina si diffonde più ampiamente." />
+    <string id="taom_ahg_t1a_p1" text="+8% danni in mischia." />
+    <string id="taom_ahg_t1a_p2" text="+3% danni delle truppe." />
+    <string id="taom_ahg_t1a_p3" text="+7% velocità di fendente." />
+    <string id="taom_ahg_t1a_p4" text="+5% rinomanza guadagnata in battaglia." />
+    <string id="taom_ahg_t1b_key" text="Durata delle Lame d'Avorio estesa, la tossina persiste." />
+    <string id="taom_ahg_t1b_p1" text="+6% resistenza." />
+    <string id="taom_ahg_t1b_p2" text="+6 salute massima." />
+    <string id="taom_ahg_t1b_p3" text="+5% velocità di movimento." />
+    <string id="taom_ahg_t1b_p4" text="+5% morale delle truppe." />
+    <string id="taom_ahg_t2a_key" text="Ricarica delle Lame d'Avorio ridotta, colpisci più frequentemente." />
+    <string id="taom_ahg_t2a_p1" text="+5% danni delle truppe." />
+    <string id="taom_ahg_t2a_p2" text="+10% danni in mischia." />
+    <string id="taom_ahg_t2a_p3" text="+10% rinomanza guadagnata in battaglia." />
+    <string id="taom_ahg_t2a_p4" text="+3 dimensione del gruppo." />
+    <string id="taom_ahg_t2b_key" text="Le Lame del Presidio d'Avorio aumentano l'usura, fiaccando la volontà di combattere del nemico." />
+    <string id="taom_ahg_t2b_p1" text="+10% velocità di fendente." />
+    <string id="taom_ahg_t2b_p2" text="+8 salute massima." />
+    <string id="taom_ahg_t2b_p3" text="+10% resistenza." />
+    <string id="taom_ahg_t2b_p4" text="+10% morale delle truppe." />
+    <string id="taom_ahg_t3a_key" text="Raggio delle Lame del Presidio d'Avorio grandemente ampliato, una nube di veleno." />
+    <string id="taom_ahg_t3a_p1" text="+15% danni in mischia." />
+    <string id="taom_ahg_t3a_p2" text="+9 salute massima." />
+    <string id="taom_ahg_t3a_p3" text="+7% danni delle truppe." />
+    <string id="taom_ahg_t3a_p4" text="+15% fama guadagnata in battaglia." />
+    <string id="taom_ahg_t3b_key" text="Ricarica delle Lame del Presidio d'Avorio grandemente ridotta, usura costante." />
+    <string id="taom_ahg_t3b_p1" text="+15% resistenza." />
+    <string id="taom_ahg_t3b_p2" text="+20% morale delle truppe." />
+    <string id="taom_ahg_t3b_p3" text="+8% danni delle truppe." />
+    <string id="taom_ahg_t3b_p4" text="+5 dimensione del gruppo." />
+    <string id="taom_air_t1a_key" text="Raggio del Tuono di Zanne di Mûmakan ampliato, la paura si diffonde più lontano." />
+    <string id="taom_air_t1a_p1" text="+10% danni di carica a cavallo." />
+    <string id="taom_air_t1a_p2" text="+8% danni in mischia." />
+    <string id="taom_air_t1a_p3" text="+5% morale delle truppe." />
+    <string id="taom_air_t1a_p4" text="+5% velocità di movimento del gruppo." />
+    <string id="taom_air_t1b_key" text="Durata del Tuono di Zanne di Mûmakan estesa, la paura persiste." />
+    <string id="taom_air_t1b_p1" text="+10% salute del cavallo." />
+    <string id="taom_air_t1b_p2" text="+3% danni delle truppe." />
+    <string id="taom_air_t1b_p3" text="+5% fama guadagnata in battaglia." />
+    <string id="taom_air_t1b_p4" text="+5% resistenza." />
+    <string id="taom_air_t2a_key" text="Ricarica del Tuono di Zanne di Mûmakan ridotta, il terrore è sempre imminente." />
+    <string id="taom_air_t2a_p1" text="+13% danni di carica a cavallo." />
+    <string id="taom_air_t2a_p2" text="+10% morale delle truppe." />
+    <string id="taom_air_t2a_p3" text="+5% danni delle truppe." />
+    <string id="taom_air_t2a_p4" text="+10% fama guadagnata in battaglia." />
+    <string id="taom_air_t2b_key" text="Il Tuono di Zanne di Mûmakan accresce la resilienza delle bestie durante la carica." />
+    <string id="taom_air_t2b_p1" text="+12% danni in mischia." />
+    <string id="taom_air_t2b_p2" text="+13% salute del cavallo." />
+    <string id="taom_air_t2b_p3" text="+10% velocità di movimento del gruppo." />
+    <string id="taom_air_t2b_p4" text="+3 dimensione del gruppo." />
+    <string id="taom_air_t3a_key" text="Raggio del Tuono di Zanne di Mûmakan grandemente ampliato, la terra stessa trema." />
+    <string id="taom_air_t3a_p1" text="+15% danni di carica a cavallo." />
+    <string id="taom_air_t3a_p2" text="+15% danni in mischia." />
+    <string id="taom_air_t3a_p3" text="+20% morale delle truppe." />
+    <string id="taom_air_t3a_p4" text="+15% fama guadagnata in battaglia." />
+    <string id="taom_air_t3b_key" text="Tuono-di-Zanne di Mûmakan: ricarica ridotta notevolmente, terrore senza fine." />
+    <string id="taom_air_t3b_p1" text="+15% salute del cavallo." />
+    <string id="taom_air_t3b_p2" text="+15% velocità di movimento del gruppo." />
+    <string id="taom_air_t3b_p3" text="+7% danno delle truppe." />
+    <string id="taom_air_t3b_p4" text="+9 salute massima." />
+    <string id="taom_ajj_t1a_key" text="Salva Jîret: raggio aumentato, i giavellotti coprono un'area più ampia." />
+    <string id="taom_ajj_t1a_p1" text="+8% danno a distanza." />
+    <string id="taom_ajj_t1a_p2" text="+10% munizioni." />
+    <string id="taom_ajj_t1a_p3" text="+7% velocità di movimento." />
+    <string id="taom_ajj_t1a_p4" text="+5% prestigio ottenuto in battaglia." />
+    <string id="taom_ajj_t1b_key" text="Salva Jîret: durata estesa, fuoco di molestia continuo." />
+    <string id="taom_ajj_t1b_p1" text="+5% resistenza." />
+    <string id="taom_ajj_t1b_p2" text="+5 salute massima." />
+    <string id="taom_ajj_t1b_p3" text="+3% danno delle truppe." />
+    <string id="taom_ajj_t1b_p4" text="+5% raggio di avvistamento del gruppo." />
+    <string id="taom_ajj_t2a_key" text="Salva Jîret: ricarica ridotta, mai a corto di giavellotti." />
+    <string id="taom_ajj_t2a_p1" text="+13% munizioni." />
+    <string id="taom_ajj_t2a_p2" text="+10% danno a distanza." />
+    <string id="taom_ajj_t2a_p3" text="+10% velocità di movimento." />
+    <string id="taom_ajj_t2a_p4" text="+10% prestigio ottenuto in battaglia." />
+    <string id="taom_ajj_t2b_key" text="Salva Jîret: aumenta l'efficacia di schermatura mentre è attiva." />
+    <string id="taom_ajj_t2b_p1" text="+12% danno a distanza." />
+    <string id="taom_ajj_t2b_p2" text="+8 salute massima." />
+    <string id="taom_ajj_t2b_p3" text="+5% danno delle truppe." />
+    <string id="taom_ajj_t2b_p4" text="+10% raggio di avvistamento del gruppo." />
+    <string id="taom_ajj_t3a_key" text="Salva Jîret: raggio enormemente ampliato, una gragnola inevitabile." />
+    <string id="taom_ajj_t3a_p1" text="+15% danno a distanza." />
+    <string id="taom_ajj_t3a_p2" text="+15% munizioni." />
+    <string id="taom_ajj_t3a_p3" text="+15% prestigio ottenuto in battaglia." />
+    <string id="taom_ajj_t3a_p4" text="+15% velocità di movimento." />
+    <string id="taom_ajj_t3b_key" text="Salva Jîret: ricarica ridotta notevolmente, molestia incessante." />
+    <string id="taom_ajj_t3b_p1" text="+15% danno a distanza." />
+    <string id="taom_ajj_t3b_p2" text="+9 salute massima." />
+    <string id="taom_ajj_t3b_p3" text="+7% danno delle truppe." />
+    <string id="taom_ajj_t3b_p4" text="+15% raggio di avvistamento del gruppo." />
+    <string id="taom_career_abanissa_house_guard" text="Guardia della Casa di Damudûr" />
+    <string id="taom_career_abanissa_house_guard_desc" text="Un guerriero delle tribù del deserto di Damudûr, le cui tattiche di guerra d'attrito logorano i nemici con pressione implacabile e lame avvelenate." />
+    <string id="taom_career_abanissa_ivory_rider" text="Cavalcabestie della Via d'Avorio" />
+    <string id="taom_career_abanissa_ivory_rider_desc" text="Un temibile cavaliere del Lontano Harad che spinge grandi bestie contro il nemico, sfondando le linee con l'urto e un terrore primordiale." />
+    <string id="taom_career_abanissa_jiret_javelineer" text="Giavellottiere Jîret" />
+    <string id="taom_career_abanissa_jiret_javelineer_desc" text="Un rapido schermagliatore di Jîret che copre la cavalleria con una pioggia di giavellotti prima di ritirarsi fuori dalla portata della rappresaglia." />
+    <string id="taom_career_craig_crag_stalker" text="Cacciatore delle rupi di Rupe Azzurra" />
+    <string id="taom_career_craig_crag_stalker_desc" text="Un malvagio tiratore goblin che si annida tra le rupi montane, abbattendo i bersagli con dardi avvelenati e archi rozzi." />
+    <string id="taom_career_craig_pit_driver" text="Aguzzino delle fosse di Rupe Azzurra" />
+    <string id="taom_career_craig_pit_driver_desc" text="Un brutale capo orco di Rupe Azzurra che comanda i troll delle caverne in battaglia, spingendoli avanti con la frusta e l'astuzia." />
+    <string id="taom_career_craig_warg_master" text="Signore dei warg di Rupe Azzurra" />
+    <string id="taom_career_craig_warg_master_desc" text="Un temuto orco alfa che cavalca il warg più grande del branco, guidando cacce selvagge attraverso gli Ered Luin." />
+    <string id="taom_career_falathrim_blade_dancer" text="Danzatore di lame dei Falathrim" />
+    <string id="taom_career_falathrim_blade_dancer_desc" text="Un elegante guerriero elfico che si muove nella battaglia come acqua che scorre, colpendo con antiche lame forgiate nella Prima Era." />
+    <string id="taom_career_falathrim_mariner" text="Navigante dei Falathrim" />
+    <string id="taom_career_falathrim_mariner_desc" text="Un guerriero a cavallo della casa di Cirdan che va in guerra su veloci destrieri elfici, faro di speranza contro l'Ombra." />
+    <string id="taom_career_falathrim_sentinel" text="Sentinella dei Falathrim" />
+    <string id="taom_career_falathrim_sentinel_desc" text="Un tiratore senza pari di Mithlond le cui frecce volano precise a grandi distanze, guidate da secoli di pratica." />
+    <string id="taom_career_goblin_troll_driver" text="Aguzzino dei troll di Città dei Goblin" />
+    <string id="taom_career_goblin_troll_driver_desc" text="Un brutale capo orco di Città dei Goblin che comanda i troll delle caverne in battaglia, spingendoli avanti con la frusta e l'astuzia." />
+    <string id="taom_career_goblin_tunnel_stalker" text="Predatore dei tunnel di Città dei Goblin" />
+    <string id="taom_career_goblin_tunnel_stalker_desc" text="Un malvagio tiratore goblin che si annida tra le rupi montane, abbattendo i bersagli con dardi avvelenati e archi rozzi." />
+    <string id="taom_career_goblin_warg_master" text="Signore dei warg di Città dei Goblin" />
+    <string id="taom_career_goblin_warg_master_desc" text="Un temuto orco alfa che cavalca il warg più grande del branco, guidando cacce selvagge attraverso i Monti Nebbiosi." />
+    <string id="taom_career_grp_abanissa_house_guard_t1_a" text="Predone delle dune" />
+    <string id="taom_career_grp_abanissa_house_guard_t1_b" text="Sopravvissuto del deserto" />
+    <string id="taom_career_grp_abanissa_house_guard_t2_a" text="Colpitore Zanna di Serpe" />
+    <string id="taom_career_grp_abanissa_house_guard_t2_b" text="Vestito di sabbia" />
+    <string id="taom_career_grp_abanissa_house_guard_t3_a" text="Veleno dell'Haradwaith" />
+    <string id="taom_career_grp_abanissa_house_guard_t3_b" text="Flagello dei Sudroni" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t1_a" text="Avanguardia delle zanne" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t1_b" text="Custode delle bestie" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t2_a" text="Carica travolgente" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t2_b" text="Guardiano dell'howdah" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t3_a" text="Ira di Mûmakan" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t3_b" text="Signore degli Olifanti" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t1_a" text="Schermagliatore Lancia del Sole" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t1_b" text="Esploratore errante" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t2_a" text="Lanciatore di fuoco solare" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t2_b" text="Schermo scarlatto" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t3_a" text="Pioggia del Lontano Harad" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t3_b" text="Ombra delle dune" />
+    <string id="taom_career_grp_craig_crag_stalker_t1_a" text="Cacciatore delle rupi" />
+    <string id="taom_career_grp_craig_crag_stalker_t1_b" text="Sgherro dei tunnel" />
+    <string id="taom_career_grp_craig_crag_stalker_t2_a" text="Imboscatore dell'Alto Passo" />
+    <string id="taom_career_grp_craig_crag_stalker_t2_b" text="Impennatore di Veleno" />
+    <string id="taom_career_grp_craig_crag_stalker_t3_a" text="Predone della Soglia" />
+    <string id="taom_career_grp_craig_crag_stalker_t3_b" text="Ombra dell'Alto Passo" />
+    <string id="taom_career_grp_craig_pit_driver_t1_a" text="Aguzzino della Fossa" />
+    <string id="taom_career_grp_craig_pit_driver_t1_b" text="Guardiano della Bocca della Caverna" />
+    <string id="taom_career_grp_craig_pit_driver_t2_a" text="Tiranno di Blue Craig" />
+    <string id="taom_career_grp_craig_pit_driver_t2_b" text="Sfondatore delle Fosse Profonde" />
+    <string id="taom_career_grp_craig_pit_driver_t3_a" text="Flagello di Blue Craig" />
+    <string id="taom_career_grp_craig_pit_driver_t3_b" text="Terrore delle Sale Settentrionali" />
+    <string id="taom_career_grp_craig_warg_master_t1_a" text="Cavalcatore di Warg" />
+    <string id="taom_career_grp_craig_warg_master_t1_b" text="Custode del Branco" />
+    <string id="taom_career_grp_craig_warg_master_t2_a" text="Esploratore del Branco Grigio" />
+    <string id="taom_career_grp_craig_warg_master_t2_b" text="Signore dei Lupi Crudeli" />
+    <string id="taom_career_grp_craig_warg_master_t3_a" text="Alfa di Blue Craig" />
+    <string id="taom_career_grp_craig_warg_master_t3_b" text="Capitano dei Lupi di Bolg" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t1_a" text="Acciaio Stellato" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t1_b" text="Guardia di Mithlond" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t2_a" text="Danza di Gondolin" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t2_b" text="Difensore della Valle Nascosta" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t3_a" text="Spada della Prima Era" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t3_b" text="Luce di Eärendil" />
+    <string id="taom_career_grp_falathrim_mariner_t1_a" text="Carica di Mithlond" />
+    <string id="taom_career_grp_falathrim_mariner_t1_b" text="Cavaliere del Guado" />
+    <string id="taom_career_grp_falathrim_mariner_t2_a" text="Galoppo di Asfaloth" />
+    <string id="taom_career_grp_falathrim_mariner_t2_b" text="Egida dei Valar" />
+    <string id="taom_career_grp_falathrim_mariner_t3_a" text="Ira di Glorfindel" />
+    <string id="taom_career_grp_falathrim_mariner_t3_b" text="Schiera dell'Ultima Alleanza" />
+    <string id="taom_career_grp_falathrim_sentinel_t1_a" text="Vigile dall'Occhio Acuto" />
+    <string id="taom_career_grp_falathrim_sentinel_t1_b" text="Vedetta di Lindon" />
+    <string id="taom_career_grp_falathrim_sentinel_t2_a" text="Scarica Incessante" />
+    <string id="taom_career_grp_falathrim_sentinel_t2_b" text="Arco dell'Eregion" />
+    <string id="taom_career_grp_falathrim_sentinel_t3_a" text="Tempesta di Gil-galad" />
+    <string id="taom_career_grp_falathrim_sentinel_t3_b" text="Veglia di Vilya" />
+    <string id="taom_career_grp_goblin_troll_driver_t1_a" text="Aguzzino della Fossa" />
+    <string id="taom_career_grp_goblin_troll_driver_t1_b" text="Guardiano della Bocca della Caverna" />
+    <string id="taom_career_grp_goblin_troll_driver_t2_a" text="Tiranno di Città degli Orchi" />
+    <string id="taom_career_grp_goblin_troll_driver_t2_b" text="Sfondatore delle Fosse Profonde" />
+    <string id="taom_career_grp_goblin_troll_driver_t3_a" text="Flagello di Città degli Orchi" />
+    <string id="taom_career_grp_goblin_troll_driver_t3_b" text="Terrore delle Sale Settentrionali" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t1_a" text="Predatore delle Rupi" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t1_b" text="Sgattaiolatore dei Cunicoli" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t2_a" text="Imboscatore dell'Alto Passo" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t2_b" text="Impennatore Velenoso" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t3_a" text="Predone della Soglia" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t3_b" text="Ombra dell'Alto Passo" />
+    <string id="taom_career_grp_goblin_warg_master_t1_a" text="Cavaliere di Warg" />
+    <string id="taom_career_grp_goblin_warg_master_t1_b" text="Guardiano del Branco" />
+    <string id="taom_career_grp_goblin_warg_master_t2_a" text="Esploratore del Branco Grigio" />
+    <string id="taom_career_grp_goblin_warg_master_t2_b" text="Signore dei Lupi Crudeli" />
+    <string id="taom_career_grp_goblin_warg_master_t3_a" text="Alfa di Goblinville" />
+    <string id="taom_career_grp_goblin_warg_master_t3_b" text="Capitano dei Lupi di Bolg" />
+    <string id="taom_career_grp_misty_deep_marksman_t1_a" text="Cacciatore delle Rupi" />
+    <string id="taom_career_grp_misty_deep_marksman_t1_b" text="Sgattaiolatore dei Cunicoli" />
+    <string id="taom_career_grp_misty_deep_marksman_t2_a" text="Imboscatore dell'Alto Passo" />
+    <string id="taom_career_grp_misty_deep_marksman_t2_b" text="Impennatore Velenoso" />
+    <string id="taom_career_grp_misty_deep_marksman_t3_a" text="Predone della Soglia" />
+    <string id="taom_career_grp_misty_deep_marksman_t3_b" text="Ombra dell'Alto Passo" />
+    <string id="taom_career_grp_misty_troll_goad_t1_a" text="Frustatore della Fossa" />
+    <string id="taom_career_grp_misty_troll_goad_t1_b" text="Custode della Bocca della Caverna" />
+    <string id="taom_career_grp_misty_troll_goad_t2_a" text="Tiranno di Goblinville" />
+    <string id="taom_career_grp_misty_troll_goad_t2_b" text="Sfondatore delle Profondità" />
+    <string id="taom_career_grp_misty_troll_goad_t3_a" text="Flagello di Moria" />
+    <string id="taom_career_grp_misty_troll_goad_t3_b" text="Terrore delle Sale Settentrionali" />
+    <string id="taom_career_grp_misty_warg_chieftain_t1_a" text="Cavaliere di Warg" />
+    <string id="taom_career_grp_misty_warg_chieftain_t1_b" text="Guardiano del Branco" />
+    <string id="taom_career_grp_misty_warg_chieftain_t2_a" text="Esploratore del Branco Grigio" />
+    <string id="taom_career_grp_misty_warg_chieftain_t2_b" text="Signore dei Lupi Crudeli" />
+    <string id="taom_career_grp_misty_warg_chieftain_t3_a" text="Alfa di Moria" />
+    <string id="taom_career_grp_misty_warg_chieftain_t3_b" text="Capitano dei Lupi di Bolg" />
+    <string id="taom_career_grp_shaghana_beast_rider_t1_a" text="Avanguardia delle Zanne" />
+    <string id="taom_career_grp_shaghana_beast_rider_t1_b" text="Custode delle Bestie" />
+    <string id="taom_career_grp_shaghana_beast_rider_t2_a" text="Carica Travolgente" />
+    <string id="taom_career_grp_shaghana_beast_rider_t2_b" text="Guardiano dell'Howdah" />
+    <string id="taom_career_grp_shaghana_beast_rider_t3_a" text="Ira di Mûmakan" />
+    <string id="taom_career_grp_shaghana_beast_rider_t3_b" text="Signore degli Olifanti" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t1_a" text="Schermagliatore della Lancia Solare" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t1_b" text="Esploratore Errante" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t2_a" text="Lanciatore di Fuoco Solare" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t2_b" text="Schermo Scarlatto" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t3_a" text="Pioggia del Lontano Harad" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t3_b" text="Ombra delle Dune" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t1_a" text="Predone delle Dune" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t1_b" text="Sopravvissuto del Deserto" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t2_a" text="Colpitore Zanna-di-Serpente" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t2_b" text="Vestito di Sabbia" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t3_a" text="Veleno di Haradwaith" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t3_b" text="Flagello dei Sudroni" />
+    <string id="taom_career_misty_deep_marksman" text="Tiratore degli Abissi di Moria" />
+    <string id="taom_career_misty_deep_marksman_desc" text="Un tiratore goblin malevolo che si annida tra le rupi della montagna, abbattendo i bersagli con dardi avvelenati e rozzi archi." />
+    <string id="taom_career_misty_troll_goad" text="Aizzatroll di Moria" />
+    <string id="taom_career_misty_troll_goad_desc" text="Un brutale capo orco di Moria che comanda i troll delle caverne in battaglia, spingendoli avanti con la frusta e l'astuzia." />
+    <string id="taom_career_misty_warg_chieftain" text="Capo dei Warg dei Monti Nebbiosi" />
+    <string id="taom_career_misty_warg_chieftain_desc" text="Un temuto orco alfa che cavalca il warg più grande del branco, guidando cacce selvagge attraverso i Monti Nebbiosi." />
+    <string id="taom_career_rank1_abanissa_house_guard" text="Guardia della Casa di Damudûr" />
+    <string id="taom_career_rank1_abanissa_ivory_rider" text="Domatore di Bestie della Via d'Avorio" />
+    <string id="taom_career_rank1_abanissa_jiret_javelineer" text="Giavellottiere Jîret" />
+    <string id="taom_career_rank1_craig_crag_stalker" text="Agguatatore delle Rupi" />
+    <string id="taom_career_rank1_craig_pit_driver" text="Aizzatore della Fossa" />
+    <string id="taom_career_rank1_craig_warg_master" text="Cavalcawarg del Branco" />
+    <string id="taom_career_rank1_falathrim_blade_dancer" text="Spadaccino Falathrim" />
+    <string id="taom_career_rank1_falathrim_mariner" text="Ohtar di Mithlond" />
+    <string id="taom_career_rank1_falathrim_sentinel" text="Arciere Falathrim" />
+    <string id="taom_career_rank1_goblin_troll_driver" text="Aizzatore della Fossa" />
+    <string id="taom_career_rank1_goblin_tunnel_stalker" text="Agguatatore delle Rupi" />
+    <string id="taom_career_rank1_goblin_warg_master" text="Cavalcawarg del Branco" />
+    <string id="taom_career_rank1_misty_deep_marksman" text="Agguatatore delle Rupi" />
+    <string id="taom_career_rank1_misty_troll_goad" text="Aizzatore della Fossa" />
+    <string id="taom_career_rank1_misty_warg_chieftain" text="Cavalcawarg del Branco" />
+    <string id="taom_career_rank1_shaghana_beast_rider" text="Domatore di Bestie Sormedân" />
+    <string id="taom_career_rank1_shaghana_chatak_javelineer" text="Giavellottiere Chatâk" />
+    <string id="taom_career_rank1_shaghana_zajana_tribesman" text="Tribale Zajâna" />
+    <string id="taom_career_rank2_abanissa_house_guard" text="Scorta della Carovana" />
+    <string id="taom_career_rank2_abanissa_ivory_rider" text="Conduttore di Mûmak" />
+    <string id="taom_career_rank2_abanissa_jiret_javelineer" text="Schermagliatore con Lancia da Lancio" />
+    <string id="taom_career_rank2_craig_crag_stalker" text="Agguatatore degli Ered Luin" />
+    <string id="taom_career_rank2_craig_pit_driver" text="Aizzatroll della Rupe Azzurra" />
+    <string id="taom_career_rank2_craig_warg_master" text="Capitano dei Lupi Crudeli" />
+    <string id="taom_career_rank2_falathrim_blade_dancer" text="Lama del Fiore d'Oro" />
+    <string id="taom_career_rank2_falathrim_mariner" text="Roquen di Mithlond" />
+    <string id="taom_career_rank2_falathrim_sentinel" text="Sentinella dell'Arco Celeste" />
+    <string id="taom_career_rank2_goblin_troll_driver" text="Pungolatore di Troll di Città degli Orchi" />
+    <string id="taom_career_rank2_goblin_tunnel_stalker" text="Predatore dell'Alto Passo" />
+    <string id="taom_career_rank2_goblin_warg_master" text="Capitano dei Lupi Crudeli" />
+    <string id="taom_career_rank2_misty_deep_marksman" text="Predatore dell'Alto Passo" />
+    <string id="taom_career_rank2_misty_troll_goad" text="Pungolatore di Troll di Moria" />
+    <string id="taom_career_rank2_misty_warg_chieftain" text="Capitano dei Lupi Crudeli" />
+    <string id="taom_career_rank2_shaghana_beast_rider" text="Conduttore di Mûmakil" />
+    <string id="taom_career_rank2_shaghana_chatak_javelineer" text="Incursore con Lancia da Getto" />
+    <string id="taom_career_rank2_shaghana_zajana_tribesman" text="Razziatore della Tempesta di Sabbia" />
+    <string id="taom_career_rank3_abanissa_house_guard" text="Capo del Trono d'Avorio" />
+    <string id="taom_career_rank3_abanissa_ivory_rider" text="Condottiero dei Mûmakil" />
+    <string id="taom_career_rank3_abanissa_jiret_javelineer" text="Maestro della Lancia Dorata" />
+    <string id="taom_career_rank3_craig_crag_stalker" text="Occhio della Rupe Azzurra" />
+    <string id="taom_career_rank3_craig_pit_driver" text="Spezzatore di Troll" />
+    <string id="taom_career_rank3_craig_warg_master" text="Signore dei Lupi della Caccia Selvaggia" />
+    <string id="taom_career_rank3_falathrim_blade_dancer" text="Maestro di Lama di Mithlond" />
+    <string id="taom_career_rank3_falathrim_mariner" text="Cavaliere del Fiore d'Oro" />
+    <string id="taom_career_rank3_falathrim_sentinel" text="Custode di Mithlond" />
+    <string id="taom_career_rank3_goblin_troll_driver" text="Spezzatore di Troll" />
+    <string id="taom_career_rank3_goblin_tunnel_stalker" text="Occhio di Città degli Orchi" />
+    <string id="taom_career_rank3_goblin_warg_master" text="Signore dei Lupi della Caccia Selvaggia" />
+    <string id="taom_career_rank3_misty_deep_marksman" text="Occhio di Moria" />
+    <string id="taom_career_rank3_misty_troll_goad" text="Spezzatore di Troll" />
+    <string id="taom_career_rank3_misty_warg_chieftain" text="Signore dei Lupi della Caccia Selvaggia" />
+    <string id="taom_career_rank3_shaghana_beast_rider" text="Condottiero dei Mûmakil" />
+    <string id="taom_career_rank3_shaghana_chatak_javelineer" text="Maestro della Lancia Scarlatta" />
+    <string id="taom_career_rank3_shaghana_zajana_tribesman" text="Capo dello Stendardo del Serpente" />
+    <string id="taom_career_shaghana_beast_rider" text="Cavalcabestie di Sormedân" />
+    <string id="taom_career_shaghana_beast_rider_desc" text="Un temibile cavaliere del Lontano Harad che spinge grandi bestie contro il nemico, spezzando le linee con l'urto e il terrore primordiale." />
+    <string id="taom_career_shaghana_chatak_javelineer" text="Lanciatore di Giavellotti di Chatâk" />
+    <string id="taom_career_shaghana_chatak_javelineer_desc" text="Un incursore rapido di Chatâk che protegge la cavalleria con una pioggia di giavellotti prima di ritirarsi fuori dalla portata della rappresaglia." />
+    <string id="taom_career_shaghana_zajana_tribesman" text="Uomo delle Tribù di Zajâna" />
+    <string id="taom_career_shaghana_zajana_tribesman_desc" text="Un guerriero delle tribù del deserto di Zajâna, le cui tattiche di logoramento consumano i nemici con pressione implacabile e lame avvelenate." />
+    <string id="taom_ccs_t1_a_key" text="Raggio del Dardo Avvelenato aumentato, coprendo zone di morte più ampie." />
+    <string id="taom_ccs_t1_a_p1" text="+8% danno a distanza." />
+    <string id="taom_ccs_t1_a_p2" text="+5% penetrazione dell'armatura." />
+    <string id="taom_ccs_t1_a_p3" text="+7% velocità di movimento." />
+    <string id="taom_ccs_t1_a_p4" text="+5% guadagno di fama in battaglia." />
+    <string id="taom_ccs_t1_b_key" text="Durata del Dardo Avvelenato estesa, raffica prolungata." />
+    <string id="taom_ccs_t1_b_p1" text="+5% resistenza." />
+    <string id="taom_ccs_t1_b_p2" text="+5 salute massima." />
+    <string id="taom_ccs_t1_b_p3" text="+5% raggio di avvistamento del gruppo." />
+    <string id="taom_ccs_t1_b_p4" text="+10% bonus di furtività." />
+    <string id="taom_ccs_t2_a_key" text="Carica di Dardo Velenoso ridotta, mantenendo una pressione costante." />
+    <string id="taom_ccs_t2_a_p1" text="+10% raggio di avvistamento del gruppo." />
+    <string id="taom_ccs_t2_a_p2" text="+10% velocità di movimento." />
+    <string id="taom_ccs_t2_a_p3" text="+13% bonus di furtività." />
+    <string id="taom_ccs_t2_a_p4" text="+10% rinomanza guadagnata in battaglia." />
+    <string id="taom_ccs_t2_b_key" text="Dardo Velenoso ottiene penetrazione aggiuntiva mentre è attivo." />
+    <string id="taom_ccs_t2_b_p1" text="+12% danno a distanza." />
+    <string id="taom_ccs_t2_b_p2" text="+10% penetrazione dell'armatura." />
+    <string id="taom_ccs_t2_b_p3" text="+8 salute massima." />
+    <string id="taom_ccs_t2_b_p4" text="+3% danno delle truppe." />
+    <string id="taom_ccs_t3_a_key" text="Raggio di Dardo Velenoso notevolmente ampliato, salve inevitabili." />
+    <string id="taom_ccs_t3_a_p1" text="+18% danno a distanza." />
+    <string id="taom_ccs_t3_a_p2" text="+15% penetrazione dell'armatura." />
+    <string id="taom_ccs_t3_a_p3" text="+15% rinomanza guadagnata in battaglia." />
+    <string id="taom_ccs_t3_a_p4" text="+5% danno delle truppe." />
+    <string id="taom_ccs_t3_b_key" text="Carica di Dardo Velenoso notevolmente ridotta, fuoco incessante." />
+    <string id="taom_ccs_t3_b_p1" text="+15% bonus di furtività." />
+    <string id="taom_ccs_t3_b_p2" text="+15% velocità di movimento." />
+    <string id="taom_ccs_t3_b_p3" text="+9 salute massima." />
+    <string id="taom_ccs_t3_b_p4" text="+15% raggio di avvistamento del gruppo." />
+    <string id="taom_cpd_t1_a_key" text="Raggio della Frenesia di Blue Craig aumentato, potenziando più guerrieri." />
+    <string id="taom_cpd_t1_a_p1" text="+8% danno in mischia." />
+    <string id="taom_cpd_t1_a_p2" text="+3% danno delle truppe." />
+    <string id="taom_cpd_t1_a_p3" text="+6 salute massima." />
+    <string id="taom_cpd_t1_a_p4" text="+7% velocità di fendente." />
+    <string id="taom_cpd_t1_b_key" text="Durata della Frenesia di Blue Craig estesa, rafforzando la difesa." />
+    <string id="taom_cpd_t1_b_p1" text="+8% resistenza." />
+    <string id="taom_cpd_t1_b_p2" text="+5% morale delle truppe." />
+    <string id="taom_cpd_t1_b_p3" text="+10% resistenza delle truppe." />
+    <string id="taom_cpd_t1_b_p4" text="+5% sopravvivenza delle truppe." />
+    <string id="taom_cpd_t2_a_key" text="Carica della Frenesia di Blue Craig ridotta, si attiva più frequentemente." />
+    <string id="taom_cpd_t2_a_p1" text="+10% morale delle truppe." />
+    <string id="taom_cpd_t2_a_p2" text="+2 dimensione del gruppo." />
+    <string id="taom_cpd_t2_a_p3" text="+10% rinomanza guadagnata in battaglia." />
+    <string id="taom_cpd_t2_a_p4" text="-10% paghe delle truppe." />
+    <string id="taom_cpd_t2_b_key" text="La Frenesia di Blue Craig concede bonus difensivi aggiuntivi mentre è attiva." />
+    <string id="taom_cpd_t2_b_p1" text="+12% resistenza." />
+    <string id="taom_cpd_t2_b_p2" text="+8 salute massima." />
+    <string id="taom_cpd_t2_b_p3" text="+13% resistenza delle truppe." />
+    <string id="taom_cpd_t2_b_p4" text="+5% danno delle truppe." />
+    <string id="taom_cpd_t3_a_key" text="Il raggio della Furia di Blue Craig è enormemente ampliato, potenza devastante." />
+    <string id="taom_cpd_t3_a_p1" text="+15% danno in mischia." />
+    <string id="taom_cpd_t3_a_p2" text="+10 salute massima." />
+    <string id="taom_cpd_t3_a_p3" text="+7% danno delle truppe." />
+    <string id="taom_cpd_t3_a_p4" text="+4 dimensione del gruppo." />
+    <string id="taom_cpd_t3_b_key" text="La carica della Furia di Blue Craig è enormemente ridotta, quasi sempre disponibile." />
+    <string id="taom_cpd_t3_b_p1" text="+18% resistenza." />
+    <string id="taom_cpd_t3_b_p2" text="+15% rigenerazione della salute dell'eroe." />
+    <string id="taom_cpd_t3_b_p3" text="+20% morale delle truppe." />
+    <string id="taom_cpd_t3_b_p4" text="+15% sopravvivenza delle truppe." />
+    <string id="taom_craig_crag_stalker_root_desc" text="Dardo Velenoso concede +5% danno a distanza con tossina di funghi delle caverne." />
+    <string id="taom_craig_pit_driver_root_desc" text="La Furia di Blue Craig concede +5 salute e fa impazzire di furia i tuoi troll." />
+    <string id="taom_craig_warg_master_root_desc" text="Ululato dell'Alfa concede +5% danno in mischia e il branco va a caccia." />
+    <string id="taom_cwm_t1_a_key" text="Il raggio dell'Ululato dell'Alfa è ampliato, travolgendo formazioni più vaste." />
+    <string id="taom_cwm_t1_a_p1" text="+8% danno in mischia." />
+    <string id="taom_cwm_t1_a_p2" text="+10% danno da carica a cavallo." />
+    <string id="taom_cwm_t1_a_p3" text="+7% velocità dei colpi." />
+    <string id="taom_cwm_t1_a_p4" text="+5% velocità di movimento del gruppo." />
+    <string id="taom_cwm_t1_b_key" text="La durata dell'Ululato dell'Alfa è estesa, mantenendo lo slancio." />
+    <string id="taom_cwm_t1_b_p1" text="+10% salute dei cavalli." />
+    <string id="taom_cwm_t1_b_p2" text="+5 salute massima." />
+    <string id="taom_cwm_t1_b_p3" text="-5% paghe delle truppe." />
+    <string id="taom_cwm_t1_b_p4" text="+5% resistenza." />
+    <string id="taom_cwm_t2_a_key" text="La carica dell'Ululato dell'Alfa è ridotta, attivazione più rapida." />
+    <string id="taom_cwm_t2_a_p1" text="+10% velocità di movimento del gruppo." />
+    <string id="taom_cwm_t2_a_p2" text="-10% paghe delle truppe." />
+    <string id="taom_cwm_t2_a_p3" text="+10% morale delle truppe." />
+    <string id="taom_cwm_t2_a_p4" text="+10% rinomanza guadagnata in battaglia." />
+    <string id="taom_cwm_t2_b_key" text="L'Ululato dell'Alfa aumenta la resilienza delle cavalcature mentre è attivo." />
+    <string id="taom_cwm_t2_b_p1" text="+12% danno in mischia." />
+    <string id="taom_cwm_t2_b_p2" text="+13% danno da carica a cavallo." />
+    <string id="taom_cwm_t2_b_p3" text="+13% salute dei cavalli." />
+    <string id="taom_cwm_t2_b_p4" text="+10% velocità dei colpi." />
+    <string id="taom_cwm_t3_a_key" text="Il raggio dell'Ululato dell'Alfa è enormemente ampliato, impatto irrefrenabile." />
+    <string id="taom_cwm_t3_a_p1" text="+18% danno in mischia." />
+    <string id="taom_cwm_t3_a_p2" text="+15% danno da carica a cavallo." />
+    <string id="taom_cwm_t3_a_p3" text="+15% velocità dei colpi." />
+    <string id="taom_cwm_t3_a_p4" text="+7% danni delle truppe." />
+    <string id="taom_cwm_t3_b_key" text="Ricarica di Ululato dell'Alfa molto ridotta, cavalca senza sosta." />
+    <string id="taom_cwm_t3_b_p1" text="+15% salute del cavallo." />
+    <string id="taom_cwm_t3_b_p2" text="-15% paghe delle truppe." />
+    <string id="taom_cwm_t3_b_p3" text="+15% velocità di movimento del gruppo." />
+    <string id="taom_cwm_t3_b_p4" text="+9 salute massima." />
+    <string id="taom_falathrim_blade_dancer_root_desc" text="Trama di Luce Stellare concede +5% resistenza e agilità elfica." />
+    <string id="taom_falathrim_mariner_root_desc" text="Ultima Alleanza concede +5% danni in mischia e ispira i tuoi alleati." />
+    <string id="taom_falathrim_sentinel_root_desc" text="Vista Elfica concede +5% danni a distanza con secoli di pratica." />
+    <string id="taom_fbd_t1_a_key" text="Raggio di Trama di Luce Stellare aumentato, potenziando più guerrieri." />
+    <string id="taom_fbd_t1_a_p1" text="+8% danni in mischia." />
+    <string id="taom_fbd_t1_a_p2" text="+3% danni delle truppe." />
+    <string id="taom_fbd_t1_a_p3" text="+6 salute massima." />
+    <string id="taom_fbd_t1_a_p4" text="+7% velocità di colpo." />
+    <string id="taom_fbd_t1_b_key" text="Durata di Trama di Luce Stellare estesa, rafforzando la difesa." />
+    <string id="taom_fbd_t1_b_p1" text="+8% resistenza." />
+    <string id="taom_fbd_t1_b_p2" text="+5% morale delle truppe." />
+    <string id="taom_fbd_t1_b_p3" text="+10% resistenza delle truppe." />
+    <string id="taom_fbd_t1_b_p4" text="+5% sopravvivenza delle truppe." />
+    <string id="taom_fbd_t2_a_key" text="Ricarica di Trama di Luce Stellare ridotta, si attiva più spesso." />
+    <string id="taom_fbd_t2_a_p1" text="+10% morale delle truppe." />
+    <string id="taom_fbd_t2_a_p2" text="+2 dimensione del gruppo." />
+    <string id="taom_fbd_t2_a_p3" text="+10% rinomanza ottenuta in battaglia." />
+    <string id="taom_fbd_t2_a_p4" text="-10% paghe delle truppe." />
+    <string id="taom_fbd_t2_b_key" text="Trama di Luce Stellare concede ulteriori bonus difensivi quando è attiva." />
+    <string id="taom_fbd_t2_b_p1" text="+12% resistenza." />
+    <string id="taom_fbd_t2_b_p2" text="+8 salute massima." />
+    <string id="taom_fbd_t2_b_p3" text="+13% resistenza delle truppe." />
+    <string id="taom_fbd_t2_b_p4" text="+5% danni delle truppe." />
+    <string id="taom_fbd_t3_a_key" text="Raggio di Trama di Luce Stellare molto ampliato, potere devastante." />
+    <string id="taom_fbd_t3_a_p1" text="+15% danni in mischia." />
+    <string id="taom_fbd_t3_a_p2" text="+10 salute massima." />
+    <string id="taom_fbd_t3_a_p3" text="+7% danni delle truppe." />
+    <string id="taom_fbd_t3_a_p4" text="+4 dimensione del gruppo." />
+    <string id="taom_fbd_t3_b_key" text="Ricarica di Trama di Luce Stellare molto ridotta, quasi sempre disponibile." />
+    <string id="taom_fbd_t3_b_p1" text="+18% resistenza." />
+    <string id="taom_fbd_t3_b_p2" text="+15% rigenerazione della salute dell'eroe." />
+    <string id="taom_fbd_t3_b_p3" text="+20% morale delle truppe." />
+    <string id="taom_fbd_t3_b_p4" text="+15% sopravvivenza delle truppe." />
+    <string id="taom_fmr_t1_a_key" text="Raggio di Ultima Alleanza ampliato, abbracciando formazioni più vaste." />
+    <string id="taom_fmr_t1_a_p1" text="+8% danno in mischia." />
+    <string id="taom_fmr_t1_a_p2" text="+10% danno da carica a cavallo." />
+    <string id="taom_fmr_t1_a_p3" text="+7% velocità dei fendenti." />
+    <string id="taom_fmr_t1_a_p4" text="+5% velocità di movimento del gruppo." />
+    <string id="taom_fmr_t1_b_key" text="Durata dell'Ultima Alleanza estesa, mantenendo lo slancio." />
+    <string id="taom_fmr_t1_b_p1" text="+10% salute del cavallo." />
+    <string id="taom_fmr_t1_b_p2" text="+5 salute massima." />
+    <string id="taom_fmr_t1_b_p3" text="-5% paghe delle truppe." />
+    <string id="taom_fmr_t1_b_p4" text="+5% resistenza." />
+    <string id="taom_fmr_t2_a_key" text="Ricarica dell'Ultima Alleanza ridotta, attivazione più rapida." />
+    <string id="taom_fmr_t2_a_p1" text="+10% velocità di movimento del gruppo." />
+    <string id="taom_fmr_t2_a_p2" text="-10% paghe delle truppe." />
+    <string id="taom_fmr_t2_a_p3" text="+10% morale delle truppe." />
+    <string id="taom_fmr_t2_a_p4" text="+10% rinomanza ottenuta in battaglia." />
+    <string id="taom_fmr_t2_b_key" text="L'Ultima Alleanza aumenta la resistenza delle cavalcature mentre è attiva." />
+    <string id="taom_fmr_t2_b_p1" text="+12% danno in mischia." />
+    <string id="taom_fmr_t2_b_p2" text="+13% danno da carica a cavallo." />
+    <string id="taom_fmr_t2_b_p3" text="+13% salute del cavallo." />
+    <string id="taom_fmr_t2_b_p4" text="+10% velocità dei fendenti." />
+    <string id="taom_fmr_t3_a_key" text="Raggio dell'Ultima Alleanza notevolmente ampliato, impatto inarrestabile." />
+    <string id="taom_fmr_t3_a_p1" text="+18% danno in mischia." />
+    <string id="taom_fmr_t3_a_p2" text="+15% danno da carica a cavallo." />
+    <string id="taom_fmr_t3_a_p3" text="+15% velocità dei fendenti." />
+    <string id="taom_fmr_t3_a_p4" text="+7% danno delle truppe." />
+    <string id="taom_fmr_t3_b_key" text="Ricarica dell'Ultima Alleanza fortemente ridotta, cavalca senza sosta." />
+    <string id="taom_fmr_t3_b_p1" text="+15% salute del cavallo." />
+    <string id="taom_fmr_t3_b_p2" text="-15% paghe delle truppe." />
+    <string id="taom_fmr_t3_b_p3" text="+15% velocità di movimento del gruppo." />
+    <string id="taom_fmr_t3_b_p4" text="+9 salute massima." />
+    <string id="taom_fsn_t1_a_key" text="Raggio della Vista Elfica aumentato, copre zone di tiro più ampie." />
+    <string id="taom_fsn_t1_a_p1" text="+8% danno a distanza." />
+    <string id="taom_fsn_t1_a_p2" text="+5% penetrazione dell'armatura." />
+    <string id="taom_fsn_t1_a_p3" text="+7% velocità di movimento." />
+    <string id="taom_fsn_t1_a_p4" text="+5% rinomanza ottenuta in battaglia." />
+    <string id="taom_fsn_t1_b_key" text="Durata della Vista Elfica estesa, raffiche continue." />
+    <string id="taom_fsn_t1_b_p1" text="+5% resistenza." />
+    <string id="taom_fsn_t1_b_p2" text="+5 salute massima." />
+    <string id="taom_fsn_t1_b_p3" text="+5% raggio di avvistamento del gruppo." />
+    <string id="taom_fsn_t1_b_p4" text="+10% bonus furtività." />
+    <string id="taom_fsn_t2_a_key" text="Ricarica della Vista Elfica ridotta, pressione costante." />
+    <string id="taom_fsn_t2_a_p1" text="+10% raggio di avvistamento del gruppo." />
+    <string id="taom_fsn_t2_a_p2" text="+10% velocità di movimento." />
+    <string id="taom_fsn_t2_a_p3" text="+13% bonus di furtività." />
+    <string id="taom_fsn_t2_a_p4" text="+10% rinomanza guadagnata in battaglia." />
+    <string id="taom_fsn_t2_b_key" text="La Vista Elfica ottiene penetrazione aggiuntiva mentre è attiva." />
+    <string id="taom_fsn_t2_b_p1" text="+12% danno a distanza." />
+    <string id="taom_fsn_t2_b_p2" text="+10% penetrazione delle armature." />
+    <string id="taom_fsn_t2_b_p3" text="+8 salute massima." />
+    <string id="taom_fsn_t2_b_p4" text="+3% danno delle truppe." />
+    <string id="taom_fsn_t3_a_key" text="Raggio della Vista Elfica molto ampliato, scariche inevitabili." />
+    <string id="taom_fsn_t3_a_p1" text="+18% danno a distanza." />
+    <string id="taom_fsn_t3_a_p2" text="+15% penetrazione delle armature." />
+    <string id="taom_fsn_t3_a_p3" text="+15% rinomanza guadagnata in battaglia." />
+    <string id="taom_fsn_t3_a_p4" text="+5% danno delle truppe." />
+    <string id="taom_fsn_t3_b_key" text="Ricarica della Vista Elfica molto ridotta, fuoco incessante." />
+    <string id="taom_fsn_t3_b_p1" text="+15% bonus di furtività." />
+    <string id="taom_fsn_t3_b_p2" text="+15% velocità di movimento." />
+    <string id="taom_fsn_t3_b_p3" text="+9 salute massima." />
+    <string id="taom_fsn_t3_b_p4" text="+15% raggio di avvistamento del gruppo." />
+    <string id="taom_goblin_troll_driver_root_desc" text="La Frenesia di Goblinvilla concede +5 salute e fa impazzire i tuoi troll." />
+    <string id="taom_goblin_tunnel_stalker_root_desc" text="Dardo Velenoso concede +5% danno a distanza con tossina di funghi delle caverne." />
+    <string id="taom_goblin_warg_master_root_desc" text="Ululato Alfa concede +5% danno in mischia e il branco va a caccia." />
+    <string id="taom_gtd_t1_a_key" text="Raggio della Frenesia di Goblinvilla aumentato, potenzia più guerrieri." />
+    <string id="taom_gtd_t1_a_p1" text="+8% danno in mischia." />
+    <string id="taom_gtd_t1_a_p2" text="+3% danno delle truppe." />
+    <string id="taom_gtd_t1_a_p3" text="+6 salute massima." />
+    <string id="taom_gtd_t1_a_p4" text="+7% velocità dei colpi." />
+    <string id="taom_gtd_t1_b_key" text="Durata della Frenesia di Goblinvilla estesa, rafforzando la difesa." />
+    <string id="taom_gtd_t1_b_p1" text="+8% resistenza." />
+    <string id="taom_gtd_t1_b_p2" text="+5% morale delle truppe." />
+    <string id="taom_gtd_t1_b_p3" text="+10% resistenza delle truppe." />
+    <string id="taom_gtd_t1_b_p4" text="+5% sopravvivenza delle truppe." />
+    <string id="taom_gtd_t2_a_key" text="Ricarica della Frenesia di Goblinvilla ridotta, si attiva più spesso." />
+    <string id="taom_gtd_t2_a_p1" text="+10% morale delle truppe." />
+    <string id="taom_gtd_t2_a_p2" text="+2 dimensione del gruppo." />
+    <string id="taom_gtd_t2_a_p3" text="+10% rinomanza guadagnata in battaglia." />
+    <string id="taom_gtd_t2_a_p4" text="-10% paghe delle truppe." />
+    <string id="taom_gtd_t2_b_key" text="La Frenesia di Goblinvilla concede bonus difensivi aggiuntivi mentre è attiva." />
+    <string id="taom_gtd_t2_b_p1" text="+12% resistenza." />
+    <string id="taom_gtd_t2_b_p2" text="+8 salute massima." />
+    <string id="taom_gtd_t2_b_p3" text="+13% resistenza delle truppe." />
+    <string id="taom_gtd_t2_b_p4" text="+5% danno delle truppe." />
+    <string id="taom_gtd_t3_a_key" text="Raggio della Frenesia di Città dei Goblin molto ampliato, potenza devastante." />
+    <string id="taom_gtd_t3_a_p1" text="+15% danno in mischia." />
+    <string id="taom_gtd_t3_a_p2" text="+10 salute massima." />
+    <string id="taom_gtd_t3_a_p3" text="+7% danno delle truppe." />
+    <string id="taom_gtd_t3_a_p4" text="+4 dimensione del gruppo." />
+    <string id="taom_gtd_t3_b_key" text="Ricarica della Frenesia di Città dei Goblin molto ridotta, quasi sempre disponibile." />
+    <string id="taom_gtd_t3_b_p1" text="+18% resistenza." />
+    <string id="taom_gtd_t3_b_p2" text="+15% rigenerazione della salute dell'eroe." />
+    <string id="taom_gtd_t3_b_p3" text="+20% morale delle truppe." />
+    <string id="taom_gtd_t3_b_p4" text="+15% sopravvivenza delle truppe." />
+    <string id="taom_gts_t1_a_key" text="Raggio del Dardo Avvelenato aumentato, copre zone di morte più ampie." />
+    <string id="taom_gts_t1_a_p1" text="+8% danno a distanza." />
+    <string id="taom_gts_t1_a_p2" text="+5% penetrazione dell'armatura." />
+    <string id="taom_gts_t1_a_p3" text="+7% velocità di movimento." />
+    <string id="taom_gts_t1_a_p4" text="+5% rinomanza guadagnata in battaglia." />
+    <string id="taom_gts_t1_b_key" text="Durata del Dardo Avvelenato estesa, raffica prolungata." />
+    <string id="taom_gts_t1_b_p1" text="+5% resistenza." />
+    <string id="taom_gts_t1_b_p2" text="+5 salute massima." />
+    <string id="taom_gts_t1_b_p3" text="+5% raggio di avvistamento del gruppo." />
+    <string id="taom_gts_t1_b_p4" text="+10% bonus di furtività." />
+    <string id="taom_gts_t2_a_key" text="Ricarica del Dardo Avvelenato ridotta, pressione costante." />
+    <string id="taom_gts_t2_a_p1" text="+10% raggio di avvistamento del gruppo." />
+    <string id="taom_gts_t2_a_p2" text="+10% velocità di movimento." />
+    <string id="taom_gts_t2_a_p3" text="+13% bonus di furtività." />
+    <string id="taom_gts_t2_a_p4" text="+10% rinomanza guadagnata in battaglia." />
+    <string id="taom_gts_t2_b_key" text="Il Dardo Avvelenato ottiene penetrazione aggiuntiva mentre è attivo." />
+    <string id="taom_gts_t2_b_p1" text="+12% danno a distanza." />
+    <string id="taom_gts_t2_b_p2" text="+10% penetrazione dell'armatura." />
+    <string id="taom_gts_t2_b_p3" text="+8 salute massima." />
+    <string id="taom_gts_t2_b_p4" text="+3% danno delle truppe." />
+    <string id="taom_gts_t3_a_key" text="Raggio del Dardo Avvelenato molto ampliato, scariche inevitabili." />
+    <string id="taom_gts_t3_a_p1" text="+18% danno a distanza." />
+    <string id="taom_gts_t3_a_p2" text="+15% penetrazione dell'armatura." />
+    <string id="taom_gts_t3_a_p3" text="+15% rinomanza guadagnata in battaglia." />
+    <string id="taom_gts_t3_a_p4" text="+5% danno delle truppe." />
+    <string id="taom_gts_t3_b_key" text="Ricarica del Dardo Avvelenato molto ridotta, fuoco incessante." />
+    <string id="taom_gts_t3_b_p1" text="+15% bonus di furtività." />
+    <string id="taom_gts_t3_b_p2" text="+15% velocità di movimento." />
+    <string id="taom_gts_t3_b_p3" text="+9 salute massima." />
+    <string id="taom_gts_t3_b_p4" text="+15% raggio di avvistamento del gruppo." />
+    <string id="taom_gwm_t1_a_key" text="Raggio dell'Ululato dell'Alfa ampliato, travolge formazioni più vaste." />
+    <string id="taom_gwm_t1_a_p1" text="+8% danni in mischia." />
+    <string id="taom_gwm_t1_a_p2" text="+10% danni da carica a cavallo." />
+    <string id="taom_gwm_t1_a_p3" text="+7% velocità dei fendenti." />
+    <string id="taom_gwm_t1_a_p4" text="+5% velocità di movimento del gruppo." />
+    <string id="taom_gwm_t1_b_key" text="Durata dell'Ululato dell'Alfa estesa, mantiene lo slancio." />
+    <string id="taom_gwm_t1_b_p1" text="+10% salute del cavallo." />
+    <string id="taom_gwm_t1_b_p2" text="+5 salute massima." />
+    <string id="taom_gwm_t1_b_p3" text="-5% paghe delle truppe." />
+    <string id="taom_gwm_t1_b_p4" text="+5% resistenza." />
+    <string id="taom_gwm_t2_a_key" text="Ricarica dell'Ululato dell'Alfa ridotta, attivazione più rapida." />
+    <string id="taom_gwm_t2_a_p1" text="+10% velocità di movimento del gruppo." />
+    <string id="taom_gwm_t2_a_p2" text="-10% paghe delle truppe." />
+    <string id="taom_gwm_t2_a_p3" text="+10% morale delle truppe." />
+    <string id="taom_gwm_t2_a_p4" text="+10% rinomanza guadagnata in battaglia." />
+    <string id="taom_gwm_t2_b_key" text="L'Ululato dell'Alfa aumenta la resistenza delle cavalcature mentre è attivo." />
+    <string id="taom_gwm_t2_b_p1" text="+12% danni in mischia." />
+    <string id="taom_gwm_t2_b_p2" text="+13% danni da carica a cavallo." />
+    <string id="taom_gwm_t2_b_p3" text="+13% salute del cavallo." />
+    <string id="taom_gwm_t2_b_p4" text="+10% velocità dei fendenti." />
+    <string id="taom_gwm_t3_a_key" text="Raggio dell'Ululato dell'Alfa ampliato enormemente, impatto irresistibile." />
+    <string id="taom_gwm_t3_a_p1" text="+18% danni in mischia." />
+    <string id="taom_gwm_t3_a_p2" text="+15% danni da carica a cavallo." />
+    <string id="taom_gwm_t3_a_p3" text="+15% velocità dei fendenti." />
+    <string id="taom_gwm_t3_a_p4" text="+7% danni delle truppe." />
+    <string id="taom_gwm_t3_b_key" text="Ricarica dell'Ululato dell'Alfa ridotta enormemente, cavalca senza sosta." />
+    <string id="taom_gwm_t3_b_p1" text="+15% salute del cavallo." />
+    <string id="taom_gwm_t3_b_p2" text="-15% paghe delle truppe." />
+    <string id="taom_gwm_t3_b_p3" text="+15% velocità di movimento del gruppo." />
+    <string id="taom_gwm_t3_b_p4" text="+9 salute massima." />
+    <string id="taom_mdm_t1_a_key" text="Raggio del Dardo Avvelenato aumentato, copre zone di morte più ampie." />
+    <string id="taom_mdm_t1_a_p1" text="+8% danni a distanza." />
+    <string id="taom_mdm_t1_a_p2" text="+5% penetrazione dell'armatura." />
+    <string id="taom_mdm_t1_a_p3" text="+7% velocità di movimento." />
+    <string id="taom_mdm_t1_a_p4" text="+5% rinomanza guadagnata in battaglia." />
+    <string id="taom_mdm_t1_b_key" text="Durata del Dardo Avvelenato estesa, raffica prolungata." />
+    <string id="taom_mdm_t1_b_p1" text="+5% resistenza." />
+    <string id="taom_mdm_t1_b_p2" text="+5 salute massima." />
+    <string id="taom_mdm_t1_b_p3" text="+5% raggio di avvistamento del gruppo." />
+    <string id="taom_mdm_t1_b_p4" text="+10% bonus furtività." />
+    <string id="taom_mdm_t2_a_key" text="Ricarica di Dardo Velenoso ridotta, mantenendo una pressione costante." />
+    <string id="taom_mdm_t2_a_p1" text="+10% raggio di avvistamento del gruppo." />
+    <string id="taom_mdm_t2_a_p2" text="+10% velocità di movimento." />
+    <string id="taom_mdm_t2_a_p3" text="+13% bonus furtività." />
+    <string id="taom_mdm_t2_a_p4" text="+10% rinomanza guadagnata in battaglia." />
+    <string id="taom_mdm_t2_b_key" text="Dardo Velenoso ottiene penetrazione aggiuntiva mentre è attivo." />
+    <string id="taom_mdm_t2_b_p1" text="+12% danno a distanza." />
+    <string id="taom_mdm_t2_b_p2" text="+10% penetrazione dell'armatura." />
+    <string id="taom_mdm_t2_b_p3" text="+8 salute massima." />
+    <string id="taom_mdm_t2_b_p4" text="+3% danno delle truppe." />
+    <string id="taom_mdm_t3_a_key" text="Raggio di Dardo Velenoso ampliato enormemente, salve inevitabili." />
+    <string id="taom_mdm_t3_a_p1" text="+18% danno a distanza." />
+    <string id="taom_mdm_t3_a_p2" text="+15% penetrazione dell'armatura." />
+    <string id="taom_mdm_t3_a_p3" text="+15% rinomanza guadagnata in battaglia." />
+    <string id="taom_mdm_t3_a_p4" text="+5% danno delle truppe." />
+    <string id="taom_mdm_t3_b_key" text="Ricarica di Dardo Velenoso enormemente ridotta, fuoco incessante." />
+    <string id="taom_mdm_t3_b_p1" text="+15% bonus furtività." />
+    <string id="taom_mdm_t3_b_p2" text="+15% velocità di movimento." />
+    <string id="taom_mdm_t3_b_p3" text="+9 salute massima." />
+    <string id="taom_mdm_t3_b_p4" text="+15% raggio di avvistamento del gruppo." />
+    <string id="taom_misty_deep_marksman_root_desc" text="Dardo Velenoso concede +5% danno a distanza grazie alla tossina dei funghi delle caverne." />
+    <string id="taom_misty_troll_goad_root_desc" text="Frenesia di Moria concede +5 salute e fa infuriare i tuoi troll." />
+    <string id="taom_misty_warg_chieftain_root_desc" text="Ululato dell'Alfa concede +5% danno in mischia e il branco va a caccia." />
+    <string id="taom_mtg_t1_a_key" text="Raggio di Frenesia di Moria aumentato, potenziando più guerrieri." />
+    <string id="taom_mtg_t1_a_p1" text="+8% danno in mischia." />
+    <string id="taom_mtg_t1_a_p2" text="+3% danno delle truppe." />
+    <string id="taom_mtg_t1_a_p3" text="+6 salute massima." />
+    <string id="taom_mtg_t1_a_p4" text="+7% velocità di fendente." />
+    <string id="taom_mtg_t1_b_key" text="Durata di Frenesia di Moria estesa, rafforzando la difesa." />
+    <string id="taom_mtg_t1_b_p1" text="+8% resistenza." />
+    <string id="taom_mtg_t1_b_p2" text="+5% morale delle truppe." />
+    <string id="taom_mtg_t1_b_p3" text="+10% resistenza delle truppe." />
+    <string id="taom_mtg_t1_b_p4" text="+5% sopravvivenza delle truppe." />
+    <string id="taom_mtg_t2_a_key" text="Ricarica di Frenesia di Moria ridotta, si attiva più frequentemente." />
+    <string id="taom_mtg_t2_a_p1" text="+10% morale delle truppe." />
+    <string id="taom_mtg_t2_a_p2" text="+2 dimensione del gruppo." />
+    <string id="taom_mtg_t2_a_p3" text="+10% rinomanza guadagnata in battaglia." />
+    <string id="taom_mtg_t2_a_p4" text="-10% paghe delle truppe." />
+    <string id="taom_mtg_t2_b_key" text="La Frenesia di Moria concede ulteriori bonus difensivi mentre è attiva." />
+    <string id="taom_mtg_t2_b_p1" text="+12% resistenza." />
+    <string id="taom_mtg_t2_b_p2" text="+8 salute massima." />
+    <string id="taom_mtg_t2_b_p3" text="+13% resistenza delle truppe." />
+    <string id="taom_mtg_t2_b_p4" text="+5% danno delle truppe." />
+    <string id="taom_mtg_t3_a_key" text="Raggio della Frenesia di Moria notevolmente ampliato, potenza devastante." />
+    <string id="taom_mtg_t3_a_p1" text="+15% danno in mischia." />
+    <string id="taom_mtg_t3_a_p2" text="+10 salute massima." />
+    <string id="taom_mtg_t3_a_p3" text="+7% danno delle truppe." />
+    <string id="taom_mtg_t3_a_p4" text="+4 dimensione del gruppo." />
+    <string id="taom_mtg_t3_b_key" text="Carica della Frenesia di Moria molto ridotta, quasi sempre disponibile." />
+    <string id="taom_mtg_t3_b_p1" text="+18% resistenza." />
+    <string id="taom_mtg_t3_b_p2" text="+15% rigenerazione della salute dell'eroe." />
+    <string id="taom_mtg_t3_b_p3" text="+20% morale delle truppe." />
+    <string id="taom_mtg_t3_b_p4" text="+15% sopravvivenza delle truppe." />
+    <string id="taom_mwc_t1_a_key" text="Raggio dell'Ululato dell'Alfa ampliato, travolge formazioni più ampie." />
+    <string id="taom_mwc_t1_a_p1" text="+8% danno in mischia." />
+    <string id="taom_mwc_t1_a_p2" text="+10% danno da carica a cavallo." />
+    <string id="taom_mwc_t1_a_p3" text="+7% velocità di fendente." />
+    <string id="taom_mwc_t1_a_p4" text="+5% velocità di movimento del gruppo." />
+    <string id="taom_mwc_t1_b_key" text="Durata dell'Ululato dell'Alfa estesa, mantenendo lo slancio." />
+    <string id="taom_mwc_t1_b_p1" text="+10% salute dei cavalli." />
+    <string id="taom_mwc_t1_b_p2" text="+5 salute massima." />
+    <string id="taom_mwc_t1_b_p3" text="-5% paghe delle truppe." />
+    <string id="taom_mwc_t1_b_p4" text="+5% resistenza." />
+    <string id="taom_mwc_t2_a_key" text="Carica dell'Ululato dell'Alfa ridotta, attivazione più rapida." />
+    <string id="taom_mwc_t2_a_p1" text="+10% velocità di movimento del gruppo." />
+    <string id="taom_mwc_t2_a_p2" text="-10% paghe delle truppe." />
+    <string id="taom_mwc_t2_a_p3" text="+10% morale delle truppe." />
+    <string id="taom_mwc_t2_a_p4" text="+10% rinomanza guadagnata in battaglia." />
+    <string id="taom_mwc_t2_b_key" text="L'Ululato dell'Alfa aumenta la resilienza delle cavalcature mentre è attivo." />
+    <string id="taom_mwc_t2_b_p1" text="+12% danno in mischia." />
+    <string id="taom_mwc_t2_b_p2" text="+13% danno da carica a cavallo." />
+    <string id="taom_mwc_t2_b_p3" text="+13% salute dei cavalli." />
+    <string id="taom_mwc_t2_b_p4" text="+10% velocità di fendente." />
+    <string id="taom_mwc_t3_a_key" text="Raggio dell'Ululato dell'Alfa notevolmente ampliato, impatto inarrestabile." />
+    <string id="taom_mwc_t3_a_p1" text="+18% danno in mischia." />
+    <string id="taom_mwc_t3_a_p2" text="+15% danno da carica a cavallo." />
+    <string id="taom_mwc_t3_a_p3" text="+15% velocità di fendente." />
+    <string id="taom_mwc_t3_a_p4" text="+7% danno delle truppe." />
+    <string id="taom_mwc_t3_b_key" text="Ricarica di Ululato dell'Alfa molto ridotta, cavalca senza sosta." />
+    <string id="taom_mwc_t3_b_p1" text="+15% salute del cavallo." />
+    <string id="taom_mwc_t3_b_p2" text="-15% paghe delle truppe." />
+    <string id="taom_mwc_t3_b_p3" text="+15% velocità di movimento del gruppo." />
+    <string id="taom_mwc_t3_b_p4" text="+9 salute massima." />
+    <string id="taom_sbr_t1a_key" text="Raggio dei Corni di Mûmakan ampliato, la paura si diffonde più lontano." />
+    <string id="taom_sbr_t1a_p1" text="+10% danno da carica del cavallo." />
+    <string id="taom_sbr_t1a_p2" text="+8% danno corpo a corpo." />
+    <string id="taom_sbr_t1a_p3" text="+5% morale delle truppe." />
+    <string id="taom_sbr_t1a_p4" text="+5% velocità di movimento del gruppo." />
+    <string id="taom_sbr_t1b_key" text="Durata dei Corni di Mûmakan estesa, la paura persiste." />
+    <string id="taom_sbr_t1b_p1" text="+10% salute del cavallo." />
+    <string id="taom_sbr_t1b_p2" text="+3% danno delle truppe." />
+    <string id="taom_sbr_t1b_p3" text="+5% rinomanza guadagnata in battaglia." />
+    <string id="taom_sbr_t1b_p4" text="+5% resistenza." />
+    <string id="taom_sbr_t2a_key" text="Ricarica dei Corni di Mûmakan ridotta, il terrore è sempre imminente." />
+    <string id="taom_sbr_t2a_p1" text="+13% danno da carica del cavallo." />
+    <string id="taom_sbr_t2a_p2" text="+10% morale delle truppe." />
+    <string id="taom_sbr_t2a_p3" text="+5% danno delle truppe." />
+    <string id="taom_sbr_t2a_p4" text="+10% rinomanza guadagnata in battaglia." />
+    <string id="taom_sbr_t2b_key" text="I Corni di Mûmakan aumentano la resistenza delle bestie durante la carica." />
+    <string id="taom_sbr_t2b_p1" text="+12% danno corpo a corpo." />
+    <string id="taom_sbr_t2b_p2" text="+13% salute del cavallo." />
+    <string id="taom_sbr_t2b_p3" text="+10% velocità di movimento del gruppo." />
+    <string id="taom_sbr_t2b_p4" text="+3 dimensione del gruppo." />
+    <string id="taom_sbr_t3a_key" text="Raggio dei Corni di Mûmakan enormemente ampliato, la terra stessa trema." />
+    <string id="taom_sbr_t3a_p1" text="+15% danno da carica del cavallo." />
+    <string id="taom_sbr_t3a_p2" text="+15% danno corpo a corpo." />
+    <string id="taom_sbr_t3a_p3" text="+20% morale delle truppe." />
+    <string id="taom_sbr_t3a_p4" text="+15% rinomanza guadagnata in battaglia." />
+    <string id="taom_sbr_t3b_key" text="Ricarica dei Corni di Mûmakan molto ridotta, terrore senza fine." />
+    <string id="taom_sbr_t3b_p1" text="+15% salute del cavallo." />
+    <string id="taom_sbr_t3b_p2" text="+15% velocità di movimento del gruppo." />
+    <string id="taom_sbr_t3b_p3" text="+7% danno delle truppe." />
+    <string id="taom_sbr_t3b_p4" text="+9 salute massima." />
+    <string id="taom_scj_t1a_key" text="Raggio della Salva Chatâk aumentato, i giavellotti coprono un'area più ampia." />
+    <string id="taom_scj_t1a_p1" text="+8% danno a distanza." />
+    <string id="taom_scj_t1a_p2" text="+10% munizioni." />
+    <string id="taom_scj_t1a_p3" text="+7% velocità di movimento." />
+    <string id="taom_scj_t1a_p4" text="+5% rinomanza guadagnata in battaglia." />
+    <string id="taom_scj_t1b_key" text="Durata di Scarica Chatâk estesa, fuoco di molestia prolungato." />
+    <string id="taom_scj_t1b_p1" text="+5% resistenza." />
+    <string id="taom_scj_t1b_p2" text="+5 salute massima." />
+    <string id="taom_scj_t1b_p3" text="+3% danni delle truppe." />
+    <string id="taom_scj_t1b_p4" text="+5% raggio di avvistamento del gruppo." />
+    <string id="taom_scj_t2a_key" text="Ricarica di Scarica Chatâk ridotta, mai a corto di giavellotti." />
+    <string id="taom_scj_t2a_p1" text="+13% munizioni." />
+    <string id="taom_scj_t2a_p2" text="+10% danni a distanza." />
+    <string id="taom_scj_t2a_p3" text="+10% velocità di movimento." />
+    <string id="taom_scj_t2a_p4" text="+10% rinomanza ottenuta in battaglia." />
+    <string id="taom_scj_t2b_key" text="Scarica Chatâk aumenta l'efficacia di copertura mentre è attiva." />
+    <string id="taom_scj_t2b_p1" text="+12% danni a distanza." />
+    <string id="taom_scj_t2b_p2" text="+8 salute massima." />
+    <string id="taom_scj_t2b_p3" text="+5% danni delle truppe." />
+    <string id="taom_scj_t2b_p4" text="+10% raggio di avvistamento del gruppo." />
+    <string id="taom_scj_t3a_key" text="Raggio di Scarica Chatâk ampiamente esteso, una pioggia inevitabile." />
+    <string id="taom_scj_t3a_p1" text="+15% danni a distanza." />
+    <string id="taom_scj_t3a_p2" text="+15% munizioni." />
+    <string id="taom_scj_t3a_p3" text="+15% rinomanza ottenuta in battaglia." />
+    <string id="taom_scj_t3a_p4" text="+15% velocità di movimento." />
+    <string id="taom_scj_t3b_key" text="Ricarica di Scarica Chatâk molto ridotta, molestia incessante." />
+    <string id="taom_scj_t3b_p1" text="+15% danni a distanza." />
+    <string id="taom_scj_t3b_p2" text="+9 salute massima." />
+    <string id="taom_scj_t3b_p3" text="+7% danni delle truppe." />
+    <string id="taom_scj_t3b_p4" text="+15% raggio di avvistamento del gruppo." />
+    <string id="taom_shaghana_beast_rider_root_desc" text="Corni di Mûmakan concede +10% danni da carica a cavallo e diffonde il terrore." />
+    <string id="taom_shaghana_chatak_javelineer_root_desc" text="Scarica Chatâk concede +5% danni a distanza e accelera il lancio dei giavellotti." />
+    <string id="taom_shaghana_zajana_tribesman_root_desc" text="Lame al Veleno di Serpente concede +5% danni in mischia e applica effetti di logoramento." />
+    <string id="taom_szt_t1a_key" text="Raggio di Lame al Veleno di Serpente aumentato, la tossina si diffonde più ampiamente." />
+    <string id="taom_szt_t1a_p1" text="+8% danni in mischia." />
+    <string id="taom_szt_t1a_p2" text="+3% danni delle truppe." />
+    <string id="taom_szt_t1a_p3" text="+7% velocità di fendente." />
+    <string id="taom_szt_t1a_p4" text="+5% rinomanza ottenuta in battaglia." />
+    <string id="taom_szt_t1b_key" text="Durata di Lame al Veleno di Serpente estesa, la tossina persiste." />
+    <string id="taom_szt_t1b_p1" text="+6% resistenza." />
+    <string id="taom_szt_t1b_p2" text="+6 salute massima." />
+    <string id="taom_szt_t1b_p3" text="+5% velocità di movimento." />
+    <string id="taom_szt_t1b_p4" text="+5% morale delle truppe." />
+    <string id="taom_szt_t2a_key" text="Ricarica di Lame al Veleno di Serpente ridotta, colpisci più frequentemente." />
+    <string id="taom_szt_t2a_p1" text="+5% danni delle truppe." />
+    <string id="taom_szt_t2a_p2" text="+10% danno in mischia." />
+    <string id="taom_szt_t2a_p3" text="+10% rinomanza guadagnata in battaglia." />
+    <string id="taom_szt_t2a_p4" text="+3 dimensione del gruppo." />
+    <string id="taom_szt_t2b_key" text="Le Lame al Veleno di Serpente aumentano il logoramento, fiaccando la volontà di combattere del nemico." />
+    <string id="taom_szt_t2b_p1" text="+10% velocità dei fendenti." />
+    <string id="taom_szt_t2b_p2" text="+8 salute massima." />
+    <string id="taom_szt_t2b_p3" text="+10% resistenza." />
+    <string id="taom_szt_t2b_p4" text="+10% morale delle truppe." />
+    <string id="taom_szt_t3a_key" text="Raggio delle Lame al Veleno di Serpente molto ampliato, una nube di tossina." />
+    <string id="taom_szt_t3a_p1" text="+15% danno in mischia." />
+    <string id="taom_szt_t3a_p2" text="+9 salute massima." />
+    <string id="taom_szt_t3a_p3" text="+7% danno delle truppe." />
+    <string id="taom_szt_t3a_p4" text="+15% rinomanza guadagnata in battaglia." />
+    <string id="taom_szt_t3b_key" text="Ricarica delle Lame al Veleno di Serpente molto ridotta, logoramento costante." />
+    <string id="taom_szt_t3b_p1" text="+15% resistenza." />
+    <string id="taom_szt_t3b_p2" text="+20% morale delle truppe." />
+    <string id="taom_szt_t3b_p3" text="+8% danno delle truppe." />
+    <string id="taom_szt_t3b_p4" text="+5 dimensione del gruppo." />
+  </strings>
+</base>

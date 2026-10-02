@@ -1147,12 +1147,12 @@
     <string id="TAOM_hero_1_47_1" text="Mina dient den dunklen Mächten Mordors." />
     <string id="TAOM_hero_1_47_2" text="Casyrea ist eine Dienerin des Schattens." />
     <string id="TAOM_hero_1_47_3" text="Colambea weilt in der Finsternis Mordors." />
-    <string id="TAOM_hero_1_15" text="Der Hexenkönig von Angmar, Herr der Nazgûl, ist Saurons furchtbarster Diener. Er war einst ein großer König der Menschen, durch seinen Ring der Macht zu einem unsterblichen Geist verdorben." />
-    <string id="TAOM_hero_1_155" text="Der Dunkle Marschall befehligt die Nazgûl in der Schlacht, nur dem Hexenkönig nachgeordnet." />
+    <string id="TAOM_hero_1_15" text="Der Hexenkönig von Angmar, Herr der Nazgûl, ist Saurons schrecklichster Diener. Einst war er ein großer König der Menschen, den sein Ring der Macht zu einem untoten Geistwesen verdarb." />
+    <string id="TAOM_hero_1_155" text="Der Dunkle Marschall befehligt die Nazgûl in der Schlacht, nur dem Hexenkönig untergeben." />
     <string id="TAOM_hero_1_16" text="Der Ritter von Umbar war einst ein Herr der Korsaren, bevor er den Ring annahm." />
     <string id="TAOM_hero_1_28" text="Der Verräter war einst ein König im Osten vor seiner Verderbnis." />
     <string id="TAOM_hero_1_38" text="Der Unsterbliche war ein Zauberkönig, der nach Unsterblichkeit strebte und nur ewige Knechtschaft fand." />
-    <string id="TAOM_hero_1_48" text="Khamûl der Ostländer, zweiter der Neun, beherrschte einst ein großes Reich in Rhûn, bevor er einen Ring der Macht annahm." />
+    <string id="TAOM_hero_1_48" text="Khamûl der Ostling, der Zweite der Neun, beherrschte einst ein großes Königreich in Rhûn, ehe er einen Ring der Macht annahm." />
     <string id="TAOM_hero_1_48_1" text="Der Befleckte verbreitet Verderben, wohin er auch reitet." />
     <string id="TAOM_hero_1_48_2" text="Der Schatten der Nordmenschen jagt in den kalten Landen." />
     <string id="TAOM_hero_1_48_3" text="Der Schatten von Umbar sucht die südlichen Küsten heim." />
@@ -1289,19 +1289,19 @@
     <string id="TAOM_hero_3_22_3" text="Zanuwa ist eine geschickte Bogenschützin des Stammes." />
     <string id="TAOM_hero_3_22_4" text="Hajara bewacht die Wachtürme der Wüste." />
     <string id="TAOM_hero_4_1" text="Théoden, König von Rohan, herrscht von Meduseld in Edoras. Einst verzaubert von Sarumans Diener Gríma, wurde er von Gandalf befreit und führte sein Volk zum Ruhm in Helms Klamm und auf den Pelennor-Feldern." />
-    <string id="TAOM_hero_4_2" text="Elfhild war Königin von Rohan, Mutter von Théodred. Sie starb im Kindbett, ein Kummer, der Théodens Herrschaft überschattete." />
-    <string id="TAOM_hero_4_7" text="Théodred war der einzige Sohn von König Théoden, Prinz von Rohan. Er fiel bei der Verteidigung der Furten von Isen gegen Sarumans Uruk-hai." />
+    <string id="TAOM_hero_4_2" text="Elfhild war Königin von Rohan und Mutter Théodreds. Sie starb im Kindbett, ein Leid, das Théodens Herrschaft überschattete." />
+    <string id="TAOM_hero_4_7" text="Théodred war der einzige Sohn König Théodens, Prinz von Rohan. Er fiel bei der Verteidigung der Furten des Isen gegen Sarumans Uruk-hai." />
     <string id="TAOM_hero_4_10" text="Elys ist eine adlige Dame des Hofes der Rohirrim." />
     <string id="TAOM_hero_4_13" text="Romund dient als Hauptmann der Königsgarde." />
     <string id="TAOM_hero_4_14" text="Morcon ist ein vertrauter Hauptmann des königlichen Haushalts." />
     <string id="TAOM_hero_4_141" text="Amorcon dient an der Seite seines Verwandten in der Garde." />
-    <string id="TAOM_hero_4_15" text="Erdurand ist ein Reiter von Théodens Haushalt." />
+    <string id="TAOM_hero_4_15" text="Erdurand ist ein Reiter aus Théodens Gefolge." />
     <string id="TAOM_hero_4_3_3" text="Théodwyn war Schwester von König Théoden und Mutter von Éomer und Éowyn. Sie starb vor Kummer, nachdem ihr Gemahl Éomund von Orks erschlagen wurde." />
     <string id="TAOM_hero_4_3" text="Aldric hält eine Halle in der Ostfalte und reitet in der Heerschau von Edoras. Er ist ein einfacher Reiter aus keinem großen Hause, und gerade darum vertraut man ihm." />
     <string id="TAOM_hero_rohan_10_1" text="Éomund aus der Ostfalte ritt als Marschall der Mark und nahm Théodwyn, die Schwester des Königs, zur Frau. Orks erschlugen ihn in den Emyn Muil, und seine beiden Kinder kamen in Théodens Obhut." />
-    <string id="TAOM_hero_4_3_1" text="Éomer Éadig, Dritter Marschall der Mark, ist Neffe Théodens und Thronerbe. Er führt die Reiter des Ostfoldes mit leidenschaftlicher Treue." />
+    <string id="TAOM_hero_4_3_1" text="Éomer Éadig, Dritter Marschall der Mark, ist Théodens Neffe und Erbe des Thrones. Mit unbeugsamer Treue führt er die Reiter der Ostfold." />
     <string id="TAOM_hero_4_4" text="Elthild ist eine adlige Dame der Eoforing." />
-    <string id="TAOM_hero_4_8" text="Furnhard dient als vertrauter Reiter unter Éomers Kommando." />
+    <string id="TAOM_hero_4_8" text="Furnhard dient als vertrauter Reiter unter Éomers Befehl." />
     <string id="TAOM_hero_4_11" text="Liena dient dem königlichen Haushalt." />
     <string id="TAOM_hero_4_6" text="Grimbold von Grimslade befehligt die Reiter des Westfoldes. Ein erbitterter Krieger, der die Furten von Isen hielt und später heldenhaft auf dem Pelennor fiel." />
     <string id="TAOM_hero_4_6_1" text="Déorwyn ist Erbe von Grimbolds Kommando." />
@@ -1478,5 +1478,41 @@
     <string id="TAOM_hero_SE9_s_bn" text="Pharazîn ist eine schwarznúmenórische Zauberin und die wahre Herrin von Cirith Nargil, sooft ihr Gemahl zu Felde zieht. Ihr Name erinnert an den letzten König von Númenor." />
     <string id="TAOM_hero_SE9_c1_bn" text="Zigûrbêl ist der Erbe von Cirith Nargil und in den dunklen Künsten geschult. Sein Name bedeutet Liebhaber des Zauberers – so nannte Númenor Sauron, ehe es erkannte, was er war." />
     <string id="TAOM_hero_SE9_c2_bn" text="Zimrazîn ist das zweite Kind des Schwertherrn und die gefährlichere der beiden. Sie hat die Gaben ihrer Mutter und nichts von deren Geduld." />
+    <string id="3UucAOBW" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}." />
+    <string id="62vceTar" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}." />
+    <string id="99gE1ZoY" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {FACTION}." />
+    <string id="AxMrFoea" text="{TOWN_NAME} wird von Truppen belagert, die {LORD.LINK} von {FACTION_NAME} anführt!" />
+    <string id="EHFibjkM" text="{TOWN_NAME} wird von dem Heer belagert, das {LORD.LINK} von {FACTION_NAME} anführt!" />
+    <string id="ExbVzTZA" text="{CLAN} hat sich verpflichtet, an der Seite von {KINGDOM} zu kämpfen." />
+    <string id="FFXqPFwl" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}, einer der ruhmreichsten Familien in den Annalen des vlandischen Königreichs." />
+    <string id="JJAWbuNT" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Man sagt, unser Ahn sei unter jenen gewesen, die in den goldenen Schiffen aus dem Westen in dieses Land kamen, zur Zeit der Helden. Freilich, wenn man glaubt, dass jeder, von dem es heißt, er sei auf jenen Schiffen gewesen, auch wirklich dort war, wären sie unter der Last gekentert." />
+    <string id="L2GbDVja" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}, meine {?PLAYER.GENDER}Herrin{?}mein Herr{\?}, und es ist mir eine Ehre, Euch zu dienen." />
+    <string id="Nq2dyiO1" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}, ein Name, den Ihr in den Sagen der Sturgier oft gehört haben werdet." />
+    <string id="PBgLvyOa" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Unsere Ahnen waren unter jenen, die aus dem hohen Norden kamen, um den Denar der Fürsten zu nehmen und einen Eid zu schwören, diese Lande zu verteidigen, und wir haben diesen Eid gehalten." />
+    <string id="S0oFKYfB" text="{CLAN} dient {KINGDOM} nicht mehr." />
+    <string id="S1vGzr8z" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}, einem Clan der Aserai." />
+    <string id="SLAkSrb5" text="{FACTION1_NAME} erklärt {FACTION2_NAME} den Krieg." />
+    <string id="TsYCa2fZ" text="{FACTION1} und {FACTION2} haben Frieden geschlossen." />
+    <string id="U4p70l9B" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}." />
+    <string id="U770Bvy8" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Der Ruhm unserer Familie ist in den Liedern der Battanier unübertroffen." />
+    <string id="Ua0T0A7t" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}, einem der alten Geschlechter der Battanier." />
+    <string id="WH8P3Y5F" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}." />
+    <string id="a8584KD0" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Sicher habt Ihr den Namen unseres Clans in den Epen der Steppe gehört. Wir tragen den Namen eines der 12 Söhne der großen Wölfin, der Mutter der Khuzait." />
+    <string id="cMO9JXvk" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Wir halten unsere Lande zu Lehen von {LIEGE_TITLE}, und wir ehren unsere Treueeide." />
+    <string id="dC8acIya" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}." />
+    <string id="dfAE3liA" text="Der Clan {CLAN_NAME} hat sich {FACTION} angeschlossen." />
+    <string id="dlkg2jQf" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}, einem der alten Geschlechter der Sturgier." />
+    <string id="eyxfHmCU" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Unsere Familie dient den Königen der Vlandier seit Generationen." />
+    <string id="hJFCi1zu" text="{FACTION1} und {FACTION2} haben Frieden geschlossen." />
+    <string id="hP57Caab" text="{VICTOR_PARTY} von {VICTOR_FACTION} besiegt {DEFEATED_PARTY} von {DEFEATED_FACTION}." />
+    <string id="hbWhfoWH" text="{SETTLEMENT} wird von {LORD.LINK} von {FACTION_NAME} überfallen" />
+    <string id="hopvV6Ch" text="{RULER_NAME} von {FACTION1_NAME} erklärt {FACTION2_NAME} den Krieg." />
+    <string id="kqwNCCbZ" text="{TOWN_NAME} wird von einem Heer unter {LORD.LINK} von {FACTION_NAME} belagert!" />
+    <string id="l2nEIZV5" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}." />
+    <string id="nbVW2cJ8" text="{SETTLEMENT} wird von dem Heer unter {LORD.LINK} von {FACTION_NAME} überfallen" />
+    <string id="pn79h0aj" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Wir erhielten unseren Titel von Kaiser Vortios höchstpersönlich. Nicht dass er viel Wahl gehabt hätte, denn er war zu jener Zeit auf einem unserer Raubschiffe gefangen, doch ich bin sicher, er erkannte den Adel unseres Blutes." />
+    <string id="rhTUDKhJ" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Es gibt keinen Clan der Battanier, der nicht den Schädel eines seiner Vorkämpfer zu unserer Sammlung von Trinkbechern beigesteuert hätte." />
+    <string id="z2yr4mc6" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}. Unser Clan dient dem Khuzait-Khanat seit Generationen treu." />
+    <string id="zZ9FQJRI" text="Ich bin {CONVERSATION_CHARACTER.LINK} von {CLAN_NAME}, der ältesten und edelsten der Aserai-Linien." />
   </strings>
 </base>

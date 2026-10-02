@@ -1533,7 +1533,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Player Switcher")]
     [SettingPropertyBool("Enable Player Switcher", Order = 0, RequireRestart = false,
-        HintText = "Adds a panel to the character creation face generator listing the existing lords of your chosen culture. Pick one and you play the campaign as that lord, with their face, gear, skills, clan, fiefs and kingdom. The character you build is set aside. Off means the panel never loads and character creation is untouched.")]
+        HintText = "Adds a panel to the character creation face generator listing the existing lords of your chosen culture. Pick one and you play the campaign as that lord, with their face, gear, skills, clan, fiefs and kingdom. The character you build is set aside. Off means the panel never loads and character creation is untouched. When the Themed Faction & Hero Picker (Menus & Loading Screens) is shown, it takes this panel's place for that character creation.")]
     public bool EnablePlayerSwitcher { get; set; } = true;
 
     [SettingPropertyGroup("Player Switcher")]
@@ -1550,6 +1550,73 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     [SettingPropertyBool("Carry Over Starting Gold", Order = 3, RequireRestart = false,
         HintText = "Adds the gold your created character would have started with on top of the lord's own treasury. Off by default: an established lord is already funded, so stacking a startup package on them is a balance change rather than a fix.")]
     public bool PlayerSwitcherTransferStartingGold { get; set; } = false;
+
+    // --- Menus & Loading Screens (#704, Kysaro's themed front end) ---
+
+    [SettingPropertyGroup("Menus & Loading Screens")]
+    [SettingPropertyBool("Themed Main Menu", Order = 0, RequireRestart = false,
+        HintText = "Kysaro's Middle-earth main menu in place of the vanilla one. Takes effect the next time the main menu opens.")]
+    public bool FrontEndCustomMainMenu { get; set; } = true;
+
+    [SettingPropertyGroup("Menus & Loading Screens")]
+    [SettingPropertyBool("Hide Game Version", Order = 1, RequireRestart = false,
+        HintText = "Hides the Bannerlord version number in the corner of the main menu. The TAOM log still records it. Takes effect after a restart: the game builds the version line once, at startup.")]
+    public bool FrontEndHideGameVersion { get; set; } = true;
+
+    [SettingPropertyGroup("Menus & Loading Screens")]
+    [SettingPropertyBool("Main Menu Video", Order = 2, RequireRestart = false,
+        HintText = "Plays the Sauron video behind the main menu in place of the vanilla background video. Takes effect the next time the main menu opens.")]
+    public bool FrontEndMenuVideo { get; set; } = true;
+
+    [SettingPropertyGroup("Menus & Loading Screens")]
+    [SettingPropertyBool("Mute Menu Music Under The Video", Order = 3, RequireRestart = false,
+        HintText = "Keeps the vanilla menu theme off the main menu while the menu video plays its own soundtrack, so it needs Main Menu Video on. Vanilla's music returns once you leave the main menu. Takes effect the next time the main menu opens.")]
+    public bool FrontEndMuteMenuMusic { get; set; } = true;
+
+    [SettingPropertyGroup("Menus & Loading Screens")]
+    [SettingPropertyBool("Themed Loading Screens", Order = 4, RequireRestart = false,
+        HintText = "Shows Kysaro's Middle-earth paintings on loading screens, never the same one twice in a row. Only the picture last shown is kept in memory. Takes effect on the next loading screen.")]
+    public bool FrontEndCustomLoadingImages { get; set; } = true;
+
+    [SettingPropertyGroup("Menus & Loading Screens")]
+    [SettingPropertyBool("Themed Skill Icons", Order = 5, RequireRestart = false,
+        HintText = "Kysaro's skill icons in place of the vanilla ones, everywhere in the game. Turning them on applies the next time the main menu opens; turning them off takes effect after a restart, because the vanilla icons are not kept once replaced.")]
+    public bool FrontEndSkillIcons { get; set; } = true;
+
+    [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]
+    [SettingPropertyBool("Themed Faction & Hero Picker", Order = 0, RequireRestart = false,
+        HintText = "Kysaro's faction screen with painted portraits, a map and a hero picker, in place of TAOM's faction map. Picking a named hero starts you with that hero's look, gear and skills. When it is shown it takes the place of Player Switcher's panel for that character creation. Takes effect the next time character creation reaches the culture screen.")]
+    public bool FrontEndFactionScreen { get; set; } = true;
+
+    [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]
+    [SettingPropertyBool("Themed Face Generator", Order = 1, RequireRestart = false,
+        HintText = "Kysaro's reskin of the character creation face generator. Outside character creation the face generator stays vanilla. Takes effect the next time it opens.")]
+    public bool FrontEndCustomFaceGen { get; set; } = true;
+
+    [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]
+    [SettingPropertyBool("Themed Backstory Screens", Order = 2, RequireRestart = false,
+        HintText = "Kysaro's reskin of the family, childhood, adolescence, youth, adulthood and age screens. Takes effect the next time one of them opens.")]
+    public bool FrontEndCustomNarrativeStage { get; set; } = true;
+
+    [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]
+    [SettingPropertyBool("Themed Review Screen", Order = 3, RequireRestart = false,
+        HintText = "Kysaro's reskin of the final review screen, where you name your character. Takes effect the next time it opens.")]
+    public bool FrontEndCustomReviewStage { get; set; } = true;
+
+    [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]
+    [SettingPropertyBool("Themed Banner Editor", Order = 4, RequireRestart = false,
+        HintText = "Kysaro's reskin of the banner editor during character creation. The banner editor in a running campaign stays vanilla. Takes effect the next time it opens.")]
+    public bool FrontEndCustomBannerEditor { get; set; } = true;
+
+    [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]
+    [SettingPropertyBool("Themed Clan Naming Screen", Order = 5, RequireRestart = false,
+        HintText = "Kysaro's reskin of the clan naming screen. Takes effect the next time it opens.")]
+    public bool FrontEndCustomClanNaming { get; set; } = true;
+
+    [SettingPropertyGroup("Menus & Loading Screens/Character Creation")]
+    [SettingPropertyBool("Themed Options Screen", Order = 6, RequireRestart = false,
+        HintText = "Kysaro's reskin of the difficulty and campaign options screen at the end of character creation. Takes effect the next time it opens.")]
+    public bool FrontEndCustomOptionsStage { get; set; } = true;
 
     [SettingPropertyGroup("Map Tools/Distance Cache Rebuild", GroupOrder = 100)]
     [SettingPropertyButton("Rebuild Settlement Distance Cache",

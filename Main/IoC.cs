@@ -103,9 +103,13 @@ public static class IoC
         BannerColorPersistenceIoC.RegisterBannerColorPersistenceFeature(container);
         TroopProgressionIoC.RegisterTroopProgressionFeature(container);
         Features.Arena.ArenaIoC.RegisterArenaFeature(container);
+        // Player Switcher and the faction UI (#704) register before FactionMap, which resolves its
+        // culture-stage hook while registering: that hook takes the faction UI's screen launcher, and
+        // the launcher takes Player Switcher's policy provider.
+        Features.PlayerSwitcher.PlayerSwitcherIoC.RegisterPlayerSwitcherFeature(container);
+        Features.FactionUI.FactionUIIoC.RegisterFactionUIFeature(container);
         FactionMapIoC.RegisterFactionMapFeature(container);
         CharacterCreationIoC.RegisterCharacterCreationFeature(container);
-        Features.PlayerSwitcher.PlayerSwitcherIoC.RegisterPlayerSwitcherFeature(container);
         InitialChildGenerationIoC.RegisterInitialChildGenerationFeature(container);
         DiplomacyIoC.RegisterDiplomacyFeature(container);
         Features.WarOfTheRingMomentum.WarOfTheRingMomentumIoC.RegisterWarOfTheRingMomentumFeature(container);

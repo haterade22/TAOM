@@ -1,0 +1,321 @@
+<Prefab>
+  <!-- Character customization (face generator), redesigned 2026-09-23 (C:\Users\Niels\.claude\plans\starry-tickling-seahorse.md).
+       Phase 1: horizontal top text-tab ribbon (replaces the old vertical icon-medallion rail) + frameless right
+       content (replaced the old cc_panel stone plaque with fs_scrim_r, matching FactionSelect.xml's "text on
+       scene" look). STALE as of 2026-09-25: a later round brought a stone panel back - see the RightPanel/
+       identity-card comments below - via a cropped/re-stretched variant (cc_panel_main), not the original
+       cc_panel.png this comment refers to.
+       Phase 2: Gender/Race/Voice moved from TFGBodyPage.xml's old IDENTITY/VOICE sections into this file's left
+       panel (always visible regardless of active tab); tools row moved from a framed box at the bottom to a
+       slim strip under the ribbon. Same view model and bindings as the game's "FaceGen" movie throughout - only
+       the shell layout/skin changed, not the VM contract. The tab pages are the TFG* prefabs generated from the
+       game's FaceGen pages by tools\Make-FaceGenPrefabs.ps1 (NOT touched by this redesign - they're already
+       frameless internally, except TFGBodyPage.xml, which is hand-maintained and was reframed in Phase 2 to
+       match). Character on-screen centering: confirmed the CharacterNavigationTarget offset below is a no-op
+       for this (gamepad focus only, not camera framing) - see its own comment for the full finding. -->
+  <Constants>
+    <Constant Name="Tab.Size" Value="78" />
+  </Constants>
+  <Window>
+    <Widget DoNotAcceptEvents="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+      <Children>
+
+        <!-- Ground fog/smoke (added 2026-09-23) REMOVED same day per user request - didn't read well on this
+             screen. FogDrift.cs/FogDrift.Attach() call in MainMenuPatch.cs reverted too; FactionSelect.xml's
+             own fog (same class, different screen) is untouched. -->
+
+        <!-- LEFT (2026-09-25, user request: "move left panel into the right panel"): the identity panel
+             (Gender/Race/Voice) that used to sit here permanently is gone - it's now its own "IDENTITY" tab in
+             the right panel's tab system (TFGIdentity.xml), made the FIRST tab so it's still the natural
+             starting point. fs_scrim_l stays as ambient atmosphere/legibility backing for the new decorative
+             text below, in the space this freed up. -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="460" HorizontalAlignment="Left" Sprite="fs_scrim_l" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+        <!-- mm_logo (the small tree emblem) removed 2026-09-23 per user request - it read as a stray element
+             in the corner rather than a deliberate mark; user circled it directly in a screenshot. -->
+
+        <!-- Decorative text, bottom-left (2026-09-25, user request, filling the space the identity panel used
+             to occupy) - reuses CC.Quote/CC.QuoteSub, brushes already built for exactly this "quote +
+             attribution" pairing but not yet used anywhere in this project. Matches the established taste
+             already shown on the main menu itself (mm_tagline.png bakes in "There and back again..." - a
+             whimsical Tolkien line).
+             SWAPS PER TAB (2026-09-26, user request: "when you click on head or body or details, it changes...
+             soft fade in coming from the left... for every header then a suitable quote") - Id'd so
+             QuoteRotator.cs (src\QuoteRotator.cs) can find and update it. Text/attribution are still static XML
+             defaults (this tab's own IDENTITY quote) purely so the very first frame before any tab click has
+             sensible content - QuoteRotator overwrites both on every tab change thereafter, keyed off the same
+             TabControl.OnActiveTabChange event TabContentReveal.cs already listens to. -->
+        <ListPanel Id="QuoteBlock" WidthSizePolicy="Fixed" SuggestedWidth="380" HeightSizePolicy="CoverChildren" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginLeft="48" MarginBottom="120" StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+          <Children>
+            <FrontEndRichTextWidget Id="QuoteText" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="CC.Quote" LocalizedText="{=taom_fui_quote_gold}All that is gold does not glitter, not all those who wander are lost." />
+            <FrontEndTextWidget Id="QuoteAttribution" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="10" Brush="CC.QuoteSub" LocalizedText="{=taom_fui_quote_gold_by}- Bilbo Baggins" />
+          </Children>
+        </ListPanel>
+
+        <!-- RIGHT: widened 694->900 (2026-09-25, same round as the tab consolidation below) - now the ONLY
+             side panel since the identity card moved in as its own tab, so it gets the screen real-estate the
+             old two-panel split used to divide up; this is also what let the hair/beard/tattoo grid cards grow
+             (TFGGrid.xml, 104->148) without cramming. fs_scrim_r widened 1000->1100 to keep a similar-sized
+             soft-transition gap on its left edge as before (was 306px at width 694, now ~200px at width 900).
+             Flat, modern cc_flat_panel_9 style FORK unchanged from the previous round - see that round's own
+             comments/the plan file for why this screen alone doesn't use the ornate stone panel. -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="746" HorizontalAlignment="Right" Sprite="fs_scrim_r" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+        <!-- RightPanel narrowed AGAIN 650->542 (2026-09-26, later same session) - user supplied a second, tighter-
+             cropped panel image (`right-panel_bg.png`, 788x1569, aspect 0.5022) and asked to "check the dimensions
+             before implementing"; 542 = 1080*0.5022, preserving that exact aspect on the panel's fixed 1080
+             height (no stretch distortion this time either). Narrowing also directly addressed the user's other
+             complaint in the same message ("the panel needs to move further to the right") - since RightPanel is
+             HorizontalAlignment=Right, a narrower width pulls its LEFT edge inward/rightward, without needing a
+             separate reposition. fs_scrim_r scaled to match (742 = 542+200, same ~200px gap logic as every prior
+             width round). This new image is saved as cc_panel_bg.png (replacing the previous 91.png-sourced one)
+             with one extra edit: the TOP ~150px of border art faded to transparent (alpha ramp 0->255) via a
+             System.Drawing script, per the user's red-marked feedback on the previous screenshot - "get rid of
+             that part [of the border] above the right panel... it will blend better." That segment's own border
+             line was visually clashing/doubling-up with the ribbon's own bottom edge line right above it; fading
+             it out leaves the corner ornament's own thin line (below) as the only accent there, avoiding the
+             duplicate-line look. Verified via direct pixel sampling (not just visual inspection, which didn't
+             clearly show the gradient against the Read tool's own preview backdrop) that the alpha ramp is really
+             there: A=0 at y=0, ramping to A=255 by y=150.
+             Title/divider/TabControl content widths reduced 550/430->400/310 to fit both the narrower panel AND
+             its own oval-shaped safe zone (the border art curves inward well before the image's own edges,
+             unlike a simple rectangular frame) - TFG* page dividers/grid follow the same reduction, see their own
+             files' comments. FRAME HISTORY (both now superseded): cc_flat_panel_9 (solid nine-slice, replaced for
+             "clashing with the ribbon") -> procedural cc_thin_frame_9 (replaced by the user's own first ChatGPT
+             panel image, 91.png/971x1619) -> this one (a tighter, better-fitting crop the user made themselves). -->
+        <Widget Id="RightPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="546" SuggestedHeight="1080" HorizontalAlignment="Right" Sprite="cc_panel_bg" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true">
+          <Children>
+
+            <!-- Corner ornament (2026-09-26, same asset swap) - cc_corner_ornament.png (1448x1086), a much more
+                 delicate L-shaped piece than the earlier AI-generated flourish: a thin horizontal arm (with a
+                 diamond accent and arrow-point end) meant to run along the ribbon boundary, and a thin vertical
+                 arm running down the panel's left edge, joined by a decorative web/curl at the actual corner.
+                 MOVED OUT of RightPanel's children 2026-09-26 (user request: "can the blending art actually be on
+                 top of the top ribbon and right panel? That way it will look better and not seem cut off") - as a
+                 child of RightPanel it drew BEHIND the ribbon (a later root-level sibling), which is exactly why
+                 the earlier MarginTop=57 workaround existed (ducking the art below the ribbon's own band so it
+                 wasn't hidden). Now a root-level sibling placed AFTER the ribbon below, so it draws on top of
+                 both. See that widget's own comment for the repositioned margins. -->
+
+            <!-- Title + hairline divider, below the ribbon (mirrors FactionSelect.xml's title/divider treatment). -->
+
+            <!-- Title + hairline divider, below the ribbon (mirrors FactionSelect.xml's title/divider treatment). -->
+            <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="400" HeightSizePolicy="Fixed" SuggestedHeight="44" HorizontalAlignment="Center" MarginTop="98" Brush="CC.Title" Text="@Title" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="310" SuggestedHeight="16" HorizontalAlignment="Center" MarginTop="152" Sprite="fs_divider_wide" DoNotAcceptEvents="true" />
+
+            <!-- content area: TabControl, 4 children (Identity/FaceCosmetic/BodyProperties/Details).
+                 Each composite page applies the ORIGINAL per-category IsEnabled flags internally to its own
+                 sub-sections instead of one flag per whole page, since a page can now span what used to be
+                 several independently-enabled categories. Height bumped 590->820 (2026-09-26, user request -
+                 "we now removed the tool kit [from this shared viewport's tab-adjacent space], so we have more
+                 space to demonstrate hairs/beards") - the freed space was always available since the tools row's
+                 old position (local 605/695) was already well past this box's OLD 590 bottom edge, sitting in
+                 RightPanel's own leftover space below it; growing this box just reclaims that same real estate as
+                 genuine scrollable-viewport height instead. Verified Identity's own content (Gender/Race/Voice,
+                 ~500px tall) plus its own tools rows (still at local 605/695, unchanged) both comfortably fit
+                 inside the new 820 height with no overlap - the tools were never repositioned because they were
+                 already sitting in what's now just more of the same page's visible area.
+                 SelectedIndex="@Tab" REMOVED (2026-09-26, user report: "if you click on category body, the
+                 camera zooms into the face, should zoom just like the window from identity") - root cause,
+                 decompile-confirmed: FaceGenVM's own "Tab" int does DOUBLE DUTY natively - it's both a page
+                 index AND the signal that drives the native per-category camera zoom, keyed off the real
+                 FaceGenTabs enum (Body=0, Face=1, Eyes=2, Nose=3, Mouth=4, Hair=5, Taint=6 - confirmed via
+                 ilspycmd decompile of FaceGenVM). This project's 4 consolidated tabs (Identity/Head/Body/
+                 Details) send CommandParameter.Click 0/1/2/3 to OnTabClicked below, which ALSO binding
+                 SelectedIndex to that same @Tab value meant clicking "Body" (index 2) both selected the
+                 BodyProperties page AND set native Tab=2=Eyes, zooming the camera to the face instead of the
+                 wide body view Identity (index 0, coincidentally = native Body) already got right. Fix:
+                 decompiled TabToggleWidget.HandleClick (confirmed it calls TabControlWidget.SetActiveTab(
+                 TabName) directly, fully independent of any VM binding) and TabControl.OnUpdate (confirmed it
+                 auto-selects the first enabled child with an Id when ActiveTab is null, so no initial
+                 SelectedIndex is even needed) - removing this binding lets page-switching work purely through
+                 the ribbon's own TabName matching below, decoupled from whatever native Tab value each
+                 button's OnTabClicked call sends for camera purposes. See the ribbon's own BODY button comment
+                 for the actual value fix. -->
+            <TabControl Id="PropertyTab" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="820" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="195">
+              <Children>
+                <TFGIdentity     Id="Identity"        WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" />
+                <TFGFaceCosmetic Id="FaceCosmetic"    WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" />
+                <TFGBodyPage     Id="BodyProperties"  WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" />
+                <TFGDetails      Id="Details"         WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" />
+              </Children>
+            </TabControl>
+
+            <!-- TOOLS row: icon+label pairs (2026-09-26, exact-match reference request - the mockup shows 4
+                 labeled tools; this keeps ALL 7 existing actions per the user's explicit "should all be
+                 included", just restyled to match). Each label is a child of its ButtonWidget, positioned BELOW
+                 the icon via PositionYOffset (same off-bounds-child technique as the gender labels above), and
+                 gaps between icons widened slightly (8->14, 34->40) to give the now-wider text labels breathing
+                 room - CC.ToolLabel is a smaller FontSize (10) than the gender row's CC.IconLabel specifically
+                 because 7 labels in this row have far less per-item horizontal space than 2 gender labels do.
+                 Row height (44, Fixed) is unaffected by the labels rendering below it - CoverChildren sizing
+                 elsewhere in this file is based on layout bounds, not PositionYOffset-shifted render position,
+                 same reasoning already noted on the gender buttons. -->
+            <!-- Tools row (Randomize/RandomizeAll/DefaultOutfit + Reset/ResetAll/Undo/Redo, 2 stacked rows)
+                 MOVED OUT of here 2026-09-26 (user report: "the tool icons stay on every screen, they should
+                 only show up on the identity screen") - being direct children of RightPanel, alongside
+                 TabControl itself, meant they rendered on top of every tab regardless of which was selected.
+                 Now live inside TFGIdentity.xml instead (see that file's own comment), as siblings of its own
+                 ScrollablePanel - TabControl already shows/hides each tab's ENTIRE content wrapper automatically
+                 (confirmed via decompile earlier this session: TabControl.OnUpdate toggles IsVisible on each
+                 child), so nesting them inside one specific tab's file is enough to scope them to that tab with
+                 no new binding/VM property needed. -->
+
+          </Children>
+        </Widget>
+
+        <!-- TOP RIBBON: full-width strip (2026-09-26, user request: "top ribbon that goes over the entire
+             horizontal length of the screen with the buttons in the center") - moved out of RightPanel (was
+             confined to that panel's 900px width) to a screen-wide sibling, reusing fs_strip, the exact same
+             full-width top-strip sprite/pattern FactionSelect.xml already uses for its own top bar. Placed after
+             RightPanel in document order so it draws on top of both scrims and the panel's top edge. Each
+             TabToggleWidget's TabControlWidget path updated to "..\..\RightPanel\PropertyTab" (was
+             "..\..\PropertyTab") since PropertyTab now lives one hop further away - it's nested inside RightPanel,
+             which is a SIBLING of this ribbon now, not a sibling of the ribbon within the same parent as before.
+             Height 90 (ribbon's own 20 top margin + 50 tall = 70, plus a small buffer) sits just above RightPanel's
+             Title (MarginTop="98" inside that panel - same coordinate space, since the panel's top edge is also
+             screen y=0). -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="90" VerticalAlignment="Top" Sprite="fs_strip" DoNotAcceptEvents="true" />
+        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="20" StackLayout.LayoutMethod="HorizontalSpaced" GamepadNavigationIndex="1000">
+          <Children>
+            <TabToggleWidget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="110" SuggestedHeight="50" Command.Click="OnTabClicked" CommandParameter.Click="0" TabControlWidget="..\..\RightPanel\PropertyTab" TabName="Identity">
+              <Children>
+                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CC.TabText" LocalizedText="{=taom_fui_identity}IDENTITY" />
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="10" SuggestedHeight="10" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="2" Brush="CC.TabAccent" DoNotAcceptEvents="true" />
+                <!-- SwitchToPreviousTab/NextTab key hints REMOVED (lens7-xml #9, 2026-10-01): decompile of
+                     FaceGenVM.cs confirms the native Tab int this hotkey drives (FaceGenTabs: Body=0, Face=1,
+                     Eyes=2, Nose=3, Mouth=4, Hair=5, Taint=6) is not the same axis as this ribbon's own
+                     CommandParameter.Click values (0/1/0/3 - Identity and BodyProperties both send 0), which is
+                     exactly why SelectedIndex="@Tab" was already removed from the TabControl above (see its own
+                     comment). The hotkey still runs (it only moves the camera now), but showing its key icon
+                     here advertised a page switch that no longer happens - removed rather than restoring a
+                     binding that would make BODY jump to the IDENTITY page. -->
+              </Children>
+            </TabToggleWidget>
+            <TabToggleWidget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="90" SuggestedHeight="50" Command.Click="OnTabClicked" CommandParameter.Click="1" TabControlWidget="..\..\RightPanel\PropertyTab" TabName="FaceCosmetic">
+              <Children>
+                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CC.TabText" LocalizedText="{=taom_fui_head}HEAD" />
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="10" SuggestedHeight="10" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="2" Brush="CC.TabAccent" DoNotAcceptEvents="true" />
+                <HintWidget DataSource="{FaceHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+              </Children>
+            </TabToggleWidget>
+            <!-- CommandParameter.Click FIX (2026-09-26): was "2" (this project's own BodyProperties tab
+                 index), which fed straight into native Tab (now decoupled from page-switching, see
+                 TabControl's own comment above) - native Tab=2 is FaceGenTabs.Eyes, so clicking BODY was
+                 telling the native camera to zoom into the face. Changed to "0" (FaceGenTabs.Body), the SAME
+                 value the IDENTITY button below already sends - reuses its already-correct wide/body camera
+                 framing exactly, per the user's own request ("should zoom just like the window from
+                 identity"). Page-switching itself is untouched: TabName="BodyProperties" still shows the
+                 right page regardless of what CommandParameter.Click sends now. -->
+            <TabToggleWidget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="90" SuggestedHeight="50" Command.Click="OnTabClicked" CommandParameter.Click="0" TabControlWidget="..\..\RightPanel\PropertyTab" TabName="BodyProperties">
+              <Children>
+                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CC.TabText" LocalizedText="{=taom_fui_body}BODY" />
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="10" SuggestedHeight="10" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="2" Brush="CC.TabAccent" DoNotAcceptEvents="true" />
+                <HintWidget DataSource="{BodyHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+              </Children>
+            </TabToggleWidget>
+            <TabToggleWidget DoNotPassEventsToChildren="true" UpdateChildrenStates="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="110" SuggestedHeight="50" Command.Click="OnTabClicked" CommandParameter.Click="3" TabControlWidget="..\..\RightPanel\PropertyTab" TabName="Details">
+              <Children>
+                <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CC.TabText" LocalizedText="{=taom_fui_details}DETAILS" />
+                <ImageWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="10" SuggestedHeight="10" HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="2" Brush="CC.TabAccent" DoNotAcceptEvents="true" />
+                <HintWidget DataSource="{EyesHint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" />
+                <!-- SwitchToPreviousTab/NextTab key hint REMOVED - see the Identity button's own comment above. -->
+              </Children>
+            </TabToggleWidget>
+          </Children>
+        </ListPanel>
+
+        <!-- Ribbon/panel seam mask REMOVED 2026-09-26 (user request, later same session) - the flat-fill patch
+             over the panel-width segment of fs_strip's baked-in border line had a visible texture seam on close
+             zoom (disclosed as a known limitation when it was added); user is handling the blend a different way
+             via their own updated panel art instead ("don't worry about the blending, I might have a fix for
+             it"). Left side of the ribbon's own border (above the character viewport) was never touched by this
+             mask to begin with - only the panel-width segment was ever painted over, so removing the mask simply
+             restores that segment to the ribbon's normal look. -->
+
+        <!-- Corner ornament (cc_corner_ornament.png) - moved here 2026-09-26 (see its old home's own comment in
+             RightPanel's children for the "why"), as a root-level sibling placed AFTER both the ribbon and
+             RightPanel so it draws on top of both. Recomputed for root-level coordinates (was relative to
+             RightPanel's own left edge before): RightPanel's own left edge sits at (screen right - 546, its own
+             width), and the ornament's join point used to land 35px INSIDE that edge (empirically pixel-matched
+             earlier this session), so MarginRight = 546 - 35 = 511 reproduces the identical on-screen position,
+             just now measured from the screen's right edge instead of the panel's own left edge. MarginTop (55)
+             unchanged - RightPanel's top edge is screen y=0 either way, so this margin's meaning didn't change. -->
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="300" HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="511" MarginTop="55" Sprite="cc_corner_ornament" AlphaFactor="0.8" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true" />
+
+        <!-- Back / Next: pill style (fs_confirm, same art already used by FactionSelect.xml's Confirm
+             button). MOVED 2026-09-23 (Phase 3 follow-up) from inside the 694-wide right column to full
+             SCREEN edges (siblings of that column, not children of it) - confined to the column's own narrow
+             width, they read as floating in the large empty gap between the character and the column, with
+             no clear anchor; anchoring to the screen itself (MarginLeft=48/MarginRight=48, matching the Home
+             button's MarginLeft=48 on FactionSelect.xml) grounds them the same way Home/Confirm ground that
+             screen. Sizing (fs_confirm.png is 1280x176, aspect ~7.2727:1, not nine-sliced) went 220x36/270x38
+             -> 300x42/340x46 -> 407x56/451x62 -> 466x64/509x70 (2026-09-23, user asked for the buttons bigger
+             three times, the last time just for a bit more top/bottom padding around the text) - each step
+             keeps the sprite's native aspect ratio exactly (64*7.2727=465.5, 70*7.2727=509.1) so it's never
+             stretched off-ratio. TextWidget children use StretchToParent for layout only; their actual glyph
+             size is CC.ConfirmText's fixed FontSize="22", so growing the button never grows the text - it only
+             adds padding, which is what was asked for here.
+             VERTICAL TEXT CENTERING (fixed 2026-09-23, confirmed correct by the user on the 407x56/451x62
+             pass): CC.ConfirmText sets TextVerticalAlignment="Center" explicitly, and MarginBottom below
+             matches the ratio (12/88 = 0.1364) FactionSelect.xml's OWN Confirm button already uses
+             successfully at SuggestedHeight="88" - scaled to these buttons' current heights
+             (64*0.1364=8.7, 70*0.1364=9.5). Keep using this same ratio if the height changes again. -->
+        <!-- Back/Next UNIFIED across every CC screen except Faction Select (2026-09-30, user: "I would prefer
+             to have them all... on the same spot / same size"). MarginLeft/Right corrected 586->48 (user
+             follow-up with a marked-up screenshot: wanted at the true screen corners, overlaid on the bottom of
+             whichever side panel occupies that side), then refined 48->113/98 (same session, next follow-up:
+             "should be more centered with the panels") - each panel is 546 wide, so centering a 320-wide Back
+             within it is (546-320)/2=113, and a 350-wide Next is (546-350)/2=98. Applied uniformly on every
+             screen, including single-panel ones with no actual panel on the left - treating that side as the
+             same 546-wide zone a panel WOULD occupy keeps Back's position identical everywhere, matching the
+             original "same spot" ask. Size (320x51/350x55) unchanged. -->
+        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="320" SuggestedHeight="51" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginLeft="113" MarginBottom="44" Brush="CC.Confirm" Command.Click="ExecuteCancel" UpdateChildrenStates="true" GamepadNavigationIndex="1000000">
+          <Children>
+            <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginBottom="7" Brush="CC.ConfirmText" LocalizedText="{=taom_fui_back}Back" />
+            <InputKeyVisualWidget DataSource="{CancelInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="32" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="-22" KeyID="@KeyID" IsVisible="@IsVisible" />
+          </Children>
+        </ButtonWidget>
+        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="350" SuggestedHeight="55" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="98" MarginBottom="43" Brush="CC.Confirm" Command.Click="ExecuteDone" UpdateChildrenStates="true" GamepadNavigationIndex="1000001">
+          <Children>
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginBottom="8" Brush="CC.ConfirmText" Text="@DoneBtnLbl" />
+            <InputKeyVisualWidget DataSource="{DoneInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="32" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="-22" KeyID="@KeyID" IsVisible="@IsVisible" />
+          </Children>
+        </ButtonWidget>
+
+        <!-- camera navigation target and key hints. TESTED 2026-09-23: changing PositionXOffset here (tried
+             -280 -> -40) had NO measurable effect on the character's actual on-screen position (verified via
+             pixel-identical before/after crops of a fixed body landmark on in-game screenshots) - this widget
+             is gamepad camera-ROTATION focus only, matching its own Id/name, not the render/camera framing
+             position. The character's screen position is set by the native game's own camera setup, outside
+             anything in this file - don't waste further effort tuning this value for visual centering. Left
+             at -40 (not reverted to native's -280) since it's a no-op either way and matches this screen's
+             own already-updated documentation trail; if gamepad camera-rotation ever behaves oddly on this
+             screen specifically, this is the first place to look, but it's unrelated to layout/centering. The
+             actual centering approach that stuck: frame the side panels around where the character already
+             stands (left-of-true-center, fixed) rather than trying to move it - the narrower 460px left panel
+             already reads as comfortable/uncrowded, confirmed on an in-game screenshot. -->
+        <NavigationScopeTargeter ScopeID="FacegenCharacterNavigationScope" ScopeParent="..\CharacterNavigationTarget" />
+        <Widget Id="CharacterNavigationTarget" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="50" VerticalAlignment="Center" HorizontalAlignment="Center" PositionXOffset="-40" GamepadNavigationIndex="0" />
+
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" DoNotAcceptEvents="true">
+          <Children>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1000" SuggestedHeight="60" MarginLeft="100" IsVisible="@CharacterGamepadControlsEnabled">
+              <Children>
+                <ListPanel DataSource="{CameraControlKeys}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalCentered">
+                  <ItemTemplate>
+                    <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginLeft="15">
+                      <Children>
+                        <InputKeyVisualWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="50" VerticalAlignment="Center" KeyID="@KeyID" IsVisible="@IsVisible" />
+                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="60" SuggestedHeight="40" VerticalAlignment="Center" Text="@KeyName" Brush="CC.KeyText" />
+                      </Children>
+                    </ListPanel>
+                  </ItemTemplate>
+                </ListPanel>
+              </Children>
+            </Widget>
+          </Children>
+        </Widget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

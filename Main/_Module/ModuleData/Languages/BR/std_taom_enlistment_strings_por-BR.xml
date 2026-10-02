@@ -43,7 +43,7 @@
     <string id="taom_fc_decline" text="Ainda Não" />
     <string id="taom_fc_keep_name" text="Manter Nome Padrão" />
     <string id="taom_fc_no_room_body" text="Não há espaço para outro companheiro no momento. A promoção de {TROOP_NAME} será oferecida novamente mais tarde." />
-    <string id="taom_fc_offer_body" text="{TROOP_NAME} se destacou em batalha. Promovê-lo a companheiro?" />
+    <string id="taom_fc_offer_body" text="{TROOP_NAME} se destacou em batalha. Promover a companheiro?" />
     <string id="taom_fc_offer_title" text="Promoção em Campo de Batalha" />
     <string id="taom_fc_rename_body" text="Dê um nome a {TROOP_NAME}, ou mantenha aquele que levou à batalha." />
     <string id="taom_fc_rename_title" text="Nomeie o Novo Companheiro" />

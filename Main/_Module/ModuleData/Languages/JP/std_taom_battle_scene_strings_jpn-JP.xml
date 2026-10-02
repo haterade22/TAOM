@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Japanese" />
+  </tags>
+  <strings>
+    <string id="aom_taom_dale_castle_001_forceatmo_name" text="[デイル] ウェストフト城" />
+    <string id="aom_taom_dwarven_moria_w_forceatmo_name" text="[霧ふり山脈] 西モリア" />
+    <string id="aom_taom_gondor_castle_001_forceatmo_name" text="[ゴンドール] バラド・ファイン城" />
+    <string id="aom_taom_gondor_castle_002_forceatmo_name" text="[ゴンドール] ベルグロー城" />
+    <string id="aom_taom_gondor_castle_003_forceatmo_name" text="[ゴンドール] メルゴバス城" />
+    <string id="aom_taom_gondor_town_dolamroth_forceatmo_name" text="[ゴンドール] ドル・アムロス" />
+    <string id="aom_taom_gondor_town_lossarnach_forceatmo_name" text="[ゴンドール] ロスアルナハの町" />
+    <string id="aom_taom_gondor_town_minas_tirith_forceatmo_name" text="[ゴンドール] ミナス・ティリス" />
+    <string id="aom_taom_gondor_town_osgiliath_e_forceatmo_name" text="[ゴンドール] オスギリアス（東）" />
+    <string id="aom_taom_gondor_town_osgiliath_w_forceatmo_name" text="[ゴンドール] オスギリアス（西）" />
+    <string id="aom_taom_gondor_village_001_forceatmo_name" text="[ゴンドール] ゴンドールの村A" />
+    <string id="aom_taom_gondor_village_002_forceatmo_name" text="[ゴンドール] カムロスの村" />
+    <string id="aom_taom_gondor_village_003_forceatmo_name" text="[ゴンドール] ディナダブの村" />
+    <string id="aom_taom_gondor_village_004_forceatmo_name" text="[ゴンドール] メレハムの村" />
+    <string id="aom_taom_isengard_town_orthanc_forceatmo_name" text="[アイゼンガルド] オルサンク" />
+    <string id="aom_taom_mordor_battle_001_forceatmo_name" text="[モルドール] モルドール平原I" />
+    <string id="aom_taom_mordor_battle_002_forceatmo_name" text="[モルドール] モルドール平原II" />
+    <string id="aom_taom_mordor_battle_003_forceatmo_name" text="[モルドール] モルドール平原III" />
+    <string id="aom_taom_mordor_battle_004_forceatmo_name" text="[モルドール] モルドール平原IV" />
+    <string id="aom_taom_mordor_battle_black_gates_forceatmo_name" text="[モルドール] 黒門" />
+    <string id="aom_taom_mordor_battle_dead_marshes_forceatmo_name" text="[モルドール] 死者の沼地" />
+    <string id="aom_taom_mordor_town_goblin_town_forceatmo_name" text="[モルドール] ゴブリンの町" />
+    <string id="aom_taom_mordor_town_minas_forceatmo_name" text="[モルドール] ミナス・モルグル" />
+    <string id="aom_taom_rohan_battle_001_forceatmo_name" text="[ローハン] ローハン平原" />
+    <string id="aom_taom_rohan_battle_fords_of_isen_forceatmo_name" text="[ローハン] アイゼンの浅瀬" />
+    <string id="aom_taom_rohan_castle_helms_deep_forceatmo_name" text="[ローハン] ヘルム峡谷 - 夜の雨" />
+    <string id="aom_taom_rohan_edoras_town_forceatmo_name" text="[ローハン] エドラス" />
+  </strings>
+</base>

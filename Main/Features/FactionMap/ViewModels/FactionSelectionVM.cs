@@ -105,9 +105,18 @@ public class FactionSelectionVM : ViewModel
             FactionDisplayHelper.ShowHoverTooltip(change);
     }
 
-    public void ExecuteSelectRegion()
+    public void ExecuteSelectRegion() => SelectRegion(PolygonWidget.LastClickedRegionName);
+
+    /// <summary>Selects <paramref name="regionName"/> and confirms its culture, as a click on the map
+    /// and then on Confirm would (#704: Kysaro's faction screen confirms through this).</summary>
+    public void ConfirmRegion(string regionName)
     {
-        string regionName = PolygonWidget.LastClickedRegionName;
+        SelectRegion(regionName);
+        ExecuteConfirm();
+    }
+
+    private void SelectRegion(string regionName)
+    {
         if (string.IsNullOrEmpty(regionName)) return;
 
         _selectedRegionName = regionName;

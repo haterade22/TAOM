@@ -644,7 +644,7 @@
     <string id="TAOM_clan_khuzait_9" text="Bozorganici" />
     <string id="aom_lord_1_1_name" text="Brenin Wulf Żelaznoręki" />
     <string id="aom_lord_1_2_name" text="Freya Wilcze Serce" />
-    <string id="aom_lord_1_3_name" text="Gorwulf Dzik " />
+    <string id="aom_lord_1_3_name" text="Gorwulf, Dzik" />
     <string id="aom_lord_1_4_name" text="Brunhilda Żelazny Pazur" />
     <string id="aom_lord_1_5_name" text="Othric Dziki" />
     <string id="aom_lord_1_6_name" text="Torvald Wołowy Róg" />
@@ -659,7 +659,7 @@
     <string id="aom_lord_1_12_name" text="Findariel" />
     <string id="aom_lord_1_14_name" text="Usta Saurona" />
     <string id="aom_lord_1_15_name" text="Czarnoksiężnik z Angmaru" />
-    <string id="aom_lord_1_155_name" text="Nazgûl, Czarny Marszałek " />
+    <string id="aom_lord_1_155_name" text="Nazgûl, Mroczny Marszałek" />
     <string id="aom_lord_1_16_name" text="Nazgûl, Rycerz z Umbaru" />
     <string id="aom_lord_1_17_name" text="Sauron" />
     <string id="aom_lord_1_177_name" text="Khorgath" />
@@ -873,7 +873,7 @@
     <string id="aom_lord_4_2_name" text="Elfhilda" />
     <string id="aom_lord_4_4_name" text="Elthilda" />
     <string id="aom_lord_4_5_name" text="Unthery" />
-    <string id="aom_lord_4_6_name" text="Grimbold Grimingas " />
+    <string id="aom_lord_4_6_name" text="Grimbold Grimingas" />
     <string id="aom_lord_4_7_name" text="Théodred Eorling" />
     <string id="aom_lord_4_8_name" text="Furnhard" />
     <string id="aom_lord_4_9_name" text="Thomund" />
@@ -891,14 +891,14 @@
     <string id="aom_lord_4_181_name" text="Arthamund" />
     <string id="aom_lord_4_19_name" text="Asela" />
     <string id="aom_lord_4_20_name" text="Varmund" />
-    <string id="aom_lord_4_21_name" text="Cuthræd Ordlacing " />
+    <string id="aom_lord_4_21_name" text="Cuthræd Ordlacing" />
     <string id="aom_lord_4_22_name" text="Wulf Celmunding" />
     <string id="aom_lord_4_23_name" text="Marhath Marhad" />
     <string id="aom_lord_4_24_name" text="Gríma Grimmóding" />
     <string id="aom_lord_4_25_name" text="Lucand" />
     <string id="aom_lord_4_26_name" text="Peric" />
-    <string id="aom_lord_4_27_name" text="Ælle Æthellafing " />
-    <string id="aom_lord_4_28_name" text="Fasthelm Morcargas " />
+    <string id="aom_lord_4_27_name" text="Ælle Æthellafing" />
+    <string id="aom_lord_4_28_name" text="Fasthelm Morcargas" />
     <string id="aom_lord_4_3_1_name" text="Éomer Eoforing" />
     <string id="aom_lord_4_6_1_name" text="Déorwyn Grimingas" />
     <string id="aom_lord_4_16_1_name" text="Mérthú Felánding" />
@@ -1147,12 +1147,12 @@
     <string id="TAOM_hero_1_47_1" text="Mina służy ciemnym potęgom Mordoru." />
     <string id="TAOM_hero_1_47_2" text="Casyrea jest służką Cienia." />
     <string id="TAOM_hero_1_47_3" text="Colambea mieszka w ciemnościach Mordoru." />
-    <string id="TAOM_hero_1_15" text="Czarnoksiężnik z Angmaru, Pan Nazgûli, jest najstraszniejszym sługą Saurona. Był kiedyś wielkim królem Ludzi, skażonym przez swój Pierścień Władzy i przemienionym w nieumierającego upiora." />
-    <string id="TAOM_hero_1_155" text="Czarny Marszałek dowodzi Nazgûlami w bitwie, ustępując tylko Czarnoksiężnikowi." />
+    <string id="TAOM_hero_1_15" text="Król-Czarnoksiężnik z Angmaru, Pan Nazgûli, jest najstraszliwszym sługą Saurona. Niegdyś był wielkim królem Ludzi, lecz Pierścień Władzy skaził go i uczynił nieumarłym upiorem." />
+    <string id="TAOM_hero_1_155" text="Mroczny Marszałek dowodzi Nazgûlami w bitwie, ustępując jedynie Królowi-Czarnoksiężnikowi." />
     <string id="TAOM_hero_1_16" text="Rycerz z Umbaru był kiedyś władcą Korsarzy, zanim przyjął Pierścień." />
     <string id="TAOM_hero_1_28" text="Zdrajca był kiedyś królem na Wschodzie, przed swoim skażeniem." />
     <string id="TAOM_hero_1_38" text="Nieumierający był królem-czarnoksiężnikiem, który szukał nieśmiertelności, a znalazł jedynie wieczną niewolę." />
-    <string id="TAOM_hero_1_48" text="Khamûl Wschodniak, drugi z Dziewięciu, władał kiedyś wielkim królestwem w Rhûnie, zanim przyjął Pierścień Władzy." />
+    <string id="TAOM_hero_1_48" text="Khamûl Łatwierdzianin... Khamûl Wschodlanin, drugi z Dziewięciu, niegdyś władał wielkim królestwem w Rhûnie, nim przyjął Pierścień Władzy." />
     <string id="TAOM_hero_1_48_1" text="Skażony szerzy zgniliznę wszędzie, gdzie się pojawi." />
     <string id="TAOM_hero_1_48_2" text="Cień Ludzi Północy poluje w zimnych krainach." />
     <string id="TAOM_hero_1_48_3" text="Cień Umbaru nawiedza południowe wybrzeża." />
@@ -1289,19 +1289,19 @@
     <string id="TAOM_hero_3_22_3" text="Zanuwa jest biegłym łucznikiem plemienia." />
     <string id="TAOM_hero_3_22_4" text="Hajara strzeże pustynnych wież straży." />
     <string id="TAOM_hero_4_1" text="Théoden, król Rohanu, włada z Meduseldu w Edoras. Niegdyś omamiony przez Grímę, sługę Sarumana, został uwolniony przez Gandalfa i poprowadził swój lud ku chwale w Helmowym Jarze i na polach Pelennoru." />
-    <string id="TAOM_hero_4_2" text="Elfhilda była królową Rohanu, matką Théodreda. Zmarła przy porodzie, a ten żal kładł się cieniem na panowaniu Théodena." />
+    <string id="TAOM_hero_4_2" text="Elfhilda była królową Rohanu, matką Théodreda. Zmarła przy porodzie, a żałoba ta kładła się cieniem na panowaniu Théodena." />
     <string id="TAOM_hero_4_7" text="Théodred był jedynym synem króla Théodena, księciem Rohanu. Poległ, broniąc Brodów Iseny przed Uruk-hai Sarumana." />
     <string id="TAOM_hero_4_10" text="Elys jest szlachetną damą dworu Rohirrimów." />
     <string id="TAOM_hero_4_13" text="Romund służy jako kapitan Gwardii Królewskiej." />
     <string id="TAOM_hero_4_14" text="Morcon jest zaufanym kapitanem królewskiego dworu." />
     <string id="TAOM_hero_4_141" text="Amorcon służy w gwardii ramię w ramię ze swym krewnym." />
-    <string id="TAOM_hero_4_15" text="Erdurand jest jeźdźcem z dworu Théodena." />
+    <string id="TAOM_hero_4_15" text="Erdurand jest jeźdźcem z drużyny Théodena." />
     <string id="TAOM_hero_4_3_3" text="Théodwyn była siostrą króla Théodena i matką Éomera oraz Éowyny. Zmarła z żalu po tym, jak jej mąż Éomund został zabity przez orków." />
     <string id="TAOM_hero_4_3" text="Aldric włada dworem we Wschodniej Bruzdzie i staje w zbrojnym pospolitym ruszeniu Edoras. Jest zwykłym jeźdźcem bez wielkiego rodu i właśnie dlatego mu ufają." />
     <string id="TAOM_hero_rohan_10_1" text="Éomund ze Wschodniej Bruzdy był marszałkiem Marchii i pojął za żonę Théodwyn, siostrę króla. Orkowie zabili go w Emyn Muil, a dwoje jego dzieci przeszło pod opiekę Théodena." />
-    <string id="TAOM_hero_4_3_1" text="Éomer Éadig, Trzeci Marszałek Marchii, jest bratankiem Théodena i następcą tronu. Z zaciekłą wiernością prowadzi jeźdźców Wschodniej Bruzdy." />
+    <string id="TAOM_hero_4_3_1" text="Éomer Eadig, Trzeci Marszałek Marchii, jest bratankiem Théodena i dziedzicem tronu. Z zaciekłą wiernością prowadzi jeźdźców Wschodniej Bruzdy." />
     <string id="TAOM_hero_4_4" text="Elthild jest szlachetną panią z rodu Eoforingów." />
-    <string id="TAOM_hero_4_8" text="Furnhard służy jako zaufany jeździec pod komendą Éomera." />
+    <string id="TAOM_hero_4_8" text="Furnhard służy jako zaufany jeździec pod dowództwem Éomera." />
     <string id="TAOM_hero_4_11" text="Liena służy na królewskim dworze." />
     <string id="TAOM_hero_4_6" text="Grimbold z Grimslade dowodzi jeźdźcami Zachodniej Bruzdy. Zacięty wojownik, obronił Brody Iseny, a później zginął bohatersko na Pelennorze." />
     <string id="TAOM_hero_4_6_1" text="Déorwyn jest następcą Grimbolda w dowodzeniu." />
@@ -1478,5 +1478,41 @@
     <string id="TAOM_hero_SE9_s_bn" text="Pharazîn to czarnonúmenorejska czarodziejka i prawdziwa władza w Cirith Nargil, ilekroć jej mąż wyrusza w pole. Jej imię przywodzi na myśl ostatniego Króla Númenoru." />
     <string id="TAOM_hero_SE9_c1_bn" text="Zigûrbêl jest dziedzicem Cirith Nargil, wyszkolonym w mrocznych sztukach. Jego imię znaczy Miłujący Czarnoksiężnika — tak Númenor nazywał Saurona, zanim poznał jego prawdziwą naturę." />
     <string id="TAOM_hero_SE9_c2_bn" text="Zimrazîn jest drugim dzieckiem Pana Miecza i groźniejszym z tej dwójki. Odziedziczyła talenty matki, lecz nic z jej cierpliwości." />
+    <string id="3UucAOBW" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}." />
+    <string id="62vceTar" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}." />
+    <string id="99gE1ZoY" text="Jestem {CONVERSATION_CHARACTER.LINK}, z {FACTION}." />
+    <string id="AxMrFoea" text="{TOWN_NAME} zostało oblężone przez siły dowodzone przez {LORD.LINK} z {FACTION_NAME}!" />
+    <string id="EHFibjkM" text="{TOWN_NAME} zostało oblężone przez armię dowodzoną przez {LORD.LINK} z {FACTION_NAME}!" />
+    <string id="ExbVzTZA" text="{CLAN} zawarł umowę, by walczyć u boku {KINGDOM}." />
+    <string id="FFXqPFwl" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}, jednego z najznamienitszych rodów w kronikach królestwa Vlandii." />
+    <string id="JJAWbuNT" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}. Powiadają, że nasz przodek był wśród tych, którzy przybyli na złotych okrętach z Zachodu w Czasach Bohaterów. Rzecz jasna, gdyby wszyscy, o których mówi się, że byli na tych statkach, naprawdę tam byli, łodzie zatonęłyby pod ciężarem." />
+    <string id="L2GbDVja" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}, {?PLAYER.GENDER}pani{?}panie{\?}, i jestem zaszczycony, mogąc ci służyć." />
+    <string id="Nq2dyiO1" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}, którego imię nieraz słyszałeś w sagach Sturgian." />
+    <string id="PBgLvyOa" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}. Nasi przodkowie byli wśród tych, którzy przybyli z dalekiej północy, by wziąć denary książąt i przysiąc obronę tych ziem — i dochowaliśmy tej przysięgi." />
+    <string id="S0oFKYfB" text="{CLAN} nie służy już {KINGDOM}." />
+    <string id="S1vGzr8z" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}, klanu Aserajów." />
+    <string id="SLAkSrb5" text="{FACTION1_NAME} wypowiada wojnę {FACTION2_NAME}." />
+    <string id="TsYCa2fZ" text="{FACTION1} i {FACTION2} zawarły pokój." />
+    <string id="U4p70l9B" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}." />
+    <string id="U770Bvy8" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}. Sława naszej rodziny nie ma sobie równych w pieśniach Battanów." />
+    <string id="Ua0T0A7t" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}, jednego z pradawnych rodów Battanów." />
+    <string id="WH8P3Y5F" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}." />
+    <string id="a8584KD0" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}. Z pewnością słyszałeś imię naszego klanu w eposach stepu. Nosimy imię jednego z 12 synów wielkiej wilczycy, matki Chuzaitów." />
+    <string id="cMO9JXvk" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}. Dzierżymy nasze ziemie w lenno od {LIEGE_TITLE} i dochowujemy przysiąg wierności." />
+    <string id="dC8acIya" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}." />
+    <string id="dfAE3liA" text="Ród {CLAN_NAME} przyłączył się do {FACTION}." />
+    <string id="dlkg2jQf" text="Jestem {CONVERSATION_CHARACTER.LINK}, z rodu {CLAN_NAME}, jednego z pradawnych rodów Sturgian." />
+    <string id="eyxfHmCU" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}. Nasza rodzina od pokoleń służy królom Vlandii." />
+    <string id="hJFCi1zu" text="{FACTION1} i {FACTION2} zawarły pokój." />
+    <string id="hP57Caab" text="{VICTOR_PARTY} z {VICTOR_FACTION} pokonuje {DEFEATED_PARTY} z {DEFEATED_FACTION}." />
+    <string id="hbWhfoWH" text="{SETTLEMENT} zostaje splądrowane przez {LORD.LINK} z {FACTION_NAME}" />
+    <string id="hopvV6Ch" text="{RULER_NAME} z {FACTION1_NAME} wypowiada wojnę {FACTION2_NAME}." />
+    <string id="kqwNCCbZ" text="{TOWN_NAME} zostało oblężone przez armię dowodzoną przez {LORD.LINK} z {FACTION_NAME}!" />
+    <string id="l2nEIZV5" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}." />
+    <string id="nbVW2cJ8" text="{SETTLEMENT} zostaje splądrowane przez armię dowodzoną przez {LORD.LINK} z {FACTION_NAME}" />
+    <string id="pn79h0aj" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}. Nasz tytuł otrzymaliśmy od samego cesarza Vortiosa. Nie żeby miał wielki wybór, jako że przebywał wówczas jako jeniec na jednym z naszych okrętów łupieżczych, lecz jestem pewien, że dostrzegł szlachetność naszej krwi." />
+    <string id="rhTUDKhJ" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}. Nie ma takiego klanu Battanów, który nie oddałby czaszki jednego ze swych mistrzów do naszej kolekcji pucharów." />
+    <string id="z2yr4mc6" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}. Nasz klan od pokoleń wiernie służy Chanatowi Chuzaitów." />
+    <string id="zZ9FQJRI" text="Jestem {CONVERSATION_CHARACTER.LINK} z rodu {CLAN_NAME}, najstarszego i najszlachetniejszego z rodów Aserai." />
   </strings>
 </base>

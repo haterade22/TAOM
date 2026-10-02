@@ -319,19 +319,19 @@
     <string id="taom_lotr_issue_combat_fallback_accept" text="Co trzeba zrobić?" />
     <string id="taom_lotr_issue_pers_fallback_desc" text="Ktoś potrzebuje dostarczenia jeńców." />
     <string id="taom_lotr_issue_pers_fallback_brief" text="Potrzebuję silnych rąk, wędrowcze." />
-    <string id="taom_lotr_issue_armourer_title" text="The Armourer's Commission" />
-    <string id="taom_lotr_issue_armourer_desc" text="The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it." />
-    <string id="taom_lotr_issue_armourer_brief" text="The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with." />
-    <string id="taom_lotr_issue_armourer_accept" text="What would you need?" />
-    <string id="taom_lotr_issue_armourer_expl" text="Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade." />
-    <string id="taom_lotr_issue_armourer_soln" text="I will bring you the steel." />
-    <string id="taom_lotr_issue_armourer_task" text="Bring {ITEM} to the armourer ({COUNT})" />
-    <string id="taom_lotr_issue_seam_title" text="The Deep Seam" />
-    <string id="taom_lotr_issue_seam_desc" text="The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in." />
-    <string id="taom_lotr_issue_seam_brief" text="My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together." />
-    <string id="taom_lotr_issue_seam_accept" text="What would you need?" />
-    <string id="taom_lotr_issue_seam_expl" text="Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me." />
-    <string id="taom_lotr_issue_seam_soln" text="I will bring you the timber." />
-    <string id="taom_lotr_issue_seam_task" text="Bring {ITEM} to the headman ({COUNT})" />
+    <string id="taom_lotr_issue_armourer_title" text="Zlecenie płatnerza" />
+    <string id="taom_lotr_issue_armourer_desc" text="Mistrz płatnerski z osady {ISSUE_SETTLEMENT} ma do połowy wykutą zbroję i ani krzty stali, by ją dokończyć." />
+    <string id="taom_lotr_issue_armourer_brief" text="Wojna zabiera każdą sztabę dobrej stali, nim dotrze do mojej kuźni. Na kowadle leży zbroja, która odbiłaby strzałę, a nie mam już czym jej dokończyć." />
+    <string id="taom_lotr_issue_armourer_accept" text="Czego ci potrzeba?" />
+    <string id="taom_lotr_issue_armourer_expl" text="Przynieś mi {COUNT} ładunków towaru {ITEM}, a zbroja będzie twoja, gdy ją ukończę. Stal za stal: uczciwa wymiana." />
+    <string id="taom_lotr_issue_armourer_soln" text="Przyniosę ci stal." />
+    <string id="taom_lotr_issue_armourer_task" text="Dostarcz {ITEM} płatnerzowi ({COUNT})" />
+    <string id="taom_lotr_issue_seam_title" text="Głęboka żyła" />
+    <string id="taom_lotr_issue_seam_desc" text="Górnicy z osady {ISSUE_SETTLEMENT} natrafili na żyłę rzadkiego kruszcu, z którego kuje się zbroje możnych, a szyb potrzebuje drewna, nim się zawali." />
+    <string id="taom_lotr_issue_seam_brief" text="Moi górnicy znaleźli ją przypadkiem: żyłę kruszcu, za który wielcy płatnerze zapłacą każdą cenę. Lecz szyb jest stary i bez dobrego drewna na stemple pogrzebie ich razem z żyłą." />
+    <string id="taom_lotr_issue_seam_accept" text="Czego ci potrzeba?" />
+    <string id="taom_lotr_issue_seam_expl" text="Przynieś mi {COUNT} ładunków towaru {ITEM} na szyb, a dostaniesz pierwszy urobek. Dla ciebie jest to warte więcej niż dla mnie." />
+    <string id="taom_lotr_issue_seam_soln" text="Przyniosę ci drewno." />
+    <string id="taom_lotr_issue_seam_task" text="Dostarcz {ITEM} sołtysowi ({COUNT})" />
   </strings>
 </base>

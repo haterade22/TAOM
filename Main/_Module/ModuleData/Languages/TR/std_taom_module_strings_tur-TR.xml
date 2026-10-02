@@ -1287,20 +1287,20 @@
     <string id="taom_faction_clans_of_andrast_name" text="Andrast Klanları" />
     <string id="taom_faction_clans_of_druwaith_iaur_desc" text="Druwaith Iaur Klanları." />
     <string id="taom_faction_clans_of_druwaith_iaur_name" text="Druwaith Iaur Klanları" />
-    <string id="taom_faction_clans_of_dunland_bonus_0" text="%50 daha az orman hız cezası + %15 görüş menzili (Battanian'dan ödünç)" />
+    <string id="taom_faction_clans_of_dunland_bonus_0" text="%50 daha az orman hız cezası + %15 görüş menzili (Orman Terbiyesi)" />
     <string id="taom_faction_clans_of_dunland_bonus_1" text="Ovalarda %10 grup hızı (Tepe Yürüyüşçüleri)" />
     <string id="taom_faction_clans_of_dunland_bonus_2" text="%5 grup boyutu sınırı (Tepe-Kabilesi Askeri)" />
     <string id="taom_faction_clans_of_dunland_bonus_3" text="%10 köy gönüllü yeniden doğuş oranı (Tepe-Kabilesi İstihdam)" />
-    <string id="taom_faction_clans_of_dunland_bonus_4" text="Şehirlerde veteran milis için %20 şans (Battanian'dan ödünç)" />
-    <string id="taom_faction_clans_of_dunland_bonus_5" text="-10% bina inşaat hızı (Battania'dan ödünç alınmış)" />
-    <string id="taom_faction_clans_of_dunland_desc" text="Dunland'ın Tepe Adamları, Rohirrim'in kadim düşmanları. Battania orman gelenekleri, TAOM'un Tepe Yürüyüşçüleri ve Tepe-Kabilesi Levhaları ile harmanlanır — ucuz, hızlı, öfkeli savaş çeteleri hem ova hem de ormanda yürür. Battania demircileri yavaş olsa da, savaş çeteleri değildir." />
+    <string id="taom_faction_clans_of_dunland_bonus_4" text="Şehirlerde veteran milis şansı +%20 (Çelikleşmiş Tepe Halkı)" />
+    <string id="taom_faction_clans_of_dunland_bonus_5" text="-%10 bina inşa hızı (İlkel Atölyeler)" />
+    <string id="taom_faction_clans_of_dunland_desc" text="Rohirrim'in kadim düşmanları, Dunland'ın Tepe Adamları. Derin ormanlarda ve yüksek fundalıklarda geçen nesiller, Tepe Yürüyüşçüleri'ni ve Tepe Kabilesi Askerleri'ni şekillendirdi: ucuz, hızlı ve öfkeli savaş çeteleri; ovada da ormanda da yürürler. Demircileri yavaştır, ama savaş çeteleri değil." />
     <string id="taom_faction_clans_of_dunland_name" text="Dunland Kabileleri" />
     <string id="taom_faction_clans_of_dunland_perk_0_desc" text="Ovalarda +10% grup hızı ve +5% grup boyutu — Dunland savaş çeteleri hızla yol alır." />
     <string id="taom_faction_clans_of_dunland_perk_0_name" text="Tepe Yürüyüşçüleri" />
     <string id="taom_faction_clans_of_dunland_perk_1_desc" text="+10% köy gönüllüsü yeniden ortaya çıkma oranı — köyler hızla kuzenlerle dolar." />
     <string id="taom_faction_clans_of_dunland_perk_1_name" text="Tepe-Kabilesi İstihdamı" />
-    <string id="taom_faction_clans_of_dunland_perk_2_desc" text="Ödünç alınmış 50% daha az orman hız cezası + 15% görüş, ve kasabalarda +20% kıdemli milis şansı; -10% inşaat hızı." />
-    <string id="taom_faction_clans_of_dunland_perk_2_name" text="Battania Orman Soyu" />
+    <string id="taom_faction_clans_of_dunland_perk_2_desc" text="Nesiller boyu süren orman terbiyesi: %50 daha az orman hız cezası + %15 görüş ve şehirlerde veteran milis şansı +%20; -%10 inşa hızı." />
+    <string id="taom_faction_clans_of_dunland_perk_2_name" text="Orman Terbiyesi" />
     <string id="taom_faction_clans_of_dunland_strength_0" text="Ucuz hızlı savaş çeteleri" />
     <string id="taom_faction_clans_of_dunland_strength_1" text="Orman ve ova hareketliliği" />
     <string id="taom_faction_clans_of_dunland_strength_2" text="İstikrarlı köy istihdamı" />
@@ -1315,7 +1315,7 @@
     <string id="taom_faction_clans_of_dunland_trait_1" text="Vahşi Tepe Savaşçıları" />
     <string id="taom_faction_clans_of_dunland_trait_2" text="Tepe-Kabilesi Levhaları" />
     <string id="taom_faction_clans_of_dunland_trait_3" text="Saruman'ın Piyonları" />
-    <string id="taom_faction_clans_of_dunland_weakness_0" text="Battania'dan ödünç alınmış yavaş inşaat" />
+    <string id="taom_faction_clans_of_dunland_weakness_0" text="İlkel atölyeler inşaatı yavaşlatır" />
     <string id="taom_faction_clans_of_dunland_weakness_1" text="Saruman'ın piyonları — zayıf diplomasi" />
     <string id="taom_faction_clans_of_dunland_weakness_2" text="Rohan ve Isengard arasında sıkışmış" />
     <string id="taom_faction_clans_of_forochel_desc" text="Forochel Buz Körfezi yakınlarındaki donmuş kuzey çorak arazilerinde dağınık Ork kabileleri. Lossoth'a ve kuzeye giden herkese saldıran vahşi akıncılar." />
@@ -1462,23 +1462,23 @@
     <string id="taom_faction_goblins_of_goblin_town_weakness_2" text="Tüm Hür Halklar tarafından nefret edilen" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_0" text="Bozkırda +%10 birlik hızı (Doğulu Öncüler)" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_1" text="+%5 birlik boyutu limiti (Doğulu Ordusu)" />
-    <string id="taom_faction_golden_realm_of_rhun_bonus_2" text="-10% atlı asker toplama ve geliştirme maliyeti (Khuzait, miras)" />
-    <string id="taom_faction_golden_realm_of_rhun_bonus_3" text="+%25 at, katır, inek ve koyun köy üretimi (Khuzait, miras)" />
-    <string id="taom_faction_golden_realm_of_rhun_bonus_4" text="-20% kasaba vergi geliri (Khuzait, miras)" />
+    <string id="taom_faction_golden_realm_of_rhun_bonus_2" text="-%10 atlı asker alma ve yükseltme maliyeti (Bozkır Binicilği)" />
+    <string id="taom_faction_golden_realm_of_rhun_bonus_3" text="+%25 köy at, katır, inek ve koyun üretimi (Bozkırın Çobanları)" />
+    <string id="taom_faction_golden_realm_of_rhun_bonus_4" text="-%20 şehir vergi geliri (Göçebe Yönetim)" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_5" text="Günlük -0.5 yerleşim sadakati (Doğulu Haracı)" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_6" text="+15% yağma hasarı (Bozkır Akıncısı Doktrini)" />
-    <string id="taom_faction_golden_realm_of_rhun_desc" text="Doğu ovalarının Doğululları. Miras Khuzait süvari gelenekleri, TAOM'un Doğulu Öncüler bozkır hızı ve Doğulu Ordusu birlik boyutuyla eşleştirilmiştir. Sayıca çok gelen ve haraç ödeyen ağır süvari." />
+    <string id="taom_faction_golden_realm_of_rhun_desc" text="Doğu ovalarının Doğulu halkları. Köklü bir bozkır süvari geleneği, Doğulu Akıncılar'ın hızı ve Doğulu Ordusu'nun sayısıyla birleşir. Mızrakların yanı sıra haraç da getiren, toplu halde gelen ağır süvariler." />
     <string id="taom_faction_golden_realm_of_rhun_name" text="Rhûn'un Altın Diyarı" />
     <string id="taom_faction_golden_realm_of_rhun_perk_0_desc" text="Bozkırda +%10 birlik hızı — Rhûn Denizi'nin binicileri ovayı hızla geçer." />
     <string id="taom_faction_golden_realm_of_rhun_perk_0_name" text="Doğulu Öncüler" />
     <string id="taom_faction_golden_realm_of_rhun_perk_1_desc" text="+%5 birlik boyutu limiti — ordular Mordor'un çağrısına yanıt olarak toplanır." />
     <string id="taom_faction_golden_realm_of_rhun_perk_1_name" text="Doğulu Ordusu" />
-    <string id="taom_faction_golden_realm_of_rhun_perk_2_desc" text="Miras alınan Khuzait -10% atlı maliyeti, +25% hayvan köyü üretimi; -20% kasaba vergi geliri." />
-    <string id="taom_faction_golden_realm_of_rhun_perk_2_name" text="Khuzait Bozkır Soyu" />
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_desc" text="Bozkır biniciliği -%10 atlı maliyeti ve +%25 köy hayvan üretimi getirir; göçebe yönetimin bedeli -%20 şehir vergi geliridir." />
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_name" text="Bozkır Biniciliği" />
     <string id="taom_faction_golden_realm_of_rhun_strength_0" text="Ağır süvari orduları" />
     <string id="taom_faction_golden_realm_of_rhun_strength_1" text="Büyük ordular" />
     <string id="taom_faction_golden_realm_of_rhun_strength_2" text="Haraç ve ticaret ağları" />
-    <string id="taom_faction_golden_realm_of_rhun_strength_3" text="Khuzait bozkır mirası" />
+    <string id="taom_faction_golden_realm_of_rhun_strength_3" text="Köklü bozkır süvari geleneği" />
     <string id="taom_faction_golden_realm_of_rhun_su_0_desc" text="Seçkin zırhlı süvari." />
     <string id="taom_faction_golden_realm_of_rhun_su_0_name" text="Doğulu Kataphrakt" />
     <string id="taom_faction_golden_realm_of_rhun_su_1_desc" text="Seçkin doğulu ağır piyade." />
@@ -1492,7 +1492,7 @@
     <string id="taom_faction_golden_realm_of_rhun_weakness_0" text="Zayıf piyade" />
     <string id="taom_faction_golden_realm_of_rhun_weakness_1" text="Bölünmüş klanlar" />
     <string id="taom_faction_golden_realm_of_rhun_weakness_2" text="Mordor'a uzun ikmal hatları" />
-    <string id="taom_faction_golden_realm_of_rhun_weakness_3" text="Khuzait'ten ödünç -20% kasaba vergisi" />
+    <string id="taom_faction_golden_realm_of_rhun_weakness_3" text="Göçebe yönetim -%20 şehir vergisine mal olur" />
     <string id="taom_faction_havens_of_umbar_bonus_0" text="-25% kervan maliyeti (Korsan Ticareti)" />
     <string id="taom_faction_havens_of_umbar_bonus_1" text="+%15 gümrük geliri (Korsan Ticaret Ağları)" />
     <string id="taom_faction_havens_of_umbar_bonus_2" text="+%8 savaş şöhreti (Korsan Şanı)" />
@@ -1556,21 +1556,21 @@
     <string id="taom_faction_high_kingdom_of_lindon_weakness_0" text="Elf Gururu nüfuz maliyetlerini artırır" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="Solan halk — az takviye" />
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="Bozkırda +%10 grup hızı (Bozkır Savaş Arabacıları)" />
-    <string id="taom_faction_khudorom_of_khand_bonus_1" text="Orman hız cezası %50 daha az + %15 görüş menzili (Battanian, miras)" />
-    <string id="taom_faction_khudorom_of_khand_bonus_2" text="Kasabalarda kıdemli milis için +%20 şans (Battanian, miras)" />
-    <string id="taom_faction_khudorom_of_khand_bonus_3" text="-10% bina inşaat hızı (Battanian, miras)" />
+    <string id="taom_faction_khudorom_of_khand_bonus_1" text="%50 daha az orman hız cezası + %15 görüş menzili (Orman Milisi)" />
+    <string id="taom_faction_khudorom_of_khand_bonus_2" text="Şehirlerde veteran milis şansı +%20 (Çelikleşmiş Askerler)" />
+    <string id="taom_faction_khudorom_of_khand_bonus_3" text="-%10 bina inşa hızı (İlkel Atölyeler)" />
     <string id="taom_faction_khudorom_of_khand_bonus_4" text="+8% savaş şöhreti (Paralı Asker Primi)" />
     <string id="taom_faction_khudorom_of_khand_bonus_5" text="-10% tarife geliri (Mordor'a Haraç)" />
     <string id="taom_faction_khudorom_of_khand_bonus_6" text="-10% müfreze yiyecek tüketimi (Bozkır Dayanıklılığı)" />
     <string id="taom_faction_khudorom_of_khand_bonus_7" text="+5% müfreze boyutu sınırı (Savaş Arabacısı Hareketliliği)" />
-    <string id="taom_faction_khudorom_of_khand_desc" text="Khand Variag'ları. Battanian orman milisi gelenekleri miras alınmış; TAOM'un Bozkır Savaş Arabacıları üzerine bozkırda +%10 grup hızı ekler. Paralı asker birlikleri en çok parayı verene hizmet eder." />
+    <string id="taom_faction_khudorom_of_khand_desc" text="Khand'ın Variag'ları. Orman milisi geleneği, Bozkır Savaş Arabacıları'nın açık arazideki +%10 hızıyla harmanlanır. Paralı çeteler, en çok parayı kim verirse onun için savaşır." />
     <string id="taom_faction_khudorom_of_khand_name" text="Khand Khudorom'u" />
     <string id="taom_faction_khudorom_of_khand_perk_0_desc" text="Bozkırda +%10 grup hızı — Variag savaş arabaları hızlı gider." />
     <string id="taom_faction_khudorom_of_khand_perk_0_name" text="Bozkır Savaş Arabacıları" />
     <string id="taom_faction_khudorom_of_khand_perk_1_desc" text="Paralı asker kaptanları parayı verene hizmet eder — ama paylarını alırlar." />
     <string id="taom_faction_khudorom_of_khand_perk_1_name" text="Paralı Asker Geleneği" />
-    <string id="taom_faction_khudorom_of_khand_perk_2_desc" text="Miras alınan 50% daha az orman hız cezası + 15% görüş menzili ve kasabalarda +20% kıdemli milis şansı; -10% inşaat hızı." />
-    <string id="taom_faction_khudorom_of_khand_perk_2_name" text="Battanian Orman Soyu" />
+    <string id="taom_faction_khudorom_of_khand_perk_2_desc" text="Orman milisi alışkanlıkları sürer: %50 daha az orman hız cezası + %15 görüş menzili ve şehirlerde veteran milis şansı +%20; -%10 inşa hızı." />
+    <string id="taom_faction_khudorom_of_khand_perk_2_name" text="Orman Milisi" />
     <string id="taom_faction_khudorom_of_khand_strength_0" text="Bozkır ve orman hareketliliği" />
     <string id="taom_faction_khudorom_of_khand_strength_1" text="Kıdemli köyler" />
     <string id="taom_faction_khudorom_of_khand_strength_2" text="Paralı asker geleneği" />
@@ -1585,7 +1585,7 @@
     <string id="taom_faction_khudorom_of_khand_trait_1" text="Variag Savaşçıları" />
     <string id="taom_faction_khudorom_of_khand_trait_2" text="Paralı Asker Birlikleri" />
     <string id="taom_faction_khudorom_of_khand_trait_3" text="Savaş Arabacısı Geleneği" />
-    <string id="taom_faction_khudorom_of_khand_weakness_0" text="Battanian yavaş inşaat" />
+    <string id="taom_faction_khudorom_of_khand_weakness_0" text="İlkel atölyeler inşaatı yavaşlatır" />
     <string id="taom_faction_khudorom_of_khand_weakness_1" text="Zayıf yerleşimler" />
     <string id="taom_faction_khudorom_of_khand_weakness_2" text="Paralı asker kaptanları paraya sadıktır, beye değil" />
     <string id="taom_faction_kingdom_of_angaladh_desc" text="Angaladh Krallığı." />
@@ -1601,23 +1601,23 @@
     <string id="taom_faction_kingdom_of_cardolan_trait_1" text="Höyük-inişleri" />
     <string id="taom_faction_kingdom_of_cardolan_trait_2" text="Kuzey Korucuları" />
     <string id="taom_faction_kingdom_of_dale_bonus_0" text="Ovalarda +%10 birlik hızı (Vadi Tüccarları)" />
-    <string id="taom_faction_kingdom_of_dale_bonus_1" text="Köylerde +%10 tahıl üretimi (Sturgian, miras)" />
-    <string id="taom_faction_kingdom_of_dale_bonus_2" text="-50% ordu etki maliyeti (Sturgian, miras)" />
-    <string id="taom_faction_kingdom_of_dale_bonus_3" text="Krallık kararlarından +%20 ilişki cezası (Sturgian, miras)" />
+    <string id="taom_faction_kingdom_of_dale_bonus_1" text="+%10 köy tahıl üretimi (Uzun Göl Hasadı)" />
+    <string id="taom_faction_kingdom_of_dale_bonus_2" text="-%50 ordu nüfuz maliyeti (Göl Kasabası Seferberliği)" />
+    <string id="taom_faction_kingdom_of_dale_bonus_3" text="+%20 krallık kararlarından doğan ilişki cezası (İnatçı Meclis)" />
     <string id="taom_faction_kingdom_of_dale_bonus_4" text="+10% tarife geliri (Cüce Ticaret İttifakı)" />
     <string id="taom_faction_kingdom_of_dale_bonus_5" text="+10% savaş şöhreti (Kara Ok Geleneği)" />
     <string id="taom_faction_kingdom_of_dale_bonus_6" text="-0.5 yerleşim sadakati günlük (Küçük Bölge Açık Hedef)" />
-    <string id="taom_faction_kingdom_of_dale_desc" text="Bard'ın Erebor'un altında yeniden inşa ettiği şehir. Miras alınan Sturgian tahıl bolluğu ve Sturgian ucuz-ordu geleneği, TAOM'un Vadi Tüccarları ova-hızı bonusuyla birleşir — ancak Sturgian krallık-kararı cezaları iki taraflı keser. Cücelerle gelişen ticaret ittifakı Dale'i zengin ve hazır tutar." />
+    <string id="taom_faction_kingdom_of_dale_desc" text="Bard'ın Erebor'un eteklerinde yeniden kurduğu şehir. Uzun Göl'ün bereketli tahılı ve düşük maliyetle asker toplama geleneği, Vadi Tüccarları'nın açık arazideki hızıyla birleşir; gerçi Dale'in meclisi gururlu olduğu kadar inatçıdır da. Cücelerle süren verimli ticaret ittifakı şehri zengin ve hazır tutar." />
     <string id="taom_faction_kingdom_of_dale_name" text="Dale Krallığı" />
     <string id="taom_faction_kingdom_of_dale_perk_0_desc" text="Ovalarda +%10 birlik hızı — Göl-kasabası kervanları hızlı hareket eder." />
     <string id="taom_faction_kingdom_of_dale_perk_0_name" text="Vadi Tüccarları" />
     <string id="taom_faction_kingdom_of_dale_perk_1_desc" text="Erebor ile ticaret bonus gelir ve silah temini sağlar." />
     <string id="taom_faction_kingdom_of_dale_perk_1_name" text="Cüce İttifakı" />
-    <string id="taom_faction_kingdom_of_dale_perk_2_desc" text="Miras alınan Sturgian +10% köy tahılı ve -50% ordu etki maliyeti; krallık kararlarında ilişki cezası +20%." />
-    <string id="taom_faction_kingdom_of_dale_perk_2_name" text="Sturgian Tahıl ve Ordu Soyu" />
+    <string id="taom_faction_kingdom_of_dale_perk_2_desc" text="Uzun Göl'ün +%10 köy tahılı ile Göl Kasabası Seferberliği'nin -%50 ordu nüfuz maliyeti bir araya gelir; krallık kararlarında ilişki cezası +%20." />
+    <string id="taom_faction_kingdom_of_dale_perk_2_name" text="Uzun Göl Hasadı ve Göl Kasabası Seferberliği" />
     <string id="taom_faction_kingdom_of_dale_strength_0" text="Erebor ile ticaret" />
     <string id="taom_faction_kingdom_of_dale_strength_1" text="Güçlü okçuluk geleneği" />
-    <string id="taom_faction_kingdom_of_dale_strength_2" text="Ucuz ordu toplama (Sturgian)" />
+    <string id="taom_faction_kingdom_of_dale_strength_2" text="Ucuz ordu toplama (Göl Kasabası Seferberliği)" />
     <string id="taom_faction_kingdom_of_dale_strength_3" text="Tahıl zengini köyler" />
     <string id="taom_faction_kingdom_of_dale_su_0_desc" text="Bard'ın mirası okçu." />
     <string id="taom_faction_kingdom_of_dale_su_0_name" text="Kara Ok Korucu" />
@@ -1631,7 +1631,7 @@
     <string id="taom_faction_kingdom_of_dale_trait_3" text="Vadi Tüccarları" />
     <string id="taom_faction_kingdom_of_dale_weakness_0" text="Küçük toprak" />
     <string id="taom_faction_kingdom_of_dale_weakness_1" text="Doğulular tarafından baskı altında" />
-    <string id="taom_faction_kingdom_of_dale_weakness_2" text="Sturgian krallık-kararı cezası" />
+    <string id="taom_faction_kingdom_of_dale_weakness_2" text="İnatçı meclis diplomasiyi zorlar" />
     <string id="taom_faction_kingdom_of_dorwinion_desc" text="Rhun Denizi'nin kuzeybatı kıyılarında bulunan şarap üreticisi Dorwinion krallığı. Özgür Halklar ile Doğu arasında sıkışmış müreffeh bir ticaret krallığı." />
     <string id="taom_faction_kingdom_of_dorwinion_name" text="Dorwinion Krallığı" />
     <string id="taom_faction_kingdom_of_dorwinion_trait_0" text="Ünlü Bağlar" />
@@ -1966,25 +1966,25 @@
     <string id="taom_faction_stronghold_of_narager_trait_1" text="Doğu Çöllükleri" />
     <string id="taom_faction_taskralan_of_harwan_bonus_0" text="+10% çölde grup hızı (Güneşin Oğulları)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_1" text="+5% grup boyutu sınırı (Haradrim Savaş Çeteleri)" />
-    <string id="taom_faction_taskralan_of_harwan_bonus_2" text="-30% kervan inşa maliyeti + -10% ticaret cezası (Aserai Tüccarı, miras)" />
-    <string id="taom_faction_taskralan_of_harwan_bonus_3" text="Çölde hız cezası yok (Aserai Çölü, miras)" />
-    <string id="taom_faction_taskralan_of_harwan_bonus_4" text="+5% günlük birlik maaşı (Aserai Maaşları, miras)" />
+    <string id="taom_faction_taskralan_of_harwan_bonus_2" text="-%30 kervan kurma maliyeti + -%10 ticaret cezası (Çöl Kervan Ticareti)" />
+    <string id="taom_faction_taskralan_of_harwan_bonus_3" text="Çölde hız cezası yok (Çölde Doğmuş)" />
+    <string id="taom_faction_taskralan_of_harwan_bonus_4" text="+%5 günlük asker maaşı (Paralı Asker Geleneği)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_5" text="+5 grup morali (Mumakil Sürücüleri)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_6" text="-15% grup yiyecek tüketimi (Çöl Dayanıklılığı)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_7" text="+15% akın hasarı (Uzak Harad Vahşeti)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_8" text="+15% ordu nüfuz maliyeti (Bölünmüş Kabileler)" />
-    <string id="taom_faction_taskralan_of_harwan_desc" text="Harwan Haradrimleri, güneşin oğulları. Miras Aserai çöl dayanıklılığı; TAOM'un Güneşin Oğulları çölde +10% grup hızı ekler; Haradrim Savaş Çeteleri miras kervan ekonomisinin üzerine grup boyutu ekler. Mûmakiller güney ovalarına hükmeder." />
+    <string id="taom_faction_taskralan_of_harwan_desc" text="Harwan'ın Haradrimleri, güneşin oğulları. Uzun bir çöl mirası, Güneşin Oğulları'nın +%10 hız bonusunun ve Haradrim Savaş Bölüklerinin daha kalabalık sayılarının temelini oluşturur; bunlar gelişen bir kervan ekonomisine dayanır. Mûmakil güney ovalarına hükmeder." />
     <string id="taom_faction_taskralan_of_harwan_name" text="Harwan Taskralanı" />
     <string id="taom_faction_taskralan_of_harwan_perk_0_desc" text="+10% çölde grup hızı — yanan kumlara doğmuşlar." />
     <string id="taom_faction_taskralan_of_harwan_perk_0_name" text="Güneşin Oğulları" />
     <string id="taom_faction_taskralan_of_harwan_perk_1_desc" text="+5% grup boyutu sınırı — kabile savaş çeteleri Mordor'un çağrısına birlikte gider." />
     <string id="taom_faction_taskralan_of_harwan_perk_1_name" text="Haradrim Savaş Çeteleri" />
-    <string id="taom_faction_taskralan_of_harwan_perk_2_desc" text="Miras Aserai Tüccarı (-30% kervanlar, -10% ticaret cezası) ve Aserai Çölü (çöl hız cezası yok); +5% günlük ücretler." />
-    <string id="taom_faction_taskralan_of_harwan_perk_2_name" text="Aserai Çöl Soyu" />
+    <string id="taom_faction_taskralan_of_harwan_perk_2_desc" text="Çöl Kervan Ticareti (-%30 kervan maliyeti, -%10 ticaret cezası) ve Çölde Doğmuş (çölde hız cezası yok) geçerlidir; +%5 günlük ücret." />
+    <string id="taom_faction_taskralan_of_harwan_perk_2_name" text="Çöl Kervan Ticareti ve Çölde Doğmuş" />
     <string id="taom_faction_taskralan_of_harwan_strength_0" text="Mûmakil savaş canavarları" />
     <string id="taom_faction_taskralan_of_harwan_strength_1" text="Çöl manevra kabiliyeti" />
     <string id="taom_faction_taskralan_of_harwan_strength_2" text="Daha büyük savaş çeteleri" />
-    <string id="taom_faction_taskralan_of_harwan_strength_3" text="Aserai kervan geleneği" />
+    <string id="taom_faction_taskralan_of_harwan_strength_3" text="Gelişen kervan ekonomisi" />
     <string id="taom_faction_taskralan_of_harwan_su_0_desc" text="Yıkıcı savaş canavarı." />
     <string id="taom_faction_taskralan_of_harwan_su_0_name" text="Mûmakil Savaş Kulesi" />
     <string id="taom_faction_taskralan_of_harwan_su_1_desc" text="Derin güneyin uzun yay seçkinleri." />
@@ -1998,7 +1998,7 @@
     <string id="taom_faction_taskralan_of_harwan_weakness_0" text="Soğuk iklim cezası" />
     <string id="taom_faction_taskralan_of_harwan_weakness_1" text="Kabile içi çatışmalar" />
     <string id="taom_faction_taskralan_of_harwan_weakness_2" text="Az demirci ve duvar" />
-    <string id="taom_faction_taskralan_of_harwan_weakness_3" text="Aserai-ödünç +%5 asker ücreti" />
+    <string id="taom_faction_taskralan_of_harwan_weakness_3" text="Pahalı paralı asker geleneği (+%5 asker ücreti)" />
     <string id="taom_faction_taskralan_of_shaghana_desc" text="Shaghâna'nın Taskralı." />
     <string id="taom_faction_taskralan_of_shaghana_name" text="Shaghâna Taskralı" />
     <string id="taom_faction_wildmen_of_enedwaith_desc" text="Arnor ve Gondor arasındaki Enedwaith'in vahşi toprakları. Hiçbir krala boyun eğmeyen, avcı ve çoban olarak yaşayan dağınık İnsan kabilelerine ev sahipliği yapar." />
@@ -2676,104 +2676,172 @@
     <string id="taom_oob_autoassign_done" text="Atanan yüzbaşılar: {COUNT}." />
     <string id="taom_oob_autoassign_not_general" text="Bu savaşta kahraman atamasını yalnızca başkomutan yapabilir." />
     <string id="taom_oob_autoassign_none" text="Boş yüzbaşı yerine uygun kahraman yok." />
-    <string id="taom_bandit_mirkwood_spiders_name" text="Spiders of Mirkwood" />
-    <string id="taom_spider_brood_forest_name" text="Giant Spider" />
-    <string id="taom_spider_brood_brown_name" text="Great Spider" />
-    <string id="taom_spider_brood_pale_name" text="Pale Broodmother" />
-    <string id="taom_bandit_wild_trolls_name" text="Wild Trolls" />
-    <string id="taom_troll_bandit_cave_name" text="Cave Troll" />
-    <string id="taom_troll_bandit_hill_name" text="Hill Troll" />
-    <string id="taom_armoury_visit_news" text="A master armourer has come to {TOWN}. For the next {DAYS} days its armoury stocks and forges as a finer one would." />
-    <string id="taom_armoury_menu" text="Visit the armoury" />
-    <string id="taom_armoury_menu_tip" text="This town's armoury works to level {LEVEL} of 3." />
-    <string id="taom_armoury_coop_guest" text="The armourer works only for the host of this campaign." />
-    <string id="taom_armoury_nothing" text="You carry nothing this armourer can improve. Bring a piece of armour and the metals its next form needs." />
-    <string id="taom_armoury_title" text="The Armoury of {TOWN}" />
-    <string id="taom_armoury_desc" text="This armoury works to level {LEVEL} of 3. Heavy pieces need level {HEAVY}, elite pieces level {ELITE}, and lord kit a master armourer at level {LORD}. The piece keeps its quality." />
-    <string id="taom_armoury_choose" text="Choose" />
-    <string id="taom_armoury_leave" text="Leave" />
-    <string id="taom_armoury_confirm_title" text="Improve {SOURCE}?" />
-    <string id="taom_armoury_confirm_body" text="The armourer will rework it into {TARGET} for {PRICE}." />
-    <string id="taom_armoury_confirm_yes" text="Have it done" />
-    <string id="taom_armoury_cancel" text="Cancel" />
-    <string id="taom_armour_class_light" text="light" />
-    <string id="taom_armour_class_medium" text="medium" />
-    <string id="taom_armour_class_heavy" text="heavy" />
-    <string id="taom_armour_class_elite" text="elite" />
+    <string id="taom_bandit_mirkwood_spiders_name" text="Karanlık Orman Örümcekleri" />
+    <string id="taom_spider_brood_forest_name" text="Dev Örümcek" />
+    <string id="taom_spider_brood_brown_name" text="Büyük Örümcek" />
+    <string id="taom_spider_brood_pale_name" text="Solgun Kraliçe Örümcek" />
+    <string id="taom_bandit_wild_trolls_name" text="Vahşi Troller" />
+    <string id="taom_troll_bandit_cave_name" text="Mağara Trolü" />
+    <string id="taom_troll_bandit_hill_name" text="Tepe Trolü" />
+    <string id="taom_armoury_visit_news" text="{TOWN} şehrine usta bir zırhçı geldi. Önümüzdeki {DAYS} gün boyunca şehrin cephaneliği daha üstün bir cephanelik gibi stok tutup dövecek." />
+    <string id="taom_armoury_menu" text="Cephaneliği ziyaret et" />
+    <string id="taom_armoury_menu_tip" text="Bu şehrin cephaneliği 3 seviyeden {LEVEL}. seviyede çalışıyor." />
+    <string id="taom_armoury_coop_guest" text="Zırhçı yalnızca bu seferin ev sahibi için çalışır." />
+    <string id="taom_armoury_nothing" text="Bu zırhçının iyileştirebileceği bir şey taşımıyorsun. Bir zırh parçası ve bir sonraki biçimi için gereken madenleri getir." />
+    <string id="taom_armoury_title" text="{TOWN} Cephaneliği" />
+    <string id="taom_armoury_desc" text="Bu cephanelik 3 seviyeden {LEVEL}. seviyede çalışıyor. Ağır parçalar {HEAVY}. seviye, seçkin parçalar {ELITE}. seviye, lord teçhizatı ise {LORD}. seviyede usta bir zırhçı gerektirir. Parça kalitesini korur." />
+    <string id="taom_armoury_choose" text="Seç" />
+    <string id="taom_armoury_leave" text="Ayrıl" />
+    <string id="taom_armoury_confirm_title" text="{SOURCE} iyileştirilsin mi?" />
+    <string id="taom_armoury_confirm_body" text="Zırhçı bunu {PRICE} karşılığında {TARGET} haline getirecek." />
+    <string id="taom_armoury_confirm_yes" text="Yapılsın" />
+    <string id="taom_armoury_cancel" text="İptal" />
+    <string id="taom_armour_class_light" text="hafif" />
+    <string id="taom_armour_class_medium" text="orta" />
+    <string id="taom_armour_class_heavy" text="ağır" />
+    <string id="taom_armour_class_elite" text="seçkin" />
     <string id="taom_armour_class_lord" text="lord" />
-    <string id="taom_armour_class_other" text="fine" />
-    <string id="taom_armoury_offer" text="{SOURCE} into {TARGET} ({CLASS})" />
-    <string id="taom_armoury_gold" text="{GOLD} gold" />
+    <string id="taom_armour_class_other" text="üstün" />
+    <string id="taom_armoury_offer" text="{SOURCE} → {TARGET} ({CLASS})" />
+    <string id="taom_armoury_gold" text="{GOLD} altın" />
     <string id="taom_armoury_amount" text="{COUNT} {ITEM}" />
-    <string id="taom_armoury_block_level" text="This armoury cannot work {CLASS} pieces: it needs level {NEED}, and this one is level {LEVEL}." />
-    <string id="taom_armoury_block_gold" text="You cannot pay it: {PRICE}." />
-    <string id="taom_armoury_block_metal" text="You lack the metals: {PRICE}." />
-    <string id="taom_armoury_block_resource" text="Your people's treasure falls short: {PRICE}." />
-    <string id="taom_armoury_cost" text="Costs {PRICE}." />
-    <string id="taom_armoury_done" text="The armourer hands you {TARGET}." />
-    <string id="taom_armoury_gone" text="You no longer carry {SOURCE}." />
-    <string id="taom_armoury_short_gold" text="You no longer have the gold for it." />
-    <string id="taom_armoury_short_metal" text="You no longer have the metals for it." />
-    <string id="taom_armoury_short_resource" text="Your people's treasure no longer covers it." />
-    <string id="taom_lh_event_title" text="A Lord's Harness Unclaimed" />
-    <string id="taom_lh_event_body" text="Among the spoils of the field lies {ITEM}, the harness of {LORD}'s household. It is yours by right of arms, though his kin would take its return as a courtesy." />
-    <string id="taom_lh_event_take" text="Take it" />
-    <string id="taom_lh_event_return" text="Send it to his kin" />
-    <string id="taom_lg_hands_title" text="The Lord's Gauntlets" />
-    <string id="taom_lg_hands_desc" text="A master armourer forges a lord's gauntlets only for hands that have proved themselves in battle. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with them." />
-    <string id="taom_lg_task_kills" text="Strike down enemies with your own hand" />
-    <string id="taom_lg_task_battles" text="Win battles" />
-    <string id="taom_lg_legs_title" text="The Lord's Greaves" />
-    <string id="taom_lg_legs_desc" text="Greaves fit for a lord are earned in the press of battle, not bought. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with them." />
-    <string id="taom_lg_shoulders_title" text="The Lord's Mantle" />
-    <string id="taom_lg_shoulders_desc" text="A lord's mantle marks one who stands where the fighting is thickest. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lg_head_title" text="The Lord's Helm" />
-    <string id="taom_lg_head_desc" text="A lord's helm is forged for a name that other lords fear. Strike down enemies with your own hand, take an enemy lord captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lg_task_lords" text="Take enemy lords captive" />
-    <string id="taom_lg_body_title" text="The Lord's Harness" />
-    <string id="taom_lg_body_desc" text="The lord's harness is the last armour a master armourer forges, and only for a proven captain. Strike down enemies with your own hand, take enemy lords captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lg_weapon_title" text="The Lord's Weapon" />
-    <string id="taom_lg_weapon_desc" text="The finest weapons of your people go to those whose deeds match the names they carry. Strike down enemies with your own hand, take enemy lords captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lm_gondor" text="Númenórean Steel" />
-    <string id="taom_lm_vlandia" text="Eorling Steel" />
-    <string id="taom_lm_erebor" text="Erebor Dwarf-steel" />
-    <string id="taom_lm_sturgia" text="Dale-forged Steel" />
-    <string id="taom_lm_rivendell" text="Noldorin Silver-steel" />
-    <string id="taom_lm_mirkwood" text="Greenwood Silver" />
-    <string id="taom_lm_mordor" text="Barad-dûr Black Iron" />
-    <string id="taom_lm_isengard" text="Isengard Forge-iron" />
-    <string id="taom_lm_dolguldur" text="Dol Guldur Shadow-iron" />
-    <string id="taom_lm_gundabad" text="Gundabad Orc-steel" />
-    <string id="taom_lm_khuzait" text="Rhûnic Gilt-bronze" />
-    <string id="taom_lm_aserai" text="Haradric Bronze" />
-    <string id="taom_lm_empire" text="Dunland Bog-iron" />
-    <string id="taom_lg_piece_hands" text="lord's gauntlets" />
-    <string id="taom_lg_piece_legs" text="lord's greaves" />
-    <string id="taom_lg_piece_shoulders" text="lord's mantle" />
-    <string id="taom_lg_piece_head" text="lord's helm" />
-    <string id="taom_lg_piece_body" text="lord's harness" />
-    <string id="taom_lg_piece_weapon" text="lord's weapon" />
-    <string id="taom_lg_claim_level" text="Only a master armourer, at a level {LORD} armoury, can fit your {PIECE}." />
-    <string id="taom_lg_take_tip_deeds" text="Do the deeds its quest asks: enemies struck down with your own hand and battles won, and on the higher rungs lords taken captive." />
-    <string id="taom_lg_take_tip" text="Do the deeds its quest asks: enemies struck down with your own hand and battles won, and on the higher rungs lords taken captive; or bring the armourer {AMOUNT} instead." />
-    <string id="taom_lg_claim" text="Claim your {PIECE}" />
-    <string id="taom_lg_take" text="Take up the commission for your {PIECE}" />
-    <string id="taom_lg_handin" text="Hand over {AMOUNT} for your {PIECE}" />
-    <string id="taom_lg_handin_tip" text="You carry {CARRIED} of the {NEEDED} needed." />
-    <string id="taom_lg_start_failed" text="The armourer cannot take up your commission today." />
-    <string id="taom_lg_handin_title" text="Hand over the materials?" />
-    <string id="taom_lg_handin_body" text="The armourer takes them, and a master armourer at a level {LORD} armoury will fit you with your {PIECE}." />
-    <string id="taom_lg_handin_short" text="You no longer carry the materials." />
-    <string id="taom_lg_handin_done" text="The armourer takes the materials. Your {PIECE} waits at any level {LORD} armoury." />
-    <string id="taom_lg_claim_none" text="The armourer has no {PIECE} for your people yet." />
-    <string id="taom_lg_claim_title" text="Your {PIECE}" />
-    <string id="taom_lg_claim_desc" text="The master armourer will fit you with one of these. Choose it." />
-    <string id="taom_lg_claimed" text="The master armourer fits you with {ITEM}." />
-    <string id="taom_lg_drop" text="Among the spoils you find {AMOUNT}." />
-    <string id="taom_lg_ready" text="Your deeds are known. A master armourer, at a level {LORD} armoury, will now fit you with your {PIECE}." />
+    <string id="taom_armoury_block_level" text="Bu cephanelik {CLASS} parçaları işleyemez: {NEED}. seviye gerekir, bu ise {LEVEL}. seviyede." />
+    <string id="taom_armoury_block_gold" text="Bedelini ödeyemezsin: {PRICE}." />
+    <string id="taom_armoury_block_metal" text="Madenlerin yetersiz: {PRICE}." />
+    <string id="taom_armoury_block_resource" text="Halkının hazinesi yetmiyor: {PRICE}." />
+    <string id="taom_armoury_cost" text="Bedeli {PRICE}." />
+    <string id="taom_armoury_done" text="Zırhçı sana {TARGET} uzatır." />
+    <string id="taom_armoury_gone" text="Artık {SOURCE} taşımıyorsun." />
+    <string id="taom_armoury_short_gold" text="Artık bunun için yeterli altının yok." />
+    <string id="taom_armoury_short_metal" text="Artık bunun için yeterli madenin yok." />
+    <string id="taom_armoury_short_resource" text="Halkının hazinesi artık bunu karşılamıyor." />
+    <string id="taom_lh_event_title" text="Sahipsiz Bir Lord Teçhizatı" />
+    <string id="taom_lh_event_body" text="Savaş alanının ganimetleri arasında {LORD} hanesinin teçhizatı olan {ITEM} duruyor. Silah hakkıyla senindir, yine de akrabaları geri verilmesini bir nezaket sayardı." />
+    <string id="taom_lh_event_take" text="Al" />
+    <string id="taom_lh_event_return" text="Akrabalarına gönder" />
+    <string id="taom_lg_hands_title" text="Lordun Zırh Eldivenleri" />
+    <string id="taom_lg_hands_desc" text="Usta bir zırhçı, lord eldivenlerini yalnızca savaşta kendini kanıtlamış eller için döver. Düşmanları kendi elinle devir ve savaşlar kazan ya da zırhçıya halkının lorduna ait malzemeleri getir; o zaman usta bir zırhçı onları sana uydurur." />
+    <string id="taom_lg_task_kills" text="Düşmanları kendi elinle devir" />
+    <string id="taom_lg_task_battles" text="Savaşlar kazan" />
+    <string id="taom_lg_legs_title" text="Lordun Baldırlıkları" />
+    <string id="taom_lg_legs_desc" text="Bir lorda yaraşır baldırlıklar satın alınmaz, savaşın göbeğinde hak edilir. Düşmanları kendi elinle devir ve savaşlar kazan ya da zırhçıya halkının lorduna ait malzemeleri getir; o zaman usta bir zırhçı onları sana uydurur." />
+    <string id="taom_lg_shoulders_title" text="Lordun Pelerini" />
+    <string id="taom_lg_shoulders_desc" text="Bir lordun pelerini, çarpışmanın en kızgın yerinde duran kişiyi belli eder. Düşmanları kendi elinle devir ve savaşlar kazan ya da zırhçıya halkının lorduna ait malzemeleri getir; o zaman usta bir zırhçı onu sana uydurur." />
+    <string id="taom_lg_head_title" text="Lordun Miğferi" />
+    <string id="taom_lg_head_desc" text="Bir lordun miğferi, diğer lordların korktuğu bir isim için dövülür. Düşmanları kendi elinle devir, bir düşman lordu esir al ve savaşlar kazan ya da zırhçıya halkının lorduna ait malzemeleri getir; o zaman usta bir zırhçı onu sana uydurur." />
+    <string id="taom_lg_task_lords" text="Düşman lordları esir al" />
+    <string id="taom_lg_body_title" text="Lordun Zırhı" />
+    <string id="taom_lg_body_desc" text="Lordun zırhı, usta bir zırhçının dövdüğü son zırhtır ve yalnızca kendini kanıtlamış bir komutan içindir. Düşmanları kendi elinle devir, düşman lordları esir al ve savaşlar kazan ya da zırhçıya halkının lorduna ait malzemeleri getir; o zaman usta bir zırhçı onu sana uydurur." />
+    <string id="taom_lg_weapon_title" text="Lordun Silahı" />
+    <string id="taom_lg_weapon_desc" text="Halkının en güzide silahları, taşıdıkları isme yaraşır işler yapanlara verilir. Düşmanları kendi elinle devir, düşman lordları esir al ve savaşlar kazan ya da zırhçıya halkının lorduna ait malzemeleri getir; o zaman usta bir zırhçı onu sana uydurur." />
+    <string id="taom_lm_gondor" text="Númenor Çeliği" />
+    <string id="taom_lm_vlandia" text="Eorling Çeliği" />
+    <string id="taom_lm_erebor" text="Erebor Cüce Çeliği" />
+    <string id="taom_lm_sturgia" text="Dale Dövmesi Çelik" />
+    <string id="taom_lm_rivendell" text="Noldor Gümüş Çeliği" />
+    <string id="taom_lm_mirkwood" text="Yeşilorman Gümüşü" />
+    <string id="taom_lm_mordor" text="Barad-dûr Kara Demiri" />
+    <string id="taom_lm_isengard" text="Isengard Ocak Demiri" />
+    <string id="taom_lm_dolguldur" text="Dol Guldur Gölge Demiri" />
+    <string id="taom_lm_gundabad" text="Gundabad Ork Çeliği" />
+    <string id="taom_lm_khuzait" text="Rhûn Yaldızlı Tuncu" />
+    <string id="taom_lm_aserai" text="Harad Tuncu" />
+    <string id="taom_lm_empire" text="Dunland Bataklık Demiri" />
+    <string id="taom_lg_piece_hands" text="lord zırh eldivenleri" />
+    <string id="taom_lg_piece_legs" text="lord baldırlıkları" />
+    <string id="taom_lg_piece_shoulders" text="lord pelerini" />
+    <string id="taom_lg_piece_head" text="lord miğferi" />
+    <string id="taom_lg_piece_body" text="lord zırhı" />
+    <string id="taom_lg_piece_weapon" text="lord silahı" />
+    <string id="taom_lg_claim_level" text="{PIECE} parçanı ancak {LORD} seviyesindeki bir zırh atölyesindeki usta bir zırhçı sana uydurabilir." />
+    <string id="taom_lg_take_tip_deeds" text="Görevinin istediği işleri yap: kendi elinle devrilmiş düşmanlar ve kazanılmış savaşlar, üst basamaklarda ise esir alınmış lordlar." />
+    <string id="taom_lg_take_tip" text="Görevinin istediği işleri yap: kendi elinle devrilmiş düşmanlar ve kazanılmış savaşlar, üst basamaklarda ise esir alınmış lordlar; ya da bunun yerine zırhçıya {AMOUNT} getir." />
+    <string id="taom_lg_claim" text="{PIECE} parçanı al" />
+    <string id="taom_lg_take" text="{PIECE} için siparişi üstlen" />
+    <string id="taom_lg_handin" text="{PIECE} için {AMOUNT} teslim et" />
+    <string id="taom_lg_handin_tip" text="Gereken {NEEDED} malzemenin {CARRIED} kadarını taşıyorsun." />
+    <string id="taom_lg_start_failed" text="Zırhçı bugün siparişini alamaz." />
+    <string id="taom_lg_handin_title" text="Malzemeler teslim edilsin mi?" />
+    <string id="taom_lg_handin_body" text="Zırhçı malzemeleri alır ve {LORD} seviyesindeki bir zırh atölyesindeki usta zırhçı sana {PIECE} parçanı giydirecek." />
+    <string id="taom_lg_handin_short" text="Malzemeleri artık taşımıyorsun." />
+    <string id="taom_lg_handin_done" text="Zırhçı malzemeleri alır. {PIECE} parçan {LORD} seviyesindeki herhangi bir zırh atölyesinde seni bekliyor." />
+    <string id="taom_lg_claim_none" text="Zırhçının halkın için henüz bir {PIECE} parçası yok." />
+    <string id="taom_lg_claim_title" text="{PIECE} parçan" />
+    <string id="taom_lg_claim_desc" text="Usta zırhçı sana bunlardan birini giydirecek. Seç." />
+    <string id="taom_lg_claimed" text="Usta zırhçı sana {ITEM} giydirir." />
+    <string id="taom_lg_drop" text="Ganimetler arasında {AMOUNT} buluyorsun." />
+    <string id="taom_lg_ready" text="Kahramanlıkların biliniyor. {LORD} seviyesindeki bir zırh atölyesinde usta zırhçı artık sana {PIECE} parçanı giydirecek." />
     <string id="taom_realm_borders_entering" text="{REALM} topraklarına giriyorsun." />
     <string id="taom_realm_borders_mode_alignment" text="Harita, Hür Halkları ve Gölge'yi gösteriyor." />
     <string id="taom_realm_borders_mode_war" text="Harita, müttefiklerini ve düşmanlarını gösteriyor." />
     <string id="taom_realm_borders_mode_political" text="Harita, diyarları gösteriyor." />
+  <string id="taom_fui_gandalf_name" text="Gandalf" />
+  <string id="taom_fui_isildur_name" text="Isildur" />
+  <string id="taom_fui_brand_name" text="Brand" />
+  <string id="taom_fui_bard_name" text="Okçu Bard" />
+  <string id="taom_fui_tauriel_name" text="Tauriel" />
+  <string id="taom_fui_thorin_name" text="Meşekalkan Thorin" />
+  <string id="taom_fui_azog_name" text="Kirletici Azog" />
+  <string id="taom_fui_gilgalad_name" text="Gil-galad" />
+  <string id="taom_fui_quote_gold" text="Parıldayan her şey altın değildir, gezginlerin hepsi kaybolmuş değildir." />
+  <string id="taom_fui_quote_gold_by" text="- Bilbo Baggins" />
+  <string id="taom_fui_quote_light" text="Gölgelerden bir ışık doğacak." />
+  <string id="taom_fui_quote_light_by" text="- Bilbo Baggins" />
+  <string id="taom_fui_quote_smallest" text="En küçük kişi bile geleceğin akışını değiştirebilir." />
+  <string id="taom_fui_quote_smallest_by" text="- Galadriel" />
+  <string id="taom_fui_quote_foul" text="Çirkin görünüyorum ama iyiyim." />
+  <string id="taom_fui_quote_foul_by" text="- Aragorn" />
+  <string id="taom_fui_wanderer" text="Gezgin" />
+  <string id="taom_fui_back_to_menu" text="Ana Menü" />
+  <string id="taom_fui_custom_character" text="Özel Karakter" />
+  <string id="taom_fui_banner" text="SANCAK" />
+  <string id="taom_fui_back" text="Geri" />
+  <string id="taom_fui_clan_name" text="KLAN ADI" />
+  <string id="taom_fui_identity" text="KİMLİK" />
+  <string id="taom_fui_head" text="BAŞ" />
+  <string id="taom_fui_body" text="VÜCUT" />
+  <string id="taom_fui_details" text="AYRINTILAR" />
+  <string id="taom_fui_strengths" text="Güçlü Yönler" />
+  <string id="taom_fui_weaknesses" text="Zayıf Yönler" />
+  <string id="taom_fui_confirm" text="Onayla" />
+  <string id="taom_fui_characters" text="Karakterler" />
+  <string id="taom_fui_leader" text="Lider" />
+  <string id="taom_fui_lord" text="Lord" />
+  <string id="taom_fui_benefits" text="Avantajlar" />
+  <string id="taom_fui_base_attributes" text="Temel Nitelikler" />
+  <string id="taom_fui_skills_and_attributes" text="Beceriler ve Nitelikler" />
+  <string id="taom_fui_faction" text="HİZİP" />
+  <string id="taom_fui_character" text="KARAKTER" />
+  <string id="taom_fui_origins" text="KÖKENLER" />
+  <string id="taom_fui_random" text="Rastgele" />
+  <string id="taom_fui_difficulty" text="ZORLUK" />
+  <string id="taom_fui_review" text="GÖZDEN GEÇİR" />
+  <string id="taom_fui_build" text="YAPI" />
+  <string id="taom_fui_skin_tone" text="TEN RENGİ" />
+  <string id="taom_fui_face" text="YÜZ" />
+  <string id="taom_fui_eyes" text="GÖZLER" />
+  <string id="taom_fui_nose" text="BURUN" />
+  <string id="taom_fui_mouth" text="AĞIZ" />
+  <string id="taom_fui_face_shape" text="YÜZ ŞEKLİ" />
+  <string id="taom_fui_hair" text="SAÇ" />
+  <string id="taom_fui_tattoos" text="DÖVMELER" />
+  <string id="taom_fui_gender" text="CİNSİYET" />
+  <string id="taom_fui_male" text="ERKEK" />
+  <string id="taom_fui_female" text="KADIN" />
+  <string id="taom_fui_race" text="IRK" />
+  <string id="taom_fui_voice" text="SES" />
+  <string id="taom_fui_randomize" text="RASTGELE SEÇ" />
+  <string id="taom_fui_randomize_all" text="TÜMÜNÜ RASTGELE SEÇ" />
+  <string id="taom_fui_default_outfit" text="VARSAYILAN KIYAFET" />
+  <string id="taom_fui_reset" text="SIFIRLA" />
+  <string id="taom_fui_reset_all" text="TÜMÜNÜ SIFIRLA" />
+  <string id="taom_fui_undo" text="GERİ AL" />
+  <string id="taom_fui_redo" text="YİNELE" />
+  <string id="taom_bc_advice_title" text="TAOM: savaş performansı ayarları" />
+  <string id="taom_bc_advice_body" text="{RAGDOLLS} veya {CORPSES} seçeneğin TAOM'un önerdiğinden daha yüksek ayarlanmış. Oyuncular yüksek değerlerde büyük savaşlarda donmalar bildirdi ve bu iki seçeneği düşürmek bunu engelledi. Önerilen: {RAGDOLLS} 5, {CORPSES} {LOW}. Zaten daha düşük olan bir ayar korunur. Şimdi uygulansın mı? İstediğin zaman Seçenekler, {PERFORMANCE} bölümünden geri değiştirebilirsin. Bu uyarı Mod Seçenekleri, TAOM, Performans kısmından kapatılabilir." />
+  <string id="taom_bc_advice_apply" text="Uygula" />
+  <string id="taom_bc_advice_keep" text="Benimkini koru" />
+  <string id="taom_bc_advice_done" text="Savaş ayarları kaydedildi." />
+  <string id="taom_bc_advice_failed" text="Savaş ayarları kaydedilemedi. Bunları Seçenekler, {PERFORMANCE} bölümünden elle ayarla." />
   </strings>
 </base>

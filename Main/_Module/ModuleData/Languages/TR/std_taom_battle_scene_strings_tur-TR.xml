@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Turkish" />
+  </tags>
+  <strings>
+    <string id="aom_taom_dale_castle_001_forceatmo_name" text="[Dale] Westoft Kalesi" />
+    <string id="aom_taom_dwarven_moria_w_forceatmo_name" text="[Puslu Dağlar] Batı Moria" />
+    <string id="aom_taom_gondor_castle_001_forceatmo_name" text="[Gondor] Barad Faen Kalesi" />
+    <string id="aom_taom_gondor_castle_002_forceatmo_name" text="[Gondor] Bergraw Kalesi" />
+    <string id="aom_taom_gondor_castle_003_forceatmo_name" text="[Gondor] Melgobas Kalesi" />
+    <string id="aom_taom_gondor_town_dolamroth_forceatmo_name" text="[Gondor] Dol Amroth" />
+    <string id="aom_taom_gondor_town_lossarnach_forceatmo_name" text="[Gondor] Lossarnach Kasabası" />
+    <string id="aom_taom_gondor_town_minas_tirith_forceatmo_name" text="[Gondor] Minas Tirith" />
+    <string id="aom_taom_gondor_town_osgiliath_e_forceatmo_name" text="[Gondor] Osgiliath (Doğu)" />
+    <string id="aom_taom_gondor_town_osgiliath_w_forceatmo_name" text="[Gondor] Osgiliath (Batı)" />
+    <string id="aom_taom_gondor_village_001_forceatmo_name" text="[Gondor] Gondor Köyü A" />
+    <string id="aom_taom_gondor_village_002_forceatmo_name" text="[Gondor] Camloth Köyü" />
+    <string id="aom_taom_gondor_village_003_forceatmo_name" text="[Gondor] Dinadab Köyü" />
+    <string id="aom_taom_gondor_village_004_forceatmo_name" text="[Gondor] Mereham Köyü" />
+    <string id="aom_taom_isengard_town_orthanc_forceatmo_name" text="[Isengard] Orthanc" />
+    <string id="aom_taom_mordor_battle_001_forceatmo_name" text="[Mordor] Mordor Ovaları I" />
+    <string id="aom_taom_mordor_battle_002_forceatmo_name" text="[Mordor] Mordor Ovaları II" />
+    <string id="aom_taom_mordor_battle_003_forceatmo_name" text="[Mordor] Mordor Ovaları III" />
+    <string id="aom_taom_mordor_battle_004_forceatmo_name" text="[Mordor] Mordor Ovaları IV" />
+    <string id="aom_taom_mordor_battle_black_gates_forceatmo_name" text="[Mordor] Kara Kapı" />
+    <string id="aom_taom_mordor_battle_dead_marshes_forceatmo_name" text="[Mordor] Ölü Bataklıklar" />
+    <string id="aom_taom_mordor_town_goblin_town_forceatmo_name" text="[Mordor] Goblin Şehri" />
+    <string id="aom_taom_mordor_town_minas_forceatmo_name" text="[Mordor] Minas Morgul" />
+    <string id="aom_taom_rohan_battle_001_forceatmo_name" text="[Rohan] Rohan Ovaları" />
+    <string id="aom_taom_rohan_battle_fords_of_isen_forceatmo_name" text="[Rohan] Isen Geçitleri" />
+    <string id="aom_taom_rohan_castle_helms_deep_forceatmo_name" text="[Rohan] Miğfer Dibi - Gece Yağmuru" />
+    <string id="aom_taom_rohan_edoras_town_forceatmo_name" text="[Rohan] Edoras" />
+  </strings>
+</base>

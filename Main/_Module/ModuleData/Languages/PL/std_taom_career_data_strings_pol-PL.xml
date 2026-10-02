@@ -1,0 +1,802 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Polish" />
+  </tags>
+  <strings>
+    <string id="taom_abanissa_house_guard_root_desc" text="Ostrza Straży Kości Słoniowej dają +5% obrażeń w zwarciu i nakładają efekty wyniszczenia." />
+    <string id="taom_abanissa_ivory_rider_root_desc" text="Grzmot Kłów Mûmakanu daje +10% obrażeń od szarży wierzchowca i szerzy strach." />
+    <string id="taom_abanissa_jiret_javelineer_root_desc" text="Salwa Jîret daje +5% obrażeń dystansowych i przyspiesza rzuty oszczepem." />
+    <string id="taom_ability_abanissa_house_guard" text="Ostrza Straży Kości Słoniowej" />
+    <string id="taom_ability_abanissa_house_guard_tt" text="Pokryj broń pustynnymi truciznami — zwiększa obrażenia w zwarciu o +15% i redukcję obrażeń o +10% u sojuszników w promieniu 50 m na 8 s." />
+    <string id="taom_ability_abanissa_ivory_rider" text="Grzmot Kłów Mûmakanu" />
+    <string id="taom_ability_abanissa_ivory_rider_tt" text="Przywołaj pradawny strach Mûmakanu — zwiększa obrażenia od szarży o +25%, prędkość wierzchowca o +20% i obrażenia w zwarciu o +10% na 8 s." />
+    <string id="taom_ability_abanissa_jiret_javelineer" text="Salwa Jîret" />
+    <string id="taom_ability_abanissa_jiret_javelineer_tt" text="Rozpętaj płomienną nawałę oszczepów — zwiększa obrażenia dystansowe o +20%, szybkość napinania o +20% i prędkość ruchu o +15% na 8 s." />
+    <string id="taom_ability_craig_crag_stalker" text="Zatruta Strzałka" />
+    <string id="taom_ability_craig_crag_stalker_tt" text="Pokryj bełty toksyną jaskiniowego grzyba — zwiększa obrażenia dystansowe o +20%, szybkość napinania o +20% i prędkość ruchu o +15% na 8 s." />
+    <string id="taom_ability_craig_pit_driver" text="Szał Błękitnej Grani" />
+    <string id="taom_ability_craig_pit_driver_tt" text="Doprowadź swoje trolle do szału — zwiększa obrażenia w zwarciu o +15% i redukcję obrażeń o +10% u sojuszników w promieniu 50 m na 8 s." />
+    <string id="taom_ability_craig_warg_master" text="Wycie Przywódcy" />
+    <string id="taom_ability_craig_warg_master_tt" text="Narzuć dominację grzmiącym wyciem watahy — zwiększa obrażenia od szarży o +25%, prędkość wierzchowca o +20% i obrażenia w zwarciu o +10% na 8 s." />
+    <string id="taom_ability_falathrim_blade_dancer" text="Splot Gwiezdnego Światła" />
+    <string id="taom_ability_falathrim_blade_dancer_tt" text="Wejdź w pełen gracji trans bojowy Noldorów — zwiększa obrażenia w zwarciu o +15% i redukcję obrażeń o +10% u sojuszników w promieniu 50 m na 8 s." />
+    <string id="taom_ability_falathrim_mariner" text="Ostatni Sojusz" />
+    <string id="taom_ability_falathrim_mariner_tt" text="Jedź z męstwem Ostatniego Sojuszu — zwiększa obrażenia od szarży o +25%, prędkość wierzchowca o +20% i obrażenia w zwarciu o +10% na 8 s." />
+    <string id="taom_ability_falathrim_sentinel" text="Elfi Wzrok" />
+    <string id="taom_ability_falathrim_sentinel_tt" text="Wyostrz pradawną percepcję elfów — zwiększa obrażenia dystansowe o +20%, szybkość napinania o +20% i prędkość ruchu o +15% na 8 s." />
+    <string id="taom_ability_goblin_troll_driver" text="Szał Goblinowego Grodu" />
+    <string id="taom_ability_goblin_troll_driver_tt" text="Doprowadź swoje trolle do szału — zwiększa obrażenia w zwarciu o +15% i redukcję obrażeń o +10% u sojuszników w promieniu 50 m na 8 s." />
+    <string id="taom_ability_goblin_tunnel_stalker" text="Zatruta Strzałka" />
+    <string id="taom_ability_goblin_tunnel_stalker_tt" text="Pokryj bełty toksyną jaskiniowego grzyba — zwiększa obrażenia dystansowe o +20%, szybkość napinania o +20% i prędkość ruchu o +15% na 8 s." />
+    <string id="taom_ability_goblin_warg_master" text="Wycie Przywódcy" />
+    <string id="taom_ability_goblin_warg_master_tt" text="Narzuć dominację grzmiącym wyciem watahy — zwiększa obrażenia od szarży o +25%, prędkość wierzchowca o +20% i obrażenia w zwarciu o +10% na 8 s." />
+    <string id="taom_ability_misty_deep_marksman" text="Zatruta Strzałka" />
+    <string id="taom_ability_misty_deep_marksman_tt" text="Pokryj bełty toksyną jaskiniowego grzyba — zwiększa obrażenia dystansowe o +20%, szybkość napinania o +20% i prędkość ruchu o +15% na 8 s." />
+    <string id="taom_ability_misty_troll_goad" text="Szał Morii" />
+    <string id="taom_ability_misty_troll_goad_tt" text="Doprowadź swoje trolle do szału — zwiększa obrażenia w zwarciu o +15% i redukcję obrażeń o +10% u sojuszników w promieniu 50 m na 8 s." />
+    <string id="taom_ability_misty_warg_chieftain" text="Wycie Przywódcy" />
+    <string id="taom_ability_misty_warg_chieftain_tt" text="Narzuć dominację grzmiącym wyciem watahy — zwiększa obrażenia od szarży o +25%, prędkość wierzchowca o +20% i obrażenia w zwarciu o +10% na 8 s." />
+    <string id="taom_ability_shaghana_beast_rider" text="Rogi Mûmakanu" />
+    <string id="taom_ability_shaghana_beast_rider_tt" text="Przywołaj pradawny strach Mûmakanu — zwiększa obrażenia od szarży o +25%, prędkość wierzchowca o +20% i obrażenia w zwarciu o +10% na 8 s." />
+    <string id="taom_ability_shaghana_chatak_javelineer" text="Salwa Chatâk" />
+    <string id="taom_ability_shaghana_chatak_javelineer_tt" text="Rozpętaj płomienną nawałę oszczepów — zwiększa obrażenia dystansowe o +20%, szybkość napinania o +20% i prędkość ruchu o +15% na 8 s." />
+    <string id="taom_ability_shaghana_zajana_tribesman" text="Ostrza Wężowego Jadu" />
+    <string id="taom_ability_shaghana_zajana_tribesman_tt" text="Pokryj broń pustynnymi truciznami — zwiększa obrażenia w zwarciu o +15% i redukcję obrażeń o +10% u sojuszników w promieniu 50 m na 8 s." />
+    <string id="taom_ahg_t1a_key" text="Zwiększony zasięg Ostrzy Straży Kości Słoniowej — trucizna rozchodzi się szerzej." />
+    <string id="taom_ahg_t1a_p1" text="+8% obrażeń w walce wręcz." />
+    <string id="taom_ahg_t1a_p2" text="+3% obrażeń zadawanych przez wojska." />
+    <string id="taom_ahg_t1a_p3" text="+7% szybkości zamachu." />
+    <string id="taom_ahg_t1a_p4" text="+5% zdobywanej sławy za bitwy." />
+    <string id="taom_ahg_t1b_key" text="Wydłużony czas działania Ostrzy Kłów z Kości Słoniowej – trucizna utrzymuje się dłużej." />
+    <string id="taom_ahg_t1b_p1" text="+6% odporności." />
+    <string id="taom_ahg_t1b_p2" text="+6 maksymalnego zdrowia." />
+    <string id="taom_ahg_t1b_p3" text="+5% szybkości poruszania się." />
+    <string id="taom_ahg_t1b_p4" text="+5% morale wojsk." />
+    <string id="taom_ahg_t2a_key" text="Skrócony czas ładowania Ostrzy Kłów z Kości Słoniowej – uderzaj częściej." />
+    <string id="taom_ahg_t2a_p1" text="+5% obrażeń zadawanych przez wojska." />
+    <string id="taom_ahg_t2a_p2" text="+10% obrażeń w walce wręcz." />
+    <string id="taom_ahg_t2a_p3" text="+10% zdobywanej sławy za bitwy." />
+    <string id="taom_ahg_t2a_p4" text="+3 do wielkości drużyny." />
+    <string id="taom_ahg_t2b_key" text="Ostrza Kłów z Kości Słoniowej zwiększają wyczerpanie, osłabiając wolę walki wroga." />
+    <string id="taom_ahg_t2b_p1" text="+10% szybkości zamachu." />
+    <string id="taom_ahg_t2b_p2" text="+8 maksymalnego zdrowia." />
+    <string id="taom_ahg_t2b_p3" text="+10% odporności." />
+    <string id="taom_ahg_t2b_p4" text="+10% morale wojsk." />
+    <string id="taom_ahg_t3a_key" text="Znacznie powiększony zasięg Ostrzy Kłów z Kości Słoniowej – chmura trucizny." />
+    <string id="taom_ahg_t3a_p1" text="+15% obrażeń w walce wręcz." />
+    <string id="taom_ahg_t3a_p2" text="+9 maksymalnego zdrowia." />
+    <string id="taom_ahg_t3a_p3" text="+7% obrażeń zadawanych przez wojska." />
+    <string id="taom_ahg_t3a_p4" text="+15% zdobywanej sławy za bitwy." />
+    <string id="taom_ahg_t3b_key" text="Znacznie skrócony czas ładowania Ostrzy Kłów z Kości Słoniowej – nieustanne wyczerpywanie." />
+    <string id="taom_ahg_t3b_p1" text="+15% odporności." />
+    <string id="taom_ahg_t3b_p2" text="+20% morale wojsk." />
+    <string id="taom_ahg_t3b_p3" text="+8% obrażeń zadawanych przez wojska." />
+    <string id="taom_ahg_t3b_p4" text="+5 do wielkości drużyny." />
+    <string id="taom_air_t1a_key" text="Powiększony zasięg Kłowego Gromu Mûmakanu – strach sięga dalej." />
+    <string id="taom_air_t1a_p1" text="+10% obrażeń od szarży konia." />
+    <string id="taom_air_t1a_p2" text="+8% obrażeń w walce wręcz." />
+    <string id="taom_air_t1a_p3" text="+5% morale wojsk." />
+    <string id="taom_air_t1a_p4" text="+5% szybkości marszu drużyny." />
+    <string id="taom_air_t1b_key" text="Wydłużony czas działania Kłowego Gromu Mûmakanu – strach utrzymuje się dłużej." />
+    <string id="taom_air_t1b_p1" text="+10% zdrowia konia." />
+    <string id="taom_air_t1b_p2" text="+3% obrażeń zadawanych przez wojska." />
+    <string id="taom_air_t1b_p3" text="+5% zdobywanej sławy za bitwy." />
+    <string id="taom_air_t1b_p4" text="+5% odporności." />
+    <string id="taom_air_t2a_key" text="Skrócony czas ładowania Kłowego Gromu Mûmakanu – groza zawsze tuż-tuż." />
+    <string id="taom_air_t2a_p1" text="+13% obrażeń od szarży konia." />
+    <string id="taom_air_t2a_p2" text="+10% morale oddziałów." />
+    <string id="taom_air_t2a_p3" text="+5% obrażeń oddziałów." />
+    <string id="taom_air_t2a_p4" text="+10% zdobywanej sławy bitewnej." />
+    <string id="taom_air_t2b_key" text="Kłowy Grom Mûmakanu zwiększa wytrzymałość bestii podczas szarży." />
+    <string id="taom_air_t2b_p1" text="+12% obrażeń w walce wręcz." />
+    <string id="taom_air_t2b_p2" text="+13% zdrowia konia." />
+    <string id="taom_air_t2b_p3" text="+10% szybkości marszu drużyny." />
+    <string id="taom_air_t2b_p4" text="+3 do liczebności drużyny." />
+    <string id="taom_air_t3a_key" text="Promień Kłowego Gromu Mûmakanu znacznie zwiększony — ziemia drży." />
+    <string id="taom_air_t3a_p1" text="+15% obrażeń od szarży konia." />
+    <string id="taom_air_t3a_p2" text="+15% obrażeń w walce wręcz." />
+    <string id="taom_air_t3a_p3" text="+20% morale oddziałów." />
+    <string id="taom_air_t3a_p4" text="+15% zdobywanej sławy bitewnej." />
+    <string id="taom_air_t3b_key" text="Czas ładowania Kłowego Gromu Mûmakanu znacznie skrócony — niekończąca się groza." />
+    <string id="taom_air_t3b_p1" text="+15% zdrowia konia." />
+    <string id="taom_air_t3b_p2" text="+15% szybkości marszu drużyny." />
+    <string id="taom_air_t3b_p3" text="+7% obrażeń oddziałów." />
+    <string id="taom_air_t3b_p4" text="+9 do maksymalnego zdrowia." />
+    <string id="taom_ajj_t1a_key" text="Promień Salwy Jîret zwiększony — oszczepy pokrywają szerszy obszar." />
+    <string id="taom_ajj_t1a_p1" text="+8% obrażeń dystansowych." />
+    <string id="taom_ajj_t1a_p2" text="+10% amunicji." />
+    <string id="taom_ajj_t1a_p3" text="+7% szybkości poruszania się." />
+    <string id="taom_ajj_t1a_p4" text="+5% zdobywanej sławy bitewnej." />
+    <string id="taom_ajj_t1b_key" text="Czas trwania Salwy Jîret wydłużony — nieustanny ogień nękający." />
+    <string id="taom_ajj_t1b_p1" text="+5% odporności." />
+    <string id="taom_ajj_t1b_p2" text="+5 do maksymalnego zdrowia." />
+    <string id="taom_ajj_t1b_p3" text="+3% obrażeń oddziałów." />
+    <string id="taom_ajj_t1b_p4" text="+5% zasięgu widzenia drużyny." />
+    <string id="taom_ajj_t2a_key" text="Czas ładowania Salwy Jîret skrócony — oszczepy nigdy się nie kończą." />
+    <string id="taom_ajj_t2a_p1" text="+13% amunicji." />
+    <string id="taom_ajj_t2a_p2" text="+10% obrażeń dystansowych." />
+    <string id="taom_ajj_t2a_p3" text="+10% szybkości poruszania się." />
+    <string id="taom_ajj_t2a_p4" text="+10% zdobywanej sławy bitewnej." />
+    <string id="taom_ajj_t2b_key" text="Salwa Jîret zwiększa skuteczność osłony, gdy jest aktywna." />
+    <string id="taom_ajj_t2b_p1" text="+12% obrażeń dystansowych." />
+    <string id="taom_ajj_t2b_p2" text="+8 do maksymalnego zdrowia." />
+    <string id="taom_ajj_t2b_p3" text="+5% obrażeń oddziałów." />
+    <string id="taom_ajj_t2b_p4" text="+10% zasięgu widzenia drużyny." />
+    <string id="taom_ajj_t3a_key" text="Promień Salwy Jîret znacznie zwiększony — nieunikniony grad oszczepów." />
+    <string id="taom_ajj_t3a_p1" text="+15% obrażeń dystansowych." />
+    <string id="taom_ajj_t3a_p2" text="+15% amunicji." />
+    <string id="taom_ajj_t3a_p3" text="+15% zdobywanej sławy bitewnej." />
+    <string id="taom_ajj_t3a_p4" text="+15% prędkości poruszania się." />
+    <string id="taom_ajj_t3b_key" text="Znacznie skrócone ładowanie Salwy Jîret, nieustające nękanie." />
+    <string id="taom_ajj_t3b_p1" text="+15% obrażeń dystansowych." />
+    <string id="taom_ajj_t3b_p2" text="+9 maksymalnego zdrowia." />
+    <string id="taom_ajj_t3b_p3" text="+7% obrażeń żołnierzy." />
+    <string id="taom_ajj_t3b_p4" text="+15% zasięgu obserwacji drużyny." />
+    <string id="taom_career_abanissa_house_guard" text="Gwardzista Rodu Damudûr" />
+    <string id="taom_career_abanissa_house_guard_desc" text="Wojownik pustynnych plemion Damudûr, którego taktyka wojny na wyczerpanie miażdży wrogów nieustępliwą presją i zatrutymi ostrzami." />
+    <string id="taom_career_abanissa_ivory_rider" text="Jeździec Bestii Szlaku Kości Słoniowej" />
+    <string id="taom_career_abanissa_ivory_rider_desc" text="Groźny jeździec z Dalekiego Haradu, który pędzi wielkie bestie na wroga, łamiąc szyki uderzeniem i pierwotną grozą." />
+    <string id="taom_career_abanissa_jiret_javelineer" text="Oszczepnik z Jîret" />
+    <string id="taom_career_abanissa_jiret_javelineer_desc" text="Szybki harcownik z Jîret, który osłania jazdę gradem oszczepów, nim wycofa się poza zasięg odwetu." />
+    <string id="taom_career_craig_crag_stalker" text="Skalny Łowca z Modrej Grani" />
+    <string id="taom_career_craig_crag_stalker_desc" text="Złośliwy goblini strzelec czający się wśród górskich turni, który zdejmuje cele zatrutymi strzałkami i prymitywnymi łukami." />
+    <string id="taom_career_craig_pit_driver" text="Poganiacz Jam z Modrej Grani" />
+    <string id="taom_career_craig_pit_driver_desc" text="Brutalny wódz orków z Modrej Grani, który dowodzi w boju jaskiniowymi trollami, poganiając je biczem i sprytem." />
+    <string id="taom_career_craig_warg_master" text="Władca Wargów z Modrej Grani" />
+    <string id="taom_career_craig_warg_master_desc" text="Budzący strach przywódca orków, który dosiada największego warga w watasze i prowadzi dzikie łowy przez Ered Luin." />
+    <string id="taom_career_falathrim_blade_dancer" text="Tancerz Ostrzy Falathrim" />
+    <string id="taom_career_falathrim_blade_dancer_desc" text="Pełen gracji elfi wojownik, który przepływa przez bitwę niczym woda, uderzając pradawnymi ostrzami wykutymi w Pierwszej Erze." />
+    <string id="taom_career_falathrim_mariner" text="Żeglarz Falathrim" />
+    <string id="taom_career_falathrim_mariner_desc" text="Konny wojownik z dworu Círdana, który rusza na wojnę na rączych elfich wierzchowcach, będąc iskrą nadziei przeciw Cieniowi." />
+    <string id="taom_career_falathrim_sentinel" text="Strażnik Falathrim" />
+    <string id="taom_career_falathrim_sentinel_desc" text="Niezrównany strzelec z Mithlondu, którego strzały lecą celnie na ogromne odległości, prowadzone wiekami wprawy." />
+    <string id="taom_career_goblin_troll_driver" text="Poganiacz Trolli z Goblinowego Grodu" />
+    <string id="taom_career_goblin_troll_driver_desc" text="Brutalny wódz orków z Goblinowego Grodu, który dowodzi w boju jaskiniowymi trollami, poganiając je biczem i sprytem." />
+    <string id="taom_career_goblin_tunnel_stalker" text="Tunelowy Łowca z Goblinowego Grodu" />
+    <string id="taom_career_goblin_tunnel_stalker_desc" text="Złośliwy goblini strzelec czający się wśród górskich turni, który zdejmuje cele zatrutymi strzałkami i prymitywnymi łukami." />
+    <string id="taom_career_goblin_warg_master" text="Władca Wargów z Goblinowego Grodu" />
+    <string id="taom_career_goblin_warg_master_desc" text="Budzący strach przywódca orków, który dosiada największego warga w watasze i prowadzi dzikie łowy przez Góry Mgliste." />
+    <string id="taom_career_grp_abanissa_house_guard_t1_a" text="Wydmowy Najeźdźca" />
+    <string id="taom_career_grp_abanissa_house_guard_t1_b" text="Ocalały z Pustyni" />
+    <string id="taom_career_grp_abanissa_house_guard_t2_a" text="Uderzenie Wężowego Kła" />
+    <string id="taom_career_grp_abanissa_house_guard_t2_b" text="Odziany w Piaski" />
+    <string id="taom_career_grp_abanissa_house_guard_t3_a" text="Jad Haradwaith" />
+    <string id="taom_career_grp_abanissa_house_guard_t3_b" text="Pogromca Południowców" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t1_a" text="Kłowa Straż Przednia" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t1_b" text="Strażnik Bestii" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t2_a" text="Tratujący Szturm" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t2_b" text="Obrońca Howdy" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t3_a" text="Gniew Mûmakanu" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t3_b" text="Władca Olifantów" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t1_a" text="Harcownik Słonecznej Włóczni" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t1_b" text="Wędrowny Zwiadowca" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t2_a" text="Miotacz Słonecznego Ognia" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t2_b" text="Szkarłatna Zasłona" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t3_a" text="Deszcz Dalekiego Haradu" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t3_b" text="Cień Wydm" />
+    <string id="taom_career_grp_craig_crag_stalker_t1_a" text="Skalny Łowca" />
+    <string id="taom_career_grp_craig_crag_stalker_t1_b" text="Tunelowy Skradacz" />
+    <string id="taom_career_grp_craig_crag_stalker_t2_a" text="Zasadzkowiec Wysokiej Przełęczy" />
+    <string id="taom_career_grp_craig_crag_stalker_t2_b" text="Zatruwacz Strzał" />
+    <string id="taom_career_grp_craig_crag_stalker_t3_a" text="Rabuś Przedsionka" />
+    <string id="taom_career_grp_craig_crag_stalker_t3_b" text="Cień Wysokiej Przełęczy" />
+    <string id="taom_career_grp_craig_pit_driver_t1_a" text="Poganiacz z Batem" />
+    <string id="taom_career_grp_craig_pit_driver_t1_b" text="Strażnik Wylotu Jaskini" />
+    <string id="taom_career_grp_craig_pit_driver_t2_a" text="Tyran Błękitnej Turni" />
+    <string id="taom_career_grp_craig_pit_driver_t2_b" text="Łamacz Głębokich Twierdz" />
+    <string id="taom_career_grp_craig_pit_driver_t3_a" text="Plaga Błękitnej Turni" />
+    <string id="taom_career_grp_craig_pit_driver_t3_b" text="Postrach Północnych Sal" />
+    <string id="taom_career_grp_craig_warg_master_t1_a" text="Jeździec Wargów" />
+    <string id="taom_career_grp_craig_warg_master_t1_b" text="Opiekun Watahy" />
+    <string id="taom_career_grp_craig_warg_master_t2_a" text="Zwiadowca Szarej Watahy" />
+    <string id="taom_career_grp_craig_warg_master_t2_b" text="Władca Dzikich Wilków" />
+    <string id="taom_career_grp_craig_warg_master_t3_a" text="Przywódca Błękitnej Turni" />
+    <string id="taom_career_grp_craig_warg_master_t3_b" text="Wilczy Kapitan Bolga" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t1_a" text="Stal Gwiezdnego Blasku" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t1_b" text="Strażnik Mithlondu" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t2_a" text="Taniec Gondolinu" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t2_b" text="Straż Ukrytej Doliny" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t3_a" text="Miecz Pierwszej Ery" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t3_b" text="Światło Eärendila" />
+    <string id="taom_career_grp_falathrim_mariner_t1_a" text="Szarża Mithlondu" />
+    <string id="taom_career_grp_falathrim_mariner_t1_b" text="Jeździec Brodu" />
+    <string id="taom_career_grp_falathrim_mariner_t2_a" text="Galop Asfalotha" />
+    <string id="taom_career_grp_falathrim_mariner_t2_b" text="Egida Valarów" />
+    <string id="taom_career_grp_falathrim_mariner_t3_a" text="Gniew Glorfindela" />
+    <string id="taom_career_grp_falathrim_mariner_t3_b" text="Zastęp Ostatniego Sojuszu" />
+    <string id="taom_career_grp_falathrim_sentinel_t1_a" text="Bystrooki Strażnik" />
+    <string id="taom_career_grp_falathrim_sentinel_t1_b" text="Straż Lindonu" />
+    <string id="taom_career_grp_falathrim_sentinel_t2_a" text="Nieustająca Salwa" />
+    <string id="taom_career_grp_falathrim_sentinel_t2_b" text="Łuk Eregionu" />
+    <string id="taom_career_grp_falathrim_sentinel_t3_a" text="Burza Gil-galada" />
+    <string id="taom_career_grp_falathrim_sentinel_t3_b" text="Czuwanie Vilyi" />
+    <string id="taom_career_grp_goblin_troll_driver_t1_a" text="Poganiacz z Batem Jamy" />
+    <string id="taom_career_grp_goblin_troll_driver_t1_b" text="Strażnik Wylotu Jaskini" />
+    <string id="taom_career_grp_goblin_troll_driver_t2_a" text="Tyran Goblinowego Grodu" />
+    <string id="taom_career_grp_goblin_troll_driver_t2_b" text="Łamacz Głębokich Twierdz" />
+    <string id="taom_career_grp_goblin_troll_driver_t3_a" text="Plaga Goblinowego Grodu" />
+    <string id="taom_career_grp_goblin_troll_driver_t3_b" text="Postrach Północnych Sal" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t1_a" text="Skradacz Skalny" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t1_b" text="Czający się w Tunelach" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t2_a" text="Napastnik z Wysokiej Przełęczy" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t2_b" text="Zatruwacz Strzał" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t3_a" text="Łupieżca Frontowego Ganku" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t3_b" text="Cień Wysokiej Przełęczy" />
+    <string id="taom_career_grp_goblin_warg_master_t1_a" text="Jeździec Wargów" />
+    <string id="taom_career_grp_goblin_warg_master_t1_b" text="Opiekun Watahy" />
+    <string id="taom_career_grp_goblin_warg_master_t2_a" text="Harcownik Szarej Watahy" />
+    <string id="taom_career_grp_goblin_warg_master_t2_b" text="Pan Groźnych Wilków" />
+    <string id="taom_career_grp_goblin_warg_master_t3_a" text="Przywódca Watahy Goblinowego Grodu" />
+    <string id="taom_career_grp_goblin_warg_master_t3_b" text="Wilczy Kapitan Bolga" />
+    <string id="taom_career_grp_misty_deep_marksman_t1_a" text="Skradacz Skalny" />
+    <string id="taom_career_grp_misty_deep_marksman_t1_b" text="Czający się w Tunelach" />
+    <string id="taom_career_grp_misty_deep_marksman_t2_a" text="Napastnik z Wysokiej Przełęczy" />
+    <string id="taom_career_grp_misty_deep_marksman_t2_b" text="Zatruwacz Strzał" />
+    <string id="taom_career_grp_misty_deep_marksman_t3_a" text="Łupieżca Frontowego Ganku" />
+    <string id="taom_career_grp_misty_deep_marksman_t3_b" text="Cień Wysokiej Przełęczy" />
+    <string id="taom_career_grp_misty_troll_goad_t1_a" text="Poganiacz z Batem Jamy" />
+    <string id="taom_career_grp_misty_troll_goad_t1_b" text="Strażnik Wylotu Jaskini" />
+    <string id="taom_career_grp_misty_troll_goad_t2_a" text="Tyran Goblinowego Grodu" />
+    <string id="taom_career_grp_misty_troll_goad_t2_b" text="Łamacz Głębokich Twierdz" />
+    <string id="taom_career_grp_misty_troll_goad_t3_a" text="Plaga Morii" />
+    <string id="taom_career_grp_misty_troll_goad_t3_b" text="Postrach Północnych Sal" />
+    <string id="taom_career_grp_misty_warg_chieftain_t1_a" text="Jeździec Wargów" />
+    <string id="taom_career_grp_misty_warg_chieftain_t1_b" text="Opiekun Watahy" />
+    <string id="taom_career_grp_misty_warg_chieftain_t2_a" text="Harcownik Szarej Watahy" />
+    <string id="taom_career_grp_misty_warg_chieftain_t2_b" text="Pan Srogich Wilków" />
+    <string id="taom_career_grp_misty_warg_chieftain_t3_a" text="Przewodnik Morii" />
+    <string id="taom_career_grp_misty_warg_chieftain_t3_b" text="Wilczy Kapitan Bolga" />
+    <string id="taom_career_grp_shaghana_beast_rider_t1_a" text="Kłowa Straż Przednia" />
+    <string id="taom_career_grp_shaghana_beast_rider_t1_b" text="Strażnik Bestii" />
+    <string id="taom_career_grp_shaghana_beast_rider_t2_a" text="Tratująca Szarża" />
+    <string id="taom_career_grp_shaghana_beast_rider_t2_b" text="Obrońca Howdy" />
+    <string id="taom_career_grp_shaghana_beast_rider_t3_a" text="Gniew Mûmakanu" />
+    <string id="taom_career_grp_shaghana_beast_rider_t3_b" text="Władca Olifantów" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t1_a" text="Harcownik Słonecznej Włóczni" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t1_b" text="Wędrowny Zwiadowca" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t2_a" text="Miotacz Słonecznego Ognia" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t2_b" text="Szkarłatna Zasłona" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t3_a" text="Deszcz Dalekiego Haradu" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t3_b" text="Cień Wydm" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t1_a" text="Najeźdźca Wydm" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t1_b" text="Ocalały z Pustyni" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t2_a" text="Wężowy Kieł" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t2_b" text="Odziany w Piaski" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t3_a" text="Jad Haradwaith" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t3_b" text="Plaga Południowców" />
+    <string id="taom_career_misty_deep_marksman" text="Strzelec Głębin Morii" />
+    <string id="taom_career_misty_deep_marksman_desc" text="Złośliwy goblini strzelec czający się w górskich turniach, który razi cele zatrutymi strzałkami i prymitywnymi łukami." />
+    <string id="taom_career_misty_troll_goad" text="Poganiacz Trolli z Morii" />
+    <string id="taom_career_misty_troll_goad_desc" text="Brutalny orkowy wódz Morii, który dowodzi jaskiniowymi trollami w bitwie, pędząc je naprzód biczem i sprytem." />
+    <string id="taom_career_misty_warg_chieftain" text="Wargowy Wódz z Gór Mglistych" />
+    <string id="taom_career_misty_warg_chieftain_desc" text="Budzący grozę orkowy przywódca, który dosiada największego warga w watasze i wiedzie dzikie łowy przez Góry Mgliste." />
+    <string id="taom_career_rank1_abanissa_house_guard" text="Gwardzista Rodu Damudûr" />
+    <string id="taom_career_rank1_abanissa_ivory_rider" text="Poskramiacz Bestii Kościanego Szlaku" />
+    <string id="taom_career_rank1_abanissa_jiret_javelineer" text="Oszczepnik Jîret" />
+    <string id="taom_career_rank1_craig_crag_stalker" text="Czający się w Turniach" />
+    <string id="taom_career_rank1_craig_pit_driver" text="Poganiacz z Jam" />
+    <string id="taom_career_rank1_craig_warg_master" text="Jeździec Wargów z Watahy" />
+    <string id="taom_career_rank1_falathrim_blade_dancer" text="Klingarz Falathrimów" />
+    <string id="taom_career_rank1_falathrim_mariner" text="Ohtar z Mithlondu" />
+    <string id="taom_career_rank1_falathrim_sentinel" text="Łucznik Falathrimów" />
+    <string id="taom_career_rank1_goblin_troll_driver" text="Poganiacz z Jam" />
+    <string id="taom_career_rank1_goblin_tunnel_stalker" text="Czający się w Turniach" />
+    <string id="taom_career_rank1_goblin_warg_master" text="Jeździec Wargów z Watahy" />
+    <string id="taom_career_rank1_misty_deep_marksman" text="Czający się w Turniach" />
+    <string id="taom_career_rank1_misty_troll_goad" text="Poganiacz z Jamy" />
+    <string id="taom_career_rank1_misty_warg_chieftain" text="Jeździec wargów ze sfory" />
+    <string id="taom_career_rank1_shaghana_beast_rider" text="Poskramiacz bestii z Sormedânu" />
+    <string id="taom_career_rank1_shaghana_chatak_javelineer" text="Oszczepnik Chatâk" />
+    <string id="taom_career_rank1_shaghana_zajana_tribesman" text="Plemieniec Zajâna" />
+    <string id="taom_career_rank2_abanissa_house_guard" text="Zwiadowca karawan" />
+    <string id="taom_career_rank2_abanissa_ivory_rider" text="Poganiacz mûmaków" />
+    <string id="taom_career_rank2_abanissa_jiret_javelineer" text="Harcownik z włócznią miotaną" />
+    <string id="taom_career_rank2_craig_crag_stalker" text="Tropiciel z Ered Luin" />
+    <string id="taom_career_rank2_craig_pit_driver" text="Poganiacz trolli z Błękitnej Turni" />
+    <string id="taom_career_rank2_craig_warg_master" text="Kapitan dzikich wilków" />
+    <string id="taom_career_rank2_falathrim_blade_dancer" text="Ostrze Złotego Kwiatu" />
+    <string id="taom_career_rank2_falathrim_mariner" text="Roquen z Mithlondu" />
+    <string id="taom_career_rank2_falathrim_sentinel" text="Strażnik Niebiańskiego Łuku" />
+    <string id="taom_career_rank2_goblin_troll_driver" text="Poganiacz trolli z Goblinowego Grodu" />
+    <string id="taom_career_rank2_goblin_tunnel_stalker" text="Tropiciel z Wysokiej Przełęczy" />
+    <string id="taom_career_rank2_goblin_warg_master" text="Kapitan dzikich wilków" />
+    <string id="taom_career_rank2_misty_deep_marksman" text="Tropiciel z Wysokiej Przełęczy" />
+    <string id="taom_career_rank2_misty_troll_goad" text="Poganiacz trolli z Morii" />
+    <string id="taom_career_rank2_misty_warg_chieftain" text="Kapitan dzikich wilków" />
+    <string id="taom_career_rank2_shaghana_beast_rider" text="Poganiacz mûmaków" />
+    <string id="taom_career_rank2_shaghana_chatak_javelineer" text="Harcownik z włócznią miotaną" />
+    <string id="taom_career_rank2_shaghana_zajana_tribesman" text="Najeźdźca burzy piaskowej" />
+    <string id="taom_career_rank3_abanissa_house_guard" text="Wódz Tronu z Kości Słoniowej" />
+    <string id="taom_career_rank3_abanissa_ivory_rider" text="Wojenny przywódca mûmaków" />
+    <string id="taom_career_rank3_abanissa_jiret_javelineer" text="Złocony mistrz włóczni" />
+    <string id="taom_career_rank3_craig_crag_stalker" text="Oko Błękitnej Turni" />
+    <string id="taom_career_rank3_craig_pit_driver" text="Łamacz trolli" />
+    <string id="taom_career_rank3_craig_warg_master" text="Wilczy władca Dzikiego Łowu" />
+    <string id="taom_career_rank3_falathrim_blade_dancer" text="Mistrz ostrza z Mithlondu" />
+    <string id="taom_career_rank3_falathrim_mariner" text="Rycerz Złotego Kwiatu" />
+    <string id="taom_career_rank3_falathrim_sentinel" text="Strażnik Mithlondu" />
+    <string id="taom_career_rank3_goblin_troll_driver" text="Łamacz trolli" />
+    <string id="taom_career_rank3_goblin_tunnel_stalker" text="Oko Goblinowego Grodu" />
+    <string id="taom_career_rank3_goblin_warg_master" text="Wilczy władca Dzikiego Łowu" />
+    <string id="taom_career_rank3_misty_deep_marksman" text="Oko Morii" />
+    <string id="taom_career_rank3_misty_troll_goad" text="Łamacz trolli" />
+    <string id="taom_career_rank3_misty_warg_chieftain" text="Wilczy władca Dzikiego Łowu" />
+    <string id="taom_career_rank3_shaghana_beast_rider" text="Wojenny przywódca mûmaków" />
+    <string id="taom_career_rank3_shaghana_chatak_javelineer" text="Szkarłatny mistrz włóczni" />
+    <string id="taom_career_rank3_shaghana_zajana_tribesman" text="Wódz Wężowego Sztandaru" />
+    <string id="taom_career_shaghana_beast_rider" text="Jeździec Bestii z Sormedânu" />
+    <string id="taom_career_shaghana_beast_rider_desc" text="Groźny jeździec z Dalekiego Haradu, który pędzi wielkie bestie na wroga, łamiąc szyki uderzeniem i pierwotnym przerażeniem." />
+    <string id="taom_career_shaghana_chatak_javelineer" text="Oszczepnik z Chatâku" />
+    <string id="taom_career_shaghana_chatak_javelineer_desc" text="Szybki harcownik z Chatâku, który osłania jazdę gradem oszczepów, nim wycofa się poza zasięg odwetu." />
+    <string id="taom_career_shaghana_zajana_tribesman" text="Plemieniec z Zajâny" />
+    <string id="taom_career_shaghana_zajana_tribesman_desc" text="Wojownik pustynnych plemion Zajâny, którego taktyka wojny na wyniszczenie miażdży wrogów nieustanną presją i zatrutymi ostrzami." />
+    <string id="taom_ccs_t1_a_key" text="Zwiększony promień Zatrutej Strzałki, obejmujący szersze strefy śmierci." />
+    <string id="taom_ccs_t1_a_p1" text="+8% obrażeń dystansowych." />
+    <string id="taom_ccs_t1_a_p2" text="+5% przebicia pancerza." />
+    <string id="taom_ccs_t1_a_p3" text="+7% prędkości poruszania się." />
+    <string id="taom_ccs_t1_a_p4" text="+5% zdobywanej sławy bitewnej." />
+    <string id="taom_ccs_t1_b_key" text="Wydłużony czas trwania Zatrutej Strzałki, nieprzerwany ostrzał." />
+    <string id="taom_ccs_t1_b_p1" text="+5% odporności." />
+    <string id="taom_ccs_t1_b_p2" text="+5 maksymalnego zdrowia." />
+    <string id="taom_ccs_t1_b_p3" text="+5% zasięgu wypatrywania drużyny." />
+    <string id="taom_ccs_t1_b_p4" text="+10% premii do skradania." />
+    <string id="taom_ccs_t2_a_key" text="Skrócone ładowanie Zatrutej Strzałki, stała presja." />
+    <string id="taom_ccs_t2_a_p1" text="+10% zasięgu wypatrywania drużyny." />
+    <string id="taom_ccs_t2_a_p2" text="+10% prędkości poruszania się." />
+    <string id="taom_ccs_t2_a_p3" text="+13% premii do skradania." />
+    <string id="taom_ccs_t2_a_p4" text="+10% zdobywanej sławy bitewnej." />
+    <string id="taom_ccs_t2_b_key" text="Zatruta Strzałka zyskuje dodatkowe przebicie, gdy jest aktywna." />
+    <string id="taom_ccs_t2_b_p1" text="+12% obrażeń dystansowych." />
+    <string id="taom_ccs_t2_b_p2" text="+10% przebicia pancerza." />
+    <string id="taom_ccs_t2_b_p3" text="+8 maksymalnego zdrowia." />
+    <string id="taom_ccs_t2_b_p4" text="+3% obrażeń żołnierzy." />
+    <string id="taom_ccs_t3_a_key" text="Znacznie zwiększony promień Zatrutej Strzałki, salwy nie do uniknięcia." />
+    <string id="taom_ccs_t3_a_p1" text="+18% obrażeń dystansowych." />
+    <string id="taom_ccs_t3_a_p2" text="+15% przebicia pancerza." />
+    <string id="taom_ccs_t3_a_p3" text="+15% zdobywanej sławy bitewnej." />
+    <string id="taom_ccs_t3_a_p4" text="+5% obrażeń żołnierzy." />
+    <string id="taom_ccs_t3_b_key" text="Znacznie skrócone ładowanie Zatrutej Strzałki, nieustający ostrzał." />
+    <string id="taom_ccs_t3_b_p1" text="+15% premii do skradania." />
+    <string id="taom_ccs_t3_b_p2" text="+15% prędkości poruszania się." />
+    <string id="taom_ccs_t3_b_p3" text="+9 maksymalnego zdrowia." />
+    <string id="taom_ccs_t3_b_p4" text="+15% zasięgu wypatrywania drużyny." />
+    <string id="taom_cpd_t1_a_key" text="Zwiększony promień Szału Błękitnej Skały, wzmacniający więcej wojowników." />
+    <string id="taom_cpd_t1_a_p1" text="+8% obrażeń w walce wręcz." />
+    <string id="taom_cpd_t1_a_p2" text="+3% obrażeń żołnierzy." />
+    <string id="taom_cpd_t1_a_p3" text="+6 maks. zdrowia." />
+    <string id="taom_cpd_t1_a_p4" text="+7% prędkości zamachu." />
+    <string id="taom_cpd_t1_b_key" text="Wydłużony czas trwania Szału Blue Craig, wzmacniający obronę." />
+    <string id="taom_cpd_t1_b_p1" text="+8% odporności." />
+    <string id="taom_cpd_t1_b_p2" text="+5% morale oddziałów." />
+    <string id="taom_cpd_t1_b_p3" text="+10% odporności oddziałów." />
+    <string id="taom_cpd_t1_b_p4" text="+5% przeżywalności oddziałów." />
+    <string id="taom_cpd_t2_a_key" text="Skrócone ładowanie Szału Blue Craig, częstsza aktywacja." />
+    <string id="taom_cpd_t2_a_p1" text="+10% morale oddziałów." />
+    <string id="taom_cpd_t2_a_p2" text="+2 do wielkości drużyny." />
+    <string id="taom_cpd_t2_a_p3" text="+10% zdobywanej sławy bitewnej." />
+    <string id="taom_cpd_t2_a_p4" text="-10% żołdu oddziałów." />
+    <string id="taom_cpd_t2_b_key" text="Szał Blue Craig daje dodatkowe premie obronne, gdy jest aktywny." />
+    <string id="taom_cpd_t2_b_p1" text="+12% odporności." />
+    <string id="taom_cpd_t2_b_p2" text="+8 maks. zdrowia." />
+    <string id="taom_cpd_t2_b_p3" text="+13% odporności oddziałów." />
+    <string id="taom_cpd_t2_b_p4" text="+5% obrażeń oddziałów." />
+    <string id="taom_cpd_t3_a_key" text="Znacznie zwiększony zasięg Szału Blue Craig, niszczycielska moc." />
+    <string id="taom_cpd_t3_a_p1" text="+15% obrażeń w walce wręcz." />
+    <string id="taom_cpd_t3_a_p2" text="+10 maks. zdrowia." />
+    <string id="taom_cpd_t3_a_p3" text="+7% obrażeń oddziałów." />
+    <string id="taom_cpd_t3_a_p4" text="+4 do wielkości drużyny." />
+    <string id="taom_cpd_t3_b_key" text="Znacznie skrócone ładowanie Szału Blue Craig, niemal zawsze dostępny." />
+    <string id="taom_cpd_t3_b_p1" text="+18% odporności." />
+    <string id="taom_cpd_t3_b_p2" text="+15% regeneracji zdrowia bohatera." />
+    <string id="taom_cpd_t3_b_p3" text="+20% morale oddziałów." />
+    <string id="taom_cpd_t3_b_p4" text="+15% przeżywalności oddziałów." />
+    <string id="taom_craig_crag_stalker_root_desc" text="Zatruta Strzałka daje +5% obrażeń dystansowych dzięki toksynie jaskiniowego grzyba." />
+    <string id="taom_craig_pit_driver_root_desc" text="Szał Blue Craig daje +5 zdrowia i doprowadza twoje trolle do szału." />
+    <string id="taom_craig_warg_master_root_desc" text="Wycie Przywódcy daje +5% obrażeń w walce wręcz, a wataha rusza na łowy." />
+    <string id="taom_cwm_t1_a_key" text="Zwiększony zasięg Wycia Przywódcy, obejmujący szersze szyki." />
+    <string id="taom_cwm_t1_a_p1" text="+8% obrażeń w walce wręcz." />
+    <string id="taom_cwm_t1_a_p2" text="+10% obrażeń szarży wierzchowca." />
+    <string id="taom_cwm_t1_a_p3" text="+7% prędkości zamachu." />
+    <string id="taom_cwm_t1_a_p4" text="+5% prędkości marszu drużyny." />
+    <string id="taom_cwm_t1_b_key" text="Wydłużony czas trwania Wycia Przywódcy, podtrzymujący impet." />
+    <string id="taom_cwm_t1_b_p1" text="+10% zdrowia wierzchowca." />
+    <string id="taom_cwm_t1_b_p2" text="+5 maks. zdrowia." />
+    <string id="taom_cwm_t1_b_p3" text="-5% żołdu oddziałów." />
+    <string id="taom_cwm_t1_b_p4" text="+5% odporności." />
+    <string id="taom_cwm_t2_a_key" text="Skrócone ładowanie Wycia Przywódcy, szybsza aktywacja." />
+    <string id="taom_cwm_t2_a_p1" text="+10% szybkości marszu drużyny." />
+    <string id="taom_cwm_t2_a_p2" text="-10% żołdu wojsk." />
+    <string id="taom_cwm_t2_a_p3" text="+10% morale wojsk." />
+    <string id="taom_cwm_t2_a_p4" text="+10% zdobywanego rozgłosu z bitew." />
+    <string id="taom_cwm_t2_b_key" text="Wycie Przywódcy zwiększa wytrzymałość wierzchowców, gdy jest aktywne." />
+    <string id="taom_cwm_t2_b_p1" text="+12% obrażeń w zwarciu." />
+    <string id="taom_cwm_t2_b_p2" text="+13% obrażeń od szarży konia." />
+    <string id="taom_cwm_t2_b_p3" text="+13% zdrowia konia." />
+    <string id="taom_cwm_t2_b_p4" text="+10% szybkości zamachu." />
+    <string id="taom_cwm_t3_a_key" text="Znacznie zwiększony zasięg Wycia Przywódcy, niepowstrzymany impet." />
+    <string id="taom_cwm_t3_a_p1" text="+18% obrażeń w zwarciu." />
+    <string id="taom_cwm_t3_a_p2" text="+15% obrażeń od szarży konia." />
+    <string id="taom_cwm_t3_a_p3" text="+15% szybkości zamachu." />
+    <string id="taom_cwm_t3_a_p4" text="+7% obrażeń wojsk." />
+    <string id="taom_cwm_t3_b_key" text="Znacznie skrócone ładowanie Wycia Przywódcy, jedźcie bez wytchnienia." />
+    <string id="taom_cwm_t3_b_p1" text="+15% zdrowia konia." />
+    <string id="taom_cwm_t3_b_p2" text="-15% żołdu wojsk." />
+    <string id="taom_cwm_t3_b_p3" text="+15% szybkości marszu drużyny." />
+    <string id="taom_cwm_t3_b_p4" text="+9 maksymalnego zdrowia." />
+    <string id="taom_falathrim_blade_dancer_root_desc" text="Splot Gwiezdnego Światła daje +5% odporności i elfią zwinność." />
+    <string id="taom_falathrim_mariner_root_desc" text="Ostatni Sojusz daje +5% obrażeń w zwarciu i podnosi na duchu sojuszników." />
+    <string id="taom_falathrim_sentinel_root_desc" text="Elfi Wzrok daje +5% obrażeń dystansowych dzięki wiekom praktyki." />
+    <string id="taom_fbd_t1_a_key" text="Zwiększony zasięg Splotu Gwiezdnego Światła, wzmacnia więcej wojowników." />
+    <string id="taom_fbd_t1_a_p1" text="+8% obrażeń w zwarciu." />
+    <string id="taom_fbd_t1_a_p2" text="+3% obrażeń wojsk." />
+    <string id="taom_fbd_t1_a_p3" text="+6 maksymalnego zdrowia." />
+    <string id="taom_fbd_t1_a_p4" text="+7% szybkości zamachu." />
+    <string id="taom_fbd_t1_b_key" text="Wydłużony czas trwania Splotu Gwiezdnego Światła, wzmacnia obronę." />
+    <string id="taom_fbd_t1_b_p1" text="+8% odporności." />
+    <string id="taom_fbd_t1_b_p2" text="+5% morale wojsk." />
+    <string id="taom_fbd_t1_b_p3" text="+10% odporności wojsk." />
+    <string id="taom_fbd_t1_b_p4" text="+5% przeżywalności wojsk." />
+    <string id="taom_fbd_t2_a_key" text="Skrócone ładowanie Splotu Gwiezdnego Światła, częstsza aktywacja." />
+    <string id="taom_fbd_t2_a_p1" text="+10% morale wojsk." />
+    <string id="taom_fbd_t2_a_p2" text="+2 do wielkości drużyny." />
+    <string id="taom_fbd_t2_a_p3" text="+10% zdobywanego rozgłosu z bitew." />
+    <string id="taom_fbd_t2_a_p4" text="-10% żołdu wojsk." />
+    <string id="taom_fbd_t2_b_key" text="Splot Gwiezdnego Światła daje dodatkowe premie obronne, gdy jest aktywny." />
+    <string id="taom_fbd_t2_b_p1" text="+12% odporności." />
+    <string id="taom_fbd_t2_b_p2" text="+8 maks. zdrowia." />
+    <string id="taom_fbd_t2_b_p3" text="+13% odporności żołnierzy." />
+    <string id="taom_fbd_t2_b_p4" text="+5% obrażeń żołnierzy." />
+    <string id="taom_fbd_t3_a_key" text="Znacznie zwiększony zasięg Splotu Gwiazd, niszczycielska moc." />
+    <string id="taom_fbd_t3_a_p1" text="+15% obrażeń w zwarciu." />
+    <string id="taom_fbd_t3_a_p2" text="+10 maks. zdrowia." />
+    <string id="taom_fbd_t3_a_p3" text="+7% obrażeń żołnierzy." />
+    <string id="taom_fbd_t3_a_p4" text="+4 do wielkości drużyny." />
+    <string id="taom_fbd_t3_b_key" text="Znacznie skrócone ładowanie Splotu Gwiazd, niemal zawsze dostępny." />
+    <string id="taom_fbd_t3_b_p1" text="+18% odporności." />
+    <string id="taom_fbd_t3_b_p2" text="+15% regeneracji zdrowia bohatera." />
+    <string id="taom_fbd_t3_b_p3" text="+20% morale żołnierzy." />
+    <string id="taom_fbd_t3_b_p4" text="+15% przeżywalności żołnierzy." />
+    <string id="taom_fmr_t1_a_key" text="Zwiększony zasięg Ostatniego Sojuszu, obejmuje szersze formacje." />
+    <string id="taom_fmr_t1_a_p1" text="+8% obrażeń w zwarciu." />
+    <string id="taom_fmr_t1_a_p2" text="+10% obrażeń od szarży konia." />
+    <string id="taom_fmr_t1_a_p3" text="+7% szybkości zamachu." />
+    <string id="taom_fmr_t1_a_p4" text="+5% szybkości marszu drużyny." />
+    <string id="taom_fmr_t1_b_key" text="Wydłużony czas trwania Ostatniego Sojuszu, utrzymuje impet." />
+    <string id="taom_fmr_t1_b_p1" text="+10% zdrowia konia." />
+    <string id="taom_fmr_t1_b_p2" text="+5 maks. zdrowia." />
+    <string id="taom_fmr_t1_b_p3" text="-5% żołdu żołnierzy." />
+    <string id="taom_fmr_t1_b_p4" text="+5% odporności." />
+    <string id="taom_fmr_t2_a_key" text="Skrócone ładowanie Ostatniego Sojuszu, szybsze uruchomienie." />
+    <string id="taom_fmr_t2_a_p1" text="+10% szybkości marszu drużyny." />
+    <string id="taom_fmr_t2_a_p2" text="-10% żołdu żołnierzy." />
+    <string id="taom_fmr_t2_a_p3" text="+10% morale żołnierzy." />
+    <string id="taom_fmr_t2_a_p4" text="+10% sławy zdobywanej w bitwach." />
+    <string id="taom_fmr_t2_b_key" text="Ostatni Sojusz zwiększa wytrzymałość wierzchowców, gdy jest aktywny." />
+    <string id="taom_fmr_t2_b_p1" text="+12% obrażeń w zwarciu." />
+    <string id="taom_fmr_t2_b_p2" text="+13% obrażeń od szarży konia." />
+    <string id="taom_fmr_t2_b_p3" text="+13% zdrowia konia." />
+    <string id="taom_fmr_t2_b_p4" text="+10% szybkości zamachu." />
+    <string id="taom_fmr_t3_a_key" text="Znacznie zwiększony zasięg Ostatniego Sojuszu, nie do powstrzymania." />
+    <string id="taom_fmr_t3_a_p1" text="+18% obrażeń w zwarciu." />
+    <string id="taom_fmr_t3_a_p2" text="+15% obrażeń od szarży konia." />
+    <string id="taom_fmr_t3_a_p3" text="+15% szybkości zamachu." />
+    <string id="taom_fmr_t3_a_p4" text="+7% obrażeń żołnierzy." />
+    <string id="taom_fmr_t3_b_key" text="Znacznie skrócone ładowanie Ostatniego Sojuszu, jedź bez wytchnienia." />
+    <string id="taom_fmr_t3_b_p1" text="+15% zdrowia konia." />
+    <string id="taom_fmr_t3_b_p2" text="-15% żołdu oddziałów." />
+    <string id="taom_fmr_t3_b_p3" text="+15% prędkości ruchu drużyny." />
+    <string id="taom_fmr_t3_b_p4" text="+9 maks. zdrowia." />
+    <string id="taom_fsn_t1_a_key" text="Zwiększony promień Elfiego Wzroku, obejmujący szersze strefy rażenia." />
+    <string id="taom_fsn_t1_a_p1" text="+8% obrażeń dystansowych." />
+    <string id="taom_fsn_t1_a_p2" text="+5% przebicia pancerza." />
+    <string id="taom_fsn_t1_a_p3" text="+7% prędkości ruchu." />
+    <string id="taom_fsn_t1_a_p4" text="+5% zdobywanego rozgłosu bitewnego." />
+    <string id="taom_fsn_t1_b_key" text="Wydłużony czas trwania Elfiego Wzroku, nieprzerwany ostrzał." />
+    <string id="taom_fsn_t1_b_p1" text="+5% odporności." />
+    <string id="taom_fsn_t1_b_p2" text="+5 maks. zdrowia." />
+    <string id="taom_fsn_t1_b_p3" text="+5% zasięgu obserwacji drużyny." />
+    <string id="taom_fsn_t1_b_p4" text="+10% premii do skradania." />
+    <string id="taom_fsn_t2_a_key" text="Skrócone ładowanie Elfiego Wzroku, utrzymuje stałą presję." />
+    <string id="taom_fsn_t2_a_p1" text="+10% zasięgu obserwacji drużyny." />
+    <string id="taom_fsn_t2_a_p2" text="+10% prędkości ruchu." />
+    <string id="taom_fsn_t2_a_p3" text="+13% premii do skradania." />
+    <string id="taom_fsn_t2_a_p4" text="+10% zdobywanego rozgłosu bitewnego." />
+    <string id="taom_fsn_t2_b_key" text="Elfi Wzrok zyskuje dodatkowe przebicie, gdy jest aktywny." />
+    <string id="taom_fsn_t2_b_p1" text="+12% obrażeń dystansowych." />
+    <string id="taom_fsn_t2_b_p2" text="+10% przebicia pancerza." />
+    <string id="taom_fsn_t2_b_p3" text="+8 maks. zdrowia." />
+    <string id="taom_fsn_t2_b_p4" text="+3% obrażeń oddziałów." />
+    <string id="taom_fsn_t3_a_key" text="Znacznie zwiększony promień Elfiego Wzroku, salwy nie do uniknięcia." />
+    <string id="taom_fsn_t3_a_p1" text="+18% obrażeń dystansowych." />
+    <string id="taom_fsn_t3_a_p2" text="+15% przebicia pancerza." />
+    <string id="taom_fsn_t3_a_p3" text="+15% zdobywanego rozgłosu bitewnego." />
+    <string id="taom_fsn_t3_a_p4" text="+5% obrażeń oddziałów." />
+    <string id="taom_fsn_t3_b_key" text="Znacznie skrócone ładowanie Elfiego Wzroku, nieustający ostrzał." />
+    <string id="taom_fsn_t3_b_p1" text="+15% premii do skradania." />
+    <string id="taom_fsn_t3_b_p2" text="+15% prędkości ruchu." />
+    <string id="taom_fsn_t3_b_p3" text="+9 maks. zdrowia." />
+    <string id="taom_fsn_t3_b_p4" text="+15% zasięgu obserwacji drużyny." />
+    <string id="taom_goblin_troll_driver_root_desc" text="Szał Goblinowego Grodu daje +5 zdrowia i doprowadza twoje trolle do furii." />
+    <string id="taom_goblin_tunnel_stalker_root_desc" text="Zatruta Strzałka daje +5% obrażeń dystansowych dzięki toksynie z jaskiniowych grzybów." />
+    <string id="taom_goblin_warg_master_root_desc" text="Wycie Przywódcy daje +5% obrażeń w zwarciu, a wataha rusza na łowy." />
+    <string id="taom_gtd_t1_a_key" text="Zwiększony promień Szału Goblinowego Grodu, wzmacnia więcej wojowników." />
+    <string id="taom_gtd_t1_a_p1" text="+8% obrażeń w zwarciu." />
+    <string id="taom_gtd_t1_a_p2" text="+3% obrażeń oddziałów." />
+    <string id="taom_gtd_t1_a_p3" text="+6 maks. zdrowia." />
+    <string id="taom_gtd_t1_a_p4" text="+7% szybkości zamachu." />
+    <string id="taom_gtd_t1_b_key" text="Wydłużony czas trwania Szału Goblinowego Miasta, wzmacniający obronę." />
+    <string id="taom_gtd_t1_b_p1" text="+8% odporności." />
+    <string id="taom_gtd_t1_b_p2" text="+5% morale żołnierzy." />
+    <string id="taom_gtd_t1_b_p3" text="+10% odporności żołnierzy." />
+    <string id="taom_gtd_t1_b_p4" text="+5% przeżywalności żołnierzy." />
+    <string id="taom_gtd_t2_a_key" text="Zmniejszony koszt ładowania Szału Goblinowego Miasta, częstsze aktywacje." />
+    <string id="taom_gtd_t2_a_p1" text="+10% morale żołnierzy." />
+    <string id="taom_gtd_t2_a_p2" text="+2 do wielkości drużyny." />
+    <string id="taom_gtd_t2_a_p3" text="+10% zdobywanej sławy bitewnej." />
+    <string id="taom_gtd_t2_a_p4" text="-10% żołdu żołnierzy." />
+    <string id="taom_gtd_t2_b_key" text="Szał Goblinowego Miasta daje dodatkowe premie obronne, gdy jest aktywny." />
+    <string id="taom_gtd_t2_b_p1" text="+12% odporności." />
+    <string id="taom_gtd_t2_b_p2" text="+8 do maksymalnego zdrowia." />
+    <string id="taom_gtd_t2_b_p3" text="+13% odporności żołnierzy." />
+    <string id="taom_gtd_t2_b_p4" text="+5% obrażeń żołnierzy." />
+    <string id="taom_gtd_t3_a_key" text="Znacznie zwiększony zasięg Szału Goblinowego Miasta, niszczycielska moc." />
+    <string id="taom_gtd_t3_a_p1" text="+15% obrażeń w walce wręcz." />
+    <string id="taom_gtd_t3_a_p2" text="+10 do maksymalnego zdrowia." />
+    <string id="taom_gtd_t3_a_p3" text="+7% obrażeń żołnierzy." />
+    <string id="taom_gtd_t3_a_p4" text="+4 do wielkości drużyny." />
+    <string id="taom_gtd_t3_b_key" text="Znacznie zmniejszony koszt ładowania Szału Goblinowego Miasta, niemal zawsze dostępny." />
+    <string id="taom_gtd_t3_b_p1" text="+18% odporności." />
+    <string id="taom_gtd_t3_b_p2" text="+15% regeneracji zdrowia bohatera." />
+    <string id="taom_gtd_t3_b_p3" text="+20% morale żołnierzy." />
+    <string id="taom_gtd_t3_b_p4" text="+15% przeżywalności żołnierzy." />
+    <string id="taom_gts_t1_a_key" text="Zwiększony zasięg Zatrutej Strzałki, obejmujący szersze strefy śmierci." />
+    <string id="taom_gts_t1_a_p1" text="+8% obrażeń dystansowych." />
+    <string id="taom_gts_t1_a_p2" text="+5% przebicia pancerza." />
+    <string id="taom_gts_t1_a_p3" text="+7% szybkości poruszania się." />
+    <string id="taom_gts_t1_a_p4" text="+5% zdobywanej sławy bitewnej." />
+    <string id="taom_gts_t1_b_key" text="Wydłużony czas trwania Zatrutej Strzałki, nieprzerwany ostrzał." />
+    <string id="taom_gts_t1_b_p1" text="+5% odporności." />
+    <string id="taom_gts_t1_b_p2" text="+5 do maksymalnego zdrowia." />
+    <string id="taom_gts_t1_b_p3" text="+5% zasięgu wykrywania drużyny." />
+    <string id="taom_gts_t1_b_p4" text="+10% premii do skradania." />
+    <string id="taom_gts_t2_a_key" text="Zmniejszony koszt ładowania Zatrutej Strzałki, utrzymujący stałą presję." />
+    <string id="taom_gts_t2_a_p1" text="+10% zasięgu wykrywania drużyny." />
+    <string id="taom_gts_t2_a_p2" text="+10% szybkości poruszania się." />
+    <string id="taom_gts_t2_a_p3" text="+13% premii do skradania." />
+    <string id="taom_gts_t2_a_p4" text="+10% zdobywanej sławy w bitwie." />
+    <string id="taom_gts_t2_b_key" text="Zatruta Strzałka zyskuje dodatkową przebijalność, gdy jest aktywna." />
+    <string id="taom_gts_t2_b_p1" text="+12% obrażeń dystansowych." />
+    <string id="taom_gts_t2_b_p2" text="+10% przebijania pancerza." />
+    <string id="taom_gts_t2_b_p3" text="+8 maksymalnego zdrowia." />
+    <string id="taom_gts_t2_b_p4" text="+3% obrażeń żołnierzy." />
+    <string id="taom_gts_t3_a_key" text="Zasięg Zatrutej Strzałki znacznie zwiększony, salwy nie do uniknięcia." />
+    <string id="taom_gts_t3_a_p1" text="+18% obrażeń dystansowych." />
+    <string id="taom_gts_t3_a_p2" text="+15% przebijania pancerza." />
+    <string id="taom_gts_t3_a_p3" text="+15% zdobywanej sławy w bitwie." />
+    <string id="taom_gts_t3_a_p4" text="+5% obrażeń żołnierzy." />
+    <string id="taom_gts_t3_b_key" text="Czas ładowania Zatrutej Strzałki znacznie skrócony, nieustanny ostrzał." />
+    <string id="taom_gts_t3_b_p1" text="+15% premii do skradania." />
+    <string id="taom_gts_t3_b_p2" text="+15% szybkości poruszania się." />
+    <string id="taom_gts_t3_b_p3" text="+9 maksymalnego zdrowia." />
+    <string id="taom_gts_t3_b_p4" text="+15% zasięgu wypatrywania drużyny." />
+    <string id="taom_gwm_t1_a_key" text="Zasięg Wycia Przywódcy zwiększony, obejmuje szersze szyki." />
+    <string id="taom_gwm_t1_a_p1" text="+8% obrażeń w walce wręcz." />
+    <string id="taom_gwm_t1_a_p2" text="+10% obrażeń od szarży konia." />
+    <string id="taom_gwm_t1_a_p3" text="+7% szybkości zamachu." />
+    <string id="taom_gwm_t1_a_p4" text="+5% szybkości poruszania się drużyny." />
+    <string id="taom_gwm_t1_b_key" text="Czas trwania Wycia Przywódcy wydłużony, utrzymuje impet." />
+    <string id="taom_gwm_t1_b_p1" text="+10% zdrowia konia." />
+    <string id="taom_gwm_t1_b_p2" text="+5 maksymalnego zdrowia." />
+    <string id="taom_gwm_t1_b_p3" text="-5% żołdu żołnierzy." />
+    <string id="taom_gwm_t1_b_p4" text="+5% odporności." />
+    <string id="taom_gwm_t2_a_key" text="Czas ładowania Wycia Przywódcy skrócony, szybsza aktywacja." />
+    <string id="taom_gwm_t2_a_p1" text="+10% szybkości poruszania się drużyny." />
+    <string id="taom_gwm_t2_a_p2" text="-10% żołdu żołnierzy." />
+    <string id="taom_gwm_t2_a_p3" text="+10% morale żołnierzy." />
+    <string id="taom_gwm_t2_a_p4" text="+10% zdobywanej sławy w bitwie." />
+    <string id="taom_gwm_t2_b_key" text="Wycie Przywódcy zwiększa wytrzymałość wierzchowców, gdy jest aktywne." />
+    <string id="taom_gwm_t2_b_p1" text="+12% obrażeń w walce wręcz." />
+    <string id="taom_gwm_t2_b_p2" text="+13% obrażeń od szarży konia." />
+    <string id="taom_gwm_t2_b_p3" text="+13% zdrowia konia." />
+    <string id="taom_gwm_t2_b_p4" text="+10% szybkości zamachu." />
+    <string id="taom_gwm_t3_a_key" text="Zasięg Wycia Przywódcy znacznie zwiększony, nie do powstrzymania." />
+    <string id="taom_gwm_t3_a_p1" text="+18% obrażeń w walce wręcz." />
+    <string id="taom_gwm_t3_a_p2" text="+15% obrażeń od szarży konia." />
+    <string id="taom_gwm_t3_a_p3" text="+15% szybkości zamachu." />
+    <string id="taom_gwm_t3_a_p4" text="+7% obrażeń jednostek." />
+    <string id="taom_gwm_t3_b_key" text="Znacznie skrócone ładowanie Wycia Przywódcy — jedź bez wytchnienia." />
+    <string id="taom_gwm_t3_b_p1" text="+15% zdrowia konia." />
+    <string id="taom_gwm_t3_b_p2" text="-15% żołdu jednostek." />
+    <string id="taom_gwm_t3_b_p3" text="+15% prędkości marszu drużyny." />
+    <string id="taom_gwm_t3_b_p4" text="+9 maksymalnego zdrowia." />
+    <string id="taom_mdm_t1_a_key" text="Zwiększony promień Zatrutej Strzałki — szersze strefy śmierci." />
+    <string id="taom_mdm_t1_a_p1" text="+8% obrażeń dystansowych." />
+    <string id="taom_mdm_t1_a_p2" text="+5% przebicia pancerza." />
+    <string id="taom_mdm_t1_a_p3" text="+7% prędkości poruszania się." />
+    <string id="taom_mdm_t1_a_p4" text="+5% zdobywanej sławy bitewnej." />
+    <string id="taom_mdm_t1_b_key" text="Wydłużony czas trwania Zatrutej Strzałki — nieustanny ostrzał." />
+    <string id="taom_mdm_t1_b_p1" text="+5% odporności." />
+    <string id="taom_mdm_t1_b_p2" text="+5 maksymalnego zdrowia." />
+    <string id="taom_mdm_t1_b_p3" text="+5% zasięgu obserwacji drużyny." />
+    <string id="taom_mdm_t1_b_p4" text="+10% premii do skradania." />
+    <string id="taom_mdm_t2_a_key" text="Skrócone ładowanie Zatrutej Strzałki — nieustanna presja." />
+    <string id="taom_mdm_t2_a_p1" text="+10% zasięgu obserwacji drużyny." />
+    <string id="taom_mdm_t2_a_p2" text="+10% prędkości poruszania się." />
+    <string id="taom_mdm_t2_a_p3" text="+13% premii do skradania." />
+    <string id="taom_mdm_t2_a_p4" text="+10% zdobywanej sławy bitewnej." />
+    <string id="taom_mdm_t2_b_key" text="Zatruta Strzałka zyskuje dodatkowe przebicie, gdy jest aktywna." />
+    <string id="taom_mdm_t2_b_p1" text="+12% obrażeń dystansowych." />
+    <string id="taom_mdm_t2_b_p2" text="+10% przebicia pancerza." />
+    <string id="taom_mdm_t2_b_p3" text="+8 maksymalnego zdrowia." />
+    <string id="taom_mdm_t2_b_p4" text="+3% obrażeń jednostek." />
+    <string id="taom_mdm_t3_a_key" text="Znacznie zwiększony promień Zatrutej Strzałki — salwy, przed którymi nie ma ucieczki." />
+    <string id="taom_mdm_t3_a_p1" text="+18% obrażeń dystansowych." />
+    <string id="taom_mdm_t3_a_p2" text="+15% przebicia pancerza." />
+    <string id="taom_mdm_t3_a_p3" text="+15% zdobywanej sławy bitewnej." />
+    <string id="taom_mdm_t3_a_p4" text="+5% obrażeń jednostek." />
+    <string id="taom_mdm_t3_b_key" text="Znacznie skrócone ładowanie Zatrutej Strzałki — bezlitosny ostrzał." />
+    <string id="taom_mdm_t3_b_p1" text="+15% premii do skradania." />
+    <string id="taom_mdm_t3_b_p2" text="+15% prędkości poruszania się." />
+    <string id="taom_mdm_t3_b_p3" text="+9 maksymalnego zdrowia." />
+    <string id="taom_mdm_t3_b_p4" text="+15% zasięgu obserwacji drużyny." />
+    <string id="taom_misty_deep_marksman_root_desc" text="Zatruta Strzałka daje +5% obrażeń dystansowych dzięki toksynie jaskiniowego grzyba." />
+    <string id="taom_misty_troll_goad_root_desc" text="Szał Morii daje +5 zdrowia i doprowadza twoje trolle do szału." />
+    <string id="taom_misty_warg_chieftain_root_desc" text="Wycie Przywódcy daje +5% obrażeń w zwarciu, a wataha rusza na łowy." />
+    <string id="taom_mtg_t1_a_key" text="Zwiększony promień Szału Morii — wzmacnia więcej wojowników." />
+    <string id="taom_mtg_t1_a_p1" text="+8% obrażeń w walce wręcz." />
+    <string id="taom_mtg_t1_a_p2" text="+3% obrażeń żołnierzy." />
+    <string id="taom_mtg_t1_a_p3" text="+6 maks. zdrowia." />
+    <string id="taom_mtg_t1_a_p4" text="+7% szybkości zamachu." />
+    <string id="taom_mtg_t1_b_key" text="Wydłużony czas trwania Szału Morii, wzmacniający obronę." />
+    <string id="taom_mtg_t1_b_p1" text="+8% odporności." />
+    <string id="taom_mtg_t1_b_p2" text="+5% morale żołnierzy." />
+    <string id="taom_mtg_t1_b_p3" text="+10% odporności żołnierzy." />
+    <string id="taom_mtg_t1_b_p4" text="+5% przeżywalności żołnierzy." />
+    <string id="taom_mtg_t2_a_key" text="Skrócone ładowanie Szału Morii, częstsze aktywacje." />
+    <string id="taom_mtg_t2_a_p1" text="+10% morale żołnierzy." />
+    <string id="taom_mtg_t2_a_p2" text="+2 do liczebności drużyny." />
+    <string id="taom_mtg_t2_a_p3" text="+10% zdobywanej sławy bitewnej." />
+    <string id="taom_mtg_t2_a_p4" text="-10% żołdu żołnierzy." />
+    <string id="taom_mtg_t2_b_key" text="Szał Morii udziela dodatkowych premii obronnych, gdy jest aktywny." />
+    <string id="taom_mtg_t2_b_p1" text="+12% odporności." />
+    <string id="taom_mtg_t2_b_p2" text="+8 maks. zdrowia." />
+    <string id="taom_mtg_t2_b_p3" text="+13% odporności żołnierzy." />
+    <string id="taom_mtg_t2_b_p4" text="+5% obrażeń żołnierzy." />
+    <string id="taom_mtg_t3_a_key" text="Znacznie zwiększony zasięg Szału Morii, niszczycielska moc." />
+    <string id="taom_mtg_t3_a_p1" text="+15% obrażeń w walce wręcz." />
+    <string id="taom_mtg_t3_a_p2" text="+10 maks. zdrowia." />
+    <string id="taom_mtg_t3_a_p3" text="+7% obrażeń żołnierzy." />
+    <string id="taom_mtg_t3_a_p4" text="+4 do liczebności drużyny." />
+    <string id="taom_mtg_t3_b_key" text="Znacznie skrócone ładowanie Szału Morii, niemal zawsze dostępny." />
+    <string id="taom_mtg_t3_b_p1" text="+18% odporności." />
+    <string id="taom_mtg_t3_b_p2" text="+15% regeneracji zdrowia bohatera." />
+    <string id="taom_mtg_t3_b_p3" text="+20% morale żołnierzy." />
+    <string id="taom_mtg_t3_b_p4" text="+15% przeżywalności żołnierzy." />
+    <string id="taom_mwc_t1_a_key" text="Zwiększony zasięg Wycia Przewodnika, obejmujący szersze formacje." />
+    <string id="taom_mwc_t1_a_p1" text="+8% obrażeń w walce wręcz." />
+    <string id="taom_mwc_t1_a_p2" text="+10% obrażeń szarży wierzchowca." />
+    <string id="taom_mwc_t1_a_p3" text="+7% szybkości zamachu." />
+    <string id="taom_mwc_t1_a_p4" text="+5% szybkości marszu drużyny." />
+    <string id="taom_mwc_t1_b_key" text="Wydłużony czas trwania Wycia Przewodnika, podtrzymujący impet." />
+    <string id="taom_mwc_t1_b_p1" text="+10% zdrowia wierzchowca." />
+    <string id="taom_mwc_t1_b_p2" text="+5 maks. zdrowia." />
+    <string id="taom_mwc_t1_b_p3" text="-5% żołdu żołnierzy." />
+    <string id="taom_mwc_t1_b_p4" text="+5% odporności." />
+    <string id="taom_mwc_t2_a_key" text="Skrócone ładowanie Wycia Przewodnika, szybsza aktywacja." />
+    <string id="taom_mwc_t2_a_p1" text="+10% prędkości marszu drużyny." />
+    <string id="taom_mwc_t2_a_p2" text="-10% żołdu wojsk." />
+    <string id="taom_mwc_t2_a_p3" text="+10% morale wojsk." />
+    <string id="taom_mwc_t2_a_p4" text="+10% zdobywanego rozgłosu z bitew." />
+    <string id="taom_mwc_t2_b_key" text="Wycie Wodza zwiększa wytrzymałość wierzchowców, gdy jest aktywne." />
+    <string id="taom_mwc_t2_b_p1" text="+12% obrażeń w zwarciu." />
+    <string id="taom_mwc_t2_b_p2" text="+13% obrażeń od szarży konia." />
+    <string id="taom_mwc_t2_b_p3" text="+13% zdrowia konia." />
+    <string id="taom_mwc_t2_b_p4" text="+10% prędkości zamachu." />
+    <string id="taom_mwc_t3_a_key" text="Znacznie zwiększony promień Wycia Wodza, niepowstrzymany impet." />
+    <string id="taom_mwc_t3_a_p1" text="+18% obrażeń w zwarciu." />
+    <string id="taom_mwc_t3_a_p2" text="+15% obrażeń od szarży konia." />
+    <string id="taom_mwc_t3_a_p3" text="+15% prędkości zamachu." />
+    <string id="taom_mwc_t3_a_p4" text="+7% obrażeń wojsk." />
+    <string id="taom_mwc_t3_b_key" text="Znacznie skrócone ładowanie Wycia Wodza, jedź bez wytchnienia." />
+    <string id="taom_mwc_t3_b_p1" text="+15% zdrowia konia." />
+    <string id="taom_mwc_t3_b_p2" text="-15% żołdu wojsk." />
+    <string id="taom_mwc_t3_b_p3" text="+15% prędkości marszu drużyny." />
+    <string id="taom_mwc_t3_b_p4" text="+9 maksymalnego zdrowia." />
+    <string id="taom_sbr_t1a_key" text="Zwiększony promień Rogów Mûmakanu, strach sięga dalej." />
+    <string id="taom_sbr_t1a_p1" text="+10% obrażeń od szarży konia." />
+    <string id="taom_sbr_t1a_p2" text="+8% obrażeń w zwarciu." />
+    <string id="taom_sbr_t1a_p3" text="+5% morale wojsk." />
+    <string id="taom_sbr_t1a_p4" text="+5% prędkości marszu drużyny." />
+    <string id="taom_sbr_t1b_key" text="Wydłużony czas trwania Rogów Mûmakanu, strach się utrzymuje." />
+    <string id="taom_sbr_t1b_p1" text="+10% zdrowia konia." />
+    <string id="taom_sbr_t1b_p2" text="+3% obrażeń wojsk." />
+    <string id="taom_sbr_t1b_p3" text="+5% zdobywanego rozgłosu z bitew." />
+    <string id="taom_sbr_t1b_p4" text="+5% odporności." />
+    <string id="taom_sbr_t2a_key" text="Skrócone ładowanie Rogów Mûmakanu, groza zawsze tuż za progiem." />
+    <string id="taom_sbr_t2a_p1" text="+13% obrażeń od szarży konia." />
+    <string id="taom_sbr_t2a_p2" text="+10% morale wojsk." />
+    <string id="taom_sbr_t2a_p3" text="+5% obrażeń wojsk." />
+    <string id="taom_sbr_t2a_p4" text="+10% zdobywanego rozgłosu z bitew." />
+    <string id="taom_sbr_t2b_key" text="Rogi Mûmakanu zwiększają wytrzymałość bestii podczas szarży." />
+    <string id="taom_sbr_t2b_p1" text="+12% obrażeń w zwarciu." />
+    <string id="taom_sbr_t2b_p2" text="+13% zdrowia konia." />
+    <string id="taom_sbr_t2b_p3" text="+10% prędkości marszu drużyny." />
+    <string id="taom_sbr_t2b_p4" text="+3 do liczebności drużyny." />
+    <string id="taom_sbr_t3a_key" text="Znacznie zwiększony promień Rogów Mûmakanu, sama ziemia drży." />
+    <string id="taom_sbr_t3a_p1" text="+15% obrażeń od szarży konia." />
+    <string id="taom_sbr_t3a_p2" text="+15% obrażeń w zwarciu." />
+    <string id="taom_sbr_t3a_p3" text="+20% morale żołnierzy." />
+    <string id="taom_sbr_t3a_p4" text="+15% zdobywanej sławy bitewnej." />
+    <string id="taom_sbr_t3b_key" text="Czas ładowania Rogów Mûmakanu znacznie skrócony, niekończąca się groza." />
+    <string id="taom_sbr_t3b_p1" text="+15% zdrowia konia." />
+    <string id="taom_sbr_t3b_p2" text="+15% prędkości marszu drużyny." />
+    <string id="taom_sbr_t3b_p3" text="+7% obrażeń żołnierzy." />
+    <string id="taom_sbr_t3b_p4" text="+9 maksymalnego zdrowia." />
+    <string id="taom_scj_t1a_key" text="Zwiększony zasięg Salwy Chatâk, oszczepy pokrywają szerszy obszar." />
+    <string id="taom_scj_t1a_p1" text="+8% obrażeń dystansowych." />
+    <string id="taom_scj_t1a_p2" text="+10% amunicji." />
+    <string id="taom_scj_t1a_p3" text="+7% prędkości ruchu." />
+    <string id="taom_scj_t1a_p4" text="+5% zdobywanej sławy bitewnej." />
+    <string id="taom_scj_t1b_key" text="Wydłużony czas trwania Salwy Chatâk, nieustający ostrzał nękający." />
+    <string id="taom_scj_t1b_p1" text="+5% odporności." />
+    <string id="taom_scj_t1b_p2" text="+5 maksymalnego zdrowia." />
+    <string id="taom_scj_t1b_p3" text="+3% obrażeń żołnierzy." />
+    <string id="taom_scj_t1b_p4" text="+5% zasięgu obserwacji drużyny." />
+    <string id="taom_scj_t2a_key" text="Skrócony czas ładowania Salwy Chatâk, oszczepy nigdy się nie kończą." />
+    <string id="taom_scj_t2a_p1" text="+13% amunicji." />
+    <string id="taom_scj_t2a_p2" text="+10% obrażeń dystansowych." />
+    <string id="taom_scj_t2a_p3" text="+10% prędkości ruchu." />
+    <string id="taom_scj_t2a_p4" text="+10% zdobywanej sławy bitewnej." />
+    <string id="taom_scj_t2b_key" text="Salwa Chatâk zwiększa skuteczność osłony, gdy jest aktywna." />
+    <string id="taom_scj_t2b_p1" text="+12% obrażeń dystansowych." />
+    <string id="taom_scj_t2b_p2" text="+8 maksymalnego zdrowia." />
+    <string id="taom_scj_t2b_p3" text="+5% obrażeń żołnierzy." />
+    <string id="taom_scj_t2b_p4" text="+10% zasięgu obserwacji drużyny." />
+    <string id="taom_scj_t3a_key" text="Zasięg Salwy Chatâk znacznie powiększony, nieunikniona nawałnica." />
+    <string id="taom_scj_t3a_p1" text="+15% obrażeń dystansowych." />
+    <string id="taom_scj_t3a_p2" text="+15% amunicji." />
+    <string id="taom_scj_t3a_p3" text="+15% zdobywanej sławy bitewnej." />
+    <string id="taom_scj_t3a_p4" text="+15% prędkości ruchu." />
+    <string id="taom_scj_t3b_key" text="Czas ładowania Salwy Chatâk znacznie skrócony, bezlitosne nękanie." />
+    <string id="taom_scj_t3b_p1" text="+15% obrażeń dystansowych." />
+    <string id="taom_scj_t3b_p2" text="+9 maksymalnego zdrowia." />
+    <string id="taom_scj_t3b_p3" text="+7% obrażeń żołnierzy." />
+    <string id="taom_scj_t3b_p4" text="+15% zasięgu obserwacji drużyny." />
+    <string id="taom_shaghana_beast_rider_root_desc" text="Rogi Mûmakanu dają +10% obrażeń od szarży konia i szerzą strach." />
+    <string id="taom_shaghana_chatak_javelineer_root_desc" text="Salwa Chatâk daje +5% obrażeń dystansowych i przyspiesza rzuty oszczepem." />
+    <string id="taom_shaghana_zajana_tribesman_root_desc" text="Ostrza Wężowego Jadu dają +5% obrażeń w zwarciu i wywołują efekty wyniszczenia." />
+    <string id="taom_szt_t1a_key" text="Zwiększony zasięg Ostrzy Wężowego Jadu — toksyna rozprzestrzenia się szerzej." />
+    <string id="taom_szt_t1a_p1" text="+8% obrażeń w zwarciu." />
+    <string id="taom_szt_t1a_p2" text="+3% obrażeń żołnierzy." />
+    <string id="taom_szt_t1a_p3" text="+7% szybkości zamachu." />
+    <string id="taom_szt_t1a_p4" text="+5% zdobywanej sławy bojowej." />
+    <string id="taom_szt_t1b_key" text="Wydłużony czas działania Ostrzy Wężowego Jadu — toksyna utrzymuje się dłużej." />
+    <string id="taom_szt_t1b_p1" text="+6% odporności." />
+    <string id="taom_szt_t1b_p2" text="+6 maksymalnego zdrowia." />
+    <string id="taom_szt_t1b_p3" text="+5% szybkości poruszania." />
+    <string id="taom_szt_t1b_p4" text="+5% morale żołnierzy." />
+    <string id="taom_szt_t2a_key" text="Skrócone ładowanie Ostrzy Wężowego Jadu — uderzaj częściej." />
+    <string id="taom_szt_t2a_p1" text="+5% obrażeń żołnierzy." />
+    <string id="taom_szt_t2a_p2" text="+10% obrażeń w zwarciu." />
+    <string id="taom_szt_t2a_p3" text="+10% zdobywanej sławy bojowej." />
+    <string id="taom_szt_t2a_p4" text="+3 do liczebności drużyny." />
+    <string id="taom_szt_t2b_key" text="Ostrza Wężowego Jadu wzmacniają wyniszczenie, odbierając wrogom wolę walki." />
+    <string id="taom_szt_t2b_p1" text="+10% szybkości zamachu." />
+    <string id="taom_szt_t2b_p2" text="+8 maksymalnego zdrowia." />
+    <string id="taom_szt_t2b_p3" text="+10% odporności." />
+    <string id="taom_szt_t2b_p4" text="+10% morale żołnierzy." />
+    <string id="taom_szt_t3a_key" text="Znacznie zwiększony zasięg Ostrzy Wężowego Jadu — chmura toksyny." />
+    <string id="taom_szt_t3a_p1" text="+15% obrażeń w zwarciu." />
+    <string id="taom_szt_t3a_p2" text="+9 maksymalnego zdrowia." />
+    <string id="taom_szt_t3a_p3" text="+7% obrażeń żołnierzy." />
+    <string id="taom_szt_t3a_p4" text="+15% zdobywanej sławy bojowej." />
+    <string id="taom_szt_t3b_key" text="Znacznie skrócone ładowanie Ostrzy Wężowego Jadu — nieustanne wyniszczenie." />
+    <string id="taom_szt_t3b_p1" text="+15% odporności." />
+    <string id="taom_szt_t3b_p2" text="+20% morale żołnierzy." />
+    <string id="taom_szt_t3b_p3" text="+8% obrażeń żołnierzy." />
+    <string id="taom_szt_t3b_p4" text="+5 do liczebności drużyny." />
+  </strings>
+</base>

@@ -1,0 +1,802 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Turkish" />
+  </tags>
+  <strings>
+    <string id="taom_abanissa_house_guard_root_desc" text="Fildişi-Muhafız Kılıçları %5 yakın dövüş hasarı verir ve yıpratma etkileri uygular." />
+    <string id="taom_abanissa_ivory_rider_root_desc" text="Mûmakan'ın Diş-Gürültüsü %10 at hücum hasarı verir ve korku yayar." />
+    <string id="taom_abanissa_jiret_javelineer_root_desc" text="Jîret Yaylım Atışı %5 menzilli hasar verir ve cirit atışlarını hızlandırır." />
+    <string id="taom_ability_abanissa_house_guard" text="Fildişi-Muhafız Kılıçları" />
+    <string id="taom_ability_abanissa_house_guard_tt" text="Silahlarını çöl zehirlerine bula — 8 saniye boyunca 50 m içindeki müttefiklere %15 yakın dövüş hasarı ve %10 hasar azaltma sağlar." />
+    <string id="taom_ability_abanissa_ivory_rider" text="Mûmakan'ın Diş Gürlemesi" />
+    <string id="taom_ability_abanissa_ivory_rider_tt" text="Mûmakan'ın kadim korkusunu çağır — 8 saniye boyunca %25 hücum hasarı, %20 binek hızı ve %10 yakın dövüş hasarı artışı sağlar." />
+    <string id="taom_ability_abanissa_jiret_javelineer" text="Jîret Yaylımı" />
+    <string id="taom_ability_abanissa_jiret_javelineer_tt" text="Alev alev bir cirit yağmuru saldır — 8 saniye boyunca %20 menzilli hasar, %20 çekiş hızı ve %15 hareket hızı artışı sağlar." />
+    <string id="taom_ability_craig_crag_stalker" text="Zehirli Ok" />
+    <string id="taom_ability_craig_crag_stalker_tt" text="Oklarını mağara mantarı zehrine bula — 8 saniye boyunca %20 menzilli hasar, %20 çekiş hızı ve %15 hareket hızı artışı sağlar." />
+    <string id="taom_ability_craig_pit_driver" text="Mavi Craig Cinneti" />
+    <string id="taom_ability_craig_pit_driver_tt" text="Trollerini cinnete sürükle — 8 saniye boyunca 50 m içindeki müttefiklere %15 yakın dövüş hasarı ve %10 hasar azaltma sağlar." />
+    <string id="taom_ability_craig_warg_master" text="Alfa Uluması" />
+    <string id="taom_ability_craig_warg_master_tt" text="Gürleyen bir sürü ulumasıyla hâkimiyetini göster — 8 saniye boyunca %25 hücum hasarı, %20 binek hızı ve %10 yakın dövüş hasarı artışı sağlar." />
+    <string id="taom_ability_falathrim_blade_dancer" text="Yıldız Işığı Örgüsü" />
+    <string id="taom_ability_falathrim_blade_dancer_tt" text="Zarif bir Noldor savaş transına gir — 8 saniye boyunca 50 m içindeki müttefiklere %15 yakın dövüş hasarı ve %10 hasar azaltma sağlar." />
+    <string id="taom_ability_falathrim_mariner" text="Son İttifak" />
+    <string id="taom_ability_falathrim_mariner_tt" text="Son İttifak'ın yiğitliğiyle at sür — 8 saniye boyunca %25 hücum hasarı, %20 binek hızı ve %10 yakın dövüş hasarı artışı sağlar." />
+    <string id="taom_ability_falathrim_sentinel" text="Elf Gözü" />
+    <string id="taom_ability_falathrim_sentinel_tt" text="Kadim elf sezgisini odakla — 8 saniye boyunca %20 menzilli hasar, %20 çekiş hızı ve %15 hareket hızı artışı sağlar." />
+    <string id="taom_ability_goblin_troll_driver" text="Goblin-şehri Cinneti" />
+    <string id="taom_ability_goblin_troll_driver_tt" text="Trollerini cinnete sürükle — 8 saniye boyunca 50 m içindeki müttefiklere %15 yakın dövüş hasarı ve %10 hasar azaltma sağlar." />
+    <string id="taom_ability_goblin_tunnel_stalker" text="Zehirli Ok" />
+    <string id="taom_ability_goblin_tunnel_stalker_tt" text="Oklarını mağara mantarı zehrine bula — 8 saniye boyunca %20 menzilli hasar, %20 çekiş hızı ve %15 hareket hızı artışı sağlar." />
+    <string id="taom_ability_goblin_warg_master" text="Alfa Uluması" />
+    <string id="taom_ability_goblin_warg_master_tt" text="Gürleyen bir sürü ulumasıyla hâkimiyetini göster — 8 saniye boyunca %25 hücum hasarı, %20 binek hızı ve %10 yakın dövüş hasarı artışı sağlar." />
+    <string id="taom_ability_misty_deep_marksman" text="Zehirli Ok" />
+    <string id="taom_ability_misty_deep_marksman_tt" text="Oklarını mağara mantarı zehrine bula — 8 saniye boyunca %20 menzilli hasar, %20 çekiş hızı ve %15 hareket hızı artışı sağlar." />
+    <string id="taom_ability_misty_troll_goad" text="Moria Cinneti" />
+    <string id="taom_ability_misty_troll_goad_tt" text="Trollerini cinnete sürükle — 8 saniye boyunca 50 m içindeki müttefiklere %15 yakın dövüş hasarı ve %10 hasar azaltma sağlar." />
+    <string id="taom_ability_misty_warg_chieftain" text="Alfa Uluması" />
+    <string id="taom_ability_misty_warg_chieftain_tt" text="Gürleyen bir sürü ulumasıyla hâkimiyetini göster — 8 saniye boyunca %25 hücum hasarı, %20 binek hızı ve %10 yakın dövüş hasarı artışı sağlar." />
+    <string id="taom_ability_shaghana_beast_rider" text="Mûmakan Boynuzları" />
+    <string id="taom_ability_shaghana_beast_rider_tt" text="Mûmakan'ın kadim korkusunu çağır — 8 saniye boyunca %25 hücum hasarı, %20 binek hızı ve %10 yakın dövüş hasarı artışı sağlar." />
+    <string id="taom_ability_shaghana_chatak_javelineer" text="Chatâk Yaylımı" />
+    <string id="taom_ability_shaghana_chatak_javelineer_tt" text="Alev alev bir cirit yağmuru saldır — 8 saniye boyunca %20 menzilli hasar, %20 çekiş hızı ve %15 hareket hızı artışı sağlar." />
+    <string id="taom_ability_shaghana_zajana_tribesman" text="Yılan Zehirli Bıçaklar" />
+    <string id="taom_ability_shaghana_zajana_tribesman_tt" text="Silahlarını çöl zehirlerine bula — 8 saniye boyunca 50 m içindeki müttefiklere %15 yakın dövüş hasarı ve %10 hasar azaltma sağlar." />
+    <string id="taom_ahg_t1a_key" text="Fildişi Koruma Bıçakları'nın yarıçapı arttı, zehir daha geniş yayılıyor." />
+    <string id="taom_ahg_t1a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_ahg_t1a_p2" text="+%3 asker hasarı." />
+    <string id="taom_ahg_t1a_p3" text="+%7 savurma hızı." />
+    <string id="taom_ahg_t1a_p4" text="+%5 savaş şöhreti kazancı." />
+    <string id="taom_ahg_t1b_key" text="Fildişi Koruma Bıçakları'nın süresi uzadı, zehir daha uzun kalıyor." />
+    <string id="taom_ahg_t1b_p1" text="+%6 direnç." />
+    <string id="taom_ahg_t1b_p2" text="+6 azami sağlık." />
+    <string id="taom_ahg_t1b_p3" text="+%5 hareket hızı." />
+    <string id="taom_ahg_t1b_p4" text="+%5 birlik morali." />
+    <string id="taom_ahg_t2a_key" text="Fildişi-Koru Bıçakları'nın dolum süresi azalır, daha sık vurur." />
+    <string id="taom_ahg_t2a_p1" text="+%5 birlik hasarı." />
+    <string id="taom_ahg_t2a_p2" text="+%10 yakın dövüş hasarı." />
+    <string id="taom_ahg_t2a_p3" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_ahg_t2a_p4" text="+3 birlik büyüklüğü." />
+    <string id="taom_ahg_t2b_key" text="Fildişi-Koru Bıçakları yıpratmayı artırır, düşmanın savaşma isteğini emer." />
+    <string id="taom_ahg_t2b_p1" text="+%10 savurma hızı." />
+    <string id="taom_ahg_t2b_p2" text="+8 azami sağlık." />
+    <string id="taom_ahg_t2b_p3" text="+%10 direnç." />
+    <string id="taom_ahg_t2b_p4" text="+%10 birlik morali." />
+    <string id="taom_ahg_t3a_key" text="Fildişi-Koru Bıçakları'nın etki yarıçapı büyük ölçüde genişler, bir zehir bulutu." />
+    <string id="taom_ahg_t3a_p1" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_ahg_t3a_p2" text="+9 azami sağlık." />
+    <string id="taom_ahg_t3a_p3" text="+%7 birlik hasarı." />
+    <string id="taom_ahg_t3a_p4" text="+%15 savaş şöhreti kazanımı." />
+    <string id="taom_ahg_t3b_key" text="Fildişi-Koru Bıçakları'nın dolum süresi büyük ölçüde azalır, sürekli yıpratma." />
+    <string id="taom_ahg_t3b_p1" text="+%15 direnç." />
+    <string id="taom_ahg_t3b_p2" text="+%20 birlik morali." />
+    <string id="taom_ahg_t3b_p3" text="+%8 birlik hasarı." />
+    <string id="taom_ahg_t3b_p4" text="+5 birlik büyüklüğü." />
+    <string id="taom_air_t1a_key" text="Mûmakan'ın Diş-Gürlemesi'nin yarıçapı genişler, korku daha uzağa yayılır." />
+    <string id="taom_air_t1a_p1" text="+%10 at hücum hasarı." />
+    <string id="taom_air_t1a_p2" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_air_t1a_p3" text="+%5 birlik morali." />
+    <string id="taom_air_t1a_p4" text="+%5 birlik hareket hızı." />
+    <string id="taom_air_t1b_key" text="Mûmakan'ın Diş-Gürlemesi'nin süresi uzar, korku kalıcı olur." />
+    <string id="taom_air_t1b_p1" text="+%10 at sağlığı." />
+    <string id="taom_air_t1b_p2" text="+%3 birlik hasarı." />
+    <string id="taom_air_t1b_p3" text="+%5 savaş şöhreti kazanımı." />
+    <string id="taom_air_t1b_p4" text="+%5 direnç." />
+    <string id="taom_air_t2a_key" text="Mûmakan'ın Diş-Gürlemesi'nin dolum süresi azalır, dehşet her an yakındır." />
+    <string id="taom_air_t2a_p1" text="+%13 at hücum hasarı." />
+    <string id="taom_air_t2a_p2" text="+%10 birlik morali." />
+    <string id="taom_air_t2a_p3" text="+%5 birlik hasarı." />
+    <string id="taom_air_t2a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_air_t2b_key" text="Mûmakan'ın Diş-Gürlemesi, hücum sırasında hayvanın dayanıklılığını artırır." />
+    <string id="taom_air_t2b_p1" text="+%12 yakın dövüş hasarı." />
+    <string id="taom_air_t2b_p2" text="+%13 at canı." />
+    <string id="taom_air_t2b_p3" text="+%10 müfreze hareket hızı." />
+    <string id="taom_air_t2b_p4" text="+3 müfreze büyüklüğü." />
+    <string id="taom_air_t3a_key" text="Mûmakan'ın Diş-Gürültüsü yarıçapı büyük ölçüde genişledi, toprak titriyor." />
+    <string id="taom_air_t3a_p1" text="+%15 at hücum hasarı." />
+    <string id="taom_air_t3a_p2" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_air_t3a_p3" text="+%20 asker morali." />
+    <string id="taom_air_t3a_p4" text="+%15 savaş şöhreti kazancı." />
+    <string id="taom_air_t3b_key" text="Mûmakan'ın Diş-Gürültüsü dolum süresi büyük ölçüde azaldı, bitmeyen dehşet." />
+    <string id="taom_air_t3b_p1" text="+%15 at canı." />
+    <string id="taom_air_t3b_p2" text="+%15 müfreze hareket hızı." />
+    <string id="taom_air_t3b_p3" text="+%7 asker hasarı." />
+    <string id="taom_air_t3b_p4" text="+9 azami can." />
+    <string id="taom_ajj_t1a_key" text="Jîret Yaylımı yarıçapı arttı, ciritler daha geniş alanı kaplıyor." />
+    <string id="taom_ajj_t1a_p1" text="+%8 menzilli hasar." />
+    <string id="taom_ajj_t1a_p2" text="+%10 cephane." />
+    <string id="taom_ajj_t1a_p3" text="+%7 hareket hızı." />
+    <string id="taom_ajj_t1a_p4" text="+%5 savaş şöhreti kazancı." />
+    <string id="taom_ajj_t1b_key" text="Jîret Yaylımı süresi uzadı, aralıksız taciz ateşi." />
+    <string id="taom_ajj_t1b_p1" text="+%5 direnç." />
+    <string id="taom_ajj_t1b_p2" text="+5 azami can." />
+    <string id="taom_ajj_t1b_p3" text="+%3 asker hasarı." />
+    <string id="taom_ajj_t1b_p4" text="+%5 müfreze görüş menzili." />
+    <string id="taom_ajj_t2a_key" text="Jîret Yaylımı dolum süresi azaldı, ciritler hiç bitmez." />
+    <string id="taom_ajj_t2a_p1" text="+%13 cephane." />
+    <string id="taom_ajj_t2a_p2" text="+%10 menzilli hasar." />
+    <string id="taom_ajj_t2a_p3" text="+%10 hareket hızı." />
+    <string id="taom_ajj_t2a_p4" text="+%10 savaş şöhreti kazancı." />
+    <string id="taom_ajj_t2b_key" text="Jîret Yaylımı etkinken perdeleme etkinliğini artırır." />
+    <string id="taom_ajj_t2b_p1" text="+%12 menzilli hasar." />
+    <string id="taom_ajj_t2b_p2" text="+8 azami can." />
+    <string id="taom_ajj_t2b_p3" text="+%5 asker hasarı." />
+    <string id="taom_ajj_t2b_p4" text="+%10 müfreze görüş menzili." />
+    <string id="taom_ajj_t3a_key" text="Jîret Yaylımı yarıçapı büyük ölçüde genişledi, kaçınılmaz bir yağmur." />
+    <string id="taom_ajj_t3a_p1" text="+%15 menzilli hasar." />
+    <string id="taom_ajj_t3a_p2" text="+%15 cephane." />
+    <string id="taom_ajj_t3a_p3" text="+%15 savaş şöhreti kazancı." />
+    <string id="taom_ajj_t3a_p4" text="+%15 hareket hızı." />
+    <string id="taom_ajj_t3b_key" text="Jîret Yaylımı dolum süresi büyük ölçüde azaldı, amansız taciz." />
+    <string id="taom_ajj_t3b_p1" text="+%15 menzilli hasar." />
+    <string id="taom_ajj_t3b_p2" text="+9 azami can." />
+    <string id="taom_ajj_t3b_p3" text="+%7 asker hasarı." />
+    <string id="taom_ajj_t3b_p4" text="+%15 müfreze görüş menzili." />
+    <string id="taom_career_abanissa_house_guard" text="Damudûr Hane Muhafızı" />
+    <string id="taom_career_abanissa_house_guard_desc" text="Yıpratma savaşı taktikleriyle düşmanlarını amansız bir baskı ve zehirli bıçaklarla eriten Damudûr çöl kabilelerinin savaşçısı." />
+    <string id="taom_career_abanissa_ivory_rider" text="Fildişi Yolu Canavar Binicisi" />
+    <string id="taom_career_abanissa_ivory_rider_desc" text="Uzak Harad'ın korkunç bir binicisi; devasa canavarları düşmanın üzerine sürerek hatları şok ve ilkel dehşetle parçalar." />
+    <string id="taom_career_abanissa_jiret_javelineer" text="Jîret Ciritçisi" />
+    <string id="taom_career_abanissa_jiret_javelineer_desc" text="Cirit yağmuruyla süvarileri perdeleyen, ardından karşılık alamayacağı uzaklığa çekilen hızlı hareket eden Jîret akıncısı." />
+    <string id="taom_career_craig_crag_stalker" text="Mavi Kayalık Yamaç Avcısı" />
+    <string id="taom_career_craig_crag_stalker_desc" text="Dağ kayalıklarında pusuya yatan, zehirli oklar ve kaba yaylarla hedeflerini teker teker deviren kinci bir goblin nişancı." />
+    <string id="taom_career_craig_pit_driver" text="Mavi Kayalık Çukur Sürücüsü" />
+    <string id="taom_career_craig_pit_driver_desc" text="Savaşta mağara trollerini yöneten, onları kırbaç ve kurnazlıkla ileri süren acımasız bir Mavi Kayalık ork reisi." />
+    <string id="taom_career_craig_warg_master" text="Mavi Kayalık Warg Efendisi" />
+    <string id="taom_career_craig_warg_master_desc" text="Sürünün en büyük wargına binen, Ered Luin boyunca vahşi avlara önderlik eden korkulan bir ork lideri." />
+    <string id="taom_career_falathrim_blade_dancer" text="Falathrim Kılıç Dansçısı" />
+    <string id="taom_career_falathrim_blade_dancer_desc" text="Savaşın içinde akan su gibi süzülen, Birinci Çağ'da dövülmüş kadim kılıçlarla vuran zarif bir elf savaşçısı." />
+    <string id="taom_career_falathrim_mariner" text="Falathrim Denizcisi" />
+    <string id="taom_career_falathrim_mariner_desc" text="Hızlı elf atlarıyla savaşa koşan, gölgeye karşı bir umut ışığı olan Círdan'ın hanesinden atlı bir savaşçı." />
+    <string id="taom_career_falathrim_sentinel" text="Falathrim Gözcüsü" />
+    <string id="taom_career_falathrim_sentinel_desc" text="Yüzyılların talimiyle yönlendirilen okları uçsuz bucaksız mesafelerde hedefini şaşmayan, eşsiz bir Mithlond nişancısı." />
+    <string id="taom_career_goblin_troll_driver" text="Goblin-kasabası Troll Sürücüsü" />
+    <string id="taom_career_goblin_troll_driver_desc" text="Savaşta mağara trollerini yöneten, onları kırbaç ve kurnazlıkla ileri süren acımasız bir Goblin-kasabası ork reisi." />
+    <string id="taom_career_goblin_tunnel_stalker" text="Goblin-kasabası Tünel Avcısı" />
+    <string id="taom_career_goblin_tunnel_stalker_desc" text="Dağ kayalıklarında pusuya yatan, zehirli oklar ve kaba yaylarla hedeflerini teker teker deviren kinci bir goblin nişancı." />
+    <string id="taom_career_goblin_warg_master" text="Goblin-kasabası Warg Efendisi" />
+    <string id="taom_career_goblin_warg_master_desc" text="Sürünün en büyük wargına binen, Puslu Dağlar boyunca vahşi avlara önderlik eden korkulan bir ork lideri." />
+    <string id="taom_career_grp_abanissa_house_guard_t1_a" text="Kum Tepesi Akıncısı" />
+    <string id="taom_career_grp_abanissa_house_guard_t1_b" text="Çöl Hayatta Kalanı" />
+    <string id="taom_career_grp_abanissa_house_guard_t2_a" text="Yılan Dişi Vurucusu" />
+    <string id="taom_career_grp_abanissa_house_guard_t2_b" text="Kumların Kuşananı" />
+    <string id="taom_career_grp_abanissa_house_guard_t3_a" text="Haradwaith Zehri" />
+    <string id="taom_career_grp_abanissa_house_guard_t3_b" text="Güneylilerin Belası" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t1_a" text="Diş Öncüsü" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t1_b" text="Canavar Bekçisi" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t2_a" text="Ezici Hücum" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t2_b" text="Howdah Muhafızı" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t3_a" text="Mûmakan Gazabı" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t3_b" text="Olifantların Efendisi" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t1_a" text="Güneş Mızraklı Avcı" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t1_b" text="Gezgin Akıncı" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t2_a" text="Güneş Ateşi Atıcısı" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t2_b" text="Kızıl Perde" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t3_a" text="Uzak Harad'ın Yağmuru" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t3_b" text="Kumulların Gölgesi" />
+    <string id="taom_career_grp_craig_crag_stalker_t1_a" text="Kaya Sinsisi" />
+    <string id="taom_career_grp_craig_crag_stalker_t1_b" text="Tünel Sinsisi" />
+    <string id="taom_career_grp_craig_crag_stalker_t2_a" text="Yüksek Geçit Pusucusu" />
+    <string id="taom_career_grp_craig_crag_stalker_t2_b" text="Zehirli Ok Yapıcısı" />
+    <string id="taom_career_grp_craig_crag_stalker_t3_a" text="Eşik Yağmacısı" />
+    <string id="taom_career_grp_craig_crag_stalker_t3_b" text="Yüksek Geçidin Gölgesi" />
+    <string id="taom_career_grp_craig_pit_driver_t1_a" text="Çukur Kırbaççısı" />
+    <string id="taom_career_grp_craig_pit_driver_t1_b" text="Mağara Ağzı Muhafızı" />
+    <string id="taom_career_grp_craig_pit_driver_t2_a" text="Mavi Kayalık Zorbası" />
+    <string id="taom_career_grp_craig_pit_driver_t2_b" text="Derin Sığınak Kırıcısı" />
+    <string id="taom_career_grp_craig_pit_driver_t3_a" text="Mavi Kayalığın Belası" />
+    <string id="taom_career_grp_craig_pit_driver_t3_b" text="Kuzey Salonlarının Dehşeti" />
+    <string id="taom_career_grp_craig_warg_master_t1_a" text="Varg Binicisi" />
+    <string id="taom_career_grp_craig_warg_master_t1_b" text="Sürü Bekçisi" />
+    <string id="taom_career_grp_craig_warg_master_t2_a" text="Gri Sürü Akıncısı" />
+    <string id="taom_career_grp_craig_warg_master_t2_b" text="Vahşi Kurt Efendisi" />
+    <string id="taom_career_grp_craig_warg_master_t3_a" text="Mavi Kayalığın Lideri" />
+    <string id="taom_career_grp_craig_warg_master_t3_b" text="Bolg'un Kurt Kaptanı" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t1_a" text="Yıldız Işıklı Çelik" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t1_b" text="Mithlond Muhafızı" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t2_a" text="Gondolin Dansı" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t2_b" text="Gizli Vadinin Koruyucusu" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t3_a" text="Birinci Çağ'ın Kılıcı" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t3_b" text="Eärendil'in Işığı" />
+    <string id="taom_career_grp_falathrim_mariner_t1_a" text="Mithlond Hücumu" />
+    <string id="taom_career_grp_falathrim_mariner_t1_b" text="Geçidin Binicisi" />
+    <string id="taom_career_grp_falathrim_mariner_t2_a" text="Asfaloth'un Dörtnalası" />
+    <string id="taom_career_grp_falathrim_mariner_t2_b" text="Valar'ın Kalkanı" />
+    <string id="taom_career_grp_falathrim_mariner_t3_a" text="Glorfindel'in Gazabı" />
+    <string id="taom_career_grp_falathrim_mariner_t3_b" text="Son İttifak Ordusu" />
+    <string id="taom_career_grp_falathrim_sentinel_t1_a" text="Keskin Gözlü Gözcü" />
+    <string id="taom_career_grp_falathrim_sentinel_t1_b" text="Lindon Nöbeti" />
+    <string id="taom_career_grp_falathrim_sentinel_t2_a" text="Dinmeyen Ok Yağmuru" />
+    <string id="taom_career_grp_falathrim_sentinel_t2_b" text="Eregion Yayı" />
+    <string id="taom_career_grp_falathrim_sentinel_t3_a" text="Gil-galad Fırtınası" />
+    <string id="taom_career_grp_falathrim_sentinel_t3_b" text="Vilya Nöbeti" />
+    <string id="taom_career_grp_goblin_troll_driver_t1_a" text="Çukur Kırbacı Sürücüsü" />
+    <string id="taom_career_grp_goblin_troll_driver_t1_b" text="Mağara Ağzı Muhafızı" />
+    <string id="taom_career_grp_goblin_troll_driver_t2_a" text="Goblin-şehri Zorbası" />
+    <string id="taom_career_grp_goblin_troll_driver_t2_b" text="Derin Kale Yarıcısı" />
+    <string id="taom_career_grp_goblin_troll_driver_t3_a" text="Goblin-şehri Belası" />
+    <string id="taom_career_grp_goblin_troll_driver_t3_b" text="Kuzey Salonlarının Dehşeti" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t1_a" text="Kaya Sinsisi" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t1_b" text="Tünel Sinsisi" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t2_a" text="Yüksek Geçit Pusucusu" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t2_b" text="Zehirli Ok Yapımcısı" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t3_a" text="Ön Sahanlık Yağmacısı" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t3_b" text="Yüksek Geçidin Gölgesi" />
+    <string id="taom_career_grp_goblin_warg_master_t1_a" text="Varg Binicisi" />
+    <string id="taom_career_grp_goblin_warg_master_t1_b" text="Sürü Bakıcısı" />
+    <string id="taom_career_grp_goblin_warg_master_t2_a" text="Gri Sürü Akıncısı" />
+    <string id="taom_career_grp_goblin_warg_master_t2_b" text="Vahşi Kurt Efendisi" />
+    <string id="taom_career_grp_goblin_warg_master_t3_a" text="Goblin-şehri Alfası" />
+    <string id="taom_career_grp_goblin_warg_master_t3_b" text="Bolg'un Kurt Kaptanı" />
+    <string id="taom_career_grp_misty_deep_marksman_t1_a" text="Kaya Sinsisi" />
+    <string id="taom_career_grp_misty_deep_marksman_t1_b" text="Tünel Sinsisi" />
+    <string id="taom_career_grp_misty_deep_marksman_t2_a" text="Yüksek Geçit Pusucusu" />
+    <string id="taom_career_grp_misty_deep_marksman_t2_b" text="Zehirli Ok Yapımcısı" />
+    <string id="taom_career_grp_misty_deep_marksman_t3_a" text="Ön Sahanlık Yağmacısı" />
+    <string id="taom_career_grp_misty_deep_marksman_t3_b" text="Yüksek Geçidin Gölgesi" />
+    <string id="taom_career_grp_misty_troll_goad_t1_a" text="Çukur Kırbacı Sürücüsü" />
+    <string id="taom_career_grp_misty_troll_goad_t1_b" text="Mağara Ağzı Muhafızı" />
+    <string id="taom_career_grp_misty_troll_goad_t2_a" text="Goblin-şehri Zorbası" />
+    <string id="taom_career_grp_misty_troll_goad_t2_b" text="Derin Kale Yarıcısı" />
+    <string id="taom_career_grp_misty_troll_goad_t3_a" text="Moria Belası" />
+    <string id="taom_career_grp_misty_troll_goad_t3_b" text="Kuzey Salonlarının Dehşeti" />
+    <string id="taom_career_grp_misty_warg_chieftain_t1_a" text="Varg Binicisi" />
+    <string id="taom_career_grp_misty_warg_chieftain_t1_b" text="Sürü Bakıcısı" />
+    <string id="taom_career_grp_misty_warg_chieftain_t2_a" text="Gri Sürü Akıncısı" />
+    <string id="taom_career_grp_misty_warg_chieftain_t2_b" text="Vahşi Kurt Efendisi" />
+    <string id="taom_career_grp_misty_warg_chieftain_t3_a" text="Moria Alfası" />
+    <string id="taom_career_grp_misty_warg_chieftain_t3_b" text="Bolg'un Kurt Kaptanı" />
+    <string id="taom_career_grp_shaghana_beast_rider_t1_a" text="Dişli Öncü" />
+    <string id="taom_career_grp_shaghana_beast_rider_t1_b" text="Canavar Muhafızı" />
+    <string id="taom_career_grp_shaghana_beast_rider_t2_a" text="Ezici Hücum" />
+    <string id="taom_career_grp_shaghana_beast_rider_t2_b" text="Howdah Muhafızı" />
+    <string id="taom_career_grp_shaghana_beast_rider_t3_a" text="Mûmakan'ın Gazabı" />
+    <string id="taom_career_grp_shaghana_beast_rider_t3_b" text="Olifantların Efendisi" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t1_a" text="Güneş Mızraklı Avcı" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t1_b" text="Gezgin Akıncı" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t2_a" text="Güneş Ateşi Atıcısı" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t2_b" text="Kızıl Perde" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t3_a" text="Uzak Harad Yağmuru" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t3_b" text="Kumulların Gölgesi" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t1_a" text="Kumul Akıncısı" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t1_b" text="Çöl Hayatta Kalanı" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t2_a" text="Yılan Dişli Vurucu" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t2_b" text="Kumların Kuşanıcısı" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t3_a" text="Haradwaith Zehri" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t3_b" text="Güneylilerin Belası" />
+    <string id="taom_career_misty_deep_marksman" text="Moria Derinlik Nişancısı" />
+    <string id="taom_career_misty_deep_marksman_desc" text="Dağ kayalıklarında pusuya yatan, zehirli oklar ve kaba yaylarla hedeflerini teker teker deviren kinci bir goblin nişancısı." />
+    <string id="taom_career_misty_troll_goad" text="Moria Trol Güdücüsü" />
+    <string id="taom_career_misty_troll_goad_desc" text="Savaşta mağara trollerine komuta eden, onları kırbaç ve kurnazlıkla ileri süren vahşi bir Moria ork reisi." />
+    <string id="taom_career_misty_warg_chieftain" text="Sisli Dağlar Warg Reisi" />
+    <string id="taom_career_misty_warg_chieftain_desc" text="Sürünün en iri warg'ına binen, Sisli Dağlar'da vahşi avlara önderlik eden korkulan bir ork lideri." />
+    <string id="taom_career_rank1_abanissa_house_guard" text="Damudûr Hane Muhafızı" />
+    <string id="taom_career_rank1_abanissa_ivory_rider" text="Fildişi Yolu Canavar Terbiyecisi" />
+    <string id="taom_career_rank1_abanissa_jiret_javelineer" text="Jîret Ciritçisi" />
+    <string id="taom_career_rank1_craig_crag_stalker" text="Kayalık Pusucusu" />
+    <string id="taom_career_rank1_craig_pit_driver" text="Çukur Güdücüsü" />
+    <string id="taom_career_rank1_craig_warg_master" text="Sürünün Warg Binicisi" />
+    <string id="taom_career_rank1_falathrim_blade_dancer" text="Falathrim Kılıç Ustası" />
+    <string id="taom_career_rank1_falathrim_mariner" text="Mithlond Ohtar'ı" />
+    <string id="taom_career_rank1_falathrim_sentinel" text="Falathrim Okçusu" />
+    <string id="taom_career_rank1_goblin_troll_driver" text="Çukur Güdücüsü" />
+    <string id="taom_career_rank1_goblin_tunnel_stalker" text="Kayalık Pusucusu" />
+    <string id="taom_career_rank1_goblin_warg_master" text="Sürünün Warg Binicisi" />
+    <string id="taom_career_rank1_misty_deep_marksman" text="Kayalık Pusucusu" />
+    <string id="taom_career_rank1_misty_troll_goad" text="Çukur Güdücüsü" />
+    <string id="taom_career_rank1_misty_warg_chieftain" text="Sürünün Warg Binicisi" />
+    <string id="taom_career_rank1_shaghana_beast_rider" text="Sormedân Canavar Terbiyecisi" />
+    <string id="taom_career_rank1_shaghana_chatak_javelineer" text="Chatâk Ciritçisi" />
+    <string id="taom_career_rank1_shaghana_zajana_tribesman" text="Zajâna Kabilelisi" />
+    <string id="taom_career_rank2_abanissa_house_guard" text="Kervan Öncüsü" />
+    <string id="taom_career_rank2_abanissa_ivory_rider" text="Mûmak Sürücüsü" />
+    <string id="taom_career_rank2_abanissa_jiret_javelineer" text="Atmalı Mızrak Avcısı" />
+    <string id="taom_career_rank2_craig_crag_stalker" text="Ered Luin Takipçisi" />
+    <string id="taom_career_rank2_craig_pit_driver" text="Mavi Kayalık Trol Güdücüsü" />
+    <string id="taom_career_rank2_craig_warg_master" text="Vahşi Kurt Kaptanı" />
+    <string id="taom_career_rank2_falathrim_blade_dancer" text="Altın Çiçek'in Kılıcı" />
+    <string id="taom_career_rank2_falathrim_mariner" text="Mithlond Roqueni" />
+    <string id="taom_career_rank2_falathrim_sentinel" text="Göksel Kemer Nöbetçisi" />
+    <string id="taom_career_rank2_goblin_troll_driver" text="Goblin-kenti Trol Güdücüsü" />
+    <string id="taom_career_rank2_goblin_tunnel_stalker" text="Yüce Geçit Takipçisi" />
+    <string id="taom_career_rank2_goblin_warg_master" text="Vahşi Kurt Kaptanı" />
+    <string id="taom_career_rank2_misty_deep_marksman" text="Yüce Geçit Takipçisi" />
+    <string id="taom_career_rank2_misty_troll_goad" text="Moria Trol Güdücüsü" />
+    <string id="taom_career_rank2_misty_warg_chieftain" text="Vahşi Kurt Kaptanı" />
+    <string id="taom_career_rank2_shaghana_beast_rider" text="Mûmak Sürücüsü" />
+    <string id="taom_career_rank2_shaghana_chatak_javelineer" text="Atmalı Mızrak Avcısı" />
+    <string id="taom_career_rank2_shaghana_zajana_tribesman" text="Kum Fırtınası Akıncısı" />
+    <string id="taom_career_rank3_abanissa_house_guard" text="Fildişi Taht Reisi" />
+    <string id="taom_career_rank3_abanissa_ivory_rider" text="Mûmak Savaş Önderi" />
+    <string id="taom_career_rank3_abanissa_jiret_javelineer" text="Yaldızlı Mızrak Ustası" />
+    <string id="taom_career_rank3_craig_crag_stalker" text="Mavi Kayalığın Gözü" />
+    <string id="taom_career_rank3_craig_pit_driver" text="Trol Kıran" />
+    <string id="taom_career_rank3_craig_warg_master" text="Yaban Avın Kurt Efendisi" />
+    <string id="taom_career_rank3_falathrim_blade_dancer" text="Mithlond Kılıç Ustası" />
+    <string id="taom_career_rank3_falathrim_mariner" text="Altın Çiçek Şövalyesi" />
+    <string id="taom_career_rank3_falathrim_sentinel" text="Mithlond Muhafızı" />
+    <string id="taom_career_rank3_goblin_troll_driver" text="Trol Kıran" />
+    <string id="taom_career_rank3_goblin_tunnel_stalker" text="Goblin-kentinin Gözü" />
+    <string id="taom_career_rank3_goblin_warg_master" text="Yaban Avın Kurt Efendisi" />
+    <string id="taom_career_rank3_misty_deep_marksman" text="Moria'nın Gözü" />
+    <string id="taom_career_rank3_misty_troll_goad" text="Trol Kıran" />
+    <string id="taom_career_rank3_misty_warg_chieftain" text="Yaban Avın Kurt Efendisi" />
+    <string id="taom_career_rank3_shaghana_beast_rider" text="Mûmak Savaş Önderi" />
+    <string id="taom_career_rank3_shaghana_chatak_javelineer" text="Kızıl Mızrak Ustası" />
+    <string id="taom_career_rank3_shaghana_zajana_tribesman" text="Yılan Sancaklı Reis" />
+    <string id="taom_career_shaghana_beast_rider" text="Sormedân Canavar Binicisi" />
+    <string id="taom_career_shaghana_beast_rider_desc" text="Uzak Harad'ın korkunç bir binicisi; devasa canavarları düşmanın üzerine sürer, saflarını şok ve ilkel dehşetle parçalar." />
+    <string id="taom_career_shaghana_chatak_javelineer" text="Chatâk Cirit Atıcısı" />
+    <string id="taom_career_shaghana_chatak_javelineer_desc" text="Chatâk'ın hızlı hareket eden bir avcısı; süvarileri cirit yağmuruyla perdeler, ardından karşılık veremeyecekleri kadar uzağa çekilir." />
+    <string id="taom_career_shaghana_zajana_tribesman" text="Zajâna Kabile Savaşçısı" />
+    <string id="taom_career_shaghana_zajana_tribesman_desc" text="Zajâna çöl kabilelerinden bir savaşçı; yıpratma savaşı taktikleriyle, amansız baskı ve zehirli bıçaklarla düşmanlarını tüketir." />
+    <string id="taom_ccs_t1_a_key" text="Zehirli Ok yarıçapı artar, daha geniş ölüm bölgelerini kapsar." />
+    <string id="taom_ccs_t1_a_p1" text="+%8 menzilli hasar." />
+    <string id="taom_ccs_t1_a_p2" text="+%5 zırh delme." />
+    <string id="taom_ccs_t1_a_p3" text="+%7 hareket hızı." />
+    <string id="taom_ccs_t1_a_p4" text="+%5 savaş şöhreti kazanımı." />
+    <string id="taom_ccs_t1_b_key" text="Zehirli Ok süresi uzar, sürekli yaylım ateşi." />
+    <string id="taom_ccs_t1_b_p1" text="+%5 direnç." />
+    <string id="taom_ccs_t1_b_p2" text="+5 azami sağlık." />
+    <string id="taom_ccs_t1_b_p3" text="+%5 müfreze görüş menzili." />
+    <string id="taom_ccs_t1_b_p4" text="+%10 gizlilik bonusu." />
+    <string id="taom_ccs_t2_a_key" text="Zehirli Ok bekleme süresi azalır, sürekli baskı." />
+    <string id="taom_ccs_t2_a_p1" text="+%10 müfreze görüş menzili." />
+    <string id="taom_ccs_t2_a_p2" text="+%10 hareket hızı." />
+    <string id="taom_ccs_t2_a_p3" text="+%13 gizlilik bonusu." />
+    <string id="taom_ccs_t2_a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_ccs_t2_b_key" text="Zehirli Ok etkinken ek delme gücü kazanır." />
+    <string id="taom_ccs_t2_b_p1" text="+%12 menzilli hasar." />
+    <string id="taom_ccs_t2_b_p2" text="+%10 zırh delme." />
+    <string id="taom_ccs_t2_b_p3" text="+8 azami sağlık." />
+    <string id="taom_ccs_t2_b_p4" text="+%3 birlik hasarı." />
+    <string id="taom_ccs_t3_a_key" text="Zehirli Ok yarıçapı büyük ölçüde genişler, kaçınılmaz yaylımlar." />
+    <string id="taom_ccs_t3_a_p1" text="+%18 menzilli hasar." />
+    <string id="taom_ccs_t3_a_p2" text="+%15 zırh delme." />
+    <string id="taom_ccs_t3_a_p3" text="+%15 savaş şöhreti kazanımı." />
+    <string id="taom_ccs_t3_a_p4" text="+%5 birlik hasarı." />
+    <string id="taom_ccs_t3_b_key" text="Zehirli Ok bekleme süresi büyük ölçüde azalır, amansız ateş." />
+    <string id="taom_ccs_t3_b_p1" text="+%15 gizlilik bonusu." />
+    <string id="taom_ccs_t3_b_p2" text="+%15 hareket hızı." />
+    <string id="taom_ccs_t3_b_p3" text="+9 azami sağlık." />
+    <string id="taom_ccs_t3_b_p4" text="+%15 müfreze görüş menzili." />
+    <string id="taom_cpd_t1_a_key" text="Mavi Craig Cinneti yarıçapı artar, daha çok savaşçıyı güçlendirir." />
+    <string id="taom_cpd_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_cpd_t1_a_p2" text="+%3 birlik hasarı." />
+    <string id="taom_cpd_t1_a_p3" text="+6 azami sağlık." />
+    <string id="taom_cpd_t1_a_p4" text="+%7 savurma hızı." />
+    <string id="taom_cpd_t1_b_key" text="Mavi Craig Cinneti süresi uzar, savunmayı sağlamlaştırır." />
+    <string id="taom_cpd_t1_b_p1" text="+%8 direnç." />
+    <string id="taom_cpd_t1_b_p2" text="+%5 birlik morali." />
+    <string id="taom_cpd_t1_b_p3" text="+%10 asker direnci." />
+    <string id="taom_cpd_t1_b_p4" text="+%5 asker hayatta kalma." />
+    <string id="taom_cpd_t2_a_key" text="Mavi Craig Çılgınlığı şarjı azaldı, daha sık etkinleşir." />
+    <string id="taom_cpd_t2_a_p1" text="+%10 asker morali." />
+    <string id="taom_cpd_t2_a_p2" text="+2 müfreze büyüklüğü." />
+    <string id="taom_cpd_t2_a_p3" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_cpd_t2_a_p4" text="-%10 asker maaşı." />
+    <string id="taom_cpd_t2_b_key" text="Mavi Craig Çılgınlığı etkinken ek savunma takviyeleri sağlar." />
+    <string id="taom_cpd_t2_b_p1" text="+%12 direnç." />
+    <string id="taom_cpd_t2_b_p2" text="+8 azami sağlık." />
+    <string id="taom_cpd_t2_b_p3" text="+%13 asker direnci." />
+    <string id="taom_cpd_t2_b_p4" text="+%5 asker hasarı." />
+    <string id="taom_cpd_t3_a_key" text="Mavi Craig Çılgınlığı yarıçapı büyük ölçüde genişledi, yıkıcı güç." />
+    <string id="taom_cpd_t3_a_p1" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_cpd_t3_a_p2" text="+10 azami sağlık." />
+    <string id="taom_cpd_t3_a_p3" text="+%7 asker hasarı." />
+    <string id="taom_cpd_t3_a_p4" text="+4 müfreze büyüklüğü." />
+    <string id="taom_cpd_t3_b_key" text="Mavi Craig Çılgınlığı şarjı büyük ölçüde azaldı, neredeyse her zaman hazır." />
+    <string id="taom_cpd_t3_b_p1" text="+%18 direnç." />
+    <string id="taom_cpd_t3_b_p2" text="+%15 kahraman sağlık yenilenmesi." />
+    <string id="taom_cpd_t3_b_p3" text="+%20 asker morali." />
+    <string id="taom_cpd_t3_b_p4" text="+%15 asker hayatta kalma." />
+    <string id="taom_craig_crag_stalker_root_desc" text="Zehirli Dart, mağara mantarı toksiniyle +%5 menzilli hasar sağlar." />
+    <string id="taom_craig_pit_driver_root_desc" text="Mavi Craig Çılgınlığı +5 sağlık verir ve trollerinizi cinnete sürükler." />
+    <string id="taom_craig_warg_master_root_desc" text="Alfa Uluması +%5 yakın dövüş hasarı verir ve sürü ava çıkar." />
+    <string id="taom_cwm_t1_a_key" text="Alfa Uluması yarıçapı genişledi, daha geniş düzenleri kapsar." />
+    <string id="taom_cwm_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_cwm_t1_a_p2" text="+%10 at hücum hasarı." />
+    <string id="taom_cwm_t1_a_p3" text="+%7 savurma hızı." />
+    <string id="taom_cwm_t1_a_p4" text="+%5 müfreze hareket hızı." />
+    <string id="taom_cwm_t1_b_key" text="Alfa Uluması süresi uzatıldı, ivmeyi korur." />
+    <string id="taom_cwm_t1_b_p1" text="+%10 at sağlığı." />
+    <string id="taom_cwm_t1_b_p2" text="+5 azami sağlık." />
+    <string id="taom_cwm_t1_b_p3" text="-%5 asker maaşı." />
+    <string id="taom_cwm_t1_b_p4" text="+%5 direnç." />
+    <string id="taom_cwm_t2_a_key" text="Alfa Uluması şarjı azaldı, daha hızlı etkinleşir." />
+    <string id="taom_cwm_t2_a_p1" text="+%10 müfreze hareket hızı." />
+    <string id="taom_cwm_t2_a_p2" text="-%10 asker maaşı." />
+    <string id="taom_cwm_t2_a_p3" text="+%10 asker morali." />
+    <string id="taom_cwm_t2_a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_cwm_t2_b_key" text="Alfa Uluması etkinken binek dayanıklılığını artırır." />
+    <string id="taom_cwm_t2_b_p1" text="+%12 yakın dövüş hasarı." />
+    <string id="taom_cwm_t2_b_p2" text="+%13 at hücum hasarı." />
+    <string id="taom_cwm_t2_b_p3" text="+%13 at sağlığı." />
+    <string id="taom_cwm_t2_b_p4" text="+%10 savurma hızı." />
+    <string id="taom_cwm_t3_a_key" text="Alfa Uluması yarıçapı büyük ölçüde genişler, durdurulamaz darbe." />
+    <string id="taom_cwm_t3_a_p1" text="+%18 yakın dövüş hasarı." />
+    <string id="taom_cwm_t3_a_p2" text="+%15 at hücum hasarı." />
+    <string id="taom_cwm_t3_a_p3" text="+%15 savurma hızı." />
+    <string id="taom_cwm_t3_a_p4" text="+%7 birlik hasarı." />
+    <string id="taom_cwm_t3_b_key" text="Alfa Uluması dolumu büyük ölçüde azalır, durmaksızın sür." />
+    <string id="taom_cwm_t3_b_p1" text="+%15 at sağlığı." />
+    <string id="taom_cwm_t3_b_p2" text="-%15 birlik maaşı." />
+    <string id="taom_cwm_t3_b_p3" text="+%15 müfreze hareket hızı." />
+    <string id="taom_cwm_t3_b_p4" text="+9 azami sağlık." />
+    <string id="taom_falathrim_blade_dancer_root_desc" text="Yıldız Işığı Örgüsü +%5 direnç ve elf çevikliği bahşeder." />
+    <string id="taom_falathrim_mariner_root_desc" text="Son İttifak +%5 yakın dövüş hasarı verir ve müttefiklerine ilham olur." />
+    <string id="taom_falathrim_sentinel_root_desc" text="Elf Görüşü, yüzyılların tecrübesiyle +%5 menzilli hasar bahşeder." />
+    <string id="taom_fbd_t1_a_key" text="Yıldız Işığı Örgüsü yarıçapı artar, daha çok savaşçıyı güçlendirir." />
+    <string id="taom_fbd_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_fbd_t1_a_p2" text="+%3 birlik hasarı." />
+    <string id="taom_fbd_t1_a_p3" text="+6 azami sağlık." />
+    <string id="taom_fbd_t1_a_p4" text="+%7 savurma hızı." />
+    <string id="taom_fbd_t1_b_key" text="Yıldız Işığı Örgüsü süresi uzar, savunmayı sağlamlaştırır." />
+    <string id="taom_fbd_t1_b_p1" text="+%8 direnç." />
+    <string id="taom_fbd_t1_b_p2" text="+%5 birlik morali." />
+    <string id="taom_fbd_t1_b_p3" text="+%10 birlik direnci." />
+    <string id="taom_fbd_t1_b_p4" text="+%5 birlik hayatta kalma." />
+    <string id="taom_fbd_t2_a_key" text="Yıldız Işığı Örgüsü dolumu azalır, daha sık etkinleşir." />
+    <string id="taom_fbd_t2_a_p1" text="+%10 birlik morali." />
+    <string id="taom_fbd_t2_a_p2" text="+2 müfreze büyüklüğü." />
+    <string id="taom_fbd_t2_a_p3" text="+%10 savaş şöhreti kazancı." />
+    <string id="taom_fbd_t2_a_p4" text="-%10 birlik maaşı." />
+    <string id="taom_fbd_t2_b_key" text="Yıldız Işığı Örgüsü etkinken ek savunma güçlendirmeleri sağlar." />
+    <string id="taom_fbd_t2_b_p1" text="+%12 direnç." />
+    <string id="taom_fbd_t2_b_p2" text="+8 azami sağlık." />
+    <string id="taom_fbd_t2_b_p3" text="+%13 birlik direnci." />
+    <string id="taom_fbd_t2_b_p4" text="+%5 birlik hasarı." />
+    <string id="taom_fbd_t3_a_key" text="Yıldız Işığı Örgüsü yarıçapı büyük ölçüde genişler, yıkıcı güç." />
+    <string id="taom_fbd_t3_a_p1" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_fbd_t3_a_p2" text="+10 azami sağlık." />
+    <string id="taom_fbd_t3_a_p3" text="+%7 asker hasarı." />
+    <string id="taom_fbd_t3_a_p4" text="+4 müfreze boyutu." />
+    <string id="taom_fbd_t3_b_key" text="Yıldız Işığı Dokusu doluş süresi büyük ölçüde azalır, neredeyse her zaman kullanılabilir." />
+    <string id="taom_fbd_t3_b_p1" text="+%18 direnç." />
+    <string id="taom_fbd_t3_b_p2" text="+%15 kahraman sağlık yenilenmesi." />
+    <string id="taom_fbd_t3_b_p3" text="+%20 asker morali." />
+    <string id="taom_fbd_t3_b_p4" text="+%15 asker hayatta kalma." />
+    <string id="taom_fmr_t1_a_key" text="Son İttifak yarıçapı genişler, daha geniş düzenleri kapsar." />
+    <string id="taom_fmr_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_fmr_t1_a_p2" text="+%10 at hücum hasarı." />
+    <string id="taom_fmr_t1_a_p3" text="+%7 savurma hızı." />
+    <string id="taom_fmr_t1_a_p4" text="+%5 müfreze hareket hızı." />
+    <string id="taom_fmr_t1_b_key" text="Son İttifak süresi uzar, ivmeyi korur." />
+    <string id="taom_fmr_t1_b_p1" text="+%10 at sağlığı." />
+    <string id="taom_fmr_t1_b_p2" text="+5 azami sağlık." />
+    <string id="taom_fmr_t1_b_p3" text="-%5 asker maaşı." />
+    <string id="taom_fmr_t1_b_p4" text="+%5 direnç." />
+    <string id="taom_fmr_t2_a_key" text="Son İttifak doluş süresi azalır, daha hızlı etkinleşir." />
+    <string id="taom_fmr_t2_a_p1" text="+%10 müfreze hareket hızı." />
+    <string id="taom_fmr_t2_a_p2" text="-%10 asker maaşı." />
+    <string id="taom_fmr_t2_a_p3" text="+%10 asker morali." />
+    <string id="taom_fmr_t2_a_p4" text="+%10 savaş şöhreti kazancı." />
+    <string id="taom_fmr_t2_b_key" text="Son İttifak etkinken binek dayanıklılığını artırır." />
+    <string id="taom_fmr_t2_b_p1" text="+%12 yakın dövüş hasarı." />
+    <string id="taom_fmr_t2_b_p2" text="+%13 at hücum hasarı." />
+    <string id="taom_fmr_t2_b_p3" text="+%13 at sağlığı." />
+    <string id="taom_fmr_t2_b_p4" text="+%10 savurma hızı." />
+    <string id="taom_fmr_t3_a_key" text="Son İttifak yarıçapı büyük ölçüde genişler, durdurulamaz bir darbe." />
+    <string id="taom_fmr_t3_a_p1" text="+%18 yakın dövüş hasarı." />
+    <string id="taom_fmr_t3_a_p2" text="+%15 at hücum hasarı." />
+    <string id="taom_fmr_t3_a_p3" text="+%15 savurma hızı." />
+    <string id="taom_fmr_t3_a_p4" text="+%7 asker hasarı." />
+    <string id="taom_fmr_t3_b_key" text="Son İttifak doluş süresi büyük ölçüde azalır, durmaksızın sür." />
+    <string id="taom_fmr_t3_b_p1" text="+%15 at sağlığı." />
+    <string id="taom_fmr_t3_b_p2" text="-%15 asker maaşı." />
+    <string id="taom_fmr_t3_b_p3" text="+%15 müfreze hareket hızı." />
+    <string id="taom_fmr_t3_b_p4" text="+9 azami sağlık." />
+    <string id="taom_fsn_t1_a_key" text="Elf Görüşü yarıçapı artar, daha geniş ölüm bölgelerini kapsar." />
+    <string id="taom_fsn_t1_a_p1" text="+%8 menzilli hasar." />
+    <string id="taom_fsn_t1_a_p2" text="+%5 zırh delme." />
+    <string id="taom_fsn_t1_a_p3" text="+%7 hareket hızı." />
+    <string id="taom_fsn_t1_a_p4" text="+%5 savaş şöhreti kazanımı." />
+    <string id="taom_fsn_t1_b_key" text="Elf Görüşü süresi uzatılır, kesintisiz ok yağmuru." />
+    <string id="taom_fsn_t1_b_p1" text="+%5 direnç." />
+    <string id="taom_fsn_t1_b_p2" text="+5 azami can." />
+    <string id="taom_fsn_t1_b_p3" text="+%5 müfreze görüş menzili." />
+    <string id="taom_fsn_t1_b_p4" text="+%10 gizlilik bonusu." />
+    <string id="taom_fsn_t2_a_key" text="Elf Görüşü dolum süresi azalır, sürekli baskı sağlanır." />
+    <string id="taom_fsn_t2_a_p1" text="+%10 müfreze görüş menzili." />
+    <string id="taom_fsn_t2_a_p2" text="+%10 hareket hızı." />
+    <string id="taom_fsn_t2_a_p3" text="+%13 gizlilik bonusu." />
+    <string id="taom_fsn_t2_a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_fsn_t2_b_key" text="Elf Görüşü etkinken ek zırh delme kazandırır." />
+    <string id="taom_fsn_t2_b_p1" text="+%12 menzilli hasar." />
+    <string id="taom_fsn_t2_b_p2" text="+%10 zırh delme." />
+    <string id="taom_fsn_t2_b_p3" text="+8 azami can." />
+    <string id="taom_fsn_t2_b_p4" text="+%3 asker hasarı." />
+    <string id="taom_fsn_t3_a_key" text="Elf Görüşü yarıçapı büyük ölçüde genişler, kaçışı olmayan yaylım atışları." />
+    <string id="taom_fsn_t3_a_p1" text="+%18 menzilli hasar." />
+    <string id="taom_fsn_t3_a_p2" text="+%15 zırh delme." />
+    <string id="taom_fsn_t3_a_p3" text="+%15 savaş şöhreti kazanımı." />
+    <string id="taom_fsn_t3_a_p4" text="+%5 asker hasarı." />
+    <string id="taom_fsn_t3_b_key" text="Elf Görüşü dolum süresi büyük ölçüde azalır, amansız atış." />
+    <string id="taom_fsn_t3_b_p1" text="+%15 gizlilik bonusu." />
+    <string id="taom_fsn_t3_b_p2" text="+%15 hareket hızı." />
+    <string id="taom_fsn_t3_b_p3" text="+9 azami can." />
+    <string id="taom_fsn_t3_b_p4" text="+%15 müfreze görüş menzili." />
+    <string id="taom_goblin_troll_driver_root_desc" text="Goblinşehir Cinneti +5 can verir ve trollerinizi çılgına çevirir." />
+    <string id="taom_goblin_tunnel_stalker_root_desc" text="Zehirli Dart, mağara mantarı toksiniyle +%5 menzilli hasar verir." />
+    <string id="taom_goblin_warg_master_root_desc" text="Alfa Uluması +%5 yakın dövüş hasarı verir ve sürü ava çıkar." />
+    <string id="taom_gtd_t1_a_key" text="Goblinşehir Cinneti yarıçapı artar, daha fazla savaşçıyı güçlendirir." />
+    <string id="taom_gtd_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_gtd_t1_a_p2" text="+%3 asker hasarı." />
+    <string id="taom_gtd_t1_a_p3" text="+6 azami can." />
+    <string id="taom_gtd_t1_a_p4" text="+%7 savurma hızı." />
+    <string id="taom_gtd_t1_b_key" text="Goblinşehir Cinneti süresi uzar, savunmayı pekiştirir." />
+    <string id="taom_gtd_t1_b_p1" text="+%8 direnç." />
+    <string id="taom_gtd_t1_b_p2" text="+%5 asker morali." />
+    <string id="taom_gtd_t1_b_p3" text="+%10 asker direnci." />
+    <string id="taom_gtd_t1_b_p4" text="+%5 asker hayatta kalma." />
+    <string id="taom_gtd_t2_a_key" text="Goblin Şehri Çılgınlığı dolum süresi azaldı, daha sık etkinleşir." />
+    <string id="taom_gtd_t2_a_p1" text="+%10 asker morali." />
+    <string id="taom_gtd_t2_a_p2" text="+2 müfreze boyutu." />
+    <string id="taom_gtd_t2_a_p3" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_gtd_t2_a_p4" text="-%10 asker maaşı." />
+    <string id="taom_gtd_t2_b_key" text="Goblin Şehri Çılgınlığı etkinken ek savunma takviyeleri sağlar." />
+    <string id="taom_gtd_t2_b_p1" text="+%12 direnç." />
+    <string id="taom_gtd_t2_b_p2" text="+8 azami can." />
+    <string id="taom_gtd_t2_b_p3" text="+%13 asker direnci." />
+    <string id="taom_gtd_t2_b_p4" text="+%5 asker hasarı." />
+    <string id="taom_gtd_t3_a_key" text="Goblin Şehri Çılgınlığı yarıçapı büyük ölçüde genişledi, yıkıcı güç." />
+    <string id="taom_gtd_t3_a_p1" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_gtd_t3_a_p2" text="+10 azami can." />
+    <string id="taom_gtd_t3_a_p3" text="+%7 asker hasarı." />
+    <string id="taom_gtd_t3_a_p4" text="+4 müfreze boyutu." />
+    <string id="taom_gtd_t3_b_key" text="Goblin Şehri Çılgınlığı dolum süresi büyük ölçüde azaldı, neredeyse her zaman kullanılabilir." />
+    <string id="taom_gtd_t3_b_p1" text="+%18 direnç." />
+    <string id="taom_gtd_t3_b_p2" text="+%15 kahraman can yenilenmesi." />
+    <string id="taom_gtd_t3_b_p3" text="+%20 asker morali." />
+    <string id="taom_gtd_t3_b_p4" text="+%15 asker hayatta kalma." />
+    <string id="taom_gts_t1_a_key" text="Zehirli Ok yarıçapı arttı, daha geniş ölüm bölgelerini kapsar." />
+    <string id="taom_gts_t1_a_p1" text="+%8 menzilli hasar." />
+    <string id="taom_gts_t1_a_p2" text="+%5 zırh delme." />
+    <string id="taom_gts_t1_a_p3" text="+%7 hareket hızı." />
+    <string id="taom_gts_t1_a_p4" text="+%5 savaş şöhreti kazanımı." />
+    <string id="taom_gts_t1_b_key" text="Zehirli Ok süresi uzadı, kesintisiz yaylım ateşi." />
+    <string id="taom_gts_t1_b_p1" text="+%5 direnç." />
+    <string id="taom_gts_t1_b_p2" text="+5 azami can." />
+    <string id="taom_gts_t1_b_p3" text="+%5 müfreze görüş menzili." />
+    <string id="taom_gts_t1_b_p4" text="+%10 gizlilik bonusu." />
+    <string id="taom_gts_t2_a_key" text="Zehirli Ok dolum süresi azaldı, sürekli baskı sağlar." />
+    <string id="taom_gts_t2_a_p1" text="+%10 müfreze görüş menzili." />
+    <string id="taom_gts_t2_a_p2" text="+%10 hareket hızı." />
+    <string id="taom_gts_t2_a_p3" text="+%13 gizlilik bonusu." />
+    <string id="taom_gts_t2_a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_gts_t2_b_key" text="Zehirli Ok etkinken ek zırh delme kazanır." />
+    <string id="taom_gts_t2_b_p1" text="+%12 menzilli hasar." />
+    <string id="taom_gts_t2_b_p2" text="+%10 zırh delme." />
+    <string id="taom_gts_t2_b_p3" text="+8 azami can." />
+    <string id="taom_gts_t2_b_p4" text="+%3 birlik hasarı." />
+    <string id="taom_gts_t3_a_key" text="Zehirli Ok yarıçapı büyük ölçüde genişler, kaçınılmaz yaylım ateşi." />
+    <string id="taom_gts_t3_a_p1" text="+%18 menzilli hasar." />
+    <string id="taom_gts_t3_a_p2" text="+%15 zırh delme." />
+    <string id="taom_gts_t3_a_p3" text="+%15 savaş şöhreti kazanımı." />
+    <string id="taom_gts_t3_a_p4" text="+%5 birlik hasarı." />
+    <string id="taom_gts_t3_b_key" text="Zehirli Ok dolum süresi büyük ölçüde azalır, amansız ateş." />
+    <string id="taom_gts_t3_b_p1" text="+%15 gizlilik bonusu." />
+    <string id="taom_gts_t3_b_p2" text="+%15 hareket hızı." />
+    <string id="taom_gts_t3_b_p3" text="+9 azami can." />
+    <string id="taom_gts_t3_b_p4" text="+%15 müfreze görüş menzili." />
+    <string id="taom_gwm_t1_a_key" text="Lider Uluması yarıçapı genişler, daha geniş düzenleri kapsar." />
+    <string id="taom_gwm_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_gwm_t1_a_p2" text="+%10 at hücum hasarı." />
+    <string id="taom_gwm_t1_a_p3" text="+%7 savurma hızı." />
+    <string id="taom_gwm_t1_a_p4" text="+%5 müfreze hareket hızı." />
+    <string id="taom_gwm_t1_b_key" text="Lider Uluması süresi uzar, ivme korunur." />
+    <string id="taom_gwm_t1_b_p1" text="+%10 at canı." />
+    <string id="taom_gwm_t1_b_p2" text="+5 azami can." />
+    <string id="taom_gwm_t1_b_p3" text="-%5 birlik maaşları." />
+    <string id="taom_gwm_t1_b_p4" text="+%5 direnç." />
+    <string id="taom_gwm_t2_a_key" text="Lider Uluması dolum süresi azalır, daha hızlı etkinleşir." />
+    <string id="taom_gwm_t2_a_p1" text="+%10 müfreze hareket hızı." />
+    <string id="taom_gwm_t2_a_p2" text="-%10 birlik maaşları." />
+    <string id="taom_gwm_t2_a_p3" text="+%10 birlik morali." />
+    <string id="taom_gwm_t2_a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_gwm_t2_b_key" text="Lider Uluması etkinken binek dayanıklılığını artırır." />
+    <string id="taom_gwm_t2_b_p1" text="+%12 yakın dövüş hasarı." />
+    <string id="taom_gwm_t2_b_p2" text="+%13 at hücum hasarı." />
+    <string id="taom_gwm_t2_b_p3" text="+%13 at canı." />
+    <string id="taom_gwm_t2_b_p4" text="+%10 savurma hızı." />
+    <string id="taom_gwm_t3_a_key" text="Lider Uluması yarıçapı büyük ölçüde genişler, durdurulamaz darbe." />
+    <string id="taom_gwm_t3_a_p1" text="+%18 yakın dövüş hasarı." />
+    <string id="taom_gwm_t3_a_p2" text="+%15 at hücum hasarı." />
+    <string id="taom_gwm_t3_a_p3" text="+%15 savurma hızı." />
+    <string id="taom_gwm_t3_a_p4" text="+%7 birlik hasarı." />
+    <string id="taom_gwm_t3_b_key" text="Lider Uluması dolum süresi büyük ölçüde azalır, durmaksızın sür." />
+    <string id="taom_gwm_t3_b_p1" text="+%15 at canı." />
+    <string id="taom_gwm_t3_b_p2" text="-%15 birlik maaşları." />
+    <string id="taom_gwm_t3_b_p3" text="+%15 müfreze hareket hızı." />
+    <string id="taom_gwm_t3_b_p4" text="+9 azami sağlık." />
+    <string id="taom_mdm_t1_a_key" text="Zehirli Ok yarıçapı arttı, daha geniş ölüm alanları kapsar." />
+    <string id="taom_mdm_t1_a_p1" text="+%8 menzilli hasar." />
+    <string id="taom_mdm_t1_a_p2" text="+%5 zırh delme." />
+    <string id="taom_mdm_t1_a_p3" text="+%7 hareket hızı." />
+    <string id="taom_mdm_t1_a_p4" text="+%5 savaş şöhreti kazanımı." />
+    <string id="taom_mdm_t1_b_key" text="Zehirli Ok süresi uzatıldı, kesintisiz yaylım ateşi." />
+    <string id="taom_mdm_t1_b_p1" text="+%5 direnç." />
+    <string id="taom_mdm_t1_b_p2" text="+5 azami sağlık." />
+    <string id="taom_mdm_t1_b_p3" text="+%5 müfreze görüş menzili." />
+    <string id="taom_mdm_t1_b_p4" text="+%10 gizlilik bonusu." />
+    <string id="taom_mdm_t2_a_key" text="Zehirli Ok dolum süresi azaldı, sürekli baskı sağlar." />
+    <string id="taom_mdm_t2_a_p1" text="+%10 müfreze görüş menzili." />
+    <string id="taom_mdm_t2_a_p2" text="+%10 hareket hızı." />
+    <string id="taom_mdm_t2_a_p3" text="+%13 gizlilik bonusu." />
+    <string id="taom_mdm_t2_a_p4" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_mdm_t2_b_key" text="Zehirli Ok etkinken ek zırh delme kazanır." />
+    <string id="taom_mdm_t2_b_p1" text="+%12 menzilli hasar." />
+    <string id="taom_mdm_t2_b_p2" text="+%10 zırh delme." />
+    <string id="taom_mdm_t2_b_p3" text="+8 azami sağlık." />
+    <string id="taom_mdm_t2_b_p4" text="+%3 asker hasarı." />
+    <string id="taom_mdm_t3_a_key" text="Zehirli Ok yarıçapı büyük ölçüde genişledi, kaçınılmaz yaylımlar." />
+    <string id="taom_mdm_t3_a_p1" text="+%18 menzilli hasar." />
+    <string id="taom_mdm_t3_a_p2" text="+%15 zırh delme." />
+    <string id="taom_mdm_t3_a_p3" text="+%15 savaş şöhreti kazanımı." />
+    <string id="taom_mdm_t3_a_p4" text="+%5 asker hasarı." />
+    <string id="taom_mdm_t3_b_key" text="Zehirli Ok dolum süresi büyük ölçüde azaldı, amansız ateş." />
+    <string id="taom_mdm_t3_b_p1" text="+%15 gizlilik bonusu." />
+    <string id="taom_mdm_t3_b_p2" text="+%15 hareket hızı." />
+    <string id="taom_mdm_t3_b_p3" text="+9 azami sağlık." />
+    <string id="taom_mdm_t3_b_p4" text="+%15 müfreze görüş menzili." />
+    <string id="taom_misty_deep_marksman_root_desc" text="Zehirli Ok, mağara mantarı zehriyle +%5 menzilli hasar verir." />
+    <string id="taom_misty_troll_goad_root_desc" text="Moria Çılgınlığı +5 sağlık verir ve trollerinizi cinnete sürükler." />
+    <string id="taom_misty_warg_chieftain_root_desc" text="Alfa Uluması +%5 yakın dövüş hasarı verir ve sürü ava çıkar." />
+    <string id="taom_mtg_t1_a_key" text="Moria Çılgınlığı yarıçapı arttı, daha fazla savaşçıyı güçlendirir." />
+    <string id="taom_mtg_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_mtg_t1_a_p2" text="+%3 asker hasarı." />
+    <string id="taom_mtg_t1_a_p3" text="+6 azami sağlık." />
+    <string id="taom_mtg_t1_a_p4" text="+%7 savurma hızı." />
+    <string id="taom_mtg_t1_b_key" text="Moria Çılgınlığı süresi uzatıldı, savunmayı güçlendirir." />
+    <string id="taom_mtg_t1_b_p1" text="+%8 direnç." />
+    <string id="taom_mtg_t1_b_p2" text="+%5 birlik morali." />
+    <string id="taom_mtg_t1_b_p3" text="+%10 birlik direnci." />
+    <string id="taom_mtg_t1_b_p4" text="+%5 birlik hayatta kalma." />
+    <string id="taom_mtg_t2_a_key" text="Moria Çılgınlığı şarjı azaldı, daha sık etkinleşir." />
+    <string id="taom_mtg_t2_a_p1" text="+%10 birlik morali." />
+    <string id="taom_mtg_t2_a_p2" text="+2 müfreze boyutu." />
+    <string id="taom_mtg_t2_a_p3" text="+%10 savaş şöhreti kazancı." />
+    <string id="taom_mtg_t2_a_p4" text="-%10 birlik ücretleri." />
+    <string id="taom_mtg_t2_b_key" text="Moria Çılgınlığı etkinken ek savunma takviyeleri sağlar." />
+    <string id="taom_mtg_t2_b_p1" text="+%12 direnç." />
+    <string id="taom_mtg_t2_b_p2" text="+8 azami sağlık." />
+    <string id="taom_mtg_t2_b_p3" text="+%13 birlik direnci." />
+    <string id="taom_mtg_t2_b_p4" text="+%5 birlik hasarı." />
+    <string id="taom_mtg_t3_a_key" text="Moria Çılgınlığı yarıçapı büyük ölçüde genişledi, yıkıcı güç." />
+    <string id="taom_mtg_t3_a_p1" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_mtg_t3_a_p2" text="+10 azami sağlık." />
+    <string id="taom_mtg_t3_a_p3" text="+%7 birlik hasarı." />
+    <string id="taom_mtg_t3_a_p4" text="+4 müfreze boyutu." />
+    <string id="taom_mtg_t3_b_key" text="Moria Çılgınlığı şarjı büyük ölçüde azaldı, neredeyse her zaman kullanılabilir." />
+    <string id="taom_mtg_t3_b_p1" text="+%18 direnç." />
+    <string id="taom_mtg_t3_b_p2" text="+%15 kahraman sağlık yenilenmesi." />
+    <string id="taom_mtg_t3_b_p3" text="+%20 birlik morali." />
+    <string id="taom_mtg_t3_b_p4" text="+%15 birlik hayatta kalma." />
+    <string id="taom_mwc_t1_a_key" text="Alfa Uluması yarıçapı genişledi, daha geniş düzenleri kapsar." />
+    <string id="taom_mwc_t1_a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_mwc_t1_a_p2" text="+%10 at hücum hasarı." />
+    <string id="taom_mwc_t1_a_p3" text="+%7 savurma hızı." />
+    <string id="taom_mwc_t1_a_p4" text="+%5 müfreze hareket hızı." />
+    <string id="taom_mwc_t1_b_key" text="Alfa Uluması süresi uzadı, ivmeyi korur." />
+    <string id="taom_mwc_t1_b_p1" text="+%10 at sağlığı." />
+    <string id="taom_mwc_t1_b_p2" text="+5 azami sağlık." />
+    <string id="taom_mwc_t1_b_p3" text="-%5 birlik ücretleri." />
+    <string id="taom_mwc_t1_b_p4" text="+%5 direnç." />
+    <string id="taom_mwc_t2_a_key" text="Alfa Uluması şarjı azaldı, daha hızlı etkinleşir." />
+    <string id="taom_mwc_t2_a_p1" text="+%10 müfreze hareket hızı." />
+    <string id="taom_mwc_t2_a_p2" text="-%10 birlik ücretleri." />
+    <string id="taom_mwc_t2_a_p3" text="+%10 birlik morali." />
+    <string id="taom_mwc_t2_a_p4" text="+%10 savaş şöhreti kazancı." />
+    <string id="taom_mwc_t2_b_key" text="Alfa Uluması etkinken binek dayanıklılığını artırır." />
+    <string id="taom_mwc_t2_b_p1" text="+%12 yakın dövüş hasarı." />
+    <string id="taom_mwc_t2_b_p2" text="+%13 at hücum hasarı." />
+    <string id="taom_mwc_t2_b_p3" text="+%13 at canı." />
+    <string id="taom_mwc_t2_b_p4" text="+%10 savurma hızı." />
+    <string id="taom_mwc_t3_a_key" text="Alfa Uluması yarıçapı büyük ölçüde genişler, durdurulamaz etki." />
+    <string id="taom_mwc_t3_a_p1" text="+%18 yakın dövüş hasarı." />
+    <string id="taom_mwc_t3_a_p2" text="+%15 at hücum hasarı." />
+    <string id="taom_mwc_t3_a_p3" text="+%15 savurma hızı." />
+    <string id="taom_mwc_t3_a_p4" text="+%7 asker hasarı." />
+    <string id="taom_mwc_t3_b_key" text="Alfa Uluması dolum süresi büyük ölçüde azalır, durmaksızın sür." />
+    <string id="taom_mwc_t3_b_p1" text="+%15 at canı." />
+    <string id="taom_mwc_t3_b_p2" text="-%15 asker ücreti." />
+    <string id="taom_mwc_t3_b_p3" text="+%15 müfreze hareket hızı." />
+    <string id="taom_mwc_t3_b_p4" text="+9 azami can." />
+    <string id="taom_sbr_t1a_key" text="Mûmakan Boruları yarıçapı genişler, korku daha uzağa yayılır." />
+    <string id="taom_sbr_t1a_p1" text="+%10 at hücum hasarı." />
+    <string id="taom_sbr_t1a_p2" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_sbr_t1a_p3" text="+%5 asker morali." />
+    <string id="taom_sbr_t1a_p4" text="+%5 müfreze hareket hızı." />
+    <string id="taom_sbr_t1b_key" text="Mûmakan Boruları süresi uzar, korku kalıcı olur." />
+    <string id="taom_sbr_t1b_p1" text="+%10 at canı." />
+    <string id="taom_sbr_t1b_p2" text="+%3 asker hasarı." />
+    <string id="taom_sbr_t1b_p3" text="+%5 savaş şöhreti kazancı." />
+    <string id="taom_sbr_t1b_p4" text="+%5 direnç." />
+    <string id="taom_sbr_t2a_key" text="Mûmakan Boruları dolum süresi azalır, dehşet daima yakındır." />
+    <string id="taom_sbr_t2a_p1" text="+%13 at hücum hasarı." />
+    <string id="taom_sbr_t2a_p2" text="+%10 asker morali." />
+    <string id="taom_sbr_t2a_p3" text="+%5 asker hasarı." />
+    <string id="taom_sbr_t2a_p4" text="+%10 savaş şöhreti kazancı." />
+    <string id="taom_sbr_t2b_key" text="Mûmakan Boruları hücum sırasında hayvanın dayanıklılığını artırır." />
+    <string id="taom_sbr_t2b_p1" text="+%12 yakın dövüş hasarı." />
+    <string id="taom_sbr_t2b_p2" text="+%13 at canı." />
+    <string id="taom_sbr_t2b_p3" text="+%10 müfreze hareket hızı." />
+    <string id="taom_sbr_t2b_p4" text="+3 müfreze boyutu." />
+    <string id="taom_sbr_t3a_key" text="Mûmakan Boruları yarıçapı büyük ölçüde genişler, yeryüzü sarsılır." />
+    <string id="taom_sbr_t3a_p1" text="+%15 at hücum hasarı." />
+    <string id="taom_sbr_t3a_p2" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_sbr_t3a_p3" text="+%20 asker morali." />
+    <string id="taom_sbr_t3a_p4" text="+%15 savaş şöhreti kazancı." />
+    <string id="taom_sbr_t3b_key" text="Mûmakan Boruları dolum süresi büyük ölçüde azalır, bitmeyen dehşet." />
+    <string id="taom_sbr_t3b_p1" text="+%15 at sağlığı." />
+    <string id="taom_sbr_t3b_p2" text="+%15 müfreze hareket hızı." />
+    <string id="taom_sbr_t3b_p3" text="+%7 asker hasarı." />
+    <string id="taom_sbr_t3b_p4" text="+9 azami sağlık." />
+    <string id="taom_scj_t1a_key" text="Chatâk Yaylımı yarıçapı artar, ciritler daha geniş alanı kaplar." />
+    <string id="taom_scj_t1a_p1" text="+%8 menzilli hasar." />
+    <string id="taom_scj_t1a_p2" text="+%10 cephane." />
+    <string id="taom_scj_t1a_p3" text="+%7 hareket hızı." />
+    <string id="taom_scj_t1a_p4" text="+%5 savaş şöhreti kazancı." />
+    <string id="taom_scj_t1b_key" text="Chatâk Yaylımı süresi uzar, sürekli taciz ateşi." />
+    <string id="taom_scj_t1b_p1" text="+%5 direnç." />
+    <string id="taom_scj_t1b_p2" text="+5 azami sağlık." />
+    <string id="taom_scj_t1b_p3" text="+%3 asker hasarı." />
+    <string id="taom_scj_t1b_p4" text="+%5 müfreze görüş menzili." />
+    <string id="taom_scj_t2a_key" text="Chatâk Yaylımı dolum süresi azalır, ciritler hiç tükenmez." />
+    <string id="taom_scj_t2a_p1" text="+%13 cephane." />
+    <string id="taom_scj_t2a_p2" text="+%10 menzilli hasar." />
+    <string id="taom_scj_t2a_p3" text="+%10 hareket hızı." />
+    <string id="taom_scj_t2a_p4" text="+%10 savaş şöhreti kazancı." />
+    <string id="taom_scj_t2b_key" text="Chatâk Yaylımı etkinken perdeleme etkinliğini artırır." />
+    <string id="taom_scj_t2b_p1" text="+%12 menzilli hasar." />
+    <string id="taom_scj_t2b_p2" text="+8 azami sağlık." />
+    <string id="taom_scj_t2b_p3" text="+%5 asker hasarı." />
+    <string id="taom_scj_t2b_p4" text="+%10 müfreze görüş menzili." />
+    <string id="taom_scj_t3a_key" text="Chatâk Yaylımı yarıçapı büyük ölçüde genişler, kaçınılmaz bir ateş yağmuru." />
+    <string id="taom_scj_t3a_p1" text="+%15 menzilli hasar." />
+    <string id="taom_scj_t3a_p2" text="+%15 cephane." />
+    <string id="taom_scj_t3a_p3" text="+%15 savaş şöhreti kazancı." />
+    <string id="taom_scj_t3a_p4" text="+%15 hareket hızı." />
+    <string id="taom_scj_t3b_key" text="Chatâk Yaylımı dolum süresi büyük ölçüde azalır, amansız bir taciz." />
+    <string id="taom_scj_t3b_p1" text="+%15 menzilli hasar." />
+    <string id="taom_scj_t3b_p2" text="+9 azami sağlık." />
+    <string id="taom_scj_t3b_p3" text="+%7 asker hasarı." />
+    <string id="taom_scj_t3b_p4" text="+%15 müfreze görüş menzili." />
+    <string id="taom_shaghana_beast_rider_root_desc" text="Mûmakan Boruları +%10 at hücum hasarı sağlar ve korku yayar." />
+    <string id="taom_shaghana_chatak_javelineer_root_desc" text="Chatâk Yaylımı +%5 menzilli hasar sağlar ve cirit atışlarını hızlandırır." />
+    <string id="taom_shaghana_zajana_tribesman_root_desc" text="Yılan Zehirli Bıçaklar +%5 yakın dövüş hasarı sağlar ve yıpratma etkileri uygular." />
+    <string id="taom_szt_t1a_key" text="Yılan Zehirli Bıçaklar yarıçapı artar, zehir daha geniş yayılır." />
+    <string id="taom_szt_t1a_p1" text="+%8 yakın dövüş hasarı." />
+    <string id="taom_szt_t1a_p2" text="+%3 asker hasarı." />
+    <string id="taom_szt_t1a_p3" text="+%7 savurma hızı." />
+    <string id="taom_szt_t1a_p4" text="+%5 savaş şöhreti kazanımı." />
+    <string id="taom_szt_t1b_key" text="Yılan Zehri Bıçakları'nın süresi uzatıldı, zehir uzun süre kalır." />
+    <string id="taom_szt_t1b_p1" text="+%6 direnç." />
+    <string id="taom_szt_t1b_p2" text="+6 azami sağlık." />
+    <string id="taom_szt_t1b_p3" text="+%5 hareket hızı." />
+    <string id="taom_szt_t1b_p4" text="+%5 birlik morali." />
+    <string id="taom_szt_t2a_key" text="Yılan Zehri Bıçakları'nın dolum süresi azaltıldı, daha sık vurun." />
+    <string id="taom_szt_t2a_p1" text="+%5 birlik hasarı." />
+    <string id="taom_szt_t2a_p2" text="+%10 yakın dövüş hasarı." />
+    <string id="taom_szt_t2a_p3" text="+%10 savaş şöhreti kazanımı." />
+    <string id="taom_szt_t2a_p4" text="+3 müfreze büyüklüğü." />
+    <string id="taom_szt_t2b_key" text="Yılan Zehri Bıçakları yıpratmayı artırır, düşmanın savaşma isteğini kırar." />
+    <string id="taom_szt_t2b_p1" text="+%10 savurma hızı." />
+    <string id="taom_szt_t2b_p2" text="+8 azami sağlık." />
+    <string id="taom_szt_t2b_p3" text="+%10 direnç." />
+    <string id="taom_szt_t2b_p4" text="+%10 birlik morali." />
+    <string id="taom_szt_t3a_key" text="Yılan Zehri Bıçakları'nın etki alanı büyük ölçüde genişledi, bir zehir bulutu." />
+    <string id="taom_szt_t3a_p1" text="+%15 yakın dövüş hasarı." />
+    <string id="taom_szt_t3a_p2" text="+9 azami sağlık." />
+    <string id="taom_szt_t3a_p3" text="+%7 birlik hasarı." />
+    <string id="taom_szt_t3a_p4" text="+%15 savaş şöhreti kazanımı." />
+    <string id="taom_szt_t3b_key" text="Yılan Zehri Bıçakları'nın dolum süresi büyük ölçüde azaltıldı, sürekli yıpratma." />
+    <string id="taom_szt_t3b_p1" text="+%15 direnç." />
+    <string id="taom_szt_t3b_p2" text="+%20 birlik morali." />
+    <string id="taom_szt_t3b_p3" text="+%8 birlik hasarı." />
+    <string id="taom_szt_t3b_p4" text="+5 müfreze büyüklüğü." />
+  </strings>
+</base>

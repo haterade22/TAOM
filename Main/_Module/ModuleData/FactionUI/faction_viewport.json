@@ -1,0 +1,5 @@
+{
+  "_readme": "Per-faction framing of the faction screen's 3D viewport (#704, Kysaro): faction key -> pixels to move the character down (-1000 to 1000), or { \"offset\", \"hide_weapons\" (true/false), \"race\" (0 to 255; 0 = human body scale, for characters taller than the frame) }. Read once per game launch: restart the game after editing.",
+
+  "dominion_of_mordor": { "offset": 40, "hide_weapons": true, "race": 0 }
+}

@@ -843,3 +843,45 @@ back as a space, so the registered English silently differs from the inline defa
   (`taom_precompile_inquiry_body`) was not looked up.
 - **Prevent:** one paragraph, or `{newline}`. Until #702 lands, read the harvested row back before translating.
 - **Source:** `docs/reviews/rca-battle-corpses-2026-10-01.md` finding 3.
+
+### An element's own attributes bind in the scope its `DataSource` sets (2026-10-01)
+`TFGDetails.xml` put `IsEnabled="@IsEyesEnabled"` on the element whose own `DataSource` is `{EyebrowTypes}`. Gauntlet resolves an element's own bindings against the view model its `DataSource` selects, so the lookup ran on a `FaceGenPropertyVM`, read null, and the bool setter took false: the eyebrow and teeth steppers inside could never be clicked, because `EventManager` does not descend into a disabled widget. On an element whose `DataSource` is a list the same binding is simply never applied. Kysaro's faction screen records the mirror case in a comment: a `Command.Click` on an element given `DataSource="{Selected}"` resolved against the sub-view-model and never fired.
+- **Why missed:** no test walked the ported prefabs against their view models, and the scoping rule is in none of `gui-ui.md`'s binding rules.
+- **Prevent:** a binding meant for the outer view model goes on a wrapper widget with no `DataSource`. A prefab TAOM ships gets a type-aware binding test: `FactionScreenPrefabBindingTests` follows each `DataSource` and `ItemTemplate` scope in both directions, and its reverse direction found two dead view-model properties on its first run.
+- **Source:** `docs/reviews/rca-faction-ui-2026-10-01.md` row D1.
+
+### A data key two characters share with different English needs splitting before it is registered (2026-10-01)
+Registering the inline text of `characters/heroes.xml` and `npcs_*.xml` found ten keys given to two characters with
+different English: six Gundabad and Dol Guldur hero bios (`ulgrim_description` and five more) and four Lindon caravan
+names that reused Rivendell's `aom_rv_*` keys. English hid it, because each site carries its own inline default;
+one registered row per key would have shown one hero's bio on the other in every other language.
+- **Why missed:** the one-default-per-key test covered only the name generator's first four sources.
+- **Prevent:** `EveryNameKey_InTheNameGeneratorsSources_HasOneEnglishDefault` now scans every generator source;
+  split a shared key (the second user gets `aom_<id>_...`) before registering, never after translating.
+- **Source:** the full translation run of 2026-10-01 (`taom_hero_text_strings.xml`, `taom_character_name_strings.xml`).
+
+### The translator model keeps Latin circumflex vowels inside Russian orc names (2026-10-01)
+Out of about 58,000 new rows, 95 failed the writing-system gates; re-translating fixed most, but 33 Russian rows came
+back with the same `Гробûрз`, `Скарнâк`, `Маугâш` on every attempt, the source's circumflex vowels copied into
+Cyrillic. A paid retry cannot fix a habit.
+- **Why missed:** the placeholder check passes these rows; only `LanguageTextIntegrityTests` sees them.
+- **Prevent:** after a large run, run `FullyQualifiedName~MixesWritingSystems`, reset and re-translate the listed rows
+  once (the test lists at most 60 at a time), then fix what remains deterministically: inside a Cyrillic word,
+  `â û ô î ê` become `а у о и е`, in the row and its cache value together.
+- **Source:** the full translation run of 2026-10-01.
+
+### A Batches API job can sit unprocessed for hours; the translator writes nothing until it ends (2026-10-01)
+Twelve batches went in together: two finished, ten showed `processing=122 succeeded=0` more than two hours later.
+The key was invalidated mid-poll, and the ten translator processes died with a 401 before their write-back, so
+nothing on disk changed. Cancelling a batch with nothing processed costs nothing; the ten languages ran live instead.
+- **Why missed:** `--batch` was chosen for price alone; the Batches API promises completion only within 24 hours.
+- **Prevent:** record each batch id as it is submitted (the log prints it), and for a run that must finish in one
+  sitting, prefer the live path or set a deadline after which unprocessed batches are cancelled. A recovery reads
+  results by string id, never by chunk position, because English edits made meanwhile shift the chunks.
+- **Source:** the full translation run of 2026-10-01.
+
+### A UI resource refresh rebuilds every open movie under its old identifier, and only while the main menu is active (2026-10-01)
+`GauntletUISubModule.RefreshResources(false)` releases every open movie, rebuilds the sprite, font and brush tables (`UIResourceManager.Refresh`), then reloads each movie into a new `UIContext` through `GauntletLayer`'s private `LoadMovie(GauntletMovieIdentifier)`, so a patch on the public `LoadMovie` never sees it and the identifier's `Movie` is a new object. Anything that cached widgets from the old tree (FactionUI's effects classes) keeps animating detached widgets. The refresh runs only when `_areResourcesDirty` is set, only `OnNewModuleLoad` sets it (option and language changes do not), and the engine allows a runtime module load only while the main menu screen is active (`MBInitialScreenBase` calls `SetCanLoadModules(true)` on activate, `false` on deactivate).
+- **Why missed:** the refresh postfix restored the resource tables, and nobody asked what else referenced the rebuilt trees, or when a refresh can happen at all.
+- **Prevent:** code that caches widget references across frames states which screens it serves; for a main-menu screen, either re-find widgets when the layer's `UIContext` changes or accept and document the gap. Settle reachability from `SetCanLoadModules` before writing re-attachment code for any other screen.
+- **Source:** `docs/reviews/rca-faction-ui-2026-10-01.md`, Codex F1.

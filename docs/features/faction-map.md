@@ -27,6 +27,8 @@ When a player confirms a faction, the `onCultureConfirmed` callback calls `ICult
 
 A separate `TrySwitchToNextMenu_Patch` guards the vanilla next-menu transition to prevent double-advance when TAOM has already advanced the stage.
 
+**Another screen can take the stage (#704).** Before loading `CharacterCreationCultureStage`, `OnCreated` asks `ICultureStageMovieOverride.TryLoad(layer, factionVm, regions, factions)` for a replacement movie, and loads its own only when that returns null. FactionUI's `FactionScreenLauncher` is the one implementation: when Kysaro's faction screen is switched on it loads `TAOMFactionScreen` on the same `FactionSelectionVM`, and confirms through `FactionSelectionVM.ConfirmRegion(regionName)`, which selects the region and runs `ExecuteConfirm` exactly as a map click followed by Confirm would. `CultureStageViewFinalizeHook` calls `OnCultureStageClosed()` first, so the replacement lets go of its screen and view model before the faction map's own view model is finalized. Kysaro's module did the same by releasing this feature's movie from a later Harmony postfix and calling into its view model by reflection.
+
 Data flow:
 - `FactionConfigProvider` loads `factionmap/factions.json` (faction lore) and `factionmap/regions.json` (normalized bounding boxes and capital positions) at view creation time.
 - `FactionRegistryService` stores the loaded data and exposes lookup by region key and faction id.
@@ -46,7 +48,8 @@ CultureStageView constructor [Postfix Patch7_FactionMap]
             |-> FactionMapStaticBridge.Initialize(registry)
             |-> GauntletLayer.ReleaseMovie(originalMovie)
             |-> new FactionSelectionVM(onCultureConfirmed, onPreviousStage, ...)
-            |-> GauntletLayer.LoadMovie("CharacterCreationCultureStage", FactionSelectionVM)
+            |-> ICultureStageMovieOverride.TryLoad(...)   [FactionUI's faction screen, or null]
+            |-> else GauntletLayer.LoadMovie("CharacterCreationCultureStage", FactionSelectionVM)
 
 Player clicks region
     |-> FactionSelectionVM -> IFactionSelectionService.SelectRegion(regionName)

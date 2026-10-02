@@ -1386,3 +1386,9 @@ Two parchment map tests set the fake renderer's "sheet built" flag back to false
   a test that writes state the code should write proves nothing about the code. Restore each fixed defect once and
   watch its test fail.
 - **Source:** `docs/reviews/rca-realm-borders-parchment-2026-10-01.md` finding 12.
+
+### A test that calls the method an engine hook should reach proves the bookkeeping, not the hook (2026-10-01)
+`FrontEndMovieServiceTests` drove the service's `OnReleased` by hand and passed, while the engine never called the patched method that would have called it (RCA row A1). Separately, thirteen MCM booleans went through a positional constructor, where a swapped pair compiles and crosses two toggles silently.
+- **Why missed:** the service tests were complete for the service's own logic; the engine half of the contract had no test, and an in-game look cannot show a release that never happens.
+- **Prevent:** when a service method's only caller is an engine hook, test the engine side too (a binding test on the member the hook relies on), or replace the interception with state the engine sets on every path. Give N settings of one type a flip-one-at-a-time mapping test and prove it with a deliberate swap: `FactionUISettingsProviderTests` flips each MCM toggle on a fresh `TaomSettings` and asserts only its own setting moves, and it caught a swapped pair.
+- **Source:** `docs/reviews/rca-faction-ui-2026-10-01.md` rows A1 and C4.

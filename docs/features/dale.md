@@ -169,7 +169,9 @@ Cross-reference validation:
 2. Re-run `pwsh tools/tpac_skeleton_scan.py "<path-to-tpac>" --all-types` to harvest mesh names
 3. Append the new mesh IDs to `tools/dale_armor_meshes.txt` (one per line, sorted)
 4. Verify the new IDs match the regex in `generate_dale_armor.py:MESH_RE` — if Solus introduced a new class or slot keyword, extend the parser
-5. Run `python tools/generate_dale_armor.py --apply`
+5. Run `python tools/generate_dale_armor.py --apply`. It appends only the manifest ids missing from each slot file and
+   leaves existing items byte for byte (since 2026-10-01; before that it rewrote all five files and wiped hand-tuned
+   values such as the beard covers in [lotrlome-beard-cover-changes](../reference/lotrlome-beard-cover-changes.md))
 6. Run `python tools/validate_all_troop_refs.py`
 
 ## Known Limitations / Follow-ups

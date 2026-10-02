@@ -93,6 +93,11 @@ public class CoopVetoClassificationTests
             "Same as its participant sibling: menu_settlement_taken_player_army_member_on_init sets " +
             "text variables and a background mesh only, the prefix returns false solely on the null " +
             "_besiegerParty path vanilla cannot survive, and menu text is per-peer presentation."),
+        ["MBMusicManagerActivateMenuModePatch"] = new(CoopVeto.ReviewedSafe,
+            "Patch95_FactionUI (#704): skips PsaiCore.MenuModeEnter, the main-menu music theme, while " +
+            "the themed menu video plays its own audio. Music is each peer's own audio output; the " +
+            "skipped body touches no campaign state, and it runs only on the main menu, before any " +
+            "campaign exists to replicate."),
         ["Patch87_ReturnToArmy"] = new(CoopVeto.ReviewedSafe,
             "Skips only GameMenu.SwitchToMenu(\"army_wait_at_settlement\"), per-peer presentation: " +
             "the village branch that leaves the settlement is never skipped (Decide returns " +

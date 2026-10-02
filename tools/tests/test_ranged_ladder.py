@@ -894,6 +894,31 @@ class HeroTests(unittest.TestCase):
                                   "elf_bow": ["player_career_man_archer_f"],
                                   "elf_bow_top": ["enlist_man_archer"]})    # the quartermaster's kit (#617 review 2)
 
+    def test_hero_launchers_covers_the_faction_ui_picker_file(self):
+        # Review (lens7-xml #13, #704): the picker's legends are occupation="NotAssigned"
+        # is_hero="false", so the Lord/Wanderer/is_hero check above misses them, yet their gear
+        # reaches the player at runtime through the hero preset copy exactly like a Lord's own kit.
+        with tempfile.TemporaryDirectory() as tmp:
+            md = Path(tmp)
+            (md / "characters").mkdir()
+            (md / "characters" / "faction_ui_picker_characters.xml").write_bytes(b"""<NPCCharacters>
+  <NPCCharacter id="taom_fui_legend" is_hero="false" occupation="NotAssigned"><equipment slot="Item0" id="Item.heavy_bow"/></NPCCharacter>
+</NPCCharacters>""")
+            heroes = rl.hero_launchers(md, _launchers())
+        self.assertEqual(heroes, {"heavy_bow": ["taom_fui_legend"]})
+
+    def test_hero_launchers_ignores_notassigned_npcs_outside_the_picker_file(self):
+        # Sibling of the test above: the is_picker_file carve-out is per-FILE, not per-attribute -
+        # the same is_hero="false" occupation="NotAssigned" shape elsewhere must stay excluded.
+        with tempfile.TemporaryDirectory() as tmp:
+            md = Path(tmp)
+            (md / "characters").mkdir()
+            (md / "characters" / "other_characters.xml").write_bytes(b"""<NPCCharacters>
+  <NPCCharacter id="not_a_legend" is_hero="false" occupation="NotAssigned"><equipment slot="Item0" id="Item.heavy_bow"/></NPCCharacter>
+</NPCCharacters>""")
+            heroes = rl.hero_launchers(md, _launchers())
+        self.assertEqual(heroes, {})
+
 
 # --------------------------------------------------------------------------- #
 # tools/rebalance_ranged_ladders.py                                             #

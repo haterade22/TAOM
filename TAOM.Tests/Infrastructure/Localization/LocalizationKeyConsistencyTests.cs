@@ -418,11 +418,15 @@ public class LocalizationKeyConsistencyTests
     public void EveryNameKey_InTheNameGeneratorsSources_HasOneEnglishDefault()
     {
         var sources = Directory.GetFiles(Path.Combine(ModuleDataPath, "troops"), "*.xml")
+            .Concat(Directory.GetFiles(Path.Combine(ModuleDataPath, "characters"), "*.xml"))
+            .Concat(Directory.GetFiles(Path.Combine(ModuleDataPath, "career_system"), "*.xml"))
             .Concat(new[]
             {
-                Path.Combine(ModuleDataPath, "characters", "lords.xml"),
-                Path.Combine(ModuleDataPath, "characters", "clans.xml"),
                 Path.Combine(ModuleDataPath, "taom_spkingdoms.xml"),
+                Path.Combine(ModuleDataPath, "taom_spcultures.xml"),
+                Path.Combine(ModuleDataPath, "taom_wanderers.xml"),
+                Path.Combine(ModuleDataPath, "named_companions", "named_companions.xml"),
+                Path.Combine(ModuleDataPath, "custom_battle_scenes.xml"),
             })
             .Where(File.Exists)
             .ToList();

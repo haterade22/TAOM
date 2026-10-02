@@ -153,6 +153,9 @@ public class SupplyOrderPrefabBindingTests
         // token in-game (the six Supply Order buttons shipped that way, field-tested 2026-08-25).
         // Label text belongs on the VM as a TextObject-built property bound with @. {=!} is the
         // engine's own "no localization" marker on text-variable bodies and is legitimate.
+        // LocalizedText="{=key}..." is not literal text: FactionUI's FrontEndTextWidget and
+        // FrontEndRichTextWidget resolve it through TextObject (#704), and
+        // FactionUIPrefabLocalizationTests keeps it on those two widgets.
         var prefabRoot = Path.Combine(RepoRoot, @"Main\_Module\GUI\PreFabs");
         var offenders = new List<string>();
         foreach (var file in Directory.GetFiles(prefabRoot, "*.xml", SearchOption.AllDirectories))
@@ -160,7 +163,8 @@ public class SupplyOrderPrefabBindingTests
             var lines = File.ReadAllLines(file);
             for (int i = 0; i < lines.Length; i++)
             {
-                if (lines[i].Contains("Text=\"{=") && !lines[i].Contains("Text=\"{=!}"))
+                var line = lines[i].Replace("LocalizedText=\"{=", "");
+                if (line.Contains("Text=\"{=") && !line.Contains("Text=\"{=!}"))
                     offenders.Add($"{file}:{i + 1}");
             }
         }

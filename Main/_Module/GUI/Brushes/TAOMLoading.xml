@@ -1,0 +1,16 @@
+<Brushes>
+  <!-- Loading window text (#704, Kysaro's themed front end). FrontEndSpriteService.EnsureResident registers the
+       FS_* fonts and re-reads this file just before the loading window's movie is built, so these brushes bind to
+       the module's own fonts. The native-font brushes stay for the multiplayer mode line. -->
+  <Brush Name="LD.Title.Sub" Font="Galahad" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#E9E1CCFF" FontSize="26" TextBlur="0" TextGlowRadius="0" TextOutlineAmount="0" /></Styles>
+  </Brush>
+
+  <Brush Name="LD.Quote.FS" Font="FS_Ringbearer" FontSize="20" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#EFE7D2FF" TextGlowColor="#000000B0" TextGlowRadius="0.2" TextBlur="0.12" /></Styles>
+  </Brush>
+
+  <Brush Name="LD.Attrib.FS" Font="FS_CinzelWide" FontSize="12" TextHorizontalAlignment="Center" TextVerticalAlignment="Center">
+    <Styles><Style Name="Default" FontColor="#C9AB69FF" TextGlowColor="#000000B0" TextGlowRadius="0.15" TextBlur="0.1" /></Styles>
+  </Brush>
+</Brushes>

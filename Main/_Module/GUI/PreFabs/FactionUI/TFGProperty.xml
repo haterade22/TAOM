@@ -1,0 +1,42 @@
+<Window>
+  <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" IsEnabled="@IsEnabled">
+    <Children>
+		
+	  <!--Property Name - MarginRight 400->215 (2026-09-26, user request: labels were being clipped on the left
+	       since this native-derived file's original absolute pixel layout assumed a much wider (~560px+) parent
+	       than this project's current 400px TabControl content column. Shortening the slider (below) freed up
+	       the room needed to bring the label fully on-screen instead of shrinking the label itself, which
+	       risked truncating already-long property names like "Inter-Eye Height" worse than before.-->
+	  <RichTextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="158" HorizontalAlignment="Right" MarginRight="215" VerticalAlignment="Center" Brush="CC.Label" Text="@Name" />
+
+	  <!--Slider - shortened 367->200 (2026-09-26, same reasoning as the label comment above) - all internal
+	       elements (track/fill/handle) scaled down by the same ~0.545 ratio to keep their proportions intact. -->
+    <NavigationTargetSwitcher WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" FromTarget="..\." ToTarget="..\SliderParent\ScrollBar\SliderHandle" />
+    <NavigationAutoScrollWidget TrackedWidget="..\SliderParent\ScrollBar\SliderHandle" ScrollTarget="..\." AutoScrollTopOffset="50" AutoScrollBottomOffset="50" />
+	  <Widget Id="SliderParent" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="200" SuggestedHeight="42" HorizontalAlignment="Right" VerticalAlignment="Center">
+	  	<Children>
+
+	  	<SliderWidget Id="ScrollBar" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="184" SuggestedHeight="42" VerticalAlignment="Center" Filler="Filler" Handle="SliderHandle" MaxValueFloat="@Max" MinValueFloat="@Min" ValueFloat="@Value" IsDiscrete="@IsDiscrete" UpdateValueOnScroll="false" Command.MousePressed="AddCommand">
+	  		<Children>
+	  			<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="194" SuggestedHeight="20" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="cc_slider_track_9" IsEnabled="false" />
+	  			<Widget Id="Filler" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="188" SuggestedHeight="14" VerticalAlignment="Center" Sprite="cc_slider_fill" ClipContents="true">
+	  		  		<Children>
+	  		  			<Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="188" SuggestedHeight="14" HorizontalAlignment="Left" VerticalAlignment="Center" Sprite="cc_slider_fill" />
+	  		  		</Children>
+	  			</Widget>
+	  			<ImageWidget Id="SliderHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="16" SuggestedHeight="26" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="CC.SliderHandle" DoNotAcceptEvents="true"/>
+	  		</Children>
+	  	</SliderWidget>
+	  		  
+	  		  
+	  	<!--<SliderWidget  WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="3" MarginRight="3" Filler="Filler" Handle="Handle" MaxValueFloat="@Max" MinValueFloat="@Min" ValueFloat="@">
+	  	<Children>
+	  		<Widget Id="Filler" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="11" SuggestedHeight="21" HorizontalAlignment="Left" VerticalAlignment="Center" Sprite="property_slider_fill_9" />
+	  		<BrushWidget Id="Handle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="5" SuggestedHeight="21" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="FaceGen.Property.Slider.Handle" />
+	  	</Children>
+	  	</SliderWidget>-->
+	  	</Children>
+	  </Widget>
+    </Children>
+  </Widget>
+</Window>

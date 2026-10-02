@@ -1,0 +1,24 @@
+{
+  "_readme": "Where each faction's pin sits on the faction screen's minimap (#704, Kysaro): faction key -> [x, y], each 0 to 1 across the fs_minimap_big image. Replaces that faction's capital_pos from factionmap/regions.json. Kysaro placed all 20 by hand in game on 2026-09-23; re-place them only if the map art changes. Read once per game launch: restart the game after editing.",
+
+  "dominion_of_isengard":       [0.4964, 0.4728],
+  "kingdom_of_rohan":           [0.5487, 0.5429],
+  "dominion_of_mordor":         [0.6929, 0.5981],
+  "stewardship_of_gondor":      [0.6210, 0.6367],
+  "kingdom_of_lasgalen":        [0.6135, 0.1905],
+  "high_kingdom_of_lindon":     [0.1771, 0.1930],
+  "kingdom_of_imladris":        [0.4895, 0.2660],
+  "overlordship_of_gundabad":   [0.5112, 0.1085],
+  "kingdom_of_lothlorien":      [0.5472, 0.4364],
+  "kingdom_of_erebor":          [0.7420, 0.1347],
+  "overlordship_of_dol_guldur": [0.6472, 0.3531],
+  "golden_realm_of_rhun":       [0.8366, 0.3119],
+  "kingdom_of_dale":            [0.7057, 0.1779],
+  "taskralan_of_harwan":        [0.7051, 0.8654],
+  "khudorom_of_khand":          [0.9084, 0.7209],
+  "clans_of_dunland":           [0.4581, 0.4257],
+  "kingdom_of_moria":           [0.5034, 0.3718],
+  "goblins_of_goblin_town":     [0.5229, 0.2646],
+  "goblins_of_blue_craig":      [0.2349, 0.2010],
+  "havens_of_umbar":            [0.5060, 0.8408]
+}

@@ -319,19 +319,19 @@
     <string id="taom_lotr_issue_combat_fallback_accept" text="Was muss getan werden?" />
     <string id="taom_lotr_issue_pers_fallback_desc" text="Jemand braucht Gefangene, die überbracht werden." />
     <string id="taom_lotr_issue_pers_fallback_brief" text="Ich brauche kräftige Arme, Reisender." />
-    <string id="taom_lotr_issue_armourer_title" text="The Armourer's Commission" />
-    <string id="taom_lotr_issue_armourer_desc" text="The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it." />
-    <string id="taom_lotr_issue_armourer_brief" text="The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with." />
-    <string id="taom_lotr_issue_armourer_accept" text="What would you need?" />
-    <string id="taom_lotr_issue_armourer_expl" text="Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade." />
-    <string id="taom_lotr_issue_armourer_soln" text="I will bring you the steel." />
-    <string id="taom_lotr_issue_armourer_task" text="Bring {ITEM} to the armourer ({COUNT})" />
-    <string id="taom_lotr_issue_seam_title" text="The Deep Seam" />
-    <string id="taom_lotr_issue_seam_desc" text="The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in." />
-    <string id="taom_lotr_issue_seam_brief" text="My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together." />
-    <string id="taom_lotr_issue_seam_accept" text="What would you need?" />
-    <string id="taom_lotr_issue_seam_expl" text="Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me." />
-    <string id="taom_lotr_issue_seam_soln" text="I will bring you the timber." />
-    <string id="taom_lotr_issue_seam_task" text="Bring {ITEM} to the headman ({COUNT})" />
+    <string id="taom_lotr_issue_armourer_title" text="Der Auftrag des Waffenschmieds" />
+    <string id="taom_lotr_issue_armourer_desc" text="Der Meisterschmied von {ISSUE_SETTLEMENT} hat eine schwere Rüstung halb geschmiedet und keinen Stahl, um sie zu vollenden." />
+    <string id="taom_lotr_issue_armourer_brief" text="Der Krieg verschlingt jeden Barren guten Stahls, ehe er meine Schmiede erreicht. Auf dem Amboss liegt eine Rüstung, die einen Pfeil abhielte, und mir fehlt alles, um sie zu vollenden." />
+    <string id="taom_lotr_issue_armourer_accept" text="Was brauchst du?" />
+    <string id="taom_lotr_issue_armourer_expl" text="Bring mir {COUNT} Ladungen {ITEM}, und die Rüstung gehört dir, sobald sie fertig ist. Stahl für Stahl: ein gerechter Handel." />
+    <string id="taom_lotr_issue_armourer_soln" text="Ich bringe dir den Stahl." />
+    <string id="taom_lotr_issue_armourer_task" text="Bringe {ITEM} zum Waffenschmied ({COUNT})" />
+    <string id="taom_lotr_issue_seam_title" text="Die tiefe Ader" />
+    <string id="taom_lotr_issue_seam_desc" text="Die Bergleute von {ISSUE_SETTLEMENT} sind auf eine Ader jenes seltenen Metalls gestoßen, aus dem die Rüstung eines Fürsten geschmiedet wird, und der Schacht braucht Holz, ehe er einstürzt." />
+    <string id="taom_lotr_issue_seam_brief" text="Meine Bergleute fanden sie durch Glück: eine Ader jenes Metalls, für das die großen Schmiede jeden Preis zahlen. Doch der Schacht ist alt, und ohne gutes Holz zur Stützung wird er sie und die Ader zugleich begraben." />
+    <string id="taom_lotr_issue_seam_accept" text="Was brauchst du?" />
+    <string id="taom_lotr_issue_seam_expl" text="Bring mir {COUNT} Ladungen {ITEM} für den Schacht, und du sollst das Erste von dem erhalten, was sie zutage fördern. Es ist für dich mehr wert als für mich." />
+    <string id="taom_lotr_issue_seam_soln" text="Ich bringe dir das Holz." />
+    <string id="taom_lotr_issue_seam_task" text="Bringe {ITEM} zum Dorfältesten ({COUNT})" />
   </strings>
 </base>

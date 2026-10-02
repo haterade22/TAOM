@@ -92,7 +92,64 @@ CATEGORIES: dict[str, dict] = {
                   "tools/generate_name_localization_strings.py. Do not hand-edit; re-run the "
                   "generator after adding a kingdom.",
     },
+    # The data-text families (2026-10-01). Each consumer builds a TextObject from the raw attribute,
+    # so a registered row is what the other twelve languages display: CultureObject.Deserialize
+    # (culture names, descriptions, name lists), Hero.Deserialize (EncyclopediaText),
+    # BasicCharacterObject.Deserialize (NPC names), the career VMs, CustomGame (battle scenes).
+    # The repo settlements.xml (a stale copy of TAOM_Map's) and custom_settlements.xml (registered
+    # nowhere in SubModule.xml) never reach the engine and are never sources.
+    "culture_text": {
+        "sources": lambda: [MODULE_DATA / "taom_spcultures.xml"],
+        "output": MODULE_DATA / "taom_culture_text_strings.xml",
+        "header": "Generated culture text strings (names, descriptions, male and female name "
+                  "lists): extracted from taom_spcultures.xml by "
+                  "tools/generate_name_localization_strings.py. Do not hand-edit; re-run the "
+                  "generator instead.",
+    },
+    "hero_text": {
+        "sources": lambda: [MODULE_DATA / "characters" / "heroes.xml"],
+        "output": MODULE_DATA / "taom_hero_text_strings.xml",
+        "header": "Generated hero biography strings: extracted from characters/heroes.xml text= "
+                  "attributes by tools/generate_name_localization_strings.py. Do not hand-edit; "
+                  "re-run the generator instead.",
+    },
+    "career_data": {
+        "sources": lambda: sorted((MODULE_DATA / "career_system").glob("*.xml")),
+        "output": MODULE_DATA / "taom_career_data_strings.xml",
+        "header": "Generated career data strings (careers, choices, ability templates, quests): "
+                  "extracted from career_system/*.xml by "
+                  "tools/generate_name_localization_strings.py. Do not hand-edit; re-run the "
+                  "generator instead.",
+    },
+    "character_name": {
+        "sources": lambda: sorted(
+            p for p in (MODULE_DATA / "characters").glob("*.xml")
+            if p.name not in ("lords.xml", "clans.xml", "heroes.xml")
+        ) + [MODULE_DATA / "taom_wanderers.xml",
+             MODULE_DATA / "named_companions" / "named_companions.xml"],
+        "output": MODULE_DATA / "taom_character_name_strings.xml",
+        "header": "Generated character name strings (notables, townsfolk, wanderers, named "
+                  "companions, creatures): extracted from characters/*.xml (lords, clans and "
+                  "heroes have their own files), taom_wanderers.xml and "
+                  "named_companions/named_companions.xml by "
+                  "tools/generate_name_localization_strings.py. Do not hand-edit; re-run the "
+                  "generator instead.",
+    },
+    "battle_scene": {
+        "sources": lambda: [MODULE_DATA / "custom_battle_scenes.xml"],
+        "output": MODULE_DATA / "taom_battle_scene_strings.xml",
+        "header": "Generated Custom Battle scene names: extracted from custom_battle_scenes.xml by "
+                  "tools/generate_name_localization_strings.py. Do not hand-edit; re-run the "
+                  "generator instead.",
+    },
 }
+
+
+def excluded_ids(cat: str, existing_sources: list[Path] = EXISTING_TAOM_SOURCES) -> set[str]:
+    """Keys category `cat` must not register: those the hand-kept sources carry, and those any
+    OTHER generated file already carries (a language loading two rows for one id keeps the later)."""
+    others = [spec["output"] for name, spec in CATEGORIES.items() if name != cat]
+    return registered_ids(list(existing_sources) + others)
 
 
 def registered_ids(existing_sources: list[Path] = EXISTING_TAOM_SOURCES) -> set[str]:
@@ -153,17 +210,17 @@ def main() -> int:
     g.add_argument("--dry-run", action="store_true")
     g.add_argument("--apply", action="store_true")
     ap.add_argument("--category", choices=sorted(CATEGORIES), default=None,
-                     help="Limit to one category. Omit to process all four.")
+                     help="Limit to one category. Omit to process all of them.")
     args = ap.parse_args()
 
-    already = registered_ids()
-    print(f"  Already-registered keys across {len(EXISTING_TAOM_SOURCES)} existing sources: {len(already)}")
+    print(f"  Already-registered keys across {len(EXISTING_TAOM_SOURCES)} existing sources: "
+          f"{len(registered_ids())}")
 
     cats = [args.category] if args.category else sorted(CATEGORIES)
     grand_total = 0
     for cat in cats:
         spec = CATEGORIES[cat]
-        entries = build_category_entries(cat, already)
+        entries = build_category_entries(cat, excluded_ids(cat))
         grand_total += len(entries)
         out = spec["output"]
         print(f"\n  [{cat}] -> {out.relative_to(REPO_ROOT)}: {len(entries)} new key(s)")

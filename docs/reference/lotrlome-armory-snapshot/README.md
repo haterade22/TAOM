@@ -544,6 +544,22 @@ Do not use `rebuild_translation_files.py` for this: it rewrites every repo langu
 catches a row that fell back to English; `LanguageTextIntegrityTests.NoCachedTranslation_MixesWritingSystems` keeps
 the cache free of wrong-script words, so a replay cannot bring the CNs damage back.
 
+### ⚠️ APPLIED EDIT: live language files, the full translation run (2026-10-01)
+
+**Live edits to the Armory's language files that a reinstall WILL revert.** Originals:
+`E:\LOTRAOMAssets\_loc_backup_20261001\armory\` (the tree omits the `ModuleData` level). Measured against those
+backups on 2026-10-01: rows added only, none changed or removed. TAOM_Map's language files came out byte-identical.
+
+| Live file (under `LOTRLOME_Armory/ModuleData/Languages/<L>/`) | Rows added | Languages |
+|---|---|---|
+| `loc_LOTRAOM_weapons.xml` | 12 | all 12 (`aom_wm_hill_troll_2h_hammer_a_name`, #679) |
+| `loc_LOTRLOME_crafting_pieces.xml` | 24 | all 12 (`aom_wm_hill_troll_2h_hammer_{head,handle}_name`, #679) |
+| `loc_mordor.xml` | 12 | all 12 (`aom_sk_mordor_mouth_of_sauron_helm_name`) |
+
+**Replay:** all four ids are new rows and their translations are in `tools/translation_cache/<lang>.json`, so after a
+reinstall `python tools/translate_with_claude.py --lang <L> --module Armory --sync-ids --apply` seeds and rewrites them
+from the cache at no API cost.
+
 ## Snapshot date
 
 2026-09-29: `skins.xml` refreshed from live and equal to it after line-ending normalisation (5,838,147 bytes, CRLF; live 5,619,454, LF): the face slider reach tuning (APPLIED EDIT above, 116 lines, plus `face_ratio` at 08:14 and `eye_depth` at 09:51). The other files are as below.

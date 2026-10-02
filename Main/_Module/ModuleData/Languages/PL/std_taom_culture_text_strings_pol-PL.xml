@@ -1,0 +1,1803 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="Polish" />
+  </tags>
+  <strings>
+    <string id="aom_abanissa_clan_1" text="Ród Phaxsharân" />
+    <string id="aom_abanissa_clan_2" text="Ród Hoshêdharma" />
+    <string id="aom_abanissa_clan_3" text="Ród Vasnârad" />
+    <string id="aom_abanissa_clan_4" text="Ród Gorazehan" />
+    <string id="aom_abanissa_clan_5" text="Ród Azadafrozan" />
+    <string id="aom_abanissa_clan_6" text="Ród Artaxshâsan" />
+    <string id="aom_abanissa_clan_7" text="Ród Ardâcheran" />
+    <string id="aom_abanissa_clan_8" text="Ród Tîrdahanâ" />
+    <string id="aom_abanissa_female_name_1" text="Phaxara" />
+    <string id="aom_abanissa_female_name_10" text="Khorba" />
+    <string id="aom_abanissa_female_name_11" text="Farzana" />
+    <string id="aom_abanissa_female_name_12" text="Mazdana" />
+    <string id="aom_abanissa_female_name_13" text="Rushana" />
+    <string id="aom_abanissa_female_name_14" text="Bakura" />
+    <string id="aom_abanissa_female_name_15" text="Dariya" />
+    <string id="aom_abanissa_female_name_16" text="Cyrana" />
+    <string id="aom_abanissa_female_name_17" text="Arszana" />
+    <string id="aom_abanissa_female_name_18" text="Kawana" />
+    <string id="aom_abanissa_female_name_19" text="Dżamszi" />
+    <string id="aom_abanissa_female_name_2" text="Hoszeda" />
+    <string id="aom_abanissa_female_name_20" text="Parwana" />
+    <string id="aom_abanissa_female_name_21" text="Bahrama" />
+    <string id="aom_abanissa_female_name_22" text="Sohraba" />
+    <string id="aom_abanissa_female_name_23" text="Chusrowa" />
+    <string id="aom_abanissa_female_name_24" text="Ardawana" />
+    <string id="aom_abanissa_female_name_25" text="Roszdana" />
+    <string id="aom_abanissa_female_name_26" text="Manucze" />
+    <string id="aom_abanissa_female_name_27" text="Zobajda" />
+    <string id="aom_abanissa_female_name_28" text="Farhada" />
+    <string id="aom_abanissa_female_name_29" text="Narima" />
+    <string id="aom_abanissa_female_name_3" text="Wasnara" />
+    <string id="aom_abanissa_female_name_30" text="Tahmura" />
+    <string id="aom_abanissa_female_name_4" text="Gorazja" />
+    <string id="aom_abanissa_female_name_5" text="Azade" />
+    <string id="aom_abanissa_female_name_6" text="Artaszna" />
+    <string id="aom_abanissa_female_name_7" text="Ardacze" />
+    <string id="aom_abanissa_female_name_8" text="Tirdana" />
+    <string id="aom_abanissa_female_name_9" text="Szarana" />
+    <string id="aom_abanissa_male_name_1" text="Faksar" />
+    <string id="aom_abanissa_male_name_10" text="Chorman" />
+    <string id="aom_abanissa_male_name_11" text="Farzan" />
+    <string id="aom_abanissa_male_name_12" text="Mazdan" />
+    <string id="aom_abanissa_male_name_13" text="Ruszan" />
+    <string id="aom_abanissa_male_name_14" text="Babak" />
+    <string id="aom_abanissa_male_name_15" text="Dariusz" />
+    <string id="aom_abanissa_male_name_16" text="Cyran" />
+    <string id="aom_abanissa_male_name_17" text="Arszan" />
+    <string id="aom_abanissa_male_name_18" text="Kawan" />
+    <string id="aom_abanissa_male_name_19" text="Dżamszid" />
+    <string id="aom_abanissa_male_name_2" text="Hoszed" />
+    <string id="aom_abanissa_male_name_20" text="Parwiz" />
+    <string id="aom_abanissa_male_name_21" text="Bahram" />
+    <string id="aom_abanissa_male_name_22" text="Sohrab" />
+    <string id="aom_abanissa_male_name_23" text="Khusrow" />
+    <string id="aom_abanissa_male_name_24" text="Ardavan" />
+    <string id="aom_abanissa_male_name_25" text="Roszdan" />
+    <string id="aom_abanissa_male_name_26" text="Manuch" />
+    <string id="aom_abanissa_male_name_27" text="Zobaid" />
+    <string id="aom_abanissa_male_name_28" text="Farhad" />
+    <string id="aom_abanissa_male_name_29" text="Nariman" />
+    <string id="aom_abanissa_male_name_3" text="Vasnar" />
+    <string id="aom_abanissa_male_name_30" text="Tahmur" />
+    <string id="aom_abanissa_male_name_4" text="Goraze" />
+    <string id="aom_abanissa_male_name_5" text="Azadan" />
+    <string id="aom_abanissa_male_name_6" text="Artasz" />
+    <string id="aom_abanissa_male_name_7" text="Ardach" />
+    <string id="aom_abanissa_male_name_8" text="Tirdah" />
+    <string id="aom_abanissa_male_name_9" text="Szarun" />
+    <string id="aom_bluecraig_clan_1" text="Horda Błękitnej Turni" />
+    <string id="aom_bluecraig_clan_10" text="Łupieżcy Szarych Gór" />
+    <string id="aom_bluecraig_clan_11" text="Horda Ettenmoors" />
+    <string id="aom_bluecraig_clan_12" text="Banda Snagów" />
+    <string id="aom_bluecraig_clan_13" text="Ród Skarnaka" />
+    <string id="aom_bluecraig_clan_14" text="Klan Czarnego Kła" />
+    <string id="aom_bluecraig_clan_15" text="Plaga Gór Błękitnych" />
+    <string id="aom_bluecraig_clan_2" text="Klan Błękitnej Turni" />
+    <string id="aom_bluecraig_clan_3" text="Wilki Gór Mglistych" />
+    <string id="aom_bluecraig_clan_4" text="Wataha Wargów" />
+    <string id="aom_bluecraig_clan_5" text="Horda Kamiennych Olbrzymów" />
+    <string id="aom_bluecraig_clan_6" text="Resztki Nogrodu" />
+    <string id="aom_bluecraig_clan_7" text="Pomiot Ujścia Lhûn" />
+    <string id="aom_bluecraig_clan_8" text="Pomiot Turni" />
+    <string id="aom_bluecraig_clan_9" text="Drużyna Carn Dûm" />
+    <string id="aom_bluecraig_desc" text="Gobliny z Błękitnej Turni dzierżą zachodnie odnogi Ered Luin, odcięte od pobratymców spod Ered Luin całą szerokością Eriadoru. Napadają na drogi krasnoludów i brzegi Lhûn, a elfowie z Mithlondu uważają je za bliższego wroga." />
+    <string id="aom_bluecraig_female_name_1" text="Gralza" />
+    <string id="aom_bluecraig_female_name_10" text="Ulzara" />
+    <string id="aom_bluecraig_female_name_11" text="Borza" />
+    <string id="aom_bluecraig_female_name_12" text="Zargra" />
+    <string id="aom_bluecraig_female_name_13" text="Grusza" />
+    <string id="aom_bluecraig_female_name_14" text="Dursza" />
+    <string id="aom_bluecraig_female_name_15" text="Thalra" />
+    <string id="aom_bluecraig_female_name_16" text="Vorla" />
+    <string id="aom_bluecraig_female_name_17" text="Nargul" />
+    <string id="aom_bluecraig_female_name_18" text="Thurka" />
+    <string id="aom_bluecraig_female_name_19" text="Ulsza" />
+    <string id="aom_bluecraig_female_name_2" text="Thurka" />
+    <string id="aom_bluecraig_female_name_20" text="Muzrak" />
+    <string id="aom_bluecraig_female_name_21" text="Kralsza" />
+    <string id="aom_bluecraig_female_name_22" text="Gralsza" />
+    <string id="aom_bluecraig_female_name_23" text="Dursza" />
+    <string id="aom_bluecraig_female_name_24" text="Thranza" />
+    <string id="aom_bluecraig_female_name_25" text="Nargra" />
+    <string id="aom_bluecraig_female_name_26" text="Ulzira" />
+    <string id="aom_bluecraig_female_name_27" text="Borlia" />
+    <string id="aom_bluecraig_female_name_28" text="Zorgla" />
+    <string id="aom_bluecraig_female_name_29" text="Durla" />
+    <string id="aom_bluecraig_female_name_3" text="Zulgara" />
+    <string id="aom_bluecraig_female_name_30" text="Muzsza" />
+    <string id="aom_bluecraig_female_name_31" text="Thrulga" />
+    <string id="aom_bluecraig_female_name_32" text="Narsza" />
+    <string id="aom_bluecraig_female_name_33" text="Kralga" />
+    <string id="aom_bluecraig_female_name_34" text="Grinza" />
+    <string id="aom_bluecraig_female_name_35" text="Thalzia" />
+    <string id="aom_bluecraig_female_name_36" text="Vorgla" />
+    <string id="aom_bluecraig_female_name_37" text="Ulzila" />
+    <string id="aom_bluecraig_female_name_38" text="Dursza" />
+    <string id="aom_bluecraig_female_name_39" text="Nargula" />
+    <string id="aom_bluecraig_female_name_4" text="Vorzha" />
+    <string id="aom_bluecraig_female_name_40" text="Thrugla" />
+    <string id="aom_bluecraig_female_name_41" text="Muzla" />
+    <string id="aom_bluecraig_female_name_42" text="Gralna" />
+    <string id="aom_bluecraig_female_name_43" text="Tharka" />
+    <string id="aom_bluecraig_female_name_44" text="Ulzara" />
+    <string id="aom_bluecraig_female_name_45" text="Kralza" />
+    <string id="aom_bluecraig_female_name_46" text="Durka" />
+    <string id="aom_bluecraig_female_name_47" text="Thruna" />
+    <string id="aom_bluecraig_female_name_48" text="Borza" />
+    <string id="aom_bluecraig_female_name_49" text="Zorga" />
+    <string id="aom_bluecraig_female_name_5" text="Durga" />
+    <string id="aom_bluecraig_female_name_50" text="Narlia" />
+    <string id="aom_bluecraig_female_name_6" text="Nargra" />
+    <string id="aom_bluecraig_female_name_7" text="Thrulza" />
+    <string id="aom_bluecraig_female_name_8" text="Muzra" />
+    <string id="aom_bluecraig_female_name_9" text="Kralza" />
+    <string id="aom_bluecraig_male_name_1" text="Azgar" />
+    <string id="aom_bluecraig_male_name_10" text="Mugzun" />
+    <string id="aom_bluecraig_male_name_11" text="Lurzok" />
+    <string id="aom_bluecraig_male_name_12" text="Zorgha" />
+    <string id="aom_bluecraig_male_name_13" text="Thrumak" />
+    <string id="aom_bluecraig_male_name_14" text="Nargoth" />
+    <string id="aom_bluecraig_male_name_15" text="Borzak" />
+    <string id="aom_bluecraig_male_name_16" text="Druznar" />
+    <string id="aom_bluecraig_male_name_17" text="Kragloth" />
+    <string id="aom_bluecraig_male_name_18" text="Vurzag" />
+    <string id="aom_bluecraig_male_name_19" text="Narlog" />
+    <string id="aom_bluecraig_male_name_2" text="Drozmak" />
+    <string id="aom_bluecraig_male_name_20" text="Thalrug" />
+    <string id="aom_bluecraig_male_name_21" text="Urzul" />
+    <string id="aom_bluecraig_male_name_22" text="Gralthak" />
+    <string id="aom_bluecraig_male_name_23" text="Vorgrim" />
+    <string id="aom_bluecraig_male_name_24" text="Mazkor" />
+    <string id="aom_bluecraig_male_name_25" text="Skarnakath" />
+    <string id="aom_bluecraig_male_name_26" text="Lurthak" />
+    <string id="aom_bluecraig_male_name_27" text="Thrugol" />
+    <string id="aom_bluecraig_male_name_28" text="Narzuk" />
+    <string id="aom_bluecraig_male_name_29" text="Kruznor" />
+    <string id="aom_bluecraig_male_name_3" text="Kargoth" />
+    <string id="aom_bluecraig_male_name_30" text="Thrazgul" />
+    <string id="aom_bluecraig_male_name_31" text="Durzak" />
+    <string id="aom_bluecraig_male_name_32" text="Zulgoth" />
+    <string id="aom_bluecraig_male_name_33" text="Vorzak" />
+    <string id="aom_bluecraig_male_name_34" text="Krogar" />
+    <string id="aom_bluecraig_male_name_35" text="Thrunak" />
+    <string id="aom_bluecraig_male_name_36" text="Grazar" />
+    <string id="aom_bluecraig_male_name_37" text="Narzog" />
+    <string id="aom_bluecraig_male_name_38" text="Ulgrim" />
+    <string id="aom_bluecraig_male_name_39" text="Vurlak" />
+    <string id="aom_bluecraig_male_name_4" text="Thrazak" />
+    <string id="aom_bluecraig_male_name_40" text="Borzak" />
+    <string id="aom_bluecraig_male_name_41" text="Durzor" />
+    <string id="aom_bluecraig_male_name_42" text="Muzrag" />
+    <string id="aom_bluecraig_male_name_43" text="Gralthor" />
+    <string id="aom_bluecraig_male_name_44" text="Tharzog" />
+    <string id="aom_bluecraig_male_name_45" text="Vrognak" />
+    <string id="aom_bluecraig_male_name_46" text="Karnak" />
+    <string id="aom_bluecraig_male_name_47" text="Borzak" />
+    <string id="aom_bluecraig_male_name_48" text="Narzul" />
+    <string id="aom_bluecraig_male_name_49" text="Thrulgoth" />
+    <string id="aom_bluecraig_male_name_5" text="Ulgrim" />
+    <string id="aom_bluecraig_male_name_50" text="Druzmok" />
+    <string id="aom_bluecraig_male_name_6" text="Zorgath" />
+    <string id="aom_bluecraig_male_name_7" text="Gragor" />
+    <string id="aom_bluecraig_male_name_8" text="Durmash" />
+    <string id="aom_bluecraig_male_name_9" text="Vorgoth" />
+    <string id="aom_bluecraig_name" text="Gobliny z Blue Craig" />
+    <string id="aom_dolguldur_clan_1" text="Niewolnicy Nekromanty" />
+    <string id="aom_dolguldur_clan_10" text="Zwiadowcy Cienia" />
+    <string id="aom_dolguldur_clan_11" text="Ostrze Zepsucia" />
+    <string id="aom_dolguldur_clan_12" text="Horda Mrocznego Lasu" />
+    <string id="aom_dolguldur_clan_13" text="Widmowa Straż" />
+    <string id="aom_dolguldur_clan_14" text="Słudzy Khamula" />
+    <string id="aom_dolguldur_clan_15" text="Łupieżcy Zmierzchu" />
+    <string id="aom_dolguldur_clan_2" text="Zastęp Cienia" />
+    <string id="aom_dolguldur_clan_3" text="Garnizon Dol Guldur" />
+    <string id="aom_dolguldur_clan_4" text="Drużyna Morgul" />
+    <string id="aom_dolguldur_clan_5" text="Tropiciele Mrocznej Puszczy" />
+    <string id="aom_dolguldur_clan_6" text="Jeźdźcy Pająków" />
+    <string id="aom_dolguldur_clan_7" text="Straż Mrocznego Czarnoksiężnika" />
+    <string id="aom_dolguldur_clan_8" text="Pomiot Amon Lanc" />
+    <string id="aom_dolguldur_clan_9" text="Opiekunowie Skrzydlatych Bestii" />
+    <string id="aom_dolguldur_desc" text="Dol Guldur to twierdza cienia i złości. Niegdyś warownia Saurona w Mrocznej Puszczy, dziś rządzą nią mroczni porucznicy Nekromanty. Armie Dol Guldur to przerażająca mieszanina orków, wargów i czarnej magii. Ten bastion zła skaża otaczający go las, szerząc gnicie i rozpacz. Wojownicy Dol Guldur są nieustępliwi, wiedzeni wolą swego mrocznego pana." />
+    <string id="aom_dolguldur_female_name_1" text="Thrulza" />
+    <string id="aom_dolguldur_female_name_10" text="Kazria" />
+    <string id="aom_dolguldur_female_name_11" text="Nargula" />
+    <string id="aom_dolguldur_female_name_12" text="Lurgra" />
+    <string id="aom_dolguldur_female_name_13" text="Druzhka" />
+    <string id="aom_dolguldur_female_name_14" text="Tharzia" />
+    <string id="aom_dolguldur_female_name_15" text="Zulgara" />
+    <string id="aom_dolguldur_female_name_16" text="Durla" />
+    <string id="aom_dolguldur_female_name_17" text="Narzia" />
+    <string id="aom_dolguldur_female_name_18" text="Thrulna" />
+    <string id="aom_dolguldur_female_name_19" text="Ulsha" />
+    <string id="aom_dolguldur_female_name_2" text="Narsha" />
+    <string id="aom_dolguldur_female_name_20" text="Vorgla" />
+    <string id="aom_dolguldur_female_name_21" text="Muzra" />
+    <string id="aom_dolguldur_female_name_22" text="Gralza" />
+    <string id="aom_dolguldur_female_name_23" text="Kazla" />
+    <string id="aom_dolguldur_female_name_24" text="Narsza" />
+    <string id="aom_dolguldur_female_name_25" text="Thalka" />
+    <string id="aom_dolguldur_female_name_26" text="Ulza" />
+    <string id="aom_dolguldur_female_name_27" text="Durzia" />
+    <string id="aom_dolguldur_female_name_28" text="Lurzha" />
+    <string id="aom_dolguldur_female_name_29" text="Zorla" />
+    <string id="aom_dolguldur_female_name_3" text="Grasza" />
+    <string id="aom_dolguldur_female_name_30" text="Thrulra" />
+    <string id="aom_dolguldur_female_name_31" text="Vorza" />
+    <string id="aom_dolguldur_female_name_32" text="Narzulra" />
+    <string id="aom_dolguldur_female_name_33" text="Muzgra" />
+    <string id="aom_dolguldur_female_name_34" text="Durgra" />
+    <string id="aom_dolguldur_female_name_35" text="Nargra" />
+    <string id="aom_dolguldur_female_name_36" text="Tharzia" />
+    <string id="aom_dolguldur_female_name_37" text="Kazria" />
+    <string id="aom_dolguldur_female_name_38" text="Gralzia" />
+    <string id="aom_dolguldur_female_name_39" text="Urzara" />
+    <string id="aom_dolguldur_female_name_4" text="Durzha" />
+    <string id="aom_dolguldur_female_name_40" text="Druznia" />
+    <string id="aom_dolguldur_female_name_41" text="Vorgria" />
+    <string id="aom_dolguldur_female_name_42" text="Thrulzia" />
+    <string id="aom_dolguldur_female_name_43" text="Zulgora" />
+    <string id="aom_dolguldur_female_name_44" text="Narzia" />
+    <string id="aom_dolguldur_female_name_45" text="Kaznia" />
+    <string id="aom_dolguldur_female_name_46" text="Lurzia" />
+    <string id="aom_dolguldur_female_name_47" text="Durla" />
+    <string id="aom_dolguldur_female_name_48" text="Gralnia" />
+    <string id="aom_dolguldur_female_name_49" text="Thalka" />
+    <string id="aom_dolguldur_female_name_5" text="Zargra" />
+    <string id="aom_dolguldur_female_name_50" text="Vorla" />
+    <string id="aom_dolguldur_female_name_6" text="Thalka" />
+    <string id="aom_dolguldur_female_name_7" text="Morgra" />
+    <string id="aom_dolguldur_female_name_8" text="Ulzra" />
+    <string id="aom_dolguldur_female_name_9" text="Vorzha" />
+    <string id="aom_dolguldur_male_name_1" text="Thrangul" />
+    <string id="aom_dolguldur_male_name_10" text="Thrargol" />
+    <string id="aom_dolguldur_male_name_11" text="Kazrag" />
+    <string id="aom_dolguldur_male_name_12" text="Zorgrul" />
+    <string id="aom_dolguldur_male_name_13" text="Morzag" />
+    <string id="aom_dolguldur_male_name_14" text="Druzhak" />
+    <string id="aom_dolguldur_male_name_15" text="Thalruk" />
+    <string id="aom_dolguldur_male_name_16" text="Lorgath" />
+    <string id="aom_dolguldur_male_name_17" text="Nargrash" />
+    <string id="aom_dolguldur_male_name_18" text="Urzok" />
+    <string id="aom_dolguldur_male_name_19" text="Vorzul" />
+    <string id="aom_dolguldur_male_name_2" text="Morgulash" />
+    <string id="aom_dolguldur_male_name_20" text="Gralzuk" />
+    <string id="aom_dolguldur_male_name_21" text="Durmorg" />
+    <string id="aom_dolguldur_male_name_22" text="Thorzag" />
+    <string id="aom_dolguldur_male_name_23" text="Krozar" />
+    <string id="aom_dolguldur_male_name_24" text="Zulgath" />
+    <string id="aom_dolguldur_male_name_25" text="Thurnak" />
+    <string id="aom_dolguldur_male_name_26" text="Vargul" />
+    <string id="aom_dolguldur_male_name_27" text="Darnash" />
+    <string id="aom_dolguldur_male_name_28" text="Lurzag" />
+    <string id="aom_dolguldur_male_name_29" text="Muzkar" />
+    <string id="aom_dolguldur_male_name_3" text="Drazgor" />
+    <string id="aom_dolguldur_male_name_30" text="Throrgash" />
+    <string id="aom_dolguldur_male_name_31" text="Gorvash" />
+    <string id="aom_dolguldur_male_name_32" text="Narduk" />
+    <string id="aom_dolguldur_male_name_33" text="Zulgor" />
+    <string id="aom_dolguldur_male_name_34" text="Dulruk" />
+    <string id="aom_dolguldur_male_name_35" text="Thrugash" />
+    <string id="aom_dolguldur_male_name_36" text="Kargul" />
+    <string id="aom_dolguldur_male_name_37" text="Ulzar" />
+    <string id="aom_dolguldur_male_name_38" text="Vorgrash" />
+    <string id="aom_dolguldur_male_name_39" text="Durzag" />
+    <string id="aom_dolguldur_male_name_4" text="Zarkash" />
+    <string id="aom_dolguldur_male_name_40" text="Grornak" />
+    <string id="aom_dolguldur_male_name_41" text="Lurgash" />
+    <string id="aom_dolguldur_male_name_42" text="Narzul" />
+    <string id="aom_dolguldur_male_name_43" text="Thargol" />
+    <string id="aom_dolguldur_male_name_44" text="Morkash" />
+    <string id="aom_dolguldur_male_name_45" text="Zorthak" />
+    <string id="aom_dolguldur_male_name_46" text="Durgrak" />
+    <string id="aom_dolguldur_male_name_47" text="Kazgul" />
+    <string id="aom_dolguldur_male_name_48" text="Thrurg" />
+    <string id="aom_dolguldur_male_name_49" text="Zarlug" />
+    <string id="aom_dolguldur_male_name_5" text="Gorzag" />
+    <string id="aom_dolguldur_male_name_50" text="Muzrak" />
+    <string id="aom_dolguldur_male_name_6" text="Ulthrak" />
+    <string id="aom_dolguldur_male_name_7" text="Vorthak" />
+    <string id="aom_dolguldur_male_name_8" text="Narzugh" />
+    <string id="aom_dolguldur_male_name_9" text="Durkar" />
+    <string id="aom_dolguldur_name" text="Orkowie z Dol Guldur" />
+    <string id="aom_erebor_clan_1" text="Długobrodzi" />
+    <string id="aom_erebor_clan_10" text="Srebrny Topór" />
+    <string id="aom_erebor_clan_11" text="Dębowa Tarcza" />
+    <string id="aom_erebor_clan_12" text="Młotowy Upadek" />
+    <string id="aom_erebor_clan_13" text="Głębokodrążcy" />
+    <string id="aom_erebor_clan_14" text="Kamienny Kilof" />
+    <string id="aom_erebor_clan_15" text="Siwobrody" />
+    <string id="aom_erebor_clan_2" text="Żelazna Stopa" />
+    <string id="aom_erebor_clan_3" text="Kamienny Hełm" />
+    <string id="aom_erebor_clan_4" text="Szerokobarczyści" />
+    <string id="aom_erebor_clan_5" text="Ogniostradzy" />
+    <string id="aom_erebor_clan_6" text="Sztywnobrodzi" />
+    <string id="aom_erebor_clan_7" text="Czarnowłosi" />
+    <string id="aom_erebor_clan_8" text="Żelazna Pięść" />
+    <string id="aom_erebor_clan_9" text="Goleli" />
+    <string id="aom_erebor_desc" text="Długobrodzi z Ereboru to dumny i pracowity lud, zamieszkujący sale Samotnej Góry. Mistrzowie rzemiosła i górnictwa, słyną z umiejętności kucia broni, zbroi i skarbów o niezrównanym pięknie. Pod wodzą swego Króla pod Górą krasnoludowie z Ereboru są ludem wytrwałym, zaciekle broniącym swej ojczyzny i jej bogactw." />
+    <string id="aom_erebor_female_name_1" text="Bryndis" />
+    <string id="aom_erebor_female_name_10" text="Karna" />
+    <string id="aom_erebor_female_name_11" text="Runa" />
+    <string id="aom_erebor_female_name_12" text="Loritha" />
+    <string id="aom_erebor_female_name_13" text="Tharva" />
+    <string id="aom_erebor_female_name_14" text="Balda" />
+    <string id="aom_erebor_female_name_15" text="Fritha" />
+    <string id="aom_erebor_female_name_16" text="Dralda" />
+    <string id="aom_erebor_female_name_17" text="Vorla" />
+    <string id="aom_erebor_female_name_18" text="Kyrnis" />
+    <string id="aom_erebor_female_name_19" text="Grenda" />
+    <string id="aom_erebor_female_name_2" text="Kharla" />
+    <string id="aom_erebor_female_name_20" text="Halwynn" />
+    <string id="aom_erebor_female_name_21" text="Brynis" />
+    <string id="aom_erebor_female_name_22" text="Morna" />
+    <string id="aom_erebor_female_name_23" text="Kildra" />
+    <string id="aom_erebor_female_name_24" text="Zylna" />
+    <string id="aom_erebor_female_name_25" text="Thrandis" />
+    <string id="aom_erebor_female_name_26" text="Orrina" />
+    <string id="aom_erebor_female_name_27" text="Dranna" />
+    <string id="aom_erebor_female_name_28" text="Naldra" />
+    <string id="aom_erebor_female_name_29" text="Galda" />
+    <string id="aom_erebor_female_name_3" text="Gorla" />
+    <string id="aom_erebor_female_name_30" text="Tylva" />
+    <string id="aom_erebor_female_name_31" text="Zarvyn" />
+    <string id="aom_erebor_female_name_32" text="Korla" />
+    <string id="aom_erebor_female_name_33" text="Vorrin" />
+    <string id="aom_erebor_female_name_34" text="Thyra" />
+    <string id="aom_erebor_female_name_35" text="Frynna" />
+    <string id="aom_erebor_female_name_36" text="Drisla" />
+    <string id="aom_erebor_female_name_37" text="Bralda" />
+    <string id="aom_erebor_female_name_38" text="Orlith" />
+    <string id="aom_erebor_female_name_39" text="Tirla" />
+    <string id="aom_erebor_female_name_4" text="Thaldis" />
+    <string id="aom_erebor_female_name_40" text="Morna" />
+    <string id="aom_erebor_female_name_41" text="Gwynla" />
+    <string id="aom_erebor_female_name_42" text="Ylrin" />
+    <string id="aom_erebor_female_name_43" text="Kilna" />
+    <string id="aom_erebor_female_name_44" text="Zandra" />
+    <string id="aom_erebor_female_name_45" text="Drisna" />
+    <string id="aom_erebor_female_name_46" text="Haldira" />
+    <string id="aom_erebor_female_name_47" text="Karril" />
+    <string id="aom_erebor_female_name_48" text="Thylla" />
+    <string id="aom_erebor_female_name_49" text="Zalwyn" />
+    <string id="aom_erebor_female_name_5" text="Faldira" />
+    <string id="aom_erebor_female_name_50" text="Frinda" />
+    <string id="aom_erebor_female_name_6" text="Hilda" />
+    <string id="aom_erebor_female_name_7" text="Norwynn" />
+    <string id="aom_erebor_female_name_8" text="Dorna" />
+    <string id="aom_erebor_female_name_9" text="Zarlin" />
+    <string id="aom_erebor_male_name_1" text="Berling" />
+    <string id="aom_erebor_male_name_10" text="Dorvin" />
+    <string id="aom_erebor_male_name_11" text="Tuldor" />
+    <string id="aom_erebor_male_name_12" text="Garlin" />
+    <string id="aom_erebor_male_name_13" text="Khaldun" />
+    <string id="aom_erebor_male_name_14" text="Gloni" />
+    <string id="aom_erebor_male_name_15" text="Thargrim" />
+    <string id="aom_erebor_male_name_16" text="Harvor" />
+    <string id="aom_erebor_male_name_17" text="Bryndal" />
+    <string id="aom_erebor_male_name_18" text="Olfar" />
+    <string id="aom_erebor_male_name_19" text="Drakkar" />
+    <string id="aom_erebor_male_name_2" text="Drúlin" />
+    <string id="aom_erebor_male_name_20" text="Vorgin" />
+    <string id="aom_erebor_male_name_21" text="Kaldan" />
+    <string id="aom_erebor_male_name_22" text="Farin" />
+    <string id="aom_erebor_male_name_23" text="Thalrin" />
+    <string id="aom_erebor_male_name_24" text="Haldin" />
+    <string id="aom_erebor_male_name_25" text="Fundin" />
+    <string id="aom_erebor_male_name_26" text="Skorgrim" />
+    <string id="aom_erebor_male_name_27" text="Brogrim" />
+    <string id="aom_erebor_male_name_28" text="Thalfar" />
+    <string id="aom_erebor_male_name_29" text="Túbi" />
+    <string id="aom_erebor_male_name_3" text="Gorwin" />
+    <string id="aom_erebor_male_name_30" text="Gamil" />
+    <string id="aom_erebor_male_name_31" text="Rulvin" />
+    <string id="aom_erebor_male_name_32" text="Thorgran" />
+    <string id="aom_erebor_male_name_33" text="Dari" />
+    <string id="aom_erebor_male_name_34" text="Bardrin" />
+    <string id="aom_erebor_male_name_35" text="Zarvin" />
+    <string id="aom_erebor_male_name_36" text="Orinor" />
+    <string id="aom_erebor_male_name_37" text="Karnil" />
+    <string id="aom_erebor_male_name_38" text="Thalgrim" />
+    <string id="aom_erebor_male_name_39" text="Frondin" />
+    <string id="aom_erebor_male_name_4" text="Norin" />
+    <string id="aom_erebor_male_name_40" text="Dror" />
+    <string id="aom_erebor_male_name_41" text="Haldor" />
+    <string id="aom_erebor_male_name_42" text="Weggir" />
+    <string id="aom_erebor_male_name_43" text="Jarn" />
+    <string id="aom_erebor_male_name_44" text="Ûni" />
+    <string id="aom_erebor_male_name_45" text="Orran" />
+    <string id="aom_erebor_male_name_46" text="Bardorn" />
+    <string id="aom_erebor_male_name_47" text="Tharan" />
+    <string id="aom_erebor_male_name_48" text="Nûrun" />
+    <string id="aom_erebor_male_name_49" text="Hamisar" />
+    <string id="aom_erebor_male_name_5" text="Balrik" />
+    <string id="aom_erebor_male_name_50" text="Gormar" />
+    <string id="aom_erebor_male_name_6" text="Khorin" />
+    <string id="aom_erebor_male_name_7" text="Rundrin" />
+    <string id="aom_erebor_male_name_8" text="Hanar" />
+    <string id="aom_erebor_male_name_9" text="Galar" />
+    <string id="aom_erebor_name" text="Krasnoludowie" />
+    <string id="aom_goblin_clan_1" text="Horda Goblinowego Grodu" />
+    <string id="aom_goblin_clan_10" text="Najeźdźcy z Szarych Gór" />
+    <string id="aom_goblin_clan_11" text="Horda Ettenmoors" />
+    <string id="aom_goblin_clan_12" text="Zgraja Snaga" />
+    <string id="aom_goblin_clan_13" text="Ród Bolga" />
+    <string id="aom_goblin_clan_14" text="Klan Czarnego Kła" />
+    <string id="aom_goblin_clan_15" text="Plaga Żelaznych Wzgórz" />
+    <string id="aom_goblin_clan_2" text="Klan Goblinowego Grodu" />
+    <string id="aom_goblin_clan_3" text="Wilki z Gór Mglistych" />
+    <string id="aom_goblin_clan_4" text="Wataha Wargów" />
+    <string id="aom_goblin_clan_5" text="Horda Kamiennych Olbrzymów" />
+    <string id="aom_goblin_clan_6" text="Niedobitki z Morii" />
+    <string id="aom_goblin_clan_7" text="Pomiot Cirith Ungol" />
+    <string id="aom_goblin_clan_8" text="Dzieci Angmaru" />
+    <string id="aom_goblin_clan_9" text="Drużyna z Carn Dûm" />
+    <string id="aom_goblin_desc" text="Gobliny z Goblinowego Grodu roją się w tunelach pod Wysoką Przełęczą Gór Mglistych. Tchórzliwe w pojedynkę, lecz przytłaczające liczbą, mnożą się bez końca w ciemnościach i wylewają się, by urządzać zasadzki na podróżnych na górskich drogach. Pod wodzą Wielkiego Goblina i jego dowódców nękają zarówno elfy, krasnoludy, jak i ludzi, służąc rosnącemu Cieniowi dla łupu i złośliwości." />
+    <string id="aom_goblin_female_name_1" text="Gralza" />
+    <string id="aom_goblin_female_name_10" text="Ulzara" />
+    <string id="aom_goblin_female_name_11" text="Borza" />
+    <string id="aom_goblin_female_name_12" text="Zargra" />
+    <string id="aom_goblin_female_name_13" text="Grusza" />
+    <string id="aom_goblin_female_name_14" text="Dursza" />
+    <string id="aom_goblin_female_name_15" text="Thalra" />
+    <string id="aom_goblin_female_name_16" text="Vorla" />
+    <string id="aom_goblin_female_name_17" text="Nargul" />
+    <string id="aom_goblin_female_name_18" text="Thurka" />
+    <string id="aom_goblin_female_name_19" text="Ulsza" />
+    <string id="aom_goblin_female_name_2" text="Thurka" />
+    <string id="aom_goblin_female_name_20" text="Muzrak" />
+    <string id="aom_goblin_female_name_21" text="Kralsza" />
+    <string id="aom_goblin_female_name_22" text="Gralsza" />
+    <string id="aom_goblin_female_name_23" text="Dursza" />
+    <string id="aom_goblin_female_name_24" text="Thranza" />
+    <string id="aom_goblin_female_name_25" text="Nargra" />
+    <string id="aom_goblin_female_name_26" text="Ulzira" />
+    <string id="aom_goblin_female_name_27" text="Borlia" />
+    <string id="aom_goblin_female_name_28" text="Zorgla" />
+    <string id="aom_goblin_female_name_29" text="Durla" />
+    <string id="aom_goblin_female_name_3" text="Zulgara" />
+    <string id="aom_goblin_female_name_30" text="Muzsza" />
+    <string id="aom_goblin_female_name_31" text="Thrulga" />
+    <string id="aom_goblin_female_name_32" text="Narsza" />
+    <string id="aom_goblin_female_name_33" text="Kralga" />
+    <string id="aom_goblin_female_name_34" text="Grinza" />
+    <string id="aom_goblin_female_name_35" text="Thalzia" />
+    <string id="aom_goblin_female_name_36" text="Vorgla" />
+    <string id="aom_goblin_female_name_37" text="Ulzila" />
+    <string id="aom_goblin_female_name_38" text="Durzsza" />
+    <string id="aom_goblin_female_name_39" text="Nargula" />
+    <string id="aom_goblin_female_name_4" text="Vorzsza" />
+    <string id="aom_goblin_female_name_40" text="Thrugla" />
+    <string id="aom_goblin_female_name_41" text="Muzla" />
+    <string id="aom_goblin_female_name_42" text="Gralna" />
+    <string id="aom_goblin_female_name_43" text="Tharka" />
+    <string id="aom_goblin_female_name_44" text="Ulzara" />
+    <string id="aom_goblin_female_name_45" text="Kralza" />
+    <string id="aom_goblin_female_name_46" text="Durka" />
+    <string id="aom_goblin_female_name_47" text="Thruna" />
+    <string id="aom_goblin_female_name_48" text="Borza" />
+    <string id="aom_goblin_female_name_49" text="Zorga" />
+    <string id="aom_goblin_female_name_5" text="Durga" />
+    <string id="aom_goblin_female_name_50" text="Narlia" />
+    <string id="aom_goblin_female_name_6" text="Nargra" />
+    <string id="aom_goblin_female_name_7" text="Thrulza" />
+    <string id="aom_goblin_female_name_8" text="Muzra" />
+    <string id="aom_goblin_female_name_9" text="Kralza" />
+    <string id="aom_goblin_male_name_1" text="Azgar" />
+    <string id="aom_goblin_male_name_10" text="Mugzun" />
+    <string id="aom_goblin_male_name_11" text="Lurzok" />
+    <string id="aom_goblin_male_name_12" text="Zorgha" />
+    <string id="aom_goblin_male_name_13" text="Thrumak" />
+    <string id="aom_goblin_male_name_14" text="Nargoth" />
+    <string id="aom_goblin_male_name_15" text="Borzak" />
+    <string id="aom_goblin_male_name_16" text="Druznar" />
+    <string id="aom_goblin_male_name_17" text="Kragloth" />
+    <string id="aom_goblin_male_name_18" text="Vurzag" />
+    <string id="aom_goblin_male_name_19" text="Narlog" />
+    <string id="aom_goblin_male_name_2" text="Drozmak" />
+    <string id="aom_goblin_male_name_20" text="Thalrug" />
+    <string id="aom_goblin_male_name_21" text="Urzul" />
+    <string id="aom_goblin_male_name_22" text="Gralthak" />
+    <string id="aom_goblin_male_name_23" text="Vorgrim" />
+    <string id="aom_goblin_male_name_24" text="Mazkor" />
+    <string id="aom_goblin_male_name_25" text="Bolgath" />
+    <string id="aom_goblin_male_name_26" text="Lurthak" />
+    <string id="aom_goblin_male_name_27" text="Thrugol" />
+    <string id="aom_goblin_male_name_28" text="Narzuk" />
+    <string id="aom_goblin_male_name_29" text="Kruznor" />
+    <string id="aom_goblin_male_name_3" text="Kargoth" />
+    <string id="aom_goblin_male_name_30" text="Thrazgul" />
+    <string id="aom_goblin_male_name_31" text="Durzak" />
+    <string id="aom_goblin_male_name_32" text="Zulgoth" />
+    <string id="aom_goblin_male_name_33" text="Vorzak" />
+    <string id="aom_goblin_male_name_34" text="Krogar" />
+    <string id="aom_goblin_male_name_35" text="Thrunak" />
+    <string id="aom_goblin_male_name_36" text="Grazar" />
+    <string id="aom_goblin_male_name_37" text="Narzog" />
+    <string id="aom_goblin_male_name_38" text="Ulgrim" />
+    <string id="aom_goblin_male_name_39" text="Vurlak" />
+    <string id="aom_goblin_male_name_4" text="Thrazak" />
+    <string id="aom_goblin_male_name_40" text="Borzak" />
+    <string id="aom_goblin_male_name_41" text="Durzor" />
+    <string id="aom_goblin_male_name_42" text="Muzrag" />
+    <string id="aom_goblin_male_name_43" text="Gralthor" />
+    <string id="aom_goblin_male_name_44" text="Tharzog" />
+    <string id="aom_goblin_male_name_45" text="Vrognak" />
+    <string id="aom_goblin_male_name_46" text="Karnak" />
+    <string id="aom_goblin_male_name_47" text="Borzak" />
+    <string id="aom_goblin_male_name_48" text="Narzul" />
+    <string id="aom_goblin_male_name_49" text="Thrulgoth" />
+    <string id="aom_goblin_male_name_5" text="Ulgrim" />
+    <string id="aom_goblin_male_name_50" text="Druzmok" />
+    <string id="aom_goblin_male_name_6" text="Zorgath" />
+    <string id="aom_goblin_male_name_7" text="Gragor" />
+    <string id="aom_goblin_male_name_8" text="Durmash" />
+    <string id="aom_goblin_male_name_9" text="Vorgoth" />
+    <string id="aom_goblin_name" text="Gobliny" />
+    <string id="aom_gondor_clan_1" text="Ród Húrina" />
+    <string id="aom_gondor_clan_10" text="Ród Ethiru" />
+    <string id="aom_gondor_clan_11" text="Ród Anfalas" />
+    <string id="aom_gondor_clan_12" text="Ród Lamedonu" />
+    <string id="aom_gondor_clan_13" text="Ród Ithilien" />
+    <string id="aom_gondor_clan_14" text="Ród Cair Andros" />
+    <string id="aom_gondor_clan_15" text="Ród Tarnostu" />
+    <string id="aom_gondor_clan_2" text="Ród Dol Amroth" />
+    <string id="aom_gondor_clan_3" text="Ród Anáriona" />
+    <string id="aom_gondor_clan_4" text="Ród Lossarnach" />
+    <string id="aom_gondor_clan_5" text="Ród Pinnath Gelin" />
+    <string id="aom_gondor_clan_6" text="Ród Morthond" />
+    <string id="aom_gondor_clan_7" text="Ród Ringló" />
+    <string id="aom_gondor_clan_8" text="Ród Lebennin" />
+    <string id="aom_gondor_clan_9" text="Ród Pelargiru" />
+    <string id="aom_gondor_desc" text="Lud Gondoru jest dumny i nieugięty, dziedzic największego królestwa Ludzi w Śródziemiu. Założony przez númenorejskich wygnańców, Isildura i Anáriona, Gondor stoi jako bastion siły i nadziei przeciw nadciągającej ciemności Mordoru. Jego kamienne miasta, zwieńczone majestatyczną Minas Tirith, są cudami inżynierii i wytrwałości. Prowadzeni przez szlachetnych namiestników i dzielnych kapitanów, wystawiają karne armie niezłomnej piechoty i rączych konnych rycerzy — lśniącą latarnię oporu w obliczu rozpaczy." />
+    <string id="aom_gondor_female_name_1" text="Lothíriel" />
+    <string id="aom_gondor_female_name_10" text="Silmarien" />
+    <string id="aom_gondor_female_name_11" text="Eärwen" />
+    <string id="aom_gondor_female_name_12" text="Lindórië" />
+    <string id="aom_gondor_female_name_13" text="Almarian" />
+    <string id="aom_gondor_female_name_14" text="Erendis" />
+    <string id="aom_gondor_female_name_15" text="Inzilbêth" />
+    <string id="aom_gondor_female_name_16" text="Telwen" />
+    <string id="aom_gondor_female_name_17" text="Daeriel" />
+    <string id="aom_gondor_female_name_18" text="Niniel" />
+    <string id="aom_gondor_female_name_19" text="Rían" />
+    <string id="aom_gondor_female_name_2" text="Ivriniel" />
+    <string id="aom_gondor_female_name_20" text="Haleth" />
+    <string id="aom_gondor_female_name_21" text="Ancalimë" />
+    <string id="aom_gondor_female_name_22" text="Vardiel" />
+    <string id="aom_gondor_female_name_23" text="Eledhwen" />
+    <string id="aom_gondor_female_name_24" text="Nimrodela" />
+    <string id="aom_gondor_female_name_25" text="Caladwen" />
+    <string id="aom_gondor_female_name_26" text="Mithrellas" />
+    <string id="aom_gondor_female_name_27" text="Eilinel" />
+    <string id="aom_gondor_female_name_28" text="Aerin" />
+    <string id="aom_gondor_female_name_29" text="Andreth" />
+    <string id="aom_gondor_female_name_3" text="Finduilas" />
+    <string id="aom_gondor_female_name_30" text="Beldis" />
+    <string id="aom_gondor_female_name_31" text="Gilmith" />
+    <string id="aom_gondor_female_name_32" text="Ragnell" />
+    <string id="aom_gondor_female_name_33" text="Anórien" />
+    <string id="aom_gondor_female_name_34" text="Lossiel" />
+    <string id="aom_gondor_female_name_35" text="Idril" />
+    <string id="aom_gondor_female_name_36" text="Oriel" />
+    <string id="aom_gondor_female_name_37" text="Faervel" />
+    <string id="aom_gondor_female_name_38" text="Celwen" />
+    <string id="aom_gondor_female_name_39" text="Braniel" />
+    <string id="aom_gondor_female_name_4" text="Morwena" />
+    <string id="aom_gondor_female_name_40" text="Tiriel" />
+    <string id="aom_gondor_female_name_41" text="Varadis" />
+    <string id="aom_gondor_female_name_42" text="Díriel" />
+    <string id="aom_gondor_female_name_43" text="Heledis" />
+    <string id="aom_gondor_female_name_44" text="Menelwen" />
+    <string id="aom_gondor_female_name_45" text="Síriel" />
+    <string id="aom_gondor_female_name_46" text="Elanor" />
+    <string id="aom_gondor_female_name_47" text="Hírwen" />
+    <string id="aom_gondor_female_name_48" text="Malliel" />
+    <string id="aom_gondor_female_name_49" text="Belwen" />
+    <string id="aom_gondor_female_name_5" text="Gilraen" />
+    <string id="aom_gondor_female_name_50" text="Anariel" />
+    <string id="aom_gondor_female_name_6" text="Ioreth" />
+    <string id="aom_gondor_female_name_7" text="Berúthiel" />
+    <string id="aom_gondor_female_name_8" text="Anwen" />
+    <string id="aom_gondor_female_name_9" text="Míriel" />
+    <string id="aom_gondor_male_name_1" text="Boromir" />
+    <string id="aom_gondor_male_name_10" text="Cirion" />
+    <string id="aom_gondor_male_name_11" text="Ecthelion" />
+    <string id="aom_gondor_male_name_12" text="Turgon" />
+    <string id="aom_gondor_male_name_13" text="Belecthor" />
+    <string id="aom_gondor_male_name_14" text="Eradan" />
+    <string id="aom_gondor_male_name_15" text="Hirgon" />
+    <string id="aom_gondor_male_name_16" text="Dervorin" />
+    <string id="aom_gondor_male_name_17" text="Duinhir" />
+    <string id="aom_gondor_male_name_18" text="Forlong" />
+    <string id="aom_gondor_male_name_19" text="Golasgil" />
+    <string id="aom_gondor_male_name_2" text="Faramir" />
+    <string id="aom_gondor_male_name_20" text="Angbor" />
+    <string id="aom_gondor_male_name_21" text="Mardil" />
+    <string id="aom_gondor_male_name_22" text="Vorondil" />
+    <string id="aom_gondor_male_name_23" text="Pelendur" />
+    <string id="aom_gondor_male_name_24" text="Herion" />
+    <string id="aom_gondor_male_name_25" text="Belegorn" />
+    <string id="aom_gondor_male_name_26" text="Baranor" />
+    <string id="aom_gondor_male_name_27" text="Ingold" />
+    <string id="aom_gondor_male_name_28" text="Bergil" />
+    <string id="aom_gondor_male_name_29" text="Hallas" />
+    <string id="aom_gondor_male_name_3" text="Beregond" />
+    <string id="aom_gondor_male_name_30" text="Egalmoth" />
+    <string id="aom_gondor_male_name_31" text="Calmacil" />
+    <string id="aom_gondor_male_name_32" text="Telumehtar" />
+    <string id="aom_gondor_male_name_33" text="Aldamir" />
+    <string id="aom_gondor_male_name_34" text="Eldacar" />
+    <string id="aom_gondor_male_name_35" text="Minardil" />
+    <string id="aom_gondor_male_name_36" text="Ciryandil" />
+    <string id="aom_gondor_male_name_37" text="Tarannon" />
+    <string id="aom_gondor_male_name_38" text="Anardil" />
+    <string id="aom_gondor_male_name_39" text="Meneldil" />
+    <string id="aom_gondor_male_name_4" text="Imrahil" />
+    <string id="aom_gondor_male_name_40" text="Ernil" />
+    <string id="aom_gondor_male_name_41" text="Galador" />
+    <string id="aom_gondor_male_name_42" text="Adrahil" />
+    <string id="aom_gondor_male_name_43" text="Narmacil" />
+    <string id="aom_gondor_male_name_44" text="Duilin" />
+    <string id="aom_gondor_male_name_45" text="Derufin" />
+    <string id="aom_gondor_male_name_46" text="Hirluin" />
+    <string id="aom_gondor_male_name_47" text="Iorlas" />
+    <string id="aom_gondor_male_name_48" text="Targon" />
+    <string id="aom_gondor_male_name_49" text="Mablung" />
+    <string id="aom_gondor_male_name_5" text="Húrin" />
+    <string id="aom_gondor_male_name_50" text="Damrod" />
+    <string id="aom_gondor_male_name_6" text="Denethor" />
+    <string id="aom_gondor_male_name_7" text="Anárion" />
+    <string id="aom_gondor_male_name_8" text="Elendil" />
+    <string id="aom_gondor_male_name_9" text="Thorongil" />
+    <string id="aom_gondor_name" text="Gondorczyk" />
+    <string id="aom_gundabad_clan_1" text="Plemię Góry Gundabad" />
+    <string id="aom_gundabad_clan_10" text="Najeźdźcy z Szarych Gór" />
+    <string id="aom_gundabad_clan_11" text="Horda z Ettenmoors" />
+    <string id="aom_gundabad_clan_12" text="Banda Snaga" />
+    <string id="aom_gundabad_clan_13" text="Ród Bolga" />
+    <string id="aom_gundabad_clan_14" text="Klan Czarnego Kła" />
+    <string id="aom_gundabad_clan_15" text="Plaga Żelaznych Wzgórz" />
+    <string id="aom_gundabad_clan_2" text="Klan Goblinowego Grodu" />
+    <string id="aom_gundabad_clan_3" text="Wilki Gór Mglistych" />
+    <string id="aom_gundabad_clan_4" text="Wataha Wargów" />
+    <string id="aom_gundabad_clan_5" text="Horda Kamiennych Olbrzymów" />
+    <string id="aom_gundabad_clan_6" text="Niedobitki z Morii" />
+    <string id="aom_gundabad_clan_7" text="Pomiot Cirith Ungol" />
+    <string id="aom_gundabad_clan_8" text="Dzieci Angmaru" />
+    <string id="aom_gundabad_clan_9" text="Drużyna z Carn Dûm" />
+    <string id="aom_gundabad_desc" text="Orkowie z Gundabadu w Górach Mglistych są dzicy i nieustępliwi. Ze starożytnej twierdzy na Górze Gundabad najeżdżają okoliczne ziemie, powodowani żądzą zemsty i podboju. Pod władzą potężnych wodzów gromadzą legiony goblinów, wargów i trolli. Wojownicy Gundabadu są brutalni i przebiegli, mistrzowie zasadzek i miażdżącej przewagi." />
+    <string id="aom_gundabad_female_name_1" text="Gralza" />
+    <string id="aom_gundabad_female_name_10" text="Ulzara" />
+    <string id="aom_gundabad_female_name_11" text="Borza" />
+    <string id="aom_gundabad_female_name_12" text="Zargra" />
+    <string id="aom_gundabad_female_name_13" text="Grusza" />
+    <string id="aom_gundabad_female_name_14" text="Dursza" />
+    <string id="aom_gundabad_female_name_15" text="Thalra" />
+    <string id="aom_gundabad_female_name_16" text="Vorla" />
+    <string id="aom_gundabad_female_name_17" text="Nargul" />
+    <string id="aom_gundabad_female_name_18" text="Thurka" />
+    <string id="aom_gundabad_female_name_19" text="Ulsza" />
+    <string id="aom_gundabad_female_name_2" text="Thurka" />
+    <string id="aom_gundabad_female_name_20" text="Muzrak" />
+    <string id="aom_gundabad_female_name_21" text="Kralsza" />
+    <string id="aom_gundabad_female_name_22" text="Gralsza" />
+    <string id="aom_gundabad_female_name_23" text="Dursza" />
+    <string id="aom_gundabad_female_name_24" text="Thranza" />
+    <string id="aom_gundabad_female_name_25" text="Nargra" />
+    <string id="aom_gundabad_female_name_26" text="Ulzira" />
+    <string id="aom_gundabad_female_name_27" text="Borlia" />
+    <string id="aom_gundabad_female_name_28" text="Zorgla" />
+    <string id="aom_gundabad_female_name_29" text="Durla" />
+    <string id="aom_gundabad_female_name_3" text="Zulgara" />
+    <string id="aom_gundabad_female_name_30" text="Muzsza" />
+    <string id="aom_gundabad_female_name_31" text="Thrulga" />
+    <string id="aom_gundabad_female_name_32" text="Narsza" />
+    <string id="aom_gundabad_female_name_33" text="Kralga" />
+    <string id="aom_gundabad_female_name_34" text="Grinza" />
+    <string id="aom_gundabad_female_name_35" text="Thalzia" />
+    <string id="aom_gundabad_female_name_36" text="Vorgla" />
+    <string id="aom_gundabad_female_name_37" text="Ulzila" />
+    <string id="aom_gundabad_female_name_38" text="Durzha" />
+    <string id="aom_gundabad_female_name_39" text="Nargula" />
+    <string id="aom_gundabad_female_name_4" text="Vorzha" />
+    <string id="aom_gundabad_female_name_40" text="Thrugla" />
+    <string id="aom_gundabad_female_name_41" text="Muzla" />
+    <string id="aom_gundabad_female_name_42" text="Gralna" />
+    <string id="aom_gundabad_female_name_43" text="Tharka" />
+    <string id="aom_gundabad_female_name_44" text="Ulzara" />
+    <string id="aom_gundabad_female_name_45" text="Kralza" />
+    <string id="aom_gundabad_female_name_46" text="Durka" />
+    <string id="aom_gundabad_female_name_47" text="Thruna" />
+    <string id="aom_gundabad_female_name_48" text="Borza" />
+    <string id="aom_gundabad_female_name_49" text="Zorga" />
+    <string id="aom_gundabad_female_name_5" text="Durga" />
+    <string id="aom_gundabad_female_name_50" text="Narlia" />
+    <string id="aom_gundabad_female_name_6" text="Nargra" />
+    <string id="aom_gundabad_female_name_7" text="Thrulza" />
+    <string id="aom_gundabad_female_name_8" text="Muzra" />
+    <string id="aom_gundabad_female_name_9" text="Kralza" />
+    <string id="aom_gundabad_male_name_1" text="Azgar" />
+    <string id="aom_gundabad_male_name_10" text="Mugzun" />
+    <string id="aom_gundabad_male_name_11" text="Lurzok" />
+    <string id="aom_gundabad_male_name_12" text="Zorgha" />
+    <string id="aom_gundabad_male_name_13" text="Thrumak" />
+    <string id="aom_gundabad_male_name_14" text="Nargoth" />
+    <string id="aom_gundabad_male_name_15" text="Borzak" />
+    <string id="aom_gundabad_male_name_16" text="Druznar" />
+    <string id="aom_gundabad_male_name_17" text="Kragloth" />
+    <string id="aom_gundabad_male_name_18" text="Vurzag" />
+    <string id="aom_gundabad_male_name_19" text="Narlog" />
+    <string id="aom_gundabad_male_name_2" text="Drozmak" />
+    <string id="aom_gundabad_male_name_20" text="Thalrug" />
+    <string id="aom_gundabad_male_name_21" text="Urzul" />
+    <string id="aom_gundabad_male_name_22" text="Gralthak" />
+    <string id="aom_gundabad_male_name_23" text="Vorgrim" />
+    <string id="aom_gundabad_male_name_24" text="Mazkor" />
+    <string id="aom_gundabad_male_name_25" text="Bolgath" />
+    <string id="aom_gundabad_male_name_26" text="Lurthak" />
+    <string id="aom_gundabad_male_name_27" text="Thrugol" />
+    <string id="aom_gundabad_male_name_28" text="Narzuk" />
+    <string id="aom_gundabad_male_name_29" text="Kruznor" />
+    <string id="aom_gundabad_male_name_3" text="Kargoth" />
+    <string id="aom_gundabad_male_name_30" text="Thrazgul" />
+    <string id="aom_gundabad_male_name_31" text="Durzak" />
+    <string id="aom_gundabad_male_name_32" text="Zulgoth" />
+    <string id="aom_gundabad_male_name_33" text="Vorzak" />
+    <string id="aom_gundabad_male_name_34" text="Krogar" />
+    <string id="aom_gundabad_male_name_35" text="Thrunak" />
+    <string id="aom_gundabad_male_name_36" text="Grazar" />
+    <string id="aom_gundabad_male_name_37" text="Narzog" />
+    <string id="aom_gundabad_male_name_38" text="Ulgrim" />
+    <string id="aom_gundabad_male_name_39" text="Vurlak" />
+    <string id="aom_gundabad_male_name_4" text="Thrazak" />
+    <string id="aom_gundabad_male_name_40" text="Borzak" />
+    <string id="aom_gundabad_male_name_41" text="Durzor" />
+    <string id="aom_gundabad_male_name_42" text="Muzrag" />
+    <string id="aom_gundabad_male_name_43" text="Gralthor" />
+    <string id="aom_gundabad_male_name_44" text="Tharzog" />
+    <string id="aom_gundabad_male_name_45" text="Vrognak" />
+    <string id="aom_gundabad_male_name_46" text="Karnak" />
+    <string id="aom_gundabad_male_name_47" text="Borzak" />
+    <string id="aom_gundabad_male_name_48" text="Narzul" />
+    <string id="aom_gundabad_male_name_49" text="Thrulgoth" />
+    <string id="aom_gundabad_male_name_5" text="Ulgrim" />
+    <string id="aom_gundabad_male_name_50" text="Druzmok" />
+    <string id="aom_gundabad_male_name_6" text="Zorgath" />
+    <string id="aom_gundabad_male_name_7" text="Gragor" />
+    <string id="aom_gundabad_male_name_8" text="Durmash" />
+    <string id="aom_gundabad_male_name_9" text="Vorgoth" />
+    <string id="aom_gundabad_name" text="Orkowie z Gundabadu" />
+    <string id="aom_isengard_clan_1" text="Biała Dłoń" />
+    <string id="aom_isengard_clan_10" text="Wojownicy z Dołów" />
+    <string id="aom_isengard_clan_11" text="Wybrańcy Sarumana" />
+    <string id="aom_isengard_clan_12" text="Straż Wieży" />
+    <string id="aom_isengard_clan_13" text="Łupieżcy Fangornu" />
+    <string id="aom_isengard_clan_14" text="Najeźdźcy z Zachodniej Bruzdy" />
+    <string id="aom_isengard_clan_15" text="Klan Czarnego Żelaza" />
+    <string id="aom_isengard_clan_2" text="Bojowi Uruk-hai" />
+    <string id="aom_isengard_clan_3" text="Awangarda Isengardu" />
+    <string id="aom_isengard_clan_4" text="Jeźdźcy Wargów" />
+    <string id="aom_isengard_clan_5" text="Zgraja Berserkerów" />
+    <string id="aom_isengard_clan_6" text="Straż Orthanku" />
+    <string id="aom_isengard_clan_7" text="Legion Żelaznej Pięści" />
+    <string id="aom_isengard_clan_8" text="Sprzymierzeńcy z Dunlandu" />
+    <string id="aom_isengard_clan_9" text="Drużyna z Nan Curunír" />
+    <string id="aom_isengard_desc" text="Lud Isengardu to legiony Sarumana, wykute w ogniu przemysłu i napędzane mroczną wizją panowania. Skupiony wokół niezdobytej wieży Orthanc, Isengard jest domem Uruk-hai, wyhodowanych dla siły, wytrzymałości i posłuszeństwa. Dzięki machinom wojennym i przebiegłości swego pana miażdżą wszelki opór z bezwzględną precyzją." />
+    <string id="aom_isengard_female_name_1" text="Grishna" />
+    <string id="aom_isengard_female_name_10" text="Durgra" />
+    <string id="aom_isengard_female_name_11" text="Grishka" />
+    <string id="aom_isengard_female_name_12" text="Urbazia" />
+    <string id="aom_isengard_female_name_13" text="Gorla" />
+    <string id="aom_isengard_female_name_14" text="Kazra" />
+    <string id="aom_isengard_female_name_15" text="Vorla" />
+    <string id="aom_isengard_female_name_16" text="Durshka" />
+    <string id="aom_isengard_female_name_17" text="Zorlia" />
+    <string id="aom_isengard_female_name_18" text="Narshka" />
+    <string id="aom_isengard_female_name_19" text="Thurza" />
+    <string id="aom_isengard_female_name_2" text="Tharza" />
+    <string id="aom_isengard_female_name_20" text="Lurgra" />
+    <string id="aom_isengard_female_name_21" text="Morlina" />
+    <string id="aom_isengard_female_name_22" text="Dulgra" />
+    <string id="aom_isengard_female_name_23" text="Vorliza" />
+    <string id="aom_isengard_female_name_24" text="Grilra" />
+    <string id="aom_isengard_female_name_25" text="Zarzha" />
+    <string id="aom_isengard_female_name_26" text="Narzulra" />
+    <string id="aom_isengard_female_name_27" text="Tharzia" />
+    <string id="aom_isengard_female_name_28" text="Durva" />
+    <string id="aom_isengard_female_name_29" text="Kazliza" />
+    <string id="aom_isengard_female_name_3" text="Urzra" />
+    <string id="aom_isengard_female_name_30" text="Thrulra" />
+    <string id="aom_isengard_female_name_31" text="Urzala" />
+    <string id="aom_isengard_female_name_32" text="Vorgulia" />
+    <string id="aom_isengard_female_name_33" text="Mordria" />
+    <string id="aom_isengard_female_name_34" text="Durgan" />
+    <string id="aom_isengard_female_name_35" text="Lurgulia" />
+    <string id="aom_isengard_female_name_36" text="Narszka" />
+    <string id="aom_isengard_female_name_37" text="Zornia" />
+    <string id="aom_isengard_female_name_38" text="Tharlia" />
+    <string id="aom_isengard_female_name_39" text="Kazria" />
+    <string id="aom_isengard_female_name_4" text="Vorgula" />
+    <string id="aom_isengard_female_name_40" text="Urbazia" />
+    <string id="aom_isengard_female_name_41" text="Griliza" />
+    <string id="aom_isengard_female_name_42" text="Durrina" />
+    <string id="aom_isengard_female_name_43" text="Vorzha" />
+    <string id="aom_isengard_female_name_44" text="Narvila" />
+    <string id="aom_isengard_female_name_45" text="Thrulia" />
+    <string id="aom_isengard_female_name_46" text="Gorlia" />
+    <string id="aom_isengard_female_name_47" text="Durzia" />
+    <string id="aom_isengard_female_name_48" text="Kazula" />
+    <string id="aom_isengard_female_name_49" text="Lurzia" />
+    <string id="aom_isengard_female_name_5" text="Durlia" />
+    <string id="aom_isengard_female_name_50" text="Vorlia" />
+    <string id="aom_isengard_female_name_6" text="Mordrith" />
+    <string id="aom_isengard_female_name_7" text="Zarnasha" />
+    <string id="aom_isengard_female_name_8" text="Narza" />
+    <string id="aom_isengard_female_name_9" text="Thrasha" />
+    <string id="aom_isengard_male_name_1" text="Grashnakh" />
+    <string id="aom_isengard_male_name_10" text="Thrask" />
+    <string id="aom_isengard_male_name_11" text="Durmash" />
+    <string id="aom_isengard_male_name_12" text="Groshnak" />
+    <string id="aom_isengard_male_name_13" text="Urbash" />
+    <string id="aom_isengard_male_name_14" text="Ghorzul" />
+    <string id="aom_isengard_male_name_15" text="Kazruk" />
+    <string id="aom_isengard_male_name_16" text="Vorzog" />
+    <string id="aom_isengard_male_name_17" text="Tugrath" />
+    <string id="aom_isengard_male_name_18" text="Zorgrak" />
+    <string id="aom_isengard_male_name_19" text="Narzugh" />
+    <string id="aom_isengard_male_name_2" text="Tharzog" />
+    <string id="aom_isengard_male_name_20" text="Drulak" />
+    <string id="aom_isengard_male_name_21" text="Gragnor" />
+    <string id="aom_isengard_male_name_22" text="Tharnak" />
+    <string id="aom_isengard_male_name_23" text="Urzrog" />
+    <string id="aom_isengard_male_name_24" text="Dargash" />
+    <string id="aom_isengard_male_name_25" text="Zogrul" />
+    <string id="aom_isengard_male_name_26" text="Vorash" />
+    <string id="aom_isengard_male_name_27" text="Durash" />
+    <string id="aom_isengard_male_name_28" text="Lurzar" />
+    <string id="aom_isengard_male_name_29" text="Narshak" />
+    <string id="aom_isengard_male_name_3" text="Lurdag" />
+    <string id="aom_isengard_male_name_30" text="Thargash" />
+    <string id="aom_isengard_male_name_31" text="Zargrath" />
+    <string id="aom_isengard_male_name_32" text="Morgash" />
+    <string id="aom_isengard_male_name_33" text="Durkash" />
+    <string id="aom_isengard_male_name_34" text="Thrarnak" />
+    <string id="aom_isengard_male_name_35" text="Gorzugh" />
+    <string id="aom_isengard_male_name_36" text="Kazlur" />
+    <string id="aom_isengard_male_name_37" text="Urbrog" />
+    <string id="aom_isengard_male_name_38" text="Narzul" />
+    <string id="aom_isengard_male_name_39" text="Thurzak" />
+    <string id="aom_isengard_male_name_4" text="Urzak" />
+    <string id="aom_isengard_male_name_40" text="Lurgrok" />
+    <string id="aom_isengard_male_name_41" text="Durnak" />
+    <string id="aom_isengard_male_name_42" text="Vorgash" />
+    <string id="aom_isengard_male_name_43" text="Morzag" />
+    <string id="aom_isengard_male_name_44" text="Thorzok" />
+    <string id="aom_isengard_male_name_45" text="Urzluk" />
+    <string id="aom_isengard_male_name_46" text="Gragnar" />
+    <string id="aom_isengard_male_name_47" text="Kazgul" />
+    <string id="aom_isengard_male_name_48" text="Vorzug" />
+    <string id="aom_isengard_male_name_49" text="Narbul" />
+    <string id="aom_isengard_male_name_5" text="Varkul" />
+    <string id="aom_isengard_male_name_50" text="Durmug" />
+    <string id="aom_isengard_male_name_6" text="Durgath" />
+    <string id="aom_isengard_male_name_7" text="Mordruk" />
+    <string id="aom_isengard_male_name_8" text="Zogash" />
+    <string id="aom_isengard_male_name_9" text="Narzug" />
+    <string id="aom_isengard_name" text="Isengard" />
+    <string id="aom_lindon_clan_1" text="Ród Círdana" />
+    <string id="aom_lindon_clan_10" text="Ród Elmoth" />
+    <string id="aom_lindon_clan_11" text="Cirdanath" />
+    <string id="aom_lindon_clan_12" text="Ród Salmara" />
+    <string id="aom_lindon_clan_13" text="Ród Nimloth" />
+    <string id="aom_lindon_clan_14" text="Ród Gil-galada" />
+    <string id="aom_lindon_clan_15" text="Ród Círdana" />
+    <string id="aom_lindon_clan_2" text="Ród Falathara" />
+    <string id="aom_lindon_clan_3" text="Ród Galdora" />
+    <string id="aom_lindon_clan_4" text="Ród Aerandira" />
+    <string id="aom_lindon_clan_5" text="Ród Erelionta" />
+    <string id="aom_lindon_clan_6" text="Gwaith-i-Falath" />
+    <string id="aom_lindon_clan_7" text="Ród Nimrosa" />
+    <string id="aom_lindon_clan_8" text="Ród Gildora" />
+    <string id="aom_lindon_clan_9" text="Ród Belegona" />
+    <string id="aom_lindon_desc" text="Falathrimowie z Lindonu to ostatni szkutnicy spośród Sindarów, mieszkający w Mithlondzie, tam gdzie Zatoka Lhûn spotyka się z morzem. Círdan strzeże Szarych Przystani od Pierwszej Ery i to od jego nabrzeży białe okręty odpływają na Zachód." />
+    <string id="aom_lindon_female_name_1" text="Anariel" />
+    <string id="aom_lindon_female_name_10" text="Silwen" />
+    <string id="aom_lindon_female_name_11" text="Ithrelle" />
+    <string id="aom_lindon_female_name_12" text="Galadwen" />
+    <string id="aom_lindon_female_name_13" text="Melinna" />
+    <string id="aom_lindon_female_name_14" text="Suilwen" />
+    <string id="aom_lindon_female_name_15" text="Calyndra" />
+    <string id="aom_lindon_female_name_16" text="Ardien" />
+    <string id="aom_lindon_female_name_17" text="Velindra" />
+    <string id="aom_lindon_female_name_18" text="Ethiriel" />
+    <string id="aom_lindon_female_name_19" text="Thaliel" />
+    <string id="aom_lindon_female_name_2" text="Elenna" />
+    <string id="aom_lindon_female_name_20" text="Caraniel" />
+    <string id="aom_lindon_female_name_21" text="Minlothwen" />
+    <string id="aom_lindon_female_name_22" text="Aeliriel" />
+    <string id="aom_lindon_female_name_23" text="Falinwen" />
+    <string id="aom_lindon_female_name_24" text="Tiriel" />
+    <string id="aom_lindon_female_name_25" text="Idriel" />
+    <string id="aom_lindon_female_name_26" text="Elvanna" />
+    <string id="aom_lindon_female_name_27" text="Ciryawen" />
+    <string id="aom_lindon_female_name_28" text="Lindalwen" />
+    <string id="aom_lindon_female_name_29" text="Erethiel" />
+    <string id="aom_lindon_female_name_3" text="Calenwen" />
+    <string id="aom_lindon_female_name_30" text="Silmariel" />
+    <string id="aom_lindon_female_name_31" text="Galadien" />
+    <string id="aom_lindon_female_name_32" text="Aelinor" />
+    <string id="aom_lindon_female_name_33" text="Thalwin" />
+    <string id="aom_lindon_female_name_34" text="Ethirwen" />
+    <string id="aom_lindon_female_name_35" text="Nimlothiel" />
+    <string id="aom_lindon_female_name_36" text="Suilenna" />
+    <string id="aom_lindon_female_name_37" text="Nolwin" />
+    <string id="aom_lindon_female_name_38" text="Tathwen" />
+    <string id="aom_lindon_female_name_39" text="Calindriel" />
+    <string id="aom_lindon_female_name_4" text="Nimrielle" />
+    <string id="aom_lindon_female_name_40" text="Ithriel" />
+    <string id="aom_lindon_female_name_41" text="Velwen" />
+    <string id="aom_lindon_female_name_42" text="Aelinna" />
+    <string id="aom_lindon_female_name_43" text="Faliniel" />
+    <string id="aom_lindon_female_name_44" text="Erelle" />
+    <string id="aom_lindon_female_name_45" text="Cariel" />
+    <string id="aom_lindon_female_name_46" text="Lothanna" />
+    <string id="aom_lindon_female_name_47" text="Elarielle" />
+    <string id="aom_lindon_female_name_48" text="Galwynn" />
+    <string id="aom_lindon_female_name_49" text="Nimindiel" />
+    <string id="aom_lindon_female_name_5" text="Tathriel" />
+    <string id="aom_lindon_female_name_50" text="Silvariel" />
+    <string id="aom_lindon_female_name_6" text="Amariel" />
+    <string id="aom_lindon_female_name_7" text="Valwen" />
+    <string id="aom_lindon_female_name_8" text="Elariel" />
+    <string id="aom_lindon_female_name_9" text="Lothiriel" />
+    <string id="aom_lindon_male_name_1" text="Calenion" />
+    <string id="aom_lindon_male_name_10" text="Orodin" />
+    <string id="aom_lindon_male_name_11" text="Aeglir" />
+    <string id="aom_lindon_male_name_12" text="Ethirion" />
+    <string id="aom_lindon_male_name_13" text="Anarion" />
+    <string id="aom_lindon_male_name_14" text="Celethir" />
+    <string id="aom_lindon_male_name_15" text="Falinor" />
+    <string id="aom_lindon_male_name_16" text="Elrodir" />
+    <string id="aom_lindon_male_name_17" text="Aradion" />
+    <string id="aom_lindon_male_name_18" text="Vorendil" />
+    <string id="aom_lindon_male_name_19" text="Melianar" />
+    <string id="aom_lindon_male_name_2" text="Erelion" />
+    <string id="aom_lindon_male_name_20" text="Tathrin" />
+    <string id="aom_lindon_male_name_21" text="Galion" />
+    <string id="aom_lindon_male_name_22" text="Eledir" />
+    <string id="aom_lindon_male_name_23" text="Mardil" />
+    <string id="aom_lindon_male_name_24" text="Silonar" />
+    <string id="aom_lindon_male_name_25" text="Nimlothon" />
+    <string id="aom_lindon_male_name_26" text="Ciryandir" />
+    <string id="aom_lindon_male_name_27" text="Arthon" />
+    <string id="aom_lindon_male_name_28" text="Elmirion" />
+    <string id="aom_lindon_male_name_29" text="Caradion" />
+    <string id="aom_lindon_male_name_3" text="Amarion" />
+    <string id="aom_lindon_male_name_30" text="Fingalor" />
+    <string id="aom_lindon_male_name_31" text="Erendur" />
+    <string id="aom_lindon_male_name_32" text="Tirion" />
+    <string id="aom_lindon_male_name_33" text="Velandor" />
+    <string id="aom_lindon_male_name_34" text="Alathion" />
+    <string id="aom_lindon_male_name_35" text="Minrandir" />
+    <string id="aom_lindon_male_name_36" text="Galdorion" />
+    <string id="aom_lindon_male_name_37" text="Lothanor" />
+    <string id="aom_lindon_male_name_38" text="Tirandir" />
+    <string id="aom_lindon_male_name_39" text="Ereglin" />
+    <string id="aom_lindon_male_name_4" text="Nolindir" />
+    <string id="aom_lindon_male_name_40" text="Thaladir" />
+    <string id="aom_lindon_male_name_41" text="Anarindor" />
+    <string id="aom_lindon_male_name_42" text="Calinor" />
+    <string id="aom_lindon_male_name_43" text="Suilon" />
+    <string id="aom_lindon_male_name_44" text="Elarion" />
+    <string id="aom_lindon_male_name_45" text="Rilion" />
+    <string id="aom_lindon_male_name_46" text="Thalorin" />
+    <string id="aom_lindon_male_name_47" text="Velanor" />
+    <string id="aom_lindon_male_name_48" text="Cathanor" />
+    <string id="aom_lindon_male_name_49" text="Aranion" />
+    <string id="aom_lindon_male_name_5" text="Thalion" />
+    <string id="aom_lindon_male_name_50" text="Lathion" />
+    <string id="aom_lindon_male_name_51" text="Falathar" />
+    <string id="aom_lindon_male_name_52" text="Aerandir" />
+    <string id="aom_lindon_male_name_53" text="Erellont" />
+    <string id="aom_lindon_male_name_54" text="Belegon" />
+    <string id="aom_lindon_male_name_55" text="Nimros" />
+    <string id="aom_lindon_male_name_56" text="Salmar" />
+    <string id="aom_lindon_male_name_57" text="Elmoth" />
+    <string id="aom_lindon_male_name_58" text="Nowe" />
+    <string id="aom_lindon_male_name_59" text="Falathar" />
+    <string id="aom_lindon_male_name_6" text="Salmar" />
+    <string id="aom_lindon_male_name_7" text="Saranion" />
+    <string id="aom_lindon_male_name_8" text="Ithralion" />
+    <string id="aom_lindon_male_name_9" text="Valendil" />
+    <string id="aom_lindon_name" text="Elfowie Falathrim" />
+    <string id="aom_lothlorien_clan_1" text="Ród Galadrieli" />
+    <string id="aom_lothlorien_clan_10" text="Klan Srebrnego Strumienia" />
+    <string id="aom_lothlorien_clan_11" text="Bractwo Złotego Lasu" />
+    <string id="aom_lothlorien_clan_12" text="Straż Cerin Amroth" />
+    <string id="aom_lothlorien_clan_13" text="Klan Gwiezdnych Tkaczy" />
+    <string id="aom_lothlorien_clan_14" text="Ród Haldira" />
+    <string id="aom_lothlorien_clan_15" text="Gwardia Lothlann" />
+    <string id="aom_lothlorien_clan_2" text="Ród Celeborna" />
+    <string id="aom_lothlorien_clan_3" text="Gwardia Galadhrimów" />
+    <string id="aom_lothlorien_clan_4" text="Strażnicy Granic" />
+    <string id="aom_lothlorien_clan_5" text="Krąg Mallornów" />
+    <string id="aom_lothlorien_clan_6" text="Strażnicy Naith" />
+    <string id="aom_lothlorien_clan_7" text="Lud Caras Galadhon" />
+    <string id="aom_lothlorien_clan_8" text="Krewni Nimrodeli" />
+    <string id="aom_lothlorien_clan_9" text="Dziedzictwo Amrotha" />
+    <string id="aom_lothlorien_desc" text="Elfowie z Lothlórien, zwani Galadhrimami, to szlachetny i tajemniczy lud zamieszkujący Złoty Las. Wiedzeni mądrością i mocą Pani Galadrieli oraz Pana Celeborna, strzegą jednego z ostatnich bastionów elfickiego piękna i spokoju w Śródziemiu. Galadhrimowie są niezrównanymi łucznikami, zlewającymi się bez śladu ze złotymi mallornami swej ojczyzny." />
+    <string id="aom_lothlorien_female_name_1" text="Calenwen" />
+    <string id="aom_lothlorien_female_name_10" text="Tauriel" />
+    <string id="aom_lothlorien_female_name_11" text="Elenwen" />
+    <string id="aom_lothlorien_female_name_12" text="Rilwen" />
+    <string id="aom_lothlorien_female_name_13" text="Caraniel" />
+    <string id="aom_lothlorien_female_name_14" text="Erilwen" />
+    <string id="aom_lothlorien_female_name_15" text="Anariel" />
+    <string id="aom_lothlorien_female_name_16" text="Velarwen" />
+    <string id="aom_lothlorien_female_name_17" text="Thalionwen" />
+    <string id="aom_lothlorien_female_name_18" text="Erynwen" />
+    <string id="aom_lothlorien_female_name_19" text="Nimriel" />
+    <string id="aom_lothlorien_female_name_2" text="Lothriel" />
+    <string id="aom_lothlorien_female_name_20" text="Galindiriel" />
+    <string id="aom_lothlorien_female_name_21" text="Aeliriel" />
+    <string id="aom_lothlorien_female_name_22" text="Calyndra" />
+    <string id="aom_lothlorien_female_name_23" text="Tathriel" />
+    <string id="aom_lothlorien_female_name_24" text="Elenis" />
+    <string id="aom_lothlorien_female_name_25" text="Thalindis" />
+    <string id="aom_lothlorien_female_name_26" text="Lothis" />
+    <string id="aom_lothlorien_female_name_27" text="Anarith" />
+    <string id="aom_lothlorien_female_name_28" text="Eredriel" />
+    <string id="aom_lothlorien_female_name_29" text="Caranwen" />
+    <string id="aom_lothlorien_female_name_3" text="Eryndis" />
+    <string id="aom_lothlorien_female_name_30" text="Velanis" />
+    <string id="aom_lothlorien_female_name_31" text="Silwen" />
+    <string id="aom_lothlorien_female_name_32" text="Galoriel" />
+    <string id="aom_lothlorien_female_name_33" text="Thaliris" />
+    <string id="aom_lothlorien_female_name_34" text="Nimlothis" />
+    <string id="aom_lothlorien_female_name_35" text="Aelwen" />
+    <string id="aom_lothlorien_female_name_36" text="Riliel" />
+    <string id="aom_lothlorien_female_name_37" text="Calanis" />
+    <string id="aom_lothlorien_female_name_38" text="Lindariel" />
+    <string id="aom_lothlorien_female_name_39" text="Eredwen" />
+    <string id="aom_lothlorien_female_name_4" text="Thariel" />
+    <string id="aom_lothlorien_female_name_40" text="Thalindriel" />
+    <string id="aom_lothlorien_female_name_41" text="Velindis" />
+    <string id="aom_lothlorien_female_name_42" text="Sildis" />
+    <string id="aom_lothlorien_female_name_43" text="Taurenis" />
+    <string id="aom_lothlorien_female_name_44" text="Galadnis" />
+    <string id="aom_lothlorien_female_name_45" text="Anarwen" />
+    <string id="aom_lothlorien_female_name_46" text="Caranis" />
+    <string id="aom_lothlorien_female_name_47" text="Lothenis" />
+    <string id="aom_lothlorien_female_name_48" text="Eryndis" />
+    <string id="aom_lothlorien_female_name_49" text="Aelinor" />
+    <string id="aom_lothlorien_female_name_5" text="Velindra" />
+    <string id="aom_lothlorien_female_name_50" text="Nimindriel" />
+    <string id="aom_lothlorien_female_name_6" text="Nimlothwen" />
+    <string id="aom_lothlorien_female_name_7" text="Galadwen" />
+    <string id="aom_lothlorien_female_name_8" text="Aelindis" />
+    <string id="aom_lothlorien_female_name_9" text="Sildriel" />
+    <string id="aom_lothlorien_male_name_1" text="Caladion" />
+    <string id="aom_lothlorien_male_name_10" text="Elendor" />
+    <string id="aom_lothlorien_male_name_11" text="Sildarion" />
+    <string id="aom_lothlorien_male_name_12" text="Tharion" />
+    <string id="aom_lothlorien_male_name_13" text="Anarion" />
+    <string id="aom_lothlorien_male_name_14" text="Rilindir" />
+    <string id="aom_lothlorien_male_name_15" text="Calyndir" />
+    <string id="aom_lothlorien_male_name_16" text="Lindirion" />
+    <string id="aom_lothlorien_male_name_17" text="Eredor" />
+    <string id="aom_lothlorien_male_name_18" text="Galendir" />
+    <string id="aom_lothlorien_male_name_19" text="Falinor" />
+    <string id="aom_lothlorien_male_name_2" text="Thalirion" />
+    <string id="aom_lothlorien_male_name_20" text="Tatharion" />
+    <string id="aom_lothlorien_male_name_21" text="Velandir" />
+    <string id="aom_lothlorien_male_name_22" text="Aelendor" />
+    <string id="aom_lothlorien_male_name_23" text="Silion" />
+    <string id="aom_lothlorien_male_name_24" text="Tirion" />
+    <string id="aom_lothlorien_male_name_25" text="Orodion" />
+    <string id="aom_lothlorien_male_name_26" text="Nimlothon" />
+    <string id="aom_lothlorien_male_name_27" text="Ciryandir" />
+    <string id="aom_lothlorien_male_name_28" text="Lotharion" />
+    <string id="aom_lothlorien_male_name_29" text="Anarhir" />
+    <string id="aom_lothlorien_male_name_3" text="Eryndor" />
+    <string id="aom_lothlorien_male_name_30" text="Thalion" />
+    <string id="aom_lothlorien_male_name_31" text="Arandir" />
+    <string id="aom_lothlorien_male_name_32" text="Caranor" />
+    <string id="aom_lothlorien_male_name_33" text="Veladan" />
+    <string id="aom_lothlorien_male_name_34" text="Rilion" />
+    <string id="aom_lothlorien_male_name_35" text="Galionor" />
+    <string id="aom_lothlorien_male_name_36" text="Elenor" />
+    <string id="aom_lothlorien_male_name_37" text="Taurandir" />
+    <string id="aom_lothlorien_male_name_38" text="Thrandir" />
+    <string id="aom_lothlorien_male_name_39" text="Lothanor" />
+    <string id="aom_lothlorien_male_name_4" text="Galadion" />
+    <string id="aom_lothlorien_male_name_40" text="Suilion" />
+    <string id="aom_lothlorien_male_name_41" text="Elarion" />
+    <string id="aom_lothlorien_male_name_42" text="Tathalion" />
+    <string id="aom_lothlorien_male_name_43" text="Calanor" />
+    <string id="aom_lothlorien_male_name_44" text="Velionor" />
+    <string id="aom_lothlorien_male_name_45" text="Eryndir" />
+    <string id="aom_lothlorien_male_name_46" text="Lindarion" />
+    <string id="aom_lothlorien_male_name_47" text="Aerlindir" />
+    <string id="aom_lothlorien_male_name_48" text="Caradion" />
+    <string id="aom_lothlorien_male_name_49" text="Galrandir" />
+    <string id="aom_lothlorien_male_name_5" text="Nimdor" />
+    <string id="aom_lothlorien_male_name_50" text="Tharlindor" />
+    <string id="aom_lothlorien_male_name_6" text="Aelindir" />
+    <string id="aom_lothlorien_male_name_7" text="Carathion" />
+    <string id="aom_lothlorien_male_name_8" text="Velanor" />
+    <string id="aom_lothlorien_male_name_9" text="Taurion" />
+    <string id="aom_lothlorien_name" text="Elfowie Galadhrimowie" />
+    <string id="aom_mirkwood_clan_1" text="Ród Thranduila" />
+    <string id="aom_mirkwood_clan_10" text="Straż Emyn Duir" />
+    <string id="aom_mirkwood_clan_11" text="Gwardia Amon Lanc" />
+    <string id="aom_mirkwood_clan_12" text="Klan Srebrnego Ciernia" />
+    <string id="aom_mirkwood_clan_13" text="Ród Króla Elfów" />
+    <string id="aom_mirkwood_clan_14" text="Lud Bystrej Rzeki" />
+    <string id="aom_mirkwood_clan_15" text="Klan Zielonego Liścia" />
+    <string id="aom_mirkwood_clan_2" text="Tawarwaith" />
+    <string id="aom_mirkwood_clan_3" text="Straż Zielonego Lasu" />
+    <string id="aom_mirkwood_clan_4" text="Warta Sylwanów" />
+    <string id="aom_mirkwood_clan_5" text="Leśni Ludzie z Dale" />
+    <string id="aom_mirkwood_clan_6" text="Drużyna Galiona" />
+    <string id="aom_mirkwood_clan_7" text="Strażnicy Lasu" />
+    <string id="aom_mirkwood_clan_8" text="Klan Dębowej Gałęzi" />
+    <string id="aom_mirkwood_clan_9" text="Strażnicy Gwiezdnego Światła" />
+    <string id="aom_mirkwood_desc" text="Elfowie Sylvańscy z Mrocznej Puszczy, zwanej też Leśnym Królestwem, to dumny i nieugięty lud, dla którego rozległy bór jest domem. Rządzeni przez króla Thranduila, są wprawnymi łowcami i wojownikami, przemierzającymi zacienione ostępy z niezrównaną zwinnością i precyzją. Elfowie z Mrocznej Puszczy są mistrzami łuku, uderzając szybko i bezgłośnie spośród drzew." />
+    <string id="aom_mirkwood_female_name_1" text="Calenwen" />
+    <string id="aom_mirkwood_female_name_10" text="Tauriel" />
+    <string id="aom_mirkwood_female_name_11" text="Elenwen" />
+    <string id="aom_mirkwood_female_name_12" text="Rilwen" />
+    <string id="aom_mirkwood_female_name_13" text="Caraniel" />
+    <string id="aom_mirkwood_female_name_14" text="Erilwen" />
+    <string id="aom_mirkwood_female_name_15" text="Anariel" />
+    <string id="aom_mirkwood_female_name_16" text="Velarwen" />
+    <string id="aom_mirkwood_female_name_17" text="Thalionwen" />
+    <string id="aom_mirkwood_female_name_18" text="Erynwen" />
+    <string id="aom_mirkwood_female_name_19" text="Nimriel" />
+    <string id="aom_mirkwood_female_name_2" text="Lothriel" />
+    <string id="aom_mirkwood_female_name_20" text="Galindiriel" />
+    <string id="aom_mirkwood_female_name_21" text="Aelindis" />
+    <string id="aom_mirkwood_female_name_22" text="Calyndra" />
+    <string id="aom_mirkwood_female_name_23" text="Tathriel" />
+    <string id="aom_mirkwood_female_name_24" text="Elenis" />
+    <string id="aom_mirkwood_female_name_25" text="Thalindis" />
+    <string id="aom_mirkwood_female_name_26" text="Lothis" />
+    <string id="aom_mirkwood_female_name_27" text="Anarith" />
+    <string id="aom_mirkwood_female_name_28" text="Eredriel" />
+    <string id="aom_mirkwood_female_name_29" text="Caranwen" />
+    <string id="aom_mirkwood_female_name_3" text="Erynniel" />
+    <string id="aom_mirkwood_female_name_30" text="Velanis" />
+    <string id="aom_mirkwood_female_name_31" text="Silwen" />
+    <string id="aom_mirkwood_female_name_32" text="Galoriel" />
+    <string id="aom_mirkwood_female_name_33" text="Thaliris" />
+    <string id="aom_mirkwood_female_name_34" text="Nimlothis" />
+    <string id="aom_mirkwood_female_name_35" text="Aelwen" />
+    <string id="aom_mirkwood_female_name_36" text="Riliel" />
+    <string id="aom_mirkwood_female_name_37" text="Calanis" />
+    <string id="aom_mirkwood_female_name_38" text="Lindariel" />
+    <string id="aom_mirkwood_female_name_39" text="Eredwen" />
+    <string id="aom_mirkwood_female_name_4" text="Thariel" />
+    <string id="aom_mirkwood_female_name_40" text="Thalindriel" />
+    <string id="aom_mirkwood_female_name_41" text="Velindis" />
+    <string id="aom_mirkwood_female_name_42" text="Sildis" />
+    <string id="aom_mirkwood_female_name_43" text="Taurenis" />
+    <string id="aom_mirkwood_female_name_44" text="Galadnis" />
+    <string id="aom_mirkwood_female_name_45" text="Anarwen" />
+    <string id="aom_mirkwood_female_name_46" text="Caranis" />
+    <string id="aom_mirkwood_female_name_47" text="Lothenis" />
+    <string id="aom_mirkwood_female_name_48" text="Eryndis" />
+    <string id="aom_mirkwood_female_name_49" text="Aelinor" />
+    <string id="aom_mirkwood_female_name_5" text="Velindra" />
+    <string id="aom_mirkwood_female_name_50" text="Nimindriel" />
+    <string id="aom_mirkwood_female_name_6" text="Nimlothwen" />
+    <string id="aom_mirkwood_female_name_7" text="Galadwen" />
+    <string id="aom_mirkwood_female_name_8" text="Aeriniel" />
+    <string id="aom_mirkwood_female_name_9" text="Sildriel" />
+    <string id="aom_mirkwood_male_name_1" text="Tharion" />
+    <string id="aom_mirkwood_male_name_10" text="Orophar" />
+    <string id="aom_mirkwood_male_name_11" text="Aerlindor" />
+    <string id="aom_mirkwood_male_name_12" text="Caranor" />
+    <string id="aom_mirkwood_male_name_13" text="Thaliondir" />
+    <string id="aom_mirkwood_male_name_14" text="Velanar" />
+    <string id="aom_mirkwood_male_name_15" text="Lindorion" />
+    <string id="aom_mirkwood_male_name_16" text="Thrandir" />
+    <string id="aom_mirkwood_male_name_17" text="Erilion" />
+    <string id="aom_mirkwood_male_name_18" text="Silmir" />
+    <string id="aom_mirkwood_male_name_19" text="Eredar" />
+    <string id="aom_mirkwood_male_name_2" text="Eryndir" />
+    <string id="aom_mirkwood_male_name_20" text="Galionor" />
+    <string id="aom_mirkwood_male_name_21" text="Nimladir" />
+    <string id="aom_mirkwood_male_name_22" text="Calenor" />
+    <string id="aom_mirkwood_male_name_23" text="Taurenion" />
+    <string id="aom_mirkwood_male_name_24" text="Aradir" />
+    <string id="aom_mirkwood_male_name_25" text="Elendar" />
+    <string id="aom_mirkwood_male_name_26" text="Rothion" />
+    <string id="aom_mirkwood_male_name_27" text="Doralin" />
+    <string id="aom_mirkwood_male_name_28" text="Veladan" />
+    <string id="aom_mirkwood_male_name_29" text="Thalos" />
+    <string id="aom_mirkwood_male_name_3" text="Calenhir" />
+    <string id="aom_mirkwood_male_name_30" text="Eryndor" />
+    <string id="aom_mirkwood_male_name_31" text="Galrandir" />
+    <string id="aom_mirkwood_male_name_32" text="Anarhir" />
+    <string id="aom_mirkwood_male_name_33" text="Lothandor" />
+    <string id="aom_mirkwood_male_name_34" text="Erionor" />
+    <string id="aom_mirkwood_male_name_35" text="Calirion" />
+    <string id="aom_mirkwood_male_name_36" text="Nimrion" />
+    <string id="aom_mirkwood_male_name_37" text="Tharlindor" />
+    <string id="aom_mirkwood_male_name_38" text="Carathir" />
+    <string id="aom_mirkwood_male_name_39" text="Siladan" />
+    <string id="aom_mirkwood_male_name_4" text="Lotharion" />
+    <string id="aom_mirkwood_male_name_40" text="Velionor" />
+    <string id="aom_mirkwood_male_name_41" text="Arvelion" />
+    <string id="aom_mirkwood_male_name_42" text="Lindarion" />
+    <string id="aom_mirkwood_male_name_43" text="Thrandar" />
+    <string id="aom_mirkwood_male_name_44" text="Aerinor" />
+    <string id="aom_mirkwood_male_name_45" text="Rilendir" />
+    <string id="aom_mirkwood_male_name_46" text="Taurielan" />
+    <string id="aom_mirkwood_male_name_47" text="Calarnor" />
+    <string id="aom_mirkwood_male_name_48" text="Galradir" />
+    <string id="aom_mirkwood_male_name_49" text="Velothar" />
+    <string id="aom_mirkwood_male_name_5" text="Nimhir" />
+    <string id="aom_mirkwood_male_name_50" text="Tharandir" />
+    <string id="aom_mirkwood_male_name_6" text="Galendir" />
+    <string id="aom_mirkwood_male_name_7" text="Taurandir" />
+    <string id="aom_mirkwood_male_name_8" text="Elenar" />
+    <string id="aom_mirkwood_male_name_9" text="Sildarion" />
+    <string id="aom_mirkwood_name" text="Elfowie Leśni" />
+    <string id="aom_mistymountainorcs_clan_1" text="Zastęp Gór Mglistych" />
+    <string id="aom_mistymountainorcs_clan_10" text="Najeźdźcy z Gór Szarych" />
+    <string id="aom_mistymountainorcs_clan_11" text="Horda z Ettenmoors" />
+    <string id="aom_mistymountainorcs_clan_12" text="Zgraja Snagów" />
+    <string id="aom_mistymountainorcs_clan_13" text="Ród Bolga" />
+    <string id="aom_mistymountainorcs_clan_14" text="Klan Czarnego Kła" />
+    <string id="aom_mistymountainorcs_clan_15" text="Plaga Żelaznych Wzgórz" />
+    <string id="aom_mistymountainorcs_clan_2" text="Klan Goblinowego Grodu" />
+    <string id="aom_mistymountainorcs_clan_3" text="Wilki Gór Mglistych" />
+    <string id="aom_mistymountainorcs_clan_4" text="Wataha Wargów" />
+    <string id="aom_mistymountainorcs_clan_5" text="Horda Kamiennych Olbrzymów" />
+    <string id="aom_mistymountainorcs_clan_6" text="Niedobitki Morii" />
+    <string id="aom_mistymountainorcs_clan_7" text="Pomiot Cirith Ungol" />
+    <string id="aom_mistymountainorcs_clan_8" text="Dzieci Angmaru" />
+    <string id="aom_mistymountainorcs_clan_9" text="Drużyna Carn Dûm" />
+    <string id="aom_mistymountainorcs_desc" text="Orkowie z Gór Mglistych to dzikie zastępy wojenne żyjące wśród wysokich szczytów i głębokich czeluści tego pasma. Wiedzeni pradawną nienawiścią do elfów i krasnoludów, zbierają ogromne, licho uzbrojone legiony i spadają na krainy w dolinach, służąc mrocznym potęgom budzącym się na Wschodzie." />
+    <string id="aom_mistymountainorcs_female_name_1" text="Gralza" />
+    <string id="aom_mistymountainorcs_female_name_10" text="Ulzara" />
+    <string id="aom_mistymountainorcs_female_name_11" text="Borza" />
+    <string id="aom_mistymountainorcs_female_name_12" text="Zargra" />
+    <string id="aom_mistymountainorcs_female_name_13" text="Grusza" />
+    <string id="aom_mistymountainorcs_female_name_14" text="Dursza" />
+    <string id="aom_mistymountainorcs_female_name_15" text="Thalra" />
+    <string id="aom_mistymountainorcs_female_name_16" text="Vorla" />
+    <string id="aom_mistymountainorcs_female_name_17" text="Nargul" />
+    <string id="aom_mistymountainorcs_female_name_18" text="Thurka" />
+    <string id="aom_mistymountainorcs_female_name_19" text="Ulsza" />
+    <string id="aom_mistymountainorcs_female_name_2" text="Thurka" />
+    <string id="aom_mistymountainorcs_female_name_20" text="Muzrak" />
+    <string id="aom_mistymountainorcs_female_name_21" text="Kralsza" />
+    <string id="aom_mistymountainorcs_female_name_22" text="Gralsza" />
+    <string id="aom_mistymountainorcs_female_name_23" text="Dursza" />
+    <string id="aom_mistymountainorcs_female_name_24" text="Thranza" />
+    <string id="aom_mistymountainorcs_female_name_25" text="Nargra" />
+    <string id="aom_mistymountainorcs_female_name_26" text="Ulzira" />
+    <string id="aom_mistymountainorcs_female_name_27" text="Borlia" />
+    <string id="aom_mistymountainorcs_female_name_28" text="Zorgla" />
+    <string id="aom_mistymountainorcs_female_name_29" text="Durla" />
+    <string id="aom_mistymountainorcs_female_name_3" text="Zulgara" />
+    <string id="aom_mistymountainorcs_female_name_30" text="Muzsza" />
+    <string id="aom_mistymountainorcs_female_name_31" text="Thrulga" />
+    <string id="aom_mistymountainorcs_female_name_32" text="Narsza" />
+    <string id="aom_mistymountainorcs_female_name_33" text="Kralga" />
+    <string id="aom_mistymountainorcs_female_name_34" text="Grinza" />
+    <string id="aom_mistymountainorcs_female_name_35" text="Thalzia" />
+    <string id="aom_mistymountainorcs_female_name_36" text="Vorgla" />
+    <string id="aom_mistymountainorcs_female_name_37" text="Ulzila" />
+    <string id="aom_mistymountainorcs_female_name_38" text="Durzha" />
+    <string id="aom_mistymountainorcs_female_name_39" text="Nargula" />
+    <string id="aom_mistymountainorcs_female_name_4" text="Vorzha" />
+    <string id="aom_mistymountainorcs_female_name_40" text="Thrugla" />
+    <string id="aom_mistymountainorcs_female_name_41" text="Muzla" />
+    <string id="aom_mistymountainorcs_female_name_42" text="Gralna" />
+    <string id="aom_mistymountainorcs_female_name_43" text="Tharka" />
+    <string id="aom_mistymountainorcs_female_name_44" text="Ulzara" />
+    <string id="aom_mistymountainorcs_female_name_45" text="Kralza" />
+    <string id="aom_mistymountainorcs_female_name_46" text="Durka" />
+    <string id="aom_mistymountainorcs_female_name_47" text="Thruna" />
+    <string id="aom_mistymountainorcs_female_name_48" text="Borza" />
+    <string id="aom_mistymountainorcs_female_name_49" text="Zorga" />
+    <string id="aom_mistymountainorcs_female_name_5" text="Durga" />
+    <string id="aom_mistymountainorcs_female_name_50" text="Narlia" />
+    <string id="aom_mistymountainorcs_female_name_6" text="Nargra" />
+    <string id="aom_mistymountainorcs_female_name_7" text="Thrulza" />
+    <string id="aom_mistymountainorcs_female_name_8" text="Muzra" />
+    <string id="aom_mistymountainorcs_female_name_9" text="Kralza" />
+    <string id="aom_mistymountainorcs_male_name_1" text="Azgar" />
+    <string id="aom_mistymountainorcs_male_name_10" text="Mugzun" />
+    <string id="aom_mistymountainorcs_male_name_11" text="Lurzok" />
+    <string id="aom_mistymountainorcs_male_name_12" text="Zorgha" />
+    <string id="aom_mistymountainorcs_male_name_13" text="Thrumak" />
+    <string id="aom_mistymountainorcs_male_name_14" text="Nargoth" />
+    <string id="aom_mistymountainorcs_male_name_15" text="Borzak" />
+    <string id="aom_mistymountainorcs_male_name_16" text="Druznar" />
+    <string id="aom_mistymountainorcs_male_name_17" text="Kragloth" />
+    <string id="aom_mistymountainorcs_male_name_18" text="Vurzag" />
+    <string id="aom_mistymountainorcs_male_name_19" text="Narlog" />
+    <string id="aom_mistymountainorcs_male_name_2" text="Drozmak" />
+    <string id="aom_mistymountainorcs_male_name_20" text="Thalrug" />
+    <string id="aom_mistymountainorcs_male_name_21" text="Urzul" />
+    <string id="aom_mistymountainorcs_male_name_22" text="Gralthak" />
+    <string id="aom_mistymountainorcs_male_name_23" text="Vorgrim" />
+    <string id="aom_mistymountainorcs_male_name_24" text="Mazkor" />
+    <string id="aom_mistymountainorcs_male_name_25" text="Bolgath" />
+    <string id="aom_mistymountainorcs_male_name_26" text="Lurthak" />
+    <string id="aom_mistymountainorcs_male_name_27" text="Thrugol" />
+    <string id="aom_mistymountainorcs_male_name_28" text="Narzuk" />
+    <string id="aom_mistymountainorcs_male_name_29" text="Kruznor" />
+    <string id="aom_mistymountainorcs_male_name_3" text="Kargoth" />
+    <string id="aom_mistymountainorcs_male_name_30" text="Thrazgul" />
+    <string id="aom_mistymountainorcs_male_name_31" text="Durzak" />
+    <string id="aom_mistymountainorcs_male_name_32" text="Zulgoth" />
+    <string id="aom_mistymountainorcs_male_name_33" text="Vorzak" />
+    <string id="aom_mistymountainorcs_male_name_34" text="Krogar" />
+    <string id="aom_mistymountainorcs_male_name_35" text="Thrunak" />
+    <string id="aom_mistymountainorcs_male_name_36" text="Grazar" />
+    <string id="aom_mistymountainorcs_male_name_37" text="Narzog" />
+    <string id="aom_mistymountainorcs_male_name_38" text="Ulgrim" />
+    <string id="aom_mistymountainorcs_male_name_39" text="Vurlak" />
+    <string id="aom_mistymountainorcs_male_name_4" text="Thrazak" />
+    <string id="aom_mistymountainorcs_male_name_40" text="Borzak" />
+    <string id="aom_mistymountainorcs_male_name_41" text="Durzor" />
+    <string id="aom_mistymountainorcs_male_name_42" text="Muzrag" />
+    <string id="aom_mistymountainorcs_male_name_43" text="Gralthor" />
+    <string id="aom_mistymountainorcs_male_name_44" text="Tharzog" />
+    <string id="aom_mistymountainorcs_male_name_45" text="Vrognak" />
+    <string id="aom_mistymountainorcs_male_name_46" text="Karnak" />
+    <string id="aom_mistymountainorcs_male_name_47" text="Borzak" />
+    <string id="aom_mistymountainorcs_male_name_48" text="Narzul" />
+    <string id="aom_mistymountainorcs_male_name_49" text="Thrulgoth" />
+    <string id="aom_mistymountainorcs_male_name_5" text="Ulgrim" />
+    <string id="aom_mistymountainorcs_male_name_50" text="Druzmok" />
+    <string id="aom_mistymountainorcs_male_name_6" text="Zorgath" />
+    <string id="aom_mistymountainorcs_male_name_7" text="Gragor" />
+    <string id="aom_mistymountainorcs_male_name_8" text="Durmash" />
+    <string id="aom_mistymountainorcs_male_name_9" text="Vorgoth" />
+    <string id="aom_mistymountainorcs_name" text="Orkowie z Gór Mglistych" />
+    <string id="aom_mordor_clan_1" text="Legion Czerwonego Oka" />
+    <string id="aom_mordor_clan_10" text="Żelazna Korona" />
+    <string id="aom_mordor_clan_11" text="Horda Udûn" />
+    <string id="aom_mordor_clan_12" text="Zastęp Cienia" />
+    <string id="aom_mordor_clan_13" text="Straż Barad-dûr" />
+    <string id="aom_mordor_clan_14" text="Kuźnia Góry Przeznaczenia" />
+    <string id="aom_mordor_clan_15" text="Garnizon Durthangu" />
+    <string id="aom_mordor_clan_2" text="Szczury z Morgul" />
+    <string id="aom_mordor_clan_3" text="Czarne Uruki" />
+    <string id="aom_mordor_clan_4" text="Straż Wieży" />
+    <string id="aom_mordor_clan_5" text="Zgraja Gorgorothu" />
+    <string id="aom_mordor_clan_6" text="Wataha Cirith Ungol" />
+    <string id="aom_mordor_clan_7" text="Plemię Gór Popiołu" />
+    <string id="aom_mordor_clan_8" text="Niewolnicy Nûrnu" />
+    <string id="aom_mordor_clan_9" text="Łupieżcy Lithlad" />
+    <string id="aom_mordor_desc" text="Orkowie Mordoru to brutalna i nieustępliwa siła, wyhodowana w mrocznych czeluściach Barad-dûr, by służyć woli Saurona. Okrutni i dzicy, ruszają na wojnę w niekończących się hordach, dzierżąc prymitywną, lecz zabójczą broń wykutą w ogniach Góry Przeznaczenia. Odziani w poszarpane zbroje i niosący czarne sztandary z Czerwonym Okiem, sieją strach i zniszczenie, gdziekolwiek stąpią. Spętani żelazną wolą swego Czarnego Władcy, orkowie Mordoru dzielą się na bandy wojenne prowadzone przez bezlitosnych dowódców, zjednoczone jedynie pragnieniem podboju." />
+    <string id="aom_mordor_female_name_1" text="Gûlsha" />
+    <string id="aom_mordor_female_name_10" text="Ûrgha" />
+    <string id="aom_mordor_female_name_11" text="Lûgsha" />
+    <string id="aom_mordor_female_name_12" text="Gorbûl" />
+    <string id="aom_mordor_female_name_13" text="Nûrzha" />
+    <string id="aom_mordor_female_name_14" text="Pushga" />
+    <string id="aom_mordor_female_name_15" text="Shagra" />
+    <string id="aom_mordor_female_name_16" text="Moksha" />
+    <string id="aom_mordor_female_name_17" text="Dûshla" />
+    <string id="aom_mordor_female_name_18" text="Krimlûg" />
+    <string id="aom_mordor_female_name_19" text="Tharûga" />
+    <string id="aom_mordor_female_name_2" text="Krûmsha" />
+    <string id="aom_mordor_female_name_20" text="Gorsha" />
+    <string id="aom_mordor_female_name_21" text="Bûlgha" />
+    <string id="aom_mordor_female_name_22" text="Skûrna" />
+    <string id="aom_mordor_female_name_23" text="Ghûlna" />
+    <string id="aom_mordor_female_name_24" text="Ûfsha" />
+    <string id="aom_mordor_female_name_25" text="Grimbûl" />
+    <string id="aom_mordor_female_name_26" text="Nârgha" />
+    <string id="aom_mordor_female_name_27" text="Kûlsha" />
+    <string id="aom_mordor_female_name_28" text="Dûrbha" />
+    <string id="aom_mordor_female_name_29" text="Glûbna" />
+    <string id="aom_mordor_female_name_3" text="Dûrgha" />
+    <string id="aom_mordor_female_name_30" text="Tharkûl" />
+    <string id="aom_mordor_female_name_31" text="Mûgsha" />
+    <string id="aom_mordor_female_name_32" text="Shrâkla" />
+    <string id="aom_mordor_female_name_33" text="Orghûl" />
+    <string id="aom_mordor_female_name_34" text="Bûrgna" />
+    <string id="aom_mordor_female_name_35" text="Gâshla" />
+    <string id="aom_mordor_female_name_36" text="Krûsha" />
+    <string id="aom_mordor_female_name_37" text="Lûrgha" />
+    <string id="aom_mordor_female_name_38" text="Dûgsha" />
+    <string id="aom_mordor_female_name_39" text="Skûlba" />
+    <string id="aom_mordor_female_name_4" text="Mûrzag" />
+    <string id="aom_mordor_female_name_40" text="Ghârbna" />
+    <string id="aom_mordor_female_name_41" text="Nûrgha" />
+    <string id="aom_mordor_female_name_42" text="Thrûsha" />
+    <string id="aom_mordor_female_name_43" text="Ûlgna" />
+    <string id="aom_mordor_female_name_44" text="Gûrbla" />
+    <string id="aom_mordor_female_name_45" text="Bûshga" />
+    <string id="aom_mordor_female_name_46" text="Krûgha" />
+    <string id="aom_mordor_female_name_47" text="Sharûl" />
+    <string id="aom_mordor_female_name_48" text="Mûrsha" />
+    <string id="aom_mordor_female_name_49" text="Dûrgla" />
+    <string id="aom_mordor_female_name_5" text="Skûlga" />
+    <string id="aom_mordor_female_name_50" text="Gûlbna" />
+    <string id="aom_mordor_female_name_6" text="Bûrzha" />
+    <string id="aom_mordor_female_name_7" text="Ghâsha" />
+    <string id="aom_mordor_female_name_8" text="Thrâkna" />
+    <string id="aom_mordor_female_name_9" text="Grûsha" />
+    <string id="aom_mordor_male_name_1" text="Gorbag" />
+    <string id="aom_mordor_male_name_10" text="Bolg" />
+    <string id="aom_mordor_male_name_11" text="Mauhúr" />
+    <string id="aom_mordor_male_name_12" text="Uglúk" />
+    <string id="aom_mordor_male_name_13" text="Gashnak" />
+    <string id="aom_mordor_male_name_14" text="Durgash" />
+    <string id="aom_mordor_male_name_15" text="Krimpûl" />
+    <string id="aom_mordor_male_name_16" text="Thrákul" />
+    <string id="aom_mordor_male_name_17" text="Grimbûrz" />
+    <string id="aom_mordor_male_name_18" text="Bûrzash" />
+    <string id="aom_mordor_male_name_19" text="Nazgûl" />
+    <string id="aom_mordor_male_name_2" text="Shagrat" />
+    <string id="aom_mordor_male_name_20" text="Gûlthrak" />
+    <string id="aom_mordor_male_name_21" text="Skûlgat" />
+    <string id="aom_mordor_male_name_22" text="Orghash" />
+    <string id="aom_mordor_male_name_23" text="Lugdush" />
+    <string id="aom_mordor_male_name_24" text="Krûmgat" />
+    <string id="aom_mordor_male_name_25" text="Tharûk" />
+    <string id="aom_mordor_male_name_26" text="Gorûl" />
+    <string id="aom_mordor_male_name_27" text="Dushgoi" />
+    <string id="aom_mordor_male_name_28" text="Mokûrz" />
+    <string id="aom_mordor_male_name_29" text="Ûrgash" />
+    <string id="aom_mordor_male_name_3" text="Grishnákh" />
+    <string id="aom_mordor_male_name_30" text="Pushnak" />
+    <string id="aom_mordor_male_name_31" text="Globthrák" />
+    <string id="aom_mordor_male_name_32" text="Skûrlag" />
+    <string id="aom_mordor_male_name_33" text="Bûrzgol" />
+    <string id="aom_mordor_male_name_34" text="Ghâshnak" />
+    <string id="aom_mordor_male_name_35" text="Durbûrz" />
+    <string id="aom_mordor_male_name_36" text="Krûmlag" />
+    <string id="aom_mordor_male_name_37" text="Tarkûl" />
+    <string id="aom_mordor_male_name_38" text="Shagrûl" />
+    <string id="aom_mordor_male_name_39" text="Ûfgash" />
+    <string id="aom_mordor_male_name_4" text="Muzgash" />
+    <string id="aom_mordor_male_name_40" text="Mûgrath" />
+    <string id="aom_mordor_male_name_41" text="Lûgrat" />
+    <string id="aom_mordor_male_name_42" text="Gorlag" />
+    <string id="aom_mordor_male_name_43" text="Nûrzgash" />
+    <string id="aom_mordor_male_name_44" text="Dûshgob" />
+    <string id="aom_mordor_male_name_45" text="Ghûlbag" />
+    <string id="aom_mordor_male_name_46" text="Krimgûl" />
+    <string id="aom_mordor_male_name_47" text="Thraknûl" />
+    <string id="aom_mordor_male_name_48" text="Skarûg" />
+    <string id="aom_mordor_male_name_49" text="Bûrgol" />
+    <string id="aom_mordor_male_name_5" text="Lagduf" />
+    <string id="aom_mordor_male_name_50" text="Grûbash" />
+    <string id="aom_mordor_male_name_6" text="Radbug" />
+    <string id="aom_mordor_male_name_7" text="Ufthak" />
+    <string id="aom_mordor_male_name_8" text="Snaga" />
+    <string id="aom_mordor_male_name_9" text="Gothmog" />
+    <string id="aom_mordor_name" text="Mordor" />
+    <string id="aom_rivendell_clan_1" text="Ród Elronda" />
+    <string id="aom_rivendell_clan_10" text="Ród Erestora" />
+    <string id="aom_rivendell_clan_11" text="Lambengolmor" />
+    <string id="aom_rivendell_clan_12" text="Ród Lindira" />
+    <string id="aom_rivendell_clan_13" text="Ród Arweny" />
+    <string id="aom_rivendell_clan_14" text="Ród Gil-galada" />
+    <string id="aom_rivendell_clan_15" text="Ród Círdana" />
+    <string id="aom_rivendell_clan_2" text="Ród Fëanora" />
+    <string id="aom_rivendell_clan_3" text="Ród Fingolfina" />
+    <string id="aom_rivendell_clan_4" text="Ród Finarfina" />
+    <string id="aom_rivendell_clan_5" text="Ród Turgona" />
+    <string id="aom_rivendell_clan_6" text="Gwaith-i-Mírdain" />
+    <string id="aom_rivendell_clan_7" text="Ród Celebrimbora" />
+    <string id="aom_rivendell_clan_8" text="Ród Gildora" />
+    <string id="aom_rivendell_clan_9" text="Ród Glorfindela" />
+    <string id="aom_rivendell_desc" text="Elfowie Noldorowie z Rivendell to mądry i prastary lud, słynący z niezrównanej wiedzy, kunsztu i męstwa. Pod przewodnictwem Władcy Elronda strzegą gasnącego piękna i wiedzy Dawnych Dni w ukrytym schronieniu Imladris. Mistrzowie miecza i łuku, Noldorowie łączą wojenne umiejętności z gracją i precyzją właściwą ich rodowi." />
+    <string id="aom_rivendell_female_name_1" text="Anariel" />
+    <string id="aom_rivendell_female_name_10" text="Silwen" />
+    <string id="aom_rivendell_female_name_11" text="Ithrelle" />
+    <string id="aom_rivendell_female_name_12" text="Galadwen" />
+    <string id="aom_rivendell_female_name_13" text="Melinna" />
+    <string id="aom_rivendell_female_name_14" text="Suilwen" />
+    <string id="aom_rivendell_female_name_15" text="Calyndra" />
+    <string id="aom_rivendell_female_name_16" text="Ardien" />
+    <string id="aom_rivendell_female_name_17" text="Velindra" />
+    <string id="aom_rivendell_female_name_18" text="Ethiriel" />
+    <string id="aom_rivendell_female_name_19" text="Thaliel" />
+    <string id="aom_rivendell_female_name_2" text="Elenna" />
+    <string id="aom_rivendell_female_name_20" text="Caraniel" />
+    <string id="aom_rivendell_female_name_21" text="Minlothwen" />
+    <string id="aom_rivendell_female_name_22" text="Aeliriel" />
+    <string id="aom_rivendell_female_name_23" text="Falinwen" />
+    <string id="aom_rivendell_female_name_24" text="Tiriel" />
+    <string id="aom_rivendell_female_name_25" text="Idriel" />
+    <string id="aom_rivendell_female_name_26" text="Elvanna" />
+    <string id="aom_rivendell_female_name_27" text="Ciryawen" />
+    <string id="aom_rivendell_female_name_28" text="Lindalwen" />
+    <string id="aom_rivendell_female_name_29" text="Erethiel" />
+    <string id="aom_rivendell_female_name_3" text="Calenwen" />
+    <string id="aom_rivendell_female_name_30" text="Silmariel" />
+    <string id="aom_rivendell_female_name_31" text="Galadien" />
+    <string id="aom_rivendell_female_name_32" text="Aelinor" />
+    <string id="aom_rivendell_female_name_33" text="Thalwin" />
+    <string id="aom_rivendell_female_name_34" text="Ethirwen" />
+    <string id="aom_rivendell_female_name_35" text="Arweniel" />
+    <string id="aom_rivendell_female_name_36" text="Suilenna" />
+    <string id="aom_rivendell_female_name_37" text="Nolwin" />
+    <string id="aom_rivendell_female_name_38" text="Tathwen" />
+    <string id="aom_rivendell_female_name_39" text="Calindriel" />
+    <string id="aom_rivendell_female_name_4" text="Nimrielle" />
+    <string id="aom_rivendell_female_name_40" text="Ithriel" />
+    <string id="aom_rivendell_female_name_41" text="Velwen" />
+    <string id="aom_rivendell_female_name_42" text="Aelinna" />
+    <string id="aom_rivendell_female_name_43" text="Faliniel" />
+    <string id="aom_rivendell_female_name_44" text="Erelle" />
+    <string id="aom_rivendell_female_name_45" text="Cariel" />
+    <string id="aom_rivendell_female_name_46" text="Lothanna" />
+    <string id="aom_rivendell_female_name_47" text="Elarielle" />
+    <string id="aom_rivendell_female_name_48" text="Galwynn" />
+    <string id="aom_rivendell_female_name_49" text="Nimindiel" />
+    <string id="aom_rivendell_female_name_5" text="Tathriel" />
+    <string id="aom_rivendell_female_name_50" text="Silvariel" />
+    <string id="aom_rivendell_female_name_6" text="Amariel" />
+    <string id="aom_rivendell_female_name_7" text="Valwen" />
+    <string id="aom_rivendell_female_name_8" text="Elariel" />
+    <string id="aom_rivendell_female_name_9" text="Lothiriel" />
+    <string id="aom_rivendell_male_name_1" text="Calenion" />
+    <string id="aom_rivendell_male_name_10" text="Orodin" />
+    <string id="aom_rivendell_male_name_11" text="Aeglir" />
+    <string id="aom_rivendell_male_name_12" text="Ethirion" />
+    <string id="aom_rivendell_male_name_13" text="Anarion" />
+    <string id="aom_rivendell_male_name_14" text="Celethir" />
+    <string id="aom_rivendell_male_name_15" text="Falinor" />
+    <string id="aom_rivendell_male_name_16" text="Elrodir" />
+    <string id="aom_rivendell_male_name_17" text="Aradion" />
+    <string id="aom_rivendell_male_name_18" text="Vorendil" />
+    <string id="aom_rivendell_male_name_19" text="Melianar" />
+    <string id="aom_rivendell_male_name_2" text="Erelion" />
+    <string id="aom_rivendell_male_name_20" text="Tathrin" />
+    <string id="aom_rivendell_male_name_21" text="Galion" />
+    <string id="aom_rivendell_male_name_22" text="Eledir" />
+    <string id="aom_rivendell_male_name_23" text="Mardil" />
+    <string id="aom_rivendell_male_name_24" text="Silonar" />
+    <string id="aom_rivendell_male_name_25" text="Nimlothon" />
+    <string id="aom_rivendell_male_name_26" text="Ciryandir" />
+    <string id="aom_rivendell_male_name_27" text="Arthon" />
+    <string id="aom_rivendell_male_name_28" text="Elmirion" />
+    <string id="aom_rivendell_male_name_29" text="Caradion" />
+    <string id="aom_rivendell_male_name_3" text="Amarion" />
+    <string id="aom_rivendell_male_name_30" text="Fingalor" />
+    <string id="aom_rivendell_male_name_31" text="Erendur" />
+    <string id="aom_rivendell_male_name_32" text="Tirion" />
+    <string id="aom_rivendell_male_name_33" text="Velandor" />
+    <string id="aom_rivendell_male_name_34" text="Alathion" />
+    <string id="aom_rivendell_male_name_35" text="Minrandir" />
+    <string id="aom_rivendell_male_name_36" text="Galdorion" />
+    <string id="aom_rivendell_male_name_37" text="Lothanor" />
+    <string id="aom_rivendell_male_name_38" text="Tirandir" />
+    <string id="aom_rivendell_male_name_39" text="Ereglin" />
+    <string id="aom_rivendell_male_name_4" text="Nolindir" />
+    <string id="aom_rivendell_male_name_40" text="Thaladir" />
+    <string id="aom_rivendell_male_name_41" text="Anarindor" />
+    <string id="aom_rivendell_male_name_42" text="Calinor" />
+    <string id="aom_rivendell_male_name_43" text="Suilon" />
+    <string id="aom_rivendell_male_name_44" text="Elarion" />
+    <string id="aom_rivendell_male_name_45" text="Rilion" />
+    <string id="aom_rivendell_male_name_46" text="Thalorin" />
+    <string id="aom_rivendell_male_name_47" text="Velanor" />
+    <string id="aom_rivendell_male_name_48" text="Cathanor" />
+    <string id="aom_rivendell_male_name_49" text="Aranion" />
+    <string id="aom_rivendell_male_name_5" text="Thalion" />
+    <string id="aom_rivendell_male_name_50" text="Lathion" />
+    <string id="aom_rivendell_male_name_51" text="Maedhros" />
+    <string id="aom_rivendell_male_name_52" text="Maglor" />
+    <string id="aom_rivendell_male_name_53" text="Curufin" />
+    <string id="aom_rivendell_male_name_54" text="Caranthir" />
+    <string id="aom_rivendell_male_name_55" text="Celegorm" />
+    <string id="aom_rivendell_male_name_56" text="Amras" />
+    <string id="aom_rivendell_male_name_57" text="Amrod" />
+    <string id="aom_rivendell_male_name_58" text="Finwë" />
+    <string id="aom_rivendell_male_name_59" text="Fëanor" />
+    <string id="aom_rivendell_male_name_6" text="Lindir" />
+    <string id="aom_rivendell_male_name_7" text="Saranion" />
+    <string id="aom_rivendell_male_name_8" text="Ithralion" />
+    <string id="aom_rivendell_male_name_9" text="Valendil" />
+    <string id="aom_rivendell_name" text="Elfowie Ñoldorowie" />
+    <string id="aom_shaghana_clan_1" text="Ezarkia" />
+    <string id="aom_shaghana_clan_2" text="Kûmaraknis" />
+    <string id="aom_shaghana_clan_3" text="Taiymâkä" />
+    <string id="aom_shaghana_clan_4" text="Zayaknûri" />
+    <string id="aom_shaghana_clan_5" text="Selarkes" />
+    <string id="aom_shaghana_clan_6" text="Uzharês" />
+    <string id="aom_shaghana_clan_7" text="Alâranin" />
+    <string id="aom_shaghana_clan_8" text="Banûgand" />
+    <string id="aom_shaghana_clan_9" text="Acammes" />
+    <string id="aom_shaghana_female_name_1" text="Zarkha" />
+    <string id="aom_shaghana_female_name_10" text="Zarima" />
+    <string id="aom_shaghana_female_name_11" text="Halima" />
+    <string id="aom_shaghana_female_name_12" text="Fadila" />
+    <string id="aom_shaghana_female_name_13" text="Nazira" />
+    <string id="aom_shaghana_female_name_14" text="Samira" />
+    <string id="aom_shaghana_female_name_15" text="Rakhima" />
+    <string id="aom_shaghana_female_name_16" text="Tanira" />
+    <string id="aom_shaghana_female_name_17" text="Marzuka" />
+    <string id="aom_shaghana_female_name_18" text="Zulfa" />
+    <string id="aom_shaghana_female_name_19" text="Jusra" />
+    <string id="aom_shaghana_female_name_2" text="Tasira" />
+    <string id="aom_shaghana_female_name_20" text="Chalida" />
+    <string id="aom_shaghana_female_name_21" text="Taszima" />
+    <string id="aom_shaghana_female_name_22" text="Bakira" />
+    <string id="aom_shaghana_female_name_23" text="Nazima" />
+    <string id="aom_shaghana_female_name_24" text="Samiha" />
+    <string id="aom_shaghana_female_name_25" text="Dżalila" />
+    <string id="aom_shaghana_female_name_26" text="Razina" />
+    <string id="aom_shaghana_female_name_27" text="Karima" />
+    <string id="aom_shaghana_female_name_28" text="Szalhun" />
+    <string id="aom_shaghana_female_name_29" text="Jasmira" />
+    <string id="aom_shaghana_female_name_3" text="Nakima" />
+    <string id="aom_shaghana_female_name_30" text="Zafira" />
+    <string id="aom_shaghana_female_name_4" text="Salima" />
+    <string id="aom_shaghana_female_name_5" text="Jazira" />
+    <string id="aom_shaghana_female_name_6" text="Marza" />
+    <string id="aom_shaghana_female_name_7" text="Dżalila" />
+    <string id="aom_shaghana_female_name_8" text="Raszima" />
+    <string id="aom_shaghana_female_name_9" text="Chadra" />
+    <string id="aom_shaghana_male_name_1" text="Zarkan" />
+    <string id="aom_shaghana_male_name_10" text="Haluz" />
+    <string id="aom_shaghana_male_name_11" text="Farun" />
+    <string id="aom_shaghana_male_name_12" text="Jazur" />
+    <string id="aom_shaghana_male_name_13" text="Taszim" />
+    <string id="aom_shaghana_male_name_14" text="Bakrim" />
+    <string id="aom_shaghana_male_name_15" text="Zulkhan" />
+    <string id="aom_shaghana_male_name_16" text="Namir" />
+    <string id="aom_shaghana_male_name_17" text="Rashun" />
+    <string id="aom_shaghana_male_name_18" text="Kareem" />
+    <string id="aom_shaghana_male_name_19" text="Mazhar" />
+    <string id="aom_shaghana_male_name_2" text="Rakhim" />
+    <string id="aom_shaghana_male_name_20" text="Tarek" />
+    <string id="aom_shaghana_male_name_21" text="Saluz" />
+    <string id="aom_shaghana_male_name_22" text="Jusuf" />
+    <string id="aom_shaghana_male_name_23" text="Zafar" />
+    <string id="aom_shaghana_male_name_24" text="Hakeen" />
+    <string id="aom_shaghana_male_name_25" text="Murak" />
+    <string id="aom_shaghana_male_name_26" text="Tarzan" />
+    <string id="aom_shaghana_male_name_27" text="Jadim" />
+    <string id="aom_shaghana_male_name_28" text="Karmaz" />
+    <string id="aom_shaghana_male_name_29" text="Shalun" />
+    <string id="aom_shaghana_male_name_3" text="Tadeen" />
+    <string id="aom_shaghana_male_name_30" text="Rahim" />
+    <string id="aom_shaghana_male_name_4" text="Marzuk" />
+    <string id="aom_shaghana_male_name_5" text="Nakhel" />
+    <string id="aom_shaghana_male_name_6" text="Jalim" />
+    <string id="aom_shaghana_male_name_7" text="Azrak" />
+    <string id="aom_shaghana_male_name_8" text="Samir" />
+    <string id="aom_shaghana_male_name_9" text="Kazan" />
+    <string id="aom_umbar_clan_1" text="Flota Czarnych Żagli" />
+    <string id="aom_umbar_clan_10" text="Sojusz Południowców" />
+    <string id="aom_umbar_clan_11" text="Klan Morskich Wilków" />
+    <string id="aom_umbar_clan_12" text="Łupieżcy Zatoki Belfalas" />
+    <string id="aom_umbar_clan_13" text="Wygnańcy z Pelargiru" />
+    <string id="aom_umbar_clan_14" text="Plaga Dol Amrothu" />
+    <string id="aom_umbar_clan_15" text="Klan Władców Wichrów" />
+    <string id="aom_umbar_clan_2" text="Bractwo Korsarzy" />
+    <string id="aom_umbar_clan_3" text="Synowie Castamira" />
+    <string id="aom_umbar_clan_4" text="Sprzymierzeńcy Haradrimów" />
+    <string id="aom_umbar_clan_5" text="Straż Węża" />
+    <string id="aom_umbar_clan_6" text="Władcy Burz" />
+    <string id="aom_umbar_clan_7" text="Najeźdźcy Czerwonej Fali" />
+    <string id="aom_umbar_clan_8" text="Straż Przystani" />
+    <string id="aom_umbar_clan_9" text="Czarni Númenorejczycy" />
+    <string id="aom_umbar_desc" text="Lud Umbaru to żeglarscy wojownicy i korsarze, władcy mórz na południe od Gondoru. Wywodzą się od númenorejskich wygnańców i słyną z przebiegłości oraz okrucieństwa w boju. Pod czarnymi żaglami ich floty pustoszą wybrzeża, siejąc trwogę w sercach wrogów. Choć ich wierność należy do Saurona, Korsarze z Umbaru są zaciekle niezależni i nade wszystko cenią siłę i spryt." />
+    <string id="aom_umbar_female_name_1" text="Selara" />
+    <string id="aom_umbar_female_name_10" text="Kalima" />
+    <string id="aom_umbar_female_name_11" text="Aszna" />
+    <string id="aom_umbar_female_name_12" text="Darira" />
+    <string id="aom_umbar_female_name_13" text="Zarina" />
+    <string id="aom_umbar_female_name_14" text="Fahira" />
+    <string id="aom_umbar_female_name_15" text="Bahlia" />
+    <string id="aom_umbar_female_name_16" text="Sulina" />
+    <string id="aom_umbar_female_name_17" text="Mordhira" />
+    <string id="aom_umbar_female_name_18" text="Zulfara" />
+    <string id="aom_umbar_female_name_19" text="Azrija" />
+    <string id="aom_umbar_female_name_2" text="Vazrah" />
+    <string id="aom_umbar_female_name_20" text="Harima" />
+    <string id="aom_umbar_female_name_21" text="Ralmira" />
+    <string id="aom_umbar_female_name_22" text="Tazira" />
+    <string id="aom_umbar_female_name_23" text="Havina" />
+    <string id="aom_umbar_female_name_24" text="Zorina" />
+    <string id="aom_umbar_female_name_25" text="Malaja" />
+    <string id="aom_umbar_female_name_26" text="Vothira" />
+    <string id="aom_umbar_female_name_27" text="Aramira" />
+    <string id="aom_umbar_female_name_28" text="Nazirah" />
+    <string id="aom_umbar_female_name_29" text="Selina" />
+    <string id="aom_umbar_female_name_3" text="Ranija" />
+    <string id="aom_umbar_female_name_30" text="Tazina" />
+    <string id="aom_umbar_female_name_31" text="Jorana" />
+    <string id="aom_umbar_female_name_32" text="Bazira" />
+    <string id="aom_umbar_female_name_33" text="Haradia" />
+    <string id="aom_umbar_female_name_34" text="Szazira" />
+    <string id="aom_umbar_female_name_35" text="Zafina" />
+    <string id="aom_umbar_female_name_36" text="Kalzira" />
+    <string id="aom_umbar_female_name_37" text="Rhamina" />
+    <string id="aom_umbar_female_name_38" text="Tarnia" />
+    <string id="aom_umbar_female_name_39" text="Virina" />
+    <string id="aom_umbar_female_name_4" text="Zahara" />
+    <string id="aom_umbar_female_name_40" text="Dornia" />
+    <string id="aom_umbar_female_name_41" text="Marzila" />
+    <string id="aom_umbar_female_name_42" text="Azrija" />
+    <string id="aom_umbar_female_name_43" text="Selzira" />
+    <string id="aom_umbar_female_name_44" text="Zulfara" />
+    <string id="aom_umbar_female_name_45" text="Nazhra" />
+    <string id="aom_umbar_female_name_46" text="Rahzara" />
+    <string id="aom_umbar_female_name_47" text="Talzira" />
+    <string id="aom_umbar_female_name_48" text="Bardina" />
+    <string id="aom_umbar_female_name_49" text="Jorvaja" />
+    <string id="aom_umbar_female_name_5" text="Malira" />
+    <string id="aom_umbar_female_name_50" text="Arakara" />
+    <string id="aom_umbar_female_name_6" text="Thazia" />
+    <string id="aom_umbar_female_name_7" text="Jorina" />
+    <string id="aom_umbar_female_name_8" text="Rahzirah" />
+    <string id="aom_umbar_female_name_9" text="Nazira" />
+    <string id="aom_umbar_male_name_1" text="Khareld" />
+    <string id="aom_umbar_male_name_10" text="Khalim" />
+    <string id="aom_umbar_male_name_11" text="Ashkar" />
+    <string id="aom_umbar_male_name_12" text="Darion" />
+    <string id="aom_umbar_male_name_13" text="Zaryth" />
+    <string id="aom_umbar_male_name_14" text="Farim" />
+    <string id="aom_umbar_male_name_15" text="Bahran" />
+    <string id="aom_umbar_male_name_16" text="Suldir" />
+    <string id="aom_umbar_male_name_17" text="Mordhak" />
+    <string id="aom_umbar_male_name_18" text="Zulfar" />
+    <string id="aom_umbar_male_name_19" text="Azrak" />
+    <string id="aom_umbar_male_name_2" text="Vardun" />
+    <string id="aom_umbar_male_name_20" text="Harum" />
+    <string id="aom_umbar_male_name_21" text="Ramlis" />
+    <string id="aom_umbar_male_name_22" text="Tarnis" />
+    <string id="aom_umbar_male_name_23" text="Havrim" />
+    <string id="aom_umbar_male_name_24" text="Zorin" />
+    <string id="aom_umbar_male_name_25" text="Malrid" />
+    <string id="aom_umbar_male_name_26" text="Vothar" />
+    <string id="aom_umbar_male_name_27" text="Aramdir" />
+    <string id="aom_umbar_male_name_28" text="Nazar" />
+    <string id="aom_umbar_male_name_29" text="Selrad" />
+    <string id="aom_umbar_male_name_3" text="Rashid" />
+    <string id="aom_umbar_male_name_30" text="Tazrin" />
+    <string id="aom_umbar_male_name_31" text="Jorhad" />
+    <string id="aom_umbar_male_name_32" text="Bazrin" />
+    <string id="aom_umbar_male_name_33" text="Haradim" />
+    <string id="aom_umbar_male_name_34" text="Shazur" />
+    <string id="aom_umbar_male_name_35" text="Zafrid" />
+    <string id="aom_umbar_male_name_36" text="Kalzar" />
+    <string id="aom_umbar_male_name_37" text="Rhamir" />
+    <string id="aom_umbar_male_name_38" text="Tarnid" />
+    <string id="aom_umbar_male_name_39" text="Virdak" />
+    <string id="aom_umbar_male_name_4" text="Zarash" />
+    <string id="aom_umbar_male_name_40" text="Dornak" />
+    <string id="aom_umbar_male_name_41" text="Marzun" />
+    <string id="aom_umbar_male_name_42" text="Azril" />
+    <string id="aom_umbar_male_name_43" text="Selkar" />
+    <string id="aom_umbar_male_name_44" text="Zulrin" />
+    <string id="aom_umbar_male_name_45" text="Nazrah" />
+    <string id="aom_umbar_male_name_46" text="Rahzir" />
+    <string id="aom_umbar_male_name_47" text="Talmir" />
+    <string id="aom_umbar_male_name_48" text="Bardum" />
+    <string id="aom_umbar_male_name_49" text="Jorvim" />
+    <string id="aom_umbar_male_name_5" text="Malkir" />
+    <string id="aom_umbar_male_name_50" text="Arakaz" />
+    <string id="aom_umbar_male_name_6" text="Tharzon" />
+    <string id="aom_umbar_male_name_7" text="Jorvin" />
+    <string id="aom_umbar_male_name_8" text="Rohzar" />
+    <string id="aom_umbar_male_name_9" text="Nazrin" />
+    <string id="aom_umbar_name" text="Umbar" />
+  </strings>
+</base>

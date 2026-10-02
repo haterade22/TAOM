@@ -111,6 +111,13 @@ public class ReflectionSiteBindingTests
     // --- ArmourAcquisition: the gate marks heavy, elite, lord and named pieces NotMerchandise at every game init
     // through the private setter. A missing setter turns gating off for the game (logged as an error).
     [DataRow("TaleWorlds.Core.ItemObject", "ItemObject", "set_NotMerchandise", "Method", "ArmourItemCatalogAdapter.cs:20")]
+    // --- FactionUI (#704): Kysaro's front end. Each missing member silently degrades one thing: the themed
+    // fonts' glyphs are not drawn, vanilla retries menu mode every frame on the main menu, the face
+    // generator skips its fade-in, the backstory Random button presses nothing.
+    [DataRow("TaleWorlds.TwoDimension.SpriteCategory", "SpriteCategory", "set_IsLoaded", "Method", "FrontEndResourceAdapter.cs:27")]
+    [DataRow("TaleWorlds.MountAndBlade.MBMusicManager", "MBMusicManager", "set_CurrentMode", "Method", "MenuMusicAdapter.cs:12")]
+    [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.FaceGenerator.FaceGenVM", "FaceGenVM", "_faceGeneratorScreen", "Field", "CharacterCreationWidgets.cs:44")]
+    [DataRow("TaleWorlds.GauntletUI.BaseTypes.ButtonWidget", "ButtonWidget", "HandleClick", "Method", "NarrativeRandomButton.cs:22")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

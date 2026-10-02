@@ -1,0 +1,256 @@
+<Prefab>
+  <!-- Character-creation "Options" stage (2026-09-28, user: "do the next tab same style the Difficult tab" -
+       clarified as "Bannerlord's own game-difficulty screen... after character creation finishes"). Confirmed
+       via decompile: movie "CharacterCreationOptionsStage", VM CharacterCreationOptionsStageVM
+       (SandBox.GauntletUI.CharacterCreation.CharacterCreationOptionsStageView) - a generic option-list stage
+       (booleans/sliders/dropdowns/action buttons bound to {OptionsController\Options}), used here for the
+       difficulty/permadeath/etc. settings right after Review. Also calls the same shared
+       BodyGeneratorView.InitCamera FaceGen/Narrative/Review all use - scoped the same way (CurrentScreen
+       "Options", own review_camera_x_offset-style keys) in FaceGenCameraPatch.cs/MainMenuPatch.cs.
+       Root widget type and every @-binding/{DataSource}/Command name preserved byte-for-byte from the native
+       prefab (Modules\Native\GUI\Prefabs\CharacterCreation\CharacterCreationOptionsStage.xml) - only the
+       chrome changed. Same established convention as every other reskinned CC screen: fs_scrim_l/r, 546-wide
+       cc_panel_bg RightPanel, fs_strip ribbon w/ static label, corner ornament, CC.Confirm/CC.ConfirmText
+       Back/Next at the Narrative-Stage-style dual-panel-safe size (this screen is single-panel like FaceGen/
+       Banner/Clan though, so uses THEIR size/margins instead, not Narrative's narrower ones).
+       The individual OPTION CONTROLS themselves (checkbox, slider, dropdown, action-key button) are LEFT ON
+       THEIR NATIVE BRUSHES (SPOptions.Checkbox.*/SPOptions.Slider.*/Standard.DropdownWithHorizontalControl/
+       SPOptions.GameKey.Button.*) - same reasoning as Banner Editor's slider/color-swatches and Review/Clan
+       Naming's banner-texture compositing: real interactive-control rendering machinery that's out of this
+       project's scope to rebuild blind. Only the option's own @Name label was restyled (CC.SecTitle) since
+       that's plain text, low risk, and reads inconsistently left on the native SPOptions.OptionName.Text brush
+       next to everything else. -->
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+      <Children>
+
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="746" HorizontalAlignment="Left" Sprite="fs_scrim_l" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="746" HorizontalAlignment="Right" Sprite="fs_scrim_r" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+
+        <NavigationScopeTargeter ScopeID="OptionsScope" ScopeParent="..\RightPanel" ScopeMovements="Vertical" HasCircularMovement="true" />
+        <Widget Id="RightPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="546" SuggestedHeight="1080" HorizontalAlignment="Right" Sprite="cc_panel_bg" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true">
+          <Children>
+
+            <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="400" HeightSizePolicy="Fixed" SuggestedHeight="44" HorizontalAlignment="Center" MarginTop="98" Brush="CC.Title" Text="@Title" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="310" SuggestedHeight="16" HorizontalAlignment="Center" MarginTop="152" Sprite="fs_divider_wide" DoNotAcceptEvents="true" />
+            <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="400" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="172" Brush="CC.NarrativeBody" Text="@Description" />
+
+            <Widget Id="InnerPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="700" MarginTop="230" HorizontalAlignment="Center" VerticalAlignment="Top">
+              <Children>
+
+                <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\List" VerticalScrollbar="..\VerticalScrollbar">
+                  <Children>
+
+                    <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                      <Children>
+
+                        <ListPanel Id="List" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="14" MarginRight="14" StackLayout.LayoutMethod="VerticalTopToBottom">
+                          <Children>
+
+                            <NavigatableListPanel DataSource="{OptionsController\Options}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="10" MarginBottom="30" StackLayout.LayoutMethod="VerticalTopToBottom" MinIndex="0" MaxIndex="50">
+                              <ItemTemplate>
+
+                                <!-- FIX (2026-10-02, user screenshot: every row's label text overlapping backward
+                                     into the PREVIOUS row's dropdown/checkbox box) - the row's own CoverChildren
+                                     height is computed through several nested layers (this ListPanel -> OptionContainer
+                                     -> native CharacterCreationOptionsItemWidget -> whichever OptionType child is
+                                     actually visible), and that chain is evidently under-reporting the real visible
+                                     height back up to the NavigatableListPanel's own stacking, so the NEXT row starts
+                                     before this one's control has actually finished. MinHeight="95" is a hard floor
+                                     (label ~25px + the dropdown/checkbox's own fixed 40-44px + breathing room) that
+                                     holds regardless of whatever the fragile CoverChildren chain reports - matches
+                                     this project's own established pattern of preferring a fixed/minimum size over a
+                                     CoverChildren chain through multiple widget layers (see TAOMNarrativeStage.xml's
+                                     own "StretchToParent-inside-CoverChildren ballooning bug" history). -->
+                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MinHeight="95" HorizontalAlignment="Center" MarginTop="15" StackLayout.LayoutMethod="VerticalTopToBottom" DoNotUseCustomScaleAndChildren="true">
+                                  <Children>
+
+                                    <NavigationTargetSwitcher FromTarget="..\." ToTarget="..\OptionContainer\Option" />
+                                    <NavigationAutoScrollWidget TrackedWidget="..\OptionContainer\Option" AutoScrollTopOffset="70" AutoScrollBottomOffset="70" />
+
+                                    <!-- FIX (2026-10-03, user: "the text above the selectors needs more padding") -
+                                         label and control sat directly flush against each other in this
+                                         VerticalTopToBottom stack, no gap at all. MarginBottom pushes the
+                                         control down, same simple stack-spacing technique already used
+                                         elsewhere in this project. -->
+                                    <TextWidget DoNotAcceptEvents="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="10" Brush="CC.SecTitle" Text="@Name" IsHidden="@HideOptionName" />
+
+                                    <Widget Id="OptionContainer" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint">
+                                      <Children>
+
+                                        <CharacterCreationOptionsItemWidget Id="Option" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" DoNotAcceptEvents="true" Type="@OptionType" BooleanOptionWidget="BooleanOption" NumericOptionWidget="RangeOption" SelectionOptionWidget="SelectionOption" ActionOptionWidget="ActionOption" IsDisabled="@IsDisabled" UpdateChildrenStates="true">
+                                          <Children>
+
+                                            <NavigationAutoScrollWidget TrackedWidget="..\BooleanOption" AutoScrollTopOffset="70" AutoScrollBottomOffset="70" />
+                                            <Widget Id="BooleanOption" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" HorizontalAlignment="Center" IsVisible="false" UpdateChildrenStates="true">
+                                              <Children>
+                                                <!-- Reskinned (2026-09-30, user: "the buttons are still vanilla,
+                                                     perhaps we can change them to be more in line with our UI")
+                                                     - same hand-built hairline-border technique proven on the
+                                                     Narrative option rows and the Review Stage name field
+                                                     (BlankWhiteSquare_9 fill + 4 thin border bars, no native
+                                                     sprite). ToggleIndicator keeps its native attribute wiring
+                                                     (ButtonType=Toggle/IsSelected/ToggleIndicator=...) - only its
+                                                     OWN visual swapped to a plain gold square; the native widget
+                                                     still handles showing/hiding it on toggle automatically.
+                                                     FIX (2026-10-01): native's own version of this exact
+                                                     ButtonWidget always has Brush="SPOptions.Checkbox.Empty.Button" -
+                                                     this reskin had dropped Brush= entirely, which fell back to a
+                                                     plain white placeholder covering the hand-built children (see
+                                                     TAOM.Checkbox.Empty's own comment in Brushes\CharCreation.xml).
+                                                     Restored with a permanently-invisible placeholder brush so the
+                                                     children are what actually shows again. -->
+                                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="40" Brush="TAOM.Checkbox.Empty" ButtonType="Toggle" IsSelected="@ValueAsBoolean" IsDisabled="@IsDisabled" ToggleIndicator="ToggleIndicator" UpdateChildrenStates="true">
+                                                  <Children>
+                                                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#14120DFF" AlphaFactor="0.8" DoNotAcceptEvents="true" />
+                                                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Top" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.7" DoNotAcceptEvents="true" />
+                                                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.7" DoNotAcceptEvents="true" />
+                                                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.7" DoNotAcceptEvents="true" />
+                                                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.7" DoNotAcceptEvents="true" />
+                                                    <ImageWidget Id="ToggleIndicator" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="22" SuggestedHeight="22" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" DoNotAcceptEvents="true" />
+                                                    <HintWidget DataSource="{Hint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsEnabled="false" />
+                                                  </Children>
+                                                </ButtonWidget>
+                                              </Children>
+                                            </Widget>
+
+                                            <NavigationAutoScrollWidget TrackedWidget="..\RangeOption" AutoScrollTopOffset="70" AutoScrollBottomOffset="70" />
+                                            <ListPanel Id="RangeOption" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" IsVisible="false" StackLayout.LayoutMethod="VerticalTopToBottom">
+                                              <Children>
+
+                                                <NavigationTargetSwitcher FromTarget="..\." ToTarget="..\Slider\SliderHandle" />
+                                                <SliderWidget Id="Slider" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="290" SuggestedHeight="42" VerticalAlignment="Center" Filler="Filler" Handle="SliderHandle" MaxValueFloat="@MaxRange" MinValueFloat="@MinRange" ValueFloat="@ValueAsRange" IsDisabled="@IsDisabled" UpdateChildrenStates="true">
+                                                  <Children>
+                                                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="312" SuggestedHeight="38" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="SPGeneral\SPOptions\standart_slider_canvas" IsEnabled="false" />
+                                                    <Widget Id="Filler" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="296" SuggestedHeight="35" VerticalAlignment="Center" Sprite="SPGeneral\SPOptions\standart_slider_fill" ClipContents="true">
+                                                      <Children>
+                                                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="296" SuggestedHeight="35" HorizontalAlignment="Left" VerticalAlignment="Center" Sprite="SPGeneral\SPOptions\standart_slider_fill" />
+                                                      </Children>
+                                                    </Widget>
+                                                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="345" SuggestedHeight="65" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="SPGeneral\SPOptions\standart_slider_frame" IsEnabled="false" />
+                                                    <ImageWidget Id="SliderHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="38" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="SPOptions.Slider.Handle" DoNotAcceptEvents="true" />
+                                                    <HintWidget DataSource="{Hint}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsEnabled="false" />
+                                                  </Children>
+                                                </SliderWidget>
+
+                                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Brush="SPOptions.Slider.Value.Text" DoNotAcceptEvents="true" Text="@ValueAsString" />
+                                              </Children>
+                                            </ListPanel>
+
+                                            <NavigationAutoScrollWidget TrackedWidget="..\SelectionOption" AutoScrollTopOffset="70" AutoScrollBottomOffset="70" />
+                                            <!-- IsCustomWidth/CustomWidth (2026-09-30, reskin) - without this the
+                                                 dropdown's width is read from the SPOptions.Dropdown.Center
+                                                 brush's own sprite pixel width (per that widget's own Constants
+                                                 block), which for our custom fs_dropdown_box sprite would be its
+                                                 raw 80px canvas - far too narrow for labels like "Disable Battle
+                                                 Death For Clan Members". 280 (+ two 40px arrow slots = 360) fits
+                                                 comfortably inside this column's 400px InnerPanel. -->
+                                            <!-- TAOMDropdown (2026-09-30) replaces Standard.DropdownWithHorizontalControl -
+                                                 a private copy of that same native prefab (Prefabs\TAOMDropdown.xml)
+                                                 using uniquely-named TAOM.Dropdown.* brushes instead of the shared
+                                                 native ones, so this screen's reskin can't leak into the main menu's
+                                                 own Options screen (see Brushes\CharCreation.xml's own comment). -->
+                                            <TAOMDropdown Id="SelectionOption" VerticalAlignment="Center" IsVisible="false" HorizontalAlignment="Center" Parameter.SelectorDataSource="{SelectionSelector}" Parameter.HintDataSource="{..\Hint}" Parameter.IsEnabled="@IsEnabled" Parameter.IsCustomWidth="true" Parameter.CustomWidth="280" />
+
+                                            <NavigationAutoScrollWidget TrackedWidget="..\ActionOption" AutoScrollTopOffset="70" AutoScrollBottomOffset="70" />
+                                            <Widget Id="ActionOption" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center" HorizontalAlignment="Center" IsVisible="false">
+                                              <Children>
+                                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="290" SuggestedHeight="42" HorizontalAlignment="Left" VerticalAlignment="Center" Command.Click="ExecuteAction" UpdateChildrenStates="true">
+                                                  <Children>
+                                                    <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="312" SuggestedHeight="38" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="SPOptions.GameKey.Button.Canvas" IsEnabled="false" />
+                                                    <BrushWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="345" SuggestedHeight="65" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="SPOptions.GameKey.Button.Frame" IsEnabled="false" />
+                                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="SPOptions.Dropdown.Center.Text" VerticalAlignment="Center" MarginTop="5" Text="@Name" />
+                                                    <HintWidget DataSource="{Hint}" DoNotPassEventsToChildren="true" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsEnabled="false" />
+                                                  </Children>
+                                                </ButtonWidget>
+                                              </Children>
+                                            </Widget>
+
+                                          </Children>
+                                        </CharacterCreationOptionsItemWidget>
+
+                                        <HintWidget Id="OptionContainer" DataSource="{Hint}" Command.HoverBegin="ExecuteBeginHint" Command.HoverEnd="ExecuteEndHint" IsEnabled="false" />
+                                      </Children>
+                                    </Widget>
+
+                                  </Children>
+                                </ListPanel>
+
+                              </ItemTemplate>
+                            </NavigatableListPanel>
+
+                          </Children>
+                        </ListPanel>
+
+                      </Children>
+                    </Widget>
+
+                  </Children>
+                </ScrollablePanel>
+
+                <ScrollbarWidget Id="VerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="4" HorizontalAlignment="Right" VerticalAlignment="Center" MarginTop="10" MarginBottom="10" AlignmentAxis="Vertical" Handle="VerticalScrollbarHandle" MaxValue="100" MinValue="0">
+                  <Children>
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" AlphaFactor="0.2" Color="#C9AB69FF" />
+                    <ImageWidget Id="VerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="4" SuggestedHeight="40" HorizontalAlignment="Center" Brush="CC.ScrollHandle" />
+                  </Children>
+                </ScrollbarWidget>
+
+              </Children>
+            </Widget>
+
+          </Children>
+        </Widget>
+
+        <!-- TOP RIBBON: same fs_strip chrome as every other reskinned CC screen. -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="90" VerticalAlignment="Top" Sprite="fs_strip" DoNotAcceptEvents="true" />
+        <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="200" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="20" Brush="CC.TabTextActive" LocalizedText="{=taom_fui_difficulty}DIFFICULTY" />
+
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="300" HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="511" MarginTop="55" Sprite="cc_corner_ornament" AlphaFactor="0.8" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true" />
+
+        <!-- Camera Controls Navigation (preserved byte-for-byte from native). -->
+        <NavigationScopeTargeter ScopeID="CharacterNavigationScope" ScopeParent="..\CharacterNavigationTarget" />
+        <Widget Id="CharacterNavigationTarget" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="50" VerticalAlignment="Center" HorizontalAlignment="Center" PositionXOffset="-280" GamepadNavigationIndex="0" />
+
+        <!--Previous and Next Buttons: single-panel-width sizing like FaceGen/Banner Editor/Clan Naming (this
+             screen only has ONE panel, on the right - no left ledger panel eating horizontal space). -->
+        <!-- Back/Next UNIFIED across every CC screen except Faction Select (2026-09-30) - refined to MarginLeft/
+             Right=113/98, centering 320/350-wide buttons under each 546-wide panel (user: "should be more
+             centered with the panels" - see TAOMFaceGen.xml's own Back/Next comment for the full math/history).
+             Size was already 320x51/350x55 here, unchanged. -->
+        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="320" SuggestedHeight="51" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginLeft="113" MarginBottom="44" Brush="CC.Confirm" Command.Click="OnPreviousStage" UpdateChildrenStates="true" GamepadNavigationIndex="1000000">
+          <Children>
+            <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginBottom="7" Brush="CC.ConfirmText" LocalizedText="{=taom_fui_back}Back" />
+            <InputKeyVisualWidget DataSource="{CancelInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="32" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="-22" KeyID="@KeyID" IsVisible="@IsVisible" />
+          </Children>
+        </ButtonWidget>
+        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="350" SuggestedHeight="55" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="98" MarginBottom="43" Brush="CC.Confirm" Command.Click="OnNextStage" IsEnabled="@CanAdvance" UpdateChildrenStates="true" GamepadNavigationIndex="1000001">
+          <Children>
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginBottom="8" Brush="CC.ConfirmText" Text="@NextStageText" />
+            <InputKeyVisualWidget DataSource="{DoneInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="32" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="-22" KeyID="@KeyID" IsVisible="@IsVisible" />
+          </Children>
+        </ButtonWidget>
+
+        <!-- Input Key List (gamepad camera-control hints) -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" DoNotAcceptEvents="true">
+          <Children>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1000" SuggestedHeight="60" MarginLeft="100" IsVisible="@CharacterGamepadControlsEnabled">
+              <Children>
+                <ListPanel DataSource="{CameraControlKeys}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalCentered">
+                  <ItemTemplate>
+                    <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginLeft="15">
+                      <Children>
+                        <InputKeyVisualWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="50" VerticalAlignment="Center" KeyID="@KeyID" IsVisible="@IsVisible" />
+                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="60" SuggestedHeight="40" VerticalAlignment="Center" Text="@KeyName" Brush="CC.KeyText" />
+                      </Children>
+                    </ListPanel>
+                  </ItemTemplate>
+                </ListPanel>
+              </Children>
+            </Widget>
+          </Children>
+        </Widget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

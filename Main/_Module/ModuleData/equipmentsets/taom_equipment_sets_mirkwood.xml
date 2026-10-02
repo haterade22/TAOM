@@ -191,4 +191,34 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+	<!-- ==================== HALDIR (#704) ====================
+	     Rivendell/Lothlorien archer gear (shared High Elf aesthetic): Mirkwood's own
+	     armour catalogue has only one helmet and one body mesh, no silver archer line.
+	     Unmounted by design, so no Horse/HorseHarness slot. -->
+
+	<EquipmentRoster id="haldir_bat_equipment" culture="Culture.mirkwood">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.highelf_longbowd" />
+			<Equipment slot="Item1" id="Item.wm_elven_arrow_v2_d" />
+			<!-- lens7-xml #4: a melee sidearm for when the bow runs dry. Same named Mirkwood
+			     blade Legolas carries in his own legolas_bat_equipment roster below. -->
+			<Equipment slot="Item2" id="Item.wm_legolas_sword" />
+			<Equipment slot="Head" id="Item.rivendell_helmet_archer_tier3_silver" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_c" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape_silver" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3_silver" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="haldir_civ_equipment" culture="Culture.mirkwood">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Head" id="Item.rivendell_helmet_archer_tier3_silver" />
+			<Equipment slot="Body" id="Item.rivendell_body_silver_c" />
+			<Equipment slot="Cape" id="Item.rivendell_pauldron_tier2_cape_silver" />
+			<Equipment slot="Gloves" id="Item.rivendell_gloves_silver" />
+			<Equipment slot="Leg" id="Item.rivendell_boots_greaves3_silver" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 </EquipmentRosters>

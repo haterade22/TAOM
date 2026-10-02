@@ -1,0 +1,13 @@
+<Window>
+  <!-- Extracted from TFGBodyPage.xml (2026-09-25, flat-panel FaceGen redesign) - Skin Tone moved under the new
+       cosmetic "FACE" tab (TFGFaceCosmetic.xml), matching the reference's own grouping (skin tone shown
+       alongside hair/tattoos, not under Body). TFGBodyPage.xml itself keeps only Body sliders now, unchanged
+       binding (@SkinColorLbl/{SkinColorSelector}). -->
+  <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+    <Children>
+      <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="CC.RowLabel" Text="@SkinColorLbl" />
+      <NavigationScopeTargeter ScopeID="ColorSelectorScope" ScopeParent="..\ColorSelector" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="12" HasCircularMovement="false" />
+      <TFGColorSelector Id="ColorSelector" DataSource="{SkinColorSelector}" MarginTop="8" Parameter.NavigationMinIndex="1003" Parameter.NavigationMaxIndex="1100" />
+    </Children>
+  </ListPanel>
+</Window>

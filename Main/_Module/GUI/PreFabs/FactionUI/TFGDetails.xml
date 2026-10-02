@@ -1,0 +1,184 @@
+﻿<Window>
+  <!-- New composite page (2026-09-25, flat-panel FaceGen redesign) - per the user's own approved choice, this
+       repurposes the visual space the reference gives to "Class"/"Equipment Preview" (neither of which exist as
+       Bannerlord concepts - no class system, starting gear comes from culture/background choices made earlier,
+       not FaceGen) for real functionality Bannerlord DOES have that the reference doesn't show at all: the
+       detailed Face/Eyes/Nose/Mouth shape-morph sliders, consolidated from 4 separate native tabs into one
+       scrollable page with a small header per group. Safe to merge this way: none of these four originally had
+       their own INNER nested-scrollable content (unlike TFGHair/TFGTaint, which each wrap a TFGGrid with its
+       own ScrollablePanel) - each was just a single ScrollablePanel wrapping one CoverChildren property list, so
+       consolidating into ONE shared outer ScrollablePanel carries none of that nesting risk.
+       Each section's own MinIndex/MaxIndex (gamepad navigation ranges) are kept exactly as they were in their
+       original standalone pages rather than renumbered - they overlap across sections now that all four live on
+       one page, which may cause minor gamepad tab-order quirks jumping between sections; not fixed here since
+       the actual meaning/dependency of these specific numbers inside the engine isn't confirmed, and guessing
+       new values risks a worse, harder-to-diagnose break for a keyboard/mouse-only concern. -->
+  <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+    <Children>
+
+      <!-- Section shortcuts (2026-09-26, user request: "add at the very top some buttons within the right frame
+           as shortcuts to the proper section") - a FIXED row (sibling of ScrollablePanel, not inside it, so it
+           stays visible regardless of scroll position - more useful as a repeatable navigation aid than a shortcut
+           that scrolls out of view after one use). ScrollShortcutButton (src\ScrollShortcutButton.cs) calls
+           ScrollablePanel's own real ScrollToChild(Widget, AutoScrollParameters) method - confirmed via ilspycmd
+           decompile of TaleWorlds.GauntletUI.dll - which nothing reachable from plain XML bindings can call
+           otherwise (Command.Click only reaches VM methods, and FaceGenVM has no "scroll to section" concept).
+           ScrollPanelWidget/TargetWidget are both real Widget-typed properties resolved from ordinary relative
+           paths, the same general mechanism already used for TabControlWidget/TrackedWidget elsewhere in this
+           project. ScrollablePanel below gained Id="DetailsScrollPanel" specifically so this row (its OWN sibling,
+           not a descendant) can address it by name. -->
+      <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="36" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="8" StackLayout.LayoutMethod="HorizontalLeftToRight">
+        <Children>
+          <ScrollShortcutButton DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="80" SuggestedHeight="34" MarginLeft="0" Brush="CC.Card" ScrollPanelWidget="..\..\DetailsScrollPanel" TargetWidget="..\..\DetailsScrollPanel\ClipRect\DetailsList\SectionFace">
+            <Children><FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CC.TabText" LocalizedText="{=taom_fui_face}FACE" /></Children>
+          </ScrollShortcutButton>
+          <ScrollShortcutButton DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="80" SuggestedHeight="34" MarginLeft="10" Brush="CC.Card" ScrollPanelWidget="..\..\DetailsScrollPanel" TargetWidget="..\..\DetailsScrollPanel\ClipRect\DetailsList\SectionEyes">
+            <Children><FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CC.TabText" LocalizedText="{=taom_fui_eyes}EYES" /></Children>
+          </ScrollShortcutButton>
+          <ScrollShortcutButton DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="80" SuggestedHeight="34" MarginLeft="10" Brush="CC.Card" ScrollPanelWidget="..\..\DetailsScrollPanel" TargetWidget="..\..\DetailsScrollPanel\ClipRect\DetailsList\SectionNose">
+            <Children><FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CC.TabText" LocalizedText="{=taom_fui_nose}NOSE" /></Children>
+          </ScrollShortcutButton>
+          <ScrollShortcutButton DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="80" SuggestedHeight="34" MarginLeft="10" Brush="CC.Card" ScrollPanelWidget="..\..\DetailsScrollPanel" TargetWidget="..\..\DetailsScrollPanel\ClipRect\DetailsList\SectionMouth">
+            <Children><FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="CC.TabText" LocalizedText="{=taom_fui_mouth}MOUTH" /></Children>
+          </ScrollShortcutButton>
+        </Children>
+      </ListPanel>
+
+      <ScrollablePanel Id="DetailsScrollPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginTop="50" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\DetailsList" VerticalScrollbar="..\VerticalScrollbar">
+        <Children>
+          <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+            <Children>
+              <NavigationScopeTargeter ScopeID="DetailsScope" ScopeParent="..\DetailsList" ScopeMovements="Vertical" HasCircularMovement="true" />
+              <ListPanel Id="DetailsList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                <Children>
+
+                  <!-- FACE SHAPE -->
+                  <FrontEndTextWidget Id="SectionFace" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="25" Brush="CC.SecTitle" LocalizedText="{=taom_fui_face_shape}FACE SHAPE" />
+                  <Widget WidthSizePolicy="Fixed" SuggestedWidth="350" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Left" MarginTop="6" MarginBottom="10" Sprite="fs_divider" />
+                  <!-- IsEnabled moved to this wrapper (lens7-xml #1, 2026-10-01): the list's own DataSource is
+                       {FaceProperties}, so an IsEnabled on the list itself is never applied
+                       (GauntletView.cs:168-178 only stores the list). A plain Widget with no DataSource
+                       resolves @IsFaceEnabled in the parent FaceGenVM context, matching vanilla FaceGen.xml:127. -->
+                  <Widget IsEnabled="@IsFaceEnabled" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginRight="10" MarginBottom="30">
+                    <Children>
+                      <NavigatableListPanel DataSource="{FaceProperties}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" MinIndex="2000" MaxIndex="10000">
+                        <ItemTemplate>
+                          <TFGProperty HorizontalAlignment="Right" MarginTop="14"/>
+                        </ItemTemplate>
+                      </NavigatableListPanel>
+                    </Children>
+                  </Widget>
+
+                  <!-- EYES -->
+                  <FrontEndTextWidget Id="SectionEyes" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="CC.SecTitle" LocalizedText="{=taom_fui_eyes}EYES" />
+                  <Widget WidthSizePolicy="Fixed" SuggestedWidth="350" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Left" MarginTop="6" MarginBottom="10" Sprite="fs_divider" />
+                  <!-- IsEnabled moved to this wrapper (lens7-xml #1 HIGH, 2026-10-01): this ListPanel's own
+                       DataSource is {EyebrowTypes}, a single FaceGenPropertyVM, so IsEnabled resolved against
+                       THAT object (no such property, so ViewModel.GetPropertyValue returns null and
+                       WidgetExtensions.SetWidgetAttribute passes false to the bool setter), disabling the
+                       numeric stepper so EventManager.CollectEnableWidgetsAt never descends into it for a mouse
+                       click. A plain Widget with no DataSource resolves @IsEyesEnabled in the parent FaceGenVM
+                       context, matching vanilla FaceGen.xml:127 and this project's own TFGEyes.xml, whose
+                       un-wrapped twin of this same ListPanel never carried an IsEnabled at all. -->
+                  <Widget IsEnabled="@IsEyesEnabled" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="10">
+                    <Children>
+                      <ListPanel Id="EyebrowTypeSelection" DataSource="{EyebrowTypes}" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="60">
+                        <Children>
+                          <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="15" Brush="CC.Label" Text="@Name" />
+                          <NavigationScopeTargeter ScopeID="EyebrowTypeSelectorScope" ScopeParent="..\EyebrowTypeSelector" ScopeMovements="Horizontal"/>
+                          <NumericUpDownWidget Id="EyebrowTypeSelector" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="145" SuggestedHeight="60" DownButton="NumericDown" MaxValue="@Max" MinValue="@Min" ShowOneAdded="true" TextWidget="TextContainer\NumericText" UpButton="NumericUp" Value="@Value">
+                            <Children>
+                              <NavigationAutoScrollWidget TrackedWidget="..\NumericDown" AutoScrollTopOffset="50" AutoScrollBottomOffset="50" />
+                              <NavigationAutoScrollWidget TrackedWidget="..\NumericUp" AutoScrollTopOffset="50" AutoScrollBottomOffset="50" />
+                              <ButtonWidget Id="NumericDown" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="29" SuggestedHeight="32" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="CC.ArrowL" GamepadNavigationIndex="0" />
+                              <Widget Id="TextContainer" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="74" SuggestedHeight="34" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="cc_switch_9">
+                                <Children><TextWidget Id="NumericText" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="CC.Label" /></Children>
+                              </Widget>
+                              <ButtonWidget Id="NumericUp" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="29" SuggestedHeight="32" HorizontalAlignment="Right" VerticalAlignment="Center" Brush="CC.ArrowR" GamepadNavigationIndex="1" />
+                            </Children>
+                          </NumericUpDownWidget>
+                        </Children>
+                      </ListPanel>
+                    </Children>
+                  </Widget>
+                  <!-- IsEnabled moved to this wrapper - same fix as the Face Shape list above. -->
+                  <Widget IsEnabled="@IsEyesEnabled" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginRight="10" MarginBottom="30">
+                    <Children>
+                      <NavigatableListPanel DataSource="{EyesProperties}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" MinIndex="2000" MaxIndex="10000">
+                        <ItemTemplate>
+                          <TFGProperty HorizontalAlignment="Right" MarginTop="14"/>
+                        </ItemTemplate>
+                      </NavigatableListPanel>
+                    </Children>
+                  </Widget>
+
+                  <!-- NOSE -->
+                  <FrontEndTextWidget Id="SectionNose" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="CC.SecTitle" LocalizedText="{=taom_fui_nose}NOSE" />
+                  <Widget WidthSizePolicy="Fixed" SuggestedWidth="350" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Left" MarginTop="6" MarginBottom="10" Sprite="fs_divider" />
+                  <!-- IsEnabled moved to this wrapper - same fix as the Face Shape list above. -->
+                  <Widget IsEnabled="@IsNoseEnabled" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginRight="10" MarginBottom="30">
+                    <Children>
+                      <NavigatableListPanel DataSource="{NoseProperties}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" MinIndex="1000" MaxIndex="10000">
+                        <ItemTemplate>
+                          <TFGProperty HorizontalAlignment="Right" MarginTop="14"/>
+                        </ItemTemplate>
+                      </NavigatableListPanel>
+                    </Children>
+                  </Widget>
+
+                  <!-- MOUTH -->
+                  <FrontEndTextWidget Id="SectionMouth" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="CC.SecTitle" LocalizedText="{=taom_fui_mouth}MOUTH" />
+                  <Widget WidthSizePolicy="Fixed" SuggestedWidth="350" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Left" MarginTop="6" MarginBottom="10" Sprite="fs_divider" />
+                  <!-- IsEnabled moved to this wrapper (lens7-xml #1 HIGH, 2026-10-01): same defect as the
+                       EyebrowTypeSelection ListPanel above - DataSource={TeethTypes} is a single
+                       FaceGenPropertyVM, so IsEnabled resolved against it instead of FaceGenVM and silently
+                       disabled the stepper. TFGMouth.xml's un-wrapped twin of this ListPanel never carried an
+                       IsEnabled either. -->
+                  <Widget IsEnabled="@IsMouthEnabled" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="10">
+                    <Children>
+                      <ListPanel DataSource="{TeethTypes}" WidthSizePolicy="CoverChildren" HeightSizePolicy="Fixed" SuggestedHeight="60">
+                        <Children>
+                          <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" VerticalAlignment="Center" MarginRight="15" Brush="CC.Label" Text="@Name" />
+                          <NavigationScopeTargeter ScopeID="TeethTypeSelectionScope" ScopeParent="..\TeethTypeSelection" ScopeMovements="Horizontal" />
+                          <NumericUpDownWidget Id="TeethTypeSelection" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="145" SuggestedHeight="60" DownButton="NumericDown" MaxValue="@Max" MinValue="@Min" ShowOneAdded="true" TextWidget="TextContainer\NumericText" UpButton="NumericUp" Value="@Value">
+                            <Children>
+                              <NavigationAutoScrollWidget TrackedWidget="..\NumericDown" AutoScrollTopOffset="50" AutoScrollBottomOffset="50" />
+                              <NavigationAutoScrollWidget TrackedWidget="..\NumericUp" AutoScrollTopOffset="50" AutoScrollBottomOffset="50" />
+                              <ButtonWidget Id="NumericDown" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="29" SuggestedHeight="32" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="CC.ArrowL" GamepadNavigationIndex="0" />
+                              <Widget Id="TextContainer" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="74" SuggestedHeight="34" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="cc_switch_9">
+                                <Children><TextWidget Id="NumericText" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="CC.Label" /></Children>
+                              </Widget>
+                              <ButtonWidget Id="NumericUp" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="29" SuggestedHeight="32" HorizontalAlignment="Right" VerticalAlignment="Center" Brush="CC.ArrowR" GamepadNavigationIndex="1" />
+                            </Children>
+                          </NumericUpDownWidget>
+                        </Children>
+                      </ListPanel>
+                    </Children>
+                  </Widget>
+                  <!-- IsEnabled moved to this wrapper - same fix as the Face Shape list above. -->
+                  <Widget IsEnabled="@IsMouthEnabled" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginRight="10" MarginBottom="60">
+                    <Children>
+                      <NavigatableListPanel DataSource="{MouthProperties}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" MinIndex="2000" MaxIndex="10000">
+                        <ItemTemplate>
+                          <TFGProperty HorizontalAlignment="Right" MarginTop="14"/>
+                        </ItemTemplate>
+                      </NavigatableListPanel>
+                    </Children>
+                  </Widget>
+
+                </Children>
+              </ListPanel>
+            </Children>
+          </Widget>
+        </Children>
+      </ScrollablePanel>
+
+      <ScrollbarWidget Id="VerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="8" HorizontalAlignment="Right" VerticalAlignment="Center" MarginTop="65" MarginBottom="15" AlignmentAxis="Vertical" Handle="VerticalScrollbarHandle" MaxValue="100" MinValue="0" >
+        <Children>
+          <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="4" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.2" />
+          <ImageWidget Id="VerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="10" SuggestedWidth="8" HorizontalAlignment="Center" Brush="CC.ScrollHandle" />
+        </Children>
+      </ScrollbarWidget>
+    </Children>
+  </Widget>
+</Window>

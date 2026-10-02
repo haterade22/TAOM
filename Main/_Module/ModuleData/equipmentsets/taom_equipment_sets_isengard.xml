@@ -182,4 +182,34 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+	<!-- ==================== LURTZ (#704) ==================== -->
+
+	<EquipmentRoster id="lurtz_bat_equipment" culture="Culture.isengard">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_command_a3" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_a3" />
+			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_b3" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_a3" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar3" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_dark" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="lurtz_civ_equipment" culture="Culture.isengard">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.isengard_1h_sword_b" />
+			<Equipment slot="Item1" id="Item.wm_isengard_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_uruk_hai_helmet_command_a3" />
+			<Equipment slot="Body" id="Item.sk_uruk_hai_plate_elite_a3" />
+			<Equipment slot="Cape" id="Item.sk_uruk_hai_pauldron_heavy_b3" />
+			<Equipment slot="Gloves" id="Item.sk_uruk_hai_bracer_elite_a3" />
+			<Equipment slot="Leg" id="Item.sk_uruk_hai_greaves_heavy_ar3" />
+			<Equipment slot="HorseHarness" id="Item.warg_saddle" />
+			<Equipment slot="Horse" id="Item.warg_dark" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
 </EquipmentRosters>

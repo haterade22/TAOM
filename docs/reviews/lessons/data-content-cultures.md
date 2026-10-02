@@ -1779,3 +1779,9 @@ generator (goblin "cavalry" kits from spider-rider gear, on foot) and the skill 
   (`CreatureMountRiders`) and the enlistment generator's donors (`drop_creature_riders`), both keyed on the mount's
   Monster: a new spider rider needs no registration, a fourth creature Monster needs adding in both places.
 - **Source:** `docs/reviews/rca-keyforce-art-wiring-2026-09-29.md` F1 to F4.
+
+### A copy that writes every skill zeroes the ones a template omits (2026-10-01)
+Kysaro's faction screen copies a picked character onto the player with `HeroDeveloper.SetInitialSkillLevel` for every skill. The eight picker-only legends were authored with three to five skills each, as his ask listed them, so a legend pick ended character creation with 13 to 15 skills at zero, wiping the backstory's gains. In the same change the new archer kits for Arwen, Haldir and Tauriel dropped the sidearm the replaced template carried, and a hair-tag trial for Denethor had no engine reader (a hero's face comes from his fixed key; tags are read only for characters without one).
+- **Why missed:** the asks were applied as written, without reading the consumer: what the copy does with an omitted skill, what the replaced kit carried, which code reads hair tags for a hero.
+- **Prevent:** before authoring data for a runtime copier, read the copier and author for it (here a full 18-skill sheet per character); diff a replacement kit against the one it replaces, slot by slot; and confirm an attribute has a reader for that character type before trialling it.
+- **Source:** `docs/reviews/rca-faction-ui-2026-10-01.md` class E.

@@ -2,9 +2,10 @@ TAOM third-party license notices
 ================================
 
 Scope: this file covers everything redistributed inside the TAOM module that is
-NOT TAOM's own work. That is three things: the compiled binaries under
-_Module/bin/, the audio under _Module/ModuleSounds/, and the fonts under
-_Module/GUI/Fonts/. Each is listed below.
+NOT TAOM's own work. That is four things: the compiled binaries under
+_Module/bin/, the audio under _Module/ModuleSounds/, the fonts under
+_Module/GUI/Fonts/, and the runtime fonts under _Module/GUI/FactionUI/RuntimeFonts/.
+Each is listed below.
 
 TAOM's own art, 3D and 2D assets, world map, and game data are NOT covered here.
 They are original TAOM work licensed under CC BY-NC-SA 4.0; see LICENSE-CONTENT.md
@@ -101,6 +102,24 @@ minionpro is an Adobe commercial typeface. aniron and ringbearer are display
 faces associated with the Lord of the Rings films. Redistribution terms for all
 three are unconfirmed and tracked as an open item in
 docs/reference/asset-provenance.md.
+
+----
+
+RUNTIME FONTS  --  _Module/GUI/FactionUI/RuntimeFonts/
+
+Bitmap fonts drawn by the themed menus and character-creation screens. They are
+excluded from the CC BY-NC-SA 4.0 grant.
+
+FS_CinzelWide: Cinzel. Copyright 2020 The Cinzel Project Authors
+(https://github.com/NDISCOVER/Cinzel).
+FS_Garamond: EB Garamond. Copyright 2017 The EB Garamond Project Authors
+(https://github.com/octaviopardo/EBGaramond12).
+Both are licensed under the SIL Open Font License, Version 1.1, with no Reserved
+Font Name. The full licence text ships beside each font as OFL.txt.
+
+FS_Ringbearer is a bitmap conversion of the Ringbearer typeface by Pete Klassen,
+with the author's readme beside it. TAOM does not hold rights in it, does not
+claim it, and does not license it onward.
 
 ----
 

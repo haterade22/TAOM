@@ -1,0 +1,79 @@
+<Window>
+  <!-- Body page (hand written, same bindings as the game's FaceGenBody). Redesigned 2026-09-23 (Phase 2 of
+       C:\Users\Niels\.claude\plans\starry-tickling-seahorse.md): IDENTITY (Gender+Race) and Voice moved out to
+       the always-visible left panel in TAOMFaceGen.xml. UPDATED 2026-09-25 (flat-panel redesign): APPEARANCE/
+       Skin Colour also moved out, to the new cosmetic "FACE" tab (see TFGSkinTone.xml) - matches the
+       reference's own grouping (skin tone shown alongside hair/tattoos, not body).
+       UPDATED AGAIN 2026-09-26 (user request): Skin Tone moved back in HERE from the HEAD tab (reversing the
+       above), and "Voice Pitch" - one entry inside the {BodyProperties} VM collection alongside Height/Weight/
+       Build, sharing one ItemTemplate with them - is now hidden from THIS page specifically (HideName="Voice
+       Pitch" on FilteredPropertyRow, src\FilteredPropertyRow.cs) since it moved to the IDENTITY tab instead. See
+       that file's own comment for why a plain XML IsVisible binding can't do this (no "@Name equals X"
+       expression exists) and why both this page and TFGIdentity.xml each render the FULL property list rather
+       than the underlying VM data being split. -->
+  <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent">
+    <Children>
+      <ScrollablePanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\VerticalList" VerticalScrollbar="..\VerticalScrollbar">
+        <Children>
+          <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+            <Children>
+              <ListPanel Id="VerticalList" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                <Children>
+
+                  <!-- BUILD (was "VOICE & BUILD" - the voice half moved to the left panel) -->
+                  <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" Brush="CC.SecTitle" LocalizedText="{=taom_fui_build}BUILD" />
+                  <Widget WidthSizePolicy="Fixed" SuggestedWidth="350" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Left" MarginTop="6" MarginBottom="10" Sprite="fs_divider" />
+                  <NavigationScopeTargeter ScopeID="PropertiesScope" ScopeParent="..\BodyProperties" ScopeMovements="Vertical" />
+                  <NavigatableListPanel Id="BodyProperties" DataSource="{BodyProperties}" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom" UpdateChildrenStates="true" ChildTarget="SliderHandle" MinIndex="5" MaxIndex="50">
+                    <ItemTemplate>
+                      <!-- Row width proportions shrunk 2026-09-26 (label 170->150, slider 330->230, internals
+                           scaled by the same ~0.697 ratio) - this template's original 170+330=500px assumed the
+                           page's old 562px content width; the shared TabControl content column has narrowed to
+                           400 since (multiple rounds this session), which this row was never revisited for until
+                           now while touching this file for the Voice Pitch filter. -->
+                      <FilteredPropertyRow Name="@Name" HideName="{=G6hYIR5k}Voice Pitch:" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="44">
+                        <Children>
+                          <NavigationTargetSwitcher WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" FromTarget="..\." ToTarget="..\List\ScrollBar\SliderHandle" />
+                          <ListPanel Id="List" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" IsEnabled="@IsEnabled" StackLayout.LayoutMethod="HorizontalLeftToRight">
+                            <Children>
+                              <RichTextWidget DoNotAcceptEvents="true" WidthSizePolicy="Fixed" SuggestedWidth="150" HeightSizePolicy="StretchToParent" MarginLeft="4" Brush="CC.RowLabel" Text="@Name" IsEnabled="false" />
+                              <SliderWidget Id="ScrollBar" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="230" SuggestedHeight="28" VerticalAlignment="Center" Filler="Filler" Handle="SliderHandle" MaxValueFloat="@Max" MinValueFloat="@Min" ValueFloat="@Value" IsDiscrete="@IsDiscrete" DoNotUpdateHandleSize="true" UpdateValueOnScroll="false" Command.MousePressed="AddCommand">
+                                <Children>
+                                  <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="237" SuggestedHeight="20" HorizontalAlignment="Center" VerticalAlignment="Center" Sprite="cc_slider_track_9" IsEnabled="false" />
+                                  <Widget Id="Filler" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="226" SuggestedHeight="14" VerticalAlignment="Center" Sprite="cc_slider_fill" ClipContents="true">
+                                    <Children>
+                                      <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="226" SuggestedHeight="14" HorizontalAlignment="Left" VerticalAlignment="Center" Sprite="cc_slider_fill" />
+                                    </Children>
+                                  </Widget>
+                                  <ImageWidget Id="SliderHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="16" SuggestedHeight="22" HorizontalAlignment="Left" VerticalAlignment="Center" Brush="CC.SliderHandle" DoNotAcceptEvents="true" />
+                                </Children>
+                              </SliderWidget>
+                            </Children>
+                          </ListPanel>
+                        </Children>
+                      </FilteredPropertyRow>
+                    </ItemTemplate>
+                  </NavigatableListPanel>
+
+                  <!-- SKIN TONE - moved back here 2026-09-26 from the HEAD tab (TFGFaceCosmetic.xml), same
+                       TFGSkinTone.xml prefab, just relocated. -->
+                  <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginTop="20" Brush="CC.SecTitle" LocalizedText="{=taom_fui_skin_tone}SKIN TONE" />
+                  <Widget WidthSizePolicy="Fixed" SuggestedWidth="350" HeightSizePolicy="Fixed" SuggestedHeight="16" HorizontalAlignment="Left" MarginTop="6" MarginBottom="14" Sprite="fs_divider" />
+                  <TFGSkinTone WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginBottom="26" />
+
+                </Children>
+              </ListPanel>
+            </Children>
+          </Widget>
+        </Children>
+      </ScrollablePanel>
+
+      <ScrollbarWidget Id="VerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="6" HorizontalAlignment="Right" VerticalAlignment="Center" MarginTop="4" MarginBottom="4" AlignmentAxis="Vertical" Handle="VerticalScrollbarHandle" MaxValue="100" MinValue="0">
+        <Children>
+          <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="3" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.2" />
+          <ImageWidget Id="VerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="10" SuggestedWidth="6" HorizontalAlignment="Center" Brush="CC.ScrollHandle" />
+        </Children>
+      </ScrollbarWidget>
+    </Children>
+  </Widget>
+</Window>

@@ -83,4 +83,49 @@ public class PlayerSwitchPolicyProviderTests
 
         Assert.IsFalse(sut.Current.Enabled);
     }
+
+    // #704: the themed faction screen owns the picking in a character creation where it is shown, and
+    // only in that one. A creation where it is switched off gets Player Switcher back.
+
+    [TestMethod]
+    public void SetSuppressedForCharacterCreation_TurnsTheFeatureOffWhileSet()
+    {
+        var sut = new StubProvider(_logger, PlayerSwitchPolicy.Default);
+
+        sut.SetSuppressedForCharacterCreation(true);
+
+        Assert.IsFalse(sut.Current.Enabled);
+    }
+
+    [TestMethod]
+    public void SetSuppressedForCharacterCreation_Lifted_BringsTheFeatureBack()
+    {
+        var sut = new StubProvider(_logger, PlayerSwitchPolicy.Default);
+        sut.SetSuppressedForCharacterCreation(true);
+
+        sut.SetSuppressedForCharacterCreation(false);
+
+        Assert.IsTrue(sut.Current.Enabled);
+    }
+
+    [TestMethod]
+    public void SetSuppressedForCharacterCreation_IsNoFailureAndLogsNoWarning()
+    {
+        var sut = new StubProvider(_logger, PlayerSwitchPolicy.Default);
+
+        sut.SetSuppressedForCharacterCreation(true);
+
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void SetSuppressedForCharacterCreation_LiftedAfterAFailedProbe_KeepsTheLatch()
+    {
+        var sut = new StubProvider(_logger, PlayerSwitchPolicy.Default);
+        sut.DisableForSession("probe failed");
+
+        sut.SetSuppressedForCharacterCreation(false);
+
+        Assert.IsFalse(sut.Current.Enabled, "lifting a suppression must not undo a failed probe");
+    }
 }

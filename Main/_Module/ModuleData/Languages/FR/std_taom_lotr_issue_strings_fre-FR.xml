@@ -319,19 +319,19 @@
     <string id="taom_lotr_issue_combat_fallback_accept" text="Que faut-il faire ?" />
     <string id="taom_lotr_issue_pers_fallback_desc" text="Quelqu'un a besoin qu'on lui livre des captifs." />
     <string id="taom_lotr_issue_pers_fallback_brief" text="J'ai besoin de bras solides, voyageur." />
-    <string id="taom_lotr_issue_armourer_title" text="The Armourer's Commission" />
-    <string id="taom_lotr_issue_armourer_desc" text="The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it." />
-    <string id="taom_lotr_issue_armourer_brief" text="The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with." />
-    <string id="taom_lotr_issue_armourer_accept" text="What would you need?" />
-    <string id="taom_lotr_issue_armourer_expl" text="Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade." />
-    <string id="taom_lotr_issue_armourer_soln" text="I will bring you the steel." />
-    <string id="taom_lotr_issue_armourer_task" text="Bring {ITEM} to the armourer ({COUNT})" />
-    <string id="taom_lotr_issue_seam_title" text="The Deep Seam" />
-    <string id="taom_lotr_issue_seam_desc" text="The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in." />
-    <string id="taom_lotr_issue_seam_brief" text="My miners found it by luck: a seam of the metal the great armourers pay anything for. But the shaft is old, and without good timber to shore it up it will bury them and the seam together." />
-    <string id="taom_lotr_issue_seam_accept" text="What would you need?" />
-    <string id="taom_lotr_issue_seam_expl" text="Bring me {COUNT} loads of {ITEM} for the shaft, and you shall have the first of what they dig out. It is worth more to you than to me." />
-    <string id="taom_lotr_issue_seam_soln" text="I will bring you the timber." />
-    <string id="taom_lotr_issue_seam_task" text="Bring {ITEM} to the headman ({COUNT})" />
+    <string id="taom_lotr_issue_armourer_title" text="La commande de l'armurier" />
+    <string id="taom_lotr_issue_armourer_desc" text="Le maître armurier de {ISSUE_SETTLEMENT} a un harnois à demi forgé et plus d'acier pour l'achever." />
+    <string id="taom_lotr_issue_armourer_brief" text="La guerre emporte chaque barre de bon acier avant qu'elle n'atteigne ma forge. J'ai sur l'enclume un harnois qui arrêterait une flèche, et plus rien pour le terminer." />
+    <string id="taom_lotr_issue_armourer_accept" text="De quoi auriez-vous besoin ?" />
+    <string id="taom_lotr_issue_armourer_expl" text="Apportez-moi {COUNT} charges de {ITEM} et le harnois sera vôtre une fois achevé. Acier contre acier : un marché honnête." />
+    <string id="taom_lotr_issue_armourer_soln" text="Je vous apporterai l'acier." />
+    <string id="taom_lotr_issue_armourer_task" text="Apporter {ITEM} à l'armurier ({COUNT})" />
+    <string id="taom_lotr_issue_seam_title" text="Le filon profond" />
+    <string id="taom_lotr_issue_seam_desc" text="Les mineurs de {ISSUE_SETTLEMENT} ont percé un filon du métal rare dont on forge l'armure des seigneurs, et le puits a besoin de bois avant de s'effondrer." />
+    <string id="taom_lotr_issue_seam_brief" text="Mes mineurs l'ont trouvé par chance : un filon du métal que les grands armuriers paient à n'importe quel prix. Mais le puits est vieux, et sans bon bois pour l'étayer, il les ensevelira avec le filon." />
+    <string id="taom_lotr_issue_seam_accept" text="De quoi auriez-vous besoin ?" />
+    <string id="taom_lotr_issue_seam_expl" text="Apportez-moi {COUNT} charges de {ITEM} pour le puits, et vous aurez les premiers fruits de leur extraction. Cela vaut plus pour vous que pour moi." />
+    <string id="taom_lotr_issue_seam_soln" text="Je vous apporterai le bois." />
+    <string id="taom_lotr_issue_seam_task" text="Apporter {ITEM} au chef du village ({COUNT})" />
   </strings>
 </base>

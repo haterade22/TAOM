@@ -1287,20 +1287,20 @@
     <string id="taom_faction_clans_of_andrast_name" text="Кланы Андраста" />
     <string id="taom_faction_clans_of_druwaith_iaur_desc" text="Кланы Друвайт Иаур." />
     <string id="taom_faction_clans_of_druwaith_iaur_name" text="Кланы Друвайт Иаур" />
-    <string id="taom_faction_clans_of_dunland_bonus_0" text="Штраф скорости в лесу снижен на 50% + 15% к дальности обзора (заимствовано у баттанийцев)" />
+    <string id="taom_faction_clans_of_dunland_bonus_0" text="На 50% меньше штраф к скорости в лесу + 15% к дальности обзора (Лесное воспитание)" />
     <string id="taom_faction_clans_of_dunland_bonus_1" text="+10% к скорости отряда на равнинах (Холмовые Марши)" />
     <string id="taom_faction_clans_of_dunland_bonus_2" text="+5% к лимиту размера отряда (Племенное Ополчение Холмов)" />
     <string id="taom_faction_clans_of_dunland_bonus_3" text="+10% к скорости восстановления добровольцев в деревнях (Племенной Набор Холмов)" />
-    <string id="taom_faction_clans_of_dunland_bonus_4" text="+20% к шансу на ветеранов ополчения в городах (заимствовано у баттанийцев)" />
-    <string id="taom_faction_clans_of_dunland_bonus_5" text="-10% к скорости строительства зданий (позаимствовано у баттанийцев)" />
-    <string id="taom_faction_clans_of_dunland_desc" text="Холмовики Дунланда, древние враги рохиррим. Баттанийские лесные традиции сочетаются с Холмовыми Марширующими и Племенными Ополчениями Холмов TAOM — дешёвые, быстрые, яростные отряды, что одинаково стремительны на равнинах и в лесах. Баттанийские кузнецы медлительны, но отряды — нет." />
+    <string id="taom_faction_clans_of_dunland_bonus_4" text="+20% шанс появления опытного ополчения в городах (Закалённые горцы)" />
+    <string id="taom_faction_clans_of_dunland_bonus_5" text="-10% к скорости строительства (Грубые мастерские)" />
+    <string id="taom_faction_clans_of_dunland_desc" text="Горцы Дунланда, давние враги рохиррим. Поколения, прожитые в глухих лесах и на высоких пустошах, выковали Горных пограничников и Ополчение горных племён — дешёвые, быстрые и яростные дружины, что одинаково легко идут и равниной, и лесом. Их кузнецы медлительны, но их дружины — нет." />
     <string id="taom_faction_clans_of_dunland_name" text="Кланы Дунланда" />
     <string id="taom_faction_clans_of_dunland_perk_0_desc" text="+10% к скорости отряда на равнинах и +5% к размеру отряда — дунландские военные отряды покрывают расстояния быстро." />
     <string id="taom_faction_clans_of_dunland_perk_0_name" text="Холмовые Марши" />
     <string id="taom_faction_clans_of_dunland_perk_1_desc" text="+10% к скорости восполнения добровольцев в деревнях — родичи прибывают быстро." />
     <string id="taom_faction_clans_of_dunland_perk_1_name" text="Набор горных племён" />
-    <string id="taom_faction_clans_of_dunland_perk_2_desc" text="Позаимствованный штраф скорости в лесу 50% вместо 100% + 15% к обзору, и +20% к шансу ветеранской милиции в городах; -10% к скорости строительства." />
-    <string id="taom_faction_clans_of_dunland_perk_2_name" text="Баттанийское лесное наследие" />
+    <string id="taom_faction_clans_of_dunland_perk_2_desc" text="Лесное воспитание, уходящее корнями в поколения: на 50% меньше штраф к скорости в лесу + 15% к обзору и +20% шанс опытного ополчения в городах; -10% к скорости строительства." />
+    <string id="taom_faction_clans_of_dunland_perk_2_name" text="Лесное воспитание" />
     <string id="taom_faction_clans_of_dunland_strength_0" text="Дешёвые быстрые военные отряды" />
     <string id="taom_faction_clans_of_dunland_strength_1" text="Подвижность в лесах и на равнинах" />
     <string id="taom_faction_clans_of_dunland_strength_2" text="Стабильный набор в деревнях" />
@@ -1315,7 +1315,7 @@
     <string id="taom_faction_clans_of_dunland_trait_1" text="Дикие горные воины" />
     <string id="taom_faction_clans_of_dunland_trait_2" text="Ополчение горных племён" />
     <string id="taom_faction_clans_of_dunland_trait_3" text="Пешки Сарумана" />
-    <string id="taom_faction_clans_of_dunland_weakness_0" text="Заимствованное у баттанийцев медленное строительство" />
+    <string id="taom_faction_clans_of_dunland_weakness_0" text="Грубые мастерские замедляют строительство" />
     <string id="taom_faction_clans_of_dunland_weakness_1" text="Пешки Сарумана — слабая дипломатия" />
     <string id="taom_faction_clans_of_dunland_weakness_2" text="Зажаты между Роханом и Изенгардом" />
     <string id="taom_faction_clans_of_forochel_desc" text="Разрозненные племена орков в замёрзших северных пустошах близ Ледяного залива Форохель. Дикие налётчики, охотящиеся на лоссот и всех, кто осмелится зайти на север." />
@@ -1462,23 +1462,23 @@
     <string id="taom_faction_goblins_of_goblin_town_weakness_2" text="Ненавидимы всеми Свободными Народами" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_0" text="+10% к скорости отряда в степи (Истерлингские разъездные)" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_1" text="+5% к лимиту размера отряда (Истерлингское войско)" />
-    <string id="taom_faction_golden_realm_of_rhun_bonus_2" text="-10% к стоимости найма и улучшения конных войск (хузаитское, унаследовано)" />
-    <string id="taom_faction_golden_realm_of_rhun_bonus_3" text="+25% к производству лошадей, мулов, коров и овец в деревнях (кузаитское, унаследованное)" />
-    <string id="taom_faction_golden_realm_of_rhun_bonus_4" text="-20% к налоговым поступлениям городов (хузаитское, унаследовано)" />
+    <string id="taom_faction_golden_realm_of_rhun_bonus_2" text="-10% к стоимости найма и повышения конных воинов (Степное наездничество)" />
+    <string id="taom_faction_golden_realm_of_rhun_bonus_3" text="+25% к производству лошадей, мулов, коров и овец в деревнях (Пастухи степей)" />
+    <string id="taom_faction_golden_realm_of_rhun_bonus_4" text="-20% к налоговым доходам городов (Кочевое правление)" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_5" text="-0,5 лояльности поселения в день (Дань истерлингов)" />
     <string id="taom_faction_golden_realm_of_rhun_bonus_6" text="+15% урона от набегов (Доктрина степного налётчика)" />
-    <string id="taom_faction_golden_realm_of_rhun_desc" text="Истерлинги восточных равнин. Унаследованные кузаитские кавалерийские традиции в сочетании с преимуществами истерлингских разъездных в степи и размером отряда истерлингского войска из TAOM. Тяжелая кавалерия, которая прибывает в большом количестве и с данью." />
+    <string id="taom_faction_golden_realm_of_rhun_desc" text="Истерлинги восточных равнин. Глубоко укоренившаяся степная конная традиция сочетается со скоростью Истерлингских дозорных и численностью Воинства истерлингов. Тяжёлая конница, что приходит всей силой, принося не только копья, но и дань." />
     <string id="taom_faction_golden_realm_of_rhun_name" text="Золотое царство Рун" />
     <string id="taom_faction_golden_realm_of_rhun_perk_0_desc" text="+10% к скорости отряда в степи — всадники моря Рун быстро пересекают равнину." />
     <string id="taom_faction_golden_realm_of_rhun_perk_0_name" text="Истерлингские разъездные" />
     <string id="taom_faction_golden_realm_of_rhun_perk_1_desc" text="+5% к лимиту размера отряда — орды собираются по зову Мордора." />
     <string id="taom_faction_golden_realm_of_rhun_perk_1_name" text="Истерлингское войско" />
-    <string id="taom_faction_golden_realm_of_rhun_perk_2_desc" text="Унаследованные хузаитские -10% к стоимости конных войск, +25% к производству животных в деревнях; -20% к налоговым поступлениям городов." />
-    <string id="taom_faction_golden_realm_of_rhun_perk_2_name" text="Кузаитское степное наследие" />
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_desc" text="Степное наездничество даёт -10% к стоимости конных воинов и +25% к производству скота в деревнях; кочевое правление стоит -20% налоговых доходов городов." />
+    <string id="taom_faction_golden_realm_of_rhun_perk_2_name" text="Степное наездничество" />
     <string id="taom_faction_golden_realm_of_rhun_strength_0" text="Орды тяжелой кавалерии" />
     <string id="taom_faction_golden_realm_of_rhun_strength_1" text="Большие армии" />
     <string id="taom_faction_golden_realm_of_rhun_strength_2" text="Сети дани и торговли" />
-    <string id="taom_faction_golden_realm_of_rhun_strength_3" text="Кузаитское степное наследие" />
+    <string id="taom_faction_golden_realm_of_rhun_strength_3" text="Глубоко укоренившаяся степная конная традиция" />
     <string id="taom_faction_golden_realm_of_rhun_su_0_desc" text="Элитная бронированная кавалерия." />
     <string id="taom_faction_golden_realm_of_rhun_su_0_name" text="Истерлингский катафракт" />
     <string id="taom_faction_golden_realm_of_rhun_su_1_desc" text="Элитная восточная тяжелая пехота." />
@@ -1492,7 +1492,7 @@
     <string id="taom_faction_golden_realm_of_rhun_weakness_0" text="Слабая пехота" />
     <string id="taom_faction_golden_realm_of_rhun_weakness_1" text="Разобщённые кланы" />
     <string id="taom_faction_golden_realm_of_rhun_weakness_2" text="Длинные линии снабжения до Мордора" />
-    <string id="taom_faction_golden_realm_of_rhun_weakness_3" text="Позаимствованное у хузаитов -20% к налогам городов" />
+    <string id="taom_faction_golden_realm_of_rhun_weakness_3" text="Кочевое правление стоит -20% городских налогов" />
     <string id="taom_faction_havens_of_umbar_bonus_0" text="-25% к стоимости каравана (корсарская торговля)" />
     <string id="taom_faction_havens_of_umbar_bonus_1" text="+15% дохода от тарифов (Торговые Сети Корсаров)" />
     <string id="taom_faction_havens_of_umbar_bonus_2" text="+8% славы в битвах (Слава Корсаров)" />
@@ -1556,21 +1556,21 @@
     <string id="taom_faction_high_kingdom_of_lindon_weakness_0" text="Эльфийская гордость повышает стоимость влияния" />
     <string id="taom_faction_high_kingdom_of_lindon_weakness_1" text="Угасающий народ — мало пополнений" />
     <string id="taom_faction_khudorom_of_khand_bonus_0" text="+10% к скорости отряда в степи (Степные колесничие)" />
-    <string id="taom_faction_khudorom_of_khand_bonus_1" text="На 50% меньше штрафа к скорости в лесу + 15% к дальности обзора (Баттанийское, унаследовано)" />
-    <string id="taom_faction_khudorom_of_khand_bonus_2" text="+20% шанс ветеранского ополчения в городах (Баттанийское, унаследовано)" />
-    <string id="taom_faction_khudorom_of_khand_bonus_3" text="-10% к скорости строительства зданий (баттанийское, унаследовано)" />
+    <string id="taom_faction_khudorom_of_khand_bonus_1" text="На 50% меньше штраф к скорости в лесу + 15% к дальности обзора (Лесное ополчение)" />
+    <string id="taom_faction_khudorom_of_khand_bonus_2" text="+20% шанс появления опытного ополчения в городах (Закалённые ополченцы)" />
+    <string id="taom_faction_khudorom_of_khand_bonus_3" text="-10% к скорости строительства (Грубые мастерские)" />
     <string id="taom_faction_khudorom_of_khand_bonus_4" text="+8% к славе в бою (Наёмная премия)" />
     <string id="taom_faction_khudorom_of_khand_bonus_5" text="-10% к доходу от пошлин (Дань Мордору)" />
     <string id="taom_faction_khudorom_of_khand_bonus_6" text="-10% к потреблению пищи отрядом (Степная выносливость)" />
     <string id="taom_faction_khudorom_of_khand_bonus_7" text="+5% к лимиту размера отряда (Мобильность колесниц)" />
-    <string id="taom_faction_khudorom_of_khand_desc" text="Вариаги Канда. Унаследованы баттанийские традиции лесного ополчения; степные колесничие TAOM добавляют +10% к скорости отряда в степи. Наёмные банды служат тому, кто больше заплатит." />
+    <string id="taom_faction_khudorom_of_khand_desc" text="Вариаги Кханда. Традиция лесного ополчения сочетается с +10% к скорости Степных колесничих на открытой местности. Наёмные отряды служат тому, кто больше заплатит." />
     <string id="taom_faction_khudorom_of_khand_name" text="Худором Канда" />
     <string id="taom_faction_khudorom_of_khand_perk_0_desc" text="+10% к скорости отряда в степи — колесницы вариагов мчатся быстро." />
     <string id="taom_faction_khudorom_of_khand_perk_0_name" text="Степные колесничие" />
     <string id="taom_faction_khudorom_of_khand_perk_1_desc" text="Наёмные капитаны служат тому, кто платит — но они берут свою долю." />
     <string id="taom_faction_khudorom_of_khand_perk_1_name" text="Наёмная традиция" />
-    <string id="taom_faction_khudorom_of_khand_perk_2_desc" text="Унаследованный штраф скорости в лесу 50% вместо 100% + 15% к дальности обзора и +20% к шансу ветеранской милиции в городах; -10% к скорости строительства." />
-    <string id="taom_faction_khudorom_of_khand_perk_2_name" text="Баттанийское лесное происхождение" />
+    <string id="taom_faction_khudorom_of_khand_perk_2_desc" text="Привычки лесного ополчения сохраняются: на 50% меньше штраф к скорости в лесу + 15% к дальности обзора и +20% шанс опытного ополчения в городах; -10% к скорости строительства." />
+    <string id="taom_faction_khudorom_of_khand_perk_2_name" text="Лесное ополчение" />
     <string id="taom_faction_khudorom_of_khand_strength_0" text="Мобильность в степи и лесу" />
     <string id="taom_faction_khudorom_of_khand_strength_1" text="Ветеранские деревни" />
     <string id="taom_faction_khudorom_of_khand_strength_2" text="Наёмная традиция" />
@@ -1585,7 +1585,7 @@
     <string id="taom_faction_khudorom_of_khand_trait_1" text="Воины вариагов" />
     <string id="taom_faction_khudorom_of_khand_trait_2" text="Наёмные банды" />
     <string id="taom_faction_khudorom_of_khand_trait_3" text="Традиция колесничих" />
-    <string id="taom_faction_khudorom_of_khand_weakness_0" text="Баттанийское медленное строительство" />
+    <string id="taom_faction_khudorom_of_khand_weakness_0" text="Грубые мастерские замедляют строительство" />
     <string id="taom_faction_khudorom_of_khand_weakness_1" text="Слабые поселения" />
     <string id="taom_faction_khudorom_of_khand_weakness_2" text="Наёмные капитаны верны монете, а не лорду" />
     <string id="taom_faction_kingdom_of_angaladh_desc" text="Королевство Ангаладх." />
@@ -1601,23 +1601,23 @@
     <string id="taom_faction_kingdom_of_cardolan_trait_1" text="Курганы" />
     <string id="taom_faction_kingdom_of_cardolan_trait_2" text="Следопыты Севера" />
     <string id="taom_faction_kingdom_of_dale_bonus_0" text="+10% к скорости отряда на равнинах (Торговцы Долины)" />
-    <string id="taom_faction_kingdom_of_dale_bonus_1" text="+10% к производству зерна в деревнях (Стургийское, унаследованное)" />
-    <string id="taom_faction_kingdom_of_dale_bonus_2" text="-50% к затратам влияния на армию (стургийское, унаследовано)" />
-    <string id="taom_faction_kingdom_of_dale_bonus_3" text="+20% штраф к отношениям от решений королевства (Стургийское, унаследованное)" />
+    <string id="taom_faction_kingdom_of_dale_bonus_1" text="+10% к производству зерна в деревнях (Урожай Долгого озера)" />
+    <string id="taom_faction_kingdom_of_dale_bonus_2" text="-50% к затратам влияния на армию (Сбор Эсгарота)" />
+    <string id="taom_faction_kingdom_of_dale_bonus_3" text="+20% к штрафу отношений от решений королевства (Упрямый совет)" />
     <string id="taom_faction_kingdom_of_dale_bonus_4" text="+10% к доходу от пошлин (Торговый союз с гномами)" />
     <string id="taom_faction_kingdom_of_dale_bonus_5" text="+10% к славе в бою (Традиция Чёрной стрелы)" />
     <string id="taom_faction_kingdom_of_dale_bonus_6" text="-0.5 к лояльности поселения в день (Уязвимость малой территории)" />
-    <string id="taom_faction_kingdom_of_dale_desc" text="Восстановленный Бардом город у подножия Эребора. Унаследованное стургийское изобилие зерна и традиция дешёвой армии сочетаются с бонусом TAOM «Торговцы Долины» к скорости на равнинах — но стургийские штрафы к решениям королевства режут в обе стороны. Процветающий торговый союз с гномами держит Дейл богатым и готовым." />
+    <string id="taom_faction_kingdom_of_dale_desc" text="Отстроенный Бардом город под сенью Эребора. Богатое зерно Долгого озера и крепкая традиция дешёвого сбора войск сочетаются со скоростью Торговцев долины, хотя совет Дейла бывает столь же упрям, сколь и горд. Процветающий торговый союз с гномами держит город богатым и готовым к войне." />
     <string id="taom_faction_kingdom_of_dale_name" text="Королевство Дейл" />
     <string id="taom_faction_kingdom_of_dale_perk_0_desc" text="+10% к скорости отряда на равнинах — караваны Озёрного города движутся быстро." />
     <string id="taom_faction_kingdom_of_dale_perk_0_name" text="Торговцы Долины" />
     <string id="taom_faction_kingdom_of_dale_perk_1_desc" text="Торговля с Эребором обеспечивает дополнительный доход и поставки оружия." />
     <string id="taom_faction_kingdom_of_dale_perk_1_name" text="Союз с гномами" />
-    <string id="taom_faction_kingdom_of_dale_perk_2_desc" text="Унаследованные стургийские +10% к зерну деревень и -50% к затратам влияния на армию; штраф отношений +20% на королевские решения." />
-    <string id="taom_faction_kingdom_of_dale_perk_2_name" text="Стургийское наследие зерна и армии" />
+    <string id="taom_faction_kingdom_of_dale_perk_2_desc" text="+10% к зерну деревень от Долгого озера и -50% к затратам влияния на армию от Сбора Эсгарота соединяются; штраф отношений +20% при решениях королевства." />
+    <string id="taom_faction_kingdom_of_dale_perk_2_name" text="Урожай Долгого озера и Сбор Эсгарота" />
     <string id="taom_faction_kingdom_of_dale_strength_0" text="Торговля с Эребором" />
     <string id="taom_faction_kingdom_of_dale_strength_1" text="Сильная традиция стрельбы из лука" />
-    <string id="taom_faction_kingdom_of_dale_strength_2" text="Дешёвый сбор войск (стургийское)" />
+    <string id="taom_faction_kingdom_of_dale_strength_2" text="Дешёвый сбор армии (Сбор Эсгарота)" />
     <string id="taom_faction_kingdom_of_dale_strength_3" text="Богатые зерном деревни" />
     <string id="taom_faction_kingdom_of_dale_su_0_desc" text="Лучник наследия Барда." />
     <string id="taom_faction_kingdom_of_dale_su_0_name" text="Следопыт Чёрной Стрелы" />
@@ -1631,7 +1631,7 @@
     <string id="taom_faction_kingdom_of_dale_trait_3" text="Торговцы Долины" />
     <string id="taom_faction_kingdom_of_dale_weakness_0" text="Малая территория" />
     <string id="taom_faction_kingdom_of_dale_weakness_1" text="Давление со стороны истерлингов" />
-    <string id="taom_faction_kingdom_of_dale_weakness_2" text="Стургийский штраф к решениям королевства" />
+    <string id="taom_faction_kingdom_of_dale_weakness_2" text="Упрямый совет осложняет дипломатию" />
     <string id="taom_faction_kingdom_of_dorwinion_desc" text="Винодельческое королевство Дорвинион на северо-западных берегах моря Рун. Процветающее торговое королевство, зажатое между Свободными Народами и Востоком." />
     <string id="taom_faction_kingdom_of_dorwinion_name" text="Королевство Дорвинион" />
     <string id="taom_faction_kingdom_of_dorwinion_trait_0" text="Знаменитые виноградники" />
@@ -1966,25 +1966,25 @@
     <string id="taom_faction_stronghold_of_narager_trait_1" text="Восточные Пустоши" />
     <string id="taom_faction_taskralan_of_harwan_bonus_0" text="+10% к скорости отряда в пустыне (Сыны Солнца)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_1" text="+5% к лимиту размера отряда (Харадримские Банды)" />
-    <string id="taom_faction_taskralan_of_harwan_bonus_2" text="-30% к стоимости создания каравана + -10% к торговому штрафу (Асерайский Торговец, унаследовано)" />
-    <string id="taom_faction_taskralan_of_harwan_bonus_3" text="Нет штрафа к скорости в пустыне (Пустыня Асераи, унаследовано)" />
-    <string id="taom_faction_taskralan_of_harwan_bonus_4" text="+5% к ежедневному жалованию войск (Жалованье Асераи, унаследовано)" />
+    <string id="taom_faction_taskralan_of_harwan_bonus_2" text="-30% к стоимости создания каравана и -10% к торговому штрафу (Пустынная караванная торговля)" />
+    <string id="taom_faction_taskralan_of_harwan_bonus_3" text="Нет штрафа к скорости в пустыне (Рождённые пустыней)" />
+    <string id="taom_faction_taskralan_of_harwan_bonus_4" text="+5% к ежедневному жалованью войск (Наёмничий обычай)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_5" text="+5 к моральному духу отряда (Погонщики Мумакилов)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_6" text="-15% к расходу провизии отряда (Пустынная Выносливость)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_7" text="+15% к урону от набегов (Дикость Дальнего Харада)" />
     <string id="taom_faction_taskralan_of_harwan_bonus_8" text="+15% к стоимости влияния армии (Разрозненные Племена)" />
-    <string id="taom_faction_taskralan_of_harwan_desc" text="Харадримы Харвана, сыны солнца. Унаследована стойкость Асераи к пустыне; черта TAOM «Сыны Солнца» добавляет +10% к скорости отряда в пустыне; Харадримские Банды увеличивают размер отряда поверх унаследованной караванной экономики. Мумакили правят южными равнинами." />
+    <string id="taom_faction_taskralan_of_harwan_desc" text="Харадрим Харвана, сыны солнца. Долгое наследие пустыни даёт Сынам Солнца +10% к скорости и увеличенную численность боевых отрядов харадрим, опираясь на процветающую караванную торговлю. Мумакил властвуют над южными равнинами." />
     <string id="taom_faction_taskralan_of_harwan_name" text="Таскралан Харвана" />
     <string id="taom_faction_taskralan_of_harwan_perk_0_desc" text="+10% к скорости отряда в пустыне — рождённые под жгучими песками." />
     <string id="taom_faction_taskralan_of_harwan_perk_0_name" text="Сыны Солнца" />
     <string id="taom_faction_taskralan_of_harwan_perk_1_desc" text="+5% к лимиту размера отряда — племенные банды едут вместе на зов Мордора." />
     <string id="taom_faction_taskralan_of_harwan_perk_1_name" text="Харадримские Банды" />
-    <string id="taom_faction_taskralan_of_harwan_perk_2_desc" text="Унаследованный Асерайский Торговец (-30% караваны, -10% торговый штраф) и Асерайская Пустыня (нет штрафа скорости в пустыне); +5% к ежедневному жалованью." />
-    <string id="taom_faction_taskralan_of_harwan_perk_2_name" text="Пустынное Наследие Асераи" />
+    <string id="taom_faction_taskralan_of_harwan_perk_2_desc" text="Пустынная караванная торговля (-30% к стоимости караванов, -10% к торговому штрафу) и Рождённые в пустыне (нет штрафа к скорости в пустыне) сохраняются; +5% к ежедневному жалованью." />
+    <string id="taom_faction_taskralan_of_harwan_perk_2_name" text="Пустынная караванная торговля и Рождённые в пустыне" />
     <string id="taom_faction_taskralan_of_harwan_strength_0" text="Боевые звери мумакили" />
     <string id="taom_faction_taskralan_of_harwan_strength_1" text="Мобильность в пустыне" />
     <string id="taom_faction_taskralan_of_harwan_strength_2" text="Более крупные банды" />
-    <string id="taom_faction_taskralan_of_harwan_strength_3" text="Караванная традиция Асераи" />
+    <string id="taom_faction_taskralan_of_harwan_strength_3" text="Процветающая караванная экономика" />
     <string id="taom_faction_taskralan_of_harwan_su_0_desc" text="Сокрушительный боевой зверь." />
     <string id="taom_faction_taskralan_of_harwan_su_0_name" text="Боевая Башня Мумакиль" />
     <string id="taom_faction_taskralan_of_harwan_su_1_desc" text="Элитные длиннолучники далёкого юга." />
@@ -1998,7 +1998,7 @@
     <string id="taom_faction_taskralan_of_harwan_weakness_0" text="Штраф холодного климата" />
     <string id="taom_faction_taskralan_of_harwan_weakness_1" text="Племенная вражда" />
     <string id="taom_faction_taskralan_of_harwan_weakness_2" text="Мало кузнецов и стен" />
-    <string id="taom_faction_taskralan_of_harwan_weakness_3" text="Заимствованные у асераев +5% к жалованию войск" />
+    <string id="taom_faction_taskralan_of_harwan_weakness_3" text="Дорогой наёмный обычай (+5% к жалованью войск)" />
     <string id="taom_faction_taskralan_of_shaghana_desc" text="Таскралан Шаганы." />
     <string id="taom_faction_taskralan_of_shaghana_name" text="Таскралан Шаганы" />
     <string id="taom_faction_wildmen_of_enedwaith_desc" text="Дикие земли Энедвайта между Арнором и Гондором. Дом разрозненных кланов людей, не подчиняющихся никакому королю, живущих охотниками и скотоводами." />
@@ -2676,104 +2676,172 @@
     <string id="taom_oob_autoassign_done" text="Назначено командиров: {COUNT}." />
     <string id="taom_oob_autoassign_not_general" text="Только полководец этой битвы может назначать героев." />
     <string id="taom_oob_autoassign_none" text="Нет героя, подходящего на свободное место командира." />
-    <string id="taom_bandit_mirkwood_spiders_name" text="Spiders of Mirkwood" />
-    <string id="taom_spider_brood_forest_name" text="Giant Spider" />
-    <string id="taom_spider_brood_brown_name" text="Great Spider" />
-    <string id="taom_spider_brood_pale_name" text="Pale Broodmother" />
-    <string id="taom_bandit_wild_trolls_name" text="Wild Trolls" />
-    <string id="taom_troll_bandit_cave_name" text="Cave Troll" />
-    <string id="taom_troll_bandit_hill_name" text="Hill Troll" />
-    <string id="taom_armoury_visit_news" text="A master armourer has come to {TOWN}. For the next {DAYS} days its armoury stocks and forges as a finer one would." />
-    <string id="taom_armoury_menu" text="Visit the armoury" />
-    <string id="taom_armoury_menu_tip" text="This town's armoury works to level {LEVEL} of 3." />
-    <string id="taom_armoury_coop_guest" text="The armourer works only for the host of this campaign." />
-    <string id="taom_armoury_nothing" text="You carry nothing this armourer can improve. Bring a piece of armour and the metals its next form needs." />
-    <string id="taom_armoury_title" text="The Armoury of {TOWN}" />
-    <string id="taom_armoury_desc" text="This armoury works to level {LEVEL} of 3. Heavy pieces need level {HEAVY}, elite pieces level {ELITE}, and lord kit a master armourer at level {LORD}. The piece keeps its quality." />
-    <string id="taom_armoury_choose" text="Choose" />
-    <string id="taom_armoury_leave" text="Leave" />
-    <string id="taom_armoury_confirm_title" text="Improve {SOURCE}?" />
-    <string id="taom_armoury_confirm_body" text="The armourer will rework it into {TARGET} for {PRICE}." />
-    <string id="taom_armoury_confirm_yes" text="Have it done" />
-    <string id="taom_armoury_cancel" text="Cancel" />
-    <string id="taom_armour_class_light" text="light" />
-    <string id="taom_armour_class_medium" text="medium" />
-    <string id="taom_armour_class_heavy" text="heavy" />
-    <string id="taom_armour_class_elite" text="elite" />
-    <string id="taom_armour_class_lord" text="lord" />
-    <string id="taom_armour_class_other" text="fine" />
-    <string id="taom_armoury_offer" text="{SOURCE} into {TARGET} ({CLASS})" />
-    <string id="taom_armoury_gold" text="{GOLD} gold" />
+    <string id="taom_bandit_mirkwood_spiders_name" text="Пауки Лихолесья" />
+    <string id="taom_spider_brood_forest_name" text="Гигантский паук" />
+    <string id="taom_spider_brood_brown_name" text="Великий паук" />
+    <string id="taom_spider_brood_pale_name" text="Бледная паучиха-матка" />
+    <string id="taom_bandit_wild_trolls_name" text="Дикие тролли" />
+    <string id="taom_troll_bandit_cave_name" text="Пещерный тролль" />
+    <string id="taom_troll_bandit_hill_name" text="Горный тролль" />
+    <string id="taom_armoury_visit_news" text="В {TOWN} прибыл мастер-оружейник. Следующие {DAYS} дн. местная оружейная будет снабжать и ковать так, как это делала бы лучшая." />
+    <string id="taom_armoury_menu" text="Посетить оружейную" />
+    <string id="taom_armoury_menu_tip" text="Оружейная этого города работает на уровне {LEVEL} из 3." />
+    <string id="taom_armoury_coop_guest" text="Оружейник работает только для хозяина этой кампании." />
+    <string id="taom_armoury_nothing" text="У вас нет ничего, что этот оружейник мог бы улучшить. Принесите доспех и металлы, нужные для его следующей формы." />
+    <string id="taom_armoury_title" text="Оружейная {TOWN}" />
+    <string id="taom_armoury_desc" text="Эта оружейная работает на уровне {LEVEL} из 3. Для тяжёлых изделий нужен уровень {HEAVY}, для элитных — {ELITE}, а для лордского снаряжения — мастер-оружейник уровня {LORD}. Изделие сохраняет своё качество." />
+    <string id="taom_armoury_choose" text="Выбрать" />
+    <string id="taom_armoury_leave" text="Уйти" />
+    <string id="taom_armoury_confirm_title" text="Улучшить {SOURCE}?" />
+    <string id="taom_armoury_confirm_body" text="Оружейник перекует это в {TARGET} за {PRICE}." />
+    <string id="taom_armoury_confirm_yes" text="Пусть сделает" />
+    <string id="taom_armoury_cancel" text="Отмена" />
+    <string id="taom_armour_class_light" text="лёгкие" />
+    <string id="taom_armour_class_medium" text="средние" />
+    <string id="taom_armour_class_heavy" text="тяжёлые" />
+    <string id="taom_armour_class_elite" text="элитные" />
+    <string id="taom_armour_class_lord" text="лордские" />
+    <string id="taom_armour_class_other" text="искусные" />
+    <string id="taom_armoury_offer" text="{SOURCE} в {TARGET} ({CLASS})" />
+    <string id="taom_armoury_gold" text="{GOLD} золота" />
     <string id="taom_armoury_amount" text="{COUNT} {ITEM}" />
-    <string id="taom_armoury_block_level" text="This armoury cannot work {CLASS} pieces: it needs level {NEED}, and this one is level {LEVEL}." />
-    <string id="taom_armoury_block_gold" text="You cannot pay it: {PRICE}." />
-    <string id="taom_armoury_block_metal" text="You lack the metals: {PRICE}." />
-    <string id="taom_armoury_block_resource" text="Your people's treasure falls short: {PRICE}." />
-    <string id="taom_armoury_cost" text="Costs {PRICE}." />
-    <string id="taom_armoury_done" text="The armourer hands you {TARGET}." />
-    <string id="taom_armoury_gone" text="You no longer carry {SOURCE}." />
-    <string id="taom_armoury_short_gold" text="You no longer have the gold for it." />
-    <string id="taom_armoury_short_metal" text="You no longer have the metals for it." />
-    <string id="taom_armoury_short_resource" text="Your people's treasure no longer covers it." />
-    <string id="taom_lh_event_title" text="A Lord's Harness Unclaimed" />
-    <string id="taom_lh_event_body" text="Among the spoils of the field lies {ITEM}, the harness of {LORD}'s household. It is yours by right of arms, though his kin would take its return as a courtesy." />
-    <string id="taom_lh_event_take" text="Take it" />
-    <string id="taom_lh_event_return" text="Send it to his kin" />
-    <string id="taom_lg_hands_title" text="The Lord's Gauntlets" />
-    <string id="taom_lg_hands_desc" text="A master armourer forges a lord's gauntlets only for hands that have proved themselves in battle. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with them." />
-    <string id="taom_lg_task_kills" text="Strike down enemies with your own hand" />
-    <string id="taom_lg_task_battles" text="Win battles" />
-    <string id="taom_lg_legs_title" text="The Lord's Greaves" />
-    <string id="taom_lg_legs_desc" text="Greaves fit for a lord are earned in the press of battle, not bought. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with them." />
-    <string id="taom_lg_shoulders_title" text="The Lord's Mantle" />
-    <string id="taom_lg_shoulders_desc" text="A lord's mantle marks one who stands where the fighting is thickest. Strike down enemies with your own hand and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lg_head_title" text="The Lord's Helm" />
-    <string id="taom_lg_head_desc" text="A lord's helm is forged for a name that other lords fear. Strike down enemies with your own hand, take an enemy lord captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lg_task_lords" text="Take enemy lords captive" />
-    <string id="taom_lg_body_title" text="The Lord's Harness" />
-    <string id="taom_lg_body_desc" text="The lord's harness is the last armour a master armourer forges, and only for a proven captain. Strike down enemies with your own hand, take enemy lords captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lg_weapon_title" text="The Lord's Weapon" />
-    <string id="taom_lg_weapon_desc" text="The finest weapons of your people go to those whose deeds match the names they carry. Strike down enemies with your own hand, take enemy lords captive and win battles, or bring the armourer your people's lord's materials instead; then a master armourer will fit you with it." />
-    <string id="taom_lm_gondor" text="Númenórean Steel" />
-    <string id="taom_lm_vlandia" text="Eorling Steel" />
-    <string id="taom_lm_erebor" text="Erebor Dwarf-steel" />
-    <string id="taom_lm_sturgia" text="Dale-forged Steel" />
-    <string id="taom_lm_rivendell" text="Noldorin Silver-steel" />
-    <string id="taom_lm_mirkwood" text="Greenwood Silver" />
-    <string id="taom_lm_mordor" text="Barad-dûr Black Iron" />
-    <string id="taom_lm_isengard" text="Isengard Forge-iron" />
-    <string id="taom_lm_dolguldur" text="Dol Guldur Shadow-iron" />
-    <string id="taom_lm_gundabad" text="Gundabad Orc-steel" />
-    <string id="taom_lm_khuzait" text="Rhûnic Gilt-bronze" />
-    <string id="taom_lm_aserai" text="Haradric Bronze" />
-    <string id="taom_lm_empire" text="Dunland Bog-iron" />
-    <string id="taom_lg_piece_hands" text="lord's gauntlets" />
-    <string id="taom_lg_piece_legs" text="lord's greaves" />
-    <string id="taom_lg_piece_shoulders" text="lord's mantle" />
-    <string id="taom_lg_piece_head" text="lord's helm" />
-    <string id="taom_lg_piece_body" text="lord's harness" />
-    <string id="taom_lg_piece_weapon" text="lord's weapon" />
-    <string id="taom_lg_claim_level" text="Only a master armourer, at a level {LORD} armoury, can fit your {PIECE}." />
-    <string id="taom_lg_take_tip_deeds" text="Do the deeds its quest asks: enemies struck down with your own hand and battles won, and on the higher rungs lords taken captive." />
-    <string id="taom_lg_take_tip" text="Do the deeds its quest asks: enemies struck down with your own hand and battles won, and on the higher rungs lords taken captive; or bring the armourer {AMOUNT} instead." />
-    <string id="taom_lg_claim" text="Claim your {PIECE}" />
-    <string id="taom_lg_take" text="Take up the commission for your {PIECE}" />
-    <string id="taom_lg_handin" text="Hand over {AMOUNT} for your {PIECE}" />
-    <string id="taom_lg_handin_tip" text="You carry {CARRIED} of the {NEEDED} needed." />
-    <string id="taom_lg_start_failed" text="The armourer cannot take up your commission today." />
-    <string id="taom_lg_handin_title" text="Hand over the materials?" />
-    <string id="taom_lg_handin_body" text="The armourer takes them, and a master armourer at a level {LORD} armoury will fit you with your {PIECE}." />
-    <string id="taom_lg_handin_short" text="You no longer carry the materials." />
-    <string id="taom_lg_handin_done" text="The armourer takes the materials. Your {PIECE} waits at any level {LORD} armoury." />
-    <string id="taom_lg_claim_none" text="The armourer has no {PIECE} for your people yet." />
-    <string id="taom_lg_claim_title" text="Your {PIECE}" />
-    <string id="taom_lg_claim_desc" text="The master armourer will fit you with one of these. Choose it." />
-    <string id="taom_lg_claimed" text="The master armourer fits you with {ITEM}." />
-    <string id="taom_lg_drop" text="Among the spoils you find {AMOUNT}." />
-    <string id="taom_lg_ready" text="Your deeds are known. A master armourer, at a level {LORD} armoury, will now fit you with your {PIECE}." />
+    <string id="taom_armoury_block_level" text="Эта оружейная не может работать с изделиями класса «{CLASS}»: нужен уровень {NEED}, а здесь уровень {LEVEL}." />
+    <string id="taom_armoury_block_gold" text="Вам нечем заплатить: {PRICE}." />
+    <string id="taom_armoury_block_metal" text="Вам не хватает металлов: {PRICE}." />
+    <string id="taom_armoury_block_resource" text="Казны вашего народа недостаёт: {PRICE}." />
+    <string id="taom_armoury_cost" text="Стоит {PRICE}." />
+    <string id="taom_armoury_done" text="Оружейник вручает вам {TARGET}." />
+    <string id="taom_armoury_gone" text="У вас больше нет {SOURCE}." />
+    <string id="taom_armoury_short_gold" text="У вас больше нет золота на это." />
+    <string id="taom_armoury_short_metal" text="У вас больше нет металлов на это." />
+    <string id="taom_armoury_short_resource" text="Казны вашего народа на это больше не хватает." />
+    <string id="taom_lh_event_title" text="Невостребованное снаряжение лорда" />
+    <string id="taom_lh_event_body" text="Среди добычи на поле лежит {ITEM}, снаряжение дома {LORD}. Оно ваше по праву оружия, хотя его родня сочла бы возврат учтивостью." />
+    <string id="taom_lh_event_take" text="Взять это" />
+    <string id="taom_lh_event_return" text="Отправить это его родне" />
+    <string id="taom_lg_hands_title" text="Владычьи наручи" />
+    <string id="taom_lg_hands_desc" text="Мастер-оружейник кует владычьи наручи лишь для рук, доказавших себя в бою. Срази врагов собственной рукой и выиграй сражения — или принеси оружейнику владычьи материалы своего народа; тогда мастер-оружейник снарядит тебя ими." />
+    <string id="taom_lg_task_kills" text="Срази врагов собственной рукой" />
+    <string id="taom_lg_task_battles" text="Выиграй сражения" />
+    <string id="taom_lg_legs_title" text="Владычьи поножи" />
+    <string id="taom_lg_legs_desc" text="Поножи, достойные владыки, добываются в гуще битвы, а не покупаются. Срази врагов собственной рукой и выиграй сражения — или принеси оружейнику владычьи материалы своего народа; тогда мастер-оружейник снарядит тебя ими." />
+    <string id="taom_lg_shoulders_title" text="Владычья мантия" />
+    <string id="taom_lg_shoulders_desc" text="Владычья мантия отмечает того, кто стоит там, где бой всего жарче. Срази врагов собственной рукой и выиграй сражения — или принеси оружейнику владычьи материалы своего народа; тогда мастер-оружейник снарядит тебя ею." />
+    <string id="taom_lg_head_title" text="Владычий шлем" />
+    <string id="taom_lg_head_desc" text="Владычий шлем куют для имени, которого страшатся иные владыки. Срази врагов собственной рукой, возьми в плен вражеского лорда и выиграй сражения — или принеси оружейнику владычьи материалы своего народа; тогда мастер-оружейник снарядит тебя им." />
+    <string id="taom_lg_task_lords" text="Возьми в плен вражеских лордов" />
+    <string id="taom_lg_body_title" text="Владычий доспех" />
+    <string id="taom_lg_body_desc" text="Владычий доспех — последнее, что кует мастер-оружейник, и лишь для испытанного военачальника. Срази врагов собственной рукой, возьми в плен вражеских лордов и выиграй сражения — или принеси оружейнику владычьи материалы своего народа; тогда мастер-оружейник снарядит тебя им." />
+    <string id="taom_lg_weapon_title" text="Владычье оружие" />
+    <string id="taom_lg_weapon_desc" text="Лучшее оружие твоего народа достается тем, чьи деяния под стать их именам. Срази врагов собственной рукой, возьми в плен вражеских лордов и выиграй сражения — или принеси оружейнику владычьи материалы своего народа; тогда мастер-оружейник снарядит тебя им." />
+    <string id="taom_lm_gondor" text="Нуменорская сталь" />
+    <string id="taom_lm_vlandia" text="Эорлингская сталь" />
+    <string id="taom_lm_erebor" text="Гномья сталь Эребора" />
+    <string id="taom_lm_sturgia" text="Сталь из кузниц Дейла" />
+    <string id="taom_lm_rivendell" text="Нолдорская серебряная сталь" />
+    <string id="taom_lm_mirkwood" text="Серебро Зеленолесья" />
+    <string id="taom_lm_mordor" text="Черное железо Барад-дура" />
+    <string id="taom_lm_isengard" text="Кузнечное железо Изенгарда" />
+    <string id="taom_lm_dolguldur" text="Теневое железо Дол Гулдура" />
+    <string id="taom_lm_gundabad" text="Орочья сталь Гундабада" />
+    <string id="taom_lm_khuzait" text="Золоченая бронза Рхуна" />
+    <string id="taom_lm_aserai" text="Харадская бронза" />
+    <string id="taom_lm_empire" text="Болотное железо Дунланда" />
+    <string id="taom_lg_piece_hands" text="владычьи наручи" />
+    <string id="taom_lg_piece_legs" text="владычьи поножи" />
+    <string id="taom_lg_piece_shoulders" text="владычью мантию" />
+    <string id="taom_lg_piece_head" text="владычий шлем" />
+    <string id="taom_lg_piece_body" text="владычий доспех" />
+    <string id="taom_lg_piece_weapon" text="владычье оружие" />
+    <string id="taom_lg_claim_level" text="Только мастер-оружейник в оружейной уровня {LORD} может изготовить ваш предмет: {PIECE}." />
+    <string id="taom_lg_take_tip_deeds" text="Соверши деяния, которых требует задание: срази врагов собственной рукой и выиграй сражения, а на высших ступенях — возьми лордов в плен." />
+    <string id="taom_lg_take_tip" text="Соверши деяния, которых требует задание: срази врагов собственной рукой и выиграй сражения, а на высших ступенях — возьми лордов в плен; либо принеси оружейнику {AMOUNT}." />
+    <string id="taom_lg_claim" text="Получить: {PIECE}" />
+    <string id="taom_lg_take" text="Взять заказ на: {PIECE}" />
+    <string id="taom_lg_handin" text="Передать {AMOUNT} за ваш {PIECE}" />
+    <string id="taom_lg_handin_tip" text="У вас при себе {CARRIED} из {NEEDED} необходимых." />
+    <string id="taom_lg_start_failed" text="Оружейник не может взяться за ваш заказ сегодня." />
+    <string id="taom_lg_handin_title" text="Передать материалы?" />
+    <string id="taom_lg_handin_body" text="Оружейник принимает их, и мастер-оружейник в оружейной уровня {LORD} снарядит вас вашим предметом: {PIECE}." />
+    <string id="taom_lg_handin_short" text="Материалы больше не при вас." />
+    <string id="taom_lg_handin_done" text="Оружейник принимает материалы. Ваш {PIECE} ждёт в любой оружейной уровня {LORD}." />
+    <string id="taom_lg_claim_none" text="У оружейника пока нет {PIECE} для вашего народа." />
+    <string id="taom_lg_claim_title" text="Ваш {PIECE}" />
+    <string id="taom_lg_claim_desc" text="Мастер-оружейник снарядит вас одним из этих. Сделайте выбор." />
+    <string id="taom_lg_claimed" text="Мастер-оружейник снаряжает вас: {ITEM}." />
+    <string id="taom_lg_drop" text="Среди трофеев вы находите {AMOUNT}." />
+    <string id="taom_lg_ready" text="О ваших деяниях известно. Теперь мастер-оружейник в оружейной уровня {LORD} снарядит вас вашим предметом: {PIECE}." />
     <string id="taom_realm_borders_entering" text="Вы вступаете во владения: {REALM}." />
     <string id="taom_realm_borders_mode_alignment" text="Карта показывает Свободные Народы и Тень." />
     <string id="taom_realm_borders_mode_war" text="Карта показывает ваших союзников и врагов." />
     <string id="taom_realm_borders_mode_political" text="Карта показывает королевства." />
+  <string id="taom_fui_gandalf_name" text="Гэндальф" />
+  <string id="taom_fui_isildur_name" text="Исильдур" />
+  <string id="taom_fui_brand_name" text="Бранд" />
+  <string id="taom_fui_bard_name" text="Бард Лучник" />
+  <string id="taom_fui_tauriel_name" text="Тауриэль" />
+  <string id="taom_fui_thorin_name" text="Торин Дубощит" />
+  <string id="taom_fui_azog_name" text="Азог Осквернитель" />
+  <string id="taom_fui_gilgalad_name" text="Гил-Галад" />
+  <string id="taom_fui_quote_gold" text="Не всё то золото, что блестит, не всякий странник сбился с пути." />
+  <string id="taom_fui_quote_gold_by" text="— Бильбо Бэггинс" />
+  <string id="taom_fui_quote_light" text="Свет воссияет из тьмы." />
+  <string id="taom_fui_quote_light_by" text="— Бильбо Бэггинс" />
+  <string id="taom_fui_quote_smallest" text="Даже самый малый способен изменить ход будущего." />
+  <string id="taom_fui_quote_smallest_by" text="— Галадриэль" />
+  <string id="taom_fui_quote_foul" text="С виду я мерзок, да сердцем чист." />
+  <string id="taom_fui_quote_foul_by" text="— Арагорн" />
+  <string id="taom_fui_wanderer" text="Странник" />
+  <string id="taom_fui_back_to_menu" text="Главное меню" />
+  <string id="taom_fui_custom_character" text="Свой персонаж" />
+  <string id="taom_fui_banner" text="ЗНАМЯ" />
+  <string id="taom_fui_back" text="Назад" />
+  <string id="taom_fui_clan_name" text="НАЗВАНИЕ КЛАНА" />
+  <string id="taom_fui_identity" text="ЛИЧНОСТЬ" />
+  <string id="taom_fui_head" text="ГОЛОВА" />
+  <string id="taom_fui_body" text="ТЕЛО" />
+  <string id="taom_fui_details" text="ДЕТАЛИ" />
+  <string id="taom_fui_strengths" text="Сильные стороны" />
+  <string id="taom_fui_weaknesses" text="Слабые стороны" />
+  <string id="taom_fui_confirm" text="Подтвердить" />
+  <string id="taom_fui_characters" text="Персонажи" />
+  <string id="taom_fui_leader" text="Предводитель" />
+  <string id="taom_fui_lord" text="Лорд" />
+  <string id="taom_fui_benefits" text="Преимущества" />
+  <string id="taom_fui_base_attributes" text="Базовые атрибуты" />
+  <string id="taom_fui_skills_and_attributes" text="Навыки и атрибуты" />
+  <string id="taom_fui_faction" text="ФРАКЦИЯ" />
+  <string id="taom_fui_character" text="ПЕРСОНАЖ" />
+  <string id="taom_fui_origins" text="ПРОИСХОЖДЕНИЕ" />
+  <string id="taom_fui_random" text="Случайно" />
+  <string id="taom_fui_difficulty" text="СЛОЖНОСТЬ" />
+  <string id="taom_fui_review" text="ОБЗОР" />
+  <string id="taom_fui_build" text="ТЕЛОСЛОЖЕНИЕ" />
+  <string id="taom_fui_skin_tone" text="ОТТЕНОК КОЖИ" />
+  <string id="taom_fui_face" text="ЛИЦО" />
+  <string id="taom_fui_eyes" text="ГЛАЗА" />
+  <string id="taom_fui_nose" text="НОС" />
+  <string id="taom_fui_mouth" text="РОТ" />
+  <string id="taom_fui_face_shape" text="ФОРМА ЛИЦА" />
+  <string id="taom_fui_hair" text="ВОЛОСЫ" />
+  <string id="taom_fui_tattoos" text="ТАТУИРОВКИ" />
+  <string id="taom_fui_gender" text="ПОЛ" />
+  <string id="taom_fui_male" text="МУЖСКОЙ" />
+  <string id="taom_fui_female" text="ЖЕНСКИЙ" />
+  <string id="taom_fui_race" text="РАСА" />
+  <string id="taom_fui_voice" text="ГОЛОС" />
+  <string id="taom_fui_randomize" text="СЛУЧАЙНО" />
+  <string id="taom_fui_randomize_all" text="ВСЁ СЛУЧАЙНО" />
+  <string id="taom_fui_default_outfit" text="СТАНДАРТНЫЙ НАРЯД" />
+  <string id="taom_fui_reset" text="СБРОС" />
+  <string id="taom_fui_reset_all" text="СБРОСИТЬ ВСЁ" />
+  <string id="taom_fui_undo" text="ОТМЕНИТЬ" />
+  <string id="taom_fui_redo" text="ПОВТОРИТЬ" />
+  <string id="taom_bc_advice_title" text="TAOM: настройки производительности в бою" />
+  <string id="taom_bc_advice_body" text="Ваш параметр {RAGDOLLS} или {CORPSES} установлен выше, чем рекомендует TAOM. Игроки сообщали о зависаниях в крупных битвах при высоких значениях, и снижение этих двух параметров устраняло их. Рекомендуется: {RAGDOLLS} 5, {CORPSES} {LOW}. Уже более низкое значение сохраняется. Применить сейчас? Вы можете вернуть прежние значения в любой момент в Настройках, {PERFORMANCE}. Это уведомление можно отключить в Настройках модов, TAOM, Производительность." />
+  <string id="taom_bc_advice_apply" text="Применить" />
+  <string id="taom_bc_advice_keep" text="Оставить мои" />
+  <string id="taom_bc_advice_done" text="Настройки боя сохранены." />
+  <string id="taom_bc_advice_failed" text="Не удалось сохранить настройки боя. Задайте их вручную в Настройках, {PERFORMANCE}." />
   </strings>
 </base>

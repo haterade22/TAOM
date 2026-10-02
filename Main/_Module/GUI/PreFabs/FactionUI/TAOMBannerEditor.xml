@@ -1,0 +1,269 @@
+<Prefab>
+  <!-- Banner selection/customization screen, the screen right after the narrative stages (2026-09-28, user
+       request: "For the Banner selection (screen after Origins), also adjust the UI to match the rest.").
+       This is a genuinely SEPARATE ScreenBase/GameState (BannerEditorState/GauntletBannerEditorScreen), not
+       another movie inside CharacterCreationState like FaceGen/Narrative/Review - but it still loads a named
+       Gauntlet movie ("BannerEditor", via BannerEditorView.OnTick -> GauntletLayer.LoadMovie) the exact same
+       way those do, so the SAME MainMenuPatch.cs Prefix/Postfix movie-name-swap technique applies unchanged -
+       see that file's own new "BannerEditor"/"TAOMBannerEditor" branch.
+       Root widget type, WidgetToAddIcons path, and every @-binding/{DataSource}/Command name below are
+       preserved byte-for-byte from the native prefab (Modules\Native\GUI\Prefabs\BannerEditor\BannerEditor.xml)
+       - only the visual layer changed, same convention as every other reskinned screen in this project.
+       CHROME: reuses the same fs_scrim_l/fs_scrim_r + cc_panel_bg RightPanel + fs_strip ribbon +
+       cc_corner_ornament + CC.Confirm/CC.ConfirmText Back/Next established by TAOMFaceGen.xml/
+       TAOMNarrativeStage.xml. No tab system on this screen (unlike FaceGen) so the ribbon just shows a static
+       "BANNER" label rather than breadcrumb buttons - this screen doesn't have a confirmed native stage index
+       to jump to via StageJumpButton (unlike FACTION/CHARACTER on the Narrative Stage ribbon), so no
+       stage-jump entries were added here this round.
+       CONTENT WIDTH: native assumed ~573px of content width (RightPanel was 694 wide natively); this
+       project's panels are 546 wide everywhere else (kept unchanged here for visual consistency with the rest
+       of the project rather than widening just this one screen). Icon grid ColumnCount dropped 5->4 and cell
+       size 112->98 to fit the resulting ~400px content column - same solution TFGGrid.xml already uses
+       (5->3 there) for the hair/beard/tattoo grids on the narrower FaceGen panel. The size-slider row's own
+       native width assumptions (built for the wider 573px column) are UNVERIFIED against 400px and may need a
+       follow-up shrink once seen on a real screenshot - flagged rather than guessed blind.
+       Color swatch buttons (ColorButtonWidget, Creation.ColorCard/.Selection) and the size SliderWidget
+       (SPOptions.Slider.*) are LEFT ON THEIR NATIVE BRUSHES this round - small, largely neutral elements
+       (plain color squares, a standard slider) unlikely to clash badly with the rest even unstyled; reskinning
+       them is a reasonable follow-up if they read as out of place once seen live, not attempted blind here. -->
+  <Window>
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true">
+      <Children>
+
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="746" HorizontalAlignment="Left" Sprite="fs_scrim_l" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="746" HorizontalAlignment="Right" Sprite="fs_scrim_r" AlphaFactor="0.85" DoNotAcceptEvents="true" />
+
+        <Widget Id="RightPanel" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="546" SuggestedHeight="1080" HorizontalAlignment="Right" Sprite="cc_panel_bg" WidgetToAddIcons="InnerPanel\ScrollablePanel\ClipRect\IconsGrid" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true">
+          <Children>
+
+            <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="400" HeightSizePolicy="Fixed" SuggestedHeight="44" HorizontalAlignment="Center" MarginTop="98" Brush="CC.Title" Text="@Title" />
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="310" SuggestedHeight="16" HorizontalAlignment="Center" MarginTop="152" Sprite="fs_divider_wide" DoNotAcceptEvents="true" />
+            <TextWidget WidthSizePolicy="Fixed" SuggestedWidth="400" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginTop="172" Brush="CC.NarrativeBody" Text="@Description" />
+
+            <ListPanel WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="760" HorizontalAlignment="Center" MarginTop="230" StackLayout.LayoutMethod="VerticalTopToBottom">
+              <Children>
+
+                <!--Icon Selection-->
+                <Widget Id="InnerPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="470">
+                  <Children>
+
+                    <ScrollablePanel Id="ScrollablePanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\IconsGrid" VerticalScrollbar="..\VerticalScrollbar">
+                      <Children>
+
+                        <NavigationScopeTargeter ScopeID="BannerEditorIconsScope" ScopeParent="..\ClipRect" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="4" />
+                        <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                          <Children>
+
+                            <NavigatableGridWidget DataSource="{IconsList}" Id="IconsGrid" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" ColumnCount="4" DefaultCellHeight="98" DefaultCellWidth="98" LayoutImp="GridLayout">
+                              <ItemTemplate>
+                                <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="90" SuggestedHeight="90" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="CC.Card" ButtonType="Radio" Command.Click="ExecuteSelectIcon" IsSelected="@IsSelected" ClipContents="true" DoNotUseCustomScaleAndChildren="true">
+                                  <Children>
+                                    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="2" MarginRight="2" MarginTop="2" MarginBottom="2" Sprite="@IconPath" AlphaFactor="0.8" />
+                                  </Children>
+                                </ButtonWidget>
+                              </ItemTemplate>
+                            </NavigatableGridWidget>
+
+                          </Children>
+                        </Widget>
+
+                      </Children>
+                    </ScrollablePanel>
+
+                    <ScrollbarWidget Id="VerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="460" SuggestedWidth="4" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="6" MarginBottom="15" AlignmentAxis="Vertical" Handle="VerticalScrollbarHandle" MaxValue="100" MinValue="0">
+                      <Children>
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" AlphaFactor="0.2" Color="#C9AB69FF" />
+                        <ImageWidget Id="VerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="4" SuggestedHeight="40" HorizontalAlignment="Center" Brush="CC.ScrollHandle" />
+                      </Children>
+                    </ScrollbarWidget>
+
+                  </Children>
+                </Widget>
+
+                <!--Separator-->
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="310" SuggestedHeight="16" HorizontalAlignment="Center" MarginTop="6" MarginBottom="6" Sprite="fs_divider_wide" DoNotAcceptEvents="true" />
+
+                <Widget Id="InnerPanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="260">
+                  <Children>
+                    <ScrollablePanel Id="ScrollablePanel" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" AutoHideScrollBars="true" ClipRect="ClipRect" InnerPanel="ClipRect\ColorAndSizeGrid" VerticalScrollbar="..\VerticalScrollbar">
+                      <Children>
+
+                        <Widget Id="ClipRect" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" ClipContents="true">
+                          <Children>
+
+                            <!--Color and Size Selection-->
+                            <ListPanel Id="ColorAndSizeGrid" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="VerticalTopToBottom">
+                              <Children>
+
+                                <!--Size Slider-->
+                                <NavigationScopeTargeter ScopeID="BannerEditorSizeSliderScope" ScopeParent="..\SizeSliderParent" ScopeMovements="Horizontal" UpNavigationScope="BannerEditorIconsScope" DownNavigationScope="BannerEditorPrimaryColorsScope" />
+                                <ListPanel Id="SizeSliderParent" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="8" MarginBottom="16" VerticalAlignment="Center">
+                                  <Children>
+                                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="72" IsEnabled="false" MarginRight="14" VerticalAlignment="Center" Brush="CC.NarrativeOption" Text="@SizeText" />
+
+                                    <!-- Reskinned (2026-09-30, user: "theres also a slider in the banner screen
+                                         can we make that more fitting to our UI as well") - same plain-
+                                         rectangle technique used throughout this project (hairline border +
+                                         flat fills, no new art). Filler/SliderHandle keep their EXACT original
+                                         Id/geometry/ClipContents wiring - the native SliderWidget computes the
+                                         filled portion and handle position from those, independent of what's
+                                         drawn inside them, so only the Sprite/Brush references changed. -->
+                                    <SliderWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="290" SuggestedHeight="42" VerticalAlignment="Center" DoNotUpdateHandleSize="true" Filler="Filler" Handle="SliderHandle" IsDiscrete="true" MaxValueInt="@MaxIconSize" MinValueInt="@MinIconSize" ValueInt="@CurrentIconSize" UpdateValueOnRelease="true">
+                                      <Children>
+                                        <!-- Canvas + hairline border, all as children of ONE container (same
+                                             wrapping technique as the checkbox/name-field fixes) so the border
+                                             bars sit exactly on that box's own edges instead of being
+                                             independently offset siblings.
+                                             FIX (2026-09-30, user: "weird empty space on both sides, it seems
+                                             like the slider doesnt start at the beginning") - this was 312 wide,
+                                             copied from the native canvas sprite's own size, which was
+                                             deliberately oversized to leave room for that sprite's decorative
+                                             edge bleed. The SliderWidget itself (where the handle's 0%-100%
+                                             travel range is actually measured) is only 290 wide, so a 312-wide
+                                             border centered in it overflowed 11px past BOTH ends - the handle
+                                             could never reach the border's own edges, reading as dead space at
+                                             each end. Shrunk to StretchToParent (= exactly 290, the slider's own
+                                             bounds) so the border's ends now line up with where the handle
+                                             actually starts/stops. -->
+                                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="38" VerticalAlignment="Center" IsEnabled="false">
+                                          <Children>
+                                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Sprite="BlankWhiteSquare_9" Color="#14120DFF" AlphaFactor="0.8" />
+                                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Top" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.6" />
+                                            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="2" VerticalAlignment="Bottom" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.6" />
+                                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.6" />
+                                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.6" />
+                                          </Children>
+                                        </Widget>
+                                        <Widget Id="Filler" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="296" SuggestedHeight="35" VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" AlphaFactor="0.7" ClipContents="true">
+                                          <Children>
+                                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="296" SuggestedHeight="35" HorizontalAlignment="Left" VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#C9AB69FF" />
+                                          </Children>
+                                        </Widget>
+                                        <Widget Id="SliderHandle" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="14" SuggestedHeight="38" HorizontalAlignment="Left" VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#F2E2B0FF" GamepadNavigationIndex="0" />
+                                      </Children>
+                                    </SliderWidget>
+
+                                  </Children>
+                                </ListPanel>
+
+                                <!--Primary Color Selection-->
+                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="8" MarginBottom="10" VerticalAlignment="Center" IsVisible="@CanChangeBackgroundColor">
+                                  <Children>
+                                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="90" MarginRight="10" VerticalAlignment="Center" Brush="CC.NarrativeOption" Text="@PrimaryColorText" />
+
+                                    <NavigationScopeTargeter ScopeID="BannerEditorPrimaryColorsScope" ScopeParent="..\PrimaryColorGrid" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="8" UpNavigationScope="BannerEditorSizeSliderScope" DownNavigationScope="BannerEditorSwitchColorsButtonScope" />
+                                    <NavigatableGridWidget DataSource="{PrimaryColorList}" Id="PrimaryColorGrid" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" ColumnCount="8" DefaultCellHeight="34" DefaultCellWidth="34" LayoutImp="GridLayout" VerticalAlignment="Center">
+                                      <ItemTemplate>
+                                        <ColorButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="2" MarginRight="2" MarginTop="2" MarginBottom="2" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Creation.ColorCard" ColorToApply="@ColorAsStr" ButtonType="Radio" UpdateChildrenStates="true" IsSelected="@IsSelected" Command.Click="ExecuteSelectIcon">
+                                          <Children>
+                                            <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Creation.ColorCard.Selection" />
+                                          </Children>
+                                        </ColorButtonWidget>
+                                      </ItemTemplate>
+                                    </NavigatableGridWidget>
+                                  </Children>
+                                </ListPanel>
+
+                                <!--Switch Colors Button-->
+                                <NavigationScopeTargeter ScopeID="BannerEditorSwitchColorsButtonScope" ScopeParent="..\SwitchColorsButton" ScopeMovements="Horizontal" UpNavigationScope="BannerEditorPrimaryColorsScope" DownNavigationScope="BannerEditorSecondaryColorsScope" />
+                                <ButtonWidget Id="SwitchColorsButton" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="30" SuggestedHeight="32" HorizontalAlignment="Left" MarginBottom="10" MarginLeft="8" Command.Click="ExecuteSwitchColors" Brush="Creation.SwitchColor" IsVisible="@CanChangeBackgroundColor" GamepadNavigationIndex="0" />
+
+                                <!--Sigil Color Selection-->
+                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="8" VerticalAlignment="Center">
+                                  <Children>
+                                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="90" MarginRight="10" VerticalAlignment="Center" Brush="CC.NarrativeOption" Text="@SigilColorText" />
+
+                                    <NavigationScopeTargeter ScopeID="BannerEditorSecondaryColorsScope" ScopeParent="..\SecondaryColorGrid" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="8" UpNavigationScope="BannerEditorSwitchColorsButtonScope" />
+                                    <NavigatableGridWidget DataSource="{SigilColorList}" Id="SecondaryColorGrid" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" ColumnCount="8" DefaultCellHeight="34" DefaultCellWidth="34" LayoutImp="GridLayout" VerticalAlignment="Center">
+                                      <ItemTemplate>
+                                        <ColorButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginLeft="2" MarginRight="2" MarginTop="2" MarginBottom="2" HorizontalAlignment="Center" VerticalAlignment="Center" Brush="Creation.ColorCard" ColorToApply="@ColorAsStr" ButtonType="Radio" UpdateChildrenStates="true" IsSelected="@IsSelected" Command.Click="ExecuteSelectIcon">
+                                          <Children>
+                                            <ImageWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" Brush="Creation.ColorCard.Selection" />
+                                          </Children>
+                                        </ColorButtonWidget>
+                                      </ItemTemplate>
+                                    </NavigatableGridWidget>
+                                  </Children>
+                                </ListPanel>
+
+                              </Children>
+                            </ListPanel>
+
+                          </Children>
+                        </Widget>
+
+                      </Children>
+                    </ScrollablePanel>
+
+                    <ScrollbarWidget Id="VerticalScrollbar" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedHeight="240" SuggestedWidth="4" HorizontalAlignment="Right" VerticalAlignment="Top" MarginTop="6" MarginBottom="15" AlignmentAxis="Vertical" Handle="VerticalScrollbarHandle" MaxValue="100" MinValue="0">
+                      <Children>
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="2" HorizontalAlignment="Center" Sprite="BlankWhiteSquare_9" AlphaFactor="0.2" Color="#C9AB69FF" />
+                        <ImageWidget Id="VerticalScrollbarHandle" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="4" SuggestedHeight="40" HorizontalAlignment="Center" Brush="CC.ScrollHandle" />
+                      </Children>
+                    </ScrollbarWidget>
+
+                  </Children>
+                </Widget>
+
+              </Children>
+            </ListPanel>
+
+          </Children>
+        </Widget>
+
+        <!-- TOP RIBBON: same fs_strip chrome as every other reskinned CC screen. No tab system here, so just a
+             static label rather than breadcrumb buttons - see this file's own header comment. -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="90" VerticalAlignment="Top" Sprite="fs_strip" DoNotAcceptEvents="true" />
+        <FrontEndTextWidget WidthSizePolicy="Fixed" SuggestedWidth="200" HeightSizePolicy="Fixed" SuggestedHeight="50" HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="20" Brush="CC.TabTextActive" LocalizedText="{=taom_fui_banner}BANNER" />
+
+        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="400" SuggestedHeight="300" HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="511" MarginTop="55" Sprite="cc_corner_ornament" AlphaFactor="0.8" DoNotAcceptEvents="true" DoNotUseCustomScaleAndChildren="true" />
+
+        <!--Previous and Next Buttons: same CC.Confirm pill style/positioning convention as every other
+             reskinned CC screen (TAOMFaceGen.xml/TAOMNarrativeStage.xml) rather than the native
+             Standard.BackButton/Popup.Done.Button.NineGrid pairing. -->
+        <!-- Back/Next UNIFIED across every CC screen except Faction Select (2026-09-30) - refined to MarginLeft/
+             Right=113/98, centering 320/350-wide buttons under each 546-wide panel (user: "should be more
+             centered with the panels" - see TAOMFaceGen.xml's own Back/Next comment for the full math/history).
+             Size was already 320x51/350x55 here, unchanged. -->
+        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="320" SuggestedHeight="51" HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginLeft="113" MarginBottom="44" Brush="CC.Confirm" Command.Click="ExecuteCancel" UpdateChildrenStates="true" GamepadNavigationIndex="1000000">
+          <Children>
+            <FrontEndTextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginBottom="7" Brush="CC.ConfirmText" LocalizedText="{=taom_fui_back}Back" />
+            <InputKeyVisualWidget DataSource="{CancelInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="32" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="-22" KeyID="@KeyID" IsVisible="@IsVisible" />
+          </Children>
+        </ButtonWidget>
+        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="350" SuggestedHeight="55" HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="98" MarginBottom="43" Brush="CC.Confirm" Command.Click="ExecuteDone" UpdateChildrenStates="true" GamepadNavigationIndex="1000001">
+          <Children>
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" MarginBottom="8" Brush="CC.ConfirmText" Text="@DoneText" />
+            <InputKeyVisualWidget DataSource="{DoneInputKey}" DoNotAcceptEvents="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="32" SuggestedHeight="32" HorizontalAlignment="Left" VerticalAlignment="Center" PositionXOffset="-22" KeyID="@KeyID" IsVisible="@IsVisible" />
+          </Children>
+        </ButtonWidget>
+
+        <!-- Camera Controls Navigation (preserved byte-for-byte from native - gamepad rotation focus only,
+             same "no-op for render framing" finding already documented on every other reskinned CC screen). -->
+        <NavigationScopeTargeter ScopeID="BannerEditorCharacterNavigationScope" ScopeParent="..\CharacterNavigationTarget" />
+        <Widget Id="CharacterNavigationTarget" DoNotAcceptEvents="true" DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="50" VerticalAlignment="Center" HorizontalAlignment="Center" PositionXOffset="-280" GamepadNavigationIndex="0" />
+
+        <!-- Input Key List (gamepad camera-control hints) -->
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="60" VerticalAlignment="Bottom" HorizontalAlignment="Left" DoNotAcceptEvents="true">
+          <Children>
+            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="1000" SuggestedHeight="60" MarginLeft="100" IsVisible="@CharacterGamepadControlsEnabled">
+              <Children>
+                <ListPanel DataSource="{CameraControlKeys}" WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="HorizontalCentered">
+                  <ItemTemplate>
+                    <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" StackLayout.LayoutMethod="HorizontalLeftToRight" MarginLeft="15">
+                      <Children>
+                        <InputKeyVisualWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="50" SuggestedHeight="50" VerticalAlignment="Center" KeyID="@KeyID" IsVisible="@IsVisible" />
+                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="60" SuggestedHeight="40" VerticalAlignment="Center" Text="@KeyName" Brush="CC.KeyText" />
+                      </Children>
+                    </ListPanel>
+                  </ItemTemplate>
+                </ListPanel>
+              </Children>
+            </Widget>
+          </Children>
+        </Widget>
+
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

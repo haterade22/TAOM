@@ -1,0 +1,802 @@
+<?xml version="1.0" encoding="utf-8"?>
+<base xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+      type="string">
+  <tags>
+    <tag language="German" />
+  </tags>
+  <strings>
+    <string id="taom_abanissa_house_guard_root_desc" text="Elfenbeinwacht-Klingen gewähren +5 % Nahkampfschaden und fügen Zermürbungseffekte zu." />
+    <string id="taom_abanissa_ivory_rider_root_desc" text="Stoßzahndonner von Mûmakan gewährt +10 % Reiterangriffsschaden und verbreitet Furcht." />
+    <string id="taom_abanissa_jiret_javelineer_root_desc" text="Jîret-Salve gewährt +5 % Fernkampfschaden und beschleunigt Speerwürfe." />
+    <string id="taom_ability_abanissa_house_guard" text="Elfenbeinwacht-Klingen" />
+    <string id="taom_ability_abanissa_house_guard_tt" text="Benetze deine Waffen mit Wüstengiften — gewährt +15 % Nahkampfschaden und +10 % Schadensreduktion für Verbündete im Umkreis von 50 m für 8 s." />
+    <string id="taom_ability_abanissa_ivory_rider" text="Stoßzahndonner von Mûmakan" />
+    <string id="taom_ability_abanissa_ivory_rider_tt" text="Beschwöre die uralte Furcht von Mûmakan — gewährt +25 % Angriffsschaden, +20 % Reittiergeschwindigkeit und +10 % Nahkampfschaden für 8 s." />
+    <string id="taom_ability_abanissa_jiret_javelineer" text="Jîret-Salve" />
+    <string id="taom_ability_abanissa_jiret_javelineer_tt" text="Entfessle ein loderndes Speerbombardement — gewährt +20 % Fernkampfschaden, +20 % Spanngeschwindigkeit und +15 % Bewegungsgeschwindigkeit für 8 s." />
+    <string id="taom_ability_craig_crag_stalker" text="Giftpfeil" />
+    <string id="taom_ability_craig_crag_stalker_tt" text="Benetze deine Bolzen mit Höhlenpilzgift — gewährt +20 % Fernkampfschaden, +20 % Spanngeschwindigkeit und +15 % Bewegungsgeschwindigkeit für 8 s." />
+    <string id="taom_ability_craig_pit_driver" text="Raserei der Blauen Klippe" />
+    <string id="taom_ability_craig_pit_driver_tt" text="Peitsche deine Trolle in Raserei — gewährt +15 % Nahkampfschaden und +10 % Schadensreduktion für Verbündete im Umkreis von 50 m für 8 s." />
+    <string id="taom_ability_craig_warg_master" text="Leitwolfsheulen" />
+    <string id="taom_ability_craig_warg_master_tt" text="Erzwinge Vorherrschaft mit donnerndem Rudelheulen — gewährt +25 % Angriffsschaden, +20 % Reittiergeschwindigkeit und +10 % Nahkampfschaden für 8 s." />
+    <string id="taom_ability_falathrim_blade_dancer" text="Sternenlichtgeflecht" />
+    <string id="taom_ability_falathrim_blade_dancer_tt" text="Versinke in einer anmutigen Kampftrance der Noldor — gewährt +15 % Nahkampfschaden und +10 % Schadensreduktion für Verbündete im Umkreis von 50 m für 8 s." />
+    <string id="taom_ability_falathrim_mariner" text="Letztes Bündnis" />
+    <string id="taom_ability_falathrim_mariner_tt" text="Reite mit der Tapferkeit des Letzten Bündnisses — gewährt +25 % Angriffsschaden, +20 % Reittiergeschwindigkeit und +10 % Nahkampfschaden für 8 s." />
+    <string id="taom_ability_falathrim_sentinel" text="Elbenblick" />
+    <string id="taom_ability_falathrim_sentinel_tt" text="Bündle uralte Elbenwahrnehmung — gewährt +20 % Fernkampfschaden, +20 % Spanngeschwindigkeit und +15 % Bewegungsgeschwindigkeit für 8 s." />
+    <string id="taom_ability_goblin_troll_driver" text="Raserei der Koboldstadt" />
+    <string id="taom_ability_goblin_troll_driver_tt" text="Peitsche deine Trolle in Raserei — gewährt +15 % Nahkampfschaden und +10 % Schadensreduktion für Verbündete im Umkreis von 50 m für 8 s." />
+    <string id="taom_ability_goblin_tunnel_stalker" text="Giftpfeil" />
+    <string id="taom_ability_goblin_tunnel_stalker_tt" text="Benetze deine Bolzen mit Höhlenpilzgift — gewährt +20 % Fernkampfschaden, +20 % Spanngeschwindigkeit und +15 % Bewegungsgeschwindigkeit für 8 s." />
+    <string id="taom_ability_goblin_warg_master" text="Leitwolfsheulen" />
+    <string id="taom_ability_goblin_warg_master_tt" text="Erzwinge Vorherrschaft mit donnerndem Rudelheulen — gewährt +25 % Angriffsschaden, +20 % Reittiergeschwindigkeit und +10 % Nahkampfschaden für 8 s." />
+    <string id="taom_ability_misty_deep_marksman" text="Giftpfeil" />
+    <string id="taom_ability_misty_deep_marksman_tt" text="Benetze deine Bolzen mit Höhlenpilzgift — gewährt +20 % Fernkampfschaden, +20 % Spanngeschwindigkeit und +15 % Bewegungsgeschwindigkeit für 8 s." />
+    <string id="taom_ability_misty_troll_goad" text="Moria-Raserei" />
+    <string id="taom_ability_misty_troll_goad_tt" text="Peitsche deine Trolle in Raserei — gewährt +15 % Nahkampfschaden und +10 % Schadensreduktion für Verbündete im Umkreis von 50 m für 8 s." />
+    <string id="taom_ability_misty_warg_chieftain" text="Leitwolfsheulen" />
+    <string id="taom_ability_misty_warg_chieftain_tt" text="Erzwinge Vorherrschaft mit donnerndem Rudelheulen — gewährt +25 % Angriffsschaden, +20 % Reittiergeschwindigkeit und +10 % Nahkampfschaden für 8 s." />
+    <string id="taom_ability_shaghana_beast_rider" text="Hörner von Mûmakan" />
+    <string id="taom_ability_shaghana_beast_rider_tt" text="Beschwöre die uralte Furcht von Mûmakan — gewährt +25 % Angriffsschaden, +20 % Reittiergeschwindigkeit und +10 % Nahkampfschaden für 8 s." />
+    <string id="taom_ability_shaghana_chatak_javelineer" text="Chatâk-Salve" />
+    <string id="taom_ability_shaghana_chatak_javelineer_tt" text="Entfessle ein loderndes Speerbombardement — gewährt +20 % Fernkampfschaden, +20 % Spanngeschwindigkeit und +15 % Bewegungsgeschwindigkeit für 8 s." />
+    <string id="taom_ability_shaghana_zajana_tribesman" text="Schlangengift-Klingen" />
+    <string id="taom_ability_shaghana_zajana_tribesman_tt" text="Benetze deine Waffen mit Wüstengiften — gewährt +15 % Nahkampfschaden und +10 % Schadensreduktion für Verbündete im Umkreis von 50 m für 8 s." />
+    <string id="taom_ahg_t1a_key" text="Der Radius der Elfenbeinwacht-Klingen wurde erhöht, das Gift breitet sich weiter aus." />
+    <string id="taom_ahg_t1a_p1" text="+8 % Nahkampfschaden." />
+    <string id="taom_ahg_t1a_p2" text="+3% Truppenschaden." />
+    <string id="taom_ahg_t1a_p3" text="+7% Schwunggeschwindigkeit." />
+    <string id="taom_ahg_t1a_p4" text="+5% Kampfruhmgewinn." />
+    <string id="taom_ahg_t1b_key" text="Dauer der Elfenbeinwacht-Klingen verlängert, das Gift wirkt nach." />
+    <string id="taom_ahg_t1b_p1" text="+6% Widerstand." />
+    <string id="taom_ahg_t1b_p2" text="+6 maximale Gesundheit." />
+    <string id="taom_ahg_t1b_p3" text="+5% Bewegungsgeschwindigkeit." />
+    <string id="taom_ahg_t1b_p4" text="+5% Truppenmoral." />
+    <string id="taom_ahg_t2a_key" text="Aufladung der Elfenbeinwacht-Klingen verringert, schlage häufiger zu." />
+    <string id="taom_ahg_t2a_p1" text="+5% Truppenschaden." />
+    <string id="taom_ahg_t2a_p2" text="+10% Nahkampfschaden." />
+    <string id="taom_ahg_t2a_p3" text="+10% Kampfruhmgewinn." />
+    <string id="taom_ahg_t2a_p4" text="+3 Gruppengröße." />
+    <string id="taom_ahg_t2b_key" text="Elfenbeinwacht-Klingen verstärken die Zermürbung und rauben dem Feind den Kampfwillen." />
+    <string id="taom_ahg_t2b_p1" text="+10% Schwunggeschwindigkeit." />
+    <string id="taom_ahg_t2b_p2" text="+8 maximale Gesundheit." />
+    <string id="taom_ahg_t2b_p3" text="+10% Widerstand." />
+    <string id="taom_ahg_t2b_p4" text="+10% Truppenmoral." />
+    <string id="taom_ahg_t3a_key" text="Radius der Elfenbeinwacht-Klingen stark vergrößert, eine Giftwolke." />
+    <string id="taom_ahg_t3a_p1" text="+15% Nahkampfschaden." />
+    <string id="taom_ahg_t3a_p2" text="+9 maximale Gesundheit." />
+    <string id="taom_ahg_t3a_p3" text="+7% Truppenschaden." />
+    <string id="taom_ahg_t3a_p4" text="+15% Kampfruhmgewinn." />
+    <string id="taom_ahg_t3b_key" text="Aufladung der Elfenbeinwacht-Klingen stark verringert, ständige Zermürbung." />
+    <string id="taom_ahg_t3b_p1" text="+15% Widerstand." />
+    <string id="taom_ahg_t3b_p2" text="+20% Truppenmoral." />
+    <string id="taom_ahg_t3b_p3" text="+8% Truppenschaden." />
+    <string id="taom_ahg_t3b_p4" text="+5 Gruppengröße." />
+    <string id="taom_air_t1a_key" text="Radius des Stoßzahn-Donners von Mûmakan vergrößert, die Furcht breitet sich weiter aus." />
+    <string id="taom_air_t1a_p1" text="+10% Pferde-Ansturmschaden." />
+    <string id="taom_air_t1a_p2" text="+8% Nahkampfschaden." />
+    <string id="taom_air_t1a_p3" text="+5% Truppenmoral." />
+    <string id="taom_air_t1a_p4" text="+5% Gruppenbewegungsgeschwindigkeit." />
+    <string id="taom_air_t1b_key" text="Dauer des Stoßzahn-Donners von Mûmakan verlängert, die Furcht wirkt nach." />
+    <string id="taom_air_t1b_p1" text="+10% Pferdegesundheit." />
+    <string id="taom_air_t1b_p2" text="+3% Truppenschaden." />
+    <string id="taom_air_t1b_p3" text="+5% Kampfruhmgewinn." />
+    <string id="taom_air_t1b_p4" text="+5% Widerstand." />
+    <string id="taom_air_t2a_key" text="Aufladung des Stoßzahn-Donners von Mûmakan verringert, der Schrecken droht stets." />
+    <string id="taom_air_t2a_p1" text="+13% Pferde-Ansturmschaden." />
+    <string id="taom_air_t2a_p2" text="+10 % Truppenmoral." />
+    <string id="taom_air_t2a_p3" text="+5 % Truppenschaden." />
+    <string id="taom_air_t2a_p4" text="+10 % Ruhmgewinn im Kampf." />
+    <string id="taom_air_t2b_key" text="Stoßzahn-Donner von Mûmakan stärkt die Widerstandskraft der Bestien während des Ansturms." />
+    <string id="taom_air_t2b_p1" text="+12 % Nahkampfschaden." />
+    <string id="taom_air_t2b_p2" text="+13 % Pferdegesundheit." />
+    <string id="taom_air_t2b_p3" text="+10 % Bewegungsgeschwindigkeit der Gruppe." />
+    <string id="taom_air_t2b_p4" text="+3 Gruppengröße." />
+    <string id="taom_air_t3a_key" text="Radius des Stoßzahn-Donners von Mûmakan stark vergrößert, die Erde selbst bebt." />
+    <string id="taom_air_t3a_p1" text="+15 % Ansturmschaden zu Pferd." />
+    <string id="taom_air_t3a_p2" text="+15 % Nahkampfschaden." />
+    <string id="taom_air_t3a_p3" text="+20 % Truppenmoral." />
+    <string id="taom_air_t3a_p4" text="+15 % Ruhmgewinn im Kampf." />
+    <string id="taom_air_t3b_key" text="Aufladezeit des Stoßzahn-Donners von Mûmakan stark verringert, endloser Schrecken." />
+    <string id="taom_air_t3b_p1" text="+15 % Pferdegesundheit." />
+    <string id="taom_air_t3b_p2" text="+15 % Bewegungsgeschwindigkeit der Gruppe." />
+    <string id="taom_air_t3b_p3" text="+7 % Truppenschaden." />
+    <string id="taom_air_t3b_p4" text="+9 maximale Gesundheit." />
+    <string id="taom_ajj_t1a_key" text="Radius der Jîret-Salve vergrößert, die Speere decken ein weiteres Feld ab." />
+    <string id="taom_ajj_t1a_p1" text="+8 % Fernkampfschaden." />
+    <string id="taom_ajj_t1a_p2" text="+10 % Munition." />
+    <string id="taom_ajj_t1a_p3" text="+7 % Bewegungsgeschwindigkeit." />
+    <string id="taom_ajj_t1a_p4" text="+5 % Ruhmgewinn im Kampf." />
+    <string id="taom_ajj_t1b_key" text="Dauer der Jîret-Salve verlängert, anhaltendes Störfeuer." />
+    <string id="taom_ajj_t1b_p1" text="+5 % Widerstand." />
+    <string id="taom_ajj_t1b_p2" text="+5 maximale Gesundheit." />
+    <string id="taom_ajj_t1b_p3" text="+3 % Truppenschaden." />
+    <string id="taom_ajj_t1b_p4" text="+5 % Sichtweite der Gruppe." />
+    <string id="taom_ajj_t2a_key" text="Aufladezeit der Jîret-Salve verringert, nie ohne Wurfspeere." />
+    <string id="taom_ajj_t2a_p1" text="+13 % Munition." />
+    <string id="taom_ajj_t2a_p2" text="+10 % Fernkampfschaden." />
+    <string id="taom_ajj_t2a_p3" text="+10 % Bewegungsgeschwindigkeit." />
+    <string id="taom_ajj_t2a_p4" text="+10 % Ruhmgewinn im Kampf." />
+    <string id="taom_ajj_t2b_key" text="Die Jîret-Salve verbessert die Abschirmwirkung, solange sie aktiv ist." />
+    <string id="taom_ajj_t2b_p1" text="+12 % Fernkampfschaden." />
+    <string id="taom_ajj_t2b_p2" text="+8 maximale Gesundheit." />
+    <string id="taom_ajj_t2b_p3" text="+5 % Truppenschaden." />
+    <string id="taom_ajj_t2b_p4" text="+10 % Sichtweite der Gruppe." />
+    <string id="taom_ajj_t3a_key" text="Radius der Jîret-Salve stark vergrößert, ein unentrinnbares Sperrfeuer." />
+    <string id="taom_ajj_t3a_p1" text="+15 % Fernkampfschaden." />
+    <string id="taom_ajj_t3a_p2" text="+15 % Munition." />
+    <string id="taom_ajj_t3a_p3" text="+15 % Ruhmgewinn im Kampf." />
+    <string id="taom_ajj_t3a_p4" text="+15 % Bewegungsgeschwindigkeit." />
+    <string id="taom_ajj_t3b_key" text="Ladezeit der Jîret-Salve stark verringert, unerbittliches Zermürben." />
+    <string id="taom_ajj_t3b_p1" text="+15 % Fernkampfschaden." />
+    <string id="taom_ajj_t3b_p2" text="+9 maximale Gesundheit." />
+    <string id="taom_ajj_t3b_p3" text="+7 % Truppenschaden." />
+    <string id="taom_ajj_t3b_p4" text="+15 % Sichtweite der Gruppe." />
+    <string id="taom_career_abanissa_house_guard" text="Hauswache von Damudûr" />
+    <string id="taom_career_abanissa_house_guard_desc" text="Ein Krieger der Wüstenstämme von Damudûr, dessen zermürbende Kriegsführung die Feinde mit unerbittlichem Druck und vergifteten Klingen aufreibt." />
+    <string id="taom_career_abanissa_ivory_rider" text="Bestienreiter der Elfenbeinstraße" />
+    <string id="taom_career_abanissa_ivory_rider_desc" text="Ein furchteinflößender Reiter aus Fern-Harad, der gewaltige Bestien in den Feind treibt und Linien mit Wucht und urtümlichem Schrecken bricht." />
+    <string id="taom_career_abanissa_jiret_javelineer" text="Jîret-Speerwerfer" />
+    <string id="taom_career_abanissa_jiret_javelineer_desc" text="Ein schneller Plänkler aus Jîret, der die Reiterei mit einem Hagel von Wurfspeeren abschirmt und sich dann außer Reichweite der Vergeltung zurückzieht." />
+    <string id="taom_career_craig_crag_stalker" text="Felsenpirscher vom Blauen Kliff" />
+    <string id="taom_career_craig_crag_stalker_desc" text="Ein boshafter Goblin-Schütze, der in den Bergklippen lauert und seine Ziele mit vergifteten Pfeilen und groben Bögen niederstreckt." />
+    <string id="taom_career_craig_pit_driver" text="Grubentreiber vom Blauen Kliff" />
+    <string id="taom_career_craig_pit_driver_desc" text="Ein brutaler Orkhäuptling des Blauen Kliffs, der Höhlentrolle in die Schlacht führt und sie mit Peitsche und List vorantreibt." />
+    <string id="taom_career_craig_warg_master" text="Wargmeister vom Blauen Kliff" />
+    <string id="taom_career_craig_warg_master_desc" text="Ein gefürchteter Ork-Anführer, der den größten Warg des Rudels reitet und wilde Jagden durch das Ered Luin anführt." />
+    <string id="taom_career_falathrim_blade_dancer" text="Klingentänzer der Falathrim" />
+    <string id="taom_career_falathrim_blade_dancer_desc" text="Ein anmutiger Elbenkrieger, der sich wie fließendes Wasser durch die Schlacht windet und mit uralten, im Ersten Zeitalter geschmiedeten Klingen zuschlägt." />
+    <string id="taom_career_falathrim_mariner" text="Seefahrer der Falathrim" />
+    <string id="taom_career_falathrim_mariner_desc" text="Ein berittener Krieger aus Círdans Haushalt, der auf schnellen Elbenrossen in den Krieg reitet – ein Leuchtfeuer der Hoffnung wider den Schatten." />
+    <string id="taom_career_falathrim_sentinel" text="Wächter der Falathrim" />
+    <string id="taom_career_falathrim_sentinel_desc" text="Ein unvergleichlicher Schütze aus Mithlond, dessen Pfeile über weite Entfernungen treffsicher fliegen, geleitet von Jahrhunderten der Übung." />
+    <string id="taom_career_goblin_troll_driver" text="Trolltreiber von Goblinstadt" />
+    <string id="taom_career_goblin_troll_driver_desc" text="Ein brutaler Orkhäuptling aus Goblinstadt, der Höhlentrolle in die Schlacht führt und sie mit Peitsche und List vorantreibt." />
+    <string id="taom_career_goblin_tunnel_stalker" text="Tunnelpirscher von Goblinstadt" />
+    <string id="taom_career_goblin_tunnel_stalker_desc" text="Ein boshafter Goblin-Schütze, der in den Bergklippen lauert und seine Ziele mit vergifteten Pfeilen und groben Bögen niederstreckt." />
+    <string id="taom_career_goblin_warg_master" text="Wargmeister von Goblinstadt" />
+    <string id="taom_career_goblin_warg_master_desc" text="Ein gefürchteter Ork-Anführer, der den größten Warg des Rudels reitet und wilde Jagden durch das Nebelgebirge anführt." />
+    <string id="taom_career_grp_abanissa_house_guard_t1_a" text="Dünenräuber" />
+    <string id="taom_career_grp_abanissa_house_guard_t1_b" text="Wüstenüberlebender" />
+    <string id="taom_career_grp_abanissa_house_guard_t2_a" text="Schlangenzahn-Streiter" />
+    <string id="taom_career_grp_abanissa_house_guard_t2_b" text="Träger der Sande" />
+    <string id="taom_career_grp_abanissa_house_guard_t3_a" text="Gift von Haradwaith" />
+    <string id="taom_career_grp_abanissa_house_guard_t3_b" text="Geißel der Südländer" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t1_a" text="Stoßzahn-Vorhut" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t1_b" text="Bestienwart" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t2_a" text="Zermalmender Ansturm" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t2_b" text="Howdah-Wächter" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t3_a" text="Zorn von Mûmakan" />
+    <string id="taom_career_grp_abanissa_ivory_rider_t3_b" text="Herr der Olifanten" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t1_a" text="Sonnenspeer-Plänkler" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t1_b" text="Streifender Vorreiter" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t2_a" text="Sonnenfeuer-Schleuderer" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t2_b" text="Scharlachroter Schild" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t3_a" text="Regen von Fern-Harad" />
+    <string id="taom_career_grp_abanissa_jiret_javelineer_t3_b" text="Schatten der Dünen" />
+    <string id="taom_career_grp_craig_crag_stalker_t1_a" text="Felsenschleicher" />
+    <string id="taom_career_grp_craig_crag_stalker_t1_b" text="Stollenlauerer" />
+    <string id="taom_career_grp_craig_crag_stalker_t2_a" text="Hochpass-Hinterhalt" />
+    <string id="taom_career_grp_craig_crag_stalker_t2_b" text="Giftbefiederer" />
+    <string id="taom_career_grp_craig_crag_stalker_t3_a" text="Räuber der Vorhalle" />
+    <string id="taom_career_grp_craig_crag_stalker_t3_b" text="Schatten des Hohen Passes" />
+    <string id="taom_career_grp_craig_pit_driver_t1_a" text="Grubenpeitscher" />
+    <string id="taom_career_grp_craig_pit_driver_t1_b" text="Wächter des Höhlenschlunds" />
+    <string id="taom_career_grp_craig_pit_driver_t2_a" text="Tyrann des Blauen Felsens" />
+    <string id="taom_career_grp_craig_pit_driver_t2_b" text="Tiefenbrecher" />
+    <string id="taom_career_grp_craig_pit_driver_t3_a" text="Geißel des Blauen Felsens" />
+    <string id="taom_career_grp_craig_pit_driver_t3_b" text="Schrecken der Nördlichen Hallen" />
+    <string id="taom_career_grp_craig_warg_master_t1_a" text="Wargreiter" />
+    <string id="taom_career_grp_craig_warg_master_t1_b" text="Rudelhüter" />
+    <string id="taom_career_grp_craig_warg_master_t2_a" text="Vorreiter des Grauen Rudels" />
+    <string id="taom_career_grp_craig_warg_master_t2_b" text="Meister der Grimmwölfe" />
+    <string id="taom_career_grp_craig_warg_master_t3_a" text="Leitwolf des Blauen Felsens" />
+    <string id="taom_career_grp_craig_warg_master_t3_b" text="Bolgs Wolfshauptmann" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t1_a" text="Sternenlicht-Stahl" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t1_b" text="Wache von Mithlond" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t2_a" text="Tanz von Gondolin" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t2_b" text="Hüter des Verborgenen Tals" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t3_a" text="Schwert des Ersten Zeitalters" />
+    <string id="taom_career_grp_falathrim_blade_dancer_t3_b" text="Licht Eärendils" />
+    <string id="taom_career_grp_falathrim_mariner_t1_a" text="Ansturm von Mithlond" />
+    <string id="taom_career_grp_falathrim_mariner_t1_b" text="Reiter der Furt" />
+    <string id="taom_career_grp_falathrim_mariner_t2_a" text="Galopp Asfaloths" />
+    <string id="taom_career_grp_falathrim_mariner_t2_b" text="Schutzschild der Valar" />
+    <string id="taom_career_grp_falathrim_mariner_t3_a" text="Zorn Glorfindels" />
+    <string id="taom_career_grp_falathrim_mariner_t3_b" text="Heer des Letzten Bündnisses" />
+    <string id="taom_career_grp_falathrim_sentinel_t1_a" text="Scharfäugiger Wächter" />
+    <string id="taom_career_grp_falathrim_sentinel_t1_b" text="Wacht von Lindon" />
+    <string id="taom_career_grp_falathrim_sentinel_t2_a" text="Unaufhörlicher Pfeilhagel" />
+    <string id="taom_career_grp_falathrim_sentinel_t2_b" text="Bogen von Eregion" />
+    <string id="taom_career_grp_falathrim_sentinel_t3_a" text="Sturm Gil-galads" />
+    <string id="taom_career_grp_falathrim_sentinel_t3_b" text="Wache von Vilya" />
+    <string id="taom_career_grp_goblin_troll_driver_t1_a" text="Grubenpeitschen-Treiber" />
+    <string id="taom_career_grp_goblin_troll_driver_t1_b" text="Wärter des Höhlenschlunds" />
+    <string id="taom_career_grp_goblin_troll_driver_t2_a" text="Tyrann von Goblinstadt" />
+    <string id="taom_career_grp_goblin_troll_driver_t2_b" text="Tiefenfesten-Brecher" />
+    <string id="taom_career_grp_goblin_troll_driver_t3_a" text="Geißel von Goblinstadt" />
+    <string id="taom_career_grp_goblin_troll_driver_t3_b" text="Schrecken der Nördlichen Hallen" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t1_a" text="Felsenpirscher" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t1_b" text="Tunnelschleicher" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t2_a" text="Hinterhalt des Hohen Passes" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t2_b" text="Giftpfeilmacher" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t3_a" text="Räuber der Vordertür" />
+    <string id="taom_career_grp_goblin_tunnel_stalker_t3_b" text="Schatten des Hohen Passes" />
+    <string id="taom_career_grp_goblin_warg_master_t1_a" text="Wargreiter" />
+    <string id="taom_career_grp_goblin_warg_master_t1_b" text="Rudelhüter" />
+    <string id="taom_career_grp_goblin_warg_master_t2_a" text="Vorreiter des Grauen Rudels" />
+    <string id="taom_career_grp_goblin_warg_master_t2_b" text="Grimmwolf-Meister" />
+    <string id="taom_career_grp_goblin_warg_master_t3_a" text="Leitwolf von Goblinstadt" />
+    <string id="taom_career_grp_goblin_warg_master_t3_b" text="Bolgs Wolfshauptmann" />
+    <string id="taom_career_grp_misty_deep_marksman_t1_a" text="Felsenpirscher" />
+    <string id="taom_career_grp_misty_deep_marksman_t1_b" text="Tunnelschleicher" />
+    <string id="taom_career_grp_misty_deep_marksman_t2_a" text="Hinterhalt des Hohen Passes" />
+    <string id="taom_career_grp_misty_deep_marksman_t2_b" text="Giftpfeilmacher" />
+    <string id="taom_career_grp_misty_deep_marksman_t3_a" text="Räuber der Vordertür" />
+    <string id="taom_career_grp_misty_deep_marksman_t3_b" text="Schatten des Hohen Passes" />
+    <string id="taom_career_grp_misty_troll_goad_t1_a" text="Grubenpeitschen-Treiber" />
+    <string id="taom_career_grp_misty_troll_goad_t1_b" text="Wärter des Höhlenschlunds" />
+    <string id="taom_career_grp_misty_troll_goad_t2_a" text="Tyrann von Goblinstadt" />
+    <string id="taom_career_grp_misty_troll_goad_t2_b" text="Tiefenfesten-Brecher" />
+    <string id="taom_career_grp_misty_troll_goad_t3_a" text="Geißel von Moria" />
+    <string id="taom_career_grp_misty_troll_goad_t3_b" text="Schrecken der Nördlichen Hallen" />
+    <string id="taom_career_grp_misty_warg_chieftain_t1_a" text="Wargreiter" />
+    <string id="taom_career_grp_misty_warg_chieftain_t1_b" text="Rudelhüter" />
+    <string id="taom_career_grp_misty_warg_chieftain_t2_a" text="Vorreiter des Grauen Rudels" />
+    <string id="taom_career_grp_misty_warg_chieftain_t2_b" text="Grimmwolf-Meister" />
+    <string id="taom_career_grp_misty_warg_chieftain_t3_a" text="Leitwolf von Moria" />
+    <string id="taom_career_grp_misty_warg_chieftain_t3_b" text="Bolgs Wolfshauptmann" />
+    <string id="taom_career_grp_shaghana_beast_rider_t1_a" text="Stoßzahn-Vorhut" />
+    <string id="taom_career_grp_shaghana_beast_rider_t1_b" text="Bestienwärter" />
+    <string id="taom_career_grp_shaghana_beast_rider_t2_a" text="Zermalmender Ansturm" />
+    <string id="taom_career_grp_shaghana_beast_rider_t2_b" text="Howdah-Wächter" />
+    <string id="taom_career_grp_shaghana_beast_rider_t3_a" text="Zorn von Mûmakan" />
+    <string id="taom_career_grp_shaghana_beast_rider_t3_b" text="Herr der Olifanten" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t1_a" text="Sonnenspeer-Plänkler" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t1_b" text="Streifender Vorreiter" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t2_a" text="Sonnenfeuer-Schleuderer" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t2_b" text="Scharlachroter Schirm" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t3_a" text="Regen von Fern-Harad" />
+    <string id="taom_career_grp_shaghana_chatak_javelineer_t3_b" text="Schatten der Dünen" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t1_a" text="Dünenräuber" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t1_b" text="Wüstenüberlebender" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t2_a" text="Schlangenzahn-Stecher" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t2_b" text="Träger der Sande" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t3_a" text="Gift von Haradwaith" />
+    <string id="taom_career_grp_shaghana_zajana_tribesman_t3_b" text="Geißel der Südländer" />
+    <string id="taom_career_misty_deep_marksman" text="Tiefenschütze von Moria" />
+    <string id="taom_career_misty_deep_marksman_desc" text="Ein boshafter Goblin-Schütze, der in den Felsklüften der Berge lauert und seine Ziele mit vergifteten Pfeilen und groben Bögen niederstreckt." />
+    <string id="taom_career_misty_troll_goad" text="Trolltreiber von Moria" />
+    <string id="taom_career_misty_troll_goad_desc" text="Ein brutaler Ork-Häuptling Morias, der Höhlentrolle in die Schlacht führt und sie mit Peitsche und List vorantreibt." />
+    <string id="taom_career_misty_warg_chieftain" text="Warg-Häuptling des Nebelgebirges" />
+    <string id="taom_career_misty_warg_chieftain_desc" text="Ein gefürchteter Ork-Anführer, der den größten Warg des Rudels reitet und wilde Jagden durch das Nebelgebirge anführt." />
+    <string id="taom_career_rank1_abanissa_house_guard" text="Hauswache von Damudûr" />
+    <string id="taom_career_rank1_abanissa_ivory_rider" text="Bestienbändiger der Elfenbeinstraße" />
+    <string id="taom_career_rank1_abanissa_jiret_javelineer" text="Jîret-Speerwerfer" />
+    <string id="taom_career_rank1_craig_crag_stalker" text="Klippenlauerer" />
+    <string id="taom_career_rank1_craig_pit_driver" text="Grubentreiber" />
+    <string id="taom_career_rank1_craig_warg_master" text="Wargreiter des Rudels" />
+    <string id="taom_career_rank1_falathrim_blade_dancer" text="Falathrim-Klingenkämpfer" />
+    <string id="taom_career_rank1_falathrim_mariner" text="Ohtar von Mithlond" />
+    <string id="taom_career_rank1_falathrim_sentinel" text="Falathrim-Bogenschütze" />
+    <string id="taom_career_rank1_goblin_troll_driver" text="Grubentreiber" />
+    <string id="taom_career_rank1_goblin_tunnel_stalker" text="Klippenlauerer" />
+    <string id="taom_career_rank1_goblin_warg_master" text="Wargreiter des Rudels" />
+    <string id="taom_career_rank1_misty_deep_marksman" text="Klippenlauerer" />
+    <string id="taom_career_rank1_misty_troll_goad" text="Grubentreiber" />
+    <string id="taom_career_rank1_misty_warg_chieftain" text="Wargreiter des Rudels" />
+    <string id="taom_career_rank1_shaghana_beast_rider" text="Sormedân-Tierbändiger" />
+    <string id="taom_career_rank1_shaghana_chatak_javelineer" text="Chatâk-Speerwerfer" />
+    <string id="taom_career_rank1_shaghana_zajana_tribesman" text="Zajâna-Stammeskrieger" />
+    <string id="taom_career_rank2_abanissa_house_guard" text="Karawanen-Vorreiter" />
+    <string id="taom_career_rank2_abanissa_ivory_rider" text="Mûmak-Treiber" />
+    <string id="taom_career_rank2_abanissa_jiret_javelineer" text="Wurfspeer-Plänkler" />
+    <string id="taom_career_rank2_craig_crag_stalker" text="Pirscher der Ered Luin" />
+    <string id="taom_career_rank2_craig_pit_driver" text="Trollstachel von Blue Craig" />
+    <string id="taom_career_rank2_craig_warg_master" text="Grimmiger Wolfshauptmann" />
+    <string id="taom_career_rank2_falathrim_blade_dancer" text="Klinge der Goldenen Blume" />
+    <string id="taom_career_rank2_falathrim_mariner" text="Roquen von Mithlond" />
+    <string id="taom_career_rank2_falathrim_sentinel" text="Wächter des Himmelsbogens" />
+    <string id="taom_career_rank2_goblin_troll_driver" text="Trollstachel von Koboldstadt" />
+    <string id="taom_career_rank2_goblin_tunnel_stalker" text="Pirscher des Hohen Passes" />
+    <string id="taom_career_rank2_goblin_warg_master" text="Grimmiger Wolfshauptmann" />
+    <string id="taom_career_rank2_misty_deep_marksman" text="Pirscher des Hohen Passes" />
+    <string id="taom_career_rank2_misty_troll_goad" text="Trollstachel von Moria" />
+    <string id="taom_career_rank2_misty_warg_chieftain" text="Grimmiger Wolfshauptmann" />
+    <string id="taom_career_rank2_shaghana_beast_rider" text="Mûmak-Treiber" />
+    <string id="taom_career_rank2_shaghana_chatak_javelineer" text="Wurfspeer-Plänkler" />
+    <string id="taom_career_rank2_shaghana_zajana_tribesman" text="Sandsturm-Plünderer" />
+    <string id="taom_career_rank3_abanissa_house_guard" text="Häuptling des Elfenbeinthrons" />
+    <string id="taom_career_rank3_abanissa_ivory_rider" text="Mûmak-Kriegsführer" />
+    <string id="taom_career_rank3_abanissa_jiret_javelineer" text="Vergoldeter Speermeister" />
+    <string id="taom_career_rank3_craig_crag_stalker" text="Auge von Blue Craig" />
+    <string id="taom_career_rank3_craig_pit_driver" text="Brecher der Trolle" />
+    <string id="taom_career_rank3_craig_warg_master" text="Wolfsherr der Wilden Jagd" />
+    <string id="taom_career_rank3_falathrim_blade_dancer" text="Klingenmeister von Mithlond" />
+    <string id="taom_career_rank3_falathrim_mariner" text="Ritter der Goldenen Blume" />
+    <string id="taom_career_rank3_falathrim_sentinel" text="Hüter von Mithlond" />
+    <string id="taom_career_rank3_goblin_troll_driver" text="Brecher der Trolle" />
+    <string id="taom_career_rank3_goblin_tunnel_stalker" text="Auge von Koboldstadt" />
+    <string id="taom_career_rank3_goblin_warg_master" text="Wolfsherr der Wilden Jagd" />
+    <string id="taom_career_rank3_misty_deep_marksman" text="Auge von Moria" />
+    <string id="taom_career_rank3_misty_troll_goad" text="Brecher der Trolle" />
+    <string id="taom_career_rank3_misty_warg_chieftain" text="Wolfsherr der Wilden Jagd" />
+    <string id="taom_career_rank3_shaghana_beast_rider" text="Mûmak-Kriegsführer" />
+    <string id="taom_career_rank3_shaghana_chatak_javelineer" text="Scharlachroter Speermeister" />
+    <string id="taom_career_rank3_shaghana_zajana_tribesman" text="Häuptling des Schlangenbanners" />
+    <string id="taom_career_shaghana_beast_rider" text="Sormedân-Bestienreiter" />
+    <string id="taom_career_shaghana_beast_rider_desc" text="Ein furchteinflößender Reiter aus Fern-Harad, der gewaltige Bestien in die Feinde treibt und ihre Reihen mit Wucht und urtümlichem Schrecken bricht." />
+    <string id="taom_career_shaghana_chatak_javelineer" text="Chatâk-Speerwerfer" />
+    <string id="taom_career_shaghana_chatak_javelineer_desc" text="Ein schnell beweglicher Plänkler aus Chatâk, der die Reiterei mit einem Hagel von Wurfspeeren abschirmt und sich dann außer Reichweite der Vergeltung zurückzieht." />
+    <string id="taom_career_shaghana_zajana_tribesman" text="Stammeskrieger von Zajâna" />
+    <string id="taom_career_shaghana_zajana_tribesman_desc" text="Ein Krieger der Wüstenstämme von Zajâna, dessen Zermürbungstaktik die Feinde mit unerbittlichem Druck und vergifteten Klingen aufreibt." />
+    <string id="taom_ccs_t1_a_key" text="Radius des Giftpfeils erhöht, deckt größere Tötungszonen ab." />
+    <string id="taom_ccs_t1_a_p1" text="+8 % Fernkampfschaden." />
+    <string id="taom_ccs_t1_a_p2" text="+5 % Rüstungsdurchdringung." />
+    <string id="taom_ccs_t1_a_p3" text="+7 % Bewegungsgeschwindigkeit." />
+    <string id="taom_ccs_t1_a_p4" text="+5 % Ruhmgewinn im Kampf." />
+    <string id="taom_ccs_t1_b_key" text="Dauer des Giftpfeils verlängert, anhaltendes Sperrfeuer." />
+    <string id="taom_ccs_t1_b_p1" text="+5 % Widerstand." />
+    <string id="taom_ccs_t1_b_p2" text="+5 maximale Gesundheit." />
+    <string id="taom_ccs_t1_b_p3" text="+5 % Sichtweite der Gruppe." />
+    <string id="taom_ccs_t1_b_p4" text="+10 % Schleichbonus." />
+    <string id="taom_ccs_t2_a_key" text="Aufladezeit des Giftpfeils verringert, hält konstanten Druck aufrecht." />
+    <string id="taom_ccs_t2_a_p1" text="+10 % Sichtweite der Gruppe." />
+    <string id="taom_ccs_t2_a_p2" text="+10 % Bewegungsgeschwindigkeit." />
+    <string id="taom_ccs_t2_a_p3" text="+13 % Schleichbonus." />
+    <string id="taom_ccs_t2_a_p4" text="+10 % Ruhmgewinn im Kampf." />
+    <string id="taom_ccs_t2_b_key" text="Giftpfeil erhält zusätzliche Durchdringung, solange er aktiv ist." />
+    <string id="taom_ccs_t2_b_p1" text="+12 % Fernkampfschaden." />
+    <string id="taom_ccs_t2_b_p2" text="+10 % Rüstungsdurchdringung." />
+    <string id="taom_ccs_t2_b_p3" text="+8 maximale Gesundheit." />
+    <string id="taom_ccs_t2_b_p4" text="+3 % Truppenschaden." />
+    <string id="taom_ccs_t3_a_key" text="Radius des Giftpfeils stark vergrößert, unausweichliche Salven." />
+    <string id="taom_ccs_t3_a_p1" text="+18 % Fernkampfschaden." />
+    <string id="taom_ccs_t3_a_p2" text="+15 % Rüstungsdurchdringung." />
+    <string id="taom_ccs_t3_a_p3" text="+15 % Ruhmgewinn im Kampf." />
+    <string id="taom_ccs_t3_a_p4" text="+5 % Truppenschaden." />
+    <string id="taom_ccs_t3_b_key" text="Aufladezeit des Giftpfeils stark verringert, unerbittliches Feuer." />
+    <string id="taom_ccs_t3_b_p1" text="+15 % Schleichbonus." />
+    <string id="taom_ccs_t3_b_p2" text="+15 % Bewegungsgeschwindigkeit." />
+    <string id="taom_ccs_t3_b_p3" text="+9 maximale Gesundheit." />
+    <string id="taom_ccs_t3_b_p4" text="+15 % Sichtweite der Gruppe." />
+    <string id="taom_cpd_t1_a_key" text="Radius der Blaufelsen-Raserei erhöht, stärkt mehr Krieger." />
+    <string id="taom_cpd_t1_a_p1" text="+8 % Nahkampfschaden." />
+    <string id="taom_cpd_t1_a_p2" text="+3 % Truppenschaden." />
+    <string id="taom_cpd_t1_a_p3" text="+6 maximale Gesundheit." />
+    <string id="taom_cpd_t1_a_p4" text="+7% Schwunggeschwindigkeit." />
+    <string id="taom_cpd_t1_b_key" text="Dauer von Blue-Craig-Raserei verlängert, stärkt die Verteidigung." />
+    <string id="taom_cpd_t1_b_p1" text="+8% Widerstand." />
+    <string id="taom_cpd_t1_b_p2" text="+5% Truppenmoral." />
+    <string id="taom_cpd_t1_b_p3" text="+10% Truppenwiderstand." />
+    <string id="taom_cpd_t1_b_p4" text="+5% Truppenüberleben." />
+    <string id="taom_cpd_t2_a_key" text="Aufladung der Blue-Craig-Raserei verringert, häufigere Aktivierung." />
+    <string id="taom_cpd_t2_a_p1" text="+10% Truppenmoral." />
+    <string id="taom_cpd_t2_a_p2" text="+2 Gruppengröße." />
+    <string id="taom_cpd_t2_a_p3" text="+10% Ruhmgewinn im Kampf." />
+    <string id="taom_cpd_t2_a_p4" text="-10% Truppensold." />
+    <string id="taom_cpd_t2_b_key" text="Blue-Craig-Raserei gewährt zusätzliche Verteidigungsboni, solange sie aktiv ist." />
+    <string id="taom_cpd_t2_b_p1" text="+12% Widerstand." />
+    <string id="taom_cpd_t2_b_p2" text="+8 maximale Gesundheit." />
+    <string id="taom_cpd_t2_b_p3" text="+13% Truppenwiderstand." />
+    <string id="taom_cpd_t2_b_p4" text="+5% Truppenschaden." />
+    <string id="taom_cpd_t3_a_key" text="Radius der Blue-Craig-Raserei stark erweitert, verheerende Kraft." />
+    <string id="taom_cpd_t3_a_p1" text="+15% Nahkampfschaden." />
+    <string id="taom_cpd_t3_a_p2" text="+10 maximale Gesundheit." />
+    <string id="taom_cpd_t3_a_p3" text="+7% Truppenschaden." />
+    <string id="taom_cpd_t3_a_p4" text="+4 Gruppengröße." />
+    <string id="taom_cpd_t3_b_key" text="Aufladung der Blue-Craig-Raserei stark verringert, fast immer verfügbar." />
+    <string id="taom_cpd_t3_b_p1" text="+18% Widerstand." />
+    <string id="taom_cpd_t3_b_p2" text="+15% Heldenregeneration." />
+    <string id="taom_cpd_t3_b_p3" text="+20% Truppenmoral." />
+    <string id="taom_cpd_t3_b_p4" text="+15% Truppenüberleben." />
+    <string id="taom_craig_crag_stalker_root_desc" text="Giftpfeil gewährt +5% Fernkampfschaden durch Höhlenpilzgift." />
+    <string id="taom_craig_pit_driver_root_desc" text="Blue-Craig-Raserei gewährt +5 Gesundheit und treibt deine Trolle in den Berserkerwahn." />
+    <string id="taom_craig_warg_master_root_desc" text="Alphaheulen gewährt +5% Nahkampfschaden und das Rudel geht auf die Jagd." />
+    <string id="taom_cwm_t1_a_key" text="Radius des Alphaheulens erweitert, erfasst breitere Formationen." />
+    <string id="taom_cwm_t1_a_p1" text="+8% Nahkampfschaden." />
+    <string id="taom_cwm_t1_a_p2" text="+10% Reitangriffsschaden." />
+    <string id="taom_cwm_t1_a_p3" text="+7% Schwunggeschwindigkeit." />
+    <string id="taom_cwm_t1_a_p4" text="+5% Gruppenbewegungsgeschwindigkeit." />
+    <string id="taom_cwm_t1_b_key" text="Dauer des Alphaheulens verlängert, erhält den Schwung." />
+    <string id="taom_cwm_t1_b_p1" text="+10% Pferdegesundheit." />
+    <string id="taom_cwm_t1_b_p2" text="+5 maximale Gesundheit." />
+    <string id="taom_cwm_t1_b_p3" text="-5% Truppensold." />
+    <string id="taom_cwm_t1_b_p4" text="+5% Widerstand." />
+    <string id="taom_cwm_t2_a_key" text="Aufladung des Alphaheulens verringert, schnellere Aktivierung." />
+    <string id="taom_cwm_t2_a_p1" text="+10% Bewegungsgeschwindigkeit der Gruppe." />
+    <string id="taom_cwm_t2_a_p2" text="-10% Truppensold." />
+    <string id="taom_cwm_t2_a_p3" text="+10% Truppenmoral." />
+    <string id="taom_cwm_t2_a_p4" text="+10% Ruhmgewinn im Kampf." />
+    <string id="taom_cwm_t2_b_key" text="Das Alphaheulen stärkt die Widerstandskraft der Reittiere, solange es aktiv ist." />
+    <string id="taom_cwm_t2_b_p1" text="+12% Nahkampfschaden." />
+    <string id="taom_cwm_t2_b_p2" text="+13% Pferde-Ansturmschaden." />
+    <string id="taom_cwm_t2_b_p3" text="+13% Pferdegesundheit." />
+    <string id="taom_cwm_t2_b_p4" text="+10% Schlaggeschwindigkeit." />
+    <string id="taom_cwm_t3_a_key" text="Radius des Alphaheulens stark erweitert, unaufhaltsame Wucht." />
+    <string id="taom_cwm_t3_a_p1" text="+18% Nahkampfschaden." />
+    <string id="taom_cwm_t3_a_p2" text="+15% Pferde-Ansturmschaden." />
+    <string id="taom_cwm_t3_a_p3" text="+15% Schlaggeschwindigkeit." />
+    <string id="taom_cwm_t3_a_p4" text="+7% Truppenschaden." />
+    <string id="taom_cwm_t3_b_key" text="Aufladung des Alphaheulens stark verringert, reite ohne Unterlass." />
+    <string id="taom_cwm_t3_b_p1" text="+15% Pferdegesundheit." />
+    <string id="taom_cwm_t3_b_p2" text="-15% Truppensold." />
+    <string id="taom_cwm_t3_b_p3" text="+15% Bewegungsgeschwindigkeit der Gruppe." />
+    <string id="taom_cwm_t3_b_p4" text="+9 maximale Gesundheit." />
+    <string id="taom_falathrim_blade_dancer_root_desc" text="Sternenlichtgewebe gewährt +5% Widerstand und elbische Gewandtheit." />
+    <string id="taom_falathrim_mariner_root_desc" text="Der Letzte Bund gewährt +5% Nahkampfschaden und beflügelt deine Verbündeten." />
+    <string id="taom_falathrim_sentinel_root_desc" text="Elbensicht gewährt +5% Fernkampfschaden durch jahrhundertelange Übung." />
+    <string id="taom_fbd_t1_a_key" text="Radius des Sternenlichtgewebes erhöht, stärkt mehr Krieger." />
+    <string id="taom_fbd_t1_a_p1" text="+8% Nahkampfschaden." />
+    <string id="taom_fbd_t1_a_p2" text="+3% Truppenschaden." />
+    <string id="taom_fbd_t1_a_p3" text="+6 maximale Gesundheit." />
+    <string id="taom_fbd_t1_a_p4" text="+7% Schlaggeschwindigkeit." />
+    <string id="taom_fbd_t1_b_key" text="Dauer des Sternenlichtgewebes verlängert, stärkt die Verteidigung." />
+    <string id="taom_fbd_t1_b_p1" text="+8% Widerstand." />
+    <string id="taom_fbd_t1_b_p2" text="+5% Truppenmoral." />
+    <string id="taom_fbd_t1_b_p3" text="+10% Truppenwiderstand." />
+    <string id="taom_fbd_t1_b_p4" text="+5% Überlebensrate der Truppen." />
+    <string id="taom_fbd_t2_a_key" text="Aufladung des Sternenlichtgewebes verringert, aktiviert sich häufiger." />
+    <string id="taom_fbd_t2_a_p1" text="+10% Truppenmoral." />
+    <string id="taom_fbd_t2_a_p2" text="+2 Gruppengröße." />
+    <string id="taom_fbd_t2_a_p3" text="+10% Ruhmgewinn im Kampf." />
+    <string id="taom_fbd_t2_a_p4" text="-10% Truppensold." />
+    <string id="taom_fbd_t2_b_key" text="Sternenlichtgewebe gewährt zusätzliche Verteidigungsboni, solange es aktiv ist." />
+    <string id="taom_fbd_t2_b_p1" text="+12% Widerstand." />
+    <string id="taom_fbd_t2_b_p2" text="+8 maximale Gesundheit." />
+    <string id="taom_fbd_t2_b_p3" text="+13 % Truppenwiderstand." />
+    <string id="taom_fbd_t2_b_p4" text="+5 % Truppenschaden." />
+    <string id="taom_fbd_t3_a_key" text="Sternenlichtgeflecht-Radius stark erweitert, verheerende Macht." />
+    <string id="taom_fbd_t3_a_p1" text="+15 % Nahkampfschaden." />
+    <string id="taom_fbd_t3_a_p2" text="+10 maximale Gesundheit." />
+    <string id="taom_fbd_t3_a_p3" text="+7 % Truppenschaden." />
+    <string id="taom_fbd_t3_a_p4" text="+4 Gruppengröße." />
+    <string id="taom_fbd_t3_b_key" text="Aufladung des Sternenlichtgeflechts stark verringert, nahezu immer verfügbar." />
+    <string id="taom_fbd_t3_b_p1" text="+18 % Widerstand." />
+    <string id="taom_fbd_t3_b_p2" text="+15 % Gesundheitsregeneration des Helden." />
+    <string id="taom_fbd_t3_b_p3" text="+20 % Truppenmoral." />
+    <string id="taom_fbd_t3_b_p4" text="+15 % Truppenüberlebensfähigkeit." />
+    <string id="taom_fmr_t1_a_key" text="Radius des Letzten Bündnisses erweitert, erfasst breitere Formationen." />
+    <string id="taom_fmr_t1_a_p1" text="+8 % Nahkampfschaden." />
+    <string id="taom_fmr_t1_a_p2" text="+10 % Pferde-Ansturmschaden." />
+    <string id="taom_fmr_t1_a_p3" text="+7 % Schwunggeschwindigkeit." />
+    <string id="taom_fmr_t1_a_p4" text="+5 % Reisegeschwindigkeit der Gruppe." />
+    <string id="taom_fmr_t1_b_key" text="Dauer des Letzten Bündnisses verlängert, der Schwung bleibt erhalten." />
+    <string id="taom_fmr_t1_b_p1" text="+10 % Pferdegesundheit." />
+    <string id="taom_fmr_t1_b_p2" text="+5 maximale Gesundheit." />
+    <string id="taom_fmr_t1_b_p3" text="-5 % Truppensold." />
+    <string id="taom_fmr_t1_b_p4" text="+5 % Widerstand." />
+    <string id="taom_fmr_t2_a_key" text="Aufladung des Letzten Bündnisses verringert, schnellere Aktivierung." />
+    <string id="taom_fmr_t2_a_p1" text="+10 % Reisegeschwindigkeit der Gruppe." />
+    <string id="taom_fmr_t2_a_p2" text="-10 % Truppensold." />
+    <string id="taom_fmr_t2_a_p3" text="+10 % Truppenmoral." />
+    <string id="taom_fmr_t2_a_p4" text="+10 % Ruhmgewinn im Kampf." />
+    <string id="taom_fmr_t2_b_key" text="Das Letzte Bündnis stärkt die Widerstandskraft der Reittiere, solange es aktiv ist." />
+    <string id="taom_fmr_t2_b_p1" text="+12 % Nahkampfschaden." />
+    <string id="taom_fmr_t2_b_p2" text="+13 % Pferde-Ansturmschaden." />
+    <string id="taom_fmr_t2_b_p3" text="+13 % Pferdegesundheit." />
+    <string id="taom_fmr_t2_b_p4" text="+10 % Schwunggeschwindigkeit." />
+    <string id="taom_fmr_t3_a_key" text="Radius des Letzten Bündnisses stark erweitert, unaufhaltsame Wucht." />
+    <string id="taom_fmr_t3_a_p1" text="+18 % Nahkampfschaden." />
+    <string id="taom_fmr_t3_a_p2" text="+15 % Pferde-Ansturmschaden." />
+    <string id="taom_fmr_t3_a_p3" text="+15 % Schwunggeschwindigkeit." />
+    <string id="taom_fmr_t3_a_p4" text="+7 % Truppenschaden." />
+    <string id="taom_fmr_t3_b_key" text="Aufladung des Letzten Bündnisses stark verringert, reite ohne Unterlass." />
+    <string id="taom_fmr_t3_b_p1" text="+15 % Pferdegesundheit." />
+    <string id="taom_fmr_t3_b_p2" text="-15 % Truppensold." />
+    <string id="taom_fmr_t3_b_p3" text="+15 % Bewegungsgeschwindigkeit der Gruppe." />
+    <string id="taom_fmr_t3_b_p4" text="+9 maximale Gesundheit." />
+    <string id="taom_fsn_t1_a_key" text="Radius des Elbenblicks erhöht, deckt größere Todeszonen ab." />
+    <string id="taom_fsn_t1_a_p1" text="+8 % Fernkampfschaden." />
+    <string id="taom_fsn_t1_a_p2" text="+5 % Rüstungsdurchdringung." />
+    <string id="taom_fsn_t1_a_p3" text="+7 % Bewegungsgeschwindigkeit." />
+    <string id="taom_fsn_t1_a_p4" text="+5 % Ruhmgewinn im Kampf." />
+    <string id="taom_fsn_t1_b_key" text="Dauer des Elbenblicks verlängert, anhaltender Beschuss." />
+    <string id="taom_fsn_t1_b_p1" text="+5 % Widerstand." />
+    <string id="taom_fsn_t1_b_p2" text="+5 maximale Gesundheit." />
+    <string id="taom_fsn_t1_b_p3" text="+5 % Sichtweite der Gruppe." />
+    <string id="taom_fsn_t1_b_p4" text="+10 % Schleichbonus." />
+    <string id="taom_fsn_t2_a_key" text="Aufladung des Elbenblicks verringert, hält konstanten Druck aufrecht." />
+    <string id="taom_fsn_t2_a_p1" text="+10 % Sichtweite der Gruppe." />
+    <string id="taom_fsn_t2_a_p2" text="+10 % Bewegungsgeschwindigkeit." />
+    <string id="taom_fsn_t2_a_p3" text="+13 % Schleichbonus." />
+    <string id="taom_fsn_t2_a_p4" text="+10 % Ruhmgewinn im Kampf." />
+    <string id="taom_fsn_t2_b_key" text="Elbenblick erhält zusätzliche Durchdringung, solange er aktiv ist." />
+    <string id="taom_fsn_t2_b_p1" text="+12 % Fernkampfschaden." />
+    <string id="taom_fsn_t2_b_p2" text="+10 % Rüstungsdurchdringung." />
+    <string id="taom_fsn_t2_b_p3" text="+8 maximale Gesundheit." />
+    <string id="taom_fsn_t2_b_p4" text="+3 % Truppenschaden." />
+    <string id="taom_fsn_t3_a_key" text="Radius des Elbenblicks stark erweitert, unausweichliche Salven." />
+    <string id="taom_fsn_t3_a_p1" text="+18 % Fernkampfschaden." />
+    <string id="taom_fsn_t3_a_p2" text="+15 % Rüstungsdurchdringung." />
+    <string id="taom_fsn_t3_a_p3" text="+15 % Ruhmgewinn im Kampf." />
+    <string id="taom_fsn_t3_a_p4" text="+5 % Truppenschaden." />
+    <string id="taom_fsn_t3_b_key" text="Aufladung des Elbenblicks stark verringert, unerbittliches Feuer." />
+    <string id="taom_fsn_t3_b_p1" text="+15 % Schleichbonus." />
+    <string id="taom_fsn_t3_b_p2" text="+15 % Bewegungsgeschwindigkeit." />
+    <string id="taom_fsn_t3_b_p3" text="+9 maximale Gesundheit." />
+    <string id="taom_fsn_t3_b_p4" text="+15 % Sichtweite der Gruppe." />
+    <string id="taom_goblin_troll_driver_root_desc" text="Raserei von Goblinstadt gewährt +5 Gesundheit und treibt deine Trolle in den Blutrausch." />
+    <string id="taom_goblin_tunnel_stalker_root_desc" text="Giftpfeil gewährt +5 % Fernkampfschaden durch Höhlenpilzgift." />
+    <string id="taom_goblin_warg_master_root_desc" text="Alphaheulen gewährt +5 % Nahkampfschaden und das Rudel geht auf die Jagd." />
+    <string id="taom_gtd_t1_a_key" text="Radius der Raserei von Goblinstadt erhöht, stärkt mehr Krieger." />
+    <string id="taom_gtd_t1_a_p1" text="+8 % Nahkampfschaden." />
+    <string id="taom_gtd_t1_a_p2" text="+3 % Truppenschaden." />
+    <string id="taom_gtd_t1_a_p3" text="+6 maximale Gesundheit." />
+    <string id="taom_gtd_t1_a_p4" text="+7 % Schwunggeschwindigkeit." />
+    <string id="taom_gtd_t1_b_key" text="Dauer des Goblinstadt-Rauschs verlängert, was die Verteidigung stärkt." />
+    <string id="taom_gtd_t1_b_p1" text="+8 % Widerstandskraft." />
+    <string id="taom_gtd_t1_b_p2" text="+5 % Truppenmoral." />
+    <string id="taom_gtd_t1_b_p3" text="+10 % Truppenwiderstand." />
+    <string id="taom_gtd_t1_b_p4" text="+5 % Überlebenschance der Truppen." />
+    <string id="taom_gtd_t2_a_key" text="Aufladung des Goblinstadt-Rauschs verringert, wodurch er häufiger ausgelöst wird." />
+    <string id="taom_gtd_t2_a_p1" text="+10 % Truppenmoral." />
+    <string id="taom_gtd_t2_a_p2" text="+2 Truppengröße." />
+    <string id="taom_gtd_t2_a_p3" text="+10 % Ruhmgewinn im Kampf." />
+    <string id="taom_gtd_t2_a_p4" text="-10 % Truppensold." />
+    <string id="taom_gtd_t2_b_key" text="Der Goblinstadt-Rausch gewährt zusätzliche Verteidigungsboni, solange er aktiv ist." />
+    <string id="taom_gtd_t2_b_p1" text="+12 % Widerstandskraft." />
+    <string id="taom_gtd_t2_b_p2" text="+8 maximale Gesundheit." />
+    <string id="taom_gtd_t2_b_p3" text="+13 % Truppenwiderstand." />
+    <string id="taom_gtd_t2_b_p4" text="+5 % Truppenschaden." />
+    <string id="taom_gtd_t3_a_key" text="Radius des Goblinstadt-Rauschs stark erweitert, verheerende Wirkung." />
+    <string id="taom_gtd_t3_a_p1" text="+15 % Nahkampfschaden." />
+    <string id="taom_gtd_t3_a_p2" text="+10 maximale Gesundheit." />
+    <string id="taom_gtd_t3_a_p3" text="+7 % Truppenschaden." />
+    <string id="taom_gtd_t3_a_p4" text="+4 Truppengröße." />
+    <string id="taom_gtd_t3_b_key" text="Aufladung des Goblinstadt-Rauschs stark verringert, nahezu immer verfügbar." />
+    <string id="taom_gtd_t3_b_p1" text="+18 % Widerstandskraft." />
+    <string id="taom_gtd_t3_b_p2" text="+15 % Gesundheitsregeneration des Helden." />
+    <string id="taom_gtd_t3_b_p3" text="+20 % Truppenmoral." />
+    <string id="taom_gtd_t3_b_p4" text="+15 % Überlebenschance der Truppen." />
+    <string id="taom_gts_t1_a_key" text="Radius des Giftpfeils erhöht, deckt größere Todeszonen ab." />
+    <string id="taom_gts_t1_a_p1" text="+8 % Fernkampfschaden." />
+    <string id="taom_gts_t1_a_p2" text="+5 % Rüstungsdurchdringung." />
+    <string id="taom_gts_t1_a_p3" text="+7 % Bewegungsgeschwindigkeit." />
+    <string id="taom_gts_t1_a_p4" text="+5 % Ruhmgewinn im Kampf." />
+    <string id="taom_gts_t1_b_key" text="Dauer des Giftpfeils verlängert, anhaltender Beschuss." />
+    <string id="taom_gts_t1_b_p1" text="+5 % Widerstandskraft." />
+    <string id="taom_gts_t1_b_p2" text="+5 maximale Gesundheit." />
+    <string id="taom_gts_t1_b_p3" text="+5 % Sichtweite der Gruppe." />
+    <string id="taom_gts_t1_b_p4" text="+10 % Schleichbonus." />
+    <string id="taom_gts_t2_a_key" text="Aufladung des Giftpfeils verringert, hält konstanten Druck aufrecht." />
+    <string id="taom_gts_t2_a_p1" text="+10 % Sichtweite der Gruppe." />
+    <string id="taom_gts_t2_a_p2" text="+10 % Bewegungsgeschwindigkeit." />
+    <string id="taom_gts_t2_a_p3" text="+13 % Schleichbonus." />
+    <string id="taom_gts_t2_a_p4" text="+10 % Ruhmgewinn im Kampf." />
+    <string id="taom_gts_t2_b_key" text="Giftpfeil erhält zusätzliche Durchschlagskraft, während er aktiv ist." />
+    <string id="taom_gts_t2_b_p1" text="+12 % Fernkampfschaden." />
+    <string id="taom_gts_t2_b_p2" text="+10 % Rüstungsdurchdringung." />
+    <string id="taom_gts_t2_b_p3" text="+8 maximale Gesundheit." />
+    <string id="taom_gts_t2_b_p4" text="+3 % Truppenschaden." />
+    <string id="taom_gts_t3_a_key" text="Giftpfeil-Radius stark erweitert, unausweichliche Salven." />
+    <string id="taom_gts_t3_a_p1" text="+18 % Fernkampfschaden." />
+    <string id="taom_gts_t3_a_p2" text="+15 % Rüstungsdurchdringung." />
+    <string id="taom_gts_t3_a_p3" text="+15 % Ruhmgewinn im Kampf." />
+    <string id="taom_gts_t3_a_p4" text="+5 % Truppenschaden." />
+    <string id="taom_gts_t3_b_key" text="Giftpfeil-Aufladung stark verringert, unablässiges Feuer." />
+    <string id="taom_gts_t3_b_p1" text="+15 % Schleichbonus." />
+    <string id="taom_gts_t3_b_p2" text="+15 % Bewegungsgeschwindigkeit." />
+    <string id="taom_gts_t3_b_p3" text="+9 maximale Gesundheit." />
+    <string id="taom_gts_t3_b_p4" text="+15 % Sichtweite der Gruppe." />
+    <string id="taom_gwm_t1_a_key" text="Alpha-Heulen-Radius erweitert, erfasst breitere Formationen." />
+    <string id="taom_gwm_t1_a_p1" text="+8 % Nahkampfschaden." />
+    <string id="taom_gwm_t1_a_p2" text="+10 % Pferde-Ansturmschaden." />
+    <string id="taom_gwm_t1_a_p3" text="+7 % Schwunggeschwindigkeit." />
+    <string id="taom_gwm_t1_a_p4" text="+5 % Bewegungsgeschwindigkeit der Gruppe." />
+    <string id="taom_gwm_t1_b_key" text="Alpha-Heulen-Dauer verlängert, erhält den Schwung aufrecht." />
+    <string id="taom_gwm_t1_b_p1" text="+10 % Pferdegesundheit." />
+    <string id="taom_gwm_t1_b_p2" text="+5 maximale Gesundheit." />
+    <string id="taom_gwm_t1_b_p3" text="-5 % Truppensold." />
+    <string id="taom_gwm_t1_b_p4" text="+5 % Widerstand." />
+    <string id="taom_gwm_t2_a_key" text="Alpha-Heulen-Aufladung verringert, schnellere Aktivierung." />
+    <string id="taom_gwm_t2_a_p1" text="+10 % Bewegungsgeschwindigkeit der Gruppe." />
+    <string id="taom_gwm_t2_a_p2" text="-10 % Truppensold." />
+    <string id="taom_gwm_t2_a_p3" text="+10 % Truppenmoral." />
+    <string id="taom_gwm_t2_a_p4" text="+10 % Ruhmgewinn im Kampf." />
+    <string id="taom_gwm_t2_b_key" text="Alpha-Heulen erhöht die Widerstandskraft des Reittiers, während es aktiv ist." />
+    <string id="taom_gwm_t2_b_p1" text="+12 % Nahkampfschaden." />
+    <string id="taom_gwm_t2_b_p2" text="+13 % Pferde-Ansturmschaden." />
+    <string id="taom_gwm_t2_b_p3" text="+13 % Pferdegesundheit." />
+    <string id="taom_gwm_t2_b_p4" text="+10 % Schwunggeschwindigkeit." />
+    <string id="taom_gwm_t3_a_key" text="Alpha-Heulen-Radius stark erweitert, unaufhaltsame Wucht." />
+    <string id="taom_gwm_t3_a_p1" text="+18 % Nahkampfschaden." />
+    <string id="taom_gwm_t3_a_p2" text="+15 % Pferde-Ansturmschaden." />
+    <string id="taom_gwm_t3_a_p3" text="+15 % Schwunggeschwindigkeit." />
+    <string id="taom_gwm_t3_a_p4" text="+7 % Truppenschaden." />
+    <string id="taom_gwm_t3_b_key" text="Aufladezeit des Alpha-Heulens stark verringert, reitet ohne Unterlass." />
+    <string id="taom_gwm_t3_b_p1" text="+15 % Pferdegesundheit." />
+    <string id="taom_gwm_t3_b_p2" text="-15 % Truppensold." />
+    <string id="taom_gwm_t3_b_p3" text="+15 % Bewegungsgeschwindigkeit der Gruppe." />
+    <string id="taom_gwm_t3_b_p4" text="+9 maximale Gesundheit." />
+    <string id="taom_mdm_t1_a_key" text="Radius des Giftpfeils erhöht, deckt größere Todeszonen ab." />
+    <string id="taom_mdm_t1_a_p1" text="+8 % Fernkampfschaden." />
+    <string id="taom_mdm_t1_a_p2" text="+5 % Rüstungsdurchdringung." />
+    <string id="taom_mdm_t1_a_p3" text="+7 % Bewegungsgeschwindigkeit." />
+    <string id="taom_mdm_t1_a_p4" text="+5 % Ruhmgewinn im Kampf." />
+    <string id="taom_mdm_t1_b_key" text="Dauer des Giftpfeils verlängert, anhaltendes Sperrfeuer." />
+    <string id="taom_mdm_t1_b_p1" text="+5 % Widerstand." />
+    <string id="taom_mdm_t1_b_p2" text="+5 maximale Gesundheit." />
+    <string id="taom_mdm_t1_b_p3" text="+5 % Sichtweite der Gruppe." />
+    <string id="taom_mdm_t1_b_p4" text="+10 % Schleichbonus." />
+    <string id="taom_mdm_t2_a_key" text="Aufladezeit des Giftpfeils verringert, hält den Druck aufrecht." />
+    <string id="taom_mdm_t2_a_p1" text="+10 % Sichtweite der Gruppe." />
+    <string id="taom_mdm_t2_a_p2" text="+10 % Bewegungsgeschwindigkeit." />
+    <string id="taom_mdm_t2_a_p3" text="+13 % Schleichbonus." />
+    <string id="taom_mdm_t2_a_p4" text="+10 % Ruhmgewinn im Kampf." />
+    <string id="taom_mdm_t2_b_key" text="Giftpfeil erhält zusätzliche Durchdringung, solange er aktiv ist." />
+    <string id="taom_mdm_t2_b_p1" text="+12 % Fernkampfschaden." />
+    <string id="taom_mdm_t2_b_p2" text="+10 % Rüstungsdurchdringung." />
+    <string id="taom_mdm_t2_b_p3" text="+8 maximale Gesundheit." />
+    <string id="taom_mdm_t2_b_p4" text="+3 % Truppenschaden." />
+    <string id="taom_mdm_t3_a_key" text="Radius des Giftpfeils stark erweitert, unausweichliche Salven." />
+    <string id="taom_mdm_t3_a_p1" text="+18 % Fernkampfschaden." />
+    <string id="taom_mdm_t3_a_p2" text="+15 % Rüstungsdurchdringung." />
+    <string id="taom_mdm_t3_a_p3" text="+15 % Ruhmgewinn im Kampf." />
+    <string id="taom_mdm_t3_a_p4" text="+5 % Truppenschaden." />
+    <string id="taom_mdm_t3_b_key" text="Aufladezeit des Giftpfeils stark verringert, unerbittliches Feuer." />
+    <string id="taom_mdm_t3_b_p1" text="+15 % Schleichbonus." />
+    <string id="taom_mdm_t3_b_p2" text="+15 % Bewegungsgeschwindigkeit." />
+    <string id="taom_mdm_t3_b_p3" text="+9 maximale Gesundheit." />
+    <string id="taom_mdm_t3_b_p4" text="+15 % Sichtweite der Gruppe." />
+    <string id="taom_misty_deep_marksman_root_desc" text="Giftpfeil gewährt +5 % Fernkampfschaden durch Höhlenpilzgift." />
+    <string id="taom_misty_troll_goad_root_desc" text="Moria-Raserei gewährt +5 Gesundheit und treibt deine Trolle in den Blutrausch." />
+    <string id="taom_misty_warg_chieftain_root_desc" text="Alpha-Heulen gewährt +5 % Nahkampfschaden, und das Rudel geht auf die Jagd." />
+    <string id="taom_mtg_t1_a_key" text="Radius der Moria-Raserei erhöht, stärkt mehr Krieger." />
+    <string id="taom_mtg_t1_a_p1" text="+8 % Nahkampfschaden." />
+    <string id="taom_mtg_t1_a_p2" text="+3 % Truppenschaden." />
+    <string id="taom_mtg_t1_a_p3" text="+6 maximale Gesundheit." />
+    <string id="taom_mtg_t1_a_p4" text="+7 % Schwunggeschwindigkeit." />
+    <string id="taom_mtg_t1_b_key" text="Dauer der Moria-Raserei verlängert, was die Verteidigung stärkt." />
+    <string id="taom_mtg_t1_b_p1" text="+8 % Widerstandskraft." />
+    <string id="taom_mtg_t1_b_p2" text="+5 % Truppenmoral." />
+    <string id="taom_mtg_t1_b_p3" text="+10 % Truppenwiderstandskraft." />
+    <string id="taom_mtg_t1_b_p4" text="+5 % Überlebensrate der Truppen." />
+    <string id="taom_mtg_t2_a_key" text="Aufladung der Moria-Raserei verringert, häufigere Aktivierung." />
+    <string id="taom_mtg_t2_a_p1" text="+10 % Truppenmoral." />
+    <string id="taom_mtg_t2_a_p2" text="+2 Gruppengröße." />
+    <string id="taom_mtg_t2_a_p3" text="+10 % Ruhmgewinn im Kampf." />
+    <string id="taom_mtg_t2_a_p4" text="-10 % Truppensold." />
+    <string id="taom_mtg_t2_b_key" text="Die Moria-Raserei gewährt zusätzliche Verteidigungsboni, solange sie aktiv ist." />
+    <string id="taom_mtg_t2_b_p1" text="+12 % Widerstandskraft." />
+    <string id="taom_mtg_t2_b_p2" text="+8 maximale Gesundheit." />
+    <string id="taom_mtg_t2_b_p3" text="+13 % Truppenwiderstandskraft." />
+    <string id="taom_mtg_t2_b_p4" text="+5 % Truppenschaden." />
+    <string id="taom_mtg_t3_a_key" text="Radius der Moria-Raserei stark vergrößert, verheerende Wirkung." />
+    <string id="taom_mtg_t3_a_p1" text="+15 % Nahkampfschaden." />
+    <string id="taom_mtg_t3_a_p2" text="+10 maximale Gesundheit." />
+    <string id="taom_mtg_t3_a_p3" text="+7 % Truppenschaden." />
+    <string id="taom_mtg_t3_a_p4" text="+4 Gruppengröße." />
+    <string id="taom_mtg_t3_b_key" text="Aufladung der Moria-Raserei stark verringert, fast immer verfügbar." />
+    <string id="taom_mtg_t3_b_p1" text="+18 % Widerstandskraft." />
+    <string id="taom_mtg_t3_b_p2" text="+15 % Gesundheitsregeneration des Helden." />
+    <string id="taom_mtg_t3_b_p3" text="+20 % Truppenmoral." />
+    <string id="taom_mtg_t3_b_p4" text="+15 % Überlebensrate der Truppen." />
+    <string id="taom_mwc_t1_a_key" text="Radius des Leitwolfheulens vergrößert, erfasst breitere Formationen." />
+    <string id="taom_mwc_t1_a_p1" text="+8 % Nahkampfschaden." />
+    <string id="taom_mwc_t1_a_p2" text="+10 % Schaden durch Pferdeansturm." />
+    <string id="taom_mwc_t1_a_p3" text="+7 % Schwunggeschwindigkeit." />
+    <string id="taom_mwc_t1_a_p4" text="+5 % Bewegungsgeschwindigkeit der Gruppe." />
+    <string id="taom_mwc_t1_b_key" text="Dauer des Leitwolfheulens verlängert, erhält den Schwung aufrecht." />
+    <string id="taom_mwc_t1_b_p1" text="+10 % Pferdegesundheit." />
+    <string id="taom_mwc_t1_b_p2" text="+5 maximale Gesundheit." />
+    <string id="taom_mwc_t1_b_p3" text="-5 % Truppensold." />
+    <string id="taom_mwc_t1_b_p4" text="+5 % Widerstandskraft." />
+    <string id="taom_mwc_t2_a_key" text="Aufladung des Leitwolfheulens verringert, schnellere Aktivierung." />
+    <string id="taom_mwc_t2_a_p1" text="+10 % Bewegungsgeschwindigkeit der Gruppe." />
+    <string id="taom_mwc_t2_a_p2" text="-10% Truppensold." />
+    <string id="taom_mwc_t2_a_p3" text="+10% Truppenmoral." />
+    <string id="taom_mwc_t2_a_p4" text="+10% Ruhmgewinn im Kampf." />
+    <string id="taom_mwc_t2_b_key" text="Alpha-Heulen stärkt die Widerstandskraft des Reittiers, solange es aktiv ist." />
+    <string id="taom_mwc_t2_b_p1" text="+12% Nahkampfschaden." />
+    <string id="taom_mwc_t2_b_p2" text="+13% Pferde-Ansturmschaden." />
+    <string id="taom_mwc_t2_b_p3" text="+13% Pferdegesundheit." />
+    <string id="taom_mwc_t2_b_p4" text="+10% Schwunggeschwindigkeit." />
+    <string id="taom_mwc_t3_a_key" text="Radius des Alpha-Heulens stark erweitert, unaufhaltsame Wucht." />
+    <string id="taom_mwc_t3_a_p1" text="+18% Nahkampfschaden." />
+    <string id="taom_mwc_t3_a_p2" text="+15% Pferde-Ansturmschaden." />
+    <string id="taom_mwc_t3_a_p3" text="+15% Schwunggeschwindigkeit." />
+    <string id="taom_mwc_t3_a_p4" text="+7% Truppenschaden." />
+    <string id="taom_mwc_t3_b_key" text="Aufladung des Alpha-Heulens stark verringert, reite ohne Unterlass." />
+    <string id="taom_mwc_t3_b_p1" text="+15% Pferdegesundheit." />
+    <string id="taom_mwc_t3_b_p2" text="-15% Truppensold." />
+    <string id="taom_mwc_t3_b_p3" text="+15% Reisegeschwindigkeit der Gruppe." />
+    <string id="taom_mwc_t3_b_p4" text="+9 maximale Gesundheit." />
+    <string id="taom_sbr_t1a_key" text="Radius der Hörner von Mûmakan erweitert, die Furcht breitet sich weiter aus." />
+    <string id="taom_sbr_t1a_p1" text="+10% Pferde-Ansturmschaden." />
+    <string id="taom_sbr_t1a_p2" text="+8% Nahkampfschaden." />
+    <string id="taom_sbr_t1a_p3" text="+5% Truppenmoral." />
+    <string id="taom_sbr_t1a_p4" text="+5% Reisegeschwindigkeit der Gruppe." />
+    <string id="taom_sbr_t1b_key" text="Dauer der Hörner von Mûmakan verlängert, die Furcht hält an." />
+    <string id="taom_sbr_t1b_p1" text="+10% Pferdegesundheit." />
+    <string id="taom_sbr_t1b_p2" text="+3% Truppenschaden." />
+    <string id="taom_sbr_t1b_p3" text="+5% Ruhmgewinn im Kampf." />
+    <string id="taom_sbr_t1b_p4" text="+5% Widerstand." />
+    <string id="taom_sbr_t2a_key" text="Aufladung der Hörner von Mûmakan verringert, der Schrecken droht stets." />
+    <string id="taom_sbr_t2a_p1" text="+13% Pferde-Ansturmschaden." />
+    <string id="taom_sbr_t2a_p2" text="+10% Truppenmoral." />
+    <string id="taom_sbr_t2a_p3" text="+5% Truppenschaden." />
+    <string id="taom_sbr_t2a_p4" text="+10% Ruhmgewinn im Kampf." />
+    <string id="taom_sbr_t2b_key" text="Die Hörner von Mûmakan stärken die Widerstandskraft der Bestien während des Ansturms." />
+    <string id="taom_sbr_t2b_p1" text="+12% Nahkampfschaden." />
+    <string id="taom_sbr_t2b_p2" text="+13% Pferdegesundheit." />
+    <string id="taom_sbr_t2b_p3" text="+10% Reisegeschwindigkeit der Gruppe." />
+    <string id="taom_sbr_t2b_p4" text="+3 Gruppengröße." />
+    <string id="taom_sbr_t3a_key" text="Radius der Hörner von Mûmakan stark erweitert, die Erde selbst erbebt." />
+    <string id="taom_sbr_t3a_p1" text="+15% Pferde-Ansturmschaden." />
+    <string id="taom_sbr_t3a_p2" text="+15 % Nahkampfschaden." />
+    <string id="taom_sbr_t3a_p3" text="+20 % Truppenmoral." />
+    <string id="taom_sbr_t3a_p4" text="+15 % Ruhmgewinn im Kampf." />
+    <string id="taom_sbr_t3b_key" text="Aufladezeit der Hörner von Mûmakan stark verringert, endloser Schrecken." />
+    <string id="taom_sbr_t3b_p1" text="+15 % Pferdegesundheit." />
+    <string id="taom_sbr_t3b_p2" text="+15 % Bewegungsgeschwindigkeit der Gruppe." />
+    <string id="taom_sbr_t3b_p3" text="+7 % Truppenschaden." />
+    <string id="taom_sbr_t3b_p4" text="+9 maximale Gesundheit." />
+    <string id="taom_scj_t1a_key" text="Radius der Chatâk-Salve erhöht, Speere decken ein größeres Gebiet ab." />
+    <string id="taom_scj_t1a_p1" text="+8 % Fernkampfschaden." />
+    <string id="taom_scj_t1a_p2" text="+10 % Munition." />
+    <string id="taom_scj_t1a_p3" text="+7 % Bewegungsgeschwindigkeit." />
+    <string id="taom_scj_t1a_p4" text="+5 % Ruhmgewinn im Kampf." />
+    <string id="taom_scj_t1b_key" text="Dauer der Chatâk-Salve verlängert, anhaltendes Störfeuer." />
+    <string id="taom_scj_t1b_p1" text="+5 % Widerstand." />
+    <string id="taom_scj_t1b_p2" text="+5 maximale Gesundheit." />
+    <string id="taom_scj_t1b_p3" text="+3 % Truppenschaden." />
+    <string id="taom_scj_t1b_p4" text="+5 % Sichtweite der Gruppe." />
+    <string id="taom_scj_t2a_key" text="Aufladezeit der Chatâk-Salve verringert, nie ohne Wurfspeere." />
+    <string id="taom_scj_t2a_p1" text="+13 % Munition." />
+    <string id="taom_scj_t2a_p2" text="+10 % Fernkampfschaden." />
+    <string id="taom_scj_t2a_p3" text="+10 % Bewegungsgeschwindigkeit." />
+    <string id="taom_scj_t2a_p4" text="+10 % Ruhmgewinn im Kampf." />
+    <string id="taom_scj_t2b_key" text="Die Chatâk-Salve steigert die Wirksamkeit der Abschirmung, solange sie aktiv ist." />
+    <string id="taom_scj_t2b_p1" text="+12 % Fernkampfschaden." />
+    <string id="taom_scj_t2b_p2" text="+8 maximale Gesundheit." />
+    <string id="taom_scj_t2b_p3" text="+5 % Truppenschaden." />
+    <string id="taom_scj_t2b_p4" text="+10 % Sichtweite der Gruppe." />
+    <string id="taom_scj_t3a_key" text="Radius der Chatâk-Salve stark erweitert, ein unausweichliches Sperrfeuer." />
+    <string id="taom_scj_t3a_p1" text="+15 % Fernkampfschaden." />
+    <string id="taom_scj_t3a_p2" text="+15 % Munition." />
+    <string id="taom_scj_t3a_p3" text="+15 % Ruhmgewinn im Kampf." />
+    <string id="taom_scj_t3a_p4" text="+15 % Bewegungsgeschwindigkeit." />
+    <string id="taom_scj_t3b_key" text="Aufladezeit der Chatâk-Salve stark verringert, unerbittliches Störfeuer." />
+    <string id="taom_scj_t3b_p1" text="+15 % Fernkampfschaden." />
+    <string id="taom_scj_t3b_p2" text="+9 maximale Gesundheit." />
+    <string id="taom_scj_t3b_p3" text="+7 % Truppenschaden." />
+    <string id="taom_scj_t3b_p4" text="+15 % Sichtweite der Gruppe." />
+    <string id="taom_shaghana_beast_rider_root_desc" text="Die Hörner von Mûmakan gewähren +10 % Ansturmschaden zu Pferd und verbreiten Furcht." />
+    <string id="taom_shaghana_chatak_javelineer_root_desc" text="Die Chatâk-Salve gewährt +5 % Fernkampfschaden und beschleunigt die Speerwürfe." />
+    <string id="taom_shaghana_zajana_tribesman_root_desc" text="Schlangengift-Klingen gewähren +5 % Nahkampfschaden und verursachen Zermürbungseffekte." />
+    <string id="taom_szt_t1a_key" text="Radius der Schlangengift-Klingen erhöht, das Gift breitet sich weiter aus." />
+    <string id="taom_szt_t1a_p1" text="+8 % Nahkampfschaden." />
+    <string id="taom_szt_t1a_p2" text="+3 % Truppenschaden." />
+    <string id="taom_szt_t1a_p3" text="+7 % Schwunggeschwindigkeit." />
+    <string id="taom_szt_t1a_p4" text="+5 % Ruhmgewinn im Kampf." />
+    <string id="taom_szt_t1b_key" text="Dauer der Schlangengift-Klingen verlängert, das Gift wirkt länger nach." />
+    <string id="taom_szt_t1b_p1" text="+6 % Widerstand." />
+    <string id="taom_szt_t1b_p2" text="+6 maximale Gesundheit." />
+    <string id="taom_szt_t1b_p3" text="+5 % Bewegungsgeschwindigkeit." />
+    <string id="taom_szt_t1b_p4" text="+5 % Truppenmoral." />
+    <string id="taom_szt_t2a_key" text="Aufladung der Schlangengift-Klingen verringert, schlage häufiger zu." />
+    <string id="taom_szt_t2a_p1" text="+5 % Truppenschaden." />
+    <string id="taom_szt_t2a_p2" text="+10 % Nahkampfschaden." />
+    <string id="taom_szt_t2a_p3" text="+10 % Ruhmgewinn im Kampf." />
+    <string id="taom_szt_t2a_p4" text="+3 Gruppengröße." />
+    <string id="taom_szt_t2b_key" text="Schlangengift-Klingen verstärken die Zermürbung und rauben dem Feind den Kampfeswillen." />
+    <string id="taom_szt_t2b_p1" text="+10 % Schwunggeschwindigkeit." />
+    <string id="taom_szt_t2b_p2" text="+8 maximale Gesundheit." />
+    <string id="taom_szt_t2b_p3" text="+10 % Widerstand." />
+    <string id="taom_szt_t2b_p4" text="+10 % Truppenmoral." />
+    <string id="taom_szt_t3a_key" text="Radius der Schlangengift-Klingen stark vergrößert, eine Giftwolke." />
+    <string id="taom_szt_t3a_p1" text="+15 % Nahkampfschaden." />
+    <string id="taom_szt_t3a_p2" text="+9 maximale Gesundheit." />
+    <string id="taom_szt_t3a_p3" text="+7 % Truppenschaden." />
+    <string id="taom_szt_t3a_p4" text="+15 % Ruhmgewinn im Kampf." />
+    <string id="taom_szt_t3b_key" text="Aufladung der Schlangengift-Klingen stark verringert, ständige Zermürbung." />
+    <string id="taom_szt_t3b_p1" text="+15 % Widerstand." />
+    <string id="taom_szt_t3b_p2" text="+20 % Truppenmoral." />
+    <string id="taom_szt_t3b_p3" text="+8 % Truppenschaden." />
+    <string id="taom_szt_t3b_p4" text="+5 Gruppengröße." />
+  </strings>
+</base>

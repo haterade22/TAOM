@@ -5,6 +5,10 @@ namespace TAOM.Features.MainMenuCustomizer;
 
 public class MainMenuCustomizerService : IMainMenuCustomizerService
 {
+    /// <summary>The new-game entry's name. The themed main menu (#704) finds the entry by this text in
+    /// the player's language, so both must use this one constant.</summary>
+    internal const string NewGameName = "{=taom_main_menu_new_game}Enter The Age Of Men";
+
     private readonly IModuleMenuAdapter _moduleMenuAdapter;
     private readonly IModLogger _logger;
 
@@ -27,7 +31,7 @@ public class MainMenuCustomizerService : IMainMenuCustomizerService
         var hidden = _moduleMenuAdapter.HideOption("StoryModeNewGame");
         if (!hidden) ReportMissOnce("StoryModeNewGame", "hide");
 
-        var renamed = _moduleMenuAdapter.RenameOption("SandBoxNewGame", "{=taom_main_menu_new_game}Enter The Age Of Men");
+        var renamed = _moduleMenuAdapter.RenameOption("SandBoxNewGame", NewGameName);
         if (!renamed) ReportMissOnce("SandBoxNewGame", "rename");
 
         if (hidden && renamed && !_appliedLogged)

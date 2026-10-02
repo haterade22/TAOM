@@ -108,6 +108,7 @@ public class SubModule : MBSubModuleBase
     // Null unless the Patch21 wiring in OnSubModuleLoad resolves it (commented out while
     // ShaderPrecompilation is parked); the explicit initializer keeps CS0649 quiet meanwhile.
     private static ShaderPrecompileRunner _shaderRunner = null;
+    private static Features.FactionUI.FactionUITicker _factionUiTicker;
     private static bool _missionTimePatchesApplied;
     private static bool _gameInitPatchesApplied;
     private static bool _basicTableauGuardApplied;
@@ -315,6 +316,34 @@ public class SubModule : MBSubModuleBase
         // binding failure inside the prefix falls back to the vanilla video. See docs/features/skip-campaign-intro.md.
         Features.SkipCampaignIntro.Hooks.Patch58_SkipCampaignIntro.Initialize(IoC.Resolve<IModLogger>());
         TryPatchCategory("Patch58_SkipCampaignIntro");
+
+        // Patch95_FactionUI: Kysaro's themed front end (#704): main menu, menu video and music, splash,
+        // loading screens, the character-creation screens and the hero presets. Applied HERE because the
+        // splash and the main menu render before any campaign, and the loading window's movie is built on
+        // the engine's first application tick (GauntletUISubModule.OnApplicationTick, v1.5.3), after this
+        // method. GUARDED: resolving the services must not take module load down with it.
+        try
+        {
+            Features.FactionUI.Hooks.FactionUIPatchContext.Initialize(
+                IoC.Resolve<Features.FactionUI.Menus.FrontEndMovieService>(),
+                IoC.Resolve<Features.FactionUI.Resources.FrontEndSpriteService>(),
+                IoC.Resolve<Features.FactionUI.Menus.MenuMediaService>(),
+                IoC.Resolve<Features.FactionUI.Menus.LoadingImageService>(),
+                IoC.Resolve<TAOM.Adapters.IMenuMusicAdapter>(),
+                IoC.Resolve<TAOM.Adapters.IFrontEndStateAdapter>(),
+                IoC.Resolve<Features.FactionUI.UI.FrontEndScreenEffects>(),
+                IoC.Resolve<Features.FactionUI.CharacterCreation.FaceGenCameraService>(),
+                IoC.Resolve<Features.FactionUI.Presets.FactionPresetService>(),
+                IoC.Resolve<IModLogger>());
+            Features.FactionUI.UI.Widgets.FactionUIWidgetContext.Initialize(
+                IoC.Resolve<Features.FactionUI.CharacterCreation.NarrativeThemeIconMap>());
+            _factionUiTicker = IoC.Resolve<Features.FactionUI.FactionUITicker>();
+            TryPatchCategory("Patch95_FactionUI");
+        }
+        catch (System.Exception ex)
+        {
+            IoC.Resolve<IModLogger>().LogError($"[FactionUI] init failed, vanilla menus kept: {ex.GetType().Name}: {ex.Message}");
+        }
 
         // Patch83_StaleCharacterRepair — makes a character restored from a save whose ModuleData
         // definition is gone INERT, so the engine's several unguarded dereferences of its null
@@ -806,6 +835,15 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.Enlistment.IServiceMaintenanceService>()?.ResetSessionCaches();
         }
         catch { /* teardown is best-effort, never break OnGameEnd */ }
+
+        // #704: quitting from the themed faction screen (its Main Menu button or Esc) pops the
+        // character-creation state without finalizing the culture stage's view, so the screen and a
+        // pending hero pick would stay referenced into the next campaign; Player Switcher comes back.
+        try
+        {
+            IoC.Resolve<Features.FactionUI.FactionScreen.FactionScreenLauncher>()?.ResetForGameEnd();
+        }
+        catch { /* teardown is best-effort, never break OnGameEnd */ }
     }
 
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -1018,6 +1056,13 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchPolicyProvider>(),
             IoC.Resolve<ICareerMenuService>(),
             IoC.Resolve<TAOM.Adapters.IInquiryAdapter>(),
+            ccLogger));
+
+        // #704: applies a hero picked on Kysaro's faction screen at character-creation handler priority
+        // 1060, after TAOM's own 1050 finalize, as his postfix on that finalize did; clears the pick
+        // when a new character creation starts.
+        campaignStarter.AddBehavior(new Features.FactionUI.Presets.FactionPresetRegistrationBehavior(
+            IoC.Resolve<Features.FactionUI.Presets.FactionPresetService>(),
             ccLogger));
 
         // #514 — offers an adopted player a place in their culture's kingdom, once, after
@@ -2127,6 +2172,7 @@ public class SubModule : MBSubModuleBase
     protected override void OnApplicationTick(float dt)
     {
         _timeAccelerationService?.OnTick();
+        _factionUiTicker?.Tick(dt);
 
         // Shader pre-compilation walk: tick the runner every frame (responsive state transitions),
         // and surface its status as a 1 Hz toast when a loading screen isn't already showing it.

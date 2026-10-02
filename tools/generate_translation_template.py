@@ -78,6 +78,21 @@ SOURCES = [
     (TAOM_BASE / "taom_kingdom_name_strings.xml",
      "std_taom_kingdom_name_strings_{locale}.xml",
      "kingdom identity strings"),
+    (TAOM_BASE / "taom_culture_text_strings.xml",
+     "std_taom_culture_text_strings_{locale}.xml",
+     "culture names and name lists"),
+    (TAOM_BASE / "taom_hero_text_strings.xml",
+     "std_taom_hero_text_strings_{locale}.xml",
+     "hero biographies"),
+    (TAOM_BASE / "taom_career_data_strings.xml",
+     "std_taom_career_data_strings_{locale}.xml",
+     "career data"),
+    (TAOM_BASE / "taom_character_name_strings.xml",
+     "std_taom_character_name_strings_{locale}.xml",
+     "character names"),
+    (TAOM_BASE / "taom_battle_scene_strings.xml",
+     "std_taom_battle_scene_strings_{locale}.xml",
+     "Custom Battle scene names"),
 ]
 
 # lang_dir -> (locale_suffix, language_tag)

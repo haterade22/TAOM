@@ -1,0 +1,18 @@
+<Window>
+  <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" StackLayout.LayoutMethod="VerticalTopToBottom">
+    <Children>
+
+      <NavigationScopeTargeter ScopeID="HairColorScope" ScopeParent="..\HairColor" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="12" HasCircularMovement="false" />
+      <TFGColorSelector Id="HairColor" DataSource="{HairColorSelector}" MarginTop="10" Parameter.NavigationMinIndex="0" Parameter.NavigationMaxIndex="1000" />
+
+      <Widget WidthSizePolicy="Fixed" SuggestedWidth="581" HeightSizePolicy="Fixed" SuggestedHeight="14" HorizontalAlignment="Center" Sprite="fs_divider_thin" />
+      <NavigationScopeTargeter ScopeID="HairTypeScope" ScopeParent="..\HairTypes" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="5" HasCircularMovement="false" />
+      <TFGGrid Id="HairTypes" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginRight="3" Parameter.GridDataSource="{HairTypes}" Parameter.NavigationMinIndex="1001" Parameter.NavigationMaxIndex="2000"/>
+
+      <Widget WidthSizePolicy="Fixed" SuggestedWidth="580" HeightSizePolicy="Fixed" SuggestedHeight="11" HorizontalAlignment="Center" Sprite="fs_divider_thin" ExtendTop="19" ExtendBottom="20" />
+      <NavigationScopeTargeter ScopeID="BeardTypeScope" ScopeParent="..\BeardTypes" ScopeMovements="Horizontal" AlternateScopeMovements="Vertical" AlternateMovementStepSize="5" HasCircularMovement="false" />
+      <TFGGrid Id="BeardTypes" WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginRight="3" IsHidden="@IsFemale" Parameter.GridDataSource="{BeardTypes}" Parameter.NavigationMinIndex="2001" Parameter.NavigationMaxIndex="3000" />
+
+    </Children>
+  </ListPanel>
+</Window>
