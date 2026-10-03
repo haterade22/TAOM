@@ -93,6 +93,16 @@
         <GameType value="CampaignStoryMode"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- Custom Battle stubs for the curated commanders built from vanilla SandBox lords (Sauron, Boromir,
+         Théoden...). SandBox loads its lords.xml for campaign game types only; this node must stay BEFORE
+         the lords node below, and that node must keep CustomGame, so lords.xslt rebuilds each stub
+         (CustomBattleLordStubsTests). -->
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="characters/custom_battle_lords"/>
+      <IncludedGameTypes>
+        <GameType value="CustomGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <!-- XSLT transformations to rename vanilla lords to TAOM names and add BodyProperties -->
     <XmlNode>
       <XmlName id="NPCCharacters" path="lords"/>

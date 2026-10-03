@@ -15,5 +15,11 @@ public interface ICustomBattleService
     /// <paramref name="takeMax"/>.
     /// </summary>
     IReadOnlyList<string> GetCommanderIdsForFaction(string factionId, int takeMax);
-    string GetDefaultTroopIdForFormation(string factionId, int formationIndex);
+    /// <summary>
+    /// The culture's troop for a formation slot. A troop the slot list can show is always preferred. With
+    /// <paramref name="vanillaHasPick"/> that is the only troop returned, so vanilla's pick is replaced only by a
+    /// fitting one. Without a vanilla pick, the first candidate that loads is returned even if it does not fit:
+    /// vanilla spawns the default as-is when the slot is empty.
+    /// </summary>
+    string GetDefaultTroopIdForFormation(string factionId, int formationIndex, bool vanillaHasPick);
 }

@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
+using System.Linq;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Infrastructure;
@@ -12,7 +13,8 @@ namespace TAOM.Tests.Features.CustomBattles;
 
 /// <summary>
 /// Shipped-data regression: loads the REAL custom_battle_commanders.json through the real provider and
-/// cross-checks every curated faction key + lord id against the real culture set and lords.xml/lords.xslt.
+/// cross-checks every curated faction key against the real culture set, and every lord id against the lords a
+/// Custom Battle actually loads (characters/lords.xml plus the custom_battle_lords.xml stubs).
 /// Catches a typo'd / renamed / removed id in the shipped config that the synthetic provider tests can't
 /// (Codex review 2026-06-27 "things the implementer may have missed").
 /// </summary>
@@ -45,18 +47,18 @@ public class CustomBattleCommandersShippedDataTests
         return null;
     }
 
-    private static HashSet<string> RealLordIds(string moduleData)
+    // Lords that exist in a Custom Battle (CustomGame). A lords.xslt template alone does not count: it rebuilds
+    // a vanilla SandBox lord, and SandBox registers lords.xml for Campaign only, so in Custom Battle the template
+    // has nothing to match unless characters/custom_battle_lords.xml supplies a stub for it.
+    private static HashSet<string> CustomGameLordIds(string moduleData)
     {
+        // Parsed, not regexed: a commented-out stub must not count as present.
         var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-        // TAOM-native lords (NPCCharacter id="lord_...") + XSLT-transformed vanilla lords (template @id='lord_...').
-        var xml = File.ReadAllText(Path.Combine(moduleData, "characters", "lords.xml"));
-        foreach (Match m in Regex.Matches(xml, "\\bid=\"(lord_[A-Za-z0-9_]+)\""))
-            ids.Add(m.Groups[1].Value);
-
-        var xslt = File.ReadAllText(Path.Combine(moduleData, "lords.xslt"));
-        foreach (Match m in Regex.Matches(xslt, "NPCCharacter\\[@id='(lord_[A-Za-z0-9_]+)'\\]"))
-            ids.Add(m.Groups[1].Value);
+        foreach (var file in new[] { "lords.xml", "custom_battle_lords.xml" })
+            ids.UnionWith(XDocument.Load(Path.Combine(moduleData, "characters", file))
+                .Descendants("NPCCharacter")
+                .Select(c => (string)c.Attribute("id"))
+                .Where(id => !string.IsNullOrEmpty(id)));
 
         return ids;
     }
@@ -84,13 +86,13 @@ public class CustomBattleCommandersShippedDataTests
     }
 
     [TestMethod]
-    public void ShippedConfig_EveryCuratedLordId_ExistsInLordData()
+    public void ShippedConfig_EveryCuratedLordId_ExistsInCustomBattle()
     {
         var md = FindModuleDataPath();
         if (md == null) { Assert.Inconclusive("ModuleData path not found — run from repo root"); return; }
 
         var provider = RealProvider(md);
-        var realIds = RealLordIds(md);
+        var realIds = CustomGameLordIds(md);
         var missing = new List<string>();
 
         foreach (var faction in ExpectedFactions)
@@ -103,6 +105,7 @@ public class CustomBattleCommandersShippedDataTests
         }
 
         Assert.AreEqual(0, missing.Count,
-            $"Curated commander ids not found as NPCCharacter defs in lords.xml/lords.xslt: {string.Join(", ", missing)}");
+            "Curated commander ids that do not exist in a Custom Battle (not in characters/lords.xml or " +
+            $"characters/custom_battle_lords.xml): {string.Join(", ", missing)}");
     }
 }

@@ -26,18 +26,52 @@ public class CustomBattleTroopHookTests
     }
 
     [TestMethod]
-    public void OnGetDefaultTroopOfFormation_VanillaAlreadyResolved_DoesNotOverride()
+    public void OnGetDefaultTroopOfFormation_VanillaResolvedCalradianTroop_TaomTroopReplacesIt()
     {
-        // Arrange
-        var existingTroop = Substitute.For<BasicCharacterObject>();
-        BasicCharacterObject result = existingTroop;
+        // Arrange: vanilla's switch returns a Calradian troop for the six re-skinned cultures (vlandia ->
+        // vlandian_swordsman), which still exist in a Custom Battle; TAOM's own culture troop wins.
+        var calradian = Substitute.For<BasicCharacterObject>();
+        var rohirrim = Substitute.For<BasicCharacterObject>();
+        _service.GetDefaultTroopIdForFormation("vlandia", 0, true).Returns("rohan_militia_spearman");
+        _objectManager.GetBasicCharacter("rohan_militia_spearman").Returns(rohirrim);
+        BasicCharacterObject result = calradian;
 
         // Act
-        _sut.OnGetDefaultTroopOfFormation("gondor", 0, ref result);
+        _sut.OnGetDefaultTroopOfFormation("vlandia", 0, ref result);
 
         // Assert
-        Assert.AreSame(existingTroop, result);
-        _service.DidNotReceive().GetDefaultTroopIdForFormation(Arg.Any<string>(), Arg.Any<int>());
+        Assert.AreSame(rohirrim, result);
+    }
+
+    [TestMethod]
+    public void OnGetDefaultTroopOfFormation_VanillaResolved_TaomHasNoTroop_KeepsVanilla()
+    {
+        // Arrange
+        var vanillaTroop = Substitute.For<BasicCharacterObject>();
+        _service.GetDefaultTroopIdForFormation("vlandia", 3, true).Returns((string)null);
+        BasicCharacterObject result = vanillaTroop;
+
+        // Act
+        _sut.OnGetDefaultTroopOfFormation("vlandia", 3, ref result);
+
+        // Assert
+        Assert.AreSame(vanillaTroop, result);
+    }
+
+    [TestMethod]
+    public void OnGetDefaultTroopOfFormation_VanillaResolved_TaomTroopUnresolvable_KeepsVanilla()
+    {
+        // Arrange
+        var vanillaTroop = Substitute.For<BasicCharacterObject>();
+        _service.GetDefaultTroopIdForFormation("vlandia", 0, true).Returns("rohan_militia_spearman");
+        _objectManager.GetBasicCharacter("rohan_militia_spearman").Returns((BasicCharacterObject)null);
+        BasicCharacterObject result = vanillaTroop;
+
+        // Act
+        _sut.OnGetDefaultTroopOfFormation("vlandia", 0, ref result);
+
+        // Assert
+        Assert.AreSame(vanillaTroop, result);
     }
 
     [TestMethod]
@@ -45,7 +79,7 @@ public class CustomBattleTroopHookTests
     {
         // Arrange
         var gondorTroop = Substitute.For<BasicCharacterObject>();
-        _service.GetDefaultTroopIdForFormation("gondor", 0).Returns("gondor_peasant");
+        _service.GetDefaultTroopIdForFormation("gondor", 0, false).Returns("gondor_peasant");
         _objectManager.GetBasicCharacter("gondor_peasant").Returns(gondorTroop);
         BasicCharacterObject result = null;
 
@@ -60,7 +94,7 @@ public class CustomBattleTroopHookTests
     public void OnGetDefaultTroopOfFormation_ServiceReturnsNull_DoesNotSetResult()
     {
         // Arrange
-        _service.GetDefaultTroopIdForFormation("gondor", 2).Returns((string)null);
+        _service.GetDefaultTroopIdForFormation("gondor", 2, false).Returns((string)null);
         BasicCharacterObject result = null;
 
         // Act
@@ -81,14 +115,14 @@ public class CustomBattleTroopHookTests
 
         // Assert
         Assert.IsNull(result);
-        _service.DidNotReceive().GetDefaultTroopIdForFormation(Arg.Any<string>(), Arg.Any<int>());
+        _service.DidNotReceive().GetDefaultTroopIdForFormation(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<bool>());
     }
 
     [TestMethod]
     public void OnGetDefaultTroopOfFormation_ObjectManagerReturnsNull_DoesNotSetResult()
     {
         // Arrange
-        _service.GetDefaultTroopIdForFormation("gondor", 0).Returns("gondor_peasant");
+        _service.GetDefaultTroopIdForFormation("gondor", 0, false).Returns("gondor_peasant");
         _objectManager.GetBasicCharacter("gondor_peasant").Returns((BasicCharacterObject)null);
         BasicCharacterObject result = null;
 

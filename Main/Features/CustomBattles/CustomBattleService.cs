@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CustomBattles.Config;
+using TaleWorlds.Core;
 
 namespace TAOM.Features.CustomBattles;
 
@@ -33,8 +34,11 @@ public class CustomBattleService : ICustomBattleService
     {
         try
         {
+            // HasFactionBanner: vanilla CustomBattleHelper.GetCustomBattleParties recolours layer 0 of the
+            // faction banner unguarded, so a culture without faction_banner_key (vanilla nord, vakken,
+            // darshi) throws ArgumentOutOfRangeException on Start (crash f9a7181d).
             return GetCultureCache().Values
-                .Where(c => c.CanHaveSettlement && !c.IsBandit)
+                .Where(c => c.CanHaveSettlement && !c.IsBandit && c.HasFactionBanner)
                 .Select(c => c.Id)
                 .ToList();
         }
@@ -106,7 +110,7 @@ public class CustomBattleService : ICustomBattleService
         }
     }
 
-    public string GetDefaultTroopIdForFormation(string factionId, int formationIndex)
+    public string GetDefaultTroopIdForFormation(string factionId, int formationIndex, bool vanillaHasPick)
     {
         if (string.IsNullOrEmpty(factionId))
             return null;
@@ -117,20 +121,50 @@ public class CustomBattleService : ICustomBattleService
             if (!cache.TryGetValue(factionId.ToLowerInvariant(), out var culture))
                 return null;
 
-            return formationIndex switch
+            var candidates = formationIndex switch
             {
-                0 => culture.MeleeMilitiaTroopId ?? culture.BasicTroopId,
-                1 => culture.RangedMilitiaTroopId,
-                2 => culture.EliteBasicTroopId,
-                3 => culture.RangedEliteMilitiaTroopId,
-                _ => culture.BasicTroopId
+                0 => new[] { culture.MeleeMilitiaTroopId, culture.BasicTroopId },
+                1 => new[] { culture.RangedMilitiaTroopId },
+                2 => new[] { culture.EliteBasicTroopId },
+                3 => new[] { culture.RangedEliteMilitiaTroopId },
+                _ => Array.Empty<string>()
             };
+
+            // With no vanilla pick, a non-fitting troop is still better than null: the slot list ignores it either way,
+            // but CustomBattleHelper.PopulateListsWithDefaults spawns the default unchecked when the slot is empty
+            // (a culture with no soldiers of its own, Abanissa and Shaghana), and a null default for slots 0-2 throws
+            // at Start once that slot has troops to spawn (a null horse-archer default is redistributed instead).
+            return candidates.FirstOrDefault(id => IsEligibleForSlot(id, culture.Id, formationIndex))
+                ?? (vanillaHasPick ? null : candidates.FirstOrDefault(CharacterExists));
         }
         catch (Exception ex)
         {
             _logger.LogError($"CustomBattleService: Failed to get troop for formation {formationIndex}: {ex.Message}");
             return null;
         }
+    }
+
+    // Vanilla's Custom Battle slot list (v1.5.3) holds a troop only when it is a soldier and not obsolete
+    // (ArmyCompositionGroupVM, IsSoldier && !IsObsolete) and is the slot's culture with a fitting
+    // DefaultFormationClass (ArmyCompositionItemVM.IsValidUnitItem). There a default outside that list is ignored
+    // and the slot's first troop becomes the default. Culture data often names a troop that cannot fit (a foot archer
+    // for the horse-archer slot, another culture's line), and returning it would replace vanilla's pick for nothing.
+    private static readonly FormationClass[][] SlotFormationClasses =
+    {
+        new[] { FormationClass.Infantry, FormationClass.HeavyInfantry },
+        new[] { FormationClass.Ranged },
+        new[] { FormationClass.Cavalry, FormationClass.LightCavalry, FormationClass.HeavyCavalry },
+        new[] { FormationClass.HorseArcher }
+    };
+
+    private bool IsEligibleForSlot(string troopId, string cultureId, int formationIndex)
+    {
+        var troop = FindCharacter(troopId);
+        if (troop == null || !troop.IsSoldier || troop.IsObsolete
+            || !string.Equals(troop.CultureId, cultureId, StringComparison.OrdinalIgnoreCase))
+            return false;
+
+        return SlotFormationClasses[formationIndex].Contains(troop.DefaultFormationClass);
     }
 
     private Dictionary<string, CultureInfo> GetCultureCache()
@@ -154,23 +188,28 @@ public class CustomBattleService : ICustomBattleService
         return _characterCache;
     }
 
-    // Existence check by id only (culture/regex agnostic) — used to drop curated commander ids that
-    // don't resolve to a real character, without re-applying the IsValidCommander regex or culture
-    // filter the curated path is meant to bypass.
-    private HashSet<string> _characterIdCache;
+    // Lookup by id only (culture/regex agnostic). CharacterExists drops curated commander ids that don't
+    // resolve to a real character, without re-applying the IsValidCommander regex or culture filter the
+    // curated path is meant to bypass; IsEligibleForSlot reads the troop's slot fields.
+    private Dictionary<string, CharacterInfo> _characterById;
 
-    private bool CharacterExists(string id)
+    private CharacterInfo FindCharacter(string id)
     {
         if (string.IsNullOrEmpty(id))
-            return false;
+            return null;
 
-        if (_characterIdCache == null)
-            _characterIdCache = new HashSet<string>(
-                GetCharacterCache().Where(c => !string.IsNullOrEmpty(c.Id)).Select(c => c.Id),
-                StringComparer.OrdinalIgnoreCase);
+        if (_characterById == null)
+        {
+            _characterById = new Dictionary<string, CharacterInfo>(StringComparer.OrdinalIgnoreCase);
+            foreach (var c in GetCharacterCache())
+                if (!string.IsNullOrEmpty(c.Id) && !_characterById.ContainsKey(c.Id))
+                    _characterById.Add(c.Id, c); // first wins
+        }
 
-        return _characterIdCache.Contains(id);
+        return _characterById.TryGetValue(id, out var character) ? character : null;
     }
+
+    private bool CharacterExists(string id) => FindCharacter(id) != null;
 
     private static readonly Regex _kingdomLordId =
         new Regex(@"^lord_[A-Za-z0-9]+_[A-Za-z0-9]+$", RegexOptions.IgnoreCase | RegexOptions.Compiled);

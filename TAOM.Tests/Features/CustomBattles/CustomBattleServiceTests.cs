@@ -5,6 +5,7 @@ using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.CustomBattles;
 using TAOM.Features.CustomBattles.Config;
+using TaleWorlds.Core;
 
 namespace TAOM.Tests.Features.CustomBattles;
 
@@ -35,8 +36,8 @@ public class CustomBattleServiceTests
         // Arrange
         _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
         {
-            new() { Id = "gondor", CanHaveSettlement = true, IsBandit = false },
-            new() { Id = "mordor", CanHaveSettlement = true, IsBandit = false },
+            new() { Id = "gondor", CanHaveSettlement = true, IsBandit = false, HasFactionBanner = true },
+            new() { Id = "mordor", CanHaveSettlement = true, IsBandit = false, HasFactionBanner = true },
             new() { Id = "looters", CanHaveSettlement = false, IsBandit = true }
         });
 
@@ -50,12 +51,14 @@ public class CustomBattleServiceTests
     }
 
     [TestMethod]
-    public void GetFactionIds_ExcludesBanditCultures()
+    public void GetFactionIds_CultureWithoutFactionBanner_IsExcluded()
     {
-        // Arrange
+        // Arrange: vanilla v1.5.3 nord/vakken/darshi, settlement-capable but no faction_banner_key.
+        // Vanilla CustomBattleHelper.GetCustomBattleParties writes layer 0 of the faction banner and
+        // throws ArgumentOutOfRangeException on an empty one (crash f9a7181d).
         _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
         {
-            new() { Id = "sea_raiders", CanHaveSettlement = false, IsBandit = true }
+            new() { Id = "vakken", CanHaveSettlement = true, IsBandit = false, HasFactionBanner = false }
         });
 
         // Act
@@ -63,6 +66,58 @@ public class CustomBattleServiceTests
 
         // Assert
         Assert.AreEqual(0, result.Count);
+    }
+
+    [TestMethod]
+    public void GetFactionIds_CultureWithFactionBanner_IsIncluded()
+    {
+        // Arrange
+        _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
+        {
+            new() { Id = "rohan", CanHaveSettlement = true, IsBandit = false, HasFactionBanner = true },
+            new() { Id = "nord", CanHaveSettlement = true, IsBandit = false, HasFactionBanner = false }
+        });
+
+        // Act
+        var result = _sut.GetFactionIds();
+
+        // Assert
+        CollectionAssert.AreEqual(new[] { "rohan" }, (System.Collections.ICollection)result);
+    }
+
+    [TestMethod]
+    public void GetFactionIds_BanditCulture_IsExcluded()
+    {
+        // Arrange: the shipped raider shape (taom_spcultures.xml dunland_raiders), settlement-capable and
+        // banner-bearing, so only the bandit clause keeps it out. gondor is the control that must survive.
+        _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
+        {
+            new() { Id = "dunland_raiders", CanHaveSettlement = true, IsBandit = true, HasFactionBanner = true },
+            new() { Id = "gondor", CanHaveSettlement = true, IsBandit = false, HasFactionBanner = true }
+        });
+
+        // Act
+        var result = _sut.GetFactionIds();
+
+        // Assert
+        CollectionAssert.AreEqual(new[] { "gondor" }, (System.Collections.ICollection)result);
+    }
+
+    [TestMethod]
+    public void GetFactionIds_CultureWithoutSettlement_IsExcluded()
+    {
+        // Arrange: not a bandit and has a banner, so only the settlement clause keeps it out.
+        _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
+        {
+            new() { Id = "landless", CanHaveSettlement = false, IsBandit = false, HasFactionBanner = true },
+            new() { Id = "gondor", CanHaveSettlement = true, IsBandit = false, HasFactionBanner = true }
+        });
+
+        // Act
+        var result = _sut.GetFactionIds();
+
+        // Assert
+        CollectionAssert.AreEqual(new[] { "gondor" }, (System.Collections.ICollection)result);
     }
 
     [TestMethod]
@@ -273,25 +328,31 @@ public class CustomBattleServiceTests
         Assert.AreEqual(0, result.Count);
     }
 
+    private const FormationClass Infantry = FormationClass.Infantry, Ranged = FormationClass.Ranged,
+        Cavalry = FormationClass.Cavalry, HorseArcher = FormationClass.HorseArcher,
+        HeavyInfantry = FormationClass.HeavyInfantry, LightCavalry = FormationClass.LightCavalry,
+        HeavyCavalry = FormationClass.HeavyCavalry;
+
+    private static CharacterInfo Soldier(string id, string cultureId, FormationClass formationClass) =>
+        new() { Id = id, CultureId = cultureId, IsHero = false, IsSoldier = true, DefaultFormationClass = formationClass };
+
+    private void GivenGondor(CultureInfo gondor, params CharacterInfo[] troops)
+    {
+        _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo> { gondor });
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>(troops));
+    }
+
     [TestMethod]
     public void GetDefaultTroopIdForFormation_Infantry_ReturnsMeleeMilitia()
     {
         // Arrange
-        _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
-        {
-            new()
-            {
-                Id = "gondor", CanHaveSettlement = true, IsBandit = false,
-                MeleeMilitiaTroopId = "gondor_peasant",
-                RangedMilitiaTroopId = "gondor_archer",
-                EliteBasicTroopId = "gondor_cavalry",
-                RangedEliteMilitiaTroopId = "gondor_horse_archer",
-                BasicTroopId = "gondor_recruit"
-            }
-        });
+        GivenGondor(
+            new() { Id = "gondor", MeleeMilitiaTroopId = "gondor_peasant", BasicTroopId = "gondor_recruit" },
+            Soldier("gondor_peasant", "gondor", Infantry),
+            Soldier("gondor_recruit", "gondor", Infantry));
 
         // Act
-        var result = _sut.GetDefaultTroopIdForFormation("gondor", 0);
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 0, vanillaHasPick: true);
 
         // Assert
         Assert.AreEqual("gondor_peasant", result);
@@ -301,17 +362,10 @@ public class CustomBattleServiceTests
     public void GetDefaultTroopIdForFormation_Ranged_ReturnsRangedMilitia()
     {
         // Arrange
-        _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
-        {
-            new()
-            {
-                Id = "gondor", CanHaveSettlement = true, IsBandit = false,
-                RangedMilitiaTroopId = "gondor_archer"
-            }
-        });
+        GivenGondor(new() { Id = "gondor", RangedMilitiaTroopId = "gondor_archer" }, Soldier("gondor_archer", "gondor", Ranged));
 
         // Act
-        var result = _sut.GetDefaultTroopIdForFormation("gondor", 1);
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 1, vanillaHasPick: true);
 
         // Assert
         Assert.AreEqual("gondor_archer", result);
@@ -321,17 +375,10 @@ public class CustomBattleServiceTests
     public void GetDefaultTroopIdForFormation_Cavalry_ReturnsEliteBasic()
     {
         // Arrange
-        _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
-        {
-            new()
-            {
-                Id = "gondor", CanHaveSettlement = true, IsBandit = false,
-                EliteBasicTroopId = "gondor_cavalry"
-            }
-        });
+        GivenGondor(new() { Id = "gondor", EliteBasicTroopId = "gondor_cavalry" }, Soldier("gondor_cavalry", "gondor", Cavalry));
 
         // Act
-        var result = _sut.GetDefaultTroopIdForFormation("gondor", 2);
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 2, vanillaHasPick: true);
 
         // Assert
         Assert.AreEqual("gondor_cavalry", result);
@@ -341,17 +388,11 @@ public class CustomBattleServiceTests
     public void GetDefaultTroopIdForFormation_HorseArcher_ReturnsRangedEliteMilitia()
     {
         // Arrange
-        _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
-        {
-            new()
-            {
-                Id = "gondor", CanHaveSettlement = true, IsBandit = false,
-                RangedEliteMilitiaTroopId = "gondor_horse_archer"
-            }
-        });
+        GivenGondor(new() { Id = "gondor", RangedEliteMilitiaTroopId = "gondor_horse_archer" },
+            Soldier("gondor_horse_archer", "gondor", HorseArcher));
 
         // Act
-        var result = _sut.GetDefaultTroopIdForFormation("gondor", 3);
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 3, vanillaHasPick: true);
 
         // Assert
         Assert.AreEqual("gondor_horse_archer", result);
@@ -361,28 +402,244 @@ public class CustomBattleServiceTests
     public void GetDefaultTroopIdForFormation_InfantryFallsBackToBasicTroop()
     {
         // Arrange
-        _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
-        {
-            new()
-            {
-                Id = "gondor", CanHaveSettlement = true, IsBandit = false,
-                MeleeMilitiaTroopId = null,
-                BasicTroopId = "gondor_recruit"
-            }
-        });
+        GivenGondor(new() { Id = "gondor", MeleeMilitiaTroopId = null, BasicTroopId = "gondor_recruit" },
+            Soldier("gondor_recruit", "gondor", Infantry));
 
         // Act
-        var result = _sut.GetDefaultTroopIdForFormation("gondor", 0);
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 0, vanillaHasPick: true);
 
         // Assert
         Assert.AreEqual("gondor_recruit", result);
     }
 
     [TestMethod]
+    public void GetDefaultTroopIdForFormation_MilitiaNotEligible_FallsBackToEligibleBasicTroop()
+    {
+        // Arrange: the militia troop is an archer, so the infantry slot cannot show it.
+        GivenGondor(new() { Id = "gondor", MeleeMilitiaTroopId = "gondor_militia", BasicTroopId = "gondor_recruit" },
+            Soldier("gondor_militia", "gondor", Ranged),
+            Soldier("gondor_recruit", "gondor", Infantry));
+
+        // Act
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 0, vanillaHasPick: true);
+
+        // Assert
+        Assert.AreEqual("gondor_recruit", result);
+    }
+
+    [TestMethod]
+    public void GetDefaultTroopIdForFormation_TroopOfWrongFormationClass_ReturnsNull()
+    {
+        // Arrange: shipped data names a foot archer for the horse-archer slot; vanilla's picker would ignore it.
+        GivenGondor(new() { Id = "gondor", RangedEliteMilitiaTroopId = "gondor_militia_veteran_archer" },
+            Soldier("gondor_militia_veteran_archer", "gondor", Ranged));
+
+        // Act
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 3, vanillaHasPick: true);
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void GetDefaultTroopIdForFormation_TroopOfAnotherCulture_ReturnsNull()
+    {
+        // Arrange: Variag (battania) names Rhun troops, whose culture is khuzait.
+        _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
+        {
+            new() { Id = "battania", MeleeMilitiaTroopId = "rhun_militia_spearman" }
+        });
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            Soldier("rhun_militia_spearman", "khuzait", Infantry)
+        });
+
+        // Act
+        var result = _sut.GetDefaultTroopIdForFormation("battania", 0, vanillaHasPick: true);
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    // Abanissa's shape: no soldier of its own culture, and every troop attribute names a Harad (aserai) troop.
+    private void GivenAbanissa()
+    {
+        _objectManager.GetAllCultureInfos().Returns(new List<CultureInfo>
+        {
+            new() { Id = "abanissa", RangedEliteMilitiaTroopId = "harad_militia_veteran_archer" }
+        });
+        _objectManager.GetAllCharacterInfos().Returns(new List<CharacterInfo>
+        {
+            Soldier("harad_militia_veteran_archer", "aserai", Ranged)
+        });
+    }
+
+    [TestMethod]
+    public void GetDefaultTroopIdForFormation_NoFittingTroop_NoVanillaPick_ReturnsFirstLoadedCandidate()
+    {
+        // Arrange: with no vanilla pick the slot list is empty, and vanilla's PopulateListsWithDefaults spawns this
+        // default as-is at Start; a null default for a slot with troops to spawn would throw there.
+        GivenAbanissa();
+
+        // Act
+        var result = _sut.GetDefaultTroopIdForFormation("abanissa", 3, vanillaHasPick: false);
+
+        // Assert
+        Assert.AreEqual("harad_militia_veteran_archer", result);
+    }
+
+    [TestMethod]
+    public void GetDefaultTroopIdForFormation_NoVanillaPick_PrefersFittingCandidate()
+    {
+        // Arrange: the call every TAOM-only culture makes (vanilla's switch has no pick for it). The militia troop
+        // loads but does not fit the infantry slot; the basic troop does, and must win over "first loaded".
+        GivenGondor(new() { Id = "gondor", MeleeMilitiaTroopId = "gondor_militia", BasicTroopId = "gondor_recruit" },
+            Soldier("gondor_militia", "gondor", Ranged),
+            Soldier("gondor_recruit", "gondor", Infantry));
+
+        // Act
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 0, vanillaHasPick: false);
+
+        // Assert
+        Assert.AreEqual("gondor_recruit", result);
+    }
+
+    [TestMethod]
+    public void GetDefaultTroopIdForFormation_NoFittingTroop_VanillaHasPick_ReturnsNull()
+    {
+        // Arrange
+        GivenAbanissa();
+
+        // Act
+        var result = _sut.GetDefaultTroopIdForFormation("abanissa", 3, vanillaHasPick: true);
+
+        // Assert: vanilla's own pick stays.
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void GetDefaultTroopIdForFormation_NoVanillaPick_NoCandidateLoaded_ReturnsNull()
+    {
+        // Arrange
+        GivenGondor(new() { Id = "gondor", RangedMilitiaTroopId = "gondor_archer" });
+
+        // Act
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 1, vanillaHasPick: false);
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void GetDefaultTroopIdForFormation_TroopNotLoaded_ReturnsNull()
+    {
+        // Arrange
+        GivenGondor(new() { Id = "gondor", RangedMilitiaTroopId = "gondor_archer" });
+
+        // Act
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 1, vanillaHasPick: true);
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void GetDefaultTroopIdForFormation_TroopNotASoldier_ReturnsNull()
+    {
+        // Arrange: vanilla's slot list holds only soldiers (ArmyCompositionGroupVM: IsSoldier && !IsObsolete);
+        // a caravan guard fits the cavalry class but is not one.
+        var guard = Soldier("gondor_caravan_guard", "gondor", Cavalry);
+        guard.IsSoldier = false;
+        GivenGondor(new() { Id = "gondor", EliteBasicTroopId = "gondor_caravan_guard" }, guard);
+
+        // Act
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 2, vanillaHasPick: true);
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void GetDefaultTroopIdForFormation_ObsoleteTroop_ReturnsNull()
+    {
+        // Arrange
+        var obsolete = Soldier("gondor_old_archer", "gondor", Ranged);
+        obsolete.IsObsolete = true;
+        GivenGondor(new() { Id = "gondor", RangedMilitiaTroopId = "gondor_old_archer" }, obsolete);
+
+        // Act
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 1, vanillaHasPick: true);
+
+        // Assert
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void GetDefaultTroopIdForFormation_MilitiaNotASoldier_FallsBackToBasicTroop()
+    {
+        // Arrange
+        var militia = Soldier("gondor_militia", "gondor", Infantry);
+        militia.IsSoldier = false;
+        GivenGondor(new() { Id = "gondor", MeleeMilitiaTroopId = "gondor_militia", BasicTroopId = "gondor_recruit" },
+            militia, Soldier("gondor_recruit", "gondor", Infantry));
+
+        // Act
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 0, vanillaHasPick: true);
+
+        // Assert
+        Assert.AreEqual("gondor_recruit", result);
+    }
+
+    [TestMethod]
+    public void GetDefaultTroopIdForFormation_SlotOutsideVanillaRange_ReturnsNull()
+    {
+        // Arrange: vanilla passes only slots 0-3; anything else keeps vanilla's own answer.
+        GivenGondor(new() { Id = "gondor", BasicTroopId = "gondor_recruit" }, Soldier("gondor_recruit", "gondor", Infantry));
+
+        // Act
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 4, vanillaHasPick: true);
+
+        // Assert: null by design, not through the catch-all.
+        Assert.IsNull(result);
+        _logger.DidNotReceive().LogError(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetDefaultTroopIdForFormation_HeavyClasses_AreAcceptedAsSiblings()
+    {
+        // Arrange: vanilla's slot filter takes HeavyInfantry as infantry and HeavyCavalry as cavalry.
+        GivenGondor(new() { Id = "gondor", MeleeMilitiaTroopId = "gondor_guard", EliteBasicTroopId = "gondor_knight" },
+            Soldier("gondor_guard", "gondor", HeavyInfantry),
+            Soldier("gondor_knight", "gondor", HeavyCavalry));
+
+        // Act
+        var infantry = _sut.GetDefaultTroopIdForFormation("gondor", 0, vanillaHasPick: true);
+        var cavalry = _sut.GetDefaultTroopIdForFormation("gondor", 2, vanillaHasPick: true);
+
+        // Assert
+        Assert.AreEqual("gondor_guard", infantry);
+        Assert.AreEqual("gondor_knight", cavalry);
+    }
+
+    [TestMethod]
+    public void GetDefaultTroopIdForFormation_LightCavalry_IsAcceptedAsCavalry()
+    {
+        // Arrange
+        GivenGondor(new() { Id = "gondor", EliteBasicTroopId = "gondor_outrider" },
+            Soldier("gondor_outrider", "gondor", LightCavalry));
+
+        // Act
+        var result = _sut.GetDefaultTroopIdForFormation("gondor", 2, vanillaHasPick: true);
+
+        // Assert
+        Assert.AreEqual("gondor_outrider", result);
+    }
+
+    [TestMethod]
     public void GetDefaultTroopIdForFormation_UnknownCulture_ReturnsNull()
     {
         // Act
-        var result = _sut.GetDefaultTroopIdForFormation("unknown", 0);
+        var result = _sut.GetDefaultTroopIdForFormation("unknown", 0, vanillaHasPick: true);
 
         // Assert
         Assert.IsNull(result);
@@ -392,7 +649,7 @@ public class CustomBattleServiceTests
     public void GetDefaultTroopIdForFormation_NullFactionId_ReturnsNull()
     {
         // Act
-        var result = _sut.GetDefaultTroopIdForFormation(null, 0);
+        var result = _sut.GetDefaultTroopIdForFormation(null, 0, vanillaHasPick: true);
 
         // Assert
         Assert.IsNull(result);

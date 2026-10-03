@@ -52,6 +52,11 @@ public class CharacterFaceCoverageTests
 
         foreach (var file in Directory.EnumerateFiles(moduleData, "*.xml", SearchOption.AllDirectories))
         {
+            // Bare id stubs that lords.xslt rebuilds at load, face included. The face is checked on the
+            // transform's output instead, with the load order: CustomBattleLordStubsTests.
+            if (Path.GetFileName(file) == "custom_battle_lords.xml")
+                continue;
+
             XDocument doc;
             try
             {
