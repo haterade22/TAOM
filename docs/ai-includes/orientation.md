@@ -5,9 +5,7 @@ CLAUDE.md imports it ([ADR-011](../adrs/011-knowledge-delivery-tiers.md)).
 
 ## Where things are
 
-- **Code:** `Main/` (features `Main/Features/<Name>/`, adapters `Main/Adapters/`, core `Main/Core/`),
-  tests `TAOM.Tests/`, data `Main/_Module/ModuleData/`, tools `tools/`
-  ([tools/README.md](../../tools/README.md)).
+- **Tools:** the catalog is [tools/README.md](../../tools/README.md).
 - **Maps:** [docs/INDEX.md](../INDEX.md) by topic, [feature-map.md](../reference/feature-map.md)
   from feature to code, [doc-lookup.md](../reference/doc-lookup.md) from task to doc.
 - **Registries:** for crash triage, grep the failing type in

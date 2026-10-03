@@ -81,7 +81,8 @@ hand edits, so land a repo-side validator gate with any fix.
 | Command | Proves | Cannot see |
 |---|---|---|
 | `python tools/audit_scene_names.py` | every settlement and hideout `scene_name` resolves to a SceneObj folder | whether the scene is playable |
-| `python tools/audit_battle_scenes.py` | every Scene id in `sp_battle_scenes.xml` still exists on disk | which scene a given fight will pick |
+| `python tools/build_battle_scenes.py --check` | `sp_battle_scenes.xml` matches its `REGIONS` table, every Scene id has a SceneObj folder, every vanilla id is still live (exits 1 otherwise) | how a scene looks or plays |
+| `python tools/audit_battle_scenes.py` | every Scene id in the deployed `sp_battle_scenes.xml` still exists on disk (report-only) | which scene a given fight will pick |
 | `python tools/audit_siege_props.py` | per town and castle, how many siege resupply props are genuinely usable | siege AI behaviour |
 | `python tools/check_prefab_budget.py` | `TAOM_Map/Prefabs` against the engine's 131,072 load-queue cap | every other module's prefabs, which share that one global queue |
 | `python tools/analyze_settlement_prosperity.py` | starting prosperity, live map against vanilla, with flat-cluster flags | the economy after day one |

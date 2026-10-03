@@ -30,15 +30,15 @@ public sealed class PrecompileSceneProvider : IPrecompileSceneProvider
     {
         // Open-field battle scenes — ALL DISABLED (pbr_terrain vista-permutation GPU crash on load).
         // Mordor DISABLED 2026-06-25 (was the fallback-drift: uncommented here while disabled in the live
-        // config). Also removed from sp_battle_scenes.xml so real battles fall back to vanilla terrain.
+        // config). Back in sp_battle_scenes.xml since 2026-10-03 (crash risk accepted), kept out of this walk.
         // "taom_mordor_battle_001_forceatmo",
         // "taom_mordor_battle_002_forceatmo",
         // "taom_mordor_battle_003_forceatmo",
         // "taom_mordor_battle_004_forceatmo",
         // "taom_mordor_battle_black_gates_forceatmo",
         // "taom_mordor_battle_dead_marshes_forceatmo",
-        // Rohan field-battle scenes DISABLED 2026-06-19 (pbr_terrain input-layout-9 GPU crash; also removed
-        // from sp_battle_scenes.xml so real battles fall back to vanilla terrain). Re-enable with the shader override.
+        // Rohan field-battle scenes DISABLED 2026-06-19 (pbr_terrain input-layout-9 GPU crash). Back in
+        // sp_battle_scenes.xml since 2026-10-03, kept out of this walk. Re-enable with the shader override.
         // "taom_rohan_battle_001_forceatmo",
         // "taom_rohan_battle_fords_of_isen_forceatmo",
         // Custom siege settlement scenes (loaded via the Battle path; siege-engine-material coverage probed in-game)

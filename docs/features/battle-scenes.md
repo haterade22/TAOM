@@ -1,108 +1,85 @@
-# Battle Scenes (ENABLED 2026-06-01)
+# Battle Scenes
 
-> **Status: ENABLED (2026-06-01).** `_harmony.PatchCategory("Patch0_BattleScenes");` is applied at module load
-> ([Main/SubModule.cs:159](../../Main/SubModule.cs)). The original "parked until TAOM_Map is integrated" reason is
-> resolved: `TAOM_Map` ships a `Main_map` scene and `Main/_Module/ModuleData/sp_battle_scenes.xml` covers all
-> 0–255 `map_indices` (0 crash suspects, every Scene id on disk). All 3 patch targets were verified against the
-> installed 1.4.5 DLLs before re-enabling (`Campaign.InitializeScenes`, `GameSceneDataManager.{LoadSPBattleScenes,
-> LoadConversationScenes,LoadMeetingScenes}`, `MBMapScene.GetBattleSceneIndexMap`, `SandBox.MapScene.Load`).
-> Build + `dotnet test TAOM.Tests` (2877 passed) clean.
->
-> **In-game validation pending** the `worldmap_battle_scene_grid` re-author (see
-> [reference/worldmap-battle-scene-grid.md](../reference/worldmap-battle-scene-grid.md)). Why this matters: with
-> Patch0 active, the grid's extended indices (158–255) resolve to real terrains (`battle_terrain_r` catch-all)
-> instead of `FailedAssert`-ing against vanilla's 1–157 table.
+> **Status: ENABLED.** `Patch0_BattleScenes` is applied at module load (`TryPatchCategory("Patch0_BattleScenes")`,
+> [Main/SubModule.cs:520](../../Main/SubModule.cs)), re-enabled 2026-06-01. Since 2026-10-03 the field-battle
+> scene list is generated per Middle-earth region by `tools/build_battle_scenes.py`, and TAOM's own Mordor and Rohan
+> field scenes are back in rotation, with the June `pbr_terrain` GPU crash risk accepted (#287). In-game checks
+> per region are owed (see "Verifying" below).
 
 ## Overview
 
-When enabled, this feature would intercept three Bannerlord scene-loading entry points to redirect them at TAOM-authored XML files (`sp_battle_scenes.xml`, `conversation_scenes.xml`, `meeting_scenes.xml`) and would harden battle-scene index map loading against an `AccessViolationException` race that has historically appeared on cold-cache map loads.
+When two parties fight on the campaign map, the cell under the main party decides which battle scene loads. This
+feature makes that decision TAOM's: it replaces vanilla's scene loading so only TAOM's `sp_battle_scenes.xml` is
+read, maps every grid cell to scenes that fit its Middle-earth region, and guards the native index-map read
+against a cold-cache `AccessViolationException`.
 
-> For **how the battle-terrain index map / `worldmap_battle_scene_grid` texture actually works** (it's baked into `Main_map`, not loaded by filename) and the **LOTR grid re-author + bake workflow**, see [reference/worldmap-battle-scene-grid.md](../reference/worldmap-battle-scene-grid.md).
+- How the grid texture and the selection chain work, and the cell to region table:
+  [reference/worldmap-battle-scene-grid.md](../reference/worldmap-battle-scene-grid.md).
+- How to add or move a custom scene:
+  [modding/recipe-add-a-field-battle-scene.md](../modding/recipe-add-a-field-battle-scene.md).
 
 ## Why This Exists
 
-- **Vanilla behavior:** `Campaign.InitializeScenes` reads scene XMLs only from the `SandBox` module's `ModuleData/`. There is no extension point for a child mod to substitute or augment those files. `MBMapScene.GetBattleSceneIndexMap` reads the binary index map from disk, can throw `AccessViolationException` if the GPU/IO path is contended, and offers no retry.
-- **TAOM requirement:** A custom Middle-earth campaign map (the `TAOM_Map` module) needs to provide its own `sp_battle_scenes.xml` (which scenes apply for which terrain types), `conversation_scenes.xml`, and `meeting_scenes.xml`. Cold-cache loads of the index map have produced bug reports that look like "stuck on loading screen / crash on first encounter."
-- **Why this is parked:** `TAOM_Map` isn't yet integrated into the main game shipping path. Enabling `Patch0_BattleScenes` without it would attempt to load TAOM XMLs that don't exist (the `File.Exists` guard would skip them silently, but the `MBMapScene.GetBattleSceneIndexMap` retry would still fire on every battle), so the category is held off until the map ships.
+- **Vanilla behaviour:** `Campaign.InitializeScenes` loads `sp_battle_scenes.xml`, `conversation_scenes.xml` and
+  `meeting_scenes.xml` from **every** active module and appends them (`Campaign.cs:1347-1368`). A child mod can add
+  scenes but cannot take vanilla's away, so SandBox's Calradian indices 1-157 would keep rolling Calradian scenes
+  on TAOM's map, and indices above 157 would have no scene at all.
+- **TAOM requirement:** `TAOM_Map` ships its own `Main_map` and its own grid, painted with Middle-earth indices
+  1-180 (plus 255 for the unpainted area). Those indices need a scene list built for them, and nothing else.
+- `MBMapScene.GetBattleSceneIndexMap` reads the index map natively and has produced `AccessViolationException` on
+  cold-cache loads ("stuck on loading screen / crash on first encounter").
 
 ## Architecture
 
-### Design Challenge
-
-Three distinct vanilla touch-points need patching, two of them are simple substitutions and one needs corruption-recovery semantics. Bannerlord's `MBMapScene.GetBattleSceneIndexMap` is a static method with `ref byte[]` / `ref int` outputs — it can only be patched as a Prefix that returns `false` to skip the original, then re-invokes the original itself inside a try/catch loop. Marking the prefix `[HandleProcessCorruptedStateExceptions]` + `[SecurityCritical]` is required for the catch to actually intercept `AccessViolationException` on .NET Framework 4.7.2.
-
-### Solution Approach
-
-All three patches share `[HarmonyPatchCategory("Patch0_BattleScenes")]` so the entire feature is gated on a single line in `SubModule.cs`.
+All three patches share `[HarmonyPatchCategory("Patch0_BattleScenes")]`, so the feature is gated on one line.
 
 | Patch | Target | Type | Behavior |
 |---|---|---|---|
-| `Campaign_InitializeScenes_Patch` | `Campaign.InitializeScenes` | Prefix → returns false | Loads TAOM's `sp_battle_scenes.xml` (from `TAOM` module) and Sandbox's `conversation_scenes.xml` / `meeting_scenes.xml` via `GameSceneDataManager.Instance.Load*Scenes`. Each load is gated on `File.Exists` so missing files are non-fatal. |
-| `MapScene_Load_DiagnosticPatch` | `SandBox.MapScene.Load` | Prefix → void | Diagnostic only — walks `ModuleHelper.GetActiveModules()` looking for an active module with `SceneObj/Main_map/scene.xscene` and prints which one wins ("last wins" semantics for Bannerlord scene resolution). |
-| `MBMapScene_GetBattleSceneIndexMap_Patch` | `MBMapScene.GetBattleSceneIndexMap` | Prefix → returns false | Wraps a 3× retry loop with `Thread.Sleep(250)` between attempts around the original call. Uses a `_isRetrying` static flag to avoid recursing when the prefix re-invokes the target. On all-attempts-failed, returns `true` so the original runs unguarded one final time. |
+| `Campaign_InitializeScenes_Patch` | `Campaign.InitializeScenes` | Prefix, returns false | Loads TAOM's `sp_battle_scenes.xml` and SandBox's `conversation_scenes.xml` / `meeting_scenes.xml` through `GameSceneDataManager.Instance.Load*Scenes`, then skips vanilla's per-module loop. Runs for new and loaded campaigns (the manager is rebuilt each load, `Campaign.cs:1405-1408`), so a changed list reaches existing saves. Each load is gated on `File.Exists`: a missing TAOM file loads **no** battle scenes at all. Nothing catches a throw from the loader, so a malformed file stops campaigns starting; the generator refuses to write one. |
+| `MapScene_Load_DiagnosticPatch` | `SandBox.MapScene.Load` | Prefix, void | Diagnostic only: prints which active module's `SceneObj/Main_map/scene.xscene` wins ("last wins"). |
+| `MBMapScene_GetBattleSceneIndexMap_Patch` | `MBMapScene.GetBattleSceneIndexMap` | Prefix, returns false | A 3x retry loop with `Thread.Sleep(250)` around the original call (`[HandleProcessCorruptedStateExceptions]` so the catch sees an AV on .NET Framework 4.7.2); the last attempt runs unguarded. It cannot rescue a mis-imported grid, which fails every time. |
 
-### Component Diagram
+**The data.** `Main/_Module/ModuleData/sp_battle_scenes.xml` is generated; its header says so. The source of truth
+is the `REGIONS` table in `tools/build_battle_scenes.py`: (region, grid cells, scene ids). A cell in several
+regions gets the union of their scenes; the engine picks among a cell's scenes with equal odds. Cells no region
+claims (0 and 181-254, which the grid never or almost never paints) fall to `battle_terrain_r`, so 0-255 is always
+covered. 93 scenes today: 85 native ones from SandBoxCore and TAOM's 8 from `TAOM_Map/SceneObj`.
 
-```
-SubModule.OnSubModuleLoad        (Main/SubModule.cs:115-116, COMMENTED OUT)
-        |
-_harmony.PatchCategory("Patch0_BattleScenes")     ← gate
-        |
-   +----+----+--------------+
-   |         |              |
-   v         v              v
-Campaign.InitializeScenes   SandBox.MapScene.Load    MBMapScene.GetBattleSceneIndexMap
-        |                        |                        |
-   loads TAOM XMLs           prints active           retries 3× on AccessViolation
-   via GameSceneDataManager   map module             with 250ms backoff
-```
-
-## Configuration
-
-When eventually re-enabled, depends on these XML files existing in module data:
-
-| File | Module | Purpose |
-|---|---|---|
-| `Main/_Module/ModuleData/sp_battle_scenes.xml` | TAOM | Single-player battle scene table — terrain → scene mapping |
-| `Modules/SandBox/ModuleData/conversation_scenes.xml` | SandBox (vanilla, but reloaded) | Conversation scene table |
-| `Modules/SandBox/ModuleData/meeting_scenes.xml` | SandBox (vanilla, but reloaded) | Meeting scene table |
-| `Modules/<map>/SceneObj/Main_map/scene.xscene` | The map module (`TAOM_Map`) | The 3D campaign map scene |
-
-None of these are currently authored / wired up — that's the work item gating re-enable.
+**Related systems that read the same scenes.** Custom Battle's picker (`custom_battle_scenes.xml`) lists TAOM's
+scenes separately. Scene ids containing `forceatmo` get the forced atmosphere
+([atmosphere-persistence.md](atmosphere-persistence.md)). The parked shader-precompile walk keeps its own scene
+list ([shader-precompilation.md](shader-precompilation.md)). `BattleLoadDiagnostics` logs every pick, and the dev
+console's `taom.print_battle_scene` lists a cell's candidates.
 
 ## Key Files
 
 | File | Purpose |
 |---|---|
+| [tools/build_battle_scenes.py](../../tools/build_battle_scenes.py) | The region table and the generator (`--apply`, `--check`) |
+| [tools/tests/test_build_battle_scenes.py](../../tools/tests/test_build_battle_scenes.py) | Guards, coverage, byte shape, modes, region regressions (runs in CI, no game needed) |
+| `Main/_Module/ModuleData/sp_battle_scenes.xml` | The generated scene list |
 | [Main/Features/BattleScenes/Hooks/Campaign_InitializeScenes_Patch.cs](../../Main/Features/BattleScenes/Hooks/Campaign_InitializeScenes_Patch.cs) | Replaces vanilla scene loading |
-| [Main/Features/BattleScenes/Hooks/MapScene_Load_DiagnosticPatch.cs](../../Main/Features/BattleScenes/Hooks/MapScene_Load_DiagnosticPatch.cs) | Diagnostic — logs which map module wins |
+| [Main/Features/BattleScenes/Hooks/MapScene_Load_DiagnosticPatch.cs](../../Main/Features/BattleScenes/Hooks/MapScene_Load_DiagnosticPatch.cs) | Logs which map module wins |
 | [Main/Features/BattleScenes/Hooks/MBMapScene_GetBattleSceneIndexMap_Patch.cs](../../Main/Features/BattleScenes/Hooks/MBMapScene_GetBattleSceneIndexMap_Patch.cs) | AccessViolationException retry guard |
-| [Main/SubModule.cs:115-116](../../Main/SubModule.cs) | The commented-out `PatchCategory` call — the gate |
+| `TAOM_Map/AssetSources/world_map/worldmap_battle_scene_grid.png` | The grid source (live, unversioned module) |
 
-No service, no IoC registration, no adapters — patches are the entire feature.
-
-## Dependencies
-
-- `TaleWorlds.CampaignSystem.Campaign` (target)
-- `TaleWorlds.CampaignSystem.GameSceneDataManager` (vanilla loader API)
-- `TaleWorlds.MountAndBlade.MBMapScene` (target + re-invoked from inside the prefix)
-- `TaleWorlds.ModuleManager.ModuleHelper` (resolves module folder paths)
-- `TaleWorlds.Engine.Scene` (parameter type for `GetBattleSceneIndexMap`)
+No service, no IoC registration, no adapters: the patches and the data are the whole feature.
 
 ## Tests
 
-None. There are no tests in `TAOM.Tests/Features/BattleScenes/`. The patches are static-only, IO-bound, and need a live game to exercise — they were always intended to be verified manually after `TAOM_Map` ships.
+`tools/tests/test_build_battle_scenes.py` covers the generator: no empty or out-of-range cell, no scene written
+without cells, no `--` in a comment, unknown ids refused, 0-255 coverage, CRLF with no BOM and the root as the first
+element, `--check` / `--dry-run` / `--apply`, and the region regression that kept Mordor scenes off Harad and Khand
+cells, plus a CI check that the committed XML matches `REGIONS` and parses the way the engine parses it. The C#
+patches have no tests: they are static, IO-bound and need a live game.
 
-## Re-enable
+## Verifying
 
-When `TAOM_Map` is integrated and the three XML files (or at minimum `sp_battle_scenes.xml`) are in place:
-
-1. In [Main/SubModule.cs:116](../../Main/SubModule.cs), uncomment `_harmony.PatchCategory("Patch0_BattleScenes");`.
-2. Verify `Main/_Module/ModuleData/sp_battle_scenes.xml` exists and has at least one `<sp_battle_scenes>` entry.
-3. Confirm a map module (likely `TAOM_Map`) is in the active load order with a `SceneObj/Main_map/scene.xscene` file.
-4. Boot the game, watch the rgl_log for the diagnostic Prefix's output ("`TAOM:   Module 'X' has Main_map scene at ...`" + "`TAOM: >>> Selected map module: 'X'`"). The selected module should be `TAOM_Map`.
-5. Travel into a battle and verify the new scene loads. The retry guard in `MBMapScene_GetBattleSceneIndexMap_Patch` will print yellow warnings if `AccessViolationException` is hit during retry, green confirmation on success.
-6. **Add a test or at least a manual checklist to this doc** before considering it shipping.
+1. `python tools/build_battle_scenes.py --check` exits 0 (the file is current and every scene has a `SceneObj`).
+2. Build (`./build.ps1`).
+3. In game, on a cell of each region you changed: `taom.print_battle_scene` lists the expected candidates; a field
+   battle there logs `[BattleLoad] ... mapIndex=<n> sceneId='<id>'` in `taom_debug_*.log`.
+4. The rgl_log diagnostic line `TAOM: >>> Selected map module: 'TAOM_Map'` confirms the right `Main_map` won.
 
 ## How to Diagnose "wrong map module wins"
 
@@ -110,6 +87,7 @@ The `MapScene_Load_DiagnosticPatch` prints to the engine log every time `MapScen
 
 ## Changelog
 
+- 2026-10-03: `sp_battle_scenes.xml` generated per Middle-earth region by `tools/build_battle_scenes.py`, from cells measured against the live settlements (native scenes grouped by type: Plain to the green kingdoms, Desert to Harad and Umbar, Steppe to Rhûn, Khand and the Erebor/Dale plains, Swamp to the Dead Marshes). The 6 Mordor and 2 Rohan field scenes are back in rotation on corrected cells, accepting the June `pbr_terrain` GPU crash risk. Region table: [worldmap-battle-scene-grid.md](../reference/worldmap-battle-scene-grid.md#region-table-2026-10-03-live).
 - 2026-06-01 — Re-enabled `Patch0_BattleScenes` (`feat(battle-scenes)`): uncommented the `PatchCategory` gate so TAOM's full 0–255 `sp_battle_scenes` table loads; doc flipped DISABLED→ENABLED.
 - 2026-06-01 — Root-caused/resolved a campaign-load `AccessViolationException` (`fix(taom_map)+docs(battle-scenes)`) traced to a mis-imported `worldmap_battle_scene_grid` texture; fixed by a lossless re-import at the `Assets/world_map/` resource path.
 - 2026-05-31 — Deep-dive reference doc on the worldmap battle-scene grid + LOTR re-author plan (`docs(battle-scenes)`).
@@ -118,8 +96,8 @@ The `MapScene_Load_DiagnosticPatch` prints to the engine log every time `MapScen
 
 ## GitHub Issue
 
-- **Issue:** None.
-- **Status:** Parked pending TAOM_Map integration.
+- **Issue:** None yet for the 2026-10-03 region remap (owed).
+- **Status:** Enabled; in-game region checks owed.
 
 ---
 

@@ -1,0 +1,20 @@
+{
+  "_about": "Background for TAOM's first loading screen (the native view's `loadingscreen_default`, and `loadingscreen_naval` when War Sails is on), chosen by Mike on 2026-10-03 after three ImagineArt rounds. Generated with ImagineArt on Mike's own account at his request.",
+  "service": "ImagineArt",
+  "model": "nano-banana-pro",
+  "resolution": "2K (2752 x 1536), aspect 16:9",
+  "files": {
+    "imagineart_moonlit_smoke_arch.png": {
+      "imagineart_asset": "0a322e9f-5ede-4d31-9b08-d369f172eea7",
+      "sha256": "0d04ed8e31d3a9bed6d7e87457f80c2634e7e2c1b378612d82c0fcfee8d6ea73",
+      "reference": "one image: ImagineArt asset 7b9c64c8-41a3-4277-8e46-5d2e80df64e5 (round two 'smoke arch'), itself text-only",
+      "prompt": "Keep this exact composition: a smoke arch with threads of ghostly flowing Elvish script over a near-black textured surface. Variation: cool moonlit blue-silver tint on the smoke and script, as if lit by a pale moon from above, and the arch kept high so a wide empty dark band runs across the middle of the image (the middle 70 percent of the width and the middle 40 percent of the height contain nothing). The bottom-right corner stays plain and quiet. Very low contrast, moody. No gold, no orange, no fire, no readable words, no logo, no title, no frame."
+    }
+  },
+  "derived": {
+    "Main/_Module/AssetSources/LoadingScreen/loadingscreen_default.png and loadingscreen_naval.png": {
+      "sha256": "5366d5c07705143d112c6eec5f419dab4573773cc584c0cc61f7015aee42b891",
+      "how": "background scaled to cover 1920 x 1080 (Lanczos) and centre-cropped; the title E:/LOTRAOMAssets/Renders/LOTRAOM_text_only.png (sha256 dd06c148...) scaled to 60 percent of the width (1152 px) and alpha-composited at the exact centre; saved RGB"
+    }
+  }
+}

@@ -25,7 +25,7 @@ TAOM ships many XML files that **mirror, extend, or transform vanilla Bannerlord
 | You're touching… | Compare against | Tool |
 |---|---|---|
 | `settlements.xml` scene_name refs | on-disk `Modules/*/SceneObj/` folders | `python tools/audit_scene_names.py` |
-| `sp_battle_scenes.xml` Scene ids / map_indices | vanilla `SandBox`/`NavalDLC` `sp_battle_scenes.xml` + SceneObj | `python tools/audit_battle_scenes.py` |
+| `sp_battle_scenes.xml` Scene ids / map_indices | vanilla `SandBox` `sp_battle_scenes.xml` + SceneObj; **generated**: edit `REGIONS` in `tools/build_battle_scenes.py`, never the XML | `python tools/build_battle_scenes.py --check` |
 | settlement entrance coordinates (`posX/posY`, `gate_posX/gate_posY`) | the navmesh island every OTHER settlement sits on — set-relative, not vanilla | `taom.audit_settlement_entrances` (needs a loaded campaign); see "Settlement entrances" below |
 | `action_sets.xml` — structure as much as content | vanilla `Native/ModuleData/action_sets.xml` (the engine field-merges same-id sets across modules) | `python tools/audit_action_set_parity.py` — **exits non-zero** on any root-level `<action>`; see "`action_sets.xml`" below |
 | a culture / kingdom / clan you authored in `Main/_Module/ModuleData/` | whether any settlement in `TAOM_Map` actually carries that culture | `python tools/validate_moduledata.py` — `LANDLESS_CULTURE` (ERROR); see "Authored data can be complete and still be orphaned" below |
@@ -40,7 +40,7 @@ TAOM ships many XML files that **mirror, extend, or transform vanilla Bannerlord
 
 ## When this fires
 
-- **After ANY Bannerlord version bump** — run `audit_scene_names.py` + `audit_battle_scenes.py` as part of the post-bump validation (see `docs/migration/v1.4.x-changes.md`). v1.4.5 renamed the house-interior scenes and TAOM's `sp_battle_scenes.xml` referenced a non-existent `battle_terrain_extended`; both crashed battles/visits until repointed (2026-05-28).
+- **After ANY Bannerlord version bump:** run `audit_scene_names.py` + `build_battle_scenes.py --check` as part of the post-bump validation (see `docs/migration/v1.4.x-changes.md`). v1.4.5 renamed the house-interior scenes and TAOM's `sp_battle_scenes.xml` referenced a non-existent `battle_terrain_extended`; both crashed battles/visits until repointed (2026-05-28).
 - **When editing any of the `paths:` files above** — re-run the relevant audit before committing.
 - **Before editing — or after a version bump touching — any TAOM GUI prefab that is a CLONE of a vanilla prefab** — diff it against installed vanilla first (see "GUI prefab clones" below). v1.4.5 silently broke every troop thumbnail this way (2026-05-31).
 - **Before committing any `action_sets.xml` edit** — run `audit_action_set_parity.py`. It now fails on a structural defect the client build loads without complaint and the dedicated-server build dies on (2026-08-03).

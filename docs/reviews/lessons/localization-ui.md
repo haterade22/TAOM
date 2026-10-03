@@ -920,3 +920,17 @@ deep review found the error in minutes by searching all of them.
 - **Prevent:** a negative finding ("X does not exist in vanilla") is relayed only with the paths it searched; check
   them against Native, SandBoxCore, SandBox, StoryMode and CustomBattle (and the DLC modules) before acting on it.
 - **Source:** `docs/reviews/rca-full-translation-run-2026-10-02.md` finding 1.
+
+### The loading-screen horse and first background are native: find the name in the installed packages, then shadow it (2026-10-03)
+The horse in the corner of every loading screen and the first screen's background are drawn by the native
+`rglLoading_screen_view`, not Gauntlet, so no prefab or patch reaches them. A TAOM texture carrying the vanilla
+name (`loading_sprite_bannerlord`, `loadingscreen_default`, `loadingscreen_naval`) replaces it, even when a
+material binds it. Vanilla still shows for about a second at launch, before TAOM's packages load.
+- **Why missed:** two false leads cost time. A search subagent reported the horse as part of the 1920 x 1080
+  loading paintings; the first native string hit, `warrider_logo` ("loading game logo"), is the game wordmark. The
+  community guide's background name, `loadingscreen_texture_1`, exists in no v1.5.3 package.
+- **Prevent:** for anything drawn natively, list the installed packages' textures and materials by name
+  (`tools/audit_map_scene_memory.py`'s TOC reader), decode the candidate (it decodes DXT5 and BC7 with Pillow in
+  memory) and read the material's `MeshVectorArgument` before authoring art. Treat a guide's resource name as
+  version-bound.
+- **Source:** `docs/features/native-loading-screen.md`.

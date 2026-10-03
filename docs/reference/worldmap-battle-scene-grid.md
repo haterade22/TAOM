@@ -1,9 +1,12 @@
 # Worldmap Battle-Scene Grid (how field-battle terrain is chosen)
 
-How Bannerlord 1.4.5 decides **which battle-terrain scene loads when a field battle starts on the campaign
+How Bannerlord decides **which battle-terrain scene loads when a field battle starts on the campaign
 map**, what the `worldmap_battle_scene_grid` texture actually is, and how to **re-author it for TAOM's
-Middle-earth map**. Companion to [scene-reference-audit.md](scene-reference-audit.md) (which validates the
-`sp_battle_scenes.xml` *data*) — this doc explains the *texture* that drives it.
+Middle-earth map**. First written against 1.4.5; the chain was re-verified against the installed v1.5.3 DLLs and
+the native decompile on 2026-10-03. Companion to [scene-reference-audit.md](scene-reference-audit.md) (which
+validates the `sp_battle_scenes.xml` *data*); this doc explains the *texture* that drives it. To add a custom
+scene, follow [recipe-add-a-field-battle-scene.md](../modding/recipe-add-a-field-battle-scene.md); which cell
+belongs to which region is the [Region table](#region-table-2026-10-03-live) below.
 
 > **TL;DR (CONFIRMED on 1.4.5, 2026-06-01):** the battle-scene grid is set by placing a **lossless**
 > `worldmap_battle_scene_grid` texture at the **`Assets/world_map/`** resource path (R = scene index → matches
@@ -34,7 +37,7 @@ Middle-earth map**. Companion to [scene-reference-audit.md](scene-reference-audi
 > is the tell). Recovery during the 2026-06-01 incident was to **delete the bad import**; the definitive fix was
 > re-importing lossless at `world_map/`. Patch0's AV retry guard does **not** rescue a deterministic mis-import.
 
-## Data flow (verified against installed v1.4.5 + decompiled SandBox)
+## Data flow (re-verified against the installed v1.5.3 DLLs and native decompile, 2026-10-03)
 
 ```
 field battle starts at map position (CampaignVec2)
@@ -46,9 +49,14 @@ field battle starts at map position (CampaignVec2)
    │    → MapPatchData { int sceneIndex; Vec2 normalizedCoordinates }
    │
    ▼ DefaultSceneModel.GetBattleSceneForMapPatch(patch, isNaval)    [DefaultSceneModel.cs:26]
-   │    PRIMARY:  pick the <Scene> whose map_indices="…" contains sceneIndex (random among ties)
-   │    FALLBACK: no index match → filter scenes by navmesh TerrainType (FaceGroupIndex);
-   │             then by IsNaval; then any scene — each fallback logs Debug.FailedAssert
+   │    PRIMARY:  every <Scene> whose map_indices="…" contains sceneIndex; one match is returned,
+   │             several are picked with equal odds (GetRandomElement) after a
+   │             Debug.FailedAssert("Multiple battle scenes ...") [:58]
+   │    FALLBACK: no index match → scenes whose terrain= equals the navmesh TerrainType (no assert);
+   │             then any non-naval scene, then any scene, each of those two after a FailedAssert
+   │    The installed MBDebugManager.Assert is empty (MBDebugManager.cs:33-35); ButterLib, shipped
+   │    in TAOM.Dependencies, wraps it to write one Debug-level line. No popup, no exception, and
+   │    nothing in rgl_log.
    │
    ▼ returns SceneID (e.g. "battle_terrain_a")
    ▼ CampaignMission.OpenBattleMission(sceneID, …)
@@ -56,8 +64,10 @@ field battle starts at map position (CampaignVec2)
 
 There are **two independent signals**, used in priority order:
 
-1. **`sceneIndex` (primary)** — comes from the **baked grid texture**. This is the `map_indices="…"` attribute
-   in `sp_battle_scenes.xml`.
+1. **`sceneIndex` (primary):** comes from the **grid texture** (a runtime resource, see below). This is the
+   `map_indices="…"` attribute in `sp_battle_scenes.xml`. Lookup: `floor(pos / terrainSize x 1024)` per axis,
+   `terrainSize` = node count x node size from `Scene.GetTerrainData` (`MapScene.cs:240-242, 451-455`); TAOM's
+   `Main_map` is 16 nodes of 100, so 1600 x 1600.
 2. **navmesh `TerrainType` (fallback)** — `MapScene.GetFaceTerrainType` returns `(TerrainType)FaceGroupIndex`
    off the map's **navigation mesh**, a completely separate bake from the texture. Only consulted when no scene's
    `map_indices` contains the pixel's index.
@@ -113,123 +123,146 @@ near-monochrome **red** (the scene index lives in the red channel — low indice
 
 Structurally unchanged: 2-byte index map, native read, `map_indices` matching, navmesh-`TerrainType` fallback.
 Confirmed 1.4.x-era additions: `is_naval="true"` scenes + an `isNavalEncounter` branch through the whole
-selection chain, and a separate `NavalDLC/ModuleData/sp_battle_scenes.xml`. The native **bake/encode** of the PNG
-→ index map is C++ and not decompilable; **the exact channel encoding must be confirmed in the editor** (the raw
-red-channel data strongly implies red = scene index).
+selection chain, and a separate `NavalDLC/ModuleData/sp_battle_scenes.xml` (TAOM declares NavalDLC
+incompatible, so the naval branch never runs). **Channel encoding, decompiled 2026-10-03**
+(`python tools/native_decompile.py --engine-method IMBMapScene.GetBattleSceneIndexMap`): the native function loads
+the texture by the hardcoded name `worldmap_battle_scene_grid`, copies bytes 0 and 1 (R and G) of each 4-byte
+texel, and starts at the **last** row, so output row r is texture row 1023 - r. The PNG's top row is the map's
+north edge, which two logged battles near Erebor confirm (`mapIndex=46`, `taom_debug_2026-09-29_08-29-26.log`).
 
-## Current TAOM state (verified on disk 2026-05-31)
+## Current TAOM state (verified 2026-10-03)
 
 | Fact | Evidence |
 |---|---|
-| TAOM_Map ships a full custom `Main_map` (11 MB `scene.xscene` + 56 MB `terrain.bin`), **baked 2026-05-28** | `Modules/TAOM_Map/SceneObj/Main_map/` |
-| 3 active modules own `Main_map`: SandBox, NavalDLC, **TAOM_Map** → TAOM_Map's map is used only if it loads **last** | filesystem scan |
-| Grid **source** PNG (113 KB) at `AssetSources/Battle Map/worldmap_battle_scene_grid/` (16:36); **reimported 2026-05-31** → compiled `Assets/Battle Map/worldmap_battle_scene_grid/worldmap_battle_scene_grid_tex.tpac` (16:47) now present, so *"Source file is missing"* is **resolved** | filesystem scan |
-| **`Main_map` still baked 2026-05-28** (`scene.xscene`/`terrain.bin` timestamps unchanged after the reimport) → the new grid is **NOT yet baked into the scene**; battles still use the old index map until `Main_map` is re-baked | filesystem scan |
-| Grid resolved (2026-06-01): re-imported **lossless** at `Assets/world_map/` (4.19 MB uncompressed `.rdc`) → campaign loads with `Main_map` unchanged | filesystem scan |
-| `Patch0_BattleScenes` is **ENABLED** (re-enabled 2026-06-01, `Main/SubModule.cs:159`) → loads TAOM's `sp_battle_scenes.xml` | grep |
-| `sp_battle_scenes.xml` is **not** an XmlNode in `Main/_Module/SubModule.xml` (only `CustomBattleScenes`→`custom_battle_scenes`, a different file) → it is loaded **only** by Patch0's `Campaign_InitializeScenes_Patch.cs:19` | grep |
+| TAOM_Map ships a full custom `Main_map` (16 x 16 terrain nodes of 100, so 1600 x 1600 units); it wins only when TAOM_Map loads after SandBox | `Modules/TAOM_Map/SceneObj/Main_map/scene.xscene`, "last active module wins" (MapScene.cs:203-211) |
+| Grid source: `TAOM_Map/AssetSources/world_map/worldmap_battle_scene_grid.png` (2026-05-31). Runtime copy: `Assets/world_map/worldmap_battle_scene_grid_tex.tpac` + `RuntimeDataCache/3CD25D70-DAD2-4C09-8FF0-D114C7810DF6.rdc` (2026-06-01), pixel-identical to the PNG; the same source hash ships in `pack4.tpac` of the public, patreon and testing channels | review of 2026-10-03 (RDC pixel block compared to the PNG) |
+| `Patch0_BattleScenes` is enabled (`Main/SubModule.cs:520`) | grep |
+| Vanilla's `Campaign.InitializeScenes` appends every active module's `sp_battle_scenes.xml` (`Campaign.cs:1347-1368`). TAOM's prefix (`Campaign_InitializeScenes_Patch`) loads only TAOM's file and skips the original, for new and loaded campaigns alike (the manager is rebuilt each load, `Campaign.cs:1405-1408`). If the patch ever fails to apply, vanilla's append comes back and SandBox's indices 1-157 roll Calradian scenes on TAOM cells | decompile + `Campaign_InitializeScenes_Patch.cs:14-37` |
+| `sp_battle_scenes.xml` is generated by `tools/build_battle_scenes.py`, is not an XmlNode in `Main/_Module/SubModule.xml`, and reaches the game through the build's `_Module` copy | `TAOM.csproj` |
 
 ### The coupling that matters
 
-The grid's pixel **index values must all be covered by the *active* `sp_battle_scenes.xml`.**
+Every index the grid paints must be listed by some scene in the active file; an unlisted index drops to the
+terrain-type fallback. The grid paints 1-180 and 255, plus a 2-texel speck of 0 at PNG (504, 847-848) on the Harad
+edge; 181-254 never occur. The generator gives every cell no region claims (0 and 181-254) to the catch-all
+`battle_terrain_r`, so coverage is 0-255 by construction.
 
-- **Patch0 enabled (current, since 2026-06-01):** the **active** file is **TAOM's `Modules/TAOM/ModuleData/sp_battle_scenes.xml`** (covers all 0–255, 0 crash suspects). Indices 158–255 resolve to `battle_terrain_r`.
-- *(Before re-enabling, vanilla `SandBox/sp_battle_scenes.xml` was active — 1–157 only — so the grid's extended indices `Debug.FailedAssert`ed + fell back to terrain-type. That's the gap Patch0 closes.)*
-
-> Verify index coverage any time the grid or XML changes: `python tools/audit_battle_scenes.py`
-> (as of 2026-05-31 the *deployed TAOM* file covers all 256 indices with 0 crash suspects — but that file is
-> inert until Patch0 is enabled).
+> Verify after any grid or table change: `python tools/build_battle_scenes.py --check` (exit 1 when the file is
+> stale or a scene has no `SceneObj` folder). CI runs the generator's tests, which also check the committed file
+> against `REGIONS`.
 
 ## Re-authoring the grid for the Middle-earth map
 
 Two coupled halves. **Asset half = Bannerlord editor (your domain, external tool).** **Data/code half = repo.**
 
-### Decision fork
+**History.** The 2026-05/06 plan weighed reusing vanilla's indices (Approach A, no code) against custom indices
+(Approach B, re-enable `Patch0_BattleScenes`). B won: the grid was repainted with Middle-earth indices 1-180 and
+Patch0 was re-enabled on 2026-06-01. Its first-draft region to terrain table was superseded on 2026-10-03 by the
+measured table below and the generator.
 
-| | Approach A — reuse vanilla indices | Approach B — custom indices |
-|---|---|---|
-| Grid paints | only vanilla indices (those in `SandBox/sp_battle_scenes.xml`) | any index 0–255 |
-| Code change | **none** (Patch0 stays disabled) | re-enable `Patch0_BattleScenes` so TAOM's extended XML loads |
-| Battle terrains available | vanilla scenes only | custom LOTR battle-terrain scenes possible |
-| Risk | lowest — ships immediately | Patch0's AccessViolation retry fires every battle; needs in-game smoke test |
+### Region table (2026-10-03, live)
 
-**Recommended:** start with **A** (correct vanilla terrain under each region, zero code risk); escalate to **B**
-per-region only where vanilla terrain can't express the lore.
+`Main/_Module/ModuleData/sp_battle_scenes.xml` is **generated** by `python tools/build_battle_scenes.py --apply`
+from its `REGIONS` table; refine a region by editing that table and re-running, never the XML. The table below is
+the cell to region half; the scene lists per region live in the tool. A cell in two regions gets the union of
+their scenes.
 
-### Proposed region → terrain mapping (design starting point — refine in-editor)
+**How the cells were attributed.** The grid PNG's red value at every settlement position in the live
+`TAOM_Map/ModuleData/settlements.xml` (pixel = `floor(pos / 1600 x 1024)`, PNG row = 1023 minus that for y, as
+the native copy reads the texture bottom row first), grouped by the settlement's culture. Cells holding no
+settlement were read off the numbered grid picture and are marked *(visual)*. Shared cells are named.
 
-Paint each Middle-earth region with an index that resolves (in the active XML) to this terrain profile. Candidate
-vanilla scene ids exist today; the editor author picks the specific index that maps to one of them.
+| Region | Cells |
+|---|---|
+| Gondor | 85 (Minas Tirith, Pelennor, Osgiliath), 86, 90, 91, 92, 93, 97 (Pelargir), 98, 99, 100, 104, 105 (Dol Amroth), 106, 107, 108; 101, 102, 103 *(visual)* |
+| Ithilien | 95, 96; 94 *(visual)* |
+| Rohan | 81, 87 (Edoras), 88 (Helm's Deep), 89; 80 (shared with Lórien) |
+| Dunland and Enedwaith | 52, 59, 61, 62 (Fords of Isen, shared with Isengard); 57, 58, 60 *(visual)* |
+| Isengard | 63 (Orthanc), 62 (13 Isengard settlements against 5 Dunland ones) |
+| Lothlórien | 65, 80 |
+| Rivendell | 42 (shared with the Misty Mountains) |
+| Moria, Misty Mountains, Gundabad, Ettenmoors | 22, 42, 43, 44, 53, 64; 23, 24 *(visual)* |
+| Mirkwood and the Woodland Realm | 25, 45, 46 (Felegoth and Caras Laerolin), 54, 55 |
+| Dol Guldur | 66 |
+| Dale | 46 (Dale, Erebor and two Mirkwood towns: shared by all three), 47, 56 |
+| Erebor and the Iron Hills | 26, 27, 28, 46, 48 |
+| Rhûn | 20, 29, 30, 49, 50 (the sand patch), 51, 69, 70, 71, 74, 75, 76, 77 (Barad-dûr's cell, shared with Mordor), 78, 160 |
+| Khand | 72, 73, 148, 149, 151, 152, 153, 154, 155, 156, 178 (shared with Near Harad) |
+| Near Harad | 109, 111, 112, 113, 114 (shared with Harad), 115, 116, 127, 131, 172 (shared with Mordor), 176, 177 (Chelkarâ), 178 (Dûn Shatagûn); 110 *(visual: the Harondor coast, nearest Kes Marzûk)* |
+| Harad | 114, 117-122, 124-126, 128, 129, 132, 135, 144, 145; 123, 130, 133, 134 *(visual)* |
+| Far Harad | 136-143, 146, 147, 150, 157, 158 |
+| Mordor | 84 (Morannon), 161-172 (172 holds three Mordor and three Near Harad settlements), 77 (Barad-dûr); 173-175, 179 *(visual)* |
+| Dead Marshes; Emyn Muil; Brown Lands | 82, 83 *(visual)*; 79; 67, 68 *(visual)* |
+| Lindon; Ered Luin | 36, 38, 39; 1, 37 *(visual)*; 3, 4, 5, 33 |
+| Eriador and Arnor | 2, 6, 7, 12, 31, 32, 34, 35, 40, 41, 180 *(visual)* |
+| Grey Mountains; Forodwaith; far east | 13-17; 8-11; 18, 19, 21, 159 *(visual)* |
+| **255 (unpainted)** | 25.8% of the grid: the sea, the parchment edge and 36 settlements (33 of Umbar's, one Harad village, and Gorgrim and Mokra of Ered Luin). It gets Umbar's mix of two desert and two coastal scenes, so the two Ered Luin settlements do too until Umbar is painted its own index. |
 
-| Region | Target `terrain` / `forest_density` / `TerrainType` | Candidate vanilla scene id(s) |
-|---|---|---|
-| Gondor lowlands, Pelennor, Rohan plains | `Plain` / `Low` | `battle_terrain_a` |
-| Rohan / Wold grassland, Rhûn steppe, Khand | `Steppe` | `battle_terrain_012`, `battle_terrain_014`, `battle_terrain_017` |
-| Mirkwood, Lothlórien, Fangorn, Druadan | `Plain` / `High` (+ `Mountain` / `Lake`) | `battle_terrain_h`, `battle_terrain_k`, `battle_terrain_001`, `battle_terrain_004` |
-| Misty Mountains, Ered Luin, White Mountains | `Plain` (+ `Canyon` / `Mountain`) | `battle_terrain_031` |
-| Mordor (Gorgoroth ash), Harad desert, Near Harad | `Desert` (+ `Canyon`) | `battle_terrain_g`, `battle_terrain_b`, `battle_terrain_d`, `battle_terrain_009` |
-| Dead Marshes, Nindalf, Nan Curunír fens | `Swamp` | `battle_terrain_005`, `battle_terrain_034` |
-| Anduin banks, Entwash, river crossings | `Plain` / `Low` (+ `River` / `Water`) | `battle_terrain_f`, `battle_terrain_s`, `battle_terrain_011` |
+**Open questions, measured but not settled.** 179 has no settlement and its nearest fortification is Khand's; it
+stays Mordor on the picture's evidence. 82 is nearest a Rohan fortification and may be the Wetwang rather than the
+Dead Marshes. Each is a one-line move in `REGIONS` plus its row in this table.
 
-*(Scene ids above were read from TAOM's `sp_battle_scenes.xml`; the exact `terrain`/`TerrainType` of each in the
-**active vanilla** file should be re-confirmed with `audit_battle_scenes.py` before the editor pass.)*
+**Pitfalls the earlier lists had.** The pre-2026-10-03 Rohan scene listed 85, 86, 90, 91 and 92 (Minas Tirith and
+Anórien); the Mordor scenes listed 85, 94, 109, 127, 128, 131, 152 and 153 (Gondor, Ithilien, Near Harad, Harad,
+Khand). The first draft of this table put Mordor on 176-178, which hold Harad and Khand castles; a test in
+`tools/tests/test_build_battle_scenes.py` now pins that. Check a cell against this table, and the dry run's
+"shared cell" lines, before giving it a custom scene.
 
-### Phase 1 — design the index→terrain table (repo)
-Refine the table above against the **active** XML; run `python tools/audit_battle_scenes.py`. Any desired terrain
-with no vanilla index is the trigger to use Approach B for those cells.
+**Scene pool.** Native scenes are grouped by type. Plain goes to the green kingdoms: River and Water tagged ones on
+the Anduin and the coasts, High forest ones to Ithilien, Lórien, Rivendell and Mirkwood, Mountain and Canyon ones to
+the ranges, and `biome_144` and `biome_149` to Far Harad as well as Eriador. Desert goes to Harad, Near Harad,
+Umbar, the Rhûn sand patch, the Brown Lands and one Khand scene. Steppe goes to Rhûn, Khand, Far Harad, Near Harad's
+edges, the Erebor and Dale plains, the Grey Mountains and Forodwaith. Swamp goes to the Dead Marshes. Vanilla's own
+XML defines `battle_terrain_002`, `006`, `016`, `c`, `e`, `i`, `j` and `r` only inside comments: the first seven
+stay out (`002` has no scene on disk), and `r` is the catch-all, since it ships in SandBoxCore and vanilla's Custom
+Battle still lists it. The `terrain`, `forest_density` and `TerrainType` values do not steer anything at runtime:
+`terrain` is read only when no scene lists a cell, which full coverage prevents, and the other two are read by
+nothing. `battle_terrain_biome_094` had two unexplained load crashes on 2026-09-06 (UNVERIFIED cause); it is now 1
+of 8 Khand scenes.
 
-### Phase 2 — author + import the grid (Bannerlord editor — your domain)
+### Authoring and importing the grid (Bannerlord editor, your domain)
 
 Per the authoritative [BannerlordModding.LT › Battle Scene Grid](https://docs.bannerlordmodding.lt/editor/battle_scene_grid/)
-(a **1.2.12-era** source — see the 1.4.5 caveat). The `map_indices`↔R-byte mapping is corroborated against installed v1.4.5:
+(a **1.2.12-era** source), corroborated against the installed engine:
 
 1. Author the grid texture **externally** at **1024×1024** ("native's size; not sure if other sizes work").
    **R channel = scene index** 0–255 — the value that must appear in a `<Scene map_indices="…">` of
-   `sp_battle_scenes.xml` (corroborated by the decompiled 2-byte texel format, `MapScene.cs:456-459`; the docs'
-   `battle_terrain_020` example list is verbatim TAOM's xml). **G channel = party entry orientation** (which side
-   parties enter from).
+   `sp_battle_scenes.xml`. **G channel = party entry orientation** (which side parties enter from). North is the
+   PNG's top row.
 2. **Import it at the `Assets/world_map/` resource path**, **LOSSLESS**: Texture Inspector → check **Do Not
    Compress** + **Dont Degrade**. **Both** matter (CONFIRMED 2026-06-01): the resource name must be
    `world_map/worldmap_battle_scene_grid` (a wrong path like `Battle Map/` orphans/conflicts the resource → crash),
    and compression mangles the R-channel index bytes (the correct import is ~4.19 MB = 1024×1024×4 uncompressed;
    a ~700 KB compressed `.rdc` is the bad-import tell).
 3. **That's it — no `Main_map` re-bake.** CONFIRMED on 1.4.5 (2026-06-01): a lossless import to `Assets/world_map/`
-   with `SceneObj/Main_map` **unchanged** loads correctly. Launch a campaign to verify (Patch0's diagnostic patch
-   logs the selected map module; the retry guard wraps `GetBattleSceneIndexMap`).
-4. Ensure `sp_battle_scenes.xml` covers every R-byte value the grid uses, and confirm `TAOM_Map` loads **after**
-   SandBox/NavalDLC so its `Main_map` wins. Run `python tools/audit_battle_scenes.py`.
+   with `SceneObj/Main_map` **unchanged** loads correctly.
+4. A repaint that adds an index or moves a border: update `REGIONS` (re-measure with the settlement method above),
+   run the generator, and confirm `TAOM_Map` still loads after SandBox so its `Main_map` wins.
 
 **Source archive:** keep `AssetSources/world_map/worldmap_battle_scene_grid.png` (and/or the `.zip`) as your
 editable grid **source** — `AssetSources/` is editor-only, never loaded at runtime.
 
-### Phase 3 — Patch0 (repo) — DONE
-`_harmony.PatchCategory("Patch0_BattleScenes");` was **re-enabled 2026-06-01** at `Main/SubModule.cs:159` (loads
-TAOM's `sp_battle_scenes.xml` so extended indices 158–255 resolve). The historical disabled-state notes below are
-kept for context.
-- Ensure `Main/_Module/ModuleData/sp_battle_scenes.xml` covers every painted index and every Scene id resolves to
-  a real `SceneObj/<id>/` (run `audit_battle_scenes.py`).
-- Follow the in-game smoke test in [features/battle-scenes.md](../features/battle-scenes.md#re-enable) (watch
-  rgl_log for the diagnostic "Selected map module" line + retry-guard warnings).
-
 ## Verification
 
-- **Data:** `python tools/audit_battle_scenes.py` → 0 crash suspects; every painted index covered by the *active*
-  XML; every Scene id has a `SceneObj/<id>/` folder.
-- **Code (Approach B):** `./build.ps1 -RunTests` green; `/verify-bindings` resolves the Patch0 targets.
-- **In-game:** start a field battle in 2–3 distinct regions (e.g. Mordor, Rohan, Mirkwood); confirm the loaded
-  battle terrain matches the painted region. `Debug.FailedAssert` in rgl_log = an index the active XML doesn't
-  cover.
+- **Data:** `python tools/build_battle_scenes.py --check` and `python -m unittest tools.tests.test_build_battle_scenes`.
+- **In game:** stand on a cell and run `taom.print_battle_scene` (prints the cell's index and every candidate scene);
+  fight there and read the `[BattleLoad] ... mapIndex=<n> sceneId='<id>'` line in
+  `bin/Win64_Shipping_Client/Logs/taom_debug_*.log`. A failed assert never reaches rgl_log, so it is no signal.
 
 ## Reference files
 
-- `E:\Decompiled_Bannerlord\Modules\SandBox\Sandbox\MapScene.cs` (Load 168–251, GetMapPatchAtPosition 436–467)
-- `…\TaleWorlds.MountAndBlade\…\{MBMapScene,IMBMapScene}.cs` (native bridge)
-- `…\TaleWorlds.CampaignSystem.GameComponents\DefaultSceneModel.cs:26` (`GetBattleSceneForMapPatch`)
-- `…\TaleWorlds.CampaignSystem\GameSceneDataManager.cs:76` (`LoadSPBattleScenes`)
+Engine authority is the installed DLLs: `pwsh tools/taom-src.ps1 path <Type>` (v1.5.3 cache in `~/.taom-src/v1.5.3/`).
+
+- `SandBox.MapScene` (terrain size 240-242, `GetMapPatchAtPosition` 436-467)
+- `TaleWorlds.CampaignSystem.GameComponents.DefaultSceneModel` (`GetBattleSceneForMapPatch` 26-62)
+- `TaleWorlds.CampaignSystem.GameSceneDataManager` (`LoadSPBattleScenes` 76-155: `int.Parse` on every `map_indices` token)
+- `TaleWorlds.MountAndBlade.MBDebugManager` (`Assert` 33-35, empty)
+- native `IMBMapScene.GetBattleSceneIndexMap`: `python tools/native_decompile.py --engine-method IMBMapScene.GetBattleSceneIndexMap`
 
 ## Related
 
-- [features/battle-scenes.md](../features/battle-scenes.md) — the (disabled) `Patch0_BattleScenes` feature + re-enable checklist
+- [features/battle-scenes.md](../features/battle-scenes.md): the `Patch0_BattleScenes` feature and its history
+- [modding/recipe-add-a-field-battle-scene.md](../modding/recipe-add-a-field-battle-scene.md): adding a custom field-battle scene
 - [scene-reference-audit.md](scene-reference-audit.md) — validates `sp_battle_scenes.xml` Scene ids vs on-disk SceneObj
 - [taom-map-settlement-naming.md](taom-map-settlement-naming.md) — TAOM_Map is a live external module, not a repo shadow
 - [.claude/rules/vanilla-data-comparison.md](../../.claude/rules/vanilla-data-comparison.md) — diff vs installed vanilla before editing mirrored data

@@ -75,7 +75,7 @@ No configuration needed. Scene creators add "forceatmo" anywhere in the scene na
 
 1. Name the scene with "forceatmo" in the name (e.g., `lotr_location_forceatmo`)
 2. Bake the desired atmosphere into the scene in the Bannerlord scene editor
-3. Reference the scene in `sp_battle_scenes.xml` or settlement XML as usual
+3. Reference the scene in settlement XML as usual; for campaign field battles, add it to `REGIONS` in `tools/build_battle_scenes.py` ([recipe](../modding/recipe-add-a-field-battle-scene.md)), never to `sp_battle_scenes.xml` by hand
 4. No code changes needed — the patch detects the naming convention automatically
 
 ## Performance

@@ -308,6 +308,10 @@ Kysaro's data asks (`TAOM_special_character_requests.md`), as decided on 2026-10
    `Main/_Module/GUI/FactionUI/LoadingScreens/`.
 2. No code change: the folder is listed the first time a loading screen opens.
 
+The first screen at launch and the spinning ring in the corner are not these paintings: the native
+loading view draws them below and above Kysaro's window. See
+[native-loading-screen.md](native-loading-screen.md).
+
 ## Performance
 
 In the campaign the resident group stays loaded (the fonts, three 2048x2048 sheets, 48 MB; the

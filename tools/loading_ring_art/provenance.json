@@ -1,0 +1,21 @@
+{
+  "_about": "Master art for the One Ring loading sheet that replaces the native galloping horse (docs/features/native-loading-screen.md). Generated with ImagineArt on Mike's own account at his request, 2026-10-03, text only: his reference image (the inscription as a gold circle on dark stone) was not uploaded, so the prompt carries the look. The sheet is derived by `python tools/build_loading_ring_sheet.py tools/loading_ring_art/imagineart_inscription.png Main/_Module/AssetSources/LoadingScreen/loading_sprite_bannerlord.png`.",
+  "service": "ImagineArt",
+  "model": "nano-banana-pro",
+  "resolution": "2K (2048 x 2048), aspect 1:1",
+  "credits": "90 for the call (balance 70,538 before, 70,448 after); count 2 was asked and one image came back",
+  "files": {
+    "imagineart_inscription.png": {
+      "imagineart_asset": "c17b49b0-381a-45e2-a223-9b4b9f328420",
+      "sha256": "bb1d53342db3c9579868e8eb91185ca04dab7237f06b8c0f53255c6cf8fe3a3c",
+      "prompt": "The One Ring inscription from The Lord of the Rings: a single continuous line of flowing elvish Tengwar fire-script in glowing molten gold, arranged in one perfect complete circle, the letters evenly spaced all the way around with no gap, centered in the image, the circle filling about 80 percent of the frame. Perfectly circular, not an ellipse, flat top-down orthographic view. Pure flat solid black background. No metal ring band, no ring object, no texture, no vignette, no smoke, no sparks, no reflections, nothing else in the image. Crisp clean letter strokes with a soft warm golden glow, high contrast."
+    }
+  },
+  "derived": {
+    "Main/_Module/AssetSources/LoadingScreen/loading_sprite_bannerlord.png": {
+      "sha256": "8c52e2f04e5b40628d3621847399e19703244d45286563cdb39bc40e8e61402d",
+      "how": "build_loading_ring_sheet.py defaults: 64 frames turning clockwise, 100 px inscription in 128 px cells, 8 x 8, a 1024 x 1024 sheet, black point 0.03"
+    }
+  },
+  "note": "The script is model-drawn pseudo-Tengwar in the inscription's style, not the canonical Black Speech text; at the 128 px it shows in game it reads as the inscription."
+}

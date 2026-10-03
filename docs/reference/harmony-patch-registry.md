@@ -8,7 +8,7 @@ Full per-category rationale, history, and RCA links for every TAOM Harmony patch
 
 **Target:** `Campaign.InitializeScenes`, `MBMapScene.GetBattleSceneIndexMap`, `SandBox.MapScene.Load` (Prefix skip-original)
 
-Battle scenes — **ACTIVE**. Loads TAOM's `sp_battle_scenes.xml` (full 0-255 `map_indices` coverage) so the TAOM_Map `Main_map` grid's extended indices (158-255) resolve to real battle terrains instead of FailedAsserting against vanilla's 1-157 table. Re-enabled 2026-06-01; applied unconditionally from `OnSubModuleLoad` (`Main/SubModule.cs`, alongside the other early categories) — this registry read "DISABLED" until 2026-08-01, three months after the re-enable, so treat the code as ground truth per the caveat at the top of this file. In-game grid validation still pending the `worldmap_battle_scene_grid` re-author. See `docs/reference/worldmap-battle-scene-grid.md`.
+Battle scenes: **ACTIVE**. Loads TAOM's `sp_battle_scenes.xml` (full 0-255 `map_indices` coverage) so the TAOM_Map `Main_map` grid's extended indices (158-255) resolve to real battle terrains instead of FailedAsserting against vanilla's 1-157 table. Re-enabled 2026-06-01; applied unconditionally from `OnSubModuleLoad` (`Main/SubModule.cs`, alongside the other early categories); this registry read "DISABLED" until 2026-08-01, three months after the re-enable, so treat the code as ground truth per the caveat at the top of this file. The grid was repainted with Middle-earth indices on 2026-06-01; since 2026-10-03 the scene list is generated per region by `tools/build_battle_scenes.py`, and the per-region in-game check is what is pending. See `docs/reference/worldmap-battle-scene-grid.md`.
 
 ## Patch1_FirstTimeInit
 

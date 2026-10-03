@@ -12,10 +12,10 @@
 # To also pre-compile vanilla terrains, add battle_terrain_* ids (from sp_battle_scenes.xml) below
 # — note each added scene adds ~5-15 min to the run.
 # Mordor field-battle scenes — DISABLED 2026-06-19: same pbr_terrain vista-permutation crash class as
-# Rohan/Helm's Deep (native AV on some GPUs during scene load). Already removed from sp_battle_scenes.xml
-# (their map cells fall back to vanilla battle_terrain_r / battle_terrain_* Plain), so real Mordor field
-# battles no longer route here — precompiling them is dead walk-work. Re-enable together with the
-# sp_battle_scenes.xml entries once the native shader-compile-guard hook lands (issue #287).
+# Rohan/Helm's Deep (native AV on some GPUs during scene load). Since 2026-10-03 they are BACK in
+# sp_battle_scenes.xml (Mike accepted the crash risk; tools/build_battle_scenes.py), so real field battles
+# load them again. They stay out of this walk because walking a scene that crashes the GPU would crash the
+# walk; revisit when the native shader-compile-guard hook lands (issue #287).
 # taom_mordor_battle_001_forceatmo
 # taom_mordor_battle_002_forceatmo
 # taom_mordor_battle_003_forceatmo
@@ -23,9 +23,9 @@
 # taom_mordor_battle_black_gates_forceatmo
 # taom_mordor_battle_dead_marshes_forceatmo
 # Rohan field-battle scenes — DISABLED 2026-06-19: the pbr_terrain input-layout-9 compile hard-crashes
-# some GPUs during load (native AV; same shader as the Helm's Deep X4008). Also removed from
-# sp_battle_scenes.xml so real Rohan field battles fall back to vanilla terrain. Re-enable once the
-# pbr_terrain shader override lands.
+# some GPUs during load (native AV; same shader as the Helm's Deep X4008). Back in sp_battle_scenes.xml
+# since 2026-10-03 (see the Mordor note above); kept out of this walk until the pbr_terrain shader
+# override lands.
 # taom_rohan_battle_001_forceatmo
 # taom_rohan_battle_fords_of_isen_forceatmo
 

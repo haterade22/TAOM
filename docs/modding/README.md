@@ -53,6 +53,7 @@ link rather than acting on the phrasing.
 | "change a lord's face, age or race" | [Body properties, Recipes](body-properties.md#recipes-add--modify--delete) |
 | "add a clan, or move a lord to another one" | [Clans, Recipes](clans.md#recipes-add--modify--delete) |
 | "add a whole kingdom" | [Add a kingdom, Filing order](recipe-add-a-kingdom.md#filing-order) |
+| "put a custom battle scene into campaign field battles" | [Add a field-battle scene, Steps](recipe-add-a-field-battle-scene.md#steps) |
 | "change a kingdom's colours or its banner" | [Kingdoms, Attributes](kingdoms.md#attributes) |
 | "design a banner or add a new emblem" | [Banners and Heraldry, Recipes](banners-and-heraldry.md#recipes-add--modify--delete) |
 | "add a culture" | [Add a culture, Order of work](recipe-add-a-culture.md#order-of-work) |
@@ -251,6 +252,7 @@ task-oriented [doc-lookup.md](../reference/doc-lookup.md).
 - [recipe-add-a-kingdom.md](recipe-add-a-kingdom.md): a playable realm, filing order first, config fan-out second.
 - [recipe-add-a-race-or-creature.md](recipe-add-a-race-or-creature.md): the five data surfaces a race needs, and two build paths.
 - [recipe-retire-content.md](recipe-retire-content.md): taking a troop, item, lord or clan out without breaking a save.
+- [recipe-add-a-field-battle-scene.md](recipe-add-a-field-battle-scene.md): a custom scene into campaign field battles, by region, through `tools/build_battle_scenes.py`.
 - [recipe-new-mod-from-zero.md](recipe-new-mod-from-zero.md): eighteen stages from an empty folder to a total conversion.
 
 **Closing**
