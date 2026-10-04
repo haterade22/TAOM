@@ -204,7 +204,7 @@ public class MissionTickProfilerBehaviorTests
             new[]
             {
                 "Mission.OnTick transpiler (Patch97)",
-                "Mission.OnPreTick frame-boundary prefix (Patch97)",
+                "Mission.OnPreTick frame-boundary prefix (Patch98)",
                 "Mission.TickAgentsAndTeamsImp prefix (Patch91)",
                 "Mission.TickAgentsAndTeamsImp finalizer (Patch91)",
             },
@@ -359,6 +359,6 @@ public class MissionTickProfilerBehaviorTests
         Create().OnCreated();
 
         Assert.IsFalse(MissionTickProfilerHooks.Profiler.Measuring);
-        StringAssert.Contains(Lines(nameof(IModLogger.LogWarning)).Single(), "Mission.OnPreTick frame-boundary prefix (Patch97)");
+        StringAssert.Contains(Lines(nameof(IModLogger.LogWarning)).Single(), "Mission.OnPreTick frame-boundary prefix (Patch98)");
     }
 }

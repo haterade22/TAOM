@@ -14,7 +14,7 @@ namespace TAOM.Features.MissionPerf.Hooks;
 /// throwing behaviour's exception propagates unchanged and is still recorded. Main thread except the
 /// agent-tick pair. A fault ends measuring for the mission, so its reason is logged once, never per frame.
 /// </summary>
-public static class MissionTickProfilerHooks
+public static partial class MissionTickProfilerHooks
 {
     internal static MissionTickProfiler? Profiler;
     internal static IModLogger? Logger;
@@ -57,8 +57,7 @@ public static class MissionTickProfilerHooks
             if (hitch == null && !profiler.HitchCapReachedThisFrame)
                 return;
             var t = (now - profiler.MissionStartTicks) / (double)Stopwatch.Frequency;
-            Logger?.LogInfo(hitch != null ? TickProfileLines.BuildHitch(t, hitch, AllocationCounter.Available)
-                : TickProfileLines.BuildHitchCapLine(MissionTickProfiler.MaxHitchLinesPerMission, t));
+            LogHitch(t, hitch);
         }
         catch (Exception ex) { Fault(profiler, "frame boundary", ex); }
     }
@@ -87,13 +86,13 @@ public static class MissionTickProfilerHooks
     }
 
     /// <summary>Starts a mission on the calling (main) thread; returns its generation, 0 when not installed.</summary>
-    internal static int BeginMission(long missionStartTicks, bool measuring, double hitchThresholdMs)
+    internal static int BeginMission(long missionStartTicks, bool measuring, double hitchThresholdMs, bool behaviorTiming = true)
     {
         var profiler = Profiler;
         if (profiler == null)
             return 0;
         Interlocked.Exchange(ref _agentTickStart, 0);
-        return profiler.BeginMission(missionStartTicks, Environment.CurrentManagedThreadId, measuring, hitchThresholdMs);
+        return profiler.BeginMission(missionStartTicks, Environment.CurrentManagedThreadId, measuring, hitchThresholdMs, behaviorTiming);
     }
 
     /// <summary>Stops measuring for <paramref name="generation"/>; an older mission's end logs why it changed nothing.</summary>
@@ -122,7 +121,7 @@ public static class MissionTickProfilerHooks
     private static void Timed(TickPhase phase, MissionBehavior behavior, float dt)
     {
         var profiler = Profiler;
-        if (profiler == null || !profiler.Measuring)
+        if (profiler == null || !profiler.Measuring || !profiler.BehaviorTiming)
         {
             Call(phase, behavior, dt);
             return;

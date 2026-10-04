@@ -125,7 +125,8 @@ public static class PatchShieldPolicy
     /// the spawn frames all walk every unit through <c>GetUnitPositionWithIndexAccordingToNewOrder</c>
     /// (three overloads, one entry covers all of them) and <c>GetUnitSpawnFrameWithIndex</c>. Same rationale
     /// as the namespace list's #331 (Gauntlet UI) and Patch38 (SettlementNameplateWidget) entries, applied
-    /// at method granularity instead of namespace granularity.
+    /// at method granularity instead of namespace granularity. The three Mission tick entries at the end are
+    /// the exception: they stay for what a swallow would break, or as built, not for cost (see their comment).
     ///
     /// PatchShield skips an excluded method for every owner, so a third-party patch on one of these methods
     /// also loses the rescue. Patch92BindingTests walks Patch92's real targets through
@@ -145,42 +146,32 @@ public static class PatchShieldPolicy
         // Patch93_CreatureBanditNoRout: CommonAIComponent.OnTickParallel asks it for every AI agent, horses
         // included, every 0.5 to 0.6 s on the TWParallel workers.
         "TaleWorlds.MountAndBlade.Mission.CanAgentRout",
-        // Mission.TickAgentsAndTeamsImp carries Patch91's bracket for every player. With a finalizer on it, a
-        // swallowed exception from the agent or team ticks would skip tickCompleted = true (Mission.cs:3629), so
-        // the next WaitTickCompletion would spin forever; excluded, the exception leaves the method instead.
-        // That is all this entry buys. On the asynchronous call it reaches the native job thread (the generated
-        // shim Mission_TickAgentsAndTeams has no catch, and what native does then is UNVERIFIED); on the inline
-        // call, which fast-forward makes (MissionState.TickMission passes asyncAITick false), it reaches
-        // Mission.OnTick, see the hazard below. Given up: the missing-API swallow and the strip of the
-        // offending patch, for any owner.
-        // Mission.OnTick (Patch35's postfix for every player, Patch97's transpiler) and Mission.OnPreTick (TAOM
-        // patches it only through Patch97; any patch on it attaches the shield) are deliberately NOT listed. Plan
-        // 028 listed them under the per-frame rule (lessons/harmony-il.md, 2026-09-26 and 2026-09-28); the
-        // maintainer took them off (decision D13, 2026-10-03), because plan 034 takes the per-call lookup off
-        // the shield's no-exception path, and left unshielded a foreign patch's missing-API throw on
-        // Mission.OnTick unwinds the whole application tick in a process's first game. The price: the strip is
-        // not culprit-only and "com.taom.mod" is not a protected owner, so if the shield ever strips patches on
-        // Mission.OnTick, TAOM's own Patch35 and Patch97 go with them, until the planned culprit-only fix.
-        // KNOWN HAZARD, older than the profiler and NOT fixed here: no choice on this list makes an interrupted
-        // Mission.OnTick safe. OnTick clears tickCompleted (Mission.cs:3756) before its OnMissionTick loop, and
-        // only TickAgentsAndTeamsImp sets it again (:3629). An exception that escapes OnTick between the two (a
-        // behaviour's OnMissionTick, which need not be a patch; a patch or transpiled call in that stretch; the
-        // inline agent tick) and is swallowed by a finalizer above it, this shield's (missing-API only) or
-        // Patch37's crash capture on Module.OnApplicationTick (any exception, while capture is on), leaves the
-        // flag false, and every later WaitTickCompletion spins forever. A throw before the clear (a prefix) or
-        // after the agent tick is launched (a postfix) does not leave the flag false. A throw before the clear
-        // still costs the frame: one no patch made (a behaviour's OnPreDisplayMissionTick, Mission.cs:3750) that a
-        // finalizer swallows skips the rest of OnTick, the agent tick launch included, on every frame it recurs.
-        // This shield logs each missing-API swallow; Patch37's capture logs at occurrences 1, 2, 10, 100 and so on
-        // (CrashBundleThrottle.IsLoggedOccurrence).
-        // The PatchShield follow-up plan (the culprit-only strip, FOLLOW-UP L1, plus a completion-aware recovery)
-        // takes it, with regression tests for an exception before the clear, between the clear and the launch,
-        // and inside the inline agent tick. It takes this one too: a swallowed foreign prefix throw on
-        // Mission.OnPreTick skips the whole body, whose first call is WaitTickCompletion, so that frame's OnTick
-        // can run while the previous agent tick still runs (consequence UNVERIFIED); trunk shields a foreign patch
-        // on it the same way, so that is older than the profiler as well.
-        // MissionTickProfilerBindingTests walks the real targets in both directions.
+        // Mission tick targets, trimmed by maintainer decision D13 (2026-10-03; lessons/harmony-il.md). Plan 034
+        // measured the shield's finalizer at about 5 ns per call once its change is in (64 ns and 241 bytes of
+        // garbage per call as the finalizer ships without that change, which is the case on the branch that made
+        // this edit), so an entry kept for cost alone no longer earns the rescue it gives up: Mission.OnTick and
+        // Mission.OnPreTick (plan 028) and Mission.SpawnAgent (plan 041) came off this list and PatchShield wraps
+        // them again. That rescue is by exception type only, so it also swallows a mission behaviour's missing-API
+        // exception (one raised from OnTick, OnPreTick or SpawnAgent), and it strips every unprotected owner's
+        // patches on the method, TAOM's own among them (on SpawnAgent: Patch23's colour prefix and postfix and
+        // Patch97's spawn attribution transpiler). Three entries stay, and for any owner's patch on them the
+        // missing-API swallow and the strip of the offending patch are given up:
+        //  - TickAgentsAndTeamsImp carries Patch91's bracket for every player, and a swallow there would skip
+        //    the body that sets tickCompleted, so the next WaitTickCompletion would spin forever.
+        //  - WaitTickCompletion runs once per frame on the main thread, and a swallow there would skip the wait
+        //    loop, so OnPreMissionTick would overlap the running agent tick.
+        //  - TickComponents runs once per ticking scene per frame, on a thread native picks, and carries
+        //    Patch97's attribution transpiler when the profiler is on; it stays as built.
+        // The first two stop a swallow only at their own method. Their callers are shielded (OnPreTick for the wait;
+        // OnTick for the synchronous agent tick, on every fast-forward tick), so the same exception is swallowed one
+        // level up, and an exception swallowed in OnTick after it clears tickCompleted still leaves the next
+        // WaitTickCompletion spinning. The re-shield does not prevent that; it is pre-existing (TickMissionAux's
+        // shield swallowed it one level higher from the second game start) and left to the PatchShield follow-up plan.
+        // MissionTickProfilerBindingTests and HitchProbeBindingTests walk the real targets and pin both halves
+        // of the split; PatchShieldPolicyTests pins it without the game.
         "TaleWorlds.MountAndBlade.Mission.TickAgentsAndTeamsImp",
+        "TaleWorlds.MountAndBlade.Mission.WaitTickCompletion",
+        "TaleWorlds.Engine.ManagedScriptHolder.TickComponents",
         // Per-frame campaign-map targets that only the Patch101 map profiler patches (2026-10-03),
         // unconditional like the entries above: with the profiler off no TAOM patch exists on them, but another
         // mod's patch on them loses the shield all the same. MapState.OnTick, Campaign.RealTick and

@@ -276,6 +276,33 @@ public class PatchShieldPolicyTests
         Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Formation", string.Empty));
     }
 
+    // --- Mission tick targets: which stay off the shield (maintainer decision D13, 2026-10-03) -----
+    // The shield costs about 5 ns per call once plan 034's finalizer change is in (64 ns and 241 bytes as the
+    // finalizer ships on this branch), so cost alone no longer keeps a target off it:
+    // Mission.OnTick, Mission.OnPreTick and Mission.SpawnAgent are shielded again. The three that stay would
+    // break the frame if a swallow skipped their body (or, for the script tick, stay as built); the first two stop
+    // a swallow only at their own method, since their callers are shielded. The binding
+    // tests (MissionTickProfilerBindingTests, HitchProbeBindingTests) check the same split against the
+    // installed engine's real targets; these two need no game.
+
+    [TestMethod]
+    public void IsExcludedTargetMethod_MissionTickTargetsKeptOffTheShield_ReturnTrue()
+    {
+        Assert.IsTrue(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Mission", "TickAgentsAndTeamsImp"));
+        Assert.IsTrue(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Mission", "WaitTickCompletion"));
+        Assert.IsTrue(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.Engine.ManagedScriptHolder", "TickComponents"));
+    }
+
+    [TestMethod]
+    public void IsExcludedTargetMethod_MissionOnTickOnPreTickAndSpawnAgent_ReturnFalse()
+    {
+        foreach (var name in new[] { "OnTick", "OnPreTick", "SpawnAgent" })
+        {
+            Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Mission", name),
+                $"Mission.{name} was excluded for cost alone and is shielded again (D13)");
+        }
+    }
+
     // --- FormatHotMethodSkip: the once-per-method diag.log reason line ----------------------------
 
     [TestMethod]

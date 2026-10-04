@@ -70,6 +70,21 @@ public class BattleLoadDiagnosticsSettingsProviderTests
         Assert.IsFalse(sut.TickProfilerEnabled);
     }
 
+    // The hitch probe installs Patch98, so it fails CLOSED when MCM is not ready, like the tick profiler,
+    // although its compiled MCM default is on.
+    [TestMethod]
+    public void HitchProbeEnabled_NoMcmInstance_DefaultsFalse()
+    {
+        var sut = new BattleLoadDiagnosticsSettingsProvider();
+        Assert.IsFalse(sut.HitchProbeEnabled);
+    }
+
+    [TestMethod]
+    public void EnableHitchProbe_CompiledDefault_IsTrue()
+    {
+        Assert.IsTrue(new BattleLoadDiagnosticsSettings().EnableHitchProbe);
+    }
+
     // The map profiler installs Harmony patches on the campaign map's per-frame methods, so its
     // toggle fails CLOSED too.
     [TestMethod]

@@ -72,6 +72,8 @@ public static class CoopSettingsRelevance
         "CultureDoctrineDebug", "EnableMissionPerfHeartbeat",
         // The Patch97 tick profiler and its two knobs (2026-10-02): log lines, never a computation.
         "EnableTickProfiler", "TickProfilerTopN", "HitchThresholdMs",
+        // The Patch98 hitch probe (2026-10-02): log lines, never a computation
+        "EnableHitchProbe",
         // The Patch101 campaign map profiler's toggle (2026-10-03): log lines, never a computation.
         "EnableMapProfiler",
         // The war elephant howdah's [Howdah] diagnostics lines (#627); gates logging, never the platform.

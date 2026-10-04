@@ -17,7 +17,7 @@ namespace TAOM.Features.MissionPerf.Hooks;
 // instance first: stack-identical, no inserted instruction, no branch. A site that is not found exactly once
 // leaves its whole method vanilla with one [TickProfiler] warning (TickProfilerTranspiler). WaitTickCompletion
 // is timed at its call site because a 17-byte private method may be inlined into a caller, which would bypass
-// a prefix on it. The OnPreTick prefix is the frame boundary: one frame is one mission tick.
+// a prefix on it. The frame boundary (one frame is one mission tick) is Patch98_HitchProbe's OnPreTick prefix.
 
 [HarmonyPatch(typeof(Mission), nameof(Mission.OnTick), new[] { typeof(float), typeof(float), typeof(bool), typeof(bool) })]
 [HarmonyPatchCategory(MissionTickProfilerInstaller.Category)]
@@ -37,9 +37,7 @@ public static class Mission_OnTick_TickProfiler_Patch
 [HarmonyPatchCategory(MissionTickProfilerInstaller.Category)]
 public static class Mission_OnPreTick_TickProfiler_Patch
 {
-    [HarmonyPrefix]
-    public static void Prefix() => MissionTickProfilerHooks.OnFrameBoundary();
-
+    // The frame boundary now lives in Patch98_HitchProbe's OnPreTick prefix, so the probe and the profiler share it.
     [HarmonyTranspiler]
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {

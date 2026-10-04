@@ -37,8 +37,8 @@ internal static class MissionTickProfilerHealth
     {
         RequiredHook.Of("Mission.OnTick transpiler (Patch97)",
             typeof(Mission_OnTick_TickProfiler_Patch), nameof(Mission_OnTick_TickProfiler_Patch.Transpiler), HarmonyPatchType.Transpiler),
-        RequiredHook.Of("Mission.OnPreTick frame-boundary prefix (Patch97)",
-            typeof(Mission_OnPreTick_TickProfiler_Patch), nameof(Mission_OnPreTick_TickProfiler_Patch.Prefix), HarmonyPatchType.Prefix),
+        RequiredHook.Of("Mission.OnPreTick frame-boundary prefix (Patch98)",
+            typeof(Mission_OnPreTick_HitchProbe_Patch), nameof(Mission_OnPreTick_HitchProbe_Patch.Prefix), HarmonyPatchType.Prefix),
         RequiredHook.Of("Mission.TickAgentsAndTeamsImp prefix (Patch91)",
             typeof(Mission_TickAgentsAndTeamsImp_StallProbe_Patch), nameof(Mission_TickAgentsAndTeamsImp_StallProbe_Patch.Prefix), HarmonyPatchType.Prefix),
         RequiredHook.Of("Mission.TickAgentsAndTeamsImp finalizer (Patch91)",

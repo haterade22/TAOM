@@ -121,7 +121,7 @@ public class MissionTickProfilerHooksTests
         Thread.Sleep(5);
         MissionTickProfilerHooks.OnFrameBoundary();
 
-        var lines = InfoLines();
+        var lines = InfoLines().Where(l => l.StartsWith("[Hitch] ")).ToArray();
         Assert.AreEqual(1, lines.Length);
         StringAssert.StartsWith(lines[0], "[Hitch] t=+");
     }
@@ -152,7 +152,7 @@ public class MissionTickProfilerHooksTests
         worker.Join();
         MissionTickProfilerHooks.OnFrameBoundary();
 
-        var hitch = InfoLines().Single();
+        var hitch = InfoLines().Single(l => l.StartsWith("[Hitch] "));
         Assert.IsTrue(double.Parse(Field(hitch, "agentTickMs"), System.Globalization.CultureInfo.InvariantCulture) >= 15d, hitch);
         Assert.AreEqual(Field(hitch, "frameMs"), Field(hitch, "otherMs"), hitch);
     }
@@ -166,7 +166,7 @@ public class MissionTickProfilerHooksTests
         MissionTickProfilerHooks.OnAgentTickExit();
         MissionTickProfilerHooks.OnFrameBoundary();
 
-        Assert.AreEqual("0.00", Field(InfoLines().Single(), "agentTickMs"));
+        Assert.AreEqual("0.00", Field(InfoLines().Single(l => l.StartsWith("[Hitch] ")), "agentTickMs"));
     }
 
     [TestMethod]

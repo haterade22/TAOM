@@ -1439,3 +1439,27 @@ finalizers with the wrong brackets, `Mission.OnPreTick` called shared and previo
 - **Prevent:** before fixing from a review file, read its scope line and check the commit range and the worktree
   against the branch you are on. When two review files could apply, list each with its scope line before choosing.
 - **Source:** `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` row G5.
+
+### A fake that asserts inside a delegate production calls from a catch passes on the error path (2026-10-02)
+Plan 028's installer tests passed `tryPatchCategory` a fake that asserted the category was Patch97's. Plan 041 made the
+installer also apply Patch98 through the same delegate, inside `HitchProbeInstaller.Install`'s try. The assertion threw
+`AssertFailedException`, the catch swallowed it as an install fault, and two "is installed" tests stayed green only
+because the line that would have cleared the flag never ran.
+- **Why missed:** a green run of an older class was read as "still valid"; nobody asked what the fake does with a call
+  it was not written for.
+- **Prevent:** a fake that stands in for a delegate answers every input the production caller can send (here, both
+  categories), and the success-path test asserts no ERROR was logged. When a change adds a call through an existing
+  seam, re-read every fake of that seam.
+- **Source:** `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` row R2.
+
+### Logic moved out of an untestable host to meet a line limit is testable: test it in the same change (2026-10-02)
+A recurrence of the plan 028 rule above, the same day. Plan 041 moved its per-mission decisions out of
+`MissionTickProfilerBehavior` into `MissionTickProfilerHooks.Probe.cs` to stay under ADR-002's 150 lines; the moved
+methods take an `IModLogger`, ints and bools, yet shipped with no test, and the commit's Not-tested trailer kept the
+behaviour's "needs a live Mission" reason. Reverting the measuring formula would have switched the probe off for every
+player with every test green.
+- **Why missed:** the plan was written before review 028's lesson existed, and its executor worked from the plan.
+- **Prevent:** a Not-tested trailer names each untested member with its own reason, and a reason inherited from the
+  member's old host is re-checked after a move. The orchestrator adds the day's new lessons to a queued plan's checklist
+  before dispatching it.
+- **Source:** `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` row R4; the plan 028 lesson above.

@@ -151,9 +151,9 @@ public class TickProfilerTranspilerTests
 
             var result = TickProfilerTranspiler.Rewrite(OnTickShape(), swaps, "Mission.OnTick", logger, out var swapped);
 
-            Assert.AreEqual(0, swapped, bad.Helper.Name);
-            Assert.AreEqual(OpCodes.Callvirt, result[5].opcode, bad.Helper.Name);
-            Assert.AreEqual(OpCodes.Callvirt, result[11].opcode, bad.Helper.Name);
+            Assert.AreEqual(0, swapped, bad.Helpers[0].Name);
+            Assert.AreEqual(OpCodes.Callvirt, result[5].opcode, bad.Helpers[0].Name);
+            Assert.AreEqual(OpCodes.Callvirt, result[11].opcode, bad.Helpers[0].Name);
             logger.Received(1).LogWarning(Arg.Is<string>(s => s.StartsWith("[TickProfiler] Mission.OnTick: helper ")));
         }
     }

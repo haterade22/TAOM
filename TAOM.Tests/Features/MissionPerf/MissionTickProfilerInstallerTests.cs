@@ -32,18 +32,21 @@ public class MissionTickProfilerInstallerTests
     [TestCleanup]
     public void Cleanup() => ResetStatics();
 
+    // Plan 041 added Patch98's statics beside these; every one goes back so no state leaks between classes.
     private static void ResetStatics()
     {
-        MissionTickProfilerHooks.Profiler = null;
-        MissionTickProfilerHooks.Logger = null;
-        MissionTickProfilerHooks.WaitTickCompletionCall = null;
-        MissionTickProfilerHooks.Installed = false;
-        MissionTickProfilerHooks.OnTickSites = 0;
-        MissionTickProfilerHooks.OnPreTickSites = 0;
+        HitchProbeInstaller.ResetForTests();
+        HitchProbeHooks.ResetForTests();
+        MissionTickProfilerHooks.ResetForTests();
+        MissionAttributionInstaller.ResetForTests();
     }
 
+    // Since plan 041 the installer hands over to Patch98 after Patch97; that category applies cleanly here,
+    // so these cases exercise the success path rather than the probe installer's catch (review 041).
     private static Func<string, bool> Apply(bool result, int onTickSites, int onPreTickSites) => category =>
     {
+        if (category == HitchProbeInstaller.Category)
+            return true;
         Assert.AreEqual(MissionTickProfilerInstaller.Category, category);
         MissionTickProfilerHooks.OnTickSites = onTickSites;
         MissionTickProfilerHooks.OnPreTickSites = onPreTickSites;
@@ -75,6 +78,7 @@ public class MissionTickProfilerInstallerTests
         Assert.IsNotNull(MissionTickProfilerHooks.Profiler);
         Assert.IsNotNull(MissionTickProfilerHooks.WaitTickCompletionCall, "The private wait binds on the installed engine.");
         _logger.Received(1).LogInfo(TickProfileLines.BuildInstallLine(true, 2, 2, 2, AllocationCounter.Available));
+        _logger.DidNotReceiveWithAnyArgs().LogError(default!);
     }
 
     [TestMethod]
@@ -105,7 +109,7 @@ public class MissionTickProfilerInstallerTests
 
         MissionTickProfilerInstaller.InstallIfEnabled(_settings, _logger, Apply(true, 2, 0));
 
-        Assert.IsTrue(MissionTickProfilerHooks.Installed, "The frame boundary is a prefix, so measuring continues.");
+        Assert.IsTrue(MissionTickProfilerHooks.Installed, "Patch98's OnPreTick prefix holds the frame boundary, so measuring continues.");
     }
 
     [TestMethod]

@@ -62,7 +62,7 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
 
     [SettingPropertyGroup("Mission Performance")]
     [SettingPropertyBool("Enable Tick Profiler", Order = 1, RequireRestart = true,
-        HintText = "Off by default. Times every mission behaviour's tick and the engine phases TAOM can see (the wait for the previous frame's agent tick, the agent tick itself, everything else), writes a [TickProfile] line to the TAOM debug log every 5 seconds, a [Hitch] line for each frame slower than the hitch threshold, and a [TickSummary] line when the mission ends. Turning it on takes effect after a restart (the profiler is installed once, at game start); turning it off stops measuring from the next mission.")]
+        HintText = "Off by default. Adds per-type attribution to the hitch probe's lines: times every mission behaviour's tick, every behaviour's spawn callback and every scene script component by type, and lists the slowest. Installed once at game start: turning it on takes effect after a restart; turning it off stops it from the next mission.")]
     public bool EnableTickProfiler { get; set; } = false;
 
     [SettingPropertyGroup("Mission Performance")]
@@ -74,6 +74,11 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
     [SettingPropertyInteger("Hitch Threshold (ms)", 50, 2000, Order = 3, RequireRestart = false,
         HintText = "A frame that takes this many milliseconds or more writes one [Hitch] line naming where the frame went, for the first 100 such frames of a mission; later ones are only counted. Below the battle's usual frame time, nearly every frame is a hitch. Default 250. Read at each mission start.")]
     public int HitchThresholdMs { get; set; } = 250;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyBool("Enable Hitch Probe", Order = 4, RequireRestart = true,
+        HintText = "On by default. Times the parts of every mission frame TAOM can see (the wait for the agent tick, the mission tick, scene scripts, agent spawns) and checks whether an animation clip is loading from disk, so each frame slower than the hitch threshold writes a hitch line and a detail line saying where the time went. Its measured cost is written to the TAOM debug log. Installed once at game start: turning it on takes effect after a restart; turning it off stops measuring from the next mission while 'Enable Tick Profiler' is off (the profiler measures through the probe's patches).")]
+    public bool EnableHitchProbe { get; set; } = true;
 
     [SettingPropertyGroup("Map Performance")]
     [SettingPropertyBool("Enable Map Profiler", Order = 0, RequireRestart = true,

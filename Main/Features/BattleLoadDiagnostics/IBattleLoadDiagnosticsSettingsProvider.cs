@@ -32,7 +32,8 @@ public interface IBattleLoadDiagnosticsSettingsProvider
     /// <summary>The Patch97 tick profiler's toggle. Unlike its siblings it fails CLOSED to false when
     /// MCM is not ready, because it installs Harmony patches on the two hottest mission methods. Read at
     /// the first game init, where Patch97 installs or is skipped, and again at each mission start: turning
-    /// it on needs a restart, turning it off stops measuring from the next mission (the patches stay).</summary>
+    /// it on needs a restart, turning it off stops behaviour timing from the next mission (the patches stay,
+    /// and the hitch probe, when installed and on, still measures).</summary>
     bool TickProfilerEnabled { get; }
 
     /// <summary>The Patch101 map profiler's toggle. Like the tick profiler's it fails CLOSED to false
@@ -50,4 +51,9 @@ public interface IBattleLoadDiagnosticsSettingsProvider
     /// <summary>The frame time at or above which the profiler writes a [Hitch] line (validated
     /// 50-2000 ms, default 250); read at each mission start.</summary>
     double HitchThresholdMs { get; }
+
+    /// <summary>The Patch98 hitch probe's toggle. Fails CLOSED to false when MCM is not ready, because it
+    /// installs Harmony patches; the compiled MCM default is true. Read once per process at the first game
+    /// init, where Patch98 installs or is skipped, and at each mission start.</summary>
+    bool HitchProbeEnabled { get; }
 }

@@ -54,7 +54,9 @@ public class ReflectionSiteBindingTests
     // --- AdvancedCombat custom attacks (CustomAttacksUtils.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "RegisterBlow", "Method", "CustomAttacksUtils.cs:55")]
     // --- MissionPerf tick profiler: the private wait it times at its call site (MissionTickProfilerInstaller.cs) ---
-    [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "WaitTickCompletion", "Method", "MissionTickProfilerInstaller.cs:29,52")]
+    [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "WaitTickCompletion", "Method", "MissionTickProfilerInstaller.cs:31,54")]
+    // --- MissionPerf attribution: the protected internal script tick it binds and swaps (MissionAttributionInstaller.cs) ---
+    [DataRow("TaleWorlds.Engine.ScriptComponentBehavior", "ScriptComponentBehavior", "OnTick", "Method", "MissionAttributionInstaller.cs:35,66")]
     // --- MapPerf map profiler: the TickEvent listener walk (TickEventListenerWalker.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.MbEvent`1", "MbEvent`1", "_nonSerializedListenerList", "Field", "TickEventListenerWalker.cs:47")]
     [DataRow("TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1", "EventHandlerRec`1", "Next", "Field", "TickEventListenerWalker.cs:51")]

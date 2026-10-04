@@ -449,3 +449,29 @@ game init, which a one-campaign process never reaches.
   stop on fault writes the summary so far with `reason=fault`. A reason line is written at the event that causes it,
   not at the next opportunity to report.
 - **Source:** `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` rows R8, R10 and R11.
+
+### When a second measurer joins, re-read every "not measuring" line of the first (2026-10-02)
+Plan 041 made Patch98's hitch probe measure every mission by default and left plan 028's tick profiler reason lines as
+they were. On the default path, a player turning the profiler on mid-session got "no patches are installed and nothing
+is measured" in a mission that then wrote `[TickProfile]`, `[Hitch]` and `[HitchDetail]`; the same held for the failed
+install and switched-off lines, and the transpiler fallbacks still said "no mission is measured". The plan limited the
+older file to one line, so the executor fixed that line and left its siblings.
+- **Why missed:** the change was checked where it was edited; the older lines live in a file the plan froze, and their
+  claim became false without any edit to them.
+- **Prevent:** when a change adds a second instrument, grep the first one's status lines for "nothing", "not measuring",
+  "no mission" and similar consequences, and choose each by what still measures (`HitchProbeLines.ProfilerNotTimingLine`,
+  `BuildProfilerOffLine`). A scope limit on a file is not a reason to leave a line in it false; say so to the
+  orchestrator instead.
+- **Source:** `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` rows R3, R9 and R10.
+
+### A benchmark's baseline arm runs in the state players had before the change, and its figure names what it stubbed (2026-10-02)
+Plan 041's overhead benchmark installed the measuring profiler before timing its unpatched arm, so Patch91's agent-tick
+pair did its measuring work in both arms and its cost cancelled out, though before plan 041 a default player's profiler
+was null and the pair returned at once. The same figure, 0.43 us per frame, was quoted as the probe's cost while the
+native clip-loading call was a stub returning false.
+- **Why missed:** the baseline was set up in the patched arm's state for convenience, and "the benchmark" was read as
+  covering everything a frame pays.
+- **Prevent:** set the baseline arm to what players ran before the change (here, no profiler), and write every cost claim
+  as "the managed part, X us; the stubbed call's cost is the line that measures it". Corrected figure: 0.477 and
+  0.470 us.
+- **Source:** `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` rows R13 and R15.

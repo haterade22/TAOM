@@ -24,7 +24,7 @@ public static class TickProfileLines
     public const string StatusTag = "[TickProfiler]";
 
     public const string OffLine =
-        StatusTag + " off: 'Enable Tick Profiler' is off at game start (or MCM was not ready); no patches installed";
+        StatusTag + " off: 'Enable Tick Profiler' is off at game start (or MCM was not ready); no per-behaviour transpilers installed";
 
     public const string WaitUnboundLine =
         StatusTag + " WaitTickCompletion could not be bound; waitTickMs reads 0 and the wait lands in otherMs";
@@ -118,10 +118,10 @@ public static class TickProfileLines
             StatusTag, applied ? "applied" : "failed", onTickSites, onPreTickSites, expectedPreTickSites,
             allocAvailable ? "available" : "na");
 
-    public static string BuildSiteCountWarning(string method, string target, int count) =>
+    public static string BuildSiteCountWarning(string method, string target, int count, int expected = 1) =>
         string.Format(CultureInfo.InvariantCulture,
-            "{0} {1}: {2} matched {3} times, expected 1; {4}",
-            StatusTag, method, target, count, LeftVanilla(method));
+            "{0} {1}: {2} matched {3} times, expected {4}; {5}",
+            StatusTag, method, target, count, expected, LeftVanilla(method));
 
     public static string BuildHelperMismatchWarning(string method, string helper, string target) =>
         StatusTag + " " + method + ": helper " + helper + " does not fit " + target + "; " + LeftVanilla(method);
@@ -153,7 +153,7 @@ public static class TickProfileLines
     }
 
     public const string RestartNeededLine =
-        StatusTag + " on in MCM but it was off at game start, so no patches are installed and nothing is measured; restart the game to measure";
+        StatusTag + " on in MCM but it was off at game start, so its patches are not installed and nothing is measured; restart the game to measure";
 
     /// <summary>The per-mission configuration header, written when a mission starts measuring: its knobs,
     /// the hitch-line cap, and the call sites swapped right now (a later re-patch reruns the transpilers).</summary>
@@ -202,9 +202,9 @@ public static class TickProfileLines
 
     private static string LeftVanilla(string method) => method + " left vanilla, so " + method switch
     {
-        "Mission.OnTick" => "no mission is measured",
-        "Mission.OnPreTick" => "waitTickMs and preTickMs read 0 and that time lands in otherMs",
-        _ => "the profiler records nothing for it",
+        "Mission.OnTick" => "no mission times behaviours by type (with 'Enable Hitch Probe' on, missions still measure in probe mode)",
+        "Mission.OnPreTick" => "preTickMs reads 0 and that time lands in otherMs (the hitch probe still times the wait)",
+        _ => "per-type attribution records nothing for it (the hitch probe's totals stay)",
     };
 
     /// <summary>An older mission's end arriving after a newer mission began; the newer one keeps measuring.</summary>
@@ -242,20 +242,20 @@ public static class TickProfileLines
         }
     }
 
-    private static string Num(double value) => value.ToString(Ms, CultureInfo.InvariantCulture);
+    internal static string Num(double value) => value.ToString(Ms, CultureInfo.InvariantCulture);
 
-    private static string Seconds(double value) => value.ToString("0", CultureInfo.InvariantCulture);
+    internal static string Seconds(double value) => value.ToString("0", CultureInfo.InvariantCulture);
 
-    private static string Int(int value) => value.ToString(CultureInfo.InvariantCulture);
+    internal static string Int(int value) => value.ToString(CultureInfo.InvariantCulture);
 
     private static string Kb(long bytes, bool available) =>
         available ? (bytes / 1024).ToString(CultureInfo.InvariantCulture) : "na";
 
-    private static string OrNa(int value) => value < 0 ? "na" : value.ToString(CultureInfo.InvariantCulture);
+    internal static string OrNa(int value) => value < 0 ? "na" : value.ToString(CultureInfo.InvariantCulture);
 
     private static string Bool(bool value) => value ? "true" : "false";
 
-    private static string Quote(string? message) =>
+    internal static string Quote(string? message) =>
         (message ?? string.Empty).Replace('[', '(').Replace(']', ')').Replace('\r', ' ').Replace('\n', ' ');
 }
 

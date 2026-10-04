@@ -1940,10 +1940,11 @@ public class SubModule : MBSubModuleBase
         TryPatchCategory("Patch91_MissionTickStall");
         IoC.Resolve<Features.BattleLoadDiagnostics.MissionTickStallWatchdog>().Start();
 
-        // Patch97 tick profiler (default off): times every mission behaviour's tick and the engine
-        // phases managed code sees, for [TickProfile] and [Hitch]. Installed here, once per process and
-        // only when its MCM toggle is on: game init precedes every mission, so nothing that calls
-        // Mission.OnPreTick has run yet. The installer contains its own failures.
+        // Patch98 hitch probe (default on) and Patch97 tick profiler (default off): the probe brackets
+        // the frame's phases, scene scripts and spawns for [Hitch] and [HitchDetail]; the profiler adds
+        // per-type attribution. Installed here, once per process, by their MCM toggles: game init
+        // precedes every mission, so nothing that calls Mission.OnPreTick has run yet. The installers
+        // contain their own failures.
         Features.MissionPerf.Hooks.MissionTickProfilerInstaller.InstallIfEnabled(
             IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
             IoC.Resolve<IModLogger>(),
@@ -2137,8 +2138,8 @@ public class SubModule : MBSubModuleBase
         // [MissionPerf] frame-time heartbeat every 5 s; the measurement the doctrine A/B and any
         // later battle-AI change is judged against. Self-gates on its BattleLoadDiagnostics toggle.
         AddTaomBehavior(new Features.MissionPerf.Hooks.MissionPerfHeartbeatBehavior(IoC.Resolve<IModLogger>()));
-        // [PerfContext] once per mission, and, when the Patch97 profiler is installed and on, a
-        // [TickProfile] window on the same 5 s wall clock as [MissionPerf].
+        // [PerfContext] once per mission; while the probe or the profiler measures, a [TickProfile]
+        // window (with script, spawn and clip-loading lines) on the same 5 s clock as [MissionPerf].
         AddTaomBehavior(new Features.MissionPerf.Hooks.MissionTickProfilerBehavior(
             IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
             IoC.Resolve<IGraphicsOptionsAdapter>(),

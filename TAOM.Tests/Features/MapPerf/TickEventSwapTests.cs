@@ -53,7 +53,7 @@ public class TickEventSwapTests
     public void TickEventSwaps_HelperFitsTheTarget()
     {
         var swap = MapProfilerTargets.TickEventSwaps().Single();
-        var helper = swap.Helper;
+        var helper = swap.Helpers.Single();
 
         Assert.AreEqual(Invoke, swap.Target);
         Assert.IsTrue(helper.IsStatic);
