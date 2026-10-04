@@ -26,12 +26,12 @@ Three constraints:
 
 The feature splits into three layers:
 
-- **`LayoutPositioner` (pure function)** — given formation geometry (width, interval, units list) and a layout type, computes a fresh `SlotAssignment` mapping each unit's `Agent.Index` to a (row, file) offset. Pure math, fully unit-testable without a live mission.
-- **`FormationLayoutService` (singleton)** — holds the per-formation layout choice (`Dictionary<formationKey, FormationLayoutType>`) and the per-formation cached assignment (`Dictionary<formationKey, SlotAssignment>`). Drives the `IsMixedFormation` heuristic for the auto-default-applier and the `CycleLayouts` rotation.
-- **`MixedFormationsMissionBehavior` (engine bridge)** — ticks every frame: every 1s, asks the service to apply default layouts to mixed formations on the player team; every frame, polls the configured cycle hotkey and rotates layouts on the selected formations (or all if none selected). Resolves player team and selected-formations adapters; passes them to the service.
-- **`Patch30_FormationGetOrderPositionOfUnit` (Harmony Prefix)** — intercepts vanilla; calls the service; if the service returns a `Vec2` plane position, queries `Mission.Current.Scene.GetGroundHeightAtPosition` for ground Z, builds a `WorldPosition`, and returns `false` to skip vanilla. Otherwise returns `true`.
+- **`LayoutPositioner` (pure function):** given formation geometry (width, interval, units list) and a layout type, computes a fresh `SlotAssignment` mapping each unit's `Agent.Index` to a (row, file) offset. Pure math, fully unit-testable without a live mission.
+- **`FormationLayoutService` (singleton):** holds the per-formation layout choice with the adapter that set it (a `ConcurrentDictionary` keyed by reference, written under the service's lock and read without it) and the per-formation cached assignment (`Dictionary<formationKey, SlotAssignment>`, under the lock). Drives the `IsMixedFormation` heuristic for the auto-default-applier and the `CycleLayouts` rotation. `FindLaidOutFormation` answers the worker-thread prefix for a formation with no layout without taking the lock.
+- **`MixedFormationsMissionBehavior` (engine bridge):** ticks every frame: every 1s, asks the service to apply default layouts to mixed formations on the player team; every frame, polls the configured cycle hotkey and rotates layouts on the selected formations (or all if none selected). Resolves player team and selected-formations adapters; passes them to the service.
+- **`Patch30_FormationGetOrderPositionOfUnit` (Harmony Prefix):** intercepts vanilla; returns `true` at once for a formation `FindLaidOutFormation` does not know; otherwise calls the service; if the service returns a `Vec2` plane position, queries `Mission.Current.Scene.GetGroundHeightAtPosition` for ground Z, builds a `WorldPosition`, and returns `false` to skip vanilla. Otherwise returns `true`.
 
-**Mission-type scope (open-field-only, siege-CTD guard 2026-07-15):** both entry points short-circuit when `Mission.Current?.IsFieldBattle != true` — the `Patch30` prefix returns `true` (vanilla positioning) on its first line, before the ~40,000×/frame hot path resolves the service or allocates an adapter; `MixedFormationsMissionBehavior.OnMissionTick` returns early, so both the 1s auto-layout apply AND the manual cycle hotkey are inert. `Mission.IsFieldBattle` is true ONLY for `MissionTeamAIType == FieldBattle`, so mixed-formation repositioning never runs in a siege / sally-out / hideout / naval / settlement mission (the guard is a live read — team-AI type is assigned after spawn, so it must not be cached at `OnBehaviorInitialize`). Per ADR-008 these entry-point guards are game-tested, not unit-tested.
+**Mission-type scope (open-field-only, siege-CTD guard 2026-07-15):** both entry points short-circuit when `Mission.Current?.IsFieldBattle != true`: the `Patch30` prefix returns `true` (vanilla positioning) on its first line, before the per-unit worker-thread path resolves the service; `MixedFormationsMissionBehavior.OnMissionTick` returns early, so both the 1s auto-layout apply AND the manual cycle hotkey are inert. `Mission.IsFieldBattle` is true ONLY for `MissionTeamAIType == FieldBattle`, so mixed-formation repositioning never runs in a siege / sally-out / hideout / naval / settlement mission (the guard is a live read: team-AI type is assigned after spawn, so it must not be cached at `OnBehaviorInitialize`). Per ADR-008 these entry-point guards are game-tested, not unit-tested.
 
 ### Component Diagram
 
@@ -52,7 +52,8 @@ Patch30 (Harmony Prefix on Formation.GetOrderPositionOfUnit)
    ↓
    fall through to vanilla when: not a field battle │ unit is a banner bearer
    ↓
-   FormationAdapter wraps Formation
+   FormationLayoutService.FindLaidOutFormation(Formation)   no layout: fall through to vanilla
+   ↓  (the adapter the mission behaviour passed when it set the layout)
    FormationLayoutService.ComputeUnitPlanePosition(formation, agentIndex, isRanged)
    ↓
    Vec2 plane position OR null (fall through to vanilla)
@@ -69,7 +70,7 @@ Patch30 returns `false` — suppressing vanilla — for every unit it positions.
 
 **Rule for future work:** when another TAOM feature starts producing a new *kind* of unit the engine positions specially, add a fall-through here rather than letting Patch30 override it. Flagging the interaction as "untested" in a doc is not the same as resolving it — that exact gap shipped the banner-bearer misplacement past a 5-agent review that had been briefed on it.
 
-The Harmony patch and `MissionBehavior` are the boundary classes (ADR-002); they construct `FormationAdapter` instances and pass them to the service. `Hero`, `Agent`, `Formation`, `Team` never cross the service boundary.
+The Harmony patch and `MissionBehavior` are the boundary classes (ADR-002). The `MissionBehavior` constructs the `FormationAdapter` instances and passes them to the service; the patch reuses the adapter the service holds for a laid-out formation and builds none. `Hero`, `Agent`, `Formation`, `Team` never cross the service boundary.
 
 ## Configuration
 
@@ -132,9 +133,10 @@ The original `MixedFormations` module exposed `InfantryRowDepth` (1 to 10, defau
 ## Tests
 
 - [TAOM.Tests/Features/MixedFormations/LayoutPositionerTests.cs](../../TAOM.Tests/Features/MixedFormations/LayoutPositionerTests.cs) — 11 tests covering all 4 layouts (block placement, wings, checkerboard parity, no slot overlap), narrow-formation fallback, mid-mission newcomer assignment paths
-- [TAOM.Tests/Features/MixedFormations/FormationLayoutServiceTests.cs](../../TAOM.Tests/Features/MixedFormations/FormationLayoutServiceTests.cs) — 25 tests covering: gating paths (disabled, not-holding, invalid order, no-layout, vanilla-layout), layout get/set/cycle (full 4-step cycle wraparound, empty formation skip), mixed-detection thresholds (5 negative cases), default-applier paths, mission end cleanup
+- [TAOM.Tests/Features/MixedFormations/FormationLayoutServiceTests.cs](../../TAOM.Tests/Features/MixedFormations/FormationLayoutServiceTests.cs): gating paths (disabled with a layout set, not-holding, invalid order, no-layout, vanilla-layout), layout get/set/cycle (full 4-step cycle wraparound, empty formation skip), mixed-detection thresholds (5 negative cases), default-applier paths, mission end cleanup; plan 032: the lock-free path for a formation with no layout (one key read, never waits for the lock), a position check for every layout (a composition check: the expectation reuses `LayoutPositioner`'s own slots and pitch on one fake geometry, so it is not an independent oracle), `FindLaidOutFormation` across every writer and by reference, the locked re-read after a stale lookup, the cavalry gate across an expired flag in both directions (a fake that follows `QueryData`'s refresh rule), and both fallback log lines pinned literally
+- [TAOM.Tests/Features/MixedFormations/Patch30ThreadSafetyIlTests.cs](../../TAOM.Tests/Features/MixedFormations/Patch30ThreadSafetyIlTests.cs): structural IL checks only. They show that the prefix contains no `FormationAdapter` construction, a call to `FindLaidOutFormation` and a call to `NoteFallback`, that `FormationKey` returns the wrapped `Formation`, and that `RepresentativeIsCavalry` reads the evaluating `IsCavalryFormation`. A call being present does not prove its order or the control flow around it (that the catch makes the `NoteFallback` call, say); the prefix itself is game-tested (ADR-008)
 
-Adapter (`FormationAdapter`) tested only via integration since `Formation` requires a live `Mission`.
+The adapter's behaviour (`FormationAdapter`) is tested only via integration since `Formation` requires a live `Mission`; the IL checks above only show which engine members two of its getters read.
 
 ## How to add a new layout type
 
@@ -146,22 +148,33 @@ Adapter (`FormationAdapter`) tested only via integration since `Formation` requi
 
 ## Performance + Thread Safety
 
-- Service state is per-mission, cleared on `OnEndMission`. Two dictionaries: `Dictionary<object, FormationLayoutType>` (~4 entries) + `Dictionary<object, SlotAssignment>` (~4 entries). Negligible.
+- Service state is per-mission, cleared on `OnEndMission`. Two maps: the layouts (`ConcurrentDictionary<object, (IFormationAdapter, FormationLayoutType)>`, ~4 entries) + `Dictionary<object, SlotAssignment>` (~4 entries), both keyed by reference (`ReferenceIdentity`). Negligible.
 - Per-frame work: `OnMissionTick` accumulates dt; once per second calls `ApplyDefaultsToFormations` (one pass over player team formations, ~4 formations); every frame polls `Input.IsKeyDown` for the cycle hotkey, whose setting string is parsed only when it changes (`CachedEnumParse`). No allocations in the hot path.
 - **Cycle hotkey log line:** a hotkey value that is not a recognised key name (a number, a list and `Invalid` included) turns the hotkey off, and the behaviour logs one WARNING the first frame it sees that value (once per field battle, and again each time the setting changes to an unusable value, the same one included): `[MixedFormations] cycle hotkey '<value>' is not a recognised InputKey name; it is ignored until the setting changes`. The field is the raw MCM string in quotes, untrimmed (`''` when empty). Example: `[MixedFormations] cycle hotkey 'Ctrl+L' is not a recognised InputKey name; it is ignored until the setting changes`. A valid value logs nothing; the per-mission `[MixedFormations] mission init` line already records it. Format pinned by `CachedEnumParseTests` and `CycleHotkeyInputKeyTests`.
 - **What counts as a key name:** the trimmed setting must be the name of one `InputKey` member in any case (`L`, `f5`, `SemiColon`, `D2`), and nothing else. `CycleHotkeyParser` parses by name only (`EnumNames`) and also refuses the member `Invalid`, the engine's `-1` "no key" value. `Enum.TryParse` alone took more than a name, so each of these used to go through with no log line: a number in any spelling (`3`, `+3` and `003` are all the key `D2`, the `2` key, so a player who typed 3 silently got a key they did not name; a number no key has, such as `0` or `999`, was handed to `Input.IsKeyDown` every frame, and what the native side does with one is unverified), a comma list (`L, K` ORs to 38 | 37 = 39, which is the key `SemiColon`, a key the player never named; `Up, Down` ORs to 216, no key), and `Invalid`. `Enum.IsDefined` was no help: it is true for `3`, for `39` and for `-1`. All of them are now off with the one warning. `CycleHotkeyInputKeyTests` pins these against the installed engine's enum, so an engine bump that moves a member fails there.
-- Per-position-query work: lock acquire + dictionary lookup + 1 conditional `BuildInitialAssignment` if the cache miss, lock release, then `Vec2` math (lock-free). The `BuildInitialAssignment` is the only ω(N) operation and runs once per layout change per formation.
+- Per-position-query work: a formation with no layout costs one lock-free lookup and nothing else; a laid-out formation takes the lock for the dictionary lookup and 1 conditional `BuildInitialAssignment` on a cache miss, then does the `Vec2` math (lock-free). The laid-out path still reads engine query state on the worker, as it did before plan 032: its cavalry gate reads the evaluating `IsCavalryFormation`, and `LayoutPositioner.UnitPitch` reads `Formation.Interval` and `UnitDiameter`, which read the evaluating `CavalryUnitRatio` (2.5 s lifetime). A read of an expired member refreshes the formation's whole class-ratio sync group on whichever thread asks first, and while the group is fresh the gate is a clock check. The gate keeps the evaluating read on purpose: a mass transfer or split only expires the group (`QuerySystem.Expire()` in `Formation.OnMassUnitTransferEnd`, `TransferUnits` and `Split`), so a cached flag would answer from the old composition and `UnitPitch` would then refresh it after the call had already returned a position (Codex review of plan 032, finding 1). Vanilla reads `Interval` on these workers too, for the typical AI unit of a formation that is not a column and not stopping or retreating: `HumanAIComponent.ParallelUpdateFormationMovement` calls `Formation.GetCurrentGlobalPositionOfUnit`, which reads it. The `BuildInitialAssignment` is the only ω(N) operation and runs once per layout change per formation.
 - `Patch30` caches the `IFormationLayoutService` resolve via static `??=` field — fires once per process, then the dict lookup is bypassed on every subsequent per-unit Prefix call. Per `harmony-patches.md` hot-path-reflection-caching pattern. Caught by deep-review Agent 3.
-- **Thread safety:** Bannerlord runs Formation positioning queries across worker threads (vanilla `Formation.OrderPositionLock`, `IsFormationUnitPositionAvailableAuxMT` uses `TWSharedMutexReadLock(Scene.PhysicsAndRayCastLock)`, `_MT` suffix on `CreateNewOrderWorldPositionMT` etc.). Patch30 fires from those threads, so all dict + `SlotAssignment.ByAgentIndex` mutations in `FormationLayoutService` are protected by a `private readonly object _lock`. Reads on the hot path lock briefly (~25ns uncontended); pure math runs outside the critical section. Caught by Codex review #36; codified in memory entry `feedback_detect_engine_threading_via_mt_suffix`.
+- **Thread safety:** Bannerlord runs Formation positioning queries across worker threads (vanilla `Formation.MovementOrderPositionLock`, `IsFormationUnitPositionAvailableAuxMT` uses `TWSharedMutexReadLock(Scene.PhysicsAndRayCastLock)`, `_MT` suffix on `CreateNewOrderWorldPositionMT` etc.). Patch30 fires from those threads, so every layout write, the slot cache and `SlotAssignment.ByAgentIndex` in `FormationLayoutService` are protected by a `private readonly object _lock`. The slot lookup for a laid-out formation locks briefly and re-reads the layout under the lock; a formation with no layout is answered with no lock from the layouts' `ConcurrentDictionary`; the pitch read and the plane transform run outside the critical section, and the pitch read reaches the engine's query system, which this lock cannot protect (see the previous bullets). Caught by Codex review #36; codified in memory entry `feedback_detect_engine_threading_via_mt_suffix`.
 - **Vanilla safety gate replicated:** Patch30 calls `Mission.IsFormationUnitPositionAvailable(ref candidate, team)` before setting `__result`. Vanilla Hold path delegates to `GetOrderPositionOfUnitAux` which validates the candidate against the navmesh and falls back to `unit.GetWorldPosition()` if unavailable. Our skip would have dropped that gate — custom layout positions could land on cliffs, walls, siege props, or non-navigable terrain. Caught by Codex review #36; codified in memory entry `feedback_replicate_vanilla_safety_gates_in_prefix`.
+
+## Log lines
+
+New in plan 032 (`Logs/taom_debug_<timestamp>.log`, one file per launch, through `IModLogger`):
+
+| Line | Level | When | Fields |
+|---|---|---|---|
+| `[MixedFormations] Patch30 position prefix threw; this unit and every later failing one this mission fall back to vanilla positioning (the first is logged in full, the count at mission end): <exception>` | WARNING | The first time the `Patch30` prefix body throws in a mission; the unit takes vanilla's position, and so does every later unit whose call throws, counted for the summary below | `<exception>` is the whole `Exception.ToString()` of the mission's first failure: type, message and stack |
+| `[MixedFormations] mission ended: <count> unit position(s) fell back to vanilla after a Patch30 throw` | INFO | At mission end, when at least one call threw that mission; the count then resets, so the next mission's first throw is logged in full again | `<count>`: every prefix call that threw and fell back to vanilla this mission, the first included |
+
+Examples: `[MixedFormations] Patch30 position prefix threw; this unit and every later failing one this mission fall back to vanilla positioning (the first is logged in full, the count at mission end): System.InvalidOperationException: boom` and `[MixedFormations] mission ended: 3 unit position(s) fell back to vanilla after a Patch30 throw`. `FormationLayoutService.NoteFallback` writes the first and `OnMissionEnd` the second; `FormationLayoutServiceTests.FallbackLine_NamesTheConsequenceAndCarriesTheWholeException` and `FallbackSummaryLine_CountsTheMissionsFallbacks` pin both formats. Before plan 032 the same throw fell back silently.
 
 ## Known Limitations
 
 Both surfaced by deep-review Agent 5 (Data Flow):
 
-1. **Once a layout is assigned to a formation, it persists for the entire mission regardless of subsequent unit-composition changes.** A formation that started as 8 melee + 6 ranged (mixed) gets assigned the default layout, then loses all 6 ranged in combat, then continues to be positioned by TAOM (`InfantryFrontRangedBack` with no ranged block — geometrically equivalent to vanilla in that case). The auto-applier (`ApplyDefaultsToFormations`) checks `_layoutByFormation.ContainsKey(...)` and skips already-assigned formations, so it never re-evaluates `IsMixedFormation` after the first assignment. Acceptable behavior — the alternative (re-evaluate every tick and remove layout if no longer mixed) would burn CPU and could cause visual jitter as units snap between layouts. Layout is cleared only by `OnMissionEnd` or an explicit `SetLayout` call.
+1. **Once a layout is assigned to a formation, it persists for the entire mission regardless of subsequent unit-composition changes.** A formation that started as 8 melee + 6 ranged (mixed) gets assigned the default layout, then loses all 6 ranged in combat, then continues to be positioned by TAOM (`InfantryFrontRangedBack` with no ranged block, geometrically equivalent to vanilla in that case). The auto-applier (`ApplyDefaultsToFormations`) checks `_layouts.ContainsKey(...)` and skips already-assigned formations, so it never re-evaluates `IsMixedFormation` after the first assignment. Acceptable behavior: the alternative (re-evaluate every tick and remove layout if no longer mixed) would burn CPU and could cause visual jitter as units snap between layouts. Layout is cleared only by `OnMissionEnd` or an explicit `SetLayout` call.
 
-2. **Pressing the cycle hotkey within the first ~1 second of a mission silently does nothing.** `CycleLayouts` only cycles formations already in `_layoutByFormation`; the auto-applier runs once per second; until the first auto-apply fires, no formations are in the dict. After 1s, cycling works normally. Not surfaced to the user via any HUD message.
+2. **Pressing the cycle hotkey within the first ~1 second of a mission silently does nothing.** `CycleLayouts` only cycles formations already in `_layouts`; the auto-applier runs once per second; until the first auto-apply fires, no formations are in the dict. After 1s, cycling works normally. Not surfaced to the user via any HUD message.
 
 ## Verification
 
@@ -196,6 +209,16 @@ Debug-mode round-trip:
   now switch the hotkey off with the one warning. The warning's wording changed from "does not parse as
   InputKey" to "is not a recognised InputKey name". Behaviour change for anyone who typed a number: the
   hotkey is now off, with a warning in the log, instead of being the key that number happens to be.
+- 2026-10-02 (plan 032): the prefix runs for every unit of every formation on the TWParallel workers, and
+  almost none has a layout, so `FindLaidOutFormation` now answers such a formation with no lock, no adapter
+  allocation and no `FormationQuerySystem` read. The layouts live in one `ConcurrentDictionary` keyed by
+  reference: every write still holds `_lock` (with the slot cache), and the slot lookup for a laid-out
+  formation still takes it and re-reads the layout there, so the #595 rule below holds for every write; only
+  the no-layout read is lock-free, by design. The cavalry gate keeps its evaluating `IsCavalryFormation` read,
+  so a laid-out formation whose class counts a mass transfer just expired is re-classified by the gate itself,
+  as before this change.
+  A throw inside the prefix, silent before, now logs its first occurrence per mission in full and a count at
+  mission end (see the log section).
 - 2026-09-16 (#606): the per-mission MCM log moved from `OnBehaviorInitialize` (which the engine never
   dispatches to a behavior added from `SubModule.OnMissionBehaviorInitialize`) to `AfterStart`. Diagnostic
   only; the tick and the hotkey never depended on it.
@@ -214,7 +237,7 @@ Debug-mode round-trip:
 
 ## GitHub Issue
 
-- **Issue:** TBD (create with `/issue feature MixedFormations integration` before commit)
+- **Issue:** #714 (perf: make the worker-thread formation patch lock-free for formations without a layout)
 - **Status:** In progress — Phase 1 (port to Main/Features/) complete; awaiting in-game verification.
 
 ---

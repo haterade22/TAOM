@@ -146,7 +146,8 @@ frame's `OnMissionTick`. A stuck agent tick freezes the game with no exception; 
 `[MissionStall]` line names the frame.
 
 A patch on a target in the last three rows may run concurrently with the first row. Its shared state
-takes a lock (`FormationLayoutService`, `CavalryChargeService`, `TroopStanceManager` are the shape), it
+takes a lock (`CavalryChargeService`, `TroopStanceManager` are the shape), or writes a concurrent collection
+under that lock so a hot reader needs none (`FormationLayoutService.FindLaidOutFormation`), it
 never registers a blow or spawns an agent, and a team filter is not a thread filter (Patch35 gated on
 `PlayerTeam` and still ran on the async tick whenever that team's formations were AI-controlled). The
 `??=` lazy-static pattern is tolerable there only for an idempotent resolve. A `MissionBehavior` or

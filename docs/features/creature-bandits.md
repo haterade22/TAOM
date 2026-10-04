@@ -244,6 +244,10 @@ template and culture.
   overrides and what they call (prisoners, morale, damage in both game types), the tree split and its deployment
   gate, the prisoner rule itself, the troll spawner and both-clan seams (no parley, looter cap, no join, freed
   prisoners), the out-of-sight spawn and the switch defaults.
+- `TAOM.Tests/Features/CreatureBandits/CreatureBanditWieldGuardTests.cs`: the three wield guards on bare agents of
+  nine kinds (soldier, husk rider, mounts, creatures with and without route A), each answering as the predicate did
+  before plan 032; its untagged `CreatureBanditAgentsTests` pin the null agent and, in the IL, that a humanoid is
+  ruled out by its flags before the troop id is read.
 - `TAOM.Tests/Features/CreatureBandits/CreatureDiagFormatTests.cs` and `CreatureDiagLedgerTests.cs`: the log line
   format, the line budget and its exemptions, `AnyRegistered` (the callbacks' no-creature gate), and the stuck,
   contact-stall, whiff, engage and side-stall checks.
@@ -277,8 +281,10 @@ template and culture.
 ## Performance
 
 - Three weapon guards (`GetPrimaryWieldedItemIndex`, `GetOffhandWieldedItemIndex`, `GetMissileRange`) and the rout
-  postfix (`Mission.CanAgentRout`) run for every agent, often on the engine's worker threads. Each exits at the
-  first managed field read for a non-creature and allocates nothing, and all four targets are on
+  postfix (`Mission.CanAgentRout`) run for every agent, often on the engine's worker threads. Each allocates
+  nothing; a mount exits at its managed `Character` field (null for every ordinary mount), a soldier after that and
+  one native flags read (`IsHuman`), and only a non-humanoid agent with a `Character` reads its troop id and rider
+  (plan 032). All four targets are on
   `PatchShieldPolicy.ExcludedTargetMethods`, so no per-call finalizer runs on them.
 - The hunt walks the hostile teams' active agents about four times a second per creature, allocation-free.
 - `CreatureBanditDamage` costs a creature victim one tuning read per hit; every other victim exits at one field

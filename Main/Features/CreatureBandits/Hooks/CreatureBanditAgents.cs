@@ -7,9 +7,10 @@ namespace TAOM.Features.CreatureBandits.Hooks;
 
 /// <summary>
 /// The engine side of <see cref="CreatureBanditRules.IsCreatureBandit"/>: reads the three facts off an agent in
-/// cheapest-first order, because the weapon guards ask it for every agent. <c>Character</c> is a managed field
-/// and null for every ordinary mount; <c>IsHuman</c> is a flags-pointer read; only a creature bandit reaches the
-/// id lookup. It asks IsHuman, not IsMount: route A clears Mountable once the creature is built, and every guard
+/// cheapest-first order, because the weapon guards ask it for every agent. <c>Character</c> comes first: a managed
+/// field, null for every ordinary mount. <c>IsHuman</c> comes next: one flags read that rules out every soldier and
+/// husk rider. Only a non-humanoid agent with a <c>Character</c> reads the troop id and the rider. It asks IsHuman,
+/// not IsMount: route A clears Mountable once the creature is built, and every guard
 /// must keep recognising it after that. Thread-safe (reads only), so the guards on the engine's worker threads
 /// may call it.
 /// </summary>
@@ -17,9 +18,10 @@ internal static class CreatureBanditAgents
 {
     internal static bool Is(Agent? agent)
     {
-        var characterId = agent?.Character?.StringId;
-        return characterId != null
-            && CreatureBanditRules.IsCreatureBandit(characterId, agent!.IsHuman, agent.RiderAgent != null);
+        var character = agent?.Character;
+        if (character == null || agent!.IsHuman)
+            return false;
+        return CreatureBanditRules.IsCreatureBandit(character.StringId, isHuman: false, agent.RiderAgent != null);
     }
 
     /// <summary>The mount lock's question: a creature bandit carries no rider. Counts each refusal for the diagnostics.</summary>

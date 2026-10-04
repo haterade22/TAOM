@@ -1,8 +1,8 @@
+using System;
 using HarmonyLib;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
-using TAOM.Adapters;
 
 namespace TAOM.Features.MixedFormations.Hooks;
 
@@ -10,10 +10,11 @@ namespace TAOM.Features.MixedFormations.Hooks;
 [HarmonyPatchCategory("Patch30_MixedFormations")]
 public static class Patch30_FormationGetOrderPositionOfUnit
 {
-    // Cached service reference — the Prefix fires per-unit-per-formation-position-recalculation
-    // (up to 40,000× per frame in worst-case 200-unit formations). DryIoc singleton resolves are
-    // fast, but caching the singleton in a static field skips the dict lookup entirely. Per
-    // .claude/rules/harmony-patches.md hot-path reflection caching pattern.
+    // Cached service reference. The prefix runs about twice a second for every AI unit in a formation
+    // (Agent.TickParallel's 0.45 to 0.55 s formation timer, on the TWParallel worker threads), plus one call
+    // per unit whenever the engine forces a formation's values and per unit of the player's order preview
+    // on the main thread. Caching the singleton skips the container lookup
+    // (.claude/rules/harmony-patches.md hot-path caching pattern).
     private static IFormationLayoutService? _service;
 
     [HarmonyPrefix]
@@ -23,8 +24,8 @@ public static class Patch30_FormationGetOrderPositionOfUnit
         {
             // Open-field-only: skip all mixed-formation repositioning in siege / sally-out / hideout /
             // naval / settlement missions (Mission.IsFieldBattle is FALSE for all of them). Returning
-            // true lets vanilla GetOrderPositionOfUnit compute the slot. Placed first to short-circuit
-            // this per-unit hot path (~40,000×/frame) before any IoC resolve or adapter allocation.
+            // true lets vanilla GetOrderPositionOfUnit compute the slot. Placed first so a
+            // siege, hideout or naval mission returns before the service is resolved.
             if (Mission.Current?.IsFieldBattle != true) return true;
 
             // Banner bearers own their slot. BannerBearerLogic places them via SwitchUnitLocations
@@ -38,7 +39,12 @@ public static class Patch30_FormationGetOrderPositionOfUnit
             var service = _service ??= IoC.Resolve<IFormationLayoutService>();
             if (service == null) return true;
 
-            var formation = new FormationAdapter(__instance);
+            // Worker-thread fast path: a formation with no layout (every formation outside the player's team,
+            // and every player formation that is not mixed) goes straight back to vanilla. The service answers
+            // with no lock, no allocation and no FormationQuerySystem read, and hands back the adapter the
+            // main thread built when it assigned the layout.
+            var formation = service.FindLaidOutFormation(__instance);
+            if (formation == null) return true;
             var agentIsRanged = unit?.Character?.IsRanged ?? false;
             var agentIndex = unit?.Index ?? -1;
             if (agentIndex < 0) return true;
@@ -72,8 +78,12 @@ public static class Patch30_FormationGetOrderPositionOfUnit
             __result = candidate;
             return false;
         }
-        catch
+        catch (Exception ex)
         {
+            // Vanilla places this unit. The service logs the first throw of each mission in full and counts the
+            // rest for its mission-end summary, so a fault on the worker threads never floods the log.
+            try { (_service ?? IoC.Resolve<IFormationLayoutService>())?.NoteFallback(ex); }
+            catch { /* never throw from the worker-thread prefix */ }
             return true;
         }
     }

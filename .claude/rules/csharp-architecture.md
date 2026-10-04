@@ -268,7 +268,7 @@ Two facts about `TaleWorlds.MountAndBlade.Agent` shape every mission-time featur
    `Mission.OnTick` returns. Mission logic that registers blows, plays actions, spawns or fades agents, or
    touches a collection an engine callback writes belongs in `MissionBehavior.OnMissionTick` (creature
    trees: `BehaviorTreeMissionLogic`). A store reachable from a patch on any of those engine methods takes
-   a lock. **No engine callback is main-thread by contract.** Native raises `OnAgentRemoved` (and through
+   a lock, or is a concurrent collection written under one and read without it. **No engine callback is main-thread by contract.** Native raises `OnAgentRemoved` (and through
    it every `AgentComponent.OnAgentRemoved`), `OnAgentDeleted`, `OnAgentHit`, `OnAgentShootMissile`,
    `OnAgentDismount` and `OnAgentAlarmedStateChanged` on the thread it chooses, and a v1.4.8 player log
    caught six callbacks off the main thread (#634); `OnAgentPanicked`, `OnObjectUsed` and `OnObjectStoppedBeingUsed`

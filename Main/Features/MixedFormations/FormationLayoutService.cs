@@ -1,6 +1,10 @@
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 using TaleWorlds.Library;
 using TAOM.Adapters;
+using TAOM.Core.Collections;
 using TAOM.Core.Logging;
 using TAOM.Features.MixedFormations.Models;
 
@@ -16,18 +20,33 @@ public sealed class FormationLayoutService : IFormationLayoutService
     private readonly ILayoutPositioner _positioner;
     private readonly IModLogger _logger;
 
-    private readonly Dictionary<object, FormationLayoutType> _layoutByFormation = new();
-    private readonly Dictionary<object, SlotAssignment> _assignmentCache = new();
+    // Each formation's layout, with the adapter the main thread passed when it set it. Written only under
+    // _lock, together with the slot cache; read without it by FindLaidOutFormation, because Patch30 asks
+    // for every unit of every formation on the worker threads (ConcurrentDictionary reads take no lock).
+    // Keys compare by reference: Formation.GetHashCode dereferences its Team
+    // (docs/reviews/lessons/adapters-taleworlds-api.md, 2026-09-26).
+    private readonly ConcurrentDictionary<object, (IFormationAdapter Formation, FormationLayoutType Layout)> _layouts =
+        new(ReferenceIdentity.Instance);
+    private readonly Dictionary<object, SlotAssignment> _assignmentCache = new(ReferenceIdentity.Instance);
+
+    // Patch30 throws counted this mission (D6: the first in full, the rest as a count at mission end).
+    private int _fallbacks;
+
+    public IFormationAdapter? FindLaidOutFormation(object formationKey) =>
+        formationKey != null && _layouts.TryGetValue(formationKey, out var entry)
+            && entry.Layout != FormationLayoutType.Vanilla
+            ? entry.Formation
+            : null;
 
     // Codex review #35 finding 2 (MEDIUM): Bannerlord runs Formation positioning across worker
-    // threads (Formation.OrderPositionLock; Mission.IsFormationUnitPositionAvailableAuxMT uses
+    // threads (Formation.MovementOrderPositionLock; Mission.IsFormationUnitPositionAvailableAuxMT uses
     // TWSharedMutexReadLock(Scene.PhysicsAndRayCastLock); the "MT" suffix on
     // CreateNewOrderWorldPositionMT etc. denotes multi-threaded helpers). Patch30 fires from
     // those threads, so EnsureAssignment cache writes + ByAgentIndex inserts could race against
     // OnMissionTick-driven CycleLayouts/ApplyDefaultsToFormations writes from the main thread.
-    // All dict + SlotAssignment.ByAgentIndex mutations now hold this lock. Reads on the hot
-    // path also lock briefly to ensure consistency. Single uncontended lock acquisition is ~25ns
-    // on x86, well below the per-call budget.
+    // Every layout write, the slot cache and SlotAssignment.ByAgentIndex hold this lock, and so
+    // does the slot lookup for a laid-out formation; a formation with no layout is answered by
+    // FindLaidOutFormation without it.
     private readonly object _lock = new();
 
     public FormationLayoutService(
@@ -43,12 +62,9 @@ public sealed class FormationLayoutService : IFormationLayoutService
     public FormationLayoutType GetLayout(IFormationAdapter formation)
     {
         if (formation == null) return FormationLayoutType.Vanilla;
-        lock (_lock)
-        {
-            return _layoutByFormation.TryGetValue(formation.FormationKey, out var layout)
-                ? layout
-                : FormationLayoutType.Vanilla;
-        }
+        return _layouts.TryGetValue(formation.FormationKey, out var entry)
+            ? entry.Layout
+            : FormationLayoutType.Vanilla;
     }
 
     public void SetLayout(IFormationAdapter formation, FormationLayoutType layout)
@@ -56,7 +72,7 @@ public sealed class FormationLayoutService : IFormationLayoutService
         if (formation == null) return;
         lock (_lock)
         {
-            _layoutByFormation[formation.FormationKey] = layout;
+            _layouts[formation.FormationKey] = (formation, layout);
             // Layout changed → assignment cache for this formation is stale. Drop it; will rebuild lazily.
             _assignmentCache.Remove(formation.FormationKey);
         }
@@ -65,21 +81,33 @@ public sealed class FormationLayoutService : IFormationLayoutService
     public Vec2? ComputeUnitPlanePosition(IFormationAdapter formation, int agentIndex, bool agentIsRanged)
     {
         if (formation == null) return null;
+        // Lock-free: almost no formation has a layout, and this is asked for each of their units on the
+        // engine's worker threads.
+        if (FindLaidOutFormation(formation.FormationKey) == null) return null;
         if (!_settings.IsEnabled) return null;
         if (!formation.IsHolding) return null;
         if (!formation.OrderPositionIsValid) return null;
         // Cross-feature handshake: SmartCavalryAI (Patch31) owns cavalry formation
         // positioning during charge maneuvers. Skip Patch30 even if a layout was
         // manually assigned to a cavalry formation via the cycle hotkey.
+        // The evaluating read, as before plan 032. FormationQuerySystem clears the class-ratio queries' lifetimes
+        // without re-evaluating them when units change formation (Formation.OnMassUnitTransferEnd, TransferUnits and
+        // Split call QuerySystem.Expire()), so a cached flag would answer from the old composition while the
+        // CavalryUnitRatio that UnitPitch reads below refreshes the same sync group, this flag included: the call
+        // would return a position the evaluating read refuses, or refuse one it gives. While the group is fresh
+        // this read is a clock check.
         if (formation.RepresentativeIsCavalry) return null;
 
-        // The dict reads + writes happen under the lock; the math after is pure and uses
-        // already-captured values, so it doesn't need the lock.
+        // Apart from the lock-free FindLaidOutFormation lookup above, this method's dictionary work (the layout
+        // re-read, the slot cache and the slot assignment) happens under the lock, and the slot is captured there.
+        // The pitch, direction and order position are read live after it: the lock cannot protect engine state, and
+        // UnitPitch can re-evaluate the class-ratio queries, writing their cache (see the gate above).
         (int row, int file) slot;
         lock (_lock)
         {
-            if (!_layoutByFormation.TryGetValue(formation.FormationKey, out var layout))
-                return null;
+            // Re-read under the lock: the lock-free lookup above can be one call stale.
+            if (!_layouts.TryGetValue(formation.FormationKey, out var entry)) return null;
+            var layout = entry.Layout;
             if (layout == FormationLayoutType.Vanilla) return null;
 
             var assignment = EnsureAssignmentLocked(formation, layout);
@@ -93,7 +121,7 @@ public sealed class FormationLayoutService : IFormationLayoutService
         }
 
         // Convert slot (row, file) to local-space offset, then transform by formation direction
-        // and add formation order position to get the final plane position. Pure math; lock-free.
+        // and add formation order position to get the final plane position. Runs outside the lock.
         var unitInterval = LayoutPositioner.UnitPitch(formation);
         var localOffset = new Vec2(slot.file * unitInterval, -slot.row * unitInterval);
         var direction = formation.Direction;
@@ -111,10 +139,10 @@ public sealed class FormationLayoutService : IFormationLayoutService
             foreach (var formation in formations)
             {
                 if (formation == null || formation.CountOfUnits == 0) continue;
-                if (!_layoutByFormation.TryGetValue(formation.FormationKey, out var current)) continue;
+                if (!_layouts.TryGetValue(formation.FormationKey, out var current)) continue;
 
-                var next = NextLayout(current);
-                _layoutByFormation[formation.FormationKey] = next;
+                var next = NextLayout(current.Layout);
+                _layouts[formation.FormationKey] = (formation, next);
                 _assignmentCache.Remove(formation.FormationKey);
                 lastLayout = next;
                 affected++;
@@ -135,18 +163,18 @@ public sealed class FormationLayoutService : IFormationLayoutService
 
         var assigned = 0;
         // IsMixedFormation iterates formation.Units (read of underlying TaleWorlds collection,
-        // owned by the engine). It's called inside the lock so a concurrent SetLayout/CycleLayouts
-        // from the worker-thread Prefix can't interleave with the auto-apply pass. The Units read
-        // is read-only against the engine's data; safe to call under our lock.
+        // owned by the engine). It's called inside the lock so the auto-apply pass cannot interleave
+        // with a worker-thread slot build for the same formation. The Units read is read-only against
+        // the engine's data; safe to call under our lock.
         lock (_lock)
         {
             foreach (var formation in formations)
             {
                 if (formation == null || formation.CountOfUnits < 2) continue;
-                if (_layoutByFormation.ContainsKey(formation.FormationKey)) continue;
+                if (_layouts.ContainsKey(formation.FormationKey)) continue;
                 if (!IsMixedFormationInternal(formation)) continue;
 
-                _layoutByFormation[formation.FormationKey] = defaultLayout;
+                _layouts[formation.FormationKey] = (formation, defaultLayout);
                 assigned++;
             }
         }
@@ -182,13 +210,29 @@ public sealed class FormationLayoutService : IFormationLayoutService
         int formationCount;
         lock (_lock)
         {
-            formationCount = _layoutByFormation.Count;
-            _layoutByFormation.Clear();
+            formationCount = _layouts.Count;
+            _layouts.Clear();
             _assignmentCache.Clear();
         }
         if (formationCount > 0)
             _logger.LogInfo($"[MixedFormations] mission ended — cleared {formationCount} formation(s)");
+        var fallbacks = Interlocked.Exchange(ref _fallbacks, 0);
+        if (fallbacks > 0)
+            _logger.LogInfo(FallbackSummaryLine(fallbacks));
     }
+
+    public void NoteFallback(Exception ex)
+    {
+        if (Interlocked.Increment(ref _fallbacks) == 1)
+            _logger.LogWarning(FallbackLine(ex));
+    }
+
+    internal static string FallbackLine(Exception ex) =>
+        "[MixedFormations] Patch30 position prefix threw; this unit and every later failing one this mission fall "
+        + $"back to vanilla positioning (the first is logged in full, the count at mission end): {ex}";
+
+    internal static string FallbackSummaryLine(int count) =>
+        $"[MixedFormations] mission ended: {count} unit position(s) fell back to vanilla after a Patch30 throw";
 
     private static bool IsMixedFormationInternal(IFormationAdapter formation)
     {

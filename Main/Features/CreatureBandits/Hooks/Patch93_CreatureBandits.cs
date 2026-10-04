@@ -98,8 +98,9 @@ public static class Patch93_CreatureBanditNoRout
 /// NRE'd reading them and AV'd writing them, and guarded this closed set of three
 /// (<c>rca-spider-troop-2026-06-04.md:30, 62</c>). Route A arms the flag at creation, so every creature it unmounts has
 /// the state (the 2026-09-28 spike logged no guard answer); the guards cover a creature route A skipped. A creature
-/// holds no weapon, so None and 0 are the true answers. These run for every agent, often on worker threads: the check is read-only and
-/// exits at the first field read for any agent that is not a creature, and the three targets are on
+/// holds no weapon, so None and 0 are the true answers. These run for every agent, often on worker threads: the check is read-only; a mount
+/// is ruled out by its managed <c>Character</c> field and a humanoid by one flags read, before the troop id is read,
+/// and the three targets are on
 /// <c>PatchShieldPolicy.ExcludedTargetMethods</c>. CreatureBanditDiag counts every answer and logs the first per kind
 /// per mission with its caller stack, so the log says whether the guards are ever needed.
 /// </summary>

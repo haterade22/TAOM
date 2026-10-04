@@ -134,7 +134,7 @@ public sealed class FormationAdapter : IFormationAdapter
         // Distance from each rider to the arrangement slot the engine drives it toward under a
         // Hold-type order (Move). Read straight from the arrangement, not through the public
         // Formation.GetOrderPositionOfUnit: that method is prefixed by MixedFormations' Patch30
-        // (an adapter allocation per call), sends detached units to their detachment frame, and
+        // (which gives a laid-out formation's units its own slot), sends detached units to their detachment frame, and
         // falls back to the rider's OWN position when the slot is off the navmesh, which would
         // read as a distance of zero. A rider the arrangement has not placed yet is skipped.
         _alignmentScratch.Clear();
