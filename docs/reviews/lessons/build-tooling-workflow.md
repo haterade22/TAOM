@@ -3336,3 +3336,19 @@ switch-off logged no reason. The settings gate beside it returned "off" from a c
 - **Why missed:** the comparison counted the change where it was expected and summed the rest into "identical rows"; nothing printed which other tags' fields moved.
 - **Prevent:** when a parsing rule changes, run the old and new parser over the real corpus and print values changed, keys dropped and keys added per tag and key; every tag in that list is either intended (and pinned by a test on its real line) or a bug. Check producers on unmerged branches too when the rule is generic (plan 040's `phase=GameInit total`).
 - **Source:** `docs/reviews/rca-perf-runs-parser-2026-10-02.md` R2.
+
+### A report a tool promises never changes the exit code is still on the exit-code path (plan 035, 2026-10-02)
+The release packager's new scene listing printed every shipped scene folder name. Under a piped stdout, which is
+cp1252 on Windows, a name outside the code page raised `UnicodeEncodeError` out of `main`: a clean dry run exited 1,
+and a real run stopped before the copy, although the change and its docs promised the report never changes the exit
+code. This is the third cp1252 stdout crash in TAOM tools, after `rebalance_troops.py`'s delta glyph and the #647
+hook extraction (both earlier in this file).
+- **Why missed:** "never changes the exit code" was checked as "adds no `return` or `raise`"; a print of a name the
+  tool did not write is a way out of `main` too. Every scene name on disk is ASCII, so no real run showed it.
+- **Prevent:** a tool that prints names it reads from disk calls
+  `sys.stdout.reconfigure(errors="backslashreplace")` (and stderr) at the top of `main`, guarded with
+  `hasattr(stream, "reconfigure")` for in-process tests. A section promised to be report-only runs inside its own
+  `try/except Exception` that prints the failure and goes on. Test both: a child run with
+  `PYTHONIOENCODING=cp1252` and a non-ASCII name, and a report patched to raise
+  (`tools/tests/test_package_release.py`, `TestSceneShaderCacheCli`).
+- **Source:** `docs/reviews/rca-release-shader-cache-check-2026-10-02.md` F1.

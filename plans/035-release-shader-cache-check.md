@@ -22,9 +22,16 @@
   translator run waits on the maintainer). Python suite: not yet recorded (Step 1 records it).
   `python -B -m unittest tools.tests.test_package_release` alone: `Ran 57 tests`, `OK` (measured by
   the plan writer on a tree whose copy of that file is identical to `dffdf879`).
-- **Issue**: filed by the orchestrator before execution
+- **Issue**: #717
 
 ## Why this matters
+
+> **Amended twice; the amendments at the end of this file are binding.** Amendment 1 (D8,
+> 2026-10-02) replaced the refusal described below with reports: nothing refuses, and there is no
+> `--allow-missing-shader-cache` flag. Amendment 2 (D15, 2026-10-03) leaves module-level shader
+> sacks out of the copy. Wherever this plan says the packager refuses, exits 2 or takes an override
+> flag, the amendments win. The Done criteria were rewritten, and the Scope, STOP, Orchestrator,
+> After-merge and Maintenance lines that said otherwise were corrected.
 
 The testing channel's `TAOM_Map/SceneObj/Main_map/ShaderCache/D3D11/` holds only
 `terrain_shaders_header_data.bin` (45,832 bytes, 2026-09-28) and no `compressed_shader_cache.sack`,
@@ -271,7 +278,9 @@ Never `./build.ps1`: it deploys into the game install.
 - The build configuration (`build.ps1`, `Main/TAOM.csproj`, `Directory.Build.props`): the report
   never refuses a Debug build and this plan changes nothing about it.
 - `docs/features/shader-precompilation.md` (its stale "zero sacks" lines; Maintenance notes).
-- Module-level `<Module>/Shaders/D3D11/` sacks and issue #448's format question.
+- Module-level `<Module>/Shaders/D3D11/` sacks: out of scope as first written, then brought in by
+  Amendment 2 (D15: list them and leave them out of the copy). Issue #448's format question stays
+  out: nothing here compares a module sack's format with anything.
 - `CHANGELOG.md`, `plans/README.md`, `tools/README.md`.
 - The gates themselves: never turn a test green by loosening an assertion or deleting it. STOP
   instead.
@@ -972,46 +981,95 @@ files.
 
 ## Done criteria
 
-ALL must hold:
+Rewritten on 2026-10-03 to the contract as amended (Amendments 1 and 2). The refusal-era list (an
+exit-2 gate, `--allow-missing-shader-cache`, exact `Ran N tests` totals for a refusal suite) is
+gone. ALL must hold:
 
-- [ ] `python -B -m unittest tools.tests.test_package_release` prints `Ran 77 tests` and `OK`
-- [ ] Step 2's RED result `FAILED (failures=7, errors=13)` with `Ran 77 tests` is quoted in the report
-- [ ] `python -B -m unittest discover -s tools/tests -t .` shows Step 1's failure set and 20 more tests
-- [ ] `dotnet build ...` exits 0 and `dotnet test ...` matches Step 1's totals
-- [ ] `python tools/lint_docs.py --fail-on-drift` exits with Step 1's code
-- [ ] `git grep -n "proves the DLLs only" -- .claude/skills/release/SKILL.md docs/reference/release-process.md docs/modding/module-map.md`
-      prints nothing
-- [ ] `git grep -l "allow-missing-shader-cache" -- tools/package_release.py tools/tests/test_package_release.py .claude/skills/release/SKILL.md docs/reference/release-process.md docs/modding/module-map.md`
-      lists all five of those paths
-- [ ] `git status --porcelain` is empty after the commit, and `git show --stat HEAD` lists only the
-      five in-scope files
-- [ ] The claims in the comments this plan supplied were re-checked: "Vanilla ships a few header-only
-      scenes" (list `Native/SceneObj/__default_new_editor_scene_/ShaderCache/D3D11/` in the game
-      install: a header and no sack) and "0x107" (Step 5 printed OFF for the dev install's Debug
-      DLLs). Step 5 prints only TAOM's own Debug copies, so it cannot show the literal Release value
-      0x2: report "0x2: UNVERIFIED by Step 5" (the `TestJitOptimization` 0x2 case covers the
-      reader's ON branch). Mark any other claim you could not check UNVERIFIED in the report
+**Behaviour**, each pinned by tests in `tools/tests/test_package_release.py`:
+
+- [ ] Scene shader caches are a report, never a gate (Amendment 1). Every shipped
+      `SceneObj/<scene>` gets one line (terrain header, sack, the sack's format dword) and a summary
+      line follows. A scene without a sack ships and the run exits 0. The packager has no
+      `--allow-missing-shader-cache` flag (`python -B tools/package_release.py --help` lists none).
+      A `WARNING` names a sack whose format differs from the majority of the shipped scene sacks.
+      That warning is a format-consistency signal and nothing more: it cannot see a set of sacks
+      that lags the engine as a whole, it names the odd one out and not necessarily the stale one,
+      and it is not a detector for issue #448, whose lagging sacks were module-level
+- [ ] Module-level sacks leave the copy (Amendment 2, D15). `classify` returns EXCLUDE under rule
+      `MODULE_SHADER_SACK` for every `<module>/Shaders/D3D11/compressed_shader_cache.sack`,
+      whatever the module and the case of its names, so a real run never copies one. The report
+      prints one policy line, then each such sack of the planned modules with its size and format.
+      Scene sacks and the other files in that folder (`shader_mapping.bin`,
+      `shader_compile_report.log`) still ship, and a module sack is never compared with a scene sack
+- [ ] The leave-out is the only change to what a real run copies. Against the base
+      (`git diff d50bf962 -- tools/package_release.py`), `classify` gains that one rule and loses
+      nothing, `execute` is untouched, and the test file's diff has no deleted line, so no existing
+      assertion changed. The rule governs the copy this tool makes. It does not edit an editor-made
+      package, which the release flow only dry-runs: for such a package the report lists the sacks
+      the package holds
+- [ ] JIT optimization: one line per shipped copy of `TAOM.dll` and `TAOM.Dependencies.dll`: OFF,
+      ON, `ON (no DebuggableAttribute on the assembly)` or `unknown (<reason>)`. Unknown covers a
+      native or truncated file, and a `DebuggableAttribute` whose constructor signature or value is
+      not one of the two layouts ECMA-335 II.23.3 gives it: a malformed attribute never gets a
+      verdict. A Debug build reads OFF, which is expected and never refused
+- [ ] No report changes the exit code. A report that raises prints `<label> report failed, ignored`
+      and the run goes on, a scene name the console cannot encode is escaped, and the refusals that
+      existed before this plan (`--require-build`, unknown entries, a non-empty destination) behave
+      as before
+- [ ] Logging (D6): the report is the packager's standard output, printed in full, with nothing
+      dropped from it. The packager writes no log file of its own, because `taom_debug.log` belongs
+      to the running mod; to keep a run's record, redirect standard output. Whether a release run
+      should also write a file is open (N5 in the deep-review record)
+
+**Evidence**, appropriate to the tests the branch ended with:
+
+- [ ] Every guard has a test that failed before the code that makes it pass (RED first, the failing
+      totals quoted in the report or the commit body)
+- [ ] Each guard of the metadata reader and of the `classify` rule is mutation-checked on a scratch
+      copy: a one-token mutant that no test fails on is either fixed with a new test or argued
+      equivalent in the report. The reader also reproduces the base's verdict on every DLL of a
+      real corpus except the malformed ones, and its row widths follow ECMA-335 II.24.2.6
+- [ ] `python -B -m unittest tools.tests.test_package_release` prints `OK` with no failure or error;
+      its `Ran N tests` line goes in the report (a run outside a git checkout skips the
+      `--require-build` tests, which need one)
+- [ ] `python -B -m unittest discover -s tools/tests -t .` fails only the three base failures
+      (`test_applying_every_spec_is_a_no_op`,
+      `test_the_committed_career_file_is_what_the_rule_derives`, `test_default_is_on_the_e_drive`)
+      and adds no new failing name
+- [ ] `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=` exits 0 and
+      `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` matches the Baseline in
+      Status (no C# changed; the one failure is `EveryLanguage_DeclaresARowForEveryEnglishKey`)
+- [ ] `python tools/lint_docs.py --fail-on-drift` exits 0, and `python tools/lint_docs.py
+      --dash-base <base>` reports no dash in new prose
+- [ ] `git status --porcelain` is empty after each commit, and `git show --stat` lists only the
+      in-scope files, the review records under `docs/reviews/`, and this plan file (its amendments)
+- [ ] A measured claim in a comment (the `0x107` and `0x2` modes, the `0x0783` sack format, vanilla's
+      header-only scenes, the sack counts per channel) is either re-checked in the review records
+      or marked UNVERIFIED
 
 ## STOP conditions
 
 Stop and report (do not improvise) if:
 
 - The drift check shows an in-scope file changed and the Current state excerpts no longer match.
-- Step 2's RED is not exactly `Ran 77 tests` with `FAILED (failures=7, errors=13)`: an existing test
-  broke, or a new test passes against the old code and guards nothing.
+- Superseded by Amendment 1: Step 2's RED is not exactly `Ran 77 tests` with
+  `FAILED (failures=7, errors=13)`: an existing test broke, or a new test passes against the old
+  code and guards nothing.
 - Step 3's GREEN fails twice after a reasonable fix, especially any `TestJitOptimization` case: do
   not rewrite the reader's offsets by guesswork.
 - Step 5 shows the reader returning `unknown` for the dev install's `TAOM.dll`, or `ON` for it while
   `TAOM.dll` was built Debug: the metadata walk disagrees with a real assembly.
-- Making a test pass seems to need changing an existing test's assertion, `classify`, the
-  `SCENE_BACKUPS` rule or `--require-build`'s behaviour.
+- Making a test pass seems to need changing an existing test's assertion, `classify` (beyond the one
+  `MODULE_SHADER_SACK` rule that Amendment 2 authorizes), the `SCENE_BACKUPS` rule or
+  `--require-build`'s behaviour.
 - The work seems to need a file outside Scope, any write to the game install or
   release-channel folder, or a build configuration change.
-- The assumption "the release flow runs the packager with `--dry-run`, so the scene check must
-  refuse there" turns out false. The one anchor to check is `.claude/skills/release/SKILL.md`
-  Phase 8 step 3, "Mike packages through the Modding Kit editor, not Claude" (line 173 at
-  `dffdf879`): STOP only if that sentence is gone at your HEAD. `docs/reference/release-process.md`
-  step 9 never said it (see Maintenance notes), so its wording is not a STOP.
+- Superseded by Amendment 1: the assumption "the release flow runs the packager with `--dry-run`, so
+  the scene check must refuse there" turns out false. The one anchor to check is
+  `.claude/skills/release/SKILL.md` Phase 8 step 3, "Mike packages through the Modding Kit editor,
+  not Claude" (line 173 at `dffdf879`): STOP only if that sentence is gone at your HEAD.
+  `docs/reference/release-process.md` step 9 never said it (see Maintenance notes), so its wording
+  is not a STOP.
 - The branch you were given is not this plan's own: the maintainer requires this work on a branch
   of its own, so STOP if `git branch --show-current` names a trunk (`bannerlord-1.5.x`,
   `bannerlord-1.4.5`) or your prompt says the branch also carries another plan's work. (Commits
@@ -1022,21 +1080,22 @@ Stop and report (do not improvise) if:
 - Issue: file it before dispatch (the gate, the JIT report, the two header-only scenes found).
 - No `/localize`: no player-facing text.
 - No feature doc: this is release tooling; the procedure docs are updated in Step 4.
-- Tell the maintainer, with the merge, that the next Phase 8 dry run will exit 2 until `Main_map`
-  and `taom_rohan_edoras_town_forceatmo` carry their sacks (or he chooses to ship one with
-  `--allow-missing-shader-cache`). This is the FOR-MIKE item for the run.
+- Superseded by Amendment 1: no run exits 2 over a sack, so there is no failing Phase 8 dry run to
+  warn the maintainer about and no `--allow-missing-shader-cache` to offer.
 
 ## After merge: the maintainer's actions
 
-- Restore or regenerate the `compressed_shader_cache.sack` of `TAOM_Map/SceneObj/Main_map` and
-  `taom_rohan_edoras_town_forceatmo` before the next release, or decide to ship either header-only
-  with `--allow-missing-shader-cache <scene>`.
+- Superseded by Amendment 1: restoring the sacks of `TAOM_Map/SceneObj/Main_map` and
+  `taom_rohan_edoras_town_forceatmo` is not a release gate. Whether a scene ships its sack is the
+  maintainer's call (D8), and the report lists what each scene carries.
 - Nothing else: no hooks or settings change.
 
 ## Maintenance notes
 
-- Plain `--dry-run` size measurements (`docs/modding/modules-overview.md:195-199`) now exit 2 while a
-  scene lacks its sack; the full report still prints first, so the numbers stay readable.
+- Plain `--dry-run` size measurements (`docs/modding/modules-overview.md:195-199`) can still be
+  taken, because nothing exits non-zero over a sack (Amendment 1). Since Amendment 2 the module
+  sacks count as dropped, not shipped (rule `MODULE_SHADER_SACK`). The 2026-09-05 table in that
+  file predates Amendment 2: a module sack under `Shaders/` counted as shipped then.
 - `docs/features/shader-precompilation.md:130` and `:146` still say every TAOM_Map scene ships
   header-only (measured 2026-08-10); 44 of 46 carry sacks today. Worth a doc follow-up; deliberately
   not in this plan's scope.
@@ -1044,15 +1103,16 @@ Stop and report (do not improvise) if:
   skill's Phase 8)", while the skill's Phase 8 step 3 says Mike packages in the editor and Claude
   never writes a package. That contradiction predates this plan and is out of scope; worth a doc
   follow-up.
-- Issue #448's module-level sacks (`<Module>/Shaders/D3D11/`) are not checked. If they ever matter,
-  that is a separate rule.
-- Review should probe: the order in `main` (scene error printed before `--require-build`, return 2
-  after it and before the `--dry-run` return); that `scenes_missing_shader_cache` reads `_copy_list`
-  and so honours every exclusion; that `_jit_report` can never raise or change the exit code; the
-  reader's row widths against ECMA-335 II.22 for tables 0x00 to 0x0C.
+- Issue #448's module-level sacks (`<Module>/Shaders/D3D11/`) are listed and left out of the copy
+  (Amendment 2, D15), not compared. While the leave-out holds, a lagging module sack cannot reach a
+  copy this tool makes; comparing formats against the engine's own is still open (N1 in the
+  deep-review record).
+- Review should probe that `scene_shader_caches` reads `_copy_list` and so honours every exclusion,
+  that the three reports run inside main's guard and never change the exit code, and the reader's
+  row widths against ECMA-335 II.22 for tables 0x00 to 0x0C.
 - Deferred: adding the JIT state to the `--json` manifest (nothing reads it yet).
 
-## Amendment (orchestrator, 2026-10-02; binding; overrides "refuse" above)
+## Amendment 1 (orchestrator, 2026-10-02; binding; overrides "refuse" above)
 
 The maintainer answered on 2026-10-02 that he does not ship shader sacks because they have been
 problematic for players (plans/_audit/2026-10-02-perf/DECISIONS.md D8). The packager therefore never
@@ -1063,3 +1123,41 @@ one summary line (scenes with a sack, without one, and any format version that d
 majority, which is the one case worth a WARNING line, since a stale-format sack is the risk #448
 describes). Exit codes never change because of sacks. The DLL optimization report stays as planned.
 Logging (D6): the report goes to the packager's normal output and its log, in full.
+
+## Amendment 2 (orchestrator, 2026-10-03; binding; D15 changes what a real run copies)
+
+On 2026-10-03 the maintainer decided what happens to a module's own compiled shader cache, the
+`<Module>/Shaders/D3D11/compressed_shader_cache.sack` that sits beside `shader_mapping.bin` (D15 in
+`plans/_audit/2026-10-02-perf/DECISIONS.md`). His target is to ship TAOM's and the Armory's and
+never TAOM_Map's, but only after a test proves the game uses a Kit-built sack. Until then the
+packager leaves every module's out of the copy. This amends Amendment 1 and the plan above:
+
+1. **Behaviour.** `classify` returns EXCLUDE under rule `MODULE_SHADER_SACK` for every such sack,
+   whatever the module and the case of its names. `plan_module` records each one on
+   `ModulePlan.module_sacks`, and a third report prints one policy line (`module shader sacks are
+   left out: shipping TAOM's and the Armory's waits on a test that the game uses a Kit-built sack;
+   TAOM_Map's never ships`), then each sack of the planned modules with its size and format. Scene
+   sacks, `shader_mapping.bin` and `shader_compile_report.log` still ship; whether the last two
+   should is open for the maintainer. Nothing refuses, warns or changes the exit code over a module
+   sack.
+2. **The copy changes.** Do not describe this branch as one that leaves what is copied alone: a real
+   run now omits those sacks. The change is deliberate and confined to the rule above, so the
+   plan's "out of scope" line for module-level sacks and its STOP condition on `classify` no longer
+   apply to that one rule. They still bind every other path. The in-scope file list is unchanged,
+   apart from this plan file, which carries the amendments.
+3. **What the leave-out does not do.** It governs the copy this tool makes. The release flow has
+   Mike package in the editor and only dry-runs the result (`.claude/skills/release/SKILL.md`,
+   Phase 8 steps 3 and 4), so for an editor-made package the report lists the sacks the package
+   holds and the policy line states the policy; nothing here edits that package.
+4. **The warning's rationale is corrected.** Amendment 1 justified the majority `WARNING` by issue
+   #448, but #448's three lagging sacks were module-level sacks, which the scene report never reads
+   (`docs/features/shader-precompilation.md:140`). The `WARNING` is a format-consistency signal
+   among the shipped scene sacks and nothing more (see the Done criteria). The #448 risk is met by
+   item 1: while the leave-out holds, a lagging module sack cannot reach a copy this tool makes.
+5. **Its log.** Amendment 1 sent the report to "the packager's normal output and its log". The one
+   destination is standard output, printed in full. The packager has no log file, and
+   `taom_debug.log` is the running mod's, so to keep a run's record, redirect standard output. A
+   file the packager writes itself would be a new feature and is the maintainer's call (N5 in the
+   deep-review record).
+6. **Done criteria.** Rewritten above to cover Amendment 1's reports, this leave-out, and the
+   evidence the final tests need.

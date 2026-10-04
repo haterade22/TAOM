@@ -87,8 +87,27 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
 9. Build at the tag and gate the DLLs: `python tools/package_release.py --source "<game>/Modules" --dest <out> --require-build vX.Y.Z --dry-run` must print `build stamp OK`, then package without `--dry-run` (the skill's Phase 8).
    The gate reads every `bin/<platform>/` copy of `TAOM.dll` and `TAOM.Dependencies.dll` and
    refuses a tag whose `Directory.Build.props` predates the `.dirty` flag (the 1.4.5 line until it
-   is ported). It proves the DLLs only. Deploys never delete, so the install also holds files from
-   every earlier deploy. Before packaging, prune only what neither the tag nor its build owns:
+   is ported). Every run also prints three reports that never refuse and never change the exit code:
+   one line per shipped `<module>/SceneObj/<scene>` saying whether `ShaderCache/D3D11/` holds
+   `terrain_shaders_header_data.bin` and `compressed_shader_cache.sack`, with the sack's format, a
+   summary line and a `WARNING` for any sack whose format differs from the majority of the shipped
+   sacks; one line per module-level `<module>/Shaders/D3D11/compressed_shader_cache.sack`, with its
+   size and format; and one `JIT optimization` line per shipped copy of `TAOM.dll` and
+   `TAOM.Dependencies.dll` (OFF for the Debug builds TAOM ships on purpose; a bare ON when the
+   assembly's `DebuggableAttribute` leaves optimization on; `ON (no DebuggableAttribute on the
+   assembly)` when it carries none; `unknown (<reason>)` when the file holds no readable .NET
+   metadata or its `DebuggableAttribute` is malformed). A scene without a sack is not an error, and
+   scene sacks keep shipping as they are; shipping sacks is the maintainer's call. The `WARNING`
+   compares the shipped scene sacks with each other, so a set of them that lags the engine as a
+   whole raises none. Module-level sacks, unlike scene sacks, are **left out of the copy, for every
+   module.** The maintainer's policy (2026-10-03) is to ship TAOM's and the Armory's compiled sacks
+   and never TAOM_Map's, but only after a test proves the game uses a Kit-built sack. Until then
+   the report lists each one and says so in one policy line. They are listed, not compared: #448's
+   three lagging sacks were exactly these, so while the policy holds a lagging module sack cannot
+   reach a build through the packager. `shader_mapping.bin` and `shader_compile_report.log` beside
+   them still ship (whether they should is open). The gate itself proves the DLLs only.
+   Deploys never delete, so the install also holds files from every earlier deploy. Before
+   packaging, prune only what neither the tag nor its build owns:
    - **`<game>/Modules/TAOM/` outside `bin/`:** remove what `Main/_Module/` does not hold at the
      tag (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module`). Compare paths
      case-insensitively, as Windows resolves them: the tag spells `GUI/PreFabs/`, the install

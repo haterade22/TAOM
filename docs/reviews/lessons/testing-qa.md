@@ -1564,3 +1564,40 @@ Four plan 033 tests passed a change their claim covered: the clock rule scanned 
 - **Why missed:** each RED step proved the change happened against the base, not that the test would notice the change being undone or narrowed later.
 - **Prevent:** for every test that guards an optimisation, delete or narrow the guarded line (a `Clear()`, a gate value, a scanned namespace) in a scratch run and keep the red log; assert what a fresh object would hold, not only that the object was reused; give a gate with N value lists a table test against a hand-read oracle; put pure formatting in an engine-free class with untagged tests.
 - **Source:** `docs/reviews/rca-creature-battle-allocations-2026-10-02.md` findings R2, R7, R8, R10, R11.
+
+### Replay the incident a detector cites through the detector before the docs say it covers it (plan 035, 2026-10-02)
+The packager's stale-format WARNING flags a scene sack whose format differs from the majority of the shipped sacks,
+and the docs said it covers issue #448. #448's three lagging sacks (0x0782 while vanilla's 486 read 0x0783) were
+module-level `<Module>/Shaders/D3D11` sacks, and TAOM_Map shipped no scene sack at that date, so the report never
+reads #448's data at all. The first fix blamed the majority rule instead (a set that lags as a whole has no odd one
+out). That limitation is real, but it is not why #448 is missed; the fix repeated the miss by again not replaying
+#448's own layout.
+- **Why missed:** the rule came from the plan's amendment, and the docs were written from the amendment's purpose.
+  Nobody fed #448's own files to the report, neither the first time nor in the fix.
+- **Prevent:** when a check names the incident it exists for, write that incident's data, in its own on-disk layout,
+  as a test case before writing the claim. If the check cannot catch it, the test pins the limitation
+  (`test_issue_448s_module_level_sacks_are_not_read`) and the docs say what it cannot see.
+- **Source:** `docs/reviews/rca-release-shader-cache-check-2026-10-02.md` F2.
+
+### A binary reader's fixture takes every width branch the shipped files take, proven by mutation (plan 035, 2026-10-02)
+The packager's DebuggableAttribute reader had one fixture: PE32+, 2-byte heap and coded indexes, one row per table.
+The installed `TAOM.dll` reads HeapSizes 0x05 (#Strings and #Blob indexes 4 bytes, #GUID 2), and its 20,114 MethodDef
+rows alone make MemberRefParent and CustomAttributeType 4 bytes (TypeRef 1,349 and MemberRef 8,068 rows, both under
+8,192); `TAOM.Dependencies.dll` is PE32 with every index 2 bytes. 16 of 22 mutations of the reader (heap width,
+coded-index thresholds, row widths, the PE32 offset, the native guard) left all 85 tests green; by the tooling
+lens's reading, three of them would have turned the Debug `TAOM.dll` into a confident "JIT optimization ON". A recurrence of "A parser tested only against the format you invented" earlier in
+this file: there the format was invented, here it was real but minimal. The first fix widened the fixture from a
+summary of the shape, not the measured shape: one switch set all three heap widths together and only TypeRef or
+MemberRef rows widened the coded indexes, so five more mutants (two heap bits swapped, every heap width taken from
+one bit, MethodDef dropped from either coded index) still left every test green while misreading the installed DLL.
+- **Why missed:** the fixture was validated by System.Reflection.Metadata reading it back, which proves a fixture
+  valid, not representative. The reader was right on real DLLs, so nothing failed to prompt a wider fixture. The
+  fix was checked against the mutations already listed, not against new ones aimed at the shape it claimed.
+- **Prevent:** read the header fields of each shipped file (HeapSizes, the row count of every table) and build one
+  fixture with exactly those values (`test_the_installed_taom_dll_shape`), then vary each flag bit on its own and
+  widen each coded index through each target table the real file uses. Write widths from the spec rather than the
+  reader, read each new shape back with an independent reader, read a Debug and a Release form per shape so a
+  constant answer cannot pass, and run mutations aimed at the measured shape: each must fail a test
+  (`tools/tests/test_package_release.py`, `_managed_dll`).
+- **Source:** `docs/reviews/rca-release-shader-cache-check-2026-10-02.md` F3, and the review record's
+  "Convergence round 1".

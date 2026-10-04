@@ -484,9 +484,19 @@ Code: No code changes needed
    rollback window.
 5. Package: `python tools/package_release.py --source "<game>/Modules" --dest <out> --dry-run` first,
    then without `--dry-run`. It copies an allow-list into a fresh folder and never deletes from the
-   dev install. For this module it drops `RuntimeDataCache`, `AssetSources`, `Prefabs_Unused` and
-   `*.xml.bak`, and keeps `ModuleData`, `SceneObj`, `SceneEditData`, `Assets`, `AssetPackages`,
-   `Atmospheres`, `NavMeshPrefabs`, `Prefabs`, `Shaders` and `bin`.
+   dev install. For this module it drops `RuntimeDataCache`, `AssetSources`, `Prefabs_Unused`,
+   `*.xml.bak` and `Shaders/D3D11/compressed_shader_cache.sack`, and keeps `ModuleData`,
+   `SceneObj`, `SceneEditData`, `Assets`, `AssetPackages`, `Atmospheres`, `NavMeshPrefabs`,
+   `Prefabs`, the rest of `Shaders` and `bin`.
+   That sack is the module's own compiled shader cache, and the maintainer's policy (2026-10-03) is
+   that TAOM_Map's never ships: the packager lists it with its size and format, under one policy
+   line, and leaves it out. `shader_mapping.bin` and `shader_compile_report.log` beside it still
+   ship.
+   It also lists, for every shipped scene, whether `SceneObj/<scene>/ShaderCache/D3D11/` holds
+   `terrain_shaders_header_data.bin` and `compressed_shader_cache.sack` and the sack's format, and
+   prints a `WARNING` for a sack whose format differs from the other shipped sacks' majority (it
+   cannot see a set that lags the engine as a whole). That listing is a report:
+   it never refuses, and a scene without a sack ships as it is.
 
 Check: `python tools/package_release.py --source "<game>/Modules" --dest <out> --dry-run`
 Takes effect: full game restart

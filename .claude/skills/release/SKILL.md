@@ -146,6 +146,15 @@ Rebuild at the tag before anything ships.
    `TAOM.Dependencies.dll` and refuses one whose stamp says `.dirty` or `nogit`, or names a commit
    other than the tag's; a requested TAOM or TAOM.Dependencies missing from `--source`; and a tag whose
    `Directory.Build.props` predates the `.dirty` flag (the 1.4.5 line until it is ported).
+   Its scene shader cache, module shader sack and `JIT optimization` sections are reports that
+   never refuse: a scene without a sack ships as it is (Mike's call), JIT optimization OFF is
+   expected (Debug builds ship on purpose), `ON (no DebuggableAttribute on the assembly)` means the
+   DLL has no attribute to read, `unknown (<reason>)` means the DLL has no readable .NET metadata
+   or a malformed attribute, and a `WARNING` names a sack out of step with the other shipped
+   sacks. The module sack section also states a policy: every `<module>/Shaders/D3D11` sack it
+   lists is left out of the copy, whatever the module. Once Mike's test shows the game uses a
+   Kit-built sack, TAOM's and the Armory's may ship; TAOM_Map's never does. Read them with
+   [release-process.md](../../../docs/reference/release-process.md) step 9.
    It proves the DLLs only. Deploys never delete, so the install also holds files from every
    earlier deploy. Before packaging, prune only what neither the tag nor its build owns:
    - **`<game>/Modules/TAOM/` outside `bin/`:** remove what `Main/_Module/` does not hold at the
