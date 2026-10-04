@@ -463,6 +463,13 @@ older file to one line, so the executor fixed that line and left its siblings.
   `BuildProfilerOffLine`). A scope limit on a file is not a reason to leave a line in it false; say so to the
   orchestrator instead.
 - **Source:** `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` rows R3, R9 and R10.
+- **Repeat (2026-10-04):** in the perf programme's integration merge, plan 028's hook health check, added on plan
+  028's branch after plan 041 had branched, wrote "not measuring, required hooks missing" while the probe measured.
+  Plan 041's sweep could not see a line its branch did not have, and the integration trial checked compile, tests and
+  lost lines, not what a line claims. Rerun this sweep on the merged tree whenever branches that add or change
+  instruments merge together. The line now has its probe-aware variant (`HitchProbeLines.BuildHooksMissingLine`),
+  chosen unless the missing hooks include the frame boundary both modes need
+  (`docs/reviews/rca-perf-integration-fixups-2026-10-04.md` F1).
 
 ### A benchmark's baseline arm runs in the state players had before the change, and its figure names what it stubbed (2026-10-02)
 Plan 041's overhead benchmark installed the measuring profiler before timing its unpatched arm, so Patch91's agent-tick

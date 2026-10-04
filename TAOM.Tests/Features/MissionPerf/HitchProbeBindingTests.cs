@@ -64,8 +64,8 @@ public class HitchProbeBindingTests
         }
     }
 
-    // D13: the shield costs about 5 ns a call once plan 034's finalizer change is in (64 ns and 241 bytes as the
-    // finalizer ships on this branch), so the entries kept only for cost went. These two stay.
+    // D13: since plan 034 the shield's finalizer is cheap (the figures are in PatchShieldPolicy's ExcludedTargetNamespacePrefixes comment), so the
+    // entries kept only for cost went. These two stay.
     private static readonly string[] StillExcluded = { "WaitTickCompletion", "TickComponents" };
 
     [TestMethod]

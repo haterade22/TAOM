@@ -1,45 +1,56 @@
 feat(mission-perf): v2.0.32 - log clip memory against the 12 MiB budget
 
-The engine loads animation clips on demand and holds their data
-against a 12 MiB budget: once a load takes the total past 15 MiB, it
-schedules a pass that frees idle clips toward the budget. A worker
-that then needs an evicted clip waits for it to load again, a suspect
-for battle frame spikes. This probe measures whether TAOM battles
-reach that budget, which decides between making TAOM's busiest clips
-resident, raising the budget, or neither.
+The engine loads animation clips on demand and holds their data against
+a 12 MiB budget: once a load takes the total past 15 MiB, it schedules a
+pass that frees idle clips toward the budget. A worker that needs a clip
+that is not loaded waits for it, a suspect for battle frame spikes. This
+probe shows whether TAOM battles put that budget under pressure, which
+is the evidence for raising it.
 
-"Enable Animation Clip Memory Probe" (MCM, Battle Load Diagnostics,
-Mission Performance) is on by default and needs no restart. Once per
-game session it finds the engine's clip byte counter and budget by a
-signature check, a scan of about 10 MB of the engine's code under the
-first mission's loading screen. It only reads: if the signature, the
-section checks or the 12582912-byte budget do not match, it turns
-itself off and says why. It is left out of the co-op settings
-fingerprint, like the frame-time heartbeat.
+"Enable Animation Clip Memory Probe" (MCM, Battle Load Diagnostics page,
+Mission Performance group) is on by default and is read at each mission
+start, so it needs no restart. Once per game process, under the first
+mission's loading screen, it finds the engine's clip byte counter and
+budget by a signature check, a scan of about 10 MB of the engine's code.
+It only reads: if the signature, the section checks or the 12582912-byte
+budget do not match, it turns itself off and says why. It is left out of
+the co-op settings fingerprint, like the frame-time heartbeat.
 
 In each mission it reads the counter once a second and writes to
 taom_debug.log:
 - "[AnimMem] mission start", then a line every 5 s: loaded KB, percent
-  of the budget, whether a clip is loading, drops (a proxy for
-  evictions), the window's minimum and maximum, and the samples that
-  saw a clip loading;
-- at mission end, a line for the samples since the last 5 s line and
-  an "[AnimMem] summary:" line (peak, samples at or above 90 percent,
-  drops, loading samples);
-- "[AnimMem] armed", "disabled", "off" or "stopped" lines for each
-  state change.
-Readings between 100 and 125 percent of the budget are normal, since
-eviction starts only past 15 MiB, and a pass can leave the total above
-12 MiB while clips are in use or loading.
+  of the budget, whether a clip is loading, drops, the window's minimum
+  and maximum, and the samples that saw a clip loading;
+- at mission end, a line for the samples since the last 5 s line and an
+  "[AnimMem] summary:" line (peak, samples at or above 90 percent,
+  drops, loading samples), also when a mission is torn down without a
+  normal end;
+- "[AnimMem] armed", "disabled", "off" or "stopped" lines for each state
+  change.
 
-The cost to every player while it is on: one counter read and one
-native walk over the clip records each second, and one INFO line every
-5 s (about 110 KB of log per hour of missions). MCM keeps a player's
-saved value, so changing the default later means renaming the
-setting; whether it stays on for a public release is still open.
+Reading it: values between 100 and 125 percent of the budget are normal,
+since eviction starts only past 15 MiB, and a pass can leave the total
+above 12 MiB while clips are in use or loading. A drop means an eviction
+pass ran in that second, not how many clips it freed. A low total with
+no drops shows no budget pressure and nothing more. It does not rule out
+making TAOM's busiest clips resident: a clip's first load blocks its
+worker whatever the total, and the probe samples after that wait has
+ended, so that decision needs hitch timing (plans 028 and 041). The
+engine reference's clip section now describes the eviction pass as the
+binary runs it.
+
+The cost to every player while it is on: one counter read and one native
+walk over the clip records each second, and one INFO line every 5 s,
+each flushed on the main thread; what the walk and the flush cost in a
+battle has not been measured. The probe reads the engine module's header
+page and code on trust, and the engine's loading query walks a native
+list without a lock. MCM keeps a player's saved value, so changing the
+default later means renaming the setting; whether it stays on for a
+public release is still open.
 
 Refs: #718 (plan 036)
-Not-tested: in game. One Custom Battle: the armed line, a 5 s line,
- the mission-end line and the summary in taom_debug.log; then one
+Not-tested: in game. One Custom Battle: the armed line, a 5 s line, the
+ mission-end line and the summary in taom_debug.log; then one
  troll-heavy and one large vanilla-troop battle, read next to
- [MissionPerf]. The read against a running game has not run.
+ [MissionPerf]. The probe has not run against a live game process, so
+ the per-second cost of the loading query and the flush is unmeasured.

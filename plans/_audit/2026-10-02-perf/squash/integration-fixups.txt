@@ -1,0 +1,37 @@
+fix(perf): v2.0.32 - integration fixups and review for the perf plans
+
+What the perf plans needed once merged together, and the review of
+those fixes. The one change a player can see is a log line.
+
+With the tick profiler switched on and a hook it needs missing (another
+mod's patch, or a PatchShield rescue), its warning at a mission's start
+said "not measuring" while the default-on hitch probe went on measuring
+that mission. It now says "no per-type timing" and that the hitch probe
+still measures, unless the missing hook is the probe's own frame
+boundary, without which nothing is measured. The status lines a mission
+writes at its start moved from the profiler's mission behaviour into a
+static helper beside the probe's, so their tests (12 new ones) run
+without the game and in CI.
+
+Docs and comments now match the merged code. Plan 030 deleted Patch35
+on Mission.OnTick and Patch23's spawn postfix, and the text no longer
+names them. Plan 034 made PatchShield's finalizer cheap: its measured
+figures are stated once, in PatchShieldPolicy, and every other copy
+points there. The hang an exception can cause inside Mission.OnTick is
+analysed once, in the mission-perf-heartbeat feature doc, with a table
+of the six mission methods the profiler and the probe patch and what a
+PatchShield rescue does on each. Plans 040 and 042 no longer describe
+their merge order as still to come. A test the merges duplicated is
+gone, and a new binding test pins the health check's frame-boundary
+hook to the method that closes frames.
+
+The programme's records after the walkthrough: the decisions and what
+came of them, the landing order and how the landing branch was built,
+the squash messages, and the review's RCA
+(docs/reviews/rca-perf-integration-fixups-2026-10-04.md) with two
+lessons.
+
+Refs: #710, #712, #716, #721, #722, #723, #724
+Not-tested: in game. The new warning needs the tick profiler on and a
+ required hook removed while the probe is on.
+Save-compat: none (no saved state)

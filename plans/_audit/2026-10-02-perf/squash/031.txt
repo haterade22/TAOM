@@ -1,38 +1,47 @@
 perf(battle): v2.0.32 - read MCM settings once, not per blow or frame
 
-Battle code looked up TAOM's MCM settings object on every read, and
-some of those reads run on every melee blow (about eight per ordinary
-hit, even with blow diagnostics off), every frame, or every howdah
-seat and agent stat update. The combat mechanics and blow diagnostics
-providers, and those of Mixed Formations, Companion Tactics, Dread
-Aura, howdah diagnostics, Smart Cavalry AI, Culture Doctrine and siege
-prop diagnostics, now keep the settings object from their first
-successful lookup and read through it. A change in MCM still applies
-at once, mid-battle included, and until MCM is up every read falls
-back to its default as before.
+Battle code looked up TAOM's MCM settings object on every read, and some
+of those reads run on every melee blow (about eight per ordinary hit,
+even with blow diagnostics off), every frame, or every howdah seat and
+agent stat update. The combat mechanics and blow diagnostics providers,
+and those of Mixed Formations, Companion Tactics, Dread Aura, howdah
+diagnostics, Smart Cavalry AI, Culture Doctrine and siege prop
+diagnostics, now keep the settings object from their first successful
+lookup and read through it. A change in MCM still applies at once,
+mid-battle included, and until MCM is up every read falls back to its
+default as before.
 
 Also:
-- Cleave, stagger immunity, crush-through, charge knockdown and the
-  race modifiers test the cheap facts of a hit (a horse charge, a
-  monster id, an AI attacker) before reading a setting, and the
-  stance-cancel patch checks the player's team before its setting.
+- Cleave, stagger immunity, crush-through and the race modifiers test
+  the cheap facts of a hit (such as a monster id, a shield block or an
+  AI attacker) before reading a setting, and the stance-cancel patch
+  checks the player's team before its setting. Every result is
+  unchanged.
+- The English string override looks a text's {=ID} up in place instead
+  of cutting it out into a new string, so its own lookup no longer
+  allocates (vanilla still builds its string when no override applies).
 - Mixed Formations parses its cycle hotkey only when the setting
-  changes, not every frame. A value that does not parse as a key name
-  used to turn the hotkey off silently; it now writes one warning to
-  taom_debug.log each time the setting changes to such a value, and
-  once per field battle. A number or a comma list such as "L, K"
-  still parses, with no warning.
-- The English string override looks a text's {=ID} up in place
-  instead of cutting it out into a new string, so its own lookup no
-  longer allocates (vanilla still builds its string when no override
-  applies).
+  changes, not every frame.
 
-Every gameplay result is unchanged, and no other log line changes.
+Behaviour change, the maintainer's decision: the Mixed Formations cycle
+hotkey must now be the name of one key, in any case (L, f5, D2). A
+number in any spelling ("3" used to pick the 2 key), a list such as
+"L, K" (which used to combine into the semicolon key), a chord such as
+"Ctrl+L" and the name "Invalid" now switch the hotkey off instead of
+quietly picking a key the player never named. Each writes one warning to
+taom_debug.log when the setting changes to it and once per field battle,
+for example "[MixedFormations] cycle hotkey 'Ctrl+L' is not a recognised
+InputKey name; it is ignored until the setting changes". An empty value
+still means no hotkey, now with the same warning. Names such as L or F5
+behave as before.
+
+Nothing else a player sees changes, and no other log line changes. The
+module dependencies chapter now names the installed MCM 5.12.3.
 
 Refs: #713 (plan 031)
 Not-tested: in game. During a field battle, change a Combat Mechanics
- toggle, the Mixed Formations cycle key and Smart Cavalry AI in MCM
- and see each apply without a restart; set the cycle key to a value
- that does not parse as a key name and find the one warning; check
- that an overridden English text (an alliance notification) still
- shows.
+ toggle, the Mixed Formations cycle key and Smart Cavalry AI in MCM and
+ see each apply without a restart; set the cycle key to "3", then
+ "Invalid", then "Ctrl+L", and find one warning for each with the key
+ doing nothing, then set it back to L and see it cycle layouts; check
+ that an overridden English text (an alliance notification) still shows.

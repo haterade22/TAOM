@@ -256,19 +256,6 @@ public class PatchShieldPolicyTests
     }
 
     [TestMethod]
-    public void IsExcludedTargetMethod_MissionOnTickAndOnPreTick_ReturnsFalse()
-    {
-        // Maintainer decision D13 (2026-10-03): plan 028 had excluded both; neither is on the list now, so the
-        // shield attaches to them whenever something patches them, and a foreign patch's missing-API throw on
-        // Mission.OnTick is swallowed and the patch stripped instead of unwinding the application tick. That does
-        // not make an interrupted Mission.OnTick safe (the hazard in PatchShieldPolicy.ExcludedTargetMethods).
-        // Only the agent tick stays excluded, so a swallow there cannot skip tickCompleted = true;
-        // MissionTickProfilerBindingTests pins that one against the real patch target.
-        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Mission", "OnTick"));
-        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Mission", "OnPreTick"));
-    }
-
-    [TestMethod]
     public void IsExcludedTargetMethod_NullOrEmptyParts_ReturnsFalse()
     {
         Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod(null, "get_UnitDiameter"));
@@ -279,8 +266,8 @@ public class PatchShieldPolicyTests
     }
 
     // --- Mission tick targets: which stay off the shield (maintainer decision D13, 2026-10-03) -----
-    // The shield costs about 5 ns per call once plan 034's finalizer change is in (64 ns and 241 bytes as the
-    // finalizer ships on this branch), so cost alone no longer keeps a target off it:
+    // Since plan 034 the shield's finalizer is cheap (the figures are in PatchShieldPolicy's ExcludedTargetNamespacePrefixes comment), so cost alone
+    // no longer keeps a target off it:
     // Mission.OnTick, Mission.OnPreTick and Mission.SpawnAgent are shielded again. The three that stay would
     // break the frame if a swallow skipped their body (or, for the script tick, stay as built); the first two stop
     // a swallow only at their own method, since their callers are shielded. The binding

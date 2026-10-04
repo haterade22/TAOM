@@ -333,11 +333,11 @@ pass 2, so without the exclusions both would carry one from a process's second g
 `Campaign.Tick` calls still run their finalizers inside `campaignTickMs`, for example Patch65's `SpawnLordParty` on a
 clan's daily tick. A player with the profiler off gains nothing and loses nothing.
 
-**Not gained:** the three shared methods keep PatchShield's finalizer, which binds `__originalMethod` (a
-`MethodBase.GetMethodFromHandle` and a try/catch per call), once per frame each. Harmony emits finalizers after every
-postfix, so a finalizer never runs inside its own method's bracket: `Campaign.RealTick`'s runs inside `mapStateMs` (after
-Patch101's postfix on it), and the ones on `MapState.OnTick` and `MapScreen.OnFrameTick` run after their own brackets, in
-`otherMs`. Plan 034 owns the finalizer's cost.
+**Not gained:** the three shared methods keep PatchShield's finalizer, which takes only `__exception` since plan 034
+(the figures are in `PatchShieldPolicy`'s `ExcludedTargetNamespacePrefixes` comment), once per frame each.
+Harmony emits finalizers after every postfix, so a finalizer never runs inside its own method's bracket:
+`Campaign.RealTick`'s runs inside `mapStateMs` (after Patch101's postfix on it), and the ones on `MapState.OnTick` and
+`MapScreen.OnFrameTick` run after their own brackets, in `otherMs`.
 
 **Given up on `Campaign.Tick` and `CampaignEvents.Tick`, profiler on:** a missing-API exception thrown anywhere inside
 either, by Patch101 or by code they call (a `CampaignEvents.TickEvent` listener, TAOM's or another mod's, the periodic and
@@ -345,8 +345,8 @@ hourly events of every mod's campaign behaviours), is no longer swallowed there.
 a throw in `CampaignEvents.Tick`: the periodic and hourly events, the tick data store, the captivity update and encounters)
 and then the rest of `MapState.OnTick`: the map screen's `AfterWaitTick` (`TickNavigationInput`) and
 `SaveHandler.CampaignTick` (the autosave attempt). From a process's second game start, or from the first when another mod
-patched `MapState.OnTick` at load, the shield on `MapState.OnTick` catches it there: it swallows, writes one `swallowed`
-diag.log line per throw and, on the first, strips Patch43's and Patch101's patches on `MapState.OnTick`, so no more frames
+patched `MapState.OnTick` at load, the shield on `MapState.OnTick` catches it there: it swallows, writes a `swallowed`
+diag.log line the first time and counts the repeats (decision D16) and, on the first, strips Patch43's and Patch101's patches on `MapState.OnTick`, so no more frames
 close and `[MapProfile]` lines stop for the process. While the cause recurs it is swallowed again each frame, and each
 frame skips the same calls. In a process's first game, when nothing shields `MapState.OnTick`, it leaves through
 `GameStateManager.OnTick`, `Game.OnTick` and `GameManagerBase.OnTick` (the game handlers' ticks, `AfterTick` and the
@@ -360,7 +360,8 @@ exception slot, each value returned becoming the exception the next one sees, so
 Capture" on (its default) Patch37 writes a crash report (a recurring signature is throttled) and swallows, and PatchShield's
 finalizer then sees none. With it off (or on re-entry, or with the crash-report service unresolved) Patch37 hands the same
 exception back, and PatchShield's finalizer on `Module.OnApplicationTick` swallows the MissingMethod, MissingField or
-TypeLoad exception, writes one `swallowed` diag.log line per throw, and on the first throw strips every non-protected
+TypeLoad exception, writes a `swallowed` diag.log line the first time and counts the repeats (decision D16), and on the
+first throw strips every non-protected
 owner's prefixes, postfixes and transpilers there, TAOM's own `CrashReportApplicationTickTrigger` among them, never the
 patch that threw.
 
@@ -382,7 +383,7 @@ Before this feature the same swallow already stripped Patch43's, Patch89's and P
 
 **Still per frame:** Patch37's targets `Module.OnApplicationTick`, `ScreenManager.Tick` and `ScreenManager.Update`, and any
 other patched method the frame calls, keep PatchShield's finalizer once per frame; that cost lands in `otherMs` or in the
-bracket enclosing the call (plan 034 owns it). One example inside `mapStateMs`: `MapScreen`'s `BeforeTick` calls
+bracket enclosing the call (plan 034 benchmarked a stand-in of its shape; the figures are in `PatchShieldPolicy`'s `ExcludedTargetNamespacePrefixes` comment). One example inside `mapStateMs`: `MapScreen`'s `BeforeTick` calls
 `SceneView.ReadyToRender` and `CheckSceneReadyToRender`, which carry Patch89's `SceneReady` patches and so its finalizer
 from the first game start.
 

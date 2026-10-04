@@ -190,7 +190,8 @@ into parentheses), so plan 029's parser never counts one as a malformed data lin
 | `[TickProfiler] on in MCM but its install at game start failed, so per-type timing is off; the hitch probe still measures this mission; see the [TickProfiler] install line and [PatchApply]` | WARNING | The same, while the hitch probe measures the mission |
 | `[TickProfiler] mission 3: not measuring, 'Enable Tick Profiler' is off in MCM; its patches stay installed and only call through until a restart` | INFO | Once per mission, installed but switched off since game start, and the hitch probe not measuring the mission |
 | `[TickProfiler] mission 3: no per-type timing, 'Enable Tick Profiler' is off in MCM; the hitch probe still measures this mission, and the profiler's patches only call through until a restart` | INFO | The same, while the hitch probe measures the mission |
-| `[TickProfiler] mission 3: not measuring, required hooks missing: Mission.OnTick call sites 0/2, Mission.OnPreTick frame-boundary prefix (Patch97); another mod's transpiler, a PatchShield strip or a failed patch apply left them out, and the next mission checks again` | WARNING | Once per mission, installed and toggled on, when a hook the profiler needs is not in place at the mission's start. The names are `Mission.OnTick call sites n/2` (a rewrite found fewer anchors), `Mission.OnTick transpiler (Patch97)`, `Mission.OnPreTick frame-boundary prefix (Patch97)` and `Mission.TickAgentsAndTeamsImp prefix (Patch91)` or `finalizer (Patch91)`, all the missing ones in one line; a name followed by `(not resolved)` or `(patch info unreadable: <exception type>)` could not be checked and counts as missing |
+| `[TickProfiler] mission 3: not measuring, required hooks missing: Mission.OnTick call sites 0/2, Mission.OnPreTick frame-boundary prefix (Patch98); another mod's transpiler, a PatchShield strip or a failed patch apply left them out, and the next mission checks again` | WARNING | Once per mission, installed and toggled on, when a hook the profiler needs is not in place at the mission's start, and the hitch probe not measuring the mission: it is off, or the missing hooks include Patch98's frame boundary, which closes the probe's frames too. The names are `Mission.OnTick call sites n/2` (a rewrite found fewer anchors), `Mission.OnTick transpiler (Patch97)`, `Mission.OnPreTick frame-boundary prefix (Patch98)` and `Mission.TickAgentsAndTeamsImp prefix (Patch91)` or `finalizer (Patch91)`, all the missing ones in one line; a name followed by `(not resolved)` or `(patch info unreadable: <exception type>)` could not be checked and counts as missing |
+| `[TickProfiler] mission 3: no per-type timing, required hooks missing: Mission.OnTick call sites 0/2; the hitch probe still measures this mission; another mod's transpiler, a PatchShield strip or a failed patch apply left them out, and the next mission checks again` | WARNING | The same, while the hitch probe measures the mission (the default) |
 | `[TickProfiler] mission 3: measuring stopped at t=+65s, required hooks missing: Mission.OnTick call sites 0/2; they were in place at this mission's start, so a later patch on the method took them out, and the next mission checks again` | WARNING | Once per mission, when a rerun of the transpilers lowers the `Mission.OnTick` site count while the mission measures. Found on the next tick; measuring stops for the rest of the mission, and the `[TickSummary]` at its end still covers every frame closed before the stop |
 | `[TickProfiler] mission 2: measuring, top 8 behaviours per line, hitch threshold 250 ms, first 100 hitch frames written in full, sites Mission.OnTick 2/2 Mission.OnPreTick 2/2` | INFO | Once per measured mission, when the mission is created (before any `[Hitch]` and before `[PerfContext]`): the knobs this mission read, the hitch-line cap, and the call sites swapped right now |
 | `[TickProfiler] MCM 'Hitch Threshold (ms)' reads 10, out of range, so 250 ms is used` | WARNING | Right after the header, one per knob whose raw MCM value the provider replaced with its default (a hand-edited settings file; the MCM page clamps its own input). `Tick Profiler Top Behaviours` reads `... so 8 is used` |
@@ -225,11 +226,13 @@ rescues, TAOM's own included; the strip removes Patch97's transpiler, so nothing
 the counter stays stale. A mission therefore asks
 `MissionTickProfilerHealth.Problems()` at its start: `OnTickSites` is 2, and `Harmony.GetPatchInfo` lists the patch
 methods the profiler needs on their targets (`HookHealth`). Required: Patch97's
-`Mission.OnTick` transpiler (behaviour time), its `Mission.OnPreTick` frame-boundary prefix (no frame closes without it)
+`Mission.OnTick` transpiler (behaviour time), Patch98's `Mission.OnPreTick` frame-boundary prefix (no frame closes without it)
 and Patch91's agent-tick prefix and finalizer on `Mission.TickAgentsAndTeamsImp` (`agentTickMs`). The `Mission.OnPreTick`
 transpiler is not: without it `waitTickMs` and `preTickMs` read 0 and that time lands in `otherMs`, which the mission
-header's `Mission.OnPreTick n/m` already says. A problem at the start means the mission does not measure and writes one
-aggregated warning; the next mission checks again, so a hook that came back measures again. A hook that cannot be
+header's `Mission.OnPreTick n/m` already says. A problem at the start means the profiler times no behaviours for that mission and
+writes one aggregated warning; with "Enable Hitch Probe" on (the default) the mission still measures in probe mode,
+unless the missing hooks include Patch98's frame boundary, without which no frame closes in either mode. The next
+mission checks again, so a hook that came back measures again. A hook that cannot be
 checked (an unresolved target, patch info that throws) counts as missing, never as healthy. While a mission measures,
 every tick re-reads only the site count (a field): a rewrite is the one loss that announces itself, because the
 transpiler's own warning says no mission is measured, and when the count drops measuring stops at once with one
@@ -256,10 +259,11 @@ per tick while measuring.
 - **Hook health reads what Harmony registered, not the final IL.** A transpiler that runs after Patch97 and rewrites its
   helper calls is not detected: the site count is taken before it, and `GetPatchInfo` lists patches, not the generated
   wrapper.
-- **A PatchShield strip of a required patch during a mission is found at the next mission start**, not before. Until
-  then the mission keeps measuring with the hook gone: a stripped `Mission.OnTick` transpiler zeroes `preDisplayMs` and
-  `missionTickMs`, and those two phases leave the per-behaviour list; a stripped frame-boundary prefix leaves empty
-  windows.
+- **The profiler's health check finds a PatchShield strip of a required patch at the next mission start**, not before.
+  Until then the mission keeps measuring with the hook gone: a stripped `Mission.OnTick` transpiler zeroes `preDisplayMs`
+  and `missionTickMs`, and those two phases leave the per-behaviour list; a stripped frame-boundary prefix leaves empty
+  windows, which Patch98's finalizer reports from the next frame (its missing-prefix warning, once per process, and the
+  count at each measured mission's end).
 - **The agent-tick bracket has one open slot.** Patch91's prefix writes one start stamp and its finalizer consumes it
   (`OnAgentTickEnter`, `OnAgentTickExit`), so the profiler assumes one agent tick is open at a time.
   `Mission.TickAgentsAndTeamsImp` sets `tickCompleted` before it calls every submodule's `AfterAsyncTickTick`
@@ -276,24 +280,30 @@ per tick while measuring.
 
 ### PatchShield
 
-`Mission.TickAgentsAndTeamsImp` is the one Patch97 target on `PatchShieldPolicy.ExcludedTargetMethods`,
-for every player, profiler on or off: it carries Patch91's bracket, and a swallow there would skip the
-body that sets `tickCompleted`, so the next `WaitTickCompletion` would spin forever. For any owner's
-patch on it PatchShield's swallow of a MissingMethod, MissingField or TypeLoad exception (every other
-exception is rethrown) and its strip of the offending patch are given up, and an exception escaping the
-asynchronous agent tick reaches the native job thread instead. PatchShield writes one diag.log line per
-patched method it skips this way, naming the method, its patch owners and what is given up.
+Six mission targets carry patches the profiler or the hitch probe relies on. Three are shielded, and three stay on
+`PatchShieldPolicy.ExcludedTargetMethods` for every player, profiler on or off:
+
+| Target | TAOM patches on it | PatchShield | A missing-API swallow there |
+|---|---|---|---|
+| `Mission.OnPreTick` | Patch97's transpiler (profiler on), Patch98's bracket (either toggle on) | shielded (D13) | skips the rest of the method, all of it when a prefix threw, the wait included; strips Patch97's transpiler and Patch98's prefix |
+| `Mission.WaitTickCompletion` | Patch98's bracket | excluded: a swallow would skip the wait loop | none there; the exception reaches `OnPreTick`, which is shielded |
+| `Mission.OnTick` | Patch97's transpiler (profiler on), Patch98's bracket | shielded (D13) | skips the rest of the method, and a throw between the `tickCompleted` clear and the agent tick that sets it leaves the next frame waiting forever (below); strips Patch97's transpiler and Patch98's prefix |
+| `Mission.TickAgentsAndTeamsImp` | Patch91's bracket (every player) | excluded: its body sets `tickCompleted` | none there; from the asynchronous agent tick the exception reaches native's job thread, from the inline one (fast-forward) it reaches `OnTick` |
+| `Mission.SpawnAgent` | Patch23's colour prefix (every player), Patch97's attribution transpiler (profiler on), Patch98's bracket | shielded (D13) | the spawn returns null in place of its agent; strips Patch23's prefix, Patch97's transpiler and Patch98's prefix |
+| `ManagedScriptHolder.TickComponents` | Patch97's attribution transpiler (profiler on), Patch98's bracket | excluded, as built | none there; native reaches it through a `ManagedCallbacks` shim, which PatchShield also excludes |
+
+Finalizers are never stripped, so Patch91's and Patch98's stay. On an excluded target, for any owner's patch on it,
+PatchShield's swallow of a MissingMethod, MissingField or TypeLoad exception (every other exception is rethrown) and its
+strip of the offending patch are given up. An exception escaping the asynchronous agent tick reaches the native job
+thread (the generated shim `Mission_TickAgentsAndTeams` has no catch, `ManagedCallbacks.CoreCallbacksGenerated.cs:936-940`,
+and what native does with the exception is UNVERIFIED). PatchShield writes one diag.log line per patched method it skips
+this way, naming the method, its patch owners and what is given up. The hitch probe part below covers the probe's side.
 
 `Mission.OnTick` and `Mission.OnPreTick` were on the list too (plan 028), for cost alone. Maintainer
-decision D13 (2026-10-03) took them off, on plan 034's measurement of PatchShield's finalizer: about
-5 ns per call once plan 034's change is in, which does not pay for the rescue the exclusion gave up.
-That change (the finalizer no longer binds `__originalMethod`) is on plan 034's own branch and is not
-in this one: as the finalizer ships here, plan 034 measured 64 ns and 241 bytes of garbage per call on
-one thread and 1,146 ns per call with eight threads contending. Two calls per frame and one per spawn
-are small either way. They are shielded like any other patched method again, from the pass that sees
-them. A foreign mod's load-time patch on either is covered from
+decision D13 (2026-10-03) took them off once plan 034 had made PatchShield's finalizer cheap (the figures are in `PatchShieldPolicy`'s `ExcludedTargetNamespacePrefixes` comment): two calls per frame and one per spawn were small even before that, and do not pay for the
+rescue the exclusion gave up. They are shielded like any other patched method again, from the pass that sees them. A foreign mod's load-time patch on either is covered from
 a process's first game (pass 1, or pass 2 for a patch applied after it); TAOM's own patches there
-(Patch35, Patch97, Patch98) apply in the first game's late batch, after both passes, so they are
+(Patch97, Patch98) apply in the first game's late batch, after both passes, so they are
 covered from the second game start, when pass 2 attaches what was patched since the last pass. The
 finalizer then runs on both once per frame, alongside `Mission.Tick` (Patch37), `MissionState.TickMissionAux`
 (Patch91) and `MissionState.OnTick` (Patch43), which already carried it.
@@ -306,7 +316,7 @@ method, but equally a mission behaviour the method calls (a foreign `OnPreDispla
 the prefixes, postfixes and transpilers of every owner on that method that is not protected, without
 finding out which patch, if any, threw. TAOM's owner `com.taom.mod` is not a protected prefix
 (FOLLOW-UP L1 in the review record), so a swallow on `Mission.OnTick` or `Mission.OnPreTick` costs
-TAOM's own Patch35 postfix, Patch97 transpilers and Patch98 prefix on that method as well. Finalizers
+TAOM's own Patch97 transpilers and Patch98 prefix on that method as well. Finalizers
 are never stripped, so Patch98's stay; see "A finalizer without its prefix" under "What the probe
 brackets" for what they do alone.
 
@@ -317,17 +327,61 @@ callers are shielded: `WaitTickCompletion` is called only from `Mission.OnPreTic
 `doAsyncAITick: false` (every fast-forward tick; at normal speed native runs it asynchronously, through
 the `TickAgentsAndTeams` callback). A missing-API exception from a prefix on the wait, or one escaping
 the synchronous agent tick, is therefore swallowed one level up, with the rest of that caller skipped.
-Re-shielding `Mission.OnTick` also does not prevent the frame-completion hang: `OnTick` clears
-`tickCompleted` before it runs the behaviours' `OnMissionTick` (v1.5.3 `Mission.cs:3756`) and the flag is
-set again only at the end of the agent tick (`:3629`), so a missing-API exception that escapes `OnTick`
-between the two, from a behaviour or a patch, and is swallowed leaves the next `WaitTickCompletion`
-spinning forever. That path is not new with D13: from a process's second game start
-`MissionState.TickMissionAux` (Patch91) already swallowed the same exception one level higher, and in a
-process's first game, before D13, TAOM's own patches on the callers above `OnTick` had no shield yet, so
-the exception unwound the application tick instead (the 2026-10-02 lesson in `harmony-il.md`). It is
-UNVERIFIED in game and not fixed here: it belongs to the PatchShield follow-up plan (strip only the
-owner whose patch threw, FOLLOW-UP L1 in the plan 028 review record), where the remedy is the
-maintainer's decision.
+Re-shielding `Mission.OnTick` also does not prevent the frame-completion hang, and no list entry does:
+`OnTick` clears `tickCompleted` before it runs the behaviours' `OnMissionTick` (v1.5.3 `Mission.cs:3756`)
+and the flag is set again only at the end of the agent tick (`:3629`), so an exception that escapes
+`OnTick` between the two and is swallowed above it leaves the next `WaitTickCompletion` spinning forever.
+What can throw there needs no patch: any module's behaviour in its `OnMissionTick`, the spawned-item handling,
+`OnEndMissionRequest` (`:3777`), a patch or transpiled call in that stretch, and the inline agent tick before it sets
+the flag (a subscriber's `AfterAsyncTickTick` runs after `:3629`, so a throw there does not). A throw before the clear (a prefix, or a behaviour's
+`OnPreDisplayMissionTick`, `:3750`) or after the agent tick is launched (a postfix) does not leave the flag
+false, though one before the clear that a finalizer swallows still skips the rest of `OnTick`, the agent
+tick launch included, on every frame it recurs. Finalizers at three levels can swallow the throw, and no
+vanilla frame between `Mission.OnTick` and the engine catches it (`MissionState`, `GameStateManager.OnTick`,
+`GameManagerBase.OnTick`, `Module.OnApplicationTick`, its caller `CoreManaged`'s `IManagedComponent.OnApplicationTick`
+(v1.5.3 `CoreManaged.cs:120-123`) and that method's caller `Managed.ApplicationTick` have no `try`, and
+`Game.OnTick` calls `GameStateManager.OnTick` outside its only `try`, which wraps the game handlers):
+
+- PatchShield's finalizer on `Mission.OnTick`, and above it on `MissionState.TickMissionAux` (Patch91) and
+  `MissionState.OnTick` (Patch43): a missing-API exception only, on the timing described above for
+  `Mission.OnTick`, and from a process's second game start for the two `MissionState` methods.
+- Patch37's crash capture on `Module.OnApplicationTick`, and again two frames up on `Managed.ApplicationTick`
+  (`CrashReportPatchHelper.HandleAndSwallow`): any exception, in any game, while crash capture is on (the default).
+  The outer one gets its own try at what the inner one hands back. Native's other tick entry,
+  `Managed.ApplicationTickLight` (v1.5.3 `Managed.cs:303-313`), calls the same component, and neither Patch37 nor
+  PatchShield wraps it, so a frame ticked that way has no TAOM catcher above `Module.OnApplicationTick` (whether
+  native ever ticks a mission that way is UNVERIFIED).
+- PatchShield's own finalizer on both, for what Patch37 hands back (capture off, re-entry, the crash service
+  unresolved or throwing): a missing-API exception only, attached by the first game start's pass 2.
+
+So an ordinary exception in that stretch, a null reference from any module's `OnMissionTick` for one, freezes
+the next frame in any game while crash capture is on, with no shield involved. That path is not new with
+D13: from a process's second game start the shielded `MissionState` methods already swallowed a missing-API
+exception one level higher, and in a process's first game, before D13, TAOM's own patches on the callers
+above `OnTick` had no shield yet, so the exception unwound the application tick instead, up to
+`Module.OnApplicationTick`'s finalizers (every module's `OnApplicationTick`, `JobManager.OnTick`, the avatar
+services, and `Game.OnTick`'s game handlers, `AfterTick` and save-completion handoff skipped for that frame, and,
+for a postfix that threw on every frame after `Mission.OnTick` had ended the mission, `MissionState.OnTick` never
+popping it, so the battle never closed; the 2026-10-02 lesson in `harmony-il.md`).
+
+It is UNVERIFIED in game (read from the v1.5.3 decompile, and no test exercises it) and not fixed here: it
+belongs to the PatchShield follow-up plan. A strip of only the owner whose patch threw (FOLLOW-UP L1 in the
+plan 028 review record) changes none of the catchers above; the remedy is a completion-aware recovery on
+`Mission.OnTick`, for example a TAOM finalizer that completes the tick when the body unwinds after `:3756`,
+tested for a throw before the clear, between the clear and the agent tick launch, inside the inline agent
+tick, in a postfix after the asynchronous launch (where the flag is false only because the job still runs, so a
+recovery that set it then would let the next frame overlap the agent tick) and with crash capture off. A recovery
+finalizer ordered after PatchShield's sees no exception once PatchShield has swallowed it. Decision D13 gives the
+remedy to the PatchShield follow-up plan. A second hazard of the same kind: a
+swallowed foreign prefix throw on `Mission.OnPreTick` skips that method's whole body, whose first call is
+`WaitTickCompletion` (`Mission.cs:3548`), so that frame's `OnTick` can run while the previous agent tick
+still runs (consequence UNVERIFIED; older than the profiler, since a foreign patch on it was shielded the
+same way before plan 028).
+
+PatchShield writes a swallow's diag.log line for its first occurrence and counts the repeats (decision D16);
+Patch37's capture logs a recurring throw at occurrences 1, 2, 10, 100 and so on
+(`CrashBundleThrottle.IsLoggedOccurrence`), so a throw that recurs every frame leaves few lines.
+
 `MissionTickProfilerBindingTests` walks the real targets in both directions
 (`AgentTickTarget_IsOnPatchShieldsExclusionList` and `TickAndPreTickTargets_AreNotOnPatchShieldsExclusionList`)
 and pins the split.
@@ -363,7 +417,7 @@ behaviour timing, so a default install is not flagged as profiled.
 
 Each bracket is a `void` prefix at `Priority.First` and a `void` finalizer at `Priority.Last`, each
 taking only Harmony's `__state` (`out` on the prefix, `ref` on the finalizer), so it encloses every
-other patch on the method (Patch23 on `SpawnAgent`, Patch35 on `OnTick`) and still closes when the
+other patch on the method (Patch23 on `SpawnAgent`, Patch97 on `OnTick`) and still closes when the
 method throws:
 
 | Target | Thread | Feeds |
@@ -586,7 +640,7 @@ tops:
 | `[TickProfiler] spawn hook failed, its timing is off for this process: InvalidOperationException: ...` | ERROR | Once per part, a fault in `pre-tick (with the anim-loading sample, which samples there)`, `wait`, `on-tick`, `script`, `spawn` or `probe install`. In `probe` mode a pre-tick or on-tick fault moves that time into `otherMs` and a wait fault moves it into `preTickMs`; a pre-tick fault also turns the clip sample off, so `animLoading` reads `na` |
 | `[TickProfiler] agent build hook failed, all per-type attribution (spawn callbacks, script components, script blocks) is off for this process: InvalidOperationException: ...` | ERROR | Once per process, a fault in an attribution helper's own bookkeeping (`agent build`, `script attribution` or `parallel block`); later missions configure no attribution, so their tops read `none` and the block columns `na` |
 
-### PatchShield
+### PatchShield on the probe's targets
 
 Two of the five targets stay on `PatchShieldPolicy.ExcludedTargetMethods` for every player.
 `Mission.WaitTickCompletion` runs once per frame on the main thread, and a swallow there would skip the
@@ -597,19 +651,18 @@ exception and its strip of the offending patch are given up.
 
 `Mission.OnPreTick`, `Mission.OnTick` and `Mission.SpawnAgent` are shielded like any other patched
 method: plan 028 had excluded the first two and plan 041 the third, for cost, and maintainer decision
-D13 (2026-10-03) took them off on plan 034's measurement of about 5 ns per call for PatchShield's
-finalizer once plan 034's change is in (on its own branch, not this one; as the finalizer ships here it
-is 64 ns and 241 bytes of garbage per call, two calls per frame and one per spawn). A shield finalizer
-runs inside those three brackets like every other patch on the method (the bracket's prefix is
+D13 (2026-10-03) took them off once plan 034 had made PatchShield's finalizer cheap (the figures are in `PatchShieldPolicy`'s `ExcludedTargetNamespacePrefixes` comment), at
+two calls per frame and one per spawn. A shield
+finalizer runs inside those three brackets like every other patch on the method (the bracket's prefix is
 `Priority.First` and its finalizer `Priority.Last`).
 
 What that gives, and what it costs. A MissingMethod, MissingField or TypeLoad exception that escapes
 `SpawnAgent` is swallowed, whether it came from Patch23, another mod's patch or a foreign behaviour's
 `OnAgentBuild`; the same holds for `OnPreTick` and `OnTick`. The rescue then strips the prefixes,
 postfixes and transpilers of every unprotected owner on the method, and `com.taom.mod` is unprotected,
-so on `SpawnAgent` it also removes Patch23's banner colour prefix and postfix and Patch97's spawn
+so on `SpawnAgent` it also removes Patch23's banner colour prefix and Patch97's spawn
 attribution transpiler (profiler on), and battlefield armour colours revert to vanilla's choice for the
-rest of the process. Patch98's own prefix goes with them; its finalizer stays, which is the case the
+rest of the process; the spawn that threw returns null in place of its agent. Patch98's own prefix goes with them; its finalizer stays, which is the case the
 missing-prefix line above covers. The rescue is not free of loss for TAOM's own patches, and it does
 not remove the frame-completion hazard described under "PatchShield" in the tick profiler part above:
 the kept exclusions on `TickAgentsAndTeamsImp` and `WaitTickCompletion` stop a swallow at their own
@@ -775,7 +828,7 @@ only while frames are shorter than a second.
 | `Main/Features/MissionPerf/Hooks/Patch97_MissionAttribution.cs` | The two attribution transpilers |
 | `Main/Features/MissionPerf/Hooks/MissionAttributionHooks.cs` | The attribution helpers |
 | `Main/Features/MissionPerf/Hooks/MissionAttributionInstaller.cs` | The attribution swap lists, the script tick delegate, the site counts |
-| `Main/Features/MissionPerf/Hooks/MissionTickProfilerHooks.Probe.cs` | `[HitchDetail]`, the per-mission probe flags, the first-tick header, `[TickSummaryExtra]` |
+| `Main/Features/MissionPerf/Hooks/MissionTickProfilerHooks.Probe.cs` | `[HitchDetail]`, the per-mission probe flags, the profiler's status lines at a mission's creation (`OnMissionCreated`), the first-tick header, `[TickSummaryExtra]` |
 | `Main/Adapters/IAnimationLoadingAdapter.cs`, `AnimationLoadingAdapter.cs` | `MBAnimation.IsAnyAnimationLoadingFromDisk()` |
 | `Main/Features/MissionPerf/AnimMemory/ClipBudgetSignature.cs` | The eviction-pass signature: parse, scan, rip targets, resolve |
 | `Main/Features/MissionPerf/AnimMemory/PeSectionTable.cs` | PE32+ section table parser and bounds check |
@@ -813,7 +866,8 @@ once, the hook back at the next mission, a site count lowered mid-mission, a str
 seen through another reflected type, a patch that cannot resolve its method, unresolved and throwing patch info),
 `MissionTickProfilerBindingTests`
 (`BindingVerification`: the swaps against the installed engine IL, the hook list walked to its real targets, the
-PatchShield walks: the agent tick excluded, the two tick methods not), `MissionTickProfilerWiringTests` (the
+frame-boundary hook pinned to the one method that calls `OnFrameBoundary`, the PatchShield walks: the agent tick
+excluded, the two tick methods not), `MissionTickProfilerWiringTests` (the
 `SubModule.cs` pins: the behaviour beside the heartbeat, and the install behind the once-per-process early return, with
 mutation tests showing the pin fails without it).
 `PatchShieldPolicyTests` pins the Mission tick split of the exclusion list without the game.
@@ -832,7 +886,10 @@ calls, a lone exit on one thread beside an open call on another),
 stripped while an outer spawn is in flight, finalizers rerun for a call and for a nested call, and a
 prefix before ours that throws or returns false), `HitchProbeSimulatedFrameTests` (one frame through
 all five real Patch98 classes on dummy methods: each bracket's own column, exact counts, no warning),
-`HitchProbeInstallerTests` (the three modes through `InstallIfEnabled`), `MissionAttributionHooksTests`
+`HitchProbeInstallerTests` (the three modes through `InstallIfEnabled`), `HitchProbeMissionFlowTests` (the per-mission
+decisions without a mission: attribution flags, the first-tick header and reason lines, `[HitchDetail]` beside
+`[Hitch]`, the mission-end extras, and every branch of the profiler's status at a mission's creation,
+`OnMissionCreated`), `MissionAttributionHooksTests`
 (`RequiresGame`: the helpers call through once and propagate), `HitchProbeBindingTests`
 (`BindingVerification`: the targets, the two rewrites against the installed IL, the PatchShield split),
 `HitchProbeWiringTests` (the frame boundary's move, the priorities, the `__state` signatures), and

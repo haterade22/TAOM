@@ -314,8 +314,10 @@ Models: 51. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface.p
 `Base: TaleWorlds.CampaignSystem.GameComponents.DefaultTournamentModel`
 
 - `MBList`1 GetEliteRewardItems(Town town, Int32 regularRewardMinValue, Int32 regularRewardMaxValue)`
+- `Int32 GetInfluenceReward(Hero winner, Town town)`
 - `Equipment GetParticipantArmor(CharacterObject participant)`
 - `MBList`1 GetRegularRewardItems(Town town, Int32 regularRewardMinValue, Int32 regularRewardMaxValue)`
+- `Int32 GetRenownReward(Hero winner, Town town)`
 - `Single GetTournamentEndChance(TournamentGame tournament)`
 - `Single GetTournamentStartChance(Town town)`
 

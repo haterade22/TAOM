@@ -4,7 +4,8 @@ Baseline `dffdf879` on `bannerlord-1.5.x`, 2026-10-02. Program branch `perf/engi
 (worktree `E:\repos\taom-perf\program`). Root `E:\repos\taom-perf` (worktrees; scratch
 `E:\repos\taom-perf\scratch`, temp `E:\repos\taom-perf\scratch\tmp`). Models: every role
 `claude-opus-5-5` (the session default); `deep-reviewer` spawns never pass `model`. Pool 4.
-Codex: not asked. Second Codex pass on fix diffs: replaced by convergence.
+Codex: one adversarial review per branch on Mike's word (D11, 2026-10-03); the fixes were re-reviewed
+by Claude convergence rounds.
 
 What this run is: an engine-performance and memory programme for TAOM at the depth of yotthani's
 Ghidra work (MithrilForge `docs/engine/*`), with large-battle frame rate first, taken end to end
@@ -21,10 +22,12 @@ through fixes. Every commit lands on `perf/*` branches; nothing touches `bannerl
 | 2026-10-02 | "Its own branch for this is critical!" | all work on `perf/engine-performance` and `perf/NNN-*` branches; the main checkout and `bannerlord-1.5.x` are never written | this programme |
 | 2026-10-02 | "Dont worry about limits on files, this is critical work and we will clean up after. The analysis is the most critical part." | evidence files committed in the run folder; analysis depth first | this programme |
 | 2026-10-02 | "Ensure when writing code we implement comprehensive logging to get all of the information we want and need! Taom debug is a critical log" | DECISIONS D6: comprehensive taom_debug logging in every plan; cost cuts keep all information | this programme |
+| 2026-10-03 | The FOR-MIKE walkthrough, decisions 1 to 9 ("yes", "A is fine", "b", "A", "A", "as recommended", sacks "B in the future", "As recommended", "as recommended.") | DECISIONS D9 to D16: integration trial, one squash commit per plan, Codex on all 15 (paid), issues and the `perf` label, the PatchShield re-shield, plan 042's calls, sacks, the 031 and 034 calls | this programme |
+| 2026-10-03 | "The rest of the decisions can be as you recommended as you did the analysis and know the sytem the best." | DECISIONS D17: every remaining FOR-MIKE recommendation | this programme |
 
-Not authorized this run (each waits for the maintainer's word): merging into a trunk, pushing,
-filing or commenting on GitHub issues (drafts go to FOR-MIKE.md), any paid call (Codex, the
-translator), edits to the live LOTRLOME_Armory or TAOM_Map installs, protected files.
+Not authorized this run (each waits for the maintainer's word): merging into a trunk, pushing, any
+paid call beyond D11's Codex reviews (the translator), GitHub issue work beyond D12 and D16, edits to
+the live LOTRLOME_Armory or TAOM_Map installs, protected files.
 
 ## Status
 
@@ -64,6 +67,15 @@ translator), edits to the live LOTRLOME_Armory or TAOM_Map installs, protected f
 | Execute wave B10 (038) | DONE | wf_23f6b117-1ec (execute.js, pool 1) | `ede09280`, `65f640fa` on `perf/038-battle-equipment-memory-audit` from `ba3f2a57` | `tools/audit_battle_equipment_memory.py` (70 tests) and a `--loose-assets` option on the map audit (default outputs byte-identical). Testing channel run: 1,657 troops, 2,671 items, largest asset `sk_mumakil_platform_a1` (65 MiB, over the LOD0 face budget), largest troop `rohan_edoras_golden_hall_supreme_rider`. Orchestrator re-ran its tests: `Ran 70 tests ... OK`; commits clean. Review owed |
 | Review wave C6 (037) | DONE | wf_5fbbe7ee-470 (review.js, pool 1, maxRounds 2) | `b282aaf2` (Stage D dropped), lead `f58ddb09`, convergence `212d397d` (round 2 clean), records `c8c96c09` | READY FOR COMMIT. Every lens rejected Stage D under the simplicity criterion. Full suite at `212d397d`: 12,400 of 12,403 (EveryLanguage only). Decision in FOR-MIKE 16n |
 | Review wave C5 (039) | DONE | wf_abcce7e9-750 (review.js, pool 1, maxRounds 2) | lead `69ed4a36`, convergence `5714149b`, records `db777487` | READY FOR COMMIT: 3 MEDIUM fixed by the lead (option A's text, an escape from MapScreen.OnFrameTick, a fault path); round 1 2 LOW fixed; round 2 1 LOW (a commit body fact), corrected in the records commit's body. Full suite at `5714149b`: 12,549 of 12,552 (EveryLanguage only). Decisions in FOR-MIKE 16a and 16r |
+| Walkthrough with Mike | DONE | orchestrator | records `d3dabeea` | DECISIONS D9 to D17; issues #710 to #724 filed with the `perf` label (036, 040 and 042 also `triage-needs-ingame`), and #725 to #728 for defects found on the way; decision page https://claude.ai/artifact/S1QLqfp8M8uyGZN7Tr292t |
+| Integration trial 1 | DONE | | `perf/integration-trial` `4c4df6c1` (`wt-integration`) | the 15 reviewed tips merged onto `7f0c8446` and green before the fix passes; superseded by trial 2 |
+| Codex reviews (D11) | DONE | background `codex exec`, one per worktree | reports in `E:\repos\taom-perf\scratch\codex\final\` | every finding verified against the code before any fix |
+| Fix passes and convergence | DONE | wf_50ddd225-a41 (14 branches, 2 rounds), 039 top-up `158fea98`, residual sweep | final tips in `evidence/merge-map.md` "Landing order" | the Claude and Codex findings fixed or rejected with evidence; the residual sweep closed the last ones on 12 branches; the final text fixes 029 `943c1679` and 035 `1bc9eda1` |
+| Issue branches #706, #725 | DONE | | `taom-706-english-overrides` `9ccec85e` (on 031's `0f7b900c`), `taom-725-earlylog-drain` `b7a122ff` (on `7f0c8446`) | each reviewed to convergence |
+| Integration trial 2 and squash messages | DONE | wf_9622fd48-cbc | `perf/integration-trial-2` `b22d41e8` (`wt-integration2`) | 18 merges and two fixups (`2a6a0ce3`, `b22d41e8`); build green; dotnet 13,514 passed, 5 skipped, 1 failed of 13,520 (EveryLanguage); Python 3,331 run with the 3 known failures; RefAsm the base three; binding gate 407 of 407; lint exit 0. `squash/*.txt` redrafted for all 18 and checked |
+| Trial 2 docs fixups | DONE | agent `a7a54cb6e5dff2654` | `f637d650` | the stale Patch35 and plan-034 wording, two content drops the lost-hunk check found, and an ADR-002 split of `MissionTickProfilerBehavior.cs` |
+| Review of the trial fixups | DONE | six lenses in two waves, convergence `wf_a40dfdaa-1fd` | `a455e3a6` | no HIGH or MEDIUM; ten LOW fixed (one log line), three proposals applied (the status writer to `MissionTickProfilerHooks.OnMissionCreated`; one owner each for plan 034's figures and the hang analysis); RCA `docs/reviews/rca-perf-integration-fixups-2026-10-04.md`; its convergence pass (one reviewer, then an adversarial verifier per finding) found 1 LOW and 1 NIT, both fixed. |
+| Landing branch | DONE | `scratch/landing/make_landing.py`, `build_steps.py`, `final_verify.sh` | `perf/landing`: `af990ca7..d31026b5`, then the integration fixups | 19 commits; step 4 carries the trial's two compile fixes; Each of the 18 squash commits builds with 0 errors and passes its suite apart from the known translation test (12,345 to 13,514 tests passed); the 19th has the trial's final tree. The tip's tree equals the trial's. |
 
 ## Log
 
@@ -166,14 +178,27 @@ translator), edits to the live LOTRLOME_Armory or TAOM_Map installs, protected f
   fixture built from the patreon and public `TAOM.dll` header (the reviewer's HasConstant mutant now
   fails it), records closed in `e403dc7c`. The convergence reviewer's stray interactive-Python output
   (64 MB on C:, 609 MB on E:, error-loop text only) was deleted. Every plan is now reviewed.
+- 2026-10-03 afternoon: the FOR-MIKE walkthrough with Mike (D9 to D17), recorded in `d3dabeea` (16:40)
+  with issues #710 to #724 filed; trial 1 green at `4c4df6c1` (16:32). Codex then reviewed all 15
+  branches.
+- 2026-10-03 evening to 2026-10-04 03:00: fix passes with convergence rounds on 14 branches; #706 and
+  #725 fixed on their own branches; #725 to #728 filed; the residual sweep; the last text fixes on 029
+  and 035 at 02:59.
+- 2026-10-04 03:05 to 04:01: trial 2 merged the 18 tips (03:05 to 03:45) and took two fixups (04:00,
+  04:01), then the full verification; the squash messages were redrafted and checked. From 04:37 the
+  docs fixups ran on trial 2, and FOR-MIKE gained its landing status.
+- 2026-10-04 05:00 to 08:35: the six-lens review of the trial's fixups and its fixes (a usage limit
+  killed the first convergence reviewer at about 07:30; the account changed and it ran again), then the
+  landing branch: built with git plumbing, every commit built and tested in three parallel worktrees.
 
 ## Next
 
-1. Nothing is running. All 15 plans are built, reviewed and closed; the programme waits on Mike:
-   FOR-MIKE "Start here", then item 16's decisions, issue filing (item 9), and the merge order in
-   `evidence/merge-map.md`. A history rewrite before merge fixes the trailers and bodies in 16g.
-2. After merge: the first measurement session (FOR-MIKE Detail), then delete the memory resume card.
+1. On Mike's word: `git merge --ff-only perf/landing` in the main checkout; on his word again, push.
+2. After the merge: step 1's game check with the Kit closed, each plan's in-game check, the PatchShield
+   follow-up plan (D13, with the fixups review's follow-ups), a test pinning the `STATE initialized:` line,
+   the shader doc sweep and the dependency doc refresh; close each issue when verified; remove the
+   `perf/*` worktrees; then delete the memory resume card.
 
 ## Blockers
 
-None. Paid calls, issues, merges and pushes wait on the maintainer (Authorizations).
+None. The merge into `bannerlord-1.5.x` and the push wait on the maintainer's word (Authorizations).

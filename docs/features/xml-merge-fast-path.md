@@ -86,7 +86,7 @@ session with one WARNING; if both threw, the data is bad and the fast path stays
 share a `__state` of type `XmlMergeCall`. Harmony keeps `rethrow` only while every finalizer on a method is void. With
 plan 040's PatchShield exclusion (the only configuration that ships: "Shipping order" below), PatchShield never attaches
 to `CreateMergedXmlFile`, so every finalizer on it is void (Patch99's and plan 040's Patch100 stamp finalizer), Harmony
-keeps `rethrow`, and the engine's exception leaves with its own trace. Without that exclusion (this branch alone),
+keeps `rethrow`, and the engine's exception leaves with its own trace. Without that exclusion (were it ever removed),
 PatchShield's second pass (at the first game init) attaches its value-returning `ShieldFinalizerWithResult`: Harmony
 then uses `throw`, `RethrowStackPreserver` keeps the engine's trace, and the finalizer swallows the engine-drift
 exceptions, the hazard "Shipping order" describes. Applied at `ProcessLoad` (`OnSubModuleLoad`) by `XmlMergeModule`,
@@ -106,11 +106,11 @@ method returns null. In the unpatched game that exception propagates: `MBObjectM
 loads empty. Other exceptions (XML and I/O errors) are outside the swallowed set and still propagate. A co-op session is
 not exposed: PatchShield does not install while a co-op module is active (`PatchShieldPolicy.ShouldInstall`).
 
-Plan 040 puts `TaleWorlds.ObjectSystem.MBObjectManager.CreateMergedXmlFile` on that exclusion list for its own void
-finalizer (`plans/040-load-time-stamps.md`, design decision 7), and 040 merges before this plan. This plan therefore adds
-no entry of its own, and a second copy would only duplicate 040's. The failure-handling promise above ("the unpatched
-game's outcome") holds with that entry in place and not without it. If the merge order ever changes, the entry moves into
-this plan, with a `BindingVerification` test that walks the patch target through `IsExcludedTargetMethod` (the
+Plan 040 put `TaleWorlds.ObjectSystem.MBObjectManager.CreateMergedXmlFile` on that exclusion list for its own void
+finalizer (`plans/040-load-time-stamps.md`, design decision 7), and 040 landed before this plan. This plan therefore
+adds no entry of its own, and a second copy would only duplicate 040's. The failure-handling promise above ("the
+unpatched game's outcome") holds with that entry in place and not without it, so removing 040's patch would move the
+entry here, with a `BindingVerification` test that walks the patch target through `IsExcludedTargetMethod` (the
 `CreatureBanditsWiringTests` precedent).
 
 ### Known limits

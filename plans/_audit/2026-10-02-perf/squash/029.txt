@@ -1,45 +1,74 @@
-feat(perf): v2.0.32 - per-mission perf rows and A/B compare from logs
+feat(perf-runs): v2.0.32 - per-mission rows and A/B compare from logs
 
-tools/perf_runs.py turns any number of taom_debug logs into one row
-per mission and compares two groups of runs, so a frame-time or memory
+tools/perf_runs.py turns any number of taom_debug logs into one row per
+mission and compares two groups of runs, so a frame-time or memory
 change is judged by numbers rather than by feel. Until now the
-[MissionPerf] heartbeat had no reader, and triage_battle_load.py looks
-at the last mission of a log only.
+[MissionPerf] heartbeat had no reader, and triage_battle_load.py reads
+only the last mission of a log.
 
 Each row carries the load buckets (through triage_battle_load.py's own
 parser), the spawn window kept apart from the steady state by its
 position, steady medians of fps and of average and p95 frame time, the
-worst frame, GC collections per minute and, when the mission tick
-profiler's lines are present, per-behaviour cost and hitch counts by
-phase. Flags say when the numbers may not mean what they seem
-(FRAME_CAP, MEMORY_PRESSURE, DIAG_ON, DIRTY_BUILD,
-BUILD_PAIR_MISMATCH), and each names its evidence.
+worst frame, GC collections per minute and, when the tick profiler's
+lines are present, per-behaviour cost and hitches by phase. Flags say
+when the numbers may not mean what they seem (FRAME_CAP,
+MEMORY_PRESSURE, DIAG_ON, DIRTY_BUILD, BUILD_PAIR_MISMATCH), and each
+names its evidence.
 
-    python tools/perf_runs.py <logs>
-    python tools/perf_runs.py compare --a <logs> --b <logs> --scene <id>
+    python tools/perf_runs.py <log> [<log> ...] [--json]
+    python tools/perf_runs.py compare --a <logs> --b <logs> [--json]
 
---json prints everything. compare refuses to mix Debug and Release
-builds or texture settings unless --allow-mixed is given, and counts a
-row with no readable texture setting as unchecked.
+compare keeps only one scene's rows with --scene, refuses to mix Debug
+and Release builds or texture settings unless --allow-mixed is given,
+and counts a row without a readable [PerfContext] as unchecked. Exit
+codes: 0 rows found, 1 no mission, 2 a usage error, an unreadable file
+or a refused compare.
 
-Nothing is skipped in silence. The report opens with one line per log
-(path, size, lines, missions, lines of a known tag it could not parse)
-and prints the first five unparsed lines verbatim. Every other
-"[Tag] key=value" line inside a mission is kept on the row as extra
-tags: a value runs to the next space-led key= outside brackets, and a
-continuation line without a prefix takes the timestamp of the entry it
-continues. The [MissionPerf] line is pinned by the same literal in the
-C# and Python tests, and the heartbeat doc now says the first line
-lands at about +6 s in battles, not +5 s.
+Nothing is skipped in silence. The report opens with one header per log
+(path, size, lines, missions, lines of a known tag it could not parse,
+and a count per tag of the key=value lines a game wrote before its first
+mission) and prints the first five unparsed lines verbatim. Every other
+"[Tag] key=value" line is kept as extra tags, on its mission's row or,
+before a game's first mission, on the log header (--json lists each
+line's tag, time and fields; the text report counts them per tag);
+summary lines that start with a word are kept too ("[AnimMem] summary:",
+"[LoadXml] summary", "[XmlMerge] summary"). A value runs to the next
+space-led key= outside brackets, and a line without the log prefix takes
+the timestamp of the entry above it. [MissionPerf], [TickProfile],
+[Hitch] and [PerfContext] count only where a line's tag sits, so a
+message that merely names one of them is not that tag's line, and the
+profilers' status lines read as prose.
 
-Limits to know when reading the numbers: hitch counts come from
-[Hitch] lines, which the tick profiler writes for the first 100 slow
-frames of a mission only; summary lines whose text starts with a word
-([AnimMem] summary:, [LoadXml] summary, [XmlMerge] summary) do not
-reach the extra tags yet. Lift any external frame cap before an fps
-A/B, or every row carries FRAME_CAP.
+Hitch counts: the tick profiler writes only the first 100 [Hitch] lines
+of a mission but counts every slow frame in [TickSummary]'s hitches=, so
+a row's count comes from its summaries, and [Hitch] lines with no
+readable summary after them count as themselves. When the two differ the
+report says what the phase breakdown covers, for example "137 (100
+parsed [Hitch] lines: ...)". A [TickSummary] without a usable hitches=
+counts as unparsed.
+
+Game boundaries: a game's initialization lines (plan 040's [LoadPhase]
+and [LoadXml], plan 042's [XmlMerge]) go on the log header, not on the
+battle before them. A new game starts at the lifecycle trace's "STATE
+initialized: InitialState" or "GameLoadingState" line, at a saved game's
+"[SaveLoad] ... phase=LoadRequested" line, or at one of those
+initialization lines, whichever comes first while a mission is open; the
+campaign map after a battle counts toward the battle until then. A load
+cancelled at the module-mismatch question still ends the row at its
+request. A log with none of these lines has no boundary, and a mission
+keeps every line after its start (the lifecycle trace first shipped in
+v2.0.29, and the 1.4.5 line has none).
+
+The [MissionPerf] line is pinned by the same literal in the C# and
+Python tests, and the heartbeat doc now says the first line lands at
+about +6 s in battles (+7 s in a tournament), not +5 s.
+
+Limits to know when reading the numbers: lift any external frame cap
+before an fps A/B, or every row carries FRAME_CAP. The tests hold a copy
+of every tick profiler and hitch probe status line; a change to those
+texts needs the copy changed with it.
 
 Refs: #711 (plan 029)
-Not-tested: against a taom_debug log written by a tick profiler build
- (plan 028), and against plan 040's "[PatchApply] phase=... total"
- lines once 040 is merged.
+Not-tested: against a real measurement session log from a build with
+ plans 028, 036, 040, 041 and 042 merged, including a saved game loaded
+ from the campaign map and a cancelled load.

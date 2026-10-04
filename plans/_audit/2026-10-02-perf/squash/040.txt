@@ -1,50 +1,64 @@
 feat(load-stamps): v2.0.32 - time module XML, patch groups and handlers
 
-Most of a new campaign's 50 s load had no line in taom_debug.log
-saying where the time went: about 28 s of module XML merging, and two
-stretches of 3.4 s and 3.2 s with no line at all. These stamps time
-the load per XML type, per patch group and per campaign handler.
+Most of a new campaign's 50 s load had no line in taom_debug.log saying
+where the time went: about 28 s of module XML merging, and two stretches
+of 3.4 s and 3.2 s with no line at all. These stamps time the load per
+XML type, per patch group and per campaign handler.
 
 Always on, for every player:
-- one [LoadXml] line per MBObjectManager.LoadXML call, one per XML
-  type (NPCCharacters, Items and the rest), with its files, XSLTs and
-  time split into the merge and object creation, and a [LoadXml]
-  summary per game initialization (the slowest type, calls that
-  threw);
-- "[PatchApply] phase=<name> total" at the end of each of the four
-  patch apply phases: patch groups, failures, summed time and the
+- one [LoadXml] line per MBObjectManager.LoadXML call, one per XML type
+  (NPCCharacters, Items and the rest), with its files, XSLTs and time
+  split into the merge and object creation, and a "[LoadXml] summary"
+  per game initialization (the slowest type, calls that threw);
+- a "[PatchApply] phase=... scope=total" line at the end of each of the
+  four patch apply phases: patch groups, failures, summed time and the
   slowest group (timing a group costs well under a microsecond);
-- ready lines at process start ([LoadStamps], [LoadXml],
-  [Lifecycle]).
+- one "[Lifecycle] dispatch=..." line for each campaign dispatch of a
+  new game, a loaded save and the session start, saying what that
+  fan-out took;
+- ready lines at process start ([LoadStamps], [LoadXml], [Lifecycle]).
 
-With "Enable Load-Time Stamps" on (MCM, Battle Load Diagnostics,
+With "Enable Load-Time Stamps" on (MCM, Battle Load Diagnostics page,
 default off):
-- one [PatchApply] line per patch group, written at the first game
-  initialization;
+- one [PatchApply] line per patch group, decided once per process at the
+  first game initialization, so these need a restart after the toggle is
+  turned on;
 - [LoadPhase] lines splitting TAOM's OnGameStart and
   OnGameInitializationFinished hooks;
 - [Lifecycle] lines for every campaign handler of a new game, a loaded
   save and the session start, TAOM's, other mods' and the game's own,
-  each naming its assembly: one line per handler taking 10 ms or more,
-  a total per event split into TAOM's handlers and everyone else's,
-  and a dispatch line. Handlers run in the same order with the same
+  each naming the assembly of the method it runs: one line per handler
+  taking 10 ms or more, and a total per event split into TAOM's handlers
+  and everyone else's. Handlers run in the same order with the same
   arguments; an exception from one carries one extra TAOM frame in its
-  stack. With the toggle off nothing is swapped.
-A [LoadStamps] line says when the toggle is first read or changes. A
-fault in the stamps themselves writes one warning per session and the
-load goes on.
+  stack.
+
+The [LoadPhase] and [Lifecycle] detail reads the toggle live, and a
+[LoadStamps] detail line says when its state is first read or changes. A
+fault in the stamps themselves writes one warning and the load goes on.
+The three total lines carry scope=total as a key=value pair, so plan
+029's log reader parses them.
 
 The two XML patches and the five CampaignEventDispatcher patches apply
 for every player, toggle on or off, and only observe. PatchShield no
-longer wraps those seven methods, so a missing-API exception there
-behaves as in the unpatched game instead of being swallowed into a
-silently missing XML type or a half-run dispatch. The trade-off:
-another mod's patch on them loses PatchShield's rescue. Whether they
-stay on the list is still the maintainer's decision, with plan 028's.
+longer wraps those seven methods, an exclusion maintainer decision D13
+keeps, so a missing-API exception there behaves as in the unpatched game
+instead of being swallowed into a silently empty XML type or a half-run
+dispatch. The trade-off: another mod's patch on them loses PatchShield's
+rescue. A crash through an XML load or one of those dispatches now shows
+a TAOM-patched frame in the crash report; the exception is still the
+engine's or the handler's.
+
+Not timed: the rest of Campaign.OnSessionStart after the dispatcher,
+Campaign.OnGameLoaded's AfterLoad calls, a loaded save's last fan-out
+(OnGameLoadFinished), and any listener added during a dispatch.
 
 Refs: #722 (plan 040)
 Not-tested: in game. A new campaign with the toggle off (ready lines,
- [LoadXml] per type and summary, [PatchApply] totals); then with it on,
- a new campaign and a save load (per-group [PatchApply], [LoadPhase]
- and [Lifecycle] lines); a custom battle (no [Lifecycle] lines); and
- diag.log's shield pass count not grown by the seven methods.
+ [LoadXml] per type and summary, [PatchApply] totals, a [Lifecycle]
+ dispatch line per dispatch); then, after a restart with it on, a new
+ campaign and a save load (per-group [PatchApply], [LoadPhase] and
+ [Lifecycle] handler lines); a custom battle (no [Lifecycle] lines);
+ diag.log's shield pass count not grown by the seven methods. With plan
+ 042 merged, [LoadXml] lines that all read merge_ms=none would mean the
+ merge finalizer is not firing.

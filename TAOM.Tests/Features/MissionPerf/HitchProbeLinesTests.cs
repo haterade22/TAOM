@@ -175,6 +175,7 @@ public class HitchProbeLinesTests
             HitchProbeLines.ProfilerNotTimingLine(restartNeeded: true, probeMeasuring: true),
             HitchProbeLines.ProfilerNotTimingLine(restartNeeded: false, probeMeasuring: true),
             HitchProbeLines.BuildProfilerOffLine(3, probeMeasuring: true),
+            HitchProbeLines.BuildHooksMissingLine(3, new[] { "Mission.OnTick transpiler (Patch97)" }, probeMeasuring: true),
             HitchProbeLines.BuildProbeMissionOffLine(3),
         };
         foreach (var line in lines)
@@ -201,6 +202,10 @@ public class HitchProbeLinesTests
             (HitchProbeLines.BuildProfilerOffLine(3, probeMeasuring: true),
                 "[TickProfiler] mission 3: no per-type timing, 'Enable Tick Profiler' is off in MCM; the hitch probe still measures this mission, and the profiler's patches only call through until a restart"),
             (HitchProbeLines.BuildProfilerOffLine(3, probeMeasuring: false), TickProfileLines.BuildMissionOffLine(3)),
+            (HitchProbeLines.BuildHooksMissingLine(3, new[] { "Mission.OnTick transpiler (Patch97)", "Mission.OnTick call sites 0/2" }, probeMeasuring: true),
+                "[TickProfiler] mission 3: no per-type timing, required hooks missing: Mission.OnTick transpiler (Patch97), Mission.OnTick call sites 0/2; the hitch probe still measures this mission; another mod's transpiler, a PatchShield strip or a failed patch apply left them out, and the next mission checks again"),
+            (HitchProbeLines.BuildHooksMissingLine(3, new[] { "Mission.OnTick transpiler (Patch97)" }, probeMeasuring: false),
+                TickProfileLines.BuildHooksMissingLine(3, new[] { "Mission.OnTick transpiler (Patch97)" })),
             (HitchProbeLines.BuildProbeMissionOffLine(3),
                 "[TickProfiler] mission 3: not measuring, 'Enable Hitch Probe' and 'Enable Tick Profiler' are off in MCM; the probe's patches stay installed and only call through until a restart"),
             (HitchProbeLines.ProbeNotInstalledLine,

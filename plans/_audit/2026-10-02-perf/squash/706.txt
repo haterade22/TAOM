@@ -1,0 +1,33 @@
+fix(localization): v2.0.32 - English overrides only for English
+
+Players on a game language other than English were shown English for 313
+strings, although every one of them has a translated row in all twelve
+language files. The Abanissa and Shaghana culture names and
+descriptions, their clan names and their notables were among them, as
+were 181 reworded vanilla texts. TAOM's English override table was
+applied in every language, so its English covered the translation.
+
+The table exists because the game skips its string dictionary only for
+English. It now applies only while the text language is English. In any
+other language the game reads the player's own row, so those 313 strings
+show in the language the player picked. English play is unchanged. A
+language with no row for an id would fall back to the default English
+text, as it does for every other string; all twelve shipped languages
+have a row for each of the 313.
+
+The language is read on every lookup, and a lookup in another language
+stops before the table probe. taom_debug.log gets one INFO line each
+time the text language changes to one that is not English
+("[LocalizationOverride] Text language '...' is not English: the English
+string overrides are skipped and vanilla reads that language's own
+rows") and one when it changes back ("Text language is English again:
+the English string overrides apply"). A session that starts in English
+writes neither.
+
+The localization override doc, the Patch25 registry entry and the
+translator docs describe the rule.
+
+Refs: #706
+Not-tested: in game. In German, an Abanissa notable and the Abanissa
+ culture name show their German rows; switching back to English writes
+ the "English again" line and the overrides apply again.

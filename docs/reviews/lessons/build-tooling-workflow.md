@@ -3390,3 +3390,19 @@ Plan 038 specified packed-first for `--loose-assets` (the `AssetPackages` copy w
 - **Why missed:** a plan choice reads as a requirement to the executor and as a decision to the reviewer, and nobody grepped the guide for the rule it contradicted.
 - **Prevent:** when a plan fixes a precedence or fallback order for an offline model of the engine, grep `docs/reference` and the lessons for that rule before building, and name in the plan the source that settles it. Model the engine's unit of choice (a module's tree), then record what the model skipped as a reason row (`COOKED_TREE_NOT_READ`).
 - **Source:** `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` Codex pass, X4.
+
+### A merge of parallel branches drops text and doubles tests without a conflict: replay every branch's additions and the merged test set (2026-10-04)
+The perf programme's integration trial merged 18 reviewed branches. Three passages a branch had added were gone (plan
+039's narrowing of a PatchShield lesson, plan 028's crash-capture facts, plan 039's per-target PatchShield table), and
+git auto-merged two overlapping tests from plans 028 and 041 into one class, one a subset of the other with a stale
+comment. A conflict resolved by keeping one side's paragraph leaves no marker for the other side's facts, and two tests
+added at different places in a file merge cleanly.
+- **Why missed:** the trial's lost-hunk check recorded the table's drop but did not raise it, because its rows named a
+  patch another branch had deleted and so read as obsolete; it compared lost lines, not doubled tests; and the fixups
+  swept for one deleted patch by name, not for every member the deleting branch removed.
+- **Prevent:** after an integration merge, replay every branch's added lines against the merged tree and raise every
+  drop; stale-looking content is rewritten for the merged tree, not dismissed. For each test file more than one branch
+  touched, list the merged tests and compare their assertions for one that is a subset of another. For each member a
+  merged branch deleted, grep the whole tree for its name.
+- **Source:** `docs/reviews/rca-perf-integration-fixups-2026-10-04.md` F2, F3 and F4;
+  `plans/_audit/2026-10-02-perf/evidence/merge-map.md`.

@@ -1,6 +1,33 @@
 # FOR-MIKE: 2026-10-02-perf
 
-## The night in brief
+## Landing status (2026-10-04, 08:35)
+
+- **Ready, on your word.** All 15 plans are built and deep reviewed by Claude and by Codex (your decision D11), and
+  the #706 and #725 fixes by Claude; every finding was verified and fixed or rejected, and each fix re-reviewed until
+  it converged. The trial's own fixups had a six-lens review as well: no HIGH or MEDIUM, ten LOW fixed, one of them a
+  log line that said "not measuring" while the hitch probe measured
+  (`docs/reviews/rca-perf-integration-fixups-2026-10-04.md`); its convergence pass (one reviewer, then an adversarial
+  verifier per finding) found 1 LOW and 1 NIT, both fixed.
+- **The landing branch is built:** `perf/landing`, 19 commits on trunk `7f0c8446`: this programme, the 17 code
+  branches in the trial's order, then the integration fixups. Its tree equals the trial's final tree. Each of the 18
+  squash commits builds with 0 errors and passes its suite apart from the known translation test (12,345 to 13,514
+  tests passed); the 19th has the trial's final tree. The trial built only its final tree, and from step 4 the merged
+  tree did not compile, so step 4 carries the two compile fixes and trunk stays bisectable (`evidence/merge-map.md`,
+  "How each squash is made").
+- **Proven on the final tree:** the trial's final code (`a455e3a6`, the code the landing tip carries) builds with 0
+  errors and the two known analyzer warnings; dotnet: 13,526 passed, 5 skipped, 1 failed of 13,532 (the known
+  translation test, waiting on the paid translation run). Python: 3,331 run, with the three known environment
+  failures. The reference-assembly step: 10,878 passed, 30 skipped, 3 failed of 10,911, CI's base three.
+- **Your word, twice:** in the main checkout, `git merge --ff-only perf/landing` moves `bannerlord-1.5.x` and nothing
+  else; then the push. I do neither without your word.
+- **Still yours:** step 1's game check with the Modding Kit closed (the inventory cost, whether the shader cache
+  persists, and whether the Armory's Kit-built sack is used), the Kit pass (13a to 13c), the in-game checks each plan
+  lists, and the items the decision page marks as needing your call.
+- **Owed after the merge:** the PatchShield follow-up plan (D13's recorded scope, plus the fixups review's two
+  follow-ups and the older copies of plan 034's figure), a test pinning the `STATE initialized:` line the log parser
+  now relies on, the stale shader-doc sweep, and a refresh of the library versions in `module-dependencies.md`.
+
+## The night in brief (2026-10-03, before the walkthrough)
 
 - **Built, each on its own branch, nothing merged, pushed, filed or paid:** all 15 plans (028 to 042)
   built, verified and deep reviewed, each with its convergence rounds run and its records closed
@@ -103,7 +130,8 @@
    trigger is a separate code constant the write does not move) and consider Loading Type 0 for TAOM's
    24 troll and 8 elephant clips (unique keys first). Build a raise together with a change to plan 036's
    probe, which recognises only the stock 12 MiB value and switches itself off on any other. Evidence:
-   the engine reference page section 6 as corrected on the 036 branch; the program branch's copy and
+   the engine reference page section 6 as corrected on the 036 branch, and REPORT.md (corrected
+   2026-10-04); before that correction the program branch's copy and
    REPORT.md "Verified engine facts" still say "evicted past 12 MiB" and credit per-frame clip-load
    sampling to plan 028, where it is plan 041's.
 3. **The first measurement session**, once plans 028, 029, 036 and 041 are merged into a build: the

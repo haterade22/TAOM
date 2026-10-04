@@ -1,17 +1,20 @@
 feat(mission-perf): v2.0.32 - per-behaviour tick profiler and hitch log
 
 A new mission tick profiler says where a battle's frame time goes. It
-times each mission behaviour's tick by type, the main thread's wait
-for the previous frame's agent tick, the agent tick itself, and
-everything else (otherMs: the native tick, views, rendering and
-streaming), with the main thread's allocation alongside.
+times each mission behaviour's tick by type (OnPreDisplayMissionTick,
+OnMissionTick and OnPreMissionTick), the main thread's wait for the
+previous frame's agent tick, the agent tick itself, and everything else
+(otherMs: the native tick, views, rendering and streaming), with the
+main thread's allocation alongside.
 
 It is off by default. To use it, turn on "Enable Tick Profiler" (MCM,
-Battle Load Diagnostics, Mission Performance) and restart the game:
-the profiler is installed once, at game start. Turning it off stops
-measuring from the next mission. Two more settings, read at each
-mission start, set how many behaviours each line lists (default 8)
-and the hitch threshold (default 250 ms).
+Battle Load Diagnostics page, Mission Performance group) and restart the
+game: the profiler is installed once, at game start. Turning it off
+stops measuring from the next mission; its patches stay until a restart
+and only call through. Two more settings, read at each mission start,
+set how many behaviours each line lists ("Tick Profiler Top Behaviours",
+default 8) and the hitch threshold ("Hitch Threshold (ms)", default
+250).
 
 With it on, taom_debug.log gets:
 - a [TickProfile] line every 5 s on the same clock as [MissionPerf],
@@ -19,35 +22,60 @@ With it on, taom_debug.log gets:
   ms, KB);
 - a [Hitch] line for each frame at or above the threshold, naming the
   frame's phases, GC counts, allocation and three slowest behaviours,
-  for the first 100 such frames of a mission (later ones are counted);
-- a [TickSummary] line at mission end covering the whole mission;
+  for the first 100 such frames of a mission; later ones are only
+  counted, so a battle that stays slow does not flush a line every
+  frame;
+- a [TickSummary] line at mission end covering the whole mission, every
+  hitch counted;
 - [TickProfiler] status lines: the install result, a header for each
-  measured mission, and one reason line whenever anything is skipped,
-  falls back (an out-of-range setting, a failed memory read) or stops.
+  measured mission, a warning for a hand-edited setting out of range,
+  and one reason line whenever anything is skipped, falls back or stops.
 
-Every player, profiler on or off, gets one [TickProfiler] line per
-game process and one [PerfContext] line per mission (build flavour,
-runtime and GC settings, scene, agent count, quality options, memory
-headroom, and which diagnostics are on). With the profiler off that
-and two static null checks per agent tick (enter and exit) are its
-whole cost.
+The profiler checks its own hooks. Another mod's transpiler or a
+PatchShield rescue can remove one after the install, so each mission
+start asks Harmony whether the profiler's patches are still in place; if
+one is missing, that mission does not measure and one warning names
+everything missing. A mission already measuring stops with one warning
+when a later patch takes out its call sites. A strip in the middle of a
+mission is found at the next mission start.
 
-Mission.OnTick, Mission.OnPreTick and Mission.TickAgentsAndTeamsImp are
-now on PatchShield's exclusion list for every player, so its finalizer
-no longer runs on those three (Mission.Tick, MissionState.TickMissionAux
-and MissionState.OnTick still carry it once per frame), and diag.log
-names each method skipped this way once. For TickAgentsAndTeamsImp this
-is also a fix: a swallowed exception there left the next frame waiting
-forever for the agent tick. For Mission.OnTick it gives up PatchShield's
-rescue when another mod's patch there throws a missing-API exception: in
-a game process's first game that unwinds the whole application tick each
-frame it recurs, and a throw after a battle has ended can stop the
-battle from closing. Whether Mission.OnTick stays on the list is still
-the maintainer's decision.
+Every player, profiler on or off, gets one [TickProfiler] line per game
+process and one [PerfContext] line per mission (build flavour, runtime
+and GC settings, scene, agent count, quality options, memory headroom,
+and which diagnostics will run). With the profiler off, its whole cost
+is those lines, one MissionTickProfilerBehavior added to every mission
+(set up once per mission; after writing [PerfContext], its tick returns
+at once each frame) and two static null checks per agent tick.
+
+PatchShield: Mission.TickAgentsAndTeamsImp is now on its exclusion list
+for every player. A missing-API exception swallowed there would skip the
+line that marks the agent tick complete, and the next frame would wait
+forever; excluded, the exception leaves the method instead. For any
+patch on that method, the swallow and the strip of the offending patch
+are given up. Mission.OnTick and Mission.OnPreTick keep the shield
+(maintainer decision D13): the first build excluded them for cost, but
+with plan 034's cheaper finalizer two calls a frame cost little, while
+without the shield a broken foreign patch on Mission.OnTick unwinds the
+whole application tick in a process's first game and can keep a finished
+battle from closing. diag.log now names each patched method the shield
+skips by name, once per process.
+
+Older than the profiler: Mission.OnTick clears the agent tick's
+completion flag before its behaviour loop, and only the agent tick sets
+it again, so an exception that escapes in between and is swallowed above
+it (by PatchShield or by the crash capture) leaves the next frame
+waiting forever, whichever way the exclusion list reads. This branch
+does not fix it; the PatchShield follow-up plan recorded under decision
+D13 takes it, with its regression tests. That plan also makes a rescue
+strip only the patch that threw. Until then a PatchShield rescue on
+Mission.OnTick or Mission.OnPreTick also strips TAOM's own patches
+there, the profiler's included, because TAOM's Harmony owner is not a
+protected one.
 
 Refs: #710 (plan 028)
 Not-tested: in game. One Custom Battle and one campaign field battle
- with the profiler on (the install line, [PerfContext], a
- [TickProfile] line every 5 s beside [MissionPerf], [Hitch] on slow
- frames), then the same battle with it off ([MissionPerf] avgMs on
- and off within run-to-run noise).
+ with the profiler on: the install line, [PerfContext], a [TickProfile]
+ line every 5 s beside [MissionPerf], [Hitch] on slow frames and
+ [TickSummary] at the end; then the same battle with it off,
+ [MissionPerf] avgMs within run-to-run noise. A PatchShield rescue on
+ either tick method and the hook-check warnings have not run in a game.

@@ -3,51 +3,68 @@ feat(map-perf): v2.0.32 - campaign map frame profiler, off by default
 A new campaign ran at 7 to 8 fps in fast-forward while lords and
 villagers spawned in, and the [MapLoad] heartbeat could only say that
 Campaign.RealTick took about 20 ms of each frame's 130 ms. The new map
-profiler splits the rest of the frame and says how much of it is
-TAOM's own code.
+profiler splits the rest of the frame and says how much of it is TAOM's
+own code.
 
 It is off by default and installs nothing unless "Enable Map Profiler"
-(MCM, Battle Load Diagnostics, Map Performance) is on at game start.
-Turning it on needs a restart; turning it off stops measuring from the
-next campaign session. With it off, every player gets one
+(MCM, Battle Load Diagnostics page, Map Performance group) is on at game
+start. Turning it on needs a restart; turning it off stops measuring
+from the next campaign session. With it off, every player gets one
 "[MapProfiler] off:" line per game process.
 
 With it on, taom_debug.log gets:
 - [MapProfile] every 5 s while the map ticks: frames, wall time, the
   campaign's real tick, the map screen, the map state, campaign tick,
   tick event and application tick phases, everything else (otherMs),
-  TAOM's own share (taomMs), main-thread allocation, the speed class
-  (Stop, Play, FF, FF2, FF3), the party count, the worst frame,
-  skipped frames, GC counts, and the slowest tick-event listeners and
-  TAOM map views;
+  TAOM's own share (taomMs), main-thread allocation, the speed class,
+  the party count, the worst frame, skipped frames, GC counts, and the
+  slowest tick-event listeners and TAOM map views;
 - [MapProfileSummary] when the campaign session ends, with the same
   totals, the skip reasons and the frames per speed class;
 - [MapProfiler] status lines for the install, each session's settings,
-  each degraded part and any fault. A fault stops the profiler for
-  that campaign and writes the frames already measured as a summary
-  with reason=fault.
-Frames during a loading window, under another screen, or not followed
-by exactly one TAOM application tick are counted as skipped, never
-mixed in. The "Tick Profiler Top Behaviours" setting also sets how
-many listeners and views each line lists.
+  each degraded part and any fault. A fault stops the profiler for that
+  campaign and writes the frames already measured as a summary with
+  reason=fault.
 
-MapState.OnTick, Campaign.RealTick, MapScreen.OnFrameTick,
-Campaign.Tick and CampaignEvents.Tick are now on PatchShield's
-exclusion list for every player. A missing-API exception from a patch,
-or from another mod's code, inside the first three is no longer
-swallowed there, and the broken patch is no longer removed. With crash
-capture on (the default) it is written to a crash report and the game
-continues, but each frame it recurs skips the rest of that application
-or screen tick; an escape from MapScreen.OnFrameTick also stops the
-party AI task while it recurs. With crash capture off, the shield on
-the enclosing method swallows it and strips that method's patches
-instead of the culprit's. Keeping the shield on those three methods
-instead is still the maintainer's decision.
+Frames during a loading window, under another screen, or not followed by
+exactly one TAOM application tick are counted as skipped, never mixed
+in. The speed class (Stop, Play, FF, FF2, FF3) follows the engine's
+simplified time mode, so a frame in which the waiting main party gets no
+campaign time reads Stop. The "Tick Profiler Top Behaviours" setting
+also sets how many listeners and views each line lists.
+
+The profiler checks its own hooks at each session start, each window and
+each session end. If a PatchShield rescue stripped one of its patches,
+it writes one warning naming every lost hook, writes the frames closed
+so far as a summary with reason=hooksLost, and stops measuring that
+session. A strip on MapState.OnTick is found only at the session end.
+The check runs after the frame boundary's timestamp is taken, so its
+cost, not yet measured, lands in the next measured frame.
+
+PatchShield: Campaign.Tick and CampaignEvents.Tick, which only the
+profiler patches, are now on its exclusion list for every player, so
+another mod's patch on either loses the shield too, profiler on or off.
+When either carries a patch, a missing-API exception thrown inside it
+(by a patch or by any mod's campaign tick listener) is no longer
+swallowed at that method: it skips the rest of the campaign tick and of
+MapState.OnTick, whose shield catches it from a process's second game
+start; in a first game it unwinds the application tick to the crash
+capture, every frame it recurs. Campaign.RealTick, MapState.OnTick and
+MapScreen.OnFrameTick, which other TAOM patches use for every player,
+keep the shield (maintainer decision D13, as plan 028 keeps it on
+Mission.OnTick and Mission.OnPreTick), so a player with the profiler off
+sees no change there. A rescue on one of those three strips every
+unprotected owner's patches on that method, TAOM's own included, so it
+also ends the profiler's measurement there for the process; when no
+patch threw, the cause is swallowed again each frame it recurs and the
+rest of the method is skipped each time. The older Mission.OnTick hang
+that plan 028 describes is not changed here.
 
 Refs: #721 (plan 039)
-Not-tested: in game. With the map profiler on: the install line at
- game start, a session line, [MapProfile] lines with frames=0 and a
- growing skipped count during the map load, then a line every 5 s
- with speed=Stop when paused and speed=FF in fast-forward, and one
- "[MapProfileSummary] reason=gameEnd" at quit; with it off, one off
- line and the [MapLoad] fps compared with it on.
+Not-tested: in game. With the map profiler on: the install line at game
+ start, a session line, [MapProfile] lines with frames=0 and a growing
+ skipped count during the map load, then a line every 5 s with
+ speed=Stop when paused and speed=FF in fast-forward, and one
+ "[MapProfileSummary] reason=gameEnd" at quit; with it off, one off line
+ and the [MapLoad] fps compared with it on. A real PatchShield strip and
+ the hooksLost warning have not run in a game.

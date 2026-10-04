@@ -681,15 +681,31 @@ the three names and `PatchShield.IsExcludedTarget` checks it beside the namespac
   2026-07-10 compat review, which fixed it by namespace and recorded it only in a `PatchShieldPolicy` comment, so no
   lesson reached the next patch author. Both of those lessons frame the tax as other mods' patches or hot
   namespaces; `TaleWorlds.MountAndBlade` is far too broad to exclude by namespace.
-- **Prevent:** when a TAOM patch targets an engine method called per unit, per agent or per frame, add
-  `<FullTypeName>.<MethodName>` to `PatchShieldPolicy.ExcludedTargetMethods` in the same change (one entry covers every
-  overload) and a `BindingVerification` test that walks the patch's real targets through `IsExcludedTargetMethod`, so
-  a renamed or added target cannot slip off the list; exclude by namespace only when the whole namespace is hot.
-- **Later change (2026-10-03, maintainer decision D13):** the per-frame half of this Prevent no longer holds.
-  A target reached once per frame or once per spawn (`Mission.OnTick`, `Mission.OnPreTick`, `Mission.SpawnAgent`) is
-  excluded only where a swallow would skip a body the frame needs, with the measured per-call cost written beside any
-  entry kept for cost. The per-unit entries above (Patch92's Formation members) stay until they are re-measured. See the
-  2026-10-03 lesson at the end of this file.
+- **Prevent:** when a TAOM patch targets an engine method called per unit or per agent (many times a frame, on the AI
+  thread or the TWParallel workers), add `<FullTypeName>.<MethodName>` to `PatchShieldPolicy.ExcludedTargetMethods` in
+  the same change (one entry covers every overload) and a `BindingVerification` test that walks the patch's real
+  targets through `IsExcludedTargetMethod`, so a renamed or added target cannot slip off the list; exclude by namespace
+  only when the whole namespace is hot. A method called once per frame or once per spawn on the main thread stays
+  shielded (decision D13, 2026-10-03: one finalizer call a frame, cheap since plan 034, against the shield's rescue)
+  unless a swallow there is unsafe, as on `Mission.WaitTickCompletion`, whose wait loop orders the frame (the agent
+  tick, `Mission.TickAgentsAndTeamsImp`, stays off too: its body sets the completion flag, though at normal speed it
+  runs on the asynchronous AI thread), or only a default-off diagnostic patches it, as on `Campaign.Tick` and
+  `CampaignEvents.Tick`. Walk the targets in both
+  directions: a target that stays shielded gets the reverse pin, `IsExcludedTargetMethod` and
+  `IsExcludedTargetNamespace` both false for it (`MapFrameProfilerBindingTests.SharedMapTargets_StayUnderPatchShield`),
+  because PatchShield skips a target on its namespace as well as on its name.
+- **Later change (2026-10-03, maintainer decision D13):** this Prevent first said "per unit, per agent or per frame".
+  The once-per-frame, main-thread targets that other TAOM patches use for every player went back under the shield
+  (`Mission.OnTick`, `MapState.OnTick`, `Campaign.RealTick`, `MapScreen.OnFrameTick`), and so did `Mission.OnPreTick`
+  (patched by Patch97 alone, with the profiler on, until plan 041's Patch98 began patching it for every player by
+  default) and `Mission.SpawnAgent`. What stays on the list: the per-unit and per-agent entries (Formation, Agent,
+  `Mission.CanAgentRout`) until they are re-measured; `Mission.TickAgentsAndTeamsImp`, `Mission.WaitTickCompletion` and
+  `ManagedScriptHolder.TickComponents`, where a swallow would break the frame or the entry stays as built; and the two
+  map targets only the Patch101 profiler patches (`Campaign.Tick`, `CampaignEvents.Tick`); and plan 040's seven
+  load-time stamps, which are not hot but where a shield finalizer would change what an observe-only patch promises to
+  leave alone. An entry kept for cost states its call rate beside it; the shield's per-call cost is stated once, in
+  `PatchShieldPolicy`'s `ExcludedTargetNamespacePrefixes` comment. See the 2026-10-03 lesson "A shield exclusion kept
+  for an unmeasured cost loses the rescue for nothing" below.
 - **Source:** `Dependencies/Foundation/PatchShieldPolicy.cs` `ExcludedTargetMethods`; `Dependencies/Foundation/PatchShield.cs`
   `Install`; `Patch92BindingTests.EveryPatch92Target_IsOnPatchShieldsHotMethodList`.
 
@@ -707,7 +723,8 @@ agents.
   `ExcludedTargetMethods`, and the category's binding test walks all of them
   (`CreatureBanditsWiringTests.HotCreatureTargets_AreOnPatchShieldsExclusionList`).
 - **Later change (2026-10-03, maintainer decision D13):** "or a per-frame path" no longer sends a target to the list:
-  see the 2026-10-03 lesson at the end of this file. Targets reached from an agent tick or a worker-thread parallel
+  see the 2026-10-03 lesson "A shield exclusion kept for an unmeasured cost loses the rescue for nothing". Targets
+  reached from an agent tick or a worker-thread parallel
   tick stay on it until re-measured.
 - **Source:** `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 6.
 
@@ -755,8 +772,10 @@ The second convergence round found that still too narrow: the throw unwinds the 
   `tickCompleted = true`. Plan 034 takes the per-call lookup off the shield's no-exception path, and left unshielded a
   foreign patch's missing-API throw on `Mission.OnTick` unwinds the application tick in a process's first game. The cost
   is that a strip on `Mission.OnTick` is not culprit-only and takes TAOM's own Patch35 and Patch97 with it (FOLLOW-UP L1
-  in the review record). The per-frame trigger in the two Prevent lines of the 2026-09-26 and 2026-09-28 lessons is
-  narrowed to match. TAOM patches `Mission.OnPreTick` only through Patch97; any patch on it attaches the shield.
+  in the review record; plan 030 later removed Patch35's postfix and plan 041 added Patch98's prefix, so it is Patch97
+  and Patch98 now). The per-frame trigger in the two Prevent lines of the 2026-09-26 and 2026-09-28 lessons is
+  narrowed to match. TAOM patched `Mission.OnPreTick` only through Patch97 then; plan 041's Patch98 patches it for every
+  player by default, and any patch on it attaches the shield.
 - **A hazard no exclusion fixes (Codex review, 2026-10-03; older than the profiler):** `Mission.OnTick` clears
   `tickCompleted` (`Mission.cs:3756`) before its `OnMissionTick` loop and only `TickAgentsAndTeamsImp` sets it again
   (`:3629`). An exception that escapes between the two and is swallowed above it, by PatchShield's finalizer on
@@ -872,8 +891,9 @@ accepted it as a cost of option B.
 ### "No shield finalizer inside the bracket" covers the bracketed methods only: list the shielded methods they call (2026-10-02)
 A recurrence of the plan 028 rule above. Plan 041 put `Mission.WaitTickCompletion`, `Mission.SpawnAgent` and
 `ManagedScriptHolder.TickComponents` on `ExcludedTargetMethods` and wrote that no shield finalizer sits inside the
-measurement. `SpawnAgent` calls `BuildAgent`, which calls `Agent.EquipItemsFromSpawnEquipment`, patched by Patch23 and
-Patch43 and still shielded, so a shield finalizer runs inside every spawn bracket.
+measurement. `SpawnAgent` calls `BuildAgent`, which calls `Agent.EquipItemsFromSpawnEquipment`, patched by Patch43 (and
+by Patch23 until plan 030 removed that prefix) and still shielded, so a shield finalizer runs inside every spawn
+bracket.
 - **Why missed:** the claim was written from the five bracketed methods, as plan 028's was from its three.
 - **Prevent:** before writing that a cost is absent from a bracket, list the patched methods the bracketed method calls
   (the decompile's call graph, one level per patched callee) and state the claim for the bracketed methods only.
@@ -882,10 +902,9 @@ Patch43 and still shielded, so a shield finalizer runs inside every spawn bracke
 ### A shield exclusion kept for an unmeasured cost loses the rescue for nothing, and a bracket must survive its prefix being stripped (2026-10-03)
 Plans 028 and 041 put `Mission.OnTick`, `Mission.OnPreTick` and `Mission.SpawnAgent` on PatchShield's
 `ExcludedTargetMethods` under the per-agent house rule of the 2026-09-26 and 2026-09-28 lessons, on a per-call price that
-plan 034 found was never measured (#331's whole stall divided by an estimated call count). Plan 034 measured the shield's
-finalizer at about 5 ns per call once its change is in (64 ns and 241 bytes of garbage per call as the finalizer ships
-without it, 1,146 ns with eight threads contending), and maintainer decision D13 (2026-10-03) took the three entries
-off. What the exclusion had given up was the rescue from a broken patch on those methods. The rescue classifies by
+plan 034 found was never measured (#331's whole stall divided by an estimated call count). Plan 034 removed the
+`__originalMethod` binding and found the shield's finalizer cheap without it (the figures are in `PatchShieldPolicy`'s `ExcludedTargetNamespacePrefixes` comment),
+and maintainer decision D13 (2026-10-03) took the three entries off. What the exclusion had given up was the rescue from a broken patch on those methods. The rescue classifies by
 exception type only, so it also swallows a mission behaviour's missing-API exception, and it strips every unprotected
 owner's patches on the method, TAOM's own included. The entries that stay (`TickAgentsAndTeamsImp`,
 `WaitTickCompletion`) are there because a swallow would skip a body the frame needs, but they stop a swallow only at
@@ -906,14 +925,16 @@ reported at each mission's end, not only warned about once.
   prefix and finalizer pair was reviewed as a pair, not as a finalizer that can run alone; and the guard was tested with
   hand-called enters and exits and a strip between top-level calls, never a strip inside a running outer call or a
   finalizer rerun, which only real Harmony produces.
-- **Prevent:** write the call rate and the measured per-call cost beside any `ExcludedTargetMethods` entry kept for
-  cost, naming the change the figure depends on when it is not in the branch, and say what a swallow would break beside
-  any kept for correctness, including the callers that stay shielded. Pair a prefix with its finalizer through Harmony's
+- **Prevent:** write the call rate beside any `ExcludedTargetMethods` entry kept for cost and point to the one
+  statement of the shield's per-call cost (`PatchShieldPolicy`'s `ExcludedTargetNamespacePrefixes` comment) instead of
+  restating it: a copied figure drifts, and goes stale when the change it depends on merges. Say what a swallow would
+  break beside any entry kept for correctness, including the callers that stay shielded. Pair a prefix with its finalizer through Harmony's
   `__state` (one local per call, default 0, set by the prefix before any code that can throw or return early, closed by the finalizer), never a
   count, a depth or a thread-keyed flag, and test the guard through real Harmony: the prefix stripped inside an outer call
-  and a later finalizer that throws. PatchShield strips prefixes and never finalizers. This lesson replaces the per-frame
-  half of the 2026-09-26 and 2026-09-28 Prevent lines: exclude a per-frame or per-spawn target only where a swallow is
-  unsafe, and keep the per-unit and worker-thread per-agent entries until they are re-measured.
+  and a later finalizer that throws. PatchShield strips prefixes and never finalizers. This lesson replaced the
+  per-frame half of the 2026-09-26 and 2026-09-28 Prevent lines; which per-frame and per-spawn targets stay shielded is
+  now the 2026-09-26 Prevent's rule, and the per-unit and worker-thread per-agent entries stay until they are
+  re-measured.
 - **Source:** maintainer decision D13 (2026-10-03); `plans/034-patchshield-per-call-cost.md`;
   `docs/reviews/deep-review-028-mission-tick-profiler-2026-10-02.md` ("A cost for the maintainer to weigh");
   `HitchProbeHooksTests.StrippedPrefix_FinalizerRunsAlone_WarnsOnceAndRecordsNothing`;

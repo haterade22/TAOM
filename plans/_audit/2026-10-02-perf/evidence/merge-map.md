@@ -3,6 +3,46 @@
 Written for: Mike, when the branches are merged on your word. No probe changed a branch, a ref or a
 worktree: every probe result is a tree object or a dangling commit that no ref points to.
 
+## Landing order (integration trial 2, 2026-10-04)
+
+This section supersedes the probes below for the landing. Trial 2 (`perf/integration-trial-2`, worktree
+`wt-integration2`) merged every branch's final tip onto trunk `7f0c8446` in this order, and each merge's
+second parent is the tip listed (checked with `git log --first-parent` on 2026-10-04).
+
+| Step | Branch | Final tip | Trial merge | Squash message |
+|---|---|---|---|---|
+| 1 | `perf/engine-performance` (this programme) | `d3dabeea` | `1ef5fe9a` | `squash/program.txt` |
+| 2 | `perf/028-mission-tick-profiler` | `d952df94` | `f48b4075` | `squash/028.txt` |
+| 3 | `perf/039-campaign-map-frame-profiler` | `6eab1e54` | `9792ad48` | `squash/039.txt` |
+| 4 | `perf/041-profiler-extensions-and-hitch-probe` | `ec965d7e` | `a4796ed6`, plus the trial's three compile fixes | `squash/041.txt` |
+| 5 | `perf/036-anim-memory-probe` | `e73789b1` | `654eec4c` | `squash/036.txt` |
+| 6 | `perf/040-load-time-stamps` | `f91d2532` | `3a94a48b` | `squash/040.txt` |
+| 7 | `perf/042-xml-merge-load-time` | `bde1114a` | `30d6eda9` | `squash/042.txt` |
+| 8 | `perf/029-perf-runs-parser` | `943c1679` | `1d330b1d` | `squash/029.txt` |
+| 9 | `perf/034-patchshield-per-call-cost` | `cc54e0e3` | `1d49fb98` | `squash/034.txt` |
+| 10 | `perf/030-mission-diagnostics-diet` | `e18b19f9` | `8c60982d` | `squash/030.txt` |
+| 11 | `perf/031-settings-reads-off-hot-paths` | `89ad8d69` | `7cf5f988` | `squash/031.txt` |
+| 12 | `taom-706-english-overrides` | `9ccec85e` | `4ad8b121` | `squash/706.txt` |
+| 13 | `perf/032-worker-thread-formation-patch` | `56adc55a` | `f5c7a9b6` | `squash/032.txt` |
+| 14 | `perf/033-creature-battle-allocations` | `b15e8f59` | `919354f8` | `squash/033.txt` |
+| 15 | `perf/035-release-shader-cache-check` | `1bc9eda1` | `2b2c67f2` | `squash/035.txt` |
+| 16 | `perf/037-campaign-hot-paths` | `793be834` | `77af5bce` | `squash/037.txt` |
+| 17 | `perf/038-battle-equipment-memory-audit` | `3a462496` | `f5baf91d` | `squash/038.txt` |
+| 18 | `taom-725-earlylog-drain` | `b7a122ff` | `0afd95c8` | `squash/725.txt` |
+| 19 | Integration fixups: the rest of the trial's fixup commits, the fixups' review and this programme's records after `d3dabeea` | | trial HEAD | `squash/integration-fixups.txt` |
+
+**How each squash is made:** branch `perf/landing`, cut from `7f0c8446`, was built with git plumbing on
+2026-10-04 (`scratch/landing/make_landing.py`): step N's commit has the trial's merge tree for that step
+and its message from `squash/`, so no conflict is resolved twice. The trial built only its final tree,
+and from step 4 the merged tree did not compile: plan 041 moved the frame-boundary prefix that plan
+028's hook health check names, and renamed the `CallSwap.Helper` that plan 039's swap test reads. Those
+three files (`MissionTickProfilerHealth.cs`, `MissionTickProfilerBehaviorTests.cs`,
+`TickEventSwapTests.cs`) do not change from step 4 to step 18, so every commit from step 4 carries their
+fixed copies from the trial's `b22d41e8`, and plan 041's message says so; every other path equals the
+trial merge (checked with `git diff --quiet` per step). Each of the 18 commits is then built and tested
+on its own, so trunk stays bisectable. Step 19 takes the trial's final tree, so the landing tip equals
+the trial. Trunk then moves by one fast-forward in the main checkout, on Mike's word.
+
 ## Full probe, 2026-10-03 (all 15 branches onto 7f0c8446)
 
 Probed on the afternoon of 2026-10-03, against trunk `bannerlord-1.5.x` at `7f0c8446`, the program branch at `bb376789`,

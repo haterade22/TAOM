@@ -28,6 +28,9 @@ internal static class MissionTickProfilerHealth
     /// <c>OnMissionTick</c>. The install and every later check use the same count.</summary>
     internal const int ExpectedOnTickSites = 2;
 
+    /// <summary>The required hook that closes every frame, in both modes: Patch98's <c>Mission.OnPreTick</c> prefix.</summary>
+    internal const string FrameBoundaryHook = "Mission.OnPreTick frame-boundary prefix (Patch98)";
+
     /// <summary>Reads the patches on a method; tests replace it.</summary>
     internal static Func<MethodBase, Patches?> PatchInfo = Harmony.GetPatchInfo;
 
@@ -37,7 +40,7 @@ internal static class MissionTickProfilerHealth
     {
         RequiredHook.Of("Mission.OnTick transpiler (Patch97)",
             typeof(Mission_OnTick_TickProfiler_Patch), nameof(Mission_OnTick_TickProfiler_Patch.Transpiler), HarmonyPatchType.Transpiler),
-        RequiredHook.Of("Mission.OnPreTick frame-boundary prefix (Patch98)",
+        RequiredHook.Of(FrameBoundaryHook,
             typeof(Mission_OnPreTick_HitchProbe_Patch), nameof(Mission_OnPreTick_HitchProbe_Patch.Prefix), HarmonyPatchType.Prefix),
         RequiredHook.Of("Mission.TickAgentsAndTeamsImp prefix (Patch91)",
             typeof(Mission_TickAgentsAndTeamsImp_StallProbe_Patch), nameof(Mission_TickAgentsAndTeamsImp_StallProbe_Patch.Prefix), HarmonyPatchType.Prefix),
@@ -56,6 +59,18 @@ internal static class MissionTickProfilerHealth
             problems.Add(SitesProblem(sites));
         problems.AddRange(HookHealth.Missing(RequiredHooks(), PatchInfo));
         return problems.ToArray();
+    }
+
+    /// <summary>Whether <paramref name="problems"/> names the frame-boundary prefix, missing or unreadable. No frame
+    /// closes without it, so then the hitch probe measures nothing either.</summary>
+    internal static bool FrameBoundaryMissing(IReadOnlyList<string> problems)
+    {
+        foreach (var problem in problems)
+        {
+            if (problem.StartsWith(FrameBoundaryHook, StringComparison.Ordinal))
+                return true;
+        }
+        return false;
     }
 
     /// <summary>Called on every tick of a measuring mission. A rewrite that found fewer anchors than the swaps need

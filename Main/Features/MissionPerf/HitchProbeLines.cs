@@ -50,6 +50,15 @@ public static class HitchProbeLines
             Tag, missionInProcess)
         : TickProfileLines.BuildMissionOffLine(missionInProcess);
 
+    /// <summary>"Enable Tick Profiler" is on but a hook it needs is missing at this mission's start: plan 028's line
+    /// when nothing measures; when the hitch probe measures the mission anyway, a line saying so. The caller passes
+    /// false when the missing hooks include Patch98's frame boundary, which closes the probe's frames too.</summary>
+    public static string BuildHooksMissingLine(int missionInProcess, IReadOnlyList<string> missing, bool probeMeasuring) => probeMeasuring
+        ? string.Format(CultureInfo.InvariantCulture,
+            "{0} mission {1}: no per-type timing, required hooks missing: {2}; the hitch probe still measures this mission; another mod's transpiler, a PatchShield strip or a failed patch apply left them out, and the next mission checks again",
+            Tag, missionInProcess, Quote(string.Join(", ", missing)))
+        : TickProfileLines.BuildHooksMissingLine(missionInProcess, missing);
+
     /// <summary>Patch98 installed but both toggles off at this mission's start (the profiler not installed).</summary>
     public static string BuildProbeMissionOffLine(int missionInProcess) =>
         string.Format(CultureInfo.InvariantCulture,

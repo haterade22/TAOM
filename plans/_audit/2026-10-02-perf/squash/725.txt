@@ -1,0 +1,27 @@
+fix(logging): v2.0.32 - flush TAOM.Dependencies startup lines
+
+taom_debug.log now shows what TAOM.Dependencies logs: its static init,
+the Harmony fork version, the AssemblyResolve handler and every redirect
+it makes, the UnpatchAll guard, UIExtenderEx's start-up and any install
+failure. That module loads before TAOM, so it holds those
+[TAOM.Dependencies] lines in a buffer (EarlyLog) until TAOM has a
+logger. Nothing ever flushed the buffer, so every one of them was
+dropped on every launch, and so was every later line, such as a blocked
+UnpatchAll call during a game.
+
+TAOM now hands EarlyLog its logger in OnSubModuleLoad, right after the
+container is configured. Buffered lines are written in the order they
+were logged, each at its own level and starting with "[buffered
+HH:mm:ss]", the time it was logged; later lines go straight to the log.
+A line logged on another thread during the flush queues behind the older
+ones, so none is lost or reordered. A logger that fails costs only the
+line it was writing and never stops the module loading.
+
+The change spans both modules: the hand-over in TAOM.Dependencies'
+EarlyLog and the bridge in TAOM. dr3-maintenance.md now says the
+AssemblyResolve redirects are in taom_debug, not diag.log.
+
+Refs: #725
+Not-tested: in game. The [TAOM.Dependencies] startup lines in
+ taom_debug.log on a real launch, and a line logged from another thread
+ during the flush.

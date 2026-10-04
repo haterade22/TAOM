@@ -1,33 +1,50 @@
-feat(release): v2.0.32 - packager reports scene sacks and JIT state
+feat(release): v2.0.32 - sack and JIT reports; module sacks left out
 
-The release packager (tools/package_release.py) now prints two reports
-on every run, --dry-run included. Both only report: neither can refuse
-a release, change the exit code or alter what is copied, and a report
-that fails prints its failure and lets the run carry on.
+The release packager (tools/package_release.py) now prints three reports
+on every run, --dry-run included, and leaves module-level shader sacks
+out of the copy. The reports only read: none of them can refuse a
+release or change the exit code, and a report that fails prints its
+failure and lets the run carry on.
 
-Scene shader caches: one line per shipped SceneObj/<scene> saying
-whether its ShaderCache/D3D11 folder holds
-terrain_shaders_header_data.bin and compressed_shader_cache.sack, with
-the sack's format, then a summary line and a WARNING for any sack
-whose format differs from the majority of the shipped sacks.
-SceneObj/Backups is never judged. A missing scene sack is reported,
-never refused: whether to ship sacks is the maintainer's call.
+Scene shader caches: one line per shipped SceneObj scene saying whether
+its ShaderCache/D3D11 folder holds terrain_shaders_header_data.bin and
+compressed_shader_cache.sack, with the sack's format, then a summary
+line and a WARNING for any sack whose format differs from the majority
+of the shipped sacks. A scene without a sack ships as it is (the
+maintainer's call, decision D8), and SceneObj/Backups is never judged.
+Because the WARNING compares the shipped sacks with each other, a whole
+set one format behind the engine raises nothing.
 
-What it cannot see: because the WARNING compares the shipped sacks
-with each other, a whole set one format behind the engine raises
-nothing, and module-level Shaders/D3D11 sacks, the case behind issue
-#448, are not read at all.
+Module shader sacks, a behaviour change: the
+compressed_shader_cache.sack directly in a module's Shaders/D3D11 folder
+is no longer copied into a release, for any module, and the report lists
+each one with its size and format under one policy line. Until now the
+packager copied these from the dev install and never reported them;
+issue #448's three lagging sacks were exactly these. The policy
+(decision D15) is to ship TAOM's and the Armory's compiled sacks and
+never TAOM_Map's, but only after a test shows the game uses a Kit-built
+sack, so for now none ships. Scene sacks keep shipping, and so do
+shader_mapping.bin and shader_compile_report.log beside the module sacks
+(whether they should is still open).
 
 JIT state: one line per shipped copy of TAOM.dll and
-TAOM.Dependencies.dll saying OFF, ON or unknown with the reason, read
-from the assembly's DebuggableAttribute in its metadata tables without
-loading the DLL. TAOM ships Debug builds on purpose, so OFF is
-expected and never refused. The reader's tests build the exact header
-of the shipped TAOM.dll as well as the dev build's.
+TAOM.Dependencies.dll saying OFF, ON, "ON (no DebuggableAttribute on the
+assembly)" or "unknown (reason)", read from the assembly's metadata
+tables without loading the DLL. TAOM ships Debug builds on purpose, so
+OFF is expected and never refused. The rule was measured on .NET
+Framework 4.8.1: the JIT turns optimization off only when the
+attribute's first byte has its low bit set and its second byte is not
+zero, so DisableOptimizations alone reads ON. A malformed attribute
+reads unknown. The tests build the exact headers of the shipped and the
+dev TAOM.dll.
 
-The release skill and release-process.md step 9 describe both
-reports.
+The release skill, release-process.md step 9 and the module map describe
+the reports and the policy. Not part of this change: the sweep of the
+older shader texts that decision D15 also asks for
+(shader-precompilation.md, precompile_scenes.txt and its provider's
+comment, v1.4.8-impact.md).
 
 Refs: #717 (plan 035)
-Not-tested: a packaged build played in game; the reports only read
- files.
+Not-tested: a dry run on the live dev install since module sacks were
+ left out, a real packaging run into a channel folder, and a packaged
+ build played in game.

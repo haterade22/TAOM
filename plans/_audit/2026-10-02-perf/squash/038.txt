@@ -1,42 +1,49 @@
 feat(tools): v2.0.32 - rank the equipment assets a battle preloads
 
-A battle costs about 2 to 3 GB of native memory, and nothing said
-which items, meshes or textures carry that weight, so every memory
-lever in the Armory's armour, weapons, hair and beards was picked by
-guess. The new tools/audit_battle_equipment_memory.py ranks them: the
+A battle costs about 2 to 3 GB of native memory, and nothing said which
+items, meshes or textures carry that weight, so every memory lever in
+the Armory's armour, weapons, hair and beards was picked by guess. The
+new tools/audit_battle_equipment_memory.py ranks them, offline: the
 battle counterpart of the campaign map memory audit, whose pack index
 and decoders it reuses.
 
 For every TAOM troop, or for chosen sides (--troops files or --culture
-ids), it builds the equipment sets the way the engine does, resolves
-each item to the meshes, materials, textures and collision bodies the
-engine preloads for it (gender and slim variants, crafted pieces,
-horses), adds each race's skin, hair and beard meshes, and sums their
-bytes in the release packs, counting a shared asset once. The floor is
-render buffers, texture chains and collision bodies; the upper bound
-adds mesh edit data, whose residency in a battle is unverified.
+ids), it builds the equipment sets the way the engine does, one
+assignment at a time, and like the engine it refuses an item that does
+not fit its slot (a refusal is its own reason row, ITEM_SLOT_REJECTED).
+It resolves each item to the meshes, materials, textures and collision
+bodies the engine preloads for it (gender and slim variants, crafted
+pieces, horses), adds each race's skin, hair and beard meshes, and sums
+their bytes in the release packs, counting a shared asset once. The
+floor is render buffers, texture chains and collision bodies; the upper
+bound adds mesh edit data, whose residency in a battle is unverified. It
+attributes pack bytes and does not measure process memory.
 
 It writes a ranked Markdown report, TSVs (assets, items, troops,
 cultures, sides, unresolved) and a run.log with one line per fallback
-reason, including textures sized from their header or not sized at
-all. A run that selects no troops, or names a troops file that is
-missing, stops with an abort line and exit code 2.
+reason. A texture it cannot size from its pixels or its header counts
+its stub or 0 bytes and makes every total that holds it a lower bound,
+and the report then opens with an incomplete-totals note. Each run first
+deletes the report and the TSVs an earlier run left in its folder. A run
+that selects no troops, or names a troops file that is missing, stops
+with an abort line and exit code 2.
 
-First results on the testing channel: Gondor against Mordor shares
-600 MB of 3.18 GB of side floors, a 2.58 GB battle floor, and the
-largest single asset is the crewed mumak's platform mesh
-sk_mumakil_platform_a1, about 65 MiB.
+First results on the testing channel: all 1,657 TAOM troops reach 2,670
+items; Gondor against Mordor shares 600 MB of 3.18 GB of side floors, a
+2.58 GB battle floor; the largest single asset is the crewed mumak's
+platform mesh sk_mumakil_platform_a1, about 65 MiB of render buffers.
 
-The map scene audit gains --loose-assets, which indexes a module's
-loose Assets tree as well (the live Armory ships no AssetPackages). A
-packed copy of a name still wins, a loose mesh is never flagged as
-editor stream bloat, and the default output is byte-identical.
+With --loose-assets, both this tool and the map scene audit read a
+module's loose Assets tree instead of its cooked packs when it has one,
+as the engine does, and report each cooked tree they skip; a loose mesh
+is never flagged as editor stream bloat. The map audit's default output
+is byte-identical.
 
-Found on the way, not changed here: sk_uruk_hai_skirt_a1 is body
-armour placed in the Cape slot of urukhai_champion and
-urukhai_berserker, so the engine never equips it. The tool's feature
+Found on the way, not changed here: sk_uruk_hai_skirt_a1 is body armour
+placed in the Cape slot of urukhai_champion and urukhai_berserker in
+troops_isengard.xml, so the engine never equips it. The tool's feature
 doc and feature-map row are still to be written.
 
 Refs: #720 (plan 038)
-Not-tested: in-game memory; the audit attributes pack bytes and does
- not measure process memory.
+Not-tested: in-game memory; the audit attributes pack bytes and does not
+ measure a running game.

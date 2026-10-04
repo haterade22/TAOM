@@ -19,7 +19,8 @@ namespace TAOM.Features.MissionPerf.Hooks;
 /// at mission end; a mission not measuring with a toggle on says why. Thin (ADR-002). Overrides only
 /// <c>OnCreated</c>, <c>OnMissionTick</c> and <c>OnEndMission</c>: <c>OnBehaviorInitialize</c> never fires for a
 /// behaviour TAOM adds (<c>MissionBehaviorLifecycleTests</c>). A failure disables the behaviour for the mission with
-/// one line, like the heartbeat.
+/// one line, like the heartbeat. Its status lines at creation are
+/// <see cref="MissionTickProfilerHooks.OnMissionCreated"/>'s.
 /// </summary>
 public sealed class MissionTickProfilerBehavior : MissionLogic
 {
@@ -65,7 +66,8 @@ public sealed class MissionTickProfilerBehavior : MissionLogic
             _measuring = _behaviorTiming || (HitchProbeInstaller.ProbeInstalled && _probeOn);
             _generation = MissionTickProfilerHooks.BeginMission(_missionStart, _measuring, _hitchMs, _behaviorTiming);
             MissionTickProfilerHooks.ConfigureProbeMission(_measuring, _behaviorTiming);
-            LogMissionStatus(hookProblems);
+            MissionTickProfilerHooks.OnMissionCreated(_logger, _missionNumber, _topN, _hitchMs, measuring: _measuring,
+                behaviorTiming: _behaviorTiming, profilerToggleOn: _toggleOn, hookProblems: hookProblems);
         }
         catch (Exception ex)
         {
@@ -122,23 +124,6 @@ public sealed class MissionTickProfilerBehavior : MissionLogic
         if (contextFault != null)
             _logger.LogInfo(contextFault);
         MissionTickProfilerHooks.OnMissionFirstTick(_logger, _missionNumber, _hitchMs, _measuring, _behaviorTiming, _toggleOn, _probeOn);
-    }
-
-    private void LogMissionStatus(string[] hookProblems)
-    {
-        if (_behaviorTiming)
-            _logger.LogInfo(TickProfileLines.BuildMissionStartLine(_missionNumber, _topN, _hitchMs,
-                MissionTickProfilerHooks.OnTickSites, MissionTickProfilerHooks.OnPreTickSites,
-                MissionTickProfilerHooks.WaitTickCompletionCall != null ? 2 : 1));
-        var mcm = BattleLoadDiagnosticsSettings.Instance;
-        if (_measuring && mcm != null)
-            foreach (var line in TickProfileLines.SettingFallbackLines(mcm.TickProfilerTopN, _topN, mcm.HitchThresholdMs, _hitchMs))
-                _logger.LogWarning(line);
-        if (_toggleOn && !_behaviorTiming)
-            _logger.LogWarning(hookProblems.Length > 0 ? TickProfileLines.BuildHooksMissingLine(_missionNumber, hookProblems)
-                : HitchProbeLines.ProfilerNotTimingLine(HitchProbeInstaller.ProfilerNeedsRestart, _measuring));
-        else if (!_toggleOn && MissionTickProfilerHooks.Installed)
-            _logger.LogInfo(HitchProbeLines.BuildProfilerOffLine(_missionNumber, _measuring));
     }
 
     private void Fail(Exception ex)

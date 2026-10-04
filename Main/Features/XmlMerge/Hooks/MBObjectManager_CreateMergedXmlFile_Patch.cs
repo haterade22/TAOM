@@ -34,8 +34,8 @@ namespace TAOM.Features.XmlMerge.Hooks;
 /// it. That finalizer swallows MissingMethodException, MissingFieldException and TypeLoadException and the method then
 /// returns null, which <c>MBObjectManager.LoadXML</c> turns into a type that silently loads empty (it passes the null to
 /// <c>LoadXml(doc)</c> inside its own try/catch, v1.5.3 MBObjectManager.cs:786-797), where the unpatched game lets the
-/// exception propagate. Plan 040 puts the method on that list and merges before this plan, so this branch adds no entry
-/// of its own (a second copy would duplicate 040's); 042 must not ship without it (feature doc, "Shipping order").</para>
+/// exception propagate. Plan 040 put the method on that list, so this patch adds no entry of its own (a second copy
+/// would duplicate 040's), and the two ship together (feature doc, "Shipping order").</para>
 /// </summary>
 [HarmonyPatch(typeof(MBObjectManager), nameof(MBObjectManager.CreateMergedXmlFile))]
 [HarmonyPatchCategory(XmlMergeModule.PatchCategory)]

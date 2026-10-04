@@ -67,12 +67,14 @@ public static class PatchShieldPolicy
     // Issue #331 round 2 (2026-07-09, measured): NEVER shield the Gauntlet/2D UI layer.
     // Until plan 034 the shield finalizer took __originalMethod, so Harmony's generated wrapper paid
     // a MethodBase.GetMethodFromHandle on EVERY CALL, inside the try/catch any finalizer adds (about
-    // 63 ns per call more than a finalizer without it, 1,145 ns with threads contending, and 241 bytes
-    // allocated; measured on .NET Framework 4.8.1 with Harmony 2.4.2, plan 034). The finalizer now
+    // 63 ns per call more than a finalizer without it, 1,145 ns with eight threads contending, and 241
+    // bytes allocated, in an optimized build; 64 and 1,305 ns in a Debug build; measured on .NET
+    // Framework 4.8.1 with Harmony 2.4.2, plan 034). The finalizer now
     // takes only __exception. Plan 034's benchmark, with a stand-in finalizer of that shape on a trivial
     // patched method, measured 5.4 ns per call in a Debug build (what players run) against 1.9 ns with
     // the postfix alone: about 3.5 ns more (1.3 against 0.7 ns optimized). The shipped finalizers were
-    // not benchmarked themselves. This exclusion was decided under the old cost and stands. The
+    // not benchmarked themselves. This comment is where those figures are stated; other comments and docs
+    // point here. This exclusion was decided under the old cost and stands. The
     // Gauntlet prefab system contains per-widget-recursion methods that
     // UIExtenderEx patches (WidgetFactory.IsCustomType prefix, WidgetTemplate.OnRelease blank-transpiler);
     // a tournament's accumulated template tree calls them ~2 MILLION times at release,
@@ -132,10 +134,11 @@ public static class PatchShieldPolicy
     /// the spawn frames all walk every unit through <c>GetUnitPositionWithIndexAccordingToNewOrder</c>
     /// (three overloads, one entry covers all of them) and <c>GetUnitSpawnFrameWithIndex</c>. Same rationale
     /// as the namespace list's #331 (Gauntlet UI) and Patch38 (SettlementNameplateWidget) entries, applied
-    /// at method granularity instead of namespace granularity. The three Mission tick entries at the end are
-    /// the exception: they stay for what a swallow would break, or as built, not for cost (see their comment).
-    /// It also lists targets that are not hot but where a shield finalizer would change behaviour an observe-only
-    /// TAOM patch promises to leave alone (the load-time stamps).
+    /// at method granularity instead of namespace granularity. The three Mission tick entries are the exception:
+    /// they stay for what a swallow would break, or as built, not for cost (see their comment). So are the two
+    /// campaign-map entries, which only the default-off map profiler patches (see theirs), and the load-time
+    /// stamps, which are not hot but where a shield finalizer would change behaviour an observe-only TAOM patch
+    /// promises to leave alone.
     ///
     /// PatchShield skips an excluded method for every owner, so a third-party patch on one of these methods
     /// also loses the rescue. Patch92BindingTests walks Patch92's real targets through
@@ -155,15 +158,14 @@ public static class PatchShieldPolicy
         // Patch93_CreatureBanditNoRout: CommonAIComponent.OnTickParallel asks it for every AI agent, horses
         // included, every 0.5 to 0.6 s on the TWParallel workers.
         "TaleWorlds.MountAndBlade.Mission.CanAgentRout",
-        // Mission tick targets, trimmed by maintainer decision D13 (2026-10-03; lessons/harmony-il.md). Plan 034
-        // measured the shield's finalizer at about 5 ns per call once its change is in (64 ns and 241 bytes of
-        // garbage per call as the finalizer ships without that change, which is the case on the branch that made
-        // this edit), so an entry kept for cost alone no longer earns the rescue it gives up: Mission.OnTick and
-        // Mission.OnPreTick (plan 028) and Mission.SpawnAgent (plan 041) came off this list and PatchShield wraps
-        // them again. That rescue is by exception type only, so it also swallows a mission behaviour's missing-API
-        // exception (one raised from OnTick, OnPreTick or SpawnAgent), and it strips every unprotected owner's
-        // patches on the method, TAOM's own among them (on SpawnAgent: Patch23's colour prefix and postfix and
-        // Patch97's spawn attribution transpiler). Three entries stay, and for any owner's patch on them the
+        // Mission tick targets, trimmed by maintainer decision D13 (2026-10-03; lessons/harmony-il.md). Since plan 034
+        // the shield's finalizer binds no __originalMethod and is cheap (the figures are in PatchShieldPolicy's ExcludedTargetNamespacePrefixes comment),
+        // so an entry kept for cost alone no longer earns the rescue it gives up: Mission.OnTick and Mission.OnPreTick
+        // (plan 028) and Mission.SpawnAgent (plan 041) came off this list and PatchShield wraps them again. That rescue
+        // is by exception type only, so it also swallows a mission behaviour's missing-API exception (one raised from
+        // OnTick, OnPreTick or SpawnAgent), and it strips every unprotected owner's prefixes, postfixes and
+        // transpilers on the method, TAOM's own among them (on SpawnAgent: Patch23's colour prefix, Patch97's spawn
+        // attribution transpiler and Patch98's prefix). Three entries stay, and for any owner's patch on them the
         // missing-API swallow and the strip of the offending patch are given up:
         //  - TickAgentsAndTeamsImp carries Patch91's bracket for every player, and a swallow there would skip
         //    the body that sets tickCompleted, so the next WaitTickCompletion would spin forever.
@@ -171,11 +173,12 @@ public static class PatchShieldPolicy
         //    loop, so OnPreMissionTick would overlap the running agent tick.
         //  - TickComponents runs once per ticking scene per frame, on a thread native picks, and carries
         //    Patch97's attribution transpiler when the profiler is on; it stays as built.
-        // The first two stop a swallow only at their own method. Their callers are shielded (OnPreTick for the wait;
-        // OnTick for the synchronous agent tick, on every fast-forward tick), so the same exception is swallowed one
-        // level up, and an exception swallowed in OnTick after it clears tickCompleted still leaves the next
-        // WaitTickCompletion spinning. The re-shield does not prevent that; it is pre-existing (TickMissionAux's
-        // shield swallowed it one level higher from the second game start) and left to the PatchShield follow-up plan.
+        // The first two stop a swallow only at their own method: their callers (OnPreTick for the wait, OnTick for the
+        // synchronous agent tick) are shielded, so the exception is swallowed one level up. A throw in OnTick after it
+        // clears tickCompleted and before the agent tick sets it again, swallowed by any catcher above it, still hangs
+        // the next WaitTickCompletion, and no entry here prevents that (read from the v1.5.3 decompile, not seen in a
+        // game; left to the PatchShield follow-up plan). Throw positions, catchers and the remedy:
+        // docs/features/mission-perf-heartbeat.md, "PatchShield".
         // MissionTickProfilerBindingTests and HitchProbeBindingTests walk the real targets and pin both halves
         // of the split; PatchShieldPolicyTests pins it without the game.
         "TaleWorlds.MountAndBlade.Mission.TickAgentsAndTeamsImp",

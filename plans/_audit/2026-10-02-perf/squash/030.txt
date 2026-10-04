@@ -1,49 +1,57 @@
 perf(diagnostics): v2.0.32 - cheaper always-on mission diagnostics
 
 Several diagnostics that run in every battle did per-frame or per-hit
-work for lines they rarely wrote. They now do that work only when it
-can produce a line, and what they logged is still in taom_debug.log,
+work for lines they rarely wrote. They now do that work only when it can
+produce a line, and what they logged is still in taom_debug.log,
 aggregated where it used to repeat.
 
 - Action-set census (the first 5 s of each mission): each agent is
   checked on an integer key first, and only a new (action set, race,
-  sex) combination reads names. The census lines are unchanged. Two
-  new INFO lines bracket the window: "[MissionDiag] ActionSet census
-  open" and "[MissionDiag] ActionSet census closed: agentChecks=N
-  newKeys=K lines=L".
+  sex) combination reads names. The census lines are unchanged. Two new
+  INFO lines bracket the window: "[MissionDiag] ActionSet census open"
+  and "[MissionDiag] ActionSet census closed: agentChecks=N newKeys=K
+  lines=L".
 - Career perks: the hit amp and hit reduction DEBUG lines are written
   once per battle for each combination of direction, hero or party
   leader, hit mask and passives, with that first hit's numbers. Every
-  hit is still counted, and at mission end an INFO summary gives each
-  combination's hits, multiplier range and damage totals. A hit with
-  a non-finite damage value is counted as nonFinite and kept out of
-  the sums. The summary is written at mission teardown, so a crash
-  mid-battle keeps each combination's first line but not its counts.
-- Trolls: the formation-spacing tracker and the clip trace wait for
-  the mission's first Brute Force troll instead of walking every agent
-  twice a second in every battle. One INFO line says when they start,
-  or at mission end that no troll was built. [TrollSpacing] and
-  [TrollClips] lines in troll battles are as before.
+  hit is still counted, and an INFO summary gives each combination's
+  hits, multiplier range and damage totals; a hit with a non-finite
+  damage value is counted as nonFinite and kept out of the sums. The
+  summary is written when the mission ends, or when its behaviours are
+  removed without a normal end, so only a crash or a killed process
+  loses the counts after each combination's first line. It keeps totals,
+  not each hit: hits of 10, 20 and 70 damage read the same as 10, 40 and
+  50 under one multiplier.
+- Trolls: the formation-spacing tracker and the clip trace wait for the
+  mission's first Brute Force troll instead of walking every agent twice
+  a second in every battle. One INFO line says when they start, or at
+  mission end that no troll was built. [TrollSpacing] and [TrollClips]
+  lines in troll battles are as before. One small gameplay timing
+  change: the spacing tracker's 0.5 s clock now starts at the first
+  troll, so a formation's re-space can land up to about 0.5 s sooner or
+  later than before.
 - Creature Bandits diagnostics: each engine callback first checks
   whether the mission has any creature, and a line the line budget
-  refuses is no longer formatted. When no creature registered, one
-  INFO line at mission end says so ("[CreatureBandits][diag]
-  no-creatures").
+  refuses is no longer formatted. A mission with no creature spawn
+  attempted or declined, which writes no summary, now ends with one INFO
+  line saying so ("[CreatureBandits][diag] no-creatures").
 - Companion Tactics: an empty Harmony postfix on Mission.OnTick that
-  still ran every frame is deleted. The order-of-battle preset buttons
-  and companion roles are unchanged.
+  still ran every frame (a detour, a settings read and a PatchShield
+  finalizer) is deleted. The order-of-battle preset buttons and
+  companion roles are unchanged.
 - Banner colours: an agent colour store that every spawned agent wrote
-  twice and nothing read is deleted, with its two patch members and
-  its cleanup behaviour. Troop armour tint still comes from the
+  twice and nothing read is deleted, with its two patch members and its
+  cleanup behaviour. Troop armour tint still comes from the
   Mission.SpawnAgent prefix. With BattleLoad diagnostics on, each
   mission logs one TaomBehaviorAdded line fewer.
 
 The cost to a player is about four new INFO lines per mission.
 
 Refs: #712 (plan 030)
-Not-tested: in game. A campaign field battle with clan-coloured
- troops (armour tint unchanged); a battle with a cave or hill troll
- and one without ([TrollSpacing] only in the first); a career hero
- with a TroopDamage pip (one hit amp line per combination, then the
- mission-end summary); the census lines in a mission's first 5 s; the
- companion-tactics preset buttons.
+Not-tested: in game. A campaign field battle with clan-coloured troops
+ (armour tint unchanged); a battle with a cave or hill troll and one
+ without ([TrollSpacing] only in the first); a career hero with a
+ TroopDamage pip (one hit amp line per combination, then the summary);
+ the census lines in a mission's first 5 s; the companion-tactics preset
+ buttons; whether the career summary is written when the game window is
+ closed mid-battle.

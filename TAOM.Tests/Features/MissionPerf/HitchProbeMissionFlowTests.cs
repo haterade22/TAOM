@@ -273,4 +273,100 @@ public class HitchProbeMissionFlowTests
         StringAssert.StartsWith(info[1], "[HitchDetail] t=+0s ");
         StringAssert.Contains(info[1], " mode=probe ");
     }
+
+    // --- OnMissionCreated: the tick profiler's status at a mission's creation (deep review 2026-10-04) ---------
+    // Plan 028's hook health check and plan 041's probe-aware lines met only in the integration merge, so these
+    // drive the status writer without a mission, for every branch.
+
+    private const string OnTickTranspiler = "Mission.OnTick transpiler (Patch97)";
+    private const string FrameBoundary = "Mission.OnPreTick frame-boundary prefix (Patch98)";
+
+    private void Created(bool measuring, bool behaviorTiming, bool profilerToggleOn, params string[] hookProblems) =>
+        MissionTickProfilerHooks.OnMissionCreated(_logger, 3, 8, 250, measuring, behaviorTiming, profilerToggleOn, hookProblems);
+
+    [TestMethod]
+    public void OnMissionCreated_AHookMissingWhileTheProbeMeasures_SaysTheProbeStillMeasures()
+    {
+        Created(measuring: true, behaviorTiming: false, profilerToggleOn: true, OnTickTranspiler);
+
+        var warning = Lines(nameof(IModLogger.LogWarning)).Single();
+        StringAssert.Contains(warning, "[TickProfiler] mission 3: no per-type timing, required hooks missing: " + OnTickTranspiler);
+        StringAssert.Contains(warning, "the hitch probe still measures this mission");
+        Assert.IsFalse(warning.Contains("not measuring"), "The default-on probe measures this mission: " + warning);
+    }
+
+    [TestMethod]
+    public void OnMissionCreated_TheFrameBoundaryMissingWhileTheProbeIsOn_SaysNotMeasuring()
+    {
+        // Patch98's OnPreTick prefix closes every frame in both modes, so without it the probe measures nothing either.
+        Created(measuring: true, behaviorTiming: false, profilerToggleOn: true, OnTickTranspiler, FrameBoundary);
+
+        StringAssert.Contains(Lines(nameof(IModLogger.LogWarning)).Single(),
+            "[TickProfiler] mission 3: not measuring, required hooks missing: " + OnTickTranspiler + ", " + FrameBoundary + ";");
+    }
+
+    [TestMethod]
+    public void OnMissionCreated_TheFrameBoundaryUncheckable_CountsAsMissing()
+    {
+        Created(measuring: true, behaviorTiming: false, profilerToggleOn: true, FrameBoundary + " (patch info unreadable: X)");
+
+        StringAssert.Contains(Lines(nameof(IModLogger.LogWarning)).Single(), "mission 3: not measuring, required hooks missing: ");
+    }
+
+    [TestMethod]
+    public void OnMissionCreated_AHookMissingAndTheProbeNotMeasuring_SaysNotMeasuring()
+    {
+        Created(measuring: false, behaviorTiming: false, profilerToggleOn: true, OnTickTranspiler);
+
+        Assert.AreEqual(TickProfileLines.BuildHooksMissingLine(3, new[] { OnTickTranspiler }),
+            Lines(nameof(IModLogger.LogWarning)).Single());
+    }
+
+    [TestMethod]
+    public void OnMissionCreated_BehaviourTiming_WritesTheHeaderAndNoWarning()
+    {
+        MissionTickProfilerHooks.OnTickSites = 2;
+        MissionTickProfilerHooks.OnPreTickSites = 2;
+
+        Created(measuring: true, behaviorTiming: true, profilerToggleOn: true);
+
+        Assert.AreEqual(TickProfileLines.BuildMissionStartLine(3, 8, 250, 2, 2, 1), Lines(nameof(IModLogger.LogInfo)).Single());
+        Assert.AreEqual(0, Lines(nameof(IModLogger.LogWarning)).Length);
+    }
+
+    [TestMethod]
+    [DataRow(true, true)]
+    [DataRow(true, false)]
+    [DataRow(false, true)]
+    [DataRow(false, false)]
+    public void OnMissionCreated_OnButNeverTimingWithNoHookProblem_SaysWhyAndWhetherTheProbeMeasures(bool offAtGameStart, bool measuring)
+    {
+        HitchProbeInstaller.ProfilerOffAtGameStart = offAtGameStart;
+
+        Created(measuring, behaviorTiming: false, profilerToggleOn: true);
+
+        Assert.AreEqual(HitchProbeLines.ProfilerNotTimingLine(restartNeeded: offAtGameStart, probeMeasuring: measuring),
+            Lines(nameof(IModLogger.LogWarning)).Single());
+    }
+
+    [TestMethod]
+    [DataRow(true)]
+    [DataRow(false)]
+    public void OnMissionCreated_InstalledButSwitchedOff_WritesTheOffLine(bool measuring)
+    {
+        MissionTickProfilerHooks.Installed = true;
+
+        Created(measuring, behaviorTiming: false, profilerToggleOn: false);
+
+        Assert.AreEqual(HitchProbeLines.BuildProfilerOffLine(3, measuring), Lines(nameof(IModLogger.LogInfo)).Single());
+        Assert.AreEqual(0, Lines(nameof(IModLogger.LogWarning)).Length);
+    }
+
+    [TestMethod]
+    public void OnMissionCreated_OffAndNeverInstalled_WritesNothing()
+    {
+        Created(measuring: true, behaviorTiming: false, profilerToggleOn: false);
+
+        Assert.AreEqual(0, _logger.ReceivedCalls().Count());
+    }
 }

@@ -81,7 +81,8 @@ public class MissionTickProfilerBindingTests
 
         // A swallow at the agent tick would skip the body that sets tickCompleted (Mission.cs:3629), so the next
         // WaitTickCompletion would spin forever: the exception leaves the method instead. That is all this entry
-        // buys: the inline call (fast-forward) still reaches Mission.OnTick, see PatchShieldPolicy.
+        // buys: the inline call (fast-forward) still reaches Mission.OnTick (docs/features/mission-perf-heartbeat.md,
+        // "PatchShield").
         var target = TargetOf(typeof(Mission_TickAgentsAndTeamsImp_StallProbe_Patch));
         Assert.IsNotNull(target, nameof(Mission_TickAgentsAndTeamsImp_StallProbe_Patch) + " has no resolvable target.");
         Assert.IsTrue(PatchShieldPolicy.IsExcludedTargetMethod(target.DeclaringType?.FullName, target.Name),
@@ -95,10 +96,10 @@ public class MissionTickProfilerBindingTests
         if (!_gameLoaded) Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
 
         // Maintainer decision D13 (2026-10-03): both stay off the exclusion list, so PatchShield attaches to them
-        // whenever something patches them (Patch35 and Patch97 on Mission.OnTick; TAOM patches Mission.OnPreTick only
-        // through Patch97, and any patch on it attaches the shield), and a foreign patch's missing-API throw there is
+        // whenever something patches them (Patch97 and Patch98 patch both Mission.OnTick and Mission.OnPreTick, and any
+        // patch on either attaches the shield), and a foreign patch's missing-API throw there is
         // swallowed and the patch stripped instead of unwinding the application tick. That does not make an
-        // interrupted Mission.OnTick safe: see the hazard in PatchShieldPolicy.
+        // interrupted Mission.OnTick safe: see docs/features/mission-perf-heartbeat.md, "PatchShield".
         foreach (var patch in new[] { typeof(Mission_OnTick_TickProfiler_Patch), typeof(Mission_OnPreTick_TickProfiler_Patch) })
         {
             var target = TargetOf(patch);
@@ -145,6 +146,27 @@ public class MissionTickProfilerBindingTests
                 "TaleWorlds.MountAndBlade.Mission.TickAgentsAndTeamsImp",
             },
             targets);
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void FrameBoundaryHook_IsTheOnePatchMethodThatClosesFrames()
+    {
+        if (!_gameLoaded) Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
+
+        // The health check requires the frame-boundary hook because no frame closes without it, in either mode
+        // (deep review 2026-10-04). Pin that it names the one method that calls OnFrameBoundary, so a boundary moved
+        // into another prefix fails here instead of leaving the check watching a method that closes nothing.
+        var callers = IlCallScanner.FindCallers(typeof(MissionTickProfilerHooks).Assembly,
+            m => m.DeclaringType == typeof(MissionTickProfilerHooks) && m.Name == nameof(MissionTickProfilerHooks.OnFrameBoundary),
+            out var unreadable, out var scanned);
+
+        Assert.IsTrue(scanned > 0, "No method bodies scanned: the scan failed rather than passed.");
+        Assert.IsFalse(unreadable.Any(u => u.StartsWith("TAOM.Features.MissionPerf", StringComparison.Ordinal)),
+            "Unreadable MissionPerf bodies: " + string.Join("; ", unreadable));
+        var hook = MissionTickProfilerHealth.RequiredHooks().Single(h => h.Name == MissionTickProfilerHealth.FrameBoundaryHook);
+        Assert.IsNotNull(hook.PatchMethod, hook.Name + " has no patch method.");
+        CollectionAssert.AreEqual(new[] { hook.PatchMethod.DeclaringType?.FullName + "." + hook.PatchMethod.Name }, callers);
     }
 
     // CreatureBanditsWiringTests.TargetOf.

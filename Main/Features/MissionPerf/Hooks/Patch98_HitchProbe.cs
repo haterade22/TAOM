@@ -9,8 +9,10 @@ namespace TAOM.Features.MissionPerf.Hooks;
 // HitchProbeInstaller from MissionTickProfilerInstaller, never by name from SubModule.cs). Whole-method
 // brackets only, no transpiler: each class is a void prefix at Priority.First and a void finalizer at
 // Priority.Last, each taking only Harmony's __state (out on the prefix, ref on the finalizer), so the bracket
-// encloses every other patch on the method (Patch23 on SpawnAgent, Patch35 on OnTick) and still closes when the
-// method throws (a void finalizer keeps Harmony's rethrow). Verified on the installed v1.5.3, none of them virtual:
+// encloses every other patch on the method (Patch23 on SpawnAgent, Patch97 on OnTick) and still closes when the
+// method throws (its void finalizer leaves the exception alone; on the three shielded targets PatchShield's
+// value-returning finalizer makes Harmony throw, and RethrowStackPreserver keeps the trace). Verified on the
+// installed v1.5.3, none of them virtual:
 //   private void Mission.WaitTickCompletion(): `while (!tickCompleted) Thread.Sleep(1);`, called first in
 //     OnPreTick; 17 bytes with a loop, so the JIT may inline it into OnPreTick, which the probe detects.
 //   [MBCallback] internal void Mission.OnPreTick(float dt): raised by native from Mission.Tick on the main

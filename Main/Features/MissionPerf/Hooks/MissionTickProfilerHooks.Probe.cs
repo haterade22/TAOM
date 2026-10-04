@@ -1,11 +1,13 @@
 using System;
+using System.Collections.Generic;
 using TAOM.Core.Logging;
+using TAOM.Features.BattleLoadDiagnostics;
 
 namespace TAOM.Features.MissionPerf.Hooks;
 
 /// <summary>Plan 041's additions to the profiler hooks (the class sits at the ADR-002 line limit): the
-/// <c>[HitchDetail]</c> line beside <c>[Hitch]</c>, the per-mission probe flags, the first-tick sampler cost
-/// and mission header, and <c>[TickSummaryExtra]</c>.</summary>
+/// <c>[HitchDetail]</c> line beside <c>[Hitch]</c>, the per-mission probe flags, the profiler's status lines at a
+/// mission's creation, the first-tick sampler cost and mission header, and <c>[TickSummaryExtra]</c>.</summary>
 public static partial class MissionTickProfilerHooks
 {
     /// <summary><c>[Hitch]</c> (or, past the per-mission cap, the one cap line) and right after it, with the same
@@ -70,6 +72,30 @@ public static partial class MissionTickProfilerHooks
             measuring && (profiler?.ScriptAttribution ?? false), measuring && (profiler?.AnimSampling ?? false)));
         if (probeToggleOn && !HitchProbeInstaller.ProbeInstalled)
             logger.LogWarning(HitchProbeLines.ProbeNotInstalledLine);
+    }
+
+    /// <summary>A mission's creation, after <see cref="ConfigureProbeMission"/>: the tick profiler's status. With
+    /// behaviour timing, its header; measuring, one warning per MCM knob replaced by its default; toggled on but not
+    /// timing, why (a required hook missing, or an install that never ran or failed) and whether the hitch probe still
+    /// measures the mission; installed but toggled off, its off line. Nothing when the profiler is off and not
+    /// installed: <see cref="OnMissionFirstTick"/> writes the probe's lines.</summary>
+    internal static void OnMissionCreated(IModLogger logger, int missionNumber, int topN, double hitchMs, bool measuring,
+        bool behaviorTiming, bool profilerToggleOn, IReadOnlyList<string> hookProblems)
+    {
+        if (behaviorTiming)
+            logger.LogInfo(TickProfileLines.BuildMissionStartLine(missionNumber, topN, hitchMs,
+                OnTickSites, OnPreTickSites, WaitTickCompletionCall != null ? 2 : 1));
+        var mcm = BattleLoadDiagnosticsSettings.Instance;
+        if (measuring && mcm != null)
+            foreach (var line in TickProfileLines.SettingFallbackLines(mcm.TickProfilerTopN, topN, mcm.HitchThresholdMs, hitchMs))
+                logger.LogWarning(line);
+        if (profilerToggleOn && !behaviorTiming)
+            logger.LogWarning(hookProblems.Count > 0
+                ? HitchProbeLines.BuildHooksMissingLine(missionNumber, hookProblems,
+                    probeMeasuring: measuring && !MissionTickProfilerHealth.FrameBoundaryMissing(hookProblems))
+                : HitchProbeLines.ProfilerNotTimingLine(HitchProbeInstaller.ProfilerNeedsRestart, measuring));
+        else if (!profilerToggleOn && Installed)
+            logger.LogInfo(HitchProbeLines.BuildProfilerOffLine(missionNumber, measuring));
     }
 
     /// <summary>Right after <c>[TickSummary]</c>, the current mission's <c>[TickSummaryExtra]</c>; nothing when no
