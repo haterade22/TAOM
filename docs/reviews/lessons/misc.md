@@ -494,3 +494,39 @@ lines; and "every campaign handler of a loaded save" missed the `OnGameLoadFinis
   the MCM hint and re-read every "every", "always" and "live" claim against the code that bounds it
   (the guard, the dispatcher list), not against the plan.
 - **Source:** `docs/reviews/rca-load-time-stamps-2026-10-02.md` rows 4, 6 and 7 (Data flow, Completeness).
+
+### A diagnostic's "nothing happened" line is written on the exact complement of its summary's condition (plan 030, 2026-10-02)
+Plan 030 added a `no-creatures` INFO line for a mission whose creature diagnostics stayed silent. Its condition was the callbacks' gate (`AnyRegistered`), but a declined creature troop writes `spawn-declined` lines and makes the summary print without registering a creature, so the log ended with the summary and then a line saying no diag line was written.
+- **Why missed:** the line was tested on the empty mission it was written for; nobody listed the other states that leave the gate false.
+- **Prevent:** derive a skip or reason line's condition from the condition of the line it stands in for (here `WriteSummary`'s), so each mission ends with exactly one of them, and test the boundary case (a decline, an attempt) as well as the empty one. Prefer a count over an absolute claim ("no line was written").
+- **Source:** `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` R1.
+
+### An aggregate that replaces per-event log lines keeps bad values out of its sums and says when it is written (plan 030, 2026-10-02)
+Plan 030 replaced per-hit `[CareerPerks]` DEBUG lines with one line per combination plus a mission-end INFO tally. The tally added every hit's base and result unchecked, so one NaN hit turned the combination's damage totals into NaN, and it is written only at mission teardown, so a crash mid-battle loses the counts the per-hit lines used to leave on disk within 50 ms.
+- **Why missed:** "keep the information as an aggregate" was checked for presence on clean, finite input.
+- **Prevent:** an aggregate counts a non-finite event apart and keeps it out of every sum and range; its doc says when it is written and what a crash before then loses, and any claim that "nothing is dropped" is checked against that write point.
+- **Source:** `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` R4, R5.
+
+### A deletion's doc sweep greps the deleted members' targets, categories and counts, not only their names (recurrence of #644, plan 030, 2026-10-02)
+Plan 030 deleted Patch23's `EquipItemsFromSpawnEquipment` prefix and Patch35's `Mission.OnTick` postfix and grepped for the class names. A code comment and `battle-load-diagnostics.md` still said Patch23 patches `EquipItemsFromSpawnEquipment` (they named the category and the method), and `companion-tactics.md` still counted 5 FormationPresets hooks.
+- **Why missed:** the plan's done-criteria grep matched class names only.
+- **Prevent:** for a deleted patch, also grep its target method, its category paired with that method, and every count of its folder or category.
+- **Source:** `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` R7, R8.
+
+### A mission-scoped write or reset is chosen from every way the engine leaves the mission (plan 030 Codex round, 2026-10-03)
+Plan 030 wrote the career hit summary from `CareerPerkMissionBehavior.OnEndMission`. That callback runs only through `Mission.EndMission`; `GameStateManager.CleanStates` finalises a mission state with no `EndMission` first (the application shutting down, if a window close reaches the engine's shutdown callback, unverified; or a mod that loads a save mid-mission), so those exits lost the counts, and the stat service being a singleton, the dead mission's tally rode into the next one. The first wording named "a save loaded mid-battle" as a vanilla exit; it is not one, because only the map's escape menu and the main menu open the load screen.
+- **Why missed:** the earlier review framed the limit as "a clean teardown versus a crash" and every lens took `OnEndMission` for every end.
+- **Prevent:** before choosing where a mission-scoped write or reset lives, list the engine's exits from the decompile (`docs/reference/engine/mission-and-missionbehavior-lifecycle.md`, "Teardown paths"). Write from `OnEndMission` and `OnRemoveBehavior` when it must survive all of them (the second is a no-op after a normal end), and test the path that skips `EndMission`. Then check each listed exit from the caller side: a `CleanStates` caller on a load path counts only when some screen can open it while a mission is live (`SandBoxViewCreator.CreateSaveLoadScreen` has two callers, the main menu and the map).
+- **Source:** `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` X1.
+
+### An aggregate's doc names what it keeps and what it drops, with a counterexample (plan 030 Codex round, 2026-10-03)
+Plan 030's wording said the per-mission hit summary left nothing the per-hit lines showed lost. It keeps a count, a multiplier range and damage sums; hits of damage 10, 20 and 70 and of 10, 40 and 50 under one multiplier read the same, and the order, each hit's own numbers and a leaderless victim's agent are gone.
+- **Why missed:** "aggregate, never drop" was checked as "an aggregate exists".
+- **Prevent:** the doc for any aggregate that replaces per-event lines lists the statistics it keeps and the detail it drops, with one pair of inputs it cannot tell apart; "nothing is lost" is never written about one.
+- **Source:** `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` X2.
+
+### A "no cost" or "no change" claim for a gated path is proven on that path (plan 030 Codex round, 2026-10-03)
+Two claims held for the formula and not for the path they named. A refused creature event line "costs no string", but `WriteEvent` built its thread label above the budget check (88 bytes per refused event). A first-troll gate "changes nothing once a troll exists", but it starts the spacing tracker's self-throttled 0.5 s clock at the first troll tick, so a late troll is counted up to 0.5 s sooner and every later scan keeps the shifted phase, which lands a later re-space up to about 0.5 s sooner or later. The first fix wrote "never later", which held for the first scan only.
+- **Why missed:** each claim was reasoned from the line or the formula it was written for, not from the consumer's own clock or the code above the guard.
+- **Prevent:** prove the claim on that path. For "costs no string", an allocation count (`GC.GetAllocatedBytesForCurrentThread`, reached by reflection on net472) over every event kind on the refused path; for a gate in front of a self-throttled consumer, say where the consumer's clock now starts and bound the shift on every later scan, not only the first (a short simulation of the old and new call patterns does it).
+- **Source:** `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` X3, X4.

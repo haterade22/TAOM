@@ -27,6 +27,7 @@ public class TrollBruteForceMissionBehavior : MissionLogic
     private readonly CreatureTreeTracker _tracker;
     private readonly TrollFormationSpacingTracker _spacing;
     private readonly TrollClipTrace _clips;
+    private readonly TrollPresence _presence;
     private bool _initialized;
     private bool _treesAdded;
 
@@ -38,6 +39,7 @@ public class TrollBruteForceMissionBehavior : MissionLogic
             a => _service.IsBruteForceTroll(a.Monster?.StringId), _logger);
         _spacing = new TrollFormationSpacingTracker(_service, _logger);
         _clips = new TrollClipTrace(_service, _logger);
+        _presence = new TrollPresence(_service, _logger);
     }
 
     private void Initialize()
@@ -79,13 +81,18 @@ public class TrollBruteForceMissionBehavior : MissionLogic
             if (!_treesAdded)
             {
                 _treesAdded = true;
+                foreach (Agent agent in Mission.Current.AllAgents)
+                    _presence.Note(agent?.Monster?.StringId);
                 int count = _tracker.AttachAll(Mission.Current.AllAgents);
                 _logger.LogInfo($"[TrollBruteForce] Attached behavior trees to {count} troll(s)");
             }
 
             _tracker.PruneDead();
-            _spacing.Tick(Mission.Current);
-            _clips.Tick(Mission.Current);   // diagnostic last: a throw here must not skip the spacing
+            if (_presence.Seen)
+            {
+                _spacing.Tick(Mission.Current);
+                _clips.Tick(Mission.Current);   // diagnostic last: a throw here must not skip the spacing
+            }
         }
         catch (Exception ex)
         {
@@ -98,6 +105,7 @@ public class TrollBruteForceMissionBehavior : MissionLogic
     public override void OnAgentBuild(Agent agent, Banner banner)
     {
         base.OnAgentBuild(agent, banner);
+        _presence.Note(agent?.Monster?.StringId);
         // Late-spawn attach: only after Initialize registered the tree (first OnMissionTick).
         if (_treesAdded)
             _tracker.TryLateAttach(agent);
@@ -111,6 +119,7 @@ public class TrollBruteForceMissionBehavior : MissionLogic
         _tracker.Clear();
         _spacing.Clear();
         _clips.Clear();
+        _presence.Clear();
         _loggedErrors.Clear();
         base.OnRemoveBehavior();
     }

@@ -43,7 +43,7 @@ Each phase is a thin Harmony hook (or `MissionLogic`) that delegates one call to
 | 4f | `WaitingForRender` | `MissionState_OnTick_RenderWait_Patch` (**Postfix**) | `MissionState.OnTick(float)` (**protected**): one call per frame the mission is loaded but not yet ticking, i.e. while `Handler.RenderIsReady()` is false. Throttled to 1 Hz in the service; carries `waitedMs=` and the live `shaders=` count |
 | 6 | `BattlePlayable` | `BattleLoadPhaseBehavior : MissionLogic` (first `OnMissionTick`) | closes the loading window — load succeeded |
 
-All hooks share the Harmony category `Patch43_BattleLoadDiagnostics`. Phases 4 and 5 coexist with the pre-existing prefixes on the same methods (`Patch16_AtmospherePersistence` on `Mission.Initialize`, `Patch23_BannerColorPersistence` on `EquipItemsFromSpawnEquipment`) — Harmony runs all of them.
+All hooks share the Harmony category `Patch43_BattleLoadDiagnostics`. Phase 4 coexists with the pre-existing `Patch16_AtmospherePersistence` prefix on `Mission.Initialize`; Harmony runs both.
 
 #### Why 2b–2d and 4b–4c exist (the 2026-07-16 blind window)
 

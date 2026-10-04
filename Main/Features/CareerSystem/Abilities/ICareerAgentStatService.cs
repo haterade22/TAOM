@@ -70,8 +70,11 @@ public interface ICareerAgentStatService
     /// <c>InitializeMissionEquipment</c> (#613).</summary>
     float AmmoBonus(string? heroId);
 
-    /// <summary>Clears the <c>[CareerPerks]</c> dedupe state so the next mission's first stat
-    /// application logs again. Called from the mission behavior's end-of-mission teardown (#613).</summary>
+    /// <summary>Clears the <c>[CareerPerks]</c> dedupe state (the stat and mount lines and the
+    /// per-hit lines) so the next mission logs again. Called from the mission behavior's OnEndMission and
+    /// again from its OnRemoveBehavior, so it runs on every way a mission can end (#613). Before clearing, writes
+    /// the mission's per-hit summary at INFO: one line per hit combination with its hit count, multiplier range and
+    /// damage totals. The second call after a normal end finds nothing to write.</summary>
     void ResetDiagnostics();
 
     /// <summary>

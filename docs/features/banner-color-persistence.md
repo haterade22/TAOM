@@ -23,8 +23,8 @@ Vanilla reads banner colors from `hero.MapFaction` (the kingdom), not from the p
 LEADER's clan, for every party in the mission and not only the player's. Vanilla
 `Mission.SpawnTroop` has already set those from the team (so kingdom) colour by then, and the
 prefix is the last writer, so **battlefield armour tint follows the clan.**
-`Hooks/Agent_EquipItemsFromSpawnEquipment_Patch.cs` covers hero agents only; the `SpawnAgent`
-prefix is what covers ordinary troops. Anyone editing a clan's `color`/`color2` in ModuleData is
+The `SpawnAgent` prefix is the only spawn-time recolour (an agent whose caller already chose its
+equipment keeps the colours it was given). Anyone editing a clan's `color`/`color2` in ModuleData is
 editing troop armour, and [clan-heraldry.md](clan-heraldry.md) is the data-side companion.
 
 One sharp edge: `FFFFFFFF` is `uint.MaxValue`, which `AgentVisualsData` uses as its own "unset"
@@ -101,20 +101,17 @@ All flags default to `true` **except `EnableLayerLimitTranspiler`, which default
 | `IBannerColorService.cs` / `BannerColorService.cs` | Pure logic: enabled checks, unique icon color calculation |
 | `Main/Adapters/ClanColorInfo.cs` | `readonly struct` carrying ClanStringId, Color1, Color2 across the sealed-type boundary |
 | `Main/Adapters/IBannerHeroAdapter.cs` / `BannerHeroAdapter.cs` | Extracts clan colors from `CharacterObject`/`Hero`/`Clan`; syncs kingdom colors for ruling clans |
-| `IAgentColorStore.cs` / `AgentColorStore.cs` | Per-mission agent color cache (`ConcurrentDictionary<int, ClanColorInfo>`) |
-| `AgentColorStoreCleanupBehavior.cs` | MissionBehavior that clears the agent color store on mission end |
-| `BannerColorPersistenceIoC.cs` | Registers all 4 singletons |
+| `BannerColorPersistenceIoC.cs` | Registers all 3 singletons |
 | `Hooks/Banner_TryGetBannerDataFromCode_Transpiler.cs` | Patch15 — IL transpiler skipping RemoveRange |
 | `Hooks/Clan_UpdateBannerColorsAccordingToKingdom_Patch.cs` | Patch24 — drift guard Prefix |
 | `Hooks/Clan_UpdateBannerColor_Patch.cs` | Patch24 — kingdom color sync Postfix |
 | `Hooks/BannerEditorView_OnTick_Patch.cs` | Patch23 — BannerPaste Ctrl+C/V; `MethodInfo` cached at Initialize |
 | `Hooks/MobilePartyVisualHelper_GetHumanAgentPartyVisual_Patch.cs` + `BannerColorTranspiler.cs` | No category, manual transpiler on the v1.5.x map-figure builder: appends a resolver call after each faction-colour read, stack-neutral, vanilla value passes through when TAOM holds no colour |
-| `Hooks/Agent_EquipItemsFromSpawnEquipment_Patch.cs` | Patch23 — registers agent in color store + resolves clan colors |
 | `Hooks/AgentVisuals_Create_Patch.cs` | Manual patch — disables color randomness when clan colors set |
 | `Hooks/MapConversationTableau_SpawnOpponentLeader_Patch.cs` | Manual patch — conversation leader clan colors |
 | `Hooks/MapConversationTableau_SpawnOpponentBodyguard_Patch.cs` | Manual patch — conversation bodyguard clan colors |
 | `Hooks/OrderOfBattleHeroItemVM_RefreshInformation_Patch.cs` | Patch23 — pre-battle deployment screen colors |
-| `TAOM.Tests/Features/BannerColorPersistence/` | 6 test files, 33 test methods |
+| `TAOM.Tests/Features/BannerColorPersistence/` | 5 test files, 29 test methods |
 
 ## Dependencies
 
@@ -131,13 +128,12 @@ All flags default to `true` **except `EnableLayerLimitTranspiler`, which default
 | Test File | Coverage |
 |-----------|---------|
 | `BannerColorServiceTests.cs` | all `IBannerColorService` methods, enabled/disabled, unique icon color, agent visual + tableau flags |
-| `AgentColorStoreTests.cs` | register, overwrite, unregistered lookup, clear |
 | `BannerColorConfigProviderTests.cs` | valid JSON, missing file (defaults), invalid JSON (defaults), caching |
 | `BannerTripletOrderingTests.cs` | banner triplet ordering |
 | `Clan_UpdateBannerColorsAccordingToKingdom_PatchTests.cs` | null service, disabled, null instance guards |
 | `Clan_UpdateBannerColor_PatchTests.cs` | null service, disabled, null instance guards |
 
-6 files, 33 `[TestMethod]` as of 2026-09-02. Per-file counts are omitted deliberately: they drifted
+5 files, 29 `[TestMethod]` as of 2026-10-02. Per-file counts are omitted deliberately: they drifted
 for three months while the table still read "22 tests". Re-measure rather than quote.
 
 Harmony patches themselves are not unit-testable (require live game) per ADR-008.

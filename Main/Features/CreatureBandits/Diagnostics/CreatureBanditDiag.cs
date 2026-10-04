@@ -21,8 +21,8 @@ internal enum CreatureGuardKind
 /// recipe in docs/features/creature-bandits.md ("Stripping the diagnostics"), which lists every call site outside
 /// this folder.
 ///
-/// Thread rules (csharp-architecture.md): <see cref="Write"/> and anything touching the ledger's budget run on the
-/// main thread only. Any thread may call <see cref="SerialOf"/>, <see cref="RecordOf"/>, <see cref="Enqueue"/> and
+/// Thread rules (csharp-architecture.md): <see cref="TakeLine"/>, <see cref="Emit"/> and anything touching the
+/// ledger's budget run on the main thread only. Any thread may call <see cref="SerialOf"/>, <see cref="RecordOf"/>, <see cref="Enqueue"/> and
 /// the <c>Note*</c> counters, which use Interlocked and concurrent collections only; the one exception is the first
 /// weapon-guard hit per kind per mission, which writes one durable WARNING with its thread and caller stack.
 /// </summary>
@@ -88,21 +88,47 @@ internal static class CreatureBanditDiag
         if (!QueueDisabled || diagEvent.Kind == CreatureDiagEventKind.Removed) Events.Enqueue(diagEvent);
     }
 
-    /// <summary>Main thread: write a line if the budget allows it.</summary>
-    internal static void Write(int serial, string kind, string line, bool warning = false)
+    /// <summary>
+    /// Main thread: takes one line of <paramref name="kind"/> from the budget BEFORE the caller formats it. False with
+    /// no logger (the budget is untouched, as the old one-call Write did) or when the budget refuses; the refusal that first reaches
+    /// the mission cap writes the one cap WARNING here. Format the line only on true, then pass it to <see cref="Emit"/>.
+    /// </summary>
+    internal static bool TakeLine(int serial, string kind)
     {
         var logger = Logger;
-        if (logger == null) return;
+        if (logger == null) return false;
         switch (Ledger.TryTakeLine(serial, kind))
         {
             case LineVerdict.Write:
-                if (warning) logger.LogWarning(line); else logger.LogInfo(line);
-                break;
+                return true;
             case LineVerdict.CapReached:
                 logger.LogWarning(CreatureDiagFormat.Line("cap", 0f, 0, "missionCap", CreatureDiagFormat.I(MissionCap),
                     "note", "further diag lines this mission are counted, not written"));
-                break;
+                return false;
+            default:
+                return false;
         }
+    }
+
+    /// <summary>Main thread: writes a line <see cref="TakeLine"/> granted.</summary>
+    internal static void Emit(string line, bool warning = false)
+    {
+        var logger = Logger;
+        if (logger == null) return;
+        if (warning) logger.LogWarning(line); else logger.LogInfo(line);
+    }
+
+    /// <summary>
+    /// Main thread, at mission end: in a mission where no creature spawn was registered, attempted or declined, one
+    /// INFO line saying the agent callbacks were skipped (each exited on <see cref="CreatureDiagLedger.AnyRegistered"/>),
+    /// so a mission with no creature diag line is explained in the log. Its condition is the exact complement of the
+    /// summary's (<see cref="CreatureBanditDiagTicker.WriteSummary"/>), so every mission ends with one or the other.
+    /// </summary>
+    internal static void NoteMissionEnd(float now)
+    {
+        if (Ledger.AnyRegistered || Interlocked.Read(ref SpawnsAttempted) != 0 || Interlocked.Read(ref SpawnsDeclined) != 0) return;
+        Logger?.LogInfo(CreatureDiagFormat.Line("no-creatures", now, 0, "note",
+            "no creature spawn was attempted or declined this mission; every agent callback exited on one field read"));
     }
 
     /// <summary>Any thread: an engine callback site's thread, for the summary's thread census.</summary>
@@ -147,15 +173,17 @@ internal static class CreatureBanditDiag
         record.LastTargetKey = key;
         if (target == null)
         {
-            Write(record.Serial, "hunt", CreatureDiagFormat.Line("hunt-idle", time, record.Serial, "note", "no enemy to hunt"));
+            if (TakeLine(record.Serial, "hunt"))
+                Emit(CreatureDiagFormat.Line("hunt-idle", time, record.Serial, "note", "no enemy to hunt"));
             return;
         }
         record.TargetChanges++;
-        Write(record.Serial, "hunt", CreatureDiagFormat.Line("hunt-target", time, record.Serial,
-            "target", target.Character?.StringId ?? "-", "targetName", CreatureDiagFormat.Name(target.Name),
-            "targetIdx", CreatureDiagFormat.I(target.Index), "targetIsPlayer", CreatureDiagFormat.B(target.IsMainAgent),
-            "targetMounted", CreatureDiagFormat.B(target.HasMount), "dist", CreatureDiagFormat.F(distance),
-            "changes", CreatureDiagFormat.I(record.TargetChanges)));
+        if (TakeLine(record.Serial, "hunt"))
+            Emit(CreatureDiagFormat.Line("hunt-target", time, record.Serial,
+                "target", target.Character?.StringId ?? "-", "targetName", CreatureDiagFormat.Name(target.Name),
+                "targetIdx", CreatureDiagFormat.I(target.Index), "targetIsPlayer", CreatureDiagFormat.B(target.IsMainAgent),
+                "targetMounted", CreatureDiagFormat.B(target.HasMount), "dist", CreatureDiagFormat.F(distance),
+                "changes", CreatureDiagFormat.I(record.TargetChanges)));
     }
 
     /// <summary>
@@ -175,12 +203,13 @@ internal static class CreatureBanditDiag
         int enemiesInArc = inArc - alliesInArc;
         bool whiff = CreatureDiagLedger.IsWhiff(enemiesInArc, struck);
         if (whiff) record.Whiffs++;
-        Write(record.Serial, "attack", CreatureDiagFormat.Line(whiff ? "attack-whiff" : "attack", time, record.Serial,
-            "kind", kind, "clip", clip, "enemiesInArc", CreatureDiagFormat.I(enemiesInArc),
-            "alliesInArc", CreatureDiagFormat.I(alliesInArc), "struck", CreatureDiagFormat.I(struck),
-            "cap", maxTargets == int.MaxValue ? "-" : CreatureDiagFormat.I(maxTargets),
-            "velY", CreatureDiagFormat.F(velocityY), "bearing", CreatureDiagFormat.F(bearing),
-            "targetDist", CreatureDiagFormat.F(record.LastTargetDistance), "attacks", CreatureDiagFormat.I(record.AttacksFired)));
+        if (TakeLine(record.Serial, "attack"))
+            Emit(CreatureDiagFormat.Line(whiff ? "attack-whiff" : "attack", time, record.Serial,
+                "kind", kind, "clip", clip, "enemiesInArc", CreatureDiagFormat.I(enemiesInArc),
+                "alliesInArc", CreatureDiagFormat.I(alliesInArc), "struck", CreatureDiagFormat.I(struck),
+                "cap", maxTargets == int.MaxValue ? "-" : CreatureDiagFormat.I(maxTargets),
+                "velY", CreatureDiagFormat.F(velocityY), "bearing", CreatureDiagFormat.F(bearing),
+                "targetDist", CreatureDiagFormat.F(record.LastTargetDistance), "attacks", CreatureDiagFormat.I(record.AttacksFired)));
     }
 
     /// <summary>
@@ -216,13 +245,14 @@ internal static class CreatureBanditDiag
         if (key == record.LastEngageKey) return;
         record.LastEngageKey = key;
         record.LastEngageLine = time;
-        Write(record.Serial, "engage", CreatureDiagFormat.Line("engage", time, record.Serial,
-            "checks", CreatureDiagFormat.I(record.EngageChecks), "passed", CreatureDiagFormat.I(record.EngagePasses),
-            "rejRange", CreatureDiagFormat.I(record.EngageRejectRange), "rejCone", CreatureDiagFormat.I(record.EngageRejectCone),
-            "scanEmpty", CreatureDiagFormat.I(record.EngageScanEmpty), "midAttack", CreatureDiagFormat.I(record.EngageMidAttack),
-            "bestMissDist", CreatureDiagFormat.F(record.EngageBestMissDistance),
-            "bestMissAngle", CreatureDiagFormat.F(record.EngageBestMissAngle),
-            "facingSkew", CreatureDiagFormat.F(record.EngageFacingSkew)));
+        if (TakeLine(record.Serial, "engage"))
+            Emit(CreatureDiagFormat.Line("engage", time, record.Serial,
+                "checks", CreatureDiagFormat.I(record.EngageChecks), "passed", CreatureDiagFormat.I(record.EngagePasses),
+                "rejRange", CreatureDiagFormat.I(record.EngageRejectRange), "rejCone", CreatureDiagFormat.I(record.EngageRejectCone),
+                "scanEmpty", CreatureDiagFormat.I(record.EngageScanEmpty), "midAttack", CreatureDiagFormat.I(record.EngageMidAttack),
+                "bestMissDist", CreatureDiagFormat.F(record.EngageBestMissDistance),
+                "bestMissAngle", CreatureDiagFormat.F(record.EngageBestMissAngle),
+                "facingSkew", CreatureDiagFormat.F(record.EngageFacingSkew)));
     }
 
     /// <summary>Main thread (the hunt task): the tree held a creature handle whose slot changed hands.</summary>
@@ -243,9 +273,10 @@ internal static class CreatureBanditDiag
     {
         Interlocked.Increment(ref SpawnsDeclined);
         if (!MissionThreadGuard.IsOnMainThread) return;
-        Write(0, "declined", CreatureDiagFormat.Line("spawn-declined", time, 0, "troop", troopId,
-            "playerSide", CreatureDiagFormat.B(isPlayerSide), "fieldBattle", CreatureDiagFormat.B(isFieldBattle),
-            "hasCreatureItem", CreatureDiagFormat.B(hasCreatureItem), "note", "vanilla spawn: the husk on its mount"));
+        if (TakeLine(0, "declined"))
+            Emit(CreatureDiagFormat.Line("spawn-declined", time, 0, "troop", troopId,
+                "playerSide", CreatureDiagFormat.B(isPlayerSide), "fieldBattle", CreatureDiagFormat.B(isFieldBattle),
+                "hasCreatureItem", CreatureDiagFormat.B(hasCreatureItem), "note", "vanilla spawn: the husk on its mount"));
     }
 
     /// <summary>Any thread, hot: a weapon guard answered for a creature. The first per kind per mission is a WARNING.</summary>

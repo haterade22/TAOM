@@ -1,6 +1,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace TAOM.Features.CreatureBandits.Diagnostics;
 
@@ -105,6 +106,10 @@ internal sealed class CreatureDiagLedger
     // The serial, not _records.Count: ConcurrentDictionary.Count takes every lock, and the ticker's gate asks it each
     // frame in every mission. Records are only added by Register and dropped by Reset, both main-thread.
     internal int Count => _nextSerial;
+
+    /// <summary>Any thread: whether this mission has registered a creature yet. The diagnostics behavior's callbacks
+    /// exit on false before any serial lookup.</summary>
+    internal bool AnyRegistered => Volatile.Read(ref _nextSerial) > 0;
     internal int MissionLines => _missionLines;
     internal int MissionSuppressed { get; private set; }
 

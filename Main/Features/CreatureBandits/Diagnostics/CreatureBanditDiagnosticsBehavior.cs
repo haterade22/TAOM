@@ -5,10 +5,11 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.CreatureBandits.Diagnostics;
 
 /// <summary>
-/// Mission entry point of the Creature Bandits diagnostics (#692). Every callback's first statement is a serial
-/// lookup (a small concurrent map keyed by agent reference), so battles without creatures pay one lookup per event;
-/// callbacks only capture and queue (<see cref="CreatureDiagCapture"/>), and the main-thread tick logs
-/// (<see cref="CreatureBanditDiagTicker"/>). Per-mission state resets in OnCreated and after the summary. A throw in
+/// Mission entry point of the Creature Bandits diagnostics (#692). Every agent callback first reads whether the mission
+/// has registered a creature (<see cref="CreatureDiagLedger.AnyRegistered"/>), so a mission without creatures pays one
+/// field read per event, then looks up serials (a small concurrent map keyed by agent reference); a mission with no
+/// creature spawn attempted or declined ends with one <c>no-creatures</c> line saying so. Callbacks only capture and queue (<see cref="CreatureDiagCapture"/>), and
+/// the main-thread tick logs (<see cref="CreatureBanditDiagTicker"/>). Per-mission state resets in OnCreated and after the summary. A throw in
 /// the tick disables the diagnostics for the rest of the mission with one ERROR (the MissionPerf heartbeat's rule);
 /// the queue then keeps only removals, which the summary applies without writing lines.
 /// Temporary, strip after sign-off with the rest of the Diagnostics folder and its module line.
@@ -44,6 +45,7 @@ public class CreatureBanditDiagnosticsBehavior : MissionLogic
     public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow,
         in AttackCollisionData attackCollisionData)
     {
+        if (!CreatureBanditDiag.Ledger.AnyRegistered) return;
         int victim = CreatureBanditDiag.SerialOf(affectedAgent);
         int attacker = CreatureBanditDiag.SerialOf(affectorAgent);
         if (victim == 0 && attacker == 0) return;
@@ -52,6 +54,7 @@ public class CreatureBanditDiagnosticsBehavior : MissionLogic
 
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
     {
+        if (!CreatureBanditDiag.Ledger.AnyRegistered) return;
         int victim = CreatureBanditDiag.SerialOf(affectedAgent);
         int killer = CreatureBanditDiag.SerialOf(affectorAgent);
         if (victim == 0 && killer == 0) return;
@@ -60,6 +63,7 @@ public class CreatureBanditDiagnosticsBehavior : MissionLogic
 
     public override void OnAgentDeleted(Agent affectedAgent)
     {
+        if (!CreatureBanditDiag.Ledger.AnyRegistered) return;
         int serial = CreatureBanditDiag.SerialOf(affectedAgent);
         if (serial == 0) return;
         CreatureDiagCapture.Simple(CreatureDiagEventKind.Deleted, serial, "OnAgentDeleted");
@@ -68,18 +72,21 @@ public class CreatureBanditDiagnosticsBehavior : MissionLogic
 
     public override void OnAgentPanicked(Agent affectedAgent)
     {
+        if (!CreatureBanditDiag.Ledger.AnyRegistered) return;
         int serial = CreatureBanditDiag.SerialOf(affectedAgent);
         if (serial > 0) CreatureDiagCapture.Simple(CreatureDiagEventKind.Panicked, serial, "OnAgentPanicked");
     }
 
     public override void OnAgentFleeing(Agent affectedAgent)
     {
+        if (!CreatureBanditDiag.Ledger.AnyRegistered) return;
         int serial = CreatureBanditDiag.SerialOf(affectedAgent);
         if (serial > 0) CreatureDiagCapture.Simple(CreatureDiagEventKind.Fled, serial, "OnAgentFleeing");
     }
 
     public override void OnAgentMount(Agent agent)
     {
+        if (!CreatureBanditDiag.Ledger.AnyRegistered) return;
         // Keyed on the mount's reference, which still resolves once RiderAgent is set (the fingerprint no longer does).
         int serial = CreatureBanditDiag.SerialOf(agent.MountAgent);
         if (serial > 0) CreatureDiagCapture.Mounted(serial, agent);
@@ -87,6 +94,7 @@ public class CreatureBanditDiagnosticsBehavior : MissionLogic
 
     public override void OnAgentAlarmedStateChanged(Agent agent, Agent.AIStateFlag flag)
     {
+        if (!CreatureBanditDiag.Ledger.AnyRegistered) return;
         int serial = CreatureBanditDiag.SerialOf(agent);
         if (serial > 0) CreatureDiagCapture.Simple(CreatureDiagEventKind.Alarmed, serial, "OnAgentAlarmedStateChanged", flag.ToString());
     }
@@ -112,6 +120,7 @@ public class CreatureBanditDiagnosticsBehavior : MissionLogic
         try
         {
             _ticker.WriteSummary(Mission, tickerFailed: _disabled, phase);
+            if (phase == "end") CreatureBanditDiag.NoteMissionEnd(Mission.CurrentTime);
         }
         catch (Exception e)
         {

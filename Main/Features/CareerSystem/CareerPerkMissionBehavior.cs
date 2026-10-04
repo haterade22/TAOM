@@ -205,14 +205,29 @@ public class CareerPerkMissionBehavior : MissionBehavior
         catch (Exception ex) { _logger?.LogWarning($"CareerSystem: OnEndMission CareerAbilityBuffTracker.ClearAll() threw — {ex.Message}"); }
 
         // #613: the [CareerPerks] dedupe lives on the singleton stat service; without this the next
-        // battle's spawn logs nothing when the values match the last one.
-        try { _agentStats.ResetDiagnostics(); }
-        catch (Exception ex) { _logger?.LogWarning($"CareerSystem: OnEndMission ResetDiagnostics() threw: {ex.Message}"); }
+        // battle's spawn logs nothing when the values match the last one. It also writes the mission's hit summary.
+        ResetStatDiagnostics("OnEndMission");
 
         _logger?.LogInfo("CareerSystem: Mission ended — clearing abilities");
         _loggedMissionStart = false;
         _deferred.Clear();
         _activeContexts.Clear();
+    }
+
+    // Plan 030: OnEndMission runs only through Mission.EndMission. A mission state finalised without it (the application
+    // shutting down, if a window close reaches CoreManaged.Finalize, unverified; or a mod that loads a save mid-mission:
+    // GameStateManager.CleanStates) removes its behaviors straight away, so the hit summary is written here too; after
+    // a normal end the tally is already empty and this writes nothing.
+    public override void OnRemoveBehavior()
+    {
+        ResetStatDiagnostics("OnRemoveBehavior");
+        base.OnRemoveBehavior();
+    }
+
+    private void ResetStatDiagnostics(string phase)
+    {
+        try { _agentStats.ResetDiagnostics(); }
+        catch (Exception ex) { _logger?.LogWarning($"CareerSystem: {phase} ResetDiagnostics() threw: {ex.Message}"); }
     }
 
     public override void OnAgentDeleted(Agent affectedAgent)

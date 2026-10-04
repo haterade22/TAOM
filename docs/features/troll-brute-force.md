@@ -61,7 +61,8 @@ whatever the Monster), so trolls stood inside each other. Once trolls are a tent
 which vanilla spaces a formation for horses, the formation is spaced for its widest troll: the Monster's measured
 shoulder width (`ShoulderWidthByMonster`: cave troll 0.75, hill troll 2.43, from the LOD0 meshes) times
 `AgentScale`, about 1.43 m and 2.7 m, capped at 4 m. `TrollFormationSpacingTracker` counts the formations twice a
-second on the main thread and writes the width to `TrollFormationSpacingStore`, a concurrent map keyed by reference
+second on the main thread, from the first tick after the mission builds a troll (`TrollPresence`; a mission
+with no troll never scans), and writes the width to `TrollFormationSpacingStore`, a concurrent map keyed by reference
 through `ReferenceIdentity` (`Formation.GetHashCode` reads its Team, which is null on a layout copy); the
 `Formation.UnitDiameter` postfix reads it from any thread. A changed width calls `Formation.OnUnitAddedOrRemoved()`
 and `Arrangement.OnFormationFrameChanged(updateCachedOrderedLocalPositions: true)`, which rebuilds the cached slot
@@ -75,6 +76,20 @@ because the shield finalizer took `__originalMethod` until plan 034, which added
 per-unit call (a stand-in finalizer of the new shape added about 3.5 ns per call in plan 034's Debug benchmark, 5.4 against 1.9 ns; the exclusion stands). MixedFormations spaces its
 slots by the same width through `IFormationAdapter.UnitDiameter`. Registry:
 [Patch92](../reference/harmony-patch-registry.md).
+
+**Timing (plan 030, Codex review).** The tracker's 0.5 second stride starts at its first tick, no longer at the
+mission's first tick. The first scan after the first troll is built (a reinforcement, a deployment spawn) comes on the
+next tick, where the old clock would have run it up to 0.5 s later: sooner, never later. Every later scan keeps the new
+phase, so a re-space that falls due after that can land up to about 0.5 s sooner or later than before. That covers a
+formation that reaches the 10% troll share only once more trolls are built, and the formation of a troll built after the
+first one. Example: the old clock scans at 0.0, 0.5, 1.0, 1.5 and 2.0 s. The first troll is built at 1.2 s, so the new
+scans run at about 1.2, 1.7 and 2.2 s. The first troll is counted about 0.3 s sooner, but a troll that brings another
+formation to the share at 1.75 s gets that formation re-spaced at about 2.2 s, not about 2.0 s. Either way it is a small
+change to when real formations re-space and, during deployment, teleport their units, not only to when a line is logged.
+The width formula and the positions it produces are unchanged, and a troll present on the mission's first tick sees the
+old timing (the latch is set before the same tick's tracker call). Restoring the old phase would mean advancing the
+deadline while the latch is closed; that was left out because it would only delay the first response by under half a
+second. The clip trace shares the latch and the stride and only logs.
 
 ## Configuration
 
@@ -110,10 +125,11 @@ troll's set is missing, or when a set has no clip for the action (a reinstall dr
 |---|---|
 | `Main/Features/TrollBruteForce/TrollBruteForceConfig.cs` | Constants, Monster ids, `ActionSetsByMonster` |
 | `Main/Features/TrollBruteForce/ITrollBruteForceService.cs`, `TrollBruteForceService.cs` | Pure decisions |
-| `Main/Features/TrollBruteForce/TrollBruteForceMissionBehavior.cs` | Attaches the trees; start-up drift guard; ticks the spacing tracker and the clip trace |
-| `Main/Features/TrollBruteForce/TrollClipTrace.cs`, `TrollClipLog.cs` | The temporary `[TrollClips]` trace for the animation tuning pass: the trace reads each troll's channel 0 and 1 actions every tick and the action set's bound clip when they change; the pure log formats one line per Monster and action. To be deleted, with `TrollClipLogTests`, once the tuning pass ends |
+| `Main/Features/TrollBruteForce/TrollBruteForceMissionBehavior.cs` | Attaches the trees; start-up drift guard; ticks the spacing tracker and the clip trace once the mission has built a troll (`TrollPresence`) |
+| `Main/Features/TrollBruteForce/TrollClipTrace.cs`, `TrollClipLog.cs` | The temporary `[TrollClips]` trace for the animation tuning pass: the trace reads each troll's channel 0 and 1 actions every tick and the action set's bound clip when they change; the pure log formats one line per Monster and action. To be deleted, with `TrollClipLogTests`, once the tuning pass ends. Like the spacing tracker, it runs only once the mission has built a troll. |
 | `Main/Features/TrollBruteForce/TrollFormationSpacingTracker.cs` | Counts trolls per formation, stores the width, rebuilds the slots, replays the mass-transfer tail during deployment |
 | `Main/Features/TrollBruteForce/TrollFormationSpacingStore.cs` | The per-formation width (reference-keyed concurrent map) and the thread-static layout scope |
+| `Main/Features/TrollBruteForce/TrollPresence.cs` | The per-mission latch: set when a Brute Force troll is built, it gates the spacing tracker and the clip trace |
 | `Main/Features/TrollBruteForce/Hooks/Patch92_TrollFormationSpacing.cs` | `UnitDiameter` postfix and the simulation-copy scope |
 | `Main/Features/TrollBruteForce/TrollBruteForceBehaviorTree.cs`, `BehaviorTreeElements/` | The tree, decorator and task |
 | `Main/Features/TrollBruteForce/Hooks/BruteForceRing.cs` | Delivers the ring; draws the smash's target cap (`MBRandom.RandomInt`) and hits the victims `NearestRingVictims` picks |
@@ -128,8 +144,9 @@ victims than the cap, ties in scan order, none eligible, a cap below 1, and NaN,
 copy borrowing the scoped formation's width, the scope nesting and staying per thread), `Patch92BindingTests` (the
 four layout entry points resolve against the installed engine, and `Formation.Team` is still a public field),
 `TrollBruteForceConfigTests` (`RingTargets_AtLeastOne_MinNoMoreThanMax_AndAtMostFive` among them), `TrollClipLogTests`
-(one line per Monster and action, troll against vanilla clips, the melee-table family tag, a mission clear), and
-`TrollBruteForceWiringTests` (`LiveInstall`: each Monster names its
+(one line per Monster and action, troll against vanilla clips, the melee-table family tag, a mission clear),
+`TrollPresenceTests` (the latch: unset before any troll, set by either battle troll, kept after, cleared at mission
+end, and its two log lines pinned literally), and `TrollBruteForceWiringTests` (`LiveInstall`: each Monster names its
 set, the action is declared once and untyped, each set binds it once to its own troll's clip, the cave troll keeps
 the human eye height). The cap's draw itself (`RandomInt` with the exclusive `+ 1`) is boundary code, checked in
 game by the ring line below.
@@ -142,6 +159,13 @@ skipped (body size X).` Pass: Hit <= Cap <= 5 on every line (Cap 0 means no ring
 `ImpactFraction`, and X the troll's body size. `[TrollSpacing]` lines give each
 troll formation's troll count and its unit width (`vanilla -> new m`, or `back to vanilla`); the trolls should
 stand apart in the line, already on the deployment screen in a battle that opens on one.
+
+The troll gate (`TrollPresence`) logs two INFO lines, at most one each per mission. When the first Brute Force
+troll is built (the first tick's scan or a later `OnAgentBuild`):
+`[TrollBruteForce] First Brute Force troll built ('hill_troll'): formation spacing and clip trace start ticking`,
+naming the Monster that set it. At mission end, when no troll was built:
+`[TrollBruteForce] No Brute Force troll built this mission: formation spacing and clip trace never ran`, so a
+battle with no `[TrollSpacing]` or `[TrollClips]` line says why. `TrollPresenceTests` pins both.
 
 `[TrollClips] <monster>: <action> -> <clip or -> (<troll clip|vanilla clip|no clip>[, melee-table family])` is
 logged once per Monster and action a mission (the 15:40 build printed `, melee table`). It names the clip the

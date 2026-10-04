@@ -1,3 +1,5 @@
+using System.Linq;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TaleWorlds.MountAndBlade;
@@ -321,6 +323,259 @@ public class CareerAgentStatServiceTests
         _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 50f);
 
         _logger.DidNotReceive().LogDebug(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_SameHeroAndTerms_LogsOncePerMission()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee | AttackTypeMask.Cut, 40f);
+
+        _logger.Received(1).LogDebug(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_TroopDamageOnManyHits_ScalesEveryHitButLogsOnce()
+    {
+        // The case #613 made hot: every blow by a non-hero troop whose party leader holds a TroopDamage pip.
+        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(0.10f);
+
+        for (int i = 0; i < 50; i++)
+            Assert.AreEqual(55f, _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f), 0.01f);
+
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("lord1") && s.Contains("TroopDamage")));
+    }
+
+    [TestMethod]
+    public void CalculateDamageReduction_SameHeroAndTerms_LogsOncePerMission()
+    {
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee | AttackTypeMask.Blunt).Returns(0.10f);
+
+        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 40f);
+        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 30f);
+
+        _logger.Received(1).LogDebug(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void CalculateDamageReduction_AllyBuffOnTwoAgents_LogsOnce_NeverKeyedOnTheAgentIndex()
+    {
+        // Agent.Index recycles, so the ally-buff-only subject shares one key; the line names the first agent.
+        CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { DamageReductionBonus = 0.20f });
+        CareerAbilityBuffTracker.SetAllyBuff(43, new ActiveBuffs { DamageReductionBonus = 0.20f });
+
+        Assert.AreEqual(40f, _sut.CalculateDamageReduction(null, 42, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f), 0.01f);
+        Assert.AreEqual(40f, _sut.CalculateDamageReduction(null, 43, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f), 0.01f);
+
+        _logger.Received(1).LogDebug(Arg.Any<string>());
+        _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("'42'") && s.Contains("ally buff reduction")));
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_NewMaskOrSubject_LogsAgain()
+    {
+        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(0.10f);
+        _passives.GetPassiveMagnitude("lord2", PassiveEffectType.TroopDamage).Returns(0.10f);
+
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Ranged | AttackTypeMask.Pierce, 50f);
+        _sut.CalculateDamageAmplification(null, "lord2", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+
+        _logger.Received(3).LogDebug(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ResetDiagnostics_ClearsTheHitDedupe_SoTheNextBattleLogsAgain()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 50f);
+
+        _sut.ResetDiagnostics();
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 50f);
+
+        _logger.Received(2).LogDebug(Arg.Any<string>());
+    }
+
+    // Plan 030 amendment (DECISIONS D6): the hit lines after the first are not written, so the mission-end teardown writes
+    // an INFO aggregate per combination (every hit counted, the multiplier's min, average and max, the damage totals).
+    [TestMethod]
+    public void ResetDiagnostics_AfterManyHits_WritesOneSummaryPerCombination()
+    {
+        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(0.10f);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 40f);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 10f);
+
+        _sut.ResetDiagnostics();
+
+        Received.InOrder(() =>
+        {
+            _logger.LogInfo("[CareerPerks] hit summary for this mission: 1 combination(s), 3 hit(s)");
+            _logger.LogInfo("[CareerPerks] hit amp summary for 'lord1' [Melee, Cut] (TroopDamage): hits=3 multiplier min=1.100 avg=1.100 max=1.100 damage 100.0 -> 110.0");
+        });
+        _logger.Received(2).LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ResetDiagnostics_BuffChangedMidBattle_SummaryShowsTheMultiplierRange()
+    {
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee | AttackTypeMask.Blunt).Returns(0.10f);
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { DamageReductionBonus = 0.20f });
+        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 100f);
+        CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { DamageReductionBonus = 0.50f });
+        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 100f);
+
+        _sut.ResetDiagnostics();
+
+        _logger.Received(1).LogInfo("[CareerPerks] hit reduction summary for 'hero1' [Melee, Blunt] (Resistance, self buff reduction): hits=2 multiplier min=0.450 avg=0.585 max=0.720 damage 200.0 -> 117.0");
+    }
+
+    [TestMethod]
+    public void ResetDiagnostics_AllyBuffOnlyHits_SummaryNamesTheSharedSubject()
+    {
+        CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { DamageReductionBonus = 0.20f });
+        CareerAbilityBuffTracker.SetAllyBuff(43, new ActiveBuffs { DamageReductionBonus = 0.20f });
+        _sut.CalculateDamageReduction(null, 42, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageReduction(null, 43, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+
+        _sut.ResetDiagnostics();
+
+        _logger.Received(1).LogInfo("[CareerPerks] hit reduction summary for '(ally-buffed agents)' [Melee, Cut] (ally buff reduction): hits=2 multiplier min=0.800 avg=0.800 max=0.800 damage 100.0 -> 80.0");
+    }
+
+    [TestMethod]
+    public void ResetDiagnostics_NonFiniteMagnitude_CountsTheHitWithoutPoisoningTheRange()
+    {
+        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(float.NaN);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Ranged | AttackTypeMask.Pierce, 50f);
+
+        _sut.ResetDiagnostics();
+
+        _logger.Received(1).LogInfo("[CareerPerks] hit amp summary for 'lord1' [Ranged, Pierce] (TroopDamage): hits=1 multiplier n/a nonFinite=1 damage n/a");
+    }
+
+    // A hit whose base or result is not finite is counted in nonFinite and kept out of every number, so one bad hit
+    // cannot turn the combination's damage totals into NaN for the rest of the mission (D6 rule 4).
+    [TestMethod]
+    public void ResetDiagnostics_NonFiniteDamage_CountsTheHitWithoutPoisoningTheTotals()
+    {
+        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(0.10f);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, float.NaN);
+        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 10f);
+
+        _sut.ResetDiagnostics();
+
+        _logger.Received(1).LogInfo("[CareerPerks] hit amp summary for 'lord1' [Melee, Cut] (TroopDamage): hits=3 multiplier min=1.100 avg=1.100 max=1.100 nonFinite=1 damage 60.0 -> 66.0");
+    }
+
+    // The first hit of each combination is the one line written in full; its text is the pre-plan-030 format.
+    [TestMethod]
+    public void CalculateDamageAmplification_FirstHit_WritesTheUnchangedDebugLine()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee | AttackTypeMask.Cut).Returns(0.20f);
+
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+
+        _logger.Received(1).LogDebug("[CareerPerks] hit amp for 'hero1' [Melee, Cut]: 50.0 -> 66.0 (ArmorPenetration +10% Damage +20%)");
+    }
+
+    [TestMethod]
+    public void CalculateDamageReduction_FirstHit_WritesTheUnchangedDebugLine()
+    {
+        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopResistance).Returns(0.10f);
+        CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { DamageReductionBonus = 0.50f });
+
+        _sut.CalculateDamageReduction(null, 42, "lord1", AttackTypeMask.Melee | AttackTypeMask.Blunt, 40f);
+
+        _logger.Received(1).LogDebug("[CareerPerks] hit reduction for 'lord1' [Melee, Blunt]: 40.0 -> 18.0 (TroopResistance +10% ally buff reduction +50%)");
+    }
+
+    [TestMethod]
+    public void ResetDiagnostics_NoHitsSinceTheLastReset_WritesNoSummary()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 50f);
+        _sut.ResetDiagnostics();
+        _logger.ClearReceivedCalls();
+
+        _sut.ResetDiagnostics();
+
+        _logger.DidNotReceive().LogInfo(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ResetDiagnostics_TwoCombinations_AmpLinesBeforeReductionLines()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee).Returns(0.10f);
+        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee, 10f);
+        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 10f);
+
+        _sut.ResetDiagnostics();
+
+        Received.InOrder(() =>
+        {
+            _logger.LogInfo("[CareerPerks] hit summary for this mission: 2 combination(s), 2 hit(s)");
+            _logger.LogInfo("[CareerPerks] hit amp summary for 'hero1' [Melee] (ArmorPenetration): hits=1 multiplier min=1.100 avg=1.100 max=1.100 damage 10.0 -> 11.0");
+            _logger.LogInfo("[CareerPerks] hit reduction summary for 'hero1' [Melee] (Resistance): hits=1 multiplier min=0.900 avg=0.900 max=0.900 damage 10.0 -> 9.0");
+        });
+    }
+
+    // Codex review of plan 030 (2026-10-03): the set of terms that fired is part of a combination's key, so a hit that
+    // gains a term for the same subject and mask is a new combination, with its own first-hit line and summary row.
+    [TestMethod]
+    public void CalculateDamageAmplification_NewTermSetForTheSameSubjectAndMask_LogsAgainAndSummarizesApart()
+    {
+        var mask = AttackTypeMask.Melee | AttackTypeMask.Cut;
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+        _sut.CalculateDamageAmplification("hero1", null, mask, 50f);
+        _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, mask).Returns(0.20f);
+        _sut.CalculateDamageAmplification("hero1", null, mask, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, mask, 50f);
+
+        _logger.Received(2).LogDebug(Arg.Any<string>());
+        _logger.Received(1).LogDebug("[CareerPerks] hit amp for 'hero1' [Melee, Cut]: 50.0 -> 55.0 (ArmorPenetration +10%)");
+        _logger.Received(1).LogDebug("[CareerPerks] hit amp for 'hero1' [Melee, Cut]: 50.0 -> 66.0 (ArmorPenetration +10% Damage +20%)");
+
+        _sut.ResetDiagnostics();
+
+        Received.InOrder(() =>
+        {
+            _logger.LogInfo("[CareerPerks] hit summary for this mission: 2 combination(s), 3 hit(s)");
+            _logger.LogInfo("[CareerPerks] hit amp summary for 'hero1' [Melee, Cut] (ArmorPenetration): hits=1 multiplier min=1.100 avg=1.100 max=1.100 damage 50.0 -> 55.0");
+            _logger.LogInfo("[CareerPerks] hit amp summary for 'hero1' [Melee, Cut] (ArmorPenetration, Damage): hits=2 multiplier min=1.320 avg=1.320 max=1.320 damage 100.0 -> 132.0");
+        });
+    }
+
+    // Codex review of plan 030 (2026-10-03): the damage path runs on whichever thread native raises the hit, so the tally
+    // is guarded by _logGate. Ally-buff-only hits keep the per-hit work to the tally itself, so a missing lock would lose
+    // counts or log the first hit twice. Every hit must be counted and the first-hit line written exactly once.
+    [TestMethod]
+    public void CalculateDamageReduction_HitsFromManyThreads_CountsEveryHitAndLogsTheFirstOnce()
+    {
+        const int threads = 8, hitsPerThread = 5000;
+        CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { DamageReductionBonus = 0.20f });
+        using var go = new ManualResetEventSlim(false);
+        var workers = Enumerable.Range(0, threads).Select(_ => new Thread(() =>
+        {
+            go.Wait();
+            for (int i = 0; i < hitsPerThread; i++)
+                _sut.CalculateDamageReduction(null, 42, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 100f);
+        })).ToList();
+        workers.ForEach(t => t.Start());
+        go.Set();
+        workers.ForEach(t => t.Join());
+
+        _logger.Received(1).LogDebug(Arg.Any<string>());
+        _sut.ResetDiagnostics();
+
+        _logger.Received(1).LogInfo("[CareerPerks] hit summary for this mission: 1 combination(s), 40000 hit(s)");
+        _logger.Received(1).LogInfo("[CareerPerks] hit reduction summary for '(ally-buffed agents)' [Melee, Cut] (ally buff reduction): hits=40000 multiplier min=0.800 avg=0.800 max=0.800 damage 4000000.0 -> 3200000.0");
     }
 
     // ──────────────────────────────────────────────────────────────────────────

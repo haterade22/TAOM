@@ -114,7 +114,15 @@ troop needs, in order, without a formation, and then makes it an enemy the engin
 - **Diagnostics (temporary).** `Diagnostics/` logs every creature from spawn to summary under
   `[CreatureBandits][diag]`: engine callbacks are captured on any thread and queued, and a main-thread ticker
   writes the lines under a budget (25 per creature per kind, 1,500 per mission; deaths, backstops, panics,
-  flights, mounts and the side counts are exempt from the mission cap, since the creature count bounds them). The
+  flights, mounts and the side counts are exempt from the mission cap, since the creature count bounds them). A
+  caller takes its line from the budget before it formats it, so a refused line costs no string (the event lines'
+  `thread=` label included, built inside the granted branch); refusals are still
+  counted (`suppressed` in the snap line, `suppressedLines` per creature in the summary). A mission (any
+  mission, not only a battle) in which no creature spawn was attempted or declined skips every agent callback and
+  ends with one INFO line,
+  `[CreatureBandits][diag] no-creatures t=312.40 note=no creature spawn was attempted or declined this mission; every agent callback exited on one field read`
+  (`t` is the mission time at teardown). Its condition is the complement of the summary's, so a mission ends with
+  the summary or this line, never both: a declined creature troop is reported by the summary's `declined=`. The
   roadmap's "In-game order" lists which line answers which playtest question. See "Stripping the diagnostics".
 
 ### Component Diagram
@@ -237,7 +245,14 @@ template and culture.
   gate, the prisoner rule itself, the troll spawner and both-clan seams (no parley, looter cap, no join, freed
   prisoners), the out-of-sight spawn and the switch defaults.
 - `TAOM.Tests/Features/CreatureBandits/CreatureDiagFormatTests.cs` and `CreatureDiagLedgerTests.cs`: the log line
-  format, the line budget and its exemptions, and the stuck, contact-stall, whiff, engage and side-stall checks.
+  format, the line budget and its exemptions, `AnyRegistered` (the callbacks' no-creature gate), and the stuck,
+  contact-stall, whiff, engage and side-stall checks.
+- `TAOM.Tests/Features/CreatureBandits/CreatureBanditDiagTests.cs` (`RequiresGame`): `TakeLine` takes the budget
+  before a line is formatted (no logger, within budget, the one cap WARNING; the per-creature cap refuses without a
+  WARNING and counts `suppressedLines`), `Emit` routes by level, the
+  `no-creatures` line is written, literally, only when no creature spawn was registered, attempted or declined, and
+  `WriteEvent` allocates nothing for any event kind the budget refuses (read from
+  `GC.GetAllocatedBytesForCurrentThread`) while a granted line still ends with `thread=<id>/main` or `/off`.
 - `TAOM.Tests/Features/DevConsole/MissionSpawnOriginTests.cs`: console spawns get the right origin in Custom Battle
   and in the campaign.
 - `TAOM.Tests/Features/CreatureBandits/CreatureWeaponStateScopeTests.cs`: the one-shot creation scope. The rules
@@ -268,7 +283,9 @@ template and culture.
 - The hunt walks the hostile teams' active agents about four times a second per creature, allocation-free.
 - `CreatureBanditDamage` costs a creature victim one tuning read per hit; every other victim exits at one field
   read.
-- The diagnostics are budgeted (see above) and write nothing per frame.
+- The diagnostics are budgeted (see above), take a line from the budget before formatting it
+  (`CreatureBanditDiag.TakeLine`, then `Emit`), and write nothing per frame; in a mission with no creature every
+  agent callback exits on one field read (`CreatureDiagLedger.AnyRegistered`).
 
 ## In-game checklist (#694)
 

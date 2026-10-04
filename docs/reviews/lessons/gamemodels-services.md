@@ -952,3 +952,9 @@ because a bounds check does not look like a decision.
 - **Prevent:** before indexing with a value derived from an engine float, write the check as a positive
   requirement (`if (!(c >= 0 && c < n)) return`), and add a NaN test per lookup.
 - **Source:** `docs/reviews/rca-realm-borders-2026-09-30.md` finding 3.
+
+### A second check on the same engine float uses the same positive polarity as the first (plan 030, 2026-10-02)
+`MissionDiagnosticBehavior` gated its census window on `_actionSetWindowSecondsLeft > 0f` and closed it on `<= 0f` two lines later. A NaN frame time makes the remainder NaN, which fails both, so the window stopped without its "census closed" summary. Another instance of the NaN-gate class this file already counts.
+- **Why missed:** the close check read as the natural "ran out" test and sat beside two correct positive checks on the same field.
+- **Prevent:** when a field is gated positively in one place (`x > 0f`), write every other decision on it as the negation of that requirement (`!(x > 0f)`), never as the complementary comparison, and pin the NaN case in a test.
+- **Source:** `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` R3.

@@ -54,7 +54,7 @@ TAOM.Features.CompanionTactics/
 │   ├── UI/OOBButtonsVM                                   (Save/Load/Delete inquiry chain; Assign Heroes command)
 │   ├── Models/HoNFormationPreset                          ([SaveableField] BaseId 726900601 / class 101)
 │   ├── Models/FormationPresetSaveableTypeDefiner
-│   └── Hooks/                                             (5 Harmony patches)
+│   └── Hooks/                                             (4 Harmony patches)
 │       FormationPresetCampaignBehavior                   (try/catch SyncData → degrade to empty on collision)
 │
 └── BattleActionBar/                ← per-mission context bar
@@ -146,7 +146,6 @@ The overlay's Assign Heroes button places the player's team heroes as captains o
 | `Main/Features/CompanionTactics/FormationPresets/OOBCaptainAutoAssigner.cs` | Auto-Assign boundary: builds open slots and candidates from the live `OrderOfBattleVM`, applies `PlanCaptains` through vanilla's select-then-accept path. Recheck on every engine bump |
 | `Main/Features/CompanionTactics/FormationPresets/OOBOverlayService.cs` | Cached-FieldInfo reflection on `_dataSource`, `_isActive`; `GauntletLayer` lifecycle |
 | `Main/Features/CompanionTactics/FormationPresets/Hooks/FormationPresetCampaignBehavior.cs` | `SyncData` with try/catch — guards the LOAD/ref path only (NOT the off-thread save write); degrades to empty on BaseId collision |
-| `Main/Features/CompanionTactics/FormationPresets/Hooks/Patch35_Mission_OnTick.cs` | **HOT PATH** — toggle check + lazy-cached service call, zero allocations |
 | `Main/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs` | MissionView; field-battle-only `GauntletLayer` attach + 0.5s refresh + 1–9 hotkey input |
 | `Main/Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs` | Implements `CancelStanceOnMove`. Belongs to shared `Patch_MissionTime_SetMovementOrder` category (applied once from `OnMissionBehaviorInitialize` because `MovementOrder.cctor` reads `Mission.Current.CurrentTime`). |
 | `Main/Adapters/{I,}BattleEquipmentSnapshot.cs` | Equipment value-object snapshot (no sealed `Equipment` leak) |
@@ -192,7 +191,6 @@ The overlay's Assign Heroes button places the player's team heroes as captains o
 
 ## Performance
 
-- `Patch35_Mission_OnTick` is on the engine-tick hot path (every frame). Body is: lazy-cached `??=` settings provider read + early-return; **zero allocations, no LINQ, no closures**. Per AGENTS.md "Per-tick allocations" rule.
 - `OOBOverlayService` caches `FieldInfo` once via `EnsureInitialized()`; no reflection in subsequent ticks.
 - `RoleTooltipDecorator` caches `PropertyInfo` / `FieldInfo` in readonly fields at construction; no reflection in postfix bodies.
 - `CompanionRoleService._cache` keyed by Hero StringId + 64-bit equipment signature; cache miss recomputes role and updates entry. **Note: cache is never explicitly cleared on hero death/removal** — see "Known limitations" below.

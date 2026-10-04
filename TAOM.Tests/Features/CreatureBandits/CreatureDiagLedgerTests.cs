@@ -92,6 +92,21 @@ public class CreatureDiagLedgerTests
     }
 
     [TestMethod]
+    public void AnyRegistered_FalseUntilACreatureRegisters_AndAgainAfterReset()
+    {
+        // The diagnostics behavior's agent callbacks exit on this before any serial lookup, so a mission with no
+        // creature pays one field read per hit, removal or alarm.
+        var ledger = new CreatureDiagLedger(perCreatureCap: 5, missionCap: 100);
+        Assert.IsFalse(ledger.AnyRegistered);
+
+        ledger.Register("a", 0f, 1);
+        Assert.IsTrue(ledger.AnyRegistered);
+
+        ledger.Reset();
+        Assert.IsFalse(ledger.AnyRegistered);
+    }
+
+    [TestMethod]
     public void HpBand_SplitsAtQuarters_AndMarksBadInputs()
     {
         Assert.AreEqual(4, CreatureDiagLedger.HpBand(100f, 100f));

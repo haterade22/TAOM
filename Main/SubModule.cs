@@ -632,9 +632,7 @@ public class SubModule : MBSubModuleBase
         PartyCharacterVM_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         ClanPartyItemVM_GetCharacterCode_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         CampaignSceneNotificationHelper_CreateNotificationCharacter_Transpiler.Initialize(bannerColorService);
-        var agentColorStore = IoC.Resolve<IAgentColorStore>();
-        Mission_SpawnAgent_Patch.Initialize(bannerColorService, bannerHeroAdapter, agentColorStore);
-        Agent_EquipItemsFromSpawnEquipment_Patch.Initialize(bannerColorService, bannerHeroAdapter, agentColorStore);
+        Mission_SpawnAgent_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         AgentVisuals_Create_Patch.Initialize(bannerColorService);
         MapConversationTableau_SpawnOpponentLeader_Patch.Initialize(bannerColorService, bannerHeroAdapter);
         MapConversationTableau_SpawnOpponentBodyguard_Patch.Initialize(bannerColorService, bannerHeroAdapter);
@@ -2174,10 +2172,6 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IGraphicsOptionsAdapter>(),
             IoC.Resolve<IModLogger>()));
         AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
-
-        var colorStore = IoC.Resolve<IAgentColorStore>();
-        if (colorStore != null)
-            AddTaomBehavior(new AgentColorStoreCleanupBehavior(colorStore));
 
         // Feature modules' mission behaviors: after the feature behaviors above, before the kernel tail
         // below (MissionDiagnostic, BattleLoadPhase, the CrashReport dev trigger, CareerPerk).

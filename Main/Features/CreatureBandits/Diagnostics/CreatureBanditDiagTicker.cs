@@ -118,57 +118,71 @@ internal sealed class CreatureBanditDiagTicker
         record.Stuck = false;
     }
 
-    private static void WriteEvent(in CreatureDiagEvent e, CreatureDiagRecord? record)
+    /// <summary>
+    /// Writes the event's line when the budget grants one. Every line is built inside its granted branch, the thread
+    /// label included, so a refused event costs no string (internal for the allocation test).
+    /// </summary>
+    internal static void WriteEvent(in CreatureDiagEvent e, CreatureDiagRecord? record)
     {
-        string thread = I(e.ThreadId) + (e.OnMain ? "/main" : "/off");
         switch (e.Kind)
         {
             case CreatureDiagEventKind.HitTaken:
-                CreatureBanditDiag.Write(e.Serial, "hit-taken", Line("hit-taken", e.Time, e.Serial,
-                    "by", e.OtherTroop, "byName", Name(e.OtherName), "byIdx", I(e.OtherIndex),
-                    "byPlayer", B(e.ByPlayer), "byMount", B(e.OtherIsMount), "aimed", B(e.Aimed), "missile", B(e.Missile),
-                    "charge", B(e.Charge), "weaponClass", I(e.WeaponClass), "dmg", I(e.Damage),
-                    "blocked", B(e.Blocked), "hpAfter", F(e.HealthAfter), "thread", thread));
+                if (CreatureBanditDiag.TakeLine(e.Serial, "hit-taken"))
+                    CreatureBanditDiag.Emit(Line("hit-taken", e.Time, e.Serial,
+                        "by", e.OtherTroop, "byName", Name(e.OtherName), "byIdx", I(e.OtherIndex),
+                        "byPlayer", B(e.ByPlayer), "byMount", B(e.OtherIsMount), "aimed", B(e.Aimed), "missile", B(e.Missile),
+                        "charge", B(e.Charge), "weaponClass", I(e.WeaponClass), "dmg", I(e.Damage),
+                        "blocked", B(e.Blocked), "hpAfter", F(e.HealthAfter), "thread", ThreadLabel(e)));
                 break;
             case CreatureDiagEventKind.BiteLanded:
-                CreatureBanditDiag.Write(e.Serial, "bite", Line(e.Detail == "native" ? "native-hit" : "bite", e.Time, e.Serial,
-                    "on", e.OtherTroop, "onName", Name(e.OtherName), "onIdx", I(e.OtherIndex),
-                    "onPlayer", B(e.ByPlayer), "onMount", B(e.OtherIsMount), "dmg", I(e.Damage), "charge", B(e.Charge),
-                    "blocked", B(e.Blocked), "victimHpAfter", F(e.HealthAfter), "thread", thread));
+                if (CreatureBanditDiag.TakeLine(e.Serial, "bite"))
+                    CreatureBanditDiag.Emit(Line(e.Detail == "native" ? "native-hit" : "bite", e.Time, e.Serial,
+                        "on", e.OtherTroop, "onName", Name(e.OtherName), "onIdx", I(e.OtherIndex),
+                        "onPlayer", B(e.ByPlayer), "onMount", B(e.OtherIsMount), "dmg", I(e.Damage), "charge", B(e.Charge),
+                        "blocked", B(e.Blocked), "victimHpAfter", F(e.HealthAfter), "thread", ThreadLabel(e)));
                 break;
             case CreatureDiagEventKind.KilledByCreature:
-                CreatureBanditDiag.Write(e.Serial, "kill", Line("kill", e.Time, e.Serial,
-                    "victim", e.OtherTroop, "victimName", Name(e.OtherName), "state", e.Detail, "thread", thread));
+                if (CreatureBanditDiag.TakeLine(e.Serial, "kill"))
+                    CreatureBanditDiag.Emit(Line("kill", e.Time, e.Serial,
+                        "victim", e.OtherTroop, "victimName", Name(e.OtherName), "state", e.Detail, "thread", ThreadLabel(e)));
                 break;
             case CreatureDiagEventKind.Removed:
-                CreatureBanditDiag.Write(e.Serial, "removed", Line("removed", e.Time, e.Serial,
-                    "state", e.Detail, "by", e.OtherTroop, "byName", Name(e.OtherName), "byPlayer", B(e.ByPlayer),
-                    "blowDmg", I(e.Damage), "missile", B(e.Missile), "weaponClass", I(e.WeaponClass),
-                    "hp", F(e.HealthAfter), "lifetime", F(record == null ? float.NaN : e.Time - record.SpawnTime),
-                    "thread", thread));
+                if (CreatureBanditDiag.TakeLine(e.Serial, "removed"))
+                    CreatureBanditDiag.Emit(Line("removed", e.Time, e.Serial,
+                        "state", e.Detail, "by", e.OtherTroop, "byName", Name(e.OtherName), "byPlayer", B(e.ByPlayer),
+                        "blowDmg", I(e.Damage), "missile", B(e.Missile), "weaponClass", I(e.WeaponClass),
+                        "hp", F(e.HealthAfter), "lifetime", F(record == null ? float.NaN : e.Time - record.SpawnTime),
+                        "thread", ThreadLabel(e)));
                 break;
             case CreatureDiagEventKind.Backstopped:
-                CreatureBanditDiag.Write(e.Serial, "backstop", Line("backstop", e.Time, e.Serial,
-                    "note", "routed with no attacker; counted via Origin.SetRouted", "thread", thread), warning: true);
+                if (CreatureBanditDiag.TakeLine(e.Serial, "backstop"))
+                    CreatureBanditDiag.Emit(Line("backstop", e.Time, e.Serial,
+                        "note", "routed with no attacker; counted via Origin.SetRouted", "thread", ThreadLabel(e)), warning: true);
                 break;
             case CreatureDiagEventKind.Mounted:
-                CreatureBanditDiag.Write(e.Serial, "outcome", Line("mounted", e.Time, e.Serial,
-                    "rider", e.OtherTroop, "riderName", Name(e.OtherName), "riderIdx", I(e.OtherIndex),
-                    "riderIsPlayer", B(e.ByPlayer), "note", "a soldier rides the creature; the creature-bandit rules stop applying",
-                    "thread", thread), warning: true);
+                if (CreatureBanditDiag.TakeLine(e.Serial, "outcome"))
+                    CreatureBanditDiag.Emit(Line("mounted", e.Time, e.Serial,
+                        "rider", e.OtherTroop, "riderName", Name(e.OtherName), "riderIdx", I(e.OtherIndex),
+                        "riderIsPlayer", B(e.ByPlayer), "note", "a soldier rides the creature; the creature-bandit rules stop applying",
+                        "thread", ThreadLabel(e)), warning: true);
                 break;
             case CreatureDiagEventKind.Panicked:
             case CreatureDiagEventKind.Fled:
             case CreatureDiagEventKind.Deleted:
-                CreatureBanditDiag.Write(e.Serial, "outcome", Line(e.Kind.ToString().ToLowerInvariant(), e.Time, e.Serial,
-                    "detail", e.Detail, "thread", thread), warning: e.Kind != CreatureDiagEventKind.Deleted);
+                if (CreatureBanditDiag.TakeLine(e.Serial, "outcome"))
+                    CreatureBanditDiag.Emit(Line(e.Kind.ToString().ToLowerInvariant(), e.Time, e.Serial,
+                        "detail", e.Detail, "thread", ThreadLabel(e)), warning: e.Kind != CreatureDiagEventKind.Deleted);
                 break;
             default:
-                CreatureBanditDiag.Write(e.Serial, "event", Line(e.Kind.ToString().ToLowerInvariant(), e.Time, e.Serial,
-                    "detail", e.Detail, "thread", thread));
+                if (CreatureBanditDiag.TakeLine(e.Serial, "event"))
+                    CreatureBanditDiag.Emit(Line(e.Kind.ToString().ToLowerInvariant(), e.Time, e.Serial,
+                        "detail", e.Detail, "thread", ThreadLabel(e)));
                 break;
         }
     }
+
+    /// <summary>The callback's managed thread id and whether it was the main thread: <c>4321/off</c>, <c>1/main</c>.</summary>
+    private static string ThreadLabel(in CreatureDiagEvent e) => I(e.ThreadId) + (e.OnMain ? "/main" : "/off");
 
     private void Sample(Mission mission, float now)
     {
@@ -193,9 +207,10 @@ internal sealed class CreatureBanditDiagTicker
                 // Tripwire: an active handle whose slot changed hands. Once per creature; it drops out of sampling.
                 if (record.OccupantLost) continue;
                 record.OccupantLost = true;
-                CreatureBanditDiag.Write(record.Serial, "outcome", Line("occupant-lost", now, record.Serial,
-                    "idx", I(record.AgentIndex), "note", "handle active but its slot has a new occupant; sampling stops"),
-                    warning: true);
+                if (CreatureBanditDiag.TakeLine(record.Serial, "outcome"))
+                    CreatureBanditDiag.Emit(Line("occupant-lost", now, record.Serial,
+                        "idx", I(record.AgentIndex), "note", "handle active but its slot has a new occupant; sampling stops"),
+                        warning: true);
                 continue;
             }
             _live[agent] = pair.Value;
@@ -288,11 +303,12 @@ internal sealed class CreatureBanditDiagTicker
         var record = CreatureBanditDiag.Ledger.Get(serial);
         if (record == null || record.FirstTargetedLogged) return;
         record.FirstTargetedLogged = true;
-        CreatureBanditDiag.Write(serial, "outcome", Line("first-targeted", now, serial,
-            "by", soldier.Character?.StringId ?? "-", "byName", Name(soldier.Name), "ranged", B(soldier.IsRangedCached),
-            "dist", F(soldier.Position.Distance(creature.Position)),
-            "sinceUnmount", F(float.IsNaN(record.UnmountTime) ? float.NaN : now - record.UnmountTime),
-            "routeA", record.RouteA));
+        if (CreatureBanditDiag.TakeLine(serial, "outcome"))
+            CreatureBanditDiag.Emit(Line("first-targeted", now, serial,
+                "by", soldier.Character?.StringId ?? "-", "byName", Name(soldier.Name), "ranged", B(soldier.IsRangedCached),
+                "dist", F(soldier.Position.Distance(creature.Position)),
+                "sinceUnmount", F(float.IsNaN(record.UnmountTime) ? float.NaN : now - record.UnmountTime),
+                "routeA", record.RouteA));
     }
 
     /// <summary>
@@ -304,16 +320,18 @@ internal sealed class CreatureBanditDiagTicker
         if (!record.AliveLogged && !float.IsNaN(record.UnmountTime) && now - record.UnmountTime >= 5f)
         {
             record.AliveLogged = true;
-            CreatureBanditDiag.Write(record.Serial, "outcome", Line("routeA-alive", now, record.Serial,
-                "sinceUnmount", F(now - record.UnmountTime), "isMount", B(agent.IsMount),
-                "nearestEnemy", F(record.LastNearestEnemy), "targetedBy", I(targeted), "hp", F(agent.Health)));
+            if (CreatureBanditDiag.TakeLine(record.Serial, "outcome"))
+                CreatureBanditDiag.Emit(Line("routeA-alive", now, record.Serial,
+                    "sinceUnmount", F(now - record.UnmountTime), "isMount", B(agent.IsMount),
+                    "nearestEnemy", F(record.LastNearestEnemy), "targetedBy", I(targeted), "hp", F(agent.Health)));
         }
         if (!record.FirstHitSurvivedLogged && !float.IsNaN(record.FirstHitTime) && now - record.FirstHitTime >= 1f)
         {
             record.FirstHitSurvivedLogged = true;
-            CreatureBanditDiag.Write(record.Serial, "outcome", Line("first-hit-survived", now, record.Serial,
-                "hitKind", record.FirstHitKind, "sinceHit", F(now - record.FirstHitTime), "hp", F(agent.Health),
-                "hpMax", F(agent.HealthLimit), "routeA", record.RouteA));
+            if (CreatureBanditDiag.TakeLine(record.Serial, "outcome"))
+                CreatureBanditDiag.Emit(Line("first-hit-survived", now, record.Serial,
+                    "hitKind", record.FirstHitKind, "sinceHit", F(now - record.FirstHitTime), "hp", F(agent.Health),
+                    "hpMax", F(agent.HealthLimit), "routeA", record.RouteA));
         }
     }
 
@@ -373,11 +391,13 @@ internal sealed class CreatureBanditDiagTicker
 
         if (alive == 0 && _lastSnapTargeted == 0 && targetedNow == 0 && CreatureBanditDiag.Ledger.Records.All(r => r.Fate != "alive")) return;
         _lastSnapTargeted = targetedNow;
-        CreatureBanditDiag.Write(0, "snap", Line("snap", now, 0, "alive", I(alive), "known", I(CreatureBanditDiag.Ledger.Count),
-            "targetedByNow", I(targetedNow), "aimingSoldiers", I(CreatureBanditDiag.SoldiersAimingAtCreatures.Count),
-            "dmgDealt", I(dealt), "dmgTaken", I(taken),
-            "queue", I(CreatureBanditDiag.Events.Count), "lines", I(CreatureBanditDiag.Ledger.MissionLines),
-            "suppressed", I(CreatureBanditDiag.Ledger.MissionSuppressed)));
+        int linesBefore = CreatureBanditDiag.Ledger.MissionLines;   // the count this line reported when it was formatted before the budget check
+        if (CreatureBanditDiag.TakeLine(0, "snap"))
+            CreatureBanditDiag.Emit(Line("snap", now, 0, "alive", I(alive), "known", I(CreatureBanditDiag.Ledger.Count),
+                "targetedByNow", I(targetedNow), "aimingSoldiers", I(CreatureBanditDiag.SoldiersAimingAtCreatures.Count),
+                "dmgDealt", I(dealt), "dmgTaken", I(taken),
+                "queue", I(CreatureBanditDiag.Events.Count), "lines", I(linesBefore),
+                "suppressed", I(CreatureBanditDiag.Ledger.MissionSuppressed)));
     }
 
     private void CheckState(Mission mission, Agent agent, CreatureDiagRecord record, float now, int targeted)
@@ -415,20 +435,21 @@ internal sealed class CreatureBanditDiagTicker
         record.LastHeartbeat = now;
         record.HpBand = band;
         bool alarming = agent.IsRunningAway || (ai?.IsPanicked ?? false) || !fingerprint || rider || !aiControlled;
-        CreatureBanditDiag.Write(record.Serial, kind, Line(kind, now, record.Serial,
-            "hp", F(agent.Health), "hpMax", F(agent.HealthLimit), "hpBand", I(band),
-            "pos", F(agent.Position.x) + "," + F(agent.Position.y), "speed", F(agent.MovementVelocity.Length),
-            "node", record.LastNode, "treeRunning", B(tree?.IsRunning ?? false),
-            "targetDist", F(record.LastTargetDistance), "nearestEnemy", F(record.LastNearestEnemy),
-            "targetedBy", I(targeted), "nearTargetingIt", I(record.NearTargetingIt) + "/" + I(record.NearSoldierSamples),
-            "stuck", B(stuck), "moved5s", F(moved), "stalledInContact", F(record.StalledInContactSeconds),
-            "retreating", B(agent.IsRetreating()), "runningAway", B(agent.IsRunningAway), "fading", B(agent.IsFadingOut()),
-            "panicked", B(ai?.IsPanicked ?? false), "aiRetreating", B(ai?.IsRetreating ?? false),
-            "morale", F(ai?.Morale ?? float.NaN), "watch", agent.CurrentWatchState.ToString(),
-            "aiControlled", B(aiControlled), "fingerprint", B(fingerprint), "rider", B(rider),
-            "scripted", scripted.ToString().Replace(", ", "+"), "proximityMap", B(proximity),
-            "flags", agent.GetAgentFlags().ToString().Replace(", ", "+"), "team", agent.Team?.Side.ToString() ?? "none",
-            "action0", agent.GetCurrentAction(0).GetName() ?? "-"), warning: kind == "state" && alarming);
+        if (CreatureBanditDiag.TakeLine(record.Serial, kind))
+            CreatureBanditDiag.Emit(Line(kind, now, record.Serial,
+                "hp", F(agent.Health), "hpMax", F(agent.HealthLimit), "hpBand", I(band),
+                "pos", F(agent.Position.x) + "," + F(agent.Position.y), "speed", F(agent.MovementVelocity.Length),
+                "node", record.LastNode, "treeRunning", B(tree?.IsRunning ?? false),
+                "targetDist", F(record.LastTargetDistance), "nearestEnemy", F(record.LastNearestEnemy),
+                "targetedBy", I(targeted), "nearTargetingIt", I(record.NearTargetingIt) + "/" + I(record.NearSoldierSamples),
+                "stuck", B(stuck), "moved5s", F(moved), "stalledInContact", F(record.StalledInContactSeconds),
+                "retreating", B(agent.IsRetreating()), "runningAway", B(agent.IsRunningAway), "fading", B(agent.IsFadingOut()),
+                "panicked", B(ai?.IsPanicked ?? false), "aiRetreating", B(ai?.IsRetreating ?? false),
+                "morale", F(ai?.Morale ?? float.NaN), "watch", agent.CurrentWatchState.ToString(),
+                "aiControlled", B(aiControlled), "fingerprint", B(fingerprint), "rider", B(rider),
+                "scripted", scripted.ToString().Replace(", ", "+"), "proximityMap", B(proximity),
+                "flags", agent.GetAgentFlags().ToString().Replace(", ", "+"), "team", agent.Team?.Side.ToString() ?? "none",
+                "action0", agent.GetCurrentAction(0).GetName() ?? "-"), warning: kind == "state" && alarming);
     }
 
     /// <summary>
@@ -452,9 +473,10 @@ internal sealed class CreatureBanditDiagTicker
             B(defenderDepleted), B(defenderLive == 0), I(defenderCreatures));
         if (key == _lastSidesKey) return;
         _lastSidesKey = key;
-        CreatureBanditDiag.Write(0, "sides", Line("sides", now, 0, "spawnLogic", spawnLogic?.GetType().Name ?? "none",
-            "attackerLive", I(attackerLive), "attackerCreatures", I(attackerCreatures), "attackerDepleted", B(attackerDepleted),
-            "defenderLive", I(defenderLive), "defenderCreatures", I(defenderCreatures), "defenderDepleted", B(defenderDepleted)));
+        if (CreatureBanditDiag.TakeLine(0, "sides"))
+            CreatureBanditDiag.Emit(Line("sides", now, 0, "spawnLogic", spawnLogic?.GetType().Name ?? "none",
+                "attackerLive", I(attackerLive), "attackerCreatures", I(attackerCreatures), "attackerDepleted", B(attackerDepleted),
+                "defenderLive", I(defenderLive), "defenderCreatures", I(defenderCreatures), "defenderDepleted", B(defenderDepleted)));
     }
 
     /// <summary>Live humans plus live creature bandits on the side's teams (loose horses are not combatants).</summary>
@@ -480,9 +502,10 @@ internal sealed class CreatureBanditDiagTicker
         if (float.IsNaN(_sideZeroSince[index])) _sideZeroSince[index] = now;
         if (_stallWarned || !CreatureDiagLedger.IsSideStalled(live, depleted, _sideZeroSince[index], now, SideStallSeconds)) return;
         _stallWarned = true;
-        CreatureBanditDiag.Write(0, "sides", Line("side-stall", now, 0, "side", side,
-            "emptyFor", F(now - _sideZeroSince[index]),
-            "note", "no live agent but not depleted: the battle cannot end unless reinforcements are pending"), warning: true);
+        if (CreatureBanditDiag.TakeLine(0, "sides"))
+            CreatureBanditDiag.Emit(Line("side-stall", now, 0, "side", side,
+                "emptyFor", F(now - _sideZeroSince[index]),
+                "note", "no live agent but not depleted: the battle cannot end unless reinforcements are pending"), warning: true);
     }
 
     /// <summary>
@@ -513,11 +536,12 @@ internal sealed class CreatureBanditDiagTicker
                 _formationKeys[id] = key;
 
                 if (++_formationLines > FormationLineCap) return;
-                CreatureBanditDiag.Write(0, "formation", Line("formation", now, 0, "team", team.Side.ToString(),
-                    "teamIdx", I(team.TeamIndex), "formation", formation.FormationIndex.ToString(),
-                    "units", I(formation.CountOfUnits), "aiControlled", B(formation.IsAIControlled), "behavior", behavior,
-                    "order", order, "closestEnemyIsCreature", B(closestIsCreature), "noLargeEnemyFormation", B(noLargeEnemy),
-                    "enemyUnits", I(enemyUnits), "lines", I(_formationLines) + "/" + I(FormationLineCap)));
+                if (CreatureBanditDiag.TakeLine(0, "formation"))
+                    CreatureBanditDiag.Emit(Line("formation", now, 0, "team", team.Side.ToString(),
+                        "teamIdx", I(team.TeamIndex), "formation", formation.FormationIndex.ToString(),
+                        "units", I(formation.CountOfUnits), "aiControlled", B(formation.IsAIControlled), "behavior", behavior,
+                        "order", order, "closestEnemyIsCreature", B(closestIsCreature), "noLargeEnemyFormation", B(noLargeEnemy),
+                        "enemyUnits", I(enemyUnits), "lines", I(_formationLines) + "/" + I(FormationLineCap)));
             }
         }
     }

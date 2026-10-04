@@ -62,6 +62,33 @@ SubModule.OnMissionBehaviorInitialize(mission)   → mission.AddMissionBehavior(
   → end: MissionEnded? → OnBattleEnded (Logic) → OnEndMissionInternal → OnEndMission → OnRemoveBehavior
 ```
 
+### Teardown paths: `OnEndMission` is not the only way out (v1.5.3)
+
+Two separate engine sequences take a mission out of play. A behavior that must act on every exit (flush a summary, reset
+a singleton) needs both callbacks.
+
+- **`EndMission`.** `Mission.EndMission()` (Mission.cs:4635) marks the mission `EndingNextFrame`; the next `Mission.Tick`
+  reaches `EndMissionInternal` (4644, through `CheckMissionEnd`: 4876-4878 in single player and on a host, 4885-4888 on a
+  network client), which calls every behavior's `OnEndMissionInternal` and so `OnEndMission`, in registration order, in a
+  plain `foreach` (4654-4657: a throw from one behavior skips the later ones). Its callers include `RetreatMission`
+  (2869), `SurrenderMission` (2885), `OnEndMissionResult` (4767), `MissionState.OnTick` once `MissionEndTime` passes
+  (MissionState.cs:105-107) and `MBGameManager.EndGame` (MBGameManager.cs:204), which the escape menu's "exit to main
+  menu" calls (`MissionGauntletSingleplayerEscapeMenu.OnExitToMainMenu`, :220-225).
+- **State finalisation.** `MissionState.OnFinalize` (MissionState.cs:49) calls `Mission.OnMissionStateFinalize`
+  (Mission.cs:2216): every behavior's `OnMissionStateFinalized`, then `RemoveMissionBehavior` (4714) on each behavior,
+  last registered first, which calls `OnRemoveBehavior`. Nothing requires an `EndMission` before it.
+  `GameStateManager.CleanStates` finalises every state, an active mission's included (GameStateManager.cs:345-366), and
+  it is reached from `Game.OnFinalize` (Game.cs:419; the engine's `CoreManaged.Finalize` callback ends there, through
+  `Module.FinalizeModule`, when the application shuts down). On that path `OnEndMission` never runs for the live
+  mission. What runs is `OnMissionStateDeactivated` (Mission.cs:2204; only if the state was active), then every
+  behavior's `OnMissionStateFinalized`, then `OnRemoveBehavior`. Whether closing the window mid-mission reaches
+  `CoreManaged.Finalize` is native and unverified; if it does not, no vanilla exit traced here skips `EndMission`, and a
+  write in `OnRemoveBehavior` is defensive. Loading a save adds no vanilla exit: `SavedGameVM.StartGame` calls
+  `CleanStates(0)` (SavedGameVM.cs:748-753), but only the map's escape-menu Load and the main menu's Saved Games option
+  open the load screen (`SandBoxViewCreator.CreateSaveLoadScreen`), so no mission is live, and the mission escape menu
+  (`MissionGauntletSingleplayerEscapeMenu.GetEscapeMenuItems`) has no Load item. A mod that loads a save mid-mission
+  would take that path.
+
 ## ⚠️ The `: MissionLogic` gotcha (confirmed at the source)
 
 If a behavior is `: MissionBehavior` and **manually** returns `BehaviorType => MissionBehaviorType.Logic` **without**

@@ -458,9 +458,50 @@ Same fallback policy as the runtime grant: missing roster → log + leave the yo
 ### Testing a perk (does it do anything?)
 1. Open the console with cheats on and run `taom.career_perks`. It lists every passive the hero holds, the effective Damage / Resistance magnitude per hit kind, the consumer of each, and the campaign probes: a "Career line" on max hitpoints, party speed, seeing range, party size, morale, wages, inventory or hero healing means the passive reached the engine's number; "no Career line" with a non-zero magnitude means it did not.
 2. Run it again inside a battle: the mission block shows the player agent's `SwingSpeedMultiplier`, `MaxSpeedMultiplier`, `DamageMultiplierBonus`, `ThrustOrRangedReadySpeedMultiplier`, `ArmorEncumbrance`, the mount's `MountChargeDamage` / `MountSpeed` / `HealthLimit`, every consumable slot's count, and the live ability buff.
-3. Read the TAOM debug log (`taom_debug_*.log`) for `[CareerPerks]`: the report lines above; `agent stats for '<hero>'` once per distinct set of applied values (spawn, buff on, buff off; the dedupe resets at mission end so every battle's spawn logs); `mount stats for rider`; `Ammo +N%` at spawn with the slot's amount/max before and after; `hit amp` / `hit reduction` at DEBUG on every hit a passive moved, with the hit mask (`Melee, Blunt`), the base and the result and the terms; `RenownGain` / `TroopUpgradeCost` / `HeroHealing` / `SmithingCostReduction` when they apply. Speed, morale, wages and range have no per-tick line by design; the probe reads them.
+3. Read the TAOM debug log (`taom_debug_*.log`) for `[CareerPerks]`: the report lines above; `agent stats for '<hero>'` once per distinct set of applied values (spawn, buff on, buff off; the dedupe resets at mission end so every battle's spawn logs); `mount stats for rider`; `Ammo +N%` at spawn with the slot's amount/max before and after; `hit amp` / `hit reduction` at DEBUG once per battle for each hero or party leader, hit mask (`Melee, Blunt`) and set of passives that moved the number, giving that first hit's base, result and terms (a troop with a party leader is keyed by the leader's id even when its only term is an ally buff; victims with neither a hero nor a leader id share one line per mask); at mission end, one INFO `hit summary` block that counts every such hit (see "Per-hit summary lines" below); `RenownGain` / `TroopUpgradeCost` / `HeroHealing` / `SmithingCostReduction` when they apply. Speed, morale, wages and range have no per-tick line by design; the probe reads them.
 4. Types that leave NO trace anywhere, by design or by gap: `ShrugOff` (0 shipped pips), `TroopSurvival` (rolled per casualty at battle end, no line), `SpecialResourceGain` / `SpecialResourceUpkeepModifier` / `SpecialResourceUpgradeCostModifier` (their `[SpecRes]` lines log the total, not the passive's share), `MountHealth` (only the mission block's mount `HealthLimit`), `TroopDamage`'s second consumer (raid speed), and `StealthBonus` (#614). A silent log for one of these is not evidence either way.
 5. The hit kind follows vanilla's own correction: a bare-hand hit, a hit off the weapon's attach bone (haft), a kick or bash, fall damage and a horse charge count as Blunt whatever the engine's `DamageType` says (`MissionCombatMechanicsHelper.GetAttackCollisionResults:200` sets a local it never writes back), so a blunt-resistance pip covers a trample.
+
+#### Per-hit summary lines
+
+The per-hit DEBUG lines are written once per combination per battle, where a combination is the direction (amp or
+reduction), the hero or party-leader id, the hit mask and the set of terms that fired. Every hit is still counted in
+a numbers-only table, and the end of the mission (`ResetDiagnostics`, from `CareerPerkMissionBehavior`) writes it at
+INFO before clearing it. Nothing is written when no passive moved a hit.
+
+**When it is written.** On every way a mission can end, from two engine callbacks. `OnEndMission` runs once
+`Mission.EndMission` has: the battle's end, a retreat, a surrender, and the escape menu's "exit to main menu"
+(`MBGameManager.EndGame`). `OnRemoveBehavior` runs when the mission state is finalised, and `GameStateManager.CleanStates`
+does that without an `EndMission` first: the application shutting down (the engine's `CoreManaged.Finalize` callback
+ends in `Game.OnFinalize`; whether closing the window mid-battle reaches it is native and unverified) or a mod that
+loads a save mid-battle. In vanilla only the map's escape menu and the main menu open the load screen, so no vanilla
+load runs inside a mission; if the window close does not reach the shutdown callback, the `OnRemoveBehavior` write is
+defensive and covers no vanilla exit. After a normal end both run, and the second finds the table empty and writes
+nothing; after an abort the stat service, a singleton, no longer carries the dead mission's counts into the next one.
+Only a crash or a process kill mid-battle leaves each combination's first-hit DEBUG line in the log without the counts
+of the hits after it. No snapshot is written during the battle.
+
+**What it keeps and drops.** Per combination it keeps the hit count, the multiplier's minimum, average and maximum, the
+summed base and result damage, and the count of non-finite hits. It drops the order and time of the hits, each hit's own
+base and result, the individual term magnitudes behind a changing multiplier (only the product's range survives), and
+which agent a victim with neither a hero nor a party-leader id was. Three hits of base damage 10, 20 and 70 and three of
+10, 40 and 50 under one multiplier give the same first-hit line and the same summary, so this is an aggregate, not the
+per-hit record the old lines were.
+
+- Header, one per mission: `[CareerPerks] hit summary for this mission: 2 combination(s), 57 hit(s)`.
+- One line per combination, amplification first, then reduction, each sorted by subject, mask and terms:
+  `[CareerPerks] hit amp summary for 'lord1' [Melee, Cut] (TroopDamage): hits=50 multiplier min=1.100 avg=1.100 max=1.100 damage 2500.0 -> 2750.0`.
+  Fields: the subject (the hero or party-leader id; `'(ally-buffed agents)'` for victims with neither, whose only
+  term is then an ally buff, since their agent index recycles), the hit mask, the terms that fired, `hits` (every
+  hit of the combination, the first included), the multiplier the terms applied (min, average and max over the
+  hits), and the summed damage before and after. A hit whose multiplier, base or result is not finite is counted,
+  adds ` nonFinite=N` after the range, and stays out of the range and the damage sums, which cover the finite hits
+  (`multiplier n/a` and `damage n/a` when none was finite).
+- `CareerAgentStatServiceTests` pins both formats literally, and covers a new term set for the same subject and mask
+  (its own first-hit line and summary row) and hits from eight threads at once (every hit counted, the first-hit line
+  written once). `CareerPerkMissionTeardownTests` (`RequiresGame`) pins the writes: `OnEndMission`, `OnRemoveBehavior`
+  with no `EndMission`, one summary after both, no tally leaking into the next mission after an abort, and a throw from
+  the summary contained and reported on either path.
 
 ### Retune the global ability cooldown
 1. Edit `Main/_Module/ModuleData/career_system/taom_ability_tuning.xml` `<Global cooldown_seconds="N" />` (must be in `(0, 3600]`)

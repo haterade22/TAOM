@@ -13,6 +13,10 @@ public sealed class MissionDiagnosticService : IMissionDiagnosticService
 {
     private readonly IModLogger _logger;
     private readonly HashSet<string> _seenActionSets = new HashSet<string>(StringComparer.Ordinal);
+    private readonly HashSet<(int ActionSet, int Race, bool Female)> _seenActionSetKeys = new();
+    // Census total for the closing summary (plan 030, D6): every pre-filter check. The new keys and the lines written
+    // are the two sets' counts. Main thread only (OnMissionTick), reset per mission.
+    private int _censusChecks;
     private bool _sessionLogged;
 
     public MissionDiagnosticService(IModLogger logger)
@@ -182,8 +186,23 @@ public sealed class MissionDiagnosticService : IMissionDiagnosticService
             $"monster='{monsterId ?? "<null>"}' (first agent: '{agentName}' char='{characterId ?? "<none>"}')");
     }
 
+    public bool TryMarkActionSetKey(int actionSetIndex, int raceId, bool isFemale)
+    {
+        _censusChecks++;
+        return _seenActionSetKeys.Add((actionSetIndex, raceId, isFemale));
+    }
+
+    public void LogActionSetCensusOpened(float windowSeconds) =>
+        _logger.LogInfo($"[MissionDiag] ActionSet census open: window={windowSeconds.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture)}s, " +
+            "one line per (action set, race, sex); names are read only for a new (action set index, race id, sex) key");
+
+    public void LogActionSetCensusClosed() =>
+        _logger.LogInfo($"[MissionDiag] ActionSet census closed: agentChecks={_censusChecks} newKeys={_seenActionSetKeys.Count} lines={_seenActionSets.Count}");
+
     public void ResetForNewMission()
     {
         _seenActionSets.Clear();
+        _seenActionSetKeys.Clear();
+        _censusChecks = 0;
     }
 }

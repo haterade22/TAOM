@@ -26,12 +26,34 @@ public class CareerAgentStatService : ICareerAgentStatService
     // #613 [CareerPerks] diagnostics: the hero's own stat application is logged once per distinct
     // set of applied values (a stat update runs per spawn, mount change, weapon change and every
     // arrow shot; the values only change when a buff lands or ends). Keyed by hero id; the two
-    // dictionaries hold one entry per career hero, i.e. one.
+    // dictionaries hold one entry per career hero, i.e. one. The per-hit lines use a third table
+    // below, one entry per hit combination per mission.
     private readonly Dictionary<string, string> _lastStatLog = new Dictionary<string, string>();
     private readonly Dictionary<string, string> _lastMountLog = new Dictionary<string, string>();
     // A hero's stat update can arrive on the AI thread (a formation order writes Defensiveness)
     // while a spawn runs on the main thread; the dedupe state takes a lock like the buff tracker.
     private readonly object _logGate = new object();
+    // #613 per-hit evidence: one DEBUG line per mission for each (direction, subject, hit mask, terms that fired),
+    // plus a numbers-only tally of every hit of that combination, which ResetDiagnostics writes as one INFO summary
+    // line each at mission end (plan 030, DECISIONS D6: the lines after the first are aggregated, never dropped).
+    // The subject is a hero or party-leader id: on the reduction path the victim's hero id, else its party leader's;
+    // on the amplification path the attacker's hero id, else its troop's party leader's. A reduction victim with
+    // neither is known only by Agent.Index, which recycles, so those hits share the null subject. Guarded by
+    // _logGate (the damage path can run off the main thread); written and cleared by ResetDiagnostics, which the mission
+    // behavior calls from OnEndMission and from OnRemoveBehavior (every way a mission can end), so only a crash or a
+    // process kill mid-battle keeps the first-hit DEBUG lines but loses these counts.
+    private readonly Dictionary<(bool Reduction, string? Subject, AttackTypeMask Mask, int Terms), HitTally> _hitTallies = new();
+
+    private sealed class HitTally
+    {
+        public int Hits;
+        public int NonFinite;
+        public float Min = float.MaxValue;
+        public float Max = float.MinValue;
+        public double MultiplierSum;
+        public double BaseSum;
+        public double ResultSum;
+    }
 
     public CareerAgentStatService(ICareerPassiveService passives, IModLogger? logger = null)
     {
@@ -71,11 +93,61 @@ public class CareerAgentStatService : ICareerAgentStatService
 
     public void ResetDiagnostics()
     {
+        List<string>? summary = null;
         lock (_logGate)
         {
             _lastStatLog.Clear();
             _lastMountLog.Clear();
+            if (_hitTallies.Count > 0 && _logger != null) summary = HitSummaryLines();
+            _hitTallies.Clear();
         }
+        if (summary == null) return;
+        foreach (var line in summary) _logger!.LogInfo(line);
+    }
+
+    // Called under _logGate. Amplification lines first, then reduction; within each by subject, mask and terms, so
+    // two runs of the same battle read the same.
+    private List<string> HitSummaryLines()
+    {
+        var keys = new List<(bool Reduction, string? Subject, AttackTypeMask Mask, int Terms)>(_hitTallies.Keys);
+        keys.Sort((a, b) =>
+        {
+            int c = a.Reduction.CompareTo(b.Reduction);
+            if (c == 0) c = string.CompareOrdinal(a.Subject, b.Subject);
+            if (c == 0) c = ((int)a.Mask).CompareTo((int)b.Mask);
+            if (c == 0) c = a.Terms.CompareTo(b.Terms);
+            return c;
+        });
+        int hits = 0;
+        foreach (var t in _hitTallies.Values) hits += t.Hits;
+        var lines = new List<string>(keys.Count + 1)
+        {
+            $"[CareerPerks] hit summary for this mission: {keys.Count} combination(s), {hits} hit(s)"
+        };
+        foreach (var k in keys)
+        {
+            var t = _hitTallies[k];
+            int finite = t.Hits - t.NonFinite;
+            var range = finite > 0
+                ? $"multiplier min={Mul(t.Min)} avg={Mul((float)(t.MultiplierSum / finite))} max={Mul(t.Max)}"
+                : "multiplier n/a";
+            var nonFinite = t.NonFinite > 0 ? $" nonFinite={t.NonFinite}" : "";
+            var damage = finite > 0 ? $"damage {Num((float)t.BaseSum)} -> {Num((float)t.ResultSum)}" : "damage n/a";
+            lines.Add($"[CareerPerks] hit {(k.Reduction ? "reduction" : "amp")} summary for '{k.Subject ?? "(ally-buffed agents)"}' " +
+                $"[{k.Mask}] ({TermNames(k.Reduction, k.Terms)}): hits={t.Hits} {range}{nonFinite} {damage}");
+        }
+        return lines;
+    }
+
+    private static string TermNames(bool reduction, int terms)
+    {
+        var names = reduction
+            ? new[] { "Resistance", "self buff reduction", "TroopResistance", "ally buff reduction" }
+            : new[] { "ArmorPenetration", "Damage", "TroopDamage" };
+        var parts = new List<string>(names.Length);
+        for (int i = 0; i < names.Length; i++)
+            if ((terms & (1 << i)) != 0) parts.Add(names[i]);
+        return string.Join(", ", parts);
     }
 
     private void LogOnChange(Dictionary<string, string> last, string heroId, string signature, string prefix)
@@ -88,11 +160,63 @@ public class CareerAgentStatService : ICareerAgentStatService
         _logger!.LogInfo(prefix + signature);
     }
 
+    // Counts the hit in its combination's tally (numbers only, no string) and returns true for the combination's
+    // first hit this mission, the one whose DEBUG line is written in full.
+    private bool TallyHit(bool reduction, string? subject, AttackTypeMask hitMask, int terms, float multiplier, float baseResult, float result)
+    {
+        lock (_logGate)
+        {
+            var key = (reduction, subject, hitMask, terms);
+            bool first = !_hitTallies.TryGetValue(key, out var tally);
+            if (first) _hitTallies[key] = tally = new HitTally();
+            tally!.Hits++;
+            // A hit with any non-finite number is counted in NonFinite and kept out of every sum, so one bad hit
+            // cannot turn the combination's totals into NaN (the summary's "finite" divisor is Hits - NonFinite).
+            if (FiniteFloatValidator.IsFinite(multiplier) && FiniteFloatValidator.IsFinite(baseResult) && FiniteFloatValidator.IsFinite(result))
+            {
+                tally.BaseSum += baseResult;
+                tally.ResultSum += result;
+                tally.MultiplierSum += multiplier;
+                if (multiplier < tally.Min) tally.Min = multiplier;
+                if (multiplier > tally.Max) tally.Max = multiplier;
+            }
+            else
+            {
+                tally.NonFinite++;
+            }
+            return first;
+        }
+    }
+
+    private static string AmpTerms(float armorPen, float damage, float troopDamage)
+    {
+        string? terms = null;
+        if (armorPen != 0f) terms += " ArmorPenetration " + Pct(armorPen);
+        if (damage != 0f) terms += " Damage " + Pct(damage);
+        if (troopDamage != 0f) terms += " TroopDamage " + Pct(troopDamage);
+        return terms!.TrimStart();
+    }
+
+    private static float ReductionMultiplier(float resistance, float selfReduction, float troopResistance, float allyReduction) =>
+        (1f - resistance) * (1f - selfReduction) * (1f - troopResistance) * (1f - allyReduction);   // an unset term is 0, so 1
+
+    private static string ReductionTerms(float resistance, float selfReduction, float troopResistance, float allyReduction)
+    {
+        string? terms = null;
+        if (resistance != 0f) terms += " Resistance " + Pct(resistance);
+        if (selfReduction != 0f) terms += " self buff reduction " + Pct(selfReduction);
+        if (troopResistance != 0f) terms += " TroopResistance " + Pct(troopResistance);
+        if (allyReduction != 0f) terms += " ally buff reduction " + Pct(allyReduction);
+        return terms!.TrimStart();
+    }
+
     private static string DescribeBuff(ActiveBuffs b) => ActiveBuffsFormat.Describe(b);
 
     private static string Pct(float magnitude) => ActiveBuffsFormat.Pct(magnitude);
 
     private static string Num(float value) => value.ToString("0.0", CultureInfo.InvariantCulture);
+
+    private static string Mul(float value) => value.ToString("0.000", CultureInfo.InvariantCulture);
 
     // #394 — the hero `Health` passive is deliberately ABSENT here. It is applied campaign-side by
     // TaomCharacterStatsModel.MaxHitpoints, and SandboxAgentStatCalculateModel.GetEffectiveMaxHealth
@@ -175,17 +299,17 @@ public class CareerAgentStatService : ICareerAgentStatService
     public float CalculateDamageAmplification(string? attackerHeroId, string? attackerTroopLeaderHeroId, AttackTypeMask hitMask, float baseResult)
     {
         var result = baseResult;
-        string? terms = null;
+        float armorPen = 0f, damage = 0f, troopDamage = 0f;
 
         if (!string.IsNullOrEmpty(attackerHeroId))
         {
-            var armorPen = _passives.GetPassiveMagnitude(attackerHeroId!, PassiveEffectType.ArmorPenetration);
-            if (armorPen != 0f) { result *= (1f + armorPen); terms += " ArmorPenetration " + Pct(armorPen); }
+            armorPen = _passives.GetPassiveMagnitude(attackerHeroId!, PassiveEffectType.ArmorPenetration);
+            if (armorPen != 0f) result *= (1f + armorPen);
 
             // Damage is attack-type-specific (a melee or ranged pip), so it applies here on the hit
             // path (gated by hitMask) rather than as a flat DamageMultiplierBonus.
-            var damage = _passives.GetMaskedMagnitude(attackerHeroId!, PassiveEffectType.Damage, hitMask);
-            if (damage != 0f) { result *= (1f + damage); terms += " Damage " + Pct(damage); }
+            damage = _passives.GetMaskedMagnitude(attackerHeroId!, PassiveEffectType.Damage, hitMask);
+            if (damage != 0f) result *= (1f + damage);
         }
 
         // TroopDamage — the attacker is a non-hero troop whose party leader took the passive. The
@@ -199,13 +323,20 @@ public class CareerAgentStatService : ICareerAgentStatService
         // double-count.
         if (!string.IsNullOrEmpty(attackerTroopLeaderHeroId))
         {
-            var troopDamage = _passives.GetPassiveMagnitude(attackerTroopLeaderHeroId!, PassiveEffectType.TroopDamage);
-            if (troopDamage != 0f) { result *= (1f + troopDamage); terms += " TroopDamage " + Pct(troopDamage); }
+            troopDamage = _passives.GetPassiveMagnitude(attackerTroopLeaderHeroId!, PassiveEffectType.TroopDamage);
+            if (troopDamage != 0f) result *= (1f + troopDamage);
         }
 
-        // #613: the per-hit evidence, on the async DEBUG lane; only when a passive moved the number.
-        if (terms != null && _logger != null)
-            _logger.LogDebug($"[CareerPerks] hit amp for '{attackerHeroId ?? attackerTroopLeaderHeroId}' [{hitMask}]: {Num(baseResult)} -> {Num(result)} ({terms.TrimStart()})");
+        // #613: the per-hit evidence, on the async DEBUG lane, once per battle for each subject, hit mask and set of
+        // terms; a combination already logged formats nothing and is only counted, for the mission-end summary.
+        int terms = (armorPen != 0f ? 1 : 0) | (damage != 0f ? 2 : 0) | (troopDamage != 0f ? 4 : 0);
+        if (terms != 0 && _logger != null)
+        {
+            var subject = attackerHeroId ?? attackerTroopLeaderHeroId;
+            float multiplier = (1f + armorPen) * (1f + damage) * (1f + troopDamage);   // an unset term is 0, so 1
+            if (TallyHit(reduction: false, subject, hitMask, terms, multiplier, baseResult, result))
+                _logger.LogDebug($"[CareerPerks] hit amp for '{subject}' [{hitMask}]: {Num(baseResult)} -> {Num(result)} ({AmpTerms(armorPen, damage, troopDamage)})");
+        }
 
         return result;
     }
@@ -213,18 +344,18 @@ public class CareerAgentStatService : ICareerAgentStatService
     public float CalculateDamageReduction(string? victimHeroId, int? victimAgentIndex, string? troopLeaderHeroId, AttackTypeMask hitMask, float baseResult)
     {
         var result = baseResult;
-        string? terms = null;
+        float resistance = 0f, selfReduction = 0f, troopResistance = 0f, allyReduction = 0f;
 
         if (!string.IsNullOrEmpty(victimHeroId))
         {
-            var resistance = _passives.GetMaskedMagnitude(victimHeroId!, PassiveEffectType.Resistance, hitMask);
-            if (resistance != 0f) { result *= (1f - resistance); terms += " Resistance " + Pct(resistance); }
+            resistance = _passives.GetMaskedMagnitude(victimHeroId!, PassiveEffectType.Resistance, hitMask);
+            if (resistance != 0f) result *= (1f - resistance);
 
             var heroBuff = CareerAbilityBuffTracker.GetBuff(victimHeroId!);
             if (heroBuff != null && heroBuff.DamageReductionBonus != 0f)
             {
-                result *= (1f - heroBuff.DamageReductionBonus);
-                terms += " self buff reduction " + Pct(heroBuff.DamageReductionBonus);
+                selfReduction = heroBuff.DamageReductionBonus;
+                result *= (1f - selfReduction);
             }
         }
 
@@ -232,8 +363,8 @@ public class CareerAgentStatService : ICareerAgentStatService
         // Mutually exclusive with the hero Resistance above (a hero victim has no troopLeaderHeroId).
         if (!string.IsNullOrEmpty(troopLeaderHeroId))
         {
-            var troopResistance = _passives.GetPassiveMagnitude(troopLeaderHeroId!, PassiveEffectType.TroopResistance);
-            if (troopResistance != 0f) { result *= (1f - troopResistance); terms += " TroopResistance " + Pct(troopResistance); }
+            troopResistance = _passives.GetPassiveMagnitude(troopLeaderHeroId!, PassiveEffectType.TroopResistance);
+            if (troopResistance != 0f) result *= (1f - troopResistance);
         }
 
         if (victimAgentIndex.HasValue)
@@ -241,13 +372,16 @@ public class CareerAgentStatService : ICareerAgentStatService
             var allyBuff = CareerAbilityBuffTracker.GetAllyBuff(victimAgentIndex.Value);
             if (allyBuff != null && allyBuff.DamageReductionBonus != 0f)
             {
-                result *= (1f - allyBuff.DamageReductionBonus);
-                terms += " ally buff reduction " + Pct(allyBuff.DamageReductionBonus);
+                allyReduction = allyBuff.DamageReductionBonus;
+                result *= (1f - allyReduction);
             }
         }
 
-        if (terms != null && _logger != null)
-            _logger.LogDebug($"[CareerPerks] hit reduction for '{victimHeroId ?? troopLeaderHeroId ?? victimAgentIndex?.ToString()}' [{hitMask}]: {Num(baseResult)} -> {Num(result)} ({terms.TrimStart()})");
+        int terms = (resistance != 0f ? 1 : 0) | (selfReduction != 0f ? 2 : 0)
+            | (troopResistance != 0f ? 4 : 0) | (allyReduction != 0f ? 8 : 0);
+        if (terms != 0 && _logger != null && TallyHit(reduction: true, victimHeroId ?? troopLeaderHeroId, hitMask, terms,
+                ReductionMultiplier(resistance, selfReduction, troopResistance, allyReduction), baseResult, result))
+            _logger.LogDebug($"[CareerPerks] hit reduction for '{victimHeroId ?? troopLeaderHeroId ?? victimAgentIndex?.ToString()}' [{hitMask}]: {Num(baseResult)} -> {Num(result)} ({ReductionTerms(resistance, selfReduction, troopResistance, allyReduction)})");
 
         return result;
     }

@@ -18,11 +18,22 @@ public interface IMissionDiagnosticService
         System.Collections.Generic.IReadOnlyList<TaleWorlds.MountAndBlade.MissionBehavior> behaviors,
         System.Collections.Generic.IReadOnlyList<TaleWorlds.MountAndBlade.MissionLogic> missionLogics);
 
-    // Called from the same boundary for each unique action_set name seen on an
-    // agent in the first 5 seconds. Service deduplicates internally — no need
-    // to gate per-agent at the boundary.
+    // Called from the same boundary for an agent whose TryMarkActionSetKey was true. Logs once per
+    // (action set name, race name, sex) per mission, naming the first agent seen with it.
     void LogActionSetSeen(string actionSetName, string raceName, bool isFemale, string agentName, string characterId, string monsterId);
 
-    // Resets per-mission state (action-set dedup set, first-tick flag).
+    // Called from the boundary for every agent in the action-set window before any name is read: true the
+    // first time this mission sees the (action set index, race id, sex) combination. The boundary reads the
+    // names and calls LogActionSetSeen only on true, so a combination already seen costs no native string
+    // marshal. One index has one name and one race id one cached race name, so this filter never hides a line.
+    bool TryMarkActionSetKey(int actionSetIndex, int raceId, bool isFemale);
+
+    // One INFO header when the action-set window opens (its length and how the census keys its lines), and one
+    // INFO summary when it closes (or the mission ends first): the pre-filter checks, the new keys and the lines
+    // written. Totals reset with ResetForNewMission.
+    void LogActionSetCensusOpened(float windowSeconds);
+    void LogActionSetCensusClosed();
+
+    // Resets per-mission state (both action-set dedup sets and the census check count).
     void ResetForNewMission();
 }

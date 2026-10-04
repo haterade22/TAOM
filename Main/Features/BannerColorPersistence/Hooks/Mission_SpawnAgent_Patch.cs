@@ -12,13 +12,11 @@ public static class Mission_SpawnAgent_Patch
 {
     private static IBannerColorService? _service;
     private static IBannerHeroAdapter? _heroAdapter;
-    private static IAgentColorStore? _colorStore;
 
-    public static void Initialize(IBannerColorService service, IBannerHeroAdapter heroAdapter, IAgentColorStore colorStore)
+    public static void Initialize(IBannerColorService service, IBannerHeroAdapter heroAdapter)
     {
         _service = service;
         _heroAdapter = heroAdapter;
-        _colorStore = colorStore;
     }
 
     private static ClanColorInfo? ResolveColors(AgentBuildData agentBuildData)
@@ -63,17 +61,5 @@ public static class Mission_SpawnAgent_Patch
 
         agentBuildData.ClothingColor1(info.Value.Color1).ClothingColor2(info.Value.Color2);
         return true;
-    }
-
-    [HarmonyPostfix]
-    public static void Postfix(Agent __result, AgentBuildData agentBuildData)
-    {
-        if (__result == null) return;
-        if (!(_service?.IsAgentVisualColorsEnabled() ?? false)) return;
-
-        var info = ResolveColors(agentBuildData);
-        if (info == null) return;
-
-        _colorStore?.Register(__result.Index, info.Value);
     }
 }
