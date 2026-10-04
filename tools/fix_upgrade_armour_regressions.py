@@ -72,10 +72,11 @@ ARMOUR_STATS = ('head_armor', 'body_armor', 'arm_armor', 'leg_armor')
 # (troop id, slot) -> item id. A hand decision that beats the family rule. State why.
 OVERRIDES = {}
 
-# Troops that never fill the Body slot on purpose (a slave in rags, the bare-chested Uruk-hai
-# champions). Kept in one place, taom_schema.Validator._BODYLESS_BY_DESIGN, so the validator's
-# MISSING_BODY_ARMOUR gate and this clamp cannot disagree about who is allowed a bare torso. For
-# these troops the Body slot is left out of the comparison on BOTH sides of the edge.
+# Troops bare-chested on purpose (a slave in rags, the hill troll in its own cloth, the Uruk-hai
+# champions, whose only Body item is a skirt that leaves the torso bare). Kept in one place,
+# taom_schema.Validator._BODYLESS_BY_DESIGN, so the validator's MISSING_BODY_ARMOUR gate and this
+# clamp cannot disagree about who is allowed a bare torso. For these troops the Body slot is left
+# out of the comparison on BOTH sides of the edge.
 try:
     import taom_schema as _ts
     BODYLESS_BY_DESIGN = frozenset(_ts.Validator._BODYLESS_BY_DESIGN)
@@ -232,9 +233,10 @@ def slot_avg(troop, items):
 def compared_slots(parent, child):
     """The slots an edge is judged on: every armour slot, minus Body and Cape when either end is
     bare-chested by design (a chest is not a stat such a troop could ever keep or hand down)."""
-    # The bare-chested Uruk-hai wear a 70-armour skirt in the Cape slot as the stand-in for the
-    # chest they never fill, so Cape goes with Body for them: an armoured nazg-hai in a heavy
-    # pauldron is not a regression from a berserker in a skirt.
+    # The bare-chested Uruk-hai wear the berserker skirt (89 armour, covers_body=false) as their
+    # only Body item and no Cape, so Cape goes with Body for them: a champion with no pauldron is
+    # not a regression from a swordman wearing one, and the nazg-hai's plate (79) is not a drop
+    # from the berserker's skirt (89).
     if child['id'] in BODYLESS_BY_DESIGN or parent['id'] in BODYLESS_BY_DESIGN:
         return tuple(s for s in ARMOUR_SLOTS if s not in ('Body', 'Cape'))
     return ARMOUR_SLOTS

@@ -1010,9 +1010,12 @@ class Validator:
     #
     # Two questions, deliberately at different severities:
     #
-    #   MISSING_BODY_ARMOUR (error) -- no battle set fills Body. Measured
-    #   repo-wide at exactly 3 troops, all three intentional, so the allowlist
-    #   below is the whole of the known debt and a new one is a real regression.
+    #   MISSING_BODY_ARMOUR (error) -- no battle set fills Body. Every troop that
+    #   does so on purpose is in the allowlist below (dg_goblin_slave, hill_troll), so
+    #   it is the whole of the known debt and a new one is a real regression. The
+    #   Uruk-hai champion and berserker stay listed although their Body item is now the
+    #   berserker skirt: it leaves the torso bare (covers_body=false), and the armour
+    #   comparisons below leave out their Body and Cape.
     #
     #   INCONSISTENT_ARMOUR_SLOT (warning) -- a slot filled in some battle sets
     #   and empty in others. `.claude/rules/troops.md`: the engine draws each
@@ -1459,7 +1462,9 @@ class Validator:
     #
     # Item values come from the install (Armory + vanilla), so the check is skipped, never
     # faked, when the registry could not be built. Bare-chested-by-design troops are compared
-    # without Body and Cape (their skirt sits in the Cape slot as the chest stand-in), and
+    # without Body and Cape (the Uruk-hai champion and berserker wear a skirt in Body and no Cape,
+    # so neither a parent's pauldron nor a child's plate below the skirt's 89 armour reads as a
+    # regression), and
     # militia-to-militia edges are exempt exactly as they are for skills.
     _EQUIPMENT_ELEM_RE = re.compile(r"<equipment\b[^>]*?/>")
 

@@ -242,8 +242,8 @@ first measured: the Rhun `loke_rim_*` and `dragon_wrath_ash_*` capstones in `pla
 | The overview | `tools/analyze_troop_balance.py` | "Upgrade armour drops" section beside the skill monotonicity one. |
 
 Exemptions mirror the skill rule: militia-to-militia edges, and the bare-chested-by-design troops
-(`_BODYLESS_BY_DESIGN`) are compared without Body and Cape, because their 70-armour skirt sits in
-the Cape slot as the chest they never wear. When a parent out-armours its child because an ITEM is
+(`_BODYLESS_BY_DESIGN`) are compared without Body and Cape, because their only Body item, where
+they have one, is an 89-armour skirt that leaves the chest bare. When a parent out-armours its child because an ITEM is
 mis-statted, fix the item: the two Dunland `wulf_helmet_medium_*` carried 45 (the lord row) and made
 every L21 Dunlending read as a downgrade, restatted to 22.
 

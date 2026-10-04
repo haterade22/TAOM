@@ -1821,3 +1821,29 @@ The battle-scene grid's cells were attributed by sampling the grid PNG at every 
 - **Why missed:** the evidence was measured once and the code, the doc table and the counts were each written separately from it; a cell holding two realms' settlements was given to one region by eye.
 - **Prevent:** write each region's cells from the measured table; a cell with settlements of two realms is shared (the generator unions it) and named in the table; "(visual)" is only for a cell with no settlement. Read the generator's dry-run "shared cell" lines before committing a table change, and pin any cross-realm mistake in `RegionTableTests` (`tools/tests/test_build_battle_scenes.py`).
 - **Source:** `docs/reviews/rca-battle-scene-regions-2026-10-03.md` findings 1 and 3.
+
+### A data change carries the allowlist reasons and docs that describe it (2026-10-04)
+The Uruk-hai Champion and Berserker kept the Berserker Skirt in the cape slot for four and a half months,
+and the validator's bare-chested allowlist, two fixers and two feature docs explained their exemption by
+that placement ("the skirt sits in the Cape slot as the chest stand-in"). When the skirt moved to the body
+slot (#729), seven sentences became false at once, and three of four review lenses read the allowlist
+entry as dead data.
+- **Why missed:** each reason restated a data fact (which slot an item sits in) instead of the rule it
+  serves, so nothing tied it to the data it described.
+- **Prevent:** write an allowlist reason or a doc sentence as the rule (why the troop is exempt), not as
+  the current placement; when a data change touches a troop or an item, grep the allowlists
+  (`_BODYLESS_BY_DESIGN`, `_ARMOUR_LADDER_EXEMPT` and the fixers' copies) and the docs for its id in the
+  same commit, and check the counts they state as well as the phrases.
+- **Source:** `docs/reviews/rca-uruk-hai-skirt-body-2026-10-04.md` S1, S2 and C3.
+
+### An empty body slot draws the race's underwear mesh: read skins.xml before describing a look change (2026-10-04)
+The planned release note for the skirt fix said the skirt had never shown on the Berserker. It had: his
+race's skin in the Armory's `skins.xml` names `sk_uruk_hai_skirt_a1` as its `underwear_bottom_mesh`, which
+the engine draws while no body item is worn (`Equipment.GetUnderwearType`). Only the Champion, of the
+Uruk-hai race, changes look.
+- **Why missed:** the look was judged from the item's flags (`covers_body`) and the slot, not from the
+  troop's race.
+- **Prevent:** before a release note or an in-game check describes how a troop's look changes, read its
+  race's skin in `skins.xml` (`underwear_top_mesh`, `underwear_bottom_mesh`) for what an empty slot
+  shows, and aim the check at the troop whose look actually changes.
+- **Source:** `docs/reviews/rca-uruk-hai-skirt-body-2026-10-04.md` S3.

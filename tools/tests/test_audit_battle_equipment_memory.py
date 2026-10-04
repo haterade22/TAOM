@@ -1641,8 +1641,8 @@ class SlotAssemblyTests(unittest.TestCase):
         self.assertEqual(self.abem.slot_rejections(t, defs), [("Body", "goods")])
 
     def test_the_release_skirt_in_a_cape_slot_is_refused(self):
-        # troops_isengard.xml puts sk_uruk_hai_skirt_a1, a BodyArmor, in the Cape slot of urukhai_champion
-        # and urukhai_berserker; the engine never equips it there
+        # troops_isengard.xml once put sk_uruk_hai_skirt_a1, a BodyArmor, in the Cape slot of urukhai_champion
+        # and urukhai_berserker (since moved to Body); the engine never equipped it there
         defs = self._defs('<NPCCharacter id="t"><Equipments><EquipmentRoster>'
                           '<equipment slot="Body" id="Item.armour"/><equipment slot="Cape" id="Item.skirt"/>'
                           "</EquipmentRoster></Equipments></NPCCharacter>")

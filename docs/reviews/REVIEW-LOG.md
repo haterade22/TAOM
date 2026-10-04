@@ -5235,3 +5235,24 @@ Report `docs/reviews/deep-review-031-settings-reads-off-hot-paths-2026-10-02.md`
 - **Final suite:** after the code fixes, `dotnet build Main/TAOM.csproj` gave 0 errors (the two known analyzer warnings) and `dotnet test TAOM.Tests` 13,526 passed, 5 skipped, 1 failed of 13,532 (`EveryLanguage_DeclaresARowForEveryEnglishKey`, as at the base; 13,514 of 13,520 at `f637d650`); CI's reference-assembly build with the no-game filter over the four touched test classes ran 96 of 96; `MissionTickProfilerBindingTests` 6 of 6 against the game; `lint_docs --fail-on-drift` exit 0 after the later docs-only edits.
 - **Convergence:** one pass, run as a workflow (`wf_a40dfdaa-1fd`; a first attempt died on a usage limit): one reviewer, then an adversarial verifier per finding. It confirmed the moved status writer line for line and every other text fix against the decompile, and found 1 LOW (the catcher chain above `Module.OnApplicationTick` named the wrong caller frame and missed native's light tick) and 1 NIT (two headings named "PatchShield"), both verified and fixed in the feature doc.
 - **RCA:** `docs/reviews/rca-perf-integration-fixups-2026-10-04.md`.
+
+## Review (number assigned at merge): Uruk-hai skirt to the body slot (#729), 4-lens deep review + convergence (2026-10-04)
+
+- **Scope:** branch `perf/uruk-hai-skirt-body` on `perf/landing`: `troops_isengard.xml`, where
+  `sk_uruk_hai_skirt_a1` moved from the cape slot to the body slot on `urukhai_champion` and
+  `urukhai_berserker` at the maintainer's request, then the text the move made false (tool comments, two
+  feature docs, the ModuleData rule, a test comment).
+- **Claude:** lenses 7 (XML and ModuleData), 4, 5 and 6 in one wave, each finding adversarially verified
+  (workflow `wf_e9a8e6bf-8f4`). No defect in the data: after the move plan 038's slot rule refuses no
+  assignment across 5,143 characters. Six findings, all LOW (RCA S1 to S6): a stale allowlist reason and
+  docs, a look claim wrong for the Berserker, the skirt's stats going live, no issue, no slot-fit gate.
+  The maintainer decided: keep the stats, keep both troops on `_BODYLESS_BY_DESIGN`, file #729, and add
+  the gate as a follow-up.
+- **Final suite:** on the data change, dotnet 13,526 passed, 5 skipped, 1 failed of 13,532 (the known
+  translation test) and Python 3,331 run with the three known failures; after the text edits, the five
+  related Python test modules ran 413 OK, `validate_moduledata.py` gave 0 errors and the base's 1,569
+  warnings, and `lint_docs --fail-on-drift` exited 0.
+- **Convergence:** one pass (workflow `wf_ba8538d8-f0e`) with an adversarial verifier per finding found
+  2 LOW (the "capstones" label; a stale example in the clamp comment) and 3 NIT, all comment or doc
+  text, all fixed (RCA C1 to C3).
+- **RCA:** `docs/reviews/rca-uruk-hai-skirt-body-2026-10-04.md`.

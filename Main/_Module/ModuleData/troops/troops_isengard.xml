@@ -1338,7 +1338,7 @@
                     slot="Head"
                     id="Item.sk_uruk_hai_helmet_officer_a2" />
                 <equipment
-                    slot="Cape"
+                    slot="Body"
                     id="Item.sk_uruk_hai_skirt_a1" />
                 <equipment
                     slot="Gloves"
@@ -1605,7 +1605,7 @@
                     slot="Head"
                     id="Item.sk_uruk_hai_helmet_bers_a2" />
                 <equipment
-                    slot="Cape"
+                    slot="Body"
                     id="Item.sk_uruk_hai_skirt_a1" />
                 <equipment
                     slot="Gloves"

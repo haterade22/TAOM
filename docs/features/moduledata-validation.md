@@ -406,17 +406,17 @@ board: `validate_moduledata.py` PASS, `validate_mesh_refs.py` 0 errors,
 Two questions at deliberately different severities.
 
 **`MISSING_BODY_ARMOUR` (ERROR).** No battle set of a troop fills the `Body` slot.
-Measured repo-wide at exactly three troops, all of them bare-chested on purpose, so
-`Validator._BODYLESS_BY_DESIGN` is the whole of the known debt and a fourth is a real
-regression:
+Every troop bare-chested on purpose is in `Validator._BODYLESS_BY_DESIGN`, so that list is the
+whole of the known debt and a new one is a real regression:
 
-| troop | file | why it is exempt |
+| troop | file | why it is listed |
 |---|---|---|
 | `dg_goblin_slave` | `troops_dolguldur.xml` | a slave in rags; bare torso is the intended look |
-| `urukhai_champion` | `troops_isengard.xml` | Uruk-hai champions fight bare-chested by design |
+| `hill_troll` | `troops_mordor.xml` | the model wears its own cloth; human-skeleton armour would float on the troll skeleton |
+| `urukhai_champion` | `troops_isengard.xml` | fights bare-chested by design; since 2026-10-04 its Body item is the berserker skirt, which leaves the torso bare (`covers_body="false"`), so it is listed for the armour comparisons below, not for this gate |
 | `urukhai_berserker` | `troops_isengard.xml` | same |
 
-A test asserts all three ids still exist in the troop files. An allowlist entry for a
+A test asserts every listed id still exists in the troop files. An allowlist entry for a
 renamed or deleted troop otherwise rots with no signal, quietly widening the
 exemption, which is the failure the `MOUNTED_DWARF` war-ram carve-out guards against
 the same way.
@@ -465,8 +465,8 @@ each slot from an independently chosen set) and warns when the target's total is
 source's. Item values are `Registries.item_armour`, built from the same item roots as the
 reference registry, so without the install the table is empty and the check is skipped rather
 than run against a handful of repo items. Militia-to-militia edges are exempt, and the
-`_BODYLESS_BY_DESIGN` troops are compared without Body and Cape (their skirt fills the Cape slot
-as the chest stand-in). The repair is `tools/fix_upgrade_armour_regressions.py --apply`; the first
+`_BODYLESS_BY_DESIGN` troops are compared without Body and Cape (the Uruk-hai champion and
+berserker wear a skirt in Body that leaves the torso bare). The repair is `tools/fix_upgrade_armour_regressions.py --apply`; the first
 run found 62 regressing edges across 13 cultures and left 0.
 
 ## Cross-culture armour inversion (`CROSS_CULTURE_ARMOUR_INVERSION`)

@@ -136,7 +136,8 @@ def curve_culture(troop):
 
 def judged_slots(*troops):
     """Every armour slot, minus Body and Cape when any of the troops is bare-chested by design
-    (their skirt sits in the Cape slot as the chest stand-in; fx.compared_slots rule)."""
+    (their only Body item, where they have one, is a skirt that leaves the torso bare;
+    fx.compared_slots rule)."""
     if any(t['id'] in fx.BODYLESS_BY_DESIGN for t in troops):
         return tuple(s for s in ARMOUR_SLOTS if s not in ('Body', 'Cape'))
     return ARMOUR_SLOTS

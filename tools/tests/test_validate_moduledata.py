@@ -2124,8 +2124,8 @@ class ArmourSlotCoverageTests(unittest.TestCase):
         self.assertEqual(self._codes("MISSING_BODY_ARMOUR"), [])
 
     def test_bodyless_by_design_troops_are_allowlisted(self):
-        """The three bare-chested troops that ship deliberately. Removing an id
-        from _BODYLESS_BY_DESIGN is what makes this check start guarding it."""
+        """Every troop on _BODYLESS_BY_DESIGN is bare-chested on purpose. Removing
+        an id from _BODYLESS_BY_DESIGN is what makes this check start guarding it."""
         self._write_troop("urukhai_berserker",
                           '<EquipmentRoster><equipment slot="Leg" id="Item.good_mail" />'
                           "</EquipmentRoster>")
