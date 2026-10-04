@@ -19,6 +19,19 @@
 > **PatchShield decision**: the orchestrator tells you whether the maintainer chose option A (five
 > PatchShield exclusions, this plan's default text) or option B (two exclusions) for decision D1
 > (Design, "PatchShield"). No word means option A.
+>
+> **Decided 2026-10-03 (D13): option B.** The maintainer chose option B: `Campaign.Tick` and
+> `CampaignEvents.Tick` are the only excluded targets, and `MapState.OnTick`, `Campaign.RealTick` and
+> `MapScreen.OnFrameTick` keep the shield. The option A text below stays as the record of the alternative; the
+> branch's code, tests and docs carry option B. The same decision took `Mission.OnTick` and `Mission.OnPreTick`
+> off plan 028's list.
+>
+> **Decided 2026-10-03 (FOR-MIKE 16r, with the Codex review):** the speed class is read from
+> `Campaign.GetSimplifiedTimeControlMode()` (through `ITimeControlAdapter.SimplifiedTimeControlMode`), so a Stoppable
+> mode while the main party waits reads `Stop`; and the six core hooks are looked at again at each session start, window
+> start and measuring session end, a lost one stopping measuring behind one `[MapProfiler]` warning and a
+> `reason=hooksLost` summary. The
+> "Speed class" paragraph and the line contract below are the first build's record of both.
 
 ## Status
 
@@ -1748,7 +1761,7 @@ Stop and report (do not improvise) if:
   PatchShield finalizer per frame on each of the three inside the measurements until plan 034. The
   reviser's recommendation is B, because a default-off diagnostic should not change every player's
   crash handling; A needs no extra word because it is the house rule. Tell the executor the answer;
-  no answer means A.
+  no answer means A. Answered 2026-10-03: B (D13).
 - This plan is anchored on plan 028's reviewed tip `765d3759`; if 028's branch moved past it, or 040
   or 041 landed first, tell the executor which (040 and 041 move the settings counts and the restart
   allowlist).

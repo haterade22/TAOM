@@ -70,6 +70,9 @@ public sealed class BattleLoadDiagnosticsSettingsProvider : IBattleLoadDiagnosti
     public bool TickProfilerEnabled =>
         BattleLoadDiagnosticsSettings.Instance?.EnableTickProfiler ?? false;
 
+    // Fail-CLOSED for the same reason: this toggle installs Patch101 on the campaign map's per-frame methods.
+    public bool MapProfilerEnabled => BattleLoadDiagnosticsSettings.Instance?.EnableMapProfiler ?? false;
+
     public int TickProfilerTopN =>
         ValidateTickProfilerTopN(BattleLoadDiagnosticsSettings.Instance?.TickProfilerTopN ?? DefaultTickProfilerTopN);
 

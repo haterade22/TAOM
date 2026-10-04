@@ -67,11 +67,16 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
 
     [SettingPropertyGroup("Mission Performance")]
     [SettingPropertyInteger("Tick Profiler Top Behaviours", 1, 20, Order = 2, RequireRestart = false,
-        HintText = "How many mission behaviours each [TickProfile] and [TickSummary] line lists, slowest first. Default 8. Read at each mission start.")]
+        HintText = "How many entries each [TickProfile] and [TickSummary] line lists (mission behaviours) and each [MapProfile] and [MapProfileSummary] line lists (map tick listeners and TAOM map views), slowest first. Default 8. Read at each mission start and each campaign session start.")]
     public int TickProfilerTopN { get; set; } = 8;
 
     [SettingPropertyGroup("Mission Performance")]
     [SettingPropertyInteger("Hitch Threshold (ms)", 50, 2000, Order = 3, RequireRestart = false,
         HintText = "A frame that takes this many milliseconds or more writes one [Hitch] line naming where the frame went, for the first 100 such frames of a mission; later ones are only counted. Below the battle's usual frame time, nearly every frame is a hitch. Default 250. Read at each mission start.")]
     public int HitchThresholdMs { get; set; } = 250;
+
+    [SettingPropertyGroup("Map Performance")]
+    [SettingPropertyBool("Enable Map Profiler", Order = 0, RequireRestart = true,
+        HintText = "Off by default. Times the campaign map's frame: the campaign tick, every per-frame tick-event listener by its owner, the map screen and TAOM's map views, and TAOM's application tick. Writes a [MapProfile] line to the TAOM debug log every 5 seconds while the map runs and a [MapProfileSummary] line when the campaign ends. Turning it on takes effect after a restart (the profiler is installed once, at game start); turning it off stops measuring from the next campaign session.")]
+    public bool EnableMapProfiler { get; set; } = false;
 }

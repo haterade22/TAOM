@@ -181,6 +181,23 @@ public static class PatchShieldPolicy
         // on it the same way, so that is older than the profiler as well.
         // MissionTickProfilerBindingTests walks the real targets in both directions.
         "TaleWorlds.MountAndBlade.Mission.TickAgentsAndTeamsImp",
+        // Per-frame campaign-map targets that only the Patch101 map profiler patches (2026-10-03),
+        // unconditional like the entries above: with the profiler off no TAOM patch exists on them, but another
+        // mod's patch on them loses the shield all the same. MapState.OnTick, Campaign.RealTick and
+        // MapScreen.OnFrameTick, which Patch43, Patch89 and Patch36 patch for every player, keep the shield by
+        // the maintainer's decision D13 (option B, 2026-10-03): their once-per-frame finalizer stays inside the
+        // map profiler's numbers, and a swallow there also strips Patch101's pair on that method, which the
+        // profiler finds at its next window or session start (MapSessionHooks.LostHooks) and stops measuring,
+        // except on MapState.OnTick, whose strip removes the boundary that runs the window check, so there the
+        // lines stop until the session end looks again.
+        // Given up on the two below, for any owner: the swallow of a
+        // missing-API exception thrown anywhere inside them (the tick-event listeners, the periodic and hourly
+        // events of every mod's campaign behaviours); it unwinds to MapState.OnTick instead
+        // (docs/features/map-perf-profiler.md, "PatchShield").
+        // MapFrameProfilerBindingTests.ProfilerOnlyTargets_AreOnPatchShieldsExclusionList and
+        // SharedMapTargets_StayUnderPatchShield walk the real targets.
+        "TaleWorlds.CampaignSystem.Campaign.Tick",
+        "TaleWorlds.CampaignSystem.CampaignEvents.Tick",
     };
 
     /// <summary>Whether a patch target's declaring type + method name is on the hot-method exclusion list.</summary>

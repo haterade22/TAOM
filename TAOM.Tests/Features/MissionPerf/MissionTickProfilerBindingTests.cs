@@ -20,7 +20,7 @@ namespace TAOM.Tests.Features.MissionPerf;
 /// one warning), so an engine bump that moves a call site would silently profile nothing; these feed the
 /// REAL installed IL through the production rewrite and the real helpers. The hook-health list is walked to its
 /// real targets and patch methods. The PatchShield walks pin the agent tick on the exclusion list and the two
-/// tick methods off it.
+/// tick methods off it, by method and by namespace.
 /// </summary>
 [TestClass]
 public class MissionTickProfilerBindingTests
@@ -105,6 +105,10 @@ public class MissionTickProfilerBindingTests
             Assert.IsNotNull(target, patch.Name + " has no resolvable target.");
             Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod(target.DeclaringType?.FullName, target.Name),
                 $"{target.DeclaringType?.FullName}.{target.Name} must not be in PatchShieldPolicy.ExcludedTargetMethods");
+            // PatchShield skips a target on its namespace as well as on its method (PatchShield.IsExcludedTarget): a
+            // prefix such as "TaleWorlds.MountAndBlade" in ExcludedTargetNamespacePrefixes would unshield both.
+            Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetNamespace(target.DeclaringType?.Namespace),
+                $"{target.DeclaringType?.Namespace} must stay off ExcludedTargetNamespacePrefixes: {target.DeclaringType?.Name}.{target.Name} stays under PatchShield (decision D13)");
         }
     }
 

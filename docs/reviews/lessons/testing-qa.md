@@ -1406,3 +1406,36 @@ lifecycle with substitutes.
   the caller's placement instead (`MissionTickProfilerWiringTests`), so the method stays testable
   (`MissionTickProfilerBehaviorTests`, `MissionTickProfilerInstallerTests`).
 - **Source:** `docs/reviews/rca-mission-tick-profiler-2026-10-02.md` row R4.
+
+### A copy of engine code pins every method it replaces, and test helpers drive the production hook, not the accumulator behind it (2026-10-02)
+Plan 039's listener walk replaces `MbEvent<float>.Invoke` (which only calls `InvokeList` on one list) and copies
+`InvokeList`; only `InvokeList`'s IL was pinned, so a second list or a guard added to `Invoke` would have passed every
+gate while the measuring dispatch skipped listeners. The hooks' test helper closed frames with
+`Profiler.AddAppTick(0)` instead of the `EndAppTick` helper the patch calls, so the only feed of the continuity count
+had no test, and the installer's production patched check was always replaced by a fake.
+- **Why missed:** the pin was written for the method copied line for line, not for the call the swap removes; test
+  helpers were written for convenience against the pure class.
+- **Prevent:** for a call-site swap plus a copy, pin the IL of the replaced method and of every method the copy
+  reproduces (`MbEventInvoke_OnlyCallsInvokeListOnTheNonSerializedList_AndHasNoHandler`), and prove the pin fails by
+  pointing it once at a different method. Test helpers call the same helper the patch calls. A decision seam that tests
+  replace with a fake gets one test of the production implementation (here: test methods patched with the real Patch101
+  prefix and a foreign one). Compile hook bodies against the installed engine (`RuntimeHelpers.PrepareMethod`) so a
+  member a body references is pinned even when no test calls it.
+- **Source:** `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` rows R3 and R12.
+- **Update (2026-10-03, convergence round):** the adapter behind the map speed class
+  (`TimeControlAdapter.SimplifiedTimeControlMode`) was faked by every test and listed as not testable offline, so
+  pointing it back at the raw `Campaign.TimeControlMode` (the bug FOR-MIKE 16r fixed) compiled and kept the suite
+  green. Its getter is now pinned by IL (`TimeControlAdapterBindingTests`), and the rule covers any engine read that a
+  fake adapter stands in for.
+
+### A fix pass starts from the review file's own scope line, not from the file with the nearest name (plan 039, 2026-10-03)
+Plan 039's follow-up pass answered `claude-review.json`, the review of plan 028's `81811ea2` in wt-028, and left
+`claude-review-TRUE-039.json`, the review of this branch's `f86342ca`, unread. The two files sat in one folder with
+similar names, and three LOW findings of the unread one stood until the convergence round: a "Gained" line that paired
+finalizers with the wrong brackets, `Mission.OnPreTick` called shared and previously shielded, and two
+`StayUnderPatchShield` walks that ignored the namespace exclusions.
+- **Why missed:** the first lines of each review file name its commit range and its worktree, and they were not read
+  before the findings were.
+- **Prevent:** before fixing from a review file, read its scope line and check the commit range and the worktree
+  against the branch you are on. When two review files could apply, list each with its scope line before choosing.
+- **Source:** `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` row G5.

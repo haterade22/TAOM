@@ -788,3 +788,78 @@ header, which only reports.
   the call PatchShield makes (`Unpatch` by type, and by method for a finalizer).
 - **Source:** `docs/reviews/deep-review-028-mission-tick-profiler-2026-10-02.md`, fix pass 3 (Codex finding 2);
   `HookHealth`, `MissionTickProfilerHealth`, `HookHealthTests`.
+
+### Follow an escaping exception through every return branch of each finalizer at its next catch, as a per-target table (repeat, 2026-10-02)
+Plan 039 put five campaign-map methods on PatchShield's `ExcludedTargetMethods` and wrote the trade-off the maintainer
+decides from. It followed an escaping MissingMethod exception to Patch37's crash-capture finalizer on
+`Module.OnApplicationTick` and stopped there, calling the order of the two finalizers on that method UNVERIFIED. Patch37
+(priority 800) runs before PatchShield's finalizer (no attribute, filed as 400; Harmony 2.4.2 runs finalizers highest
+priority first against one shared exception slot), and it hands the exception back when crash capture is off, on
+re-entry or with its service unresolved; PatchShield's finalizer there then swallows it and strips the outer method's
+non-protected patches, TAOM's own included, never the culprit. The text also listed the unwound calls by name without
+reading them: the skipped `MapScreen.OnPostFrameTick` is what starts the party AI task. It also repeated plan 028's
+"no finalizer runs inside the measured phases", though Harmony emits finalizers after postfixes, so a finalizer always
+runs in the bracket that encloses its method.
+- **Why missed:** the 2026-10-02 rule above ("follow the exception to its next catch and read each unwound caller")
+  existed as prose; the executor of the next plan, a day later, produced none of the evidence it asks for.
+- **Prevent:** any change that adds or removes a shield, catch or finalizer carries a per-target table in its feature
+  doc: target, from which PatchShield pass it is shielded today, what a swallow does there, what an escape skips per
+  throw position (before and after the method's first state change), the next catcher, and that catcher's finalizers
+  in Harmony order (priority, then registration) with what each returns on every branch. Read the priority from the
+  attribute and the order from `PatchInfoSerialization.PriorityComparer`, never mark it UNVERIFIED when the Harmony
+  DLL is on disk. For each skipped call, read its body for what it starts or completes (a task, a pop, a save).
+- **Source:** `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` rows R1, R2 and R4.
+- **Update (2026-10-03):** the maintainer chose option B (decision D13): `MapState.OnTick`, `Campaign.RealTick` and
+  `MapScreen.OnFrameTick` stay shielded and only `Campaign.Tick` and `CampaignEvents.Tick` are excluded. The first
+  paragraph describes the first build (option A); the per-target table this lesson asks for is now in
+  `docs/features/map-perf-profiler.md`.
+- **Update (2026-10-03, review follow-up):** the D13 text called the `Mission.TickAgentsAndTeamsImp` exclusion "a fix"
+  for the freeze that a swallowed throw leaves (`tickCompleted` never set). It holds for the asynchronous agent tick
+  only. In fast-forward `MissionState` passes `asyncAITick: false`, `Mission.OnTick` runs the agent tick inline, and the
+  exception lands in `Mission.OnTick`, where PatchShield's finalizer (a missing-API exception, from a process's second
+  game start) or, above it, Patch37's crash capture on `Module.OnApplicationTick` (any exception, while capture is on)
+  or, for what Patch37 hands back, PatchShield's own finalizer there (a missing-API exception, from the first game
+  start) swallows it: flag still false, same freeze. A claim that an exclusion prevents a hang follows the throw from
+  every path that can run the method (asynchronous, inline) to its next catch, and says which path it covers.
+- **Update (2026-10-03, convergence round):** that follow-up named the shield as the only swallower of the
+  `tickCompleted` hazard and sent it to a PatchShield plan. Patch37's finalizer on `Module.OnApplicationTick` swallows
+  any exception while crash capture is on (the default), and no vanilla frame between `Mission.OnTick` and it catches,
+  so an ordinary exception after `Mission.cs:3756` freezes the next frame in any game, and a missing-API throw in a
+  process's first game does too. With capture off, on re-entry or with the service unresolved or throwing, Patch37
+  hands the exception back and PatchShield's own finalizer on that method, attached by the first game start's pass 2,
+  swallows a missing-API throw (the residual review of 2026-10-04 found this third catcher missing from the first
+  rewrite). A plan built on PatchShield's culprit-only strip changes neither path; a completion-aware recovery on
+  `Mission.OnTick` does, and its tests carry a crash-capture-off case. Name every catcher between the throw and the
+  engine, the default-on crash capture included, and follow each one's hand-back branches to the next finalizer on the
+  same method, before sizing the follow-up.
+
+### A hook verified once at install can be stripped later by PatchShield: look again where each measurement starts (2026-10-03)
+Plan 039's installer checked at the first game start that all six Patch101 targets carried a profiler patch, then trusted
+that for the process. PatchShield strips by owner: after a swallowed MissingMethod, MissingField or TypeLoad throw on a
+shielded method it unpatches every non-protected owner's prefixes, postfixes and transpilers on that method, and
+`com.taom.mod` is not protected, so Patch101's pair on `Campaign.RealTick`, `MapScreen.OnFrameTick` or `MapState.OnTick`
+goes with the rest and nothing reinstalls it. The profiler kept writing windows whose `realTickMs` read 0.00 and looked
+measured (Codex adversarial review, 2026-10-03). The first docs called that "silently ends that measurement" and
+accepted it as a cost of option B.
+- **Why missed:** the install check answered "did the apply work", and the shield's strip was analysed for what it does
+  to the swallowed method's callers, not to the profiler's own patches sharing that method. Accepting a silent end of
+  the measurement skipped the cheaper question of whether the profiler could notice it.
+- **Prevent:** a diagnostic whose patches share a method with a shield re-runs its installed check at its natural
+  cadence (a session start, a window start, a session end; never per call or per frame) and on a loss stops behind one
+  aggregated warning that names every lost hook, keeping what it already measured (D6). It never reinstalls what the
+  shield removed. List which of its hooks the shield can reach (the declaring assembly decides: TAOM's own methods are
+  never shielded) and which hook carries the check: a strip of the hook that runs the check cannot be reported by it, so
+  say so, and let the end of the run, which a TAOM method drives, look once more before it writes its summary. Say where
+  each look's cost lands: one at a window or session start runs after the boundary's stamp, so its time and allocation
+  fall in the next frame (`otherMs`, `maxFrameMs`, `allocKB`), and the feature doc names it beside the line write. A
+  patch-info read is a `BinaryFormatter` deserialization plus a scan of the loaded modules for each patch inspected, and
+  stays UNVERIFIED until timed; plan 028 ran its check at a mission start, off its measurement's clock, for that reason.
+- **Update (2026-10-03, convergence round):** the first fix looked at each start and not before the summary the session
+  ends with, so a strip after the last window start put frames with a zero phase into that summary unflagged, and a
+  strip on `MapState.OnTick` left the other hooks measuring with nothing in the output to say so. A measuring session's
+  end (`SubModule.OnGameEnd`, or a new campaign) now looks first, and a lost hook turns the summary into
+  `reason=hooksLost`.
+- **Source:** `docs/reviews/deep-review-039-campaign-map-frame-profiler-2026-10-02.md` (review follow-up);
+  `MapSessionHooks.LostHooks`, `MapFrameProfilerHooksTests.Step_HooksLostAtWindowStart_WritesTheWindowThenOneWarningThenTheSummaryAndStops`,
+  `MapFrameProfilerHooksTests.EndSession_HooksLostSinceTheLastLook_WarnsForThatSessionAndWritesTheSummaryAsHooksLost`,
+  `MapFrameProfilerInstallerTests.IsPatchedByThisProfiler_AfterThePatchShieldStripCalls_False`.

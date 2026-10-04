@@ -70,6 +70,14 @@ public class BattleLoadDiagnosticsSettingsProviderTests
         Assert.IsFalse(sut.TickProfilerEnabled);
     }
 
+    // The map profiler installs Harmony patches on the campaign map's per-frame methods, so its
+    // toggle fails CLOSED too.
+    [TestMethod]
+    public void MapProfilerEnabled_NoMcmInstance_DefaultsFalse()
+    {
+        Assert.IsFalse(new BattleLoadDiagnosticsSettingsProvider().MapProfilerEnabled);
+    }
+
     [TestMethod]
     public void TickProfilerTopN_NoMcmInstance_Defaults8()
     {

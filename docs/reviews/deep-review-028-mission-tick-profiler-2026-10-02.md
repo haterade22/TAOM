@@ -328,7 +328,9 @@ this branch's `AgentTickTarget_IsOnPatchShieldsExclusionList` and
 tip (a `git merge-tree` of the two branches, which shows four conflict hunks in
 `MissionTickProfilerBindingTests.cs`), not from 039's code, which this branch does not have. Reconcile at the
 merge: keep one set, and make every text that names a test (this record, 039's record, REVIEW-LOG) match the
-kept names.
+kept names. Reconciled at the merge (integration trial 2): this branch's names are kept, plan 039's two Mission
+tests are dropped, and `TickAndPreTickTargets_AreNotOnPatchShieldsExclusionList` carries plan 039's
+`IsExcludedTargetNamespace` assertion.
 
 ### Suite totals, round 3
 

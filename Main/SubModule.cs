@@ -844,6 +844,12 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.FactionUI.FactionScreen.FactionScreenLauncher>()?.ResetForGameEnd();
         }
         catch { /* teardown is best-effort, never break OnGameEnd */ }
+
+        // [MapProfileSummary] for the campaign session that just ended (Patch101, default off; a no-op when
+        // the map profiler is not installed). An in-campaign load can skip OnGameEnd, so the profiler also
+        // closes a session when it sees a new campaign.
+        try { Features.MapPerf.Hooks.MapSessionHooks.EndSession("gameEnd"); }
+        catch { /* diagnostic is best-effort, never break OnGameEnd */ }
     }
 
     protected override void OnGameStart(Game game, IGameStarter gameStarterObject)
@@ -1554,6 +1560,18 @@ public class SubModule : MBSubModuleBase
         // before a new game's workshops cache their items (OnNewGameCreatedPartialFollowUp runs after this hook).
         // Only a campaign has the markets, workshops and loot the gate reaches.
         IoC.Resolve<Features.ArmourAcquisition.IArmourGateService>().ApplyGating(game?.GameType is Campaign);
+
+        // Patch101 map frame profiler (default off; docs/features/map-perf-profiler.md): every game init,
+        // before the once-per-process guard, because a later game init only reports (restart needed, or the
+        // install failed). The installer applies its categories at most once per process and contains its
+        // own failures; the four services it takes are registered singletons (BattleLoadDiagnosticsIoC,
+        // TimeAccelerationIoC, the logger), resolved here before its try.
+        Features.MapPerf.Hooks.MapFrameProfilerInstaller.OnGameInitialized(
+            IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
+            IoC.Resolve<Features.TimeAcceleration.ITimeControlAdapter>(),
+            IoC.Resolve<Features.TimeAcceleration.ITimeAccelerationSettingsProvider>(),
+            IoC.Resolve<IModLogger>(),
+            TryPatchCategory);
 
         // Harmony patches are process-global (applied to methods, persist across games). Apply this
         // whole per-game-init patch block ONCE per process — re-applying on a 2nd game init duplicates

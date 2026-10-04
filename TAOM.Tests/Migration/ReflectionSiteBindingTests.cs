@@ -55,6 +55,11 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "RegisterBlow", "Method", "CustomAttacksUtils.cs:55")]
     // --- MissionPerf tick profiler: the private wait it times at its call site (MissionTickProfilerInstaller.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "WaitTickCompletion", "Method", "MissionTickProfilerInstaller.cs:29,52")]
+    // --- MapPerf map profiler: the TickEvent listener walk (TickEventListenerWalker.cs) ---
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`1", "MbEvent`1", "_nonSerializedListenerList", "Field", "TickEventListenerWalker.cs:47")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1", "EventHandlerRec`1", "Next", "Field", "TickEventListenerWalker.cs:51")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1", "EventHandlerRec`1", "<Action>k__BackingField", "Field", "TickEventListenerWalker.cs:54")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1", "EventHandlerRec`1", "<Owner>k__BackingField", "Field", "TickEventListenerWalker.cs:57")]
     // --- ShaderPrecompilation 1.4.7 headless-battle deployment-NRE guard (ShaderPrecompilePlayerAgentGuard.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "_initialPlayerAgent", "Field", "ShaderPrecompilePlayerAgentGuard.cs:44")]
     // --- BannerColorPersistence banner-paste (BannerEditorView_OnTick_Patch.cs) ---

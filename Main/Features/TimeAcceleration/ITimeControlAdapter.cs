@@ -15,5 +15,14 @@ public interface ITimeControlAdapter
     bool IsTimeControlLocked { get; }
     float SpeedUpMultiplier { get; set; }
     int TimeControlMode { get; set; }
+
+    /// <summary>
+    /// The engine's own simplification of the mode (<c>Campaign.GetSimplifiedTimeControlMode</c>), read-only: a
+    /// Stoppable mode reads Stop while the main party is waiting, because <c>TickMapTime</c> then gives the frame no
+    /// campaign time; the party-wait fast-forward reads as the plain unstoppable one and FastForwardStop as Stop.
+    /// Stop when no campaign is running.
+    /// </summary>
+    int SimplifiedTimeControlMode { get; }
+
     void SetTimeSpeed(int mode);
 }

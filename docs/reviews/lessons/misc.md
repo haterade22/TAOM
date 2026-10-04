@@ -395,13 +395,22 @@ the feature doc, and the named-weapon list protected 4 of 17 items.
   the display name, and list what the search did find.
 - **Source:** `docs/reviews/rca-armour-acquisition-2026-09-27.md` row 3 (XML lens).
 
-### When a decision reverses an invariant, grep its old words across code comments, config headers and MCM hints
+### When a decision reverses an invariant, grep its old words across code comments, config headers, MCM hints and the lessons
 The weapon rung began awarding the named hero weapons, but "never change hands" (the MCM master hint) and "never
 sold, looted or awarded" (a config comment and the config header) stayed, beside the feature doc's corrected table.
+The same happened to the lessons: decision D13 (2026-10-03) reversed the per-frame PatchShield exclusion, and the
+2026-09-26 and 2026-09-28 Prevent bullets in `harmony-il.md` still told the next patch author to exclude per-frame
+targets, because D13's update went under one lesson only. A pass on the same decision then corrected two comments the
+same way, one in `Dependencies/Foundation/PatchShieldPolicy.cs` and one in a test under `TAOM.Tests/`, folders this
+lesson did not yet name.
 - **Why missed:** only the doc's own table was rewritten; the invariant's other statements were not searched for.
-- **Prevent:** grep the old invariant's key words across `Main/`, ModuleData comments and `TaomSettings.cs` before
-  calling a reversed decision done. A repeat of RCA 2026-09-27 row 19.
-- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 6 (Data flow A).
+- **Prevent:** grep the old invariant's key words across `Main/`, `Dependencies/`, ModuleData comments,
+  `TaomSettings.cs`, the comments in `TAOM.Tests/` and `docs/reviews/lessons/*.md` (a Prevent bullet restates the
+  invariant, and it is what the next author reads) before calling a reversed decision done. A repeat of RCA 2026-09-27
+  row 19.
+- **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 6 (Data flow A);
+  `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` row F4 (D13 and the `harmony-il.md` Prevent bullets) and
+  row G2 (the two comments, in `PatchShieldPolicy.cs` and `MissionTickProfilerBindingTests.cs`).
 
 ### Every engine claim written into a doc or a data header cites a line read that session, or says UNVERIFIED
 The ladder's "Engine facts" and the materials header carried six wrong claims (towns never eat the materials; an
@@ -423,3 +432,20 @@ plan 041 turns the profiler on for every player.
   in full, one line where the cap starts, and a count of every event in the run's summary
   (`MissionTickProfiler.MaxHitchLinesPerMission`). Price a stream at its setting's floor, not its default.
 - **Source:** `docs/reviews/rca-mission-tick-profiler-2026-10-02.md` row R1.
+
+### A fault latch records its key before anything that can throw, and a fault keeps what was already measured (2026-10-02)
+The plan 039 map profiler stopped measuring on a fault and relied on its session (`_session`, the campaign) to keep
+the next frame from retrying. `OpenSession` stored the session after the provider reads, so a throwing read left no
+session and every later frame opened it again and threw again. A guard added to log the fault once per session keyed
+on a session number that only `BeginSession` advanced, so it muted the repeated throws instead of stopping them, and a
+second campaign's identical fault logged nothing. The fault also dropped every frame already closed in the session,
+against D6's per-session summary. Separately, a failed install warned that nothing would be measured only at the next
+game init, which a one-campaign process never reaches.
+- **Why missed:** the fault design was written for faults inside a measuring session; the open path's own failure was
+  not walked, and a log guard was chosen where the latch was wrong.
+- **Prevent:** a fault handler sets the state that stops the retry itself (here `Fault` takes the campaign and makes it
+  the session) rather than relying on code that runs after the throw. Test the fault in the open path with a throwing
+  substitute and `Received(1)` on the read (`Step_SessionOpenThrows_FaultsOnceAndDoesNotRetryTheSameCampaign`). A
+  stop on fault writes the summary so far with `reason=fault`. A reason line is written at the event that causes it,
+  not at the next opportunity to report.
+- **Source:** `docs/reviews/rca-campaign-map-frame-profiler-2026-10-02.md` rows R8, R10 and R11.

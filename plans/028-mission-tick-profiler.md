@@ -12,6 +12,10 @@
 > `TAOM.Tests/Features/MissionPerf/`), 030 (deletes the `Patch35_Mission_OnTick` postfix) and 034
 > (PatchShield) run in the same programme; a change from them in the files above is expected drift:
 > re-check only the excerpts this plan relies on.
+>
+> **Decided 2026-10-03 (D13):** the maintainer took `Mission.OnTick` and `Mission.OnPreTick` off
+> `ExcludedTargetMethods`; only `Mission.TickAgentsAndTeamsImp` stays excluded. The "PatchShield trade-off"
+> paragraph below, and the three entries its steps add, describe the first build.
 
 ## Status
 
