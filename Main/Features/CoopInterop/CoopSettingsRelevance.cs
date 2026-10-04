@@ -76,6 +76,8 @@ public static class CoopSettingsRelevance
         "EnableHitchProbe",
         // The Patch101 campaign map profiler's toggle (2026-10-03): log lines, never a computation.
         "EnableMapProfiler",
+        // The [AnimMem] clip memory probe; it reads, never changes, the engine.
+        "EnableAnimMemoryProbe",
         // The war elephant howdah's [Howdah] diagnostics lines (#627); gates logging, never the platform.
         "EnableHowdahDiagnostics",
     };

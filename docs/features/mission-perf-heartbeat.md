@@ -37,7 +37,8 @@ Cost: one timestamp per frame, one sort of at most 4,096 doubles per five second
 Battle Load Diagnostics MCM page, `Mission Performance` group: `EnableMissionPerfHeartbeat`,
 default on. Read from the MCM instance at most once a second (`ToggleRefreshSeconds`);
 instrumentation only, so it is excluded
-from the co-op settings fingerprint.
+from the co-op settings fingerprint. The same group holds `EnableAnimMemoryProbe` for the clip memory
+probe below, also default on and read at each mission start.
 
 ## Log line
 
@@ -626,6 +627,116 @@ script blocks (they run on workers; the block totals are kept). Unverified until
 log: whether the JIT inlines `WaitTickCompletion` (the self-check line), which thread ticks script
 components (the thread line), and the native cost of the clip-loading call (the sample line).
 
+## Animation clip memory probe
+
+Bannerlord keeps animation clips marked Loading Type 1 or 2 "on demand": a worker that samples an
+unloaded clip blocks until it loads, which delays the parallel agent tick and shows up as a frame
+spike. The engine's eviction pass works against a **12 MiB** budget: it measures the excess over
+12 MiB once, when it starts, and evicts idle loaded clips until it has freed that much. Clips in use,
+and loads that finish during the pass, can leave the total above 12 MiB. A pass is scheduled once a
+load takes the total past 15 MiB (the loader's compare at `0x591327`; that the compare schedules the
+pass is inferred, not traced). The `[AnimMem]`
+probe logs how many bytes of on-demand clip data the engine holds against that budget, whether a clip
+is loading at the instant of a sample, and how often the total fell between samples. A troll-heavy
+battle and a large vanilla battle then show whether the budget is under pressure, which is the
+evidence for raising it. They do not decide the other lever, making TAOM's hot clips resident: the
+first load of a clip blocks the worker that samples it whatever the total, and the probe cannot see
+that wait (see "Reading it" and the
+[engine notes, section 6](../reference/engine/mission-frame-threads-and-native-costs.md)).
+
+**How it finds the values.** No fixed offset: once per process, in the first mission's `AfterStart`
+(under the loading screen), `AnimMemoryProbe` reads the PE headers of the loaded
+`TaleWorlds.Native.dll`, requires `.text`, `.rdata` and `.data`, copies `.text` and scans it for a
+50-byte signature of the clip eviction pass (its `mov eax` load of the loaded-bytes counter and its
+`subss` of the budget float, with the four rip displacements wildcarded). The match must be unique;
+the counter target must be an aligned 4-byte address inside `.data` and the budget target one inside
+`.rdata`, both proven before either is read; the budget float must read exactly `12582912`; and the
+first counter read must not be negative. On the v1.5.3 client the site is at RVA `0x21E00F`, the
+budget `subss` at `0x21E034`, the counter at `0xDABE40` and the budget float at `0xB2E2DC`. Any failed
+check turns the probe off for the rest of the process with one `[AnimMem] disabled` line naming the
+reason; `[MissionPerf]` is unaffected. The probe never writes engine memory.
+
+**What is checked and what is trusted.** Before the first read of the counter or the budget float, the
+probe checks that each target is an aligned 4-byte address inside `.data` or `.rdata`, by the section
+table it parsed from the module's own headers. Read on trust before that: the 4 KiB header page at the
+module base, and the `.text` copy, whose range comes from the same table. Also trusted: that
+`TaleWorlds.Native.dll` stays mapped for the whole process (`GetModuleHandleW` takes no reference, and
+the counter address is cached once armed). Outside every check is the engine's own
+`IsAnyAnimationLoadingFromDisk()`: it takes no lock, and what can grow the clip record list or free a
+record while a mission callback walks it was not traced (**UNVERIFIED**; see the engine notes). A
+managed `catch` cannot help there: an access violation is a corrupted-state exception on .NET Framework.
+
+**Cost.** One scan of about 10 MB once per process, inside the first mission's loading screen
+(`scanMs` in the header), plus one read of the budget float. Then, per mission, one aligned 32-bit read
+of the counter and one `MBAnimation.IsAnyAnimationLoadingFromDisk()` call per second (a native walk
+over every clip record, not only the on-demand ones, stopping at the first one loading; it takes no
+lock), one log line every 5 s, and one or two lines at mission end. Each INFO line is written and
+flushed on the calling thread, which is the main thread here (`FileLogger.LogInfo` is durable).
+**Not yet measured in a battle:** what one `IsAnyAnimationLoadingFromDisk()` call costs against the
+full clip table, and what each synchronous flush costs a frame. The scan reports its own cost
+(`scanMs`); nothing else is timed.
+
+**Measuring that cost.** The heartbeat's A/B ("Reading an A/B": the toggle off against on, three runs
+per cell) cannot resolve either one. At 60 fps the sample lands on one frame in sixty and the 5 s line
+on one in three hundred, so a cost of X ms moves `avgMs` by X/60 (0.03 ms for a 2 ms stall), which the
+run-to-run variation that section warns of would hide. The five sampled frames in a window can move
+`p95Ms` by at most five places along the sorted frames, and `maxMs` only if one of them becomes the
+window's slowest. The A/B therefore only bounds the aggregate effect on frame time; compare `maxMs` as
+well, because a single long stall can show there. To measure the two costs directly, use plan 041's
+`[TickProfiler] anim-loading sample` line (the median of 32 timed calls of this same native call, once
+that plan merges; it does not time a flush), or time one battle with a `Stopwatch` around a sample and
+around its INFO write.
+
+**Toggle.** Battle Load Diagnostics MCM page, `Mission Performance` group,
+`EnableAnimMemoryProbe` ("Enable Animation Clip Memory Probe"), default on, read at each mission start.
+Instrumentation only, so it is excluded from the co-op settings fingerprint.
+
+**Reading it.** `pctOfBudget` above 100 is expected: the total can reach about 125% (15 MiB) before
+an eviction pass is scheduled. A pass that finds enough idle clips frees the excess it measured at
+its start; with clips in use, or loads landing during the pass, it can end above 12 MiB, and the next
+pass waits for a load past 15 MiB. `samplesAtOrAbove90Pct` counts
+against 12 MiB, so in a busy battle most samples count. `drops` counts one-second samples lower than
+the one before (across a window boundary too). Among the engine's direct references to the counter
+only the eviction pass lowers it (engine notes, section 6), so a drop means a pass ran since the
+previous sample. It is not a count of evictions: one drop can be many clips, and a pass followed by a
+reload of the same bytes inside one second leaves none.
+
+**What the numbers can and cannot decide.** A total sitting at or above 100% with frequent drops is
+evidence of budget pressure, which supports a budget raise; resident clips would also stop those clips
+reloading. A low total with no drops is only the absence of that evidence: it shows no sustained
+pressure in the sampled seconds, and a one-second snapshot cannot exclude churn that returns to the
+same total within a second. It does not rule out making hot clips resident. A type 2 clip starts
+unloaded and loads on its first sample, and again after an eviction, and that load blocks the worker
+that asked for it whatever the total. The probe cannot see that wait either: `loadingNow` and
+`loadingSamples` are point observations taken in `OnMissionTick`, after the frame's
+`WaitTickCompletion` has already held the main thread until the previous parallel agent tick
+finished, and before the next one starts, so the load that delayed a frame has already ended by the
+time the probe looks. `loadingSamples=0` therefore does not show that no frame waited on a clip load.
+To reject either lever, use timing or event evidence correlated with the hitches themselves, not these
+logs alone: plan 028's `[Hitch]` lines give each hitch's wait and agent-tick timing, and plan 041's
+clip-loading sample, taken in a prefix on `Mission.OnPreTick` before its `WaitTickCompletion`, ties a
+hitch to a clip load (engine notes, section 6).
+
+### Log lines
+
+Every line is INFO except `stopped`, which is ERROR; none is per frame. KB is bytes / 1024 (floor) and
+a percentage is floored. The formats are pinned literally by `AnimMemLineTests`.
+
+| Line | When | Fields | Example |
+|---|---|---|---|
+| armed | once per process, when the scan succeeds | module base address; `.text` RVA and size; the RVAs of the load site, the budget site, the counter and the budget float; the budget in bytes; the scan's cost in ms | `[AnimMem] armed: TaleWorlds.Native.dll base=0x7FFB12340000 text=0x1000+0xA240CC loadSite=0x21E00F budgetSite=0x21E034 counter=0xDABE40 budget=0xB2E2DC budgetBytes=12582912 scanMs=23.4` |
+| disabled | once per process, when a check fails or the counter later reads negative | the reason | `[AnimMem] disabled for this process: TaleWorlds.Native.dll is not loaded in this process. No further [AnimMem] samples will be taken; [MissionPerf] is unaffected.` |
+| off | each mission start with the toggle off | none | `[AnimMem] off for this mission: 'Enable Animation Clip Memory Probe' is off (Battle Load Diagnostics page).` |
+| mission start | each mission start with the probe armed | first sample in KB, budget in KB, percent of budget, whether a clip is loading (0 or 1) | `[AnimMem] mission start: sample every 1 s, line every 5 s, startKB=10240 budgetKB=12288 pctOfBudget=83 loadingNow=0` |
+| periodic | every 5 s of wall clock | `t` (seconds since mission start); the last sample in KB and as a percent of the budget; `loadingNow` of the last sample; over the window: `drops`, `minKB`, `maxKB`, and samples with a clip loading out of all samples | `[AnimMem] t=+5s loadedKB=12288 budgetKB=12288 pctOfBudget=100 loadingNow=0 drops=2 minKB=9216 maxKB=12288 loadingSamples=0/6` |
+| periodic, over budget | as above | as above | `[AnimMem] t=+10s loadedKB=15360 budgetKB=12288 pctOfBudget=125 loadingNow=1 drops=0 minKB=15360 maxKB=15360 loadingSamples=1/5` |
+| periodic, tail | mission end, before the summary, when samples were taken since the last 5 s line | as periodic, over that partial window | `[AnimMem] t=+7s loadedKB=10240 budgetKB=12288 pctOfBudget=83 loadingNow=0 drops=1 minKB=8192 maxKB=10240 loadingSamples=0/2` |
+| summary | mission end (`OnEndMission`, or `OnRemoveBehavior` when the mission is torn down without it), when at least one sample was taken | `t`; over the whole mission: samples, first and last sample in KB, peak in KB and percent, samples at or above 90% of the budget, drops, samples with a clip loading, and whether the session stopped early (0 or 1) | `[AnimMem] summary: t=+7s samples=6 startKB=10240 endKB=12288 peakKB=12288 peakPct=100 samplesAtOrAbove90Pct=4 drops=2 loadingSamples=0 stopped=0` |
+| stopped (ERROR) | once per mission, on a caught exception | exception type and message | `[AnimMem] stopped for this mission after InvalidOperationException: boom` |
+
+The summary counts samples at or above 90% rather than seconds because samples are one second apart
+only while frames are shorter than a second.
+
 ## Key Files
 
 | File | Purpose |
@@ -633,7 +744,7 @@ components (the thread line), and the native cost of the clip-loading call (the 
 | `Main/Features/MissionPerf/FrameStats.cs` | Pure window: record, should-emit, emit |
 | `Main/Features/MissionPerf/MissionPerfLine.cs` | The line format |
 | `Main/Features/MissionPerf/Hooks/MissionPerfHeartbeatBehavior.cs` | The `MissionLogic` |
-| `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsSettings.cs` | The heartbeat toggle and the three tick profiler settings |
+| `Main/Features/BattleLoadDiagnostics/BattleLoadDiagnosticsSettings.cs` | The heartbeat toggle, the three tick profiler settings, the hitch probe toggle and `EnableAnimMemoryProbe` |
 | `Main/Features/MissionPerf/AllocationCounter.cs` | The per-thread allocation counter, bound by reflection |
 | `Main/Features/MissionPerf/BehaviorTickTable.cs` | Per-behaviour-type frame, window and mission accumulators |
 | `Main/Features/MissionPerf/MissionTickProfiler.cs` | Frame, window, hitch and mission-summary arithmetic; generation |
@@ -664,6 +775,16 @@ components (the thread line), and the native cost of the clip-loading call (the 
 | `Main/Features/MissionPerf/Hooks/MissionAttributionInstaller.cs` | The attribution swap lists, the script tick delegate, the site counts |
 | `Main/Features/MissionPerf/Hooks/MissionTickProfilerHooks.Probe.cs` | `[HitchDetail]`, the per-mission probe flags, the first-tick header, `[TickSummaryExtra]` |
 | `Main/Adapters/IAnimationLoadingAdapter.cs`, `AnimationLoadingAdapter.cs` | `MBAnimation.IsAnyAnimationLoadingFromDisk()` |
+| `Main/Features/MissionPerf/AnimMemory/ClipBudgetSignature.cs` | The eviction-pass signature: parse, scan, rip targets, resolve |
+| `Main/Features/MissionPerf/AnimMemory/PeSectionTable.cs` | PE32+ section table parser and bounds check |
+| `Main/Features/MissionPerf/AnimMemory/AnimMemLine.cs` | Every `[AnimMem]` line format |
+| `Main/Features/MissionPerf/AnimMemory/IAnimClipMemoryProbe.cs` | The probe interface the session uses |
+| `Main/Features/MissionPerf/AnimMemory/AnimMemoryProbe.cs` | Once-per-process arming, every disable reason, the counter read |
+| `Main/Features/MissionPerf/AnimMemory/AnimMemorySession.cs` | One mission: 1 s samples, 5 s line, summary |
+| `Main/Features/MissionPerf/AnimMemory/AnimMemoryProbeModule.cs` | Feature module: registrations and the mission behavior |
+| `Main/Features/MissionPerf/AnimMemory/Hooks/AnimMemoryProbeMissionBehavior.cs` | The `MissionLogic`: toggle, arm in `AfterStart`, tick, end |
+| `Main/Adapters/INativeModuleMemoryAdapter.cs` | Read-only module memory: base, copy, aligned 32-bit read |
+| `Main/Adapters/NativeModuleMemoryAdapter.cs` | `GetModuleHandleW`, `Marshal.Copy`, `Marshal.ReadInt32` |
 
 ## Tests
 
@@ -712,6 +833,21 @@ all five real Patch98 classes on dummy methods: each bracket's own column, exact
 (`BindingVerification`: the targets, the two rewrites against the installed IL, the PatchShield split),
 `HitchProbeWiringTests` (the frame boundary's move, the priorities, the `__state` signatures), and
 `HitchProbeOverheadBenchmarkTests` (`Benchmark`, opt-in: the per-frame cost).
+
+`TAOM.Tests/Features/MissionPerf/AnimMemory/`: `ClipBudgetSignatureTests` (parse, scan, rip targets
+of the two real encodings, resolve on the real 50 bytes), `PeSectionTableTests` (parse and every
+reject, bounds), `ClipBudgetSignatureInstalledBinaryTests` (LiveInstall: the signature on the
+installed `TaleWorlds.Native.dll`, and the v1.5.3 RVAs), `AnimMemLineTests` (every line literally),
+`AnimMemoryProbeTests` (header, scan once, every disable reason, NaN budget, negative counter at
+arming and after it, exception, disable latch, read before arming, reads), `AnimMemorySessionTests`
+(start line, cadence, 5 s line, drops in and across windows, loading count, the 90% boundary, the
+tail line, summary, negative read at start and later, exception, empty mission),
+`AnimMemoryProbeWiringTests` (module listed once, behavior declared, the source shape of the two
+teardown overrides, singleton probe, default on, instrumentation, no native write and no
+`Marshal.Copy` into native memory), `AnimMemoryProbeMissionBehaviorTests` (RequiresGame, so not on
+hosted CI: the end and removal callbacks against a real session write the summary once whichever
+comes first, write it from removal alone, repeat nothing, sample nothing afterwards, and write nothing
+when the probe never armed). `SyntheticNativeImage` builds the fake module.
 
 ## Reading an A/B
 

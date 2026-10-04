@@ -26,7 +26,9 @@
 - **Effort**: M (new pure code, two small adapters, one mission behaviour, wiring, docs; one commit)
 - **Risk**: LOW (read-only: after a one-time signature check and one budget read, one aligned 32-bit
   read and one `IsAnyAnimationLoadingFromDisk` call per second; it writes nothing into the engine and
-  disables itself on any mismatch)
+  disables itself on any mismatch). Two edges stay unverified, because the Codex review of 2026-10-03
+  could not close them: the engine's own loading query takes no lock and its table lifetime was not
+  traced, and the per-second cost in a battle was not measured (Maintenance notes)
 - **Depends on**: none
 - **Category**: perf (a measurement that decides a perf lever)
 - **Planned at**: commit `0d1e91f0`, 2026-10-02
@@ -35,7 +37,7 @@
   `EveryLanguage_DeclaresARowForEveryEnglishKey` (English keys without rows in the other languages; the
   paid translator run waits on the maintainer). Python suite: not needed (this plan touches no
   `tools/` file). RefAsm unit step (Commands): not measured by the writer; Step 1 records it.
-- **Issue**: filed by the orchestrator before execution
+- **Issue**: #718, filed by the orchestrator before execution
 
 ## Why this matters
 
@@ -47,8 +49,11 @@ TAOM battles play, and TAOM's hill troll and elephant attack clips are type 2. T
 TAOM's hot clips resident, or raise the 12 MiB budget engine-wide), and both are the maintainer's call;
 neither should be pulled on a guess. This plan adds a read-only probe that logs, once a second, how
 many bytes of on-demand clip data the engine holds against that budget, whether a clip is loading
-right now, and how often the total fell (clips evicted), so one troll-heavy battle and one large
-vanilla battle give the number the decision needs.
+at that instant, and how often the total fell (a sign that clips were evicted), so one troll-heavy
+battle and one large vanilla battle show whether the budget is under pressure. That is the evidence
+for the budget lever only: the first load of a clip blocks the worker that samples it whatever the
+total, and a one-second sample cannot see that wait, so timing evidence correlated with hitches is
+still needed before either lever is rejected.
 
 ## Current state
 
@@ -126,14 +131,21 @@ with `python tools/native_sig_author.py` and a brute-force disp32 scan of `.text
 - **When `AfterStart` runs** (`pwsh tools/taom-src.ps1 path TaleWorlds.MountAndBlade.MissionState`,
   `FinishMissionLoading`, lines 333-351): `CurrentMission.AfterStart()` runs between
   `Utilities.SetLoadingScreenPercentage(0.48f)` and `(0.56f)`, under the loading screen and before the
-  first `Mission.OnTick`. A one-time scan there costs load time, not a battle frame. `MissionBehavior`
-  (same decompile): `public virtual void AfterStart()`, `public virtual void OnMissionTick(float dt)`,
-  `protected virtual void OnEndMission()`.
+  behaviour's first tick (the engine's own two preliminary `CurrentMission.Tick(0.001f)` calls, lines
+  338-341, run before the behaviour is added). A one-time scan there costs load time, not a battle
+  frame. `MissionBehavior` (same decompile): `public virtual void AfterStart()`,
+  `public virtual void OnMissionTick(float dt)`, `protected virtual void OnEndMission()`.
 - **Reading safely.** On .NET Framework 4.x an `AccessViolationException` is a corrupted-state
-  exception that a plain `catch` does not catch: a read of an unmapped address kills the game. So every
-  address the probe reads must first be proven inside a mapped section of the module (the `.text`
-  range it copies, the `.data` and `.rdata` targets). An aligned 32-bit read is one load on x64, so a
-  value the engine is writing cannot tear. Net472 surface used: `[DllImport("kernel32")]
+  exception that a plain `catch` does not catch: a read of an unmapped address kills the game. So the
+  two targets the probe reads with `ReadInt32` (the counter in `.data`, the budget float in `.rdata`)
+  are each checked against the section table of the module's own headers, for 4-byte alignment and for
+  all four bytes lying inside that section, and both are checked before either is read. The header page
+  and the code copy come first and are read on trust: the 4 KiB page at the module base (RVA `0` to
+  `0xFFF`) is in no section, since the first section, `.text`, starts at `0x1000`, and the `.text`
+  range comes from that same table, so it is not independently checked. That the module stays
+  mapped is assumed. The engine's own loading query is outside this check (it takes no lock and its
+  table lifetime was not traced). An aligned 32-bit read is one load on x64, so a value the engine is
+  writing cannot tear. Net472 surface used: `[DllImport("kernel32")]
   GetModuleHandleW`, `Marshal.Copy(IntPtr, byte[], int, int)`, `Marshal.ReadInt32(IntPtr)`,
   `BitConverter.ToInt32`, `BitConverter.ToSingle(BitConverter.GetBytes(int), 0)`.
   `BitConverter.Int32BitsToSingle` does **not** exist on net472; do not use it.
@@ -619,7 +631,9 @@ The test file's usings: `System`, `System.Text.RegularExpressions`,
 All four adapter files use namespace `TAOM.Adapters`, as the top-level files in `Main/Adapters/` do.
 
 `Main/Adapters/INativeModuleMemoryAdapter.cs` (public, ADR-007; summary: read-only access to a native
-module mapped in this process; the caller guarantees every address lies inside a mapped section):
+module mapped in this process; callers pass only addresses inside the module's mapped image, the
+adapter checks nothing, and an access violation is a corrupted-state exception on .NET Framework,
+which no plain catch stops):
 
 ```csharp
 public interface INativeModuleMemoryAdapter
@@ -795,7 +809,7 @@ GREEN:
   ```csharp
   [SettingPropertyGroup("Mission Performance")]
   [SettingPropertyBool("Enable Animation Clip Memory Probe", Order = 10, RequireRestart = false,
-      HintText = "Writes an [AnimMem] line to the TAOM debug log every 5 seconds while a mission runs: how much on-demand animation clip data the engine holds against its 12 MiB budget, whether a clip is loading from disk right now, and how often the total fell (clips evicted), plus a summary when the mission ends. Read-only: it finds the two engine values once per game session by a signature check, then reads the clip byte total once a second; if the check fails on this game version it turns itself off and says why in the log. Takes effect at the next mission start. Default ON.")]
+      HintText = "Writes an [AnimMem] line to the TAOM debug log every 5 seconds while a mission runs: how much on-demand animation clip data the engine holds against its 12 MiB budget, whether a clip is loading from disk at the moment of a sample, and how often the total fell between one-second samples (a sign that clips were evicted), plus a summary when the mission ends. Read-only: it finds the two engine values once per game session by a signature check, then once a second reads the clip byte total and asks the engine whether a clip is loading; if the check fails on this game version it turns itself off and says why in the log. Takes effect at the next mission start. Default ON.")]
   public bool EnableAnimMemoryProbe { get; set; } = true;
   ```
   (`Order = 10` leaves 1 to 9 for plan 028's profiler settings in the same group. A new property name,
@@ -854,8 +868,8 @@ passes, and so does
   excluded from the co-op fingerprint); and a **log lines** table listing all eight lines from Step 5
   with their fields and the example strings. State that `pctOfBudget` above 100 is expected (the loader
   lets the total pass 12 MiB before the eviction pass trims it) and that `drops` counts one-second
-  samples lower than the one before, a proxy for evictions. Add the twelve new production files
-  (Scope) to `## Key Files` and the new test classes to `## Tests`.
+  samples lower than the one before, a sign that an eviction pass ran and not a count of evictions.
+  Add the twelve new production files (Scope) to `## Key Files` and the new test classes to `## Tests`.
 - `docs/reference/feature-map.md:72`, the MissionPerf row: append, before ` See [mission-perf-heartbeat.md]`,
   `Also the \`[AnimMem]\` probe (\`AnimMemory/\`): on-demand animation clip bytes against the engine's 12 MiB budget, read-only, signature-guarded.`
 - `docs/reference/engine/mission-frame-threads-and-native-costs.md` section 6: after the last bullet
@@ -888,8 +902,9 @@ using it):
 The engine keeps only 12 MiB of on-demand animation clip data and
 evicts clips past that; a worker that then needs an evicted clip
 blocks until it reloads, which shows up as a battle frame spike.
-Whether TAOM battles hit that budget decides between making TAOM's
-hot clips resident and raising the budget, so measure it first.
+Whether TAOM battles press against that budget is evidence for the
+choice between raising it and making TAOM's hot clips resident, so
+measure it first.
 
 A new probe, on by default on the Battle Load Diagnostics page,
 finds the engine's loaded-clip byte counter and its 12 MiB budget by
@@ -922,7 +937,9 @@ Machine and a non-PE32+ magic; find; bounds),
 - Not testable offline (the `Not-tested:` trailer, and only these): `NativeModuleMemoryAdapter`'s three
   members against the running game, `AnimationLoadingAdapter`, and
   `AnimMemoryProbeMissionBehavior`'s engine callbacks. Every decision behind them is in the tested
-  classes.
+  classes. (The Codex review of 2026-10-03 found the teardown callbacks reachable from a unit test
+  with the game assemblies: `AnimMemoryProbeMissionBehaviorTests`, tagged `RequiresGame`, drives
+  `OnEndMissionInternal` and `OnRemoveBehavior` against a real session.)
 
 ## Done criteria
 
@@ -980,9 +997,13 @@ Stop and report (do not improvise) if:
 
 Pull and deploy as usual. Then, per the perf run's FOR-MIKE item 2: one troll-heavy battle and one
 large vanilla-troop battle with the probe on (it is on by default), and read the `[AnimMem]` lines and
-summaries next to `[MissionPerf]`. A total sitting at or above 100% with frequent drops supports a
-budget raise or resident clips; a total far below 12 MiB rules both out. No restart of Claude sessions
-is needed (no hooks or settings change).
+summaries next to `[MissionPerf]`. A total sitting at or above 100% with frequent drops is evidence of
+budget pressure, which supports a budget raise (resident clips would also stop those reloads). A low
+total with no drops is only the absence of that evidence: it does not rule out resident clips, because
+the first load of a clip blocks the worker that samples it whatever the total, and `loadingNow` is a
+point observation taken between agent ticks that misses that wait. Reject neither lever
+without timing evidence correlated with hitches. No restart of Claude sessions is needed (no hooks or
+settings change).
 
 ## Maintenance notes
 
@@ -993,8 +1014,9 @@ is needed (no hooks or settings change).
 - **Plan 028** edits the same files (`BattleLoadDiagnosticsSettings.cs`, `CoopSettingsRelevance.cs`,
   the pinned count in `SettingsFingerprintTests.cs`, `coop-interop.md`, `bannerlord-together-compat.md`,
   `mission-perf-heartbeat.md`, the feature-map row). Whichever merges second resolves the counts by
-  adding both plans' settings; the engine reference page also says plan 028 records
-  `IsAnyAnimationLoadingFromDisk`, which this plan does not change.
+  adding both plans' settings. The engine reference page used to say plan 028 records
+  `IsAnyAnimationLoadingFromDisk`; plan 028 leaves the clip-loading flag to plan 041, and the page's
+  section 6 now says so.
 - **What the review should probe**: that no read can happen before both section checks pass
   (`AnimMemoryProbe.EnsureArmed` order); that the NaN budget path disables; that the 10 MB text copy
   is released after the scan; that the session never logs per frame; and that the 5 s line keeps
@@ -1009,3 +1031,17 @@ is needed (no hooks or settings change).
   deferred: the Configuration table in `docs/features/battle-load-diagnostics.md` lacks both Mission
   Performance toggles (`EnableMissionPerfHeartbeat` already, `EnableAnimMemoryProbe` after this plan);
   add both rows once plans 028 and 036 have merged.
+- **Unverified native edges** (Codex review, 2026-10-03): the probe checks its two target addresses
+  against the module's own section table, reads the header page and the code copy on trust, and
+  assumes the module stays mapped. The engine's own `IsAnyAnimationLoadingFromDisk` (native
+  `0x6EAAE0`) is outside that check: it takes no lock, reads the list's count once and its begin
+  pointer for every entry, and what can grow the clip record list or free a record while a mission
+  callback walks it was not traced. The per-second cost of that walk and of each synchronous INFO
+  flush was not measured in a battle. If either becomes a problem the loading query is the part to
+  drop or make opt-in; the counter read does not depend on it. Whether the probe ships on by default
+  is the maintainer's decision (NEEDS MIKE 1 in the review record).
+- **What the log can decide**: occupancy against the budget informs the budget lever. It does not rule
+  out resident clips, whose benefit includes the first load of a clip that no occupancy figure shows,
+  and `loadingNow` is read between agent ticks (`OnPreTick` waits for the previous tick first), so a
+  load that delayed that tick has already ended. Pair the logs with timing evidence for the hitches
+  before rejecting either lever.

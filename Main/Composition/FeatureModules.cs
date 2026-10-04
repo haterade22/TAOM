@@ -21,5 +21,6 @@ internal static class FeatureModules
         new Features.RealmBorders.RealmBordersModule(),
         new Features.BattleCorpses.BattleCorpsesModule(),
         new Features.TournamentRewards.TournamentRewardsModule(),
+        new Features.MissionPerf.AnimMemory.AnimMemoryProbeModule(),
     };
 }

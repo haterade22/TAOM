@@ -133,11 +133,11 @@ creature contact limb rays ([scripted-melee-strikes.md](../scripted-melee-strike
 
 | Piece | Where | What it does |
 |---|---|---|
-| Clip data record | initialiser `0x473090` | Stores the clip's Loading Type at `+0x194`. Type 0: the data pointer (`+0x88`) and size (`+0x80`) are set at once, no loader. Type 1: a short resident piece goes to `+0x90` and a loader callback (`+0x98`) is installed for the full data. Type 2: a loader callback is installed. Reader count `+0xD8`, state `+0xE0` (0 unloaded, 1 loading, 2 loaded), a mutex at `+0x130` and a condition variable at `+0xE8` |
+| Clip data record | initialiser `0x473090` | Stores the clip's Loading Type at `+0x194`. Type 0: the data pointer (`+0x88`) and size (`+0x80`) are set at once, no loader. Type 1: a short resident piece goes to `+0x90` and a loader callback (`+0x98`) is installed for the full data. Type 2: a loader callback is installed. Reader count `+0xD8`, state `+0xE0` (0 unloaded, 1 loading, 2 loaded; the initialiser stores 0 in both, so an on-demand clip starts unloaded), a mutex at `+0x130` and a condition variable at `+0xE8` |
 | Acquire | `0x474140` | Type 0: returns the data pointer, nothing else. Type 1 or 2: marks the clip used (`0x473250`); spins while the reader count is `-1` (being evicted), then raises it with a compare-and-swap loop; if the state is 0 it swaps it to 1 and starts the loader (`0x474660`); a type 1 clip sampled inside its resident short piece returns that piece; otherwise the calling thread locks the clip's mutex and **waits on its condition variable until the data is loaded** |
 | Release | the accessors, for example `0x473320` and `0x4733A0` | Every read of a type 1 or 2 clip's data ends with an atomic decrement of the reader count; type 0 skips it. Atomic operations on `+0xD8` appear at 28 sites, among them one sampler function with eight (`0x49D960`) |
-| Eviction | `0x21DEA0` | Drains a queue of loaded on-demand clips, sorts them, and while the global loaded-bytes counter exceeds **12,582,912 bytes (12 MiB, the float at `0xB2E2DC`, read by this function only)** frees clips whose reader count it can swap from 0 to `-1`: data freed, state back to 0, the counter lowered |
-| Probe | `IMBAnimation.IsAnyAnimationLoadingFromDisk` (`0x6EAAE0`, managed `MBAnimation.IsAnyAnimationLoadingFromDisk()`) | Walks the on-demand clip records and returns true while any is in state 1 (loading) |
+| Eviction | `0x21DEA0` | Drains a queue of loaded on-demand clips and sorts them. It measures the excess of the global loaded-bytes counter over **12,582,912 bytes (12 MiB, the float at `0xB2E2DC`, read by this function only)** once, at its start, then walks the sorted list from its end and frees clips in state 2 (loaded) whose reader count it can swap from 0 to `-1` (data freed, state back to 0, the counter lowered), until the bytes freed reach that excess or the list runs out. It never re-reads the counter, so clips in use and loads that land during the pass can leave the total above 12 MiB. Every return clears the pass flag `0xDABE44` |
+| Probe | `IMBAnimation.IsAnyAnimationLoadingFromDisk` (`0x6EAAE0`, managed `MBAnimation.IsAnyAnimationLoadingFromDisk()`) | Walks the record pointer list at `0xDB00C8` from its start and returns true at the first record in state 1 (loading); when none is loading it reads every entry. It takes no lock and checks no thread: it takes the count once at entry from the list's end and begin pointers (`0xDB00D0`, `0xDB00C8`) and re-reads the begin pointer for every entry. Whether the engine can grow that list or free a record while a mission thread calls this was not traced (**UNVERIFIED**) |
 | Load-time loaders | bulk `0x591390`, single `0x592400` | Read clip data at asset load ("Unable to read animation clip data for %s"); the bulk loader fans out jobs on the engine job manager and helps run them |
 
 What it means:
@@ -148,8 +148,9 @@ What it means:
 - The first sample after a clip is unloaded **blocks that worker** until the clip has loaded. The
   parallel agent tick then finishes late, and the next frame's `WaitTickCompletion` (section 1) holds the
   main thread: a load shows up as a frame spike, not as a worker-only cost.
-- Only 12 MiB of on-demand clip data stays resident. A battle whose working set of type 1 and 2 clips
-  is larger evicts clips nobody is reading at that moment and loads them again on their next use.
+- On-demand clip data can grow to 15 MiB before a load sets the pass flag (below), and a pass frees
+  only the excess over 12 MiB that it measured at its start. A battle whose working set of type 1 and 2
+  clips is larger evicts clips nobody is reading at that moment and loads them again on their next use.
 - Type 0 clips do none of this. [yotthani] DualWield's 293 clips at type 2 cost 8.3 s of CPU in 45 s in a
   500 against 500 battle and 0.14 s once every clip was resident (an unpublished profile; the
   mechanism above is the TAOM-verified part).
@@ -158,11 +159,27 @@ What it means:
   template's motion. Give each resident clone its own key before setting type 0.
 - TAOM consequence: 24 of the 30 bound hill-troll release and blocked clips and the elephant's 8 attack
   clips sit at Loading Type 2 ([bannerlord-animation-system-map.md](../bannerlord-animation-system-map.md)),
-  and vanilla ships hundreds of type 1 and 2 clips that TAOM battles also play. Measure first: the
-  profiler (plan 028) records `IsAnyAnimationLoadingFromDisk` per frame and on every hitch, beside the
-  agent-tick and wait times. Two levers follow from the result, both the maintainer's decision: set type
-  0 on TAOM's hot battle clips (Armory data, with unique keys), or raise the 12 MiB budget for the whole
+  and vanilla ships hundreds of type 1 and 2 clips that TAOM battles also play. Measure first: plan 028's
+  profiler records the wait and agent-tick times of every hitch, and plan 041 adds an
+  `IsAnyAnimationLoadingFromDisk` sample per frame, flagged on each hitch's `[HitchDetail]` line and taken
+  in a prefix on `Mission.OnPreTick` before its `WaitTickCompletion`, so it can see a load still blocking
+  the previous agent tick. Two levers follow from the result, both the maintainer's decision: set type 0
+  on TAOM's hot battle clips (Armory data, with unique keys), or raise the 12 MiB budget for the whole
   process (a guarded four-byte native patch).
+- **[TAOM-verified, Ghidra and a disp32 scan, 2026-10-02]** Among rip-relative references, the counter
+  at `0xDABE40` is written only by `lock xadd` at `0x591319` (in `0x5911A0`, adding a clip's size field
+  `+0x80` after a load) and at `0x21E0EF` (the eviction pass, adding the negated freed bytes), and read
+  at `0x21E00F` (the eviction pass) and `0x830A3` (in `0x82BE0`, as a float). After its add, `0x5911A0`
+  compares the total with `0xF00000` (15 MiB, at `0x591327`) and above it sets a once-flag
+  (`0xDABE44`) with `lock cmpxchg` and hands an object to `0x44400`; that this schedules the eviction
+  pass is an inference, not traced, though the pass clears the same flag at every return. The
+  `[AnimMem]` probe logs that counter against the budget once a second, locating both by signature,
+  never by offset ([mission-perf-heartbeat.md](../../features/mission-perf-heartbeat.md)). That is an
+  occupancy snapshot, not a timer of loads. It shows pressure on the budget. It does not show a clip's
+  first load, which blocks the worker that samples it whatever the total (the Acquire row: a clip in
+  state 0 is loaded on its first use), and its loading flag is read in `OnMissionTick`, after the
+  previous parallel agent tick has finished (section 1), so a load that delayed that tick has already
+  ended. A low total therefore does not rule out setting type 0 on hot clips.
 
 ## 7. Asset facts from the Modding Kit [yotthani]
 

@@ -20,6 +20,24 @@ When porting a native hook target to a new engine build, a structural body-match
 - **Prevent:** (1) For every hook target, add a one-line "signature" assertion to the disasm workflow: which arg register is dereferenced first, and is it the pointer type the hook casts it to? (2) Reach for interior triangulation, not single-point structural matching, whenever a build changes prologues (`tools/native_sig_author.py` has both). (3) Treat "all 7 patterns single-match at expected RVAs" as necessary-not-sufficient — the definitive gate is the in-game log showing `sample-processing` with real pointers, never `sample-AV`. The `Signatures.h` comment for `cloth_factory` carries the full RCA.
 - **Source:** `docs/features/native-skin-fixes.md` ("v1.4.6 native port" → RCA) + `Dependencies/NativeSkinFixes.NativeHooks/Signatures.h` (kClothFactory comment), 2026-06-30.
 
+### Name a native budget's trigger and its target separately (2026-10-02)
+The engine's on-demand clip budget float is 12 MiB, and the feature doc said the engine holds 12 MiB before evicting. The loader compares the total with `0xF00000` (15 MiB) and only then schedules the eviction pass, so totals between 100% and 125% are normal. The review's fix then said each pass trims the total to 12 MiB or less, which the binary does not guarantee: the pass (`FUN_18021dea0`, entry `0x21DEA0`) measures the excess over the budget once, when it starts, and evicts only idle loaded clips (state 2, no users) until it has freed that much. Clips in use, and loads that finish during the pass, can leave the total above 12 MiB.
+- **Why missed:** the doc was written from the constant the eviction pass reads, not from the compare that schedules it, although the engine note recorded both; the correction read the target from the subtraction and did not read the loop's exit and skip conditions.
+- **Prevent:** for any native limit, record every constant compared with the same counter (trigger, target, hysteresis) before stating what the limit means to a reader, and state what the enforcing loop skips and when it stops before calling the target a guarantee.
+- **Source:** `docs/reviews/rca-anim-memory-probe-2026-10-02.md` C4.
+
+### A diagnostic meant to decide a lever lists what it cannot see (2026-10-03)
+The `[AnimMem]` docs and plan said a total far below 12 MiB "rules out" both clip levers. It speaks to the budget lever only. A type 2 clip starts unloaded and loads on its first sample whatever the total (the acquire path, `0x474140`, never reads the counter), and the probe samples once a second in `OnMissionTick`, after the frame's `WaitTickCompletion`, so a load that delayed a frame has ended before `loadingNow` is read.
+- **Why missed:** every native claim was checked for truth and none for what the measurement can reject; the stated purpose ("decides between the levers") was copied into the reading guide.
+- **Prevent:** when a log is meant to choose between levers, write per lever the observation that would reject it, and mark each lever the log cannot reject. Say where the sample sits in the frame (the engine's tick order): a point sample misses a wait that ended before it.
+- **Source:** `docs/reviews/rca-anim-memory-probe-2026-10-02.md` X1.
+
+### A safety comment names what is checked, what is trusted and what is outside the checks (2026-10-03)
+The probe's summary said every address is proven inside a mapped section before any read. Only the two targets are checked against the section table; the header page and the code copy are read on trust; the module is assumed to stay mapped; and `IsAnyAnimationLoadingFromDisk` walks a native list with no lock, outside every check (`0x6EAAE0` holds no call, lock-prefixed instruction or thread check; what can grow the list was not traced).
+- **Why missed:** the comment was written for the arming path, which the reviews read closely, and it covered a class that also forwards an engine call nobody traced; the rollout cost sat in the review record and not in the doc that ships the default.
+- **Prevent:** write a safety comment as three lists (checked, trusted, outside the checks) and give each forwarded engine call its own entry. A doc that ships a diagnostic on by default says what was not measured and how to measure it.
+- **Source:** `docs/reviews/rca-anim-memory-probe-2026-10-02.md` X3.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

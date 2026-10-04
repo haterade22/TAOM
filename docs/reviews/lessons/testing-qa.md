@@ -1463,3 +1463,15 @@ player with every test green.
   member's old host is re-checked after a move. The orchestrator adds the day's new lessons to a queued plan's checklist
   before dispatching it.
 - **Source:** `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` row R4; the plan 028 lesson above.
+
+### A source-text guard against a dangerous API names the direction, not only the method (2026-10-02)
+`Behavior_MakesNoNativeWrite` banned `Marshal.Write`, `VirtualProtect` and `WriteProcessMemory` in the probe's files and passed, while `Marshal.Copy`, the call the adapter itself makes, writes native memory when its array argument comes first. Swapping the adapter's two arguments left the guard green.
+- **Why missed:** the banned list was built from API names that say "write"; the one overloaded API that writes or reads by argument order was the one in use.
+- **Prevent:** when a guard asserts a property ("no native write"), list every API in the guarded files that can have that effect under any overload and pin the safe shape (here: every `Marshal.Copy(` takes `new IntPtr(` first, and `unsafe` is banned), then prove the guard by mutating the real call into the unsafe shape.
+- **Source:** `docs/reviews/rca-anim-memory-probe-2026-10-02.md` C6.
+
+### A source-text pin of a callback proves its shape; drive the callback where the game assemblies allow (2026-10-03)
+The `[AnimMem]` behavior's teardown test matched the source text of `OnRemoveBehavior` and `OnEndMission`, and a convergence fix tightened the match. Codex showed it still passed with the line that writes the summary deleted, or the line that clears the session deleted: it read the override's text and never ran it. The plan had called the callbacks "not testable offline" and nobody tried; `MountDespawnOffThreadTests` already builds a `MissionBehavior` against the game assemblies and calls `OnEndMissionInternal()`.
+- **Why missed:** "not testable offline" was taken as a fact about the engine when it is a fact about hosted CI, which excludes `RequiresGame` tests but does not make them unrunnable.
+- **Prevent:** before pinning a lifecycle override by source text, check whether a `RequiresGame` test can construct the behavior and call its public entry (`OnEndMissionInternal`, `OnRemoveBehavior`); drive it with fakes and a recording logger, and keep the source test only as the hosted-CI structural pin, named for what it proves. Run the deletion mutation for each line a test is named for, and give a negative assertion that a stopped clock would also satisfy a control test (here, a live session that does sample once the aged clock passes the second).
+- **Source:** `docs/reviews/rca-anim-memory-probe-2026-10-02.md` X2.

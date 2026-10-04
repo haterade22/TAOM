@@ -208,7 +208,7 @@ public class SettingsFingerprintTests
         // one of these numbers moves, which is the moment to decide what it is. The same numbers
         // are quoted in docs/features/coop-interop.md.
         AssertSplit(typeof(TaomSettings), reflected: 320, covered: 217);
-        AssertSplit(typeof(BattleLoadDiagnosticsSettings), reflected: 14, covered: 0);
+        AssertSplit(typeof(BattleLoadDiagnosticsSettings), reflected: 15, covered: 0);
         AssertSplit(typeof(BlowDiagnosticsSettings), reflected: 1, covered: 0);
         AssertSplit(typeof(CrashReportSettings), reflected: 7, covered: 0);
     }

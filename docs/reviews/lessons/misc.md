@@ -475,3 +475,9 @@ native clip-loading call was a stub returning false.
   as "the managed part, X us; the stubbed call's cost is the line that measures it". Corrected figure: 0.477 and
   0.470 us.
 - **Source:** `docs/reviews/rca-profiler-extensions-and-hitch-probe-2026-10-02.md` rows R13 and R15.
+
+### A windowed diagnostic flushes its partial window before the summary (2026-10-02)
+The `[AnimMem]` session wrote one line per 5 s window and a mission summary. Samples after the last 5 s line reached the log only through the summary, which has no minimum, so a partial window's low point was lost, against D6's "aggregate or sample, never drop".
+- **Why missed:** the plan said "a summary at mission end", and nobody compared the summary's fields with the periodic line's to find the fields only the periodic line carries.
+- **Prevent:** for any instrument with periodic and summary lines, write the partial window at the end whenever it holds samples, and pin it with a test that ends the session between two periodic lines.
+- **Source:** `docs/reviews/rca-anim-memory-probe-2026-10-02.md` C2.

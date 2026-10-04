@@ -80,6 +80,11 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
         HintText = "On by default. Times the parts of every mission frame TAOM can see (the wait for the agent tick, the mission tick, scene scripts, agent spawns) and checks whether an animation clip is loading from disk, so each frame slower than the hitch threshold writes a hitch line and a detail line saying where the time went. Its measured cost is written to the TAOM debug log. Installed once at game start: turning it on takes effect after a restart; turning it off stops measuring from the next mission while 'Enable Tick Profiler' is off (the profiler measures through the probe's patches).")]
     public bool EnableHitchProbe { get; set; } = true;
 
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyBool("Enable Animation Clip Memory Probe", Order = 10, RequireRestart = false,
+        HintText = "Writes an [AnimMem] line to the TAOM debug log every 5 seconds while a mission runs: how much on-demand animation clip data the engine holds against its 12 MiB budget, whether a clip is loading from disk at the moment of a sample, and how often the total fell between one-second samples (a sign that clips were evicted), plus a summary when the mission ends. Read-only: it finds the two engine values once per game session by a signature check, then once a second reads the clip byte total and asks the engine whether a clip is loading; if the check fails on this game version it turns itself off and says why in the log. Takes effect at the next mission start. Default ON.")]
+    public bool EnableAnimMemoryProbe { get; set; } = true;
+
     [SettingPropertyGroup("Map Performance")]
     [SettingPropertyBool("Enable Map Profiler", Order = 0, RequireRestart = true,
         HintText = "Off by default. Times the campaign map's frame: the campaign tick, every per-frame tick-event listener by its owner, the map screen and TAOM's map views, and TAOM's application tick. Writes a [MapProfile] line to the TAOM debug log every 5 seconds while the map runs and a [MapProfileSummary] line when the campaign ends. Turning it on takes effect after a restart (the profiler is installed once, at game start); turning it off stops measuring from the next campaign session.")]
