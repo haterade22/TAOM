@@ -46,7 +46,9 @@ probe below, also default on and read at each mission start.
 [MissionPerf] t=+65s frames=300 fps=60.0 avgMs=16.67 p95Ms=25.50 maxMs=40.3 agents=812 active=640 formations=9 gc0=12 gc1=3 gc2=1
 ```
 
-`t` is seconds since the mission was created; the first line lands at +5 s.
+`t` is wall seconds since the behavior's `OnCreated`. The first window opens at the first
+`OnMissionTick`, so the first line lands one interval after that tick: `t=+6s` in the custom and
+campaign battle logs of 2026-09-29 to 2026-10-02, `t=+7s` in a tournament.
 
 ## Tick profiler (Patch97)
 
@@ -791,6 +793,8 @@ only while frames are shorter than a second.
 `TAOM.Tests/Features/MissionPerf/FrameStatsTests.cs`: cadence, average, nearest-rank p95,
 single sample, empty window (zeros, not NaN), window reset, bounded sample set, clock reset,
 line format.
+The line-format test is a twin pin with `tools/tests/test_perf_runs.py` (`PINNED_MISSION_PERF`),
+which parses the same literal: change both or neither.
 
 Tick profiler, all in `TAOM.Tests/Features/MissionPerf/`: `AllocationCounterTests` (the reflection
 binding), `BehaviorTickTableTests` (slots, folding, ordering, open frame, mission totals),
@@ -851,6 +855,126 @@ when the probe never armed). `SyntheticNativeImage` builds the fake module.
 
 ## Reading an A/B
 
-Take the lines from 30 s after both sides are AI-controlled (F6) to the first rout, compare the
-median `avgMs` and `p95Ms` between the two runs; `gc2` should not climb faster with the feature
-on. Three runs per cell is the floor, AI battles vary.
+`tools/perf_runs.py` does the arithmetic. Run the same scene several times with the change off and
+several times with it on, keep each log, then:
+
+```
+python tools/perf_runs.py <logs...>
+python tools/perf_runs.py compare --a <logs with it off...> --b <logs with it on...> --scene <scene id>
+```
+
+The first command prints one row per mission (a log may hold several). Each row reports the first
+window on its own as the spawn window, because `BattlePlayable` fires with `agents=0` and the spawn
+burst lands in that window, and steady-state numbers over the later windows from `t=+30s` with
+active agents: median fps, `avgMs` and `p95Ms`, the worst `maxMs`, and `gc0`, `gc1`, `gc2` per
+minute. The spawn window is never steady, even when a long render wait before the first tick puts
+it past `t=+30s`. `compare` prints the median of each metric per group, the delta and the
+percentage, with N per group, and refuses groups whose `[PerfContext]` build (Debug or Release) or
+texture quality differ unless given `--allow-mixed`. It counts the rows it could not check (no
+`[PerfContext]`, or `na` for either setting) under the table. Press F6 on the first frame so both
+sides are AI-controlled, and end each run at the same point: steady windows run to the end of the
+mission, routs included. Three runs per cell is the floor; AI battles vary. `gc2` should not climb
+faster with the change on.
+
+The report names what it could not read. It opens with one line per log read (path, size in bytes,
+line count, missions found, and how many lines it could not parse: a `[MissionPerf]`,
+`[TickProfile]`, `[Hitch]` or `[PerfContext]` line that does not read, or a `[TickSummary]` whose
+`hitches=` is missing or not a whole number, a line cut before its first key included), followed by
+the first five of those lines verbatim.
+Those four tags count only where a line's tag sits, right after the `[ts] [LEVEL]` prefix: a line
+that merely names one, as `[AnimMem]`'s `... [MissionPerf] is unaffected.`, is not that tag's line.
+Under each row, every flag prints its evidence, and every other `[Tag] key=value` line between the
+mission's start and the next mission's start or the next game's initialization (a later instrument
+such as `[TickSummary]`, and the campaign map's lines after a battle) is counted per tag; `--json`
+carries those lines in full as
+`extra_tags`, with the flag evidence as `flag_evidence`. A value runs to the next space-led `key=`
+outside brackets, so `[Doctrine]`'s `registered=[ShieldWall*1.00, Charge*0.30]` stays one value.
+A bracketed group after a space joins the value before it (`[MapLoad]`'s per-kind counts
+`[lord=64 ... other=78]` are part of `parties=`), so does a bare word or prose after a value, and a
+bracket left open runs its value to the end of the line. A line without the logger's `[ts] [LEVEL]`
+prefix (a multi-line entry's later lines) takes the timestamp of the newest prefixed line above it.
+Prose lines, such as the tick profiler's `[TickProfiler]` status lines, are neither counted nor
+unparsed. For example (lines cut to `...`):
+
+```
+log: taom_debug_2026-10-02_11-38-06.log size=372870B lines=3021 missions=4 unparsed=0
+  tag [Engine]: 1 line(s) before the first mission
+  tag [SaveLoad]: 2 line(s) before the first mission
+  tag [MountSpawn]: 4 line(s) before the first mission
+  tag [MapLoad]: 4 line(s) before the first mission
+taom_debug_2026-10-02_11-38-06.log #2 CustomBattle battle_terrain_biome_148 windows=14/9 fps=117.0 ... flags=FRAME_CAP,MEMORY_PRESSURE,DIRTY_BUILD,BUILD_PAIR_MISMATCH
+  FRAME_CAP: 6 of 9 steady windows within 1.0 fps of 117.1 fps; windows: t=+31s fps=117.1 active=83, ...
+  MEMORY_PRESSURE: [2026-10-02 11:44:21] [INFO] [MemSample] privMB=10092 ... memLoad=84%
+  DIRTY_BUILD: [BuildStamp] TAOM=v2.0.0.0 build.20261002-163736Z+bc39f6e4....dirty
+  BUILD_PAIR_MISMATCH: [BuildStamp] TAOM and TAOM.Dependencies built 1d 02h 55m apart
+  tag [MountSpawn]: 14 line(s)
+  ...
+```
+
+A game initializes before its first mission, and what that writes (the `[LoadPhase]` steps, and
+`[LoadXml]` and `[XmlMerge]` lines per module XML type, each with a per-game `summary`) belongs to
+no mission. Every `[Tag] key=value` line before a game's first mission goes on the log's header, not
+on a row: one `tag [LoadXml]: 27 line(s) before the first mission` line per tag in the text report
+(in a log with several games, the lines before each game's first mission), and `extra_tags` on the
+log in `--json`. The first of three kinds of line read while a mission is open is taken as the
+start of the next game: the lifecycle trace's `[MapLoad] #N t=Nms STATE initialized: InitialState`
+(the main menu, which the engine initializes only once the game before it is gone) or
+`... STATE initialized: GameLoadingState` (what `MBGameManager.StartNewGame` pushes for a new
+campaign, a saved game and a custom battle alike), a saved game's
+`[SaveLoad] ... phase=LoadRequested` line, which the Load Game click writes before the load reads
+anything, or a `[LoadPhase]`, `[LoadXml]` or `[XmlMerge]` line. The trace is
+`Patch89_MapLoadDiagnostics_Lifecycle` (`Main/Features/MapLoadDiagnostics`): a build that applies it
+writes both state lines, and no setting turns it off. It first shipped in v2.0.29, and the 1.4.5
+branch has none. The three load tags are written only while a game initializes, but each line
+follows the step it times (a `[LoadXml]` line comes when its XML type has finished loading, seconds
+after the load began); the state lines and the request come earlier. A save's own phases
+(`SaveBegin`, `SaveCompleted`) and the later phases of a load do not start a game. That
+mission's row stops there (the campaign map after a battle counted toward it up to that line, and a
+`[MemSample]` of the next game's load does not), and every line up to the next mission's start goes
+on the header. The request is written before the load can fail, so a load that never completes ends
+the row too: a Cancel at the module-mismatch question (`SandBoxSaveHelper.TryLoadSave` asks it when
+a module other than the official ones differs between the save and the install, a TAOM version
+change included) or a save that does not read leaves the player where the Load menu was opened. The
+lines written from there up to the next mission go on the header, as `before the first mission`
+lines, and the `[MemSample]` lines among them on no row. The Load item is on the campaign map's
+escape menu and a mission's has none, so the click comes after the mission it ends, and the row
+loses only the map's lines after it. A new campaign or a custom battle writes no load request, but
+it starts from the main menu, so the row of the game before it stops at the menu's `InitialState`
+line: the time in the menu goes on the header, the `[MemSample]` lines of the new game's load on no
+row (the header holds no `[MemSample]` lines), and the row keeps what its game wrote before that
+line, the teardown included. A log with none of these
+lines has no boundary: each mission keeps every line after its start, as before.
+
+A summary line, `[Tag] summary key=value ...` or `[Tag] summary: key=value ...` (`[AnimMem]`,
+`[LoadXml]` and `[XmlMerge]` write them), is kept without its leading word, so its fields are the
+line's own keys. A key named `summary`, or one that only starts with the word (`summaryMs=`), is not
+skipped. A row's `hitches:` count adds up what its `[TickSummary]` lines report, each for the
+`[Hitch]` lines above it back to the previous summary, because the profiler writes only the first
+100 `[Hitch]` lines of a mission in full and counts every slow frame in the summary. Lines that no
+readable summary covers count as themselves: those of a summary whose `hitches=` is missing or not a
+whole number, those below the row's last summary, and all of them in a row with no summary. A row
+with a readable summary and an unreadable one counts the readable one's `hitches=` plus the lines
+the unreadable one would have covered, whichever comes first.
+The phase breakdown and the worst frame always come from the `[Hitch]` lines that parsed, and the
+clause in parentheses says how many that is whenever it differs from the count:
+`hitches: 137 (100 parsed [Hitch] lines: agentTickMs x100)` has 37 slow frames without a line,
+`hitches: 5 (no [Hitch] line parsed)` has none, and a row whose summary counts 0 but whose log holds
+a line prints `hitches: 0 (1 parsed [Hitch] line: agentTickMs x1)`. No clause means every counted
+hitch has its line. A `[Hitch]` line that did not parse is counted as unparsed in the header, not
+as parsed. So is a `[TickSummary]` whose `hitches=` is missing or not a whole number (a line cut
+before its first key, `[TickSummary] frames` or the tag alone, included: the profiler writes its
+status text under `[TickProfiler]`, so a `[TickSummary]` line is always data), and the `[Hitch]`
+lines it would have covered count as themselves.
+
+Read the flags before the numbers:
+
+| Flag | Meaning |
+|---|---|
+| `FRAME_CAP` | With four or more steady windows: at least half of them sit within 1 fps of one window's fps, or the windows with the most and the fewest active agents, 30% or more apart, ran within 1 fps of each other. A frame limiter (in game or in the driver) may have set the frame time; lift it and rerun |
+| `MEMORY_PRESSURE` | The mission's `[PerfContext]`, or a `[MemSample]` line written between the mission's start and the next mission's start or the next game's initialization (so the campaign map after a battle counts toward that battle), read `memLoad` of 80% or more |
+| `DIAG_ON` | `[PerfContext]` shows cost beyond the default diagnostics: `tickProfiler=on`, or a `diag=` token other than the seven that default on (`battleLoad`, `stallWatchdog`, `stallBundle`, `exitSampler`, `freezeSampler`, `memSampler`, `missionPerf`) |
+| `DIRTY_BUILD` | The `[BuildStamp]` TAOM stamp ends in `.dirty`: the build held uncommitted edits, so say what was measured |
+| `BUILD_PAIR_MISMATCH` | The `[BuildStamp]` line says `MISMATCH`: TAOM and TAOM.Dependencies were built more than 12 hours apart |
+
+Exit codes: 0 when rows were found, 1 when no mission was found, 2 for a usage error, an unreadable
+file or a refused compare.

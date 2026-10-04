@@ -1498,3 +1498,27 @@ exception would have sent such a merge back to the engine.
   identity in general, a "Known limits" section lists the inputs that differ and the command that re-proves a
   player's module set (`TAOM_XMLMERGE_MODULES`).
 - **Source:** `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` finding 6.
+
+### A rule stated by position is coded by position, and its fixtures carry the shape every real input has (2026-10-02)
+Plan 029's contract said the first `[MissionPerf]` window is the spawn window, reported on its own and kept out of the steady statistics. The code kept it out with `t >= 30`, which holds only because every real log opens at `t=+6s`; the heartbeat's clock starts at `OnCreated` and its first window closes one interval after the first tick, so a long render wait (one is on record at 305 s) would put the spawn burst into the steady numbers. Most of the plan's fixtures opened on a `t=31` window with no spawn window at all, a shape no real log has, so the value rule passed them and a position rule would have failed them.
+- **Why missed:** the value test and the position rule agree on every real input, and the synthetic fixtures were shaped to the code, not to the logs.
+- **Prevent:** when the contract names a position ("the first window", "the last line"), select by position and filter by value after. Build fixtures from the shape every real input has (here, a spawn window first), and add one fixture where the position and the value disagree.
+- **Source:** `docs/reviews/rca-perf-runs-parser-2026-10-02.md` F1.
+
+### A parser twin pin covers the producer's edge shapes and status lines, and the report it prints is asserted line by line (2026-10-02)
+`perf_runs.py` pinned one sample literal per tick-profiler line, equal to plan 028's. 028's own tests also pin `top=none`, `na` per-behaviour KB, an all-`na` context, a fourth data line (`[TickSummary]`) and eleven `[TickProfiler]` status lines; none had a parser-side test, and the `[TickSummary]` fixtures invented a shape 028 never writes. The compare table (the A/B verdict) and the row's detail lines were never asserted. Fourteen mutants, each misreading a real line or misprinting the report, survived the committed suite.
+- **Why missed:** a twin pin felt like a contract, but it pinned one happy-path sample; the producer's edge-shape tests were not mirrored, and printed text was assumed to follow from tested data.
+- **Prevent:** for every producer test that pins a line shape (edge cases and status lines included), add the parser-side test that reads it; pin every data literal the producer pins; assert at least one golden line of each report section. Before calling the suite done, mutate each guard line (`== "none"`, `na`, a `\b`, a column) in a scratch copy and check a test fails.
+- **Source:** `docs/reviews/rca-perf-runs-parser-2026-10-02.md` F2, F3 and F4.
+
+### A red-first test proves the change mattered, not which guard: every guard line gets a mutant, follow-up commits included (2026-10-02)
+`perf_runs.py`'s value rule has two guards: a key must follow a space, and it must sit outside brackets. The commit that added both made its `[Doctrine]` bracket test go red first, but that test went red because of the space guard (`{Charge=` has no space before it). Four mutants of the bracket guard (depth never rises, only `[`, no clamp, no parentheses) and one of the continuation timestamp passed all 75 tests. The lesson above, written the same day, says to mutate each guard line; the commit was an orchestrator follow-up after the review round, and nobody ran the mutation pass on it.
+- **Why missed:** one red-then-green test felt like proof for the whole rule, and a follow-up commit outside a review round skipped the checks the round applies.
+- **Prevent:** for each guard line a change adds, write the mutant that removes or weakens it (in a scratch copy) and name the test that kills it; a guard no test kills gets a test on a real line where only that guard decides. This applies to every commit that adds a guard, not only to commits under review.
+- **Source:** `docs/reviews/rca-perf-runs-parser-2026-10-02.md` R1 and R4 (a repeat of F2 to F4's lesson).
+
+### A fixture labelled as a real line is that line verbatim; a variant is derived from the writer's code and labelled "modelled on" (2026-10-02)
+Twice in plan 029: a `[TickSummary]` variant set `allocKB=na` while keeping numeric per-behaviour KB, a pair plan 028 writes from one flag (C3), and a `[Doctrine]` fixture labelled "as a 2026-09-29 log writes it" put `troops=1` after `registered=[...]`, which `TeamDoctrineInstaller.cs:46` writes last (R5). Both passed because the parser was right; both claimed a provenance they did not have, so a later reader would trust a shape no writer produces.
+- **Why missed:** the fixture was edited from a real line to reach the case the test wanted, and the label was kept from the line it started as.
+- **Prevent:** copy a real line byte for byte when the comment says it is real (name the log and time); when the test needs a shape the logs lack, build it from the writer's format string and say "modelled on <writer>". Never edit a pinned or logged line in place to make a new case.
+- **Source:** `docs/reviews/rca-perf-runs-parser-2026-10-02.md` C3 and R5.

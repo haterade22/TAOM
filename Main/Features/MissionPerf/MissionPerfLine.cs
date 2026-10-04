@@ -4,7 +4,9 @@ namespace TAOM.Features.MissionPerf;
 
 /// <summary>
 /// The one line format, kept pure so the heartbeat behavior stays a thin reader of the engine
-/// and the parser in <c>tools/</c> has a single fixture to match.
+/// and <c>tools/perf_runs.py</c> has a single fixture to match: <c>PINNED_MISSION_PERF</c> in
+/// <c>tools/tests/test_perf_runs.py</c> and <c>FrameStatsTests.BuildLine_FormatsEveryFieldInvariantly</c>
+/// assert the same literal. Change both or neither.
 /// </summary>
 public static class MissionPerfLine
 {

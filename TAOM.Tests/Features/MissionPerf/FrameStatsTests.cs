@@ -130,6 +130,10 @@ public class FrameStatsTests
         Assert.IsTrue(sut.ShouldEmit(107.0));
     }
 
+    /// <summary>
+    /// Cross-language twin pin: <c>PINNED_MISSION_PERF</c> in <c>tools/tests/test_perf_runs.py</c> is
+    /// this literal, and <c>tools/perf_runs.py</c> must parse it to these numbers. Change both or neither.
+    /// </summary>
     [TestMethod]
     public void BuildLine_FormatsEveryFieldInvariantly()
     {

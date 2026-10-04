@@ -81,6 +81,16 @@ Offline `.sav` triage — stdlib only, no game required. Both understand the v1.
 
 ---
 
+## Performance logs
+
+Offline reading of the performance lines in `taom_debug_*.log`, stdlib only, no game required.
+
+| Script | Purpose | CLI |
+|--------|---------|-----|
+| `perf_runs.py` | **One performance row per mission from any number of `taom_debug_*.log` files, and an A/B compare of two groups of runs** (read-only). Cuts each log into missions at `[BattleLoad] phase=MissionOpenNew` (with Battle Load Diagnostics off: at a `[PerfContext]` line or a restart of the `[MissionPerf]` clock), reuses `triage_battle_load.py`'s parser for the load buckets and `[MemSample]`, reports the spawn window (the first `[MissionPerf]` line) apart from steady-state medians over the windows from `t=+30s` with active agents, aggregates `[TickProfile]` and `[Hitch]` lines when present (a row's `hitches:` adds up its `[TickSummary]` counts, a stretch with no readable one counted by its `[Hitch]` lines, and `(N parsed [Hitch] lines ...)` says what the phase breakdown covers when the two differ), keeps every other `[Tag] key=value` line from a mission's start to the next mission's start or the next game's initialization as `extra_tags` (a summary line, `[Tag] summary key=value` or `[Tag] summary: key=value`, is kept without its leading word), puts the lines before a game's first mission on the log header (the first of the lifecycle trace's `[MapLoad]` `STATE initialized: InitialState` or `GameLoadingState` line, a saved game's `[SaveLoad]` `LoadRequested` line, or a `[LoadPhase]`, `[LoadXml]` or `[XmlMerge]` line, read after a mission starts the next game), and flags confounders, each with its evidence: `FRAME_CAP`, `MEMORY_PRESSURE`, `DIAG_ON`, `DIRTY_BUILD`, `BUILD_PAIR_MISMATCH`. The report opens with one header per log (path, size, lines, missions, unparsed lines, the first five verbatim, and the extra tags before a game's first mission); a `[TickSummary]` without a usable `hitches=` (a bare one included) counts as unparsed, and `[MissionPerf]`, `[TickProfile]`, `[Hitch]` and `[PerfContext]` count only where a line's tag sits, after the `[ts] [LEVEL]` prefix. `compare` prints per-metric medians, delta, percentage and N per group, and refuses groups whose `[PerfContext]` build or texture quality differ unless `--allow-mixed`. Guide: `docs/features/mission-perf-heartbeat.md` "Reading an A/B". Tests: `tools/tests/test_perf_runs.py`. | `<log> [...]`, `--json`; `compare --a <logs> --b <logs>`, `--scene`, `--allow-mixed`, `--json`; exit 0 rows, 1 no mission, 2 usage, unreadable file or refused compare |
+
+---
+
 ## Content Generation
 
 | Script | Purpose | Output |

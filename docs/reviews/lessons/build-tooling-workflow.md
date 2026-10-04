@@ -3324,3 +3324,15 @@ switch-off logged no reason. The settings gate beside it returned "off" from a c
   returns the off value logs why, once or on change. Pin each with a test that a second reason still
   logs after the first.
 - **Source:** `docs/reviews/rca-load-time-stamps-2026-10-02.md` rows 2 and 3 (all six lenses).
+
+### Evidence for a flag comes from the same parse that raised it (2026-10-02)
+`perf_runs.py` raised `MEMORY_PRESSURE` from `triage_battle_load.py`'s strict `[MemSample]` parser but chose the line to show with its own looser `memLoad=(\d+)%` scan, so the cited line could be one the flag never read; its docstring said `[MemSample]` was never re-implemented.
+- **Why missed:** the evidence was added later as "find the line to print", a separate small scan beside the parse that decides the flag.
+- **Prevent:** derive a flag's evidence from the parsed records that raised it (or from the same parser, line by line); a second regex for one fact is a fork that drifts.
+- **Source:** `docs/reviews/rca-perf-runs-parser-2026-10-02.md` F6.
+
+### A parser rule change prints its diff per tag over the real corpus, not only for the tag that motivated it (2026-10-02)
+`perf_runs.py`'s new value rule (a value runs to the next space-led `key=` outside brackets) was written for `[Doctrine]`'s lists and checked over the 30 installed logs as "rows identical outside extra_tags, 489 values kept whole". The same rule also folded `[MapLoad]`'s seven per-kind party counts into `parties` (92 values, 644 keys) and would fold `[EnlistDiag]`'s presence snapshot into `verdict`; neither the commit, the doc nor the review record said so.
+- **Why missed:** the comparison counted the change where it was expected and summed the rest into "identical rows"; nothing printed which other tags' fields moved.
+- **Prevent:** when a parsing rule changes, run the old and new parser over the real corpus and print values changed, keys dropped and keys added per tag and key; every tag in that list is either intended (and pinned by a test on its real line) or a bug. Check producers on unmerged branches too when the rule is generic (plan 040's `phase=GameInit total`).
+- **Source:** `docs/reviews/rca-perf-runs-parser-2026-10-02.md` R2.
