@@ -605,6 +605,7 @@ MCM page **"TAOM — Battle Load Diagnostics"** (`BattleLoadDiagnosticsSettings`
 | `EnableMissionTickStallSampler` | `true` | The battle-freeze sampler (#634): photographs an agent tick or mission frame stuck for 10s or more as `[MissionStall]`. Never arms on a teardown frame and stands down during the exit window. Independent of the master toggle. Local-only for co-op (`CoopSettingsRelevance`). |
 | `EnableMemorySampler` | `true` | Session-wide `[MemSample]` telemetry + low-commit-headroom WARN (#386). Independent of the master toggle (crash forensics, not phase logging). |
 | `MemorySampleIntervalSeconds` | `30` | Seconds between `[MemSample]` lines (10–120; NaN/range-guarded in the provider, invalid → 30). Read live — no restart needed. |
+| `EnableLoadTimeStamps` | `false` | The detailed load-time lines ([load-time-stamps.md](load-time-stamps.md)). Independent of the master toggle. Local-only for co-op (`CoopSettingsRelevance`). |
 
 `Reuse.Singleton` — the provider is a process singleton, but `IsEnabled` reads the MCM value live on each access, so an in-game toggle takes effect immediately. Every gate (the Mission.Initialize prefix, the watchdog poll, the behavior-add) reads through this one provider, so they stay consistent with each other at any instant.
 

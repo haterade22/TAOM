@@ -47,6 +47,9 @@ public sealed class BattleLoadDiagnosticsSettingsProvider : IBattleLoadDiagnosti
     public bool MemorySamplerEnabled =>
         BattleLoadDiagnosticsSettings.Instance?.EnableMemorySampler ?? true;
 
+    public bool LoadTimeStampsEnabled =>
+        BattleLoadDiagnosticsSettings.Instance?.EnableLoadTimeStamps ?? false;
+
     public double MemorySampleIntervalSeconds
     {
         get

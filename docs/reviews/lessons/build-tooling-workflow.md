@@ -3299,3 +3299,28 @@ that does not exist.
 - **Why missed:** that rule loads when a `tools/**` file is read. A scratchpad prototype matches no `paths:` rule, and the script reached `tools/` through a write, not a read, so the convention entered context only after the script existed. The second instance of a rule existing but not firing for a new writer (2026-08-28 was the first).
 - **Prevent:** before promoting a scratchpad script into `tools/`, read `tools/README.md` "XML I/O convention" and `.claude/rules/moduledata-validation.md` (reading any `tools/*.py` loads the rule). A generator lands with parse-before-write, a `--check` that exits 1 when the committed output is stale, and a no-install test that compares the committed file with what the generator would write.
 - **Source:** `docs/reviews/rca-battle-scene-regions-2026-10-03.md` finding 2.
+
+### A timing stamp reads its clock outside its own work: start after its setup, end before its lines
+The `[Lifecycle]` dispatch line (plan 040) started its clock before the stamp swapped every listener by
+reflection and read the end only after it had written every handler and event line, each a synchronous
+INFO flush. Three texts then called `ms - listeners_ms` the engine's receivers. The sibling `[LoadXml]`
+path read its end tick before logging and was right.
+- **Why missed:** the stamp was reviewed for having its lines and totals, not for what each window
+  contains; the oracle's fake clock never advanced while logging, so no test could see it.
+- **Prevent:** in a stamp, take the end tick first in the closing call and start the window after any
+  setup the stamp itself does; pin it with a test whose logger (and adapter) advance the fake clock. A
+  sentence that says what a difference of two numbers is cites the clock reads that bound it.
+- **Source:** `docs/reviews/rca-load-time-stamps-2026-10-02.md` row 1 (Standards, Engine, Efficiency, Data flow).
+
+### A once-only reason line has one latch per reason, and every path that writes it does what it says
+`[Lifecycle] per-handler timing off for this session` was written by a gate, clock, logging or restore
+fault that turned nothing off, and those faults spent the line's single latch, so a later real
+switch-off logged no reason. The settings gate beside it returned "off" from a catch with no line at all.
+- **Why missed:** D6 was checked for the existence of once-only reason lines; nobody listed each caller
+  of the line and checked the consequence it states, and a catch returning the off value was read as
+  fail-safe rather than as a disable path.
+- **Prevent:** for each reason line, list every writer and confirm each one does what the text says;
+  give unrelated faults their own line and latch (the X3 and C5 "stamp fault" shape); a catch that
+  returns the off value logs why, once or on change. Pin each with a test that a second reason still
+  logs after the first.
+- **Source:** `docs/reviews/rca-load-time-stamps-2026-10-02.md` rows 2 and 3 (all six lenses).

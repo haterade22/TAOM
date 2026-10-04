@@ -6,7 +6,9 @@ using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TaleWorlds.Localization;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
+using TAOM.Tests.Features.LoadTimeStamps;
 
 namespace TAOM.Tests.Infrastructure;
 
@@ -29,12 +31,28 @@ public class PatchCategoryApplierTests
 
     private IModLogger _logger = null!;
     private List<string> _applied = null!;
+    private FakeStampClock _clock = null!;
+    private RecordingLogger _recording = null!;
 
     [TestInitialize]
     public void Setup()
     {
         _logger = Substitute.For<IModLogger>();
         _applied = new List<string>();
+        _clock = new FakeStampClock();
+        _recording = new RecordingLogger();
+    }
+
+    // Each category's apply advances the fake clock by its duration (one tick is one millisecond)
+    // and throws for the failing ones; every line lands in _recording.
+    private PatchCategoryApplier ApplierTiming(Dictionary<string, long> durations, params string[] failing)
+    {
+        return new PatchCategoryApplier(category =>
+        {
+            _clock.Advance(durations[category]);
+            if (Array.IndexOf(failing, category) >= 0)
+                throw new InvalidOperationException("boom " + category);
+        }, _recording, _clock);
     }
 
     private PatchCategoryApplier ApplierFailingOn(params string[] failing)
@@ -145,6 +163,158 @@ public class PatchCategoryApplierTests
     {
         Assert.IsTrue(text.GetVariableValue(tag, out var value), "no " + tag + " variable");
         return value.Value;
+    }
+
+    [TestMethod]
+    public void Constructor_WithANullClock_Throws()
+    {
+        Assert.ThrowsException<ArgumentNullException>(() => new PatchCategoryApplier(_ => { }, _logger, null!));
+    }
+
+    [TestMethod]
+    public void TryApply_ThenEndPhase_LogsThePhaseTotalWithTheSlowestCategory()
+    {
+        var sut = ApplierTiming(new Dictionary<string, long> { ["A"] = 3, ["B"] = 9 });
+
+        sut.TryApply("A");
+        sut.TryApply("B");
+        sut.EndPhase("GameInit");
+
+        CollectionAssert.AreEqual(new[]
+        {
+            "INFO [PatchApply] phase=GameInit scope=total categories=2 failed=0 ms=12.00 max_ms=9.00 max_category=B",
+        }, _recording.Lines);
+    }
+
+    [TestMethod]
+    public void TryApply_WhenTheApplyThrows_StillRecordsItsTimeAndCountsItFailed()
+    {
+        var sut = ApplierTiming(new Dictionary<string, long> { ["A"] = 2, ["B"] = 4 }, "B");
+
+        Assert.IsTrue(sut.TryApply("A"));
+        Assert.IsFalse(sut.TryApply("B"));
+        sut.EndPhase("GameInit");
+
+        Assert.AreEqual(2, _recording.Lines.Count);
+        StringAssert.StartsWith(_recording.Lines[0],
+            "ERROR [PatchApply] B FAILED (Harmony stops a category at its first failing class): ");
+        Assert.AreEqual(
+            "INFO [PatchApply] phase=GameInit scope=total categories=2 failed=1 ms=6.00 max_ms=4.00 max_category=B",
+            _recording.Lines[1]);
+    }
+
+    [TestMethod]
+    public void EndPhase_WithNoCategories_LogsZerosAndNone()
+    {
+        var sut = ApplierTiming(new Dictionary<string, long>());
+
+        sut.EndPhase("Mission");
+
+        CollectionAssert.AreEqual(new[]
+        {
+            "INFO [PatchApply] phase=Mission scope=total categories=0 failed=0 ms=0.00 max_ms=0.00 max_category=none",
+        }, _recording.Lines);
+    }
+
+    [TestMethod]
+    public void EndPhase_StartsAFreshPhase()
+    {
+        var sut = ApplierTiming(new Dictionary<string, long> { ["A"] = 5, ["B"] = 2 });
+
+        sut.TryApply("A");
+        sut.EndPhase("OnSubModuleLoad");
+        sut.TryApply("B");
+        sut.EndPhase("MainMenu");
+
+        CollectionAssert.AreEqual(new[]
+        {
+            "INFO [PatchApply] phase=OnSubModuleLoad scope=total categories=1 failed=0 ms=5.00 max_ms=5.00 max_category=A",
+            "INFO [PatchApply] phase=MainMenu scope=total categories=1 failed=0 ms=2.00 max_ms=2.00 max_category=B",
+        }, _recording.Lines);
+    }
+
+    [TestMethod]
+    public void EndPhase_ATie_NamesTheFirstSlowestCategory()
+    {
+        var sut = ApplierTiming(new Dictionary<string, long> { ["A"] = 4, ["B"] = 4 });
+
+        sut.TryApply("A");
+        sut.TryApply("B");
+        sut.EndPhase("GameInit");
+
+        StringAssert.EndsWith(_recording.Lines[0], "max_ms=4.00 max_category=A");
+    }
+
+    [TestMethod]
+    public void WriteHeldCategoryLines_Enabled_WritesEveryHeldCategoryInApplyOrderWithItsPhase()
+    {
+        var sut = ApplierTiming(new Dictionary<string, long> { ["A"] = 1, ["B"] = 2, ["C"] = 3 }, "C");
+        sut.TryApply("A");
+        sut.EndPhase("OnSubModuleLoad");
+        sut.TryApply("B");
+        sut.EndPhase("MainMenu");
+        sut.TryApply("C");
+        sut.EndPhase("GameInit");
+        _recording.Lines.Clear();
+
+        sut.WriteHeldCategoryLines(true);
+
+        CollectionAssert.AreEqual(new[]
+        {
+            "INFO [PatchApply] phase=OnSubModuleLoad category=A ms=1.00 result=ok",
+            "INFO [PatchApply] phase=MainMenu category=B ms=2.00 result=ok",
+            "INFO [PatchApply] phase=GameInit category=C ms=3.00 result=failed",
+        }, _recording.Lines);
+    }
+
+    [TestMethod]
+    public void WriteHeldCategoryLines_Disabled_WritesNothingAndDropsThem()
+    {
+        var sut = ApplierTiming(new Dictionary<string, long> { ["A"] = 1 });
+        sut.TryApply("A");
+        sut.EndPhase("OnSubModuleLoad");
+        _recording.Lines.Clear();
+
+        sut.WriteHeldCategoryLines(false);
+        sut.WriteHeldCategoryLines(true);
+
+        Assert.AreEqual(0, _recording.Lines.Count);
+    }
+
+    [TestMethod]
+    public void WriteHeldCategoryLines_Enabled_WritesEachHeldLineOnlyOnce()
+    {
+        var sut = ApplierTiming(new Dictionary<string, long> { ["A"] = 1, ["B"] = 2 });
+        sut.TryApply("A");
+        sut.EndPhase("GameInit");
+        sut.WriteHeldCategoryLines(true);
+        sut.TryApply("B");
+        sut.EndPhase("Mission");
+        _recording.Lines.Clear();
+
+        sut.WriteHeldCategoryLines(true);
+
+        CollectionAssert.AreEqual(new[] { "INFO [PatchApply] phase=Mission category=B ms=2.00 result=ok" }, _recording.Lines);
+    }
+
+    // Decision 2 of plan 040: the always-on part must stay far under a millisecond for ~100
+    // categories. The real clock, a no-op apply: what remains is the timing's own overhead.
+    [TestMethod]
+    public void TryApply_TimingOverhead_IsUnderFiftyMicrosecondsPerCategory()
+    {
+        const int Calls = 1000;
+        var sut = new PatchCategoryApplier(_ => { }, _logger);
+        var names = new string[Calls];
+        for (var i = 0; i < Calls; i++) names[i] = "Patch_Overhead_" + i;
+
+        var watch = System.Diagnostics.Stopwatch.StartNew();
+        for (var i = 0; i < Calls; i++) sut.TryApply(names[i]);
+        watch.Stop();
+
+        var microsPerCall = watch.Elapsed.TotalMilliseconds * 1000.0 / Calls;
+        Console.WriteLine($"[PatchApply overhead] {microsPerCall:0.000} microseconds per category over {Calls} calls");
+        Assert.IsTrue(watch.Elapsed.TotalMilliseconds < 50.0,
+            $"Timing overhead {microsPerCall:0.000} us per category is 50 us or more");
     }
 
     // Also pins the premise against the pinned Harmony 2.4.2: a class whose target does not

@@ -56,4 +56,7 @@ public interface IBattleLoadDiagnosticsSettingsProvider
     /// installs Harmony patches; the compiled MCM default is true. Read once per process at the first game
     /// init, where Patch98 installs or is skipped, and at each mission start.</summary>
     bool HitchProbeEnabled { get; }
+
+    /// <summary>The detailed load-time stamps (default false); read at game start, game initialization and each campaign dispatch.</summary>
+    bool LoadTimeStampsEnabled { get; }
 }

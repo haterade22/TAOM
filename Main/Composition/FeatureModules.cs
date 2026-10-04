@@ -22,5 +22,6 @@ internal static class FeatureModules
         new Features.BattleCorpses.BattleCorpsesModule(),
         new Features.TournamentRewards.TournamentRewardsModule(),
         new Features.MissionPerf.AnimMemory.AnimMemoryProbeModule(),
+        new Features.LoadTimeStamps.LoadTimeStampsModule(),
     };
 }

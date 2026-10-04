@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using TaleWorlds.Localization;
+using TAOM.Core.Diagnostics;
 using TAOM.Core.Logging;
+using TAOM.Features.LoadTimeStamps;
 
 namespace TAOM;
 
@@ -17,17 +19,27 @@ namespace TAOM;
 /// full cause and remembered until the phase summary is taken.
 /// The apply delegate keeps HarmonyLib out of this class, and its only engine type is the
 /// TextObject it builds (never rendered here), so it is unit-testable.
+/// Every apply is timed, failed or not: EndPhase logs the phase's always-on total, and
+/// WriteHeldCategoryLines writes the per-category lines later, when the toggle that decides them
+/// can be read (docs/features/load-time-stamps.md).
 /// </summary>
 internal sealed class PatchCategoryApplier
 {
     private readonly Action<string> _apply;
     private readonly IModLogger _logger;
     private readonly List<string> _failed = new();
+    private readonly IStampClock _clock;
+    private readonly List<CategoryTiming> _phase = new();
+    private readonly List<(string Phase, CategoryTiming Timing)> _held = new();
 
     internal PatchCategoryApplier(Action<string> apply, IModLogger logger)
+        : this(apply, logger, StopwatchStampClock.Instance) { }
+
+    internal PatchCategoryApplier(Action<string> apply, IModLogger logger, IStampClock clock)
     {
         _apply = apply ?? throw new ArgumentNullException(nameof(apply));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _clock = clock ?? throw new ArgumentNullException(nameof(clock));
     }
 
     /// <summary>
@@ -37,9 +49,12 @@ internal sealed class PatchCategoryApplier
     /// </summary>
     internal bool TryApply(string category)
     {
+        var start = _clock.Now;
+        var ok = false;
         try
         {
             _apply(category);
+            ok = true;
             return true;
         }
         catch (Exception ex)
@@ -49,6 +64,49 @@ internal sealed class PatchCategoryApplier
                 $"[PatchApply] {category} FAILED (Harmony stops a category at its first failing class): {ex}");
             return false;
         }
+        finally
+        {
+            _phase.Add(new CategoryTiming(category, _clock.Now - start, ok));
+        }
+    }
+
+    /// <summary>Logs the phase's total line (always) and keeps its per-category records for
+    /// WriteHeldCategoryLines, because the toggle that decides them cannot be read in OnSubModuleLoad.</summary>
+    internal void EndPhase(string phase)
+    {
+        long totalTicks = 0;
+        var failed = 0;
+        CategoryTiming? slowest = null;
+        foreach (var timing in _phase)
+        {
+            totalTicks += timing.Ticks;
+            if (!timing.Ok) failed++;
+            if (slowest == null || timing.Ticks > slowest.Ticks) slowest = timing;
+            _held.Add((phase, timing));
+        }
+
+        var frequency = _clock.Frequency;
+        _logger.LogInfo(LoadTimeStampLines.PatchPhaseTotal(
+            phase,
+            _phase.Count,
+            failed,
+            LoadTimeStampLines.ToMs(totalTicks, frequency),
+            slowest == null ? 0 : LoadTimeStampLines.ToMs(slowest.Ticks, frequency),
+            slowest?.Category));
+        _phase.Clear();
+    }
+
+    /// <summary>Writes every held per-category line when enabled, in apply order, then drops them.</summary>
+    internal void WriteHeldCategoryLines(bool enabled)
+    {
+        if (enabled)
+        {
+            var frequency = _clock.Frequency;
+            foreach (var (phase, timing) in _held)
+                _logger.LogInfo(LoadTimeStampLines.PatchCategoryLine(phase, timing.Category, LoadTimeStampLines.ToMs(timing.Ticks, frequency), timing.Ok));
+        }
+
+        _held.Clear();
     }
 
     /// <summary>
@@ -80,5 +138,19 @@ internal sealed class PatchCategoryApplier
             .SetTextVariable("GROUPS", string.Join(", ", _failed));
         _failed.Clear();
         return summary;
+    }
+
+    private sealed class CategoryTiming
+    {
+        internal CategoryTiming(string category, long ticks, bool ok)
+        {
+            Category = category;
+            Ticks = ticks;
+            Ok = ok;
+        }
+
+        internal string Category { get; }
+        internal long Ticks { get; }
+        internal bool Ok { get; }
     }
 }

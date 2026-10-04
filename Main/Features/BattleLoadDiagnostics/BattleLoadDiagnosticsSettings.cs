@@ -89,4 +89,9 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
     [SettingPropertyBool("Enable Map Profiler", Order = 0, RequireRestart = true,
         HintText = "Off by default. Times the campaign map's frame: the campaign tick, every per-frame tick-event listener by its owner, the map screen and TAOM's map views, and TAOM's application tick. Writes a [MapProfile] line to the TAOM debug log every 5 seconds while the map runs and a [MapProfileSummary] line when the campaign ends. Turning it on takes effect after a restart (the profiler is installed once, at game start); turning it off stops measuring from the next campaign session.")]
     public bool EnableMapProfiler { get; set; } = false;
+
+    [SettingPropertyGroup("Load-Time Stamps")]
+    [SettingPropertyBool("Enable Load-Time Stamps", Order = 0, RequireRestart = false,
+        HintText = "Writes the detailed load-time lines to the TAOM debug log: one [PatchApply] line per Harmony patch group with its apply time (written at game initialization), [LoadPhase] steps of TAOM's game start and game initialization, and [Lifecycle] lines timing every campaign handler of a new game, a loaded save and the session start (a line for each handler taking 10 ms or more, and a total per event). The per-type [LoadXml] lines, the patch phase totals and one [Lifecycle] dispatch line per campaign dispatch are always written. Costs a few microseconds per handler while a campaign loads and nothing during play. Default OFF.")]
+    public bool EnableLoadTimeStamps { get; set; } = false;
 }

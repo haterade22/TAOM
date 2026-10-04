@@ -672,6 +672,8 @@ re-queried that day and match the lines below; the `BattleLoadDiagnosticsSetting
    do not turn on a default-off toggle), and the `[PatchApply]` phase totals (4 lines per process).
    Everything else (per-category `[PatchApply]`, `[LoadPhase]`, `[Lifecycle]`) follows a new MCM
    toggle, **Enable Load-Time Stamps**, default OFF, on the Battle Load Diagnostics page.
+   (Superseded 2026-10-03 for one `[Lifecycle]` line: `dispatch=` is written for every player; the
+   handler and event lines still follow the toggle.)
 2. **What the always-on part costs.** The phase totals cost far under a millisecond in total: two
    `Stopwatch.GetTimestamp()` reads and one list add per category (about 100 categories per process)
    plus four INFO lines. Step 5 adds a test that measures the per-category overhead with the real
@@ -997,6 +999,9 @@ Then implement:
   IModLogger logger)` that records start and last mark), `public void Mark(string step)` (logs `HookStep`
   with the time since the last mark, then moves the mark and counts the step) and `public void End()`
   (logs `HookTotal` once). Both catch every exception and swallow it: a stamp must never break a load.
+  Corrected after the Codex review (2026-10-03): `Mark` moves the mark after the line's own write (a
+  second clock read), so a slow write is not charged to the next step; `HookTotal` stays the wall
+  clock from the start.
 
 **Verify (RED then GREEN)**: `One test class` with `LoadStampDetailGateTests`, then `HookStampServiceTests`:
 first every new test fails (stubs throw `NotImplementedException`), then all pass.
@@ -1579,7 +1584,14 @@ only where the record still holds this adapter's wrapper (`ReferenceEquals`), th
 `ListenerInfo`: the owner's type, or `original.Method.DeclaringType` when the owner is null;
 `handler` = `<type Name>.<original.Method.Name>`; `assembly` = the type's assembly `GetName().Name`;
 `isTaom` = that assembly is `typeof(CampaignListenerAdapter).Assembly`. A reflection failure mid-walk
-undoes this call's swaps and rethrows.
+undoes this call's swaps and rethrows. Corrected after the Codex review (2026-10-03): `assembly` and
+`isTaom` come from `original.Method.DeclaringType` (the owner's type only when that is null, as for a
+dynamic method), because `MbEvent` stores the owner as a removal token that need not implement the
+callback; `handler` keeps the owner's type name. Corrected again after the convergence review: a
+callback that is this adapter's own wrapper (a closure nested in the adapter, which a record keeps
+after a failed restore or a second wrap) is no evidence either, so the owner's type stands in for it
+too. The adapter also gained an internal `BeforeWrite` seam, so a test can fail a write midway and
+check the rollback on real records.
 
 `CampaignListenerAdapterTests.cs`, `[TestCategory("RequiresGame")]` (it runs engine code), on fresh
 `new MbEvent<CampaignGameStarter>()` and `new MbEvent<CampaignGameStarter, int>()` instances (no
@@ -1809,21 +1821,30 @@ Stop and report (do not improvise) if:
   entry exists (or will) because of 040, 042 must not add a second copy, and its stand-aside filter
   simply no longer sees a PatchShield finalizer on that method once 040 lands.
 - Decide with the maintainer whether to follow up on Maintenance note "Lifecycle only when on"
-  once the field `[PatchApply]` lines show what the `Lifecycle` category costs to apply.
+  once the field `[PatchApply]` lines show what the `Lifecycle` category costs to apply. (Superseded
+  2026-10-03: the dispatch line is written for every player, so the follow-up no longer fits.)
 
 ## After merge: the maintainer's actions
 
 - Pull, build and deploy as usual. With the toggle OFF, start a new campaign: expect at boot
   `[LoadStamps] ready: ...`, `[LoadXml] ready: ...`, `[Lifecycle] ready: listener binding ok; ...`,
-  `[PatchApply] phase=OnSubModuleLoad total ...` and `phase=MainMenu total ...`; during the load one
-  `[LoadXml] id=...` line per type, `[LoadStamps] detail off: ...`, `[LoadXml] summary game=Campaign ...`
-  and `[PatchApply] phase=GameInit total ...`.
+  `[PatchApply] phase=OnSubModuleLoad scope=total ...` and `phase=MainMenu scope=total ...`; during
+  the load one `[LoadXml] id=...` line per type, `[LoadStamps] detail off: ...`,
+  `[LoadXml] summary game=Campaign ...`, `[PatchApply] phase=GameInit scope=total ...` and one
+  `[Lifecycle] dispatch=...` line each for `OnNewGameCreated`, `OnSessionStart` and
+  `OnAfterSessionStart` (`listeners_ms=none result=ok`), with no `[Lifecycle] event=` line. A save
+  load writes `OnGameEarlyLoaded`, `OnGameLoaded`, `OnSessionStart` and `OnAfterSessionStart`
+  instead of `OnNewGameCreated`.
 - Turn ON "Enable Load-Time Stamps" (Battle Load Diagnostics page), start another new campaign and
-  load a save: expect `[PatchApply] phase=... category=...` lines at game initialization,
-  `[LoadPhase] hook=OnGameStart ...`, `[LoadPhase] hook=OnGameInitializationFinished ...`,
-  `[Lifecycle] event=... total ...` and `[Lifecycle] dispatch=OnNewGameCreated ...` (new game) or
-  `dispatch=OnGameLoaded ...` (save). Check that the two silent stretches of a new game now have
-  handler lines, and that the game behaves as before.
+  load a save, in the same session: expect `[LoadPhase] hook=OnGameStart ...`,
+  `[LoadPhase] hook=OnGameInitializationFinished ...`, `[Lifecycle] event=... scope=total ...` and
+  `[Lifecycle] dispatch=OnNewGameCreated ...` (new game) or `dispatch=OnGameLoaded ...` (save).
+  These read the toggle live, with no restart. Check that the two silent stretches of a new game now
+  have handler lines, and that the game behaves as before.
+- For the per-category lines, restart the game with the toggle still ON and start a new campaign:
+  expect `[PatchApply] phase=... category=...` lines at its game initialization. They are decided
+  once per process, at the first game initialization, so the toggle-OFF campaign above (and any
+  campaign after it in that session) cannot write them.
 - Start a custom battle: `[LoadXml]` lines and summary, the hook stamps, no `[Lifecycle]` lines.
 - In `diag.log` after the first game start, PatchShield's pass 2 line: compare its `attached:` count
   with a pre-merge log; it should not have grown by this plan's seven targets.
@@ -1843,6 +1864,9 @@ Stop and report (do not improvise) if:
   `PatchCategoryDecl` holds only a name and a phase) and a restart to turn per-handler timing on. The
   per-category `[PatchApply]` line for that category measures the saving; decide from the field
   numbers. The PatchShield exclusions stay either way: pass 2 reruns at every game start.
+  Superseded 2026-10-03: the `[Lifecycle] dispatch=` line is now written for every player, so every
+  player uses those patches and this follow-up no longer fits (the feature doc's changelog has the
+  decision).
 - PatchShield's exclusion list now carries two kinds of entry: hot targets (the original reason)
   and observe-only targets where a shield would change behaviour. A future reviewer pruning the list
   as "not hot" must read the comment above the load-time entries.

@@ -481,3 +481,16 @@ The `[AnimMem]` session wrote one line per 5 s window and a mission summary. Sam
 - **Why missed:** the plan said "a summary at mission end", and nobody compared the summary's fields with the periodic line's to find the fields only the periodic line carries.
 - **Prevent:** for any instrument with periodic and summary lines, write the partial window at the end whenever it holds samples, and pin it with a test that ends the session between two periodic lines.
 - **Source:** `docs/reviews/rca-anim-memory-probe-2026-10-02.md` C2.
+
+### A staged feature re-checks its inherited claims at every stage: summary rows, "live" settings, "every X"
+Plan 040 landed in three stages. The feature-map row kept describing stage A; the toggle was documented
+as read live with no restart, though a once-per-process guard in `SubModule.cs` decides the per-category
+lines; and "every campaign handler of a loaded save" missed the `OnGameLoadFinished` fan-out that
+`SandBoxGameManager`, not `Campaign`, dispatches.
+- **Why missed:** each stage followed its own plan steps, which did not list the earlier summary text,
+  and the claims were written once from the design rather than re-read against the guards and
+  dispatchers that bound them.
+- **Prevent:** at each stage's end, grep the feature's name across `feature-map.md`, the registry and
+  the MCM hint and re-read every "every", "always" and "live" claim against the code that bounds it
+  (the guard, the dispatcher list), not against the plan.
+- **Source:** `docs/reviews/rca-load-time-stamps-2026-10-02.md` rows 4, 6 and 7 (Data flow, Completeness).

@@ -127,6 +127,8 @@ public static class PatchShieldPolicy
     /// as the namespace list's #331 (Gauntlet UI) and Patch38 (SettlementNameplateWidget) entries, applied
     /// at method granularity instead of namespace granularity. The three Mission tick entries at the end are
     /// the exception: they stay for what a swallow would break, or as built, not for cost (see their comment).
+    /// It also lists targets that are not hot but where a shield finalizer would change behaviour an observe-only
+    /// TAOM patch promises to leave alone (the load-time stamps).
     ///
     /// PatchShield skips an excluded method for every owner, so a third-party patch on one of these methods
     /// also loses the rescue. Patch92BindingTests walks Patch92's real targets through
@@ -189,6 +191,20 @@ public static class PatchShieldPolicy
         // SharedMapTargets_StayUnderPatchShield walk the real targets.
         "TaleWorlds.CampaignSystem.Campaign.Tick",
         "TaleWorlds.CampaignSystem.CampaignEvents.Tick",
+        // The load-time stamps (docs/features/load-time-stamps.md): observe-only TAOM patches that run
+        // once per XML type, or once per lifecycle event, per load, so they are not hot. A shield
+        // finalizer here would swallow a missing-API exception that propagates today (ending a
+        // dispatch early, or returning a null merged document) and add one Harmony.Patch per target
+        // to every player's first game start. LoadTimeStampsBindingTests walks the real targets.
+        "TaleWorlds.ObjectSystem.MBObjectManager.LoadXML",
+        "TaleWorlds.ObjectSystem.MBObjectManager.CreateMergedXmlFile",
+        // The load-time stamps' campaign-handler timing: one call per lifecycle event per load. A shield
+        // swallow here would end the dispatch early and skip the remaining listeners and receivers.
+        "TaleWorlds.CampaignSystem.CampaignEventDispatcher.OnNewGameCreated",
+        "TaleWorlds.CampaignSystem.CampaignEventDispatcher.OnGameEarlyLoaded",
+        "TaleWorlds.CampaignSystem.CampaignEventDispatcher.OnGameLoaded",
+        "TaleWorlds.CampaignSystem.CampaignEventDispatcher.OnSessionStart",
+        "TaleWorlds.CampaignSystem.CampaignEventDispatcher.OnAfterSessionStart",
     };
 
     /// <summary>Whether a patch target's declaring type + method name is on the hot-method exclusion list.</summary>

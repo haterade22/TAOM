@@ -127,6 +127,18 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.MBMusicManager", "MBMusicManager", "set_CurrentMode", "Method", "MenuMusicAdapter.cs:12")]
     [DataRow("TaleWorlds.MountAndBlade.ViewModelCollection.FaceGenerator.FaceGenVM", "FaceGenVM", "_faceGeneratorScreen", "Field", "CharacterCreationWidgets.cs:44")]
     [DataRow("TaleWorlds.GauntletUI.BaseTypes.ButtonWidget", "ButtonWidget", "HandleClick", "Method", "NarrativeRandomButton.cs:22")]
+    // --- LoadTimeStamps (plan 040): the [Lifecycle] listener swap walks MbEvent's private listener records and
+    // sets their private Action. Missing: per-handler timing is off for the session, dispatch totals only.
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`1", "MbEvent`1", "_nonSerializedListenerList", "Field", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1", "EventHandlerRec`1", "Next", "Field", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1", "EventHandlerRec`1", "Action", "Property", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1", "EventHandlerRec`1", "set_Action", "Method", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`1+EventHandlerRec`1", "EventHandlerRec`1", "Owner", "Property", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`2", "MbEvent`2", "_nonSerializedListenerList", "Field", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2", "EventHandlerRec`2", "Next", "Field", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2", "EventHandlerRec`2", "Action", "Property", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2", "EventHandlerRec`2", "set_Action", "Method", "CampaignListenerAdapter.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2", "EventHandlerRec`2", "Owner", "Property", "CampaignListenerAdapter.cs")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)
