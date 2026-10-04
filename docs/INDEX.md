@@ -170,7 +170,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [atmosphere-persistence](features/atmosphere-persistence.md) — forced-atmosphere scenes (Patch16); exonerated as the `_forceatmo` battle-load crash cause (2026-06-19)
 - [weather-bounds-guard](features/weather-bounds-guard.md) — weather bounds clamp (Patch10)
 - [localization](features/localization.md): 12 languages × 3 modules, AI-translated via tools. Only the TAOM third is in git; the other 285 language XML (25 in `TAOM_Map`, 260 in `LOTRLOME_Armory`) live in the game install and a module reinstall reverts them silently. The sole in-repo gate is `python tools/check_external_loc_coverage.py`, a per-language untranslated-row ratchet that no hook or CI job runs
-- [localization-override](features/localization-override.md) — per-language curated overrides
+- [localization-override](features/localization-override.md): English-only overrides of `{=ID}` strings (Patch25 prefix on `MBTextManager.GetLocalizedText`; every other language keeps its translated rows, #706)
 - [army-targeting](features/army-targeting.md) — besieger commitment stickiness, priority lists, border floor
 - [mcm](features/mcm.md): MCM options-screen top-to-bottom layout fix (Patch41 on UIExtenderEx `WidgetFactoryManager.CreateAndRegister`; #252), plus the settings-posture rules: every value knob live with `RequireRestart = false`, the posture test, the persisted-default caveat (#559)
 - [bandit-management](features/bandit-management.md): 8 LOTR bandit cultures replace vanilla's, PlayerProgress-scaled hideout density and party sizes (`TaomBanditDensityModel`, Patch39), themed hideout descriptions (Patch40); the #559 MCM case (initial hideouts are a per-faction target read once at world-gen)

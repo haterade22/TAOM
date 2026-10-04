@@ -2,6 +2,9 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+using TAOM.Adapters;
+using TAOM.Core.Logging;
 using TAOM.Features.LocalizationOverride;
 using TAOM.Features.LocalizationOverride.Hooks;
 using TAOM.Tests.Migration;
@@ -11,10 +14,22 @@ namespace TAOM.Tests.Features.LocalizationOverride;
 [TestClass]
 public class MBTextManager_GetLocalizedText_PatchTests
 {
+    private ITextLocalizerAdapter _localizer = null!;
+
     [TestInitialize]
     public void Setup()
     {
         MBTextManager_GetLocalizedText_Patch.ClearOverrides();
+        _localizer = Substitute.For<ITextLocalizerAdapter>();
+        _localizer.ActiveLanguage.Returns("English");
+        MBTextManager_GetLocalizedText_Patch.UseLanguageGate(
+            new OverrideLanguageGate(_localizer, () => Substitute.For<IModLogger>()));
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        MBTextManager_GetLocalizedText_Patch.UseLanguageGate(null);
     }
 
     [TestMethod]
@@ -261,5 +276,68 @@ public class MBTextManager_GetLocalizedText_PatchTests
     {
         Assert.ThrowsException<ArgumentNullException>(
             () => MBTextManager_GetLocalizedText_Patch.RegisterOverride(null, "text"));
+    }
+
+    // #706: vanilla skips its dictionary only for English, so the table is English-only. Any other
+    // language falls through to vanilla, which reads that language's translated row.
+    [TestMethod]
+    public void Prefix_EnglishLanguage_RegisteredId_ReturnsTheOverride()
+    {
+        MBTextManager_GetLocalizedText_Patch.RegisterOverride("aom_ab_notable_0", "Far Harad dynasty broker");
+        string result = null!;
+
+        bool runOriginal = MBTextManager_GetLocalizedText_Patch.Prefix("{=aom_ab_notable_0}Far Harad dynasty broker", ref result);
+
+        Assert.IsFalse(runOriginal);
+        Assert.AreEqual("Far Harad dynasty broker", result);
+    }
+
+    [TestMethod]
+    public void Prefix_NonEnglishLanguage_RegisteredId_FallsThroughToVanilla()
+    {
+        MBTextManager_GetLocalizedText_Patch.RegisterOverride("aom_ab_notable_0", "Far Harad dynasty broker");
+        _localizer.ActiveLanguage.Returns("Deutsch");
+        string result = null!;
+
+        bool runOriginal = MBTextManager_GetLocalizedText_Patch.Prefix("{=aom_ab_notable_0}Far Harad dynasty broker", ref result);
+
+        Assert.IsTrue(runOriginal);
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Prefix_LanguageChangesWhileRunning_AppliesTheOverrideOnlyWhileEnglish()
+    {
+        MBTextManager_GetLocalizedText_Patch.RegisterOverride("aom_ab_notable_0", "Far Harad dynasty broker");
+        const string text = "{=aom_ab_notable_0}Far Harad dynasty broker";
+        string result = null!;
+
+        Assert.IsFalse(MBTextManager_GetLocalizedText_Patch.Prefix(text, ref result));
+        Assert.AreEqual("Far Harad dynasty broker", result);
+
+        _localizer.ActiveLanguage.Returns("Deutsch");
+        result = null!;
+        Assert.IsTrue(MBTextManager_GetLocalizedText_Patch.Prefix(text, ref result));
+        Assert.IsNull(result);
+
+        _localizer.ActiveLanguage.Returns("English");
+        Assert.IsFalse(MBTextManager_GetLocalizedText_Patch.Prefix(text, ref result));
+        Assert.AreEqual("Far Harad dynasty broker", result);
+    }
+
+    // The gate the game runs is the real adapter over MBTextManager, which a process that never changed
+    // language leaves on English (v1.5.3 MBTextManager.cs:36). Needs the engine, so not on hosted CI.
+    [TestMethod]
+    [TestCategory("RequiresGame")]
+    public void Prefix_GameGate_EngineLanguageIsEnglish_ReturnsTheOverride()
+    {
+        MBTextManager_GetLocalizedText_Patch.UseLanguageGate(null);
+        MBTextManager_GetLocalizedText_Patch.RegisterOverride("aom_ab_notable_0", "Far Harad dynasty broker");
+        string result = null!;
+
+        bool runOriginal = MBTextManager_GetLocalizedText_Patch.Prefix("{=aom_ab_notable_0}Far Harad dynasty broker", ref result);
+
+        Assert.IsFalse(runOriginal);
+        Assert.AreEqual("Far Harad dynasty broker", result);
     }
 }
