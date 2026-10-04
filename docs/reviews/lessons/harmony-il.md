@@ -915,3 +915,17 @@ reported at each mission's end, not only warned about once.
   `docs/reviews/deep-review-028-mission-tick-profiler-2026-10-02.md` ("A cost for the maintainer to weigh");
   `HitchProbeHooksTests.StrippedPrefix_FinalizerRunsAlone_WarnsOnceAndRecordsNothing`;
   `HitchProbePrefixGuardTests` and the fix pass in `docs/reviews/deep-review-041-profiler-extensions-and-hitch-probe-2026-10-02.md`.
+
+### A new patch on an engine method also gets PatchShield's finalizer: describe the target's whole finalizer set (2026-10-02)
+Patch99's comment, feature doc and registry row said its `void` finalizer keeps Harmony on `rethrow`. PatchShield's
+second pass (at the first game init) gives every patched method declared outside TAOM, and not on its exclusion lists,
+a value-returning finalizer, so `CreateMergedXmlFile` ends in `throw` from then on; only `RethrowStackPreserver` keeps
+the engine's trace. The same finalizer swallows the missing-API trinity into a null result, which a method that was
+never patched before did not do.
+- **Why missed:** the 2026-09-22 Prevent line above ("a finalizer that only observes should be void, which leaves
+  Harmony on rethrow") reads as unconditional, and nobody asked which other finalizers the new patch would bring onto
+  the target.
+- **Prevent:** when a patch targets an engine method that had no patch before, write down the target's full finalizer
+  list after PatchShield's pass 2 (`PatchShieldPolicy` exclusions decide it) and word any rethrow or swallow claim for
+  that list, not for TAOM's own finalizer alone.
+- **Source:** `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` finding 5.

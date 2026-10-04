@@ -5,10 +5,17 @@
      matches no test (a renamed category, a typo) is an error, not a green run of nothing. The
      default suite does not use this file on purpose: there a test skips when the game or the
      Armory is absent (see the GameAssemblies doc comment). BindingGateRunSettingsTests pins
-     both settings. -->
+     all three settings.
+
+     TAOM_RUN_BENCHMARKS=1 opts the gate in to the checks that are opt-in in the default suite
+     and tagged BindingVerification (today XmlMergeLiveEquivalenceTests, about 45 s). Without it
+     each would be Inconclusive here, so the gate would fail it. -->
 <RunSettings>
   <RunConfiguration>
     <TreatNoTestsAsError>true</TreatNoTestsAsError>
+    <EnvironmentVariables>
+      <TAOM_RUN_BENCHMARKS>1</TAOM_RUN_BENCHMARKS>
+    </EnvironmentVariables>
   </RunConfiguration>
   <MSTest>
     <MapInconclusiveToFailed>true</MapInconclusiveToFailed>

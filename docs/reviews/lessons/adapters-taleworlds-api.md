@@ -872,3 +872,19 @@ The takeover changes the stage list from a handler's `OnStageCompleted`, which d
 - **Why missed:** the branch was written against the campaign's type; the service tests mock the adapter, so nothing executed it under the game type that calls it, and its only runtime trace was a DEBUG line that never printed.
 - **Prevent:** before an adapter casts to an engine subtype, check what type each calling game type registers (`OnRegisterTypes` of `CustomGame`, `Campaign`). When the base type drops the data, read it back from the merged XML for the current game type (`MBObjectManager.GetMergedXmlForManaged` with `Game.Current.GameType.GameTypeStringId`, as `MonsterSizeCatalogAdapter` does and `ObjectManagerAdapter` now does for cultures, parsing with `CultureTroopIdReader`), and log once at INFO that the read ran. Then check the data the read returns against the consumer's own filter: the culture troops TAOM reads fit vanilla's Custom Battle slot filter in only 33 of 88 slots, so the service also checks culture and formation class before offering one.
 - **Source:** `docs/reviews/rca-custom-battle-bannerless-factions-2026-10-02.md` "Two older Custom Battle defects", B.
+
+### A drift guard pins an engine dependency at the strength the code relies on it (2026-10-02)
+Patch99 re-implements `CreateMergedXmlFile`'s loop, copies `ApplyXslt`, and drops the `ToXDocument`/`ToXmlDocument`
+round trip, yet its IL tests compared an unordered set of callee names and its watched-method test checked names while
+the adapter resolves exact parameter lists. A reordered loop, a changed XSLT setting or a new conversion option would
+have changed the merged document with no exception, no fallback and a green `/verify-bindings`. This repeats the
+2026-10-01 entry "pin that order from its IL" for a re-implemented body.
+- **Why missed:** the guard copied the shape of the existing binding tests ("which helpers exist") instead of the
+  shape of the dependency ("this exact sequence, these exact signatures").
+- **Prevent:** for every engine body TAOM copies or whose effect it removes, pin its ordered calls, with their
+  overloads and the constants that feed them (`IlCallScanner.Fingerprint`; a name-only call list misses
+  `keepDuplicates: false` becoming `true`), in a
+  `BindingVerification` + `RequiresGameIL` test with re-pin instructions in the failure message
+  (`XmlMergeBindingTests.MirroredEngineBodies_CallExactlyThePinnedSequence`); resolve watched or bound members in the
+  test by the same parameter list the adapter uses, from one shared table.
+- **Source:** `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` findings 3 and 4.

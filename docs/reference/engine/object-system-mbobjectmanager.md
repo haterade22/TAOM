@@ -47,6 +47,15 @@ work the same way.) **Cross-module merging means the load is order-tolerant** �
 enabled module's rows are present, so an object defined in one module + referenced in another resolves regardless of
 declared load order (the basis for the ADOD_Beasts finding that LOTRLOME needn't be a declared dependency).
 
+**The merge loop (v1.5.3).** `GetMergedXmlForManaged(id, ...)` builds the per-type list from every active module's
+XmlNodes in load order (a file, or every `*.xml` of a folder, each with the module's or the game's `XmlSchemas/<id>.xsd`
+and any `.xsl`/`.xslt` beside it), and `CreateMergedXmlFile` loads, validates, transforms and merges one file at a time.
+Every merge goes through `MergeTwoXmls`, which converts the whole document merged so far to `XDocument` and back, so the
+cost grows with the square of the merged size; each validated file also builds its own `XmlSchemaSet`, and each XSLT is
+compiled on every call. TAOM's `Patch99_XmlMergeFastPath` keeps one `XDocument` across the files instead, with the
+same engine helpers in the same order and identical output on every type of the live install (its known limits are in
+[xml-merge-fast-path.md](../../features/xml-merge-fast-path.md)).
+
 ### Resolution — `GetObject` (ObjectSystem.cs:813/867/981/994)
 - `GetObject<T>(string objectName)` (867) — resolve by `StringId`; **returns clean `null` if not found** (no
   coerced fallback). e.g. `MBObjectManager.Instance.GetObject<Monster>("spider")`.

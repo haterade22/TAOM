@@ -1589,6 +1589,11 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<IModLogger>(),
             TryPatchCategory);
 
+        // [XmlMerge] summary (docs/features/xml-merge-fast-path.md): one line per game for the module-XML merges
+        // since the previous one. Every game init, before the once-per-process guard: Campaign.OnInitialize and
+        // CustomGame.OnInitialize call this after their XML loads. The hook never throws.
+        Features.XmlMerge.Hooks.MBObjectManager_CreateMergedXmlFile_Patch.LogWindowSummary(game?.GameType?.GameTypeStringId);
+
         // Harmony patches are process-global (applied to methods, persist across games). Apply this
         // whole per-game-init patch block ONCE per process — re-applying on a 2nd game init duplicates
         // every prefix/postfix, restarts the BattleLoad watchdog, and CRASHES the non-idempotent

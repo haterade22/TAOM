@@ -23,5 +23,6 @@ internal static class FeatureModules
         new Features.TournamentRewards.TournamentRewardsModule(),
         new Features.MissionPerf.AnimMemory.AnimMemoryProbeModule(),
         new Features.LoadTimeStamps.LoadTimeStampsModule(),
+        new Features.XmlMerge.XmlMergeModule(),
     };
 }

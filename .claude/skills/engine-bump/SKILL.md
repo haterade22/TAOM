@@ -125,6 +125,11 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
    no backlinks footer while `tools/build_backlinks.py` appends one to every doc, so `-Check` only
    returns 0 in the window between regenerating and restoring backlinks. That drift is the footer
    alone. If it names anything above the `---`, the API surface genuinely moved.
+   The same gate runs Patch99's live harness (`XmlMergeLiveEquivalenceTests`), because the IL
+   fingerprint of the merge bodies does not pin every input of the merge. Its runsettings set
+   `TAOM_RUN_BENCHMARKS=1`, which a plain `dotnet test` needs to run it. A red harness means the fast
+   path no longer matches the engine's merge, or the gate's inventory or speed rule failed: read the
+   message ([fast path](../../../docs/features/xml-merge-fast-path.md), "How to run the harness").
 2. **`python tools/audit_mount_parity.py`** — creature data vs the (possibly re-schema'd)
    vanilla baselines. **Report-only: it contains no `sys.exit` and always exits 0**, so it cannot be
    gated on in a script and a green exit code proves nothing — READ the output.

@@ -308,6 +308,11 @@ public class CoopVetoClassificationTests
             "Delays the local player's own tournament Join until they pick a prize and a skill, then " +
             "re-enters vanilla's whole Join consequence unchanged; closing a dialog is the same as not " +
             "clicking Join. Reads no other peer's state and skips no mutation for good."),
+        ["MBObjectManager_CreateMergedXmlFile_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Patch99: replaces the engine's module-XML merge loop with one proven byte-identical on every " +
+            "type of the live install. Each peer merges its own module files during game init, before any " +
+            "session state exists, and on that module set gets the document the engine would have built; it stands aside for " +
+            "foreign patches and re-runs the engine's own merge on any exception."),
 
         // --- Parked --------------------------------------------------------------------------
         ["Patch57_NavalAtSeaLandRescueGuard"] = new(CoopVeto.Parked,

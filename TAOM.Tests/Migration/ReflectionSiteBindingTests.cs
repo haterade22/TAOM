@@ -139,6 +139,9 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2", "EventHandlerRec`2", "Action", "Property", "CampaignListenerAdapter.cs")]
     [DataRow("TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2", "EventHandlerRec`2", "set_Action", "Method", "CampaignListenerAdapter.cs")]
     [DataRow("TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2", "EventHandlerRec`2", "Owner", "Property", "CampaignListenerAdapter.cs")]
+    // --- XmlMerge (plan 042): the fast path loads each file through the engine's private loader. A miss turns the fast
+    // path off for the session (logged at start); every module XML merge then runs the engine's own code.
+    [DataRow("TaleWorlds.ObjectSystem.MBObjectManager", "MBObjectManager", "CreateDocumentFromXmlFile", "Method", "XmlMergeEngineAdapter.cs:52")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

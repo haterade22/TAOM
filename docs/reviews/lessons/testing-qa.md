@@ -1475,3 +1475,26 @@ The `[AnimMem]` behavior's teardown test matched the source text of `OnRemoveBeh
 - **Why missed:** "not testable offline" was taken as a fact about the engine when it is a fact about hosted CI, which excludes `RequiresGame` tests but does not make them unrunnable.
 - **Prevent:** before pinning a lifecycle override by source text, check whether a `RequiresGame` test can construct the behavior and call its public entry (`OnEndMissionInternal`, `OnRemoveBehavior`); drive it with fakes and a recording logger, and keep the source test only as the hosted-CI structural pin, named for what it proves. Run the deletion mutation for each line a test is named for, and give a negative assertion that a stopped clock would also satisfy a control test (here, a live session that does sample once the aged clock passes the second).
 - **Source:** `docs/reviews/rca-anim-memory-probe-2026-10-02.md` X2.
+
+### Drive a guard with the state the game hands it on its most common path (2026-10-02)
+Harmony runs Patch99's finalizer after every call, including the fast merges whose original the prefix skipped, but
+every finalizer test passed an engine-path call; removing the `call.Handled` early return doubled every summary count
+with all tests green. The stand-aside filter was tested only with nothing patched, never with TAOM's own prefix on the
+target, which is its state on every in-game merge.
+- **Why missed:** tests followed the author's model of each method's purpose (the finalizer "logs engine merges"; the
+  filter "finds other mods") rather than the inputs it receives at run time.
+- **Prevent:** list a hook's callers and the state each leaves (here, the prefix's success path) and test each; test a
+  filter with the owner it must ignore present. Prove each new test red by deleting the guard it covers once.
+- **Source:** `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` findings 1 and 2.
+
+### An equivalence proven on one data set is stated with that data set, and its known boundary is written down (2026-10-02)
+Plan 042 proved the fast merge byte-identical on every type of the live install, then several docs said "identical
+output" without the domain. Three review lenses built fixtures on which the dropped round trip differs without an
+exception (a namespace prefix rebound by a later file; adjacent text after `_replaceWhileMerging`), and only an
+exception would have sent such a merge back to the engine.
+- **Why missed:** the harness's scope was correct in the harness and lost when the result was summarised in the
+  patch comment, the registry and the engine reference.
+- **Prevent:** every sentence that cites an equivalence gate names its data set; when the replaced step is not an
+  identity in general, a "Known limits" section lists the inputs that differ and the command that re-proves a
+  player's module set (`TAOM_XMLMERGE_MODULES`).
+- **Source:** `docs/reviews/rca-xml-merge-load-time-2026-10-02.md` finding 6.
