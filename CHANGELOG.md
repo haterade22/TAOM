@@ -10,6 +10,2258 @@
 > [`docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md`](docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md);
 > older ones are in [`docs/changelog-archive/CHANGELOG-2026-H1.md`](docs/changelog-archive/CHANGELOG-2026-H1.md).
 
+## v2.0.33 (2026-10-04)
+
+Commits since v2.0.32: 74 (62 with the version label, 12 without).
+
+### Features
+
+#### feat(race-abilities): v2.0.32 - glow and sparks, 1 to 2 minute cooldowns
+
+`d9b50277`
+
+Abilities now come round every one to two minutes: every cooldown is
+four times the first numbers (Berserk 60 s; Swarm, Scurry, Hill-clan
+Fury and Corsair Raid 80 s; Bloodlust, Hunter's Rush and Variag
+Ferocity 100 s; the rest 120 s). How long each one lasts is unchanged.
+
+A fury, guard or dread ability now shows on the battlefield. While it
+is active the soldier wears a coloured outline: red for fury, steel
+blue for a guard, violet for dread. The six speed and aim abilities
+stay unlit so a crowd stays readable. Sparks burst on the soldier who
+fires and on every third kinsman who joins him. Only the 40 soldiers
+nearest the camera are outlined (visuals.maxGlowing in
+race_abilities.json), repainted every half second, cleared the moment
+a window ends or a soldier falls, and hidden with Hide Battle UI. New
+MCM switch: Battle Tactics, Race Abilities, Ability Glow and Sparks
+(on). taom.print_race_abilities also reports how many soldiers are
+outlined.
+
+Khand keeps Rhun's troops and Variag Ferocity stays as it is (Mike's
+decision). The feature doc now names everyone who carries each
+ability, corrects Umbar (its own recruits, lords and armies fire
+Corsair Raid), and says what Wainrider Wall and Variag Ferocity do for
+a rider or a charioteer.
+
+Reviewed by all seven deep-review lenses and a convergence pass:
+docs/reviews/rca-race-ability-glow-2026-10-04.md. Tests: 13,973
+passed, 1 known failure (translations owed, #731), 5 skipped. #730.
+
+#### feat(race-abilities): v2.0.32 - battle abilities per race and culture
+
+`a498e357`
+
+AI soldiers now fight with a battle ability for their race, or for men
+their culture, on a cooldown. A behaviour tree on each soldier waits
+for his moment (wounded in melee, a kill, cavalry closing, a target in
+bow range, kin falling), fires the ability for a few seconds, and kin
+nearby whose ability is ready fire with him, so a whole line braces or
+a pack goes berserk at once.
+
+Races: berserkers go berserk (every swing breaks a block, no guard,
+then spent), Uruk-hai fall into bloodlust (kills heal and lengthen
+it), dwarves stand fast (nothing crushes through them, less damage,
+no panic), elves quicken (draw, aim, feet), orcs swarm (stronger the
+bigger the mob), goblins scurry, Mordor's uruks hold with iron
+discipline, Gundabad's run their prey down, Dol Guldur's spread dread.
+Cultures, for men: Gondor closes ranks, Rohan's riders spur on, Dale
+aims true, Dunland rages, Harad's arrows bite, Rhun locks its wall,
+Umbar's corsairs press, Khand's Variags fight savage, and the Shadow's
+men frighten. Elite troops hit harder and pay more; lords most of all.
+
+Works in campaign battles and in Custom Battle. Numbers live in
+race_abilities.json. MCM Battle Tactics/Race Abilities: on/off, war
+cries, a message-log line for big waves, and a debug log. The log
+reports what each ability did every 30 s of activity and at battle
+end, and the console command taom.race_abilities shows it in game.
+
+Known limitations: a horse charge, a kick or a shield bash still
+knocks back a dwarf standing fast (he stays on his feet); the ability
+names show in English until the translation run.
+
+#### feat(tools): v2.0.32 - rank the equipment assets a battle preloads
+
+`3dac7ab5`
+
+A battle costs about 2 to 3 GB of native memory, and nothing said which
+items, meshes or textures carry that weight, so every memory lever in
+the Armory's armour, weapons, hair and beards was picked by guess. The
+new tools/audit_battle_equipment_memory.py ranks them, offline: the
+battle counterpart of the campaign map memory audit, whose pack index
+and decoders it reuses.
+
+For every TAOM troop, or for chosen sides (--troops files or --culture
+ids), it builds the equipment sets the way the engine does, one
+assignment at a time, and like the engine it refuses an item that does
+not fit its slot (a refusal is its own reason row, ITEM_SLOT_REJECTED).
+It resolves each item to the meshes, materials, textures and collision
+bodies the engine preloads for it (gender and slim variants, crafted
+pieces, horses), adds each race's skin, hair and beard meshes, and sums
+their bytes in the release packs, counting a shared asset once. The
+floor is render buffers, texture chains and collision bodies; the upper
+bound adds mesh edit data, whose residency in a battle is unverified. It
+attributes pack bytes and does not measure process memory.
+
+It writes a ranked Markdown report, TSVs (assets, items, troops,
+cultures, sides, unresolved) and a run.log with one line per fallback
+reason. A texture it cannot size from its pixels or its header counts
+its stub or 0 bytes and makes every total that holds it a lower bound,
+and the report then opens with an incomplete-totals note. Each run first
+deletes the report and the TSVs an earlier run left in its folder. A run
+that selects no troops, or names a troops file that is missing, stops
+with an abort line and exit code 2.
+
+First results on the testing channel: all 1,657 TAOM troops reach 2,670
+items; Gondor against Mordor shares 600 MB of 3.18 GB of side floors, a
+2.58 GB battle floor; the largest single asset is the crewed mumak's
+platform mesh sk_mumakil_platform_a1, about 65 MiB of render buffers.
+
+With --loose-assets, both this tool and the map scene audit read a
+module's loose Assets tree instead of its cooked packs when it has one,
+as the engine does, and report each cooked tree they skip; a loose mesh
+is never flagged as editor stream bloat. The map audit's default output
+is byte-identical.
+
+Found on the way, not changed here: sk_uruk_hai_skirt_a1 is body armour
+placed in the Cape slot of urukhai_champion and urukhai_berserker in
+troops_isengard.xml, so the engine never equips it. The tool's feature
+doc and feature-map row are still to be written.
+
+Refs: #720 (plan 038)
+Not-tested: in-game memory; the audit attributes pack bytes and does not
+ measure a running game.
+
+#### feat(release): v2.0.32 - sack and JIT reports; module sacks left out
+
+`e4c2c159`
+
+The release packager (tools/package_release.py) now prints three reports
+on every run, --dry-run included, and leaves module-level shader sacks
+out of the copy. The reports only read: none of them can refuse a
+release or change the exit code, and a report that fails prints its
+failure and lets the run carry on.
+
+Scene shader caches: one line per shipped SceneObj scene saying whether
+its ShaderCache/D3D11 folder holds terrain_shaders_header_data.bin and
+compressed_shader_cache.sack, with the sack's format, then a summary
+line and a WARNING for any sack whose format differs from the majority
+of the shipped sacks. A scene without a sack ships as it is (the
+maintainer's call, decision D8), and SceneObj/Backups is never judged.
+Because the WARNING compares the shipped sacks with each other, a whole
+set one format behind the engine raises nothing.
+
+Module shader sacks, a behaviour change: the
+compressed_shader_cache.sack directly in a module's Shaders/D3D11 folder
+is no longer copied into a release, for any module, and the report lists
+each one with its size and format under one policy line. Until now the
+packager copied these from the dev install and never reported them;
+issue #448's three lagging sacks were exactly these. The policy
+(decision D15) is to ship TAOM's and the Armory's compiled sacks and
+never TAOM_Map's, but only after a test shows the game uses a Kit-built
+sack, so for now none ships. Scene sacks keep shipping, and so do
+shader_mapping.bin and shader_compile_report.log beside the module sacks
+(whether they should is still open).
+
+JIT state: one line per shipped copy of TAOM.dll and
+TAOM.Dependencies.dll saying OFF, ON, "ON (no DebuggableAttribute on the
+assembly)" or "unknown (reason)", read from the assembly's metadata
+tables without loading the DLL. TAOM ships Debug builds on purpose, so
+OFF is expected and never refused. The rule was measured on .NET
+Framework 4.8.1: the JIT turns optimization off only when the
+attribute's first byte has its low bit set and its second byte is not
+zero, so DisableOptimizations alone reads ON. A malformed attribute
+reads unknown. The tests build the exact headers of the shipped and the
+dev TAOM.dll.
+
+The release skill, release-process.md step 9 and the module map describe
+the reports and the policy. Not part of this change: the sweep of the
+older shader texts that decision D15 also asks for
+(shader-precompilation.md, precompile_scenes.txt and its provider's
+comment, v1.4.8-impact.md).
+
+Refs: #717 (plan 035)
+Not-tested: a dry run on the live dev install since module sacks were
+ left out, a real packaging run into a channel folder, and a packaged
+ build played in game.
+
+#### feat(perf-runs): v2.0.32 - per-mission rows and A/B compare from logs
+
+`67eff55c`
+
+tools/perf_runs.py turns any number of taom_debug logs into one row per
+mission and compares two groups of runs, so a frame-time or memory
+change is judged by numbers rather than by feel. Until now the
+[MissionPerf] heartbeat had no reader, and triage_battle_load.py reads
+only the last mission of a log.
+
+Each row carries the load buckets (through triage_battle_load.py's own
+parser), the spawn window kept apart from the steady state by its
+position, steady medians of fps and of average and p95 frame time, the
+worst frame, GC collections per minute and, when the tick profiler's
+lines are present, per-behaviour cost and hitches by phase. Flags say
+when the numbers may not mean what they seem (FRAME_CAP,
+MEMORY_PRESSURE, DIAG_ON, DIRTY_BUILD, BUILD_PAIR_MISMATCH), and each
+names its evidence.
+
+    python tools/perf_runs.py <log> [<log> ...] [--json]
+    python tools/perf_runs.py compare --a <logs> --b <logs> [--json]
+
+compare keeps only one scene's rows with --scene, refuses to mix Debug
+and Release builds or texture settings unless --allow-mixed is given,
+and counts a row without a readable [PerfContext] as unchecked. Exit
+codes: 0 rows found, 1 no mission, 2 a usage error, an unreadable file
+or a refused compare.
+
+Nothing is skipped in silence. The report opens with one header per log
+(path, size, lines, missions, lines of a known tag it could not parse,
+and a count per tag of the key=value lines a game wrote before its first
+mission) and prints the first five unparsed lines verbatim. Every other
+"[Tag] key=value" line is kept as extra tags, on its mission's row or,
+before a game's first mission, on the log header (--json lists each
+line's tag, time and fields; the text report counts them per tag);
+summary lines that start with a word are kept too ("[AnimMem] summary:",
+"[LoadXml] summary", "[XmlMerge] summary"). A value runs to the next
+space-led key= outside brackets, and a line without the log prefix takes
+the timestamp of the entry above it. [MissionPerf], [TickProfile],
+[Hitch] and [PerfContext] count only where a line's tag sits, so a
+message that merely names one of them is not that tag's line, and the
+profilers' status lines read as prose.
+
+Hitch counts: the tick profiler writes only the first 100 [Hitch] lines
+of a mission but counts every slow frame in [TickSummary]'s hitches=, so
+a row's count comes from its summaries, and [Hitch] lines with no
+readable summary after them count as themselves. When the two differ the
+report says what the phase breakdown covers, for example "137 (100
+parsed [Hitch] lines: ...)". A [TickSummary] without a usable hitches=
+counts as unparsed.
+
+Game boundaries: a game's initialization lines (plan 040's [LoadPhase]
+and [LoadXml], plan 042's [XmlMerge]) go on the log header, not on the
+battle before them. A new game starts at the lifecycle trace's "STATE
+initialized: InitialState" or "GameLoadingState" line, at a saved game's
+"[SaveLoad] ... phase=LoadRequested" line, or at one of those
+initialization lines, whichever comes first while a mission is open; the
+campaign map after a battle counts toward the battle until then. A load
+cancelled at the module-mismatch question still ends the row at its
+request. A log with none of these lines has no boundary, and a mission
+keeps every line after its start (the lifecycle trace first shipped in
+v2.0.29, and the 1.4.5 line has none).
+
+The [MissionPerf] line is pinned by the same literal in the C# and
+Python tests, and the heartbeat doc now says the first line lands at
+about +6 s in battles (+7 s in a tournament), not +5 s.
+
+Limits to know when reading the numbers: lift any external frame cap
+before an fps A/B, or every row carries FRAME_CAP. The tests hold a copy
+of every tick profiler and hitch probe status line; a change to those
+texts needs the copy changed with it.
+
+Refs: #711 (plan 029)
+Not-tested: against a real measurement session log from a build with
+ plans 028, 036, 040, 041 and 042 merged, including a saved game loaded
+ from the campaign map and a cancelled load.
+
+#### feat(load-stamps): v2.0.32 - time module XML, patch groups and handlers
+
+`346f3e09`
+
+Most of a new campaign's 50 s load had no line in taom_debug.log saying
+where the time went: about 28 s of module XML merging, and two stretches
+of 3.4 s and 3.2 s with no line at all. These stamps time the load per
+XML type, per patch group and per campaign handler.
+
+Always on, for every player:
+- one [LoadXml] line per MBObjectManager.LoadXML call, one per XML type
+  (NPCCharacters, Items and the rest), with its files, XSLTs and time
+  split into the merge and object creation, and a "[LoadXml] summary"
+  per game initialization (the slowest type, calls that threw);
+- a "[PatchApply] phase=... scope=total" line at the end of each of the
+  four patch apply phases: patch groups, failures, summed time and the
+  slowest group (timing a group costs well under a microsecond);
+- one "[Lifecycle] dispatch=..." line for each campaign dispatch of a
+  new game, a loaded save and the session start, saying what that
+  fan-out took;
+- ready lines at process start ([LoadStamps], [LoadXml], [Lifecycle]).
+
+With "Enable Load-Time Stamps" on (MCM, Battle Load Diagnostics page,
+default off):
+- one [PatchApply] line per patch group, decided once per process at the
+  first game initialization, so these need a restart after the toggle is
+  turned on;
+- [LoadPhase] lines splitting TAOM's OnGameStart and
+  OnGameInitializationFinished hooks;
+- [Lifecycle] lines for every campaign handler of a new game, a loaded
+  save and the session start, TAOM's, other mods' and the game's own,
+  each naming the assembly of the method it runs: one line per handler
+  taking 10 ms or more, and a total per event split into TAOM's handlers
+  and everyone else's. Handlers run in the same order with the same
+  arguments; an exception from one carries one extra TAOM frame in its
+  stack.
+
+The [LoadPhase] and [Lifecycle] detail reads the toggle live, and a
+[LoadStamps] detail line says when its state is first read or changes. A
+fault in the stamps themselves writes one warning and the load goes on.
+The three total lines carry scope=total as a key=value pair, so plan
+029's log reader parses them.
+
+The two XML patches and the five CampaignEventDispatcher patches apply
+for every player, toggle on or off, and only observe. PatchShield no
+longer wraps those seven methods, an exclusion maintainer decision D13
+keeps, so a missing-API exception there behaves as in the unpatched game
+instead of being swallowed into a silently empty XML type or a half-run
+dispatch. The trade-off: another mod's patch on them loses PatchShield's
+rescue. A crash through an XML load or one of those dispatches now shows
+a TAOM-patched frame in the crash report; the exception is still the
+engine's or the handler's.
+
+Not timed: the rest of Campaign.OnSessionStart after the dispatcher,
+Campaign.OnGameLoaded's AfterLoad calls, a loaded save's last fan-out
+(OnGameLoadFinished), and any listener added during a dispatch.
+
+Refs: #722 (plan 040)
+Not-tested: in game. A new campaign with the toggle off (ready lines,
+ [LoadXml] per type and summary, [PatchApply] totals, a [Lifecycle]
+ dispatch line per dispatch); then, after a restart with it on, a new
+ campaign and a save load (per-group [PatchApply], [LoadPhase] and
+ [Lifecycle] handler lines); a custom battle (no [Lifecycle] lines);
+ diag.log's shield pass count not grown by the seven methods. With plan
+ 042 merged, [LoadXml] lines that all read merge_ms=none would mean the
+ merge finalizer is not firing.
+
+#### feat(mission-perf): v2.0.32 - log clip memory against the 12 MiB budget
+
+`a9f10688`
+
+The engine loads animation clips on demand and holds their data against
+a 12 MiB budget: once a load takes the total past 15 MiB, it schedules a
+pass that frees idle clips toward the budget. A worker that needs a clip
+that is not loaded waits for it, a suspect for battle frame spikes. This
+probe shows whether TAOM battles put that budget under pressure, which
+is the evidence for raising it.
+
+"Enable Animation Clip Memory Probe" (MCM, Battle Load Diagnostics page,
+Mission Performance group) is on by default and is read at each mission
+start, so it needs no restart. Once per game process, under the first
+mission's loading screen, it finds the engine's clip byte counter and
+budget by a signature check, a scan of about 10 MB of the engine's code.
+It only reads: if the signature, the section checks or the 12582912-byte
+budget do not match, it turns itself off and says why. It is left out of
+the co-op settings fingerprint, like the frame-time heartbeat.
+
+In each mission it reads the counter once a second and writes to
+taom_debug.log:
+- "[AnimMem] mission start", then a line every 5 s: loaded KB, percent
+  of the budget, whether a clip is loading, drops, the window's minimum
+  and maximum, and the samples that saw a clip loading;
+- at mission end, a line for the samples since the last 5 s line and an
+  "[AnimMem] summary:" line (peak, samples at or above 90 percent,
+  drops, loading samples), also when a mission is torn down without a
+  normal end;
+- "[AnimMem] armed", "disabled", "off" or "stopped" lines for each state
+  change.
+
+Reading it: values between 100 and 125 percent of the budget are normal,
+since eviction starts only past 15 MiB, and a pass can leave the total
+above 12 MiB while clips are in use or loading. A drop means an eviction
+pass ran in that second, not how many clips it freed. A low total with
+no drops shows no budget pressure and nothing more. It does not rule out
+making TAOM's busiest clips resident: a clip's first load blocks its
+worker whatever the total, and the probe samples after that wait has
+ended, so that decision needs hitch timing (plans 028 and 041). The
+engine reference's clip section now describes the eviction pass as the
+binary runs it.
+
+The cost to every player while it is on: one counter read and one native
+walk over the clip records each second, and one INFO line every 5 s,
+each flushed on the main thread; what the walk and the flush cost in a
+battle has not been measured. The probe reads the engine module's header
+page and code on trust, and the engine's loading query walks a native
+list without a lock. MCM keeps a player's saved value, so changing the
+default later means renaming the setting; whether it stays on for a
+public release is still open.
+
+Refs: #718 (plan 036)
+Not-tested: in game. One Custom Battle: the armed line, a 5 s line, the
+ mission-end line and the summary in taom_debug.log; then one
+ troll-heavy and one large vanilla-troop battle, read next to
+ [MissionPerf]. The probe has not run against a live game process, so
+ the per-second cost of the loading query and the flush is unmeasured.
+
+#### feat(mission-perf): v2.0.32 - hitch probe; spawn, script, clip timing
+
+`daba6f0a`
+
+A hitch probe now runs for every player by default, so a slow battle
+frame in any player's log says where its time went. "Enable Hitch Probe"
+(MCM, Battle Load Diagnostics page, Mission Performance group) is on by
+default. It is installed once at game start, so turning it on needs a
+restart; turning it off stops measuring from the next mission while
+"Enable Tick Profiler" is off (the profiler measures through the probe's
+patches).
+
+Each frame slower than the hitch threshold (default 250 ms) writes a
+[Hitch] line and right after it a [HitchDetail] line: the wait for the
+agent tick, the mission tick, agent spawning, scene scripts, and whether
+an animation clip was loading from disk. Every 5 s window adds
+[TickProfile], [ScriptProfile], [AnimLoad] and, while agents spawn,
+[SpawnProfile] lines; each mission ends with [TickSummary] and
+[TickSummaryExtra]. Full [Hitch] lines stop after the first 100 of a
+mission; later ones are counted. So every player's log gains two to four
+INFO lines every 5 s of a mission, each written and flushed on the main
+thread.
+
+The probe brackets five whole engine methods (Mission.OnPreTick,
+Mission.WaitTickCompletion, Mission.OnTick,
+ManagedScriptHolder.TickComponents and Mission.SpawnAgent) with a prefix
+and a finalizer, and no transpiler. An offline benchmark puts the
+brackets at about 0.5 microseconds per simulated frame, against a target
+of 0.5 percent of a 10 ms frame; the install line logs a separate
+start-up measurement of the profiler's bookkeeping alone. The clip
+loading check calls the engine once a frame. The first measured mission
+logs the median of 32 calls, and the per-frame check runs for the rest
+of the process only when that median is within 20 microseconds; a later
+slow call does not turn it off. Its per-frame cost in a battle is
+unmeasured, and the safety of the engine's unlocked walk of its clip
+list while clips load rests on a reading of the engine binary, not yet
+on a battle.
+
+Per-type attribution (which behaviour, spawn callback or scene script
+component) stays behind "Enable Tick Profiler", off by default, because
+it needs two more transpilers. The frame boundary moved from the tick
+profiler's patch to the probe's, so both share it. The "[TickProfiler]
+off:" line now ends "no per-behaviour transpilers installed", and the
+"probe install:" or "probe off:" line after it says whether the probe is
+in.
+
+PatchShield: Mission.WaitTickCompletion and
+ManagedScriptHolder.TickComponents join its exclusion list for every
+player. A swallowed exception in the wait would skip its loop and let
+the next pre-tick overlap the running agent tick; TickComponents, called
+once per ticking scene per frame on a thread native picks, stays
+excluded as built. For any patch on those two, the missing-API swallow
+and the strip of the offending patch are given up. Mission.OnTick,
+Mission.OnPreTick and Mission.SpawnAgent keep the shield (maintainer
+decision D13). A rescue there strips every unprotected owner's patches
+on the method, TAOM's own included, so on SpawnAgent it also removes
+Patch23's banner colours (armour tint falls back to vanilla's for the
+process) and the probe's own prefix. Each probe call carries its own
+state from prefix to finalizer, so a finalizer whose prefix was stripped
+records nothing; the first one per method in a process writes one
+warning, and each measured mission's end counts them.
+
+Two earlier plans follow the frame boundary's move in this commit, so
+the tree builds: plan 028's hook health check now requires the
+probe's Mission.OnPreTick prefix as the frame boundary (its warning
+names it "(Patch98)"), and plan 039's campaign tick swap test reads
+the swap's helper list, which replaced its single helper.
+
+Older than the probe: an exception that escapes Mission.OnTick after it
+clears the agent tick's completion flag, and is swallowed above it,
+leaves the next frame waiting forever, and neither exclusion stops it.
+This branch does not fix it; the PatchShield follow-up plan recorded
+under decision D13 takes it, with its regression tests.
+
+Refs: #723 (plan 041)
+Not-tested: in game. With default settings, one Custom Battle with
+ elephants or mumakil and one campaign field battle: the probe install
+ line, the anim-loading sample line, the 5 s lines, a [HitchDetail]
+ after every [Hitch], the mission-end lines, and no
+ "WaitTickCompletion's bracket did not run" line; then with the tick
+ profiler on, and with both off; [MissionPerf] avgMs with the probe on
+ against both off, within noise; the TickComponents thread line in a
+ real log.
+
+#### feat(map-perf): v2.0.32 - campaign map frame profiler, off by default
+
+`f6bf0e58`
+
+A new campaign ran at 7 to 8 fps in fast-forward while lords and
+villagers spawned in, and the [MapLoad] heartbeat could only say that
+Campaign.RealTick took about 20 ms of each frame's 130 ms. The new map
+profiler splits the rest of the frame and says how much of it is TAOM's
+own code.
+
+It is off by default and installs nothing unless "Enable Map Profiler"
+(MCM, Battle Load Diagnostics page, Map Performance group) is on at game
+start. Turning it on needs a restart; turning it off stops measuring
+from the next campaign session. With it off, every player gets one
+"[MapProfiler] off:" line per game process.
+
+With it on, taom_debug.log gets:
+- [MapProfile] every 5 s while the map ticks: frames, wall time, the
+  campaign's real tick, the map screen, the map state, campaign tick,
+  tick event and application tick phases, everything else (otherMs),
+  TAOM's own share (taomMs), main-thread allocation, the speed class,
+  the party count, the worst frame, skipped frames, GC counts, and the
+  slowest tick-event listeners and TAOM map views;
+- [MapProfileSummary] when the campaign session ends, with the same
+  totals, the skip reasons and the frames per speed class;
+- [MapProfiler] status lines for the install, each session's settings,
+  each degraded part and any fault. A fault stops the profiler for that
+  campaign and writes the frames already measured as a summary with
+  reason=fault.
+
+Frames during a loading window, under another screen, or not followed by
+exactly one TAOM application tick are counted as skipped, never mixed
+in. The speed class (Stop, Play, FF, FF2, FF3) follows the engine's
+simplified time mode, so a frame in which the waiting main party gets no
+campaign time reads Stop. The "Tick Profiler Top Behaviours" setting
+also sets how many listeners and views each line lists.
+
+The profiler checks its own hooks at each session start, each window and
+each session end. If a PatchShield rescue stripped one of its patches,
+it writes one warning naming every lost hook, writes the frames closed
+so far as a summary with reason=hooksLost, and stops measuring that
+session. A strip on MapState.OnTick is found only at the session end.
+The check runs after the frame boundary's timestamp is taken, so its
+cost, not yet measured, lands in the next measured frame.
+
+PatchShield: Campaign.Tick and CampaignEvents.Tick, which only the
+profiler patches, are now on its exclusion list for every player, so
+another mod's patch on either loses the shield too, profiler on or off.
+When either carries a patch, a missing-API exception thrown inside it
+(by a patch or by any mod's campaign tick listener) is no longer
+swallowed at that method: it skips the rest of the campaign tick and of
+MapState.OnTick, whose shield catches it from a process's second game
+start; in a first game it unwinds the application tick to the crash
+capture, every frame it recurs. Campaign.RealTick, MapState.OnTick and
+MapScreen.OnFrameTick, which other TAOM patches use for every player,
+keep the shield (maintainer decision D13, as plan 028 keeps it on
+Mission.OnTick and Mission.OnPreTick), so a player with the profiler off
+sees no change there. A rescue on one of those three strips every
+unprotected owner's patches on that method, TAOM's own included, so it
+also ends the profiler's measurement there for the process; when no
+patch threw, the cause is swallowed again each frame it recurs and the
+rest of the method is skipped each time. The older Mission.OnTick hang
+that plan 028 describes is not changed here.
+
+Refs: #721 (plan 039)
+Not-tested: in game. With the map profiler on: the install line at game
+ start, a session line, [MapProfile] lines with frames=0 and a growing
+ skipped count during the map load, then a line every 5 s with
+ speed=Stop when paused and speed=FF in fast-forward, and one
+ "[MapProfileSummary] reason=gameEnd" at quit; with it off, one off line
+ and the [MapLoad] fps compared with it on. A real PatchShield strip and
+ the hooksLost warning have not run in a game.
+
+#### feat(mission-perf): v2.0.32 - per-behaviour tick profiler and hitch log
+
+`6eb2e1b9`
+
+A new mission tick profiler says where a battle's frame time goes. It
+times each mission behaviour's tick by type (OnPreDisplayMissionTick,
+OnMissionTick and OnPreMissionTick), the main thread's wait for the
+previous frame's agent tick, the agent tick itself, and everything else
+(otherMs: the native tick, views, rendering and streaming), with the
+main thread's allocation alongside.
+
+It is off by default. To use it, turn on "Enable Tick Profiler" (MCM,
+Battle Load Diagnostics page, Mission Performance group) and restart the
+game: the profiler is installed once, at game start. Turning it off
+stops measuring from the next mission; its patches stay until a restart
+and only call through. Two more settings, read at each mission start,
+set how many behaviours each line lists ("Tick Profiler Top Behaviours",
+default 8) and the hitch threshold ("Hitch Threshold (ms)", default
+250).
+
+With it on, taom_debug.log gets:
+- a [TickProfile] line every 5 s on the same clock as [MissionPerf],
+  with the window's totals and its slowest behaviours (ms, calls, max
+  ms, KB);
+- a [Hitch] line for each frame at or above the threshold, naming the
+  frame's phases, GC counts, allocation and three slowest behaviours,
+  for the first 100 such frames of a mission; later ones are only
+  counted, so a battle that stays slow does not flush a line every
+  frame;
+- a [TickSummary] line at mission end covering the whole mission, every
+  hitch counted;
+- [TickProfiler] status lines: the install result, a header for each
+  measured mission, a warning for a hand-edited setting out of range,
+  and one reason line whenever anything is skipped, falls back or stops.
+
+The profiler checks its own hooks. Another mod's transpiler or a
+PatchShield rescue can remove one after the install, so each mission
+start asks Harmony whether the profiler's patches are still in place; if
+one is missing, that mission does not measure and one warning names
+everything missing. A mission already measuring stops with one warning
+when a later patch takes out its call sites. A strip in the middle of a
+mission is found at the next mission start.
+
+Every player, profiler on or off, gets one [TickProfiler] line per game
+process and one [PerfContext] line per mission (build flavour, runtime
+and GC settings, scene, agent count, quality options, memory headroom,
+and which diagnostics will run). With the profiler off, its whole cost
+is those lines, one MissionTickProfilerBehavior added to every mission
+(set up once per mission; after writing [PerfContext], its tick returns
+at once each frame) and two static null checks per agent tick.
+
+PatchShield: Mission.TickAgentsAndTeamsImp is now on its exclusion list
+for every player. A missing-API exception swallowed there would skip the
+line that marks the agent tick complete, and the next frame would wait
+forever; excluded, the exception leaves the method instead. For any
+patch on that method, the swallow and the strip of the offending patch
+are given up. Mission.OnTick and Mission.OnPreTick keep the shield
+(maintainer decision D13): the first build excluded them for cost, but
+with plan 034's cheaper finalizer two calls a frame cost little, while
+without the shield a broken foreign patch on Mission.OnTick unwinds the
+whole application tick in a process's first game and can keep a finished
+battle from closing. diag.log now names each patched method the shield
+skips by name, once per process.
+
+Older than the profiler: Mission.OnTick clears the agent tick's
+completion flag before its behaviour loop, and only the agent tick sets
+it again, so an exception that escapes in between and is swallowed above
+it (by PatchShield or by the crash capture) leaves the next frame
+waiting forever, whichever way the exclusion list reads. This branch
+does not fix it; the PatchShield follow-up plan recorded under decision
+D13 takes it, with its regression tests. That plan also makes a rescue
+strip only the patch that threw. Until then a PatchShield rescue on
+Mission.OnTick or Mission.OnPreTick also strips TAOM's own patches
+there, the profiler's included, because TAOM's Harmony owner is not a
+protected one.
+
+Refs: #710 (plan 028)
+Not-tested: in game. One Custom Battle and one campaign field battle
+ with the profiler on: the install line, [PerfContext], a [TickProfile]
+ line every 5 s beside [MissionPerf], [Hitch] on slow frames and
+ [TickSummary] at the end; then the same battle with it off,
+ [MissionPerf] avgMs within run-to-run noise. A PatchShield rescue on
+ either tick method and the hook-check warnings have not run in a game.
+
+#### feat(faction-ui): v2.0.32 - play as the lord you pick (#704)
+
+`21b01894`
+
+Picking a lord or lady of the chosen faction on the faction screen now
+makes you that character. Character creation goes from the faction
+screen straight to the career choice and then into the campaign, in
+the hero's own clan and kingdom, with their gear, skills and fiefs.
+Player Switcher performs the takeover, so its settings apply: with it
+switched off, or for Sauron and the Nine without "Allow Sauron and the
+Nazgul", the pick is copied as before. Legends, wanderers, troops,
+Aragorn and Gimli (no clan), and Haldir and Bolg (another faction's
+people) are still copied. Taking over a ruler's child makes them the
+clan's leader, and so the ruler, as Player Switcher already does.
+
+This is also the release note for the faction screen itself, which went
+out in 0bd6abf3 without one: Kysaro's themed main menu, menu video and
+music, splash, loading screens, skill icons, character-creation screens
+and his faction and hero picker are now part of TAOM, with their images
+loaded only while their screens are open.
+
+Known limitations: the career menu's button still reads "Next"; a
+takeover cannot turn on Iron Man (or, with Birth and Aging Options,
+turn off the life and death cycle); a taken-over lord starts with 1,000
+gold plus his culture's starting gold, as Player Switcher's own
+takeovers do.
+
+Reviewed by a six-lens deep review and a convergence pass, RCA
+docs/reviews/rca-faction-ui-takeover-2026-10-01.md. Tested in game by
+Mike: Boromir went from the faction screen to the career page and into
+the game.
+
+#### feat(realm-borders): v2.0.32 - parchment map at full zoom-out
+
+`eed96b38`
+
+As you zoom all the way out on the campaign map, a parchment map of
+Middle-earth now fades in, with the realm borders, colours and names
+drawn on it. The picture is traced from TAOM_Map's own terrain, so the
+borders follow its drawn coasts and rivers. MCM > Realm Borders >
+"Parchment Map at Full Zoom-Out" turns it off; it also hides whenever
+the borders do (#698).
+
+Border changes that come with it:
+- Every Border Material choice now draws over the parchment map.
+- The borders and land tint no longer draw twice on the default
+  material, so Realm Colour Strength now defaults to 0.5 to keep the
+  same look.
+- New colours for Rohan, Harad, Gundabad, Rivendell and Mirkwood.
+
+Console: taom.print_realm_atlas reports the parchment map's state;
+taom.realm_atlas_rebuild, taom.realm_atlas_tint and
+taom.realm_atlas_fade redraw it or tune it until the game restarts.
+
+Reviewed by a six-lens deep review, a convergence pass and a Codex
+adversarial pass (0 findings); record in
+docs/reviews/rca-realm-borders-parchment-2026-10-01.md. The two-layer
+look and its build time are not yet checked in game; the checklist is
+in docs/features/realm-borders.md.
+
+#### feat(realm-borders): v2.0.32 - Your Realm colour field in MCM
+
+`6b00881b`
+
+Adds a "Your Realm" field under MCM > Realm Borders > Realm Colours.
+It colours your realm on the campaign map when it is none of the
+kingdoms listed above it: your clan's land while it serves no kingdom,
+then a kingdom you found. The colour follows you from the one to the
+other, and a kingdom you leave behind takes a free colour again. Blank
+keeps today's behaviour, a free colour picked to stand apart from the
+other realms; setting the field hands that free colour back for a
+rebel realm to use. In one of the listed kingdoms, such as Gondor, that
+kingdom's own field applies. A second campaign or a loaded save in the
+same session keeps the colour.
+
+RCA: docs/reviews/rca-realm-borders-2026-09-30.md, "Your Realm colour
+review".
+
+Refs #698.
+
+#### feat(realm-borders): v2.0.32 - kingdom borders on the campaign map
+
+`425a0573`
+
+Every kingdom's border is now drawn on the campaign map and moves with
+the war: a captured castle, a clan changing sides or a rebellion
+redraws it within a frame or two. Each town and castle owns a province
+grown over the map's own terrain, so borders follow rivers, coasts and
+mountain ranges, and the wild land between realms stays unclaimed.
+
+The default Atlas look is a watercolour wash inside each realm with a
+dash-dot ink line; your own realm's frontier is a gold cord, and
+heraldic bands are an option. The G key switches the map between the
+realms, the Free Peoples against the Shadow, and your allies and
+enemies in the settlement nameplates' colours; M hides and shows the
+borders (both rebindable under Keybindings > Campaign Map). Realm names
+are lettered across their lands in TAOM's Tolkien font where it has the
+letters, and a message tells you when your party rides into another
+realm. Everything is in MCM under "Realm Borders".
+
+Nothing is saved, so existing campaigns get the borders too. They do
+not run on a dedicated server, and they stand aside when the Kingdom
+Borders mod is loaded. The repaint runs on a worker thread: measured
+offline at about 37 ms per capture, it would otherwise stall the map.
+Not yet run in game: the checklist is in the feature doc,
+docs/features/realm-borders.md. The eight new strings are drafted in all
+twelve languages.
+
+Review and RCA: docs/reviews/rca-realm-borders-2026-09-30.md. Refs #698.
+
+#### feat(custom-battles): v2.0.32 - Edoras siege in the battle picker
+
+`d96167ef`
+
+Mike's Edoras siege scene (taom_rohan_edoras_town_forceatmo) joins the
+Custom Battle picker as "[Rohan] Edoras".
+
+The scene lives only in the unversioned TAOM_Map, created on
+2026-09-29, so a new LiveInstall gate checks the whole picker:
+CustomBattleSceneLiveDataTests fails when a row names a scene no
+installed module ships, or when a siege row's scene has no siege level
+(the level a Custom Battle siege loads). All 27 rows pass on the
+desktop; without the install the test is Inconclusive.
+
+Ship the scene with the release that ships this row. Owed in game: a
+Custom Battle siege on Edoras, and a town visit, because the scene
+spells its civilian level "civillian" (1,155 entities) while town
+visits ask for "civilian". The name key is registered nowhere, like
+every other picker scene name, so it shows in English everywhere.
+
+#### feat(culture-conversion): v2.0.32 - no creature rider replacements
+
+`1d8fc1d8`
+
+The goblin tree's new mountain spider riders (#696) are the first
+Cavalry troops of Goblin-town, the Misty Mountain Orcs and Blue Craig,
+and two consumers that pick troops by role picked them up at once.
+Mike decided both during the review.
+
+- Culture conversion: a captured cavalryman in a garrison converting to
+  a goblin culture became a spider rider. Now a rider of a mount-locked
+  creature (the giant spider, the war elephant or the Mumakil, the same
+  three CanAgentRideMount refuses) never replaces a garrison or militia
+  stack, so that cavalryman keeps his tier as infantry, as before. The
+  rule lives in CreatureMountRiders; the adapter flags each candidate
+  from its battle mounts, and CultureTroopIndex keeps flagged troops
+  out of its replacement cells but in its id set, so a garrison that
+  already holds a culture's own spider riders keeps them. War rams and
+  elk stay ordinary cavalry.
+- Behaviour change beyond the goblins: Dol Guldur's converted garrisons
+  could pick its spider riders since the swap landed (2026-09-21), and
+  now they cannot. Troops already in a garrison can still upgrade into
+  spider riders.
+- Enlistment: generate_enlistment_rosters.py would have built goblin
+  "cavalry" kits from spider-rider gear, on foot. It now drops riders of
+  the mount-locked creatures as donors (drop_creature_riders, keyed on
+  the mount's Monster), so goblins still get no cavalry kit. The Harad
+  rosters do not change: none of their donors rode an elephant.
+
+Tests: CreatureMountRidersTests (the three Monsters, and the real
+war ram, elk, moose and warg Monsters staying eligible);
+TroopCultureMapperTests (a creature rider is never picked, a garrison's
+own is kept); GarrisonCultureCoverageTests (no conversion target offers
+one, and the goblin cultures still recognise theirs);
+tools/tests/test_generate_enlistment_rosters.py.
+
+Review: docs/reviews/rca-keyforce-art-wiring-2026-09-29.md
+
+#### feat(creatures): v2.0.32 - KEYforce's elephant and spider art (#696)
+
+`98ca32e0`
+
+KEYforce delivered new art for the Harad war elephant and the giant
+spiders on 2026-09-29, and it is now wired in and verified in game.
+
+War elephant
+- The body is KEYforce's sk_elephant_basemesh_a, replacing ADOD_Beasts's
+  elephant_mesh. adod_elephant_geo.tpac stays: it still carries the
+  elephant_skeleton, its hit capsules and every clip.
+- Six HorseHarness items, all family_type 10. Three plain armours:
+  sk_elephant_armor_a (the same id, now the medium mesh, armour 60),
+  sk_elephant_armor_heavy (70) and sk_elephant_armor_elite (80). Three
+  howdahs: sk_elephant_armor_howdah_med (60), _heavy (70) and the
+  existing _elite (80).
+- The three howdahs share one deck placement, so all three get the
+  howdah platform and its two archers (ElephantConfig
+  .HowdahHarnessStringIds, HowdahHarness.GetsPlatform). The plain
+  armours get neither. The old plain armour's crewless platform is gone.
+- The Harad Elephant Rider has three rosters, one per howdah, with the
+  elite one first so the troop card keeps its look. Battles mix all
+  three.
+
+Spiders
+- KEYforce's whole meshes (sk_spiders_a_geo.tpac) replace the L/R split
+  halves, which the June crash had made necessary. They loaded and
+  rendered on the first try, so the split is retired; its tpacs stay on
+  disk as the rollback until a release ships.
+- The Giant Spider rides forest_a1. The Brown Spider is now the "Great
+  Spider" (same id, forest_a1 at 1.10x, the brown skin is gone). The
+  Pale Spider rides forest_a2. The Dol Guldur riders and the Mirkwood
+  broods keep their three tiers.
+- New Mountain Spider (1.0x) and Great Mountain Spider (1.25x) for two
+  new goblin-tree troops, the [Goblin] Spider Rider (level 21) and the
+  [Goblin] Spider Lord (level 31), a second upgrade off the Lurker. One
+  tree serves Goblin-town, the Misty Mountain Orcs and Blue Craig, so
+  all three field them. Their skills and weight (4.0) follow the Dol
+  Guldur riders; rebalance_troops.py now skips them so a rebaseline
+  keeps that parity.
+- The rider and brood names changed from Brown to Great Spider.
+
+All new and renamed item names are translated by hand in the 12
+languages, in the language files and the translator cache alike.
+
+Live LOTRLOME_Armory edits (unversioned): LOTRAOM_horses.xml and the
+13 loc_LOTRAOM_horses.xml files; the howdah prefab's comment. The
+previous copies are in
+E:\Bannerlord_Backups\module_bak_sweep_2026-09-29.
+Package the Armory in the same release as this build: the goblin
+riders and the elephant rider name items that exist only there.
+
+Tests: HowdahHarnessTests now pins the three-howdah rule (the plain
+armour rows turned false and the crew tests went with CarriesCrew);
+HowdahHarnessItemTests pins all six harnesses and the body mesh, and
+its repo-only rider test now runs on CI; SpiderMountItemTests pins the
+five spider items. Verified in game 2026-09-29 in Custom Battle: all
+five spider mounts, the goblin riders, and 91 crewed howdahs. Owed in
+game: the #624 hit test on the new body, a slide measurement, and the
+campaign upgrade chain (listed on #696).
+
+Review: docs/reviews/rca-keyforce-art-wiring-2026-09-29.md
+
+#### feat(tooling): v2.0.32 - /new-map-prop and a mesh name check
+
+`7bbe6f4d`
+
+Put MithrilForge into the workflow for custom static props built
+without the Modding Kit.
+
+- New skill /new-map-prop, listed in CLAUDE.md: a thin procedure over
+  docs/reference/tpac-static-prop-authoring.md. It stops until
+  yotthani's TpacTool fork has been read, and it makes the delivery
+  path the first decision and the last proof (the client log's
+  "Loading packages" line, the release folder), because the camp props
+  built this way were never loaded by the game.
+- tools/validate_mesh_refs.py --check-name <name>: is a new mesh name
+  free in every module's loose Assets and AssetPackages alike, case
+  ignored? Exit 0 free, 1 taken with the holding packages listed, 2
+  when an unreadable package leaves "free" unproven. MithrilForge's own
+  check reads Native's packages only. About 2 s on the full install.
+
+#### feat(creature-bandits): v2.0.32 - wild trolls: hill trolls, no armour
+
+`59f68511`
+
+The Wild Troll bands wear no armour and are hill trolls only for now,
+after Mike's first in-game test: bands are two to four hill trolls,
+replacing the earlier "same race, stats and gear" twins. A bare cave
+troll's body has no cloth (its trousers belong to the armour mesh), so
+the cave twin stays defined, armourless and in no band.
+
+In place of armour a bandit troll is tougher: 300 hit points (the
+race's 200 plus 100) and it takes 70% of every hit. Both are keyed to
+the bandit trolls only; Mordor's own trolls are unchanged. A troll
+spawned by console in Custom Battle has 200 hit points there, since
+Custom Battle reads health from the race.
+
+The band's map icon is now a hill troll. Reviewed (XML, data flow,
+completeness, and the C# on the per-hit path); follow-up in
+docs/reviews/rca-troll-bandits-2026-09-28.md. Full suite 11341 passed,
+2 skipped; one failure is trunk's NoTranslatedString_MixesWritingSystems
+on the #693 strings, not this change. Refs #694.
+
+#### feat(creature-bandits): v2.0.32 - taom.spawn_creature_band command
+
+`57f2b4d3`
+
+A dev-console command to meet a Wild Troll band or a spider brood on the
+campaign map without waiting for the daily spawners (cheat mode):
+"taom.spawn_creature_band trolls|broods [confirm]". Without "confirm"
+it is a dry run naming the settlement the band would be homed on and,
+for trolls, the kingdom it counts for. With it, one band spawns within
+a quarter of your sight, so it always shows on the map.
+
+The band is saved with the campaign and only killing it removes it. It
+shares the spawners' party step but none of their daily rules: it
+ignores the MCM spawn switches and the cap, still takes a cap slot, and
+is homed on your nearest town, castle or village. Refused before your
+party is on the map, as a prisoner, in a battle, or in a siege on
+either side; while enlisted it spawns beside your commander's column.
+
+The spawn diagnostic now says origin=console or origin=spawner, so the
+out-of-sight checklist step reads only spawner lines. The daily
+spawners behave exactly as before.
+
+Deep review (6 lenses + convergence): all findings fixed; follow-up in
+docs/reviews/rca-troll-bandits-2026-09-28.md. Full suite 11023 passed,
+2 skipped. Refs #694.
+
+#### feat: v2.0.32 - ten more named weapons; each lord's material its bar
+
+`40f58d14`
+
+Tuor's two heirloom axes, Galadriel's sword and the seven Noldor
+swords of Fingon, Finarfin, Finwë, Ingwë, Túrin, Voronwë and Celegorm
+join the named weapons: never sold, never looted. Rivendell's weapon
+rung now offers the seven swords and Tuor's axes, and Lórien's offers
+Galadriel's sword. Twenty-seven hero weapons and shields are named.
+
+Each of the thirteen lord's materials now shows its own bar in the
+inventory instead of the vanilla thamaskene ingot: vanilla's bar in
+the culture's metal colour (the meshes and materials live in the
+LOTRLOME_Armory).
+
+#### feat(tools): v2.0.32 - the item registry reads only Items documents
+
+`1ebcf86a`
+
+validate_moduledata.py counted every <Item id> row in any XML file as
+an item definition, so the armour class table and the armour
+acquisition config defined their own ids: a named weapon, a ladder
+weapon pick or a retired armour piece that no longer existed passed
+every check. The registry now reads only documents with an <Items>
+root, as the engine does. The armour acquisition gate also checks the
+ladder's weapon picks, lord's materials and rung quests, reading the
+quest file the way the game does, and a file with a bad encoding
+declaration is reported as one that does not parse instead of
+crashing the run.
+
+#### feat: v2.0.32 - the lord's gear ladder earns lord kit by slot (#693)
+
+`046123a7`
+
+Lord kit can now be earned piece by piece. A town armoury lists six
+rungs, climbed in order: hands, legs, shoulders, head, body, weapon.
+Each rung opens a quest done by the hero's own deeds (enemies struck
+down by their own hand, battles won and, on the higher rungs, enemy
+lords taken captive), or the rung is done at once by handing the
+armourer the culture's lord's materials. A done rung is claimed at an
+armoury of the lord level: the culture's lord piece for that slot,
+else its best elite piece there. The weapon rung awards the culture's
+named weapons where it has them (Andúril, Glamdring, Théoden's sword
+and their like), else a choice set per culture in the config.
+
+Thirteen lord's materials, one per culture that owns armour, turn up
+after battles won, more often the more enemies the hero struck down,
+and come from "The Deep Seam", a new village headman's quest per
+culture that pays five of them for timber. No workshop makes them and
+no battle loot or hideout gives them out. The one-quest Lord's
+Harness, which never shipped, is gone.
+
+Career quests gain a HeroKills objective, and LotrIssues rows can pay
+several items (reward_count) and be offered only to a player of their
+cultures (for_player_culture); such an offer is withdrawn once the
+player's culture no longer matches.
+
+Numbers, names and weapon picks are placeholders to tune in play, and
+the materials wear the vanilla thamaskene ingot until their art is
+imported.
+
+Save-compat: new keys only (per hero, a mask of claimed rungs and one
+of done rungs); no shipped save holds the retired Harness quest.
+Not-tested: the kill counter, the drops and the claim need the in-game
+checklist in docs/features/armour-acquisition.md.
+Research: Mission.OnAgentRemoved, PlayerEncounter, IssueManager,
+HideoutCampaignBehavior (v1.5.3)
+
+#### feat(tools): v2.0.32 - armour class generator and acquisition ref gate
+
+`04da4a0d`
+
+tools/generate_armour_classes.py classes every character armour piece
+in the live Armory (named hero kit, lord, civilian, the roster tier,
+else the band nearest its kingdom-cap target) and names the piece the
+armoury upgrades it into, inside the piece's own kit line. --check
+reports a stale table after an art drop; the validator raises it as
+ARMOUR_CLASS_TABLE_DRIFT (a warning) and says NOT verified when it
+cannot read the Armory the generator reads.
+
+A new ERROR gate, ARMOUR_ACQUISITION_REF, resolves every id the armour
+acquisition configs name (LotrIssue cultures and reward items, named
+weapons, upgrade metals, marketplace cultures and armour donors)
+against the registry plus the items the engine registers in code, and
+the commit hook enforces it. audit_deleted_mesh_impact.py now reads
+reward_item and the armour config, so a mesh removal names them too.
+
+#### feat: v2.0.32 - gated armour acquisition and the town armoury
+
+`301cd338`
+
+Heavy, elite and lord armour is no longer on every stall. Markets and
+battle loot still hand out light and medium armour freely, but a town
+sells heavy pieces only at armoury (Barracks) level 1 or more, elite at
+2 and lord kit at 3. Workshops, battle loot, the tournament prize pool,
+plunder and hideout loot skip the gated pieces, and a daily sweep takes
+out of each market what its armoury does not allow that day. The
+seventeen named hero weapons and shields, Anduril and Glamdring among
+them, are never sold, looted or awarded.
+
+"Visit the armoury" in every town menu upgrades a carried piece into
+the next class of its kingdom's kit line for gold and metals; lord kit
+also costs the kingdom's special resource. Lord kit is bought or forged
+at a level 3 armoury, earned through the quest "The Lord's Harness"
+(capture two enemy lords, reach 900 clan renown and win 12 battles, in
+any order), or found after a battle won against lords. A master
+armourer sometimes visits a town for a week and raises its armoury a
+level, and an artisan's "Armourer's Commission" trades a heavy chest of
+the town's people for steel.
+
+Nine cultures with no armour of their own, Lindon and Lothlorien among
+them, draw on a related culture's armour for their markets and their
+lord kit. The Animalia moose is now guaranteed Mirkwood stock, like the
+elk.
+
+The gate itself writes nothing to the save: it is reapplied at every
+campaign load, so its MCM switch takes effect from the next load. Each
+piece's class comes from the generated table armour_classes.xml.
+
+Deep-reviewed (ten lenses, then a convergence pass); the RCA is
+docs/reviews/rca-armour-acquisition-2026-09-27.md.
+
+Save-compat: adds one flat string dictionary (the harness quest,
+visiting armourers, event cooldowns); an older save loads it empty.
+Not-tested: in game. The checklist is the feature doc's Owed section.
+
+#### feat(resources): v2.0.32 - affordability-checked special resource spend
+
+`caf52758`
+
+Adds ISpecialResourceSpender, a narrow spend of a hero's special
+resource for callers outside the troop economy. GetBalance resolves the
+hero's resource by kingdom, then culture; TrySpend debits only when the
+balance covers the amount, and refuses a non-positive or non-finite one.
+
+SpecialResourceService implements it and the IoC registers the same
+singleton behind the new interface. The armour acquisition armoury uses
+it to charge the kingdom's resource for lord kit. The troop-keyed spend
+and the debug GrantAmount are unchanged.
+
+#### feat(creature-bandits): v2.0.32 - wild troll bands, twenty broods
+
+`b9fdaaf7`
+
+Spider broods now reach twenty (one new brood a day) and spread over
+every town, castle and village of Mirkwood and Dol Guldur, 47
+settlements instead of 13.
+
+Wild Trolls roam as bandits: bands of two to four cave and hill trolls,
+about one per kingdom, spawned near that kingdom's settlements, one new
+band a day. The trolls are hidden twins of Mordor's two trolls (same
+race, stats and gear, their own ids), so they fight with every troll
+trait while Mordor's recruitable trolls stay untouched. A troll is never
+taken prisoner, meeting a band goes straight to attack or leave, and a
+band never takes in freed prisoners, so it stays trolls only. New MCM
+switch "Spawn Troll Bands" in the Creature Bandits group, on by
+default; the tuning options below it apply to spiders only.
+
+Also for both spiders and trolls: with the Roguery perk Partners in
+Crime, telling a bandit party to serve under you no longer recruits a
+nearby brood or troll band along with it (the looters still join), and
+new broods and bands try for a spawn point outside your party's sight,
+as vanilla bandits do.
+
+Troll bands need a new campaign; an existing campaign's broods grow to
+twenty over the new anchors. The three new names are English in every
+language until the translator runs. Not yet run in game: see the
+checklist in docs/features/creature-bandits.md.
+
+Deep review (8 lenses + convergence): all findings fixed, RCA
+docs/reviews/rca-troll-bandits-2026-09-28.md. Full suite 11015 passed,
+2 skipped. Refs #694.
+
+### Fixes
+
+#### fix(race-abilities): v2.0.32 - second review: kill credit, leaner scans
+
+`70320bbe`
+
+Fixes from the second deep review of the race abilities (#730).
+
+Behaviour:
+- A horse is no longer a kill. Mounts carry no team, so a horse
+  killed under its rider passed the same-side check and extended
+  Bloodlust, healed the killer and spread fear around it.
+- A fall keeps its damage under Stand Fast and the other damage
+  reductions, as the documentation always said.
+- race_abilities.json's own "enabled" switch now closes the mission
+  gate; the gate log line and the console report show it beside the
+  MCM switch.
+- The message line for your side reads "N soldiers on your side": it
+  always counted an allied lord's troops too.
+- Stand Fast drops a knock-back resistance its shrug-off made
+  unreachable, and goblins an unread kin list. Config that nothing
+  reads now warns, and a trigger kind must be exactly one name.
+
+Performance:
+- Every behaviour tree's per-frame schedule copy no longer allocates:
+  List.AddRange built an array the size of the schedule each frame,
+  and the race abilities put every profiled soldier on it.
+- The sensor gathers only what can change a decision, so a Rohirrim
+  on foot or a Dale soldier without a bow no longer scans 30 to 40 m
+  every second. A test proves no profile's answer changes.
+- The MCM switches are read through a cached settings object, the
+  30 s report no longer sums the counters every frame, and the
+  battle's buffers are released at mission end.
+
+Code: the tree's decorator, task and blackboard are one node; the
+console command is taom.print_race_abilities, under Cheats/; the
+mission logic is back under 150 lines.
+
+Known limits, now in docs/features/race-abilities.md: in campaign a
+full-speed charge floors any man before resistance is read; scripted
+creature blows bypass the defensive effects; and Khand fields Rhun's
+troops, so its soldiers fire Rhun's Wainrider Wall while Variag
+Ferocity reaches only Khand's lords and town guard (the first
+commit's note said otherwise).
+
+Review: docs/reviews/rca-race-abilities-2026-10-04.md.
+
+#### fix(troops): v2.0.32 - Uruk-hai berserker skirt worn as body armour
+
+`569f6750`
+
+The Uruk-hai Champion and Berserker carried the Berserker Skirt in the
+cape slot. The skirt is body armour, and the game puts an item in a
+slot only when its type fits that slot, so neither troop ever wore it
+and its armour never counted. Both now carry it in the body slot,
+which they had left empty for the bare-chested look; the skirt leaves
+the chest bare.
+
+In battle both troops now get the skirt's armour (body and arms 38,
+legs 13: the Champion goes from 76 to 165 armour, the Berserker from
+83 to 172) and carry its 20.7 kg, so both are slower. The Berserker
+looks the same, because his race already showed this skirt as
+underwear; the Champion now shows the skirt in place of the plain
+Uruk-hai underwear.
+
+The validator's bare-chested-by-design list keeps both troops, so
+their body and cape slots stay out of the armour comparisons. The
+tools, docs and ModuleData rule no longer say the skirt sits in the
+cape slot. RCA: docs/reviews/rca-uruk-hai-skirt-body-2026-10-04.md.
+
+Refs: #729, #720 (plan 038)
+Not-tested: in game; #729 lists the checks (the Champion's skirt fit,
+ one skirt on the Berserker, both troops' speed).
+
+#### fix(perf): v2.0.32 - integration fixups and review for the perf plans
+
+`43ca92ee`
+
+What the perf plans needed once merged together, and the review of
+those fixes. The one change a player can see is a log line.
+
+With the tick profiler switched on and a hook it needs missing (another
+mod's patch, or a PatchShield rescue), its warning at a mission's start
+said "not measuring" while the default-on hitch probe went on measuring
+that mission. It now says "no per-type timing" and that the hitch probe
+still measures, unless the missing hook is the probe's own frame
+boundary, without which nothing is measured. The status lines a mission
+writes at its start moved from the profiler's mission behaviour into a
+static helper beside the probe's, so their tests (12 new ones) run
+without the game and in CI.
+
+Docs and comments now match the merged code. Plan 030 deleted Patch35
+on Mission.OnTick and Patch23's spawn postfix, and the text no longer
+names them. Plan 034 made PatchShield's finalizer cheap: its measured
+figures are stated once, in PatchShieldPolicy, and every other copy
+points there. The hang an exception can cause inside Mission.OnTick is
+analysed once, in the mission-perf-heartbeat feature doc, with a table
+of the six mission methods the profiler and the probe patch and what a
+PatchShield rescue does on each. Plans 040 and 042 no longer describe
+their merge order as still to come. A test the merges duplicated is
+gone, and a new binding test pins the health check's frame-boundary
+hook to the method that closes frames.
+
+The programme's records after the walkthrough: the decisions and what
+came of them, the landing order and how the landing branch was built,
+the squash messages, and the review's RCA
+(docs/reviews/rca-perf-integration-fixups-2026-10-04.md) with two
+lessons.
+
+Refs: #710, #712, #716, #721, #722, #723, #724
+Not-tested: in game. The new warning needs the tick profiler on and a
+ required hook removed while the probe is on.
+Save-compat: none (no saved state)
+
+#### fix(logging): v2.0.32 - flush TAOM.Dependencies startup lines
+
+`d31026b5`
+
+taom_debug.log now shows what TAOM.Dependencies logs: its static init,
+the Harmony fork version, the AssemblyResolve handler and every redirect
+it makes, the UnpatchAll guard, UIExtenderEx's start-up and any install
+failure. That module loads before TAOM, so it holds those
+[TAOM.Dependencies] lines in a buffer (EarlyLog) until TAOM has a
+logger. Nothing ever flushed the buffer, so every one of them was
+dropped on every launch, and so was every later line, such as a blocked
+UnpatchAll call during a game.
+
+TAOM now hands EarlyLog its logger in OnSubModuleLoad, right after the
+container is configured. Buffered lines are written in the order they
+were logged, each at its own level and starting with "[buffered
+HH:mm:ss]", the time it was logged; later lines go straight to the log.
+A line logged on another thread during the flush queues behind the older
+ones, so none is lost or reordered. A logger that fails costs only the
+line it was writing and never stops the module loading.
+
+The change spans both modules: the hand-over in TAOM.Dependencies'
+EarlyLog and the bridge in TAOM. dr3-maintenance.md now says the
+AssemblyResolve redirects are in taom_debug, not diag.log.
+
+Refs: #725
+Not-tested: in game. The [TAOM.Dependencies] startup lines in
+ taom_debug.log on a real launch, and a line logged from another thread
+ during the flush.
+
+#### fix(localization): v2.0.32 - English overrides only for English
+
+`407b1e76`
+
+Players on a game language other than English were shown English for 313
+strings, although every one of them has a translated row in all twelve
+language files. The Abanissa and Shaghana culture names and
+descriptions, their clan names and their notables were among them, as
+were 181 reworded vanilla texts. TAOM's English override table was
+applied in every language, so its English covered the translation.
+
+The table exists because the game skips its string dictionary only for
+English. It now applies only while the text language is English. In any
+other language the game reads the player's own row, so those 313 strings
+show in the language the player picked. English play is unchanged. A
+language with no row for an id would fall back to the default English
+text, as it does for every other string; all twelve shipped languages
+have a row for each of the 313.
+
+The language is read on every lookup, and a lookup in another language
+stops before the table probe. taom_debug.log gets one INFO line each
+time the text language changes to one that is not English
+("[LocalizationOverride] Text language '...' is not English: the English
+string overrides are skipped and vanilla reads that language's own
+rows") and one when it changes back ("Text language is English again:
+the English string overrides apply"). A session that starts in English
+writes neither.
+
+The localization override doc, the Patch25 registry entry and the
+translator docs describe the rule.
+
+Refs: #706
+Not-tested: in game. In German, an Abanissa notable and the Abanissa
+ culture name show their German rows; switching back to English writes
+ the "English again" line and the overrides apply again.
+
+#### fix(custom-battles): v2.0.32 - named commanders, default troops (#709)
+
+`dffdf879`
+
+Custom Battle no longer crashes on Start when a side picks Nord,
+Vakken or Darshi. Those vanilla minor cultures have no faction banner,
+and vanilla recolours each side's banner without checking it has a
+layer. The faction picker now lists only cultures with a banner: the
+22 TAOM factions instead of 25.
+
+Mordor, Gondor and Rohan now show their full curated commanders in
+Custom Battle: Sauron, the Witch-king and the Nazgul, Boromir, Faramir,
+Imrahil, Theoden and his captains. These 24 lords are vanilla lords
+that TAOM rebuilds, and vanilla loads them only in a campaign, so
+Mordor's list was empty and Gondor and Rohan showed one or two names.
+A Custom Battle-only stub file now lets the same rebuild create them.
+Khamul also heads Dol Guldur's commander list now, and in Sergeant
+mode the random general can be one of these lords.
+
+Each formation now defaults to the culture's own TAOM troop where that
+troop fits the slot. TAOM's defaults never applied in Custom Battle
+before, and the six re-skinned cultures defaulted to Calradian troops
+(Rohan infantry: the Vlandian Swordsman). The culture data fits 33 of
+88 culture and slot pairs; the other slots keep vanilla's pick.
+
+Most of this code landed in 9e2a39f4. This commit adds the slot check,
+the fallback that keeps Abanissa and Shaghana fielding Harad troops,
+and the face-gate exemption whose absence failed CI on 9e2a39f4.
+
+Known limitation: Sauron fights in Custom Battle without TAOM's race
+combat rules, which are campaign-only.
+
+RCA: docs/reviews/rca-custom-battle-bannerless-factions-2026-10-02.md
+
+#### fix(arena): v2.0.32 - troll gear unobtainable, prizes capped at heavy
+
+`bc39f6e4`
+
+Troll weapons and armour are for trolls. Troll Mace I and the troll
+shield could be bought, looted and won, the bracers had no merchandise
+flag at all, and every troll weapon part could be researched and forged
+at the smithy. The Armory now marks all ten troll items as not for sale
+and hides their twelve crafting parts from the smithy. Troll troops
+still spawn armed.
+
+Tournament prizes are now light, medium or heavy gear and nothing
+above. A tournament with fewer than four lords awards light or medium
+kit; a bigger one awards heavy armour or a Tier 4 weapon. Elite, lord
+and named kit, Tier 5 and 6 weapons and troll gear are never prizes.
+Heavy armour was never a prize before, because the armour gate hid it
+from every pool. A town whose culture has nothing in the band now draws
+from every culture's items instead of vanilla's Calradian list, which
+also keeps an empty list from crashing the prize roll.
+
+With Armour Acquisition switched off, culture markets no longer stock
+anything the Armory marks not for sale.
+
+For modders: CREATURE_GEAR_OBTAINABLE in validate_moduledata.py (and
+the commit hook) fails when an Armory reinstall brings the troll gear
+back; tools/lock_creature_gear.py puts it back, and --modules applies
+it to a release channel.
+
+Known limitation: the Armory edit is in the dev install only. Players
+get it with the next Armory package, or after lock_creature_gear.py is
+run against a release channel. One deep review convergence pass on the
+fix diff is owed: the review hit the weekly usage limit. RCA:
+docs/reviews/rca-troll-gear-tournament-prizes-2026-10-02.md
+
+#### fix(player-switcher): v2.0.32 - a taken-over lord keeps their treasury
+
+`59b1ff92`
+
+Picking an existing lord at character creation (Player Switcher's
+panel, or Kysaro's faction screen from #704) now keeps that lord's own
+treasury. Before, every lord taken over started with the engine's flat
+1,000 gold plus the culture's starting gold, whatever they held,
+because the engine assigns the player 1,000 once every character
+creation handler has run. Mike: "If they wanted to start with 1K they
+would've made a character from scratch."
+
+The handover records the lord's gold, and at the end of character
+creation StartupResources gives it back in place of the culture's
+starting gold. "Carry Over Starting Gold" works again: with it on, the
+created character's starting gold is added to the treasury.
+
+Unchanged: a character made from scratch and an adopted wanderer start
+with 1,000 plus their culture's starting gold, and an Advanced Starting
+Options start other than the default keeps the gold it sets.
+
+Known limitation: such a start (King, Vassal, Mercenary, Trader,
+Outlaw, Beggar) still runs against a taken-over lord, replacing their
+gold and, depending on the start, their gear or their clan's kingdom.
+A decision is owed.
+
+Review: docs/reviews/rca-takeover-treasury-2026-10-02.md
+
+#### fix(battle-corpses): v2.0.32 - fade and cap battle corpses (#701)
+
+`c17541f2`
+
+Players on 1.4.8 and 2.0.x reported mid-battle freezes that stopped
+when they lowered the vanilla Number of Ragdolls and Number of Corpses
+options. In a normal battle a fallen soldier never times out: the
+engine's own corpse timer is an hour, so bodies pile up until the
+corpse cap pushes them out, and on Unlimited that is 1,021 bodies,
+which the engine walks every frame.
+
+Field battles, sieges and sally-outs now fade each body 60 seconds
+after it settles and keep at most 25, through the engine's own
+per-battle corpse settings. If your Number of Corpses option is lower,
+yours is kept; TAOM never raises it. Stealth missions, towns, arenas
+and hideouts keep their bodies. Both values are sliders under Mod
+Options, TAOM, Performance, Battle Corpses, and apply mid-battle.
+
+Ragdolls cannot be limited per battle, so on the first main menu
+after the game starts TAOM offers to lower Number of Ragdolls to 5 and
+Number of Corpses to Low when yours are higher. Each option is only
+ever lowered, nothing changes unless you click Apply, and an MCM
+button does the same at any time. The notice names the options with
+the game's own labels, so it matches your Options screen.
+
+Each battle also logs one [BattleSettings] line with your ragdoll,
+corpse and battle-size options, so a freeze report shows what was
+set.
+
+Known limitations: the new notice is English-only until the
+translation run (#703). Whether removing a corpse also frees its
+agent slot (reinforcements arriving sooner) and whether the lowered
+ragdoll limit applies before a restart are still to be checked in
+game. Deep review RCA: docs/reviews/rca-battle-corpses-2026-10-01.md.
+
+#### fix(hero-race): v2.0.32 - Load Game preview rider no longer lies flat
+
+`1e39c1b8`
+
+The hero preview on the main-menu Load Game screen showed the rider
+lying flat in bind pose while the mount stood normally (#700). Every
+in-game screen was fine.
+
+The preview poses the rider with one of the engine's cached animation
+indices. On v1.5.3 those indices are broken before the game finishes
+loading on almost every launch, and TAOM's repair for them only ran
+once a campaign or battle started, after this screen. The preview's
+existing patch now runs the repair first, so the rider stands in the
+inventory idle. Nothing changes for other screens.
+
+Pinned by a wiring test that fails if the repair stops being the first
+statement of the patch. Review record:
+docs/reviews/rca-load-game-preview-bind-pose-2026-10-01.md; incident
+addendum in docs/reviews/rca-prone-character-tableau-2026-07-31.md.
+
+Refs #700
+
+#### fix(realm-borders): v2.0.32 - review fixes for the tint and colours
+
+`1ac2d1eb`
+
+Completes the Realm Borders look round begun in cfca3c5f, whose message
+left out what players get:
+
+Each realm's land is now tinted in its colour between the borders (MCM
+"Colour Realm Lands" and "Realm Colour Strength"). Every look control
+is in MCM under Realm Borders, including a colour field for each realm
+under Realm Colours (blank keeps the default) and two advanced choices,
+Border Blend Mode and Border Material. Harad is red, Rhûn crimson,
+Khand orange, Rivendell purple, Rohan green, Dunland brown, and
+Isengard and Umbar black; six neighbours moved so no two realms look
+alike. Building a border tile no longer freezes the map for a quarter
+of a second: heights now come from the terrain directly.
+
+This commit fixes what the review of that round found. The province
+map picture no longer shares a grey with Gundabad. Changing one of the
+two advanced dropdowns keeps a console choice made for the other. A
+rebel realm's colour now keeps clear of colours set in MCM. The Border
+Blend Mode tip no longer suggests Factor, which turns blending off.
+Umbar's default is a black with a faint sea-blue cast, #2F3C58.
+
+Still to decide in game: the blend mode. The material's own is
+AddAlpha, an additive glow that hides the ink; Modulate should show it.
+
+Refs #698.
+
+#### fix(tools): v2.0.32 - Codex review fixes for the KEYforce art (#696)
+
+`babcb833`
+
+Codex (gpt-6-astra, xhigh) reviewed the five #696 commits and found
+two LOW defects, both latent, with no false positives. A seven-lens
+review of the fixes found one more gap of the same kind, and a
+convergence pass confirmed nothing the tools write has changed.
+
+- The enlistment roster generator decided whether a troop rides a
+  spider, war elephant or Mumakil from its first battle equipment set
+  only. The engine can spawn a troop on any battle set, and it writes
+  an <equipment> placed directly under <Equipments> over that slot in
+  every set, which is how 88 shipped troops get their horse. The
+  generator now builds each battle set the way the engine does and
+  reads the kit (first set) and the mounts (every set) from that one
+  model; an equipmentType="Civilian" roster no longer counts as a
+  battle set. No shipped troop changes: the same four riders are
+  dropped and the rosters it would write differ only in two reworded
+  header lines.
+- The Custom Battle picker gate searched each siege scene's text for
+  one line: a commented-out declaration passed it and a reordered one
+  failed. It now parses the scene's level declarations and requires
+  every level a Custom Battle siege loads, siege plus level_1 to
+  level_3. All 15 siege scenes pass, and two fragment tests run
+  without the game installed.
+
+Docs: the file catalogue, the enlistment and custom battles feature
+docs, and the generator's header no longer describe the old gate or
+say the donor pools mount mumakil and war elephants.
+
+Review records: the Codex pass and the fix review in the RCA
+(docs/reviews/rca-keyforce-art-wiring-2026-09-29.md), recurrences
+under three existing lessons and one new testing lesson, the Codex
+track record, the review reference, the REVIEW-LOG entry and the
+prompt that was dispatched.
+
+#### fix(creature-bandits): v2.0.32 - vanilla out-of-sight spawn retry
+
+`dd6c3d3a`
+
+New spider broods and troll bands now pick their spawn point out of the
+player's sight exactly the way vanilla bandits do: a point inside the
+player's sight is retried up to 15 times around itself, taking the
+first reachable point whose path distance from the player is past his
+sight, and the first point stands if none is. The earlier retry
+resampled around the settlement with straight-line distance, which
+could run out of tries where vanilla finds a point.
+
+Codex review of #694 (gpt-6-astra, xhigh): no defect, all six suspects
+disputed with engine code, this one LOW observation fixed. Recorded in
+docs/reviews/rca-troll-bandits-2026-09-28.md and REVIEW-LOG. Full suite
+11010 passed, 2 skipped. Refs #694.
+
+#### fix(saruman): v2.0.32 - review fixes for Saruman and Sauron faces
+
+`a728f35b`
+
+Follow-up to 6df36909, which added Saruman the White as the head of
+Isengard and gave Saruman and Sauron their faces. A deep review of that
+commit found the fixes below.
+
+Sauron is no longer offered to Mordor players in character creation.
+The race was added only so his face could be built in the editor; a
+player of that race would have taken Sauron's dread aura, signature
+strikes and immortality, and the race has no character creation
+animation sets.
+
+Removed the taom.print_face console command. The face editor already
+copies a face to the clipboard with Ctrl+C, in character creation and
+the barber, and pastes one with Ctrl+V; the docs now say so.
+
+Removed the hair and beard morph fitter (tools/blender/fit_hair_morphs.py
+and hair_follow.py). Vanilla gives hair and beards no morph channels of
+their own; the engine carries them with the head's channels. Vanilla is
+the reference, so a beard fits when its rest shape is modelled on the
+exact head. Saruman's live FBX keeps the fitted channels for now; the
+original is at .bak-hairfollow.
+
+The gold and red eye colours on the sauron race now have a reinstall
+gate: tools/oneoff/add_sauron_eye_colours.py --check exits 1 while any
+sauron skin lacks them, and refuses a race whose gradients it cannot
+find. The script also refuses to pass the engine's 32 eye colour stops.
+The Armory snapshot, its README and the tools README record the edit.
+
+Docs: race-face-and-hand-morphs.md gains sections on exporting a lord's
+face, on how hair, beards and eyebrows follow the face, and on eye
+colour stops; routed from doc-lookup.md and INDEX.md. Three lessons and
+the RCA: docs/reviews/rca-saruman-lord-and-faces-2026-09-28.md.
+
+### Performance
+
+#### perf(campaign): v2.0.32 - cheaper campaign settings reads and filters
+
+`423d948d`
+
+Campaign code that runs per party per hour, per party and garrison per
+day, per caravan destination score, every map frame or per party icon
+looked up TAOM's Mod Options object on every read. Eight settings
+providers (castle recruitment, caravan trade, alignment desertion, realm
+borders, battlefield promotions, quick actions, time acceleration and
+map figure scale) now keep it from their first successful lookup and
+read through it. A change in Mod Options still applies at once, and
+until MCM is up they fall back to their defaults as before.
+
+Cheap checks now run first:
+- Alignment desertion asks whether an owner can lose troops at all (the
+  feature, owner and location toggles, a Free or Evil kingdom, a rate
+  above zero) before copying its roster, so the parties and garrisons of
+  Neutral kingdoms cost nothing each day.
+- The refuge listener skips its walk over every party in a world battle
+  while the player has no refuge.
+- Party speed walks the roster for the Rohan infantry penalty only for
+  parties of a culture with that feat, using the same check the speed
+  model uses to skip counting mounts.
+- The culture marketplace builds each culture's item id sets once,
+  instead of for every town every day, and counts a town's guaranteed
+  items in one walk of its market. A failed market read logs one line
+  naming every guaranteed item instead of one line per item.
+
+Every recruitment, desertion, speed, price and stock result is
+unchanged.
+
+What this does not do: caravan trade scoring still asks the engine for a
+town's travel distance a second time. A hand-off that reused vanilla's
+distance was built and then dropped in review: an unmeasured saving on
+an infrequent path, against a transpiler on a private engine method.
+Castle recruitment keeps its original check order.
+
+Refs: #719 (plan 037)
+Not-tested: in game. Change Realm Borders, Battlefield Promotions, the
+ fast-forward multiplier and Map Figure Scale in Mod Options on the map
+ and see each apply without a restart; an AI lord recruits in a castle;
+ a Free lord's party sheds Evil troops overnight; a Rohan infantry party
+ is still slowed; a refuge rallies militia in a battle; an Isengard town
+ stocks its warg items after a few days.
+
+#### perf(creatures): v2.0.32 - fewer allocations in creature battles
+
+`efe32624`
+
+Creature trees and the spatial grid did work in every battle that
+nothing used. Creatures behave as before.
+
+- The creature behaviour trees (wargs, spiders, elephants and mumakil,
+  elk, war rams) time their sleeps, waits, attack cooldowns and the
+  warg's rage with DateTime.UtcNow instead of DateTime.Now: no time zone
+  conversion per node per frame, and a daylight-saving change no longer
+  makes an interval in flight jump by an hour. The intervals are the
+  same, and the timers still follow the wall clock, so they keep running
+  in a paused battle as before.
+- The tree framework's selector reuses its two child lists instead of
+  allocating them on every re-entry, which for a creature tree is every
+  frame.
+- The tree logic returns before building argument arrays, or parking a
+  replay for an off-thread event, when no tree listens to that engine
+  callback. An off-thread event nobody listens to is now dropped, as the
+  main thread already dropped it. taom_debug.log gets one INFO line for
+  the mission's first such skip and an INFO summary at mission end
+  ("[BehaviorTree] Mission end: N callbacks skipped with no tree
+  listener ...; M parked off-thread for the mission tick.").
+- The spatial grid that wargs and spiders scan is still rebuilt every
+  2 s in every battle. It now reuses its maps and cell lists, removes a
+  deleted agent from the one cell its index names, and skips a scheduled
+  rebuild that nothing queried; the next query on the mission thread
+  rebuilds first, so a creature that starts scanning later still sees
+  fresh cells, and an off-thread query never builds. One INFO line each
+  per mission records the first skipped rebuild and the first rebuild
+  made by a query ("[SpatialGrid] ...").
+
+What this does not do: the spider hunt still walks the hostile teams'
+agents. A version that asked the engine's nearby-agent query first was
+built and reverted, because on v1.5.3 the reads it avoided are cheap
+inlined field reads and the query cost more before contact. The grid
+still holds the last battle's surviving agents, and through them the
+finished mission, until the next mission replaces it, as before.
+
+Refs: #715 (plan 033)
+Not-tested: in game. A warg battle (bites land, rage triggers), a
+ creature-bandit battle (the spider hunts the nearest soldier from the
+ start) and an elephant battle (trample and side-attack cooldowns feel
+ unchanged); the [SpatialGrid] and [BehaviorTree] lines in a battle
+ without creatures.
+
+#### perf(mixed-formations): v2.0.32 - lock-free path for plain formations
+
+`13f34c1c`
+
+Mixed Formations patches Formation.GetOrderPositionOfUnit, which the
+engine calls for every AI unit in a formation about twice a second, on
+its worker threads. Each call allocated an adapter, and for a formation
+holding position it also read the cavalry query and took the service's
+global lock, all for formations that almost never have a layout.
+
+A formation without a TAOM layout now goes back to vanilla after one
+lookup in a map of laid-out formations, keyed by object identity,
+written under the lock and read without it: no lock, no allocation and
+no formation query on the worker. A laid-out formation reuses the
+adapter the main thread built; its cavalry check and its positions are
+the same as before.
+
+What this does not do: a laid-out formation still takes the lock for its
+slot, still evaluates the formation's class-ratio queries on the worker
+through its unit spacing (Formation.Interval and UnitDiameter), as
+vanilla's own worker code does, and still makes its two native queries
+per unit (ground height and slot availability). Only formations without
+a layout are off the lock and the queries.
+
+A throw inside the formation prefix still falls back to vanilla
+positioning, but no longer silently. The first throw of each mission is
+written in full at WARNING ("[MixedFormations] Patch30 position prefix
+threw; ..."), later ones are counted, and the count is written at INFO
+when the mission ends ("[MixedFormations] mission ended: N unit
+position(s) fell back to vanilla after a Patch30 throw").
+
+Creature bandits: the wield and missile-range guards every agent passes
+through rule a humanoid out by its flags before reading its troop id or
+rider, so a soldier costs two reads instead of four. The answer is
+unchanged for every kind of agent.
+
+Refs: #714 (plan 032)
+Not-tested: in game. A mixed player infantry and archer formation of 10
+ or more on Hold still forms its layout and the L hotkey cycles it;
+ cavalry moved into and out of a laid-out formation; AI formations
+ behave as before; a spider brood battle runs. No unit test shows that a
+ real prefix throw reaches the fallback lines.
+
+#### perf(battle): v2.0.32 - read MCM settings once, not per blow or frame
+
+`74e9172d`
+
+Battle code looked up TAOM's MCM settings object on every read, and some
+of those reads run on every melee blow (about eight per ordinary hit,
+even with blow diagnostics off), every frame, or every howdah seat and
+agent stat update. The combat mechanics and blow diagnostics providers,
+and those of Mixed Formations, Companion Tactics, Dread Aura, howdah
+diagnostics, Smart Cavalry AI, Culture Doctrine and siege prop
+diagnostics, now keep the settings object from their first successful
+lookup and read through it. A change in MCM still applies at once,
+mid-battle included, and until MCM is up every read falls back to its
+default as before.
+
+Also:
+- Cleave, stagger immunity, crush-through and the race modifiers test
+  the cheap facts of a hit (such as a monster id, a shield block or an
+  AI attacker) before reading a setting, and the stance-cancel patch
+  checks the player's team before its setting. Every result is
+  unchanged.
+- The English string override looks a text's {=ID} up in place instead
+  of cutting it out into a new string, so its own lookup no longer
+  allocates (vanilla still builds its string when no override applies).
+- Mixed Formations parses its cycle hotkey only when the setting
+  changes, not every frame.
+
+Behaviour change, the maintainer's decision: the Mixed Formations cycle
+hotkey must now be the name of one key, in any case (L, f5, D2). A
+number in any spelling ("3" used to pick the 2 key), a list such as
+"L, K" (which used to combine into the semicolon key), a chord such as
+"Ctrl+L" and the name "Invalid" now switch the hotkey off instead of
+quietly picking a key the player never named. Each writes one warning to
+taom_debug.log when the setting changes to it and once per field battle,
+for example "[MixedFormations] cycle hotkey 'Ctrl+L' is not a recognised
+InputKey name; it is ignored until the setting changes". An empty value
+still means no hotkey, now with the same warning. Names such as L or F5
+behave as before.
+
+Nothing else a player sees changes, and no other log line changes. The
+module dependencies chapter now names the installed MCM 5.12.3.
+
+Refs: #713 (plan 031)
+Not-tested: in game. During a field battle, change a Combat Mechanics
+ toggle, the Mixed Formations cycle key and Smart Cavalry AI in MCM and
+ see each apply without a restart; set the cycle key to "3", then
+ "Invalid", then "Ctrl+L", and find one warning for each with the key
+ doing nothing, then set it back to L and see it cycle layouts; check
+ that an overridden English text (an alliance notification) still shows.
+
+#### perf(diagnostics): v2.0.32 - cheaper always-on mission diagnostics
+
+`e0ad0db7`
+
+Several diagnostics that run in every battle did per-frame or per-hit
+work for lines they rarely wrote. They now do that work only when it can
+produce a line, and what they logged is still in taom_debug.log,
+aggregated where it used to repeat.
+
+- Action-set census (the first 5 s of each mission): each agent is
+  checked on an integer key first, and only a new (action set, race,
+  sex) combination reads names. The census lines are unchanged. Two new
+  INFO lines bracket the window: "[MissionDiag] ActionSet census open"
+  and "[MissionDiag] ActionSet census closed: agentChecks=N newKeys=K
+  lines=L".
+- Career perks: the hit amp and hit reduction DEBUG lines are written
+  once per battle for each combination of direction, hero or party
+  leader, hit mask and passives, with that first hit's numbers. Every
+  hit is still counted, and an INFO summary gives each combination's
+  hits, multiplier range and damage totals; a hit with a non-finite
+  damage value is counted as nonFinite and kept out of the sums. The
+  summary is written when the mission ends, or when its behaviours are
+  removed without a normal end, so only a crash or a killed process
+  loses the counts after each combination's first line. It keeps totals,
+  not each hit: hits of 10, 20 and 70 damage read the same as 10, 40 and
+  50 under one multiplier.
+- Trolls: the formation-spacing tracker and the clip trace wait for the
+  mission's first Brute Force troll instead of walking every agent twice
+  a second in every battle. One INFO line says when they start, or at
+  mission end that no troll was built. [TrollSpacing] and [TrollClips]
+  lines in troll battles are as before. One small gameplay timing
+  change: the spacing tracker's 0.5 s clock now starts at the first
+  troll, so a formation's re-space can land up to about 0.5 s sooner or
+  later than before.
+- Creature Bandits diagnostics: each engine callback first checks
+  whether the mission has any creature, and a line the line budget
+  refuses is no longer formatted. A mission with no creature spawn
+  attempted or declined, which writes no summary, now ends with one INFO
+  line saying so ("[CreatureBandits][diag] no-creatures").
+- Companion Tactics: an empty Harmony postfix on Mission.OnTick that
+  still ran every frame (a detour, a settings read and a PatchShield
+  finalizer) is deleted. The order-of-battle preset buttons and
+  companion roles are unchanged.
+- Banner colours: an agent colour store that every spawned agent wrote
+  twice and nothing read is deleted, with its two patch members and its
+  cleanup behaviour. Troop armour tint still comes from the
+  Mission.SpawnAgent prefix. With BattleLoad diagnostics on, each
+  mission logs one TaomBehaviorAdded line fewer.
+
+The cost to a player is about four new INFO lines per mission.
+
+Refs: #712 (plan 030)
+Not-tested: in game. A campaign field battle with clan-coloured troops
+ (armour tint unchanged); a battle with a cave or hill troll and one
+ without ([TrollSpacing] only in the first); a career hero with a
+ TroopDamage pip (one hit amp line per combination, then the summary);
+ the census lines in a mission's first 5 s; the companion-tactics preset
+ buttons; whether the career summary is written when the game window is
+ closed mid-battle.
+
+#### perf(patchshield): v2.0.32 - find the original method only on a throw
+
+`5ee49d05`
+
+Every method PatchShield guards (about 160 at a process's first game
+start, close to 300 later) paid a lookup on every call, so the shield
+would know the method's name in case an error ever came through: its
+finalizers took Harmony's original-method parameter, which makes the
+patched method call MethodBase.GetMethodFromHandle on every call. The
+finalizers now take only the exception, and after a throw the shield
+finds the shielded method from the stack, judging only the frame that
+called the finalizer. If another mod has patched PatchShield's own
+finalizer, the lookup skips that frame and judges the next one.
+
+Measured outside the game (.NET Framework, Harmony 2.4.2): the old
+binding cost about 64 ns and 241 bytes of garbage per call on one
+thread, and about 1.1 microseconds per call with 8 threads calling at
+once. With TAOM.Dependencies as it ships (a Debug build), a patched call
+with the remaining finalizer costs about 5.4 ns against 1.9 ns with no
+finalizer, and allocates nothing.
+
+What the shield does after an error is unchanged: the same exceptions
+are swallowed or rethrown, and the swallow line, the owner it unpatches
+and the rethrow marker name the same method. The exclusion lists and the
+co-op skip are as they were.
+
+diag.log changes (PatchShield ships in TAOM.Dependencies):
+- A swallow line that repeats (the same exception type, method and
+  message) is written in full the first time in a process and counted
+  after that (maintainer decision D16). Until now such a line was
+  written on every call, at frame rate on a hot method, whenever the
+  throw kept coming after the first swallow, for example from an owner
+  on the protected list or from the method's own body or a method it
+  calls. Each mission start now writes the running count of every line
+  that recurred, "(and N more so far this session, counted instead of
+  logged)", and the summary at a clean exit gives the totals, so a crash
+  loses at most the counts since the last mission start. A line whose
+  write failed (diag.log held open elsewhere) is retried until it lands.
+  Up to 256 distinct lines are counted; a line past that is written in
+  full every time.
+- If the stack lookup cannot name the method, the first miss writes one
+  INFO line ("could not tell which shielded method an exception crossed
+  ...") and the session summary adds "; the shielded method was unknown
+  N time(s)". Nothing is unpatched in that case, so a throwing foreign
+  patch the shield cannot name keeps being swallowed on every call; its
+  line is written once and counted.
+
+Refs: #716 (plan 034)
+Not-tested: in game. One battle on a deployed build: diag.log shows the
+ usual shield pass lines and no new CAUGHT line; after a session with a
+ swallow or a rethrow marker, no "could not tell which shielded method"
+ line and no "unknown N time(s)" suffix; a repeated swallow's count line
+ at a mission start and at exit. The Mono path (Proton players) cannot
+ run on .NET Framework.
+
+#### perf(xml-merge): v2.0.32 - merge module XML in one document per load
+
+`a27c6b33`
+
+Every campaign load and custom battle start merges each module's
+ModuleData XML into one document per type. The engine converts the whole
+document merged so far between XmlDocument and XDocument for every file
+and compiles every XSLT on every call, so the cost grows with the square
+of the merged size. On the maintainer's desktop the engine's logs put
+about 28 s of a new campaign's 50 s loading screen in that merge, and
+about 14 s of a custom battle's load.
+
+The new fast path runs the same loop with the engine's own loader, merge
+and converters, in the engine's order, but keeps one document across the
+files and compiles each XSLT once per game process. Only validated
+merges take it; unvalidated ones (SPCultures, Monsters and similar) keep
+the engine's code. It stands aside while another mod patches a method it
+bypasses, re-runs the engine's own merge on any exception, and turns
+itself off for the session if the engine succeeds where it failed. There
+is no player-facing switch.
+
+A harness merges every type of the installed module set both ways and
+compares the results character for character: every type is identical,
+for a campaign and a custom battle. For the four heaviest types the fast
+path took about 16 percent of the engine's time in that harness for a
+campaign and 9 percent for a custom battle, and 27 to 35 percent
+offline; the test host slows the engine path about twice, so the offline
+figure is the fairer one. The in-game load time has not been measured
+yet. The harness is opt-in (TAOM_RUN_BENCHMARKS=1, about 40 s), and
+/verify-bindings runs it: run it after any engine update, because the IL
+fingerprint test cannot see every engine change. It fails on any
+difference, on an engine exception, on a missing heavy type or module,
+and on a heavy-type fast total above half the engine's.
+
+The compiled XSLT cache holds about 11 MB of managed memory for the game
+process. lords.xslt still costs about 1 s on each game process's first
+load and 0.05 to 0.1 s on later loads.
+
+taom_debug.log gets a start line ("[XmlMerge] fast path ready", or "fast
+path off:" with the reason), one [XmlMerge] line per merged type (path
+fast or vanilla, files, XSLTs, time with its load, XSLT and merge split,
+XSLT cache counts), a summary per game, a line whenever the fast path
+stands aside, fails or turns itself off, and after each failure a DEBUG
+line with the exception's full text. The engine's rgl log keeps its
+"opening" lines for every file.
+
+Ship it only with plan 040, which puts CreateMergedXmlFile on
+PatchShield's exclusion list: without that entry PatchShield would
+attach to the method this plan patches, and a missing-API exception
+inside the engine's own merge would load that data type empty instead of
+failing as the unpatched game does. This plan adds no entry of its own.
+
+Refs: #724 (plan 042)
+Not-tested: in game. One new campaign and one custom battle: the
+ [XmlMerge] start line, path=fast lines for validated types and
+ path=vanilla reason=skip-validation for the rest, the summary, the
+ loading screen against the 50 s baseline, and the rgl "opening" lines;
+ with plan 040 merged, [LoadXml] lines still carrying merge times.
+
+### Documentation
+
+#### docs(perf): v2.0.32 - engine performance programme records and plans
+
+`af990ca7`
+
+The records of the 2026-10-02 engine performance and memory programme
+that no single plan carries. No code changes; each plan's code lands in
+its own commit, tracked by issues #710 to #724.
+
+- plans/028 to plans/042: the fifteen plans as reviewed and revised,
+  with their rows in the plans/README.md index.
+- plans/_audit/2026-10-02-perf, the run folder: REPORT.md (the findings
+  and the engine facts behind them), FOR-MIKE.md (the maintainer's open
+  items and the protocol for the first measurement session),
+  DECISIONS.md (the maintainer's answers), the run log, the baseline,
+  the issue drafts, one plan review per plan, the squash messages, and
+  the evidence: load-time and shader-cache readings, memory audits
+  (banner atlases, UI sprite sheets, module sounds, map texture orphans,
+  the inventory open cost, a Kit worklist), native decompile notes, the
+  merge map and the commit-message spec check.
+- docs/reference/engine/mission-frame-threads-and-native-costs.md: a
+  battle frame by thread, the native costs TAOM's code pays, and
+  animation clip residency, linked from docs/INDEX.md. Plan 036's commit
+  corrects the page's clip eviction section; REPORT.md's eviction lines
+  and the INDEX.md entry already carry that correction in this commit.
+- Corrections found on the way: the inventory and party screens' memory
+  jump comes from cheat mode's every-item list, and the 2026-09-12
+  readings followed one engine collection, not two
+  (battle-load-diagnostics.md, the 2026-09-12 memory RCA, the native
+  commit audit and a state-lifecycle lesson); the Steam game runs on
+  .NET Framework, not Mono (bannerlord-engine-and-toolchain.md).
+- The adoption review of yotthani's engine research for this work, with
+  its provenance register rows: comparison only, nothing copied.
+
+Refs: plans 028 to 042
+Not-tested: nothing here runs; the measurement session in FOR-MIKE.md is
+ owed once plans 028, 029, 036 and 041 are in a build.
+
+#### docs(realm-borders): v2.0.32 - adoption review and preview tool
+
+`594d0ae9`
+
+Reviewed the Kingdom Borders mod (Nexus 10699) and designed TAOM's own
+kingdom borders for the campaign map. The mod gives every spot to the
+nearest settlement on a coarse grid, which on TAOM's map runs borders
+straight through the Misty Mountains and hands realms the open sea, and
+it colours borders with banner colours that leave 9 of 22 realms near
+black.
+
+The approved design grows one province per fief over the terrain, so
+coasts, mountain walls and rivers become borders, and redraws the
+borders live whenever a fief changes hands. Mike approved all six
+proposals: the province model, a curated realm palette, batched strips
+in an "Atlas" look (watercolour outline colouring with a dip-pen
+dash-dot line, the player's own realm in a gold cord), map modes, realm
+names and border-crossing notices. Nothing is built yet.
+
+tools/realm_borders_preview.py renders the model and the looks offline
+from the live TAOM_Map heightmap and settlements, for tuning. The strip
+textures in tools/realm_border_art/ were generated with ImagineArt; the
+prompts are in its provenance.json. The mod is recorded in the
+provenance register as comparison-only.
+
+#### docs(elephant): v2.0.32 - howdah crew kills keep their merit (#627)
+
+`9e7cc727`
+
+Mike decided on 2026-09-30 that kills by the howdah crew keep counting
+as Field Commission merit for harad_archer when the player's own party
+fields a howdah elephant. The elephant doc records the decision; the
+refuge damage reduction that does not reach the crew stays open there.
+
+#### docs(rules): v2.0.32 - model the deserializer when reading troop kit
+
+`df273ea2`
+
+An <equipment> written directly under <Equipments> is laid over its
+slot in every set a troop has. That rule lived only in the XSLT and
+ModuleData lessons, and scripts under tools/ have missed it twice:
+the troop roster page (#641) and the enlistment generator's
+creature-rider filter (#696, fix review R1 in
+docs/reviews/rca-keyforce-art-wiring-2026-09-29.md).
+
+moduledata-validation.md loads whenever a tools/ script is read, so a
+short section there now puts the rule in front of whoever next writes
+a script or test that decides what a troop wears or rides.
+
+#### docs(reviews): v2.0.32 - RCA and lessons for the KEYforce art wiring
+
+`0aad0d94`
+
+The deep review of the KEYforce art wiring (#696): eight lenses in two
+waves plus a convergence pass, no CRITICAL or HIGH finding, every
+MEDIUM and LOW fixed or decided by Mike before the commits.
+
+- docs/reviews/rca-keyforce-art-wiring-2026-09-29.md: 16 findings with
+  why each was missed. The main pattern: a troop joining a shared tree
+  is read by every consumer that selects troops by role (AI upgrade
+  weighting, notable slot growth, the garrison swap, the enlistment
+  generator, the skill rebaseliner), and the plan traced only its
+  recruiters.
+- Lessons: that rule (data-content-cultures.md); a crash tied to one
+  mesh is not a rule for the next (animation-skeleton.md); a Visual
+  Studio launch deploys the whole working tree, a subagent's issue
+  number is a claim to check, a live-module backup belongs in the
+  quarantine, and a generated file goes through its owner
+  (build-tooling-workflow.md).
+
+#### docs: v2.0.32 - the mirror is Mike's to sync; elephant skeleton path
+
+`8af881f2`
+
+Two pieces of documentation told sessions the wrong thing.
+
+- Edit the live Armory only. Since 2026-09-22 Mike syncs the
+  lotraom-assets mirror himself, in one pass, and a session never edits
+  it. The /armory-audit skill (its repair and commit steps), the
+  armory-ref-audit feature doc and the ranged-ladders recipe still said
+  to patch or commit the mirror; the /armory-audit run of 2026-09-29
+  had to override its own skill. They now say the live Armory, and a
+  commit body names which live files changed.
+- bannerlord-engine-and-toolchain.md named elephant_harad_armor_01_geo
+  .tpac as the file carrying the elephant_skeleton. It is a 416-byte
+  stub; adod_elephant_geo.tpac carries the skeleton.
+
+#### docs(mithrilforge): v2.0.32 - adopt prop recipe, gate the camp tpacs
+
+`991f415f`
+
+Adopt what TAOM can use from yotthani's MithrilForge (MIT), read in full
+at commit 91149e11 and in its 2026-09-13 snapshot. Its TpacTool fork is
+private and unread, so nothing is built or run; the facts are restated
+and attributed.
+
+- New docs/reference/tpac-static-prop-authoring.md: how MithrilForge
+  writes a static prop into a .tpac without the Modding Kit (donor
+  clone, all 14 vertex channels, flat normal and specular maps, no UV
+  flip, one package), and four measured ways its output differs from
+  every Kit and vanilla package.
+- The animation reference docs gain its clip findings, marked as not
+  measured by TAOM: a movement set naming a module's own action is
+  dropped, only release clips collide, the combat parameter comes from
+  CombatParameterId. Measured here: Kit and vanilla packages are packed,
+  and every vanilla clip carries its own motion segment.
+- New gate tools/tests/test_prefab_asset_packages.py: the prefab meshes
+  the code passes to PlaceCenteredPrefab must be packaged once each in
+  Main/_Module/AssetPackages, in structurally sound packages.
+  tpac_clone_metamesh.py now imports lz4 and xxhash only where they are
+  used, so the gate runs without them.
+
+Known limitation: the four field camp and refuge props yotthani built
+have never rendered. The editor-built releases ship only pack0.tpac,
+which holds none of them, and the dev install reads TAOM's loose Assets
+tree instead of AssetPackages, so every camp shows the vanilla
+fallback. Where the props should live is an open decision; this commit
+records it and corrects the docs that called them shipped.
+
+Review: docs/reviews/adopt-mithrilforge-2026-09-29.md
+Deep review RCA: docs/reviews/rca-mithrilforge-adoption-2026-09-29.md
+
+#### docs(creature-bandits): v2.0.32 - #694 closed, translations in #695
+
+`41eef590`
+
+The Creature Bandits feature doc records #694 as closed with the in-game
+checks still owed (listed in its closing comment), and names #695, the
+open issue for translating the seven spider and troll names into the
+12 languages. The roadmap's translation note points at #695 too.
+
+#### docs: v2.0.32 - keep the lessons files spaced as trunk has them
+
+`b9feae67`
+
+The rebase onto the new trunk inserted blank lines above older lesson
+headings; each file is now trunk's text with this branch's lessons
+appended, nothing else changed.
+
+#### docs: v2.0.32 - the lord's gear ladder doc, RCA and lessons
+
+`cdbad39e`
+
+The armour acquisition feature doc covers the ladder: how rungs,
+deeds, materials and claims work, the engine facts behind them (each
+cited to the v1.5.3 source), its config sections, known limitations,
+the in-game checklist and what is owed. The career quest, LotrIssues,
+validation, file catalogue, feature map and index docs follow suit.
+
+The RCA of the ladder's deep review records 24 findings, eight design
+changes and a convergence pass, all fixed; twelve lessons land in
+seven category files.
+
+#### docs: v2.0.32 - armour acquisition feature doc, RCA and lessons
+
+`be1450f0`
+
+docs/features/armour-acquisition.md describes the feature, Mike's
+decisions, the configs, the known limitations and the in-game checks
+still owed. The CultureMarketplace, special resources, career quest,
+LotrIssues, Animalia, co-op and validation docs, the reflection-site
+list, the file catalogue, the feature map and the index carry the
+matching rows.
+
+The deep review's RCA is
+docs/reviews/rca-armour-acquisition-2026-09-27.md; its lessons are
+appended to six category files under docs/reviews/lessons/.
+
+### Chores
+
+#### chore: v2.0.32 - the ladder's references in the moduledata rule
+
+`45eaf011`
+
+The moduledata validation rule now lists the ladder's weapon picks,
+lord's materials and rung quests among the ARMOUR_ACQUISITION_REF
+checks.
+
+#### chore: v2.0.32 - armour class table in the audit and validation rules
+
+`37be26a8`
+
+The moduledata-validation rule registers the two new gates,
+ARMOUR_CLASS_TABLE_DRIFT and ARMOUR_ACQUISITION_REF, and adds the class
+table check to the Armory row of the gate-per-file-kind table.
+/armory-audit now regenerates armour_classes.xml after a ref repair and
+commits it with the audit files.
+
+### ci
+
+#### ci(python-tests): v2.0.32 - run tools/tests on bannerlord-1.5.x
+
+`83758f1d`
+
+Nothing ran the Python tool tests on the 1.5.x trunk: build.yml's job
+triggers on bannerlord-1.4.5 only, and no hook or skill runs them. The
+new workflow runs every tools/tests module on each 1.5.x push and pull
+request, including the new camp prefab gate.
+
+It also fixes what made the 1.4.5 copy error: it pins Python 3.14
+(Path.read_text(newline=...) needs 3.13 or later) and installs the
+packages tests import at module level (pytest, lxml, lz4, xxhash,
+numpy, scipy, capstone, pefile, pyyaml). Measured in a clean venv with
+exactly that list: 2,819 tests ran and none failed to import. Tests
+that need the game install skip on the runner. A floor of 2,500
+discovered tests stops a broken discovery from passing.
+
+### Commits without the version label
+
+#### fix: Update fs_portrait_lasgalen.png to improve faction UI visuals
+
+`7f0c8446`
+
+#### Add loading ring sheet generation tool and associated assets
+
+`d9a8f46f`
+
+- Implemented `build_loading_ring_sheet.py` to create a loading sprite sheet for Bannerlord, replacing the default galloping horse with a One Ring inscription.
+- Added `imagineart_inscription.png` as the master image for the loading ring sheet.
+- Created provenance metadata for the inscription image detailing its generation process and attributes.
+- Introduced `imagineart_moonlit_smoke_arch.png` as a background for the loading screen, along with its provenance metadata.
+- Added unit tests for the loading ring sheet generation to ensure correct functionality and output.
+
+#### feat: Add comprehensive localization and mesh weight transfer tools
+
+`9e2a39f4`
+
+- Introduced a new documentation file detailing the RCA for the full translation run on 2026-10-01, highlighting key findings and preventive actions.
+- Created a centralized source table for TAOM English localization in `tools/_loc_sources.py`, consolidating multiple hand-kept copies into a single source of truth.
+- Developed a script in `tools/blender/transfer_upper_mesh_weights.py` to transfer skin weights from reference meshes to unweighted hair or beard meshes, ensuring proper movement in-game.
+- Implemented unit tests for the localization source table and the mesh weight transfer tool, verifying functionality and correctness.
+- Enhanced the testing framework with new tests for argument parsing, target and reference validation, barycentric calculations, and weight mixing.
+
+#### Add unit tests for generate_dale_armor.apply() to ensure it appends missing items without overwriting existing ones
+
+`0bd6abf3`
+
+- Implement tests to verify that existing items remain unchanged when apply() is called.
+- Ensure that missing items are appended correctly to the output files.
+- Create tests for scenarios where the output file does not exist, confirming it is created and parsed correctly.
+
+#### feat(crash-report): add diagnostic triggers for exception handling and mission start throws
+
+`649cc30f`
+
+#### fix(siege-dismount): guard adapter calls to prevent NRE in Custom Battle sieges
+
+`bb85e928`
+
+#### fix(siege-dismount): prevent exceptions in Custom Battle sieges by guarding adapter calls
+
+`9cb6d49e`
+
+#### Add realm fill functionality and associated tests
+
+`cfca3c5f`
+
+- Implemented RealmFill class to color each realm's land between borders with a translucent tint.
+- Added tests for RealmFill to ensure correct tinting behavior between realms, wild land, and water.
+- Enhanced RealmBorderServiceTests with additional tests for fill lands functionality based on player settings.
+- Updated RealmBordersProviderTests to validate color overrides and blend modes.
+- Introduced new tests for SiegeDismountAdapters to handle scenarios without a campaign.
+- Improved documentation for realm borders feature, including MCM settings and console commands.
+
+#### Add unit tests for creature fitting, animation repointing, and geometry calculations
+
+`a8fc5c84`
+
+- Implement tests for creature fitting logic in `test_creature_fit.py`, covering weight joining, hand pose channels, and clip metadata reading.
+- Introduce `test_creature_fit_math.py` to validate geometry calculations related to creature animation, including quaternion operations, skeleton transformations, and skinning.
+- Create `test_repoint_anim_clip.py` to ensure correct functionality of repointing animation clips, including master GUID changes and frame range adjustments.
+
+#### feat: Add deep review findings for ECC re-review and implement new tuning tool for face sliders
+
+`fdf9f38c`
+
+- Created a new document detailing findings from the deep review of the ECC re-review changeset, highlighting critical and high severity issues, along with preventive actions.
+- Introduced a new script `tune_face_slider_reach.py` to adjust face slider ranges in LOTRLOME skins.xml based on reference mesh data, ensuring sliders do not exceed acceptable deformation limits.
+- Added unit tests for the new tuning tool to validate slider adjustments and ensure correct functionality.
+- Implemented tests for user scope configuration auditing, ensuring proper scanning of user settings and installed plugins.
+- Developed tests for the Blender harness gait functionality, verifying stance height calculations and ear flap functionality.
+- Enhanced test coverage for the tuning tool, ensuring edge cases and expected behaviors are thoroughly validated.
+
+#### feat(mordor): add Mouth of Sauron equipment sets and strip upper mesh channels tool
+
+`799e189e`
+
+#### Add Saruman translations and implement hair morph fitting tools
+
+`6df36909`
+
+- Updated translation overrides for various languages to include Saruman's name:
+  - Chinese (Traditional and Simplified)
+  - Italian
+  - Korean
+  - Russian
+  - Turkish
+  - Portuguese (Brazil)
+  - German
+  - French
+  - Japanese
+  - Polish
+  - Spanish
+
+- Introduced new Blender scripts for fitting hair and beard morphs to head morph channels:
+  - `fit_hair_morphs.py`: Adjusts hair and beard meshes to follow head morphs.
+  - `hair_follow.py`: Contains mathematical functions for hair and beard vertex adjustments.
+
+- Added one-off script to modify Sauron eye colors in skins.xml, allowing for new eye color options.
+- Created unit tests for hair morph fitting and Sauron eye color modifications to ensure functionality.
+
 ## v2.0.31 (2026-09-28)
 
 Commits since v2.0.30: 259 (245 with the version label, 14 without).
