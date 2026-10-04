@@ -9,6 +9,18 @@
 > must print nothing, and `git ls-files tools/audit_battle_equipment_memory.py tools/tests/test_audit_battle_equipment_memory.py`
 > must print nothing (both files are new). If an in-scope file changed since this plan was written,
 > compare the "Current state" excerpts with the live code; a mismatch is a STOP condition.
+>
+> **Decided 2026-10-03 (FOR-MIKE 16s, with the Codex review):** under `--loose-assets` the engine's rule applies, not
+> the packed-first order that Steps 2 and 3 below specify: a module that ships a loose `Assets` tree reads only that
+> tree (its cooked packs are not read, and the run reports each one as COOKED_TREE_NOT_READ), and a module with none
+> keeps its packs. The Step 2 test `test_loose_tree_is_indexed_after_the_pack_trees_when_asked` is replaced by
+> `test_loose_tree_replaces_the_pack_trees_of_a_module_that_has_one`. The Step 9.4 STOP condition (an undecoded loose
+> header) was reached: 115 of the live Armory's 2,595 loose textures carry metadata version 2, which the shared decoder
+> rejects, and the default population reaches 82 of them. The tool reports each as TEXTURE_SIZE_UNKNOWN, counts it at
+> 0 bytes and says in the report that every total is then a lower bound; decoding version 2 is a research follow-up
+> outside this plan. Equipment placement follows `Equipment.IsItemFitsToSlot` now (the plan's equipment model assigned
+> every item to the slot the XML names). The tool, its tests and the README row carry all three; the sections below are the first
+> build's record.
 
 ## Status
 
