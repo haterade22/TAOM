@@ -1,0 +1,90 @@
+module: TaleWorlds.Native.dll v1.5.3 (14,209,376 bytes)
+engine: v1.5.3
+ghidra project: (local, not recorded)
+engine methods: 2282 mapped
+
+function: FUN_1801ef4b0  entry 0x1EF4B0  size 0x214  (rva at +0x0)
+
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+
+ulonglong FUN_1801ef4b0(longlong param_1,longlong *param_2)
+
+{
+  char cVar1;
+  longlong lVar2;
+  char *pcVar3;
+  char *pcVar4;
+  PSRWLOCK pRVar5;
+  undefined1 auStack_78 [32];
+  longlong local_58;
+  PSRWLOCK local_50;
+  undefined1 local_48;
+  undefined8 local_40;
+  uint local_38;
+  undefined4 local_34;
+  longlong local_30;
+  undefined8 uStack_28;
+  undefined1 local_20;
+  undefined4 local_1c;
+  ulonglong local_18;
+  
+  local_40 = 0xfffffffffffffffe;
+  local_18 = DAT_180d054a8 ^ (ulonglong)auStack_78;
+  lVar2 = param_2[4];
+  if (lVar2 == 0) {
+    if (*(char *)(*(longlong *)(param_1 + 0x50) + 0x360) != '\0') {
+      pcVar3 = *(char **)(*param_2 + 0x18);
+      pcVar4 = "";
+      if (pcVar3 != (char *)0x0) {
+        pcVar4 = pcVar3;
+      }
+      local_38 = 0x1505;
+      cVar1 = *pcVar4;
+      while (cVar1 != '\0') {
+        pcVar4 = pcVar4 + 1;
+        local_38 = local_38 * 0x21 + (int)cVar1;
+        cVar1 = *pcVar4;
+      }
+      local_38 = local_38 ^ *(uint *)(*(longlong *)(*param_2 + 0xa8) + 0xc);
+      local_34 = (undefined4)((ulonglong)param_2[1] >> 0x20);
+      local_30 = CONCAT44((int)param_2[2],(int)param_2[1]);
+      uStack_28._0_3_ =
+           CONCAT12(*(undefined1 *)((longlong)param_2 + 0xa4),
+                    *(undefined2 *)((longlong)param_2 + 0x14));
+      pRVar5 = (PSRWLOCK)(*(longlong *)(param_1 + 0x50) + 0x368);
+      local_48 = 1;
+      local_50 = pRVar5;
+      AcquireSRWLockShared(pRVar5);
+      FUN_1801ff2f0(*(undefined8 *)(*(longlong *)(param_1 + 0x50) + 800),&local_58,&local_38);
+      lVar2 = *(longlong *)(*(longlong *)(param_1 + 0x50) + 800);
+      ReleaseSRWLockShared(pRVar5);
+      return (ulonglong)(local_58 != lVar2);
+    }
+  }
+  else if (*(char *)(lVar2 + 0x360) != '\0') {
+    pcVar3 = "";
+    if (*(char **)(*param_2 + 0x18) != (char *)0x0) {
+      pcVar3 = *(char **)(*param_2 + 0x18);
+    }
+    local_38 = 0x1505;
+    cVar1 = *pcVar3;
+    while (cVar1 != '\0') {
+      pcVar3 = pcVar3 + 1;
+      local_38 = local_38 * 0x21 + (int)cVar1;
+      cVar1 = *pcVar3;
+    }
+    local_30 = param_2[1];
+    uStack_28 = param_2[2];
+    local_20 = *(undefined1 *)((longlong)param_2 + 0xa4);
+    local_1c = (undefined4)param_2[0x14];
+    pRVar5 = (PSRWLOCK)(lVar2 + 0x368);
+    local_48 = 1;
+    local_50 = pRVar5;
+    AcquireSRWLockShared(pRVar5);
+    FUN_1801f87f0(lVar2 + 0x330,&local_58,&local_38);
+    ReleaseSRWLockShared(pRVar5);
+    return (ulonglong)(local_58 != lVar2 + 0x330);
+  }
+  return local_18 & 0xffffffffffffff00;
+}

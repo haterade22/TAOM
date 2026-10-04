@@ -1,0 +1,71 @@
+banner_icons.xml: 368 icons on 33 atlases
+
+_Module/characters\clans.xml: 147 banner keys, 18 TAOM atlases
+     70  taom_banners_gundabad_alpha_01
+     13  taom_banners_dwarves_ornaments_01
+     12  taom_banners_mordor_alpha_01
+     12  taom_banners_silvan_alpha_01
+     12  taom_banners_dolguldur_alpha_01
+     11  taom_banners_rohan_alpha_01
+     11  taom_banners_isengard_alpha_01
+     10  taom_banners_rhun_alpha_01
+     10  taom_banners_dwarves_alpha_02
+      9  taom_banners_harad_alpha_01
+      9  taom_banners_abanissa_alpha_01
+      7  taom_banners_umbar_alpha_01
+      5  taom_banners_gondor_alpha_01
+      4  taom_banners_noldor_alpha_01
+      3  taom_banners_gondor_alpha_02
+      2  taom_banners_sindar_alpha_01
+      1  taom_banners_gondor_ornaments_01
+      1  taom_banners_dunland_alpha_01
+
+_Module/spclans.xslt: 72 banner keys, 11 TAOM atlases
+     14  taom_banners_rhun_alpha_01
+     13  taom_banners_harad_alpha_01
+     12  taom_banners_mordor_alpha_01
+     11  taom_banners_rohan_alpha_01
+      9  taom_banners_dunland_alpha_01
+      8  taom_banners_dale_alpha_01
+      5  taom_banners_gondor_alpha_02
+      3  taom_banners_gondor_alpha_01
+      1  taom_banners_dolguldur_alpha_01
+      1  taom_banners_umbar_alpha_01
+      1  taom_banners_gondor_ornaments_01
+
+_Module/spkingdoms.xslt: 8 banner keys, 7 TAOM atlases
+      4  taom_banners_harad_alpha_01
+      1  taom_banners_dunland_alpha_01
+      1  taom_banners_gondor_alpha_01
+      1  taom_banners_mordor_alpha_01
+      1  taom_banners_dale_alpha_01
+      1  taom_banners_rohan_alpha_01
+      1  taom_banners_rhun_alpha_01
+
+_Module/taom_spcultures.xml: 24 banner keys, 9 TAOM atlases
+      2  taom_banners_gundabad_alpha_01
+      2  taom_banners_silvan_alpha_01
+      1  taom_banners_dunland_alpha_01
+      1  taom_banners_rhun_alpha_01
+      1  taom_banners_harad_alpha_01
+      1  taom_banners_umbar_alpha_01
+      1  taom_banners_gondor_alpha_01
+      1  taom_banners_dwarves_alpha_02
+      1  taom_banners_dwarves_ornaments_01
+
+_Module/taom_spkingdoms.xml: 14 banner keys, 11 TAOM atlases
+      8  taom_banners_gundabad_alpha_01
+      4  taom_banners_noldor_alpha_01
+      2  taom_banners_silvan_alpha_01
+      2  taom_banners_sindar_alpha_01
+      2  taom_banners_harad_alpha_01
+      1  taom_banners_dwarves_alpha_02
+      1  taom_banners_dwarves_ornaments_01
+      1  taom_banners_isengard_alpha_01
+      1  taom_banners_umbar_alpha_01
+      1  taom_banners_dolguldur_alpha_01
+      1  taom_banners_abanissa_alpha_01
+
+Union: 19 of 33 atlases, 1216 MiB at today's format (304 MiB as 4096 BC7, 76 MiB as 2048 BC7)
+Never used by any banner key here: ['taom_banners_anduinvale_alpha_01', 'taom_banners_arnor_alpha_01', 'taom_banners_dale_ornaments_01', 'taom_banners_dolguldur_alpha_02', 'taom_banners_dunland_alpha_02', 'taom_banners_dwarves_alpha_01', 'taom_banners_goblin_alpha_01', 'taom_banners_gundabad_alpha_02', 'taom_banners_isengard_alpha_02', 'taom_banners_misc_alpha_01', 'taom_banners_mistymountainorcs_alpha_01', 'taom_banners_mistymountainorcs_alpha_02', 'taom_banners_mordor_alpha_02', 'taom_banners_rhun_ornaments_01']
+Icon ids >= 10000 with no banner_icons.xml entry: {17299: 8, 17104: 2, 17371: 2, 17358: 2, 17281: 1}

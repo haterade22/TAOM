@@ -1,0 +1,33 @@
+feat(release): v2.0.32 - packager reports scene sacks and JIT state
+
+The release packager (tools/package_release.py) now prints two reports
+on every run, --dry-run included. Both only report: neither can refuse
+a release, change the exit code or alter what is copied, and a report
+that fails prints its failure and lets the run carry on.
+
+Scene shader caches: one line per shipped SceneObj/<scene> saying
+whether its ShaderCache/D3D11 folder holds
+terrain_shaders_header_data.bin and compressed_shader_cache.sack, with
+the sack's format, then a summary line and a WARNING for any sack
+whose format differs from the majority of the shipped sacks.
+SceneObj/Backups is never judged. A missing scene sack is reported,
+never refused: whether to ship sacks is the maintainer's call.
+
+What it cannot see: because the WARNING compares the shipped sacks
+with each other, a whole set one format behind the engine raises
+nothing, and module-level Shaders/D3D11 sacks, the case behind issue
+#448, are not read at all.
+
+JIT state: one line per shipped copy of TAOM.dll and
+TAOM.Dependencies.dll saying OFF, ON or unknown with the reason, read
+from the assembly's DebuggableAttribute in its metadata tables without
+loading the DLL. TAOM ships Debug builds on purpose, so OFF is
+expected and never refused. The reader's tests build the exact header
+of the shipped TAOM.dll as well as the dev build's.
+
+The release skill and release-process.md step 9 describe both
+reports.
+
+Refs: #717 (plan 035)
+Not-tested: a packaged build played in game; the reports only read
+ files.

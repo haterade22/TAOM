@@ -1,0 +1,53 @@
+feat(mission-perf): v2.0.32 - per-behaviour tick profiler and hitch log
+
+A new mission tick profiler says where a battle's frame time goes. It
+times each mission behaviour's tick by type, the main thread's wait
+for the previous frame's agent tick, the agent tick itself, and
+everything else (otherMs: the native tick, views, rendering and
+streaming), with the main thread's allocation alongside.
+
+It is off by default. To use it, turn on "Enable Tick Profiler" (MCM,
+Battle Load Diagnostics, Mission Performance) and restart the game:
+the profiler is installed once, at game start. Turning it off stops
+measuring from the next mission. Two more settings, read at each
+mission start, set how many behaviours each line lists (default 8)
+and the hitch threshold (default 250 ms).
+
+With it on, taom_debug.log gets:
+- a [TickProfile] line every 5 s on the same clock as [MissionPerf],
+  with the window's totals and its slowest behaviours (ms, calls, max
+  ms, KB);
+- a [Hitch] line for each frame at or above the threshold, naming the
+  frame's phases, GC counts, allocation and three slowest behaviours,
+  for the first 100 such frames of a mission (later ones are counted);
+- a [TickSummary] line at mission end covering the whole mission;
+- [TickProfiler] status lines: the install result, a header for each
+  measured mission, and one reason line whenever anything is skipped,
+  falls back (an out-of-range setting, a failed memory read) or stops.
+
+Every player, profiler on or off, gets one [TickProfiler] line per
+game process and one [PerfContext] line per mission (build flavour,
+runtime and GC settings, scene, agent count, quality options, memory
+headroom, and which diagnostics are on). With the profiler off that
+and two static null checks per agent tick (enter and exit) are its
+whole cost.
+
+Mission.OnTick, Mission.OnPreTick and Mission.TickAgentsAndTeamsImp are
+now on PatchShield's exclusion list for every player, so its finalizer
+no longer runs on those three (Mission.Tick, MissionState.TickMissionAux
+and MissionState.OnTick still carry it once per frame), and diag.log
+names each method skipped this way once. For TickAgentsAndTeamsImp this
+is also a fix: a swallowed exception there left the next frame waiting
+forever for the agent tick. For Mission.OnTick it gives up PatchShield's
+rescue when another mod's patch there throws a missing-API exception: in
+a game process's first game that unwinds the whole application tick each
+frame it recurs, and a throw after a battle has ended can stop the
+battle from closing. Whether Mission.OnTick stays on the list is still
+the maintainer's decision.
+
+Refs: #710 (plan 028)
+Not-tested: in game. One Custom Battle and one campaign field battle
+ with the profiler on (the install line, [PerfContext], a
+ [TickProfile] line every 5 s beside [MissionPerf], [Hitch] on slow
+ frames), then the same battle with it off ([MissionPerf] avgMs on
+ and off within run-to-run noise).

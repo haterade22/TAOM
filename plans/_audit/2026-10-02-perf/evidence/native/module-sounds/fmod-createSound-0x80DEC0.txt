@@ -1,0 +1,31 @@
+--- FUN_18080dec0  entry 0x80DEC0 ---
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+
+int FUN_18080dec0(undefined8 param_1,undefined8 param_2,undefined4 param_3,undefined8 param_4,
+                 undefined8 param_5)
+
+{
+  int iVar1;
+  undefined1 auStack_188 [32];
+  undefined1 *local_168;
+  undefined8 local_160;
+  undefined8 local_158 [2];
+  undefined1 local_148 [256];
+  ulonglong local_48;
+  
+  local_48 = DAT_180d054a8 ^ (ulonglong)auStack_188;
+  iVar1 = FUN_18081ef50(param_1,local_158,0);
+  if (iVar1 == 0) {
+    local_168 = (undefined1 *)param_5;
+    iVar1 = FUN_18081a7c0(local_158[0],param_2,param_3,param_4);
+  }
+  if ((iVar1 != 0) && ((PTR_DAT_180cf6470[0x10] & 0x80) != 0)) {
+    local_160 = param_5;
+    local_168 = (undefined1 *)param_4;
+    FUN_18080d790(local_148,0x100,param_2,param_3);
+    local_168 = local_148;
+    FUN_180810c40(iVar1,1,param_1,"System::createSound");
+  }
+  return iVar1;
+}

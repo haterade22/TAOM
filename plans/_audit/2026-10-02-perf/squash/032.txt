@@ -1,0 +1,40 @@
+perf(mixed-formations): v2.0.32 - lock-free path for plain formations
+
+Mixed Formations patches Formation.GetOrderPositionOfUnit, which the
+engine calls for every AI unit in a formation about twice a second, on
+its worker threads. Each call allocated an adapter, and for a
+formation holding position it also read the cavalry query and took
+the service's global lock, all for formations that almost never have
+a layout.
+
+A formation without a TAOM layout now goes back to vanilla after one
+lookup in a map of laid-out formations, keyed by object identity,
+written under the lock and read without it: no lock, no allocation and
+no formation query on the worker. A laid-out formation reuses the
+adapter the main thread built and reads the cached cavalry flag, so a
+laid-out formation that turns mostly cavalry keeps its layout until
+that flag refreshes, about 2.5 s at most. Positions for every layout
+are unchanged.
+
+What this does not do: a laid-out formation still evaluates the
+formation's class-ratio queries on the worker through its unit spacing
+(Formation.Interval and UnitDiameter), as vanilla's own worker code
+does, and still makes its two native queries per unit (ground height
+and slot availability). Only formations without a layout are off the
+lock and the queries.
+
+A throw inside the formation prefix still falls back to vanilla
+positioning, but no longer silently. The first throw of each mission
+is written in full at WARNING ("[MixedFormations] Patch30 position
+prefix threw; ..."), later ones are counted, and the count is written
+at INFO when the mission ends.
+
+Creature bandits: the wield and missile-range guards every agent
+passes through rule a humanoid out by its flags before reading its
+troop id or rider, so a soldier costs two reads instead of four. The
+answer is unchanged for every kind of agent.
+
+Refs: #714 (plan 032)
+Not-tested: in game. A mixed player infantry and archer formation of
+ 10 or more on Hold still forms its layout and the L hotkey cycles
+ it; AI formations behave as before; a spider brood battle runs.

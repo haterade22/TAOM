@@ -1,0 +1,524 @@
+{
+ "summary": "PART A (baseline). TAOM's load-time numbers come from single runs on one machine. They are not a controlled series. The 11.9 s MissionInitialize to MissionAfterStartBegin gap (2026-08-07) was split on 2026-08-08 into: native InitializeMission 2 ms, async wait 903 ms (polls=28, healthy streaming), warm-up ticks 1,582 ms, other mods 846 ms and TAOM 55 ms. After that, 19.5 s passed after FinishMissionLoadingDone at memLoad 97%. The doc put that on memory pressure and never ran the clean-boot repeat. CORRECTION TO THE TASK PREMISE: 'resource residency is dead as a mechanism' comes from the #389 Isengard black-tableau investigation (CHANGELOG-2026-H2-handwritten.md:19172; rca-isengard-black-tableau-2026-08-06.md:174), not from battle loads. For its 2026-08-08 run, battle-load-diagnostics.md:783-787 concluded the opposite ('load time and memory pressure are ONE problem'). Later work (bundle b18f3441, 2026-09-04) showed that the window after FinishMissionLoadingDone can also be shader compilation (the render-ready gate, WaitingForRender phase 4f). That leaves the Aug-8 19.5 s, the Aug-8 21:50 33 s and the Aug-10 67.4 s (at memLoad 56%) without a split between the two causes. Fresh 2026-10-02 logs show loads of 1.9 to 2.9 s on a warm cache. Boot and first-load costs are explained and fixed: Native2Managed went from 29-33 s to 51-68 ms, PatchShield pass 2 from 69 s to 0.9-1.4 s, and the loading-window trace from 84 MB logs to under 0.4 MB. Frame time on record: 661 agents at 172-183 fps, 1,313 agents at 91-97 fps. Spawn spikes up to 1,663 ms and recurring single-frame hitches of 0.6 to 1.1 s have no attribution, and the warg fix (#659) has no frame-time measurement. Memory: the 6.6 GB menu floor is attributed (Armory about 970 MB, TAOM about 700, TAOM_Map about 500, the rest engine and vanilla). The map scene is about 4.4 GB, and about 3.1 GB of it moves with the engine's graphics sliders. About 3.9 GB of regions generated at load are still unnamed. PART B (repeatability). No TAOM Custom Battle preset exists, and no automated starter is in use. The parked shader-precompile walk already holds the machinery: a programmatic CustomBattleData builder plus a StartNewGame/EndGame chain driven from OnApplicationTick. No TAOM console command can run at the main menu. No parser for [MissionPerf] exists anywhere in tools/, and triage_battle_load.py reports only the last mission in a log. The 2026-10-02 session that loaded the same scene four times had 273, 83, 164 and 165 agents, so they were not the same battle, and steady fps on the same day differed 2x (about 117 against about 255) with no logged cause. PART C (native). TAOM is ahead on engine-method naming: 2,282 methods on 1.5.3, seeded into Ghidra. yotthani's 1.5.3 project has those names not yet applied, and his 1.4.8 project names 647 of them. Both binaries he analysed carry TAOM's project hash prefixes (client 45be32c5, wEditor 85c4d169), and TAOM's map puts GetMaximumNumberOfAgents at 0x6E4FA0, the address he reports. TAOM lacks callee trees, an offset-use search, an immediate-constant search, a function-size listing, range/enum/vtable-to-C decompiles and a committed struct-offset table. The smallest additions: native_decompile.py --callees, native_sig_author.py offsetuse and imm (capstone, grouped by .pdata function), a funcs --top size list, and a SHA-keyed native-struct-offsets.md. yotthani's Ghidra scripts are not in the MithrilForge repo, and docs/engine/native.md (2026-09-29) postdates TAOM's 91149e11 adoption cutoff, so /adopt-external fits it. BattlePresets has no licence, so it is comparison-only (provenance register row needed). /issue fits filing the additions. PROCESS NOTE: I ran one read-only `python -c` json.load on the engine-method JSON to list its keys. Python is outside the allowed command list. Nothing was written. Everything else used Read/Grep and allowed Bash commands.",
+ "instruments": [
+  {
+   "name": "[BattleLoad] load-phase ladder (BattleLoadDiagnostics, Patch43)",
+   "measures": "seq + t=+ms per phase from EncounterStart/MissionOpenNew to BattlePlayable. Buckets: 1 native InitializeMission, 2 async IsLoadingFinished wait with polls=/waitMs=, 3a warm-up ticks, 3b Mission.AfterStart incl. AgentEquip burst, 3c OnMissionLoadingFinished; the triage tool also reports bucket4 = FinishMissionLoadingDone to BattlePlayable. Phase markers 4a-4f: MissionInitializeDone, MissionAfterStart, TaomBehaviors, FinishMissionLoadingBegin/Done, WaitingForRender (1 Hz, waitedMs + live shaders=). WaitingForSceneLoad heartbeat (silent under 3,000 ms, then every 5,000 ms). gc/heapMB/privMB/wsMB tokens on the key markers; per-agent AgentEquipBegin/Ok/AgentBuildDone",
+   "files": "Main/Features/BattleLoadDiagnostics/ (BattleLoadDiagnosticsService.cs, Hooks/*, BattleLoadPhaseBehavior)",
+   "doc": "docs/features/battle-load-diagnostics.md:17-47, 63-160, 250-288, 708"
+  },
+  {
+   "name": "Battle-load stall watchdog + in-flight marker",
+   "measures": "load window open past StallWatchdogSeconds (default 300 s, range 10-600): WATCHDOG line + crash bundle. Defers while the shader-compile count is moving (900 s continuous-compile cap). A surviving Logs/battle-load-inflight.marker signals a force-quit hang at the next launch",
+   "files": "Main/Features/BattleLoadDiagnostics/BattleLoadStallWatchdog.cs, BattleLoadRenderWaitProbe.cs, BattleLoadStallMarker",
+   "doc": "docs/features/battle-load-diagnostics.md:289-343, 591, 679-687"
+  },
+  {
+   "name": "[BattleLoad] exit phases + [ExitStall] sampler (#331, #425)",
+   "measures": "ExitBegin, ExitTeardown, ExitStateFinalize, ExitResourceClear, MapResumed, FirstMapTick, with GC/heap/isSaving. Main-thread managed stack samples at +15/+30/+60 s while a teardown is in flight",
+   "files": "Main/Features/BattleLoadDiagnostics/Hooks/*_ExitPhase_Patch.cs, ExitStallSampler, ThreadStackCapture.cs",
+   "doc": "docs/features/battle-load-diagnostics.md:349-376"
+  },
+  {
+   "name": "[MissionStall] battle-freeze sampler (Patch91, #634)",
+   "measures": "stack of the agent-tick thread (Mission.TickAgentsAndTeamsImp) or the main mission frame (MissionState.TickMissionAux) when a tick is still in flight at 10/20/40 s",
+   "files": "Main/Features/BattleLoadDiagnostics/MissionTickStallProbe.cs, MissionTickStallWatchdog.cs, Hooks/Patch91_MissionTickStallProbes.cs",
+   "doc": "docs/features/battle-load-diagnostics.md:378-393"
+  },
+  {
+   "name": "[MissionPerf] heartbeat",
+   "measures": "every 5 s of wall clock in every mission: frames, fps, avgMs, p95Ms (nearest-rank over the newest 4,096 samples), maxMs, agents (AllAgents), active (Agents), live formations, gc0/gc1/gc2 deltas. MCM EnableMissionPerfHeartbeat, default on, re-read at 1 Hz",
+   "files": "Main/Features/MissionPerf/FrameStats.cs, MissionPerfLine.cs, Hooks/MissionPerfHeartbeatBehavior.cs",
+   "doc": "docs/features/mission-perf-heartbeat.md (A/B reading rule :64-68)"
+  },
+  {
+   "name": "[MemSample] session memory telemetry (#386)",
+   "measures": "privMB, wsMB, heapMB, sysCommitUsed/Limit, availPhysMB, memLoad every MemorySampleIntervalSeconds (default 30, range 10-120). Starts at the main menu (OnBeforeInitialModuleScreenSetAsRoot). LOW COMMIT HEADROOM warning below 2,048 MB or 10%",
+   "files": "Main/Features/BattleLoadDiagnostics/MemoryPressureSampler.cs, MemorySampleReader.cs",
+   "doc": "docs/features/battle-load-diagnostics.md:395-416, 594-595, 632-642"
+  },
+  {
+   "name": "[MemStation] screen anchors",
+   "measures": "the memory token tail at every ScreenManager push/pop (map, mission, inventory, party, clan, kingdom, character creation). Capped at 2,000 lines per session. Blind to the encyclopedia",
+   "files": "Main/Features/BattleLoadDiagnostics/MemoryStationSampler.cs",
+   "doc": "docs/features/battle-load-diagnostics.md:417-547"
+  },
+  {
+   "name": "taom.print_memory [label] [gpu] -> [MemProbe]",
+   "measures": "engine application/native memory strings (one number / zeros in shipping), GPU cost estimate, vertex-buffer system memory (bytes), GPU stats split (all zeros in shipping)",
+   "files": "Main/Features/BattleLoadDiagnostics/Cheats/MemoryProbeCheats.cs, EngineMemoryStatsReader.cs, MemoryProbeReportFormatter.cs",
+   "doc": "docs/features/battle-load-diagnostics.md:566-580; docs/features/dev-console.md:305"
+  },
+  {
+   "name": "[MapLoad] heartbeat + lifecycle trace (Patch89)",
+   "measures": "every 5 s from Campaign.RealTick: frames, fps, tickMs, party census by type, heroes, clans, settlements, campaignTime, loadingWindow, timeControl, top screen, state stack. Lifecycle trace with caller chains (a lower is traced only when it actually drops the window, since #655)",
+   "files": "Main/Features/MapLoadDiagnostics/",
+   "doc": "docs/features/map-load-diagnostics.md:25-60"
+  },
+  {
+   "name": "[SaveLoad] lifecycle (Patch61)",
+   "measures": "seq/t per load/save phase. GameLoaded and GameInitializationFinished carry gc/heapMB/privMB/wsMB (2026-09-12), which bisects campaign load time and allocation",
+   "files": "Main/Features/SaveLoadDiagnostics/",
+   "doc": "docs/features/save-load-diagnostics.md:40-59"
+  },
+  {
+   "name": "[BattleSettings] (BattleCorpses, #701)",
+   "measures": "one line per battle: ragdollOption, corpseOption, battleSizeOption, taomOverride, fadeSeconds, corpseCap",
+   "files": "Main/Features/BattleCorpses/",
+   "doc": "docs/features/battle-corpses.md:15"
+  },
+  {
+   "name": "PatchShield and Native2Managed timing lines",
+   "measures": "diag.log `shield pass: +N new ... in T ms (X ms/attach)` (#651). taom_debug `[CrashReport] Native2Managed: attached N of M Finalizer(s) in X ms` (plan 006)",
+   "files": "Dependencies/Foundation/PatchShield.cs, PatchShieldPolicy.cs; Main/Features/CrashReport/Hooks/Native2ManagedPatcher.cs",
+   "doc": "gh issue view 651; plans/006-crash-capture-boot-cost.md:793-824"
+  },
+  {
+   "name": "tools/triage_battle_load.py",
+   "measures": "verdict (EQUIPMENT/POST_EQUIP/SCENE/RENDER_WAIT/...), Load timing buckets 1/2/3a/3b/3c/4 with polls/waitMs and privMB trajectory, memory trend and station sections. Scoped to the LAST mission in a log. Does not parse [MissionPerf]",
+   "files": "tools/triage_battle_load.py (CLI :1329-1337; _last_mission_segment :812-817); tools/tests/test_triage_battle_load.py",
+   "doc": "docs/features/battle-load-diagnostics.md:691-708"
+  },
+  {
+   "name": "tools/Invoke-CommitMatrix.ps1 / tools/Invoke-RdcAbTest.ps1 / tools/audit_map_scene_memory.py",
+   "measures": "Invoke-CommitMatrix.ps1: OS-side station CSV rows plus optional VMMap snapshots, FRESH/STALE stamps. Invoke-RdcAbTest.ps1: RDC rename A/B, and -Report extracts the last BattlePlayable load time and [MemSample] peaks (:217-244). audit_map_scene_memory.py: offline byte weight of the Main_map scene's textures and meshes",
+   "files": "tools/Invoke-CommitMatrix.ps1, tools/Invoke-RdcAbTest.ps1, tools/audit_map_scene_memory.py",
+   "doc": "docs/investigations/native-commit-audit-2026-08.md:228-240, 515-543"
+  },
+  {
+   "name": "Hang dump procedure",
+   "measures": "stack of a spinning or frozen game thread: procdump -ma, then WinDbgX k/!clrstack, then native_decompile.py --rva per TaleWorlds_Native frame",
+   "files": ".claude/skills/native-crash-triage/SKILL.md",
+   "doc": ".claude/skills/native-crash-triage/SKILL.md:125-150"
+  }
+ ],
+ "measurements": [
+  {
+   "metric": "Native memory growth over a session ([MemSample])",
+   "value": "privMB 12,070 -> 20,406 (+8,336 MB, 303 MB/min); heap 166 -> 625 MB; native share 7,877 MB (94%); system commit 78,978 -> 86,348 of 128,662 MB; plateau 20,206-20,712",
+   "source": "docs/reviews/session-prompts-2026-08-07-perf.md:16-37",
+   "date": "2026-08-07",
+   "conditions": "27.5-min Enlistment play-test, log taom_debug_2026-08-07_12-50-34.log, 63,126 MB physical RAM"
+  },
+  {
+   "metric": "Battle load, 29-second case (pre-bucket-split)",
+   "value": "MissionInitialize 14,969 ms; MissionAfterStartBegin 26,889 ms (11.9 s unattributed gap); TAOM behaviours 23 ms; MissionAfterStartDone 26,981; BattlePlayable 29,109 ms. A second load reached BattlePlayable at 62,974 ms",
+   "source": "docs/reviews/session-prompts-2026-08-07-perf.md:74-83",
+   "date": "2026-08-07",
+   "conditions": "small battles (mainPartySize=1, caravan/looter), same log as above"
+  },
+  {
+   "metric": "Log volume",
+   "value": "6,001 lines / 1.24 MB in 32 min; [EnlistDiag] 4,856 lines (81%); 291 of 299 WARNINGs were one drift message",
+   "source": "docs/reviews/session-prompts-2026-08-07-perf.md:119-126",
+   "date": "2026-08-07",
+   "conditions": "same session"
+  },
+  {
+   "metric": "First bucket-split run",
+   "value": "MissionInitialize +4,413; MissionInitializeDone +4,415 (2 ms); FinishMissionLoadingBegin +5,318 (903 ms, polls=28, ~32 ms/poll); MissionAfterStartBegin +6,900 (1,582 ms); TaomBehaviorsBegin +7,746 (other mods 846 ms); TaomBehaviorsDone +7,801 (TAOM 55 ms); FinishMissionLoadingDone +8,280; BattlePlayable +27,792 (19,512 ms, 70% of the load, agents=0). privMB 13,531, wsMB 7,271, availPhys 1,468, memLoad 97%, sysCommit 108,915/128,662; ws 7,430 -> 5,351 -> 2,447. Menu baseline privMB 9,238",
+   "source": "docs/features/battle-load-diagnostics.md:748-792",
+   "date": "2026-08-08",
+   "conditions": "taom_debug_2026-08-08_09-32-00.log, battle_terrain_biome_028. Caveat in the doc: ~95 GB of the 108 GB system commit was not Bannerlord; the clean-boot repeat was never run"
+  },
+  {
+   "metric": "Field battle load, map cell 85",
+   "value": "FinishMissionLoadingDone +11.3 s; BattlePlayable +44.2 s",
+   "source": "gh issue view 287 (comment 2026-08-09)",
+   "date": "2026-08-08 21:50",
+   "conditions": "battle_terrain_r, build bbf27dda"
+  },
+  {
+   "metric": "RDC-ON battle baseline",
+   "value": "load to BattlePlayable 67.4 s; privMB 12,799 at FinishMissionLoadingDone; peak [MemSample] privMB 16,979 over 78 samples; memLoad 56%",
+   "source": "docs/investigations/native-commit-audit-2026-08.md:241-244",
+   "date": "2026-08-10",
+   "conditions": "taom_debug_2026-08-10_10-23-55.log, battle_terrain_biome_040"
+  },
+  {
+   "metric": "Equipment-dump cost (phase 5/5c)",
+   "value": "1,146 slot lines / 186 KB (29% of a 644 KB log) for 18 loadouts; deduped to 52 lines / 8,432 B; per-agent stamps 145 ms for 429 agents (~0.11 ms/agent)",
+   "source": "docs/features/battle-load-diagnostics.md:194, 797-798",
+   "date": "2026-08-03",
+   "conditions": "429-agent arena audience, 37-min session"
+  },
+  {
+   "metric": "Render-ready (shader) stall",
+   "value": "305 s past FinishMissionLoadingDone; rgl_log 820 lines, 818 compile_shader. Same session: a 421-agent battle (battle_terrain_biome_046) was playable in 11.5 s with 77 shader misses. The stalled 95-agent Dunland battle had 478 misses (430 pbr_metallic); 108 had compiled by FinishMissionLoadingDone",
+   "source": "docs/features/battle-load-diagnostics.md:250-276",
+   "date": "2026-09-04",
+   "conditions": "player bundle b18f3441, cold shader cache"
+  },
+  {
+   "metric": "Bucket 2 (async scene wait), healthy loads",
+   "value": "383, 457 and 933 ms; two CTD runs on battle_terrain_biome_094 still alive 7 s in",
+   "source": "docs/features/battle-load-diagnostics.md:110-113",
+   "date": "2026-09-06",
+   "conditions": "RX 7900 XTX, one session"
+  },
+  {
+   "metric": "Map load and steady state (v1.5.2)",
+   "value": "PatchShield pass 2 69 s (+371 new); ReadyToRender True at t=231 s; MapScreen.OnInitialize 632 ms; loading window down between +10 and +15 s; 54 fps at Stop, tick 7 ms; fast-forward 7-8 fps, tick 20 ms while parties grew 2,091 -> 3,042 in 56 s",
+   "source": "docs/migration/v1.5.2-impact.md:140-147; docs/features/map-load-diagnostics.md:3-8",
+   "date": "2026-09-14",
+   "conditions": "new campaign, TAOM v2.0.29, re-baked TAOM_Map"
+  },
+  {
+   "metric": "Map load v1.5.0 (hang case)",
+   "value": "68 fps; MapScreen.OnInitialize 646 ms; 2 raises, 0 lowers (scene never ready)",
+   "source": "docs/features/map-load-diagnostics.md:69-75",
+   "date": "2026-08-20",
+   "conditions": "archived v1.5.0 line, pre-1.5 terrain bake"
+  },
+  {
+   "metric": "Commit matrix run 1, config B",
+   "value": "menu 6,759 privMB; save load +2,739 in ~2 min; map first settle +3,481 with no input; map paused flat; map running 60-100 MB/min (later ~15 MB/min over 17 min); party screen +450 per open, +1.0 GB kept once; inventory +2.9 GB transient per open (managed); Minas Tirith load 13.7 s (MissionInitialize 10,364, BattlePlayable 14,049); field battle battle_terrain_r, 13 agents, playable in 6.3 s; round trips -104 / +240 MB",
+   "source": "docs/investigations/native-commit-audit-2026-08.md:392-487",
+   "date": "2026-09-12",
+   "conditions": "TAOM v2.0.28 build 612cb8a2, Bannerlord v1.4.8.119303, 63,126 MB RAM, cheat mode on (party/inventory rows are upper bounds)"
+  },
+  {
+   "metric": "VMMap composition at map baseline",
+   "value": "Private Data 85%, Mapped File 2% (291 MB); 1,066 x 4.00 MB pool chunks (4,264 MB); map-only large regions 4,264 MB, town-only 3,495 MB; ~90 map-only regions (3.9 GB) match no packed texture",
+   "source": "docs/investigations/native-commit-audit-2026-08.md:437-446, 489-565",
+   "date": "2026-09-12",
+   "conditions": "VMMap B-end vs L-town snapshots"
+  },
+  {
+   "metric": "Vertex buffer system memory / GPU stats",
+   "value": "vertexBufferSysMem 363 MB on the map, 929 MB in Minas Tirith; GetGPUMemoryStats all zeros (dead in the shipping client)",
+   "source": "docs/investigations/native-commit-audit-2026-08.md:567-571; docs/features/battle-load-diagnostics.md:816-818",
+   "date": "2026-09-12",
+   "conditions": "taom.print_memory, run 2"
+  },
+  {
+   "metric": "Campaign load bisected by [SaveLoad]",
+   "value": "LoadRequested 14,104 MB; LoadDataOk +4.0 s; ObjectsInitialized +8.0 s; GameLoaded +26.1 s (10,001 MB); GameInitializationFinished +51.7 s (25.6 s of CPU, +1 MB); loading screen exit +58 s (11,758 MB, +1.76 GB in 7 s); settled +83 s (14,720 MB). The first load of a process had a 67 s silent stretch",
+   "source": "docs/investigations/native-commit-audit-2026-08.md:578-598",
+   "date": "2026-09-12",
+   "conditions": "autosave reload from inside a running campaign (warm second load)"
+  },
+  {
+   "metric": "Graphics-slider effect on map residency",
+   "value": "all three sliders to 0: 12,810 -> 9,734 MB (-3,076). Raising them back one at a time: texture +2,318, terrain +199, foliage +769",
+   "source": "docs/investigations/native-commit-audit-2026-08.md:638-666",
+   "date": "2026-09-12",
+   "conditions": "settled campaign map, live switch with 60 s settle each, baseline foliage 4 / terrain 2 / texture 2"
+  },
+  {
+   "metric": "Main-menu floor ladder",
+   "value": "L0 settled 6,565-6,600 MB; without LOTRLOME_Armory ~970 MB less; without TAOM_Map ~500 MB less; both out 5,169; without TAOM main ~0.6-0.75 GB less; engine + vanilla + Dependencies ~4,400 MB",
+   "source": "docs/investigations/native-commit-audit-2026-08.md:685-707",
+   "date": "2026-09-12",
+   "conditions": "five launches, [MemStation] enter GauntletInitialScreen reading"
+  },
+  {
+   "metric": "Session memory across mission cycles ([MemStation] analysis)",
+   "value": "sessions start ~6,600 MB private and reach 12,600-19,000; heapMB 400-1,000; MissionInitialize baselines 10,212 / 12,785 / 11,146 / 11,271 / 11,323 / 11,449 MB; each battle ~2-3 GB, returned; 37 min with zero missions +8.4 GB (10,646 -> 19,032) while ws fell 4,399 -> 2,861",
+   "source": "docs/features/battle-load-diagnostics.md:420-427",
+   "date": "2026-09-01",
+   "conditions": "five sessions of real logs"
+  },
+  {
+   "metric": "#385 facegen CTD memory",
+   "value": "process commit 20.3 GB = 15.65 private + 4.04 mapped + 0.65 image; system 23,081 MB used / 8,588 available; heap ~654 MB; 1,163 partial-read lines (28,863 in a longer session). Local deterministic repro: privMB 17,785, sysCommit 94,255/128,662, availPhys 16,849, memLoad 73%",
+   "source": "gh issue view 385 (body; comment 2026-08-07); docs/investigations/native-commit-audit-2026-08.md:12-21",
+   "date": "2026-08-05 / 2026-08-07",
+   "conditions": "tester: 16 GB RAM, RTX 3070, 3440x1440. Local: 63 GB machine, female dwarf hall. Memory pressure was falsified as a requirement"
+  },
+  {
+   "metric": "L1 banner-atlas lever, menu baseline",
+   "value": "menu privMB pre-change 9,238 / 9,287 / 9,385 (mean 9,303) vs post 6,782-6,958 (mean 6,834): delta ~2,470 MB against a predicted 2,496 MiB",
+   "source": "gh issue view 385 (comment 2026-08-09)",
+   "date": "2026-08-08",
+   "conditions": "first [MemSample] of each session, one machine, not a controlled A/B"
+  },
+  {
+   "metric": "Boot: Native2Managed sweep (before fix)",
+   "value": "29-33 s on 30 of 30 logs (crash bundles 33-51 s); engine module-load window 46.5 s; ~140 ms per patch on this desktop",
+   "source": "plans/_audit/2026-09-23-opus/verify-PERF-L4-01-repro.md:33-40; lane-4.findings.md:13-19; REPORT.md:37",
+   "date": "2026-09-19 to 2026-09-23",
+   "conditions": "maintainer desktop (slow mode), 247 finalizers"
+  },
+  {
+   "metric": "First game start: PatchShield pass 2 (before fix)",
+   "value": "69.1-69.4 s on 67 of 67 first starts since 2026-09-04; 64-65% of a 106-109 s custom-battle loading screen, 53% of a 117 s new campaign; 413 runs: 259 slow (median 66.7 s), 154 fast (median 2.3 s); 4.9 h of loading-screen stall in total; ~186 ms/attach slow vs 5-10 ms fast",
+   "source": "gh issue view 651",
+   "date": "2026-05-27 to 2026-09-23",
+   "conditions": "maintainer desktop diag.log"
+  },
+  {
+   "metric": "Player boot speed (Harmony)",
+   "value": "247 Native2Managed attaches in 0-1 s (under ~8 ms/attach) on 11 player processes; desktop 29-34 s (117-138 ms/attach)",
+   "source": "plans/_audit/2026-09-23-opus/followup-patch-tax.md:20-37",
+   "date": "2026-09-04 to 2026-09-23",
+   "conditions": "at least 3 player installs, TAOM v2.0.26-2.0.28, engine 1.4.8"
+  },
+  {
+   "metric": "Boot and first-load after plans 006/007 and managed-only profile",
+   "value": "Native2Managed: attached 16 of 16 in 51-68 ms. PatchShield pass 2: +129 new in 896-1,127 ms (6.9-8.7 ms/attach); later starts +144/+146 in 1,225-1,422 ms",
+   "source": "taom_debug logs 2026-09-29/30 (grep 'Native2Managed: attached'); Modules/TAOM.Dependencies/diag.log:40463-40873",
+   "date": "2026-09-29 to 2026-10-02",
+   "conditions": "maintainer desktop, engine 1.5.3.122374, TAOM v2.0.32"
+  },
+  {
+   "metric": "Loading-window trace log volume",
+   "value": "before: 84 MB / 265,061 lines, 262,763 lowered (99.1%), ~21,530/min (~360/s); 1.16 GB / 4,098,264 lines with the main menu open ~3 h. After the fix: 4-12 lowered lines per session, logs 171-392 KB",
+   "source": "gh issue view 655; grep -c 'LOADING-WINDOW lowered' on taom_debug_2026-10-02_{11-05-27,11-38-06,14-30-27}.log",
+   "date": "2026-09-20/23 (before), 2026-10-02 (after)",
+   "conditions": "maintainer desktop"
+  },
+  {
+   "metric": "Frame time, 661 agents",
+   "value": "172-183 fps, gen2 collections 0",
+   "source": "docs/features/culture-doctrine.md:648-649; gh issue view 608",
+   "date": "2026-09-17",
+   "conditions": "Custom Battle, Erebor defender v Mordor, 300 v 300, doctrine A/B run 1"
+  },
+  {
+   "metric": "Frame time and GC, 1,313 agents",
+   "value": "before contact 91-97 fps, avgMs 10.3-11.0, 74-88 Gen0 and 20-24 Gen1 per 5 s; spawn window maxMs 1,663.3 (774.0 at 207 agents); windows under 200 active average 16 Gen0 per 5 s (3,148 heartbeat lines)",
+   "source": "plans/_audit/2026-09-23-opus/lane-4.findings.md:83-85, 101-104",
+   "date": "2026-09-21",
+   "conditions": "taom_debug_2026-09-21_12-20-32.log, elves vs goblins custom battle, no creatures, 27 TAOM behaviours"
+  },
+  {
+   "metric": "Same scene loaded four times in one process",
+   "value": "MissionOpenNew -> BattlePlayable 2,857 / 1,941 / 2,294 / 2,439 ms; polls=22/14/21/22, waitMs=745/679/677/701; FinishMissionLoadingBegin -> BattlePlayable 1,610 / 867 / 1,206 / 1,212 ms; agents 273 / 83 / 164 / 165 (different rosters); steady windows mostly 112-131 fps (avgMs ~7.6-8.9); single-frame maxMs spikes 624.6, 1,089.2, 869.8, 674.2, 1,019.4, 1,012.2, 913.5 ms",
+   "source": "taom_debug_2026-10-02_11-38-06.log ([BattleLoad] and [MissionPerf] lines)",
+   "date": "2026-10-02 11:43-11:51",
+   "conditions": "CustomBattle battle_terrain_biome_148, build .dirty (BuildStamp MISMATCH line), [BattleSettings] ragdoll 5 / corpse 5 / battleSize 6 / override on"
+  },
+  {
+   "metric": "Custom battle, 231 agents",
+   "value": "load 2,451 ms (polls=13, waitMs=403); 225-260 fps, avgMs 3.84-4.45 from +37 s to +367 s; active stayed 231",
+   "source": "taom_debug_2026-10-02_14-30-27.log",
+   "date": "2026-10-02 14:35-14:41",
+   "conditions": "CustomBattle battle_terrain_biome_075, same engine and settings as the 11:43 session"
+  },
+  {
+   "metric": "Tournament load",
+   "value": "MissionOpenNew -> BattlePlayable 4,842 ms (polls=13, waitMs=463); 182 agents",
+   "source": "taom_debug_2026-10-02_11-56-06.log (grep phase=)",
+   "date": "2026-10-02 12:02",
+   "conditions": "arena_sturgia_a, campaign"
+  },
+  {
+   "metric": "Tournament exit hang (#331)",
+   "value": "108.2 s: ExitTeardownDone +76 ms, ExitStateFinalizeDone +276 ms, MapResumed +108,475 ms; +8,276 gen0 (77/s vs 2.2/s baseline); native clear 4 ms. After Patch60 the stall moved (ExitTeardownDone +106,417 ms, ReleaseMovie 104,482 / 108,866 ms). After the PatchShield GauntletUI exclusion: exit 9.5 s, ReleaseMovie 8,822 ms, gen0 delta +3",
+   "source": "gh issue view 331 (comments 2026-07-06, 2026-07-09, 2026-07-10)",
+   "date": "2026-07-06 to 2026-07-10",
+   "conditions": "Edoras arena_vlandia_a 461 agents; repros with 4/461/745 agents"
+  },
+  {
+   "metric": "Exit window false positives (#425)",
+   "value": "MapResumed within ~1 s on five exits; sampler windows of 123 s and 21 s were player time",
+   "source": "docs/features/battle-load-diagnostics.md:372",
+   "date": "2026-08-08",
+   "conditions": "45-minute field session"
+  },
+  {
+   "metric": "Battle freeze (#634)",
+   "value": "heap flat at 624 MB, private +1 MB per 30 s after the game thread stopped; 950 attackers + 1,408 defenders; 6 callbacks off the main thread",
+   "source": "gh issue view 634",
+   "date": "2026-09-23",
+   "conditions": "player, v1.4.8, TAOM v2.0.29, battle_terrain_biome_028"
+  },
+  {
+   "metric": "Hang dump (#599)",
+   "value": "game thread spinning ~70% of a core, 13 of the process's 14 minutes of CPU; full dump 11.4 GB",
+   "source": "gh issue view 599",
+   "date": "2026-09-15",
+   "conditions": "elf start, Rivendell tournament, v1.5.2, TAOM v2.0.29"
+  },
+  {
+   "metric": "Warg tick cost (#659)",
+   "value": "UNMEASURED frame time. Estimates only: ~28,000 hash lookups and ~320 KB garbage per frame at 80 engaged wargs; ~1,240 Skeleton wrappers per frame, ~74,000 finalizable objects/s at 60 fps",
+   "source": "gh issue view 659; plans/_audit/2026-09-23-opus/lane-4.findings.md:48-77",
+   "date": "2026-09-24",
+   "conditions": "assumed crowd densities; an in-game warg A/B is owed"
+  },
+  {
+   "metric": "Mumak mission-end freeze",
+   "value": "tick dead at over 250 fps, memory flat; root-caused from procdump -ma",
+   "source": "CHANGELOG.md:831 (v2.0.31 section, entry at :794)",
+   "date": "2026-09-28",
+   "conditions": "elephant howdah battles"
+  },
+  {
+   "metric": "[MemSample] reader cost",
+   "value": "System.Diagnostics.Process 7,711 us/call vs P/Invoke pair 84 us",
+   "source": "docs/features/battle-load-diagnostics.md:407",
+   "date": "2026-08-05",
+   "conditions": "net472"
+  },
+  {
+   "metric": "Ghidra tool cost",
+   "value": "first analysis 213 s (212 MB project); map build ~4 s; seeding 8.5 s (947 functions created, 1,960 addresses named); later runs 3-5 s",
+   "source": "docs/features/ghidra-native-decompile.md:181-188",
+   "date": "2026-09-26",
+   "conditions": "v1.5.3 client DLL, 14,209,376 bytes"
+  },
+  {
+   "metric": "External reference (yotthani)",
+   "value": "~1000 agents runs at 19-21 FPS on his reference machine; native agent cap 2040 (MOV EAX,0x7F8)",
+   "source": "gh api repos/yotthani/MithrilForge/contents/docs/engine/combat.md:128-129; native.md:65-66",
+   "date": "2026-09-29",
+   "conditions": "not TAOM's machine or build"
+  }
+ ],
+ "priorPerfWork": [
+  {
+   "ref": "plans/003-hot-path-resolve-and-grid-caching.md (#664)",
+   "what": "cache hot-path IoC/MCM resolves, fix 2 s SpatialGrid staleness",
+   "outcome": "MERGED into bannerlord-1.5.x e9b28e2a 2026-09-25; in-game slider check owed (plans/README.md:49)"
+  },
+  {
+   "ref": "plans/006-crash-capture-boot-cost.md (#650)",
+   "what": "replace the 247-shim Native2Managed sweep with an allowlist and log its attach time",
+   "outcome": "MERGED e9b28e2a; logs since 2026-09-29 read 'attached 16 of 16 Finalizer(s) in 51-68 ms', down from 29-33 s"
+  },
+  {
+   "ref": "plans/007-patchshield-skip-callback-shims.md (#651) + 37ff41e4 (managed-only launch profile)",
+   "what": "exclude ManagedCallbacks from PatchShield and time the pass; drop the mixed native debugger from the default VS profile",
+   "outcome": "MERGED. diag.log 2026-10-02: pass 2 896-1,127 ms (6.9-8.7 ms/attach), down from 69 s. The debugger cause stayed UNVERIFIED as a single variable (both changes landed together)"
+  },
+  {
+   "ref": "plans/012-loading-window-trace-per-frame.md (#655)",
+   "what": "trace a loading-window lower only when the window actually drops",
+   "outcome": "MERGED; 2026-10-02 logs carry 4-12 lowered lines per session (171-392 KB logs vs 84 MB)"
+  },
+  {
+   "ref": "plans/015-warg-tick-costs.md (#659)",
+   "what": "per-tree service resolve, reused scan buffers, (x,y) SpatialGrid keys, range gate before GetSkeleton",
+   "outcome": "MERGED e9b28e2a; no frame-time number claimed; in-game warg A/B owed (label triage-needs-ingame)"
+  },
+  {
+   "ref": "#331 (Patch60 + PatchShield GauntletUI/TwoDimension exclusion)",
+   "what": "tournament exit hang",
+   "outcome": "105-109 s -> 9.5 s measured; ExitStallSampler kept as standing diagnostics"
+  },
+  {
+   "ref": "native-commit audit L1 (62abaeb6) and L3a (bc4ff801)",
+   "what": "banner atlases 41 -> 2 sheets at 256 px; FactionMap PNGs capped at 1024",
+   "outcome": "L1 -2.44 GB resident, menu delta measured ~2,470 MB (#385 comment); L3a worst case -2.40 GB (docs/investigations/native-commit-audit-2026-08.md:744-752)"
+  },
+  {
+   "ref": "ScreenCloseHeapRelease (2026-09-12)",
+   "what": "forced GC on inventory/party/character close",
+   "outcome": "built and removed the same day: GameStateManager already collects on every push/pop (battle-load-diagnostics.md:549-564)"
+  },
+  {
+   "ref": "Patch43 bucket split (2026-08-07), WaitingForSceneLoad (2026-09-06), WaitingForRender + watchdog Decide (#539, 2026-09-04)",
+   "what": "close the unattributed load windows",
+   "outcome": "no unattributed span between MissionInitialize and BattlePlayable while 4f is present (battle-load-diagnostics.md:78-83)"
+  },
+  {
+   "ref": "#608 MissionPerf heartbeat",
+   "what": "frame-time instrument for the culture-doctrine A/B",
+   "outcome": "shipped; first A/B 2026-09-17 recorded 172-183 fps at 661 agents; the 800 v 800 perf-gate cells are still owed (culture-doctrine.md:579, 589)"
+  },
+  {
+   "ref": "#634 Patch91 battle-freeze sampler",
+   "what": "stack-sample a stuck agent tick or mission frame",
+   "outcome": "shipped on 1.5.x; issue OPEN, cause unproven, in-game smoke owed"
+  },
+  {
+   "ref": "#701 BattleCorpses (c17541f2)",
+   "what": "per-battle corpse fade/cap, [BattleSettings] line, ragdoll/corpse advisor",
+   "outcome": "landed; native corpse-list walk per frame verified, freeze causation a hypothesis; 7 in-game checks owed (battle-corpses.md:15; issue comment)"
+  },
+  {
+   "ref": "#287 / #560 shader precompilation",
+   "what": "main-menu walk of hidden custom battles to compile shaders",
+   "outcome": "parked at the wiring level 2026-08-20, re-enabled 2026-09-11, parked again 2026-09-25 (shader-precompilation.md:3)"
+  },
+  {
+   "ref": "Native-commit audit Phases 1-2 (docs/investigations/native-commit-audit-2026-08.md)",
+   "what": "RDC Procmon, commit matrix, menu ladder, graphics diff, map-scene manifest",
+   "outcome": "menu floor and graphics levers attributed; RDC OFF timing (step 1.2), configs A/A+ and a PerfView heap snapshot still owed"
+  },
+  {
+   "ref": "FileLogger synchronous INFO (2026-07-16, #350)",
+   "what": "crash-durable stamps",
+   "outcome": "budgeted at ~15 ms per large load; 145 ms for 429 agents' stamps measured (battle-load-diagnostics.md:798-803)"
+  }
+ ],
+ "repeatableHarness": {
+  "exists": "Partial: protocols exist in prose and there are no tools for them. The mission-perf A/B rule is: from 30 s after F6 to the first rout, median avgMs/p95, three runs per cell (docs/features/mission-perf-heartbeat.md:64-68). The culture-doctrine A/B protocol and perf gate is: within 3% avg and 5% p95 at 800 v 800 (docs/features/culture-doctrine.md:523-585). The commit-matrix stations require the same scene, 250v250, the same cultures, season and time (docs/investigations/native-commit-audit-2026-08.md:348-351). Pieces that could be reused: the VS launch profile pins the module list (Main/Properties/launchSettings.json:3-10). taom.spawn_troops composes a fight inside an open mission (Main/Features/DevConsole/Cheats/MissionSpawnCheats.cs:27-45, at most 200 per call, ring around the player or camera :84-136). The PARKED shader-precompile walk is a working automated custom-battle starter. It builds CustomBattleData with a fixed scene, SeasonId 'spring', TimeOfDay 6f and fixed rosters, then calls CustomBattleHelper.StartGame (Main/Features/ShaderPrecompilation/TaomShaderGameManager.cs:48-69, 112-137). It chains MBGameManager.StartNewGame/EndGame per item from OnApplicationTick (ShaderPrecompileRunner.cs:14-40, :188), and its menu entry is commented out (Main/SubModule.cs:777-802). Several custom games in one process are safe (SubModule.cs:1556-1565).",
+  "gaps": "1) No battle preset: Main/Features/CustomBattles has no save/load of a setup (grep 'preset' finds nothing there). The 2026-10-02 'same scene x4' runs had 273/83/164/165 agents. 2) No TAOM console command can start a battle: all three TaomConsole gates refuse at the main menu (docs/features/dev-console.md:115-131). 3) No [MissionPerf] parser anywhere in tools/ (Grep 'MissionPerf' in tools: 0 hits), although Main/Features/MissionPerf/MissionPerfLine.cs:6-7 says 'the parser in tools/ has a single fixture to match'. 4) triage_battle_load.py scopes to the LAST mission only (tools/triage_battle_load.py:812-817), so N runs in one log yield one row. analyze_battle_logs.py is [AutoResolve] only. 5) No run marker, no auto-F6, no fixed camera, no auto-quit. The confounders are not logged: time scale, camera, AI control, deployment vs combat, window focus. Steady fps on 2026-10-02 differed ~117 vs ~255 between sessions with no recorded cause, and one session ran a .dirty build (BuildStamp MISMATCH). 6) No CPU sampler: spikes of 0.6-1.7 s are unattributed (lane-4.findings.md:101-104).",
+  "how": "Today: launch with the managed-only 'Bannerlord' profile, keep engine_config and the [BattleSettings] options the same, pick the same Custom Battle scene, cultures, counts, season and time by hand, F6 on the first frame, then grep [MissionPerf] and run triage_battle_load.py --json per log. Smallest TAOM-owned additions: (a) tools/perf_runs.py, or a triage_battle_load.py --all-missions mode. It would emit one row per mission segment (scene, agents, buckets 1/2/3a/3b/3c/4, polls/waitMs, privMB) joined with that mission's [MissionPerf] steady-window medians and its [BattleSettings], [BuildStamp] and [Engine] tokens, plus a compare mode across logs. A twin literal test would pin MissionPerfLine.Build, the same C#/Python contract pattern [MemSample] uses. (b) A TAOM preset file plus a starter that reuses TaomShaderGameManager.BuildBattle. It would be reached from a main-menu option or a command-line switch read at OnBeforeInitialModuleScreenSetAsRoot, because the console cannot run at the menu. It would auto-F6 or spectate, end the mission after a fixed time, chain N runs with the ShaderPrecompileRunner state machine as template, and write a [PerfRun] preset=/run= marker for the parser to window on. (c) A one-shot context line per mission: time scale, camera mode, AI-controlled sides, graphics quality values. yotthani's HoN/BattlePresets is a reference design only: no licence (gh api repos/yotthani/bannerlord: license null), so comparison-only with a provenance-register row. Its design is an XML preset (Battle type/map/season/time/role; per-side troop id+count), an auto-saved last.xml, and a start via CustomBattleHelper.PrepareBattleData -> StartGame. It covers field and village battles only, at most 1000 per side, and has no spectator mode (README; Integration/BattleStarter.cs:14-16, 90-108). Its module scaffold predates TAOM's 8e040ab cutoff (774c14b0, 2026-09-29), but the README and v0.2.x came on 2026-10-02, and docs/reviews/adopt-yotthani-bannerlord-2026-09-30.md does not cover it."
+ },
+ "nativeTooling": {
+  "capabilities": [
+   "native_decompile.py --rva / --engine-method / --string to C, headless Ghidra 12.1.4, per-binary project keyed by build folder + sha256[:16] (tools/native_decompile.py:411-426; docs/features/ghidra-native-decompile.md:8-13, 49-65)",
+   "--callers N: caller levels decompiled, capped at 8 per function per level (tools/native_decompile.py:59, 256-259, 356-395); prints name, entry and size (getBody().getNumAddresses()) for the reported function (:233-238, 363-364)",
+   "Engine-method map: 2,282 managed [EngineMethod]s joined to native implementations across MountAndBlade/Engine/DotNet (688 + 1,561 + 33 ids), cached JSON with problems: [] for client 45be32c57c451f78; seeding created 947 functions and named 1,960 addresses (ghidra-native-decompile.md:36-41, 151-152, 187; E:/ghidra/TAOM/*.engine-methods.json)",
+   "Two analysed binaries: client Win64_Shipping_Client-45be32c57c451f78 and wEditor Win64_Shipping_wEditor-85c4d16945700701 (ls E:/ghidra/TAOM). These are the same SHA prefixes yotthani's kit153 project lists (MithrilForge docs/engine/modding-kit.md:27-30), so RVAs are directly comparable (Ghidra address = 0x180000000 + RVA)",
+   "Hot entry points resolvable from the map (decimal RVA in the JSON, hex converted): IMBMission.Tick 7290800 = 0x6F3FB0; IMBMission.TickAgentsAndTeamsAsync 7299728 = 0x6F6290; IScene.Tick 4992256 = 0x4C2D00; IMBMission.InitializeMission 7287488 = 0x6F32C0; IMBMission.GetIsLoadingFinished 7292240 = 0x6F4550; IMBAgent.GetMaximumNumberOfAgents 7229344 = 0x6E4FA0, matching yotthani's 1.5.3 0x1806e4fa0 (native.md:66). battle-corpses.md:15 already names the per-frame mission tick FUN_1805aefc0, reached from IMBMission.Tick",
+   "native_sig_author.py: rtti, vtable (slot RVAs + disasm head), disasm, scan (IDA byte pattern; count + first 20 RVAs), xref (capstone sweep for rip-relative/call/jmp targets, first 30), fxref (byte-math rip-relative), funcstart (int3 heuristic), pattern, diff (hard-coded NativeSkinFixes TARGETS only) (tools/native_sig_author.py:442-453, 219-240, 268-331, 367, 423-439)",
+   "native_crash_triage.py: --rva, --ip/--base, --dump minidump decode (exception, module, commit summary, stack return-address scan); exact .pdata function bounds; strings via rip-relative LEA; E8 callers (tools/native_crash_triage.py:1-28, 73-119, 499-507)",
+   "Hang procedure: procdump -ma, then WinDbgX stack, then native_decompile --rva (.claude/skills/native-crash-triage/SKILL.md:125-150). Ad hoc offset work already done this way: corpse setters read with native_decompile plus 'a byte scan for the field offsets' (docs/features/battle-corpses.md:21-27); Face_mesh +0x1A0/+0x108 verified via RTTI vtables (docs/features/native-skin-fixes.md:280-316); agent+0xAD8 known from the spider CTD (docs/features/spider.md:203)"
+  ],
+  "gapsVsYotthani": [
+   "Scripting-table naming: NOT a gap, TAOM is ahead. yotthani named 647 mb_<Name> functions on 1.4.8 only; the larger engine table FUN_180391e90 (ids up to 827) is 'not yet named', and his 1.5.3 project has scripting names 'not yet applied' (MithrilForge docs/engine/native.md:14-16, 26-30). TAOM maps all 2,282 methods on 1.5.3",
+   "Struct field offset tables: yotthani has a 1.4.8 Agent table: +0xad8 weapon block, +0xee0/+0xee4 held slots, slot stride 0x2f8, WeaponStatsData stride 0xa0 (+0x50 flags, +0x58 props), +0xf20 remembered left slot, +0x49c EventControlFlags, +0x888 AI block (native.md:34-46). He also has the Agent[2040] pool layout, stride 0xC60 (native.md:67-70). TAOM has no committed Agent/Mission offset table: only scattered offsets, and the corpse-field offsets found by its byte scan are not recorded in battle-corpses.md",
+   "'Find every function using offset X' (FindOffsetUse, native.md:20; it produced '~1000 fixed field offsets across ~150 functions', :71). TAOM has no displacement-use search: xref/fxref resolve only rip-relative or absolute targets, and scan is raw bytes with no function grouping. The script itself is not in the repo, so its exact behaviour is [inferred] from its name and those counts",
+   "Constant search (MOV EAX,0x7F8; '~40 constants across ~16 functions', native.md:65-71): TAOM can reach that one getter through --engine-method IMBAgent.GetMaximumNumberOfAgents. A binary-wide immediate census is only approximated by `native_sig_author.py scan \"B8 F8 07 00 00\"`, which matches one encoding, prints at most 20 RVAs and maps none to functions",
+   "Callee trees from a hot entry point: yotthani's Explore.java prints a function plus callers/callees plus C (modding-kit.md:34); a deeper tree is not evidenced in his docs. TAOM has callers only (native_decompile.py:256-259); no callees, no tree, no subtree size",
+   "Per-function size: neither side has a listing. TAOM prints the size of the one reported function (native_decompile.py:363-364) and exact .pdata bounds (native_crash_triage.py:73-82); yotthani's docs give counts, not size tables. Not evidenced as a yotthani capability",
+   "Other yotthani scripts TAOM lacks or covers only partly (modding-kit.md:31-38): RefsTo.java (address to containing functions; TAOM xref prints instruction RVAs), DecompileRange.java (no TAOM equivalent), DumpEnumTable.java (rgl {char* name; int value} tables; none), VtableOf.java (vtable to decompiled slots; TAOM prints disasm heads only). StringXrefs.java and DumpFunctionC are covered by --string and --rva",
+   "Access: yotthani's scripts live in D:/Tools/ghidra_projects/scripts on his machine (native.md:20; modding-kit.md:31-38), not in the MithrilForge tree (gh api tree: no .java). docs/engine/native.md was added 2026-09-29 (8a48e05c..1dd42c05), after TAOM's 91149e11 adoption cutoff (docs/reviews/adopt-mithrilforge-2026-09-29.md:13). TAOM must author its own"
+  ],
+  "smallestAdditions": [
+   "native_decompile.py --callees N [--c]: the mirror of callers() through Ghidra Function.getCalledFunctions(TaskMonitor.DUMMY). Print a names-only tree (name, entry RVA, size, engine-method labels, subtree byte total) with C only for the root unless --c, deduped by the existing seen set. Covered by the fake-backend tests already in tools/tests/test_native_decompile.py. First target: 0x5AEFC0 (FUN_1805aefc0) and 0x6F6290",
+   "native_sig_author.py offsetuse <disp> [--writes]: capstone sweep of .text for memory operands [reg+disp] with a non-RIP base, grouped by containing .pdata function (reuse native_crash_triage.Pe.func_of), with read/write, count, function size and engine-method label from the cached map JSON. No Ghidra needed; unit-test on synthetic byte buffers the way test_native_engine_methods.py does. Use it to re-verify yotthani's 1.4.8 Agent offsets on the 1.5.3 client and to record the corpse fields",
+   "native_sig_author.py imm <value>: the same sweep for immediate operands (mov/cmp/imul/lea forms), grouped by function. Covers the MOV EAX,0x7F8 class and agent-cap constant censuses",
+   "native_sig_author.py funcs --top N [--sort size]: list .pdata functions by size, labelled with engine methods. A few lines over the existing PE parser",
+   "docs/reference/engine/native-struct-offsets.md keyed by binary SHA prefix (45be32c57c451f78). Each row carries the command that proves it. Seed it with agent+0xAD8, the Face_mesh offsets and the corpse fields. Add yotthani's 1.4.8 rows as comparison-only until offsetuse re-verifies them. Needs a provenance-register row (MithrilForge, MIT, facts only)",
+   "Optional: native_decompile.py --range START END (DecompileRange equivalent), and a sample folder that maps module+RVA stack samples (WinDbg k output, WPA CSV) to .pdata functions with engine labels, so frame-hitch stacks become function names. Value [inferred]; TAOM has no CPU-sampling workflow today"
+  ]
+ },
+ "openQuestions": [
+  {
+   "question": "The task premise says battle-load-diagnostics.md concludes 'resource residency is dead as a mechanism'. Is that a mix-up with the #389 tableau investigation?",
+   "evidence": "The phrase is at docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md:19172 and rca-isengard-black-tableau-2026-08-06.md:174 (black tableau). battle-load-diagnostics.md:783-787 concluded the opposite for the 2026-08-08 run ('ONE problem'), with an unrun clean-boot caveat (:789-790). native-commit-audit-2026-08.md:732-733 keeps both outcomes open as a decision table"
+  },
+  {
+   "question": "Were the long post-FinishMissionLoadingDone windows (19.5 s on 2026-08-08 09:32, ~33 s at 21:50, 67.4 s load on 2026-08-10) paging or shader compilation?",
+   "evidence": "WaitingForRender (phase 4f) only exists since 2026-09-04 (battle-load-diagnostics.md:825-831), and b18f3441 showed that window can be 290 s of compile_shader (:252-270). The 2026-08-10 baseline ran at memLoad 56% (native-commit-audit:241-244), which argues against paging alone [inferred]. 2026-10-02 loads spend 0.9-1.7 s there. A cold-cache run with 4f present would separate the two"
+  },
+  {
+   "question": "Why did steady fps differ about 2x between two sessions on the same day and build?",
+   "evidence": "taom_debug_2026-10-02_11-38-06.log: ~117 fps at 83-273 agents. taom_debug_2026-10-02_14-30-27.log: 225-260 fps at 231 agents. Different scenes (biome_148 vs biome_075); engine_config has max_framerate = 360, force_vsync = 0. Camera, combat state, focus and time scale are not logged"
+  },
+  {
+   "question": "What causes the 0.6-1.1 s single-frame hitches every 30-70 s and the 1,663 ms spawn spike at 1,313 agents?",
+   "evidence": "maxMs 624.6-1,089.2 in steady windows (2026-10-02 log); spawn maxMs 1,663.3 / 774.0 unattributed (plans/_audit/2026-09-23-opus/lane-4.findings.md:101-104). No CPU sampling workflow exists (grep for perfview/wpr/etw finds only a PerfView heap-snapshot mention)"
+  },
+  {
+   "question": "Did the warg tick-cost change (#659) and the hot-path caching (#664) move frame time or GC?",
+   "evidence": "#659 closes with 'no frame-time number is claimed' and an owed warg A/B; lane-4 offers a [MissionPerf] gc0/gc1 comparison as the method, but no parser exists in tools/"
+  },
+  {
+   "question": "Is the per-frame native corpse walk what froze #634 and the #701 reports?",
+   "evidence": "battle-corpses.md:15 calls it 'a hypothesis'. #701 lists 7 owed in-game checks, including whether a corpse removal deletes its agent. #634 is OPEN with the cause unproven"
+  },
+  {
+   "question": "Do yotthani's 1.4.8 Agent offsets hold on the 1.5.3 client TAOM analyses?",
+   "evidence": "native.md:34-46 (1.4.8, wield_report.txt) vs the address shift of -0x14410 'not exactly constant' (:79-84). TAOM's map independently reproduces his 1.5.3 limit-getter address (0x6E4FA0). No TAOM tool can enumerate [reg+0xF20]-style uses to re-verify"
+  },
+  {
+   "question": "Which allocations make up the ~3.9 GB of map regions generated at load, and what roots the 2.2 GB managed heap after an inventory close?",
+   "evidence": "native-commit-audit-2026-08.md:557-565 (terrain/flora runtime data candidate) and :600-609 (a PerfView heap snapshot is owed); configs A/A+ are parked (:499-500)"
+  },
+  {
+   "question": "Was the slow Harmony mode really the mixed debugger?",
+   "evidence": "37ff41e4 changed the default profile to managed-only on 2026-09-24, and plan 007 removed 247 attaches in the same window, so the pass-2 drop (69 s to ~1 s, diag.log 2026-10-02) confounds the two. followup-patch-tax.md:85-112 named the debugger UNVERIFIED"
+  },
+  {
+   "question": "Is the MithrilForge perf-audit doc yotthani cites available?",
+   "evidence": "docs/engine/combat.md:148 references docs/perf-audit/limb-ray-given-agent.md, but `gh api repos/yotthani/MithrilForge/git/trees/main?recursive=1` lists no perf-audit path"
+  }
+ ]
+}

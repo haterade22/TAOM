@@ -1,0 +1,48 @@
+perf(xml-merge): v2.0.32 - merge module XML in one document per load
+
+Every campaign load and custom battle start merges each module's
+ModuleData XML into one document per type. The engine converts the
+whole document merged so far between XmlDocument and XDocument for
+every file and compiles every XSLT on every call, so the cost grows
+with the square of the merged size. On the maintainer's desktop the
+engine's logs put about 28 s of a new campaign's 50 s loading screen
+in that merge, and about 14 s of a custom battle's load.
+
+The new fast path runs the same loop with the engine's own loader,
+merge and converters, in the engine's order, but keeps one document
+across the files and compiles each XSLT once per game process. A
+harness merges every type of the installed module set both ways and
+compares the results character for character: every type is
+identical, for a campaign and a custom battle. Measured offline, the
+fast path took 27 to 35 percent of the engine's time for the four
+heaviest types; the in-game load time has not been measured yet.
+
+Only validated merges take the fast path; unvalidated ones (SPCultures,
+Monsters and similar) keep the engine's code. It stands aside while
+another mod patches a method it bypasses, re-runs the engine's own
+merge on any exception, and turns itself off for the session if the
+engine succeeds where it failed. There is no player-facing switch. On
+its own this change leaves PatchShield wrapping CreateMergedXmlFile,
+where a missing-API exception would load that data type empty instead
+of crashing; plan 040 takes the method off the shield's list.
+
+The compiled XSLT cache holds about 11 MB of managed memory for the
+game process. lords.xslt still costs about 1 s on each game process's
+first load and 0.05 to 0.1 s on later loads.
+
+taom_debug.log gets a start line ("[XmlMerge] fast path ready", or
+"fast path off:" with the reason), one [XmlMerge] line per merged type
+(path fast or vanilla, files, XSLTs, time with its load, XSLT and
+merge split, cache counts), a summary per game, and a line whenever
+the fast path stands aside, fails or turns itself off. The engine's
+rgl log keeps its "opening" lines for every file. After any engine
+update, run the live equivalence harness: the IL fingerprint test
+cannot see every engine change.
+
+Refs: #724 (plan 042)
+Not-tested: in game. One new campaign and one custom battle: the
+ [XmlMerge] start line, path=fast lines for validated types and
+ path=vanilla reason=skip-validation for the rest, the summary, the
+ loading screen against the 50 s baseline, and the rgl "opening"
+ lines; with plan 040 merged, [LoadXml] lines still carrying merge
+ times.

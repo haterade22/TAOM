@@ -1,0 +1,24 @@
+== Armory: 2595 textures, 2101 MiB decompressed
+   DXT1                1616       770 MiB
+   BC5                  761      1020 MiB
+   DXT5                 206       287 MiB
+   BC4                   12        23 MiB
+   one mip at 512 px or more: 1 textures, 0 MiB; largest: sigil_test_bounds_for_shields 612x612 DXT1 0 MiB
+   largest: theoden_torso_h 4096x4096 mips=13 BC4 11 MiB; T_Dwarf_Erebor_Chest_A_New 4096x4096 mips=13 DXT1 11 MiB; t_rivendell_shield_a02_black_grayscale 2048x2048 mips=12 DXT5 5 MiB; t_hr_pz_camel_barding_n 2048x2048 mips=12 BC5 5 MiB; t_hr_pz_camel_barding_d 2048x2048 mips=12 DXT5 5 MiB; t_harad_torso_a_n 2048x2048 mips=12 BC5 5 MiB
+== TAOM_Map: 1322 textures, 4720 MiB decompressed
+   DXT1                 676      1447 MiB
+   BC5                  326      1263 MiB
+   BC4                  184       281 MiB
+   DXT5                 120       713 MiB
+   R8G8B8A8_UNORM        10       664 MiB  <- uncompressed
+   R16_UNORM              5       352 MiB  <- uncompressed
+   R8_UNORM               1         0 MiB  <- uncompressed
+   one mip at 512 px or more: 29 textures, 1030 MiB; largest: GAEA02 8193x8193 R8G8B8A8_UNORM 256 MiB; GAEA 8193x8193 R8G8B8A8_UNORM 256 MiB; terrain_materialmal_layer2 8193x8193 R16_UNORM 128 MiB; terrain_heightmap 8193x8193 R16_UNORM 128 MiB; terrain_normal 4097x4097 R8G8B8A8_UNORM 64 MiB
+   largest: 16K_Vista_02 16384x16384 mips=15 DXT5 341 MiB; GAEA02 8193x8193 mips=1 R8G8B8A8_UNORM 256 MiB; GAEA 8193x8193 mips=1 R8G8B8A8_UNORM 256 MiB; terrain_materialmal_layer2 8193x8193 mips=1 R16_UNORM 128 MiB; terrain_heightmap 8193x8193 mips=1 R16_UNORM 128 MiB; terrain_normal 4097x4097 mips=1 R8G8B8A8_UNORM 64 MiB
+== TAOM: 86 textures, 4959 MiB decompressed
+   R8G8B8A8_UNORM        74      4779 MiB  <- uncompressed
+   DXT5                   8       171 MiB
+   BC4                    3         8 MiB
+   BC7                    1         1 MiB
+   one mip at 512 px or more: 73 textures, 4609 MiB; largest: ui_taom_bannericons_9 4096x4096 R8G8B8A8_UNORM 64 MiB; ui_taom_bannericons_8 4096x4096 R8G8B8A8_UNORM 64 MiB; ui_taom_bannericons_7 4096x4096 R8G8B8A8_UNORM 64 MiB; ui_taom_bannericons_6 4096x4096 R8G8B8A8_UNORM 64 MiB; ui_taom_bannericons_5 4096x4096 R8G8B8A8_UNORM 64 MiB
+   largest: ui_loading_2 4096x4096 mips=13 R8G8B8A8_UNORM 85 MiB; ui_loading_1 4096x4096 mips=13 R8G8B8A8_UNORM 85 MiB; ui_taom_bannericons_9 4096x4096 mips=1 R8G8B8A8_UNORM 64 MiB; ui_taom_bannericons_8 4096x4096 mips=1 R8G8B8A8_UNORM 64 MiB; ui_taom_bannericons_7 4096x4096 mips=1 R8G8B8A8_UNORM 64 MiB; ui_taom_bannericons_6 4096x4096 mips=1 R8G8B8A8_UNORM 64 MiB

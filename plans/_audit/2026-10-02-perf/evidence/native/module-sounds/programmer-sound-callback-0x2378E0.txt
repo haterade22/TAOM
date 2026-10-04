@@ -1,0 +1,140 @@
+--- FUN_1802378e0  entry 0x2378E0 ---
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+
+undefined8 FUN_1802378e0(longlong param_1,int param_2,longlong param_3,longlong param_4)
+
+{
+  longlong lVar1;
+  uint uVar2;
+  undefined4 uVar3;
+  uint uVar4;
+  int iVar5;
+  undefined1 *puVar6;
+  undefined1 auStack_1c8 [32];
+  longlong *local_1a8;
+  longlong local_198;
+  longlong *local_190;
+  longlong local_188;
+  undefined4 uStack_180;
+  undefined4 uStack_17c;
+  undefined8 local_178;
+  undefined4 local_168;
+  int local_164;
+  undefined4 local_160;
+  undefined4 local_15c;
+  undefined4 local_158;
+  undefined4 local_154;
+  undefined1 local_150 [200];
+  undefined1 local_88 [4];
+  undefined4 local_84;
+  ulonglong local_58;
+  
+  local_178 = 0xfffffffffffffffe;
+  local_58 = DAT_180d054a8 ^ (ulonglong)auStack_1c8;
+  if (((param_2 == 8) || (param_2 == 0x20)) &&
+     ((*(longlong *)(param_1 + 0x300) != 0 || (*(longlong *)(param_1 + 0x308) != 0)))) {
+    local_190 = (longlong *)0x0;
+    FUN_18091d6a0(param_3,&local_190);
+    local_198 = 0;
+    FUN_18091f020(local_190,&local_198);
+    if ((local_198 != 0) && (-1 < *(int *)(local_198 + 8))) {
+      uVar3 = FUN_18091d010(param_3,local_88);
+      FUN_180234a00(uVar3,&DAT_180a73083);
+      uStack_180 = local_84;
+      uStack_17c = DAT_180b2e308;
+      (**(code **)(param_1 + 0x308))
+                (*(undefined8 *)(param_1 + 0x300),param_2 == 8,*(undefined4 *)(local_198 + 8),
+                 &local_188);
+    }
+  }
+  if (param_2 == 0x20) {
+    local_190 = (longlong *)0x0;
+    local_198 = param_3;
+    uVar3 = FUN_18091f140(param_3,&local_190);
+    FUN_180234a00(uVar3,&DAT_180a73083);
+    FUN_180922700(param_3,0);
+    if ((local_190 == (longlong *)0x0) || (lVar1 = *local_190, lVar1 == 0)) {
+      local_188 = param_1 + 0x60;
+      iVar5 = _Mtx_lock(local_188);
+      if (iVar5 != 0) {
+        std::_Throw_C_error(iVar5);
+      }
+      FUN_180044db0(param_1 + 0x3b0,&local_198);
+    }
+    else {
+      local_188 = param_1 + 0x60;
+      if (*(longlong *)(lVar1 + 0x88) == param_3) {
+        iVar5 = _Mtx_lock();
+        if (iVar5 != 0) {
+          std::_Throw_C_error(iVar5);
+        }
+        local_198 = CONCAT44(local_198._4_4_,*(undefined4 *)(lVar1 + 0x50));
+        FUN_18003c850(param_1 + 0xb0,&local_198);
+      }
+      else {
+        iVar5 = _Mtx_lock(local_188);
+        if (iVar5 != 0) {
+          std::_Throw_C_error(iVar5);
+        }
+        FUN_180044db0(param_1 + 0x3b0,&local_198);
+      }
+    }
+    iVar5 = _Mtx_unlock(param_1 + 0x60);
+    if (iVar5 != 0) {
+      std::_Throw_C_error(iVar5);
+    }
+  }
+  else if (param_2 == 0x80) {
+    local_190 = (longlong *)0x0;
+    uVar3 = FUN_18091f140(param_3,&local_190);
+    FUN_180234a00(uVar3);
+    if (((local_190 != (longlong *)0x0) && (lVar1 = *local_190, lVar1 != 0)) &&
+       (*(int *)(lVar1 + 0x10) != 0)) {
+      local_198 = 0;
+      if (*(int *)(lVar1 + 0x10) == 1) {
+        uVar4 = 8;
+        if (*(char *)(lVar1 + 0x49) != '\0') {
+          uVar4 = 0x10;
+        }
+        uVar2 = uVar4 | 0x10000;
+        if (*(char *)(lVar1 + 0x48) != '\0') {
+          uVar2 = uVar4;
+        }
+        puVar6 = &DAT_180a73083;
+        if (*(undefined1 **)(lVar1 + 0x20) != (undefined1 *)0x0) {
+          puVar6 = *(undefined1 **)(lVar1 + 0x20);
+        }
+        local_1a8 = &local_198;
+        uVar3 = FUN_18080dec0(*(undefined8 *)(param_1 + 0x368),puVar6,uVar2,0);
+        puVar6 = &DAT_180a73083;
+        if (*(undefined1 **)(lVar1 + 0x20) != (undefined1 *)0x0) {
+          puVar6 = *(undefined1 **)(lVar1 + 0x20);
+        }
+        FUN_180234a00(uVar3,puVar6);
+        *(longlong *)(param_4 + 8) = local_198;
+      }
+      else {
+        local_160 = 0;
+        memset(local_150,0,200);
+        local_158 = 0x2b11;
+        local_15c = 1;
+        local_154 = 2;
+        local_168 = 0xe0;
+        local_164 = *(int *)(lVar1 + 0x40);
+        if (local_164 != 0) {
+          local_1a8 = &local_198;
+          uVar3 = FUN_18080dec0(*(undefined8 *)(param_1 + 0x368),*(undefined8 *)(lVar1 + 0x38),
+                                0x1800,&local_168);
+        }
+        FUN_180234a00(uVar3,&DAT_180a73083);
+        *(longlong *)(param_4 + 8) = local_198;
+      }
+    }
+  }
+  else if (param_2 == 0x100) {
+    FUN_1808138b0(*(undefined8 *)(param_4 + 8));
+  }
+  return 0;
+}
+

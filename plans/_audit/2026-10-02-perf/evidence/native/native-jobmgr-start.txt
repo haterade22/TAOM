@@ -1,0 +1,216 @@
+
+function: FUN_180043d30  entry 0x43D30  size 0x5F6  (rva at +0x0)
+
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+
+void FUN_180043d30(void)
+
+{
+  longlong lVar1;
+  char cVar2;
+  int iVar3;
+  undefined8 uVar4;
+  undefined8 *puVar5;
+  longlong lVar6;
+  undefined8 *puVar8;
+  uint uVar9;
+  ulonglong uVar10;
+  ulonglong uVar11;
+  longlong lVar12;
+  longlong *plVar13;
+  int iVar14;
+  ulonglong uVar15;
+  longlong lVar16;
+  longlong *plVar17;
+  undefined1 auStack_1c8 [32];
+  undefined8 *local_1a8;
+  longlong local_1a0;
+  longlong local_198;
+  undefined8 *local_188;
+  longlong local_180;
+  longlong local_178;
+  longlong *local_170;
+  undefined8 local_168;
+  undefined **local_160;
+  char *local_158;
+  uint local_150;
+  char local_148 [16];
+  undefined **local_138;
+  char *local_130;
+  undefined4 local_128;
+  char local_120 [24];
+  undefined1 local_108 [152];
+  int local_70;
+  undefined8 local_58;
+  undefined8 local_48;
+  ulonglong local_38;
+  longlong lVar7;
+  
+  lVar7 = DAT_180d99130;
+  local_168 = 0xfffffffffffffffe;
+  local_38 = DAT_180d054a8 ^ (ulonglong)auStack_1c8;
+  local_178 = DAT_180d99130;
+  FUN_18070dbc0(local_108);
+  iVar14 = local_70 + -1;
+  if (*(int *)(lVar7 + 0xa4c) < local_70 + -1) {
+    iVar14 = *(int *)(lVar7 + 0xa4c);
+  }
+  iVar3 = 3;
+  if (3 < iVar14) {
+    iVar3 = iVar14;
+  }
+  plVar13 = (longlong *)(lVar7 + 8);
+  lVar16 = (longlong)iVar3;
+  local_170 = plVar13;
+  FUN_18003cb80(plVar13,lVar16);
+  uVar4 = FUN_1807155d0(DAT_180da8df0,0x208,8,3);
+  uVar11 = 0;
+  local_160 = rglConstString<16>::vftable;
+  local_158 = local_148;
+  local_148[0] = '\0';
+  local_150 = 4;
+  strcpy_s(local_148,0x10,"Main");
+  lVar12 = lVar7 + 0x90;
+  lVar1 = lVar7 + 0x578;
+  local_1a8 = (undefined8 *)(lVar7 + 0xa8);
+  local_1a0 = lVar1;
+  local_198 = lVar12;
+  local_188 = local_1a8;
+  local_180 = lVar12;
+  local_58 = lVar1;
+  uVar4 = FUN_180228580(uVar4,&local_160,0,0);
+  *(undefined8 *)*plVar13 = uVar4;
+  local_160 = rglString_base::vftable;
+  puVar5 = (undefined8 *)FUN_1807155d0(DAT_180da8df0,0x208,8,3);
+  local_138 = rglConstString<16>::vftable;
+  local_130 = local_120;
+  local_120[0] = '\0';
+  local_128 = 6;
+  local_48 = puVar5;
+  strcpy_s(local_120,0x10,"Render");
+  local_1a8 = (undefined8 *)(lVar7 + 0xa8);
+  local_1a0 = lVar1;
+  local_198 = lVar12;
+  FUN_180228580(puVar5,&local_138,1);
+  *puVar5 = rglRender_thread::vftable;
+  *(undefined8 **)(*plVar13 + 8) = puVar5;
+  local_138 = rglString_base::vftable;
+  iVar14 = 2;
+  *(undefined4 *)(lVar7 + 0xa48) = 2;
+  if (2 < lVar16) {
+    lVar12 = 2;
+    do {
+      local_160 = rglConstString<16>::vftable;
+      local_158 = local_148;
+      local_148[0] = '\0';
+      local_150 = 7;
+      strcpy_s(local_148,0x10,"Worker ");
+      FUN_1800469a0(&local_48,&DAT_180ae4638,iVar14 + -1);
+      lVar7 = -1;
+      do {
+        lVar6 = lVar7 + 1;
+        lVar1 = lVar7 + 1;
+        lVar7 = lVar6;
+      } while (*(char *)((longlong)&local_48 + lVar1) != '\0');
+      iVar3 = (int)lVar6;
+      if (0 < iVar3) {
+        uVar9 = local_150 + iVar3;
+        if (uVar9 < 0xf) {
+          memcpy(local_158 + local_150,&local_48,(longlong)(iVar3 + 1));
+          local_150 = uVar9;
+        }
+      }
+      uVar4 = FUN_1807155d0(DAT_180da8df0,0x208,8,3);
+      local_198 = local_180;
+      local_1a0 = local_58;
+      local_1a8 = local_188;
+      uVar4 = FUN_180228580(uVar4,&local_160,2,iVar14);
+      *(undefined8 *)(*plVar13 + lVar12 * 8) = uVar4;
+      local_160 = rglString_base::vftable;
+      iVar14 = iVar14 + 1;
+      lVar12 = lVar12 + 1;
+      lVar7 = local_178;
+    } while (lVar12 < lVar16);
+  }
+  plVar17 = (longlong *)(lVar7 + 0x48);
+  local_48 = plVar17;
+  FUN_18003cb80(plVar17,0);
+  iVar3 = (int)(local_70 + (local_70 >> 0x1f & 3U)) >> 2;
+  iVar14 = 2;
+  if ((1 < iVar3) && (iVar14 = iVar3, 4 < iVar3)) {
+    iVar14 = 4;
+  }
+  lVar12 = (longlong)iVar14;
+  FUN_18003cb80(lVar7 + 0x28,lVar12);
+  if (0 < lVar12) {
+    puVar5 = (undefined8 *)(local_178 + 0x98);
+    local_180 = local_178 + 0x310;
+    uVar10 = uVar11;
+    uVar15 = uVar11;
+    do {
+      local_160 = rglConstString<16>::vftable;
+      local_158 = local_148;
+      local_148[0] = '\0';
+      local_150 = 10;
+      strcpy_s(local_148,0x10,"BackWorker");
+      FUN_1800469a0(&local_58,&DAT_180ae4638,uVar10);
+      lVar1 = -1;
+      do {
+        lVar16 = lVar1;
+        lVar1 = lVar16 + 1;
+      } while (*(char *)((longlong)&local_58 + lVar16 + 1) != '\0');
+      iVar14 = (int)(lVar16 + 1);
+      if (0 < iVar14) {
+        uVar9 = local_150 + iVar14;
+        if (uVar9 < 0xf) {
+          memcpy(local_158 + local_150,&local_58,(longlong)((int)lVar16 + 2));
+          local_150 = uVar9;
+        }
+      }
+      puVar8 = (undefined8 *)FUN_1807155d0(DAT_180da8df0,0x208,8,3);
+      local_1a8 = puVar5;
+      local_188 = puVar8;
+      FUN_180228250(puVar8,&local_160,4,local_180);
+      *puVar8 = rglBackground_worker_thread::vftable;
+      *(undefined8 **)(*(longlong *)(lVar7 + 0x28) + uVar15 * 8) = puVar8;
+      local_160 = rglString_base::vftable;
+      uVar10 = (ulonglong)((int)uVar10 + 1);
+      uVar15 = uVar15 + 1;
+      plVar13 = local_170;
+      plVar17 = local_48;
+    } while ((longlong)uVar15 < lVar12);
+  }
+  uVar10 = uVar11;
+  uVar15 = uVar11;
+  if (plVar13[1] - *plVar13 >> 3 != 0) {
+    do {
+      FUN_180228920(*(undefined8 *)(*plVar13 + uVar10));
+      uVar9 = (int)uVar15 + 1;
+      uVar10 = uVar10 + 8;
+      uVar15 = (ulonglong)uVar9;
+    } while ((ulonglong)(longlong)(int)uVar9 < (ulonglong)(plVar13[1] - *plVar13 >> 3));
+  }
+  uVar10 = uVar11;
+  uVar15 = uVar11;
+  if (plVar17[1] - *plVar17 >> 3 != 0) {
+    do {
+      FUN_180228920(*(undefined8 *)(*plVar17 + uVar10));
+      uVar9 = (int)uVar15 + 1;
+      uVar10 = uVar10 + 8;
+      uVar15 = (ulonglong)uVar9;
+    } while ((ulonglong)(longlong)(int)uVar9 < (ulonglong)(plVar17[1] - *plVar17 >> 3));
+  }
+  uVar10 = uVar11;
+  if (*(longlong *)(lVar7 + 0x30) - *(longlong *)(lVar7 + 0x28) >> 3 != 0) {
+    do {
+      FUN_180228920(*(undefined8 *)(uVar11 + *(longlong *)(lVar7 + 0x28)));
+      uVar9 = (int)uVar10 + 1;
+      uVar11 = uVar11 + 8;
+      uVar10 = (ulonglong)uVar9;
+    } while ((ulonglong)(longlong)(int)uVar9 <
+             (ulonglong)(*(longlong *)(lVar7 + 0x30) - *(longlong *)(lVar7 + 0x28) >> 3));
+  }
+  cVar2 = (**(code **)**(undefined8 **)(DAT_180da8de0 + 0x18))();
+  if (cVar2 == '\0') {
+    IsDebuggerPresent();

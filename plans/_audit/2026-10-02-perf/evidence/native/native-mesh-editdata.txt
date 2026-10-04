@@ -1,0 +1,276 @@
+# Mesh edit data in the v1.5.3 shipping client (TaleWorlds.Native.dll, Ghidra project Win64_Shipping_Client-45be32c57c451f78), 2026-10-02
+
+## GUID locations (guid_scan.py)
+== shipping: E:\Steam\steamapps\common\Mount & Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.Native.dll (14,209,376 bytes)
+   SEG_MESH_A (editor positions)    full=1 [.rdata:0xAE3D50]  low8=1 [.rdata:0xAE3D50]  high8=1 [.rdata:0xAE3D58]
+   SEG_MESH_B (runtime streams)     full=1 [.rdata:0xAE3D78]  low8=1 [.rdata:0xAE3D78]  high8=1 [.rdata:0xAE3D80]
+   SEG_MESH_TABLE                   full=1 [.rdata:0xA73D40]  low8=1 [.rdata:0xA73D40]  high8=1 [.rdata:0xA73D48]
+   SEG_TEXTURE_PIXELS               full=1 [.rdata:0xAE9228]  low8=1 [.rdata:0xAE9228]  high8=1 [.rdata:0xAE9230]
+   SEG_TEXTURE_STUB                 full=1 [.rdata:0xAE9188]  low8=1 [.rdata:0xAE9188]  high8=1 [.rdata:0xAE9190]
+   TYPE_METAMESH                    full=1 [.rdata:0xAE94C8]  low8=1 [.rdata:0xAE94C8]  high8=1 [.rdata:0xAE94D0]
+
+## Code references to the GUIDs (rip_target_scan.py; 'lea ebp' lines are the scanner decoding 48 8D 2D one byte late; the paired functions near 0x1C000-0x25000 are static initialisers)
+segment A (edit data, 0xAE3D50): functions 0x1C340 0x1E280 0x216B0 0x225D0 0x252F0 (initialisers), 0x68D30, 0x181CD0
+segment B (render buffers, 0xAE3D78): functions 0x1C440 0x1E380 0x217B0 0x226D0 0x253F0 (initialisers), 0x66700 (twice)
+
+## 0x66700, the render-buffer read (full decompile)
+void FUN_180066700(longlong *param_1,byte param_2,longlong *param_3,longlong *param_4,char param_5)
+
+{
+  char *pcVar1;
+  longlong *plVar2;
+  longlong *plVar3;
+  longlong *plVar4;
+  code *pcVar5;
+  char cVar6;
+  undefined1 *puVar7;
+  undefined4 local_100;
+  undefined4 uStack_fc;
+  undefined4 uStack_f8;
+  undefined4 uStack_f4;
+  code *local_f0;
+  undefined1 *local_e8;
+  undefined8 local_e0;
+  undefined4 uStack_d8;
+  undefined4 uStack_d4;
+  longlong *local_d0;
+  byte local_c8;
+  longlong *local_c0;
+  longlong *local_b8;
+  longlong *local_b0;
+  byte local_a8;
+  longlong *local_a0;
+  longlong *local_98;
+  undefined8 local_90;
+  longlong **local_88;
+  undefined1 local_80 [16];
+  code *local_70;
+  undefined1 local_60 [16];
+  code *local_50;
+  
+  local_90 = 0xfffffffffffffffe;
+  plVar2 = (longlong *)*param_4;
+  if (plVar2 != (longlong *)0x0) {
+    (**(code **)(*plVar2 + 0x28))(plVar2);
+  }
+  plVar3 = (longlong *)*param_3;
+  if (plVar3 != (longlong *)0x0) {
+    (**(code **)(*plVar3 + 0x28))(plVar3);
+  }
+  uStack_d8 = CONCAT31(uStack_d8._1_3_,param_2);
+  local_e0 = param_1;
+  if ((undefined **)*param_1 == rglMesh::vftable) {
+    LOCK();
+    *(int *)(param_1 + 1) = (int)param_1[1] + 1;
+    UNLOCK();
+  }
+  else {
+    (*(code *)((undefined **)*param_1)[5])(param_1);
+  }
+  if (param_5 == '\0') {
+    plVar4 = *(longlong **)(param_1[0x15] + 0x88);
+    pcVar5 = *(code **)(*plVar4 + 0x70);
+    local_f0 = FUN_18006e3d0;
+    local_e8 = &LAB_18006e3c0;
+    local_100 = (undefined4)local_e0;
+    uStack_fc = local_e0._4_4_;
+    uStack_f8 = uStack_d8;
+    uStack_f4 = uStack_d4;
+    local_b0 = param_1;
+    local_a8 = param_2;
+    local_a0 = plVar2;
+    if (plVar2 != (longlong *)0x0) {
+      (**(code **)(*plVar2 + 0x28))(plVar2);
+    }
+    local_98 = plVar3;
+    if (plVar3 != (longlong *)0x0) {
+      (**(code **)(*plVar3 + 0x28))(plVar3);
+    }
+    FUN_18006be00(local_60,&local_b0);
+    (*pcVar5)(plVar4,&DAT_180ae3d78,param_1 + 0x17,0,local_60,&local_100);
+    if (local_50 != (code *)0x0) {
+      (*local_50)(local_60,0,0);
+    }
+    if (local_f0 != (code *)0x0) {
+      (*local_f0)(&local_100,0,0);
+    }
+  }
+  else {
+    plVar4 = *(longlong **)(param_1[0x15] + 0x88);
+    pcVar5 = *(code **)(*plVar4 + 0x60);
+    local_88 = &local_d0;
+    local_d0 = param_1;
+    local_c8 = param_2;
+    local_c0 = plVar2;
+    if (plVar2 != (longlong *)0x0) {
+      (**(code **)(*plVar2 + 0x28))(plVar2);
+    }
+    local_b8 = plVar3;
+    if (plVar3 != (longlong *)0x0) {
+      (**(code **)(*plVar3 + 0x28))(plVar3);
+    }
+    FUN_18006be00(local_80,&local_d0);
+    cVar6 = (*pcVar5)(plVar4,&DAT_180ae3d78,param_1 + 0x17,0,local_80);
+    if (local_70 != (code *)0x0) {
+      (*local_70)(local_80,0,0);
+    }
+    if (cVar6 == '\0') {
+      puVar7 = &DAT_180a73083;
+      if ((undefined1 *)param_1[3] != (undefined1 *)0x0) {
+        puVar7 = (undefined1 *)param_1[3];
+      }
+      FUN_180710f90("Cannot read render buffers of mesh %s",puVar7);
+      pcVar1 = (char *)(param_1[0x3c] + 0x15 + (ulonglong)param_2 * 0x18);
+      LOCK();
+      if (*pcVar1 == '\x01') {
+        *pcVar1 = '\x04';
+      }
+      UNLOCK();
+      (**(code **)(*param_1 + 0x38))(param_1);
+    }
+  }
+  if (plVar3 != (longlong *)0x0) {
+    (**(code **)(*plVar3 + 0x38))(plVar3);
+  }
+  if (plVar2 != (longlong *)0x0) {
+    (**(code **)(*plVar2 + 0x38))(plVar2);
+  }
+  if ((longlong *)*param_3 != (longlong *)0x0) {
+    (**(code **)(*(longlong *)*param_3 + 0x38))();
+  }
+  if ((longlong *)*param_4 != (longlong *)0x0) {
+    (**(code **)(*(longlong *)*param_4 + 0x38))();
+  }
+  return;
+}
+
+## 0x68D30, ensure edit data (full decompile)
+void FUN_180068d30(longlong param_1,char param_2)
+
+{
+  longlong *plVar1;
+  undefined8 uVar2;
+  longlong local_30;
+  undefined4 local_28;
+  code *local_20;
+  code *local_18;
+  
+  plVar1 = (longlong *)(param_1 + 0x210);
+  if (*plVar1 == 0) {
+    if ((*(byte *)(param_1 + 0xfd) & 0x20) == 0) {
+      local_30 = FUN_180071060(*(undefined8 *)(param_1 + 0x1b0));
+      if (local_30 != param_1) {
+        local_28 = 0;
+        FUN_180069920(&local_30);
+        uVar2 = FUN_1807155d0(DAT_180da8df0,0xf0,8,3);
+        uVar2 = FUN_1800694a0(uVar2);
+        FUN_18003c560(plVar1,uVar2);
+        FUN_180071360(*plVar1 + 0x10,(longlong)local_20 + 0x10);
+        FUN_180071360(*plVar1 + 0x38,(longlong)local_20 + 0x38);
+        FUN_180071300(*plVar1 + 0x60,(longlong)local_20 + 0x60);
+        FUN_180071220(*plVar1 + 0x88,(longlong)local_20 + 0x88);
+        if (param_2 != '\0') {
+          *(byte *)(param_1 + 0xfd) = *(byte *)(param_1 + 0xfd) | 0x40;
+          FUN_180071130(*plVar1 + 200,(longlong)local_20 + 200);
+          FUN_180070900(*plVar1 + 0xb0,(longlong)local_20 + 0xb0);
+        }
+        FUN_1800699f0(&local_30);
+        return;
+      }
+    }
+    if (*(longlong *)(param_1 + 0xa8) == 0) {
+      if ((*(byte *)(param_1 + 0xfd) & 4) != 0) {
+        uVar2 = FUN_1807155d0(DAT_180da8df0,0xf0,8,3);
+        uVar2 = FUN_1800694a0(uVar2);
+        FUN_18003c560(plVar1,uVar2);
+        return;
+      }
+      FUN_1807112b0("Generating edit data from buffers, this may cause a performance hit");
+      FUN_180710f90("Generate edit data from buffers disabled");
+    }
+    else {
+      plVar1 = *(longlong **)(*(longlong *)(param_1 + 0xa8) + 0x88);
+      local_20 = FUN_18006e2c0;
+      local_18 = FUN_18006e220;
+      local_30 = param_1;
+      (**(code **)(*plVar1 + 0x60))(plVar1,&DAT_180ae3d50,param_1 + 0xb8,0,&local_30);
+      if (local_20 != (code *)0x0) {
+        (*local_20)(&local_30,0,0);
+        return;
+      }
+    }
+  }
+  return;
+}
+
+## 0x181CD0, async edit-data request (excerpt)
+  piVar2 = (int *)(param_1 + 0x10);
+  uVar6 = FUN_1807155d0(DAT_180da8df0,0xf0,8,3);
+  plVar7 = (longlong *)FUN_1800694a0(uVar6);
+  if (plVar7 != (longlong *)0x0) {
+    (**(code **)(*plVar7 + 0x28))(plVar7);
+  }
+  plVar3 = (longlong *)param_2[0x42];
+  param_2[0x42] = (longlong)plVar7;
+  if (plVar3 != (longlong *)0x0) {
+    (**(code **)(*plVar3 + 0x38))();
+  }
+  plVar7 = (longlong *)param_2[0x42];
+  uVar11 = 0;
+  if (piVar2 != (int *)0x0) {
+    LOCK();
+    *piVar2 = *piVar2 + 1;
+    UNLOCK();
+    uVar11 = uVar15;
+  }
+  local_58 = FUN_18006e310;
+  local_50 = &LAB_18006e300;
+  local_78 = FUN_18006e380;
+  local_70 = FUN_18006e350;
+  uStack_a0 = SUB84(plVar7,0);
+  uStack_9c = (undefined4)((ulonglong)plVar7 >> 0x20);
+  uStack_80 = uStack_a0;
+  uStack_7c = uStack_9c;
+  ppiVar14 = local_68;
+  ppiVar13 = &local_88;
+  local_68[0] = piVar2;
+  local_88 = piVar2;
+  (**(code **)(**(longlong **)(param_2[0x15] + 0x88) + 0x70))
+            (*(longlong **)(param_2[0x15] + 0x88),&DAT_180ae3d50,param_2 + 0x17,0,ppiVar13,ppiVar14)
+  ;
+  if (local_78 != (code *)0x0) {
+    (*local_78)(&local_88,0,0);
+
+## Callers
+0x68D30 L1 callers (7):
+  :       FUN_1807112b0("Generating edit data from buffers, this may cause a performance hit");
+  :       FUN_180710f90("Generate edit data from buffers disabled");
+  FUN_180069670 0x69670:       FUN_180048b90(DAT_180d9d1f8,"Waiting for static mesh edit operation to finish : %s\n",puVar8);
+  FUN_18038d490 0x38D490:     pcVar13 = strstr(pcVar13,"Tableau");
+  FUN_18056f360 0x56F360:         strcpy_s(local_8150,0x10,"head");
+  FUN_18056f360 0x56F360:                                            "produce_vertex_map_from_mesh could not find corresponding vertices correctly between the meshes \'%s\' and \'%s\' (check skinning 
+  FUN_180574c30 0x574C30:   pcVar28 = "deform_keys";
+  FUN_180574c30 0x574C30:       pcVar28 = "deform_key";
+  FUN_180574c30 0x574C30:               pcVar28 = "deform_key";
+  FUN_180574c30 0x574C30:                 pbVar27 = (byte *)("deform_key" + -(longlong)pbVar19);
+  FUN_180574c30 0x574C30:           pbVar27 = (byte *)("deform_key" + -(longlong)pbVar19);
+  FUN_180574c30 0x574C30:       pcVar28 = "deform_key";
+  FUN_180574c30 0x574C30:           lVar21 = (longlong)"deform_key" - (longlong)pbVar19;
+  FUN_180574c30 0x574C30:           strcpy_s(local_68,0x20,"face_base_mesh");
+  FUN_180574c30 0x574C30:           pcVar28 = "deform_key";
+  FUN_180574c30 0x574C30:               lVar21 = (longlong)"deform_key" - (longlong)pcVar28;
+  FUN_180574c30 0x574C30:     lVar21 = (longlong)"deform_keys" - (longlong)pbVar19;
+  FUN_180583350 0x583350:       if (*(char *)(*(longlong *)(param_2 + 8) + lVar25) != "Button"[lVar25]) {
+  FUN_180583350 0x583350:     uVar17 = FUN_1807155d0(DAT_180da8df0,800,0x10,"%s_%08X");
+  FUN_180583350 0x583350:               strcpy_s(local_118,0x20,"face_base_mesh");
+  FUN_180583350 0x583350:                 FUN_1807120e0(&local_4f8,"Scale %f %f %f, deform %s",(double)local_4d8[0],
+0x69920 (no strings): a per-mesh spinlock with thread-id reentrancy, then ensure edit data, returning mesh+0x210: the edit-data lock behind the managed edit operations.
+0x2569D0 (no strings): builds triangle and index lists from a mesh under a transform (see its callers below).
+0x181CD0 L1 caller: 0x182010; its callers 0x2A64C0 ('Mesh %s does not have LOD 0', merges two metameshes, no direct caller) and 0x2A7C50, whose caller is engine method IMetaMesh.BatchMultiMeshesMultiple (Engine id 702).
+0x2569D0 callers: engine method IManagedMeshEditOperations.UpdateOverlappedVertexNormals (Engine id 597), and 0x574870 <- 0x577E10 (face skin loading: 'Loading Module...', 'skins', 'Duplicate face instance was found with name %s!').
+
+## Managed callers of the batching engine methods
+grep over E:\Decompiled_Bannerlord\_categories_v1.5.3 for '.BatchMultiMeshesMultiple(' and '.BatchMultiMeshes(' outside MetaMesh.cs: none. TAOM Main: none.
+
+## Edit data share in packages (editdata_share.py)
+Native: 151 tpacs, 11939 metameshes, 11939 with edit data; edit data 8,567 MB (4,635 MB stored), render buffers 8,107 MB (4,490 MB stored)

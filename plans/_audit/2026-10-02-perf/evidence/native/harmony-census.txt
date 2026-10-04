@@ -1,0 +1,50 @@
+202 attribute-declared targets
+target | prefix | postfix | transpiler | finalizer | files
+HeroSpawnCampaignBehavior.SpawnLordParty | 2 | 0 | 0 | 2 | 2: Features/LordPartyTemplates/Hooks/Patch88_SpawnLordPartyScope.cs, Features/LordSpawnGuard/Hooks/Patch65_LandlessCultureSpawnGuard.cs
+Mission.Initialize | 2 | 1 | 0 | 0 | 2: Features/AtmospherePersistence/Hooks/Mission_Initialize_Patch.cs, Features/BattleLoadDiagnostics/Hooks/Mission_Initialize_BattleLoad_Patch.cs
+Agent.EquipItemsFromSpawnEquipment | 2 | 1 | 0 | 0 | 2: Features/BannerColorPersistence/Hooks/Agent_EquipItemsFromSpawnEquipment_Patch.cs, Features/BattleLoadDiagnostics/Hooks/Agent_EquipItemsFromSpawnEquipment_BattleLoad_Patch.cs
+MapState.OnActivate | 1 | 2 | 0 | 0 | 2: Features/BattleLoadDiagnostics/Hooks/MapState_OnActivate_ExitPhase_Patch.cs, Features/MapLoadDiagnostics/Hooks/CampaignLifecycle_Trace_Patch.cs
+Formation.SetMovementOrder | 1 | 2 | 0 | 0 | 2: Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs, Features/SmartCavalryAI/Hooks/Patch31_FormationSetMovementOrder.cs
+GauntletLayer.LoadMovie | 1 | 1 | 0 | 1 | 1: Features/FactionUI/Hooks/GauntletLayerLoadMoviePatch.cs
+Formation.UnitDiameter | 1 | 1 | 0 | 1 | 1: Features/TrollBruteForce/Hooks/Patch92_TrollFormationSpacing.cs
+Agent.CheckToDropFlaggedItem | 1 | 0 | 0 | 1 | 1: Features/AdvancedCombat/Hooks/Agent_CheckToDropFlaggedItem_Guard_Patch.cs
+MissionGauntletTournamentView.OnMissionScreenFinalize | 1 | 1 | 0 | 0 | 1: Features/Arena/Hooks/Patch60_TournamentExitMovieRelease.cs
+Mission.SpawnAgent | 1 | 1 | 0 | 0 | 1: Features/BannerColorPersistence/Hooks/Mission_SpawnAgent_Patch.cs
+MissionState.FinishMissionLoading | 1 | 1 | 0 | 0 | 1: Features/BattleLoadDiagnostics/Hooks/MissionState_FinishMissionLoading_BattleLoad_Patch.cs
+MissionState.OnFinalize | 1 | 1 | 0 | 0 | 1: Features/BattleLoadDiagnostics/Hooks/MissionState_OnFinalize_ExitPhase_Patch.cs
+MissionState.OpenNew | 1 | 1 | 0 | 0 | 1: Features/BattleLoadDiagnostics/Hooks/MissionState_OpenNew_Patch.cs
+Mission.AfterStart | 1 | 1 | 0 | 0 | 1: Features/BattleLoadDiagnostics/Hooks/Mission_AfterStart_BattleLoad_Patch.cs
+Mission.ClearUnreferencedResources | 1 | 1 | 0 | 0 | 1: Features/BattleLoadDiagnostics/Hooks/Mission_ClearUnreferencedResources_ExitPhase_Patch.cs
+Mission.EndMissionInternal | 1 | 1 | 0 | 0 | 1: Features/BattleLoadDiagnostics/Hooks/Mission_EndMissionInternal_ExitPhase_Patch.cs
+Mission.TickAgentsAndTeamsImp | 1 | 0 | 0 | 1 | 1: Features/BattleLoadDiagnostics/Hooks/Patch91_MissionTickStallProbes.cs
+MissionState.TickMissionAux | 1 | 0 | 0 | 1 | 1: Features/BattleLoadDiagnostics/Hooks/Patch91_MissionTickStallProbes.cs
+SandBoxSaveHelper.TryLoadSave | 2 | 0 | 0 | 0 | 2: Features/BattleLoadDiagnostics/Hooks/SandBoxSaveHelper_TryLoadSave_DisarmPatch.cs, Features/SaveLoadDiagnostics/Hooks/SandBoxSaveHelper_TryLoadSave_Patch.cs
+Utilities.ClearOldResourcesAndObjects | 1 | 1 | 0 | 0 | 1: Features/BattleLoadDiagnostics/Hooks/Utilities_ClearOldResourcesAndObjects_BattleLoad_Patch.cs
+Agent.Die | 2 | 0 | 0 | 0 | 2: Features/BlowDiagnostics/Hooks/Agent_Die_BlowDiag_Patch.cs, Features/Spider/Hooks/Agent_Die_SpiderDismount_Patch.cs
+Agent.HandleBlowAux | 2 | 0 | 0 | 0 | 2: Features/BlowDiagnostics/Hooks/Agent_HandleBlowAux_BlowDiag_Patch.cs, Features/Spider/Hooks/Agent_HandleBlowAux_SpiderDismountGuard_Patch.cs
+PartyCharacterVM.RefreshValues | 0 | 2 | 0 | 0 | 2: Features/CompanionTactics/Roles/Hooks/Patch35_PartyCharacterVM_RefreshValues.cs, Features/TroopWeight/Hooks/PartyCharacterVM_RefreshValues_Patch.cs
+Module.OnApplicationTick | 0 | 1 | 0 | 1 | 2: Features/CrashReport/DevTriggers/CrashReportApplicationTickTrigger.cs, Features/CrashReport/Hooks/Patch37_CrashReport.cs
+KingdomDecisionsVM.RefreshWith | 1 | 1 | 0 | 0 | 2: Features/Diplomacy/Hooks/KingdomDecisionsVM_RefreshWith_AutoResolved_Patch.cs, Features/Diplomacy/Hooks/KingdomDecisionsVM_RefreshWith_Patch.cs
+SettlementComponent.ChangeGold | 1 | 1 | 0 | 0 | 1: Features/EconomyDiagnostics/Hooks/SettlementComponent_ChangeGold_Patch.cs
+ItemConsumptionBehavior.UpdateTownGold | 1 | 1 | 0 | 0 | 1: Features/EconomyDiagnostics/Hooks/TownGoldFlowTagPatches.cs
+ItemConsumptionBehavior.MakeConsumption | 1 | 1 | 0 | 0 | 1: Features/EconomyDiagnostics/Hooks/TownGoldFlowTagPatches.cs
+SellGoodsForTradeAction.ApplyByVillagerTrade | 1 | 1 | 0 | 0 | 1: Features/EconomyDiagnostics/Hooks/TownGoldFlowTagPatches.cs
+SellItemsAction.Apply | 1 | 1 | 0 | 0 | 1: Features/EconomyDiagnostics/Hooks/TownGoldFlowTagPatches.cs
+BodyGeneratorView.InitCamera | 1 | 1 | 0 | 0 | 1: Features/FactionUI/Hooks/BodyGeneratorViewInitCameraPatch.cs
+MapScreen.OnFrameTick | 0 | 2 | 0 | 0 | 2: Features/FiefManagement/Hooks/Patch36_MapScreenF6.cs, Features/MapLoadDiagnostics/Hooks/CampaignLifecycle_Trace_Patch.cs
+CharacterTableau.OnFinalize | 0 | 2 | 0 | 0 | 2: Features/HeroRace/Hooks/CharacterTableau_OnFinalize_LiveRefPatch.cs, Features/HeroRace/Hooks/CharacterTableau_ResidencyReset_Patches.cs
+CharacterTableau.RefreshCharacterTableau | 1 | 1 | 0 | 0 | 2: Features/HeroRace/Hooks/CharacterTableau_RefreshCharacterTableau_Patch.cs, Features/HeroRace/Hooks/CharacterTableau_RefreshCharacterTableau_PositionPatch.cs
+CharacterTableau.SetRace | 0 | 2 | 0 | 0 | 2: Features/HeroRace/Hooks/CharacterTableau_ResidencyReset_Patches.cs, Features/HeroRace/Hooks/CharacterTableau_SetRace_Patch.cs
+InitializationArgs.InitializeLordPartyProperties | 1 | 0 | 0 | 1 | 1: Features/LordPartyTemplates/Hooks/Patch88_InitializeLordPartyPropertiesScope.cs
+MapScreen.OnInitialize | 1 | 1 | 0 | 0 | 1: Features/MapLoadDiagnostics/Hooks/CampaignLifecycle_Trace_Patch.cs
+LoadingWindow.DisableGlobalLoadingWindow | 1 | 1 | 0 | 0 | 1: Features/MapLoadDiagnostics/Hooks/LoadingWindow_Transitions_Patch.cs
+PlayerEncounter.DoMeeting | 2 | 0 | 0 | 0 | 2: Features/Refuge/Hooks/RefugeEncounterPatch.cs, Features/SupplyLines/Hooks/SupplyCaravanEncounterPatch.cs
+FileDriver.Save | 0 | 1 | 0 | 1 | 1: Features/SaveLoadDiagnostics/Hooks/FileDriver_Save_Patch.cs
+ObjectHeaderLoadData.CreateObject | 0 | 1 | 0 | 1 | 1: Features/SaveLoadDiagnostics/Hooks/ObjectHeaderLoadData_CreateObject_Patch.cs
+SaveManager.Load | 0 | 1 | 0 | 1 | 1: Features/SaveLoadDiagnostics/Hooks/SaveManager_Load_Patch.cs
+SaveOutput.PrintStatus | 0 | 1 | 0 | 1 | 1: Features/SaveLoadDiagnostics/Hooks/SaveOutput_PrintStatus_Patch.cs
+RecruitmentVM.RefreshPartyProperties | 0 | 2 | 0 | 0 | 2: Features/SpecialResources/Hooks/RecruitmentVM_RecruitGate_Patch.cs, Features/TroopWeight/Hooks/RecruitmentVM_RefreshPartyProperties_Patch.cs
+
+files with manual harmony.Patch calls: 2
+  Features/CrashReport/Hooks/Native2ManagedPatcher.cs
+  ManualPatchApplicator.cs

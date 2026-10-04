@@ -1,0 +1,56 @@
+                  if (0 < local_3a00) {
+                    local_3990 = rglVarString::vftable;
+                    local_3978 = 0;
+                    local_3988 = (char *)0x0;
+                    local_3980 = 0;
+                    FUN_1807117c0(&local_3990,0xd);
+                    pcVar29 = local_3988;
+                    *(undefined8 *)local_3988 = s_ModuleSounds__180afa810._0_8_;
+                    *(undefined4 *)(local_3988 + 8) = s_ModuleSounds__180afa810._8_4_;
+                    *(undefined2 *)(local_3988 + 0xc) = s_ModuleSounds__180afa810._12_2_;
+                    local_3980 = 0xd;
+                    uVar12 = FUN_180711ce0(lVar32,&local_3888,&local_3990);
+                    FUN_180711ce0(uVar12,&local_3948,&local_3a10);
+                    local_3888 = rglVarString::vftable;
+                    if (local_3880 != 0) {
+                      FUN_18073a900();
+                    }
+                    local_3880 = 0;
+                    local_3870 = 0;
+                    local_3888 = rglString_base::vftable;
+                    local_3990 = rglVarString::vftable;
+                    if (pcVar29 != (char *)0x0) {
+                      FUN_18073a900(pcVar29);
+                    }
+                    local_3988 = (char *)0x0;
+                    local_3978 = local_3978 & 0xffffffff00000000;
+                    local_3990 = rglString_base::vftable;
+                    lVar30 = FUN_18070e2b0(local_37d8,&local_3948);
+                    puVar17 = &DAT_180a73083;
+                    if (*(undefined1 **)(lVar30 + 8) != (undefined1 *)0x0) {
+                      puVar17 = *(undefined1 **)(lVar30 + 8);
+                    }
+                    (*(code *)local_3948[2])(&local_3948,puVar17);
+                    uVar26 = local_3938;
+                    local_37d8[0] = rglString_base::vftable;
+                    local_3a60 = rglVarString::vftable;
+                    local_3a48 = 0;
+                    local_3a58 = (void *)0x0;
+                    local_3a50 = 0;
+                    uVar22 = (ulonglong)local_3938;
+                    if (local_3940 != (void *)0x0) {
+                      FUN_1807117c0(&local_3a60,uVar22);
+                    }
+                    if (uVar26 != 0) {
+                      memcpy(local_3a58,local_3940,uVar22);
+                    }
+                    uVar16 = uStack_3aa0;
+                    local_3a50 = uVar26;
+                    if (local_3a58 != (void *)0x0) {
+                      *(undefined1 *)(uVar22 + (longlong)local_3a58) = 0;
+                    }
+                    local_3a48 = CONCAT44(local_392c,(undefined4)local_3a48);
+                    local_3a40 = 0x3f800000;
+                    if (uStack_3aa0 < local_3a98) {
+                      uStack_3aa0 = uStack_3aa0 + 0x28;
+                      FUN_180711ae0(uVar16);

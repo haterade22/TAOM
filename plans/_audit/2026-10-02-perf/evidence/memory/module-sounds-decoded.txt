@@ -1,0 +1,27 @@
+files 437  on disk 166.0 MiB  decoded (estimated where possible) 438.8 MiB
+module_sounds.xml path entries: 417; files referenced: 416
+   51.6 MiB decoded     9.4 MiB file  unref  mp3 256kbps 44100 2ch  Native/OST/the-Briton-kmacleod.mp3
+   45.9 MiB decoded     9.6 MiB file  ref  mp3 320kbps 48000 2ch  LOTR/OST/Isengard Walking.mp3
+   39.8 MiB decoded     6.6 MiB file  ref  mp3 256kbps 48000 2ch  LOTR/OST/Charge Theoden.mp3
+   35.5 MiB decoded     6.4 MiB file  unref  mp3 256kbps 44100 2ch  Native/OST/medieval-ambient-DeusLower.mp3
+   27.4 MiB decoded     5.0 MiB file  unref  mp3 256kbps 44100 2ch  Native/OST/medieval-citytavern-ambient-DeusLower.mp3
+   26.8 MiB decoded    26.8 MiB file  ref  wav-pcm 2ch 16bit 44100  LOTR/OST/Flaming Red Hair.wav
+   21.6 MiB decoded     3.9 MiB file  unref  mp3 256kbps 44100 2ch  Native/OST/musik-bauern-Dueg-oth.mp3
+   19.9 MiB decoded     3.6 MiB file  unref  mp3 256kbps 44100 2ch  Native/OST/arabischer-VictorvanTast.mp3
+   19.6 MiB decoded     3.6 MiB file  unref  mp3 256kbps 44100 2ch  Native/OST/floralia-theromancrow.mp3
+   16.7 MiB decoded     3.0 MiB file  unref  mp3 256kbps 44100 2ch  Native/OST/jig-england-VictorvanTast.mp3
+   16.1 MiB decoded     2.9 MiB file  unref  mp3 256kbps 44100 2ch  Native/OST/in-horto-theromancrow.mp3
+    5.2 MiB decoded     5.2 MiB file  unref  wav-pcm 2ch 24bit 44100  LOTR/Dwarf/D1_Death.wav
+    3.0 MiB decoded     3.0 MiB file  unref  wav-pcm 2ch 24bit 44100  LOTR/Dwarf/D1_Warcry5.wav
+    2.5 MiB decoded     2.5 MiB file  ref  wav-pcm 2ch 24bit 44100  LOTR/Isengard/Voice/Uruk-Hai/Death5_Isengard.wav
+    2.4 MiB decoded     2.4 MiB file  ref  wav-pcm 2ch 16bit 48000  LOTR/Rohan/Alert/bfhd_hd_horn.wav
+    2.2 MiB decoded     0.2 MiB file  ref  mp3 128kbps 44100 2ch VBR-header  LOTR/Rohan/Alert/bfhd_explosion.mp3
+    2.2 MiB decoded     2.2 MiB file  unref  wav-pcm 2ch 24bit 44100  LOTR/Dwarf/D1_Grunts2.wav
+    2.0 MiB decoded     2.0 MiB file  unref  wav-pcm 2ch 24bit 44100  LOTR/Dwarf/D1_Grunts1.wav
+    1.8 MiB decoded     1.8 MiB file  unref  wav-pcm 2ch 24bit 44100  LOTR/Dwarf/D1_Pain3.wav
+    1.8 MiB decoded     1.8 MiB file  ref  wav-pcm 2ch 24bit 44100  LOTR/Dwarf/D1_Warcry3.wav
+mp3: 93 files, 58.8 MiB on disk, 316.8 MiB decoded (2 not estimated)
+ogg: 2 files, 0.1 MiB on disk, 0.0 MiB decoded (2 not estimated)
+wav-adpcm: 145 files, 5.0 MiB on disk, 19.8 MiB decoded
+wav-pcm: 197 files, 102.2 MiB on disk, 102.2 MiB decoded
+largest registered sound outside LOTR/OST: 2.5 MiB decoded, wav-pcm 2ch 24bit 44100, LOTR/Isengard/Voice/Uruk-Hai/Death5_Isengard.wav

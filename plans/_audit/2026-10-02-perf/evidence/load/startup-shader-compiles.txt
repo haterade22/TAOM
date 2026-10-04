@@ -1,0 +1,13 @@
+== rgl_log_32020
+1335 compiles from 12:40:06.292000 to 12:40:40.558000: window 34.3 s, 680 other lines inside it, 34.1 s in gaps ending on a compile line
+log start 12:39:51, window ends 49.4 s after it
+by source: pbr_metallic.rs 768, pbr_metallic_gbuffer.rs 288, pbr_metallic_constant_output.rs 160, pbr_metallic_shadowmap.rs 80, pbr_metallic_pointlight.rs 39
+== rgl_log_83784
+1335 compiles from 13:16:27.177000 to 13:16:59.661000: window 32.5 s, 984 other lines inside it, 32.2 s in gaps ending on a compile line
+log start 13:16:07, window ends 52.0 s after it
+by source: pbr_metallic.rs 768, pbr_metallic_gbuffer.rs 288, pbr_metallic_constant_output.rs 160, pbr_metallic_shadowmap.rs 80, pbr_metallic_pointlight.rs 39
+rgl_log_32020 start 12:39:51.177 compiles=1336 modules=TAOM.Dependencies*Native*SandBoxCore*CustomBattle*Sandbox*StoryMode*BirthAndDeath*FastMode*LOTRLOME_Armory*TAOM_Map*TAOM
+rgl_log_66948 start 12:48:08.745 compiles=0 modules=TAOM.Dependencies*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*TAOM_Map*TAOM
+rgl_log_83784 start 13:16:07.628 compiles=1336 modules=TAOM.Dependencies*Native*SandBoxCore*CustomBattle*Sandbox*StoryMode*BirthAndDeath*FastMode*LOTRLOME_Armory*TAOM_Map*TAOM
+rgl_log_56116 start 14:30:09.156 compiles=46 modules=TAOM.Dependencies*Native*SandBoxCore*CustomBattle*Sandbox*StoryMode*BirthAndDeath*FastMode*LOTRLOME_Armory*TAOM_Map*TAOM
+rgl_log_2620 start 14:56:30.101 compiles=6 modules=TAOM.Dependencies*Native*SandBoxCore*Sandbox*StoryMode*CustomBattle*TAOM

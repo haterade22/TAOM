@@ -1,0 +1,43 @@
+perf(campaign): v2.0.32 - cheaper campaign settings reads and filters
+
+Campaign code that runs per party per hour, per party and garrison per
+day, per caravan destination score, every map frame or per party icon
+looked up TAOM's Mod Options object on every read. Eight settings
+providers (castle recruitment, caravan trade, alignment desertion,
+realm borders, battlefield promotions, quick actions, time
+acceleration and map figure scale) now keep it from their first
+successful lookup and read through it. A change in Mod Options still
+applies at once, and until MCM is up they fall back to their defaults
+as before.
+
+Cheap checks now run first:
+- Alignment desertion asks whether an owner can lose troops at all
+  (the feature, owner and location toggles, a Free or Evil kingdom, a
+  rate above zero) before copying its roster, so the parties and
+  garrisons of Neutral kingdoms cost nothing each day.
+- The refuge listener skips its walk over every party in a world
+  battle while the player has no refuge.
+- Party speed walks the roster for the Rohan infantry penalty only for
+  parties of a culture with that feat, using the same check the speed
+  model uses to skip counting mounts.
+- The culture marketplace builds each culture's item id sets once,
+  instead of for every town every day, and counts a town's guaranteed
+  items in one walk of its market. A failed market read logs one line
+  naming every guaranteed item instead of one line per item.
+
+Every recruitment, desertion, speed, price and stock result is
+unchanged.
+
+What this does not do: caravan trade scoring still asks the engine for
+a town's travel distance a second time. A hand-off that reused
+vanilla's distance was built and then dropped in review, an unmeasured
+saving on an infrequent path against a transpiler on a private engine
+method. Castle recruitment keeps its original check order.
+
+Refs: #719 (plan 037)
+Not-tested: in game. Change Realm Borders, Battlefield Promotions, the
+ fast-forward multiplier and Map Figure Scale in Mod Options on the
+ map and see each apply without a restart; an AI lord recruits in a
+ castle; a Free lord's party sheds Evil troops overnight; a Rohan
+ infantry party is still slowed; a refuge rallies militia in a
+ battle; an Isengard town stocks its warg items after a few days.

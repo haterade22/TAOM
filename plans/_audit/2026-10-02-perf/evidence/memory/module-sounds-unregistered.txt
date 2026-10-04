@@ -1,0 +1,24 @@
+registered paths 417, files 437, unregistered files 21, 53.3 MiB
+    9.36 MiB  native/ost/the-briton-kmacleod.mp3
+    6.43 MiB  native/ost/medieval-ambient-deuslower.mp3
+    5.20 MiB  lotr/dwarf/d1_death.wav
+    4.97 MiB  native/ost/medieval-citytavern-ambient-deuslower.mp3
+    3.91 MiB  native/ost/musik-bauern-dueg-oth.mp3
+    3.61 MiB  native/ost/arabischer-victorvantast.mp3
+    3.55 MiB  native/ost/floralia-theromancrow.mp3
+    3.03 MiB  native/ost/jig-england-victorvantast.mp3
+    2.98 MiB  lotr/dwarf/d1_warcry5.wav
+    2.92 MiB  native/ost/in-horto-theromancrow.mp3
+    2.21 MiB  lotr/dwarf/d1_grunts2.wav
+    2.00 MiB  lotr/dwarf/d1_grunts1.wav
+    1.84 MiB  lotr/dwarf/d1_pain3.wav
+    1.12 MiB  lotr/elves/alert/horn_elf.wav
+    0.03 MiB  lotr/dwarf/dwarven_infantry_2.mp3
+    0.03 MiB  lotr/monsters/troll/troll_footstep_grass.wav
+    0.03 MiB  lotr/monsters/troll/troll_footstep_stone.wav
+    0.02 MiB  lotr/rohan/voice/theoden/now for wrath now for ruin and the red dawn.ogg
+    0.02 MiB  lotr/monsters/troll/troll_footstep_sand.wav
+    0.02 MiB  lotr/monsters/warg/footstep_snow_1.wav
+    0.01 MiB  lotr/dwarf/dwarf_jump.mp3
+registered paths with no file: 1
+   lotr/elves/alert/elf_horn.wav

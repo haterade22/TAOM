@@ -200,7 +200,7 @@ ilspycmd can't) + the PE **version resource** (PowerShell `(Get-Item).VersionInf
 
 | Dependency | What it proves |
 |---|---|
-| **`mono-2.0-sgen.dll`** | Bannerlord's managed code runs on the **Mono** runtime (sgen GC), hosted by the native engine — NOT CoreCLR/.NET Framework directly. |
+| **`mono-2.0-sgen.dll`** | The native engine can host **Mono** (sgen GC) for its `WotsMainNative` entry, used by `Bannerlord.Native.exe`. The Steam game does not run on it: `Bannerlord.exe` and the launcher are managed .NET Framework executables, so TaleWorlds' and TAOM's managed code runs on the **.NET Framework 4.x desktop CLR** (corrected 2026-10-02; evidence in [mission-frame-threads-and-native-costs.md](engine/mission-frame-threads-and-native-costs.md) section 2). A .NET 6 CoreCLR also ships, in `Microsoft.NETCore.App/`, for `WotsMainNativeCoreCLR`. |
 | **`PhysX_64` + `PhysXCommon/Cooking/Foundation_64`** | The physics engine is **NVIDIA PhysX**. (So collision capsules, ragdoll, `body_capsule` in monsters.xml feed PhysX.) |
 | **`grCore` / `grGranite` / `grGraniteDX11`** | Texture streaming is **Granite** (Graphine virtual texturing). |
 | **`d3d11.dll` / `dxgi.dll` / `D3DCOMPILER_47`** | Renderer is **DirectX 11**. |

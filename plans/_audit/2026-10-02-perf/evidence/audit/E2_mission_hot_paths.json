@@ -1,0 +1,460 @@
+{
+ "items": [
+  {
+   "file": "E:/repos/TAOM/Dependencies/Foundation/PatchShieldPolicy.cs",
+   "symbol": "PatchShield.Install / ShieldFinalizerVoid+WithResult; PatchShieldPolicy.ExcludedTargetMethods",
+   "hook": "A Harmony finalizer that binds __originalMethod, attached to every patched method whose declaring type is outside a TAOM assembly and not on an exclusion list. On TAOM's mission targets that means: Formation.GetOrderPositionOfUnit (Patch30), CommonAIComponent.OnHit, Mission.SpawnTroop and Mission.CreateAgent (Patch93), Mission.Tick, Module.OnApplicationTick, Managed.ApplicationTick and ScreenManager.Tick/Update (Patch37), MBTextManager.GetLocalizedText (Patch25). From the second game start of a process it also covers Agent.HandleBlowAux (Patch48+63), Agent.Die, Agent.CheckToDropFlaggedItem (Patch50), Formation.SetMovementOrder/SetTargetFormation (Patch31/31b/35), Mission.SpawnAgent, Agent.EquipItemsFromSpawnEquipment, Mission.BuildAgent, Mission.OnTick (Patch35), Mission.TickAgentsAndTeamsImp, MissionState.TickMissionAux and MissionState.OnTick.",
+   "frequency": "Once per call of each wrapped method. GetOrderPositionOfUnit runs about once per AI formation agent every 0.45-0.55 s (Agent ctor timer TaleWorlds.MountAndBlade.cs:12240, TickParallel gate :15371-15374), which is the same cadence as Mission.CanAgentRout. TAOM measured that one at about 700 calls/s at 400 agents. On top of that come per-formation bursts (Formation.Tick pending positions :72686-72693). OnHit, HandleBlowAux and CheckToDropFlaggedItem fire once per hit (:58561, :16148, :58563). Mission.Tick, OnApplicationTick, OnTick, TickAgentsAndTeamsImp and TickMissionAux fire once per frame each.",
+   "severity": "high",
+   "evidence": "PatchShield.cs:113-236: Install walks Harmony.GetAllPatchedMethods. It skips only methods declared in TAOM* assemblies (:165-176) and the exclusion lists (:184-189), then attaches the finalizer (:209-210). Both finalizers bind __originalMethod (:246, :264). The exclusion lists (PatchShieldPolicy.cs:77-106, 134-148) name only the GauntletUI/TwoDimension/ManagedCallbacks namespaces, Patch92's Formation members, Patch93's three wield getters and Mission.CanAgentRout; GetOrderPositionOfUnit, CommonAIComponent.OnHit, HandleBlowAux, CheckToDropFlaggedItem and SetMovementOrder are not on them. The install gate is ShouldInstall => !disabledByFlag && !coopActive (:265-266), so it is on in solo play. Pass timing: Dependencies/SubModule.cs:234 (pass 1 at load), :293 (pass 2 at every game start), and :274-276 ('at a second start, TAOM's late batch, about +140 attaches'). Patch30 is applied in TAOM's OnSubModuleLoad (Main/SubModule.cs:593) and Patch93 at ProcessLoad (CreatureBanditsModule.cs:25), so both are already shielded at the first game start. Cost per TAOM's own lesson: GetMethodFromHandle + try/catch on every call, '~50µs + allocation' (docs/reviews/lessons/harmony-il.md:6). The same class has been fixed three times before (docs/reviews/rca-creature-bandits-2026-09-28.md:19).",
+   "thread": "Workers (GetOrderPositionOfUnit via TickParallel), async AI thread (SetMovementOrder, Formation.Tick bursts), native-chosen thread for hit callbacks, main thread for the per-frame targets",
+   "gating": "On unless a co-op module is present or patchshield-disabled.flag exists. Per-target coverage depends on the pass: the OnSubModuleLoad and ProcessLoad batch is shielded at the first game start; the OnGameInitializationFinished batch (SubModule.cs:1606-1953), the mission-time category (:2013) and the manual patches (:1960) only from the next game start in the same process.",
+   "costPatterns": [
+    "reflection per call (MethodBase.GetMethodFromHandle from __originalMethod)",
+    "try/catch wrapper per call",
+    "allocation per call (lessons/harmony-il.md:6)",
+    "on TWParallel worker hot path"
+   ],
+   "alreadyFixed": "Already excluded: the Patch92 targets, Patch93's wield getters and Mission.CanAgentRout (PatchShieldPolicy.cs:134-148), and the ManagedCallbacks namespace (plan 007, :86-105). None of the listed commits touch this.",
+   "suggestedLever": "Add Formation.GetOrderPositionOfUnit, CommonAIComponent.OnHit, Agent.HandleBlowAux, Agent.Die, Agent.CheckToDropFlaggedItem, Formation.SetMovementOrder/SetTargetFormation, Mission.Tick/OnTick, Mission.TickAgentsAndTeamsImp and MissionState.TickMissionAux/OnTick to ExcludedTargetMethods. Extend the HotCreatureTargets exclusion test into a hot-mission-targets list. Measure first with patchshield-disabled.flag against [MissionPerf], and read the attach list in diag.log 'shield pass' lines. The ~50µs per-call figure is TAOM's #331 measurement; the cost on these particular targets is unmeasured [inferred]."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/MixedFormations/Hooks/Patch30_FormationGetOrderPositionOfUnit.cs",
+   "symbol": "Patch30_FormationGetOrderPositionOfUnit.Prefix -> FormationLayoutService.ComputeUnitPlanePosition",
+   "hook": "Formation.GetOrderPositionOfUnit prefix (Harmony)",
+   "frequency": "About once per AI formation agent every 0.45-0.55 s. The chain is Agent.TickParallel (:15332, timer gate :15371-15374) -> HumanAIComponent.ParallelUpdateFormationMovement (:19317-19323) -> GetFormationFrame (:19238-19259) -> Agent.GetBaseFormationFrame (:12700-12705). Bursts of one call per unit come from Formation.Tick when it has pending unit positions (:72686-72693), from OnMassUnitTransferEnd (:72133-72152), and from the per-frame order preview while the player drags an order (View UpdateFormationDrawingForDestination :29443-29452). The '~40,000×/frame' in the patch comment and registry is not supported by the dump; ~2 Hz per agent plus bursts is what the dump shows [inferred].",
+   "severity": "high",
+   "evidence": "Patch30_FormationGetOrderPositionOfUnit.cs:28 (IsFieldBattle gate), :41 (new FormationAdapter per call), :46 (service call), :54 (scene.GetGroundHeightAtPosition) and :68 (mission.IsFormationUnitPositionAvailable): two native scene queries per call for formations with a layout. Vanilla's Hold path reads the cached slot first (Formation.GetOrderPositionOfUnitAux :71521-71527) and reaches IsFormationUnitPositionAvailable only on a miss. FormationLayoutService.cs:68 reads _settings.IsEnabled, which is TaomSettings.Instance on every read (MixedFormationsSettingsProvider.cs:7); :79-93 is one global lock(_lock) taken by every holding, non-cavalry unit even when the formation has no layout. FormationAdapter.cs:40-41 reads QuerySystem.IsCavalryFormation, which goes through QueryData.Value (:43190, :43786-43804) and re-evaluates per-class unit counts (:43426-43437) on the calling worker thread when its 5 s value expires, with no lock. Vanilla offers *ReadOnly accessors for this case (:43104-43148). On a cache miss, LayoutPositioner.cs:32-34 runs LINQ OrderBy/Where/ToList inside the lock.",
+   "thread": "TWParallel workers, async AI thread (Formation.Tick), and main thread (OrderController preview, ForceUpdateCachedAndFormationValues)",
+   "gating": "MCM EnableMixedFormations, default true (TaomSettings.cs:663). Field battles only. Expensive branch only for Hold-state, non-cavalry formations; native queries only for formations with an assigned layout (the player team's mixed formations).",
+   "costPatterns": [
+    "allocation per call (FormationAdapter)",
+    "MCM settings read per call (TaomSettings.Instance ConcurrentDictionary walk)",
+    "global lock contended across worker threads",
+    "2 native scene queries per call (ground height + IsFormationUnitPositionAvailable)",
+    "QueryData.Value evaluated from workers",
+    "LINQ inside lock on assignment miss",
+    "also carries PatchShield finalizer (see item 1)"
+   ],
+   "suggestedLever": "Cache the settings reference in the provider constructor (the 7feca96b pattern). Check layout membership with a lock-free snapshot, such as an immutable dictionary swapped on write, before taking the lock. Read IsCavalryFormationReadOnly from workers. Cache a grounded and availability-checked slot per agent per layout and order position instead of querying the scene every call. Pass the formation as a struct or use the existing per-formation adapter cache. A/B with [MissionPerf] by toggling EnableMixedFormations in a 500+ agent field battle."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/MissionDiagnostic/Hooks/MissionDiagnosticBehavior.cs",
+   "symbol": "MissionDiagnosticBehavior.CaptureActionSetsFromAgents",
+   "hook": "MissionBehavior.OnMissionTick (action-set census window)",
+   "frequency": "Every frame for the first 5 s of mission time in every mission (_actionSetWindowSecondsLeft = 5f, :19, :41-45), over every agent in Mission.Agents. OnMissionTick runs once per frame (Mission.OnTick reverse loop, TaleWorlds.MountAndBlade.cs:56636-56639). The window usually falls in deployment, right after the initial spawn [inferred].",
+   "severity": "high",
+   "evidence": "MissionDiagnosticBehavior.cs:76-91, per agent per frame: agent.ActionSet.GetName(), a native string marshal (MBActionSet.GetName -> MBAPI.IMBActionSet.GetNameWithIndex, :48834-48841); agent.Name, which is _name.ToString() (:11396-11405), i.e. TextObject.ToString -> MBTextManager.ProcessTextToString (TaleWorlds.Localization.cs:407-419); RaceManager lookup; Character and Monster StringIds. Then MissionDiagnosticService.cs:178 builds an interpolated key with a boxed bool and :179 does a HashSet.Add. Only the first sighting of each combination logs. Always registered: SubModule.cs:2128-2132, no MCM gate.",
+   "thread": "main",
+   "gating": "None. Every mission, first 5 s.",
+   "costPatterns": [
+    "Mission.Agents enumeration per tick",
+    "native string marshal per agent per frame",
+    "TextObject.ToString (localization) per agent per frame",
+    "string interpolation + boxing per agent per frame",
+    "logging (dedup HashSet) per tick"
+   ],
+   "suggestedLever": "Sample a fixed number of agents per frame, or once per agent. Key the dedup on (actionSet index, race id, isFemale) as a value tuple, and only fetch names for a combination not yet seen. Gate the census behind BattleLoadDiagnostics. Compare the first [MissionPerf] window with and without it."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/CareerSystem/Abilities/CareerAgentStatService.cs",
+   "symbol": "CareerAgentStatService.CalculateDamageAmplification / CalculateDamageReduction (per-hit [CareerPerks] DEBUG lines)",
+   "hook": "AgentApplyDamageModel.ApplyDamageAmplifications / ApplyDamageReductions via TaomAgentApplyDamageModel",
+   "frequency": "Every damage calculation (MissionCombatMechanicsHelper -> AgentApplyDamageModel.CalculateDamage :145355-145357, reached from :59421) in which a career passive changes the number. TroopDamage and TroopResistance apply to every non-hero troop of a party whose leader holds the pip, so in practice that is every hit by or on the player's party troops when the player has those pips. taom_career_choices.xml has 193 TroopDamage/TroopResistance occurrences [grep count].",
+   "severity": "medium",
+   "evidence": "CareerAgentStatService.cs:183, 188, 203: string concatenation per term (terms += ... + Pct()). :207-208 and :249-250 build an eager interpolated LogDebug string. FileLogger.LogDebug has no level gate (FileLogger.cs:86): it enqueues DateTime.Now.ToString plus another interpolation (:90-95). The model entry points are TaomAgentApplyDamageModel.cs:27-46 (attacker and victim troop-leader ids at :97-119). Added in 7ede923b (#613, 2026-09-17), after CareerPassiveService.cs:122-131 had removed the same per-lookup logging because 'A large battle turned that into thousands of allocations and log lines per minute'.",
+   "thread": "Whichever thread native raises MeleeHitCallback/MissileHitCallback on (main or off-main, #634 rule). FileLogger queue is concurrent; the writer thread drains every 50 ms.",
+   "gating": "No toggle. Fires only when a passive actually moved the value.",
+   "costPatterns": [
+    "string formatting / logging per blow",
+    "allocations per blow (DateTime.ToString, interpolation, concatenation)",
+    "log volume buries crash-triage log"
+   ],
+   "suggestedLever": "Put the per-hit evidence behind a diagnostics toggle or a per-hero, per-kind once-per-mission dedup, as LogOnChange already does for stat lines. Never build the string before the gate."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/CombatMechanics/CombatMechanicsSettingsProvider.cs",
+   "symbol": "CombatMechanicsSettingsProvider (every property) consumed by TaomCombatMechanicsModel services",
+   "hook": "AgentApplyDamageModel overrides: DecideWeaponCollisionReaction, CalculateRemainingMomentum, DecideAgentShrugOffBlow / CalculateStaggerThresholdDamage, DecideCrushedThrough, DecideMissileWeaponFlags, CalculateShieldDamage, GetHorseChargePenetration",
+   "frequency": "Per melee collision and per hit: DecideWeaponCollisionReaction (:58318), shrug-off and knock-down/back (:58497-58517, :78235), CalculateRemainingMomentum (:78538). Per defended collision: DecideCrushedThrough (:78533, via the native callback Mission_GetDefendCollisionResults :59402-59405). Per missile spawn: DecideMissileWeaponFlags (:58668). Per shield hit: CalculateShieldDamage (:78782).",
+   "severity": "medium",
+   "evidence": "CombatMechanicsSettingsProvider.cs:19-38: every *Enabled property reads TaomSettings.Instance twice (MasterEnabled plus its own field), and the float getters read it again (:40-70). TaomSettings.Instance is MCM GlobalSettings<T>.Instance: ConcurrentDictionary ContainsKey + indexer, then BaseSettingsProvider.GetSettings looping over settings containers with string-keyed lookups (_modules_build/TAOM.Dependencies__MCMv5.cs:6321-6330, :2214-2232). Per-hit readers check settings before anything cheaper: CreatureCombatService.cs:67, :82, :90; RaceCombatModifiersResolver.cs:35 (via ApplyStaggerThresholdMultiplier :98-101); CrushThroughService.cs:88, :100, :104, :139; ChargeKnockdownService.cs:40, :66, :78-79; ShieldPenetrationService.cs:51, :71. Roughly 8 lookups per ordinary melee hit and more on blocked swings [inferred count]. DecideCrushedThrough also calls the Patch93-detoured wield getters twice (TaomCombatMechanicsModel.cs:242-248).",
+   "thread": "Native-chosen thread for the combat callbacks",
+   "gating": "EnableCombatMechanics default true (TaomSettings.cs:1128). The reads happen whether features are on or off.",
+   "costPatterns": [
+    "MCM settings read per blow (several per blow)",
+    "ConcurrentDictionary + container walk per read"
+   ],
+   "alreadyFixed": "7feca96b fixed the same pattern in BattleBalanceSettingsProvider only. The combat, MixedFormations, SmartCavalryAI, CultureDoctrine, CompanionTactics, Howdah, DreadAura and BlowDiagnostics providers still resolve Instance on every read.",
+   "suggestedLever": "Cache the TaomSettings reference in the constructor and read through it, as 7feca96b did. Order the per-hit gates cheapest-first, for example the monster-id set lookup before the settings read."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/CreatureBandits/Hooks/Patch93_CreatureBandits.cs",
+   "symbol": "Patch93_CreatureBanditPrimaryWieldGuard / OffhandWieldGuard / MissileRangeGuard",
+   "hook": "Agent.GetPrimaryWieldedItemIndex, Agent.GetOffhandWieldedItemIndex, Agent.GetMissileRange prefixes",
+   "frequency": "Every managed call to these getters for any agent. Call sites: 40 / 32 / 11 in TaleWorlds.MountAndBlade.cs, plus 25 in SandBox.cs and 26 in the View dump that read these getters or WieldedWeapon [grep counts]. Agent.WieldedWeapon itself calls GetPrimaryWieldedItemIndex (:11452-11463). Callers include AI pickup ticks (:18878, timer-gated), combat helpers (:63906, :65430, :78457), Patch50 and the combat model. Exact per-frame rate unmeasured [inferred].",
+   "severity": "medium",
+   "evidence": "Patch93_CreatureBandits.cs:106-146: each prefix calls CreatureBanditAgents.Is (CreatureBanditAgents.cs:18-23). That reads Character.StringId; for every human agent it then reads agent.IsHuman and agent.RiderAgent before CreatureBanditRules.IsCreatureBandit short-circuits (CreatureBanditRules.cs:54-55). The originals are trivial: unsafe pointer reads via AgentHelper (:13336-13344) and one native call for GetMissileRange (:13773-13776). The detour makes them non-inlinable. Applied at ProcessLoad for all battles (CreatureBanditsModule.cs:25). Excluded from PatchShield (PatchShieldPolicy.cs:139-144).",
+   "thread": "Any: main, async AI, TWParallel workers",
+   "gating": "Always on. The creature path itself runs only for creature bandits.",
+   "costPatterns": [
+    "Harmony detour on hot trivial getter",
+    "managed field + property reads per call for every human agent"
+   ],
+   "alreadyFixed": "PatchShield exclusion done at the time (rca-creature-bandits-2026-09-28.md:19).",
+   "suggestedLever": "Check the cheapest discriminator first: Character == null or IsHuman before reading StringId, since a creature is the non-human case. Alternatively skip the patch when no creature troop exists in the session (patch lazily on the first creature spawn). Measure call volume with a temporary counter."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs",
+   "symbol": "TaomAgentStatCalculateModel.UpdateAgentStats (+ TaomCustomBattleAgentStatCalculateModel.UpdateAgentStats)",
+   "hook": "AgentStatCalculateModel.UpdateAgentStats (Agent.UpdateAgentProperties -> AgentDrivenProperties.UpdateDrivenProperties :17955-17959, :14306-14313)",
+   "frequency": "Per agent at spawn (:17949-17953). Then in whole-formation bursts: Formation.SetMovementOrder and SetArrangementOrder change defensiveness (:70895/:70919, :70932/:70941 -> :73026; Agent.Defensiveness setter :11726-11737 calls UpdateAgentProperties only when the value changes), captain changes (:73017-73022), the banner-bearer controller (:80153-80162), ammo-supply AddUnit (:72468-72475), mount changes (:11645-11654) and wield changes.",
+   "severity": "low",
+   "evidence": "TaomAgentStatCalculateModel.cs:96-126 does three things after base. (1) ApplyAgentStatModifiers takes the CareerAbilityBuffTracker lock per human (CareerAgentStatService.cs:53, CareerAbilityBuffTracker.cs:41-44). For heroes it also runs LogStatApplication, which builds a List<string>, string.Join and an interpolated string every call before the dedup (CareerAgentStatService.cs:56-70). (2) Three Monster.StringId creature checks. (3) AgentAggressionApplier with _aggression.Profile -> CultureDoctrineSettingsProvider (1-3 TaomSettings.Instance reads, :12-19), then MountChargeDamageApplier -> ChargeDamageService (2 reads, ChargeDamageService.cs:25 + provider :38). The async-AI-thread route is documented at AgentAggressionApplier.cs:11-15.",
+   "thread": "Main at spawn; async AI thread for order-driven formation bursts",
+   "gating": "Always. Aggression is off unless EnableCultureDoctrine (default false, TaomSettings.cs:825); the charge multiplier is on by default (:1198).",
+   "costPatterns": [
+    "MCM settings read per agent update (3-5)",
+    "global lock per human agent update",
+    "string building per hero update"
+   ],
+   "suggestedLever": "Cache the settings references. Read the doctrine-enabled flag once per mission into an immutable field. Skip LogStatApplication unless a diagnostics flag is on."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/Elephant/TaomHowdahMachine.cs",
+   "symbol": "TaomHowdahMachine.OnTick / RepositionToFixedOffset; TaomHowdahStandingPoint.OnTick; TaomMumakilPlatform / TaomMumakilStandingPoint.OnTick",
+   "hook": "ScriptComponentBehavior.OnTick (GetTickRequirement Tick) on UsableMachine and StandingPoint",
+   "frequency": "Every frame per howdah or war tower and per seat (TaomHowdahMachine.cs:149-150; TaomHowdahStandingPoint.cs:110-111; TaomMumakilPlatform.cs:67-68; TaomMumakilStandingPoint.cs:69-70). A code comment records 14 crewed elephants in one battle (TaomHowdahStandingPoint.cs:132).",
+   "severity": "medium",
+   "evidence": "Per howdah per frame: TaomHowdahMachine.cs:59-113 -> RepositionToElephant :244-262 -> RepositionToFixedOffset :346-375 -> TryReadAnchorBoneWorld :268-317, which calls visuals.GetSkeleton() every frame (:274). TAOM documents GetSkeleton as building 'a new native wrapper on every call (a ref-count call, a lock, a GCHandle and a finalizer)' (BoneCheck.cs:130-133, commit 7577894d). Each frame also does a GameEntity.SetFrame. Per seat per frame (TaomHowdahStandingPoint.cs:154-255): AgentSlotIdentity check (native FindAgentWithIndex), TeleportToPosition (:194, deadband-gated), SetScriptedPosition (:213-214), and a diagnostics MCM read (:219) followed by GetCurrentActionProgress. Diagnostics are on by default (TaomSettings.cs:532; HowdahDiagnosticsSettingsProvider.cs:10), with a durable status line every 5 s per platform (ElephantConfig.cs:51; HowdahDiagnosticsReporter.cs:49-75).",
+   "thread": "main (ScriptComponent tick)",
+   "gating": "Only with harnessed elephants or mumakil (Harad). EnableHowdahDiagnostics default ON.",
+   "costPatterns": [
+    "native wrapper + finalizer allocation per frame per howdah (GetSkeleton)",
+    "native writes per seat per frame",
+    "MCM settings read per seat per frame",
+    "durable log every 5 s per platform"
+   ],
+   "suggestedLever": "Cache the Skeleton per elephant for the mission, or read the bone only every N frames. Read the diagnostics toggle once per sample, not per seat per frame. Default EnableHowdahDiagnostics off once #627 testing ends."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/Spider/SpiderAttackService.cs",
+   "symbol": "[Spider][diag] lines; BruteForceTask smash lines; SignatureStrikesMissionLogic.OnMeleeHit line; warg LogTask",
+   "hook": "Creature BT attack tasks (main thread) and MissionBehavior.OnMeleeHit (:58326)",
+   "frequency": "Spiders: one line per ridden-spider attack (about once every 2-5 s per spider per the comment at :97-99) plus one per bite that connects. Trolls: one line per smash, cooldown 15 s (TrollBruteForceConfig.cs:37). Signature heroes: one line per melee collision. Warg LogTask: per player-warg rage branch.",
+   "severity": "low",
+   "evidence": "SpiderAttackService.cs:72-74 and :100-103 call LogInfo with no gate ('Single prefix for one-grep removal after sign-off'). BruteForceTask.cs:52-53 and :59-61 call LogInfo with troll.Name (TextObject.ToString). SignatureStrikesMissionLogic.cs:70 calls LogInfo with attacker and victim Name on every hit by a signature hero. LogTask.cs:10, :17-21 does IoC.Resolve + LogWarning per Execute (used at WargBehaviorTree.cs:56, :59, :64). FileLogger INFO/WARNING lines are durable: a synchronous lock + WriteLine + Flush on the calling thread (FileLogger.cs:85-95, :99-136).",
+   "thread": "main (creature trees); native-chosen for OnMeleeHit",
+   "gating": "Content-gated: Dol Guldur or goblin spider riders, trolls, Sauron and the Nine, player on a warg. No toggle.",
+   "costPatterns": [
+    "synchronous file flush per attack/hit",
+    "TextObject.ToString per line",
+    "IoC.Resolve per execute (LogTask)"
+   ],
+   "suggestedLever": "Route these through LogDebug (async) or a diagnostics toggle, or cap them per mission like CreatureBanditDiag.Write does."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/MixedFormations/Hooks/MixedFormationsMissionBehavior.cs",
+   "symbol": "MixedFormationsMissionBehavior.OnMissionTick / HandleCycleHotkey / ApplyDefaultsToPlayerTeam",
+   "hook": "MissionBehavior.OnMissionTick",
+   "frequency": "Every frame (Mission.OnTick :56638); the defaults pass once per second",
+   "severity": "low",
+   "evidence": ":50 _settings.IsEnabled, a TaomSettings.Instance read every frame. :124-133 reads _settings.CycleHotkey (another Instance read) and calls Enum.TryParse(raw, ignoreCase: true) every frame (:132). :55-59 then calls TryGetTeamAdapters (:78-101) once per second, allocating a List and a FormationAdapter per formation. FormationLayoutService.ApplyDefaultsToFormations (:130-158) holds the global _lock that Patch30's workers also take, while IsMixedFormationInternal (:193-220) walks FormationAdapter.Units: OfType + OrderBy + Select + ToList (FormationAdapter.cs:28-33). This repeats every second for every player formation that is not mixed, because those are never added to _layoutByFormation (:146-150).",
+   "thread": "main",
+   "gating": "EnableMixedFormations default true; field battles only",
+   "costPatterns": [
+    "Enum.TryParse per frame",
+    "MCM settings read per frame (2)",
+    "LINQ OrderBy/ToList per formation per second",
+    "holds lock shared with worker-thread Patch30"
+   ],
+   "suggestedLever": "Parse the hotkey only when the MCM string changes. Cache the settings reference. Remember formations already judged non-mixed. Count ranged units without LINQ or sorting, outside the lock."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/CreatureBandits/BehaviorTreeElements/CreatureHuntTask.cs",
+   "symbol": "CreatureHuntTask.FindNearestEnemy (+ CreatureBanditDiagnostics capture)",
+   "hook": "Creature-bandit BT task, ticked by BehaviorTreeMissionLogic.OnMissionTick",
+   "frequency": "About 4 times a second per creature bandit (SleepTask 250 ms, CreatureBanditBehaviorTree.cs:63-66); each run scans every active agent of every hostile team",
+   "severity": "low",
+   "evidence": "CreatureHuntTask.cs:74-97 loops over every hostile team's ActiveAgents with IsHuman, IsActive and Position (native) per agent: O(C x N_enemy) per 250 ms. On top of that, CreatureBanditDiag string building runs per creature event even after the line cap is reached, because the Line(...) arguments are evaluated before Write checks the cap (CreatureBanditDiagTicker.cs:123-170; CreatureBanditDiag.cs:92-105).",
+   "thread": "main",
+   "gating": "Only in battles with creature-bandit spawns (enemy side, field battle; CreatureBanditRules.cs:51-52)",
+   "costPatterns": [
+    "O(n^2)-style C x N scan",
+    "native Position read per enemy per scan",
+    "eager string building for capped diag lines"
+   ],
+   "suggestedLever": "Use Mission.GetNearbyEnemyAgents with a reused MBList and an expanding radius, or the SpatialGrid, and only fall back to the full scan when nothing is near. Build diag lines only after TryTakeLine allows them."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/TrollBruteForce/TrollBruteForceMissionBehavior.cs",
+   "symbol": "TrollFormationSpacingTracker.Tick, TrollClipTrace.Tick, Patch92_TrollFormationSpacing.Postfix",
+   "hook": "OnMissionTick; Formation.UnitDiameter getter postfix",
+   "frequency": "Both Mission.Agents scans run every 0.5 s in every mission. The clip trace also reads each troll every frame. The UnitDiameter getter is a computed property (:70408) with 109 references, read in per-unit layout code (GetLocalPositionOfUnit, TryGetUnitPositionIndexFromLocalPosition and others) on any thread.",
+   "severity": "low",
+   "evidence": "TrollBruteForceMissionBehavior.cs:86-88 runs both trackers on every tick. TrollFormationSpacingTracker.cs:42-61 is an O(N) Mission.Agents pass with a Formation-keyed dictionary write per agent; :64 TrollFormationSpacingStore.Keys is ConcurrentDictionary.Keys, which takes all locks and copies. TrollClipTrace.cs:39-45 is an O(N) scan, then per troll per frame IsActive + FindAgentWithIndex + 2 GetCurrentAction (:47-56). The class is marked temporary at :16-18. Patch92_TrollFormationSpacing.cs:24-30 costs a volatile read when no trolls are stored (TrollFormationSpacingStore.cs:45) and a ConcurrentDictionary lookup otherwise.",
+   "thread": "main (trackers); any thread including workers (Patch92 postfix)",
+   "gating": "Always registered (SubModule.cs:2060); Patch92 always applied (SubModule.cs:596)",
+   "costPatterns": [
+    "Mission.Agents enumeration every 0.5 s x2",
+    "diagnostic (temporary) active by default",
+    "Harmony detour on hot computed getter"
+   ],
+   "suggestedLever": "Skip both scans until a troll has been built (OnAgentBuild flag). Delete TrollClipTrace when the clip-tuning pass ends, as its comment already plans."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/BehaviorTreeWrapper/BehaviorTreeMissionLogic.cs",
+   "symbol": "BehaviorTreeMissionLogic.OnMissionTick + event dispatch; BehaviorTreeAgentComponent.TickOnMissionThread; creature trackers' PruneDead",
+   "hook": "OnMissionTick; OnAgentHit/OnAgentRemoved/OnAgentShootMissile/OnAgentAlarmedStateChanged etc.",
+   "frequency": "Every tree runs every frame. _rootEvaluationDelay is an int (BehaviorTreesCore.cs:36) and every TAOM tree passes base(10), so BehaviorTreeAgentComponent.cs:65 computes 10/1000 == 0 and the gate always passes. Event dispatch fires per hit, removal and missile (:58556, :55900, :57920). The nine trackers prune every frame.",
+   "severity": "low",
+   "evidence": "Per creature per frame: SleepTask, WaitNSecondsTickDecorator and the cooldown decorators call DateTime.Now (SleepTask.cs:22, :30; WaitNSecondsTickDecorator.cs:21, :24; ElephantLikeAttackOffCooldownDecorator.cs:37). Selector.Prepare allocates two Lists on every re-entry (BehaviorTreesNodes.cs:131-135). CreatureTreeTracker.PruneDead (:114-122) runs per tracked creature per frame across the Spider/Elephant/Mumakil/WarRam/Elk/Animalia x2/Troll/CreatureBandit trackers. OnAgentRemoved (:289-297) allocates object[] arrays with a boxed AgentState and KillingBlow on every removal, whether or not anything listens. Off the main thread, every event is deferred through a closure and tuple capture (:300-310, :340-347), including OnAgentShootMissile, which no TAOM tree subscribes to (grep of SubscriptionPossibilities). Per hit, the OnSelfIsHit scan is O(listeners), one per warg tree.",
+   "thread": "main for ticks; callbacks on any thread, parked via DeferredCallbackQueue",
+   "gating": "Per creature present; the dispatch itself runs in every mission",
+   "costPatterns": [
+    "DateTime.Now per tree per frame",
+    "List allocations per traversal",
+    "object[] + boxing per removal",
+    "closure per off-thread event even with no listener"
+   ],
+   "alreadyFixed": "Plan 015 / #659 (87f9f862, 7577894d, e5f644da, fe8f30c7, 5d9d4cc9, 56eb4bc8, 2420761b) fixed the warg node resolves, scan buffers and skeleton fetches; those are not re-reported.",
+   "suggestedLever": "Return early in the event dispatchers when actions has no entry for that subscription, before allocating or deferring. Reuse Selector lists (Clear instead of new). Use mission time instead of DateTime.Now."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/AdvancedCombat/SpatialGrid.cs",
+   "symbol": "AdvancedCombatBehavior.OnMissionTick -> SpatialGrid.UpdateGrid; SpatialGrid.Remove/RemoveNow; SpatialGridDebugService",
+   "hook": "OnMissionTick; OnAgentDeleted (:55876)",
+   "frequency": "Rebuild every 2 s in every mission, with or without creatures. Removal once per deleted agent.",
+   "severity": "low",
+   "evidence": "AdvancedCombatBehavior.cs:38-47 calls UpdateGrid(Mission.Current.AllAgents) every 2 s. SpatialGrid.cs:70-87 allocates a new Dictionary and per-cell Lists on each rebuild, with IsActive + native Position per agent. RemoveNow (:61-67) walks every cell's List.Remove, O(N) per deletion, with a closure from RunOrDefer (:53). SpatialGridDebugService.cs:13-16 uses the allocating GetNearAliveAgentsInRange overload every 2 s while Left Alt is held. Always registered (SubModule.cs:2051).",
+   "thread": "main (off-main removals parked)",
+   "gating": "None",
+   "costPatterns": [
+    "AllAgents enumeration every 2 s",
+    "allocation per rebuild",
+    "O(N) per deletion (O(D x N) per battle)"
+   ],
+   "alreadyFixed": "e5f644da (xy cells). c17541f2 (#701) now fades corpses after 60 s, which raises the OnAgentDeleted volume this pays per deletion [inferred].",
+   "suggestedLever": "Skip the rebuild while no creature tracker holds an agent. Keep an agent-to-cell map so a removal is O(cell). Use the buffer overload in the debug service."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/CompanionTactics/FormationPresets/Hooks/Patch35_Mission_OnTick.cs",
+   "symbol": "Patch35_Mission_OnTick.Postfix; Patch35_Formation_SetMovementOrder.Postfix; Patch35_OOBUIHandler_Tick; BattleActionBarMissionView.OnMissionScreenTick",
+   "hook": "Mission.OnTick postfix (per frame); Formation.SetMovementOrder postfix; MissionGauntletOrderOfBattleUIHandler.OnMissionScreenTick postfix; MissionView.OnMissionScreenTick (View :13042)",
+   "frequency": "Per frame (three of them). SetMovementOrder per formation order, mostly team-AI orders on the async thread.",
+   "severity": "low",
+   "evidence": "Patch35_Mission_OnTick.cs:31: EnableFormationPresets is a TaomSettings.Instance read every frame (CompanionTacticsSettingsProvider.cs:14) and the body is empty (:33-35). Its comment claims 'a single field read'. Patch35_Formation_SetMovementOrder.cs:37 reads CancelStanceOnMove from MCM before the team filter (:49), so every team's orders pay it. OOBOverlayService.cs:73-82 reads MCM every frame and, when presets are on, does a reflection FieldInfo.GetValue with boxing every frame. BattleActionBarMissionView.cs:76 reads MCM every frame, :128-145 polls 9 IsKeyPressed, and :110-126 creates a new FormationAdapter every 0.5 s, which defeats its 500 ms composition TTL and rescans equipment (FormationAdapter.cs:88-126).",
+   "thread": "main (ticks); async AI (SetMovementOrder)",
+   "gating": "EnableFormationPresets default false, EnableBattleActionBar and CancelStanceOnMove default true (TaomSettings.cs:922, :939, :944)",
+   "costPatterns": [
+    "MCM settings read per frame",
+    "empty per-frame Harmony postfix",
+    "reflection per frame (when presets enabled)",
+    "allocation per refresh"
+   ],
+   "suggestedLever": "Remove the empty Mission.OnTick postfix. Move the team filter ahead of the settings read. Cache the settings reference and the adapter per formation."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/SmartCavalryAI/Hooks/SmartCavalryAIMissionBehavior.cs",
+   "symbol": "SmartCavalryAIMissionBehavior.OnMissionTick / ApplyCollisionAvoidance; Patch31_FormationSetMovementOrder; Patch31b_FormationSetTargetFormation",
+   "hook": "OnMissionTick; Formation.SetMovementOrder prefix+postfix; Formation.SetTargetFormation postfix",
+   "frequency": "Every frame. The patches run on every SetMovementOrder/SetTargetFormation for every team (63 call sites per the Patch31 comment).",
+   "severity": "low",
+   "evidence": "The patches apply in every mission (SubModule.cs:2013) whether the feature is on or off. The Prefix copies the MovementOrder struct on every order (Patch31:63-66). The postfix exits on team mismatch (:75-76); for AI-controlled player-team formations it takes CancelIfActive's lock (:139-142). When disabled the tick costs one MCM read plus the HasActiveCycles lock per frame (:66). When enabled it ticks per formation (:79-97) and runs ApplyCollisionAvoidance for every player-cavalry unit every frame: GetNearbyAgents(3 m) into a reused MBList, but one NearbyAgentSnapshot list fill per unit (BattlefieldQueryAdapter.cs:74-92), plus 2 MCM reads per formation (:93).",
+   "thread": "main (tick); async AI (patches)",
+   "gating": "EnableSmartCavalryAI default false (TaomSettings.cs:787); field battles",
+   "costPatterns": [
+    "MCM settings read per frame",
+    "lock per frame",
+    "per-unit nearby scan per frame when enabled"
+   ],
+   "suggestedLever": "Cache the settings reference. Skip the tick entirely when disabled and no cycles exist; HasActiveCycles could be a volatile counter instead of a locked read."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/BlowDiagnostics/Hooks/Agent_HandleBlowAux_BlowDiag_Patch.cs",
+   "symbol": "BlowDiag HandleBlowAux/Die prefixes; Spider Patch47/48; Patch50 CheckToDropFlaggedItem guard",
+   "hook": "Agent.HandleBlowAux (:16151, per damaging blow), Agent.Die, Agent.CheckToDropFlaggedItem (:58563, per hit)",
+   "frequency": "Per hit or per death",
+   "severity": "low",
+   "evidence": "Agent_HandleBlowAux_BlowDiag_Patch.cs:31-33 runs svc.IsEnabled, which reads BlowDiagnosticsSettings.Instance on every blow (BlowDiagnosticsSettingsProvider.cs:9-10) even though the default is off (BlowDiagnosticsSettings.cs:21). Spider Patch48 exits early on a flag test (Agent_HandleBlowAux_SpiderDismountGuard_Patch.cs:19). Patch47 (Agent_Die_SpiderDismount_Patch.cs) does a reflection MethodInfo.Invoke with a new object[] for spider riders only. Patch50 (Agent_CheckToDropFlaggedItem_Guard_Patch.cs) calls the two Patch93-detoured wield getters, then vanilla calls them again.",
+   "thread": "native-chosen",
+   "gating": "Always applied (SubModule.cs:1767-1787)",
+   "costPatterns": [
+    "MCM settings read per blow while feature is off",
+    "reflection Invoke per spider death",
+    "shielded from 2nd game start (item 1)"
+   ],
+   "suggestedLever": "Cache the BlowDiagnosticsSettings reference, or a volatile bool refreshed once per second."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/BannerColorPersistence/Hooks/Mission_SpawnAgent_Patch.cs",
+   "symbol": "Spawn-path fan-out: about 13 TAOM OnAgentBuild overrides + Mission.SpawnAgent / EquipItemsFromSpawnEquipment / BuildAgent / CreateAgent / SpawnTroop / AgentVisuals.Create patches",
+   "hook": "MissionBehavior.OnAgentBuild (Mission.SpawnAgent :57053 -> :57276); spawn-path Harmony patches",
+   "frequency": "Per agent spawn: the initial wave of about battle size, plus reinforcements",
+   "severity": "low",
+   "evidence": "OnAgentBuild overrides: AdvancedCombat (adapter-cache NoteBuilt under lock), Warg, Spider, Elephant (+howdah), Mumakil (+platform), WarRam, Elk, Animalia x2, Troll, CreatureBandit, DreadAura, SignatureStrikes, EnlistmentBattleFormation. Each creature tracker runs a Monster.StringId predicate (CreatureTreeTracker.cs:49-53). Mission_SpawnAgent_Patch.cs:56-78 calls ResolveColors twice (prefix and postfix). AgentColorStore.Register runs per spawn from both the SpawnAgent postfix and Agent_EquipItemsFromSpawnEquipment_Patch.cs:24-36, into a Dictionary<int,...> keyed on Agent.Index (AgentColorStore.cs:8-10). TryGetColors has no caller (grep), so the store is write-only, cleared only at mission end (AgentColorStoreCleanupBehavior.cs:13), and never evicted on OnAgentDeleted. While the loading window is open, BattleLoad logs a durable loadout dump plus Ok/BuildDone lines per agent (Agent_EquipItemsFromSpawnEquipment_BattleLoad_Patch.cs; Mission_BuildAgent_BattleLoad_Patch.cs:35-44). That is load time, not battle frames.",
+   "thread": "main",
+   "gating": "Always",
+   "costPatterns": [
+    "dictionary keyed on Agent.Index (write-only, no OnAgentDeleted eviction)",
+    "duplicate color resolution per spawn",
+    "durable log lines per agent in the load window"
+   ],
+   "suggestedLever": "Delete AgentColorStore and its two Register calls, or evict it in OnAgentDeleted. Resolve colors once and pass them through __state."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/CultureDoctrine/Models/TaomBattleMoraleModel.cs",
+   "symbol": "TaomBattleMoraleModel.CanPanicDueToMorale; Patch93 CanAgentRout postfix; Patch93 CommonAIComponent.OnHit prefix",
+   "hook": "BattleMoraleModel.CanPanicDueToMorale (CommonAIComponent.CanPanic :18466-18469); Mission.CanAgentRout (:58202); CommonAIComponent.OnHit (:58561)",
+   "frequency": "CanPanic only when an agent's morale drops below 0.01 (CommonAIComponent.OnTickParallel :18376-18385). CanAgentRout per AI agent every 0.5-0.6 s (_fadeOutTimer :18346, :18391). OnHit per hit.",
+   "severity": "low",
+   "evidence": "TaomBattleMoraleModel.cs:28-30: CreatureBanditAgents.Is + base + _morale.CanPanic -> CultureDoctrineSettingsProvider.IsMoraleEnabled (1-2 TaomSettings.Instance reads, :12-17). Patch93_CreatureBandits.cs:87-92 (rout) returns early when __result is false. :66-71 (OnHit) runs a CreatureBanditAgents.Is check per hit; that target is shielded by PatchShield (item 1).",
+   "thread": "TWParallel workers (CanPanic, CanAgentRout); native-chosen (OnHit)",
+   "gating": "Always",
+   "costPatterns": [
+    "MCM read on worker thread (rare)",
+    "per-hit prefix + PatchShield finalizer"
+   ],
+   "alreadyFixed": "CanAgentRout excluded from PatchShield (rca-creature-bandits-2026-09-28.md:19)."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/MissionPerf/Hooks/MissionPerfHeartbeatBehavior.cs",
+   "symbol": "MissionPerfHeartbeat, Patch91 stall probes, Patch37 finalizers, Native2Managed finalizers, MissionState.OnTick render-wait postfix, stall/memory timers",
+   "hook": "OnMissionTick; Mission.TickAgentsAndTeamsImp / MissionState.TickMissionAux prefix+finalizer; Mission.Tick et al. finalizers; ManagedCallbacks Mission_* shims; MissionState.OnTick postfix",
+   "frequency": "Per frame, plus per combat callback for the Native2Managed finalizers",
+   "severity": "low",
+   "evidence": "MissionPerfHeartbeatBehavior.cs:52-67: one Stopwatch read per frame and one MCM read per second. FrameStats.cs:93-104 sorts up to 4096 doubles every 5 s. Patch91_MissionTickStallProbes.cs:15-42 does DateTime.UtcNow + volatile writes twice per frame (MissionTickStallProbe.cs:31-40). Patch37_CrashReport.cs:38-86 adds five per-frame finalizers. Native2ManagedPatcher.cs:45-46, :67-75 finalizes the 10 Mission_* callbacks (Native2ManagedTargets.cs:48-60) with a null-check fast path. MissionState_OnTick_RenderWait_Patch.cs:58-59 does two property reads per frame. MissionTickStallWatchdog.cs:23, :75 runs a 1 s timer. MemoryPressureSampler.cs:21, :31 samples every 30 s with GC.GetTotalMemory(false) (MemorySampleReader.cs:81).",
+   "thread": "main; async AI (Patch91 agent probe); timer threads",
+   "gating": "On by default (BattleLoadDiagnosticsSettings.cs:21-61)",
+   "costPatterns": [
+    "per-frame Harmony wrappers (several also PatchShield-wrapped, item 1)"
+   ],
+   "suggestedLever": "No action beyond item 1. These are the measurement tools. Docs drift: mission-perf-heartbeat.md:39 says 'Read once per tick' but the code reads the toggle once per second (:24-26, :54-58)."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/DreadAura/Hooks/DreadAuraMissionLogic.cs",
+   "symbol": "DreadAuraMissionLogic.OnMissionTick / DreadPulseRunner.Run; SignatureStrikesMissionLogic.OnMeleeHit/OnMissionTick",
+   "hook": "OnMissionTick; OnAgentBuild; OnMeleeHit (:58326); OnAgentDeleted",
+   "frequency": "Per frame: gates and prune. Per pulse per source, rate-limited by PulseIntervalSeconds and MaxSourcesPerFrame. OnMeleeHit fires per melee collision.",
+   "severity": "low",
+   "evidence": "DreadAuraMissionLogic.cs:73 reads _service.IsEnabled, which is TaomSettings.Instance every frame (DreadAuraSettingsProvider.cs:33). :82 runs DreadMissionGate per frame; :92 runs Prune per frame (native FindAgentWithIndex per source, DreadSourceTracker.cs:79-87). DreadPulseRunner.cs:56-58 uses a reused MBList with native enemy filtering. SignatureStrikesMissionLogic.cs:59 does a roster TryGet per melee hit and caches its gate (:113-119). The ring uses a reused MBList (SignatureStrikeRunner.cs:33-34, :81).",
+   "thread": "main; OnMeleeHit on native-chosen thread",
+   "gating": "EnableDreadAura and EnableSignatureStrikes default true (TaomSettings.cs:1203, :1215); campaign field battles and sieges",
+   "costPatterns": [
+    "MCM settings read per frame"
+   ],
+   "suggestedLever": "Cache the settings reference."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/CareerSystem/CareerPerkMissionBehavior.cs",
+   "symbol": "CareerPerkMissionBehavior.OnMissionTick/OnScoreHit/OnAgentDeleted; MissionAgentStatusCareerMixin.OnRefresh",
+   "hook": "OnMissionTick; OnScoreHit (:58557); OnAgentDeleted; MissionAgentStatusVM.Tick mixin",
+   "frequency": "Per frame; per hit; per deletion",
+   "severity": "low",
+   "evidence": "CareerPerkMissionBehavior.cs:62-116 runs every frame: HasCareer lookup, identity gate, activation-controller tick. :122-145 (OnScoreHit) exits early unless the affector is the main agent. :218-221 takes the global lock for ClearAllyBuff on each deletion (CareerAbilityBuffTracker.cs:46-49). MissionAgentStatusCareerMixin.cs:17 and :43-88 run per VM tick with GetOrCreateAbility, a cached key label and guarded setters. Registered only in the campaign (SubModule.cs:2161-2172).",
+   "thread": "main; OnScoreHit/OnAgentDeleted native-chosen (deferred)",
+   "gating": "Campaign only",
+   "costPatterns": [
+    "global lock per deletion"
+   ]
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/MountDespawn/Hooks/MountDespawnMissionBehavior.cs",
+   "symbol": "MountDespawnMissionBehavior; BattleCorpseMissionBehavior",
+   "hook": "OnAgentRemoved (:55900), OnAgentDeleted (:55876), OnMissionTick",
+   "frequency": "Per removal and deletion; sweep every 0.5 s; corpse check every 1 s",
+   "severity": "low",
+   "evidence": "MountDespawnMissionBehavior.cs:63-64 reads MCM (IsEnabled) only for mounts. :79-84 and :100-115 allocate a closure for RunOrDefer per kill and deletion. :27 is a Dictionary<int, Agent> keyed on Agent.Index, which is evicted in OnAgentDeleted (:86-96) and so complies with the rule. BattleCorpseMissionBehavior.cs:47-79 runs once a second.",
+   "thread": "main; callbacks native-chosen (deferred)",
+   "gating": "MountDespawn and BattleCorpses MCM toggles; field battles, sieges, sally-outs",
+   "costPatterns": [
+    "closure per removal"
+   ],
+   "alreadyFixed": "c17541f2 (#701) added BattleCorpses (corpse fade and cap)."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/AdvancedCombat/AutonomousMovementPlayerController.cs",
+   "symbol": "AutonomousMovementPlayerController ([DefaultView] + SubModule.AddTaomBehavior)",
+   "hook": "MissionView.OnPreMissionTick (Mission.OnPreTick :56425-56431)",
+   "frequency": "Per frame per instance",
+   "severity": "low",
+   "evidence": "The class is marked [DefaultView] (:15). ViewCreatorManager collects [DefaultView] MissionBehaviors from assemblies that reference the View module (View dump :4747-4756) and adds them through MissionScreen.OnAddBehaviors when addDefaultMissionBehaviors is set (:16635-16640, :13205-13210). SubModule.cs:2052 adds a second instance. _activated defaults to true (:662). WargMissionBehavior.cs:52-54 disables only the first instance GetMissionBehavior returns. While the player is mounted, the other instance would run ControlTick and LookTick every frame (:207-210), and while a target is locked an O(N) Mission.Agents.ContainsQ per frame (:379). Whether two instances actually exist is [inferred]; the [MissionDiag] behavior dump at mission start would show it.",
+   "thread": "main",
+   "gating": "Player mounted and not AI-controlled",
+   "costPatterns": [
+    "possible duplicate per-frame controller",
+    "O(N) ContainsQ per frame while locked"
+   ],
+   "suggestedLever": "Confirm the two instances in a [MissionDiag] dump. Then drop either [DefaultView] or the SubModule add, and default _activated to false."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/CreatureBandits/Diagnostics/CreatureBanditDiagnosticsBehavior.cs",
+   "symbol": "CreatureBanditDiagnosticsBehavior (temporary diagnostics)",
+   "hook": "OnAgentHit (:58556), OnAgentRemoved, OnAgentDeleted, OnAgentAlarmedStateChanged, OnMissionTick",
+   "frequency": "Per hit, removal and alarm change in every battle; per frame tick",
+   "severity": "low",
+   "evidence": "Added in every mission by CreatureBanditsModule.cs:33-34 ('Temporary diagnostics'). :47-49 does two ConcurrentDictionary SerialOf lookups on every hit in every battle. :91 calls flag.ToString() only for creatures. The tick exits early without creatures (CreatureBanditDiagTicker.cs:63-64).",
+   "thread": "native-chosen for callbacks; main tick",
+   "gating": "None",
+   "costPatterns": [
+    "diagnostic active by default",
+    "2 concurrent-dict lookups per hit"
+   ],
+   "suggestedLever": "Add the behavior only when a creature troop spawned, or strip it after sign-off as planned."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/SubModule.cs",
+   "symbol": "Idle per-frame TAOM behaviours (EnlistmentMerit/Role/Formation, FieldCommission, HeroKillCounter, BannerBearerAssignment, CultureDoctrine, SiegeDismount, SiegePropDiagnostics, AgentColorStoreCleanup, BattleLoadPhase, CrashReportDevTrigger, CustomBattleTeamFix, Warg/Spider/Elephant/Mumakil/WarRam/Elk/Animalia ticks)",
+   "hook": "OnMissionTick and lifecycle virtuals (Mission.OnTick :56636-56639)",
+   "frequency": "Per frame: about 28 TAOM OnMissionTick/OnPreMissionTick/OnMissionScreenTick overrides in a campaign field battle",
+   "severity": "low",
+   "evidence": "Registration is in SubModule.cs:2043-2172 plus FeatureModuleHooks.cs:108-120 (ArmourAcquisitionModule.cs:73, CreatureBanditsModule.cs:32-34, BattleCorpsesModule.cs:19). CustomBattleTeamFixBehavior is added by BannerlordMissions_CustomBattle_Patch.cs:27 and the Siege patch at :40. Each is a cheap early-out. Exceptions: EnlistmentMerit runs an O(N) MeritGeometryScanner pass every 2 s while enlisted (EnlistmentMeritMissionBehavior.cs:82-108; MeritGeometryScanner.cs:33). SiegePropDiagnostics reads MCM per frame (:50; default false, TaomSettings.cs:492). CultureDoctrine logs a status line every 5 s only in debug (:78-91). Doctrine tactics and behaviours run on the async AI thread at TickOccasionally cadence only when EnableCultureDoctrine is on (default false, TaomSettings.cs:825).",
+   "thread": "main (doctrine tactics on async AI thread when enabled)",
+   "gating": "Mostly self-filtering per mission",
+   "costPatterns": [
+    "MCM settings read per frame (SiegePropDiagnostics)",
+    "O(N) scan every 2 s (enlisted)"
+   ]
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/LocalizationOverride/Hooks/MBTextManager_GetLocalizedText_Patch.cs",
+   "symbol": "MBTextManager_GetLocalizedText_Patch.Prefix",
+   "hook": "MBTextManager.GetLocalizedText (TextObject token cache miss, TaleWorlds.Localization.cs:327-334, :1395)",
+   "frequency": "Per TextObject localization on a token-cache miss, mostly UI and agent-name text in missions, including the MissionDiagnostic census and the diag log lines above",
+   "severity": "low",
+   "evidence": ":29-50: text.Substring(2, idLength) allocates for every {=ID} text before the dictionary probe (:43-46). The patch is applied in OnSubModuleLoad (SubModule.cs:275), so it is shielded at the first game start (item 1).",
+   "thread": "main mostly",
+   "gating": "Always",
+   "costPatterns": [
+    "allocation per localized string",
+    "PatchShield finalizer"
+   ],
+   "suggestedLever": "Look up the id without allocating, for example with a span comparer or by precomputing hashes of the override keys."
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/BannerBearers/Models/TaomBattleBannerBearersModel.cs",
+   "symbol": "TaomBattleBannerBearersModel overrides",
+   "hook": "BattleBannerBearersModel.GetDesiredNumberOfBannerBearersForFormation / CanAgentBecomeBannerBearer / CanAgentPickUpAnyBanner",
+   "frequency": "Per formation banner update and per candidate agent when bearers are picked or a dropped banner is searched (BannerBearerLogic :80261, :80369, :80390, :80614)",
+   "severity": "low",
+   "evidence": "Config-driven (BannerBearerService.cs:35, :171), no MCM. CanFormationDeployBannerBearers runs vanilla's LINQ Count over units (:66582-66586); TAOM's enabled path calls it the same way vanilla does.",
+   "thread": "main",
+   "gating": "banner_bearers config Enabled",
+   "costPatterns": [
+    "vanilla LINQ Count per formation (inherited)"
+   ]
+  }
+ ],
+ "multipliers": [
+  "N = Mission.Agents / AllAgents, mounts included. Costs that scale with it: the MissionDiagnostic census, O(N) per frame for the first 5 s (MissionDiagnosticBehavior.cs:41-45, :76); the SpatialGrid rebuild, O(N) every 2 s (AdvancedCombatBehavior.cs:38-47); TrollFormationSpacingTracker and TrollClipTrace, O(N) every 0.5 s each; SpatialGrid.RemoveNow, O(N) per deletion; MeritGeometryScanner, O(N) every 2 s while enlisted.",
+  "A = AI agents in formations. Formation.GetOrderPositionOfUnit runs about once per agent every 0.45-0.55 s on TWParallel workers (Agent ctor timer :12240, TickParallel :15371-15374), plus bursts of one call per unit from Formation.Tick (:72686-72693), OnMassUnitTransferEnd (:72133-72152) and the order preview (View :29452). Each call pays Patch30's body (allocation, MCM read, global lock, two native scene queries for mixed layouts) and PatchShield's __originalMethod finalizer.",
+  "F = formation size. UpdateAgentStats bursts of F (more with mounts) on every defensiveness-changing SetMovementOrder or SetArrangementOrder (:70919, :70941 -> :73026), captain change (:73017-73022) and banner-controller update (:80153-80162). Each runs 3-5 MCM reads plus the CareerAbilityBuffTracker lock.",
+  "H = hits per second, roughly proportional to engaged agents. Per hit: about 8+ TaomSettings.Instance reads in the combat model; shielded HandleBlowAux, CommonAIComponent.OnHit and CheckToDropFlaggedItem (shielded from the second game start for two of them); a career DEBUG line per player-troop hit when TroopDamage/TroopResistance pips apply; the BlowDiagnostics MCM read; four Patch93-detoured wield-getter calls in Patch50 + vanilla; the BT OnSelfIsHit scan, O(W) for W warg trees; two creature-diag dictionary lookups.",
+  "C = creatures with trees (wargs, spiders, elephants, mumakil, rams, elks, Animalia, trolls, creature bandits). Per frame: RunTree with DateTime.Now in the sleep tasks, and PruneDead with a native FindAgentWithIndex. Creature-bandit hunt is O(C x N_enemy) every 250 ms. Spider and troll durable INFO lines fire per attack and per bite.",
+  "P x S = crew platforms x seats. Per frame: GetSkeleton (a native wrapper with a finalizer) and SetFrame per howdah; TeleportToPosition, SetScriptedPosition and an MCM read per seat. A durable status line every 5 s per platform (diagnostics default on).",
+  "D = removals and deletions. Fan-out across about 10 TAOM OnAgentRemoved/OnAgentDeleted overrides, with object[] and boxing allocations in BehaviorTreeMissionLogic and closures in the RunOrDefer paths. Corpse fading (c17541f2) raises the deletion count [inferred].",
+  "S = spawns (initial wave plus reinforcements). About 13 TAOM OnAgentBuild overrides plus SpawnAgent, Equip, BuildAgent, CreateAgent, SpawnTroop and AgentVisuals.Create patches per agent, and two AgentColorStore writes keyed on Agent.Index.",
+  "Per-frame constants: about 28 TAOM tick overrides, about 7 MCM provider reads, 2 Patch91 probes, and up to about 9 PatchShield-wrapped per-frame engine methods (5 from the first game start, 4 more from the second)."
+ ],
+ "summary": "I've ranked TAOM's battle-time hot paths by likely frame cost; the full inventory is 29 items above. Only TAOM's own two comments on Patch30, Mission.CanAgentRout's ~700 calls/s at 400 agents (from TAOM's own RCA) and the 14-elephant observation come from measurement or logs. Every other cost estimate is reasoned from the code and the engine dump; none was measured.\n\nThe dump in `_shipping_build` is v1.5.3. The top-level `_manifest.json` still says v1.4.8 (dated 2026-08-10) and is stale; `_categories_v1.5.3/_manifest.json` and `_diff_1.5.2_to_1.5.3_shipping_editor.txt` match the dump's 2026-09-15 timestamp.\n\n**The three items likely to be measurable at 500+ agents:**\n1. **PatchShield is still wrapping TAOM's own hot engine targets.** TAOM.Dependencies attaches a finalizer that binds `__originalMethod` to every patched TaleWorlds method not on its exclusion lists. TAOM's own lesson puts that at about 50 µs plus an allocation per call. The list covers the Patch92 and Patch93 targets but not:\n   - Patch30's `Formation.GetOrderPositionOfUnit` (shielded from the first game start), which runs at the same per-agent cadence as `CanAgentRout`. That target was already rated MED and excluded for exactly this cost.\n   - The per-hit `CommonAIComponent.OnHit` (from the first game start), plus `Agent.HandleBlowAux` and `CheckToDropFlaggedItem` (from the second game start in a process).\n   - `Formation.SetMovementOrder`, and up to about 9 per-frame tick methods.\n   This would be the fourth time this class has shipped.\n2. **Patch30 (MixedFormations) is on by default in field battles and runs on the worker threads.** Every call allocates, reads MCM, and takes one global lock. For mixed layouts it also makes two native scene queries, where vanilla reads a cached slot. It reads a formation query value that can recompute on the worker thread without a lock. Its \"40,000×/frame\" comment is not supported by the dump: it is about once per AI agent every half second, plus bursts.\n3. **The MissionDiagnostic action-set census runs in every mission.** For the first 5 s, every frame, it does a native name fetch, a localized `Agent.Name`, and an interpolated string per agent.\n\n**Medium:**\n- Per-hit `[CareerPerks]` DEBUG lines (added in `7ede923b`, #613). `FileLogger.LogDebug` has no level gate. This brings back a pattern `CareerPassiveService` had already removed for causing log spam in large battles.\n- About 8+ uncached `TaomSettings.Instance` reads per blow in `CombatMechanicsSettingsProvider`. `7feca96b` fixed this pattern for BattleBalance only; several other providers still do it.\n- The Patch93 detours on the hot wield-index getters.\n- The howdah and war-tower crews: a skeleton fetch per frame per howdah, and per-seat native writes. Their diagnostics are on by default.\n\nThe rest are low: ungated durable log lines on spider, troll and signature-hero attacks, creature-bandit hunting that scans every enemy, the always-on troll scans, the behaviour-tree framework's allocations, the SpatialGrid rebuild, and the CompanionTactics per-frame patches including an empty `Mission.OnTick` postfix. Smaller findings: a write-only colour store keyed on `Agent.Index` that is never evicted, and a possible double `AutonomousMovementPlayerController` from `[DefaultView]` plus the SubModule add (inferred, not confirmed).\n\nThe warg tick costs (plan 015 / #659) and battle corpses (`c17541f2`) are already fixed and not re-reported.\n\n**To confirm the top three with `[MissionPerf]` in a 500+ agent field battle:**\n- Run once with `patchshield-disabled.flag` and once without, and read the `diag.log` \"shield pass\" lines for the attach list.\n- Toggle `EnableMixedFormations`.\n- Compare the first 5-second window.\n\nThe `improve` skill fits for turning these into plans, and `deep-review` before committing fixes."
+}

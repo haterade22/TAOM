@@ -1,0 +1,30 @@
+docs(perf): v2.0.32 - engine performance programme records and plans
+
+The records of the 2026-10-02 engine performance and memory programme
+that no single plan carries. No code changes.
+
+- plans/028 to plans/042: the fifteen plans as reviewed and revised,
+  with their rows in the plans/README.md index. Each plan's code lands
+  in its own commit.
+- plans/_audit/2026-10-02-perf, the run folder: REPORT.md (findings
+  and verified engine facts), FOR-MIKE.md (the maintainer's open
+  decisions and the protocol for the first measurement session),
+  DECISIONS.md, the run log, the baseline, the issue drafts, one plan
+  review per plan, the squash messages, and the evidence: load-time
+  and shader-cache readings, memory audits (banner atlases, UI sprite
+  sheets, module sounds, map texture orphans, the inventory open
+  cost), native decompile notes and the merge probe.
+- docs/reference/engine/mission-frame-threads-and-native-costs.md: a
+  battle frame by thread, the native costs TAOM's code pays, and
+  animation clip residency, linked from docs/INDEX.md.
+- Corrections found on the way: the inventory and party screens'
+  memory jump comes from cheat mode's every-item list
+  (battle-load-diagnostics.md, the 2026-09-12 memory RCA, the native
+  commit audit and a state-lifecycle lesson); the Steam game runs on
+  .NET Framework, not Mono (bannerlord-engine-and-toolchain.md).
+- The adoption review of yotthani's engine research for this work,
+  with its provenance register rows: comparison only, nothing copied.
+
+Refs: plans 028 to 042
+Not-tested: nothing here runs; the measurement session in FOR-MIKE.md
+ is owed once plans 028, 029, 036 and 041 are in a build.

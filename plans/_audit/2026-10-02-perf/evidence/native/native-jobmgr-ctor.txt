@@ -1,0 +1,41 @@
+
+function: FUN_180043680  entry 0x43680  size 0x14F  (rva at +0x0)
+
+
+undefined1 * FUN_180043680(undefined1 *param_1)
+
+{
+  HANDLE pvVar1;
+  
+  *(undefined8 *)(param_1 + 8) = 0;
+  *(undefined8 *)(param_1 + 0x10) = 0;
+  *(undefined8 *)(param_1 + 0x18) = 0;
+  *(undefined4 *)(param_1 + 0x20) = 3;
+  *(undefined8 *)(param_1 + 0x28) = 0;
+  *(undefined8 *)(param_1 + 0x30) = 0;
+  *(undefined8 *)(param_1 + 0x38) = 0;
+  *(undefined4 *)(param_1 + 0x40) = 3;
+  *(undefined8 *)(param_1 + 0x48) = 0;
+  *(undefined8 *)(param_1 + 0x50) = 0;
+  *(undefined8 *)(param_1 + 0x58) = 0;
+  *(undefined4 *)(param_1 + 0x60) = 3;
+  *(undefined8 *)(param_1 + 0x68) = 0;
+  *(undefined8 *)(param_1 + 0x70) = 0;
+  *(undefined8 *)(param_1 + 0x78) = 0;
+  *(undefined4 *)(param_1 + 0x80) = 3;
+  pvVar1 = CreateSemaphoreW((LPSECURITY_ATTRIBUTES)0x0,0,0x7fffffff,(LPCWSTR)0x0);
+  *(HANDLE *)(param_1 + 0x90) = pvVar1;
+  pvVar1 = CreateSemaphoreW((LPSECURITY_ATTRIBUTES)0x0,0,0x7fffffff,(LPCWSTR)0x0);
+  *(HANDLE *)(param_1 + 0x98) = pvVar1;
+  pvVar1 = CreateSemaphoreW((LPSECURITY_ATTRIBUTES)0x0,0,0x7fffffff,(LPCWSTR)0x0);
+  *(HANDLE *)(param_1 + 0xa0) = pvVar1;
+  FUN_180044c70(param_1 + 0xa8);
+  FUN_180044c70(param_1 + 0x310);
+  FUN_180044c70(param_1 + 0x578);
+  FUN_180044c70(param_1 + 0x7e0);
+  *(undefined4 *)(param_1 + 0xa48) = 0;
+  *(undefined4 *)(param_1 + 0xa4c) = 0x1000;
+  *param_1 = 0;
+  *(undefined8 *)(param_1 + 0x88) = 0;
+  return param_1;
+}

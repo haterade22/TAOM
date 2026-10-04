@@ -1,0 +1,14 @@
+module	category	count	bytes
+Native	meshes	431	1161361195
+Native	meshes: segment 5f98413d	431	586198724
+Native	meshes: segment 97f81dbb	431	575027216
+Native	physics	176	2862031
+Native	textures	1311	3358785450
+Native	textures: chain only in EmAssetPackages	301	1656145528
+TAOM_Map	meshes	210	1090909829
+TAOM_Map	meshes: segment 5f98413d	210	1090829692
+TAOM_Map	meshes: segment 97f81dbb	210	0
+TAOM_Map	physics	38	251787
+TAOM_Map	textures	474	1114855208
+TAOM_Map	textures: pixels in no pack (formula)	474	1114855208
+TAOM_Map (scene files)	scene_files	5	109811556

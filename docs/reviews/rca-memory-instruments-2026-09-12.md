@@ -54,3 +54,7 @@ still be distinguishable from "not asked".
 
 None new. The lifecycle-hook lesson goes to the lessons file (below); the never-fabricate rule
 already exists and this is an application of it.
+
+## Correction, 2026-10-02
+
+Finding 3's conclusion that the 2.6 GB "survived two engine collections" and so "is rooted, so a release could never have returned it" is wrong on the count. The `[MemStation] enter` line is written before the push's own collection (v1.5.3 `GameStateManager.cs:281-288`), so each re-entry reading followed one collection, the pop's, which runs while the closing screen and its layer are still on the stack; they keep their movie and widget tree after release, so the next collection frees it. A release one frame after the pop would return it at close; the removed class ran in the same tick and could not. The size itself is cheat mode's every-item inventory list. Trace: `plans/_audit/2026-10-02-perf/evidence/memory/inventory-open-alloc.md`; lesson in `docs/reviews/lessons/state-lifecycle-save.md`.

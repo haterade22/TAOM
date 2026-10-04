@@ -1,0 +1,42 @@
+perf(creatures): v2.0.32 - fewer allocations in creature battles
+
+Creature trees and the spatial grid did work in every battle that
+nothing used. Creatures behave as before.
+
+- The creature behaviour trees (wargs, spiders, elephants and mumakil,
+  elk, war rams) time their sleeps, waits, attack cooldowns and the
+  warg's rage with DateTime.UtcNow instead of DateTime.Now: no time
+  zone conversion per node per frame, and a daylight-saving change no
+  longer makes an interval in flight jump by an hour. The intervals
+  are the same, and the timers still follow the wall clock, so they
+  keep running in a paused battle as before.
+- The tree framework's selector reuses its two child lists instead of
+  allocating them on every re-entry, which for a creature tree is
+  every frame.
+- The tree logic returns before building argument arrays, or parking
+  a replay for an off-thread event, when no tree listens to that
+  engine callback. An off-thread event nobody listens to is now
+  dropped, as the main thread already dropped it. taom_debug.log gets
+  one INFO line for the mission's first such skip and an INFO summary
+  at mission end ("[BehaviorTree] Mission end: N callbacks skipped
+  with no tree listener ...").
+- The spatial grid that wargs and spiders scan is rebuilt every 2 s
+  in every battle. It now reuses its maps and cell lists, removes a
+  deleted agent from its one cell, and skips a scheduled rebuild that
+  nothing queried; the next query rebuilds first, so a creature that
+  starts scanning later still sees fresh cells. One INFO line each per
+  mission records the first skipped rebuild and the first rebuild made
+  by a query ("[SpatialGrid] ...").
+- The developer grid overlay empties its reused agent list after each
+  frame, so it no longer keeps the last battle's agents alive.
+
+What this does not do: the spider hunt still walks the hostile teams'
+agents. A version that asked the engine's nearby-agent query first was
+built and reverted, because on v1.5.3 the reads it avoided are cheap
+inlined field reads and the query cost more before contact.
+
+Refs: #715 (plan 033)
+Not-tested: in game. A warg battle (bites land, rage triggers), a
+ creature-bandit battle (the spider hunts the nearest soldier from the
+ start) and an elephant battle (trample and side-attack cooldowns feel
+ unchanged).

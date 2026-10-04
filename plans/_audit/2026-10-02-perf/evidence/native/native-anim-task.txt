@@ -1,0 +1,52 @@
+======== 0x70D790
+function: FUN_18070d790  entry 0x70D790  size 0x80  (rva at +0x0)
+
+
+undefined8 *
+FUN_18070d790(undefined8 param_1,undefined8 *param_2,undefined8 param_3,undefined8 param_4)
+
+{
+  char *pcVar1;
+  
+  *param_2 = rglString_base::vftable;
+  param_2[1] = 0;
+  *(undefined4 *)(param_2 + 2) = 0;
+  *param_2 = rglVarString::vftable;
+  param_2[3] = 0;
+  param_2[1] = 0;
+  *(undefined4 *)(param_2 + 2) = 0;
+  FUN_1807117c0(param_2,9,param_3,param_4,0,0xfffffffffffffffe);
+  pcVar1 = (char *)param_2[1];
+  *(undefined8 *)pcVar1 = s_ftlObject_180b2acb0._0_8_;
+  *(undefined2 *)(pcVar1 + 8) = s_ftlObject_180b2acb0._8_2_;
+  *(undefined4 *)(param_2 + 2) = 9;
+  return param_2;
+}
+======== 0x70D590
+function: FUN_18070d590  entry 0x70D590  size 0x5B  (rva at +0x0)
+
+
+int FUN_18070d590(longlong *param_1)
+
+{
+  longlong *plVar1;
+  longlong lVar2;
+  char cVar3;
+  int iVar4;
+  
+  LOCK();
+  plVar1 = param_1 + 1;
+  lVar2 = *plVar1;
+  *(int *)plVar1 = (int)*plVar1 + -1;
+  UNLOCK();
+  iVar4 = (int)lVar2 + -1;
+  if (iVar4 == 0) {
+    cVar3 = (**(code **)(*param_1 + 0x60))();
+    if (cVar3 != '\0') {
+      INativeStringHelper_DeleteRglVarString(param_1);
+      return 0;
+    }
+    (**(code **)(*(longlong *)*DAT_180da8de0 + 0x60))((longlong *)*DAT_180da8de0,param_1);
+  }
+  return iVar4;
+}

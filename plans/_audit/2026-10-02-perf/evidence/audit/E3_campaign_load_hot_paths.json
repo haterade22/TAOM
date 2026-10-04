@@ -1,0 +1,439 @@
+{
+ "items": [
+  {
+   "file": "E:/repos/TAOM/build.ps1",
+   "symbol": "build.ps1 param [string]$Configuration = \"Debug\" (also builds TAOM.Dependencies, which holds the PatchShield finalizers)",
+   "hook": "build and release packaging (applies to every TAOM managed method)",
+   "frequency": "every call of every TAOM method: all per-frame, per-party, per-settlement and per-AI-evaluation paths listed below",
+   "severity": "high",
+   "evidence": "build.ps1:4 defaults Configuration to Debug and build.ps1:27 runs `dotnet build -c $Configuration`. Release Phase 8 builds the tag with a bare `./build.ps1` (.claude/skills/release/SKILL.md:140-142). Neither Main/TAOM.csproj nor Directory.Build.props sets <Optimize> (grep found none). docs/features/realm-borders.md:438-439 times its repaint 'with the Debug build TAOM ships' (also docs/reviews/rca-realm-borders-2026-09-30.md:11). The deployed Modules/TAOM/bin/Win64_Shipping_Client/TAOM.dll is 4,172,288 bytes; Main/bin/Debug/net472/TAOM.dll is 4,176,384 and the older Main/bin/Release/net472/TAOM.dll is 3,353,600. The size points to a Debug deploy [inferred].",
+   "costPatterns": [
+    "JIT optimizations off in the Debug configuration [inferred: .NET SDK default Optimize=false for Debug]",
+    "a flat multiplier on every hot path in this list, including PatchShield's finalizers"
+   ],
+   "gating": "none",
+   "suggestedLever": "Package with -Configuration Release (or <Optimize>true</Optimize> for the shipping build) and confirm the DebuggableAttribute on the shipped DLL. A/B with the existing [MapLoad] tickMs/fps heartbeat and [MissionPerf].",
+   "thread": "all"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/_Module/SubModule.xml",
+   "symbol": "110 XmlNode registrations (48 NPCCharacters, 28 EquipmentRosters, 19 GameText) plus lords.xslt/heroes.xslt, driving engine MBObjectManager.CreateMergedXmlFile / ApplyXslt / MergeTwoXmls / MergeElements",
+   "hook": "engine LoadXML at every campaign start, new or loaded (Campaign LoadXML per docs/changelog-archive/CHANGELOG-2026-H2-handwritten.md:24372-24375)",
+   "frequency": "once per XML id per game start; merge steps = one per registered file, and one per file inside a registered folder",
+   "severity": "high",
+   "evidence": "Engine v1.5.3 dump E:/Decompiled_Bannerlord/_shipping_build/TaleWorlds.ObjectSystem.cs: ApplyXslt constructs and Loads a new XslCompiledTransform on every call (1274-1286); CreateMergedXmlFile merges files one at a time (1256-1272); each MergeTwoXmls round-trips the whole accumulated document through XDocument (1288-1300); MergeElements re-indexes every accumulated child at each step (1114-1160); a folder becomes one merge step per *.xml (1188-1197). TAOM: 47 NPCCharacters files, 7,722,487 bytes, plus lords.xslt (1,515,721 bytes, 397 NPCCharacter[@id] templates; SubModule.xml:118-120) and heroes.xslt (177,579 bytes, 397 templates; :128-130). EquipmentRosters: 28 files, 1,890,380 bytes. GameText: 16 files, 1,580,909 bytes. 8 XSLTs total 1,941,350 bytes; 409 ModuleData XML files total 37,485,381 bytes (12 languages included). LOTRLOME_Armory: 21 Items XmlNodes point at folders, giving 131 per-file merge steps that hold 3,512 <Item and 68 <CraftedItem (2,940,929 bytes), plus 97 CraftingPiece and 63 Monster; the whole Armory ModuleData is 454 XML files, 20,145,897 bytes. No TAOM timing of LoadXML exists [unmeasured].",
+   "costPatterns": [
+    "XSLT compiled again at every game start",
+    "O(merge steps x accumulated size) XmlDocument/XDocument conversions",
+    "per-step dictionary rebuild over all accumulated elements",
+    "397 predicate templates tested per NPCCharacter node"
+   ],
+   "gating": "none",
+   "suggestedLever": "Measure first: add a stamp around LoadXML, which no [SaveLoad]/[MapLoad] phase covers today. Then consolidate the 47 NPCCharacters and 28 EquipmentRosters files into a few files per id, ask the Armory side to collapse its per-folder item files, and replace lords.xslt/heroes.xslt overrides with same-id XML merges where the XSD allows.",
+   "thread": "main (loading screen)"
+  },
+  {
+   "file": "E:/repos/TAOM/Dependencies/SubModule.cs",
+   "symbol": "SubModule.OnGameInitializationFinished -> PatchShield.Install (pass 2)",
+   "hook": "MBSubModuleBase.OnGameInitializationFinished, inside every game start's loading screen; runs before TAOM's own OnGameInitializationFinished (TAOM.Dependencies loads first, save-load-diagnostics.md:36)",
+   "frequency": "every game start: first start about +125 attaches after #651; a second start in the same process about +140 (TAOM's late batch)",
+   "severity": "high",
+   "evidence": "Dependencies/SubModule.cs:274-276 ('Pass 2 reruns at every game start ... at a second start, TAOM's late batch, about +140 attaches') and :293. PatchShield.cs:149-219 does one harmony.Patch per patched method. deep-review-007-patchshield-skip-callback-shims-2026-09-24.md:122-123 expects '+125 new' after #651; before #651 the desktop logged 69 s for '+371 new' (docs/migration/v1.5.2-impact.md:141). Per attach: 117-190 ms on the maintainer desktop vs under about 8 ms on 11 player processes (plans/_audit/2026-09-23-opus/followup-patch-tax.md:22-31), so pass 2 is 'about 1 to 3 s on player machines' (:124-125). The desktop slowdown is most likely the VS mixed-mode debugger launch profile (:85-130, UNVERIFIED there). The 2026-08 audit's unexplained 25.6 s (warm) and 67 s (first load) CPU stretches before GameInitializationFinished (docs/investigations/native-commit-audit-2026-08.md:588, 594) match about 140 and about 370 attaches at about 186 ms [inferred].",
+   "costPatterns": [
+    "one Harmony.Patch (DynamicMethod emit + JIT + detour) per newly patched method, every game start"
+   ],
+   "gating": "skipped by patchshield-disabled.flag or when any co-op module is present (PatchShield.cs:113-128; PatchShieldPolicy.cs:265-266)",
+   "alreadyFixed": "#651 (merge d90b4be3, plan 007) excluded ManagedCallbacks, about 247 fewer pass-2 attaches. #650 (plan 006, merged e9b28e2a per plans/README.md:29) cut the boot Native2Managed sweep from 247 to 16 shims (29-33 s on the desktop, 0-1 s on players per docs/features/crash-report.md:282).",
+   "suggestedLever": "Skip methods whose only foreign owner is com.taom.mod, or TAOM targets that already wrap their own bodies in try/catch. Alternatively run one pass after TAOM's late batch rather than at every start. Fix the desktop debug profile before trusting desktop timings.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/CaravanTrade/Hooks/CaravansCampaignBehavior_GetTradeScoreForTown_Patch.cs",
+   "symbol": "Patch59_CaravanTrade: GetTradeScoreForTown, CanTradeWith, GetDistanceLimitVeryFarAsDaysForNavigationType and CalculateBudgetFactor postfixes",
+   "hook": "Harmony postfixes on private CaravansCampaignBehavior methods (applied SubModule.cs:574-578)",
+   "frequency": "per caravan destination search: 78 towns x (CanTradeWith + GetTradeScoreForTown + several VeryFar getter calls) x up to 2 passes; 302 caravans at +30 s on a new campaign (map-load-diagnostics.md:31)",
+   "severity": "high",
+   "evidence": "Vanilla ThinkNextDestination runs FindNextDestinationForCaravan twice when the first pass finds nothing (E:/Decompiled_Bannerlord/_shipping_build/TaleWorlds.CampaignSystem.cs:178046-178053). Each pass loops Town.AllTowns, calling CanTradeWith and GetTradeScoreForTown (178057-178085). The patched VeryFar getter is also reached through the Close/Medium/Far wrappers inside AdjustVeryFarAddition (177406-177416) and directly at 178089, 178121 and 178130. The TAOM GetTradeScoreForTown postfix repeats AiHelper.GetBestNavigationTypeAndAdjustedDistanceOfSettlementForMobileParty (patch :40-41), which vanilla just ran at 178114, then does a visit-memory lookup (:55) and a Math.Pow reweight (CaravanTradeService.cs:25-60). The VeryFar postfix reads Enabled and RangeMultiplier (CaravanTradeService.cs:70-76), each a TaomSettings.Instance read (CaravanTradeSettingsProvider.cs:21, 23). CanTradeWith runs IsAtWarWith plus a string-keyed policy on every war-vetoed pair (:31-56). 78 towns = 221 <Town minus 143 is_castle in TAOM_Map/ModuleData/settlements.xml. The lifted war veto and wider range mean fewer early -1 exits and more full scoring loops (item roster x ItemCategories, 178142-178160) [inferred]. All four targets are shield-eligible, so each carries a PatchShield finalizer.",
+   "costPatterns": [
+    "duplicate navigation-distance query per town per pass",
+    "2 MCM registry lookups per VeryFar call, several calls per score",
+    "Harmony + PatchShield wrapper per call",
+    "more candidates fully scored than vanilla"
+   ],
+   "gating": "EnableCaravanTrade default true (TaomSettings.cs:111)",
+   "suggestedLever": "Capture vanilla's computed distance instead of recomputing it (prefix __state or a transpiler hand-off). Cache the TaomSettings reference in CaravanTradeSettingsProvider (the BattleBalanceSettingsProvider.cs:14-15 pattern). Count calls per in-game day on the [MapLoad] heartbeat.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/CulturalFeats/Models/TaomPartySpeedModel.cs",
+   "symbol": "TaomPartySpeedModel.CalculateFinalSpeed + Patch18 PartyBaseHelper_HasFeat_Patch (skip-original prefix) + Patch10 DefaultMapWeatherModel_GetWeatherEventInPosition_Patch",
+   "hook": "GameModel override plus Harmony prefixes, reached from MobileParty.CalculateSpeedForPartyUnified",
+   "frequency": "per moving party whenever its nav face, night state, prisoner state or wind changes; 2,091 parties at Stop, rising to 3,042 during fast-forward (docs/migration/v1.5.2-impact.md:146-147); more often per frame at the 8x/16x multipliers",
+   "severity": "high",
+   "evidence": "Every tick ComputeNextMoveDistance calls CalculateSpeed (TaleWorlds.CampaignSystem.cs:104738-104748), which recomputes CalculateFinalSpeed when IsLastSpeedCacheInvalid, for example on a nav-face index change (104996-105011, 105038-105075). Vanilla CalculateFinalSpeed calls PartyBaseHelper.HasFeat (67229, 67245) and GetWeatherEventInPosition (67257); the vanilla weather body is just an array read (64224-64228). TAOM replaces HasFeat with a prefix (PartyBaseHelper_HasFeat_Patch.cs:34-39 -> CultureFeatAdapter.cs:62-77) and clamps the weather position (DefaultMapWeatherModel_GetWeatherEventInPosition_Patch.cs:12-22). The override then walks the whole roster (TaomPartySpeedModel.cs:70-80), makes two feat calls and a career-passive lookup that takes a lock plus two dictionary lookups (CareerPassiveService.cs:110-133, 166-180). GetTerrainSize and GetFaceTerrainType are field reads (E:/Decompiled_Bannerlord/_modules_build/SandBox__SandBox.cs:1787-1791, 2053-2062), so TAOM's overhead is the detours, their shield finalizers and the roster walk [magnitude inferred].",
+   "costPatterns": [
+    "roster walk on every speed recompute",
+    "2-4 Harmony detours with PatchShield finalizers per recompute",
+    "lock + 2 dictionary lookups (career passive)"
+   ],
+   "gating": "always on (feats data-driven)",
+   "suggestedLever": "Count mounted troops only when a Rohan-infantry feat can apply (culture check first). Add HasFeat and the three weather targets to PatchShieldPolicy.ExcludedTargetMethods, since they are pure lookups. Add a call counter to confirm frequency.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/LocalizationOverride/Hooks/MBTextManager_GetLocalizedText_Patch.cs",
+   "symbol": "MBTextManager_GetLocalizedText_Patch.Prefix (Patch25_LocalizationOverride)",
+   "hook": "Harmony prefix on MBTextManager.GetLocalizedText (applied first in OnSubModuleLoad, SubModule.cs:273-275)",
+   "frequency": "every TextObject-to-string conversion (MBTextManager.ConvertToText, TaleWorlds.Localization.cs:1269, 1306) and token caching (334, 347): all UI text, nameplates, tooltips, menus",
+   "severity": "medium",
+   "evidence": "The prefix allocates text.Substring(2, idLength) for every '{=id}' string before probing the dictionary (:31-48), although only about 120 overrides exist (harmony-patch-registry.md:186; SubModule.cs:279-285). Vanilla's own body reuses StringBuilders (TaleWorlds.Localization.cs:1395-1420). The TaleWorlds.Localization namespace is not on PatchShield's exclusion list (PatchShieldPolicy.cs:77-106), so the target also carries the shield finalizer [inferred from PatchShield.cs:160-213].",
+   "costPatterns": [
+    "one string allocation per localized text (GC pressure)",
+    "Harmony + PatchShield wrapper per call"
+   ],
+   "gating": "always on",
+   "suggestedLever": "Probe without allocating (compare the id span against a prebuilt key set, or key the dictionary by the full '{=id}' prefix). Or ship the overrides as LocalizedTextManager data and drop the patch. Exclude the target from PatchShield.",
+   "thread": "main and UI"
+  },
+  {
+   "file": "E:/repos/TAOM/Dependencies/Foundation/PatchShield.cs",
+   "symbol": "PatchShield.ShieldFinalizerVoid / ShieldFinalizerWithResult (__originalMethod binding)",
+   "hook": "Harmony finalizer attached to every patched method outside the exclusion lists, TAOM's own patch targets included",
+   "frequency": "every call of every shielded target. Per frame: Campaign.RealTick, MapScreen.OnFrameTick, MapState.OnTick, SceneView.ReadyToRender/CheckSceneReadyToRender, LoadingWindow.DisableGlobalLoadingWindow, Module.OnApplicationTick, ScreenManager.Tick/Update, Managed.ApplicationTick. Per text: GetLocalizedText. Per party AI and speed: HasFeat, weather, caravan methods, AiVisitSettlementBehavior.AiHourlyTick, RecruitmentCampaignBehavior.HourlyTickParty, PartyUpgraderCampaignBehavior.UpgradeReadyTroops. Per gold move: SettlementComponent.ChangeGold",
+   "severity": "medium",
+   "evidence": "The shield skips only methods DECLARED in a TAOM assembly (PatchShield.cs:165-174), so TAOM's patches on engine methods are shielded. Exclusions are 4 namespaces and 7 methods (PatchShieldPolicy.cs:77-106, 134-148). The policy comment claims about 50 us per call (GetMethodFromHandle + try/catch) from #331 (PatchShieldPolicy.cs:67-76). However, plans/_audit/2026-09-23-opus/followup-patchshield.md:239-240 lists the per-call cost as UNMEASURED, and the #331 measurement (2026-07) falls inside the desktop's slow mode (followup-patch-tax.md:44-48) [inferred]. When nothing throws the finalizer body is one null check (PatchShield.cs:246-256). UIExtenderEx view-model mixin patches (MapTimeControlVM.Tick, MapInfoVM.Refresh) are shield-eligible too [inferred].",
+   "costPatterns": [
+    "__originalMethod materialization + try/catch per call",
+    "unoptimized (Debug) finalizer body [inferred]"
+   ],
+   "gating": "off with patchshield-disabled.flag or any co-op module (PatchShieldPolicy.cs:265-266)",
+   "alreadyFixed": "#331 excluded the Gauntlet/TwoDimension/MountAndBlade.GauntletUI layers (which covers the Patch38 nameplate target, PatchShieldPolicy.cs:81-85); #651 excluded ManagedCallbacks; Patch92 and Patch93 hot Formation/Agent methods are excluded (:134-148).",
+   "suggestedLever": "Free A/B: drop patchshield-disabled.flag into the TAOM.Dependencies module folder (PatchShield.cs:26-28, 96-105) and compare [MapLoad] tickMs/fps. Then add TAOM's per-call hot targets to ExcludedTargetMethods.",
+   "thread": "main; also TWParallel load workers for Patch61 targets"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/AutoResolveDiagnostics/AutoResolveDiagnosticsBehavior.cs",
+   "symbol": "AutoResolveDiagnosticsBehavior.OnMapEventStarted / OnPartyAddedToMapEvent / OnMapEventEnded",
+   "hook": "CampaignEvents.MapEventStarted, OnPartyAddedToMapEventEvent, MapEventEnded (:60-62)",
+   "frequency": "every map event in the world, AI battles included (4,380 live battles in one analysis set, auto-resolve-diagnostics.md:93; the doc estimates 'a handful of times per in-game day', :254)",
+   "severity": "medium",
+   "evidence": "Default ON (TaomSettings.cs:515; AutoResolveDiagnosticsSettingsProvider.cs:15). At start it snapshots every party's roster on both sides and calls CombatSimulationModel.GetBattleAdvantage (MapEventBattleLogAdapter.cs:58-104). Every joining party adds another snapshot; the comment notes quadratic shape for armies (:134-139). At the end it formats a record and calls LogInfo (AutoResolveLogWriter.cs:86-99), which drains and flushes the file synchronously on the game thread (FileLogger.cs:85-95, 99-124).",
+   "costPatterns": [
+    "roster walks per battle start and join",
+    "synchronous file flush per completed world battle",
+    "Dictionary<MapEvent, snapshot> held per live battle (cap 256, :40)"
+   ],
+   "gating": "LogAutoResolvedBattles default true",
+   "suggestedLever": "Default the battle log OFF for players (it is a tuning diagnostic) or route it through a buffered writer; keep it opt-in for balance passes.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/CultureMarketplace/CultureMarketplaceBehavior.cs",
+   "symbol": "CultureMarketplaceBehavior.OnDailyTickSettlement -> EnsureGuaranteedStock / FilterForeignCultureItems / SelectItems / AddItem",
+   "hook": "CampaignEvents.DailyTickSettlementEvent (:73)",
+   "frequency": "per town per in-game day (78 towns; the event fires for all ~1,002 settlements and is rejected by IsTown at :148)",
+   "severity": "medium",
+   "evidence": "EnsureGuaranteedStock calls GetItemCount once per routed item; each call does MBObjectManager.GetObject<ItemObject> and scans the whole town roster (CultureMarketplaceMaintenanceService.cs:26-43; TownRosterAdapter.cs:59-86), so the cost is O(routed x roster). FilterForeignCultureItems snapshots the roster into new RosterItemSnapshot objects (TownRosterAdapter.cs:136-157) and rebuilds two HashSets, one holding the whole culture pool, on every call (CultureMarketplaceMaintenanceService.cs:61-77). Each removal is GetObject + roster scan + AddToCounts per stack (TownRosterAdapter.cs:88-134), and AddToCounts triggers market price recalculation (comment :122-123). Picks are added with GetObject + AddToCounts (:35-57).",
+   "costPatterns": [
+    "MBObjectManager.GetObject per routed item per town per day",
+    "roster scan per item (quadratic)",
+    "per-call HashSet allocation of the full culture pool",
+    "snapshot allocations"
+   ],
+   "gating": "no MCM gate; gives up after 3 failed pool builds (:30-35)",
+   "suggestedLever": "Build the routed and pooled id sets once per culture in BuildPools; resolve ItemObjects once; count the roster once into a dictionary per town tick.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/CastleRecruitment/Hooks/Patch42_HourlyTickParty_Postfix.cs",
+   "symbol": "Patch42_CastleRecruitment: HourlyTickParty postfix + AiHourlyTick/FillSettlementsToVisitWithDistancesAsDays transpilers (CastleAiToggle.IsCastleAndAiDisabled)",
+   "hook": "Harmony postfix on RecruitmentCampaignBehavior.HourlyTickParty; IsCastle gate swapped inside AiVisitSettlementBehavior (applied SubModule.cs:646-655)",
+   "frequency": "postfix: per mobile party per in-game hour (2,091-3,042 parties); toggle: per candidate settlement in each lord party's AI-hourly visit search",
+   "severity": "medium",
+   "evidence": "The postfix reads IsEnabled and IsAiEnabled, two TaomSettings.Instance lookups (CastleRecruitmentSettingsProvider.cs:20-22), BEFORE its party filter (Patch42_HourlyTickParty_Postfix.cs:60-64). The transpiler replaces vanilla's first get_IsCastle with CastleAiToggle.IsCastleAndAiDisabled (CastleAiTranspiler.cs:27-81), which reads both settings on every call (CastleAiToggle.cs:20-24). In FillSettlementsToVisitWithDistancesAsDays that gate sits inside the neutral-settlement locatable search (TaleWorlds.CampaignSystem.cs:231125-231136), so with AI on the 143 castles become candidates that get GetBestNavigationDataForVisitingSettlement [inferred]. Both targets are shield-eligible.",
+   "costPatterns": [
+    "2 MCM registry lookups per party per hour before filtering",
+    "2 MCM lookups per candidate settlement",
+    "more AI candidates than vanilla"
+   ],
+   "gating": "EnableCastleRecruitment and EnableCastleRecruitmentAi default true (TaomSettings.cs:146, 151)",
+   "suggestedLever": "Move the cheap party filter ahead of the settings read; cache the TaomSettings reference in CastleRecruitmentSettingsProvider.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/RealmBorders/RealmBorderService.cs",
+   "symbol": "RealmBorderService.OnMapFrame + RealmBordersMapView.OnMapScreenUpdate/PlaceNames + RealmTerritoryService.Tick + RealmAtlasService (parchment)",
+   "hook": "MapView.OnMapScreenUpdate (every map frame); CampaignEvents.TickEvent EnsureMapView and HourlyTickEvent crossing notices (RealmBordersCampaignBehavior.cs:51-52)",
+   "frequency": "every map frame; territory sampling once per map; repaint on owner, war, alliance or kingdom changes",
+   "severity": "medium",
+   "evidence": "Each frame makes about 12 TaomSettings.Instance reads (Enabled, MaterialName, BlendMode, DrawThroughTerrain, a 7-field look tuple, the fade band) (RealmBorderService.cs:241-299; RealmBordersSettingsProvider.cs:90-116), calls Collect twice, Upload and ApplyFade, and makes one native WorldToScreen call per realm label (RealmBordersMapView.cs:96-124; RealmNamesVM.cs:59-77; 22 realms per realm-borders.md:324). Once per map it issues up to 262,144 navmesh queries, 256 at a time within 3 ms of each frame (realm-borders.md:88-91, 425-426). The parchment map is built in one frame, measured at 203-599 ms (realm-borders.md:433-436). A repaint takes about 37 ms (63 ms first) on a worker, with at most 4 ms of uploads per frame (realm-borders.md:427-429, 437-440). EnsureMapView scans the view list on every TickEvent (RealmBordersCampaignBehavior.cs:85-91).",
+   "costPatterns": [
+    "~12 MCM registry lookups per frame",
+    "native projection per label per frame",
+    "up to 3 ms/frame sampling budget after map open",
+    "one-frame 0.2-0.6 s parchment hitch"
+   ],
+   "gating": "EnableRealmBorders, RealmBordersNames and RealmBordersParchmentMap default true (TaomSettings.cs:1756, 1791, 1811); stands aside when the Kingdom Borders mod is loaded (RealmBordersCampaignBehavior.cs:59-67)",
+   "suggestedLever": "Cache the TaomSettings reference in RealmBordersSettingsProvider; build the parchment over several frames; skip label projection when the camera has not moved.",
+   "thread": "game thread (snapshot, uploads, fade, labels); worker (partition, repaint) per realm-borders.md:62-65"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/CulturalFeats/Models/TaomPartyMoraleModel.cs",
+   "symbol": "Per-party GameModels: TaomPartyMoraleModel, TaomPartyWageModel, TaomFoodConsumptionModel, TaomVolunteerModel, TaomPartySizeModel, TaomMapVisibilityModel",
+   "hook": "GameModel overrides",
+   "frequency": "Morale: every MobileParty.Morale read, uncached (TaleWorlds.CampaignSystem.cs:102852-102859). FoodChange uncached (102861-102868). TotalWage uncached (102996). SeeingRange uncached, mostly read for the main party (103068). PartySizeLimit cached per roster version (108179-108203). Volunteer probability per notable per slot per day",
+   "severity": "medium",
+   "evidence": "The morale override adds a feat lookup and the career-passive lock and lookups on every read (TaomPartyMoraleModel.cs:21-29; CareerPassiveService.cs:110-133). The wage model walks the roster (TaomPartyWageModel.cs:48, 135). The food model adds feats plus AI relief (TaomFoodConsumptionModel.cs:20-27); the AI party-size scaling reads TaomSettings up to three times per call (docs/reviews/rca-ai-party-size-2026-08-18.md:17). GetBasicVolunteer resolves a pool through four maps plus ResolveCharacter (TaomVolunteerModel.cs:55-68), and the probability builds an ExplainedNumber per call (:79-88). Visibility loops its spotting contributors (TaomMapVisibilityModel.cs:32-39). TAOM overrides no settlement-value or encounter model (docs/reference/gamemodel-registry.md:6-58).",
+   "costPatterns": [
+    "uncached engine getters re-run the override",
+    "lock + dictionary lookups per call",
+    "roster walks"
+   ],
+   "gating": "feature data and MCM driven",
+   "suggestedLever": "Count calls before optimizing; each is cheap alone. Cache TaomSettings in the AI party-size provider.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/MapLoadDiagnostics/Hooks/Campaign_RealTick_MapLoad_Patch.cs",
+   "symbol": "Patch89 RealTick heartbeat + SceneReady trace + MapScreen first-frame trace; Patch36 F6 poll; Patch43 MapState.OnTick",
+   "hook": "Harmony prefix and postfix on Campaign.RealTick; postfixes on SceneView.ReadyToRender/CheckSceneReadyToRender, MapScreen.OnFrameTick (x2) and MapState.OnTick",
+   "frequency": "every map frame; heartbeat emit and party census every 5 s with no end; two SceneReady INFO lines every 5 s with no end",
+   "severity": "low",
+   "evidence": "The RealTick prefix and postfix run every frame (Campaign_RealTick_MapLoad_Patch.cs:57-70). Every 5 s, forever, it censuses all MobileParties, joins the state stack with LINQ and calls LogInfo (:72-127; MapLoadHeartbeatService.cs:56-63). The SceneReady postfixes run on every call (SceneReady_Trace_Patch.cs:38-79), and MapScreen.HandleIfBlockerStatesDisabled calls both queries unconditionally every frame (E:/Decompiled_Bannerlord/_modules_build/SandBox__SandBox.View.cs:14513-14541, called at :14647). That adds two MapLoadTracer.Trace -> LogInfo lines every 5 s (MapLoadTracer.cs:42-52), each a synchronous flush (FileLogger.cs:85-124). Patch36 polls about 10 MapScreen properties, an MCM toggle and input every frame (Patch36_MapScreenF6.cs:25-57). Patch43 is a two-read early-out (MapState_OnTick_ExitPhase_Patch.cs:19-23). The Patch89 first-frame postfix is a bool check (CampaignLifecycle_Trace_Patch.cs:62-77). All these targets are shield-eligible.",
+   "costPatterns": [
+    "about 2,160 synchronous INFO log lines per hour on the map [inferred: 3 lines per 5 s]",
+    "census walk of all parties every 5 s",
+    "per-frame property polling"
+   ],
+   "gating": "always on (diagnostics)",
+   "alreadyFixed": "#655 (merge ed1732eb, plan 012): the DisableGlobalLoadingWindow trace stopped walking the stack and flushing a line every frame (LoadingWindow_Transitions_Patch.cs:36-51; map-load-diagnostics.md:49-59 records 84 MB per 35 min and 1.16 GB in 3 h before the fix).",
+   "suggestedLever": "Log SceneReady only on transitions once the map is ready; stop or slow the heartbeat after the loading window lowers.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/EconomyDiagnostics/Hooks/SettlementComponent_ChangeGold_Patch.cs",
+   "symbol": "Patch68_EconomyDiagnostics: ChangeGold recorder + 4 flow-tag prefix/postfix pairs (TownGoldFlowTagPatches.cs:30-91)",
+   "hook": "Harmony prefix and postfix on SettlementComponent.ChangeGold, ItemConsumptionBehavior.UpdateTownGold/MakeConsumption, SellGoodsForTradeAction.ApplyByVillagerTrade and SellItemsAction.Apply",
+   "frequency": "every settlement gold change: every AI trade, villager delivery, resident purchase and daily mint",
+   "severity": "low",
+   "evidence": "Always-on diagnostic in the campaign-phase batch (SubModule.cs:585-592; harmony-patch-registry.md:612, 618). The postfix exits early for non-towns (:58), then does a string-keyed dictionary add (TownGoldLedger.cs:114-127). Five shield-eligible targets carry 10 patch methods between them.",
+   "costPatterns": [
+    "2 detours per gold change",
+    "PatchShield finalizer per call"
+   ],
+   "gating": "none (registry: 'always-on')",
+   "suggestedLever": "Put it behind a diagnostics MCM toggle that defaults off; it answers the one-off question in #391.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/ArmourAcquisition/Hooks/ArmourAcquisitionCampaignBehavior.cs",
+   "symbol": "ArmourAcquisitionCampaignBehavior.OnDailyTickSettlement -> ArmourStockSweepService.SweepTown",
+   "hook": "CampaignEvents.DailyTickSettlementEvent (:57)",
+   "frequency": "per town per in-game day (78 towns)",
+   "severity": "low",
+   "evidence": "SweepTown enumerates the roster by id, with a Settlement.Find and a fresh snapshot list per town (TownRosterAdapter.cs:136-175). It classifies each item and removes ineligible ones, each removal costing Settlement.Find + GetObject + a roster scan (ArmourStockSweepService.cs:28-45). Every town with a removal writes an INFO line, which is a synchronous flush (ArmourAcquisitionCampaignBehavior.cs:89-91).",
+   "costPatterns": [
+    "Settlement.Find by string per call",
+    "snapshot allocation per town",
+    "synchronous INFO log per town with removals"
+   ],
+   "gating": "EnableArmourAcquisition default true (TaomSettings.cs:192); cheap rejections first (:86-88)",
+   "suggestedLever": "Pass the Settlement instead of re-finding it by id; replace the per-town line with a daily digest, as CultureMarketplace does.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/SpecialResources/UI/SpecialResourceMapBarMixin.cs",
+   "symbol": "SpecialResourceMapBarMixin.OnRefresh",
+   "hook": "UIExtenderEx [ViewModelMixin(\"Refresh\")] on MapInfoVM (:14)",
+   "frequency": "every MapInfoVM.Refresh: every 0.1 s in fast-forward, 0.2 s otherwise (E:/Decompiled_Bannerlord/_shipping_build/TaleWorlds.CampaignSystem.ViewModelCollection.cs:20911-20918)",
+   "severity": "low",
+   "evidence": "Each refresh rebuilds the daily breakdown with CountOwnedTowns and PartyUpkeepReader.Collect over the player roster (:114-115), plus GetCurrentAmount (:100).",
+   "costPatterns": [
+    "player roster walk and allocations 5-10 times per second"
+   ],
+   "gating": "only when the hero's kingdom or culture resolves a resource (:90-91)",
+   "suggestedLever": "Recompute the breakdown only when the roster version or the day changes.",
+   "thread": "main/UI"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/ArmyTargeting/Models/TaomTargetScoreModel.cs",
+   "symbol": "TaomTargetScoreModel.GetTargetScoreForFaction + Patch22 AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch.Postfix",
+   "hook": "GameModel override + Harmony postfix on AiMilitaryBehavior (vanilla call sites TaleWorlds.CampaignSystem.cs:229712, 229729)",
+   "frequency": "per army per AI evaluation per candidate settlement ('~500-2000 calls/cycle per feature doc', patch :16-20)",
+   "severity": "low",
+   "evidence": "Allocates a TargetScoreContext class on every call (TargetScoreContextFactory.cs:39-56) and applies string-keyed multipliers (ArmyTargetingService.cs:168-207). The Patch22 postfix returns on its first line for positive scores (patch :55) and resolves services once via ??= (:59-61).",
+   "costPatterns": [
+    "allocation per evaluation",
+    "string comparisons"
+   ],
+   "gating": "EnableArmyStrategicIntelligence default true (TaomSettings.cs:381)",
+   "suggestedLever": "Reuse a context instance or make it a struct.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/AlignmentDesertion/Hooks/AlignmentDesertionBehavior.cs",
+   "symbol": "Per-entity daily listeners: AlignmentDesertion OnDailyTickParty/OnDailyTickSettlement, CastleRecruitment OnDailyTickSettlement (CastleNotableMaintainer.TickCastle), SpecialResources OnDailyTickHero",
+   "hook": "CampaignEvents.DailyTickPartyEvent (:34), DailyTickSettlementEvent (:35; CastleRecruitmentBehavior.cs:47), DailyTickHeroEvent (SpecialResourcesBehavior.cs:59)",
+   "frequency": "per party (2,091-3,042), per settlement (~1,002), per alive hero (4,770-4,879) per in-game day, staggered through the day on the main thread (TaleWorlds.CampaignSystem.cs:22548-22588)",
+   "severity": "low",
+   "evidence": "AlignmentDesertion makes one MCM read per call (AlignmentDesertionSettingsProvider.cs:19) for every party and settlement. For lord parties and garrisoned towns and castles it allocates a List and one DesertionTroopInfo object per roster element BEFORE the owner and location gates (AlignmentDesertionBehavior.cs:84-102; AlignmentDesertionService.cs:26-51). CastleRecruitment runs LINQ Any per occupation, counts notables and fills volunteers for each of 143 castles (CastleNotableMaintainer.cs:52-172). SpecialResources returns at once for every non-player hero (SpecialResourcesBehavior.cs:203-205).",
+   "costPatterns": [
+    "snapshot allocations before cheap gates",
+    "MCM lookup per entity"
+   ],
+   "gating": "EnableAlignmentDesertion default true (TaomSettings.cs:1096); castle work gated on IsEnabled && IsCastle",
+   "suggestedLever": "Run AlignmentDesertionService's owner and location gates before building the snapshot.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/FieldCommission/Hooks/FieldCommissionBehavior.cs",
+   "symbol": "8 CampaignEvents.TickEvent listeners + SubModule.OnApplicationTick",
+   "hook": "CampaignEvents.TickEvent (per frame while campaign time runs) and MBSubModuleBase.OnApplicationTick (every frame)",
+   "frequency": "every frame",
+   "severity": "low",
+   "evidence": "FieldCommission builds a 7-read MCM snapshot through GetConfig every frame (FieldCommissionBehavior.cs:51, 105-117; FieldCommissionSettingsProvider.cs:50, 117-124). FieldCamp does a GetMapView list scan, then FrameTick returns early (FieldCampCampaignBehavior.cs:53, 128-154; CampService.cs:382-389). Refuge returns early with no refuges (RefugeCampaignBehavior.cs:51, 134-142; RefugeService.cs:363-366). RealmBorders EnsureMapView (RealmBordersCampaignBehavior.cs:52, 85-91). SupplyLines (SupplyLinesCampaignBehavior.cs:54, 138-154; SupplyOrderService.cs:213-216; SupplyRouteVisualService.cs:90-100). Enlistment Pump returns unless enlisted (EnlistmentMaintenanceBehavior.cs:46, 66-72; ServiceMaintenanceService.cs:95-99). InventorySearch reads an MCM bool every frame (InventorySearchCampaignBehavior.cs:40, 80-95). The Messenger cleanup is transient (MessengerCampaignBehavior.cs:449, 492). OnApplicationTick runs the TimeAcceleration input checks and the FactionUI ticker every frame (SubModule.cs:2177-2196; TimeAccelerationService.cs:36-102; FactionUITicker.cs:53-82).",
+   "costPatterns": [
+    "MCM registry lookups per frame",
+    "view-list scans per frame"
+   ],
+   "gating": "most return early when their feature holds no state",
+   "suggestedLever": "Cache the TaomSettings reference in FieldCommissionSettingsProvider and QuickActions settings.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/RaceAge/RaceAgeBehavior.cs",
+   "symbol": "Global hourly (10) and daily (12) listeners; heaviest is RaceAgeBehavior.OnDailyTick",
+   "hook": "CampaignEvents.HourlyTickEvent / DailyTickEvent",
+   "frequency": "once per in-game hour or day",
+   "severity": "low",
+   "evidence": "RaceAge allocates one HeroAgeInfo per non-child living hero through LINQ every day (HeroAgeAdapter.cs:10-15; RaceAgeBehavior.cs:36, 49-57). TrollBandSpawn runs LINQ over Kingdom.All and WarPartyComponents daily (TrollBandSpawnBehavior.cs:59-62). SiegeDefense runs LINQ Where/Select/ToList hourly (SiegeDefenseService.cs:183-186, 207-210). These return early without state: LordsLadder (LordsLadderBehavior.cs:80-85), Messengers (MessengerCampaignBehavior.cs:194-205), Enlistment (EnlistmentBehavior.cs:106-110 -> EnlistmentReconciler.cs:119-123), EnlistmentDuty (DutyOrchestrationService.cs:45-50), PlayerPossession (PlayerPossessionBehavior.cs:87-92), FieldCamp/Refuge/SupplyLines hourly (CampService.cs:338-342; RefugeService.cs:436-451; SupplyOrderService.cs:205-208), RealmBorders notices (RealmBorderService.cs:302-316), WarOfTheRing (WarOfTheRingBehavior.cs:81-91), Momentum (WarOfTheRingMomentumBehavior.cs:188-221), CultureConversion (CultureConversionService.cs:110-143), CareerQuest (CareerQuestCampaignBehavior.cs:50-72), CreatureBrood (CreatureBroodSpawnBehavior.cs:52-76).",
+   "costPatterns": [
+    "LINQ allocations once per hour or day"
+   ],
+   "gating": "various",
+   "suggestedLever": "None needed; RaceAge could iterate Hero.AllAliveHeroes directly.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/Refuge/Hooks/RefugeCampaignBehavior.cs",
+   "symbol": "World map-event and settlement listeners: Refuge, CreatureBroodCampaignDiag, WarOfTheRingMomentum, Enlistment, FieldCommission, CaravanVisitMemory, quest listeners",
+   "hook": "MapEventStarted, MapEventEnded, OnPartyAddedToMapEventEvent, MobilePartyDestroyed, SettlementEntered, OnSettlementLeftEvent",
+   "frequency": "every world battle; every party entering or leaving any settlement",
+   "severity": "low",
+   "evidence": "Refuge allocates a List and walks InvolvedParties for every battle start and end, even with no refuge (RefugeCampaignBehavior.cs:152-211). CreatureBroodCampaignDiag allocates a closure and runs LINQ Any per battle (CreatureBroodCampaignDiagBehavior.cs:29-55; marked temporary :13-14). Momentum renders 4 TextObjects per battle (WarEventSnapshotAdapter.cs:67-70) before ProcessBattle (WarOfTheRingMomentumBehavior.cs:236-251). Enlistment handlers filter by commander id (EnlistmentMaintenanceBehavior.cs:74-119). FieldCommission checks IsPlayerMapEvent first (FieldCommissionBehavior.cs:69-103). CaravanVisitMemory filters IsTown/IsCaravan before a dictionary write (CaravanVisitMemoryBehavior.cs:46-54). Quest listeners return unless the party is MainParty (DeliverGoodsLotrIssue.cs:311-319).",
+   "costPatterns": [
+    "allocation per world battle even when idle",
+    "TextObject rendering per battle"
+   ],
+   "gating": "MomentumEnabled default true (TaomSettings.cs:268); the others always run",
+   "suggestedLever": "Return early in Refuge when the book is empty; strip the CreatureBrood diagnostic after sign-off as planned.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/HeroRace/RacePersistenceService.cs",
+   "symbol": "CaptureHeroRaces / RestoreHeroRaces (_taom_heroRaceMap) + momentum chunked JSON + other SyncData payloads",
+   "hook": "CampaignEvents.OnBeforeSaveEvent (RacePersistenceBehavior.cs:19) and SyncData on save and load",
+   "frequency": "every save, autosaves included, and every load",
+   "severity": "medium",
+   "evidence": "Every save rebuilds a dictionary holding EVERY living hero's race (RacePersistenceService.cs:71-86), synced as _taom_heroRaceMap (:199): about 4,770-4,879 entries [inferred size: a string key plus an int per hero]. Every load walks all living heroes (:101-185). Momentum JSON-serializes and chunks the whole war state on each save (WarOfTheRingMomentumBehavior.cs:98-128), reaching '~9 chunks at the observed day-52 max' (war-of-the-ring-momentum.md:176). TAOM has 8 SaveableTypeDefiners (LotrIssue, CareerQuest, Preset, FormationPreset, FieldCamp, FiefGrant, Refuge, SupplyLines). Load phases measured on the desktop: LoadDataOk +4.0 s, ObjectsInitialized +8.0 s, GameLoaded +26.1 s, AllBehaviorDataLoaded +26.1 s, GameInitializationFinished +51.7 s, loading exit +58 s, settled +83 s (native-commit-audit-2026-08.md:581-596). Patch61's always-on finalizers sit on per-object load methods running on TWParallel workers (save-load-diagnostics.md:25-38, 48). SpecialResources logs at INFO on every SyncData call (SpecialResourcesBehavior.cs:106).",
+   "costPatterns": [
+    "per-hero map captured on every save",
+    "whole-state JSON per save",
+    "finalizers on per-object deserialization methods"
+   ],
+   "gating": "capture refused against a degenerate race table (:60-69)",
+   "alreadyFixed": "The momentum >32 KB SyncData corruption was fixed by chunking (save-load-diagnostics.md:7; war-of-the-ring-momentum.md:190).",
+   "suggestedLever": "Persist only heroes whose race differs from their XML template. Mind the reason all races are captured today (:77-81).",
+   "thread": "main; Patch61 hooks on TWParallel load workers and the async save writer (save-load-diagnostics.md:38)"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/SubModule.cs",
+   "symbol": "SubModule.OnSubModuleLoad / OnBeforeInitialModuleScreenSetAsRoot / OnGameStart / OnGameInitializationFinished",
+   "hook": "MBSubModuleBase lifecycle",
+   "frequency": "once per process (boot, main menu); OnGameStart every game; the late patch batch once per process (:1565-1566)",
+   "severity": "medium",
+   "evidence": "OnSubModuleLoad (:116-661) reads Harmony attributes on every type in TAOM.dll to build PatchCategoryIndex (:204-209; PatchCategoryIndex.cs:31-57); TAOM.dll is 4,172,288 bytes from 2,458 .cs files. It attaches Patch37 plus the 16 Native2Managed shims (:215-226; harmony-patch-registry.md:283), registers UIExtenderEx over the assembly (:228-230, 957-1005), parses about 120 localization overrides (:273-289) and applies about 29 categories plus the ProcessLoad modules (:239-656). Main menu: Patch55, memory samplers and the console discovery audit (:663-748). OnGameStart: 57 AddBehavior and 52 AddModel calls (grep counts). OnGameInitializationFinished applies about 40 categories and 8 manual patches (:1960; ManualPatchApplicator.cs), and every game init runs MonsterSize and ArmourGate passes (:1551-1556). Overall there are 265 [HarmonyPatchCategory] attributes across 95 distinct literal categories, with no PatchAll anywhere (PatchCategoryIndex.cs:69). Each attach costs about 4-8 ms on players vs 117-190 ms on the desktop (followup-patch-tax.md:22-31). The engine's console discovery walks every type and static method of TAOM.dll (dev-console.md:46-54; 45 taom.* commands in 28 files). HarmonyCensus runs only when a co-op module is active (:1962-1999). Feature IoC files hold about 567 registrations.",
+   "costPatterns": [
+    "Harmony.Patch per patch class",
+    "reflection scans over a 4 MB assembly (TAOM PatchCategoryIndex, UIExtenderEx registration; the engine's console discovery is engine-side)"
+   ],
+   "gating": "none",
+   "alreadyFixed": "#650 / plan 006 cut the boot Native2Managed sweep from 247 to 16 shims (crash-report.md:282); plan 009 made category application guarded (PatchCategoryApplier.cs).",
+   "suggestedLever": "Log elapsed ms per apply phase (PatchCategoryApplier has no timing today); fix the desktop debugger launch profile before using desktop boot numbers.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/docs/features/map-load-diagnostics.md",
+   "symbol": "Map screen construction with TAOM_Map data (scene, terrain runtime data, settlement distance cache)",
+   "hook": "engine MapState/MapScreen initialization",
+   "frequency": "every campaign start or load",
+   "severity": "medium",
+   "evidence": "MapScreen.OnInitialize took 632-646 ms, the loading window lowered within 10-15 s, and time ran from +90 s (map-load-diagnostics.md:3-8, 74; v1.5.2-impact.md:143-147). Session launch plus map-screen construction took 7 s and +1.76 GB; the map settled at a further +3.3 GB (native-commit-audit-2026-08.md:589-591). About 3.9 GB of terrain and flora runtime data is generated at load and scales with map area, 'our map is twice vanilla's' (native-commit-audit-2026-08.md:560-565). TAOM_Map's RuntimeDataCache is 21 GB (v1.5.2-impact.md:153). settlements_distance_cache_Default.bin is 10,519,671 bytes and settlements.xml 1,165,969 bytes (Modules/TAOM_Map/ModuleData). These are desktop runs inside the slow-mode window, so absolute times may be inflated [inferred caveat].",
+   "costPatterns": [
+    "map-area-scaled native terrain data",
+    "large GPU/system memory settle"
+   ],
+   "gating": "none",
+   "suggestedLever": "Driven by TAOM_Map data, not TAOM code; re-measure on a non-debugger launch.",
+   "thread": "main/native"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/SettlementNameplateFade/Hooks/SettlementNameplateWidget_DetermineTargetAlphaValue_Patch.cs",
+   "symbol": "Patch38 fade postfix + TaomSettlementPlateWidget.OnLateUpdate + Patch74 PartyNameplateCampIconPatch",
+   "hook": "Harmony postfix on SettlementNameplateWidget.DetermineTargetAlphaValue (from OnParallelUpdate), custom widget late update, postfix on PartyPlayerNameplateWidget.UpdateNameplatesVisibility",
+   "frequency": "about 3000 calls/s on a populated map (harmony-patch-registry.md:291); per plate per frame; per frame for the player nameplate",
+   "severity": "low",
+   "evidence": "Patch38 uses statics captured once and is PatchShield-excluded (PatchShieldPolicy.cs:81-85); its body is two service calls (:41-55). TaomSettlementPlateWidget.OnLateUpdate does bounded reference resolution (at most 120 attempts), a palette check, and MirrorAlpha writes only on change (TaomSettlementPlateWidget.cs:81-148; SettlementPlatePresenter.cs:69-98). Patch74's no-camp path allocates nothing (harmony-patch-registry.md:753; PartyNameplateCampIconPatch.cs:41-67).",
+   "costPatterns": [
+    "per-plate per-frame property reads"
+   ],
+   "gating": "EnableNameplateFade default true (TaomSettings.cs:1244)",
+   "alreadyFixed": "#465 (gh issue 465, closed 2026-08-19: 'CRITICAL: per-frame NRE on the campaign map from a stale PartyNameplateItem clone'). TaomSettings caching for Patch38 (rca-settlement-nameplate-fade-2026-05-25.md:7, 19, 39). #331 removed PatchShield from the Gauntlet layer.",
+   "suggestedLever": "None.",
+   "thread": "Patch38 in OnParallelUpdate, multi-threaded (patch comment :22-25); widgets on UI"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/BannerColorPersistence/Hooks/MobilePartyVisualHelper_GetHumanAgentPartyVisual_Patch.cs",
+   "symbol": "Party icon build: Patch23 transpiler (ResolveColor1/2), Patch53 transpilers (PartyIconScaleConfig.GetScale), Patch94 brood-icon prefix",
+   "hook": "Harmony transpilers and prefix on SandBoxViewHelpers+MobilePartyVisualHelper.GetHumanAgentPartyVisual; Patch53 transpiler on MobilePartyVisual.AddCharacterToPartyIcon",
+   "frequency": "per party visual (re)build: map load for every party and each spawn or roster-driven rebuild (parties 2,091 -> 3,042 in 56 s of fast-forward, v1.5.2-impact.md:147)",
+   "severity": "low",
+   "evidence": "GetScale reads TaomSettings.Instance at each of the three swapped literal sites per build (PartyIconScaleConfig.cs:47; Patch53_PartyIconScale.cs:28-35; Patch53_PartyIconScaleHumanVisual.cs:26-35). The colour resolver is called after each faction-colour read (:41-52). Patch94 adds a prefix (Patch94_CreatureBroodCampaign.cs:23-30). The desktop ran fast-forward at 7-8 fps with RealTick at 20 ms during spawn-in (v1.5.2-impact.md:147), so most of each ~130 ms frame was outside the campaign tick, in visuals, rendering and UI [inferred]. TAOM's share of the native-heavy icon build is likely small [inferred].",
+   "costPatterns": [
+    "MCM lookups per icon build",
+    "3 patches on one per-party visual builder (shield-eligible)"
+   ],
+   "gating": "MapFigureScale MCM; colour persistence always on",
+   "suggestedLever": "Cache the scale in a static refreshed on MCM change; profile spawn-in with and without TAOM's icon patches.",
+   "thread": "main"
+  },
+  {
+   "file": "E:/repos/TAOM/Main/Features/TimeAcceleration/TimeAccelerationSettingsProvider.cs",
+   "symbol": "FastForwardMultiplier / ExtraFastForwardMultiplier / CtrlSpaceMultiplier, written to Campaign.SpeedUpMultiplier",
+   "hook": "TimeAccelerationService.OnTick from SubModule.OnApplicationTick; TimeAccelerationMixin [ViewModelMixin(\"Tick\")] on MapTimeControlVM",
+   "frequency": "every frame; multiplies campaign dt per frame",
+   "severity": "low",
+   "evidence": "Defaults are 4, 8 and 16 (TaomSettings.cs:427, 432, 437; provider :5-14). They are written to Campaign.SpeedUpMultiplier (TimeAccelerationService.cs:74-93; TimeControlAdapter.cs:16-19). The mixin reads the multiplier setting every frame (TimeAccelerationMixin.cs:16, 87-91; TimeAccelerationService.cs:118-121). A higher multiplier raises per-frame dt, and with it the nav-face crossings, periodic ticks and battles processed per frame [inferred], amplifying every per-party item above.",
+   "costPatterns": [
+    "amplifier for per-tick work",
+    "MCM lookup per frame"
+   ],
+   "gating": "player chooses mode",
+   "suggestedLever": "None itself; benchmark the per-party items at 8x and 16x.",
+   "thread": "main"
+  }
+ ],
+ "multipliers": [
+  "Mobile parties: 2,033 at +30 s on a new campaign (lord 63, villager 0, caravan 302, bandit 541, militia 828, garrison 221, other 78) per docs/features/map-load-diagnostics.md:30-31; 2,091 at Stop, growing to 3,042 over 56 s of fast-forward while lords and villagers spawned (docs/migration/v1.5.2-impact.md:146-147).",
+  "Living heroes: 4,770 (map-load-diagnostics.md:32) to 4,879 (v1.5.2-impact.md:146), counted from Hero.AllAliveHeroes (Campaign_RealTick_MapLoad_Patch.cs:120). DailyTickHeroEvent ticks over Hero.AllAliveHeroes (TaleWorlds.CampaignSystem.cs:22548-22588).",
+  "Clans: 235 (both docs). Settlements: 988 (map-load-diagnostics.md:32) to 1,002 (v1.5.2-impact.md:146). TAOM_Map/ModuleData/settlements.xml has 1,002 <Settlement, 221 <Town components of which 143 are is_castle (so 78 towns), 622 <Village and 158 <Hideout (grep counts).",
+  "Realms: 22 (realm-borders.md:324). Armory items: 3,512 <Item + 68 <CraftedItem in 131 files merged as 131 separate steps.",
+  "Per-entity tickers (MobileParty.All hourly/daily, settlements hourly/daily, Clan.All hourly, Town.AllTowns daily, Hero.AllAliveHeroes daily) are spread over game time and all run with doParallel:false on the main thread (TaleWorlds.CampaignSystem.cs:22548-22588).",
+  "Time multipliers: FastForward 4, Extra 8, Ctrl+Space 16 (TaomSettings.cs:427-437) scale per-frame campaign dt.",
+  "UI cadences: MapBarVM refreshes MapInfo every 0.1 s in fast-forward and 0.2 s otherwise (TaleWorlds.CampaignSystem.ViewModelCollection.cs:20911-20918); settlement nameplate fade about 3000 calls/s (harmony-patch-registry.md:291); Patch22 '~500-2000 calls/cycle' (AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch.cs:17).",
+  "Harmony attach cost: under about 8 ms per attach on 11 player processes vs 117-190 ms on the maintainer desktop, most likely from a mixed-mode debugger launch profile (plans/_audit/2026-09-23-opus/followup-patch-tax.md:22-31, 85-130). Many desktop timings in the docs were recorded in that slow mode.",
+  "MCM read cost: TaomSettings.Instance is GlobalSettings<T>.Instance, which does two ConcurrentDictionary operations plus a walk of the settings containers on every read (E:/Decompiled_Bannerlord/_modules_build/TAOM.Dependencies__MCMv5.cs:6321-6331, 2214-2233). About 100 per-read getters across 40 files remain uncached (deep-review-003-hot-path-resolve-and-grid-caching-2026-09-24.md:71, 154). One RCA calls it an 'O(1) cached lookup' (rca-ai-party-size-2026-08-18.md:17), which the decompile contradicts.",
+  "Logging: FileLogger writes INFO, WARNING and ERROR synchronously with a Flush on the calling (game) thread; DEBUG is queued but always formatted, with no level gate (FileLogger.cs:85-124; CareerPassiveService.cs:125-130)."
+ ],
+ "summary": "I inventoried TAOM's campaign and load-time hot paths: the event listeners (8 TickEvent, 10 hourly, 12 daily global, plus per-entity DailyTickParty, DailyTickSettlement and DailyTickHero), the Harmony patches on AI, speed, caravan, text, gold and map-frame paths, the per-party GameModels, map rendering (RealmBorders, nameplates, map-bar mixins), and boot, XML, save and load costs. No TAOM behavior registers on HourlyTickPartyEvent, HourlyTickSettlementEvent, HourlyTickClanEvent or DailyTickClanEvent. Patch42 instead postfixes vanilla's per-party hourly RecruitmentCampaignBehavior.HourlyTickParty. No uncached IoC.Resolve appears on a campaign hot path. TAOM overrides no settlement-value or encounter model.\n\nRanked findings:\n1. TAOM appears to ship a Debug-configuration DLL. build.ps1 defaults to Debug, the release skill builds with a bare ./build.ps1, and the deployed DLL's size matches the Debug output. This is a cheap, broad multiplier.\n2. The engine's per-game-start XML merge and XSLT compile are amplified by TAOM's data shape: 47 NPCCharacters files, a 1.5 MB lords.xslt with 397 templates that is recompiled every start, and 131 Armory item-file merge steps. It is unmeasured but structurally quadratic.\n3. PatchShield pass 2 runs at every game start: about 125 attaches on the first start after #651 and about 140 on a second start. That is about 1-3 s on players and tens of seconds on the desktop, and it plausibly explains the audit's 25.6 s and 67 s silent windows [inferred].\n4. The caravan trade postfixes multiply the per-destination search: 78 towns, a duplicate distance query per town, several MCM-reading getter calls per score, and up to two passes, across 302+ caravans.\n5. TaomPartySpeedModel plus the HasFeat and weather prefixes run on every speed recompute (each nav-face change) for 2,000-3,000 parties.\nMedium items are the GetLocalizedText substring allocation per text, the unmeasured per-call PatchShield tax, the default-on AutoResolve battle log (synchronous flush per world battle), CultureMarketplace's O(routed x roster) daily town pass, Patch42's per-party MCM reads and extra castle candidates, RealmBorders' per-frame MCM reads with its 0.2-0.6 s parchment hitch and 3 ms/frame sampling, the uncached Morale/Food/Wage model re-runs, the per-save hero race map, boot reflection, and map-load data scale.\n\nAlready fixed: #651 (d90b4be3) and #650 (plan 006) for PatchShield and Native2Managed boot cost, #655 (ed1732eb) for the per-frame loading-window trace, #465 for the per-frame nameplate NRE, plus Patch38 settings caching and #331's Gauntlet exclusion.\n\nCaveats:\n- E:/Decompiled_Bannerlord/_manifest.json still says v1.4.8, but the _diff_1.5.2_to_1.5.3 headers show _shipping_build and _modules_build are v1.5.3. All engine line numbers come from those dumps.\n- Many recorded timings (69 s pass 2, 7-8 fps fast-forward, 25.6 s/67 s load windows) come from the maintainer desktop's slow mode (117-190 ms per Harmony.Patch, likely the VS mixed-mode debugger), so they overstate player cost.\n- No per-handler or LoadXML timing instrument exists.\n\nCheapest next measurements:\n- A Release-vs-Debug A/B, and a patchshield-disabled.flag A/B, both against [MapLoad] tickMs/fps.\n- Call counters on the caravan, speed and GetLocalizedText patches.\n- A stamp around LoadXML.\nFitting skills: /investigate for root-causing a measured regression and /research for the engine side."
+}

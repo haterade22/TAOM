@@ -92,8 +92,8 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Khuzdul vocabulary (J.R.R. Tolkien) | `Khuzdul` `Khazad` `Baruk` `khuzdul-lexicon` | UNKNOWN | verbatim-port | `docs/audio/khuzdul-lexicon.html` `docs/audio/vo-script-dwarves.html` | uncleared |
 | Cave Troll Lightweight (Fab) | `Cave Troll Lightweight` `cave_troll_lightweight` | purchased-asset, code terms informal | data-port | `tools/oneoff/ue_export_cave_troll.py` `tools/blender/retarget_mannequin_to_human.py`; the retargeted `anim_troll_*` clips in `LOTRLOME_Armory` (live, outside the repo) | cleared |
 | Animalia - Elk (male), Animalia - Moose (male) (Fab) | `Animalia` `Elk_M` `Moose_M` `animalia_elk` `animalia_moose` | purchased-asset, code terms informal | data-port | `tools/blender/reskin_animalia_to_horse.py` `tools/blender/retarget_animalia_to_horse.py` `tools/blender/animalia_to_horse_map.json` `tools/blender/measure_animalia_clips.py` `tools/blender/animalia_elk_clip_measure.json` `tools/blender/animalia_moose_clip_measure.json` `tools/gen_animalia_anim_clips.ps1` `docs/features/animalia-elk-moose.md`; meshes, clips and textures in `LOTRLOME_Armory/AssetSources/creature/elk/` and their Kit packages in `LOTRLOME_Armory/Assets/creature/elk/` (live, outside the repo) | cleared |
-| Yotthani DualWield handoff, MithrilForge | `MithrilForge` `DualWield` `Bannerlord_Animation_Handoff` `TpacTool-bannerlord` | MIT (MithrilForge); the handoff document was shared with the maintainer by its author, no licence stated | comparison-only | (none; restated facts in `docs/reference/tpac-static-prop-authoring.md` and the animation reference docs) | cleared |
-| Yotthani `bannerlord` repository (DualWield, FaceLearner) | `yotthani/bannerlord` `HoN/DualWield` `FaceLearner` `FaceLearner.HeadExtract` | UNKNOWN (no licence file; shared with the maintainer by its author) | comparison-only | (none; restated facts in `docs/reference/scripted-melee-strikes.md` and `docs/reference/head-mesh-and-groom-authoring.md`) | uncleared |
+| Yotthani DualWield handoff, MithrilForge | `MithrilForge` `DualWield` `Bannerlord_Animation_Handoff` `TpacTool-bannerlord` | MIT (MithrilForge); the handoff document was shared with the maintainer by its author, no licence stated | comparison-only | (none; restated facts in `docs/reference/tpac-static-prop-authoring.md`, the animation reference docs and `docs/reference/engine/mission-frame-threads-and-native-costs.md`) | cleared |
+| Yotthani `bannerlord` repository (DualWield, FaceLearner) | `yotthani/bannerlord` `HoN/DualWield` `FaceLearner` `FaceLearner.HeadExtract` | UNKNOWN (no licence file; shared with the maintainer by its author) | comparison-only | (none; restated facts in `docs/reference/scripted-melee-strikes.md`, `docs/reference/head-mesh-and-groom-authoring.md` and `docs/reference/engine/mission-frame-threads-and-native-costs.md`) | uncleared |
 | Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
 | Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
 | Kingdom Borders (Nexus mod 10699) | `Kingdom Borders` `KingdomBorders` | UNKNOWN | behavioural-port | `Main/Adapters/BorderRenderAdapter.cs`; the Heraldic layout in `Main/Features/RealmBorders/Domain/BorderPainter.cs`; the module-id check in `Main/Features/RealmBorders/Hooks/RealmBordersCampaignBehavior.cs` (interop); see detail | uncleared |
@@ -295,6 +295,13 @@ tool is irrelevant to their terms, which remain the commissioned-art clearance a
 the editor-built releases ship only `pack0.tpac`, which does not contain them. Review:
 [`docs/reviews/adopt-mithrilforge-2026-09-29.md`](../reviews/adopt-mithrilforge-2026-09-29.md).
 
+Third pass on 2026-10-02, for the engine-performance programme: `docs/engine/*` at commit `7c556554` (native.md,
+hooks.md, ai-formations.md, combat.md, taom-combat.md, rider-ik.md, modding-kit.md) and the `TpacFormat` library's
+README, read in a local clone. Nothing was copied. Every native fact TAOM relies on was re-derived on TAOM's own copy of
+the v1.5.3 client with TAOM's tools; the rest is tagged as yotthani's in
+[`engine/mission-frame-threads-and-native-costs.md`](engine/mission-frame-threads-and-native-costs.md). Review:
+[`docs/reviews/adopt-mithrilforge-engine-perf-2026-10-02.md`](../reviews/adopt-mithrilforge-engine-perf-2026-10-02.md).
+
 ### Yotthani `bannerlord` repository (DualWield, FaceLearner)
 
 yotthani's private monorepo `yotthani/bannerlord`, shared with the maintainer by its author (the same collaborator as
@@ -307,6 +314,11 @@ measurement, in [`scripted-melee-strikes.md`](scripted-melee-strikes.md) and
 [`head-mesh-and-groom-authoring.md`](head-mesh-and-groom-authoring.md). Restating facts needs no licence; the row
 stays `uncleared` until the terms are known, and a licence line from yotthani would clear it. Review:
 [`docs/reviews/adopt-yotthani-bannerlord-2026-09-30.md`](../reviews/adopt-yotthani-bannerlord-2026-09-30.md).
+
+Read again on 2026-10-02 at commit `2e44db7` for its performance work only (`HoN/DualWield/Core/DwPerf.cs`, the
+DualWield perf and limb-ray commit messages, `bn faces/FaceLearner/PERFORMANCE_ANALYSIS.md`, two design specs);
+comparison only, nothing taken. Review:
+[`docs/reviews/adopt-mithrilforge-engine-perf-2026-10-02.md`](../reviews/adopt-mithrilforge-engine-perf-2026-10-02.md).
 
 ### ADOD_Beasts, BehaviorTrees
 

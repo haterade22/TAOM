@@ -1,0 +1,329 @@
+765d3759 len=66 docs(mission-perf): v2.0.32 - record plan 028's convergence rounds | OK
+    parsed: ['Refs: plan 028']
+9d52bb86 len=69 docs(mission-perf): v2.0.32 - first-game cost of the OnTick exclusion | OK
+    parsed: ['Refs: plan 028']
+7ca09cc2 len=59 fix(mission-perf): v2.0.32 - convergence fixes for plan 028 | TRAILERS-UNPARSED(last para keys ['Review', 'Refs', 'Not-tested']) UNINDENTED-CONT:2
+    parsed: (none)
+e64529b3 len=59 fix(mission-perf): v2.0.32 - review follow-ups for plan 028 | OK
+    parsed: ['Review: docs/reviews/deep-review-028-mission-tick-profiler-2026-10-02.md', 'RCA: docs/reviews/rca-mission-tick-profiler-2026-10-02.md', 'Refs: plan 028', 'Not-tested: in game; no mission was run with the profiler on or off.']
+b3bac1a9 len=71 feat(mission-perf): v2.0.32 - per-behaviour tick profiler and hitch log | LONG:148
+    parsed: ['Refs: plan 028', "Not-tested: live patch application, the in-game numbers, MissionTickProfilerBehavior and the [PerfContext] engine reads (maintainer's in-game check)", 'Save-compat: none (no saved state)']
+    long 148: Not-tested: live patch application, the in-game numbers, MissionTickProfilerBehavior and t
+0d1e91f0 len=66 docs(plans): v2.0.32 - perf plans 028 to 035, reviewed and revised | OK
+    parsed: (none)
+e9cd8b39 len=69 docs(engine): v2.0.32 - texture formats, hitch analysis, memory audit | OK
+    parsed: (none)
+761b20fe len=70 docs(engine): v2.0.32 - battle frame, runtime and clip residency facts | OK
+    parsed: (none)
+76878ffd len=63 docs(perf): v2.0.32 - record plan 029's last convergence rounds | OK
+    parsed: ['Refs: plan 029']
+973f35d9 len=51 fix(perf): v2.0.32 - convergence fixes for plan 029 | OK
+    parsed: (none)
+df40fee6 len=51 fix(perf): v2.0.32 - review follow-ups for plan 029 | LONG:75,90 ALSO-KEYED-ABOVE:['Tests', 'Report']
+    parsed: ['Not-tested: plan 040\'s "total" marker lines against a merged 040; left for the maintainer.']
+    long 75: (Convergence round 3). RCA: docs/reviews/rca-perf-runs-parser-2026-10-02.md
+    long 90: Not-tested: plan 040's "total" marker lines against a merged 040; left for the maintainer.
+f92a0bb4 len=58 docs(perf): v2.0.32 - record plan 029's convergence rounds | OK
+    parsed: ['Refs: plan 029']
+43f74556 len=62 test(perf): v2.0.32 - pin plan 028's newest status line shapes | OK
+    parsed: ['Refs: plan 029']
+50028d26 len=67 fix(perf): v2.0.32 - keep whole values and timestamps in extra tags | OK
+    parsed: ['Refs: plan 029', 'Not-tested: against a log written by a plan 028 build.']
+fc141af2 len=51 fix(perf): v2.0.32 - convergence fixes for plan 029 | TRAILERS-UNPARSED(last para keys ['Not-tested']) UNINDENTED-CONT:1
+    parsed: (none)
+06584dd9 len=51 fix(perf): v2.0.32 - review follow-ups for plan 029 | ALSO-KEYED-ABOVE:['Tests', 'Report']
+    parsed: ['Not-tested: the [TickSummary] pin has no C# twin until plan 028 lands.']
+63cc79a7 len=69 feat(perf): v2.0.32 - per-mission perf rows and A/B compare from logs | TRAILERS-UNPARSED(last para keys ['Not-tested']) ALSO-KEYED-ABOVE:['Refs'] UNINDENTED-CONT:1
+    parsed: (none)
+37dab128 len=65 docs(diagnostics): v2.0.32 - record plan 030's convergence rounds | OK
+    parsed: ['Refs: plan 030']
+8fee9625 len=58 fix(diagnostics): v2.0.32 - convergence fixes for plan 030 | OK
+    parsed: ['Refs: plan 030']
+b812bb82 len=58 fix(diagnostics): v2.0.32 - review follow-ups for plan 030 | LONG:75,73 ALSO-KEYED-ABOVE:['Report']
+    parsed: ['Refs: plan 030', 'Not-tested: the no-creatures and census lines in a live mission (in game)']
+    long 75: Report: docs/reviews/deep-review-030-mission-diagnostics-diet-2026-10-02.md
+    long 73: Not-tested: the no-creatures and census lines in a live mission (in game)
+494eec47 len=67 perf(banner-colors): v2.0.32 - delete the unread agent colour store | LONG:102
+    parsed: ['Refs: plan 030', 'Not-tested: Harmony apply of Patch23 without the deleted members and armour tint in a battle (in game)']
+    long 102: Not-tested: Harmony apply of Patch23 without the deleted members and armour tint in a batt
+57c6876f len=66 perf(companion-tactics): v2.0.32 - remove the empty OnTick postfix | LONG:81
+    parsed: ['Refs: plan 030', 'Not-tested: Harmony apply of Patch35_CompanionTactics without the class (in game)']
+    long 81: Not-tested: Harmony apply of Patch35_CompanionTactics without the class (in game)
+501e0f04 len=66 perf(creature-bandits): v2.0.32 - diag skips work it would not log | LONG:181
+    parsed: ['Refs: plan 030', 'Not-tested: the seven early returns in CreatureBanditDiagnosticsBehavior and the 22 call sites (engine callbacks and Mission reads; TakeLine, Emit and AnyRegistered are unit tested)']
+    long 181: Not-tested: the seven early returns in CreatureBanditDiagnosticsBehavior and the 22 call s
+cb6b37a2 len=63 perf(trolls): v2.0.32 - troll trackers wait for the first troll | LONG:107
+    parsed: ['Refs: plan 030', 'Not-tested: the gate in TrollBruteForceMissionBehavior (engine Mission and Agent; the latch is unit tested)']
+    long 107: Not-tested: the gate in TrollBruteForceMissionBehavior (engine Mission and Agent; the latc
+8ebdbbcc len=67 perf(career): v2.0.32 - log each perk hit combination once a battle | OK
+    parsed: ['Refs: plan 030', 'Not-tested: the TaomAgentApplyDamageModel call path in a live battle']
+9c246f5e len=68 perf(mission-diag): v2.0.32 - census reads names only for new combos | LONG:117
+    parsed: ['Refs: plan 030', "Not-tested: MissionDiagnosticBehavior's agent loop (engine Agent; unit tests cover the service key and the line text)"]
+    long 117: Not-tested: MissionDiagnosticBehavior's agent loop (engine Agent; unit tests cover the ser
+6d17e69d len=57 docs(perf): v2.0.32 - record plan 031's convergence round | OK
+    parsed: ['Refs: plan 031']
+3dc3739c len=51 fix(perf): v2.0.32 - review follow-ups for plan 031 | LONG:84
+    parsed: ['Refs: plan 031', 'Not-tested: in game; nothing player-visible changed.']
+    long 84: Deep review: docs/reviews/deep-review-031-settings-reads-off-hot-paths-2026-10-02.md
+bf1898c3 len=70 perf(battle): v2.0.32 - parse hotkey on change, probe loc ids in place | TRAILERS-UNPARSED(last para keys ['Not-tested']) ALSO-KEYED-ABOVE:['Refs'] UNINDENTED-CONT:3
+    parsed: (none)
+5d890e31 len=65 perf(battle): v2.0.32 - cache MCM settings in per-frame providers | TRAILERS-UNPARSED(last para keys ['Not-tested']) ALSO-KEYED-ABOVE:['Refs'] UNINDENTED-CONT:1
+    parsed: (none)
+5c1c240c len=63 perf(combat): v2.0.32 - read combat settings once, not per blow | TRAILERS-UNPARSED(last para keys ['Not-tested']) ALSO-KEYED-ABOVE:['Refs'] UNINDENTED-CONT:1
+    parsed: (none)
+e6343e53 len=70 docs(mixed-formations): v2.0.32 - record plan 032's convergence rounds | OK
+    parsed: ['Refs: plan 032']
+c46ef0c1 len=63 fix(mixed-formations): v2.0.32 - convergence fixes for plan 032 | OK
+    parsed: ['Not-tested: comment and assertion-message text only; nothing can fail.']
+1fb072c5 len=63 fix(mixed-formations): v2.0.32 - review follow-ups for plan 032 | TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested']) ALSO-KEYED-ABOVE:['Tests'] UNINDENTED-CONT:1
+    parsed: (none)
+a00363cc len=69 perf(mixed-formations): v2.0.32 - lock-free path for plain formations | TRAILERS-UNPARSED(last para keys ['Refs', 'Constraint', 'Not-tested', 'Research']) UNINDENTED-CONT:3
+    parsed: (none)
+4823b241 len=69 perf(creature-bandits): v2.0.32 - rule out humans before the troop id | TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested']) UNINDENTED-CONT:1
+    parsed: (none)
+80176e2a len=61 docs(perf): v2.0.32 - plans 030 and 031 reviewed and verified | LONG:215
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/PROGRESS.md']
+    long 215: Both passed deep review with no HIGH or CRITICAL finding; the orchestrator re-ran each sui
+406613ef len=76 docs(perf): v2.0.32 - FOR-MIKE item 15: PatchShield can strip TAOM's patches | SUBJECT>72(76) LONG:323
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/FOR-MIKE.md']
+    long 323: Found by plan 028's standards lens and verified against the code: TAOM's Harmony owner com
+74d41cf5 len=51 docs(perf): v2.0.32 - run log: next steps of record | OK
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/PROGRESS.md']
+10915ba6 len=66 docs(perf): v2.0.32 - the startup shader compiles are the Armory's | LONG:161
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/load/load-time-rgl.md']
+    long 161: Sessions without the Armory compiled 0 and 6 shaders at start, so the 1,335 come from the 
+07d7caa9 len=67 docs(perf): v2.0.32 - cold game start spends 33 s compiling shaders | OK
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/load/load-time-rgl.md']
+92d5779f len=55 docs(perf): v2.0.32 - issue drafts for plans 039 to 042 | LONG:202
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/issue-drafts.md']
+    long 202: Adds the four missing drafts (the map profiler, the load stamps, the battle profiler exten
+e4d192f0 len=71 docs(perf): v2.0.32 - FOR-MIKE opens with a priority-ordered start list | LONG:184
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/FOR-MIKE.md']
+    long 184: Adds a five-line start list in priority order above the numbered items (whose numbers othe
+141a20f1 len=52 docs(plans): v2.0.32 - index marks plan 033 executed | OK
+    parsed: ['Refs: plans/README.md']
+34b93d12 len=69 docs(perf): v2.0.32 - run log: plan 033 executed, plans run 3 started | OK
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/PROGRESS.md']
+0912e1b7 len=72 docs(perf): v2.0.32 - run log: load time and the offline merge benchmark | OK
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/PROGRESS.md']
+172668fb len=69 docs(perf): v2.0.32 - lords.xslt lever is a trade-off, not a free win | LONG:202
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/load/merge-bench.md']
+    long 202: lords.xslt keeps each vanilla lord's other children, so a faster plain override would bake
+cbee8510 len=61 docs(perf): v2.0.32 - report carries the offline merge result | LONG:150
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/load/merge-bench.md']
+    long 150: The summary's load-time item now states the measured offline result: the four biggest merg
+35f35e2b len=73 docs(perf): v2.0.32 - XML merge measured offline: 8.8 s down to 2.4-3.1 s | SUBJECT>72(73)
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/load/merge-bench.md']
+61340dc4 len=68 docs(perf): v2.0.32 - run log: plans 036 and 041 done, 033 executing | OK
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/PROGRESS.md']
+06681779 len=67 docs(plans): v2.0.32 - perf plans 036 and 041, reviewed and revised | LONG:86
+    parsed: ['Refs: plans/036-anim-memory-probe.md, plans/041-profiler-extensions-and-hitch-probe.md']
+    long 86: Refs: plans/036-anim-memory-probe.md, plans/041-profiler-extensions-and-hitch-probe.md
+0808552a len=64 docs(perf): v2.0.32 - load evidence records the 09-12 comparison | LONG:190
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/load/load-time-rgl.md']
+    long 190: The XML merge cost about 19 s on 2026-09-12 too; that load's two-minute total came from tw
+be009a11 len=62 docs(perf): v2.0.32 - brief 038 notes the loose-install layout | LONG:201,87
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/briefs/038-battle-equipment-memory-audit.md']
+    long 201: The live TAOM_Map is now the Kit's loose layout, which the map tool cannot index; brief 03
+    long 87: Refs: plans/_audit/2026-10-02-perf/evidence/briefs/038-battle-equipment-memory-audit.md
+c4ad278c len=70 docs(perf): v2.0.32 - map texture reconciliation from the live install | OK
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/memory/live/totals.tsv']
+7c6def2b len=60 docs(perf): v2.0.32 - run log stages wave B1 and plans run 3 | LONG:208
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/PROGRESS.md']
+    long 208: Plan 033 executes first in the next free agent slot (battle frame time is the maintainer's
+8aac41e1 len=62 docs(perf): v2.0.32 - brief 040 times TAOM's new-game handlers | LONG:261,74
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/briefs/040-load-time-stamps.md']
+    long 261: The 2026-10-02 new campaign holds two silent stretches, 6.6 s together, that neither log a
+    long 74: Refs: plans/_audit/2026-10-02-perf/evidence/briefs/040-load-time-stamps.md
+52650b35 len=67 docs(perf): v2.0.32 - report summary gains load time, plans 037-042 | LONG:148
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/REPORT.md']
+    long 148: Adds the measured load-time result to the summary and lists plans 037 to 042 in the build 
+ff4bd55b len=69 docs(perf): v2.0.32 - load time measured: the XML merge is half of it | OK
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/load/load-time-rgl.md']
+01b1a395 len=64 docs(perf): v2.0.32 - campaign map leak is open, add a soak step | OK
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/FOR-MIKE.md']
+c9055868 len=69 docs(perf): v2.0.32 - report summary and decisions brought up to date | OK
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/REPORT.md']
+c29cdb76 len=70 docs(perf): v2.0.32 - battle hitches are not paging or TAOM's samplers | OK
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/REPORT.md']
+631cbc35 len=54 docs(perf): v2.0.32 - campaign map frame rate baseline | OK
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/baseline.md']
+059536c2 len=67 docs(perf): v2.0.32 - brief 038 into the run folder, wave B1 staged | OK
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/PROGRESS.md']
+d50bf962 len=72 docs(perf): v2.0.32 - inventory open cost is cheat mode's all-items list | LONG:74
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/memory/inventory-open-alloc.md']
+    long 74: Refs: plans/_audit/2026-10-02-perf/evidence/memory/inventory-open-alloc.md
+0b2944ad len=76 docs(perf): v2.0.32 - campaign map costs 4.2 GB, read at load and first view | SUBJECT>72(76) LONG:76
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/memory/campaign-memory-reread.md']
+    long 76: Refs: plans/_audit/2026-10-02-perf/evidence/memory/campaign-memory-reread.md
+ae6e2b53 len=72 docs(perf): v2.0.32 - map entry cost matches the scene without edit data | LONG:76
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/memory/campaign-memory-reread.md']
+    long 76: Refs: plans/_audit/2026-10-02-perf/evidence/memory/campaign-memory-reread.md
+9efd3230 len=66 docs(perf): v2.0.32 - battle frame-time baseline from session logs | OK
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/baseline.md']
+4a909f20 len=60 docs(engine): v2.0.32 - mesh edit data stays on disk in play | LONG:75
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/native/native-mesh-editdata.txt']
+    long 75: Refs: plans/_audit/2026-10-02-perf/evidence/native/native-mesh-editdata.txt
+0862bfc3 len=61 docs(perf): v2.0.32 - UI sprite sheet memory, wave A verified | OK
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/memory/ui-sprite-sheets.md']
+5b7f5b1b len=67 docs(perf): v2.0.32 - campaign memory re-read from the session logs | LONG:76
+    parsed: ['Refs: plans/_audit/2026-10-02-perf/evidence/memory/campaign-memory-reread.md']
+    long 76: Refs: plans/_audit/2026-10-02-perf/evidence/memory/campaign-memory-reread.md
+06307997 len=68 docs(behavior-trees): v2.0.32 - record plan 033's convergence rounds | OK
+    parsed: ['Refs: plan 033']
+066e129f len=61 fix(behavior-trees): v2.0.32 - convergence fixes for plan 033 | LONG:78 ALSO-KEYED-ABOVE:['Report']
+    parsed: ['Refs: plan 033']
+    long 78: Report: docs/reviews/deep-review-033-creature-battle-allocations-2026-10-02.md
+7021101b len=56 fix(creatures): v2.0.32 - review follow-ups for plan 033 | TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested']) ALSO-KEYED-ABOVE:['Tests'] UNINDENTED-CONT:1
+    parsed: (none)
+d45774a5 len=64 perf(creature-bandits): v2.0.32 - hunt from a nearby query first | TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested']) UNINDENTED-CONT:3
+    parsed: (none)
+42dddf17 len=68 perf(combat): v2.0.32 - reuse the spatial grid, skip unread rebuilds | TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested']) UNINDENTED-CONT:2
+    parsed: (none)
+5e5cb7a0 len=70 perf(behavior-trees): v2.0.32 - stop allocating per re-entry and event | TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested']) UNINDENTED-CONT:1
+    parsed: (none)
+98a26c69 len=63 perf(creatures): v2.0.32 - read the UTC clock in creature trees | TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested']) UNINDENTED-CONT:1
+    parsed: (none)
+04894078 len=65 docs(patchshield): v2.0.32 - record plan 034's convergence rounds | OK
+    parsed: ['Refs: plan 034']
+bbe7fe9f len=58 fix(patchshield): v2.0.32 - convergence fixes for plan 034 | OK
+    parsed: ['Not-tested: documentation and comment text only.']
+4f8f3018 len=58 fix(patchshield): v2.0.32 - review follow-ups for plan 034 | TRAILERS-UNPARSED(last para keys ['Not-tested', 'Refs']) UNINDENTED-CONT:1
+    parsed: (none)
+31f59582 len=69 perf(patchshield): v2.0.32 - find the original method only on a throw | TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested']) UNINDENTED-CONT:1
+    parsed: (none)
+64dbcac8 len=64 docs(perf): v2.0.32 - wave A reviewed, review decisions for Mike | OK
+    parsed: ['Refs: plans 028 to 032, 036, 041']
+1a702d25 len=68 docs(plans): v2.0.32 - re-anchor plan 041 on plan 028's reviewed tip | OK
+    parsed: ['Refs: plan 041']
+e403dc7c len=61 docs(release): v2.0.32 - record plan 035's convergence rounds | OK
+    parsed: ['Not-tested: no dotnet run; this commit changes no C# or localization', ' file.']
+893f9428 len=54 fix(release): v2.0.32 - convergence fixes for plan 035 | OK
+    parsed: (none)
+6cc7fbfe len=54 fix(release): v2.0.32 - review follow-ups for plan 035 | ALSO-KEYED-ABOVE:['Tests']
+    parsed: ['Refs: plan 035', 'Not-tested: a packaged build played in game; the reports read files', ' only']
+a2e46e29 len=67 feat(release): v2.0.32 - packager reports scene sacks and JIT state | OK
+    parsed: ['Refs: plan 035', 'Not-tested: a packaged build played in game; the reports read files', ' only']
+50df8cbf len=66 docs(mission-perf): v2.0.32 - record plan 036's convergence rounds | OK
+    parsed: ['Refs: plan 036']
+89f1efea len=59 fix(mission-perf): v2.0.32 - convergence fixes for plan 036 | OK
+    parsed: ['Review: docs/reviews/deep-review-036-anim-memory-probe-2026-10-02.md', ' (Convergence round 1)', "Not-tested: the finalize-only teardown in a running game; the probe's", " default stays on pending the maintainer's decision."]
+78f654d9 len=59 fix(mission-perf): v2.0.32 - review follow-ups for plan 036 | OK
+    parsed: ['Review: docs/reviews/deep-review-036-anim-memory-probe-2026-10-02.md', 'RCA: docs/reviews/rca-anim-memory-probe-2026-10-02.md', 'Not-tested: OnRemoveBehavior on a live network client, and the tail', ' line in a real mission log; both are covered by unit tests only.']
+2f560c6c len=71 feat(mission-perf): v2.0.32 - log clip memory against the 12 MiB budget | TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested']) UNINDENTED-CONT:3
+    parsed: (none)
+c8c96c09 len=62 docs(campaign): v2.0.32 - record plan 037's convergence rounds | OK
+    parsed: ['Refs: plan 037']
+212d397d len=55 fix(campaign): v2.0.32 - convergence fixes for plan 037 | TRAILERS-UNPARSED(last para keys ['Not-tested']) UNINDENTED-CONT:1
+    parsed: (none)
+f58ddb09 len=55 fix(campaign): v2.0.32 - review follow-ups for plan 037 | TRAILERS-UNPARSED(last para keys ['Not-tested']) ALSO-KEYED-ABOVE:['Refs'] UNINDENTED-CONT:1
+    parsed: (none)
+b282aaf2 len=68 refactor(caravans): v2.0.32 - drop the trade-score distance hand-off | LONG:77
+    parsed: ['Refs: plan 037, docs/reviews/deep-review-037-campaign-hot-paths-2026-10-02.md']
+    long 77: Refs: plan 037, docs/reviews/deep-review-037-campaign-hot-paths-2026-10-02.md
+f9e277ce len=67 perf(caravans): v2.0.32 - reuse vanilla's distance in trade scoring | TRAILERS-UNPARSED(last para keys ['Refs', 'Rejected', 'Not-tested']) UNINDENTED-CONT:4
+    parsed: (none)
+ae7eff12 len=67 perf(marketplace): v2.0.32 - build culture id sets once per culture | TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested']) UNINDENTED-CONT:1
+    parsed: (none)
+4b6bbf80 len=65 perf(campaign): v2.0.32 - run cheap filters before per-party work | TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested']) UNINDENTED-CONT:2
+    parsed: (none)
+2fd5645c len=71 perf(campaign): v2.0.32 - read campaign MCM settings once, not per call | TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested']) UNINDENTED-CONT:2
+    parsed: (none)
+ba3f2a57 len=57 docs(perf): v2.0.32 - 040 and 039 staged; 16a covers them | OK
+    parsed: ['Refs: plans 039, 040']
+67fa6c1a len=58 docs(perf): v2.0.32 - merge map re-probed with 034 and 042 | OK
+    parsed: ['Refs: plans 034, 042']
+b70743d6 len=64 docs(perf): v2.0.32 - plan 042 executed: the XML merge fast path | OK
+    parsed: ['Refs: plan 042']
+f2c42c6b len=62 docs(perf): v2.0.32 - run log: plans run 3 done, 042 executing | OK
+    parsed: (none)
+81a62844 len=55 docs(plans): v2.0.32 - plans 037, 038 and 039, reviewed | OK
+    parsed: ['Refs: plans 037, 038, 039']
+3901be1e len=64 docs(perf): v2.0.32 - plan 042 staged, its open choices for Mike | OK
+    parsed: ['Refs: plan 042']
+efb70763 len=62 docs(plans): v2.0.32 - plans 042 and 040, reviewed and revised | OK
+    parsed: ['Refs: plans 040, 042']
+dafdd8e0 len=55 docs(perf): v2.0.32 - the orphan count is a lower bound | OK
+    parsed: (none)
+d0394f22 len=60 docs(perf): v2.0.32 - FOR-MIKE opens with the night in brief | OK
+    parsed: (none)
+7adfd612 len=58 docs(perf): v2.0.32 - run log: 034 executed, 041 in review | OK
+    parsed: (none)
+bfcf4d6c len=67 docs(perf): v2.0.32 - texture census and map-pack orphan candidates | OK
+    parsed: ['Refs: FOR-MIKE item 6']
+a6d7bafd len=64 docs(perf): v2.0.32 - banner atlases are 16 times vanilla's size | OK
+    parsed: ['Refs: REPORT M2, M9']
+f852a0b7 len=64 docs(perf): v2.0.32 - REPORT B6 carries the measured shield cost | OK
+    parsed: ['Refs: plan 034']
+df91e97c len=56 docs(perf): v2.0.32 - PatchShield per-call cost measured | OK
+    parsed: ['Refs: plan 034, FOR-MIKE 16a']
+c3a7cb30 len=53 docs(perf): v2.0.32 - merge map for the perf branches | OK
+    parsed: ['Refs: plans 028 to 036, 041']
+6d1e6d6b len=70 docs(perf): v2.0.32 - correct the PatchShield owner-gap recommendation | OK
+    parsed: ['Refs: FOR-MIKE items 15, 16a']
+6d5b2b12 len=62 docs(perf): v2.0.32 - run log: plan 041 executed, 034 launched | OK
+    parsed: (none)
+47ac3b8d len=63 docs(perf): v2.0.32 - name what is known of the main-menu floor | OK
+    parsed: ['Refs: REPORT M3']
+1f3f7f62 len=73 docs(perf): v2.0.32 - ask whether the Kit can split textures like vanilla | SUBJECT>72(73)
+    parsed: ['Refs: REPORT M2']
+9bd38830 len=70 docs(perf): v2.0.32 - the compile-all path is not what runs at startup | OK
+    parsed: ['Refs: plan 035']
+e9b68515 len=70 docs(perf): v2.0.32 - the 1,090 ms battle hitch is silent in both logs | OK
+    parsed: ['Refs: plans 036, 041']
+b7c1b49a len=71 docs(perf): v2.0.32 - when the shader cache is dropped, from the engine | OK
+    parsed: ['Refs: plan 035']
+072d46dc len=59 docs(tools): v2.0.32 - record plan 038's convergence rounds | OK
+    parsed: ['Refs: plan 038']
+9546c167 len=52 fix(tools): v2.0.32 - convergence fixes for plan 038 | OK
+    parsed: (none)
+666d5249 len=52 fix(tools): v2.0.32 - review follow-ups for plan 038 | LONG:80
+    parsed: ['Review: docs/reviews/deep-review-038-battle-equipment-memory-audit-2026-10-02.md', 'RCA: docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md']
+    long 80: Review: docs/reviews/deep-review-038-battle-equipment-memory-audit-2026-10-02.md
+65f640fa len=66 feat(tools): v2.0.32 - rank the equipment assets a battle preloads | OK
+    parsed: ['Refs: plan 038', 'Not-tested: in-game memory; the audit attributes pack bytes, it does', ' not measure process memory']
+ede09280 len=67 feat(tools): v2.0.32 - map memory audit can read loose Assets trees | OK
+    parsed: ['Refs: plan 038']
+db777487 len=62 docs(map-perf): v2.0.32 - record plan 039's convergence rounds | OK
+    parsed: ['Refs: plan 039']
+5714149b len=55 fix(map-perf): v2.0.32 - convergence fixes for plan 039 | OK
+    parsed: ['Refs: plan 039', 'Not-tested: prose only (doc text and code comments); no test reads it.']
+69ed4a36 len=55 fix(map-perf): v2.0.32 - review follow-ups for plan 039 | TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested']) UNINDENTED-CONT:1
+    parsed: (none)
+a3c219d4 len=69 feat(map-perf): v2.0.32 - campaign map frame profiler, off by default | LONG:141 ALSO-KEYED-ABOVE:['Refs']
+    parsed: ["Not-tested: live patch application, the in-game numbers, and the engine reads in MapSessionHooks.OnFrameBoundary (maintainer's in-game check)", 'Save-compat: none (no saved state)']
+    long 141: Not-tested: live patch application, the in-game numbers, and the engine reads in MapSessio
+c4ee9373 len=45 docs(plans): v2.0.32 - plan 039 on its branch | OK
+    parsed: ['Refs: plan 039']
+4e4e65e5 len=65 docs(load-stamps): v2.0.32 - record plan 040's convergence rounds | OK
+    parsed: ['Refs: plan 040']
+e6dcb83f len=58 fix(load-stamps): v2.0.32 - convergence fixes for plan 040 | OK
+    parsed: ['Refs: plan 040', 'Not-tested: in a real game load; covered by unit tests with fakes.']
+f1267a98 len=58 fix(load-stamps): v2.0.32 - review follow-ups for plan 040 | TRAILERS-UNPARSED(last para keys ['Review', 'RCA', 'Refs', 'Not-tested']) UNINDENTED-CONT:1
+    parsed: (none)
+a07546a7 len=65 feat(load-stamps): v2.0.32 - time each campaign handler of a load | OK
+    parsed: ['Refs: plan 040 (issue not filed yet)', 'Not-tested: the listener swap inside a real new game and save load', 'Research: v1.5.3 CampaignEventDispatcher, CampaignEvents and', ' MbEvent`1 / MbEvent`2 (the private listener records)']
+fb796e0d len=65 feat(load-stamps): v2.0.32 - stamp every module XML load per type | OK
+    parsed: ['Refs: plan 040 (issue not filed yet)', 'Not-tested: the two Harmony patches inside a real game load', 'Research: v1.5.3 MBObjectManager.LoadXML and CreateMergedXmlFile, and', ' the LoadXML callers (Campaign, Game, CustomGame, SandBoxSubModule)']
+4daf7d80 len=68 feat(load-stamps): v2.0.32 - time patch groups and TAOM's load hooks | OK
+    parsed: ['Refs: plan 040 (issue not filed yet)', 'Not-tested: the phase lines and hook steps in a real game load']
+d7208235 len=66 docs(mission-perf): v2.0.32 - record plan 041's convergence rounds | OK
+    parsed: ['Refs: plan 041']
+2ab27cdd len=59 fix(mission-perf): v2.0.32 - convergence fixes for plan 041 | TRAILERS-UNPARSED(last para keys ['Not-tested']) UNINDENTED-CONT:1
+    parsed: (none)
+0d030997 len=59 fix(mission-perf): v2.0.32 - review follow-ups for plan 041 | LONG:86 TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested']) UNINDENTED-CONT:2
+    parsed: (none)
+    long 86: Review: docs/reviews/deep-review-041-profiler-extensions-and-hitch-probe-2026-10-02.md
+56b2b327 len=69 feat(mission-perf): v2.0.32 - hitch probe; spawn, script, clip timing | LONG:204 ALSO-KEYED-ABOVE:['Refs']
+    parsed: ["Not-tested: live patch application, the in-game numbers, MissionTickProfilerBehavior, AnimationLoadingAdapter, MissionAttributionHooks.TimedScriptTick against a live component (maintainer's in-game check)", 'Save-compat: none (no saved state)']
+    long 204: Not-tested: live patch application, the in-game numbers, MissionTickProfilerBehavior, Anim
+1639147d len=45 docs(plans): v2.0.32 - plan 041 on its branch | OK
+    parsed: ['Refs: plan 041']
+af50ab17 len=63 docs(xml-merge): v2.0.32 - record plan 042's convergence rounds | OK
+    parsed: ['Refs: plan 042']
+98a69d4f len=56 fix(xml-merge): v2.0.32 - convergence fixes for plan 042 | OK
+    parsed: ["Not-tested: in game; the patch's runtime path is unchanged."]
+4a67f13f len=56 fix(xml-merge): v2.0.32 - review follow-ups for plan 042 | OK
+    parsed: ['Report: docs/reviews/deep-review-042-xml-merge-load-time-2026-10-02.md', 'RCA: docs/reviews/rca-xml-merge-load-time-2026-10-02.md', 'Refs: plan 042', "Not-tested: in game; the merge's runtime path is unchanged here."]
+19be93be len=68 perf(xml-merge): v2.0.32 - merge module XML in one document per load | TRAILERS-UNPARSED(last para keys ['Refs', 'Not-tested', 'Research']) UNINDENTED-CONT:6
+    parsed: (none)

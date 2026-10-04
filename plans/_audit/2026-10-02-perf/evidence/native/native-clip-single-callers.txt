@@ -1,0 +1,108 @@
+
+function: FUN_180592400  entry 0x592400  size 0x5E  (rva at +0x0)
+
+
+void FUN_180592400(longlong param_1)
+
+{
+  undefined8 uVar1;
+  char cVar2;
+  undefined1 *puVar3;
+  
+  uVar1 = *(undefined8 *)(*(longlong *)(param_1 + 0x200) + 0x20);
+  cVar2 = FUN_1805919d0();
+  if (cVar2 != '\0') {
+    FUN_180591c30(param_1,uVar1);
+    return;
+  }
+  puVar3 = &DAT_180a73083;
+  if (*(undefined1 **)(param_1 + 0x18) != (undefined1 *)0x0) {
+    puVar3 = *(undefined1 **)(param_1 + 0x18);
+  }
+  FUN_180710f90("Unable to read animation clip data for %s",puVar3);
+  return;
+}
+
+L1 callers of 0x592400: 2
+
+--- FUN_18058bea0  entry 0x58BEA0 ---
+
+void FUN_18058bea0(longlong param_1)
+
+{
+  byte *pbVar1;
+  int iVar2;
+  longlong lVar3;
+  byte *pbVar4;
+  int iVar5;
+  longlong lVar6;
+  
+  if (*(char *)(DAT_180d9d178 + 0x130) != '\0') {
+    FUN_180592400(*(undefined8 *)(param_1 + 0xb0));
+  }
+  lVar3 = *(longlong *)(param_1 + 0x20);
+  iVar2 = *(int *)(param_1 + 0x78);
+  iVar5 = *(int *)(lVar3 + 0xe8);
+  if (iVar2 == iVar5) {
+    if (iVar2 != 0) {
+      pbVar4 = *(byte **)(param_1 + 0x70);
+      lVar6 = *(longlong *)(lVar3 + 0xe0) - (longlong)pbVar4;
+      do {
+        pbVar1 = pbVar4 + lVar6;
+        iVar5 = (uint)*pbVar4 - (uint)*pbVar1;
+        if (iVar5 != 0) break;
+        pbVar4 = pbVar4 + 1;
+      } while (*pbVar1 != 0);
+    }
+  }
+  else if (iVar2 != 0) goto LAB_18058bf3e;
+  if (iVar5 == 0) {
+    FUN_1805682b0(&DAT_180db0360,*(undefined8 *)(param_1 + 0xb0),param_1 + 0x68,param_1 + 0x68,0xff)
+    ;
+    return;
+  }
+LAB_18058bf3e:
+  if (0 < *(int *)(lVar3 + 0x180)) {
+    FUN_1800725e0(DAT_180d9d178,&DAT_180b1b180,lVar3 + 0x170);
+    FUN_1800725e0(DAT_180d9d178,&DAT_180b1b180,lVar3 + 400);
+    FUN_1805682b0(&DAT_180db0360,*(undefined8 *)(param_1 + 0xb0),lVar3 + 0x170,lVar3 + 400,
+                  *(undefined1 *)(lVar3 + 0x1b0));
+  }
+  return;
+}
+
+--- FUN_18058c170  entry 0x58C170 ---
+
+void FUN_18058c170(longlong param_1)
+
+{
+  char cVar1;
+  undefined8 uVar2;
+  longlong *plVar3;
+  undefined1 *puVar4;
+  
+  if (*(longlong *)(param_1 + 0xb0) == 0) {
+    cVar1 = FUN_180076140(param_1,*(undefined8 *)(*(longlong *)(param_1 + 0x88) + 8));
+    if (cVar1 == '\0') {
+      return;
+    }
+    uVar2 = FUN_18058bdb0(param_1);
+    *(undefined8 *)(param_1 + 0xb0) = uVar2;
+    FUN_180592400(uVar2);
+  }
+  else {
+    FUN_18058f630(&DAT_180db0070);
+    plVar3 = (longlong *)(*(longlong *)(param_1 + 0xb0) + 0x10);
+    puVar4 = &DAT_180a73083;
+    if (*(undefined1 **)(param_1 + 0x70) != (undefined1 *)0x0) {
+      puVar4 = *(undefined1 **)(param_1 + 0x70);
+    }
+    (**(code **)(*plVar3 + 0x10))(plVar3,puVar4);
+  }
+  FUN_18058f4c0(&DAT_180db0070,*(undefined8 *)(param_1 + 0xb0));
+  return;
+}
+
+L2 callers of 0x58BEA0: 0
+
+L2 callers of 0x58C170: 0

@@ -563,6 +563,18 @@ therefore gives the heap AFTER the engine's collection at the previous close; a 
 is rooted state, and the question is who holds it, not when to collect. RCA:
 `docs/reviews/rca-memory-instruments-2026-09-12.md`.
 
+**Correction, 2026-10-02 (v1.5.3 code).** The `[MemStation] enter` line is written from
+`ScreenManager.OnPushScreen` (`ScreenManager.cs:505`), which `GameStateManager.OnPushState` reaches
+through its listeners (`:281-284`) *before* its own `Common.MemoryCleanupGC()` (`:288`; the pop's is at
+`:316`). So the 2,64x MB re-entry readings followed one collection, the pop's, not two. That collection
+runs inside the closing tick while the closing screen and its layer are still on the stack, and those
+keep their movie and widget tree after release, so the graph is held only until the next collection;
+no type on that graph has a finalizer that would delay it. The size comes from cheat mode: vanilla's
+`InventoryScreenHelper.OpenInventoryPresentation` (`:177-188`) puts every item in the game, ten of each,
+into the inventory's left list (about 5,165 rows with the Armory, about 0.5 MB each), and the party
+screen lists every troop. A release one frame after the pop, not in the same tick, is what would return
+the memory at close. Trace: `plans/_audit/2026-10-02-perf/evidence/memory/inventory-open-alloc.md`.
+
 ### What `taom.print_memory` reports since 2026-09-12
 
 The first live run showed the engine's two string surfaces are one number each in the shipping

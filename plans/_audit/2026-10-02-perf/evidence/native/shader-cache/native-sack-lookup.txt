@@ -1,0 +1,118 @@
+module: TaleWorlds.Native.dll v1.5.3 (14,209,376 bytes)
+engine: v1.5.3
+ghidra project: (local, not recorded)
+engine methods: 2282 mapped
+
+function: FUN_1801ef110  entry 0x1EF110  size 0x397  (rva at +0x0)
+
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+
+bool FUN_1801ef110(undefined8 param_1,longlong param_2)
+
+{
+  undefined8 uVar1;
+  char cVar2;
+  longlong lVar3;
+  longlong lVar4;
+  bool bVar5;
+  undefined1 auStack_108 [32];
+  undefined8 local_e8;
+  undefined1 local_d8 [96];
+  undefined1 local_78 [32];
+  undefined1 local_58 [32];
+  undefined4 local_38;
+  undefined4 local_34;
+  undefined4 local_30;
+  undefined1 local_2c;
+  ulonglong local_28;
+  
+  uVar1 = DAT_180da12d8;
+  local_e8 = 0xfffffffffffffffe;
+  local_28 = DAT_180d054a8 ^ (ulonglong)auStack_108;
+  bVar5 = true;
+  if ((*(byte *)(param_2 + 0xa8) & 1) != 0) {
+    FUN_18008ad80(local_d8);
+    FUN_180711ae0(local_78,param_2 + 0x60);
+    FUN_180711ae0(local_58,param_2 + 0x80);
+    local_38 = *(undefined4 *)(param_2 + 0xa0);
+    local_30 = *(undefined4 *)(param_2 + 0xa8);
+    local_2c = *(undefined1 *)(param_2 + 0xac);
+    local_34 = 0;
+    cVar2 = FUN_1801ef4b0(uVar1,local_d8);
+    bVar5 = cVar2 != '\0';
+    FUN_1801ddcc0(local_d8);
+    if (!bVar5) {
+      return bVar5;
+    }
+  }
+  lVar3 = param_2 + 0x60;
+  if ((*(byte *)(param_2 + 0xa8) & 4) != 0) {
+    FUN_18008ad80(local_d8,param_2);
+    FUN_180711ae0(local_78,lVar3);
+    FUN_180711ae0(local_58,param_2 + 0x80);
+    local_38 = *(undefined4 *)(param_2 + 0xa0);
+    local_30 = *(undefined4 *)(param_2 + 0xa8);
+    local_2c = *(undefined1 *)(param_2 + 0xac);
+    local_34 = 3;
+    cVar2 = FUN_1801ef4b0(uVar1,local_d8);
+    bVar5 = cVar2 != '\0';
+    FUN_1801ddcc0(local_d8);
+  }
+  lVar4 = param_2 + 0x80;
+  if (bVar5 != false) {
+    if ((*(byte *)(param_2 + 0xa8) & 2) != 0) {
+      FUN_18008ad80(local_d8,param_2);
+      FUN_180711ae0(local_78,lVar3);
+      FUN_180711ae0(local_58,lVar4);
+      local_38 = *(undefined4 *)(param_2 + 0xa0);
+      local_30 = *(undefined4 *)(param_2 + 0xa8);
+      local_2c = *(undefined1 *)(param_2 + 0xac);
+      local_34 = 2;
+      cVar2 = FUN_1801ef4b0(uVar1,local_d8);
+      bVar5 = cVar2 != '\0';
+      FUN_1801ddcc0(local_d8);
+    }
+    if (bVar5 != false) {
+      if ((*(byte *)(param_2 + 0xa8) & 8) != 0) {
+        FUN_18008ad80(local_d8,param_2);
+        FUN_180711ae0(local_78,lVar3);
+        FUN_180711ae0(local_58,lVar4);
+        local_38 = *(undefined4 *)(param_2 + 0xa0);
+        local_30 = *(undefined4 *)(param_2 + 0xa8);
+        local_2c = *(undefined1 *)(param_2 + 0xac);
+        local_34 = 5;
+        cVar2 = FUN_1801ef4b0(uVar1,local_d8);
+        bVar5 = cVar2 != '\0';
+        FUN_1801ddcc0(local_d8);
+      }
+      if (bVar5 != false) {
+        if ((*(byte *)(param_2 + 0xa8) & 0x10) != 0) {
+          FUN_18008ad80(local_d8,param_2);
+          FUN_180711ae0(local_78,lVar3);
+          FUN_180711ae0(local_58,lVar4);
+          local_38 = *(undefined4 *)(param_2 + 0xa0);
+          local_30 = *(undefined4 *)(param_2 + 0xa8);
+          local_2c = *(undefined1 *)(param_2 + 0xac);
+          local_34 = 1;
+          cVar2 = FUN_1801ef4b0(uVar1,local_d8);
+          bVar5 = cVar2 != '\0';
+          FUN_1801ddcc0(local_d8);
+        }
+        if ((bVar5 != false) && ((*(byte *)(param_2 + 0xa8) & 0x20) != 0)) {
+          FUN_18008ad80(local_d8,param_2);
+          FUN_180711ae0(local_78,param_2 + 0x60);
+          FUN_180711ae0(local_58,lVar4);
+          local_38 = *(undefined4 *)(param_2 + 0xa0);
+          local_30 = *(undefined4 *)(param_2 + 0xa8);
+          local_2c = *(undefined1 *)(param_2 + 0xac);
+          local_34 = 4;
+          cVar2 = FUN_1801ef4b0(uVar1,local_d8);
+          bVar5 = cVar2 != '\0';
+          FUN_1801ddcc0(local_d8);
+        }
+      }
+    }
+  }
+  return bVar5;
+}

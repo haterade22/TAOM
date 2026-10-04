@@ -1,0 +1,196 @@
+
+function: FUN_18046a4b0  entry 0x46A4B0  size 0x56C  (rva at +0x0)
+
+
+/* WARNING: Function: _alloca_probe replaced with injection: alloca_probe */
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+
+undefined8 FUN_18046a4b0(undefined4 param_1,longlong param_2)
+
+{
+  char cVar1;
+  bool bVar2;
+  InputFormat IVar3;
+  undefined8 uVar4;
+  longlong lVar5;
+  uint uVar6;
+  uint uVar7;
+  undefined8 *puVar8;
+  undefined1 *puVar9;
+  uint uVar10;
+  ulonglong uVar12;
+  int iVar13;
+  undefined1 auStackY_12c8 [32];
+  InputOptions local_1288 [8];
+  undefined4 local_1280;
+  CompressionOptions local_1278 [8];
+  OutputOptions local_1270 [8];
+  Compressor local_1268 [8];
+  undefined8 local_1260;
+  undefined **local_1258;
+  undefined8 local_1250;
+  longlong local_1248;
+  undefined1 local_1240 [2304];
+  undefined8 local_940;
+  undefined8 local_938 [288];
+  ulonglong local_38;
+  undefined8 local_30;
+  ulonglong uVar11;
+  
+  local_30 = 0x18046a4cc;
+  local_1260 = 0xfffffffffffffffe;
+  local_38 = DAT_181828718 ^ (ulonglong)auStackY_12c8;
+  if (((*(byte *)(param_2 + 0x5c) & 3) != 0) || ((*(ushort *)(param_2 + 0x5e) & 3) != 0)) {
+    return 0;
+  }
+  cVar1 = FUN_180469740(param_2);
+  if ((cVar1 == '\0') && (DAT_1818f8260 != (undefined8 *)0x0)) {
+    (**(code **)(*(longlong *)*DAT_1818f8260 + 0x20))
+              ((longlong *)*DAT_1818f8260,
+               "C:\\BuildAgent\\work\\mb3\\Source\\Engine\\Rgl\\rglResource_compiler.cpp",0xbeb,
+               "validated_format");
+  }
+  nvtt::InputOptions::InputOptions(local_1288);
+  iVar13 = *(int *)(param_2 + 0x54);
+  if (iVar13 == 1) {
+    IVar3 = 0;
+  }
+  else if (iVar13 == 0x1f) {
+    IVar3 = 1;
+  }
+  else {
+    if (iVar13 != 0x22) {
+      uVar4 = 0;
+      goto LAB_18046a9da;
+    }
+    IVar3 = 2;
+  }
+  nvtt::InputOptions::setFormat(local_1288,IVar3);
+  nvtt::InputOptions::setTextureLayout
+            (local_1288,(uint)((*(uint *)(param_2 + 0x58) & 0x2000) != 0),
+             (uint)*(ushort *)(param_2 + 0x5c),(uint)*(ushort *)(param_2 + 0x5e),1,1);
+  nvtt::InputOptions::setMipmapGeneration(local_1288,true,(uint)*(byte *)(param_2 + 0x65));
+  nvtt::InputOptions::setAlphaMode(local_1288,(uint)((*(uint *)(param_2 + 0x58) & 0x8000) != 0));
+  nvtt::InputOptions::setConvertToNormalMap(local_1288,false);
+  nvtt::CompressionOptions::CompressionOptions(local_1278);
+  nvtt::CompressionOptions::setQuality(local_1278,2);
+  switch(param_1) {
+  case 0:
+  case 1:
+  case 3:
+    nvtt::InputOptions::setNormalMap(local_1288,false);
+    nvtt::InputOptions::setConvertToNormalMap(local_1288,false);
+    if ((*(uint *)(param_2 + 0x58) & 0x88000) == 0x8000) {
+LAB_18046a6ff:
+      nvtt::CompressionOptions::setFormat(local_1278,4);
+      local_1280 = 0x13;
+    }
+    else {
+      nvtt::CompressionOptions::setFormat(local_1278,1);
+      local_1280 = 0xf;
+    }
+    break;
+  case 2:
+    nvtt::InputOptions::setGamma(local_1288,DAT_1814abaa8,DAT_1814abaa8);
+    if ((*(uint *)(param_2 + 0x58) & 0x88000) == 0x8000) goto LAB_18046a6ff;
+    nvtt::CompressionOptions::setFormat(local_1278,7);
+    local_1280 = 0x15;
+    *(uint *)(param_2 + 0x58) = *(uint *)(param_2 + 0x58) | 0x80000000;
+    break;
+  case 4:
+    nvtt::InputOptions::setNormalMap(local_1288,false);
+    nvtt::InputOptions::setConvertToNormalMap(local_1288,false);
+    nvtt::CompressionOptions::setFormat(local_1278,6);
+    local_1280 = 0x14;
+    break;
+  case 5:
+    nvtt::InputOptions::setGamma(local_1288,DAT_1814abaa8,DAT_1814abaa8);
+    nvtt::InputOptions::setNormalMap(local_1288,false);
+    nvtt::InputOptions::setConvertToNormalMap(local_1288,false);
+    nvtt::CompressionOptions::setFormat(local_1278,10);
+    local_1280 = 0x16;
+    break;
+  case 6:
+    nvtt::InputOptions::setNormalMap(local_1288,false);
+    nvtt::InputOptions::setConvertToNormalMap(local_1288,false);
+    nvtt::CompressionOptions::setFormat(local_1278,0xb);
+    local_1280 = 0x17;
+    break;
+  default:
+    if (DAT_1818f8260 != (undefined8 *)0x0) {
+      (**(code **)(*(longlong *)*DAT_1818f8260 + 0x20))
+                ((longlong *)*DAT_1818f8260,
+                 "C:\\BuildAgent\\work\\mb3\\Source\\Engine\\Rgl\\rglResource_compiler.cpp",0xc70,
+                 "Unknown image type");
+    }
+    uVar4 = 0;
+    goto LAB_18046a9ce;
+  }
+  puVar8 = local_938;
+  lVar5 = 0x60;
+  do {
+    FUN_18019e090(puVar8);
+    puVar8 = puVar8 + 3;
+    lVar5 = lVar5 + -1;
+  } while (lVar5 != 0);
+  FUN_18019e0b0(param_2);
+  uVar11 = 0;
+  uVar12 = uVar11;
+  if (*(short *)(param_2 + 0x62) != 0) {
+    do {
+      iVar13 = 0;
+      uVar6 = (uint)*(ushort *)(param_2 + 0x5c);
+      uVar10 = (uint)*(ushort *)(param_2 + 0x5e);
+      if (*(char *)(param_2 + 0x65) != '\0') {
+        puVar8 = local_938 + uVar12 * 3;
+        do {
+          bVar2 = nvtt::InputOptions::setMipmapData
+                            (local_1288,(void *)*puVar8,uVar6,uVar10,1,(int)uVar11,iVar13);
+          if ((!bVar2) && (DAT_1818f8260 != (undefined8 *)0x0)) {
+            (**(code **)(*(longlong *)*DAT_1818f8260 + 0x20))
+                      ((longlong *)*DAT_1818f8260,
+                       "C:\\BuildAgent\\work\\mb3\\Source\\Engine\\Rgl\\rglResource_compiler.cpp",
+                       0xc80,&DAT_18138a2b0);
+          }
+          uVar7 = uVar6 >> 1;
+          uVar6 = 1;
+          if (1 < uVar7) {
+            uVar6 = uVar7;
+          }
+          uVar7 = uVar10 >> 1;
+          uVar10 = 1;
+          if (1 < uVar7) {
+            uVar10 = uVar7;
+          }
+          uVar12 = uVar12 + 1;
+          puVar8 = puVar8 + 3;
+          iVar13 = iVar13 + 1;
+        } while (iVar13 < (int)(uint)*(byte *)(param_2 + 0x65));
+      }
+      uVar10 = (int)uVar11 + 1;
+      uVar11 = (ulonglong)uVar10;
+    } while ((int)uVar10 < (int)(uint)*(ushort *)(param_2 + 0x62));
+  }
+  lVar5 = 0x60;
+  *(undefined4 *)(param_2 + 0x54) = local_1280;
+  FUN_18042c330(param_2);
+  nvtt::OutputOptions::OutputOptions(local_1270);
+  nvtt::OutputOptions::setSrgbFlag(local_1270,false);
+  local_1258 = rglNTT_Output_handler::vftable;
+  puVar9 = local_1240;
+  do {
+    FUN_18019e090(puVar9);
+    puVar9 = puVar9 + 0x18;
+    lVar5 = lVar5 + -1;
+  } while (lVar5 != 0);
+  local_1248 = param_2;
+  FUN_18019e0b0(param_2,local_1240);
+  local_940 = 0;
+  local_1250 = 0;
+  nvtt::OutputOptions::setOutputHandler(local_1270,(OutputHandler *)&local_1258);
+  nvtt::Compressor::Compressor(local_1268);
+  nvtt::Compressor::process(local_1268,local_1288,local_1278,local_1270);
+  uVar4 = 1;
+  nvtt::Compressor::~Compressor(local_1268);
+  local_1258 = nvtt::OutputHandler::vftable;
+  nvtt::OutputOptions::~OutputOptions(local_1270);

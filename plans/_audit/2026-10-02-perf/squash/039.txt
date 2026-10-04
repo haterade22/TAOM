@@ -1,0 +1,53 @@
+feat(map-perf): v2.0.32 - campaign map frame profiler, off by default
+
+A new campaign ran at 7 to 8 fps in fast-forward while lords and
+villagers spawned in, and the [MapLoad] heartbeat could only say that
+Campaign.RealTick took about 20 ms of each frame's 130 ms. The new map
+profiler splits the rest of the frame and says how much of it is
+TAOM's own code.
+
+It is off by default and installs nothing unless "Enable Map Profiler"
+(MCM, Battle Load Diagnostics, Map Performance) is on at game start.
+Turning it on needs a restart; turning it off stops measuring from the
+next campaign session. With it off, every player gets one
+"[MapProfiler] off:" line per game process.
+
+With it on, taom_debug.log gets:
+- [MapProfile] every 5 s while the map ticks: frames, wall time, the
+  campaign's real tick, the map screen, the map state, campaign tick,
+  tick event and application tick phases, everything else (otherMs),
+  TAOM's own share (taomMs), main-thread allocation, the speed class
+  (Stop, Play, FF, FF2, FF3), the party count, the worst frame,
+  skipped frames, GC counts, and the slowest tick-event listeners and
+  TAOM map views;
+- [MapProfileSummary] when the campaign session ends, with the same
+  totals, the skip reasons and the frames per speed class;
+- [MapProfiler] status lines for the install, each session's settings,
+  each degraded part and any fault. A fault stops the profiler for
+  that campaign and writes the frames already measured as a summary
+  with reason=fault.
+Frames during a loading window, under another screen, or not followed
+by exactly one TAOM application tick are counted as skipped, never
+mixed in. The "Tick Profiler Top Behaviours" setting also sets how
+many listeners and views each line lists.
+
+MapState.OnTick, Campaign.RealTick, MapScreen.OnFrameTick,
+Campaign.Tick and CampaignEvents.Tick are now on PatchShield's
+exclusion list for every player. A missing-API exception from a patch,
+or from another mod's code, inside the first three is no longer
+swallowed there, and the broken patch is no longer removed. With crash
+capture on (the default) it is written to a crash report and the game
+continues, but each frame it recurs skips the rest of that application
+or screen tick; an escape from MapScreen.OnFrameTick also stops the
+party AI task while it recurs. With crash capture off, the shield on
+the enclosing method swallows it and strips that method's patches
+instead of the culprit's. Keeping the shield on those three methods
+instead is still the maintainer's decision.
+
+Refs: #721 (plan 039)
+Not-tested: in game. With the map profiler on: the install line at
+ game start, a session line, [MapProfile] lines with frames=0 and a
+ growing skipped count during the map load, then a line every 5 s
+ with speed=Stop when paused and speed=FF in fast-forward, and one
+ "[MapProfileSummary] reason=gameEnd" at quit; with it off, one off
+ line and the [MapLoad] fps compared with it on.

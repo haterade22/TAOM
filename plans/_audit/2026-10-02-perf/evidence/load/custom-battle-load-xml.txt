@@ -1,0 +1,43 @@
+274 ModuleData files opened between 14:33:30 and 14:33:55
+
+per schema: files, seconds before open (schema to file), seconds after open (file to next line)
+  NPCCharacters                  48 files  before   8.263 s  after   0.023 s  total   8.286 s
+  Items                         141 files  before   5.694 s  after   0.015 s  total   5.709 s
+  ?                              24 files  before   0.000 s  after   1.438 s  total   1.438 s
+  GameText                       16 files  before   0.288 s  after   0.014 s  total   0.302 s
+  EquipmentRosters               22 files  before   0.178 s  after   0.000 s  total   0.178 s
+  WeaponDescriptions              1 files  before   0.081 s  after   0.000 s  total   0.081 s
+  SPCultures                      1 files  before   0.072 s  after   0.001 s  total   0.073 s
+  CraftingPieces                  2 files  before   0.055 s  after   0.000 s  total   0.055 s
+  CraftingTemplates               1 files  before   0.052 s  after   0.000 s  total   0.052 s
+  SkillSets                       3 files  before   0.028 s  after   0.000 s  total   0.028 s
+  Monsters                        9 files  before   0.019 s  after   0.000 s  total   0.019 s
+  BodyProperties                  2 files  before   0.013 s  after   0.000 s  total   0.013 s
+  SiegeEngines                    1 files  before   0.009 s  after   0.000 s  total   0.009 s
+  ItemModifiers                   1 files  before   0.003 s  after   0.000 s  total   0.003 s
+  SkeletonScales                  1 files  before   0.002 s  after   0.000 s  total   0.002 s
+  ItemModifierGroups              1 files  before   0.002 s  after   0.000 s  total   0.002 s
+
+per module:
+  TAOM                   80 files  before   8.201 s  after   0.085 s  total   8.286 s
+  LOTRLOME_Armory       153 files  before   4.280 s  after   1.356 s  total   5.636 s
+  SandBoxCore            17 files  before   1.960 s  after   0.006 s  total   1.966 s
+  Native                 22 files  before   0.159 s  after   0.042 s  total   0.201 s
+  CustomBattle            2 files  before   0.159 s  after   0.002 s  total   0.161 s
+
+top 15 files by total:
+   1.391 s (before 1.390, after 0.001) Items              SandBoxCore/ModuleData/sandboxcore_equipment_sets.xml
+   1.330 s (before 0.000, after 1.330) ?                  LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_animalia.xml
+   0.324 s (before 0.324, after 0.000) NPCCharacters      SandBoxCore/ModuleData/spcultures.xml
+   0.316 s (before 0.311, after 0.005) NPCCharacters      TAOM/ModuleData/characters/lords.xml
+   0.236 s (before 0.236, after 0.000) NPCCharacters      TAOM/ModuleData/characters/npcs_lothlorien.xml
+   0.233 s (before 0.233, after 0.000) NPCCharacters      TAOM/ModuleData/taom_wanderers.xml
+   0.225 s (before 0.221, after 0.004) NPCCharacters      TAOM/ModuleData/characters/npcs_dale.xml
+   0.224 s (before 0.224, after 0.000) NPCCharacters      TAOM/ModuleData/characters/faction_ui_picker_characters.xml
+   0.223 s (before 0.223, after 0.000) NPCCharacters      TAOM/ModuleData/characters/npcs_umbar.xml
+   0.221 s (before 0.221, after 0.000) NPCCharacters      TAOM/ModuleData/troops/troops_dunland.xml
+   0.215 s (before 0.215, after 0.000) NPCCharacters      TAOM/ModuleData/characters/npcs_khand.xml
+   0.212 s (before 0.212, after 0.000) NPCCharacters      TAOM/ModuleData/characters/npcs_harad.xml
+   0.209 s (before 0.208, after 0.001) NPCCharacters      TAOM/ModuleData/characters/npcs_lindon.xml
+   0.208 s (before 0.208, after 0.000) NPCCharacters      TAOM/ModuleData/characters/npcs_abanissa.xml
+   0.205 s (before 0.205, after 0.000) NPCCharacters      TAOM/ModuleData/troops/troops_umbar.xml

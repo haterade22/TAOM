@@ -1,0 +1,6 @@
+defined icon and background ids across modules: 655
+characters\clans.xml:410 clan_khuzait_16: 1 of 1 icon layers undefined [17281]
+characters\clans.xml:593 clan_rivendell_2: 2 of 38 icon layers undefined [17104, 17371]
+characters\clans.xml:688 clan_mirkwood_5: 5 of 7 icon layers undefined [17299, 17358]
+characters\clans.xml:703 clan_mirkwood_6: 5 of 7 icon layers undefined [17299, 17358]
+characters\clans.xml:736 clan_lothlorien_2: 2 of 38 icon layers undefined [17104, 17371]

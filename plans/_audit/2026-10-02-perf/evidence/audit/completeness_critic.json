@@ -1,0 +1,245 @@
+{
+ "summary": "I checked the load-bearing claims in all five reports against the code, the v1.5.3 dump, the 2026-10-02 logs, diag.log and the release folders. Everything was read-only: Read, Grep, and Bash with grep/sed/ls/find/git/gh. I ran no Python or PowerShell and wrote no files. The relayed note about copying the external repos locally did not apply, because nothing needed them.\n\n**Confirmed.**\n- **TAOM ships unoptimized code (E3).** The testing and patreon/public TAOM.dll, and both channels' TAOM.Dependencies.dll, carry the DebuggableAttribute that turns JIT optimization off (byte 0x107). The local Release build (E:/repos/TAOM/Main/bin/Release/net472/TAOM.dll) does not. Cause: E:/repos/TAOM/build.ps1:4 defaults to Debug, and the release skill's Phase 8 calls ./build.ps1 with no configuration. So every frame-time figure in E2, E3 and E4 measures unoptimized code.\n- **The next release's map loses its shader cache (E5).** The testing channel's Main_map has no compressed_shader_cache.sack, only terrain_shaders_header_data.bin from 2026-09-28. Patreon and public ship a 1,835,980 B sack.\n- **The formation-order patch runs about every half second per AI agent (E1-10, E2), not \"40,000× per frame\".** I traced the engine timer at E:/Decompiled_Bannerlord/_shipping_build/TaleWorlds.MountAndBlade.cs:12240, :15371-15374 and :16191, with Timer.Check in TaleWorlds.Core.cs:21628-21650. The \"40,000×\" comment in Patch30 is wrong.\n- **The engine's XML loading is slow by construction (E3).** It recompiles each XSLT on every apply and round-trips the merged document at every step. E3 missed one cost: every file is also validated against a freshly built XSD schema set.\n- **E2's diagnostics and logging claims hold**: the per-agent action-set census, the per-hit career DEBUG line, and synchronous INFO flushes. So do the MCM read cost and all the MCM defaults cited.\n\n**Corrected.**\n- **Plan 003 only half landed.** Its merge, 40615c22, touched only BattleBalanceSettingsProvider. The SpatialGrid still rebuilds every 2 s.\n- **E4's \"2x fps difference with no logged cause\" is wrong.** 43 [MissionPerf] windows sit at 116-117 fps across agent counts from 83 to 273, while engine_config allows 360 fps with vsync off. That is probably a frame cap outside the game, so these windows cannot show a CPU saving. Memory load was also logged: 82-84% in the slow session against 46%.\n- **E4's 1.9-2.9 s \"load times\" stop before the troops exist.** BattlePlayable fires with agents=0, so spawning lands in the first [MissionPerf] window: gen0 collections 31-41, against 3-7 later.\n- **The ~1 s hitches are not gen2 GCs.** All nine hitch windows show gc2=0. They also occur in battles with no trolls, so troll clip loading cannot be the general cause.\n- **E5's UI-atlas lever was already tested.** The memory audit removed AlwaysLoad from three sprite categories and saw no measurable change (native-commit-audit-2026-08.md:688).\n- **PatchShield's ~50 µs per call is not a measurement.** It is the #331 stall time averaged over about 2 million calls, taken on the desktop while it was running in the slow (debugger) mode. Harmony does fetch the original method by reflection on every call, but the real per-call cost has never been measured.\n- **Process note:** E4 ran `python -c`, which the rules forbid. It reported this itself.\n\n**Missed areas.** Lights are the biggest one. TAOM's campaign map has 70 light components where vanilla's has none. Three Mordor scenes have 429-531 lights each, against a vanilla maximum of 305. Also missed or only partly covered:\n- Validity of the measurements themselves (frame cap, other processes' memory use, diagnostics left on).\n- Audio.\n- Pathfinding and navmesh.\n- Ragdoll physics.\n- How many Harmony patches stack on each hot method.\n- GC pause timing.\n- Co-op overhead.\n- Save size and autosave time.\n- The inventory screen's 2.9 GB of temporary memory.\n- Campaign map rendering and entity counts against vanilla.\n\n**Fastest wins, in order:**\n1. Ship a Release build.\n2. Restore the Main_map shader cache, with a packaging check.\n3. Offer players a texture-quality advisor (measured at −2.3 GB on the map).\n4. Turn off the always-on diagnostics.\n5. Remove PatchShield's per-call reflection.\n\nBuild the measurement harness, with the frame cap and machine state recorded, before claiming any frame-time gain.\n\n**Skills that fit:** /release (configuration change), /investigate (Main_map shader cache regression), /improve (plans), /deep-review and /verify-bindings (PatchShield and Patch30 changes), /research or tools/native_decompile.py --engine-method (GetNearbyAgentsAux at 0x6F70E0).",
+ "contradictions": [
+  "PatchShield per-call cost (E2 vs E3). E2 rates the shield on hot mission targets HIGH at '~50 us + allocation' per call; E3 says the per-call cost is UNMEASURED. Checked: the 50 us figure comes from E:/repos/TAOM/Dependencies/Foundation/PatchShieldPolicy.cs:67-70 and E:/repos/TAOM/docs/reviews/lessons/harmony-il.md:6. Both derive it from #331's 104-109 s exit stall over ~2 million Gauntlet calls on the desktop while it ran in the slow (debugger) mode. E:/repos/TAOM/plans/_audit/2026-09-23-opus/followup-patchshield.md:239-240 lists the per-call cost as UNMEASURED. E3's 'finalizer body is one null check' (E:/repos/TAOM/Dependencies/Foundation/PatchShield.cs:246-249) misses the wrapper cost: the bundled Harmony emits ldtoken plus MethodBase.GetMethodFromHandle for __originalMethod on every call (E:/Decompiled_Bannerlord/_modules_build/TAOM.Dependencies__0Harmony.cs:4397-4416, :4615). Each report is half right, and no number exists.",
+  "Patch30 call rate (TAOM code comment vs E1-10/E2). E:/repos/TAOM/Main/Features/MixedFormations/Hooks/Patch30_FormationGetOrderPositionOfUnit.cs:13-14 and :28 claim 'up to 40,000x per frame'; E1-10 and E2 say about once per AI agent every 0.45-0.55 s. The v1.5.3 dump backs the reports:\n- The steady caller is Agent.GetBaseFormationFrame (E:/Decompiled_Bannerlord/_shipping_build/TaleWorlds.MountAndBlade.cs:12700-12705), reached from ParallelUpdateCachedAndFormationValuesForAIAgent (:14381-14389) behind a 0.45 + rand*0.1 s timer (:12240).\n- AdjustStartTime(-5f) at :15373 only hands the expired timer to TickAsAI's Check in the same frame (:16189-16193). Timer.Check advances StartTime in Duration steps (E:/Decompiled_Bannerlord/_shipping_build/TaleWorlds.Core.cs:21628-21650), so the cadence stands.\n- The other callers are the order-drag preview (:33149), the non-AI path (:14374) and a debug loop (:72440).\nThe code comment is wrong by orders of magnitude.",
+  "Plan 003 status (E4 vs E2). E4 lists plan 003 (#664: cache hot-path resolves and fix the 2 s SpatialGrid staleness) as MERGED, following E:/repos/TAOM/plans/README.md:49. E2 reports the grid still rebuilds every 2 s. The code agrees with E2:\n- E:/repos/TAOM/Main/Features/AdvancedCombat/AdvancedCombatBehavior.cs:16 still reads GridUpdateInterval = 2f.\n- That file's last commit is f75288eb (2026-09-22).\n- The plan 003 merge 40615c22 (2026-09-25) changed only BattleBalanceSettingsProvider.cs plus tests and docs.\nOnly the battle-balance settings cache landed.",
+  "Clip Loading Type 2 (E1-01 vs E5). E5 says TAOM's 'Never load' and MithrilForge's 'load on demand' DISAGREE; E1 treats them as reconciled. E:/repos/TAOM/docs/reference/bannerlord-animation-system-map.md:276-300 records three things: a null keyframe set is passed at load [Certain], such clips still animate in vanilla, and where the keyframes come from later is UNVERIFIED. That fits 'load on demand': the label differs, not the mechanism. The reports also differ on weight (E1 relevance high, E5 lever small). The logs favour E5 on how general the effect is: 0.9-1.1 s hitches also hit battles with no [TrollClips] lines (taom_debug_2026-10-02_11-38-06.log:1599, :2595; taom_debug_2026-10-02_14-30-27.log:1196, in E:/Steam/steamapps/common/Mount & Blade II Bannerlord/bin/Win64_Shipping_Client/Logs/).",
+  "Steady fps 'differed 2x with no logged cause' (E4). The logs do record context:\n- [MissionPerf] sits at fps 116-117 in 43 windows across three sessions and agent counts from 83 to 273: the fps does not move when the agents triple.\n- C:/Users/mikew/OneDrive/Documents/Mount and Blade II Bannerlord/Configs/engine_config.txt sets max_framerate = 360 and force_vsync = 0, so a frame cap outside the game is likely [inferred].\n- In the 14:30 session fps jumped from 117 to 229 at +32-37 s with no casualty and no log event (taom_debug_2026-10-02_14-30-27.log:1198-1206).\n- The slow session ran at memLoad 82-84% with sysCommitUsed ~96-98 GB, about 86 GB of it outside Bannerlork's process, against 46% / 50 GB at 14:30 (the [MemSample] lines).\nThe '~117 steady fps' is a ceiling, not a measured cost.",
+  "Debug-build evidence (E3). E3 infers a Debug ship from DLL size: deployed 4,172,288 B against Debug 4,176,384 B and an older Release 3,353,600 B. Size fails for E:/LOTRAOM_Releases/patreon/Modules/TAOM/bin/Win64_Shipping_Client/TAOM.dll, which at 3,230,720 B is smaller than the Release build. The conclusion still holds on stronger evidence. The DebuggableAttribute blob 08 01 00 07 01 00 00 00 00 (0x107 = DisableOptimizations | Default | IgnoreSymbolStoreSequencePoints | EnableEditAndContinue) is:\n- present in the testing and patreon TAOM.dll;\n- present in both channels' TAOM.Dependencies.dll;\n- absent from E:/repos/TAOM/Main/bin/Release/net472/TAOM.dll.\n(Heuristic grep -P byte check.) No other report noticed, so every frame-cost argument in E2, E3 and E4 measures unoptimized code.",
+  "Battle load time (E4). E4 reports 2026-10-02 loads of 1.9-2.9 s, but BattlePlayable fires with agents=0 (taom_debug_2026-10-02_11-38-06.log:666, :1025, :1464, :2450). Spawning therefore lands in the first [MissionPerf] window: maxMs 624.6, 1,019.4, 170.8 and 544.2 ms, with gen0 41/31/33/34 against 3-7 in later windows (11-38-06.log:808, :1599, :2589; 14-30-27.log, first window). The load figures stop before the field is populated.",
+  "UI atlases as a texture lever (E5 vs TAOM's own audit). E5 folds the uncompressed 4096^2 UI atlases into 'texture residency is the biggest lever'. TAOM already ran that experiment. Removing <AlwaysLoad/> from ui_taom_bannericons, ui_taom and ui_taom_career_system gave 'No measurable change against L0' on the menu floor (E:/repos/TAOM/docs/investigations/native-commit-audit-2026-08.md:688). The measured texture lever is the campaign map: texture quality controls about 2.3 GB there (:649-666).",
+  "GetNearbyAgents semantics (E1-08). E1 says the call returns active humans only, which contradicts yotthani's own earlier taom-combat.md:332 (E1 notes this) and the mount guard TAOM still carries. The managed wrapper filters nothing: it passes GetNearbyAgentsAuxType.All to native and serialises every caller on one static lock (E:/Decompiled_Bannerlord/_shipping_build/TaleWorlds.MountAndBlade.cs:55209-55230, :59539-59544). Whatever the behaviour is, it is native: get_nearby_agents_aux sits at RVA 7303392 = 0x6F70E0 in E:/ghidra/TAOM/Win64_Shipping_Client-45be32c57c451f78.engine-methods.json. TAOM has not verified it either way."
+ ],
+ "weakClaims": [
+  "E2 rates Patch30 HIGH. At the verified cadence (~2 calls/s per AI agent, about 2,000/s at 1,000 agents), the per-call overhead would need to be at least 5 us to cost 1% of one core. Lock contention at that rate is low [inferred]. Only the order-drag preview (TaleWorlds.MountAndBlade.cs:33149) and Formation.Tick bursts run per frame.",
+  "E2's behaviour-tree integer division is real: E:/repos/TAOM/Main/BehaviorTreeWrapper/BehaviorTreeAgentComponent.cs:65 against the int field at E:/repos/TAOM/Main/BehaviorTrees/BehaviorTreesCore.cs:36, with 20 'base(10)' lines in Main. But the intended 10 ms delay is already shorter than a frame below 100 fps, so fixing the division changes nothing at typical frame rates. The real lever is a longer delay, and that changes how fast creatures respond.",
+  "E2's duplicate AutonomousMovementPlayerController is half confirmed. [DefaultView] at E:/repos/TAOM/Main/Features/AdvancedCombat/AutonomousMovementPlayerController.cs:15 and AddTaomBehavior at E:/repos/TAOM/Main/SubModule.cs:2052 both exist, and _activated defaults to true (:662). Whether ViewCreatorManager actually creates TAOM's [DefaultView] instance is unverified; the [MissionDiag] behaviour dump would show it.",
+  "E2's ~50 us PatchShield cost is applied to Formation.GetOrderPositionOfUnit, CommonAIComponent.OnHit and others, but it is a derived #331 average from the slow-mode desktop, not a per-call measurement.",
+  "E3's 'about 2,160 synchronous INFO lines per hour' assumes three trace lines every 5 s. The 2026-10-02 logs show one SCENE-READY line per 5 s. They also show it inside missions, not only on the map (taom_debug_2026-10-02_11-38-06.log:816, :846; 90 such lines in that session).",
+  "E3's claim that the 25.6 s and 67 s silent load stretches 'match ~140 and ~370 attaches' is [inferred], and it can now be tested. Pass 2 currently takes 0.9-1.4 s (E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/TAOM.Dependencies/diag.log:40463-40873). A fresh [SaveLoad] bisect should show the GameLoaded-to-GameInitializationFinished window shrinking by the same amount.",
+  "E3's 'MCM read cost' and the settings-caching levers in E2 and E3 are real (E:/Decompiled_Bannerlord/_modules_build/TAOM.Dependencies__MCMv5.cs:6321-6330, :2214-2232) but have no numbers. One read is two ConcurrentDictionary operations plus a walk of the settings containers, probably under a microsecond [inferred]. These are hygiene fixes, not frame-time wins.",
+  "E3's caravan and party-speed costs have no call counts behind them. 'More candidates fully scored than vanilla' and the cost per speed recompute are both [inferred].",
+  "E4's list of harness gaps misses four confounders:\n- the 116-117 fps ceiling;\n- memory pressure from other processes (memLoad 82-84%);\n- per-blow BlowDiag INFO lines switched on in the dev session (36 in taom_debug_2026-10-02_11-38-06.log; E2 says the default is off);\n- PatchShield coverage that changes between the first game start of a process (159 methods wrapped) and the second (303-305) (diag.log:40463-40873).",
+  "E4 ran `python -c` to read the engine-method JSON, which is outside the allowed commands. It reported this itself; nothing was written.",
+  "E5's 'at least 906 RDC orphans' assumes one .rdc per package GUID. E:/repos/TAOM/docs/reference/bannerlord-animation-system-map.md:531-533 established that rule only on troll clip packages (480 of 480). Applying it to texture and mesh packages is [inferred].",
+  "E5's map-mesh and texture numbers come from a manifest built from the 2026-09-12 packs. The live TAOM_Map now has no packs (loose files only), and nobody has audited the 2026-10-02 testing-channel packs, so it is unknown whether the 2026-09-13 texture downsizing ever reached players.",
+  "E1-01's 8.3 s to 0.14 s CPU figure rests on a profile that was never published. The only source is the bannerlord db97bc5e commit message; MithrilForge docs/perf-audit is on no pushed branch. E1 and E5 both flag this.",
+  "E1-07's 19-21 FPS at ~1000 agents comes with no date, log or machine spec. TAOM has no baseline for a large battle in contact either: E4's 1,313-agent figure is from before the armies met. So E1's conclusion that big battles are 'engine-bound before TAOM code costs anything' cannot be checked on TAOM's machine.",
+  "E1-08's mount-exclusion counts leave 15 of 357 and 33 of 472 misses unexplained, as E1 itself notes."
+ ],
+ "uncoveredAreas": [
+  {
+   "area": "GPU: dynamic lights and shadow casters (also decals, terrain LOD)",
+   "why": "No report counted lights. TAOM's campaign map has 70 light components where vanilla's has none. Three Mordor scenes carry 429-531 lights each, against a vanilla maximum of 305:\n- E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/TAOM_Map/SceneObj/Main_map/scene.xscene: 70 <light_component, shadow_radius 5-24.\n- SandBox/SceneObj/Main_map: 0 lights.\n- taom_mordor_town_goblin_town_forceatmo: 531.\n- taom_mordor_battle_003_forceatmo: 527.\n- taom_mordor_arena_001_forceatmo: 429, of which 273 have shadow_radius=16.000.\n- Vanilla maximum across SandBox, SandBoxCore and Native: 305 (khuzait_town_g).\nDecals are not the issue (TAOM map 667, vanilla 2,068). The Main_map terrain lod_multiplier is 5.0 against vanilla's 3.0 (E5), and nobody has tested it.",
+   "howToCover": "Count light components (and which cast shadows) per scene. Then measure [MissionPerf] and [MapLoad] with the Shadow and Lighting quality options moved, in the top scenes against a vanilla scene at equal agents. Try lod_multiplier 3.0 in a scratch copy."
+  },
+  {
+   "area": "Validity of the measurements themselves",
+   "why": "Every A/B in the reports relies on [MissionPerf] fps or avgMs. On 2026-10-02 those values sat at 116-117 fps in 43 windows, so nothing is visible below the ceiling. Other processes held ~86 GB of commit during one session. The dev session had per-blow BlowDiag INFO lines switched on. PatchShield wraps 159 methods at the first game start of a process and 303-305 at the second. None of this is logged per mission.",
+   "howToCover": "Add a one-shot context line per mission: whether a frame cap is detected (an fps plateau), memLoad and availPhys, build configuration, PatchShield attached count, which game start this is in the process, and which diagnostics are on. Run the harness with external limiters off."
+  },
+  {
+   "area": "Audio",
+   "why": "TAOM ships 232 module_sound entries (112 mission_voice, 106 mission_voice_shout, 17 mission_horse_gallop, 10 alert) in E:/repos/TAOM/Main/_Module/ModuleData/module_sounds.xml, plus 168 MB of ModuleSounds. No report looked at whether they load at start or stream, or at voice cost in 1,000-agent battles.",
+   "howToCover": "Read the menu floor in [MemStation] with ModuleSounds emptied on a scratch install. Compare [MissionPerf] with voice volume at 0 against the default in a fixed preset."
+  },
+  {
+   "area": "Pathfinding and navmesh (campaign and battle)",
+   "why": "The campaign map is about twice vanilla's area and runs 2,033-3,042 parties. E:/repos/TAOM/Main/Features/NavalTravel/Models/TaomPartyNavigationModel.cs:159 calls GetPathDistanceBetweenAIFaces inside a GameModel, and its call rate has never been counted (E1-30 only flags it). No report measured battle AI pathing in TAOM's large custom scenes (Minas Tirith, Helm's Deep).",
+   "howToCover": "Put a call counter on the navigation model and read it on the [MapLoad] heartbeat. Compare [MissionPerf] in TAOM sieges against a vanilla siege at the same battle size."
+  },
+  {
+   "area": "Physics and ragdolls (#701)",
+   "why": "#701 (closed) found that creature ragdolls have 60-62 bodies against a human's 26, and that native walks the corpse list every frame. TAOM now caps corpses at 25 and fades them after 60 s ([BattleSettings] corpseCap=25 fadeSeconds=60 in the 2026-10-02 logs). The ragdoll count is only advised to the player, and 7 in-game checks are still owed. No report measured the physics step when many agents die at once.",
+   "howToCover": "Read [MissionPerf] maxMs and avgMs in the windows after an elephant or troll mass death, with Number of Ragdolls at 0, 5 and Unlimited."
+  },
+  {
+   "area": "How many Harmony patches stack on each hot method",
+   "why": "No report counted the prefixes, postfixes, finalizers and transpilers on each hot target from TAOM plus third parties: UIExtenderEx, ButterLib's blank transpilers on the tick shims (mentioned in the PatchShieldPolicy.cs comments), MCM, and players' other mods. The registry is prose, and HarmonyCensus runs only when a co-op module is present (per E3).",
+   "howToCover": "Write a one-shot census in solo play to diag.log: Harmony.GetPatchInfo for the ~20 hot targets (HandleBlowAux, Mission.OnTick and Tick, GetOrderPositionOfUnit, SetMovementOrder, GetLocalizedText, RealTick and so on), with patch owners."
+  },
+  {
+   "area": ".NET GC behaviour in the game process",
+   "why": "The reports only count collections. All nine hitch windows on 2026-10-02 show gc2=0, so blocking gen2 is not the cause there. First windows show gen0 at 31-41. No Bannerlord.exe.config exists, so the GC uses its defaults [inferred: workstation, concurrent]. GCSettings.LatencyMode is never set. #659 estimated ~74,000 finalizable objects per second from Skeleton wrappers.",
+   "howToCover": "Capture GC pause events with PerfView/ETW on one preset run. Correlate maxMs with the gc deltas across every [MissionPerf] log."
+  },
+  {
+   "area": "Steady-state ~1 s single-frame hitches",
+   "why": "Frames of 0.9-1.1 s appear at +11 to +96 s with gc2=0, with and without trolls, and at memLoad 46% as well as 84% (taom_debug_2026-10-02_11-38-06.log:847, :1209, :1223, :2595, :2640; 14-30-27.log:1196). No report attributed them. Candidates: a shader compile for a first-seen material, texture streaming, the driver or an external limiter [inferred].",
+   "howToCover": "Line up rgl_log compile_shader timestamps against the [MissionPerf] windows. Use PresentMon to capture frame times. Add a probe that samples the main-thread stack when a frame exceeds 500 ms, reusing Patch91's stack-capture approach."
+  },
+  {
+   "area": "The spawn window after BattlePlayable",
+   "why": "BattlePlayable fires with agents=0, so the spawn wave, the 5 s action-set census and JIT on first use all land in the first [MissionPerf] window. The 1,663 ms spike at 1,313 agents is unattributed (E4).",
+   "howToCover": "Add stamps around the phases of DefaultBattleMissionAgentSpawnLogic, capture ETW JIT events, and A/B with the census on and off."
+  },
+  {
+   "area": "Co-op / multiplayer overhead",
+   "why": "When a co-op module is present PatchShield is skipped (E:/repos/TAOM/Dependencies/Foundation/PatchShieldPolicy.cs:265-266) and HarmonyCensus runs. Nobody has measured TAOM's sync or settings-parity overhead.",
+   "howToCover": "Run one co-op session with [MissionPerf] and [MapLoad] and compare it with solo play on the same preset."
+  },
+  {
+   "area": "Save size and autosave hitch",
+   "why": "E3 covered what TAOM adds to a save (a hero-race map of ~4,800 entries, chunked momentum JSON). Nobody measured .sav size or how long an autosave freezes the campaign. [SaveLoad] stamps SaveBegin, but I found no line that records save duration.",
+   "howToCover": "Log the time from SaveBegin to save complete and the file size. Compare saves taken at the same in-game day with TAOM's SyncData payloads included and excluded."
+  },
+  {
+   "area": "Gauntlet screens (inventory and party)",
+   "why": "E4 lists the inventory at +2.9 GB of temporary memory per open (cheat mode, all items) and the party screen at +1.0 GB kept once (E:/repos/TAOM/docs/investigations/native-commit-audit-2026-08.md:420-422, :451-452). No report ranked it. A 2.2 GB managed heap makes the next full GC expensive.",
+   "howToCover": "Read the [MemStation] heap per open with cheat mode off. Take the owed PerfView heap snapshot (:673)."
+  },
+  {
+   "area": "Campaign render cost and entity counts against vanilla",
+   "why": "In fast-forward the map ran at 7-8 fps with RealTick at 20 ms, so about 110 ms of each frame was spent outside the campaign tick (E:/repos/TAOM/docs/migration/v1.5.2-impact.md:147). The entity counts were never compared with vanilla: 2,033-3,042 parties (541 bandit, 828 militia), 4,770-4,879 heroes, 1,002 settlements.",
+   "howToCover": "Run [MapLoad] from a fixed camera at Stop, Play and fast-forward, with party nameplates and icons toggled. Count vanilla's entities from its XML or a vanilla run with TAOM.Dependencies only."
+  },
+  {
+   "area": "XML load: per-file XSD validation (missed by E3)",
+   "why": "LoadXML validates every file against an XmlSchemaSet built fresh for that file, and reads each file twice (E:/Decompiled_Bannerlord/_shipping_build/TaleWorlds.ObjectSystem.cs:1083, :1350-1360, :1633-1647). Each additional file therefore adds a schema compile, a validation pass and a merge step.",
+   "howToCover": "Stamp each LoadXML id inside the [SaveLoad] LoadRequested-to-LoadDataOk window, before any data restructuring."
+  },
+  {
+   "area": "Mesh edit-data residency",
+   "why": "On Main_map, TAOM_Map's meshes carry 1.02 GB of edit data against 735 MB of vertex stream; edoras_t3 alone is 362 MB, 346 MB of it edit data (E5, E1-21). Whether the client keeps edit data in memory is unknown on both sides.",
+   "howToCover": "Compare VMMap private bytes for a scene with and without edoras_t3. Alternatively, compare GetVertexBufferChunkSystemMemoryUsage (taom.print_memory) against the manifest's segment split."
+  }
+ ],
+ "topLevers": [
+  {
+   "rank": 1,
+   "lever": "Ship Release-optimized TAOM.dll and TAOM.Dependencies.dll. Either change the build.ps1 default or pass -Configuration Release in the release skill's Phase 8. Add a packaging check that refuses a DLL whose DebuggableAttribute turns JIT optimization off.",
+   "playerImpact": "Everything TAOM runs in managed code gets an optimizing JIT: Harmony prefixes and postfixes, GameModels per party and per blow, behaviour trees, and the PatchShield finalizers. The gain is broad, but its size is unknown, because TAOM's share of frame and tick time has never been measured [inferred].",
+   "effort": "Trivial: one parameter or skill line, plus one packaging check.",
+   "risk": "Low to moderate.\n- No '#if DEBUG' exists in Main/ or Dependencies/ (grep). Only 2 Debug.WriteLine calls disappear (E:/repos/TAOM/Main/Core/Infrastructure/Reflection/ReflectionService.cs:127-128).\n- Optimized JIT can expose latent races in worker-thread prefixes and watchdog threads, and inlining thins crash stacks.\n- Tests currently run in Debug (E:/repos/TAOM/build.ps1:38).",
+   "restsOn": "- Build config: E:/repos/TAOM/build.ps1:4 (Configuration = \"Debug\") and :27 (dotnet build -c $Configuration). E:/repos/TAOM/.claude/skills/release/SKILL.md Phase 8 step 1 ('run ./build.ps1'). No <Optimize> in E:/repos/TAOM/Main/TAOM.csproj, E:/repos/TAOM/Directory.Build.props or the Dependencies csproj (grep, 0 hits).\n- Byte check: the 0x107 DebuggableAttribute blob (DisableOptimizations) is in E:/LOTRAOM_Releases/testing and patreon TAOM.dll and in both TAOM.Dependencies.dll, and is absent from E:/repos/TAOM/Main/bin/Release/net472/TAOM.dll.\n- E3's build item.",
+   "confirmBy": "Build Debug and Release at the same commit. Run one fixed Custom Battle preset three times per cell, with the external frame cap off. Compare:\n- [MissionPerf] avgMs, p95 and gc0;\n- [MapLoad] tickMs at 8x fast-forward;\n- the [SaveLoad] GameLoaded-to-GameInitializationFinished time.\nAlso run the test suite in Release."
+  },
+  {
+   "rank": 2,
+   "lever": "Restore the Main_map scene shader cache (and taom_rohan_edoras_town_forceatmo's) before the next release. Add a check to tools/package_release.py: any TAOM_Map scene that ships terrain_shaders_header_data.bin must also ship compressed_shader_cache.sack.",
+   "playerImpact": "Every player of the next release avoids first-use shader compiles on the campaign map. That means a shorter first map load and no map props that stay invisible for a session (E1-15).",
+   "effort": "Low. Regenerate in the editor [inferred: TAOM does not document how a scene sack is produced] and add a small check to the packager.",
+   "risk": "Low. The regenerated sack must match the engine's sack format: #448 is open (TAOM sacks are 0x0782, the engine expects 0x0783).",
+   "restsOn": "- E:/LOTRAOM_Releases/testing/Modules/TAOM_Map/SceneObj/Main_map/ShaderCache/D3D11 holds only terrain_shaders_header_data.bin (45,832 B, 2026-09-28).\n- The patreon and public channels ship compressed_shader_cache.sack at 1,835,980 B (2026-09-14).\n- The live dev install matches testing (find).\n- E5 inventory: 44 of 47 scenes carry sacks.\n- E1-15 (MithrilForge modding-kit.md:767-772).",
+   "confirmBy": "On an emptied ProgramData shader cache, load the campaign twice: testing as packaged, then with patreon's Main_map sack copied in. Compare:\n- 'Missing shader from sack' and compile_shader counts in rgl_log;\n- [MapLoad] time to SCENE-READY and to the loading window lowering;\n- whether map props render on first view."
+  },
+  {
+   "rank": 3,
+   "lever": "Extend the #701 ragdoll/corpse advisor to offer Texture Quality one step down, and optionally Foliage, on machines with 16 GB of RAM or less, or when [MemSample] reports low commit headroom.",
+   "playerImpact": "Measured on the settled campaign map:\n- texture quality: -2.3 GB resident;\n- foliage: -0.77 GB;\n- both apply on a live switch, with no restart.\nThe audit concludes that on a 16 GB machine this beats every TAOM content lever measured so far combined.",
+   "effort": "Low. The advisor, the graphics-options adapter and the MCM pattern already exist from #701.",
+   "risk": "Low. It is opt-in, and the cost is sharpness.",
+   "restsOn": "- E:/repos/TAOM/docs/investigations/native-commit-audit-2026-08.md:649-666: G-hi at 12,810 MB; all three sliders at 0 give 9,734; texture back to 2 adds 2,318; foliage back to 4 adds 769.\n- #701 issue body: the advisor runs on the first main menu, through IGraphicsOptionsAdapter.\n- The #385 tester had 16 GB of RAM (gh issue view 385; E4).",
+   "confirmBy": "On a 16 GB machine, compare at texture quality 2 and 1:\n- settled-map [MemSample] privMB, availPhysMB and memLoad;\n- [MemStation] readings;\n- the number of LOW COMMIT HEADROOM warnings in a 30-minute session."
+  },
+  {
+   "rank": 4,
+   "lever": "Diagnostics diet: make these default-off or once per session.\n- The MissionDiagnostic action-set census, which touches every agent every frame for the first 5 s of every mission.\n- TrollClipTrace and CreatureBanditDiagnostics, both marked temporary.\n- EnableHowdahDiagnostics (default true).\n- LogAutoResolvedBattles (default true), which flushes synchronously per world battle.\n- The always-on EconomyDiagnostics gold patches.\n- The per-hit [CareerPerks] DEBUG line.\n- The SCENE-READY trace, one INFO line every 5 s on every screen.\n- The ungated spider, troll and signature-hero INFO lines.",
+   "playerImpact": "Less per-frame and per-hit work and less allocation in the spawn window and in big battles, plus fewer synchronous file flushes on the game thread. The first [MissionPerf] window shows gen0 at 31-41 against 3-7 later; part of that is spawning and part plausibly the census [inferred].",
+   "effort": "Low: defaults and gates.",
+   "risk": "Low. Player bundles carry less forensic data, so keep the MCM toggles for testers.",
+   "restsOn": "- E:/repos/TAOM/Main/Features/MissionDiagnostic/Hooks/MissionDiagnosticBehavior.cs:19, :41-45, :76-91, registered without a gate at E:/repos/TAOM/Main/SubModule.cs:2128-2132.\n- E:/repos/TAOM/Main/Features/TaomSettings.cs:515 and :532.\n- E:/repos/TAOM/Main/Core/Logging/FileLogger.cs:85-95: INFO drains and flushes synchronously; DEBUG is always formatted.\n- E:/repos/TAOM/Main/Features/CareerSystem/Abilities/CareerAgentStatService.cs:206-208 (added in 7ede923b).\n- taom_debug_2026-10-02_11-38-06.log: 90 SCENE-READY lines, some during missions (:816); first-window gc0 41/31/33 (:808, :1599, :2589).\n- E2 items 3, 4, 9, 12 and 23; E3's AutoResolve, EconomyDiagnostics and MapLoad items.",
+   "confirmBy": "Run the same preset with diagnostics off and on, below the frame cap. Compare:\n- first-window avgMs, maxMs and gc0;\n- steady p95;\n- INFO lines per session;\n- [MapLoad] tickMs in a fast-forward stretch with many world battles, LogAutoResolvedBattles off vs on."
+  },
+  {
+   "rank": 5,
+   "lever": "PatchShield: stop binding __originalMethod in the finalizers. Resolve the original only on the exception path; the bundled Harmony provides Harmony.GetOriginalMethodFromStackframe. As a minimum alternative, add TAOM's hot targets to ExcludedTargetMethods: GetOrderPositionOfUnit, CommonAIComponent.OnHit, HandleBlowAux, CheckToDropFlaggedItem, Mission.Tick/OnTick, GetLocalizedText, HasFeat, the weather getter and the caravan methods.",
+   "playerImpact": "Removes a reflection call and a small allocation from every call of the wrapped engine methods: 159 of them after the first game start, 303-305 after the second. Several run per agent, per hit or per frame. The size of the saving is unmeasured.",
+   "effort": "Low to medium.",
+   "risk": "Low. The original method is only used on the swallow path, for logging and TryUnpatchOffendingPatches (E:/repos/TAOM/Dependencies/Foundation/PatchShield.cs:272-306).",
+   "restsOn": "- E:/repos/TAOM/Dependencies/Foundation/PatchShield.cs:246 and :264: both finalizers take MethodBase __originalMethod.\n- E:/Decompiled_Bannerlord/_modules_build/TAOM.Dependencies__0Harmony.cs:4397-4416 and :4615: Harmony emits GetMethodFromHandle per call.\n- E:/repos/TAOM/Dependencies/Foundation/PatchShieldPolicy.cs:134-148: the exclusion list.\n- diag.log:40463-40873: +129 at the first start (159 attached), +144/+146 at the second (303/305 attached).\n- E:/repos/TAOM/plans/_audit/2026-09-23-opus/followup-patchshield.md:239-240: per-call cost UNMEASURED.",
+   "confirmBy": "A/B with patchshield-disabled.flag (PatchShield.cs:26-28, :96-105). Use a fixed 1,000-agent preset, frame cap off, first game start of a fresh process each time. Compare [MissionPerf] avgMs, p95 and gc0, and [MapLoad] tickMs at 8x."
+  },
+  {
+   "rank": 6,
+   "lever": "Enabler: a repeatable perf harness. Three parts:\n- a preset starter that reuses TaomShaderGameManager.BuildBattle and the ShaderPrecompileRunner chain;\n- a parser that reads every mission's [MissionPerf] and [BattleLoad] lines, not just the last;\n- the per-mission context line (frame cap detected, memLoad, build configuration, PatchShield attached count, which game start in the process, diagnostics on).",
+   "playerImpact": "None directly. Without it, no other lever's gain can be confirmed below the observed 116-117 fps ceiling.",
+   "effort": "Medium.",
+   "risk": "None to players.",
+   "restsOn": "- E4's repeatableHarness gaps.\n- No MissionPerf parser in E:/repos/TAOM/tools (Grep: 0 files), even though MissionPerfLine.cs:6-7 says one exists.\n- E:/repos/TAOM/tools/triage_battle_load.py:812-817 reads only the last mission.\n- The 2026-10-02 logs: a 116-117 fps plateau across agent counts from 83 to 273; memLoad 82-84% against 46%; BattlePlayable fired with agents=0.",
+   "confirmBy": "Run one preset five times, each in a fresh process. The harness is good enough when steady-window avgMs varies by less than 3% between runs and no fps plateau appears."
+  },
+  {
+   "rank": 7,
+   "lever": "TAOM_Map texture content: get the 2026-09-13 downsized textures into the published packs, and downsize the 16K vista (341 MB, DXT5 at 16384^2). Audit the testing-channel packs first.",
+   "playerImpact": "Less RAM and VRAM on the campaign map at every quality setting, for every player. Main_map uses 474 TAOM_Map textures totalling 2.34 GB, of which 70 are 4096^2 (1,045 MB). How much the downsizing saves once published is unknown.",
+   "effort": "Low to medium: a re-publish plus one vista re-import.",
+   "risk": "Low to moderate. Visual quality changes, and TAOM_Map is a live, unversioned module.",
+   "restsOn": "- E5's Main_map manifest (E:/taom-memory-2026-09-02/map-manifest/textures.tsv).\n- E5's cache census: 417 entries of 4096^2 class dated February to July.\n- E:/repos/TAOM/docs/investigations/native-commit-audit-2026-08.md:649-666: texture quality controls 2.3 GB.\n- E5: the 2026-09-13 downsizing reaches players only through a re-publish.",
+   "confirmBy": "Run tools/audit_map_scene_memory.py offline with --game-dir pointed at E:/LOTRAOM_Releases/testing and count the 4096^2 textures. After re-publishing, compare settled-map [MemSample] privMB at the same graphics settings."
+  },
+  {
+   "rank": 8,
+   "lever": "Trim the campaign map's 70 light components (vanilla's map has none) and its 322 particle instances (vanilla has 4; 150 are waterfall_foam_circular). Drop shadow casting on decorative lights.",
+   "playerImpact": "Lower GPU frame time on the campaign map, the screen players spend most time on. On the maintainer's desktop it runs at 54 fps at Stop and 7-8 fps in fast-forward. How much of that is lights and particles is unknown.",
+   "effort": "Medium: scene editing in the editor.",
+   "risk": "Low to moderate: it changes the visual mood.",
+   "restsOn": "- grep on E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/TAOM_Map/SceneObj/Main_map/scene.xscene: 70 <light_component, shadow_radius 5-24.\n- SandBox/SceneObj/Main_map: 0 lights.\n- E5's particle census.\n- E:/repos/TAOM/docs/migration/v1.5.2-impact.md:146-147.",
+   "confirmBy": "[MapLoad] fps at Stop from a fixed camera over a light-dense region. First test sensitivity with Particle Detail Low vs High and Shadow off vs High. Then compare against a scratch copy with the lights and particles removed."
+  },
+  {
+   "rank": 9,
+   "lever": "Add LODs and set metamesh visible distances on the six map meshes that have a single record and more than 10k faces: wildling_town (244,932 faces, placed 3 times), wildling_village_large (98,508, placed 42 times), orthanc_tower (86,721), wildling_castle (61,070, placed 6 times), and argonath_1 and argonath_2. Then take a census of VisibleDistance across all TAOM_Map metameshes.",
+   "playerImpact": "Fewer triangles drawn on the campaign map. Measured as largest record times placements, TAOM_Map comes to 14.9M faces against Native's 5.5M. wildling_village_large alone is about 4.1M across its placements.",
+   "effort": "Medium to high. It needs a Kit re-import with LODs, and no TAOM tool reads VisibleDistance yet.",
+   "risk": "Moderate: the art pipeline is involved, and the editor's prefab cap has only 489 entities of headroom.",
+   "restsOn": "- E5's meshes.tsv (2026-09-12 manifest), with placements re-checked against scene.xscene.\n- E1-19 (MithrilForge modding-kit.md:1064-1069): the Kit's default visible distance is FLT_MAX.\n- E5: the UE pipeline exports LOD0 only.",
+   "confirmBy": "[MapLoad] fps at Stop with the camera on the wildlands, plus a resolution-scaling test to confirm the scene is GPU-bound. Then compare against a scratch TAOM_Map with a LOD'd wildling_village_large."
+  },
+  {
+   "rank": 10,
+   "lever": "Cap shadow-casting lights and particle instances in TAOM's heaviest scenes:\n- taom_mordor_town_goblin_town_forceatmo: 531 lights;\n- taom_mordor_battle_003_forceatmo: 527 lights;\n- taom_mordor_arena_001_forceatmo: 429 lights and 607 particle instances.\nAim toward vanilla's maxima: 305 lights, and 55 particle instances per scene.",
+   "playerImpact": "Higher fps in Mordor battles, arenas, goblin town and Minas Morgul. These scenes also hold big crowds: arena audiences of 429-461 agents.",
+   "effort": "Medium.",
+   "risk": "Visual changes.",
+   "restsOn": "- Per-scene grep of <light_component across E:/Steam/steamapps/common/Mount & Blade II Bannerlord/Modules/TAOM_Map/SceneObj against SandBox, SandBoxCore and Native (vanilla maximum: khuzait_town_g, 305).\n- In the arena, 273 lights have shadow_radius 16.000.\n- E5's particle census.",
+   "confirmBy": "[MissionPerf] in taom_mordor_battle_003_forceatmo against a vanilla battle_terrain scene at equal agents and settings, after first testing sensitivity to the Shadow and Particle options."
+  },
+  {
+   "rank": 11,
+   "lever": "Measure the XML load first: add a stamp per MBObjectManager.LoadXML id. Then:\n- consolidate the 47 NPCCharacters and 28 EquipmentRosters files;\n- ask the Armory side to collapse its 131 per-file Items merge steps;\n- replace lords.xslt and heroes.xslt (397 templates each; lords.xslt is 1.5 MB) with same-id merges where the XSD allows.",
+   "playerImpact": "A shorter loading screen at every game start (new campaign, loaded campaign, custom battle). The size of the saving is unmeasured.",
+   "effort": "Measuring is low. Consolidating is medium to high, because the data spans modules.",
+   "risk": "Medium: merge and override semantics, and the XSD.",
+   "restsOn": "Engine (E:/Decompiled_Bannerlord/_shipping_build/TaleWorlds.ObjectSystem.cs):\n- :1256-1272: files are merged one at a time;\n- :1274-1286: a new XslCompiledTransform is compiled per apply;\n- :1288-1300: the whole accumulated document round-trips through XDocument at each step;\n- :1083, :1350-1360, :1633-1647: every file is validated against a freshly built XmlSchemaSet and read twice.\nTAOM data:\n- lords.xslt is 1,515,721 B and heroes.xslt 177,579 B, with 397 templates each (ls/grep);\n- E:/repos/TAOM/Main/_Module/SubModule.xml has 110 XmlNode registrations.",
+   "confirmBy": "Run a temporary per-id stamp inside the [SaveLoad] LoadRequested-to-LoadDataOk window on a campaign load. Repeat after a scratch consolidation."
+  },
+  {
+   "rank": 12,
+   "lever": "Campaign per-party costs:\n- in caravan trade, reuse vanilla's computed distance instead of querying it again;\n- in TaomPartySpeedModel, run the roster walk only when the culture feat can apply;\n- exclude HasFeat and the weather getter from PatchShield;\n- in castle recruitment, filter parties before reading settings;\n- build the RealmBorders parchment over several frames.",
+   "playerImpact": "Faster campaign ticks in fast-forward (RealTick reached 20 ms as parties grew from 2,091 to 3,042) and one fewer 0.2-0.6 s hitch on the map.",
+   "effort": "Low to medium.",
+   "risk": "Low to medium. AI outcomes must stay identical, so A/B the outcomes as well as the timing.",
+   "restsOn": "- E3's items: CaravansCampaignBehavior_GetTradeScoreForTown_Patch.cs:40-41 repeats vanilla's query at TaleWorlds.CampaignSystem.cs:178114; TaomPartySpeedModel.cs:70-80; Patch42_HourlyTickParty_Postfix.cs:60-64; realm-borders.md:433-436.\n- E:/repos/TAOM/Main/Features/TaomSettings.cs:111, :146 and :151 (these features default on).\n- E:/repos/TAOM/docs/migration/v1.5.2-impact.md:147.",
+   "confirmBy": "Put call counters per in-game day on the [MapLoad] heartbeat. Compare tickMs at 4x, 8x and 16x with EnableCaravanTrade on and off."
+  },
+  {
+   "rank": 13,
+   "lever": "Hygiene in battle code that is always on:\n- cache the TaomSettings reference in the remaining providers: combat mechanics (several reads per blow), DreadAura, MixedFormations and CompanionTactics (per frame), BlowDiagnostics (per blow while switched off);\n- in Patch30, skip the adapter allocation and the global lock for formations that have no layout, using a lock-free snapshot, and cache each agent's grounded slot;\n- check the cheapest discriminator first in the Patch93 getters;\n- avoid the Substring allocation in the GetLocalizedText prefix.",
+   "playerImpact": "Each call saves little, but the calls happen on every blow, every frame, and about twice a second per AI agent in field battles.",
+   "effort": "Low. The pattern exists in BattleBalanceSettingsProvider.",
+   "risk": "Low. Live MCM edits must keep working.",
+   "restsOn": "- E:/Decompiled_Bannerlord/_modules_build/TAOM.Dependencies__MCMv5.cs:6321-6330 and :2214-2232: what the Instance getter does on each read.\n- Merge 40615c22 cached only the BattleBalance provider.\n- Patch30_FormationGetOrderPositionOfUnit.cs:41, :54, :68 and E:/repos/TAOM/Main/Features/MixedFormations/FormationLayoutService.cs:68, :79-93.\n- Engine cadence verified at TaleWorlds.MountAndBlade.cs:12240, :15371-15374 and :16191.\n- E:/repos/TAOM/Main/Features/TaomSettings.cs:663: MixedFormations on by default.",
+   "confirmBy": "Add temporary call counters per target. Compare [MissionPerf] avgMs at 1,000 agents with EnableMixedFormations on and off, below the frame cap."
+  },
+  {
+   "rank": 14,
+   "lever": "Per-frame costs in creature battles:\n- cache the Skeleton per howdah elephant instead of calling GetSkeleton every frame;\n- set EnableHowdahDiagnostics to off by default;\n- reuse Selector lists in the behaviour trees and use mission time instead of DateTime.Now;\n- return early from behaviour-tree event dispatch when nothing subscribes;\n- have the creature-bandit hunt use GetNearbyEnemyAgents with a reused list;\n- give the SpatialGrid an agent-to-cell map, and skip the grid rebuild and troll scans when no creatures are present.",
+   "playerImpact": "Fewer finalizable native wrappers and less gen0 garbage in creature-heavy battles: Harad mumakil with crews (14 crewed elephants were seen in one battle), wargs, spiders and trolls.",
+   "effort": "Low to medium.",
+   "risk": "Low to medium: creature behaviour timing could shift.",
+   "restsOn": "- E2's items: TaomHowdahMachine.cs:274; BoneCheck.cs:130-133 (the GetSkeleton wrapper's cost); BehaviorTreesNodes.cs:131-135; BehaviorTreeMissionLogic.cs:289-310; CreatureHuntTask.cs:74-97; SpatialGrid.cs:61-87.\n- E:/repos/TAOM/Main/Features/AdvancedCombat/AdvancedCombatBehavior.cs:16: still a 2 s rebuild.\n- E:/repos/TAOM/Main/Features/TaomSettings.cs:532: howdah diagnostics on by default.",
+   "confirmBy": "[MissionPerf] gc0 per 5 s and avgMs in a Harad preset with 10 or more crewed mumakil, and in a warg/troll preset, before and after."
+  },
+  {
+   "rank": 15,
+   "lever": "Set Loading Type 0 on the battle-bound clips that sit at type 2: 24 of the 30 bound hill-troll release/blocked clips and the elephant's 8 attack clips. First confirm that each clip's (SourceAnimation guid, source window) key is unique (E1-02).",
+   "playerImpact": "May remove a per-bone reader lock and a first-play stall on a worker thread for those creatures. This rests on yotthani's unpublished profile, and it only affects troll and elephant battles.",
+   "effort": "Low: a Kit flag, plus refreshing the RuntimeDataCache.",
+   "risk": "Medium. A cloned clip can silently get its template's motion (E1-02), and the cache goes stale after a re-point.",
+   "restsOn": "- E1-01 and E1-02 (MithrilForge src/MithrilForge.Anim/ClipLoading.cs:7-27; the bannerlord db97bc5e message).\n- E:/repos/TAOM/docs/reference/bannerlord-animation-system-map.md:276-300: 48 of the 62 troll release/blocked clips are at type 2.\n- On 2026-10-02, hitches also hit battles with no trolls, so this lever cannot fix the general hitches.",
+   "confirmBy": "In a troll-heavy preset, line up the first [TrollClips] binding lines with [MissionPerf] maxMs. Then A/B the 32 clips at type 0 against type 2 on avgMs and p95."
+  }
+ ]
+}

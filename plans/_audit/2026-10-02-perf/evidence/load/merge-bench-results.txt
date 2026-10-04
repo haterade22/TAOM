@@ -1,0 +1,32 @@
+type=NPCCharacters gameType=Campaign entries=57 xslts=1
+engine run 1 : 5432 ms
+engine run 2 : 5647 ms
+prototype run 1 : 2384 ms (create+validate 429 ms, toXDocument 35 ms, MergeElements 64 ms, xslt 1768 ms, final 77 ms)
+prototype run 2 : 1774 ms (create+validate 361 ms, toXDocument 33 ms, MergeElements 51 ms, xslt 1246 ms, final 78 ms)
+identical=True engineChars=7276693 prototypeChars=7276693
+type=Items gameType=Campaign entries=142 xslts=0
+engine run 1 : 2404 ms
+engine run 2 : 2420 ms
+prototype run 1 : 374 ms (create+validate 175 ms, toXDocument 9 ms, MergeElements 174 ms, xslt 0 ms, final 11 ms)
+prototype run 2 : 343 ms (create+validate 174 ms, toXDocument 9 ms, MergeElements 147 ms, xslt 0 ms, final 12 ms)
+identical=True engineChars=2637805 prototypeChars=2637805
+type=EquipmentRosters gameType=Campaign entries=31 xslts=0
+engine run 1 : 591 ms
+engine run 2 : 552 ms
+prototype run 1 : 102 ms (create+validate 53 ms, toXDocument 6 ms, MergeElements 17 ms, xslt 0 ms, final 12 ms)
+prototype run 2 : 101 ms (create+validate 55 ms, toXDocument 6 ms, MergeElements 18 ms, xslt 0 ms, final 12 ms)
+identical=True engineChars=2346944 prototypeChars=2346944
+type=GameText gameType=Campaign entries=33 xslts=3
+engine run 1 : 379 ms
+engine run 2 : 384 ms
+prototype run 1 : 218 ms (create+validate 51 ms, toXDocument 4 ms, MergeElements 75 ms, xslt 77 ms, final 5 ms)
+prototype run 2 : 220 ms (create+validate 60 ms, toXDocument 4 ms, MergeElements 74 ms, xslt 75 ms, final 4 ms)
+identical=True engineChars=2321719 prototypeChars=2321719
+lords.xslt: 1,515,721 bytes, compile 136 ms, compile again 212 ms
+heroes.xslt: 177,579 bytes, compile 14 ms, compile again 14 ms
+spclans.xslt: 104,190 bytes, compile 4 ms, compile again 4 ms
+spcultures.xslt: 98,873 bytes, compile 3 ms, compile again 3 ms
+spkingdoms.xslt: 18,176 bytes, compile 1 ms, compile again 1 ms
+comment_strings.xslt: 14,804 bytes, compile 1 ms, compile again 1 ms
+module_strings.xslt: 6,776 bytes, compile 1 ms, compile again 1 ms
+action_strings.xslt: 5,231 bytes, compile 1 ms, compile again 1 ms

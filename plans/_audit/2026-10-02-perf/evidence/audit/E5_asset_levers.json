@@ -1,0 +1,220 @@
+{
+ "inventory": [
+  {
+   "module": "TAOM repo: E:/repos/TAOM/Main/_Module/Assets",
+   "what": "Loose Kit packages committed to git: BannerIcons, GauntletUI (52 _tex.tpac, 41 of them ui_taom_bannericons_1..41) and main_map_textures",
+   "count": "121 files: 120 .tpac and 1 editor temp file (BannerIcons/taom_banners_dunland_alpha_01_tex.tpac.ptemp)",
+   "size": "157K",
+   "evidence": "du -sh and find on Main/_Module/Assets, run 2026-10-02. TAOMSpriteData.xml:32 declares ui_taom_bannericons SpriteSheetCount=2, so 39 of the 41 committed bannericons stubs are stale (native-commit-audit-2026-08.md:751 also says ~39 stale atlases were left behind after the L1 rebake)."
+  },
+  {
+   "module": "TAOM repo: Main/_Module/AssetPackages",
+   "what": "The four MithrilForge camp-prop packages, all dated Aug 23: refuge_camp_a 9,944,104 B, fieldcamp_camp_a 9,157,856 B, fieldcamp_palisade_ring 8,947,960 B, refuge_palisade_ring 8,007,344 B",
+   "count": "4 .tpac",
+   "size": "35M",
+   "evidence": "ls -la Main/_Module/AssetPackages. docs/reference/tpac-static-prop-authoring.md:19-26 says no player or dev install has ever loaded them: releases carry only pack0.tpac, and the dev install loads TAOM/Assets (rgl_log_73032.txt:203). yotthani rewrote the upstream copies twice on 2026-10-02 (yotthani/bannerlord c41f71fe, 478587b4), including a fix that gives each mesh the prop's own bounding sphere instead of the donor tent's. TAOM's copies predate both."
+  },
+  {
+   "module": "TAOM repo: Main/_Module (RuntimeDataCache, SceneObj, other folders)",
+   "what": "RuntimeDataCache/ and SceneObj/ do not exist in the repo module. Sizes of the other folders: ModuleData 47M, AssetSources 551M, GUI 347M (FactionUI 170M, SpriteParts 119M, SpriteData 58M), ModuleSounds 168M, Videos 70M, bin 20M, NavMeshPrefabs 4K",
+   "count": "RuntimeDataCache: absent. SceneObj: absent",
+   "size": "ModuleData 47M",
+   "evidence": "du -sh in Main/_Module: 'cannot access RuntimeDataCache / SceneObj: No such file or directory' (2026-10-02)"
+  },
+  {
+   "module": "Live install: Modules/TAOM",
+   "what": "AssetPackages holds only pack0.tpac (188,902,921 B, written 2026-10-02 15:00). The repo's four camp packages are not in the live install. Assets/ holds 121 files: 120 tpac plus the .ptemp, 60,031 B in total, the largest a 593 B stub. Other folders: Shaders 2.0K (a 36 B compressed_shader_cache.sack and a log), GUI 347M, ModuleData 47M, ModuleSounds 168M, Videos 140M (the repo's 70M plus extra initial_menu/ and splash/ folders), bin 47M, AssetSources 551M. Module total 6.5G",
+   "count": "121 tpac (1 in AssetPackages, 120 loose)",
+   "size": "6.5G total; AssetPackages 181M",
+   "evidence": "ls, du and find on the module. Memory feedback_mike_packages_via_editor.md says pack0 is an editor artifact to delete from the live install before a release. tpac-static-prop-authoring.md:23-26 and bannerlord-animation-system-map.md:545-552 say loose Assets/ wins on a dev install, so pack0 is not read there."
+  },
+  {
+   "module": "Live install: Modules/TAOM/RuntimeDataCache",
+   "what": "72 files of exactly 67,109,029 B each: a 165 B header (the same overhead as TAOM_Map's vista entry) plus 4096x4096x4 bytes, i.e. RGBA8 with a single mip, all dated 2026-08-11. Also 16 x 22,369,813 B (4096², 13-mip BC5/DXT5 class), 2 x 89,478,649 B (4096² RGBA8 with full mips), 1 x 11,185,013 B, 3 x 2,796,381 B, 1 x 1,570,981 B, 3 x 275 B. Dates: 25 files from 2026-03, 4 from 2026-04, 86 from 2026-08",
+   "count": "115 files: 98 .rdc and 17 .rtemp",
+   "size": "5.02 GB",
+   "evidence": "find -printf size and date histogram, 2026-10-02. native-commit-audit-2026-08.md:27-32 identifies 4096² RGBA8 no-mip files as the UI atlases, imported with Do Not Generate Mips and Do Not Compress. There are 72 such 64 MiB entries but only 52 GauntletUI stubs, so at least 20 name no current package [inferred, assuming one .rdc per package GUID per bannerlord-animation-system-map.md:531]."
+  },
+  {
+   "module": "Live install: Modules/LOTRLOME_Armory/Assets",
+   "what": "Loose Kit tree. In Assets/: 2,595 _tex.tpac stubs (about 1.4 MB in total, at most 638 B each, so the pixels live in the RDC), 1,132 _geo.tpac (4.10 GB), 950 _mtl.tpac, 777 _anm.tpac clips. Also 6 Visual Studio .vs files under Assets/Race Test/.vs and 30 *.tpac.bak-repoint-20260930-075211 backups. The module holds 5,568 tpac in all (114 of them inside AssetSources). There is no AssetPackages/ or EmAssetPackages/ today; on 2026-09-26 there were 10 and 237",
+   "count": "5,490 files in Assets (5,454 tpac)",
+   "size": "Assets 4.2G; module total 20G",
+   "evidence": "find and du, 2026-10-02. The 2026-09-26 counts are in bannerlord-animation-system-map.md:555-560."
+  },
+  {
+   "module": "Live install: Modules/LOTRLOME_Armory (10 largest packages)",
+   "what": "Race Test/Beards/SK_Dwarf_Beards_geo 484,977,970 B; dale_kingdom/sr_dale_kingdom_gauntlets_geo 153,035,195; Race Test/Hair/Dwarf_Hairs_geo 136,527,635; dale_kingdom/sr_dale_kingdom_chests_geo 106,913,541; Race Test/Hair/Dwarf_Hairs_SecondBatch_geo 83,974,511; gundabad_armors/pale_uruk/SK_GB_Uruk_Chests_A_geo 61,802,662; creature/mumakil/sk_mumakil_harad_01_geo 48,662,800; iron_hills_armors/SM_Dwarf_Iron_Bracers_A_geo 45,764,556; Isengard/isengard_armors/SK_Uruk_Hai_Bracers_A_geo 40,719,323; Dol Guldur/SK_DG_Uruk_Chests_A_geo 38,071,413",
+   "count": "10",
+   "size": "about 1.2 GB together",
+   "evidence": "find -name '*.tpac' -printf '%s' | sort -rn | head -10. Per MithrilForge docs/engine/modding-kit.md:1080-1083 (main 7c556554), a Kit _geo.tpac holds edit data only; the cooked vertex stream goes to the RDC."
+  },
+  {
+   "module": "Live install: Modules/LOTRLOME_Armory (cache, shaders, sources)",
+   "what": "RuntimeDataCache: 4,604 .rdc and 2,160 zero-byte .rtemp, 6.69 GB; 3,712 files written in 2026-09; largest .rdc 99,499,798 B. Shaders/D3D11: compressed_shader_cache.sack 108,833,116 B (2026-10-02), shader_mapping.bin 14,167,104, shader_compile_report.log 7,859,900. AssetSources 8.1G (2,661 png, 1,147 fbx, 114 tpac, 32 tga, 4 dds). SceneObj 2.3M (8 menu scenes, 8 scene sacks). Prefabs 52K (19 game_entity)",
+   "count": "6,764 RDC files",
+   "size": "RDC 6.8G; Shaders 128M",
+   "evidence": "find and du, 2026-10-02"
+  },
+  {
+   "module": "Live install: Modules/TAOM_Map/Assets",
+   "what": "Loose Kit tree: 1,322 _tex stubs (about 0.7 MB in total), 199 _geo (4.11 GB), 413 _mtl. Packages by folder: Scenes 1,237 (3.3G; Gondor 511, Rohan 239, Nature 130, Mordor 116, Mirkwood 116, erebor 100), Campaign Map 550 (957M), dao_rocks 81, 4K_Textures 42, Support 20, Vista_16K 2, world_map 2. One stray file: Scenes/Gondor/meshes/gondor_stairs_3m_straight_a_geo.zip (50,626,145 B). There is no AssetPackages/ or EmAssetPackages/ in the live module",
+   "count": "1,935 files (1,934 tpac)",
+   "size": "Assets 4.2G; module total 34G",
+   "evidence": "find and du, 2026-10-02. module-map.md:612 recorded 5 packs and 13.5 GB in TAOM_Map/AssetPackages on 2026-09-05, so the live module has since become loose-only."
+  },
+  {
+   "module": "Live install: Modules/TAOM_Map (10 largest packages)",
+   "what": "Campaign Map/Map Icons/Rohan/RohanIcons_geo 460,968,922 B; Scenes/Gondor/blockout/lond_cirion_wall_a_geo 372,064,297; Scenes/Gondor/buildings/gondor_building_large_comp_a_geo 185,003,092; heroBuildingA_geo 153,302,741; blockout/minas_tirith_wall_l0_geo 149,702,027; buildings/minas_tirith_walls_l0_geo 145,040,052; Map Icons/Mordor/mordor_icons_geo 144,101,655; Map Icons/Umbar/umbar icons_geo 131,387,620; buildings/gondor_building_citadel_a1_geo 107,050,883; blockout/minas_tirith_wall_l1_geo 84,983,614",
+   "count": "10",
+   "size": "about 1.93 GB together",
+   "evidence": "find -printf '%s' | sort -rn | head -10, 2026-10-02"
+  },
+  {
+   "module": "Live install: Modules/TAOM_Map/RuntimeDataCache",
+   "what": "529 entries of at least 10 MB total 12.61 GB. Of those, 266 x 11,184,989 B (4096², 13 mips, 8 bytes per block) and 151 x 22,369,813 B (4096², 13 mips, 16 bytes per block), about 6.35 GB, are all dated Feb to Jul 2026, alongside 684 entries of about 2.8 MB and 353 of about 5.6 MB (the 2048² classes). Two 357,914,133 B files carry the 16K vista's chain size: one dated 2026-02-14, one 2026-09-04. The cache holds more .rdc files (2,840) than the module has packages (1,934)",
+   "count": "3,141 files: 2,840 .rdc and 301 .rtemp",
+   "size": "17.43 GB",
+   "evidence": "find size and date histograms, 2026-10-02. The vista chain is 357,913,968 B (audit_map_scene_memory.py:43-44) plus the 165 B header. Orphaned entries versus textures never re-imported is UNRESOLVED and needs a GUID join; no tool does that join today (native-commit-audit-2026-08.md:783 plans one)."
+  },
+  {
+   "module": "Live install: Modules/TAOM_Map (scenes, shaders, prefabs, sources)",
+   "what": "SceneObj 757M across 47 folders, Backups among them at 116M. 44 of the 47 have a per-scene ShaderCache/D3D11/compressed_shader_cache.sack (91.8 MB together, all dated 2026-09). The three without one are Backups, Main_map and taom_rohan_edoras_town_forceatmo; Main_map and Edoras hold only terrain_shaders_header_data.bin (Main_map's is 45,832 B, written 2026-09-28). Module Shaders/D3D11: sack 57,848,772 B (2026-09-26), shader_mapping.bin 3,157,000, log 1,730,671. Prefabs 52M (141 XML, 93,830 game_entity); Prefabs_Unused 55M (69 XML, 91,023). AssetSources 9.3G (1,330 png, 199 fbx, 7 dds, 4 tga; 16K_Vista_02.png is 447,348,085 B, dated Jun 26). SceneEditData 2.3G",
+   "count": "47 scene folders; 44 scene sacks",
+   "size": "SceneObj 757M; RuntimeDataCache 18G; AssetSources 9.3G",
+   "evidence": "find, du and a grep count of <game_entity, 2026-10-02. For comparison, vanilla SandBox/SceneObj/Main_map ships a 71,960 B sack."
+  },
+  {
+   "module": "Release channels: E:/LOTRAOM_Releases (what players load)",
+   "what": "testing (all packs dated 2026-10-02): TAOM_Map 5 packs, 11G (pack2 4,162,201,319; pack1 2,777,434,204; pack3 2,728,657,446; pack4 1,021,671,405; pack0 441,914,728). LOTRLOME_Armory 10 packs, 8.5G (pack5 2,216,008,355 down to pack1 39,771,945). TAOM pack0 188,902,921. patreon/public: TAOM_Map 9.8G dated 2026-09-14; Armory dated 2026-09-29. No release carries RuntimeDataCache or loose Assets, and none ships a module-level compressed_shader_cache.sack (only shader_compile_report.log and shader_mapping.bin). Scene sacks: testing TAOM_Map 44 of 47, with Main_map missing; patreon 45 of 45, with Main_map's at 1,835,980 B. Every channel also ships TAOM_Map/Prefabs_Unused (55M); testing ships SceneObj/Backups",
+   "count": "testing: 16 packs across the 3 modules",
+   "size": "TAOM_Map 11G, Armory 8.5G, TAOM 181M (testing)",
+   "evidence": "ls, du and find -printf size and date on E:/LOTRAOM_Releases/{testing,patreon,public}/Modules, 2026-10-02"
+  },
+  {
+   "module": "Vanilla: Modules/Native",
+   "what": "AssetPackages: 151 tpac, 18.37 GB. Ten largest: core_game 3,026,841,256 B; animations 598,497,978; pack_11 520,978,865; archhitecture_empire 511,194,936; pack_13 510,660,541; pack_15 500,773,967; flora 498,359,702; pack_7 495,419,672; pack_9 489,422,282; pack_17 472,087,130. EmAssetPackages: 1,039 tpac, 27G, largest conversation_backgrounds 1,077,517,052. SceneObj 1.2G (82 scenes, 68 sacks). No RuntimeDataCache",
+   "count": "151 + 1,039 tpac",
+   "size": "AssetPackages 19G (du); module 70G",
+   "evidence": "find and du, 2026-10-02"
+  },
+  {
+   "module": "Vanilla: Modules/SandBoxCore and SandBox; game root",
+   "what": "SandBoxCore has no AssetPackages and 0 tpac; its SceneObj is 8.8G (206 scenes, 198 sacks); module 9.1G. SandBox: AssetPackages holds 1 tpac, gauntlet_ui 137,167,654 B (131M); EmAssetPackages/GauntletUI/GauntletUI.tpac 28,595,142 B; SceneObj 3.5G (195 scenes, 132 sacks). Game root: Shaders/D3D11/compressed_shader_cache.sack 1,572,733,784 B (2026-09-15). Other RuntimeDataCache folders: AWOIAF_Map 4.84 GB (549 .rdc); NavalDLC has the folder but no files",
+   "count": "SandBoxCore 0 tpac; SandBox 2 tpac",
+   "size": "SandBoxCore 9.1G; SandBox AssetPackages 131M",
+   "evidence": "find and du, 2026-10-02"
+  },
+  {
+   "module": "All installed modules: prefab entity budget",
+   "what": "<game_entity> totals across every installed Prefabs/ folder: TAOM_Map 93,830; Native 23,828; NavalDLC 9,927; SandBox 2,889; AWOIAF_Map 51; StoryMode 39; LOTRLOME_Armory 19. Live TAOM has no Prefabs/",
+   "count": "130,583 against the editor queue cap of 131,072 (489 spare)",
+   "size": "TAOM_Map Prefabs 52M",
+   "evidence": "grep -o '<game_entity' per module, 2026-10-02. The cap is at tools/check_prefab_budget.py:4-9,19; module-map.md:348-374 records 130,468 on 2026-09-05."
+  },
+  {
+   "module": "TAOM_Map scenes and prefabs: particle instances",
+   "what": "1,645 particle_system_instanced_component referencing 43 distinct base effects, all vanilla wherever resolved: psys_campfire 278, prt_basic_fire_smoke 277, aserai_torch_fire_spark 247, waterfall_foam_circular 153. Main_map has 322 instances (150 waterfall_foam_circular) against 4 in vanilla SandBox/SceneObj/Main_map. taom_mordor_arena_001_forceatmo has 607 (277 campfire, 277 fire smoke) against a vanilla SandBoxCore per-scene maximum of 55 (battle_terrain_biome_048). Emitter overrides in scene XML: emission_rate 582, particle_size 439, particle_life 400, emit_box_size 347; no min/max config override",
+   "count": "1,645 instances / 43 effects",
+   "size": "n/a",
+   "evidence": "grep over TAOM_Map/SceneObj/*/scene.xscene and Prefabs/*.xml; effect GUIDs resolved by name in Native/ModuleData/particle_systems*.xml. TAOM ships no particle-named file in any of its 3 modules, and grep for psys_/ParticleSystem in Main/ finds 0 matches."
+  },
+  {
+   "module": "Texture-flag census (literal byte-string match in _tex.tpac stubs, not a parse)",
+   "what": "TAOM_Map, 1,322 stubs: dont_delay_loading 1 (world_map/worldmap_battle_scene_grid), dont_degrade 6 (4 Support/Weather maps, worldmap_battle_scene_grid, worldmap_colorgrade_grid_custom), for_terrain 48, dont_compress 0. TAOM, 86 stubs: dont_degrade 1 (main_map_textures/taom_gui_map_circle_atlas), dont_resize_in_atlas 1. LOTRLOME_Armory, 2,595 stubs: none of these flags",
+   "count": "3 modules, 4,003 stubs",
+   "size": "n/a",
+   "evidence": "find -name '*_tex.tpac' | xargs grep -l -a -F <flag>, 2026-10-02. The flag names and bits come from MithrilForge docs/engine/modding-kit.md:162-174."
+  },
+  {
+   "module": "Main_map manifest (output of tools/audit_map_scene_memory.py, 2026-09-12, from the TAOM_Map packs of that date)",
+   "what": "Textures: 474 TAOM_Map textures, 2.34 GB, referenced by Main_map: BC5 107 (835 MB), DXT1 226 (714 MB), DXT5 62 (667 MB), BC4 78 (179 MB). By size: 70 at 4096² (1,045 MB), 249 at 2048² (928 MB), 1 at 16384² (341 MB). Only 3 are flagged NO_MIPS_ABOVE_512 or UNCOMPRESSED. Meshes: 210 TAOM_Map metameshes total 5,363,708 faces over all records; 98 exceed 10k faces and 14 exceed 100k. Native's 429 metameshes on the same map total 2,996,862 faces, none above 100k. Six single-record meshes above 10k faces, i.e. no LOD: wildling_town 244,932 (x3), wildling_village_large 98,508 (x42), orthanc_tower 86,721, wildling_castle 61,070 (x6), argonath_1 and argonath_2 (about 11k each). Largest record times instance count: TAOM_Map 14.9M against Native 5.5M. edoras_t3 is 362 MB, 346 MB of it edit-data segment (EDITOR_STREAM_BLOAT)",
+   "count": "474 textures, 210 meshes",
+   "size": "textures 2.34 GB; meshes 1.86 GB",
+   "evidence": "E:/taom-memory-2026-09-02/map-manifest/textures.tsv, meshes.tsv and totals.tsv (plain-text TSV read with awk). The heavy-mesh placement counts were re-checked against the current scene.xscene (2026-09-28): wildling_village_large x42, wildling_town x3, wildling_castle x6."
+  }
+ ],
+ "properties": [
+  {
+   "property": "Metamesh visible distance",
+   "runtimeEffect": "A per-metamesh maximum draw distance in metres, stored as the float after the version and the geometry-file GUID in Metamesh v1 metadata. The Kit default is FLT_MAX, meaning never culled by distance. Vanilla sets small props to 20-50 m, baskets to 100-200 m, and 88 of 230 map_icon_parts to 200 m. It governs draw distance and GPU cost (draw calls, triangles, shadow casters) of scene and map props, not memory or load time.",
+   "taomLikelyAffected": "Likely yes for TAOM_Map scene, kitbash and map-icon props [inferred]: Kit imports default to FLT_MAX, and no TAOM tool or doc reads or sets the value (grep of tools/ and docs/ for visible_distance or VisibleDistance: 0 hits; audit_map_scene_memory.py:31 lists 'dont_degrade' only in a comment). Scale: 93,830 live prefab entities; goblin town has 36,665 scene entities against a vanilla maximum of 17,037; 14 Main_map meshes exceed 100k faces. The four MithrilForge camp props probably inherit the donor's 200 [inferred] but are never loaded. Armour and weapons are agent meshes, so the property is probably irrelevant to them [inferred].",
+   "measurableWith": "Offline: the float at metadata offset 20 of each Metamesh item (type GUID 978b8fa0). audit_map_scene_memory.iter_tpac_items already yields that metadata (audit_map_scene_memory.py:121-126,227-269), so a visible_distance column is a small extension. MithrilForge.TpacFormat MetameshMetadata.VisibleDistance reads the same field (port it, do not install it). In game: [MapLoad] fps (map-load-diagnostics.md) and [MissionPerf] p95 frame ms (mission-perf-heartbeat.md:5-8) in a town scene, A/B after setting distances in the Kit.",
+   "leverSize": "unknown",
+   "evidence": "MithrilForge docs/engine/modding-kit.md:18 ('map props 200, small props 15-50, default FLT_MAX'), :562-563 and :1064-1069 (main 7c556554); src/MithrilForge.TpacFormat/Assets/MetameshMetadata.cs:31-32,64; the entity and face counts in the inventory."
+  },
+  {
+   "property": "LOD count and LOD distances",
+   "runtimeEffect": "LOD records (.lodN, folded by the Kit into one metamesh) cut triangle and vertex cost at range. The switching distances are engine-side. The managed surface exposes only GameEntity.GetLodLevelForDistanceSq / SetEnforcedMaximumLodLevel and MetaMesh.SetLodBias (_shipping_build/TaleWorlds.Engine.cs:3789-3793, 7060-7067, 12501-12503). Their native addresses in Win64_Shipping_Client-45be32c57c451f78.engine-methods.json are 4919936 (0x4B1280), 4919920 (0x4B1270) and 4956208 (0x4BA030). The one LOD-distance knob in TAOM data is the per-scene terrain lod_multiplier, which affects terrain only (TAOM_Map Main_map 5.000 against vanilla 3.000).",
+   "taomLikelyAffected": "Armory: resolved. lod-audit.md:5-25 reports 0 LOD0-only and 0 incomplete chains among used meshes, 131 shipped-but-unreferenced chains with gaps, and 5 naming defects, one used by an item (dunland_caerdh_bracer_medium_d.metal: LODs but no LOD0). The tools are committed (e6312852, 30abf550). The memory note's 'repo tools UNCOMMITTED' is stale, and its beard re-import was still owed. NOTE: docs/features/armory-lod-pass* and docs/features/texture-downsizing.md do not exist; that content lives in Claude memory features/armory-lod-pass.md and features/texture-downsizing.md. TAOM_Map: not covered by any LOD audit. Six single-record (LOD-less) map meshes exceed 10k faces, and wildling_village_large alone is 98,508 faces x 42 placements = 4.1M. The UE pipeline exports LOD0 only (ue-to-bannerlord-asset-pipeline.md:15).",
+   "measurableWith": "tools/audit_fbx_lods.py (binary-FBX reader; triangles per LOD; --module defaults to the Armory; --fbx for one file; the default run writes lod-audit.md, so pass --out elsewhere). audit_map_scene_memory.py meshes.tsv (records, largest_faces, all_records_faces). Runtime: a console probe calling GetLodLevelForDistanceSq on placed map entities [suggestion]; [MapLoad] fps on the campaign map.",
+   "leverSize": "large",
+   "evidence": "docs/reference/armory-catalogue/lod-audit.md:5-25; docs/reviews/lessons/build-tooling-workflow.md:2625 (about 1,730 levels added); git log e6312852 (2026-09-25); map-manifest meshes.tsv; scene XML lod_multiplier grep."
+  },
+  {
+   "property": "Texture formats, sizes, mip counts and flags (dont_delay_loading, dont_degrade)",
+   "runtimeEffect": "Resident system RAM and VRAM, plus load time. The engine keeps CPU-side copies of whole mip chains (a VMMap private region equals the chain plus 43,664 B). The texture-quality slider alone freed 2.3 GB of the map's 4.4 GB on a live switch. The Kit picks the format from the name suffix (_d DXT1/DXT5, _n BC5, _h BC4, _atlas BC7) and builds mips down to 1x1. Flag semantics are [inferred] from their names: dont_delay_loading (0x80) loads eagerly, and dont_degrade (0x2) is exempt from the quality downscale.",
+   "taomLikelyAffected": "Yes. Map: 474 textures (2.34 GB) on Main_map, 70 of them 4096². The 16K vista is DXT5 16384² with 15 mips, 357,913,968 B; its source is untouched since Jun 26 and the memory note lists Vista_16K as owed. The 2026-09-13 downsizing (TAOM_Map diffuse 2K and data maps 1K; Armory sources 19 GB to 7.3 GB) reaches players only through a re-publish. The TAOM_Map RDC still holds 417 4096²-class entries (about 6.35 GB) dated Feb to Jul, which is unresolved. UI: 72 RDC entries are exactly 4096² RGBA8 single-mip, and the two live banner sheets show as 2 x 64 MB private regions. The four camp props each carry an uncompressed 16 MB single-mip diffuse but never load. Flags: dont_delay_loading on 1 TAOM_Map stub; dont_degrade on 6 TAOM_Map stubs and 1 TAOM stub. Armory and map textures are otherwise BC-compressed with mips.",
+   "measurableWith": "tools/audit_map_scene_memory.py (format, size, mips, resident bytes, UNCOMPRESSED and NO_MIPS_ABOVE_512 flags). It parses user flags at :350-374 but does not emit them, and it reads only AssetPackages/EmAssetPackages, so point --game-dir at a release channel: the live TAOM_Map and Armory have no packs. Also the VMMap region fingerprint, taom.print_memory and [MemSample], the graphics-settings diff protocol, and MithrilForge TextureMetadata.UserFlags/MipCount/Format (port).",
+   "leverSize": "large",
+   "evidence": "native-commit-audit-2026-08.md:27-32, 494-496, 524-543, 649-665; audit_map_scene_memory.py:33-46, 791; MithrilForge modding-kit.md:136-174; memory features/texture-downsizing.md:11-17, 36, 53; tpac-static-prop-authoring.md:120-121; RDC size histograms; the flag grep."
+  },
+  {
+   "property": "Animation clip loading types and resident clips",
+   "runtimeEffect": "Loading Type is byte 0 of UnknownUInt2 (+0x1B1): 0 Always keep, 1 Load when needed (with a resident 'Shortened optimized animation'), 2 per TAOM 'Never load' (null keyframe set at load) and per MithrilForge 'load on demand'; the two readings DISAGREE. Per yotthani, types 1 and 2 take a lock per bone per clip per agent and block the sampling worker: 8.3 s CPU in 45 s with 500 dual wielders, against 0.14 s with resident clips. That measurement is cited from an unpushed perf-audit commit: MithrilForge 9b51448 returns 'No commit found' (HTTP 422), and docs/perf-audit is on no pushed branch. Type 0 shares clip data by SourceAnimation GUID plus source window, so a resident clip needs its own key. The Kit warns 'better be Always_keep_in_memory'.",
+   "taomLikelyAffected": "Small exposure. Of 243 creature clips (2026-09-18), 235 are at 0; the 8 elephant attack clips are at 2 with no segment. The hill troll binds 24 of its 30 self-keyed clips at 2. Troll and elephant clips are bound to their own masters, so type 0 would not hit the vanilla-sharing trap [inferred]. TAOM humans play vanilla clips (5,040 at 0, 563 at 1, 574 at 2). Unknown: the elk/moose clips (97), the cave-troll Fab clips, and the 30 hill-troll swings re-pointed on 2026-09-30 (memory: RDC stale until a Kit save).",
+   "measurableWith": "No committed TAOM tool reads Loading Type (grep of tools for LoadMode or loading type: 0). Options: read +0x1B1 alongside the self-key checks in set_clip_balance_name.py and wire_hill_troll_race.py --check; or port MithrilForge AnimationClipMetadata.LoadMode. In game: [MissionPerf] p95 frame ms in a creature-heavy Custom Battle, A/B.",
+   "leverSize": "small",
+   "evidence": "bannerlord-animation-system-map.md:144, 276-319, 524-526; bannerlord-animation-clip-flags.md:235-241, 255-264; yotthani/bannerlord db97bc5e (2026-10-02T10:51Z) commit message; MithrilForge src/MithrilForge.Anim/ClipLoading.cs:7-25; modding-kit.md:919-925."
+  },
+  {
+   "property": "Particle emitters: min/max config bounds on Particle Detail, and particle LOD",
+   "runtimeEffect": "CPU and GPU particle simulation and overdraw. An emitter is created only when (min == -1 || min <= level) && (max == -1 || level <= max). level is the system's own value, else the Particle Detail option (0 Low, 1 Medium, 2 High; 3 levels, TaleWorlds.Engine.cs:21508). Each particle system carries LOD distances, and each emitter carries a LOD index.",
+   "taomLikelyAffected": "Indirectly. TAOM authors no particle assets (0 particle files in its 3 modules; 0 particle code in Main/), so the min/max bounds are vanilla's. Instance counts are far above vanilla, though: Main_map has 322 against 4 in vanilla, and taom_mordor_arena_001_forceatmo has 607 against a vanilla per-scene maximum of 55. Instance overrides raise emission_rate (582 times) and particle_life (400 times); config bounds are never overridden.",
+   "measurableWith": "grep counts over the scene and prefab XML (as in the inventory); Native/ModuleData/particle_systems*.xml to name effects (the XML carries no min/max config); MithrilForge ParticleSystemData MinConfig/MaxConfig/LodDistances (port) to see which of the 43 effects are bounded. In game: [MissionPerf] in the Mordor arena and [MapLoad] fps on the map, with Particle Detail Low against High.",
+   "leverSize": "medium",
+   "evidence": "MithrilForge modding-kit.md:375, 446-461 (main 7c556554); ParticleSystemData.cs:31-34, 130-149; _shipping_build/TaleWorlds.Engine.cs:21088, 21507-21508; scene grep counts."
+  },
+  {
+   "property": "Physics bodies (bo_ meshes) and missing-body load hangs (#352, #599, #633)",
+   "runtimeEffect": "A load hang, not a frame-rate cost. PreloadHelper.WaitForMeshesToBeLoaded polls every registered body name until each resolves and has no exit for a name no tpac ships. The result is one core at 100 percent, no log, and a mission that never loads.",
+   "taomLikelyAffected": "Yes. #352 is CLOSED (2026-08-08). #599 is OPEN: the elven-bow bodies were retired by the 2026-09-11 art drop, leaving 18 MISSING_BODY refs across 31 troops. #633 is OPEN (triage-blocked-external): three longbows borrow bo_wm_elven_bow_a03. Mitigations are live: Patch90_PreloadBodyGuard (registered at SubModule.cs:455-470; 5 s bounded drain, logs [PreloadGuard]), plus the MISSING_COLLISION_BODY and COLLISION_BODY_BORROWED gates. The guard drains body names only, not the MetaMesh.CheckResources half of the same loop.",
+   "measurableWith": "tools/validate_mesh_refs.py --scan-bodies (Tier C over loose Assets/ and AssetPackages/); tools/validate_moduledata.py; [PreloadGuard] ERROR lines; [BattleLoad] bucket-2 polls and WaitingForRender waitedMs (battle-load-diagnostics.md:43, 728).",
+   "leverSize": "large",
+   "evidence": "docs/features/preload-body-guard.md:5-46; gh issue view 352/599/633; .claude/rules moduledata-validation table (MISSING_COLLISION_BODY, COLLISION_BODY_BORROWED); validate_mesh_refs.py:1-40, 328-331."
+  },
+  {
+   "property": "RuntimeDataCache .rdc presence",
+   "runtimeEffect": "A dev-install cache of cooked data: texture pixels, vertex streams, clip data and cloth. The shipping client reads it (13,795 ReadFile ops on 5,036 files, plus 943 NAME NOT FOUND probes) but cannot write it. A _geo or _anm package without an entry is skipped whole, silently (#616). Masters are exempt, and textures and materials render without an entry. Releases ship no RDC, so dev-install performance does not equal player performance. The RDC-OFF A/B (step 1.2) never ran its campaign or battle stations.",
+   "taomLikelyAffected": "Yes, on dev installs; small as a runtime-speed lever. The audit calls RDC a disk cache and treats removing it as a packaging question. Orphan risk: TAOM_Map has 2,840 .rdc for 1,934 packages, so at least 906 name no current package [inferred], and TAOM has 72 x 64 MiB UI entries for 52 GauntletUI stubs. The Armory has 4,604 .rdc plus 2,160 zero-byte .rtemp.",
+   "measurableWith": "tools/check_rdc_entries.py (missing entry for a package; exit 1). An RDC-to-package orphan join is planned (native-commit-audit-2026-08.md:783) but not built. tools/Invoke-RdcAbTest.ps1 runs the OFF/ON A/B (-Report pulls BattlePlayable seconds, privMB and the [MemSample] peak). Procmon on RuntimeDataCache.",
+   "leverSize": "small",
+   "evidence": "check_rdc_entries.py:2-23, 61-63; native-commit-audit-2026-08.md:146-179, 188-203, 246-284; bannerlord-animation-system-map.md:530-560; RDC counts in the inventory."
+  },
+  {
+   "property": "Shader caches (#287) and the parked ShaderPrecompilation feature",
+   "runtimeEffect": "First-use shader compiles hold a battle one frame short of playable until the queue drains (one 14 s load logged 478 misses, 430 of them pbr_metallic) and stall 100-2000 ms on the first encounter with a material. Since 1.4.8 the engine deletes the local cache after any module-list change. Map props can stay invisible for a whole first session when pbr_main_map_* variants are missing from the shipped sack.",
+   "taomLikelyAffected": "Yes. ShaderPrecompilation was PARKED again on 2026-09-25. #287 is closed (triage-parked); #448 is open (TAOM sacks at 0x0782 against the engine's 0x0783). Live module sacks: Armory 108.8 MB, TAOM_Map 57.8 MB, TAOM 36 B. No release ships a module-level sack. 44 of 47 TAOM_Map scenes carry scene sacks, but Main_map and the Edoras town have none in the dev install or the 2026-10-02 testing build. patreon (2026-09-14) shipped a 1,835,980 B Main_map sack, so this is a regression in testing.",
+   "measurableWith": "[BattleLoad] phase 4f WaitingForRender, a 1 Hz series carrying shaders= from Utilities.GetNumberOfShaderCompilationsInProgress (MissionState_OnTick_RenderWait_Patch.cs:67); the count of 'Missing shader from sack' lines in rgl_log; [MapLoad] heartbeat fps; per-scene ShaderCache file checks.",
+   "leverSize": "large",
+   "evidence": "shader-precompilation.md:3, 5, 17, 233; battle-load-diagnostics.md:262-283; docs/migration/v1.4.8-impact.md:108-118; reviews/rca-shader-precompile-repark-2026-09-25.md; MithrilForge modding-kit.md:767-773; gh issue view 287/448; find over the SceneObj ShaderCache folders (live, testing, patreon)."
+  },
+  {
+   "property": "Scene props in TAOM_Map (prefab entity cap)",
+   "runtimeEffect": "Editor-only hard cap. At startup the Kit enqueues every <game_entity> in every Prefabs/ folder of every loaded module into a native queue of 131,072 (wEditor RVA 0x7708F0). Crossing it asserts, and ignoring the assert hangs the loader. No client-side effect is documented. Scene entity counts drive culling and draw cost [inferred].",
+   "taomLikelyAffected": "Yes, as an editor-blocking risk: 130,583 of 131,072 across installed modules today, 489 spare (NavalDLC's 9,927 included). check_prefab_budget.py counts TAOM_Map only (93,830, prints OK), which module-map.md flags as misleading. Prefabs_Unused (91,023 entities) is parked but ships in every release channel.",
+   "measurableWith": "python tools/check_prefab_budget.py (TAOM_Map only) plus the all-module grep sum (module-map.md:370 and :615); per-scene <game_entity> counts; in game, [MissionPerf] in towns.",
+   "leverSize": "small",
+   "evidence": "tools/check_prefab_budget.py:1-20; docs/modding/module-map.md:67-68, 348-374; the prefab grep."
+  },
+  {
+   "property": "(Additional) Mesh edit data versus vertex stream in packages",
+   "runtimeEffect": "Per MithrilForge, segment bb1df897 (TAOM's SEG_MESH_B 97f81dbb, byte order swapped) is the vertex stream 'the game renders'. 3d41985f (TAOM's SEG_MESH_A 5f98413d) is the Kit's edit data, and publishing does not strip it. On a dev install the _geo.tpac holds edit data only and the stream is in the RDC. Whether the client keeps edit data resident is UNKNOWN; TAOM's audit records it as unknown.",
+   "taomLikelyAffected": "Install weight is certain; residency is unknown. On Main_map TAOM_Map meshes carry 1.02 GB of edit data against 735 MB of stream, and edoras_t3 is 362 MB with 346 MB of edit data (flagged EDITOR_STREAM_BLOAT).",
+   "measurableWith": "audit_map_scene_memory.py meshes.tsv (seg_5f98413d_bytes, seg_97f81dbb_bytes, EDITOR_STREAM_BLOAT at :950-951); VMMap against GetVertexBufferChunkSystemMemoryUsage (363 MB on the map; native-commit-audit-2026-08.md:567-571).",
+   "leverSize": "unknown",
+   "evidence": "MithrilForge modding-kit.md:591-593, 1080-1083, 1096-1097; audit_map_scene_memory.py:67-84, 129-131; native-commit-audit-2026-08.md:525."
+  }
+ ],
+ "summary": "Everything here was gathered read-only: du, find, grep, git log, gh api GETs and the existing manifest TSVs. No Python or PowerShell tool was run. Text grep was the only access to binaries, plus one literal-string grep over the ~600-byte texture stubs.\n\n**What I could not find**\n- docs/features/texture-downsizing.md and docs/features/armory-lod-pass* do not exist. Their content lives in Claude memory: features/texture-downsizing.md (3 days old) and features/armory-lod-pass.md (7 days old).\n- E:/Decompiled_Bannerlord/_manifest.json says v1.4.8. But _shipping_build is dated 2026-09-15 and _categories_v1.5.3/_manifest.json says v1.5.3, so _shipping_build is probably 1.5.3 [inferred].\n- MithrilForge commit 9b51448 and docs/perf-audit/ are on no pushed branch. The 8.3 s / 0.14 s resident-clip figures rest only on the yotthani/bannerlord db97bc5e commit message.\n- GitHub code search returns 0 hits on these private repos, so all external reads were direct gh api content reads.\n\n**What dominates the asset-side surface**\n1. **Texture residency is the biggest lever, and it is measured.**\n   - The texture-quality slider freed 2.3 GB of the map's 4.4 GB (native-commit-audit-2026-08.md:649-665).\n   - TAOM_Map puts 474 textures (2.34 GB) on Main_map, 70 of them 4096², plus the 341 MB 16K vista, which has not been downsized.\n   - The UI atlases are uncompressed 4096² RGBA8 with a single mip.\n2. **Campaign-map icons are 100 to 1000 times vanilla's triangle budget, and several have no LODs.**\n   - 14 meshes exceed 100k faces.\n   - wildling_village_large is 98,508 faces with no LOD, placed 42 times.\n   - By largest record times placements, TAOM_Map comes to 14.9M faces against Native's 5.5M.\n   - The Armory LOD pass is complete (lod-audit.md), but no LOD audit covers TAOM_Map.\n3. **Shader caches.**\n   - ShaderPrecompilation is parked, and no release ships a module-level sack.\n   - Main_map and Edoras lost their scene sacks: the 2026-10-02 testing build has none for Main_map, where patreon shipped one.\n   - #448 (sack format version) is still open.\n4. **Missing-body hangs.** Patch90 contains them; #599 and #633 are still open.\n5. **Particles.** TAOM_Map places vanilla effects far more densely than vanilla does: 322 on the map against 4, and 607 in the Mordor arena.\n6. **Clip Loading Type 2.** Small for TAOM: 24 troll and 8 elephant clips.\n7. **RDC and the prefab cap.** Correctness and packaging concerns, not frame-rate levers. RDC orphans are likely, and the editor prefab margin is 489 entities.\n\n**Measurement caveat that affects every A/B:** Mike's dev install loads loose Assets/ plus RuntimeDataCache, while players load cooked AssetPackages (bannerlord-animation-system-map.md:545-552). Live TAOM_Map and the Armory no longer have any packs, so offline pack audits must point --game-dir at E:/LOTRAOM_Releases/<channel>.\n\n**Existing TAOM tooling**\n- audit_map_scene_memory.py: texture format, size and mips, mesh records and faces, edit data versus stream. It parses texture user flags but does not output them.\n- validate_mesh_refs.py: bo_ bodies.\n- check_rdc_entries.py: missing RDC entries.\n- audit_fbx_lods.py and lod_fill_batch.py: LOD chains and triangle counts.\n- tpac_clipinfo.py: clip flags, heuristically.\n- check_prefab_budget.py.\n- In-game instruments: [MissionPerf], [BattleLoad] with shaders=, [MemSample], taom.print_memory, [MapLoad].\n\nNo TAOM tool reads metamesh visible distance, clip Loading Type, particle min/max config or LOD distances, or RDC orphans.\n\n**MithrilForge**\n- Since 2026-10-02 it has its own MIT, netstandard2.0, dependency-free TpacFormat library with typed readers for all 13 item types, including VisibleDistance, texture UserFlags and MipCount, clip LoadMode, and particle Min/MaxConfig and LodDistances.\n- TpacCorpus is a scan/diff/extract tool for format versions, item types and round trips across an install. It does not report performance properties.\n- Neither references the TpacTool fork any more; only the tests do (README:30-31, 117-128; TpacCorpus.csproj). So the 2026-09-29 'safe to run: not yet' reason (an unread fork) no longer applies to those two projects.\n- TAOM's rule still stands: never install, port with a provenance row, and a measured trial needs the maintainer's decision. MithrilForge main is at 7c556554, against TAOM's adopted 91149e11, and the gap includes many TpacFormat commits from 2026-10-02.\n- The relayed user note ('we can copy it locally') would only matter for running or porting that code. Reading it needed no clone.\n\n**Skills that fit:** /adopt-external (MithrilForge delta since 91149e11), /armory-audit (the owed beard re-import), /investigate (Main_map scene-sack regression), /taom-src or /research (engine LOD API)."
+}

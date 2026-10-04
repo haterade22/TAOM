@@ -1,0 +1,38 @@
+perf(patchshield): v2.0.32 - find the original method only on a throw
+
+Every method PatchShield guards (about 160 at a process's first game
+start, close to 300 later) paid a lookup on every call, so the shield
+would know the method's name in case an error ever came through. Its
+finalizers took Harmony's __originalMethod parameter, which makes the
+patched method call MethodBase.GetMethodFromHandle on every call. The
+finalizers now take only the exception, and after a throw the shield
+finds the shielded method from the stack, judging only the frame that
+called the finalizer.
+
+Measured outside the game (.NET Framework, Harmony 2.4.2): the old
+binding cost about 64 ns and 241 bytes of garbage per call on one
+thread, and about 1.1 microseconds per call with 8 threads calling at
+once. The finalizer that remains costs about 5.4 ns per call as
+TAOM.Dependencies ships (a Debug build), against 1.9 ns for a patched
+method with no finalizer, and allocates nothing.
+
+What the shield does after an error is unchanged: the same exceptions
+are swallowed or rethrown, and the swallow line, the owner it
+unpatches and the rethrow marker name the same method. If another mod
+has patched PatchShield's own finalizer, the lookup skips that frame
+and judges the next one. The exclusion lists and the co-op skip are
+kept exactly as they were.
+
+New in diag.log: if the lookup ever cannot name the method, the first
+miss writes one INFO line ("could not tell which shielded method an
+exception crossed ...") and the session summary adds "; the shielded
+method was unknown N time(s)". In that case nothing is unpatched, so a
+throwing foreign patch the shield cannot name keeps being swallowed,
+and logged, on every call.
+
+Refs: #716 (plan 034)
+Not-tested: in game. One battle on a deployed build: diag.log shows
+ the usual shield pass lines and no new CAUGHT line; after a session
+ with a swallow or a rethrow marker, no "could not tell which shielded
+ method" line and no "unknown N time(s)" suffix. The Mono path (Proton
+ players) cannot run on .NET Framework.

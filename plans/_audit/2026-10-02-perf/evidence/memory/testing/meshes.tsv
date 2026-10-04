@@ -1,0 +1,211 @@
+name	module	pack	records	largest_positions	largest_faces	largest_vertices	all_records_faces	seg_5f98413d_bytes	seg_97f81dbb_bytes	seg_f6304064_bytes	total_bytes	flags	scene_direct	via_prefabs	flora_kind_instances	in_references_txt	terrain	materials	also_in
+edoras_t3	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(8 found, 8 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	362384960	16701996	254	379087210	EDITOR_STREAM_BLOAT	1	0	0	yes		rh_logs;rh_planks;rh_roof;rh_stone_wall;rohan_edoras_hill;rohan_houses;rohan_meduseld_icon	
+umbar_town_b_t3	TAOM_Map	AssetPackages/pack4.tpac	UNKNOWN(32 found, 32 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	48702576	50676588	1428	99380592		1	0	0	yes		umbar_bricks;umbar_map_icons_atlas;umbar_map_icons_atlas_2;umbar_rooftiles_1;umbar_rooftiles_2;umbar_rooftiles_3;umbar_tiles;umbar_trim_sheet	
+umbar_haven	TAOM_Map	AssetPackages/pack4.tpac	UNKNOWN(30 found, 30 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	44864388	46808112	1241	91673741		1	0	0	yes		umbar_bricks;umbar_map_icons_atlas;umbar_map_icons_atlas_2;umbar_rooftiles_1;umbar_rooftiles_2;umbar_rooftiles_3;umbar_tiles;umbar_trim_sheet	
+wildling_town	TAOM_Map	AssetPackages/pack4.tpac	1	151046	244932	301492	244932	33093212	35500548	39	68593799		3	0	0	yes		wildlings_trim	
+rivendell_icon	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(11 found, 11 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	26649484	27694482	431	54344397		2	0	0	yes		rivendell_bricks;rivendell_floor;rivendell_icon_mountain;rivendell_pillars;rivendell_roof;rivendell_stone;rivendell_tiles;rivendell_walls;rivendell_wood	
+rhun_town_b_t3	TAOM_Map	AssetPackages/pack2.tpac	21	32033	50493	73097	160320	26395380	27786474	887	54182741		2	0	0	yes		rhun_bricks;rhun_dome_snake;rhun_rooftiles;rhun_stone_orange;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2	
+barad_dur	TAOM_Map	AssetPackages/pack0.tpac	UNKNOWN(4 found, 4 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	24672332	26485674	133	51158139		1	0	0	yes		mordor_bricks;mordor_eye;mordor_lava_b;piecea	
+erebor_map_icon	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(4 found, 4 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	22590420	24743394	158	47333972		1	0	0	yes		erebor_dwarf_statue;erebor_map_icon	
+rhun_town_e_t3	TAOM_Map	AssetPackages/pack2.tpac	21	28306	44299	64387	138562	22734460	23665848	887	46401195		1	0	0	yes		rhun_bricks;rhun_dome_snake;rhun_rooftiles;rhun_stone_orange;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2	
+rhun_town_c_t3	TAOM_Map	AssetPackages/pack2.tpac	21	25434	40013	57575	123856	20466468	21315660	887	41783015		2	0	0	yes		rhun_bricks;rhun_dome_snake;rhun_rooftiles;rhun_stone_orange;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2	
+rhun_town_a_t3	TAOM_Map	AssetPackages/pack2.tpac	21	24980	39297	56506	123088	20342012	21187284	887	41530183		6	0	0	yes		rhun_bricks;rhun_dome_snake;rhun_rooftiles;rhun_stone_orange;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2	
+wildling_village_large	TAOM_Map	AssetPackages/pack4.tpac	1	59167	98508	128987	98508	13995600	15112920	48	29108568		42	0	0	yes		wildlings_trim	
+orthanc_tower	TAOM_Map	AssetPackages/pack2.tpac	1	47639	86721	130278	86721	13788480	15110904	33	28899417		1	0	0	yes		isengard	
+mordor_town_large_grasslands_t2	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	14391328	14043504	320	28435152		1	0	0	yes		mordor_floor;mordor_houses;mordor_planks	
+mordor_town_small_grasslands_t3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	14267552	14009820	320	28277692		1	0	0	yes		mordor_floor;mordor_houses;mordor_planks	
+aldburg_t3	TAOM_Map	AssetPackages/pack0.tpac	UNKNOWN(9 found, 9 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	13381096	13993746	287	27375129		1	0	0	yes		rh_logs;rh_planks;rh_planks_burnt;rh_roof;rh_stone;rh_stone_wall;rohan_aldburg_hill;rohan_houses	
+rhun_town_d_t3	TAOM_Map	AssetPackages/pack2.tpac	21	15257	24067	33862	71898	11879356	12368232	887	24248475		1	0	0	yes		rhun_bricks;rhun_dome_snake;rhun_rooftiles;rhun_stone_orange;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2	
+mirkwood_town_lvl3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(9 found, 9 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	11625036	11152308	414	22777758		1	0	0	yes		lotrome_map_hedge;mirkwood_map_atlas	
+rohan_town_b_t3	TAOM_Map	AssetPackages/pack2.tpac	5	23441	34291	48691	72113	11100000	11573154	177	22673331		1	0	0	yes		rh_logs;rh_planks;rh_roof;rh_stone_wall;rohan_houses	
+rohan_town_a_t3	TAOM_Map	AssetPackages/pack2.tpac	5	21573	31169	47124	68059	11063336	11608878	177	22672391		1	0	0	yes		rh_logs;rh_planks;rh_roof;rh_stone_wall;rohan_houses	
+umbar_castle_a_t3	TAOM_Map	AssetPackages/pack4.tpac	UNKNOWN(26 found, 26 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	10512164	10772502	1173	21285839		4	0	0	yes		umbar_bricks;umbar_map_icons_atlas;umbar_rooftiles_1;umbar_rooftiles_2;umbar_rooftiles_3;umbar_tiles;umbar_trim_sheet	
+gundabad_town	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(15 found, 15 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	10413932	10278972	557	20693461		2	0	0	yes		gundabad_dwarf_ruins;gundabad_dwarf_ruins_trim;gundabad_town_hill;mordor_houses	
+rohan_town_b_t2	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	10093604	10462362	213	20556179		1	0	0	yes		rh_logs;rh_planks;rh_roof;rh_stone_wall;rohan_houses	
+rohan_town_a_t2	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	10030780	10468764	213	20499757		1	0	0	yes		rh_logs;rh_planks;rh_roof;rh_stone_wall;rohan_houses	
+minas_tirith	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(7 found, 7 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	9369152	9762870	280	19132302		1	0	0	yes		minas_tirith_bricks;minas_tirith_houses;minas_tirith_mountain;minas_tirith_rooftiles;minas_tirith_stone;minas_tirith_tiles	
+pelargir	TAOM_Map	AssetPackages/pack2.tpac	7	18969	34625	45965	64423	9130808	9501174	260	18632242		1	0	0	yes		gondor_pelargir_ground;minas_tirith_bricks;minas_tirith_houses;minas_tirith_rooftiles;minas_tirith_stone;minas_tirith_tiles	
+rhun_castle_a_t3	TAOM_Map	AssetPackages/pack2.tpac	18	12758	20430	28022	54143	8854952	9217470	796	18073218		8	0	0	yes		rhun_bricks;rhun_rooftiles;rhun_stone_orange;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2	
+mordor_castle_large_pit_t3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(9 found, 9 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	7983720	7854534	441	15838695		1	0	0	yes		mordor_bricks;mordor_floor;mordor_houses;mordor_lava_b;mordor_planks	
+wildling_castle	TAOM_Map	AssetPackages/pack4.tpac	1	36992	61070	68857	61070	7659584	8169624	41	15829249		6	0	0	yes		wildlings_trim	
+sm_mordor_black_gate_icon_a	TAOM_Map	AssetPackages/pack3.tpac	2	28682	44268	69514	44908	7441800	8092920	120	15534840		1	0	0	yes		m_mordor_plate_tile_a;m_mordor_stone_wall_a	
+mordor_castle_large_grassland_t3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	7368060	7244394	326	14612780		3	0	0	yes		mordor_floor;mordor_houses;mordor_planks	
+sm_mordor_black_gate_wall_right	TAOM_Map	AssetPackages/pack3.tpac	2	23565	41892	50854	48180	6621620	6863388	129	13485137		1	0	0	yes		m_mordor_plate_tile_a	
+sm_mordor_black_gate_wall_left	TAOM_Map	AssetPackages/pack3.tpac	2	23565	41892	50854	48180	6621620	6863388	127	13485135		1	0	0	yes		m_mordor_plate_tile_a	
+rhun_castle_b_t3	TAOM_Map	AssetPackages/pack2.tpac	18	9200	14802	20168	38665	6319524	6582174	796	12902494		8	0	0	yes		rhun_bricks;rhun_rooftiles;rhun_stone_orange;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2	
+rhun_castle_c_t3	TAOM_Map	AssetPackages/pack2.tpac	18	8845	14299	19564	38150	6308680	6577140	796	12886616		7	0	0	yes		rhun_bricks;rhun_rooftiles;rhun_stone_orange;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2	
+dol_guldur_icon	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(14 found, 14 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	6411052	6462102	511	12873665		1	0	0	yes		dolguldur_icon_hill;mordor_bricks;mordor_floor;mordor_houses;mordor_planks	
+rohan_castle_c_t2	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	6166240	6400530	225	12566995		2	0	0	yes		rh_logs;rh_planks;rh_roof;rh_stone_wall;rohan_houses	
+rohan_castle_d_t2	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	6125452	6431550	225	12557227		2	0	0	yes		rh_logs;rh_planks;rh_roof;rh_stone_wall;rohan_houses	
+gondor_town_large_a	TAOM_Map	AssetPackages/pack1.tpac	5	14720	26838	36712	38713	5975564	6273102	245	12248911		4	0	0	yes		minas_tirith_bricks;minas_tirith_houses;minas_tirith_rooftiles;minas_tirith_stone;minas_tirith_tiles	
+mordor_town_large_hill_t3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(9 found, 9 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	6131752	6020334	424	12152510		7	0	0	yes		mordor_bricks;mordor_floor;mordor_houses;mordor_planks	
+gondor_town_large_b	TAOM_Map	AssetPackages/pack1.tpac	5	13567	24822	38303	34776	5738304	6074088	245	11812637		3	0	0	yes		minas_tirith_bricks;minas_tirith_houses;minas_tirith_rooftiles;minas_tirith_stone;minas_tirith_tiles	
+kirikhgathol_map_icon	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(3 found, 3 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	5265748	5309664	138	10575550		1	0	0	yes		kirikhgathol_map_icon	
+rivendell_castle_icon	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(7 found, 7 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	5186124	5210658	304	10397086		4	0	0	yes		rivendell_bricks;rivendell_roof;rivendell_stone;rivendell_walls;rivendell_wood	
+mordor_castle_large_hill_t3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(8 found, 8 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	4704876	4639140	400	9344416		11	0	0	yes		mordor_bricks;mordor_floor;mordor_houses;mordor_planks	
+erebor_town_small	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(5 found, 5 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	4157032	4291626	212	8448870		1	0	0	yes		erebor_dwarf_floor;erebor_dwarf_walls;erebor_icon_atlas	
+mordor_castle_small_grassland_t3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	4153124	4097136	326	8250586		8	0	0	yes		mordor_floor;mordor_houses;mordor_planks	
+rhun_castle_d_t3	TAOM_Map	AssetPackages/pack2.tpac	18	6156	9648	13928	22668	3974628	4160412	796	8135836		5	0	0	yes		rhun_bricks;rhun_rooftiles;rhun_stone_orange;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2	
+rohan_castle_b_t2	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	3880536	4056384	225	7937145		1	0	0	yes		rh_logs;rh_planks;rh_roof;rh_stone_wall;rohan_houses	
+umbar_castle_b_t3	TAOM_Map	AssetPackages/pack4.tpac	UNKNOWN(16 found, 16 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	3806820	3959958	706	7767484		4	0	0	yes		umbar_bricks;umbar_map_icons_atlas;umbar_rooftiles_1;umbar_tiles;umbar_trim_sheet	
+mordor_castle_small_hill_t3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	3574396	3549564	301	7124261		1	0	0	yes		mordor_houses;mordor_planks	
+west_osgiliath	TAOM_Map	AssetPackages/pack4.tpac	5	5480	9331	12200	21722	3405404	3509064	219	6914687		1	0	0	yes		minas_tirith_bricks;minas_tirith_houses;minas_tirith_mountain;minas_tirith_stone;minas_tirith_tiles	
+erebor_town_large	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(5 found, 5 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	3368828	3467544	212	6836584		2	0	0	yes		erebor_dwarf_floor;erebor_dwarf_walls;erebor_icon_atlas	
+erebor_castle_large	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(4 found, 4 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	3305152	3451560	178	6756890		8	0	0	yes		erebor_dwarf_floor;erebor_dwarf_walls;erebor_icon_atlas	
+gondor_castle_large_a	TAOM_Map	AssetPackages/pack1.tpac	5	8316	15194	21624	21197	3205132	3357846	255	6563233		3	0	0	yes		minas_tirith_bricks;minas_tirith_houses;minas_tirith_rooftiles;minas_tirith_stone;minas_tirith_tiles	
+rohan_castle_a_t3	TAOM_Map	AssetPackages/pack2.tpac	5	9263	13398	19369	20524	3200236	3337500	187	6537923		2	0	0	yes		rh_logs;rh_planks;rh_roof;rh_stone_wall;rohan_houses	
+east_osgiliath	TAOM_Map	AssetPackages/pack1.tpac	5	4668	5359	10086	18422	3001728	3080484	219	6082431		1	0	0	yes		minas_tirith_bricks;minas_tirith_houses;minas_tirith_mountain;minas_tirith_stone;minas_tirith_tiles	
+gondor_castle_large_b	TAOM_Map	AssetPackages/pack1.tpac	4	8266	15092	21046	19747	2969144	3112182	202	6081528		2	0	0	yes		minas_tirith_bricks;minas_tirith_houses;minas_tirith_stone;minas_tirith_tiles	
+mirkwood_castle_1_lvl2	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(9 found, 9 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	2941292	2835432	437	5777161		1	0	0	yes		lothlorien_map_castle_terrain;lotrome_map_hedge;mirkwood_map_atlas	
+gundabad_castle_3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(15 found, 15 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	2753532	2725722	620	5479874		2	0	0	yes		gundabad_castle_hills;gundabad_dwarf_ruins;gundabad_dwarf_ruins_trim;mordor_houses	
+mirkwood_castle_2_lvl3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(8 found, 8 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	2560796	2495622	392	5056810		1	0	0	yes		lotrome_map_hedge;mirkwood_map_atlas	
+mirkwood_castle_2_lvl1	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(8 found, 8 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	2451832	2389410	380	4841622		2	0	0	yes		lotrome_map_hedge;mirkwood_map_atlas	
+sm_dw_castle_tower_a1	TAOM_Map	AssetPackages/pack3.tpac	10	3220	5928	11640	11556	2194756	2363916	521	4559193		0	1	0			m_dw_obsidian_black_a1;m_dw_obsidian_red_a1;m_dw_rock_smooth_a1;m_dw_trim_a1;m_dw_wall_brick_b1	
+lothlorien_castle_1	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(9 found, 9 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	2251660	2228556	425	4480641		1	0	0	yes		lothlorien_map_atlas;lothlorien_map_castle_terrain;lothlorien_map_mallorn;lothlorien_mapicon_roof;lothlorien_marble;lotrome_map_hedge;mordor_planks	
+gondor_castle_small_b	TAOM_Map	AssetPackages/pack1.tpac	4	6581	12114	16307	15123	2185400	2281782	202	4467384		2	0	0	yes		minas_tirith_bricks;minas_tirith_houses;minas_tirith_stone;minas_tirith_tiles	
+lothlorien_castle_2	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(7 found, 7 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	2227756	2216670	332	4444758		3	0	0	yes		lothlorien_map_atlas;lothlorien_map_mallorn;lothlorien_mapicon_roof;lothlorien_marble;lotrome_map_hedge;mordor_planks	
+gondor_castle_wall_tower_l3_a	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(19 found, 19 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	2133468	2249232	1362	4384062		0	2	0			decal_piled_leaks_a_mat;gondor_bricks_a_normal_mat;gondor_tiles_a_normal_mat;m_gondor_bricks_large_a_dirty;m_gondor_stone_trim_a1	
+gondor_castle_gatehouse_l1_a	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(12 found, 12 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	2009152	2041776	776	4051704		0	1	0			gondor_tiles_a_dirty_mat;m_gondor_bricks_large_a_dirty;m_gondor_stone_trim_a1	
+gd_bridge_a_dirty	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(34 found, 34 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	1868712	1971090	2121	3841923		0	12	0			decal_piled_leaks_a_mat;gondor_bricks_a_dirty_mat;gondor_bricks_small_a_dirty_mat;gondor_stone_a_normal_mat;gondor_stone_brick_a_mat;gondor_tiles_a_dirty_mat	
+umbar_village_b	TAOM_Map	AssetPackages/pack4.tpac	UNKNOWN(21 found, 21 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	1870192	1899042	884	3770118		22	0	0	yes		umbar_bricks;umbar_map_icons_atlas;umbar_rooftiles_2;umbar_tiles;umbar_trim_sheet	
+helms_deep	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(5 found, 5 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	1877960	1887306	156	3765422		1	0	0	yes		rh_planks;rh_stone;rh_stone_wall	
+gondor_castle_small_a	TAOM_Map	AssetPackages/pack1.tpac	4	5030	9207	13000	11856	1798160	1886880	202	3685242		9	0	0	yes		minas_tirith_bricks;minas_tirith_houses;minas_tirith_stone;minas_tirith_tiles	
+sm_dw_castle_tower_a1_int	TAOM_Map	AssetPackages/pack3.tpac	4	3720	7000	13127	9140	1733588	1870476	224	3604288		0	1	0			m_dw_ground_pavement_a1;m_dw_trim_a1	
+mirkwood_map_castle_3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(5 found, 5 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	1822948	1704744	286	3527978		1	0	0	yes		mirkwood_map_castle_hill;thranduils_halls_map_icon_1;thranduils_halls_map_icon_2	
+umbar_village_a	TAOM_Map	AssetPackages/pack4.tpac	UNKNOWN(21 found, 21 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	1710172	1733136	884	3444192		8	0	0	yes		umbar_bricks;umbar_map_icons_atlas;umbar_rooftiles_3;umbar_tiles;umbar_trim_sheet	
+test5	TAOM_Map	AssetPackages/pack4.tpac	1	2972	5937	16083	5937	1598460	1772814	41	3371315		0	50	0			dragonstone_map_01_a	
+rhun_village_d_looted	TAOM_Map	AssetPackages/pack2.tpac	15	1108	1865	2322	11259	1640380	1705554	754	3346688		12	0	0	yes		rhun_rooftiles;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2;umbar_bricks_burned;umbar_rubble_burned	
+thranduills_halls_icon	TAOM_Map	AssetPackages/pack4.tpac	3	4969	8685	5615	18965	1679964	1620534	181	3300679		1	0	0	yes		thranduils_halls_map_icon_1;thranduils_halls_map_icon_2;thranduils_halls_map_icon_3	
+rhun_village_a_looted	TAOM_Map	AssetPackages/pack2.tpac	20	1546	2250	3456	8377	1446756	1506558	1017	2954331		40	0	0	yes		rhun_rooftiles;rhun_stone_orange;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2;umbar_bricks_burned;umbar_rubble_burned	
+rhun_village_c_looted	TAOM_Map	AssetPackages/pack2.tpac	18	1225	1640	2864	7056	1186308	1232820	916	2420044		40	0	0	yes		rhun_rooftiles;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2;umbar_bricks_burned;umbar_rubble_burned	
+rhun_village_a	TAOM_Map	AssetPackages/pack2.tpac	17	1468	2168	3744	6101	1161080	1228050	714	2389844		40	0	0	yes		rhun_bricks;rhun_rooftiles;rhun_stone_orange;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2	
+umbar_village_b_burned	TAOM_Map	AssetPackages/pack4.tpac	UNKNOWN(9 found, 9 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	1142628	1170072	451	2313151		22	0	0	yes		umbar_bricks_burned;umbar_rubble_burned	
+gundabad_map_fortress	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(2 found, 2 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	1123580	1115670	104	2239354		1	0	0	yes		gundabad_fortress_map	
+rhun_village_b	TAOM_Map	AssetPackages/pack2.tpac	18	1015	1419	2181	5960	1049952	1102368	760	2153080		40	0	0	yes		rhun_bricks;rhun_rooftiles;rhun_stone_orange;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2	
+gundabad_castle_2	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(11 found, 11 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	1056100	1068552	450	2125102		2	0	0	yes		gundabad_castle_hills;gundabad_dwarf_ruins;gundabad_dwarf_ruins_trim;mordor_houses	
+argonath_2	TAOM_Map	AssetPackages/pack0.tpac	1	5319	10666	8973	10666	1038640	1033308	32	2071980		1	0	0	yes		argonath_2	
+dao_rock_15	TAOM_Map	AssetPackages/pack1.tpac	6	2597	5190	2957	13232	998516	941844	209	1940569		6	0	0	yes		dao_rock_15	
+gondor_wall_6m_arch_d_dirty	TAOM_Map	AssetPackages/pack2.tpac	14	1184	2306	4600	5238	923568	987612	990	1912170		0	16	0			decal_piled_leaks_a_mat;gondor_bricks_a_dirty_mat;gondor_stone_brick_a_mat	
+dao_rock_19	TAOM_Map	AssetPackages/pack1.tpac	6	2573	5146	2897	13118	979392	921612	209	1901213		12	0	0	yes		dao_rock_19	
+dao_rock_13	TAOM_Map	AssetPackages/pack1.tpac	6	2646	5288	2895	13480	980568	916440	209	1897217		47	0	0	yes		dao_rock_13	
+dao_rock_14	TAOM_Map	AssetPackages/pack1.tpac	6	2566	5130	2875	13080	973116	914796	209	1888121		13	0	0	yes		dao_rock_14	
+dao_rock_12	TAOM_Map	AssetPackages/pack1.tpac	6	2531	5068	2872	12918	970780	915336	209	1886325		13	0	0	yes		dao_rock_12	
+dao_rock_20	TAOM_Map	AssetPackages/pack1.tpac	6	2532	5060	2840	12902	961924	904656	209	1866789		13	0	0	yes		dao_rock_20	
+dao_rock_11	TAOM_Map	AssetPackages/pack1.tpac	6	2515	5026	2820	12812	955800	899040	209	1855049		11	0	0	yes		dao_rock_11	
+dao_rock_9	TAOM_Map	AssetPackages/pack1.tpac	6	2554	5104	2812	13010	950836	889752	197	1840785		32	0	0	yes		dao_rock_9	
+dao_rock_5	TAOM_Map	AssetPackages/pack1.tpac	6	2539	5080	2807	12954	949244	889200	197	1838641		48	0	0	yes		dao_rock_5	
+dao_rock_18	TAOM_Map	AssetPackages/pack1.tpac	6	2507	5014	2800	12780	946044	888372	209	1834625		5	0	0	yes		dao_rock_18	
+dao_rock_10	TAOM_Map	AssetPackages/pack1.tpac	6	2522	5042	2794	12854	943296	883740	209	1827245		21	0	0	yes		dao_rock_10	
+dao_rock_8	TAOM_Map	AssetPackages/pack1.tpac	6	2575	5148	2798	13122	944332	880272	197	1824801		20	0	0	yes		dao_rock_8	
+dao_rock_16	TAOM_Map	AssetPackages/pack1.tpac	6	2538	5076	2788	12938	938992	877332	209	1816533		26	0	0	yes		dao_rock_16	
+dao_rock_3	TAOM_Map	AssetPackages/pack1.tpac	6	2517	5030	2774	12824	936996	876756	197	1813949		34	0	0	yes		dao_rock_3	
+umbar_village_a_burned	TAOM_Map	AssetPackages/pack4.tpac	UNKNOWN(9 found, 9 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	898592	912228	451	1811271		8	0	0	yes		umbar_bricks_burned;umbar_rubble_burned	
+dao_rock_17	TAOM_Map	AssetPackages/pack1.tpac	6	2529	5054	2761	12882	931348	869112	209	1800669		12	0	0	yes		dao_rock_17	
+dao_rock_6	TAOM_Map	AssetPackages/pack1.tpac	6	2531	5064	2753	12908	928452	865596	197	1794245		18	0	0	yes		dao_rock_6	
+dao_rock_4	TAOM_Map	AssetPackages/pack1.tpac	6	2511	5018	2738	12790	925920	864348	197	1790465		70	0	0	yes		dao_rock_4	
+dao_rock_1	TAOM_Map	AssetPackages/pack1.tpac	6	2513	5022	2740	12802	924964	863016	197	1788177		34	0	0	yes		dao_rock_1	
+dao_rock_7	TAOM_Map	AssetPackages/pack1.tpac	6	2492	4986	2727	12710	920904	860196	197	1781297		27	0	0	yes		dao_rock_7	
+dao_rock_2	TAOM_Map	AssetPackages/pack1.tpac	6	2448	4896	2712	12480	916952	859464	197	1776613		46	0	0	yes		dao_rock_2	
+gondor_wall_3m_window3_a_dirty	TAOM_Map	AssetPackages/pack2.tpac	13	2019	3852	3434	6306	765060	779952	960	1545972		0	8	0			decal_piled_leaks_a_mat;gondor_bricks_a_dirty_mat;gondor_stone_brick_rough_a_mat;m_gondor_stone_trim_a1	
+argonath_1	TAOM_Map	AssetPackages/pack0.tpac	1	5490	10968	6243	10968	793840	740280	32	1534152		1	0	0	yes		argonath_1	
+gondor_wall_3m_window3_a_clean	TAOM_Map	AssetPackages/pack2.tpac	10	2019	3852	3434	6234	748560	763284	741	1512585		0	8	0			gondor_bricks_a_normal_mat;gondor_stone_brick_rough_a_mat;m_gondor_stone_trim_a1	
+rhun_village_b_looted	TAOM_Map	AssetPackages/pack2.tpac	16	588	859	1190	4387	723868	752058	806	1476732		40	0	0	yes		rhun_rooftiles;rhun_stone_orange;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2;umbar_bricks_burned	
+gundabad_village_warg_pit	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(10 found, 10 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	685196	664464	480	1350140		79	0	0	yes		mordor_houses	
+mordor_village_slaver_tents	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	638108	644094	296	1282498		76	0	0	yes		mordor_floor;mordor_houses;mordor_planks	
+rhun_village_c	TAOM_Map	AssetPackages/pack2.tpac	15	773	1174	1874	3650	620308	649344	627	1270279		40	0	0	yes		rhun_bricks;rhun_rooftiles;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2	
+gd_bridge_a_middle_dirty	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(27 found, 27 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	583940	626604	1870	1212414		0	6	0			gondor_bricks_a_dirty_mat;gondor_bricks_small_a_dirty_mat;gondor_stone_a_normal_mat;gondor_tiles_a_dirty_mat	
+test2	TAOM_Map	AssetPackages/pack4.tpac	1	1038	2057	5687	2057	564524	626766	41	1191331		0	2	0			dragonstone_map_01_a	
+erebor_village_1	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(4 found, 4 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	574884	608496	166	1183546		16	0	0	yes		erebor_dwarf_floor;erebor_dwarf_walls;erebor_icon_atlas	
+gondor_wall_6m_arch_b_dirty	TAOM_Map	AssetPackages/pack2.tpac	13	664	1324	2640	3076	551948	592092	913	1144953		0	6	0			decal_piled_leaks_a_mat;gondor_bricks_a_dirty_mat;gondor_stone_brick_a_mat	
+gundabad_village_war_pit_looted	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(7 found, 7 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	567868	565680	386	1133934		77	0	0	yes		mordor_houses	
+gondor_wall_6m_arch_b_clean	TAOM_Map	AssetPackages/pack2.tpac	10	664	1324	2640	3132	534648	573600	691	1108939		0	2	0			gondor_bricks_a_normal_mat;gondor_stone_brick_a_mat;m_gondor_stone_trim_a1	
+rhun_village_d	TAOM_Map	AssetPackages/pack2.tpac	13	606	942	1474	3676	540504	562104	541	1103149		12	0	0	yes		rhun_bricks;rhun_rooftiles;rhun_stone_red;rhun_trimsheet_1;rhun_trimsheet_2	
+gundabad_village_camp	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(10 found, 10 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	548120	534366	442	1082928		23	0	0	yes		mordor_houses	
+gondor_roof_circular_full_6m_a	TAOM_Map	AssetPackages/pack1.tpac	5	1410	2816	1688	6000	546572	535668	324	1082564		0	2	0			m_gondor_roof_tiles_a;m_gondor_stone_trim_a1;m_wood_planks_a_old_worn	
+gondor_roof_circular_full_6m_b	TAOM_Map	AssetPackages/pack1.tpac	9	545	1056	1778	3164	521252	548724	595	1070571		0	2	0			m_gondor_roof_tiles_a;m_gondor_stone_trim_a1;m_wood_planks_a_old_worn	
+rohan_village_a_pillaged	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(4 found, 4 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	483860	498396	193	982449		34	0	0	yes		rh_planks_burnt;rh_stone_wall;rohan_houses_burnt	
+gondor_castle_wall_20m_l1_a_m1	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(20 found, 20 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	478080	489540	1333	968953		0	40	0			gondor_bricks_a_dirty_mat;gondor_bricks_small_a_dirty_mat;gondor_stone_brick_a_mat;gondor_stone_rubble_a_mat;m_gondor_black_trim_a;m_gondor_stone_trim_a1	
+mirkwood_village_3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(4 found, 4 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	464160	464004	163	928327		24	0	0	yes		mirkwood_map_atlas	
+lothlorien_village_2	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(5 found, 5 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	463636	463584	227	927447		9	0	0	yes		lothlorien_map_atlas;lothlorien_mapicon_roof;mordor_planks	
+st_mirkwood_bridge_a01	TAOM_Map	AssetPackages/pack3.tpac	12	966	1760	1196	5171	462416	445998	736	909150		0	5	0			t_mirkwood_stone_dirty;t_mirkwood_trimsheet_stone	
+gundabad_village_camp_looted	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(7 found, 7 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	440392	453192	361	893945		23	0	0	yes			
+lothlorien_village_1	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(5 found, 5 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	443724	442584	226	886534		6	0	0	yes		lothlorien_map_atlas;lothlorien_map_mallorn;mordor_planks	
+gondor_stairs_cuv_3m_a_dirty	TAOM_Map	AssetPackages/pack1.tpac	8	840	1396	2634	2258	420696	449964	562	871222		0	2	0			gondor_bricks_a_dirty_mat;gondor_bricks_small_a_dirty_mat	
+test	TAOM_Map	AssetPackages/pack4.tpac	1	1383	2730	3970	2730	420156	445368	40	865564		0	4	0			dragonstone_map_01_a	
+rohan_village_a	TAOM_Map	AssetPackages/pack2.tpac	3	1318	2111	3336	2513	418208	440850	111	859169		34	0	0	yes		rh_roof;rh_stone_wall;rohan_houses	
+mirkwood_village_2	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	408728	408324	243	817295		18	0	0	yes		mirkwood_map_atlas;mirkwood_map_tent	
+gondor_ground_3m_a_dirty	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(8 found, 8 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	383248	415956	482	799686		0	117	0			gondor_tiles_a_dirty_mat	
+gondor_stairs_3m_a_clean	TAOM_Map	AssetPackages/pack1.tpac	12	490	704	1408	1794	369768	399708	837	770313		0	6	0			gondor_bricks_a_normal_mat;gondor_bricks_small_a_normal_mat	
+erebor_village_2	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(3 found, 3 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	373920	395856	122	769898		40	0	0	yes		erebor_dwarf_walls;erebor_icon_atlas	
+gondor_wall_3m_window_a_dirty	TAOM_Map	AssetPackages/pack2.tpac	13	809	1548	1384	3060	369452	377292	935	747679		0	6	0			decal_piled_leaks_a_mat;gondor_bricks_a_dirty_mat;gondor_stone_a_rough_mat;m_gondor_stone_trim_a1	
+orthanc_outer_walls	TAOM_Map	AssetPackages/pack2.tpac	3	1284	2308	3070	2393	341364	356214	124	697702		1	0	0	yes		isengard;mordor_bricks;mordor_floor	
+gondor_wall_3m_window_a_clean	TAOM_Map	AssetPackages/pack2.tpac	10	809	1548	1384	2880	343032	350904	719	694655		0	8	0			gondor_bricks_a_normal_mat;gondor_stone_brick_a_mat;m_gondor_stone_trim_a1	
+erebor_village_3	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(4 found, 4 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	327440	338466	163	666069		22	0	0	yes		erebor_dwarf_walls;erebor_icon_atlas	
+gondor_castle_wall_20m_l3_a_m2	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	327368	322596	381	650345		0	1	0			m_gondor_stone_trim_a1	
+gondor_castle_wall_20m_l3_a_m3	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	327368	322596	381	650345		0	1	0			m_gondor_stone_trim_a1	
+gondor_castle_wall_20m_l3_a_m4	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	327368	322596	381	650345		0	2	0			m_gondor_stone_trim_a1	
+mirkwood_village_1	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(2 found, 2 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	310712	309516	84	620312		14	0	0	yes		mirkwood_map_tent	
+gondor_castle_wall_tower_l3_a_m6	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	282712	286446	393	569551		0	2	0			m_gondor_stone_trim_a1	
+gondor_castle_wall_tower_l3_a_m12	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	282528	286230	399	569157		0	2	0			m_gondor_stone_trim_a1	
+gondor_castle_wall_tower_l3_a_m4	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	281480	285204	393	567077		0	2	0			m_gondor_stone_trim_a1	
+gondor_castle_wall_tower_l3_a_m10	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	281388	285096	399	566883		0	2	0			m_gondor_stone_trim_a1	
+gondor_castle_wall_tower_l3_a_m11	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	281080	284664	399	566143		0	2	0			m_gondor_stone_trim_a1	
+gondor_castle_wall_tower_l3_a_m5	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	281080	284664	393	566137		0	2	0			m_gondor_stone_trim_a1	
+gondor_wall_6m_a_dirty	TAOM_Map	AssetPackages/pack2.tpac	7	1008	1944	1512	2412	280084	280452	448	560984		0	6	0			decal_piled_leaks_a_mat;gondor_bricks_a_normal_mat;gondor_stone_brick_a_mat	
+gondor_castle_wall_tower_l3_a_m3	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	277284	280074	393	557751		0	2	0			m_gondor_stone_trim_a1	
+gondor_castle_wall_tower_l3_a_m9	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	277192	279966	393	557551		0	2	0			m_gondor_stone_trim_a1	
+gondor_castle_wall_tower_l3_a_m1	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	276052	278832	393	555277		0	2	0			m_gondor_stone_trim_a1	
+gondor_castle_wall_tower_l3_a_m7	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	276052	278832	393	555277		0	2	0			m_gondor_stone_trim_a1	
+gondor_castle_wall_tower_l3_a_m2	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	275836	278508	393	554737		0	2	0			m_gondor_stone_trim_a1	
+gondor_castle_wall_tower_l3_a_m8	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	275836	278508	393	554737		0	2	0			m_gondor_stone_trim_a1	
+rhun_icon_wall_destroyed_t3	TAOM_Map	AssetPackages/pack2.tpac	10	220	284	226	1906	265548	263952	550	530050		56	0	0	yes		rhun_bricks;rhun_stone_orange;rhun_stone_red;rhun_trimsheet_1	
+osgiliath_bridge	TAOM_Map	AssetPackages/pack2.tpac	2	1288	1736	2184	1792	255192	259176	93	514461		1	0	0	yes		minas_tirith_bricks;minas_tirith_tiles	
+mordor_village_pit_looted	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	216460	218694	280	435434		2	0	0	yes		mordor_floor	
+rohan_t2_map_wall	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(3 found, 3 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	204876	217074	116	422066		2	0	0	yes		rh_logs;rh_stone_wall	
+test4	TAOM_Map	AssetPackages/pack4.tpac	1	375	745	1968	745	196024	217242	41	413307		2	50	0	yes		dragonstone_map_01_a	
+gondor_buttress_a_dirty	TAOM_Map	AssetPackages/pack1.tpac	8	286	568	1136	952	193984	212304	506	406794		0	64	0			gondor_bricks_a_dirty_mat;m_gondor_roof_tiles_a	
+gondor_wall_3m_a_door_a_dirty	TAOM_Map	AssetPackages/pack1.tpac	13	212	420	840	1064	188300	202884	927	392111		0	6	0			decal_piled_leaks_a_mat;gondor_bricks_a_dirty_mat;gondor_stone_brick_a_mat;m_gondor_stone_trim_a1	
+dragonstonewall	TAOM_Map	AssetPackages/pack1.tpac	1	349	692	1832	692	182460	202236	51	384747		0	56	0			dragonstone_map_01_a	
+lothlorien_village_2_looted	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(2 found, 2 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	183448	190230	98	373776		9	0	0	yes			
+lothlorien_village_1_looted	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(2 found, 2 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	182972	188934	98	372004		6	0	0	yes			
+gondor_wall_3m_a_door_a_clean	TAOM_Map	AssetPackages/pack1.tpac	10	212	420	840	1016	177272	191544	711	369527		0	2	0			gondor_bricks_a_normal_mat;gondor_stone_brick_a_mat;m_gondor_stone_trim_a1	
+rhun_icon_wall_t3	TAOM_Map	AssetPackages/pack2.tpac	9	168	210	330	891	175956	182682	409	359047		80	0	0	yes		rhun_bricks;rhun_stone_orange;rhun_trimsheet_1	
+rohan_t3_map_wall_broken	TAOM_Map	AssetPackages/pack2.tpac	2	432	670	786	1258	172004	176376	92	348472		22	0	0	yes		rh_logs;rh_stone_wall	
+mirkwood_village_2_looted	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(3 found, 3 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	172248	174246	146	346640		18	0	0	yes		mirkwood_map_tent	
+st_mirkwood_wood_path_a01	TAOM_Map	AssetPackages/pack3.tpac	11	315	560	315	2076	170428	160764	685	331877		0	2	0			t_decal_dirt_vertical;t_mirkwood_wood_bark_b;t_mirkwood_wood_path_b	
+st_mirkwood_wood_path_b01	TAOM_Map	AssetPackages/pack3.tpac	11	315	560	315	2076	170320	160656	685	331661		0	3	0			t_decal_dirt_vertical;t_mirkwood_wood_bark_a;t_mirkwood_wood_path_a	
+helms_deep_wall_a	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(2 found, 2 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	156552	165156	85	321793		1	0	0	yes		rh_stone_wall	
+erebor_wall_broken	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(5 found, 5 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	152692	157752	212	310656		22	0	0	yes		erebor_dwarf_floor;erebor_dwarf_walls;erebor_icon_atlas	
+mordor_siege_wall_broken_t3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(4 found, 4 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	150272	148338	202	298812		66	0	0	yes		mordor_planks	
+rohan_t3_map_wall	TAOM_Map	AssetPackages/pack2.tpac	2	643	907	1153	1069	146496	149538	78	296112		22	0	0	yes		rh_logs;rh_stone_wall	
+gondor_wall_trim_6m_a	TAOM_Map	AssetPackages/pack2.tpac	6	152	300	575	664	137580	145212	375	283167		0	12	0			decal_piled_leaks_a_mat;gondor_bricks_a_normal_mat	
+erebor_wall	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(4 found, 4 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	138360	144144	146	282650		22	0	0	yes		erebor_dwarf_floor;erebor_dwarf_walls;erebor_icon_atlas	
+mordor_village_pit	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	141996	136866	238	279100		2	0	0	yes		mordor_floor	
+gd_bridge_sup_a_dirty	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(9 found, 9 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	133472	143064	574	277110		0	24	0			gondor_bricks_a_dirty_mat;gondor_stone_a_normal_mat	
+mordor_siege_wall_t3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(3 found, 3 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	132580	130392	124	263096		66	0	0	yes		mordor_planks	
+mordor_village_tents	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(4 found, 4 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	118348	114318	168	232834		2	0	0	yes		mordor_floor	
+rohan_t2_map_wall_broken	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(3 found, 3 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	108384	110394	137	218915		2	0	0	yes		rh_logs;rh_stone_wall	
+gondor_village_2	TAOM_Map	AssetPackages/pack1.tpac	1	494	754	955	754	104840	107892	47	212779		140	0	0	yes		minas_tirith_houses	
+gd_bridge_a_merlon_f_dirty	TAOM_Map	AssetPackages/pack1.tpac	4	160	316	588	496	95904	104544	255	200703		0	60	0			gondor_bricks_a_dirty_mat	
+gondor_column_3m_a_1x1	TAOM_Map	AssetPackages/pack1.tpac	3	152	300	592	460	93284	101940	170	195394		0	83	0			m_gondor_stone_trim_a1	
+gondor_wall_3m_a_dirty	TAOM_Map	AssetPackages/pack1.tpac	7	336	648	504	808	93892	95436	460	189788		0	83	0			decal_piled_leaks_a_mat;gondor_bricks_a_dirty_mat;gondor_stone_brick_a_mat	
+test6	TAOM_Map	AssetPackages/pack4.tpac	1	192	379	887	379	89252	98298	41	187591		0	100	0			dragonstone_map_01_a	
+mordor_village_tents_looted	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(4 found, 4 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	95336	91944	196	187476		2	0	0	yes		mordor_floor	
+gondor_ground_1m_a_dirty	TAOM_Map	AssetPackages/pack1.tpac	UNKNOWN(8 found, 8 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	82816	90672	482	173970		0	6	0			gondor_tiles_a_dirty_mat	
+gondor_wall_3m_a_clean	TAOM_Map	AssetPackages/pack1.tpac	5	336	648	504	756	81980	83436	332	165748		0	71	0			gondor_bricks_a_normal_mat;gondor_stone_brick_a_mat	
+rohan_t1_map_wall	TAOM_Map	AssetPackages/pack2.tpac	2	275	375	450	473	70068	71550	74	141692		2	0	0	yes		rh_logs;rh_planks	
+mi_windmill_stairs_s	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(2 found, 2 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	64096	66576	92	130764		3	0	0	yes			
+gondor_wall_trim_corner_d_clean	TAOM_Map	AssetPackages/pack2.tpac	3	104	204	370	308	59516	64956	197	124669		0	24	0			m_gondor_stone_trim_a1	
+gd_bridge_sup_side_a_dirty	TAOM_Map	AssetPackages/pack1.tpac	3	88	168	334	296	58268	63588	191	122047		0	24	0			gondor_bricks_a_dirty_mat	
+rohan_t1_map_wall_broken	TAOM_Map	AssetPackages/pack2.tpac	2	179	239	298	307	46716	48090	88	94894		2	0	0	yes		rh_logs;rh_planks	
+gondor_wall_trim_corner_c_clean	TAOM_Map	AssetPackages/pack2.tpac	3	80	156	246	228	37676	40716	197	78589		0	34	0			m_gondor_stone_trim_a1	
+gondor_wall_trim_3m_d_dirty	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	35512	37440	363	73315		0	32	0			m_gondor_stone_trim_a1	
+mi_windmill_s	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(6 found, 6 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	29560	31482	225	61267		3	0	0	yes			
+gondor_wall_trim_3m_c_clean	TAOM_Map	AssetPackages/pack2.tpac	3	40	76	108	148	23012	24900	185	48097		0	62	0			m_gondor_stone_trim_a1	
+mi_windmill_fan_s	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(4 found, 4 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	19424	20520	165	40109		3	0	0	yes			
+test3	TAOM_Map	AssetPackages/pack4.tpac	1	28	52	76	52	8092	8748	41	16881		0	2	0			dragonstone_map_01_a	
+mirkwood_map_wall_lvl2	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(3 found, 3 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	6924	7344	140	14408		6	0	0	yes		mirkwood_map_atlas	
+mirkwood_map_wall_lvl3	TAOM_Map	AssetPackages/pack2.tpac	2	48	24	48	30	6832	7116	105	14053		4	0	0	yes		mirkwood_map_atlas	
+lothlorien_map_wall	TAOM_Map	AssetPackages/pack2.tpac	2	48	24	48	30	6832	7116	101	14049		6	0	0	yes		lothlorien_map_atlas;lothlorien_marble	
+mirkwood_map_wall_broken_lvl3	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(2 found, 2 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	6116	6804	107	13027		4	0	0	yes			
+mirkwood_map_wall_broken_lvl2	TAOM_Map	AssetPackages/pack2.tpac	UNKNOWN(2 found, 2 editor segments)	UNKNOWN	UNKNOWN	UNKNOWN	UNKNOWN	6112	6480	104	12696		6	0	0	yes			

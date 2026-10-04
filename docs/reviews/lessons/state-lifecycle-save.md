@@ -966,3 +966,9 @@ v1.5.0 added `Hero.MainHero.Gold = 1000` to `CharacterCreationState.FinalizeChar
 - **Why missed:** the migration repaired the consumer whose symptom was reported, and nothing listed the other features that set the main hero's gold during character creation.
 - **Prevent:** when an engine bump adds or moves a write to a field, grep TAOM for every writer of that field in the affected window and every doc or hint that states its value, before the migration is called done.
 - **Source:** `docs/reviews/rca-takeover-treasury-2026-10-02.md` G10.
+
+### A reading taken from a lifecycle event follows only the work that ran before that event (2026-10-02)
+The 2026-09-12 memory run read the inventory's `[MemStation] enter` line as the heap after two engine collections (the previous close and this open) and concluded that the 2.6 GB still there was rooted state. In v1.5.3 the line is written from `ScreenManager.OnPushScreen`, which `GameStateManager.OnPushState` reaches through its listeners before its own `Common.MemoryCleanupGC()` (`GameStateManager.cs:281-288`), so the reading followed one collection, the pop's, taken while the closing screen was still on the stack. A screen-close heap release was removed as redundant on that reading; a release one frame after the pop was never tried.
+- **Why missed:** the review checked that both state transitions collect, not where in each transition the sampler's event fires relative to the collection.
+- **Prevent:** before inferring how many collections, cache clears or flushes a reading follows, read the order of the event that writes it against the side effects in the same method, and state that order next to the conclusion.
+- **Source:** `plans/_audit/2026-10-02-perf/evidence/memory/inventory-open-alloc.md`; `docs/reviews/rca-memory-instruments-2026-09-12.md` finding 3.

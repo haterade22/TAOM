@@ -1,0 +1,27 @@
+4402 lines between 12:45:00 and 12:45:51
+window span 50.239 s; top 12 gaps cover 22.843 s
+  4.590 s after [12:45:32.796000] Loading xml file: $BASE/Modules/TAOM_Map/SceneObj/Main_map/atmosphere.xml.
+           next: Town scene manager: Total mesh: 6909, Total Unique Mesh: 224
+  3.372 s after [12:45:42.126000] creating hero from template with id: spc_notable_bluecraig_3 
+           next: creating hero from template with id: spc_ghilman_leader_0 
+  3.184 s after [12:45:46.182000] creating hero from template with id: lord_LN2_3 
+           next: Dump integrity is compromised due to cheat usage 
+  2.727 s after [12:45:38.018000] Missing shader from sack: pbr_terrain_gbuffer
+           next: Loading xml file: $BASE/Modules/Native//ModuleData/water_prefabs.xml.
+  2.306 s after [12:45:11.778000] opening ../../XmlSchemas/Items.xsd 
+           next: opening ..\..\Modules\SandBoxCore/ModuleData/sandboxcore_equipment_sets.xml 
+  1.559 s after [12:45:31.153000] opening ..\..\Modules\LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_animalia.xml 
+           next: gpu_morph_mapping: 6540780
+  1.474 s after [12:45:16.338000] opening ../../XmlSchemas/NPCCharacters.xsd 
+           next: opening ..\..\Modules\TAOM/ModuleData/characters/lords.xml 
+  1.192 s after [12:45:29.868000] Null object reference found with ID: neutral 
+           next: opening ..\..\Modules\SandBox/ModuleData/settlement_track_instruments.xml 
+  0.749 s after [12:45:49.369000] Dump integrity is compromised due to cheat usage 
+           next: Finished starting a new game. 
+  0.649 s after [12:45:02.708000] AddGlobalLayer 
+           next: Loading xml file: $BASE/Modules/Native/SceneObj/scn_conversation_tableau/scene.xscene.
+  0.551 s after [12:45:40.928000] Reading SettlementsDistanceCacheFilePath: ..\..\Modules\TAOM_Map/ModuleData/DistanceCaches/settlements_distanc
+           next: Found distance cache at: Sandbox, ..\..\Modules\SandBox/ModuleData/DistanceCaches, Default 
+  0.490 s after [12:45:28.606000] opening ../../XmlSchemas/NPCCharacters.xsd 
+           next: opening ..\..\Modules\SandBox/ModuleData/heroes.xml 
+'Loading xml file' lines: 14

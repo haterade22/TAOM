@@ -1,0 +1,45 @@
+feat(perf): v2.0.32 - per-mission perf rows and A/B compare from logs
+
+tools/perf_runs.py turns any number of taom_debug logs into one row
+per mission and compares two groups of runs, so a frame-time or memory
+change is judged by numbers rather than by feel. Until now the
+[MissionPerf] heartbeat had no reader, and triage_battle_load.py looks
+at the last mission of a log only.
+
+Each row carries the load buckets (through triage_battle_load.py's own
+parser), the spawn window kept apart from the steady state by its
+position, steady medians of fps and of average and p95 frame time, the
+worst frame, GC collections per minute and, when the mission tick
+profiler's lines are present, per-behaviour cost and hitch counts by
+phase. Flags say when the numbers may not mean what they seem
+(FRAME_CAP, MEMORY_PRESSURE, DIAG_ON, DIRTY_BUILD,
+BUILD_PAIR_MISMATCH), and each names its evidence.
+
+    python tools/perf_runs.py <logs>
+    python tools/perf_runs.py compare --a <logs> --b <logs> --scene <id>
+
+--json prints everything. compare refuses to mix Debug and Release
+builds or texture settings unless --allow-mixed is given, and counts a
+row with no readable texture setting as unchecked.
+
+Nothing is skipped in silence. The report opens with one line per log
+(path, size, lines, missions, lines of a known tag it could not parse)
+and prints the first five unparsed lines verbatim. Every other
+"[Tag] key=value" line inside a mission is kept on the row as extra
+tags: a value runs to the next space-led key= outside brackets, and a
+continuation line without a prefix takes the timestamp of the entry it
+continues. The [MissionPerf] line is pinned by the same literal in the
+C# and Python tests, and the heartbeat doc now says the first line
+lands at about +6 s in battles, not +5 s.
+
+Limits to know when reading the numbers: hitch counts come from
+[Hitch] lines, which the tick profiler writes for the first 100 slow
+frames of a mission only; summary lines whose text starts with a word
+([AnimMem] summary:, [LoadXml] summary, [XmlMerge] summary) do not
+reach the extra tags yet. Lift any external frame cap before an fps
+A/B, or every row carries FRAME_CAP.
+
+Refs: #711 (plan 029)
+Not-tested: against a taom_debug log written by a tick profiler build
+ (plan 028), and against plan 040's "[PatchApply] phase=... total"
+ lines once 040 is merged.

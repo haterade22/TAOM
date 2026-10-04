@@ -1,0 +1,57 @@
+feat(mission-perf): v2.0.32 - hitch probe; spawn, script, clip timing
+
+A hitch probe now runs for every player by default, so a slow battle
+frame in any player's log says where its time went. "Enable Hitch
+Probe" (MCM, Battle Load Diagnostics, Mission Performance) is on by
+default; it is installed once at game start, so turning it on needs a
+restart, and turning it off stops measuring from the next mission.
+
+Each frame slower than the hitch threshold (default 250 ms) writes a
+[Hitch] line and right after it a [HitchDetail] line: the wait for the
+agent tick, the mission tick, agent spawning, scene scripts, and
+whether an animation clip was loading from disk. Every 5 s window adds
+[TickProfile], [ScriptProfile], [AnimLoad] and, while agents spawn,
+[SpawnProfile] lines; each mission ends with [TickSummary] and
+[TickSummaryExtra]. Full [Hitch] lines stop after the first 100 of a
+mission; later ones are counted.
+
+The probe brackets five whole engine methods (Mission.OnPreTick,
+Mission.WaitTickCompletion, Mission.OnTick,
+ManagedScriptHolder.TickComponents and Mission.SpawnAgent) with a
+prefix and a finalizer, and no transpiler. An offline benchmark puts
+the brackets at about 0.48 microseconds per simulated frame, against a
+target of 0.5 percent of a 10 ms frame; the install line logs a
+separate start-up measurement of the profiler's bookkeeping alone. The
+clip loading check calls the engine once a frame: the first measured
+mission logs its median cost, and the check runs only while that
+median is within 20 microseconds.
+
+Per-type attribution (which behaviour, spawn callback or scene script
+component) stays behind "Enable Tick Profiler", off by default,
+because it needs two more transpilers. The frame boundary moved from
+the tick profiler's patch to the probe's, so both share it; with the
+profiler on, switching the probe off does not stop its timing, since
+the profiler measures through the probe's patches. The
+"[TickProfiler] off:" line now ends "no per-behaviour transpilers
+installed", and the "probe install:" or "probe off:" line after it
+says whether the probe is in.
+
+Mission.SpawnAgent, Mission.WaitTickCompletion and
+ManagedScriptHolder.TickComponents join PatchShield's exclusion list
+for every player, so no shield finalizer runs on the bracketed
+methods. The trade-off: a missing-API exception from any patch on
+those three is no longer swallowed, and the patch is no longer
+stripped, Patch23's banner colour patches on SpawnAgent included.
+Whether SpawnAgent stays on the list is still the maintainer's
+decision.
+
+Refs: #723 (plan 041)
+Not-tested: in game. With default settings, one Custom Battle with
+ elephants or mumakil and one campaign field battle: the probe install
+ line, the clip-loading cost line, the 5 s lines, a [HitchDetail]
+ after every [Hitch], the mission-end lines, and no
+ "WaitTickCompletion's bracket did not run" line; then with the tick
+ profiler on, and with both off; [MissionPerf] avgMs with the probe
+ on against both off, within noise. That the per-frame clip-loading
+ call is safe while clips load is read from the engine, not yet seen
+ in a battle.

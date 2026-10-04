@@ -1,0 +1,251 @@
+module: TaleWorlds.Native.dll v1.5.3 (14,209,376 bytes)
+engine: v1.5.3
+ghidra project: (local, not recorded)
+engine methods: 2282 mapped
+
+string 'Mod change detected' at 0xAF6290 (ascii): 1 referencing function(s)
+
+--- FUN_1801d91a0  entry 0x1D91A0 ---
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+/* WARNING: Switch with 1 destination removed at 0x0001801d9577 : 7 cases all go to same destination
+    */
+
+char FUN_1801d91a0(longlong param_1)
+
+{
+  char *pcVar1;
+  byte *pbVar2;
+  undefined4 uVar3;
+  undefined4 uVar4;
+  undefined4 uVar5;
+  FILE *_File;
+  void *_Dst;
+  byte *pbVar6;
+  void *_Dst_00;
+  ulonglong uVar7;
+  undefined1 *puVar8;
+  int iVar9;
+  undefined1 *puVar10;
+  char cVar11;
+  char cVar12;
+  undefined1 auStack_158 [32];
+  char *local_138;
+  char *local_130;
+  char *local_128;
+  int local_118;
+  int local_114;
+  int local_110 [2];
+  undefined **local_108;
+  undefined1 *local_100;
+  uint local_f8;
+  undefined8 local_f0;
+  undefined8 local_e8;
+  FILE *local_e0;
+  undefined **local_d0;
+  byte *local_c8;
+  int local_c0;
+  undefined4 local_b8;
+  undefined **local_b0;
+  longlong local_a8;
+  int local_a0;
+  undefined4 local_98;
+  undefined **local_90;
+  byte *local_88;
+  int local_80;
+  undefined4 local_78;
+  undefined8 local_70;
+  undefined **local_68;
+  undefined1 *local_60;
+  int local_58;
+  undefined1 local_50 [32];
+  ulonglong local_30;
+  
+  local_70 = 0xfffffffffffffffe;
+  local_30 = DAT_180d054a8 ^ (ulonglong)auStack_158;
+  _Dst_00 = (void *)0x0;
+  local_110[1] = 0;
+  cVar12 = '\x01';
+  local_108 = rglVarString::vftable;
+  local_f0 = 0;
+  local_100 = (undefined1 *)0x0;
+  local_f8 = 0;
+  FUN_1801d9e60(&local_108,param_1);
+  iVar9 = local_f8 + 0x12;
+  FUN_1807117c0(&local_108,iVar9);
+  puVar10 = local_100;
+  uVar5 = s_shader_mapping_bin_180af6228._12_4_;
+  uVar4 = s_shader_mapping_bin_180af6228._8_4_;
+  uVar3 = s_shader_mapping_bin_180af6228._4_4_;
+  uVar7 = (ulonglong)local_f8;
+  pcVar1 = local_100 + uVar7;
+  *(undefined4 *)pcVar1 = s_shader_mapping_bin_180af6228._0_4_;
+  *(undefined4 *)(pcVar1 + 4) = uVar3;
+  *(undefined4 *)(pcVar1 + 8) = uVar4;
+  *(undefined4 *)(pcVar1 + 0xc) = uVar5;
+  *(undefined2 *)(local_100 + uVar7 + 0x10) = s_shader_mapping_bin_180af6228._16_2_;
+  local_100[uVar7 + 0x12] = s_shader_mapping_bin_180af6228[0x12];
+  local_e8 = 0;
+  local_e0 = (FILE *)0x0;
+  puVar8 = &DAT_180a73083;
+  if (local_100 != (undefined1 *)0x0) {
+    puVar8 = local_100;
+  }
+  local_f8 = iVar9;
+  FUN_180718ab0(&local_e8,puVar8,&DAT_180ae9efc);
+  _File = local_e0;
+  local_110[0] = 0;
+  if (local_e0 == (FILE *)0x0) goto LAB_1801d9669;
+  fread(local_110,4,1,local_e0);
+  cVar12 = '\0';
+  if (local_110[0] == 0x783) {
+    local_68 = rglConstString<32>::vftable;
+    local_60 = local_50;
+    local_58 = 0;
+    local_50[0] = 0;
+    local_110[1] = 1;
+    FUN_18002ebb0(&local_68,&DAT_180ae4638,0x1de06);
+    local_118 = 0;
+    fread(&local_118,4,1,_File);
+    if (local_118 < 9) {
+      _Dst = _Dst_00;
+      if (local_118 + 1 != 0) {
+        _Dst = (void *)FUN_180715820(DAT_180da8df0,(longlong)(local_118 + 1),3);
+      }
+      memset(_Dst,0,(longlong)(local_118 + 1));
+      fread(_Dst,1,(longlong)local_118,_File);
+      FUN_180711910(&local_d0,_Dst);
+      if (_Dst != (void *)0x0) {
+        FUN_18073a900(_Dst);
+      }
+      iVar9 = local_58;
+      if (local_c0 == local_58) {
+        if (local_c0 != 0) {
+          pbVar6 = local_c8;
+          do {
+            pbVar2 = pbVar6 + ((longlong)local_60 - (longlong)local_c8);
+            iVar9 = (uint)*pbVar6 - (uint)*pbVar2;
+            if (iVar9 != 0) break;
+            pbVar6 = pbVar6 + 1;
+          } while (*pbVar2 != 0);
+        }
+LAB_1801d93de:
+        if (iVar9 != 0) goto LAB_1801d93e5;
+        cVar12 = '\x01';
+      }
+      else {
+        if (local_c0 == 0) goto LAB_1801d93de;
+LAB_1801d93e5:
+        cVar12 = '\0';
+      }
+      local_d0 = rglVarString::vftable;
+      if (local_c8 != (byte *)0x0) {
+        FUN_18073a900();
+      }
+      local_c8 = (byte *)0x0;
+      local_b8 = 0;
+      local_d0 = rglString_base::vftable;
+    }
+    else {
+      cVar12 = '\0';
+    }
+    if (((cVar12 != '\0') && (*(int *)(DAT_180d9d1f0 + 0x1ce0) == 0)) && (param_1 == 0)) {
+      local_114 = 0;
+      fread(&local_114,4,1,_File);
+      if (local_114 - 1U < 0xfff) {
+        if (local_114 + 1 != 0) {
+          _Dst_00 = (void *)FUN_180715820(DAT_180da8df0,(longlong)(local_114 + 1),3);
+        }
+        memset(_Dst_00,0,(longlong)(local_114 + 1));
+        fread(_Dst_00,1,(longlong)local_114,_File);
+        FUN_180711910(&local_90,_Dst_00);
+        if (_Dst_00 != (void *)0x0) {
+          FUN_18073a900(_Dst_00);
+        }
+        FUN_1801d9710(&local_b0);
+        if (local_80 == local_a0) {
+          if (local_80 != 0) {
+            pbVar6 = local_88;
+            do {
+              pbVar2 = pbVar6 + (local_a8 - (longlong)local_88);
+              local_a0 = (uint)*pbVar6 - (uint)*pbVar2;
+              if (local_a0 != 0) break;
+              pbVar6 = pbVar6 + 1;
+            } while (*pbVar2 != 0);
+          }
+LAB_1801d950e:
+          if (local_a0 != 0) goto LAB_1801d9514;
+        }
+        else {
+          if (local_80 == 0) goto LAB_1801d950e;
+LAB_1801d9514:
+          cVar11 = '\0';
+          cVar12 = '\0';
+          if ((DAT_180d99129 == '\0') && (*(int *)(DAT_180d9d1d8 + 0x620) == 0)) {
+            cVar12 = cVar11;
+            if (DAT_180d99102 == '\0') {
+              MessageBoxA((HWND)0x0,
+                          "A change in your active mods was detected. Deleting the runtime shader cache to avoid rendering issues. "
+                          ,"Mod change detected",0x41040);
+            }
+            else if (*(char *)(DAT_180d9d1f8 + 0x18) != '\0') {
+              local_128 = 
+              "A change in your active mods was detected. Deleting the runtime shader cache to avoid rendering issues. "
+              ;
+              local_130 = "Mod change detected";
+              local_138 = "Messagebox [%s] message: %s\n";
+              FUN_180048c40(DAT_180d9d1f8,3,0xffffffff00000000,0xd);
+            }
+          }
+        }
+        local_b0 = rglVarString::vftable;
+        if (local_a8 != 0) {
+          FUN_18073a900();
+        }
+        local_a8 = 0;
+        local_98 = 0;
+        local_b0 = rglString_base::vftable;
+        local_90 = rglVarString::vftable;
+        if (local_88 != (byte *)0x0) {
+          FUN_18073a900();
+        }
+        local_88 = (byte *)0x0;
+        local_78 = 0;
+        local_90 = rglString_base::vftable;
+      }
+      else {
+        cVar12 = '\0';
+      }
+    }
+    local_110[1] = 0;
+    local_68 = rglString_base::vftable;
+  }
+  if (cVar12 == '\0') {
+    if (param_1 == 0) {
+      *(undefined1 *)(DAT_180da12d8 + 0x439) = 1;
+    }
+    else {
+      *(undefined1 *)(param_1 + 0x311) = 1;
+    }
+  }
+  fclose(_File);
+  local_e0 = (FILE *)0x0;
+  LOCK();
+  DAT_180da8e38 = DAT_180da8e38 + -1;
+  UNLOCK();
+  puVar10 = local_100;
+LAB_1801d9669:
+  if (local_e0 != (FILE *)0x0) {
+    fclose(local_e0);
+    local_e0 = (FILE *)0x0;
+    LOCK();
+    DAT_180da8e38 = DAT_180da8e38 + -1;
+    UNLOCK();
+    puVar10 = local_100;
+  }
+  local_108 = rglVarString::vftable;
+  if (puVar10 != (undefined1 *)0x0) {
+    FUN_18073a900(puVar10);
+  }
+  return cVar12;
+}
