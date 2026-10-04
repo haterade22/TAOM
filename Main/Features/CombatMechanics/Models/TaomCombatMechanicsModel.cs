@@ -78,7 +78,7 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
         result = CreatureBandits.Hooks.CreatureBanditDamage.Reduce(in attackInformation, in collisionData, result);
 
         // Race Abilities: a soldier standing fast takes less; inert unless his ability is live.
-        return RaceAbilityHooks.ReduceDamage(in attackInformation, result);
+        return RaceAbilityHooks.ReduceDamage(in attackInformation, in collisionData, result);
     }
 
     // Race Abilities: a raging soldier's melee hits, after the career amplification (the parent's override).

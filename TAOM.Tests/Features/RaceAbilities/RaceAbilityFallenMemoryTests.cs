@@ -4,9 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.RaceAbilities;
 using TAOM.Features.RaceAbilities.Domain;
 
-// The small pure pieces the race-ability boundary leans on: who is remembered as fallen kin, which aura
-// frightens a soldier when several reach him, and when the battle report is due. Plain objects stand in
-// for teams and agents.
+// Who is remembered as fallen kin, for the KinFell trigger. Plain objects stand in for teams.
 
 namespace TAOM.Tests.Features.RaceAbilities;
 
@@ -97,99 +95,5 @@ public class RaceAbilityFallenMemoryTests
         _sut.Clear();
 
         Assert.AreEqual(0, _sut.Count);
-    }
-}
-
-[TestClass]
-public class RaceAbilityAuraLedgerTests
-{
-    private RaceAbilityAuraLedger<object> _sut = null!;
-
-    [TestInitialize]
-    public void Setup() => _sut = new RaceAbilityAuraLedger<object>();
-
-    [TestMethod]
-    public void Offer_SeveralAurasOnOneVictim_KeepsTheStrongest()
-    {
-        var victim = new object();
-
-        _sut.Offer(victim, 1f, "weak");
-        _sut.Offer(victim, 3f, "strong");
-        _sut.Offer(victim, 2f, "middling");
-
-        Assert.AreEqual(1, _sut.Count);
-        Assert.AreEqual(3f, _sut.Entries.Single().Value.drain, 0.0001f);
-        Assert.AreEqual("strong", _sut.Entries.Single().Value.abilityId);
-    }
-
-    [DataTestMethod]
-    [DataRow(0f)]
-    [DataRow(-1f)]
-    [DataRow(float.NaN)]
-    public void Offer_NoDrain_IsIgnored(float drain)
-    {
-        _sut.Offer(new object(), drain, "necromancer_shadow");
-
-        Assert.AreEqual(0, _sut.Count);
-    }
-
-    [TestMethod]
-    public void Clear_EmptiesTheLedger()
-    {
-        _sut.Offer(new object(), 2f, "necromancer_shadow");
-
-        _sut.Clear();
-
-        Assert.AreEqual(0, _sut.Count);
-    }
-}
-
-[TestClass]
-public class RaceAbilityReportClockTests
-{
-    private RaceAbilityReportClock _sut = null!;
-
-    [TestInitialize]
-    public void Setup() => _sut = new RaceAbilityReportClock();
-
-    [TestMethod]
-    public void Due_BeforeTheFirstInterval_IsFalse() =>
-        Assert.IsFalse(_sut.Due(RaceAbilityReportClock.IntervalSeconds - 1f, activations: 5));
-
-    [TestMethod]
-    public void Due_AtTheIntervalWithNewActivity_IsTrue() =>
-        Assert.IsTrue(_sut.Due(RaceAbilityReportClock.IntervalSeconds, activations: 5));
-
-    [TestMethod]
-    public void Due_NoActivitySinceTheLastReport_IsFalse()
-    {
-        _sut.Due(RaceAbilityReportClock.IntervalSeconds, activations: 5);
-
-        Assert.IsFalse(_sut.Due(2f * RaceAbilityReportClock.IntervalSeconds, activations: 5));
-    }
-
-    [TestMethod]
-    public void Due_NoActivityAtAll_IsFalse() =>
-        Assert.IsFalse(_sut.Due(RaceAbilityReportClock.IntervalSeconds, activations: 0));
-
-    [TestMethod]
-    public void Due_InsideTheInterval_IsFalse()
-    {
-        _sut.Due(RaceAbilityReportClock.IntervalSeconds, activations: 5);
-
-        Assert.IsFalse(_sut.Due(RaceAbilityReportClock.IntervalSeconds + 1f, activations: 9));
-    }
-
-    [TestMethod]
-    public void Due_NaNTime_IsFalse() => Assert.IsFalse(_sut.Due(float.NaN, activations: 5));
-
-    [TestMethod]
-    public void Reset_StartsAgain()
-    {
-        _sut.Due(RaceAbilityReportClock.IntervalSeconds, activations: 5);
-
-        _sut.Reset();
-
-        Assert.IsTrue(_sut.Due(RaceAbilityReportClock.IntervalSeconds, activations: 5));
     }
 }

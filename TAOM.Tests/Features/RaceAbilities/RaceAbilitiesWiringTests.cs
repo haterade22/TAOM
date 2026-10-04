@@ -45,7 +45,7 @@ public class RaceAbilitiesWiringTests
     {
         var calls = new[]
         {
-            "RaceAbilityHooks.ReduceDamage(in attackInformation,",
+            "RaceAbilityHooks.ReduceDamage(in attackInformation, in collisionData,",
             "RaceAbilityHooks.AmplifyDamage(in attackInformation, in collisionData,",
             "RaceAbilityHooks.CrushVerdict(attackerAgent, defenderAgent, strikeType,",
             "RaceAbilityHooks.ShrugsOff(victimAgent)",
@@ -81,7 +81,10 @@ public class RaceAbilitiesWiringTests
         Assert.AreEqual(typeof(RaceAbilitiesMissionLogic), behavior.BehaviorType);
     }
 
+    // Building the runtime builds its engine-facing parts, which hold engine lists: on hosted CI's reference
+    // assemblies their constructors throw (tests.md "Test categories").
     [TestMethod]
+    [TestCategory("RequiresGame")]
     public void Module_RegistersARuntimeTheContainerCanBuild_AsOneInstance()
     {
         using var container = new Container();
@@ -106,4 +109,26 @@ public class RaceAbilitiesWiringTests
             "MissionThreadGuard.MarkMainThread();",
             "_deferred.RunOrDefer(\"RaceAbilitiesMissionLogic.OnAgentRemoved\"");
     }
+
+    [TestMethod]
+    public void MissionLogic_TellsTheDeathsWhetherTheVictimWasASoldier()
+    {
+        // A horse has no Character and no team; kill credit needs to know (RaceAbilityService.CreditsKill).
+        AssertCalls("Main/Features/RaceAbilities/Hooks/RaceAbilitiesMissionLogic.cs",
+            "var soldier = affectedAgent.Character != null;",
+            "_runtime.Deaths.OnAgentRemoved(affectedAgent, soldier,");
+    }
+
+    [TestMethod]
+    public void RuntimeClear_EmptiesEveryEngineFacingPart()
+    {
+        // Their buffers hold agents, and through their teams the ended mission, until cleared.
+        AssertCalls("Main/Features/RaceAbilities/Hooks/RaceAbilityRuntime.cs",
+            "Sensor.Clear();", "Activator.Clear();", "Ticker.Clear();", "Deaths.Clear();");
+        AssertCalls("Main/Features/RaceAbilities/Hooks/RaceAbilityTicker.cs", "_scratch.Clear();");
+    }
+
+    [TestMethod]
+    public void MissionLogic_ClearsTheRuntimeAtMissionEnd() =>
+        AssertCalls("Main/Features/RaceAbilities/Hooks/RaceAbilitiesMissionLogic.cs", "_runtime.Clear();");
 }

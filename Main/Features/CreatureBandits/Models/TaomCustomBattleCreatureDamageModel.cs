@@ -20,7 +20,7 @@ namespace TAOM.Features.CreatureBandits.Models;
 public class TaomCustomBattleCreatureDamageModel : CustomAgentApplyDamageModel
 {
     public override float ApplyDamageReductions(in AttackInformation attackInformation, in AttackCollisionData collisionData, float baseDamage)
-        => RaceAbilityHooks.ReduceDamage(in attackInformation,
+        => RaceAbilityHooks.ReduceDamage(in attackInformation, in collisionData,
             CreatureBanditDamage.Reduce(in attackInformation, in collisionData,
                 base.ApplyDamageReductions(in attackInformation, in collisionData, baseDamage)));
 

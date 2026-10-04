@@ -29,10 +29,11 @@ public static class RaceAbilityNames
         _ => new TextObject(abilityId),
     };
 
+    // playerSide is the player's team or an ally's (Team.IsPlayerAlly), so an allied lord's troops count too.
     public static TextObject Wave(string abilityId, int count, bool playerSide)
     {
         var line = playerSide
-            ? new TextObject("{=taom_race_ability_wave_ally}{ABILITY}: {COUNT} of your soldiers")
+            ? new TextObject("{=taom_race_ability_wave_ally}{ABILITY}: {COUNT} soldiers on your side")
             : new TextObject("{=taom_race_ability_wave_enemy}Enemy {ABILITY}: {COUNT} soldiers");
         line.SetTextVariable("ABILITY", Name(abilityId));
         line.SetTextVariable("COUNT", count);

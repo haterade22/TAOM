@@ -55,4 +55,35 @@ public class BehaviorTreeAgentComponentThreadingTests
         Assert.IsFalse(calls.Any(m => m.Name == nameof(BehaviorTreeBannerlordWrapper.DisposeTree)),
             "DisposeTree mutates the Dictionary every listener lookup reads");
     }
+
+    // The #592 guard: a component left scheduled for a deleted agent must not run its tree against the slot's
+    // new tenant. Since the race abilities it is checked only when a tree is due, so pin that it still comes
+    // before the tree runs (a moved gate is a new gate, csharp-architecture.md).
+    [TestMethod]
+    public void TickOnMissionThread_ChecksTheSlotBeforeRunningTheTree()
+    {
+        var tick = typeof(BehaviorTreeAgentComponent).GetMethod("TickOnMissionThread", BindingFlags.NonPublic | BindingFlags.Instance);
+        Assert.IsNotNull(tick, "BehaviorTreeAgentComponent.TickOnMissionThread was renamed; this pin no longer sees it.");
+
+        var calls = CallsIn(tick).Select(m => m.Name).ToList();
+        int active = calls.IndexOf("IsActive"), occupant = calls.IndexOf("IsCurrentOccupant"), run = calls.IndexOf("RunTree");
+
+        Assert.IsTrue(run >= 0, "the tick runs the tree");
+        Assert.IsTrue(active >= 0 && active < run, "IsActive is checked before the tree runs");
+        Assert.IsTrue(occupant >= 0 && occupant < run, "AgentSlotIdentity.IsCurrentOccupant is checked before the tree runs");
+    }
+
+    // The schedule is copied every frame, and the race abilities put every profiled soldier on it: List.AddRange
+    // of a collection allocates a temporary array of the whole list each time.
+    [TestMethod]
+    public void MissionTick_CopiesTheScheduleWithoutAllocating()
+    {
+        var onMissionTick = typeof(BehaviorTreeMissionLogic).GetMethod(nameof(BehaviorTreeMissionLogic.OnMissionTick));
+
+        var calls = CallsIn(onMissionTick).Select(m => m.Name).ToList();
+
+        CollectionAssert.DoesNotContain(calls, "AddRange");
+        CollectionAssert.DoesNotContain(calls, "InsertRange");
+        CollectionAssert.Contains(calls, "TickOnMissionThread");
+    }
 }

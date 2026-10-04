@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Infrastructure;
@@ -293,19 +295,41 @@ public class RaceAbilitiesConfigProviderTests
         Assert.AreEqual(0, _sut.GetConfig().Races["dwarf"].Requires.Count);
     }
 
+    // One bad value for every numeric effect field (a second for the fields with two bounds worth pinning).
+    // BadEffectValues_CoverEveryNumericEffect fails when a new field arrives without a row.
+    public static IEnumerable<object[]> BadEffectValues => new[]
+    {
+        new object[] { "moveSpeedPercent", "NaN" },
+        new object[] { "moveSpeedPercent", "-96" },
+        new object[] { "accelerationPercent", "301" },
+        new object[] { "swingSpeedPercent", "301" },
+        new object[] { "drawSpeedPercent", "-96" },
+        new object[] { "reloadSpeedPercent", "Infinity" },
+        new object[] { "missileSpeedPercent", "301" },
+        new object[] { "mountSpeedPercent", "301" },
+        new object[] { "meleeDamagePercent", "Infinity" },
+        new object[] { "rangedDamagePercent", "-96" },
+        new object[] { "damageReductionPercent", "-1" },
+        new object[] { "damageReductionPercent", "91" },
+        new object[] { "knockdownResistancePercent", "1001" },
+        new object[] { "knockbackResistancePercent", "-96" },
+        new object[] { "dismountResistancePercent", "1001" },
+        new object[] { "blockAbilityPercent", "-96" },
+        new object[] { "parryAbilityPercent", "301" },
+        new object[] { "attackEagernessPercent", "NaN" },
+        new object[] { "aimErrorPercent", "-96" },
+        new object[] { "moraleFloor", "101" },
+        new object[] { "moraleOnEnd", "-101" },
+        new object[] { "moraleOnEnd", "NaN" },
+        new object[] { "healPerKill", "-1" },
+        new object[] { "fearOnKillRadius", "31" },
+        new object[] { "fearOnKillMorale", "101" },
+        new object[] { "fearAuraRadius", "31" },
+        new object[] { "fearAuraMoralePerSecond", "51" },
+    };
+
     [DataTestMethod]
-    [DataRow("moveSpeedPercent", "NaN")]
-    [DataRow("moveSpeedPercent", "-96")]
-    [DataRow("swingSpeedPercent", "301")]
-    [DataRow("meleeDamagePercent", "Infinity")]
-    [DataRow("damageReductionPercent", "-1")]
-    [DataRow("damageReductionPercent", "91")]
-    [DataRow("knockdownResistancePercent", "1001")]
-    [DataRow("aimErrorPercent", "-96")]
-    [DataRow("moraleFloor", "101")]
-    [DataRow("healPerKill", "-1")]
-    [DataRow("fearOnKillRadius", "31")]
-    [DataRow("fearOnKillMorale", "101")]
+    [DynamicData(nameof(BadEffectValues))]
     public void GetConfig_BadEffect_RevertsToNoEffect(string field, string value)
     {
         WriteConfig(OneRace(ValidCore + ", \"effects\": { \"" + field + "\": " + value + " }"));
@@ -314,6 +338,19 @@ public class RaceAbilitiesConfigProviderTests
 
         Assert.AreEqual(0f, EffectValue(effects, field), 0.0001f);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains(field)));
+    }
+
+    [TestMethod]
+    public void BadEffectValues_CoverEveryNumericEffect()
+    {
+        var covered = new HashSet<string>(BadEffectValues.Select(row => (string)row[0]));
+        var missing = typeof(RaceAbilityEffects).GetProperties()
+            .Where(p => p.PropertyType == typeof(float))
+            .Select(p => char.ToLowerInvariant(p.Name[0]) + p.Name.Substring(1))
+            .Where(field => !covered.Contains(field))
+            .ToList();
+
+        Assert.AreEqual(0, missing.Count, "numeric effect fields with no bad-value row: " + string.Join(", ", missing));
     }
 
     [TestMethod]
@@ -405,20 +442,13 @@ public class RaceAbilitiesConfigProviderTests
         Assert.AreSame(first, _sut.GetConfig());
     }
 
-    private static float EffectValue(RaceAbilityEffects e, string field) => field switch
+    // The JSON field's property, by name: a field with no property fails the test instead of reading another.
+    private static float EffectValue(RaceAbilityEffects effects, string field)
     {
-        "moveSpeedPercent" => e.MoveSpeedPercent,
-        "swingSpeedPercent" => e.SwingSpeedPercent,
-        "meleeDamagePercent" => e.MeleeDamagePercent,
-        "damageReductionPercent" => e.DamageReductionPercent,
-        "knockdownResistancePercent" => e.KnockdownResistancePercent,
-        "aimErrorPercent" => e.AimErrorPercent,
-        "moraleFloor" => e.MoraleFloor,
-        "healPerKill" => e.HealPerKill,
-        "fearOnKillRadius" => e.FearOnKillRadius,
-        "fearOnKillMorale" => e.FearOnKillMorale,
-        _ => float.NaN,
-    };
+        var property = typeof(RaceAbilityEffects).GetProperty(char.ToUpperInvariant(field[0]) + field.Substring(1));
+        Assert.IsNotNull(property, $"RaceAbilityEffects has no property for '{field}'");
+        return (float)property!.GetValue(effects)!;
+    }
 
     // --- cultures, aliases, kin ---
 
@@ -527,33 +557,126 @@ public class RaceAbilitiesConfigProviderTests
         _logger.DidNotReceive().LogWarning(Arg.Any<string>());
     }
 
-    [DataTestMethod]
-    [DataRow("mountSpeedPercent", "301")]
-    [DataRow("rangedDamagePercent", "-96")]
-    [DataRow("dismountResistancePercent", "1001")]
-    [DataRow("moraleOnEnd", "-101")]
-    [DataRow("moraleOnEnd", "NaN")]
-    [DataRow("fearAuraRadius", "31")]
-    [DataRow("fearAuraMoralePerSecond", "51")]
-    public void GetConfig_BadNewEffect_RevertsToNoEffect(string field, string value)
-    {
-        WriteConfig(OneRace(ValidCore + ", \"effects\": { \"" + field + "\": " + value + " }"));
+    // --- trigger kinds are names, not numbers or lists ---
 
-        var effects = _sut.GetConfig().Races["dwarf"].Effects;
-        var actual = field switch
-        {
-            "mountSpeedPercent" => effects.MountSpeedPercent,
-            "rangedDamagePercent" => effects.RangedDamagePercent,
-            "dismountResistancePercent" => effects.DismountResistancePercent,
-            "moraleOnEnd" => effects.MoraleOnEnd,
-            "fearAuraRadius" => effects.FearAuraRadius,
-            _ => effects.FearAuraMoralePerSecond,
-        };
-        Assert.AreEqual(0f, actual, 0.0001f);
+    [DataTestMethod]
+    [DataRow("EnemyWithin,CavalryClosing")]   // Enum.TryParse would OR these into RangedTargetWithin
+    [DataRow("1")]
+    [DataRow("RangedTargetWithin, Mounted")]
+    [DataRow("")]
+    public void GetConfig_KindThatIsNotOneName_IsSkippedWithAWarning(string kind)
+    {
+        WriteConfig(OneRace("\"abilityId\": \"x\", \"cooldownSeconds\": 30, \"durationSeconds\": 10, " +
+            "\"anyOf\": [ { \"kind\": \"" + kind + "\", \"range\": 5 }, { \"kind\": \"Always\" } ]"));
+
+        var profile = _sut.GetConfig().Races["dwarf"];
+
+        Assert.AreEqual(1, profile.AnyOf.Count);
+        Assert.AreEqual(RaceAbilityTriggerKind.Always, profile.AnyOf[0].ParsedKind);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("not a known trigger kind")));
+    }
+
+    [TestMethod]
+    public void GetConfig_KindWithSpaces_IsMatched()
+    {
+        WriteConfig(OneRace("\"abilityId\": \"x\", \"cooldownSeconds\": 30, \"durationSeconds\": 10, " +
+            "\"anyOf\": [ { \"kind\": \" EnemyWithin \", \"range\": 5 } ]"));
+
+        Assert.AreEqual(RaceAbilityTriggerKind.EnemyWithin, _sut.GetConfig().Races["dwarf"].AnyOf[0].ParsedKind);
+    }
+
+    [TestMethod]
+    public void GetConfig_KeyOfOnlyCommas_IsSkippedWithAWarning()
+    {
+        WriteConfig("{ \"cultures\": { \" , \": { " + ValidCore + " } } }");
+
+        Assert.AreEqual(0, _sut.GetConfig().Cultures.Count);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("empty name")));
+    }
+
+    [DataTestMethod]
+    [DataRow("{ \"kind\": \"WoundedEnemyWithin\", \"range\": 41, \"fraction\": 0.5 }", "range")]
+    [DataRow("{ \"kind\": \"RangedTargetWithin\", \"range\": 0 }", "range")]
+    [DataRow("{ \"kind\": \"KinWithin\", \"range\": NaN, \"count\": 3 }", "range")]
+    [DataRow("{ \"kind\": \"KinFell\", \"range\": 41, \"seconds\": 5 }", "range")]
+    public void GetConfig_BadRangeOnEveryRangedKind_SkipsTheTrigger(string triggerJson, string field)
+    {
+        WriteConfig(OneRace("\"abilityId\": \"x\", \"cooldownSeconds\": 30, \"durationSeconds\": 10, " +
+            "\"anyOf\": [ " + triggerJson + ", { \"kind\": \"Always\" } ]"));
+
+        Assert.AreEqual(1, _sut.GetConfig().Races["dwarf"].AnyOf.Count);
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains(field)));
     }
 
     // --- accepted but never read ---
+
+    [TestMethod]
+    public void GetConfig_KinRacesNothingReads_Warns()
+    {
+        WriteConfig(OneRace(ValidCore + ", \"kinRaces\": [ \"orc\" ]"));
+
+        _sut.GetConfig();
+
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("kinRaces is set but")));
+    }
+
+    [DataTestMethod]
+    [DataRow("\"requires\": [ { \"kind\": \"KinWithin\", \"range\": 6, \"count\": 3 } ]")]
+    [DataRow("\"requires\": [ { \"kind\": \"KinFell\", \"range\": 6, \"seconds\": 5 } ]")]
+    [DataRow("\"anyOf\": [ { \"kind\": \"Always\" } ], \"kinBonus\": { \"radius\": 6, \"perKinPercent\": 3, \"maxKin\": 5 }")]
+    public void GetConfig_KinRacesSomethingReads_DoesNotWarn(string reader)
+    {
+        WriteConfig(OneRace("\"abilityId\": \"x\", \"cooldownSeconds\": 30, \"durationSeconds\": 10, \"kinRaces\": [ \"orc\" ], " + reader));
+
+        _sut.GetConfig();
+
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetConfig_KinBonusOfZeroPercent_Warns()
+    {
+        WriteConfig(OneRace(ValidCore + ", \"kinBonus\": { \"radius\": 6, \"perKinPercent\": 0, \"maxKin\": 5 }"));
+
+        _sut.GetConfig();
+
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("perKinPercent is 0")));
+    }
+
+    [TestMethod]
+    public void GetConfig_SpentMoraleOnEnd_Warns()
+    {
+        WriteConfig(OneRace(ValidCore + ", \"spentSeconds\": 3, \"spent\": { \"moraleOnEnd\": -5 }"));
+
+        _sut.GetConfig();
+
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("spent.moraleOnEnd is never read")));
+    }
+
+    [DataTestMethod]
+    [DataRow("effects", "\"fearOnKillRadius\": 6", "fearOnKillRadius and fearOnKillMorale")]
+    [DataRow("effects", "\"fearOnKillMorale\": 4", "fearOnKillRadius and fearOnKillMorale")]
+    [DataRow("effects", "\"fearAuraRadius\": 8", "fearAuraRadius and fearAuraMoralePerSecond")]
+    [DataRow("spent", "\"fearAuraMoralePerSecond\": 2", "fearAuraRadius and fearAuraMoralePerSecond")]
+    public void GetConfig_HalfAFearPair_Warns(string block, string field, string message)
+    {
+        WriteConfig(OneRace(ValidCore + ", \"spentSeconds\": 3, \"" + block + "\": { " + field + " }"));
+
+        _sut.GetConfig();
+
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains(block + ": " + message)));
+    }
+
+    [TestMethod]
+    public void GetConfig_WholeFearPairs_DoNotWarn()
+    {
+        WriteConfig(OneRace(ValidCore + ", \"effects\": { \"fearOnKillRadius\": 6, \"fearOnKillMorale\": 4, " +
+            "\"fearAuraRadius\": 8, \"fearAuraMoralePerSecond\": 2 }"));
+
+        _sut.GetConfig();
+
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
 
     [TestMethod]
     public void GetConfig_KillExtensionWithoutRoomToExtend_Warns()

@@ -28,7 +28,7 @@ public class RaceAbilityStoreTests
     public void Get_NeverActivated_IsNull()
     {
         Assert.IsNull(_sut.Get(_soldier));
-        Assert.IsNull(_sut.CurrentEffects(_soldier));
+        Assert.IsNull(_sut.Get(_soldier)?.CurrentEffects);
         Assert.IsNull(_sut.LastFiredAt(_soldier));
     }
 
@@ -40,7 +40,7 @@ public class RaceAbilityStoreTests
         var state = _sut.Get(_soldier)!;
         Assert.AreEqual(RaceAbilityPhase.Active, state.Phase);
         Assert.AreEqual(106f, state.PhaseEndsAt, 0.0001f);
-        Assert.AreSame(_active, _sut.CurrentEffects(_soldier));
+        Assert.AreSame(_active, _sut.Get(_soldier)?.CurrentEffects);
         Assert.AreEqual(100f, _sut.LastFiredAt(_soldier));
     }
 
@@ -67,7 +67,7 @@ public class RaceAbilityStoreTests
         Assert.AreEqual(RaceAbilityPhase.Active, transition.Before.Phase);
         Assert.AreEqual(RaceAbilityPhase.Spent, transition.After.Phase);
         Assert.AreEqual(109f, _sut.Get(_soldier)!.PhaseEndsAt, 0.0001f);
-        Assert.AreSame(_spent, _sut.CurrentEffects(_soldier));
+        Assert.AreSame(_spent, _sut.Get(_soldier)?.CurrentEffects);
     }
 
     [TestMethod]
@@ -82,7 +82,7 @@ public class RaceAbilityStoreTests
         var transition = _transitions.Single();
         Assert.AreEqual(RaceAbilityPhase.Spent, transition.Before.Phase);
         Assert.AreEqual(RaceAbilityPhase.Ready, transition.After.Phase);
-        Assert.IsNull(_sut.CurrentEffects(_soldier));
+        Assert.IsNull(_sut.Get(_soldier)?.CurrentEffects);
         Assert.AreEqual(100f, _sut.LastFiredAt(_soldier));   // the cooldown still counts from activation
     }
 
@@ -195,6 +195,27 @@ public class RaceAbilityStoreTests
 
         Assert.IsNull(_sut.Get(second));
     }
+
+    [TestMethod]
+    public void LiveCounts_ActiveAndSpentPerAbility_ReadyLeftOut()
+    {
+        var swarm = new RaceAbilityProfile { AbilityId = "swarm", DurationSeconds = 8f, SpentSeconds = 3f, MaxDurationSeconds = 8f };
+        var berserk = new RaceAbilityProfile { AbilityId = "berserk", DurationSeconds = 6f, SpentSeconds = 3f, MaxDurationSeconds = 6f };
+        var spentOrc = new object();
+        _sut.Activate(new object(), swarm, 100f, _active, _spent);
+        _sut.Activate(spentOrc, swarm, 90f, _active, _spent);       // spent from 98 to 101
+        _sut.Activate(new object(), berserk, 100f, _active, _spent);
+        _sut.Activate(new object(), berserk, 80f, _active, _spent); // ready again from 89
+        _sut.Advance(100f, _transitions);
+
+        var live = _sut.LiveCounts();
+
+        CollectionAssert.AreEqual(new[] { ("berserk", 1, 0), ("swarm", 1, 1) },
+            live.Select(c => (c.AbilityId, c.Active, c.Spent)).ToArray());
+    }
+
+    [TestMethod]
+    public void LiveCounts_NoOneLive_IsEmpty() => Assert.AreEqual(0, _sut.LiveCounts().Count);
 
     private sealed class EqualToEverything
     {

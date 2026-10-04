@@ -3142,7 +3142,7 @@
 	<string id="taom_race_ability_bloodlust" text="{=taom_race_ability_bloodlust}Bloodlust" />
 	<string id="taom_race_ability_stand_fast" text="{=taom_race_ability_stand_fast}Stand Fast" />
 	<string id="taom_race_ability_swiftness" text="{=taom_race_ability_swiftness}Swiftness of the Eldar" />
-	<string id="taom_race_ability_wave_ally" text="{=taom_race_ability_wave_ally}{ABILITY}: {COUNT} of your soldiers" />
+	<string id="taom_race_ability_wave_ally" text="{=taom_race_ability_wave_ally}{ABILITY}: {COUNT} soldiers on your side" />
 	<string id="taom_race_ability_wave_enemy" text="{=taom_race_ability_wave_enemy}Enemy {ABILITY}: {COUNT} soldiers" />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- RaceAbilities -->

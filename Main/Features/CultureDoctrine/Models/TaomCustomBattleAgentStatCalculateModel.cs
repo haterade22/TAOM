@@ -50,7 +50,7 @@ public class TaomCustomBattleAgentStatCalculateModel : CustomBattleAgentStatCalc
         RaceAbilityHooks.ApplyStats(agent, agentDrivenProperties);
     }
 
-    // Race Abilities: a live ability's knockdown and knock-back resistance, as in the campaign slot.
+    // Race Abilities: a live ability's knockdown, knock-back and dismount resistance, as in the campaign slot.
     public override float GetKnockDownResistance(Agent agent, StrikeType strikeType = StrikeType.Invalid)
         => RaceAbilityHooks.KnockDownResistance(agent, base.GetKnockDownResistance(agent, strikeType));
 

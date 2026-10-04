@@ -175,9 +175,12 @@ public class BehaviorTreeMissionLogic : MissionLogic
 
         // Every scheduled tree runs here, in the managed mission-tick phase, where the engine's agent
         // callbacks cannot interleave with it. A run can kill an agent and unschedule its component
-        // (or another's) mid-loop, so iterate a snapshot and honour the flag.
+        // (or another's) mid-loop, so iterate a snapshot and honour the flag. Copied element by element:
+        // List.AddRange of a collection allocates a temporary array of the whole schedule, every frame, and the
+        // race abilities put every profiled soldier on it.
         _tickScratch.Clear();
-        _tickScratch.AddRange(_scheduled);
+        for (int i = 0; i < _scheduled.Count; i++)
+            _tickScratch.Add(_scheduled[i]);
         for (int i = 0; i < _tickScratch.Count; i++)
         {
             BehaviorTreeAgentComponent component = _tickScratch[i];

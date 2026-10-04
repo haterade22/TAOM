@@ -9,6 +9,9 @@ public sealed class RaceAbilityReportClock
     private float _next = IntervalSeconds;
     private long _reportedActivations;
 
+    // Cheap and side-effect free, so the caller can skip counting the activations on every other tick.
+    public bool IsDue(float now) => now >= _next;
+
     public bool Due(float now, long activations)
     {
         if (!(now >= _next))

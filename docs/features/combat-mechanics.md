@@ -28,10 +28,10 @@ Thin model → four pure services (ADR-002/007; gamemodels.md rule 4): every ove
 | Override | Service | Mechanic |
 |---|---|---|
 | `DecideCrushedThrough` | `CrushThroughService` | race-ability verdict first (Stand Fast holds, Berserk forces; [race-abilities.md](race-abilities.md)) → monster auto-CTB → orc shield-CTB → skill CTB curve; `?? base` keeps the vanilla 58f path |
-| `ApplyDamageAmplifications` | `RaceAbilityHooks` | a live race ability's melee damage, after the career amplification the parent model applies |
+| `ApplyDamageAmplifications` | `RaceAbilityHooks` | a live race ability's melee or ranged damage, after the career amplification the parent model applies |
 | `CalculateRemainingMomentum` | `CreatureCombatService` | cleave momentum 0.3× for listed creatures (default zeroes momentum for ordinary weapons) |
 | `DecideWeaponCollisionReaction` | `CreatureCombatService` | force `SlicedThrough` — prevents chain-termination on Bounced/Stuck branches (shield block, axe <50% HP, shrug-off, wrong bone) |
-| `DecideAgentShrugOffBlow` | `CreatureCombatService` | base (vanilla + career) OR per-creature damage threshold; true sets `BlowFlags.ShrugOff` which also suppresses knockback/knockdown/dismount (intended) |
+| `DecideAgentShrugOffBlow` | `CreatureCombatService` | base (vanilla + career) OR per-creature damage threshold OR a live race ability's shrug-off (`RaceAbilityHooks.ShrugsOff`); true sets `BlowFlags.ShrugOff` which also suppresses knockback/knockdown/dismount (intended) |
 | `CalculateStaggerThresholdDamage` | `CreatureCombatService` | × race `staggerThresholdMultiplier`; vanilla shrug-off re-enters this via the REGISTERED model, so the multiplier feeds vanilla stagger automatically |
 | `DecideAgentKnockedDownByBlow` | `ChargeKnockdownService` | weight-driven two-branch (below); non-charge hits short-circuit to base |
 | `DecideMissileWeaponFlags` | `ShieldPenetrationService` | after base (preserves vanilla Javelin+Impale grant): OR-in `CanPenetrateShield`/`MultiplePenetration` for config-listed ids/classes. **SHIPS OFF since 2026-08-17, lists empty** (see "Shield penetration ships off" below) |

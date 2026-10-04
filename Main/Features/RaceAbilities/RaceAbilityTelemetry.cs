@@ -8,7 +8,7 @@ using TAOM.Features.RaceAbilities.Domain;
 
 namespace TAOM.Features.RaceAbilities;
 
-// What the race abilities did in one battle, per ability, for the log and the taom.race_abilities
+// What the race abilities did in one battle, per ability, for the log and the taom.print_race_abilities
 // command. Written from the main thread (activations, phases, deaths) and from the engine's threads
 // (the stat and damage hooks), so every count is an Interlocked add on an array that is never replaced
 // while a mission runs.
@@ -41,7 +41,9 @@ public sealed class RaceAbilityTelemetry
     private static readonly int StatCount = Enum.GetValues(typeof(RaceAbilityStat)).Length;
     private static readonly int TriggerCount = Enum.GetValues(typeof(RaceAbilityTriggerKind)).Length;
 
-    // How each stat reads in a report line, in report order.
+    // How each stat reads in a report line, in report order. "kills while live" counts the spent phase too;
+    // "fear landed" counts each enemy once per kill and once per aura pulse; "blocks braced" counts every
+    // block by a soldier holding against crush-throughs, whether or not the blow could have crushed.
     private static readonly (RaceAbilityStat stat, string label)[] Labels =
     {
         (RaceAbilityStat.TreesAttached, "trees"),
@@ -50,13 +52,13 @@ public sealed class RaceAbilityTelemetry
         (RaceAbilityStat.Activations, "soldiers"),
         (RaceAbilityStat.Rallied, "rallied"),
         (RaceAbilityStat.Ended, "ended"),
-        (RaceAbilityStat.Kills, "kills while active"),
+        (RaceAbilityStat.Kills, "kills while live"),
         (RaceAbilityStat.Extensions, "extensions"),
         (RaceAbilityStat.HealthHealed, "health healed"),
-        (RaceAbilityStat.Frightened, "enemies frightened"),
+        (RaceAbilityStat.Frightened, "fear landed"),
         (RaceAbilityStat.MoraleRestored, "morale restored"),
         (RaceAbilityStat.CrushesForced, "crush forced"),
-        (RaceAbilityStat.CrushesHeld, "crush held"),
+        (RaceAbilityStat.CrushesHeld, "blocks braced"),
         (RaceAbilityStat.ShrugOffs, "shrug-offs"),
         (RaceAbilityStat.MeleeHitsAmplified, "melee hits boosted"),
         (RaceAbilityStat.RangedHitsAmplified, "ranged hits boosted"),

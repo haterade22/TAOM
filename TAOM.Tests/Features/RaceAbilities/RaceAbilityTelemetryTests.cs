@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.RaceAbilities;
 using TAOM.Features.RaceAbilities.Domain;
 
-// The counters behind the race-ability log lines and the taom.race_abilities command: what fired, how
+// The counters behind the race-ability log lines and the taom.print_race_abilities command: what fired, how
 // often, and what each ability actually changed in the fighting. Written from any thread.
 
 namespace TAOM.Tests.Features.RaceAbilities;
@@ -80,7 +80,21 @@ public class RaceAbilityTelemetryTests
         StringAssert.Contains(report, "soldiers 9");
         StringAssert.Contains(report, "crush forced 5");
         StringAssert.Contains(report, "TookDamage 1");
-        Assert.IsFalse(report.Contains("crush held"), "a zero stat is left out");
+        Assert.IsFalse(report.Contains("blocks braced"), "a zero stat is left out");
+    }
+
+    [TestMethod]
+    public void Report_LabelsSayWhatIsCounted()
+    {
+        _sut.Add("stand_fast", RaceAbilityStat.CrushesHeld, 4);
+        _sut.Add("bloodlust", RaceAbilityStat.Kills, 2);
+        _sut.Add("necromancer_shadow", RaceAbilityStat.Frightened, 16);
+
+        var report = _sut.Report();
+
+        StringAssert.Contains(report, "blocks braced 4");    // every block by a bracing soldier, not crushes prevented
+        StringAssert.Contains(report, "kills while live 2"); // the spent phase counts too
+        StringAssert.Contains(report, "fear landed 16");     // one per enemy per kill or aura pulse
     }
 
     [TestMethod]

@@ -7,7 +7,8 @@ on each soldier waits for his moment, fires the ability for a few seconds, and k
 is ready fire with him. Berserkers go berserk when hurt in melee, Uruk-hai fall into bloodlust on a kill, dwarves
 stand fast against a charge or a crowd, elves quicken, orcs swarm, goblins scurry, Gondor closes ranks, Rohan's
 riders spur on, and so on: 18 abilities, one generic tree. The numbers live in `race_abilities.json`. Logging and
-the console command `taom.race_abilities` show what each ability did in a battle. Issue: not filed yet.
+the console command `taom.print_race_abilities` show what each ability did in a battle. Issue: #730 (the feature),
+#731 (the translation of its 20 strings).
 
 ## Why This Exists
 
@@ -26,9 +27,14 @@ the console command `taom.race_abilities` show what each ability did in a battle
 ### Design Challenge
 
 - **Hundreds of trees, not a dozen.** Creature trees run on a few agents every tick; this tree runs on every
-  profiled soldier. It runs one pass a second, its first pass staggered across that second, checks the cooldown
-  before any proximity scan, scans enemies with the engine's enemies-only query, and scans kin only for a profile
-  that reads them. `BehaviorTreeAgentComponent` checks slot identity only when a tree is due, not every tick.
+  profiled soldier. It runs one pass a second, its first pass staggered across that second, and checks the
+  cooldown before anything is sensed. The sensor then gathers only what could change the answer
+  (`RaceAbilityService.PlanScan`): nothing at all when the soldier's own state already rules the ability out (a
+  Rohirrim on foot, a Dale soldier without a bow), enemies only out to the widest trigger that can still hold,
+  a rider's closing speed only for a CavalryClosing trigger, and kin and fallen kin only once every other
+  requirement holds. A test pins that the plan never changes an answer for any shipped profile.
+  `BehaviorTreeAgentComponent` checks slot identity only when a tree is due, not every tick, and
+  `BehaviorTreeMissionLogic` copies its schedule without allocating.
 - **Two model stacks.** Custom Battle installs its own stat, damage and morale models. Its damage model
   (`CustomAgentApplyDamageModel`) reads no driven-property damage bonus at all, so ability damage cannot ride the
   stat bag; and none of Combat Mechanics' crush-through or shrug-off rules run there.
@@ -39,50 +45,53 @@ the console command `taom.race_abilities` show what each ability did in a battle
   (#611). Mount speed is written on the horse's own stats through its rider.
 - **Agent handles and threads.** The engine recycles a dead agent's slot (#592) and raises removals off the main
   thread (#634). The store is keyed by object identity, every held handle is checked with
-  `AgentSlotIdentity.IsCurrentOccupant`, and deaths are deferred to the mission tick with the values (position,
-  team, race, culture) captured at the callback.
-- **One tree per agent.** `BehaviorTreeMissionLogic` keeps a single tree per agent, so the attach skips an agent
-  that already carries one.
+  `AgentSlotIdentity.IsCurrentOccupant`, and a death is handled with the values (position, team, race, culture,
+  whether the victim was a soldier) captured at the callback: inline on the main thread, inside a catch because
+  the engine's removal loop guards nothing, and deferred to the mission tick anywhere else.
+- **One tree per agent.** TAOM's `BehaviorTreeMissionLogic` keeps a single tree per agent, so the attach skips an
+  agent that already carries one. Late spawns are always safe (the creature behaviors see `OnAgentBuild` first);
+  on the first tick behaviors tick last to first, so this scan runs before the creatures'. No shipped profile
+  covers a creature-tree agent, so that order matters only if one ever does.
 
 ### Solution Approach
 
 `RaceAbilitiesModule` (a `TaomFeatureModule`) registers the services, sets `RaceAbilityHooks.Runtime`, and adds
 `RaceAbilitiesMissionLogic` to every mission. The mission logic decides its gate on the first tick (no
 `OnBehaviorInitialize`: a module's behavior is added after the engine dispatches it, #606): combat missions with
-no multiplayer session (`SignatureMissionGate`) and the MCM switch on. It attaches a `RaceAbilityBehaviorTree` to
-every agent with a profile, at the first tick and then as soldiers spawn (Custom Battle spawns its armies after
-the first tick, so there nearly every tree is a late spawn).
+no multiplayer session (`SignatureMissionGate`), the MCM switch on, and `race_abilities.json`'s own `enabled`
+on. It attaches a `RaceAbilityBehaviorTree` to every agent with a profile, at the first tick and then as soldiers
+spawn (Custom Battle spawns its armies after the first tick, so there nearly every tree is a late spawn).
 
 A profile comes from `RaceAbilityProfileResolver`: the soldier's race profile when his race has one; otherwise, for
-a soldier of the human race only, his culture's profile. A troll in Mordor's ranks is not one of Mordor's men.
+a soldier of the human race only, his culture's profile. A troll in Mordor's ranks is not one of Mordor's men. The
+culture is the troop's own (`Character.Culture`); for a hero that is his template's culture, which can differ from
+`Hero.Culture` for a born child. Culture Doctrine reads it the same way.
 
 The tree, the same for every profile:
 
 ```
 [root]
   main (Selector)
-    ai soldier (Selector, IsAiAgentDecorator)
-      unleash (Sequence, RaceAbilityReadyDecorator: not fleeing, off cooldown, trigger holds)
-        UnleashTask: activate, war cry, rally ready kin
-      ReturnTrueTask
+    ai soldier (Sequence, IsAiAgentDecorator)
+      RaceAbilityTask: not fleeing, off cooldown, a trigger holds -> activate, war cry, rally ready kin
     ReturnTrueTask (player-controlled: never fires)
 ```
 
-`base(1000)` gives one pass a second (`BehaviorTreeAgentComponent` divides the delay in whole seconds). Every leaf
-finishes on the pass it starts; a `SleepTask` would finish only on the next pass and halve the decision rate. The
-tree resolves the runtime once in `BuildTree` and passes it to its nodes (the warg tree's shape). A node that
-throws logs once per battle and reads as "not ready" instead of stopping the soldier's tree.
+`base(1000)` gives one pass a second (`BehaviorTreeAgentComponent` divides the delay in whole seconds). The one
+leaf finishes on the pass it starts, so each pass is one decision; a `SleepTask` would finish only on the next pass
+and halve the decision rate. The tree resolves the runtime once in `BuildTree` and passes it to the task (the warg
+tree's shape). A pass that throws logs once per battle and fires nothing, instead of stopping the soldier's tree.
 
 The engine side is five small boundary classes around one runtime, and every rule they apply is
 `RaceAbilityService`'s:
 
 | Class | Does |
 |---|---|
-| `RaceAbilityRuntime` | Holds the store, telemetry, fallen-kin memory and wave counter; resolves profiles and kinship; prints the status |
-| `RaceAbilitySensor` | Reads health, morale, mount, weapon, enemies, kin and fallen kin into `RaceAbilitySenses` |
+| `RaceAbilityRuntime` | Holds the store, telemetry, fallen-kin memory and wave counter; resolves profiles and kinship; prints the status; clears everything at mission end |
+| `RaceAbilitySensor` | Reads health, morale, mount and weapon, then what the scan plan asks for: enemies, kin, fallen kin |
 | `RaceAbilityActivator` | Fires the ability and the rally, scales each soldier for his tier (and crowd, for a kin bonus), refreshes his stats and his horse's, shouts |
 | `RaceAbilityTicker` | Ages every ability (Active, Spent, Ready), settles a burnt-out frenzy's morale price, tops up morale floors, pulses fear auras, posts the wave messages and the 30 s report |
-| `RaceAbilityDeaths` | Forgets the dead, remembers fallen kin, credits the killer (extension, heal, fear on kill) |
+| `RaceAbilityDeaths` | Forgets the dead, remembers fallen kin, credits the killer of a soldier (extension, heal, fear on kill) |
 
 The effects reach the engine through six shared models, each calling one `RaceAbilityHooks` method per seam:
 
@@ -110,24 +119,36 @@ Checked against the v1.5.3 decompile (`SandboxAgentStatCalculateModel`, `CustomB
 |---|---|---|
 | `moveSpeedPercent` | `MaxSpeedMultiplier`, `CombatMaxSpeedMultiplier` | rewritten in `UpdateHumanStats` in both models; on foot only |
 | `accelerationPercent` | `TopSpeedReachDuration` (divided) | same |
-| `mountSpeedPercent` | the ridden horse's `MountSpeed`, through its rider | rewritten in `UpdateHorseStats` in both models |
+| `mountSpeedPercent` | the ridden horse's `MountSpeed`, through its rider | rewritten in `UpdateHorseStats` in both models. A rider dismounted mid-ability may leave his old horse boosted until its next stat update (UNVERIFIED) |
 | `swingSpeedPercent` | `SwingSpeedMultiplier` | rewritten every update |
 | `drawSpeedPercent` | `ThrustOrRangedReadySpeedMultiplier` (the skill-driven bow draw, throw and thrust readying) | rewritten every update |
-| `reloadSpeedPercent`, `missileSpeedPercent` | `ReloadSpeed`, `MissileSpeedMultiplier` | rewritten every update; whether `MissileSpeedMultiplier` scales bow arrows is UNVERIFIED (vanilla writes it from throwing perks only) |
+| `reloadSpeedPercent`, `missileSpeedPercent` | `ReloadSpeed`, `MissileSpeedMultiplier` | rewritten every update. Whether `MissileSpeedMultiplier` speeds a bow's arrows is UNVERIFIED, though likely: vanilla's own wet-weather penalty writes it for bows and crossbows |
 | `blockAbilityPercent`, `parryAbilityPercent`, `attackEagernessPercent`, `aimErrorPercent` | `AIBlockOnDecideAbility`, `AIParryOnDecideAbility`, `AIAttackOnDecideChance` (each kept in 0 to 1), `AiShooterError` | rewritten in `SetAiRelatedProperties` on every update; how native weighs `AiShooterError` (base 0.008) is UNVERIFIED |
-| `knockdownResistancePercent` | `GetKnockDownResistance` | the engine floors a soldier when the hit reaches `HealthLimit x (resistance - penetration)`, on weapon hits and on a horse charge that knocked him back |
-| `knockbackResistancePercent` | `GetKnockBackResistance` | read only for missiles, crush-throughs and wide-grip thrusts: a frontal horse charge and a kick or shield bash knock back regardless |
-| `dismountResistancePercent` | `GetDismountResistance` | the dismount decision for riders |
-| `meleeDamagePercent`, `rangedDamagePercent`, `damageReductionPercent` | the damage models' amplification and reduction steps | Custom Battle reads no driven-property damage bonus. They also scale damage to and from shields (Berserk breaks shields faster) and to objects; a fall keeps its damage, a hit on the soldier's horse is the horse's |
+| `knockdownResistancePercent` | `GetKnockDownResistance` | the engine floors a soldier when the hit reaches `HealthLimit x (resistance - penetration)`, on weapon hits and on a horse charge that knocked him back. In campaign, Combat Mechanics floors any victim of a full-speed charge whose weight times 6 is at most the horse's and rider's before it reads resistance (`ChargeKnockdownService`, Branch A): every man, while dwarves and the uruk races are heavy enough to stay in Branch B, where resistance counts. Custom Battle reads the resistance on every charge |
+| `knockbackResistancePercent` | `GetKnockBackResistance` | read only for missiles, crush-throughs and wide-grip thrusts, and never for a hit that is shrugged off: a frontal horse charge and a kick or shield bash knock back regardless. So Stand Fast carries none: its shrug-off already prevents every knock-back that reads it |
+| `dismountResistancePercent` | `GetDismountResistance` | the dismount decision for a weapon that can dismount; any other knockdown-capable weapon's dismount reads knockdown resistance instead |
+| `meleeDamagePercent`, `rangedDamagePercent`, `damageReductionPercent` | the damage models' amplification and reduction steps | Custom Battle reads no driven-property damage bonus. They also scale damage to and from shields (Berserk breaks shields faster) and to objects; a fall keeps its damage both ways, and a hit on the soldier's horse is the horse's |
 | `forceCrushThrough`, `holdAgainstCrush` | `DecideCrushedThrough` | a verdict, not a stat |
 | `shrugOffBlows` | `DecideAgentShrugOffBlow` | on a weapon or missile hit: no flinch, no knockdown, knock-back or dismount, and the attacker's weapon bounces, as vanilla's shrug-off does. A horse charge never asks, so it still knocks a Stand Fast dwarf back (his knockdown resistance keeps him on his feet), and a kick or shield bash still knocks back. It also spares the soldier Sauron's guaranteed slam knockdown |
-| `moraleFloor` | `CanPanicDueToMorale` false while live, plus a top-up every 0.5 s | exact: the soldier cannot panic at all while it lasts |
+| `moraleFloor` | `CanPanicDueToMorale` false while live, plus a top-up every 0.5 s | exact for morale: the soldier cannot panic while it lasts. It does not stop a retreat order, or a retreat already under way |
 | `moraleOnEnd` | `ChangeMorale` when the active window ends | the orcs' frenzy burns out |
-| `healPerKill`, `fearOnKill*`, `fearAura*` | `Agent.Health`, `ChangeMorale` | fear is scaled through the registered morale model (tier and hero resistance), as the Dread Aura and Signature Strikes do, and only reaches live AI humans (`DreadAgentGate`); where several auras reach one enemy, only the strongest drains him |
+| `healPerKill`, `fearOnKill*`, `fearAura*` | `Agent.Health`, `ChangeMorale` | fear is scaled through the registered morale model, as the Dread Aura and Signature Strikes do (in a campaign the victim's tier and hero resistance apply; Custom Battle's characters all resist alike), and only reaches live AI humans (`DreadAgentGate`); where several auras reach one enemy, only the strongest drains him. Unlike the Dread Aura, no per-race fear resistance applies |
 
 **Never touched:** armour (`ArmorHead` and the rest) and `OffhandWeaponDefendSpeedMultiplier`. Custom Battle writes
 them only in `InitializeAgentStats`, so a post-pass would stack on every update. A tougher stance is damage
 reduction instead.
+
+### Known limits
+
+- **Scripted creature blows.** The troll's Brute Force ring, warg bites, trample and the signature-strike ring land
+  through `CustomAttacksUtils.TakeDamage`, which writes the damage past the damage models. None of the defensive
+  effects (damage reduction, shrug-off, resistances, the crush hold) applies to them.
+- **Riderless creatures.** The sensor counts humanoid enemies only, and the engine's proximity query appears to
+  return nothing else anyway (UNVERIFIED in native), so a riderless spider or warg is invisible to the enemy
+  triggers.
+- **Khand and Umbar field other kingdoms' troops.** Khand recruits Rhun's roster, so its soldiers fire Wainrider
+  Wall and Variag Ferocity reaches only Khand's lords and town guard. Umbar's levies and garrisons are Harad troops
+  and fire Serpent's Venom; Corsair Raid reaches the `umbar_elite` line and the corsair bandits.
 
 ## Configuration
 
@@ -138,25 +159,27 @@ Loaded once per process: an edit needs a restart. A missing or unreadable file g
 
 | Field | Meaning |
 |---|---|
-| `tierScaling` | `baseTier`, `percentPerTier`, `minFactor`, `maxFactor`: effects scale with `GetBattleTier()` (0 to 7); heroes take `heroFactor`. Prices scale too: an elite pays more for more |
-| `races.<race>` | keyed by the race name in `skins.xml`; a comma-separated key gives several races one profile |
-| `cultures.<culture>` | keyed by culture id (`vlandia` is Rohan, `empire` Dunland, `sturgia` Dale, `aserai` Harad, `khuzait` Rhun, `battania` Khand); human soldiers only, and only when their race has no profile; comma-separated aliases share one profile, and so one ability for the rally |
+| `enabled` | the file's own switch, beside MCM's; the mission gate line and the console report show both |
+| `tierScaling` | `baseTier`, `percentPerTier`, `minFactor`, `maxFactor`: effects scale with `GetBattleTier()` (0 to 7); heroes take `heroFactor`. The speed and guard prices scale too (an elite pays more for more); morale floors, radii and `moraleOnEnd` do not |
+| `races.<race>` | keyed by the race name in `skins.xml`; a comma-separated key gives several races one profile. A race the engine does not register is skipped with a warning |
+| `cultures.<culture>` | keyed by culture id (`vlandia` is Rohan, `empire` Dunland, `sturgia` Dale, `aserai` Harad, `khuzait` Rhun, `battania` Khand); human soldiers only, and only when their race has no profile; comma-separated aliases share one profile, and so one ability for the rally. Culture ids are not checked in game: `ShippedRaceAbilitiesConfigTests` pins the shipped ones against `taom_spcultures.xml` and the six re-skinned vanilla ids |
 | `abilityId` | log name and display name (`RaceAbilityNames`); defaults to the first key |
 | `cooldownSeconds`, `durationSeconds` | the cooldown runs from activation; raised to cover the longest window plus the spent phase |
-| `spentSeconds`, `spent` | the aftermath and its effects (a `spent` block without `spentSeconds` warns) |
+| `spentSeconds`, `spent` | the aftermath and its effects (a `spent` block without `spentSeconds` warns, and so does a `moraleOnEnd` there, which is never read) |
 | `killExtensionSeconds`, `maxDurationSeconds` | each kill while active adds time, never past the maximum from activation (an extension without room to extend warns) |
 | `rallyRadius` | ready kin of the same profile and team within it fire too |
 | `warCry` | `Yell`, `Charge`, `Victory`, `Grunt` or empty, in the soldier's own voice set |
-| `kinRaces` | races that count as kin for `KinWithin`, `KinFell` and the kin bonus, besides the same profile (never widens the rally) |
-| `kinBonus` | `radius`, `perKinPercent`, `maxKin`: extra melee damage per kinsman close by at activation |
+| `kinRaces` | races that count as kin for `KinWithin`, `KinFell` and the kin bonus, besides the same profile (never widens the rally); a list none of those reads warns |
+| `kinBonus` | `radius`, `perKinPercent`, `maxKin`: extra melee damage per kinsman close by at activation (`perKinPercent` 0 warns) |
 | `requires`, `anyOf` | every `requires` trigger holds and, when `anyOf` is not empty, one of them does |
-| `effects` | percentages are whole numbers (20 = +20%) |
+| `effects` | percentages are whole numbers (20 = +20%); a fear radius without its morale, or the reverse, warns |
 
 Trigger kinds: `Always` (a plain timer), `EnemyWithin` (range), `EnemiesWithin` (range, count), `NoEnemyWithin`
 (range), `HealthBelow` (fraction), `MoraleBelow` (fraction of 100), `TookDamage` (lost health since the previous
 pass, about a second), `Mounted`, `KinFell` (range, seconds), `KinWithin` (range, count), `LandedKill` (seconds),
 `WoundedEnemyWithin` (range, fraction), `CavalryClosing` (range: a rider whose mount closes faster than 3 m/s),
-`RangedTargetWithin` (range, while wielding a ranged weapon). Ranges are capped at 40 m and event windows at 30 s.
+`RangedTargetWithin` (range, while wielding a ranged weapon). A kind is one name, any case; a number or a
+comma-separated list is rejected. Ranges are capped at 40 m and event windows at 30 s.
 
 ### Current Values
 
@@ -166,13 +189,13 @@ First guesses, to be tuned in a Custom Battle. The four first cooldowns are Mike
 
 | Race | Ability | Cooldown / length | Fires when | Effect | Price |
 |---|---|---|---|---|---|
-| `berserker` | Berserk | 15 s / 6 s | enemy within 3 m and (health 75% or less, or took damage, or kin fell within 10 m in 5 s) | swings crush through; +20% melee; +15% swing; +10% speed; no flinch; cannot rout | block and parry -60%; 3 s spent: -20% speed, -10% swing |
+| `berserker` | Berserk | 15 s / 6 s | enemy within 3 m and (health 75% or less, or took damage, or kin fell within 10 m in 5 s) | swings crush through; +20% melee; +15% swing; +10% speed; no flinch; cannot panic | block and parry -60%; 3 s spent: -20% speed, -10% swing |
 | `uruk_hai` | Bloodlust | 25 s / 8 s, +2 s a kill to 14 s | a kill in 1.5 s, or an enemy within 3 m at half health | +15% melee; +10% swing; knockdown resistance x2; 8 health a kill; each kill frightens enemies within 6 m | block -20% |
-| `dwarf` | Stand Fast | 30 s / 10 s | enemy within 20 m and (cavalry closing within 20 m, or 3 enemies within 5 m, or health half) | no crush-through against him; no flinch; 20% less damage; knockdown resistance x3; block +25%; cannot rout | -15% speed |
+| `dwarf` | Stand Fast | 30 s / 10 s | enemy within 20 m and (cavalry closing within 20 m, or 3 enemies within 5 m, or health half) | no crush-through against him; no flinch; 20% less damage; knockdown resistance x3; block +25%; cannot panic | -15% speed |
 | `elf` | Swiftness of the Eldar | 30 s / 8 s | a target within 30 m with a bow, or an enemy within 6 m | +20% speed; +25% acceleration and draw; +15% reload; +10% arrow speed; aim error -30%; parry +20%; horse +10% | none |
 | `orc` | Swarm | 20 s / 8 s | enemy within 4 m and 3 kin (orcs or goblins) within 6 m | +5% melee, +3% per kinsman within 6 m (up to 5); +10% swing | morale -8 when it ends; 3 s spent: -10% speed |
 | `goblin` | Scurry | 20 s / 6 s | enemy within 8 m, or health half | +25% speed; +30% acceleration; +20% swing | 3 s spent: -15% speed |
-| `uruk` | Iron Discipline | 30 s / 10 s | enemy within 5 m and (health 60%, or morale 60, or 3 enemies within 4 m) | cannot rout (morale held at 60); 15% less damage; block +15%; knock-back resistance x2 | -10% speed |
+| `uruk` | Iron Discipline | 30 s / 10 s | enemy within 5 m and (health 60%, or morale 60, or 3 enemies within 4 m) | cannot panic (morale held at 60); 15% less damage; block +15%; knock-back resistance x2 | -10% speed |
 | `pale_uruk` | Hunter's Rush | 25 s / 6 s | an enemy at 4 to 15 m | +30% speed; +40% acceleration; knockdown resistance x2; +10% melee | 3 s spent: -15% speed |
 | `dg_uruk` | Shadow of the Necromancer | 30 s / 8 s | 2 enemies within 6 m | enemies within 8 m lose 2 morale a second; +10% melee | none |
 
@@ -180,15 +203,15 @@ First guesses, to be tuned in a Custom Battle. The four first cooldowns are Mike
 
 | Culture | Ability | Cooldown / length | Fires when | Effect | Price |
 |---|---|---|---|---|---|
-| `gondor`, `gondor_soldiers` | Guard of the Citadel | 30 s / 10 s | enemy within 15 m and (2 within 5 m, or cavalry closing, or health half) | block +30%; 10% less damage; knock-back resistance x2; cannot rout | -10% speed |
-| `vlandia` (Rohan) | Forth Eorlingas | 30 s / 10 s | mounted, enemy within 30 m | horse +15%; +15% melee; +10% swing; dismount resistance x2.5; cannot rout | none |
+| `gondor`, `gondor_soldiers` | Guard of the Citadel | 30 s / 10 s | enemy within 15 m and (2 within 5 m, or cavalry closing, or health half) | block +30%; 10% less damage; knock-back resistance x2; cannot panic | -10% speed |
+| `vlandia` (Rohan) | Forth Eorlingas | 30 s / 10 s | mounted, enemy within 30 m | horse +15%; +15% melee; +10% swing; dismount resistance x2.5; cannot panic | none |
 | `sturgia` (Dale) | Bard's Aim | 30 s / 8 s | a target within 40 m with a bow | +20% draw; aim error -40%; +15% arrow speed; +10% ranged damage | none |
 | `empire`, `dunland_raiders` (Dunland) | Hill-clan Fury | 20 s / 6 s | enemy within 3 m and (took damage, or kin fell within 8 m) | +15% melee; +10% swing; +10% speed | block -30%; 3 s spent: -10% speed |
 | `aserai`, `harad_raiders`, `shaghana`, `abanissa` (Harad) | Serpent's Venom | 30 s / 8 s | a target within 35 m with a bow, or an enemy within 4 m | +20% ranged damage; aim error -15%; +10% melee | none |
-| `khuzait`, `rhun_raiders` (Rhun) | Wainrider Wall | 30 s / 10 s | enemy within 15 m and (2 within 5 m, or cavalry closing) | block +20%; 10% less damage; knockdown resistance x2; +10% swing | none |
+| `khuzait`, `rhun_raiders` (Rhun, and Khand's soldiers) | Wainrider Wall | 30 s / 10 s | enemy within 15 m and (2 within 5 m, or cavalry closing) | block +20%; 10% less damage; knockdown resistance x2; +10% swing | none |
 | `umbar`, `umbar_corsairs` | Corsair Raid | 20 s / 6 s | enemy within 4 m and (took damage, or a kill in 2 s) | +20% swing; +15% speed; +10% melee | 3 s spent: -10% speed |
-| `battania` (Khand) | Variag Ferocity | 25 s / 8 s | enemy within 6 m | +15% melee; +10% swing; knockdown resistance x2; dismount resistance x2 | none |
-| `mordor`, `dolguldur` (their men) | Servants of the Shadow | 30 s / 8 s | enemy within 4 m and (a kill in 2 s, or health half) | each kill frightens enemies within 6 m; cannot rout; +10% melee | none |
+| `battania` (Khand's lords and guard) | Variag Ferocity | 25 s / 8 s | enemy within 6 m | +15% melee; +10% swing; knockdown resistance x2; dismount resistance x2 | none |
+| `mordor`, `dolguldur` (their men) | Servants of the Shadow | 30 s / 8 s | enemy within 4 m and (a kill in 2 s, or health half) | each kill frightens enemies within 6 m; cannot panic; +10% melee | none |
 
 Rally radii run 6 to 12 m. The initiator and every third joiner shout.
 
@@ -196,7 +219,8 @@ Rally radii run 6 to 12 m. The initiator and every third joiner shout.
 
 `Enable Race Abilities` (switching on takes effect from the next battle; switching off stops new abilities at once
 and lets running ones finish), `War Cries`, `Show Ability Messages` (one line when five or more soldiers on one side
-fire the same ability within two seconds), `Race Ability Debug Log` (off: see below).
+fire the same ability within two seconds; "your side" counts an allied lord's troops too), `Race Ability Debug Log`
+(off: see below).
 
 ## Logging: is it working?
 
@@ -204,25 +228,26 @@ Everything goes to the TAOM log with the `[RaceAbilities]` tag.
 
 | Line | When | Tells you |
 |---|---|---|
-| `mission gate: eligible=True enabled=True combatType=Combat` | first tick of every mission | the feature is on for this battle (False in arenas, tournaments, conversations) |
+| `mission gate: eligible=True MCM=True json=True combatType=Combat` | first tick of every mission | the feature is on for this battle (False in arenas, tournaments, conversations, or with either switch off) |
 | `Attached ability trees to N soldier(s) at the first tick` | first tick | in Custom Battle this is usually 0: the armies spawn afterwards |
 | `First late-spawn tree attached` | the first later spawn | trees are attaching |
 | `<ability> by <name> (tier T, player side) at S s, trigger=<kind>, rallied=R` | the first 12 waves of a battle; every wave with the debug log on | an ability fired, why, and how many joined |
 | `<ability> on <name>: Active -> Spent at S s` | every phase change, debug log on | windows end when they should |
 | `Battle so far (S s):` then one line per ability | every 30 s of mission time with new activity | the running counters |
 | `Mission end: N tree(s) late-attached, M soldier(s) tracked at end`, then `Mission end:` and the counters | mission end | the battle's totals |
-| `RaceAbilitiesConfigProvider: ...` / `RaceAbilityProfileResolver: ...` | first use | a config value was reverted, or a race or culture name matched nothing |
-| `<node> threw ...` | once per battle | a tree node failed (the soldier is treated as not ready) |
+| `RaceAbilitiesConfigProvider: ...` / `RaceAbilityProfileResolver: ...` | first use | a config value was reverted or is never read, or a race name matched nothing |
+| `RaceAbilityTask threw ...` / `RaceAbilityDeaths threw ...` | once per battle | a decision or a death failed (that soldier fires nothing that pass) |
 
-Each counter line reads, per ability: `trees`, `decisions` (passes off cooldown that scanned), `waves`, `soldiers`
-(activations, rallies included), `rallied`, `ended`, `kills while active`, `extensions`, `health healed`,
-`enemies frightened`, `morale restored`, `crush forced`, `crush held`, `shrug-offs`, `melee hits boosted`,
-`ranged hits boosted`, `bonus damage`, `hits softened`, `damage prevented`, `stat passes`, and `fired by` with a
-count per trigger kind. Many `decisions` and few `waves` means the triggers are strict; `trees 0` means the race or
-culture has no soldiers here.
+Each counter line reads, per ability: `trees`, `decisions` (passes off cooldown that sensed), `waves`, `soldiers`
+(activations, rallies included), `rallied`, `ended`, `kills while live` (active or spent), `extensions`,
+`health healed`, `fear landed` (once per enemy per kill or aura pulse), `morale restored`, `crush forced`,
+`blocks braced` (every block by a soldier holding against crush-throughs, whether or not the blow could crush),
+`shrug-offs`, `melee hits boosted`, `ranged hits boosted`, `bonus damage`, `hits softened`, `damage prevented`,
+`stat passes`, and `fired by` with a count per trigger kind. Many `decisions` and few `waves` means the triggers
+are strict; `trees 0` means the race or culture has no soldiers here.
 
-`taom.race_abilities` (dev console, cheats on) prints the same in game: the gate, who is live now (active and spent
-per ability), and the counters.
+`taom.print_race_abilities` (dev console, cheats on) prints the same in game: the gate, who is live now (active and
+spent per ability), and the counters.
 
 ## Key Files
 
@@ -230,18 +255,20 @@ per ability), and the counters.
 |---|---|
 | `Main/Features/RaceAbilities/RaceAbilitiesModule.cs` | Registration, the hooks' runtime, the mission logic |
 | `Main/Features/RaceAbilities/Domain/RaceAbilitiesConfig.cs`, `RaceAbilityDefaults.cs` | Config shape and the compiled profiles |
+| `Main/Features/RaceAbilities/Domain/RaceAbilitySenses.cs`, `RaceAbilityScanPlan.cs` | What a soldier perceives, and what the sensor still has to gather |
 | `Main/Features/RaceAbilities/RaceAbilitiesConfigProvider.cs` | Load and validate, aliases, accepted-but-unread warnings |
 | `Main/Features/RaceAbilities/RaceAbilityProfileResolver.cs` | Race and culture to profile; kin races |
-| `Main/Features/RaceAbilities/RaceAbilityService.cs` | Every decision, pure |
-| `Main/Features/RaceAbilities/RaceAbilityStore.cs` | Live state per agent, identity-keyed, immutable states, transitions |
+| `Main/Features/RaceAbilities/RaceAbilityService.cs` | Every decision, pure: triggers, the scan plan, scaling, rally, kill credit, damage, crush, morale, the percentage arithmetic |
+| `Main/Features/RaceAbilities/RaceAbilityStore.cs` | Live state per agent, identity-keyed, immutable states, transitions, live counts |
 | `Main/Features/RaceAbilities/RaceAbilityTelemetry.cs` | The thread-safe counters behind the logs and the console command |
 | `Main/Features/RaceAbilities/RaceAbilityFallenMemory.cs`, `RaceAbilityAuraLedger.cs`, `RaceAbilityReportClock.cs`, `RaceAbilityWaveCounter.cs` | Fallen kin, strongest aura per enemy, the 30 s report, the message throttle |
-| `Main/Features/RaceAbilities/RaceAbilitySettingsProvider.cs` | The MCM switches |
-| `Main/Features/RaceAbilities/RaceAbilityBehaviorTree.cs`, `BehaviorTreeElements/` | The tree, decorator and task |
+| `Main/Features/RaceAbilities/RaceAbilitySettingsProvider.cs` | The MCM switches, cached and read through |
+| `Main/Features/RaceAbilities/RaceAbilityBehaviorTree.cs`, `BehaviorTreeElements/RaceAbilityTask.cs` | The tree and its one decision |
 | `Main/Features/RaceAbilities/Hooks/RaceAbilityRuntime.cs`, `RaceAbilitySensor.cs`, `RaceAbilityActivator.cs`, `RaceAbilityTicker.cs`, `RaceAbilityDeaths.cs` | The engine boundary |
-| `Main/Features/RaceAbilities/Hooks/RaceAbilitiesMissionLogic.cs` | Attach, tick, deferred deaths, mission-end report |
+| `Main/Features/RaceAbilities/Hooks/RaceAbilitiesMissionLogic.cs` | Gate, attach, tick, deaths, mission-end report |
 | `Main/Features/RaceAbilities/Hooks/RaceAbilityHooks.cs`, `RaceAbilityStatApplier.cs` | What the six models call |
-| `Main/Features/RaceAbilities/Hooks/RaceAbilityNames.cs`, `RaceAbilitiesCheats.cs` | Display names and message lines; `taom.race_abilities` |
+| `Main/Features/RaceAbilities/Hooks/RaceAbilityNames.cs` | Display names and message lines |
+| `Main/Features/RaceAbilities/Cheats/RaceAbilitiesCheats.cs` | `taom.print_race_abilities` |
 | `Main/_Module/ModuleData/race_abilities/race_abilities.json` | The profiles |
 
 ## Dependencies
@@ -251,30 +278,45 @@ per ability), and the counters.
 - `DeferredCallbackQueue` (BehaviorTreeWrapper): deaths off the main thread.
 - `SignatureMissionGate` (SignatureStrikes): which missions carry battle abilities.
 - `DreadAgentGate` (DreadAura): who fear can reach.
+- `CreatureBanditsModule` (CreatureBandits) declares `TaomCustomBattleCreatureDamageModel` for Custom Battle, so the
+  Custom Battle damage, crush and shrug-off hooks ride that module's declaration.
 
 ## Tests
 
 All under `TAOM.Tests/Features/RaceAbilities/`:
 
-- `RaceAbilitiesConfigProviderTests`: missing and broken files, every validation rule, aliases, kin fields, the
-  accepted-but-unread warnings, the summary warning.
+- `RaceAbilitiesConfigProviderTests`: missing and broken files, every validation rule (one bad value for every
+  numeric effect field, with a test that fails when a new field has none), trigger kinds as names only, aliases,
+  kin fields, the accepted-but-unread warnings, the summary warning.
 - `RaceAbilityProfileResolverTests`: invalid ids never reach a name lookup, race over culture, culture for men only,
   kin races.
-- `RaceAbilityServiceTests`: every trigger kind, cooldown and NaN, tier and kin scaling, rally recruits, kill credit,
-  the heal, cavalry closing, crush verdicts, damage, resistance, morale, auras.
-- `RaceAbilityStoreTests`: phases and transitions, a stall past both ends, kill extension, identity keys, eviction.
-- `RaceAbilityStatApplierTests`: the multiply, divide and clamp, and (`RequiresGame`) each effect's property and the mount.
-- `RaceAbilityTelemetryTests`, `RaceAbilityHelpersTests`, `RaceAbilityWaveCounterTests`: counters across threads,
-  fallen kin, the aura ledger, the report clock, the message throttle.
-- `ShippedRaceAbilitiesConfigTests`: the shipped file loads clean, equals the compiled profiles, and every ability
-  has a display name; `RaceAbilitiesLiveKeyTests` (`LiveInstall`): every race, kin race and culture it names exists.
-- `RaceAbilitiesWiringTests`: every model call site, the module, the container, the main-thread mark.
+- `RaceAbilityServiceTests`: every trigger kind, the scan plan (and that it never changes an answer for any
+  shipped profile), cooldown and NaN, tier and kin scaling and caps, rally recruits, kill credit (no horses), the
+  heal, cavalry closing, crush verdicts, damage (falls keep theirs), resistance, morale, auras, the percentage
+  arithmetic.
+- `RaceAbilityStoreTests`: phases and transitions, a stall past both ends, kill extension, identity keys, eviction,
+  live counts.
+- `RaceAbilityStatApplierTests` (`RequiresGame`): each effect's property, and the mount.
+- `RaceAbilityTelemetryTests`, `RaceAbilityFallenMemoryTests`, `RaceAbilityAuraLedgerTests`,
+  `RaceAbilityReportClockTests`, `RaceAbilityWaveCounterTests`: counters across threads and their labels, fallen
+  kin, the aura ledger, the report clock, the message throttle.
+- `RaceAbilitySettingsProviderTests`: the no-MCM fallbacks and reading through the cached settings
+  (`HotPathSettingsProvidersTests` pins the cache itself).
+- `RaceAbilityHooksTests`: with no runtime, every model hook hands its input back.
+- `ShippedRaceAbilitiesConfigTests`: the shipped file loads clean, equals the compiled profiles, every ability has a
+  display name, and every culture key is a real culture id; `RaceAbilitiesLiveKeyTests` (`LiveInstall`): every
+  race and kin race it names is registered by the installed game.
+- `RaceAbilitiesWiringTests`: every model call site, the module, the container (`RequiresGame`), the main-thread
+  mark, the deaths' soldier flag, and the mission-end clearing.
+- `TAOM.Tests/BehaviorTreeWrapper/BehaviorTreeAgentComponentThreadingTests`: the slot check still comes before a
+  tree runs, and the schedule copy allocates nothing.
 
 ## How to add a race or culture
 
 1. Add a `races.<race>` or `cultures.<culture>` row to `race_abilities.json` and the same profile to
    `RaceAbilityDefaults`; `ShippedRaceAbilitiesConfigTests` fails until they agree. Do not profile a race that
-   already carries its own behaviour tree (the engine keeps one per agent; the attach skips such agents).
+   already carries its own behaviour tree (TAOM's `BehaviorTreeMissionLogic` keeps one per agent; the attach skips
+   such agents).
 2. Pick triggers from the kinds above; only the parameters a kind reads are validated.
 3. Use only the effect fields in Engine levers. A new driven property needs its write site in both stat models
    checked first: it must be assigned on every update, or the post-pass compounds.
@@ -287,16 +329,36 @@ Custom Battle:
 
 1. Isengard (pick `urukhai_berserker` or `urukhai_nazg_hai` for berserkers, plus Uruk-hai) against Erebor. Watch for
    blocks broken by berserkers and held by bracing dwarves, and a dwarf line bracing together. `crush forced` and
-   `crush held` should both climb.
+   `blocks braced` should both climb.
 2. Rohan cavalry charging Gondor's line: `forth_eorlingas` and `citadel_guard` waves; the riders visibly faster.
 3. An elven army against orcs: archers loosing faster as the orcs close; `swarm` firing in the orc mob.
-4. Dol Guldur against anyone: `enemies frightened` under `necromancer_shadow`.
-5. `taom.race_abilities` mid-battle; the mission-end summary in the log.
+4. Dol Guldur against anyone: `fear landed` under `necromancer_shadow`.
+5. `taom.print_race_abilities` mid-battle; the mission-end summary in the log.
 6. A 1,000-agent Custom Battle with the MCM switch on and off, comparing frame time.
-7. One campaign field battle, to see the campaign models behave as Custom Battle's do.
+7. One campaign field battle, to see the campaign models behave as Custom Battle's do; Rhun spearmen against a
+   full-speed charge there shows the Branch A limit.
+8. A Rohirrim unhorsed mid-ability: whether his horse keeps its boost (the UNVERIFIED row above).
 
 ## Not yet
 
 - **Custom war-cry audio, particles, an outline glow, a player "Unleash" order.**
 - Trolls, the Nazgul, Sauron and Saruman keep their own systems (Brute Force, Signature Strikes, the Dread Aura).
-- Bandit cultures (looters, sea raiders and the rest) and the minor peoples have no profile.
+- Calradia's bandit cultures and the minor peoples (`nord`, `vakken`, `darshi`, `neutral_culture`) have no profile;
+  TAOM's raider cultures share their kingdom's ability through the aliases.
+
+## Changelog
+
+Dated, feature-sliced history (newest first). The commit bodies, which `/release` gathers into `CHANGELOG.md`, are
+the chronological log of record.
+
+- 2026-10-04: round-2 review fixes. A horse's death no longer counts as a kill; falls keep their damage; the
+  sensor gathers only what can change a decision; the tree's decorator and task are one node; the console command
+  is `taom.print_race_abilities`; Stand Fast drops its unreachable knock-back resistance and goblins their unread
+  kin races; telemetry labels say what they count; the documentation records the known limits.
+- 2026-10-04: first version (#730): 18 abilities for nine races and nine cultures, one generic tree, telemetry.
+
+## GitHub Issue
+
+- **Issue:** #730, [Race Abilities: a battle ability per race and per culture](https://github.com/haterade22/TAOM/issues/730);
+  translation backlog #731
+- **Status:** Open (in-game check owed)

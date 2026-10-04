@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using DryIoc;
 using TAOM.Composition;
-using TAOM.Core.Logging;
 using TAOM.Features.RaceAbilities.Hooks;
 
 namespace TAOM.Features.RaceAbilities;
@@ -17,10 +16,7 @@ internal sealed class RaceAbilitiesModule : TaomFeatureModule
 {
     private static readonly MissionBehaviorDecl[] Missions =
     {
-        MissionBehaviorDecl.Of((_, r) => new RaceAbilitiesMissionLogic(
-            r.Resolve<RaceAbilityRuntime>(),
-            r.Resolve<RaceAbilitySettingsProvider>(),
-            r.Resolve<IModLogger>())),
+        MissionBehaviorDecl.Of((_, r) => new RaceAbilitiesMissionLogic(r.Resolve<RaceAbilityRuntime>())),
     };
 
     public override string Id => "RaceAbilities";

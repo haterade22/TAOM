@@ -1233,7 +1233,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Battle Tactics/Race Abilities", GroupOrder = 56)]
     [SettingPropertyBool("Enable Race Abilities", Order = 0, RequireRestart = false,
-        HintText = "AI soldiers fight with a battle ability for their race (or, for men, their culture) on a cooldown, fired when the moment comes and joined by nearby kin: berserkers go berserk when hurt in melee, Uruk-hai fall into bloodlust on a kill, dwarves stand fast against a charge or a crowd, elves quicken, orcs swarm, Rohan's riders spur on, Gondor closes ranks, and more. Your own character never fires one. Switching it on takes effect from the next battle; switching it off stops new abilities at once and lets running ones finish. Numbers live in race_abilities.json; the console command taom.race_abilities shows what each ability has done in the battle on screen.")]
+        HintText = "AI soldiers fight with a battle ability for their race (or, for men, their culture) on a cooldown, fired when the moment comes and joined by nearby kin: berserkers go berserk when hurt in melee, Uruk-hai fall into bloodlust on a kill, dwarves stand fast against a charge or a crowd, elves quicken, orcs swarm, Rohan's riders spur on, Gondor closes ranks, and more. Your own character never fires one. Switching it on takes effect from the next battle; switching it off stops new abilities at once and lets running ones finish. Numbers live in race_abilities.json; the console command taom.print_race_abilities shows what each ability has done in the battle on screen.")]
     public bool EnableRaceAbilities { get; set; } = true;
 
     [SettingPropertyGroup("Battle Tactics/Race Abilities")]

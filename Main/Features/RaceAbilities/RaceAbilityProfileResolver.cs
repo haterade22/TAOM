@@ -6,11 +6,13 @@ using TAOM.Features.RaceAbilities.Domain;
 namespace TAOM.Features.RaceAbilities;
 
 // A soldier's ability profile, from his race and culture: his race's profile when it has one; otherwise,
-// for a soldier of the human race only, his culture's. The RaceCombatModifiersResolver pattern: race names
-// are checked against the engine's registry on first use (the registry is engine state, empty when the
-// config loads), and an id is validated before any name lookup because GetRaceNameFromId answers "human"
-// for an unknown id. Also answers who counts as kin. The maps are built once and then only read; a
-// concurrent first build at worst builds them twice.
+// for a soldier of the human race only, his culture's. Race names are checked against the engine's
+// registry on first use (the registry is engine state, empty when the config loads) and turned into ids;
+// the maps are keyed by id, so this never calls GetRaceNameFromId, whose "human" fallback for an unknown
+// id is why other resolvers validate an id first (DreadRegistry). An unknown id simply misses every map.
+// Culture names are not checked here: no engine registry is reachable, so the shipped keys are pinned by
+// RaceAbilitiesLiveKeyTests instead. Also answers who counts as kin. The maps are built once and then only
+// read; a concurrent first build at worst builds them twice.
 public class RaceAbilityProfileResolver
 {
     private static readonly HashSet<int> NoKinRaces = new HashSet<int>();
@@ -29,9 +31,12 @@ public class RaceAbilityProfileResolver
 
     public RaceAbilityTierScaling TierScaling => _configProvider.GetConfig().TierScaling;
 
+    // race_abilities.json's own "enabled" switch, beside the MCM one.
+    public bool ConfigEnabled => _configProvider.GetConfig().Enabled;
+
     public RaceAbilityProfile? Resolve(int? raceId, string? cultureId)
     {
-        if (!raceId.HasValue || !_configProvider.GetConfig().Enabled || !_raceManager.IsValidRaceId(raceId.Value))
+        if (!raceId.HasValue || !_configProvider.GetConfig().Enabled)
             return null;
         var maps = _maps ?? Build();
         if (maps.ByRaceId.TryGetValue(raceId.Value, out var byRace))

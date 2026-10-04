@@ -2,15 +2,23 @@ namespace TAOM.Features.RaceAbilities;
 
 // The MCM switches (Battle Tactics/Race Abilities in TaomSettings), read live. Enabled decides each
 // mission's gate on its first tick and every tree's decision; switching it off mid-battle stops new
-// activations at once while running ones finish.
+// activations at once while running ones finish. Read on every decision and every mission tick, so the
+// settings object is taken once, on the first non-null read, and read through (BattleBalanceSettingsProvider
+// pattern; HotPathSettingsProvidersTests).
 public class RaceAbilitySettingsProvider
 {
-    public bool Enabled => TaomSettings.Instance?.EnableRaceAbilities ?? true;
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
 
-    public bool WarCries => TaomSettings.Instance?.RaceAbilityWarCries ?? true;
+    public RaceAbilitySettingsProvider() { }
+    internal RaceAbilitySettingsProvider(TaomSettings settings) => _settings = settings;
 
-    public bool Messages => TaomSettings.Instance?.RaceAbilityMessages ?? true;
+    public bool Enabled => Settings?.EnableRaceAbilities ?? true;
+
+    public bool WarCries => Settings?.RaceAbilityWarCries ?? true;
+
+    public bool Messages => Settings?.RaceAbilityMessages ?? true;
 
     // One log line per wave and per phase change, on top of the 30 s and mission-end reports.
-    public bool DebugLog => TaomSettings.Instance?.RaceAbilityDebugLog ?? false;
+    public bool DebugLog => Settings?.RaceAbilityDebugLog ?? false;
 }

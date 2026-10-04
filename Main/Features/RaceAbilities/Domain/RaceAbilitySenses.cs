@@ -3,8 +3,8 @@ using System.Collections.Generic;
 namespace TAOM.Features.RaceAbilities.Domain;
 
 // What one soldier perceives at one decision, gathered by the sensor from the engine and read by
-// RaceAbilityService. One instance per decorator, cleared and refilled each decision, so a decision
-// allocates nothing once the lists have grown.
+// RaceAbilityService. One instance, owned by RaceAbilitySensor, cleared and refilled each decision, so a
+// decision allocates nothing once the lists have grown.
 public sealed class RaceAbilitySenses
 {
     public float Now { get; set; }

@@ -5,9 +5,10 @@ using TAOM.Core.Logging;
 using TAOM.Features.RaceAbilities;
 using TAOM.Features.RaceAbilities.Domain;
 
-// Race and culture to ability profile, and who counts as kin. The engine's GetRaceNameFromId answers
-// "human" for an unknown id, so the id is validated before any name lookup (csharp-architecture.md
-// "Lookup Functions With Fallbacks"). A culture profile applies to men only, and never over a race's own.
+// Race and culture to ability profile, and who counts as kin. The resolver turns race names into ids and
+// keys its maps by id, so it never calls GetRaceNameFromId, whose "human" answer for an unknown id
+// (csharp-architecture.md "Lookup Functions With Fallbacks") would otherwise make a junk id a man; an unknown
+// id simply misses every map. A culture profile applies to men only, and never over a race's own.
 
 namespace TAOM.Tests.Features.RaceAbilities;
 
@@ -40,7 +41,6 @@ public class RaceAbilityProfileResolverTests
     {
         _raceManager.IsValidRaceName(name).Returns(true);
         _raceManager.GetRaceIdFromName(name).Returns(id);
-        _raceManager.IsValidRaceId(id).Returns(true);
     }
 
     private RaceAbilityProfile AddRace(string name, int id, params string[] kinRaces)

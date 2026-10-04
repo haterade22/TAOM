@@ -17,6 +17,7 @@ using TAOM.Features.DreadAura;
 using TAOM.Features.DreadAura.Domain;
 using TAOM.Features.Elephant;
 using TAOM.Features.MixedFormations;
+using TAOM.Features.RaceAbilities;
 using TAOM.Features.SiegePropDiagnostics;
 using TAOM.Features.SmartCavalryAI;
 using TAOM.Tests.Migration;
@@ -60,6 +61,7 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(SmartCavalryAISettingsProvider))]
     [DataRow(typeof(CultureDoctrineSettingsProvider))]
     [DataRow(typeof(SiegePropDiagnosticsSettingsProvider))]
+    [DataRow(typeof(RaceAbilitySettingsProvider))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
         var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance)?.GetGetMethod(true);
@@ -100,6 +102,7 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(ISmartCavalryAISettingsProvider), typeof(SmartCavalryAISettingsProvider))]
     [DataRow(typeof(ICultureDoctrineSettingsProvider), typeof(CultureDoctrineSettingsProvider))]
     [DataRow(typeof(ISiegePropDiagnosticsSettingsProvider), typeof(SiegePropDiagnosticsSettingsProvider))]
+    [DataRow(typeof(RaceAbilitySettingsProvider), typeof(RaceAbilitySettingsProvider))]
     public void Provider_ResolvesFromARealContainer(Type service, Type implementation)
     {
         using var container = new Container();
@@ -147,6 +150,8 @@ public class HotPathSettingsProvidersTests
             nameof(ICultureDoctrineSettingsProvider.IsDebug), nameof(TaomSettings.CultureDoctrineDebug), () => new TaomSettings()),
         [typeof(SiegePropDiagnosticsSettingsProvider)] = (() => new SiegePropDiagnosticsSettingsProvider(),
             nameof(ISiegePropDiagnosticsSettingsProvider.IsEnabled), nameof(TaomSettings.EnableSiegePropDiagnostics), () => new TaomSettings()),
+        [typeof(RaceAbilitySettingsProvider)] = (() => new RaceAbilitySettingsProvider(),
+            nameof(RaceAbilitySettingsProvider.Enabled), nameof(TaomSettings.EnableRaceAbilities), () => new TaomSettings()),
     };
 
     // The IL rule above proves WHERE MCM is resolved, not THAT the result is kept: an accessor written
@@ -165,6 +170,7 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(SmartCavalryAISettingsProvider))]
     [DataRow(typeof(CultureDoctrineSettingsProvider))]
     [DataRow(typeof(SiegePropDiagnosticsSettingsProvider))]
+    [DataRow(typeof(RaceAbilitySettingsProvider))]
     public void Provider_AsksMcmUntilItHasTheSettings_ThenNeverAgain_AndReadsThrough(Type provider)
     {
         var probe = Probes[provider];

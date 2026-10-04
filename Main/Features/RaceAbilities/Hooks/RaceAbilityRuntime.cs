@@ -1,6 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using BehaviorTreeWrapper;
 using TAOM.Core.Logging;
 using TAOM.Features.RaceAbilities.Domain;
 using TaleWorlds.MountAndBlade;
@@ -20,7 +20,7 @@ public sealed class RaceAbilityRuntime
     // The first waves of a battle are logged in full even with the debug log off.
     internal const int DetailedWaves = 12;
 
-    private bool _treeFailureLogged;
+    private bool _failureLogged;
 
     public RaceAbilityRuntime(RaceAbilityService service, RaceAbilityProfileResolver resolver,
         RaceAbilitySettingsProvider settings, IModLogger logger)
@@ -29,6 +29,7 @@ public sealed class RaceAbilityRuntime
         Resolver = resolver;
         Settings = settings;
         Logger = logger;
+        Warn = logger.LogWarning;
         Sensor = new RaceAbilitySensor(this);
         Activator = new RaceAbilityActivator(this);
         Ticker = new RaceAbilityTicker(this);
@@ -42,6 +43,9 @@ public sealed class RaceAbilityRuntime
     public RaceAbilitySettingsProvider Settings { get; }
 
     public IModLogger Logger { get; }
+
+    // The thread tripwire's reporter (MissionThreadGuard.NoteCall), made once rather than on every call.
+    internal Action<string> Warn { get; }
 
     public RaceAbilityStore<Agent> Store { get; } = new RaceAbilityStore<Agent>();
 
@@ -61,7 +65,7 @@ public sealed class RaceAbilityRuntime
 
     public bool Enabled => Settings.Enabled;
 
-    // The mission gate's last answer, for taom.race_abilities.
+    // The mission gate's last answer, for taom.print_race_abilities.
     public string MissionGate { get; set; } = "no battle has started";
 
     internal int WavesLogged { get; set; }
@@ -72,32 +76,40 @@ public sealed class RaceAbilityRuntime
     public bool IsKin(RaceAbilityProfile profile, Agent other) =>
         Resolver.IsKin(profile, other.Character?.Race, ProfileOf(other));
 
+    // Who gets a tree: a soldier with a profile and no tree yet. BehaviorTreeMissionLogic keeps one tree per
+    // agent, and a second would take the first one's place and silence its listeners.
+    public bool CarriesTree(Agent agent) =>
+        ProfileOf(agent) != null && agent.GetComponent<BehaviorTreeAgentComponent>() == null;
+
+    public void CountTree(Agent agent)
+    {
+        var profile = ProfileOf(agent);
+        if (profile != null)
+            Telemetry.Add(profile.AbilityId, RaceAbilityStat.TreesAttached);
+    }
+
     // The live state of this soldier's ability, for the stat and damage models. Any thread.
     public RaceAbilityState? StateOf(Agent? agent) => agent == null ? null : Store.Get(agent);
 
-    // One error line per battle for a tree node that threw, never one per soldier.
-    public void ReportTreeFailure(string node, Exception ex)
+    // One error line per battle for a step that threw (a tree pass, a death), never one per soldier.
+    public void ReportFailure(string site, Exception ex)
     {
-        if (_treeFailureLogged)
+        if (_failureLogged)
             return;
-        _treeFailureLogged = true;
-        Logger.LogError($"[RaceAbilities] {node} threw {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+        _failureLogged = true;
+        Logger.LogError($"[RaceAbilities] {site} threw {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
     }
 
     public void LogReport(string heading) =>
         Logger.LogInfo($"[RaceAbilities] {heading}:\n{Telemetry.Report()}");
 
-    // What taom.race_abilities prints: the gate, who is live right now, and the battle's counters.
+    // What taom.print_race_abilities prints: the gate, who is live right now, and the battle's counters.
     public string DescribeStatus()
     {
-        var live = Store.Entries
-            .Where(pair => pair.Value.Phase != RaceAbilityPhase.Ready)
-            .GroupBy(pair => pair.Value.Profile.AbilityId)
-            .OrderBy(group => group.Key, StringComparer.Ordinal)
-            .Select(group => $"{group.Key} {group.Count(p => p.Value.Phase == RaceAbilityPhase.Active)} active, " +
-                             $"{group.Count(p => p.Value.Phase == RaceAbilityPhase.Spent)} spent")
-            .ToList();
-        return $"Race abilities: {(Settings.Enabled ? "enabled" : "DISABLED in MCM")}; mission gate: {MissionGate}\n"
+        var live = Store.LiveCounts().Select(count => $"{count.AbilityId} {count.Active} active, {count.Spent} spent").ToList();
+        return $"Race abilities: {(Settings.Enabled ? "enabled" : "DISABLED in MCM")}"
+               + (Resolver.ConfigEnabled ? "" : ", DISABLED in race_abilities.json")
+               + $"; mission gate: {MissionGate}\n"
                + $"Live now: {(live.Count == 0 ? "none" : string.Join("; ", live))}\n"
                + Telemetry.Report();
     }
@@ -108,8 +120,11 @@ public sealed class RaceAbilityRuntime
         Fallen.Clear();
         Waves.Clear();
         Telemetry.Reset();
+        Sensor.Clear();
+        Activator.Clear();
         Ticker.Clear();
-        _treeFailureLogged = false;
+        Deaths.Clear();
+        _failureLogged = false;
         WavesLogged = 0;
         MissionGate = "no battle running";
     }

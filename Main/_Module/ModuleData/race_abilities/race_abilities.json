@@ -79,7 +79,6 @@
         "shrugOffBlows": true,
         "damageReductionPercent": 20,
         "knockdownResistancePercent": 200,
-        "knockbackResistancePercent": 200,
         "blockAbilityPercent": 25,
         "moveSpeedPercent": -15,
         "moraleFloor": 25
@@ -134,7 +133,6 @@
       "spentSeconds": 3,
       "rallyRadius": 6,
       "warCry": "Grunt",
-      "kinRaces": [ "orc" ],
       "anyOf": [
         { "kind": "EnemyWithin", "range": 8 },
         { "kind": "HealthBelow", "fraction": 0.5 }

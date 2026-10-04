@@ -3406,3 +3406,9 @@ added at different places in a file merge cleanly.
   merged branch deleted, grep the whole tree for its name.
 - **Source:** `docs/reviews/rca-perf-integration-fixups-2026-10-04.md` F2, F3 and F4;
   `plans/_audit/2026-10-02-perf/evidence/merge-map.md`.
+
+### A review round is every lens in scope; stopping after the first wave is a partial review (Race Abilities, 2026-10-04)
+Round 1 of the Race Abilities review ran the defect wave (standards, engine compatibility, data flow, XML) and stopped. Efficiency, completeness and design never looked, and round 2's efficiency lens then found a HIGH per-frame allocation and four MEDIUM hot-path costs in code round 1 had passed.
+- **Why missed:** the first wave's findings were fixed and the round was treated as done; the deep-review table runs completeness and design always and efficiency whenever C# changed.
+- **Prevent:** run every lens the table puts in scope, in waves of four. When a round must stop early (a usage limit, Mike's call), its RCA names the lenses that did not run, and the next round starts with them.
+- **Source:** `docs/reviews/rca-race-abilities-2026-10-04.md` R20 to R24, "Root-cause pattern 2".

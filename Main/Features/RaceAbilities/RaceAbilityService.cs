@@ -15,6 +15,10 @@ public sealed class RaceAbilityService
     // A rider is charging a soldier when his mount closes on him faster than this (m/s).
     public const float CavalryClosingSpeed = 3f;
 
+    // Lost health since the previous decision. The first decision has no sample (-1), and a NaN on either side
+    // reads as unhurt.
+    public static bool TookDamage(float lastHealth, float health) => lastHealth >= 0f && health < lastHealth;
+
     public bool IsOffCooldown(float? lastFiredAt, float now, float cooldownSeconds)
     {
         if (!lastFiredAt.HasValue)
@@ -75,7 +79,7 @@ public sealed class RaceAbilityService
             case RaceAbilityTriggerKind.RangedTargetWithin:
                 return senses.WieldsRanged && CountEnemies(senses, trigger.Range, woundedBelow: null, closingOnly: false) >= 1;
             case RaceAbilityTriggerKind.KinWithin:
-                return CountKinWithin(senses.KinDistances, trigger.Range) >= trigger.Count;
+                return CountKin(senses.KinDistances, trigger.Range) >= trigger.Count;
             default:
                 return false;
         }
@@ -97,9 +101,9 @@ public sealed class RaceAbilityService
         return count;
     }
 
-    public int CountKin(List<float> kinDistances, float range) => CountKinWithin(kinDistances, range);
-
-    private static int CountKinWithin(List<float> kinDistances, float range)
+    // Kin no further than the range. The engine's proximity query is flat, so a kinsman it returns can still
+    // be further away than the range in three dimensions.
+    public static int CountKin(List<float> kinDistances, float range)
     {
         var count = 0;
         foreach (var distance in kinDistances)
@@ -115,33 +119,83 @@ public sealed class RaceAbilityService
         return age >= 0f && age <= seconds;
     }
 
-    // How far the sensor must look for enemies and kin: the widest trigger that reads them, and the kin
-    // bonus radius. A fallen kinsman is remembered by the mission logic, not scanned for.
-    public float ScanRange(RaceAbilityProfile profile)
+    // What the sensor still has to gather once the soldier's own senses are in: enemies out to the widest
+    // trigger that can still hold, the closing speed only as far as a CavalryClosing trigger reads, kin only
+    // as far as a KinWithin trigger reads (the kin bonus counts its own kin at activation), and the fallen
+    // kin only for a KinFell trigger. A Requires trigger his own state already fails, or an AnyOf list in
+    // which no trigger can still hold, means nothing can fire him this pass, so nothing is scanned. Never
+    // changes what FiringTrigger answers; it only leaves out what could not change it.
+    public RaceAbilityScanPlan PlanScan(RaceAbilityProfile profile, RaceAbilitySenses self)
     {
-        var range = Math.Max(ScanRange(profile.Requires), ScanRange(profile.AnyOf));
-        return profile.KinBonus != null ? Math.Max(range, profile.KinBonus.Radius) : range;
+        foreach (var trigger in profile.Requires)
+            if (!CanStillHold(trigger, self))
+                return default;
+        if (profile.AnyOf.Count > 0)
+        {
+            var any = false;
+            foreach (var trigger in profile.AnyOf)
+                any |= CanStillHold(trigger, self);
+            if (!any)
+                return default;
+        }
+
+        float enemy = 0f, closing = 0f, kin = 0f;
+        var fallen = false;
+        Widen(profile.Requires, self, ref enemy, ref closing, ref kin, ref fallen);
+        Widen(profile.AnyOf, self, ref enemy, ref closing, ref kin, ref fallen);
+        return new RaceAbilityScanPlan(enemy, closing, kin, fallen);
     }
 
-    private static float ScanRange(List<RaceAbilityTrigger> triggers)
+    private static void Widen(List<RaceAbilityTrigger> triggers, RaceAbilitySenses self,
+        ref float enemy, ref float closing, ref float kin, ref bool fallen)
     {
-        var range = 0f;
         foreach (var trigger in triggers)
         {
+            if (!CanStillHold(trigger, self))
+                continue;
             switch (trigger.ParsedKind)
             {
                 case RaceAbilityTriggerKind.EnemyWithin:
                 case RaceAbilityTriggerKind.EnemiesWithin:
                 case RaceAbilityTriggerKind.NoEnemyWithin:
                 case RaceAbilityTriggerKind.WoundedEnemyWithin:
-                case RaceAbilityTriggerKind.CavalryClosing:
                 case RaceAbilityTriggerKind.RangedTargetWithin:
+                    enemy = Math.Max(enemy, trigger.Range);
+                    break;
+                case RaceAbilityTriggerKind.CavalryClosing:
+                    enemy = Math.Max(enemy, trigger.Range);
+                    closing = Math.Max(closing, trigger.Range);
+                    break;
                 case RaceAbilityTriggerKind.KinWithin:
-                    range = Math.Max(range, trigger.Range);
+                    kin = Math.Max(kin, trigger.Range);
+                    break;
+                case RaceAbilityTriggerKind.KinFell:
+                    fallen = true;
                     break;
             }
         }
-        return range;
+    }
+
+    // A trigger that reads only the soldier is decided by his own senses already, and RangedTargetWithin
+    // cannot hold without a ranged weapon in hand; every other trigger waits for the scan.
+    private static bool CanStillHold(RaceAbilityTrigger trigger, RaceAbilitySenses self) => trigger.ParsedKind switch
+    {
+        RaceAbilityTriggerKind.Always or RaceAbilityTriggerKind.HealthBelow or RaceAbilityTriggerKind.MoraleBelow
+            or RaceAbilityTriggerKind.TookDamage or RaceAbilityTriggerKind.Mounted or RaceAbilityTriggerKind.LandedKill
+            => Holds(trigger, self),
+        RaceAbilityTriggerKind.RangedTargetWithin => self.WieldsRanged,
+        _ => true,
+    };
+
+    // After the enemy scan: whether every Requires trigger that kin and fallen kin do not decide holds. When
+    // one fails nothing can fire him, so the ally scan and the fallen-kin walk are skipped.
+    public bool RequiresHoldBeforeKin(RaceAbilityProfile profile, RaceAbilitySenses senses)
+    {
+        foreach (var trigger in profile.Requires)
+            if (trigger.ParsedKind != RaceAbilityTriggerKind.KinWithin && trigger.ParsedKind != RaceAbilityTriggerKind.KinFell
+                && !Holds(trigger, senses))
+                return false;
+        return true;
     }
 
     // Mounted, and the mount's velocity carries it towards the soldier faster than CavalryClosingSpeed. The
@@ -227,11 +281,13 @@ public sealed class RaceAbilityService
         return FiniteFloatValidator.IsFinite(extended) ? Math.Max(phaseEndsAt, extended) : phaseEndsAt;
     }
 
-    // A kill earns credit when the victim died (killed or knocked out) at the hand of someone else, who is
-    // still alive, on another team, and carries an ability. Mirrors vanilla's own kill count, which skips a
-    // same-team kill.
-    public bool CreditsKill(bool victimDied, bool killerIsVictim, bool killerAlive, bool sameTeam, bool killerHasProfile) =>
-        victimDied && !killerIsVictim && killerAlive && !sameTeam && killerHasProfile;
+    // A kill earns credit when a soldier died (killed or knocked out) at the hand of someone else, who is
+    // still alive, on another team, and carries an ability. A horse is no soldier: mounts carry no team, so
+    // without that gate a dead horse would pass the same-team check and feed every kill effect. Vanilla's
+    // morale-on-kill likewise skips non-humans and same-team kills.
+    public bool CreditsKill(bool victimDied, bool victimIsSoldier, bool killerIsVictim, bool killerAlive, bool sameTeam,
+        bool killerHasProfile) =>
+        victimDied && victimIsSoldier && !killerIsVictim && killerAlive && !sameTeam && killerHasProfile;
 
     // The killer's health after the heal, never above his limit; unchanged when the result is not finite.
     public float HealOnKill(float health, float healthLimit, float heal)
@@ -255,23 +311,21 @@ public sealed class RaceAbilityService
 
     // A melee hit takes MeleeDamagePercent, a missile RangedDamagePercent; a horse charge and a fall keep
     // their damage.
-    public float AmplifyHit(float damage, RaceAbilityEffects? attacker, bool isMissile, bool isHorseCharge, bool isFallDamage)
-    {
-        if (attacker == null || isHorseCharge || isFallDamage)
-            return damage;
-        var percent = isMissile ? attacker.RangedDamagePercent : attacker.MeleeDamagePercent;
-        return percent == 0f ? damage : Finite(damage * (1f + percent / 100f), damage);
-    }
-
-    // The soldier's own body only: a hit on his horse is the horse's.
-    public float Reduce(float damage, RaceAbilityEffects? victim, bool victimIsMount) =>
-        victim == null || victimIsMount || victim.DamageReductionPercent == 0f
+    public float AmplifyHit(float damage, RaceAbilityEffects? attacker, bool isMissile, bool isHorseCharge, bool isFallDamage) =>
+        attacker == null || isHorseCharge || isFallDamage
             ? damage
-            : Finite(damage * (1f - victim.DamageReductionPercent / 100f), damage);
+            : Times(damage, isMissile ? attacker.RangedDamagePercent : attacker.MeleeDamagePercent);
+
+    // Blows on the soldier's own body only: a hit on his horse is the horse's, and a fall keeps its damage.
+    public float Reduce(float damage, RaceAbilityEffects? victim, bool victimIsMount, bool isFallDamage) =>
+        victim == null || victimIsMount || isFallDamage ? damage : Times(damage, -victim.DamageReductionPercent);
 
     // Vanilla answers float.MaxValue for a non-human; scaling that overflows, so it stays as it was.
-    public float ScaleResistance(float baseResistance, float percent) =>
-        percent == 0f ? baseResistance : Finite(baseResistance * (1f + percent / 100f), baseResistance);
+    public float ScaleResistance(float baseResistance, float percent) => Times(baseResistance, percent);
+
+    // The morale an active window costs when it ends (the orcs' Swarm); a spent phase ending costs nothing.
+    public float MoraleOnEnd(RaceAbilityState before) =>
+        before.Phase == RaceAbilityPhase.Active ? before.ActiveEffects.MoraleOnEnd : 0f;
 
     // How much morale to add to hold the soldier at the floor (0 when he is above it or there is none).
     public float MoraleTopUp(float morale, float floor) =>
@@ -284,6 +338,22 @@ public sealed class RaceAbilityService
     // One aura pulse: the morale an enemy loses over this many seconds.
     public float AuraDrain(float moralePerSecond, float seconds) =>
         Finite(Math.Max(0f, moralePerSecond) * Math.Max(0f, seconds), 0f);
+
+    // A value raised by a percentage (negative lowers it); unchanged at 0%, or when the result would not be
+    // finite. Every percentage the abilities apply, to damage, resistances and driven properties, goes here.
+    public static float Times(float value, float percent) =>
+        percent == 0f ? value : Finite(value * (1f + percent / 100f), value);
+
+    // A duration shortened by the percentage (TopSpeedReachDuration: faster acceleration, less time).
+    public static float Over(float value, float percent) =>
+        percent == 0f ? value : Finite(value / (1f + percent / 100f), value);
+
+    // A probability raised by the percentage and kept within 0 to 1.
+    public static float Chance(float value, float percent)
+    {
+        var result = Times(value, percent);
+        return FiniteFloatValidator.IsFinite(result) ? Math.Min(1f, Math.Max(0f, result)) : result;
+    }
 
     private static float Finite(float result, float fallback) =>
         FiniteFloatValidator.IsFinite(result) ? result : fallback;

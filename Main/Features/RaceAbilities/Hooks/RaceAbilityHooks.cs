@@ -108,7 +108,7 @@ public static class RaceAbilityHooks
         return result;
     }
 
-    public static float ReduceDamage(in AttackInformation attack, float damage)
+    public static float ReduceDamage(in AttackInformation attack, in AttackCollisionData collision, float damage)
     {
         var runtime = Runtime;
         if (runtime == null)
@@ -117,7 +117,7 @@ public static class RaceAbilityHooks
         var effects = state?.CurrentEffects;
         if (effects == null)
             return damage;
-        var result = runtime.Service.Reduce(damage, effects, attack.IsVictimAgentMount);
+        var result = runtime.Service.Reduce(damage, effects, attack.IsVictimAgentMount, collision.IsFallDamage);
         if (result != damage)
         {
             runtime.Telemetry.Add(state!.Profile.AbilityId, RaceAbilityStat.HitsReduced);

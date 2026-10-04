@@ -201,6 +201,15 @@ public class RaceAbilitiesConfigProvider : IRaceAbilitiesConfigProvider
             Warn($"{field}.killExtensionSeconds is set but maxDurationSeconds does not exceed durationSeconds, so kills cannot extend it", ref rejected);
         if (!(profile.SpentSeconds > 0f) && JsonConvert.SerializeObject(profile.Spent) != EmptyEffects)
             Warn($"{field}.spent has effects but spentSeconds is 0, so they never apply", ref rejected);
+        if (profile.KinRaces.Count > 0 && profile.KinBonus == null
+            && !Reads(profile, RaceAbilityTriggerKind.KinWithin) && !Reads(profile, RaceAbilityTriggerKind.KinFell))
+            Warn($"{field}.kinRaces is set but no KinWithin or KinFell trigger and no kinBonus reads it", ref rejected);
+        if (profile.KinBonus != null && !(profile.KinBonus.PerKinPercent > 0f))
+            Warn($"{field}.kinBonus.perKinPercent is 0, so the bonus adds nothing", ref rejected);
+        if (profile.Spent.MoraleOnEnd != 0f)
+            Warn($"{field}.spent.moraleOnEnd is never read: the price is paid from effects when the active window ends", ref rejected);
+        WarnHalfPairs(profile.Effects, $"{field}.effects", ref rejected);
+        WarnHalfPairs(profile.Spent, $"{field}.spent", ref rejected);
 
         if (profile.Requires.Count == 0 && profile.AnyOf.Count == 0)
         {
@@ -208,6 +217,18 @@ public class RaceAbilitiesConfigProvider : IRaceAbilitiesConfigProvider
             return null;
         }
         return profile;
+    }
+
+    private static bool Reads(RaceAbilityProfile profile, RaceAbilityTriggerKind kind) =>
+        profile.Requires.Exists(t => t.ParsedKind == kind) || profile.AnyOf.Exists(t => t.ParsedKind == kind);
+
+    // Fear on a kill needs both its radius and its morale, and a fear aura both its radius and its rate.
+    private void WarnHalfPairs(RaceAbilityEffects effects, string field, ref bool rejected)
+    {
+        if ((effects.FearOnKillRadius > 0f) != (effects.FearOnKillMorale > 0f))
+            Warn($"{field}: fearOnKillRadius and fearOnKillMorale act only together, and one of them is 0", ref rejected);
+        if ((effects.FearAuraRadius > 0f) != (effects.FearAuraMoralePerSecond > 0f))
+            Warn($"{field}: fearAuraRadius and fearAuraMoralePerSecond act only together, and one of them is 0", ref rejected);
     }
 
     private static List<string> SplitList(List<string>? values)
@@ -265,9 +286,7 @@ public class RaceAbilitiesConfigProvider : IRaceAbilitiesConfigProvider
             Warn($"{field} is null, skipped", ref rejected);
             return null;
         }
-        if (!Enum.TryParse(parsed.Kind ?? "", ignoreCase: true, out RaceAbilityTriggerKind kind)
-            || !Enum.IsDefined(typeof(RaceAbilityTriggerKind), kind)
-            || int.TryParse(parsed.Kind, out _))
+        if (!TryParseKind(parsed.Kind, out var kind))
         {
             Warn($"{field}.kind='{parsed.Kind}' is not a known trigger kind, skipped", ref rejected);
             return null;
@@ -292,6 +311,23 @@ public class RaceAbilitiesConfigProvider : IRaceAbilitiesConfigProvider
         if (ReadsCount(kind) && (parsed.Count < 1 || parsed.Count > 50))
             valid = SkipTrigger($"{field}.count={parsed.Count} must be in [1,50]", ref rejected);
         return valid ? trigger : null;
+    }
+
+    // One kind's exact name, any case. Enum.TryParse would also take a number, or a comma list whose values
+    // it ORs together into some other kind ("EnemyWithin,CavalryClosing" reads as RangedTargetWithin).
+    private static bool TryParseKind(string? value, out RaceAbilityTriggerKind kind)
+    {
+        var name = value?.Trim();
+        foreach (RaceAbilityTriggerKind candidate in Enum.GetValues(typeof(RaceAbilityTriggerKind)))
+        {
+            if (string.Equals(candidate.ToString(), name, StringComparison.OrdinalIgnoreCase))
+            {
+                kind = candidate;
+                return true;
+            }
+        }
+        kind = default;
+        return false;
     }
 
     private static bool ReadsRange(RaceAbilityTriggerKind kind) => kind switch

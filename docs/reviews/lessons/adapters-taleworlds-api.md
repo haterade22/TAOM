@@ -924,3 +924,9 @@ The first review of plan 038 named slot fit (`Equipment.IsItemFitsToSlot`), note
 - **Why missed:** the model was read from the `case "Weapon"` arm and its data, and a census showing every real item agrees turned a gap into a non-finding.
 - **Prevent:** when a model cites an engine type test (`X != null`, `is X`), list the subclasses of X and the XML elements that construct each (here the `switch` in `ItemObject.Deserialize`), give each a fixture, and route every consumer of that test through one flag. Read "the real data agrees" as proof the gap is latent, not absent.
 - **Source:** `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` convergence of the Codex pass, Y2.
+
+### Mounts carry no Team: list every agent kind an engine callback passes before a rule reads its fields (Race Abilities, 2026-10-04)
+Race Abilities credited a kill when the victim died at the hand of a live soldier with an ability on another team. A horse killed under its rider passed: `Mission.SpawnAgent` sets the rider's team (`Mission.cs:4215`) and builds the horse through `CreateHorseAgentFromRosterElements` (`:4324`) without one, so `killer.Team == null` was false and the dead horse extended Bloodlust, healed the killer and spread fear around the carcass. Vanilla's own `KillCount` counts horses too (`:3010-3012`); its morale-on-kill skips every non-human.
+- **Why missed:** the credit was modelled on `KillCount`, and the same-team gate was assumed to stop a horse; nobody listed what the removal callback carries.
+- **Prevent:** for every engine callback or query a rule reads (removals, hits, proximity scans), write down the agent kinds that arrive (soldier, mount, riderless creature, the player) and the value of each field the rule reads for each: a horse is `Character == null` and `Team == null`. Put the kind in the rule's inputs and pin each kind with a test row.
+- **Source:** `docs/reviews/rca-race-abilities-2026-10-04.md` R14 (lens 2 F1, lens 5 L7).

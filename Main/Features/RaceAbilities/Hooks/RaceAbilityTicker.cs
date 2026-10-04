@@ -30,7 +30,7 @@ public sealed class RaceAbilityTicker
 
     public void Tick(float now)
     {
-        MissionThreadGuard.NoteCall("RaceAbilityTicker.Tick", _runtime.Logger.LogWarning);
+        MissionThreadGuard.NoteCall("RaceAbilityTicker.Tick", _runtime.Warn);
         _transitions.Clear();
         _runtime.Store.Advance(now, _transitions);
         foreach (var transition in _transitions)
@@ -46,13 +46,14 @@ public sealed class RaceAbilityTicker
 
         _due.Clear();
         _runtime.Waves.Flush(now, _due);
-        if (_runtime.Settings.Messages)
+        if (_due.Count > 0 && _runtime.Settings.Messages)
             foreach (var wave in _due)
                 InformationManager.DisplayMessage(new InformationMessage(
                     RaceAbilityNames.Wave(wave.AbilityId, wave.Soldiers, wave.PlayerSide).ToString(),
                     wave.PlayerSide ? Colors.Green : Colors.Red));
 
-        if (_clock.Due(now, _runtime.Telemetry.Total(RaceAbilityStat.Activations)))
+        // IsDue first: counting the activations walks the whole telemetry, and the answer is almost always "not yet".
+        if (_clock.IsDue(now) && _clock.Due(now, _runtime.Telemetry.Total(RaceAbilityStat.Activations)))
             _runtime.LogReport($"Battle so far ({now:0} s)");
     }
 
@@ -61,6 +62,7 @@ public sealed class RaceAbilityTicker
         _transitions.Clear();
         _aura.Clear();
         _due.Clear();
+        _scratch.Clear();
         _clock.Reset();
         _nextPulse = 0f;
     }
@@ -71,12 +73,10 @@ public sealed class RaceAbilityTicker
         var abilityId = transition.Before.Profile.AbilityId;
         var live = agent.IsActive() && AgentSlotIdentity.IsCurrentOccupant(agent);
         if (transition.Before.Phase == RaceAbilityPhase.Active)
-        {
             _runtime.Telemetry.Add(abilityId, RaceAbilityStat.Ended);
-            var price = transition.Before.ActiveEffects.MoraleOnEnd;
-            if (live && price != 0f)
-                agent.ChangeMorale(price);
-        }
+        var price = _runtime.Service.MoraleOnEnd(transition.Before);
+        if (live && price != 0f)
+            agent.ChangeMorale(price);
         if (live)
         {
             agent.UpdateAgentProperties();

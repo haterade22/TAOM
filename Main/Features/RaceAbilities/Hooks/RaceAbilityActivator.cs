@@ -19,9 +19,9 @@ public sealed class RaceAbilityActivator
 
     public RaceAbilityActivator(RaceAbilityRuntime runtime) => _runtime = runtime;
 
-    public void Unleash(Agent initiator, RaceAbilityProfile profile, float now, RaceAbilityTriggerKind? trigger)
+    public void Unleash(Agent initiator, RaceAbilityProfile profile, float now, RaceAbilityTriggerKind trigger)
     {
-        MissionThreadGuard.NoteCall("RaceAbilityActivator.Unleash", _runtime.Logger.LogWarning);
+        MissionThreadGuard.NoteCall("RaceAbilityActivator.Unleash", _runtime.Warn);
         var service = _runtime.Service;
         Activate(initiator, profile, now, cry: true);
 
@@ -54,8 +54,11 @@ public sealed class RaceAbilityActivator
         telemetry.AddTrigger(profile.AbilityId, trigger);
         if (_runtime.Settings.DebugLog || _runtime.WavesLogged++ < RaceAbilityRuntime.DetailedWaves)
             _runtime.Logger.LogInfo($"[RaceAbilities] {profile.AbilityId} by {initiator.Name} (tier {initiator.Character?.GetBattleTier()}, " +
-                $"{(playerSide ? "player side" : "enemy side")}) at {now:0.0} s, trigger={trigger?.ToString() ?? "?"}, rallied={rallied}");
+                $"{(playerSide ? "player side" : "enemy side")}) at {now:0.0} s, trigger={trigger}, rallied={rallied}");
     }
+
+    // Mission end: the buffer would otherwise keep the last rally's soldiers, and the mission, alive.
+    internal void Clear() => _scratch.Clear();
 
     private void Activate(Agent agent, RaceAbilityProfile profile, float now, bool cry)
     {

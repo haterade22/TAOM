@@ -77,8 +77,9 @@ public static class RaceAbilityDefaults
         AnyOf = { T("CavalryClosing", range: 20f), T("EnemiesWithin", range: 5f, count: 3), T("HealthBelow", fraction: 0.5f) },
         Effects = new RaceAbilityEffects
         {
+            // No knock-back resistance: shrugging off already prevents every knock-back that reads it.
             HoldAgainstCrush = true, ShrugOffBlows = true, DamageReductionPercent = 20f, KnockdownResistancePercent = 200f,
-            KnockbackResistancePercent = 200f, BlockAbilityPercent = 25f, MoveSpeedPercent = -15f, MoraleFloor = 25f,
+            BlockAbilityPercent = 25f, MoveSpeedPercent = -15f, MoraleFloor = 25f,
         },
     };
 
@@ -107,11 +108,11 @@ public static class RaceAbilityDefaults
         Spent = new RaceAbilityEffects { MoveSpeedPercent = -10f },
     };
 
-    // Goblins scurry: a burst of speed when a foe comes near or a wound bites. They count as kin for a Swarm.
+    // Goblins scurry: a burst of speed when a foe comes near or a wound bites. They count as kin for a Swarm
+    // through the orcs' kinRaces; Scurry reads no kin of its own.
     private static RaceAbilityProfile Scurry() => new RaceAbilityProfile
     {
         AbilityId = "scurry", CooldownSeconds = 20f, DurationSeconds = 6f, SpentSeconds = 3f, RallyRadius = 6f, WarCry = "Grunt",
-        KinRaces = { "orc" },
         AnyOf = { T("EnemyWithin", range: 8f), T("HealthBelow", fraction: 0.5f) },
         Effects = new RaceAbilityEffects { MoveSpeedPercent = 25f, AccelerationPercent = 30f, SwingSpeedPercent = 20f },
         Spent = new RaceAbilityEffects { MoveSpeedPercent = -15f },

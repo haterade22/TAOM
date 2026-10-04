@@ -34,8 +34,8 @@ namespace TAOM.Features.CareerSystem.Models;
 // has the engine evidence). Five rules. Same day, #611: the career mount bonuses (the
 // MountChargeDamage passive, the Cavalry ability's mount speed and charge) moved from the rider's
 // properties, where nothing reads them, to the mount's, through the same rider hop.
-// 2026-10-04: the race abilities' live effects (RaceAbilities) ride the slot last among the human rules,
-// plus the knockdown and knock-back resistance overrides. Six rules.
+// 2026-10-04 (#730): the race abilities' live effects (RaceAbilities) ride the slot last among the human rules,
+// plus the knockdown, knock-back and dismount resistance overrides. Six rules.
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
     private readonly ICareerAgentStatService _agentStatService;
@@ -81,8 +81,8 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
             ? false
             : base.CanAgentRideMount(agent, targetMount);
 
-    // Race Abilities: a live ability's knockdown and knock-back resistance (Bloodlust, Stand Fast). The engine
-    // floors a soldier when the hit beats HealthLimit x (resistance - penetration) (MissionCombatMechanicsHelper).
+    // Race Abilities: a live ability's knockdown, knock-back and dismount resistance. The engine floors a
+    // soldier when the hit beats HealthLimit x (resistance - penetration) (MissionCombatMechanicsHelper).
     public override float GetKnockDownResistance(Agent agent, StrikeType strikeType = StrikeType.Invalid)
         => RaceAbilityHooks.KnockDownResistance(agent, base.GetKnockDownResistance(agent, strikeType));
 

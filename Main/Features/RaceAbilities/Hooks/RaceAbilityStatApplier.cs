@@ -1,7 +1,6 @@
-using System;
-using TAOM.Core.Validation;
 using TAOM.Features.RaceAbilities.Domain;
 using TaleWorlds.MountAndBlade;
+using static TAOM.Features.RaceAbilities.RaceAbilityService;
 
 namespace TAOM.Features.RaceAbilities.Hooks;
 
@@ -13,7 +12,8 @@ namespace TAOM.Features.RaceAbilities.Hooks;
 /// <c>SetAiRelatedProperties</c> for the AI values), so a multiply here never compounds. Armour and
 /// <c>OffhandWeaponDefendSpeedMultiplier</c> are set only at spawn in Custom Battle, which is why the
 /// abilities never touch them. Runs wherever <c>Agent.UpdateAgentProperties</c> runs, the async AI
-/// thread included: arithmetic over immutable data and nothing else.
+/// thread included: arithmetic over immutable data and nothing else. The arithmetic itself
+/// (<see cref="RaceAbilityService.Times"/>, <c>Over</c>, <c>Chance</c>) is the service's.
 /// </summary>
 public static class RaceAbilityStatApplier
 {
@@ -43,22 +43,4 @@ public static class RaceAbilityStatApplier
             return;
         p.MountSpeed = Times(p.MountSpeed, effects.MountSpeedPercent);
     }
-
-    // A multiplier or a rate, raised by the percentage.
-    public static float Times(float value, float percent) =>
-        percent == 0f ? value : Finite(value * (1f + percent / 100f), value);
-
-    // A duration, shortened by the percentage (TopSpeedReachDuration: faster acceleration, less time).
-    public static float Over(float value, float percent) =>
-        percent == 0f ? value : Finite(value / (1f + percent / 100f), value);
-
-    // A probability, raised by the percentage and kept within 0 to 1.
-    public static float Chance(float value, float percent)
-    {
-        var result = Times(value, percent);
-        return FiniteFloatValidator.IsFinite(result) ? Math.Min(1f, Math.Max(0f, result)) : result;
-    }
-
-    private static float Finite(float result, float fallback) =>
-        FiniteFloatValidator.IsFinite(result) ? result : fallback;
 }

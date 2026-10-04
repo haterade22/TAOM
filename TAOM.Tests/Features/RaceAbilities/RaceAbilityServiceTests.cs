@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.RaceAbilities;
 using TAOM.Features.RaceAbilities.Domain;
@@ -31,6 +32,18 @@ public class RaceAbilityServiceTests
     private bool Fires(RaceAbilityProfile profile) => _sut.FiringTrigger(profile, _senses).HasValue;
 
     // --- cooldown ---
+
+    // --- took damage, sampled once a decision ---
+
+    [DataTestMethod]
+    [DataRow(100f, 90f, true)]
+    [DataRow(100f, 100f, false)]
+    [DataRow(90f, 100f, false)]          // healed
+    [DataRow(-1f, 50f, false)]           // the first decision has nothing to compare
+    [DataRow(float.NaN, 50f, false)]
+    [DataRow(100f, float.NaN, false)]
+    public void TookDamage_ComparesWithThePreviousDecision(float lastHealth, float health, bool expected) =>
+        Assert.AreEqual(expected, RaceAbilityService.TookDamage(lastHealth, health));
 
     [TestMethod]
     public void IsOffCooldown_NeverFired_IsTrue() => Assert.IsTrue(_sut.IsOffCooldown(null, 100f, 15f));
@@ -294,10 +307,10 @@ public class RaceAbilityServiceTests
         Assert.IsFalse(Holds(T(RaceAbilityTriggerKind.KinWithin, range: 6f, count: 2)));
     }
 
-    // --- scan range ---
+    // --- what the sensor gathers ---
 
     [TestMethod]
-    public void ScanRange_IsTheWidestEnemyOrKinTrigger()
+    public void PlanScan_IsTheWidestTriggerThatCanStillHold()
     {
         var profile = new RaceAbilityProfile
         {
@@ -305,12 +318,174 @@ public class RaceAbilityServiceTests
             AnyOf = { T(RaceAbilityTriggerKind.CavalryClosing, range: 25f), T(RaceAbilityTriggerKind.KinFell, range: 35f, seconds: 5f) },
         };
 
-        Assert.AreEqual(25f, _sut.ScanRange(profile), 0.0001f);   // a fallen kinsman is remembered, not scanned for
+        var plan = _sut.PlanScan(profile, _senses);
+
+        Assert.AreEqual(25f, plan.EnemyRange, 0.0001f);
+        Assert.AreEqual(25f, plan.ClosingRange, 0.0001f);
+        Assert.AreEqual(0f, plan.KinRange, 0.0001f);
+        Assert.IsTrue(plan.FallenKin);   // a fallen kinsman is remembered, not scanned for
     }
 
     [TestMethod]
-    public void ScanRange_NoSpatialTrigger_IsZero() =>
-        Assert.AreEqual(0f, _sut.ScanRange(new RaceAbilityProfile { AnyOf = { T(RaceAbilityTriggerKind.TookDamage) } }), 0.0001f);
+    public void PlanScan_NoSpatialTrigger_ScansNothing()
+    {
+        _senses.TookDamage = true;
+
+        var plan = _sut.PlanScan(new RaceAbilityProfile { AnyOf = { T(RaceAbilityTriggerKind.TookDamage) } }, _senses);
+
+        Assert.AreEqual(0f, plan.EnemyRange, 0.0001f);
+        Assert.AreEqual(0f, plan.KinRange, 0.0001f);
+        Assert.IsFalse(plan.FallenKin);
+    }
+
+    [TestMethod]
+    public void PlanScan_ARequiresHisOwnStateFails_ScansNothing()
+    {
+        // Rohan's riders: a footman never fires, so he never scans 30 m for it.
+        var profile = new RaceAbilityProfile { Requires = { T(RaceAbilityTriggerKind.Mounted), T(RaceAbilityTriggerKind.EnemyWithin, range: 30f) } };
+
+        Assert.AreEqual(0f, _sut.PlanScan(profile, _senses).EnemyRange, 0.0001f);
+        _senses.Mounted = true;
+        Assert.AreEqual(30f, _sut.PlanScan(profile, _senses).EnemyRange, 0.0001f);
+    }
+
+    [TestMethod]
+    public void PlanScan_RequiredRangedTargetWithoutARangedWeapon_ScansNothing() =>
+        Assert.AreEqual(0f, _sut.PlanScan(new RaceAbilityProfile { Requires = { T(RaceAbilityTriggerKind.RangedTargetWithin, range: 40f) } }, _senses).EnemyRange, 0.0001f);
+
+    [TestMethod]
+    public void PlanScan_ARangedTargetOnlyWidensTheScanForARangedWeapon()
+    {
+        var profile = new RaceAbilityProfile
+        {
+            AnyOf = { T(RaceAbilityTriggerKind.RangedTargetWithin, range: 35f), T(RaceAbilityTriggerKind.EnemyWithin, range: 4f) },
+        };
+
+        Assert.AreEqual(4f, _sut.PlanScan(profile, _senses).EnemyRange, 0.0001f);
+        _senses.WieldsRanged = true;
+        Assert.AreEqual(35f, _sut.PlanScan(profile, _senses).EnemyRange, 0.0001f);
+    }
+
+    [TestMethod]
+    public void PlanScan_NoAnyOfCanStillHold_ScansNothing()
+    {
+        // Umbar's corsairs: unhurt and with no fresh kill, nothing in the list can hold.
+        var profile = new RaceAbilityProfile
+        {
+            Requires = { T(RaceAbilityTriggerKind.EnemyWithin, range: 4f) },
+            AnyOf = { T(RaceAbilityTriggerKind.TookDamage), T(RaceAbilityTriggerKind.LandedKill, seconds: 2f) },
+        };
+
+        Assert.AreEqual(0f, _sut.PlanScan(profile, _senses).EnemyRange, 0.0001f);
+        _senses.TookDamage = true;
+        Assert.AreEqual(4f, _sut.PlanScan(profile, _senses).EnemyRange, 0.0001f);
+    }
+
+    [TestMethod]
+    public void PlanScan_KinReachIsTheKinTrigger_NotTheBonus()
+    {
+        // The kin bonus counts its own kin at activation, so it widens neither scan.
+        var profile = new RaceAbilityProfile
+        {
+            Requires = { T(RaceAbilityTriggerKind.EnemyWithin, range: 4f), T(RaceAbilityTriggerKind.KinWithin, range: 6f, count: 3) },
+            KinBonus = new RaceAbilityKinBonus { Radius = 9f, PerKinPercent = 3f, MaxKin = 5 },
+        };
+
+        var plan = _sut.PlanScan(profile, _senses);
+
+        Assert.AreEqual(4f, plan.EnemyRange, 0.0001f);
+        Assert.AreEqual(6f, plan.KinRange, 0.0001f);
+        Assert.AreEqual(0f, plan.ClosingRange, 0.0001f);
+    }
+
+    [DataTestMethod]
+    [DataRow(RaceAbilityTriggerKind.EnemiesWithin)]
+    [DataRow(RaceAbilityTriggerKind.NoEnemyWithin)]
+    [DataRow(RaceAbilityTriggerKind.WoundedEnemyWithin)]
+    public void PlanScan_EveryEnemyTriggerSetsTheReach(RaceAbilityTriggerKind kind) =>
+        Assert.AreEqual(7f, _sut.PlanScan(new RaceAbilityProfile { Requires = { T(kind, range: 7f, fraction: 0.5f, count: 1) } }, _senses).EnemyRange, 0.0001f);
+
+    [TestMethod]
+    public void RequiresHoldBeforeKin_AFailingEnemyRequirement_SkipsTheKin()
+    {
+        var profile = new RaceAbilityProfile
+        {
+            Requires = { T(RaceAbilityTriggerKind.EnemyWithin, range: 4f), T(RaceAbilityTriggerKind.KinWithin, range: 6f, count: 3) },
+        };
+
+        Assert.IsFalse(_sut.RequiresHoldBeforeKin(profile, _senses));
+        _senses.Enemies.Add(new EnemySense(3f, 1f, false));
+        Assert.IsTrue(_sut.RequiresHoldBeforeKin(profile, _senses));   // the kin requirement waits for the kin scan
+    }
+
+    [TestMethod]
+    public void RequiresHoldBeforeKin_LeavesKinFellToTheMemory() =>
+        Assert.IsTrue(_sut.RequiresHoldBeforeKin(new RaceAbilityProfile { Requires = { T(RaceAbilityTriggerKind.KinFell, range: 10f, seconds: 5f) } }, _senses));
+
+    // The plan may only leave out what cannot change the answer. For every shipped profile, across a grid of
+    // the soldier's own states in one crowded scene, FiringTrigger on what the plan gathers (as the sensor
+    // gathers it) equals FiringTrigger on everything.
+    [TestMethod]
+    public void PlanScan_ShippedProfiles_GatherEnoughForTheSameAnswer()
+    {
+        var config = ShippedRaceAbilitiesConfigTests.Load(ShippedRaceAbilitiesConfigTests.ModuleDataPath, NSubstitute.Substitute.For<TAOM.Core.Logging.IModLogger>());
+        var profiles = config.Races.Values.Concat(config.Cultures.Values).Distinct().ToList();
+        var enemies = new[]
+        {
+            new EnemySense(2f, 0.4f, false), new EnemySense(5f, 1f, false), new EnemySense(12f, 1f, true),
+            new EnemySense(25f, 1f, true), new EnemySense(38f, 1f, false),
+        };
+        var kin = new[] { 2f, 3f, 5f, 8f };
+        var fallen = new FallenSense(4f, 98f);
+        int compared = 0, fired = 0, skipped = 0;
+
+        foreach (var profile in profiles)
+        foreach (var mounted in new[] { false, true })
+        foreach (var ranged in new[] { false, true })
+        foreach (var health in new[] { 1f, 0.4f })
+        foreach (var hurt in new[] { false, true })
+        foreach (var lastKill in new float?[] { null, 99f })
+        foreach (var morale in new[] { 80f, 30f })
+        {
+            RaceAbilitySenses Self() => new RaceAbilitySenses
+            {
+                Now = 100f, HealthFraction = health, Morale = morale, TookDamage = hurt, WieldsRanged = ranged,
+                Mounted = mounted, LastKillAt = lastKill,
+            };
+            var everything = Self();
+            everything.Enemies.AddRange(enemies);
+            everything.KinDistances.AddRange(kin);
+            everything.FallenKin.Add(fallen);
+
+            var gathered = Self();
+            var plan = _sut.PlanScan(profile, gathered);
+            foreach (var enemy in enemies)
+                if (enemy.Distance <= plan.EnemyRange)
+                    gathered.Enemies.Add(new EnemySense(enemy.Distance, enemy.HealthFraction,
+                        plan.ClosingRange > 0f && enemy.Distance <= plan.ClosingRange && enemy.CavalryClosing));
+            if (_sut.RequiresHoldBeforeKin(profile, gathered))
+            {
+                foreach (var distance in kin)
+                    if (distance <= plan.KinRange)
+                        gathered.KinDistances.Add(distance);
+                if (plan.FallenKin)
+                    gathered.FallenKin.Add(fallen);
+            }
+
+            var expected = _sut.FiringTrigger(profile, everything);
+            Assert.AreEqual(expected, _sut.FiringTrigger(profile, gathered),
+                $"{profile.AbilityId}: mounted={mounted} ranged={ranged} health={health} hurt={hurt} kill={lastKill} morale={morale}");
+            compared++;
+            if (expected.HasValue)
+                fired++;
+            if (gathered.Enemies.Count < enemies.Length)
+                skipped++;
+        }
+
+        Assert.AreEqual(18, profiles.Count);
+        Assert.IsTrue(fired > 0 && fired < compared, $"the grid must both fire and not fire ({fired} of {compared})");
+        Assert.IsTrue(skipped > 0, "the plan must leave something out, or it saves nothing");
+    }
 
     // --- tier scaling ---
 
@@ -428,10 +603,54 @@ public class RaceAbilityServiceTests
 
     [TestMethod]
     public void Reduce_TakesThePercentageOff() =>
-        Assert.AreEqual(40f, _sut.Reduce(50f, new RaceAbilityEffects { DamageReductionPercent = 20f }, victimIsMount: false), 0.0001f);
+        Assert.AreEqual(40f, _sut.Reduce(50f, new RaceAbilityEffects { DamageReductionPercent = 20f }, victimIsMount: false, isFallDamage: false), 0.0001f);
 
     [TestMethod]
-    public void Reduce_NoAbility_KeepsTheDamage() => Assert.AreEqual(50f, _sut.Reduce(50f, null, victimIsMount: false), 0.0001f);
+    public void Reduce_NoAbility_KeepsTheDamage() => Assert.AreEqual(50f, _sut.Reduce(50f, null, victimIsMount: false, isFallDamage: false), 0.0001f);
+
+    [TestMethod]
+    public void Reduce_AFall_KeepsItsDamage() =>
+        Assert.AreEqual(50f, _sut.Reduce(50f, new RaceAbilityEffects { DamageReductionPercent = 20f }, victimIsMount: false, isFallDamage: true), 0.0001f);
+
+    [TestMethod]
+    public void Reduce_NaNDamage_PassesItThrough() =>
+        Assert.IsTrue(float.IsNaN(_sut.Reduce(float.NaN, new RaceAbilityEffects { DamageReductionPercent = 20f }, victimIsMount: false, isFallDamage: false)));
+
+    // --- the percentage arithmetic every effect goes through ---
+
+    [DataTestMethod]
+    [DataRow(1f, 20f, 1.2f)]
+    [DataRow(1f, -20f, 0.8f)]
+    [DataRow(0.93f, 0f, 0.93f)]
+    public void Times_AppliesThePercentage(float value, float percent, float expected) =>
+        Assert.AreEqual(expected, RaceAbilityService.Times(value, percent), 0.0001f);
+
+    [TestMethod]
+    public void Times_NaNValue_PassesItThrough() =>
+        Assert.IsTrue(float.IsNaN(RaceAbilityService.Times(float.NaN, 20f)));
+
+    [TestMethod]
+    public void Times_AnOverflow_KeepsTheValue() =>
+        Assert.AreEqual(float.MaxValue, RaceAbilityService.Times(float.MaxValue, 200f));
+
+    [TestMethod]
+    public void Over_FasterAccelerationShortensTheTime() =>
+        Assert.AreEqual(2f, RaceAbilityService.Over(2.5f, 25f), 0.0001f);
+
+    [TestMethod]
+    public void Over_ZeroPercent_KeepsTheValue() =>
+        Assert.AreEqual(2.5f, RaceAbilityService.Over(2.5f, 0f), 0.0001f);
+
+    [DataTestMethod]
+    [DataRow(0.9f, -60f, 0.36f)]
+    [DataRow(0.9f, 25f, 1f)]       // a probability stops at 1
+    [DataRow(0.5f, 20f, 0.6f)]
+    public void Chance_AppliesThePercentageWithinZeroToOne(float value, float percent, float expected) =>
+        Assert.AreEqual(expected, RaceAbilityService.Chance(value, percent), 0.0001f);
+
+    [TestMethod]
+    public void Chance_NaNValue_PassesItThrough() =>
+        Assert.IsTrue(float.IsNaN(RaceAbilityService.Chance(float.NaN, 20f)));
 
     // --- resistances and morale ---
 
@@ -506,18 +725,6 @@ public class RaceAbilityServiceTests
         Assert.IsFalse(Fires(profile));
     }
 
-    [TestMethod]
-    public void ScanRange_IncludesNoEnemyWithinAndTheKinBonus()
-    {
-        var profile = new RaceAbilityProfile
-        {
-            Requires = { T(RaceAbilityTriggerKind.NoEnemyWithin, range: 4f) },
-            KinBonus = new RaceAbilityKinBonus { Radius = 9f, PerKinPercent = 3f, MaxKin = 5 },
-        };
-
-        Assert.AreEqual(9f, _sut.ScanRange(profile), 0.0001f);
-    }
-
     // --- rules the engine boundary asks for ---
 
     [DataTestMethod]
@@ -555,16 +762,18 @@ public class RaceAbilityServiceTests
 
     [TestMethod]
     public void CreditsKill_AnEnemyKilledByALiveSoldierWithAnAbility_Counts() =>
-        Assert.IsTrue(_sut.CreditsKill(victimDied: true, killerIsVictim: false, killerAlive: true, sameTeam: false, killerHasProfile: true));
+        Assert.IsTrue(_sut.CreditsKill(victimDied: true, victimIsSoldier: true, killerIsVictim: false, killerAlive: true, sameTeam: false,
+            killerHasProfile: true));
 
     [DataTestMethod]
-    [DataRow(false, false, true, false, true)]   // the victim lived (fled or was removed)
-    [DataRow(true, true, true, false, true)]     // he killed himself (a fall)
-    [DataRow(true, false, false, false, true)]   // the killer is gone
-    [DataRow(true, false, true, true, true)]     // a teamkill, which vanilla does not count either
-    [DataRow(true, false, true, false, false)]   // the killer has no ability
-    public void CreditsKill_AnyGateFails_NoCredit(bool died, bool self, bool alive, bool sameTeam, bool hasProfile) =>
-        Assert.IsFalse(_sut.CreditsKill(died, self, alive, sameTeam, hasProfile));
+    [DataRow(false, true, false, true, false, true)]   // the victim lived (fled or was removed)
+    [DataRow(true, false, false, true, false, true)]   // a horse: mounts carry no team, so only this gate keeps it out
+    [DataRow(true, true, true, true, false, true)]     // he killed himself (a fall)
+    [DataRow(true, true, false, false, false, true)]   // the killer is gone
+    [DataRow(true, true, false, true, true, true)]     // a teamkill, which vanilla does not count either
+    [DataRow(true, true, false, true, false, false)]   // the killer has no ability
+    public void CreditsKill_AnyGateFails_NoCredit(bool died, bool soldier, bool self, bool alive, bool sameTeam, bool hasProfile) =>
+        Assert.IsFalse(_sut.CreditsKill(died, soldier, self, alive, sameTeam, hasProfile));
 
     [DataTestMethod]
     [DataRow(50f, 100f, 8f, 58f)]
@@ -626,7 +835,25 @@ public class RaceAbilityServiceTests
 
     [TestMethod]
     public void Reduce_AHitOnTheHorse_IsTheHorses() =>
-        Assert.AreEqual(50f, _sut.Reduce(50f, new RaceAbilityEffects { DamageReductionPercent = 20f }, victimIsMount: true), 0.0001f);
+        Assert.AreEqual(50f, _sut.Reduce(50f, new RaceAbilityEffects { DamageReductionPercent = 20f }, victimIsMount: true, isFallDamage: false), 0.0001f);
+
+    [TestMethod]
+    public void MoraleOnEnd_AnActiveWindowEnding_PaysThePrice()
+    {
+        var before = new RaceAbilityState(new RaceAbilityProfile(), RaceAbilityPhase.Active, 100f, 108f,
+            new RaceAbilityEffects { MoraleOnEnd = -8f }, new RaceAbilityEffects());
+
+        Assert.AreEqual(-8f, _sut.MoraleOnEnd(before), 0.0001f);
+    }
+
+    [TestMethod]
+    public void MoraleOnEnd_ASpentPhaseEnding_CostsNothing()
+    {
+        var before = new RaceAbilityState(new RaceAbilityProfile(), RaceAbilityPhase.Spent, 100f, 111f,
+            new RaceAbilityEffects { MoraleOnEnd = -8f }, new RaceAbilityEffects());
+
+        Assert.AreEqual(0f, _sut.MoraleOnEnd(before), 0.0001f);
+    }
 
     [TestMethod]
     public void HoldsNerve_OnlyWithAMoraleFloor()
@@ -645,5 +872,32 @@ public class RaceAbilityServiceTests
 
     [TestMethod]
     public void CountKin_CountsWithinTheRange() =>
-        Assert.AreEqual(2, _sut.CountKin(new System.Collections.Generic.List<float> { 1f, 6f, 6.1f }, 6f));
+        Assert.AreEqual(2, RaceAbilityService.CountKin(new System.Collections.Generic.List<float> { 1f, 6f, 6.1f }, 6f));
+
+    [TestMethod]
+    public void ExtendOnKill_NaNEnd_KeepsTheEnd()
+    {
+        var profile = new RaceAbilityProfile { KillExtensionSeconds = 2f, MaxDurationSeconds = 14f };
+
+        Assert.IsTrue(float.IsNaN(_sut.ExtendOnKill(float.NaN, activatedAt: 100f, profile)));
+        Assert.AreEqual(108f, _sut.ExtendOnKill(108f, activatedAt: float.NaN, profile), 0.0001f);
+    }
+
+    [TestMethod]
+    public void Scale_CapsHealFearAndResistances()
+    {
+        var scaled = _sut.Scale(new RaceAbilityEffects
+        {
+            HealPerKill = 90f, FearOnKillMorale = 90f, FearAuraMoralePerSecond = 45f, KnockdownResistancePercent = 900f,
+            KnockbackResistancePercent = 900f, DismountResistancePercent = 900f, MeleeDamagePercent = 290f,
+        }, 1.25f);
+
+        Assert.AreEqual(100f, scaled.HealPerKill, 0.0001f);
+        Assert.AreEqual(100f, scaled.FearOnKillMorale, 0.0001f);
+        Assert.AreEqual(50f, scaled.FearAuraMoralePerSecond, 0.0001f);
+        Assert.AreEqual(1000f, scaled.KnockdownResistancePercent, 0.0001f);
+        Assert.AreEqual(1000f, scaled.KnockbackResistancePercent, 0.0001f);
+        Assert.AreEqual(1000f, scaled.DismountResistancePercent, 0.0001f);
+        Assert.AreEqual(300f, scaled.MeleeDamagePercent, 0.0001f);
+    }
 }

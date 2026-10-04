@@ -83,8 +83,6 @@ public sealed class RaceAbilityStore<TKey> where TKey : class
 
     public RaceAbilityState? Get(TKey key) => _states.TryGetValue(key, out var state) ? state : null;
 
-    public RaceAbilityEffects? CurrentEffects(TKey key) => Get(key)?.CurrentEffects;
-
     public float? LastFiredAt(TKey key) => Get(key)?.ActivatedAt;
 
     public float? LastKillAt(TKey key) => _lastKillAt.TryGetValue(key, out var at) ? at : (float?)null;
@@ -119,6 +117,27 @@ public sealed class RaceAbilityStore<TKey> where TKey : class
         var state = Get(key);
         if (state != null && state.Phase == RaceAbilityPhase.Active)
             _states[key] = state.With(RaceAbilityPhase.Active, phaseEndsAt);
+    }
+
+    // How many soldiers of each ability are live now, active and spent, in ability-id order (the console's
+    // "live now" line). A soldier back to Ready is not live.
+    public List<(string AbilityId, int Active, int Spent)> LiveCounts()
+    {
+        var counts = new SortedDictionary<string, (int Active, int Spent)>(System.StringComparer.Ordinal);
+        foreach (var pair in _states)
+        {
+            var state = pair.Value;
+            if (state.Phase == RaceAbilityPhase.Ready)
+                continue;
+            counts.TryGetValue(state.Profile.AbilityId, out var count);
+            counts[state.Profile.AbilityId] = state.Phase == RaceAbilityPhase.Active
+                ? (count.Active + 1, count.Spent)
+                : (count.Active, count.Spent + 1);
+        }
+        var live = new List<(string AbilityId, int Active, int Spent)>(counts.Count);
+        foreach (var pair in counts)
+            live.Add((pair.Key, pair.Value.Active, pair.Value.Spent));
+        return live;
     }
 
     public void RecordKill(TKey key, float now) => _lastKillAt[key] = now;

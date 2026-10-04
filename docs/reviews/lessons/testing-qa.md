@@ -1619,3 +1619,15 @@ Plan 038's item type rule maps the `WeaponClass` enum (32 members) to item types
 - **Why missed:** the mutants were chosen per guard from the rules the change added, so a 30-row table counted as one guard and three rows stood for thirty; "none survived" described the sample, not the rule.
 - **Prevent:** for a lookup table that decides behaviour, generate the mutants from the table (each row sent to the failing value, its key mistyped, and sent to another valid value) and write one test row per table row against a hand-written copy of the engine's own table, never against the tool's. Report the mutant count per table, not only the total.
 - **Source:** `docs/reviews/rca-battle-equipment-memory-audit-2026-10-02.md` convergence of the Codex pass, Y1.
+
+### A test that resolves a container graph runs every constructor in it: trace them before choosing the CI category (Race Abilities, 2026-10-04)
+`RaceAbilitiesWiringTests` built the module's container and resolved `RaceAbilityRuntime` with no `RequiresGame` tag. The runtime's constructor builds four boundary parts, and each holds a `new MBList<Agent>()` field initializer; in the reference assemblies hosted CI builds against, `MBList`'s constructor is `throw null`. Locally the real DLLs are present, so the suite stayed green.
+- **Why missed:** the engine construction sat three levels below the test (container, runtime constructor, the parts' field initializers), invisible from the test's own lines. `tests.md` says "even through TAOM code", but only a trace of the resolve finds the constructor that needs the game.
+- **Prevent:** before leaving a container test untagged, follow every constructor the resolve reaches, field initializers included, for an engine type; tag `RequiresGame` on the method when one appears, so the class's source-only tests stay on CI (`RealmBordersWiringTests`, `ArmourAcquisitionWiringTests`, `WandererAllegianceWiringTests` are the shape).
+- **Source:** `docs/reviews/rca-race-abilities-2026-10-04.md` R13 (lenses 1 and 4).
+
+### A culture-id existence test reads the defining document, not every element of that name (Race Abilities, 2026-10-04)
+The live-install test meant to prove every culture key in `race_abilities.json` exists counted any `<Culture id>` element in TAOM's ModuleData as a definition. Seven feature configs use that element for rows of their own, and `charactercreation/cc_body_properties.xml` carries `<Culture id="dale">`, so the exact wrong key the xml-data rule warns about would have passed.
+- **Why missed:** the regex was written for the shape of a definition and never checked against the other files that share the element name; the BannerBearers lesson (keys must be real StringIds) was applied, but its test's narrower source was not copied.
+- **Prevent:** pin culture keys against `taom_spcultures.xml` (assert its root is `SPCultures`) plus the six vanilla ids TAOM re-skins through `spcultures.xslt`. It needs no install, so it runs on CI (`ShippedBannerBearerConfigTests`, `ShippedRaceAbilitiesConfigTests`).
+- **Source:** `docs/reviews/rca-race-abilities-2026-10-04.md` R18 (lens 7).

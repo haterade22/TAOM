@@ -1,3 +1,4 @@
+using System;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.DreadAura.Hooks;
 using TaleWorlds.Library;
@@ -20,9 +21,28 @@ public sealed class RaceAbilityDeaths
 
     public RaceAbilityDeaths(RaceAbilityRuntime runtime) => _runtime = runtime;
 
-    public void OnAgentRemoved(Agent affected, Agent? killer, bool died, Vec2 position, Team? team, int? race, string? culture, float now)
+    // On the main thread this runs inline, inside the engine's removal loop, which guards no behavior: a throw
+    // here would skip the engine's own removal bookkeeping, so it is caught and reported once per battle.
+    public void OnAgentRemoved(Agent affected, bool victimIsSoldier, Agent? killer, bool died, Vec2 position, Team? team,
+        int? race, string? culture, float now)
     {
-        MissionThreadGuard.NoteCall("RaceAbilityDeaths.OnAgentRemoved", _runtime.Logger.LogWarning);
+        try
+        {
+            Handle(affected, victimIsSoldier, killer, died, position, team, race, culture, now);
+        }
+        catch (Exception ex)
+        {
+            _runtime.ReportFailure(nameof(RaceAbilityDeaths), ex);
+        }
+    }
+
+    // Mission end: the buffer would otherwise keep the last fear's victims, and the mission, alive.
+    internal void Clear() => _scratch.Clear();
+
+    private void Handle(Agent affected, bool victimIsSoldier, Agent? killer, bool died, Vec2 position, Team? team,
+        int? race, string? culture, float now)
+    {
+        MissionThreadGuard.NoteCall("RaceAbilityDeaths.OnAgentRemoved", _runtime.Warn);
         var store = _runtime.Store;
         var service = _runtime.Service;
         store.Remove(affected);
@@ -33,7 +53,7 @@ public sealed class RaceAbilityDeaths
             return;
         var killerAlive = killer.IsActive() && AgentSlotIdentity.IsCurrentOccupant(killer);
         var killerProfile = killerAlive ? _runtime.ProfileOf(killer) : null;
-        if (!service.CreditsKill(died, killer == affected, killerAlive, killer.Team == team, killerProfile != null))
+        if (!service.CreditsKill(died, victimIsSoldier, killer == affected, killerAlive, killer.Team == team, killerProfile != null))
             return;
         store.RecordKill(killer, now);
 
@@ -58,14 +78,15 @@ public sealed class RaceAbilityDeaths
         if (healed > health)
         {
             killer.Health = healed;
-            telemetry.Add(abilityId, RaceAbilityStat.HealthHealed, (long)System.Math.Round(healed - health));
+            telemetry.Add(abilityId, RaceAbilityStat.HealthHealed, (long)Math.Round(healed - health));
         }
         if (effects.FearOnKillMorale > 0f && effects.FearOnKillRadius > 0f && killer.Team != null)
             Frighten(killer, position, effects.FearOnKillRadius, effects.FearOnKillMorale, abilityId);
     }
 
-    // Scaled through the registered morale model, as the Dread Aura and the signature strikes do, so tier and
-    // hero resistance apply; gated like them to live AI humans with morale to lose.
+    // Scaled through the registered morale model, as the Dread Aura and the signature strikes do, so in a
+    // campaign the victim's tier and hero resistance apply (Custom Battle's characters all resist alike);
+    // gated like them to live AI humans with morale to lose.
     private void Frighten(Agent killer, Vec2 at, float radius, float morale, string abilityId)
     {
         var moraleModel = MissionGameModels.Current?.BattleMoraleModel;
