@@ -1631,3 +1631,15 @@ The live-install test meant to prove every culture key in `race_abilities.json` 
 - **Why missed:** the regex was written for the shape of a definition and never checked against the other files that share the element name; the BannerBearers lesson (keys must be real StringIds) was applied, but its test's narrower source was not copied.
 - **Prevent:** pin culture keys against `taom_spcultures.xml` (assert its root is `SPCultures`) plus the six vanilla ids TAOM re-skins through `spcultures.xslt`. It needs no install, so it runs on CI (`ShippedBannerBearerConfigTests`, `ShippedRaceAbilitiesConfigTests`).
 - **Source:** `docs/reviews/rca-race-abilities-2026-10-04.md` R18 (lens 7).
+
+### A live-install test checks the engine's load set, not the folder (Race Ability glow, 2026-10-04)
+The test meant to prove the configured spark effect exists globbed every `particle_systems*.xml` in Native's ModuleData. Two of those files (`particle_systems2.xml`, `particle_systems_old.xml`) are registered by no `project.mbproj`, so a name declared only there would pass while the game shows no sparks: the exact failure the test exists to catch.
+- **Why missed:** the folder's files were taken to be what the engine loads; the load set is the module's registration manifest.
+- **Prevent:** read the manifest's rows for the file kind (`type="particle_system"` in each module's `ModuleData/project.mbproj`) and scan only those. The same holds for any engine-registered data a test vouches for.
+- **Source:** `docs/reviews/rca-race-ability-glow-2026-10-04.md` G2 (lens 4 M1, lenses 5 and 7).
+
+### When a compiled default leaks into one config test, isolate its siblings too (Race Ability glow, 2026-10-04)
+`GetConfig_GlowWhenNoOutlineIsAllowed_Warns` passed whatever the dwarf profile said: its JSON had no `cultures` section, so the config object's initializer supplied the compiled culture profiles, six of which glow. A sibling test had failed an hour earlier for the same leak, and only that test was changed.
+- **Why missed:** a surprising failure was treated as one test's problem, not as a property of the test helper.
+- **Prevent:** a config test names every section the code under test reads, empty when unused; when one test surprises you with a default, fix the shared helper and add the negative case (here, a cap of 0 with no glow set raises no warning).
+- **Source:** `docs/reviews/rca-race-ability-glow-2026-10-04.md` G3 (lens 4 L1).

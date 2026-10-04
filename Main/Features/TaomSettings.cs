@@ -1251,6 +1251,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Writes one log line for every wave of abilities and every phase change (active, spent, ready). Off, the log still gets a summary every 30 s of activity and at the end of each battle. For checking that the abilities work; leave off in normal play.")]
     public bool RaceAbilityDebugLog { get; set; } = false;
 
+    [SettingPropertyGroup("Battle Tactics/Race Abilities")]
+    [SettingPropertyBool("Ability Glow and Sparks", Order = 4, RequireRestart = false,
+        HintText = "A soldier whose ability is active wears a coloured outline: red for fury, steel blue for a guard, violet for dread; the speed and aim abilities stay unlit. Sparks burst on the soldier who fires and on a few of the kin who join him. Only the soldiers nearest the camera are outlined (visuals.maxGlowing in race_abilities.json). Drawn on this client only, and hidden while Hide Battle UI is on.")]
+    public bool RaceAbilityGlow { get; set; } = true;
+
     // --- World / Uncapturable Heroes ---
 
     [SettingPropertyGroup("World/Uncapturable Heroes", GroupOrder = 48)]

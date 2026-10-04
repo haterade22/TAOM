@@ -3,10 +3,16 @@ using System.Collections.Generic;
 namespace TAOM.Features.RaceAbilities.Domain;
 
 // The compiled profiles, mirrored by the shipped race_abilities.json. First guesses, to be tuned in a
-// Custom Battle (docs/features/race-abilities.md). The four first cooldowns are Mike's (2026-10-04):
-// berserker 15 s, Uruk-hai 25 s, dwarf and elf 30 s.
+// Custom Battle (docs/features/race-abilities.md). Cooldowns are Mike's 1 to 2 minutes (2026-10-04): his
+// first numbers (berserker 15 s, Uruk-hai 25 s, dwarf and elf 30 s) times four, keeping their order.
 public static class RaceAbilityDefaults
 {
+    // Outline colours by kind of ability, the same on both sides (Mike, 2026-10-04): fury red, guard steel blue,
+    // dread violet. The speed and aim abilities stay dark so a crowd stays readable.
+    private const string Fury = "#E03A2E";
+    private const string Guard = "#5B9BD5";
+    private const string Dread = "#9B59FF";
+
     public static Dictionary<string, RaceAbilityProfile> RaceProfiles() => new Dictionary<string, RaceAbilityProfile>
     {
         ["berserker"] = Berserk(),
@@ -43,7 +49,8 @@ public static class RaceAbilityDefaults
     // through every block, then stand spent for a moment.
     private static RaceAbilityProfile Berserk() => new RaceAbilityProfile
     {
-        AbilityId = "berserk", CooldownSeconds = 15f, DurationSeconds = 6f, SpentSeconds = 3f, RallyRadius = 8f, WarCry = "Yell",
+        AbilityId = "berserk", CooldownSeconds = 60f, DurationSeconds = 6f, SpentSeconds = 3f, RallyRadius = 8f, WarCry = "Yell",
+        Glow = Fury,
         Requires = { T("EnemyWithin", range: 3f) },
         AnyOf = { T("HealthBelow", fraction: 0.75f), T("TookDamage"), T("KinFell", range: 10f, seconds: 5f) },
         Effects = new RaceAbilityEffects
@@ -58,7 +65,8 @@ public static class RaceAbilityDefaults
     // lasts heals, lengthens it and shakes the enemies nearby.
     private static RaceAbilityProfile Bloodlust() => new RaceAbilityProfile
     {
-        AbilityId = "bloodlust", CooldownSeconds = 25f, DurationSeconds = 8f, KillExtensionSeconds = 2f, MaxDurationSeconds = 14f,
+        AbilityId = "bloodlust", CooldownSeconds = 100f, DurationSeconds = 8f, KillExtensionSeconds = 2f, MaxDurationSeconds = 14f,
+        Glow = Fury,
         RallyRadius = 6f, WarCry = "Charge",
         AnyOf = { T("LandedKill", seconds: 1.5f), T("WoundedEnemyWithin", range: 3f, fraction: 0.5f) },
         Effects = new RaceAbilityEffects
@@ -72,7 +80,8 @@ public static class RaceAbilityDefaults
     // guard, slower feet. Kin within 8 m brace with them, so the line locks as one.
     private static RaceAbilityProfile StandFast() => new RaceAbilityProfile
     {
-        AbilityId = "stand_fast", CooldownSeconds = 30f, DurationSeconds = 10f, RallyRadius = 8f, WarCry = "Yell",
+        AbilityId = "stand_fast", CooldownSeconds = 120f, DurationSeconds = 10f, RallyRadius = 8f, WarCry = "Yell",
+        Glow = Guard,
         Requires = { T("EnemyWithin", range: 20f) },
         AnyOf = { T("CavalryClosing", range: 20f), T("EnemiesWithin", range: 5f, count: 3), T("HealthBelow", fraction: 0.5f) },
         Effects = new RaceAbilityEffects
@@ -87,7 +96,7 @@ public static class RaceAbilityDefaults
     // parries faster when a foe closes; a mounted elf's horse quickens too. Kin within 10 m loose with them.
     private static RaceAbilityProfile Swiftness() => new RaceAbilityProfile
     {
-        AbilityId = "swiftness", CooldownSeconds = 30f, DurationSeconds = 8f, RallyRadius = 10f,
+        AbilityId = "swiftness", CooldownSeconds = 120f, DurationSeconds = 8f, RallyRadius = 10f,
         AnyOf = { T("RangedTargetWithin", range: 30f), T("EnemyWithin", range: 6f) },
         Effects = new RaceAbilityEffects
         {
@@ -100,7 +109,8 @@ public static class RaceAbilityDefaults
     // with every orc or goblin near, and burns out into a moment of cowardice.
     private static RaceAbilityProfile Swarm() => new RaceAbilityProfile
     {
-        AbilityId = "swarm", CooldownSeconds = 20f, DurationSeconds = 8f, SpentSeconds = 3f, RallyRadius = 6f, WarCry = "Yell",
+        AbilityId = "swarm", CooldownSeconds = 80f, DurationSeconds = 8f, SpentSeconds = 3f, RallyRadius = 6f, WarCry = "Yell",
+        Glow = Fury,
         KinRaces = { "goblin" },
         KinBonus = new RaceAbilityKinBonus { Radius = 6f, PerKinPercent = 3f, MaxKin = 5 },
         Requires = { T("EnemyWithin", range: 4f), T("KinWithin", range: 6f, count: 3) },
@@ -112,7 +122,7 @@ public static class RaceAbilityDefaults
     // through the orcs' kinRaces; Scurry reads no kin of its own.
     private static RaceAbilityProfile Scurry() => new RaceAbilityProfile
     {
-        AbilityId = "scurry", CooldownSeconds = 20f, DurationSeconds = 6f, SpentSeconds = 3f, RallyRadius = 6f, WarCry = "Grunt",
+        AbilityId = "scurry", CooldownSeconds = 80f, DurationSeconds = 6f, SpentSeconds = 3f, RallyRadius = 6f, WarCry = "Grunt",
         AnyOf = { T("EnemyWithin", range: 8f), T("HealthBelow", fraction: 0.5f) },
         Effects = new RaceAbilityEffects { MoveSpeedPercent = 25f, AccelerationPercent = 30f, SwingSpeedPercent = 20f },
         Spent = new RaceAbilityEffects { MoveSpeedPercent = -15f },
@@ -121,7 +131,8 @@ public static class RaceAbilityDefaults
     // Mordor's black uruks hold the line when it sags: no panic, less damage, a firmer guard.
     private static RaceAbilityProfile IronDiscipline() => new RaceAbilityProfile
     {
-        AbilityId = "iron_discipline", CooldownSeconds = 30f, DurationSeconds = 10f, RallyRadius = 8f, WarCry = "Yell",
+        AbilityId = "iron_discipline", CooldownSeconds = 120f, DurationSeconds = 10f, RallyRadius = 8f, WarCry = "Yell",
+        Glow = Guard,
         Requires = { T("EnemyWithin", range: 5f) },
         AnyOf = { T("HealthBelow", fraction: 0.6f), T("MoraleBelow", fraction: 0.6f), T("EnemiesWithin", range: 4f, count: 3) },
         Effects = new RaceAbilityEffects
@@ -134,7 +145,7 @@ public static class RaceAbilityDefaults
     // Gundabad's pale uruks run their prey down: an enemy at 4 to 15 m sets off a closing sprint.
     private static RaceAbilityProfile HuntersRush() => new RaceAbilityProfile
     {
-        AbilityId = "hunters_rush", CooldownSeconds = 25f, DurationSeconds = 6f, SpentSeconds = 3f, RallyRadius = 6f, WarCry = "Charge",
+        AbilityId = "hunters_rush", CooldownSeconds = 100f, DurationSeconds = 6f, SpentSeconds = 3f, RallyRadius = 6f, WarCry = "Charge",
         Requires = { T("EnemyWithin", range: 15f), T("NoEnemyWithin", range: 4f) },
         Effects = new RaceAbilityEffects
         {
@@ -147,7 +158,8 @@ public static class RaceAbilityDefaults
     // around them.
     private static RaceAbilityProfile NecromancersShadow() => new RaceAbilityProfile
     {
-        AbilityId = "necromancer_shadow", CooldownSeconds = 30f, DurationSeconds = 8f, RallyRadius = 6f, WarCry = "Yell",
+        AbilityId = "necromancer_shadow", CooldownSeconds = 120f, DurationSeconds = 8f, RallyRadius = 6f, WarCry = "Yell",
+        Glow = Dread,
         Requires = { T("EnemiesWithin", range: 6f, count: 2) },
         Effects = new RaceAbilityEffects { FearAuraRadius = 8f, FearAuraMoralePerSecond = 2f, MeleeDamagePercent = 10f },
     };
@@ -157,7 +169,8 @@ public static class RaceAbilityDefaults
     // Gondor's line closes ranks against a crowd or a charge.
     private static RaceAbilityProfile CitadelGuard() => new RaceAbilityProfile
     {
-        AbilityId = "citadel_guard", CooldownSeconds = 30f, DurationSeconds = 10f, RallyRadius = 8f, WarCry = "Yell",
+        AbilityId = "citadel_guard", CooldownSeconds = 120f, DurationSeconds = 10f, RallyRadius = 8f, WarCry = "Yell",
+        Glow = Guard,
         Requires = { T("EnemyWithin", range: 15f) },
         AnyOf = { T("EnemiesWithin", range: 5f, count: 2), T("CavalryClosing", range: 15f), T("HealthBelow", fraction: 0.5f) },
         Effects = new RaceAbilityEffects
@@ -170,7 +183,7 @@ public static class RaceAbilityDefaults
     // Rohan's riders: in the saddle with the enemy ahead, the whole eored spurs on.
     private static RaceAbilityProfile ForthEorlingas() => new RaceAbilityProfile
     {
-        AbilityId = "forth_eorlingas", CooldownSeconds = 30f, DurationSeconds = 10f, RallyRadius = 12f, WarCry = "Charge",
+        AbilityId = "forth_eorlingas", CooldownSeconds = 120f, DurationSeconds = 10f, RallyRadius = 12f, WarCry = "Charge",
         Requires = { T("Mounted"), T("EnemyWithin", range: 30f) },
         Effects = new RaceAbilityEffects
         {
@@ -182,7 +195,7 @@ public static class RaceAbilityDefaults
     // Dale's bowmen, Bard's heirs: a target in range and their aim steadies.
     private static RaceAbilityProfile BardsAim() => new RaceAbilityProfile
     {
-        AbilityId = "bards_aim", CooldownSeconds = 30f, DurationSeconds = 8f, RallyRadius = 10f,
+        AbilityId = "bards_aim", CooldownSeconds = 120f, DurationSeconds = 8f, RallyRadius = 10f,
         Requires = { T("RangedTargetWithin", range: 40f) },
         Effects = new RaceAbilityEffects
         {
@@ -193,7 +206,8 @@ public static class RaceAbilityDefaults
     // Dunland's hillmen: a wound or a fallen clansman in melee turns them wild.
     private static RaceAbilityProfile HillClanFury() => new RaceAbilityProfile
     {
-        AbilityId = "hillclan_fury", CooldownSeconds = 20f, DurationSeconds = 6f, SpentSeconds = 3f, RallyRadius = 6f, WarCry = "Yell",
+        AbilityId = "hillclan_fury", CooldownSeconds = 80f, DurationSeconds = 6f, SpentSeconds = 3f, RallyRadius = 6f, WarCry = "Yell",
+        Glow = Fury,
         Requires = { T("EnemyWithin", range: 3f) },
         AnyOf = { T("TookDamage"), T("KinFell", range: 8f, seconds: 5f) },
         Effects = new RaceAbilityEffects
@@ -206,7 +220,7 @@ public static class RaceAbilityDefaults
     // The Haradrim: venomed arrows at range, a bite in close.
     private static RaceAbilityProfile SerpentsVenom() => new RaceAbilityProfile
     {
-        AbilityId = "serpent_venom", CooldownSeconds = 30f, DurationSeconds = 8f, RallyRadius = 10f,
+        AbilityId = "serpent_venom", CooldownSeconds = 120f, DurationSeconds = 8f, RallyRadius = 10f,
         AnyOf = { T("RangedTargetWithin", range: 35f), T("EnemyWithin", range: 4f) },
         Effects = new RaceAbilityEffects { RangedDamagePercent = 20f, AimErrorPercent = -15f, MeleeDamagePercent = 10f },
     };
@@ -214,7 +228,8 @@ public static class RaceAbilityDefaults
     // Rhun's Easterlings lock their wall against a crowd or horse.
     private static RaceAbilityProfile WainriderWall() => new RaceAbilityProfile
     {
-        AbilityId = "wainrider_wall", CooldownSeconds = 30f, DurationSeconds = 10f, RallyRadius = 8f, WarCry = "Yell",
+        AbilityId = "wainrider_wall", CooldownSeconds = 120f, DurationSeconds = 10f, RallyRadius = 8f, WarCry = "Yell",
+        Glow = Guard,
         Requires = { T("EnemyWithin", range: 15f) },
         AnyOf = { T("EnemiesWithin", range: 5f, count: 2), T("CavalryClosing", range: 15f) },
         Effects = new RaceAbilityEffects
@@ -226,7 +241,8 @@ public static class RaceAbilityDefaults
     // Umbar's corsairs: blooded or bloodied in close, they press like a boarding party.
     private static RaceAbilityProfile CorsairRaid() => new RaceAbilityProfile
     {
-        AbilityId = "corsair_raid", CooldownSeconds = 20f, DurationSeconds = 6f, SpentSeconds = 3f, RallyRadius = 6f, WarCry = "Charge",
+        AbilityId = "corsair_raid", CooldownSeconds = 80f, DurationSeconds = 6f, SpentSeconds = 3f, RallyRadius = 6f, WarCry = "Charge",
+        Glow = Fury,
         Requires = { T("EnemyWithin", range: 4f) },
         AnyOf = { T("TookDamage"), T("LandedKill", seconds: 2f) },
         Effects = new RaceAbilityEffects { SwingSpeedPercent = 20f, MoveSpeedPercent = 15f, MeleeDamagePercent = 10f },
@@ -236,7 +252,8 @@ public static class RaceAbilityDefaults
     // Khand's Variags: close in, they fight savage and hard to unseat.
     private static RaceAbilityProfile VariagFerocity() => new RaceAbilityProfile
     {
-        AbilityId = "variag_ferocity", CooldownSeconds = 25f, DurationSeconds = 8f, RallyRadius = 8f, WarCry = "Charge",
+        AbilityId = "variag_ferocity", CooldownSeconds = 100f, DurationSeconds = 8f, RallyRadius = 8f, WarCry = "Charge",
+        Glow = Fury,
         Requires = { T("EnemyWithin", range: 6f) },
         Effects = new RaceAbilityEffects
         {
@@ -247,7 +264,8 @@ public static class RaceAbilityDefaults
     // The Shadow's men (Mordor's and Dol Guldur's human soldiers): a kill or a wound hardens them into dread.
     private static RaceAbilityProfile ServantsOfTheShadow() => new RaceAbilityProfile
     {
-        AbilityId = "shadow_servants", CooldownSeconds = 30f, DurationSeconds = 8f, RallyRadius = 6f, WarCry = "Yell",
+        AbilityId = "shadow_servants", CooldownSeconds = 120f, DurationSeconds = 8f, RallyRadius = 6f, WarCry = "Yell",
+        Glow = Dread,
         Requires = { T("EnemyWithin", range: 4f) },
         AnyOf = { T("LandedKill", seconds: 2f), T("HealthBelow", fraction: 0.5f) },
         Effects = new RaceAbilityEffects

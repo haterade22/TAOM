@@ -9,9 +9,10 @@ namespace TAOM.Features.RaceAbilities.Hooks;
 
 /// <summary>
 /// The race abilities' mission tick: ages every ability through its phases and refreshes whoever changed
-/// (settling a burnt-out frenzy's morale price), then every half second tops up morale floors and pulses
-/// fear auras (strongest aura per enemy, scaled through the registered morale model as the Dread Aura does),
-/// posts the message-log waves, and writes the battle report every 30 s of activity. Main thread.
+/// (settling a burnt-out frenzy's morale price), then every half second tops up morale floors, pulses fear
+/// auras (strongest aura per enemy, scaled through the registered morale model as the Dread Aura does) and
+/// repaints the outlines, posts the message-log waves, and writes the battle report every 30 s of activity.
+/// Main thread.
 /// Boundary code, game-tested (ADR-008).
 /// </summary>
 public sealed class RaceAbilityTicker
@@ -42,6 +43,7 @@ public sealed class RaceAbilityTicker
             HoldMoraleFloors();
             PulseAuras();
             _runtime.Fallen.Forget(now);
+            _runtime.Visuals.Refresh();
         }
 
         _due.Clear();
@@ -82,6 +84,9 @@ public sealed class RaceAbilityTicker
             agent.UpdateAgentProperties();
             agent.MountAgent?.UpdateAgentProperties();
         }
+        // The outline ends with the window, not on the next pulse.
+        if (transition.Before.Phase == RaceAbilityPhase.Active)
+            _runtime.Visuals.Forget(agent);
         if (_runtime.Settings.DebugLog)
             _runtime.Logger.LogInfo($"[RaceAbilities] {abilityId} on {agent.Name}: {transition.Before.Phase} -> {transition.After.Phase} at {now:0.0} s");
     }

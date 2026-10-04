@@ -855,6 +855,28 @@ public class RaceAbilityServiceTests
         Assert.AreEqual(0f, _sut.MoraleOnEnd(before), 0.0001f);
     }
 
+    private static RaceAbilityState GlowState(RaceAbilityPhase phase, uint? color) =>
+        new RaceAbilityState(new RaceAbilityProfile { GlowColor = color }, phase, 100f, 108f,
+            new RaceAbilityEffects(), new RaceAbilityEffects());
+
+    [TestMethod]
+    public void GlowFor_AnActiveAbilityWithAColour_ReturnsTheColour() =>
+        Assert.AreEqual(0xFFE03A2Eu, _sut.GlowFor(GlowState(RaceAbilityPhase.Active, 0xFFE03A2E)));
+
+    [DataTestMethod]
+    [DataRow(RaceAbilityPhase.Spent)]
+    [DataRow(RaceAbilityPhase.Ready)]
+    public void GlowFor_NotActive_IsDark(RaceAbilityPhase phase) =>
+        Assert.IsNull(_sut.GlowFor(GlowState(phase, 0xFFE03A2E)));
+
+    [TestMethod]
+    public void GlowFor_AnAbilityWithNoColour_IsDark() =>
+        Assert.IsNull(_sut.GlowFor(GlowState(RaceAbilityPhase.Active, null)));
+
+    [TestMethod]
+    public void GlowFor_NoState_IsDark() =>
+        Assert.IsNull(_sut.GlowFor(null));
+
     [TestMethod]
     public void HoldsNerve_OnlyWithAMoraleFloor()
     {

@@ -930,3 +930,15 @@ Race Abilities credited a kill when the victim died at the hand of a live soldie
 - **Why missed:** the credit was modelled on `KillCount`, and the same-team gate was assumed to stop a horse; nobody listed what the removal callback carries.
 - **Prevent:** for every engine callback or query a rule reads (removals, hits, proximity scans), write down the agent kinds that arrive (soldier, mount, riderless creature, the player) and the value of each field the rule reads for each: a horse is `Character == null` and `Team == null`. Put the kind in the rule's inputs and pin each kind with a test row.
 - **Source:** `docs/reviews/rca-race-abilities-2026-10-04.md` R14 (lens 2 F1, lens 5 L7).
+
+### Trace the mounted branch before documenting a resistance or a knock decision (Race Abilities, 2026-10-04)
+The feature doc said a non-dismounting weapon's dismount "reads knockdown resistance instead", and described knockdown and knock-back with no mention of riders. `Mission`'s blow code asks a victim with a mount only `DecideAgentDismountedByBlow`, which rolls dismount resistance first and, whenever that roll fails, knockdown resistance (`MissionCombatMechanicsHelper.cs:36-45`); either unhorses him. Knock-back and knock-down as such run only for a victim on foot, and the native charge filter never picks a mounted victim (static read).
+- **Why missed:** the rows were written from the on-foot path, and the dismount path was summarised without reading its fall-through.
+- **Prevent:** for every agent-level decision a doc or rule states, read both branches of the caller (mounted and on foot) and say which one the sentence covers.
+- **Source:** `docs/reviews/rca-race-ability-glow-2026-10-04.md` K3 and K4 (the Khand research).
+
+### Bound a config string before it reaches a native call (Race Ability glow, 2026-10-04)
+`race_abilities.json`'s `visuals.burst` went from a trim straight into `ParticleSystemManager.GetRuntimeIdByName`, whose native side copies the name into a 64-byte buffer with `strcpy_s`. A hand-edited name of 64 bytes or more takes the C runtime's invalid-parameter path.
+- **Why missed:** the provider rule covered numbers, ordering and strings the code branches on; a string handed to the engine was none of those, and its existence was to be checked on first use.
+- **Prevent:** a config string that reaches a native call is bounded at load to the engine's buffer and the character set its own data uses (here `^[A-Za-z0-9_]{1,63}$`, which all 217 registered effect names meet), and reverts with a warning otherwise.
+- **Source:** `docs/reviews/rca-race-ability-glow-2026-10-04.md` G1 (lenses 2, 5 and 7).

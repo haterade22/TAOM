@@ -6,9 +6,10 @@ AI soldiers fight with a battle ability for their race, or for men their culture
 on each soldier waits for his moment, fires the ability for a few seconds, and kin standing near him whose ability
 is ready fire with him. Berserkers go berserk when hurt in melee, Uruk-hai fall into bloodlust on a kill, dwarves
 stand fast against a charge or a crowd, elves quicken, orcs swarm, goblins scurry, Gondor closes ranks, Rohan's
-riders spur on, and so on: 18 abilities, one generic tree. The numbers live in `race_abilities.json`. Logging and
-the console command `taom.print_race_abilities` show what each ability did in a battle. Issue: #730 (the feature),
-#731 (the translation of its 20 strings).
+riders spur on, and so on: 18 abilities, one generic tree, each on a cooldown of one to two minutes. While a fury,
+guard or dread ability is active the soldier wears a coloured outline, and sparks burst as an ability fires. The
+numbers live in `race_abilities.json`. Logging and the console command `taom.print_race_abilities` show what each
+ability did in a battle. Issue: #730 (the feature), #731 (the translation of its 20 strings).
 
 ## Why This Exists
 
@@ -82,7 +83,7 @@ leaf finishes on the pass it starts, so each pass is one decision; a `SleepTask`
 and halve the decision rate. The tree resolves the runtime once in `BuildTree` and passes it to the task (the warg
 tree's shape). A pass that throws logs once per battle and fires nothing, instead of stopping the soldier's tree.
 
-The engine side is five small boundary classes around one runtime, and every rule they apply is
+The engine side is six small boundary classes around one runtime, and every rule they apply is
 `RaceAbilityService`'s:
 
 | Class | Does |
@@ -90,8 +91,9 @@ The engine side is five small boundary classes around one runtime, and every rul
 | `RaceAbilityRuntime` | Holds the store, telemetry, fallen-kin memory and wave counter; resolves profiles and kinship; prints the status; clears everything at mission end |
 | `RaceAbilitySensor` | Reads health, morale, mount and weapon, then what the scan plan asks for: enemies, kin, fallen kin |
 | `RaceAbilityActivator` | Fires the ability and the rally, scales each soldier for his tier (and crowd, for a kin bonus), refreshes his stats and his horse's, shouts |
-| `RaceAbilityTicker` | Ages every ability (Active, Spent, Ready), settles a burnt-out frenzy's morale price, tops up morale floors, pulses fear auras, posts the wave messages and the 30 s report |
-| `RaceAbilityDeaths` | Forgets the dead, remembers fallen kin, credits the killer of a soldier (extension, heal, fear on kill) |
+| `RaceAbilityTicker` | Ages every ability (Active, Spent, Ready), settles a burnt-out frenzy's morale price, tops up morale floors, pulses fear auras, repaints the outlines, posts the wave messages and the 30 s report |
+| `RaceAbilityDeaths` | Forgets the dead (and clears a fallen soldier's outline), remembers fallen kin, credits the killer of a soldier (extension, heal, fear on kill) |
+| `RaceAbilityVisuals` | Outlines the active soldiers nearest the camera, sparks as an ability fires (Glow and sparks below) |
 
 The effects reach the engine through six shared models, each calling one `RaceAbilityHooks` method per seam:
 
@@ -110,6 +112,45 @@ The effects reach the engine through six shared models, each calling one `RaceAb
 every crush-through (a troll's included), a raging swing breaks any block, and with neither live the existing
 rules decide. Hold beats force. The engine never crushes a chamber block, Berserk or not.
 
+### Glow and sparks
+
+Mike's pick (2026-10-04): an outline for the whole window, and a burst of sparks as the ability fires.
+
+- **Colour by kind, the same on both sides.** Fury red `#E03A2E`: Berserk, Bloodlust, Swarm, Hill-clan Fury,
+  Corsair Raid, Variag Ferocity. Guard steel blue `#5B9BD5`: Stand Fast, Iron Discipline, Guard of the Citadel,
+  Wainrider Wall. Dread violet `#9B59FF`: Shadow of the Necromancer, Servants of the Shadow. The six speed and aim
+  abilities (Swiftness, Scurry, Hunter's Rush, Forth Eorlingas, Bard's Aim, Serpent's Venom) stay dark, so a
+  crowd stays readable. Only the active phase glows: a spent soldier is dark, so an outline means "dangerous now".
+- **Who.** The `visuals.maxGlowing` (40) active soldiers nearest the camera, picked again and repainted every half
+  second on the ticker's pulse, and at once after a glowing ability's wave fires (`RaceAbilityGlowLedger`). An
+  outline ends the moment its window does. Repainting is required: the outline is painted on the soldier's meshes
+  as they are, and an equipment rebuild (a soldier made banner bearer) replaces them
+  (`Agent.UpdateSpawnEquipmentAndRefreshVisuals`). Vanilla's multiplayer outline view repaints at the same rhythm.
+  Only the rider's visuals are painted; his horse is a separate agent.
+- **Sparks.** `visuals.burst` (`psys_game_sparkle_a`, a vanilla effect) plays once at the chest of the soldier who
+  fires and of every third kinsman who joins him, the war cry's crowd rule; it is fired and forgotten, as vanilla's
+  own bursts are. The engine answers -1 for an effect name it does not know (its native lookup), which turns the
+  sparks off with one warning; `RaceAbilitiesLiveKeyTests` checks the shipped name against the particle files the
+  game loads.
+- **Engine calls.** `MBAgentVisuals.SetContourColor(uint? color, bool alwaysVisible)` (an opaque `0xFFRRGGBB`; null
+  clears it, 0 does not; `visuals.seeThrough` is the second argument) and `Scene.CreateBurstParticle(int,
+  MatrixFrame)` with `ParticleSystemManager.GetRuntimeIdByName`. Nothing in vanilla single player or Custom Battle
+  outlines soldiers in v1.5.3: `MissionAgentContourControllerView` sits in every mission but is compiled with
+  `IsEnabled = false`. The engine keeps one colour per mesh and the last writer wins, so an engine bump should
+  re-check for a new writer.
+- **Safety.** The engine's outline setters check nothing, so a call on a deleted or recycled soldier's visuals can
+  fault natively. Every write passes vanilla's own guard (not deleted, valid visuals) plus slot identity (#592),
+  and runs only on the main thread (#634): from the activator, the ticker and the deaths handler, which runs inline
+  inside the engine's removal callback when that arrives on the main thread and is parked for the next mission tick
+  when it does not. A fallen soldier's outline is cleared on the death path, while his body is still his. Each
+  visual call catches its own failures and logs once per battle on its own line, so it can never abort a rally, a
+  phase change or a death. The effect name reaches a native 64-byte buffer, so the config bounds it.
+- **Off.** MCM `Ability Glow and Sparks` switches both, and the outlines clear on the next pulse. Hide Battle UI
+  hides both, as it hides vanilla's own outlines.
+- **UNVERIFIED until seen in game:** the look (outline weight at a distance, the see-through setting), the frame
+  cost of 40 outlined soldiers, that a re-equipped banner bearer is painted again within half a second, and whether
+  a rider's outline also reaches his horse through the engine's entity tree.
+
 ## Engine levers
 
 Checked against the v1.5.3 decompile (`SandboxAgentStatCalculateModel`, `CustomBattleAgentStatCalculateModel`,
@@ -124,9 +165,9 @@ Checked against the v1.5.3 decompile (`SandboxAgentStatCalculateModel`, `CustomB
 | `drawSpeedPercent` | `ThrustOrRangedReadySpeedMultiplier` (the skill-driven bow draw, throw and thrust readying) | rewritten every update |
 | `reloadSpeedPercent`, `missileSpeedPercent` | `ReloadSpeed`, `MissileSpeedMultiplier` | rewritten every update. Whether `MissileSpeedMultiplier` speeds a bow's arrows is UNVERIFIED, though likely: vanilla's own wet-weather penalty writes it for bows and crossbows |
 | `blockAbilityPercent`, `parryAbilityPercent`, `attackEagernessPercent`, `aimErrorPercent` | `AIBlockOnDecideAbility`, `AIParryOnDecideAbility`, `AIAttackOnDecideChance` (each kept in 0 to 1), `AiShooterError` | rewritten in `SetAiRelatedProperties` on every update; how native weighs `AiShooterError` (base 0.008) is UNVERIFIED |
-| `knockdownResistancePercent` | `GetKnockDownResistance` | the engine floors a soldier when the hit reaches `HealthLimit x (resistance - penetration)`, on weapon hits and on a horse charge that knocked him back. In campaign, Combat Mechanics floors any victim of a full-speed charge whose weight times 6 is at most the horse's and rider's before it reads resistance (`ChargeKnockdownService`, Branch A): every man, while dwarves and the uruk races are heavy enough to stay in Branch B, where resistance counts. Custom Battle reads the resistance on every charge |
-| `knockbackResistancePercent` | `GetKnockBackResistance` | read only for missiles, crush-throughs and wide-grip thrusts, and never for a hit that is shrugged off: a frontal horse charge and a kick or shield bash knock back regardless. So Stand Fast carries none: its shrug-off already prevents every knock-back that reads it |
-| `dismountResistancePercent` | `GetDismountResistance` | the dismount decision for a weapon that can dismount; any other knockdown-capable weapon's dismount reads knockdown resistance instead |
+| `knockdownResistancePercent` | `GetKnockDownResistance` | on foot, the engine floors a soldier when the hit reaches `HealthLimit x (resistance - penetration)`, on weapon hits and on a horse charge that knocked him back. In campaign, Combat Mechanics floors any victim of a full-speed charge whose weight times 6 is at most the horse's and rider's before it reads resistance (`ChargeKnockdownService`, Branch A): every man, while dwarves and the uruk races are heavy enough to stay in Branch B, where resistance counts. Custom Battle reads the resistance on every charge. A rider is never floored as such: his knockdown resistance is the second roll of the dismount decision (below) |
+| `knockbackResistancePercent` | `GetKnockBackResistance` | read only for a soldier on foot, for missiles, crush-throughs and wide-grip thrusts, and never for a hit that is shrugged off: a frontal horse charge and a kick or shield bash knock back regardless. So Stand Fast carries none: its shrug-off already prevents every knock-back that reads it |
+| `dismountResistancePercent` | `GetDismountResistance` | a rider's first roll when a blow can dismount (a thrust with the dismount flag, or a hook swung by a man on foot, to the head, neck, chest, abdomen or shoulders; in campaign also a hero's bolt with the Hammer Bolts perk or throw with Knock Off); if he keeps his seat, a blow that can knock down then rolls his knockdown resistance (`MissionCombatMechanicsHelper.DecideAgentDismountedByBlow`), and either roll unhorses him |
 | `meleeDamagePercent`, `rangedDamagePercent`, `damageReductionPercent` | the damage models' amplification and reduction steps | Custom Battle reads no driven-property damage bonus. They also scale damage to and from shields (Berserk breaks shields faster) and to objects; a fall keeps its damage both ways, and a hit on the soldier's horse is the horse's |
 | `forceCrushThrough`, `holdAgainstCrush` | `DecideCrushedThrough` | a verdict, not a stat |
 | `shrugOffBlows` | `DecideAgentShrugOffBlow` | on a weapon or missile hit: no flinch, no knockdown, knock-back or dismount, and the attacker's weapon bounces, as vanilla's shrug-off does. A horse charge never asks, so it still knocks a Stand Fast dwarf back (his knockdown resistance keeps him on his feet), and a kick or shield bash still knocks back. It also spares the soldier Sauron's guaranteed slam knockdown |
@@ -146,9 +187,26 @@ reduction instead.
 - **Riderless creatures.** The sensor counts humanoid enemies only, and the engine's proximity query appears to
   return nothing else anyway (UNVERIFIED in native), so a riderless spider or warg is invisible to the enemy
   triggers.
-- **Khand and Umbar field other kingdoms' troops.** Khand recruits Rhun's roster, so its soldiers fire Wainrider
-  Wall and Variag Ferocity reaches only Khand's lords and town guard. Umbar's levies and garrisons are Harad troops
-  and fire Serpent's Venom; Corsair Raid reaches the `umbar_elite` line and the corsair bandits.
+- **Khand and Umbar field other kingdoms' troops.** Khand recruits Rhun's roster, so its soldiers, cavalry and
+  chariots included, carry `khuzait` and fire Wainrider Wall. Variag Ferocity reaches only `battania` characters:
+  Khand's lords (on chargers), the `caravan_master_khand` with each Khand notable's caravan, the
+  `caravan_guard_khand` mercenaries Khand's taverns hire out (to the player, lords and caravans), and the Variag
+  Ravagers (vanilla's Wolfskins outlaws, kept `battania`, on foot); perhaps also `guard_khand` and vanilla's
+  battania wanderers (UNVERIFIED). The two never rally each other: a rally takes the same profile. Mike's decision
+  (2026-10-04): leave Khand's ability as it is; he expects Khand's armies to use a lot of cavalry and chariots. As
+  shipped, a Khand lord's party (Rhun's default template) has one cavalry stack in eight, and chariots come only by
+  upgrading along Rhun's Wain line. Umbar's militia, patrols, villagers and rebels are Harad troops, and its
+  garrisons start as Harad troops; they fire Serpent's Venom. Umbar's own recruits (`aux_basic` and the
+  `umbar_elite` line), its lords and their armies carry `umbar` and fire Corsair Raid, as the corsair bandits do.
+- **Riders and charioteers.** On a horse or a chariot, Wainrider Wall and Variag Ferocity act on the rider alone:
+  neither protects, speeds or strengthens the mount (Combat Mechanics already scales charge damage by the rider's
+  culture). A rider is never knocked back or down as such. A blow that can dismount him rolls his dismount
+  resistance first; if he keeps his seat, a blow that can knock down rolls his knockdown resistance; either
+  unhorses him. So Variag Ferocity guards both rolls and Wainrider Wall only the second. No horse or chariot charge
+  strikes a mounted soldier at all (read in the engine's native code, not yet seen in play), so Wainrider Wall's
+  damage reduction and knockdown resistance meet a charge only once he is on foot. The swing bonuses work in the
+  saddle, Variag Ferocity's melee bonus covers the couched lance, and thrown spears get no bonus. Whether the
+  block bonus changes how a mounted AI fights is UNVERIFIED.
 
 ## Configuration
 
@@ -169,6 +227,8 @@ Loaded once per process: an edit needs a restart. A missing or unreadable file g
 | `killExtensionSeconds`, `maxDurationSeconds` | each kill while active adds time, never past the maximum from activation (an extension without room to extend warns) |
 | `rallyRadius` | ready kin of the same profile and team within it fire too |
 | `warCry` | `Yell`, `Charge`, `Victory`, `Grunt` or empty, in the soldier's own voice set |
+| `glow` | the outline colour while the ability is active, `#RRGGBB` in any case, or empty for none; anything else warns and draws none |
+| `visuals` | `maxGlowing` (0 to 200, default 40): at most this many soldiers outlined, the nearest to the camera; a profile's `glow` with `maxGlowing` 0 warns. `seeThrough`: draw the outline through walls and soldiers. `burst`: the engine particle effect played as an ability fires, or empty for none; 1 to 63 letters, digits or underscores (the engine copies it into a 64-byte buffer), else it reverts with a warning; checked against the engine on first use, and an unknown name turns the sparks off with one warning |
 | `kinRaces` | races that count as kin for `KinWithin`, `KinFell` and the kin bonus, besides the same profile (never widens the rally); a list none of those reads warns |
 | `kinBonus` | `radius`, `perKinPercent`, `maxKin`: extra melee damage per kinsman close by at activation (`perKinPercent` 0 warns) |
 | `requires`, `anyOf` | every `requires` trigger holds and, when `anyOf` is not empty, one of them does |
@@ -183,35 +243,38 @@ comma-separated list is rejected. Ranges are capped at 40 m and event windows at
 
 ### Current Values
 
-First guesses, to be tuned in a Custom Battle. The four first cooldowns are Mike's (2026-10-04).
+First guesses, to be tuned in a Custom Battle. The cooldowns are Mike's 1 to 2 minutes (2026-10-04): his
+first four numbers (berserker 15 s, Uruk-hai 25 s, dwarf and elf 30 s) times four, keeping their order. The
+effects are a tier-3 soldier's: `tierScaling` runs them from x0.85 to x1.2 by tier (Rhun's chariot riders
+get x1.2), and heroes take x1.25.
 
 **Races**
 
 | Race | Ability | Cooldown / length | Fires when | Effect | Price |
 |---|---|---|---|---|---|
-| `berserker` | Berserk | 15 s / 6 s | enemy within 3 m and (health 75% or less, or took damage, or kin fell within 10 m in 5 s) | swings crush through; +20% melee; +15% swing; +10% speed; no flinch; cannot panic | block and parry -60%; 3 s spent: -20% speed, -10% swing |
-| `uruk_hai` | Bloodlust | 25 s / 8 s, +2 s a kill to 14 s | a kill in 1.5 s, or an enemy within 3 m at half health | +15% melee; +10% swing; knockdown resistance x2; 8 health a kill; each kill frightens enemies within 6 m | block -20% |
-| `dwarf` | Stand Fast | 30 s / 10 s | enemy within 20 m and (cavalry closing within 20 m, or 3 enemies within 5 m, or health half) | no crush-through against him; no flinch; 20% less damage; knockdown resistance x3; block +25%; cannot panic | -15% speed |
-| `elf` | Swiftness of the Eldar | 30 s / 8 s | a target within 30 m with a bow, or an enemy within 6 m | +20% speed; +25% acceleration and draw; +15% reload; +10% arrow speed; aim error -30%; parry +20%; horse +10% | none |
-| `orc` | Swarm | 20 s / 8 s | enemy within 4 m and 3 kin (orcs or goblins) within 6 m | +5% melee, +3% per kinsman within 6 m (up to 5); +10% swing | morale -8 when it ends; 3 s spent: -10% speed |
-| `goblin` | Scurry | 20 s / 6 s | enemy within 8 m, or health half | +25% speed; +30% acceleration; +20% swing | 3 s spent: -15% speed |
-| `uruk` | Iron Discipline | 30 s / 10 s | enemy within 5 m and (health 60%, or morale 60, or 3 enemies within 4 m) | cannot panic (morale held at 60); 15% less damage; block +15%; knock-back resistance x2 | -10% speed |
-| `pale_uruk` | Hunter's Rush | 25 s / 6 s | an enemy at 4 to 15 m | +30% speed; +40% acceleration; knockdown resistance x2; +10% melee | 3 s spent: -15% speed |
-| `dg_uruk` | Shadow of the Necromancer | 30 s / 8 s | 2 enemies within 6 m | enemies within 8 m lose 2 morale a second; +10% melee | none |
+| `berserker` | Berserk | 60 s / 6 s | enemy within 3 m and (health 75% or less, or took damage, or kin fell within 10 m in 5 s) | swings crush through; +20% melee; +15% swing; +10% speed; no flinch; cannot panic | block and parry -60%; 3 s spent: -20% speed, -10% swing |
+| `uruk_hai` | Bloodlust | 100 s / 8 s, +2 s a kill to 14 s | a kill in 1.5 s, or an enemy within 3 m at half health | +15% melee; +10% swing; knockdown resistance x2; 8 health a kill; each kill frightens enemies within 6 m | block -20% |
+| `dwarf` | Stand Fast | 120 s / 10 s | enemy within 20 m and (cavalry closing within 20 m, or 3 enemies within 5 m, or health half) | no crush-through against him; no flinch; 20% less damage; knockdown resistance x3; block +25%; cannot panic | -15% speed |
+| `elf` | Swiftness of the Eldar | 120 s / 8 s | a target within 30 m with a bow, or an enemy within 6 m | +20% speed; +25% acceleration and draw; +15% reload; +10% arrow speed; aim error -30%; parry +20%; horse +10% | none |
+| `orc` | Swarm | 80 s / 8 s | enemy within 4 m and 3 kin (orcs or goblins) within 6 m | +5% melee, +3% per kinsman within 6 m (up to 5); +10% swing | morale -8 when it ends; 3 s spent: -10% speed |
+| `goblin` | Scurry | 80 s / 6 s | enemy within 8 m, or health half | +25% speed; +30% acceleration; +20% swing | 3 s spent: -15% speed |
+| `uruk` | Iron Discipline | 120 s / 10 s | enemy within 5 m and (health 60%, or morale 60, or 3 enemies within 4 m) | cannot panic (morale held at 60); 15% less damage; block +15%; knock-back resistance x2 | -10% speed |
+| `pale_uruk` | Hunter's Rush | 100 s / 6 s | an enemy at 4 to 15 m | +30% speed; +40% acceleration; knockdown resistance x2; +10% melee | 3 s spent: -15% speed |
+| `dg_uruk` | Shadow of the Necromancer | 120 s / 8 s | 2 enemies within 6 m | enemies within 8 m lose 2 morale a second; +10% melee | none |
 
 **Human cultures** (men only)
 
 | Culture | Ability | Cooldown / length | Fires when | Effect | Price |
 |---|---|---|---|---|---|
-| `gondor`, `gondor_soldiers` | Guard of the Citadel | 30 s / 10 s | enemy within 15 m and (2 within 5 m, or cavalry closing, or health half) | block +30%; 10% less damage; knock-back resistance x2; cannot panic | -10% speed |
-| `vlandia` (Rohan) | Forth Eorlingas | 30 s / 10 s | mounted, enemy within 30 m | horse +15%; +15% melee; +10% swing; dismount resistance x2.5; cannot panic | none |
-| `sturgia` (Dale) | Bard's Aim | 30 s / 8 s | a target within 40 m with a bow | +20% draw; aim error -40%; +15% arrow speed; +10% ranged damage | none |
-| `empire`, `dunland_raiders` (Dunland) | Hill-clan Fury | 20 s / 6 s | enemy within 3 m and (took damage, or kin fell within 8 m) | +15% melee; +10% swing; +10% speed | block -30%; 3 s spent: -10% speed |
-| `aserai`, `harad_raiders`, `shaghana`, `abanissa` (Harad) | Serpent's Venom | 30 s / 8 s | a target within 35 m with a bow, or an enemy within 4 m | +20% ranged damage; aim error -15%; +10% melee | none |
-| `khuzait`, `rhun_raiders` (Rhun, and Khand's soldiers) | Wainrider Wall | 30 s / 10 s | enemy within 15 m and (2 within 5 m, or cavalry closing) | block +20%; 10% less damage; knockdown resistance x2; +10% swing | none |
-| `umbar`, `umbar_corsairs` | Corsair Raid | 20 s / 6 s | enemy within 4 m and (took damage, or a kill in 2 s) | +20% swing; +15% speed; +10% melee | 3 s spent: -10% speed |
-| `battania` (Khand's lords and guard) | Variag Ferocity | 25 s / 8 s | enemy within 6 m | +15% melee; +10% swing; knockdown resistance x2; dismount resistance x2 | none |
-| `mordor`, `dolguldur` (their men) | Servants of the Shadow | 30 s / 8 s | enemy within 4 m and (a kill in 2 s, or health half) | each kill frightens enemies within 6 m; cannot panic; +10% melee | none |
+| `gondor`, `gondor_soldiers` | Guard of the Citadel | 120 s / 10 s | enemy within 15 m and (2 within 5 m, or cavalry closing, or health half) | block +30%; 10% less damage; knock-back resistance x2; cannot panic | -10% speed |
+| `vlandia` (Rohan) | Forth Eorlingas | 120 s / 10 s | mounted, enemy within 30 m | horse +15%; +15% melee; +10% swing; dismount resistance x2.5; cannot panic | none |
+| `sturgia` (Dale) | Bard's Aim | 120 s / 8 s | a target within 40 m with a bow | +20% draw; aim error -40%; +15% arrow speed; +10% ranged damage | none |
+| `empire`, `dunland_raiders` (Dunland) | Hill-clan Fury | 80 s / 6 s | enemy within 3 m and (took damage, or kin fell within 8 m) | +15% melee; +10% swing; +10% speed | block -30%; 3 s spent: -10% speed |
+| `aserai`, `harad_raiders`, `shaghana`, `abanissa` (Harad) | Serpent's Venom | 120 s / 8 s | a target within 35 m with a bow, or an enemy within 4 m | +20% ranged damage; aim error -15%; +10% melee | none |
+| `khuzait`, `rhun_raiders` (Rhun, and Khand's soldiers, cavalry and chariots included) | Wainrider Wall | 120 s / 10 s | enemy within 15 m and (2 within 5 m, or cavalry closing) | block +20%; 10% less damage; knockdown resistance x2; +10% swing | none |
+| `umbar`, `umbar_corsairs` | Corsair Raid | 80 s / 6 s | enemy within 4 m and (took damage, or a kill in 2 s) | +20% swing; +15% speed; +10% melee | 3 s spent: -10% speed |
+| `battania` (Khand's lords, caravan masters and tavern mercenaries, and the Variag Ravagers) | Variag Ferocity | 100 s / 8 s | enemy within 6 m | +15% melee; +10% swing; knockdown resistance x2; dismount resistance x2 | none |
+| `mordor`, `dolguldur` (their men) | Servants of the Shadow | 120 s / 8 s | enemy within 4 m and (a kill in 2 s, or health half) | each kill frightens enemies within 6 m; cannot panic; +10% melee | none |
 
 Rally radii run 6 to 12 m. The initiator and every third joiner shout.
 
@@ -220,7 +283,8 @@ Rally radii run 6 to 12 m. The initiator and every third joiner shout.
 `Enable Race Abilities` (switching on takes effect from the next battle; switching off stops new abilities at once
 and lets running ones finish), `War Cries`, `Show Ability Messages` (one line when five or more soldiers on one side
 fire the same ability within two seconds; "your side" counts an allied lord's troops too), `Race Ability Debug Log`
-(off: see below).
+(off: see below), `Ability Glow and Sparks` (on: the outlines and sparks above, drawn on this client only, so co-op
+classifies it as presentation).
 
 ## Logging: is it working?
 
@@ -237,6 +301,8 @@ Everything goes to the TAOM log with the `[RaceAbilities]` tag.
 | `Mission end: N tree(s) late-attached, M soldier(s) tracked at end`, then `Mission end:` and the counters | mission end | the battle's totals |
 | `RaceAbilitiesConfigProvider: ...` / `RaceAbilityProfileResolver: ...` | first use | a config value was reverted or is never read, or a race name matched nothing |
 | `RaceAbilityTask threw ...` / `RaceAbilityDeaths threw ...` | once per battle | a decision or a death failed (that soldier fires nothing that pass) |
+| `visuals Refresh threw ...` (or `Burst`, `Forget`) | once per battle | an outline or a burst failed; the abilities themselves are untouched |
+| `visuals.burst '<name>' is not a particle effect the engine knows; no sparks` | the first burst | the configured effect does not exist, so no sparks this session |
 
 Each counter line reads, per ability: `trees`, `decisions` (passes off cooldown that sensed), `waves`, `soldiers`
 (activations, rallies included), `rallied`, `ended`, `kills while live` (active or spent), `extensions`,
@@ -247,7 +313,7 @@ Each counter line reads, per ability: `trees`, `decisions` (passes off cooldown 
 are strict; `trees 0` means the race or culture has no soldiers here.
 
 `taom.print_race_abilities` (dev console, cheats on) prints the same in game: the gate, who is live now (active and
-spent per ability), and the counters.
+spent per ability), how many soldiers are outlined, and the counters.
 
 ## Key Files
 
@@ -262,9 +328,10 @@ spent per ability), and the counters.
 | `Main/Features/RaceAbilities/RaceAbilityStore.cs` | Live state per agent, identity-keyed, immutable states, transitions, live counts |
 | `Main/Features/RaceAbilities/RaceAbilityTelemetry.cs` | The thread-safe counters behind the logs and the console command |
 | `Main/Features/RaceAbilities/RaceAbilityFallenMemory.cs`, `RaceAbilityAuraLedger.cs`, `RaceAbilityReportClock.cs`, `RaceAbilityWaveCounter.cs` | Fallen kin, strongest aura per enemy, the 30 s report, the message throttle |
+| `Main/Features/RaceAbilities/RaceAbilityGlowLedger.cs` | Who wears an outline: the nearest up to the cap, repainted each pass, cleared on dropping out |
 | `Main/Features/RaceAbilities/RaceAbilitySettingsProvider.cs` | The MCM switches, cached and read through |
 | `Main/Features/RaceAbilities/RaceAbilityBehaviorTree.cs`, `BehaviorTreeElements/RaceAbilityTask.cs` | The tree and its one decision |
-| `Main/Features/RaceAbilities/Hooks/RaceAbilityRuntime.cs`, `RaceAbilitySensor.cs`, `RaceAbilityActivator.cs`, `RaceAbilityTicker.cs`, `RaceAbilityDeaths.cs` | The engine boundary |
+| `Main/Features/RaceAbilities/Hooks/RaceAbilityRuntime.cs`, `RaceAbilitySensor.cs`, `RaceAbilityActivator.cs`, `RaceAbilityTicker.cs`, `RaceAbilityDeaths.cs`, `RaceAbilityVisuals.cs` | The engine boundary |
 | `Main/Features/RaceAbilities/Hooks/RaceAbilitiesMissionLogic.cs` | Gate, attach, tick, deaths, mission-end report |
 | `Main/Features/RaceAbilities/Hooks/RaceAbilityHooks.cs`, `RaceAbilityStatApplier.cs` | What the six models call |
 | `Main/Features/RaceAbilities/Hooks/RaceAbilityNames.cs` | Display names and message lines |
@@ -287,13 +354,15 @@ All under `TAOM.Tests/Features/RaceAbilities/`:
 
 - `RaceAbilitiesConfigProviderTests`: missing and broken files, every validation rule (one bad value for every
   numeric effect field, with a test that fails when a new field has none), trigger kinds as names only, aliases,
-  kin fields, the accepted-but-unread warnings, the summary warning.
+  kin fields, the outline colour and the `visuals` block, the accepted-but-unread warnings, the summary warning.
 - `RaceAbilityProfileResolverTests`: invalid ids never reach a name lookup, race over culture, culture for men only,
   kin races.
 - `RaceAbilityServiceTests`: every trigger kind, the scan plan (and that it never changes an answer for any
   shipped profile), cooldown and NaN, tier and kin scaling and caps, rally recruits, kill credit (no horses), the
-  heal, cavalry closing, crush verdicts, damage (falls keep theirs), resistance, morale, auras, the percentage
-  arithmetic.
+  heal, cavalry closing, crush verdicts, damage (falls keep theirs), resistance, morale, auras, who glows, the
+  percentage arithmetic.
+- `RaceAbilityGlowLedgerTests`: the nearest up to the cap, one slot per soldier, repainting, clearing on dropping
+  out, a cap of 0, bad distances, forgetting the dead.
 - `RaceAbilityStoreTests`: phases and transitions, a stall past both ends, kill extension, identity keys, eviction,
   live counts.
 - `RaceAbilityStatApplierTests` (`RequiresGame`): each effect's property, and the mount.
@@ -304,10 +373,12 @@ All under `TAOM.Tests/Features/RaceAbilities/`:
   (`HotPathSettingsProvidersTests` pins the cache itself).
 - `RaceAbilityHooksTests`: with no runtime, every model hook hands its input back.
 - `ShippedRaceAbilitiesConfigTests`: the shipped file loads clean, equals the compiled profiles, every ability has a
-  display name, and every culture key is a real culture id; `RaceAbilitiesLiveKeyTests` (`LiveInstall`): every
-  race and kin race it names is registered by the installed game.
+  display name, every culture key is a real culture id, the cooldowns stay one to two minutes and the outline palette
+  is Mike's; `RaceAbilitiesLiveKeyTests` (`LiveInstall`): every race and kin race it names is registered by the
+  installed game, and the spark effect is in a particle file the game loads (the ones `project.mbproj` registers).
 - `RaceAbilitiesWiringTests`: every model call site, the module, the container (`RequiresGame`), the main-thread
-  mark, the deaths' soldier flag, and the mission-end clearing.
+  mark, the deaths' soldier flag, the mission-end clearing, the visuals' call sites (main-thread steps only, and no
+  other file in the feature), one outline write site behind its guard, and a mission-end clear with no native call.
 - `TAOM.Tests/BehaviorTreeWrapper/BehaviorTreeAgentComponentThreadingTests`: the slot check still comes before a
   tree runs, and the schedule copy allocates nothing.
 
@@ -338,10 +409,20 @@ Custom Battle:
 7. One campaign field battle, to see the campaign models behave as Custom Battle's do; Rhun spearmen against a
    full-speed charge there shows the Branch A limit.
 8. A Rohirrim unhorsed mid-ability: whether his horse keeps its boost (the UNVERIFIED row above).
+9. Outlines and sparks: active soldiers wear their kind's colour and lose it when the ability ends or they fall,
+   bodies carry none, sparks pop as abilities fire, `Ability Glow and Sparks` off clears every outline within half a
+   second, and Hide Battle UI hides them. `taom.print_race_abilities` shows `outlined now`: a count above 0 with
+   nothing on screen means the engine drew nothing. Watch the edge of a big lit crowd for outlines blinking as
+   soldiers trade places around the 40th, and whether soldiers behind the camera take outlines from ones in view.
+   Try `seeThrough` true once (restart after editing the JSON).
+10. Step 6's frame-time comparison with the glow on and off, before choosing whether it stays on by default: MCM
+    keeps a player's first saved value, so the default is changed only by renaming the setting.
 
 ## Not yet
 
-- **Custom war-cry audio, particles, an outline glow, a player "Unleash" order.**
+- **Custom war-cry audio, a lasting aura (embers for the whole window), a player "Unleash" order.** The aura was
+  left out of the glow: an effect pinned to a bone needs its own handle, may need re-attaching after an equipment
+  rebuild, and needs its bones checked on every race's skeleton.
 - Trolls, the Nazgul, Sauron and Saruman keep their own systems (Brute Force, Signature Strikes, the Dread Aura).
 - Calradia's bandit cultures and the minor peoples (`nord`, `vakken`, `darshi`, `neutral_culture`) have no profile;
   TAOM's raider cultures share their kingdom's ability through the aliases.
@@ -351,6 +432,14 @@ Custom Battle:
 Dated, feature-sliced history (newest first). The commit bodies, which `/release` gathers into `CHANGELOG.md`, are
 the chronological log of record.
 
+- 2026-10-04: Khand's ability left as it is (Mike). The known limits now name everyone who carries Variag
+  Ferocity (Khand's caravan masters and the Variag Ravagers added), correct Umbar (its own recruits, lords and
+  armies fire Corsair Raid), and say what Wainrider Wall and Variag Ferocity do for a rider or charioteer; the knockdown,
+  knock-back and dismount rows now cover a mounted soldier.
+- 2026-10-04: outline glow and sparks (Mike's option C1 of three): fury, guard and dread abilities outline their
+  soldier while active, the 40 nearest the camera, repainted every half second; sparks burst as an ability fires;
+  MCM `Ability Glow and Sparks`, on.
+- 2026-10-04: cooldowns lengthened to one to two minutes (Mike): his first numbers times four, so their order holds.
 - 2026-10-04: round-2 review fixes. A horse's death no longer counts as a kill; falls keep their damage; the
   sensor gathers only what can change a decision; the tree's decorator and task are one node; the console command
   is `taom.print_race_abilities`; Stand Fast drops its unreachable knock-back resistance and goblins their unread

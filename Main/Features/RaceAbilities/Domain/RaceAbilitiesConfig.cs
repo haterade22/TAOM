@@ -20,6 +20,23 @@ public class RaceAbilitiesConfig
     // Keyed by culture id ("gondor", "vlandia" for Rohan), comma-separated aliases allowed. Applies only to
     // soldiers of the human race, and only when their race has no profile of its own.
     public Dictionary<string, RaceAbilityProfile> Cultures { get; set; } = RaceAbilityDefaults.CultureProfiles();
+
+    public RaceAbilityVisualsConfig Visuals { get; set; } = new RaceAbilityVisualsConfig();
+}
+
+// What a player sees of an active ability: an outline on the soldier (each profile's Glow) and a burst of sparks
+// as it fires. MCM's "Ability Glow and Sparks" switches both.
+public class RaceAbilityVisualsConfig
+{
+    // At most this many soldiers wear an outline at once, the ones nearest the camera (0 = none).
+    public int MaxGlowing { get; set; } = 40;
+
+    // Draw the outline through walls and other soldiers.
+    public bool SeeThrough { get; set; }
+
+    // The engine particle effect played once on the soldier who fires and on every third kinsman who joins him
+    // ("" = none). Checked against the engine's registry on first use, not at load.
+    public string Burst { get; set; } = "psys_game_sparkle_a";
 }
 
 // How strongly a soldier's ability hits, by his battle tier (BasicCharacterObject.GetBattleTier: 0 to 7,
@@ -62,6 +79,13 @@ public class RaceAbilityProfile
 
     // The voice line played on activation: "", "Yell", "Charge", "Victory" or "Grunt".
     public string WarCry { get; set; } = "";
+
+    // The outline colour while the ability is active, "#RRGGBB" ("" = none).
+    public string Glow { get; set; } = "";
+
+    // Set by the provider from Glow, opaque 0xFFRRGGBB; never read from the file.
+    [JsonIgnore]
+    public uint? GlowColor { get; set; }
 
     // Races that count as kin for the KinWithin and KinFell triggers and the kin bonus, besides soldiers of
     // the same profile (orcs and goblins swarm together). Never widens the rally: only the same ability rallies.

@@ -9,8 +9,8 @@ namespace TAOM.Features.RaceAbilities.Hooks;
 
 /// <summary>
 /// The race abilities' mission-time state and the engine boundary's composition root: the live store, the
-/// battle's telemetry, the fallen-kin memory and the four engine-facing parts (<see cref="Sensor"/>,
-/// <see cref="Activator"/>, <see cref="Ticker"/>, <see cref="Deaths"/>). Every rule is
+/// battle's telemetry, the fallen-kin memory and the five engine-facing parts (<see cref="Sensor"/>,
+/// <see cref="Activator"/>, <see cref="Ticker"/>, <see cref="Deaths"/>, <see cref="Visuals"/>). Every rule is
 /// <see cref="RaceAbilityService"/>'s or the resolver's. A singleton: <see cref="Clear"/> runs at every
 /// mission end. Main thread only, except <see cref="StateOf"/> and the telemetry, which the stat and damage
 /// models reach from any thread. Boundary code, game-tested (ADR-008).
@@ -34,6 +34,7 @@ public sealed class RaceAbilityRuntime
         Activator = new RaceAbilityActivator(this);
         Ticker = new RaceAbilityTicker(this);
         Deaths = new RaceAbilityDeaths(this);
+        Visuals = new RaceAbilityVisuals(this);
     }
 
     public RaceAbilityService Service { get; }
@@ -62,6 +63,8 @@ public sealed class RaceAbilityRuntime
     public RaceAbilityTicker Ticker { get; }
 
     public RaceAbilityDeaths Deaths { get; }
+
+    public RaceAbilityVisuals Visuals { get; }
 
     public bool Enabled => Settings.Enabled;
 
@@ -110,7 +113,7 @@ public sealed class RaceAbilityRuntime
         return $"Race abilities: {(Settings.Enabled ? "enabled" : "DISABLED in MCM")}"
                + (Resolver.ConfigEnabled ? "" : ", DISABLED in race_abilities.json")
                + $"; mission gate: {MissionGate}\n"
-               + $"Live now: {(live.Count == 0 ? "none" : string.Join("; ", live))}\n"
+               + $"Live now: {(live.Count == 0 ? "none" : string.Join("; ", live))}; outlined now: {Visuals.LitCount}\n"
                + Telemetry.Report();
     }
 
@@ -124,6 +127,7 @@ public sealed class RaceAbilityRuntime
         Activator.Clear();
         Ticker.Clear();
         Deaths.Clear();
+        Visuals.Clear();
         _failureLogged = false;
         WavesLogged = 0;
         MissionGate = "no battle running";

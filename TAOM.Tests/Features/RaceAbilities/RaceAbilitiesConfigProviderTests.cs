@@ -705,4 +705,170 @@ public class RaceAbilitiesConfigProviderTests
 
         _logger.Received(1).LogWarning(Arg.Any<string>());
     }
+
+    // --- the outline and the sparks ---
+
+    // An empty cultures section, so the compiled culture profiles (six of them glow) cannot answer for the dwarf.
+    private static string WithVisuals(string visuals, string profileExtra = "") =>
+        "{ \"visuals\": " + visuals + ", \"races\": { \"dwarf\": { " + ValidCore + profileExtra + " } }, \"cultures\": {} }";
+
+    [DataTestMethod]
+    [DataRow("#E03A2E", 0xFFE03A2Eu)]
+    [DataRow("#e03a2e", 0xFFE03A2Eu)]
+    [DataRow(" #5B9BD5 ", 0xFF5B9BD5u)]
+    public void GetConfig_GlowColour_ParsesToAnOpaqueOutline(string glow, uint expected)
+    {
+        WriteConfig(OneRace(ValidCore + ", \"glow\": \"" + glow + "\""));
+
+        var profile = _sut.GetConfig().Races["dwarf"];
+
+        Assert.AreEqual(expected, profile.GlowColor);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetConfig_NoGlow_DrawsNoOutline()
+    {
+        WriteConfig(OneRace(ValidCore));
+
+        Assert.IsNull(_sut.GetConfig().Races["dwarf"].GlowColor);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [DataTestMethod]
+    [DataRow("red")]
+    [DataRow("E03A2E")]
+    [DataRow("#E03A2")]
+    [DataRow("#E03A2E00")]
+    [DataRow("#GG3A2E")]
+    [DataRow("#-03A2E")]
+    public void GetConfig_MalformedGlow_WarnsAndDrawsNoOutline(string glow)
+    {
+        WriteConfig(OneRace(ValidCore + ", \"glow\": \"" + glow + "\""));
+
+        var profile = _sut.GetConfig().Races["dwarf"];
+
+        Assert.IsNull(profile.GlowColor);
+        Assert.AreEqual("", profile.Glow);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains(".glow=")));
+    }
+
+    [TestMethod]
+    public void GetConfig_NoVisualsBlock_UsesTheDefaults()
+    {
+        WriteConfig(OneRace(ValidCore));
+
+        var visuals = _sut.GetConfig().Visuals;
+
+        Assert.AreEqual(40, visuals.MaxGlowing);
+        Assert.IsFalse(visuals.SeeThrough);
+        Assert.AreEqual("psys_game_sparkle_a", visuals.Burst);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetConfig_NullVisuals_WarnsAndUsesTheDefaults()
+    {
+        WriteConfig(WithVisuals("null"));
+
+        Assert.AreEqual(40, _sut.GetConfig().Visuals.MaxGlowing);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("visuals is null")));
+    }
+
+    [DataTestMethod]
+    [DataRow(-1)]
+    [DataRow(201)]
+    public void GetConfig_MaxGlowingOutOfRange_RevertsToTheDefault(int maxGlowing)
+    {
+        WriteConfig(WithVisuals("{ \"maxGlowing\": " + maxGlowing + " }"));
+
+        Assert.AreEqual(40, _sut.GetConfig().Visuals.MaxGlowing);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("visuals.maxGlowing")));
+    }
+
+    [TestMethod]
+    public void GetConfig_VisualsValues_AreKept()
+    {
+        WriteConfig(WithVisuals("{ \"maxGlowing\": 12, \"seeThrough\": true, \"burst\": \" psys_smoke \" }"));
+
+        var visuals = _sut.GetConfig().Visuals;
+
+        Assert.AreEqual(12, visuals.MaxGlowing);
+        Assert.IsTrue(visuals.SeeThrough);
+        Assert.AreEqual("psys_smoke", visuals.Burst);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetConfig_NullBurst_MeansNoSparks()
+    {
+        WriteConfig(WithVisuals("{ \"burst\": null }"));
+
+        Assert.AreEqual("", _sut.GetConfig().Visuals.Burst);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetConfig_GlowWhenNoOutlineIsAllowed_Warns()
+    {
+        WriteConfig(WithVisuals("{ \"maxGlowing\": 0 }", ", \"glow\": \"#E03A2E\""));
+
+        _sut.GetConfig();
+
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("maxGlowing is 0")));
+    }
+
+    [TestMethod]
+    public void GetConfig_NoOutlineAllowedAndNoGlowSet_DoesNotWarn()
+    {
+        WriteConfig(WithVisuals("{ \"maxGlowing\": 0 }"));
+
+        Assert.AreEqual(0, _sut.GetConfig().Visuals.MaxGlowing);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetConfig_MaxGlowingAtTheCap_IsKept()
+    {
+        WriteConfig(WithVisuals("{ \"maxGlowing\": 200 }"));
+
+        Assert.AreEqual(200, _sut.GetConfig().Visuals.MaxGlowing);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void GetConfig_NullGlow_DrawsNoOutline()
+    {
+        WriteConfig(OneRace(ValidCore + ", \"glow\": null"));
+
+        var profile = _sut.GetConfig().Races["dwarf"];
+
+        Assert.IsNull(profile.GlowColor);
+        Assert.AreEqual("", profile.Glow);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    // The engine copies the name into a 64-byte buffer; every effect it registers is letters, digits and underscores.
+    [DataTestMethod]
+    [DataRow("psys spark")]
+    [DataRow("psys-spark")]
+    [DataRow("psys_étincelle")]
+    public void GetConfig_BurstNameOutsideTheEngineCharacters_RevertsToTheDefault(string burst)
+    {
+        WriteConfig(WithVisuals("{ \"burst\": \"" + burst + "\" }"));
+
+        Assert.AreEqual("psys_game_sparkle_a", _sut.GetConfig().Visuals.Burst);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("visuals.burst")));
+    }
+
+    [DataTestMethod]
+    [DataRow(63, true)]
+    [DataRow(64, false)]
+    public void GetConfig_BurstNameLength_IsBoundedByTheEngineBuffer(int length, bool kept)
+    {
+        var name = new string('a', length);
+        WriteConfig(WithVisuals("{ \"burst\": \"" + name + "\" }"));
+
+        Assert.AreEqual(kept ? name : "psys_game_sparkle_a", _sut.GetConfig().Visuals.Burst);
+    }
 }

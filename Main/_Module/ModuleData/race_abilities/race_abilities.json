@@ -7,10 +7,16 @@
     "maxFactor": 1.2,
     "heroFactor": 1.25
   },
+  "visuals": {
+    "maxGlowing": 40,
+    "seeThrough": false,
+    "burst": "psys_game_sparkle_a"
+  },
   "races": {
     "berserker": {
       "abilityId": "berserk",
-      "cooldownSeconds": 15,
+      "glow": "#E03A2E",
+      "cooldownSeconds": 60,
       "durationSeconds": 6,
       "spentSeconds": 3,
       "rallyRadius": 8,
@@ -40,7 +46,8 @@
     },
     "uruk_hai": {
       "abilityId": "bloodlust",
-      "cooldownSeconds": 25,
+      "glow": "#E03A2E",
+      "cooldownSeconds": 100,
       "durationSeconds": 8,
       "killExtensionSeconds": 2,
       "maxDurationSeconds": 14,
@@ -62,7 +69,8 @@
     },
     "dwarf": {
       "abilityId": "stand_fast",
-      "cooldownSeconds": 30,
+      "glow": "#5B9BD5",
+      "cooldownSeconds": 120,
       "durationSeconds": 10,
       "rallyRadius": 8,
       "warCry": "Yell",
@@ -86,7 +94,7 @@
     },
     "elf": {
       "abilityId": "swiftness",
-      "cooldownSeconds": 30,
+      "cooldownSeconds": 120,
       "durationSeconds": 8,
       "rallyRadius": 10,
       "anyOf": [
@@ -106,7 +114,8 @@
     },
     "orc": {
       "abilityId": "swarm",
-      "cooldownSeconds": 20,
+      "glow": "#E03A2E",
+      "cooldownSeconds": 80,
       "durationSeconds": 8,
       "spentSeconds": 3,
       "rallyRadius": 6,
@@ -128,7 +137,7 @@
     },
     "goblin": {
       "abilityId": "scurry",
-      "cooldownSeconds": 20,
+      "cooldownSeconds": 80,
       "durationSeconds": 6,
       "spentSeconds": 3,
       "rallyRadius": 6,
@@ -148,7 +157,8 @@
     },
     "uruk": {
       "abilityId": "iron_discipline",
-      "cooldownSeconds": 30,
+      "glow": "#5B9BD5",
+      "cooldownSeconds": 120,
       "durationSeconds": 10,
       "rallyRadius": 8,
       "warCry": "Yell",
@@ -170,7 +180,7 @@
     },
     "pale_uruk": {
       "abilityId": "hunters_rush",
-      "cooldownSeconds": 25,
+      "cooldownSeconds": 100,
       "durationSeconds": 6,
       "spentSeconds": 3,
       "rallyRadius": 6,
@@ -191,7 +201,8 @@
     },
     "dg_uruk": {
       "abilityId": "necromancer_shadow",
-      "cooldownSeconds": 30,
+      "glow": "#9B59FF",
+      "cooldownSeconds": 120,
       "durationSeconds": 8,
       "rallyRadius": 6,
       "warCry": "Yell",
@@ -208,7 +219,8 @@
   "cultures": {
     "gondor,gondor_soldiers": {
       "abilityId": "citadel_guard",
-      "cooldownSeconds": 30,
+      "glow": "#5B9BD5",
+      "cooldownSeconds": 120,
       "durationSeconds": 10,
       "rallyRadius": 8,
       "warCry": "Yell",
@@ -230,7 +242,7 @@
     },
     "vlandia": {
       "abilityId": "forth_eorlingas",
-      "cooldownSeconds": 30,
+      "cooldownSeconds": 120,
       "durationSeconds": 10,
       "rallyRadius": 12,
       "warCry": "Charge",
@@ -248,7 +260,7 @@
     },
     "sturgia": {
       "abilityId": "bards_aim",
-      "cooldownSeconds": 30,
+      "cooldownSeconds": 120,
       "durationSeconds": 8,
       "rallyRadius": 10,
       "requires": [
@@ -263,7 +275,8 @@
     },
     "empire,dunland_raiders": {
       "abilityId": "hillclan_fury",
-      "cooldownSeconds": 20,
+      "glow": "#E03A2E",
+      "cooldownSeconds": 80,
       "durationSeconds": 6,
       "spentSeconds": 3,
       "rallyRadius": 6,
@@ -287,7 +300,7 @@
     },
     "aserai,harad_raiders,shaghana,abanissa": {
       "abilityId": "serpent_venom",
-      "cooldownSeconds": 30,
+      "cooldownSeconds": 120,
       "durationSeconds": 8,
       "rallyRadius": 10,
       "anyOf": [
@@ -302,7 +315,8 @@
     },
     "khuzait,rhun_raiders": {
       "abilityId": "wainrider_wall",
-      "cooldownSeconds": 30,
+      "glow": "#5B9BD5",
+      "cooldownSeconds": 120,
       "durationSeconds": 10,
       "rallyRadius": 8,
       "warCry": "Yell",
@@ -322,7 +336,8 @@
     },
     "umbar,umbar_corsairs": {
       "abilityId": "corsair_raid",
-      "cooldownSeconds": 20,
+      "glow": "#E03A2E",
+      "cooldownSeconds": 80,
       "durationSeconds": 6,
       "spentSeconds": 3,
       "rallyRadius": 6,
@@ -345,7 +360,8 @@
     },
     "battania": {
       "abilityId": "variag_ferocity",
-      "cooldownSeconds": 25,
+      "glow": "#E03A2E",
+      "cooldownSeconds": 100,
       "durationSeconds": 8,
       "rallyRadius": 8,
       "warCry": "Charge",
@@ -361,7 +377,8 @@
     },
     "mordor,dolguldur": {
       "abilityId": "shadow_servants",
-      "cooldownSeconds": 30,
+      "glow": "#9B59FF",
+      "cooldownSeconds": 120,
       "durationSeconds": 8,
       "rallyRadius": 6,
       "warCry": "Yell",

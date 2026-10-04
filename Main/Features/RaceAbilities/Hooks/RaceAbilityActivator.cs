@@ -9,8 +9,9 @@ namespace TAOM.Features.RaceAbilities.Hooks;
 /// <summary>
 /// Fires an ability: the soldier's own, then every ready kinsman's within the rally radius (the service
 /// decides who qualifies), each scaled for its own tier and, for a kin-bonus ability, its own crowd. Refreshes
-/// the soldier's stats and his horse's, holds his morale floor, shouts, and counts and logs the wave. Main
-/// thread (the tree tick). Boundary code, game-tested (ADR-008).
+/// the soldier's stats and his horse's, holds his morale floor, shouts and sparks, counts and logs the wave,
+/// then lights the wave's outlines at once rather than on the next pulse. Main thread (the tree tick).
+/// Boundary code, game-tested (ADR-008).
 /// </summary>
 public sealed class RaceAbilityActivator
 {
@@ -55,6 +56,9 @@ public sealed class RaceAbilityActivator
         if (_runtime.Settings.DebugLog || _runtime.WavesLogged++ < RaceAbilityRuntime.DetailedWaves)
             _runtime.Logger.LogInfo($"[RaceAbilities] {profile.AbilityId} by {initiator.Name} (tier {initiator.Character?.GetBattleTier()}, " +
                 $"{(playerSide ? "player side" : "enemy side")}) at {now:0.0} s, trigger={trigger}, rallied={rallied}");
+        // A wave shares one profile, so a dark one has nothing to light.
+        if (profile.GlowColor.HasValue)
+            _runtime.Visuals.Refresh();
     }
 
     // Mission end: the buffer would otherwise keep the last rally's soldiers, and the mission, alive.
@@ -75,6 +79,9 @@ public sealed class RaceAbilityActivator
         TopUpMorale(_runtime, agent, active.MoraleFloor, profile.AbilityId);
         if (cry && _runtime.Settings.WarCries)
             WarCry(agent, profile.WarCry);
+        // The war cry's crowd rule: the initiator and every third joiner.
+        if (cry)
+            _runtime.Visuals.Burst(agent);
     }
 
     internal static void TopUpMorale(RaceAbilityRuntime runtime, Agent agent, float floor, string abilityId)

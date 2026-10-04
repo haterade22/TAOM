@@ -34,6 +34,9 @@ public class RaceAbilityProfileResolver
     // race_abilities.json's own "enabled" switch, beside the MCM one.
     public bool ConfigEnabled => _configProvider.GetConfig().Enabled;
 
+    // The outline cap and the spark effect.
+    public RaceAbilityVisualsConfig VisualsConfig => _configProvider.GetConfig().Visuals;
+
     public RaceAbilityProfile? Resolve(int? raceId, string? cultureId)
     {
         if (!raceId.HasValue || !_configProvider.GetConfig().Enabled)

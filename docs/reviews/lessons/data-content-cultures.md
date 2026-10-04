@@ -1849,7 +1849,13 @@ Uruk-hai race, changes look.
 - **Source:** `docs/reviews/rca-uruk-hai-skirt-body-2026-10-04.md` S3.
 
 ### Check a culture-keyed config against the cultures the troops carry, after roster sharing (Race Abilities, 2026-10-04)
-Race Abilities keyed its men's profiles on culture ids and proved each id exists. Khand's `spcultures.xslt` block binds Rhun's roster (`:1348-1355`), and those troops carry `Culture.khuzait`, so the `battania` profile reached only Khand's lords and town guard while Khand's soldiers fired Rhun's ability; Umbar likewise fields Harad's levies. The commit body promised "Khand's Variags fight savage".
+Race Abilities keyed its men's profiles on culture ids and proved each id exists. Khand's `spcultures.xslt` block binds Rhun's roster (`:1348-1355`), and those troops carry `Culture.khuzait`, so the `battania` profile reached only Khand's lords and town guard while Khand's soldiers fired Rhun's ability; Umbar likewise binds Harad's militia, patrols and starting garrisons. The commit body promised "Khand's Variags fight savage".
 - **Why missed:** existence was checked, reach was not. A culture's definition says nothing about which troops carry it once the XSLT shares rosters between kingdoms.
 - **Prevent:** for every culture key, list the troops whose own `culture=` is that id (the troop files, and the XSLT bindings that feed recruitment and garrisons). A key whose culture fields no soldiers is a design question to raise, not a row to ship.
+- **Second pass (2026-10-04):** the first answer was itself incomplete. Variag Ferocity also reaches Khand's caravan
+  masters, the `caravan_guard_khand` mercenaries its taverns hire out (vanilla picks a town's mercenary from
+  `town.Culture.CaravanGuard`), and the Variag Ravagers (vanilla's Wolfskins minor faction, its culture passed
+  through `spclans.xslt`); Umbar's volunteer pool and lord templates are its own `umbar` troops. Carriers come from
+  minor-faction clans, caravans, tavern mercenaries and TAOM's volunteer pools as well, and the culture block shows
+  none of them.
 - **Source:** `docs/reviews/rca-race-abilities-2026-10-04.md` R17 (lens 7).

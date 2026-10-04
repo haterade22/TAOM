@@ -21,4 +21,8 @@ public class RaceAbilitySettingsProvider
 
     // One log line per wave and per phase change, on top of the 30 s and mission-end reports.
     public bool DebugLog => Settings?.RaceAbilityDebugLog ?? false;
+
+    // The outline on a soldier whose ability is active and the sparks as he fires; switching it off clears the
+    // outlines on the next half-second pulse.
+    public bool Glow => Settings?.RaceAbilityGlow ?? true;
 }

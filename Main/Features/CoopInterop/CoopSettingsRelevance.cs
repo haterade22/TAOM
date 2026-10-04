@@ -140,9 +140,9 @@ public static class CoopSettingsRelevance
         "FrontEndCustomLoadingImages", "FrontEndSkillIcons",
         "FrontEndCustomFaceGen", "FrontEndCustomNarrativeStage", "FrontEndCustomReviewStage",
         "FrontEndCustomBannerEditor", "FrontEndCustomClanNaming", "FrontEndCustomOptionsStage",
-        // Race Abilities: the war cry is a voice line and the wave line is a log message, both on this
-        // client only. EnableRaceAbilities stays in: it changes who fights how.
-        "RaceAbilityWarCries", "RaceAbilityMessages",
+        // Race Abilities: the war cry is a voice line, the wave line a log message and the glow an outline
+        // and sparks, all on this client only. EnableRaceAbilities stays in: it changes who fights how.
+        "RaceAbilityWarCries", "RaceAbilityMessages", "RaceAbilityGlow",
         // The faction picker shapes the local player's own character creation, which each peer runs
         // for themselves; the co-op layer replicates the hero that results, not the screen.
         "FrontEndFactionScreen",

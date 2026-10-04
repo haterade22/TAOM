@@ -62,6 +62,41 @@ public class ShippedRaceAbilitiesConfigTests
         Assert.AreEqual(JsonConvert.SerializeObject(compiled), JsonConvert.SerializeObject(shipped));
     }
 
+    // Mike (2026-10-04): "Cooldown on abilities should be about 1 to 2 minutes".
+    [TestMethod]
+    public void ShippedFile_CooldownsAreOneToTwoMinutes()
+    {
+        var config = Load(ModuleDataPath, Substitute.For<IModLogger>());
+
+        foreach (var profile in config.Races.Values.Concat(config.Cultures.Values).Distinct())
+            Assert.IsTrue(profile.CooldownSeconds >= 60f && profile.CooldownSeconds <= 120f,
+                $"{profile.AbilityId}: {profile.CooldownSeconds} s");
+    }
+
+    // Mike's pick (2026-10-04): an outline by kind of ability, the same on both sides, with the six speed and
+    // aim abilities left dark so a crowd stays readable.
+    [TestMethod]
+    public void ShippedFile_OutlinesThreeKindsOfAbility_AndLeavesSpeedAndAimDark()
+    {
+        const uint fury = 0xFFE03A2E, guard = 0xFF5B9BD5, dread = 0xFF9B59FF;
+        var expected = new Dictionary<string, uint?>
+        {
+            ["berserk"] = fury, ["bloodlust"] = fury, ["swarm"] = fury, ["hillclan_fury"] = fury,
+            ["corsair_raid"] = fury, ["variag_ferocity"] = fury,
+            ["stand_fast"] = guard, ["iron_discipline"] = guard, ["citadel_guard"] = guard, ["wainrider_wall"] = guard,
+            ["necromancer_shadow"] = dread, ["shadow_servants"] = dread,
+            ["swiftness"] = null, ["scurry"] = null, ["hunters_rush"] = null, ["forth_eorlingas"] = null,
+            ["bards_aim"] = null, ["serpent_venom"] = null,
+        };
+        var config = Load(ModuleDataPath, Substitute.For<IModLogger>());
+        var shipped = config.Races.Values.Concat(config.Cultures.Values).Distinct()
+            .ToDictionary(profile => profile.AbilityId, profile => profile.GlowColor);
+
+        Assert.AreEqual(expected.Count, shipped.Count, "abilities shipped");
+        foreach (var pair in expected)
+            Assert.AreEqual(pair.Value, shipped[pair.Key], pair.Key);
+    }
+
     [TestMethod]
     public void ShippedFile_EveryAbilityHasADisplayNameRow()
     {

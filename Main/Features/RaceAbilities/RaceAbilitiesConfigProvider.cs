@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
@@ -30,6 +32,13 @@ public class RaceAbilitiesConfigProvider : IRaceAbilitiesConfigProvider
     // with room for an archer's sight line).
     private const float MaxRange = 40f;
     private const float MaxEventSeconds = 30f;
+
+    // Each outlined soldier costs the renderer extra draws of his meshes (unmeasured), so the cap is bounded.
+    private const int MaxGlowingCap = 200;
+
+    // The engine copies an effect name into a 64-byte buffer, and every effect it registers is named in these
+    // characters (217 of them in v1.5.3, the longest 42).
+    private static readonly Regex EffectName = new Regex("^[A-Za-z0-9_]{1,63}$", RegexOptions.CultureInvariant);
 
     private readonly IPathService _pathService;
     private readonly IModLogger _logger;
@@ -75,7 +84,10 @@ public class RaceAbilitiesConfigProvider : IRaceAbilitiesConfigProvider
             TierScaling = ValidateTierScaling(parsed.TierScaling, ref rejected),
             Races = ValidateSection(parsed.Races, "races", RaceAbilityDefaults.RaceProfiles, ref rejected),
             Cultures = ValidateSection(parsed.Cultures, "cultures", RaceAbilityDefaults.CultureProfiles, ref rejected),
+            Visuals = ValidateVisuals(parsed.Visuals, ref rejected),
         };
+        if (config.Visuals.MaxGlowing == 0 && (HasGlow(config.Races) || HasGlow(config.Cultures)))
+            Warn("visuals.maxGlowing is 0, so no profile's glow is ever drawn", ref rejected);
         if (rejected)
             _logger.LogWarning("RaceAbilitiesConfigProvider: race_abilities.json had invalid values; they were reverted or skipped (see the warnings above)");
         return config;
@@ -99,6 +111,59 @@ public class RaceAbilitiesConfigProvider : IRaceAbilitiesConfigProvider
             MaxFactor = Check(parsed.MaxFactor, 1f, 3f, defaults.MaxFactor, "tierScaling.maxFactor", ref rejected),
             HeroFactor = CheckAboveZero(parsed.HeroFactor, 3f, defaults.HeroFactor, "tierScaling.heroFactor", ref rejected),
         };
+    }
+
+    private RaceAbilityVisualsConfig ValidateVisuals(RaceAbilityVisualsConfig? parsed, ref bool rejected)
+    {
+        var defaults = new RaceAbilityVisualsConfig();
+        if (parsed == null)
+        {
+            Warn("visuals is null, using the defaults", ref rejected);
+            return defaults;
+        }
+
+        // Whether the engine knows the burst is checked on first use by RaceAbilityVisuals, which warns once: the
+        // provider makes no engine call, so it stays pure and loads in tests. Its shape is checked here, because
+        // the name is handed to a native call.
+        var burst = (parsed.Burst ?? "").Trim();
+        if (burst.Length > 0 && !EffectName.IsMatch(burst))
+        {
+            Warn($"visuals.burst='{parsed.Burst}' must be 1 to 63 letters, digits or underscores, reverting to {defaults.Burst}", ref rejected);
+            burst = defaults.Burst;
+        }
+        return new RaceAbilityVisualsConfig
+        {
+            MaxGlowing = parsed.MaxGlowing >= 0 && parsed.MaxGlowing <= MaxGlowingCap
+                ? parsed.MaxGlowing
+                : Revert(parsed.MaxGlowing, defaults.MaxGlowing, "visuals.maxGlowing", $"[0,{MaxGlowingCap}]", ref rejected),
+            SeeThrough = parsed.SeeThrough,
+            Burst = burst,
+        };
+    }
+
+    private static bool HasGlow(Dictionary<string, RaceAbilityProfile> profiles)
+    {
+        foreach (var profile in profiles.Values)
+            if (profile.GlowColor.HasValue)
+                return true;
+        return false;
+    }
+
+    // "#RRGGBB", any case: an outline is always opaque. Empty or absent draws none.
+    private string ValidateGlow(string? value, string field, out uint? color, ref bool rejected)
+    {
+        color = null;
+        var glow = (value ?? "").Trim();
+        if (glow.Length == 0)
+            return "";
+        if (glow.Length == 7 && glow[0] == '#'
+            && uint.TryParse(glow.Substring(1), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out var rgb))
+        {
+            color = 0xFF000000u | rgb;
+            return "#" + glow.Substring(1).ToUpperInvariant();
+        }
+        Warn($"{field}='{value}' is not a #RRGGBB colour; no outline", ref rejected);
+        return "";
     }
 
     // One validated profile object per JSON entry, under every id its key lists.
@@ -164,6 +229,7 @@ public class RaceAbilitiesConfigProvider : IRaceAbilitiesConfigProvider
             return null;
         }
 
+        var glow = ValidateGlow(parsed.Glow, $"{field}.glow", out var glowColor, ref rejected);
         var profile = new RaceAbilityProfile
         {
             AbilityId = string.IsNullOrEmpty(parsed.AbilityId) ? firstId : parsed.AbilityId,
@@ -173,6 +239,8 @@ public class RaceAbilitiesConfigProvider : IRaceAbilitiesConfigProvider
             KillExtensionSeconds = Check(parsed.KillExtensionSeconds, 0f, MaxEventSeconds, 0f, $"{field}.killExtensionSeconds", ref rejected),
             RallyRadius = Check(parsed.RallyRadius, 0f, 30f, 0f, $"{field}.rallyRadius", ref rejected),
             WarCry = ValidateWarCry(parsed.WarCry, $"{field}.warCry", ref rejected),
+            Glow = glow,
+            GlowColor = glowColor,
             KinRaces = SplitList(parsed.KinRaces),
             KinBonus = ValidateKinBonus(parsed.KinBonus, $"{field}.kinBonus", ref rejected),
             Requires = ValidateTriggers(parsed.Requires, $"{field}.requires", ref rejected),

@@ -6,8 +6,8 @@ using TAOM.Features.RaceAbilities.Domain;
 namespace TAOM.Features.RaceAbilities;
 
 // Every decision behind the race abilities, floats and flags in, no TaleWorlds types (ADR-007). The engine
-// boundary (RaceAbilitySensor, RaceAbilityActivator, RaceAbilityTicker, RaceAbilityDeaths, RaceAbilityHooks)
-// only reads the engine, asks here, and writes the answer back. Engine floats can arrive as NaN, so each
+// boundary (RaceAbilitySensor, RaceAbilityActivator, RaceAbilityTicker, RaceAbilityDeaths, RaceAbilityVisuals,
+// RaceAbilityHooks) only reads the engine, asks here, and writes the answer back. Engine floats can arrive as NaN, so each
 // gate is written as a positive requirement and fails closed; each piece of arithmetic hands its input back
 // unchanged when the result would not be finite.
 public sealed class RaceAbilityService
@@ -326,6 +326,11 @@ public sealed class RaceAbilityService
     // The morale an active window costs when it ends (the orcs' Swarm); a spent phase ending costs nothing.
     public float MoraleOnEnd(RaceAbilityState before) =>
         before.Phase == RaceAbilityPhase.Active ? before.ActiveEffects.MoraleOnEnd : 0f;
+
+    // A soldier wears his ability's outline while it is active, if the profile has a colour. A spent soldier
+    // is dark, so the outline means "dangerous now".
+    public uint? GlowFor(RaceAbilityState? state) =>
+        state != null && state.Phase == RaceAbilityPhase.Active ? state.Profile.GlowColor : null;
 
     // How much morale to add to hold the soldier at the floor (0 when he is above it or there is none).
     public float MoraleTopUp(float morale, float floor) =>

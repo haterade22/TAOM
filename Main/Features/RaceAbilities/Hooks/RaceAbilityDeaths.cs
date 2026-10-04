@@ -46,6 +46,7 @@ public sealed class RaceAbilityDeaths
         var store = _runtime.Store;
         var service = _runtime.Service;
         store.Remove(affected);
+        _runtime.Visuals.Forget(affected);
         if (died && team != null && race.HasValue)
             _runtime.Fallen.Remember(position.x, position.y, team, race.Value, _runtime.Resolver.Resolve(race, culture), now);
 

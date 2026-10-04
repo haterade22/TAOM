@@ -207,7 +207,7 @@ public class SettingsFingerprintTests
         // guards nothing. The count is the guard that can fail: add a setting anywhere below and
         // one of these numbers moves, which is the moment to decide what it is. The same numbers
         // are quoted in docs/features/coop-interop.md.
-        AssertSplit(typeof(TaomSettings), reflected: 324, covered: 218);
+        AssertSplit(typeof(TaomSettings), reflected: 325, covered: 218);
         AssertSplit(typeof(BattleLoadDiagnosticsSettings), reflected: 16, covered: 0);
         AssertSplit(typeof(BlowDiagnosticsSettings), reflected: 1, covered: 0);
         AssertSplit(typeof(CrashReportSettings), reflected: 7, covered: 0);
