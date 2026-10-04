@@ -33,8 +33,6 @@ public static class Patch35_Formation_SetMovementOrder
     {
         try
         {
-            _settings ??= IoC.Resolve<ICompanionTacticsSettingsProvider>();
-            if (_settings == null || !_settings.CancelStanceOnMove) return;
             if (__instance == null) return;
 
             // Phase 9b #149 — team filter. Formation.SetMovementOrder is invoked from the async AI
@@ -46,7 +44,12 @@ public static class Patch35_Formation_SetMovementOrder
             // bucket-chain corruption. Stances are player-team-only semantically, so the
             // team filter is the simpler fix vs adding locks. See `cluster-harmony-patches.md`
             // Cluster B finding B1.
+            // Plan 031: the filter runs before the settings read because it is the cheaper check
+            // and every operand is a side-effect-free read, so every enemy order skips the setting.
             if (__instance.Team != Mission.Current?.PlayerTeam) return;
+
+            _settings ??= IoC.Resolve<ICompanionTacticsSettingsProvider>();
+            if (_settings == null || !_settings.CancelStanceOnMove) return;
 
             _stances ??= IoC.Resolve<ITroopStanceManager>();
             _stances?.ClearStance((int)__instance.FormationIndex);

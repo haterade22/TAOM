@@ -136,7 +136,7 @@ The overlay's Assign Heroes button places the player's team heroes as captains o
 | File | Purpose |
 |------|---------|
 | `Main/Features/CompanionTactics/CompanionTacticsIoC.cs` | DryIoc registrations (all `Reuse.Singleton`) |
-| `Main/Features/CompanionTactics/CompanionTacticsSettingsProvider.cs` | Reads `TaomSettings.Instance` directly (no reflection) |
+| `Main/Features/CompanionTactics/CompanionTacticsSettingsProvider.cs` | Caches `TaomSettings.Instance` on its first non-null read and reads through it, so MCM edits apply live (no reflection) |
 | `Main/Features/CompanionTactics/Roles/CompanionRoleService.cs` | 11-role classifier with hero-StringId-keyed cache + equipment fingerprint signature |
 | `Main/Features/CompanionTactics/Roles/RoleTooltipDecorator.cs` | Cached `PropertyInfo` mutations of vanilla VMs' Name + tooltip cache |
 | `Main/Features/CompanionTactics/Roles/Hooks/Patch35_*.cs` | 3 Harmony postfixes + 1 manual patch (private GetCaptainTooltip) |
@@ -158,7 +158,7 @@ The overlay's Assign Heroes button places the player's team heroes as captains o
 
 ## Dependencies
 
-- `ICompanionTacticsSettingsProvider` — typed read from `TaomSettings.Instance` (testable seam).
+- `ICompanionTacticsSettingsProvider`: typed read through a cached `TaomSettings.Instance` (testable seam).
 - `IModLogger` (TAOM core) — file logger; gated HUD output via Debug toggles.
 - `IFormationAdapter`, `IHeroCombatAdapter`, `IAgentCombatAdapter`, `IBattleEquipmentSnapshot` — sealed-type wrappers per ADR-007.
 - TaleWorlds types used: `Hero`, `Equipment`, `WeaponClass`, `EquipmentIndex`, `Formation`, `Mission`, `MissionMode`, `OrderOfBattleVM`, `OrderOfBattleHeroItemVM`, `OrderOfBattleFormationItemVM`, `DeploymentFormationClass`, `Agent`, `CharacterObject`, `MissionGauntletOrderOfBattleUIHandler`, `GauntletLayer`, `MissionScreen`, `MBBindingList<T>`, `MultiSelectionInquiryData`, `TextInquiryData`.
@@ -177,7 +177,7 @@ The overlay's Assign Heroes button places the player's team heroes as captains o
 - `FormationPresets/OOBCaptainAutoAssignerTests.cs`: 2 tests; the null-VM and not-general early returns never reach the planner.
 - `CompanionTacticsWiringTests.cs`: 1 test; the overlay's DI graph (with `IOOBCaptainAutoAssigner`) resolves.
 - `FormationPresets/HoNFormationPresetSerializationTests.cs` — 5 tests; every `[SaveableField]` must be a save-serializable type (the DateTime save-corruption regression guard, allowlist fails closed on unknown types); every container field's exact closed type is allowlisted; ids unique; retired id 3 not reused; definer registers only the mod-specific container (no duplicate-of-engine registrations).
-- `SharedMovementOrderPostfixTests.cs` — 5 tests; shared `Formation.SetMovementOrder` postfix dispatch (SmartCavalry + CancelStanceOnMove) ordering/guards.
+- `SharedMovementOrderPostfixTests.cs` — 6 tests; shared `Formation.SetMovementOrder` postfix dispatch (SmartCavalry + CancelStanceOnMove) ordering/guards.
 
 ## How to add a new combat role
 

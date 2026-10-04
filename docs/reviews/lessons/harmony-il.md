@@ -950,3 +950,9 @@ Plan 034's benchmark gave a stand-in for PatchShield's new finalizer 1.3 ns for 
 - **Why missed:** the benchmark's header printed "JIT optimizer disabled: False" and every reader took it as the cost, without asking which configuration ships.
 - **Prevent:** a benchmark quoted for TAOM.Dependencies or Main runs in the shipped configuration, or quotes both and says which is which. Check the deployed DLL's `DebuggableAttribute.IsJITOptimizerDisabled` when in doubt.
 - **Source:** `docs/reviews/rca-patchshield-per-call-cost-2026-10-02.md` row 3.
+
+### A helper type a patch needs lives in its own file; a comment pinning where code must sit to satisfy a source scan is the tell (plan 031, 2026-10-02)
+Plan 031 keyed the English override table by a string slice and nested the slice struct and its FNV-1a comparer inside `MBTextManager_GetLocalizedText_Patch`. The plan review then found that `CoopVetoClassificationTests` names a bool prefix's owner after the last class declared above it, so a nested class above `Prefix` would take it over, and fixed that by keeping both types below `Prefix` with a comment saying so. The hash and equality were an algorithm in an entry point (ADR-002), and the comment was a rule nobody could see from the type.
+- **Why missed:** the scan collision was solved where it surfaced (placement) instead of asking why a patch file held a second class at all.
+- **Prevent:** give a key type, comparer or other helper a patch needs its own file beside the feature (`Main/Features/LocalizationOverride/IdSlice.cs`) with its own tests; prefer one `IEquatable<T>` struct over a struct plus a comparer class. When a source-scan gate forces where code must sit, move the code out rather than documenting the position.
+- **Source:** `docs/reviews/rca-settings-reads-off-hot-paths-2026-10-02.md` C1.

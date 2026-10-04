@@ -1304,7 +1304,3 @@ public class CavalryChargeServiceTests
             "Reset() must clear stuck flag from abnormal mission termination.");
     }
 }
-
-// Note: SmartCavalryAISettingsProvider has no direct unit tests. It reads TaomSettings.Instance,
-// which inherits from MCMv5's AttributeGlobalSettings and triggers an MCMv5 assembly load that is
-// unavailable in the test host. Its clamps go through the shared SettingClamp, which is tested.

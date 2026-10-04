@@ -339,4 +339,29 @@ public class CrushThroughServiceTests
 
         Assert.IsNull(result);
     }
+
+    // Per-hit gate order: a blow with no monster attacker never reads the monster toggle, and a
+    // player-controlled blow never reads the orc toggle. The Ctx defaults describe a skill-path
+    // crush (chance 0.5, roll 0), so both blows still crush through.
+    [TestMethod]
+    public void DecideCrushThrough_NoMonsterId_NeverReadsTheMonsterToggle()
+    {
+        _settings.ClearReceivedCalls();
+
+        var result = _sut.DecideCrushThrough(Ctx(attackerMonsterId: null));
+
+        Assert.AreEqual(true, result);
+        _ = _settings.DidNotReceive().MonsterCrushThroughEnabled;
+    }
+
+    [TestMethod]
+    public void DecideCrushThrough_PlayerControlled_NeverReadsTheOrcToggle()
+    {
+        _settings.ClearReceivedCalls();
+
+        var result = _sut.DecideCrushThrough(Ctx(isAiControlled: false));
+
+        Assert.AreEqual(true, result);
+        _ = _settings.DidNotReceive().OrcShieldCrushEnabled;
+    }
 }

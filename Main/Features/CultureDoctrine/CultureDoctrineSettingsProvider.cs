@@ -4,17 +4,25 @@ public sealed class CultureDoctrineSettingsProvider : ICultureDoctrineSettingsPr
 {
     private readonly ICultureDoctrineConfigProvider _config;
 
+    // Read per agent stat update by TaomAgentStatCalculateModel (through CultureAggressionService): cached
+    // on the first non-null read, read through (BattleBalanceSettingsProvider pattern).
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
     public CultureDoctrineSettingsProvider(ICultureDoctrineConfigProvider config)
     {
         _config = config;
     }
 
+    internal CultureDoctrineSettingsProvider(ICultureDoctrineConfigProvider config, TaomSettings settings)
+        : this(config) => _settings = settings;
+
     public bool IsEnabled =>
-        (TaomSettings.Instance?.EnableCultureDoctrine ?? false) && _config.GetCatalog().Enabled;
+        (Settings?.EnableCultureDoctrine ?? false) && _config.GetCatalog().Enabled;
 
-    public bool IsDebug => TaomSettings.Instance?.CultureDoctrineDebug ?? false;
+    public bool IsDebug => Settings?.CultureDoctrineDebug ?? false;
 
-    public bool IsMoraleEnabled => IsEnabled && (TaomSettings.Instance?.CultureDoctrineMorale ?? false);
+    public bool IsMoraleEnabled => IsEnabled && (Settings?.CultureDoctrineMorale ?? false);
 
-    public bool IsAggressionEnabled => IsEnabled && (TaomSettings.Instance?.CultureDoctrineAggression ?? false);
+    public bool IsAggressionEnabled => IsEnabled && (Settings?.CultureDoctrineAggression ?? false);
 }

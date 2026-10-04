@@ -88,7 +88,7 @@ berserkers with a javelin in a secondary slot, so they keep their crush on the m
 nothing at range.
 
 **Existing players keep their own MCM value.** MCM merges over JSON per read
-(`CombatMechanicsSettingsProvider:33`), so a profile that saved "Shield Penetration" as on stays on.
+(`CombatMechanicsSettingsProvider.ShieldPenetrationEnabled`), so a profile that saved "Shield Penetration" as on stays on.
 The empty grant lists are the second line of defence: `IsGranted` matches nothing, so the mechanic is
 inert even with a stale toggle. Pinned by
 `ShieldPenetrationServiceTests.ShippedDefaults_MechanicToggledOn_StillGrantsNothingAndLeavesShieldDamageAlone`.

@@ -6,6 +6,13 @@ namespace TAOM.Features.BlowDiagnostics;
 // reason: an MCM hiccup must not silently switch every battle into per-blow durable logging.
 public sealed class BlowDiagnosticsSettingsProvider : IBlowDiagnosticsSettingsProvider
 {
-    public bool IsEnabled =>
-        BlowDiagnosticsSettings.Instance?.EnableBlowDiagnostics ?? false;
+    // Read per damaging blow even while OFF (Agent_HandleBlowAux_BlowDiag_Patch), so the MCM reference
+    // is cached on its first non-null read and read through (BattleBalanceSettingsProvider pattern).
+    private BlowDiagnosticsSettings? _settings;
+    private BlowDiagnosticsSettings? Settings => _settings ??= BlowDiagnosticsSettings.Instance;
+
+    public BlowDiagnosticsSettingsProvider() { }
+    internal BlowDiagnosticsSettingsProvider(BlowDiagnosticsSettings settings) => _settings = settings;
+
+    public bool IsEnabled => Settings?.EnableBlowDiagnostics ?? false;
 }

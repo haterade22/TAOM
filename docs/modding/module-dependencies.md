@@ -37,9 +37,9 @@ in [load-order-and-dependencies](load-order-and-dependencies.md); the other modu
   container, logging through Serilog, and a crash-report renderer. It is not on NuGet as a runtime
   package; the DLLs are copied by hand from Steam Workshop item `2859232415`
   (`Dependencies/_Module/THIRD-PARTY-LICENSES.txt:18-21`, [dr3-maintenance.md](../migration/dr3-maintenance.md) lines 48-55).
-- **MCM**, the Mod Configuration Menu (NuGet `Bannerlord.MCM 5.12.1` for the API in `MCMv5.dll`, and
+- **MCM**, the Mod Configuration Menu (NuGet `Bannerlord.MCM 5.12.3` for the API in `MCMv5.dll`, and
   the vendored `Bannerlord.MBOptionScreen.v1.4.N.dll` set plus `MCM.UI.Adapter.MCMv5.dll` for the
-  screen, 5.12.1, MIT, BUTR) is the in-game **Mod Options** tab. It turns a C# settings class into
+  screen, 5.12.3, MIT, BUTR) is the in-game **Mod Options** tab. It turns a C# settings class into
   sliders and checkboxes. MCM the library is a `TAOM.Dependencies` concern; the `Main/Features/Mcm/`
   folder in the main module is only TAOM's layout fix for it ([mcm.md](../features/mcm.md) line 7).
 
@@ -197,9 +197,9 @@ The vendored set is 6 `Bannerlord.ButterLib.Implementation.1.4.N.dll` and 6
 `Bannerlord.MBOptionScreen.v1.4.N.dll` files (`1.4.0` through `1.4.5`) plus the 6 `BUTR.CrashReport*`
 files. <!-- measured: ls Dependencies/_Module/bin/Win64_Shipping_Client | rg -c 'ButterLib\.Implementation\.1\.4\.[0-9]+\.dll' (and the MBOptionScreen and BUTR.CrashReport patterns) 2026-09-05 -->
 Their versions, read from the files: `Bannerlord.ButterLib.dll` FileVersion `2.11.0.0`,
-`MCM.UI.Adapter.MCMv5.dll` `5.12.1.0`, `Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll`
+`MCM.UI.Adapter.MCMv5.dll` `5.12.3.0`, `Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll`
 `1.0.1.50`, `BUTR.CrashReport.dll` `14.0.0.99`.
-<!-- measured: [Diagnostics.FileVersionInfo]::GetVersionInfo(<dll>).FileVersion over the four files 2026-09-05 -->
+<!-- measured: [Diagnostics.FileVersionInfo]::GetVersionInfo(<dll>).FileVersion over the four files 2026-09-05; the MCM.UI.Adapter.MCMv5.dll value re-read 2026-10-03 -->
 
 The `.gitignore` is what makes this folder committable. The top-level `bin/` rule matches everywhere,
 so lines 44-45 un-ignore the two parent folders, line 51 re-ignores everything inside
@@ -633,7 +633,7 @@ BattleLinkMPClient
 ```
 
 <!-- excerpt file="Dependencies/_Module/THIRD-PARTY-LICENSES.txt" -->
-The first four notice paragraphs, lines 8-32:
+The first five notice paragraphs, lines 8-33:
 
 ```
 0Harmony.dll  --  Lib.Harmony 2.4.2
@@ -641,23 +641,24 @@ Copyright (c) Andreas Pardeike
 Licensed under the MIT License.
 Source: https://github.com/pardeike/Harmony
 
-Bannerlord.UIExtenderEx.dll  --  Bannerlord.UIExtenderEx 2.13.2
+Bannerlord.UIExtenderEx.dll  --  Bannerlord.UIExtenderEx 2.13.3
 Copyright (c) BUTR (Bannerlord Unofficial Tools & Resources)
 Licensed under the MIT License.
 Source: https://github.com/BUTR/Bannerlord.UIExtenderEx
 
-Bannerlord.ButterLib.dll + Bannerlord.ButterLib.Implementation.1.4.*.dll  --  ButterLib 2.11.0
+Bannerlord.ButterLib.dll + Bannerlord.ButterLib.Implementation.1.4.*.dll + Bannerlord.ButterLib.Implementation.1.5.1.dll  --  ButterLib 2.12.0
 Copyright (c) BUTR
 Licensed under the MIT License.
 Source: https://github.com/BUTR/Bannerlord.ButterLib
 
-MCMv5.dll  --  Bannerlord.MCM 5.12.1
+MCMv5.dll  --  Bannerlord.MCM 5.12.3
 Copyright (c) BUTR
 Licensed under the MIT License.
 Source: https://github.com/BUTR/Bannerlord.MCM
 
-Bannerlord.MBOptionScreen.v1.4.*.dll, Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll,
-MCM.UI.Adapter.MCMv5.dll  --  Bannerlord.MBOptionScreen 5.12.1
+Bannerlord.MBOptionScreen.v1.4.*.dll, Bannerlord.MBOptionScreen.v1.5.1.dll,
+Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll,
+MCM.UI.Adapter.MCMv5.dll  --  Bannerlord.MBOptionScreen 5.12.3
 Copyright (c) BUTR
 Licensed under the MIT License.
 Source: https://github.com/BUTR/Bannerlord.MCM
@@ -671,8 +672,8 @@ The three runtime pins, lines 70-72, and the Unsafe pin with its comment, lines 
 
 ```xml
 		<PackageReference Include="Lib.Harmony" Version="2.4.2" />
-		<PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.2" />
-		<PackageReference Include="Bannerlord.MCM" Version="5.12.1" />
+		<PackageReference Include="Bannerlord.UIExtenderEx" Version="2.13.3" />
+		<PackageReference Include="Bannerlord.MCM" Version="5.12.3" />
 ```
 
 ```xml
@@ -864,7 +865,8 @@ Code: No code changes needed
 
 ## Numbers in this chapter
 
-All measured 2026-09-05 from the repo at its current commit and the live install on this machine.
+All measured 2026-09-05 from the repo at its current commit and the live install on this machine,
+except the two MCM FileVersion values (`5.12.3.0`), which were re-read on 2026-10-03.
 
 | Number | What | Command |
 |---|---|---|
@@ -890,8 +892,8 @@ All measured 2026-09-05 from the repo at its current commit and the live install
 | 16 | `.cs` files in `Dependencies/Foundation/` | `ls Dependencies/Foundation/*.cs \| wc -l` |
 | 17 | simple names in `RedirectedSimpleNames` | `sed -n '39,98p' Dependencies/SubModule.cs \| rg -c '^\s*"[^"]+",'` |
 | 9 / 2 / 5 | `[TestMethod]` in `BundledDependencyManifestTests` / `DependenciesPairingTests` / `AssemblyRedirectListTests` | `rg -c '\[TestMethod\]' <file>` |
-| 2.11.0.0, 5.12.1.0, 1.0.1.50, 14.0.0.99 | FileVersion of `Bannerlord.ButterLib.dll`, `MCM.UI.Adapter.MCMv5.dll`, `Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll`, `BUTR.CrashReport.dll` | `[Diagnostics.FileVersionInfo]::GetVersionInfo(<dll>).FileVersion` |
-| 2.4.2.0, 2.13.2.0, 5.12.1.0 | FileVersion of the live `0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll` | same, over the live `bin/Win64_Shipping_Client` |
+| 2.11.0.0, 5.12.3.0, 1.0.1.50, 14.0.0.99 | FileVersion of `Bannerlord.ButterLib.dll`, `MCM.UI.Adapter.MCMv5.dll`, `Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll`, `BUTR.CrashReport.dll` | `[Diagnostics.FileVersionInfo]::GetVersionInfo(<dll>).FileVersion` |
+| 2.4.2.0, 2.13.2.0, 5.12.3.0 | FileVersion of the live `0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll` | same, over the live `bin/Win64_Shipping_Client` |
 | 4.0.4.1 / 4.0.1.1 | assembly version of `System.Runtime.CompilerServices.Unsafe.dll` (repo and live) / vendored `System.Memory.dll` | `[Reflection.AssemblyName]::GetAssemblyName(<dll>).Version` |
 | 17 / 17 | language folders under the live `ModuleData/Languages` / `ModuleData/Languages_MCM` | `ls "<game>/Modules/TAOM.Dependencies/ModuleData/Languages" \| wc -l` (and `_MCM`) |
 | 3,150,674 | bytes in the live `diag.log` | `ls -la "<game>/Modules/TAOM.Dependencies"` |

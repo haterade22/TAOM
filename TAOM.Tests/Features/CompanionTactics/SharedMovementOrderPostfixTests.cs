@@ -82,4 +82,18 @@ public class SharedMovementOrderPostfixTests
         Assert.IsFalse(src.Contains("CavalryChargeService") || src.Contains("ICavalryChargeService"),
             "Patch35 must not touch the cavalry charge service — that is Patch31's domain (non-overlapping intent)");
     }
+
+    // Formation.SetMovementOrder runs for every team's formations, mostly on the async AI tick. The team
+    // filter is two field reads; checking it first skips the settings read for every enemy order.
+    [TestMethod]
+    public void Patch35_FiltersThePlayerTeam_BeforeReadingTheSetting()
+    {
+        var src = RepoPaths.ReadSource(
+            "Main/Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs",
+            stripComments: true);
+        int team = src.IndexOf("Mission.Current?.PlayerTeam", System.StringComparison.Ordinal);
+        int setting = src.IndexOf(".CancelStanceOnMove", System.StringComparison.Ordinal);
+        Assert.IsTrue(team >= 0 && setting >= 0, "both checks are still present");
+        Assert.IsTrue(team < setting, "the player-team filter runs before the CancelStanceOnMove read");
+    }
 }

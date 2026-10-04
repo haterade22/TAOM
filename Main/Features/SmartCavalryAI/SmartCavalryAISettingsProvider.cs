@@ -5,21 +5,29 @@ namespace TAOM.Features.SmartCavalryAI;
 
 public sealed class SmartCavalryAISettingsProvider : ISmartCavalryAISettingsProvider
 {
-    public bool IsEnabled => TaomSettings.Instance?.EnableSmartCavalryAI ?? false;
+    // Read every frame, and per cavalry formation, by SmartCavalryAIMissionBehavior: cached on the first
+    // non-null read, read through (BattleBalanceSettingsProvider pattern).
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
 
-    public bool AvoidFriendlies => TaomSettings.Instance?.SmartCavalryAvoidFriendlies ?? true;
+    public SmartCavalryAISettingsProvider() { }
+    internal SmartCavalryAISettingsProvider(TaomSettings settings) => _settings = settings;
+
+    public bool IsEnabled => Settings?.EnableSmartCavalryAI ?? false;
+
+    public bool AvoidFriendlies => Settings?.SmartCavalryAvoidFriendlies ?? true;
 
     public float ChargeFormationStrictness =>
-        SettingClamp.Clamp(TaomSettings.Instance?.SmartCavalryChargeStrictness, 0.7f, 0.0f, 1.0f);
+        SettingClamp.Clamp(Settings?.SmartCavalryChargeStrictness, 0.7f, 0.0f, 1.0f);
 
     public float ReformDistanceAfterCharge =>
-        SettingClamp.Clamp(TaomSettings.Instance?.SmartCavalryReformDistance, 25f, 10f, 80f);
+        SettingClamp.Clamp(Settings?.SmartCavalryReformDistance, 25f, 10f, 80f);
 
     public float ChargeLineSpacing =>
-        SettingClamp.Clamp(TaomSettings.Instance?.SmartCavalryLineSpacing, 1.2f, 0.8f, 3.0f);
+        SettingClamp.Clamp(Settings?.SmartCavalryLineSpacing, 1.2f, 0.8f, 3.0f);
 
     public float MaxLineUpSeconds =>
-        SettingClamp.Clamp(TaomSettings.Instance?.SmartCavalryMaxLineUpSeconds, 4f, 1f, 15f);
+        SettingClamp.Clamp(Settings?.SmartCavalryMaxLineUpSeconds, 4f, 1f, 15f);
 
-    public bool IsDebugMode => TaomSettings.Instance?.SmartCavalryDebug ?? false;
+    public bool IsDebugMode => Settings?.SmartCavalryDebug ?? false;
 }

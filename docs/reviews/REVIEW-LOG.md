@@ -5128,3 +5128,21 @@ Report `docs/reviews/deep-review-042-xml-merge-load-time-2026-10-02.md`; RCA
 - **Final suite:** 12,383 passed, 1 failed, 2 skipped. The failure is `EveryLanguage_DeclaresARowForEveryEnglishKey`, failing at the base.
 - **After the Codex fixes:** 12,394 passed, 1 failed, 2 skipped (12,397 total, 11 new tests); the same known failure.
 - Report `docs/reviews/deep-review-030-mission-diagnostics-diet-2026-10-02.md`.
+
+## Review (plan 031, number assigned at merge): MCM settings reads off hot paths, 6-lens deep review + convergence (2026-10-02)
+
+- **Scope:** branch `perf/031-settings-reads-off-hot-paths` (`0d1e91f0..bf1898c3`): nine settings providers cache the MCM settings reference and read through it; four combat services and Patch35 check the cheap condition before the setting; the Mixed Formations cycle hotkey is parsed only when its string changes (`CachedEnumParse`); the English override prefix looks the `{=ID}` up in place instead of with `Substring`.
+- **Claude:** six lenses (Standards, Engine compatibility, Efficiency, Completeness, Data flow, Design); no HIGH or MEDIUM, no runtime defect. Five lenses answered the focus questions from the installed MCM 5.12.3 and v1.5.3 assemblies: MCM keeps one settings object per global id for the process and copies resets, presets, menu edits and Cancel into it, so the cached reference reads live values; the reorders keep every result for NaN and null; the slice compares exactly as the ordinal `Substring` key did. Eleven LOW findings confirmed and fixed (an algorithm nested in the patch class, test-only public surface, a gate test in the wrong folder, two self-comparing assertions, three wording errors, two stale "untestable" notes, two probe tests); design P1 and P2 applied; P3 and P4 behaviour-changing, for Mike. 0 false positives. Every new or tightened test failed against a deliberate mutation first.
+- **Codex:** not run (no paid dispatch asked for this item).
+- **Final suite:** 12,423 passed, 1 failed (the known `EveryLanguage_DeclaresARowForEveryEnglishKey`), 2 skipped. A convergence pass on `bf1898c3..3dc3739c` found no defect.
+
+| # | Bug | Category | Why Missed | Preventive Action |
+|---|---|---|---|---|
+| C1 | Hash and comparer nested in the Harmony patch class, kept below `Prefix` by a comment for the co-op scan | Convention | Plan prescribed nesting; the scan collision was fixed by placement | `IdSlice.cs` with tests; lesson in harmony-il |
+| C4 | Gate-order tests compared the code with itself | Test meaningfulness | Plan oracle used as written | Concrete value; lesson in testing-qa |
+| C7 | "Once per distinct value" wording, test name included, against once-per-change behaviour | Wording against behaviour | Words from the plan's intent, not the code | Reworded and renamed; same lesson |
+| C8, C11 | "No direct unit tests" notes the change made false | Stale claim | Outside the diff or above appended tests | Deleted; lesson in testing-qa |
+| C2, C3, C5, C6, C9, C10 | Test-only constructor, test location, two doc lines, two probe tests | Simplicity, convention, doc, test gap | Plan text followed without re-checking | Fixed; one-off |
+
+Report `docs/reviews/deep-review-031-settings-reads-off-hot-paths-2026-10-02.md`; RCA
+`docs/reviews/rca-settings-reads-off-hot-paths-2026-10-02.md`. Nothing merged or deployed.

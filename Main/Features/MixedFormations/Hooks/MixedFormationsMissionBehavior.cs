@@ -16,6 +16,7 @@ public sealed class MixedFormationsMissionBehavior : MissionBehavior
 
     private float _autoApplyAccumulator;
     private bool _wasCycleKeyDown;
+    private readonly CachedEnumParse<InputKey> _cycleKey;
 
     // BehaviorType=Other: this class inherits MissionBehavior (not MissionLogic) and does not
     // override MissionEnded/OnMissionResultReady, so it has no business in Mission.MissionLogics.
@@ -28,6 +29,7 @@ public sealed class MixedFormationsMissionBehavior : MissionBehavior
         _service = IoC.Resolve<IFormationLayoutService>();
         _settings = IoC.Resolve<IMixedFormationsSettingsProvider>();
         _logger = IoC.Resolve<IModLogger>();
+        _cycleKey = CycleHotkeyParser.Create(_logger);
     }
 
     // AfterStart, not OnBehaviorInitialize: the engine dispatches the latter before
@@ -121,16 +123,7 @@ public sealed class MixedFormationsMissionBehavior : MissionBehavior
         if (firstFrameDown) ExecuteCycle();
     }
 
-    private bool TryResolveCycleKey(out InputKey key)
-    {
-        var raw = _settings.CycleHotkey?.Trim();
-        if (string.IsNullOrEmpty(raw))
-        {
-            key = default;
-            return false;
-        }
-        return Enum.TryParse(raw, ignoreCase: true, out key);
-    }
+    private bool TryResolveCycleKey(out InputKey key) => _cycleKey.TryGet(_settings.CycleHotkey, out key);
 
     private void ExecuteCycle()
     {

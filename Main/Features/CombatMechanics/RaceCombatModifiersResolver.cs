@@ -32,13 +32,16 @@ public class RaceCombatModifiersResolver : IRaceCombatModifiersResolver
 
     public RaceCombatModifiers Resolve(int? raceId)
     {
+        if (!raceId.HasValue)
+            return RaceCombatModifiers.Neutral;
+
         if (!_settings.RaceCombatModifiersEnabled)
             return RaceCombatModifiers.Neutral;
 
         // Validate BEFORE any name lookup — GetRaceNameFromId coerces unknown ids to "human"
         // (csharp-architecture.md "Lookup Functions With Fallbacks"), which would silently hand
         // an invalid agent the human row.
-        if (!raceId.HasValue || !_raceManager.IsValidRaceId(raceId.Value))
+        if (!_raceManager.IsValidRaceId(raceId.Value))
             return RaceCombatModifiers.Neutral;
 
         var map = _byRaceId ?? BuildMap();

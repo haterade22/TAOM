@@ -7,5 +7,13 @@ namespace TAOM.Features.Elephant;
 /// </summary>
 public class HowdahDiagnosticsSettingsProvider : IHowdahDiagnosticsSettingsProvider
 {
-    public bool IsEnabled => TaomSettings.Instance?.EnableHowdahDiagnostics ?? true;
+    // Read per seat per frame by TaomHowdahStandingPoint: cached on the first non-null read, read through
+    // (BattleBalanceSettingsProvider pattern).
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
+    public HowdahDiagnosticsSettingsProvider() { }
+    internal HowdahDiagnosticsSettingsProvider(TaomSettings settings) => _settings = settings;
+
+    public bool IsEnabled => Settings?.EnableHowdahDiagnostics ?? true;
 }

@@ -273,4 +273,39 @@ public class CreatureCombatServiceTests
         Assert.IsTrue(sut.CalculateCleaveMomentum("taom_mumakil", 10f, isColliderAgent: true).HasValue);
         Assert.IsTrue(sut.CalculateCleaveMomentum("taom_mumakil_settlement_fast", 10f, isColliderAgent: true).HasValue);
     }
+
+    // Per-hit gate order: the cheap facts of the hit are tested before the settings toggle, so an
+    // ordinary blow never reads a setting. Every operand is side-effect-free; only the order moved.
+    [TestMethod]
+    public void CalculateCleaveMomentum_NotColliderAgent_NeverReadsTheToggle()
+    {
+        _settings.ClearReceivedCalls();
+
+        var result = _sut.CalculateCleaveMomentum("cave_troll", 10f, isColliderAgent: false);
+
+        Assert.IsNull(result);
+        _ = _settings.DidNotReceive().CreatureCleaveEnabled;
+    }
+
+    [TestMethod]
+    public void ShouldForceSliceThrough_NotColliderAgent_NeverReadsTheToggle()
+    {
+        _settings.ClearReceivedCalls();
+
+        var result = _sut.ShouldForceSliceThrough("cave_troll", 5f, isColliderAgent: false, inflictedDamage: 10);
+
+        Assert.IsFalse(result);
+        _ = _settings.DidNotReceive().CreatureCleaveEnabled;
+    }
+
+    [TestMethod]
+    public void IsUnstoppable_NullMonsterId_NeverReadsTheToggle()
+    {
+        _settings.ClearReceivedCalls();
+
+        var result = _sut.IsUnstoppable(null, 5);
+
+        Assert.IsFalse(result);
+        _ = _settings.DidNotReceive().CreatureUnstoppableEnabled;
+    }
 }

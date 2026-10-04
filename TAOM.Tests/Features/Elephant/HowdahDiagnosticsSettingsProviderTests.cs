@@ -24,4 +24,18 @@ public class HowdahDiagnosticsSettingsProviderTests
         Assert.IsTrue(new TaomSettings().EnableHowdahDiagnostics,
             "TaomSettings.EnableHowdahDiagnostics default must match the provider's ?? fallback");
     }
+
+    // Read per seat per frame (TaomHowdahStandingPoint), so the provider caches the MCM reference and
+    // reads THROUGH it: an edit made after the first read must still reach the getter.
+    [TestMethod]
+    public void IsEnabled_ReadsThroughTheCachedSettings_SoLiveMcmEditsApply()
+    {
+        var mcm = new TaomSettings();
+        var sut = new HowdahDiagnosticsSettingsProvider(mcm);
+        _ = sut.IsEnabled;
+
+        mcm.EnableHowdahDiagnostics = false;
+
+        Assert.IsFalse(sut.IsEnabled);
+    }
 }

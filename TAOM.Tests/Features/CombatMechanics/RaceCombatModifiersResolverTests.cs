@@ -159,4 +159,16 @@ public class RaceCombatModifiersResolverTests
         Assert.AreEqual(0, _sut.BaseHitPointsBonus(42));
         Assert.AreEqual(0, _sut.BaseHitPointsBonus(null));
     }
+
+    // Per-agent gate order: an agent with no race id never reads the toggle.
+    [TestMethod]
+    public void Resolve_NullRaceId_NeverReadsTheToggle()
+    {
+        _settings.ClearReceivedCalls();
+
+        var result = _sut.Resolve(null);
+
+        Assert.AreSame(RaceCombatModifiers.Neutral, result);
+        _ = _settings.DidNotReceive().RaceCombatModifiersEnabled;
+    }
 }

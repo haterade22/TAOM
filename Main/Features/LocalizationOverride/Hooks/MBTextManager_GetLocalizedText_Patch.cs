@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
@@ -20,7 +21,10 @@ namespace TAOM.Features.LocalizationOverride.Hooks;
 [HarmonyPatchCategory("Patch25_LocalizationOverride")]
 public static class MBTextManager_GetLocalizedText_Patch
 {
-    private static readonly Dictionary<string, string> _overrides = new();
+    // Keyed by a (string, start, length) slice so the per-call probe reads the id in place instead of
+    // allocating it: this prefix runs on every localized text resolve. Ordinal, like the string key it
+    // replaces. Written only at module load (SubModule) and in tests.
+    private static readonly Dictionary<IdSlice, string> _overrides = new();
 
     static MethodBase TargetMethod()
         => AccessTools.Method(typeof(MBTextManager), "GetLocalizedText");
@@ -39,9 +43,7 @@ public static class MBTextManager_GetLocalizedText_Patch
         if (idLength == 1 && (text[2] == '!' || text[2] == '*'))
             return true;
 
-        string id = text.Substring(2, idLength);
-
-        if (_overrides.TryGetValue(id, out string overrideText))
+        if (_overrides.TryGetValue(new IdSlice(text, 2, idLength), out string overrideText))
         {
             __result = overrideText;
             return false;
@@ -52,7 +54,8 @@ public static class MBTextManager_GetLocalizedText_Patch
 
     public static void RegisterOverride(string id, string text)
     {
-        _overrides[id] = text;
+        if (id == null) throw new ArgumentNullException(nameof(id));
+        _overrides[new IdSlice(id, 0, id.Length)] = text;
     }
 
     public static void ClearOverrides()

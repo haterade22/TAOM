@@ -1,5 +1,10 @@
+using System;
+using System.Linq;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Features.LocalizationOverride;
 using TAOM.Features.LocalizationOverride.Hooks;
+using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.LocalizationOverride;
 
@@ -170,5 +175,91 @@ public class MBTextManager_GetLocalizedText_PatchTests
         // Assert
         Assert.IsTrue(runOriginal);
         Assert.IsNull(result);
+    }
+
+    // The prefix runs on every localized text resolve, so it reads the {=ID} in place instead of
+    // cutting it out into a new string. The probe's key (IdSlice) compares and hashes on that path too.
+    [TestMethod]
+    public void Prefix_NeverCallsSubstring()
+    {
+        var prefix = typeof(MBTextManager_GetLocalizedText_Patch).GetMethod("Prefix");
+        var slice = typeof(IdSlice);
+        var scanned = new MethodBase[]
+        {
+            prefix,
+            slice.GetMethod(nameof(IdSlice.Equals), new[] { slice }),
+            slice.GetMethod(nameof(IdSlice.GetHashCode), Type.EmptyTypes),
+        };
+
+        foreach (var method in scanned)
+        {
+            Assert.IsNotNull(method);
+            var called = IlCallScanner.ExtractCalledMethods(method, method.GetMethodBody().GetILAsByteArray()).ToList();
+
+            Assert.IsTrue(called.Count > 0, "the scan read the calls of " + method.Name);
+            Assert.IsFalse(called.Any(m => m.DeclaringType == typeof(string) && m.Name == "Substring"),
+                method.DeclaringType.Name + "." + method.Name + " allocates an id substring per call");
+        }
+    }
+
+    [TestMethod]
+    public void Prefix_TextIdIsAPrefixOfARegisteredId_FallsThrough()
+    {
+        MBTextManager_GetLocalizedText_Patch.RegisterOverride("abcd", "override");
+        string result = null;
+
+        Assert.IsTrue(MBTextManager_GetLocalizedText_Patch.Prefix("{=abc}x", ref result));
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Prefix_RegisteredIdIsAPrefixOfTheTextId_FallsThrough()
+    {
+        MBTextManager_GetLocalizedText_Patch.RegisterOverride("abc", "override");
+        string result = null;
+
+        Assert.IsTrue(MBTextManager_GetLocalizedText_Patch.Prefix("{=abcd}x", ref result));
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Prefix_IdDiffersOnlyInCase_FallsThrough()
+    {
+        MBTextManager_GetLocalizedText_Patch.RegisterOverride("AbC", "override");
+        string result = null;
+
+        Assert.IsTrue(MBTextManager_GetLocalizedText_Patch.Prefix("{=abc}x", ref result));
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void Prefix_ManyRegisteredIds_EachTextGetsItsOwnOverride()
+    {
+        for (int i = 0; i < 500; i++)
+            MBTextManager_GetLocalizedText_Patch.RegisterOverride("id" + i, "text" + i);
+
+        for (int i = 0; i < 500; i++)
+        {
+            string result = null;
+            Assert.IsFalse(MBTextManager_GetLocalizedText_Patch.Prefix("{=id" + i + "}tail", ref result), "id" + i);
+            Assert.AreEqual("text" + i, result);
+        }
+    }
+
+    [TestMethod]
+    public void Prefix_EmptyIdRegistered_MatchesTheEmptyIdText()
+    {
+        MBTextManager_GetLocalizedText_Patch.RegisterOverride("", "E");
+        string result = null;
+
+        Assert.IsFalse(MBTextManager_GetLocalizedText_Patch.Prefix("{=}tail", ref result));
+        Assert.AreEqual("E", result);
+    }
+
+    [TestMethod]
+    public void RegisterOverride_NullId_ThrowsArgumentNullException()
+    {
+        Assert.ThrowsException<ArgumentNullException>(
+            () => MBTextManager_GetLocalizedText_Patch.RegisterOverride(null, "text"));
     }
 }

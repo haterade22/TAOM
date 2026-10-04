@@ -7,16 +7,24 @@ namespace TAOM.Features.CompanionTactics;
 /// </summary>
 public sealed class CompanionTacticsSettingsProvider : ICompanionTacticsSettingsProvider
 {
-    public bool EnableCompanionRoleTooltips => TaomSettings.Instance?.EnableCompanionRoleTooltips ?? true;
-    public bool EnableOOBRoleDisplay => TaomSettings.Instance?.EnableOOBRoleDisplay ?? true;
-    public bool CompanionRolesDebug => TaomSettings.Instance?.CompanionRolesDebug ?? false;
+    // Read every frame by BattleActionBarMissionView and OOBOverlayService, and per formation order by
+    // Patch35: cached on the first non-null read, read through (BattleBalanceSettingsProvider pattern).
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
 
-    public bool EnableFormationPresets => TaomSettings.Instance?.EnableFormationPresets ?? false;
-    public int MaxFormationPresets => TaomSettings.Instance?.MaxFormationPresets ?? 10;
-    public bool FormationPresetsDebug => TaomSettings.Instance?.FormationPresetsDebug ?? false;
+    public CompanionTacticsSettingsProvider() { }
+    internal CompanionTacticsSettingsProvider(TaomSettings settings) => _settings = settings;
 
-    public bool EnableBattleActionBar => TaomSettings.Instance?.EnableBattleActionBar ?? true;
-    public bool CancelStanceOnMove => TaomSettings.Instance?.CancelStanceOnMove ?? true;
-    public bool EnableVolleyFire => TaomSettings.Instance?.EnableVolleyFire ?? true;
-    public bool BattleActionBarDebug => TaomSettings.Instance?.BattleActionBarDebug ?? false;
+    public bool EnableCompanionRoleTooltips => Settings?.EnableCompanionRoleTooltips ?? true;
+    public bool EnableOOBRoleDisplay => Settings?.EnableOOBRoleDisplay ?? true;
+    public bool CompanionRolesDebug => Settings?.CompanionRolesDebug ?? false;
+
+    public bool EnableFormationPresets => Settings?.EnableFormationPresets ?? false;
+    public int MaxFormationPresets => Settings?.MaxFormationPresets ?? 10;
+    public bool FormationPresetsDebug => Settings?.FormationPresetsDebug ?? false;
+
+    public bool EnableBattleActionBar => Settings?.EnableBattleActionBar ?? true;
+    public bool CancelStanceOnMove => Settings?.CancelStanceOnMove ?? true;
+    public bool EnableVolleyFire => Settings?.EnableVolleyFire ?? true;
+    public bool BattleActionBarDebug => Settings?.BattleActionBarDebug ?? false;
 }

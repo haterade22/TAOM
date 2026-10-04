@@ -79,7 +79,7 @@ The Harmony patch and `MissionBehavior` are the boundary classes (ADR-002); they
 |---|---|---|---|
 | `Enable Mixed Formations` | bool | `true` | Master toggle. When off, formations use vanilla positioning. |
 | `Default Layout` | int 0–3 | `0` (InfFront) | Auto-applied to mixed formations during the per-second tick. 0=InfFront, 1=RngFront, 2=Wings, 3=Checkerboard |
-| `Cycle Layout Hotkey` | string | `"L"` | Bannerlord `InputKey` name. Pressing while a formation is selected cycles its layout; pressing while no formation is selected cycles all formations. |
+| `Cycle Layout Hotkey` | string | `"L"` | One Bannerlord `InputKey` name, in any case (`L`, `F5`). Pressing while a formation is selected cycles its layout; pressing while no formation is selected cycles all formations. Anything but a key name turns the hotkey off and logs one warning (below): a name the game does not know, a number in any spelling (type `D2`, not `3`), a list such as `L, K`, or `Invalid`. |
 | `Mixed Formations Debug Mode` | bool | `false` | Show `[MixedFormations]` diagnostic messages on the in-game HUD. Off = file log only. |
 
 ### Layout Modes
@@ -117,6 +117,7 @@ The original `MixedFormations` module exposed `InfantryRowDepth` (1 to 10, defau
 | [Main/Features/MixedFormations/Models/SlotAssignment.cs](../../Main/Features/MixedFormations/Models/SlotAssignment.cs) | Cached (row, file) map per formation |
 | [Main/Features/MixedFormations/Models/FormationUnit.cs](../../Main/Features/MixedFormations/Models/FormationUnit.cs) | (Index, IsRanged) tuple struct |
 | [Main/Features/MixedFormations/Hooks/MixedFormationsMissionBehavior.cs](../../Main/Features/MixedFormations/Hooks/MixedFormationsMissionBehavior.cs) | Per-frame tick + hotkey handling + team-adapter construction |
+| [Main/Features/MixedFormations/CycleHotkeyParser.cs](../../Main/Features/MixedFormations/CycleHotkeyParser.cs) + [CachedEnumParse.cs](../../Main/Features/MixedFormations/CachedEnumParse.cs) | The hotkey rule (a key name only, never a number or `Invalid`) and the cache that parses the setting only when it changes |
 | [Main/Features/MixedFormations/Hooks/Patch30_FormationGetOrderPositionOfUnit.cs](../../Main/Features/MixedFormations/Hooks/Patch30_FormationGetOrderPositionOfUnit.cs) | Harmony Prefix on `Formation.GetOrderPositionOfUnit` |
 | [Main/Features/MixedFormations/MixedFormationsIoC.cs](../../Main/Features/MixedFormations/MixedFormationsIoC.cs) | DryIoc registrations |
 | [Main/Adapters/IFormationAdapter.cs](../../Main/Adapters/IFormationAdapter.cs) + [FormationAdapter.cs](../../Main/Adapters/FormationAdapter.cs) | Wraps `Formation` (load-bearing for SmartCavalryAI feature 3 + CompanionTactics feature 7) |
@@ -146,7 +147,9 @@ Adapter (`FormationAdapter`) tested only via integration since `Formation` requi
 ## Performance + Thread Safety
 
 - Service state is per-mission, cleared on `OnEndMission`. Two dictionaries: `Dictionary<object, FormationLayoutType>` (~4 entries) + `Dictionary<object, SlotAssignment>` (~4 entries). Negligible.
-- Per-frame work: `OnMissionTick` accumulates dt; once per second calls `ApplyDefaultsToFormations` (one pass over player team formations, ~4 formations); every frame polls `Input.IsKeyDown` for the cycle hotkey. No allocations in the hot path.
+- Per-frame work: `OnMissionTick` accumulates dt; once per second calls `ApplyDefaultsToFormations` (one pass over player team formations, ~4 formations); every frame polls `Input.IsKeyDown` for the cycle hotkey, whose setting string is parsed only when it changes (`CachedEnumParse`). No allocations in the hot path.
+- **Cycle hotkey log line:** a hotkey value that is not a recognised key name (a number, a list and `Invalid` included) turns the hotkey off, and the behaviour logs one WARNING the first frame it sees that value (once per field battle, and again each time the setting changes to an unusable value, the same one included): `[MixedFormations] cycle hotkey '<value>' is not a recognised InputKey name; it is ignored until the setting changes`. The field is the raw MCM string in quotes, untrimmed (`''` when empty). Example: `[MixedFormations] cycle hotkey 'Ctrl+L' is not a recognised InputKey name; it is ignored until the setting changes`. A valid value logs nothing; the per-mission `[MixedFormations] mission init` line already records it. Format pinned by `CachedEnumParseTests` and `CycleHotkeyInputKeyTests`.
+- **What counts as a key name:** the trimmed setting must be the name of one `InputKey` member in any case (`L`, `f5`, `SemiColon`, `D2`), and nothing else. `CycleHotkeyParser` parses by name only (`EnumNames`) and also refuses the member `Invalid`, the engine's `-1` "no key" value. `Enum.TryParse` alone took more than a name, so each of these used to go through with no log line: a number in any spelling (`3`, `+3` and `003` are all the key `D2`, the `2` key, so a player who typed 3 silently got a key they did not name; a number no key has, such as `0` or `999`, was handed to `Input.IsKeyDown` every frame, and what the native side does with one is unverified), a comma list (`L, K` ORs to 38 | 37 = 39, which is the key `SemiColon`, a key the player never named; `Up, Down` ORs to 216, no key), and `Invalid`. `Enum.IsDefined` was no help: it is true for `3`, for `39` and for `-1`. All of them are now off with the one warning. `CycleHotkeyInputKeyTests` pins these against the installed engine's enum, so an engine bump that moves a member fails there.
 - Per-position-query work: lock acquire + dictionary lookup + 1 conditional `BuildInitialAssignment` if the cache miss, lock release, then `Vec2` math (lock-free). The `BuildInitialAssignment` is the only ω(N) operation and runs once per layout change per formation.
 - `Patch30` caches the `IFormationLayoutService` resolve via static `??=` field — fires once per process, then the dict lookup is bypassed on every subsequent per-unit Prefix call. Per `harmony-patches.md` hot-path-reflection-caching pattern. Caught by deep-review Agent 3.
 - **Thread safety:** Bannerlord runs Formation positioning queries across worker threads (vanilla `Formation.OrderPositionLock`, `IsFormationUnitPositionAvailableAuxMT` uses `TWSharedMutexReadLock(Scene.PhysicsAndRayCastLock)`, `_MT` suffix on `CreateNewOrderWorldPositionMT` etc.). Patch30 fires from those threads, so all dict + `SlotAssignment.ByAgentIndex` mutations in `FormationLayoutService` are protected by a `private readonly object _lock`. Reads on the hot path lock briefly (~25ns uncontended); pure math runs outside the critical section. Caught by Codex review #36; codified in memory entry `feedback_detect_engine_threading_via_mt_suffix`.
@@ -186,6 +189,13 @@ Debug-mode round-trip:
 
 ## Changelog
 
+- 2026-10-03 (#713): the cycle hotkey setting must be the name of one `InputKey` member. `Enum.TryParse` used
+  to accept a number in any spelling (`3`, `+3` and `003` are `D2`, and a number no key has went to the game's
+  key check every frame), a value with a comma (it combines the names into one, possibly different, key) and
+  the name `Invalid` (`-1`, no key), and the hotkey then read that key or value with no log line; all of them
+  now switch the hotkey off with the one warning. The warning's wording changed from "does not parse as
+  InputKey" to "is not a recognised InputKey name". Behaviour change for anyone who typed a number: the
+  hotkey is now off, with a warning in the log, instead of being the key that number happens to be.
 - 2026-09-16 (#606): the per-mission MCM log moved from `OnBehaviorInitialize` (which the engine never
   dispatches to a behavior added from `SubModule.OnMissionBehaviorInitialize`) to `AfterStart`. Diagnostic
   only; the tick and the hotkey never depended on it.

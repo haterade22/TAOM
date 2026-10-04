@@ -7,7 +7,15 @@ namespace TAOM.Features.SiegePropDiagnostics;
 /// </summary>
 public class SiegePropDiagnosticsSettingsProvider : ISiegePropDiagnosticsSettingsProvider
 {
-    public bool IsEnabled => TaomSettings.Instance?.EnableSiegePropDiagnostics ?? false;
+    // Read every frame by SiegePropDiagnosticsMissionBehavior: cached on the first non-null read, read
+    // through (BattleBalanceSettingsProvider pattern).
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
 
-    public bool IsVerbose => TaomSettings.Instance?.SiegePropDiagnosticsVerbose ?? false;
+    public SiegePropDiagnosticsSettingsProvider() { }
+    internal SiegePropDiagnosticsSettingsProvider(TaomSettings settings) => _settings = settings;
+
+    public bool IsEnabled => Settings?.EnableSiegePropDiagnostics ?? false;
+
+    public bool IsVerbose => Settings?.SiegePropDiagnosticsVerbose ?? false;
 }

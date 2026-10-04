@@ -11,34 +11,47 @@ public sealed class CombatMechanicsSettingsProvider : ICombatMechanicsSettingsPr
 {
     private readonly CombatMechanicsConfig _defaults;
 
+    // HOT PATH: read per melee blow (crush-through, cleave, stagger, shield penetration; the charge
+    // knockdown settings only on a horse charge, the one blow TaomCombatMechanicsModel hands to
+    // ChargeKnockdownService) and per mount stat update. Resolving TaomSettings.Instance walks MCM's
+    // settings containers, so the reference is cached on its first non-null read and read THROUGH, never
+    // snapshotted: MCM edits its one registered instance in place (reset and presets copy values into
+    // it), so live MCM edits still apply. Lazy, not in the constructor, so a resolve before MCM is up
+    // cannot pin the JSON fallbacks. Same contract as BattleBalanceSettingsProvider.
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
     public CombatMechanicsSettingsProvider(ICombatMechanicsConfigProvider configProvider)
     {
         _defaults = configProvider.GetConfig();
     }
 
-    private bool MasterEnabled => TaomSettings.Instance?.EnableCombatMechanics ?? _defaults.Enabled;
+    internal CombatMechanicsSettingsProvider(ICombatMechanicsConfigProvider configProvider, TaomSettings settings)
+        : this(configProvider) => _settings = settings;
 
-    public bool SkillCrushThroughEnabled => MasterEnabled && (TaomSettings.Instance?.EnableSkillCrushThrough ?? _defaults.CrushThrough.SkillBasedEnabled);
+    private bool MasterEnabled => Settings?.EnableCombatMechanics ?? _defaults.Enabled;
 
-    public bool MonsterCrushThroughEnabled => MasterEnabled && (TaomSettings.Instance?.EnableMonsterCrushThrough ?? _defaults.CrushThrough.MonsterAutoCrushEnabled);
+    public bool SkillCrushThroughEnabled => MasterEnabled && (Settings?.EnableSkillCrushThrough ?? _defaults.CrushThrough.SkillBasedEnabled);
 
-    public bool OrcShieldCrushEnabled => MasterEnabled && (TaomSettings.Instance?.EnableOrcShieldCrush ?? _defaults.CrushThrough.OrcShieldCrushEnabled);
+    public bool MonsterCrushThroughEnabled => MasterEnabled && (Settings?.EnableMonsterCrushThrough ?? _defaults.CrushThrough.MonsterAutoCrushEnabled);
 
-    public bool CreatureCleaveEnabled => MasterEnabled && (TaomSettings.Instance?.EnableCreatureCleave ?? _defaults.Creatures.CleaveEnabled);
+    public bool OrcShieldCrushEnabled => MasterEnabled && (Settings?.EnableOrcShieldCrush ?? _defaults.CrushThrough.OrcShieldCrushEnabled);
 
-    public bool CreatureUnstoppableEnabled => MasterEnabled && (TaomSettings.Instance?.EnableCreatureUnstoppable ?? _defaults.Creatures.UnstoppableEnabled);
+    public bool CreatureCleaveEnabled => MasterEnabled && (Settings?.EnableCreatureCleave ?? _defaults.Creatures.CleaveEnabled);
 
-    public bool ChargeKnockdownEnabled => MasterEnabled && (TaomSettings.Instance?.EnableChargeKnockdown ?? _defaults.ChargeKnockdown.Enabled);
+    public bool CreatureUnstoppableEnabled => MasterEnabled && (Settings?.EnableCreatureUnstoppable ?? _defaults.Creatures.UnstoppableEnabled);
 
-    public bool ShieldPenetrationEnabled => MasterEnabled && (TaomSettings.Instance?.EnableShieldPenetration ?? _defaults.ShieldPenetration.Enabled);
+    public bool ChargeKnockdownEnabled => MasterEnabled && (Settings?.EnableChargeKnockdown ?? _defaults.ChargeKnockdown.Enabled);
+
+    public bool ShieldPenetrationEnabled => MasterEnabled && (Settings?.EnableShieldPenetration ?? _defaults.ShieldPenetration.Enabled);
 
     // No JSON sibling — the race table itself is the JSON side; this is a pure MCM kill switch.
-    public bool RaceCombatModifiersEnabled => MasterEnabled && (TaomSettings.Instance?.EnableRaceCombatModifiers ?? true);
+    public bool RaceCombatModifiersEnabled => MasterEnabled && (Settings?.EnableRaceCombatModifiers ?? true);
 
-    public bool CultureChargeDamageEnabled => MasterEnabled && (TaomSettings.Instance?.EnableCultureChargeDamage ?? _defaults.ChargeDamage.Enabled);
+    public bool CultureChargeDamageEnabled => MasterEnabled && (Settings?.EnableCultureChargeDamage ?? _defaults.ChargeDamage.Enabled);
 
     public float CrushThroughMaxChance
-        => SettingClamp.Clamp(TaomSettings.Instance?.CrushThroughMaxChance, _defaults.CrushThrough.MaxSkillChance, 0f, 1f);
+        => SettingClamp.Clamp(Settings?.CrushThroughMaxChance, _defaults.CrushThrough.MaxSkillChance, 0f, 1f);
 
     // MCM slider is an int [2,30]; without MCM the provider-validated JSON float applies as-is.
     // The slider floor is the validated NeutralWeightRatio: a below-neutral auto-knockdown ratio
@@ -48,7 +61,7 @@ public sealed class CombatMechanicsSettingsProvider : ICombatMechanicsSettingsPr
     {
         get
         {
-            var mcm = TaomSettings.Instance?.ChargeAutoKnockdownWeightRatio;
+            var mcm = Settings?.ChargeAutoKnockdownWeightRatio;
             if (!mcm.HasValue)
                 return _defaults.ChargeKnockdown.AutoKnockdownWeightRatio;
 
@@ -60,14 +73,14 @@ public sealed class CombatMechanicsSettingsProvider : ICombatMechanicsSettingsPr
 
     // #610: the three Branch B knobs. Slider bounds mirror TaomSettings; the JSON may go wider.
     public float ChargeNeutralWeightRatio
-        => SettingClamp.Clamp(TaomSettings.Instance?.ChargeNeutralWeightRatio, _defaults.ChargeKnockdown.NeutralWeightRatio, 1f, 30f);
+        => SettingClamp.Clamp(Settings?.ChargeNeutralWeightRatio, _defaults.ChargeKnockdown.NeutralWeightRatio, 1f, 30f);
 
     public float ChargeHorsePenetration
-        => SettingClamp.Clamp(TaomSettings.Instance?.ChargeHorsePenetration, _defaults.ChargeKnockdown.HorseChargePenetration, 0f, 1f);
+        => SettingClamp.Clamp(Settings?.ChargeHorsePenetration, _defaults.ChargeKnockdown.HorseChargePenetration, 0f, 1f);
 
     // Clamped to the JSON max so the min <= max invariant holds at both surfaces.
     public float ChargeMinPenetrationFactor
-        => SettingClamp.Clamp(TaomSettings.Instance?.ChargeMinPenetrationFactor, _defaults.ChargeKnockdown.MinPenetrationFactor, 0f, _defaults.ChargeKnockdown.MaxPenetrationFactor);
+        => SettingClamp.Clamp(Settings?.ChargeMinPenetrationFactor, _defaults.ChargeKnockdown.MinPenetrationFactor, 0f, _defaults.ChargeKnockdown.MaxPenetrationFactor);
 
     /// <summary>The auto-knockdown slider's floor: the neutral ratio rounded up, never below 2.
     /// NaN reads as the minimum so a poisoned value cannot unlock Branch A on ordinary charges.</summary>
