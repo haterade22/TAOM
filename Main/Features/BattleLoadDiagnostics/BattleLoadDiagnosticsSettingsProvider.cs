@@ -11,6 +11,12 @@ public sealed class BattleLoadDiagnosticsSettingsProvider : IBattleLoadDiagnosti
     private const double DefaultWatchdogSeconds = 300d;
     private const double MinWatchdogSeconds = 10d;
     private const double MaxWatchdogSeconds = 600d;
+    private const int DefaultTickProfilerTopN = 8;
+    private const int MinTickProfilerTopN = 1;
+    private const int MaxTickProfilerTopN = 20;
+    private const double DefaultHitchThresholdMs = 250d;
+    private const double MinHitchThresholdMs = 50d;
+    private const double MaxHitchThresholdMs = 2000d;
 
     public bool IsEnabled =>
         BattleLoadDiagnosticsSettings.Instance?.EnableBattleLoadDiagnostics ?? true;
@@ -58,4 +64,23 @@ public sealed class BattleLoadDiagnosticsSettingsProvider : IBattleLoadDiagnosti
             raw, MemoryPressureSampler.MinSampleIntervalSeconds, MemoryPressureSampler.MaxSampleIntervalSeconds)
             ? raw
             : MemoryPressureSampler.DefaultSampleIntervalSeconds;
+
+    // Fail-CLOSED, unlike the getters above: this toggle installs Patch97 on Mission.OnTick and
+    // Mission.OnPreTick, so "MCM not ready" must never install it.
+    public bool TickProfilerEnabled =>
+        BattleLoadDiagnosticsSettings.Instance?.EnableTickProfiler ?? false;
+
+    public int TickProfilerTopN =>
+        ValidateTickProfilerTopN(BattleLoadDiagnosticsSettings.Instance?.TickProfilerTopN ?? DefaultTickProfilerTopN);
+
+    public double HitchThresholdMs =>
+        ValidateHitchThresholdMs(BattleLoadDiagnosticsSettings.Instance?.HitchThresholdMs ?? (int)DefaultHitchThresholdMs);
+
+    internal static int ValidateTickProfilerTopN(int raw) =>
+        raw >= MinTickProfilerTopN && raw <= MaxTickProfilerTopN ? raw : DefaultTickProfilerTopN;
+
+    internal static double ValidateHitchThresholdMs(double raw) =>
+        FiniteFloatValidator.IsFiniteInRange(raw, MinHitchThresholdMs, MaxHitchThresholdMs)
+            ? raw
+            : DefaultHitchThresholdMs;
 }

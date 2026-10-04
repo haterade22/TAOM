@@ -20,12 +20,14 @@ namespace TAOM.Tests.Features.Mcm;
 /// took, until the next launch reverts it. Player-reported for Troop Weight 2026-09-06 and for
 /// Bandit Scaling 2026-09-11 (#559).
 ///
-/// Every TAOM setting is read live through <c>TaomSettings.Instance</c> (no Harmony category is
-/// gated on a setting at apply time), so the honest posture is <c>RequireRestart = false</c>
-/// everywhere, and a new setting that omits the flag is a bug this test catches. The allowlist
-/// holds settings whose consumer is parked (commented out in SubModule.cs), where a restart does
-/// not help either but flipping the flag would promise an effect that does not exist. Note that no
-/// MCM setting can gate anything in OnSubModuleLoad: <c>GlobalSettings&lt;T&gt;.Instance</c> is null
+/// Every TAOM setting but one is read live through its settings instance, so the honest posture
+/// is <c>RequireRestart = false</c> everywhere, and a new setting that omits the flag is a bug this
+/// test catches. The allowlist holds the exceptions, each with its reason: a setting whose consumer
+/// is parked (commented out in SubModule.cs), where a restart does not help either but flipping
+/// the flag would promise an effect that does not exist; and <c>EnableTickProfiler</c>, the one
+/// setting a Harmony category is gated on at apply time (read once per process for Patch97).
+/// Note that no MCM setting can gate anything in OnSubModuleLoad:
+/// <c>GlobalSettings&lt;T&gt;.Instance</c> is null
 /// until MCM's own OnBeforeInitialModuleScreenSetAsRoot, which is why the two CrashReport toggles
 /// left this list on 2026-09-24 and are read at capture time instead.
 ///
@@ -38,6 +40,7 @@ public class SettingRequireRestartPostureTests
     private static readonly IReadOnlyDictionary<string, string> RestartAllowlist = new Dictionary<string, string>
     {
         [$"{nameof(TaomSettings)}.{nameof(TaomSettings.EnableNativeSkinFixes)}"] = "PARKED 2026-07-08: the install call is commented out in SubModule.cs, the toggle drives nothing",
+        [$"{nameof(BattleLoadDiagnosticsSettings)}.{nameof(BattleLoadDiagnosticsSettings.EnableTickProfiler)}"] = "Read at the first game init, where Patch97 installs or is skipped: turning it on needs a restart (turning it off applies from the next mission)",
     };
 
     private static readonly Type[] SettingsClasses =

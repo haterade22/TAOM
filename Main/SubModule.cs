@@ -1922,6 +1922,15 @@ public class SubModule : MBSubModuleBase
         TryPatchCategory("Patch91_MissionTickStall");
         IoC.Resolve<Features.BattleLoadDiagnostics.MissionTickStallWatchdog>().Start();
 
+        // Patch97 tick profiler (default off): times every mission behaviour's tick and the engine
+        // phases managed code sees, for [TickProfile] and [Hitch]. Installed here, once per process and
+        // only when its MCM toggle is on: game init precedes every mission, so nothing that calls
+        // Mission.OnPreTick has run yet. The installer contains its own failures.
+        Features.MissionPerf.Hooks.MissionTickProfilerInstaller.InstallIfEnabled(
+            IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
+            IoC.Resolve<IModLogger>(),
+            TryPatchCategory);
+
         // Exit-stall stack sampler (#331 round 2): OnGameInitializationFinished runs on the
         // game's main thread — the same thread the tournament-exit stall freezes — so this
         // is a valid capture point for the sampler's main-thread reference. (Verified against
@@ -2110,6 +2119,12 @@ public class SubModule : MBSubModuleBase
         // [MissionPerf] frame-time heartbeat every 5 s; the measurement the doctrine A/B and any
         // later battle-AI change is judged against. Self-gates on its BattleLoadDiagnostics toggle.
         AddTaomBehavior(new Features.MissionPerf.Hooks.MissionPerfHeartbeatBehavior(IoC.Resolve<IModLogger>()));
+        // [PerfContext] once per mission, and, when the Patch97 profiler is installed and on, a
+        // [TickProfile] window on the same 5 s wall clock as [MissionPerf].
+        AddTaomBehavior(new Features.MissionPerf.Hooks.MissionTickProfilerBehavior(
+            IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsSettingsProvider>(),
+            IoC.Resolve<IGraphicsOptionsAdapter>(),
+            IoC.Resolve<IModLogger>()));
         AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
 
         var colorStore = IoC.Resolve<IAgentColorStore>();

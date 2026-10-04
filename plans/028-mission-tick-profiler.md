@@ -1237,7 +1237,9 @@ Stop and report (do not improvise) if:
   that contains a data tag counts as a malformed line in every log 029 reads.
 - Plan 030 deletes `Patch35_Mission_OnTick` (a postfix on the same method); Harmony composes the two,
   so the order of merging does not matter. Plan 034 changes PatchShield; if it rewrites
-  `ExcludedTargetMethods`, keep the three Patch97 entries and the binding test that walks them.
+  `ExcludedTargetMethods`, keep `Mission.TickAgentsAndTeamsImp` on it and `Mission.OnTick` and `Mission.OnPreTick` off
+  it (decision D13, 2026-10-03: those two are not excluded), and the binding tests that walk both directions
+  (`AgentTickTarget_IsOnPatchShieldsExclusionList`, `TickAndPreTickTargets_AreNotOnPatchShieldsExclusionList`).
 - Plans that add MCM settings also move `SettingsFingerprintTests` and the two co-op docs' counts;
   the second to merge recomputes.
 - An engine bump that moves the call sites fails `MissionTickProfilerBindingTests` (the binding gate)

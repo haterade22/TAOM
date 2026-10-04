@@ -678,10 +678,15 @@ the three names and `PatchShield.IsExcludedTarget` checks it beside the namespac
   2026-07-10 compat review, which fixed it by namespace and recorded it only in a `PatchShieldPolicy` comment, so no
   lesson reached the next patch author. Both of those lessons frame the tax as other mods' patches or hot
   namespaces; `TaleWorlds.MountAndBlade` is far too broad to exclude by namespace.
-- **Prevent:** when a TAOM patch targets an engine method called per unit, per agent or per frame, add
+- **Prevent:** when a TAOM patch targets an engine method called per unit or per agent, or on a worker thread, add
   `<FullTypeName>.<MethodName>` to `PatchShieldPolicy.ExcludedTargetMethods` in the same change (one entry covers every
   overload) and a `BindingVerification` test that walks the patch's real targets through `IsExcludedTargetMethod`, so
   a renamed or added target cannot slip off the list; exclude by namespace only when the whole namespace is hot.
+  Narrowed 2026-10-03 (decision D13): a once-per-frame main-thread target keeps the shield, because plan 034 makes its
+  no-exception cost small. A per-frame target is excluded only where a swallow at it would skip the code that
+  completes the frame's work, as at `Mission.TickAgentsAndTeamsImp`. `Mission.OnTick` meets this test but keeps the
+  shield: a finalizer above it swallows the same throw; exclude only where the exclusion changes who catches it (the
+  asynchronous agent tick). The binding test walks both directions.
 - **Source:** `Dependencies/Foundation/PatchShieldPolicy.cs` `ExcludedTargetMethods`; `Dependencies/Foundation/PatchShield.cs`
   `Install`; `Patch92BindingTests.EveryPatch92Target_IsOnPatchShieldsHotMethodList`.
 
@@ -695,8 +700,9 @@ agents.
   postfix looked like a rare event and nobody read its caller. Third instance of the per-call tax on TAOM's own
   targets (Patch38 2026-07-10, Patch92 2026-09-26).
 - **Prevent:** for every target in a new patch category, read the engine caller (not the method name) and write its
-  call rate down; any target reached from an agent tick, a parallel tick or a per-frame path goes on
-  `ExcludedTargetMethods`, and the category's binding test walks all of them
+  call rate down; any target reached from an agent tick or a parallel tick (a per-unit or per-agent rate) goes on
+  `ExcludedTargetMethods`, a once-per-frame main-thread target does not (narrowed 2026-10-03, decision D13; see the
+  2026-09-26 rule), and the category's binding test walks all of them
   (`CreatureBanditsWiringTests.HotCreatureTargets_AreOnPatchShieldsExclusionList`).
 - **Source:** `docs/reviews/rca-creature-bandits-2026-09-28.md`, finding 6.
 
@@ -717,3 +723,68 @@ The Custom Battle troop postfix was narrowed to return only a troop vanilla's sl
 - **Why missed:** the filter was designed against the consumer that motivated it; the second caller sat in the same decompiled file and was never asked what it does with null.
 - **Prevent:** before changing what a postfix returns, list every caller of the patched method with what it does on each value you now return (null included), and write the narrowing as a function of the caller's state when they differ (here `vanillaHasPick`). One test per caller shape.
 - **Source:** `docs/reviews/rca-custom-battle-bannerless-factions-2026-10-02.md` part B (convergence pass).
+
+### Name every patch target a shield or gate skips, and list every per-frame target before claiming a frame is free of a cost (2026-10-02)
+Plan 028 put `Mission.OnTick`, `Mission.OnPreTick` and `Mission.TickAgentsAndTeamsImp` on PatchShield's
+`ExcludedTargetMethods` for every player. PatchShield recorded the skip as one more `skipped` count, so no log said a
+patch on those methods ran unshielded. The docs then claimed no shield finalizer ran inside a frame, while
+`Mission.Tick` (Patch37), `MissionState.TickMissionAux` (Patch91) and `MissionState.OnTick` (Patch43) still carried one
+per frame, and that any throwing patch lost its rescue, while PatchShield only ever swallowed the missing-API trinity.
+The first correction then overstated the remaining cover: a throw from `Mission.OnTick` is swallowed one frame up only
+from a process's second game start, when pass 2 has shielded Patch91's `TickMissionAux` (and that rescue strips
+Patch91's own prefix); in a process's first game it reaches Patch37's crash-report finalizer on `Module.OnApplicationTick`.
+The second convergence round found that still too narrow: the throw unwinds the whole application tick (every module's
+`OnApplicationTick`, `JobManager.OnTick` and the game handlers are skipped that frame), and a postfix that throws after
+`Mission.OnTick` has ended the mission stops `MissionState.OnTick` from popping it every frame, so the battle never closes.
+- **Why missed:** the skip lives in `PatchShield.cs`, outside the diff, and the claim was written from the three methods
+  the plan touched; the comment tied all three entries to the profiler, though two serve Patch35 and Patch91.
+- **Prevent:** a skip list writes one log line per skipped target, once, naming it, its owners and what is given up
+  (`PatchShieldPolicy.FormatHotMethodSkip`). Before writing "no X runs inside a frame", list every per-frame target that
+  carries X (the frame's whole call chain, not the methods you patch). A list entry's comment names every consumer.
+  Before claiming a caller's shield still covers a skipped method, check when that shield is attached (which
+  PatchShield pass, first or second game start), not only that it exists. When a change removes or narrows a catch,
+  follow the exception to its next catch and read each unwound caller's code after the call: list what one throw
+  skips, including transitions that run only after a call returns (a state pop, a completion flag, a save).
+- **Later change (2026-10-03, maintainer decision D13):** `Mission.OnTick` and `Mission.OnPreTick` came off
+  `ExcludedTargetMethods`; only `Mission.TickAgentsAndTeamsImp` stays, so that a swallow at the agent tick cannot skip
+  `tickCompleted = true`. Plan 034 takes the per-call lookup off the shield's no-exception path, and left unshielded a
+  foreign patch's missing-API throw on `Mission.OnTick` unwinds the application tick in a process's first game. The cost
+  is that a strip on `Mission.OnTick` is not culprit-only and takes TAOM's own Patch35 and Patch97 with it (FOLLOW-UP L1
+  in the review record). The per-frame trigger in the two Prevent lines of the 2026-09-26 and 2026-09-28 lessons is
+  narrowed to match. TAOM patches `Mission.OnPreTick` only through Patch97; any patch on it attaches the shield.
+- **A hazard no exclusion fixes (Codex review, 2026-10-03; older than the profiler):** `Mission.OnTick` clears
+  `tickCompleted` (`Mission.cs:3756`) before its `OnMissionTick` loop and only `TickAgentsAndTeamsImp` sets it again
+  (`:3629`). An exception that escapes between the two and is swallowed above it, by PatchShield's finalizer on
+  `Mission.OnTick` or by Patch37's crash capture on `Module.OnApplicationTick`, leaves the next `WaitTickCompletion`
+  spinning forever, whether `Mission.OnTick` is shielded or not. The `TickAgentsAndTeamsImp` exclusion does not change
+  that for the inline call (fast-forward), which reaches `Mission.OnTick`; the texts that called it "a fix for the
+  hang" said more than it does. The PatchShield follow-up plan takes it, and takes a second hazard of the same kind: a
+  swallowed foreign prefix throw on `Mission.OnPreTick` skips the whole body, whose first call is `WaitTickCompletion`,
+  so that frame's `OnTick` can run while the previous agent tick still runs (consequence UNVERIFIED; trunk shields a
+  foreign patch on it the same way). **Prevent:** before claiming a shield, or its
+  absence, keeps a flow alive, list the completion flag the flow depends on and every write to it, then place each throw
+  position (before the clear, between the clear and the launch, after the launch) against them.
+- **Source:** `docs/reviews/rca-mission-tick-profiler-2026-10-02.md` rows R2 and R3; convergence rounds 1 and 2 in
+  `docs/reviews/deep-review-028-mission-tick-profiler-2026-10-02.md`.
+
+### An install flag is a startup fact: read the health of patches that can change where they are used (2026-10-03)
+Plan 028's tick profiler set `Installed` once at game start (the category applied and both `Mission.OnTick` calls swapped)
+and every mission gated on it. Harmony patches change after that. Another mod's transpiler that runs earlier can take an
+anchor, after which Patch97's rewrite finds none, returns its input and lowers `OnTickSites` while its warning says no
+mission is measured; PatchShield strips every unprotected owner's patches on a method it rescues, TAOM's own included;
+the strip removes Patch97's transpiler, so nothing rewrites `OnTickSites` afterwards and even the counter stays stale.
+The profiler kept measuring: behaviour time vanished into `otherMs`,
+and a stripped frame-boundary prefix left empty windows. The first fix (RCA R7) printed the live counts in the mission
+header, which only reports.
+- **Why missed:** `Installed` was reviewed as the right gate for a once-per-process install, and the transpiler's own
+  warning was read as the safety net. Neither is checked where the data is produced, and the tests covered the install
+  decision and the status lines, not an install followed by a change.
+- **Prevent:** a gate on patches that can change is evaluated where it is used: at each mission start, from
+  `Harmony.GetPatchInfo` for the patch methods the feature needs plus the transpiler's own site counts, and on every tick
+  for what costs nothing to read (the site count). Price a read before putting it on a cadence: `GetPatchInfo`
+  deserializes on every call and each `Patch.PatchMethod` resolves by scanning the loaded assemblies, so patch info
+  stays at the mission start, off the clock of the measurement. A loss is one aggregated reason line and a stop, never
+  a counter left to be read. Test it as install, then change: a zero-site rewrite, then each required patch removed by
+  the call PatchShield makes (`Unpatch` by type, and by method for a finalizer).
+- **Source:** `docs/reviews/deep-review-028-mission-tick-profiler-2026-10-02.md`, fix pass 3 (Codex finding 2);
+  `HookHealth`, `MissionTickProfilerHealth`, `HookHealthTests`.

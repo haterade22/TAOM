@@ -254,6 +254,19 @@ public class PatchShieldPolicyTests
     }
 
     [TestMethod]
+    public void IsExcludedTargetMethod_MissionOnTickAndOnPreTick_ReturnsFalse()
+    {
+        // Maintainer decision D13 (2026-10-03): plan 028 had excluded both; neither is on the list now, so the
+        // shield attaches to them whenever something patches them, and a foreign patch's missing-API throw on
+        // Mission.OnTick is swallowed and the patch stripped instead of unwinding the application tick. That does
+        // not make an interrupted Mission.OnTick safe (the hazard in PatchShieldPolicy.ExcludedTargetMethods).
+        // Only the agent tick stays excluded, so a swallow there cannot skip tickCompleted = true;
+        // MissionTickProfilerBindingTests pins that one against the real patch target.
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Mission", "OnTick"));
+        Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Mission", "OnPreTick"));
+    }
+
+    [TestMethod]
     public void IsExcludedTargetMethod_NullOrEmptyParts_ReturnsFalse()
     {
         Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod(null, "get_UnitDiameter"));
@@ -262,6 +275,21 @@ public class PatchShieldPolicyTests
         Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod(string.Empty, "get_UnitDiameter"));
         Assert.IsFalse(PatchShieldPolicy.IsExcludedTargetMethod("TaleWorlds.MountAndBlade.Formation", string.Empty));
     }
+
+    // --- FormatHotMethodSkip: the once-per-method diag.log reason line ----------------------------
+
+    [TestMethod]
+    public void FormatHotMethodSkip_NamesTheTargetItsOwnersAndWhatIsGivenUp()
+        => Assert.AreEqual(
+            "not shielding TaleWorlds.MountAndBlade.Mission.TickAgentsAndTeamsImp (ExcludedTargetMethods, a hot target), patched by com.taom.mod, other.mod: "
+            + "a MissingMethod, MissingField or TypeLoad exception from a patch on it is not swallowed, and that patch is not stripped",
+            PatchShieldPolicy.FormatHotMethodSkip("TaleWorlds.MountAndBlade.Mission", "TickAgentsAndTeamsImp", new[] { "com.taom.mod", "other.mod" }));
+
+    [TestMethod]
+    public void FormatHotMethodSkip_NoOwnersKnown_SaysUnknown()
+        => StringAssert.Contains(
+            PatchShieldPolicy.FormatHotMethodSkip("TaleWorlds.MountAndBlade.Mission", "TickAgentsAndTeamsImp", null),
+            "(ExcludedTargetMethods, a hot target), patched by unknown: ");
 
     // --- FormatShieldPassSummary: the diag.log shield-pass line ----------------------------------
 

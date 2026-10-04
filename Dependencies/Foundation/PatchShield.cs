@@ -62,6 +62,20 @@ public static class PatchShield
         catch { return false; /* fail open: an unreadable type just gets shielded as before */ }
     }
 
+    // One diag.log reason line per patched method skipped by name (ExcludedTargetMethods), once per
+    // process: the caller has just recorded the method as seen. The namespace exclusions stay counted
+    // only; they cover whole layers, and their rationale is in PatchShieldPolicy.
+    private static void LogHotMethodSkip(MethodBase method)
+    {
+        try
+        {
+            var type = method.DeclaringType?.FullName;
+            if (!PatchShieldPolicy.IsExcludedTargetMethod(type, method.Name)) return;
+            DiagLog.Log(Tag, PatchShieldPolicy.FormatHotMethodSkip(type, method.Name, Harmony.GetPatchInfo(method)?.Owners));
+        }
+        catch { /* diagnostic only */ }
+    }
+
     private static readonly Dictionary<string, int> _ownerCounts =
         new(StringComparer.OrdinalIgnoreCase);
     private static readonly object _ownerLock = new();
@@ -185,6 +199,7 @@ public static class PatchShield
                     {
                         _coverage.RecordSkipped(method);
                         skipped++;
+                        LogHotMethodSkip(method);
                         continue;
                     }
 

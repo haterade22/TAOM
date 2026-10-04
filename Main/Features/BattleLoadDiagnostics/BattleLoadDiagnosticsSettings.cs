@@ -59,4 +59,19 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
     [SettingPropertyBool("Enable Mission Frame-Time Heartbeat", Order = 0, RequireRestart = false,
         HintText = "Writes a [MissionPerf] line to the TAOM debug log every 5 seconds while a mission runs: frames, fps, average / p95 / max frame time in ms, agent and formation counts, garbage collections. This is the in-mission counterpart of [MemSample] and the measurement an AI or content change is judged against. Cost is one timestamp per frame. Default ON.")]
     public bool EnableMissionPerfHeartbeat { get; set; } = true;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyBool("Enable Tick Profiler", Order = 1, RequireRestart = true,
+        HintText = "Off by default. Times every mission behaviour's tick and the engine phases TAOM can see (the wait for the previous frame's agent tick, the agent tick itself, everything else), writes a [TickProfile] line to the TAOM debug log every 5 seconds, a [Hitch] line for each frame slower than the hitch threshold, and a [TickSummary] line when the mission ends. Turning it on takes effect after a restart (the profiler is installed once, at game start); turning it off stops measuring from the next mission.")]
+    public bool EnableTickProfiler { get; set; } = false;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyInteger("Tick Profiler Top Behaviours", 1, 20, Order = 2, RequireRestart = false,
+        HintText = "How many mission behaviours each [TickProfile] and [TickSummary] line lists, slowest first. Default 8. Read at each mission start.")]
+    public int TickProfilerTopN { get; set; } = 8;
+
+    [SettingPropertyGroup("Mission Performance")]
+    [SettingPropertyInteger("Hitch Threshold (ms)", 50, 2000, Order = 3, RequireRestart = false,
+        HintText = "A frame that takes this many milliseconds or more writes one [Hitch] line naming where the frame went, for the first 100 such frames of a mission; later ones are only counted. Below the battle's usual frame time, nearly every frame is a hitch. Default 250. Read at each mission start.")]
+    public int HitchThresholdMs { get; set; } = 250;
 }

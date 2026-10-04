@@ -60,4 +60,67 @@ public class BattleLoadDiagnosticsSettingsProviderTests
         Assert.AreEqual(10d, BattleLoadDiagnosticsSettingsProvider.ValidateSampleIntervalSeconds(10d));
         Assert.AreEqual(120d, BattleLoadDiagnosticsSettingsProvider.ValidateSampleIntervalSeconds(120d));
     }
+
+    // The tick profiler installs Harmony patches, so its toggle fails CLOSED when MCM is not ready,
+    // unlike every sibling above.
+    [TestMethod]
+    public void TickProfilerEnabled_NoMcmInstance_DefaultsFalse()
+    {
+        var sut = new BattleLoadDiagnosticsSettingsProvider();
+        Assert.IsFalse(sut.TickProfilerEnabled);
+    }
+
+    [TestMethod]
+    public void TickProfilerTopN_NoMcmInstance_Defaults8()
+    {
+        var sut = new BattleLoadDiagnosticsSettingsProvider();
+        Assert.AreEqual(8, sut.TickProfilerTopN);
+    }
+
+    [TestMethod]
+    public void HitchThresholdMs_NoMcmInstance_Defaults250()
+    {
+        var sut = new BattleLoadDiagnosticsSettingsProvider();
+        Assert.AreEqual(250d, sut.HitchThresholdMs);
+    }
+
+    [TestMethod]
+    public void ValidateTickProfilerTopN_OutOfRange_Returns8()
+    {
+        Assert.AreEqual(8, BattleLoadDiagnosticsSettingsProvider.ValidateTickProfilerTopN(0));
+        Assert.AreEqual(8, BattleLoadDiagnosticsSettingsProvider.ValidateTickProfilerTopN(21));
+        Assert.AreEqual(8, BattleLoadDiagnosticsSettingsProvider.ValidateTickProfilerTopN(-5));
+    }
+
+    [TestMethod]
+    public void ValidateTickProfilerTopN_RangeEdges_ReturnRaw()
+    {
+        Assert.AreEqual(1, BattleLoadDiagnosticsSettingsProvider.ValidateTickProfilerTopN(1));
+        Assert.AreEqual(20, BattleLoadDiagnosticsSettingsProvider.ValidateTickProfilerTopN(20));
+    }
+
+    [TestMethod]
+    public void ValidateHitchThresholdMs_NaN_Returns250()
+        => Assert.AreEqual(250d, BattleLoadDiagnosticsSettingsProvider.ValidateHitchThresholdMs(double.NaN));
+
+    [TestMethod]
+    public void ValidateHitchThresholdMs_Infinity_Returns250()
+    {
+        Assert.AreEqual(250d, BattleLoadDiagnosticsSettingsProvider.ValidateHitchThresholdMs(double.PositiveInfinity));
+        Assert.AreEqual(250d, BattleLoadDiagnosticsSettingsProvider.ValidateHitchThresholdMs(double.NegativeInfinity));
+    }
+
+    [TestMethod]
+    public void ValidateHitchThresholdMs_OutOfRange_Returns250()
+    {
+        Assert.AreEqual(250d, BattleLoadDiagnosticsSettingsProvider.ValidateHitchThresholdMs(49d));
+        Assert.AreEqual(250d, BattleLoadDiagnosticsSettingsProvider.ValidateHitchThresholdMs(2001d));
+    }
+
+    [TestMethod]
+    public void ValidateHitchThresholdMs_RangeEdges_ReturnRaw()
+    {
+        Assert.AreEqual(50d, BattleLoadDiagnosticsSettingsProvider.ValidateHitchThresholdMs(50d));
+        Assert.AreEqual(2000d, BattleLoadDiagnosticsSettingsProvider.ValidateHitchThresholdMs(2000d));
+    }
 }

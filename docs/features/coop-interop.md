@@ -307,13 +307,13 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **337** settings across
+- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **340** settings across
   four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
-  the split is 320 in `TaomSettings`, 9 in `BattleLoadDiagnosticsSettings`, 7 in
+  the split is 320 in `TaomSettings`, 12 in `BattleLoadDiagnosticsSettings`, 7 in
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
   **217 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
   ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 217 are in
-  `TaomSettings`. The 120 excluded (67 counted 2026-09-22, the 37 Realm Borders settings added from 2026-09-30, the Crash Report AfterStart dev trigger added 2026-10-01, the Battle Corpses advice toggle and button added 2026-10-01, and the thirteen Menus & Loading Screens settings added 2026-10-01, #704) are instrumentation, player-local convenience,
+  `TaomSettings`. The 123 excluded (67 counted 2026-09-22, the 37 Realm Borders settings added from 2026-09-30, the Crash Report AfterStart dev trigger added 2026-10-01, the Battle Corpses advice toggle and button added 2026-10-01, and the thirteen Menus & Loading Screens settings added 2026-10-01, #704, and the three tick profiler settings added 2026-10-02) are instrumentation, player-local convenience,
   presentation, two action buttons, and the three time-acceleration knobs whose UI co-op already
   suppresses; the list with its reasons is
   `Main/Features/CoopInterop/CoopSettingsRelevance.cs`.

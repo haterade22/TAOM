@@ -1,4 +1,5 @@
 using HarmonyLib;
+using TAOM.Features.MissionPerf.Hooks;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.BattleLoadDiagnostics.Hooks;
@@ -16,11 +17,12 @@ namespace TAOM.Features.BattleLoadDiagnostics.Hooks;
 [HarmonyPatchCategory("Patch91_MissionTickStall")]
 public static class Mission_TickAgentsAndTeamsImp_StallProbe_Patch
 {
+    // The Patch97 tick profiler reads the same bracket for agentTickMs (a static null check when it is not installed).
     [HarmonyPrefix]
-    public static void Prefix() => MissionTickStallProbe.AsyncAgentTick.Enter();
+    public static void Prefix() { MissionTickStallProbe.AsyncAgentTick.Enter(); MissionTickProfilerHooks.OnAgentTickEnter(); }
 
     [HarmonyFinalizer]
-    public static void Finalizer() => MissionTickStallProbe.AsyncAgentTick.Exit();
+    public static void Finalizer() { MissionTickStallProbe.AsyncAgentTick.Exit(); MissionTickProfilerHooks.OnAgentTickExit(); }
 }
 
 [HarmonyPatch(typeof(MissionState), "TickMissionAux", new[] { typeof(float), typeof(float), typeof(bool), typeof(bool) })]

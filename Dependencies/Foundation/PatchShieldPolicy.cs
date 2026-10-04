@@ -145,6 +145,42 @@ public static class PatchShieldPolicy
         // Patch93_CreatureBanditNoRout: CommonAIComponent.OnTickParallel asks it for every AI agent, horses
         // included, every 0.5 to 0.6 s on the TWParallel workers.
         "TaleWorlds.MountAndBlade.Mission.CanAgentRout",
+        // Mission.TickAgentsAndTeamsImp carries Patch91's bracket for every player. With a finalizer on it, a
+        // swallowed exception from the agent or team ticks would skip tickCompleted = true (Mission.cs:3629), so
+        // the next WaitTickCompletion would spin forever; excluded, the exception leaves the method instead.
+        // That is all this entry buys. On the asynchronous call it reaches the native job thread (the generated
+        // shim Mission_TickAgentsAndTeams has no catch, and what native does then is UNVERIFIED); on the inline
+        // call, which fast-forward makes (MissionState.TickMission passes asyncAITick false), it reaches
+        // Mission.OnTick, see the hazard below. Given up: the missing-API swallow and the strip of the
+        // offending patch, for any owner.
+        // Mission.OnTick (Patch35's postfix for every player, Patch97's transpiler) and Mission.OnPreTick (TAOM
+        // patches it only through Patch97; any patch on it attaches the shield) are deliberately NOT listed. Plan
+        // 028 listed them under the per-frame rule (lessons/harmony-il.md, 2026-09-26 and 2026-09-28); the
+        // maintainer took them off (decision D13, 2026-10-03), because plan 034 takes the per-call lookup off
+        // the shield's no-exception path, and left unshielded a foreign patch's missing-API throw on
+        // Mission.OnTick unwinds the whole application tick in a process's first game. The price: the strip is
+        // not culprit-only and "com.taom.mod" is not a protected owner, so if the shield ever strips patches on
+        // Mission.OnTick, TAOM's own Patch35 and Patch97 go with them, until the planned culprit-only fix.
+        // KNOWN HAZARD, older than the profiler and NOT fixed here: no choice on this list makes an interrupted
+        // Mission.OnTick safe. OnTick clears tickCompleted (Mission.cs:3756) before its OnMissionTick loop, and
+        // only TickAgentsAndTeamsImp sets it again (:3629). An exception that escapes OnTick between the two (a
+        // behaviour's OnMissionTick, which need not be a patch; a patch or transpiled call in that stretch; the
+        // inline agent tick) and is swallowed by a finalizer above it, this shield's (missing-API only) or
+        // Patch37's crash capture on Module.OnApplicationTick (any exception, while capture is on), leaves the
+        // flag false, and every later WaitTickCompletion spins forever. A throw before the clear (a prefix) or
+        // after the agent tick is launched (a postfix) does not leave the flag false. A throw before the clear
+        // still costs the frame: one no patch made (a behaviour's OnPreDisplayMissionTick, Mission.cs:3750) that a
+        // finalizer swallows skips the rest of OnTick, the agent tick launch included, on every frame it recurs.
+        // This shield logs each missing-API swallow; Patch37's capture logs at occurrences 1, 2, 10, 100 and so on
+        // (CrashBundleThrottle.IsLoggedOccurrence).
+        // The PatchShield follow-up plan (the culprit-only strip, FOLLOW-UP L1, plus a completion-aware recovery)
+        // takes it, with regression tests for an exception before the clear, between the clear and the launch,
+        // and inside the inline agent tick. It takes this one too: a swallowed foreign prefix throw on
+        // Mission.OnPreTick skips the whole body, whose first call is WaitTickCompletion, so that frame's OnTick
+        // can run while the previous agent tick still runs (consequence UNVERIFIED); trunk shields a foreign patch
+        // on it the same way, so that is older than the profiler as well.
+        // MissionTickProfilerBindingTests walks the real targets in both directions.
+        "TaleWorlds.MountAndBlade.Mission.TickAgentsAndTeamsImp",
     };
 
     /// <summary>Whether a patch target's declaring type + method name is on the hot-method exclusion list.</summary>
@@ -157,6 +193,19 @@ public static class PatchShieldPolicy
             if (string.Equals(entry, key, StringComparison.Ordinal)) return true;
         }
         return false;
+    }
+
+    /// <summary>
+    /// The diag.log reason line PatchShield writes once per process for each patched method it skips
+    /// because it is on <see cref="ExcludedTargetMethods"/>: which method, whose patches sit on it, and
+    /// what the skip gives up.
+    /// </summary>
+    public static string FormatHotMethodSkip(string? declaringType, string? name, IEnumerable<string>? owners)
+    {
+        var ownerList = owners == null ? string.Empty : string.Join(", ", owners.Where(o => !string.IsNullOrEmpty(o)));
+        return "not shielding " + declaringType + "." + name + " (ExcludedTargetMethods, a hot target), patched by "
+            + (ownerList.Length == 0 ? "unknown" : ownerList)
+            + ": a MissingMethod, MissingField or TypeLoad exception from a patch on it is not swallowed, and that patch is not stripped";
     }
 
     /// <summary>

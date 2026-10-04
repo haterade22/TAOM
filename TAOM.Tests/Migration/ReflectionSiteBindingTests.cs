@@ -53,6 +53,8 @@ public class ReflectionSiteBindingTests
     [DataRow("TaleWorlds.MountAndBlade.CustomBattle.CustomBattleSideVM", "CustomBattleSideVM", "OnCultureSelection", "Method", "CustomBattleSideVM_Constructor_Patch.cs:23")]
     // --- AdvancedCombat custom attacks (CustomAttacksUtils.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "RegisterBlow", "Method", "CustomAttacksUtils.cs:55")]
+    // --- MissionPerf tick profiler: the private wait it times at its call site (MissionTickProfilerInstaller.cs) ---
+    [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "WaitTickCompletion", "Method", "MissionTickProfilerInstaller.cs:29,52")]
     // --- ShaderPrecompilation 1.4.7 headless-battle deployment-NRE guard (ShaderPrecompilePlayerAgentGuard.cs) ---
     [DataRow("TaleWorlds.MountAndBlade.Mission", "Mission", "_initialPlayerAgent", "Field", "ShaderPrecompilePlayerAgentGuard.cs:44")]
     // --- BannerColorPersistence banner-paste (BannerEditorView_OnTick_Patch.cs) ---

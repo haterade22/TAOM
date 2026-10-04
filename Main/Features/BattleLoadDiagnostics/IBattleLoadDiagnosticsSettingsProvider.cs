@@ -28,4 +28,18 @@ public interface IBattleLoadDiagnosticsSettingsProvider
     /// <summary>Seconds between [MemSample] emissions (validated 10-120, default 30);
     /// read live per poll so the MCM knob needs no timer rescheduling.</summary>
     double MemorySampleIntervalSeconds { get; }
+
+    /// <summary>The Patch97 tick profiler's toggle. Unlike its siblings it fails CLOSED to false when
+    /// MCM is not ready, because it installs Harmony patches on the two hottest mission methods. Read at
+    /// the first game init, where Patch97 installs or is skipped, and again at each mission start: turning
+    /// it on needs a restart, turning it off stops measuring from the next mission (the patches stay).</summary>
+    bool TickProfilerEnabled { get; }
+
+    /// <summary>How many behaviours a [TickProfile] or [TickSummary] line lists (validated 1-20,
+    /// default 8); read at each mission start.</summary>
+    int TickProfilerTopN { get; }
+
+    /// <summary>The frame time at or above which the profiler writes a [Hitch] line (validated
+    /// 50-2000 ms, default 250); read at each mission start.</summary>
+    double HitchThresholdMs { get; }
 }

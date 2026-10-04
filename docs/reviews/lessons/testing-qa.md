@@ -1392,3 +1392,17 @@ Two parchment map tests set the fake renderer's "sheet built" flag back to false
 - **Why missed:** the service tests were complete for the service's own logic; the engine half of the contract had no test, and an in-game look cannot show a release that never happens.
 - **Prevent:** when a service method's only caller is an engine hook, test the engine side too (a binding test on the member the hook relies on), or replace the interception with state the engine sets on every path. Give N settings of one type a flip-one-at-a-time mapping test and prove it with a deliberate swap: `FactionUISettingsProviderTests` flips each MCM toggle on a fresh `TaomSettings` and asserts only its own setting moves, and it caught a swapped pair.
 - **Source:** `docs/reviews/rca-faction-ui-2026-10-01.md` rows A1 and C4.
+
+### A plan's "needs a live Mission" is a draft: an unattached MissionBehavior runs its lifecycle with Mission null (2026-10-02)
+The plan 028 profiler's mission behaviour and its installer shipped untested: the plan said the behaviour needed a live
+mission, and the installer's static once-latch made every call after a run's first a silent no-op. `MissionBehavior.Mission`
+is an auto-property, null when the behaviour is not attached, `OnCreated` and `OnEndMissionInternal` are public, and every
+mission read in the profiler's context reader was already wrapped in a fallback, so a `RequiresGame` test drives the whole
+lifecycle with substitutes.
+- **Why missed:** the executor took the plan's "untestable" as fact (dispatch rule 12 says it is a draft), and the latch
+  duplicated a guard its only caller already holds.
+- **Prevent:** before accepting "needs the game", try the type unattached: construct it, call its lifecycle entry points,
+  and see which reads actually throw. Do not add a static once-latch to a method whose caller is already once-only; pin
+  the caller's placement instead (`MissionTickProfilerWiringTests`), so the method stays testable
+  (`MissionTickProfilerBehaviorTests`, `MissionTickProfilerInstallerTests`).
+- **Source:** `docs/reviews/rca-mission-tick-profiler-2026-10-02.md` row R4.

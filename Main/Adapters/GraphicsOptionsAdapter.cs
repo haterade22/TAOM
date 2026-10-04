@@ -16,11 +16,20 @@ public sealed class GraphicsOptionsAdapter : IGraphicsOptionsAdapter
 {
     private const int MaxOptionIndex = 5;
 
+    // A sanity bound that rejects garbage from the engine store, not the length of any options list.
+    private const int MaxRawOptionIndex = 16;
+
     public int RagdollOption => ToOptionIndex(NativeOptions.GetConfig(NativeOptions.NativeOptionsType.NumberOfRagDolls), MaxOptionIndex);
 
     public int CorpseOption => InRange(BannerlordConfig.NumberOfCorpses, MaxOptionIndex);
 
     public int BattleSizeOption => BannerlordConfig.BattleSize;
+
+    public int TextureQualityOption => ToOptionIndex(NativeOptions.GetConfig(NativeOptions.NativeOptionsType.TextureQuality), MaxRawOptionIndex);
+
+    public int ShadowmapResolutionOption => ToOptionIndex(NativeOptions.GetConfig(NativeOptions.NativeOptionsType.ShadowmapResolution), MaxRawOptionIndex);
+
+    public int ParticleDetailOption => ToOptionIndex(NativeOptions.GetConfig(NativeOptions.NativeOptionsType.ParticleDetail), MaxRawOptionIndex);
 
     public bool SaveOptions(int ragdollOption, int corpseOption)
     {

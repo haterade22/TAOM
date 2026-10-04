@@ -411,3 +411,15 @@ hideout pool; only a patch reaches the loot screen; the kill counter's mission l
 - **Prevent:** treat every sentence about engine behaviour as a claim: cite its file and line from a read that
   session, or mark it UNVERIFIED. A repeat of RCA 2026-09-27 rows 3, 6 and 8.
 - **Source:** `docs/reviews/rca-lords-gear-ladder-2026-09-28.md` row 16 (Engine, Data flow B).
+
+### Cap a per-event diagnostic per run, and count what the cap drops (2026-10-02)
+The plan 028 tick profiler wrote one `[Hitch]` line at INFO, a synchronous flush on the main thread, for every frame
+at or above its threshold. The rate was bounded (1000/threshold lines a second) but the count was not: at the MCM floor
+of 50 ms, a battle running under 20 fps wrote a per-frame INFO line for its whole length, which D6 rule 5 forbids, and
+plan 041 turns the profiler on for every player.
+- **Why missed:** the plan priced the stream at the default threshold only and deferred a cap before D6 existed; two of
+  six review lenses judged it bounded because nothing was dropped.
+- **Prevent:** any line written per event (frame, agent, hit) at INFO gets a per-run cap that keeps the first occurrences
+  in full, one line where the cap starts, and a count of every event in the run's summary
+  (`MissionTickProfiler.MaxHitchLinesPerMission`). Price a stream at its setting's floor, not its default.
+- **Source:** `docs/reviews/rca-mission-tick-profiler-2026-10-02.md` row R1.
