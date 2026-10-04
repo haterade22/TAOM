@@ -85,6 +85,10 @@ public class AlignmentDesertionBehavior : CampaignBehaviorBase
     {
         if (roster == null)
             return;
+        // Owner-level gates first (feature, owner and location toggles, a sided owner, a positive rate):
+        // a Neutral kingdom's parties and garrisons would build a snapshot every day only to shed nothing.
+        if (!_service.ShouldEvaluate(kingdomId, isPlayerOwned, isGarrison))
+            return;
 
         // Snapshot first — never mutate the roster while scanning it.
         var snapshot = new List<DesertionTroopInfo>(roster.Count);

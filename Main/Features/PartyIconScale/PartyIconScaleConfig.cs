@@ -31,6 +31,11 @@ public static class PartyIconScaleConfig
     /// <summary>Largest allowed scale; 1.0 lets a user make figures larger than vanilla (0.3) for testing.</summary>
     public const float Max = 1.0f;
 
+    // Called on every party-icon build. The MCM reference is cached on its first non-null read and read
+    // through (BattleBalanceSettingsProvider pattern), so a slider change still applies on the next build.
+    private static TaomSettings? _settings;
+    private static TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
     /// <summary>
     /// Validates a raw slider value. Returns it when finite and within [<see cref="Min"/>, <see cref="Max"/>];
     /// otherwise (NaN / ±Infinity / out-of-range / null) returns <see cref="Default"/>.
@@ -44,5 +49,5 @@ public static class PartyIconScaleConfig
     /// <c>ScaleFactor * GetScale()</c>). Reads the live MCM value so a slider change applies on the next
     /// icon rebuild; null-safe when MCM/settings aren't loaded (main menu, custom battle, tests).
     /// </summary>
-    public static float GetScale() => Resolve(TaomSettings.Instance?.MapFigureScale);
+    public static float GetScale() => Resolve(Settings?.MapFigureScale);
 }

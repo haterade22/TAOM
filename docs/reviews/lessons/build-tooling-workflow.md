@@ -3352,3 +3352,17 @@ hook extraction (both earlier in this file).
   `PYTHONIOENCODING=cp1252` and a non-ASCII name, and a report patched to raise
   (`tools/tests/test_package_release.py`, `TestSceneShaderCacheCli`).
 - **Source:** `docs/reviews/rca-release-shader-cache-check-2026-10-02.md` F1.
+
+### A performance stage carries a measured cost, and is re-weighed after the stages before it land (2026-10-02)
+Plan 037 Stage D added a transpiler, a thread-static hand-off, a fallback and four log formats to skip one
+cache-backed distance read per positively scored town on a caravan's infrequent re-think, reversing a reviewed
+"cheap enough" decision (`rca-caravan-trade-2026-07-04.md` row 2) on a call count, not a time. Stage B1
+reordered two MCM toggle reads that Stage A, one commit earlier, had already made a cached field read. Six
+review lenses rejected D under the simplicity criterion and B1 bought nothing; both were removed.
+- **Why missed:** the plan costed each call site in isolation and before the earlier stages existed, and the
+  build step's contract asked for parity, not for a fresh simplicity verdict once the code was written.
+- **Prevent:** a performance stage states its win as a measured or bounded time (a profile, or the callee's
+  cost times its real frequency), never a call count multiplied out. A stage that reverses a reviewed
+  decision needs new evidence the review lacked. Before building stage N, re-state stage N's win against the
+  code as stages 1 to N-1 left it; drop the stage when the win no longer dominates its cost.
+- **Source:** `docs/reviews/rca-campaign-hot-paths-2026-10-02.md` findings 1 and 2.

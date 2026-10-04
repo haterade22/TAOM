@@ -14,6 +14,13 @@ public interface IAlignmentDesertionService
     bool IsEnabled { get; }
 
     /// <summary>
+    /// False when no roster of this owner and location can lose a troop today (feature off, owner or
+    /// location toggle off, a Neutral or kingdomless owner, a zero rate), so the behavior can skip the
+    /// roster snapshot. True exactly when <see cref="CalculateDesertion"/> would look at the troops.
+    /// </summary>
+    bool ShouldEvaluate(string ownerKingdomId, bool isPlayerOwned, bool isGarrison);
+
+    /// <summary>
     /// Returns the per-troop-type desertion for a single party or garrison. Empty when the feature or
     /// the relevant owner/location toggle is off, when the owner is Neutral/kingdomless, or when no
     /// troop is opposed.

@@ -15,9 +15,10 @@ namespace TAOM.Features.FieldCommission;
 /// every consumer picks up live MCM values with no constructor change, and caching on the snapshot
 /// means the tick path allocates nothing while the player is not touching sliders.
 ///
-/// <c>TaomSettings.Instance</c> is read on every call rather than captured, which is what makes the
-/// MCM properties honestly <c>RequireRestart = false</c> — the JSON file still needs a full
-/// application restart (the decorated provider is a <c>Lazy</c> singleton), but the knobs do not.
+/// The MCM settings object is cached on its first non-null read and read through on every call,
+/// never snapshotted: MCM edits its one registered instance in place, which is what keeps the MCM
+/// properties honestly <c>RequireRestart = false</c>. The JSON file still needs a full application
+/// restart (the decorated provider is a <c>Lazy</c> singleton), but the knobs do not.
 /// </summary>
 public sealed class FieldCommissionSettingsProvider : IFieldCommissionConfigProvider
 {
@@ -42,10 +43,22 @@ public sealed class FieldCommissionSettingsProvider : IFieldCommissionConfigProv
     private FieldCommissionMcmSnapshot _mergedFrom;
     private FieldCommissionConfig _mergedJsonSource;
 
+    // Read on a campaign hot path (per party, per score, per day or every map frame). Resolving
+    // TaomSettings.Instance walks MCM's settings containers, so the reference is cached on its first
+    // non-null read and read THROUGH, never snapshotted: MCM edits its one registered instance in place
+    // (reset and presets copy values into it), so live MCM edits still apply. Lazy, not in the
+    // constructor, so a resolve before MCM is up cannot pin the fallbacks. Same contract as
+    // BattleBalanceSettingsProvider.
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
     public FieldCommissionSettingsProvider(IFieldCommissionConfigProvider jsonProvider)
     {
         _jsonProvider = jsonProvider;
     }
+
+    internal FieldCommissionSettingsProvider(IFieldCommissionConfigProvider jsonProvider, TaomSettings settings)
+        : this(jsonProvider) => _settings = settings;
 
     public FieldCommissionConfig GetConfig() => GetConfig(Capture());
 
@@ -111,15 +124,19 @@ public sealed class FieldCommissionSettingsProvider : IFieldCommissionConfigProv
     }
 
     /// <summary>
-    /// Reads the MCM statics. Separated from <see cref="Merge"/> so nothing above this line needs MCM
-    /// loaded; <c>TaomSettings.Instance</c> is null in the test host and whenever MCM fails to load.
+    /// Reads the cached MCM settings. Separated from <see cref="Merge"/> so nothing above this line needs
+    /// MCM loaded; <c>TaomSettings.Instance</c> is null in the test host and whenever MCM fails to load.
     /// </summary>
-    private static FieldCommissionMcmSnapshot Capture() => new FieldCommissionMcmSnapshot(
-        TaomSettings.Instance?.EnableFieldCommission,
-        TaomSettings.Instance?.FieldCommissionRatioThreshold,
-        TaomSettings.Instance?.FieldCommissionMeritPerKill,
-        TaomSettings.Instance?.FieldCommissionMeritThreshold,
-        TaomSettings.Instance?.FieldCommissionRetainerAllowance,
-        TaomSettings.Instance?.FieldCommissionMaxOffersPerBattle,
-        TaomSettings.Instance?.EnableFieldCommissionDiagnostics);
+    private FieldCommissionMcmSnapshot Capture()
+    {
+        var s = Settings;
+        return new FieldCommissionMcmSnapshot(
+            s?.EnableFieldCommission,
+            s?.FieldCommissionRatioThreshold,
+            s?.FieldCommissionMeritPerKill,
+            s?.FieldCommissionMeritThreshold,
+            s?.FieldCommissionRetainerAllowance,
+            s?.FieldCommissionMaxOffersPerBattle,
+            s?.EnableFieldCommissionDiagnostics);
+    }
 }

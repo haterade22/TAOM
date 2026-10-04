@@ -36,8 +36,10 @@ Neutral and they would never desert.
 
 - A new `CampaignBehavior` subscribes to `DailyTickPartyEvent` (gated to `IsLordParty || IsMainParty` —
   the event fires for ALL mobile parties, so caravans/villagers/militia/bandits/garrisons are excluded)
-  and `DailyTickSettlementEvent` (garrisons). It does only engine I/O: snapshot the roster into POCOs, call
-  the pure service, apply the returned removals via `TroopRoster.AddToCounts`. No Harmony patch, no
+  and `DailyTickSettlementEvent` (garrisons). It does only engine I/O: ask the service whether this owner
+  can lose anyone today (`ShouldEvaluate`, the gates `CalculateDesertion` applies, in the same order, so a
+  Neutral owner or a switched-off toggle skips the roster copy; plan 037), snapshot the roster into POCOs,
+  call the pure service, apply the returned removals via `TroopRoster.AddToCounts`. No Harmony patch, no
   GameModel, no adapter (the roster I/O stays in the thin behavior, mirroring the SpecialResources
   desertion precedent), no `SyncData` (desertion is recomputed daily from live rosters).
 - A pure `AlignmentDesertionService` owns the decision matrix and is 100% unit-tested.
@@ -131,9 +133,20 @@ culture-id keys whose ids differ from their kingdom id:
 
 ## Tests
 
-- `TAOM.Tests/Features/AlignmentDesertion/AlignmentDesertionServiceTests.cs` — 19 tests: master toggle,
+- `TAOM.Tests/Features/AlignmentDesertion/AlignmentDesertionServiceTests.cs`: 31 tests: master toggle,
   each owner/location gate, Evil↔Free symmetric desertion, same-side/Neutral-owner/Neutral-troop/hero
-  skips, min-1 floor, cap-at-count, rate-0 no-op, mixed-roster selectivity, kingdomless owner, zero-count.
+  skips, min-1 floor, cap-at-count, rate-0 no-op, mixed-roster selectivity, kingdomless owner, zero-count;
+  and `ShouldEvaluate`: each gate, and a matrix proving a false answer always means `CalculateDesertion`
+  would return nothing. A NaN rate (reachable only through a hand-edited MCM file) still passes the gate
+  and sheds one troop per opposed type through the min-1 floor, exactly as before the gate existed (pinned by `ShouldEvaluate_NaNRate_IsTrue_ParityWithTheOriginalGate`).
+- `TAOM.Tests/Features/AlignmentDesertion/AlignmentDesertionBehaviorTests.cs`: 3 `RequiresGame` tests, 9
+  runs: an IL-order test that the behaviour asks `ShouldEvaluate` before it snapshots the roster, and two
+  that run `ApplyDesertion` on a real `TroopRoster`, each once for every combination of the two flags (a
+  player-owned or AI-owned party, a player-owned or AI-owned garrison). A false answer never reaches
+  `CalculateDesertion`; a true answer calls it over a snapshot of one non-hero row. An inverted or ignored
+  gate fails, and so does any other value for either flag in the gate call or the calculation call (a
+  constant, the other flag, either flag negated, the two swapped), since the four rows are the whole
+  truth table.
 - `TAOM.Tests/Features/AlignmentDesertion/AlignmentDesertionConfigProviderTests.cs` — 12 tests: one per
   `Rate` validation rule (above-1, below-0, NaN, Infinity revert to 0.5 + warn; 0/1/valid preserved) plus
   missing-file / malformed-JSON / empty-object / cache-identity.
@@ -163,6 +176,7 @@ roster is scanned once into a small POCO list, decided, and written back.
 ## GitHub Issue
 
 - **Issue:** _pending — open before the closing commit._
+- **Plan 037 (the `ShouldEvaluate` gate before the roster copy):** #719
 - **Status:** Open
 
 ---

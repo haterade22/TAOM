@@ -1,8 +1,8 @@
 namespace TAOM.Features.CaravanTrade;
 
 /// <summary>
-/// Merges MCM over the validated JSON config. MCM-exposed fields read <c>TaomSettings.Instance?.X</c>
-/// and fall back to the JSON config (which is the default source + holds the advanced, JSON-only
+/// Merges MCM over the validated JSON config. MCM-exposed fields read <c>X</c> through the cached
+/// <c>TaomSettings</c> reference (see <c>Settings</c>) and fall back to the JSON config (which is the default source + holds the advanced, JSON-only
 /// knobs). MCM slider bounds mirror the JSON validation bounds, so an MCM value can't escape the
 /// validated range (the "both surfaces" invariant). The war policy resolves from the MCM dropdown
 /// index, falling back to the validated JSON string.
@@ -11,16 +11,28 @@ public class CaravanTradeSettingsProvider : ICaravanTradeSettingsProvider
 {
     private readonly ICaravanTradeConfigProvider _configProvider;
 
+    // Read on a campaign hot path (per party, per score, per day or every map frame). Resolving
+    // TaomSettings.Instance walks MCM's settings containers, so the reference is cached on its first
+    // non-null read and read THROUGH, never snapshotted: MCM edits its one registered instance in place
+    // (reset and presets copy values into it), so live MCM edits still apply. Lazy, not in the
+    // constructor, so a resolve before MCM is up cannot pin the fallbacks. Same contract as
+    // BattleBalanceSettingsProvider.
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
     public CaravanTradeSettingsProvider(ICaravanTradeConfigProvider configProvider)
     {
         _configProvider = configProvider;
     }
 
+    internal CaravanTradeSettingsProvider(ICaravanTradeConfigProvider configProvider, TaomSettings settings)
+        : this(configProvider) => _settings = settings;
+
     private CaravanTradeConfig Cfg => _configProvider.GetConfig();
 
-    public bool Enabled => TaomSettings.Instance?.EnableCaravanTrade ?? Cfg.Enabled;
-    public bool ApplyToPlayerCaravans => TaomSettings.Instance?.CaravanTradeApplyToPlayer ?? Cfg.ApplyToPlayerCaravans;
-    public float RangeMultiplier => TaomSettings.Instance?.CaravanRangeMultiplier ?? Cfg.RangeMultiplier;
+    public bool Enabled => Settings?.EnableCaravanTrade ?? Cfg.Enabled;
+    public bool ApplyToPlayerCaravans => Settings?.CaravanTradeApplyToPlayer ?? Cfg.ApplyToPlayerCaravans;
+    public float RangeMultiplier => Settings?.CaravanRangeMultiplier ?? Cfg.RangeMultiplier;
 
     // JSON-only advanced curve knobs.
     public float DistanceDecayExponent => Cfg.DistanceDecayExponent;
@@ -30,7 +42,7 @@ public class CaravanTradeSettingsProvider : ICaravanTradeSettingsProvider
     public bool HomeDistanceReweight => Cfg.HomeDistanceReweight;
 
     public WarTradePolicy WarTradePolicy => ResolveWarPolicy();
-    public float BudgetFactorFloor => TaomSettings.Instance?.CaravanBudgetDiversityFloor ?? Cfg.BudgetFactorFloor;
+    public float BudgetFactorFloor => Settings?.CaravanBudgetDiversityFloor ?? Cfg.BudgetFactorFloor;
 
     // JSON-only.
     public int InitialTradeGold => Cfg.InitialTradeGold;
@@ -38,7 +50,7 @@ public class CaravanTradeSettingsProvider : ICaravanTradeSettingsProvider
 
     private WarTradePolicy ResolveWarPolicy()
     {
-        var dropdown = TaomSettings.Instance?.CaravanWarTradePolicy;
+        var dropdown = Settings?.CaravanWarTradePolicy;
         if (dropdown != null)
         {
             switch (dropdown.SelectedIndex)

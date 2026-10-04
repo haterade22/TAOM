@@ -82,44 +82,55 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
     private readonly string?[] _currentTexts = new string?[YourRealmSlot + 1];
     private int _colourVersion;
 
+    // Read on a campaign hot path (per party, per score, per day or every map frame). Resolving
+    // TaomSettings.Instance walks MCM's settings containers, so the reference is cached on its first
+    // non-null read and read THROUGH, never snapshotted: MCM edits its one registered instance in place
+    // (reset and presets copy values into it), so live MCM edits still apply. Lazy, not in the
+    // constructor, so a resolve before MCM is up cannot pin the fallbacks. Same contract as
+    // BattleBalanceSettingsProvider.
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
     public RealmBordersSettingsProvider(IModLogger logger)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public bool Enabled => TaomSettings.Instance?.EnableRealmBorders ?? true;
+    internal RealmBordersSettingsProvider(IModLogger logger, TaomSettings settings) : this(logger) => _settings = settings;
 
-    public bool HeraldicBands => TaomSettings.Instance?.RealmBordersHeraldicBands ?? false;
+    public bool Enabled => Settings?.EnableRealmBorders ?? true;
 
-    public bool GildPlayerRealm => TaomSettings.Instance?.RealmBordersGildPlayerRealm ?? true;
+    public bool HeraldicBands => Settings?.RealmBordersHeraldicBands ?? false;
 
-    public float WidthScale => CheckedWidthScale(TaomSettings.Instance?.RealmBordersWidthScale);
+    public bool GildPlayerRealm => Settings?.RealmBordersGildPlayerRealm ?? true;
+
+    public float WidthScale => CheckedWidthScale(Settings?.RealmBordersWidthScale);
 
     public float FadeStartDistance => Fade().Start;
 
     public float FullOpacityDistance => Fade().Full;
 
-    public bool DrawThroughTerrain => TaomSettings.Instance?.RealmBordersDrawThroughTerrain ?? true;
+    public bool DrawThroughTerrain => Settings?.RealmBordersDrawThroughTerrain ?? true;
 
-    public bool RealmNames => TaomSettings.Instance?.RealmBordersNames ?? true;
+    public bool RealmNames => Settings?.RealmBordersNames ?? true;
 
-    public bool CrossingNotices => TaomSettings.Instance?.RealmBordersCrossingNotices ?? true;
+    public bool CrossingNotices => Settings?.RealmBordersCrossingNotices ?? true;
 
-    public bool FillLands => TaomSettings.Instance?.RealmBordersFillLands ?? true;
+    public bool FillLands => Settings?.RealmBordersFillLands ?? true;
 
-    public float FillStrength => CheckedFillStrength(TaomSettings.Instance?.RealmBordersFillStrength);
+    public float FillStrength => CheckedFillStrength(Settings?.RealmBordersFillStrength);
 
-    public string? BlendMode => Choice(TaomSettings.Instance?.RealmBordersBlendMode?.SelectedIndex, BlendModeChoices);
+    public string? BlendMode => Choice(Settings?.RealmBordersBlendMode?.SelectedIndex, BlendModeChoices);
 
-    public string? MaterialName => Choice(TaomSettings.Instance?.RealmBordersMaterial?.SelectedIndex, MaterialChoices);
+    public string? MaterialName => Choice(Settings?.RealmBordersMaterial?.SelectedIndex, MaterialChoices);
 
-    public bool ParchmentMap => TaomSettings.Instance?.RealmBordersParchmentMap ?? true;
+    public bool ParchmentMap => Settings?.RealmBordersParchmentMap ?? true;
 
     public int ColourVersion
     {
         get
         {
-            var settings = TaomSettings.Instance;
+            var settings = Settings;
             for (int i = 0; i < ColourFields.Length; i++)
                 _currentTexts[i] = settings == null ? null : ColourFields[i].Read(settings);
             _currentTexts[YourRealmSlot] = settings?.RealmColourYourRealm;
@@ -221,7 +232,7 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
     }
 
     private (float Start, float Full) Fade() =>
-        CheckedFade(TaomSettings.Instance?.RealmBordersFadeStartDistance, TaomSettings.Instance?.RealmBordersFullOpacityDistance);
+        CheckedFade(Settings?.RealmBordersFadeStartDistance, Settings?.RealmBordersFullOpacityDistance);
 
     /// <summary>
     /// Warns once when a setting turns unusable (<paramref name="badValue"/> set), again only when its

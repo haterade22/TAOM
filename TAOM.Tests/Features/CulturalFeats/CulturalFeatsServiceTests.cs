@@ -306,6 +306,42 @@ public class CulturalFeatsServiceTests
         Assert.AreEqual(1f, en.ResultNumber);
     }
 
+    // NeedsMountedCount: the speed model walks a party's roster only when the Rohan infantry
+    // penalty can change the result for that culture.
+
+    [TestMethod]
+    public void NeedsMountedCount_NullCulture_IsFalse()
+        => Assert.IsFalse(_sut.NeedsMountedCount(null));
+
+    [TestMethod]
+    public void NeedsMountedCount_CultureWithoutTheRohanFeat_IsFalse()
+        => Assert.IsFalse(_sut.NeedsMountedCount(AdapterWith()));
+
+    [TestMethod]
+    public void NeedsMountedCount_CultureWithTheRohanFeat_IsTrue()
+        => Assert.IsTrue(_sut.NeedsMountedCount(AdapterWith(TaomCulturalFeats.RohanInfantrySpeedFeat)));
+
+    // Every party the skip affects (NeedsMountedCount false) gets the same speed from (0, 0) as from
+    // its real counts.
+    [TestMethod]
+    public void ApplyRohanInfantryPenalty_WhenNotNeeded_ZeroCountsGiveTheSameSpeed()
+    {
+        var cultures = new ICultureFeatAdapter?[] { null, AdapterWith(), AdapterWith(TaomCulturalFeats.RohanPlainSpeedFeat) };
+        var counts = new[] { (0, 10), (4, 10), (6, 10), (10, 10), (0, 0) };
+        for (int c = 0; c < cultures.Length; c++)
+        {
+            Assert.IsFalse(_sut.NeedsMountedCount(cultures[c]), $"culture #{c}");
+            foreach (var (mounted, total) in counts)
+            {
+                var real = new ExplainedNumber(1f);
+                var zero = new ExplainedNumber(1f);
+                _sut.ApplyRohanInfantryPenalty(cultures[c], mounted, total, ref real);
+                _sut.ApplyRohanInfantryPenalty(cultures[c], 0, 0, ref zero);
+                Assert.AreEqual(real.ResultNumber, zero.ResultNumber, 0.0001f, $"culture #{c}, ({mounted}, {total})");
+            }
+        }
+    }
+
     // ── SettlementProsperity (hearth growth) ───────────────────────────
 
     [TestMethod]

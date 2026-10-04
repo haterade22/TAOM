@@ -958,3 +958,17 @@ because a bounds check does not look like a decision.
 - **Why missed:** the close check read as the natural "ran out" test and sat beside two correct positive checks on the same field.
 - **Prevent:** when a field is gated positively in one place (`x > 0f`), write every other decision on it as the negation of that requirement (`!(x > 0f)`), never as the complementary comparison, and pin the NaN case in a test.
 - **Source:** `docs/reviews/rca-mission-diagnostics-diet-2026-10-02.md` R3.
+
+### A skip gate in front of a service call calls that service's own predicate, never a copy (2026-10-02)
+Plan 037 let `TaomPartySpeedModel` skip the roster walk when `ICulturalFeatsService.NeedsMountedCount` says the
+Rohan infantry penalty cannot apply, passing (0, 0) instead. `NeedsMountedCount` re-derived the penalty's feat
+test rather than the penalty using it, so a second trigger feat added to the penalty alone would have left the
+model skipping the walk for that culture and the penalty silently off; the parity test enumerated only
+today's cultures. The same plan's desertion gate (`TryGetPurge`, one gate with two callers) was built right.
+- **Why missed:** the skip-gate was written as a sibling of the decision it guards, and a parity matrix over
+  the current data cannot see a predicate that drifts later.
+- **Prevent:** when a caller skips work because a service would ignore it, the service's decision method
+  calls the same predicate the skip uses (`if (totalCount <= 0 || !NeedsMountedCount(culture)) return;`), so
+  the two cannot disagree. Review a new "needs X" member by finding the decision it mirrors and checking the
+  decision calls it.
+- **Source:** `docs/reviews/rca-campaign-hot-paths-2026-10-02.md` finding 3.

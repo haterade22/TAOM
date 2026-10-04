@@ -323,7 +323,8 @@ in-scope culture under the floor.
 | File | Coverage |
 |------|----------|
 | `TAOM.Tests/Features/CulturalFeats/TaomCulturalFeatsDefinitionTests.cs` | Feat property count (130), uniqueness, culture distribution, field structure, **Wave 1 production-metadata pin** (`Wave1Feats_ProductionMetadata_MatchesSpec`, which source-parses `Initialize(...)` so a production sign-flip can't pass; see Codex review 2026-06-07 MEDIUM) |
-| `TAOM.Tests/Features/CulturalFeats/CulturalFeatsServiceTests.cs` | Per-feat dispatch incl. terrain-speed (per-terrain match, Mordor 5% vs 10%, night, null/wrong-terrain no-ops) and one dispatch test per (culture, axis) cell for the Wave 1 feats (per `feedback_per_branch_dispatch_test_enumeration`) |
+| `TAOM.Tests/Features/CulturalFeats/CulturalFeatsServiceTests.cs` | Per-feat dispatch incl. terrain-speed (per-terrain match, Mordor 5% vs 10%, night, null/wrong-terrain no-ops) and one dispatch test per (culture, axis) cell for the Wave 1 feats (per `feedback_per_branch_dispatch_test_enumeration`); `NeedsMountedCount`, which the Rohan infantry penalty now shares as its own gate, so the speed model counts a party's mounts only for a culture with that feat |
+| `TAOM.Tests/Features/CulturalFeats/TaomPartySpeedModelTests.cs` | `RequiresGame`: the mount-count helper reads the roster only when asked to, and `CalculateFinalSpeed` asks the service before counting (IL order) |
 
 GameModel overrides are thin entry points (delegate to `base` + apply feat modifier via the service) and are verified via in-game testing. The `TaomPartySpeedModel.MapTerrain` boundary mapping is verified in-game (it consumes the sealed `TerrainType`).
 

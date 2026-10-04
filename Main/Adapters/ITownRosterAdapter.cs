@@ -10,9 +10,11 @@ public interface ITownRosterAdapter
     int GetRosterDistinctItemCount(Settlement settlement);
     bool AddItem(Settlement settlement, string itemId, int count);
 
-    /// <summary>Count of a specific itemId across the roster (sum across all stacks of
-    /// that item). 0 if absent or settlement is null.</summary>
-    int GetItemCount(Settlement settlement, string itemId);
+    /// <summary>For each id, the sum over every stack of that item, whatever its modifier, from ONE walk of
+    /// the roster. 0 for a null or empty id, an id the object manager does not know, or a null settlement.
+    /// The array has one entry per id, in order; empty for null ids. A failed walk logs one ERROR line
+    /// naming every id and returns zeroes.</summary>
+    int[] GetItemCounts(Settlement settlement, IReadOnlyList<string> itemIds);
 
     /// <summary>Remove `count` of itemId from the roster. Returns true if any units were
     /// removed (positive count, the item existed). Vanilla `AddToCounts` handles the

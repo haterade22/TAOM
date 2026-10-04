@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.ObjectSystem;
@@ -56,34 +57,42 @@ public class TownRosterAdapter : ITownRosterAdapter
         }
     }
 
-    public int GetItemCount(Settlement settlement, string itemId)
+    public int[] GetItemCounts(Settlement settlement, IReadOnlyList<string> itemIds)
     {
-        if (settlement == null || string.IsNullOrEmpty(itemId)) return 0;
+        var counts = new int[itemIds?.Count ?? 0];
+        if (settlement == null || counts.Length == 0) return counts;
         try
         {
-            var itemObject = MBObjectManager.Instance?.GetObject<ItemObject>(itemId);
-            if (itemObject == null) return 0;
-            // Deep-review 2026-05-21 (Data Flow #9): vanilla `FindIndexOfItem` only finds
-            // the FIRST stack matching the ItemObject — different ItemModifiers create
-            // separate stacks, so a town with "Sharp warg_brown ×3" + "Damaged warg_brown ×2"
-            // would have reported 3 (or 2, whichever stack happens to be first in storage),
-            // not the total 5. Sum across ALL stacks for the same ItemObject to make the
-            // guaranteed-stock floor work correctly even when modifiers split inventory.
+            // Resolve each id once; the roster walk below compares items by reference.
+            var items = new ItemObject[counts.Length];
+            for (var j = 0; j < counts.Length; j++)
+                items[j] = string.IsNullOrEmpty(itemIds[j]) ? null : MBObjectManager.Instance?.GetObject<ItemObject>(itemIds[j]);
+
+            // One walk, summing every stack of each item: different ItemModifiers make separate stacks
+            // (vanilla FindIndexOfItem finds only the first), so "Sharp warg_brown x3" plus
+            // "Damaged warg_brown x2" counts 5 (deep review 2026-05-21, Data Flow #9).
             var roster = settlement.ItemRoster;
-            var total = 0;
             for (var i = 0; i < roster.Count; i++)
             {
-                if (roster.GetItemAtIndex(i) == itemObject)
-                    total += roster.GetElementNumber(i);
+                var item = roster.GetItemAtIndex(i);
+                for (var j = 0; j < items.Length; j++)
+                {
+                    if (items[j] != null && item == items[j])
+                        counts[j] += roster.GetElementNumber(i);
+                }
             }
-            return total;
+            return counts;
         }
         catch (Exception ex)
         {
-            _logger.LogError($"[CultureMarketplace] GetItemCount('{itemId}' @ {settlement.StringId}) failed: {ex.Message}");
-            return 0;
+            _logger.LogError(CountFailureLine(settlement.StringId, itemIds, ex.Message));
+            return new int[counts.Length];
         }
     }
+
+    /// <summary>The one error line a failed count logs, naming every id it was asked for.</summary>
+    internal static string CountFailureLine(string settlementId, IReadOnlyList<string> itemIds, string message)
+        => $"[CultureMarketplace] GetItemCounts({string.Join(",", itemIds.Select(id => "'" + id + "'"))} @ {settlementId}) failed: {message}";
 
     public bool RemoveItem(Settlement settlement, string itemId, int count)
     {
@@ -101,7 +110,7 @@ public class TownRosterAdapter : ITownRosterAdapter
             // matches by EXACT element — so the removal landed on a DIFFERENT, smaller stack and
             // drove its Amount negative → MBUnderFlowException("ItemRosterElement::Amount") spam
             // (crash report 2026-06-17: thousands of CultureMarketplace RemoveItem failures).
-            // Mirror GetItemCount above: collect every matching stack with its OWN EquipmentElement
+            // Mirror GetItemCounts above: collect every matching stack with its OWN EquipmentElement
             // (modifier-preserving), then remove per-stack clamped to that stack's amount. Snapshot
             // first — AddToCounts mutates/reindexes the roster as stacks empty.
             var stacks = new List<(EquipmentElement element, int amount)>();

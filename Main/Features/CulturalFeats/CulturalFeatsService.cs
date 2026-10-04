@@ -134,13 +134,15 @@ public sealed class CulturalFeatsService : ICulturalFeatsService
     public void ApplyRohanInfantryPenalty(
         ICultureFeatAdapter? culture, int mountedCount, int totalCount, ref ExplainedNumber result)
     {
-        if (culture == null || totalCount <= 0)
-            return;
-        if (!culture.HasFeat(TaomCulturalFeats.RohanInfantrySpeedFeat))
+        // One predicate with NeedsMountedCount: the speed model hands (0, 0) to every culture it rules out.
+        if (totalCount <= 0 || !NeedsMountedCount(culture))
             return;
         if (mountedCount * 2 < totalCount)
             result.AddFactor(TaomCulturalFeats.RohanInfantrySpeedFeat.EffectBonus, CultureText);
     }
+
+    public bool NeedsMountedCount(ICultureFeatAdapter? culture)
+        => culture != null && culture.HasFeat(TaomCulturalFeats.RohanInfantrySpeedFeat);
 
     // ── SettlementProsperity ───────────────────────────────────────────
 
