@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using BehaviorTreeWrapper.AbstractDecoratorsListeners;
 using BehaviorTrees;
 using TAOM;
@@ -8,6 +9,7 @@ using TAOM.Features.AdvancedCombat;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using Callback = BehaviorTreeWrapper.CallbackSkipLedger.Callback;
 
 namespace BehaviorTreeWrapper;
 
@@ -61,6 +63,45 @@ public class BehaviorTreeMissionLogic : MissionLogic
     /// <summary>Engine callbacks parked for the next mission tick.</summary>
     public int DeferredCount => _deferred.Count;
 
+    // How many listeners each SubscriptionPossibilities value has. Subscribe and UnSubscribe write it on the
+    // mission thread; a callback reads it on whichever thread native raised it, so an event nobody listens
+    // to returns before it allocates arguments or parks a replay (plan 033).
+    private static readonly int SubscriptionKinds = Enum.GetValues(typeof(SubscriptionPossibilities)).Length;
+    private readonly int[] _listenerCounts = new int[SubscriptionKinds];
+
+    // So taom_debug.log keeps what an early return no longer shows: one reason line at the mission's first skip,
+    // then the mission-end summary with every skip and every parked replay counted.
+    private readonly CallbackSkipLedger _ledger = new CallbackSkipLedger();
+
+    /// <summary>Where this logic's INFO lines go: the file log, or a test's capture.</summary>
+    internal Action<string> InfoLog { get; set; } = LogInfoToFile;
+
+    private static void LogInfoToFile(string message)
+    {
+        try { IoC.Resolve<IModLogger>()?.LogInfo(message); }
+        catch { /* a log line must never throw into an engine callback */ }
+    }
+
+    private bool Listening(SubscriptionPossibilities kind) => Volatile.Read(ref _listenerCounts[(int)kind]) > 0;
+
+    private bool Listens(Callback callback, SubscriptionPossibilities kind) =>
+        Listening(kind) || Skip(callback);
+
+    private bool Listens(Callback callback, SubscriptionPossibilities a, SubscriptionPossibilities b) =>
+        Listening(a) || Listening(b) || Skip(callback);
+
+    private bool Listens(Callback callback, SubscriptionPossibilities a, SubscriptionPossibilities b, SubscriptionPossibilities c) =>
+        Listening(a) || Listening(b) || Listening(c) || Skip(callback);
+
+    // Counts a callback that returns early; the mission's first one also writes the reason line. Any thread.
+    private bool Skip(Callback callback)
+    {
+        string? reason = _ledger.NoteSkip(callback);
+        if (reason != null)
+            InfoLog(reason);
+        return false;
+    }
+
     public void Subscribe(BannerlordBTListener listener)
     {
         if (!actions.TryGetValue(listener.SubscribesTo, out List<BannerlordBTListener> value))
@@ -69,11 +110,13 @@ public class BehaviorTreeMissionLogic : MissionLogic
             actions[listener.SubscribesTo] = value;
         }
         value.Add(listener);
+        Interlocked.Increment(ref _listenerCounts[(int)listener.SubscribesTo]);
     }
 
     public void UnSubscribe(BannerlordBTListener listener)
     {
-        actions[listener.SubscribesTo].Remove(listener);
+        if (actions[listener.SubscribesTo].Remove(listener))
+            Interlocked.Decrement(ref _listenerCounts[(int)listener.SubscribesTo]);
     }
 
     public void Subscribe(BannerlordBTTickListener listener)
@@ -172,7 +215,11 @@ public class BehaviorTreeMissionLogic : MissionLogic
     }
 
     // The replay lambda captures only `this`, so the main-thread path allocates nothing.
-    private void Defer<T>(T args, Action<T> replay) => _deferred.Enqueue(() => replay(args));
+    private void Defer<T>(T args, Action<T> replay)
+    {
+        _ledger.NoteParked();
+        _deferred.Enqueue(() => replay(args));
+    }
 
     /// <summary>
     /// Runs <paramref name="action"/> now on the mission thread, else parks it behind the callbacks
@@ -236,9 +283,16 @@ public class BehaviorTreeMissionLogic : MissionLogic
         }
     }
 
+    // Every callback below: the thread tripwire first (it reports an off-thread site once per process), then
+    // an early return when none of the values it dispatches has a listener, so nothing is allocated or parked.
+    // Off-thread, an event raised while nothing listens is dropped, as the main-thread path drops it; the two
+    // differ only when a first listener subscribes between the asynchronous agent tick and the next drain.
+
     public override void OnAgentDismount(Agent agent)
     {
-        if (OffMainThread("BehaviorTreeMissionLogic.OnAgentDismount")) { Defer(agent, a => OnAgentDismount(a)); return; }
+        bool offThread = OffMainThread("BehaviorTreeMissionLogic.OnAgentDismount");
+        if (!Listens(Callback.OnAgentDismount, SubscriptionPossibilities.OnSelfDismount, SubscriptionPossibilities.OnAgentDismount)) return;
+        if (offThread) { Defer(agent, a => OnAgentDismount(a)); return; }
         NotifyAll(FindCalledListeners(agent, SubscriptionPossibilities.OnSelfDismount), EmptyArgs);
         var matched = FindCalledListeners(agent, SubscriptionPossibilities.OnAgentDismount);
         if (matched.Count > 0)
@@ -247,22 +301,30 @@ public class BehaviorTreeMissionLogic : MissionLogic
 
     public override void OnAgentFleeing(Agent affectedAgent)
     {
-        if (OffMainThread("BehaviorTreeMissionLogic.OnAgentFleeing")) { Defer(affectedAgent, a => OnAgentFleeing(a)); return; }
-        var selfArgs = new object[] { affectedAgent };
-        NotifyAll(FindCalledListeners(affectedAgent, SubscriptionPossibilities.OnSelfFleeing), selfArgs);
-        if (actions.TryGetValue(SubscriptionPossibilities.OnAgentFleeing, out var globalListeners) && globalListeners != null)
-            NotifyAll(globalListeners, selfArgs);
+        bool offThread = OffMainThread("BehaviorTreeMissionLogic.OnAgentFleeing");
+        if (!Listens(Callback.OnAgentFleeing, SubscriptionPossibilities.OnSelfFleeing, SubscriptionPossibilities.OnAgentFleeing)) return;
+        if (offThread) { Defer(affectedAgent, a => OnAgentFleeing(a)); return; }
+        object[]? args = null;
+        var self = FindCalledListeners(affectedAgent, SubscriptionPossibilities.OnSelfFleeing);
+        if (self.Count > 0)
+            NotifyAll(self, args = new object[] { affectedAgent });
+        if (actions.TryGetValue(SubscriptionPossibilities.OnAgentFleeing, out var globalListeners) && globalListeners != null && globalListeners.Count > 0)
+            NotifyAll(globalListeners, args ?? new object[] { affectedAgent });
     }
 
     public override void OnAgentDeleted(Agent affectedAgent)
     {
-        if (OffMainThread("BehaviorTreeMissionLogic.OnAgentDeleted")) { Defer(affectedAgent, a => OnAgentDeleted(a)); return; }
+        bool offThread = OffMainThread("BehaviorTreeMissionLogic.OnAgentDeleted");
+        if (!Listens(Callback.OnAgentDeleted, SubscriptionPossibilities.OnSelfAlarmedStateChanged)) return;
+        if (offThread) { Defer(affectedAgent, a => OnAgentDeleted(a)); return; }
         NotifyAll(FindCalledListeners(affectedAgent, SubscriptionPossibilities.OnSelfAlarmedStateChanged), EmptyArgs);
     }
 
     public override void OnAgentMount(Agent agent)
     {
-        if (OffMainThread("BehaviorTreeMissionLogic.OnAgentMount")) { Defer(agent, a => OnAgentMount(a)); return; }
+        bool offThread = OffMainThread("BehaviorTreeMissionLogic.OnAgentMount");
+        if (!Listens(Callback.OnAgentMount, SubscriptionPossibilities.OnSelfMount, SubscriptionPossibilities.OnAgentMount)) return;
+        if (offThread) { Defer(agent, a => OnAgentMount(a)); return; }
         NotifyAll(FindCalledListeners(agent, SubscriptionPossibilities.OnSelfMount), EmptyArgs);
         var matched = FindCalledListeners(agent, SubscriptionPossibilities.OnAgentMount);
         if (matched.Count > 0)
@@ -273,33 +335,42 @@ public class BehaviorTreeMissionLogic : MissionLogic
     {
         // Raised from CommonAIComponent.OnTick inside the asynchronous agent tick (v1.4.8): the one
         // engine route into this class that is known to arrive off the main thread.
-        if (OffMainThread("BehaviorTreeMissionLogic.OnAgentPanicked")) { Defer(affectedAgent, a => OnAgentPanicked(a)); return; }
+        bool offThread = OffMainThread("BehaviorTreeMissionLogic.OnAgentPanicked");
+        if (!Listens(Callback.OnAgentPanicked, SubscriptionPossibilities.OnAgentPanicked)) return;
+        if (offThread) { Defer(affectedAgent, a => OnAgentPanicked(a)); return; }
         if (actions.TryGetValue(SubscriptionPossibilities.OnAgentPanicked, out var listeners) && listeners != null)
             NotifyAll(listeners, new object[] { affectedAgent });
     }
 
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
     {
-        if (OffMainThread("BehaviorTreeMissionLogic.OnAgentRemoved"))
+        bool offThread = OffMainThread("BehaviorTreeMissionLogic.OnAgentRemoved");
+        if (!Listens(Callback.OnAgentRemoved, SubscriptionPossibilities.OnSelfRemoved, SubscriptionPossibilities.OnSelfKilledEnemy,
+                SubscriptionPossibilities.OnAgentRemoved)) return;
+        if (offThread)
         {
             Defer((affectedAgent, affectorAgent, agentState, blow),
                 t => OnAgentRemoved(t.affectedAgent, t.affectorAgent, t.agentState, t.blow));
             return;
         }
-        var selfRemovedArgs = new object[] { affectorAgent, agentState, blow };
-        NotifyAll(FindCalledListeners(affectedAgent, SubscriptionPossibilities.OnSelfRemoved), selfRemovedArgs);
+        var selfRemoved = FindCalledListeners(affectedAgent, SubscriptionPossibilities.OnSelfRemoved);
+        if (selfRemoved.Count > 0)
+            NotifyAll(selfRemoved, new object[] { affectorAgent, agentState, blow });
         if (affectorAgent != null)
         {
-            var killedArgs = new object[] { affectedAgent, agentState, blow };
-            NotifyAll(FindCalledListeners(affectorAgent, SubscriptionPossibilities.OnSelfKilledEnemy), killedArgs);
+            var killedEnemy = FindCalledListeners(affectorAgent, SubscriptionPossibilities.OnSelfKilledEnemy);
+            if (killedEnemy.Count > 0)
+                NotifyAll(killedEnemy, new object[] { affectedAgent, agentState, blow });
         }
-        if (actions.TryGetValue(SubscriptionPossibilities.OnAgentRemoved, out var globalListeners) && globalListeners != null)
+        if (actions.TryGetValue(SubscriptionPossibilities.OnAgentRemoved, out var globalListeners) && globalListeners != null && globalListeners.Count > 0)
             NotifyAll(globalListeners, new object[] { affectedAgent, affectorAgent, agentState, blow });
     }
 
     public override void OnAgentShootMissile(Agent shooterAgent, EquipmentIndex weaponIndex, Vec3 position, Vec3 velocity, Mat3 orientation, bool hasRigidBody, int forcedMissileIndex)
     {
-        if (OffMainThread("BehaviorTreeMissionLogic.OnAgentShootMissile"))
+        bool offThread = OffMainThread("BehaviorTreeMissionLogic.OnAgentShootMissile");
+        if (!Listens(Callback.OnAgentShootMissile, SubscriptionPossibilities.OnAgentShootMissile)) return;
+        if (offThread)
         {
             Defer((shooterAgent, weaponIndex, position, velocity, orientation, hasRigidBody, forcedMissileIndex),
                 t => OnAgentShootMissile(t.shooterAgent, t.weaponIndex, t.position, t.velocity, t.orientation, t.hasRigidBody, t.forcedMissileIndex));
@@ -311,7 +382,9 @@ public class BehaviorTreeMissionLogic : MissionLogic
 
     public override void OnFocusGained(Agent agent, IFocusable focusableObject, bool isInteractable)
     {
-        if (OffMainThread("BehaviorTreeMissionLogic.OnFocusGained"))
+        bool offThread = OffMainThread("BehaviorTreeMissionLogic.OnFocusGained");
+        if (!Listens(Callback.OnFocusGained, SubscriptionPossibilities.OnSelfGainedFocus)) return;
+        if (offThread)
         {
             Defer((agent, focusableObject, isInteractable), t => OnFocusGained(t.agent, t.focusableObject, t.isInteractable));
             return;
@@ -323,7 +396,9 @@ public class BehaviorTreeMissionLogic : MissionLogic
 
     public override void OnFocusLost(Agent agent, IFocusable focusableObject)
     {
-        if (OffMainThread("BehaviorTreeMissionLogic.OnFocusLost")) { Defer((agent, focusableObject), t => OnFocusLost(t.agent, t.focusableObject)); return; }
+        bool offThread = OffMainThread("BehaviorTreeMissionLogic.OnFocusLost");
+        if (!Listens(Callback.OnFocusLost, SubscriptionPossibilities.OnSelfLostFocus)) return;
+        if (offThread) { Defer((agent, focusableObject), t => OnFocusLost(t.agent, t.focusableObject)); return; }
         var matched = FindCalledListeners(agent, SubscriptionPossibilities.OnSelfLostFocus);
         if (matched.Count > 0)
             NotifyAll(matched, new object[] { focusableObject });
@@ -331,7 +406,9 @@ public class BehaviorTreeMissionLogic : MissionLogic
 
     public override void OnAgentAlarmedStateChanged(Agent agent, Agent.AIStateFlag flag)
     {
-        if (OffMainThread("BehaviorTreeMissionLogic.OnAgentAlarmedStateChanged")) { Defer((agent, flag), t => OnAgentAlarmedStateChanged(t.agent, t.flag)); return; }
+        bool offThread = OffMainThread("BehaviorTreeMissionLogic.OnAgentAlarmedStateChanged");
+        if (!Listens(Callback.OnAgentAlarmedStateChanged, SubscriptionPossibilities.OnSelfAlarmedStateChanged)) return;
+        if (offThread) { Defer((agent, flag), t => OnAgentAlarmedStateChanged(t.agent, t.flag)); return; }
         var matched = FindCalledListeners(agent, SubscriptionPossibilities.OnSelfAlarmedStateChanged);
         if (matched.Count > 0)
             NotifyAll(matched, new object[] { flag });
@@ -339,7 +416,9 @@ public class BehaviorTreeMissionLogic : MissionLogic
 
     public override void OnAgentHit(Agent affectedAgent, Agent affectorAgent, in MissionWeapon affectorWeapon, in Blow blow, in AttackCollisionData attackCollisionData)
     {
-        if (OffMainThread("BehaviorTreeMissionLogic.OnAgentHit"))
+        bool offThread = OffMainThread("BehaviorTreeMissionLogic.OnAgentHit");
+        if (!Listens(Callback.OnAgentHit, SubscriptionPossibilities.OnSelfIsHit, SubscriptionPossibilities.OnSelfHitsEnemy)) return;
+        if (offThread)
         {
             Defer((affectedAgent, affectorAgent, affectorWeapon, blow, attackCollisionData),
                 t => OnAgentHit(t.affectedAgent, t.affectorAgent, in t.affectorWeapon, in t.blow, in t.attackCollisionData));
@@ -358,7 +437,9 @@ public class BehaviorTreeMissionLogic : MissionLogic
 
     public override void OnObjectUsed(Agent userAgent, UsableMissionObject usedObject)
     {
-        if (OffMainThread("BehaviorTreeMissionLogic.OnObjectUsed")) { Defer((userAgent, usedObject), t => OnObjectUsed(t.userAgent, t.usedObject)); return; }
+        bool offThread = OffMainThread("BehaviorTreeMissionLogic.OnObjectUsed");
+        if (!Listens(Callback.OnObjectUsed, SubscriptionPossibilities.OnSelfUsedObject)) return;
+        if (offThread) { Defer((userAgent, usedObject), t => OnObjectUsed(t.userAgent, t.usedObject)); return; }
         var matched = FindCalledListeners(userAgent, SubscriptionPossibilities.OnSelfUsedObject);
         if (matched.Count > 0)
             NotifyAll(matched, new object[] { usedObject });
@@ -366,14 +447,18 @@ public class BehaviorTreeMissionLogic : MissionLogic
 
     protected override void OnObjectDisabled(DestructableComponent destructionComponent)
     {
-        if (OffMainThread("BehaviorTreeMissionLogic.OnObjectDisabled")) { Defer(destructionComponent, c => OnObjectDisabled(c)); return; }
+        bool offThread = OffMainThread("BehaviorTreeMissionLogic.OnObjectDisabled");
+        if (!Listens(Callback.OnObjectDisabled, SubscriptionPossibilities.OnObjectDisabled)) return;
+        if (offThread) { Defer(destructionComponent, c => OnObjectDisabled(c)); return; }
         if (actions.TryGetValue(SubscriptionPossibilities.OnObjectDisabled, out var listeners) && listeners != null)
             NotifyAll(listeners, new object[] { destructionComponent });
     }
 
     public override void OnObjectStoppedBeingUsed(Agent userAgent, UsableMissionObject usedObject)
     {
-        if (OffMainThread("BehaviorTreeMissionLogic.OnObjectStoppedBeingUsed")) { Defer((userAgent, usedObject), t => OnObjectStoppedBeingUsed(t.userAgent, t.usedObject)); return; }
+        bool offThread = OffMainThread("BehaviorTreeMissionLogic.OnObjectStoppedBeingUsed");
+        if (!Listens(Callback.OnObjectStoppedBeingUsed, SubscriptionPossibilities.OnSelfStoppedUsingObject)) return;
+        if (offThread) { Defer((userAgent, usedObject), t => OnObjectStoppedBeingUsed(t.userAgent, t.usedObject)); return; }
         var matched = FindCalledListeners(userAgent, SubscriptionPossibilities.OnSelfStoppedUsingObject);
         if (matched.Count > 0)
             NotifyAll(matched, new object[] { usedObject });
@@ -384,7 +469,10 @@ public class BehaviorTreeMissionLogic : MissionLogic
         // Mission-end cleanup (deep-review 2026-05-24 E5): clear all subscription
         // state so a new Mission starts with empty listener lists. The original
         // vendored DLL leaked these across mission boundaries.
+        InfoLog(_ledger.Summary());
         actions.Clear();
+        Array.Clear(_listenerCounts, 0, _listenerCounts.Length);
+        _ledger.Reset();
         tickListeners.Clear();
         trees.Clear();
         _tempMatched.Clear();

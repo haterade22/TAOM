@@ -178,7 +178,7 @@ roll stays on the normal stream.
 
 Not yet addressed, and honest about it: TAOM has six unseeded `new System.Random()` sites driving
 campaign decisions (recruitment pools, settlement guards, initial children, marketplace injection),
-and the creature behavior-tree cooldowns run on `DateTime.Now` rather than mission time. Whether any
+and the creature behavior-tree cooldowns run on `DateTime.UtcNow` rather than mission time. Whether any
 of it matters depends on whether BT suppresses the client's campaign tick — which the boot matrix
 and a two-peer session will tell us, and nothing else will.
 

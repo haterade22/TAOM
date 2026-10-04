@@ -36,7 +36,7 @@ public abstract class SpiderAttackTaskBase : BTTask, IBTBannerlordBase, IBTSpide
     /// <summary>The attack kind this task fires (drives the service's clip/bone selection + which cooldown is stamped).</summary>
     protected abstract SpiderAttackKind Kind { get; }
 
-    /// <summary>Stamp this kind's cooldown (write DateTime.Now into the matching blackboard value).</summary>
+    /// <summary>Stamp this kind's cooldown (write DateTime.UtcNow into the matching blackboard value).</summary>
     protected abstract void StampCooldown(DateTime now);
 
     public override BTTaskStatus Execute()
@@ -44,7 +44,7 @@ public abstract class SpiderAttackTaskBase : BTTask, IBTBannerlordBase, IBTSpide
         Agent spider = Agent.GetValue();
         if (spider == null || !spider.IsActive()) return BTTaskStatus.FinishedWithFalse;
 
-        StampCooldown(DateTime.Now);
+        StampCooldown(DateTime.UtcNow);
 
         _adapterFactory ??= IoC.Resolve<IMissionAdapterFactory>();
         _service ??= IoC.Resolve<ISpiderAttackService>();

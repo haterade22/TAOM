@@ -150,10 +150,25 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 - **SpatialGrid**: cells are keyed on (x, y) only (the distance test stays 3D), so the 60 m "no enemy close" scan looks up 49 cells instead of 343; every warg node scans into a reused buffer through the zero-allocation overload.
 - **BoneCheck**: the attacker's bone positions reuse one list and its skeleton is fetched once per tick; a target's skeleton is fetched only inside the 20 square-metre gate (about 4.5 m), because `MBAgentVisuals.GetSkeleton()` builds a new finalizable native wrapper on every call. `BoneCheckDuringAnimation.Tick` reads the action progress once per tick and fetches the attacker's skeleton only once the progress reaches the hit window, so a standing bite's wind-up frame builds no wrapper (the running bite's window opens at 0). The one behaviour difference: a missing attacker skeleton no longer ends the bite during the wind-up; it ends it only if still missing at the first in-window tick, and a skeleton back by then lets the bite go on (whether that happens in the engine is unverified). Tests drive `Tick` with substitutes; the owed in-game warg Custom Battle is the proof for a live skeleton in the hit window (bites must still land and end as before).
 - **Services in BT nodes**: `WargBehaviorTree.BuildTree` resolves `IMissionAdapterFactory` and `IWargAttackService` once per tree and passes them to the constructors of the four nodes that need them (`PeriodicallyCheckIfCanAttackAnyone`, `CheckOnceIfCanAttackEnemy`, `WargAiControlledIsNotFacingEnemy`, `WargAttackTask`), which keep them in private readonly instance fields and never call `IoC.Resolve` (#659). The tree's attack tasks share one `WargAttackService`, which keeps no per-call state. `LogTask` still resolves its logger per Execute; it runs only when the tree changes branch. `WargRiderHandManager.Tick` decides warg-ness from the mount's `Monster` with `WargConfig.IsWargMonster`, with no container or adapter-cache lookup.
-- **Grid updates**: Every 5 ticks via AdvancedCombatBehavior, not every frame
+- **Grid updates**: `AdvancedCombatBehavior` asks for a rebuild every 2 seconds, not every frame; a build nobody queried makes the next scheduled rebuild a skip, and the next query rebuilds first (plan 033, `advanced-combat.md`).
+- **Tree framework (plan 033)**: the sleep, wait, cooldown and rage timers read `DateTime.UtcNow` (no time-zone conversion per frame, no daylight-saving step; `CreatureTreeClockTests` pins it in the IL); `Selector.Prepare` clears its two child lists instead of allocating them on every re-entry (`SelectorListReuseTests`); and each of the 14 callbacks `BehaviorTreeMissionLogic` routes returns before it builds argument arrays or parks an off-thread replay when none of the subscription values it dispatches has a listener, counted per value in `_listenerCounts` (`BehaviorTreeMissionLogicDispatchTests`, 18, including delivery to the `OnSelfRemoved` and `OnSelfIsHit` listeners the warg and spider trees use, and a table that raises each of the 14 callbacks off-thread with a listener on each of the 20 values). Off-thread, such an event is dropped as the main-thread path drops it; the two differ only if a first listener for that value subscribes between the asynchronous agent tick and the next drain.
+
+## Log lines
+
+`BehaviorTreeMissionLogic` writes two INFO lines to `taom_debug.log` (plan 033), formatted and counted by `CallbackSkipLedger`; `CallbackSkipLedgerTests` (4, no game needed) and `BehaviorTreeMissionLogicDispatchTests` pin both formats literally.
+
+| When | Line | Fields |
+|---|---|---|
+| The mission's first callback that returns early (once per mission, on the thread that raised it) | `[BehaviorTree] OnAgentRemoved had no tree listener, so it returned before building arguments or parking a replay; every such skip this mission is counted in the mission-end summary.` | the callback's name |
+| Mission end (`OnEndMissionInternal`) | `[BehaviorTree] Mission end: 3 callbacks skipped with no tree listener (OnAgentRemoved 2, OnAgentHit 1); 1 parked off-thread for the mission tick.` | total skips; per callback with a nonzero count, in the class's callback order; replays parked off the main thread for the next mission tick. With no skip the parenthesis is left out. |
 
 ## Changelog
 
+- 2026-10-02 (plan 033): the creature trees read `DateTime.UtcNow`, `Selector.Prepare` reuses its
+  child lists, and `BehaviorTreeMissionLogic` returns before allocating or parking when nothing
+  listens; it logs the first such skip per mission and a mission-end summary of skips and parked
+  replays. Review follow-ups: the skip and park counts moved into `CallbackSkipLedger`, so the
+  entry point keeps only the dispatch.
 - 2026-09-24 - #659, maintainer decisions on the plan 015 review: `WargBehaviorTree.BuildTree`
   resolves the node services once per tree and injects them, so the four service nodes hold no
   `IoC.Resolve` (`LogTask` still does);

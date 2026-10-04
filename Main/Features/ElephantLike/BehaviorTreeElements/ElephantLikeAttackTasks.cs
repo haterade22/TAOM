@@ -39,7 +39,7 @@ public abstract class ElephantLikeAttackTaskBase : BTTask, IBTBannerlordBase, IB
     /// <summary>The attack animation to play this firing (side attacks pick by <see cref="TargetBearing"/>).</summary>
     protected abstract ActionIndexCache GetAttackAction();
 
-    /// <summary>Stamp this attack kind's cooldown (write DateTime.Now into the matching blackboard value).</summary>
+    /// <summary>Stamp this attack kind's cooldown (write DateTime.UtcNow into the matching blackboard value).</summary>
     protected abstract void StampCooldown(DateTime now);
 
     /// <summary>Which attack this task is — selects the damage band in <see cref="IElephantLikeAttackService.ComputeInflictedDamage"/>.</summary>
@@ -53,7 +53,7 @@ public abstract class ElephantLikeAttackTaskBase : BTTask, IBTBannerlordBase, IB
         if (rider == null) return BTTaskStatus.FinishedWithFalse;
 
         creature.SetActionChannel(0, GetAttackAction());
-        StampCooldown(DateTime.Now);
+        StampCooldown(DateTime.UtcNow);
 
         _service ??= Profile.ResolveService();
         Mission.Current.GetNearbyAgents(creature.Position.AsVec2, Profile.TrampleRadius * Profile.ReachScaleOf(creature), _scratch);

@@ -363,7 +363,7 @@ stale table above).** Accepted-behavior observations, recorded so they aren't re
   positive cross-z = LEFT is TaleWorlds' own convention.
 - **Effective trample period is ~10.7–12s, not a crisp 10s** — a side swing started just before the trample comes
   off cooldown blocks it for one clip length (the priority ordering is honored at every evaluation instant).
-- **Cooldowns/sleeps are wall-clock `DateTime.Now`** (elapse during pause; real-time under slow-motion) — library +
+- **Cooldowns/sleeps are wall-clock `DateTime.UtcNow`** (elapse during pause; real-time under slow-motion; UTC since plan 033); library +
   warg precedent (`SleepTask` itself is wall-clock). Switch to `Mission.Current.CurrentTime` only if pause-exploit
   behavior ever matters.
 - `base(10)` is NOT a 10ms eval throttle (int division truncates <1000 to 0 → tree runs every component tick, warg

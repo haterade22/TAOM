@@ -18,7 +18,7 @@ public class SetRageAttackTimer : BTTask, IBTWargBlackboard
 
     public override BTTaskStatus Execute()
     {
-        RageAttackStartTime.SetValue(DateTime.Now);
+        RageAttackStartTime.SetValue(DateTime.UtcNow);
         return BTTaskStatus.FinishedWithTrue;
     }
 }

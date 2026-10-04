@@ -978,3 +978,9 @@ The `[AnimMem]` probe wrote its mission summary only from `OnEndMission`, whose 
 - **Why missed:** the review read the condition on the first branch of `CheckMissionEnd` and stopped; the `else if` that a client takes was a few lines below.
 - **Prevent:** for any end-of-mission output (summary, flush, release), write it from `OnRemoveBehavior` too, with a null-after-use latch so the normal path does not log twice. Before stating that a path never reaches a method, read every branch of the gating method, the `else` included, and quote the line that excludes it. Second occurrence of "An engine lifecycle virtual's firing set is read from its caller".
 - **Source:** `docs/reviews/rca-anim-memory-probe-2026-10-02.md` C3; convergence round 1 in `docs/reviews/deep-review-036-anim-memory-probe-2026-10-02.md`.
+
+### A buffer moved from a local to a field takes its owner's lifetime: empty it after use in a singleton (plan 033, 2026-10-02)
+`SpatialGridDebugService` began scanning into a reused `List<Agent>` field. The service is a `Reuse.Singleton`, so the list kept the last overlay frame's agents, and through `Agent.Team` their finished mission, reachable into later battles; as a local it died with the frame.
+- **Why missed:** the allocation fix was judged per call; nobody looked up the registration that sets the field's lifetime.
+- **Prevent:** when hoisting a buffer into a field, read the owner's registration or construction site; if the owner outlives the data (an IoC singleton, a static), clear the buffer after each use and pin the clear with a test.
+- **Source:** `docs/reviews/rca-creature-battle-allocations-2026-10-02.md` finding R9.
