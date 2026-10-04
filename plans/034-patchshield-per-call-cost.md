@@ -23,7 +23,7 @@
   (net472), failing: `EveryLanguage_DeclaresARowForEveryEnglishKey` (untranslated keys; the paid
   translator run waits on the maintainer). Python suite: not recorded, and this plan touches no
   `tools/` file, so it does not run it.
-- **Issue**: filed by the orchestrator before execution
+- **Issue**: #716
 
 ## Why this matters
 
@@ -36,7 +36,8 @@ uses the value after an exception. Several shielded methods run per frame, per h
 agent on worker threads. Nobody has measured what that costs per call: the "~50 µs" figure in the
 code comments and docs is #331's tournament-exit stall divided by an estimated call count, not a
 measurement. This plan measures it on the game's runtime and, only if the binding costs 50 ns or more
-per call, removes it while keeping every swallow, log line, unpatch and rethrow exactly as it is.
+per call, removes it while keeping every swallow, log line, unpatch and rethrow exactly as it is
+(except where the 2026-10-03 amendment under STOP conditions records a change).
 Either way the wrong figure is corrected.
 
 ## Current state
@@ -1278,12 +1279,50 @@ Stop and report (do not improvise) if:
   protected file.
 - A step's verification fails twice after a reasonable fix.
 
+### Amendment, 2026-10-03: the scope as built
+
+The branch as built does not satisfy the STOP conditions above literally. The maintainer's decisions D6 and D16 and
+the two reviews changed what Branch B touches. This records it, so the plan no longer contradicts the branch.
+
+- **Log cadence and new files (D6, D16).** D6 (log comprehensively: aggregate or sample, never drop) and D16 (a
+  repeated swallow line is written once and counted) changed the diag.log text of the swallow path, so the STOP
+  condition on "the diag.log text" no longer holds. `Dependencies/Foundation/LogRepeatLimiter.cs` is a new file outside
+  Branch B's file list. The miss diagnostics (one reason line per session, a count in the session summary) and the
+  running count written when each mission starts (`SubModule.OnBeforeMissionBehaviorInitialize`) belong to the same
+  decisions, and a write that fails to land is retried (`DiagLog.TryLog`): a swallow line and the reason line by the
+  next occurrence, a count line by the next mission start. Also outside the Scope list as built:
+  `Dependencies/Foundation/DiagLog.cs` (`TryLog`); `Dependencies/SubModule.cs` (the mission-start override, which the
+  out-of-scope list at :425 calls not needed, so that line and the STOP condition at :1278-1279 are superseded for this
+  file; `Main/IoC.cs` and `Main/SubModule.cs` are untouched); `TAOM.Tests/Infrastructure/Dependencies/DiagLogTests.cs`
+  and `LogRepeatLimiterTests.cs`, both new; `docs/features/crash-report.md`; `docs/reference/feature-map.md` (the
+  class count in PatchShield's row, 19 to 20); and the review's own records (the deep-review report, the RCA,
+  `docs/reviews/REVIEW-LOG.md` and `docs/reviews/lessons/testing-qa.md`).
+- **Protected files.** `RethrowStackPreserver.cs` changed in documentation only: its XML comment named
+  `__originalMethod` as the usage and described a finalizer ordering that plan 007 removed. No executable preservation
+  logic, `RethrowStackPreserverTests.cs`, `SaveShield.cs`, exclusion list or `ShouldInstall` changed. The Done criteria
+  check that the `git diff --stat` of those files prints nothing therefore prints that one file.
+- **Behaviour equivalence has one stated exception.** "Every unpatch exactly as it is" holds whenever the lookup names
+  the shielded method. When it cannot (the judged frame is not a replacement this Harmony copy maps), nothing is
+  unpatched for that exception: a foreign patch that keeps throwing stays attached, is swallowed on every call, and its
+  line is counted instead of written. The `__originalMethod` the finalizers took before this plan named the method
+  whether or not Harmony's map held the frame, so this is a loss of recovery on those configurations, accepted here,
+  and the lookup never climbs to an outer method to make up for it. Stripping only the throwing owner there is left to
+  a follow-up PatchShield plan. The Maintenance notes below and `docs/migration/dr3-maintenance.md` state the same.
+- **Done criteria as built.** The Branch B test line ("Step 1's totals plus 9 new passing tests,
+  `PatchShieldFinalizerTests` 9 of 9") reads, as built, as 47 new passing tests in three new files:
+  `PatchShieldFinalizerTests` 28 of 28, `LogRepeatLimiterTests` 16 of 16 and `DiagLogTests` 3 of 3. The
+  `git status --porcelain` line reads against the Scope list plus the files named above. The stale-claim grep still
+  prints six lines, but not the six Step B5 names: the five other than `docs/features/crash-report.md` (the D16
+  commit reworded its Steady-state bullet to the past tense), plus the review record's quote of the runtime string
+  at `docs/reviews/deep-review-034-patchshield-per-call-cost-2026-10-02.md:196`.
+
 ## Orchestrator steps (not the executor's)
 
-- Issue: file it before dispatch (perf, crash-safety). No issue number is known at planning time.
+- Issue: #716 (filed before dispatch; no number was known at planning time).
 - `/deep-review` of the branch before merge (C# changes in Branch B; comment-only C# in Branch A).
 - No `/localize`: no player-facing text. No new feature doc or feature-map row: PatchShield's row
-  (`docs/reference/feature-map.md:112`, "TAOM.Dependencies defensive infrastructure") is unchanged.
+  (`docs/reference/feature-map.md:112`, "TAOM.Dependencies defensive infrastructure") is unchanged except its class
+  count, which moved from 19 to 20 when this branch added `LogRepeatLimiter`.
 - The `bannerlord-1.4.5` line carries the same two finalizers
   (`git show bannerlord-1.4.5:Dependencies/Foundation/PatchShield.cs`, :244 and :255 at its tip on
   2026-10-02); decide whether Branch B is ported there.
@@ -1316,12 +1355,12 @@ Stop and report (do not improvise) if:
   the caller's frame from the stack; the bound test's dynamic method stores its result for that
   reason. The replacement calls finalizers from inside its exception handling, where no tail call is
   made, and the finalizers use the lookup's result, so production frames are not affected.
-- `RethrowStackPreserver.cs:60` (out of scope) still documents usage as
-  `PreserveForRethrow(__exception, __originalMethod)`, and so do the generic finalizer examples at
-  `docs/reference/engine/submodule-lifecycle-and-harmony.md:35` and `docs/reviews/lessons/harmony-il.md:581`.
-  They describe any finalizer, SaveShield's included, and stay correct; only PatchShield's own
-  finalizers no longer match that example after Branch B. A later doc pass may add "or the method
-  from `ResolveShieldedOriginal`".
+- `RethrowStackPreserver.cs:60` documented usage as `PreserveForRethrow(__exception, __originalMethod)`, and so
+  did the generic finalizer examples at `docs/reference/engine/submodule-lifecycle-and-harmony.md:35` and
+  `docs/reviews/lessons/harmony-il.md:581`. They describe any finalizer, SaveShield's included, and stayed
+  correct; only PatchShield's own finalizers no longer matched that example after Branch B. The later doc pass
+  (maintainer decision D16) added "or the method from `ResolveShieldedOriginal`" to all three; see the amendment
+  under STOP conditions for the one protected file that pass touched.
 - Constructor targets: the tests patch methods only. A shielded constructor's replacement is still a
   generated method mapped to its `ConstructorInfo` original in the same map; review may ask for a
   constructor case.

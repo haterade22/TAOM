@@ -1522,3 +1522,9 @@ Twice in plan 029: a `[TickSummary]` variant set `allocKB=na` while keeping nume
 - **Why missed:** the fixture was edited from a real line to reach the case the test wanted, and the label was kept from the line it started as.
 - **Prevent:** copy a real line byte for byte when the comment says it is real (name the log and time); when the test needs a shape the logs lack, build it from the writer's format string and say "modelled on <writer>". Never edit a pinned or logged line in place to make a new case.
 - **Source:** `docs/reviews/rca-perf-runs-parser-2026-10-02.md` C3 and R5.
+
+### A test that asserts a frame is on the stack must keep code after the call in that frame (2026-10-02)
+Plan 034's review added a test that the shield's stack lookup never climbs past an unresolved frame to a patched outer method. The outer method first carried only a foreign prefix, so its Harmony replacement ended `call; ret`; the x64 JIT made that a tail call, the outer frame was never on the stack, and a lookup that did climb still passed. A postfix on the outer method keeps the frame, and the test then failed against the climbing mutation.
+- **Why missed:** the executor had defeated the same tail call in its own dynamic method by storing the result, but the rule was not carried to the next frame up.
+- **Prevent:** every frame a stack test relies on, dynamic or patched, must do something after its call (store the result, or carry a postfix). Prove the test against the mutation it guards; a stack test that never failed proves nothing.
+- **Source:** `docs/reviews/rca-patchshield-per-call-cost-2026-10-02.md` row 5.

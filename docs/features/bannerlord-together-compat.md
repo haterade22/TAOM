@@ -76,12 +76,15 @@ does today.
 | TAOM time-acceleration UI (`MapBar` extra fast-forward + 4 layout patches + `MapTimeControlVM` mixin) | Registered | **Not registered** — BT owns `Campaign.TimeControlMode` |
 
 **Why the shield is skipped outright (2026-08-02).** This is a **performance** decision, not a
-safety one. A shield finalizer binds `__originalMethod`, so Harmony's generated wrapper pays a
-`MethodBase.GetMethodFromHandle` plus a try/catch on every call — the same mechanism that turned a
-millisecond tournament teardown into a measured 104–109 s freeze in #331. A co-op mod that
-transpiles the whole campaign surface converts that per-call tax into a frame-rate collapse; a
-player profiled one and traced it here. The two rows above are therefore now historical for
-`PatchShield`, though the reasoning still governs `SaveShield`.
+safety one. Until plan 034 the shield finalizer took `__originalMethod`, so Harmony's generated wrapper
+paid a `MethodBase.GetMethodFromHandle` on every call (about 63 ns per call, 1,145 ns with threads
+contending; plan 034 now passes only `__exception`, which its Debug benchmark put at about 3.5 ns per
+call more than a patched method with no finalizer, 5.4 against 1.9 ns with a stand-in finalizer of the
+same shape, and the skip stands as decided), the same mechanism that turned a millisecond tournament teardown into
+a measured 104 to 109 s freeze in #331. A co-op mod that transpiles the whole campaign surface
+converted that per-call cost into a frame-rate collapse; a player profiled one and traced it here.
+The two rows above are therefore now historical for `PatchShield`, though the reasoning still
+governs `SaveShield`.
 
 **Why unpatching inverted, and why the principle outlives the skip.** In singleplayer, stripping a
 broken third-party patch converts a crash into a survivable degradation. Under host-authoritative

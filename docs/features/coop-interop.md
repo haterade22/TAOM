@@ -402,13 +402,18 @@ to characterise. The existing try/catch around acceptance is containment, not co
 `PatchShield.Install()` is suppressed whenever a co-op module is active
 (`PatchShieldPolicy.ShouldInstall`). This is a **performance** fix, not a safety one.
 
-A shield finalizer binds `__originalMethod`, so Harmony's generated wrapper pays a
-`MethodBase.GetMethodFromHandle` plus a try/catch **on every call** (~50 µs) — the same mechanism
-that turned a millisecond tournament teardown into a measured 104–109 s freeze in #331. Co-op
-amplifies it: Coop's AutoSync transpiles every declared method and constructor of 43 campaign types,
-and Coop's `PatchAll` runs on connect, *before* TAOM's `OnGameInitializationFinished` pass — so pass
-2 shielded that entire surface. Those methods are the campaign hot path, so the symptom was frame
-rate rather than a single stall. A player profiled it and traced it here.
+Until plan 034 the shield finalizer took `__originalMethod`, so Harmony's generated wrapper paid a
+`MethodBase.GetMethodFromHandle` **on every call** (measured at about 63 ns per call, 1,145 ns
+contended, plan 034), the same mechanism that turned a millisecond tournament teardown into a measured
+104 to 109 s freeze in #331. Co-op amplifies it: Coop's AutoSync transpiles every declared method and
+constructor of 43 campaign types, and Coop's `PatchAll` runs on connect, *before* TAOM's
+`OnGameInitializationFinished` pass, so pass 2 shielded that entire surface. Those methods are the
+campaign hot path, so the symptom was frame rate rather than a single stall. A player profiled it and
+traced it here. Plan 034 removed the parameter: the finalizer now takes only `__exception`. Its
+benchmark, with a stand-in finalizer of that shape on a trivial patched method, measured 5.4 ns per
+call in a Debug build (what players run) against 1.9 ns with the postfix alone, about 3.5 ns more (1.3
+against 0.7 ns optimized); the shipped finalizers were not benchmarked themselves. The skip was decided
+under the old cost and stands; whether to revisit it is a separate decision.
 
 Extending `ExcludedTargetNamespacePrefixes` would have been the wrong lever: adding
 `TaleWorlds.CampaignSystem` there suppresses shielding **in solo play too**, because that list is not

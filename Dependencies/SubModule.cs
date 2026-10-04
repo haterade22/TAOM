@@ -296,6 +296,18 @@ public class SubModule : MBSubModuleBase
         DiagLog.Log("Dependencies", "OnGameInitializationFinished: complete");
     }
 
+    /// <summary>
+    /// Runs when each mission starts, which is the nearest the engine gives a sub-module to a mission boundary (there
+    /// is no mission-end callback). Writes the repeat counts PatchShield gathered since its last report, so a session
+    /// that crashes keeps the counts up to its last mission start, not only the first line of each swallow
+    /// (maintainer decision D6). The clean-exit summary still states the totals. Never throws.
+    /// </summary>
+    public override void OnBeforeMissionBehaviorInitialize(Mission mission)
+    {
+        base.OnBeforeMissionBehaviorInitialize(mission);
+        PatchShield.WriteRepeatCheckpoint();
+    }
+
     private static void ApplyHarmonyGuards()
     {
         var harmony = new Harmony(GuardHarmonyId);

@@ -65,10 +65,16 @@ public static class PatchShieldPolicy
     };
 
     // Issue #331 round 2 (2026-07-09, measured): NEVER shield the Gauntlet/2D UI layer.
-    // A shield finalizer binds __originalMethod, so Harmony's generated wrapper pays a
-    // MethodBase.GetMethodFromHandle + try/catch on EVERY CALL (~50µs). The Gauntlet
-    // prefab system contains per-widget-recursion methods that UIExtenderEx patches
-    // (WidgetFactory.IsCustomType prefix, WidgetTemplate.OnRelease blank-transpiler);
+    // Until plan 034 the shield finalizer took __originalMethod, so Harmony's generated wrapper paid
+    // a MethodBase.GetMethodFromHandle on EVERY CALL, inside the try/catch any finalizer adds (about
+    // 63 ns per call more than a finalizer without it, 1,145 ns with threads contending, and 241 bytes
+    // allocated; measured on .NET Framework 4.8.1 with Harmony 2.4.2, plan 034). The finalizer now
+    // takes only __exception. Plan 034's benchmark, with a stand-in finalizer of that shape on a trivial
+    // patched method, measured 5.4 ns per call in a Debug build (what players run) against 1.9 ns with
+    // the postfix alone: about 3.5 ns more (1.3 against 0.7 ns optimized). The shipped finalizers were
+    // not benchmarked themselves. This exclusion was decided under the old cost and stands. The
+    // Gauntlet prefab system contains per-widget-recursion methods that
+    // UIExtenderEx patches (WidgetFactory.IsCustomType prefix, WidgetTemplate.OnRelease blank-transpiler);
     // a tournament's accumulated template tree calls them ~2 MILLION times at release,
     // so the shield tax amplified a milliseconds-scale teardown into a measured 104-109s
     // frozen exit (+8,276 gen0 GCs, invariant across sessions; stack-sampled proof in
@@ -120,7 +126,8 @@ public static class PatchShieldPolicy
     /// Method-level hot-target exclusion list: "&lt;FullTypeName&gt;.&lt;MethodName&gt;" entries for engine
     /// members whose declaring TYPE is not hot enough to exclude by namespace (Patch92's own targets sit
     /// in the otherwise-ordinary <c>TaleWorlds.MountAndBlade</c> namespace) but whose own call frequency
-    /// makes a per-call <c>__originalMethod</c> finalizer tax unacceptable: <c>Formation.get_UnitDiameter</c>
+    /// made the per-call cost of the <c>__originalMethod</c> parameter PatchShield's finalizer took until
+    /// plan 034 unacceptable: <c>Formation.get_UnitDiameter</c>
     /// runs per unit per formation-positioning query, and the order preview, the deployment placement and
     /// the spawn frames all walk every unit through <c>GetUnitPositionWithIndexAccordingToNewOrder</c>
     /// (three overloads, one entry covers all of them) and <c>GetUnitSpawnFrameWithIndex</c>. Same rationale
@@ -299,16 +306,24 @@ public static class PatchShieldPolicy
     /// <summary>
     /// Should PatchShield install at all?
     ///
-    /// NO under co-op, and this is a PERFORMANCE decision, not a correctness one. A shield finalizer
-    /// binds <c>__originalMethod</c>, so Harmony's generated wrapper pays a
-    /// <c>MethodBase.GetMethodFromHandle</c> plus a try/catch on EVERY CALL (~50 µs). That tax is
-    /// what turned a millisecond tournament teardown into a measured 104–109 s freeze in #331, and
+    /// NO under co-op, and this is a PERFORMANCE decision, not a correctness one. Until plan 034 the
+    /// shield finalizer took <c>__originalMethod</c>, so Harmony's generated wrapper paid a
+    /// <c>MethodBase.GetMethodFromHandle</c> on EVERY CALL, inside the try/catch any finalizer adds (about
+    /// 63 ns per call more than a finalizer without it, 1,145 ns with threads contending, and 241 bytes
+    /// allocated; measured on .NET Framework 4.8.1 with Harmony 2.4.2, plan 034). That binding is what
+    /// turned a millisecond tournament teardown into a measured 104 to 109 s freeze in #331 (its per-call
+    /// time alone cannot explain the stall; see the plan 034 lesson in harmony-il.md), and
     /// co-op amplifies it far harder: BannerlordCoop's AutoSync transpiles every declared method and
     /// constructor of 43 campaign types (<c>MobileParty</c>, <c>Hero</c>, <c>Settlement</c>,
     /// <c>Clan</c>, <c>PartyBase</c>…), and those are the campaign hot path. Coop's <c>PatchAll</c>
     /// runs on connect, BEFORE TAOM's <c>OnGameInitializationFinished</c> pass, so pass 2 shields
     /// that entire surface. A player traced a co-op frame-rate collapse to exactly this, which
-    /// answers the open question the 2026-08-01 deep review raised and could not measure.
+    /// answers the open question the 2026-08-01 deep review raised and could not measure. Plan 034
+    /// removed the parameter: the finalizer now takes only <c>__exception</c>. Its benchmark, with a
+    /// stand-in finalizer of that shape on a trivial patched method, measured 5.4 ns per call in a Debug
+    /// build (what players run) against 1.9 ns with the postfix alone, about 3.5 ns more (1.3 against
+    /// 0.7 ns optimized); the shipped finalizers were not benchmarked themselves. This skip was decided
+    /// under the old cost and stands; whether to revisit it is a separate decision.
     ///
     /// Extending <c>ExcludedTargetNamespacePrefixes</c> instead would have been wrong: adding
     /// <c>TaleWorlds.CampaignSystem</c> there excludes nearly everything TAOM shields IN SOLO PLAY

@@ -71,7 +71,8 @@ onto the wider slots; after deployment they walk there. A prefix and finalizer o
 (`GetUnitPositionWithIndexAccordingToNewOrder`, `GetUnitSpawnFrameWithIndex`) name the real formation for the
 length of the call, so the team-less copy formations of the order preview, the deployment placement and the spawn
 frames take its width. PatchShield skips all five patched methods (`PatchShieldPolicy.ExcludedTargetMethods`),
-because a shield finalizer would add a `GetMethodFromHandle` to every per-unit call. MixedFormations spaces its
+because the shield finalizer took `__originalMethod` until plan 034, which added a `GetMethodFromHandle` to every
+per-unit call (a stand-in finalizer of the new shape added about 3.5 ns per call in plan 034's Debug benchmark, 5.4 against 1.9 ns; the exclusion stands). MixedFormations spaces its
 slots by the same width through `IFormationAdapter.UnitDiameter`. Registry:
 [Patch92](../reference/harmony-patch-registry.md).
 

@@ -26,6 +26,14 @@ public static class DiagLog
     /// <summary>Logs an informational message under the given tag.</summary>
     public static void Log(string tag, string message) => Write(tag, "INFO", message);
 
+    /// <summary>
+    /// Logs like <see cref="Log"/> and says whether the line reached the file: false when the log path did not
+    /// resolve or the write threw (a sharing violation, a full disk), which is still swallowed as for every call
+    /// here. For a caller that writes a line once and has to try again when that write did not land
+    /// (<see cref="LogRepeatLimiter"/>, PatchShield's once-per-session lines).
+    /// </summary>
+    public static bool TryLog(string tag, string message) => Write(tag, "INFO", message);
+
     /// <summary>Logs a caught exception under the given tag with a where-context.</summary>
     public static void LogCaught(string tag, string where, Exception ex)
     {
@@ -41,12 +49,12 @@ public static class DiagLog
         }
     }
 
-    private static void Write(string tag, string level, string message)
+    private static bool Write(string tag, string level, string message)
     {
         try
         {
             var path = RuntimeLog.Path;
-            if (string.IsNullOrEmpty(path)) return;
+            if (string.IsNullOrEmpty(path)) return false;
 
             lock (_lock)
             {
@@ -59,10 +67,12 @@ public static class DiagLog
                 var line = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss.fff} [{level,-6}] [{tag}] {message}{Environment.NewLine}";
                 File.AppendAllText(path, line, Encoding.UTF8);
             }
+            return true;
         }
         catch
         {
-            // Logger failure must not propagate (BetaDeps invariant).
+            // Logger failure must not propagate (BetaDeps invariant); TryLog callers read it as false.
+            return false;
         }
     }
 

@@ -43,8 +43,10 @@ public class Patch92BindingTests
             Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
 
         // PatchShield skips these by declaring type and name (PatchShieldPolicy.ExcludedTargetMethods). A target
-        // added to Patch92, or renamed by an engine bump, and missing from that list would pay the per-call
-        // __originalMethod finalizer on a per-unit hot path (the #331 cost), with every other test still green.
+        // added to Patch92, or renamed by an engine bump, and missing from that list would carry a shield
+        // finalizer on a per-unit hot path, with every other test still green. Until plan 034 that finalizer took
+        // __originalMethod (the #331 cost, about 63 ns per call); a stand-in finalizer of the new shape added
+        // about 3.5 ns per call in plan 034's Debug benchmark (5.4 against 1.9 ns), and the list stands.
         MethodInfo getter = AccessTools.PropertyGetter(typeof(Formation), nameof(Formation.UnitDiameter));
         Assert.IsNotNull(getter, "Formation.UnitDiameter getter");
 

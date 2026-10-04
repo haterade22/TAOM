@@ -472,8 +472,10 @@ public class CreatureBanditsWiringTests
         if (!_gameLoaded)
             Assert.Inconclusive("Game assemblies not loaded: " + string.Join("; ", GameAssemblies.Diagnostics));
 
-        // Each is asked for every agent, often on the TWParallel workers: a per-call PatchShield finalizer would take
-        // the reflection cache's lock on every call (rca-tournament-exit-hang-2026-07-06.md).
+        // Each is asked for every agent, often on the TWParallel workers. Until plan 034 PatchShield's finalizer took
+        // __originalMethod, whose per-call reflection lookup (rca-tournament-exit-hang-2026-07-06.md) cost about
+        // 1,145 ns per call with 8 threads contending (measured by plan 034); the finalizer now takes only
+        // __exception, and the exclusion stands as decided.
         foreach (var patch in new[]
                  {
                      typeof(Patch93_CreatureBanditPrimaryWieldGuard), typeof(Patch93_CreatureBanditOffhandWieldGuard),

@@ -128,9 +128,11 @@ public class PatchShieldPolicyTests
     // --- ShouldInstall: full flag x coop truth table ---------------------------------------------
     //
     // Player-reported 2026-08-02: shielding BannerlordCoop's AutoSync surface collapsed frame rate.
-    // Every declared method of 43 campaign types gets a finalizer that binds __originalMethod, so
-    // Harmony's wrapper pays GetMethodFromHandle + try/catch per call — the #331 mechanism, on the
-    // campaign hot path. These four rows pin the gate so it cannot regress in either direction.
+    // Every declared method of 43 campaign types got a finalizer that took __originalMethod until
+    // plan 034, so Harmony's wrapper paid a GetMethodFromHandle per call (the #331 mechanism) on the
+    // campaign hot path. The finalizer now takes only __exception (a stand-in finalizer of that shape added
+    // about 3.5 ns per call in plan 034's Debug benchmark, 5.4 against 1.9 ns); the gate stands as decided.
+    // These four rows pin it so it cannot regress in either direction.
 
     [TestMethod]
     public void ShouldInstall_NoCoopNoFlag_ReturnsTrue()
