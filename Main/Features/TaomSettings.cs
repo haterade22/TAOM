@@ -1229,6 +1229,28 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "When off, troops on your team are immune and dread only touches the AI. Leave it on and an enemy wraith can rout your soldiers, and routed troops are LOST from your party, not merely shaken. Your own character is always immune either way: the engine gives player-controlled agents no morale component at all.")]
     public bool DreadAuraAffectsPlayerTroops { get; set; } = true;
 
+    // --- Battle Tactics / Race Abilities ---
+
+    [SettingPropertyGroup("Battle Tactics/Race Abilities", GroupOrder = 56)]
+    [SettingPropertyBool("Enable Race Abilities", Order = 0, RequireRestart = false,
+        HintText = "AI soldiers fight with a battle ability for their race (or, for men, their culture) on a cooldown, fired when the moment comes and joined by nearby kin: berserkers go berserk when hurt in melee, Uruk-hai fall into bloodlust on a kill, dwarves stand fast against a charge or a crowd, elves quicken, orcs swarm, Rohan's riders spur on, Gondor closes ranks, and more. Your own character never fires one. Switching it on takes effect from the next battle; switching it off stops new abilities at once and lets running ones finish. Numbers live in race_abilities.json; the console command taom.race_abilities shows what each ability has done in the battle on screen.")]
+    public bool EnableRaceAbilities { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Race Abilities")]
+    [SettingPropertyBool("War Cries", Order = 1, RequireRestart = false,
+        HintText = "The soldier who fires an ability, and a few of the kin who join him, shout in their own voice.")]
+    public bool RaceAbilityWarCries { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Race Abilities")]
+    [SettingPropertyBool("Show Ability Messages", Order = 2, RequireRestart = false,
+        HintText = "One line in the message log when five or more soldiers on either side fire the same ability within two seconds. Never one line per soldier.")]
+    public bool RaceAbilityMessages { get; set; } = true;
+
+    [SettingPropertyGroup("Battle Tactics/Race Abilities")]
+    [SettingPropertyBool("Race Ability Debug Log", Order = 3, RequireRestart = false,
+        HintText = "Writes one log line for every wave of abilities and every phase change (active, spent, ready). Off, the log still gets a summary every 30 s of activity and at the end of each battle. For checking that the abilities work; leave off in normal play.")]
+    public bool RaceAbilityDebugLog { get; set; } = false;
+
     // --- World / Uncapturable Heroes ---
 
     [SettingPropertyGroup("World/Uncapturable Heroes", GroupOrder = 48)]

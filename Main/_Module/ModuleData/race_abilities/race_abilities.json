@@ -1,0 +1,385 @@
+{
+  "enabled": true,
+  "tierScaling": {
+    "baseTier": 3,
+    "percentPerTier": 5,
+    "minFactor": 0.85,
+    "maxFactor": 1.2,
+    "heroFactor": 1.25
+  },
+  "races": {
+    "berserker": {
+      "abilityId": "berserk",
+      "cooldownSeconds": 15,
+      "durationSeconds": 6,
+      "spentSeconds": 3,
+      "rallyRadius": 8,
+      "warCry": "Yell",
+      "requires": [
+        { "kind": "EnemyWithin", "range": 3 }
+      ],
+      "anyOf": [
+        { "kind": "HealthBelow", "fraction": 0.75 },
+        { "kind": "TookDamage" },
+        { "kind": "KinFell", "range": 10, "seconds": 5 }
+      ],
+      "effects": {
+        "forceCrushThrough": true,
+        "shrugOffBlows": true,
+        "meleeDamagePercent": 20,
+        "swingSpeedPercent": 15,
+        "moveSpeedPercent": 10,
+        "moraleFloor": 30,
+        "blockAbilityPercent": -60,
+        "parryAbilityPercent": -60
+      },
+      "spent": {
+        "moveSpeedPercent": -20,
+        "swingSpeedPercent": -10
+      }
+    },
+    "uruk_hai": {
+      "abilityId": "bloodlust",
+      "cooldownSeconds": 25,
+      "durationSeconds": 8,
+      "killExtensionSeconds": 2,
+      "maxDurationSeconds": 14,
+      "rallyRadius": 6,
+      "warCry": "Charge",
+      "anyOf": [
+        { "kind": "LandedKill", "seconds": 1.5 },
+        { "kind": "WoundedEnemyWithin", "range": 3, "fraction": 0.5 }
+      ],
+      "effects": {
+        "meleeDamagePercent": 15,
+        "swingSpeedPercent": 10,
+        "knockdownResistancePercent": 100,
+        "healPerKill": 8,
+        "fearOnKillRadius": 6,
+        "fearOnKillMorale": 4,
+        "blockAbilityPercent": -20
+      }
+    },
+    "dwarf": {
+      "abilityId": "stand_fast",
+      "cooldownSeconds": 30,
+      "durationSeconds": 10,
+      "rallyRadius": 8,
+      "warCry": "Yell",
+      "requires": [
+        { "kind": "EnemyWithin", "range": 20 }
+      ],
+      "anyOf": [
+        { "kind": "CavalryClosing", "range": 20 },
+        { "kind": "EnemiesWithin", "range": 5, "count": 3 },
+        { "kind": "HealthBelow", "fraction": 0.5 }
+      ],
+      "effects": {
+        "holdAgainstCrush": true,
+        "shrugOffBlows": true,
+        "damageReductionPercent": 20,
+        "knockdownResistancePercent": 200,
+        "knockbackResistancePercent": 200,
+        "blockAbilityPercent": 25,
+        "moveSpeedPercent": -15,
+        "moraleFloor": 25
+      }
+    },
+    "elf": {
+      "abilityId": "swiftness",
+      "cooldownSeconds": 30,
+      "durationSeconds": 8,
+      "rallyRadius": 10,
+      "anyOf": [
+        { "kind": "RangedTargetWithin", "range": 30 },
+        { "kind": "EnemyWithin", "range": 6 }
+      ],
+      "effects": {
+        "moveSpeedPercent": 20,
+        "accelerationPercent": 25,
+        "drawSpeedPercent": 25,
+        "reloadSpeedPercent": 15,
+        "missileSpeedPercent": 10,
+        "aimErrorPercent": -30,
+        "parryAbilityPercent": 20,
+        "mountSpeedPercent": 10
+      }
+    },
+    "orc": {
+      "abilityId": "swarm",
+      "cooldownSeconds": 20,
+      "durationSeconds": 8,
+      "spentSeconds": 3,
+      "rallyRadius": 6,
+      "warCry": "Yell",
+      "kinRaces": [ "goblin" ],
+      "kinBonus": { "radius": 6, "perKinPercent": 3, "maxKin": 5 },
+      "requires": [
+        { "kind": "EnemyWithin", "range": 4 },
+        { "kind": "KinWithin", "range": 6, "count": 3 }
+      ],
+      "effects": {
+        "meleeDamagePercent": 5,
+        "swingSpeedPercent": 10,
+        "moraleOnEnd": -8
+      },
+      "spent": {
+        "moveSpeedPercent": -10
+      }
+    },
+    "goblin": {
+      "abilityId": "scurry",
+      "cooldownSeconds": 20,
+      "durationSeconds": 6,
+      "spentSeconds": 3,
+      "rallyRadius": 6,
+      "warCry": "Grunt",
+      "kinRaces": [ "orc" ],
+      "anyOf": [
+        { "kind": "EnemyWithin", "range": 8 },
+        { "kind": "HealthBelow", "fraction": 0.5 }
+      ],
+      "effects": {
+        "moveSpeedPercent": 25,
+        "accelerationPercent": 30,
+        "swingSpeedPercent": 20
+      },
+      "spent": {
+        "moveSpeedPercent": -15
+      }
+    },
+    "uruk": {
+      "abilityId": "iron_discipline",
+      "cooldownSeconds": 30,
+      "durationSeconds": 10,
+      "rallyRadius": 8,
+      "warCry": "Yell",
+      "requires": [
+        { "kind": "EnemyWithin", "range": 5 }
+      ],
+      "anyOf": [
+        { "kind": "HealthBelow", "fraction": 0.6 },
+        { "kind": "MoraleBelow", "fraction": 0.6 },
+        { "kind": "EnemiesWithin", "range": 4, "count": 3 }
+      ],
+      "effects": {
+        "moraleFloor": 60,
+        "damageReductionPercent": 15,
+        "blockAbilityPercent": 15,
+        "knockbackResistancePercent": 100,
+        "moveSpeedPercent": -10
+      }
+    },
+    "pale_uruk": {
+      "abilityId": "hunters_rush",
+      "cooldownSeconds": 25,
+      "durationSeconds": 6,
+      "spentSeconds": 3,
+      "rallyRadius": 6,
+      "warCry": "Charge",
+      "requires": [
+        { "kind": "EnemyWithin", "range": 15 },
+        { "kind": "NoEnemyWithin", "range": 4 }
+      ],
+      "effects": {
+        "moveSpeedPercent": 30,
+        "accelerationPercent": 40,
+        "knockdownResistancePercent": 100,
+        "meleeDamagePercent": 10
+      },
+      "spent": {
+        "moveSpeedPercent": -15
+      }
+    },
+    "dg_uruk": {
+      "abilityId": "necromancer_shadow",
+      "cooldownSeconds": 30,
+      "durationSeconds": 8,
+      "rallyRadius": 6,
+      "warCry": "Yell",
+      "requires": [
+        { "kind": "EnemiesWithin", "range": 6, "count": 2 }
+      ],
+      "effects": {
+        "fearAuraRadius": 8,
+        "fearAuraMoralePerSecond": 2,
+        "meleeDamagePercent": 10
+      }
+    }
+  },
+  "cultures": {
+    "gondor,gondor_soldiers": {
+      "abilityId": "citadel_guard",
+      "cooldownSeconds": 30,
+      "durationSeconds": 10,
+      "rallyRadius": 8,
+      "warCry": "Yell",
+      "requires": [
+        { "kind": "EnemyWithin", "range": 15 }
+      ],
+      "anyOf": [
+        { "kind": "EnemiesWithin", "range": 5, "count": 2 },
+        { "kind": "CavalryClosing", "range": 15 },
+        { "kind": "HealthBelow", "fraction": 0.5 }
+      ],
+      "effects": {
+        "blockAbilityPercent": 30,
+        "damageReductionPercent": 10,
+        "knockbackResistancePercent": 100,
+        "moraleFloor": 40,
+        "moveSpeedPercent": -10
+      }
+    },
+    "vlandia": {
+      "abilityId": "forth_eorlingas",
+      "cooldownSeconds": 30,
+      "durationSeconds": 10,
+      "rallyRadius": 12,
+      "warCry": "Charge",
+      "requires": [
+        { "kind": "Mounted" },
+        { "kind": "EnemyWithin", "range": 30 }
+      ],
+      "effects": {
+        "mountSpeedPercent": 15,
+        "meleeDamagePercent": 15,
+        "swingSpeedPercent": 10,
+        "dismountResistancePercent": 150,
+        "moraleFloor": 40
+      }
+    },
+    "sturgia": {
+      "abilityId": "bards_aim",
+      "cooldownSeconds": 30,
+      "durationSeconds": 8,
+      "rallyRadius": 10,
+      "requires": [
+        { "kind": "RangedTargetWithin", "range": 40 }
+      ],
+      "effects": {
+        "drawSpeedPercent": 20,
+        "aimErrorPercent": -40,
+        "missileSpeedPercent": 15,
+        "rangedDamagePercent": 10
+      }
+    },
+    "empire,dunland_raiders": {
+      "abilityId": "hillclan_fury",
+      "cooldownSeconds": 20,
+      "durationSeconds": 6,
+      "spentSeconds": 3,
+      "rallyRadius": 6,
+      "warCry": "Yell",
+      "requires": [
+        { "kind": "EnemyWithin", "range": 3 }
+      ],
+      "anyOf": [
+        { "kind": "TookDamage" },
+        { "kind": "KinFell", "range": 8, "seconds": 5 }
+      ],
+      "effects": {
+        "meleeDamagePercent": 15,
+        "swingSpeedPercent": 10,
+        "moveSpeedPercent": 10,
+        "blockAbilityPercent": -30
+      },
+      "spent": {
+        "moveSpeedPercent": -10
+      }
+    },
+    "aserai,harad_raiders,shaghana,abanissa": {
+      "abilityId": "serpent_venom",
+      "cooldownSeconds": 30,
+      "durationSeconds": 8,
+      "rallyRadius": 10,
+      "anyOf": [
+        { "kind": "RangedTargetWithin", "range": 35 },
+        { "kind": "EnemyWithin", "range": 4 }
+      ],
+      "effects": {
+        "rangedDamagePercent": 20,
+        "aimErrorPercent": -15,
+        "meleeDamagePercent": 10
+      }
+    },
+    "khuzait,rhun_raiders": {
+      "abilityId": "wainrider_wall",
+      "cooldownSeconds": 30,
+      "durationSeconds": 10,
+      "rallyRadius": 8,
+      "warCry": "Yell",
+      "requires": [
+        { "kind": "EnemyWithin", "range": 15 }
+      ],
+      "anyOf": [
+        { "kind": "EnemiesWithin", "range": 5, "count": 2 },
+        { "kind": "CavalryClosing", "range": 15 }
+      ],
+      "effects": {
+        "blockAbilityPercent": 20,
+        "damageReductionPercent": 10,
+        "knockdownResistancePercent": 100,
+        "swingSpeedPercent": 10
+      }
+    },
+    "umbar,umbar_corsairs": {
+      "abilityId": "corsair_raid",
+      "cooldownSeconds": 20,
+      "durationSeconds": 6,
+      "spentSeconds": 3,
+      "rallyRadius": 6,
+      "warCry": "Charge",
+      "requires": [
+        { "kind": "EnemyWithin", "range": 4 }
+      ],
+      "anyOf": [
+        { "kind": "TookDamage" },
+        { "kind": "LandedKill", "seconds": 2 }
+      ],
+      "effects": {
+        "swingSpeedPercent": 20,
+        "moveSpeedPercent": 15,
+        "meleeDamagePercent": 10
+      },
+      "spent": {
+        "moveSpeedPercent": -10
+      }
+    },
+    "battania": {
+      "abilityId": "variag_ferocity",
+      "cooldownSeconds": 25,
+      "durationSeconds": 8,
+      "rallyRadius": 8,
+      "warCry": "Charge",
+      "requires": [
+        { "kind": "EnemyWithin", "range": 6 }
+      ],
+      "effects": {
+        "meleeDamagePercent": 15,
+        "swingSpeedPercent": 10,
+        "knockdownResistancePercent": 100,
+        "dismountResistancePercent": 100
+      }
+    },
+    "mordor,dolguldur": {
+      "abilityId": "shadow_servants",
+      "cooldownSeconds": 30,
+      "durationSeconds": 8,
+      "rallyRadius": 6,
+      "warCry": "Yell",
+      "requires": [
+        { "kind": "EnemyWithin", "range": 4 }
+      ],
+      "anyOf": [
+        { "kind": "LandedKill", "seconds": 2 },
+        { "kind": "HealthBelow", "fraction": 0.5 }
+      ],
+      "effects": {
+        "fearOnKillRadius": 6,
+        "fearOnKillMorale": 5,
+        "moraleFloor": 50,
+        "meleeDamagePercent": 10
+      }
+    }
+  }
+}

@@ -1,5 +1,6 @@
 using TAOM.Features.CreatureBandits.Hooks;
 using TAOM.Features.CultureDoctrine.Hooks;
+using TAOM.Features.RaceAbilities.Hooks;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.CultureDoctrine.Models;
@@ -20,10 +21,11 @@ public class TaomCustomBattleMoraleModel : CustomBattleMoraleModel
         _morale = morale;
     }
 
-    // Creature Bandits (#692): a creature bandit never panics, whatever its morale.
+    // Creature Bandits (#692): a creature bandit never panics, whatever its morale. Race Abilities: nor does a
+    // soldier while his ability holds a morale floor.
     public override bool CanPanicDueToMorale(Agent agent)
-        => !CreatureBanditAgents.RefusesMoralePanic(agent) && base.CanPanicDueToMorale(agent)
-           && _morale.CanPanic(AgentAggressionApplier.CultureOf(agent));
+        => !CreatureBanditAgents.RefusesMoralePanic(agent) && !RaceAbilityHooks.HoldsNerve(agent)
+           && base.CanPanicDueToMorale(agent) && _morale.CanPanic(AgentAggressionApplier.CultureOf(agent));
 
     public override float GetEffectiveInitialMorale(Agent agent, float baseMorale)
         => _morale.InitialMorale(AgentAggressionApplier.CultureOf(agent), base.GetEffectiveInitialMorale(agent, baseMorale));

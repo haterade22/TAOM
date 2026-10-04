@@ -40,6 +40,9 @@ public class CombatMechanicsModelInvariantsTests
         "DecideMissileWeaponFlags",
         "CalculateShieldDamage",
         "GetHorseChargePenetration",
+        // RaceAbilities (2026-10-04): a live ability's melee damage, after the career amplification the
+        // parent model applies. The Custom Battle damage model carries the same call.
+        "ApplyDamageAmplifications",
     };
 
     private static bool _gameLoaded;

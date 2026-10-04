@@ -3136,6 +3136,30 @@
 	<string id="taom_tr_skill_gained" text="{=taom_tr_skill_gained}The tournament trained your {SKILL_NAME} (+{XP} experience)." />
 	<string id="taom_tr_choose" text="{=taom_tr_choose}Choose" />
 	<string id="taom_tr_cancel" text="{=taom_tr_cancel}Cancel" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- RaceAbilities -->
+	<string id="taom_race_ability_berserk" text="{=taom_race_ability_berserk}Berserk" />
+	<string id="taom_race_ability_bloodlust" text="{=taom_race_ability_bloodlust}Bloodlust" />
+	<string id="taom_race_ability_stand_fast" text="{=taom_race_ability_stand_fast}Stand Fast" />
+	<string id="taom_race_ability_swiftness" text="{=taom_race_ability_swiftness}Swiftness of the Eldar" />
+	<string id="taom_race_ability_wave_ally" text="{=taom_race_ability_wave_ally}{ABILITY}: {COUNT} of your soldiers" />
+	<string id="taom_race_ability_wave_enemy" text="{=taom_race_ability_wave_enemy}Enemy {ABILITY}: {COUNT} soldiers" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- RaceAbilities -->
+	<string id="taom_race_ability_swarm" text="{=taom_race_ability_swarm}Swarm" />
+	<string id="taom_race_ability_scurry" text="{=taom_race_ability_scurry}Scurry" />
+	<string id="taom_race_ability_iron_discipline" text="{=taom_race_ability_iron_discipline}Iron Discipline" />
+	<string id="taom_race_ability_hunters_rush" text="{=taom_race_ability_hunters_rush}Hunter's Rush" />
+	<string id="taom_race_ability_necromancer_shadow" text="{=taom_race_ability_necromancer_shadow}Shadow of the Necromancer" />
+	<string id="taom_race_ability_citadel_guard" text="{=taom_race_ability_citadel_guard}Guard of the Citadel" />
+	<string id="taom_race_ability_forth_eorlingas" text="{=taom_race_ability_forth_eorlingas}Forth Eorlingas" />
+	<string id="taom_race_ability_bards_aim" text="{=taom_race_ability_bards_aim}Bard's Aim" />
+	<string id="taom_race_ability_hillclan_fury" text="{=taom_race_ability_hillclan_fury}Hill-clan Fury" />
+	<string id="taom_race_ability_serpent_venom" text="{=taom_race_ability_serpent_venom}Serpent's Venom" />
+	<string id="taom_race_ability_wainrider_wall" text="{=taom_race_ability_wainrider_wall}Wainrider Wall" />
+	<string id="taom_race_ability_corsair_raid" text="{=taom_race_ability_corsair_raid}Corsair Raid" />
+	<string id="taom_race_ability_variag_ferocity" text="{=taom_race_ability_variag_ferocity}Variag Ferocity" />
+	<string id="taom_race_ability_shadow_servants" text="{=taom_race_ability_shadow_servants}Servants of the Shadow" />
 
 
 

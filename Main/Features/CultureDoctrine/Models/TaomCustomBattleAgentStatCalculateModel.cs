@@ -2,6 +2,7 @@ using TAOM.Features.CombatMechanics;
 using TAOM.Features.CombatMechanics.Hooks;
 using TAOM.Features.CreatureBandits.Hooks;
 using TAOM.Features.CultureDoctrine.Hooks;
+using TAOM.Features.RaceAbilities.Hooks;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
@@ -45,7 +46,19 @@ public class TaomCustomBattleAgentStatCalculateModel : CustomBattleAgentStatCalc
     {
         base.UpdateAgentStats(agent, agentDrivenProperties);
         AgentAggressionApplier.Apply(agentDrivenProperties, _aggression.Profile(AgentAggressionApplier.CultureOf(agent)));
+        // Race Abilities: the same post-pass as the campaign slot, so a Custom Battle shows the live ability.
+        RaceAbilityHooks.ApplyStats(agent, agentDrivenProperties);
     }
+
+    // Race Abilities: a live ability's knockdown and knock-back resistance, as in the campaign slot.
+    public override float GetKnockDownResistance(Agent agent, StrikeType strikeType = StrikeType.Invalid)
+        => RaceAbilityHooks.KnockDownResistance(agent, base.GetKnockDownResistance(agent, strikeType));
+
+    public override float GetKnockBackResistance(Agent agent)
+        => RaceAbilityHooks.KnockBackResistance(agent, base.GetKnockBackResistance(agent));
+
+    public override float GetDismountResistance(Agent agent)
+        => RaceAbilityHooks.DismountResistance(agent, base.GetDismountResistance(agent));
 
     // Creature Bandits (#692): a riderless creature is nobody's mount. AI soldiers look for loose mounts to ride and
     // ask this first (v1.5.3 HumanAIComponent.cs:302). The campaign slot locks creatures by Monster

@@ -5,6 +5,7 @@ using TaleWorlds.MountAndBlade;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Models;
 using TAOM.Features.CombatMechanics.Domain;
+using TAOM.Features.RaceAbilities.Hooks;
 using TAOM.Features.Refuge;
 using TAOM.Features.SignatureStrikes;
 using TAOM.Features.SignatureStrikes.Hooks;
@@ -74,8 +75,16 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
 
         // Creature Bandits (#692, #694): the riderless creatures' damage-taken rules and the bandit trolls' 70%;
         // inert for every other victim.
-        return CreatureBandits.Hooks.CreatureBanditDamage.Reduce(in attackInformation, in collisionData, result);
+        result = CreatureBandits.Hooks.CreatureBanditDamage.Reduce(in attackInformation, in collisionData, result);
+
+        // Race Abilities: a soldier standing fast takes less; inert unless his ability is live.
+        return RaceAbilityHooks.ReduceDamage(in attackInformation, result);
     }
+
+    // Race Abilities: a raging soldier's melee hits, after the career amplification (the parent's override).
+    public override float ApplyDamageAmplifications(in AttackInformation attackInformation, in AttackCollisionData collisionData, float baseDamage)
+        => RaceAbilityHooks.AmplifyDamage(in attackInformation, in collisionData,
+            base.ApplyDamageAmplifications(in attackInformation, in collisionData, baseDamage));
 
     private static string VictimPartyId(TaleWorlds.Core.IAgentOriginBase origin)
     {
@@ -88,12 +97,13 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
         return party?.MobileParty?.StringId;
     }
 
+    // Race Abilities first: a defender standing fast holds against every crush-through, a raging swing breaks
+    // any block; with neither live it has no opinion and the combat rules decide. The crush context (two
+    // skill lookups and a roll) is built only when the combat rules are asked.
     public override bool DecideCrushedThrough(Agent attackerAgent, Agent defenderAgent, float totalAttackEnergy, Agent.UsageDirection attackDirection, StrikeType strikeType, WeaponComponentData defendItem, bool isPassiveUsageHit)
-    {
-        var context = BuildCrushThroughContext(attackerAgent, defenderAgent, totalAttackEnergy, attackDirection, strikeType, defendItem, isPassiveUsageHit);
-        return _crushThroughService.DecideCrushThrough(in context)
-            ?? base.DecideCrushedThrough(attackerAgent, defenderAgent, totalAttackEnergy, attackDirection, strikeType, defendItem, isPassiveUsageHit);
-    }
+        => RaceAbilityHooks.CrushVerdict(attackerAgent, defenderAgent, strikeType, isPassiveUsageHit)
+           ?? _crushThroughService.DecideCrushThrough(BuildCrushThroughContext(attackerAgent, defenderAgent, totalAttackEnergy, attackDirection, strikeType, defendItem, isPassiveUsageHit))
+           ?? base.DecideCrushedThrough(attackerAgent, defenderAgent, totalAttackEnergy, attackDirection, strikeType, defendItem, isPassiveUsageHit);
 
     public override float CalculateRemainingMomentum(float originalMomentum, in Blow b, in AttackCollisionData collisionData, Agent attacker, Agent victim, in MissionWeapon attackerWeapon, bool isCrushThrough)
     {
@@ -109,13 +119,14 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
             : colReaction;
     }
 
+    // Base = vanilla stagger threshold (which re-enters our CalculateStaggerThresholdDamage via the
+    // registered model) + career shrug-off passives; then creature unstoppability; then Race Abilities: a
+    // berserker or a dwarf standing fast does not flinch at a weapon or missile hit while his ability is
+    // live (a horse charge never asks, and a kick or bash still knocks back).
     public override bool DecideAgentShrugOffBlow(Agent victimAgent, in AttackCollisionData collisionData, in Blow blow)
-    {
-        // Base = vanilla stagger threshold (which re-enters our CalculateStaggerThresholdDamage
-        // via the registered model) + career shrug-off passives.
-        if (base.DecideAgentShrugOffBlow(victimAgent, in collisionData, in blow)) return true;
-        return _creatureCombatService.IsUnstoppable(victimAgent?.Monster?.StringId, collisionData.InflictedDamage);
-    }
+        => base.DecideAgentShrugOffBlow(victimAgent, in collisionData, in blow)
+           || _creatureCombatService.IsUnstoppable(victimAgent?.Monster?.StringId, collisionData.InflictedDamage)
+           || RaceAbilityHooks.ShrugsOff(victimAgent);
 
     public override float CalculateStaggerThresholdDamage(Agent defenderAgent, in Blow blow)
     {

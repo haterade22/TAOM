@@ -27,7 +27,8 @@ Thin model → four pure services (ADR-002/007; gamemodels.md rule 4): every ove
 
 | Override | Service | Mechanic |
 |---|---|---|
-| `DecideCrushedThrough` | `CrushThroughService` | monster auto-CTB → orc shield-CTB → skill CTB curve; `?? base` keeps the vanilla 58f path |
+| `DecideCrushedThrough` | `CrushThroughService` | race-ability verdict first (Stand Fast holds, Berserk forces; [race-abilities.md](race-abilities.md)) → monster auto-CTB → orc shield-CTB → skill CTB curve; `?? base` keeps the vanilla 58f path |
+| `ApplyDamageAmplifications` | `RaceAbilityHooks` | a live race ability's melee damage, after the career amplification the parent model applies |
 | `CalculateRemainingMomentum` | `CreatureCombatService` | cleave momentum 0.3× for listed creatures (default zeroes momentum for ordinary weapons) |
 | `DecideWeaponCollisionReaction` | `CreatureCombatService` | force `SlicedThrough` — prevents chain-termination on Bounced/Stuck branches (shield block, axe <50% HP, shrug-off, wrong bone) |
 | `DecideAgentShrugOffBlow` | `CreatureCombatService` | base (vanilla + career) OR per-creature damage threshold; true sets `BlowFlags.ShrugOff` which also suppresses knockback/knockdown/dismount (intended) |

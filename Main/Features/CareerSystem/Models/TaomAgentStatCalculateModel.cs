@@ -9,7 +9,9 @@ using TAOM.Features.CultureDoctrine;
 using TAOM.Features.CultureDoctrine.Hooks;
 using TAOM.Features.Elephant;
 using TAOM.Features.Mumakil;
+using TAOM.Features.RaceAbilities.Hooks;
 using TAOM.Features.Spider;
+using TaleWorlds.Core;
 
 namespace TAOM.Features.CareerSystem.Models;
 
@@ -32,6 +34,8 @@ namespace TAOM.Features.CareerSystem.Models;
 // has the engine evidence). Five rules. Same day, #611: the career mount bonuses (the
 // MountChargeDamage passive, the Cavalry ability's mount speed and charge) moved from the rider's
 // properties, where nothing reads them, to the mount's, through the same rider hop.
+// 2026-10-04: the race abilities' live effects (RaceAbilities) ride the slot last among the human rules,
+// plus the knockdown and knock-back resistance overrides. Six rules.
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
     private readonly ICareerAgentStatService _agentStatService;
@@ -77,6 +81,17 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
             ? false
             : base.CanAgentRideMount(agent, targetMount);
 
+    // Race Abilities: a live ability's knockdown and knock-back resistance (Bloodlust, Stand Fast). The engine
+    // floors a soldier when the hit beats HealthLimit x (resistance - penetration) (MissionCombatMechanicsHelper).
+    public override float GetKnockDownResistance(Agent agent, StrikeType strikeType = StrikeType.Invalid)
+        => RaceAbilityHooks.KnockDownResistance(agent, base.GetKnockDownResistance(agent, strikeType));
+
+    public override float GetKnockBackResistance(Agent agent)
+        => RaceAbilityHooks.KnockBackResistance(agent, base.GetKnockBackResistance(agent));
+
+    public override float GetDismountResistance(Agent agent)
+        => RaceAbilityHooks.DismountResistance(agent, base.GetDismountResistance(agent));
+
     public override float GetEffectiveMaxHealth(Agent agent)
     {
         var baseHealth = base.GetEffectiveMaxHealth(agent);
@@ -112,6 +127,10 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 
         if (_aggression != null)
             AgentAggressionApplier.Apply(agentDrivenProperties, _aggression.Profile(AgentAggressionApplier.CultureOf(agent)));
+
+        // Race Abilities: a live ability's speeds and AI temperament, after the aggression pass so it scales
+        // the culture's values; inert unless the soldier's ability is running.
+        RaceAbilityHooks.ApplyStats(agent, agentDrivenProperties);
 
         // Mount-side career bonuses (#611) and the culture charge multiplier (#610) both ride the
         // MOUNT's properties, after base rewrote them; the rider is the identity (a mount's own

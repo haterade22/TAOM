@@ -63,11 +63,11 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 
 | Model | Base | Feature |
 |-------|------|---------|
-| `TaomAgentStatCalculateModel` | `SandboxAgentStatCalculateModel` (SandBox) | `CareerSystem` (+ the CultureDoctrine aggression post-pass + the CombatMechanics mount charge multiplier #610 + the career mount bonuses #611; mount-side rules key on `RiderAgent`, a mount's own `Character` is null) |
-| `TaomBattleMoraleModel` | `SandboxBattleMoraleModel` (SandBox) | `CultureDoctrine` |
-| `TaomCustomBattleMoraleModel` | `CustomBattleMoraleModel` | `CultureDoctrine` (Custom Battle) |
-| `TaomCustomBattleCreatureDamageModel` | `CustomAgentApplyDamageModel` | `CreatureBandits` (Custom Battle only, declared by the feature module through `GameModelDecl`, not `SubModule`: the creature bandits' damage-taken step in `ApplyDamageReductions`; the campaign's `TaomCombatMechanicsModel` carries the same step) |
-| `TaomCustomBattleAgentStatCalculateModel` | `CustomBattleAgentStatCalculateModel` | `CultureDoctrine` (Custom Battle; + the CombatMechanics mount charge multiplier, from `InitializeAgentStats` because that base writes `MountChargeDamage` once) |
+| `TaomAgentStatCalculateModel` | `SandboxAgentStatCalculateModel` (SandBox) | `CareerSystem` (+ the CultureDoctrine aggression post-pass + the CombatMechanics mount charge multiplier #610 + the career mount bonuses #611 + the RaceAbilities post-pass and resistances; mount-side rules key on `RiderAgent`, a mount's own `Character` is null) |
+| `TaomBattleMoraleModel` | `SandboxBattleMoraleModel` (SandBox) | `CultureDoctrine` (+ the RaceAbilities panic gate) |
+| `TaomCustomBattleMoraleModel` | `CustomBattleMoraleModel` | `CultureDoctrine` (Custom Battle; + the RaceAbilities panic gate) |
+| `TaomCustomBattleCreatureDamageModel` | `CustomAgentApplyDamageModel` | `CreatureBandits` (Custom Battle only, declared by the feature module through `GameModelDecl`, not `SubModule`: the creature bandits' damage-taken step in `ApplyDamageReductions`; the campaign's `TaomCombatMechanicsModel` carries the same step; + the RaceAbilities damage, crush-through and shrug-off hooks) |
+| `TaomCustomBattleAgentStatCalculateModel` | `CustomBattleAgentStatCalculateModel` | `CultureDoctrine` (Custom Battle; + the CombatMechanics mount charge multiplier, from `InitializeAgentStats` because that base writes `MountChargeDamage` once; + the RaceAbilities post-pass and resistances) |
 | `TaomClanTierModel` | `DefaultClanTierModel` | `CareerSystem` |
 | `TaomInventoryCapacityModel` | `DefaultInventoryCapacityModel` | `CareerSystem` |
 | `TaomMapVisibilityModel` | `DefaultMapVisibilityModel` | `CareerSystem` |
@@ -109,7 +109,7 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 | `TaomKingdomDecisionPermissionModel` | `DefaultKingdomDecisionPermissionModel` | `Diplomacy` |
 | `TaomDiplomacyModel` | `DefaultDiplomacyModel` | `Diplomacy` |
 | `TaomInformationRestrictionModel` | `DefaultInformationRestrictionModel` | `Encyclopedia` |
-| `TaomCombatMechanicsModel` | `TaomAgentApplyDamageModel` (CareerSystem, **abstract** — career passives via inheritance; ultimately `SandboxAgentApplyDamageModel`) | `CombatMechanics` |
+| `TaomCombatMechanicsModel` | `TaomAgentApplyDamageModel` (CareerSystem, **abstract**: career passives via inheritance; ultimately `SandboxAgentApplyDamageModel`) | `CombatMechanics` (+ the RaceAbilities damage, crush-through and shrug-off hooks) |
 | `TaomPrisonerRecruitmentCalculationModel` | `DefaultPrisonerRecruitmentCalculationModel` | `PrisonerRecruitment` |
 | `TaomBattleBannerBearersModel` | `SandboxBattleBannerBearersModel` (SandBox) | `BannerBearers` |
 | `TaomCustomBattleBannerBearersModel` | `CustomBattleBannerBearersModel` | `BannerBearers` (Custom Battle) |

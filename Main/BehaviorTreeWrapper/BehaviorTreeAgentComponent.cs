@@ -58,14 +58,15 @@ public class BehaviorTreeAgentComponent : AgentComponent
     /// <summary>The tick <see cref="BehaviorTreeMissionLogic"/> drives; same cadence rule as before.</summary>
     internal void TickOnMissionThread(float dt)
     {
+        if (Tree == null) return;
+        timeSinceLastEvaluation += dt;
+        if (!((Tree._rootEvaluationDelay / 1000) < timeSinceLastEvaluation || Tree.ShouldRunNextTick)) return;
         // The engine's IsActive() answers for whoever occupies the agent's slot; a component left
         // scheduled for a deleted agent must not run its tree against the slot's new tenant (#592).
-        if (Tree == null || !Agent.IsActive() || !AgentSlotIdentity.IsCurrentOccupant(Agent)) return;
-        timeSinceLastEvaluation += dt;
-        if ((Tree._rootEvaluationDelay / 1000) < timeSinceLastEvaluation || Tree.ShouldRunNextTick)
-        {
-            Tree.RunTree();
-            timeSinceLastEvaluation = 0f;
-        }
+        // Checked only when the tree is due: both are native reads, and a race-ability tree runs once a
+        // second on every soldier of its race, where a creature tree runs every tick on a few.
+        if (!Agent.IsActive() || !AgentSlotIdentity.IsCurrentOccupant(Agent)) return;
+        Tree.RunTree();
+        timeSinceLastEvaluation = 0f;
     }
 }
