@@ -119,6 +119,10 @@ public class SubModule : MBSubModuleBase
 
         IoC.Configure();
 
+        // #725: TAOM.Dependencies buffers its startup lines until this logger exists; flush them now.
+        try { Core.Logging.EarlyLogBridge.Connect(IoC.Resolve<IModLogger>()); }
+        catch { /* the early-log flush must never stop the mod loading */ }
+
         // Issue #371: report both modules' build stamps and flag a mismatched pair. TAOM resolves
         // HarmonyLib and UIExtenderEx THROUGH TAOM.Dependencies, so a stale pairing breaks patch
         // application and renders every character in bind pose — a failure that previously left no

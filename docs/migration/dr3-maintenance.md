@@ -265,7 +265,8 @@ The co-op additions: `CoopPresence` — "is a co-op module in this launcher sess
 
 | File | Purpose |
 |---|---|
-| `<game>/Modules/TAOM.Dependencies/diag.log` | Append-only runtime event log (DiagLog). All shield activity, AssemblyResolve redirects, version probe results, crash-loop detection. Inspect first when diagnosing any incident. |
+| `<game>/Modules/TAOM.Dependencies/diag.log` | Append-only runtime event log (DiagLog). All shield activity, version probe results, crash-loop detection. Inspect first when diagnosing any incident. It records only that the AssemblyResolve handler was installed, never what it redirected: for that, read the TAOM log in the next row. |
+| `<game>/bin/Win64_Shipping_Client/Logs/taom_debug_*.log` | TAOM's own log (`FileLogger`). Since 2026-10-03 (#725) it also carries what TAOM.Dependencies logs through `EarlyLog` while it loads: static init, the Harmony fork version, the AssemblyResolve handler and every redirect it makes, the UnpatchAll guard, the duplicate `0Harmony.dll` check and shim install failures. A line logged before TAOM loaded starts with `[buffered HH:mm:ss]`, the time it was logged. Before that nothing flushed `EarlyLog`, so those lines were dropped on every launch. |
 | `<game>/Modules/TAOM.Dependencies/failed-mods-catalog.txt` | One line per (culprit-mod, exception-type, owner-method) that a shield swallowed. Format: `<UTC> | <culprit> | <category> | <ExceptionType> | <owner method> | <message head>`. |
 | `<game>/Modules/TAOM.Dependencies/session-launching.marker` | Crash-loop sentinel. Created in `OnSubModuleLoad` (`IncompatibleModDetector.RunEarlyPhase`); deleted on `OnGameInitializationFinished`, which fires at the first game start (campaign, custom battle or editor), not at the main menu. Survival to next launch means the previous session crashed before a game started, or quit from the main menu without starting one. |
 | `<game>/Modules/TAOM.Dependencies/last-good-modlist.txt` | Snapshot of enabled modules at the last game start (written with the marker delete). Used by `IncompatibleModDetector` to diff against current modlist for culprit identification. |
@@ -289,7 +290,7 @@ After a normal launch and one game start (campaign, custom battle or editor), `d
 [INFO  ] [PatchShield]                shield pass: +N new, 0 already-seen, M skipped (seen: N+M, attached: N) in T ms (X.X ms/attach)
 [INFO  ] [SaveShield]                 install complete: shielded +K new, 0 already-shielded, 0 skipped
 [INFO  ] [VersionProbe]               detected via ApplicationVersionHelper: v1.4
-[INFO  ] [TAOM.Dependencies]          OnSubModuleLoad complete
+[INFO  ] [Dependencies]               OnSubModuleLoad: complete
                                        ... then, at the game start:
 [INFO  ] [IncompatibleModDetector]    MarkSessionLaunchSuccessful: saved 47-mod last-good snapshot
 [INFO  ] [PatchShield]                shield pass: +P new, N+M already-seen, Q skipped (seen: N+M+P+Q, attached: N+P) in T ms (X.X ms/attach)
