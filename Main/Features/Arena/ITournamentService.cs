@@ -51,8 +51,12 @@ public interface ITournamentService
     int InfluenceReward(int vanillaInfluence, string? townId, string? winnerCultureId,
         string? winnerKingdomId, string? townKingdomId);
 
-    /// <summary>Resolve the dummy-character ID for participant armor selection.</summary>
-    string ResolveDummyId(string participantCultureId, string settlementCultureId);
+    /// <summary>
+    /// The practice-kit dummy a fighter's armour comes from, or null in a tournament (a played or a skipped match),
+    /// where he keeps his own armour (Mike, 2026-10-05). An arena practice fight gets his own culture's kit, which
+    /// vanilla would replace with the host faction's for everyone.
+    /// </summary>
+    string? ArmourDummyId(string? participantCultureId, bool inTournament);
 
     /// <summary>
     /// True if a tournament participant of this FaceGen race id must fight on foot — i.e. their

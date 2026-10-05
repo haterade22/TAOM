@@ -1000,3 +1000,14 @@ with his culture's practice kit, a side effect nobody had chosen.
   settlement checks) and name which callers reach which branch, with the mission mode each caller runs in. An
   override that removes a vanilla branch says so in its doc, with what it changes in each.
 - **Source:** the v1.5.4 compatibility check, 2026-10-05 (tournament area, adversarially verified).
+
+### An override that rekeys a vanilla branch returns that branch's value; falling through to base re-applies base's condition (Arena, 2026-10-05)
+To keep tournament fighters in their own armour, `TaomTournamentModel.GetParticipantArmor` was first keyed on the
+tournament mission, because a skipped match never sets `MissionMode.Tournament`, and then returned
+`base.GetParticipantArmor`. Base checks that same mode, so every skipped match still got the host faction's kit, the
+opposite of the comment above it. The unit tests passed: they pinned the service's answer, not what base did with it.
+- **Why missed:** the new key was chosen against base's condition, then base was called as if the condition were gone.
+- **Prevent:** when an override decides which vanilla branch applies, return that branch's expression itself
+  (`participant.RandomBattleEquipment`); keep `?? base` only for the fallback case. Walk every caller of the
+  method with the state it runs in (here: played match, skipped match, practice fight).
+- **Source:** `/deep-review` of the own-armour change, 2026-10-05 (lenses 1, 2, 4 and 5 independently).

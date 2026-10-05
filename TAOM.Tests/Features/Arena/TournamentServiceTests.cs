@@ -9,7 +9,7 @@ namespace TAOM.Tests.Features.Arena;
 
 /// <summary>
 /// Phase 9b #137 — TournamentService extracted from TaomTournamentModel. Pure decision functions
-/// (CalculateStartChance, CalculateEndChance, ResolveDummyId) are unit-testable here without
+/// (CalculateStartChance, CalculateEndChance, ArmourDummyId) are unit-testable here without
 /// Campaign.Current. BuildPrizePool's loop over Items.All (sealed engine cache) is game-only, and so is
 /// PrizeChoices, which calls it; every decision either makes is a TournamentPrizeRules call (Fits, and
 /// AdvertisedBand and PickChoices for the Join choices), tested in TournamentPrizeRulesTests.
@@ -115,36 +115,30 @@ public class TournamentServiceTests
         Assert.AreEqual(0.33f, _sut.CalculateEndChance(30f), 0.001f);
     }
 
-    // --- ResolveDummyId ---
+    // --- ArmourDummyId (Mike, 2026-10-05: tournament fighters wear their own armour, played or skipped) ---
 
     [TestMethod]
-    public void ResolveDummyId_ParticipantCultureGiven_ReturnsCultureSpecificDummy()
+    public void ArmourDummyId_InTournament_IsNullSoTheFighterKeepsHisOwnArmour()
     {
-        Assert.AreEqual("gear_practice_dummy_gondor", _sut.ResolveDummyId("gondor", null));
+        Assert.IsNull(_sut.ArmourDummyId("gondor", inTournament: true));
     }
 
     [TestMethod]
-    public void ResolveDummyId_NoParticipantCulture_FallsBackToSettlementCulture()
+    public void ArmourDummyId_InPracticeFight_IsTheFightersCulturePracticeKit()
     {
-        Assert.AreEqual("gear_practice_dummy_rohan", _sut.ResolveDummyId(null, "rohan"));
+        Assert.AreEqual("gear_practice_dummy_erebor", _sut.ArmourDummyId("erebor", inTournament: false));
     }
 
     [TestMethod]
-    public void ResolveDummyId_NoCultures_FallsBackToEmpireDefault()
+    public void ArmourDummyId_InPracticeFightWithNoCulture_IsTheEmpireKit()
     {
-        Assert.AreEqual("gear_practice_dummy_empire", _sut.ResolveDummyId(null, null));
+        Assert.AreEqual("gear_practice_dummy_empire", _sut.ArmourDummyId(null, inTournament: false));
     }
 
     [TestMethod]
-    public void ResolveDummyId_EmptyParticipantCulture_FallsBackToSettlement()
+    public void ArmourDummyId_InPracticeFightWithEmptyCulture_IsTheEmpireKit()
     {
-        Assert.AreEqual("gear_practice_dummy_mordor", _sut.ResolveDummyId("", "mordor"));
-    }
-
-    [TestMethod]
-    public void ResolveDummyId_BothEmpty_FallsBackToEmpire()
-    {
-        Assert.AreEqual("gear_practice_dummy_empire", _sut.ResolveDummyId("", ""));
+        Assert.AreEqual("gear_practice_dummy_empire", _sut.ArmourDummyId("", inTournament: false));
     }
 
     // --- ShouldDismountInTournament (Patch46 — dwarf tournament-cavalry fix) ---

@@ -7,7 +7,7 @@ namespace TAOM.Tests.Features.Arena;
 public class TaomTournamentModelTests
 {
     // The start and end tuning constants live on TournamentService (internal const, visible here through
-    // InternalsVisibleTo); ResolveDummyId is tested in TournamentServiceTests and the prize bands in
+    // InternalsVisibleTo); ArmourDummyId is tested in TournamentServiceTests and the prize bands in
     // TournamentPrizeRulesTests.
 
     [TestMethod]

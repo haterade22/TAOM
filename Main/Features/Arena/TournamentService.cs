@@ -87,13 +87,13 @@ public class TournamentService : ITournamentService
         string? winnerKingdomId, string? townKingdomId) =>
         _rewards.InfluenceReward(vanillaInfluence, townId, winnerCultureId, winnerKingdomId, townKingdomId);
 
-    public string ResolveDummyId(string participantCultureId, string settlementCultureId)
+    public string? ArmourDummyId(string? participantCultureId, bool inTournament)
     {
-        if (!string.IsNullOrEmpty(participantCultureId))
-            return $"gear_practice_dummy_{participantCultureId}";
-        if (!string.IsNullOrEmpty(settlementCultureId))
-            return $"gear_practice_dummy_{settlementCultureId}";
-        return "gear_practice_dummy_empire";
+        if (inTournament)
+            return null;
+        return string.IsNullOrEmpty(participantCultureId)
+            ? "gear_practice_dummy_empire"
+            : $"gear_practice_dummy_{participantCultureId}";
     }
 
     public bool ShouldDismountInTournament(int raceId)

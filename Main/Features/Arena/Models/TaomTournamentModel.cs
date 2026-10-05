@@ -1,10 +1,12 @@
 using System.Linq;
+using SandBox.Tournaments.MissionLogics;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.TournamentGames;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
+using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.Arena.Models;
 
@@ -70,10 +72,15 @@ public class TaomTournamentModel : DefaultTournamentModel
 
     public override Equipment GetParticipantArmor(CharacterObject participant)
     {
-        var dummyId = _service.ResolveDummyId(participant?.Culture?.StringId, null);
-        var dummy = Game.Current?.ObjectManager?.GetObject<CharacterObject>(dummyId);
-        if (dummy?.RandomBattleEquipment != null)
-            return dummy.RandomBattleEquipment;
-        return base.GetParticipantArmor(participant);
+        // A tournament fighter keeps his own armour, played or skipped match; an arena practice fighter gets his own
+        // culture's practice kit. Keyed on the tournament mission and returning the fighter's set directly, because
+        // a skipped match (TournamentFightMissionController.SkipMatch) never sets MissionMode.Tournament, so base
+        // would hand its simulation the host faction's kit. The ternary is the null guard GetObject needs.
+        var inTournament = Mission.Current?.GetMissionBehavior<TournamentFightMissionController>() != null;
+        var dummyId = _service.ArmourDummyId(participant?.Culture?.StringId, inTournament);
+        var armour = dummyId == null
+            ? participant?.RandomBattleEquipment
+            : Game.Current?.ObjectManager?.GetObject<CharacterObject>(dummyId)?.RandomBattleEquipment;
+        return armour ?? base.GetParticipantArmor(participant);
     }
 }
