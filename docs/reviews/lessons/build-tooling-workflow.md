@@ -3412,3 +3412,34 @@ Round 1 of the Race Abilities review ran the defect wave (standards, engine comp
 - **Why missed:** the first wave's findings were fixed and the round was treated as done; the deep-review table runs completeness and design always and efficiency whenever C# changed.
 - **Prevent:** run every lens the table puts in scope, in waves of four. When a round must stop early (a usage limit, Mike's call), its RCA names the lenses that did not run, and the next round starts with them.
 - **Source:** `docs/reviews/rca-race-abilities-2026-10-04.md` R20 to R24, "Root-cause pattern 2".
+
+### A memory card's "UNCOMMITTED" is a claim about the past: grep the release commit before saying what ships (v2.0.33, 2026-10-04)
+Before the v2.0.33 cut this session told Mike that nine untranslated `taom_tr_*` strings were unused by shipped
+code. The Tournament Rewards memory card said "UNCOMMITTED, review owed"; in fact Mike's mixed commit `9e2a39f4` had
+carried the whole feature to trunk two days earlier, registered in `FeatureModules.cs:23`, with no review.
+- **Why missed:** the card was read as current state; nothing in git flags a feature that reached trunk without a
+  review record.
+- **Prevent:** before telling Mike what a release contains, grep the code at the commit being released (`git grep
+  -n <key> <sha> -- Main`), and for each feature in the range check that a review record exists
+  (`docs/reviews/rca-*`). A card that says UNCOMMITTED for files `git log` shows on trunk is stale: update it.
+- **Source:** `docs/reviews/rca-tournament-rewards-2026-10-04.md`, "How it shipped unreviewed"; the Mouth of
+  Sauron's gear went the same way (`docs/reviews/rca-mouth-of-sauron-gear-2026-10-04.md`).
+
+### Pick a release number no channel already carries (v2.0.33 renumbered as v2.0.34, 2026-10-04)
+v2.0.33 was tagged and pushed while the testing channel already held an untagged v2.0.33 build of 2026-10-02
+(`bc39f6e4` plus uncommitted work, by its DLL stamp), so a tester's "v2.0.33" was not the tagged code. Mike asked for
+v2.0.34; the same happened with v2.0.31 on 2026-09-26.
+- **Why missed:** the release pre-flight checked git tags only; an untagged channel build is invisible to git.
+- **Prevent:** `/release` Phase 1 item 4b reads the `<Version>` of every `E:\LOTRAOM_Releases\<channel>\Modules\TAOM`
+  before choosing the number.
+- **Source:** the v2.0.34 release commit `18a4e402`.
+
+### A mesh-editing tool's guard lists what it may edit; a run that changes nothing writes nothing (2026-10-04)
+`strip_upper_mesh_channels.py` refused only names with a head, eye or mouth token, so hands, arms and body meshes,
+whose 26 hand-pose channels the repo requires, passed and would have been stripped. A run with nothing to strip still
+re-exported the FBX and replaced the live file. Its siblings already refuse a no-op.
+- **Why missed:** the guard was written as a denylist sized to the two meshes in hand, and the tool was not checked
+  against the conventions of the tools it was copied from.
+- **Prevent:** guard a mesh-editing tool with an allowlist of the mesh kinds it exists for, tested with real names
+  of the kinds it must refuse; refuse before any export when the edit would change nothing.
+- **Source:** `docs/reviews/rca-mouth-of-sauron-gear-2026-10-04.md` M1 and M2 (Tooling lens).

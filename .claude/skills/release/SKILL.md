@@ -28,6 +28,10 @@ characters to players. Full contract: [`docs/reference/release-process.md`](../.
    If it is not, tag that one **first** — bumping past an untagged version manufactures another
    unresolvable phantom.
 4. `git tag -l 'v*'` does not already contain the target version. **Never move a pushed tag.**
+4b. No release channel already carries the target version, tagged or not:
+   `grep -o '<Version value="[^"]*"' /e/LOTRAOM_Releases/*/Modules/TAOM/SubModule.xml`. A channel holding an
+   untagged build of that number means a tester's crash report naming it is not your commit: take the next number
+   (it happened with v2.0.31 and v2.0.33, both renumbered after the fact).
 5. `git grep -l taom_test_ -- Main/_Module` prints nothing. Custom-Battle test riders show in every player's
    Custom Battle picker; delete them (with their SubModule node and their ladder and recruitment exemptions)
    before a release. The Animalia ones (#646) were removed for v2.0.31.
@@ -48,8 +52,12 @@ aborts if more turn up than `-MaxOrphans`. Detail: `docs/reference/module-backup
 | File | Field | When |
 |------|-------|------|
 | `Main/_Module/SubModule.xml` | `<Version value="v2.0.X" />` | Every release |
-| `Dependencies/_Module/SubModule.xml` | `<Version value="v2.0.Y" />` | Only if the Dependencies assembly changed |
+| `Dependencies/_Module/SubModule.xml` | `<Version value="v2.0.Y" />` | Every release since v2.0.29 (all four modules read one version); must change whenever the Dependencies assembly changed |
 | `Main/_Module/SubModule.xml` | `<DependedModuleMetadata id="TAOM.Dependencies" … version="v2.0.Y" />` | **Must equal the line above** |
+
+Outside the repo, set the same `v2.0.X` in the live `<game>/Modules/TAOM_Map/SubModule.xml` and
+`<game>/Modules/LOTRLOME_Armory/SubModule.xml` too. Both modules are unversioned (no git), and the release
+note tells players all four modules read the release number. The gate below checks only the two repo files.
 
 **The #371 gate — do not skip.** After editing, read both files back and assert the two `v2.0.Y`
 values are byte-identical:

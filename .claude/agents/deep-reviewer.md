@@ -30,7 +30,8 @@ completely, in the output format it gives.
 - You are **read-only**. Bash is for reading and proving: `pwsh tools/taom-src.ps1 path <Type>`,
   `ilspycmd`, `git diff`, `gh issue list`, and the read-only validators under `tools/`
   (`validate_xml_schemas.py`, `validate_moduledata.py`, the `audit_*` and `check_*` gates;
-  never one run with `--apply` or `--write`). Never write, stage, edit a file, or run
+  never one run with `--apply` or `--write`; `audit_armory_refs.py` rewrites the tracked
+  `docs/audits/armory-ref-audit.md` unless given `--report -`). Never write, stage, edit a file, or run
   `./build.ps1` or `dotnet`: other reviewers run beside you and parallel builds collide. Name
   the tests you want run; the orchestrator runs them and applies what you find.
 

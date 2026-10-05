@@ -48,7 +48,7 @@ that shipped bind-posed characters to players:
 | File | Field | When |
 |------|-------|------|
 | [`Main/_Module/SubModule.xml`](../../Main/_Module/SubModule.xml) | `<Version value="v2.0.X" />` | Every release |
-| [`Dependencies/_Module/SubModule.xml`](../../Dependencies/_Module/SubModule.xml) | `<Version value="v2.0.Y" />` | Only when the Dependencies assembly changed |
+| [`Dependencies/_Module/SubModule.xml`](../../Dependencies/_Module/SubModule.xml) | `<Version value="v2.0.Y" />` | Every release since v2.0.29, so all four modules read one version; it must change whenever the Dependencies assembly changed |
 | [`Main/_Module/SubModule.xml`](../../Main/_Module/SubModule.xml) | `<DependedModuleMetadata id="TAOM.Dependencies" … version="v2.0.Y" />` | **Must equal the line above** |
 
 The third line exists because BUTR/BLSE launchers read `DependedModuleMetadatas` and the vanilla
@@ -56,6 +56,11 @@ launcher does not — the in-file comment above it spells this out. A stale pair
 load against an old Dependencies, Harmony/UIExtenderEx types fail to resolve at the member level,
 and every character renders in bind pose. `/release` asserts the two `v2.0.Y` values match; do not
 bump one by hand.
+
+The two unversioned modules carry a version too. The live `<game>/Modules/TAOM_Map/SubModule.xml`
+and `<game>/Modules/LOTRLOME_Armory/SubModule.xml` hold their own `<Version>`, outside git, and the
+release note tells players all four modules read the release number. Edit both in the install
+before Mike's editor package; no commit records the change.
 
 Assembly identity is separate and deliberately static: `Directory.Build.props` freezes
 `AssemblyVersion` (changing it alters binding identity for no benefit) and stamps
@@ -71,7 +76,10 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
 
 1. Tree clean (`git status --porcelain` empty; if another session's edits are present, stop, because `build.ps1` compiles and deploys every file in the tree, committed or not; git refuses a second worktree on a branch that is already checked out, so only the Phase 8 build moves to a detached worktree of the tag),
    on the release branch (`bannerlord-1.5.x` since v2.0.29; `bannerlord-1.4.5` for a 1.4.8 build), current version
-   already tagged.
+   already tagged, and the target version in no tag (`git tag -l 'v*'`) and in no release channel: read the
+   `<Version>` of every `E:\LOTRAOM_Releases\<channel>\Modules\TAOM\SubModule.xml`, because a channel can
+   hold an untagged build of a number git has never seen (see "A number a channel carried before git
+   did" below).
 2. `./build.ps1 -RunTests` green — no release on an unrun build.
 3. `pwsh tools/sweep_module_backups.ps1` reports 0 files. If it does not, run it with `-Apply`:
    backup sidecars must not ship, because `.bak` breaks the Cloudflare distribution. The first run
@@ -84,7 +92,7 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
    2026-09-13, hook `check-commit-subject-version.sh`), so between releases
    `git log --grep 'vX.Y.Z - '` lists the commits a build reporting that `TaomVersion` can contain.
 8. Confirm `git rev-parse <release commit>^` prints the commit step 5 ended at (if not, stop and ask), then `git tag -a vX.Y.Z <release commit> -m "…"`, tagging the step 7 commit by SHA, then `git push origin <release branch> vX.Y.Z`.
-9. Build at the tag and gate the DLLs: `python tools/package_release.py --source "<game>/Modules" --dest <out> --require-build vX.Y.Z --dry-run` must print `build stamp OK`, then package without `--dry-run` (the skill's Phase 8).
+9. Build at the tag and gate the DLLs (the skill's Phase 8). Run `./build.ps1` in the main checkout only when `git status --porcelain` is empty and `HEAD` is the tag's commit; otherwise build a clean worktree of the tag (`git worktree add ../taom-release-vX.Y.Z vX.Y.Z`, `./build.ps1` there, then `git worktree remove ../taom-release-vX.Y.Z`). Then `python tools/package_release.py --source "<game>/Modules" --dest <out> --require-build vX.Y.Z --dry-run` must print `build stamp OK`. Any later deploying build of a dirty tree (`./build.ps1`, or any build without `-p:DisableModuleCopy=true -p:ModuleId=`) replaces the gated DLLs and the module's ModuleData in the install: after the v2.0.34 gate passed, one made the installed `TAOM.dll` `+18a4e402...dirty`. So repeat the dry run right before Mike packages. Mike packages through the Modding Kit editor; Claude never writes a package with this command. Once his package exists in `E:\LOTRAOM_Releases\<channel>\Modules\`, offer the same dry run with `--source` pointing there.
    The gate reads every `bin/<platform>/` copy of `TAOM.dll` and `TAOM.Dependencies.dll` and
    refuses a tag whose `Directory.Build.props` predates the `.dirty` flag (the 1.4.5 line until it
    is ported). Every run also prints three reports that never refuse and never change the exit code:
@@ -113,6 +121,8 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
      case-insensitively, as Windows resolves them: the tag spells `GUI/PreFabs/`, the install
      `GUI/Prefabs/`, and an exact comparison deletes every live prefab. Leave
      `RuntimeDataCache*` alone: the packager already excludes it unless `--keep-rdc` asks for it.
+     `AssetPackages/pack0.tpac` is what packaging TAOM in the editor writes and is not needed:
+     delete it. The other tpacs there are git-tracked (field camp and refuge prefabs) and stay.
    - **`<game>/Modules/TAOM.Dependencies/` outside `bin/`:** prune nothing. MCM's UI assets
      (`AssetPackages/`, `EmAssetPackages/`, `GUI/`, `ModuleData/Languages*/`) exist in the install
      only, and no build step recreates them
@@ -162,6 +172,25 @@ is the commit the DLL was compiled from: `git show <sha>`. A `.dirty` suffix mea
 held uncommitted edits, so the commit is only the nearest known state; `nogit` means git could not
 tell. Bundles written before this field existed lack the line: read the `[BuildStamp]` line near the
 top of the bundled `taom_debug.log` instead.
+
+**A number a channel carried before git did.** A build can reach a release channel under a number
+no commit or tag holds yet, so the tag of that name is not what the player ran. Resolve such a
+report by its build stamp, never by the tag:
+
+- **v2.0.33 (testing channel).** The channel's `TAOM.dll` stamp reads
+  `build.20261002-194207Z+bc39f6e4...dirty`: `bc39f6e4` plus uncommitted edits, built on 2 October.
+  The `v2.0.33` tag (`7b551f87`, cut on 4 October) holds different code and was never packaged. That
+  code became `v2.0.34` (`18a4e402`), a release commit that changes only the version fields and
+  renames the release note. So `CHANGELOG.md` has no v2.0.34 section (the v2.0.33 section covers the
+  code), and the `v2.0.33` tag message still names `docs/releases/v2.0.33-discord.md`, now
+  `v2.0.34-discord.md`. v2.0.31 collided the same way on 2026-09-26
+  ([lesson](../reviews/lessons/build-tooling-workflow.md)).
+- **v2.0.29.5 (patreon and public channels, Bannerlord 1.4.8).** No commit on any branch holds this
+  number. The channels' `TAOM.dll` stamp names `8df90444` (branch `fix/public-armory-ids-145`), whose
+  `<Version>` in git is v2.0.28.
+
+`/release` Phase 1 item 4b reads every channel's `<Version>` before a number is chosen, so a new
+release cannot reuse one a channel already carries.
 
 ## Historical record: the backfill (2026-08-08)
 
