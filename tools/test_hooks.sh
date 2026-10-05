@@ -956,7 +956,17 @@ else
     CSV_MSGFILE="$SANDBOX/subject-ok.txt"; printf 'docs: %s - from a file\n\nbody\n' "$CSV_VER" > "$CSV_MSGFILE"
     CSV_BADFILE="$SANDBOX/subject-bad.txt"; printf 'docs: from a file without the label\n' > "$CSV_BADFILE"
     CSV_AIFILE="$SANDBOX/subject-ai.txt"; printf 'docs: %s - from a file\n\nbody\n\nCo-Authored-By: Claude <noreply@anthropic.com>\n' "$CSV_VER" > "$CSV_AIFILE"
+    # Another worktree carries its own version (the bannerlord-1.4.5 line): a commit run there
+    # through `git -C <dir>` or `cd <dir> &&` is judged against that tree's SubModule.xml.
+    mkdir -p "$SANDBOX/otherwt/Main/_Module"
+    printf '<Module>\n  <Version value="v1.2.3"/>\n</Module>\n' > "$SANDBOX/otherwt/Main/_Module/SubModule.xml"
+    CSV_OTHER=$(cygpath -m "$SANDBOX/otherwt" 2>/dev/null || echo "$SANDBOX/otherwt")
     CSV_CASES=(
+      "git -C another worktree, its label|allow|git -C \"$CSV_OTHER\" commit -m \"docs: v1.2.3 - x\""
+      "git -C another worktree, this repo's label|deny|git -C \"$CSV_OTHER\" commit -m \"docs: $CSV_VER - x\""
+      "cd another worktree then commit, its label|allow|cd \"$CSV_OTHER\" && git commit -m \"docs: v1.2.3 - x\""
+      "cd another worktree then commit, this repo's label|deny|cd \"$CSV_OTHER\" && git commit -m \"docs: $CSV_VER - x\""
+      "git -C a missing directory falls back to this repo|allow|git -C \"$CSV_OTHER/nope\" commit -m \"docs: $CSV_VER - x\""
       "labelled -m|allow|git commit -m \"fix(recruitment): $CSV_VER - Glanhir recruits the Ringlo Vale line\""
       "labelled -m, no scope|allow|git commit -m 'docs: $CSV_VER - update the changelog'"
       "labelled --message=|allow|git commit --message=\"chore: $CSV_VER - tidy\""

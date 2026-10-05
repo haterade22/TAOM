@@ -136,16 +136,34 @@ def piped_text(group):
         return None
     return None if "$" in word else word
 
+COMMIT_DIRS = []   # the repository each found commit runs in (None: the project directory)
+
+def native_path(p):
+    """A Git Bash drive path (/e/repos/x) as the Windows path this Python can open (E:/repos/x)."""
+    m = re.match(r"^/([A-Za-z])(/|$)", p)
+    return (m.group(1).upper() + ":/" + p[m.end():]) if m else p
+
+def resolve_dir(base, p):
+    p = native_path(p)
+    if os.path.isabs(p) or re.match(r"^[A-Za-z]:", p):
+        return p
+    return os.path.join(base or os.getcwd(), p)
+
 def commit_arg_lists(s, depth=0):
     """The argument list after `commit` of every git commit invocation in s. A commit whose stdin
     is piped from a command that only prints one word (a PowerShell here-string piped to
-    `git commit -F -`, plan 027) gets that word first as a heredoc placeholder, so `-F -` reads it."""
+    `git commit -F -`, plan 027) gets that word first as a heredoc placeholder, so `-F -` reads it.
+    A `cd <dir>` earlier in the same command, and `git -C <dir>`, name the repository the commit
+    runs in; it is recorded in COMMIT_DIRS, because the label must match THAT repo's version."""
     found = []
     group, prev, sep = [], [], ""
+    cwd = None
     for t in tokens(s) + [";"]:
         if t and set(t) <= SEP:
             if group:
-                lists = _commit_args(group, depth)
+                if os.path.basename(group[0]).lower() == "cd" and len(group) >= 2:
+                    cwd = resolve_dir(cwd, group[1])
+                lists = _commit_args(group, depth, cwd)
                 piped = piped_text(prev) if sep == "|" else None
                 if piped is not None:
                     bodies.append(piped)
@@ -157,7 +175,7 @@ def commit_arg_lists(s, depth=0):
             group.append(t)
     return found
 
-def _commit_args(g, depth):
+def _commit_args(g, depth, cwd=None):
     i = 0
     while i < len(g) and re.match(r"^[A-Za-z_][A-Za-z0-9_]*=", g[i]):   # VAR=value prefixes
         i += 1
@@ -170,9 +188,15 @@ def _commit_args(g, depth):
     if word not in ("git", "git.exe"):
         return []
     i += 1
+    repo = cwd
     while i < len(g) and g[i].startswith("-"):
+        if g[i] == "-C" and i + 1 < len(g):
+            repo = resolve_dir(repo, g[i + 1])
         i += 2 if g[i] in GIT_OPTS_WITH_VALUE else 1
-    return [g[i + 1:]] if i < len(g) and g[i] == "commit" else []
+    if i < len(g) and g[i] == "commit":
+        COMMIT_DIRS.append(repo)
+        return [g[i + 1:]]
+    return []
 
 LONG = {"--message": "m", "--file": "F", "--trailer": "trailer", "--reuse-message": "reuse",
         "--reedit-message": "reuse", "--fixup": "fixup", "--squash": "fixup", "--template": None,
@@ -296,20 +320,26 @@ if not subjects:
     allow()
 
 # The version the commit will carry: the staged SubModule.xml when it is staged (a
-# release commit bumps it there), else the working tree.
+# release commit bumps it there), else the working tree, both read in the repository the
+# commit runs in (`cd <dir> && git commit`, `git -C <dir> commit`: another worktree, such as
+# the bannerlord-1.4.5 line, carries its own version). A directory that does not exist falls
+# back to the project, as before.
 sub = "Main/_Module/SubModule.xml"
+repo = next((d for d in reversed(COMMIT_DIRS) if d), None)
+if repo is not None and not os.path.isdir(repo):
+    repo = None
 text = ""
 try:
     staged = subprocess.run(["git", "diff", "--cached", "--name-only", "--", sub],
-                            capture_output=True, text=True, timeout=4).stdout
+                            capture_output=True, text=True, timeout=4, cwd=repo).stdout
     if staged.strip():
         text = subprocess.run(["git", "show", ":" + sub],
-                              capture_output=True, text=True, timeout=4).stdout
+                              capture_output=True, text=True, timeout=4, cwd=repo).stdout
 except Exception:
     text = ""
 if not text:
     try:
-        with open(sub, encoding="utf-8", errors="replace") as fh:
+        with open(os.path.join(repo or ".", sub), encoding="utf-8", errors="replace") as fh:
             text = fh.read()
     except OSError:
         text = ""
