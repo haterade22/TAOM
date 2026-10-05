@@ -22,10 +22,8 @@ namespace TAOM.Tests.Features.Mcm;
 ///
 /// Every TAOM setting but three is read live through its settings instance, so the honest posture
 /// is <c>RequireRestart = false</c> everywhere, and a new setting that omits the flag is a bug this
-/// test catches. The allowlist holds the exceptions, each with its reason: a setting whose consumer
-/// is parked (commented out in SubModule.cs), where a restart does not help either but flipping
-/// the flag would promise an effect that does not exist; and the three settings a Harmony category is
-/// gated on at apply time, <c>EnableTickProfiler</c> (Patch97), <c>EnableHitchProbe</c> (Patch98) and
+/// test catches. The allowlist holds the exceptions, each with its reason: the three settings a
+/// Harmony category is gated on at apply time, <c>EnableTickProfiler</c> (Patch97), <c>EnableHitchProbe</c> (Patch98) and
 /// <c>EnableMapProfiler</c> (Patch101), each read once per process.
 /// Note that no MCM setting can gate anything in OnSubModuleLoad:
 /// <c>GlobalSettings&lt;T&gt;.Instance</c> is null
@@ -40,7 +38,6 @@ public class SettingRequireRestartPostureTests
 {
     private static readonly IReadOnlyDictionary<string, string> RestartAllowlist = new Dictionary<string, string>
     {
-        [$"{nameof(TaomSettings)}.{nameof(TaomSettings.EnableNativeSkinFixes)}"] = "PARKED 2026-07-08: the install call is commented out in SubModule.cs, the toggle drives nothing",
         [$"{nameof(BattleLoadDiagnosticsSettings)}.{nameof(BattleLoadDiagnosticsSettings.EnableTickProfiler)}"] = "Read at the first game init, where Patch97 installs or is skipped: turning it on needs a restart (turning it off applies from the next mission)",
         [$"{nameof(BattleLoadDiagnosticsSettings)}.{nameof(BattleLoadDiagnosticsSettings.EnableHitchProbe)}"] = "Read at the first game init, where Patch98 installs or is skipped: turning it on needs a restart (turning it off applies from the next mission while the tick profiler is off)",
         [$"{nameof(BattleLoadDiagnosticsSettings)}.{nameof(BattleLoadDiagnosticsSettings.EnableMapProfiler)}"] = "Read at the first game init, where Patch101 installs or is skipped: turning it on needs a restart (turning it off applies from the next campaign session)",

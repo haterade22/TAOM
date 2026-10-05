@@ -44,7 +44,7 @@ import sys
 import tempfile
 import unittest
 from unittest import mock
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -165,7 +165,7 @@ class TestConfidentExclusions(unittest.TestCase):
 
     def test_binaries_still_copied(self):
         self.assertEqual(act("bin/Win64_Shipping_Client/TAOM.dll"), pr.COPY)
-        self.assertEqual(act("bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll"), pr.COPY)
+        self.assertEqual(act("bin/Win64_Shipping_Client/DryIoc.dll"), pr.COPY)
 
     def test_runtime_state_files(self):
         for f in ("diag.log", "last-good-modlist.txt", "failed-mods-catalog.txt"):
@@ -425,6 +425,55 @@ STAMP = "build.20260923-184249Z"
 def _dll_bytes(stamp: str) -> bytes:
     """A stand-in DLL: the stamp sits in the bytes the way the metadata stores it (UTF-8)."""
     return b"MZ\x90\x00\x01\x00" + stamp.encode("ascii") + b"\x00\x00trailer"
+
+
+class TestRetiredBinaries(unittest.TestCase):
+    """A binary the repo stopped shipping survives in the install, its _wEditor/_Server mirrors and
+    every channel folder, because deploys never delete. The packager is the gate every release
+    passes, in --dry-run too, so it must refuse rather than quietly copy or exclude."""
+
+    def test_dry_run_refuses_a_retired_binary_and_names_it(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/bin/Win64_Shipping_wEditor/MinHook.x64.dll", 16)
+            r = _run("--source", str(src), "--dest", str(Path(td) / "out"), "--modules", "TAOM",
+                     "--dry-run")
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("TAOM/bin/Win64_Shipping_wEditor/MinHook.x64.dll", r.stderr)
+
+    def test_real_run_refuses_before_writing(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll", 16)
+            dest = Path(td) / "out"
+            r = _run("--source", str(src), "--dest", str(dest), "--modules", "TAOM",
+                     "--allow-unknown")
+            self.assertEqual(r.returncode, 2, r.stdout)
+            self.assertIn("TAOM.NativeSkinFixes.dll", r.stderr)
+            self.assertFalse(dest.exists(), "must fail before writing anything")
+
+    def test_match_is_case_insensitive_and_limited_to_bin(self):
+        with tempfile.TemporaryDirectory() as td:
+            src = _fixture(Path(td))
+            _write(src, "TAOM/bin/Gaming.Desktop.x64_Shipping_Client/BehaviorTreeWrapper.DLL", 16)
+            _write(src, "TAOM/ModuleData/minhook.x64.dll", 16)
+            plan = pr.plan_module(src / "TAOM")
+            self.assertEqual(pr.retired_binaries([plan]),
+                             ["TAOM/bin/Gaming.Desktop.x64_Shipping_Client/BehaviorTreeWrapper.DLL"])
+
+    def test_no_retired_name_is_tracked_in_the_repo(self):
+        # A retired name coming back into a tracked _Module/bin would be refused at every release.
+        repo = Path(__file__).resolve().parents[2]
+        try:
+            r = subprocess.run(["git", "ls-files", "*/_Module/bin/*"], cwd=repo,
+                               capture_output=True, text=True)
+        except OSError:
+            self.skipTest("git unavailable")
+        if r.returncode != 0:
+            self.skipTest("git unavailable")
+        tracked = {PurePosixPath(p).name.casefold() for p in r.stdout.splitlines()
+                   if (repo / p).exists()}
+        self.assertFalse(tracked & pr.RETIRED_BINARIES, sorted(tracked & pr.RETIRED_BINARIES))
 
 
 class TestBuildStamp(unittest.TestCase):

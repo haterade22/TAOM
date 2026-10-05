@@ -20353,8 +20353,6 @@
   "taom_mwc_t3_b_p2": "兵士の賃金 -15%。",
   "taom_mwc_t3_b_p3": "部隊の移動速度 +15%。",
   "taom_mwc_t3_b_p4": "最大体力 +9。",
-  "taom_nativeskinfixes_degraded": "NativeSkinFixes縮退モード — このBannerlordビルドのパターン署名が未対応; バニラレンダリングを使用",
-  "taom_nativeskinfixes_loaded": "NativeSkinFixes有効 — covers_headモーフ修正 + 髪/髭の布シミュレーション",
   "taom_nca_t1_a_key": "ダーク・ボルトの範囲が拡大し、より広い殺傷範囲をカバーする。",
   "taom_nca_t1_a_p1": "遠隔ダメージ+8%。",
   "taom_nca_t1_a_p2": "装甲貫通+5%。",

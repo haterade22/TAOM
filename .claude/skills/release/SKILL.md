@@ -178,7 +178,8 @@ Rebuild at the tag before anything ships.
      ([module-dependencies.md](../../../docs/modding/module-dependencies.md), "Five folders").
    - **`bin/<platform>/` of both modules:** keep a file whose name the tag tracks under
      `_Module/bin/` (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module/bin Dependencies/_Module/bin`:
-     2 files for TAOM, 44 for TAOM.Dependencies) or the tag's build writes. The build writes
+     none for TAOM from the NativeSkinFixes removal on, 2 on earlier tags; 44 for TAOM.Dependencies)
+     or the tag's build writes. The build writes
      `TAOM.dll`, `TAOM.pdb`, `DryIoc.dll`, `Newtonsoft.Json.dll` and
      `System.Runtime.CompilerServices.Unsafe.dll` into TAOM, and `TAOM.Dependencies.dll`,
      `TAOM.Dependencies.pdb`, `0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll` and
@@ -186,7 +187,8 @@ Rebuild at the tag before anything ships.
      `bin/Debug/net472/` output, every runtime DLL its packages bring in (the other packages are
      compile-only or carry none). The build then mirrors `Win64_Shipping_Client` into `_Server` for
      both modules, and into `_wEditor` for TAOM only. Remove any other file; `.pdb`, `.exp` and `.lib` may stay, since the packager
-     never ships them. A retired binary such as `BehaviorTreeWrapper.dll` would otherwise ship.
+     never ships them. A retired binary such as `BehaviorTreeWrapper.dll` would otherwise ship; the
+     packager refuses the names in `RETIRED_BINARIES` (`tools/package_release.py`), dry runs included.
 3. Package: **Mike packages through the Modding Kit editor, not Claude** (2026-09-28). Stop after the
    prune and hand over; never write a package with the command above.
 4. Once his editor package exists (in `E:\LOTRAOM_Releases\<channel>\Modules\`), offer step 2's dry

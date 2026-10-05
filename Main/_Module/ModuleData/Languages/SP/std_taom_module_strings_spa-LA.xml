@@ -1126,8 +1126,6 @@
     <string id="taom_career_grp_wolfskin_hunter_t2_b" text="Fantasma de las Colinas" />
     <string id="taom_career_grp_wolfskin_hunter_t3_a" text="Piel de Lobo Supremo" />
     <string id="taom_career_grp_wolfskin_hunter_t3_b" text="Maestro de la Gran Manada" />
-    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes activo — corrección de morfología covers_head + simulación de tela para cabello/barba" />
-    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes degradado — firmas de patrón no autorizadas para esta versión de Bannerlord; renderizado vanilla" />
     <string id="taom_bandit_dunland_name" text="Saqueadores Dunlendinos" />
     <string id="taom_bandit_dunland_m1" text="Caradoc" />
     <string id="taom_bandit_dunland_m2" text="Gwidion" />

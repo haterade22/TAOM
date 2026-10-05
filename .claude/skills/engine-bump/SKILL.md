@@ -40,6 +40,17 @@ misattributed crashes) or we migrate deliberately. The session-start hook warns 
    reads every id. Fix the sweep before trusting native answers for that build. Native offsets quoted in
    docs and RCAs belong to their old binary; re-derive one by engine method or string, not by
    offset ([ghidra-native-decompile.md](../../../docs/features/ghidra-native-decompile.md)).
+5. **Resolve the last RELEASED `TAOM.dll` against the new engine, not just a fresh build.** A fresh
+   compile binds whatever overload the new engine offers, so it hides a removed member that a shipped
+   binary still calls. v1.5.4 removed `TooltipProperty(string, string, int, bool, TooltipPropertyFlags)`
+   for a six-parameter twin: source and every binding gate stayed green while the v2.0.33 testing
+   build would throw `MissingMethodException` on 21 tooltip sites. Read every engine `MemberRef` of
+   each channel's `TAOM.dll` (`E:\LOTRAOM_Releases\<channel>\Modules\TAOM\bin\Win64_Shipping_Client`)
+   with System.Reflection.Metadata and resolve it, by name and full signature, against the installed
+   engine assemblies; run a fresh build as the negative control (it must report 0). The v1.5.4 run's
+   checker is archived at `E:\Decompiled_Bannerlord\_diff_1.5.3_to_1.5.4\refcheck\` (`dotnet run --
+   <TAOM.dll> <engine bin dirs...>`) until a committed tool exists (follow-up on #736); it skips
+   members whose parent is a generic type instantiation, so a clean run is not proof for those. A hit means that channel needs a rebuilt release before players take the engine update.
 
 ## Phase 2 — Preserve the baseline, THEN regenerate
 
@@ -102,8 +113,12 @@ only "does the signature still resolve". A member whose signature is unchanged a
 does something else passes every gate. Enumerate the bound surface from the API snapshot
 (`docs/reference/taleworlds-api-snapshot/{patch-targets,gamemodel-bases,reflection-sites}.md`) plus
 the XML `Deserialize` loaders, extract each member's body from the archived and the fresh
-decompile, and diff them (the 2026-09-14 pass: 62 rows, `bodydiff.py` in that session's
-scratchpad; rebuild it, it is forty lines). Rank the CHANGED rows and hand them to review agents in
+decompile, and diff them. **Regenerate the API snapshot first** (`pwsh tools/snapshot_api_surface.ps1`
+after a TAOM.Tests build), or members added since the last regeneration are never compared. The
+v1.5.4 script is archived as `E:\Decompiled_Bannerlord\_diff_1.5.3_to_1.5.4\bodydiff.py`; it prints an
+`unparsed=` count, which must be 0. Its first cut parsed table rows with a regex that skipped every
+target carrying a generic-arity backtick (`` List`1 ``): 27 of 292 patch rows, one of them a real
+change, while still reporting "0 unresolved". Rank the CHANGED rows and hand them to review agents in
 batches of six to ten with the diff, the TAOM override and the question "does TAOM re-implement a
 term that moved". **Full-replacement GameModel overrides first**: an additive override (`base.`
 then TAOM on top) inherits a body change for free, a replacement inherits nothing, and the two are
@@ -166,6 +181,24 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
    `session-start.sh` reads; note it's `.claude/`, NOT `.claude/state/`).
 6. The `Target:` line in AGENTS.md (`lint_docs.py` checks it against the pin), plus the
    memory resume card if one tracks the bump.
+7. Every other pin the version feeds, each gated or found by grep:
+   - `Main/_Module/SubModule.xml` Native `DependedModuleMetadata` to `v<new>.*`
+     (`NativeConstraint_MatchesPinnedGameVersion`), and the same row in the live
+     `TAOM_Map/SubModule.xml` and `LOTRLOME_Armory/SubModule.xml` (unversioned: back up first).
+   - `GameReferences.targets` `BannerlordRefAsmVersion` to BUTR's build for the new changeset
+     (`BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild`, which CI runs too). Check the
+     NuGet flat-container index for `bannerlord.referenceassemblies.core`; BUTR can publish hours
+     after Steam, so re-check before calling it blocked.
+   - The per-build native address pins, which SKIP rather than fail on an unknown build: the
+     `KnownBuilds` table in `ClipBudgetSignatureInstalledBinaryTests`, `PINS` in
+     `tools/tests/test_native_decompile.py` and the `pins` table in
+     `tools/tests/test_native_engine_methods.py` (run those two with `TAOM_GHIDRA_IT=1`). Add a row
+     per build; derive engine methods with `native_engine_methods.load_or_build`.
+   - The category tree (`decompile_to_folder.ps1 -Destination _categories_v<new>`) and the three
+     handbook-gate references to it (`tools/check_handbook_attributes.py`,
+     `tools/handbook_attribute_manifest.json`, its test).
+   - `git grep -n "v<old>"` over README.md, `docs/modding/` and `docs/reference/` for statements of
+     the current version.
 
 ## Phase 5 — Control battles before believing anything
 

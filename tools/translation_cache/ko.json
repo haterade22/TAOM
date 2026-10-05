@@ -20352,8 +20352,6 @@
   "taom_mwc_t3_b_p2": "병사 급료 -15%.",
   "taom_mwc_t3_b_p3": "부대 이동 속도 +15%.",
   "taom_mwc_t3_b_p4": "최대 체력 +9.",
-  "taom_nativeskinfixes_degraded": "NativeSkinFixes 저하됨 — 이 배너로드 빌드에 대한 패턴 서명이 승인되지 않음; 바닐라 렌더링",
-  "taom_nativeskinfixes_loaded": "NativeSkinFixes 활성화 — covers_head 모프 수정 + 머리카락/수염 천 시뮬레이션",
   "taom_nca_t1_a_key": "암흑 화살 범위 증가, 더 넓은 살상 지역을 커버합니다.",
   "taom_nca_t1_a_p1": "원거리 피해량 +8%.",
   "taom_nca_t1_a_p2": "방어구 관통력 +5%.",

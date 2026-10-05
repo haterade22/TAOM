@@ -136,7 +136,7 @@ public class LanguageTextIntegrityTests
     /// <summary>Product and key names that legitimately stay in Latin letters inside any language.</summary>
     private static readonly string[] LatinAllowed =
     {
-        "Ctrl", "Shift", "Alt", "TAOM", "Bannerlord", "NativeSkinFixes", "covers_head", "Discord", "Steam",
+        "Ctrl", "Shift", "Alt", "TAOM", "Bannerlord", "Discord", "Steam",
         "MCM", "Harmony", "Patreon", "Nexus", "Workshop", "Modding", "Kit",
     };
 
@@ -254,7 +254,7 @@ public class LanguageTextIntegrityTests
     [DataRow("RU", "Друэдайн, известные людям как во́зы")]
     [DataRow("RU", "Удерживайте Ctrl вместе с этой клавишей")]
     [DataRow("CNt", "諾斯・佩瑞赫爾")]
-    [DataRow("JP", "NativeSkinFixes有効 — covers_headモーフ修正")]
+    [DataRow("RU", "Войдите в Steam-аккаунт")]
     [DataRow("KO", "Ain Baliq은 Jarjara 절벽지대")]
     [DataRow("CNs", "是的。[ib:hip][if:convo_excited]{ENEMYFACTION_INFORMALNAME}")]
     [DataRow("DE", "[Dol Guldur] Goblin-Bogenschütze")]

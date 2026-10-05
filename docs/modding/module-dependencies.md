@@ -10,7 +10,7 @@ no `<Xmls>` block, only seven `<SubModule>` entries that boot other people's cla
 `TAOM.Dependencies` ticked in the launcher; the standalone `Bannerlord.Harmony`,
 `Bannerlord.ButterLib`, `Bannerlord.UIExtenderEx` and `Bannerlord.MBOptionScreen` modules are not
 required and should be uninstalled (`Dependencies/_Module/SubModule.xml:124-126`,
-[dr3-maintenance.md](../migration/dr3-maintenance.md) line 309).
+[dr3-maintenance.md](../migration/dr3-maintenance.md) line 297).
 
 This chapter is a concept chapter: it explains what the four libraries are, why they are packaged
 this way, the version pairing that a release must keep intact, the vendored-DLL allowlist, the
@@ -176,10 +176,10 @@ Two facts about the numbers. The Dependencies `<Version>` is `v2.0.6` (`Dependen
 while Main's is `v2.0.28` (`Main/_Module/SubModule.xml:6`); the two are not meant to match, and
 `v2.0.6` is not a phantom Main version ([release-process.md](../reference/release-process.md) line
 152). The engine target is pinned separately: `NativeConstraint_MatchesPinnedGameVersion` asserts that
-Main's `<DependedModuleMetadata id="Native" version="v1.5.3.*" />` equals
+Main's `<DependedModuleMetadata id="Native" version="v1.5.4.*" />` equals
 `.claude/pinned-game-version.txt` plus `.*`
 (`TAOM.Tests/Infrastructure/Dependencies/BundledDependencyManifestTests.cs:200-224`); the pin file
-reads `v1.5.3`. <!-- measured: cat .claude/pinned-game-version.txt 2026-09-15 -->
+reads `v1.5.4`. <!-- measured: cat .claude/pinned-game-version.txt 2026-10-05 -->
 
 ## Vendored DLLs, the allowlist and THIRD-PARTY-LICENSES
 
@@ -206,18 +206,18 @@ so lines 44-45 un-ignore the two parent folders, line 51 re-ignores everything i
 `Win64_Shipping_Client/`, and lines 52-64 carry 13 `!`-prefixed allow patterns, one per DLL family
 (`.gitignore:36-64`). <!-- measured: sed -n '52,64p' .gitignore | rg -c '^!' 2026-09-05 -->
 A new vendored DLL that is not added to that list is silently never committed
-([dr3-maintenance.md](../migration/dr3-maintenance.md) line 123). Where each family comes from is the
+([dr3-maintenance.md](../migration/dr3-maintenance.md) line 111). Where each family comes from is the
 table at [dr3-maintenance.md](../migration/dr3-maintenance.md) lines 48-55: Steam Workshop item
 `2859232415` (ButterLib, its implementations, the CrashReport family, the Microsoft, Serilog and
 `System.*` companions) and `2859238197` (the MBOptionScreen set, the module loader, the adapter).
 
 **`Main/_Module/bin/Win64_Shipping_Client/`** is a different pool with its own allowlist, and it is
-exactly two files: `MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll` (`.gitignore:73-80`,
-the [orientation.md](../ai-includes/orientation.md) trap index ("Vendored DLLs")). <!-- measured: git ls-files Main/_Module/bin | wc -l 2026-09-05 -->
+empty: NativeSkinFixes (`MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll`) was removed on 2026-10-05, so the folder ships no vendored binary (`.gitignore:66-70`,
+the [orientation.md](../ai-includes/orientation.md) trap index ("Vendored DLLs")).
 `MCMv5.dll` is never vendored there: MCM's runtime comes from this module and the compile-time
 reference comes from the `Bannerlord.MCM` NuGet with `IncludeAssets="compile"`
-(`Main/TAOM.csproj:99`, `.gitignore:69-70`, [dr3-maintenance.md](../migration/dr3-maintenance.md)
-line 121).
+(`Main/TAOM.csproj:99`, `.gitignore:68`, [dr3-maintenance.md](../migration/dr3-maintenance.md)
+line 109).
 
 **One pin that looks like a typo and is not.** `Dependencies/TAOM.Dependencies.csproj:47` pins
 `System.Runtime.CompilerServices.Unsafe` to package `4.5.3`, whose assembly version is `4.0.4.1`. The
@@ -292,7 +292,7 @@ pointing at `TAOM.Dependencies.AliasStubSubModule` (`Stubs/Bannerlord.Harmony/_M
 `X.Y` is the minor of the version actually shipped (the csproj pin for the three NuGet packages, the
 vendored DLL's own FileVersion for ButterLib) and `.99.0` satisfies any reasonable `vX.Y.*` lower
 bound a third-party mod declares, without claiming a major jump. A minor bump needs a stub edit; a
-patch bump does not ([dr3-maintenance.md](../migration/dr3-maintenance.md) lines 231-238). Both
+patch bump does not ([dr3-maintenance.md](../migration/dr3-maintenance.md) lines 219-226). Both
 derivations are asserted by `StubVersions_NuGetPinnedDeps_TrackPackageMinorAs99` and
 `StubVersion_ButterLib_TracksVendoredDllMinorAs99` (`BundledDependencyManifestTests.cs:122-150`). The
 stub's own comment warns that a legacy mod pinning a strict `v2.4.0.*` wildcard will not match
@@ -316,10 +316,10 @@ otherwise (`ModuleHelper.cs:327-331`), and vanilla `Native/SubModule.xml` sits a
 the vanilla engine does not see the four stubs at all. That matches the observation recorded at
 `Dependencies/SubModule.cs:205-211` that the launcher never constructs `AliasStubSubModule`, and it
 means the "auto-tick so third-party mods are not greyed out" purpose in
-[dr3-maintenance.md](../migration/dr3-maintenance.md) line 227 is not what the vanilla engine does with
+[dr3-maintenance.md](../migration/dr3-maintenance.md) line 215 is not what the vanilla engine does with
 the files as deployed. Whether BLSE scans `_Module/` was not checked here; it is listed as an open
 question. The `_Module/` destination is documented as intended at
-[dr3-maintenance.md](../migration/dr3-maintenance.md) line 219.
+[dr3-maintenance.md](../migration/dr3-maintenance.md) line 207.
 
 ## Worked example
 
@@ -462,7 +462,7 @@ Lines 142-158, the note that Harmony has no SubModule class, and the first entry
 
 <!-- example file="Dependencies/_Module/SubModule.xml" id="TAOM.Dependencies" -->
 Lines 163-237, the remaining six entries (the comment at lines 160-162 says entry two is a thin stub
-since NativeSkinFixes initialisation moved into `TAOM.dll` on 2026-05-26):
+whose NativeSkinFixes init moved into TAOM.dll on 2026-05-26, before the feature was removed on 2026-10-05):
 
 ```xml
 		<SubModule>
@@ -556,7 +556,7 @@ The seven `<SubModule>` entries, in construction order: <!-- measured: rg -c '^\
 
 Nothing asserts the seven class names against the upstream BUTR manifests; the tests check versions
 and file sets only. A rename upstream would be a silent no-op at load
-([dr3-maintenance.md](../migration/dr3-maintenance.md) lines 191-204 tells you to read the new
+([dr3-maintenance.md](../migration/dr3-maintenance.md) lines 179-192 tells you to read the new
 upstream `SubModule.xml` when a major version lands).
 
 <!-- example file="Main/_Module/SubModule.xml" id="TAOM" -->
@@ -776,13 +776,13 @@ Code: No code changes needed
 
 ### Never do
 
-1. **Never vendor `MCMv5.dll` into `Main/_Module/bin/`.** The Main allowlist is exactly
-   `MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll` (the [orientation.md](../ai-includes/orientation.md) trap index ("Vendored DLLs"), `.gitignore:79-80`). A second
+1. **Never vendor `MCMv5.dll` into `Main/_Module/bin/`.** The Main folder has no allowlist
+   entry at all (the [orientation.md](../ai-includes/orientation.md) trap index ("Vendored DLLs"), `.gitignore:66-70`). A second
    `MCMv5.dll` in the process is what the redirect list was written to fight
    (`Dependencies/SubModule.cs:39-46`).
 2. **Never edit the live `bin/` folders by hand.** The next build copies `_Module/**` over them, and
    the server mirror never deletes, so a hand-dropped file survives in `Win64_Shipping_Server/` after
-   the client copy is gone ([dr3-maintenance.md](../migration/dr3-maintenance.md) line 135).
+   the client copy is gone ([dr3-maintenance.md](../migration/dr3-maintenance.md) line 123).
 3. **Never fill in `<DependedModules />` on this module.** It must be able to construct before
    `Native` (`Dependencies/_Module/SubModule.xml:10`, [coop-interop.md](../features/coop-interop.md)
    lines 108-114).
@@ -831,7 +831,7 @@ Code: No code changes needed
   <!-- measured: ls "<game>/Modules/TAOM.Dependencies"; ls ".../ModuleData/Languages" | wc -l; ls ".../ModuleData/Languages_MCM" | wc -l 2026-09-05 -->
 - **The vendored implementation set is three builds behind the Workshop.** Both Workshop folders hold
   `1.4.6`, `1.4.7` and `1.4.8`; TAOM vendors through `1.4.5`. [dr3-maintenance.md](../migration/dr3-maintenance.md)
-  line 172 records the 2026-08-10 check as "MCM is clean" at `1.4.5`, which is no longer true of the
+  line 160 records the 2026-08-10 check as "MCM is clean" at `1.4.5`, which is no longer true of the
   MBOptionScreen folder either (the Workshop listing on this machine).
 - **`SubModuleInfo` probes `bin\Win64_Shipping_Client` no matter which build runs**, while the load
   uses `bin/<Common.ConfigName>/`, the process's working-directory name. A dedicated server or editor
@@ -847,17 +847,17 @@ Code: No code changes needed
   would wipe every Harmony patch in the process (`Dependencies/SubModule.cs:294-309`).
 - **A folder-name collision can overwrite a real BUTR module.** If a player has the standalone
   Workshop `Bannerlord.Harmony` module, the stub deploy overwrites its manifest and a later Steam update
-  can overwrite the stub back ([dr3-maintenance.md](../migration/dr3-maintenance.md) lines 301-309).
+  can overwrite the stub back ([dr3-maintenance.md](../migration/dr3-maintenance.md) lines 289-297).
 - **A red `(!)` on a third-party mod is the launcher's unsigned-code warning, not a dependency error**
-  ([dr3-maintenance.md](../migration/dr3-maintenance.md) line 244).
+  ([dr3-maintenance.md](../migration/dr3-maintenance.md) line 232).
 - **Under a co-op module two shields go quiet with no flag file involved.** PatchShield skips install
   and SaveShield rethrows the save-load category; "the shield did not run" is then expected, and the
   skip reason is logged in `Modules/TAOM.Dependencies/diag.log`
-  ([coop-interop.md](../features/coop-interop.md) lines 400-435; [dr3-maintenance.md](../migration/dr3-maintenance.md) line 282).
+  ([coop-interop.md](../features/coop-interop.md) lines 400-435; [dr3-maintenance.md](../migration/dr3-maintenance.md) line 270).
 - **`diag.log` is append-only and never rotated**: 3,150,674 bytes on this machine.
   <!-- measured: ls -la "<game>/Modules/TAOM.Dependencies" 2026-09-05 -->
-  It is the first file to read for any incident ([dr3-maintenance.md](../migration/dr3-maintenance.md) line 267).
-- **[dr3-maintenance.md](../migration/dr3-maintenance.md) line 248 still says the Foundation classes
+  It is the first file to read for any incident ([dr3-maintenance.md](../migration/dr3-maintenance.md) line 255).
+- **[dr3-maintenance.md](../migration/dr3-maintenance.md) line 236 still says the Foundation classes
   came from BetaDeps "via clean-room rewrite".** The provenance register retracts that: the headers
   say "Ports BetaDeps.Foundation.X", the derivation is `behavioural-port`, status `uncleared`
   ([provenance-register.md](../reference/provenance-register.md) lines 330-343). The shipped notice
@@ -898,7 +898,7 @@ except the two MCM FileVersion values (`5.12.3.0`), which were re-read on 2026-1
 | 17 / 17 | language folders under the live `ModuleData/Languages` / `ModuleData/Languages_MCM` | `ls "<game>/Modules/TAOM.Dependencies/ModuleData/Languages" \| wc -l` (and `_MCM`) |
 | 3,150,674 | bytes in the live `diag.log` | `ls -la "<game>/Modules/TAOM.Dependencies"` |
 | 19 | folders under the live `Modules/` | `ls "<game>/Modules" \| wc -l` |
-| v1.5.3 | pinned engine version | `cat .claude/pinned-game-version.txt` |
+| v1.5.4 | pinned engine version | `cat .claude/pinned-game-version.txt` |
 | 2026-08-11 | date of `cc1713eb`, the commit that removed the #371 rows | `git log -1 --format='%h %ad' --date=short cc1713eb` |
 | 0 | hits for `DependedModuleMetadata` in the v1.4.8 managed decompile | `rg -n DependedModuleMetadata <decompile root>` |
 

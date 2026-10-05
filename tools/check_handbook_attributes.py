@@ -78,7 +78,7 @@ from _gamedir import game_modules as resolve_game_modules  # noqa: E402
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DOCS_DIR = REPO_ROOT / "docs" / "modding"
 MANIFEST_PATH = REPO_ROOT / "tools" / "handbook_attribute_manifest.json"
-DEFAULT_DUMP_ROOT = r"E:\Decompiled_Bannerlord\_categories_v1.5.3"
+DEFAULT_DUMP_ROOT = r"E:\Decompiled_Bannerlord\_categories_v1.5.4"
 DUMP_ENV_VAR = "TAOM_DECOMPILE_ROOT"
 DEFAULT_GAME_MODULES = resolve_game_modules(
     r"E:\Steam\steamapps\common\Mount & Blade II Bannerlord")

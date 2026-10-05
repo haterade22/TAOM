@@ -66,29 +66,6 @@ jobs:
           if ($errors -gt 0) { exit 1 }
           Write-Host "All JSON files are well-formed."
 
-      - name: Validate native DLL links a static CRT
-        if: ${{ !cancelled() }}
-        shell: bash
-        run: |
-          # The vendored TAOM.NativeSkinFixes.dll must link a STATIC CRT
-          # (Debug /MTd or Release /MT). A dynamic CRT (/MDd or /MD) imports
-          # vcruntime*/msvcp140*/ucrtbase*/api-ms-win-crt* — DLLs players
-          # without Visual Studio lack — so LoadLibrary fails with Win32
-          # error 126 and NativeSkinFixes goes inert. pe_inspect.py is pure
-          # stdlib and parses the PE import table cross-platform.
-          DLL="Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll"
-          if [ ! -f "$DLL" ]; then
-            echo "::notice::$DLL not present — skipping static-CRT check."
-            exit 0
-          fi
-          IMPORTS=$(python3 tools/pe_inspect.py "$DLL")
-          echo "$IMPORTS"
-          if echo "$IMPORTS" | grep -iqE 'VCRUNTIME|MSVCP[0-9]+|MSVCR[0-9]+|ucrtbase|api-ms-win-crt'; then
-            echo "::error::$DLL links a DYNAMIC CRT (imports above). Players without Visual Studio get LoadLibrary error 126. Rebuild with a static CRT — Debug /MTd or Release /MT — via Dependencies/NativeSkinFixes.NativeHooks/Build.ps1."
-            exit 1
-          fi
-          echo "Native DLL links a static CRT — no redistributable dependency."
-
       - name: Doc-graph ratchet (isolated docs must not grow)
         if: ${{ !cancelled() }}
         shell: bash
@@ -154,9 +131,9 @@ jobs:
     # skipped since 2026-08-18). A gate that cannot run is not a gate: the exact
     # lesson this suite exists to enforce, reproduced by the commit that added it.
     #
-    # The native-CRT check has since been reordered above the ratchet, so that
-    # specific hole is closed. Every step in validate-xml now also carries
-    # an always-run guard, so a future reordering cannot reopen it.
+    # The native-CRT check was later reordered above the ratchet, and removed on
+    # 2026-10-05 with NativeSkinFixes. Every step in validate-xml now carries an
+    # always-run guard, so a future reordering cannot reopen the hole.
     steps:
       - uses: actions/checkout@v4
 

@@ -24,7 +24,7 @@
   -->
   <PropertyGroup>
     <TaomGameRefs Condition="'$(TaomGameRefs)' == ''">Install</TaomGameRefs>
-    <BannerlordRefAsmVersion>1.5.3.122374-beta</BannerlordRefAsmVersion>
+    <BannerlordRefAsmVersion>1.5.4.123627-beta</BannerlordRefAsmVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TaomGameRefs)' == 'Install'">

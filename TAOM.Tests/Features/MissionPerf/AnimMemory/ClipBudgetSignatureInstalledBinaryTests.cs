@@ -15,7 +15,14 @@ namespace TAOM.Tests.Features.MissionPerf.AnimMemory;
 [TestCategory("LiveInstall")]
 public class ClipBudgetSignatureInstalledBinaryTests
 {
-    private const long V153FileLength = 14209376;
+    /// <summary>Verified targets per client build, keyed by TaleWorlds.Native.dll file length. Add a row
+    /// at every engine bump; an unlisted build is Inconclusive rather than a silent pass.</summary>
+    private static readonly System.Collections.Generic.Dictionary<long, (string Build, int LoadSite, int BudgetSite, int Counter, int Budget)> KnownBuilds =
+        new System.Collections.Generic.Dictionary<long, (string, int, int, int, int)>
+        {
+            [14209376] = ("v1.5.3", 0x21E00F, 0x21E034, 0xDABE40, 0xB2E2DC),
+            [14209888] = ("v1.5.4", 0x21E00F, 0x21E034, 0xDABE40, 0xB2E2CC),
+        };
 
     [TestMethod]
     public void InstalledNativeDll_Signature_MatchesOnceWithTargetsInDataAndRdataAndA12MiBBudget()
@@ -33,18 +40,18 @@ public class ClipBudgetSignatureInstalledBinaryTests
     }
 
     [TestMethod]
-    public void InstalledNativeDll_V153Binary_TargetsAreTheVerifiedRvas()
+    public void InstalledNativeDll_KnownBuild_TargetsAreTheVerifiedRvas()
     {
         var image = LoadInstalled(out var length);
-        if (length != V153FileLength)
-            Assert.Inconclusive($"TaleWorlds.Native.dll is {length} bytes, not the v1.5.3 build's {V153FileLength}; the pinned RVAs do not apply.");
+        if (!KnownBuilds.TryGetValue(length, out var expected))
+            Assert.Inconclusive($"TaleWorlds.Native.dll is {length} bytes, which matches no verified build; add its row to KnownBuilds at the engine bump.");
 
         var match = Resolve(image, out _, out _);
 
-        Assert.AreEqual(0x21E00F, match.LoadSiteRva);
-        Assert.AreEqual(0x21E034, match.BudgetSiteRva);
-        Assert.AreEqual(0xDABE40, match.CounterRva);
-        Assert.AreEqual(0xB2E2DC, match.BudgetRva);
+        Assert.AreEqual(expected.LoadSite, match.LoadSiteRva, expected.Build);
+        Assert.AreEqual(expected.BudgetSite, match.BudgetSiteRva, expected.Build);
+        Assert.AreEqual(expected.Counter, match.CounterRva, expected.Build);
+        Assert.AreEqual(expected.Budget, match.BudgetRva, expected.Build);
     }
 
     private static byte[] LoadInstalled(out long length)

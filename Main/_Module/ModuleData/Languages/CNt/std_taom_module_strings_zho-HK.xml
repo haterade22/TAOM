@@ -1126,8 +1126,6 @@
     <string id="taom_career_grp_wolfskin_hunter_t2_b" text="丘陵幽靈" />
     <string id="taom_career_grp_wolfskin_hunter_t3_a" text="頂級狼皮" />
     <string id="taom_career_grp_wolfskin_hunter_t3_b" text="巨狼群統領" />
-    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes 已啟用 — covers_head 變形修正 + 頭髮/鬍鬚布料模擬" />
-    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes 降級 — 此 Bannerlord 版本的模式簽章未授權;使用原版渲染" />
     <string id="taom_bandit_dunland_name" text="登蘭德掠奪者" />
     <string id="taom_bandit_dunland_m1" text="卡拉多克" />
     <string id="taom_bandit_dunland_m2" text="格維迪昂" />

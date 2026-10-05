@@ -1126,8 +1126,6 @@
     <string id="taom_career_grp_wolfskin_hunter_t2_b" text="Fantôme des Collines" />
     <string id="taom_career_grp_wolfskin_hunter_t3_a" text="Peau de Loup Suprême" />
     <string id="taom_career_grp_wolfskin_hunter_t3_b" text="Maître de la Grande Meute" />
-    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes actif — correction morphologique covers_head + simulation tissu cheveux/barbe" />
-    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes dégradé — signatures de motifs non définies pour cette version de Bannerlord ; rendu vanilla" />
     <string id="taom_bandit_dunland_name" text="Pillards du Pays de Dun" />
     <string id="taom_bandit_dunland_m1" text="Caradoc" />
     <string id="taom_bandit_dunland_m2" text="Gwidion" />

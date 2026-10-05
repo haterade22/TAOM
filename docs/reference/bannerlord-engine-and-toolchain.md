@@ -38,7 +38,7 @@ boot. The 2026-08-03 case was 168 root-level `<action>` elements in LOTRLOME_Arm
 — tolerated by build 1.4.7.117484, fatal on build 117131 (`KeyNotFoundException` in
 `MBObjectManager.MergeElements` at `/action_sets/action`). Both build numbers come from the co-op field
 report; they are **not** locally verifiable — the installed client's `bin/Win64_Shipping_Client/Version.xml`
-carries only `<Singleplayer Value="v1.5.3"/>` and every exe/DLL reports FileVersion `1.0.0.0`.
+carries only `<Singleplayer Value="v1.5.4"/>` and every exe/DLL reports FileVersion `1.0.0.0`.
 
 What *is* verifiable on disk is that the two installs ship different schema sets: `<game>/XmlSchemas/`
 has 51 `.xsd`, the Dedicated Server app 45 — it lacks the single-player/naval set (`SPCultures.xsd`,
@@ -70,7 +70,7 @@ folder via mirror targets:
 
 Both server targets run `AfterTargets="PostBuildCopyToModules"`, gated on `$(DisableModuleCopy) != 'true'`
 and on the assembled client folder existing. **Mirroring the assembled folder rather than the build output
-is deliberate** — it picks up the vendored natives (`MinHook.x64.dll`, `TAOM.NativeSkinFixes.dll`) and NuGet
+is deliberate**: it picks up the NuGet
 companions that only exist after `PostBuildCopyToModules`. There is no editor mirror in
 `TAOM.Dependencies.csproj`, so `Modules/TAOM.Dependencies/bin/Win64_Shipping_wEditor/` being empty is
 expected, not a bug.
@@ -84,7 +84,7 @@ server-capable.
 
 > **That path is the desktop's.** The dump lives wherever the machine put it, and
 > `TAOM_DECOMPILE_ROOT` names the category tree on machines that are not the desktop (on the laptop,
-> `C:\Decompiled_Bannerlord\_categories_v<ver>`; the desktop's current tree is `_categories_v1.5.3`). The layout below is the same everywhere; only the
+> `C:\Decompiled_Bannerlord\_categories_v<ver>`; the desktop's current tree is `_categories_v1.5.4`). The layout below is the same everywhere; only the
 > root differs. Both decompile scripts take the destination as a parameter and read no environment
 > variable. See [development-machines](development-machines.md).
 
@@ -99,15 +99,18 @@ server-capable.
 Regenerate with **`pwsh tools/decompile_bannerlord.ps1`** (re-run after an engine update). `ilspycmd` only
 decompiles .NET assemblies; native DLLs are detected and listed, not decompiled.
 
-**Current version: v1.5.3**, regenerated 2026-09-15 (the client and the Modding Kit moved together
-again, buildid 25302170; `ApplicationVersion` build 122374). Counts at that regen: 57 `.cs` in
-`_shipping_build`, 66 in `_editor_build`, 95 in `_modules_build`. The v1.5.2 regen of 2026-09-14
-(`GameVersion` `v1.5.2.121216`, 56 / 65 / 86) is archived as `_*_v1.5.2`. The root `_manifest.json` is NOT the per-DLL builds'
+**Current version: v1.5.4**, regenerated 2026-10-05 (buildid 25653793; `GameVersion`
+`v1.5.4.123627`; the Modding Kit updated a few minutes before the client). Counts at that regen:
+56 `.cs` in `_shipping_build`, 65 in `_editor_build`, 127 in `_modules_build`, of which 86 come
+from the installed TAOM, TAOM.Dependencies and DOTS module bins and 41 are vanilla (the script walks
+every `Modules\*\bin`). The v1.5.3 regen of 2026-09-15 (`v1.5.3.122374`, 56 / 65 / 94 `.cs`) is
+archived as `_*_v1.5.3`, the v1.5.2 regen as `_*_v1.5.2`, and the per-assembly and per-member
+diffs between v1.5.3 and v1.5.4 sit in `_diff_1.5.3_to_1.5.4\`. The root `_manifest.json` is NOT the per-DLL builds'
 record: `decompile_to_folder.ps1` writes it for the category tree, and the root copy still says
 `"version": "v1.4.8"` from the 2026-08-10 run (`_manifest_v1.4.8.json` is its archived twin). The
-v1.5.3 category tree at `_categories_v1.5.3` carries its own `_manifest.json` (`"version":
-"v1.5.3"`, 2026-09-15), and `tools/check_handbook_attributes.py` defaults to it; `_categories_v1.5.2`
-stays beside it.
+v1.5.4 category tree at `_categories_v1.5.4` carries its own `_manifest.json` (`"version":
+"v1.5.4"`, 2026-10-05), and `tools/check_handbook_attributes.py` defaults to it; `_categories_v1.5.3`
+and `_categories_v1.5.2` stay beside it.
 
 **`_modules_build` (added 2026-08-10) covers assemblies nothing else did.** The two
 `<GameBin>\Win64_Shipping_*` folders hold only the base binaries, and the category tree's generator
@@ -175,8 +178,7 @@ them):
 | **`steam_api64.dll`** | **Steamworks** API. | Steam platform (workshop, achievements, friends). |
 | **`EOSSDK-Win64-Shipping.dll`** | **Epic Online Services** SDK. | Cross-play/Epic platform services. |
 
-(NAudio.* — managed audio lib, editor-build only, used by the Kit's audio tooling. MinHook/`TAOM.NativeSkinFixes`
-are TAOM-vendored native hooks, not shipped by TaleWorlds — see CLAUDE.md.)
+(NAudio.*: managed audio lib, editor-build only, used by the Kit's audio tooling.)
 
 ### 3.1 Verified facts (PE inspection 2026-06-06 — NOT guesses)
 

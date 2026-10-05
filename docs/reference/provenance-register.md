@@ -60,10 +60,12 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | NVIDIA SkillSpector | `SkillSpector` `NVIDIA/SkillSpector` | Apache-2.0 | behavioural-port | `tools/audit_claude_config.py` | cleared |
 | ECC (Everything Claude Code) | `affaan-m/ECC` `everything-claude-code` `AgentShield` | MIT | behavioural-port | `tools/audit_claude_config.py`; `.claude/skills/{context-budget,skill-stocktake,agent-introspection-debugging,build-fix,verify}/**`; `.claude/hooks/{config-protection,mcp-health-check,mcp-health-mark,block-dangerous-git}.sh`; `tools/blender/harness.py` (`stance_height`); `.claude/skills/context-save` and `context-restore` (failed-approaches field, staleness notice) | cleared |
 | graphify | `graphify` `graphifyy` `Graphify-Labs` `safishamsi/graphify` | Apache-2.0 (MIT when ported, see detail) | behavioural-port | `tools/doc_graph.py` `tools/graph_query.py`; `tools/graphify_taom.py` runs the CLI (interop-only, see detail) | cleared |
-| MinHook | `MinHook` `MinHook.x64.dll` | BSD-2-Clause | redistributed | `Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll` `Dependencies/NativeSkinFixes.NativeHooks/MinHook/**` | cleared |
+| MinHook | `MinHook` `MinHook.x64.dll` | BSD-2-Clause | redistributed | (removed 2026-10-05) `Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll` `Dependencies/NativeSkinFixes.NativeHooks/MinHook/**` | removed |
 | Lib.Harmony | `0Harmony.dll` `Lib.Harmony` | MIT | redistributed | (build-acquired, `Dependencies/TAOM.Dependencies.csproj` PackageReference) | cleared |
 | BUTR stack | `ButterLib` `UIExtenderEx` `MBOptionScreen` `MCMv5` `BUTR.CrashReport` | MIT | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/{Bannerlord,MCM,BUTR}*.dll` | cleared |
-| .NET Foundation | `Microsoft.Extensions` `Microsoft.Bcl` `System.Buffers` `System.Memory` | MIT | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/{Microsoft,System}*.dll` | cleared |
+| .NET Foundation | `Microsoft.Extensions` `Microsoft.Bcl` `System.Buffers` `System.Memory` | MIT | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/{Microsoft,System}*.dll` and TAOM's own copy of `System.Runtime.CompilerServices.Unsafe.dll`, which the build writes into the install's `Modules/TAOM/bin/<platform>/` | cleared |
+| DryIoc (Maksim Volkau) | `DryIoc` `DryIoc.dll` | MIT | redistributed | (build-acquired, `Main/TAOM.csproj` PackageReference 4.8.8; the build writes it into the install's `Modules/TAOM/bin/<platform>/`, never into the repo); notice in `Main/_Module/THIRD-PARTY-LICENSES.txt` since 2026-10-05 | cleared |
+| Json.NET (James Newton-King) | `Newtonsoft.Json` | MIT | redistributed | (build-acquired, `Main/TAOM.csproj` PackageReference 13.0.3; the build writes it into the install's `Modules/TAOM/bin/<platform>/`, never into the repo); notice in `Main/_Module/THIRD-PARTY-LICENSES.txt` since 2026-10-05 | cleared |
 | Serilog | `Serilog` | Apache-2.0 | redistributed | `Dependencies/_Module/bin/Win64_Shipping_Client/Serilog*.dll` | cleared |
 | Yotthani modules (FieldCamp, Refuge, SupplyLines) | none published | maintainer-commissioned | behavioural-port | `Main/Features/SupplyLines/**` `Main/Features/FieldCamp/**` `Main/Features/Refuge/**` `Main/_Module/AssetPackages/*.tpac` | cleared |
 | LOTRAOM | `LOTRAOM` | maintainer-owned | data-port | `Main/_Module/ModuleData/characters/lords.xml` `Main/_Module/ModuleData/**/taom_wanderer*.xml` `Main/_Module/ModuleData/lords.xslt` `Main/_Module/ModuleData/spcultures.xslt` `Main/Features/WarOfTheRingMomentum/**` `Main/Features/Messengers/**` `Main/Features/HeroRace/**` | cleared |
@@ -76,7 +78,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | TransferbuttonMenu | `TransferbuttonMenu` | UNKNOWN | behavioural-port | `Main/Features/QuickActions/**` | uncleared |
 | ServeAsSoldier | `ServeAsSoldier` `Serve as Soldier` | UNKNOWN | comparison-only | (none) | uncleared |
 | BetaDeps | `BetaDeps` | UNKNOWN | behavioural-port | `Dependencies/Foundation/{DiagLog,RuntimeLog,ReflectionUtils,VersionProbe,IncompatibleModDetector,PatchShield,SaveShield,FailureRecord,FailedModsCatalog,SubModuleConstructionGuard,CollectAssemblyTypesShim}.cs` `Dependencies/AliasStubSubModule.cs` `Dependencies/SubModule.cs` | uncleared |
-| NativeSkinFixes | `NativeSkinFixes` | UNKNOWN | verbatim-port | `Dependencies/NativeSkinFixes.NativeHooks/**` `Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll` | uncleared |
+| NativeSkinFixes | `NativeSkinFixes` | UNKNOWN | verbatim-port | (removed 2026-10-05) `Dependencies/NativeSkinFixes.NativeHooks/**` `Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll` | removed |
 | upstream chariot pack | `upstream chariot pack` `upstream-chariot-pack` | UNKNOWN | behavioural-port | `docs/features/chariot.md` `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs` | uncleared |
 | ROT-Core | `ROT-Core` `ROT.dll` `ROTTownTradersBehavior` | UNKNOWN | behavioural-port | `Main/Features/EliteEmissary/**` | uncleared |
 | TOR_Core | `TOR_Core` | UNKNOWN | comparison-only | (none) | uncleared |
@@ -106,6 +108,8 @@ TAOM's own and predecessor modules. The checker skips these entirely.
 `TAOM` `TAOM_Map` `TAOM_Online` `TAOM.Dependencies` `TAOM.NativeSkinFixes`
 `LOTRLOME` `LOTRLOME_Armory` `LOTRAOM`
 <!-- taom-owned-end -->
+
+`TAOM.NativeSkinFixes` stays in that list because history docs still name it; the DLL itself was removed on 2026-10-05.
 
 Vanilla TaleWorlds module ids (`Native`, `SandBox`, `SandBoxCore`, `StoryMode`, `CustomBattle`,
 `BirthAndDeath`, `Multiplayer`, `NavalDLC`) are engine facts, not project policy, and live as a
@@ -232,13 +236,15 @@ The derivation of `tools/doc_graph.py` stays `behavioural-port`. Usage:
 [`docs/features/graphify-code-graph.md`](../features/graphify-code-graph.md); the trial's
 measurements: [`docs/reviews/adopt-graphify-v8-2026-08-18.md`](../reviews/adopt-graphify-v8-2026-08-18.md).
 
-### MinHook
+### MinHook (REMOVED 2026-10-05)
+
+**Removed 2026-10-05:** NativeSkinFixes was deleted, so MinHook is no longer redistributed and its vendored headers are gone from the tree. The record below describes what was taken; the history is in git.
 
 Upstream: https://github.com/TsudaKageyu/minhook · Pin: v1.3.4 (DLL `FileVersion 1.3.4.0`) ·
 BSD-2-Clause, Copyright (C) 2009-2017 Tsuda Kageyu.
 
-Ships as a binary at `Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll`, un-ignored explicitly
-by `.gitignore:64`, and the headers are vendored at
+Shipped as a binary at `Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll`, un-ignored explicitly
+in `.gitignore` (the rule went with the feature), and the headers are vendored at
 `Dependencies/NativeSkinFixes.NativeHooks/MinHook/include/`. BSD-2-Clause clause 2 requires the
 copyright notice be reproduced in binary redistributions, which is why
 `Main/_Module/THIRD-PARTY-LICENSES.txt` now exists. Until 2026-08-13 it did not, and this condition
@@ -441,7 +447,7 @@ The playback engine is unaffected and is TAOM original work under MIT: `MusicPla
 
 **What would clear this row:** identify the upstream and its terms, or replace the audio. Until
 then it is redistributed with unknown terms, which is the same class of exposure as the
-NativeSkinFixes row below, at lower stakes only because audio is easier to swap than a native hook
+NativeSkinFixes row below (while that DLL shipped), at lower stakes only because audio is easier to swap than a native hook
 library.
 
 ### Fonts: Aniron, Minion Pro, Ringbearer (UNCLEARED)
@@ -497,7 +503,9 @@ free, non-commercial release is the maintainer's call. Not covered because not p
 `character_menu_new` scene (its assets are missing), the face generator backdrop and the loading-screen
 quotes (both off in his own shipped configuration).
 
-### NativeSkinFixes (UNCLEARED, and the highest-priority row here)
+### NativeSkinFixes (REMOVED 2026-10-05)
+
+**Removed 2026-10-05:** the feature, its C++ source and its built DLL were deleted from the tree at the maintainer's request, so on the `bannerlord-1.5.x` line nothing here is redistributed any more and the licence question no longer blocks a release. The `bannerlord-1.4.5` line (the 1.4.8 builds) still carries the feature, parked; the maintainer chose to leave it there (2026-10-05), so the question still applies to that line. The history is in git. The text below records what was taken and why it was flagged.
 
 `Dependencies/NativeSkinFixes.NativeHooks/**` is a port of an upstream Nexus mod of the same name,
 carried through the v1.3.15 to v1.4.5 migration. Classified `verbatim-port` on the repo's own
@@ -505,11 +513,10 @@ evidence: `docs/reviews/rca-native-skin-fixes-port-2026-05-26.md` says the C++ w
 minimal modification from the upstream" and that three of four review findings were "inherited
 verbatim from upstream code". No upstream name, version, or terms are recorded anywhere in the repo.
 
-**The built `TAOM.NativeSkinFixes.dll` ships today.** The feature is PARKED and disabled at the wiring
-level, so it does nothing at runtime, but a disabled binary is still a redistributed one. Of every row
-in this register this is the one where the licence question is actually blocking: a verbatim port with
-no identified upstream, shipping in the release. Either identify the upstream and its terms, or drop
-the binary from the module until the feature is un-parked.
+**The built `TAOM.NativeSkinFixes.dll` shipped until the removal.** The feature was PARKED and disabled at the wiring
+level, so it did nothing at runtime, but a disabled binary is still a redistributed one. Of every row
+in this register it was the one where the licence question was actually blocking: a verbatim port with
+no identified upstream, shipping in the release. The removal resolved it by dropping the binary.
 
 ### upstream chariot pack (UNCLEARED, and still unnamed)
 

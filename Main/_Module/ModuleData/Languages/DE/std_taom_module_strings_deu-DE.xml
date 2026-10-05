@@ -1126,8 +1126,6 @@
     <string id="taom_career_grp_wolfskin_hunter_t2_b" text="Geist der Hügel" />
     <string id="taom_career_grp_wolfskin_hunter_t3_a" text="Oberster Wolfspelz" />
     <string id="taom_career_grp_wolfskin_hunter_t3_b" text="Meister des Großen Rudels" />
-    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes aktiv — covers_head Morph-Korrektur + Haar-/Bart-Tuchsimulation" />
-    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes degradiert — Mustersignaturen für diesen Bannerlord-Build nicht autorisiert; Vanilla-Rendering" />
     <string id="taom_bandit_dunland_name" text="Dunländische Plünderer" />
     <string id="taom_bandit_dunland_m1" text="Caradoc" />
     <string id="taom_bandit_dunland_m2" text="Gwidion" />

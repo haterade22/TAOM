@@ -1126,8 +1126,6 @@
     <string id="taom_career_grp_wolfskin_hunter_t2_b" text="언덕의 유령" />
     <string id="taom_career_grp_wolfskin_hunter_t3_a" text="최상위 늑대가죽" />
     <string id="taom_career_grp_wolfskin_hunter_t3_b" text="대무리의 주인" />
-    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes 활성화 — covers_head 모프 수정 + 머리카락/수염 천 시뮬레이션" />
-    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes 저하됨 — 이 배너로드 빌드에 대한 패턴 서명이 승인되지 않음; 바닐라 렌더링" />
     <string id="taom_bandit_dunland_name" text="던랜드 약탈자" />
     <string id="taom_bandit_dunland_m1" text="카라독" />
     <string id="taom_bandit_dunland_m2" text="그위디온" />

@@ -161,7 +161,7 @@ STALE_VERSION_EXEMPT_FILENAME_SUBSTRINGS = (
 STALE_VERSION_EXEMPT_DIR_PARTS = ("docs/reviews/lessons",)
 # The exemptions above are all whole-FILE switches (directory, filename, path part). That is the
 # wrong granularity and is why #397 stayed at 29 findings after the 2026-08-05 exemption sweep:
-# the remaining sites live in docs that must stay linted (native-skin-fixes.md alone holds 10),
+# the remaining sites live in docs that must stay linted (native-skin-fixes.md alone held 10 before it became a tombstone),
 # and the real distinction is per LINE — "is this naming the CURRENT target, or recording history?"
 # So the model flips: a version string alone is not rot; a version string presented as current is.
 # Measured against the 29: this clears 26. The wording-marker approach from the issue clears 16.

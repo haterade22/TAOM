@@ -20,22 +20,22 @@ The tree below is measured from the repo copy. Sizes are `du -sm`, rounded up to
 ```
 Main/_Module/                      978 MB in total
   SubModule.xml                    37,947 bytes, 971 lines, 100 <XmlNode> rows
-  THIRD-PARTY-LICENSES.txt         117 lines
+  THIRD-PARTY-LICENSES.txt        137 lines
   AssetPackages/                   4 files, 35 MB
   AssetSources/                    86 files, 551 MB
   Assets/                          121 files, 1 MB
   GUI/                             1,319 files, 178 MB
   ModuleData/                      367 files, 32 MB
   ModuleSounds/                    436 files, 167 MB
-  bin/                             7 files, 17 MB (2 of them git-tracked)
+  bin/                             4 files, 12 MB (none git-tracked)
 ```
 
 | Folder or file | What it holds | Who reads it, and where |
 |---|---|---|
 | `SubModule.xml` | The manifest: identity, dependencies, the one `<SubModule>`, and 100 `<XmlNode>` data registrations across 12 `XmlName id` values <!-- measured: rg -o 'XmlName id="[^"]+"' Main/_Module/SubModule.xml \| sort -u \| wc -l 2026-09-05 --> | `ModuleInfo.LoadWithFullPath` opens `FolderPath + "/SubModule.xml"` (`ModuleInfo.cs:75-79`); `XmlResource.GetXmlListAndApply` opens the same file again to read `Module/Xmls/XmlNode` (`XmlResource.cs:144-149`) |
-| `THIRD-PARTY-LICENSES.txt` | Redistribution notices; MinHook 1.3.4 is at line 22 <!-- measured: rg -n "MinHook" Main/_Module/THIRD-PARTY-LICENSES.txt 2026-09-05 --> | Nothing at runtime. `tools/package_release.py:65-68` lists it in `KNOWN_TOP_FILES` so it ships |
-| `bin/Win64_Shipping_Client/` | `TAOM.dll` and `TAOM.pdb` (build output, ignored by git) plus the two vendored natives `MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll` (tracked) and its `.pdb` | `Module.LoadSubModules` loads from `Path.Combine(FolderPath, "bin", Common.ConfigName)` (`Module.cs:1044`), where `Common.ConfigName` is the name of the process's current working directory (`Common.cs:37`). `SubModuleInfo.LoadFrom` separately probes the literal `bin\Win64_Shipping_Client` for its `DLLExists` flag (`SubModuleInfo.cs:54-57`) |
-| `bin/Gaming.Desktop.x64_Shipping_Client/` | A second copy of `TAOM.dll` and `TAOM.pdb` | Written only by `CopyBinariesToModuleFolder` (`Main/TAOM.csproj:148,152-153`); the whole folder is ignored (`.gitignore:82`) |
+| `THIRD-PARTY-LICENSES.txt` | Redistribution notices for the NuGet runtime libraries in `bin/`, the audio, the fonts and the runtime fonts <!-- measured: wc -l Main/_Module/THIRD-PARTY-LICENSES.txt 2026-10-05 --> | Nothing at runtime. `tools/package_release.py:65-68` lists it in `KNOWN_TOP_FILES` so it ships |
+| `bin/Win64_Shipping_Client/` | `TAOM.dll` and `TAOM.pdb` (build output, ignored by git) and nothing else tracked (the two vendored natives went with NativeSkinFixes on 2026-10-05) | `Module.LoadSubModules` loads from `Path.Combine(FolderPath, "bin", Common.ConfigName)` (`Module.cs:1044`), where `Common.ConfigName` is the name of the process's current working directory (`Common.cs:37`). `SubModuleInfo.LoadFrom` separately probes the literal `bin\Win64_Shipping_Client` for its `DLLExists` flag (`SubModuleInfo.cs:54-57`) |
+| `bin/Gaming.Desktop.x64_Shipping_Client/` | A second copy of `TAOM.dll` and `TAOM.pdb` | Written only by `CopyBinariesToModuleFolder` (`Main/TAOM.csproj:148,152-153`); the whole folder is ignored (`.gitignore:2`) |
 | `ModuleData/` | 39 loose files at the root and 42 subfolders <!-- measured: find Main/_Module/ModuleData -maxdepth 1 -type f \| wc -l; find Main/_Module/ModuleData -mindepth 1 -maxdepth 1 -type d \| wc -l 2026-09-05 --> | A registered `path="X"` resolves to `<module>/ModuleData/X.xml` (`ModuleHelper.cs:232-235`); a stylesheet to `ModuleData/X.xsl`, then `.xslt` (`ModuleHelper.cs:237-240`, `MBObjectManager.cs:949-964`) |
 | `ModuleData/project.mbproj` | 5 `<file>` rows: 4 voice definitions and `module_sounds.xml` <!-- measured: rg -c "<file " Main/_Module/ModuleData/project.mbproj 2026-09-05 --> | `XmlResource.GetMbprojxmls` (`XmlResource.cs:107-140`), called at `Module.cs:1031`. See the second channel below |
 | `ModuleData/Languages/` | 169 files: the root `language_data.xml`, then 12 language folders each holding its own `language_data.xml` plus 13 `std_taom_*.xml` files <!-- measured: find Main/_Module/ModuleData/Languages -type f \| wc -l; for d in Main/_Module/ModuleData/Languages/*/; do ls $d \| wc -l; done 2026-09-05 --> | `LocalizedTextManager.LoadLocalizationXmls` searches `ModuleData/Languages` recursively for files named exactly `language_data.xml` (`LocalizedTextManager.cs:91-99`). No manifest row is involved |
@@ -214,17 +214,17 @@ MCM settings are not in the module either. `TaomSettings.FolderName` is `"TAOM"`
 
 ## Vendored DLLs and the allowlist
 
-`.gitignore:2` ignores every `bin/` and `.gitignore:4` every `_Module/bin/`. The Main module then un-ignores its client folder and re-ignores its contents (`.gitignore:73-75`) and allowlists exactly two files (`.gitignore:79-80`):
+`.gitignore:2` ignores every `bin/` folder at any depth (`.gitignore:4`'s `_Module/bin/` is anchored to the root, so it never matches here). The Main module adds no exception: its un-ignore block went with NativeSkinFixes (`MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll`, removed 2026-10-05), and the comment at `.gitignore:66-70` records why:
 
 ```
-!Main/_Module/bin/
-!Main/_Module/bin/Win64_Shipping_Client/
-Main/_Module/bin/Win64_Shipping_Client/*
-!Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll
-!Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll
+# Main module: nothing is vendored under Main/_Module/bin, so `bin/` and
+# `_Module/bin/` above ignore it whole (TAOM.dll/TAOM.pdb are build output).
+# MCMv5.dll comes from TAOM.Dependencies + the Bannerlord.MCM NuGet, never here.
+# The last vendored binaries went with NativeSkinFixes on 2026-10-05; the
+# BehaviorTrees DLLs were inlined into TAOM.dll on 2026-05-24.
 ```
 
-`git ls-files Main/_Module/bin` returns those two paths and nothing else. <!-- measured: git ls-files Main/_Module/bin 2026-09-05 --> `TAOM.dll` and `TAOM.pdb` stay ignored as build output; the Gaming.Desktop sibling is ignored whole (`.gitignore:82`); and the comment at `.gitignore:69-70` records that `MCMv5.dll` comes from TAOM.Dependencies and the `Bannerlord.MCM` NuGet and must not be vendored here. `TAOM.NativeSkinFixes.dll` is TAOM-owned C++ rebuilt outside this repo (`.gitignore:70-72`); MinHook's licence is at `Main/_Module/THIRD-PARTY-LICENSES.txt:22`. The install's client folder holds 10 files, because `CopyBinariesWindows` also copies the NuGet companions (`DryIoc.dll`, `Newtonsoft.Json.dll`, `System.Runtime.CompilerServices.Unsafe.dll`) that match its regex. <!-- measured: ls "<game>/Modules/TAOM/bin/Win64_Shipping_Client" | wc -l 2026-09-05 -->
+`git ls-files Main/_Module/bin` lists nothing once the removal is committed (the two deleted files show until then). <!-- measured: git ls-files Main/_Module/bin 2026-10-05 --> `TAOM.dll` and `TAOM.pdb` stay ignored as build output; every platform folder, the Gaming.Desktop sibling included, falls under `.gitignore:2`; and the comment at `.gitignore:68` records that `MCMv5.dll` comes from TAOM.Dependencies and the `Bannerlord.MCM` NuGet and must not be vendored here. The install's client folder holds 5 files, `TAOM.dll` and `TAOM.pdb` plus the NuGet companions `CopyBinariesWindows` also copies because they match its regex (`DryIoc.dll`, `Newtonsoft.Json.dll`, `System.Runtime.CompilerServices.Unsafe.dll`). <!-- measured: ls "<game>/Modules/TAOM/bin/Win64_Shipping_Client" | wc -l 2026-10-05 -->
 
 ## Versioning
 
@@ -392,12 +392,12 @@ All measured 2026-09-05 from the repo at `Main/_Module/` and the installed `Modu
 | Number | Command |
 |---|---|
 | 978 MB module tree; per-folder MB | `du -sm Main/_Module; for d in Main/_Module/*/; do du -sm "$d"; done` |
-| 4, 86, 121, 1,319, 367, 436, 1, 7 files per top-level folder | `for d in Main/_Module/*/; do find "$d" -type f \| wc -l; done` |
+| 4, 86, 121, 1,319, 367, 436, 1, 4 files per top-level folder | `for d in Main/_Module/*/; do find "$d" -type f \| wc -l; done` |
 | 37,947 bytes, 971 lines in `SubModule.xml` | `wc -l -c Main/_Module/SubModule.xml` |
 | 100 `<XmlNode>` rows, 12 distinct ids, 44/27/15/2/2/2/2/2/1/1/1/1 by id | `rg -o "<XmlNode>" Main/_Module/SubModule.xml \| wc -l; rg -o 'XmlName id="[^"]+"' Main/_Module/SubModule.xml \| sort \| uniq -c \| sort -rn` |
 | Sentinel lines 348, 394, 395, 441 | `rg -n "TAOM-NEW(FACTIONS\|CULTURE)-REG" Main/_Module/SubModule.xml` |
-| 117 lines in `THIRD-PARTY-LICENSES.txt`; MinHook at line 22 | `wc -l Main/_Module/THIRD-PARTY-LICENSES.txt; rg -n MinHook Main/_Module/THIRD-PARTY-LICENSES.txt` |
-| 2 git-tracked files under `bin/` | `git ls-files Main/_Module/bin` |
+| 137 lines in `THIRD-PARTY-LICENSES.txt`, no MinHook notice | `wc -l Main/_Module/THIRD-PARTY-LICENSES.txt; rg -n MinHook Main/_Module/THIRD-PARTY-LICENSES.txt` |
+| no git-tracked file under `bin/` once the removal is committed | `git ls-files Main/_Module/bin` |
 | 39 root files and 42 subfolders under `ModuleData/` | `find Main/_Module/ModuleData -maxdepth 1 -type f \| wc -l; find Main/_Module/ModuleData -mindepth 1 -maxdepth 1 -type d \| wc -l` |
 | 4 registered, 36 code-loaded subfolders | `for d in Main/_Module/ModuleData/*/; do rg -q "path=\"$(basename ${d%/})/" Main/_Module/SubModule.xml && echo REGISTERED \|\| echo CODE; done` |
 | 5 `<file>` rows, 11 lines, 896 bytes in `project.mbproj` | `rg -c "<file " Main/_Module/ModuleData/project.mbproj; wc -l -c Main/_Module/ModuleData/project.mbproj` |

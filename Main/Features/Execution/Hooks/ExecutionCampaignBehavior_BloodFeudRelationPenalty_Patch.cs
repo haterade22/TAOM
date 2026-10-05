@@ -36,11 +36,15 @@ namespace TAOM.Features.Execution.Hooks;
 /// </para>
 ///
 /// <para>
-/// Vanilla reaches the loop only while the feud clan still has a kingdom, so the live
-/// <c>dyingHero.Clan.Kingdom</c> read here is populated on the player-executes path. The participant
-/// carries the culture regardless, and the service resolves sides with a culture fallback and no
-/// early return, so a kingdom-less executor (independent or enlisted player, mercenary clan) is
-/// placed on a side rather than handing the calculation back to vanilla's flat penalty.
+/// Since v1.5.4 vanilla runs the loop whether or not the feud clan has a kingdom (v1.5.3 skipped it
+/// for a kingdom-less clan), and the method itself returns zero when <c>otherClan</c> is eliminated,
+/// a bandit faction or leaderless, before this postfix sees it. So <c>dyingHero.Clan.Kingdom</c> can
+/// be null here; it always could on the second caller, the execute-troop hint text, which never had
+/// the kingdom check.
+/// Every participant carries its culture regardless, and the service resolves sides with a culture
+/// fallback and no early return, so a kingdom-less victim, evaluator or executor (independent or
+/// enlisted player, mercenary clan) is placed on a side rather than handing the calculation back to
+/// vanilla's flat penalty.
 /// </para>
 /// </summary>
 [HarmonyPatch(typeof(ExecutionCampaignBehavior),

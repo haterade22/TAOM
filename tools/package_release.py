@@ -46,7 +46,8 @@ the game uses a Kit-built sack, so for now every module's is dropped (rule MODUL
 the report says so in one policy line. Scene sacks and the other files in Shaders/D3D11
 (shader_mapping.bin, shader_compile_report.log) still ship.
 
-Exit codes: 0 ok · 1 nothing to do · 2 bad input / unknown entries / non-empty destination / failed --require-build.
+Exit codes: 0 ok · 1 nothing to do · 2 bad input / unknown entries / non-empty destination / failed --require-build /
+            retired binaries in the source (RETIRED_BINARIES, dry runs included).
 """
 from __future__ import annotations
 
@@ -97,6 +98,15 @@ RUNTIME_STATE_FILES = frozenset({"diag.log", "last-good-modlist.txt", "failed-mo
 # would block the run.
 RDC_DIR_PREFIX = "RuntimeDataCache"
 NATIVE_DEBUG_EXT = frozenset({".pdb", ".exp", ".lib"})
+
+# Binaries an earlier build shipped and the repo has since deleted. Deploys never delete, so the
+# install, its _wEditor/_Server mirrors and a channel folder built from it keep them; a release
+# that carried MinHook would also ship it without the BSD-2 notice removed with it. The run
+# refuses (dry runs included) until they are pruned. Compared case-insensitively by file name.
+RETIRED_BINARIES = frozenset({
+    "behaviortrees.dll", "behaviortreewrapper.dll",    # inlined into TAOM.dll 2026-05-24
+    "taom.nativeskinfixes.dll", "minhook.x64.dll",     # NativeSkinFixes removed 2026-10-05
+})
 
 # Backup sidecars the tools under tools/ leave beside the live file (tools/README.md "XML I/O
 # convention"). The suffix sits AFTER the real extension, and the dated, topic-tagged forms are
@@ -389,6 +399,13 @@ def shipped_dll_copies(plan) -> list:
     return [rel for rel, _size in plan._copy_list
             if rel.casefold().startswith("bin/")
             and PurePosixPath(rel).name.casefold() == dll_name.casefold()]
+
+
+def retired_binaries(plans) -> list:
+    """<module>/<rel> of every RETIRED_BINARIES file under a planned module's bin/."""
+    return [f"{p.name}/{rel}" for p in plans for rel, _size in p._copy_list
+            if rel.split("/", 1)[0] == "bin"
+            and PurePosixPath(rel).name.casefold() in RETIRED_BINARIES]
 
 
 @dataclass(frozen=True)
@@ -842,6 +859,14 @@ def main(argv=None) -> int:
                 print(f"  {p.name}/{rel}")
             if len(p.unknown) > 20:
                 print(f"  ... and {len(p.unknown) - 20} more in {p.name}")
+
+    retired = retired_binaries(plans)
+    if retired:
+        print("\nERROR: retired binaries in the source; delete them there (install bin folders or "
+              "the channel folder) and re-run:", file=sys.stderr)
+        for rel in retired:
+            print(f"  {rel}", file=sys.stderr)
+        return 2
 
     if args.require_build is not None:
         problems, checked = require_build(plans, args.require_build, names)

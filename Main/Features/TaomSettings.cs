@@ -131,13 +131,6 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Raises poor caravans' buying power so they stock several goods instead of one. 0 = vanilla (poor caravans buy a single item); higher = fuller baskets. Default: 0.35.")]
     public float CaravanBudgetDiversityFloor { get; set; } = 0.35f;
 
-    // --- Native Skin Fixes ---
-
-    [SettingPropertyGroup("Native Skin Fixes")]
-    [SettingPropertyBool("Enable Native Skin Fixes", Order = 0,
-        HintText = "Currently DISABLED — the native MinHook detours (covers_head hand-morph freeze + hair/beard cloth physics) are parked in code and this toggle has no effect for now: the hooks never load and engine rendering is vanilla regardless of this setting. The hook targets remain authored + verified against Bannerlord v1.4.6's TaleWorlds.Native.dll; re-enabling is a code change (uncomment the install branch in SubModule.cs + flip this default back to true).")]
-    public bool EnableNativeSkinFixes { get; set; } = false;
-
     // --- Castle Recruitment ---
 
     [SettingPropertyGroup("Castle Recruitment")]

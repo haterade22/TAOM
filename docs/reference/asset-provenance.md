@@ -77,8 +77,8 @@ in [THIRD-PARTY-LICENSES.txt](../../Main/_Module/THIRD-PARTY-LICENSES.txt).
 
 The register also carries the two uncleared software rows that any credible claimant would look at
 first, both predating this file and both already tracked there: **NativeSkinFixes** (a verbatim C++
-port with no identified upstream, whose built DLL ships even though the feature is parked, and which
-the register calls its highest-priority row) and **BetaDeps** (a behavioural port, license
+port with no identified upstream; removed from the 1.5 line on 2026-10-05, so its row there is
+`removed`, while the 1.4.8 builds still ship it parked) and **BetaDeps** (a behavioural port, license
 `UNKNOWN`). Neither is what the August 2026 "stolen code" comments referred to, since those named
 nothing at all. Both are real work items, and the register is where their status lives.
 

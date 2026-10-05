@@ -1272,10 +1272,6 @@
 	<string id="taom_career_grp_wolfskin_hunter_t3_a" text="{=taom_career_grp_wolfskin_hunter_t3_a}Apex Wolfskin" />
 	<string id="taom_career_grp_wolfskin_hunter_t3_b" text="{=taom_career_grp_wolfskin_hunter_t3_b}Master of the Great Pack" />
 
-	<!-- NativeSkinFixes boot banner -->
-	<string id="taom_nativeskinfixes_loaded" text="{=taom_nativeskinfixes_loaded}NativeSkinFixes active — covers_head morph fix + hair/beard cloth simulation" />
-	<string id="taom_nativeskinfixes_degraded" text="{=taom_nativeskinfixes_degraded}NativeSkinFixes degraded — pattern signatures unauthored for this Bannerlord build; vanilla rendering" />
-
 	<!-- ============================================== -->
 	<!-- LOTR Bandit Cultures                            -->
 	<!-- ============================================== -->

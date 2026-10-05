@@ -1126,8 +1126,6 @@
     <string id="taom_career_grp_wolfskin_hunter_t2_b" text="丘陵の亡霊" />
     <string id="taom_career_grp_wolfskin_hunter_t3_a" text="頂点の狼皮" />
     <string id="taom_career_grp_wolfskin_hunter_t3_b" text="大いなる群れの長" />
-    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes有効 — covers_headモーフ修正 + 髪/髭の布シミュレーション" />
-    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes縮退モード — このBannerlordビルドのパターン署名が未対応; バニラレンダリングを使用" />
     <string id="taom_bandit_dunland_name" text="ドゥンランドの略奪者" />
     <string id="taom_bandit_dunland_m1" text="カラドック" />
     <string id="taom_bandit_dunland_m2" text="グウィディオン" />

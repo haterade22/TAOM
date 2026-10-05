@@ -1126,8 +1126,6 @@
     <string id="taom_career_grp_wolfskin_hunter_t2_b" text="山丘幽灵" />
     <string id="taom_career_grp_wolfskin_hunter_t3_a" text="顶级狼皮战士" />
     <string id="taom_career_grp_wolfskin_hunter_t3_b" text="巨狼群统领" />
-    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes已激活 — covers_head变形修复 + 头发/胡须布料模拟" />
-    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes已降级 — 此霸主版本的模式签名未授权;使用原版渲染" />
     <string id="taom_bandit_dunland_name" text="登兰德掠袭者" />
     <string id="taom_bandit_dunland_m1" text="卡拉多克" />
     <string id="taom_bandit_dunland_m2" text="格威迪昂" />

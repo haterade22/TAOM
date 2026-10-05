@@ -1654,3 +1654,14 @@ shape (logic placed where a label said tests cannot follow) the same day.
   rules class and test it there; the excuse names its methods one by one.
 - **Source:** `docs/reviews/rca-tournament-rewards-2026-10-04.md` T1 (lenses 1 and 4); repeat of
   `docs/reviews/rca-troll-gear-tournament-prizes-2026-10-02.md` finding 2.
+
+### A test pinned to one engine build skips at the next bump: give it a table of builds, not one constant (2026-10-05)
+Seven native address tests (`ClipBudgetSignatureInstalledBinaryTests`, five Ghidra CLI tests in
+`tools/tests/test_native_decompile.py`, `test_known_methods_resolve_to_their_registered_implementations`)
+compared against a single v1.5.3 constant and returned Inconclusive or skip on any other build, so the
+v1.5.4 bump switched them off with a green run.
+- **Why missed:** a skip reads as "not applicable", and the bump checklist did not name the tests.
+- **Prevent:** key such pins by build (file length or engine version) in a table, keep the old rows, add a
+  row at every bump, and let an unlisted build skip with a message naming the table. `/engine-bump`
+  Phase 4 step 7 lists the three tables.
+- **Source:** `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F6.

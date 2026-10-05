@@ -1,6 +1,6 @@
 # TAOM — Tales From the Age of Men
 
-A Lord of the Rings total conversion mod for **Mount & Blade II: Bannerlord v1.5.3**.
+A Lord of the Rings total conversion mod for **Mount & Blade II: Bannerlord v1.5.4**.
 
 ![The TAOM world map — Middle-earth at the time of the War of the Ring](tools/factionmap_output/verification_full.png)
 
@@ -12,7 +12,7 @@ spiders, wargs), race-specific lifespans, alignment-driven diplomacy, a full car
 system, per-kingdom special resources, and dozens of other systems. Every kingdom, clan, lord, and
 troop has been replaced or rewritten to fit Tolkien's world.
 
-> Development happens on **`bannerlord-1.5.x`** (Bannerlord v1.5.3). The GitHub default branch, **`bannerlord-1.4.5`**, is the v1.4.8 line and shows its own README.
+> Development happens on **`bannerlord-1.5.x`** (Bannerlord v1.5.4). The GitHub default branch, **`bannerlord-1.4.5`**, is the v1.4.8 line and shows its own README.
 
 ## Working with AI
 
@@ -30,7 +30,7 @@ commands in the developer quick start below.
 
 **Prerequisites**
 
-- Mount & Blade II: Bannerlord **v1.5.3** installed (the Steam beta branch)
+- Mount & Blade II: Bannerlord **v1.5.4** installed (the Steam beta branch)
 - Visual Studio 2022 (or the .NET SDK + MSBuild) — targets .NET Framework 4.7.2
 - `BANNERLORD_GAME_DIR` environment variable pointing at your game install
   (the `setup-dev-env.ps1` script configures this)
@@ -168,7 +168,7 @@ TAOM ships as four modules, all at the same version: `TAOM`, `TAOM.Dependencies`
 Configuration Menu (MCM) inside it, so none of those is installed separately: a standalone Workshop
 or Nexus copy of any of them must be removed before TAOM is enabled.
 
-Bannerlord **v1.5.3** is required (the Steam beta branch). Place the four modules
+Bannerlord **v1.5.4** is required (the Steam beta branch). Place the four modules
 in your Bannerlord `Modules/` directory, enable them in the launcher, and start a **new campaign**:
 existing saves are not supported.
 

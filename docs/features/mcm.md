@@ -92,9 +92,8 @@ reverts it. 166 settings shipped in that state until #559; the player report tha
 [bandit-management.md](bandit-management.md).
 
 `TAOM.Tests/Features/Mcm/SettingRequireRestartPostureTests.cs` reflects over the four settings
-classes and fails on any value attribute without the flag. Four are allowlisted by `Class.Property`,
-each with a reason: `TaomSettings.EnableNativeSkinFixes` (parked; its consumer is commented out, so
-no value of the flag is honest) and the three profiler toggles `BattleLoadDiagnosticsSettings.EnableTickProfiler`,
+classes and fails on any value attribute without the flag. Three are allowlisted by `Class.Property`,
+each with a reason: the three profiler toggles `BattleLoadDiagnosticsSettings.EnableTickProfiler`,
 `BattleLoadDiagnosticsSettings.EnableHitchProbe` and `BattleLoadDiagnosticsSettings.EnableMapProfiler` (see below). The two CrashReport toggles sat on that list until 2026-09-24 on the
 belief that `SubModule.OnSubModuleLoad` read them to decide whether to install the crash patches. It
 never could: `GlobalSettings<T>.Instance` is null until MCM's own

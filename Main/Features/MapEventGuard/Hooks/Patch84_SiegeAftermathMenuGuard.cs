@@ -22,8 +22,9 @@ namespace TAOM.Features.MapEventGuard.Hooks;
 /// <c>currentSettlement.GetName()</c>. Neither is null-guarded, even though the very next line
 /// guards the character chain (<c>LordPartyComponent?.Owner?.CharacterObject ?? PlayerCharacter</c>).
 /// Its sibling <c>menu_settlement_taken_player_army_member_on_init</c> is worse still: it derefs
-/// <c>_besiegerParty</c> three times unguarded, the FIRST being <c>.Army</c> at :325, a line ahead
-/// of its own <c>.CurrentSettlement</c>. Gating on the party being present covers whole methods
+/// <c>_besiegerParty</c> several times unguarded (on v1.4.8 the first was <c>.Army</c>; v1.5.4 reads
+/// <c>MobileParty.MainParty.Army</c> there, so its first is now <c>.CurrentSettlement</c>, see
+/// <see cref="Patch84_ArmyMemberMenuGuard"/>). Gating on the party being present covers whole methods
 /// rather than individual lines, which is why the verdict is taken before either body runs.
 ///
 /// WHY _besiegerParty CAN BE NULL. It is assigned in exactly one place, inside
@@ -289,10 +290,12 @@ public static class Patch84_ParticipantMenuGuard
 }
 
 /// <summary>
-/// The army-member menu. It was not the one that crashed, but it is worse: THREE unguarded
-/// dereferences of <c>_besiegerParty</c> — <c>.Army</c> at :325, <c>.CurrentSettlement</c> at :326,
-/// and <c>.CurrentSettlement.Culture</c> again at :349 — and it is reachable from the same skipped
-/// assignment block, so guarding one menu without the other would only move the crash.
+/// The army-member menu. It was not the one that crashed, but it is worse: several unguarded
+/// dereferences of <c>_besiegerParty</c>, and it is reachable from the same skipped assignment block,
+/// so guarding one menu without the other would only move the crash. v1.5.4 replaced the first one
+/// (<c>_besiegerParty.Army</c>) with <c>MobileParty.MainParty.Army</c>; the second statement still
+/// reads <c>_besiegerParty.CurrentSettlement</c>, and <c>.MapFaction</c>,
+/// <c>.CurrentSettlement.Culture</c> and <c>.LordPartyComponent</c> follow, all unguarded.
 /// </summary>
 [HarmonyPatch(typeof(SiegeAftermathCampaignBehavior), "menu_settlement_taken_player_army_member_on_init")]
 [HarmonyPatchCategory(Patch84_SiegeAftermathMenuGuard.Category)]

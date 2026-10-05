@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """
-native_sig_author.py — reverse-engineering helper for authoring NativeSkinFixes
-byte-pattern signatures + verifying struct/vtable offsets against a specific
-build of TaleWorlds.Native.dll.
+native_sig_author.py: reverse-engineering helper that finds native functions,
+vtables and byte-pattern signatures in a specific build of TaleWorlds.Native.dll
+and verifies struct/vtable offsets against it, offline (no IDA/Ghidra, no game
+running).
 
-Why this exists: NativeSkinFixes detours 7 internal native functions and writes
-to ~20 hardcoded struct offsets + 6 vtable indices inside undocumented native
-C++ classes (Face_mesh, rglCloth_simulator_component, the cloth factory, the
-scene). All of these are engine-version-specific; a single wrong value corrupts
-memory. This tool lets us locate the functions and PROVE each offset against the
-installed binary offline (no IDA/Ghidra, no game running), so only verified
-values ship.
+Why this exists: it was written to author the NativeSkinFixes detours (removed
+2026-10-05), whose ~20 struct offsets and 6 vtable indices were engine-version
+specific, so every value had to be proven against the installed binary before it
+shipped. It now serves native crash triage and the AnimMemory probe's signature
+pins. The `diff` subcommand and its TARGETS table still hold the old NativeSkinFixes
+hook RVAs and have no current use.
 
 Capabilities:
   * PE load (pefile): image base, section map, RVA<->file-offset.

@@ -472,10 +472,17 @@ class InstalledEngineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             m = nem.load_or_build(dll, Path(d), "it")
         self.assertEqual(m.problems, [])
-        if nd.engine_version(dll) != "v1.5.3":
-            self.skipTest("the address pins are v1.5.3's; re-pin them at an engine bump")
-        for name, rva in (("get_current_action_type", 0x6E19B0), ("set_attack_state", 0x6DF670),
-                          ("set_scripted_target_entity", 0x6E2540)):
+        # Client addresses per engine version; add a row at every engine bump.
+        pins = {
+            "v1.5.3": (("get_current_action_type", 0x6E19B0), ("set_attack_state", 0x6DF670),
+                       ("set_scripted_target_entity", 0x6E2540)),
+            "v1.5.4": (("get_current_action_type", 0x6E1C40), ("set_attack_state", 0x6DF900),
+                       ("set_scripted_target_entity", 0x6E27D0)),
+        }
+        version = nd.engine_version(dll)
+        if version not in pins:
+            self.skipTest(f"no address pins for client {version}; add its row at the engine bump")
+        for name, rva in pins[version]:
             with self.subTest(name=name):
                 self.assertEqual([r.rva for r in m.lookup(f"MBAgent.{name}")], [rva])
         counts = {a: sum(1 for r in m.methods if r.assembly == a) for a in nem.ASSEMBLIES}

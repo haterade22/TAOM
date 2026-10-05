@@ -55,7 +55,6 @@ using TAOM.Features.Arena.Models;
 using TAOM.Features.Encyclopedia;
 using TAOM.Features.Encyclopedia.Models;
 using TAOM.Features.MainMenuCustomizer;
-using TAOM.Features.NativeSkinFixes;
 using TAOM.Features.ShaderPrecompilation;
 using TAOM.Features.Siege;
 using TAOM.Features.Siege.Models;
@@ -751,31 +750,6 @@ public class SubModule : MBSubModuleBase
             Features.DevConsole.DevConsoleDiscoveryAudit.Run(IoC.Resolve<IModLogger>());
         }
         catch { /* never block the main menu over a diagnostic */ }
-
-        // NativeSkinFixes — three native MinHook detours that fix engine bugs
-        // TaleWorlds won't: covers_head morph freeze, hair cloth orphan, beard
-        // cloth orphan. Loads TAOM.NativeSkinFixes.dll from Main/_Module/bin
-        // and pattern-scans TaleWorlds.Native.dll for the hook targets at
-        // install time. See docs/features/native-skin-fixes.md.
-        //
-        // PARKED 2026-07-08 (user decision) — DISABLED at the wiring level. The
-        // install call below is commented out so the native hooks NEVER load,
-        // regardless of any persisted MCM "Native Skin Fixes → Enable Native
-        // Skin Fixes" value (MCM persists a saved value over the compiled
-        // default, so flipping the default alone would not stop machines that
-        // already saved it ON). Engine rendering is vanilla for everyone.
-        // RE-ENABLE: uncomment the install branch below AND flip the MCM default
-        // (TaomSettings.EnableNativeSkinFixes) back to true.
-        // (No log line — a parked feature announcing itself every session is pure noise; the
-        // commented-out install branch below is the record.)
-        // bool nsfEnabled = false;
-        // try { nsfEnabled = TaomSettings.Instance?.EnableNativeSkinFixes == true; }
-        // catch { /* MCM not ready — fail closed */ }
-        // if (nsfEnabled)
-        //     NativeSkinFixesInstaller.Install(IoC.Resolve<IModLogger>());
-        // else
-        //     IoC.Resolve<IModLogger>().LogInfo(
-        //         "[NativeSkinFixes] disabled (MCM 'Enable Native Skin Fixes' is off) — engine rendering is vanilla");
 
         // Pre-compile Shaders: PARKED again 2026-09-25 (more problems than it is worth for now; earlier
         // park 2026-08-20 to 2026-09-11, #560). This AddInitialStateOption call is the feature's ONLY
@@ -2278,11 +2252,6 @@ public class SubModule : MBSubModuleBase
         // across game-restart-in-same-process. Deep-review INC 3 (2026-05-25).
         try { IoC.Resolve<TAOM.Features.CrashReport.Hooks.AppDomainExceptionHook>()?.Unsubscribe(); }
         catch { /* IoC may already be torn down — best-effort */ }
-
-        // Reverse NativeSkinFixes hooks so DLL unload during reload-in-same-process
-        // doesn't leave dangling MinHook trampolines. Best-effort — swallows.
-        try { NativeSkinFixesInstaller.Uninstall(); }
-        catch { /* shutdown — never block */ }
 
         _harmony?.UnpatchAll("com.taom.mod");
         IoC.Dispose();

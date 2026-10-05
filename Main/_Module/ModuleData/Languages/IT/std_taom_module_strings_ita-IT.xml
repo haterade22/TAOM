@@ -1126,8 +1126,6 @@
     <string id="taom_career_grp_wolfskin_hunter_t2_b" text="Fantasma delle Colline" />
     <string id="taom_career_grp_wolfskin_hunter_t3_a" text="Pelle di Lupo Supremo" />
     <string id="taom_career_grp_wolfskin_hunter_t3_b" text="Maestro del Grande Branco" />
-    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes attivo — correzione morph covers_head + simulazione tessuto capelli/barba" />
-    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes degradato — firme pattern non configurate per questa build di Bannerlord; rendering vanilla" />
     <string id="taom_bandit_dunland_name" text="Predoni di Dunland" />
     <string id="taom_bandit_dunland_m1" text="Caradoc" />
     <string id="taom_bandit_dunland_m2" text="Gwidion" />

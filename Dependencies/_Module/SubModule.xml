@@ -129,7 +129,7 @@
 		  0. 0Harmony.dll auto-loads (no SubModule — Lib.Harmony is pure
 		     managed library; CLR loads on first HarmonyLib type touch)
 		  1. Bannerlord.UIExtenderEx.SubModule — depends on Harmony
-		  2. TAOM.Dependencies.SubModule       — dependency stub (NativeSkinFixes init moved to TAOM.dll OnBeforeInitialModuleScreenSetAsRoot on 2026-05-26)
+		  2. TAOM.Dependencies.SubModule       — dependency stub (its NativeSkinFixes init moved into TAOM.dll on 2026-05-26; the feature itself was removed on 2026-10-05)
 		  3. ButterLib + ButterLib Impl Loader — depends on Harmony
 		  4. MCMv5 + MCMv5 Basic Impl
 		  5. MBOptionScreen Module Loader      — picks correct
@@ -158,8 +158,8 @@
 		</SubModule>
 
 		<!-- TAOM.Dependencies bootstrap. As of 2026-05-26 this is a thin dependency
-		     stub — NativeSkinFixes initialization moved to TAOM.dll directly via
-		     NativeSkinFixesInstaller.Install in OnBeforeInitialModuleScreenSetAsRoot. -->
+		     stub; the NativeSkinFixes init it carried moved into TAOM.dll that day,
+		     and the feature itself was removed on 2026-10-05. -->
 		<SubModule>
 			<Name value="TAOM.Dependencies" />
 			<DLLName value="TAOM.Dependencies.dll" />

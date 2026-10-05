@@ -1126,8 +1126,6 @@
     <string id="taom_career_grp_wolfskin_hunter_t2_b" text="Duch Wzgórz" />
     <string id="taom_career_grp_wolfskin_hunter_t3_a" text="Szczytowy Wilczoskóry" />
     <string id="taom_career_grp_wolfskin_hunter_t3_b" text="Pan Wielkiej Watahy" />
-    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes aktywne — poprawka morfu covers_head + symulacja tkaniny włosów/brody" />
-    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes ograniczone — sygnatury wzorców nieopracowane dla tej wersji Bannerlorda; renderowanie waniliowe" />
     <string id="taom_bandit_dunland_name" text="Rabusie z Dunlandu" />
     <string id="taom_bandit_dunland_m1" text="Caradoc" />
     <string id="taom_bandit_dunland_m2" text="Gwidion" />

@@ -285,9 +285,7 @@ public class LocalizationKeyConsistencyTests
                     }
                     checkedSites++;
                     var inline = UnescapeCSharp(m.Groups[2].Value);
-                    // A bare "{=key}" names the key and defers to its registered text on purpose
-                    // (NativeSkinFixesInstaller's message keys): there is no second English to drift.
-                    if (inline.Length > 0 && !string.Equals(inline, english, StringComparison.Ordinal))
+                    if (!string.Equals(inline, english, StringComparison.Ordinal))
                     {
                         problems.Add($"{Path.GetFileName(file)}:{n + 1} {m.Groups[1].Value}: code \"{inline}\" vs registered \"{english}\"");
                     }

@@ -631,45 +631,65 @@ class GhidraIntegrationTests(unittest.TestCase):
                 self.assertEqual(int(m.group(1), 16), pe.func_of(rva)[0], out)
                 self.assertIn("{", out[m.end():], "no decompiled body")
 
-    def _cli_v153(self, *args):
-        """The CLI on the installed client, for tests that pin v1.5.3 addresses."""
+    # Client addresses per engine version. Add a row at every engine bump (derive the values with
+    # native_engine_methods / this CLI); an unlisted version skips rather than passing silently.
+    # The stub is the REX `48 FF 25` jump to KERNEL32!AcquireSRWLockShared.
+    PINS = {
+        "v1.5.3": {"set_attack_state": "0x6DF670", "weapon_equipped": "0x6E0100",
+                   "process_preload_queue": "0x4A0CF0", "import_stub": "0x9DB690",
+                   "get_current_action_type": 0x6E19B0},
+        "v1.5.4": {"set_attack_state": "0x6DF900", "weapon_equipped": "0x6E0390",
+                   "process_preload_queue": "0x4A0D50", "import_stub": "0x9DB920",
+                   "get_current_action_type": 0x6E1C40},
+    }
+
+    def _pins(self):
+        """The installed client's row of PINS, or a skip."""
         import native_crash_triage as nct
         dll = Path(nct.DEFAULT_DLL)
-        if not dll.is_file() or nd.engine_version(dll) != "v1.5.3":
-            self.skipTest("pins v1.5.3 client addresses; re-pin them at an engine bump")
+        version = nd.engine_version(dll) if dll.is_file() else None
+        if version not in self.PINS:
+            self.skipTest(f"no address pins for client {version}; add its row to PINS at the engine bump")
+        return self.PINS[version]
+
+    def _cli(self, *args):
         r = subprocess.run([sys.executable, nd.__file__, *args], capture_output=True, timeout=3600)
         return r.returncode, r.stdout.decode("utf-8", errors="replace"), r.stderr.decode("utf-8", errors="replace")
 
     def test_an_engine_method_resolves_to_its_registered_implementation(self):
-        code, out, err = self._cli_v153("--engine-method", "IMBAgent.SetAttackState")
+        entry = self._pins()["set_attack_state"]
+        code, out, err = self._cli("--engine-method", "IMBAgent.SetAttackState")
         self.assertEqual(code, 0, out + err)
-        self.assertIn("-> 0x6DF670", out)
-        self.assertIn("function: IMBAgent_SetAttackState  entry 0x6DF670", out)
+        self.assertIn(f"-> {entry}", out)
+        self.assertIn(f"function: IMBAgent_SetAttackState  entry {entry}", out)
 
     def test_a_string_leads_to_the_function_the_id_map_predicts(self):
         # Two independent paths agree: the assert text the function holds, and its registration id.
-        code, out, err = self._cli_v153("--string", "IMono_MBAgent::weapon_equipped")
+        entry = self._pins()["weapon_equipped"]
+        code, out, err = self._cli("--string", "IMono_MBAgent::weapon_equipped")
         self.assertEqual(code, 0, out + err)
-        self.assertIn("--- IMBAgent_WeaponEquipped  entry 0x6E0100 ---", out)
+        self.assertIn(f"--- IMBAgent_WeaponEquipped  entry {entry} ---", out)
         self.assertIn("engine method: IMBAgent.WeaponEquipped = weapon_equipped (MountAndBlade id 252)", out)
 
     def test_a_thunked_engine_method_shows_the_code_it_jumps_to(self):
-        code, out, err = self._cli_v153("--engine-method", "IPhysicsShape.ProcessPreloadQueue")
+        entry = self._pins()["process_preload_queue"]
+        code, out, err = self._cli("--engine-method", "IPhysicsShape.ProcessPreloadQueue")
         self.assertEqual(code, 0, out + err)
-        self.assertIn("function: IPhysicsShape_ProcessPreloadQueue  entry 0x4A0CF0", out)
+        self.assertIn(f"function: IPhysicsShape_ProcessPreloadQueue  entry {entry}", out)
         self.assertIn("thunk to: FUN_180153850  entry 0x153850", out)
 
     def test_a_stub_that_jumps_to_an_import_does_not_crash(self):
-        code, out, err = self._cli_v153("--rva", "0x9DB690")
+        code, out, err = self._cli("--rva", self._pins()["import_stub"])
         self.assertEqual(code, 0, out + err)
         self.assertNotIn("thunk to:", out)
 
     def test_a_site_inside_a_registered_only_function_decompiles(self):
-        # 0x6E19B0 is reached only through the registration table: analysis alone found no
+        # The function is reached only through the registration table: analysis alone found no
         # function there, so a crash inside it failed to decompile until the project was seeded.
-        code, out, err = self._cli_v153("--rva", "0x6E19B4")
+        entry = self._pins()["get_current_action_type"]
+        code, out, err = self._cli("--rva", hex(entry + 4))
         self.assertEqual(code, 0, out + err)
-        self.assertIn("function: IMBAgent_GetCurrentActionType  entry 0x6E19B0", out)
+        self.assertIn(f"function: IMBAgent_GetCurrentActionType  entry 0x{entry:X}", out)
 
     def test_a_lone_gpr_marker_exits_2_with_the_cleanup_advice(self):
         # Deleting only the big .rep folder to free disk leaves a .gpr that Ghidra's

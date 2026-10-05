@@ -1126,8 +1126,6 @@
     <string id="taom_career_grp_wolfskin_hunter_t2_b" text="Призрак Холмов" />
     <string id="taom_career_grp_wolfskin_hunter_t3_a" text="Высший Волчьешкурый" />
     <string id="taom_career_grp_wolfskin_hunter_t3_b" text="Повелитель Великой Стаи" />
-    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes активен — исправление морфинга covers_head + симуляция ткани волос/бороды" />
-    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes ограничен — сигнатуры шаблонов не авторизованы для этой сборки Bannerlord; стандартный рендеринг" />
     <string id="taom_bandit_dunland_name" text="Налётчики Дунланда" />
     <string id="taom_bandit_dunland_m1" text="Карадок" />
     <string id="taom_bandit_dunland_m2" text="Гвидион" />

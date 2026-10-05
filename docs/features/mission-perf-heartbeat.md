@@ -707,7 +707,8 @@ that wait (see "Reading it" and the
 the counter target must be an aligned 4-byte address inside `.data` and the budget target one inside
 `.rdata`, both proven before either is read; the budget float must read exactly `12582912`; and the
 first counter read must not be negative. On the v1.5.3 client the site is at RVA `0x21E00F`, the
-budget `subss` at `0x21E034`, the counter at `0xDABE40` and the budget float at `0xB2E2DC`. Any failed
+budget `subss` at `0x21E034`, the counter at `0xDABE40` and the budget float at `0xB2E2DC`; v1.5.4
+keeps the first three and moves the budget float to `0xB2E2CC` (still `12582912`). Any failed
 check turns the probe off for the rest of the process with one `[AnimMem] disabled` line naming the
 reason; `[MissionPerf]` is unaffected. The probe never writes engine memory.
 
@@ -898,7 +899,7 @@ decisions without a mission: attribution flags, the first-tick header and reason
 `TAOM.Tests/Features/MissionPerf/AnimMemory/`: `ClipBudgetSignatureTests` (parse, scan, rip targets
 of the two real encodings, resolve on the real 50 bytes), `PeSectionTableTests` (parse and every
 reject, bounds), `ClipBudgetSignatureInstalledBinaryTests` (LiveInstall: the signature on the
-installed `TaleWorlds.Native.dll`, and the v1.5.3 RVAs), `AnimMemLineTests` (every line literally),
+installed `TaleWorlds.Native.dll`, and each verified build's RVAs, keyed by file length), `AnimMemLineTests` (every line literally),
 `AnimMemoryProbeTests` (header, scan once, every disable reason, NaN budget, negative counter at
 arming and after it, exception, disable latch, read before arming, reads), `AnimMemorySessionTests`
 (start line, cadence, 5 s line, drops in and across windows, loading count, the 90% boundary, the

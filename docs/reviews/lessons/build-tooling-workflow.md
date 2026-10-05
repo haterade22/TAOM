@@ -3443,3 +3443,46 @@ re-exported the FBX and replaced the live file. Its siblings already refuse a no
 - **Prevent:** guard a mesh-editing tool with an allowlist of the mesh kinds it exists for, tested with real names
   of the kinds it must refuse; refuse before any export when the edit would change nothing.
 - **Source:** `docs/reviews/rca-mouth-of-sauron-gear-2026-10-04.md` M1 and M2 (Tooling lens).
+
+### At an engine bump, resolve the RELEASED TAOM.dll against the new engine, not only a fresh build (v1.5.4, 2026-10-05)
+v1.5.4 replaced a five-parameter `TooltipProperty` constructor with a six-parameter twin. The source
+compiled, every binding gate passed and the fresh build resolved, while the testing channel's v2.0.33
+`TAOM.dll` still called the removed member on 21 tooltip sites.
+- **Why missed:** each bump gate checks source or the fresh build. A compile binds whatever overload the
+  new engine offers, and the binding tests resolve TAOM's patch targets, not its call sites.
+- **Prevent:** `/engine-bump` Phase 1 step 5. Read every engine `MemberRef` of each channel's released
+  `TAOM.dll` with System.Reflection.Metadata, resolve it by name and full signature against the installed
+  assemblies, and use a fresh build as the negative control. Check a claim about what a binary calls
+  against its metadata, never a decompile of it: optional parameters are invisible in source, which is how
+  a review lens blamed the wrong build.
+- **Source:** `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F1 and "The false positive"; #736.
+
+### A removed binary lives on in the install and every channel folder until something refuses it (2026-10-05)
+Removing NativeSkinFixes deleted `MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll` from the repo, but
+copies stayed in the dev install's Client, Server and wEditor bin folders and in all three release
+channels, and the packager classified them COPY. The next package would have shipped MinHook without the
+BSD-2 notice the same change removed. `BehaviorTreeWrapper.dll` went the same way on 2026-05-24.
+- **Why missed:** deploys never delete, the removal edited only the repo, and the only defence was a
+  manual prune step whose keep-list still counted the deleted files.
+- **Prevent:** add any binary the repo stops shipping to `RETIRED_BINARIES` in `tools/package_release.py`,
+  which refuses it (dry runs included), and sweep the install and the channel folders as part of the
+  removal, with a backup.
+- **Source:** `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F2.
+
+### A scratch tool rebuilt at every bump needs a parse count, or "0 unresolved" means "0 of what I read" (2026-10-05)
+The bound-member body diff, rebuilt per bump as "forty lines", parsed snapshot rows with a regex that
+skipped every target carrying a generic-arity backtick: 27 of 292 rows, one a real change, while it still
+reported 0 unresolved. It also ran before the snapshot was regenerated.
+- **Why missed:** the tool counted what it compared, never what it skipped, and the skill told each bump
+  to rewrite it.
+- **Prevent:** regenerate the API snapshot first, then run the archived script and require its
+  `unparsed=0` (`/engine-bump` Phase 3). Promoting it into `tools/` with a row-count test is a follow-up
+  on #736.
+- **Source:** `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F4.
+
+### "Blocked on an upstream publish" is a check with a time stamp, not a state (2026-10-05)
+At 08:2x NuGet had no v1.5.4 BUTR reference assemblies, and the bump wrote the red test off as blocked.
+BUTR published `1.5.4.123627-beta` for all five packages later the same day; the review found it.
+- **Prevent:** re-check the NuGet flat-container index before writing "blocked" into a doc or a commit
+  (`/engine-bump` Phase 4 step 7).
+- **Source:** `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F6.

@@ -18,12 +18,12 @@ fixed points (load, pre-menu, game start, mission init, tick, unload). Inside th
 | Override | When | What TAOM does |
 |---|---|---|
 | **`OnSubModuleLoad()`** (:112) | Earliest: module DLL loaded, before menu | `_harmony = new Harmony("com.taom.mod")` (:200); apply the module-load patch categories (24 call sites; the larger batch is in `OnGameInitializationFinished`) via **`TryPatchCategory("PatchNN_X")`** (:210-619), the guarded helper over `PatchCategoryIndex.Apply(_harmony, category)`: a failure logs `[PatchApply]`, stops that category at its failing class (classes applied before it stay patched), and every other category still applies (a class whose attribute names a type the engine no longer has is skipped and reported on its own, see Categories below); wire static patch fields via `.Initialize(service, …)`; IoC bootstrap. Nothing receives `InformationManager.DisplayMessage` yet, so this phase's failures are shown later, in the startup inquiry of `OnBeforeInitialModuleScreenSetAsRoot`. |
-| **`OnBeforeInitialModuleScreenSetAsRoot()`** (:626) | After all modules load, before main menu | Pre-menu setup; applies `Patch55_BasicTableauRaceGuard`, then shows every startup patch failure (this phase's and `OnSubModuleLoad`'s) in one persistent inquiry, since Native's `GauntletUISubModule` has built the inquiry manager by now; NativeSkinFixes **install** (the native MinHook layer; managed Harmony can't touch native; **parked 2026-07-08**: the install call is commented out, so it does no MinHook work until re-enabled). |
+| **`OnBeforeInitialModuleScreenSetAsRoot()`** (:666) | After all modules load, before main menu | Pre-menu setup; applies `Patch55_BasicTableauRaceGuard`, then shows every startup patch failure (this phase's and `OnSubModuleLoad`'s) in one persistent inquiry, since Native's `GauntletUISubModule` has built the inquiry manager by now. |
 | **`OnGameStart(Game, IGameStarter)`** (:294) | A game (campaign) is starting | `if (gameStarter is CampaignGameStarter cs)` → **`cs.AddBehavior(new XxxBehavior(...))`** (every CampaignBehavior, Phase 9) + **`cs.AddModel(new TaomXxxModel(...))`** (every GameModel, Phase 7/15/16). |
 | **`OnGameInitializationFinished(Game)`** (:512) | Campaign fully initialized | Post-init; defensive-infra success marker (DR3 `OnGameInitializationFinished`). |
 | **`OnMissionBehaviorInitialize(Mission)`** (:640) | Each mission is being built (Phase 17 step 6) | **Deferred patches** whose target's cctor reads `Mission.Current`/`Campaign.Current` — the `Formation.SetMovementOrder` category (Phase 13/17), one-shot-guarded. Per-mission MissionBehavior wiring. |
 | **`OnApplicationTick(float dt)`** (:704) | Every frame | Per-frame polling (sparingly). |
-| **`OnSubModuleUnloaded()`** (:726) | Module unload / shutdown | NativeSkinFixes **uninstall**; cleanup. |
+| **`OnSubModuleUnloaded()`** (:2233) | Module unload / shutdown | Cleanup. |
 
 ## HOW it works — Harmony mechanics
 - **`new Harmony(id)`** — the patch *owner* (`"com.taom.mod"`); all TAOM patches belong to this owner (used by PatchShield's allowlist — `feedback_harmony_owner_allowlist_from_vendored_dll_enumeration`).
@@ -54,8 +54,10 @@ they exist (Phase 7/9).
 - **Three registration mechanisms, choose the right one:** an engine method to intercept → **Harmony patch**; a vanilla
   GameModel calc to override → **`AddModel`** (Phase 7); campaign-event logic → **`CampaignBehavior` + `AddBehavior`**
   (Phase 9). Prefer `AddModel`/`AddBehavior` (sanctioned, forward-compatible) over a patch when they fit.
-- **Native methods can't be Harmony-patched** — Harmony rewrites *managed* IL. `TaleWorlds.Native.dll` methods need
-  **MinHook** (NativeSkinFixes) or the `Native2ManagedPatcher` (CrashReport, :113). This is why the native-creature-render
+- **Native methods can't be Harmony-patched:** Harmony rewrites *managed* IL. `TaleWorlds.Native.dll` behaviour is out of
+  TAOM's reach: since NativeSkinFixes was removed (2026-10-05) TAOM carries no native detour, and the
+  `Native2ManagedPatcher` (CrashReport, `SubModule.cs:223`) only wraps the managed callback shims native code
+  calls into, for crash capture. This is why the native-creature-render
   problems (the spider AV, Phase 1) can't be fixed with a Harmony patch — they're past the managed boundary.
 - **PatchShield** (Dependencies/Foundation, DR3) wraps every patch in a Finalizer that catches the
   MissingMethod/MissingField/TypeLoad trinity and **auto-unpatches the offending owner** — so an engine-bump signature
@@ -68,13 +70,14 @@ they exist (Phase 7/9).
 ## The native boundary
 `MBSubModuleBase` + Harmony operate **entirely in managed space** — Harmony patches the engine's **managed** C# methods
 (TaleWorlds.*.dll). The native engine (`TaleWorlds.Native.dll`, Phases 1/3/14/15 render+physics) is **not** Harmony-reachable;
-TAOM crosses that boundary only via **MinHook** (NativeSkinFixes byte-pattern hooks) and `[EngineMethod]`/P-Invoke. So:
-*managed behavior* = Harmony/AddModel/AddBehavior (this phase); *native behavior* = MinHook (the engine-and-toolchain doc).
+TAOM does not cross that boundary: it declares no `[EngineMethod]`, its only P/Invokes are kernel32/psapi memory probes,
+and the `Native2ManagedPatcher` (CrashReport) only observes managed callback shims. So *managed behavior* =
+Harmony/AddModel/AddBehavior (this phase); *native behavior* is the engine's alone (the engine-and-toolchain doc).
 
 ## Evidence (file:line)
-- `Main/SubModule.cs`:82 (`: MBSubModuleBase`), :91 (`OnSubModuleLoad`), :104 (`new Harmony("com.taom.mod")`), :133-242 (`PatchCategory("PatchNN_X")` ×N; CrashReport unconditional since 2026-09-24), :207-235 (`.Initialize` static wiring), :247 (`OnBeforeInitialModuleScreenSetAsRoot`), :294 (`OnGameStart` → `AddBehavior`/`AddModel` :310-391+), :512 (`OnGameInitializationFinished`), :640 (`OnMissionBehaviorInitialize` — deferred MovementOrder category), :704 (`OnApplicationTick`), :726 (`OnSubModuleUnloaded`).
+- `Main/SubModule.cs`:82 (`: MBSubModuleBase`), :91 (`OnSubModuleLoad`), :104 (`new Harmony("com.taom.mod")`), :133-242 (`PatchCategory("PatchNN_X")` ×N; CrashReport unconditional since 2026-09-24), :207-235 (`.Initialize` static wiring), :666 (`OnBeforeInitialModuleScreenSetAsRoot`), :294 (`OnGameStart` → `AddBehavior`/`AddModel` :310-391+), :512 (`OnGameInitializationFinished`), :640 (`OnMissionBehaviorInitialize`: deferred MovementOrder category), :704 (`OnApplicationTick`), :2233 (`OnSubModuleUnloaded`).
 - TAOM patch catalogue + categories: `docs/reference/harmony-patch-registry.md` (full rationale/history) + the thin routing tables in `CLAUDE.md` ("Harmony Patch Categories" + "GameModel Overrides"). Defensive infra: `Dependencies/Foundation/PatchShield`. Gotcha memories: `feedback_movementorder_cctor_mission_current`, `feedback_transpiler_ordinal_plus_anchor_failsafe`, `feedback_hotpath_private_method_open_delegate`, `feedback_harmony_owner_allowlist_from_vendored_dll_enumeration`.
-- Linked: gamemodel-system.md (Phase 7, AddModel), campaignevents-and-campaignbehavior.md (Phase 9, AddBehavior), formations-and-team-ai.md / campaign-to-mission-bridge.md (Phases 13/17, deferred patch), bannerlord-engine-and-toolchain.md (the native/MinHook boundary).
+- Linked: gamemodel-system.md (Phase 7, AddModel), campaignevents-and-campaignbehavior.md (Phase 9, AddBehavior), formations-and-team-ai.md / campaign-to-mission-bridge.md (Phases 13/17, deferred patch), bannerlord-engine-and-toolchain.md (the native boundary).
 
 ---
 

@@ -33,10 +33,10 @@ and the gate.
 | Prefab entity cap | The 131,072 queue is global across modules; `check_prefab_budget.py` counts TAOM_Map only | [module map](../modding/module-map.md) |
 | Unversioned modules | A fix in the live Armory or TAOM_Map reverts on reinstall; land an in-repo gate with it | [coverage](../features/moduledata-validation.md) |
 | Artist commit ports | His base is the mirror revision nearest his file, not his commit's parent; merge from it | [lesson](../reviews/lessons/data-content-cultures.md) |
-| Parked features | NavalTravel, NativeSkinFixes, ShaderPrecompilation: off in `SubModule.cs`; sweep every file the last toggle touched | [map](../reference/feature-map.md) |
+| Parked features | NavalTravel, ShaderPrecompilation: off in `SubModule.cs`; sweep every file the last toggle touched | [map](../reference/feature-map.md) |
 | Persisted MCM defaults | json2 keeps the old value, so rename a setting to change its default, never flip it | [shaders](../features/shader-precompilation.md) |
 | Moving platforms | Agents need a navmesh riding the entity, plus physics; teleporting fails. Crew stand inside the deck | [mumakil](../features/mumakil.md) |
-| Vendored DLLs | `Main/_Module/bin/Win64_Shipping_Client/` ships only `MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll`; never MCMv5 | [deps](../modding/module-dependencies.md) |
+| Vendored DLLs | `Main/_Module/bin/Win64_Shipping_Client/` ships no vendored binary (`TAOM.dll` is build output); never MCMv5 | [deps](../modding/module-dependencies.md) |
 | Mission logic base | `BehaviorTreeMissionLogic` derives from `MissionLogic`, never `MissionBehavior` | [RCA](../reviews/rca-looter-battle-nre-2026-05-24.md) |
 | Armory dependency | It is `LOTRLOME_Armory`. A root-level `<action>` kills a dedicated server: `audit_action_set_parity.py` | [armory](../reference/armory-guide.md) |
 | Armory item ids | Grep every `LOTRLOME_items/*/` for the id prefix first; a second folder silently shadows one | [armory](../reference/armory-guide.md) |

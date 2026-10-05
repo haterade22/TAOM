@@ -1126,8 +1126,6 @@
     <string id="taom_career_grp_wolfskin_hunter_t2_b" text="Tepelerin Hayaleti" />
     <string id="taom_career_grp_wolfskin_hunter_t3_a" text="Başat Kurt Derili" />
     <string id="taom_career_grp_wolfskin_hunter_t3_b" text="Büyük Sürünün Efendisi" />
-    <string id="taom_nativeskinfixes_loaded" text="NativeSkinFixes aktif — covers_head morph düzeltmesi + saç/sakal bez simülasyonu" />
-    <string id="taom_nativeskinfixes_degraded" text="NativeSkinFixes düşürülmüş — desen imzaları bu Bannerlord derlemesi için yazılmamış; vanilla rendering" />
     <string id="taom_bandit_dunland_name" text="Dunlending Akıncıları" />
     <string id="taom_bandit_dunland_m1" text="Caradoc" />
     <string id="taom_bandit_dunland_m2" text="Gwidion" />
