@@ -19,7 +19,7 @@ Git history only on this line: `git log --diff-filter=D -1 -- Main/Features/Nati
 - `Dependencies/NativeSkinFixes.NativeHooks/` (the C++ project, including the vendored MinHook headers and libs)
 - `Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll` and `TAOM.NativeSkinFixes.dll`
 
-The MCM setting `TaomSettings.EnableNativeSkinFixes` and the strings `taom_nativeskinfixes_loaded` and `taom_nativeskinfixes_degraded` went with it, as did the CI static-CRT step. Stale copies of the two DLLs in the dev install's `bin` folders and the 1.5.x testing channel were backed up to `E:\Backups\nativeskinfixes-removal-2026-10-05\` and deleted (the patreon and public channels carry the 1.4.8 line, which keeps the feature, so their copies stay), and the 1.5.x `tools/package_release.py` now refuses both names (`RETIRED_BINARIES`). The commit hook `check-native-dll-crt.sh` is retired separately, once its `settings.json` entry is removed.
+The MCM setting `TaomSettings.EnableNativeSkinFixes` and the strings `taom_nativeskinfixes_loaded` and `taom_nativeskinfixes_degraded` went with it, as did the CI static-CRT step. Stale copies of the two DLLs in the dev install's `bin` folders and the 1.5.x testing channel were backed up to `E:\Backups\nativeskinfixes-removal-2026-10-05\` and deleted (the patreon and public channels carry the 1.4.8 line, which keeps the feature, so their copies stay), and the 1.5.x `tools/package_release.py` now refuses both names (`RETIRED_BINARIES`). The commit hook `check-native-dll-crt.sh`, which guarded the DLL's static CRT link, was retired the same day.
 
 ## History
 

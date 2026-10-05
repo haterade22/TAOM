@@ -477,7 +477,7 @@ PY
 # The gates whose prefilter is their own word rather than `git`: each must also skip
 # `git status`, `git diff` and `git log`.
 PF_NARROWED_LIST=(check-claude-files-tracked.sh check-commit-subject-version.sh
-                  check-moduledata-validation.sh check-native-dll-crt.sh check-doc-config-drift.sh
+                  check-moduledata-validation.sh check-doc-config-drift.sh
                   validate-push.sh block-no-verify.sh check-graphify-usage.sh)
 PF_NARROWED="${PF_NARROWED_LIST[*]}"
 PF_U='\'u    # the two characters backslash and u: a JSON escape prefix, as the raw payload holds it
@@ -562,8 +562,8 @@ fi
 #     block-dangerous-git.sh, block-broad-git-add.sh, check-graphify-usage.sh) are each fed their blocked command
 #     twice, plain and with the gated word's first letter escaped, and must answer both the
 #     same way (maintainer decision D40; Codex's counter-payload in the plan 013 review).
-#     The other four (check-claude-files-tracked.sh,
-#     check-moduledata-validation.sh, check-native-dll-crt.sh, check-doc-config-drift.sh)
+#     The other three (check-claude-files-tracked.sh,
+#     check-moduledata-validation.sh, check-doc-config-drift.sh)
 #     get 4c's escaped-word reach row only.
 # ---------------------------------------------------------------------------
 head2 "4d. a blocking gate answers the same when its word arrives escaped"
@@ -1708,7 +1708,7 @@ d = json.load(open('.claude/settings.json', encoding='utf-8'))
 pre = d.get('hooks', {}).get('PreToolUse', [])
 names = ["block-broad-git-add.sh", "block-dangerous-git.sh", "block-no-verify.sh",
          "check-claude-files-tracked.sh", "check-commit-subject-version.sh",
-         "check-doc-config-drift.sh", "check-moduledata-validation.sh", "check-native-dll-crt.sh"]
+         "check-doc-config-drift.sh", "check-moduledata-validation.sh"]
 own = ["check-graphify-usage.sh", "validate-push.sh"]
 extra = sorted({h['command'].rsplit('/', 1)[-1] for g in pre
                 if {'Bash', 'PowerShell'} & set(g.get('matcher', '').split('|'))
@@ -1945,7 +1945,7 @@ G7E_REACH=(
   "PowerShell|0|git log --grep commit"
   "Bash|1|GIT commit -m x"
 )
-for hook in check-claude-files-tracked.sh check-moduledata-validation.sh check-native-dll-crt.sh check-doc-config-drift.sh; do
+for hook in check-claude-files-tracked.sh check-moduledata-validation.sh check-doc-config-drift.sh; do
     for entry in "${G7E_REACH[@]}"; do
         tool="${entry%%|*}"; rest="${entry#*|}"; want="${rest%%|*}"; cmd="${rest#*|}"
         got=$(g7e_reaches "$hook" "$tool" "$cmd")
@@ -2293,7 +2293,7 @@ if (( HW_LEN != 65581 )); then
     bad "7h's staged list is $((HW_LEN - 1)) bytes, not 65,580: the commit gate rows below prove nothing"
 fi
 pre_payload Bash 'git commit -m "docs: v0.0.0 - staged list probe"' > "$SANDBOX/hw.json"
-for hook in check-doc-config-drift.sh check-moduledata-validation.sh check-native-dll-crt.sh; do
+for hook in check-doc-config-drift.sh check-moduledata-validation.sh; do
     hw_row "$hook" PreToolUse "$HW_STAGED" "$SANDBOX/hw.json" allow "$hook [Bash] on a staged name list of 65,580 bytes"
 done
 rm -rf "$SANDBOX/hw-proj" "$SANDBOX/hw-staged" "$SANDBOX/hw.json" "$SANDBOX/hw-index.txt"
