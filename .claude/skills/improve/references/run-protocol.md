@@ -243,8 +243,8 @@ merge" below).
    (the default base, HEAD, sees nothing once the merge is committed), whose exit gates drift only
    and ignores dashes, so also compare its `ai_dashes:` count with step 4's: a higher count is new
    prose with an em or en dash; `validate_moduledata.py` when ModuleData changed; the hook suite when
-   `.claude/` or `tools/test_hooks.sh` changed; the CI replay (`.ai/verification.md`, the three
-   `csharp.yml` steps) when C# or tests changed. When a plan adds a CI gate, replay it on every
+   `.claude/` or `tools/test_hooks.sh` changed; the no-game replay (`.ai/verification.md`, its three
+   RefAsm commands) when C# or tests changed. When a plan adds a gate, replay it on every
    in-flight branch before merging any of them. Stop at the first new failure.
 7. **Push**: fetch and repeat step 3, then a plain fast-forward `git push origin HEAD:<trunk>`. Never a
    force push. Record the range.

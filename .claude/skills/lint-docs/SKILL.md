@@ -29,7 +29,7 @@ Full reference — exemption surface, the #399 model, blind spots: [docs/feature
 - `$ARGUMENTS` empty or `--full` → run all seven checks.
 - `$ARGUMENTS` contains `--quick` → only check dead links (fastest; suitable for tight loops).
 - `$ARGUMENTS` contains `--write-report` → write to `docs/reviews/doc-lint-<YYYY-MM-DD>.md` instead of streaming inline.
-- `--fail-on-drift` → exit 1 on config-example drift, version mismatch, OR a hard budget violation; checks 1-4 never block. CI runs this on every branch (`.github/workflows/doc-budget.yml`).
+- `--fail-on-drift` → exit 1 on config-example drift, version mismatch, OR a hard budget violation; checks 1-4 never block. The commit hook runs `--drift-only` on commits that stage a file these checks read.
 - `--drift-only` → run only those three checks, with the same exit code (about 0.15 s). The `check-doc-config-drift.sh` pre-commit hook runs this.
 - `--context-budget-json` → print the entry docs, rules and caps as JSON (`/context-budget` reads it).
 - `--fail-on-dead` → exit 1 if any dead links are found (CI-oriented; not wired into a hook).

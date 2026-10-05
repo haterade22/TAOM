@@ -12,9 +12,9 @@
     TaomGameRefs=RefAsm: BUTR's stripped, metadata-only reference assemblies from nuget.org
     (Bannerlord.ReferenceAssemblies.*, generated from the Steam build named in their nuspec tags),
     plus System.Management and System.Numerics.Vectors from their NuGet packages at the assembly
-    versions the game ships (4.0.1.0 and 4.1.3.0). For a machine with no game: the GitHub-hosted
-    job in .github/workflows/csharp.yml. Every method body in these assemblies throws, so a test
-    that executes engine code carries [TestCategory("RequiresGame")] and that job filters it out.
+    versions the game ships (4.0.1.0 and 4.1.3.0). For a machine with no game (.ai/verification.md
+    lists the commands). Every method body in these assemblies throws, so a test that executes
+    engine code carries [TestCategory("RequiresGame")] and those commands filter it out.
     The packages are downloaded at restore and never committed.
 
     BannerlordRefAsmVersion is the BUTR build of the version in .claude/pinned-game-version.txt,

@@ -81,8 +81,8 @@ head2 "1. no UNGUARDED python3 (.claude/ and tools/*.sh)"
 # `command -v` succeeding proves only that a file exists at that name.
 #
 # So: a file may reference python3 only if it also carries a WindowsApps rejection, or
-# delegates to _pybin.sh which does. Comments are ignored. .github/workflows/ is exempt
-# entirely (Linux runner, real python3).
+# delegates to _pybin.sh which does. Comments are ignored. (.github/workflows/ was exempt
+# until the Linux CI workflows were removed, 2026-10-05.)
 HITS=$("$HPY" - <<'PY'
 import pathlib, re
 bad = []

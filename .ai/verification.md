@@ -19,9 +19,13 @@ untrusted PR code on the personal self-hosted workstation.
 Both MSBuild flags are required on build AND test. Build the solution, not just
 `Main`, before testing with `--no-build`; otherwise a stale test DLL can pass.
 Do not use the deploying default of `build.ps1` as a review-time check. Without
-the game, skip the `managed-build` and `managed-tests` rows and run the `run:`
-blocks of the three steps in `.github/workflows/csharp.yml` as written, in
-order, from the repository root under PowerShell: the build (its implicit restore
+the game, skip the `managed-build` and `managed-tests` rows and run these three
+commands in order, from the repository root: `dotnet build TAOM.Tests -p:TaomGameRefs=RefAsm -p:DisableModuleCopy=true -p:ModuleId=`;
+`dotnet test TAOM.Tests --no-build -p:TaomGameRefs=RefAsm -p:DisableModuleCopy=true -p:ModuleId= --filter
+"TestCategory!=RequiresGame&TestCategory!=LiveInstall&TestCategory!=BindingVerification"`; and
+`dotnet test TAOM.Tests --no-build -p:TaomGameRefs=RefAsm -p:DisableModuleCopy=true -p:ModuleId= --settings
+TAOM.Tests/binding-gate.runsettings --filter
+"TestCategory=BindingVerification&TestCategory!=RequiresGameIL&TestCategory!=LiveInstall"`. The build (its implicit restore
 passes `-p:TaomGameRefs=RefAsm`, so BUTR's metadata-only reference assemblies
 from `GameReferences.targets` are downloaded; a restore without it downloads
 none), the unit tests and the binding gate. All three use the Debug
@@ -37,7 +41,7 @@ module assemblies beside the stubs. Such a run cannot execute the tests tagged
 prerequisites mean not run, not passed.
 
 Capture test totals, failures and skips. Empty discovery is not success. The
-existing Python CI job checks its discovery floor; record skips affecting the
+Python tool tests (`/verify` Step 2b) treat fewer than 2,500 discovered tests as broken; record skips affecting the
 assigned scope as incomplete evidence. The ModuleData validator can auto-skip
 engine-dependent checks without the game install: exit zero alone is insufficient.
 Review the validator's documented coverage limits before asserting correctness.
@@ -95,7 +99,6 @@ these checks. There is no universal native/provenance/runtime test here, and no
 new blanket gameplay smoke gate. Agree task-specific runtime expectations and
 document what static checks cannot establish.
 
-The existing `.github/workflows/build.yml` Python test discovery includes the
-review-tool and documentation tests. That tests the tools; it does not run AI
-reviewers, verify their identity or create a protected merge check. Preserve the
-existing restriction against PR execution on the personal game runner.
+The Python tool tests (`python -m unittest discover -s tools/tests -t .`, `/verify`
+Step 2b) include the review-tool and documentation tests. That tests the tools; it
+does not run AI reviewers, verify their identity or create a protected merge check.

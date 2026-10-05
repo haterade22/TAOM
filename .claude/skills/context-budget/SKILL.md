@@ -49,7 +49,7 @@ own copy.
 | Are MCP schemas eager? | `ENABLE_TOOL_SEARCH=false` | Unset it, or drop servers that wrap a CLI |
 
 The same constants gate every commit that touches an entry doc or a rule (the commit hook runs
-`lint_docs.py --drift-only`) and every push (`.github/workflows/doc-budget.yml`); this scan adds the
+`lint_docs.py --drift-only`); this scan adds the
 per-spawn view, MCP and memory.
 
 ## Phase 4: record the baseline

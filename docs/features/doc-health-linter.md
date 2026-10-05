@@ -5,8 +5,8 @@
 One read-only pass over `docs/` (plus the files CLAUDE.md loads, `AGENTS.md`, `.claude/rules/`, and
 the shipped ModuleData configs) that reports **doc rot**: the class of defect where the code moved
 and the prose did not. Seven checks, pure stdlib, no game install required. Three of the seven
-**block**: a commit through `.claude/hooks/check-doc-config-drift.sh`, and every push on every
-branch through `.github/workflows/doc-budget.yml`. The other four are advisory.
+**block** a commit through `.claude/hooks/check-doc-config-drift.sh` (the GitHub workflow that also
+ran them on every push was removed on 2026-10-05). The other four are advisory.
 
 Skill entry point: `/lint-docs`. Backs [ADR-010](../adrs/010-knowledge-base-architecture.md).
 Sibling validators: [moduledata-validation.md](moduledata-validation.md) (game data),
@@ -185,7 +185,6 @@ before treating it as an all-clear.
 | `tools/tests/test_lint_docs.py` | unit tests over synthetic repo trees, including the exit codes the gates act on |
 | `.claude/skills/lint-docs/SKILL.md` | `/lint-docs` — run + summarize; diagnostic, never auto-fixes |
 | `.claude/hooks/check-doc-config-drift.sh` | pre-commit gate; runs `--drift-only` when a commit stages a file the three checks read (`tools/test_hooks.sh` 5d pins that list to the entry docs) |
-| `.github/workflows/doc-budget.yml` | runs `--fail-on-drift` on every push and pull request, every branch |
 | `.claude/pinned-game-version.txt` | the pin checks 2 and 6 read |
 | `.claude/hooks/detect-docs-gaps.sh` | SessionStart sibling of check 4; shares the slug algorithm |
 
@@ -193,7 +192,7 @@ before treating it as an all-clear.
 
 Python 3.9+ stdlib (`argparse`, `json`, `re`, `pathlib`, `urllib.parse`, `dataclasses`), plus PyYAML
 when installed, to parse rule frontmatter for check 7; without it a `frontmatter-unchecked` note
-says the parse was skipped, and `doc-budget.yml` installs it.
+says the parse was skipped.
 `Path.is_relative_to` sets the 3.9 floor. No game install, no network, no third-party packages —
 which is why this is one of the few TAOM gates that can run in CI unchanged.
 

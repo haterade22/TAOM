@@ -1,6 +1,6 @@
-"""CI runs the tool tests with the standard library only: `python -m unittest discover -s tools/tests -t .`
-(.github/workflows/build.yml), with no pytest installed. A module that imports pytest fails to import there, and one
-written as module-level `def test_*` functions collects 0 tests, so its checks never run on CI while passing locally
+"""`/verify` runs the tool tests with the standard library only: `python -m unittest discover -s tools/tests -t .`
+(the retired GitHub CI did the same), with no pytest required. A module that imports pytest fails to import there, and
+one written as module-level `def test_*` functions collects 0 tests, so its checks never run there while passing
 under pytest (the hill troll binder's 13 tests, 2026-09-25 deep review).
 
 This is a ratchet: the modules below predate the gate and are the only ones allowed to import pytest. Convert one to

@@ -6,8 +6,8 @@ silently either way.
 
 FILES: the list in your spawn prompt. Read each script whole, its tests, and the sibling whose
 conventions it copies. Read `tools/README.md` "XML I/O convention"; for hooks, read
-`.claude/rules/hook-authoring.md`. Scripts spell the interpreter `python`; the 3-suffixed name is
-for `.github/workflows/` only (hook-authoring.md "Never spell it": the Store alias hangs Git Bash).
+`.claude/rules/hook-authoring.md`. Scripts spell the interpreter `python`, never the 3-suffixed
+name (hook-authoring.md "Never spell it": the Store alias hangs Git Bash).
 
 FOR A SCRIPT THAT WRITES FILES (especially outside the repo, e.g. the live `TAOM_Map` or Armory):
 1. Encoding and BOM preservation: detect with `read_bytes().startswith(b"\xef\xbb\xbf")`, decode
