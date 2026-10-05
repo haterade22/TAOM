@@ -81,7 +81,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | NativeSkinFixes | `NativeSkinFixes` | UNKNOWN | verbatim-port | (removed 2026-10-05) `Dependencies/NativeSkinFixes.NativeHooks/**` `Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll` | removed |
 | upstream chariot pack | `upstream chariot pack` `upstream-chariot-pack` | UNKNOWN | behavioural-port | `docs/features/chariot.md` `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs` | uncleared |
 | ROT-Core | `ROT-Core` `ROT.dll` `ROTTownTradersBehavior` | UNKNOWN | behavioural-port | `Main/Features/EliteEmissary/**` | uncleared |
-| TOR_Core | `TOR_Core` | UNKNOWN | comparison-only | (none) | uncleared |
+| TOR_Core | `TOR_Core` `TheOldRealms/TOR_Core` | GPL-3.0 | behavioural-port | `Main/Features/CreatureSiegeRole/**` | pending-license |
 | module audio | `ModuleSounds` `taom_music_module_sounds.xml` | UNKNOWN | redistributed | `Main/_Module/ModuleSounds/**` | uncleared |
 | Aniron (Pete Klassen) | `aniron` | UNKNOWN | redistributed | `Main/_Module/GUI/Fonts/aniron.{fnt,bfnt}` | uncleared |
 | Minion Pro (Adobe) | `minionpro` `Minion Pro` | Adobe commercial, redistribution NOT granted by a desktop licence | redistributed | `Main/_Module/GUI/Fonts/minionpro.{fnt,bfnt}` | uncleared |
@@ -531,17 +531,39 @@ which covers the assets but says nothing about the code or who granted it.
 This row is deliberately left with the euphemism as its token rather than a guessed name.
 **To resolve:** the maintainer names the mod, and the pre-de-naming text is recoverable from history
 (`git log -S chariot -- docs/` around 2026-06-12). Then the euphemisms in `docs/features/chariot.md`
-(16 sites) and `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs:20` become the real
+(16 sites) and `Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs:25` become the real
 name, the same way the elephant's did.
 
-### ROT-Core, TOR_Core (UNCLEARED)
+### ROT-Core (UNCLEARED)
 
 `docs/migration/ROT-CORE-ANALYSIS.md` is a full decompile dossier of ROT-Core, produced from
 `ROT.dll`. One shipped feature derives from it: [`docs/features/elite-emissary.md:11`](../features/elite-emissary.md)
 records that it is "Inspired by ROT's `ROTTownTradersBehavior`". That derivation is why the row is
 `behavioural-port` rather than `comparison-only`; a row cannot claim nothing derives from it while
-naming thirteen files that do. TOR_Core is a separate source, referenced for engine behaviour only
-(`docs/features/dev-console.md:106`), and derives nothing.
+naming thirteen files that do.
+
+### TOR_Core (PENDING-LICENSE)
+
+TOR_Core (The Old Realms, `TheOldRealms/TOR_Core` on GitHub) is GPL-3.0: the root `LICENSE` file is the
+GNU GPL version 3 text, and GitHub reports `GPL-3.0` for the repository. Its siege logic
+(`CSharpSourceCode/BattleMechanics/TORMonsterSiegeLogic.cs`) was read at commit `5ccd0b91`, whose
+`SubModule.xml` declares Bannerlord v1.3.15, for four behaviours: the ladder and standing-point vetoes that keep its
+monsters off siege machines, the gate damage multiplier, gate targeting, and parking its monsters
+while they wait. [Creature Siege Role](../features/creature-siege-role.md) (#735)
+reproduces that behaviour with TAOM's own structure: GameModel seams (an infinite detachment cost and a
+gate damage hook) in place of Harmony patches, per-agent navmesh face exclusion as the climb barrier,
+and per-agent routing to the gates. No code, constants or identifiers were copied, and TAOM registers no
+Harmony patch for it. The gate multiplier is TAOM's own provisional value, to be set by an
+in-game measurement, not TOR_Core's. The source was not re-read during implementation. Because the source was
+read before the design was written, the derivation is `behavioural-port`, not `clean-room`.
+
+Status `pending-license`: the terms are identified and nothing is yet recorded about whether a
+behavioural port needs a notice under them. **To resolve:** the maintainer decides, then sets
+`cleared` (with any notice it needs) or records why not.
+
+TOR_Core is also referenced for engine behaviour only in `docs/features/dev-console.md:106`, and
+[Siege Forces](../features/siege-forces.md) names it only as another owner of the troop supplier model
+slot; neither derives anything from it.
 
 ---
 

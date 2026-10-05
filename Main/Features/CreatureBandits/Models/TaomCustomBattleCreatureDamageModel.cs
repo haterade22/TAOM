@@ -1,4 +1,5 @@
 using TAOM.Features.CreatureBandits.Hooks;
+using TAOM.Features.CreatureSiegeRole.Hooks;
 using TAOM.Features.RaceAbilities.Hooks;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
@@ -16,6 +17,9 @@ namespace TAOM.Features.CreatureBandits.Models;
 /// the campaign model makes, so a Custom Battle smoke shows them. The engine's own Custom Battle model reads no
 /// driven-property damage bonus (<c>ApplyDamageAmplifications</c> applies banner effects only), which is why the
 /// abilities' damage rides this model rather than the stat bag. The rest of Combat Mechanics stays campaign-only.
+///
+/// The creature siege role's gate blow (CreatureSiegeRole) rides the slot too, through <c>ApplyDamageScaling</c>, so a Custom
+/// Battle siege multiplies a creature's blow on a castle gate the way the campaign does.
 /// </summary>
 public class TaomCustomBattleCreatureDamageModel : CustomAgentApplyDamageModel
 {
@@ -27,6 +31,11 @@ public class TaomCustomBattleCreatureDamageModel : CustomAgentApplyDamageModel
     public override float ApplyDamageAmplifications(in AttackInformation attackInformation, in AttackCollisionData collisionData, float baseDamage)
         => RaceAbilityHooks.AmplifyDamage(in attackInformation, in collisionData,
             base.ApplyDamageAmplifications(in attackInformation, in collisionData, baseDamage));
+
+    // Creature Siege Role: the same gate-blow multiplier as the campaign model, after the engine's own scaling.
+    public override float ApplyDamageScaling(in AttackInformation attackInformation, in AttackCollisionData collisionData, float baseDamage)
+        => CreatureSiegeHooks.ScaleGateDamage(in attackInformation, in collisionData,
+            base.ApplyDamageScaling(in attackInformation, in collisionData, baseDamage));
 
     public override bool DecideCrushedThrough(Agent attackerAgent, Agent defenderAgent, float totalAttackEnergy, Agent.UsageDirection attackDirection, StrikeType strikeType, WeaponComponentData defendItem, bool isPassiveUsage)
         => RaceAbilityHooks.CrushVerdict(attackerAgent, defenderAgent, strikeType, isPassiveUsage)

@@ -308,6 +308,15 @@ public class CoopVetoClassificationTests
             "Delays the local player's own tournament Join until they pick a prize and a skill, then " +
             "re-enters vanilla's whole Join consequence unchanged; closing a dialog is the same as not " +
             "clicking Join. Reads no other peer's state and skips no mutation for good."),
+        ["Patch102_StartSiegeMissionPicker"] = new(CoopVeto.ReviewedSafe,
+            "Siege Forces (#734): delays the local player's own wall-battle Attack until he picks his troops on " +
+            "vanilla's Manage Troops screen, then re-enters vanilla's whole StartSiegeMission unchanged. A cancel " +
+            "skips that mission open and leaves the state vanilla's own lord's hall cancel leaves, because the " +
+            "Attack consequence still runs StartAttackMission and BeginWait after the prefix returns false " +
+            "(MenuHelper.EncounterAttackConsequence, v1.5.3 :405-406). It offers nothing under co-op: the service " +
+            "returns false, so the prefix returns true and vanilla runs, when a co-op session is live, when the " +
+            "host decides for this peer (ShouldDeferToHost, which also covers co-op mods TAOM cannot probe) and on " +
+            "a dedicated server, each read live. Reads no other peer's state."),
         ["MBObjectManager_CreateMergedXmlFile_Patch"] = new(CoopVeto.ReviewedSafe,
             "Patch99: replaces the engine's module-XML merge loop with one proven byte-identical on every " +
             "type of the live install. Each peer merges its own module files during game init, before any " +

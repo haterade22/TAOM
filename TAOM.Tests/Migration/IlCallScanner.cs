@@ -143,6 +143,26 @@ public static class IlCallScanner
     }
 
     /// <summary>
+    /// Every opcode in the method body, in IL order, for a test that bans a whole instruction family
+    /// (<c>newobj</c>, <c>newarr</c>, <c>box</c>) rather than one call. An opcode this walk cannot name
+    /// throws instead of ending the walk: a scan that stopped early would read as a clean pass.
+    /// </summary>
+    public static IEnumerable<OpCode> ExtractOpCodes(byte[] il)
+    {
+        int pos = 0;
+        while (pos < il.Length)
+        {
+            byte first = il[pos++];
+            short key = first != 0xFE ? first : (short)(0xFE00 | il[pos++]);
+            if (!OpCodeMap.TryGetValue(key, out var op))
+                throw new InvalidOperationException("unknown opcode 0x" + key.ToString("X") + " at IL offset " + (pos - 1));
+
+            yield return op;
+            pos += OperandSize(op.OperandType, il, pos);
+        }
+    }
+
+    /// <summary>
     /// A drift fingerprint of a method body, in IL order: every call-shaped instruction with the callee's constructed
     /// declaring type and parameter list (so another overload, or the same member on a list of another element type,
     /// differs), every constant (<c>ldc.*</c>, <c>ldstr</c>, <c>ldnull</c>), every field load, and every comparison and

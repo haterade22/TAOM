@@ -6,7 +6,7 @@ paths:
 
 # GameModel Override Rules
 
-TAOM has 52 GameModel overrides, the parked and abstract ones included (`tools/lint_docs.py` checks the total). All follow the same pattern.
+TAOM has 53 GameModel overrides, the parked and abstract ones included (`tools/lint_docs.py` checks the total). All follow the same pattern.
 
 ## Pattern
 
@@ -59,15 +59,15 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 }
 ```
 
-## Existing Overrides (52 total)
+## Existing Overrides (53 total)
 
 | Model | Base | Feature |
 |-------|------|---------|
-| `TaomAgentStatCalculateModel` | `SandboxAgentStatCalculateModel` (SandBox) | `CareerSystem` (+ the CultureDoctrine aggression post-pass + the CombatMechanics mount charge multiplier #610 + the career mount bonuses #611 + the RaceAbilities post-pass and resistances; mount-side rules key on `RiderAgent`, a mount's own `Character` is null) |
+| `TaomAgentStatCalculateModel` | `SandboxAgentStatCalculateModel` (SandBox) | `CareerSystem` (+ the CultureDoctrine aggression post-pass + the CombatMechanics mount charge multiplier #610 + the career mount bonuses #611 + the RaceAbilities post-pass and resistances + the CreatureSiegeRole detachment cost, read on the async AI thread; mount-side rules key on `RiderAgent`, a mount's own `Character` is null) |
 | `TaomBattleMoraleModel` | `SandboxBattleMoraleModel` (SandBox) | `CultureDoctrine` (+ the RaceAbilities panic gate) |
 | `TaomCustomBattleMoraleModel` | `CustomBattleMoraleModel` | `CultureDoctrine` (Custom Battle; + the RaceAbilities panic gate) |
-| `TaomCustomBattleCreatureDamageModel` | `CustomAgentApplyDamageModel` | `CreatureBandits` (Custom Battle only, declared by the feature module through `GameModelDecl`, not `SubModule`: the creature bandits' damage-taken step in `ApplyDamageReductions`; the campaign's `TaomCombatMechanicsModel` carries the same step; + the RaceAbilities damage, crush-through and shrug-off hooks) |
-| `TaomCustomBattleAgentStatCalculateModel` | `CustomBattleAgentStatCalculateModel` | `CultureDoctrine` (Custom Battle; + the CombatMechanics mount charge multiplier, from `InitializeAgentStats` because that base writes `MountChargeDamage` once; + the RaceAbilities post-pass and resistances) |
+| `TaomCustomBattleCreatureDamageModel` | `CustomAgentApplyDamageModel` | `CreatureBandits` (Custom Battle only, declared by the feature module through `GameModelDecl`, not `SubModule`: the creature bandits' damage-taken step in `ApplyDamageReductions`; the campaign's `TaomCombatMechanicsModel` carries the same step; + the RaceAbilities damage, crush-through and shrug-off hooks + the CreatureSiegeRole gate blow in `ApplyDamageScaling`) |
+| `TaomCustomBattleAgentStatCalculateModel` | `CustomBattleAgentStatCalculateModel` | `CultureDoctrine` (Custom Battle; + the CombatMechanics mount charge multiplier, from `InitializeAgentStats` because that base writes `MountChargeDamage` once; + the RaceAbilities post-pass and resistances + the CreatureSiegeRole detachment cost) |
 | `TaomClanTierModel` | `DefaultClanTierModel` | `CareerSystem` |
 | `TaomInventoryCapacityModel` | `DefaultInventoryCapacityModel` | `CareerSystem` |
 | `TaomMapVisibilityModel` | `DefaultMapVisibilityModel` | `CareerSystem` |
@@ -109,8 +109,9 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 | `TaomKingdomDecisionPermissionModel` | `DefaultKingdomDecisionPermissionModel` | `Diplomacy` |
 | `TaomDiplomacyModel` | `DefaultDiplomacyModel` | `Diplomacy` |
 | `TaomInformationRestrictionModel` | `DefaultInformationRestrictionModel` | `Encyclopedia` |
-| `TaomCombatMechanicsModel` | `TaomAgentApplyDamageModel` (CareerSystem, **abstract**: career passives via inheritance; ultimately `SandboxAgentApplyDamageModel`) | `CombatMechanics` (+ the RaceAbilities damage, crush-through and shrug-off hooks) |
+| `TaomCombatMechanicsModel` | `TaomAgentApplyDamageModel` (CareerSystem, **abstract**: career passives via inheritance; ultimately `SandboxAgentApplyDamageModel`) | `CombatMechanics` (+ the RaceAbilities damage, crush-through and shrug-off hooks + the CreatureSiegeRole gate blow in `ApplyDamageScaling`) |
 | `TaomPrisonerRecruitmentCalculationModel` | `DefaultPrisonerRecruitmentCalculationModel` | `PrisonerRecruitment` |
 | `TaomBattleBannerBearersModel` | `SandboxBattleBannerBearersModel` (SandBox) | `BannerBearers` |
 | `TaomCustomBattleBannerBearersModel` | `CustomBattleBannerBearersModel` | `BannerBearers` (Custom Battle) |
 | `TaomBattleInitializationModel` | `SandboxBattleInitializationModel` (SandBox) | `Enlistment` |
+| `TaomTroopSupplierProbabilityModel` | `DefaultTroopSupplierProbabilityModel` | `SiegeForces` (campaign only, declared by the feature module through `GameModelDecl`; base first, then the service drops the troops left out of a wall battle while a picker plan is armed) |

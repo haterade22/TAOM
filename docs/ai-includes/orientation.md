@@ -39,7 +39,7 @@ and the gate.
 | Vendored DLLs | `Main/_Module/bin/Win64_Shipping_Client/` ships no vendored binary (`TAOM.dll` is build output); never MCMv5 | [deps](../modding/module-dependencies.md) |
 | Mission logic base | `BehaviorTreeMissionLogic` derives from `MissionLogic`, never `MissionBehavior` | [RCA](../reviews/rca-looter-battle-nre-2026-05-24.md) |
 | Armory dependency | It is `LOTRLOME_Armory`. A root-level `<action>` kills a dedicated server: `audit_action_set_parity.py` | [armory](../reference/armory-guide.md) |
-| Armory item ids | Grep every `LOTRLOME_items/*/` for the id prefix first; a second folder silently shadows one | [armory](../reference/armory-guide.md) |
+| Armory files | A second `LOTRLOME_items/*/` folder shadows an id (grep the prefix); loose `Assets/**` wins; inventory is generated | [armory](../reference/armory-guide.md) |
 | Shield body name | `bo_capwm_isengard_shield_a02_clean` ships misspelled; the "fixed" name resolves to nothing | [shields](../reference/armory-shield-audit.md) |
 | Shield plus polearm | A shield troop never draws a polearm absent from `OneHandedPolearm`: `audit_polearm_shield_parity.py` | [pipeline](../features/weapon-xml-pipeline.md) |
 | Co-op gating | Co-op loaded, peer authority and dedicated server are three different questions | [co-op](../features/coop-interop.md) |
@@ -59,7 +59,6 @@ and the gate.
 | Armory art drops | A mesh rename strands XML refs and hangs preload; repoint refs, never restore a tpac | [ref audit](../features/armory-ref-audit.md) |
 | Borrowed `bo_` body | A weapon's body is its own mesh's `bo_` twin; a borrow dies on the next art drop | [validation](../features/moduledata-validation.md) |
 | Unsaved tpac | A package without its `RuntimeDataCache` `.rdc` is skipped, silently: `check_rdc_entries.py` | [pipeline](../reference/ue-to-bannerlord-asset-pipeline.md) |
-| Armory asset tree | Loose `Assets/**` loads and wins; the inventory is generated, never counted by hand | [armory](../reference/armory-guide.md) |
 | Horse-skeleton mounts | Engine actions only (`act_horse_kick`); a HorseHarness per Horse slot unless `_HARNESSLESS_BY_DESIGN` | [war ram](../features/war-ram.md) |
 | Mount size | A Monster with `taom_body_length` overrides every item's `body_length`: resize on the Monster | [monster size](../features/monster-size.md) |
 | Riderless creatures | Soldiers ignore a riderless `Mountable` agent; unmount only one built with a weapon state | [creature bandits](../features/creature-bandits.md) |
@@ -72,5 +71,6 @@ and the gate.
 | Player start kits | Defaults are `starter_<donor>` twins, careers take troop gear; override the roster, never a set | [start kits](../features/starting-equipment-tuning.md) |
 | Troop bows | Generated `ladder_*` items in the unversioned Armory: `generate_ranged_ladder_items.py --verify` | [ladders](../features/ranged-ladders.md) |
 | Stop order | `StandGround` never forms a line; shape a formation with a Move | [cavalry](../features/smart-cavalry-ai.md) |
+| Ladder queue | No climb gate: exclude faces per agent, at most 6 ids per scene (bits 0, 7 reserved), fixed order, never removed | [siege](../features/creature-siege-role.md) |
 | Agent slots, threads | Indices recycle and callbacks run off-thread: never key on `Agent.Index`, write via `RunOrDefer` | [rule](../../.claude/rules/csharp-architecture.md) |
 | Loc keys | An English edit stales 12 languages; a copied `{=KEY}` shows the original: reset rows and cache, one key per id | [guide](../localization/TRANSLATOR_GUIDE.md) |

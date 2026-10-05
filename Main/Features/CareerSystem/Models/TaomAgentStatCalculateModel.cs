@@ -5,6 +5,7 @@ using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CombatMechanics;
 using TAOM.Features.CombatMechanics.Hooks;
+using TAOM.Features.CreatureSiegeRole.Hooks;
 using TAOM.Features.CultureDoctrine;
 using TAOM.Features.CultureDoctrine.Hooks;
 using TAOM.Features.Elephant;
@@ -19,23 +20,9 @@ namespace TAOM.Features.CareerSystem.Models;
 // lives in ICareerAgentStatService. This file extracts primitives from the sealed Agent
 // at the boundary and delegates. Closes deferred audit-issue #142 inline-logic P2.
 //
-// 2026-06-05: the shared AgentStatCalculateModel slot also carries the war-elephant mount-lock
-// (1-for-1 with ADOD_Beasts's agent-stat-calculate-model) — non-rider AI can't take the elephant. The elephant
-// id check is delegated to IElephantAttackService; the boundary only applies the result via ternaries.
-// 2026-06-10: same lock extended to the ridden giant spider (ISpiderAttackService.IsSpiderMonster).
-// 2026-06-12: the Rhûn war chariot (issue #279) deliberately has NO mount-lock — maintainer wants
-// chariots remountable mid-battle (upstream-chariot-pack parity; the item's riding difficulty 120 is the only gate).
-// 2026-06-29: same lock extended to the ridden Mûmakil (IMumakilAttackService.IsMumakilMonster) — scaled-up elephant.
-// 2026-09-17: the same slot carries the culture aggression post-pass (#608, CultureDoctrine):
-// after base and the career modifiers have set the AI decision values, the soldier's culture
-// profile scales them (AgentAggressionApplier). One AgentStatCalculateModel slot, four rules.
-// 2026-09-17: and the per-culture cavalry charge multiplier (#610, CombatMechanics) on mounts,
-// keyed on the RIDER's culture: a mount agent's own Character is null (MountChargeDamageApplier
-// has the engine evidence). Five rules. Same day, #611: the career mount bonuses (the
-// MountChargeDamage passive, the Cavalry ability's mount speed and charge) moved from the rider's
-// properties, where nothing reads them, to the mount's, through the same rider hop.
-// 2026-10-04 (#730): the race abilities' live effects (RaceAbilities) ride the slot last among the human rules,
-// plus the knockdown, knock-back and dismount resistance overrides. Six rules.
+// This one AgentStatCalculateModel slot carries the career, mount-lock, culture aggression, cavalry charge, race ability
+// and creature siege detachment rules; their order and history are in the TaomAgentStatCalculateModel row of
+// docs/reference/gamemodel-registry.md. The Rhun war chariot has no mount-lock (upstream-chariot-pack parity, #279).
 public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 {
     private readonly ICareerAgentStatService _agentStatService;
@@ -91,6 +78,11 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 
     public override float GetDismountResistance(Agent agent)
         => RaceAbilityHooks.DismountResistance(agent, base.GetDismountResistance(agent));
+
+    // Creature Siege Role: +Infinity for a creature of an active wall battle, base (a banner bearer's 10, else 1) for every other
+    // agent. The engine reads this from its asynchronous AI thread, so the hook is a lock-free read of one snapshot.
+    public override float GetDetachmentCostMultiplierOfAgent(Agent agent, IDetachment detachment)
+        => CreatureSiegeHooks.DetachmentCost(agent, base.GetDetachmentCostMultiplierOfAgent(agent, detachment));
 
     public override float GetEffectiveMaxHealth(Agent agent)
     {

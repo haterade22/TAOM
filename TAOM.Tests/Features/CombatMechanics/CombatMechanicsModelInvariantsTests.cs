@@ -43,6 +43,9 @@ public class CombatMechanicsModelInvariantsTests
         // RaceAbilities (2026-10-04): a live ability's melee damage, after the career amplification the
         // parent model applies. The Custom Battle damage model carries the same call.
         "ApplyDamageAmplifications",
+        // CreatureSiegeRole (2026-10-05): a creature's melee blow on a castle gate is multiplied, after the engine's own
+        // scaling (base runs first). The Custom Battle damage model carries the same call.
+        "ApplyDamageScaling",
     };
 
     private static bool _gameLoaded;

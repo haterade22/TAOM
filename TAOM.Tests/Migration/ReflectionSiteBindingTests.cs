@@ -145,6 +145,9 @@ public class ReflectionSiteBindingTests
     // --- TournamentRewards (Patch96): the prize the player picks at Join is written through the private setter.
     // Missing: a warning per Join and the advertised prize stands, though the dialog promised the pick.
     [DataRow("TaleWorlds.CampaignSystem.TournamentGames.TournamentGame", "TournamentGame", "set_Prize", "Method", "TournamentJoinAdapter.cs:18")]
+    // --- CreatureSiegeRole: a siege tower's navmesh id start is a protected field, read through AccessTools.FieldRefAccess.
+    // A miss binds nothing (fail-soft): every tower then reads as having no navmesh (start 0) and the role rules skip it with a named warning.
+    [DataRow("TaleWorlds.MountAndBlade.MissionObject", "MissionObject", "DynamicNavmeshIdStart", "Field", "CreatureSiegeMissionAdapter.cs:227")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

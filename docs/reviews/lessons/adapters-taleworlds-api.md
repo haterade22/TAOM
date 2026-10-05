@@ -942,3 +942,13 @@ The feature doc said a non-dismounting weapon's dismount "reads knockdown resist
 - **Why missed:** the provider rule covered numbers, ordering and strings the code branches on; a string handed to the engine was none of those, and its existence was to be checked on first use.
 - **Prevent:** a config string that reaches a native call is bounded at load to the engine's buffer and the character set its own data uses (here `^[A-Za-z0-9_]{1,63}$`, which all 217 registered effect names meet), and reverts with a warning otherwise.
 - **Source:** `docs/reviews/rca-race-ability-glow-2026-10-04.md` G1 (lenses 2, 5 and 7).
+
+### Read the native body behind a name before trusting what the name implies
+- **Why missed:** `Scene.DoesPathExistBetweenPositions` only compares two faces' navmesh island ids (native 0x4C7A60) and takes no agent, so it ignores per-agent face exclusion, and islands merge when a ladder is raised; `Scene.GetGroundHeightAtPosition` returns 0, not NaN, on a miss (0x4C4D80). The siege design trusted both names and a copied vanilla fallback order, and scripted trolls behind shut gates.
+- **Prevent:** for every engine call whose result gates a decision, read the native or managed body for what it actually computes, its miss value and whether it is agent-aware, and write that into the adapter's interface doc. Prefer calls that return a hit flag (`RayCastForClosestEntityOrTerrain`) over ones with a sentinel value.
+- **Source:** `docs/reviews/rca-siege-forces-2026-10-05.md` F2, F4.
+
+### A native capacity claim reads every writer of the resource, not only the registrar
+- **Why missed:** the per-agent face exclusion capacity was derived from the registry's per-face mark byte (8 bits, bit 7 the navmesh boundary), but the face-ability setter (0x401B20) re-marks sets only from index 1 because bit 0 belongs to the engine, so the safe cap is 6, not 7.
+- **Prevent:** before fixing a cap from native bookkeeping, list every function that writes the field (xrefs) and check which bits or slots each owns; cap under the most conservative reading when one stays unverified.
+- **Source:** `docs/reviews/rca-siege-forces-2026-10-05.md` F3.

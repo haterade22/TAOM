@@ -475,6 +475,31 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Show diagnostic [SiegeDismount] messages on the in-game HUD. Off = file log only.")]
     public bool SiegeDismountDebug { get; set; } = false;
 
+    // --- Battle Tactics / Siege Forces ---
+    // The wall-battle troop picker (#734). The toggle gates only the OFFER of the screen, read at each assault, so
+    // RequireRestart = false: nothing is applied once at start. A defender who presses Escape mid-battle gets
+    // ExitResult.SurrenderSiege (BattleEndLogic.TryExit, v1.5.3 :255-258), and CampaignSiegeStateHandler.OnSurrenderMission
+    // sets PlayerSurrender, which stops the siege component continuing the battle: the surrender takes the whole side.
+    // GroupOrder 25 is free among the Battle Tactics subgroups (19-24, 27-29, 52 and 56 are taken); it is the group's
+    // first property, so it carries the order (MCM ignores a GroupOrder on any later one).
+
+    [SettingPropertyGroup("Battle Tactics/Siege Forces", GroupOrder = 25)]
+    [SettingPropertyBool("Choose Troops Before Wall Battles", Order = 0, RequireRestart = false,
+        HintText = "Before an assault, or before defending a siege, open the 'Manage Troops' screen the lord's hall fight uses and choose who fights. By default, trolls start unticked; tick them to bring them. Troops you leave out take no part in the battle and suffer no losses in it. Takes effect from the next assault. As defender, pressing Escape in the battle surrenders the siege and everyone with it, reserves included. When off, every troop fights as in vanilla. Default: on.")]
+    public bool EnableSiegeTroopPicker { get; set; } = true;
+
+    // --- Battle Tactics / Creature Siege Role ---
+    // Trolls in a wall battle (#735). Read ONCE per battle at the mission's AfterStart, so a change applies from the next
+    // battle and RequireRestart = false: nothing is applied at start-up and nothing is half-applied mid-battle. The
+    // face exclusion it adds to a creature is never removed, which is why a mid-battle toggle is not live.
+    // GroupOrder 26 is free among the Battle Tactics subgroups (19-25, 27-29, 52 and 56 are taken); it is the group's first
+    // property, so it carries the order (MCM ignores a GroupOrder on any later one).
+
+    [SettingPropertyGroup("Battle Tactics/Creature Siege Role", GroupOrder = 26)]
+    [SettingPropertyBool("Trolls Stay Off Siege Ladders, Towers and Walls", Order = 0, RequireRestart = false,
+        HintText = "In a wall battle, trolls never use siege ladders, towers or siege engines. Attacking trolls break the gate down instead, and defending trolls hold the ground behind it and stay off the walls while the AI commands them; a formation you give orders to obeys them. Takes effect from the next battle. When off, trolls behave as in vanilla. Default: on.")]
+    public bool EnableCreatureSiegeRole { get; set; } = true;
+
     // --- Battle Tactics / Siege Prop Diagnostics ---
     // Diagnostic only, no gameplay effect. The engine reports NOTHING when a rock pile or ammo
     // barrel is unusable, so this turns that silence into one log line per prop.

@@ -1,6 +1,7 @@
 using TAOM.Features.CombatMechanics;
 using TAOM.Features.CombatMechanics.Hooks;
 using TAOM.Features.CreatureBandits.Hooks;
+using TAOM.Features.CreatureSiegeRole.Hooks;
 using TAOM.Features.CultureDoctrine.Hooks;
 using TAOM.Features.RaceAbilities.Hooks;
 using TaleWorlds.Core;
@@ -59,6 +60,11 @@ public class TaomCustomBattleAgentStatCalculateModel : CustomBattleAgentStatCalc
 
     public override float GetDismountResistance(Agent agent)
         => RaceAbilityHooks.DismountResistance(agent, base.GetDismountResistance(agent));
+
+    // Creature Siege Role: the same +Infinity detachment cost as the campaign slot, so a Custom Battle siege keeps its creatures
+    // off the siege engines, ladders and towers too. Neither engine base overrides it (banner bearers: 10, else 1).
+    public override float GetDetachmentCostMultiplierOfAgent(Agent agent, IDetachment detachment)
+        => CreatureSiegeHooks.DetachmentCost(agent, base.GetDetachmentCostMultiplierOfAgent(agent, detachment));
 
     // Creature Bandits (#692): a riderless creature is nobody's mount. AI soldiers look for loose mounts to ride and
     // ask this first (v1.5.3 HumanAIComponent.cs:302). The campaign slot locks creatures by Monster

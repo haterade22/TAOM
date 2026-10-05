@@ -5,6 +5,7 @@ using TaleWorlds.MountAndBlade;
 using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Models;
 using TAOM.Features.CombatMechanics.Domain;
+using TAOM.Features.CreatureSiegeRole.Hooks;
 using TAOM.Features.RaceAbilities.Hooks;
 using TAOM.Features.Refuge;
 using TAOM.Features.SignatureStrikes;
@@ -85,6 +86,11 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
     public override float ApplyDamageAmplifications(in AttackInformation attackInformation, in AttackCollisionData collisionData, float baseDamage)
         => RaceAbilityHooks.AmplifyDamage(in attackInformation, in collisionData,
             base.ApplyDamageAmplifications(in attackInformation, in collisionData, baseDamage));
+
+    // Creature Siege Role: a creature's melee blow on a castle gate is multiplied after base; every other hit is unchanged.
+    public override float ApplyDamageScaling(in AttackInformation attackInformation, in AttackCollisionData collisionData, float baseDamage)
+        => CreatureSiegeHooks.ScaleGateDamage(in attackInformation, in collisionData,
+            base.ApplyDamageScaling(in attackInformation, in collisionData, baseDamage));
 
     private static string VictimPartyId(TaleWorlds.Core.IAgentOriginBase origin)
     {

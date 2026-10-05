@@ -1011,3 +1011,8 @@ opposite of the comment above it. The unit tests passed: they pinned the service
   (`participant.RandomBattleEquipment`); keep `?? base` only for the fallback case. Walk every caller of the
   method with the state it runs in (here: played match, skipped match, practice fight).
 - **Source:** `/deep-review` of the own-armour change, 2026-10-05 (lenses 1, 2, 4 and 5 independently).
+
+### A damage-model stage value is not the final damage
+- **Why missed:** the creature gate-blow log printed `hitPoint - scaled` from `ApplyDamageScaling`, but reductions, general modifiers (campaign damage bonuses, career buffs) and rounding run after that stage, so the logged "after" HP overstated what was left in the campaign while matching Custom Battle.
+- **Prevent:** log only values the stage owns; read the outcome from the next observation (the following blow's "before" HP) and say in tuning docs which later stages change the number per game mode.
+- **Source:** `docs/reviews/rca-siege-forces-2026-10-05.md` F6.

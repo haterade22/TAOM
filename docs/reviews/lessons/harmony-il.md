@@ -994,3 +994,8 @@ comment was incomplete again within the hour.
   section; the caller list, history and accepted consequences live only in the registry. Quote engine text only with
   its `{=key}`.
 - **Source:** `docs/reviews/rca-patch69-comment-2026-10-05.md` findings 1 and 2.
+
+### When one patch compensates for another's effect, apply the compensator first and gate the other on it
+- **Why missed:** the Siege Forces design treated its two prefixes as one unit. `PatchCategoryIndex` applies a category's classes in assembly order, and a class that throws stops the category while earlier classes stay patched, so the picker (declared first) could be live with the spawn-total fit absent, which stalls deployment.
+- **Prevent:** declare the compensating patch class first and pin the order in a wiring test against `PatchCategoryIndex`'s own enumeration; before the dependent patch acts, confirm the compensator is attached (`Harmony.GetPatchInfo` owner check through the adapter) and refuse the behaviour if it is not.
+- **Source:** `docs/reviews/rca-siege-forces-2026-10-05.md` F1.
