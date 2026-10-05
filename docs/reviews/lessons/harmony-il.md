@@ -983,3 +983,14 @@ Patch30's catch, added to satisfy the D6 logging rule, logged its first throw th
 - **Why missed:** the line was written as logging, not as state, so the static-latch lesson in `lessons/state-lifecycle-save.md` (four earlier recurrences) was not read; the sample alone was taken to meet "aggregate or sample, never drop".
 - **Prevent:** a catch on a hot or worker-thread patch hands the exception to its service (`FormationLayoutService.NoteFallback`): count every throw with `Interlocked.Increment` on the exception path only, log the first per mission in full, write the count at mission end and re-arm there. Pin both lines literally, and pin that the prefix calls the service with an IL presence check (`Prefix_ReportsAThrowToTheService`). A presence check does not show that the call sits in the catch, so verify that in game, or assert that the call's IL offset falls inside a `MethodBody.ExceptionHandlingClauses` handler range (`IlCallScanner` returns no offsets, so that needs a scanner that does).
 - **Source:** `docs/reviews/rca-worker-thread-formation-patch-2026-10-02.md` finding 1.
+
+### A patch's class doc states its claim and points to the registry; it never copies the caller list (2026-10-05)
+Patch69's class doc and its registry entry each carried their own list of the target's callers. They drifted to
+different wrong counts (four and three; there are six), and a rewrite that copied the corrected list back into the
+comment was incomplete again within the hour.
+- **Why missed:** a long class summary looked like the place to record the patch's reasoning, though
+  `harmony-patches.md` makes the registry entry that place and requires reading it before editing the patch.
+- **Prevent:** keep the class doc to the claim a reader needs at the call site and one pointer to the registry
+  section; the caller list, history and accepted consequences live only in the registry. Quote engine text only with
+  its `{=key}`.
+- **Source:** `docs/reviews/rca-patch69-comment-2026-10-05.md` findings 1 and 2.

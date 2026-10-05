@@ -31,23 +31,11 @@ namespace TAOM.Features.Arena.Hooks;
 /// replacement is the culture's elite/basic troop — the same filler vanilla itself uses in the tail
 /// of <c>GetParticipantCharacters</c>.
 ///
-/// **This runs on every call, not once per tournament.** On v1.5.3 and v1.5.4 (checked 2026-10-05)
-/// `GetParticipantCharacters` has six direct callers, none per-frame:
-/// `TournamentBehavior.CreateParticipants` (the one that matters) and `GetAllPossibleParticipants`
-/// (once per mission, from `ArenaPreloadView`); `FightTournamentGame.GetMenuText` and
-/// `GetTournamentPrize` (the join menu's on_init, the `TournamentGame` constructor, game load and the
-/// off-screen prize award); `TournamentManager.ResolveTournament` (the off-screen resolution); and
-/// `HeroKnownInformationCampaignBehavior.OnPlayerJoinedTournament`. So a clean roster is silent (the
-/// healthy-path line was retired 2026-08-09); an actual substitution stays WARNING, because it is
-/// rare and is the thing a future crash bundle needs to name.
-///
-/// Accepted consequences of patching a method this many paths read: `GetMenuText`'s
-/// "{NOBLE_COUNT} lords are competing" and the prize tiering both count `p.IsHero`, so substituting a
-/// hero shifts each by one; off-screen, a substituted hero cannot win or collect the leaderboard
-/// entry, prize or simulation experience; and the `TournamentFinished` participant list carries the
-/// substitute, so Tournament Rewards' hero count and the event's other listeners see it. All are
-/// arguably *more* correct (a substituted hero genuinely does not compete), but they are behaviour
-/// changes, recorded here rather than discovered later (harmony-patch-registry.md, Patch69).
+/// It runs on every read of the roster, not once per tournament (no caller is per-frame), so every
+/// reader gets the substitute: the join menus' lord count, the prize tier, the off-screen
+/// <c>TournamentManager.ResolveTournament</c> and the <c>TournamentFinished</c> list that Tournament
+/// Rewards counts heroes from. A clean roster is silent; a substitution logs WARNING. The callers and
+/// each consequence: <c>docs/reference/harmony-patch-registry.md</c>, "Patch69_TournamentRosterGuard".
 ///
 /// Decision logic lives in <see cref="ITournamentRosterGuardService"/>; this patch is a thin
 /// boundary (ADR-002/007). Lazy service resolve mirrors Patch46.

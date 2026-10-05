@@ -855,7 +855,7 @@ launching the game mid-review, not by the review.
 ### Enumerate a patch target's call sites before writing a durable log in it
 
 **Symptom:** the Patch69 roster postfix wrote a durable, synchronously-flushed INFO line claiming to
-run "once per tournament". `FightTournamentGame.GetParticipantCharacters` has four call sites; two
+run "once per tournament". `FightTournamentGame.GetParticipantCharacters` had four known call sites (six in fact, counted 2026-10-05: the off-screen `TournamentManager.ResolveTournament` and `HeroKnownInformationCampaignBehavior` were missed); two
 (`GetMenuText`, `GetTournamentPrize`) run from the arena join menu's `on_init`, so every menu open hit
 the disk.
 
