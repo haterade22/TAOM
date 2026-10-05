@@ -71,9 +71,9 @@ current as the last person who updated it. Update it in the same commit as the c
 The planned mechanism, not yet built: `tools/check_provenance.py` parsing the register as its
 allowlist and scanning for module ids, mod distribution links, euphemism phrases,
 attribution-header coverage, and unregistered shipped binaries, with a
-`tools/provenance-baseline.txt` ratchet for the pre-existing backlog. It would run in CI (the
-unconditional `validate-xml` job in `.github/workflows/build.yml`, which is the only path every
-committer hits) plus a `PreToolUse` hook for fast feedback. **Do not cite it as though it exists**
+`tools/provenance-baseline.txt` ratchet for the pre-existing backlog. It would run as a `/verify`
+step plus a `PreToolUse` hook for fast feedback (the GitHub CI job first planned for it was removed
+with the workflow on 2026-10-05). **Do not cite it as though it exists**
 until it does; that is the same gap this rule was written to close.
 
 **When it does exist, a zero from it will not be self-validating.** It would detect the shapes in

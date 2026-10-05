@@ -81,7 +81,6 @@ these checks. There is no universal native/provenance/runtime test here, and no
 new blanket gameplay smoke gate. Agree task-specific runtime expectations and
 document what static checks cannot establish.
 
-The existing `.github/workflows/build.yml` Python test discovery includes the
-review-tool and documentation tests. That tests the tools; it does not run AI
-reviewers, verify their identity or create a protected merge check. Preserve the
-existing restriction against PR execution on the personal game runner.
+The Python tool tests (`python -m unittest discover -s tools/tests -t .`, `/verify`
+Step 2b) include the review-tool and documentation tests. That tests the tools; it
+does not run AI reviewers, verify their identity or create a protected merge check.

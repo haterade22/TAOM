@@ -32,6 +32,16 @@ Report:
 - Passed / Failed / Skipped
 - Any failure details (test name + assertion message)
 
+## Step 2b: Python tool tests
+
+```bash
+python -m unittest discover -s tools/tests -t . 2>&1
+```
+
+The tests for `tools/`. Plain `unittest`, no pytest. Nothing else runs them automatically since the
+GitHub CI was removed (2026-10-05). Report `Ran N tests` and the failures. No `Ran N tests` line,
+or fewer than 1,200 tests, means discovery broke: not a pass.
+
 ## Step 3: Git Status
 
 ```bash
@@ -73,6 +83,7 @@ VERIFICATION REPORT
 ===================
 Build:      [PASS/FAIL]
 Tests:      [X/Y passed, Z failed]
+Tool tests: [N ran, F failed, S skipped]
 Uncommitted: [X files modified, Y staged, Z untracked]
 TODOs:      [X in Main/]
 CHANGELOG:  [Updated/NOT UPDATED]

@@ -152,8 +152,8 @@ first `"$PYBIN"` use, then honour `[ -n "$PYBIN" ] || { echo '{}'; exit 0; }`. P
 convention. A portable candidate list may still include `python3` provided the loop rejects any
 resolved path matching `*[Ww]indows[Aa]pps*` first.
 
-**Only `.github/workflows/` may use bare `python3`**: CI is Linux, where it is the correct
-spelling and the alias cannot exist.
+**No file may use bare `python3`**: the Linux GitHub CI workflow, where it was the correct
+spelling, was removed on 2026-10-05.
 
 ## Log-appending hooks: size-cap rotation (EMPIRICAL: TAOM 2026-07-12)
 

@@ -235,8 +235,8 @@ they stop the regression at the source):
    dynamic-CRT import before the DLL can be vendored.
 2. The `check-native-dll-crt.sh` PreToolUse hook blocks a `git commit` that
    stages a dynamic-CRT DLL.
-3. The `validate-xml` CI job (`.github/workflows/build.yml`) re-runs the same
-   check on the committed binary.
+3. Until 2026-10-05 the `validate-xml` CI job re-ran the same check on the
+   committed binary; the GitHub workflow was removed that day, so the hook is the gate.
 
 > As of 2026-06-30 all 7 byte patterns are authored for v1.4.6 (see "v1.4.6
 > native port" below), so the static-CRT-linked DLL both loads AND installs its
