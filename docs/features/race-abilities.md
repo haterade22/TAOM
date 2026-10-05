@@ -149,7 +149,8 @@ Mike's pick (2026-10-04): an outline for the whole window, and a burst of sparks
   hides both, as it hides vanilla's own outlines.
 - **UNVERIFIED until seen in game:** the look (outline weight at a distance, the see-through setting), the frame
   cost of 40 outlined soldiers, that a re-equipped banner bearer is painted again within half a second, and whether
-  a rider's outline also reaches his horse through the engine's entity tree.
+  a rider's outline also reaches his horse through the engine's entity tree. The first look (2026-10-04, a packed
+  line) showed the outline mostly around legs and on a few raised arms (First in-game test below).
 
 ## Engine levers
 
@@ -418,6 +419,31 @@ Custom Battle:
 10. Step 6's frame-time comparison with the glow on and off, before choosing whether it stays on by default: MCM
     keeps a player's first saved value, so the default is changed only by renaming the setting.
 
+### First in-game test (2026-10-04): a success, tuning later
+
+Mike ran two Custom Battles on v2.0.34 (Isengard against Dunland, about 200 a side; Isengard, 261, against Erebor
+and the Iron Hills, 200) and called the feature a success for now, to be tuned later. The dev install's build was
+the tag plus the working tree's uncommitted edits (`TAOM.dll` stamp `+18a4e402...dirty`), none of them in Race
+Abilities, so the abilities ran as tagged. From `taom_debug.log`:
+
+- Every trigger fired as designed (`TookDamage`, `KinFell`, `WoundedEnemyWithin`, `HealthBelow`, `CavalryClosing`,
+  `EnemiesWithin`), kin rallied (79 dwarves in one Stand Fast wave), the firing counts fit the cooldowns (no
+  ability fired more often than the soldiers carrying it), and the feature logged no error; the spark effect
+  resolved. The wave lines showed in the message log.
+- The abilities moved each fight by a few percent: Isengard's added 705 damage, 4.1% of all the damage Dunland took,
+  plus 54 health healed and 121 morale hits; Dunland's added 168, 1.2% of Isengard's; against the dwarves,
+  Isengard's added 193 (5.8%) and Stand Fast prevented 254. The dwarves were winning that fight on armour, not
+  Stand Fast: by the last sample their 180-strong infantry line had lost 18 and Isengard 112, and the Iron Hills
+  elites took 713 damage from 227 hits.
+
+Tuning notes, not yet acted on:
+
+- **The outline in a packed line** showed mostly around legs and on a few raised arms, not around each body (step
+  9). Whether it reads better on a soldier standing alone is the next look.
+- **Hill-clan Fury** fired 195 times but boosted only 59 hits (0.3 a firing; Bloodlust 1.3, Berserk 1.5).
+- **Balance:** the clean test is one matchup run three times with the MCM switch off and three times on.
+- Not yet run: steps 2 to 4, 6 to 8 and 10, and the sparks in step 9.
+
 ## Not yet
 
 - **Custom war-cry audio, a lasting aura (embers for the whole window), a player "Unleash" order.** The aura was
@@ -432,6 +458,10 @@ Custom Battle:
 Dated, feature-sliced history (newest first). The commit bodies, which `/release` gathers into `CHANGELOG.md`, are
 the chronological log of record.
 
+- 2026-10-04: first in-game test on a v2.0.34 dev build (Mike): a success for now, tuning later; the findings are
+  under "First in-game test" above.
+- 2026-10-04: part of the v2.0.34 release (tag on `18a4e402`). The v2.0.33 tag carries the same code but was never
+  packaged, because a testing build already carried that number.
 - 2026-10-04: Khand's ability left as it is (Mike). The known limits now name everyone who carries Variag
   Ferocity (Khand's caravan masters and the Variag Ravagers added), correct Umbar (its own recruits, lords and
   armies fire Corsair Raid), and say what Wainrider Wall and Variag Ferocity do for a rider or charioteer; the knockdown,
@@ -450,4 +480,5 @@ the chronological log of record.
 
 - **Issue:** #730, [Race Abilities: a battle ability per race and per culture](https://github.com/haterade22/TAOM/issues/730);
   translation backlog #731
-- **Status:** Open (in-game check owed)
+- **Status:** Closed 2026-10-04, verified in two Custom Battles (a success for now, tuning later), with
+  `triage-needs-ingame` and `triage-blocked-decision` for the remaining in-game steps and decisions listed above
