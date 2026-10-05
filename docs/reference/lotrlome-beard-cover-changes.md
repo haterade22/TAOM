@@ -76,6 +76,43 @@ outside the module so the engine never loads them. Restoring one undoes only thi
 | `python tools/audit_armory_refs.py --report -` | CLEAN |
 | Duplicate definitions | Each of the 47 ids is one engine `Item` across all installed modules; no other item shares any of their meshes |
 
+## 2026-10-05: Thenn helmets to beard `type2`
+
+Mike's audit against [helmet-hair-beard-cover.md](helmet-hair-beard-cover.md): all seven
+`thenn/head_armors.xml` helmets (`thenn_helm1` to `thenn_helm7`) went from `beard_cover_type="type3"` to
+`"type2"`. `hair_cover_type` stays `all`. No troop wears them, so check from the inventory. Backup:
+`E:\Temp\claude\armory-backups\cover-2026-10-05\thenn\head_armors.xml`; the diff against it is those 7 lines plus
+the `thenn_helm6` rename below.
+
+## 2026-10-05: Sauron, Witch King and Nazgûl helmets fully covered
+
+Mike: these helmets get hair `all`, beard `all` and `covers_head="true"`, matching the Mouth of Sauron's helm
+(`sk_mordor_mouth_of_sauron_helm`, already set). In `mordor/head_armors.xml`: `sauron_helmet_player`,
+`sauron_helmet` (the unused "Dont Use" twin, kept in step), `witch_king_helmet`, `nazgul_helmet` and
+`nazgul_v1_helmet`. The Witch King's helmet and the Nazgûl hood were beard `type3`; the rest were already
+`all`/`all`. `covers_head` hides the head skin and switches off facegen head scaling ([items-armor.md](../modding/items-armor.md)).
+Backup: `E:\Temp\claude\armory-backups\cover-2026-10-05\mordor\head_armors.xml`; the diff is 5 inserted
+`covers_head` lines and 2 beard lines.
+
+## 2026-10-05: duplicate helmet names numbered
+
+Mike, from the inventory: same-named helmets should read in order, `X Helmet I`, `X Helmet II`. 124 helmets in 43
+same-name groups got a Roman numeral, assigned by id order (`_a` is I, `_b` II), in Arnor (13 groups), Rhûn's
+Khamul line (27), `mercenary` Northern (2) and Thenn, where `thenn_helm6` was a second "Thenn Helm V" and is now VI.
+
+- **Where:** the inline default in each item's `name="{=aom_<id>_name}..."`, the English
+  `Languages/loc_<folder>.xml`, all 12 `Languages/<LANG>/loc_<folder>.xml` (the numeral appended to the
+  translation, so no row goes stale), and the matching entries in the repo's `tools/translation_cache/<lang>.json`
+  so a re-translation reproduces them.
+- **Left for Mike:** `[Erebor] Legionary Helmet I` to `IV` (each shared by an `_x` and `_x2` id, names already
+  numbered) and `[Gondor] Ithilien Hood Masked` (`ithilien_hood_masked`, `_masked_var`).
+- **Proof:** 67 files backed up to `E:\Temp\claude\armory-backups\helmet-numbering-2026-10-05\`; a diff against
+  them changed only name text, no line ending, BOM or line count changed, every file parses;
+  `validate_moduledata.py` 0 errors; `audit_armory_refs.py` CLEAN; the regenerated name list has no duplicate
+  helmet name outside the two groups left.
+- **Reverts on** an Armory reinstall or sync, like the beard edit above; the cache entries survive, so
+  `translate_with_claude.py --module Armory` would restore the translated numerals but not the English.
+
 ## Still owed
 
 1. **In game, after a full restart:** check for clipping on the six reversed Gondor helmets, a Dale A03 and B03,

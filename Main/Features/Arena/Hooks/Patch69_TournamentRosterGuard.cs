@@ -31,18 +31,23 @@ namespace TAOM.Features.Arena.Hooks;
 /// replacement is the culture's elite/basic troop — the same filler vanilla itself uses in the tail
 /// of <c>GetParticipantCharacters</c>.
 ///
-/// **This runs on every call, not once per tournament.** `GetParticipantCharacters` has four call
-/// sites — `CreateParticipants` (the one that matters), `GetAllPossibleParticipants`, and
-/// `GetMenuText` + `GetTournamentPrize`, both reached from the arena join menu's on_init. So the
-/// clean-roster line is DEBUG (it would otherwise emit a durable, synchronously-flushed INFO on
-/// every menu open); an actual substitution stays WARNING, because it is rare and is the thing a
-/// future crash bundle needs to name.
+/// **This runs on every call, not once per tournament.** On v1.5.3 and v1.5.4 (checked 2026-10-05)
+/// `GetParticipantCharacters` has six direct callers, none per-frame:
+/// `TournamentBehavior.CreateParticipants` (the one that matters) and `GetAllPossibleParticipants`
+/// (once per mission, from `ArenaPreloadView`); `FightTournamentGame.GetMenuText` and
+/// `GetTournamentPrize` (the join menu's on_init, the `TournamentGame` constructor, game load and the
+/// off-screen prize award); `TournamentManager.ResolveTournament` (the off-screen resolution); and
+/// `HeroKnownInformationCampaignBehavior.OnPlayerJoinedTournament`. So a clean roster is silent (the
+/// healthy-path line was retired 2026-08-09); an actual substitution stays WARNING, because it is
+/// rare and is the thing a future crash bundle needs to name.
 ///
-/// Two accepted consequences of patching a method the menu also calls: `GetMenuText`'s
-/// "{NOBLE_COUNT} lords are competing" and `GetTournamentPrize`'s reward-tier gate both count
-/// `p.IsHero`, so substituting a hero shifts each by one. Both are arguably *more* correct — a
-/// substituted hero genuinely does not compete — but they are behaviour changes, recorded here
-/// rather than discovered later.
+/// Accepted consequences of patching a method this many paths read: `GetMenuText`'s
+/// "{NOBLE_COUNT} lords are competing" and the prize tiering both count `p.IsHero`, so substituting a
+/// hero shifts each by one; off-screen, a substituted hero cannot win or collect the leaderboard
+/// entry, prize or simulation experience; and the `TournamentFinished` participant list carries the
+/// substitute, so Tournament Rewards' hero count and the event's other listeners see it. All are
+/// arguably *more* correct (a substituted hero genuinely does not compete), but they are behaviour
+/// changes, recorded here rather than discovered later (harmony-patch-registry.md, Patch69).
 ///
 /// Decision logic lives in <see cref="ITournamentRosterGuardService"/>; this patch is a thin
 /// boundary (ADR-002/007). Lazy service resolve mirrors Patch46.

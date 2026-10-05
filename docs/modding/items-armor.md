@@ -114,7 +114,7 @@ These belong to weapons, mounts and crafted items. They are listed so the table 
 | `has_gender_variations` | bool | no | **`true`** | When true the engine looks for gendered mesh variants. The default is the opposite of what shipped data implies. | `ArmorComponent.cs:160` |
 | `body_mesh_type` | string | no | `Normal` | Only the exact lowercase `upperbody` or `shoulders` do anything; any other text, a typo included, silently means normal. Unused in the armoury. | `ArmorComponent.cs:165` |
 | `body_deform_type` | string | no | `Medium` | Only `large` or `skinny` do anything. Unused in the armoury. | `ArmorComponent.cs:178` |
-| `hair_cover_type` | enum | no | `None` | `None`, `Type1` to `Type4`, `All`. Hides hair so it does not poke through a helmet. Parsed with `ignoreCase`, so `all` works. | `ArmorComponent.cs:190` |
+| `hair_cover_type` | enum | no | `None` | `None`, `Type1` to `Type4`, `All`. Hides hair so it does not poke through a helmet. Parsed with `ignoreCase`, so `all` works. What each type looks like: [helmet-hair-beard-cover](../reference/helmet-hair-beard-cover.md). | `ArmorComponent.cs:190` |
 | `beard_cover_type` | enum | no | `None` | Same value set and same case handling, for the beard. `All` hides it; `Type1` is the mildest trim (the 47 helmets in [lotrlome-beard-cover-changes](../reference/lotrlome-beard-cover-changes.md)). | `ArmorComponent.cs:191` |
 | `mane_cover_type` | enum | no | `None` | `None`, `Type1`, `Type2`, `All`. Hides a mount's mane under a harness. | `ArmorComponent.cs:192` |
 | `tail_cover_type` | enum | no | `None` | `None` or `All`. Read and stored, but no consumer was found in the dump, so its effect is not determined from the engine. | `ArmorComponent.cs:193` |
