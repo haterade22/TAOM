@@ -84,6 +84,29 @@ public class CultureMarketplaceConfigProviderTests
     }
 
     [TestMethod]
+    public void ShippedConfig_MordorBlacklistsTheMouthOfSauronHelm()
+    {
+        // The shared Armory ships the Mouth of Sauron's helm, is_merchandise="false". This line's pool builder takes
+        // every item with a culture and honours only a blacklist, so without the row a Mordor town could sell it
+        // (Mike, 2026-10-04).
+        _pathService.ModuleDataPath.Returns(Path.Combine(FindRepoRoot(), "Main", "_Module", "ModuleData"));
+        var provider = new CultureMarketplaceConfigProvider(_pathService, _logger);
+
+        var result = provider.GetOverridesByCulture();
+
+        Assert.IsTrue(result.ContainsKey("mordor"), "the shipped config has no mordor block");
+        Assert.IsTrue(result["mordor"].Blacklist.Contains("sk_mordor_mouth_of_sauron_helm"));
+    }
+
+    private static string FindRepoRoot()
+    {
+        var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
+        while (dir != null && !File.Exists(Path.Combine(dir.FullName, "TAOM.sln")))
+            dir = dir.Parent;
+        return dir?.FullName ?? throw new FileNotFoundException("TAOM.sln not found walking upward from cwd");
+    }
+
+    [TestMethod]
     public void GetOverridesByCulture_BoostEntry_RetainsWeight()
     {
         WriteConfig(@"<CultureMarketplaceConfig>

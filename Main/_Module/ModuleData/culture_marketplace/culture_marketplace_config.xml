@@ -58,4 +58,14 @@
     <Item id="taom_ram_barding_elite_b" cultures="erebor" min_stock="1" />
   </Routing>
 
+  <!-- The Mouth of Sauron's helm (LOTRLOME_Armory, LOTRLOME_items/mordor/head_armors.xml) is his own kit on the
+       1.5 line, is_merchandise="false". This line's pool builder takes every item with a culture and honours only
+       this blacklist, and nothing here wears the helm, so without the row a Mordor town could sell it (Mike,
+       2026-10-04; docs/reviews/rca-mouth-of-sauron-gear-2026-10-04.md on bannerlord-1.5.x). The row stops new
+       stock only: a helm a saved game's town already stocks stays until it is bought, because the stock filter
+       (CultureMarketplaceMaintenanceService.FilterForeignCultureItems) removes only foreign-culture items. -->
+  <Culture id="mordor">
+    <Blacklist><Item id="sk_mordor_mouth_of_sauron_helm" /></Blacklist>
+  </Culture>
+
 </CultureMarketplaceConfig>
