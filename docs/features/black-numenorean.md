@@ -123,7 +123,9 @@ deliberate pair, not a collision.
 The Mouth of Sauron and every converted lord also wore orc kit
 (`mordor_bat_template_medium_*`). All 14 now bind the BN lord rosters
 (`mordor_num_{bat,civ}_template_lord_{cav,inf}`) that had been authored and left unassigned, with
-the file's own comment asking for exactly this.
+the file's own comment asking for exactly this. Since 799e189e the Mouth of Sauron (`lord_1_14`)
+binds his own copy of the `lord_inf` pair, `mordor_num_{bat,civ}_template_mouth_of_sauron`, which
+differs only in his helm.
 
 The armour fix was then widened past the two houses to the whole line. `lord_1_29` Herumarth and
 `lord_1_39` Naktharil sit in `clan_empire_south_3` Melkondili, were already human, and already
@@ -588,8 +590,10 @@ translator run is deferred.
 
 **Every Black Numenorean lord rides.** The six lord rosters in `taom_equipment_sets_mordor.xml`
 (`mordor_num_{bat,civ}_template_lord_{cav,inf,arc}`, bound by the human Mordor lords in
-`characters/lords.xml`) all carry `noble_horse_imperial` with the lord barding, `lord_a` on the three
-battle rosters and `lord_b` on the three civilian ones. The cav pair swapped off `mordor_horse_armour_a`;
+`characters/lords.xml` and `lords.xslt`) all carry `noble_horse_imperial` with the lord barding, `lord_a` on the three
+battle rosters and `lord_b` on the three civilian ones. The Mouth of Sauron's own pair
+(`mordor_num_{bat,civ}_template_mouth_of_sauron`, since 799e189e) carries the same horse and barding, `lord_a` in
+battle and `lord_b` civilian. The cav pair swapped off `mordor_horse_armour_a`;
 the inf and arc pairs had no mount at all and gained the two rows. The infantry lord's
 `sm_md_num_sword_2h_c` is a plain greatsword blade with no horseback restriction, so his kit is
 unchanged; the archer lord becomes a horse archer. A hero's formation class reads his battle

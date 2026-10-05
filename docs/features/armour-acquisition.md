@@ -225,9 +225,10 @@ ArmourMarketplaceGate  ArmouryUpgradeService  LordsLadderService / LordHarnessSe
 ### Generated: `Main/_Module/ModuleData/armour_acquisition/armour_classes.xml`
 
 One `<Item id class next>` row per piece. Never hand-edit: `python tools/generate_armour_classes.py --apply`.
-On 2026-09-27: 2,860 pieces, light 419, medium 400, heavy 725, elite 1,031, lord 169, named 116; 2,071 of
-the 2,575 upgradable pieces have an upgrade target inside their kit line (the rest are mostly elite
-pieces with no lord sibling).
+On 2026-10-05: 2,861 pieces, light 419, medium 400, heavy 725, elite 1,031, lord 169, civilian 0, named 117
+(the new piece is the Mouth of Sauron's helm, `sk_mordor_mouth_of_sauron_helm`, named because its display name
+carries `Sauron`, a `rebalance_armor.HERO_NAMES` entry); 2,071 of the 2,575 upgradable pieces have an upgrade
+target inside their kit line (the rest are mostly elite pieces with no lord sibling).
 
 ### Hand-edited: `Main/_Module/ModuleData/armour_acquisition/armour_acquisition_config.xml`
 
@@ -379,7 +380,9 @@ Another route can be a CareerQuest `GrantItem` reward or a LotrIssues `reward_it
 ## Tests
 
 `TAOM.Tests/Features/ArmourAcquisition/`: the config (the ladder's sections included), class-table and
-settings providers, the planner and gate service (pieces by slot), state round-trip and session reset
+settings providers, the Mouth of Sauron's helm (`MouthOfSauronHelmDataTests`: its `named` class row, and in the
+live Armory its head armour of 50, `covers_head`, non-merchandise and `Civilian` flag, `LiveInstall`, Inconclusive
+where the Armory is not installed), the planner and gate service (pieces by slot), state round-trip and session reset
 (`RequiresGame`), visiting armourers, armoury level, the market gate, the daily sweep per town, the
 upgrade service, the ladder service (`LordsLadderServiceTests`: rungs, owner-keyed readiness, the
 hand-in, rewards and their fallbacks, the claim, material finds, the claimed-slot mask with a rung
@@ -526,3 +529,7 @@ The lord's gear ladder: #693. The base feature: none yet (see Owed).
   the ladder's references.
 - 2026-09-28: ten more named weapons (Mike): Tuor's two heirloom axes, Galadriel's sword and the seven
   Noldor swords; Rivendell's weapon rung offers the swords and Tuor's axes, Lórien's Galadriel's sword.
+- 2026-10-04: the Mouth of Sauron's helm (`sk_mordor_mouth_of_sauron_helm`) joined the class table as `named`, so
+  it is never sold, looted or a tournament prize; `MouthOfSauronHelmDataTests` pins the row and the live helm's 50
+  head armour (Mike lowered it from 55 in the unversioned Armory:
+  [snapshot README](../reference/lotrlome-armory-snapshot/README.md)).

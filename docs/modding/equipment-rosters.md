@@ -354,7 +354,11 @@ are optional and every shipped culture has them anyway.
   does not show you. `Equipment.cs:216-221`, legality at `Equipment.cs:445-506`.
 - **A missing roster reference is a crash, not a gap.** `<EquipmentSet id="typo"/>` on a character
   resolves to null and `AddEquipmentRoster` dereferences it immediately.
-  `MBEquipmentRoster.cs:110-116`, called from `BasicCharacterObject.cs:407`.
+  `MBEquipmentRoster.cs:110-116`, called from `BasicCharacterObject.cs:407`. No gate resolves these
+  ids: `validate_moduledata.py` checks only prefixed refs (`Item.`, `Culture.` and the like) and reads
+  only `*.xml`, so it never opens `lords.xslt`, where the Mouth of Sauron's two rosters are bound. A
+  `BROKEN_ROSTER_REF` pass is a follow-up
+  ([rca-mouth-of-sauron-gear-2026-10-04.md](../reviews/rca-mouth-of-sauron-gear-2026-10-04.md) M3).
 - **`equipmentType` is case-sensitive and fails soft.** `Enum.TryParse` is called with no
   ignore-case flag, so `equipmentType="civilian"` fires an assert and silently stays `Battle`.
   `MBEquipmentRoster.cs:92-98`.

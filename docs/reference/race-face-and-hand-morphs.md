@@ -156,9 +156,10 @@ large (Saruman's moved 13 mm), and then the face in game never matches the FBX.
 ## Hair, beards and eyebrows
 
 The skin's `hair_meshes`, `beard_meshes` and `eyebrow_meshes` are "upper meshes": separate metameshes the face
-builder attaches over the head. **Vanilla is the reference, and it gives them no morph channels at all**
-[Certain]: every beard and hair metamesh in `Native/EmAssetPackages/pack3/pack3.tpac` (98 metameshes: `beards_c_a`,
-`beards_c_k`, `hair_male_c_b` and the rest, 50 to 3,728 vertices at LOD0) has 0 morph frames.
+builder attaches over the head. **Vanilla is the reference, and it gives its hair and beards no morph channels at
+all** [Certain]: every beard and hair metamesh in `Native/EmAssetPackages/pack3/pack3.tpac` (98 metameshes: `beards_c_a`,
+`beards_c_k`, `hair_male_c_b` and the rest, 50 to 3,728 vertices at LOD0) has 0 morph frames. Vanilla eyebrows were
+not measured.
 
 **How they follow the face** [Likely, from the v1.5.3 decompile]. The face builder (0x56D5C0) takes the GUID of
 the head sub-mesh tagged `face_base_mesh` and hands it, with each upper mesh, through 0x572B40 to 0x56EBA0. That
@@ -185,7 +186,11 @@ the engine reads those channels at all is unproven; vanilla does not need them (
 A tool that fitted them (`fit_hair_morphs.py`, 2026-09-28) was written, applied to Saruman's FBX and removed the
 same day for that reason. Saruman's hair and beard were then stripped to vanilla's shape (no channels) with
 `tools/blender/strip_upper_mesh_channels.py` (2026-09-28 20:05; backups `.bak-stripupper`, the fitted file, and
-`.bak-hairfollow`, the original); a Kit re-import and an in-game look are owed.
+`.bak-hairfollow`, the original, moved by the 2026-10-04 backup sweep to
+`E:\Bannerlord_Backups\module_bak_sweep_2026-10-04\LOTRLOME_Armory\AssetSources\Race Test\Saruman\`). The compiled
+package and its `RuntimeDataCache` entry were written about a minute after the strip, the Kit's import-and-save
+pattern, so the re-import has most likely happened; whether the compiled hair and beard lost their channels is not
+measured. An in-game look is owed.
 
 **An upper mesh with no weights does not move with the head.** `SK_Dwarf_Beard_A_12` shipped with all 15,344
 vertices unweighted, while beards 01 to 11 are weighted to `head` and `neck` (the long ones `spine1` and `spine2`
@@ -220,7 +225,7 @@ array and does not clamp the count (the skin parser 0x577410, v1.5.3), so a grad
 | `tools/check_race_morph_channels.py` | Reinstall gate on the FBX sources: exact channel counts |
 | `tools/check_eye_follow.py` (export: `export_face_morphs.ps1`) | Gate on the compiled package: no eye left behind |
 | `tools/oneoff/restore_adult_woman_dwarf.py` | The female dwarf's skin restore; its dry run prints the live state |
-| `tools/blender/strip_upper_mesh_channels.py` | Removes every morph channel from named hair and beard meshes and their LODs, the vanilla shape; refuses face parts |
+| `tools/blender/strip_upper_mesh_channels.py` | Removes every morph channel from named hair, beard, eyebrow or moustache meshes and their LODs, the vanilla shape; refuses face parts, hands, arms and bodies, and a run with nothing to strip |
 | `tools/blender/transfer_upper_mesh_weights.py` | Weights an unweighted hair or beard mesh and its LODs from its finished siblings or a head; refuses one that already has weights |
 | `tools/oneoff/tune_face_slider_reach.py` | Scales a race head's slider ranges to the male dwarf's reach in millimetres; `--zero` pins a key at 0; `--check` is the reinstall gate |
 | `tools/oneoff/add_sauron_eye_colours.py` | Gold and red stops on the `sauron` race's eye slider; `--check` exits 1 when a skin lacks them |

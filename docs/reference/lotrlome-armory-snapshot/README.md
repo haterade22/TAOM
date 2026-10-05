@@ -311,13 +311,16 @@ carries weights: [race-face-and-hand-morphs.md](../race-face-and-hand-morphs.md)
   keeps an item out of shops, workshops, loot and tournament prizes; `is_hidden` keeps a piece out of the smithy's
   designer and research unlocks. The troll troops still build their weapons: nothing that assembles a crafted item
   reads the hidden flag.
-- **Written by** `tools/lock_creature_gear.py --apply` (its first run was a scratchpad copy of the same edits). Live
-  backups `*.bak-20261002`. CRLF and no BOM kept; 15 lines in all.
-- **Not yet in any release channel.** Each `E:\LOTRAOM_Releases\<channel>` Armory still has the old values until the
-  next editor package, or `python tools/lock_creature_gear.py --modules "E:/LOTRAOM_Releases/<channel>/Modules" --apply`.
+- **Written by** `tools/lock_creature_gear.py --apply` (its first run was a scratchpad copy of the same edits). Its
+  `*.bak-20261002` backups no longer sit beside the live files: the release backup sweep of 2026-10-04 moved them to
+  `E:\Bannerlord_Backups\module_bak_sweep_2026-10-04\LOTRLOME_Armory\ModuleData\`. CRLF and no BOM kept; 15 lines in all.
+- **Release channels (2026-10-04).** The testing channel's Armory (its tester build of 2026-10-02) carries the lock and
+  passes the gate. The patreon and public Armories (v2.0.29.5) still have the old values: the gate reports 15 errors
+  on each. They get the lock from their next editor package built from this install, or from
+  `python tools/lock_creature_gear.py --modules "E:/LOTRAOM_Releases/<channel>/Modules" --apply`.
 
 **Gate after any Armory update:** `python tools/validate_moduledata.py --code CREATURE_GEAR_OBTAINABLE` (in the
-commit hook; add `--game-modules <channel>/Modules` for a staged copy). Repair: `python tools/lock_creature_gear.py --apply`.
+commit hook and in `/armory-audit` Step 1; add `--game-modules <channel>/Modules` for a staged copy). Repair: `python tools/lock_creature_gear.py --apply`.
 
 ### ⚠️ APPLIED EDIT: gold and red eye colours on the `sauron` race (2026-09-28)
 
@@ -336,6 +339,59 @@ commit hook; add `--game-modules <channel>/Modules` for a staged copy). Repair: 
 
 **Gate after any Armory update:** `python tools/oneoff/add_sauron_eye_colours.py --check` (exit 1 while a sauron
 skin lacks the stops; `--apply` restores them).
+
+### ⚠️ APPLIED EDIT: the Mouth of Sauron's helm (2026-09-28; armour 50 since 2026-10-04)
+
+**Live edits an Armory reinstall WILL revert:**
+
+| File | Edit |
+|---|---|
+| `ModuleData/LOTRLOME_items/mordor/head_armors.xml` | new item `sk_mordor_mouth_of_sauron_helm`: HeadArmor, `head_armor="50"`, `covers_head="true"`, `is_merchandise="false"`, `Civilian` flag |
+| `ModuleData/Languages/loc_mordor.xml` | its English name row, `aom_sk_mordor_mouth_of_sauron_helm_name` (the 12 translations: the full translation run block below) |
+| `Assets/Mordor/mouthofsauron/` | five tpacs from Mike's Kit import (mesh, material, three textures); the mesh and the textures have `RuntimeDataCache` entries, the material none (no Armory material package has one) |
+
+- **Why.** The Mouth of Sauron (`lord_1_14`) wears it in both his sets, `mordor_num_bat_template_mouth_of_sauron` and
+  `mordor_num_civ_template_mouth_of_sauron` (`taom_equipment_sets_mordor.xml`, named in `lords.xslt`), in campaigns
+  started on v2.0.33 or later: a saved game keeps a hero's saved equipment, because heroes are read from XML only for
+  a new campaign. A helm with `covers_head="true"` hides the head, which gives him the look without a race of his own.
+- **What `covers_head` costs.** The engine builds no face object for him (no eyes, mouth, hair, beard or eyebrows) and
+  turns off facegen head scaling (`ItemObject.UsingFacegenScaling`). TAOM's research also records hand-grip morphs
+  freezing under a `covers_head` helm, a fix that is parked ([native-skin-fixes.md](../../features/native-skin-fixes.md));
+  whether his grips freeze on v1.5.3 is unverified. The `Civilian` flag only marks the helm civilian in the inventory
+  and tooltips: his civilian set would wear it without the flag.
+- **Armour.** 55 when added; Mike set it to 50 on 2026-10-04. Backups: `E:\Bannerlord_Backups\mouth_of_sauron_helm_2026-09-28\`
+  (before the item existed) and `E:\Bannerlord_Backups\mouth_of_sauron_helm_2026-10-04\` (at 55). The asset sources:
+  `E:\LOTRAOMAssets\Mordor\MouthOfSauron\HANDOFF.md` (not under version control). The item as it stands:
+
+  ```xml
+      <Item
+          id="sk_mordor_mouth_of_sauron_helm"
+          name="{=aom_sk_mordor_mouth_of_sauron_helm_name}[Mordor] Helm of the Mouth of Sauron"
+          subtype="head_armor"
+          mesh="sk_mordor_mouth_of_sauron_helm"
+          culture="Culture.mordor"
+          is_merchandise="false"
+          weight="5.5"
+          difficulty="0"
+          appearance="7"
+          Type="HeadArmor">
+          <ItemComponent>
+              <Armor head_armor="50" has_gender_variations="false" covers_head="true" hair_cover_type="all" modifier_group="plate" material_type="Plate" beard_cover_type="all" />
+          </ItemComponent>
+          <Flags Civilian="true" />
+      </Item>
+  ```
+- **Class.** `armour_classes.xml` lists it as `named`: never sold, looted or awarded.
+- **Release channels (2026-10-04).** The patreon, public and testing Armories still carry the helm at 55 (their
+  copies date from 2026-09-28). The v2.0.34 Armory package must be built from this install.
+- **Not yet run:** an in-game look after a restart, on a campaign started on v2.0.33 or later: `lord_1_14` in battle
+  and in town, the fit, the hood-to-collar band on a 40 degree nod, and his hands on the sword and shield grips.
+
+**Gate after any Armory update:** `python tools/validate_moduledata.py` reports both rosters as `BROKEN_ITEM_REF` if
+the item is gone; `python tools/generate_armour_classes.py --check` exits 1 if the table and the Armory disagree on
+it; `python tools/check_rdc_entries.py --under Mordor/mouthofsauron` exits 1 if the mesh package lost its cache entry
+(with `covers_head`, a skipped helm package would most likely leave him headless); and `MouthOfSauronHelmDataTests`
+pins the armour value, the flags and the class.
 
 ### Two dwarf-skin divergences from vanilla that are NOT defects
 

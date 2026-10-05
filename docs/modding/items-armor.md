@@ -120,7 +120,7 @@ These belong to weapons, mounts and crafted items. They are listed so the table 
 | `tail_cover_type` | enum | no | `None` | `None` or `All`. Read and stored, but no consumer was found in the dump, so its effect is not determined from the engine. | `ArmorComponent.cs:193` |
 | `stealth_factor` | int | no | `0` | Shown as a stealth bonus in the inventory. Unused in the armoury. | `ArmorComponent.cs:194` |
 | `reins_mesh` | string | no | `""` | Harness reins mesh. Unused in the armoury. | `ArmorComponent.cs:195` |
-| `covers_head` | bool | no | `false` | Hides the bare head skin. Set on zero shipped items, TAOM and vanilla alike, because it also switches off facegen head scaling (`ItemObject.cs:130-140`). | `ArmorComponent.cs:196` |
+| `covers_head` | bool | no | `false` | Hides the bare head skin. Vanilla sets it on no armour a person wears (only on a horse harness, `chain_horse_harness`, and its multiplayer twin), because it also switches off facegen head scaling (`ItemObject.cs:130-140`). One deliberate TAOM exception: the Mouth of Sauron's helm (`sk_mordor_mouth_of_sauron_helm`, 2026-09-28), which hides a head the asset has no race for; its costs are in the [Armory snapshot README](../reference/lotrlome-armory-snapshot/README.md). | `ArmorComponent.cs:196` |
 | `covers_body` | bool | no | `false` | Hides the bare torso skin. | `ArmorComponent.cs:197` |
 | `covers_hands` | bool | no | `false` | Hides the bare hand skin. Set it when your sleeve mesh already draws the forearm. | `ArmorComponent.cs:198` |
 | `covers_legs` | bool | no | `false` | Hides the bare leg skin. Set it on boots and greaves whose mesh draws the shin. | `ArmorComponent.cs:199` |
@@ -331,7 +331,7 @@ These come up on every armour job and no doc in the repo settles them. Say so ra
 | 2,938 items carry an `<Armor>` component | same walk, counting `./ItemComponent/Armor` <!-- measured: python ElementTree walk of LOTRLOME_items 2026-09-05 --> |
 | `Type` spread: HeadArmor 1021, BodyArmor 746, Cape 448, HandArmor 350, LegArmor 339, Shield 224, Bow 35, HorseHarness 34, Arrows 28, Horse 10, Crossbow 3, Bolts 2 | same walk, counting the `Type` attribute <!-- measured: python ElementTree walk of LOTRLOME_items 2026-09-05 --> |
 | `material_type`: Plate 1871, Chainmail 590, Leather 383, Cloth 94, absent 0 | same walk <!-- measured: python ElementTree walk of LOTRLOME_items 2026-09-05 --> |
-| `covers_body` true 744, `covers_legs` 323, `covers_hands` 147, `covers_head` 0 | same walk <!-- measured: python ElementTree walk of LOTRLOME_items 2026-09-05 --> |
+| `covers_body` true 744, `covers_legs` 323, `covers_hands` 147, `covers_head` 0 (1 since 2026-09-28: the Mouth of Sauron's helm) | same walk <!-- measured: python ElementTree walk of LOTRLOME_items 2026-09-05 --> |
 | `covers_head="true"` on 0 vanilla armour items | `rg -c 'covers_head="true"' head_armors.xml body_armors.xml leg_armors.xml arm_armors.xml shoulder_armors.xml` in `SandBoxCore/ModuleData/items/` <!-- measured: rg -c covers_head SandBoxCore items 2026-09-05 --> |
 | `hair_cover_type`: `all` 891, `type2` 117, `type1` 8, `none` 4 | `rg -o 'hair_cover_type="[^"]*"' --glob '*.xml' . \| sort \| uniq -c` <!-- measured: rg -o hair_cover_type LOTRLOME_items 2026-09-05 --> |
 | `modifier_group` illegal values: `shield_wood` 10, `mail` 1, `false` 1 | `rg -o 'modifier_group="[^"]*"'` over `LOTRLOME_items/**/*.xml`, joined against the group ids <!-- measured: rg -o modifier_group LOTRLOME_items 2026-09-05 --> |

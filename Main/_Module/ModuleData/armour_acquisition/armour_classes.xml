@@ -2125,6 +2125,7 @@
   <Item id="sk_md_orc_sct_helmet_med_a" class="medium" next="sk_md_orc_sct_helmet_heavy_a" />
   <Item id="sk_md_orc_vgd_helmet_heavy_a" class="heavy" next="sk_md_orc_arc_helmet_heavy_a" />
   <Item id="sk_md_orc_vgd_helmet_med_a" class="heavy" next="sk_md_orc_arc_helmet_heavy_a" />
+  <Item id="sk_mordor_mouth_of_sauron_helm" class="named" />
   <Item id="sk_northern_armor_light_a" class="light" next="sk_northern_armor_medium_a" />
   <Item id="sk_northern_armor_light_b" class="light" next="sk_northern_armor_medium_b" />
   <Item id="sk_northern_armor_medium_a" class="medium" />

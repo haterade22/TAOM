@@ -279,9 +279,9 @@
 	<!-- ==================== BLACK NUMENOREAN LORD EQUIPMENT ==================== -->
 	<!--  Lord-tier helmets and bracers exist as meshes; body, pauldron and    -->
 	<!--  greave slots take the elite row, the top authored for those slots.   -->
-	<!--  NOT yet assigned to any lord: apply to specific human Mordor lords   -->
-	<!--  in characters/lords.xml or lords.xslt. A lord wearing these should   -->
-	<!--  not carry race="uruk".                                              -->
+	<!--  Worn by the Black Numenorean lords in lords.xslt and                 -->
+	<!--  characters/lords.xml; lord_1_14 (the Mouth of Sauron) has his own    -->
+	<!--  pair below. A lord wearing these should not carry race="uruk".       -->
 
 	<EquipmentRoster id="mordor_num_bat_template_lord_cav" culture="Culture.mordor">
 		<EquipmentSet>
