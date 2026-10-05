@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DryIoc;
 using TAOM.Adapters;
 using TAOM.Composition;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.TournamentRewards;
 
@@ -9,7 +10,7 @@ namespace TAOM.Features.TournamentRewards;
 /// Tournament rewards (docs/features/tournament-rewards.md, Mike 2026-10-02): the MCM bet cap, renown and influence
 /// scaled by the field and the winner's culture, and the prize and skill chosen at Join. The renown and influence
 /// overrides live on the Arena feature's TaomTournamentModel, which reaches this module's service through
-/// ITournamentService. Patch96's three patches target campaign and SandBox types, so they apply at GameInit.
+/// ITournamentService. Patch96's two patches target campaign and SandBox types, so they apply at GameInit.
 /// </summary>
 internal sealed class TournamentRewardsModule : TaomFeatureModule
 {
@@ -24,7 +25,8 @@ internal sealed class TournamentRewardsModule : TaomFeatureModule
     {
         CampaignBehaviorDecl.Of(r => new TournamentRewardsBehavior(
             r.Resolve<TournamentRewardsService>(),
-            r.Resolve<TournamentSkillAwardService>())),
+            r.Resolve<TournamentSkillAwardService>(),
+            r.Resolve<IModLogger>())),
     };
 
     public override string Id => "TournamentRewards";

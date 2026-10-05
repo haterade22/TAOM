@@ -39,7 +39,7 @@ public class TournamentSkillAwardServiceTests
         _sut.OnTournamentFinished(winnerIsPlayer: true, "town_A", "main_hero", "gondor");
 
         _xp.Received(1).AddSkillXp("main_hero", "Polearm", 750f);
-        _presenter.Received(1).ShowSkillXpGained("Polearm", 750);
+        _presenter.Received(1).ShowSkillTrained("Polearm");
     }
 
     [TestMethod]
@@ -49,7 +49,7 @@ public class TournamentSkillAwardServiceTests
         _sut.OnTournamentFinished(winnerIsPlayer: false, "town_A", "main_hero", "gondor");
 
         _xp.DidNotReceive().AddSkillXp(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
-        _presenter.DidNotReceive().ShowSkillXpGained(Arg.Any<string>(), Arg.Any<int>());
+        _presenter.DidNotReceive().ShowSkillTrained(Arg.Any<string>());
     }
 
     [TestMethod]
@@ -58,7 +58,7 @@ public class TournamentSkillAwardServiceTests
         _sut.OnPlayerEliminated(roundIndex: 2, "town_A", "main_hero", "gondor");
 
         _xp.Received(1).AddSkillXp("main_hero", "Polearm", 250f);
-        _presenter.Received(1).ShowSkillXpGained("Polearm", 250);
+        _presenter.Received(1).ShowSkillTrained("Polearm");
     }
 
     [TestMethod]
@@ -66,7 +66,7 @@ public class TournamentSkillAwardServiceTests
     {
         _sut.OnPlayerEliminated(0, "town_A", "main_hero", "gondor");
 
-        _presenter.DidNotReceive().ShowSkillXpGained(Arg.Any<string>(), Arg.Any<int>());
+        _presenter.DidNotReceive().ShowSkillTrained(Arg.Any<string>());
     }
 
     [TestMethod]
@@ -86,6 +86,6 @@ public class TournamentSkillAwardServiceTests
     {
         _sut.OnTournamentFinished(true, "town_B", "main_hero", "gondor");
 
-        _presenter.DidNotReceive().ShowSkillXpGained(Arg.Any<string>(), Arg.Any<int>());
+        _presenter.DidNotReceive().ShowSkillTrained(Arg.Any<string>());
     }
 }

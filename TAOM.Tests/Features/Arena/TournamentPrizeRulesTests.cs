@@ -191,6 +191,38 @@ public class TournamentPrizeRulesTests
         Assert.AreEqual(expected, TournamentPrizeRules.XmlMerchandise(recorded: null, liveNotMerchandise));
     }
 
+    // --- AdvertisedBand: the band the alternatives at Join are drawn from ---
+
+    [DataTestMethod]
+    // The table's class decides, whatever the engine tier says.
+    [DataRow(ArmourClass.Light, Tier4Index, PrizeBand.Regular)]
+    [DataRow(ArmourClass.Medium, Tier4Index, PrizeBand.Regular)]
+    [DataRow(ArmourClass.Civilian, Tier4Index, PrizeBand.Regular)]
+    [DataRow(ArmourClass.Heavy, Tier3Index, PrizeBand.Elite)]
+    // Above heavy draws the elite band too (Mike, 2026-10-04): a save from before the pools were capped at heavy,
+    // or vanilla's fallback list when the elite pool is empty, can advertise such a prize, and its alternatives
+    // should sit near it.
+    [DataRow(ArmourClass.Elite, Tier4Index, PrizeBand.Elite)]
+    [DataRow(ArmourClass.Lord, Tier4Index, PrizeBand.Elite)]
+    [DataRow(ArmourClass.Named, Tier4Index, PrizeBand.Elite)]
+    // No table class (a weapon, shield or harness): the engine tier implies one.
+    [DataRow(null, Tier3Index, PrizeBand.Regular)]
+    [DataRow(null, Tier4Index, PrizeBand.Elite)]
+    [DataRow(null, Tier5Index, PrizeBand.Elite)]
+    public void AdvertisedBand_ByClassAndTier_PicksTheBand(ArmourClass? tableClass, int engineTierIndex, PrizeBand expected)
+    {
+        Assert.AreEqual(expected, TournamentPrizeRules.AdvertisedBand(tableClass, engineTierIndex));
+    }
+
+    [DataTestMethod]
+    [DataRow(ArmourClass.Heavy)]
+    [DataRow(null)]
+    public void AdvertisedBand_UnknownTier_DrawsTheRegularBand(ArmourClass? tableClass)
+    {
+        // No tier was read (null), so the prize cannot be called heavy, whatever the table says.
+        Assert.AreEqual(PrizeBand.Regular, TournamentPrizeRules.AdvertisedBand(tableClass, engineTierIndex: null));
+    }
+
     // --- PreferCulture: the town's culture first, never an empty list while anything fits ---
 
     private static readonly (string Id, string? Culture)[] Fitting =
@@ -287,6 +319,15 @@ public class TournamentPrizeRulesTests
         var picks = TournamentPrizeRules.PickChoices(new[] { "e", "e", "e", "f" }, "d", "s");
 
         Assert.AreEqual(picks.Count, picks.Distinct().Count());
+    }
+
+    [TestMethod]
+    public void PickChoices_NullOrEmptyIdsInPool_Skipped()
+    {
+        var picks = TournamentPrizeRules.PickChoices(new string[] { null!, "", "e", "f" }, "d", "s");
+
+        CollectionAssert.AreEquivalent(new[] { "d", "e", "f" }, picks.ToList());
+        Assert.AreEqual("d", picks[0]);
     }
 
     [TestMethod]

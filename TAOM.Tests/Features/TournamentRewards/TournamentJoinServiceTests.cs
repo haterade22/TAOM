@@ -28,7 +28,10 @@ public class TournamentJoinServiceTests
     private Action? _onSkillCancel;
     private IReadOnlyList<string>? _offeredPrizes;
 
-    private static readonly TournamentJoinSnapshot Tournament = new("town_A", "gondor", "town_A:12", "prize_a");
+    // (int)ItemObject.Tier of the advertised prize, Tier1 = 0 in v1.5.3.
+    private const int PrizeTier = 3;
+
+    private static readonly TournamentJoinSnapshot Tournament = new("town_A", "gondor", "town_A:12", "prize_a", PrizeTier);
 
     [TestInitialize]
     public void Setup()
@@ -37,7 +40,7 @@ public class TournamentJoinServiceTests
         _join.GetCurrentTournament().Returns(Tournament);
         _join.SetPrize(Arg.Any<string>(), Arg.Any<string>()).Returns(true);
         _arena = Substitute.For<ITournamentService>();
-        _arena.PrizeChoices("gondor", "prize_a", "town_A:12").Returns(new[] { "prize_a", "prize_b", "prize_c" });
+        _arena.PrizeChoices("gondor", "prize_a", PrizeTier, "town_A:12").Returns(new[] { "prize_a", "prize_b", "prize_c" });
         _presenter = Substitute.For<ITournamentChoicePresenter>();
         _presenter.When(p => p.ShowPrizeChoice(Arg.Any<IReadOnlyList<string>>(), Arg.Any<Action<string>>(), Arg.Any<Action>()))
             .Do(c => { _offeredPrizes = c.ArgAt<IReadOnlyList<string>>(0); _onPrize = c.ArgAt<Action<string>>(1); _onPrizeCancel = c.ArgAt<Action>(2); });
@@ -147,7 +150,7 @@ public class TournamentJoinServiceTests
     [TestMethod]
     public void BeginJoin_OnlyTheAdvertisedPrize_SkipsThePrizeDialog()
     {
-        _arena.PrizeChoices("gondor", "prize_a", "town_A:12").Returns(new[] { "prize_a" });
+        _arena.PrizeChoices("gondor", "prize_a", PrizeTier, "town_A:12").Returns(new[] { "prize_a" });
 
         Begin();
         _presenter.DidNotReceive().ShowPrizeChoice(Arg.Any<IReadOnlyList<string>>(), Arg.Any<Action<string>>(), Arg.Any<Action>());
@@ -183,12 +186,20 @@ public class TournamentJoinServiceTests
     [TestMethod]
     public void BeginJoin_NoPrize_SkipsThePrizeDialog()
     {
-        _join.GetCurrentTournament().Returns(new TournamentJoinSnapshot("town_A", "gondor", "town_A:12", null));
+        _join.GetCurrentTournament().Returns(new TournamentJoinSnapshot("town_A", "gondor", "town_A:12", null, null));
 
         Begin();
         _onSkill!("Bow");
 
-        _arena.DidNotReceive().PrizeChoices(Arg.Any<string?>(), Arg.Any<string>(), Arg.Any<string>());
+        _arena.DidNotReceive().PrizeChoices(Arg.Any<string?>(), Arg.Any<string>(), Arg.Any<int?>(), Arg.Any<string>());
         Assert.AreEqual(1, _proceeded);
+    }
+
+    [TestMethod]
+    public void BeginJoin_AsksTheArenaWithTheAdvertisedPrizesTierAndTheTournamentsSeed()
+    {
+        Begin();
+
+        _arena.Received(1).PrizeChoices("gondor", "prize_a", PrizeTier, "town_A:12");
     }
 }

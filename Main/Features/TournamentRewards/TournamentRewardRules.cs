@@ -20,6 +20,15 @@ public static class TournamentRewardRules
     /// </summary>
     public const int BetCeiling = 50_000_000;
 
+    /// <summary>
+    /// The largest renown or influence multiplier. TaomSettings' two multiplier sliders run from 0 to this, the
+    /// settings provider clamps to it, and the rules refuse a larger one, so the three cannot drift apart.
+    /// </summary>
+    public const float MaxMultiplier = 5f;
+
+    /// <summary>The largest bet cap the MCM slider offers; the settings provider clamps to it.</summary>
+    public const int MaxBetSetting = 1_000_000;
+
     public const int XpPerRoundWon = 125;
     public const int XpForTheWin = 250;
     public const int Rounds = 4;
@@ -44,35 +53,55 @@ public static class TournamentRewardRules
         return (int)Math.Min(BetCeiling, configuredCap * perkFactor);
     }
 
-    /// <summary>(vanilla renown + one per hero) x culture x multiplier; vanilla's answer keeps its perks.</summary>
+    /// <summary>
+    /// (vanilla renown + one per hero) x culture x multiplier; vanilla's answer keeps its perks. A multiplier
+    /// above <see cref="MaxMultiplier"/>, or a result past what an int holds, gives vanilla's answer.
+    /// </summary>
     public static int Renown(int vanillaRenown, int heroCount, float cultureFactor, float multiplier)
     {
-        if (!IsFactor(cultureFactor) || !IsFactor(multiplier))
+        if (!IsFactor(cultureFactor) || !IsMultiplier(multiplier))
             return vanillaRenown;
         var raw = (vanillaRenown + Math.Max(0, heroCount)) * (double)cultureFactor * multiplier;
-        return (int)Math.Round(raw, MidpointRounding.AwayFromZero);
+        return RoundToInt(raw, vanillaRenown);
     }
 
     /// <summary>
-    /// In a town of the winner's own kingdom: (vanilla + 2 + one per four heroes) x culture x multiplier.
-    /// Anywhere else, vanilla's answer.
+    /// In a town of the winner's own kingdom: (vanilla + 2 + one per four heroes) x culture x multiplier, in whole
+    /// points. Vanilla's answer anywhere else, and for a multiplier above <see cref="MaxMultiplier"/> or a result
+    /// past what an int holds.
     /// </summary>
-    public static float Influence(float vanillaInfluence, int heroCount, bool ownKingdomTown, float cultureFactor, float multiplier)
+    public static int Influence(int vanillaInfluence, int heroCount, bool ownKingdomTown, float cultureFactor, float multiplier)
     {
-        if (!ownKingdomTown || !IsFactor(cultureFactor) || !IsFactor(multiplier) || !FiniteFloatValidator.IsFinite(vanillaInfluence))
+        if (!ownKingdomTown || !IsFactor(cultureFactor) || !IsMultiplier(multiplier))
             return vanillaInfluence;
-        var raw = vanillaInfluence + InfluenceBase + Math.Max(0, heroCount) / HeroesPerInfluencePoint;
-        return raw * cultureFactor * multiplier;
+        var raw = (float)vanillaInfluence + InfluenceBase + Math.Max(0, heroCount) / HeroesPerInfluencePoint;
+        return RoundToInt(raw * cultureFactor * multiplier, vanillaInfluence);
     }
 
-    /// <summary>125 per round won plus 250 for the win, times the player's culture factor (none when invalid).</summary>
+    /// <summary>
+    /// 125 per round won plus 250 for the win, times the player's culture factor (none when invalid, and none when
+    /// the product is past what an int holds).
+    /// </summary>
     public static int SkillXp(int roundsWon, bool wonTournament, float cultureFactor)
     {
         var rounds = Math.Max(0, Math.Min(Rounds, roundsWon));
         var raw = rounds * XpPerRoundWon + (wonTournament ? XpForTheWin : 0);
         var factor = IsFactor(cultureFactor) ? cultureFactor : 1f;
-        return (int)Math.Round(raw * (double)factor, MidpointRounding.AwayFromZero);
+        return RoundToInt(raw * (double)factor, raw);
     }
 
     private static bool IsFactor(float value) => FiniteFloatValidator.IsFiniteAtLeast(value, 0f);
+
+    private static bool IsMultiplier(float value) => FiniteFloatValidator.IsFiniteInRange(value, 0f, MaxMultiplier);
+
+    /// <summary>
+    /// Rounds half away from zero. A value past what an int holds gives <paramref name="fallback"/>, because the
+    /// unchecked cast of one is int.MinValue on net472 x64 (csharp-architecture.md, float-to-int casts); a
+    /// positive requirement, so NaN fails it too.
+    /// </summary>
+    private static int RoundToInt(double value, int fallback)
+    {
+        var rounded = Math.Round(value, MidpointRounding.AwayFromZero);
+        return rounded >= int.MinValue && rounded <= int.MaxValue ? (int)rounded : fallback;
+    }
 }

@@ -58,7 +58,13 @@ brings any of it back. It derives the set from what every `cave_troll` or `hill_
 new troll weapon is covered when a troll troop wears it; an unworn one goes in `_CREATURE_GEAR_EXTRA`. The
 gate reads the dev install only: a staged release Armory is checked by passing its `Modules` folder to
 `--game-modules`. `python tools/lock_creature_gear.py` (dry run; `--apply` writes, `--modules` targets a release
-channel) puts the attributes back after a reinstall; a new troll item or piece goes in its lists too.
+channel) puts the attributes back after a reinstall; a new troll item or piece goes in its lists too. `/armory-audit`
+runs the gate in Step 1. **Release channels (checked 2026-10-05):** the testing channel's Armory carries the lock;
+the patreon and public Armories (v2.0.29.5) do not (the gate reports 15 errors on each) and get it from their next
+editor package, built from the dev install (Mike's decision,
+[rca-troll-gear-tournament-prizes-2026-10-02.md](../reviews/rca-troll-gear-tournament-prizes-2026-10-02.md)
+"Convergence pass"). The `*.bak-20261002` backups are now in
+`E:\Bannerlord_Backups\module_bak_sweep_2026-10-04\LOTRLOME_Armory\ModuleData\`.
 
 ## Skeleton + animation approach (this project)
 

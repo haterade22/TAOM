@@ -972,3 +972,15 @@ today's cultures. The same plan's desertion gate (`TryGetPurge`, one gate with t
   the two cannot disagree. Review a new "needs X" member by finding the decision it mirrors and checking the
   decision calls it.
 - **Source:** `docs/reviews/rca-campaign-hot-paths-2026-10-02.md` finding 3.
+
+### Before scaling a GameModel answer, list every engine caller from the decompile, null-argument calls included (Tournament Rewards, 2026-10-04)
+`TaomTournamentModel.GetRenownReward` scaled every answer by the winner's culture and the MCM multiplier, and the
+feature doc said the model is asked twice: at the award and for the winner panel. The engine asks a third time, 500
+times per new campaign: `TournamentCampaignBehavior.InitializeTournamentLeaderboard` seeds the leaderboard with
+`GetRenownReward(hero, null)`, so the override quietly changed every clan's starting renown.
+- **Why missed:** the callers were listed from the two code paths the feature touched, not from the decompile; a
+  GameModel method has no Harmony-style "every caller" rule.
+- **Prevent:** before an override changes what a model method returns, search the decompile for every caller of
+  that method and write the list into the override's comment, with what each passes for each argument; decide the
+  null and world-generation calls on purpose.
+- **Source:** `docs/reviews/rca-tournament-rewards-2026-10-04.md` T4 (lenses 2, 3, 5, 6).

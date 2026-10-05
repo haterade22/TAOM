@@ -10,6 +10,7 @@
     "gundabad": { "renown": 1.5, "skill_xp": 1.40 },
     "goblin": { "renown": 1.5, "skill_xp": 1.40 },
     "mistymountainorcs": { "renown": 1.5, "skill_xp": 1.40 },
-    "dolguldur": { "renown": 1.5, "skill_xp": 1.40 }
+    "dolguldur": { "renown": 1.5, "skill_xp": 1.40 },
+    "bluecraig": { "renown": 1.5, "skill_xp": 1.40 }
   }
 }

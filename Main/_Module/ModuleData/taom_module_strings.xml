@@ -3130,10 +3130,10 @@
 	<string id="taom_tr_prize_advertised" text="{=taom_tr_prize_advertised}{ITEM_NAME} (the advertised prize)" />
 	<string id="taom_tr_prize_hint" text="{=taom_tr_prize_hint}Worth about {VALUE} denars." />
 	<string id="taom_tr_prize_title" text="{=taom_tr_prize_title}Choose Your Prize" />
-	<string id="taom_tr_prize_desc" text="{=taom_tr_prize_desc}The tournament master offers three prizes. Choose the one you will fight for; it is yours if you win." />
+	<string id="taom_tr_prize_desc" text="{=taom_tr_prize_desc}The tournament master offers a choice of prizes. Choose the one you will fight for; it is yours if you win." />
 	<string id="taom_tr_skill_title" text="{=taom_tr_skill_title}Choose Your Training" />
 	<string id="taom_tr_skill_desc" text="{=taom_tr_skill_desc}Choose the skill this tournament trains. You gain experience in it for every round you win, and more for winning the tournament." />
-	<string id="taom_tr_skill_gained" text="{=taom_tr_skill_gained}The tournament trained your {SKILL_NAME} (+{XP} experience)." />
+	<string id="taom_tr_skill_gained" text="{=taom_tr_skill_gained}The tournament trained your {SKILL_NAME}." />
 	<string id="taom_tr_choose" text="{=taom_tr_choose}Choose" />
 	<string id="taom_tr_cancel" text="{=taom_tr_cancel}Cancel" />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->

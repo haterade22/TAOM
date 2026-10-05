@@ -101,7 +101,7 @@ protected override void OnGameStart(Game game, IGameStarter gameStarter)
 | `TaomMilitaryPowerModel` | `DefaultMilitaryPowerModel` | `BattleBalance` |
 | `TaomCombatSimulationModel` | `DefaultCombatSimulationModel` | `BattleBalance` |
 | `TaomPartyHealingModel` | `DefaultPartyHealingModel` | `Arena` |
-| `TaomTournamentModel` | `DefaultTournamentModel` | `Arena` |
+| `TaomTournamentModel` | `DefaultTournamentModel` | `Arena` (+ the TournamentRewards renown and influence) |
 | `TaomAgeModel` | `DefaultAgeModel` | `RaceAge` |
 | `TaomPregnancyModel` | `DefaultPregnancyModel` | `RaceAge` |
 | `TaomHeroCreationModel` | `DefaultHeroCreationModel` | `RaceAge` |

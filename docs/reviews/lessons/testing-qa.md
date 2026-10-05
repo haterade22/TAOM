@@ -1643,3 +1643,14 @@ The test meant to prove the configured spark effect exists globbed every `partic
 - **Why missed:** a surprising failure was treated as one test's problem, not as a property of the test helper.
 - **Prevent:** a config test names every section the code under test reads, empty when unused; when one test surprises you with a default, fix the shared helper and add the negative case (here, a cap of 0 with no glow set raises no warning).
 - **Source:** `docs/reviews/rca-race-ability-glow-2026-10-04.md` G3 (lens 4 L1).
+
+### A "game-only" label excuses the loop it names, not a decision added beside it (Tournament Rewards, 2026-10-04)
+`TournamentServiceTests` excuses `BuildPrizePool` from tests because its loop over `Items.All` is game-only and
+every decision in it is a tested `TournamentPrizeRules` call. `PrizeChoices` was added beside it with its own
+decision, the prize band, inline and reading `Game.Current`, and no test reached it. The troll-gear review named this
+shape (logic placed where a label said tests cannot follow) the same day.
+- **Why missed:** the label was read as covering the class, not the one method it names.
+- **Prevent:** when a method lands in a class with a game-only excuse, move each decision it makes into the pure
+  rules class and test it there; the excuse names its methods one by one.
+- **Source:** `docs/reviews/rca-tournament-rewards-2026-10-04.md` T1 (lenses 1 and 4); repeat of
+  `docs/reviews/rca-troll-gear-tournament-prizes-2026-10-02.md` finding 2.

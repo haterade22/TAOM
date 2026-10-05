@@ -70,14 +70,10 @@ public class TournamentService : ITournamentService
         return pool;
     }
 
-    public IReadOnlyList<string> PrizeChoices(string? cultureId, string advertisedItemId, string seedKey)
+    public IReadOnlyList<string> PrizeChoices(string? cultureId, string advertisedItemId, int? advertisedTierIndex, string seedKey)
     {
         // The alternatives come from the advertised prize's own band: a heavy prize is a big tournament's.
-        var advertised = Game.Current?.ObjectManager?.GetObject<ItemObject>(advertisedItemId);
-        var band = advertised != null
-                   && TournamentPrizeRules.PrizeClass(_armourGate.GetClass(advertisedItemId), (int)advertised.Tier) == ArmourAcquisition.Domain.ArmourClass.Heavy
-            ? PrizeBand.Elite
-            : PrizeBand.Regular;
+        var band = TournamentPrizeRules.AdvertisedBand(_armourGate.GetClass(advertisedItemId), advertisedTierIndex);
         var ids = new List<string>();
         foreach (var item in BuildPrizePool(cultureId, band))
             ids.Add(item.StringId);

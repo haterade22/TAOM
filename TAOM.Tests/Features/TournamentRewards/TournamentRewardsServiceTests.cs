@@ -64,6 +64,17 @@ public class TournamentRewardsServiceTests
     }
 
     [TestMethod]
+    public void RenownReward_WithoutATown_IsVanillasAnswer()
+    {
+        // The new-game leaderboard seeding asks GetRenownReward(hero, null) 500 times
+        // (TournamentCampaignBehavior.InitializeTournamentLeaderboard, v1.5.3); world generation keeps vanilla's
+        // renown whatever the winner's culture or the MCM multiplier (Mike, 2026-10-04).
+        _settings.RenownMultiplier.Returns(5f);
+
+        Assert.AreEqual(3, _sut.RenownReward(3, townId: null, winnerCultureId: "mordor"));
+    }
+
+    [TestMethod]
     public void RenownReward_ForAnotherTown_CountsNoHeroes()
     {
         _sut.NoteTournamentFinished("town_A", 6);
@@ -211,6 +222,18 @@ public class TournamentRewardsServiceTests
         _sut.RememberSkillChoice("town_A", "Smithing");
 
         Assert.AreEqual(0, _sut.AwardPlayerSkillXp("town_A", 4, true, "main_hero", null));
+    }
+
+    [DataTestMethod]
+    [DataRow("")]
+    [DataRow(null)]
+    public void RememberSkillChoice_EmptyTown_Ignored(string? townId)
+    {
+        _sut.RememberSkillChoice(townId!, "Bow");
+
+        Assert.IsNull(_sut.ChosenSkill(townId));
+        Assert.AreEqual(0, _sut.AwardPlayerSkillXp(townId, 4, true, "main_hero", null));
+        _xp.DidNotReceive().AddSkillXp(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<float>());
     }
 
     [TestMethod]

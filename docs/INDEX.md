@@ -165,6 +165,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [fief-management](features/fief-management.md) — custom GameState for fief management
 - [fief-granting](features/fief-granting.md): who gets a captured town or castle (Patch70 decision swap, siege participation record, ten MCM knobs; #458, #565)
 - [arena](features/arena.md) — TaomTournamentModel with culture armor + prize pools
+- [tournament-rewards](features/tournament-rewards.md): MCM bet cap, renown and influence by the field and the winner's culture, the prize and the skill chosen at Join (Patch96)
 - [messengers](features/messengers.md) — paid messenger dispatch + travel arrival inquiry
 - [shader-precompilation](features/shader-precompilation.md): pre-compile shaders menu option (Patch21), parked 2026-09-25: every character in batches, scene passes an MCM opt-in
 - [time-acceleration](features/time-acceleration.md) — campaign time scale knobs

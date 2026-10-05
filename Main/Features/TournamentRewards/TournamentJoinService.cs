@@ -41,7 +41,7 @@ public sealed class TournamentJoinService
 
         var prizes = tournament.PrizeItemId == null
             ? Array.Empty<string>()
-            : _arena.PrizeChoices(tournament.CultureId, tournament.PrizeItemId, tournament.SeedKey).ToArray();
+            : _arena.PrizeChoices(tournament.CultureId, tournament.PrizeItemId, tournament.PrizeTierIndex, tournament.SeedKey).ToArray();
         if (prizes.Length < 2)
         {
             ChooseSkill(tournament, null, proceed);

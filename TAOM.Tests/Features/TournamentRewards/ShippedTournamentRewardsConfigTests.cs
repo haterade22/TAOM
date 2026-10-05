@@ -58,6 +58,7 @@ public class ShippedTournamentRewardsConfigTests
     [DataRow("goblin", 1.5f, 1.0f, 1.40f)]
     [DataRow("mistymountainorcs", 1.5f, 1.0f, 1.40f)]
     [DataRow("dolguldur", 1.5f, 1.0f, 1.40f)]
+    [DataRow("bluecraig", 1.5f, 1.0f, 1.40f)]
     [DataRow("rivendell", 1.0f, 1.0f, 1.0f)]
     public void ShippedConfig_HasTheApprovedFactors(string culture, float renown, float influence, float xp)
     {

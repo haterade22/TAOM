@@ -42,9 +42,16 @@ public sealed class TournamentRewardsService
         _finishedHeroCount = heroCount;
     }
 
+    /// <summary>
+    /// A winner's renown. A null town is the new-game leaderboard seeding, which asks once per seeded win
+    /// (TournamentCampaignBehavior.InitializeTournamentLeaderboard, v1.5.3); it keeps vanilla's answer so world
+    /// generation's starting renown does not move with the culture factors or the MCM multiplier (Mike, 2026-10-04).
+    /// </summary>
     public int RenownReward(int vanillaRenown, string? townId, string? winnerCultureId) =>
-        TournamentRewardRules.Renown(vanillaRenown, HeroCountFor(townId),
-            _config.GetCatalog().For(winnerCultureId).Renown, _settings.RenownMultiplier);
+        townId == null
+            ? vanillaRenown
+            : TournamentRewardRules.Renown(vanillaRenown, HeroCountFor(townId),
+                _config.GetCatalog().For(winnerCultureId).Renown, _settings.RenownMultiplier);
 
     /// <summary>Whole points: the engine's GetInfluenceReward returns an int (v1.5.3).</summary>
     public int InfluenceReward(int vanillaInfluence, string? townId, string? winnerCultureId,
@@ -52,9 +59,8 @@ public sealed class TournamentRewardsService
     {
         var ownKingdomTown = !string.IsNullOrEmpty(winnerKingdomId)
                              && string.Equals(winnerKingdomId, townKingdomId, StringComparison.Ordinal);
-        var influence = TournamentRewardRules.Influence(vanillaInfluence, HeroCountFor(townId), ownKingdomTown,
+        return TournamentRewardRules.Influence(vanillaInfluence, HeroCountFor(townId), ownKingdomTown,
             _config.GetCatalog().For(winnerCultureId).Influence, _settings.InfluenceMultiplier);
-        return (int)Math.Round(influence, MidpointRounding.AwayFromZero);
     }
 
     /// <summary>The skill the player chose at Join for this town's tournament; an unknown skill is ignored.</summary>

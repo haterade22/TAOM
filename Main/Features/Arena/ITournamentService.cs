@@ -35,9 +35,14 @@ public interface ITournamentService
 
     /// <summary>
     /// The prizes offered at Join (TournamentPrizeRules.PickChoices): the advertised prize first, then up to
-    /// two alternatives from its band's pool, the same three for one tournament.
+    /// two alternatives from its band's pool (TournamentPrizeRules.AdvertisedBand), the same three for one
+    /// tournament while the advertised prize stands: vanilla re-rolls that prize at the join menu when lords
+    /// arrive or leave, and the alternatives follow it.
     /// </summary>
-    IReadOnlyList<string> PrizeChoices(string? cultureId, string advertisedItemId, string seedKey);
+    /// <param name="advertisedTierIndex">
+    /// <c>(int)ItemObject.Tier</c> of the advertised prize, read at the boundary (the Join snapshot); null when unknown.
+    /// </param>
+    IReadOnlyList<string> PrizeChoices(string? cultureId, string advertisedItemId, int? advertisedTierIndex, string seedKey);
 
     /// <summary>A tournament winner's renown (docs/features/tournament-rewards.md), from vanilla's answer.</summary>
     int RenownReward(int vanillaRenown, string? townId, string? winnerCultureId);

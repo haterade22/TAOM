@@ -3,12 +3,13 @@ namespace TAOM.Adapters;
 /// <summary>The tournament the player is about to join, as plain values.</summary>
 public sealed class TournamentJoinSnapshot
 {
-    public TournamentJoinSnapshot(string townId, string? cultureId, string seedKey, string? prizeItemId)
+    public TournamentJoinSnapshot(string townId, string? cultureId, string seedKey, string? prizeItemId, int? prizeTierIndex)
     {
         TownId = townId;
         CultureId = cultureId;
         SeedKey = seedKey;
         PrizeItemId = prizeItemId;
+        PrizeTierIndex = prizeTierIndex;
     }
 
     /// <summary>The town settlement's StringId.</summary>
@@ -22,6 +23,12 @@ public sealed class TournamentJoinSnapshot
 
     /// <summary>The advertised prize's item id; null when the tournament has none.</summary>
     public string? PrizeItemId { get; }
+
+    /// <summary>
+    /// The advertised prize's engine tier, <c>(int)ItemObject.Tier</c> (Tier1 = 0 in v1.5.3), which classes a weapon,
+    /// shield or harness the armour table does not list; null when the tournament has no prize.
+    /// </summary>
+    public int? PrizeTierIndex { get; }
 }
 
 /// <summary>

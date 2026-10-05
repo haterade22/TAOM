@@ -17,7 +17,9 @@ public interface ITournamentRewardsConfigProvider
 /// Validating loader for <c>tournament_rewards/tournament_rewards.json</c> (the CultureDoctrine pattern): a
 /// missing file gives every culture vanilla's factor with a warning, a parse failure the same with an error, and
 /// a parseable-but-invalid factor reverts to the default row's with a warning (csharp-architecture.md "Config
-/// Providers MUST Validate"). A culture row's missing field inherits the default row's. Read once per process.
+/// Providers MUST Validate"). A row with an empty key is dropped with a warning, and when two keys name one culture
+/// once spacing and case are ignored the later row wins, with a warning. A culture row's missing field inherits the
+/// default row's. Read once per process.
 /// </summary>
 public sealed class TournamentRewardsConfigProvider : ITournamentRewardsConfigProvider
 {
@@ -80,6 +82,11 @@ public sealed class TournamentRewardsConfigProvider : ITournamentRewardsConfigPr
                 _logger.LogWarning($"{Tag}: a row has an empty culture key, dropping it");
                 rejected = true;
                 continue;
+            }
+            if (rows.ContainsKey(key!))
+            {
+                _logger.LogWarning($"{Tag}: culture '{key}' appears twice once spacing and case are ignored, the later row wins");
+                rejected = true;
             }
             rows[key!] = pair.Value;
         }

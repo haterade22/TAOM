@@ -37,6 +37,7 @@ proves nothing, because UVs are normalized ([module-armory.md](../../../docs/mod
 python tools/audit_armory_refs.py                    # check
 python tools/audit_armory_refs.py --regen-catalogue  # regen
 python tools/wire_hill_troll_race.py --check         # both modes: the only gate that catches an unkeyed troll clip on a melee-table code (the +0x6590B9 swing CTD)
+python tools/validate_moduledata.py --code CREATURE_GEAR_OBTAINABLE  # both modes: a reinstall reverts the troll gear lock; repair: python tools/lock_creature_gear.py --apply
 ```
 
 About 15 s against the live install. Writes `docs/audits/armory-ref-audit.md` and prints
@@ -76,4 +77,4 @@ in the live install.
 - `validate_mesh_refs.py --unreferenced` matches case-insensitively and reported the new elven bows as used when nothing used them; the audit's "new art nothing uses" is an exact match.
 - `validate_moduledata.py` now carries the same body check as `MISSING_COLLISION_BODY` (ERROR) and `MISSING_VISUAL_MESH` (WARNING), so the commit hook blocks on it too (since #622: until 2026-09-18 `main()` never called the pass; the MCP tool and `/verify` still do not run it, #623). The audit is still the only place the troops are joined in.
 - A body that RESOLVES can still be borrowed, and this audit cannot see that (#633): three Rhun longbows carried the elven bow's `bo_wm_elven_bow_a03` and every ref check here read CLEAN. After an art drop also run `python tools/validate_moduledata.py --code COLLISION_BODY_BORROWED`, which errors on a body that is provably another kit's twin (same-kit sharing and the Rhun family exempt). The audit does not run that pass itself yet.
-- The player release under `E:\LOTRAOM_Releases\dev` ships its own copy of the Armory; a repair here reaches players only through `/release`.
+- Each release channel (`E:\LOTRAOM_Releases\testing`, `patreon`, `public`) ships its own copy of the Armory; a repair here reaches players only through Mike's next editor package for that channel (`/release` Phase 8).

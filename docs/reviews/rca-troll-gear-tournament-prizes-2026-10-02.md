@@ -49,3 +49,25 @@ could not be tested, instead of moving the logic.
 
 None new. `armory-is-shipped-to-players` already held the delivery fact and the three-part guard; the lesson below
 makes it reach the next live-Armory change.
+
+## Convergence pass (2026-10-04)
+
+The pass owed above ran on 2026-10-04 as one `deep-reviewer` (Opus 5.5, max effort) on `bc39f6e4` and the four live
+Armory edits, inside the Tournament Rewards review (workflow `wf_614275cb-eec`, whose checker confirmed each item).
+
+- **Findings 2 to 8:** resolved at HEAD, each re-read (the pure `TournamentPrizeRules` calls and their tests, the
+  interface comments, the undefined-piece report, the rule row, the test names, the tier comment, `string?`).
+  Finding 9 stands as decided.
+- **Finding 1 (HIGH, delivery): still open for two channels.** The testing channel's Armory (its tester build of
+  2026-10-02) passes `CREATURE_GEAR_OBTAINABLE`; patreon and public (v2.0.29.5) fail it with 15 errors each. The
+  HIGH rule needs the decision on record: lock both with `tools/lock_creature_gear.py --modules <channel>/Modules
+  --apply` before either is published, or ship the lock in their next editor package. Mike's decision (2026-10-04):
+  the next editor package, built from the dev install, carries the lock to both.
+- **New, fixed in the same change:** the snapshot README's troll block named backups the 2026-10-04 sweep had moved
+  and said no channel had the lock; `arena.md` said an old save always re-rolls its prize at the join menu, while the
+  engine keeps a saved prize until the hero count changes (`FightTournamentGame.cs:333`), as `armour-acquisition.md`
+  already said; `/armory-audit` never ran `CREATURE_GEAR_OBTAINABLE`, though an Armory reinstall is exactly when the
+  lock reverts.
+- **New, follow-up:** when `ApplyGating` throws, its catch clears the record and class snapshot that both consumers
+  of this fix now read, so culture stalls admit every item and the prize class falls back to engine tier (error path
+  only; no gate failure has been logged). Fix with a test, or document it.

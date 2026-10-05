@@ -81,7 +81,7 @@ delegate. Investigation: [investigation-dunland-tournament-ctd-2026-08-02.md](..
 
 Two extension points, both delegating to `ITournamentService`:
 
-**(A) GameModel override** — [TaomTournamentModel](../../Main/Features/Arena/Models/TaomTournamentModel.cs) inherits `DefaultTournamentModel` and overrides five methods:
+**(A) GameModel override** — [TaomTournamentModel](../../Main/Features/Arena/Models/TaomTournamentModel.cs) inherits `DefaultTournamentModel` and overrides seven methods:
 
 | Override | Delegates to | Behavior |
 |---|---|---|
@@ -90,6 +90,8 @@ Two extension points, both delegating to `ITournamentService`:
 | `GetEliteRewardItems(Town, …)` | `BuildPrizePool(culture, PrizeBand.Elite)` | Same builder, heavy class only. |
 | `GetTournamentStartChance(Town)` | `CalculateStartChance` | Boundary computes lord count; service maps it: 0→0%, 1→45%, 2→75%, 3→90%, 4+→100%. Returns 0% if the town is under siege or outside a campaign. |
 | `GetTournamentEndChance(TournamentGame)` | `CalculateEndChance` | After a 20-day grace period, ramps end-chance by 3.3%/day elapsed. |
+| `GetRenownReward(Hero, Town)` | `RenownReward` | Vanilla's answer plus one per hero in the field, times the winner's culture factor and the MCM multiplier; a null town (the new-game leaderboard seeding) keeps vanilla's. Owned by [Tournament Rewards](tournament-rewards.md). |
+| `GetInfluenceReward(Hero, Town)` | `InfluenceReward` | In a town of the winner's own kingdom, vanilla's answer plus 2 and one per four heroes, times culture and MCM; elsewhere vanilla's. Owned by [Tournament Rewards](tournament-rewards.md). |
 
 **(B) Harmony postfix (Patch46_TournamentDwarfDismount)** — [Patch46_TournamentDwarfDismount](../../Main/Features/Arena/Hooks/Patch46_TournamentDwarfDismount.cs) postfixes the public `TournamentFightMissionController.PrepareForMatch`. After vanilla assigns every participant's `MatchEquipment`, it iterates all teams/participants and, for any participant whose race `ShouldDismountInTournament` returns true (currently dwarves), clears `EquipmentIndex.Horse` + `EquipmentIndex.HorseHarness` via `AddEquipmentToSlotWithoutAgent(slot, EquipmentElement.Invalid)`. `PrepareForMatch` is the single chokepoint feeding **both** the visual spawn (`SpawnAgentWithRandomItems`) and the AI simulation (`Simulate` → `GetSimulationAttackPower`), so a dwarf is never treated as cavalry anywhere in the tournament. Keyed on **race, not culture**, so a dwarf competing in *any* town — and the player, if the player is a dwarf — is caught.
 
@@ -99,17 +101,20 @@ Two extension points, both delegating to `ITournamentService`:
 
 ```
 == (A) GameModel ==
-SubModule.OnGameStart  (Main/SubModule.cs:385)
+SubModule.OnGameStart → RegisterCulturalFeatModels  (Main/SubModule.cs:1227)
    campaignStarter.AddModel(new TaomTournamentModel(IoC.Resolve<ITournamentService>()))
         |
 TaomTournamentModel : DefaultTournamentModel        ← thin: converts sealed→primitive, delegates
         |                                               (logic lives in TournamentService, #137)
    GetParticipantArmor / GetRegularRewardItems / GetEliteRewardItems
    GetTournamentStartChance / GetTournamentEndChance
+   GetRenownReward / GetInfluenceReward
         |
-   ITournamentService (TournamentService, Reuse.Singleton, injects IRaceManager + IArmourGateService)
+   ITournamentService (TournamentService, Reuse.Singleton, injects IRaceManager + IArmourGateService + TournamentRewardsService)
         ├─ ResolveDummyId(cultureId)        → "gear_practice_dummy_<culture>"
         ├─ BuildPrizePool(culture, band)    → filter Items.All by TournamentPrizeRules
+        ├─ PrizeChoices(culture, prize, tier, seed) → TournamentPrizeRules.AdvertisedBand + PickChoices
+        ├─ RenownReward / InfluenceReward → TournamentRewardsService (Tournament Rewards)
         ├─ CalculateStartChance / CalculateEndChance
         └─ ShouldDismountInTournament(raceId) → IRaceManager validate + "dwarf" check
 
@@ -126,7 +131,7 @@ SpawnAgentWithRandomItems / Simulate read the now-horse-free MatchEquipment → 
 
 ## Configuration
 
-None. All knobs are constants on `TournamentService` / `TaomTournamentModel`. The dwarf-dismount race set is a one-line extension point (`DwarfRaceName` constant) — intentionally not config (per the simplicity criterion; spiders/other non-humanoids are recruitable troops, not tournament heroes — see memory `nonhumanoid-creature-troop-not-mount`).
+None for the Arena feature itself: its knobs are constants on `TournamentService` / `TaomTournamentModel`. The model's renown and influence overrides read Tournament Rewards' MCM "Tournaments" group and `tournament_rewards.json` ([tournament-rewards.md](tournament-rewards.md#configuration)). The dwarf-dismount race set is a one-line extension point (`DwarfRaceName` constant), intentionally not config (per the simplicity criterion; spiders/other non-humanoids are recruitable troops, not tournament heroes; see memory `nonhumanoid-creature-troop-not-mount`).
 
 | Constant | Location | Value | Meaning |
 |---|---|---|---|
@@ -142,14 +147,14 @@ To change armor or rewards, **edit XML, not code** — add/edit `gear_practice_d
 
 | File | Purpose |
 |---|---|
-| [Main/Features/Arena/Models/TaomTournamentModel.cs](../../Main/Features/Arena/Models/TaomTournamentModel.cs) | GameModel override (thin) — 5 overrides, each delegates to `ITournamentService` |
-| [Main/Features/Arena/ITournamentService.cs](../../Main/Features/Arena/ITournamentService.cs) | Service interface — `CalculateStartChance` / `CalculateEndChance` / `BuildPrizePool` / `ResolveDummyId` / `ShouldDismountInTournament` |
-| [Main/Features/Arena/TournamentService.cs](../../Main/Features/Arena/TournamentService.cs) | Service impl (`Reuse.Singleton`); injects `IRaceManager` for the dwarf check and `IArmourGateService` for prize classes |
-| [Main/Features/Arena/TournamentPrizeRules.cs](../../Main/Features/Arena/TournamentPrizeRules.cs) | Pure prize rules: `PrizeBand`, `PrizeClass`, `Fits` |
+| [Main/Features/Arena/Models/TaomTournamentModel.cs](../../Main/Features/Arena/Models/TaomTournamentModel.cs) | GameModel override (thin): 7 overrides, each delegates to `ITournamentService` |
+| [Main/Features/Arena/ITournamentService.cs](../../Main/Features/Arena/ITournamentService.cs) | Service interface: `CalculateStartChance` / `CalculateEndChance` / `BuildPrizePool` / `PrizeChoices` / `RenownReward` / `InfluenceReward` / `ResolveDummyId` / `ShouldDismountInTournament` |
+| [Main/Features/Arena/TournamentService.cs](../../Main/Features/Arena/TournamentService.cs) | Service impl (`Reuse.Singleton`); injects `IRaceManager` for the dwarf check, `IArmourGateService` for prize classes, and Tournament Rewards' `TournamentRewardsService` for renown and influence |
+| [Main/Features/Arena/TournamentPrizeRules.cs](../../Main/Features/Arena/TournamentPrizeRules.cs) | Pure prize rules: `PrizeBand`, `PrizeClass`, `XmlMerchandise`, `Fits`, `PreferCulture`, and for Tournament Rewards' Join choice `AdvertisedBand` (the band the alternatives come from: elite for a heavy, elite, lord or named prize) and `PickChoices` (the seeded three) |
 | [Main/Features/Arena/Hooks/Patch46_TournamentDwarfDismount.cs](../../Main/Features/Arena/Hooks/Patch46_TournamentDwarfDismount.cs) | Harmony postfix — clears Horse/HorseHarness for dwarf participants |
 | [Main/Features/Arena/ArenaIoC.cs](../../Main/Features/Arena/ArenaIoC.cs) | `container.Register<ITournamentService, TournamentService>(Reuse.Singleton)` |
-| [Main/SubModule.cs:385](../../Main/SubModule.cs) | `AddModel(new TaomTournamentModel(IoC.Resolve<ITournamentService>()))` |
-| [Main/SubModule.cs](../../Main/SubModule.cs) | `_harmony.PatchCategory("Patch46_TournamentDwarfDismount")` (next to Patch45_SpiderTroopSpawn) |
+| [Main/SubModule.cs:1227](../../Main/SubModule.cs) | `AddModel(new TaomTournamentModel(IoC.Resolve<TAOM.Features.Arena.ITournamentService>()))`, in `RegisterCulturalFeatModels` (called from `OnGameStart`) |
+| [Main/SubModule.cs](../../Main/SubModule.cs) | `TryPatchCategory("Patch46_TournamentDwarfDismount")` in `OnGameInitializationFinished` (next to Patch71_HeroResetEquipmentsGuard) |
 | `Main/_Module/ModuleData/characters/npcs_<culture>.xml` | `gear_practice_dummy_<culture>` NPCs (armor data) — see [tournament-armor-assignment.md](tournament-armor-assignment.md) |
 
 ## Dependencies
@@ -165,14 +170,15 @@ To change armor or rewards, **edit XML, not code** — add/edit `gear_practice_d
 
 - [TAOM.Tests/Features/Arena/TournamentServiceTests.cs](../../TAOM.Tests/Features/Arena/TournamentServiceTests.cs) — **21 tests**: start-chance step function, end-chance ramp, `ResolveDummyId` fallback chain, and **6 for `ShouldDismountInTournament`** (dwarf→true, mixed-case "Dwarf"→true, human/elf/orc→false, invalid race id→false with `DidNotReceive().GetRaceNameFromId` asserting validate-before-lookup). `IRaceManager` is mocked via NSubstitute.
 - [TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs](../../TAOM.Tests/Features/Arena/TaomTournamentModelTests.cs): the tuning constants' invariants.
-- [TAOM.Tests/Features/Arena/TournamentPrizeRulesTests.cs](../../TAOM.Tests/Features/Arena/TournamentPrizeRulesTests.cs): which class, tier and merchandise flag each band accepts, weapons by engine tier included.
+- [TAOM.Tests/Features/Arena/TournamentPrizeRulesTests.cs](../../TAOM.Tests/Features/Arena/TournamentPrizeRulesTests.cs): which class, tier and merchandise flag each band accepts, weapons by engine tier included; `XmlMerchandise`; `PreferCulture`'s fallback; `AdvertisedBand` by class and tier and with an unknown tier; `PickChoices`' seeded, distinct choices.
 
 The `Patch46` postfix and the model methods that touch `Game.Current.ObjectManager` / `Items.All` are game-only (not unit-tested per ADR-008). The testable decision logic lives in `TournamentService` and `TournamentPrizeRules`; `BuildPrizePool`'s loop over `Items.All` is game-only.
 
 ## Prize pools
 
-The engine picks a prize in `FightTournamentGame.GetTournamentPrize` (v1.5.3, not virtual): fewer than
-4 hero entrants draw from `GetRegularRewardItems` by value quartile (the quartile is the hero count),
+The engine picks a prize in `FightTournamentGame.GetTournamentPrize` (v1.5.3, a protected override of the
+abstract `TournamentGame.GetTournamentPrize`, so only a new `TournamentGame` subclass could replace it): fewer
+than 4 hero entrants draw from `GetRegularRewardItems` by value quartile (the quartile is the hero count),
 4 or more from `GetEliteRewardItems` (the cheaper half below 10 heroes, the dearer half from 10). TAOM
 supplies both lists through [TournamentPrizeRules](../../Main/Features/Arena/TournamentPrizeRules.cs)
 (Mike, 2026-10-02: every prize is heavy or below):
@@ -196,8 +202,13 @@ supplies both lists through [TournamentPrizeRules](../../Main/Features/Arena/Tou
   (`cache[MBRandom.RandomInt(min, max)]`, `FightTournamentGame.cs:365` and `:392`), so an empty list
   crashes the roll. The service falls back from the town's culture to every culture's items; the
   model's `base` call after that is a last resort no real item set reaches.
-- **Old saves** pick the rules up without help: the candidate lists are not saved, and the join menu
-  re-rolls the prize (`UpdateTournamentPrize(includePlayer: true)` changes the hero count).
+- **Old saves** pick the rules up without help, though not always at once. The candidate lists are not saved,
+  and a tournament's first join-menu visit after its creation re-rolls its prize
+  (`UpdateTournamentPrize(includePlayer: true)` counts the player, so the count differs from the 0 a new
+  tournament records). After that the engine keeps the saved prize: `GetTournamentPrize` re-rolls only when the
+  hero count changed or there is no prize. A prize the player already saw before the update, one the new pools
+  never offer (troll gear, or a Tier 5 or 6 weapon), therefore stands until the count changes or the tournament
+  ends (15 days at most), and Tournament Rewards offers it as the first choice.
 
 ## Extension points (engine facts, v1.5.3)
 
@@ -294,6 +305,8 @@ If another custom-skeleton race is ever a tournament participant and clips insid
 
 ## Changelog
 
+- 2026-10-04: the band Tournament Rewards draws the Join alternatives from is `TournamentPrizeRules.AdvertisedBand`, with the prize's engine tier read at Join: a heavy, elite, lord or named advertised prize draws the elite band, since an old save or vanilla's fallback list can still advertise one above heavy (Mike). The old-save note corrected: the engine keeps a saved prize until the hero count changes.
+- 2026-10-02: `TaomTournamentModel` gained `GetRenownReward` and `GetInfluenceReward`, and the service `PrizeChoices`, for [Tournament Rewards](tournament-rewards.md).
 - 2026-10-02: Prize pools capped at heavy. The bands are armour classes now (regular light and medium, elite heavy), weapons judged by engine tier, so a big tournament no longer awards Tier5 or Tier6 weapons and does award heavy armour (the armour gate's `NotMerchandise` flip had kept heavy out of every pool). Troll gear and elite, lord and named kit are never prizes, and an empty culture pool falls back to every culture's instead of to vanilla's fixed Calradian list.
 - 2026-09-06: Arena practice characters rendered as toddlers. 46 `NPCCharacter` entries across ten cultures had no `<face>`, so the engine gave them body properties with age 0 and picked the toddler skin. Added the missing `face_key_template` to each and `CharacterFaceCoverageTests` as the gate. Data only, no code change.
 - 2026-06-09 — Patch46 dwarf dismount added (`fix(arena)`, #277): postfix on `PrepareForMatch` clears Horse/HorseHarness for dwarf participants so they never spawn inside the mount; same-day hotfix corrected the injected `_match` field from three underscores to four (`____match`) after it crashed every campaign load.

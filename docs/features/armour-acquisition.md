@@ -425,7 +425,9 @@ Run it after any troop roster change that moves a piece's lowest wearer across a
   the flag. No real item set reaches that last step (2026-10-02).
 - **The player's own pieces:** the flag also keeps the player's gated pieces from being plundered when
   the player's party is defeated, and from the 15% given up on "try to get away".
-- **Saved prizes:** a tournament running when the gate first applies keeps its saved prize.
+- **Saved prizes:** a tournament whose join menu was opened before the gate first applied keeps its saved prize
+  until its hero count changes or it ends (15 days at most); one never opened is re-rolled at its first visit
+  ([arena.md](arena.md#prize-pools)).
 - **Enlistment:** rank kits are issued with no gate check (each rank is re-earned by service).
 - **Start kits:** the `starter_*` twins have no class row, so the armoury cannot upgrade them; they are
   non-merchandise, so the gate does not need them.

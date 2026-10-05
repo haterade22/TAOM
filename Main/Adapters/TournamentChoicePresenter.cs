@@ -31,7 +31,7 @@ public sealed class TournamentChoicePresenter : ITournamentChoicePresenter
         }
 
         Show(new TextObject("{=taom_tr_prize_title}Choose Your Prize").ToString(),
-            new TextObject("{=taom_tr_prize_desc}The tournament master offers three prizes. Choose the one you will fight for; it is yours if you win.").ToString(),
+            new TextObject("{=taom_tr_prize_desc}The tournament master offers a choice of prizes. Choose the one you will fight for; it is yours if you win.").ToString(),
             elements, onPicked, onCancel);
     }
 
@@ -46,11 +46,10 @@ public sealed class TournamentChoicePresenter : ITournamentChoicePresenter
             elements, onPicked, onCancel);
     }
 
-    public void ShowSkillXpGained(string skillId, int xp)
+    public void ShowSkillTrained(string skillId)
     {
-        var text = new TextObject("{=taom_tr_skill_gained}The tournament trained your {SKILL_NAME} (+{XP} experience).")
-            .SetTextVariable("SKILL_NAME", SkillName(skillId))
-            .SetTextVariable("XP", xp);
+        var text = new TextObject("{=taom_tr_skill_gained}The tournament trained your {SKILL_NAME}.")
+            .SetTextVariable("SKILL_NAME", SkillName(skillId));
         InformationManager.DisplayMessage(new InformationMessage(text.ToString()));
     }
 

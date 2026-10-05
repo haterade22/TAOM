@@ -34,7 +34,9 @@ public sealed class TournamentJoinAdapter : ITournamentJoinAdapter
                 return null;
             var townId = town!.Settlement.StringId;
             var seedKey = $"{townId}:{Math.Round(tournament.CreationTime.ToHours * 1000d):0}";
-            return new TournamentJoinSnapshot(townId, town.Culture?.StringId, seedKey, tournament.Prize?.StringId);
+            var prize = tournament.Prize;
+            return new TournamentJoinSnapshot(townId, town.Culture?.StringId, seedKey, prize?.StringId,
+                prize == null ? (int?)null : (int)prize.Tier);
         }
         catch (Exception ex)
         {

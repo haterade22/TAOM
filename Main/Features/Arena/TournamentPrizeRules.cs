@@ -51,10 +51,19 @@ public static class TournamentPrizeRules
     }
 
     /// <summary>
-    /// The town culture's share of the fitting items, in order, or every fitting item when that share is
-    /// empty or the town has no culture: the engine's prize roll indexes the list unguarded
-    /// (FightTournamentGame.GetTournamentPrize), so it must never be empty while anything fits.
+    /// The band the alternatives at Join are drawn from, the advertised prize's own: a heavy prize is a big
+    /// tournament's, so its alternatives come from the elite band, and so do an elite, lord or named prize's (a
+    /// save from before the pools were capped at heavy, or vanilla's fallback list when the elite pool is empty,
+    /// can advertise one; Mike, 2026-10-04). Light, medium and civilian prizes, and a prize whose engine tier is
+    /// unknown (null: no tier was read), draw the regular band.
     /// </summary>
+    /// <param name="tableClass">The armour gate's class for the prize, null when the table has none.</param>
+    /// <param name="engineTierIndex"><c>(int)ItemObject.Tier</c> of the prize, Tier1 = 0 in v1.5.3.</param>
+    public static PrizeBand AdvertisedBand(ArmourClass? tableClass, int? engineTierIndex) =>
+        engineTierIndex is int tier && ArmourClassRules.IsGated(PrizeClass(tableClass, tier))
+            ? PrizeBand.Elite
+            : PrizeBand.Regular;
+
     /// <summary>How many prizes the player chooses between at Join (Mike, 2026-10-02).</summary>
     public const int ChoiceCount = 3;
 
@@ -62,7 +71,9 @@ public static class TournamentPrizeRules
     /// The prizes offered at Join: the advertised prize first, then alternatives from <paramref name="pool"/>,
     /// at most <see cref="ChoiceCount"/> in all, distinct. The draw is seeded by <paramref name="seedKey"/> (the
     /// town and the tournament's creation time) over the pool in id order, so reopening the menu, in this
-    /// session or after a reload, offers the same three.
+    /// session or after a reload, offers the same three while the advertised prize stands: vanilla re-rolls that
+    /// prize at the join menu when lords arrive or leave
+    /// (<c>TournamentCampaignBehavior.game_menu_tournament_join_on_init</c>), and the alternatives follow it.
     /// </summary>
     public static IReadOnlyList<string> PickChoices(IEnumerable<string> pool, string advertised, string seedKey)
     {
@@ -93,6 +104,11 @@ public static class TournamentPrizeRules
         }
     }
 
+    /// <summary>
+    /// The town culture's share of the fitting items, in order, or every fitting item when that share is
+    /// empty or the town has no culture: the engine's prize roll indexes the list unguarded
+    /// (FightTournamentGame.GetTournamentPrize), so it must never be empty while anything fits.
+    /// </summary>
     public static List<T> PreferCulture<T>(IReadOnlyList<T> fitting, string? cultureId, Func<T, string?> cultureOf)
     {
         if (!string.IsNullOrEmpty(cultureId))

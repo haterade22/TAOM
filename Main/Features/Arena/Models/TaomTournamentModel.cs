@@ -58,7 +58,9 @@ public class TaomTournamentModel : DefaultTournamentModel
     }
 
     // Renown and influence for every winner (docs/features/tournament-rewards.md). The engine asks at the award
-    // and again for the winner panel; both read the same tournament's hero count, noted by Patch96.
+    // and again for the winner panel; both read the same tournament's hero count, noted by TournamentRewardsBehavior's
+    // TournamentFinished listener (it runs before vanilla's handler; the order is traced on the behavior). A new
+    // campaign's leaderboard seeding asks renown with a null town, which the service answers with vanilla's value.
     public override int GetRenownReward(Hero winner, Town town) =>
         _service.RenownReward(base.GetRenownReward(winner, town), town?.Settlement?.StringId, winner?.Culture?.StringId);
 

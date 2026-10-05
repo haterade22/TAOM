@@ -1859,3 +1859,15 @@ Race Abilities keyed its men's profiles on culture ids and proved each id exists
   minor-faction clans, caravans, tavern mercenaries and TAOM's volunteer pools as well, and the culture block shows
   none of them.
 - **Source:** `docs/reviews/rca-race-abilities-2026-10-04.md` R17 (lens 7).
+
+### A culture group in a config is listed from the culture data, never from memory (Tournament Rewards, 2026-10-04)
+`tournament_rewards.json` gives the orc factors to Mordor, Isengard, Gundabad, Goblin-town, the Misty Mountain Orcs
+and Dol Guldur, and not to Blue Craig, the third goblin kingdom, which falls to the neutral default. The
+shipped-config test pinned the same six, so the data and its test came from one list.
+- **Why missed:** the group "the orc hosts" was typed from memory, and the test was written from the data it
+  checks.
+- **Prevent:** derive a culture group from what defines it (the cultures' playable race, alignment and shared
+  rosters in `taom_spcultures.xml`, `charactercreation/cultures.json`, `execution/alignment.json`), and make the test
+  derive its expected set the same way. Sibling: "Check a culture-keyed config against the cultures the troops
+  carry" above.
+- **Source:** `docs/reviews/rca-tournament-rewards-2026-10-04.md` T2 (lens 7).

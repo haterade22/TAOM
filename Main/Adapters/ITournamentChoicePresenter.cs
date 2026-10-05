@@ -15,6 +15,9 @@ public interface ITournamentChoicePresenter
     /// <summary>Pick the combat skill the tournament trains, by skill id.</summary>
     void ShowSkillChoice(IReadOnlyList<string> skillIds, Action<string> onPicked, Action onCancel);
 
-    /// <summary>A message line naming the trained skill and the XP gained.</summary>
-    void ShowSkillXpGained(string skillId, int xp);
+    /// <summary>
+    /// A message line naming the trained skill. It shows no number: the engine scales the XP by the hero's learning
+    /// rate (HeroDeveloper.AddSkillXp, v1.5.3), so the amount awarded is not the amount the skill gains.
+    /// </summary>
+    void ShowSkillTrained(string skillId);
 }

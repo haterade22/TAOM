@@ -88,32 +88,77 @@ public class TournamentRewardRulesTests
         Assert.AreEqual(3, TournamentRewardRules.Renown(3, 6, cultureFactor, multiplier));
     }
 
-    // --- Influence ---
+    [DataTestMethod]
+    [DataRow(TournamentRewardRules.MaxMultiplier + 0.01f)]
+    [DataRow(1e9f)]
+    public void Renown_MultiplierAboveTheSliderMaximum_FallsBackToVanilla(float multiplier)
+    {
+        // The slider stops at MaxMultiplier, and a hand-edited settings file can exceed it.
+        Assert.AreEqual(3, TournamentRewardRules.Renown(3, 6, 1f, multiplier));
+    }
+
+    [TestMethod]
+    public void Renown_MultiplierAtTheSliderMaximum_Applies()
+    {
+        // (3 + 6) x 1 x 5 = 45.
+        Assert.AreEqual(45, TournamentRewardRules.Renown(3, 6, 1f, TournamentRewardRules.MaxMultiplier));
+    }
+
+    [TestMethod]
+    public void Renown_ResultBeyondIntRange_FallsBackToVanilla()
+    {
+        // (3 + 6) x 1e9 x 5 is about 4.5e10: the unchecked cast would give int.MinValue (net472 x64), which
+        // Clan.AddRenown ignores, so the award would silently vanish.
+        Assert.AreEqual(3, TournamentRewardRules.Renown(3, 6, cultureFactor: 1e9f, multiplier: 5f));
+    }
+
+    // --- Influence (whole points: the engine's GetInfluenceReward is an int) ---
 
     [TestMethod]
     public void Influence_NotTheWinnersKingdomsTown_IsVanilla()
     {
-        Assert.AreEqual(0f, TournamentRewardRules.Influence(0f, heroCount: 8, ownKingdomTown: false, 1.5f, 1f));
+        Assert.AreEqual(0, TournamentRewardRules.Influence(0, heroCount: 8, ownKingdomTown: false, 1.5f, 1f));
     }
 
     [TestMethod]
     public void Influence_OwnKingdomsTown_IsTwoPlusOnePerFourHeroes()
     {
         // 0 + 2 + 8 / 4 = 4.
-        Assert.AreEqual(4f, TournamentRewardRules.Influence(0f, heroCount: 8, ownKingdomTown: true, 1f, 1f), 0.0001f);
+        Assert.AreEqual(4, TournamentRewardRules.Influence(0, heroCount: 8, ownKingdomTown: true, 1f, 1f));
     }
 
     [TestMethod]
     public void Influence_PartialFourHeroes_CountsOnlyWholeFours()
     {
-        Assert.AreEqual(3f, TournamentRewardRules.Influence(0f, heroCount: 7, ownKingdomTown: true, 1f, 1f), 0.0001f);
+        Assert.AreEqual(3, TournamentRewardRules.Influence(0, heroCount: 7, ownKingdomTown: true, 1f, 1f));
     }
 
     [TestMethod]
     public void Influence_CultureAndMultiplier_Scale()
     {
         // (0 + 2 + 2) x 1.5 x 2 = 12.
-        Assert.AreEqual(12f, TournamentRewardRules.Influence(0f, 8, true, 1.5f, 2f), 0.0001f);
+        Assert.AreEqual(12, TournamentRewardRules.Influence(0, 8, true, 1.5f, 2f));
+    }
+
+    [TestMethod]
+    public void Influence_KeepsVanillasAnswerInTheBase()
+    {
+        // (5 + 2 + 2) x 1.5 x 1 = 13.5, rounded half away from zero.
+        Assert.AreEqual(14, TournamentRewardRules.Influence(5, 8, true, 1.5f, 1f));
+    }
+
+    [TestMethod]
+    public void Influence_ScaledHalf_RoundsAwayFromZero()
+    {
+        // (0 + 2 + 1) x 1.5 x 1 = 4.5: the rule rounds, as Renown does.
+        Assert.AreEqual(5, TournamentRewardRules.Influence(0, heroCount: 4, ownKingdomTown: true, 1.5f, 1f));
+    }
+
+    [TestMethod]
+    public void Influence_NegativeHeroCount_TreatedAsNone()
+    {
+        // 0 + 2 + 0 = 2.
+        Assert.AreEqual(2, TournamentRewardRules.Influence(0, heroCount: -8, ownKingdomTown: true, 1f, 1f));
     }
 
     [DataTestMethod]
@@ -121,7 +166,26 @@ public class TournamentRewardRulesTests
     [DataRow(float.NegativeInfinity)]
     public void Influence_InvalidFactor_FallsBackToVanilla(float factor)
     {
-        Assert.AreEqual(0f, TournamentRewardRules.Influence(0f, 8, true, factor, 1f));
+        Assert.AreEqual(0, TournamentRewardRules.Influence(0, 8, true, factor, 1f));
+    }
+
+    [DataTestMethod]
+    [DataRow(float.NaN)]
+    [DataRow(-1f)]
+    [DataRow(float.PositiveInfinity)]
+    [DataRow(TournamentRewardRules.MaxMultiplier + 0.01f)]
+    public void Influence_InvalidMultiplier_FallsBackToVanilla(float multiplier)
+    {
+        // The multiplier is its own gate: the factor tests above pass the bad value as the culture factor.
+        Assert.AreEqual(7, TournamentRewardRules.Influence(7, 8, true, 1f, multiplier));
+    }
+
+    [TestMethod]
+    public void Influence_ResultBeyondIntRange_FallsBackToVanilla()
+    {
+        // (7 + 2 + 2) x 1e9 x 5 is about 5.5e10, past what an int holds: the unchecked cast gives
+        // int.MinValue, which GainKingdomInfluenceAction would add to the clan's influence.
+        Assert.AreEqual(7, TournamentRewardRules.Influence(7, 8, true, cultureFactor: 1e9f, multiplier: 5f));
     }
 
     // --- SkillXp ---
@@ -163,6 +227,13 @@ public class TournamentRewardRulesTests
     public void SkillXp_InvalidFactor_UsesNoBonus()
     {
         Assert.AreEqual(750, TournamentRewardRules.SkillXp(4, true, float.NaN));
+    }
+
+    [TestMethod]
+    public void SkillXp_FactorBeyondIntRange_UsesNoBonus()
+    {
+        // 750 x 1e9 is past what an int holds; the unchecked cast would give int.MinValue.
+        Assert.AreEqual(750, TournamentRewardRules.SkillXp(4, true, 1e9f));
     }
 
     // --- CombatSkillIds ---

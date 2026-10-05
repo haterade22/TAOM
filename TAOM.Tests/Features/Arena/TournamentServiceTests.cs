@@ -10,8 +10,9 @@ namespace TAOM.Tests.Features.Arena;
 /// <summary>
 /// Phase 9b #137 — TournamentService extracted from TaomTournamentModel. Pure decision functions
 /// (CalculateStartChance, CalculateEndChance, ResolveDummyId) are unit-testable here without
-/// Campaign.Current. BuildPrizePool's loop over Items.All (sealed engine cache) is game-only; every
-/// decision it makes is a TournamentPrizeRules call, tested in TournamentPrizeRulesTests.
+/// Campaign.Current. BuildPrizePool's loop over Items.All (sealed engine cache) is game-only, and so is
+/// PrizeChoices, which calls it; every decision either makes is a TournamentPrizeRules call (Fits, and
+/// AdvertisedBand and PickChoices for the Join choices), tested in TournamentPrizeRulesTests.
 /// ShouldDismountInTournament (dwarf tournament-cavalry fix, Patch46) is pure over IRaceManager.
 /// </summary>
 [TestClass]

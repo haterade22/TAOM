@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Infrastructure;
@@ -110,6 +111,42 @@ public class TournamentRewardsConfigProviderTests
         WriteConfig(Default + @", "" Mordor "": { ""renown"": 1.5 }");
 
         Assert.AreEqual(1.5f, _sut.GetCatalog().For("mordor").Renown, 0.0001f);
+    }
+
+    [DataTestMethod]
+    [DataRow("")]
+    [DataRow("  ")]
+    public void For_EmptyCultureKey_DroppedAndWarns(string key)
+    {
+        WriteConfig(Default + @", """ + key + @""": { ""renown"": 1.5, ""influence"": 1.5, ""skill_xp"": 1.5 }");
+
+        var catalog = _sut.GetCatalog();
+
+        Assert.AreEqual(0, catalog.CultureIds.Count(), "the keyless row belongs to no culture");
+        AssertFactors(catalog.For("gondor"), 1f, 1f, 1f);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("empty culture key")));
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("invalid values")));
+    }
+
+    [TestMethod]
+    public void For_NullRow_InheritsTheDefaultRow()
+    {
+        // "gondor": null is a row with no fields, so every field inherits; it is not a validation failure.
+        WriteConfig(@"""default"": { ""renown"": 1.1, ""influence"": 1.2, ""skill_xp"": 1.3 }, ""gondor"": null");
+
+        AssertFactors(_sut.GetCatalog().For("gondor"), 1.1f, 1.2f, 1.3f);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void For_TwoKeysThatNormaliseToOneCulture_WarnsAndTheLaterRowWins()
+    {
+        // " Mordor " and "mordor" are two JSON keys but one culture once spacing and case are ignored.
+        WriteConfig(Default + @", "" Mordor "": { ""renown"": 1.5 }, ""mordor"": { ""renown"": 1.25 }");
+
+        Assert.AreEqual(1.25f, _sut.GetCatalog().For("mordor").Renown, 0.0001f);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("mordor") && s.Contains("twice")));
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("invalid values")));
     }
 
     [DataTestMethod]

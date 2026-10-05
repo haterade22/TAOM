@@ -38,6 +38,6 @@ public sealed class TournamentSkillAwardService
         var skill = _rewards.ChosenSkill(townId);
         var xp = _rewards.AwardPlayerSkillXp(townId, roundsWon, won, playerHeroId, playerCultureId);
         if (skill != null && xp > 0)
-            _presenter.ShowSkillXpGained(skill, xp);
+            _presenter.ShowSkillTrained(skill);
     }
 }
