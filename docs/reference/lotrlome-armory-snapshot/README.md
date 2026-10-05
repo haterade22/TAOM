@@ -354,11 +354,15 @@ skin lacks the stops; `--apply` restores them).
   `mordor_num_civ_template_mouth_of_sauron` (`taom_equipment_sets_mordor.xml`, named in `lords.xslt`), in campaigns
   started on v2.0.33 or later: a saved game keeps a hero's saved equipment, because heroes are read from XML only for
   a new campaign. A helm with `covers_head="true"` hides the head, which gives him the look without a race of his own.
-- **What `covers_head` costs.** The engine builds no face object for him (no eyes, mouth, hair, beard or eyebrows) and
-  turns off facegen head scaling (`ItemObject.UsingFacegenScaling`). TAOM's research also records hand-grip morphs
-  freezing under a `covers_head` helm, a fix that is parked ([native-skin-fixes.md](../../features/native-skin-fixes.md));
-  whether his grips freeze on v1.5.3 is unverified. The `Civilian` flag only marks the helm civilian in the inventory
-  and tooltips: his civilian set would wear it without the flag.
+- **What `covers_head` costs.** It turns off facegen head scaling (`ItemObject.UsingFacegenScaling`), and his head,
+  hair, beard and eyebrows are not drawn. On v1.5.3 the native `add_skin_meshes_to_agent_visuals` also built no face
+  object for a `covers_head` agent, which is the cause TAOM's research gave for hand-grip morphs freezing under such a
+  helm. **Bannerlord v1.5.4 (2026-10-05) changed that path:** it builds the face object for every agent and then hides
+  the head, hair, beard and eyebrow meshes and the face, so the hand and glove morph helper now receives a face. Shown
+  by a function-by-function comparison of the two `TaleWorlds.Native.dll` builds on 2026-10-05 (v1.5.3 skips the face
+  build at RVA `0x60C13A`; v1.5.4 runs it unconditionally at `0x60C372`). Whether his grips animate on v1.5.4 is still
+  the in-game check #733 owes. The `Civilian` flag only marks the helm civilian in the inventory and tooltips: his
+  civilian set would wear it without the flag.
 - **Armour.** 55 when added; Mike set it to 50 on 2026-10-04. Backups: `E:\Bannerlord_Backups\mouth_of_sauron_helm_2026-09-28\`
   (before the item existed) and `E:\Bannerlord_Backups\mouth_of_sauron_helm_2026-10-04\` (at 55). The asset sources:
   `E:\LOTRAOMAssets\Mordor\MouthOfSauron\HANDOFF.md` (not under version control). The item as it stands:

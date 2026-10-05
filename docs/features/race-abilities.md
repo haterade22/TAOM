@@ -444,6 +444,19 @@ Tuning notes, not yet acted on:
 - **Balance:** the clean test is one matchup run three times with the MCM switch off and three times on.
 - Not yet run: steps 2 to 4, 6 to 8 and 10, and the sparks in step 9.
 
+### Bannerlord v1.5.4 (2026-10-05)
+
+Checked when Steam moved the game to v1.5.4. Every managed engine member the feature calls, overrides or reads is
+byte-identical to v1.5.3: `Agent`, `AgentDrivenProperties`, `Mission` and the mission behaviour callbacks, the stat,
+damage and morale model bases with their Sandbox and Custom Battle subclasses, `MBAgentVisuals`, `SkinVoiceManager`
+and `ParticleSystemManager` (decompile diff of the two builds). The strict binding gate passes 464 of 464 on v1.5.4.
+On the native side, the code behind each bridge call it makes (`MakeVoice`, the contour calls, the particle lookup and
+burst, the nearby-agent query) is instruction-identical as far as its direct calls reach; code behind virtual calls
+was not compared. What v1.5.4 did change natively is the agent-visuals state
+code that runs when a soldier is built, re-equips or dies, so the next look in game should confirm three things on
+v1.5.4: an outline survives a weapon or banner re-equip; it clears on death and leaves nothing on the corpse; the war
+cry and the sparks still play.
+
 ## Not yet
 
 - **Custom war-cry audio, a lasting aura (embers for the whole window), a player "Unleash" order.** The aura was
@@ -458,6 +471,8 @@ Tuning notes, not yet acted on:
 Dated, feature-sliced history (newest first). The commit bodies, which `/release` gathers into `CHANGELOG.md`, are
 the chronological log of record.
 
+- 2026-10-05: checked against Bannerlord v1.5.4: no code change needed; three in-game checks owed, listed under
+  "Bannerlord v1.5.4" above.
 - 2026-10-04: first in-game test on a v2.0.34 dev build (Mike): a success for now, tuning later; the findings are
   under "First in-game test" above.
 - 2026-10-04: part of the v2.0.34 release (tag on `18a4e402`). The v2.0.33 tag carries the same code but was never

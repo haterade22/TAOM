@@ -51,7 +51,7 @@ which reaches the reward service through `ITournamentService`.
 | `Patch96_TournamentMaxBet` | Postfix on `TournamentBehavior.GetMaximumBet`: 0 in MCM means the 50,000,000 safety ceiling; any other cap keeps vanilla's perk factor (Deep Pockets doubles it) |
 | `TaomTournamentModel.GetRenownReward` / `GetInfluenceReward` | Vanilla's answer (perks included) plus the hero bonus, times the winner's culture factor and the MCM multiplier; influence only in a town of the winner's own kingdom |
 | `Patch96_TournamentJoinChoices` | Prefix on the private "Join" consequence: shows the prize dialog, then the skill dialog, then re-enters vanilla's whole Join through a thread-static bypass. Closing a dialog joins nothing |
-| `TournamentRewardsBehavior` | `TournamentFinished` first notes the town and its hero count, before vanilla's handler asks the model, so the award and the winner panel agree (the listener order is the engine's, traced on the behavior), then pays the chosen skill for a player win (four rounds plus the bonus); `PlayerEliminatedFromTournament` pays the rounds won before it; one line then names the trained skill, with no number. A fault in the `TournamentFinished` listener is logged and never skips vanilla's award |
+| `TournamentRewardsBehavior` | `TournamentFinished` first notes the town and its hero count, before vanilla's handler asks the model, so the award and the winner panel agree (the listener order is the engine's, traced on the behavior). The count comes from the event's participant list, after Patch69 has swapped any unsafe hero for a troop, so a substituted hero does not count. Then it pays the chosen skill for a player win (four rounds plus the bonus); `PlayerEliminatedFromTournament` pays the rounds won before it; one line then names the trained skill, with no number. A fault in the `TournamentFinished` listener is logged and never skips vanilla's award |
 
 **The numbers** (`TournamentRewardRules`):
 
@@ -196,6 +196,9 @@ row. A bad value reverts with a warning; read once per process.
 
 ## Changelog
 
+- 2026-10-05: checked against Bannerlord v1.5.4: every engine member it overrides, patches, reflects on or subscribes
+  to is unchanged from v1.5.3 (decompile diff of both builds, and the strict binding gate passes on v1.5.4), and so is
+  the engine code behind every behaviour this doc cites. No code change.
 - 2026-10-04: reviewed after it shipped in the v2.0.33 testing build (its code is in the v2.0.34 tag too) and fixed
   ([rca-tournament-rewards-2026-10-04.md](../reviews/rca-tournament-rewards-2026-10-04.md)). Mike's decisions: Blue
   Craig gets the orc factors; the new-game leaderboard keeps vanilla's renown; the prize dialog offers "a choice of

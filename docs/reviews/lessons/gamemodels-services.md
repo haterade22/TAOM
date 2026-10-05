@@ -984,3 +984,19 @@ times per new campaign: `TournamentCampaignBehavior.InitializeTournamentLeaderbo
   that method and write the list into the override's comment, with what each passes for each argument; decide the
   null and world-generation calls on purpose.
 - **Source:** `docs/reviews/rca-tournament-rewards-2026-10-04.md` T4 (lenses 2, 3, 5, 6).
+
+### Describe a vanilla model method from every branch, mode checks included (Arena, 2026-10-05)
+`arena.md` and `tournament-armor-assignment.md` said vanilla `DefaultTournamentModel.GetParticipantArmor` dresses
+every tournament fighter in the host culture's kit. It does that only when the campaign mission is not in
+`MissionMode.Tournament`, which means arena practice fights; in a tournament match it returns the fighter's own
+`RandomBattleEquipment`, because `TournamentBehavior.StartMatch` sets the mode before the armour is copied. The claim
+stood from 2026-03-31 to 2026-10-05, became the feature's stated reason to exist, and was found only by the v1.5.4
+compatibility check. Since TAOM's override drops the mode check, it also replaces every tournament fighter's own armour
+with his culture's practice kit, a side effect nobody had chosen.
+- **Why missed:** the first branch of the method was read as the whole method; the mode check sits in the `if` and
+  the doc quoted only what the `if` returns. Later reviews checked TAOM's override against the doc, never the doc
+  against the decompile.
+- **Prevent:** when a doc states what a vanilla method returns, quote its branch conditions (mode, null and
+  settlement checks) and name which callers reach which branch, with the mission mode each caller runs in. An
+  override that removes a vanilla branch says so in its doc, with what it changes in each.
+- **Source:** the v1.5.4 compatibility check, 2026-10-05 (tournament area, adversarially verified).
