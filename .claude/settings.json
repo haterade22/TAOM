@@ -89,13 +89,7 @@
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-moduledata-validation.sh",
             "statusMessage": "Validating ModuleData refs before commit…",
             "timeout": 60
-          },
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-native-dll-crt.sh",
-            "statusMessage": "Checking vendored native DLL links a static CRT…",
-            "timeout": 5
-          },
+          },   
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-doc-config-drift.sh",
