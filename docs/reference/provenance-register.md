@@ -96,6 +96,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Animalia - Elk (male), Animalia - Moose (male) (Fab) | `Animalia` `Elk_M` `Moose_M` `animalia_elk` `animalia_moose` | purchased-asset, code terms informal | data-port | `tools/blender/reskin_animalia_to_horse.py` `tools/blender/retarget_animalia_to_horse.py` `tools/blender/animalia_to_horse_map.json` `tools/blender/measure_animalia_clips.py` `tools/blender/animalia_elk_clip_measure.json` `tools/blender/animalia_moose_clip_measure.json` `tools/gen_animalia_anim_clips.ps1` `docs/features/animalia-elk-moose.md`; meshes, clips and textures in `LOTRLOME_Armory/AssetSources/creature/elk/` and their Kit packages in `LOTRLOME_Armory/Assets/creature/elk/` (live, outside the repo) | cleared |
 | Yotthani DualWield handoff, MithrilForge | `MithrilForge` `DualWield` `Bannerlord_Animation_Handoff` `TpacTool-bannerlord` | MIT (MithrilForge); the handoff document was shared with the maintainer by its author, no licence stated | comparison-only | (none; restated facts in `docs/reference/tpac-static-prop-authoring.md`, the animation reference docs and `docs/reference/engine/mission-frame-threads-and-native-costs.md`; the measurement cited in `docs/features/butter-lib-distance-matrix.md`) | cleared |
 | Yotthani `bannerlord` repository (DualWield, FaceLearner) | `yotthani/bannerlord` `HoN/DualWield` `FaceLearner` `FaceLearner.HeadExtract` | UNKNOWN (no licence file; shared with the maintainer by its author) | comparison-only | (none; restated facts in `docs/reference/scripted-melee-strikes.md`, `docs/reference/head-mesh-and-groom-authoring.md` and `docs/reference/engine/mission-frame-threads-and-native-costs.md`) | uncleared |
+| Yotthani ShaderCacheKeeper | `ShaderCacheKeeper` `yotthani/bannerlord` `HoN/ShaderCacheKeeper` `xinput9_1_0.dll` | MIT, (c) 2026 yotthani (its own `LICENSE`) | verbatim-port | `Native/ShaderCacheKeeper/**`; the built `bin/Win64_Shipping_Client/xinput9_1_0.dll` shipped through the launcher manifest | cleared |
 | Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
 | Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
 | Stuck Battle Guard v1.0.0 (a TAOM player's workaround module) | `StuckBattleGuard` `stuckbattle.` | UNKNOWN | behavioural-port | the stuck AI battle sweep in `Main/Features/MapEventGuard/` and `Main/Adapters/StuckBattle*Adapter.cs`; see detail | uncleared |
@@ -328,6 +329,16 @@ Read again on 2026-10-02 at commit `2e44db7` for its performance work only (`HoN
 DualWield perf and limb-ray commit messages, `bn faces/FaceLearner/PERFORMANCE_ANALYSIS.md`, two design specs);
 comparison only, nothing taken. Review:
 [`docs/reviews/adopt-mithrilforge-engine-perf-2026-10-02.md`](../reviews/adopt-mithrilforge-engine-perf-2026-10-02.md).
+
+### Yotthani ShaderCacheKeeper
+
+`HoN/ShaderCacheKeeper` in the same repository carries its own MIT licence ((c) 2026 yotthani), unlike the rest of
+the repository, so its row is separate and `cleared`. Read in full on 2026-10-06 at commit `1bbdc17d`, and vendored
+as code: `keeper.c`, `keeper.rc`, `build.py`, `LICENSE` and `test/host.c` are his files with TAOM's changes (listed at
+the top of `keeper.c`); `test/run_tests.ps1` is his test reworked to run hermetically; `keeper.def`, `README.md` and
+`test/parse_tests.c` are TAOM's. The built DLL ships in the game's `bin` folder, outside every module, and its MIT
+notice is in `Main/_Module/THIRD-PARTY-LICENSES.txt`. Review:
+[`docs/reviews/adopt-yotthani-shadercachekeeper-2026-10-06.md`](../reviews/adopt-yotthani-shadercachekeeper-2026-10-06.md).
 
 ### ADOD_Beasts, BehaviorTrees
 

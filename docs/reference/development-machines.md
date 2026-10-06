@@ -12,6 +12,7 @@ fact is usually a fact about that machine only.
 | Game | `E:\Steam\steamapps\common\Mount & Blade II Bannerlord` | `C:\Program Files (x86)\Steam\steamapps\common\Mount & Blade II Bannerlord` |
 | Decompile dump | `E:\Decompiled_Bannerlord\` | `C:\Decompiled_Bannerlord\` |
 | LOTRAOM asset drop | `E:\LOTRAOMAssets\LOTRAOM_Jan_1_Patreon\` | not present |
+| Launcher repo (`haterade22/LOTRAOM`, branch `dev`) | `C:\Users\mikew\source\repos\LOTRAOM`; `E:\repos\lotraom-launcher-staging` is a commit-less staging copy, not the launcher | not recorded |
 | Content modules | complete | incomplete, see the warning below |
 
 Neither machine is wrong. The desktop is where a claim about content gets settled, because it is

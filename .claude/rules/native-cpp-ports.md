@@ -3,6 +3,8 @@ paths:
   - "Dependencies/**/*.cpp"
   - "Dependencies/**/*.h"
   - "Main/SceneScripts/**"
+  - "Native/**/*.c"
+  - "Native/**/*.h"
 ---
 
 # Native C++ Port Discipline

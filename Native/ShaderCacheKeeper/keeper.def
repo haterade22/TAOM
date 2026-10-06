@@ -1,0 +1,8 @@
+; The XInput functions of Windows' own xinput9_1_0.dll, with its ordinals (read off the system file, Windows 11,
+; 2026-10-06). keeper.c passes every call on to that file.
+LIBRARY xinput9_1_0
+EXPORTS
+    XInputGetCapabilities           @2
+    XInputGetDSoundAudioDeviceGuids @3
+    XInputGetState                  @4
+    XInputSetState                  @5

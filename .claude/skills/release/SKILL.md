@@ -193,6 +193,12 @@ Rebuild at the tag before anything ships.
    prune and hand over; never write a package with the command above.
 4. Once his editor package exists (in `E:\LOTRAOM_Releases\<channel>\Modules\`), offer step 2's dry
    run with `--source` pointing at that folder before he uploads it.
+5. ShaderCacheKeeper, which ships beside the modules: at the tag, `python Native/ShaderCacheKeeper/build.py`
+   and `pwsh -File Native/ShaderCacheKeeper/test/run_tests.ps1` both exit 0. Offer to copy
+   `Native/ShaderCacheKeeper/out/xinput9_1_0.dll` to `E:\LOTRAOM_Releases\<channel>\bin\Win64_Shipping_Client\`
+   before the launcher manifest is generated, and put its SHA-256 in the release note. Patreon and public
+   only after its in-game check has passed on testing
+   ([shader-cache-keeper.md](../../../docs/features/shader-cache-keeper.md)).
 
 ## Gotchas
 
