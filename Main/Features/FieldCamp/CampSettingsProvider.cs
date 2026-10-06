@@ -9,6 +9,14 @@ namespace TAOM.Features.FieldCamp;
 /// </summary>
 public class CampSettingsProvider : ICampSettingsProvider
 {
+    // Enabled is read every campaign frame while the camp stands, so the settings object is taken once, on the first non-null read, and read through
+    // (BattleBalanceSettingsProvider pattern; CampaignHotPathSettingsProvidersTests, #746).
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
+    public CampSettingsProvider() { }
+    internal CampSettingsProvider(TaomSettings settings) => _settings = settings;
+
     public const float DefaultSetupHours = 4f;
     public const float DefaultMoralePerHour = 1f;
     public const float DefaultForageFactor = 0.1f;
@@ -17,31 +25,31 @@ public class CampSettingsProvider : ICampSettingsProvider
     public const float DefaultMinTownDistance = 10f;
     public const int DefaultFortifyCost = 500;
 
-    public bool Enabled => TaomSettings.Instance?.EnableFieldCamps ?? true;
+    public bool Enabled => Settings?.EnableFieldCamps ?? true;
 
     public float CampSetupHours =>
-        Sane(TaomSettings.Instance?.CampSetupHours, 0.5f, 24f, DefaultSetupHours);
+        Sane(Settings?.CampSetupHours, 0.5f, 24f, DefaultSetupHours);
 
     public float CampMoralePerHour =>
-        Sane(TaomSettings.Instance?.CampMoralePerHour, 0f, 5f, DefaultMoralePerHour);
+        Sane(Settings?.CampMoralePerHour, 0f, 5f, DefaultMoralePerHour);
 
     public float ForagePerTroopFactor =>
-        Sane(TaomSettings.Instance?.CampForagePerTroopFactor, 0f, 1f, DefaultForageFactor);
+        Sane(Settings?.CampForagePerTroopFactor, 0f, 1f, DefaultForageFactor);
 
     public float MaxAmbushRange =>
-        Sane(TaomSettings.Instance?.CampMaxAmbushRange, 1f, 30f, DefaultMaxAmbushRange);
+        Sane(Settings?.CampMaxAmbushRange, 1f, 30f, DefaultMaxAmbushRange);
 
     public float BaseAmbushChance =>
-        Sane(TaomSettings.Instance?.CampBaseAmbushChance, 0f, 1f, DefaultBaseAmbushChance);
+        Sane(Settings?.CampBaseAmbushChance, 0f, 1f, DefaultBaseAmbushChance);
 
     public float MinTownDistance =>
-        Sane(TaomSettings.Instance?.CampMinTownDistance, 0f, 50f, DefaultMinTownDistance);
+        Sane(Settings?.CampMinTownDistance, 0f, 50f, DefaultMinTownDistance);
 
     public int FortifiedUpgradeCost
     {
         get
         {
-            var raw = TaomSettings.Instance?.CampFortifiedUpgradeCost ?? DefaultFortifyCost;
+            var raw = Settings?.CampFortifiedUpgradeCost ?? DefaultFortifyCost;
             return raw < 0 || raw > 10000 ? DefaultFortifyCost : raw;
         }
     }

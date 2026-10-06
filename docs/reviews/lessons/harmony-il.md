@@ -999,3 +999,8 @@ comment was incomplete again within the hour.
 - **Why missed:** the Siege Forces design treated its two prefixes as one unit. `PatchCategoryIndex` applies a category's classes in assembly order, and a class that throws stops the category while earlier classes stay patched, so the picker (declared first) could be live with the spawn-total fit absent, which stalls deployment.
 - **Prevent:** declare the compensating patch class first and pin the order in a wiring test against `PatchCategoryIndex`'s own enumeration; before the dependent patch acts, confirm the compensator is attached (`Harmony.GetPatchInfo` owner check through the adapter) and refuse the behaviour if it is not.
 - **Source:** `docs/reviews/rca-siege-forces-2026-10-05.md` F1.
+
+### An invariant lives in the feature's pure rule, never only in a prefix that falls through to vanilla (#742, 2026-10-06)
+- **Why missed:** creature bandits are enemies at all times, but the only thing enforcing it was `Patch93_CreatureBanditSpawn` declining the player's side, and a declined troop falls through to the vanilla `SpawnTroop`. `taom.spawn_troops <creature> <n> ally` named the side itself, so the creature landed on the player's team as a husk on its mount.
+- **Prevent:** state the invariant as a pure rule in the owning feature (`CreatureBanditRules.SpawnsOnPlayerSide`) and audit every path that can name the state, console commands included, so each asks the rule before it acts. A prefix that declines and falls through enforces nothing for the case it declines.
+- **Source:** `docs/reviews/rca-refuge-crews-creature-allies-2026-10-06.md` (#742, "An invariant lived in a fall-through prefix").

@@ -213,7 +213,8 @@ provisions covered the consumption, which only ever favours the player.
 MCM group **Supply Lines** (GroupOrder 45): `EnableSupplyLines`, `SupplyGoodsMarkupFactor` (1.05),
 `SupplyTransportFeePerDistance` (2), `SupplyMercenaryWagePerDistance` (10),
 `SupplyMercenaryGuardCount` (10), `SupplyCaravanHoursPerDistance` (2), `SupplyShowRouteVisual`.
-All validated in `SupplyLinesSettingsProvider` (finite + range, fallback to defaults). All but the
+All validated in `SupplyLinesSettingsProvider` (finite + range, fallback to defaults), which takes the MCM object once
+and reads through it, since `Enabled` and the route visual are read every campaign frame (#746). All but the
 route visual are coop simulation-relevant (`CoopSettingsRelevance`); the route visual is
 presentation. Toggling the feature off stops NEW orders and menu options; in-transit orders still
 complete so cargo is never stranded by a toggle.

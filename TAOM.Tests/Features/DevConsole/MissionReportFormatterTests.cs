@@ -173,6 +173,38 @@ public class MissionReportFormatterTests
         StringAssert.Contains(report, "Defender");
     }
 
+    // #742: a creature asked for as an ally spawns as an enemy, and the report says why.
+    [TestMethod]
+    public void FormatSpawn_WithANote_AddsItBelowTheCount()
+    {
+        var report = MissionReportFormatter.FormatSpawn(new SpawnOutcome
+        { TroopId = "taom_spider_brood_pale", Requested = 2, Spawned = 2, TeamLabel = "Defender", Note = "fights only as an enemy" });
+
+        StringAssert.Contains(report, "2/2 taom_spider_brood_pale spawned onto Defender");
+        StringAssert.Contains(report, "\nfights only as an enemy");
+    }
+
+    // A creature's `ally` turned enemy can meet a town mission with no enemy team: the refusal keeps the reason why.
+    [TestMethod]
+    public void FormatSpawn_FailureWithANote_KeepsTheNote()
+    {
+        var report = MissionReportFormatter.FormatSpawn(new SpawnOutcome
+        { TroopId = "taom_spider_brood_pale", Requested = 2, FailureReason = "This mission has no enemy team.", Note = "`ally` is ignored" });
+
+        StringAssert.Contains(report, "[Spawn] This mission has no enemy team.");
+        StringAssert.Contains(report, "\n`ally` is ignored");
+        Assert.IsFalse(report.Contains("0/2"), report);
+    }
+
+    [TestMethod]
+    public void FormatSpawn_NoNote_IsOneLine()
+    {
+        var report = MissionReportFormatter.FormatSpawn(new SpawnOutcome
+        { TroopId = "taom_troll", Requested = 1, Spawned = 1, TeamLabel = "Attacker" });
+
+        Assert.IsFalse(report.Contains("\n"), report);
+    }
+
     /// <summary>
     /// Partial success is normal — one bad equipment roll should not read as total failure, but it
     /// must not read as success either.

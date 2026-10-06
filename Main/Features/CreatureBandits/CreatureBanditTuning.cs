@@ -86,8 +86,6 @@ public sealed class CreatureBanditTuning
         int missilePercent = DefaultMissileTakenPercent, int cutPercent = DefaultMeleeTakenPercent,
         int piercePercent = DefaultMeleeTakenPercent, int bluntPercent = DefaultMeleeTakenPercent)
     {
-        float Taken(int percent, int fallback) => SettingClamp.Clamp(percent, fallback, 0, MaxTakenPercent) / 100f;
-
         SpiderStrikeProfile Strike(int targets, int percent) => new(
             SettingClamp.Clamp(targets, 1, 1, MaxTargetsCap),
             SettingClamp.Clamp(percent, 100, 0, MaxDamagePercent) / 100f,
@@ -98,16 +96,28 @@ public sealed class CreatureBanditTuning
             new SpiderStrikeSet(Strike(biteTargets, bitePercent), Strike(pounceTargets, pouncePercent), Strike(swipeTargets, swipePercent)),
             SettingClamp.Clamp(pounceCooldown, (float)SpiderConfig.PounceCooldownSeconds, MinCooldownSeconds, MaxCooldownSeconds),
             SettingClamp.Clamp(swipeCooldown, (float)SpiderConfig.SideAttackCooldownSeconds, MinCooldownSeconds, MaxCooldownSeconds),
-            Taken(missilePercent, DefaultMissileTakenPercent), Taken(cutPercent, DefaultMeleeTakenPercent),
-            Taken(piercePercent, DefaultMeleeTakenPercent), Taken(bluntPercent, DefaultMeleeTakenPercent));
+            TakenShare(missilePercent, DefaultMissileTakenPercent), TakenShare(cutPercent, DefaultMeleeTakenPercent),
+            TakenShare(piercePercent, DefaultMeleeTakenPercent), TakenShare(bluntPercent, DefaultMeleeTakenPercent));
     }
 
-    /// <summary>The MCM values, or <see cref="Defaults"/> when MCM is not loaded. Read on the main thread (spawn, tree build, attack).</summary>
+    // The settings object MCM keeps for TaomSettings, taken on the first non-null read and read through: an MCM edit lands
+    // in it, so a change still applies at once, and no read walks MCM's settings containers again (#746). The write is
+    // an idempotent reference publish, safe from the damage model's thread.
+    private static TaomSettings? _settings;
+    private static TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
+    /// <summary>Installs the settings a test reads through; null puts MCM back.</summary>
+    internal static void UseSettings(TaomSettings? settings) => _settings = settings;
+
+    /// <summary>
+    /// The MCM values (a new object each call), or the shared <see cref="Defaults"/> when MCM is not loaded, for the main thread's
+    /// spawn, tree build and attack. The per-hit damage step asks <see cref="CurrentTakenFactor"/> instead.
+    /// </summary>
     public static CreatureBanditTuning Current
     {
         get
         {
-            var s = TaomSettings.Instance;
+            var s = Settings;
             if (s == null) return Defaults;
             return From(s.CreatureBanditHitPoints, s.CreatureBanditBiteTargets, s.CreatureBanditPounceTargets,
                 s.CreatureBanditSwipeTargets, s.CreatureBanditBiteDamagePercent, s.CreatureBanditPounceDamagePercent,
@@ -116,6 +126,27 @@ public sealed class CreatureBanditTuning
                 s.CreatureBanditPierceTakenPercent, s.CreatureBanditBluntTakenPercent);
         }
     }
+
+    /// <summary>
+    /// <see cref="TakenFactor"/> on the live MCM values, without building a tuning: CreatureBanditDamage asks it on every
+    /// hit against a creature, on whichever thread the engine runs the damage model, so it reads the kept settings object
+    /// and allocates nothing (#746; CreatureBanditTuningLiveTests pins both the rule and the allocation).
+    /// </summary>
+    public static float CurrentTakenFactor(bool isMissile, DamageTypes damageType, bool bluntByRule = false)
+    {
+        var s = Settings;
+        if (s == null) return Defaults.TakenFactor(isMissile, damageType, bluntByRule);
+        if (isMissile) return TakenShare(s.CreatureBanditMissileTakenPercent, DefaultMissileTakenPercent);
+        return (bluntByRule ? DamageTypes.Blunt : damageType) switch
+        {
+            DamageTypes.Cut => TakenShare(s.CreatureBanditCutTakenPercent, DefaultMeleeTakenPercent),
+            DamageTypes.Pierce => TakenShare(s.CreatureBanditPierceTakenPercent, DefaultMeleeTakenPercent),
+            DamageTypes.Blunt => TakenShare(s.CreatureBanditBluntTakenPercent, DefaultMeleeTakenPercent),
+            _ => 1f,
+        };
+    }
+
+    private static float TakenShare(int percent, int fallback) => SettingClamp.Clamp(percent, fallback, 0, MaxTakenPercent) / 100f;
 
     /// <summary>The active numbers for the spawn diagnostics line, so a balance run is attributable.</summary>
     public string Describe() => System.FormattableString.Invariant(

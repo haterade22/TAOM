@@ -10,5 +10,6 @@ public static class RaceAgeIoC
         container.Register<IHeroAgeAdapter, HeroAgeAdapter>(Reuse.Singleton);
         container.Register<IRaceAgeConfigProvider, RaceAgeConfigProvider>(Reuse.Singleton);
         container.Register<IRaceAgeService, RaceAgeService>(Reuse.Singleton);
+        container.Register<ILordKitDonorAdapter, LordKitDonorAdapter>(Reuse.Singleton);
     }
 }

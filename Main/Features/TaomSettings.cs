@@ -1705,8 +1705,9 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     };
 
     // --- Creature Bandits (#692): the riderless creatures' own numbers, apart from the ridden spider's. Defaults are
-    // CreatureBanditTuning's constants; CreatureBanditTuning.Current reads these live and clamps them. Read at the
-    // creature's spawn (hit points), its tree build (cooldowns) and each attack (targets, damage, knockdown). To change
+    // CreatureBanditTuning's constants; CreatureBanditTuning reads these live and clamps them. Read at the
+    // creature's spawn (hit points), its tree build (cooldowns), each attack (targets, damage, knockdown) and each hit it
+    // takes (the damage-taken percents, CreatureBanditTuning.CurrentTakenFactor, #746). To change
     // a default later, rename the property: MCM json2 keeps a saved value (orientation.md "Persisted MCM defaults").
     // A top-level group: under "Combat Mechanics" its master switch would promise to make these inert, and none of
     // these reads fold it. ---

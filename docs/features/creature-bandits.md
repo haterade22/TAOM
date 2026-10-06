@@ -6,7 +6,8 @@ Hostile bandit parties made of creatures that fight with no rider. The first is 
 broods of giant spiders, led by a pale broodmother, that spawn around Mirkwood and Dol Guldur. In battle each
 spider is a riderless creature that hunts the nearest enemy and bites; on the map the brood shows as a spider,
 and meeting it goes straight to attack or leave. Creatures are bandits only: never recruited, never taken
-prisoner, never fielded by lords.
+prisoner, never fielded by lords, never on the player's side. Even `taom.spawn_troops <creature> <n> ally` spawns
+them as enemies (`CreatureBanditRules.SpawnsOnPlayerSide`, #742).
 
 The second is the Wild Trolls (#694): bands of two to four hill trolls (for now), about one per kingdom, roaming
 near that kingdom's towns, castles and villages. A troll is humanoid, so it fights as a troll troop with every troll
@@ -200,7 +201,7 @@ template and culture.
 | `Main/Features/CreatureBandits/TrollBandSpawnBehavior.cs` | Troll band spawner, one band per kingdom |
 | `Main/Features/CreatureBandits/CreatureBandParties.cs` | The spawn and re-patrol steps both spawners and the console command share |
 | `Main/Features/CreatureBandits/Cheats/CreatureBandCheats.cs` | `taom.spawn_creature_band`: one band or brood beside the player, for testing |
-| `Main/Features/CreatureBandits/CreatureBanditTuning.cs`, `Main/Features/TaomSettings.cs` (group "Creature Bandits") | The creature's numbers and their MCM options |
+| `Main/Features/CreatureBandits/CreatureBanditTuning.cs`, `Main/Features/TaomSettings.cs` (group "Creature Bandits") | The creature's numbers and their MCM options; the MCM object is kept after its first non-null read, and the per-hit damage step asks the allocation-free `CurrentTakenFactor` (#746) |
 | `Main/Features/Spider/SpiderStrikes.cs` | Strike rules as data: per-attack target cap, damage multiplier, crit-only knockdown |
 | `Main/Features/CreatureBandits/Hooks/CreatureBanditDamage.cs`, `Models/TaomCustomBattleCreatureDamageModel.cs` | Damage taken, campaign and Custom Battle |
 | `Main/Features/CreatureBandits/CreatureBanditLog.cs` | The error log for the spawner and the weapon-state hook |
@@ -227,7 +228,8 @@ template and culture.
 
 - `TAOM.Tests/Features/CreatureBandits/CreatureBanditRulesTests.cs`: every rule, including the deployment gate,
   the routed backstop's mount condition, the patrol rule, the MCM switch, the cap of 20, and the troll rules (the
-  twins, both clans, the prisoner rule, the kingdoms owed a band, the freed-prisoner renormalisation).
+  twins, both clans, the prisoner rule, the kingdoms owed a band, the freed-prisoner renormalisation), and the side
+  rule (`SpawnsOnPlayerSide`: every creature troop is the enemy side whatever is asked for, #742).
 - `TAOM.Tests/Features/CreatureBandits/CreatureBandCheatsTests.cs`: `taom.spawn_creature_band`'s parser (a typo is an
   error, `confirm` is literal) and pins for its quarter-sight point and every refusal.
 - `TAOM.Tests/Features/CreatureBandits/CreatureBanditLiveDataTests.cs` (LiveInstall): the brood anchors equal every
@@ -243,7 +245,8 @@ template and culture.
   their phases, every patch parameter bound against the installed engine, the hot-method exclusions, the model
   overrides and what they call (prisoners, morale, damage in both game types), the tree split and its deployment
   gate, the prisoner rule itself, the troll spawner and both-clan seams (no parley, looter cap, no join, freed
-  prisoners), the out-of-sight spawn and the switch defaults.
+  prisoners), the out-of-sight spawn, the switch defaults, and that `taom.spawn_troops` takes its side from the
+  side rule before it resolves a team (#742).
 - `TAOM.Tests/Features/CreatureBandits/CreatureBanditWieldGuardTests.cs`: the three wield guards on bare agents of
   nine kinds (soldier, husk rider, mounts, creatures with and without route A), each answering as the predicate did
   before plan 032; its untagged `CreatureBanditAgentsTests` pin the null agent and, in the IL, that a humanoid is
@@ -262,7 +265,8 @@ template and culture.
 - `TAOM.Tests/Features/CreatureBandits/CreatureWeaponStateScopeTests.cs`: the one-shot creation scope. The rules
   tests pin the route A flag transforms, and the wiring tests bind the `CreateAgent` hook to the installed engine.
 - `TAOM.Tests/Features/CreatureBandits/CreatureBanditTuningTests.cs`: the defaults, the clamps, the damage-taken
-  factors with vanilla's blunt rule, and the top-level MCM group. `TAOM.Tests/Features/Spider/SpiderStrikeTests.cs`
+  factors with vanilla's blunt rule, and the top-level MCM group. `CreatureBanditTuningLiveTests.cs`: the per-hit
+  `CurrentTakenFactor` matches the full tuning's rule, reads an MCM edit at once, keeps the MCM object once it has one (counted against a stand-in for MCM), and allocates nothing (#746). `TAOM.Tests/Features/Spider/SpiderStrikeTests.cs`
   and `SpiderStrikeCapTests.cs`: the strike rules, the nearest-N pick, a rider and his horse in one slot, and the
   cap through the service; `SpiderAttackServiceTests` prove the ridden spider keeps its numbers.
 
@@ -287,8 +291,9 @@ template and culture.
   (plan 032). All four targets are on
   `PatchShieldPolicy.ExcludedTargetMethods`, so no per-call finalizer runs on them.
 - The hunt walks the hostile teams' active agents about four times a second per creature, allocation-free.
-- `CreatureBanditDamage` costs a creature victim one tuning read per hit; every other victim exits at one field
-  read.
+- `CreatureBanditDamage` costs a creature victim one percent read through the kept MCM object per hit, with no
+  allocation; an ordinary mount exits at one field read, and a humanoid victim pays one troop-id lookup in a string
+  set (the bandit troll rule).
 - The diagnostics are budgeted (see above), take a line from the budget before formatting it
   (`CreatureBanditDiag.TakeLine`, then `Emit`), and write nothing per frame; in a mission with no creature every
   agent callback exits on one field read (`CreatureDiagLedger.AnyRegistered`).
@@ -319,6 +324,8 @@ spawns beside your commander's column.
 9. MCM "Spawn Troll Bands" off: no new bands; live ones stay.
 10. An older save: one "No 'wild_trolls' clan" line; its broods grow to 20 over the new anchors.
 11. Custom Battle: `taom.spawn_troops taom_troll_bandit_hill 2 enemy` spawns trolls that fight normally.
+12. Custom Battle: `taom.spawn_troops taom_spider_brood_pale 3 ally` spawns three spiders on the enemy side, and the
+    console adds "fights only as an enemy" below the count (#742).
 
 ## Known Limitations
 

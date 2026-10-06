@@ -29,6 +29,7 @@ using TAOM.Features.Execution.Hooks;
 using TAOM.Features.PrisonerRecruitment.Models;
 using TAOM.Features.RaceAge;
 using TAOM.Features.RaceAge.Models;
+using TAOM.Features.GeneratedLordKits.Models;
 using TAOM.Features.StartupResources;
 using TAOM.Features.NamedCompanions;
 using TAOM.Features.TroopProgression;
@@ -1132,7 +1133,11 @@ public class SubModule : MBSubModuleBase
             IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
         campaignStarter.AddModel(new TaomAgeModel(raceAgeService));
         campaignStarter.AddModel(new TaomPregnancyModel(raceAgeService));
-        campaignStarter.AddModel(new TaomHeroCreationModel());
+        // Generated lords wear a kit their culture's XML lords of the same race and sex share
+        // (LordKitSelector); both models fall back to vanilla's pick when there is none.
+        var lordKits = IoC.Resolve<ILordKitDonorAdapter>();
+        campaignStarter.AddModel(new TaomHeroCreationModel(lordKits));
+        campaignStarter.AddModel(new TaomEquipmentSelectionModel(lordKits));
 
         // TaomMarriageModel is the mod's ONLY MarriageModel and carries two rules, because the
         // engine resolves exactly one model per type — a second AddModel would silently shadow one

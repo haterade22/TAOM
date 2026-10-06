@@ -12,13 +12,17 @@ using TAOM.Features;
 using TAOM.Features.BlowDiagnostics;
 using TAOM.Features.CombatMechanics;
 using TAOM.Features.CompanionTactics;
+using TAOM.Features.CreatureBandits;
 using TAOM.Features.CultureDoctrine;
 using TAOM.Features.DreadAura;
 using TAOM.Features.DreadAura.Domain;
 using TAOM.Features.Elephant;
 using TAOM.Features.MixedFormations;
 using TAOM.Features.RaceAbilities;
+using TAOM.Features.Refuge;
 using TAOM.Features.SiegePropDiagnostics;
+using TAOM.Features.SignatureStrikes;
+using TAOM.Features.SignatureStrikes.Domain;
 using TAOM.Features.SmartCavalryAI;
 using TAOM.Tests.Migration;
 
@@ -62,9 +66,14 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(CultureDoctrineSettingsProvider))]
     [DataRow(typeof(SiegePropDiagnosticsSettingsProvider))]
     [DataRow(typeof(RaceAbilitySettingsProvider))]
+    [DataRow(typeof(RefugeSettingsProvider))]
+    [DataRow(typeof(SignatureStrikesSettingsProvider))]
+    // #746: static, read per hit against a creature bandit. It has no instance to construct, so the counting
+    // test below cannot take it: CreatureBanditTuningLiveTests runs the same CountingMcm check on it.
+    [DataRow(typeof(CreatureBanditTuning))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
-        var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance)?.GetGetMethod(true);
+        var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)?.GetGetMethod(true);
         Assert.IsNotNull(accessor, provider.Name + ": the private lazy Settings accessor");
         Assert.IsTrue(CallsInstance(accessor), provider.Name + ": the lazy accessor takes the settings reference");
 
@@ -103,6 +112,8 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(ICultureDoctrineSettingsProvider), typeof(CultureDoctrineSettingsProvider))]
     [DataRow(typeof(ISiegePropDiagnosticsSettingsProvider), typeof(SiegePropDiagnosticsSettingsProvider))]
     [DataRow(typeof(RaceAbilitySettingsProvider), typeof(RaceAbilitySettingsProvider))]
+    [DataRow(typeof(IRefugeSettingsProvider), typeof(RefugeSettingsProvider))]
+    [DataRow(typeof(ISignatureStrikesSettingsProvider), typeof(SignatureStrikesSettingsProvider))]
     public void Provider_ResolvesFromARealContainer(Type service, Type implementation)
     {
         using var container = new Container();
@@ -118,6 +129,13 @@ public class HotPathSettingsProvidersTests
     {
         var config = Substitute.For<ICombatMechanicsConfigProvider>();
         config.GetConfig().Returns(new CombatMechanicsConfig());
+        return config;
+    }
+
+    private static ISignatureStrikesConfigProvider SignatureConfig()
+    {
+        var config = Substitute.For<ISignatureStrikesConfigProvider>();
+        config.GetConfig().Returns(new SignatureStrikesConfig());
         return config;
     }
 
@@ -152,6 +170,12 @@ public class HotPathSettingsProvidersTests
             nameof(ISiegePropDiagnosticsSettingsProvider.IsEnabled), nameof(TaomSettings.EnableSiegePropDiagnostics), () => new TaomSettings()),
         [typeof(RaceAbilitySettingsProvider)] = (() => new RaceAbilitySettingsProvider(),
             nameof(RaceAbilitySettingsProvider.Enabled), nameof(TaomSettings.EnableRaceAbilities), () => new TaomSettings()),
+        // #745: read per hit on a refuge's defenders, real-time and auto-resolve.
+        [typeof(RefugeSettingsProvider)] = (() => new RefugeSettingsProvider(),
+            nameof(IRefugeSettingsProvider.Enabled), nameof(TaomSettings.EnableRefuges), () => new TaomSettings()),
+        // #746: read on every melee hit a signature hero lands.
+        [typeof(SignatureStrikesSettingsProvider)] = (() => new SignatureStrikesSettingsProvider(SignatureConfig()),
+            nameof(ISignatureStrikesSettingsProvider.IsEnabled), nameof(TaomSettings.EnableSignatureStrikes), () => new TaomSettings()),
     };
 
     // The IL rule above proves WHERE MCM is resolved, not THAT the result is kept: an accessor written
@@ -171,6 +195,8 @@ public class HotPathSettingsProvidersTests
     [DataRow(typeof(CultureDoctrineSettingsProvider))]
     [DataRow(typeof(SiegePropDiagnosticsSettingsProvider))]
     [DataRow(typeof(RaceAbilitySettingsProvider))]
+    [DataRow(typeof(RefugeSettingsProvider))]
+    [DataRow(typeof(SignatureStrikesSettingsProvider))]
     public void Provider_AsksMcmUntilItHasTheSettings_ThenNeverAgain_AndReadsThrough(Type provider)
     {
         var probe = Probes[provider];
@@ -208,33 +234,4 @@ public class HotPathSettingsProvidersTests
 
     private static void SetSetting(BaseSettings settings, string property, bool value)
         => settings.GetType().GetProperty(property)!.SetValue(settings, value);
-
-    // MCM's own provider is what every GlobalSettings<T>.Instance asks, through a static whose setter is
-    // internal (MCM assigns it once at start-up). This installs a counting stand-in for one test, holding
-    // no settings until Register, and puts back whatever was there.
-    private sealed class CountingMcm : IDisposable
-    {
-        private static readonly MethodInfo SetInstance =
-            typeof(BaseSettingsProvider).GetProperty(nameof(BaseSettingsProvider.Instance))!.GetSetMethod(nonPublic: true)!;
-
-        private readonly BaseSettingsProvider? _previous = BaseSettingsProvider.Instance;
-        private BaseSettings? _registered;
-
-        public int Lookups { get; private set; }
-
-        public CountingMcm()
-        {
-            var stand = Substitute.For<BaseSettingsProvider>();
-            stand.GetSettings(NSubstitute.Arg.Any<string>()).Returns(_ =>
-            {
-                Lookups++;
-                return _registered;
-            });
-            SetInstance.Invoke(null, new object?[] { stand });
-        }
-
-        public void Register(BaseSettings settings) => _registered = settings;
-
-        public void Dispose() => SetInstance.Invoke(null, new object?[] { _previous });
-    }
 }

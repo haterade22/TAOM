@@ -26,6 +26,8 @@ public static class Mission_SpawnAgent_Patch
 
         TaleWorlds.CampaignSystem.Hero? leaderHero = null;
 
+        // Deliberately a switch on vanilla's origins, not BattleCombatant: crew spawners already copy
+        // their parent's colours, and every BannerlordCoop battle troop (CoopAgentOrigin) keeps its faction colours (#746).
         if (origin is PartyAgentOrigin partyOrigin)
             leaderHero = partyOrigin.Party?.LeaderHero;
         else if (origin is PartyGroupAgentOrigin partyGroupOrigin)

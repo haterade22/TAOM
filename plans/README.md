@@ -63,6 +63,7 @@ never pushed; see "Overnight execution" below).
 | [040](040-load-time-stamps.md) | Stamp the load-time phases nobody times (LoadXML per id, patch categories) | P2 | S | perf / diagnostics | none | REVIEWED (perf run 2026-10-02; `4e4e65e5` on perf/040-load-time-stamps after deep review and two convergence rounds); awaits the maintainer |
 | [041](041-profiler-extensions-and-hitch-probe.md) | Profiler extensions (spawn, script components, clip loading) and an on-by-default hitch probe | P1 | M | perf | 028 | REVIEWED (perf run 2026-10-02; `d7208235` on perf/041-profiler-extensions-and-hitch-probe after deep review and two convergence rounds); awaits the maintainer |
 | [042](042-xml-merge-load-time.md) | Cut the 15 to 28 s module-XML merge at every campaign load and custom battle start, byte-identical output | P1 | L | perf / load time | none | REVIEWED (perf run 2026-10-02; `af50ab17` on perf/042-xml-merge-load-time after deep review and two convergence rounds); awaits the maintainer |
+| [043](043-offscreen-bone-reads.md) | Measure whether TAOM's own bone reads (warg bites, elephant howdah) see a frozen pose off the screen; force the pose where they do | P2 | S to M | bug | none | TODO (#739; Phase A measures and stops for the maintainer) |
 
 Plans 006 and 007 were written as P1 on the assumption that every player pays their boot and load
 seconds. A follow-up measured players at about 1 to 3 s (this desktop runs about 30 times slower), so

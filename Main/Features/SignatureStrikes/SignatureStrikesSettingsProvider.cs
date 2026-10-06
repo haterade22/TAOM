@@ -16,21 +16,25 @@ public sealed class SignatureStrikesSettingsProvider : ISignatureStrikesSettings
 
     private readonly SignatureStrikesConfig _defaults;
 
+    // Read on every melee hit a signature hero lands, so the settings object is taken once, on the first non-null
+    // read, and read through (BattleBalanceSettingsProvider pattern; HotPathSettingsProvidersTests, #746).
+    private TaomSettings? _settings;
+    private TaomSettings? Settings => _settings ??= TaomSettings.Instance;
+
     public SignatureStrikesSettingsProvider(ISignatureStrikesConfigProvider configProvider)
     {
         _defaults = configProvider.GetConfig();
     }
 
-    // Read once per call: this runs on every melee hit a signature hero lands.
     public bool IsEnabled
     {
         get
         {
-            var settings = TaomSettings.Instance;
+            var settings = Settings;
             return (settings?.EnableCombatMechanics ?? true) && (settings?.EnableSignatureStrikes ?? _defaults.Enabled);
         }
     }
 
     public float CooldownMultiplier
-        => SettingClamp.Clamp(TaomSettings.Instance?.SignatureStrikeCooldownMultiplier, 1f, MinMultiplier, MaxMultiplier);
+        => SettingClamp.Clamp(Settings?.SignatureStrikeCooldownMultiplier, 1f, MinMultiplier, MaxMultiplier);
 }

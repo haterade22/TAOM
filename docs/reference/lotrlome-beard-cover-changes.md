@@ -94,6 +94,20 @@ Mike: these helmets get hair `all`, beard `all` and `covers_head="true"`, matchi
 Backup: `E:\Temp\claude\armory-backups\cover-2026-10-05\mordor\head_armors.xml`; the diff is 5 inserted
 `covers_head` lines and 2 beard lines.
 
+## 2026-10-05: Arnor beards (audit sheet v2)
+
+Mike's audit workbook (`E:\Temp\claude\helmet-cover-audit-v2.xlsx`, read from a copy), 13 beard changes in
+`arnor/head_armors.xml`; hair and `covers_head` untouched:
+
+| New beard | Ids (`sk_ar_art_...`) | Was |
+|---|---|---|
+| `type2` | `helmet_cav_elite_b`, `helmet_guard_elite_b`, `helmet_inf_elite_a`, `helmet_noble_elite_a`, `helmet_noble_prince_a`, `helmet_warden_elite_b` | `all` |
+| `type2` | `helmet_guard_heavy_b` | `type1` |
+| `none` | `helmet_cav_heavy_a`, `helmet_guard_heavy_a`, `helmet_inf_hvy_a`, `helmet_noble_heavy_a`, `helmet_warden_heavy_a`, `crown_king_a` | `type1` |
+
+Backup: `E:\Temp\claude\armory-backups\cover-2026-10-05\arnor\head_armors.xml`; the diff is those 13 lines.
+No troop wears any Arnor helmet, so check from the inventory.
+
 ## 2026-10-05: duplicate helmet names numbered
 
 Mike, from the inventory: same-named helmets should read in order, `X Helmet I`, `X Helmet II`. 124 helmets in 43

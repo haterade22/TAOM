@@ -10,8 +10,9 @@ namespace TAOM.Features.CreatureBandits.Hooks;
 /// every melee and missile hit that connects through that step (<c>AgentApplyDamageModel.CalculateDamage</c>, called
 /// from <c>Mission.GetAttackCollisionResults</c>, v1.5.3 <c>Mission.cs:6542</c>). Inert for every other victim: the
 /// fingerprint's first read is the managed Character, null on every ordinary mount. The rules are
-/// <see cref="CreatureBanditTuning.TakenFactor"/>, read from the MCM values at each hit so a change applies at once, with
-/// the melee kind corrected as vanilla corrects it (a charge, kick or bash is Blunt). TAOM's own scripted blows
+/// <see cref="CreatureBanditTuning.TakenFactor"/>, asked through <see cref="CreatureBanditTuning.CurrentTakenFactor"/>
+/// at each hit so an MCM change applies at once, with the melee kind corrected as vanilla corrects it (a charge, kick
+/// or bash is Blunt). TAOM's own scripted blows
 /// (CustomAttacksUtils.TakeDamage: troll brute force, signature strikes, warg and ridden-spider bites) never reach this
 /// step, so these rules do not apply to them: a known limitation, invisible at the 100% melee defaults, and a bandit
 /// troll takes those blows whole, as armour never reduced them either. A bandit troll
@@ -24,7 +25,7 @@ internal static class CreatureBanditDamage
     {
         if (!CreatureBanditAgents.Is(attackInformation.VictimAgent))
             return damage * CreatureBanditRules.TrollBanditDamageTakenFactor(attackInformation.VictimAgent?.Character?.StringId);
-        return damage * CreatureBanditTuning.Current.TakenFactor(collisionData.IsMissile, (DamageTypes)collisionData.DamageType,
+        return damage * CreatureBanditTuning.CurrentTakenFactor(collisionData.IsMissile, (DamageTypes)collisionData.DamageType,
             TaomAgentApplyDamageModel.BluntByVanillaRule(in attackInformation, in collisionData));
     }
 }

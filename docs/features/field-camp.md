@@ -90,7 +90,8 @@ short prefix.
 MCM group **Field Camps** (GroupOrder 46): master toggle, `CampSetupHours` (4),
 `CampMoralePerHour` (1, x2 fortified), `CampForagePerTroopFactor` (0.1), `CampMaxAmbushRange` (10),
 `CampBaseAmbushChance` (0.5), `CampMinTownDistance` (10, ambush/lookout exempt),
-`CampFortifiedUpgradeCost` (500). All validated in `CampSettingsProvider`; all coop
+`CampFortifiedUpgradeCost` (500). All validated in `CampSettingsProvider` (which takes the MCM object once and reads
+through it, since `Enabled` is read every campaign frame while a camp stands, #746); all coop
 simulation-relevant. Master toggle off hides the button and menus and stops the gameplay effects
 (morale, forage, ambush scans, the lookout sight bonus); the state-PROTECTING paths stay live so a
 standing camp is never trapped: the settlement-entry fold, the captivity break, and the move guard

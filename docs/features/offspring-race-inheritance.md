@@ -10,7 +10,7 @@ Vanilla Bannerlord uses the same same-sex parent logic, but includes a `Debug.Si
 
 ## Architecture
 
-**TaomHeroCreationModel** (GameModel override) overrides `GetCharacterTemplateForOffspring` to use same-sex parent logic: male children get `father.CharacterObject`, female children get `mother.CharacterObject`. This matches vanilla behavior but is explicitly defined so TAOM controls the logic.
+**TaomHeroCreationModel** (GameModel override) overrides `GetCharacterTemplateForOffspring` to use same-sex parent logic: male children get `father.CharacterObject`, female children get `mother.CharacterObject`. This matches vanilla behavior but is explicitly defined so TAOM controls the logic. The same model also overrides `GetCivilianEquipment`/`GetBattleEquipment` so an adult lord created at runtime wears a peer kit; that half belongs to [generated-lord-kits.md](generated-lord-kits.md).
 
 ### Component Diagram
 

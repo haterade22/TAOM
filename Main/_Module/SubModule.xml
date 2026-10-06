@@ -904,6 +904,19 @@
         <GameType value ="EditorGame"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- XSLT that takes the lord and ruler template flags off vanilla's rosters for the six renamed
+         cultures, so generated Rohan, Dunland, Harad, Easterling, Dale and Khand lords draw the
+         TAOM templates above instead of Calradic gear. It rewrites only the roster nodes listed
+         before it, so keep this the LAST EquipmentRosters node (LordTemplateRosterTests). -->
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="lord_template_rosters"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value ="CustomGame"/>
+        <GameType value ="EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
     <!-- XSLT to remove vanilla faction strings and replace with LOTR-themed -->
     <XmlNode>
       <XmlName id="GameText" path="module_strings"/>

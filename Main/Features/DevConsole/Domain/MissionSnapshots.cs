@@ -48,6 +48,9 @@ public sealed class SpawnOutcome
 
     /// <summary>Non-null only when nothing could be spawned at all.</summary>
     public string FailureReason { get; set; }
+
+    /// <summary>A line the report adds below the count or the failure reason, such as why the side differs from the one asked for.</summary>
+    public string Note { get; set; }
 }
 
 /// <summary>What battle terrain a fight at the party's current map position would load.</summary>

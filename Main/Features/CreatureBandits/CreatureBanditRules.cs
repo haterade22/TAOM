@@ -51,6 +51,14 @@ public static class CreatureBanditRules
     public static bool ShouldSpawnAsCreature(string? troopId, bool isPlayerSide, bool isFieldBattle, bool hasCreatureItem)
         => !isPlayerSide && isFieldBattle && hasCreatureItem && IsCreatureTroop(troopId);
 
+    /// <summary>
+    /// The side a spawn request really gets (#742). A creature is an enemy at all times: never recruited, never a
+    /// prisoner, never fielded by the player. In a battle it only ever comes from a brood party, so this matters to a
+    /// request that names the side itself, <c>taom.spawn_troops ... ally</c>. Any other troop keeps the requested side.
+    /// </summary>
+    public static bool SpawnsOnPlayerSide(string? troopId, bool requestedPlayerSide)
+        => requestedPlayerSide && !IsCreatureTroop(troopId);
+
     public static bool IsCreatureBandit(string? characterId, bool isHuman, bool hasRider)
         => !isHuman && !hasRider && IsCreatureTroop(characterId);
 

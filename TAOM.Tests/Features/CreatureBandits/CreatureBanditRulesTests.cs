@@ -54,6 +54,28 @@ public class CreatureBanditRulesTests
         Assert.IsFalse(CreatureBanditRules.IsCreatureBroodClan(null));
     }
 
+    // #742: a creature is an enemy at all times, whatever side a spawn asks for.
+    [TestMethod]
+    public void SpawnsOnPlayerSide_CreatureAskedForAsAnEnemy_StaysTheEnemySide()
+        => Assert.IsFalse(CreatureBanditRules.SpawnsOnPlayerSide(Brood, requestedPlayerSide: false));
+
+    [DataTestMethod]
+    [DataRow("taom_spider_brood_pale")]
+    [DataRow("taom_spider_brood_forest")]
+    [DataRow("taom_spider_brood_brown")]
+    public void SpawnsOnPlayerSide_EveryCreatureTroop_IsTheEnemySide(string troopId)
+        => Assert.IsFalse(CreatureBanditRules.SpawnsOnPlayerSide(troopId, requestedPlayerSide: true));
+
+    [DataTestMethod]
+    [DataRow("imperial_recruit")]
+    [DataRow("taom_troll_bandit_hill")]
+    [DataRow(null)]
+    public void SpawnsOnPlayerSide_AnyOtherTroop_KeepsTheRequestedSide(string? troopId)
+    {
+        Assert.IsTrue(CreatureBanditRules.SpawnsOnPlayerSide(troopId, requestedPlayerSide: true));
+        Assert.IsFalse(CreatureBanditRules.SpawnsOnPlayerSide(troopId, requestedPlayerSide: false));
+    }
+
     [TestMethod]
     public void ShouldSpawnAsCreature_EnemyCreatureTroopInFieldBattle_ReturnsTrue()
         => Assert.IsTrue(CreatureBanditRules.ShouldSpawnAsCreature(Brood, isPlayerSide: false, isFieldBattle: true, hasCreatureItem: true));

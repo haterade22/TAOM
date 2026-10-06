@@ -1892,3 +1892,8 @@ off its rule from v2.0.31 to v2.0.34: the install-gated `--verify` pin never ran
 - **Prevent:** a generator's `--verify` runs in the commit hook that fires on its INPUT files, not only in a
   test someone has to remember.
 - **Source:** `docs/reviews/rca-career-kits-uruk-2026-10-06.md` finding 3.
+
+### XSLT cultures no longer inherit vanilla's lord, teen and ruler templates (generated lord kits, 2026-10-06)
+- **Why missed:** the entry above says custom cultures inherit none of the templates and XSLT cultures get them for free. Since `lord_template_rosters.xslt`, the six renamed cultures' adult lord, teen and ruler pools hold only TAOM's `taom_*` rosters; only child templates still come from vanilla. A generated Dunland lord had drawn vanilla Empire gear 26 times in 27.
+- **Prevent:** treat `taom_lord_template_equipment.xml` as the only lord, teen and ruler pool for all eighteen TAOM cultures. A roster it loses empties a pool (null equipment, NRE in four engine callers). Never rerun its generator whole (#637); hand-port. `LordTemplateRosterTests` checks every pool the engine requests.
+- **Source:** `docs/reviews/rca-generated-lord-kits-2026-10-06.md`, [generated-lord-kits.md](../../features/generated-lord-kits.md).

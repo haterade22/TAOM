@@ -47,7 +47,7 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
     {
         var result = base.ApplyDamageReductions(in attackInformation, in collisionData, baseDamage);
 
-        result = RefugeDamageHooks.Reduce(_refugeDefense, attackInformation.VictimAgentOrigin, result);
+        result = RefugeDamageHooks.Reduce(_refugeDefense, in attackInformation, result);
 
         // Creature Bandits (#692, #694): the riderless creatures' damage-taken rules and the bandit trolls' 70%;
         // inert for every other victim.
@@ -105,9 +105,11 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
            ?? _combat.ChargeKnockdown(attackerAgent, victimAgent, in collisionData, in blow)
            ?? base.DecideAgentKnockedDownByBlow(attackerAgent, victimAgent, in collisionData, attackerWeapon, in blow);
 
-    // Vanilla never grants KnockBack to a melee swing (SandboxAgentApplyDamageModel.CanWeaponKnockback
-    // returns false for swings), so a signature strike whose profile sets knockBack (Sauron's sweep,
-    // the Nine's scream) is the only true this can produce;
+    // Vanilla knocks back every kick or bash (MissionCombatMechanicsHelper :63-66) and, when its damage beats
+    // the victim's resistance, a head-to-shoulders weapon hit that is a missile, a crush-through or a WideGrip
+    // thrust, unless the weapon carries CanKnockDown as Sauron's mace does (v1.5.4
+    // SandboxAgentApplyDamageModel.CanWeaponKnockback :929-942); an ordinary swing never. A signature strike whose
+    // profile sets knockBack (Sauron's sweep, the Nine's scream) is the only true this override adds;
     // horse charges and every non-signature hit stay base (the 0.7-dot glancing gate is untouched).
     public override bool DecideAgentKnockedBackByBlow(Agent attackerAgent, Agent victimAgent, in AttackCollisionData collisionData, WeaponComponentData attackerWeapon, in Blow blow)
         => SignatureStrikeVerdicts.Decide(_signatureStrikes, _signatureRoster, attackerAgent, victimAgent, in collisionData, in blow, knockdown: false)

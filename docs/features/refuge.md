@@ -21,7 +21,14 @@ defence: IRefugeDefenseService <- TaomCombatMechanicsModel.ApplyDamageReductions
                                <- TaomCombatSimulationModel.SimulateHit (auto-resolve)
    both apply RefugeDamageReduction: ONE composition contract, (1 - r) on the FINAL damage
    (ExplainedNumber composes factors against the BASE, so the auto-resolve site scales the
-   factor by result/base; a bare AddFactor(-r) drifted from real-time under vanilla factors)
+   factor by result/base; a bare AddFactor(-r) drifted from real-time under vanilla factors).
+   Real-time finds the victim's party through its origin's BattleCombatant, so the crew of a
+   howdah elephant or a mumak shares its party's refuge (#741), as do a SimpleAgentOrigin hero
+   and BannerlordCoop's CoopAgentOrigin. A mount has no origin of its own, so a mount hit counts
+   for its rider's party: a defender's horse, elephant or mumak shares the refuge, and a riderless
+   mount gets nothing. Scripted blows (CustomAttacksUtils.TakeDamage: troll brute force, signature
+   strikes, creature bites, the elephant and mumak trample, the war ram, the elk and Animalia
+   attacks) skip the damage model, so a refuge defender takes them in full.
 overlay/menus: RefugeCampContributor : ICampOverlayContributor (FieldCamp's seam; the source
    assigned three mutable static delegates instead)
 clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition)
@@ -111,7 +118,9 @@ clan screen + click-to-manage: Patch75 (registry entry has the co-op disposition
 
 ## Configuration
 
-MCM group **Refuge** (GroupOrder 47), 14 settings, all validated in `RefugeSettingsProvider`, all
+MCM group **Refuge** (GroupOrder 47), 14 settings, all validated in `RefugeSettingsProvider` (which takes the MCM
+object once and reads through it, since the defence bonuses are read on every hit against a ready refuge's defenders,
+#745; `HotPathSettingsProvidersTests`), all
 coop simulation-relevant: master toggle, found/upgrade costs (2000/5000), build hours (6), hard cap
 (3, live limit min(1 + clanTier/2, cap)), manage range (4), town distances (16/26), defence bonuses
 (0.20/0.35), militia base/max (6/40), raids toggle + range (off/6). Toggle off stops founding,
@@ -146,7 +155,7 @@ disagrees.
 | `RefugeService.cs` | Lifecycle state machine; campaign statics behind protected virtuals |
 | `WardenService.cs` | Candidates, promotion, the no-kill release policy |
 | `RefugeDefenseService.cs` (+ `IRefugeBook`) | Hot-path tier factors; one singleton serves both faces |
-| `Hooks/RefugeDamageHooks.cs` | The real-time reduction the campaign damage model applies: the victim's party from its agent origin, then `RefugeDamageReduction` (#737) |
+| `Hooks/RefugeDamageHooks.cs` | The real-time reduction the campaign damage model applies: the victim's party from its agent origin's `BattleCombatant` (a mount's from its rider's), then `RefugeDamageReduction` (#737, #741) |
 | `Visuals/RefugeVisualService.cs` | refuge tpacs (scale 4/4.8, palisade 4.6/5.4) over CampLayoutBuilder, vanilla fallback |
 | `Hooks/RefugeCampaignBehavior.cs` + `RefugeMenuController.cs` | Events, SyncData, menus, index-4 insertions |
 | `Hooks/RefugeCampContributor.cs` | Overlay caption/blocked-reason/status through FieldCamp's seam |
@@ -198,6 +207,8 @@ disagrees.
 
 ## Owed
 
+- #741 in game: a refuge defence where the refuge's own party fields a war elephant or a mumak; its crew and
+  the beast take reduced damage (Blow Diagnostics logs each blow's damage; compare with the MCM bonus at 0).
 - In-game smoke per #507 checklist (found/build/enter/store/upgrade/dismantle, defence bonus both
   paths, militia rally + stand-down, save/load with refuge under attack, warden capture path,
   refuge wiped by a hostile lord mid-session, orphan-row dismantle) plus the fix-pass paths:

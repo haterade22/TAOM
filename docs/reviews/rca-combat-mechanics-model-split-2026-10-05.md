@@ -56,11 +56,17 @@ F7 share a second, smaller cause: each test oracle was chosen narrower than the 
 
 ## Follow-ups (not part of #737)
 
+Resolved 2026-10-06 in #741: the first two below (the refuge reduction widened to mounts as well, on the
+maintainer's word), plus four source pins: the damage argument of the race-ability and
+creature-bandit calls in `ApplyDamageReductions`, the base result `AmplifyDamage` receives, and the agent order of
+`RaceAbilityHooks.CrushVerdict`.
+
 - **Refuge victim party through `BattleCombatant`** (design lens, behaviour-changing): would extend the refuge
   reduction to the howdah and mumakil crews and to a `SimpleAgentOrigin` hero; needs its own issue, commit and an
   in-game check. `mumakil.md` does not record the gap yet.
 - **"Vanilla never grants KnockBack to a melee swing"** is wrong on v1.5.4 (`SandboxAgentApplyDamageModel.cs:929-942`:
-  a crush-through or consumable-weapon swing can earn it; kicks and bashes always do). The claim sits in four places:
+  a crush-through head-to-shoulders hit from a weapon without `CanKnockDown` can earn it, and
+  `MissionCombatMechanicsHelper` grants every kick or bash before asking). The claim sits in four places:
   the model's knock-back comment, `signature-strikes.md:37-39`, `combat-mechanics.md:42` and
   `CombatMechanicsModelInvariantsTests.cs:40-41`. Behaviour is unaffected.
 - **Perf audit E2 items** (`GetWieldedUsageItem`'s two detoured getters; the crush context built in full for hits the

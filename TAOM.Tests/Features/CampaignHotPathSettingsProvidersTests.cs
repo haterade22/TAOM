@@ -7,6 +7,8 @@ using NSubstitute;
 using TAOM.Core.Logging;
 using TAOM.Features;
 using TAOM.Features.AlignmentDesertion;
+using TAOM.Features.FieldCamp;
+using TAOM.Features.SupplyLines;
 using TAOM.Features.CaravanTrade;
 using TAOM.Features.CastleRecruitment;
 using TAOM.Features.FieldCommission;
@@ -51,6 +53,9 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(QuickActionsSettingsProvider))]
     [DataRow(typeof(PartyIconScaleConfig))]
     [DataRow(typeof(TimeAccelerationSettingsProvider))]
+    // #746: read every campaign frame (supply lines always, the field camp while it stands).
+    [DataRow(typeof(SupplyLinesSettingsProvider))]
+    [DataRow(typeof(CampSettingsProvider))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
         var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
@@ -77,6 +82,8 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(IRealmBordersSettings), typeof(RealmBordersSettingsProvider))]
     [DataRow(typeof(IQuickActionsSettingsProvider), typeof(QuickActionsSettingsProvider))]
     [DataRow(typeof(ITimeAccelerationSettingsProvider), typeof(TimeAccelerationSettingsProvider))]
+    [DataRow(typeof(ISupplyLinesSettingsProvider), typeof(SupplyLinesSettingsProvider))]
+    [DataRow(typeof(ICampSettingsProvider), typeof(CampSettingsProvider))]
     public void Provider_ResolvesFromARealContainer(Type service, Type implementation)
     {
         using var container = new Container();
@@ -181,6 +188,38 @@ public class CampaignHotPathSettingsProvidersTests
         mcm.EnableInventorySearch = false;
 
         Assert.IsFalse(sut.EnableInventorySearch);
+    }
+
+    [TestMethod]
+    public void SupplyLines_ReadsThroughTheCachedSettings()
+    {
+        var mcm = new TaomSettings();
+        var sut = new SupplyLinesSettingsProvider(mcm);
+        Assert.IsTrue(sut.Enabled);
+        Assert.IsTrue(sut.ShowRouteVisual);
+
+        mcm.EnableSupplyLines = false;
+        mcm.SupplyShowRouteVisual = false;
+        mcm.SupplyGoodsMarkupFactor = 2f;
+
+        Assert.IsFalse(sut.Enabled);
+        Assert.IsFalse(sut.ShowRouteVisual);
+        Assert.AreEqual(2f, sut.GoodsMarkupFactor);
+    }
+
+    [TestMethod]
+    public void FieldCamp_ReadsThroughTheCachedSettings()
+    {
+        var mcm = new TaomSettings();
+        var sut = new CampSettingsProvider(mcm);
+        Assert.IsTrue(sut.Enabled);
+        Assert.AreEqual(4f, sut.CampSetupHours);
+
+        mcm.EnableFieldCamps = false;
+        mcm.CampSetupHours = 8f;
+
+        Assert.IsFalse(sut.Enabled);
+        Assert.AreEqual(8f, sut.CampSetupHours);
     }
 
     [TestMethod]

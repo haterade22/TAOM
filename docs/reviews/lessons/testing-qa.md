@@ -1670,3 +1670,8 @@ v1.5.4 bump switched them off with a green run.
 - **Why missed:** the #737 facade tests passed zero damage, empty blow flags and a non-charge collision, so a swapped flag mask or a dropped field mapped default to default and passed. The source pin on the model's call sites covered only "the seams that take two agents" and missed the refuge step's agent origin (one of four on `AttackInformation`) and the shield seam's base result, where a wrong argument also compiles.
 - **Prevent:** give every field a boundary maps a distinct non-default value (`CollisionDataFixture` writes the get-only `AttackCollisionData` members; a bare `Agent` from `FormatterServices.GetUninitializedObject` reaches code that reads the agent only past a guard). Choose pins by the mistake, not by the type: list each argument's in-scope candidates of the same type and pin every call site that has more than one.
 - **Source:** `docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md` F2, F3.
+
+### A wiring pin checks the effect, not just that the call is there (#742, 2026-10-06)
+- **Why missed:** the pin for `taom.spawn_troops` checked that `CreatureBanditRules.SpawnsOnPlayerSide` was called before the team lookup. Deleting the line that assigned its answer left every test green while the creature went back to the player's side under a note saying otherwise.
+- **Prevent:** pin the statement that carries the answer into the code that uses it (here the call and its assignment are one statement, and the pin targets it), or drive the path end to end. Ask of every source pin: if the result of this call were thrown away, would the pin fail?
+- **Source:** `docs/reviews/rca-refuge-crews-creature-allies-2026-10-06.md` F8.

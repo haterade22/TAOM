@@ -33,7 +33,7 @@ public class RefugeDefenseService : IRefugeDefenseService
         _settings = settings;
     }
 
-    public float DefenderDamageReduction(string partyStringId)
+    public float DefenderDamageReduction(string? partyStringId)
     {
         if (partyStringId == null)
             return 0f;

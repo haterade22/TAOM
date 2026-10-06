@@ -952,8 +952,10 @@ and walk-into test is owed on the new body, and a refit would re-run `tools/skel
       walking; worth watching against the June act_none locomotion bug, not a finding from one line.
 - [ ] **Crew follow-ups (#627 delta review):** crew kills count as Field Commission merit for `harad_archer` when the
       player's own party fields a howdah elephant (`FieldCommissionMissionLogic` accepts the mahout's party); Mike
-      decided on 2026-09-30 to keep that. Still open: refuge damage reduction (#507) does not reach the crew (`RefugeDamageHooks.VictimPartyId`
-      switches on the vanilla origin types; read `BattleCombatant as PartyBase` instead). The Armory mirror
+      decided on 2026-09-30 to keep that. Refuge damage reduction (#507) reaches the crew since #741
+      (`RefugeDamageHooks` reads the party through `BattleCombatant`, which the crew origin forwards to the mahout's),
+      and the elephant itself (a mount hit counts for its rider's party). The in-game check, with the refuge's own
+      party fielding the elephant, is owed. The Armory mirror
       (`E:\repos\lotraom-assets`) is Mike's to sync (2026-09-22): a session edits the live Armory only.
 - [ ] **Package the Armory in the same release** as the TAOM build that asks for `taom_howdah_platform` and the rider's
       three howdahs (`sk_elephant_armor_howdah_med`, `_heavy`, `_elite`; #627, 2026-09-29): players get the Armory only
@@ -1032,8 +1034,9 @@ does not count toward the side's losses. A side whose last roster troop falls is
 elephant, and its crew are released at mission end. An enemy that kills a crew archer still earns its XP. When the
 player's own party fields a howdah elephant, crew kills also count as Field Commission merit for `harad_archer`
 (`FieldCommissionMissionLogic` accepts the mahout's party); decide if that is wanted. Refuge damage reduction
-(#507) does not reach the crew yet: `RefugeDamageHooks.VictimPartyId` switches on the vanilla origin types
-(follow-up: read `BattleCombatant as PartyBase` instead).
+(#507) reaches the crew of a refuge's party (#741): `RefugeDamageHooks` reads the victim's party through
+`BattleCombatant`, which `HowdahCrewAgentOrigin` forwards to the mahout's origin; a hit on the elephant counts for
+its mahout's party.
 
 The engine reads happen in `HowdahDiagnosticsReporter`; the arithmetic (clearance, drift, NaN handling, the 5 s clock,
 the summary extremes) is in `HowdahDiagnostics`, `HowdahSampleClock` and `HowdahRunStats`, unit-tested.

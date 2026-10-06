@@ -221,7 +221,7 @@ one in the crow's nest.**
 | `TaomMumakilPlatform` | places the entity on the beast each tick, attaches the navmesh, releases seats before vanilla deactivates them |
 | `TaomMumakilStandingPoint` | one seat: keeps the formation, rewrites the AI curves, pins locomotion, corrects drift past a deadband |
 | `MumakilCrewSpawner` | owns the platform's lifecycle; builds on the rider's `OnAgentBuild`, spawns crew from the next `OnMissionTick` |
-| `MumakilCrewAgentOrigin` | a no-op casualty surface per archer |
+| `MumakilCrewAgentOrigin` | a no-op casualty surface per archer; forwards `BattleCombatant` to the rider's origin, so the crew shares its party's refuge damage reduction (#741) |
 | `MumakilPlatformTests` | 15 gates: prefab name, decks, spacing, headroom, containment, deadband margin, tag-vs-script parity, navmesh declaration, `body_length`, live-copy match, IL release |
 
 ### The four things that had to be true at once
@@ -360,6 +360,8 @@ invalidates the rest if it fails.
    the release is wired, not that it runs.
 7. A campaign battle with several mumakil, watching the archer formation: crew count toward their formation's
    average position, and eight per beast scales that concern with the feature.
+8. A refuge defence where the refuge's own party (not the player's) fields a mumak: its crew, and the mumak itself
+   (a mount hit counts for its rider's party), take the refuge's reduced damage (#741).
 
 ---
 

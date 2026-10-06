@@ -53,15 +53,19 @@ internal static class MissionReportFormatter
     {
         if (outcome == null) return "Spawn failed.";
 
-        // A hard failure reports the reason and nothing else — claiming "0/5 spawned" alongside it
-        // would imply the spawn was attempted per-troop when it never got that far.
+        // A hard failure reports the reason and no count — claiming "0/5 spawned" alongside it would
+        // imply the spawn was attempted per-troop when it never got that far. The note still follows:
+        // a creature's `ally` turned enemy is exactly what can meet a mission with no enemy team (#742).
+        string line;
         if (!string.IsNullOrEmpty(outcome.FailureReason))
-            return $"[Spawn] {outcome.FailureReason}";
-
-        var line = $"[Spawn] {outcome.Spawned}/{outcome.Requested} {outcome.TroopId} spawned onto {outcome.TeamLabel}";
-        return outcome.Spawned == outcome.Requested
-            ? line
-            : line + $" — {outcome.Requested - outcome.Spawned} failed, see taom_debug for the exceptions";
+            line = $"[Spawn] {outcome.FailureReason}";
+        else
+        {
+            line = $"[Spawn] {outcome.Spawned}/{outcome.Requested} {outcome.TroopId} spawned onto {outcome.TeamLabel}";
+            if (outcome.Spawned != outcome.Requested)
+                line += $" — {outcome.Requested - outcome.Spawned} failed, see taom_debug for the exceptions";
+        }
+        return string.IsNullOrEmpty(outcome.Note) ? line : line + "\n" + outcome.Note;
     }
 
     internal static string FormatBattleScene(BattleSceneQuery q)

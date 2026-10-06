@@ -34,9 +34,12 @@ and cannot do:
   1.0 m, quadratic falloff `1 / lerp(1,3,t)^2` to one ninth at the edge, every ring victim
   inheriting the primary blow's flags (a boulder carries `KnockDown`, set unconditionally from its
   `CanKnockDown` weapon flag in `CreateMissileBlow`, `:5522`). A ballista bolt passes through up to
-  three agents (`MultiplePenetration`, `:5913-5959`). Both are missile-only. A melee swing
-  **never knocks back** (`SandboxAgentApplyDamageModel.CanWeaponKnockback:917-943` returns false
-  for swings) and knocks down only inside the sweet spot (`AttackProgress` 0.22 to 0.55) when
+  three agents (`MultiplePenetration`, `:5913-5959`). Both are missile-only. An ordinary
+  melee swing **never knocks back**: v1.5.4 `SandboxAgentApplyDamageModel.CanWeaponKnockback:929-942`
+  allows a weapon hit only on the head, neck, torso or shoulders, only from a weapon without
+  `CanKnockDown` (so never Sauron's mace), and only for a missile, a crush-through or a `WideGrip`
+  thrust; `MissionCombatMechanicsHelper.DecideAgentKnockedBackByBlow:63-66` grants it to every kick
+  or bash. A swing knocks down only inside the sweet spot (`AttackProgress` 0.22 to 0.55) when
   `damage >= maxHP * max(0, (0.4 + 0.001 * Athletics) - penetration)`
   (`MissionCombatMechanicsHelper.cs:76-96,333-348`). Rams and siege towers damage nobody by
   contact.
@@ -239,7 +242,7 @@ race resistance (elf 0.4, dwarf 0.5) and falloff, clamped to what the agent has;
 | `Main/Features/SignatureStrikes/SignatureStrikeFalloff.cs` | The engine's `1 / lerp(1,3,t)^2` band as a pure static |
 | `Main/Features/SignatureStrikes/SignatureStrikeRegistry.cs` | Three-axis identity to a signature index, one id-keyed table per signature, built once |
 | `Main/Features/SignatureStrikes/SignatureStrikesConfigProvider.cs` | Validating loader (DreadAura shape), per-signature fallback by id |
-| `Main/Features/SignatureStrikes/SignatureStrikesSettingsProvider.cs` | Folds the Combat Mechanics master toggle; clamps the multiplier |
+| `Main/Features/SignatureStrikes/SignatureStrikesSettingsProvider.cs` | Folds the Combat Mechanics master toggle; clamps the multiplier; takes the MCM object once and reads through it, read on every signature hit (#746) |
 | `Main/Features/SignatureStrikes/Domain/` | `StrikeContext` / `StrikeEffect` record structs, `StrikeKindTimes`, the four enums, the config POCOs, `StrikeNames` |
 | `Main/Features/SignatureStrikes/Hooks/SignatureStrikesMissionLogic.cs` | Entry point (`: MissionLogic`): roster lifecycle, enqueue on hit, drain on tick, stand-down on exception |
 | `Main/Features/SignatureStrikes/Hooks/StrikeContextFactory.cs` | The one boundary from `AttackCollisionData` to `StrikeContext`, shared with the model's verdicts |

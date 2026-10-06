@@ -15,12 +15,12 @@ Validate XSLT file against SandBoxCore source data.
 1. **Read the XSLT file** from `Main/_Module/ModuleData/$ARGUMENTS`
 
    **Scope limit, know this before you trust a PASS.** That path is the repo's ModuleData, which
-   holds 8 of TAOM's 16 XSLT files. The other 8 live in the game install and this skill does not
-   reach them: `TAOM_Map/ModuleData/settlements.xslt`, and the Armory's `action_sets.xslt`,
+   holds only the repo's XSLT files (`python tools/check_external_xslt.py` counts all of them). The
+   rest live in the game install and this skill does not reach them: `TAOM_Map/ModuleData/settlements.xslt`, and the Armory's `action_sets.xslt`,
    `action_types.xslt`, `Animations/action_sets.xslt`, `crafting_templates.xslt`,
    `monster_usage_sets.xslt`, `MonsterUsage/LOTR/lotr_monster_usage_spider.xslt`,
    `weapon_descriptions.xslt`. The CI `validate-xml` job globs the same repo path, and it cannot be
-   extended to cover them because those modules are not in the checkout. To check one of the eight,
+   extended to cover them because those modules are not in the checkout. To check one of those,
    pass an absolute path under
    `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\<module>\ModuleData\` and apply
    the same steps by hand. See
@@ -37,6 +37,10 @@ Validate XSLT file against SandBoxCore source data.
    - `lords.xslt` → `lords.xml`
    - `heroes.xslt` → `heroes.xml`
    - `module_strings.xslt` → `module_strings.xml`
+   - `lord_template_rosters.xslt` → `sandboxcore_equipment_sets.xml` **and**
+     `SandBox/ModuleData/sandbox_equipment_sets.xml` (it also strips SandBox's noble teen templates,
+     so the "SandBoxCore only" note below does not hold for it). Executable gate:
+     `dotnet test TAOM.Tests --filter FullyQualifiedName~LordTemplateRosterTests`.
 
 3. **Check passthrough rules** (CRITICAL):
    - XSLT MUST use `<xsl:apply-templates select="@*"/>` to pass through ALL vanilla attributes

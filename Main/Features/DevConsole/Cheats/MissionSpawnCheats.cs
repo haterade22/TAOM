@@ -7,6 +7,7 @@ using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.ObjectSystem;
 using TAOM.Core.Logging;
+using TAOM.Features.CreatureBandits;
 using TAOM.Features.DevConsole.Domain;
 
 namespace TAOM.Features.DevConsole.Cheats;
@@ -61,6 +62,12 @@ public static class MissionSpawnCheats
 
         var origin = CreateOrigin(character);
 
+        // A creature bandit is an enemy at all times (#742): asked for as an ally, it spawns on the enemy side.
+        var requestedPlayerSide = isPlayerSide;
+        isPlayerSide = CreatureBanditRules.SpawnsOnPlayerSide(troopId, requestedPlayerSide);
+        if (isPlayerSide != requestedPlayerSide)
+            outcome.Note = $"{troopId} is a creature bandit and fights only as an enemy, so the player's side is ignored.";
+
         // Pre-resolve the team and bail if it is null. SpawnTroop does
         // `.ClothingColor1(agentTeam.Color)` with NO null check, so a null team hard-crashes the game
         // instead of printing a sentence. This is the single biggest crash risk in the suite.
@@ -68,7 +75,7 @@ public static class MissionSpawnCheats
         // Only the ENEMY path can actually return null: GetAgentTeam returns Current.PlayerEnemyTeam
         // unguarded, and that is null in town/village missions. The ally path never returns null — it
         // falls back to Current.PlayerTeam when PlayerAllyTeam is missing — so `ally` in a town spawns
-        // onto the player's own team rather than refusing. That is the engine's behaviour, not a bug
+        // onto the player's own team rather than refusing (except a creature bandit, sent to the enemy side above). That is the engine's behaviour, not a bug
         // to work around, but it is why the message below names the enemy case specifically.
         var team = Mission.GetAgentTeam(origin, isPlayerSide);
         if (team == null)

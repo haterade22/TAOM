@@ -37,8 +37,9 @@ public class CombatMechanicsModelInvariantsTests
         "CalculateStaggerThresholdDamage",
         "DecideAgentKnockedDownByBlow",
         // SignatureStrikes (#605, 2026-09-16): a signature hero's side swing knocks the struck
-        // agent back; vanilla never grants KnockBack to a melee swing, so this is the one place
-        // that verdict can come from. Every non-signature case falls through to base.
+        // agent back; vanilla never knocks back an ordinary swing (only a crush-through one, and never
+        // one from a CanKnockDown weapon such as Sauron's mace), so this is the one place that verdict
+        // can come from for a signature side swing. Every non-signature case falls through to base.
         "DecideAgentKnockedBackByBlow",
         "DecideMissileWeaponFlags",
         "CalculateShieldDamage",
@@ -117,13 +118,18 @@ public class CombatMechanicsModelInvariantsTests
     }
 
     // A live Agent cannot be built outside the game, so the facades' tests cannot see two agents swapped, the verdict flag
-    // flipped, the wrong one of the four agent origins read, or the raw damage passed where base's result belongs. Each call
-    // the model makes into CombatMechanicsHooks, SignatureStrikeVerdicts and RefugeDamageHooks where such a mistake would
-    // still compile is pinned here. The RaceAbilities, CreatureBandits and CreatureSiegeRole calls are pinned by their own
-    // wiring tests, which do not check the damage argument; the context builders inside CombatMechanicsHooks moved
-    // byte-identical from HEAD (docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md).
+    // flipped, or the raw damage passed where base's result belongs (the refuge's origin choice is RefugeDamageHooksTests'). Each call
+    // the model makes into a feature hook where such a mistake would still compile is pinned here, except
+    // CreatureSiegeHooks.ScaleGateDamage, whose base-first shape CreatureSiegeRoleWiringTests pins in the IL. A base call is
+    // pinned only where it is a hook's damage argument (ApplyDamageAmplifications, CalculateShieldDamage); the others hand
+    // the override's own parameters through in order; the context builders inside
+    // CombatMechanicsHooks moved byte-identical from HEAD (docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md).
     [DataTestMethod]
-    [DataRow("ApplyDamageReductions", "RefugeDamageHooks.Reduce(_refugeDefense, attackInformation.VictimAgentOrigin, result)")]
+    [DataRow("ApplyDamageReductions", "CreatureBandits.Hooks.CreatureBanditDamage.Reduce(in attackInformation, in collisionData, result)")]
+    [DataRow("ApplyDamageReductions", "RaceAbilityHooks.ReduceDamage(in attackInformation, in collisionData, result)")]
+    [DataRow("ApplyDamageAmplifications", "base.ApplyDamageAmplifications(in attackInformation, in collisionData, baseDamage)")]
+    [DataRow("DecideCrushedThrough", "RaceAbilityHooks.CrushVerdict(attackerAgent, defenderAgent, strikeType, isPassiveUsageHit)")]
+    [DataRow("ApplyDamageReductions", "RefugeDamageHooks.Reduce(_refugeDefense, in attackInformation, result)")]
     [DataRow("CalculateShieldDamage", "_combat.ShieldDamage(in attackInformation, base.CalculateShieldDamage(in attackInformation, baseDamage))")]
     [DataRow("DecideCrushedThrough", "_combat.CrushThrough(attackerAgent, defenderAgent, totalAttackEnergy, attackDirection, strikeType, defendItem, isPassiveUsageHit)")]
     [DataRow("CalculateRemainingMomentum", "_combat.CleaveMomentum(attacker, originalMomentum, in collisionData)")]

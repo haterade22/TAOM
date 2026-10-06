@@ -151,7 +151,8 @@ two). Design: D2, D9, and the confirmation that the queue, the origin wrapper an
 - A reinforcement headroom guard before spawning four crew (Efficiency F3): the engine's agent cap is native and
   unverified; the A/B with `CrewSpawnEnabled` is the measurement to take first.
 - `TaomCombatMechanicsModel.VictimPartyId` reading `BattleCombatant as PartyBase` so refuge reduction reaches the crew:
-  another feature's file, FOLLOW-UP, recorded in `elephant.md`.
+  another feature's file, FOLLOW-UP, recorded in `elephant.md`. Resolved 2026-10-06 in #741 (now in
+  `RefugeDamageHooks`, which also credits a mount hit to its rider's party).
 
 ## Owed in game
 
