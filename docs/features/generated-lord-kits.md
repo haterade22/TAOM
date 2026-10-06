@@ -103,4 +103,5 @@ The adapter is registered in `RaceAgeIoC` and both models in `SubModule.Register
 
 ## GitHub Issue
 
-- **Issue:** not filed yet.
+- **Issue:** #747, [Generated lords wear vanilla Calradic gear, and the gear pick ignores race](https://github.com/haterade22/TAOM/issues/747)
+- **Status:** Closed, `triage-needs-ingame` (in-game checklist owed)
