@@ -70,7 +70,12 @@ No managed API runs a melee collision for a clip you play yourself, and none say
   test, bone origins within 13 cm, landed 2 hits in a whole round, because a blade through a chest passes between
   joints [yotthani].
 - **The per-agent ray is a trap** [yotthani]: hits from `RayCastForGivenAgentsLimbs` broke the damage call with an
-  access violation (2026-09-29).
+  access violation (2026-09-29). The likely cause is in the engine (upstream did not isolate the faulting site): the
+  native wrapper never builds the agent's capsules,
+  so hit, distance and bone index are uninitialised stack, and `GetBoneTypeData`, which has no range check, reads
+  address 0 when the garbage bone finds no known bone type (yotthani, MithrilForge
+  `docs/perf-audit/limb-ray-given-agent.md`, decompile v1.5.3; v1.5.4: confirmed via native_decompile; detail in
+  [mission-frame-threads-and-native-costs.md](engine/mission-frame-threads-and-native-costs.md) section 5).
 - **Cost** [yotthani]: 65 to 70 µs per limb ray with 1,600 agents on the field. Four rays a tick per strike cost 31 to
   36 ms per second; two cost 14 ms but lost 16 % of the hits. DualWield settled on three rays for an NPC strike and
   nine plus a one-tick look-ahead for the player's.
@@ -78,6 +83,16 @@ No managed API runs a melee collision for a clip you play yourself, and none say
   `RayCastForClosestAgentsLimbs` and `RayCastForGivenAgentsLimbs`, and a shield is an attachment, not a limb. DualWield
   models a guarding weapon as a line from its weapon bone along the bone's local +z and calls a parry when the swept
   blade passes close to it; a shield that is not actively raised still reads as a body hit.
+- **What vanilla's own melee does natively** (yotthani, MithrilForge `docs/perf-audit/pilot-weapon-collision.md`,
+  decompile v1.5.3; v1.5.4: not re-checked). A per-agent combat job keeps each blade's pose for this frame and the
+  last, and queues the agent when a `ReleaseMelee`, `Kick` or `WeaponBash` action on channel 1 is inside its
+  combat-parameter window. A sweep job then takes candidates from the agent grid along the blade's segment (at
+  most 15), tests their limb capsules in substeps between the two poses, and calls the managed
+  `GetDefendCollisionResults` for parry and block from inside the sweep; that these jobs run on worker threads
+  is an inference, not measured. The main thread then sorts the results and calls `MeleeHitCallback` serially in
+  the native mission tick. Only the right hand is swept: the slot, blade length, flail chain and the defender's
+  parry weapon all read the right-hand weapon (a shield bash is the one left-hand case), and only the bone the
+  blade pose hangs on is data-driven (`anf_use_left_hand_during_attack`).
 - **The weapon as a line.** The hand bone's local +z for the weapon's length. Measured against the engine's own hits
   (a postfix on `MeleeHitCallback`, 2026-09-22), the hit point lies on that axis within 1 to 12 degrees, even for a
   flail [yotthani]. **The length is wrong for flails:** `GetRealWeaponLength()` says 0.65 m for vanilla's flail while
@@ -129,9 +144,15 @@ No managed API runs a melee collision for a clip you play yourself, and none say
   when a hit reaction has taken the body and stop sweeping.
 - **`SetAnimationAtChannel` holds its last frame** [yotthani]: it is a raw one-shot with no blend-out. Hand the
   channel back by starting a real idle action.
-- **The spine bends by pitch only for the engine's own attacks** [yotthani; the attributes are Certain]: combat
-  parameters carry `vertical_rot_limit_multiplier_up`/`_down` (`1h_up` 0.3). A typeless clip gets no bend, so
-  DualWield bakes bent variants (`_lo`, `_hi`) and picks one by the look pitch.
+- **The spine bends with the look pitch on channel 1, never on channel 0** [the attributes are Certain]: combat
+  parameters carry `vertical_rot_limit_multiplier_up`/`_down` (`1h_up` 0.3). The bend follows the channel, not the
+  action type: a typeless clip on channel 1 bends as vanilla's attack does, and a clip on channel 0, typed or not,
+  gets none. On channel 0 the bend must be baked into the clip (DualWield's `_lo` and `_hi` variants, picked by the
+  look pitch); a baked variant on channel 1 bends twice. Moving a strike from channel 0 to 1 changes how it looks,
+  not what it comes to: one 500 against 500 battle per channel gave hits 21.8 % and 22.6 %, parries 6.9 % and
+  6.6 %, blocks 14.5 % and 15.3 %. (yotthani, MithrilForge `docs/engine/look-bend.md`, measured in game on v1.5.3,
+  no decompile; v1.5.4: not re-checked.) Channel 1 ran crash-free there only with mirrored vanilla-keyed clips;
+  overriding channels 1 to 3 with other clips crashed (the vanilla-attack bullet above).
 - **Speed** [yotthani]: `Agent.SetMaximumSpeedLimit` limits the AI's movement orders and does nothing for the player
   (left strikes ran at 3.6 to 4.7 m/s under a 2.8 m/s cap); slow the player through driven properties.
 - **Every stat model** [yotthani]: a patch on `SandboxAgentStatCalculateModel` alone never runs in a custom battle
@@ -179,7 +200,11 @@ No managed API runs a melee collision for a clip you play yourself, and none say
 
 - **Engine calls add up** [yotthani]: `GetCurrentActionType` and `FindAgentWithIndex` go into the engine. With 936
   dual wielders, calling them every tick meant about 45,000 and 56,000 calls a second respectively; DualWield looks at
-  each agent every third tick and sweeps for the dead once a second.
+  each agent every third tick and sweeps for the dead once a second. Of the two, only `GetCurrentActionType` costs
+  anything measurable: native `FindAgentWithIndex` is O(1) (an index check and a handle read) and drew 0 samples in a
+  45 s 500 against 500 profile (yotthani, MithrilForge `docs/perf-audit/profile_s3d_functions.md`, decompile and
+  profile v1.5.3; v1.5.4: not re-checked). Per-call costs:
+  [mission-frame-threads-and-native-costs.md](engine/mission-frame-threads-and-native-costs.md) section 9.
 - **`ActionIndexCache.Create` caches nothing** [Certain]: each call constructs a new cache whose constructor calls
   `MBAnimation.GetActionCodeWithName` with the string. Resolve action codes once and keep them; re-ask a -1, which can
   come from a lookup made before the action sets loaded.

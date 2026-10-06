@@ -27,5 +27,6 @@ internal static class FeatureModules
         new Features.RaceAbilities.RaceAbilitiesModule(),
         new Features.SiegeForces.SiegeForcesModule(),
         new Features.CreatureSiegeRole.CreatureSiegeRoleModule(),
+        new Features.ButterLibDistanceMatrix.ButterLibDistanceMatrixModule(),
     };
 }

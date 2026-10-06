@@ -44,6 +44,25 @@ What it means for TAOM:
   divided by 4, clamped to between 2 and 4. On-demand loads (section 6) share those at most four
   background threads with other streaming work. `/maxThreadCount` can only lower the count; useful as an
   A/B variable, not a lever to ship.
+- **The native `Mission.Tick` runs before the managed `Mission.OnTick`**: `MissionState.TickMissionAux` calls
+  it first. Inside it, in order: the managed `OnPreTick` callback, the agent jobs (combat tick, AI, movement,
+  the melee sweep), then the scene tick, which starts the particle simulation task, runs
+  `ManagedScriptHolder.TickComponents` and the native scene objects on the main thread, and then **waits for
+  the particle task**. In the profiled 500 against 500 battle that wait was 5.9 s of 45 s (about 2.7 ms a
+  frame). (yotthani, MithrilForge `docs/perf-audit/particle-sim-wait.md` and
+  `docs/perf-audit/profile_s3d_functions.md` section 3, decompile and profile v1.5.3; v1.5.4: not re-checked.)
+- **Particle simulation has no visibility or distance gate.** Every active emitter is stepped every step;
+  visibility, camera distance (emitter LOD) and the particle quality option gate only emission. Emitters are
+  split across workers in chunks of 16, so one emitter holding most particles runs on one thread. The step is a
+  fixed 1/60 s and the step count per frame is uncapped, so a hitch is followed by a particle-heavy frame (a
+  0.5 s hitch means 30 steps at once; no cap in native code, and whether C# caps the frame time first is not
+checked). (yotthani, MithrilForge `docs/perf-audit/particle-sim-wait.md`,
+  decompile v1.5.3; v1.5.4: not re-checked.)
+- **Later in the frame the main thread waits on particle render data**, which grows with the particle count
+  (roughly 0.06 ms per 1,000 particles in one Black Gate run, an estimate from one battle). On the Black Gate
+  ash that was about 2.7 ms of simulation plus about 7 ms of render data per frame. TAOM's case is #738.
+  (yotthani, MithrilForge `docs/perf-audit/agent-render-items.md` sections 0 and 1.5, profile v1.5.3; v1.5.4:
+  not re-checked.)
 - Which callbacks reach which thread, and how TAOM code must treat them, is the thread table in
   [`.claude/rules/harmony-patches.md`](../../../.claude/rules/harmony-patches.md) "Which thread runs your
   target". This page does not repeat it.
@@ -120,12 +139,29 @@ threads expecting parallelism.
 
 ## 5. Limb rays [yotthani]
 
-`Mission.RayCastForClosestAgentsLimbs` (RVA `0x6F2D60` in TAOM's engine-method map) costs about 65 to 78
+`Mission.RayCastForClosestAgentsLimbs` (RVA `0x6F2D60` on v1.5.3, `0x6F2FF0` on v1.5.4 in TAOM's engine-method
+map) costs about 65 to 78
 microseconds per call with 1,600 agents, tests the limbs of only the agent whose origin is nearest among
 those whose box the ray touches, and reports nothing if that agent's capsules are missed even when a body
-further along is cut. `RayCastForGivenAgentsLimbs` (`0x6F2BA0`) returns a bone index the hit code
-rejects, which raises an access violation in the damage call. Budget the cost per call before giving
-creature contact limb rays ([scripted-melee-strikes.md](../scripted-melee-strikes.md) section 9).
+further along is cut. Its agent loop has no early exit: every agent with visuals pays a root-bone
+spinlock, a matrix inverse and a box test (about 50 ns each), whatever the ray's length, thickness or
+excluded index, and no dead, mount or team filter applies. Of the chosen agent's capsules (at most 64)
+the first hit in list order wins, not the nearest. Vanilla's only caller is
+`MissionMainAgentInteractionComponent.FocusTick`, once per frame, to focus fallen bodies. (yotthani,
+MithrilForge `docs/perf-audit/limb-ray-given-agent.md`, decompile v1.5.3; v1.5.4: the filter, the
+first-hit rule and the 64-capsule buffer confirmed via native_decompile, the 50 ns and the caller not
+re-checked.)
+
+`RayCastForGivenAgentsLimbs` (`0x6F2BA0`; `0x6F2E30` on v1.5.4) is broken in the engine: its native
+wrapper never calls the capsule builder (`0x681240`) that the closest variant calls, and reads the
+capsule count from uninitialised stack, so its hit, distance and bone index are stack garbage. It never
+null-checks the agent's visuals (`agent+0x880`) either, and vanilla never calls it. A garbage bone then
+reaches `MBAgentVisuals.GetBoneTypeData`, which indexes `bone * 0x1B0` with no range check and reads
+address 0 when the byte it finds is no known bone type: the likely site of the access violation in the damage
+call (upstream did not isolate it, since DualWield catches every site in one handler).
+(yotthani, MithrilForge `docs/perf-audit/limb-ray-given-agent.md`, decompile v1.5.3; v1.5.4: confirmed
+via native_decompile, except "vanilla never calls it", not re-checked.) Budget the cost per call before
+giving creature contact limb rays ([scripted-melee-strikes.md](../scripted-melee-strikes.md) section 9).
 
 ## 6. Animation clip residency: on-demand clips lock, block and get evicted
 
@@ -134,8 +170,8 @@ creature contact limb rays ([scripted-melee-strikes.md](../scripted-melee-strike
 | Piece | Where | What it does |
 |---|---|---|
 | Clip data record | initialiser `0x473090` | Stores the clip's Loading Type at `+0x194`. Type 0: the data pointer (`+0x88`) and size (`+0x80`) are set at once, no loader. Type 1: a short resident piece goes to `+0x90` and a loader callback (`+0x98`) is installed for the full data. Type 2: a loader callback is installed. Reader count `+0xD8`, state `+0xE0` (0 unloaded, 1 loading, 2 loaded; the initialiser stores 0 in both, so an on-demand clip starts unloaded), a mutex at `+0x130` and a condition variable at `+0xE8` |
-| Acquire | `0x474140` | Type 0: returns the data pointer, nothing else. Type 1 or 2: marks the clip used (`0x473250`); spins while the reader count is `-1` (being evicted), then raises it with a compare-and-swap loop; if the state is 0 it swaps it to 1 and starts the loader (`0x474660`); a type 1 clip sampled inside its resident short piece returns that piece; otherwise the calling thread locks the clip's mutex and **waits on its condition variable until the data is loaded** |
-| Release | the accessors, for example `0x473320` and `0x4733A0` | Every read of a type 1 or 2 clip's data ends with an atomic decrement of the reader count; type 0 skips it. Atomic operations on `+0xD8` appear at 28 sites, among them one sampler function with eight (`0x49D960`) |
+| Acquire | `0x474140` | Type 0: returns the data pointer, nothing else. Type 1 or 2: marks the clip used (`0x473250` writes a `QueryPerformanceCounter` timestamp to `+0x84`); spins while the reader count is `-1` (being evicted), then raises it with a compare-and-swap loop; if the state is 0 it swaps it to 1 and starts the loader (`0x474660`); a type 1 clip sampled inside its resident short piece returns that piece; otherwise the calling thread locks the clip's mutex and **waits on its condition variable until the data is loaded**. The one-bone sampler (`0x473630`) always calls it with header-only off, so the pair is paid per bone sample, per clip, per agent (yotthani, MithrilForge `docs/perf-audit/clip-reader-lock.md`, decompile v1.5.3; v1.5.4: not re-checked) |
+| Release | the accessors, for example `0x473320` and `0x4733A0` | Every read of a type 1 or 2 clip's data ends with an atomic decrement of the reader count; type 0 skips it. Atomic operations on `+0xD8` appear at 28 sites, among them one sampler function with eight (`0x49D960`). **Conflict, unresolved:** yotthani lists `0x473320` and `0x4733A0` as header-only reads (the bone count) that take no lock, which contradicts this row; his own address table adds "except mode 2" for them (MithrilForge `docs/perf-audit/clip-reader-lock.md`, decompile v1.5.3; v1.5.4: not re-checked) |
 | Eviction | `0x21DEA0` | Drains a queue of loaded on-demand clips and sorts them. It measures the excess of the global loaded-bytes counter over **12,582,912 bytes (12 MiB, the float at `0xB2E2DC`, read by this function only)** once, at its start, then walks the sorted list from its end and frees clips in state 2 (loaded) whose reader count it can swap from 0 to `-1` (data freed, state back to 0, the counter lowered), until the bytes freed reach that excess or the list runs out. It never re-reads the counter, so clips in use and loads that land during the pass can leave the total above 12 MiB. Every return clears the pass flag `0xDABE44` |
 | Probe | `IMBAnimation.IsAnyAnimationLoadingFromDisk` (`0x6EAAE0`, managed `MBAnimation.IsAnyAnimationLoadingFromDisk()`) | Walks the record pointer list at `0xDB00C8` from its start and returns true at the first record in state 1 (loading); when none is loading it reads every entry. It takes no lock and checks no thread: it takes the count once at entry from the list's end and begin pointers (`0xDB00D0`, `0xDB00C8`) and re-reads the begin pointer for every entry. Whether the engine can grow that list or free a record while a mission thread calls this was not traced (**UNVERIFIED**) |
 | Load-time loaders | bulk `0x591390`, single `0x592400` | Read clip data at asset load ("Unable to read animation clip data for %s"); the bulk loader fans out jobs on the engine job manager and helps run them |
@@ -143,29 +179,46 @@ creature contact limb rays ([scripted-melee-strikes.md](../scripted-melee-strike
 What it means:
 
 - A clip at Loading Type 1 or 2 costs an atomic increment and decrement of one shared counter on every
-  data access, so every sampling worker in the parallel agent tick contends on the same cache line for a
-  popular clip.
+  data access, which means per bone sample, per clip, per agent, so every sampling worker in the parallel
+  agent tick contends on the same cache line for a popular clip. Each acquire also writes the timestamp at
+  `+0x84`, in the same 64-byte line (`+0x80` to `+0xBF`) as the data pointer at `+0x88`, so every
+  sampling worker invalidates the line the others read that pointer from; this cache-line cost is an
+  inference, not measured (yotthani, MithrilForge `docs/perf-audit/clip-reader-lock.md`, decompile
+  v1.5.3; v1.5.4: not re-checked).
 - The first sample after a clip is unloaded **blocks that worker** until the clip has loaded. The
   parallel agent tick then finishes late, and the next frame's `WaitTickCompletion` (section 1) holds the
   main thread: a load shows up as a frame spike, not as a worker-only cost.
 - On-demand clip data can grow to 15 MiB before a load sets the pass flag (below), and a pass frees
   only the excess over 12 MiB that it measured at its start. A battle whose working set of type 1 and 2
   clips is larger evicts clips nobody is reading at that moment and loads them again on their next use.
-- Type 0 clips do none of this. [yotthani] DualWield's 293 clips at type 2 cost 8.3 s of CPU in 45 s in a
-  500 against 500 battle and 0.14 s once every clip was resident (an unpublished profile; the
-  mechanism above is the TAOM-verified part).
-- **[yotthani, seen in game]** Resident clip data is shared by a key of the clip's SourceAnimation guid
-  plus its source window, so a resident clone that keeps its template's guid and window plays the
-  template's motion. Give each resident clone its own key before setting type 0.
+- Type 0 clips do none of this. [yotthani] In one profile of a 500 against 500 DualWield battle the
+  acquire function took 8.3 s of exclusive CPU (2.6 %). That is the whole function over every clip in
+  that profile; that most of it comes from DualWield's 292 mirror-pack clips, all at type 2, is very
+  likely, not measured per clip (MithrilForge `docs/perf-audit/profile_s3d_functions.md` and
+  `docs/perf-audit/clip-reader-lock.md`, decompile v1.5.3; v1.5.4: not re-checked). A second 45 s
+  profile with a type 0 test pack, on another battle with the same troops, measured 0.14 s; its own
+  author reads the two battles' totals as a direction only (MithrilForge `docs/engine/perf.md`).
+- **[yotthani, decompile-verified and seen in game]** Resident clip data is shared through a cache
+  (`0x5927B0`, table `0xDABE50`) keyed on `AnimationGUID ^ min(Source1, end) ^ (mode == 1)`, so a
+  resident clone that keeps its template's guid and window plays the template's motion. The mode bit
+  keeps type 0 and type 1 clips from ever sharing data; type 2 bypasses the cache (MithrilForge
+  `docs/perf-audit/clip-reader-lock.md`, decompile v1.5.3; v1.5.4: not re-checked). Give each resident
+  clone its own key before setting type 0.
 - TAOM consequence: 24 of the 30 bound hill-troll release and blocked clips and the elephant's 8 attack
   clips sit at Loading Type 2 ([bannerlord-animation-system-map.md](../bannerlord-animation-system-map.md)),
-  and vanilla ships hundreds of type 1 and 2 clips that TAOM battles also play. Measure first: plan 028's
+  and vanilla ships hundreds of type 1 and 2 clips that TAOM battles also play: by name group, type 2
+  holds 63 `release`, 102 `quick`, 44 `blocked` and 97 `conversation` clips, while every `run`, `crouch`,
+  `defend`, `ready` and `strike` clip is type 0 (`walk` has one at type 2) (yotthani, MithrilForge
+  `docs/perf-audit/clip-reader-lock.md`, package census v1.5.3; v1.5.4: not re-checked). Measure first: plan 028's
   profiler records the wait and agent-tick times of every hitch, and plan 041 adds an
   `IsAnyAnimationLoadingFromDisk` sample per frame, flagged on each hitch's `[HitchDetail]` line and taken
   in a prefix on `Mission.OnPreTick` before its `WaitTickCompletion`, so it can see a load still blocking
-  the previous agent tick. Two levers follow from the result, both the maintainer's decision: set type 0
-  on TAOM's hot battle clips (Armory data, with unique keys), or raise the 12 MiB budget for the whole
-  process (a guarded four-byte native patch).
+  the previous agent tick. Three levers follow from the result, all the maintainer's decision: set type 0
+  on TAOM's hot battle clips (Armory data, with unique keys), raise the 12 MiB budget for the whole
+  process (a guarded four-byte native patch), or patch the native sampler to count readers once per clip
+  (in `0x472660`) instead of once per bone, the only lever that reaches vanilla's own type 1 and 2 clips
+  (yotthani, MithrilForge `docs/perf-audit/clip-reader-lock.md`, decompile v1.5.3; v1.5.4: not
+  re-checked).
 - **[TAOM-verified, Ghidra and a disp32 scan, 2026-10-02]** Among rip-relative references, the counter
   at `0xDABE40` is written only by `lock xadd` at `0x591319` (in `0x5911A0`, adding a clip's size field
   `+0x80` after a load) and at `0x21E0EF` (the eviction pass, adding the negated freed bytes), and read
@@ -202,7 +255,9 @@ TAOM-verified were re-derived by TAOM; the rest are not yet.
 - **Metamesh visible distance** defaults to `FLT_MAX` on a Kit import; shipped small props use 20 to 50 m,
   baskets 100 to 200, map icons 200.
 - **Particle emitters** carry a min and max config that bound the Particle Detail option; an emitter is
-  created only inside its bounds.
+  created only inside its bounds. That and the other gates act on creation and emission only: a created
+  emitter is simulated every step, seen or not (section 1; yotthani, MithrilForge
+  `docs/perf-audit/particle-sim-wait.md` section 5, decompile v1.5.3; v1.5.4: not re-checked).
 - **Mesh edit data ships, and the client reads it only on demand.** [TAOM-verified, Ghidra on the
   v1.5.3 shipping `TaleWorlds.Native.dll`] Every metamesh in a package carries two segments: render
   buffers (segment type `97f81dbb...`, the GUID at RVA `0xAE3D78`) and edit data (`5f98413d...`, at
@@ -231,6 +286,30 @@ Vanilla updates every settlement nameplate each frame on worker threads (`Update
 `RefreshDynamicProperties(forceUpdate: false)`); only the rare forced refresh runs on the main thread. A
 patch there runs per settlement per frame off the main thread. In 1.5.x a settlement's visibility is a
 flag set on events, no longer recomputed every tick.
+
+## 9. What an agent read costs [yotthani]
+
+(MithrilForge `docs/perf-audit/dw-left-strike-cost.md` and `docs/perf-audit/profile_s3d_functions.md`, v1.5.3
+managed decompile and profile; v1.5.4: not re-checked.)
+
+- **Plain pointer reads, no engine call:** `Agent.Position`, `IsActive()`, `State`, `IsHuman`, `Controller`,
+  `GetPrimaryWieldedItemIndex` and `GetOffhandWieldedItemIndex`, `WieldedWeapon`, `GetCurrentAction(channel)`,
+  `MountAgent`, `Health` and `Index` read through pointers cached at agent creation (`AgentHelper`).
+- **Engine calls:** `GetCurrentActionType`, `GetCurrentActionProgress`, `LookDirection`, `Frame`, `Velocity`
+  (two calls), `IsEnemyOf`, `GetEyeGlobalPosition`, `MBAgentVisuals.GetSkeleton`, `Skeleton.GetBoneEntitialFrame`,
+  `Mission.GetNearbyAgents` (section 4) and the raycasts (section 5).
+- **Costs, derived from one measurement line, not timed per call:** a simple engine call about 0.1 to 0.4 µs;
+  `GetSkeleton` about 1.5 to 2 µs, because each call builds a new `Skeleton` wrapper with a finalizer, a lock and
+  a `GCHandle`. One melee hit through vanilla's `MeleeHitCallback` chain costs about 128 µs, most of it vanilla's
+  own hit handling and every mod's `OnAgentHit` (that split is estimated).
+- **`Mission.FindAgentWithIndex` is O(1)** natively (an index check and a handle read) and drew 0 samples in the
+  profile.
+- **Where busy CPU goes** in that 500 against 500 battle (82 % of it native): about 60 % presentation (agent render items 18.6 %,
+  render commands 15.2 %, skeleton and animation 15.1 %, particles 8.0 %, culling 2.8 %), against agent AI 4.2 %,
+  movement and physics 6.4 % and the melee sweep 1.2 %. These are CPU shares, not frame-time shares.
+
+The reverse case, a perf change costed by call names instead of bodies, is the lesson "A perf commit's win names
+the cost it removes" in [adapters-taleworlds-api.md](../../reviews/lessons/adapters-taleworlds-api.md).
 
 ## How to re-verify
 

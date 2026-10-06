@@ -68,6 +68,15 @@ replacing whole screens (forward-compatible across patches, as long as the bound
   regenerated (baked `*_tex.tpac`) — `feedback_sprite_atlas_baked_regen_required`/`feedback_sprite_dimensions` (resize
   before bake). Baked ≠ visible until the render check.
 - **Overlay input wiring** + **GameState creation** + **IGameStateListener** — the three crash/no-op gotchas above.
+- **Every return to the map leaks GPU memory** [yotthani; not confirmed in focused play]: the engine rebuilds the
+  map view's render targets each time a menu closes and 3 colour targets plus 1 depth target of the old set stay
+  alive, about 94 MB at a 3413x1440 render resolution and about 40 MB at 1080p.
+  `MapScreen.ClearGPUMemory()`, called by `MissionCampaignView` at mission start, should free them (read from
+  code, not measured), so the leak likely builds between missions. The engine's own GPU counters do not show it; measure with the Windows `GPU Process Memory`
+  counters (Task Manager's dedicated GPU memory). Separately, `ViewSubModule.BannerTexturedMaterialCache` gains
+  one entry per character preview, because its key's material is a fresh mesh copy that never matches (clearing
+  it freed about 100 MB in one run). (MithrilForge `docs/engine/perf.md`, menu-memory sections: the banner-cache
+  run of 2026-10-05 on v1.5.3, the render-target runs of 2026-10-06 on v1.5.4; autopilot runs.)
 
 ### Map conversation + encyclopedia: two layers on one `MapScreen` (read 2026-09-22, #635)
 A conversation started from a settlement menu's character overlay, or from a map encounter, is a **map

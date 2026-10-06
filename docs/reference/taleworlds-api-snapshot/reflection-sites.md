@@ -22,6 +22,8 @@ The one hand-attached exception: `CrashReport/Hooks/Native2ManagedTargets.cs` na
 
 > First run of that gate (2026-05-28) caught a real defect: `HeroViewModel_FillFrom_Patch` was name-only on an overloaded method (`HeroViewModel` inherits two more `FillFrom` overloads from `CharacterViewModel`), so Harmony's `AccessTools.Method` threw `AmbiguousMatchException` at patch time — the postfix never applied in v1.4.5. Fixed by pinning the argument types.
 
+A third-party site gated the same way: `Adapters/ButterLibDistanceMatrixAdapter.cs` (#740) finds ButterLib's internal `Bannerlord.ButterLib.Implementation.DistanceMatrix.DistanceMatrixSubSystem` by full name and reads its static `Instance`, then calls `IsEnabled` and `Disable()` on it. The type lives in a version-specific ButterLib DLL that ReflectionSiteBindingTests does not load, so `TAOM.Tests/Features/ButterLibDistanceMatrix/ButterLibDistanceMatrixBindingTests.cs` (`BindingVerification`) checks it against the newest implementation DLL tracked in `Dependencies/_Module/bin/`.
+
 ---
 
 ## Category B — Auxiliary static-engine reflection (GATED)

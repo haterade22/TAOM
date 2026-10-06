@@ -37,7 +37,7 @@ and the gate.
 | Persisted MCM defaults | json2 keeps the old value, so rename a setting to change its default, never flip it | [shaders](../features/shader-precompilation.md) |
 | Moving platforms | Agents need a navmesh riding the entity, plus physics; teleporting fails. Crew stand inside the deck | [mumakil](../features/mumakil.md) |
 | Vendored DLLs | `Main/_Module/bin/Win64_Shipping_Client/` ships no vendored binary (`TAOM.dll` is build output); never MCMv5 | [deps](../modding/module-dependencies.md) |
-| Mission logic base | `BehaviorTreeMissionLogic` derives from `MissionLogic`, never `MissionBehavior` | [RCA](../reviews/rca-looter-battle-nre-2026-05-24.md) |
+| Mission logic | Logic `BehaviorType` needs `: MissionLogic`; an `AfterStart` throw reloads forever | [lifecycle](../reference/engine/mission-and-missionbehavior-lifecycle.md) |
 | Armory dependency | It is `LOTRLOME_Armory`. A root-level `<action>` kills a dedicated server: `audit_action_set_parity.py` | [armory](../reference/armory-guide.md) |
 | Armory files | A second `LOTRLOME_items/*/` folder shadows an id (grep the prefix); loose `Assets/**` wins; inventory is generated | [armory](../reference/armory-guide.md) |
 | Shield body name | `bo_capwm_isengard_shield_a02_clean` ships misspelled; the "fixed" name resolves to nothing | [shields](../reference/armory-shield-audit.md) |

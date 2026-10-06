@@ -74,6 +74,30 @@ space (Phase 5) is because `MBObjectBase` objects are referenced by `MBGUID` (th
 - New saveable validation: TAOM has no engine-level guard against base-id collision — discipline is on the author +
   the memory. There's no validator for this (unlike moduledata refs).
 
+## Performance: what a save costs [yotthani]
+
+Measured by yotthani in game and on an offline save bench (MithrilForge `docs/engine/perf.md`, sections K2 and
+`save-no-forced-gc`, v1.5.3, 2026-10-02 to 2026-10-04; v1.5.4: not re-checked). One save of 145,000 to 152,000
+objects.
+- **`SaveContext.Save` takes 2.6 to 2.9 s**, all of it a frozen frame. It allocates about 1.72 GB to write about
+  106 MB, and under the default workstation GC 66 to 72 % of that time is collections; the work alone is about
+  0.5 s.
+- **Server GC brings a save to about 1.05 s** in game (8 heaps, at about 1.5 GB more RAM), but the GC mode is
+  fixed at runtime start: it can be set only in the starting exe's `.exe.config` (for BLSE,
+  `Bannerlord.BLSE.Launcher.exe.config`), never by a mod.
+- **The hitch after a save is vanilla's forced collection:** `Game.OnSaveCompleted` calls
+  `Common.MemoryCleanupGC()`, a blocking collection: 313 and 286 ms about a second after the save under server
+  GC; under workstation GC, Gen-2 collections of 835 and 872 ms came 5 to 6 s after an instrumented save, likely
+  the same call. Removing it is worse: the runtime collects the same garbage later, longer (535 ms) and with
+  about 2 GB more RAM in between. Vanilla's other forced collections on game state changes are in
+  [battle-load-diagnostics.md](../../features/battle-load-diagnostics.md) (`OnPushState`, `OnPopState`).
+- **Save bytes are not deterministic:** string ids depend on the order the parallel workers reach
+  `AddOrGetStringId`, so two saves of one state differ. Compare a save-path patch in sequential mode or after a
+  load, never byte for byte.
+- **A save loaded offline without its load callbacks gives every `TextObject` a hash of 0** (`GetHashCode`
+  returns an id only the callback assigns), so the save's object dictionary degenerates (`CollectObjects` 3.5 s
+  instead of 0.2 s).
+
 ## The native boundary
 The save *serializer* is largely managed (`TaleWorlds.SaveSystem` — `IDataStore`, `TypeDefinition`,
 `DefinitionContext`); it walks tagged fields + registered types and writes the save blob. The objects it serializes

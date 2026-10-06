@@ -475,8 +475,11 @@ pre-ticks, it writes one WARNING line, and from then on `waitTickMs` reads 0 and
 the wait.
 
 **Scene scripts.** `TickComponents` is reached from native for every scene with script components
-(the mission scene, the campaign map, any other scene ticking), and which thread calls it is not
-recorded in the repo, so the bracket keeps a `[ThreadStatic]` open flag and start stamp and adds its
+(the mission scene, the campaign map, any other scene ticking). In a mission it most likely runs on
+the main thread (the callback is identified by signature; upstream's table-offset rule is an assumption), from the native scene tick, between the start of the particle simulation task and the wait
+on it (yotthani, MithrilForge `docs/perf-audit/particle-sim-wait.md`, decompile v1.5.3; v1.5.4: not
+re-checked). That was not recorded in the repo when this was built, so the bracket keeps a
+`[ThreadStatic]` open flag and start stamp and adds its
 time with `Interlocked`. The first measured call of the process names its thread once: INFO on the
 main thread, WARNING elsewhere, in which case per-component attribution is off for the process and
 the totals stay. `calls=` on `[ScriptProfile]` counts every call, so more calls than frames means
