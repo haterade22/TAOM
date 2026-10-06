@@ -546,3 +546,20 @@ The taken-over lord's treasury restore first ran as its own phase-9 `OnCharacter
 - **Why missed:** the fix was built as a Player Switcher change, so it got a Player Switcher listener, though the decision it changed already had an owner in another feature.
 - **Prevent:** before adding a listener that overrides a value another listener sets at the same event, extend that listener and have it call your feature's service. A skip that exists only to keep two listeners from colliding is the sign.
 - **Source:** `docs/reviews/rca-takeover-treasury-2026-10-02.md` G9.
+
+### A map event that cannot reach a round never picks a winner (2026-10-06)
+v1.5.4 `MapEvent.Update` simulates a round only while both sides have healthy troops, and sets `BattleState` only inside a round, so a side that reaches 0 healthy between rounds leaves the event open for good. A destroyed party left attached adds a second lock: `CanPartyJoinBattle` refuses every joiner while any party is inactive. A player hit both in two campaigns and found the cause before TAOM did.
+- **Why missed:** nothing in TAOM watched map events for age, and code that removes troops from a party (daily desertion, for one) never asks whether that party is in a battle.
+- **Prevent:** the hourly `StuckBattleModule` sweep is the backstop. Code that removes or wounds a party's troops outside a mission should ask whether the party is in a map event before it runs.
+- **Source:** player report "NPC battle that appears to be stuck" (#748, follow-up #750); [map-event-guard.md](../../features/map-event-guard.md#stuck-ai-battles).
+
+### A sweep that decides other parties' outcomes asks who controls each one, not only whether this peer may tick (2026-10-06)
+The stuck-battle sweep copied its siblings' `IsAuthority` gate, true on a BannerlordCoop host. But Coop's
+`MapEvent.Update` prefix never runs vanilla for a non-raid event holding a party this instance does not control, and the
+sweep's player-battle test saw only the local player, so on a host it would award a remote player's battle that then
+never finishes. `IsAuthority` also fails open under BannerlordTogether.
+- **Why missed:** `IsAuthority` answers "may this peer run campaign logic", the question the sibling hourly behaviors
+  face (double-running on clients). Deciding a battle's winner is a decision about other players' parties.
+- **Prevent:** a world-mutating pass over shared entities (battles, parties, settlements) either asks who controls each
+  entity or stands down while `IsSessionActive || ShouldDeferToHost`, and says which in `coop-interop.md`'s gated table.
+- **Source:** `docs/reviews/rca-stuck-battle-guard-2026-10-06.md` row 2 (Engine and Data-flow lenses, independently).

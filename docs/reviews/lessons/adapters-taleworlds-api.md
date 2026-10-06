@@ -974,3 +974,16 @@ The feature doc said a non-dismounting weapon's dismount "reads knockdown resist
 - **Why missed:** the research grepped ButterLib and MCM for the setting and concluded that a player could keep the Distance Matrix on with ButterLib's own `Options.json` key. MCM's `MBOptionScreen` owns ButterLib's settings page, stores a second key in the same file, applies it before TAOM's main-menu hook and rewrites the file without other keys on save; it enumerates `IEnumerable<ISubSystem>` and builds the key at runtime as `Id + " Enabled"`, so a name grep finds nothing. An earlier design also missed that ButterLib's public `DistanceMatrix<Kingdom>.Create()` reads the table it deferred.
 - **Prevent:** a name grep is not enough. Also grep every installed DLL (MCM and the version-specific implementation DLLs included) for the interfaces the type implements (here `ISubSystem`) and the settings folder id (here `ButterLib`), and read every settings page or container that enumerates them; trace each reader and writer before writing the design or the doc.
 - **Source:** `docs/reviews/rca-butterlib-distance-matrix-2026-10-06.md` F1, F2.
+
+### An engine type with no id gets a per-object adapter; a class that gains injection and tests is a service (2026-10-06)
+The stuck-battle guard's adapter returned `IReadOnlyList<MapEvent>` and took `MapEvent` in every member, and the
+orchestration that used them sat in `StuckBattleSweep`, an injected `Reuse.Singleton` under `Hooks/` with unit tests over
+a substituted adapter and `null!` handles. The "key by id" remedy above does not apply: a v1.5.4 `MapEvent` inherits
+`StringId` but nothing ever assigns it, and its constructor is internal. Second occurrence of the sealed-token class in nine days.
+- **Why missed:** the builder copied `AutoResolveDiagnostics`, where an entry point holds the `MapEvent`, then moved the
+  logic into an injected class to test it. The move made it a service; the sealed-type rule was not re-checked, and the
+  entry above was not read before writing the adapter.
+- **Prevent:** for an engine type with no id, the adapter hands out one small adapter per object
+  (`IStuckBattleAdapter.LiveBattles()` returning `IStuckBattleEventAdapter`), and the service drives those. A class that
+  takes constructor injection, is registered `Reuse.Singleton` and is unit-tested is a service, whatever folder it sits in.
+- **Source:** `docs/reviews/rca-stuck-battle-guard-2026-10-06.md` row 1 (Standards, adversarial Step 2b).

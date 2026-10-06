@@ -133,7 +133,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [diplomacy](features/diplomacy.md) — TaomDiplomacyModel for LOTR faction relationships
 - [kingdom-creation](features/kingdom-creation.md) — TAOM kingdom + clan + lord authoring
 - [lord-spawn-guard](features/lord-spawn-guard.md) — Patch65 + the Variag settlement retag: a landless culture CTDs the daily clan tick
-- [map-event-guard](features/map-event-guard.md): Patch82, restoring the `BattleObserver`/`TroopUpgradeTracker` pairing that four unguarded engine dereferences rely on
+- [map-event-guard](features/map-event-guard.md): Patch82, restoring the `BattleObserver`/`TroopUpgradeTracker` pairing that four unguarded engine dereferences rely on; and the hourly sweep that ends AI battles stuck at N vs 0 (#748)
 - [return-to-army](features/return-to-army.md): Patch87, "Return to Army" leaves a town or castle for an army member who is not merged into the army, where vanilla's wait menu has no exit
 - [lord-party-templates](features/lord-party-templates.md): Patch88, a lord named in `lord_party_templates.json` fields his own party template instead of his clan's (Faramir the Ithilien rangers, Sauron a Black Numenorean and Uruk host)
 - [stale-character-repair](features/stale-character-repair.md): Patch83, making a save-restored character with no ModuleData definition inert before the engine derefs its null fields

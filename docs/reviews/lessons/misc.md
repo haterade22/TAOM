@@ -549,3 +549,14 @@ Plans 031 and 037 moved the hot-path settings providers onto a cached MCM refere
 - **Why missed:** the sweeps found their targets by name and memory, and a gate whose rows are typed in by hand cannot fail for a provider nobody typed. Nothing told the author of a new hot reader the gates existed.
 - **Prevent:** a rule line (`csharp-architecture.md` "Config Providers MUST Validate", item 9) now sends every new hot-path provider to its gate in the same commit. The structural fix is still owed: a ratchet test that scans every `TaomSettings.Instance` reader outside a lazy accessor, with the known per-event readers as its baseline. Not yet filed as an issue or plan.
 - **Source:** `docs/reviews/rca-refuge-crews-creature-allies-2026-10-06.md` follow-ups; #745, #746 review (lens 4, C7).
+
+### Write a provenance claim from a comparison against the source, not from memory (2026-10-06)
+The register said "No code was copied" for the stuck-battle guard, while its adapter mirrored the player's module:
+a detach loop with the same read-back check and `-1` sentinel, a predicate's name and first condition, a fallback string,
+the order of work, and the module Id. The builder had read the source while planning and listed what was "taken" from
+memory of the ideas, not of the code.
+- **Why missed:** reading a source while writing reproduces its details below the level of ideas, and a register entry
+  written afterwards records the intent, not the result.
+- **Prevent:** before writing a `behavioural-port` row, diff the new files against the source (names, string literals,
+  loop shapes, ids) and either rewrite each match from a TAOM spec or relabel it `verbatim-port`.
+- **Source:** `docs/reviews/rca-stuck-battle-guard-2026-10-06.md` row 6 (Completeness lens).

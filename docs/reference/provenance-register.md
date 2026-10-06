@@ -98,6 +98,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Yotthani `bannerlord` repository (DualWield, FaceLearner) | `yotthani/bannerlord` `HoN/DualWield` `FaceLearner` `FaceLearner.HeadExtract` | UNKNOWN (no licence file; shared with the maintainer by its author) | comparison-only | (none; restated facts in `docs/reference/scripted-melee-strikes.md`, `docs/reference/head-mesh-and-groom-authoring.md` and `docs/reference/engine/mission-frame-threads-and-native-costs.md`) | uncleared |
 | Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
 | Hindsight | `Hindsight` `vectorize-io/hindsight` | MIT | comparison-only | (none) | cleared |
+| Stuck Battle Guard v1.0.0 (a TAOM player's workaround module) | `StuckBattleGuard` `stuckbattle.` | UNKNOWN | behavioural-port | the stuck AI battle sweep in `Main/Features/MapEventGuard/` and `Main/Adapters/StuckBattle*Adapter.cs`; see detail | uncleared |
 | Kingdom Borders (Nexus mod 10699) | `Kingdom Borders` `KingdomBorders` | UNKNOWN | behavioural-port | `Main/Adapters/BorderRenderAdapter.cs`; the Heraldic layout in `Main/Features/RealmBorders/Domain/BorderPainter.cs`; the module-id check in `Main/Features/RealmBorders/Hooks/RealmBordersCampaignBehavior.cs` (interop); see detail | uncleared |
 
 <!-- provenance-register-end -->
@@ -646,6 +647,34 @@ conflicts with ADR-011's rule that durable knowledge lives in the repository, an
 plugin injects recalled text into every prompt and spends an auto-detected LLM key. Its hook scripts
 were read for the security pass; nothing was installed or ported. Record:
 [`docs/reviews/adopt-ghidra-hindsight-2026-09-26.md`](../reviews/adopt-ghidra-hindsight-2026-09-26.md).
+
+### Stuck Battle Guard (UNCLEARED)
+
+Stuck Battle Guard v1.0.0, a workaround module a TAOM player sent with their report of AI battles frozen
+at 8000 against 0 (2026-10-06, #748). It ships its C# source; it states no license, so it is treated as
+all rights reserved. Its source was read while planning TAOM's guard, which makes the derivation a
+behavioural port. Taken from it: the diagnosis (re-verified against v1.5.4, written up in
+[map-event-guard.md](../features/map-event-guard.md#stuck-ai-battles)), detaching destroyed parties with
+`party.MapEventSide = null` (also vanilla's `DestroyPartyAction` write), excluding the main party from
+that set, a grace window of 12 in-game hours, and skipping raid-like events and the player's battle.
+
+**A first draft mirrored more than that,** and the #748 deep review caught it in two passes: the
+module's detach loop (its read-back check and `-1` sentinel) and method name, its player-battle
+predicate and snapshot member names, its raid-like flag's name and expression order, a fallback string,
+a doc phrase, its "detached N" log wording, its detach-then-judge-again order, and its module Id
+`StuckBattleGuard`. All of it was rewritten from TAOM's own spec before any commit: the detach is
+vanilla's single write per party and spares quest parties as vanilla does, a battle gets one write per
+pass, the player test rebuilds the engine's encountered-battle lookup null-safe, and the names
+(`DetachWrecks`, `InvolvesPlayer`, `IsVillageHostileAction`, module Id `StuckBattle`) and wording are
+TAOM's. Two facts stay shared because they are the engine's: a wreck is an inactive mobile party, and
+the three village hostile actions are raid, forced supplies and forced volunteers. The source is named in
+`StuckBattleService`'s header comment.
+
+TAOM's own: the healthy side wins through `SetOverrideWinner`, and with both sides empty the defenders
+hold (the module ends every stuck battle with no winner); an hourly in-game sweep instead of a wall-clock
+timer and on-screen warnings; the co-op stand-down, the quest-party exception and the enlisted-commander
+skip; and the service, adapters and tests. Nothing of the module ships. Clearing the row needs the
+author's terms.
 
 ### Kingdom Borders (UNCLEARED)
 
