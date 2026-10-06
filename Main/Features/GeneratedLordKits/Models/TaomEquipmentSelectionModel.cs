@@ -22,11 +22,12 @@ public class TaomEquipmentSelectionModel : DefaultEquipmentSelectionModel
     public override Equipment GetEquipmentForCompanionWhenTurningToLord(Hero companionHero, Equipment.EquipmentType equipmentType) =>
         _kits.PickKit(companionHero, equipmentType) ?? base.GetEquipmentForCompanionWhenTurningToLord(companionHero, equipmentType);
 
-    // The new ruler keeps TAOM's ruler template (regalia). The old ruler, a lord again, gets a peer kit; vanilla
-    // leaves Item2 null when it re-kits nobody, so a null stays null.
+    // The new ruler keeps TAOM's ruler template (regalia). The old ruler, a lord again, gets a peer kit. The only
+    // caller (NPCEquipmentsCampaignBehavior) reads Item2 under the same conditions vanilla fills it, and PickKit
+    // returns null for a null hero.
     public override (Equipment, Equipment) GetEquipmentsForChangingRuler(Hero newRuler, Hero oldRuler, Equipment.EquipmentType equipmentType)
     {
         var (forNewRuler, forOldRuler) = base.GetEquipmentsForChangingRuler(newRuler, oldRuler, equipmentType);
-        return (forNewRuler, forOldRuler == null ? null : _kits.PickKit(oldRuler, equipmentType) ?? forOldRuler);
+        return (forNewRuler, _kits.PickKit(oldRuler, equipmentType) ?? forOldRuler);
     }
 }

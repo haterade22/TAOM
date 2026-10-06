@@ -8,8 +8,9 @@
 	     random. SandBoxCore's own lord and ruler templates stay loaded, so a generated Dunland lord drew from
 	     26 Empire sets and one TAOM set. This removes IsLordTemplate and IsKingdomRulerTemplate from those
 	     vanilla rosters, leaving TAOM's taom_* templates (taom_lord_template_equipment.xml) as the pool.
-	     That includes SandBox's noble teenager templates, so a noble teen of these cultures now wears the
-	     TAOM teen template, as the other twelve cultures already do. The rosters themselves stay, so anything
+	     That includes SandBox's noble teenager templates (and two Battanian NPC sets SandBox flags as lord
+	     templates), so a noble teen of these cultures now wears the TAOM teen template, as TAOM's other
+	     sixteen cultures already do. The rosters themselves stay, so anything
 	     naming one by id still resolves.
 
 	     Child templates keep their flags in all six cultures: TAOM ships child templates for Khand only, and

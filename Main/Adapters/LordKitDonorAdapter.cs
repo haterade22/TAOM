@@ -33,7 +33,8 @@ public class LordKitDonorAdapter : ILordKitDonorAdapter
     }
 
     // Rebuilt per call: characters belong to the running campaign, and a pick happens only when a lord is
-    // generated, so there is no cache to go stale between campaigns or as lords die.
+    // equipped by the engine (created, of age, made a lord, stepping down), so there is no cache to go stale
+    // between campaigns or as lords die.
     private static List<LordKitCandidate> Candidates(LordKitRequest request)
     {
         var candidates = new List<LordKitCandidate>();
