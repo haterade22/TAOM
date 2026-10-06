@@ -770,7 +770,8 @@ Code: Code changes required in `Dependencies/SubModule.cs` and `Dependencies/TAO
    the deploy into the game install; add `-p:ModuleId=` to skip all three copy targets
    ([agent-operating-manual.md](../ai-includes/agent-operating-manual.md) lines 49-51).
 
-Check: `dotnet test TAOM.Tests --filter DependenciesPairing`
+Check: `dotnet test TAOM.Tests --filter DependenciesPairing`, and for a ButterLib update also
+`--settings TAOM.Tests/binding-gate.runsettings --filter FullyQualifiedName~ButterLibDistanceMatrixBindingTests` (TAOM switches a ButterLib subsystem off by name, #740)
 Takes effect: full game restart
 Code: No code changes needed
 
