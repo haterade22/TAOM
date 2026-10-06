@@ -1296,12 +1296,7 @@ public class SubModule : MBSubModuleBase
         // inheritance + the combat feel pack on top (docs/features/combat-mechanics.md).
         campaignStarter.AddModel<AgentApplyDamageModel>(new TaomCombatMechanicsModel(
             careerAgentStat,
-            IoC.Resolve<Features.CombatMechanics.ICrushThroughService>(),
-            IoC.Resolve<Features.CombatMechanics.IChargeKnockdownService>(),
-            IoC.Resolve<Features.CombatMechanics.ICreatureCombatService>(),
-            IoC.Resolve<Features.CombatMechanics.IShieldPenetrationService>(),
-            IoC.Resolve<Features.CombatMechanics.ICombatMechanicsConfigProvider>(),
-            IoC.Resolve<Features.CombatMechanics.ICombatMechanicsSettingsProvider>(),
+            IoC.Resolve<Features.CombatMechanics.Hooks.CombatMechanicsHooks>(),
             IoC.Resolve<Features.Refuge.IRefugeDefenseService>(),
             // SignatureStrikes (#605): the guaranteed knockdown / knock-back on the struck agent.
             // Optional params on the model, so the two resolves here are what turn them on.

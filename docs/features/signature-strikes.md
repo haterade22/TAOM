@@ -145,7 +145,7 @@ SignatureStrikeRegistry         SignatureStrikesSettingsProvider (MCM toggle + c
 SignatureAgentRoster                   /                      \
  (Agent -> signature + stamps)        /                        \
         |                            /                          \
-SignatureStrikesMissionLogic --- StrikeContextFactory --- TaomCombatMechanicsModel
+SignatureStrikesMissionLogic --- StrikeContextFactory --- SignatureStrikeVerdicts <- TaomCombatMechanicsModel
  OnAgentBuild -> roster           (one boundary,          DecideAgentKnockedDownByBlow
  OnMeleeHit   -> Evaluate,         both paths)            DecideAgentKnockedBackByBlow
                  stamp, centre, enqueue                    (primary victim, ?? base)
@@ -242,13 +242,14 @@ race resistance (elf 0.4, dwarf 0.5) and falloff, clamped to what the agent has;
 | `Main/Features/SignatureStrikes/SignatureStrikesSettingsProvider.cs` | Folds the Combat Mechanics master toggle; clamps the multiplier |
 | `Main/Features/SignatureStrikes/Domain/` | `StrikeContext` / `StrikeEffect` record structs, `StrikeKindTimes`, the four enums, the config POCOs, `StrikeNames` |
 | `Main/Features/SignatureStrikes/Hooks/SignatureStrikesMissionLogic.cs` | Entry point (`: MissionLogic`): roster lifecycle, enqueue on hit, drain on tick, stand-down on exception |
-| `Main/Features/SignatureStrikes/Hooks/StrikeContextFactory.cs` | The one boundary from `AttackCollisionData` to `StrikeContext`, shared with the model |
+| `Main/Features/SignatureStrikes/Hooks/StrikeContextFactory.cs` | The one boundary from `AttackCollisionData` to `StrikeContext`, shared with the model's verdicts |
+| `Main/Features/SignatureStrikes/Hooks/SignatureStrikeVerdicts.cs` | The model's knockdown and knock-back verdicts: roster probe, strike context, service; null when the feature is absent (#737) |
 | `Main/Features/SignatureStrikes/Hooks/SignatureStrikeRunner.cs` | Plays the sound and rings the enemies: query, falloff, blow, fear |
 | `Main/Features/SignatureStrikes/Hooks/StrikeSoundPlayer.cs` | Per-mission sound id cache, `MakeSound`, the `Yell` fallback |
 | `Main/Features/SignatureStrikes/Hooks/SignatureAgentRoster.cs` | Reference-keyed roster: each agent's signature and stamps |
 | `Main/Features/SignatureStrikes/Hooks/StrikeRequestBuffer.cs` | Two-list swap buffer for the one-frame deferral |
 | `Main/Features/SignatureStrikes/Hooks/SignatureMissionGate.cs` | `Combat` missions only, no multiplayer, no campaign requirement |
-| `Main/Features/CombatMechanics/Models/TaomCombatMechanicsModel.cs` | Two thin delegations (optional ctor params, the `IRefugeDefenseService` precedent) |
+| `Main/Features/CombatMechanics/Models/TaomCombatMechanicsModel.cs` | Two delegations to `SignatureStrikeVerdicts` (optional ctor params, the `IRefugeDefenseService` precedent) |
 | `Main/Features/AdvancedCombat/CustomAttacksUtils.cs` | `TakeDamage` gains `extraFlags`; `ComposeBlowFlags` extracted and pinned |
 | `Main/_Module/ModuleData/signature_strikes/signature_strikes_config.json` | Shipped config |
 | `Main/_Module/ModuleData/module_sounds.xml`, `Main/_Module/ModuleSounds/LOTR/Mordor/Nazgul/` | The scream's registration and its one clip |
@@ -277,6 +278,7 @@ campaign-only, so a Custom Battle gets the ring but vanilla primary knockdown an
 - `StrikeKindTimesTests.cs`, `StrikeNamesTests.cs`: every kind round-trips, the name-only parsing
 - `StrikeRequestBufferTests.cs`: swap semantics
 - `StrikeContextFactoryTests.cs`: the two enum mirrors and the item-type gate
+- `SignatureStrikeVerdictsTests.cs`: the model's two verdicts: absent feature, roster miss, a horse charge that skips the roster, a NaN charge velocity read as a melee hit, the attacker as the probe, and which verdict each flag asks
 - `SignatureAgentRosterTests.cs`, `SignatureMissionGateTests.cs`: the null and lifecycle paths (an `Agent` cannot be built in a test)
 - `SignatureStrikesBindingTests.cs` (`BindingVerification`): `OnMeleeHit`, `GetNearbyEnemyAgents`, `DecideAgentKnockedBackByBlow`, `BlowFlags.KnockBack == 0x10`, the two enum mirrors, `: MissionLogic`, `MakeSound`, `GetEventIdFromString`, `MakeVoice` + `VoiceType.Yell`, `GetEyeGlobalPosition`, the `SubModule.cs` call site
 - `TAOM.Tests/Features/AdvancedCombat/CustomAttacksUtilsBlowFlagsTests.cs`: the flag composer

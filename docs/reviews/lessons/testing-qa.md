@@ -1665,3 +1665,8 @@ v1.5.4 bump switched them off with a green run.
   row at every bump, and let an unlisted build skip with a message naming the table. `/engine-bump`
   Phase 4 step 7 lists the three tables.
 - **Source:** `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F6.
+
+### A boundary test gives each mapped field its own non-default value, and a call-site pin covers every argument with more than one candidate (#737, 2026-10-05)
+- **Why missed:** the #737 facade tests passed zero damage, empty blow flags and a non-charge collision, so a swapped flag mask or a dropped field mapped default to default and passed. The source pin on the model's call sites covered only "the seams that take two agents" and missed the refuge step's agent origin (one of four on `AttackInformation`) and the shield seam's base result, where a wrong argument also compiles.
+- **Prevent:** give every field a boundary maps a distinct non-default value (`CollisionDataFixture` writes the get-only `AttackCollisionData` members; a bare `Agent` from `FormatterServices.GetUninitializedObject` reaches code that reads the agent only past a guard). Choose pins by the mistake, not by the type: list each argument's in-scope candidates of the same type and pin every call site that has more than one.
+- **Source:** `docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md` F2, F3.

@@ -3,7 +3,7 @@ namespace TAOM.Features.CombatMechanics.Domain;
 // Boundary DTO for the weight-driven charge-knockdown decision (ADR-007). This struct is the
 // designated extension point for future factors (user list, 2026-07-02): collision-angle dot,
 // attacker/victim troop tier, attacker race, perks on either side. Add a field + one extractor
-// line in the model when a factor becomes real — the service formula changes, the boundary shape
+// line in CombatMechanicsHooks when a factor becomes real — the service formula changes, the boundary shape
 // doesn't.
 public readonly struct ChargeKnockdownContext
 {

@@ -12,7 +12,7 @@ public sealed class CombatMechanicsSettingsProvider : ICombatMechanicsSettingsPr
     private readonly CombatMechanicsConfig _defaults;
 
     // HOT PATH: read per melee blow (crush-through, cleave, stagger, shield penetration; the charge
-    // knockdown settings only on a horse charge, the one blow TaomCombatMechanicsModel hands to
+    // knockdown settings only on a horse charge, the one blow CombatMechanicsHooks hands to
     // ChargeKnockdownService) and per mount stat update. Resolving TaomSettings.Instance walks MCM's
     // settings containers, so the reference is cached on its first non-null read and read THROUGH, never
     // snapshotted: MCM edits its one registered instance in place (reset and presets copy values into

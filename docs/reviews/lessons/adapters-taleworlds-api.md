@@ -952,3 +952,8 @@ The feature doc said a non-dismounting weapon's dismount "reads knockdown resist
 - **Why missed:** the per-agent face exclusion capacity was derived from the registry's per-face mark byte (8 bits, bit 7 the navmesh boundary), but the face-ability setter (0x401B20) re-marks sets only from index 1 because bit 0 belongs to the engine, so the safe cap is 6, not 7.
 - **Prevent:** before fixing a cap from native bookkeeping, list every function that writes the field (xrefs) and check which bits or slots each owns; cap under the most conservative reading when one stays unverified.
 - **Source:** `docs/reviews/rca-siege-forces-2026-10-05.md` F3.
+
+### A moved comment's engine claims are re-verified at the move: byte parity proves the code, not the comment (#737, 2026-10-05)
+- **Why missed:** the #737 parity check proved every moved block byte-identical, and that was read as proof the move was right. Five comments that came along were wrong or stale on v1.5.4: "per missile spawn" (the engine asks per missile hit, `Mission.MissileHitCallback`), a v1.4.6 line citation, a value said to feed a context that has no such field, "every decision stays in the services" after two gates moved into the facade, and a factory naming one of its two callers. A new summary written from a switch's two arms also missed vanilla's third party-carrying origin, `SimpleAgentOrigin`.
+- **Prevent:** when a refactor moves or rewrites a comment that states engine behaviour, check each claim against the installed DLLs (`pwsh tools/taom-src.ps1 path <Type>`) as if it were new text, and list an interface's implementers before writing "only".
+- **Source:** `docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md` F4, F5.

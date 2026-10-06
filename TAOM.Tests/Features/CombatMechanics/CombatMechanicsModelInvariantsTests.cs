@@ -1,7 +1,9 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.CombatMechanics;
@@ -20,6 +22,7 @@ public class CombatMechanicsModelInvariantsTests
 {
     private const string ParentFullName = "TAOM.Features.CareerSystem.Models.TaomAgentApplyDamageModel";
     private const string ModelFullName = "TAOM.Features.CombatMechanics.Models.TaomCombatMechanicsModel";
+    private const string ModelSource = "Main/Features/CombatMechanics/Models/TaomCombatMechanicsModel.cs";
 
     private static readonly string[] ExpectedOverrides =
     {
@@ -100,5 +103,47 @@ public class CombatMechanicsModelInvariantsTests
         var expected = ExpectedOverrides.OrderBy(n => n, StringComparer.Ordinal).ToArray();
         CollectionAssert.AreEqual(expected, declared,
             $"Override set drifted. Declared: [{string.Join(", ", declared)}] — update ExpectedOverrides deliberately if a new mechanic landed.");
+    }
+
+    // ADR-002 caps an entry point at 150 lines (#737). Every feature's damage seam lands in this one slot, so each keeps
+    // its glue in its own Hooks/ facade and adds a delegate line here.
+    [TestMethod]
+    public void ModelSource_StaysUnderTheEntryPointCeiling()
+    {
+        var lines = File.ReadAllLines(RepoPaths.RepoPath(ModelSource.Split('/'))).Length;
+
+        Assert.IsTrue(lines < 150,
+            $"TaomCombatMechanicsModel.cs is {lines} lines, over ADR-002's 150 for an entry point. Put the new seam's glue in its feature's Hooks/ facade and leave one delegate line here.");
+    }
+
+    // A live Agent cannot be built outside the game, so the facades' tests cannot see two agents swapped, the verdict flag
+    // flipped, the wrong one of the four agent origins read, or the raw damage passed where base's result belongs. Each call
+    // the model makes into CombatMechanicsHooks, SignatureStrikeVerdicts and RefugeDamageHooks where such a mistake would
+    // still compile is pinned here. The RaceAbilities, CreatureBandits and CreatureSiegeRole calls are pinned by their own
+    // wiring tests, which do not check the damage argument; the context builders inside CombatMechanicsHooks moved
+    // byte-identical from HEAD (docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md).
+    [DataTestMethod]
+    [DataRow("ApplyDamageReductions", "RefugeDamageHooks.Reduce(_refugeDefense, attackInformation.VictimAgentOrigin, result)")]
+    [DataRow("CalculateShieldDamage", "_combat.ShieldDamage(in attackInformation, base.CalculateShieldDamage(in attackInformation, baseDamage))")]
+    [DataRow("DecideCrushedThrough", "_combat.CrushThrough(attackerAgent, defenderAgent, totalAttackEnergy, attackDirection, strikeType, defendItem, isPassiveUsageHit)")]
+    [DataRow("CalculateRemainingMomentum", "_combat.CleaveMomentum(attacker, originalMomentum, in collisionData)")]
+    [DataRow("DecideWeaponCollisionReaction", "_combat.CollisionReaction(attacker, momentumRemaining, in collisionData, colReaction)")]
+    [DataRow("DecideAgentKnockedDownByBlow", "_combat.ChargeKnockdown(attackerAgent, victimAgent, in collisionData, in blow)")]
+    [DataRow("DecideAgentKnockedDownByBlow", "SignatureStrikeVerdicts.Decide(_signatureStrikes, _signatureRoster, attackerAgent, victimAgent, in collisionData, in blow, knockdown: true)")]
+    [DataRow("DecideAgentKnockedBackByBlow", "SignatureStrikeVerdicts.Decide(_signatureStrikes, _signatureRoster, attackerAgent, victimAgent, in collisionData, in blow, knockdown: false)")]
+    public void ModelSource_HandsEachSeamItsOwnAgents(string overrideName, string call)
+    {
+        StringAssert.Contains(OverrideText(overrideName), call, $"{overrideName} must call {call}");
+    }
+
+    // From the override's name to the next override, comments blanked. A base call reads ".Name(", so " Name(" finds the
+    // declaration.
+    private static string OverrideText(string name)
+    {
+        var source = RepoPaths.ReadSource(ModelSource, stripComments: true);
+        var start = source.IndexOf($" {name}(", StringComparison.Ordinal);
+        Assert.IsTrue(start >= 0, $"TaomCombatMechanicsModel no longer declares {name}");
+        var end = source.IndexOf("public override", start, StringComparison.Ordinal);
+        return end < 0 ? source.Substring(start) : source.Substring(start, end - start);
     }
 }

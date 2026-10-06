@@ -23,7 +23,7 @@ TaomCombatMechanicsModel : TaomAgentApplyDamageModel (CareerSystem, now abstract
 
 Career damage passives ride along via inheritance; the CareerSystem parent is `abstract` since 2026-07-02 (registered only through this derived model — see `GameModelOverrideBindingTests`, which exempts abstract models from the registration gate).
 
-Thin model → four pure services (ADR-002/007; gamemodels.md rule 4): every override extracts primitives/DTOs at the boundary and delegates. Services precompute `HashSet`/`Dictionary` lookups at construction (per-hit hot path — no LINQ/allocation per call) and take caller-supplied random rolls so probability tests are deterministic.
+Thin model → `CombatMechanicsHooks` → four pure services (ADR-002/007; gamemodels.md rule 4): every override is base plus one call per feature, and the hooks extract primitives/DTOs at the boundary and delegate (#737). Services precompute `HashSet`/`Dictionary` lookups at construction (per-hit hot path: no LINQ or allocation per call) and take caller-supplied random rolls so probability tests are deterministic.
 
 | Override | Service | Mechanic |
 |---|---|---|
@@ -33,7 +33,7 @@ Thin model → four pure services (ADR-002/007; gamemodels.md rule 4): every ove
 | `DecideWeaponCollisionReaction` | `CreatureCombatService` | force `SlicedThrough` — prevents chain-termination on Bounced/Stuck branches (shield block, axe <50% HP, shrug-off, wrong bone) |
 | `DecideAgentShrugOffBlow` | `CreatureCombatService` | base (vanilla + career) OR per-creature damage threshold OR a live race ability's shrug-off (`RaceAbilityHooks.ShrugsOff`); true sets `BlowFlags.ShrugOff` which also suppresses knockback/knockdown/dismount (intended) |
 | `CalculateStaggerThresholdDamage` | `CreatureCombatService` | × race `staggerThresholdMultiplier`; vanilla shrug-off re-enters this via the REGISTERED model, so the multiplier feeds vanilla stagger automatically |
-| `DecideAgentKnockedDownByBlow` | `ChargeKnockdownService` | weight-driven two-branch (below); non-charge hits short-circuit to base |
+| `DecideAgentKnockedDownByBlow` | `ChargeKnockdownService` | a signature slam first (`SignatureStrikeVerdicts`), then the weight-driven two-branch rules (below), which `CombatMechanicsHooks.ChargeKnockdown` asks for a horse charge only; every other hit is base |
 | `DecideMissileWeaponFlags` | `ShieldPenetrationService` | after base (preserves vanilla Javelin+Impale grant): OR-in `CanPenetrateShield`/`MultiplePenetration` for config-listed ids/classes. **SHIPS OFF since 2026-08-17, lists empty** (see "Shield penetration ships off" below) |
 | `CalculateShieldDamage` | `ShieldPenetrationService` | ÷0.3 correction when penetration was granted at runtime only. **SHIPS OFF since 2026-08-17**: the underestimation premise was disproved against 1.4.8 |
 | `ApplyDamageScaling` | `CreatureSiegeHooks` (Creature Siege Role) | after `base`: a creature's melee blow on one of the mission's castle gates is multiplied (`siege/creature_siege_role.json`, provisional 2.0); every other hit is returned unchanged; [creature-siege-role.md](creature-siege-role.md) |
@@ -168,7 +168,8 @@ MCM: "Combat Mechanics" group (GroupOrder 24), 17 members as of 2026-09-17: the 
 
 | File | Purpose |
 |---|---|
-| `Main/Features/CombatMechanics/Models/TaomCombatMechanicsModel.cs` | The 11 thin overrides + boundary extractors (`CombatMechanicsModelInvariantsTests` pins the exact set) |
+| `Main/Features/CombatMechanics/Models/TaomCombatMechanicsModel.cs` | The 13 overrides, each base plus one call per feature; under ADR-002's 150 lines (`CombatMechanicsModelInvariantsTests` pins the exact set, the ceiling and which agent reaches which seam) |
+| `Main/Features/CombatMechanics/Hooks/CombatMechanicsHooks.cs` | The model's boundary to the four services, one method per seam, with the context builders and primitive extractors (#737) |
 | `Main/Features/CombatMechanics/ChargeDamageService.cs` | Per-culture charge multiplier table (#610): case-insensitive, built once, 1.0 for null/unlisted/off |
 | `Main/Features/CombatMechanics/Hooks/MountChargeDamageApplier.cs` | The mount-side post-pass shared by both `AgentStatCalculateModel` slots; the rider hop (`RiderAgent`) with the engine evidence |
 | `Main/Features/CombatMechanics/CrushThroughService.cs` | Skill CTB curve + monster auto-CTB + orc shield-CTB |
@@ -180,8 +181,8 @@ MCM: "Combat Mechanics" group (GroupOrder 24), 17 members as of 2026-09-17: the 
 | `Main/Features/CombatMechanics/CombatMechanicsSettingsProvider.cs` | MCM-over-JSON merge, master-toggle folding |
 | `Main/Features/CombatMechanics/Domain/*.cs` | `CrushThroughContext`, `ChargeKnockdownContext`, `RaceCombatModifiers` |
 | `Main/Features/CareerSystem/Models/TaomAgentApplyDamageModel.cs` | Parent (abstract since 2026-07-02) |
-| `Main/SubModule.cs` (:1219) | Single registration: `AddModel<AgentApplyDamageModel>(new TaomCombatMechanicsModel(...))`; the charge service is passed to `TaomAgentStatCalculateModel` (:1214) and to the Custom Battle stat model (`RegisterCustomBattleModels`) |
-| `TAOM.Tests/Features/CombatMechanics/*` | Service/provider/resolver tests + `CombatMechanicsModelInvariantsTests` (derivation + abstract parent + exact override set pins) |
+| `Main/SubModule.cs` (:1297) | Single registration: `AddModel<AgentApplyDamageModel>(new TaomCombatMechanicsModel(...))`, handed `CombatMechanicsHooks` from the container; the charge service is passed to `TaomAgentStatCalculateModel` (:1292) and to the Custom Battle stat model (`RegisterCustomBattleModels`) |
+| `TAOM.Tests/Features/CombatMechanics/*` | Service/provider/resolver tests + `CombatMechanicsModelInvariantsTests` (derivation + abstract parent + exact override set + line ceiling + agent-per-seam pins) + `CombatMechanicsHooksTests` + `CombatMechanicsContainerWiringTests` |
 
 ## Dependencies
 

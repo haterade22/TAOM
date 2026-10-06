@@ -1016,3 +1016,8 @@ opposite of the comment above it. The unit tests passed: they pinned the service
 - **Why missed:** the creature gate-blow log printed `hitPoint - scaled` from `ApplyDamageScaling`, but reductions, general modifiers (campaign damage bonuses, career buffs) and rounding run after that stage, so the logged "after" HP overstated what was left in the campaign while matching Custom Battle.
 - **Prevent:** log only values the stage owns; read the outcome from the next observation (the following blow's "before" HP) and say in tuning docs which later stages change the number per game mode.
 - **Source:** `docs/reviews/rca-siege-forces-2026-10-05.md` F6.
+
+### A rule exception lives in a recorded catalogue, never only in a comment in the code it excuses (#737, 2026-10-05)
+- **Why missed:** `TaomCombatMechanicsModel` kept two `if (IsHorseCharge)` routing guards, which gamemodels.md rule 4 forbids in an override body, because its own header called them "the parent's accepted idiom". No ADR and no `.ai/review-reference.md` "Intentional Patterns" entry records that idiom; the claim outlived several reviews and the #737 plan because each reader took the file's account of itself.
+- **Prevent:** before keeping code a rule forbids, find its exception in `.ai/review-reference.md` "Intentional Patterns" or an ADR. With none, fix the code (here each facade declines the hits it does not own, so the override is a `??` chain) or record the exception with its reason; either way the excusing comment goes.
+- **Source:** `docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md` F1.

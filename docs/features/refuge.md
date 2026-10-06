@@ -17,7 +17,7 @@ taom_fc_camp menu (a WAIT menu), index 4: "Establish a refuge here"
 refuge book (SyncData "_taomRefuges") -- RefugeData: tier, warden, build timestamps,
    PERSISTED militia bookkeeping (MilitiaAdded/MilitiaTroopId/MilitiaPreRallyCount)
 manage: taom_refuge_menu (vanilla party screen for garrison+prisoners, stash screen for goods)
-defence: IRefugeDefenseService <- TaomCombatMechanicsModel.ApplyDamageReductions (real-time)
+defence: IRefugeDefenseService <- TaomCombatMechanicsModel.ApplyDamageReductions (real-time, via RefugeDamageHooks)
                                <- TaomCombatSimulationModel.SimulateHit (auto-resolve)
    both apply RefugeDamageReduction: ONE composition contract, (1 - r) on the FINAL damage
    (ExplainedNumber composes factors against the BASE, so the auto-resolve site scales the
@@ -146,6 +146,7 @@ disagrees.
 | `RefugeService.cs` | Lifecycle state machine; campaign statics behind protected virtuals |
 | `WardenService.cs` | Candidates, promotion, the no-kill release policy |
 | `RefugeDefenseService.cs` (+ `IRefugeBook`) | Hot-path tier factors; one singleton serves both faces |
+| `Hooks/RefugeDamageHooks.cs` | The real-time reduction the campaign damage model applies: the victim's party from its agent origin, then `RefugeDamageReduction` (#737) |
 | `Visuals/RefugeVisualService.cs` | refuge tpacs (scale 4/4.8, palisade 4.6/5.4) over CampLayoutBuilder, vanilla fallback |
 | `Hooks/RefugeCampaignBehavior.cs` + `RefugeMenuController.cs` | Events, SyncData, menus, index-4 insertions |
 | `Hooks/RefugeCampContributor.cs` | Overlay caption/blocked-reason/status through FieldCamp's seam |

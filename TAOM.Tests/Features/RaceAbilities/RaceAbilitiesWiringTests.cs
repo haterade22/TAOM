@@ -62,7 +62,7 @@ public class RaceAbilitiesWiringTests
         var source = RepoPaths.ReadSource("Main/Features/CombatMechanics/Models/TaomCombatMechanicsModel.cs", stripComments: true);
 
         Assert.IsTrue(source.IndexOf("RaceAbilityHooks.CrushVerdict(", System.StringComparison.Ordinal)
-                      < source.IndexOf("_crushThroughService.DecideCrushThrough(", System.StringComparison.Ordinal),
+                      < source.IndexOf("_combat.CrushThrough(", System.StringComparison.Ordinal),
             "a defender standing fast must hold before the troll or skill rules can crush through");
     }
 
