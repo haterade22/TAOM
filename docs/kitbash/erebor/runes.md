@@ -9,8 +9,11 @@ to Erebor architecture. Two tiers:
 2. **Overlay-decal planes** — alpha-keyed quad meshes placed on top of plain
    walls. Use for *composable* placement where each scene varies.
 
-The vanilla `decal_sets.xml` system is **not used** — that's for ephemeral runtime
-decals (blood, footsteps), not authoring-time architectural detail.
+The vanilla decal system is **not used**. Its `decal` shader draws only from Native's
+prebaked decal atlas, which a mod cannot add to, so a mod's own texture renders as a
+solid rectangle with no error; TaleWorlds uses `deferred_decal` on `decal_mesh_flipped`
+for textures outside the atlas (yotthani, MithrilForge `docs/engine/modding-kit.md`
+"Decals", Kit decompile v1.5.3, not tried in game; v1.5.4: not re-checked).
 
 ## Naming Convention
 
@@ -154,7 +157,7 @@ editor), author a thin alpha-keyed plane mesh:
 
 1. **Mesh**: `sm_dw_decal_<motif>_<family><n>.fbx` — a flat 3 m × 1 m quad with UV (0..1) covering one face
 2. **Texture set**: `t_dw_decal_<motif>_<family><n>_{d,n,s}.png` — RGBA where alpha channel is the mask
-3. **Material**: bound by name from the FBX
+3. **Material**: bound by name from the FBX. Never give it the `decal` shader (solid rectangle, see above); a projected decal needs `deferred_decal`
 4. **Placement**: in scene editor, place against the target wall with a small Z-offset along the wall normal (a few cm) to prevent z-fighting
 5. **Scene XML**: standard `<game_entity>` with mesh reference
 
@@ -186,7 +189,7 @@ not stamped onto a base PBR. A separate tool entry-point is a likely follow-up.
 
 ## Out of Scope
 
-- Vanilla `decal_sets.xml` system — wrong tool (ephemeral runtime decals only)
+- Vanilla atlas decals (`decal` shader, `decal_sets.xml`): a mod texture outside Native's atlas renders as a solid rectangle
 - Procedural in-shader rune generation — engine shaders are not modifiable
 - Animated/glowing runes (Moria-style "speak friend and enter") — possible
   later via emission texture, not in this round

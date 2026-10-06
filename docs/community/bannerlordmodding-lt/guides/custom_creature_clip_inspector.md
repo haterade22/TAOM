@@ -151,7 +151,9 @@ only reader found is death timing.
 
 **Loading Type** is 0 Always keep in memory, 1 Load when needed or 2 Never load. TAOM's reverse
 engineering reads 2 as "load no keyframes" at load (574 vanilla clips use it); a third-party
-measurement on v1.4.6 read 2 as "play motion stored in the clip itself". A clip cloned from a
+measurement on v1.4.6 read 2 as "play motion stored in the clip itself". Both hold: yotthani's
+v1.5.3 decompile (MithrilForge) shows a type 2 clip loads nothing at load and fetches its own
+motion segment on first use. A clip cloned from a
 template keeps the template's value.
 
 **Set 0 on any clip you bind to a

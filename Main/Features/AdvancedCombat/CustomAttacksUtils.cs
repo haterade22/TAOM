@@ -209,7 +209,12 @@ public class CustomAttacksUtils
         // survives (held by weakref) and Monster still returns a valid positive head-look bone. HandleBlow
         // derefs the dead visuals.Pointer -> AV reading 0x0 (crash report 2026-06-25: a horse caught
         // mid-teardown, boneIndex 31; the tell was IsHuman/IsMount reading INVERTED off the freed native
-        // struct while the managed wrapper was still non-null). Handing -1 makes the `>= 0` guard short-circuit
+        // struct while the managed wrapper was still non-null). A second candidate [unconfirmed]: native
+        // GetBoneTypeData indexes bone * 0x1B0 with no range check and reads address 0 when the byte there is no
+        // known bone type; on the 32-bone horse skeleton 31 is `horse_head`, in range, so this only fits if that slot's
+        // type is missing from the native table, which nobody has checked (yotthani, MithrilForge
+        // docs/perf-audit/limb-ray-given-agent.md, decompile v1.5.3; v1.5.4: confirmed via native_decompile).
+        // Forcing -1 covers both causes. Handing -1 makes the `>= 0` guard short-circuit
         // so GetBoneTypeData is never called — deterministic, where detecting a pointer that can die after any
         // check is not. Cost is cosmetic only: the armor-material hit-sound parameter falls back to None; body
         // part is already hardcoded to BoneBodyPartType.Abdomen below, and damage/knockdown/death never read

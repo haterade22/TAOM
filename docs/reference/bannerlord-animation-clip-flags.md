@@ -229,13 +229,17 @@ Source: the Yotthani handoff (`docs/reviews/adopt-yotthani-animation-handoff-202
 
 - An `AnimationClip` item may carry a compressed motion segment of its own (segment type `6c1e136f`). The
   clip field TpacTool.Lib 0.4.0 calls `UnknownUInt2` picks the source: **0 plays the `SkeletalAnimation` the
-  clip's `Animation` GUID names; 2 plays the clip's own segment** (per the handoff's 1.4.6 measurement; the field
-  is one TpacTool calls unknown, and TAOM has not measured the rule itself). Vanilla slash clips are at 2 and thrusts at 0,
+  clip's `Animation` GUID names; 2 plays the clip's own segment** (per the handoff's 1.4.6 measurement; TAOM has not
+  measured the rule itself). Byte 0 of the field is the clip's **Loading Type** (0 always resident, 1 short piece
+  resident, 2 loaded on demand), copied to the runtime clip at `+0x194`. Type 2 skips the shared keyframe cache and
+  loads the clip's own segment on first access. Types 0 and 1 first look in a cache keyed on the Animation GUID and
+  the source window, so a clip whose GUID and window match an already-loaded clip plays that clip's data, not its
+  own (yotthani, MithrilForge `docs/perf-audit/clip-reader-lock.md`, decompile v1.5.3; v1.5.4: not re-checked). Vanilla slash clips are at 2 and thrusts at 0,
   which is why a tool that re-points `Animation` can change nothing in game for a clip at 2.
 - **TAOM census, 243 creature clips (read with TpacTool.Lib and the shared tpac parser by a one-off script, not
   committed, 2026-09-18):** 235 are at
   0 with no data segment (all chariot, ram, spider, troll and warg clips, 61 elephant clips), so re-pointing
-  their master reaches the game; `tools/wire_anim_master_clip.ps1` is sound for them. **Eight are at 2 with NO
+  their master reaches the game as long as no already-loaded clip shares its GUID and source window; `tools/wire_anim_master_clip.ps1` is sound for them. **Eight are at 2 with NO
   segment:** `elephant_attack_1..4` and `elephant_rider_attack_1..4`, the ADOD_Beasts-derived attack clips. What
   the engine plays for a clip that asks for a segment it does not carry is UNVERIFIED; see `features/elephant.md`
   Open items.

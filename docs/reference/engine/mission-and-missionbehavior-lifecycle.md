@@ -89,6 +89,20 @@ a singleton) needs both callbacks.
   (`MissionGauntletSingleplayerEscapeMenu.GetEscapeMenuItems`) has no Load item. A mod that loads a save mid-mission
   would take that path.
 
+### An exception in `AfterStart` reloads the mission forever
+
+`MissionState.FinishMissionLoading` (MissionState.cs:333-352) sets `_missionInitializing = false` first and only
+then calls `Mission.AfterStart` (:345). If `AfterStart`, and so any behavior's `AfterStart`, throws, the next
+`TickLoading` (:221-233), still reached because the mission has not left loading, sees `_missionInitializing`
+false and runs `LoadMission` again. The loading screen never ends, the exception is swallowed at the managed boundary, and the
+engine log shows only `Mission-AddTeam-<side>` per attempt. yotthani hit it when a Harmony patch applied at game
+start compiled `Team.Tick` and ran `MovementOrder`'s static initializer with no mission, leaving the type broken
+for the session (`TypeInitializationException` in every `Team.Initialize`). So keep every `AfterStart` throw-safe,
+and apply a patch that touches a type with a static initializer only after the game has initialised that type
+(TAOM's deferred categories, [submodule-lifecycle-and-harmony.md](submodule-lifecycle-and-harmony.md) "Deferred
+application"). (yotthani, MithrilForge `docs/engine/bugs.md` B3, v1.5.3; v1.5.4: the managed sequence confirmed in
+the v1.5.4 decompile via `taom-src`, the swallowed exception and the log line not re-checked.)
+
 ## ⚠️ The `: MissionLogic` gotcha (confirmed at the source)
 
 If a behavior is `: MissionBehavior` and **manually** returns `BehaviorType => MissionBehaviorType.Logic` **without**
@@ -96,7 +110,8 @@ inheriting `MissionLogic`, then in `AddMissionBehavior` `missionBehavior as Miss
 `MissionLogics.Add(null)` puts a **null in the `MissionLogics` list**. The engine then NREs the next time it
 iterates `MissionLogics` (e.g. `CheckMissionEnded` → `MissionEnded`) — **every tick, immediately.** Fix: **inherit
 `: MissionLogic`** (it sets `BehaviorType.Logic` for you). This is `feedback_missionbehaviortype_logic_requires_missionlogic_inheritance`
-(it has crashed TAOM twice — 3 ports in 2026-05 + the inlined `BehaviorTreeWrapper.dll` in 2026-05-24). Phase-4
+(it has crashed TAOM twice: 3 ports in 2026-05 + the inlined `BehaviorTreeWrapper.dll` in 2026-05-24, whose `BehaviorTreeMissionLogic` now derives from
+`MissionLogic`: [RCA](../../reviews/rca-looter-battle-nre-2026-05-24.md)). Phase-4
 confirmation: the null-cast is `Mission.cs:4610`.
 
 ## TAOM relevance

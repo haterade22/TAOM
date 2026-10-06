@@ -133,6 +133,50 @@ cross into `TaleWorlds.Native.dll` (the bone-palette cap, the actual GPU mesh up
 *orchestrates* (pick Monster, pick creation type, equip, then call preload); the *rendering* is native — so the
 spider's fix lives in the **mesh asset** (tpac), not in C#.
 
+## After spawn: pose, LOD and shadows each frame (v1.5.3) [yotthani]
+
+Read by yotthani from the v1.5.3 client in Ghidra and a 45 s Very Sleepy profile of a 500 against 500
+battle. Every bullet names its MithrilForge source and its v1.5.4 status.
+
+**Pose (animation LOD).** (MithrilForge `docs/perf-audit/profile_s3d_functions.md` section 4 and
+`docs/engine/offscreen-pose.md`, decompile and profile v1.5.3; v1.5.4: the option string
+`animation_sampling_quality` is still present (native_decompile `--string`), the rest not re-checked.)
+- **A skeleton is posed only while its agent is visible** in at least one view, shadow views included; a rider
+  and its mount count as one. A non-visible agent only advances its animation time and action state, plus a
+  timer-based forced update (`do_timer_based_skeleton_forced_updates`, on by default) when its timer runs out.
+  Between those updates `Skeleton.GetBoneEntitialFrame` returns the same frame tick after tick while
+  `GetCurrentActionProgress` keeps running.
+- **The rate falls with camera distance** under the `animation_sampling_quality` option (default 1): at 1,
+  144 / 108 / 45 / 29 / 21 Hz at 0 / 10 / 30 / 50 / 100 m with a floor of 18 Hz; at 0, 60 / 46 / 21 / 15 / 11 Hz
+  with a floor of 10 Hz; at 2, every visible agent every frame.
+- **`MBAgent.GetVisualPosition` forces a pose evaluation**, and vanilla's melee sweep forces the attacker's pose
+  before it reads the blade, so vanilla melee is unaffected.
+- **The lever for a mod that reads bones itself** is `Skeleton.ForceUpdateBoneFrames()`: the same evaluation the
+  sweep forces, and a no-op when the skeleton was posed this frame. Calling it only when a bone frame equals the
+  previous tick's keeps the cost to off-screen agents. TAOM's open case is #739 (warg bites, elephant howdah).
+
+**Agent LOD.** (MithrilForge `docs/perf-audit/agent-render-items.md` summary, sections 2.2, 3 and 4, decompile and profile
+v1.5.3; v1.5.4: `SetAgentLodMakeZeroOrMax` confirmed via native_decompile, the rest not re-checked.)
+- **One LOD per agent, from its distance to the main camera**, not per view, with thresholds set by the
+  `character_detail` option (at 2: LOD 1 to 5 start at 8.3, 13.8, 19.3, 28.3 and 37.3 m).
+- **A lower LOD saves triangles and skinning, not render items:** every part stays in the list with that LOD's
+  mesh, so the item count follows the number of parts and materials.
+- **Never call `MBAgentVisuals.SetAgentLodZeroOrMax(false)`.** The native setter stores `(makeZero ^ 1) << 3`, so
+  `false` writes 8, one past the eight LOD slots (0 to 7) the renderer indexes. Vanilla calls it only with `true`.
+- **`GameEntity.SetEnforcedMaximumLodLevel` does not reach agents:** only the LOD path of ordinary entities reads
+  it; the agent renderer does not.
+- **Agent render items cost CPU, not frame time** on the profiled battle: they start in `PreDisplay`, take about
+  2 ms of wall time per frame on about 13 workers, and the main thread sleeps on them for about 0.13 ms per frame.
+  Halving them would save up to about 9 % of busy CPU and no frame time there (the frame-time half is upstream's assumption).
+
+**Distant shadows.** (MithrilForge `docs/perf-audit/agent-render-items.md` section 3.5, decompile v1.5.3;
+v1.5.4: the skeleton-name test confirmed via native_decompile `--string human_shadow_mesh`.)
+- Full meshes go only into shadow cascades 0 and 1. Cascades 2 and 3 draw one stand-in mesh per agent, chosen by
+  skeleton name: `human_shadow_mesh` when the name contains "human", `horse_shadow_mesh.lod3` when it contains
+  "horse", otherwise none. With the cascade multiplier at 1.0 the switch is at 10 m times an engine factor yotthani did not pin down.
+- [unverified in game] So a creature on its own skeleton may cast no far shadow at all, and a mount on
+  `horse_skeleton` may cast a horse silhouette.
+
 ## Evidence (file:line, v1.4.5 shipping decompile)
 - `Mission.cs`: `SpawnAgent`:4074, `SpawnTroop`:4418, `SpawnMonster`:4394/4399-4416, `CreateHorseAgentFromRosterElements`:4525-4534 (CreateAgent FromHorseObj:4528, SetMountInitialValues:4533), `CreateAgent`:4040-4054, `BuildAgent`:4007-4038 (PreloadForRendering:4025).
 - `Agent.cs`: `EquipItemsFromSpawnEquipment`:4529-4567 (switch FromRoster/FromCharacterObj→AddSkinMeshes:4560; FromHorseObj falls through), `AddSkinMeshes`:5405-5411, `PreloadForRendering`:4923 → `PreloadForRenderingAux`:5189 (`MBAPI.IMBAgent.PreloadForRendering`).

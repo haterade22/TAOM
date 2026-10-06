@@ -123,7 +123,7 @@ that 0x591C30 builds (vector 0xDB00C8, indexed through the remap array 0xDB00A8)
 | **Blend in period** | `+0x140`, f32 | W18 | Runtime `+0x1E4`. Used when the request's blend-in is within 0.001 of -0.2, the managed default (0x65573D..0x65575F), or negative in `SetAnimationAtChannel` (0x6FB290); `GetAnimationBlendInPeriod` (0x6EA440) [Certain] | Cross-fade into the clip | Kit 0..100, step 0.01 |
 | **Blend out period** | `+0x144`, f32 | W19 | Runtime `+0x1E8`. Used when the request's blend-out is negative. Blend-out starts at progress 1 - blendOut / duration (0x653A40), which is also when Continue to action fires [Certain] | Cross-fade out | The validator sets it to 0 on a `keep` or `cyclic` clip |
 | **Do not interpolate** | `+0x148`, u8 | W20 | Not copied. No client consumer in 0x460000..0x600000 [Likely]; elsewhere UNVERIFIED | UNVERIFIED | 0 on all 6,177 vanilla clips |
-| **Loading Type** | `+0x1B1`, u8 (`loading_type`; byte 0 of TpacTool's `UnknownUInt2`) | W26 | The keyframe loaders: 2 passes a null keyframe set to 0x592520 (no keyframes), 1 uses the async loader and a 3-second cache key, 0 is the default path [Certain] (R-Fields) | 0 Always keep in memory, 1 Load when needed, 2 Never load [Certain] (R-Kit, from the combo table and the enum names; R-Fields tags the combo-to-value order Likely) | Vanilla: 5,040 at 0, 563 at 1, 574 at 2 [Certain]. This byte is the one the clip-flags doc reads as a segment selector: see section 3 and section 11 |
+| **Loading Type** | `+0x1B1`, u8 (`loading_type`; byte 0 of TpacTool's `UnknownUInt2`) | W26 | The keyframe loaders: 2 passes a null keyframe set to 0x592520 (no keyframes), 1 uses the async loader and keeps the first 3.0 s resident (the float `0xB2DE74`, the short segment `8fc3fc2a`; yotthani, MithrilForge `docs/perf-audit/clip-reader-lock.md`, decompile v1.5.3; v1.5.4: not re-checked), 0 is the default path [Certain] (R-Fields) | 0 Always keep in memory, 1 Load when needed, 2 Never load [Certain] (R-Kit, from the combo table and the enum names; R-Fields tags the combo-to-value order Likely) | Vanilla: 5,040 at 0, 563 at 1, 574 at 2 [Certain]. This byte is the one the clip-flags doc reads as a segment selector: see section 3 and section 11 |
 | **Do not optimize** | `+0x1B2`, u8 (`do_not_optimize_`; byte 1 of `UnknownUInt2`) | W27 | Not copied; no consumer found [Likely editor or cook only], UNVERIFIED | UNVERIFIED | 17 vanilla clips (inventory and naval NPC clips) |
 | **Flags** (43 checkboxes) | `+0x38`, u64 | W28 (`int 0`, skipped by the client), W29 (count and names) | Runtime `+0x1D0`, with the priority byte and the weight nibble folded in | Section 4 | Saved as names; a bit with no name is lost |
 | **Clip usages** | `+0x150`, vector of records | W30 | Runtime `+0x198`, `+0x1A0`: at most two | Section 5 | A third is dropped at load |
@@ -292,7 +292,9 @@ say the value matters:
   `as_human_hideout_bandit`: 98 `act_conversation_*` gestures, `act_sit_and_drink_idle`
   (`anim_sit_idle_tavern_drink1`), the cat and dog gaits, jumps and deaths, and the dog's inventory idle. No melee
   table stands between those actions and their clips, and they animate in vanilla play, so the null keyframe set
-  built at load does not leave a clip motionless; where its keyframes come from later is UNVERIFIED. (The rider
+  built at load does not leave a clip motionless. Its keyframes come from its own `6c1e136f` segment: a type 2
+  clip gets no data at load, and the loader callback (`0x5910C0`) requests that segment on the first access
+  (yotthani, MithrilForge `docs/perf-audit/clip-reader-lock.md`, decompile v1.5.3; v1.5.4: not re-checked). (The rider
   falls, `act_fall_rider_left` to `fall_rider_left` and its kin, are commented out in Native and prove nothing.)
 - **The self-keyed row at 2 in game:** the 15:40 Custom Battle (troll-race.md "The swing CTD") entered the 12 quick
   release and quick blocked codes for overswing and both slashes, all on troll clips at 2, with no crash. Its
@@ -505,7 +507,10 @@ TAOM].
 
 **A clip's segment is read by length.** Per MithrilForge (segment `6c1e136f`, version 2, decoded and re-encoded by
 its `tools/anim`), identical block contents with different padding crash the reader (`rglBuffer::read_void
-overrun`): values in a clip's own segment can change, sizes and key frames cannot. TAOM's creature clips carry no
+overrun`). Key counts can change too, given the exact block padding, a key-index table rebuilt from the new key
+frames and a recomputed `size_in_bytes`: DualWield's 368 mirror-pack clips, some re-keyed from 35 to 101 keys, play
+in game (yotthani, MithrilForge `docs/engine/modding-kit.md` "Animation clips", in game since 2026-10-01 on v1.5.3;
+v1.5.4: not re-checked). TAOM's creature clips carry no
 segment (the 243-clip census in [bannerlord-animation-clip-flags.md](bannerlord-animation-clip-flags.md) "A clip can
 carry its own motion"), so this binds only an edit of a vanilla clip's payload.
 
@@ -905,7 +910,8 @@ Everything below is UNVERIFIED. Grouped by where it sits.
 
 **Clip fields at runtime**
 - What plays through a self-keyed row whose clip is at Loading Type 2 (a directly bound clip at 2 plays [Likely],
-  section 3), and where a Loading Type 2 clip's keyframes come from after the null set built at load.
+  section 3). A vanilla type 2 clip loads its own segment on first access (section 3); where a type 2 clip with no
+  segment (TAOM's troll and elephant clips) gets keyframes stays UNVERIFIED.
 - Param 1 on reload, blocked and ready clips; Param 2 and Param 3 outside reload and death; what the death hand-off
   time means (ragdoll or body-down).
 - Consumers of Do not interpolate and Do not optimize outside 0x460000..0x600000.
