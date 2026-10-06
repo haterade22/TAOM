@@ -1871,3 +1871,24 @@ shipped-config test pinned the same six, so the data and its test came from one 
   derive its expected set the same way. Sibling: "Check a culture-keyed config against the cultures the troops
   carry" above.
 - **Source:** `docs/reviews/rca-tournament-rewards-2026-10-04.md` T2 (lens 7).
+
+### Check a generated kit against the career it dresses, not only against its own rule (Career kits, 2026-10-06)
+The #629 career-kit rule picked each culture's lowest non-vanilla troop gear. It handed Isengard and Mordor
+careers the Mordor orc armour of their level-1 orcs, and three ranged careers named for a crossbow or javelins
+a bow; the rule's own table showed both and the review approved it.
+- **Why missed:** every pick was judged by level, vanilla-ness and re-equip skill. None was read against the
+  career's name, its description or the race the player wears it on.
+- **Prevent:** when a generator dresses a character, review its output against the character: the career's
+  weapon, the culture's playable races (`charactercreation/cultures.json`), the line a kingdom's own troops
+  wear. Encode each answer as a table the generator reads (`RANGED`, `ARMOUR_LINE`) with a literal-culture
+  test, never a loop over the table.
+- **Source:** `docs/reviews/rca-career-kits-uruk-2026-10-06.md` findings 1 and 2.
+
+### A generated file whose pin runs only by hand drifts with its input (Career kits, 2026-10-06)
+`998f054c` re-kitted Gondor's low troops without re-running `generate_career_kits.py`, and the career file sat
+off its rule from v2.0.31 to v2.0.34: the install-gated `--verify` pin never ran.
+- **Why missed:** the gate existed, but nothing ran it when its input (the troop files) changed in another
+  commit.
+- **Prevent:** a generator's `--verify` runs in the commit hook that fires on its INPUT files, not only in a
+  test someone has to remember.
+- **Source:** `docs/reviews/rca-career-kits-uruk-2026-10-06.md` finding 3.

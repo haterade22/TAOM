@@ -7,9 +7,12 @@ Leg) of each `player_career_{culture}_{archetype}_{m|f}` roster:
 
 1. candidates are the items of that slot's class that a non-hero troop of the culture carries in
    a battle set (`troops/troops_*.xml`: inline `EquipmentRoster`s that are not `civilian="true"`,
-   plus direct `<Equipments>/<equipment>` overrides, which the engine applies to every set);
-2. a bow first keeps only the candidates with the lowest `difficulty` (the Bow skill needed to
-   re-equip it), so a new character can put it back on;
+   plus direct `<Equipments>/<equipment>` overrides, which the engine applies to every set). For
+   Isengard's and Mordor's Body and Leg, only their uruk line (`ARMOUR_LINE`): their level-1 orcs
+   wear Mordor orc kit, which does not fit an uruk player, while uruk armour sits on the human
+   skeleton every race of theirs uses. A culture with no piece on its line is an error;
+2. a bow or crossbow first keeps only the candidates with the lowest `difficulty` (the skill
+   needed to re-equip it), so a new character can put it back on;
 3. the lowest-level NON-VANILLA candidate first carried at level LEVEL_CAP or below wins;
    otherwise the lowest-level candidate at all (possibly vanilla). Ties: most carried, then id.
 
@@ -50,15 +53,21 @@ VANILLA_MODULES = ("SandBoxCore", "Native", "SandBox")
 LEVEL_CAP = 21
 SLOTS = ("Item0", "Item1", "Item2", "Body", "Leg")
 
-# The kit shape per archetype; SIDEARM and SECOND resolve per culture below.
+# The kit shape per archetype; the upper-case entries resolve per culture below.
 LAYOUT = {
-    "ranged": ("Bow", "Arrows", "SIDEARM"),
+    "ranged": ("LAUNCHER", "AMMO", "SIDEARM"),
     "cavalry": ("TwoHandedPolearm", "Shield", "SIDEARM"),
     "infantry": ("SIDEARM", "Shield", "SECOND"),
 }
 SIDEARM = {"erebor": "OneHandedAxe",   # dwarves carry axes
            "empire": "OneHandedAxe"}   # Dunland has no non-vanilla one-handed sword
 SECOND = {"dolguldur": "TwoHandedAxe"}
+RANGED = {"isengard": ("Crossbow", "Bolts"),   # Uruk Crossbow
+          "erebor": ("Crossbow", "Bolts"),     # Crossbow Master
+          "aserai": ("Javelin", "Shield")}     # Pezarsani Javelineer (Harad)
+ARMOUR_LINE = {"isengard": "sk_uruk_hai_", "mordor": "sk_uruk_mordor_"}   # docstring step 1
+ARMOUR = ("BodyArmor", "LegArmor")
+LAUNCHERS = ("Bow", "Crossbow")
 
 ROSTER_RE = re.compile(r'(<EquipmentRoster id="player_career_([a-z]+)_(ranged|cavalry|infantry)_[mf]"[^>]*>)(.*?)(</EquipmentRoster>)', re.S)
 EQ_RE = re.compile(r'(<Equipment slot="(Item0|Item1|Item2|Body|Leg)" id="Item\.)([^"]+)(")')
@@ -76,10 +85,10 @@ class Candidate(NamedTuple):
     difficulty: int
 
 
-def pick(candidates: list[Candidate], is_bow: bool = False) -> str | None:
+def pick(candidates: list[Candidate], is_launcher: bool = False) -> str | None:
     if not candidates:
         return None
-    if is_bow:
+    if is_launcher:
         lowest = min(c.difficulty for c in candidates)
         candidates = [c for c in candidates if c.difficulty == lowest]
     order = lambda c: (c.level, -c.count, c.item)  # noqa: E731
@@ -88,7 +97,9 @@ def pick(candidates: list[Candidate], is_bow: bool = False) -> str | None:
 
 
 def slot_classes(culture: str, archetype: str) -> dict[str, str]:
-    resolve = {"SIDEARM": SIDEARM.get(culture, "OneHandedSword"), "SECOND": SECOND.get(culture, "TwoHandedPolearm")}
+    launcher, ammo = RANGED.get(culture, ("Bow", "Arrows"))
+    resolve = {"SIDEARM": SIDEARM.get(culture, "OneHandedSword"), "SECOND": SECOND.get(culture, "TwoHandedPolearm"),
+               "LAUNCHER": launcher, "AMMO": ammo}
     weapons = [resolve.get(k, k) for k in LAYOUT[archetype]]
     return {"Item0": weapons[0], "Item1": weapons[1], "Item2": weapons[2], "Body": "BodyArmor", "Leg": "LegArmor"}
 
@@ -191,10 +202,11 @@ def _is_vanilla(el: ET.Element, sources: Sources) -> bool:
 
 
 def candidates(sources: Sources, culture: str, klass: str) -> list[Candidate]:
+    line = ARMOUR_LINE.get(culture, "") if klass in ARMOUR else ""   # "" admits every id
     out = []
     for item, (level, count) in sources.troops.get(culture, {}).items():
         el = sources.items.get(item)
-        if el is None or _item_class(el) != klass:
+        if el is None or _item_class(el) != klass or not item.startswith(line):
             continue
         out.append(Candidate(item, level, count, _is_vanilla(el, sources), int(el.get("difficulty") or 0)))
     return out
@@ -204,7 +216,7 @@ def derive_kits(sources: Sources) -> dict[tuple[str, str], dict[str, str | None]
     kits = {}
     for culture, archetype in sources.rosters:
         kits[(culture, archetype)] = {
-            slot: pick(candidates(sources, culture, klass), is_bow=klass == "Bow")
+            slot: pick(candidates(sources, culture, klass), is_launcher=klass in LAUNCHERS)
             for slot, klass in slot_classes(culture, archetype).items()}
     return kits
 
@@ -227,8 +239,9 @@ def apply_kits(text: str, kits: dict[tuple[str, str], dict[str, str | None]]) ->
             slot = em.group(2)
             new = kit.get(slot)
             if not new:
-                raise CareerKitError(f"{culture}/{archetype} {slot}: no troop of the culture carries a "
-                                     f"{slot_classes(culture, archetype)[slot]}")
+                klass = slot_classes(culture, archetype)[slot]
+                line = f" on its {ARMOUR_LINE[culture]}* line" if klass in ARMOUR and culture in ARMOUR_LINE else ""
+                raise CareerKitError(f"{culture}/{archetype} {slot}: no troop of the culture carries a {klass}{line}")
             seen.add(slot)
             if em.group(3) != new:
                 changed += 1

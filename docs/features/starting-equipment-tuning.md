@@ -96,25 +96,38 @@ Two stacked rosters build the player's kit at CC finalize (`Main/Features/Charac
 `tools/generate_career_kits.py` derives each weapon and armour slot of a career roster from the troops
 the culture fields, and its `--verify` pins the file to the rule:
 
-1. candidates are the items of the slot's class (bow, arrows, one-handed sword or axe, polearm, shield,
-   body, leg) that a non-hero troop of the culture carries in a battle set (`troops/troops_*.xml`: inline
-   `EquipmentRoster`s that are not civilian, plus `<Equipments>/<equipment>` overrides, which the engine
-   applies to every set; the standalone sets the troop files reference are all civilian templates);
-2. a bow first keeps only the candidates with the lowest `difficulty`, the Bow skill the engine's
+1. candidates are the items of the slot's class (bow or crossbow, arrows or bolts, javelin, one-handed
+   sword or axe, polearm, shield, body, leg) that a non-hero troop of the culture carries in a battle set
+   (`troops/troops_*.xml`: inline `EquipmentRoster`s that are not civilian, plus `<Equipments>/<equipment>`
+   overrides, which the engine applies to every set; the standalone sets the troop files reference are all
+   civilian templates). For Isengard's and Mordor's Body and Leg, only their uruk line (`ARMOUR_LINE`:
+   `sk_uruk_hai_` and `sk_uruk_mordor_`); a culture with no piece on its line stops the tool with an error;
+2. a bow or crossbow first keeps only the candidates with the lowest `difficulty`, the skill the engine's
    `CharacterHelper.CanUseItem` demands to re-equip it (a ladder bow can ask for 100);
 3. the lowest-level non-vanilla candidate first carried at level 21 or below wins, otherwise the lowest
    troop's own item even when vanilla. Tie-break: most carried, then id.
 
-Class exceptions, in the tool's `SIDEARM`/`SECOND` tables: Erebor and Dunland carry a one-handed axe as
-the sidearm (no non-vanilla Dunland sword exists), and Dol Guldur infantry a two-handed axe. The level cap
-keeps a Rhun tier-7 bow (first carried at L36) out of a starting kit. The full per-culture table is in issue
-#629. Vanilla left by rule 3: arrows for every career culture but Isengard, Erebor, Rivendell and Mirkwood;
-the Rohan, Dunland and Rhun bows, and Gundabad's (its only bow a new character can re-equip); Harad's sword,
-lance and shield (Harad troops carry no culture weapons). The consequence is deliberate: these kits equal
-the lowest regular gear, which is stronger than the old twins (Gondor body 23 against 5 to 9) and sells at
-its real price, and a culture's three archetypes share their body and leg armour. Bows still ask for their
-troop requirement where the culture fields nothing lower (Harad and Rivendell 100): the player starts with
-the bow equipped and can use it, but cannot put it back on once removed until Bow reaches the number.
+The uruk line is a restriction, not a preference. Both cultures field level-1 orcs in Mordor orc armour,
+which beat the uruks on level and dressed every Isengard and Mordor career as a Mordor orc until
+2026-10-06, and orc armour does not fit an uruk player. Every race the two cultures offer (uruk, uruk_hai,
+berserker, orc, human, saruman) uses the human skeleton and no equip path checks race, so the uruk pieces
+equip on any of them; how they look on an orc or a human player is owed in game. Isengard's line starts at
+the Uruk-hai recruit (L6), Mordor's at the uruk grunt (L11), so Mordor's career armour comes from
+engine tier 2, two tiers above its level-1 orcs; the weapons still come from the lowest troops.
+
+Class exceptions, in the tool's `SIDEARM`/`SECOND`/`RANGED` tables: Erebor and Dunland carry a one-handed
+axe as the sidearm (no non-vanilla Dunland sword exists), Dol Guldur infantry a two-handed axe, and three
+ranged careers carry their own weapon: Isengard's Uruk Crossbow and Erebor's Crossbow Master a crossbow
+and bolts, Harad's Pezarsani Javelineer javelins and a shield. Erebor fields no crossbow below L21, so its
+start is `ladder_erebor_xbow_t4`. The level cap keeps a Rhun tier-7 bow (first carried at L36) out of a
+starting kit. The full per-culture table is in issue #629, amended by #743. Vanilla left by rule 3: arrows
+for every bow career but Rivendell and Mirkwood; the Rohan, Dunland and Rhun bows, and Gundabad's (its only
+bow a new character can re-equip); Harad's sword, lance, javelin and shield (Harad troops carry no culture
+weapons). The consequence is deliberate: these kits equal the lowest regular gear, which is stronger than
+the old twins (Gondor body 23 against 5 to 9) and sells at its real price, and a culture's three archetypes
+share their body and leg armour. Bows still ask for their troop requirement where the culture fields
+nothing lower (Rivendell 100): the player starts with the bow equipped and can use it, but cannot put it
+back on once removed until Bow reaches the number.
 
 ### The starter items
 
@@ -169,16 +182,16 @@ reports every player roster slot as `BROKEN_ITEM_REF`, which is the backstop.
 
 - `python tools/validate_moduledata.py`: every `starter_` reference resolves (0 errors).
 - `python tools/audit_polearm_shield_parity.py`: a spear beside a shield resolves one-handed. Its
-  `KNOWN_FAILURES` hold the eight Mordor player rosters under #526: four culture-default rosters on
-  `starter_wm_mordor_set1_polearm_a01`, four career rosters on `wm_mordor_set1_polearm_a02` (the lowest
-  Mordor troop polearm, which resolves two-handed the same way).
+  `KNOWN_FAILURES` hold the four Mordor culture-default player rosters under #526, on
+  `starter_wm_mordor_set1_polearm_a01`. The four Mordor career rosters left the list on 2026-10-06 (#743):
+  their polearm is `sm_md_num_lance_a`, which resolves one-handed.
 - `python tools/check_external_xslt.py`: both modified stylesheets compile.
 - `python tools/generate_starter_kit.py --verify` on both Armory copies (the live install and
   `lotraom-assets\v1.5`). It checks ids only, not stats.
 - `python tools/generate_career_kits.py --verify`: the career file is exactly what the rule derives.
 - Python: `tools/tests/test_generate_starter_kit.py` (52), `test_wire_starter_kit_rosters.py` (16, including
   the committed override being byte-for-byte what the tool builds from the committed career file) and
-  `test_generate_career_kits.py` (19, one of them the install-gated `--verify` pin).
+  `test_generate_career_kits.py` (25, one of them the install-gated `--verify` pin).
 - C#: `TAOM.Tests/Features/CharacterCreation/StarterKitCoverageTests.cs` pins that every weapon and armour
   slot in the culture-default file is a `starter_` item (no allowlist), that every career and override slot
   names an item a non-hero troop of its culture carries in a battle set (Khand through Rhun, no borrowing),
@@ -276,6 +289,17 @@ an item folder loads as a duplicate item id.
   arrow borrowing), made the retained twins an explicit list that keeps each twin in its folder, pointed the
   generator at the `v1.5` mirror, taught the wiring tool to refuse an override id vanilla lacks, and deleted
   the two scripts that could still write the old career kits.
+- 2026-10-06: Isengard and Mordor careers started in Mordor orc armour (`sk_md_orc_arc_chest_light_a`,
+  `sk_md_orc_boots_a`), carried by each culture's level-1 orcs (#743). Their Body and Leg now come only
+  from the uruk line: Isengard wears `sk_uruk_hai_chainmail_a1` and `sk_uruk_hai_shoes_a1`, Mordor
+  `sk_uruk_mordor_chainmail_medium_a1` and `sk_uruk_mordor_boots_a`. Three ranged careers got their own
+  weapon: the Uruk Crossbow `ladder_isengard_xbow_t2` and `wm_isengard_bolt_a01`, the Crossbow Master
+  `ladder_erebor_xbow_t4` and `sm_dwarf_iron_bolt_a`, the Pezarsani Javelineer `eastern_javelin_3_t4` and
+  `desert_round_shield` (with Harad's hunter, skirmisher and bard override starts). The Gondor careers
+  went back to the rule's picks, `wm_gondor_sword_a01` and `wm_gondor_light_spear`, also the weakest
+  Gondor troop weapons (simulated sustained damage 34.8 against `_a02` 35.4, and 28.5 against
+  `wm_gondor_spear_b` 32.1): `998f054c` (#669) re-kitted Gondor's low troops on 2026-09-25 without
+  regenerating, so the file had drifted from v2.0.31 to v2.0.34 with the install-gated pin unrun.
 
 ## Related docs
 

@@ -89,13 +89,9 @@ FAILING_TYPES = frozenset({"Polearm"})
 # old debt. A count that goes UP is new debt and fails; a count that goes DOWN means the entry is
 # partly fixed and overstates the debt, so it would absorb a future regression, and that fails too.
 KNOWN_FAILURES: dict[tuple[str, str], tuple[int, str]] = {
-    # Mordor player starting gear: a two-handed-resolving polearm beside a shield, in the kit the
-    # player is handed at character creation and career start. 8 rosters. The career kit is the
-    # lowest Mordor troop's polearm since #629, which resolves the same way.
-    ("player_career_mordor_cavalry_f", "wm_mordor_set1_polearm_a02"): (1, "#526"),
-    ("player_career_mordor_cavalry_m", "wm_mordor_set1_polearm_a02"): (1, "#526"),
-    ("player_career_mordor_infantry_f", "wm_mordor_set1_polearm_a02"): (1, "#526"),
-    ("player_career_mordor_infantry_m", "wm_mordor_set1_polearm_a02"): (1, "#526"),
+    # Mordor player starting gear: a two-handed-resolving polearm beside a shield, in the
+    # culture-default kit the player is handed at character creation. 4 rosters. The career kits
+    # left this list when their polearm became sm_md_num_lance_a, which resolves one-handed.
     ("player_char_creation_mordor_mercenary_f", "starter_wm_mordor_set1_polearm_a01"): (1, "#526"),
     ("player_char_creation_mordor_mercenary_m", "starter_wm_mordor_set1_polearm_a01"): (1, "#526"),
     ("player_char_creation_mordor_retainer_f", "starter_wm_mordor_set1_polearm_a01"): (1, "#526"),

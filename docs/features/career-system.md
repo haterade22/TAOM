@@ -337,7 +337,7 @@ After the culture-default starting roster is applied at `OnCharacterCreationFina
 
 | Archetype | Weapons | Armor |
 |-----------|---------|-------|
-| **Ranged** | bow + arrows + one-handed sidearm | the culture's lowest troop body + legs |
+| **Ranged** | bow + arrows + one-handed sidearm (Isengard and Erebor: crossbow + bolts; Harad: javelins + shield) | the culture's lowest troop body + legs (Isengard and Mordor: their lowest uruk armour) |
 | **Cavalry** | polearm + shield + sidearm + horse + harness | the same |
 | **Infantry** | one-handed weapon + shield + polearm (Dol Guldur: two-handed axe) | the same |
 
@@ -369,8 +369,10 @@ Same fallback policy as the runtime grant: missing roster → log + leave the yo
    battle set, so ranged and infantry rosters simply omit the mount.
 2. Run `python tools/generate_career_kits.py --apply`: it fills the five slots from the culture's troops by
    the rule in [starting-equipment-tuning.md](starting-equipment-tuning.md) "Career kits" (lowest troop gear,
-   non-vanilla preferred up to level 21, bows by lowest skill requirement). A culture whose sidearm or
-   second weapon is not a sword or a polearm gets a row in the tool's `SIDEARM`/`SECOND` tables first. No
+   non-vanilla preferred up to level 21, bows and crossbows by lowest skill requirement). A culture whose sidearm or
+   second weapon is not a sword or a polearm gets a row in the tool's `SIDEARM`/`SECOND` tables first, a ranged
+   career that is not a bow career a row in `RANGED`, and a culture whose armour must come from one line a row
+   in `ARMOUR_LINE`. No
    new items: the culture's troops already carry them. `--verify` and `StarterKitCoverageTests` pin the result.
 3. If the culture is one of the six vanilla-mapped ones, re-run `python tools/wire_starter_kit_rosters.py --apply`
    so its careerless override follows the new kit.

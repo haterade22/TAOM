@@ -569,8 +569,8 @@
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_hunter_m" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item0" id="Item.eastern_javelin_3_t4" />
+            <Equipment slot="Item1" id="Item.desert_round_shield" />
             <Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
             <Equipment slot="Body" id="Item.haradrim_torso" />
             <Equipment slot="Leg" id="Item.haradrim_boots" />
@@ -583,8 +583,8 @@
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_hunter_f" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item0" id="Item.eastern_javelin_3_t4" />
+            <Equipment slot="Item1" id="Item.desert_round_shield" />
             <Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
             <Equipment slot="Body" id="Item.haradrim_torso" />
             <Equipment slot="Leg" id="Item.haradrim_boots" />
@@ -625,8 +625,8 @@
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_skirmisher_m" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item0" id="Item.eastern_javelin_3_t4" />
+            <Equipment slot="Item1" id="Item.desert_round_shield" />
             <Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
             <Equipment slot="Body" id="Item.haradrim_torso" />
             <Equipment slot="Leg" id="Item.haradrim_boots" />
@@ -639,8 +639,8 @@
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_skirmisher_f" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item0" id="Item.eastern_javelin_3_t4" />
+            <Equipment slot="Item1" id="Item.desert_round_shield" />
             <Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
             <Equipment slot="Body" id="Item.haradrim_torso" />
             <Equipment slot="Leg" id="Item.haradrim_boots" />
@@ -653,8 +653,8 @@
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_bard_m" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item0" id="Item.eastern_javelin_3_t4" />
+            <Equipment slot="Item1" id="Item.desert_round_shield" />
             <Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
             <Equipment slot="Body" id="Item.haradrim_torso" />
             <Equipment slot="Leg" id="Item.haradrim_boots" />
@@ -667,8 +667,8 @@
     </EquipmentRoster>
     <EquipmentRoster id="player_char_creation_aserai_bard_f" culture="Culture.aserai" _replaceWhileMerging="true">
         <EquipmentSet>
-            <Equipment slot="Item0" id="Item.ladder_harad_bow_t2" />
-            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item0" id="Item.eastern_javelin_3_t4" />
+            <Equipment slot="Item1" id="Item.desert_round_shield" />
             <Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
             <Equipment slot="Body" id="Item.haradrim_torso" />
             <Equipment slot="Leg" id="Item.haradrim_boots" />

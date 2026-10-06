@@ -5,9 +5,10 @@ Run:  python -m unittest tools.tests.test_generate_career_kits
 
 The career kits are the gear each culture's lowest troops carry. The ways the derivation could be
 wrong and still look plausible: a higher-level item beating a lower one, a vanilla item beating a
-culture's own, a high-tier culture item sneaking in past the level cap, a bow whose skill
-requirement a new character cannot meet, a hero's or a civilian set's item counted as troop gear,
-and a rewrite that touches the mounts or the file's line endings.
+culture's own, a high-tier culture item sneaking in past the level cap, a bow or crossbow whose
+skill requirement a new character cannot meet, an uruk career dressed in orc armour (or another
+kingdom's uruk line), a ranged career handed a bow it does not use, a hero's or a civilian set's
+item counted as troop gear, and a rewrite that touches the mounts or the file's line endings.
 """
 import os
 import sys
@@ -41,14 +42,14 @@ class TestPick(unittest.TestCase):
         self.assertEqual(ck.pick([cand("b", 11, 3), cand("a", 11, 7)]), "a")
         self.assertEqual(ck.pick([cand("b", 11, 2), cand("a", 11, 2)]), "a")
 
-    def test_a_bow_takes_the_lowest_skill_requirement_first(self):
+    def test_a_launcher_takes_the_lowest_skill_requirement_first(self):
         bows = [cand("own_t3", 16, difficulty=50), cand("van_t2", 11, vanilla=True, difficulty=0)]
-        self.assertEqual(ck.pick(bows, is_bow=True), "van_t2")
+        self.assertEqual(ck.pick(bows, is_launcher=True), "van_t2")
         self.assertEqual(ck.pick(bows), "own_t3")
 
     def test_among_equal_requirements_the_usual_rule_applies(self):
         bows = [cand("van_t2", 11, vanilla=True), cand("own_t4", 21)]
-        self.assertEqual(ck.pick(bows, is_bow=True), "own_t4")
+        self.assertEqual(ck.pick(bows, is_launcher=True), "own_t4")
 
     def test_no_candidate_is_none(self):
         self.assertIsNone(ck.pick([]))
@@ -67,6 +68,82 @@ class TestLayout(unittest.TestCase):
         self.assertEqual(ck.slot_classes("erebor", "ranged")["Item2"], "OneHandedAxe")
         self.assertEqual(ck.slot_classes("dolguldur", "infantry")["Item2"], "TwoHandedAxe")
         self.assertEqual(ck.slot_classes("dolguldur", "cavalry")["Item0"], "TwoHandedPolearm")
+
+    def test_ranged_careers_carry_their_own_weapon(self):
+        # Uruk Crossbow, Crossbow Master, Pezarsani Javelineer
+        weapons = lambda c: tuple(ck.slot_classes(c, "ranged")[s] for s in ("Item0", "Item1", "Item2"))  # noqa: E731
+        self.assertEqual(weapons("isengard"), ("Crossbow", "Bolts", "OneHandedSword"))
+        self.assertEqual(weapons("erebor"), ("Crossbow", "Bolts", "OneHandedAxe"))
+        self.assertEqual(weapons("aserai"), ("Javelin", "Shield", "OneHandedSword"))
+        self.assertEqual(ck.slot_classes("isengard", "infantry")["Item0"], "OneHandedSword")
+
+
+def _item(iid, klass, difficulty=None):
+    el = ET.Element("Item", {"id": iid, "Type": klass, "mesh": iid})
+    if difficulty is not None:
+        el.set("difficulty", str(difficulty))
+    return el
+
+
+class TestDerive(unittest.TestCase):
+    def _sources(self, culture, archetype, troop_items, items):
+        return ck.Sources({culture: troop_items}, {el.get("id"): el for el in items}, {}, set(),
+                          [(culture, archetype)], [])
+
+    def test_isengard_and_mordor_careers_wear_their_uruk_line(self):
+        # uruk armour fits every race these cultures offer; their L1 orcs wear Mordor orc kit.
+        # Literal cultures, never ARMOUR_LINE.items(): a dropped entry must fail here.
+        for culture, uruk in (("isengard", "sk_uruk_hai_"), ("mordor", "sk_uruk_mordor_")):
+            with self.subTest(culture=culture):
+                chest, boots = uruk + "chest", uruk + "boots"
+                sources = self._sources(culture, "infantry",
+                                        {"orc_chest": (1, 3), chest: (11, 1), "orc_boots": (1, 3),
+                                         boots: (11, 1), "sword": (1, 1)},
+                                        [_item("orc_chest", "BodyArmor"), _item(chest, "BodyArmor"),
+                                         _item("orc_boots", "LegArmor"), _item(boots, "LegArmor"),
+                                         _item("sword", "OneHandedSword")])
+                kit = ck.derive_kits(sources)[(culture, "infantry")]
+                self.assertEqual((kit["Body"], kit["Leg"]), (chest, boots))
+
+    def test_the_uruk_line_is_required_not_preferred(self):
+        # an uruk piece above the cap still beats an orc piece; no uruk piece at all is an error,
+        # never a silent return to orc armour
+        sources = self._sources("mordor", "infantry",
+                                {"orc_chest": (1, 3), "sk_uruk_mordor_elite": (31, 1)},
+                                [_item("orc_chest", "BodyArmor"), _item("sk_uruk_mordor_elite", "BodyArmor")])
+        self.assertEqual([c.item for c in ck.candidates(sources, "mordor", "BodyArmor")], ["sk_uruk_mordor_elite"])
+        sources.troops["mordor"].pop("sk_uruk_mordor_elite")
+        self.assertEqual(ck.candidates(sources, "mordor", "BodyArmor"), [])
+        kits = ck.derive_kits(sources)
+        roster = ('<EquipmentRoster id="player_career_mordor_infantry_m"><EquipmentSet>'
+                  + '<Equipment slot="Body" id="Item.old" />'
+                  + "</EquipmentSet></EquipmentRoster>")
+        with self.assertRaisesRegex(ck.CareerKitError, "sk_uruk_mordor_"):
+            ck.apply_kits(roster, kits)
+
+    def test_another_kingdoms_uruk_line_is_not_this_ones(self):
+        sources = self._sources("isengard", "infantry", {"sk_uruk_mordor_chest": (1, 1), "sk_uruk_hai_chest": (6, 1)},
+                                [_item("sk_uruk_mordor_chest", "BodyArmor"), _item("sk_uruk_hai_chest", "BodyArmor")])
+        self.assertEqual([c.item for c in ck.candidates(sources, "isengard", "BodyArmor")], ["sk_uruk_hai_chest"])
+
+    def test_other_cultures_and_weapons_are_not_narrowed(self):
+        sources = self._sources("gondor", "infantry", {"orc_chest": (1, 1), "sword": (1, 1)},
+                                [_item("orc_chest", "BodyArmor"), _item("sword", "OneHandedSword")])
+        self.assertEqual([c.item for c in ck.candidates(sources, "gondor", "BodyArmor")], ["orc_chest"])
+        sources = self._sources("mordor", "infantry", {"orc_sword": (1, 1)}, [_item("orc_sword", "OneHandedSword")])
+        self.assertEqual([c.item for c in ck.candidates(sources, "mordor", "OneHandedSword")], ["orc_sword"])
+
+    def test_a_crossbow_takes_the_lowest_skill_requirement_first(self):
+        sources = self._sources(
+            "isengard", "ranged",
+            {"xbow_t2": (11, 1), "xbow_hard": (6, 1), "bolts": (11, 1), "sword": (6, 1),
+             "sk_uruk_hai_chest": (6, 1), "sk_uruk_hai_boots": (6, 1)},
+            [_item("xbow_t2", "Crossbow", difficulty=0), _item("xbow_hard", "Crossbow", difficulty=100),
+             _item("bolts", "Bolts"), _item("sword", "OneHandedSword"),
+             _item("sk_uruk_hai_chest", "BodyArmor"), _item("sk_uruk_hai_boots", "LegArmor")])
+        kit = ck.derive_kits(sources)[("isengard", "ranged")]
+        self.assertEqual(kit, {"Item0": "xbow_t2", "Item1": "bolts", "Item2": "sword",
+                               "Body": "sk_uruk_hai_chest", "Leg": "sk_uruk_hai_boots"})
 
 
 TROOPS = """<NPCCharacters>
