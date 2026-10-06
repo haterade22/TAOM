@@ -5,7 +5,8 @@ using TaleWorlds.CampaignSystem.Settlements;
 namespace TAOM.Features.Arena;
 
 /// <summary>
-/// Boundary conversion for the tournament roster guard: sealed engine types in, primitives out.
+/// Boundary conversion for the tournament roster guard and the #744 alignment pass: sealed engine
+/// types in, primitives out.
 ///
 /// Split out of <c>Patch69_TournamentRosterGuard</c> so the Harmony class stays a thin entry point
 /// (ADR-002) — the patch binds the target and delegates; this maps; the service decides. Sealed
@@ -15,7 +16,8 @@ namespace TAOM.Features.Arena;
 public static class TournamentEntrantMapper
 {
     /// <summary>
-    /// Reduce a sealed <c>CharacterObject</c> to the primitives the winner panel actually reads.
+    /// Reduce a sealed <c>CharacterObject</c> to the primitives the winner panel and the alignment
+    /// filter read.
     /// A null character maps to <c>default</c>, which the guard service classifies as
     /// <see cref="TournamentEntrantVerdict.UnsafeNullCharacter"/>.
     /// </summary>
@@ -40,11 +42,29 @@ public static class TournamentEntrantMapper
             raceName: raceName,
             clanId: hero?.Clan?.StringId,
             hasMapFaction: hero?.MapFaction != null,
-            hasCulture: character.Culture != null);
+            hasCulture: character.Culture != null,
+            kingdomId: hero?.Clan?.Kingdom?.StringId,
+            cultureId: character.Culture?.StringId,
+            isPlayerOrPlayerClan: character.IsPlayerCharacter
+                || (hero?.Clan != null && hero.Clan == Clan.PlayerClan));
     }
 
     /// <summary>
-    /// The substitute troop for an unsafe entrant. Mirrors vanilla's own padding choice in the tail
+    /// The host for the #744 alignment pass. <c>Settlement.MapFaction</c> is the owner clan's map
+    /// faction (v1.5.4 <c>Town.MapFaction</c> => <c>OwnerClan?.MapFaction</c> => its kingdom, or the
+    /// clan itself without one), so a captured town follows its conqueror and an unlisted owner falls
+    /// back to its own culture, not the conquered town's.
+    /// </summary>
+    public static TournamentHost ResolveHost(Settlement settlement)
+    {
+        var owner = settlement?.MapFaction;
+        var culture = settlement?.Culture;
+        return new TournamentHost(owner?.StringId, owner?.Culture?.StringId, culture?.StringId,
+            culture?.BasicTroop?.Culture?.StringId, culture?.EliteBasicTroop?.Culture?.StringId);
+    }
+
+    /// <summary>
+    /// The substitute troop for an unsafe or barred entrant. Mirrors vanilla's own padding choice in the tail
     /// of <c>FightTournamentGame.GetParticipantCharacters</c> — elite basic troop first, then basic
     /// troop. Both are culture-owned so <c>Culture</c> is non-null by construction, and both are
     /// non-heroes so the winner panel's hero branch never runs for them.

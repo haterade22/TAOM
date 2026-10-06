@@ -108,6 +108,7 @@ Patch96 join choices ─> TournamentJoinService ─> ITournamentJoinAdapter (pri
 | Max Bet Per Round | 0 | 0 = unlimited (up to the purse); vanilla is 150 |
 | Renown Multiplier | 1.00 | scales every winner's renown |
 | Influence Multiplier | 1.00 | scales every winner's influence in their own kingdom's towns |
+| Keep Enemy Sides Out | on | owned by the Arena feature: see [tournament-alignment-filter.md](tournament-alignment-filter.md) |
 
 MCM keeps a value once saved, so a changed default never reaches an existing install: rename the property to
 change one ([orientation trap](../ai-includes/orientation.md), "Persisted MCM defaults").

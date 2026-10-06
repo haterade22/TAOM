@@ -177,6 +177,11 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Scales the influence a tournament winner earns in a town of their own kingdom (base: 2 plus 1 per 4 lords or heroes in the field, times the winner's culture factor). 1.00 = as designed. Default: 1.00.")]
     public float TournamentInfluenceMultiplier { get; set; } = 1.0f;
 
+    [SettingPropertyGroup("Tournaments")]
+    [SettingPropertyBool("Keep Enemy Sides Out", Order = 3, RequireRestart = false,
+        HintText = "A Free People's tournament seats no lord, wanderer or troop of the Shadow, and a tournament of the Shadow seats none of the Free Peoples; each is replaced by one of the town's own troops. A town's side is its owner's, so a captured town follows its conqueror, and a town held by a neutral realm bars nobody. Neutral lords and wanderers, the troops the town itself recruits, you and your clan always compete. Fewer lords in the field means a lesser prize. Default: on.")]
+    public bool TournamentKeepEnemySidesOut { get; set; } = true;
+
     // --- Armour Acquisition ---
 
     [SettingPropertyGroup("Armour Acquisition")]

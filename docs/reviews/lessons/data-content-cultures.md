@@ -1897,3 +1897,23 @@ off its rule from v2.0.31 to v2.0.34: the install-gated `--verify` pin never ran
 - **Why missed:** the entry above says custom cultures inherit none of the templates and XSLT cultures get them for free. Since `lord_template_rosters.xslt`, the six renamed cultures' adult lord, teen and ruler pools hold only TAOM's `taom_*` rosters; only child templates still come from vanilla. A generated Dunland lord had drawn vanilla Empire gear 26 times in 27.
 - **Prevent:** treat `taom_lord_template_equipment.xml` as the only lord, teen and ruler pool for all eighteen TAOM cultures. A roster it loses empties a pool (null equipment, NRE in four engine callers). Never rerun its generator whole (#637); hand-port. `LordTemplateRosterTests` checks every pool the engine requests.
 - **Source:** `docs/reviews/rca-generated-lord-kits-2026-10-06.md`, [generated-lord-kits.md](../../features/generated-lord-kits.md).
+
+### Hand `ResolveSide` an id and the culture of that same entity, and read what each id is from the data (Tournament Alignment, 2026-10-06)
+`IAlignmentService.ResolveSide(id, culture)` falls back to the culture when the id is unlisted OR listed Neutral.
+The tournament filter sided a town by its owner kingdom and the conquered TOWN's culture, so a town held by Khand,
+Umbar, Shaghana, Abanissa, a player-founded kingdom or a kingdomless clan took the town's old side: Khand-held Minas
+Tirith barred orcs, and a Gondor player's captured Minas Morgul seated them. The same change called `battania`
+Dunland (it is Khand; `empire` is Dunland, and Evil), and exempted "the town's own troops" by the town's culture id
+although seven cultures recruit another culture's troops, Umbar only for its basic troop.
+- **Why missed:** the table was reasoned about from memory: what `ResolveSide`'s fallback receives, what an id
+  names (TAOM reuses vanilla ids), and that a culture's troops share its culture. The two lessons above (troop
+  cultures after roster sharing; culture groups from data) already covered two of the three, two days earlier: the
+  author read `harmony-il.md` before coding and not this file, because the code under change was Arena C#, not
+  culture data.
+- **Prevent:** pair an id with its own entity's culture (`Settlement.MapFaction` and `MapFaction.Culture` for a
+  town's owner, the CaravanTrade pairing), and test an unlisted id, a Neutral-listed id and a kingdomless owner.
+  Before naming a realm's side or a culture's troops in code, a doc or a question to Mike, read `alignment.json`,
+  `spkingdoms.xslt` and the culture's `basic_troop`/`elite_basic_troop` cultures. Any change that sides, groups or
+  exempts by culture reads this file first, whatever folder the code lives in. When two lenses propose fixes for
+  one finding, apply the one with the wider coverage.
+- **Source:** `docs/reviews/rca-tournament-alignment-filter-2026-10-06.md` findings 1 to 4.

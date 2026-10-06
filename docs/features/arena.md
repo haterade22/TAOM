@@ -12,6 +12,8 @@ Replaces vanilla's tournament model with a culture-aware, race-aware variant. Si
 
 6. **Winner-panel null guard (Patch69, 2026-08-07, #407)** — vanilla `TournamentVM.OnTournamentEnd` sets the winner's armour colours via `hero.MapFaction.Color` (hero branch) or `character.Culture.Color` (troop branch), neither guarded. `Hero.MapFaction` genuinely returns null for a clanless, non-special hero with no home settlement and no party, so such a winner NREs the panel — reported as a crash after "Skip All Rounds" at Erebor (bundle `d7d9f7d3`, v2.0.18.0). [Patch69_TournamentRosterGuard](../../Main/Features/Arena/Hooks/Patch69_TournamentRosterGuard.cs) **substitutes** offending entrants with the culture's elite/basic troop at `GetParticipantCharacters`. It must never *remove* one: vanilla pads the roster to exactly 16 and `TournamentMatch.AddParticipant` reads `participant.Team` unguarded, so a short roster crashes on entry instead — see the registry entry for the full chain. [Patch69_TournamentEndGuard](../../Main/Features/Arena/Hooks/Patch69_TournamentEndGuard.cs) is a finalizer that dumps the bracket and swallows, covering the two further null sites we could not reproduce (`TournamentParticipantVM.Refresh(null, …)` nulls `Participant` but never clears `IsValid`).
 
+   Since #744 the same postfix first swaps out entrants of the other side (Free vs Evil) for the same filler: [tournament-alignment-filter.md](tournament-alignment-filter.md).
+
 Tournament start/end timing constants are also exposed for tuning.
 
 ## A tournament crash is not automatically a tournament bug

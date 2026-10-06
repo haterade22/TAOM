@@ -22,6 +22,12 @@ public interface IAlignmentService
     /// that is being evaluated) and a player-founded kingdom whose id is absent from alignment.json.
     /// Mirrors the private <c>ResolveSide</c> helpers in CaravanTrade, WarOfTheRingMomentum and
     /// PrisonerRecruitment.
+    /// <para>
+    /// The fallback fires when the id is unlisted OR listed Neutral, so pass the culture of the SAME
+    /// entity the id names (a faction with its own culture, a hero with his). A kingdom paired with
+    /// another entity's culture (the conquered town's) sides a Neutral or player-founded owner as that
+    /// entity (#744, <c>docs/reviews/rca-tournament-alignment-filter-2026-10-06.md</c>).
+    /// </para>
     /// </summary>
     FactionSide ResolveSide(string kingdomId, string cultureId);
 

@@ -37,6 +37,9 @@ namespace TAOM.Features.Arena.Hooks;
 /// Rewards counts heroes from. A clean roster is silent; a substitution logs WARNING. The callers and
 /// each consequence: <c>docs/reference/harmony-patch-registry.md</c>, "Patch69_TournamentRosterGuard".
 ///
+/// #744 rides the same seam: <see cref="TournamentAlignmentPass"/> first swaps the other side's entrants
+/// (Mordor orcs at Minas Tirith) for the same filler, logged at INFO, before the crash guard runs.
+///
 /// Decision logic lives in <see cref="ITournamentRosterGuardService"/>; this patch is a thin
 /// boundary (ADR-002/007). Lazy service resolve mirrors Patch46.
 /// </summary>
@@ -49,6 +52,7 @@ public static class Patch69_TournamentRosterGuard
     private static ITournamentRosterGuardService _guard;
     private static IModLogger _logger;
     private static IRaceManager _raceManager;
+    private static TournamentAlignmentFilterService _alignment;
 
     private static ITournamentRosterGuardService GetGuard() =>
         _guard ??= TAOM.IoC.Resolve<ITournamentRosterGuardService>();
@@ -59,12 +63,16 @@ public static class Patch69_TournamentRosterGuard
     private static IRaceManager GetRaceManager() =>
         _raceManager ??= TAOM.IoC.Resolve<IRaceManager>();
 
+    private static TournamentAlignmentFilterService GetAlignment() =>
+        _alignment ??= TAOM.IoC.Resolve<TournamentAlignmentFilterService>();
+
     /// <summary>Module-unload lifecycle hook — drop cached IoC references.</summary>
     public static void ResetForUnload()
     {
         _guard = null;
         _logger = null;
         _raceManager = null;
+        _alignment = null;
     }
 
     [HarmonyPostfix]
@@ -82,6 +90,8 @@ public static class Patch69_TournamentRosterGuard
             for (var i = 0; i < __result.Count; i++)
                 roster.Add(TournamentEntrantMapper.Describe(__result[i], GetRaceManager()));
 
+            // #744 first, with its own catch, so the crash guard below always runs and checks the filler too.
+            TournamentAlignmentPass.Apply(__result, roster, settlement, GetAlignment, GetRaceManager(), logger);
             var unsafeIndices = guard.FindUnsafeIndices(roster);
 
             // The healthy path is silent. It used to log "N entrant(s), all safe" at DEBUG — 78

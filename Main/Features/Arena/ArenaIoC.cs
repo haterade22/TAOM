@@ -13,5 +13,10 @@ public static class ArenaIoC
         // Patch69 — decides which roster entrants would trip the two unguarded dereferences in
         // vanilla TournamentVM.OnTournamentEnd. Pure over TournamentEntrant, no engine types.
         container.Register<ITournamentRosterGuardService, TournamentRosterGuardService>(Reuse.Singleton);
+
+        // #744 — Patch69's alignment pass: which entrants belong to the other side. IAlignmentService
+        // comes from ExecutionIoC.
+        container.Register<ITournamentAlignmentSettingsProvider, TournamentAlignmentSettingsProvider>(Reuse.Singleton);
+        container.Register<TournamentAlignmentFilterService>(Reuse.Singleton);
     }
 }
