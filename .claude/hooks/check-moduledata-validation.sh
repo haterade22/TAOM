@@ -133,6 +133,16 @@ if [[ $RC -eq 124 ]]; then
     exit 0
 fi
 
+# Career kits (#743): taom_career_starting_equipment.xml is generated from the troop files, so a
+# troop edit can leave it off its rule with nothing staged in it. 998f054c did, and the file sat
+# adrift from v2.0.31 to v2.0.34 because its pin only ran by hand. ~0.8s; 10s bound keeps the
+# hook inside its 60s registration. Exit 1 is drift and blocks; 2 (no install) fails open.
+KIT_OUT=$(timeout -k 2 10 "$PY" tools/generate_career_kits.py --verify 2>&1)
+if [[ $? -eq 1 ]]; then
+    OUT=$(printf '%s\n%s\nRepair: python tools/generate_career_kits.py --apply, then python tools/wire_starter_kit_rosters.py --apply' "$OUT" "$KIT_OUT")
+    RC=1
+fi
+
 [[ $RC -ne 1 ]] && { echo '{}'; exit 0; }
 
 # Build a JSON-escaped deny message with the validator's findings (bounded).
@@ -141,8 +151,9 @@ import sys, json
 lines = [l for l in sys.stdin.read().splitlines() if l.strip()][-30:]
 print(json.dumps(
     "[check-moduledata-validation] git commit BLOCKED: tools/validate_moduledata.py "
-    "found ERROR-severity issues in staged ModuleData XML (broken Item/NPCCharacter "
-    "ref, unknown culture, or duplicate id). Fix them and re-stage. See details: "
+    "or tools/generate_career_kits.py --verify found ERROR-severity issues in staged "
+    "ModuleData XML (broken Item/NPCCharacter ref, unknown culture, duplicate id, or a "
+    "career kit off its rule). Fix them and re-stage. See details: "
     "python tools/validate_moduledata.py\n\n" + "\n".join(lines)))
 ' 2>/dev/null)
 [[ -z "$MSG" ]] && { echo '{}'; exit 0; }
