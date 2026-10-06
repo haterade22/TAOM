@@ -75,7 +75,7 @@ build of a tree with uncommitted changes to its inputs appends `.dirty` after th
 Use `/release`. It runs the sequence below and fails closed on the #371 pairing check.
 
 1. Tree clean (`git status --porcelain` empty; if another session's edits are present, stop, because `build.ps1` compiles and deploys every file in the tree, committed or not; git refuses a second worktree on a branch that is already checked out, so only the Phase 8 build moves to a detached worktree of the tag),
-   on the release branch (`bannerlord-1.5.x` since v2.0.29; `bannerlord-1.4.5` for a 1.4.8 build), current version
+   on the release branch (`bannerlord-1.5.x`, the only release line), current version
    already tagged, and the target version in no tag (`git tag -l 'v*'`) and in no release channel: read the
    `<Version>` of every `E:\LOTRAOM_Releases\<channel>\Modules\TAOM\SubModule.xml`, because a channel can
    hold an untagged build of a number git has never seen (see "A number a channel carried before git
@@ -94,8 +94,7 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
 8. Confirm `git rev-parse <release commit>^` prints the commit step 5 ended at (if not, stop and ask), then `git tag -a vX.Y.Z <release commit> -m "…"`, tagging the step 7 commit by SHA, then `git push origin <release branch> vX.Y.Z`.
 9. Build at the tag and gate the DLLs (the skill's Phase 8). Run `./build.ps1` in the main checkout only when `git status --porcelain` is empty and `HEAD` is the tag's commit; otherwise build a clean worktree of the tag (`git worktree add ../taom-release-vX.Y.Z vX.Y.Z`, `./build.ps1` there, then `git worktree remove ../taom-release-vX.Y.Z`). Then `python tools/package_release.py --source "<game>/Modules" --dest <out> --require-build vX.Y.Z --dry-run` must print `build stamp OK`. Any later deploying build of a dirty tree (`./build.ps1`, or any build without `-p:DisableModuleCopy=true -p:ModuleId=`) replaces the gated DLLs and the module's ModuleData in the install: after the v2.0.34 gate passed, one made the installed `TAOM.dll` `+18a4e402...dirty`. So repeat the dry run right before Mike packages. Mike packages through the Modding Kit editor; Claude never writes a package with this command. Once his package exists in `E:\LOTRAOM_Releases\<channel>\Modules\`, offer the same dry run with `--source` pointing there.
    The gate reads every `bin/<platform>/` copy of `TAOM.dll` and `TAOM.Dependencies.dll` and
-   refuses a tag whose `Directory.Build.props` predates the `.dirty` flag (the 1.4.5 line until it
-   is ported). Every run also prints three reports that never refuse and never change the exit code:
+   refuses a tag whose `Directory.Build.props` predates the `.dirty` flag. Every run also prints three reports that never refuse and never change the exit code:
    one line per shipped `<module>/SceneObj/<scene>` saying whether `ShaderCache/D3D11/` holds
    `terrain_shaders_header_data.bin` and `compressed_shader_cache.sack`, with the sack's format, a
    summary line and a `WARNING` for any sack whose format differs from the majority of the shipped

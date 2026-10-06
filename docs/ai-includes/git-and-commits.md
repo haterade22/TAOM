@@ -19,8 +19,8 @@ when Mike asks for them.
   subject without the label or with the wrong version. Amend, fixup and squash forms that bring no new
   subject pass. Commits made outside Claude (IDE, terminal) are not checked. The hook reads the
   version from the session's main checkout, not from the tree a `git -C <worktree> commit` names, so
-  a Claude commit in a worktree on another release line (`bannerlord-1.4.5` reads v2.0.28) is
-  refused even with the right label: make that commit from a terminal
+  a Claude commit in a worktree on another branch whose `<Version>` differs is refused even with
+  the right label: make that commit from a terminal
   ([hooks catalog](../reference/hooks-catalog.md)).
 - **Length:** subject at most 72 characters (the label costs about 20, so the old 50 no longer fits);
   body wrapped at 72.

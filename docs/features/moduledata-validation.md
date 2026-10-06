@@ -623,6 +623,8 @@ Three exemptions, each measured on the live install on 2026-09-21:
   never our placeholder. A shield carries the `bo_cap_*` capsule in `body_name` and the full body in
   `shield_body_name`, and sharing a sibling culture's is the convention
   (`docs/modding/items-shields.md`). A body no pack ships is left to `MISSING_COLLISION_BODY`.
+  `bo_capwm_isengard_shield_a02_clean` ships misspelled: the "fixed" name resolves to nothing, so keep
+  it ([shield audit](../reference/armory-shield-audit.md)).
 
 Result: 0 findings on items and 0 on crafting pieces after the #633 repair; the nine #633 items fire
 under the rule (proved by restoring the borrow on one donor: one ERROR, `LOTRAOM_weapons.xml:8643`).

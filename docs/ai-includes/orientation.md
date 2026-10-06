@@ -40,11 +40,11 @@ and the gate.
 | Mission logic | Logic `BehaviorType` needs `: MissionLogic`; an `AfterStart` throw reloads forever | [lifecycle](../reference/engine/mission-and-missionbehavior-lifecycle.md) |
 | Armory dependency | It is `LOTRLOME_Armory`. A root-level `<action>` kills a dedicated server: `audit_action_set_parity.py` | [armory](../reference/armory-guide.md) |
 | Armory files | A second `LOTRLOME_items/*/` folder shadows an id (grep the prefix); loose `Assets/**` wins; inventory is generated | [armory](../reference/armory-guide.md) |
-| Shield body name | `bo_capwm_isengard_shield_a02_clean` ships misspelled; the "fixed" name resolves to nothing | [shields](../reference/armory-shield-audit.md) |
 | Shield plus polearm | A shield troop never draws a polearm absent from `OneHandedPolearm`: `audit_polearm_shield_parity.py` | [pipeline](../features/weapon-xml-pipeline.md) |
 | Co-op gating | Co-op loaded, peer authority and dedicated server are three different questions | [co-op](../features/coop-interop.md) |
 | Console commands | Route through `TaomConsole`; a wrongly shaped command throws in unguarded startup discovery | [console](../features/dev-console.md) |
 | Landless cultures | A culture owning no settlement CTDs the daily clan tick: `Patch65`, `LANDLESS_CULTURE` | [spawn guard](../features/lord-spawn-guard.md) |
+| Culture ids | `empire` is Dunland, `battania` Khand; troops may carry another culture: read both from the data | [lesson](../reviews/lessons/data-content-cultures.md) |
 | Culture party templates | An XSLT culture block inherits vanilla for every attribute it omits; caravan lists union | [wiring](../features/culture-playability-wiring.md) |
 | NPCCharacter, no `<face>` | Renders as a toddler with no error: `CharacterFaceCoverageTests` | [body properties](../modding/body-properties.md) |
 | Enlisted service | Only `DischargeService` ends it; parked, or visible in the commander's settlement, is legitimate | [enlistment](../features/enlistment.md) |
@@ -57,7 +57,7 @@ and the gate.
 | Player Switcher | Register at priority 1100; reassign the player clan before removing the created hero | [switcher](../features/player-switcher.md) |
 | Settlement menus | Need an encounter; only `IEncounterAdapter.EnsureSettlementEncounter` places the player | [enlistment](../features/enlistment.md) |
 | Armory art drops | A mesh rename strands XML refs and hangs preload; repoint refs, never restore a tpac | [ref audit](../features/armory-ref-audit.md) |
-| Borrowed `bo_` body | A weapon's body is its own mesh's `bo_` twin; a borrow dies on the next art drop | [validation](../features/moduledata-validation.md) |
+| `bo_` bodies | Use the mesh's own `bo_` twin, never a borrow; keep the misspelled `bo_capwm_isengard_shield_a02_clean` | [validation](../features/moduledata-validation.md) |
 | Unsaved tpac | A package without its `RuntimeDataCache` `.rdc` is skipped, silently: `check_rdc_entries.py` | [pipeline](../reference/ue-to-bannerlord-asset-pipeline.md) |
 | Horse-skeleton mounts | Engine actions only (`act_horse_kick`); a HorseHarness per Horse slot unless `_HARNESSLESS_BY_DESIGN` | [war ram](../features/war-ram.md) |
 | Mount size | A Monster with `taom_body_length` overrides every item's `body_length`: resize on the Monster | [monster size](../features/monster-size.md) |

@@ -1,26 +1,26 @@
 ---
 name: finish-branch
 description: Integrate a merge-ready branch into the trunk (fast-forward check, merge, regenerate backlinks, delete branch local and remote, push with confirmation). TAOM trunk-based, not Git Flow.
-argument-hint: "[branch] [base=bannerlord-1.4.5]"
+argument-hint: "[branch] [base=bannerlord-1.5.x]"
 disable-model-invocation: true
 ---
 
 # Finish Branch (trunk integration)
 
-Integrate a completed branch into TAOM's trunk (`bannerlord-1.4.5`, the de-facto master). This is the **post-`/ship`** step: `/ship` gates that a feature is review-clean; this skill does the actual git integration + doc-consistency cleanup that we otherwise run by hand and forget steps in.
+Integrate a completed branch into TAOM's trunk (`bannerlord-1.5.x`). This is the **post-`/ship`** step: `/ship` gates that a feature is review-clean; this skill does the actual git integration + doc-consistency cleanup that we otherwise run by hand and forget steps in.
 
-**Not** `git-workflow:finish` — that's Git Flow (develop/feature/release/hotfix + version tags). TAOM is trunk-based: ephemeral `taom-*` branches merge into `bannerlord-1.4.5`, no tagging.
+**Not** `git-workflow:finish`, which is Git Flow (develop/feature/release/hotfix + version tags). TAOM is trunk-based: ephemeral `taom-*` branches merge into `bannerlord-1.5.x`, no tagging.
 
 ## When to invoke
 
-- A branch's commits are reviewed and ready to land on `bannerlord-1.4.5`.
+- A branch's commits are reviewed and ready to land on `bannerlord-1.5.x`.
 - **Skip for** a branch that still needs `/ship` (run that first), or work that was committed directly to trunk (no branch to finish).
 
 ## Steps
 
 ### 1. Pre-flight (read-only — never skip)
 - `git status --short` — working tree must be clean. If dirty, stop and surface (the user may have parallel in-flight work that shouldn't ride along).
-- Confirm the base: default `bannerlord-1.4.5`. If `$ARGUMENTS` names a different base, use it.
+- Confirm the base: default `bannerlord-1.5.x`. If `$ARGUMENTS` names a different base, use it.
 - **Fast-forward check:** `git log --oneline <base> ^<branch>` — empty output = base hasn't advanced past the branch point, so the merge is a clean FF. Non-empty = base moved; it'll be a real merge that **may conflict** — surface the divergence and preview with `git merge --no-commit --no-ff` (then `git merge --abort`) before committing. Never force.
 
 ### 2. Merge
@@ -35,7 +35,7 @@ Integrate a completed branch into TAOM's trunk (`bannerlord-1.4.5`, the de-facto
 - `git push origin --delete <branch>` — only after local delete succeeds (confirms it was merged).
 
 ### 5. Push the trunk
-- **Confirm with the user before pushing a trunk (`bannerlord-1.5.x` or `bannerlord-1.4.5`).** `validate-push.sh` refuses only a force push to one; a plain push is not gated, and its warning never reaches you. Do not auto-push: surface "ready to push N commits" and wait, unless the user pre-authorized the push for this run.
+- **Confirm with the user before pushing the trunk (`bannerlord-1.5.x`).** `validate-push.sh` refuses only a force push to it; a plain push is not gated, and its warning never reaches you. Do not auto-push: surface "ready to push N commits" and wait, unless the user pre-authorized the push for this run.
 
 ## Gotchas
 

@@ -123,10 +123,6 @@ The mission behavior's apply-on-change needs a live `Mission` and is covered by 
 7. Ragdolls 1 and corpses High: Apply keeps ragdolls at 1. Turn "Recommend Battle Settings" off and restart: no inquiry.
 8. After the translation run, one non-English language: the inquiry names the options as that language's Options screen does.
 
-## 1.4.8 Backport
-
-A port, not a cherry-pick. `bannerlord-1.4.5` has no feature-module plumbing (`Main/Composition/`), so the registrations and the mission behavior are hand-wired into `IoC.cs` and `SubModule.cs` there, and its fingerprint pins (229/180) become 234/183. The managed APIs exist in v1.4.8; the native clamps, reset and gate have only been read on v1.5.3, so re-run `native_decompile.py --engine-method` for both setters against the 1.4.8 DLL first.
-
 ## Changelog
 
 - 2026-10-01: feature added (#701).

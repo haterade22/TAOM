@@ -23,7 +23,7 @@ characters to players. Full contract: [`docs/reference/release-process.md`](../.
 
 1. `git status --porcelain` is **empty**. Another session's edits must not ride along in a release
    commit (CLAUDE.md multi-session git safety).
-2. On the branch the release line lives on: `bannerlord-1.5.x` since v2.0.29 (Bannerlord 1.5 players), `bannerlord-1.4.5` for a 1.4.8 build. Tag the release commit on that branch and push that branch.
+2. On `bannerlord-1.5.x`, the only release line. Tag the release commit on that branch and push that branch.
 3. The *current* version is already tagged: `git rev-parse -q --verify refs/tags/$(grep -o '<Version value="[^"]*"' Main/_Module/SubModule.xml | head -1 | sed 's/.*"\(.*\)"/\1/')`.
    If it is not, tag that one **first** — bumping past an untagged version manufactures another
    unresolvable phantom.
@@ -153,7 +153,7 @@ Rebuild at the tag before anything ships.
    must print `build stamp OK` and exit 0. It reads every `bin/<platform>/` copy of `TAOM.dll` and
    `TAOM.Dependencies.dll` and refuses one whose stamp says `.dirty` or `nogit`, or names a commit
    other than the tag's; a requested TAOM or TAOM.Dependencies missing from `--source`; and a tag whose
-   `Directory.Build.props` predates the `.dirty` flag (the 1.4.5 line until it is ported).
+   `Directory.Build.props` predates the `.dirty` flag.
    Its scene shader cache, module shader sack and `JIT optimization` sections are reports that
    never refuse: a scene without a sack ships as it is (Mike's call), JIT optimization OFF is
    expected (Debug builds ship on purpose), `ON (no DebuggableAttribute on the assembly)` means the

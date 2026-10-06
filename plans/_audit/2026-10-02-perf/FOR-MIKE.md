@@ -308,9 +308,7 @@
     mod's failure disables TAOM's patch there) and keeping a broken TAOM patch. **Recommended: strip only
     the owner whose patch threw** (read the patch method from the exception's stack and match it to
     `Harmony.GetPatchInfo`), then protect `com.taom.mod` as well. That is a small plan, not a one-liner,
-    and it changes what PatchShield does, so it waits for your word. The same gap exists on
-    `bannerlord-1.4.5` (`com.taom.mod` at its `Main/SubModule.cs:161`), so the plan needs a 1.4.5
-    adaptation too.
+    and it changes what PatchShield does, so it waits for your word.
 16. **Decisions from the reviews of plans 028 to 042 (029's follow-ups too)** (2026-10-03; review records on each branch under
     `docs/reviews/`). No branch is blocked on them. Each is yours; my recommendation is in bold.
     - **a. `Mission.OnTick` on PatchShield's exclusion list (028): the one with a stability edge.** The
@@ -464,8 +462,6 @@
         tell which method threw, it no longer strips the throwing foreign patch, so that patch keeps
         throwing and the diag.log line repeats on every call. It changes a documented log format, so it
         is yours; the in-game check below says whether misses happen at all.
-      - Port Branch B to `bannerlord-1.4.5`: an adaptation, not a cherry-pick (that line has no
-        `RethrowStackPreserver`). **Recommended: after 1.5.x has played a while with it.**
       - The save-load diagnostics' finalizers (`HeaderLoadData_Readers_Patch`,
         `ContainerLoadData_Fill_Patch`) still bind `__originalMethod`, per object and per container on
         the parallel workers. **Recommended: count the calls in one save load first.**
