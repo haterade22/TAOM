@@ -71,7 +71,7 @@ TaomMilitaryPowerModel       TaomCombatSimulationModel       TaomPartyHealingMod
     "EnableCulturalSurvivalBonuses": true,
     "CulturalSurvivalBonuses": {
       "gondor": 0.3, "vlandia": 0.2, "lothlorien": 0.5,
-      "erebor": 0.3, "rivendell": 0.4,
+      "erebor": 0.3, "rivendell": 0.4, "lindon": 0.4,
       "mordor": -0.2, "gundabad": -0.1, "dolguldur": -0.1
     }
   }
@@ -131,6 +131,7 @@ Both providers register `Reuse.Singleton`, so the JSON file is cached for the en
 - [TAOM.Tests/Features/BattleBalance/TaomMilitaryPowerModelTests.cs](../../TAOM.Tests/Features/BattleBalance/TaomMilitaryPowerModelTests.cs) — **10 tests**: T7-T10 configured values, T6 vanilla/override fallback, T11+ formula extension, low-tier override behavior.
 - [TAOM.Tests/Features/BattleBalance/TaomCombatSimulationModelTests.cs](../../TAOM.Tests/Features/BattleBalance/TaomCombatSimulationModelTests.cs) — **5 tests**: player vs AI blunt-chance routing, fallback to vanilla when `EnableCustomCasualtyRatios=false`.
 - [TAOM.Tests/Features/BattleBalance/TaomPartyHealingModelTests.cs](../../TAOM.Tests/Features/BattleBalance/TaomPartyHealingModelTests.cs) — **13 tests**: cultural bonus zero / positive / negative, boundary clamping (0..1), career passive multiplier integration, null-safety paths.
+- [TAOM.Tests/Features/BattleBalance/ShippedBattleBalanceConfigTests.cs](../../TAOM.Tests/Features/BattleBalance/ShippedBattleBalanceConfigTests.cs): **1 test**, Lindon's row in the shipped JSON equals Rivendell's (#749). It reads the file with `ObjectCreationHandling.Replace`, because the provider's default merge would fill a missing key from the compiled dictionary and hide its absence.
 - [TAOM.Tests/Features/BattleBalance/BattleBalanceSettingsProviderTests.cs](../../TAOM.Tests/Features/BattleBalance/BattleBalanceSettingsProviderTests.cs): **10 tests**: the no-MCM fallbacks (six literal pins, and all twelve against the `TaomSettings` compiled defaults), read-through (one setting edited per pass, after every getter has been read once, reaches its own getter and no other), resolution from a real DryIoc container, and an IL rule that no getter or constructor calls `TaomSettings.Instance`, only the private lazy accessor (PERF-04).
 
 The models themselves test the static helpers (`CalculateTierPower`, `CalculateBluntChance`, `ApplyCulturalSurvivalBonus`) — the `override`-method paths that touch `IoC.Resolve` and live game state are exercised in-game.
@@ -148,6 +149,7 @@ Use the MCM panel: **TAOM → Troop Power → Tier7Power / Tier8Power / Tier9Pow
 
 ## Changelog
 
+- 2026-10-06: Lindon gets Rivendell's 0.4 survival bonus in the JSON and the compiled default (#749). It had none since Lindon became its own culture in `cc1713eb3` (2026-08-11); before that it ran on `rivendell`.
 - 2026-09-24: plan 003 (PERF-04): `BattleBalanceSettingsProvider` stops resolving `TaomSettings.Instance` on every read; it caches the reference lazily on the first non-null read and reads through it, so MCM edits still apply live.
 - 2026-05-13 — Phase 9b: `BattleBalanceConfigProvider` now validates per-key (TierPower T0-T10 finite + > 0, CulturalSurvivalBonuses finite + [-1, +1]); invalid values revert to compiled default with a warning (partial closes #140).
 - 2026-05-07 — Feature doc `battle-balance.md` created (backfilled one of 5 missing feature docs flagged by `detect-docs-gaps.sh`).

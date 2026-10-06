@@ -1681,3 +1681,8 @@ yotthani's `save-fast` patch cut allocation and was byte-identical to vanilla on
 - **Why missed:** byte equality and a bench timing were read as proof of both correctness and speed; the bench ran the save through the CLR thread pool, not the engine's worker threads, with objects loaded without their load callbacks.
 - **Prevent:** a performance patch on the save path, or on any path the engine runs through its own parallel driver, counts as verified only after an in-game measurement against the same session without it. State the bench and the game figures separately in the commit body.
 - **Source:** yotthani, MithrilForge `docs/engine/perf.md`, `save-fast` sections of 2026-10-04 (in game on v1.5.3; v1.5.4: not re-checked).
+
+### A shipped-config test reads the file without the provider's merge (#749, 2026-10-06)
+- **Why missed:** the Lindon survival-bonus test copied `BattleBalanceConfigProvider`'s `JsonConvert.DeserializeObject<T>(json)`. Json.NET's default `ObjectCreationHandling.Auto` reuses a pre-initialised dictionary property and merges the file's keys into it, so with the compiled default also holding `lindon`, the "file has no lindon row" assert could never fire. RED had been checked only when both rows were absent.
+- **Prevent:** when a test pins what a JSON file carries and the target class initialises a collection, deserialize with `ObjectCreationHandling.Replace`, then prove RED by removing the row from the file while the compiled default still has it.
+- **Source:** `docs/reviews/rca-lindon-balance-tables-2026-10-06.md` finding 1.

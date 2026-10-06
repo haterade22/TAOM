@@ -1917,3 +1917,9 @@ although seven cultures recruit another culture's troops, Umbar only for its bas
   exempts by culture reads this file first, whatever folder the code lives in. When two lenses propose fixes for
   one finding, apply the one with the wider coverage.
 - **Source:** `docs/reviews/rca-tournament-alignment-filter-2026-10-06.md` findings 1 to 4.
+
+### A culture promotion drops every table keyed on the host culture or its troop ids (#749, 2026-10-06)
+`cc1713eb3` (2026-08-11) moved Lindon off `Culture.rivendell` onto its own culture with a cloned `lindon_*` tree. Nothing re-keyed the balance tables, so for two months Lindon troops weighed 1.0 against their Rivendell twins' 2.0 and 3.0, and Lindon parties had no survival bonus. A player found it.
+- **Why missed:** `tools/promote_borrowed_cultures.py` writes the culture and the tree, `tools/retag_promoted_cultures.py` the retag, and neither writes or lists a keyed balance table. The #585 level-band test checks only troops that already have a weight row, so a tree with no rows passed it.
+- **Prevent:** after a promotion, grep ModuleData and `Main/Features` for the host culture id and for the host tree's troop ids, and decide each hit (mirror, or exempt with a reason). Pin a cloned tree with a parity test against its source, like `EveryLindonTroop_WeighsTheSameAsItsRivendellTwin`. Still open for Lindon on 2026-10-06: clan party templates, Elven Wine, troop resource costs, Elite Emissary, banner bearers.
+- **Source:** `docs/reviews/rca-lindon-balance-tables-2026-10-06.md`.

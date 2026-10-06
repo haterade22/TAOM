@@ -14,7 +14,8 @@ namespace TAOM.Tests.Features.TroopWeight;
 /// pays at least 3.0, and below that band nothing pays 3.0 except the mount packages. The file is a
 /// flat per-id lookup with no level table, so nothing but this test connects a row's weight to the
 /// troop's <c>level=</c>; without it a new L46 capstone added at 2.0 reads exactly like the rest of
-/// the file.
+/// the file. The rule only sees troops that have a row, so a cloned tree that ships with no rows at
+/// all passes it; the clone-parity test below covers that case for Lindon.
 /// </summary>
 [TestClass]
 public class TroopWeightLevelBandTests
@@ -103,6 +104,42 @@ public class TroopWeightLevelBandTests
         Assert.AreEqual(0, heavy.Count,
             "troops below the heavy band pay 3.0 or more without being a mount package:\n  "
             + string.Join("\n  ", heavy));
+    }
+
+    /// <summary>
+    /// Lindon's tree is a clone of Rivendell's under a <c>lindon_</c> prefix: <c>lindon_X</c> twins
+    /// <c>rivendell_X</c> where that troop exists, else plain <c>X</c> (the <c>imladris_*</c> and
+    /// unprefixed elites). Lindon shipped with no rows at all, so every Mithlond elite paid 1.0.
+    /// </summary>
+    [TestMethod]
+    public void EveryLindonTroop_WeighsTheSameAsItsRivendellTwin()
+    {
+        const string prefix = "lindon_";
+        var lindon = _levels.Keys.Where(id => id.StartsWith(prefix, StringComparison.Ordinal)).ToList();
+        Assert.IsTrue(lindon.Count > 0, "no lindon_ troop resolved; the sweep is empty");
+
+        float WeightOf(string id) => _weights.TryGetValue(id, out var w) ? w : 1.0f;
+
+        var mismatched = new List<string>();
+        var unpaired = new List<string>();
+        foreach (var id in lindon.OrderBy(id => id, StringComparer.Ordinal))
+        {
+            var bare = id.Substring(prefix.Length);
+            var prefixed = "rivendell_" + bare;
+            var twin = _levels.ContainsKey(prefixed) ? prefixed : bare;
+            if (!_levels.ContainsKey(twin))
+                unpaired.Add(id);
+            else if (WeightOf(id) != WeightOf(twin))
+                mismatched.Add($"{id} = {WeightOf(id).ToString(CultureInfo.InvariantCulture)}, "
+                    + $"{twin} = {WeightOf(twin).ToString(CultureInfo.InvariantCulture)}");
+        }
+
+        Assert.AreEqual(0, unpaired.Count,
+            $"{unpaired.Count} Lindon troops have no Rivendell twin (a renamed twin, or a troop of Lindon's own: "
+            + "weigh it by the level rule and exempt it here by name):\n  " + string.Join("\n  ", unpaired));
+        Assert.AreEqual(0, mismatched.Count,
+            $"{mismatched.Count} Lindon troops weigh differently from their Rivendell twin:\n  "
+            + string.Join("\n  ", mismatched));
     }
 
     [TestMethod]

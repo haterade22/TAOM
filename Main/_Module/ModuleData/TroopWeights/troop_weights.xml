@@ -41,6 +41,35 @@
     <TroopWeight id="imladris_bowman" weight="2.0" />
     <TroopWeight id="rivendell_noble" weight="2.0" />
 
+    <!-- ===== LINDON / MITHLOND (Falathrim Elves) ===== -->
+    <!-- A clone of the Rivendell tree under a lindon_ prefix: every row matches its Rivendell twin
+         (TroopWeightLevelBandTests.EveryLindonTroop_WeighsTheSameAsItsRivendellTwin). -->
+    <!-- Level 51 (3.0) -->
+    <TroopWeight id="lindon_glorfindel_guard" weight="3.0" />
+    <TroopWeight id="lindon_gondolin_battlemaster" weight="3.0" />
+    <TroopWeight id="lindon_high_captain" weight="3.0" />
+    <TroopWeight id="lindon_knight_golden_flower" weight="3.0" />
+    <TroopWeight id="lindon_warden_gondolin" weight="3.0" />
+    <!-- Level 41 and 46 (3.0) -->
+    <TroopWeight id="lindon_royal_knight" weight="3.0" />
+    <TroopWeight id="lindon_royal_guard" weight="3.0" />
+    <TroopWeight id="lindon_noldorin_lancer" weight="3.0" />
+    <TroopWeight id="lindon_rider_of_himring" weight="3.0" />
+    <TroopWeight id="lindon_battlemaster_of_the_first_age" weight="3.0" />
+    <TroopWeight id="lindon_imladris_blademaster" weight="3.0" />
+    <TroopWeight id="lindon_imladris_horse_archer" weight="3.0" />
+    <TroopWeight id="lindon_imladris_marchwarden" weight="3.0" />
+    <TroopWeight id="lindon_imladris_outrider" weight="3.0" />
+    <TroopWeight id="lindon_imladris_warden" weight="3.0" />
+    <!-- Level 21 to 36 (2.0) -->
+    <TroopWeight id="lindon_imladris_guardsman" weight="2.0" />
+    <TroopWeight id="lindon_imladris_marksman" weight="2.0" />
+    <TroopWeight id="lindon_imladris_nobleman" weight="2.0" />
+    <TroopWeight id="lindon_imladris_swordguard" weight="2.0" />
+    <TroopWeight id="lindon_imladris_archer" weight="2.0" />
+    <TroopWeight id="lindon_imladris_bowman" weight="2.0" />
+    <TroopWeight id="lindon_noble" weight="2.0" />
+
     <!-- ===== MIRKWOOD — Wood Elves ===== -->
     <!-- Level 51 (3.0) -->
     <TroopWeight id="mirkwood_palaceguard" weight="3.0" />

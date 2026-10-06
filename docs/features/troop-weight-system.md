@@ -440,8 +440,8 @@ Two things about that interaction read backwards if you assume weight tracks ali
 against `troop_weights.xml` and the `troops/troops_*.xml` rosters on 2026-08-14:
 
 - **A weighted troop is not an evil-culture marker.** Rivendell has 22 of its 30 troop ids weighted
-  and Mirkwood 13 of 19, against Dol Guldur 16 of 50, Isengard 8 of 52, Mordor 6 of 49 and Gundabad 3
-  of 30 (Erebor carries 16 of 60). The evil trees are mostly weight-1.0, so the surplus that eats
+  (Lindon's clone of that tree the same 22 of 30 since #749) and Mirkwood 13 of 19, against Dol
+  Guldur 16 of 50, Isengard 8 of 52, Mordor 6 of 49 and Gundabad 3 of 30 (Erebor carries 16 of 60). The evil trees are mostly weight-1.0, so the surplus that eats
   their feat comes from a minority of the roster.
 - **Three of the seven cultures the floor test pins take no tax at all.** Goblin, Blue Craig and Misty
   Mountain Orcs have zero entries in `troop_weights.xml`, so for them the floor raises a bonus that
@@ -470,7 +470,8 @@ boundary math in point 3 above, and since #585 an all-level-41+ roster at `raw =
 the counts above that lands on Rivendell and Mirkwood, and neither culture appears in
 `ApplyPartySizeFeats`, so nothing offsets it. The Overview also names that exact
 case ("100+ Rivendell blademasters") as the thing to prevent, so the flat cut may be the intent rather
-than a gap. Nobody has written down which. The 20% floor answers the opposing-bonus question for
+than a gap. Lindon, a clone of the Rivendell tree, has carried the same weights since #749 and is in
+the same position. Nobody has written down which. The 20% floor answers the opposing-bonus question for
 Mordor, Isengard, Dol Guldur and Gundabad; it does not answer this one.
 
 ## Configuration
@@ -495,14 +496,15 @@ Simple XML format with one element per weighted troop. Any troop not listed defa
 
 > **Note (2026-05-14):** `cave_troll`'s weight-4.0 row sits inside a comment block in `troop_weights.xml` (WIP: see CHANGELOG "Phase 9c: Disable troll content in-place"), so it is NOT one of the live rows counted below. Re-enable by uncommenting.
 
-**105 live rows**, measured rather than estimated: an earlier version of this table said "~70 at 2.0" and omitted the 10.0 tier entirely:
+**133 live rows**, measured rather than estimated: an earlier version of this table said "~70 at 2.0" and omitted the 10.0 tier entirely:
 
 | Weight | Count | Troop ids |
 |--------|-------|-----------|
-| 10.0 | 1 | `harad_elephant_rider` |
-| 4.0 | 3 | `taom_spider_creature`, `taom_spider_rider_brown`, `taom_spider_rider_pale` (the three Spider Rider rungs, #616; `cave_troll` would be the fourth, but is commented out) |
-| 3.0 | 51 | Every listed troop at level 41 or above: the Rivendell Gondolin line (5) and Mirkwood palace guard + Thingol's heir (2) at level 51, and at level 41 to 46 the Imladris and Mirkwood elites, the Erebor/Iron Hills royal wardens and nobles' tips, `ironpass_ram_marshal`, Khamûl's shadow and veiled lines, the Black Númenórean knight/warden/marksman and temple tips, `orthanc_bodyguard`, `battlemaster_of_the_first_age` |
-| 2.0 | 52 | Every listed troop below level 41: the lower Imladris/Mirkwood elves, warg riders (all cultures), the Black Númenórean initiate to veteran rungs, Dol Guldur uruk black guard, Mordor elite captains, Orthanc guard/warden, the lower Erebor/Iron Hills nobles, Ironpass ram cavalry rungs, Gundabad elites, `gondor_pg_vet_cavalry` |
+| 20.0 | 1 | `harad_mumakil_rider` |
+| 12.0 | 1 | `harad_elephant_rider` |
+| 4.0 | 6 | `hill_troll`, `taom_spider_creature`, `taom_spider_rider_brown`, `taom_spider_rider_pale` (the three Spider Rider rungs, #616), `goblin_spider_rider`, `goblin_spider_lord` (`cave_troll` would be one more, but is commented out) |
+| 3.0 | 66 | Every other listed troop at level 41 or above: the Rivendell and Lindon Gondolin lines (5 each) and Mirkwood palace guard + Thingol's heir (2) at level 51, and at level 41 to 46 the Imladris, Lindon and Mirkwood elites, the Erebor/Iron Hills royal wardens and nobles' tips, `ironpass_ram_marshal`, Khamûl's shadow and veiled lines, the Black Númenórean knight/warden/marksman and temple tips, `orthanc_bodyguard`, `battlemaster_of_the_first_age` |
+| 2.0 | 59 | Every other listed troop below level 41: the lower Imladris/Lindon/Mirkwood elves, warg riders (all cultures), the Black Númenórean initiate to veteran rungs, Dol Guldur uruk black guard, Mordor elite captains, Orthanc guard/warden, the lower Erebor/Iron Hills nobles, Ironpass ram cavalry rungs, Gundabad elites, `gondor_pg_vet_cavalry` |
 | 1.0 | default | Every unlisted troop, stated in the file's own header comment, and there is no other default anywhere |
 
 **The level rule (#585, 2026-09-13).** A listed troop at level 41 or above pays 3.0 and a listed troop
@@ -512,7 +514,13 @@ rows do: `TroopWeightLevelBandTests` pins it from both sides of the boundary and
 id that resolves to no troop. Before #585 the 3.0 band was the ten level-46/51 capstones and the file
 argued that mounted branches never escalate with tier; both are gone.
 
-<!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();d=collections.defaultdict(list);[d[x.get('weight')].append(x.get('id')) for x in r.findall('.//TroopWeight')];print({k:len(v) for k,v in d.items()})" 2026-09-13 -->
+**The clone rule (#749, 2026-10-06).** The level rule sees only troops that have a row, so a cloned
+tree that ships with no rows passes it: Lindon did from 2026-08-11 until #749. Every `lindon_X` troop
+now weighs the same as its Rivendell twin (`rivendell_X` where that troop exists, else `X`), and
+`TroopWeightLevelBandTests.EveryLindonTroop_WeighsTheSameAsItsRivendellTwin` fails on a Lindon troop
+that differs from its twin or has none.
+
+<!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();d=collections.defaultdict(list);[d[x.get('weight')].append(x.get('id')) for x in r.findall('.//TroopWeight')];print({k:len(v) for k,v in d.items()})" 2026-10-06 -->
 | 1.0 | default | All standard human/orc/goblin infantry, archers, militia, cavalry |
 
 ### MCM Setting
@@ -539,7 +547,7 @@ argued that mounted branches never escalate with tier; both are gone.
 | `Main/Features/TroopWeight/Hooks/IOn*.cs` | 6 hook interfaces: shed-on-upgrade + the 5 display surfaces |
 | `Main/Features/TroopWeight/Hooks/*_Patch.cs` | 6 Harmony patches, all `Patch17_TroopWeight`: `UpgradeReadyTroops` + `PartyVM.RefreshPartyInformation` + `CampaignUIHelper.GetMainPartyHealthTooltip` + `ClanPartyItemWithPartyVM` / `ClanPartyItemWithHeroVM` `.UpdateProperties` + `RecruitmentVM.RefreshPartyProperties` + `PartyCharacterVM.RefreshValues` |
 | `Main/Features/TroopWeight/Diagnostics/` | TEMPORARY special-currency count diagnostic (separate investigation) |
-| `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | Weight definitions, **105 live rows: 52 at 2.0, 51 at 3.0, one at 4.0, one at 10.0.** A raw grep returns 106 because a `cave_troll` row sits inside a comment block. Unlisted troops weigh 1.0 <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" 2026-09-13 --> |
+| `Main/_Module/ModuleData/TroopWeights/troop_weights.xml` | Weight definitions, **133 live rows: 59 at 2.0, 66 at 3.0, six at 4.0, one at 12.0, one at 20.0.** A raw grep returns one more because a `cave_troll` row sits inside a comment block. Unlisted troops weigh 1.0 <!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/TroopWeights/troop_weights.xml').getroot();w=[x.get('weight') for x in r.findall('.//TroopWeight')];print(len(w),sorted(collections.Counter(w).items()))" 2026-10-06 --> |
 | `Main/_Module/ModuleData/taom_module_strings.xml` | `{=taom_troop_weight_size}` (enforcement label, no longer rendered) + `{=taom_troop_weight_tag}` (row `×N` tag) |
 | `Main/Features/TaomSettings.cs` | MCM toggle (`EnableTroopWeight`) |
 
@@ -588,6 +596,7 @@ Weight values are continuous floats — any positive value works. Common tiers:
 
 ## Changelog
 
+- 2026-10-06: Lindon's 22 elite rows, each its Rivendell twin's weight (15 at 3.0, 7 at 2.0), plus the clone-parity test (#749). Lindon had no rows since it became its own culture in `cc1713eb3` (2026-08-11), so every Mithlond troop weighed 1.0.
 - 2026-09-14: `ClanPartyItemVM.UpdateProperties` went abstract at v1.5.0; the target table and the patch list now name the two concrete overrides the patch targets through `TargetMethods` (a resolvable-but-bodiless target had passed the binding gate; the gate refuses those now).
 - 2026-09-06, **Usage frame (display-only).** Players reported that recruiting heavy troops *shrinks* the party size limit: the 2026-07-11 deflation, read backwards. Enforcement is unchanged; the presentation moved to the other side of the fraction. `ApplyPartySizeWeightPenalty` now takes `includeDescriptions` and skips the display path, so the tooltip shows `Base size +20 / Total +20` with no `Heavy troops −9` line (safe: v1.4.8 grep proves `PartySizeLimitExplainer` has only tooltip consumers). Five new `Patch17_TroopWeight` postfixes behind one `TroopWeightDisplayHook` render `weighted-used / true-base` on the party-screen header, both health tooltips' `Land Troop Capacity` row, the clan-screen row and the recruitment screen, and tag heavy rows `×N` (new `{=taom_troop_weight_tag}`, 12 languages). Headcounts still read raw everywhere. Header patch targets `PartyVM.RefreshPartyInformation`, not the `private static PopulatePartyListLabel` the 2026-07-11 set had prefixed: that builder also produces the *prisoner* headers. New pure `TroopWeightDisplay` + `TroopWeightDisplayTests` / `DisplayFrameSourceTests`; `taom.print_party_size` now prints both frames. Also corrected this doc's Key Files / Tests / UI-displays / Performance sections, which had described the deleted pre-2026-07-11 architecture since that rework.
 - 2026-07-11 — **Count → limit rework (raw counts everywhere).** Relocated the "elite tax" from weighting the member count to deflating the party-size limit: `TaomPartySizeModel` now subtracts `ceil(weighted)−raw` from the limit (`ApplyPartySizeWeightPenalty` / pure `ComputeSizePenalty`, clamped ≥1), and the two count-getter patches + 5 weighted-display hooks + `WeightedCountCache` + `[CountFlicker]` diagnostic were deleted (~26 files). Every troop count now reads raw (map/party-screen/battle agree); the displayed limit shrinks with heavy troops; the recruit cap is preserved exactly. Shed-on-upgrade adapted to the deflated frame. Ripples: `SpecialResources` reward scaling preserved via explicit weighted-count call; `SettlementFood` garrison correction self-neutralizes (net food unchanged). New string `{=taom_troop_weight_size}` (needs `/localize`).
@@ -602,6 +611,7 @@ Weight values are continuous floats — any positive value works. Common tiers:
 - **Feature:** #41 — [feat: Troop Weight System — Elite unit party capacity](https://github.com/haterade22/TAOM/issues/41) — Closed
 - **Bug fix:** #45 — [fix: TroopWeight crashes and freezes from TroopRoster-level patches](https://github.com/haterade22/TAOM/issues/45) — Closed
 - **Feature:** #282 — [feat: AI lords respect troop weight on auto-upgrade (shed-on-upgrade) + fix unweighted UI counts](https://github.com/haterade22/TAOM/issues/282) — Closed
+- **Bug fix:** #749: [Lindon troops take one party slot and get no survival bonus](https://github.com/haterade22/TAOM/issues/749)
 
 ---
 
