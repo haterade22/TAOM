@@ -81,6 +81,8 @@ draws wrongly after a start, deleting `...\Shaders\CoreShaders` makes the game r
 
 ### What it does not cover
 
+When the engine does rebuild, [shader-compile-notice.md](shader-compile-notice.md) shows the progress over the game.
+
 - **TAOM, TAOM_Map and LOTRLOME_Armory all have a `Shaders` folder**, so switching between vanilla and TAOM, or
   updating any of the three, still recompiles. That is correct, not a gap.
 - **A changed game build** (a game update, or the Modding Kit, which shares the cache folder and has its own build)

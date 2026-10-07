@@ -3156,6 +3156,12 @@
 	<string id="taom_race_ability_corsair_raid" text="{=taom_race_ability_corsair_raid}Corsair Raid" />
 	<string id="taom_race_ability_variag_ferocity" text="{=taom_race_ability_variag_ferocity}Variag Ferocity" />
 	<string id="taom_race_ability_shadow_servants" text="{=taom_race_ability_shadow_servants}Servants of the Shadow" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- ShaderCompileNotice -->
+	<string id="taom_shader_notice_title_total" text="{=taom_shader_notice_title_total}Compiling shaders: {COUNT} of about {TOTAL}" />
+	<string id="taom_shader_notice_title_count" text="{=taom_shader_notice_title_count}Compiling shaders: {COUNT}" />
+	<string id="taom_shader_notice_detail" text="{=taom_shader_notice_detail}The game is rebuilding its shaders after a change to your mod list or to the game. It is not frozen." />
+
 
 
 

@@ -123,6 +123,16 @@ public class SubModule : MBSubModuleBase
         try { Core.Logging.EarlyLogBridge.Connect(IoC.Resolve<IModLogger>()); }
         catch { /* the early-log flush must never stop the mod loading */ }
 
+        // First, because the engine starts compiling its shaders about six seconds after TAOM loads
+        // (docs/features/shader-compile-notice.md); stopped at the first main menu.
+        try
+        {
+            Features.ShaderCompileNotice.ShaderCompileNoticeEntry.Start(
+                IoC.Resolve<IModLogger>(),
+                IoC.Resolve<TAOM.Features.CoopInterop.IDedicatedServerProvider>().IsDedicatedServer);
+        }
+        catch { /* the notice must never stop the mod loading */ }
+
         // Issue #371: report both modules' build stamps and flag a mismatched pair. TAOM resolves
         // HarmonyLib and UIExtenderEx THROUGH TAOM.Dependencies, so a stale pairing breaks patch
         // application and renders every character in bind pose — a failure that previously left no
@@ -667,6 +677,7 @@ public class SubModule : MBSubModuleBase
     protected override void OnBeforeInitialModuleScreenSetAsRoot()
     {
         base.OnBeforeInitialModuleScreenSetAsRoot();
+        Features.ShaderCompileNotice.ShaderCompileNoticeEntry.Stop();
         IoC.Resolve<IMainMenuCustomizerService>().CustomizeMenu();
 
         // Patch55_BasicTableauRaceGuard — MUST be applied HERE, not in OnGameInitializationFinished.
