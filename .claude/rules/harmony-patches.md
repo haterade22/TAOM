@@ -28,8 +28,7 @@ that prevents the bug.
 
 Every patch category's rationale, history, crash-guard semantics, and RCA links live in
 [`docs/reference/harmony-patch-registry.md`](../../docs/reference/harmony-patch-registry.md) —
-read the target patch's section before changing it. CLAUDE.md keeps only the thin routing table
-(category | feature | target | status).
+read the target patch's section before changing it.
 
 ## Research First (MANDATORY)
 ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 path <Type>`) before writing a patch. Verify:

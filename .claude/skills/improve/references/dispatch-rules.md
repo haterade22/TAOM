@@ -78,7 +78,7 @@ short: read git log and git status and continue from there, never reset.
    tools); at the end, match them. A failure the base did not have is yours; known failures your prompt
    names come with the reason each is expected. A test filter that matches nothing proves nothing. If
    you add tests that touch engine types, also run the RefAsm unit step from .ai/verification.md (an
-   engine-bound test without [TestCategory("RequiresGame")] fails hosted CI). If you touch .claude/hooks
+   engine-bound test without [TestCategory("RequiresGame")] fails the no-game replay). If you touch .claude/hooks
    or tools/test_hooks.sh, run the hook suite (rule 4).
 8. TDD. Write the failing test first, run it and quote the failure, then implement and see it pass. A
    test is not done until it has failed against the code it guards.

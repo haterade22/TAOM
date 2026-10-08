@@ -26,15 +26,10 @@ Entry Points (thin, <150 lines) → Service → IAdapter (sealed types)
 
 A hook interface (`IOnXxx`) goes between an entry point and its service only when the patch needs a narrow seam or a test fake. A service gets an `I{Name}Service` interface only when a test fakes it or a second implementation exists; every adapter has one (ADR-002, ADR-007).
 
-## Rules You MUST Follow
-1. **TDD** — Write tests FIRST (RED), implement (GREEN), refactor. No exceptions.
-2. **Adapter Pattern** — Services use `IXxxAdapter` interfaces, NEVER sealed TaleWorlds types (ADR-007)
-3. **Thin Entry Points** — <150 lines, delegate to services (ADR-002)
-4. **No `#region`** — Use class decomposition (ADR-003)
-5. **No `[Obsolete]`** — Migrate all usage in same PR (ADR-004)
-6. **No `#if DEBUG`** — Except IoC.cs registration (ADR-005)
-7. **Verify before reference** — Before writing ANY `Sprite="X"`, read `TAOMSpriteData.xml` to get the exact registered name. Before ANY `IoC.Resolve<T>()` in a per-frame method, use lazy-cached property. Before ANY `PrefabExtension` injection, decompile vanilla code to check child-access assumptions on the target container.
-8. **Verify API signatures.** Before overriding ANY TaleWorlds method, run `pwsh tools/taom-src.ps1 path <FullTypeName>` (primary; decompiles the installed **v1.5.2** DLL and caches it, prints a `.cs` path to grep). `E:\Decompiled_Bannerlord\` is a v1.5.2 dump too; fine for browsing patterns; `ilspycmd` on the installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\` is the fallback.
+## Rules
+AGENTS.md "Always" and "Architecture" bind you (TDD, adapters, thin entry points, banned constructs, verify-before-reference). Deltas: tests are MSTest + NSubstitute (below); before overriding a TaleWorlds method, run `pwsh tools/taom-src.ps1 path <FullTypeName>` and grep the printed `.cs`.
+
+**Verify API signatures.** Before overriding ANY TaleWorlds method, run `pwsh tools/taom-src.ps1 path <FullTypeName>` (primary; decompiles the installed DLL and caches it, prints a `.cs` path to grep). `E:\Decompiled_Bannerlord\` can lag an engine bump; use it only to browse. `ilspycmd` on the installed DLLs at `%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\` is the fallback.
 
 ## Feature Structure
 ```
@@ -69,13 +64,7 @@ internal static class {FeatureName}IoC
 
 ## Iterative Retrieval
 
-When exploring the codebase for patterns or related code, use progressive refinement:
-
-1. **Cycle 1 (Broad):** Search for similar features in `Main/Features/` to understand patterns.
-2. **Cycle 2 (Focused):** Read the specific interfaces, adapters, and services relevant to your feature. Before you change any existing TAOM type, map it (mandatory, #677): `python tools/graphify_taom.py refresh --if-stale`, then `python tools/graphify_taom.py affected "<Type>" --depth 2` for its dependents and `explain "<Type>"` for its dependencies. On "Ambiguous", rerun with the repo-relative `.cs` path it lists. Never run `graphify` itself; a hook denies its write verbs. Report the dependents you checked.
-3. **Cycle 3 (Targeted):** Check how existing features wire into IoC.cs and SubModule.cs.
-
-Stop when you have enough context. Don't read everything — 3 high-relevance files beats 10 shallow reads.
+Before you change any existing TAOM type, map it (mandatory, #677): `python tools/graphify_taom.py refresh --if-stale`, then `python tools/graphify_taom.py affected "<Type>" --depth 2` for its dependents and `explain "<Type>"` for its dependencies. On "Ambiguous", rerun with the repo-relative `.cs` path it lists. Never run `graphify` itself; a hook denies its write verbs. Report the dependents you checked.
 
 ## Scope-lock during implementation
 
@@ -85,7 +74,7 @@ You cannot invoke `/freeze` yourself (no Skill tool). In your report, **recommen
 After building the feature:
 1. Wire IoC into `Main/IoC.cs` (may require widening freeze scope or temporarily `/unfreeze`)
 2. Register entry points in `Main/SubModule.cs` if needed
-3. Run `./build.ps1 -RunTests` to verify
+3. Run `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` to verify (never `./build.ps1`: it deploys into the game install)
 4. If the build fails, fix compile errors within the compile-error retry budget (`docs/ai-includes/agent-operating-manual.md`) and never past it. A spent budget or a structural failure: **recommend `/investigate`** to the orchestrator; you can't invoke it yourself.
 
 ## Retry budget (HARD STOP)

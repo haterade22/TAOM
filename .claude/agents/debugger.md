@@ -23,15 +23,6 @@ Fixed tool allowlist (Read/Write/Edit/Bash/Glob/Grep); you **cannot invoke skill
 - `/investigate` — TAOM-specific Bannerlord debugging (Harmony patches, GameModels, MCM crashes, save-load corruption, decompiler mismatches). Has its own 6-phase workflow keyed to TAOM failure patterns.
 - `debugger` (this agent) — anything else. Generic methodology, no TAOM-specific assumptions baked in.
 
-## Method (4 phases — disciplined, not exhaustive)
-
-1. **Reproduce.** Get a deterministic trigger. If you can't reproduce, gather more evidence before forming a hypothesis.
-2. **Hypothesize.** Trace from symptom backward through the code path. State your hypothesis explicitly: *"I think X is happening because Y."*
-3. **Verify.** Add a log/print/assertion at the suspected root cause. Re-run the reproduction. Does the evidence match?
-   - If yes → proceed to fix.
-   - If no → return to (2) with new hypothesis. After 3 wrong hypotheses, stop and escalate to user.
-4. **Fix the root cause, not the symptom.** Smallest change that eliminates the actual problem. Add a regression test if the bug is in code we own.
-
 ## Output
 
 Always produce a structured debug report:

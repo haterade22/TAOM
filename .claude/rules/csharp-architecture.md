@@ -239,17 +239,6 @@ TAOM.Tests/Features/MyFeature/
 └── MyFeatureServiceTests.cs
 ```
 
-## Stale-file re-read
-
-Long sessions edit many files. Cached `Read` content drifts: a teammate-agent may have re-written the same file, a hook or skill may have run `dotnet format`, the user may have edited via the IDE. Editing against stale content produces opaque "no match" failures that look like permission/conflict bugs.
-
-**Rule:** Before editing any C# file you have not Read in the last ~10 tool calls of the current turn, re-Read it.
-
-- Hard signal to re-Read: another agent ran in this turn; `git status` shows changes you didn't make; the Edit tool returns a "string not found" error.
-- Soft signal to re-Read: you're about to make >1 edit to the same file, the file is in a hot area (Main/Adapters, GameModels), or it's been more than ~5 minutes wall-clock since you last looked.
-
-The re-Read costs nothing. The Edit failure plus diagnosis costs minutes.
-
 ## Mission-scope agent handles and the engine's threads (MANDATORY)
 
 Two facts about `TaleWorlds.MountAndBlade.Agent` shape every mission-time feature (#592, #595; RCA
@@ -272,9 +261,10 @@ Two facts about `TaleWorlds.MountAndBlade.Agent` shape every mission-time featur
    trees: `BehaviorTreeMissionLogic`). A store reachable from a patch on any of those engine methods takes
    a lock, or is a concurrent collection written under one and read without it. **No engine callback is main-thread by contract.** Native raises `OnAgentRemoved` (and through
    it every `AgentComponent.OnAgentRemoved`), `OnAgentDeleted`, `OnAgentHit`, `OnAgentShootMissile`,
-   `OnAgentDismount` and `OnAgentAlarmedStateChanged` on the thread it chooses, and a v1.4.8 player log
-   caught six callbacks off the main thread (#634); `OnAgentPanicked`, `OnObjectUsed` and `OnObjectStoppedBeingUsed`
-   have managed routes from the asynchronous tick. A behavior or component that owns main-thread
+   `OnAgentDismount` and `OnAgentAlarmedStateChanged` on the thread it chooses; `OnAgentPanicked`,
+   `OnObjectUsed` and `OnObjectStoppedBeingUsed` have managed routes from the asynchronous tick. The
+   callbacks observed off the main thread are the table in `harmony-patches.md` ("Which thread runs
+   your target"). A behavior or component that owns main-thread
    collections routes the write through `DeferredCallbackQueue.RunOrDefer`, which runs it inline on the
    main thread and parks it for the next `OnMissionTick` anywhere else, or uses a concurrent collection
    or a lock when order does not matter. `MissionThreadGuard.NoteCall` is the tripwire; wire it into any new native write.

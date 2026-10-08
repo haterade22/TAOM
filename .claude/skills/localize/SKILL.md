@@ -11,7 +11,7 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 ## Case A — new C# text shown to the player
 1. Wrap the string: `new TextObject("{=taom_my_feature_label}My Feature")` (always `{=KEY}default` form).
 2. Register it: `python tools/harvest_literal_loc_keys.py --apply` lifts the default out of the literal into `taom_module_strings.xml` (or the feature's own file). Idempotent, so a hand-tuned row survives.
-3. Propagate: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply` (machine-translates to all 12 languages, PL included; overrides in `tools/translation_overrides/<lang>.json` always win). **`--sync-ids` is not optional for a new key**: the translator substitutes by id, so without a seeded row the translation is paid for and discarded.
+3. Propagate: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply` (one language per run: repeat for each of BR CNs CNt DE FR IT JP KO PL RU SP TR; overrides in `tools/translation_overrides/<lang>.json` always win). **`--sync-ids` is not optional for a new key**: the translator substitutes by id, so without a seeded row the translation is paid for and discarded.
 
 ## Case B — new SOURCE XML file containing in-game text
 1. Add its row to `tools/_loc_sources.py` (the one ordered table the translator, template and name generators read; `tools/tests/test_loc_sources.py` fails until it matches the files).
@@ -28,7 +28,7 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 1. `git status` the source files first: the generator reads the working tree, other sessions' edits included.
 2. `python tools/generate_name_localization_strings.py --apply` (one pass; `--check` and `tools/tests` fail while a source is ahead of its generated file).
 3. A hero, NPC or culture key that two sites share with different English needs its own key first (`EveryNameKey_InTheNameGeneratorsSources_HasOneEnglishDefault`). Heroes' `text=` is saved with the hero, so give **both** sites new keys and retire the old one, or old saves show the other hero's text.
-4. `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply`.
+4. `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply`, once per language.
 
 ## Tools
 - `tools/translate_with_claude.py` — 4-tier fallback (override → cache → LLM → English); cache in `tools/translation_cache/<lang>.json` is git-tracked, so re-runs are free. `--provider anthropic` (default, `claude-opus-5`) | `deepseek` | `openrouter`; the last two need no SDK and read `DEEPSEEK_API_KEY` / `OPENROUTER_API_KEY`. `--module TAOM` works with no game installed; `--module all` reads TAOM_Map and Armory from the install, so it needs `$BANNERLORD_GAME_DIR` and exits 2 without it.
@@ -45,4 +45,4 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 
 ## Gotchas
 - Morphologically-rich languages (RU/JP/KO/TR/CN) hit gender-agreement rejections that fall back to English — flag for human polish (no auto-fix).
-- Three external modules also have loc (`TAOM_Map`, `LOTRLOME_Armory`) deployed straight to the game install — not in the repo.
+- Two external modules also have loc (`TAOM_Map`, `LOTRLOME_Armory`) deployed straight to the game install, not in the repo.

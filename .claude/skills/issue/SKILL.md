@@ -16,69 +16,28 @@ Determine from `$ARGUMENTS` whether this is a `bug`/`crash` fix or a `feature`.
 
 ## For Bug/Crash Issues
 
-Run this command after filling in the template:
+Write the filled template to a file with the Write tool, run `python tools/check_public_text.py <file>`, then run `gh issue create --title "<title>" --label "<bug|feature>" --body-file <file>`. Sections of the bug/crash template:
 
-```bash
-gh issue create \
-  --title "[one-line description of the bug/crash]" \
-  --label "bug" \
-  --body "$(cat <<'EOF'
-## Problem
-
-[Exact error message or symptom. Stack trace if available. Steps to reproduce.]
-
-## Analysis
-
-[Root cause. What was examined. Why it happened. What TaleWorlds internals were involved.]
-
-## Solution
-
-[What was changed. Why this approach was chosen over alternatives.]
-
-## Files Changed
-
-| File | Change |
-|------|--------|
-| `path/to/file.cs` | One-line description |
-
-## Testing
-
-[How the fix was verified. Unit tests added/updated. Manual testing steps.]
-EOF
-)"
-```
+- `## Problem`: exact error message or symptom, stack trace if available, steps to reproduce.
+- `## Analysis`: root cause, what was examined, why it happened, which TaleWorlds internals were involved.
+- `## Solution`: what was changed, and why this approach over the alternatives.
+- `## Files Changed`: a table of `File | Change`, one line per file.
+- `## Testing`: how the fix was verified, unit tests added or updated, manual testing steps.
 
 ## For Feature Issues
 
-```bash
-gh issue create \
-  --title "[one-line description of the feature]" \
-  --label "feature" \
-  --body "$(cat <<'EOF'
-## Motivation
+Same procedure, with these sections:
 
-[Why this feature exists. What problem it solves. Specific examples.]
-
-## Design
-
-[Architecture decisions. Extension points used (GameModel, Harmony, CampaignBehavior). Alternatives considered.]
-
-## Implementation
-
-[Key files. Patterns used. Configuration format. IoC registration.]
-
-## Testing
-
-[Test coverage summary. How to verify it works in-game.]
-EOF
-)"
-```
+- `## Motivation`: why this feature exists, what problem it solves, specific examples.
+- `## Design`: architecture decisions, extension points used (GameModel, Harmony, CampaignBehavior), alternatives considered.
+- `## Implementation`: key files, patterns used, configuration format, IoC registration.
+- `## Testing`: test coverage summary, how to verify it works in-game.
 
 ## Steps
 
 1. Determine issue type from `$ARGUMENTS`
 2. Fill in all sections — do NOT leave placeholder text
-3. Run the `gh issue create` command
+3. Write the body to a file, run `check_public_text.py`, then `gh issue create --body-file`
 4. Output the created issue URL
 5. Reference the issue number in your next commit message
 

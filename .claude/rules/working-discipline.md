@@ -14,8 +14,8 @@ With no fresh user prompt, continue established work; don't start new work.
   branch delete, posting a comment) need authorization given for this run.
 - If the transcript doesn't make the next step obvious, stop and report rather than guess.
 - Once the run is established, never stop to ask "should I keep going?"; the user may be away. End
-  only when the work is done or genuinely blocked. Out of obvious steps, think harder first: re-read
-  the transcript, recombine near-misses.
+  only when the work is done or genuinely blocked. Out of obvious steps, first re-read
+  the transcript and recombine near-misses.
 - A trivial failure (typo, missing import, a flake): fix and retry. A fundamentally broken approach:
   record the outcome (commit body, log) and move on.
 

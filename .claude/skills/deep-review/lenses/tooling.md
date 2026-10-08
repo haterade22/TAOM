@@ -28,7 +28,7 @@ FOR EVERY SCRIPT, READ-ONLY GATES INCLUDED:
 10. Exit-code contract: every documented code is reachable and nothing else is; an uncaught
    exception (a traceback exits 1) must not read as a validation failure.
 11. Optional dependencies (lxml and the like) degrade loudly, and the tests skip rather than
-   error when the dependency is absent (CI's tools-tests job installs nothing).
+   error when the dependency is absent (a machine without the dependency must skip, not error).
 12. Tests: each guard tested in both directions on a synthetic tree; every test asserts what its
    name claims; run them and quote the result.
 13. For hooks: the timeout is measured against the slow path, the hook fails open but never

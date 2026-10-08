@@ -28,7 +28,7 @@ when the maintainer asks, drive execution, review and merge through agents. The 
 
 ## Hard rules
 
-1. Build and test only in non-deploying forms: both `-p:DisableModuleCopy=true -p:ModuleId=` on every `dotnet build` and `dotnet test` (the CI replay adds its own flags); never `./build.ps1` (AGENTS.md "Commands").
+1. Build and test only in non-deploying forms: both `-p:DisableModuleCopy=true -p:ModuleId=` on every `dotnet build` and `dotnet test` (the no-game replay in .ai/verification.md adds its own flags); never `./build.ps1` (AGENTS.md "Commands").
 2. Every agent prompt starts with [references/dispatch-rules.md](references/dispatch-rules.md): `improve_ctl.py args` embeds it for the workflows; a direct Agent spawn pastes it.
 3. In the main checkout, touch only this run's `plans/` files. Worktrees, scratch and temp live outside the repo and off C:; read other revisions with `git show`, never a clone or archive extraction (dispatch rules "Workspace", "Disk").
 4. At most four agents in flight plus one checker ([CLAUDE.md](../../../CLAUDE.md) "Subagents"). The pool is per workflow: run one at a time, or give concurrent workflows pools that sum to four. Never stop a turn while agents run (it kills them); typing is safe.

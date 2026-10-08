@@ -38,7 +38,7 @@ characters to players. Full contract: [`docs/reference/release-process.md`](../.
 
 ## Phase 2 — Verify
 
-`/verify` (`./build.ps1 -RunTests`). Read the exit code and the output. No release on an unrun
+`/verify` (build, full test suite, Python tool tests; it never deploys). Read the exit code and the output. No release on an unrun
 build (`evidence-over-claims.md` §B). If red, stop.
 
 Then `pwsh tools/sweep_module_backups.ps1`. It must report **0 files**. Backup sidecars must not

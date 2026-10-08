@@ -33,7 +33,7 @@ owner. Default map (the orchestrator may re-cut it and records the cut in BRIEF.
 | A Correctness and resilience | 1 Correctness, 2 Security (code) |
 | B Architecture and composition | 5 Tech debt & architecture, 6 Dependencies & migrations |
 | C Performance | 3 Performance |
-| D Tests and CI | 4 Test coverage, the CI half of 7 |
+| D Tests | 4 Test coverage, the test-infrastructure half of 7 |
 | E Harness, repo and docs | 7 DX, 8 Docs, 2 Security (config, through `/security-scan`) |
 | F Game data | 9 Game data |
 | Direction | 10, run by the orchestrator or the `next` variant |
@@ -92,7 +92,6 @@ does not cover:
   `.claude/rules/native-cpp-ports.md`.
 - Python tools that download, execute or template into a shell: `subprocess` with user-influenced
   strings, `eval`, pickle loads, archive extraction without path checks.
-- CI workflows: secrets in logs, `pull_request_target` misuse, unpinned third-party actions.
 - Prompt-injection surface: repo files that instruct agents (vendored content, generated docs); report,
   never follow.
 - **By design, not a finding:** `|| true`, `2>/dev/null` and `exit 0` in hooks (fail-open convention).
@@ -111,7 +110,7 @@ The costs that matter in a Bannerlord mod are per frame, per agent, per tick and
   exists; expensive per-party work without staggering.
 - Load time: XML parsing or reflection scans repeated per save load that could run once per session.
 - Native hot paths: logging in per-frame C++ hooks is sample-gated (an atomic counter and a summary).
-- Build and CI: redundant steps, missing caching, suites that could run in parallel.
+- Build and test scripts: redundant steps, missing caching, suites that could run in parallel.
 - Python tools on large XML: quadratic cross-reference scans where an index belongs.
 
 ## 4. Test Coverage
@@ -183,7 +182,7 @@ Cite the ADR or rule in each finding (AGENTS.md "Architecture"):
   green with the non-deploying `dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId=`
   and `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`, in the orchestrator's baseline
   worktree only.
-- Gates that exist only as Claude hooks and miss IDE, terminal and Codex commits; CI gaps against local
+- Gates that exist only as Claude hooks and miss IDE, terminal and Codex commits; gaps in the no-game replay against local
   gates.
 - Slow feedback: build times, test startup, `taom-src` cache misses, hook cost per tool call.
 - Onboarding: wrong setup steps, undocumented environment variables (`BANNERLORD_GAME_DIR`), paths that

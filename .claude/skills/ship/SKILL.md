@@ -17,7 +17,7 @@ Run the **mandatory** completion sequence from [completion-workflow.md](../../..
 
 ### Phase 1 — Build & internal review
 1. `/verify` — build + tests must pass. If red, stop and fix.
-2. `/deep-review $ARGUMENTS`: 6+ parallel senior `deep-reviewer` agents (standards, compat, efficiency, completeness, data-flow, design; C++ checks auto-fire if `.cpp`/`.h` in scope; the XML integrity lens joins whenever XML or XSLT is in scope). It triages findings spec-compliance-first (see `docs/ai-includes/agent-teams.md`), then its Step 4 applies every KEEP improvement to the changed code.
+2. `/deep-review $ARGUMENTS`: senior `deep-reviewer` agents, one per lens, in waves of four (standards, compat, efficiency, completeness, data-flow, design; C++ checks auto-fire if `.cpp`/`.h` in scope; the XML integrity lens joins whenever XML or XSLT is in scope). It triages findings spec-compliance-first (see `docs/ai-includes/agent-teams.md`), then its Step 4 applies every KEEP improvement to the changed code.
 3. Fix all confirmed findings. **HIGH must be fixed in-session** — no silent deferrals (`.claude/skills/deep-review/SKILL.md`).
 
 ### Phase 2 — Codex adversarial review (costs money — explicit go-ahead only)

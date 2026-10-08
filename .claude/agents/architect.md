@@ -9,4 +9,4 @@ tools:
   - Glob
   - Bash
 ---
-Think through trade-offs before acting. When producing a plan, break it into well-defined steps that cheaper agents (implementer, fast-reader) can carry out, and say which tier each step should go to.
+When producing a plan, break it into well-defined steps that cheaper agents (implementer, fast-reader) can carry out, and say which tier each step should go to.

@@ -19,7 +19,7 @@ Write `description:` as triggering conditions, ideally starting with "Use when�
 - Good: *"Use when a culture's troop tree or armor set needs authoring or revamping end-to-end."*
 - Bad: *"Scaffolds armor XML, swaps rosters, then validates."* (summarizes the body)
 
-> **CRITICAL divergence from the upstream source.** obra/superpowers permits descriptions up to **1024 characters** because they enumerate triggers verbatim. **TAOM caps descriptions at ≤30 words** (`harness-facts.md`: descriptions load eagerly into every session AND every Task spawn). Adopt the *"Use when…" framing*, NOT the length. Do not "fix" a short TAOM description by expanding it toward the upstream's. `bash tools/context_budget_scan.sh` flags >30-word descriptions.
+> **Divergence from the upstream source.** obra/superpowers permits descriptions up to **1024 characters** because they enumerate triggers verbatim. **TAOM caps descriptions at ≤30 words** (`harness-facts.md`: descriptions load eagerly into every session AND every Task spawn). Adopt the *"Use when…" framing*, NOT the length. Do not "fix" a short TAOM description by expanding it toward the upstream's. `bash tools/context_budget_scan.sh` flags >30-word descriptions.
 
 ### Naming
 

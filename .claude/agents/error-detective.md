@@ -72,9 +72,4 @@ Recommended next step:
   - If coincidence: list the N independent /investigate runs, prioritize by severity
 ```
 
-## Notes
-
-- This agent is read-only. Findings inform subsequent `/investigate` runs; it does not write fixes itself.
-- The dimensions list above is TAOM-specific. The original (VoltAgent/awesome-claude-code-subagents) was framed for distributed-services architectures; the dimensions here map "services" to "features" and "API endpoints" to "TaleWorlds API surfaces."
-
 Source: VoltAgent/awesome-claude-code-subagents (adapted from microservices framing to mod-feature framing).

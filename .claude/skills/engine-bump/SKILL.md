@@ -186,7 +186,7 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
      (`NativeConstraint_MatchesPinnedGameVersion`), and the same row in the live
      `TAOM_Map/SubModule.xml` and `LOTRLOME_Armory/SubModule.xml` (unversioned: back up first).
    - `GameReferences.targets` `BannerlordRefAsmVersion` to BUTR's build for the new changeset
-     (`BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild`, which CI runs too). Check the
+     (`BannerlordRefAsmVersion_PinnedGameVersion_IsTheSameGameBuild`). Check the
      NuGet flat-container index for `bannerlord.referenceassemblies.core`; BUTR can publish hours
      after Steam, so re-check before calling it blocked.
    - The per-build native address pins, which SKIP rather than fail on an unknown build: the

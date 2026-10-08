@@ -248,8 +248,8 @@ merge" below).
    in-flight branch before merging any of them. Stop at the first new failure.
 7. **Push**: fetch and repeat step 3, then a plain fast-forward `git push origin HEAD:<trunk>`. Never a
    force push. Record the range.
-8. **CI**: `gh run list --branch <trunk> --limit 5`, then `timeout 900 gh run watch <id> --exit-status`
-   until done; record run ids and totals.
+8. **Trunk check**: no CI runs on the trunk (GitHub CI was removed 2026-10-05). The proof is the step 6
+   verification on the integration tip; record its totals.
 9. **Issues**: close per "Issues" above, naming the merge.
 10. **Cleanup**, in this order, from a query, never a hand list. `git branch -d` refuses a branch
     checked out in a worktree, and judges a branch with no upstream (every `improve/*`) against the

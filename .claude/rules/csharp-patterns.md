@@ -71,7 +71,7 @@ See `.claude/rules/gamemodels.md` for full GameModel rules.
 
 ## Transpiler Note
 
-TAOM uses manual `List<CodeInstruction>` iteration. Harmony 2.4.2 (Bannerlord 1.3) has an expanded `CodeMatcher` API — evaluate it for new transpilers before defaulting to manual iteration.
+Transpilers iterate List<CodeInstruction> by hand; Harmony's CodeMatcher is available but unused here.
 
 ## Anti-Patterns
 
