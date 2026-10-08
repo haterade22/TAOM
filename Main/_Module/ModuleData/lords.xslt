@@ -9,6 +9,14 @@
         </xsl:copy>
     </xsl:template>
 
+    <!-- Vanilla wanderer templates leave the spawn pool (#758). CompanionsCampaignBehavior spawns every
+         template with occupation Wanderer from every module, so SandBox's 67 Calradian wanderers turned up
+         in Middle-earth. Retag, never delete: saved heroes reference their template. TAOM's own wanderers
+         merge after this stylesheet runs. VanillaWandererTemplateTransformTests. -->
+    <xsl:template match="NPCCharacter[@is_template='true' and @occupation='Wanderer']/@occupation">
+        <xsl:attribute name="occupation">NotAssigned</xsl:attribute>
+    </xsl:template>
+
 
     <!-- ============================================== -->
     <!-- Faction 1 - Empire/Dunland -->

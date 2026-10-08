@@ -4086,6 +4086,473 @@
 		</Equipments>
 	</NPCCharacter>
 
+	<!-- ==================== DALE WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_dale_0"
+		name="{=aom_spc_wanderer_dale_0_name}{FIRSTNAME} Bainling"
+		voice="softspoken"
+		age="31"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.sturgia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dale_1"
+		name="{=aom_spc_wanderer_dale_1_name}{FIRSTNAME} Girionsson"
+		voice="earnest"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.sturgia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dale_2"
+		name="{=aom_spc_wanderer_dale_2_name}{FIRSTNAME} Hallbrand"
+		voice="curt"
+		age="38"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.sturgia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dale_3"
+		name="{=aom_spc_wanderer_dale_3_name}{FIRSTNAME} Esgarothing"
+		voice="ironic"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.sturgia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dale_4"
+		name="{=aom_spc_wanderer_dale_4_name}{FIRSTNAME} Dalecroft"
+		voice="earnest"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.sturgia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dale_5"
+		name="{=aom_spc_wanderer_dale_5_name}{FIRSTNAME} Longlakeson"
+		voice="softspoken"
+		age="34"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.sturgia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Generosity" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dale_6"
+		name="{=aom_spc_wanderer_dale_6_name}{FIRSTNAME} Brandwyn"
+		voice="curt"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.sturgia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dale_7"
+		name="{=aom_spc_wanderer_dale_7_name}{FIRSTNAME} Ravenhild"
+		voice="ironic"
+		age="41"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.sturgia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dale_8"
+		name="{=aom_spc_wanderer_dale_8_name}{FIRSTNAME} Lonelyfell"
+		voice="curt"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.sturgia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dale_9"
+		name="{=aom_spc_wanderer_dale_9_name}{FIRSTNAME} Fellrider"
+		voice="earnest"
+		age="25"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.sturgia"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dale" />
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- ==================== KHAND WANDERERS ==================== -->
+	<NPCCharacter
+		id="spc_wanderer_khand_0"
+		name="{=aom_spc_wanderer_khand_0_name}{FIRSTNAME} Variagor"
+		voice="curt"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.battania"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_khand" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_khand" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_khand_1"
+		name="{=aom_spc_wanderer_khand_1_name}{FIRSTNAME} Azrakhan"
+		voice="earnest"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.battania"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_khand" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_khand" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_khand_2"
+		name="{=aom_spc_wanderer_khand_2_name}{FIRSTNAME} Dunhazur"
+		voice="softspoken"
+		age="37"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.battania"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_khand" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_khand" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_khand_3"
+		name="{=aom_spc_wanderer_khand_3_name}{FIRSTNAME} Karzuran"
+		voice="ironic"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.battania"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_khand" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_khand" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_khand_4"
+		name="{=aom_spc_wanderer_khand_4_name}{FIRSTNAME} Hazgudan"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.battania"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_khand" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_khand" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_khand_5"
+		name="{=aom_spc_wanderer_khand_5_name}{FIRSTNAME} Sulmarak"
+		voice="earnest"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.battania"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_khand" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_khand" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_khand_6"
+		name="{=aom_spc_wanderer_khand_6_name}{FIRSTNAME} Tarkhazan"
+		voice="curt"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.battania"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="2" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_khand" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_khand" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_khand_7"
+		name="{=aom_spc_wanderer_khand_7_name}{FIRSTNAME} Ostrakan"
+		voice="ironic"
+		age="43"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.battania"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_khand" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_khand" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_khand_8"
+		name="{=aom_spc_wanderer_khand_8_name}{FIRSTNAME} Zhulgarid"
+		voice="softspoken"
+		age="31"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.battania"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_khand" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_khand" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_khand_9"
+		name="{=aom_spc_wanderer_khand_9_name}{FIRSTNAME} Bahrmakhan"
+		voice="earnest"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.battania"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rhun_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rhun" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_khand" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_khand" />
+		</Equipments>
+	</NPCCharacter>
+
   <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->
 	<NPCCharacter
 		id="spc_wanderer_goblin_0"

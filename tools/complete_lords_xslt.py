@@ -437,6 +437,20 @@ def generate_lord_template(lord_id, data):
     return '\n'.join(lines)
 
 
+# Not a lord rule, but lords.xslt is the stylesheet that runs over vanilla NPCCharacters before TAOM's own
+# wanderers merge, so the #758 retag lives here and every regeneration must keep it.
+VANILLA_WANDERER_RETAG = [
+    '',
+    '    <!-- Vanilla wanderer templates leave the spawn pool (#758). CompanionsCampaignBehavior spawns every',
+    '         template with occupation Wanderer from every module, so SandBox\'s 67 Calradian wanderers turned up',
+    '         in Middle-earth. Retag, never delete: saved heroes reference their template. TAOM\'s own wanderers',
+    '         merge after this stylesheet runs. VanillaWandererTemplateTransformTests. -->',
+    '    <xsl:template match="NPCCharacter[@is_template=\'true\' and @occupation=\'Wanderer\']/@occupation">',
+    '        <xsl:attribute name="occupation">NotAssigned</xsl:attribute>',
+    '    </xsl:template>',
+]
+
+
 def generate_xslt(merged, xslt_order):
     """Generate the complete XSLT file."""
     parts = []
@@ -452,6 +466,7 @@ def generate_xslt(merged, xslt_order):
     parts.append('            <xsl:apply-templates select="@*|node()"/>')
     parts.append('        </xsl:copy>')
     parts.append('    </xsl:template>')
+    parts.extend(VANILLA_WANDERER_RETAG)
 
     # Group lords by faction
     faction_lords = {i: [] for i in range(len(FACTION_SECTIONS))}

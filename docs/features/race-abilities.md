@@ -191,9 +191,10 @@ reduction instead.
 - **Khand and Umbar field other kingdoms' troops.** Khand recruits Rhun's roster, so its soldiers, cavalry and
   chariots included, carry `khuzait` and fire Wainrider Wall. Variag Ferocity reaches only `battania` characters:
   Khand's lords (on chargers), the `caravan_master_khand` with each Khand notable's caravan, the
-  `caravan_guard_khand` mercenaries Khand's taverns hire out (to the player, lords and caravans), and the Variag
-  Ravagers (vanilla's Wolfskins outlaws, kept `battania`, on foot); perhaps also `guard_khand` and vanilla's
-  battania wanderers (UNVERIFIED). The two never rally each other: a rally takes the same profile. Mike's decision
+  `caravan_guard_khand` mercenaries Khand's taverns hire out (to the player, lords and caravans), the Variag
+  Ravagers (vanilla's Wolfskins outlaws, kept `battania`, on foot), Khand's own ten wanderers (#758; vanilla's
+  battania wanderers no longer spawn in new campaigns), and perhaps `guard_khand`
+  (UNVERIFIED). The two never rally each other: a rally takes the same profile. Mike's decision
   (2026-10-04): leave Khand's ability as it is; he expects Khand's armies to use a lot of cavalry and chariots. As
   shipped, a Khand lord's party (Rhun's default template) has one cavalry stack in eight, and chariots come only by
   upgrading along Rhun's Wain line. Umbar's militia, patrols, villagers and rebels are Harad troops, and its

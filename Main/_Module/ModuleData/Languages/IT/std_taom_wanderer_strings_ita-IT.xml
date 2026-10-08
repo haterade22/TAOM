@@ -1767,5 +1767,165 @@
     <string id="aom_response_2.spc_wanderer_arthedain_12_text" text="The council was right to count the stores before the sentiment." />
     <string id="aom_backstory_d.spc_wanderer_arthedain_12_text" text="Take me with you, and I will find you provisions, goodwill and honest allies." />
     <string id="aom_generic_backstory.spc_wanderer_arthedain_12_text" text="Fornost's stewards keep the counts of grain and refugees. A few of us have spoken up for the North Downs folk and been sent away for it." />
+    <string id="aom_prebackstory.spc_wanderer_dale_0_text" text="The road from Dale to the lake is longer than it looks, friend." />
+    <string id="aom_backstory_a.spc_wanderer_dale_0_text" text="I rode the post between Dale and Esgaroth, carrying letters, coin and now and then a sick child to the healer. Every rider on that road knew me, and I knew every ford and farm along the River Running." />
+    <string id="aom_backstory_b.spc_wanderer_dale_0_text" text="One autumn the grain wagon I was guarding came upon a village burned out by raiders from Rhun. I gave the families half the load without asking leave. The guild factor called it theft and wrote my name in his ledger." />
+    <string id="aom_backstory_c.spc_wanderer_dale_0_text" text="No guild will hire a man marked for that, so I ride for whoever pays, and I still stop at every farm on the way. I cannot seem to help it. My horse is all that is left of that life." />
+    <string id="aom_response_1.spc_wanderer_dale_0_text" text="Feeding the hungry is no crime to me." />
+    <string id="aom_response_2.spc_wanderer_dale_0_text" text="A rider who gives away other men's grain is a poor courier." />
+    <string id="aom_backstory_d.spc_wanderer_dale_0_text" text="Trust me with a message, a purse or a wounded man, and I will carry it anywhere you point." />
+    <string id="aom_generic_backstory.spc_wanderer_dale_0_text" text="Riders of the Dale road know every ford between the Mountain and the lake. We go wherever the roads still need carrying." />
+    <string id="aom_prebackstory.spc_wanderer_dale_1_text" text="My name is older than my fortune. Have you heard of the house of Girion?" />
+    <string id="aom_backstory_a.spc_wanderer_dale_1_text" text="My family claims kinship with Girion, the last Lord of Dale before the dragon came, so I was taught young to lead men and to sit a horse. I rose to command thirty spears on the eastern road." />
+    <string id="aom_backstory_b.spc_wanderer_dale_1_text" text="I held a ford on the River Running with thirty spears when a larger band came through from the east. My captain withdrew in the night and left us the order to hold. I held it, and eleven men died before help arrived." />
+    <string id="aom_backstory_c.spc_wanderer_dale_1_text" text="The council praised the ford and then quietly passed me over for every command, because I had named my captain's flight aloud. I carry the eleven names with me. A man who will not lie for his betters finds few doors open." />
+    <string id="aom_response_1.spc_wanderer_dale_1_text" text="You did what honor asked of you." />
+    <string id="aom_response_2.spc_wanderer_dale_1_text" text="Perhaps your captain saw the field better than you did." />
+    <string id="aom_backstory_d.spc_wanderer_dale_1_text" text="If you need someone to hold a line and keep faith with the men in it, I will lead a company for you." />
+    <string id="aom_generic_backstory.spc_wanderer_dale_1_text" text="The sons of Dale's old houses are raised to lead men and to ride out when the horns sound. Some of us find our commands elsewhere." />
+    <string id="aom_prebackstory.spc_wanderer_dale_2_text" text="Looking for someone who knows the roads. I do." />
+    <string id="aom_backstory_a.spc_wanderer_dale_2_text" text="I scouted for the merchant caravans that run from Dale to the Iron Hills and the gates of Erebor. Water, ambush ground, safe fords, I priced them all. A good scout is paid by the mile." />
+    <string id="aom_backstory_b.spc_wanderer_dale_2_text" text="When the Easterling raids went quiet, the caravan master tried to cut my wage and said there was no danger left to pay for. Quiet was my work. I took my maps and left him to find his own way, and two carts were lost that season." />
+    <string id="aom_backstory_c.spc_wanderer_dale_2_text" text="No factor trusts me now, and I trust none of them back. I carry my own pay and I count it twice." />
+    <string id="aom_response_1.spc_wanderer_dale_2_text" text="A man should be paid for his craft." />
+    <string id="aom_response_2.spc_wanderer_dale_2_text" text="You left honest drivers to the raiders." />
+    <string id="aom_backstory_d.spc_wanderer_dale_2_text" text="Pay me on time and I will put you on the best ground between here and the Mountain." />
+    <string id="aom_generic_backstory.spc_wanderer_dale_2_text" text="Caravan scouts of Dale sell the roads they know to anyone who pays on time. We are not sentimental about it." />
+    <string id="aom_prebackstory.spc_wanderer_dale_3_text" text="A man of Lake-town on dry land. Try not to laugh, I have heard it all." />
+    <string id="aom_backstory_a.spc_wanderer_dale_3_text" text="I walked the boardwalks of Esgaroth with the town watch, a boat-spear in my hands, keeping thieves out of the fish stalls. Hold a long spear on a rocking deck for ten years and you can use it anywhere." />
+    <string id="aom_backstory_b.spc_wanderer_dale_3_text" text="I noticed the Master's toll-men taking more silver than they ever wrote down. I kept my own tally and took it to the council, and I was struck from the watch rolls before the ink dried. The week before, I had let a starving boy go, so I was blamed for that too." />
+    <string id="aom_backstory_c.spc_wanderer_dale_3_text" text="So here I am, a watchman without a town, holding a ledger nobody wants. I keep the tally anyway, in case a better council ever asks." />
+    <string id="aom_response_1.spc_wanderer_dale_3_text" text="Counting honestly should never cost a man his post." />
+    <string id="aom_response_2.spc_wanderer_dale_3_text" text="A watchman who frees thieves has himself to blame." />
+    <string id="aom_backstory_d.spc_wanderer_dale_3_text" text="I can hold a spear steady on any ground, and I can read your quartermaster's books, for a fair share." />
+    <string id="aom_generic_backstory.spc_wanderer_dale_3_text" text="I learned the long spear on the pitching decks of Lake-town's watch. Few things steady the hand like that." />
+    <string id="aom_prebackstory.spc_wanderer_dale_4_text" text="The lads named me after the dragon-slayer. I have not earned it yet, but I will." />
+    <string id="aom_backstory_a.spc_wanderer_dale_4_text" text="My father told the tale of the dragon's fall every night of my childhood. The other boys named me after the dragon-slayer as a joke because I would not stop asking for more of it. At sixteen I took a spear from the Dale armory and swore to make the joke true." />
+    <string id="aom_backstory_b.spc_wanderer_dale_4_text" text="Word came of raiders from Rhun near our hills, and I led six lads out to meet them without waiting for the garrison. I never counted the enemy, and there were forty. Three of the six came home." />
+    <string id="aom_backstory_c.spc_wanderer_dale_4_text" text="The garrison does not trust me with a command now, and my father will not speak of it. I would sooner die useful than live as a joke. I still carry the spear." />
+    <string id="aom_response_1.spc_wanderer_dale_4_text" text="Courage learns from its mistakes." />
+    <string id="aom_response_2.spc_wanderer_dale_4_text" text="You threw boys at forty men for the sake of a nickname." />
+    <string id="aom_backstory_d.spc_wanderer_dale_4_text" text="Let me stand in your front rank, and I will earn what the lads called me or learn I never could." />
+    <string id="aom_generic_backstory.spc_wanderer_dale_4_text" text="Young spearmen of Dale grow up on the story of the dragon's fall. Some of us go looking for a fight that big." />
+    <string id="aom_prebackstory.spc_wanderer_dale_5_text" text="Forgive me, I only wished to see a friendly face." />
+    <string id="aom_backstory_a.spc_wanderer_dale_5_text" text="My father fished the Long Lake and I fished it after him, hauling nets at dawn and mending them at dusk. When the watch needed spears, I took up the boat-hook and a place in the line, being strong and no worse than most." />
+    <string id="aom_backstory_b.spc_wanderer_dale_5_text" text="When a raiding band came across the ice one winter, I froze. The lads on either side of me did not. Two never came back, and I was crouched behind a woodpile when they fell." />
+    <string id="aom_backstory_c.spc_wanderer_dale_5_text" text="I do not blame the cold, for I know what I did. Since then I give away what coin I earn to the widows of Esgaroth, and it is never enough." />
+    <string id="aom_response_1.spc_wanderer_dale_5_text" text="Fear touches every man. You have paid for it." />
+    <string id="aom_response_2.spc_wanderer_dale_5_text" text="A man who breaks from the line is no use to me." />
+    <string id="aom_backstory_d.spc_wanderer_dale_5_text" text="If you can use a man who knows his own failing, I will carry a spear for you and try to stand firmer than I did." />
+    <string id="aom_generic_backstory.spc_wanderer_dale_5_text" text="Fishermen of the Long Lake take up the boat-hook and the spear when the watch calls. Not all of us stand when the shouting starts." />
+    <string id="aom_prebackstory.spc_wanderer_dale_6_text" text="You carry a bow? Good. Then you will understand." />
+    <string id="aom_backstory_a.spc_wanderer_dale_6_text" text="I was the best archer in Dale at twenty, with a black-fletched arrow on my quiver in honor of Bard. The great shoot at the midsummer fair was mine to lose, and I wanted it badly." />
+    <string id="aom_backstory_b.spc_wanderer_dale_6_text" text="A rival from Esgaroth shot as well as I did, so the night before the final I cut his string a third of the way through. He drew at the line and it snapped across his cheek. They found the cut ends in my pack." />
+    <string id="aom_backstory_c.spc_wanderer_dale_6_text" text="I was stripped of my fletching and barred from the butts. I still shoot better than any man in the hall, and they know it, and it changes nothing. I am not sorry I wanted to win, only that I was caught." />
+    <string id="aom_response_1.spc_wanderer_dale_6_text" text="Skill like yours should not rot unused." />
+    <string id="aom_response_2.spc_wanderer_dale_6_text" text="A man who cuts his rival's string deserves the ban." />
+    <string id="aom_backstory_d.spc_wanderer_dale_6_text" text="Take me on and I will put an arrow wherever you point. Do not ask me for more than that." />
+    <string id="aom_generic_backstory.spc_wanderer_dale_6_text" text="Archers of Dale are raised on Bard's legend and shoot at the butts every feast day. Some of us carry the bow wherever the pay is fair." />
+    <string id="aom_prebackstory.spc_wanderer_dale_7_text" text="Nothing watches a road like an old rider with a good horse." />
+    <string id="aom_backstory_a.spc_wanderer_dale_7_text" text="My father was a boy when the dragon fell, and I grew up watching Dale rebuilt stone by stone. I rode the Ravenhill post for twenty years, carrying word between the old watch above the city and the gates." />
+    <string id="aom_backstory_b.spc_wanderer_dale_7_text" text="One spring the ravens brought news of an Easterling muster in the east, and I rode to the council with it. The lord called ravens gossip and kept me waiting three weeks. By the time he believed it, the villages on the eastern fells had burned." />
+    <string id="aom_backstory_c.spc_wanderer_dale_7_text" text="I kept my honor and lost my post, since the lord could not forgive having been wrong. Now I ride where a warning is still welcome. It is a short list." />
+    <string id="aom_response_1.spc_wanderer_dale_7_text" text="You were right, and they should have listened." />
+    <string id="aom_response_2.spc_wanderer_dale_7_text" text="Ravens bring rumor. A sensible lord waits for proof." />
+    <string id="aom_backstory_d.spc_wanderer_dale_7_text" text="I know the eastern roads and the minds of men who ignore warnings. I will ride ahead for you." />
+    <string id="aom_generic_backstory.spc_wanderer_dale_7_text" text="I come from the Ravenhill riders, who watch the eastern roads for Dale. A warning from us is sound, whatever the lords choose to do with it." />
+    <string id="aom_prebackstory.spc_wanderer_dale_8_text" text="Hard country makes hard men. Do not expect me to apologize." />
+    <string id="aom_backstory_a.spc_wanderer_dale_8_text" text="I served as a sergeant on the Iron Hills road, where Dale's spearmen stand beside the dwarves against whatever comes down from the north. The dwarves taught me to keep the spear steady and the line closed, and to waste nothing, pity included." />
+    <string id="aom_backstory_b.spc_wanderer_dale_8_text" text="We took a band of Easterling raiders who had burned three farms, and I put the prisoners down rather than march them for days to the stocks. My captain called it murder. The dwarves said nothing, which I took for agreement." />
+    <string id="aom_backstory_c.spc_wanderer_dale_8_text" text="I was dismissed with no pay owed and no word to carry. I would do it again. The farms along that road stayed safe the rest of the year." />
+    <string id="aom_response_1.spc_wanderer_dale_8_text" text="Hard choices keep the roads safe." />
+    <string id="aom_response_2.spc_wanderer_dale_8_text" text="Killing prisoners is plain murder." />
+    <string id="aom_backstory_d.spc_wanderer_dale_8_text" text="I fight hard and I do not flinch. If that suits you, put me at the front of your line." />
+    <string id="aom_generic_backstory.spc_wanderer_dale_8_text" text="Dale's spearmen hold the Iron Hills road beside the dwarves, and the work there is not gentle. We learn it, and we do not forget it." />
+    <string id="aom_prebackstory.spc_wanderer_dale_9_text" text="Have you heard whether the eastern fells are quiet this season?" />
+    <string id="aom_backstory_a.spc_wanderer_dale_9_text" text="I bred and broke horses on the fells east of the Lonely Mountain, where the grass is thin and the horses are hardy. I rode before I could properly walk, and half the mounts in the valley carry my training." />
+    <string id="aom_backstory_b.spc_wanderer_dale_9_text" text="Raiders from Rhun came at harvest and drove off our herd and half our village. I rode to Dale for help, but the council would not hear me before morning, so I gathered the farmhands and went after them myself." />
+    <string id="aom_backstory_c.spc_wanderer_dale_9_text" text="We took back most of the horses and every child, but two farmhands did not return, and the village is a burned ring of posts. I sold the herd to pay the dead men's families. A rider's hands are all I have left." />
+    <string id="aom_response_1.spc_wanderer_dale_9_text" text="You gave everything you had. That counts." />
+    <string id="aom_response_2.spc_wanderer_dale_9_text" text="A hothead who rides off without leave gets men killed." />
+    <string id="aom_backstory_d.spc_wanderer_dale_9_text" text="I will ride for you gladly, and I will give my last coin to anyone you want to help." />
+    <string id="aom_generic_backstory.spc_wanderer_dale_9_text" text="Horse-breeders of the eastern fells raise sturdy mounts and riders who ask little. We are quick to the saddle when the raiders come." />
+    <string id="aom_prebackstory.spc_wanderer_khand_0_text" text="Walls fall to whoever knows where they are weak. I know." />
+    <string id="aom_backstory_a.spc_wanderer_khand_0_text" text="I raised siege towers and rams for a war-chief of the high plains, cutting timber that we Variags had never bothered to use. When the chief's host marched on a Haradrim border fortress, my engines went with it, and its walls shook under them." />
+    <string id="aom_backstory_b.spc_wanderer_khand_0_text" text="After the siege he paid me in captives I had no use for and a lame horse. So I sold the plans and two spare rams to a rival clan, and the chief put a price on my head that his riders still chase." />
+    <string id="aom_backstory_c.spc_wanderer_khand_0_text" text="I own a mallet, a bad name and a map of every ford between here and the Ash Mountains. The dead in those pens never troubled my sleep, but the debt of an unpaid wage does." />
+    <string id="aom_response_1.spc_wanderer_khand_0_text" text="A man who can break walls is worth more than a man who only climbs them." />
+    <string id="aom_response_2.spc_wanderer_khand_0_text" text="You cheated your own chief. Why would I be safe from you?" />
+    <string id="aom_backstory_d.spc_wanderer_khand_0_text" text="Give me timber and a few hands, and I will build you something that opens any gate." />
+    <string id="aom_generic_backstory.spc_wanderer_khand_0_text" text="I am a siege-builder out of the Variag clans, and I go where the walls are thick and the pay is thicker." />
+    <string id="aom_prebackstory.spc_wanderer_khand_1_text" text="I swore my blade once. I would swear it again, if the man were worth it." />
+    <string id="aom_backstory_a.spc_wanderer_khand_1_text" text="I was sworn blade-brother to the heir of a horse clan, and we rode together from boyhood. I won my place in the war-band with the sword, against older men, and never lost a duel I was given." />
+    <string id="aom_backstory_b.spc_wanderer_khand_1_text" text="The heir ordered a surrendered caravan guard put to the axe, and I stepped between them. He struck me across the face, and his clan named me oath-breaker, which in Khand is worse than being named dead." />
+    <string id="aom_backstory_c.spc_wanderer_khand_1_text" text="I carry my sword, my scar and the shame of a vow that bound me to a butcher. I have no clan, no camp, and no one left who will share a fire with me." />
+    <string id="aom_response_1.spc_wanderer_khand_1_text" text="Keeping faith with the helpless is no shame. The shame was his." />
+    <string id="aom_response_2.spc_wanderer_khand_1_text" text="An oath is an oath. You broke yours, whatever your reasons." />
+    <string id="aom_backstory_d.spc_wanderer_khand_1_text" text="Name me a cause I can serve without lowering my sword, and I will follow you to the end of it." />
+    <string id="aom_generic_backstory.spc_wanderer_khand_1_text" text="I am a Variag swordsman who served a clan chief's household, and I fight best at the front of a charge." />
+    <string id="aom_prebackstory.spc_wanderer_khand_2_text" text="I have watched this country for thirty years. Ask me anything about the plains and I will tell you who is riding across them." />
+    <string id="aom_backstory_a.spc_wanderer_khand_2_text" text="I was a horse-archer and scout for the caravans that cross the plains of Khand toward the southern roads. I knew every well, every ambush hollow, and which Haradrim raiders took coin to look the other way." />
+    <string id="aom_backstory_b.spc_wanderer_khand_2_text" text="One season the chief who hired me sold our route to the very raiders we guarded against. I warned the caravan masters and shot two of his men for it, and he had me dismissed before the rains came." />
+    <string id="aom_backstory_c.spc_wanderer_khand_2_text" text="Now I ride alone, with a bow, a good eye, and a name the caravan masters speak quietly. Honest guards are rare, and the chiefs who pay them are rarer." />
+    <string id="aom_response_1.spc_wanderer_khand_2_text" text="A man who keeps his word to those who hire him is worth more than any chief's gold." />
+    <string id="aom_response_2.spc_wanderer_khand_2_text" text="You killed your own side's men. Do not expect me to praise that." />
+    <string id="aom_backstory_d.spc_wanderer_khand_2_text" text="If you need eyes ahead of your column and a shaft that finds its mark, I will ride scout for you." />
+    <string id="aom_generic_backstory.spc_wanderer_khand_2_text" text="I am a plains scout and horse-archer who walked the caravan roads between Khand and the southern markets." />
+    <string id="aom_prebackstory.spc_wanderer_khand_3_text" text="Come closer, I do not bite. Not unless the wound is already festering." />
+    <string id="aom_backstory_a.spc_wanderer_khand_3_text" text="I learned the cutting trade as a boy in a Variag war-camp, holding lamps while the camp surgeon sewed up men who had lost bets with an axe. By twenty I could set a bone, burn out a rot, and curse a fever faster than anyone south of the Ash Mountains." />
+    <string id="aom_backstory_b.spc_wanderer_khand_3_text" text="I gave away the chief's wound-wine and bandages to anyone who asked, even a captured Haradrim scout, and the chief took the strap to my back for wasting his stores on the enemy. I did not stay to see what he planned next." />
+    <string id="aom_backstory_c.spc_wanderer_khand_3_text" text="I still carry a kit of needles, a bottle of spirits, and a conscience nobody warned me about. I keep patching people and still wonder why it never pays." />
+    <string id="aom_response_1.spc_wanderer_khand_3_text" text="You mended what the chiefs break. That counts for more than the stores you spent." />
+    <string id="aom_response_2.spc_wanderer_khand_3_text" text="Free medicine for the enemy is just a fancy way to arm him." />
+    <string id="aom_backstory_d.spc_wanderer_khand_3_text" text="I will sew up your wounded and your enemies too, if you can stand the sight of it." />
+    <string id="aom_generic_backstory.spc_wanderer_khand_3_text" text="I am a camp surgeon from the Variag war-hosts, patching up axe wounds and arrow cuts for anyone with coin or kindness." />
+    <string id="aom_prebackstory.spc_wanderer_khand_4_text" text="Every road has a price. I know the price of most." />
+    <string id="aom_backstory_a.spc_wanderer_khand_4_text" text="I was a factor for the slave caravans that ran from the markets of Khand south to the Harad coast. I kept the ledgers, bribed the toll-keepers, and bought and sold more men and horses than I could count." />
+    <string id="aom_backstory_b.spc_wanderer_khand_4_text" text="A partner I trusted sold the whole convoy to Easterling buyers while I slept, and I was left in the dust with the ledgers and an empty purse. The cargo I did not mourn, but the silver I did." />
+    <string id="aom_backstory_c.spc_wanderer_khand_4_text" text="I have nothing but a head for sums and a long list of men who owe me. I intend to collect from every one of them before I die." />
+    <string id="aom_response_1.spc_wanderer_khand_4_text" text="A man who can make a profit from nothing is useful to any cause." />
+    <string id="aom_response_2.spc_wanderer_khand_4_text" text="You sold men. I will not forget it, however polite you are." />
+    <string id="aom_backstory_d.spc_wanderer_khand_4_text" text="Put me in charge of your coin and your caravans, and you will see a profit within a season." />
+    <string id="aom_generic_backstory.spc_wanderer_khand_4_text" text="I am a caravan factor out of the Khand markets, and I know how silver moves between the plains and the south." />
+    <string id="aom_prebackstory.spc_wanderer_khand_5_text" text="You have the look of someone with something worth taking. Relax, I only admire." />
+    <string id="aom_backstory_a.spc_wanderer_khand_5_text" text="I grew up in the shadow of a war-camp, picking pockets among the warriors and fencing what they plundered. By the time I was grown, I could empty a chief's tent without waking the dogs." />
+    <string id="aom_backstory_b.spc_wanderer_khand_5_text" text="I robbed a clan's war-chest, and when the riders closed in, I gave them the names of my whole gang to save my own neck. I do not pretend it was brave, only that it worked." />
+    <string id="aom_backstory_c.spc_wanderer_khand_5_text" text="I have a few coins, a sharp blade and a talent for slipping out of trouble that I should not be proud of. I am, and the clans never forget a face." />
+    <string id="aom_response_1.spc_wanderer_khand_5_text" text="A clever thief knows when to run. You lived to tell it." />
+    <string id="aom_response_2.spc_wanderer_khand_5_text" text="You sold out your own people. I should check my purse." />
+    <string id="aom_backstory_d.spc_wanderer_khand_5_text" text="Take me on, and I will find you what your enemies hide, and keep my hands to myself, mostly." />
+    <string id="aom_generic_backstory.spc_wanderer_khand_5_text" text="I am a camp thief and fence out of the Variag war-camps, and I know every back way into a chief's tent." />
+    <string id="aom_prebackstory.spc_wanderer_khand_6_text" text="I led forty riders at nineteen. I would have led four hundred, given the chance." />
+    <string id="aom_backstory_a.spc_wanderer_khand_6_text" text="I took command of a war-band of the plains when its captain died at a ford, and I won my first fight with a feint that drew a Haradrim column into a gully. By the next summer the riders called me by a title I had not earned yet." />
+    <string id="aom_backstory_b.spc_wanderer_khand_6_text" text="I kept the plunder for myself and paid my men in promises, and the promises ran out before the winter did. Half of them deserted at the next camp, and the rest followed me like ghosts until I let them go." />
+    <string id="aom_backstory_c.spc_wanderer_khand_6_text" text="I have a sword, a good horse, and a lesson I have only half learned about what men follow. I do not intend to lose a second command." />
+    <string id="aom_response_1.spc_wanderer_khand_6_text" text="A leader learns more from one loss than from ten wins." />
+    <string id="aom_response_2.spc_wanderer_khand_6_text" text="You cheated men who bled for you. A fool commands that way." />
+    <string id="aom_backstory_d.spc_wanderer_khand_6_text" text="Give me riders and a plan, and I will teach you what a Variag feint does to a line." />
+    <string id="aom_generic_backstory.spc_wanderer_khand_6_text" text="I am a young war-band captain of the Variag riders, trained to read a field and break a line." />
+    <string id="aom_prebackstory.spc_wanderer_khand_7_text" text="You want an axe that will not shatter at the first blow? Good. Most do not know to ask." />
+    <string id="aom_backstory_a.spc_wanderer_khand_7_text" text="I forged weapons in a Khand camp for twenty years, the curved cutting axes that my people are known for, balanced and hungry. Every blade I made, I tested on a post of iron oak before I sold it." />
+    <string id="aom_backstory_b.spc_wanderer_khand_7_text" text="The chief ordered me to forge collars and chains for his slave caravans, and I refused, though he offered twice the silver. He burned my forge to the ground, with the tools my father left me inside it." />
+    <string id="aom_backstory_c.spc_wanderer_khand_7_text" text="I walk with a hammer, a scarred hand, and a stubborn pride that cost me everything. I never regretted it, and I suspect I never will." />
+    <string id="aom_response_1.spc_wanderer_khand_7_text" text="A craftsman who refuses to make chains still makes the world better." />
+    <string id="aom_response_2.spc_wanderer_khand_7_text" text="You could have made the collars and lived richly. Pride is a poor trade." />
+    <string id="aom_backstory_d.spc_wanderer_khand_7_text" text="Set me up with a forge and iron, and I will arm your people better than any smith in the south." />
+    <string id="aom_generic_backstory.spc_wanderer_khand_7_text" text="I am an axe-smith out of the Khand camps, and I can make a blade to bite through helm and bone alike." />
+    <string id="aom_prebackstory.spc_wanderer_khand_8_text" text="There is no creature in the world I understand better than a horse. People are harder." />
+    <string id="aom_backstory_a.spc_wanderer_khand_8_text" text="I was a horse-breaker and lancer in a clan whose wealth stood in its herds. I broke wild colts from the plains, rode the ridge-line at dawn, and charged at the head of the lances when the clan went to war." />
+    <string id="aom_backstory_b.spc_wanderer_khand_8_text" text="In a feud raid, I found a wounded boy of the rival clan hiding in a gully, and I lifted him onto my horse and carried him to his own people's tents. My clan called it treason, and my own chief had my herd driven off." />
+    <string id="aom_backstory_c.spc_wanderer_khand_8_text" text="I have one horse left, the colt I could not bear to part with, and a saddle that is still mine. The plains still call me, but no clan will receive me." />
+    <string id="aom_response_1.spc_wanderer_khand_8_text" text="You showed mercy when mercy was all you had. That is not treason." />
+    <string id="aom_response_2.spc_wanderer_khand_8_text" text="You helped the enemy's child. Your clan was right to be angry." />
+    <string id="aom_backstory_d.spc_wanderer_khand_8_text" text="Give me a horse under me and a lance, and I will carry your banner ahead of every charge." />
+    <string id="aom_generic_backstory.spc_wanderer_khand_8_text" text="I am a horse-breaker and lancer from the plains clans, raised in the saddle among the herds of Khand." />
+    <string id="aom_prebackstory.spc_wanderer_khand_9_text" text="I will be honest with you. I am not brave, but I am very hard to hit." />
+    <string id="aom_backstory_a.spc_wanderer_khand_9_text" text="I trained as an archer in a Variag battle line, loosing from the rear while the axemen held the front. I could put an arrow through a mailed throat at two hundred paces, and I took pride in the number I kept in my quiver." />
+    <string id="aom_backstory_b.spc_wanderer_khand_9_text" text="When the line broke in a border war against the Haradrim, I shot until the horns blew, then dropped my bow and ran. Better to live as a coward than to die as a corpse, I told myself, and I have told myself that every night since." />
+    <string id="aom_backstory_c.spc_wanderer_khand_9_text" text="I am a deserter now, with a price on me in the war-camps and a sharp bow I never learned to stop using. Fear has made me careful, and I am still alive." />
+    <string id="aom_response_1.spc_wanderer_khand_9_text" text="Running from a lost fight is not the same as cowardice. You kept your arm." />
+    <string id="aom_response_2.spc_wanderer_khand_9_text" text="You left your comrades to die. I do not trust that kind of nerve." />
+    <string id="aom_backstory_d.spc_wanderer_khand_9_text" text="Keep me behind your line with a bow and a clear target, and I will be worth every coin." />
+    <string id="aom_generic_backstory.spc_wanderer_khand_9_text" text="I am an archer from the Variag battle lines, trained to shoot from behind the axes and stay alive." />
   </strings>
 </base>

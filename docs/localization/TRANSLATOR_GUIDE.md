@@ -13,7 +13,7 @@ Located at `Main/_Module/ModuleData/Languages/<LANG>/`:
 | File | What it contains | Entries |
 |------|------------------|---------|
 | `std_taom_module_strings_{locale}.xml` | Faction names, titles, culture terms, UI labels (career screen, main menu, etc.) | ~2,652 |
-| `std_taom_wanderer_strings_{locale}.xml` | Wanderer backstories for all cultures | ~1,761 |
+| `std_taom_wanderer_strings_{locale}.xml` | Wanderer backstories for all cultures | ~1,921 |
 | `std_taom_named_companion_strings_{locale}.xml` | Named companion dialog (Aragorn, Legolas, Gimli, etc.) | ~119 |
 | `std_taom_cc_strings_{locale}.xml` | Character creation narratives (parents, childhood, youth, education, adulthood) | ~966 |
 | `std_taom_career_strings_{locale}.xml` | Career system names, descriptions, ability tooltips, choices | ~2,050 |
@@ -32,7 +32,7 @@ Located at `Main/_Module/ModuleData/Languages/<LANG>/`:
 | `std_taom_culture_text_strings_{locale}.xml` | Culture names, descriptions and the male/female name lists heroes are named from, generated from `taom_spcultures.xml` (added 2026-10-01) | 1,793 |
 | `std_taom_hero_text_strings_{locale}.xml` | Hero biographies (encyclopedia text), generated from `characters/heroes.xml` (added 2026-10-01) | 460 |
 | `std_taom_career_data_strings_{locale}.xml` | Career, choice, rank, ability-template and career-quest names and descriptions, generated from `career_system/*.xml` (added 2026-10-01) | 792 |
-| `std_taom_character_name_strings_{locale}.xml` | Notable, townsfolk, wanderer, named-companion and creature names, generated from `characters/*.xml` (not lords, clans, heroes), `taom_wanderers.xml` and `named_companions.xml` (added 2026-10-01) | 1,519 |
+| `std_taom_character_name_strings_{locale}.xml` | Notable, townsfolk, wanderer, named-companion and creature names, generated from `characters/*.xml` (not lords, clans, heroes), `taom_wanderers.xml` and `named_companions.xml` (added 2026-10-01) | 1,622 |
 | `std_taom_battle_scene_strings_{locale}.xml` | Custom Battle scene names, generated from `custom_battle_scenes.xml` (added 2026-10-01) | 27 |
 
 ### TAOM_Map module (1 file, ~1,102 strings)

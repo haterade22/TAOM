@@ -240,7 +240,9 @@ See [arthedain.md](../features/arthedain.md).
    files run from 28 to 80 notables.
 8. Add the education templates, the wanderers, the wanderer skill sets and each wanderer's seven
    backstory rows in `taom_wanderer_strings.xml` (`WandererBackstoryCoverageTests`). Ten wanderers is
-   the shipped norm; 17 of the 21 cultures with wanderers have exactly ten.
+   the shipped norm; 19 of the 23 cultures with wanderers have exactly ten. Also list them in the
+   culture's `notable_templates` (`RenamedCultureWandererListTests` for the XSLT cultures), or the
+   Faction screen's Wanderer tab stays empty.
 9. Assign fiefs in `TAOM_Map/ModuleData/settlements.xml`: set both `owner` and `culture` on every
    town and castle. Villages inherit from the fief they are bound to. For brand-new settlements the
    map author places and saves the entities in `Main_map/scene.xscene` first; then
@@ -359,7 +361,7 @@ Code: No code changes needed
 | 34 | of those clans share `clan_gundabad_1`'s `banner_key` | the ElementTree one-liner in Gotchas |
 | 1022 / 1202 | `<Hero>` entries in `characters/heroes.xml` and `<NPCCharacter>` entries in `characters/lords.xml` | `rg -c '<Hero\b' Main/_Module/ModuleData/characters/heroes.xml ; rg -c '<NPCCharacter\b' Main/_Module/ModuleData/characters/lords.xml` |
 | 23 / 1479 / 28 to 80 | `npcs_*.xml` files, notables in them, and the per-file range | `python -c "import glob,xml.etree.ElementTree as ET;n=[len([x for x in ET.parse(p).getroot().iter('NPCCharacter')]) for p in glob.glob('Main/_Module/ModuleData/characters/npcs_*.xml')];print(len(n),sum(n),min(n),max(n))"` |
-| 223 / 21 / 17 | wanderer entries, cultures covered, and cultures with exactly 10 | `python -c "import xml.etree.ElementTree as ET,collections;c=collections.Counter(e.get('culture') for e in ET.parse('Main/_Module/ModuleData/taom_wanderers.xml').getroot().iter('NPCCharacter'));print(len(c),sum(1 for v in c.values() if v==10))"` |
+| 243 / 23 / 19 | wanderer entries, cultures covered, and cultures with exactly 10 | `python -c "import xml.etree.ElementTree as ET,collections;c=collections.Counter(e.get('culture') for e in ET.parse('Main/_Module/ModuleData/taom_wanderers.xml').getroot().iter('NPCCharacter'));print(len(c),sum(1 for v in c.values() if v==10))"` |
 | 17 | troop files, every one swept by `validate_all_troop_refs.py` | `ls Main/_Module/ModuleData/troops/ \| rg '^troops_[a-z_]+\.xml$' \| wc -l` |
 | 1040 | settlements in the live map module | `rg -c '<Settlement\b' "$BANNERLORD_GAME_DIR/Modules/TAOM_Map/ModuleData/settlements.xml"` |
 | 2 / 10 / 5 | Lindon's clans, heroes and settlements, the smallest shipped realm | the three `rg -c` commands quoted under "The floor" |

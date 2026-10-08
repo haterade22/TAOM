@@ -1608,5 +1608,25 @@
     <string id="aom_spc_wanderer_arthedain_7_name" text="{FIRSTNAME} Annúminasionath" />
     <string id="aom_spc_wanderer_arthedain_8_name" text="{FIRSTNAME} Forostirionath" />
     <string id="aom_spc_wanderer_arthedain_9_name" text="{FIRSTNAME} Valandilionath" />
+    <string id="aom_spc_wanderer_dale_0_name" text="{FIRSTNAME} Bainling" />
+    <string id="aom_spc_wanderer_dale_1_name" text="{FIRSTNAME} Girionsson" />
+    <string id="aom_spc_wanderer_dale_2_name" text="{FIRSTNAME} Hallbrand" />
+    <string id="aom_spc_wanderer_dale_3_name" text="{FIRSTNAME} Esgarothing" />
+    <string id="aom_spc_wanderer_dale_4_name" text="{FIRSTNAME} Dalecroft" />
+    <string id="aom_spc_wanderer_dale_5_name" text="{FIRSTNAME} Longlakeson" />
+    <string id="aom_spc_wanderer_dale_6_name" text="{FIRSTNAME} Brandwyn" />
+    <string id="aom_spc_wanderer_dale_7_name" text="{FIRSTNAME} Ravenhild" />
+    <string id="aom_spc_wanderer_dale_8_name" text="{FIRSTNAME} Lonelyfell" />
+    <string id="aom_spc_wanderer_dale_9_name" text="{FIRSTNAME} Fellrider" />
+    <string id="aom_spc_wanderer_khand_0_name" text="{FIRSTNAME} Variagor" />
+    <string id="aom_spc_wanderer_khand_1_name" text="{FIRSTNAME} Azrakhan" />
+    <string id="aom_spc_wanderer_khand_2_name" text="{FIRSTNAME} Dunhazur" />
+    <string id="aom_spc_wanderer_khand_3_name" text="{FIRSTNAME} Karzuran" />
+    <string id="aom_spc_wanderer_khand_4_name" text="{FIRSTNAME} Hazgudan" />
+    <string id="aom_spc_wanderer_khand_5_name" text="{FIRSTNAME} Sulmarak" />
+    <string id="aom_spc_wanderer_khand_6_name" text="{FIRSTNAME} Tarkhazan" />
+    <string id="aom_spc_wanderer_khand_7_name" text="{FIRSTNAME} Ostrakan" />
+    <string id="aom_spc_wanderer_khand_8_name" text="{FIRSTNAME} Zhulgarid" />
+    <string id="aom_spc_wanderer_khand_9_name" text="{FIRSTNAME} Bahrmakhan" />
   </strings>
 </base>

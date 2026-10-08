@@ -25,9 +25,11 @@ namespace TAOM.Tests.Migration;
 /// </para>
 ///
 /// <para>
-/// Reads the installed modules, so it lives in <c>BindingVerification</c>. A stylesheet whose
-/// basename has no vanilla counterpart (TAOM_Map's, or the live-module ones) is skipped: its input
-/// is not under this repo's control.
+/// Reads the installed modules, so it lives in <c>BindingVerification</c>. A stylesheet's input is
+/// every vanilla file registered under the XmlName id TAOM registers the stylesheet with, which is
+/// what the engine merges. A stylesheet is looked up by its path under ModuleData, as the engine
+/// applies <c>ModuleData/&lt;registered path&gt;.xslt</c>; one TAOM does not register, or whose id no
+/// vanilla module registers, has no vanilla input and is skipped.
 /// </para>
 /// </summary>
 [TestClass]
@@ -52,24 +54,38 @@ public class XsltTemplateCoverageTests
         if (!_gameLoaded) Assert.Inconclusive("Game assemblies unavailable: " + string.Join("; ", GameAssemblies.Diagnostics));
 
         var modulesRoot = Path.Combine(GameAssemblies.GameDir, "Modules");
-        var vanillaByName = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+        var vanillaById = new Dictionary<string, List<string>>(StringComparer.Ordinal);
         foreach (var module in VanillaModules)
         {
             var data = Path.Combine(modulesRoot, module, "ModuleData");
             if (!Directory.Exists(data)) continue;
-            foreach (var file in Directory.GetFiles(data, "*.xml", SearchOption.AllDirectories))
+            foreach (var (id, path) in XmlNames(Path.Combine(modulesRoot, module, "SubModule.xml")))
             {
-                if (!vanillaByName.TryGetValue(Path.GetFileName(file), out var list)) vanillaByName[Path.GetFileName(file)] = list = new List<string>();
+                var file = Path.Combine(data, path + ".xml");
+                if (!File.Exists(file)) continue;
+                if (!vanillaById.TryGetValue(id, out var list)) vanillaById[id] = list = new List<string>();
                 list.Add(file);
             }
         }
 
+        // The engine merges by XmlName id, not by file name (MBObjectManager.GetMergedXmlForManaged): TAOM's
+        // lords.xslt runs over every earlier module's NPCCharacters file, spspecialcharacters.xml included.
+        var moduleData = Core.CultureDataFixture.ModuleDataPath();
+        var taomIdsByPath = XmlNames(Path.Combine(moduleData, "..", "SubModule.xml"))
+            .ToLookup(n => n.Path.Replace('\\', '/'), n => n.Id, StringComparer.OrdinalIgnoreCase);
+
         var dead = new List<string>();
         var checkedTemplates = 0;
-        foreach (var xslt in Directory.GetFiles(Core.CultureDataFixture.ModuleDataPath(), "*.xslt", SearchOption.AllDirectories))
+        foreach (var xslt in Directory.GetFiles(moduleData, "*.xslt", SearchOption.AllDirectories))
         {
-            var inputName = Path.GetFileNameWithoutExtension(xslt) + ".xml";
-            if (!vanillaByName.TryGetValue(inputName, out var inputs)) continue;
+            var registeredPath = xslt.Substring(moduleData.TrimEnd('\\', '/').Length + 1)
+                .Replace('\\', '/');
+            registeredPath = registeredPath.Substring(0, registeredPath.Length - ".xslt".Length);
+            var inputs = taomIdsByPath[registeredPath]
+                .SelectMany(id => vanillaById.TryGetValue(id, out var byId) ? byId : new List<string>())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            if (inputs.Count == 0) continue;
 
             var stylesheet = new XmlDocument();
             stylesheet.Load(xslt);
@@ -78,8 +94,8 @@ public class XsltTemplateCoverageTests
             var matches = stylesheet.SelectNodes("//xsl:template/@match", ns)!.Cast<XmlAttribute>()
                 .Select(a => a.Value).Where(m => !Trivial.Contains(m)).Distinct().ToList();
 
-            // The engine runs a module's stylesheet over the MERGED document of every earlier module's
-            // file of that name (MBObjectManager.CreateMergedXmlFile), so a template is dead only when
+            // The engine runs a module's stylesheet over the MERGED document of every earlier entry of that
+            // XmlName id (MBObjectManager.CreateMergedXmlFile), so a template is dead only when
             // it selects nothing in the union of those files, not in each one separately.
             var navigators = inputs.Select(i => new XPathDocument(i).CreateNavigator()).ToList();
             foreach (var match in matches)
@@ -93,7 +109,7 @@ public class XsltTemplateCoverageTests
                 }
                 catch (XPathException) { continue; }   // a pattern XPath cannot evaluate as an expression; not a coverage question
                 if (hits == 0)
-                    dead.Add($"{Path.GetFileName(xslt)}: match=\"{match}\" selects nothing in any vanilla {inputName}");
+                    dead.Add($"{Path.GetFileName(xslt)}: match=\"{match}\" selects nothing in its {inputs.Count} vanilla input file(s)");
             }
         }
 
@@ -101,5 +117,19 @@ public class XsltTemplateCoverageTests
         Assert.AreEqual(0, dead.Count,
             "XSLT templates that match nothing in the vanilla file they transform (silent no-ops; the vanilla value ships):"
             + Environment.NewLine + string.Join(Environment.NewLine, dead));
+    }
+
+    /// <summary>Each <c>&lt;XmlName id path&gt;</c> a SubModule.xml registers.</summary>
+    private static IEnumerable<(string Id, string Path)> XmlNames(string subModule)
+    {
+        if (!File.Exists(subModule)) yield break;
+        var doc = new XmlDocument();
+        doc.Load(subModule);
+        foreach (XmlElement name in doc.SelectNodes("//XmlName")!)
+        {
+            var id = name.GetAttribute("id");
+            var path = name.GetAttribute("path");
+            if (id.Length > 0 && path.Length > 0) yield return (id, path);
+        }
     }
 }

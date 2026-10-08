@@ -1399,6 +1399,169 @@
 		</EquipmentSet>
 	</EquipmentRoster>
 
+	<EquipmentRoster id="npc_companion_equipment_template_dale" culture="Culture.sturgia">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dale_sword_c" />
+			<Equipment slot="Item1" id="Item.wm_dale_shield_a08" />
+			<Equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
+			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
+			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+			<Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dale_spear_a" />
+			<Equipment slot="Item1" id="Item.wm_dale_shield_a08" />
+			<Equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
+			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
+			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+			<Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dale_great_axe_a" />
+			<Equipment slot="Item1" id="Item.dale_sword_b" />
+			<Equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a02" />
+			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a02" />
+			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a02" />
+			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a02" />
+			<Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dale_winged_spear_b" />
+			<Equipment slot="Item1" id="Item.dale_sword_b" />
+			<Equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a02" />
+			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a02" />
+			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a02" />
+			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a02" />
+			<Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dale_winged_spear_a" />
+			<Equipment slot="Item1" id="Item.dale_sword_a" />
+			<Equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
+			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
+			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
+			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
+			<Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.dale_great_axe_a" />
+			<Equipment slot="Item1" id="Item.dale_sword_a" />
+			<Equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a03" />
+			<Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a03" />
+			<Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a03" />
+			<Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a03" />
+			<Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a03" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.ladder_dale_bow_t3" />
+			<Equipment slot="Item1" id="Item.default_arrows" />
+			<Equipment slot="Item2" id="Item.dale_sword_b" />
+			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a01" />
+			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
+			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a01" />
+			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
+			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.dale_sword_c" />
+			<Equipment slot="Body" id="Item.nordic_padded_cloth" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.dale_sword_c" />
+			<Equipment slot="Body" id="Item.padded_leather_overcoat" />
+			<Equipment slot="Leg" id="Item.strapped_leather_boots" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.dale_sword_b" />
+			<Equipment slot="Body" id="Item.nordic_sloven_leather" />
+			<Equipment slot="Leg" id="Item.ragged_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<EquipmentRoster id="npc_companion_equipment_template_khand" culture="Culture.battania">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_b" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_chest_light_c" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_a" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_light_b" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_b" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_chest_light_c" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_a" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_light_b" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+			<Equipment slot="Item1" id="Item.desert_round_shield" />
+			<Equipment slot="Item2" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_c" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_chest_light_c" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_a" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_light_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_a" />
+			<Equipment slot="Body" id="Item.sk_rh_drag_chainmail_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+			<Equipment slot="Item1" id="Item.bound_adarga" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_chest_med_c" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_b" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_med_b" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Item1" id="Item.bound_adarga" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_rh_loke_chest_med_c" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_b" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_med_b" />
+		</EquipmentSet>
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+			<Equipment slot="Item2" id="Item.composite_bow" />
+			<Equipment slot="Item3" id="Item.bodkin_arrows_b" />
+			<Equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_a" />
+			<Equipment slot="Body" id="Item.sk_rh_drag_chainmail_a" />
+			<Equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
+			<Equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
+			<Equipment slot="Cape" id="Item.sk_rh_loke_pauldron_light_b" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+			<Equipment slot="Body" id="Item.khuzait_civil_coat_b" />
+			<Equipment slot="Leg" id="Item.khuzait_curved_boots" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_a" />
+			<Equipment slot="Body" id="Item.khuzait_civil_coat" />
+			<Equipment slot="Leg" id="Item.khuzait_curved_boots" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+			<Equipment slot="Body" id="Item.khuzait_civil_coat_b" />
+			<Equipment slot="Leg" id="Item.khuzait_curved_boots" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
   <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->
 	<EquipmentRoster id="npc_companion_equipment_template_goblin" culture="Culture.goblin">
 		<EquipmentSet>

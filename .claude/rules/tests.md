@@ -91,9 +91,11 @@ vanilla prefixes: a whitelist needs no exemption for intentional sharing and doe
 engine bump.
 
 Worked example, pinning culture party-template bindings across `spcultures.xslt`:
-`TAOM.Tests/Core/CulturePartyTemplateTests.cs`. The same technique applies to `spclans.xslt`,
-`spkingdoms.xslt` and `heroes.xslt`, none of which currently has output coverage; `lords.xslt` has it
-only for the Nine's race, age, face age and kit (`TAOM.Tests/Features/NazgulFamily/NazgulRaceDataTests.cs`, #644).
+`TAOM.Tests/Core/CulturePartyTemplateTests.cs`. The same technique applies to `spclans.xslt` and
+`spkingdoms.xslt`, neither of which currently has output coverage; `lords.xslt` has it for the Nine's
+race, age, face age and kit (`TAOM.Tests/Features/NazgulFamily/NazgulRaceDataTests.cs`, #644), lord
+families with `heroes.xslt` (`LordFamilyTransformTests`) and the vanilla wanderer retag
+(`VanillaWandererTemplateTransformTests`, #758).
 
 ## Test categories (builds without the game)
 
