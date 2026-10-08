@@ -258,7 +258,8 @@ public class WarTheaterConfigInvariantsTests
         Assert.AreEqual(before.ForeignTheaterWeight, after.ForeignTheaterWeight);
         Assert.AreEqual(before.TheaterEntries, after.KingdomTheaters.Sum(k => k.Value?.Count ?? 0),
             "validation dropped a theater entry, so a name in the shipped file is undeclared");
-        Assert.AreEqual(80, after.FactionPriorityTargets.Sum(k => k.Value?.Count ?? 0),
+        // 80 until 2026-10-07, when Gundabad and Dunland each gained Arthedain's three towns.
+        Assert.AreEqual(86, after.FactionPriorityTargets.Sum(k => k.Value?.Count ?? 0),
             "the shipped priority lists lost entries to validation, or the 2026-08-21 prune came back");
 
         logger.DidNotReceive().LogWarning(Arg.Any<string>());

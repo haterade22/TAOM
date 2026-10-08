@@ -1923,3 +1923,29 @@ although seven cultures recruit another culture's troops, Umbar only for its bas
 - **Why missed:** `tools/promote_borrowed_cultures.py` writes the culture and the tree, `tools/retag_promoted_cultures.py` the retag, and neither writes or lists a keyed balance table. The #585 level-band test checks only troops that already have a weight row, so a tree with no rows passed it.
 - **Prevent:** after a promotion, grep ModuleData and `Main/Features` for the host culture id and for the host tree's troop ids, and decide each hit (mirror, or exempt with a reason). Pin a cloned tree with a parity test against its source, like `EveryLindonTroop_WeighsTheSameAsItsRivendellTwin`. Still open for Lindon on 2026-10-06: clan party templates, Elven Wine, troop resource costs, Elite Emissary, banner bearers.
 - **Source:** `docs/reviews/rca-lindon-balance-tables-2026-10-06.md`.
+
+### A new kingdom's generators drift from their output, and the map save can duplicate a name (Arthedain, 2026-10-07)
+Building Arthedain surfaced four traps no gate named in advance. `generate_new_faction_kingdoms.py`
+and `promote_borrowed_cultures.py` regenerate every table entry by default, and Lindon's entries had
+been retagged and re-templated after generation, so a plain run would have reverted Lindon.
+`harvest_factionmap_strings.py` rebuilds every faction's strings from `factions.json`, whose Lindon card
+is older than its corrected registered rows ("The Last Homely House", "Noldor"), so a re-harvest
+reverted five Lindon rows. The Arnor armour pack is tagged `Culture.gondor`, so Arthedain owns no
+armour by item culture: markets, lord's materials and armour acquisition all read it as Gondor's.
+And a scene save after an entity rename left two entities named `castle_AN8` and none named
+`castle_AN4`; the editor then wrote one castle's position into the other's row.
+- **Why missed:** each tool was written for one batch and its table was never reconciled with the
+  shipped output; the drift is invisible until the tool runs again.
+- **Prevent:** run those generators with `--only <culture>` (now required by the kingdom generator);
+  diff `taom_module_strings.xml` after any `harvest_factionmap_strings.py` run and restore every row
+  that is not yours; read the `culture=` of a pack's items before keying a table on "the culture's
+  armour"; after every scene save run `add_map_fortifications.py --check` and
+  `add_map_villages.py --check` before any campaign load. Still open: Lindon's `factions.json` card
+  text disagrees with its registered strings, and English reads the inline default.
+- **Source:** [arthedain.md](../../features/arthedain.md).
+
+### Hold a new culture's coverage with tests that read the data, not with a sweep (Arthedain, 2026-10-07)
+The #749 lesson asked for a grep sweep of every table keyed on the scaffold culture. Arthedain's sweep covered ModuleData and still missed a C# map keyed on career ids (`CareerSystemIoC`, so all three careers' abilities were no-ops), a compound JSON key (`"gondor,gondor_soldiers"` in `race_abilities.json`), and both armour quests, excluded on a misread test. Each is now a test that reads the data: every career has an archetype, every character-creation culture has a commission row and a Deep Seam row, compiled defaults equal the shipped JSON, and the custom-battle culture set equals the playable cultures (`CultureDataFixture.MainCultureIds()`).
+- **Why missed:** a grep for a culture id cannot see a table keyed on something else, and a hand list that "mirrors" another is checked by nobody.
+- **Prevent:** when a table must cover every culture, write the test that reads the cultures from the data and fails on a missing one; a named known-gap set is allowed only with a reason and a test that it only shrinks. The recipe's "C# a kingdom touches" table lists every compiled list and its guard.
+- **Source:** `docs/reviews/rca-arthedain-2026-10-07.md` findings 2 to 4, 9 and 10.

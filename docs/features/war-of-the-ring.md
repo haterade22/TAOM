@@ -85,7 +85,8 @@ All paths ultimately funnel through `MakePeaceAction.ApplyInternal`, which Layer
     "triggerDay": 30,
     "wars": [
       { "attacker": "isengard", "defender": "vlandia" },
-      { "attacker": "empire", "defender": "vlandia" }
+      { "attacker": "empire", "defender": "vlandia" },
+      { "attacker": "gundabad", "defender": "arthedain" }
     ]
   },
   "phase2": {
@@ -251,6 +252,7 @@ The MCM branch of `GetEffectivePhaseDays` had no coverage until 2026-07-30 — e
 | rivendell | Rivendell | Free |
 | lothlorien | Lothlorien | Free |
 | mirkwood | Mirkwood | Free |
+| arthedain | Arthedain | Free |
 | empire_s | Mordor | Dark Power |
 | isengard | Isengard | Dark Power |
 | gundabad | Gundabad | Dark Power |

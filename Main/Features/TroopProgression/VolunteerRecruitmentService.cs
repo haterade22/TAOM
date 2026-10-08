@@ -62,6 +62,7 @@ public partial class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeDunlandClans();
         InitializeMirkwoodCulture();
         InitializeUmbarCulture();
+        InitializeArthedainCulture();
     }
 
     public VolunteerRecruitmentService(IRandomProvider random, IModLogger logger)

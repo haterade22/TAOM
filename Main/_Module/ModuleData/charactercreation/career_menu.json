@@ -534,5 +534,29 @@
         "focus_to_add": 0,
         "skill_level_to_add": 0,
         "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "ranger_of_the_north",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "warden_of_fornost",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "knight_of_arthedain",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     }
 ]

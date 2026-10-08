@@ -29,7 +29,7 @@ public static class RaceAbilityDefaults
     // Human soldiers only, by culture; a comma-separated key shares one profile.
     public static Dictionary<string, RaceAbilityProfile> CultureProfiles() => new Dictionary<string, RaceAbilityProfile>
     {
-        ["gondor,gondor_soldiers"] = CitadelGuard(),
+        ["gondor,gondor_soldiers,arthedain"] = CitadelGuard(),
         ["vlandia"] = ForthEorlingas(),
         ["sturgia"] = BardsAim(),
         ["empire,dunland_raiders"] = HillClanFury(),

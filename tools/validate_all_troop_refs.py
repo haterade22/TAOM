@@ -77,24 +77,13 @@ def main():
     # fabricated failure here is as costly as a missed one.
     ensure_exists(ARMORY_ROOT, what="the LOTRLOME_Armory item folder")
 
-    cultures = [
-        "gondor", "mordor", "isengard", "dolguldur",
-        "gundabad", "erebor", "rhun_new", "dale",
-        # Promoted 2026-08-10 out of a borrowed culture: bluecraig off goblin, lindon off rivendell.
-        # A new culture must be appended here or its troop file is never swept for broken item refs
-        # — the "underwear bug" gate (docs/ai-includes/new-culture-authoring.md Phase 4).
-        #
-        # bluecraig has no row: its troop file was a duplicate of goblin's and was retired, so the
-        # culture now fields troops_goblin.xml. NOTE the old wording here claimed it was therefore
-        # "swept under goblin" -- it is not. `goblin` is absent from this list and validate_culture
-        # resolves troops_{culture}.xml by exact name, so troops_goblin.xml is never opened. Six
-        # files go unswept: dunland, goblin, harad, mirkwood, rivendell, rohan. The schema check
-        # MISSING_BODY_ARMOUR reads all 16 automatically; this hardcoded list is the liability.
-        "lindon",
-        # Added 2026-09-01. Umbar had never been swept, which is part of why its
-        # troops sat in Gondor hand-me-downs and vanilla Calradian rags unnoticed.
-        "umbar",
-    ]
+    # Every troop file, read from the folder: a hand list here left six files unswept (dunland,
+    # goblin, harad, mirkwood, rivendell, rohan) and made each new culture an edit to this script.
+    cultures = sorted(os.path.basename(p)[len("troops_"):-len(".xml")]
+                      for p in glob.glob(os.path.join(TROOPS_DIR, "troops_*.xml")))
+    if not cultures:
+        print(f"FAIL: no troops_*.xml under {TROOPS_DIR}")
+        sys.exit(1)
     armory_ids = collect_armory_ids()
     print(f"Armory IDs (recursive): {len(armory_ids):,}\n")
     total_missing = 0

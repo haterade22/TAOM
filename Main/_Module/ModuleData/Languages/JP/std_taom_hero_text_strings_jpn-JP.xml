@@ -466,5 +466,6 @@
     <string id="zulgor_description" text="翼の繁殖者ズルゴルは怪鳥の卵を孵し、ハムールの空の支配を広げる。" />
     <string id="zulgora_description" text="影を織る者ズルゴラは幻を作り出し、物語に語られるサウロンの欺瞞のごとく敵を惑わす。" />
     <string id="zulgoth_description" text="ズルゴスは儀式師のオークとして、オークの慣習に示唆される通り暗黒の力に生贄を捧げる。その儀式は氏族の企てに力を呼び込む。" />
+    <string id="lord_AN1_1_description" text="Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against Angmar with fewer swords each year." />
   </strings>
 </base>

@@ -1611,10 +1611,11 @@ class Validator:
         "gondor_pel_skirmisher", "gondor_pel_veteran", "gondor_pel_infantry",
         "gondor_pel_vet_infantry",
     )
-    # One (troop, item) pair each: a regular troop wearing a piece above its level where the
-    # armour line ships no lower-tier variant (fix_armour_mesh_ladder's hand decisions after the
-    # KEYforce drop, Mike 2026-09-25). Only that item is excused on that troop: it is not judged
-    # there and does not anchor its price; every other slot of the troop stays on the ladder.
+    # One (troop, item) pair each, with its reason: a troop wearing a piece off its level's band,
+    # because the armour line ships no variant at that tier or by design. Over-dressed (a piece above the level:
+    # fix_armour_mesh_ladder's hand decisions after the KEYforce drop, Mike 2026-09-25) or
+    # under-dressed (a piece below it: Arthedain, 2026-10-07). Only that item is excused on that
+    # troop: it is not judged there and does not anchor its price; every other slot stays on the ladder.
     _ARMOUR_LADDER_EXEMPT_ITEMS = {
         ("gondor_anf_cavalry", "sk_gd_anf_cav_helmet_heavy_a"): "L21 wears heavy; the line has no medium variant",
         ("gondor_anf_cavalry", "sk_gd_anf_cav_helmet_heavy_b"): "L21 wears heavy; the line has no medium variant",
@@ -1634,6 +1635,11 @@ class Validator:
         ("gondor_pg_cavalry", "sk_gd_osg_pauld_cape_inf_elite_a"): "L26 wears elite; the line has no heavy variant",
         ("gondor_pg_spearman", "sk_gd_pin_spear_helmet_heavy_a"): "L21 wears heavy; the line has no medium variant",
         ("gondor_pg_spearman", "sk_gd_pin_spear_helmet_heavy_b"): "L21 wears heavy; the line has no medium variant",
+        # Under-dressed: the Arnor kit has no elite chest, and the rangers are light by choice (Arthedain, 2026-10-07).
+        ("arthedain_kings_guard", "sk_ar_art_chest_noble_heavy_a"): "L36 wears heavy; the Arnor kit ships no elite chest",
+        ("arthedain_kings_guard", "sk_ar_art_chest_noble_heavy_b"): "L36 wears heavy; the Arnor kit ships no elite chest",
+        ("arthedain_ranger_captain", "sk_ar_art_chest_noble_med_a"): "L31 wears medium; the rangers fight light by design",
+        ("arthedain_ranger_captain", "sk_ar_art_chest_noble_med_b"): "L31 wears medium; the rangers fight light by design",
     }
 
     def _cross_culture_armour_inversions(self) -> list:

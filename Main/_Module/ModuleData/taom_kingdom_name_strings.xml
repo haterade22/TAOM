@@ -2,6 +2,11 @@
 <strings>
 
 	<!-- Generated kingdom-identity strings (name/short_name/title/ruler_title/text): extracted from taom_spkingdoms.xml by tools/generate_name_localization_strings.py. Do not hand-edit; re-run the generator after adding a kingdom. -->
+	<string id="taom_arthedain_desc" text="{=taom_arthedain_desc}The last of the three realms into which Arnor was sundered, Arthedain did not fall. Arvedui's line still holds Fornost upon the North Downs, though its lords are few, its towns poor, and Angmar's shadow lies always on the northern hills." />
+	<string id="taom_arthedain_name" text="{=taom_arthedain_name}Kingdom of Arthedain" />
+	<string id="taom_arthedain_ruler_title" text="{=taom_arthedain_ruler_title}King" />
+	<string id="taom_arthedain_short_name" text="{=taom_arthedain_short_name}Arthedain" />
+	<string id="taom_arthedain_title" text="{=taom_arthedain_title}North-Kingdom of Arthedain" />
 	<string id="taom_bluecraig_desc" text="{=taom_bluecraig_desc}The goblin-warrens of Blue Craig in the Blue Mountains (Ered Luin) of the far west, hard by the Grey Havens of Lindon. A distinct, numberless host of goblin-kind — separate from their Misty Mountains cousins of Goblin Town — they swarm the western crags and trouble the Elves of the western shore." />
 	<string id="taom_bluecraig_name" text="{=taom_bluecraig_name}Goblins of Blue Craig" />
 	<string id="taom_bluecraig_ruler_title" text="{=taom_bluecraig_ruler_title}Great Goblin" />

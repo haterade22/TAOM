@@ -154,7 +154,7 @@ clears `IsActive`). A skipped call is a debug line and is expected once per seam
 ### `Main/_Module/ModuleData/diplomacy/diplomacy.json`
 Defines all kingdom pair relationships. Each entry has `kingdomA`, `kingdomB`, and `tier` (`Permanent`, `Natural`, `Neutral`, or `Hostile`). Keys are matched order-insensitively.
 
-Current data: 5 Free Peoples permanent alliances, 11 Natural alliances, 10 Dark Powers permanent alliances, and 33 Hostile pairs.
+Current data: 38 Permanent, 27 Natural, 7 Neutral and 70 Hostile pairs <!-- measured: python collections.Counter(r['tier'] for r in diplomacy.json relationships) 2026-10-07 -->. Every Hostile pair goes to war at Full War, so a free realm needs a Hostile row with each evil realm; `DiplomacyShippedConfigTests` holds Arthedain to that.
 
 ### `Main/_Module/ModuleData/diplomacy/war_of_the_ring.json`
 Controls the scripted war escalation:

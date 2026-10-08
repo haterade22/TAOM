@@ -466,5 +466,6 @@
     <string id="zulgor_description" text="Zulgor, ein Schwingenzüchter, brütet grauenvolle Eier aus und erweitert Khamûls Herrschaft über die Lüfte." />
     <string id="zulgora_description" text="Zulgora, eine Schattenweberin, erschafft Trugbilder und täuscht Feinde wie Saurons Blendwerke in den Erzählungen." />
     <string id="zulgoth_description" text="Zulgoth dient als Ritualist unter den Orks und bringt dunklen Mächten Opfer dar, wie es in den Bräuchen der Orks angedeutet wird. Seine Riten beschwören Stärke für die Unternehmungen des Klans." />
+    <string id="lord_AN1_1_description" text="Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against Angmar with fewer swords each year." />
   </strings>
 </base>

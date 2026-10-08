@@ -1316,4 +1316,59 @@
         </policies>
     </Kingdom>
   <!-- TAOM-NEWFACTIONS:lindon:END -->
+  <!-- TAOM-NEWFACTIONS:arthedain:BEGIN -->
+    <Kingdom
+        id="arthedain"
+        owner="Hero.lord_AN1_1"
+        initial_home_settlement="Settlement.town_AN2"
+        banner_key="11.190.190.1528.1528.764.764.1.0.0.11000.110.110.700.700.764.764.0.0.0"        primary_banner_color="0xFF4870B8"
+        secondary_banner_color="0xFFC8CCD8"
+        color="0xFF4870B8"
+        color2="0xFFC8CCD8"      
+        culture="Culture.arthedain"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_arthedain_name}Kingdom of Arthedain"
+        short_name="{=taom_arthedain_short_name}Arthedain"
+        title="{=taom_arthedain_title}North-Kingdom of Arthedain"
+        ruler_title="{=taom_arthedain_ruler_title}King"
+        text="{=taom_arthedain_desc}The last of the three realms into which Arnor was sundered, Arthedain did not fall. Arvedui's line still holds Fornost upon the North Downs, though its lords are few, its towns poor, and Angmar's shadow lies always on the northern hills.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.gundabad"
+                value="-1"
+                isAtWar="true" />
+            <relationship
+                kingdom="Kingdom.empire"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.isengard"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.rivendell"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lindon"
+                value="1"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.empire_w"
+                value="1"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_lord_prerogative" />
+            <policy
+                id="policy_religious_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+  <!-- TAOM-NEWFACTIONS:arthedain:END -->
 </Kingdoms>

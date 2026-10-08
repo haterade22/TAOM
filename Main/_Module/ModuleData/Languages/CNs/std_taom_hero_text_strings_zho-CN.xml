@@ -466,5 +466,6 @@
     <string id="zulgor_description" text="祖尔戈是育翼者，孵化凶兽之卵，扩张卡姆尔的空中统治。" />
     <string id="zulgora_description" text="祖尔戈拉是编影者，制造幻象以欺骗敌人，一如故事中索隆的诡诈。" />
     <string id="zulgoth_description" text="祖尔戈斯是部族的祭仪者，依照奥克习俗向黑暗力量献祭。他的仪式为部族的行动召来力量。" />
+    <string id="lord_AN1_1_description" text="Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against Angmar with fewer swords each year." />
   </strings>
 </base>

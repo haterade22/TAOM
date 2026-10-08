@@ -198,6 +198,7 @@ class LadderItem:
     donor: str
     folder: str
     usage: str | None = None   # the line's item_usage override for the class, else the donor's
+    name: str | None = None    # the line's display name for the class, else the donor's
 
 
 @dataclass(frozen=True)
@@ -414,6 +415,11 @@ def validate_spec(spec: dict, launchers: dict | None = None, cultures: set | Non
                 problems.append(f"line {lid!r} overrides item_usage for {cls!r}; only Bow and Crossbow are ladders")
             elif not isinstance(usage, str) or not usage.strip():
                 problems.append(f"line {lid!r} item_usage override for {cls!r} is empty")
+        for cls, name in (line.get("names") or {}).items():
+            if cls not in CLASSES:
+                problems.append(f"line {lid!r} names {cls!r}; only Bow and Crossbow are ladders")
+            elif not isinstance(name, str) or not name.strip():
+                problems.append(f"line {lid!r} name override for {cls!r} is empty")
         for cls, per_band in (line.get("donor_by_band") or {}).items():
             if cls not in donors:
                 problems.append(f"line {lid!r} has donor_by_band for {cls!r} but no default donor")
@@ -904,7 +910,8 @@ def planned_items(spec: dict) -> list[LadderItem]:
                 items.append(LadderItem(
                     id=ladder_id(line["id"], cls, tier), line=line["id"], cls=cls, tier=tier, band=band,
                     speed=c.speed, damage=c.damage, accuracy=c.accuracy,
-                    donor=donor_for(line, cls, band), folder=line["folder"], usage=usage_for(line, cls)))
+                    donor=donor_for(line, cls, band), folder=line["folder"], usage=usage_for(line, cls),
+                    name=(line.get("names") or {}).get(cls)))
     return items
 
 

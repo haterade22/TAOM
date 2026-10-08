@@ -5085,4 +5085,315 @@
 	</NPCCharacter>
 
   <!-- TAOM-NEWCULTURE:bluecraig:END -->
+  <!-- TAOM-NEWCULTURE:arthedain:BEGIN -->
+	<NPCCharacter
+		id="spc_wanderer_arthedain_0"
+		name="{=aom_spc_wanderer_arthedain_0_name}{FIRSTNAME} Calendorionath"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.arthedain"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_arthedain_1"
+		name="{=aom_spc_wanderer_arthedain_1_name}{FIRSTNAME} Minastirionath"
+		voice="earnest"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.arthedain"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_arthedain_2"
+		name="{=aom_spc_wanderer_arthedain_2_name}{FIRSTNAME} Erelionath"
+		voice="earnest"
+		age="21"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.arthedain"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_arthedain_3"
+		name="{=aom_spc_wanderer_arthedain_3_name}{FIRSTNAME} Morthalionath"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.arthedain"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_arthedain_4"
+		name="{=aom_spc_wanderer_arthedain_4_name}{FIRSTNAME} Dolmarionath"
+		voice="softspoken"
+		age="23"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.arthedain"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Honor" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_arthedain_5"
+		name="{=aom_spc_wanderer_arthedain_5_name}{FIRSTNAME} Tarcilionath"
+		voice="curt"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.arthedain"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_arthedain_6"
+		name="{=aom_spc_wanderer_arthedain_6_name}{FIRSTNAME} Laurethionath"
+		voice="curt"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.arthedain"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_arthedain_7"
+		name="{=aom_spc_wanderer_arthedain_7_name}{FIRSTNAME} Annúminasionath"
+		voice="ironic"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.arthedain"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_arthedain_8"
+		name="{=aom_spc_wanderer_arthedain_8_name}{FIRSTNAME} Forostirionath"
+		voice="curt"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.arthedain"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_arthedain_9"
+		name="{=aom_spc_wanderer_arthedain_9_name}{FIRSTNAME} Valandilionath"
+		voice="ironic"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.arthedain"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-2" />
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_arthedain_10"
+		name="{=aom_spc_wanderer_arthedain_10_name}{FIRSTNAME} Morvegilionath"
+		voice="earnest"
+		age="32"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.arthedain"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_10_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_arthedain_11"
+		name="{=aom_spc_wanderer_arthedain_11_name}{FIRSTNAME} Arandurionath"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.arthedain"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_11_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_arthedain_12"
+		name="{=aom_spc_wanderer_arthedain_12_name}{FIRSTNAME} Telemarionath"
+		voice="earnest"
+		age="25"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.arthedain"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_gondor_12_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_gondor" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_arthedain" />
+		</Equipments>
+	</NPCCharacter>
+
+  <!-- TAOM-NEWCULTURE:arthedain:END -->
 </NPCCharacters>

@@ -106,6 +106,8 @@
 
   <!-- Human Good cultures -->
   <Culture id="gondor"      gold="150000"  influence="600"  playerGold="2000"  />
+  <!-- Arthedain: a poor northern remnant (20 lords on 10 small fiefs), well under Gondor. -->
+  <Culture id="arthedain"   gold="90000"   influence="400"  playerGold="2000"  />
   <Culture id="vlandia"     gold="75000"  influence="400"  playerGold="2000"  />
   <Culture id="sturgia"     gold="85000"  influence="400"  playerGold="2000"  />
 

@@ -93,6 +93,11 @@
   <Troop id="gondor_lg_haven_guard" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" />
   <Troop id="gondor_met_sun_knight" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" />
   <Troop id="gondor_pel_anchor_guard" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" />
+  <!-- Arthedain (2026-10-07): its capstone and three tier-6 elites on Gondor's Castar pricing. -->
+  <Troop id="arthedain_kings_guard" resource_id="caster" upgrade_cost="5" daily_upkeep="0.3" />
+  <Troop id="arthedain_knight" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" />
+  <Troop id="arthedain_ranger_captain" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" />
+  <Troop id="arthedain_warden" resource_id="caster" upgrade_cost="4" daily_upkeep="0.2" />
 
   <!-- ============================================================================
        Elite Emissary merchant offers (merchant_cost = one-time price the faction

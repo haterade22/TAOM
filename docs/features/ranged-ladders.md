@@ -196,6 +196,10 @@ overrides the usage per line with `"usage": {"Bow": "bow"}` (Harad and Dunland),
 in a cell whose effective usage is in the install's `requires_no_mount` set, and `RANGED_MOUNT_USAGE`
 names any that exists.
 
+**A line may name its own items.** A clone takes its donor's display name unless the line states
+`"names": {"Bow": "..."}`; Arthedain's rangers carry Gondor's Ithilien bows under
+"[Arnor] Ranger's Bow II" to "VI" (2026-10-07). An empty name is a spec problem.
+
 ### The Armory's own bows and ammo
 
 The ladder items carry the troops; the Armory's own launchers are what lords, wanderers, named

@@ -1502,4 +1502,67 @@
     </ChoiceGroups>
   </Career>
 
+  <Career id="ranger_of_the_north" rank1_name="{=taom_career_rank1_ranger_of_the_north}Scout of Eriador" rank2_name="{=taom_career_rank2_ranger_of_the_north}Ranger of the North" rank3_name="{=taom_career_rank3_ranger_of_the_north}Chieftain of the Rangers"
+          display_name="{=taom_career_ranger_of_the_north}Ranger of the North"
+          description="{=taom_career_ranger_of_the_north_desc}An elite scout who strikes from the wilds of Eriador, ambushing the servants of Angmar with deadly precision."
+          portrait_sprite="career_ranger_of_ithilien_portrait"
+          ability_template_id="ranger_of_the_north_ability"
+          min_clan_tier="0"
+          root_choice_id="ranger_of_the_north_root"
+          keystone_icon="10003">
+    <EligibleCultures>
+      <Culture id="arthedain" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="ranger_of_the_north_t1_a" />
+      <Group id="ranger_of_the_north_t1_b" />
+      <Group id="ranger_of_the_north_t2_a" />
+      <Group id="ranger_of_the_north_t2_b" />
+      <Group id="ranger_of_the_north_t3_a" />
+      <Group id="ranger_of_the_north_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="warden_of_fornost" rank1_name="{=taom_career_rank1_warden_of_fornost}Ohtar of the North Downs" rank2_name="{=taom_career_rank2_warden_of_fornost}Warden of the Walls" rank3_name="{=taom_career_rank3_warden_of_fornost}Warden of Fornost"
+          display_name="{=taom_career_warden_of_fornost}Warden of Fornost"
+          description="{=taom_career_warden_of_fornost_desc}A battle-hardened infantry officer who holds the walls of Fornost against the hosts of Angmar, forging order from chaos when the North Downs burn. The Warden holds the line where others would break, rallying soldiers through sheer force of will."
+          portrait_sprite="career_captain_of_osgiliath_portrait"
+          ability_template_id="warden_of_fornost_ability"
+          min_clan_tier="0"
+          root_choice_id="warden_of_fornost_root"
+          keystone_icon="10004">
+    <EligibleCultures>
+      <Culture id="arthedain" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="warden_of_fornost_t1_a" />
+      <Group id="warden_of_fornost_t1_b" />
+      <Group id="warden_of_fornost_t2_a" />
+      <Group id="warden_of_fornost_t2_b" />
+      <Group id="warden_of_fornost_t3_a" />
+      <Group id="warden_of_fornost_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="knight_of_arthedain" rank1_name="{=taom_career_rank1_knight_of_arthedain}Squire of Fornost" rank2_name="{=taom_career_rank2_knight_of_arthedain}Silver Knight" rank3_name="{=taom_career_rank3_knight_of_arthedain}Knight of the Seven Stars"
+          display_name="{=taom_career_knight_of_arthedain}Knight of Arthedain"
+          description="{=taom_career_knight_of_arthedain_desc}An armored champion of the North-kingdom, whose thundering charge has broken countless enemy formations. The Knight of Arthedain combines Arthedain discipline with Fornost's proud cavalry tradition, becoming an immovable wall of steel."
+          portrait_sprite="career_knight_of_belfalas_portrait"
+          ability_template_id="knight_of_arthedain_ability"
+          min_clan_tier="0"
+          root_choice_id="knight_of_arthedain_root"
+          keystone_icon="10005">
+    <EligibleCultures>
+      <Culture id="arthedain" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="knight_of_arthedain_t1_a" />
+      <Group id="knight_of_arthedain_t1_b" />
+      <Group id="knight_of_arthedain_t2_a" />
+      <Group id="knight_of_arthedain_t2_b" />
+      <Group id="knight_of_arthedain_t3_a" />
+      <Group id="knight_of_arthedain_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
 </Careers>

@@ -995,5 +995,25 @@
     <string id="aom_lord_rohan_2_1_name" text="이센문드 케르디킹" />
     <string id="aom_lord_rohan_5_1_name" text="에아드위그 오스키텔링" />
     <string id="aom_lord_rohan_9_1_name" text="둔헤레 두닝" />
+    <string id="aom_lord_AN1_1_name" text="Arvegil II" />
+    <string id="aom_lord_AN1_2_name" text="Malvegil" />
+    <string id="aom_lord_AN1_3_name" text="Gilraen" />
+    <string id="aom_lord_AN1_4_name" text="Ivorwen" />
+    <string id="aom_lord_AN2_1_name" text="Amlaith" />
+    <string id="aom_lord_AN2_2_name" text="Celepharn" />
+    <string id="aom_lord_AN2_3_name" text="Fíriel" />
+    <string id="aom_lord_AN2_4_name" text="Elanwen" />
+    <string id="aom_lord_AN3_1_name" text="Argeleb" />
+    <string id="aom_lord_AN3_2_name" text="Araphor" />
+    <string id="aom_lord_AN3_3_name" text="Meneliel" />
+    <string id="aom_lord_AN3_4_name" text="Silivren" />
+    <string id="aom_lord_AN4_1_name" text="Halbarad" />
+    <string id="aom_lord_AN4_2_name" text="Aranuir" />
+    <string id="aom_lord_AN4_3_name" text="Ithilwen" />
+    <string id="aom_lord_AN4_4_name" text="Calwen" />
+    <string id="aom_lord_AN5_1_name" text="Celebrindor" />
+    <string id="aom_lord_AN5_2_name" text="Arveleg" />
+    <string id="aom_lord_AN5_3_name" text="Maethil" />
+    <string id="aom_lord_AN5_4_name" text="Tirwen" />
   </strings>
 </base>

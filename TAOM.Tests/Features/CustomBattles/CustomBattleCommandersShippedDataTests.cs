@@ -25,13 +25,16 @@ public class CustomBattleCommandersShippedDataTests
     private static readonly string[] ExpectedFactions =
         { "mordor", "gondor", "vlandia", "mirkwood", "rivendell", "lothlorien", "isengard", "erebor" };
 
-    // Mirrors ConfigIdValidationTests.ValidCultureIds (custom + XSLT/vanilla culture StringIds).
-    private static readonly HashSet<string> KnownCultureIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+    // The playable cultures, read from the data (custom is_main_culture ids plus the six XSLT ones).
+    private static readonly HashSet<string> KnownCultureIds = TAOM.Tests.Core.CultureDataFixture.MainCultureIds();
+
+    [TestMethod]
+    public void ProviderWarningSet_IsThePlayableCultureSet()
     {
-        "gondor", "mordor", "erebor", "rivendell", "lothlorien", "mirkwood", "isengard",
-        "gundabad", "dolguldur", "umbar", "goblin", "mistymountainorcs",
-        "vlandia", "empire", "aserai", "khuzait", "sturgia", "battania"
-    };
+        // The provider warns on a faction key outside its own hand-kept set; a culture missing from it
+        // draws a spurious "is not a known culture id" warning (2026-10-07 review: four copies, three contents).
+        CollectionAssert.AreEquivalent(KnownCultureIds.ToList(), CustomBattleCommandersProvider.KnownCultureIds.ToList());
+    }
 
     private static string FindModuleDataPath()
     {

@@ -466,5 +466,6 @@
     <string id="zulgor_description" text="날개 사육사 줄고르는 흉물의 알을 부화시켜 카물의 공중 지배권을 넓힌다." />
     <string id="zulgora_description" text="그림자 직조자 줄고라는 환영을 짜내어, 이야기 속 사우론의 기만처럼 적들을 속인다." />
     <string id="zulgoth_description" text="줄고스는 의식 집전 오르크로서, 오르크 관습에 암시된 대로 어둠의 권능에 제물을 바친다. 그의 의례는 씨족의 과업에 힘을 불어넣는다." />
+    <string id="lord_AN1_1_description" text="Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against Angmar with fewer swords each year." />
   </strings>
 </base>

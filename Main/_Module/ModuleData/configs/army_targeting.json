@@ -22,7 +22,8 @@
     "erebor": ["north", "east"],
     "sturgia": ["north", "east"],
     "bluecraig": [],
-    "lindon": []
+    "lindon": [],
+    "arthedain": ["north"]
   },
   "BorderRescueRadiusInTownGaps": 3.2,
   "PrimaryTheaterWeight": 1.25,
@@ -32,6 +33,9 @@
     "empire_s": ["town_EW3", "town_EW2", "town_EW1", "town_EW4"],
     "isengard": ["town_V2", "town_V1"],
     "gundabad": [
+      "town_AN2",
+      "town_AN1",
+      "town_AN3",
       "town_M1",
       "town_M2",
       "town_S1",
@@ -86,6 +90,9 @@
       "town_A6"
     ],
     "empire": [
+      "town_AN3",
+      "town_AN1",
+      "town_AN2",
       "town_V7",
       "town_V2",
       "town_V5",

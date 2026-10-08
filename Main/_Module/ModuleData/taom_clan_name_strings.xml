@@ -2,6 +2,11 @@
 <strings>
 
 	<!-- Generated clan-name strings: extracted from characters/clans.xml name= attributes by tools/generate_name_localization_strings.py. Keys already registered via taom_module_strings.xml (abanissa/shaghana/bandit clusters) are excluded on purpose. Do not hand-edit; re-run the generator instead. -->
+	<string id="aom_clan_arthedain_1_name" text="{=aom_clan_arthedain_1_name}House of Arvedui" />
+	<string id="aom_clan_arthedain_2_name" text="{=aom_clan_arthedain_2_name}House of Evendim" />
+	<string id="aom_clan_arthedain_3_name" text="{=aom_clan_arthedain_3_name}Wardens of Amon Sûl" />
+	<string id="aom_clan_arthedain_4_name" text="{=aom_clan_arthedain_4_name}House of the Baranduin" />
+	<string id="aom_clan_arthedain_5_name" text="{=aom_clan_arthedain_5_name}House of Emyn Beraid" />
 	<string id="aom_clan_bluecraig_1_name" text="{=aom_clan_bluecraig_1_name}Blue Craig Warband" />
 	<string id="aom_clan_bluecraig_2_name" text="{=aom_clan_bluecraig_2_name}Crag-spawn" />
 	<string id="aom_clan_bluecraig_3_name" text="{=aom_clan_bluecraig_3_name}Lune-skulkers" />

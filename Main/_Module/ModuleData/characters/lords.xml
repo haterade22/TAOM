@@ -54713,4 +54713,957 @@
         </Equipments>
     </NPCCharacter>
   <!-- TAOM-NEWFACTIONS:lindon:END -->
+  <!-- TAOM-NEWFACTIONS:arthedain:BEGIN -->
+    <NPCCharacter id="lord_AN1_1" name="{=aom_lord_AN1_1_name}Arvegil II" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+        <face>
+            <BodyProperties version="4" weight="0.2534" build="0.5733" key="00057C0D0000131AC186C84D4697AC7356B46C8983BEB92A379743C66986654300B946030BACA5A60000000000000000000000000000000000000000676C6082" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="205" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="186" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="138" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_a" />
+            <EquipmentSet id="arthedain_civ_template_default_a" equipmentType="Civilian" />
+            <equipment slot="Head" id="Item.sk_ar_art_crown_king_a" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN1_2" name="{=aom_lord_AN1_2_name}Malvegil" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+        <face>
+            <!-- Placeholder face-->
+            <BodyProperties version="4" weight="0.5" build="0.5" key="000A80034014168D54C4BC37777515B7D845A4BA65A0A9BB59628895AB9747530077760307872A4A000000000000000000000000000000000000000052DC30C2" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="205" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="186" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="138" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_b" />
+            <EquipmentSet id="arthedain_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN1_3" name="{=aom_lord_AN1_3_name}Gilraen" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+        <face>
+            <BodyProperties version="4" weight="0.4" build="0.5" key="000B500A1114300BB69199998669E37568754C66A53693B2BA7A9855C96751D601677613062B368C000000000000000000000000000000000000000040CC4083" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="30" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
+            <skill id="Riding" value="120" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="90" />
+            <skill id="Tactics" value="125" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="146" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="178" />
+            <skill id="Medicine" value="150" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="1" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_c" />
+            <EquipmentSet id="arthedain_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN1_4" name="{=aom_lord_AN1_4_name}Ivorwen" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+        <face>
+            <BodyProperties version="4" age="40.11" weight="0.0023" build="0.5116" key="0015780FC000000B5BA6B6479BC8D64868798769E4627AB4189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F040002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="30" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
+            <skill id="Riding" value="120" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="90" />
+            <skill id="Tactics" value="125" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="146" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="178" />
+            <skill id="Medicine" value="150" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="1" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_d" />
+            <EquipmentSet id="arthedain_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN2_1" name="{=aom_lord_AN2_1_name}Amlaith" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+        <face>
+            <!-- Placeholder face value -->
+            <BodyProperties version="4" weight="0.75" build="0.85" key="0011840B40CC12CBB7B2B8C953C76674299A5DC93264A4A938C659683379847901777613077D5972000000000000000000000000000000000000000040E42102" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="205" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="186" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="138" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_a" />
+            <EquipmentSet id="arthedain_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN2_2" name="{=aom_lord_AN2_2_name}Celepharn" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+        <face>
+            <!--face_key
+			value="000b7da440bc300e669e57882765477b8bb7397b87a7a78b85a54998ac6579dc000c586609868975000000000000000000000000000000000000000000005040"
+			/-->
+            <BodyProperties version="4" age="27.11" weight="0.2292" build="0.7361" key="0000480E400003415870080A6671BA68776789B2BFA60E52754B68098F804B2600AB36030A49A30600000000000000000000000000000000000000003D4C2002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="205" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="186" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="138" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_b" />
+            <EquipmentSet id="arthedain_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN2_3" name="{=aom_lord_AN2_3_name}Fíriel" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+        <face>
+            <!--face_key
+			value="0016d52e407c334e269c3c75a7974761a6ae8c7b19959cab9cb685d9565bb66a00047bb4067385ab00001105000030a30000001f000000000000000000009000"
+			/-->
+            <BodyProperties version="4" weight="0.5" build="0.5" key="0015580A4000000D94255675D562A945CD8B4547EBCC549678EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="30" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
+            <skill id="Riding" value="120" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="90" />
+            <skill id="Tactics" value="125" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="146" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="178" />
+            <skill id="Medicine" value="150" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="1" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_c" />
+            <EquipmentSet id="arthedain_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN2_4" name="{=aom_lord_AN2_4_name}Elanwen" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+        <face>
+            <!--face_key
+			value="0016d52e407c334e269c3c75a7974761a6ae8c7b19959cab9cb685d9565bb66a00047bb4067385ab00001105000030a30000001f000000000000000000009000"
+			/-->
+            <BodyProperties version="4" weight="0.5" build="0.5" key="00003C02D0CC200FCECB7755385C79B87764EA7A87439E635759266A4A5A653B01177613012CB56100000000000000000000000000000000000000004A344043" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="30" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
+            <skill id="Riding" value="120" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="90" />
+            <skill id="Tactics" value="125" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="146" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="178" />
+            <skill id="Medicine" value="150" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="1" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_d" />
+            <EquipmentSet id="arthedain_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN3_1" name="{=aom_lord_AN3_1_name}Argeleb" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+        <face>
+            <BodyProperties version="4" age="22.11" weight="0.2431" build="0.9884" key="0000480FC000001C5870380D66C2D60A7B778AB2B7A80E5273593A0C86C04645008F46030805550300000000000000000000000000000000000000003D1C7002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="205" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="186" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="138" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_a" />
+            <EquipmentSet id="arthedain_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN3_2" name="{=aom_lord_AN3_2_name}Araphor" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+        <face>
+            <!--face_key
+			value="000b7da440bc300e669e57882765477b8bb7397b87a7a78b85a54998ac6579dc000c586609868975000000000000000000000000000000000000000000005040"
+			/-->
+            <BodyProperties version="4" age="22.11" weight="0.2292" build="0.7361" key="00002C0E400003C88770080F61B1F06577C789FBB2A9BE13756905058FB04F0200AB36030A45A30100000000000000000000000000000000000000003D4C1002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="205" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="186" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="138" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_b" />
+            <EquipmentSet id="arthedain_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN3_3" name="{=aom_lord_AN3_3_name}Meneliel" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+        <face>
+            <!--face_key
+			value="000ba52cc03c300d658918a66a565a686aaab3a57a485991a57a63282749b75400056aa402ae984800001105000030a30000001f000000000000000000001000"
+			/-->
+            <BodyProperties version="4" age="25.84" weight="0.5" build="0.5" key="0015BC0E40000006C45AC7B638DC687A68794B86835B7987189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F042002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="30" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
+            <skill id="Riding" value="120" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="90" />
+            <skill id="Tactics" value="125" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="146" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="178" />
+            <skill id="Medicine" value="150" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="1" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_c" />
+            <EquipmentSet id="arthedain_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN3_4" name="{=aom_lord_AN3_4_name}Silivren" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+        <face>
+            <BodyProperties version="4" age="22.11" weight="0.2847" build="0.4352" key="000A580E50140004108730267EF0FB24C4B0881608638801789AF94F7FFF812400A746030A49B7081F64106050200040000000000000176700000000434C1003" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="30" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
+            <skill id="Riding" value="120" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="90" />
+            <skill id="Tactics" value="125" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="146" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="178" />
+            <skill id="Medicine" value="150" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="1" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_d" />
+            <EquipmentSet id="arthedain_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN4_1" name="{=aom_lord_AN4_1_name}Halbarad" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+        <face>
+            <BodyProperties version="4" age="27.11" weight="0.0486" build="0.5741" key="000A240D8000368300802F541370F012ACFA80F5B172060707683B067F945E01009916030905C6140000000000000000000000000000000000000000331C9002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="205" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="186" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="138" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_a" />
+            <EquipmentSet id="arthedain_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN4_2" name="{=aom_lord_AN4_2_name}Aranuir" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+        <face>
+            <BodyProperties version="4" age="25.11" weight="0.1782" build="0.4236" key="0010D808C00010063E8415A71000FF529EC9833001BCE003075810017F905E52009636030980A70600000000000000000000000000000000000000003B2C4002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="205" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="186" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="138" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_b" />
+            <EquipmentSet id="arthedain_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN4_3" name="{=aom_lord_AN4_3_name}Ithilwen" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+        <face>
+            <BodyProperties version="4" age="40.11" weight="0" build="0.2778" key="0015100FC00000109158384479AAA669CD8B367B4918A49378EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F041002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="30" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
+            <skill id="Riding" value="120" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="90" />
+            <skill id="Tactics" value="125" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="146" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="178" />
+            <skill id="Medicine" value="150" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="1" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_c" />
+            <EquipmentSet id="arthedain_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN4_4" name="{=aom_lord_AN4_4_name}Calwen" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+        <face>
+            <BodyProperties version="4" age="33.00" weight="0.4" build="0.5" key="0015B80D8000300AA47918D76753B24A6879516D792B7467189C98C73DB8566800883603088427A500000000000000000000000000000000000000003F040002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="30" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
+            <skill id="Riding" value="120" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="90" />
+            <skill id="Tactics" value="125" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="146" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="178" />
+            <skill id="Medicine" value="150" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="1" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_d" />
+            <EquipmentSet id="arthedain_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN5_1" name="{=aom_lord_AN5_1_name}Celebrindor" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+        <face>
+            <BodyProperties version="4" age="38.11" weight="0.4236" build="0.4236" key="000AD806C00011420E8015A716F0F012E910830001B90601675810067F9A5C04007666030720804000000000000000000000000000000000000000003AF43002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="205" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="186" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="138" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_a" />
+            <EquipmentSet id="arthedain_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN5_2" name="{=aom_lord_AN5_2_name}Arveleg" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_knight_skills">
+        <face>
+            <BodyProperties version="4" age="38.11" weight="0.3981" build="0.4861" key="0020FC0980001282248414071B75011484C884CF8169800109FA00017FF95EA2009766030971A00800000000000000000000000000000000000000003B2C4002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <beard_tags>
+                <beard_tag name="empire" />
+            </beard_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="205" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="186" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="138" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_b" />
+            <EquipmentSet id="arthedain_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN5_3" name="{=aom_lord_AN5_3_name}Maethil" voice="curt" is_female="true" age="25" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+        <face>
+            <BodyProperties version="4" age="22.11" weight="0.2731" build="0.6366" key="0015000D800010020F800A1A098007985FFD8660BE886A0167895C1885BB9A60008836030809B70500000000000000000000000000000000000000003F042002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="30" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
+            <skill id="Riding" value="120" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="90" />
+            <skill id="Tactics" value="125" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="146" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="178" />
+            <skill id="Medicine" value="150" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="1" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_c" />
+            <EquipmentSet id="arthedain_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AN5_4" name="{=aom_lord_AN5_4_name}Tirwen" voice="curt" is_female="true" age="26" default_group="Cavalry" is_hero="true" culture="Culture.arthedain" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_gondor_young_lady_skills">
+        <face>
+            <!--face_key
+			value="000ca12e00bc2005478d688968868296a6779bb376d6a724d866c7b9a9a97b7d000cc774ad629b660000000000000ffe00000000000000000000000000001080"
+			/-->
+            <BodyProperties version="4" age="22.11" weight="0" build="0.3218" key="00152C0A400000103E255675D562A945CD8B7764558E9F4B78EA83A9CC4A9A3500883603083C678E00000000000000000000000000000000000000003F043002" />
+            <hair_tags>
+                <hair_tag name="empire" />
+            </hair_tags>
+            <tattoo_tags>
+                <tattoo_tag name="Cleanface" />
+            </tattoo_tags>
+        </face>
+        <skills>
+            <skill id="OneHanded" value="40" />
+            <skill id="TwoHanded" value="20" />
+            <skill id="Polearm" value="30" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="40" />
+            <skill id="Throwing" value="40" />
+            <skill id="Riding" value="120" />
+            <skill id="Athletics" value="100" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="90" />
+            <skill id="Tactics" value="125" />
+            <skill id="Roguery" value="50" />
+            <skill id="Charm" value="180" />
+            <skill id="Leadership" value="146" />
+            <skill id="Trade" value="130" />
+            <skill id="Steward" value="178" />
+            <skill id="Medicine" value="150" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="1" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="0" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="arthedain_bat_template_medium_d" />
+            <EquipmentSet id="arthedain_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+  <!-- TAOM-NEWFACTIONS:arthedain:END -->
 </NPCCharacters>

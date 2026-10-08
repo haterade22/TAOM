@@ -145,7 +145,7 @@ public static class CoopSettingsRelevance
         // The faction picker shapes the local player's own character creation, which each peer runs
         // for themselves; the co-op layer replicates the hero that results, not the screen.
         "FrontEndFactionScreen",
-        "RealmColourGondor", "RealmColourRohan", "RealmColourDunland", "RealmColourIsengard", "RealmColourMordor", "RealmColourHarad", "RealmColourUmbar", "RealmColourShaghana", "RealmColourAbanissa", "RealmColourKhand", "RealmColourRhun", "RealmColourDale", "RealmColourErebor", "RealmColourRivendell", "RealmColourLothlorien", "RealmColourMirkwood", "RealmColourLindon", "RealmColourDolGuldur", "RealmColourGundabad", "RealmColourMistyMountainOrcs", "RealmColourGoblins", "RealmColourBlueCraig", "RealmColourYourRealm",
+        "RealmColourGondor", "RealmColourRohan", "RealmColourDunland", "RealmColourIsengard", "RealmColourMordor", "RealmColourHarad", "RealmColourUmbar", "RealmColourShaghana", "RealmColourAbanissa", "RealmColourKhand", "RealmColourRhun", "RealmColourDale", "RealmColourErebor", "RealmColourRivendell", "RealmColourLothlorien", "RealmColourMirkwood", "RealmColourLindon", "RealmColourDolGuldur", "RealmColourGundabad", "RealmColourMistyMountainOrcs", "RealmColourGoblins", "RealmColourBlueCraig", "RealmColourArthedain", "RealmColourYourRealm",
     };
 
     /// <summary>True when a difference in this property can make two peers simulate differently.</summary>

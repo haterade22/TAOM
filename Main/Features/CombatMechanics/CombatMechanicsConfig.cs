@@ -84,6 +84,7 @@ public class ChargeDamageConfig
         ["vlandia"] = 1.5f,
         ["khuzait"] = 1.4f,
         ["gondor"] = 1.3f,
+        ["arthedain"] = 1.3f,
         ["sturgia"] = 1.2f,
         ["mordor"] = 1.2f,
         ["isengard"] = 1.2f,

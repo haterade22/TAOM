@@ -466,5 +466,6 @@
     <string id="zulgor_description" text="Zulgor, hodowca skrzydeł, wylęga straszliwe jaja, poszerzając powietrzne władztwo Khamûla." />
     <string id="zulgora_description" text="Zulgora, tkaczka cieni, tworzy iluzje, zwodząc wrogów niczym podstępy Saurona z opowieści." />
     <string id="zulgoth_description" text="Zulgoth działa jako orkowy rytualista, składając ofiary mrocznym mocom, jak sugerują orkowe zwyczaje. Jego obrzędy przyzywają siłę dla przedsięwzięć klanu." />
+    <string id="lord_AN1_1_description" text="Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against Angmar with fewer swords each year." />
   </strings>
 </base>

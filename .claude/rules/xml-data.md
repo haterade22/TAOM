@@ -34,7 +34,7 @@ The same applies to additional Preachers, Headmen, or any new notable beyond the
 Culture XML attributes (`merchant_notary`, `artisan_notary`, etc.) must reference the FIRST NPC of each occupation type.
 
 ## Region Codes
-EN=Rohan, ES=Mordor, EW=Gondor, A=Harad, B=Dunland, V=Vlandia, K=Easterlings, S=Dale/North, DG=Dol Guldur, E=Erebor, G=Gundabad, I=Isengard, L=Lothlorien, M=Mirkwood, R=Rivendell, RU=Rhun, U=Umbar, MM=Misty Mountain Orcs, GT=Goblins (Goblin-town, settlements), LN=Lindon
+EN=Rohan, ES=Mordor, EW=Gondor, A=Harad, B=Dunland, V=Vlandia, K=Easterlings, S=Dale/North, DG=Dol Guldur, E=Erebor, G=Gundabad, I=Isengard, L=Lothlorien, M=Mirkwood, R=Rivendell, RU=Rhun, U=Umbar, MM=Misty Mountain Orcs, GT=Goblins (Goblin-town, settlements), LN=Lindon, AN=Arthedain (settlements and lords)
 
 **Lord/hero id region prefixes** (`lord_<CODE><clanN>_<lordN>`) differ from settlement codes for the new orc kingdoms: Misty Mountain Orcs lords use `MM`, **Goblin lords use `GB`** (settlements use `GT`), Lindon lords use `LN`. Goblin's settlement code (`GT`) and lord code (`GB`) are independent id-spaces.
 
@@ -48,7 +48,7 @@ After writing ANY XML/JSON config containing culture, kingdom, or settlement IDs
 
 | Type | StringIds | Note |
 |------|-----------|------|
-| **Custom cultures** | `gondor`, `mordor`, `erebor`, `rivendell`, `lothlorien`, `mirkwood`, `isengard`, `gundabad`, `dolguldur`, `umbar` | Use LOTR names |
+| **Custom cultures** | `gondor`, `mordor`, `erebor`, `rivendell`, `lothlorien`, `mirkwood`, `isengard`, `gundabad`, `dolguldur`, `umbar`, `goblin`, `mistymountainorcs`, `bluecraig`, `lindon`, `shaghana`, `abanissa`, `arthedain` | Use LOTR names; the `is_main_culture` ids in `taom_spcultures.xml` |
 | **XSLT cultures** | `vlandia` (Rohan), `empire` (Dunland), `aserai` (Harad), `khuzait` (Easterlings), `sturgia` (Dale), `battania` (Khand) | Use vanilla engine IDs |
 
 **Common mistake:** Writing lore names for XSLT cultures. `rohan` is WRONG — use `vlandia`. `dunland` is WRONG — use `empire`. `harad`/`rhun`/`dale`/`khand` are WRONG — use `aserai`/`khuzait`/`sturgia`/`battania`.
@@ -58,7 +58,7 @@ After writing ANY XML/JSON config containing culture, kingdom, or settlement IDs
 | Step | What to check |
 |------|---------------|
 | 1 | Every `culture=` attribute uses a StringId from the table above |
-| 2 | Every `kingdom=` attribute uses a kingdom ID from CLAUDE.md cheatsheet |
+| 2 | Every `kingdom=` attribute uses a kingdom ID from [id-cheatsheet.md](../../docs/modding/id-cheatsheet.md) |
 | 3 | Every `settlement=` attribute exists in `settlements.xml` |
 | 4 | Every `troop=` attribute exists in `troops/troops_{culture}.xml` |
 

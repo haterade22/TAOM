@@ -23,9 +23,9 @@ Idempotent: each inserted region is wrapped in <!-- TAOM-NEWCULTURE:<id>:BEGIN/E
 before re-insert, so re-running regenerates cleanly. Byte-faithful: each file is written back with
 the line endings and BOM it arrived with.
 
-Run:  python tools/promote_borrowed_cultures.py                    # dry run, reports what it would do
-      python tools/promote_borrowed_cultures.py --apply
-      python tools/promote_borrowed_cultures.py --only lindon --apply
+Run:  python tools/promote_borrowed_cultures.py --only arthedain            # dry run: each file same or edit
+      python tools/promote_borrowed_cultures.py --only arthedain --check    # exit 1 if a run would change a file
+      python tools/promote_borrowed_cultures.py --only arthedain --apply
 """
 import argparse
 import json
@@ -34,6 +34,9 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _gamedir import game_dir  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 MD = ROOT / "Main" / "_Module" / "ModuleData"
@@ -110,7 +113,233 @@ TARGETS = {
         "feats": ["taom_goblin_party_size", "taom_goblin_volunteer_rate", "taom_goblin_snow_speed",
                   "taom_goblin_food_consumption", "taom_goblin_smithing", "taom_goblin_raid_damage"],
     },
+    # Arthedain is not a borrowed kingdom being promoted but a NEW culture, scaffolded from Gondor
+    # (the other Dunedain realm) and then given its own troop tree. The keys below the line are
+    # what makes that different from Lindon and Blue Craig, and every one is opt-in, so those two
+    # targets behave exactly as before.
+    "arthedain": {
+        "src": "gondor",
+        "capital": "town_AN2",  # Fornost Erain (Mike, 2026-10-07)
+        # Gondor's men carry no race attribute (plain humans), so there is nothing to rewrite.
+        "race": None,
+        "raceword": "Man",
+        "adjective": "Arthedain",
+        "tag": "Arthedain",
+        "short": "arth",
+        # Gondor's NPC name keys are aom_gd_*, not aom_gon_*, so the default src[:3] remap would
+        # leave 68 Gondor keys carrying Arthedain text: one key, two texts.
+        "src_short": "gd",
+        "color": "0xFF4870B8",
+        "color2": "0xFFC8CCD8",
+        "orc_remap": False,
+        "subs": [
+            ("Minas Tirith", "Fornost"),
+            ("Pelargir", "Annúminas"),
+            ("Gondorians", "Dúnedain"),
+            ("Gondorian", "Arthedain"),
+            ("Gondor", "Arthedain"),
+        ],
+        "culture_name": "Arthedain",
+        "culture_desc": (
+            "The Dúnedain of Arthedain are the last heirs of Arnor, the North-kingdom Elendil founded. "
+            "From Fornost upon the North Downs the line of Arvedui still keeps the watch that Isildur's "
+            "heirs have kept for a thousand years, though their towns are few, their lords are poor and "
+            "the shadow of Angmar never leaves the hills. They are fewer than their southern kin and "
+            "prouder than their numbers warrant, and every season the wild lands press closer."),
+        # Gondor's feats, verbatim (see Lindon's note), less the two that make a realm strong in the
+        # field: army influence and party size. Arthedain is meant to be the realm others carve up.
+        "feats": ["taom_gondor_garrison_wage", "taom_gondor_hearth_growth", "taom_gondor_loyalty",
+                  "taom_gondor_morale", "taom_gondor_plain_speed"],
+        # ---- opt-in keys ----
+        # Clone only these standalone files. The troop tree is tools/generate_arthedain_troops.py.
+        "standalone": ["characters/npcs_{c}.xml", "equipmentsets/taom_equipment_sets_{c}.xml"],
+        # Of Gondor's 74 equipment rosters keep the lord template family a to e only: the culture block
+        # names _a, and generate_new_faction_kingdoms.py assigns letters a to e by lord (Arthedain's four
+        # lords per clan use a to d). The rest are Gondor's named lords' kits.
+        "rosters_kept": r"^arthedain_(bat_template_medium|civ_template_default)_[a-e]$",
+        # The cloned lord, ruler, heir and enlistment rosters wear the Arnor kit (Mike, 2026-10-07):
+        # Gondor's armour piece -> the Arnor piece of the same slot and tier; weapons, horses and
+        # harnesses keep. Applied only to these files' cloned blocks.
+        "item_map_files": ["equipmentsets/taom_equipment_sets_{c}.xml",
+                           "equipmentsets/taom_lord_template_equipment.xml",
+                           "equipmentsets/taom_enlistment_equipment.xml"],
+        "item_map": {
+            "sk_gd_mns_cita_helmet_heavy_a": "sk_ar_art_helmet_noble_heavy_a",
+            "sk_gd_mns_cita_helmet_heavy_b": "sk_ar_art_helmet_noble_heavy_b",
+            "sk_gd_mns_fount_helmet_heavy_a": "sk_ar_art_helmet_noble_elite_a",
+            "sk_gd_mns_noble_helmet_heavy_a": "sk_ar_art_helmet_noble_lord_b",
+            "sk_gd_ano_noble_helmet_med_a": "sk_ar_art_helmet_noble_med_a",
+            "sk_gd_mns_citadel_chest_med_a": "sk_ar_art_chest_noble_med_a",
+            "sk_gd_mns_citadel_chest_heavy_a": "sk_ar_art_chest_noble_heavy_a",
+            "sk_gd_mns_fount_chest_heavy_a": "sk_ar_art_chest_noble_heavy_b",
+            "sk_gd_ano_pauld_cape_fount_elite_a": "sk_ar_art_pauld_cape_noble_elite_a",
+            "sk_gd_ano_pauld_noble_heavy_a": "sk_ar_art_pauld_noble_heavy_a",
+            "sk_gd_ano_bracer_noble_heavy_a": "sk_ar_art_bracer_noble_heavy_a",
+            "sk_gd_ano_bracer_noble_med_a": "sk_ar_art_bracer_noble_med_a",
+            "sk_gd_ano_grvs_noble_med_a": "sk_ar_art_grvs_noble_med_a",
+            "sk_gd_ano_inf_chest_heavy_a": "sk_ar_art_chest_inf_heavy_a",
+            "sk_gd_ano_inf_chest_heavy_b": "sk_ar_art_chest_inf_heavy_b",
+            "sk_gd_ano_pauld_inf_heavy_a": "sk_ar_art_pauld_inf_heavy_a",
+            "sk_gd_ano_pauld_inf_med_a": "sk_ar_art_pauld_inf_med_a",
+            "sk_gd_ano_pauld_inf_med_b": "sk_ar_art_pauld_inf_med_b",
+            "sk_gd_ano_pauld_inf_elite_a": "sk_ar_art_pauld_inf_elite_a",
+            "sk_gd_ano_gloves_a": "sk_ar_art_gloves_a",
+            "sk_gd_ano_bracer_inf_med_a": "sk_ar_art_bracer_inf_med_a",
+            "sk_gd_ano_grvs_inf_light_a": "sk_ar_art_grvs_inf_light_a",
+            "sk_gd_ano_grvs_inf_med_a": "sk_ar_art_grvs_inf_med_a",
+            "sk_gd_ano_grvs_inf_heavy_a": "sk_ar_art_grvs_inf_heavy_a",
+            "sk_gd_ano_boots_a": "sk_ar_art_boots_a",
+            "sk_gd_ano_cape_a": "sk_ar_art_cape_a",
+            "sk_gd_ano_chainmail_half_b": "sk_ar_art_chainmail_half_b",
+            "sk_gd_ano_chainmail_full_a": "sk_ar_art_chainmail_full_a",
+            "sk_gd_bel_inf_chainmail_b": "sk_ar_art_chainmail_half_b",
+            "sk_gd_ano_inf_chest_med_a": "sk_ar_art_chest_inf_med_a",
+            "sk_gd_bel_inf_chest_med_a": "sk_ar_art_chest_inf_med_a",
+            "sk_gd_bel_inf_chest_med_b": "sk_ar_art_chest_inf_med_b",
+            "sk_gd_anf_inf_chest_med_b": "sk_ar_art_chest_inf_med_b",
+            "sk_gd_pin_inf_chest_med_b": "sk_ar_art_chest_inf_med_b",
+            "sk_gd_vale_chest_heavy_a": "sk_ar_art_chest_inf_heavy_a",
+            "sk_gd_pin_inf_chest_heavy_a": "sk_ar_art_chest_inf_heavy_b",
+            "sk_gd_osg_pauld_cape_inf_elite_a": "sk_ar_art_pauld_cape_inf_elite_a",
+            "sk_gd_vale_pauld_med_a": "sk_ar_art_pauld_inf_med_b",
+            "sk_gd_ano_inf_helmet_med_a": "sk_ar_art_helmet_inf_med_a",
+            "sk_gd_pin_inf_helmet_med_a": "sk_ar_art_helmet_inf_med_b",
+            "sk_gd_ano_inf_helmet_heavy_a": "sk_ar_art_helmet_inf_hvy_a",
+            "sk_gd_pin_spear_helmet_heavy_a": "sk_ar_art_helmet_inf_hvy_b",
+            "sk_gd_vale_helmet_heavy_a": "sk_ar_art_helmet_warden_heavy_a",
+            "sk_gd_anf_cav_helmet_heavy_a": "sk_ar_art_helmet_cav_heavy_a",
+        },
+        # Clone only the templates that name townsfolk; the generator writes the nine soldier ones.
+        "party_names": ["villager_{c}_template", "caravan_template_{c}", "elite_caravan_template_{c}"],
+        # References the blanket rename would point at Gondor troops Arthedain does not have. Applied
+        # as whole tokens after the rename, so the culture's troop slots and the villager's upgrade
+        # path land on the generated tree.
+        "id_overrides": {
+            "arthedain_ano_peasant": "arthedain_levy",
+            "arthedain_ano_footman": "arthedain_dunadan_youth",
+        },
+        # The culture's <basic_mercenary_troops>, rebuilt outright: the tavern sells a _merc leaf
+        # copy of the rarest pool entry, which the troop generator emits (TavernMercenaryDataTests).
+        "mercenaries": ["arthedain_dunadan_youth_merc"],
+        # Gondor's culture strings name a Steward; Arthedain has a king. Stated outright per id.
+        "string_overrides": {
+            "str_faction_ruler.arthedain": "King",
+            "str_faction_ruler.arthedain_f": "Queen",
+            "str_faction_ruler_term_in_speech.arthedain": "{?RULER.GENDER}the Queen{?}the King{\\?} {RULER.NAME}",
+            "str_faction_ruler_name_with_title.arthedain": "{?RULER.GENDER}Queen{?}King{\\?} {RULER.NAME}",
+            "str_faction_formal_name_for_culture.arthedain": "Arthedain",
+            "str_faction_informal_name_for_culture.arthedain": "the Dúnedain of the North",
+            "str_neutral_term_for_culture.arthedain": "Dúnedain",
+            "str_culture_rich_name.arthedain": "Dúnedain of Arthedain",
+            "str_adjective_for_culture.arthedain": "Arthedain",
+            "str_player_father_name.arthedain": "Aravir",
+            "str_player_mother_name.arthedain": "Ivorwen",
+        },
+        # The name pools are the people's identity; Gondor's (Boromir, Denethor) cannot stand.
+        # Kings and chieftains of Arthedain from LOTR Appendix A I iii, the Dunedain of the Angle,
+        # and Sindarin-pattern names. Aragorn, Arathorn and Arwen are left out on purpose.
+        "names": {
+            "male_names": [
+                "Amlaith", "Beleg", "Mallor", "Celepharn", "Celebrindor", "Malvegil", "Argeleb",
+                "Arveleg", "Araphor", "Arvegil", "Araval", "Araphant", "Arvedui", "Aranarth",
+                "Arahael", "Aranuir", "Aravir", "Aragost", "Aravorn", "Arahad", "Argonui", "Arador",
+                "Arassuil", "Dírhael", "Malbeth", "Halbarad", "Calmir", "Dorlas", "Galdir", "Haldan",
+                "Iorhael", "Mablost", "Nardil", "Rodnor", "Tharion", "Saelon", "Morvegil", "Cirdir",
+                "Hirvegil", "Hallatan"],
+            "female_names": [
+                "Gilraen", "Ivorwen", "Fíriel", "Dírwen", "Eirien", "Elanwen", "Gilwen", "Lothwen",
+                "Meneliel", "Rhiannel", "Silivren", "Ithilwen", "Aerwen", "Calwen", "Elthiel",
+                "Maethil", "Varwen", "Anwiel", "Cúwen", "Faerwen", "Hethlin", "Luinil", "Tirwen",
+                "Arwiel"],
+            "clan_names": [
+                "House of Amlaith", "House of Fornost", "House of Annúminas", "House of Amon Sûl",
+                "House of the North Downs", "House of Evendim", "House of the Baranduin",
+                "House of the Angle", "House of Bree", "House of Deadmen's Dike",
+                "House of the Weather Hills", "House of Nenuial"],
+        },
+        # Register this culture's files in a marker region of its own, so a run with --only never
+        # rebuilds the shared TAOM-NEWCULTURE-REG block (which no longer matches what this script
+        # would emit for bluecraig: its troop file was retired).
+        "own_reg": True,
+    },
 }
+
+# BANNERLORD_GAME_DIR overrides the install path (#404), as in tools/add_map_villages.py.
+LIVE_SETTLEMENTS = (Path(game_dir(r"E:/Steam/steamapps/common/Mount & Blade II Bannerlord"))
+                    / "Modules" / "TAOM_Map" / "ModuleData" / "settlements.xml")
+
+
+def capital_position(target, cfg):
+    """(posX, posY) of the target's capital: the layout first, then the LIVE map, then a stated
+    provisional borrow. Never a made-up coordinate."""
+    if cfg["capital"] in CAPITALS:
+        return CAPITALS[cfg["capital"]], False
+    if not LIVE_SETTLEMENTS.exists():
+        raise SystemExit(f"{target}: the live map is not at {LIVE_SETTLEMENTS} (set BANNERLORD_GAME_DIR)")
+    live = LIVE_SETTLEMENTS.read_text(encoding="utf-8-sig")
+    for sid in (cfg["capital"], cfg.get("provisional_start_from")):
+        if not sid:
+            continue
+        m = re.search(r'<Settlement\b[^>]*\bid="%s"[^>]*>' % re.escape(sid), live)
+        if m:
+            head = m.group(0)
+            pos = {"posX": re.search(r'\bposX="([^"]+)"', head).group(1),
+                   "posY": re.search(r'\bposY="([^"]+)"', head).group(1)}
+            return pos, sid != cfg["capital"]
+    raise SystemExit(f"{target}: capital {cfg['capital']} is in neither the layout nor the live map, "
+                     "and no provisional_start_from resolves")
+
+
+def keep_rosters(text, pattern):
+    """Keep only the <EquipmentRoster>s whose id matches `pattern`, and a section comment only while a
+    roster under it survives. Returns (text, dropped ids). Gondor's file carries its named lords' kits
+    (Boromir's, Faramir's...), which a clone would ship under new ids that nothing names."""
+    keep = re.compile(pattern)
+    parts = re.split(r"([ \t]*<!--.*?-->\n|[ \t]*<EquipmentRoster\b.*?</EquipmentRoster>\n)", text, flags=re.DOTALL)
+    out, held, dropped = [], None, []
+    for part in parts:
+        if part.lstrip().startswith("<!--"):
+            held = [part]
+        elif part.lstrip().startswith("<EquipmentRoster"):
+            rid = re.search(r'\bid="([^"]+)"', part).group(1)
+            if keep.search(rid):
+                out.extend(held or [])
+                held = None
+                out.append(part)
+            else:
+                dropped.append(rid)
+        elif held is not None:
+            held.append(part)
+        else:
+            out.append(part)
+    if held:
+        out.extend(p for p in held if not p.lstrip().startswith("<!--"))
+    return re.sub(r"\n(?:[ \t]*\n){2,}", "\n\n", "".join(out)), dropped
+
+
+def apply_string_overrides(text, overrides):
+    """Replace the default text of named <string> rows, keeping each row's {=key}."""
+    for sid, value in overrides.items():
+        pat = r'(<string id="%s" text="\{=[^}]*\})[^"]*(")' % re.escape(sid)
+        text, n = re.subn(pat, lambda m, v=value: m.group(1) + v.replace("&", "&amp;") + m.group(2), text)
+        if n != 1:
+            raise SystemExit(f"string override {sid}: expected exactly one row, found {n}")
+    return text
+
+
+def replace_name_pools(block, target, names):
+    """Rebuild <male_names>, <female_names> and <clan_names> from the target's own lists."""
+    keys = {"male_names": "male_name", "female_names": "female_name", "clan_names": "clan"}
+    for tag, key in keys.items():
+        if tag not in names:
+            continue
+        rows = "".join(f'      <name name="{{=aom_{target}_{key}_{i}}}{n}" />\n'
+                       for i, n in enumerate(names[tag], 1))
+        block, n = re.subn(rf"(<{tag}>\n).*?([ \t]*</{tag}>)", lambda m: m.group(1) + rows + m.group(2),
+                           block, flags=re.DOTALL)
+        if n != 1:
+            raise SystemExit(f"{target}: expected one <{tag}> block, found {n}")
+    return block
 
 # Tokens that must survive the blanket source->target rename because they name a real Armory item,
 # body property, sub-culture or skill-set that exists only under the SOURCE culture's name. Renaming
@@ -215,8 +444,9 @@ def transform(text, target, cfg, id_map=None):
     if id_map:
         guarded = apply_id_map(guarded, id_map)
 
-    guarded = re.sub(r'race="[a-z_]+"', f'race="{cfg["race"]}"', guarded)
-    guarded = guarded.replace(f"aom_{src[:3]}_", f"aom_{cfg['short']}_")
+    if cfg["race"]:
+        guarded = re.sub(r'race="[a-z_]+"', f'race="{cfg["race"]}"', guarded)
+    guarded = guarded.replace(f"aom_{cfg.get('src_short', src[:3])}_", f"aom_{cfg['short']}_")
     for old, new in cfg["subs"]:
         guarded = guarded.replace(old, new)
 
@@ -245,7 +475,7 @@ def extract_rosters(text, substr):
     return "".join(out)
 
 
-def source_blocks(kind, text, src):
+def source_blocks(kind, text, src, cfg=None):
     if kind == "culture":
         return extract_one(text, r'([ \t]*<Culture\b[^>]*\bid="%s".*?</Culture>\n)' % src, f"<Culture> {src}")
     if kind == "wanderers":
@@ -270,6 +500,8 @@ def source_blocks(kind, text, src):
                  f"patrol_party_{src}_template_level_1", f"patrol_party_{src}_template_level_2",
                  f"patrol_party_{src}_template_level_3", f"rebels_{src}_template",
                  f"vassal_reward_troops_{src}"]
+        if cfg and cfg.get("party_names"):
+            names = [n.format(c=src) for n in cfg["party_names"]]
         found = []
         for name in names:
             m = re.search(r'[ \t]*<MBPartyTemplate\b[^>]*\bid="%s".*?</MBPartyTemplate>\n' % re.escape(name),
@@ -426,9 +658,13 @@ def duplicate_id_check(target, generated):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--apply", action="store_true")
-    ap.add_argument("--only", action="append", choices=sorted(TARGETS), help="limit to these cultures")
+    # Required, as in generate_new_faction_kingdoms.py: the older targets have drifted from their
+    # shipped blocks (Lindon's ids are already defined), so a run over every target only refuses.
+    ap.add_argument("--only", action="append", choices=sorted(TARGETS), required=True, help="the culture(s) to promote")
+    ap.add_argument("--dump", help="write each target's generated blocks under this directory for review")
+    ap.add_argument("--check", action="store_true", help="exit 1, writing nothing, if a run would change a file")
     args = ap.parse_args()
-    targets = {k: v for k, v in TARGETS.items() if not args.only or k in args.only}
+    targets = {k: v for k, v in TARGETS.items() if k in args.only}
 
     # Shared files accumulate across cultures. Keyed by path so the second culture upserts into the
     # FIRST culture's output rather than into a fresh read of the original — otherwise the last
@@ -441,24 +677,41 @@ def main():
         return shared_state[path]
 
     for target, cfg in targets.items():
-        src, cap = cfg["src"], CAPITALS[cfg["capital"]]
+        src = cfg["src"]
+        cap, provisional = capital_position(target, cfg)
+        if provisional:
+            print(f"  WARNING {target}: {cfg['capital']} is not on the map yet; the culture's start point "
+                  f"is borrowed from {cfg['provisional_start_from']} until it is. Re-run after placing it.")
         generated = []
+        standalone = [(rel, root) for rel, root in STANDALONE_FILES
+                      if "standalone" not in cfg or rel in cfg["standalone"]]
 
         # The id map has to be built from the SOURCE standalone files before anything is
         # transformed, because the culture block and the party templates reference those ids and
         # must be rewritten with exactly the same mapping.
         standalone_src = []
-        for rel_tmpl, _ in STANDALONE_FILES:
+        for rel_tmpl, _ in standalone:
             p = MD / rel_tmpl.format(c=src)
             if not p.exists():
                 raise SystemExit(f"source file missing: {p}")
             standalone_src.append(read(p)[0])
         id_map = build_id_map(src, target, standalone_src)
 
+        def finish(text):
+            """The per-target rewrites that run after the shared transform."""
+            if cfg.get("id_overrides"):
+                text = apply_id_map(text, cfg["id_overrides"])
+            if cfg.get("string_overrides"):
+                hits = {sid: v for sid, v in cfg["string_overrides"].items() if f'id="{sid}"' in text}
+                text = apply_string_overrides(text, hits)
+            return text
+
         for rel, close_tag, kind in SHARED_FILES:
             path = MD / rel
             text, nl, bom = load(path)
-            block = transform(source_blocks(kind, text, src), target, cfg, id_map)
+            block = finish(transform(source_blocks(kind, text, src, cfg), target, cfg, id_map))
+            if rel in cfg.get("item_map_files", ()):
+                block = apply_id_map(block, cfg["item_map"])
 
             if kind == "culture":
                 feats = ("        <cultural_feats>\n"
@@ -476,47 +729,97 @@ def main():
                                  cfg["culture_name"], f"{target} culture name")
                 block = sub_once(block, r'(\stext="\{=aom_%s_desc\})[^"]*"' % target,
                                  cfg["culture_desc"], f"{target} culture description")
+                if cfg.get("names"):
+                    block = replace_name_pools(block, target, cfg["names"])
+                if cfg.get("mercenaries"):
+                    rows = "".join(f'      <template name="NPCCharacter.{m}" />\n' for m in cfg["mercenaries"])
+                    block, n = re.subn(r"(<basic_mercenary_troops>\n).*?([ \t]*</basic_mercenary_troops>)",
+                                       lambda m: m.group(1) + rows + m.group(2), block, flags=re.DOTALL)
+                    if n != 1:
+                        raise SystemExit(f"{target}: expected one <basic_mercenary_troops> block, found {n}")
+            if kind == "strings" and cfg.get("string_overrides"):
+                missing = [sid for sid in cfg["string_overrides"] if f'id="{sid}"' not in block]
+                if missing:
+                    raise SystemExit(f"{target}: string overrides name rows the clone did not produce: {missing}")
+                desc_id = f"str_culture_description.{target}"
+                if f'id="{desc_id}"' in block:
+                    block = apply_string_overrides(block, {desc_id: cfg["culture_desc"]})
 
             generated.append(block)
             shared_state[path] = (upsert(text, close_tag, block, f"{MARKER}:{target}"), nl, bom)
 
-        for (rel_tmpl, _), text in zip(STANDALONE_FILES, standalone_src):
+        for (rel_tmpl, _), text in zip(standalone, standalone_src):
             _, nl, bom = read(MD / rel_tmpl.format(c=src))
-            body = transform(text, target, cfg, id_map)
+            body = finish(transform(text, target, cfg, id_map))
+            if rel_tmpl in cfg.get("item_map_files", ()):
+                body = apply_id_map(body, cfg["item_map"])
+            if cfg.get("rosters_kept") and rel_tmpl.startswith("equipmentsets/"):
+                body, dropped = keep_rosters(body, cfg["rosters_kept"])
+                print(f"  {target}: kept the rosters matching {cfg['rosters_kept']}, dropped {len(dropped)}")
             generated.append(body)
             pending_writes.append((MD / rel_tmpl.format(c=target), body, nl, bom))
 
         contamination_check(target, cfg, "\n".join(generated))
         duplicate_id_check(target, generated)
         summary.append((target, src, cfg["capital"], len(id_map)))
+        if args.dump:
+            out = Path(args.dump) / target
+            out.mkdir(parents=True, exist_ok=True)
+            for i, g in enumerate(generated):
+                (out / f"block_{i:02d}.xml").write_text(g, encoding="utf-8")
 
     # SubModule.xml registration. Without it the three new files per culture are never loaded, so
     # every troop the culture names resolves to null — the culture would validate on disk and be
     # empty in-engine, which is the "PASS != in-game loaded" trap in its purest form.
+    def xml_node(idv, path):
+        return ('    <XmlNode>\n'
+                f'      <XmlName id="{idv}" path="{path}"/>\n'
+                '      <IncludedGameTypes>\n'
+                '        <GameType value ="Campaign"/>\n'
+                '        <GameType value ="CampaignStoryMode"/>\n'
+                '        <GameType value = "CustomGame"/>\n'
+                '        <GameType value = "EditorGame"/>\n'
+                '      </IncludedGameTypes>\n'
+                '    </XmlNode>\n')
+
     sm_text, sm_nl, sm_bom = read(SUBMODULE)
-    sm_text = re.sub(r"[ \t]*<!-- " + MARKER + r"-REG:BEGIN -->.*?<!-- " + MARKER + r"-REG:END -->\n",
-                     "", sm_text, flags=re.DOTALL)
-    reg = f"    <!-- {MARKER}-REG:BEGIN -->\n"
-    for target in targets:
+    legacy = [t for t in targets if not TARGETS[t].get("own_reg")]
+    if legacy:
+        sm_text = re.sub(r"[ \t]*<!-- " + MARKER + r"-REG:BEGIN -->.*?<!-- " + MARKER + r"-REG:END -->\n",
+                         "", sm_text, flags=re.DOTALL)
+        reg = f"    <!-- {MARKER}-REG:BEGIN -->\n"
+        for target in legacy:
+            for idv, path in (("NPCCharacters", f"troops/troops_{target}"),
+                              ("NPCCharacters", f"characters/npcs_{target}"),
+                              ("EquipmentRosters", f"equipmentsets/taom_equipment_sets_{target}")):
+                reg += xml_node(idv, path)
+        reg += f"    <!-- {MARKER}-REG:END -->\n"
+        anchor = re.search(r"[ \t]*<!-- TAOM-NEWFACTIONS-REG:BEGIN -->.*?<!-- TAOM-NEWFACTIONS-REG:END -->\n",
+                           sm_text, re.DOTALL)
+        if not anchor:
+            raise SystemExit("SubModule.xml: TAOM-NEWFACTIONS-REG anchor not found — refusing to guess "
+                             "where the new <XmlNode> registrations belong")
+        sm_text = sm_text[:anchor.end()] + reg + sm_text[anchor.end():]
+    # A culture with its own region is registered after the shared block and never disturbs it. Its
+    # troop file is registered whether or not this script wrote it: a generated tree lives there.
+    for target in (t for t in targets if TARGETS[t].get("own_reg")):
+        mark = f"{MARKER}-REG:{target}"
+        sm_text = re.sub(r"[ \t]*<!-- " + re.escape(mark) + r":BEGIN -->.*?<!-- " + re.escape(mark) + r":END -->\n",
+                         "", sm_text, flags=re.DOTALL)
+        reg = f"    <!-- {mark}:BEGIN -->\n"
         for idv, path in (("NPCCharacters", f"troops/troops_{target}"),
                           ("NPCCharacters", f"characters/npcs_{target}"),
                           ("EquipmentRosters", f"equipmentsets/taom_equipment_sets_{target}")):
-            reg += ('    <XmlNode>\n'
-                    f'      <XmlName id="{idv}" path="{path}"/>\n'
-                    '      <IncludedGameTypes>\n'
-                    '        <GameType value ="Campaign"/>\n'
-                    '        <GameType value ="CampaignStoryMode"/>\n'
-                    '        <GameType value = "CustomGame"/>\n'
-                    '        <GameType value = "EditorGame"/>\n'
-                    '      </IncludedGameTypes>\n'
-                    '    </XmlNode>\n')
-    reg += f"    <!-- {MARKER}-REG:END -->\n"
-    anchor = re.search(r"[ \t]*<!-- TAOM-NEWFACTIONS-REG:BEGIN -->.*?<!-- TAOM-NEWFACTIONS-REG:END -->\n",
-                       sm_text, re.DOTALL)
-    if not anchor:
-        raise SystemExit("SubModule.xml: TAOM-NEWFACTIONS-REG anchor not found — refusing to guess "
-                         "where the new <XmlNode> registrations belong")
-    sm_text = sm_text[:anchor.end()] + reg + sm_text[anchor.end():]
+            if not (MD / (path + ".xml")).exists() and not any(
+                    str(p).endswith(path.replace("/", os.sep) + ".xml") for p, *_ in pending_writes):
+                raise SystemExit(f"{target}: refusing to register {path}.xml, which neither exists nor is "
+                                 "about to be written")
+            reg += xml_node(idv, path)
+        reg += f"    <!-- {mark}:END -->\n"
+        anchor = re.search(r"[ \t]*<!-- " + MARKER + r"-REG:END -->\n", sm_text)
+        if not anchor:
+            raise SystemExit("SubModule.xml: TAOM-NEWCULTURE-REG:END anchor not found")
+        sm_text = sm_text[:anchor.end()] + reg + sm_text[anchor.end():]
     pending_writes.append((SUBMODULE, sm_text, sm_nl, sm_bom))
 
     for path, (text, nl, bom) in shared_state.items():
@@ -527,9 +830,18 @@ def main():
         print(f"  {target:12s} <- clone of {src:12s} capital={capital:12s} ({n} block sets)")
     print(f"  -> {len(pending_writes)} file writes")
 
-    if not args.apply:
+    def changes(path, text, nl, bom):
+        return not Path(path).exists() or Path(path).read_bytes() != (
+            (b"\xef\xbb\xbf" if bom else b"") + text.replace("\n", nl).encode("utf-8"))
+
+    changed = {str(path) for path, text, nl, bom in pending_writes if changes(path, text, nl, bom)}
+    if args.check or not args.apply:
         for path, _, _, _ in pending_writes:
-            print(f"     {'NEW ' if not Path(path).exists() else 'edit'} {Path(path).relative_to(ROOT)}")
+            label = "NEW " if not Path(path).exists() else ("edit" if str(path) in changed else "same")
+            print(f"     {label} {Path(path).relative_to(ROOT)}")
+        if args.check:
+            print(f"CHECK: {len(changed)} of {len(pending_writes)} file(s) would change")
+            return 1 if changed else 0
         print("DRY RUN — re-run with --apply to write")
         return 0
 
@@ -539,11 +851,10 @@ def main():
         ET.parse(path)
         print(f"  written + well-formed: {Path(path).relative_to(ROOT)}")
 
-    print("\nDONE. NOT yet done, and required before this is safe to load:")
-    print("  1. register the new troops/npcs/equipment files as <XmlNode> in Main/_Module/SubModule.xml")
-    print("  2. retag kingdoms/clans/lords/heroes and the LIVE TAOM_Map settlements onto the new culture")
-    print("  3. character-creation wiring (cultures.json, cc_body_properties, narrative menus, CC gear)")
-    print("  Until (2), each new culture owns no settlement -> LANDLESS_CULTURE / daily-tick CTD (#374).")
+    print("\nDONE, SubModule.xml registration included. NOT yet done, and required before this is safe to load:")
+    print("  1. retag kingdoms/clans/lords/heroes and the LIVE TAOM_Map settlements onto the new culture")
+    print("  2. character-creation wiring (cultures.json, cc_body_properties, narrative menus, CC gear)")
+    print("  Until (1), each new culture owns no settlement -> LANDLESS_CULTURE / daily-tick CTD (#374).")
     return 0
 
 

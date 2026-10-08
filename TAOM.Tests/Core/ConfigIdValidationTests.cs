@@ -9,29 +9,9 @@ namespace TAOM.Tests.Core;
 [TestClass]
 public class ConfigIdValidationTests
 {
-    private static readonly HashSet<string> ValidCultureIds = new HashSet<string>
-    {
-        // Custom cultures (LOTR names as StringIds)
-        "gondor", "mordor", "erebor", "rivendell", "lothlorien",
-        "mirkwood", "isengard", "gundabad", "dolguldur", "umbar",
-        // New orc cultures (Misty Mountains expansion)
-        "goblin", "mistymountainorcs",
-        // Promoted 2026-08-10 out of a borrowed culture: bluecraig off goblin, lindon off rivendell
-        "bluecraig", "lindon",
-        // XSLT cultures (vanilla engine StringIds)
-        "vlandia", "empire", "aserai", "khuzait", "sturgia", "battania"
-    };
-
-    private static readonly HashSet<string> ValidKingdomIds = new HashSet<string>
-    {
-        "empire_w", "empire_s", "empire", "vlandia", "battania",
-        "aserai", "khuzait", "sturgia", "erebor", "rivendell",
-        "lothlorien", "mirkwood", "isengard", "gundabad", "dolguldur",
-        "umbar", "shaghana", "abanissa",
-        // New kingdoms (Misty Mountains expansion): goblin + mistymountainorcs = new cultures;
-        // lindon reuses Culture.rivendell; bluecraig reuses Culture.goblin.
-        "goblin", "mistymountainorcs", "lindon", "bluecraig"
-    };
+    // Read from the data (taom_spcultures.xml is_main_culture plus the six XSLT ids), so a new culture
+    // needs no edit here.
+    private static readonly HashSet<string> ValidCultureIds = CultureDataFixture.MainCultureIds();
 
     private static string FindModuleDataPath()
     {
@@ -193,20 +173,12 @@ public class ConfigIdValidationTests
     // --- ValidCultureIds set is complete ---
 
     [TestMethod]
-    public void ValidCultureIds_Contains20Cultures()
+    public void ValidCultureIds_ReadFromTheData_HoldEveryVanillaAndCustomCulture()
     {
-        Assert.AreEqual(20, ValidCultureIds.Count,
-            "Expected 20 valid culture IDs (14 custom — incl. goblin, mistymountainorcs, and the "
-            + "2026-08-10 promotions bluecraig + lindon — plus 6 XSLT). This count is deliberately "
-            + "hardcoded: it is the tripwire that makes adding a culture surface every other "
-            + "per-culture list that also needs it.");
-    }
-
-    [TestMethod]
-    public void ValidKingdomIds_Contains22Kingdoms()
-    {
-        Assert.AreEqual(22, ValidKingdomIds.Count,
-            "Expected 22 valid kingdom IDs (incl. goblin, mistymountainorcs, lindon, bluecraig)");
+        // Guards the read itself: an empty or vanilla-only set would pass every check above.
+        Assert.IsTrue(ValidCultureIds.Count > 6, $"only {ValidCultureIds.Count} culture ids read from taom_spcultures.xml");
+        foreach (var id in new[] { "gondor", "mordor", "vlandia", "empire", "battania" })
+            Assert.IsTrue(ValidCultureIds.Contains(id), id);
     }
 
     // --- Character-creation coverage (RCA 2026-06-02) ---

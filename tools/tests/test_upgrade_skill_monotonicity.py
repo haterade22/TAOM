@@ -236,8 +236,8 @@ class MilitiaDetectionTests(unittest.TestCase):
 
     def test_the_bound_set_is_the_authority(self):
         bound = rb.militia_troop_ids()
-        self.assertEqual(60, len(bound),
-                         "60 troops are bound to a culture militia slot. Change this deliberately.")
+        self.assertEqual(64, len(bound),
+                         "64 troops are bound to a culture militia slot. Change this deliberately.")
         self.assertTrue(rb.is_militia("dale_militia_archer"))
         self.assertFalse(
             rb.is_militia("gondor_ano_archer_militia"),

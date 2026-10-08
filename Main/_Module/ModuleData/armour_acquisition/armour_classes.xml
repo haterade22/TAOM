@@ -578,18 +578,18 @@
   <Item id="sk_ar_art_bracer_noble_med_a" class="medium" next="sk_ar_art_bracer_noble_heavy_a" />
   <Item id="sk_ar_art_cape_a" class="light" next="sk_ar_art_pauld_inf_med_a" />
   <Item id="sk_ar_art_cape_b" class="light" next="sk_ar_art_pauld_inf_med_a" />
-  <Item id="sk_ar_art_chainmail_full_a" class="light" next="sk_ar_art_chest_inf_med_a" />
-  <Item id="sk_ar_art_chainmail_full_b" class="light" next="sk_ar_art_chest_inf_med_a" />
-  <Item id="sk_ar_art_chainmail_half_a" class="light" next="sk_ar_art_chest_inf_med_a" />
-  <Item id="sk_ar_art_chainmail_half_b" class="light" next="sk_ar_art_chest_inf_med_a" />
+  <Item id="sk_ar_art_chainmail_full_a" class="medium" next="sk_ar_art_chest_inf_heavy_a" />
+  <Item id="sk_ar_art_chainmail_full_b" class="medium" next="sk_ar_art_chest_inf_heavy_a" />
+  <Item id="sk_ar_art_chainmail_half_a" class="light" next="sk_ar_art_chainmail_full_a" />
+  <Item id="sk_ar_art_chainmail_half_b" class="light" next="sk_ar_art_chainmail_full_a" />
   <Item id="sk_ar_art_chest_inf_heavy_a" class="heavy" />
   <Item id="sk_ar_art_chest_inf_heavy_b" class="heavy" />
-  <Item id="sk_ar_art_chest_inf_med_a" class="medium" next="sk_ar_art_chest_inf_heavy_a" />
-  <Item id="sk_ar_art_chest_inf_med_b" class="medium" next="sk_ar_art_chest_inf_heavy_b" />
+  <Item id="sk_ar_art_chest_inf_med_a" class="heavy" />
+  <Item id="sk_ar_art_chest_inf_med_b" class="heavy" />
   <Item id="sk_ar_art_chest_noble_heavy_a" class="heavy" />
   <Item id="sk_ar_art_chest_noble_heavy_b" class="heavy" />
-  <Item id="sk_ar_art_chest_noble_med_a" class="medium" next="sk_ar_art_chest_noble_heavy_a" />
-  <Item id="sk_ar_art_chest_noble_med_b" class="medium" next="sk_ar_art_chest_noble_heavy_b" />
+  <Item id="sk_ar_art_chest_noble_med_a" class="heavy" />
+  <Item id="sk_ar_art_chest_noble_med_b" class="heavy" />
   <Item id="sk_ar_art_crown_king_a" class="light" next="sk_ar_art_helmet_inf_hvy_a" />
   <Item id="sk_ar_art_gloves_a" class="light" next="sk_ar_art_bracer_inf_med_a" />
   <Item id="sk_ar_art_grvs_inf_heavy_a" class="heavy" next="sk_ar_art_grvs_noble_elite_a" />
@@ -646,7 +646,7 @@
   <Item id="sk_ar_art_pauld_noble_heavy_b" class="heavy" next="sk_ar_art_pauld_noble_elite_b" />
   <Item id="sk_ar_art_pauld_noble_med_a" class="medium" next="sk_ar_art_pauld_noble_heavy_a" />
   <Item id="sk_ar_art_pauld_noble_med_b" class="medium" next="sk_ar_art_pauld_noble_heavy_b" />
-  <Item id="sk_ar_art_pauld_noble_med_c" class="medium" next="sk_ar_art_pauld_noble_heavy_a" />
+  <Item id="sk_ar_art_pauld_noble_med_c" class="heavy" next="sk_ar_art_pauld_noble_elite_a" />
   <Item id="sk_dale_boots_archer_a01" class="light" next="sk_dale_boots_archer_b01" />
   <Item id="sk_dale_boots_archer_a02" class="heavy" next="sk_dale_boots_archer_a04" />
   <Item id="sk_dale_boots_archer_a03" class="heavy" next="sk_dale_boots_archer_a04" />

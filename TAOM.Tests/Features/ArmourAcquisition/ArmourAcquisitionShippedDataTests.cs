@@ -148,7 +148,7 @@ public class ArmourAcquisitionShippedDataTests
         var ladder = new ArmourAcquisitionConfigProvider(_paths, _logger).GetConfig().Ladder;
         var marketplace = new TAOM.Features.CultureMarketplace.CultureMarketplaceConfigProvider(_paths, _logger);
 
-        foreach (var culture in new[] { "lindon", "lothlorien", "abanissa", "shaghana", "battania", "goblin", "mistymountainorcs", "bluecraig", "umbar" })
+        foreach (var culture in new[] { "lindon", "lothlorien", "abanissa", "shaghana", "battania", "goblin", "mistymountainorcs", "bluecraig", "umbar", "arthedain" })
         {
             var donor = marketplace.GetArmourDonor(culture);
             Assert.IsNotNull(donor, culture);
@@ -198,7 +198,7 @@ public class ArmourAcquisitionShippedDataTests
         {
             ("lindon", "rivendell"), ("lothlorien", "rivendell"), ("abanissa", "aserai"), ("shaghana", "aserai"),
             ("battania", "khuzait"), ("goblin", "mordor"), ("mistymountainorcs", "mordor"), ("bluecraig", "mordor"),
-            ("umbar", "mordor"),
+            ("umbar", "mordor"), ("arthedain", "gondor"),
         };
 
         foreach (var (culture, donor) in expected)
@@ -243,6 +243,49 @@ public class ArmourAcquisitionShippedDataTests
         Assert.IsTrue(entries.Count > 2000, $"only {entries.Count} rows: regenerate with python tools/generate_armour_classes.py --apply");
     }
 
+    private static System.Collections.Generic.List<string> CharacterCreationCultureIds() =>
+        Newtonsoft.Json.Linq.JArray.Parse(System.IO.File.ReadAllText(
+                RepoPaths.RepoPath("Main", "_Module", "ModuleData", "charactercreation", "cultures.json")))
+            .Select(c => (string?)c["culture_id"])
+            .Where(id => !string.IsNullOrEmpty(id))
+            .Select(id => id!)
+            .ToList();
+
+    private static System.Collections.Generic.HashSet<string> CulturesServedBy(string idPrefix) =>
+        new(XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "lotr_issues", "taom_lotr_issues.xml"))
+            .Root!.Elements("LotrIssue")
+            .Where(r => ((string?)r.Attribute("id") ?? string.Empty).StartsWith(idPrefix, StringComparison.Ordinal))
+            .SelectMany(r => ((string?)r.Attribute("cultures") ?? string.Empty).Split(','))
+            .Select(c => c.Trim()), StringComparer.Ordinal);
+
+    [TestMethod]
+    public void Commissions_EveryCharacterCreationCultureHasARow()
+    {
+        // 2026-10-07 review: Arthedain shipped as the one playable culture no artisan would ever commission.
+        var served = CulturesServedBy("lotr_armourer_commission_");
+
+        var missing = CharacterCreationCultureIds().Where(c => !served.Contains(c)).ToList();
+
+        Assert.AreEqual(0, missing.Count, $"no Armourer's Commission row for: {string.Join(", ", missing)}");
+    }
+
+    [TestMethod]
+    public void DeepSeam_EveryCharacterCreationCultureWithALordsMaterialIsServed()
+    {
+        // A culture whose ladder spends a material (its own, or its armour donor's) gets that material's row.
+        var ladder = new ArmourAcquisitionConfigProvider(_paths, _logger).GetConfig().Ladder;
+        var marketplace = new TAOM.Features.CultureMarketplace.CultureMarketplaceConfigProvider(_paths, _logger);
+        var served = CulturesServedBy("lotr_deep_seam_");
+
+        var missing = CharacterCreationCultureIds()
+            .Where(c => ladder.Materials.ContainsKey(c)
+                        || (marketplace.GetArmourDonor(c) is { } donor && ladder.Materials.ContainsKey(donor)))
+            .Where(c => !served.Contains(c))
+            .ToList();
+
+        Assert.AreEqual(0, missing.Count, $"no Deep Seam row serves: {string.Join(", ", missing)}");
+    }
+
     [TestMethod]
     public void Commissions_RewardOnlyHeavyOrEliteKit()
     {
@@ -253,7 +296,7 @@ public class ArmourAcquisitionShippedDataTests
             .Where(e => ((string?)e.Attribute("id") ?? string.Empty).StartsWith("lotr_armourer_commission_", StringComparison.Ordinal))
             .ToList();
 
-        Assert.AreEqual(18, commissions.Count);
+        Assert.AreEqual(19, commissions.Count);
         foreach (var issue in commissions)
         {
             var id = (string?)issue.Attribute("id");

@@ -70,6 +70,10 @@ SOURCES_FOR = {
                  ("mahud_beast_rider", "mbr")],
     "abanissa": [("tribesman_of_jelut", "toj"), ("pezarsani_javelineer", "pj"),
                  ("mahud_beast_rider", "mbr")],
+    # Arthedain (2026-10-07) takes Gondor's three: the other Dunedain realm, and the roles map
+    # straight across (ranger scout, infantry captain, heavy horse).
+    "arthedain": [("ranger_of_ithilien", "roi"), ("captain_of_osgiliath", "cop"),
+                  ("knight_of_belfalas", "kob")],
 }
 
 TARGETS = {
@@ -107,7 +111,17 @@ TARGETS = {
         "pezarsani_javelineer": ("abanissa_jiret_javelineer", "ajj", "Jîret Javelineer"),
         "mahud_beast_rider": ("abanissa_ivory_rider", "air", "Ivory-Road Beast Rider"),
     },
+    "arthedain": {
+        "ranger_of_ithilien": ("ranger_of_the_north", "rotn", "Ranger of the North"),
+        "captain_of_osgiliath": ("warden_of_fornost", "wof", "Warden of Fornost"),
+        "knight_of_belfalas": ("knight_of_arthedain", "koa", "Knight of Arthedain"),
+    },
 }
+
+# Extra source-culture rows to remove from a cloned <Career>'s eligibility. Gondor's careers list
+# both its culture (gondor) and its kingdom id (empire_w); swapping only the first would leave an
+# Arthedain career selectable by Gondor's players too.
+ELIGIBILITY_DROP = {"arthedain": ["empire_w"]}
 
 # The source culture whose <Culture id="..."> row is swapped for the target's. Gundabad for the two
 # orc kingdoms; the promoted cultures take theirs from the culture they were carved out of.
@@ -115,6 +129,7 @@ ELIGIBILITY_SRC = {
     "goblin": "gundabad", "mistymountainorcs": "gundabad",
     "bluecraig": "goblin", "lindon": "rivendell",
     "shaghana": "aserai", "abanissa": "aserai",
+    "arthedain": "gondor",
 }
 
 # Player-facing wording. Longest phrase FIRST so a substring never double-substitutes — the same
@@ -189,6 +204,52 @@ TEXT_REMAP = {
         ("Mahûd", "Ivory-Road"),
         ("Jelut", "Damudûr"),
     ],
+    # Arthedain: every Gondor place, person and order in the three careers moves north. Ranks and
+    # group names first (longest phrase first), then the catch-all place and people words.
+    "arthedain": [
+        ("shadows of Ithilien, ambushing enemies of Gondor", "wilds of Eriador, ambushing the servants of Angmar"),
+        ("commands Gondor's frontline defense at the ruins of Osgiliath, forging order from chaos in brutal urban combat",
+         "holds the walls of Fornost against the hosts of Angmar, forging order from chaos when the North Downs burn"),
+        ("the coastal fiefdom of Belfalas", "the North-kingdom"),
+        ("The Captain holds the line", "The Warden holds the line"),
+        ("Captain of the White Company", "Chieftain of the Rangers"),
+        ("Hunter of the Ithilien Road", "Hunter of the Greenway"),
+        ("Watcher of Henneth Annûn", "Watcher of Weathertop"),
+        ("Scout of North Ithilien", "Scout of the North Downs"),
+        ("Bowman of Faramir", "Bowman of the Angle"),
+        ("Arrow of the Forbidden Pool", "Arrow of Nenuial"),
+        ("Shadow of Emyn Arnen", "Shadow of the Chetwood"),
+        ("Ithilien Scout", "Scout of Eriador"),
+        ("Ranger of Ithilien", "Ranger of the North"),
+        ("Ohtar of the Crossing", "Ohtar of the North Downs"),
+        ("Warden of Osgiliath", "Warden of the Walls"),
+        ("Captain of Osgiliath", "Warden of Fornost"),
+        ("Warden of the East Bank", "Warden of the Dike"),
+        ("Keeper of the Anduin Crossing", "Keeper of the Baranduin Crossing"),
+        ("Vanguard of the Rammas", "Vanguard of the North Downs"),
+        ("Host of Faramir", "Host of Arvedui"),
+        ("Lord of the Dome of Stars", "Keeper of Amon Sûl"),
+        ("Squire of Dol Amroth", "Squire of Fornost"),
+        ("Knight of the Silver Swan", "Knight of the Seven Stars"),
+        ("Swan-Knight", "Silver Knight"),
+        ("Knight of Belfalas", "Knight of Arthedain"),
+        ("Lancer of Dol Amroth", "Lancer of the North Downs"),
+        ("Warden of the Bay", "Warden of Evendim"),
+        ("Rider of the Silver Swan", "Rider of the Seven Stars"),
+        ("Shieldwall of Imrahil", "Shieldwall of Arvegil"),
+        ("Knight of the Swan-Prow", "Knight of the Silver Crown"),
+        ("Charge of Dol Amroth", "Charge of Fornost"),
+        ("charge of Dol Amroth", "charge of Fornost"),
+        ("host of Belfalas", "host of Arthedain"),
+        ("Dol Amroth", "Fornost"),
+        ("Belfalas", "Arthedain"),
+        ("Osgiliath", "Fornost"),
+        ("Ithilien", "Eriador"),
+        ("Faramir", "Arvedui"),
+        ("Imrahil", "Arvegil"),
+        ("Gondorian", "Arthedain"),  # before the bare name, or "Gondorian" becomes "Arthedainian"
+        ("Gondor", "Arthedain"),
+    ],
 }
 
 
@@ -262,6 +323,10 @@ def build(culture, src_id, src_abbr, new_id, new_abbr, display, careers, abiliti
     if career.count(f'<Culture id="{elig}" />') != 1:
         raise SystemExit(f"{src_id}: expected exactly one {elig} <Culture> row in <Career>")
     career = career.replace(f'<Culture id="{elig}" />', f'<Culture id="{culture}" />')
+    for extra in ELIGIBILITY_DROP.get(culture, []):
+        career, n = re.subn(rf'[ \t]*<Culture id="{re.escape(extra)}" />\n', "", career)
+        if n != 1:
+            raise SystemExit(f"{src_id}: expected exactly one {extra} <Culture> row to drop, found {n}")
     # display_name carries the career's own name, which the TEXT_REMAP table cannot know — it would
     # otherwise inherit whatever the source ability was called ("Gundabad Berserker" -> "Goblin-town
     # Frenzy", which is the ABILITY's name, not the career's). The key is `{=taom_career_<id>}`.
@@ -326,7 +391,9 @@ def main():
     # needs its own people- and place-words listed here, or a TEXT_REMAP entry missed by the author
     # ships Aserai wording under a Harad career exactly the way "Gundabad" once shipped under a
     # Goblin-town one. Longest first so a nested word is reported at its most specific form.
-    SOURCE_DISPLAY_WORDS = ["Gundabad", "Pezarsani", "Pezarsan", "Mahûd", "Jelut"]
+    SOURCE_DISPLAY_WORDS = ["Gundabad", "Pezarsani", "Pezarsan", "Mahûd", "Jelut",
+                            "Gondor", "Ithilien", "Osgiliath", "Belfalas", "Dol Amroth", "Faramir",
+                            "Imrahil", "Henneth", "Emyn Arnen", "Rammas", "Anduin", "Swan"]
     source_words = SOURCE_DISPLAY_WORDS + [s for s, _ in SOURCES] + [f"_{a}_" for _, a in SOURCES]
     for tgt in TARGETS:
         for s, a in SOURCES_FOR.get(tgt, []):

@@ -466,5 +466,6 @@
     <string id="zulgor_description" text="Zulgor, criador de alados, incuba huevos de bestias temibles, expandiendo el dominio aéreo de Khamûl." />
     <string id="zulgora_description" text="Zulgora, tejedora de sombras, crea ilusiones, engañando a los enemigos como los engaños de Sauron en los relatos." />
     <string id="zulgoth_description" text="Zulgoth actúa como orco ritualista, realizando sacrificios a los poderes oscuros tal como se insinúa en las costumbres orcas. Sus ritos invocan fuerza para las empresas del clan." />
+    <string id="lord_AN1_1_description" text="Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against Angmar with fewer swords each year." />
   </strings>
 </base>

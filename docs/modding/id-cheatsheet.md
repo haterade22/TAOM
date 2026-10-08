@@ -17,7 +17,7 @@ The trap first. **Six cultures keep their vanilla Calradian id** because `spcult
 | Dale (Bardings) | `sturgia` | `dale` |
 | Khand (Variags) | `battania` | `khand` |
 
-The full set. 24 cultures are authored in `Main/_Module/ModuleData/taom_spcultures.xml` <!-- measured: python re.findall(r'<Culture\b[^>]*?\bid="([^"]+)"', taom_spcultures.xml, re.S) 2026-09-05 --> and the six above are XSLT-wrapped, so TAOM data may name 30 culture ids. The last column counts the `culture=` attribute on `<Settlement>` elements in the live map, hideouts included, 988 settlements in all <!-- measured: python re.findall over TAOM_Map/ModuleData/settlements.xml, culture per <Settlement> 2026-09-05 -->. `TAOM_Map/ModuleData/settlements.xml` lives in the game install, not the repo; a module reinstall reverts hand edits, so land a repo-side validator gate with any fix.
+The full set. 27 cultures are authored in `Main/_Module/ModuleData/taom_spcultures.xml` <!-- measured: python re.findall(r'<Culture\b[^>]*?\bid="([^"]+)"', taom_spcultures.xml, re.S) 2026-10-07 --> and the six above are XSLT-wrapped, so TAOM data may name 33 culture ids. The last column counts the `culture=` attribute on `<Settlement>` elements in the live map, hideouts included, 1040 settlements in all <!-- measured: python re.findall over TAOM_Map/ModuleData/settlements.xml, culture per <Settlement> 2026-10-07 -->. `TAOM_Map/ModuleData/settlements.xml` lives in the game install, not the repo; a module reinstall reverts hand edits, so land a repo-side validator gate with any fix.
 
 | Culture id | Display name (`name=`) | Kind | Live-map settlements |
 |---|---|---|---|
@@ -32,11 +32,12 @@ The full set. 24 cultures are authored in `Main/_Module/ModuleData/taom_spcultur
 | `mirkwood` | Silvan Elves | custom, settled | 24 |
 | `dolguldur` | Dol Guldur Orcs | custom, settled | 23 |
 | `rivendell` | Ñoldor Elves | custom, settled | 21 |
-| `bluecraig` | Blue Craig Goblins | custom, settled | 20 |
+| `bluecraig` | Blue Craig Goblins | custom, settled | 24 |
 | `lothlorien` | Galadhrim Elves | custom, settled | 19 |
 | `isengard` | Isengard | custom, settled | 12 |
 | `goblin` | Goblins | custom, settled | 7 |
 | `lindon` | Falathrim Elves | custom, settled | 5 |
+| `arthedain` | Arthedain | custom, settled (added 2026-10-07) | 34 |
 | `umbar_corsairs` | Corsairs of Umbar | custom, bandit (hideouts) | 36 |
 | `harad_raiders` | Haradrim Raiders | custom, bandit (hideouts) | 34 |
 | `rhun_raiders` | Rhûn Raiders | custom, bandit (hideouts) | 20 |
@@ -52,11 +53,11 @@ The full set. 24 cultures are authored in `Main/_Module/ModuleData/taom_spcultur
 | `sturgia` | Barding | vanilla id, XSLT-renamed | 37 |
 | `empire` | Dunlendings | vanilla id, XSLT-renamed | 31 |
 
-The validator accepts 40 culture ids <!-- measured: mcp__taom-moduledata__list_cultures 2026-09-05 -->: the 30 above plus ten vanilla ids that `spcultures.xslt` never strips (`darshi`, `desert_bandits`, `forest_bandits`, `looters`, `mountain_bandits`, `neutral_culture`, `nord`, `sea_raiders`, `steppe_bandits`, `vakken`). Those ten own no TAOM settlement; naming one on a lord is the `LANDLESS_CULTURE` crash class ([tools README](../../tools/README.md), row `validate_moduledata.py`). Which cultures borrow another culture's troops and party templates is in [cultures](../cultures.md), lines 17-37; the menu link colours keyed on these ids are in [menu-link-colors](../features/menu-link-colors.md), lines 77-95.
+The validator accepts 43 culture ids <!-- measured: mcp__taom-moduledata__list_cultures 2026-10-07 returned 42 from a registry cached before arthedain existed, plus arthedain -->: the 33 above plus ten vanilla ids that `spcultures.xslt` never strips (`darshi`, `desert_bandits`, `forest_bandits`, `looters`, `mountain_bandits`, `neutral_culture`, `nord`, `sea_raiders`, `steppe_bandits`, `vakken`). Those ten own no TAOM settlement; naming one on a lord is the `LANDLESS_CULTURE` crash class ([tools README](../../tools/README.md), row `validate_moduledata.py`). Which cultures borrow another culture's troops and party templates is in [cultures](../cultures.md), lines 17-37; the menu link colours keyed on these ids are in [menu-link-colors](../features/menu-link-colors.md), lines 77-95.
 
 ## Kingdom ids
 
-22 kingdoms exist: 14 in `Main/_Module/ModuleData/taom_spkingdoms.xml` <!-- measured: python re.findall(r'<Kingdom\b[^>]*?\bid="([^"]+)"', taom_spkingdoms.xml, re.S) 2026-09-05 --> and 8 vanilla kingdoms that `Main/_Module/ModuleData/spkingdoms.xslt` rewrites in place <!-- measured: rg -c "xsl:template match=\"Kingdom\[@id=" spkingdoms.xslt 2026-09-05 -->. Three kingdom ids do not match their culture id, and that is where every `alignment.json`-style config goes wrong: `empire_w` is Gondor, `empire_s` is Mordor, and plain `empire` is Dunland. There is no `Kingdom.gondor`, no `Kingdom.mordor` and no `Culture.empire_w`. The Side column is quoted from [war-of-the-ring](../features/war-of-the-ring.md), lines 243-263, which lists 16 of the 22; the six it omits are marked.
+23 kingdoms exist: 15 in `Main/_Module/ModuleData/taom_spkingdoms.xml` <!-- measured: python re.findall(r'<Kingdom\b[^>]*?\bid="([^"]+)"', taom_spkingdoms.xml, re.S) 2026-10-07 --> and 8 vanilla kingdoms that `Main/_Module/ModuleData/spkingdoms.xslt` rewrites in place <!-- measured: rg -c "xsl:template match=\"Kingdom\[@id=" spkingdoms.xslt 2026-09-05 -->. Three kingdom ids do not match their culture id, and that is where every `alignment.json`-style config goes wrong: `empire_w` is Gondor, `empire_s` is Mordor, and plain `empire` is Dunland. There is no `Kingdom.gondor`, no `Kingdom.mordor` and no `Culture.empire_w`. The Side column is quoted from [war-of-the-ring](../features/war-of-the-ring.md), lines 243-263, which lists 17 of the 23; the six it omits are marked.
 
 | Kingdom id | Display name | `culture=` | Defined in | Side (war-of-the-ring.md) |
 |---|---|---|---|---|
@@ -68,6 +69,7 @@ The validator accepts 40 culture ids <!-- measured: mcp__taom-moduledata__list_c
 | `lothlorien` | Lothlorien | `Culture.lothlorien` | `taom_spkingdoms.xml` | Free |
 | `mirkwood` | Lasgalen | `Culture.mirkwood` | `taom_spkingdoms.xml` | Free |
 | `lindon` | Lindon | `Culture.lindon` | `taom_spkingdoms.xml` | not in that table |
+| `arthedain` | Kingdom of Arthedain | `Culture.arthedain` | `taom_spkingdoms.xml` (added 2026-10-07) | Free |
 | `empire_s` | Mordor | `Culture.mordor` | `spkingdoms.xslt:77-108` | Dark Power |
 | `isengard` | Isengard | `Culture.isengard` | `taom_spkingdoms.xml` | Dark Power |
 | `gundabad` | Gundabad | `Culture.gundabad` | `taom_spkingdoms.xml` | Dark Power |
@@ -92,6 +94,7 @@ Settlement ids follow `town_<P><n>`, `castle_<P><n>`, `village_<P><n>` and `cast
 | Prefix | Region | Culture on the live map (count) | Settlements |
 |---|---|---|---|
 | `A` | Khand / Harad, Aserai-mapped | `aserai` 50, `shaghana` 42, `abanissa` 17 | 109 |
+| `AN` | Arthedain (added 2026-10-07) | `arthedain` 34 | 34 |
 | `DG` | Dol Guldur | `dolguldur` 23 | 23 |
 | `E` | Erebor | `erebor` 52 | 52 |
 | `EN` | Dunland (Empire-North) | `empire` 30 | 30 |
@@ -135,6 +138,7 @@ Lord ids follow `lord_{PREFIX}{CLAN_N}_{MEMBER_N}` ([kingdom-creation](../featur
 | `WE` | `gondor` | 11 |
 | `U` | `umbar` | 10 |
 | `LN` | `lindon` | 10 |
+| `AN` | `arthedain` (added 2026-10-07; same prefix as its settlements) | 20 |
 | `NE` | `empire` | 8 |
 | `K` | `khuzait` | 5 |
 | `S` | `sturgia` | 5 |

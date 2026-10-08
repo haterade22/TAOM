@@ -1723,5 +1723,65 @@
         "focus_to_add": 1,
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_arthedain_1",
+        "culture_id": "arthedain",
+        "title_type": "retainer",
+        "text": "Rode with the King's horse at Fornost.",
+        "description": "You joined the mounted companies of Fornost, learning to ride and fight with the lance under knights who still carry the old banners of the North-kingdom.",
+        "skills": ["Riding", "Polearm"],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_arthedain_2",
+        "culture_id": "arthedain",
+        "title_type": "guard",
+        "text": "Stood watch on the walls of Fornost.",
+        "description": "You served in the garrison of Fornost Erain, keeping the night watch on its walls and learning the craft of siege defence from captains who had held them against Angmar.",
+        "skills": ["Bow", "Tactics"],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_arthedain_3",
+        "culture_id": "arthedain",
+        "title_type": "hunter",
+        "text": "Rode with the Rangers of the North.",
+        "description": "You followed the Rangers along the Greenway and through the Weather Hills, striking at orcs and wolves from cover and learning to read the wild as other men read letters.",
+        "skills": ["Riding", "Bow"],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_arthedain_4",
+        "culture_id": "arthedain",
+        "title_type": "infantry",
+        "text": "Trained with the Guard of the Citadel.",
+        "description": "You joined the King's guard in the citadel of Fornost, training in disciplined infantry warfare to protect the King and the hall of his fathers.",
+        "skills": ["Polearm", "OneHanded"],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_youth_arthedain_5",
+        "culture_id": "arthedain",
+        "title_type": "skirmisher",
+        "text": "Lived by your wits in the ruins of Cardolan.",
+        "description": "You scraped by among the broken towns of fallen Cardolan, where barrow-robbers and outlaws made their living. You learned the value of a quick hand, a well-thrown stone and a story nobody could check.",
+        "skills": ["Roguery", "Throwing"],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
     }
 ]

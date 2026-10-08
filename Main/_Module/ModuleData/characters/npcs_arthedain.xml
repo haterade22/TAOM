@@ -1,0 +1,1263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+	<!-- ==================== GONDOR CIVILIAN NPCs ==================== -->
+	<!-- Dúnedain are humans - no race attribute -->
+
+	<!-- Tournament / Arena -->
+	<NPCCharacter id="tournament_master_arthedain" default_group="Infantry" is_hero="false" occupation="ArenaMaster" culture="Culture.arthedain" name="{=aom_arth_arena}Arena Master">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Villager (upgrades to arthedain_levy) -->
+	<NPCCharacter id="villager_arthedain" default_group="Infantry" level="1" name="{=aom_arth_villager}Villager" occupation="Villager" culture="Culture.arthedain">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills>
+			<skill id="Athletics" value="30" />
+			<skill id="Riding" value="0" />
+			<skill id="OneHanded" value="30" />
+			<skill id="TwoHanded" value="20" />
+			<skill id="Polearm" value="30" />
+			<skill id="Bow" value="0" />
+			<skill id="Crossbow" value="0" />
+			<skill id="Throwing" value="20" />
+		</skills>
+		<upgrade_targets>
+			<upgrade_target id="NPCCharacter.arthedain_levy" />
+		</upgrade_targets>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Village Woman -->
+	<NPCCharacter id="village_woman_arthedain" is_female="true" default_group="Infantry" name="{=aom_arth_village_woman}Village Woman" occupation="Villager" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Caravan Staff -->
+	<NPCCharacter id="caravan_master_arthedain" default_group="Infantry" level="26" name="{=aom_arth_caravan_master}Arthedain Caravan Master" occupation="CaravanGuard" culture="Culture.arthedain">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="120" />
+			<skill id="Polearm" value="80" />
+			<skill id="Trade" value="100" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+				<equipment slot="Item1" id="Item.sm_gd_shield_a1" />
+				<equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armed_trader_arthedain" default_group="Infantry" level="16" name="{=aom_arth_armed_trader}Arthedain Armed Trader" occupation="CaravanGuard" culture="Culture.arthedain">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills>
+			<skill id="Athletics" value="40" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="60" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="caravan_guard_arthedain" default_group="Infantry" level="21" name="{=aom_arth_caravan_guard}Arthedain Caravan Guard" occupation="CaravanGuard" culture="Culture.arthedain">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="100" />
+			<skill id="Polearm" value="100" />
+			<skill id="Bow" value="40" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+				<equipment slot="Item1" id="Item.sm_gd_shield_a1" />
+				<equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="veteran_caravan_guard_arthedain" default_group="Infantry" level="26" name="{=aom_arth_vet_caravan_guard}Arthedain Veteran Caravan Guard" occupation="CaravanGuard" culture="Culture.arthedain">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills>
+			<skill id="Athletics" value="60" />
+			<skill id="OneHanded" value="130" />
+			<skill id="Polearm" value="130" />
+			<skill id="Bow" value="50" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
+				<equipment slot="Item1" id="Item.sm_gd_shield_a1" />
+				<equipment slot="Item2" id="Item.wm_gondor_spear_b" />
+				<equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Guards -->
+	<NPCCharacter id="prison_guard_arthedain" default_group="Infantry" level="4" culture="Culture.arthedain" occupation="PrisonGuard" name="{=aom_arth_prison_guard}Prison Guard">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills>
+			<skill id="OneHanded" value="50" />
+			<skill id="TwoHanded" value="50" />
+			<skill id="Polearm" value="50" />
+			<skill id="Athletics" value="30" />
+			<skill id="Throwing" value="20" />
+		</skills>
+		<upgrade_targets></upgrade_targets>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+				<equipment slot="Item1" id="Item.sm_gd_shield_a1" />
+				<equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+				<equipment slot="Item1" id="Item.sm_gd_shield_a1" />
+				<equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="guard_arthedain" default_group="Infantry" level="16" name="{=aom_arth_guard}Guard" occupation="Soldier" culture="Culture.arthedain">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills>
+			<skill id="Athletics" value="50" />
+			<skill id="OneHanded" value="80" />
+			<skill id="Polearm" value="80" />
+		</skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
+				<equipment slot="Item1" id="Item.sm_gd_shield_a1" />
+				<equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
+				<equipment slot="Item1" id="Item.sm_gd_shield_a1" />
+				<equipment slot="Head" id="Item.sk_gd_ano_inf_helmet_med_a" />
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Town Population -->
+	<NPCCharacter id="townsman_arthedain" default_group="Infantry" name="{=aom_arth_townsman}Townsman" occupation="Townsfolk" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_arthedain" is_female="true" default_group="Infantry" name="{=aom_arth_townswoman}Townswoman" occupation="Townsfolk" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_infant_arthedain" default_group="Infantry" name="{=aom_arth_townsman_infant}Townsman" occupation="Townsfolk" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_child_arthedain" default_group="Infantry" name="{=aom_arth_townsman_child}Townsman" occupation="Townsfolk" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townsman_teenager_arthedain" default_group="Infantry" name="{=aom_arth_townsman_teen}Townsman" occupation="Townsfolk" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_infant_arthedain" is_female="true" default_group="Infantry" name="{=aom_arth_townswoman_infant}Townswoman" occupation="Townsfolk" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_child_arthedain" is_female="true" default_group="Infantry" name="{=aom_arth_townswoman_child}Townswoman" occupation="Townsfolk" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="townswoman_teenager_arthedain" is_female="true" default_group="Infantry" name="{=aom_arth_townswoman_teen}Townswoman" occupation="Townsfolk" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Village Children/Teenagers -->
+	<NPCCharacter id="village_woman_child_arthedain" is_female="true" default_group="Infantry" name="{=aom_arth_village_woman_child}Village Child" occupation="Townsfolk" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="village_woman_teenager_arthedain" is_female="true" default_group="Infantry" name="{=aom_arth_village_woman_teen}Village Teenager" occupation="Townsfolk" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_child_arthedain" default_group="Infantry" name="{=aom_arth_villager_child}Village Child" occupation="Townsfolk" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="villager_teenager_arthedain" default_group="Infantry" name="{=aom_arth_villager_teen}Village Teenager" occupation="Townsfolk" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Merchants -->
+	<NPCCharacter id="merchant_arthedain" default_group="Infantry" is_hero="false" occupation="GoodsTrader" culture="Culture.arthedain" name="{=aom_arth_merchant}Trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Crafters -->
+	<NPCCharacter id="blacksmith_arthedain" default_group="Infantry" is_hero="false" occupation="Blacksmith" culture="Culture.arthedain" name="{=aom_arth_blacksmith}Blacksmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weaponsmith_arthedain" default_group="Infantry" is_hero="false" occupation="Weaponsmith" culture="Culture.arthedain" name="{=aom_arth_weaponsmith}Weaponsmith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="armorer_arthedain" default_group="Infantry" is_hero="false" occupation="Armorer" culture="Culture.arthedain" name="{=aom_arth_armorer}Armorer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="horseMerchant_arthedain" default_group="Infantry" is_hero="false" occupation="HorseTrader" culture="Culture.arthedain" name="{=aom_arth_horse_merchant}Horse Merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Tavern -->
+	<NPCCharacter id="tavernkeeper_arthedain" default_group="Infantry" is_hero="false" name="{=aom_arth_tavernkeeper}Tavern Keeper" occupation="Tavernkeeper" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="taverngamehost_arthedain" default_group="Infantry" is_hero="false" name="{=aom_arth_gamehost}Game Host" occupation="TavernGameHost" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="tavern_wench_arthedain" is_female="true" default_group="Infantry" is_hero="false" name="{=aom_arth_tavern_wench}Tavern Wench" occupation="TavernWench" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="musician_arthedain" default_group="Infantry" is_hero="false" name="{=aom_arth_musician}Musician" occupation="Musician" culture="Culture.arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Services -->
+	<NPCCharacter id="shop_worker_arthedain" default_group="Infantry" is_hero="false" occupation="ShopWorker" culture="Culture.arthedain" name="{=aom_arth_shop_worker}Shop Worker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="barber_arthedain" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.arthedain" name="{=aom_arth_barber}Barber" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="ransom_broker_arthedain" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.arthedain" name="{=aom_arth_ransom_broker}Ransom Broker" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Gang -->
+	<NPCCharacter id="gangleader_bodyguard_arthedain" default_group="Infantry" level="16" is_hero="false" occupation="Townsfolk" culture="Culture.arthedain" name="{=aom_arth_gang_bodyguard}Gang Bodyguard" skill_template="SkillSet.infantry_heavyinfantry_level16_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Beggars / Dancers -->
+	<NPCCharacter id="beggar_arthedain" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.arthedain" name="{=aom_arth_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_beggar_arthedain" is_female="true" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.arthedain" name="{=aom_arth_female_beggar}Beggar" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="female_dancer_arthedain" is_female="true" default_group="Infantry" is_hero="false" occupation="Townsfolk" culture="Culture.arthedain" name="{=aom_arth_dancer}Dancer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Merchants (10) -->
+	<NPCCharacter id="spc_notable_arthedain_0" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.arthedain" name="{=aom_arth_notable_0}Prudent Arthedain merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_0b" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.arthedain" name="{=aom_arth_notable_0b}Arthedain vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_1" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.arthedain" name="{=aom_arth_notable_1}Ruthless Arthedain trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_1b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.arthedain" name="{=aom_arth_notable_1b}Cold Arthedain merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_2" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.arthedain" name="{=aom_arth_notable_2}Fornost gem dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_2b" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.arthedain" name="{=aom_arth_notable_2b}Wise Arthedain merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_3" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.arthedain" name="{=aom_arth_notable_3}Self-made Arthedain merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_3b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.arthedain" name="{=aom_arth_notable_3b}Jovial Arthedain merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.arthedain" name="{=aom_arth_notable_4}Shrewd Arthedain merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_4b" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.arthedain" name="{=aom_arth_notable_4b}Devious Arthedain merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Preachers (3) -->
+	<NPCCharacter id="spc_notable_arthedain_5" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.arthedain" name="{=aom_arth_notable_5}Zealous Arthedain loremaster" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_6" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.arthedain" name="{=aom_arth_notable_6}Stern lord of Arthedain" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_7" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.arthedain" name="{=aom_arth_notable_7}Arthedain keeper of traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Artisans (2) -->
+	<NPCCharacter id="spc_notable_arthedain_8" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.arthedain" name="{=aom_arth_notable_8}Gruff Fornost artisan" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_9" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.arthedain" name="{=aom_arth_notable_9}Gifted Arthedain craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Gang Leaders (6) -->
+	<NPCCharacter id="spc_notable_arthedain_gl1" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.arthedain" name="{=aom_arth_notable_gl1}Protective Arthedain ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_10" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.arthedain" name="{=aom_arth_notable_10}Sardonic Arthedain outlaw" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_11" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.arthedain" name="{=aom_arth_notable_11}Intimidating Arthedain enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_gl4" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.arthedain" name="{=aom_arth_notable_gl4}Ruthless Arthedain thug" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_12" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.arthedain" name="{=aom_arth_notable_12}Cunning Arthedain smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_jerkin_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_13" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.arthedain" name="{=aom_arth_notable_13}Menacing Arthedain schemer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Rural Notables (2) -->
+	<NPCCharacter id="spc_notable_arthedain_21" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.arthedain" name="{=aom_arth_notable_21}Stern Arthedain landowner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_notable_arthedain_22" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.arthedain" name="{=aom_arth_notable_22}Agreeable Arthedain elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Honor" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Notables: Headmen (3) -->
+	<NPCCharacter id="spc_arthedain_headman_1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.arthedain" name="{=aom_arth_headman_1}Rebellious Arthedain headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_arthedain_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.arthedain" name="{=aom_arth_headman_2}Conservative Arthedain headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_arthedain_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.arthedain" name="{=aom_arth_headman_3}Devious Arthedain headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.gondor_noble_coat_b" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Practice Dummies -->
+	<NPCCharacter id="gear_practice_dummy_arthedain" default_group="Infantry" level="15" is_hero="false" name="{=aom_arth_practice_dummy}Practice Dummy" occupation="Soldier" culture="Culture.arthedain">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_1_arthedain" default_group="Infantry" level="15" is_hero="false" name="{=aom_arth_practice_1}Practice Fighter" occupation="Soldier" culture="Culture.arthedain">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
+				<equipment slot="Body" id="Item.ithilien_jerkin_long" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_2_arthedain" default_group="Infantry" level="25" is_hero="false" name="{=aom_arth_practice_2}Practice Fighter" occupation="Soldier" culture="Culture.arthedain">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
+				<equipment slot="Body" id="Item.sk_gd_cair_chainmail_half_b" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_light_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="weapon_practice_stage_3_arthedain" default_group="Infantry" level="35" is_hero="false" name="{=aom_arth_practice_3}Practice Fighter" occupation="Soldier" culture="Culture.arthedain">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
+				<equipment slot="Body" id="Item.sk_gd_ano_chainmail_half_a" />
+				<equipment slot="Gloves" id="Item.sk_gd_ano_bracer_inf_med_a" />
+				<equipment slot="Leg" id="Item.sk_gd_ano_grvs_inf_med_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="gear_dummy_arthedain" default_group="Infantry" level="15" is_hero="false" name="{=aom_arth_gear_dummy}Gear Dummy" occupation="Soldier" culture="Culture.arthedain">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<skills></skills>
+		<Equipments>
+			<EquipmentRoster civilian="true">
+				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster>
+				<equipment slot="Body" id="Item.ithilien_jerkin_short" />
+				<equipment slot="Leg" id="Item.ithilien_boots" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Lord templates. Referenced from taom_spcultures.xml <lord_templates> and
+	     <rebellion_hero_templates>; both lists previously held vanilla's Culture.empire
+	     leaders, and a hero keeps its TEMPLATE's culture. Equipment comes from the
+	     already-authored taom_arthedain_lord_* rosters. -->
+	<NPCCharacter id="spc_arthedain_lord_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.arthedain" name="{=aom_arthedain_lord_1}Bold Arthedain lord" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Lord">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentSet id="taom_arthedain_lord_battle_male" />
+			<EquipmentSet id="taom_arthedain_lord_civilian_male" equipmentType="Civilian" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_arthedain_lord_2" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.arthedain" name="{=aom_arthedain_lord_2}Cautious Arthedain lord" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Lord">
+		<face><face_key_template value="BodyProperty.fighter_gondor" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentSet id="taom_arthedain_lord_battle_male" />
+			<EquipmentSet id="taom_arthedain_lord_civilian_male" equipmentType="Civilian" />
+		</Equipments>
+	</NPCCharacter>
+</NPCCharacters>

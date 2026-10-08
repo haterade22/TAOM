@@ -197,6 +197,26 @@
 	<string id="aom_lord_AB8_7_name" text="{=aom_lord_AB8_7_name}Saharâ" />
 	<string id="aom_lord_AB8_8_name" text="{=aom_lord_AB8_8_name}Tûba" />
 	<string id="aom_lord_AB8_9_name" text="{=aom_lord_AB8_9_name}Zhâleh" />
+	<string id="aom_lord_AN1_1_name" text="{=aom_lord_AN1_1_name}Arvegil II" />
+	<string id="aom_lord_AN1_2_name" text="{=aom_lord_AN1_2_name}Malvegil" />
+	<string id="aom_lord_AN1_3_name" text="{=aom_lord_AN1_3_name}Gilraen" />
+	<string id="aom_lord_AN1_4_name" text="{=aom_lord_AN1_4_name}Ivorwen" />
+	<string id="aom_lord_AN2_1_name" text="{=aom_lord_AN2_1_name}Amlaith" />
+	<string id="aom_lord_AN2_2_name" text="{=aom_lord_AN2_2_name}Celepharn" />
+	<string id="aom_lord_AN2_3_name" text="{=aom_lord_AN2_3_name}Fíriel" />
+	<string id="aom_lord_AN2_4_name" text="{=aom_lord_AN2_4_name}Elanwen" />
+	<string id="aom_lord_AN3_1_name" text="{=aom_lord_AN3_1_name}Argeleb" />
+	<string id="aom_lord_AN3_2_name" text="{=aom_lord_AN3_2_name}Araphor" />
+	<string id="aom_lord_AN3_3_name" text="{=aom_lord_AN3_3_name}Meneliel" />
+	<string id="aom_lord_AN3_4_name" text="{=aom_lord_AN3_4_name}Silivren" />
+	<string id="aom_lord_AN4_1_name" text="{=aom_lord_AN4_1_name}Halbarad" />
+	<string id="aom_lord_AN4_2_name" text="{=aom_lord_AN4_2_name}Aranuir" />
+	<string id="aom_lord_AN4_3_name" text="{=aom_lord_AN4_3_name}Ithilwen" />
+	<string id="aom_lord_AN4_4_name" text="{=aom_lord_AN4_4_name}Calwen" />
+	<string id="aom_lord_AN5_1_name" text="{=aom_lord_AN5_1_name}Celebrindor" />
+	<string id="aom_lord_AN5_2_name" text="{=aom_lord_AN5_2_name}Arveleg" />
+	<string id="aom_lord_AN5_3_name" text="{=aom_lord_AN5_3_name}Maethil" />
+	<string id="aom_lord_AN5_4_name" text="{=aom_lord_AN5_4_name}Tirwen" />
 	<string id="aom_lord_BC1_1_name" text="{=aom_lord_BC1_1_name}Morgrub" />
 	<string id="aom_lord_BC1_2_name" text="{=aom_lord_BC1_2_name}Snagbut" />
 	<string id="aom_lord_BC1_3_name" text="{=aom_lord_BC1_3_name}Hrakdush" />

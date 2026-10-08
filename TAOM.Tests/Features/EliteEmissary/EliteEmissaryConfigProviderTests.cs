@@ -165,6 +165,28 @@ public class EliteEmissaryConfigProviderTests
     }
 
     [TestMethod]
+    public void GetConfig_CultureWithAResourceButNoHandListedId_IsKept()
+    {
+        // The special resource is the gate: shaghana maps to one, so its offers are reachable. A hand
+        // list of culture ids beside it once dropped shaghana and abanissa for being missing from it.
+        _resourceConfig.GetTroopCost("shaghana_a").Returns(Priced("shaghana_a", 30));
+        _resourceConfig.GetByCultureId("shaghana").Returns(
+            new SpecialResource("spice", new[] { "shaghana" }, new[] { "shaghana" }, "Spice", "icon",
+                500f, 25f, 0.6f, 8f, 4f, 18f, 1f));
+        WriteConfig(@"<EliteEmissary enabled=""true"">
+  <CultureOffers>
+    <Culture id=""shaghana"">
+      <Troop id=""shaghana_a"" />
+    </Culture>
+  </CultureOffers>
+</EliteEmissary>");
+
+        var config = _sut.GetConfig();
+
+        Assert.IsTrue(config.CultureOffers.ContainsKey("shaghana"));
+    }
+
+    [TestMethod]
     public void GetConfig_CultureWithNoValidTroops_NotRecorded()
     {
         WriteConfig(@"<EliteEmissary enabled=""true"">

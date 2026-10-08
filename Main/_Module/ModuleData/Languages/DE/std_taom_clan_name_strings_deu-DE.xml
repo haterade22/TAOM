@@ -126,5 +126,10 @@
     <string id="aom_clan_umbar_4_name" text="Haus Bel Inzûl" />
     <string id="aom_clan_umbar_5_name" text="Haus Halrax" />
     <string id="aom_clan_umbar_6_name" text="Haus Khatûg" />
+    <string id="aom_clan_arthedain_1_name" text="House of Arvedui" />
+    <string id="aom_clan_arthedain_2_name" text="House of Evendim" />
+    <string id="aom_clan_arthedain_3_name" text="Wardens of Amon Sûl" />
+    <string id="aom_clan_arthedain_4_name" text="House of the Baranduin" />
+    <string id="aom_clan_arthedain_5_name" text="House of Emyn Beraid" />
   </strings>
 </base>

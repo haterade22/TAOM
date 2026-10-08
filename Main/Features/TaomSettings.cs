@@ -1987,7 +1987,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public string RealmColourBlueCraig { get; set; } = string.Empty;
 
     [SettingPropertyGroup("Realm Borders/Realm Colours")]
-    [SettingPropertyText("Your Realm", Order = 22, RequireRestart = false,
+    [SettingPropertyText("Arthedain", Order = 22, RequireRestart = false,
+        HintText = "Arthedain's colour on the map, written #RRGGBB. Blank uses the default, #A0B4D8.")]
+    public string RealmColourArthedain { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Your Realm", Order = 23, RequireRestart = false,
         HintText = "The colour of your realm when it is none of the kingdoms above: your clan's land while it serves no kingdom, then a kingdom you found. Written #RRGGBB. Blank gives it a free colour. In one of the kingdoms above, that kingdom's own field applies.")]
     public string RealmColourYourRealm { get; set; } = string.Empty;
 }

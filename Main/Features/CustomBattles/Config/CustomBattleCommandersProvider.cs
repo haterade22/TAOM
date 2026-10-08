@@ -23,13 +23,14 @@ public class CustomBattleCommandersProvider : ICustomBattleCommandersProvider
 {
     // Warning-only aid: a faction key not in this set is kept but flagged (likely a typo — a real
     // faction with that id would otherwise silently fall back to default). Stale set => spurious or
-    // missing warning, never broken behavior. Mirrors ConfigIdValidationTests.ValidCultureIds.
-    private static readonly HashSet<string> KnownCultureIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+    // missing warning, never broken behavior. CustomBattleCommandersShippedDataTests pins it to the
+    // playable cultures in the data.
+    internal static readonly HashSet<string> KnownCultureIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
     {
         "gondor", "mordor", "erebor", "rivendell", "lothlorien",
         "mirkwood", "isengard", "gundabad", "dolguldur", "umbar",
         "shaghana", "abanissa", "goblin", "mistymountainorcs",
-        "bluecraig", "lindon",
+        "bluecraig", "lindon", "arthedain",
         "vlandia", "empire", "aserai", "khuzait", "sturgia", "battania"
     };
 

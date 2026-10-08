@@ -14,9 +14,12 @@ while a PLACEHOLDER row has no scene entity, SettlementVisual.OnStartup NREs at 
 `--check` is the gate for that: it fails on any table id whose master row, loc row or scene entity
 is missing, or whose master position drifted from the scene transform.
 
-Rows are inserted right after the row's own `after` anchor (default INSERT_AFTER) so a region's
-block stays contiguous; loc rows go after that anchor's last row in each language, same display
-name in all 12 (Tolkien proper nouns do not translate). `hearth` is per row too (default HEARTH):
+Master rows are appended at the END of the file, never after an anchor (append_settlements): a
+save made before the batch still loads this file, and a new village or town ahead of an existing
+row makes that save skip the existing row (2026-10-07, docs/modding/settlements.md "Add"). The
+row's `after` anchor (default INSERT_AFTER) now places only its loc rows, after that anchor's last
+row in each language, same display name in all 12 (Tolkien proper nouns do not translate). A row
+whose `bound` settlement has no row is refused, and named by `--check`. `hearth` is per row too (default HEARTH):
 the #597 Gondor rows sit at 350 like their EW10/EW11 castle-village neighbours; the Isengard and
 Gundabad rows at those cultures' 500 floor. Idempotent per id: an id already in the master is skipped. Byte discipline per
 .claude/rules/moduledata-validation.md: binary read, each file's own BOM and newline preserved
@@ -65,6 +68,8 @@ MESHES = {
     "isengard": ("gui_bg_village_empire", "wait_empire_village", "gui_bg_castle_empire"),
     "gondor": ("gui_bg_village_empire", "wait_empire_village", "gui_bg_castle_empire"),
     "gundabad": ("gui_bg_village_sturgia", "wait_sturgia_village", "gui_bg_castle_sturgia"),
+    "arthedain": ("gui_bg_village_empire", "wait_empire_village", "gui_bg_castle_empire"),
+    "bluecraig": ("gui_bg_village_sturgia", "wait_sturgia_village", "gui_bg_castle_sturgia"),
 }
 HEARTH = "500"  # the SETTLEMENT_ECONOMY_FLOOR for isengard (tools/settlement_economy_floor.json)
 
@@ -102,6 +107,45 @@ VILLAGES = [
     # the Northman name the orcs kept. -bosh is what this map's swine farms carry (Bagmosh, Gundbosh).
     Village("castle_village_G4_1", "Fram-bûrz", "castle_G4", "wheat_farm", "gundabad", "sturgia_village_g", after="castle_G4"),
     Village("castle_village_G4_2", "Fram-bosh", "castle_G4", "swine_farm", "gundabad", "sturgia_village_h", after="castle_G4"),
+    # Arthedain (2026-10-07): the 22 villages Mike placed with the kingdom's ten fortifications
+    # (tools/add_map_fortifications.py writes those first; each village lands after its own).
+    # Names approved by Mike; Bree-land's four are canon (Staddle, Combe, Archet, the Chetwood).
+    # Hearth 300 against Gondor's 350-366: a poor realm, and not on the economy-floor spec.
+    # Scenes are Gondor's four village scenes in rotation, the entities being Gondor copies.
+    Village("village_AN2_1", "Norbury",         "town_AN2",    "wheat_farm",  "arthedain", "taom_gondor_village_001_forceatmo", hearth="300", after="town_AN2"),
+    Village("village_AN2_2", "Garth Erain",     "town_AN2",    "cattle_farm", "arthedain", "taom_gondor_village_002_forceatmo", hearth="300", after="town_AN2"),
+    Village("village_AN2_3", "Talath Forn",     "town_AN2",    "sheep_farm",  "arthedain", "taom_gondor_village_003_forceatmo", hearth="300", after="town_AN2"),
+    Village("village_AN2_4", "Emyn Forn",       "town_AN1",    "iron_mine",   "arthedain", "taom_gondor_village_004_forceatmo", hearth="300", after="town_AN2"),
+    Village("village_AN1_1", "Lond Nenuial",    "town_AN1",    "fisherman",   "arthedain", "taom_gondor_village_001_forceatmo", hearth="300", after="town_AN1"),
+    Village("village_AN1_2", "Parth Uial",      "town_AN1",    "wheat_farm",  "arthedain", "taom_gondor_village_002_forceatmo", hearth="300", after="town_AN1"),
+    Village("village_AN1_3", "Tol Uial",        "town_AN1",    "lumberjack",  "arthedain", "taom_gondor_village_003_forceatmo", hearth="300", after="town_AN1"),
+    Village("village_AN3_1", "Staddle",         "town_AN3",    "wheat_farm",  "arthedain", "taom_gondor_village_004_forceatmo", hearth="300", after="town_AN3"),
+    # Archet and Combe swapped after Mike moved the entities (2026-10-07): Archet keeps its canon
+    # place beside the Chetwood (village_AN3_4).
+    Village("village_AN3_2", "Archet",          "town_AN3",    "lumberjack",  "arthedain", "taom_gondor_village_001_forceatmo", hearth="300", after="town_AN3"),
+    Village("village_AN3_3", "Combe",           "castle_AN8",    "swine_farm",  "arthedain", "taom_gondor_village_002_forceatmo", hearth="300", after="town_AN3"),
+    Village("village_AN3_4", "Chetwood",        "town_AN3",    "trapper",     "arthedain", "taom_gondor_village_003_forceatmo", hearth="300", after="town_AN3"),
+    Village("castle_village_AN9_1",  "Northgate",       "castle_AN9",  "sheep_farm",  "arthedain", "taom_gondor_village_004_forceatmo", hearth="300", after="castle_AN9"),
+    Village("castle_village_AN10_1", "Uial Fold",       "castle_AN10", "sheep_farm",  "arthedain", "taom_gondor_village_001_forceatmo", hearth="300", after="castle_AN10"),
+    Village("castle_village_AN4_1",  "Midgewater",      "castle_AN4",  "fisherman",   "arthedain", "taom_gondor_village_002_forceatmo", hearth="300", after="castle_AN4"),
+    Village("castle_village_AN5_1",  "Mitheithel Ford", "castle_AN5",  "fisherman",   "arthedain", "taom_gondor_village_003_forceatmo", hearth="300", after="castle_AN5"),
+    Village("castle_village_AN5_2",  "Rhaw Field",      "castle_AN5",  "cattle_farm", "arthedain", "taom_gondor_village_004_forceatmo", hearth="300", after="castle_AN5"),
+    Village("castle_village_AN6_1",  "Stonebows",       "castle_AN6",  "wheat_farm",  "arthedain", "taom_gondor_village_001_forceatmo", hearth="300", after="castle_AN6"),
+    Village("castle_village_AN6_2",  "Baranduin Mead",  "castle_AN6",  "cattle_farm", "arthedain", "taom_gondor_village_002_forceatmo", hearth="300", after="castle_AN6"),
+    Village("castle_village_AN8_1",  "Undertowers",     "castle_AN8",  "sheep_farm",  "arthedain", "taom_gondor_village_003_forceatmo", hearth="300", after="castle_AN8"),
+    Village("castle_village_AN8_2",  "Beraid Vale",     "castle_AN8",  "wheat_farm",  "arthedain", "taom_gondor_village_004_forceatmo", hearth="300", after="castle_AN8"),
+    Village("castle_village_AN11_1", "Lossoth Strand",  "castle_AN11", "fisherman",   "arthedain", "taom_gondor_village_001_forceatmo", hearth="300", after="castle_AN11"),
+    Village("castle_village_AN11_2", "Iceward",         "castle_AN11", "trapper",     "arthedain", "taom_gondor_village_002_forceatmo", hearth="300", after="castle_AN11"),
+    # Two more Mike placed the same afternoon; names approved by him (Bridgefields is canon, by the
+    # Brandywine Bridge).
+    Village("village_AN1_4",         "Lin Uial",        "town_AN1",    "sheep_farm",  "arthedain", "taom_gondor_village_004_forceatmo", hearth="300", after="town_AN1"),
+    Village("castle_village_AN6_3",  "Bridgefields",    "castle_AN6",  "wheat_farm",  "arthedain", "taom_gondor_village_003_forceatmo", hearth="300", after="castle_AN6"),
+    # Blue Craig's second town, Luinkrag (town_GBC2, tools/add_map_fortifications.py). Hyphenated
+    # Black Speech compounds like Blue Craig's own villages; types by the orc per-fief rule
+    # (assign_orc_village_types.fief_types(3, "silver_mine")); hearth the 500 Blue Craig floor.
+    Village("village_GBC2_1", "Gash-nakh", "town_GBC2", "swine_farm",  "bluecraig", "sturgia_village_d", after="town_GBC2"),
+    Village("village_GBC2_2", "Mok-bûr",   "town_GBC2", "cattle_farm", "bluecraig", "sturgia_village_k", after="town_GBC2"),
+    Village("village_GBC2_3", "Zog-tang",  "town_GBC2", "silver_mine", "bluecraig", "sturgia_village_c", after="town_GBC2"),
 ]
 INSERT_AFTER = "village_isengard_a"   # default anchor: last settlement of the Isengard block, and its last loc row
 
@@ -232,6 +276,46 @@ def insert_after_settlement(master_text, anchor_id, blocks):
     return master_text[:at] + "".join(blocks) + master_text[at:]
 
 
+def append_settlements(master_text, blocks):
+    """New rows go at the END of the file, never after an anchor (the save-order rule).
+
+    A save made before a batch still loads settlements.xml (SandBoxManager.InitializeSandboxXMLs).
+    For a new town or village, Settlement.Deserialize runs Alleys[num].Initialize on the new
+    object's empty list and throws; MBObjectManager.LoadXML swallows it and stops, so no row AFTER
+    that one is marked ready, and the load unregisters every non-ready object (Campaign.cs:1457):
+    those existing settlements vanish from that save while its parties and heroes still point at
+    them. Rows at the end are dropped
+    cleanly instead: IsReady is set only after Deserialize returns, and the load unregisters
+    non-ready objects (Campaign.cs:1457, v1.5.4).
+    """
+    at = master_text.rfind("</Settlements>")
+    if at == -1:
+        raise RuntimeError("</Settlements> close tag not found")
+    return master_text[:at] + "".join(blocks) + master_text[at:]
+
+
+def save_order_findings(master_text, new_ids):
+    """Findings unless the rows in `new_ids` are the file's tail, headed by a row with <CommonAreas>.
+
+    The head must throw on an old save (a town or village), so the whole tail is dropped; a castle
+    carries no <CommonAreas>, loads into the old save without its owner and is not dropped. XML
+    comments are skipped, as the engine skips comment nodes.
+    """
+    rows = re.sub(r"<!--.*?-->", "", master_text, flags=re.S)
+    order = re.findall(r'<Settlement id="([^"]+)"', rows)
+    first = next((i for i, sid in enumerate(order) if sid in new_ids), None)
+    if first is None:
+        return []
+    head = order[first]
+    findings = [f"{sid}: an existing row after the new row {head}; a save made before this batch unregisters it"
+                for sid in order[first:] if sid not in new_ids]
+    head_row = re.search(r'<Settlement id=' + re.escape(f'"{head}"') + r'[\s>].*?</Settlement>', rows, re.S)
+    if head_row and "<CommonAreas>" not in head_row.group(0):
+        findings.append(f"{head}: heads the new rows but has no <CommonAreas>, so a save made before this "
+                        "batch loads it without its owner instead of dropping it; put a town first")
+    return findings
+
+
 def loc_row(sid, name):
     return f'    <string id="Settlements.Settlement.name.{sid}" text={quoteattr(name)} />'
 
@@ -261,6 +345,8 @@ def check(villages, master_text, scene_text, loc_texts, tolerance=0.01):
         pos = settlement_position(master_text, v.id)
         if not pos:
             findings.append(f"{v.id}: no <Settlement> row in settlements.xml")
+        if not settlement_position(master_text, v.bound):
+            findings.append(f"{v.id}: bound settlement {v.bound} has no row in settlements.xml (a new campaign NREs)")
         for lang, text in loc_texts.items():
             if f'id="Settlements.Settlement.name.{v.id}"' not in text:
                 findings.append(f"{v.id}: no loc row in Languages/{lang}/loc_settlements.xml")
@@ -326,16 +412,21 @@ def main():
     loc_plan = plan_loc_rows(VILLAGES, loc_texts)
 
     nl = detect_newline(master)
-    blocks, placeholders, per_parent = {}, 0, {}
-    print(f"Plan: +{len(todo)} village(s) ({len(VILLAGES) - len(todo)} already present)")
+    orphans = [v.id for v in todo if not settlement_position(master, v.bound)]
+    if orphans:
+        print("REFUSING: bound settlement has no row in settlements.xml (run add_map_fortifications.py "
+              "first): " + ", ".join(orphans), file=sys.stderr)
+        return 1
+    blocks, placeholders, per_parent = [], 0, {}
+    print(f"Plan: +{len(todo)} village(s) ({len(VILLAGES) - len(todo)} already present), appended at the end")
     for v in todo:
         k = per_parent.get(v.bound, 0)
         px, py, source = resolve_position(v, scene, master, k)
         if source == "PLACEHOLDER":
             per_parent[v.bound] = k + 1
             placeholders += 1
-        blocks.setdefault(anchor_of(v), []).append(village_block(v, px, py, nl))
-        print(f"  {v.id:28} {v.name:15} -> bound {v.bound:20} {v.village_type:11} at {px}, {py}  [{source}]  after {anchor_of(v)}")
+        blocks.append(village_block(v, px, py, nl))
+        print(f"  {v.id:28} {v.name:15} -> bound {v.bound:20} {v.village_type:11} at {px}, {py}  [{source}]  loc after {anchor_of(v)}")
     if placeholders:
         print(f"\n{placeholders} PLACEHOLDER position(s): the entity is not in the saved scene yet. Save the scene "
               f"before any campaign load; the editor writes the real posX/posY back. Then run --check.")
@@ -347,12 +438,9 @@ def main():
         return 0
 
     tag = "mapvillages_" + datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    n_blocks = sum(len(group) for group in blocks.values())
+    n_blocks = len(blocks)
     if blocks:
-        text = master
-        for anchor, group in blocks.items():
-            text = insert_after_settlement(text, anchor, group)
-        _write(LIVE, master_bom, text, tag)
+        _write(LIVE, master_bom, append_settlements(master, blocks), tag)
     written = []
     by_id = {v.id: v for v in VILLAGES}
     for lang, (bom, text) in locs.items():

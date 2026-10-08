@@ -38,6 +38,9 @@
        that culture's armour, which the armour acquisition gate sells by armoury level, and their lord
        harness is that culture's lord kit. -->
   <Culture id="lindon" armour_from="rivendell" />
+  <!-- Arthedain's own Arnor pack is tagged Culture.gondor in the Armory, so its markets draw on
+       Gondor's, which is where the Arnor pieces are counted (2026-10-07). -->
+  <Culture id="arthedain" armour_from="gondor" />
   <Culture id="lothlorien" armour_from="rivendell" />
   <Culture id="abanissa" armour_from="aserai" />
   <Culture id="shaghana" armour_from="aserai" />

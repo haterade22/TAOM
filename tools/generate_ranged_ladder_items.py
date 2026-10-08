@@ -83,8 +83,9 @@ class GeneratorError(Exception):
 # --------------------------------------------------------------------------- #
 # Clones                                                                        #
 # --------------------------------------------------------------------------- #
-def ladder_name(donor_name: str | None, new_id: str, tier: int) -> str:
-    text = _TAG_RE.sub("", donor_name or new_id).strip()
+def ladder_name(donor_name: str | None, new_id: str, tier: int, own_name: str | None = None) -> str:
+    """`{=<id>}<name> <numeral>`: the line's own name when it states one, else the donor's."""
+    text = (own_name or _TAG_RE.sub("", donor_name or new_id)).strip()
     for _ in range(3):
         text = _SUFFIX_RE.sub("", text).strip()
         text = rl.TIER_NUMERAL_RE.sub("", text).strip()
@@ -97,7 +98,7 @@ def clone_launcher(donor: ET.Element, item: rl.LadderItem) -> ET.Element:
     rl.usage_for)."""
     out = copy.deepcopy(donor)
     out.set("id", item.id)
-    out.set("name", ladder_name(donor.get("name"), item.id, item.tier))
+    out.set("name", ladder_name(donor.get("name"), item.id, item.tier, item.name))
     out.set("is_merchandise", "false")
     changed = 0
     for weapon in out.iter("Weapon"):

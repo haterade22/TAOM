@@ -1588,7 +1588,7 @@
     <string id="taom_faction_khudorom_of_khand_weakness_2" text="Les capitaines mercenaires sont loyaux à l'or, pas au seigneur" />
     <string id="taom_faction_kingdom_of_angaladh_desc" text="Le Royaume d'Angaladh." />
     <string id="taom_faction_kingdom_of_angaladh_name" text="Royaume d'Angaladh" />
-    <string id="taom_faction_kingdom_of_arthedain_desc" text="Le dernier et le plus grand des royaumes successeurs de l'Arnor. L'Arthedain résista le plus longtemps contre le Roi-Sorcier d'Angmar avant sa chute finale." />
+    <string id="taom_faction_kingdom_of_arthedain_desc" text="The last of Arnor's three successor kingdoms, and the only one still standing. Arvedui's line holds Fornost upon the North Downs and its Rangers keep the roads of Eriador, but Angmar, Dunland and the orcs of Gundabad press on every border of a realm with too few swords." />
     <string id="taom_faction_kingdom_of_arthedain_name" text="Royaume d'Arthedain" />
     <string id="taom_faction_kingdom_of_arthedain_trait_0" text="Dernier de l'Arnor" />
     <string id="taom_faction_kingdom_of_arthedain_trait_1" text="Palantír d'Annúminas" />
@@ -2841,5 +2841,44 @@
   <string id="taom_bc_advice_keep" text="Garder les miens" />
   <string id="taom_bc_advice_done" text="Réglages de bataille enregistrés." />
   <string id="taom_bc_advice_failed" text="Les réglages de bataille n'ont pas pu être enregistrés. Réglez-les à la main dans Options, {PERFORMANCE}." />
+  <string id="taom_str_faction_official.arthedain" text="a noble lord" />
+  <string id="taom_str_faction_official.arthedain_f" text="a noble lady" />
+  <string id="taom_str_faction_ruler.arthedain" text="King" />
+  <string id="taom_str_faction_ruler.arthedain_f" text="Queen" />
+  <string id="taom_str_faction_ruler_term_in_speech.arthedain" text="{?RULER.GENDER}the Queen{?}the King{\?} {RULER.NAME}" />
+  <string id="taom_str_faction_ruler_name_with_title.arthedain" text="{?RULER.GENDER}Queen{?}King{\?} {RULER.NAME}" />
+  <string id="taom_str_faction_noble_name_with_title.arthedain" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+  <string id="taom_str_faction_formal_name_for_culture.arthedain" text="Arthedain" />
+  <string id="taom_str_faction_informal_name_for_culture.arthedain" text="the Dúnedain of the North" />
+  <string id="taom_str_neutral_term_for_culture.arthedain" text="Dúnedain" />
+  <string id="taom_str_culture_description.arthedain" text="The Dúnedain of Arthedain are the last heirs of Arnor, the North-kingdom Elendil founded. From Fornost upon the North Downs the line of Arvedui still keeps the watch that Isildur's heirs have kept for a thousand years, though their towns are few, their lords are poor and the shadow of Angmar never leaves the hills. They are fewer than their southern kin and prouder than their numbers warrant, and every season the wild lands press closer." />
+  <string id="taom_str_culture_rich_name.arthedain" text="Dúnedain of Arthedain" />
+  <string id="taom_str_adjective_for_culture.arthedain" text="Arthedain" />
+  <string id="taom_str_player_father_name.arthedain" text="Aravir" />
+  <string id="taom_str_player_mother_name.arthedain" text="Ivorwen" />
+  <string id="taom_aso_kingdom.arthedain" text="Arthedain" />
+  <string id="taom_faction_kingdom_of_arthedain_bonus_0" text="+10% party speed on plains (Rangers' Roads)" />
+  <string id="taom_faction_kingdom_of_arthedain_bonus_1" text="-20% garrison wage (Wardens of the Walls)" />
+  <string id="taom_faction_kingdom_of_arthedain_bonus_2" text="+5 party morale (Dúnedain Resolve)" />
+  <string id="taom_faction_kingdom_of_arthedain_bonus_3" text="+1 settlement loyalty per day (Line of Isildur)" />
+  <string id="taom_faction_kingdom_of_arthedain_bonus_4" text="-15% village hearth growth (A Dwindling People)" />
+  <string id="taom_faction_kingdom_of_arthedain_perk_0_desc" text="-20% garrison wage and +1 settlement loyalty per day." />
+  <string id="taom_faction_kingdom_of_arthedain_perk_0_name" text="Wardens of the Walls" />
+  <string id="taom_faction_kingdom_of_arthedain_perk_1_desc" text="+5 party morale. Few as they are, the Dúnedain do not break." />
+  <string id="taom_faction_kingdom_of_arthedain_perk_1_name" text="Dúnedain Resolve" />
+  <string id="taom_faction_kingdom_of_arthedain_perk_2_desc" text="+10% party speed on plains, where the Rangers keep the old roads open." />
+  <string id="taom_faction_kingdom_of_arthedain_perk_2_name" text="Rangers' Roads" />
+  <string id="taom_faction_kingdom_of_arthedain_strength_0" text="Fine Dúnedain archers and guards" />
+  <string id="taom_faction_kingdom_of_arthedain_strength_1" text="Steadfast morale and loyal towns" />
+  <string id="taom_faction_kingdom_of_arthedain_strength_2" text="Cheap garrisons behind old walls" />
+  <string id="taom_faction_kingdom_of_arthedain_su_0_desc" text="Two-handed elite guard of the King's citadel." />
+  <string id="taom_faction_kingdom_of_arthedain_su_0_name" text="King's Guard of Fornost" />
+  <string id="taom_faction_kingdom_of_arthedain_su_1_desc" text="Veteran Dúnedain scout-bowman of the North." />
+  <string id="taom_faction_kingdom_of_arthedain_su_1_name" text="Ranger Captain" />
+  <string id="taom_faction_kingdom_of_arthedain_su_2_desc" text="Sword-and-shield knight of the old blood." />
+  <string id="taom_faction_kingdom_of_arthedain_su_2_name" text="Knight of Arthedain" />
+  <string id="taom_faction_kingdom_of_arthedain_weakness_0" text="Few lords and small hosts" />
+  <string id="taom_faction_kingdom_of_arthedain_weakness_1" text="Poor lands that grow slowly" />
+  <string id="taom_faction_kingdom_of_arthedain_weakness_2" text="Ringed by Angmar, Dunland and Gundabad" />
   </strings>
 </base>

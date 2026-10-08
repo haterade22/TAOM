@@ -73,7 +73,7 @@ public class TroopUpgradeSkillMonotonicityTests
     /// </summary>
     private static readonly string[] ExpectedMilitiaCultures =
     {
-        "dale", "dolguldur", "dunland", "erebor", "goblin", "gondor", "gundabad", "harad",
+        "arthedain", "dale", "dolguldur", "dunland", "erebor", "goblin", "gondor", "gundabad", "harad",
         "isengard", "lindon", "mirkwood", "mordor", "rhun", "rivendell", "rohan"
     };
 

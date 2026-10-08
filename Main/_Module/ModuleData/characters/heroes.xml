@@ -3925,5 +3925,88 @@
 		id="lord_M18_11"
 		father="Hero.lord_M18_1"
 		faction="Faction.clan_empire_south_12" />
+  <!-- TAOM-NEWFACTIONS:arthedain:BEGIN -->
+	<Hero
+		id="lord_AN1_1"
+		faction="Faction.clan_arthedain_1"
+		spouse="Hero.lord_AN1_3"
+		text="{=lord_AN1_1_description}Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against Angmar with fewer swords each year." />
+	<Hero
+		id="lord_AN1_2"
+		faction="Faction.clan_arthedain_1"
+		spouse="Hero.lord_AN1_4" />
+	<Hero
+		id="lord_AN1_3"
+		faction="Faction.clan_arthedain_1"
+		spouse="Hero.lord_AN1_1" />
+	<Hero
+		id="lord_AN1_4"
+		faction="Faction.clan_arthedain_1"
+		spouse="Hero.lord_AN1_2" />
+	<Hero
+		id="lord_AN2_1"
+		faction="Faction.clan_arthedain_2"
+		spouse="Hero.lord_AN2_3" />
+	<Hero
+		id="lord_AN2_2"
+		faction="Faction.clan_arthedain_2"
+		spouse="Hero.lord_AN2_4" />
+	<Hero
+		id="lord_AN2_3"
+		faction="Faction.clan_arthedain_2"
+		spouse="Hero.lord_AN2_1" />
+	<Hero
+		id="lord_AN2_4"
+		faction="Faction.clan_arthedain_2"
+		spouse="Hero.lord_AN2_2" />
+	<Hero
+		id="lord_AN3_1"
+		faction="Faction.clan_arthedain_3"
+		spouse="Hero.lord_AN3_3" />
+	<Hero
+		id="lord_AN3_2"
+		faction="Faction.clan_arthedain_3"
+		spouse="Hero.lord_AN3_4" />
+	<Hero
+		id="lord_AN3_3"
+		faction="Faction.clan_arthedain_3"
+		spouse="Hero.lord_AN3_1" />
+	<Hero
+		id="lord_AN3_4"
+		faction="Faction.clan_arthedain_3"
+		spouse="Hero.lord_AN3_2" />
+	<Hero
+		id="lord_AN4_1"
+		faction="Faction.clan_arthedain_4"
+		spouse="Hero.lord_AN4_3" />
+	<Hero
+		id="lord_AN4_2"
+		faction="Faction.clan_arthedain_4"
+		spouse="Hero.lord_AN4_4" />
+	<Hero
+		id="lord_AN4_3"
+		faction="Faction.clan_arthedain_4"
+		spouse="Hero.lord_AN4_1" />
+	<Hero
+		id="lord_AN4_4"
+		faction="Faction.clan_arthedain_4"
+		spouse="Hero.lord_AN4_2" />
+	<Hero
+		id="lord_AN5_1"
+		faction="Faction.clan_arthedain_5"
+		spouse="Hero.lord_AN5_3" />
+	<Hero
+		id="lord_AN5_2"
+		faction="Faction.clan_arthedain_5"
+		spouse="Hero.lord_AN5_4" />
+	<Hero
+		id="lord_AN5_3"
+		faction="Faction.clan_arthedain_5"
+		spouse="Hero.lord_AN5_1" />
+	<Hero
+		id="lord_AN5_4"
+		faction="Faction.clan_arthedain_5"
+		spouse="Hero.lord_AN5_2" />
+  <!-- TAOM-NEWFACTIONS:arthedain:END -->
 </Heroes>
 

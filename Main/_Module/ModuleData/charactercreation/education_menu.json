@@ -1798,5 +1798,77 @@
         "focus_to_add": 1,
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_arthedain_1",
+        "culture_id": "arthedain",
+        "occupation_type": "retainer",
+        "text": "Drilled with the sons of the old houses.",
+        "description": "You grew up training alongside the children of Arthedain's noble families in the yards of Fornost. You learned sword and lance under knights sworn to the King, and the long lineages of the Dúnedain by heart.",
+        "skills": ["TwoHanded", "Riding"],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_arthedain_2",
+        "culture_id": "arthedain",
+        "occupation_type": "merchant_urban",
+        "text": "Apprenticed at the Bree market.",
+        "description": "You spent your youth carrying ledgers and running errands in the market of Bree, where every road in Eriador seems to meet. You learned to bargain with Dwarves, flatter Hobbits and never trust a Southerner's scales.",
+        "skills": ["Trade", "Charm"],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_arthedain_3",
+        "culture_id": "arthedain",
+        "occupation_type": "farmer",
+        "text": "Labored on the farms of the North Downs.",
+        "description": "You worked from dawn to dusk on the cold farms below Fornost, hauling stone and driving sheep across the downs. When the levy was called you were handed a spear and taught to hold a line.",
+        "skills": ["Athletics", "Polearm"],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_arthedain_4",
+        "culture_id": "arthedain",
+        "occupation_type": "artisan_urban",
+        "text": "Apprenticed to a smith of Fornost.",
+        "description": "You learned your craft in the forges of Fornost Erain, working the bellows under a master who still kept the Númenórean ways of tempering steel. By the time you were grown your hands knew the work better than your head.",
+        "skills": ["Crafting", "OneHanded"],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_arthedain_5",
+        "culture_id": "arthedain",
+        "occupation_type": "hunter",
+        "text": "Ranged the wilds with the Dúnedain.",
+        "description": "You followed the Rangers as a youngster, learning to move without sound through the Chetwood and along the Hoarwell. You strung your first bow before you could grow a beard, and your first orc fell to it soon after.",
+        "skills": ["Scouting", "Bow"],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_education_arthedain_6",
+        "culture_id": "arthedain",
+        "occupation_type": "vagabond_urban",
+        "text": "Scrounged along the Great East Road.",
+        "description": "You grew up on the road between Bree and the Brandywine, running messages for coin and selling what travellers left behind. The road taught you quick hands, a quicker tongue and when to vanish.",
+        "skills": ["Roguery", "Throwing"],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
     }
 ]

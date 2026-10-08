@@ -57,6 +57,7 @@ public sealed class RealmBordersSettingsProvider : IRealmBordersSettings
         ("mistymountainorcs", "Misty Mountain Orcs", s => s.RealmColourMistyMountainOrcs),
         ("goblin", "Goblins", s => s.RealmColourGoblins),
         ("bluecraig", "Goblins of Blue Craig", s => s.RealmColourBlueCraig),
+        ("arthedain", "Arthedain", s => s.RealmColourArthedain),
     };
 
     /// <summary>The Your Realm field's slot in the colour arrays, after one slot per realm field.</summary>

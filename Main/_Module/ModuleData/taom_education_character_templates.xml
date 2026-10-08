@@ -2878,4 +2878,181 @@
 	</NPCCharacter>
 
   <!-- TAOM-NEWCULTURE:bluecraig:END -->
+  <!-- TAOM-NEWCULTURE:arthedain:BEGIN -->
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_0_arthedain"
+		name="{=!}stage_2_page_0_branch_0_arthedain"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.arthedain"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gondor" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.empire_horseman_armor" />
+				<equipment
+					slot="Leg"
+					id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_1_arthedain"
+		name="{=!}stage_2_page_0_branch_1_arthedain"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.arthedain"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gondor" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Head"
+					id="Item.empire_crown_v2" />
+				<equipment
+					slot="Body"
+					id="Item.empire_dress" />
+				<equipment
+					slot="Leg"
+					id="Item.empire_horseman_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_2_arthedain"
+		name="{=!}stage_2_page_0_branch_2_arthedain"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.arthedain"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gondor" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.short_padded_robe" />
+				<equipment
+					slot="Leg"
+					id="Item.empire_horseman_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_3_arthedain"
+		name="{=!}stage_2_page_0_branch_3_arthedain"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.arthedain"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gondor" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.padded_leather_overcoat" />
+				<equipment
+					slot="Leg"
+					id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_4_arthedain"
+		name="{=!}stage_2_page_0_branch_4_arthedain"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.arthedain"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gondor" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Body"
+					id="Item.empire_plate_vest_armor" />
+				<equipment
+					slot="Leg"
+					id="Item.empire_horseman_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="child_education_templates_stage_2_page_0_branch_5_arthedain"
+		name="{=!}stage_2_page_0_branch_5_arthedain"
+		age="45"
+		default_group="Infantry"
+		is_hero="false"
+		occupation="Lord"
+		culture="Culture.arthedain"
+		skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills"
+		is_template="true">
+		<face>
+			<face_key_template
+				value="BodyProperty.fighter_gondor" />
+		</face>
+		<skills />
+		<Equipments>
+			<EquipmentRoster>
+				<equipment
+					slot="Cape"
+					id="Item.scarf" />
+				<equipment
+					slot="Body"
+					id="Item.empire_horseman_armor" />
+				<equipment
+					slot="Leg"
+					id="Item.strapped_leather_boots" />
+			</EquipmentRoster>
+			<EquipmentRoster
+				civilian="true" />
+		</Equipments>
+	</NPCCharacter>
+
+  <!-- TAOM-NEWCULTURE:arthedain:END -->
 </NPCCharacters>

@@ -197,6 +197,16 @@ class InsertionTests(unittest.TestCase):
         self.assertTrue(out.rstrip().endswith("</Settlements>"))
         ET.fromstring(out)
 
+    def test_master_rows_append_at_the_end_whatever_the_anchor(self):
+        # The save-order rule: a new row ahead of an existing one makes a pre-batch save skip the
+        # existing one (Settlement.Deserialize throws on the new row's alleys, LoadXML swallows it).
+        block = amv.village_block(ROW, "1", "2", "\n")
+        out = amv.append_settlements(MASTER, [block])
+        self.assertTrue(out.index('id="castle_village_I2_4"') > out.index('id="castle_L1"'))
+        self.assertTrue(out.rstrip().endswith("</Settlements>"))
+        self.assertEqual(amv.save_order_findings(out, {"castle_village_I2_4"}), [])
+        ET.fromstring(out)
+
     def test_loc_insert_after_anchors_last_row_with_files_newline(self):
         out = amv.insert_loc_rows(LOC, "castle_village_I2_3", [("castle_village_I2_4", "Angroth")])
         lines = out.split("\r\r\n")
@@ -265,6 +275,13 @@ class CheckTests(unittest.TestCase):
         # The editor writes float.ToString(), so "665.904" and "665.9040" are the same position.
         reformatted = MASTER.replace('posX="665.904"', 'posX="665.9040"')
         self.assertEqual(amv.check([PRESENT], reformatted, SCENE, {"DE": LOC}), [])
+
+    def test_check_names_a_dangling_bound(self):
+        # A village bound to no settlement row NREs on a new campaign (docs/modding/settlements.md).
+        orphan = PRESENT._replace(bound="castle_nowhere")
+        findings = amv.check([orphan], MASTER, SCENE, {"DE": LOC})
+        self.assertEqual(len(findings), 1)
+        self.assertIn("castle_nowhere", findings[0])
 
     def test_check_names_entity_missing_from_scene(self):
         master = MASTER.replace("castle_village_I2_3", "castle_village_I2_4")

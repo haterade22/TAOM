@@ -504,6 +504,17 @@
              solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
              task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
 
+  <LotrIssue id="lotr_armourer_commission_arthedain" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
+             cultures="arthedain" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="sk_ar_art_chest_inf_heavy_a" relation_min="0"
+             title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
+             description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
+             brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
+             accept_key="{=taom_lotr_issue_armourer_accept}What would you need?"
+             explanation_key="{=taom_lotr_issue_armourer_expl}Bring me {COUNT} loads of {ITEM} and the harness is yours when it is done. Steel for steel: a fair trade."
+             solution_accept_key="{=taom_lotr_issue_armourer_soln}I will bring you the steel."
+             task_key="{=taom_lotr_issue_armourer_task}Bring {ITEM} to the armourer ({COUNT})" />
+
   <LotrIssue id="lotr_armourer_commission_rohan" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
              cultures="vlandia" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
              reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="cts_rohan_armor1" relation_min="0"
@@ -700,7 +711,7 @@
        and default on every row. Placeholder numbers. -->
 
   <LotrIssue id="lotr_deep_seam_gondor" template="DeliverGoods" giver_occupation="Headman" frequency="Common" for_player_culture="true"
-             cultures="gondor" count="6" count_per_difficulty="18" item_source="item:hardwood"
+             cultures="gondor,arthedain" count="6" count_per_difficulty="18" item_source="item:hardwood"
              reward_gold_base="0" reward_gold_per_difficulty="300" reward_renown="1" reward_item="taom_lords_material_gondor" reward_count="5" relation_min="0"
              title_key="{=taom_lotr_issue_seam_title}The Deep Seam"
              description_key="{=taom_lotr_issue_seam_desc}The miners of {ISSUE_SETTLEMENT} have struck a seam of the rare metal a lord's armour is forged from, and the shaft needs timber before it falls in."

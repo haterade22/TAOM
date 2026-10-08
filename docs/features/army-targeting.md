@@ -146,20 +146,22 @@ pair's gap is inside the march radius, because anything past it is governed by g
 
 | Theater | Kingdoms (primary in **bold**) |
 |---|---|
-| `north` | **gundabad**, **mirkwood**, **rivendell**, **goblin**, **mistymountainorcs**, **dolguldur**, **lothlorien**, **erebor**, **sturgia** (Dale), empire (Dunland), isengard |
+| `north` | **gundabad**, **mirkwood**, **rivendell**, **goblin**, **mistymountainorcs**, **dolguldur**, **lothlorien**, **erebor**, **sturgia** (Dale), **arthedain**, empire (Dunland), isengard |
 | `central` | **vlandia** (Rohan), **isengard**, **empire** (Dunland), empire_w (Gondor), empire_s (Mordor), khuzait (Rhûn), goblin, mistymountainorcs, dolguldur, lothlorien |
 | `south` | **empire_w** (Gondor), **empire_s** (Mordor), **aserai** (Harad), **umbar**, **shaghana**, **abanissa**, battania (Khand) |
 | `east` | **khuzait** (Rhûn), **battania** (Khand), erebor, sturgia (Dale), empire_s (Mordor) |
 | *(passive)* | `bluecraig`, `lindon` |
 
-`bluecraig` and `lindon` carry no theater deliberately: all 20 Bluecraig settlements and 4 of
-Lindon's 5 sit in a closed land-navigation component, so Bluecraig's nearest hostile kingdom is
+`bluecraig` and `lindon` carry no theater deliberately: the 20 Bluecraig settlements measured then
+(Luinkrag and its three villages, added 2026-10-07, are not yet measured) and 4 of Lindon's 5 sit in
+a closed land-navigation component, so Bluecraig's nearest hostile kingdom is
 5.13 town gaps away and it can reach nothing. That is a pre-existing map defect, not something this
 feature caused, and it has its own issue.
 
 ### Current priority lists
 
-All 80 entries, as originally authored. A 2026-08-21 pass pruned 26 of them as "inert"; that was
+All 86 entries: the 80 as originally authored, plus Arthedain's three towns at the head of
+Gundabad's and Dunland's lists (2026-10-07). A 2026-08-21 pass pruned 26 of them as "inert"; that was
 **reverted on 2026-08-22** after review showed the prune was wrong three ways. The straight-line
 tool disagreed with the engine's own path cache on `khuzait -> town_S2` and `empire_w -> town_A6`,
 both actually in range. It classified against STARTING ownership when reach is anchored on CURRENT
@@ -168,17 +170,19 @@ when the axis of advance matters. And because the priority boost decays across t
 deleting entries re-steepened the curve for every survivor, costing Gundabad up to 18.9 percent and
 Gondor up to 20.9 percent on targets nobody meant to touch.
 
-At the corrected 6.0 G radius, **zero** of the 80 entries sit beyond reach.
+At the corrected 6.0 G radius, **zero** of the 80 measured entries sit beyond reach. The six
+Arthedain entries are unmeasured: the analyzer reads the position snapshot of the last in-game Map
+Tools rebuild (2026-08-26), which predates them.
 
 | Faction | Kingdom ID (JSON key) | Priority Sequence |
 |---------|------------|------------------|
 | Mordor | `empire_s` | EW3 (E.Osgiliath) → EW2 (W.Osgiliath) → EW1 (Minas Tirith) → EW4 (Pelargir) |
 | Isengard | `isengard` | V2 (Helm's Deep) → V1 (Edoras) |
-| Gundabad | `gundabad` | M1/M2 (Mirkwood) → S1/S5/S4/S3/S2 (Dale) → E1/E2/E3/E4 (Erebor) → R1 (Rivendell) |
+| Gundabad | `gundabad` | AN2/AN1/AN3 (Arthedain) → M1/M2 (Mirkwood) → S1/S5/S4/S3/S2 (Dale) → E1/E2/E3/E4 (Erebor) → R1 (Rivendell) |
 | Dol Guldur | `dolguldur` | L1 (Lothlórien) → S1/S5/S4/S3/S2 (Dale) → M1/M2 (Mirkwood) → E1-E4 (Erebor) → R1 (Rivendell) |
 | Rhûn / Easterlings | `khuzait` | E4/E3/E2/E1 (Erebor) → S5/S4/S3/S1/S2 (Dale) |
 | Gondor | `empire_w` | Interleaved ES (Mordor) + A (Harad): ES2→A1→ES3→A2→ES1→A3→ES4→A4→ES5→A5→ES6→A6 |
-| Dunland | `empire` | V7/V2/V5/V4/V1/V3/V6 (Rohan) → EW3/EW2/EW1/EW4 (Gondor) |
+| Dunland | `empire` | AN3/AN1/AN2 (Arthedain) → V7/V2/V5/V4/V1/V3/V6 (Rohan) → EW3/EW2/EW1/EW4 (Gondor) |
 | Dale / Barding | `sturgia` | RU7/RU2/RU1/RU4/RU3/RU5/RU6/RU8 (Rhûn) → DG1 (Dol Guldur) |
 | Erebor | `erebor` | RU7/RU2/RU1/RU4/RU3/RU5/RU6/RU8 (Rhûn) |
 
@@ -187,7 +191,7 @@ says where a faction wants to go in order, and the reach falloff decides how muc
 today. Do not delete an entry because it is currently far.
 
 **No priority list (vanilla logic):** Rohan (`vlandia`), Harad (`aserai`), Shaghâna, Âbanissa, Khand
-(`battania`), Umbar, Mirkwood, Lothlórien, Rivendell, Lindon, Blue Craig. These either defend, or
+(`battania`), Umbar, Mirkwood, Lothlórien, Rivendell, Lindon, Blue Craig, Arthedain. These either defend, or
 have no scripted axis of advance.
 
 **Kingdom ID notes (keys are kingdom StringIds, not culture StringIds).** `WarTheaterConfigInvariantsTests`

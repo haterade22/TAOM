@@ -153,4 +153,8 @@
   <Culture id="bluecraig">
     <BodyProperties version="4" age="30.01" weight="0.7109" build="0.543" key="00003C08C0441000EF8819F83BEFEFFFFFFE86877F87EFFFFEFFFEFF7FFFFEFF00F8B6030FFFEFFF00000000000000000000000000000000000000001BFC0000" />
   </Culture>
+  <!-- Arthedain: Gondor's default body, the Dunedain of the North being the same people. -->
+  <Culture id="arthedain">
+    <BodyProperties version="4" age="30.16" weight="0" build="0.7222" key="0015000D800013420F800A1A098007985FFD8660BE886A0167895C1885BB9A60009B06030909B70500000000000000000000000000000000000000003F3C2002" />
+  </Culture>
 </CCBodyProperties>

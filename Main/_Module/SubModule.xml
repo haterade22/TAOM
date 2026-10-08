@@ -497,6 +497,35 @@
       </IncludedGameTypes>
     </XmlNode>
     <!-- TAOM-NEWCULTURE-REG:END -->
+    <!-- TAOM-NEWCULTURE-REG:arthedain:BEGIN -->
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="troops/troops_arthedain"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="characters/npcs_arthedain"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_arthedain"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <!-- TAOM-NEWCULTURE-REG:arthedain:END -->
     <XmlNode>
       <XmlName id="NPCCharacters" path="characters/npcs_mirkwood"/>
       <IncludedGameTypes>

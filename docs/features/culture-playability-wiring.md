@@ -140,7 +140,9 @@ that has died and respawned, before treating it as a regression.
    Add a `no_mount: True` entry to that script's `CULTURES` table if the culture's troop tree
    contains no `slot="Horse"` — otherwise the player rides out on an animal the culture never fields.
 5. Add the `startup_resources_config.xml` row.
-6. Give it careers — `tools/insert_new_faction_careers.py --apply` clones an existing culture's.
+6. Give it careers: `tools/insert_new_faction_careers.py --apply` clones an existing culture's. Then
+   add each new career to `CareerSystemIoC.BuildCareerArchetypeMap`, or its battle ability is a
+   no-op behind a working toast (`IoCMap_EveryCareerInTheData_HasAnArchetype` fails until you do).
 7. Add enlistment rosters, child/teen/lord/education templates, and a recruitment pool.
 8. Remove the culture from every `documentedExceptions` list in `TAOM.Tests/` that names it.
    **Leaving a fixed culture parked in an exception list is a permanent blind spot**, and the
@@ -157,7 +159,8 @@ Goblin-town and picking Lindon dropped them in Rivendell.
 
 Two scripts do this, and **the order is not optional**:
 
-1. `tools/promote_borrowed_cultures.py --apply` — writes the culture DATA: the `<Culture>` block,
+1. `tools/promote_borrowed_cultures.py --only <culture> --apply` (`--only` is required since
+   2026-10-07; `--check` exits 1 when a run would change a file) writes the culture DATA: the `<Culture>` block,
    troops, NPCs, equipment sets, wanderers, party templates, child/lord/education templates, the
    six stage-2 tutor templates, enlistment rosters, and the `SubModule.xml` registrations.
 2. `tools/retag_promoted_cultures.py --apply` — moves the kingdom, its clans, its lords and its

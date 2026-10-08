@@ -466,5 +466,6 @@
     <string id="zulgor_description" text="Bir kanat yetiştiricisi olan Zulgor, vahşi yumurtaları kuluçkaya yatırır ve Khamûl'un havadaki hâkimiyetini genişletir." />
     <string id="zulgora_description" text="Bir gölge dokuyucusu olan Zulgora, yanılsamalar yaratır; hikâyelerdeki Sauron'un aldatmaları gibi düşmanları kandırır." />
     <string id="zulgoth_description" text="Zulgoth bir ayinci ork olarak görev yapar; ork geleneklerinde ima edildiği gibi karanlık güçlere kurbanlar sunar. Ayinleri klanın girişimleri için güç çağırır." />
+    <string id="lord_AN1_1_description" text="Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against Angmar with fewer swords each year." />
   </strings>
 </base>

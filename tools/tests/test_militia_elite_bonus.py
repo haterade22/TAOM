@@ -117,7 +117,7 @@ class EliteMilitiaBonusTests(unittest.TestCase):
                 else:
                     self.assertTrue(b <= v <= b + rb.MILITIA_ELITE_BONUS, f"{vet_id} {skill} {b}->{v}")
             checked += 1
-        self.assertEqual(checked, 30)
+        self.assertEqual(checked, 32)  # +arthedain 2026-10-07
 
     def test_elite_ids_survive_a_basic_cache_filled_out_of_band(self):
         """A basic entry without its elite twin (something filled the basic cache directly) is

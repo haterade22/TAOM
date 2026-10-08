@@ -4,7 +4,8 @@
     "triggerDay": 30,
     "wars": [
       { "attacker": "isengard", "defender": "vlandia" },
-      { "attacker": "empire", "defender": "vlandia" }
+      { "attacker": "empire", "defender": "vlandia" },
+      { "attacker": "gundabad", "defender": "arthedain" }
     ]
   },
   "phase2": {

@@ -5136,6 +5136,12 @@
 
   <!-- TAOM-NEWCULTURE:bluecraig:END -->
 	<!-- ==== SupplyLines crew templates (generated: tools/generate_supply_caravan_templates.py) ==== -->
+	<MBPartyTemplate id="supply_caravan_template_arthedain">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_arthedain" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_arthedain" />
+		</stacks>
+	</MBPartyTemplate>
 	<MBPartyTemplate id="supply_caravan_template_bluecraig">
 		<stacks>
 			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_bluecraig" />
@@ -5239,4 +5245,115 @@
 		</stacks>
 	</MBPartyTemplate>
 	<!-- ==== end SupplyLines crew templates ==== -->
+	<!-- TAOM-ARTHEDAIN-PT:BEGIN -->
+	<MBPartyTemplate id="kingdom_hero_party_arthedain_template">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="12" troop="NPCCharacter.arthedain_levy" />
+			<PartyTemplateStack min_value="2" max_value="10" troop="NPCCharacter.arthedain_spearman" />
+			<PartyTemplateStack min_value="1" max_value="8" troop="NPCCharacter.arthedain_dunadan_youth" />
+			<PartyTemplateStack min_value="1" max_value="8" troop="NPCCharacter.arthedain_footman" />
+			<PartyTemplateStack min_value="1" max_value="8" troop="NPCCharacter.arthedain_ranger_of_the_north" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.arthedain_squire" />
+			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.arthedain_shieldman" />
+			<PartyTemplateStack min_value="0" max_value="6" troop="NPCCharacter.arthedain_ranger" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.arthedain_outrider" />
+			<PartyTemplateStack min_value="0" max_value="4" troop="NPCCharacter.arthedain_citadel_guard" />
+			<PartyTemplateStack min_value="0" max_value="3" troop="NPCCharacter.arthedain_fornost_guard" />
+			<PartyTemplateStack min_value="0" max_value="3" troop="NPCCharacter.arthedain_veteran_ranger" />
+			<PartyTemplateStack min_value="0" max_value="3" troop="NPCCharacter.arthedain_lancer" />
+			<PartyTemplateStack min_value="0" max_value="2" troop="NPCCharacter.arthedain_veteran_citadel_guard" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="kingdom_hero_party_mercenary_arthedain_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.arthedain_spearman" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.arthedain_ranger_of_the_north" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.arthedain_shieldman" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.arthedain_ranger" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.arthedain_outrider" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="kingdom_hero_party_outlaw_arthedain_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.arthedain_levy" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.arthedain_militia_spearman" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.arthedain_militia_archer" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.arthedain_ranger_of_the_north" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="militia_arthedain_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.arthedain_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.arthedain_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_arthedain_template_level_1">
+		<stacks>
+			<PartyTemplateStack min_value="6" max_value="6" troop="NPCCharacter.arthedain_levy" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.arthedain_spearman" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.arthedain_ranger_of_the_north" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_arthedain_template_level_2">
+		<stacks>
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.arthedain_spearman" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.arthedain_footman" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.arthedain_ranger" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.arthedain_outrider" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_arthedain_template_level_3">
+		<stacks>
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.arthedain_shieldman" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.arthedain_fornost_guard" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.arthedain_veteran_ranger" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.arthedain_lancer" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.arthedain_knight" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="rebels_arthedain_template">
+		<stacks>
+			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.arthedain_levy" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.arthedain_militia_spearman" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.arthedain_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="vassal_reward_troops_arthedain">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.arthedain_kings_guard" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.arthedain_knight" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.arthedain_ranger_captain" />
+		</stacks>
+	</MBPartyTemplate>
+	<!-- TAOM-ARTHEDAIN-PT:END -->
+  <!-- TAOM-NEWCULTURE:arthedain:BEGIN -->
+	<MBPartyTemplate id="villager_arthedain_template">
+		<stacks>
+			<PartyTemplateStack min_value="15" max_value="30" troop="NPCCharacter.villager_arthedain" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="caravan_template_arthedain">
+		<stacks>
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_arthedain" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_arthedain" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_arthedain" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="elite_caravan_template_arthedain">
+		<stacks>
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_arthedain" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_arthedain" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_arthedain" />
+		</stacks>
+	</MBPartyTemplate>
+
+  <!-- TAOM-NEWCULTURE:arthedain:END -->
 </partyTemplates>

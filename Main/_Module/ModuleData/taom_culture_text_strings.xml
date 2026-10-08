@@ -70,6 +70,84 @@
 	<string id="aom_abanissa_male_name_7" text="{=aom_abanissa_male_name_7}Ardach" />
 	<string id="aom_abanissa_male_name_8" text="{=aom_abanissa_male_name_8}Tirdah" />
 	<string id="aom_abanissa_male_name_9" text="{=aom_abanissa_male_name_9}Sharun" />
+	<string id="aom_arthedain_clan_1" text="{=aom_arthedain_clan_1}House of Amlaith" />
+	<string id="aom_arthedain_clan_10" text="{=aom_arthedain_clan_10}House of Deadmen's Dike" />
+	<string id="aom_arthedain_clan_11" text="{=aom_arthedain_clan_11}House of the Weather Hills" />
+	<string id="aom_arthedain_clan_12" text="{=aom_arthedain_clan_12}House of Nenuial" />
+	<string id="aom_arthedain_clan_2" text="{=aom_arthedain_clan_2}House of Fornost" />
+	<string id="aom_arthedain_clan_3" text="{=aom_arthedain_clan_3}House of Annúminas" />
+	<string id="aom_arthedain_clan_4" text="{=aom_arthedain_clan_4}House of Amon Sûl" />
+	<string id="aom_arthedain_clan_5" text="{=aom_arthedain_clan_5}House of the North Downs" />
+	<string id="aom_arthedain_clan_6" text="{=aom_arthedain_clan_6}House of Evendim" />
+	<string id="aom_arthedain_clan_7" text="{=aom_arthedain_clan_7}House of the Baranduin" />
+	<string id="aom_arthedain_clan_8" text="{=aom_arthedain_clan_8}House of the Angle" />
+	<string id="aom_arthedain_clan_9" text="{=aom_arthedain_clan_9}House of Bree" />
+	<string id="aom_arthedain_desc" text="{=aom_arthedain_desc}The Dúnedain of Arthedain are the last heirs of Arnor, the North-kingdom Elendil founded. From Fornost upon the North Downs the line of Arvedui still keeps the watch that Isildur's heirs have kept for a thousand years, though their towns are few, their lords are poor and the shadow of Angmar never leaves the hills. They are fewer than their southern kin and prouder than their numbers warrant, and every season the wild lands press closer." />
+	<string id="aom_arthedain_female_name_1" text="{=aom_arthedain_female_name_1}Gilraen" />
+	<string id="aom_arthedain_female_name_10" text="{=aom_arthedain_female_name_10}Rhiannel" />
+	<string id="aom_arthedain_female_name_11" text="{=aom_arthedain_female_name_11}Silivren" />
+	<string id="aom_arthedain_female_name_12" text="{=aom_arthedain_female_name_12}Ithilwen" />
+	<string id="aom_arthedain_female_name_13" text="{=aom_arthedain_female_name_13}Aerwen" />
+	<string id="aom_arthedain_female_name_14" text="{=aom_arthedain_female_name_14}Calwen" />
+	<string id="aom_arthedain_female_name_15" text="{=aom_arthedain_female_name_15}Elthiel" />
+	<string id="aom_arthedain_female_name_16" text="{=aom_arthedain_female_name_16}Maethil" />
+	<string id="aom_arthedain_female_name_17" text="{=aom_arthedain_female_name_17}Varwen" />
+	<string id="aom_arthedain_female_name_18" text="{=aom_arthedain_female_name_18}Anwiel" />
+	<string id="aom_arthedain_female_name_19" text="{=aom_arthedain_female_name_19}Cúwen" />
+	<string id="aom_arthedain_female_name_2" text="{=aom_arthedain_female_name_2}Ivorwen" />
+	<string id="aom_arthedain_female_name_20" text="{=aom_arthedain_female_name_20}Faerwen" />
+	<string id="aom_arthedain_female_name_21" text="{=aom_arthedain_female_name_21}Hethlin" />
+	<string id="aom_arthedain_female_name_22" text="{=aom_arthedain_female_name_22}Luinil" />
+	<string id="aom_arthedain_female_name_23" text="{=aom_arthedain_female_name_23}Tirwen" />
+	<string id="aom_arthedain_female_name_24" text="{=aom_arthedain_female_name_24}Arwiel" />
+	<string id="aom_arthedain_female_name_3" text="{=aom_arthedain_female_name_3}Fíriel" />
+	<string id="aom_arthedain_female_name_4" text="{=aom_arthedain_female_name_4}Dírwen" />
+	<string id="aom_arthedain_female_name_5" text="{=aom_arthedain_female_name_5}Eirien" />
+	<string id="aom_arthedain_female_name_6" text="{=aom_arthedain_female_name_6}Elanwen" />
+	<string id="aom_arthedain_female_name_7" text="{=aom_arthedain_female_name_7}Gilwen" />
+	<string id="aom_arthedain_female_name_8" text="{=aom_arthedain_female_name_8}Lothwen" />
+	<string id="aom_arthedain_female_name_9" text="{=aom_arthedain_female_name_9}Meneliel" />
+	<string id="aom_arthedain_male_name_1" text="{=aom_arthedain_male_name_1}Amlaith" />
+	<string id="aom_arthedain_male_name_10" text="{=aom_arthedain_male_name_10}Arvegil" />
+	<string id="aom_arthedain_male_name_11" text="{=aom_arthedain_male_name_11}Araval" />
+	<string id="aom_arthedain_male_name_12" text="{=aom_arthedain_male_name_12}Araphant" />
+	<string id="aom_arthedain_male_name_13" text="{=aom_arthedain_male_name_13}Arvedui" />
+	<string id="aom_arthedain_male_name_14" text="{=aom_arthedain_male_name_14}Aranarth" />
+	<string id="aom_arthedain_male_name_15" text="{=aom_arthedain_male_name_15}Arahael" />
+	<string id="aom_arthedain_male_name_16" text="{=aom_arthedain_male_name_16}Aranuir" />
+	<string id="aom_arthedain_male_name_17" text="{=aom_arthedain_male_name_17}Aravir" />
+	<string id="aom_arthedain_male_name_18" text="{=aom_arthedain_male_name_18}Aragost" />
+	<string id="aom_arthedain_male_name_19" text="{=aom_arthedain_male_name_19}Aravorn" />
+	<string id="aom_arthedain_male_name_2" text="{=aom_arthedain_male_name_2}Beleg" />
+	<string id="aom_arthedain_male_name_20" text="{=aom_arthedain_male_name_20}Arahad" />
+	<string id="aom_arthedain_male_name_21" text="{=aom_arthedain_male_name_21}Argonui" />
+	<string id="aom_arthedain_male_name_22" text="{=aom_arthedain_male_name_22}Arador" />
+	<string id="aom_arthedain_male_name_23" text="{=aom_arthedain_male_name_23}Arassuil" />
+	<string id="aom_arthedain_male_name_24" text="{=aom_arthedain_male_name_24}Dírhael" />
+	<string id="aom_arthedain_male_name_25" text="{=aom_arthedain_male_name_25}Malbeth" />
+	<string id="aom_arthedain_male_name_26" text="{=aom_arthedain_male_name_26}Halbarad" />
+	<string id="aom_arthedain_male_name_27" text="{=aom_arthedain_male_name_27}Calmir" />
+	<string id="aom_arthedain_male_name_28" text="{=aom_arthedain_male_name_28}Dorlas" />
+	<string id="aom_arthedain_male_name_29" text="{=aom_arthedain_male_name_29}Galdir" />
+	<string id="aom_arthedain_male_name_3" text="{=aom_arthedain_male_name_3}Mallor" />
+	<string id="aom_arthedain_male_name_30" text="{=aom_arthedain_male_name_30}Haldan" />
+	<string id="aom_arthedain_male_name_31" text="{=aom_arthedain_male_name_31}Iorhael" />
+	<string id="aom_arthedain_male_name_32" text="{=aom_arthedain_male_name_32}Mablost" />
+	<string id="aom_arthedain_male_name_33" text="{=aom_arthedain_male_name_33}Nardil" />
+	<string id="aom_arthedain_male_name_34" text="{=aom_arthedain_male_name_34}Rodnor" />
+	<string id="aom_arthedain_male_name_35" text="{=aom_arthedain_male_name_35}Tharion" />
+	<string id="aom_arthedain_male_name_36" text="{=aom_arthedain_male_name_36}Saelon" />
+	<string id="aom_arthedain_male_name_37" text="{=aom_arthedain_male_name_37}Morvegil" />
+	<string id="aom_arthedain_male_name_38" text="{=aom_arthedain_male_name_38}Cirdir" />
+	<string id="aom_arthedain_male_name_39" text="{=aom_arthedain_male_name_39}Hirvegil" />
+	<string id="aom_arthedain_male_name_4" text="{=aom_arthedain_male_name_4}Celepharn" />
+	<string id="aom_arthedain_male_name_40" text="{=aom_arthedain_male_name_40}Hallatan" />
+	<string id="aom_arthedain_male_name_5" text="{=aom_arthedain_male_name_5}Celebrindor" />
+	<string id="aom_arthedain_male_name_6" text="{=aom_arthedain_male_name_6}Malvegil" />
+	<string id="aom_arthedain_male_name_7" text="{=aom_arthedain_male_name_7}Argeleb" />
+	<string id="aom_arthedain_male_name_8" text="{=aom_arthedain_male_name_8}Arveleg" />
+	<string id="aom_arthedain_male_name_9" text="{=aom_arthedain_male_name_9}Araphor" />
+	<string id="aom_arthedain_name" text="{=aom_arthedain_name}Arthedain" />
 	<string id="aom_bluecraig_clan_1" text="{=aom_bluecraig_clan_1}Blue Craig Horde" />
 	<string id="aom_bluecraig_clan_10" text="{=aom_bluecraig_clan_10}Grey Mountain Raiders" />
 	<string id="aom_bluecraig_clan_11" text="{=aom_bluecraig_clan_11}Ettenmoors Horde" />

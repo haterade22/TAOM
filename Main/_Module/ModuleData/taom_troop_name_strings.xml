@@ -2,6 +2,29 @@
 <strings>
 
 	<!-- Generated troop-name strings: extracted from troops/troops_*.xml name= attributes by tools/generate_name_localization_strings.py. Do not hand-edit; re-run the generator after adding troops. -->
+	<string id="aom_arthedain_citadel_guard_name" text="{=aom_arthedain_citadel_guard_name}[Arthedain] Guard of the Citadel" />
+	<string id="aom_arthedain_dunadan_youth_merc_name" text="{=aom_arthedain_dunadan_youth_merc_name}[Arthedain] Dunadan Sellsword" />
+	<string id="aom_arthedain_dunadan_youth_name" text="{=aom_arthedain_dunadan_youth_name}[Arthedain] Dunadan Youth" />
+	<string id="aom_arthedain_footman_name" text="{=aom_arthedain_footman_name}[Arthedain] Fornost Footman" />
+	<string id="aom_arthedain_fornost_guard_name" text="{=aom_arthedain_fornost_guard_name}[Arthedain] Fornost Guard" />
+	<string id="aom_arthedain_kings_guard_name" text="{=aom_arthedain_kings_guard_name}[Arthedain] King's Guard of Fornost" />
+	<string id="aom_arthedain_knight_name" text="{=aom_arthedain_knight_name}[Arthedain] Knight of Arthedain" />
+	<string id="aom_arthedain_lancer_name" text="{=aom_arthedain_lancer_name}[Arthedain] Lancer" />
+	<string id="aom_arthedain_levy_name" text="{=aom_arthedain_levy_name}[Arthedain] Levy" />
+	<string id="aom_arthedain_militia_archer_name" text="{=aom_arthedain_militia_archer_name}[Arthedain] Militia Archer" />
+	<string id="aom_arthedain_militia_spearman_name" text="{=aom_arthedain_militia_spearman_name}[Arthedain] Militia Spearman" />
+	<string id="aom_arthedain_militia_veteran_archer_name" text="{=aom_arthedain_militia_veteran_archer_name}[Arthedain] Veteran Militia Archer" />
+	<string id="aom_arthedain_militia_veteran_spearman_name" text="{=aom_arthedain_militia_veteran_spearman_name}[Arthedain] Veteran Militia Spearman" />
+	<string id="aom_arthedain_outrider_name" text="{=aom_arthedain_outrider_name}[Arthedain] Outrider" />
+	<string id="aom_arthedain_ranger_captain_name" text="{=aom_arthedain_ranger_captain_name}[Arthedain] Ranger Captain" />
+	<string id="aom_arthedain_ranger_name" text="{=aom_arthedain_ranger_name}[Arthedain] Ranger" />
+	<string id="aom_arthedain_ranger_of_the_north_name" text="{=aom_arthedain_ranger_of_the_north_name}[Arthedain] Ranger of the North" />
+	<string id="aom_arthedain_shieldman_name" text="{=aom_arthedain_shieldman_name}[Arthedain] Fornost Shieldman" />
+	<string id="aom_arthedain_spearman_name" text="{=aom_arthedain_spearman_name}[Arthedain] Spearman" />
+	<string id="aom_arthedain_squire_name" text="{=aom_arthedain_squire_name}[Arthedain] Dunadan Squire" />
+	<string id="aom_arthedain_veteran_citadel_guard_name" text="{=aom_arthedain_veteran_citadel_guard_name}[Arthedain] Veteran Citadel Guard" />
+	<string id="aom_arthedain_veteran_ranger_name" text="{=aom_arthedain_veteran_ranger_name}[Arthedain] Veteran Ranger" />
+	<string id="aom_arthedain_warden_name" text="{=aom_arthedain_warden_name}[Arthedain] Warden of Fornost" />
 	<string id="aom_aux_basic_name" text="{=aom_aux_basic_name}[Umbar] Auxiliary Recruit" />
 	<string id="aom_balcoth_archer_name" text="{=aom_balcoth_archer_name}[Rhûn] Balcoth Archer" />
 	<string id="aom_balcoth_axeman_name" text="{=aom_balcoth_axeman_name}[Rhûn] Balcoth Axeman" />

@@ -119,6 +119,22 @@
       }
     },
     {
+      "id": "arthedain",
+      "folder": "arnor",
+      "files": ["arthedain"],
+      "ranks": {"overall": 4, "damage": 5, "accuracy": 4},
+      "tiers": {
+        "Bow": [2, 3, 4, 5, 6]
+      },
+      "donor": {"Bow": "wm_ithilien_bow"},
+      "names": {"Bow": "[Arnor] Ranger's Bow"},
+      "donor_by_band": {
+        "Bow": {
+          "E": "gondor_steel_bow"
+        }
+      }
+    },
+    {
       "id": "mordor_num",
       "folder": "mordor",
       "files": ["mordor"],

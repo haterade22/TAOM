@@ -18523,4 +18523,1188 @@
 				id="Item.rivendell_boots_leather1" />
 		</EquipmentSet>
 	</EquipmentRoster>
+	<!-- ═══ Culture: ARTHEDAIN ═══ -->
+	<!-- Parent fallback -->
+	<EquipmentRoster
+		id="mother_char_creation_none_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_ar_art_cape_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_none_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--1.Retainer-->
+	<EquipmentRoster
+		id="mother_char_creation_retainer_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+			<Equipment
+				slot="Head"
+				id="Item.ithilien_hood" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_ar_art_cape_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_retainer_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_grvs_inf_light_a" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_ar_art_helmet_inf_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--2.Merchant-->
+	<EquipmentRoster
+		id="mother_char_creation_merchant_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_merchant_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_grvs_inf_light_a" />
+			<Equipment
+				slot="Head"
+				id="Item.ithilien_hood" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--3.Farmer-->
+	<EquipmentRoster
+		id="mother_char_creation_farmer_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_farmer_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_grvs_inf_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--4.Artisan-->
+	<EquipmentRoster
+		id="mother_char_creation_artisan_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_ar_art_cape_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_artisan_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_grvs_inf_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--5.Hunter-->
+	<EquipmentRoster
+		id="mother_char_creation_hunter_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_hunter_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_grvs_inf_light_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_ar_art_cape_a" />
+			<Equipment
+				slot="Head"
+				id="Item.ithilien_hood" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--6.Vagabond-->
+	<EquipmentRoster
+		id="mother_char_creation_vagabond_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_vagabond_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_grvs_inf_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Childhood & Education age -->
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_arthedain_retainer_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_arthedain_retainer_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_arthedain_retainer_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_arthedain_retainer_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_arthedain_merchant_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_arthedain_merchant_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_arthedain_merchant_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_arthedain_merchant_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_arthedain_farmer_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_arthedain_farmer_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_arthedain_farmer_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_arthedain_farmer_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_arthedain_artisan_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_arthedain_artisan_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_arthedain_artisan_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_arthedain_artisan_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_arthedain_hunter_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_grvs_inf_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_arthedain_hunter_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_grvs_inf_light_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_arthedain_hunter_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_arthedain_hunter_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_arthedain_vagabond_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_arthedain_vagabond_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_arthedain_vagabond_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_arthedain_vagabond_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Adult careers -->
+	<EquipmentRoster
+		id="player_char_creation_arthedain_retainer_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_sm_gd_shield_a1" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_gondor_light_spear_cardolan" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_retainer_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_sm_gd_shield_a1" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_gondor_light_spear_cardolan" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_mercenary_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_sm_gd_shield_a1" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_gondor_light_spear_cardolan" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_mercenary_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_sm_gd_shield_a1" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_gondor_light_spear_cardolan" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_guard_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_sm_gd_shield_a1" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_gondor_steel_bow" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_guard_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_sm_gd_shield_a1" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_gondor_steel_bow" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_hunter_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_gondor_steel_bow" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_hunter_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_gondor_steel_bow" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_infantry_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_gondor_light_spear_cardolan" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_infantry_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_gondor_light_spear_cardolan" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_skirmisher_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_gondor_steel_bow" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_skirmisher_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_gondor_steel_bow" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_bard_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_light_spear_cardolan" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_gondor_steel_bow" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_bard_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_light_spear_cardolan" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_gondor_steel_bow" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_6_m"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_gondor_light_spear_cardolan" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_sm_gd_shield_a1" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_arthedain_6_f"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_gondor_light_spear_cardolan" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_sm_gd_shield_a1" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_gondor_noble_coat_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_ar_art_cape_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Show -->
+	<EquipmentRoster
+		id="player_char_creation_show_arthedain"
+		culture="Culture.arthedain">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_ar_art_chainmail_half_a" />
+			<Equipment
+				slot="Gloves"
+				id="Item.sk_ar_art_gloves_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_gondor_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.gondor_noble_coat_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_ar_art_boots_a" />
+		</EquipmentSet>
+	</EquipmentRoster>
 </EquipmentRosters>

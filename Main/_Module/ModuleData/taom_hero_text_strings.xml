@@ -344,6 +344,7 @@
 	<string id="kzha_description" text="{=kzha_description}Kzha, a lich-like mage, extends unlife, reflecting Sauron's immortality pursuits." />
 	<string id="legolas_description" text="{=legolas_description}Legolas, son of Thranduil, is a masterful archer and scout, as depicted in both books and films, venturing beyond Mirkwood to aid the Free Peoples with his keen senses and unerring aim against the forces of darkness." />
 	<string id="leordinoth_description" text="{=leordinoth_description}Leôrdinoth Kalkian, a veteran campaigner of Rhûn, leads seasoned warriors into battle during the Third Age for Sauron. His experience turns the tide in many conflicts. Leôrdinoth's tactical genius maximizes the Easterlings' martial prowess." />
+	<string id="lord_AN1_1_description" text="{=lord_AN1_1_description}Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against Angmar with fewer swords each year." />
 	<string id="lord_BC1_1_description" text="{=lord_BC1_1_description}Morgrub, the Great Goblin of Blue Craig, whose swarms infest the Blue Mountains of the far west, hard by the Grey Havens of Lindon." />
 	<string id="lord_GB1_1_description" text="{=lord_GB1_1_description}Muzgash, the Great Goblin of Goblin Town, master of the warrens of the High Pass." />
 	<string id="lord_I1_10_text" text="{=lord_I1_10_text}Krazdra leads scouting parties for the Iron Fist. Her knowledge of the terrain surrounding Isengard is unmatched." />

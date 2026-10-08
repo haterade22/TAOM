@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Core.Infrastructure;
@@ -111,10 +112,24 @@ public class ShippedCombatMechanicsConfigTests
         Assert.AreEqual(1.5f, m["vlandia"], 0.0001f, "Rohan");
         Assert.AreEqual(1.4f, m["khuzait"], 0.0001f, "Rhun");
         Assert.AreEqual(1.3f, m["gondor"], 0.0001f);
+        Assert.AreEqual(1.3f, m["arthedain"], 0.0001f, "Arthedain rides like Gondor");
         Assert.AreEqual(1.2f, m["sturgia"], 0.0001f, "Dale");
         foreach (var orc in new[] { "mordor", "isengard", "gundabad", "dolguldur", "umbar" })
             Assert.AreEqual(1.2f, m[orc], 0.0001f, orc);
         Assert.AreEqual(1f, m["erebor"], 0.0001f, "dwarves do not ride");
+    }
+
+    [TestMethod]
+    public void CompiledDefaults_ChargeDamage_MatchTheShippedFile()
+    {
+        // The compiled table is the fallback for a missing or unreadable file, so it carries every
+        // culture row the shipped file does.
+        var shipped = _sut.GetConfig().ChargeDamage.CultureMultipliers;
+        var compiled = new ChargeDamageConfig().CultureMultipliers;
+
+        CollectionAssert.AreEquivalent(shipped.Keys.ToList(), compiled.Keys.ToList());
+        foreach (var pair in shipped)
+            Assert.AreEqual(pair.Value, compiled[pair.Key], 0.0001f, pair.Key);
     }
 
     [TestMethod]

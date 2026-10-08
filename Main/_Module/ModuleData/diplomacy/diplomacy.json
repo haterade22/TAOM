@@ -130,6 +130,18 @@
     { "kingdomA": "bluecraig", "kingdomB": "lothlorien", "tier": "Hostile" },
     { "kingdomA": "bluecraig", "kingdomB": "mirkwood", "tier": "Hostile" },
     { "kingdomA": "bluecraig", "kingdomB": "sturgia", "tier": "Hostile" },
-    { "kingdomA": "lindon", "kingdomB": "rivendell", "tier": "Permanent" }
+    { "kingdomA": "lindon", "kingdomB": "rivendell", "tier": "Permanent" },
+    { "kingdomA": "arthedain", "kingdomB": "gundabad", "tier": "Hostile" },
+    { "kingdomA": "arthedain", "kingdomB": "empire", "tier": "Hostile" },
+    { "kingdomA": "arthedain", "kingdomB": "isengard", "tier": "Hostile" },
+    { "kingdomA": "arthedain", "kingdomB": "empire_s", "tier": "Hostile" },
+    { "kingdomA": "arthedain", "kingdomB": "dolguldur", "tier": "Hostile" },
+    { "kingdomA": "arthedain", "kingdomB": "khuzait", "tier": "Hostile" },
+    { "kingdomA": "arthedain", "kingdomB": "goblin", "tier": "Hostile" },
+    { "kingdomA": "arthedain", "kingdomB": "mistymountainorcs", "tier": "Hostile" },
+    { "kingdomA": "arthedain", "kingdomB": "bluecraig", "tier": "Hostile" },
+    { "kingdomA": "arthedain", "kingdomB": "rivendell", "tier": "Natural" },
+    { "kingdomA": "arthedain", "kingdomB": "lindon", "tier": "Natural" },
+    { "kingdomA": "arthedain", "kingdomB": "empire_w", "tier": "Natural" }
   ]
 }

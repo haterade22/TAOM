@@ -29,6 +29,7 @@ public class BattleBalanceConfig
         {
             ["gondor"] = 0.3f,    ["vlandia"] = 0.2f,    ["lothlorien"] = 0.5f,
             ["erebor"] = 0.3f,    ["rivendell"] = 0.4f,  ["lindon"] = 0.4f,
+            ["arthedain"] = 0.3f,
             ["mordor"] = -0.2f,   ["gundabad"] = -0.1f,  ["dolguldur"] = -0.1f
         };
 

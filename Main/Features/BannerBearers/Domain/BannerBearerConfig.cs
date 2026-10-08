@@ -64,6 +64,7 @@ public sealed class BannerBearerConfig
         // Men of the West — Numenorean/Roman standard silhouette
         { "gondor", "standard_of_duty_t1" },
         { "gondor_soldiers", "standard_of_duty_t1" },
+        { "arthedain", "standard_of_duty_t1" },         // Arnor, cloned from Gondor
         { "vlandia", "banner_of_the_horseman_t1" },      // Rohirrim — charge standard
         { "sturgia", "close_shields_banner_t1" },        // Barding (Dale)
 

@@ -1525,5 +1525,88 @@
     <string id="taom_spider_creature_name" text="蜘蛛骑手" />
     <string id="taom_spider_rider_brown_name" text="巨蛛骑手" />
     <string id="taom_spider_rider_pale_name" text="苍白蜘蛛骑手" />
+    <string id="aom_arth_arena" text="Arena Master" />
+    <string id="aom_arth_armed_trader" text="Arthedain Armed Trader" />
+    <string id="aom_arth_armorer" text="Armorer" />
+    <string id="aom_arth_barber" text="Barber" />
+    <string id="aom_arth_beggar" text="Beggar" />
+    <string id="aom_arth_blacksmith" text="Blacksmith" />
+    <string id="aom_arth_caravan_guard" text="Arthedain Caravan Guard" />
+    <string id="aom_arth_caravan_master" text="Arthedain Caravan Master" />
+    <string id="aom_arth_dancer" text="Dancer" />
+    <string id="aom_arth_female_beggar" text="Beggar" />
+    <string id="aom_arth_gamehost" text="Game Host" />
+    <string id="aom_arth_gang_bodyguard" text="Gang Bodyguard" />
+    <string id="aom_arth_gear_dummy" text="Gear Dummy" />
+    <string id="aom_arth_guard" text="Guard" />
+    <string id="aom_arth_headman_1" text="Rebellious Arthedain headman" />
+    <string id="aom_arth_headman_2" text="Conservative Arthedain headman" />
+    <string id="aom_arth_headman_3" text="Devious Arthedain headman" />
+    <string id="aom_arth_horse_merchant" text="Horse Merchant" />
+    <string id="aom_arth_merchant" text="Trader" />
+    <string id="aom_arth_musician" text="Musician" />
+    <string id="aom_arth_notable_0" text="Prudent Arthedain merchant" />
+    <string id="aom_arth_notable_0b" text="Arthedain vintner" />
+    <string id="aom_arth_notable_1" text="Ruthless Arthedain trader" />
+    <string id="aom_arth_notable_10" text="Sardonic Arthedain outlaw" />
+    <string id="aom_arth_notable_11" text="Intimidating Arthedain enforcer" />
+    <string id="aom_arth_notable_12" text="Cunning Arthedain smuggler" />
+    <string id="aom_arth_notable_13" text="Menacing Arthedain schemer" />
+    <string id="aom_arth_notable_1b" text="Cold Arthedain merchant" />
+    <string id="aom_arth_notable_2" text="Fornost gem dealer" />
+    <string id="aom_arth_notable_21" text="Stern Arthedain landowner" />
+    <string id="aom_arth_notable_22" text="Agreeable Arthedain elder" />
+    <string id="aom_arth_notable_2b" text="Wise Arthedain merchant" />
+    <string id="aom_arth_notable_3" text="Self-made Arthedain merchant" />
+    <string id="aom_arth_notable_3b" text="Jovial Arthedain merchant" />
+    <string id="aom_arth_notable_4" text="Shrewd Arthedain merchant" />
+    <string id="aom_arth_notable_4b" text="Devious Arthedain merchant" />
+    <string id="aom_arth_notable_5" text="Zealous Arthedain loremaster" />
+    <string id="aom_arth_notable_6" text="Stern lord of Arthedain" />
+    <string id="aom_arth_notable_7" text="Arthedain keeper of traditions" />
+    <string id="aom_arth_notable_8" text="Gruff Fornost artisan" />
+    <string id="aom_arth_notable_9" text="Gifted Arthedain craftsman" />
+    <string id="aom_arth_notable_gl1" text="Protective Arthedain ringleader" />
+    <string id="aom_arth_notable_gl4" text="Ruthless Arthedain thug" />
+    <string id="aom_arth_practice_1" text="Practice Fighter" />
+    <string id="aom_arth_practice_2" text="Practice Fighter" />
+    <string id="aom_arth_practice_3" text="Practice Fighter" />
+    <string id="aom_arth_practice_dummy" text="Practice Dummy" />
+    <string id="aom_arth_prison_guard" text="Prison Guard" />
+    <string id="aom_arth_ransom_broker" text="Ransom Broker" />
+    <string id="aom_arth_shop_worker" text="Shop Worker" />
+    <string id="aom_arth_tavern_wench" text="Tavern Wench" />
+    <string id="aom_arth_tavernkeeper" text="Tavern Keeper" />
+    <string id="aom_arth_townsman" text="Townsman" />
+    <string id="aom_arth_townsman_child" text="Townsman" />
+    <string id="aom_arth_townsman_infant" text="Townsman" />
+    <string id="aom_arth_townsman_teen" text="Townsman" />
+    <string id="aom_arth_townswoman" text="Townswoman" />
+    <string id="aom_arth_townswoman_child" text="Townswoman" />
+    <string id="aom_arth_townswoman_infant" text="Townswoman" />
+    <string id="aom_arth_townswoman_teen" text="Townswoman" />
+    <string id="aom_arth_vet_caravan_guard" text="Arthedain Veteran Caravan Guard" />
+    <string id="aom_arth_village_woman" text="Village Woman" />
+    <string id="aom_arth_village_woman_child" text="Village Child" />
+    <string id="aom_arth_village_woman_teen" text="Village Teenager" />
+    <string id="aom_arth_villager" text="Villager" />
+    <string id="aom_arth_villager_child" text="Village Child" />
+    <string id="aom_arth_villager_teen" text="Village Teenager" />
+    <string id="aom_arth_weaponsmith" text="Weaponsmith" />
+    <string id="aom_arthedain_lord_1" text="Bold Arthedain lord" />
+    <string id="aom_arthedain_lord_2" text="Cautious Arthedain lord" />
+    <string id="aom_spc_wanderer_arthedain_0_name" text="{FIRSTNAME} Calendorionath" />
+    <string id="aom_spc_wanderer_arthedain_10_name" text="{FIRSTNAME} Morvegilionath" />
+    <string id="aom_spc_wanderer_arthedain_11_name" text="{FIRSTNAME} Arandurionath" />
+    <string id="aom_spc_wanderer_arthedain_12_name" text="{FIRSTNAME} Telemarionath" />
+    <string id="aom_spc_wanderer_arthedain_1_name" text="{FIRSTNAME} Minastirionath" />
+    <string id="aom_spc_wanderer_arthedain_2_name" text="{FIRSTNAME} Erelionath" />
+    <string id="aom_spc_wanderer_arthedain_3_name" text="{FIRSTNAME} Morthalionath" />
+    <string id="aom_spc_wanderer_arthedain_4_name" text="{FIRSTNAME} Dolmarionath" />
+    <string id="aom_spc_wanderer_arthedain_5_name" text="{FIRSTNAME} Tarcilionath" />
+    <string id="aom_spc_wanderer_arthedain_6_name" text="{FIRSTNAME} Laurethionath" />
+    <string id="aom_spc_wanderer_arthedain_7_name" text="{FIRSTNAME} Annúminasionath" />
+    <string id="aom_spc_wanderer_arthedain_8_name" text="{FIRSTNAME} Forostirionath" />
+    <string id="aom_spc_wanderer_arthedain_9_name" text="{FIRSTNAME} Valandilionath" />
   </strings>
 </base>

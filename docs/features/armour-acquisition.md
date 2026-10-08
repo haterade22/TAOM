@@ -275,9 +275,10 @@ thamaskene 260. Special resources earn about 14 per battle won, so 150 is roughl
 
 ### `culture_marketplace_config.xml`
 
-Nine `<Culture id armour_from>` rows, the Armourer's Commission mapping: Lindon and Lórien draw on
-Rivendell, Abanissa and Shaghana on Harad (`aserai`), Khand (`battania`) on Rhûn (`khuzait`), and the
-three orc cultures and Umbar on Mordor. Those cultures own 22 of the 78 towns. The Animalia moose is
+Ten `<Culture id armour_from>` rows, the Armourer's Commission mapping: Lindon and Lórien draw on
+Rivendell, Abanissa and Shaghana on Harad (`aserai`), Khand (`battania`) on Rhûn (`khuzait`), the
+three orc cultures and Umbar on Mordor, and Arthedain on Gondor (2026-10-07). Those cultures own 26
+of the 82 towns. The Animalia moose is
 routed to Mirkwood with `min_stock="1"`.
 
 ### MCM: "Armour Acquisition"

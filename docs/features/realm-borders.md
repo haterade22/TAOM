@@ -321,8 +321,8 @@ Options names are rows in `ModuleData/global_strings.xml`.
 | `minimumDeltaE` | number | the smallest CIE76 distance any two colours, reserve included, may have (15) |
 | `minimumLightness` | number | the darkest L* allowed (25), so no realm reads as black |
 
-The palette is separate from banner colours on purpose: banner colours leave 9 of the 22 realms near
-black and make Gundabad and the Misty Mountain Orcs look alike. `RealmPaletteTests` fails when a
+The palette is separate from banner colours on purpose: banner colours left 9 of the 22 realms of
+the time near black and made Gundabad and the Misty Mountain Orcs look alike. `RealmPaletteTests` fails when a
 kingdom is missing, two colours (reserve included) sit closer than `minimumDeltaE`, or one is darker
 than `minimumLightness`. A malformed colour is skipped with a warning and that realm takes a reserve
 colour, or the Your Realm colour when it is the player's. The file is read once per process, so an edit

@@ -8,7 +8,7 @@ namespace TAOM.Features.AdvancedStartOptions;
 ///
 /// <para>
 /// ASO's faction pickers are NOT data-driven. <c>SandBoxStartOptionsProvider.GetCultureItems()</c>
-/// returns a literal list of the eight vanilla StringIds, so TAOM's fourteen LOTR kingdoms are
+/// returns a literal list of the eight vanilla StringIds, so the LOTR kingdoms TAOM adds are
 /// invisible to the menu and the eight that do appear resolve to TAOM's renamed vanilla kingdoms.
 /// Left alone, the campaign-start screen offers "Western Empire" and drops the player into Gondor.
 /// </para>
@@ -22,13 +22,15 @@ namespace TAOM.Features.AdvancedStartOptions;
 /// </summary>
 public static class TaomStartOptionsProvider
 {
-    // The fourteen kingdoms TAOM adds in taom_spkingdoms.xml. The other eight playable kingdoms keep
-    // vanilla StringIds (renamed in place by spkingdoms.xslt) and are already in ASO's hardcoded
-    // list, so adding them again would just overwrite the existing entries.
+    // The kingdoms TAOM adds in taom_spkingdoms.xml (TaomKingdomIds_MatchTaomSpkingdoms pins the list).
+    // The eight other playable kingdoms keep vanilla StringIds (renamed in place by spkingdoms.xslt)
+    // and are already in ASO's hardcoded list, so adding them again would just overwrite the
+    // existing entries.
     internal static readonly string[] TaomKingdomIds =
     {
         "erebor", "rivendell", "mirkwood", "lothlorien", "isengard", "gundabad", "umbar",
         "dolguldur", "shaghana", "abanissa", "goblin", "mistymountainorcs", "lindon", "bluecraig",
+        "arthedain",
     };
 
     // Every ASO list option that lets the player pick a faction.

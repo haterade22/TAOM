@@ -12,24 +12,14 @@ namespace TAOM.Features.EliteEmissary;
 /// <summary>
 /// Loads + validates <c>elite_emissary/elite_emissary_config.xml</c> (Config-Providers-MUST-Validate,
 /// csharp-architecture.md). Missing/malformed → <see cref="EliteEmissaryConfig.Empty"/>. Validation:
-/// a <c>&lt;Culture&gt;</c> id not in the known culture set is dropped+warned (a typo would otherwise
-/// silently produce "this faction has no elites" — the M1 trap); a <c>&lt;Troop&gt;</c> with no
+/// a <c>&lt;Culture&gt;</c> id that maps to no special resource is dropped+warned (a typo or a culture with no
+/// resource would otherwise silently produce "this faction has no elites" — the M1 trap); a <c>&lt;Troop&gt;</c> with no
 /// <c>merchant_cost</c> row in troop_resource_costs.xml is dropped+warned (it would be unsellable).
 /// Key-settlement ids can't be validated here (MBObjectManager isn't populated at load) — the behavior
 /// validates them against live settlements at session launch.
 /// </summary>
 public sealed class EliteEmissaryConfigProvider : IEliteEmissaryConfigProvider
 {
-    // Owner-culture StringIds an emissary offer block may be keyed by. Source: CLAUDE.md / xml-data.md
-    // culture table (custom LOTR cultures + XSLT engine-id cultures + the two orc-host cultures).
-    private static readonly HashSet<string> KnownCultureIds = new(StringComparer.Ordinal)
-    {
-        "gondor", "mordor", "erebor", "rivendell", "lothlorien", "mirkwood",
-        "isengard", "gundabad", "dolguldur", "umbar", "goblin", "mistymountainorcs",
-        "bluecraig", "lindon",
-        "vlandia", "empire", "aserai", "khuzait", "sturgia", "battania",
-    };
-
     private readonly IPathService _pathService;
     private readonly IModLogger _logger;
     private readonly ISpecialResourceConfigProvider _resourceConfig;
@@ -96,19 +86,14 @@ public sealed class EliteEmissaryConfigProvider : IEliteEmissaryConfigProvider
                         _logger.LogWarning("EliteEmissaryConfigProvider: <Culture> with empty id — skipped");
                         continue;
                     }
-                    if (!KnownCultureIds.Contains(cultureId))
-                    {
-                        _logger.LogWarning($"EliteEmissaryConfigProvider: unknown culture id '{cultureId}' — dropped (offers for it would never be reachable)");
-                        droppedCultures++;
-                        continue;
-                    }
-                    // A known culture that maps to NO special resource (goblin, mistymountainorcs) would
+                    // A culture that maps to NO special resource (a typo, or goblin, mistymountainorcs) would
                     // pass the merchant_cost checks but be silently dead at runtime — ResolveResource
                     // returns null and HideWhenNoResource hides the option. Drop+warn at load instead of
                     // shipping a dead offer block (the parsed-but-unresolvable M1 trap; Codex review 2026-06-25 [MED]).
+                    // This is the only culture gate: a hand list of ids beside it dropped shaghana and abanissa.
                     if (_resourceConfig.GetByCultureId(cultureId) == null)
                     {
-                        _logger.LogWarning($"EliteEmissaryConfigProvider: culture '{cultureId}' maps to no special resource in special_resources_config.xml — dropped (its offers would be silently unreachable)");
+                        _logger.LogWarning($"EliteEmissaryConfigProvider: culture '{cultureId}' maps to no special resource in special_resources_config.xml (a typo, or a culture with no resource) — dropped (its offers would be silently unreachable)");
                         droppedCultures++;
                         continue;
                     }

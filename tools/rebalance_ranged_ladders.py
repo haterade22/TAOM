@@ -304,7 +304,7 @@ REPORT_HTML = "REPORT.html"
 LINE_LABELS = {
     "mirkwood": "Mirkwood", "rivendell": "Rivendell and Lindon",
     "ithilien": "Gondor: Ithil Guard and Ithilien Rangers", "blackroot": "Gondor: Blackroot Vale",
-    "mordor_num": "Mordor: Black Numenoreans", "dale": "Dale", "isengard": "Isengard",
+    "arthedain": "Arthedain: Rangers of the North", "mordor_num": "Mordor: Black Numenoreans", "dale": "Dale", "isengard": "Isengard",
     "harad": "Harad", "mordor_uruk": "Mordor: Black Uruks", "rhun_new": "Rhun", "umbar": "Umbar",
     "gondor": "Gondor: the other regions", "goblin": "Goblin-town and Bluecraig", "erebor": "Erebor, Iron Hills, Ironpass",
     "mordor": "Mordor: orcs, Morannon, militia", "gundabad": "Gundabad", "dolguldur": "Dol Guldur",

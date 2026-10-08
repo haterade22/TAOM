@@ -466,5 +466,6 @@
     <string id="zulgor_description" text="Зулгор, разводчик крылатых тварей, высиживает жуткие яйца, расширяя воздушные владения Хамула." />
     <string id="zulgora_description" text="Зулгора, ткачиха теней, творит иллюзии, обманывая врагов, как обманы Саурона в преданиях." />
     <string id="zulgoth_description" text="Зулгот выступает орком-ритуалистом, принося жертвы тёмным силам, как намекают орочьи обычаи. Его обряды призывают силу для деяний клана." />
+    <string id="lord_AN1_1_description" text="Arvegil II, King of Arthedain, heir of Arvedui and of Isildur, who holds Fornost against Angmar with fewer swords each year." />
   </strings>
 </base>

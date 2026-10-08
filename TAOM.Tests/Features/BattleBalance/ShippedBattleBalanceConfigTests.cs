@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using TAOM.Features.BattleBalance;
@@ -33,5 +34,32 @@ public class ShippedBattleBalanceConfigTests
 
         Assert.IsTrue(bonuses.TryGetValue("lindon", out var lindon), "battle_balance_config.json has no lindon row");
         Assert.AreEqual(bonuses["rivendell"], lindon, 0.001f);
+    }
+
+    /// <summary>
+    /// Arthedain's realm is cloned from Gondor's, so its parties survive like Gondor's.
+    /// </summary>
+    [TestMethod]
+    public void ShippedConfig_Arthedain_MatchesGondorSurvivalBonus()
+    {
+        var bonuses = LoadShippedFileOnly().CasualtyRatios.CulturalSurvivalBonuses;
+
+        Assert.IsTrue(bonuses.TryGetValue("arthedain", out var arthedain), "battle_balance_config.json has no arthedain row");
+        Assert.AreEqual(bonuses["gondor"], arthedain, 0.001f);
+    }
+
+    /// <summary>
+    /// The compiled table is what a missing or unreadable file falls back to, so it carries every
+    /// culture row the shipped file does (the #749 fix mirrored Lindon by hand; nothing checked it).
+    /// </summary>
+    [TestMethod]
+    public void CompiledDefaults_SurvivalBonuses_MatchTheShippedFile()
+    {
+        var shipped = LoadShippedFileOnly().CasualtyRatios.CulturalSurvivalBonuses;
+        var compiled = new BattleBalanceConfig().CasualtyRatios.CulturalSurvivalBonuses;
+
+        CollectionAssert.AreEquivalent(shipped.Keys.ToList(), compiled.Keys.ToList());
+        foreach (var pair in shipped)
+            Assert.AreEqual(pair.Value, compiled[pair.Key], 0.001f, pair.Key);
     }
 }

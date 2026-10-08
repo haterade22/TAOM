@@ -1798,5 +1798,77 @@
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1,
         "occupation_type": "vagabond_urban"
+    },
+    {
+        "string_id": "taom_parent_arthedain_1",
+        "culture_id": "arthedain",
+        "text": "Noble Houses of Arthedain",
+        "description": "Your family belonged to one of the old houses of Arthedain, whose blood runs back to the Númenóreans who came north with Elendil. Your father rode in the King's host at Fornost, while your mother kept the family's thinning lands and its long memory.",
+        "skills": ["TwoHanded", "Riding"],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1,
+        "occupation_type": "retainer"
+    },
+    {
+        "string_id": "taom_parent_arthedain_2",
+        "culture_id": "arthedain",
+        "text": "Merchants of Bree",
+        "description": "Your family kept a trading house in Bree, where the Great East Road meets the Greenway. Dwarves from the Blue Mountains, Hobbits from the Shire and Men of the Bree-land all passed through their doors, and every one of them paid.",
+        "skills": ["Trade", "Charm"],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1,
+        "occupation_type": "merchant_urban"
+    },
+    {
+        "string_id": "taom_parent_arthedain_3",
+        "culture_id": "arthedain",
+        "text": "Farmers of the North Downs",
+        "description": "Your family worked the thin soil of the North Downs below Fornost. They sent a son to the levy every spring and kept a spear by the door, for Angmar's raiders came over the hills more often than the rain.",
+        "skills": ["Athletics", "Polearm"],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1,
+        "occupation_type": "farmer"
+    },
+    {
+        "string_id": "taom_parent_arthedain_4",
+        "culture_id": "arthedain",
+        "text": "Smiths of Fornost",
+        "description": "Your family were smiths and stonewrights in Fornost Erain, mending the walls the Witch-king's hosts broke and forging the blades that held them. Their craft came down unbroken from Númenórean masters.",
+        "skills": ["Crafting", "OneHanded"],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1,
+        "occupation_type": "artisan_urban"
+    },
+    {
+        "string_id": "taom_parent_arthedain_5",
+        "culture_id": "arthedain",
+        "text": "Rangers of the North",
+        "description": "Your family were Rangers of the Dúnedain, walking the empty lands of Eriador to keep its roads and borders. Few thanked them and fewer knew their names, but the wild places of the North were safer for their watch.",
+        "skills": ["Scouting", "Bow"],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1,
+        "occupation_type": "hunter"
+    },
+    {
+        "string_id": "taom_parent_arthedain_6",
+        "culture_id": "arthedain",
+        "text": "Drifters of the Greenway",
+        "description": "Your family lived on the roads, drifting between Bree, the borders of the Shire and the ruined towns of fallen Cardolan. They traded what they found, took what they could, and learned that a stranger's purse was often looser than his tongue.",
+        "skills": ["Roguery", "Throwing"],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1,
+        "occupation_type": "vagabond_urban"
     }
 ]

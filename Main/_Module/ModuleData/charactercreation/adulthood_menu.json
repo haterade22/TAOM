@@ -1678,5 +1678,71 @@
         "focus_to_add": 1,
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_arthedain_1",
+        "culture_id": "arthedain",
+        "text": "You held the Weather Hills against a host of Angmar.",
+        "description": "When the hill-men of Rhudaur came over the Weather Hills under Angmar's banners, you held your line on the slopes until the King's riders came. Your name was spoken in the hall at Fornost.",
+        "skills": ["TwoHanded", "Riding"],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_arthedain_2",
+        "culture_id": "arthedain",
+        "text": "You won the Dwarves of the Blue Mountains as partners in trade.",
+        "description": "When iron ran short in Fornost's forges, you rode west to the Ered Luin and bargained with the Dwarves until the ore carts rolled east again. The King's treasurer does not forget who kept the forges lit.",
+        "skills": ["Trade", "Charm"],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_arthedain_3",
+        "culture_id": "arthedain",
+        "text": "You brought in the harvest of the North Downs under threat of wolves.",
+        "description": "When wolves and orcs came down from the north in a hard autumn, you gathered the farmers' levies to guard the fields and brought the harvest in before the snow. The villages remember.",
+        "skills": ["Athletics", "Polearm"],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_arthedain_4",
+        "culture_id": "arthedain",
+        "text": "You forged a blade presented to a knight of Fornost.",
+        "description": "A knight of the King's guard had heard of your work and commissioned a sword for the day he took his oath. When he drew it before the assembled guard and it rang true, you knew your name was made.",
+        "skills": ["Crafting", "OneHanded"],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_arthedain_5",
+        "culture_id": "arthedain",
+        "text": "You guided a Ranger company out of an ambush in the Ettenmoors.",
+        "description": "When a Ranger patrol was cut off in the Ettenmoors, you led them out by a path no orc scout knew, losing not a single man. Their captain clasped your arm and named you a friend of the Dúnedain.",
+        "skills": ["Scouting", "Bow"],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_arthedain_6",
+        "culture_id": "arthedain",
+        "text": "You uncovered a band of barrow-robbers working out of Bree.",
+        "description": "For months grave-goods from the Barrow-downs had been turning up in the back rooms of Bree. You traced the trade, found the men behind it and handed them to the King's wardens, keeping a little of the gold for your trouble.",
+        "skills": ["Roguery", "Throwing"],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
     }
 ]

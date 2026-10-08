@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace TAOM.Tests.Core;
@@ -80,6 +81,20 @@ internal static class CultureDataFixture
 
         Assert.Fail("Could not locate Main/_Module/ModuleData from the test working directory.");
         return null;
+    }
+
+    /// <summary>
+    /// Every playable culture's StringId, read from the data: the <c>is_main_culture</c> cultures TAOM defines in
+    /// <c>taom_spcultures.xml</c> plus the six vanilla ids <c>spcultures.xslt</c> re-skins. Read rather than listed,
+    /// so a new culture needs no test edit (2026-10-07 review: four hand copies had drifted to three contents).
+    /// </summary>
+    public static HashSet<string> MainCultureIds()
+    {
+        var ids = new HashSet<string>(StringComparer.Ordinal) { "vlandia", "empire", "aserai", "khuzait", "sturgia", "battania" };
+        foreach (var culture in XDocument.Load(Path.Combine(ModuleDataPath(), "taom_spcultures.xml")).Descendants("Culture"))
+            if ((string)culture.Attribute("is_main_culture") == "true")
+                ids.Add((string)culture.Attribute("id"));
+        return ids;
     }
 
     /// <summary>Strips the <c>PartyTemplate.</c> / <c>NPCCharacter.</c> style prefix from a reference.</summary>

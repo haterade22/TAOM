@@ -42,7 +42,9 @@
     per_battle_victory_base="8" per_raid="4" per_siege_victory="18"
     per_prisoner="1" per_tournament_win="6" per_hideout_clear="5">
     <Kingdom id="empire_w" />
+    <Kingdom id="arthedain" />
     <Culture id="gondor" />
+    <Culture id="arthedain" />
   </Resource>
 
   <!-- Marks (Rohan) — honor-driven horse lords -->

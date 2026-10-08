@@ -94,6 +94,8 @@ Authoritative table for naming new settlements anywhere on the map. Match the pr
 | `U` | Umbar | `Culture.umbar` | Adunaic / Black Númenórean | Umbar, Azruphêr, Bôluzir | Bej-Phazân, Azar-Mîr, Bôluz-Sêr |
 | `A` | Khand (Aserai-mapped) | `Culture.aserai/abanissa/shaghana` | Eastern/Mongolic | Nagakhôdi, Korb Taskral, Khanôg Gôr | Shatag-Lub, Lajôr-Argûn, Kalmôkh-Bûsh |
 | `RU` | Rhûn (Easterling) | `Culture.khuzait` | Easterling/Wainrider | Mistrand, Lest, Vorgavuld | Mistrand-Krish, Vorgav-Argûn, Iôrig-Mukh |
+| `AN` | Arthedain (Arnor, 2026-10-07) | `Culture.arthedain` | Sindarin of the North + Bree-land Mannish | Fornost Erain, Annúminas, Bree, Amon Sûl, Staddle, Archet | Barad Forn, Lond Nenuial, Talath Forn, Rhaw Field |
+| `GBC` | Blue Craig (Ered Luin goblins) | `Culture.bluecraig` | Black Speech, hyphenated compounds | Blue Craig, Bolgkrag, Krimp-morn | Luinkrag, Gash-nakh, Mok-bûr, Zog-tang |
 
 ### Suffix vocabulary (for compound names)
 

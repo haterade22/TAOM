@@ -3150,6 +3150,47 @@ public class VolunteerRecruitmentServiceTests
         Assert.AreEqual("umbar_elite", _sut.GetVolunteerTroopId(context));
     }
 
+    // --- Arthedain: levy-heavy, the Dunadan Youth as the one elite root (all three branches) ---
+    // pool: arthedain_levy(6)[0..5] + arthedain_dunadan_youth(2)[6..7] = total 8
+
+    [TestMethod]
+    public void GetVolunteerTroopId_ArthedainCulture_Roll0_ReturnsLevy()
+    {
+        _random.Next(8).Returns(0);
+        var context = new VolunteerContext(null, null, null, "arthedain");
+        Assert.AreEqual("arthedain_levy", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_ArthedainCulture_Roll5_ReturnsLevy()
+    {
+        _random.Next(8).Returns(5);
+        var context = new VolunteerContext(null, null, null, "arthedain");
+        Assert.AreEqual("arthedain_levy", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_ArthedainCulture_Roll6_ReturnsDunadanYouth()
+    {
+        _random.Next(8).Returns(6);
+        var context = new VolunteerContext(null, null, null, "arthedain");
+        Assert.AreEqual("arthedain_dunadan_youth", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_ArthedainCulture_Roll7_ReturnsDunadanYouth()
+    {
+        _random.Next(8).Returns(7);
+        var context = new VolunteerContext(null, null, null, "arthedain");
+        Assert.AreEqual("arthedain_dunadan_youth", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void HasCulturePool_Arthedain_True()
+    {
+        Assert.IsTrue(_sut.HasCulturePool("arthedain"));
+    }
+
     [TestMethod]
     public void HasCulturePool_MirkwoodAndUmbar_NowTrue()
     {

@@ -49,6 +49,15 @@
     </Guards>
   </Settlement>
 
+  <!-- Fornost Erain (town_AN2), Arthedain's capital: the King's guard and the wardens of the walls -->
+  <Settlement id="town_AN2">
+    <Guards>
+      <Guard troop="arthedain_kings_guard" weight="2" spawn_points="sp_guard_castle" />
+      <Guard troop="arthedain_warden" weight="3" spawn_points="sp_guard_castle,sp_guard_with_spear" />
+      <Guard troop="arthedain_fornost_guard" weight="3" spawn_points="sp_guard,sp_guard_patrol" />
+    </Guards>
+  </Settlement>
+
   <!-- Cair Andros (castle_EW4) — Cair Andros wardens -->
   <Settlement id="castle_EW4">
     <Guards>

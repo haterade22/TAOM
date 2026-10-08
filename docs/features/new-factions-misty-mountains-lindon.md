@@ -25,7 +25,7 @@ central Misty Mountains and the Grey Havens are populated and playable in the ca
 |---|---|---|---|---|---|
 | `mistymountainorcs` | `mistymountainorcs` (race `orc`) | `MM` / `MM` | `town_MM1` (Hrakdûr) | 3 towns, 7 castles, 23 villages | evil |
 | `goblin` | `goblin` (race `goblin`) | `GT` / `GB` | `town_GT1` (Goblin Town) | 1 town, 6 villages | evil |
-| `bluecraig` | `goblin` (race `goblin`) | `GBC` / `BC` | `town_GBC1` (Blue Craig)† — far west, by Lindon | 1 town + 4 villages (+ user-placed castles) | evil |
+| `bluecraig` | `goblin` (race `goblin`) | `GBC` / `BC` | `town_GBC1` (Blue Craig)†, far west by Lindon | 2 towns (Luinkrag `town_GBC2` since 2026-10-07) + 7 villages (+ user-placed castles) | evil |
 | `lindon` | `rivendell` (race `elf`) | `LN` / `LN` | `town_LN1` (Mithlond) | 1 town, 4 villages* | free |
 
 \* The 4 Lindon villages (`village_LN1_1..4`) have been **placed in the map editor** (positions in
@@ -54,7 +54,7 @@ re-running it reproduces the live file exactly (positions + types) without clobb
   castle_MM2, clan_3 = town_MM3 + castle_MM3, clan_4 = castle_MM4 + MM5, clan_5 = castle_MM6 + MM7.
 - **goblin** (5 clans): clan_1 = town_GT1 (ruler); clans 2-5 = landless vassal warbands.
 - **bluecraig** (5 clans): clan_1 = town_GBC1 + 3 villages (ruler); clan_2 = castle_GBC1 (Krathol) + 2
-  villages; clan_3 = castle_GBC2 (Gorgrim) + 2 villages; clan_4 = castle_GBC3 (Skarnak) + 4 villages;
+  villages, and since 2026-10-07 Luinkrag (`town_GBC2`, `tools/add_map_fortifications.py`) + 3 villages; clan_3 = castle_GBC2 (Gorgrim) + 2 villages; clan_4 = castle_GBC3 (Skarnak) + 4 villages;
   clan_5 = castle_GBC4 (Bolgkrag) + 4 villages. The 4 castles + 12 castle-villages were added by
   `tools/add_bluecraig_castles.py` (positions taken FROM the author's `scene.xscene` placements — every
   settlement MUST have a worldmap-scene entity or `SettlementVisual.OnStartup` NREs at map load).
@@ -163,6 +163,8 @@ skill templates (`taom_elf_king/warrior/lady_skills`).
 | `tools/add_bluecraig_castles.py` | Adds the 4 Blue Craig castles (`castle_GBC1..4`) + 11 castle-villages to the live settlements.xml, spread across clans 2-5 (`--apply` + backup; idempotent; positions FROM scene.xscene). Only adds ids already placed in the scene. |
 
 Re-run order: `generate_new_factions.py` → `insert_new_factions.py` → `generate_new_faction_kingdoms.py`
+(since 2026-10-07 it takes `--only` and offers only `arthedain`: these four realms have drifted from
+their table entries, Lindon retagged to `Culture.lindon`, so a regeneration would revert them)
 → `generate_new_faction_settlements.py --apply`. All inserts are idempotent
 (`<!-- TAOM-NEWFACTIONS:… -->` markers stripped + re-inserted).
 

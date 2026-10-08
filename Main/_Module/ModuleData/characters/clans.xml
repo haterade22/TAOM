@@ -2144,4 +2144,71 @@
 		default_party_template="PartyTemplate.kingdom_hero_party_rivendell_lindon_2_template"
 		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0" />
   <!-- TAOM-NEWFACTIONS:lindon:END -->
+  <!-- TAOM-NEWFACTIONS:arthedain:BEGIN -->
+  <Faction
+		id="clan_arthedain_1"
+		initial_home_settlement="Settlement.town_AN2"
+		name="{=aom_clan_arthedain_1_name}House of Arvedui"
+		tier="4"
+		owner="Hero.lord_AN1_1"
+		culture="Culture.arthedain"
+		super_faction="Kingdom.arthedain"
+		is_noble="true"
+		color="FF4870B8"
+		color2="FFC8CCD8"
+		default_party_template="PartyTemplate.kingdom_hero_party_arthedain_template"
+		banner_key="11.190.190.1528.1528.764.764.1.0.0.11000.110.110.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_arthedain_2"
+		initial_home_settlement="Settlement.town_AN1"
+		name="{=aom_clan_arthedain_2_name}House of Evendim"
+		tier="3"
+		owner="Hero.lord_AN2_1"
+		culture="Culture.arthedain"
+		super_faction="Kingdom.arthedain"
+		is_noble="true"
+		color="FF3A6298"
+		color2="FFC8CCD8"
+		default_party_template="PartyTemplate.kingdom_hero_party_arthedain_template"
+		banner_key="11.190.190.1528.1528.764.764.1.0.0.11001.110.110.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_arthedain_3"
+		initial_home_settlement="Settlement.town_AN3"
+		name="{=aom_clan_arthedain_3_name}Wardens of Amon Sûl"
+		tier="3"
+		owner="Hero.lord_AN3_1"
+		culture="Culture.arthedain"
+		super_faction="Kingdom.arthedain"
+		is_noble="true"
+		color="FF5960A8"
+		color2="FFD2D6D5"
+		default_party_template="PartyTemplate.kingdom_hero_party_arthedain_template"
+		banner_key="11.190.190.1528.1528.764.764.1.0.0.11002.110.110.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_arthedain_4"
+		initial_home_settlement="Settlement.castle_AN5"
+		name="{=aom_clan_arthedain_4_name}House of the Baranduin"
+		tier="2"
+		owner="Hero.lord_AN4_1"
+		culture="Culture.arthedain"
+		super_faction="Kingdom.arthedain"
+		is_noble="true"
+		color="FF2E4A78"
+		color2="FFCACCCB"
+		default_party_template="PartyTemplate.kingdom_hero_party_arthedain_template"
+		banner_key="11.190.190.1528.1528.764.764.1.0.0.11003.110.110.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_arthedain_5"
+		initial_home_settlement="Settlement.castle_AN8"
+		name="{=aom_clan_arthedain_5_name}House of Emyn Beraid"
+		tier="2"
+		owner="Hero.lord_AN5_1"
+		culture="Culture.arthedain"
+		super_faction="Kingdom.arthedain"
+		is_noble="true"
+		color="FF4E75BC"
+		color2="FFEAEEEF"
+		default_party_template="PartyTemplate.kingdom_hero_party_arthedain_template"
+		banner_key="11.190.190.1528.1528.764.764.1.0.0.11004.110.110.700.700.764.764.0.0.0" />
+  <!-- TAOM-NEWFACTIONS:arthedain:END -->
 </Factions>

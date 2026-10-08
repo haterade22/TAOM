@@ -48,9 +48,20 @@ public class ShippedRaceAbilitiesConfigTests
         var config = Load(ModuleDataPath, logger);
 
         Assert.AreEqual(9, config.Races.Count);
-        Assert.AreEqual(17, config.Cultures.Count);
+        Assert.AreEqual(18, config.Cultures.Count);
         logger.DidNotReceive().LogWarning(Arg.Any<string>());
         logger.DidNotReceive().LogError(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ShippedFile_Arthedain_SharesGondorsCitadelGuard()
+    {
+        // Arthedain's troops are human with no race ability of their own, so without a culture row
+        // they resolve to nothing (lesson #749: every table keyed on the scaffold culture).
+        var config = Load(ModuleDataPath, Substitute.For<IModLogger>());
+
+        Assert.IsTrue(config.Cultures.ContainsKey("arthedain"));
+        Assert.AreEqual(config.Cultures["gondor"].AbilityId, config.Cultures["arthedain"].AbilityId);
     }
 
     [TestMethod]

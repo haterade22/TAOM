@@ -251,7 +251,7 @@ class RepoSpecTests(unittest.TestCase):
 
     def test_lines_and_ranks(self):
         ids = [ln["id"] for ln in self.spec["lines"]]
-        self.assertEqual(len(ids), 19)
+        self.assertEqual(len(ids), 20)  # +arthedain 2026-10-07
         self.assertIn("ithilien", ids)
         self.assertIn("blackroot", ids)
         self.assertNotIn("gondor_special", ids)
@@ -307,7 +307,7 @@ class RepoSpecTests(unittest.TestCase):
                     self.assertLess(sx, sb, f"T{tx} {lx} crossbow spread {sx:.2f}, {lb} bow {sb:.2f}")
 
     def test_one_item_per_listed_tier(self):
-        self.assertEqual(len(rl.planned_items(self.spec)), 123)
+        self.assertEqual(len(rl.planned_items(self.spec)), 128)  # +5 arthedain bows 2026-10-07
 
     def test_donor_table_stays_under_the_hero_ceiling(self):
         s = self.spec
@@ -1185,6 +1185,21 @@ class GeneratorTests(unittest.TestCase):
         (self.md / "troops" / "troops_elf_twin.xml").unlink()
         self.assertEqual(self._run("--apply"), 2)
         self.assertFalse(self._elf_file().exists())
+
+    def test_a_lines_own_name_replaces_the_donors(self):
+        # Arthedain's rangers clone Gondor's bows; the line names them, the donor's name never shows.
+        n = self.gen.ladder_name
+        self.assertEqual(n("{=g}[Gondor] Ithilien Bow III", "ladder_arthedain_bow_t4", 4, "[Arnor] Ranger's Bow"),
+                         "{=ladder_arthedain_bow_t4}[Arnor] Ranger's Bow IV")
+        spec = rl.load_spec()
+        arthedain = [i for i in rl.planned_items(spec) if i.line == "arthedain"]
+        self.assertTrue(arthedain and all(i.name == "[Arnor] Ranger's Bow" for i in arthedain))
+
+    def test_an_empty_line_name_is_a_spec_problem(self):
+        spec = rl.load_spec()
+        line = next(l for l in spec["lines"] if l["id"] == "arthedain")
+        line["names"] = {"Bow": " "}
+        self.assertTrue(any("name override" in p for p in rl.validate_spec(spec)))
 
     def test_ladder_name_strips_the_donor_numeral_and_suffixes(self):
         n = self.gen.ladder_name

@@ -3067,4 +3067,185 @@
         </EquipmentSet>
     </EquipmentRoster>
 
+  <!-- TAOM-NEWCULTURE:arthedain:BEGIN -->
+    <EquipmentRoster id="enlist_arthedain_infantry_recruit" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
+            <Equipment slot="Item2" id="Item.wm_gondor_spear_b" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_inf_med_a" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chainmail_half_b" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_light_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
+            <Equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_arthedain_archer_recruit" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_bow" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.bodkin_arrows_a" />
+            <Equipment slot="Item3" id="Item.wm_gondor_sword_a02" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_inf_med_a" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chainmail_half_b" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_light_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_arthedain_support_recruit" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_sword_a02" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_inf_med_a" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chainmail_half_b" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_light_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
+            <Equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_arthedain_infantry_soldier" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
+            <Equipment slot="Item2" id="Item.wm_gondor_spear_b" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_inf_med_a" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chest_inf_med_a" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_bracer_inf_med_a" />
+            <Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_med_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_arthedain_archer_soldier" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_bow" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.bodkin_arrows_a" />
+            <Equipment slot="Item3" id="Item.wm_gondor_sword_a03" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_inf_med_a" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chainmail_full_a" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_light_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_gloves_a" />
+            <Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_med_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_arthedain_cavalry_soldier" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
+            <Equipment slot="Item2" id="Item.wm_gondor_spear_b" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_cav_heavy_a" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chest_inf_med_b" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_bracer_inf_med_a" />
+            <Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_heavy_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_arthedain_support_soldier" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_sword_a03" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_inf_med_a" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chest_inf_med_a" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_bracer_inf_med_a" />
+            <Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_med_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_arthedain_infantry_veteran" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
+            <Equipment slot="Item2" id="Item.wm_gondor_spear_b" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_inf_hvy_a" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chest_inf_med_b" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_bracer_inf_med_a" />
+            <Equipment slot="Cape" id="Item.sk_ar_art_pauld_cape_inf_elite_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_arthedain_archer_veteran" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_bow" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.bodkin_arrows_a" />
+            <Equipment slot="Item3" id="Item.wm_gondor_sword_a02" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_inf_hvy_a" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chest_inf_med_a" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_bracer_inf_med_a" />
+            <Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_med_b" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_arthedain_cavalry_veteran" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_spear_b" />
+            <Equipment slot="Item1" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Item2" id="Item.gond_shield_three_green" />
+            <Equipment slot="Item3" id="Item.western_javelin_2_t3" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_inf_med_b" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chest_inf_med_b" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_bracer_inf_med_a" />
+            <Equipment slot="Cape" id="Item.sk_ar_art_pauld_cape_inf_elite_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_arthedain_support_veteran" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_sword_a01" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_inf_hvy_a" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chest_inf_med_b" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_med_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_bracer_inf_med_a" />
+            <Equipment slot="Cape" id="Item.sk_ar_art_pauld_cape_inf_elite_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_arthedain_infantry_sergeant" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_pelargir_sword_a02" />
+            <Equipment slot="Item1" id="Item.sm_gd_shield_a1" />
+            <Equipment slot="Item2" id="Item.imperial_throwing_spear_1_t4" />
+            <Equipment slot="Item3" id="Item.imperial_throwing_spear_1_t4" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_inf_hvy_a" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chest_inf_heavy_b" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_heavy_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_bracer_inf_med_a" />
+            <Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_elite_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_arthedain_archer_sergeant" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_bow" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.bodkin_arrows_a" />
+            <Equipment slot="Item3" id="Item.wm_gondor_sword_a07" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_warden_heavy_a" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chest_inf_heavy_a" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_heavy_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_bracer_inf_med_a" />
+            <Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_med_b" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_arthedain_cavalry_sergeant" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_gondor_spear_b_pg" />
+            <Equipment slot="Item1" id="Item.wm_gondor_sword_a03" />
+            <Equipment slot="Item2" id="Item.gond_shield_three_green" />
+            <Equipment slot="Item3" id="Item.western_javelin_3_t4" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_inf_hvy_b" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chest_inf_heavy_b" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_heavy_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_bracer_inf_med_a" />
+            <Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_heavy_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_arthedain_support_sergeant" culture="Culture.arthedain">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_pelargir_sword_a02" />
+            <Equipment slot="Head" id="Item.sk_ar_art_helmet_inf_hvy_a" />
+            <Equipment slot="Body" id="Item.sk_ar_art_chest_inf_heavy_b" />
+            <Equipment slot="Leg" id="Item.sk_ar_art_grvs_inf_heavy_a" />
+            <Equipment slot="Gloves" id="Item.sk_ar_art_bracer_inf_med_a" />
+            <Equipment slot="Cape" id="Item.sk_ar_art_pauld_inf_elite_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+  <!-- TAOM-NEWCULTURE:arthedain:END -->
 </EquipmentRosters>

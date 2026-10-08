@@ -66,5 +66,10 @@
     <string id="taom_umbar_ruler_title" text="海賊王" />
     <string id="taom_umbar_short_name" text="ウンバール" />
     <string id="taom_umbar_title" text="ウンバールの港" />
+    <string id="taom_arthedain_desc" text="The last of the three realms into which Arnor was sundered, Arthedain did not fall. Arvedui's line still holds Fornost upon the North Downs, though its lords are few, its towns poor, and Angmar's shadow lies always on the northern hills." />
+    <string id="taom_arthedain_name" text="Kingdom of Arthedain" />
+    <string id="taom_arthedain_ruler_title" text="King" />
+    <string id="taom_arthedain_short_name" text="Arthedain" />
+    <string id="taom_arthedain_title" text="North-Kingdom of Arthedain" />
   </strings>
 </base>

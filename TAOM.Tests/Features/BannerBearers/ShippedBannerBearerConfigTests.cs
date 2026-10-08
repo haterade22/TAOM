@@ -265,4 +265,17 @@ public class ShippedBannerBearerConfigTests
                 $"vanilla leftover culture '{culture}' is mapped to banner '{banner}' — these should field no standard.");
         }
     }
+
+    [TestMethod]
+    public void CompiledDefaults_CultureBanners_MatchTheShippedFile()
+    {
+        // The compiled table is the fallback for a missing or unreadable file, so it carries every
+        // culture row the shipped file does.
+        var shipped = _sut.GetConfig().CultureBanners;
+        var compiled = new TAOM.Features.BannerBearers.Domain.BannerBearerConfig().CultureBanners;
+
+        CollectionAssert.AreEquivalent(shipped.Keys.ToList(), compiled.Keys.ToList());
+        foreach (var pair in shipped)
+            Assert.AreEqual(pair.Value, compiled[pair.Key], pair.Key);
+    }
 }

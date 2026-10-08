@@ -60,6 +60,17 @@ public class ClonedCultureFlavorTests
             "Goblin-town", "High Pass", "Misty Mountains", "Moria", "Gundabad", "Bolg",
             "Cirith Ungol", "Angmar", "Carn Dûm", "Iron Hills",
         },
+        // Arthedain is the North-kingdom of Isildur's heirs at Fornost. Numenor, Elendil and Isildur
+        // are shared Dunedain heritage and stay legal; the South-kingdom's places, Stewards and
+        // Anarion's line belong to Gondor.
+        ["arthedain"] = new[]
+        {
+            "Gondor", "Minas Tirith", "Minas Anor", "White City", "Osgiliath", "Steward", "Denethor",
+            "Boromir", "Faramir", "Ecthelion", "Imrahil", "Anárion", "Anarion", "Anórien", "Anorien",
+            "Lossarnach", "Lebennin", "Pelargir", "Dol Amroth", "Ithilien", "Belfalas", "Lamedon",
+            "Morthond", "Blackroot", "Pelennor", "Ethir", "Anfalas", "Pinnath Gelin", "Ringló",
+            "Cair Andros", "Erech", "Swan Knight", "Harlond", "Mardil", "Tower of Guard",
+        },
     };
 
     private static void Scan(List<string> hits, string culture, string where, string value)

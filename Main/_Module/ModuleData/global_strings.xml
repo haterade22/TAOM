@@ -72,6 +72,7 @@
 	<string id="str_campaign_starting_options_item_name.mistymountainorcs" text="{=taom_aso_kingdom.mistymountainorcs}Misty Mountain Orcs" />
 	<string id="str_campaign_starting_options_item_name.lindon" text="{=taom_aso_kingdom.lindon}Lindon" />
 	<string id="str_campaign_starting_options_item_name.bluecraig" text="{=taom_aso_kingdom.bluecraig}Goblins of Blue Craig" />
+	<string id="str_campaign_starting_options_item_name.arthedain" text="{=taom_aso_kingdom.arthedain}Arthedain" />
 
 	<!-- Scenario text that names Calradia directly. The United Empire scenario itself is
 	     removed by TaomStartOptionsProvider, so only the surviving scenarios are retitled. -->
