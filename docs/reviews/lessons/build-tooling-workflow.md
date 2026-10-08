@@ -3486,3 +3486,14 @@ BUTR published `1.5.4.123627-beta` for all five packages later the same day; the
 - **Prevent:** re-check the NuGet flat-container index before writing "blocked" into a doc or a commit
   (`/engine-bump` Phase 4 step 7).
 - **Source:** `docs/reviews/rca-engine-bump-v1.5.4-2026-10-05.md` F6.
+
+### A skill that wraps a script the model already runs is a description tax that rots (2026-10-08)
+Over seven weeks of transcripts, 21 of 45 skills had no call: the model ran `taom-src.ps1` about 5,100
+times and `lint_docs.py` about 2,100 times directly, and fixed 301 build errors without `/build-fix`.
+Several unused skills had drifted into wrong instructions (`xslt-check` mapped five vanilla files to a
+module that lacks them; `lord-skills` called a merged XSLT lord dead code). The recurring mistakes were
+caught by gates, never by skill text.
+- **Why missed:** skills were added per workflow and never measured, and an unused skill fails silently.
+- **Prevent:** before adding a skill, check whether the model already does the job by running the script;
+  measure Skill-tool calls in the transcripts before keeping one. A gate beats skill text.
+- **Source:** `docs/reviews/skill-usage-audit-2026-10-08.md`.

@@ -102,7 +102,7 @@ Enabled plugins add their own skills alongside TAOM's and the MCP servers. Where
 |-----|-----------|---------------------------|
 | Pre-commit C# or XML review | `/deep-review` (+ `/review-codex`) | `code-review` plugin (`/code-review`, kept for `/code-review ultra` cloud review) |
 | GitHub issues/PRs | `gh` CLI | `github` plugin |
-| Redundant-code deletion | `/deslop` | `code-simplifier` plugin (`/simplify`) — disabled 2026-08-05 |
+| Redundant-code deletion | `refactoring-specialist` agent | `code-simplifier` plugin (`/simplify`) — disabled 2026-08-05 |
 
 ---
 

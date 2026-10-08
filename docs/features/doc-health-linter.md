@@ -8,7 +8,7 @@ and the prose did not. Seven checks, pure stdlib, no game install required. Thre
 **block** a commit through `.claude/hooks/check-doc-config-drift.sh` (the GitHub workflow that also
 ran them on every push was removed on 2026-10-05). The other four are advisory.
 
-Skill entry point: `/lint-docs`. Backs [ADR-010](../adrs/010-knowledge-base-architecture.md).
+Run `python tools/lint_docs.py` directly. Backs [ADR-010](../adrs/010-knowledge-base-architecture.md).
 Sibling validators: [moduledata-validation.md](moduledata-validation.md) (game data),
 [mesh-ref-validation.md](mesh-ref-validation.md) (assets), [doc-graph.md](doc-graph.md) (link topology).
 
@@ -177,13 +177,14 @@ Interpreting a **clean** run: a checker reporting zero and a checker exempted in
 byte-identical output. Say the tests are green alongside the zero, and read the blind-spot list above
 before treating it as an all-clear.
 
+**A zero is not self-validating.** A checker reporting no findings looks identical to a checker that has been exempted into silence; that is how the stale-version check reached 29/29 false positives before anyone re-read it. `tools/tests/test_lint_docs.py::test_naming_an_old_version_as_the_current_target_is_still_reported` is the fixture separating the two states. If a run is clean, say the tests are green too, and never resolve a noisy check by widening an exemption without a fixture proving the check still fires.
+
 ## Key Files
 
 | File | Role |
 |---|---|
 | `tools/lint_docs.py` | the linter: all seven checks, stdlib only |
 | `tools/tests/test_lint_docs.py` | unit tests over synthetic repo trees, including the exit codes the gates act on |
-| `.claude/skills/lint-docs/SKILL.md` | `/lint-docs` — run + summarize; diagnostic, never auto-fixes |
 | `.claude/hooks/check-doc-config-drift.sh` | pre-commit gate; runs `--drift-only` when a commit stages a file the three checks read (`tools/test_hooks.sh` 5d pins that list to the entry docs) |
 | `.claude/pinned-game-version.txt` | the pin checks 2 and 6 read |
 | `.claude/hooks/detect-docs-gaps.sh` | SessionStart sibling of check 4; shares the slug algorithm |

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inventory probe for docs/raw/<topic>/ — preparatory context for /knowledge-compile.
+"""Inventory probe for docs/raw/<topic>/ — preparatory context for the compile workflow in docs/research/README.md.
 
 The script does NOT generate the research node itself. It collects:
 1. The file inventory of docs/raw/<topic>/ (recursive).
@@ -7,9 +7,9 @@ The script does NOT generate the research node itself. It collects:
    that contain the topic keywords.
 3. A skeleton outline for docs/research/<topic>.md.
 
-The /knowledge-compile skill consumes this output as its briefing material, then
-writes the actual research node using Claude. The script is the *boring* deterministic
-half (inventory + grep); the skill is the *interesting* LLM-driven half (synthesis).
+The compile workflow in docs/research/README.md consumes this output as its briefing material,
+then writes the actual research node. The script is the *boring* deterministic
+half (inventory + grep); the workflow is the *interesting* LLM-driven half (synthesis).
 
 Usage:
     python tools/compile_research.py <topic>
@@ -108,7 +108,7 @@ def find_candidates(keywords: list[str]) -> dict[Path, list[str]]:
 
 def render_briefing(topic: str, topic_dir: Path, files: list[Path], candidates: dict[Path, list[str]]) -> str:
     out: list[str] = []
-    out.append(f"# /knowledge-compile briefing — `{topic}`")
+    out.append(f"# Compile briefing: `{topic}`")
     out.append("")
     out.append(f"Raw directory: `{ld.rel(topic_dir)}`")
     out.append(f"Research output target: `docs/research/{Path(topic).name}.md`")

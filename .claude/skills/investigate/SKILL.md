@@ -211,4 +211,4 @@ After verification passes, ask the user whether to release the scope lock or kee
 
 - This skill auto-attaches the `/freeze` hook to its own session. It works whether or not the user explicitly ran `/freeze` first.
 - For multi-feature bugs, run `/investigate` once per feature in sequence, releasing freeze between runs.
-- Pair with `/codex-verify` after fix lands, before merge — gets an adversarial second opinion on the root-cause analysis.
+- Pair with `/review-codex` after the fix lands, before merge, for an adversarial second opinion on the root-cause analysis (paid: only on the user's word).

@@ -31,8 +31,8 @@ line. Run timers yourself.
 ## Part 2: produced prose
 
 Covers commit bodies, CHANGELOG entries, issues and PRs, feature docs, RCAs and doc paragraphs; not
-code comments or chat. It applies to new writing; `/humanizer` spot-cleans a finished artifact. The
-fix for AI-sounding prose is almost always more specific and concrete.
+code comments or chat. It applies to new writing. The fix for AI-sounding prose is almost always
+more specific and concrete.
 
 **No em or en dash** (U+2014, U+2013; AGENTS.md "Human prose" lists the substitutes), the loudest
 single tell. If no substitute reads well, restructure the sentence. In an unquoted YAML
@@ -50,4 +50,4 @@ language of Y"), signposting ("let's dive in"), chatbot closers ("I hope this he
 with the concrete claim.
 
 **TAOM house style stays:** boldface, inline `**Label:**` headers, tables and backticked paths are
-deliberate semantic markers. (`/humanizer` upstream cuts boldface; TAOM does not.)
+deliberate semantic markers.

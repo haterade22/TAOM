@@ -10,7 +10,7 @@ A deterministic, offline security scan of TAOM's Claude Code configuration surfa
 
 ## When to use
 
-- Before a release / `/ship`, or periodically alongside `/skill-stocktake`.
+- Before a release / `/ship`, or periodically.
 - After adding or editing a hook, an MCP server, a permission grant, or a config file.
 - Whenever you've pulled in external config (the `/adopt-external` flow ends here).
 - **To vet a foreign skill before adopting it** — point `--root` at it and pass `--external` (see below).

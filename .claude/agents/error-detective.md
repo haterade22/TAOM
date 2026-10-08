@@ -28,7 +28,7 @@ Fixed tool allowlist (Read/Grep/Glob/Bash, read-only); you **cannot invoke skill
 
 - Single bug in a single feature → `/investigate`
 - "Why is build failing?" → `/build-fix` then `/investigate`
-- Looking for code-quality / refactoring opportunities → `refactoring-specialist` or `/deslop`
+- Looking for code-quality / refactoring opportunities → `refactoring-specialist`
 - Just looking at one error message → don't escalate to cross-system analysis prematurely
 
 ## Method

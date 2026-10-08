@@ -83,7 +83,7 @@ It reuses `lint_docs`'s link parser rather than copy-pasting it (`build_backlink
 
 - `tools/doc_graph.py`, `tools/graph_query.py`, `tools/tests/test_graph_query.py` (17 tests)
 - [docs/features/doc-graph.md](../features/doc-graph.md) — authoritative reference + workflow
-- [.claude/skills/doc-graph/SKILL.md](../../.claude/skills/doc-graph/SKILL.md) — the repeatable-workflow entry point
+- `.claude/skills/doc-graph/SKILL.md` (removed 2026-10-08): the repeatable-workflow entry point
 - [ADR-010](../adrs/010-knowledge-base-architecture.md) Phase 5 amendment
 - This review + CHANGELOG + INDEX.md entry
 

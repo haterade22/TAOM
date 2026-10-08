@@ -54,7 +54,7 @@ esac
 
 **MANDATORY for any new hook that detects git commits** (review 29 in `docs/reviews/REVIEW-LOG.md` found a bare matcher after the rule was written).
 
-When you write a NEW hook (or add commit detection to an existing one), grep for `git commit` substring matches in the diff before commit. If you find one that's NOT using the two-stage pattern above, that's a regression — fix before shipping. The `/skill-stocktake` checklist now includes this check.
+When you write a NEW hook (or add commit detection to an existing one), grep for `git commit` substring matches in the diff before commit. If you find one that's NOT using the two-stage pattern above, that's a regression — fix before shipping.
 
 **Both shell tools (plan 027).** Register a git gate in the `Bash|PowerShell` matcher group and
 read its command with `COMMAND=$(taom_hook_command posix <gate>)` (`_pybin.sh`), never from

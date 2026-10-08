@@ -188,8 +188,8 @@ Cite the ADR or rule in each finding (AGENTS.md "Architecture"):
 - Slow feedback: build times, test startup, `taom-src` cache misses, hook cost per tool call.
 - Onboarding: wrong setup steps, undocumented environment variables (`BANNERLORD_GAME_DIR`), paths that
   assume one machine.
-- Harness health: `/skill-stocktake` and `/context-budget` own the skills, agents and rules audit; run
-  or cite them and flag only what they cannot see.
+- Harness health: `/context-budget` and `bash tools/test_hooks.sh` own the skills, agents and rules
+  audit; run or cite them and flag only what they cannot see.
 - Silent failures: features that fail in game with nothing in any log.
 
 ## 8. Docs

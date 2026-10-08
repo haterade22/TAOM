@@ -10,7 +10,6 @@ Claude dispatch adapters, not a mandatory role for Codex.
 
 | Claude skill | Purpose and source |
 | --- | --- |
-| `/codex-verify [feature]` | Verification through `codex exec`; [skill contract](../../.claude/skills/codex-verify/SKILL.md) |
 | `/review-codex [feature]` | Adversarial review and follow-up; [skill contract](../../.claude/skills/review-codex/SKILL.md) |
 | `/deep-review [feature] --codex` | Optional Codex pre-review before Claude reviewers; [skill contract](../../.claude/skills/deep-review/SKILL.md) |
 

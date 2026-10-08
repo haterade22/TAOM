@@ -75,7 +75,7 @@ graphify <verb> ... --graph <out>/graphify-out/graph.json
 - **No XML or XSLT.** graphify collects neither (0 of 1,048 ModuleData files). Troop, item,
   culture and party-template questions go to the taom-moduledata MCP or
   `python tools/validate_moduledata.py`.
-- **No docs graph.** Markdown topology is [doc-graph](doc-graph.md) (`/doc-graph`).
+- **No docs graph.** Markdown topology is [doc-graph](doc-graph.md) (`tools/graph_query.py`).
 - **No semantic pass, no MCP server, no `install`, no CI job.** The code-only graph is free,
   deterministic and reads real files, so its `source_file` citations are parsed, not invented.
 

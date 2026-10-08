@@ -65,11 +65,11 @@ not a grant of authority or a description of Codex's available tools.
 
 Grouped by purpose. Authoritative list + when-to-use routing: the **Skills** index in [`CLAUDE.md`](../../CLAUDE.md).
 
-- **Build/debug:** `/build-fix` (compile errors, minimal diffs), `/investigate` (root-cause C# debugging), `/native-crash-triage` (native CTDs — Event Log offsets + `tools/native_crash_triage.py` + debugger protocol), `/engine-bump` (game version changed — baseline-preserve, regen, re-verify), `/agent-introspection-debugging` (failing agent runs).
-- **Build/verify a change:** `/verify` (build+test+git), `/verify-bindings` (engine API bindings + snapshot), `/deep-review` (multi-agent review), `/review-codex` + `/codex-verify` (Codex — costs money), `/ship` (full completion sequence).
+- **Build/debug:** `/build-fix` (compile errors, minimal diffs), `/investigate` (root-cause C# debugging), `/native-crash-triage` (native CTDs — Event Log offsets + `tools/native_crash_triage.py` + debugger protocol), `/engine-bump` (game version changed — baseline-preserve, regen, re-verify).
+- **Build/verify a change:** `/verify` (build+test+git), `/verify-bindings` (engine API bindings + snapshot), `/deep-review` (multi-agent review), `/review-codex` (Codex, costs money), `/ship` (full completion sequence).
 - **Research:** `/research` (decompile + analyze a TaleWorlds class), `/taom-src` (one-shot signature lookup), `/xslt-check` (XSLT passthrough).
 - **Authoring:** `/new-feature`, `/new-culture`, `/new-creature-mount` (rideable creatures — warg-parity workflow over `docs/ai-includes/creature-mount-authoring.md`), `/lord-skills`, `/author-armor`, `/localize`, `/new-adr`, `/issue`.
-- **Scope/hygiene:** `/freeze` + `/unfreeze` (edit lock), `/scope-check`, `/deslop`, `/commit-split`, `/context-save` + `/context-restore`, `/context-budget`, `/skill-stocktake`.
+- **Scope/hygiene:** `/freeze` + `/unfreeze` (edit lock), `/commit-split`, `/context-budget`.
 - **Adoption/security:** `/adopt-external` (review an external repo/article and fold useful parts into TAOM — if your job is evaluating an outside source, recommend this), `/security-scan` (audit TAOM's own Claude config for secrets / permission / hook-exfil / MCP risk via `tools/audit_claude_config.py`; for a FOREIGN/untrusted skill repo run `python tools/audit_claude_config.py --root <repo> --external` to fire the SkillSpector-derived threat categories at full severity BEFORE recommending adoption — the automated supplement to `/adopt-external`'s manual security-pass).
 
 When your job hits one of these situations, finish your analysis and **name the skill in your report** so the orchestrator runs it.

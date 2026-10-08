@@ -177,7 +177,7 @@ Defaults equal LOTRAOM's shipped `momentum_config.xml`, so the out-of-box balanc
 
 ## Status
 
-Built + ~155 tests green + deep-reviewed (5 agents, 6 findings fixed) + Codex-reviewed (1 HIGH + 4 lower, all fixed) — RCA `docs/reviews/rca-wotr-momentum-2026-07-03.md`. **In-game confirmed:** map bar renders + moves, popup renders with faction banners, Relative-Strength award works, Khand dropped from Evil. **Still owed:** save/reload persistence round-trip and the full victory flow (inquiry → wars end → meter freezes) under a live game. Not yet merged to trunk (`/finish-branch`); AI localization pass pending (`ANTHROPIC_API_KEY`).
+Built + ~155 tests green + deep-reviewed (5 agents, 6 findings fixed) + Codex-reviewed (1 HIGH + 4 lower, all fixed); RCA `docs/reviews/rca-wotr-momentum-2026-07-03.md`. **In-game confirmed:** map bar renders + moves, popup renders with faction banners, Relative-Strength award works, Khand dropped from Evil. **Still owed:** save/reload persistence round-trip and the full victory flow (inquiry → wars end → meter freezes) under a live game. Not yet merged to trunk; AI localization pass pending (`ANTHROPIC_API_KEY`).
 
 ## Play-test fix history (2026-07-03 → 07-04)
 

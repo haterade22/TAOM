@@ -25,6 +25,9 @@ reproduces the NRE, make it pass, keep `TAOM.Tests` green".
 two or three approaches, each with a one-line trade-off and a recommendation, before investing in
 one.
 
+**Never drop part of the request silently.** If something must be cut to fit, name it and offer a
+split (now, or a follow-up issue); dropping it is the user's decision.
+
 **Reuse before writing**, top-down, stopping at the first rung that works:
 
 1. The engine already provides it (a GameModel hook, a `CampaignEvent`): verify with `taom-src`.

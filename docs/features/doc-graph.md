@@ -79,8 +79,8 @@ Reach for doc-graph when the question is about the **shape** of the documentatio
 | **Orienting in an unfamiliar subsystem** before you touch it — "what docs surround the career system?" | `explain career-system` | The doc's whole neighbourhood (what references it + what it links out to) in ~15 lines — instead of opening 9 docs to reconstruct it. |
 | **"Are these two areas already related?"** before building a feature that spans both | `path A B --directed` | The real link chain, or "no path" — which tells you they're documented in isolation (a genuine gap, or genuinely unrelated). |
 | **Pre-refactor blast radius** — about to rename / move / split / delete a doc | `explain X` | Everything that references X (inbound) = what you'll orphan if you remove it. A **feature doc** that ranks as a god node is a signal it covers too much and wants splitting. |
-| **After a batch of docs lands** (`/knowledge-compile`, a migration, a feature wave) — did any ship disconnected? | `metrics` (orphans) | The docs that exist but nothing links — so no future session or agent will ever find them. |
-| **Periodic KB hygiene** — like `/skill-stocktake`, but for docs | `metrics --top 15` | God nodes (split candidates), bridges (fragile single-link joins), orphans (dead / mis-filed docs) in one pass. |
+| **After a batch of docs lands** (a research compile, a migration, a feature wave) — did any ship disconnected? | `metrics` (orphans) | The docs that exist but nothing links — so no future session or agent will ever find them. |
+| **Periodic KB hygiene** — a harness-style audit, but for docs | `metrics --top 15` | God nodes (split candidates), bridges (fragile single-link joins), orphans (dead / mis-filed docs) in one pass. |
 | **Finding the front door to a cluster** — "where do I start reading about X?" | `metrics` god-node ranking | The most-referenced doc in an area is its natural entry point. |
 | **A token-conscious subagent** answering "what's related to X?" | `explain X --json` | A compact machine-readable neighbourhood instead of reading X's full doc and chasing its links — the context-budget lever. |
 | **Pre-merge / pre-release cross-link check** | `metrics` (bridges) | `INDEX.md → X` bridges flag docs reachable **only** through the index; if that one entry is ever dropped, X vanishes from navigation. |
@@ -122,20 +122,20 @@ Interpret the output (snapshot 2026-06-08: 314 nodes, 490 edges, 70 components, 
 - **Bridges** = a single link whose removal disconnects two clusters. The common pattern `INDEX.md — features/X.md` means feature X is reachable **only** through INDEX — it has no peer cross-links. Reinforce by linking it from a related feature doc / RCA.
 - **Orphans** = docs with no inbound *or* outbound `.md` link (e.g. a feature doc nobody references). Either link it into INDEX.md / a sibling doc, or delete it. This complements `lint_docs`'s feature-only orphan check (which keys on inbound from any doc).
 
-Then route fixes through the existing pipeline — edit the docs, re-run [build_backlinks.py](../../tools/build_backlinks.py) to refresh footers, `/lint-docs` to confirm clean — and re-run `metrics` to verify the signal improved.
+Then route fixes through the existing pipeline — edit the docs, re-run [build_backlinks.py](../../tools/build_backlinks.py) to refresh footers, `python tools/lint_docs.py` to confirm clean — and re-run `metrics` to verify the signal improved.
 
 **The 2026-08-18 re-measure is the cautionary case.** Ten weeks after the snapshot above, orphans had gone 64 → 153 and components 70 → 156, and not because anyone degraded the docs: the KB grew (314 → 537 nodes) while nothing re-ran this tool, so the isolates grew about twice as fast as the KB itself. `graph_query` was referenced in zero `.claude/hooks/` scripts and zero CI jobs, so `metrics` had not been run since the day it shipped. **That is now closed:** `tools/check_doc_graph_ratchet.py` gates orphans and components against `tools/doc_graph_baseline.json` in the `validate-xml` CI job. Working the isolates down and lowering the baseline is the remaining work. Measurements: [adopt-graphify-v8-2026-08-18.md](../reviews/adopt-graphify-v8-2026-08-18.md).
 
 ### Agent / session entry points
 
-- **Sessions / the orchestrator:** invoke the `/doc-graph` skill ([.claude/skills/doc-graph/SKILL.md](../../.claude/skills/doc-graph/SKILL.md)).
+- **Sessions / the orchestrator:** run `python tools/graph_query.py` directly.
 - **Subagents** can't invoke skills, but they *can* run `python tools/graph_query.py …` directly — the CLI is the agent-facing surface. Verbs accept `--json` for machine consumption.
 
 ## Future phases (deferred — documented so the growth path isn't lost)
 
 These were considered and intentionally **not** built in v1 (scope + ROI; see the adoption review):
 
-- **`--infer` confidence-tagged edges** — graphify tags edges `EXTRACTED` vs `INFERRED`. The literal links here are all `EXTRACTED`. An `INFERRED` layer (keyword-overlap candidates, reusing `compile_research.extract_keywords`) could surface *latent* relationships, rendered distinctly and excluded from metrics by default. Deferred: keyword overlap is noisy and `/knowledge-compile` already does human-audited semantic linking.
+- **`--infer` confidence-tagged edges** — graphify tags edges `EXTRACTED` vs `INFERRED`. The literal links here are all `EXTRACTED`. An `INFERRED` layer (keyword-overlap candidates, reusing `compile_research.extract_keywords`) could surface *latent* relationships, rendered distinctly and excluded from metrics by default. Deferred: keyword overlap is noisy and the compile workflow in [docs/research/README.md](../research/README.md) already does human-audited semantic linking.
 - **Memory-layer ingestion** — the out-of-repo memory files (`[[wikilinks]]` + markdown) could be a second labelled subgraph. Deferred: the memory dir path is harness-coupled (project-slug encoding of cwd), the syntax is mixed, and `[[ ]]` targets can dangle. If built: opt-in (`--include-memory`), best-effort path derivation, failure-tolerant (skip + warn, never crash).
 - **MCP exposure** — the verbs already return dicts, so wrapping them in a stdio MCP server (like `taom_mcp_server.py`) is trivial. Deferred: an always-loaded MCP is a standing token cost ([context-budget](../../.claude/skills/context-budget/SKILL.md)) for a low-frequency tool; the CLI is the right surface until usage proves otherwise.
 
@@ -150,7 +150,7 @@ are every one `_origin: null`, invented by the semantic layer from prose rather 
 the same caveat that applies to its 13 XML-looking nodes. Since 2026-09-26 graphify is part of the
 workflow as a code-only graph ([ADR-012](../adrs/012-graphify-code-graph-in-the-workflow.md)).
 Reach for it via `python tools/graphify_taom.py` ([graphify-code-graph.md](graphify-code-graph.md));
-reach for this tool via `/doc-graph`.
+reach for this tool via `python tools/graph_query.py`.
 
 ### Raised by the 2026-08-18 graphify v8 trial
 

@@ -128,6 +128,6 @@ the maintainer. Detail: execute-and-review "The stop rule".
 Delegates read `/deep-review` (Steps 1 to 4, lenses), `/review-codex` (Phases 2 and 3; fixed prompt
 blocks in `.claude/skills/review-codex/references/prompt-fixed.md`), the `/ship` sequence and the
 `/issue` sections as files, so those bodies do not push this one out after compaction. You invoke
-`/localize` and `/security-scan` (agents cannot). Run or cite `/lint-docs`, `/skill-stocktake`,
+`/localize` and `/security-scan` (agents cannot). Run or cite `lint_docs.py`,
 `validate_moduledata.py` and `.ai/verification.md` rather than re-deriving them. Advise plainly: "not
 worth doing" beats padding ([simplicity-criterion](../../rules/simplicity-criterion.md)).

@@ -54,6 +54,6 @@ Disabling servers is a `settings.local.json` / `.mcp.json` decision — user's c
   Since 2026-08-05 the warn is report-only (it used to hard-gate — a bug); only hard violations
   block. At 28.4 KB there is ~15.6 KB of headroom before the first warning — the user declined a
   cap ratchet, so watch this line in future baselines.
-- Skill descriptions ≤30 words: flagged by this scan + `/skill-stocktake`.
+- Skill descriptions ≤30 words: flagged by this scan.
 - Re-baseline here after: adding an MCP server or plugin, a new always-load rule, or ±10 KB on
   CLAUDE.md.

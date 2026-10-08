@@ -58,7 +58,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | BetterExceptionWindow | `BetterExceptionWindow` `BEW` | AGPL-3.0 | comparison-only | (none) | cleared |
 | TpacTool | `TpacTool` `szszss/TpacTool` | MIT | behavioural-port | `tools/tpac_skeleton_scan.py` `tools/tpac_clipinfo.py` | cleared |
 | NVIDIA SkillSpector | `SkillSpector` `NVIDIA/SkillSpector` | Apache-2.0 | behavioural-port | `tools/audit_claude_config.py` | cleared |
-| ECC (Everything Claude Code) | `affaan-m/ECC` `everything-claude-code` `AgentShield` | MIT | behavioural-port | `tools/audit_claude_config.py`; `.claude/skills/{context-budget,skill-stocktake,agent-introspection-debugging,build-fix,verify}/**`; `.claude/hooks/{config-protection,mcp-health-check,mcp-health-mark,block-dangerous-git}.sh`; `tools/blender/harness.py` (`stance_height`); `.claude/skills/context-save` and `context-restore` (failed-approaches field, staleness notice) | cleared |
+| ECC (Everything Claude Code) | `affaan-m/ECC` `everything-claude-code` `AgentShield` | MIT | behavioural-port | `tools/audit_claude_config.py`; `.claude/skills/{context-budget,build-fix,verify}/**`; `.claude/hooks/{config-protection,mcp-health-check,mcp-health-mark,block-dangerous-git}.sh`; `tools/blender/harness.py` (`stance_height`) (context-save, context-restore, skill-stocktake and agent-introspection-debugging removed 2026-10-08: [skill usage audit](../reviews/skill-usage-audit-2026-10-08.md)) | cleared |
 | graphify | `graphify` `graphifyy` `Graphify-Labs` `safishamsi/graphify` | Apache-2.0 (MIT when ported, see detail) | behavioural-port | `tools/doc_graph.py` `tools/graph_query.py`; `tools/graphify_taom.py` runs the CLI (interop-only, see detail) | cleared |
 | MinHook | `MinHook` `MinHook.x64.dll` | BSD-2-Clause | redistributed | (removed 2026-10-05) `Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll` `Dependencies/NativeSkinFixes.NativeHooks/MinHook/**` | removed |
 | Lib.Harmony | `0Harmony.dll` `Lib.Harmony` | MIT | redistributed | (build-acquired, `Dependencies/TAOM.Dependencies.csproj` PackageReference) | cleared |
@@ -195,8 +195,7 @@ Upstream: https://github.com/affaan-m/ECC (formerly `affaan-m/everything-claude-
 Ideas and procedures re-expressed in TAOM's own words and code across four reviews (early 2026, the
 2026-04-26 ecosystem review, 2026-05-29, 2026-09-29); no ECC file was copied or installed. The
 config scanner is a calibrated subset of AgentShield's categories. The file itself names ECC in
-`audit_claude_config.py`, the `context-budget`, `skill-stocktake`, `agent-introspection-debugging`,
-`context-save` and `context-restore` skills, `block-dangerous-git.sh` and `harness.py`; the early-2026
+`audit_claude_config.py`, the `context-budget` skill, `block-dangerous-git.sh` and `harness.py`; the early-2026
 ports (`build-fix`, `verify`, `config-protection.sh`, `mcp-health-check.sh`, `mcp-health-mark.sh`) carry
 no attribution line, and their record is the "Everything-Claude-Code Cherry-Pick" entry in
 `docs/changelog-archive/CHANGELOG-2026-H1.md`. Harness tooling only: none of it ships to players, so no

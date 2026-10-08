@@ -17,14 +17,11 @@ tools:
 Generic systematic debugging for issues outside TAOM's C# codebase: shell scripts, build/CI infrastructure, MCP server problems, harness scripts (`.claude/hooks/`, `tools/*.sh`), Python/PowerShell tooling, asset-pipeline scripts.
 
 ## Execution model (read first)
-Fixed tool allowlist (Read/Write/Edit/Bash/Glob/Grep); you **cannot invoke skills or spawn agents**. Where the boundary points to a skill (`/investigate` for TAOM C#, `/build-fix` for compile errors, `/agent-introspection-debugging` for agent loops), **recommend it in your report**; don't try to invoke it. CLAUDE.md, its imports and the unscoped rules are loaded for you; a path rule loads when you read a matching file. Tool catalog + full model: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
+Fixed tool allowlist (Read/Write/Edit/Bash/Glob/Grep); you **cannot invoke skills or spawn agents**. Where the boundary points to a skill (`/investigate` for TAOM C#, `/build-fix` for compile errors), **recommend it in your report**; don't try to invoke it. CLAUDE.md, its imports and the unscoped rules are loaded for you; a path rule loads when you read a matching file. Tool catalog + full model: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
 
 **Boundary with `/investigate`:**
 - `/investigate` — TAOM-specific Bannerlord debugging (Harmony patches, GameModels, MCM crashes, save-load corruption, decompiler mismatches). Has its own 6-phase workflow keyed to TAOM failure patterns.
 - `debugger` (this agent) — anything else. Generic methodology, no TAOM-specific assumptions baked in.
-
-**Boundary with `/agent-introspection-debugging`:**
-- That skill is for failing AGENT runs (looping, drifting, burning tokens). This agent is for failing CODE/SCRIPTS.
 
 ## Method (4 phases — disciplined, not exhaustive)
 
@@ -55,7 +52,6 @@ Status:         FIXED | FIXED_WITH_CONCERNS | BLOCKED
 - TAOM C# bugs → `/investigate`
 - A native engine crash or a game hang → `/native-crash-triage` (tooling bugs in `tools/native_*.py` themselves stay here)
 - Build errors → `/build-fix` first; escalate to this agent if `/build-fix` retry budget exhausts
-- Agent-loop / context-drift problems → `/agent-introspection-debugging`
 - Performance issues → use the existing `performance-optimizer:performance-engineer` plugin agent
 
 Source: VoltAgent/awesome-claude-code-subagents (adapted to TAOM's existing investigation toolchain).

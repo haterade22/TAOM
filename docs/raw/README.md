@@ -1,6 +1,6 @@
 # docs/raw/ — source material ingest layer
 
-This is the **raw materials** layer of TAOM's knowledge base (see [ADR-010](../adrs/010-knowledge-base-architecture.md)). Anything here is **unstructured source**, not curated wiki content. The compiled wiki layer lives in [docs/research/](../research/), and is generated from this directory by the `/knowledge-compile` skill.
+This is the **raw materials** layer of TAOM's knowledge base (see [ADR-010](../adrs/010-knowledge-base-architecture.md)). Anything here is **unstructured source**, not curated wiki content. The compiled wiki layer lives in [docs/research/](../research/), and is generated from this directory by the compile workflow in [docs/research/README.md](../research/README.md).
 
 Karpathy's pattern: `raw/` is where you drop papers, web clippings, screenshots, and decompilation notes; the LLM does the work of summarizing and cross-linking them into navigable wiki nodes.
 
@@ -39,7 +39,7 @@ docs/raw/
 - **Filenames** — kebab-case, descriptive. `numenorean-bloodline-fragments.md`, not `notes1.md`.
 - **Attribution** — every file should name its source on line 1 or in frontmatter (`Source: <url> (clipped 2026-05-27)`). Knowledge without provenance is rumor.
 - **Images** — keep alongside the markdown they belong to. Reference with relative paths. Large binaries (>500KB) — see "Binary policy" below.
-- **No bot edits** — the `/knowledge-compile` skill **reads** this directory but does not modify it. If a raw doc needs fixing, fix it by hand.
+- **No bot edits** — the compile workflow **reads** this directory but does not modify it. If a raw doc needs fixing, fix it by hand.
 
 ## Binary policy
 
@@ -50,9 +50,9 @@ docs/raw/
 ## How the compile step works
 
 1. Drop source material into `docs/raw/<topic>/`.
-2. Run `/knowledge-compile <topic>` (or `python tools/compile_research.py <topic>` for the inventory-only step).
-3. The skill produces `docs/research/<topic>.md` — a wiki node with summary, citations, cross-references to existing feature docs and memory entries, and an open-questions section.
-4. The output joins the navigable wiki: `/lint-docs` validates it, `/build-backlinks` wires footers.
+2. Follow the compile workflow in [docs/research/README.md](../research/README.md); its first step is `python tools/compile_research.py <topic>`, the inventory.
+3. The workflow produces `docs/research/<topic>.md` — a wiki node with summary, citations, cross-references to existing feature docs and memory entries, and an open-questions section.
+4. The output joins the navigable wiki: `python tools/lint_docs.py --quick` validates it, `python tools/build_backlinks.py` wires footers.
 
 You can re-run the compile any time material is added — the resulting `research/<topic>.md` overwrites cleanly (it's bot-authored output).
 
@@ -61,7 +61,6 @@ You can re-run the compile any time material is added — the resulting `researc
 - [docs/research/README.md](../research/README.md) — the output layer
 - [ADR-010](../adrs/010-knowledge-base-architecture.md) — architecture decision
 - [tools/compile_research.py](../../tools/compile_research.py) — inventory + cross-reference probe
-- `.claude/skills/knowledge-compile/SKILL.md` — the LLM-driven compile workflow
 
 ---
 

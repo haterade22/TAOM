@@ -34,6 +34,6 @@ Run the **mandatory** completion sequence from [completion-workflow.md](../../..
 10. Write the commit body as the changelog entry; `/release` generates `CHANGELOG.md` from it.
 
 ## Gotchas
-- `/review-codex` and `/codex-verify` cost real money — confirm with the user before Phase 2 unless they already authorized the ship.
+- `/review-codex` costs real money: confirm with the user before Phase 2 unless they already authorized the ship.
 - Do not commit before Phases 1–3 are clean — they are blocking gates.
 - This skill **invokes** the sub-skills; it does not reimplement them. Treat each sub-skill's SKILL.md as the source of truth for that step.

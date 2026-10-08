@@ -10,7 +10,7 @@ This rule covers two cases: **authoring a skill from scratch** (§ Authoring a s
 
 ## Authoring a skill from scratch
 
-Before authoring, confirm the skill *should* exist. CLAUDE.md "Where new knowledge goes" (item 4) already gives the gate (repeatable + multi-step/chains-skills + TAOM-specific gotchas) and the "do NOT skill-ify" filter (one-offs, pure reference, single commands; descriptions load eagerly, so each skill is a permanent context tax). Two more tests from obra/superpowers worth applying: **was the technique non-obvious to you?** and **would you reference it across multiple tasks?** If a plain doc or a CLAUDE.md line would do, write that instead.
+Before authoring, confirm the skill *should* exist. CLAUDE.md "Where new knowledge goes" (item 4) already gives the gate (repeatable + multi-step/chains-skills + TAOM-specific gotchas) and the "do NOT skill-ify" filter (one-offs, pure reference, single commands; descriptions load eagerly, so each skill is a permanent context tax). Two more tests from obra/superpowers worth applying: **was the technique non-obvious to you?** and **would you reference it across multiple tasks?** If a plain doc or a CLAUDE.md line would do, write that instead. A skill that only wraps a script the model already runs directly is a description tax: the 2026-10-08 audit found 28 of 45 skills redundant for that reason ([skill usage audit](../../docs/reviews/skill-usage-audit-2026-10-08.md)).
 
 ### Description = *when to use*, not *what it does*
 
@@ -19,11 +19,11 @@ Write `description:` as triggering conditions, ideally starting with "Use when�
 - Good: *"Use when a culture's troop tree or armor set needs authoring or revamping end-to-end."*
 - Bad: *"Scaffolds armor XML, swaps rosters, then validates."* (summarizes the body)
 
-> **CRITICAL divergence from the upstream source.** obra/superpowers permits descriptions up to **1024 characters** because they enumerate triggers verbatim. **TAOM caps descriptions at ≤30 words** (`harness-facts.md` — descriptions load eagerly into every session AND every Task spawn). Adopt the *"Use when…" framing*, NOT the length. Do not "fix" a short TAOM description by expanding it toward the upstream's. `/context-budget` and `/skill-stocktake` flag >30-word descriptions.
+> **CRITICAL divergence from the upstream source.** obra/superpowers permits descriptions up to **1024 characters** because they enumerate triggers verbatim. **TAOM caps descriptions at ≤30 words** (`harness-facts.md`: descriptions load eagerly into every session AND every Task spawn). Adopt the *"Use when…" framing*, NOT the length. Do not "fix" a short TAOM description by expanding it toward the upstream's. `/context-budget` flags >30-word descriptions.
 
 ### Naming
 
-Active voice, verb-first or gerund: `new-culture`, `finish-branch`, `lint-cleanup-loop` — not `culture-creation`, `branch-finisher`. Matches TAOM's existing skill names.
+Active voice, verb-first or gerund: `adopt-external`, `investigate`, `release`, not `culture-creation`, `branch-finisher`. Matches TAOM's existing skill names.
 
 ### Body structure
 
@@ -32,6 +32,10 @@ A skill is a thin entry point, not a manual. Per CLAUDE.md it should "point to t
 ### Flowcharts only for non-obvious decisions
 
 Use a decision tree only where branching wrong or stopping early causes errors (e.g. `/investigate`'s phase gating). Never wrap linear instructions, reference tables, or code blocks in a flowchart.
+
+### Cross-references
+
+Every `/name` a skill body cites resolves to `.claude/skills/<name>/SKILL.md`, and every rule, ADR, memory and `docs/` path it cites exists. `python tools/lint_docs.py --quick` checks markdown links only, not a bare `/name`.
 
 ### Anti-patterns (from real upstream review)
 
@@ -124,7 +128,7 @@ After porting:
 
 1. **Run `bash .claude/skills/context-budget/scan.sh --verbose`** — confirm the new skill appears with reasonable eager (frontmatter) and lazy (body) tokens. Description over 30 words gets flagged.
 2. **Describe the port in the commit body**: it is the changelog entry (`/release` generates `CHANGELOG.md` from commit bodies).
-3. **Commit + run `/codex-verify`** for any non-trivial port — Codex catches the lifecycle and load-semantic mistakes Claude tends to make on first port.
+3. **Commit + run `/review-codex`** for any non-trivial port: Codex catches the lifecycle and load-semantic mistakes Claude tends to make on first port.
 4. **Re-run `/security-scan`** on TAOM's own tree after the port lands. The SkillSpector regex categories run advisory (INFO) on a self-audit; the loud, full-severity pass is the foreign-tree `--external` run you did in "Security-vet FIRST" above — don't conflate the two.
 
 ## Lessons from the Tier 1 adoption (the canonical port-drift case study)
