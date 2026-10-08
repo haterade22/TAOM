@@ -241,7 +241,8 @@ templates; 98 education-equipment and 13 enlistment rosters; 55 character-creati
 5. Author `characters/npcs_{id}.xml` (26 notable and headman slots plus townsfolk), and register it.
 6. Add the twelve party templates to `taom_partyTemplates.xml` ([party-templates.md](party-templates.md),
    [party-template-sizing.md](../reference/party-template-sizing.md)).
-7. Add 10 wanderers and 10 wanderer skill sets.
+7. Add 10 wanderers, 10 wanderer skill sets and each wanderer's seven backstory rows in
+   `taom_wanderer_strings.xml` (`WandererBackstoryCoverageTests`).
 8. Author the child, lord and education equipment templates. A custom culture inherits none of them.
 9. Add the 6 stage-2 education tutor templates.
 10. Add the culture to `charactercreation/cultures.json`, `cc_body_properties.xml`, the four

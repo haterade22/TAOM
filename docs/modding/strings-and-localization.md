@@ -43,7 +43,7 @@ The `path` has no `.xml` and no leading `ModuleData/`, the same convention the r
 | `taom_module_strings.xml` | 2618 | `taom_faction_` 744, `taom_career_` 459, `taom_str_` 374 |
 | `taom_career_strings.xml` | 2050 | `taom_career_` 100, `taom_ability_` 100, `taom_buc_` 61 |
 | `taom_xslt_strings.xml` | 1449 | `aom_lord_` 389, `aom_harad_` 120, plus 576 keys with no prefix pattern |
-| `taom_wanderer_strings.xml` | 1337 | `aom_backstory_` 680, `aom_response_` 340 |
+| `taom_wanderer_strings.xml` | 1761 | `aom_backstory_` 892, `aom_response_` 446 |
 | `taom_cc_strings.xml` | 966 | `taom_cc_` 966 |
 | `taom_lotr_issue_strings.xml` | 308 | `taom_lotr_` 308 |
 | `taom_enlistment_strings.xml` | 252 | `taom_enlist_` 225, `taom_fc_` 27 |

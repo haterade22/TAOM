@@ -13,7 +13,7 @@ Located at `Main/_Module/ModuleData/Languages/<LANG>/`:
 | File | What it contains | Entries |
 |------|------------------|---------|
 | `std_taom_module_strings_{locale}.xml` | Faction names, titles, culture terms, UI labels (career screen, main menu, etc.) | ~2,652 |
-| `std_taom_wanderer_strings_{locale}.xml` | Wanderer backstories for all cultures | ~1,337 |
+| `std_taom_wanderer_strings_{locale}.xml` | Wanderer backstories for all cultures | ~1,761 |
 | `std_taom_named_companion_strings_{locale}.xml` | Named companion dialog (Aragorn, Legolas, Gimli, etc.) | ~119 |
 | `std_taom_cc_strings_{locale}.xml` | Character creation narratives (parents, childhood, youth, education, adulthood) | ~966 |
 | `std_taom_career_strings_{locale}.xml` | Career system names, descriptions, ability tooltips, choices | ~2,050 |

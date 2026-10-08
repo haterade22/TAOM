@@ -406,6 +406,8 @@ Required attributes:
 
 Each entry references a skill set: `skill_template="SkillSet.spc_wanderer_{id}_{N}_skills"`.
 
+Each entry also needs its seven backstory rows (`prebackstory`, `backstory_a` to `_d`, `response_1`, `response_2`) in `taom_wanderer_strings.xml`, keyed `<kind>.spc_wanderer_{id}_{N}`. A copied block brings none; without them the conversation shows "ERROR: Text with id ... doesn't exist!". Checked by `WandererBackstoryCoverageTests`.
+
 ### File 10 — `Main/_Module/ModuleData/taom_wanderer_skill_sets.xml`
 
 Add 10 `<SkillSet>` entries: `spc_wanderer_{id}_0_skills` through `spc_wanderer_{id}_9_skills`.

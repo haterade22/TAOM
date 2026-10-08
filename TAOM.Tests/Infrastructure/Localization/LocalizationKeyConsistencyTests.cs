@@ -221,7 +221,7 @@ public class LocalizationKeyConsistencyTests
             .Select(m => (m.Groups[1].Value, m.Groups[2].Value));
 
     /// <summary>Every registered English row across the English sources, key to text.</summary>
-    private static Dictionary<string, string> RegisteredEnglish()
+    internal static Dictionary<string, string> RegisteredEnglish()
     {
         var registered = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var file in EnglishSources())

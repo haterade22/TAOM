@@ -433,7 +433,7 @@ Four scripts that together produce, translate, validate, and inject loc XMLs acr
 
 **Source XMLs** (the translator's English list, 22 total, in `tools/_loc_sources.py`; English players read the inline `{=KEY}Default` at the use site, not these files):
 - `Main/_Module/ModuleData/taom_module_strings.xml` (~2,657, faction names, UI labels)
-- `Main/_Module/ModuleData/taom_wanderer_strings.xml` (~1,337, wanderer backstories)
+- `Main/_Module/ModuleData/taom_wanderer_strings.xml` (~1,761, wanderer backstories)
 - `Main/_Module/ModuleData/named_companions/named_companion_strings.xml` (~119, Aragorn etc.)
 - `Main/_Module/ModuleData/taom_cc_strings.xml` (~966, CC narratives)
 - `Main/_Module/ModuleData/taom_career_strings.xml` (~2,050, career names + tooltips)

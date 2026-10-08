@@ -238,8 +238,9 @@ See [arthedain.md](../features/arthedain.md).
 7. Write `characters/npcs_{id}.xml` and add its row to `Main/_Module/SubModule.xml` beside the other
    `NPCCharacters` rows ([submodule-and-registration](submodule-and-registration.md)). The shipped
    files run from 28 to 80 notables.
-8. Add the education templates, the wanderers and the wanderer skill sets. Ten wanderers is the
-   shipped norm; 17 of the 21 cultures with wanderers have exactly ten.
+8. Add the education templates, the wanderers, the wanderer skill sets and each wanderer's seven
+   backstory rows in `taom_wanderer_strings.xml` (`WandererBackstoryCoverageTests`). Ten wanderers is
+   the shipped norm; 17 of the 21 cultures with wanderers have exactly ten.
 9. Assign fiefs in `TAOM_Map/ModuleData/settlements.xml`: set both `owner` and `culture` on every
    town and castle. Villages inherit from the fief they are bound to. For brand-new settlements the
    map author places and saves the entities in `Main_map/scene.xscene` first; then

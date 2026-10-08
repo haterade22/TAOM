@@ -160,7 +160,7 @@ gate is registered here once. A gate that cannot run (no install, no lxml) has n
 | Kind | Read first | Run |
 |---|---|---|
 | Any engine-registered XML, repo or live | `tools/validate_xml_schemas.py` docstring | `python tools/validate_xml_schemas.py <files>` (finds each file's module; add SubModule.xml when it changed; `--live` for whole live modules) |
-| troops, characters, equipment rosters, cultures, clans, party templates, lords | this rule, `troops.md`, `xml-data.md` | `python tools/validate_moduledata.py`, reading the warnings as well as the errors |
+| troops, characters, equipment rosters, cultures, clans, party templates, lords | this rule, `troops.md`, `xml-data.md` | `python tools/validate_moduledata.py`, reading the warnings as well as the errors; for wanderers and `taom_wanderer_strings.xml`, `dotnet test ... --filter FullyQualifiedName~WandererBackstoryCoverageTests` |
 | XSLT anywhere | `xslt.md` | `python tools/check_external_xslt.py`; transform and diff against SandBoxCore vanilla (`/xslt-check`); `CulturePartyTemplateTests` for `spcultures.xslt` |
 | Armory items, crafting pieces, weapon descriptions | `docs/reference/armory-guide.md` | `python tools/audit_armory_refs.py`; `python tools/audit_polearm_shield_parity.py` for weapons and pieces; `python tools/generate_armour_classes.py --check` for armour (re-run with `--apply` when stale) |
 | action sets, monsters, monster usage | `armory-guide.md` "action_sets structure" | `python tools/audit_action_set_parity.py`; `python tools/audit_mount_parity.py` for creature mounts; `python tools/wire_hill_troll_race.py --check` and the `TrollBruteForceWiringTests` / `TrollHitPointsLiveDataTests` filter for the troll sets and Monsters |

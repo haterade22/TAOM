@@ -1343,5 +1343,429 @@
     <string id="aom_response_2.spc_wanderer_abanissa_9_text" text="Strażnik, który zawiódł swego ostatniego pana, może zawieść i mnie." />
     <string id="aom_backstory_d.spc_wanderer_abanissa_9_text" text="Daj mi posterunek i pana wartego strzeżenia, a będę go bronił do końca." />
     <string id="aom_generic_backstory.spc_wanderer_abanissa_9_text" text="Młody strażnik domowy Domu Vashan, który odszedł, byle nie służyć mordercy swego pana." />
+    <string id="aom_prebackstory.spc_wanderer_goblin_0_text" text="Quiet. The walls listen under the High Pass, and so do I." />
+    <string id="aom_backstory_a.spc_wanderer_goblin_0_text" text="I was a tunnel-reader for the Great Goblin. I stitched the wounded of the guard with gut and ash, and I knew every passage under the mountain, every crack, every drop of the shaft where we threw the dead, I walked and counted. Nobody else knew how the deep ways joined, so nobody dared to touch me." />
+    <string id="aom_backstory_b.spc_wanderer_goblin_0_text" text="I grew too clever. I sold one back-door passage to a rival chief, only one, for a pit of salt-meat and three slaves. A slave talked. The Great Goblin's boys came for my fingers, and I left through a hole they did not know I had." />
+    <string id="aom_backstory_c.spc_wanderer_goblin_0_text" text="Now I carry the whole mountain in my skull and no lair to put it in. I sell a way in, a way out, a way round, to whoever pays in iron. Never the same way twice." />
+    <string id="aom_response_1.spc_wanderer_goblin_0_text" text="A map in the head is worth more than a sword." />
+    <string id="aom_response_2.spc_wanderer_goblin_0_text" text="You sold your own tunnels. Why would you not sell me?" />
+    <string id="aom_backstory_d.spc_wanderer_goblin_0_text" text="Give me a warband that pays on time. I will lead it under any mountain you name, and mend the wounded on the way." />
+    <string id="aom_generic_backstory.spc_wanderer_goblin_0_text" text="I mapped the deep ways under the High Pass for Goblin-town. Chiefs pay for a guide who knows the tunnels, so I walk for whoever pays." />
+    <string id="aom_prebackstory.spc_wanderer_goblin_1_text" text="Ha! You look at my scars. Good. Count them." />
+    <string id="aom_backstory_a.spc_wanderer_goblin_1_text" text="The slave pits at the Front Porch had a ring, and I ruled it for four winters. Dwarf captives, men, a Beorning cub once, I broke them all while the crowd screamed. The Great Goblin's own sons put bones on me." />
+    <string id="aom_backstory_b.spc_wanderer_goblin_1_text" text="Then a son of the Great Goblin lost a wager on his pet. They chained my arm to the post and sent in three blades against me. I killed all three and the pet, too. Someone had to pay for that, and it was not him." />
+    <string id="aom_backstory_c.spc_wanderer_goblin_1_text" text="They cast me out through the Front Porch with a rope on my neck. I do not mind. Out here the ring is wherever I stand, and no fat son of a chief chooses who dies in it." />
+    <string id="aom_response_1.spc_wanderer_goblin_1_text" text="A champion thrown out for winning. That is an insult." />
+    <string id="aom_response_2.spc_wanderer_goblin_1_text" text="You killed the pet and lost your place. Poor judgment." />
+    <string id="aom_backstory_d.spc_wanderer_goblin_1_text" text="Put me in front of your line and watch the others break." />
+    <string id="aom_generic_backstory.spc_wanderer_goblin_1_text" text="I fought in the slave pits under the Front Porch. Pit-fighters who win too often do not last there, so I fight for whoever stands me in front." />
+    <string id="aom_prebackstory.spc_wanderer_goblin_2_text" text="You have a good beast? I had one. Better." />
+    <string id="aom_backstory_a.spc_wanderer_goblin_2_text" text="I raised a warg from a pup in the Great Goblin's kennels. We rode the Vales of Anduin together, burning thatch and dragging off sheep. I kept every coin and every knucklebone from those raids in a hole under my sleeping rock." />
+    <string id="aom_backstory_b.spc_wanderer_goblin_2_text" text="An eagle took him. Out of the clouds, from the eyries above the pass, one stoop, and my warg was torn off the ground in front of me. I ran for two days. When I crept back to the hole, the other whelps had found my hoard and eaten it up like carrion." />
+    <string id="aom_backstory_c.spc_wanderer_goblin_2_text" text="I walk now, and walking is for slaves. I mean to earn another beast, and a bigger hoard, and this time hide it where no thief sniffs. Then I will find the eyrie." />
+    <string id="aom_response_1.spc_wanderer_goblin_2_text" text="To lose your beast is a hard thing." />
+    <string id="aom_response_2.spc_wanderer_goblin_2_text" text="You hoarded like a dwarf. What did you expect?" />
+    <string id="aom_backstory_d.spc_wanderer_goblin_2_text" text="Pay me and I will ride for you the day you find me a mount." />
+    <string id="aom_generic_backstory.spc_wanderer_goblin_2_text" text="I rode wargs out of the Great Goblin's kennels, raiding the Vales of Anduin. A rider with no beast is worth little, so I hire out and save." />
+    <string id="aom_prebackstory.spc_wanderer_goblin_3_text" text="Captain. Was. Do not salute." />
+    <string id="aom_backstory_a.spc_wanderer_goblin_3_text" text="Eleven years I led the pass raids for the Goblin-town host. Merchants' wagons, dwarf caravans, a Beorning farm if the snow was kind. My plans held. My boys came home fat." />
+    <string id="aom_backstory_b.spc_wanderer_goblin_3_text" text="The last raid, I saw the trap early. Beornings in the trees, both sides. I took the strong ones and ran. The rearguard I left to hold the pass, and they held, and they died. The Great Goblin counted the dead and asked who gave the order." />
+    <string id="aom_backstory_c.spc_wanderer_goblin_3_text" text="So I left before he finished the sum. Honor is a tale for the dead. A plan is what lives, and mine are still good." />
+    <string id="aom_response_1.spc_wanderer_goblin_3_text" text="You saved the best of your force. That is sense." />
+    <string id="aom_response_2.spc_wanderer_goblin_3_text" text="You left your own to die. Do not expect trust." />
+    <string id="aom_backstory_d.spc_wanderer_goblin_3_text" text="I plan, you pay. If the trap closes, I will not be in it." />
+    <string id="aom_generic_backstory.spc_wanderer_goblin_3_text" text="I led raids on the passes for the Goblin-town host. A captain with a good plan always finds work, and I take it where it pays." />
+    <string id="aom_prebackstory.spc_wanderer_goblin_4_text" text="I watch the high rocks. Birds watch me. Don't speak loud." />
+    <string id="aom_backstory_a.spc_wanderer_goblin_4_text" text="My work was the eyries. I crawled the ledges above the High Pass and counted the great eagles, their nests, their hunts. The chiefs paid in bones and I put aside a little each time." />
+    <string id="aom_backstory_b.spc_wanderer_goblin_4_text" text="A rival clan paid more than the chiefs. Gold-weight of dwarf silver. I sold them the count of the eagles' watch hours, and they struck at dawn and lost half their host to the birds. They knew where it came from. The Great Goblin has my name on his tally-stick." />
+    <string id="aom_backstory_c.spc_wanderer_goblin_4_text" text="I hide in the scree and sell what I see. Nothing in the world stays hid from a scout who does not mind a kick. I only ask who pays last, and who pays most." />
+    <string id="aom_response_1.spc_wanderer_goblin_4_text" text="A clever trade, if you live through it." />
+    <string id="aom_response_2.spc_wanderer_goblin_4_text" text="You sold your own kin for dwarf silver." />
+    <string id="aom_backstory_d.spc_wanderer_goblin_4_text" text="Take me with you. I see what is behind the next ridge." />
+    <string id="aom_generic_backstory.spc_wanderer_goblin_4_text" text="I watched the passes and the high rocks for Goblin-town. A scout sells what he sees, and I sell it to whoever pays." />
+    <string id="aom_prebackstory.spc_wanderer_goblin_5_text" text="Smell that? Burnt iron. Good. That is my work on me." />
+    <string id="aom_backstory_a.spc_wanderer_goblin_5_text" text="I stood at the Great Goblin's forges and made blades for half the Misty Mountains. Dwarf slaves worked the bellows; I worked the slaves. Every one who lagged got the hot end of the tongs." />
+    <string id="aom_backstory_b.spc_wanderer_goblin_5_text" text="Beornings came down on the forge-gate in a night of snow. Bears the size of ponies. They broke the slave chains and let the dwarves loose, and the dwarves had my own hammers. I killed nine of them with their own steel. The fire took the rest of the forge, and my brothers with it." />
+    <string id="aom_backstory_c.spc_wanderer_goblin_5_text" text="I walked out of the smoke with one hammer and a burnt ear. Now I wander and smash whatever I find, and if there is an anvil on the way I will make you a good blade." />
+    <string id="aom_response_1.spc_wanderer_goblin_5_text" text="You paid for that loss in good iron." />
+    <string id="aom_response_2.spc_wanderer_goblin_5_text" text="You taught your slaves to hate. They did the rest." />
+    <string id="aom_backstory_d.spc_wanderer_goblin_5_text" text="A host that needs a smith, and does not mind blood on the anvil, I am ready." />
+    <string id="aom_generic_backstory.spc_wanderer_goblin_5_text" text="I worked the forges of the Great Goblin with dwarf slaves at the bellows. A smith always finds an anvil, and I carry my own hammer." />
+    <string id="aom_prebackstory.spc_wanderer_goblin_6_text" text="Bow. Front Porch. Next question." />
+    <string id="aom_backstory_a.spc_wanderer_goblin_6_text" text="I guarded the Front Porch from the shelf above the gate. Anything that came up the road I put an arrow through. Dwarf scouts, tinkers, once a grey-cloaked man with a stick who got away." />
+    <string id="aom_backstory_b.spc_wanderer_goblin_6_text" text="The Great Goblin's tithe-collector took half my kill-share every moon. Said it was the chief's right. One night the share was short. I shot him from the shelf, clean, in the throat, and watched him fall down the steps. Nobody saw. Everybody knew." />
+    <string id="aom_backstory_c.spc_wanderer_goblin_6_text" text="I ran the same night, down to the Vales. Now I shoot for coin from the roadside, or for the pleasure. I have not missed anything bigger than a hare for two winters." />
+    <string id="aom_response_1.spc_wanderer_goblin_6_text" text="A fair shot for a fair price." />
+    <string id="aom_response_2.spc_wanderer_goblin_6_text" text="You killed your own tithe-man. You will do worse." />
+    <string id="aom_backstory_d.spc_wanderer_goblin_6_text" text="Point me at your enemies and I will thin them before they reach you." />
+    <string id="aom_generic_backstory.spc_wanderer_goblin_6_text" text="I held a bow on the Front Porch for Goblin-town. Anything that comes up the road, I shoot, and I will do it for coin anywhere." />
+    <string id="aom_prebackstory.spc_wanderer_goblin_7_text" text="Oh, you want a story? I have one. It ends badly. Mine all do." />
+    <string id="aom_backstory_a.spc_wanderer_goblin_7_text" text="I raided the Vales of Anduin since I had teeth, and when the host wanted a gate broken I built the rams and ladders for it. Cattle, children's toys, the odd Beorning's roof. The pack laughed at my jokes and followed me anywhere. Then the shaman threw her bones for me." />
+    <string id="aom_backstory_b.spc_wanderer_goblin_7_text" text="She said I would die under the shadow of wings, and would be last of the pack. So the pack stopped sleeping next to me. One by one they took other captains, and I walked alone at the back, grinning, since there was nothing else to do with my mouth." />
+    <string id="aom_backstory_c.spc_wanderer_goblin_7_text" text="I am still alive, which is a poor omen for the bones. If you are the wings, make it quick. If you are not, give me a spear and I will stand in front of you and make the shaman a liar." />
+    <string id="aom_response_1.spc_wanderer_goblin_7_text" text="Doom is only a word the weak whisper." />
+    <string id="aom_response_2.spc_wanderer_goblin_7_text" text="A cursed one. I will keep my back to the wall." />
+    <string id="aom_backstory_d.spc_wanderer_goblin_7_text" text="Bones lie as often as I do. Let me fight under your banner." />
+    <string id="aom_generic_backstory.spc_wanderer_goblin_7_text" text="I raided the Vales of Anduin and built the ladders and rams for the pass assaults. Goblins talk of omens; I say the work is the work." />
+    <string id="aom_prebackstory.spc_wanderer_goblin_8_text" text="You look at my face. Good. Look at my hands as well." />
+    <string id="aom_backstory_a.spc_wanderer_goblin_8_text" text="I held a place in the Great Goblin's own guard, a post for whoever could crack a skull and not be missed. My company kept the throne-cave and the hot stair. We were thirty. We were the best the tunnels grew." />
+    <string id="aom_backstory_b.spc_wanderer_goblin_8_text" text="A dwarf-hunt went down the old shaft and I led it. They knew the walls better than we did. Their axes came out of the dark, and the shaft took twenty-six of mine. The Great Goblin said the fault was the leader's. I was the leader." />
+    <string id="aom_backstory_c.spc_wanderer_goblin_8_text" text="He gave me a night to be gone. I took two knives and the helm of the last of my dead. Now I look for a hall where nobody asks who lost the shaft, and a dwarf to pay the debt." />
+    <string id="aom_response_1.spc_wanderer_goblin_8_text" text="No blame on a leader who survived a trap." />
+    <string id="aom_response_2.spc_wanderer_goblin_8_text" text="Twenty-six dead. I would have hanged you." />
+    <string id="aom_backstory_d.spc_wanderer_goblin_8_text" text="I need a war to feed and a dwarf to kill. I am yours until I have both." />
+    <string id="aom_generic_backstory.spc_wanderer_goblin_8_text" text="I served the Great Goblin's guard in the tunnels and hunted dwarves in the old shafts. A spear-arm is always wanted, so I carry mine." />
+    <string id="aom_prebackstory.spc_wanderer_goblin_9_text" text="A fine day for a trade. Is it not? Is it always?" />
+    <string id="aom_backstory_a.spc_wanderer_goblin_9_text" text="The slave pits were mine, in a way. I kept the tally, the chains, the price of a dwarf, of a Rohirric farm-girl, of a Beorning cub. The Great Goblin paid me a tenth. He is generous, as spiders are." />
+    <string id="aom_backstory_b.spc_wanderer_goblin_9_text" text="I shaved the count. Not much, a head in twenty, sold on the side to a trader of Rhovanion. A new overseer counted again. One head short, then two, then eleven. I will say only that I am grateful for a long throwing arm and a short corridor." />
+    <string id="aom_backstory_c.spc_wanderer_goblin_9_text" text="I have kept my coin and lost my place. I still know every buyer from the Vales to the Anduin ford. Anything can be sold, including you, though not today." />
+    <string id="aom_response_1.spc_wanderer_goblin_9_text" text="Cheating the Great Goblin takes spine." />
+    <string id="aom_response_2.spc_wanderer_goblin_9_text" text="A thief who robs his own chief. How comforting." />
+    <string id="aom_backstory_d.spc_wanderer_goblin_9_text" text="Hire me to plan your battles. I can make any field and any tally agree with you." />
+    <string id="aom_generic_backstory.spc_wanderer_goblin_9_text" text="I worked the slave pits and the tallies of Goblin-town. Anything can be bought or sold there, and a battle is just another count." />
+    <string id="aom_prebackstory.spc_wanderer_mistymountainorcs_0_text" text="Every corpse has a number. Ask me what yours is worth." />
+    <string id="aom_backstory_a.spc_wanderer_mistymountainorcs_0_text" text="At Mount Gram I mended the chieftain's wounded and kept the tally-bones. Every skull from the last great defeat went on my strings, ours and theirs, and I knew who lived and who was owed. Nobody counts the counter." />
+    <string id="aom_backstory_b.spc_wanderer_mistymountainorcs_0_text" text="A pale rider from the south paid in silver for my numbers: how many Bolg's sons had left, where the holds stood thin. I sold him all of it. Then a rival read my strings, found the gaps, and counted me among the dead." />
+    <string id="aom_backstory_c.spc_wanderer_mistymountainorcs_0_text" text="I walked out through a drain before they came to count properly. Now I sell my numbers to whoever bleeds silver, and I keep one string for every warband that has crossed me." />
+    <string id="aom_response_1.spc_wanderer_mistymountainorcs_0_text" text="A careful mind is worth more than a loud one." />
+    <string id="aom_response_2.spc_wanderer_mistymountainorcs_0_text" text="You sold your own hold. Why should I be spared the same?" />
+    <string id="aom_backstory_d.spc_wanderer_mistymountainorcs_0_text" text="Pay me fair and I will count your enemies for you, and keep your name off my strings." />
+    <string id="aom_generic_backstory.spc_wanderer_mistymountainorcs_0_text" text="Mount Gram and the northern holds always need someone to mend the wounded and keep the tally of the dead. That is my trade." />
+    <string id="aom_prebackstory.spc_wanderer_mistymountainorcs_1_text" text="Say the word Carrock to me. Go on. See what I do." />
+    <string id="aom_backstory_a.spc_wanderer_mistymountainorcs_1_text" text="I was the first through every door in my warband. My axe was three paces of reach and I never counted heads, only skulls. The hold sang of me, and I believed the song." />
+    <string id="aom_backstory_b.spc_wanderer_mistymountainorcs_1_text" text="We went up to the Carrock after a Beorning. I ran at him alone, and he was not a man but a bear the size of a wagon. The warband stood on the rocks and watched. He broke my shoulder and my pride, and not one of them came down." />
+    <string id="aom_backstory_c.spc_wanderer_mistymountainorcs_1_text" text="I crawled home and they called me a fool who chose to die alone. I will not be that fool twice. I want a host that charges together, or I will find one." />
+    <string id="aom_response_1.spc_wanderer_mistymountainorcs_1_text" text="Cowards watched while you bled. I would not forget that." />
+    <string id="aom_response_2.spc_wanderer_mistymountainorcs_1_text" text="Charging a bear alone is not courage, it is stupidity." />
+    <string id="aom_backstory_d.spc_wanderer_mistymountainorcs_1_text" text="Put me at the front and ride behind me, and I will break whatever stands there." />
+    <string id="aom_generic_backstory.spc_wanderer_mistymountainorcs_1_text" text="I am a front-rank axe from the northern holds. You will find my kind wherever the Misty Mountain warbands go to war." />
+    <string id="aom_prebackstory.spc_wanderer_mistymountainorcs_2_text" text="You keep a good horse? Mine is dead, and I am still angry about it." />
+    <string id="aom_backstory_a.spc_wanderer_mistymountainorcs_2_text" text="I rode a gray wolf out of the northern holds, the best of the litter, and we raided down into the Vales of Anduin every thaw. Woodmen steadings, sheep, grain, whatever burned. I was young and the pack was mine." />
+    <string id="aom_backstory_b.spc_wanderer_mistymountainorcs_2_text" text="One steading had a Beorning guest. He took the wolf by the throat and I watched it die under his hands. The raid broke, the loot went to the chieftain, and I came home with nothing but a torn cloak." />
+    <string id="aom_backstory_c.spc_wanderer_mistymountainorcs_2_text" text="A rider with no mount is a thrall in the holds. I will not carry packs. I will take another wolf, or a horse, from a Woodman's stable, and keep what I take." />
+    <string id="aom_response_1.spc_wanderer_mistymountainorcs_2_text" text="A good mount is hard to replace. I understand." />
+    <string id="aom_response_2.spc_wanderer_mistymountainorcs_2_text" text="You lost a beast and your nerve. The holds were right." />
+    <string id="aom_backstory_d.spc_wanderer_mistymountainorcs_2_text" text="Give me a saddle and a share of the plunder, and I will ride ahead of your column." />
+    <string id="aom_generic_backstory.spc_wanderer_mistymountainorcs_2_text" text="I ride wolves out of the northern holds, scouting and raiding down toward the Vales of Anduin. Most riders you meet will say the same." />
+    <string id="aom_prebackstory.spc_wanderer_mistymountainorcs_3_text" text="Sergeant. Retired, you might say. Not by choice." />
+    <string id="aom_backstory_a.spc_wanderer_mistymountainorcs_3_text" text="I held a rear guard for one of the old captains after the last great defeat. Forty orcs, one pass, a long retreat. I learned how to keep an army alive by deciding who does not get to live." />
+    <string id="aom_backstory_b.spc_wanderer_mistymountainorcs_3_text" text="The Iron Hills dwarves caught us at a ford. I gave them the wounded and the weak flank, bought an hour, and marched the rest away. Thirty-one stayed behind in the mud. The captain saw the count and called it murder." />
+    <string id="aom_backstory_c.spc_wanderer_mistymountainorcs_3_text" text="He would not stand me in the hold after that, though nine of those I saved still eat my share. I was right, and being right is not a rank." />
+    <string id="aom_response_1.spc_wanderer_mistymountainorcs_3_text" text="War is arithmetic. You did what was needed." />
+    <string id="aom_response_2.spc_wanderer_mistymountainorcs_3_text" text="Thirty-one left to die. What would you do to my flank?" />
+    <string id="aom_backstory_d.spc_wanderer_mistymountainorcs_3_text" text="Give me a column to keep alive and I will do it, and you will not ask how." />
+    <string id="aom_generic_backstory.spc_wanderer_mistymountainorcs_3_text" text="I am a sergeant of the northern warbands, the sort who keeps a column in order. We are not loved, but we are useful." />
+    <string id="aom_prebackstory.spc_wanderer_mistymountainorcs_4_text" text="Quiet. Do you hear that? No? Good. That is why I am still alive." />
+    <string id="aom_backstory_a.spc_wanderer_mistymountainorcs_4_text" text="I scouted the Old Forest Road for the northern holds, ahead of the warbands, sleeping in the roots of oaks. I knew every Woodman path and every ford, and I threw a knife better than I talked." />
+    <string id="aom_backstory_b.spc_wanderer_mistymountainorcs_4_text" text="A smiling man from the south offered me gold for the road: where the patrols walked, when the caravans passed. I sold it to him. Then I sold the same road to the Woodmen, for the other half of the gold. Both found out." />
+    <string id="aom_backstory_c.spc_wanderer_mistymountainorcs_4_text" text="The Woodmen hunt me for the ambush, and my own warband hunts me for the betrayal. I sleep in different holes. I have never been so alert, and never so poor." />
+    <string id="aom_response_1.spc_wanderer_mistymountainorcs_4_text" text="Two buyers, one road. Clever, if dangerous." />
+    <string id="aom_response_2.spc_wanderer_mistymountainorcs_4_text" text="You sell anyone. Why would I think I am safe?" />
+    <string id="aom_backstory_d.spc_wanderer_mistymountainorcs_4_text" text="Hide me in your host and I will find you the road, and sell you to no one. Probably." />
+    <string id="aom_generic_backstory.spc_wanderer_mistymountainorcs_4_text" text="I scout ahead of the Misty Mountain warbands, along the forest roads and the river fords. It is quiet work, for those who prefer it." />
+    <string id="aom_prebackstory.spc_wanderer_mistymountainorcs_5_text" text="Do not stand near me. I smell of the forge and of what I did to it." />
+    <string id="aom_backstory_a.spc_wanderer_mistymountainorcs_5_text" text="I worked the forges below the Dimrill gate of Moria, cleavers and hooks for the war bands. I ate what I cut. I liked the work." />
+    <string id="aom_backstory_b.spc_wanderer_mistymountainorcs_5_text" text="We dug deeper for a better seam of iron. Something in the dark answered with a drumbeat and then with fire. The tunnel crew went in, and I held the door shut with a hammer while they screamed." />
+    <string id="aom_backstory_c.spc_wanderer_mistymountainorcs_5_text" text="Nobody who heard that drum will go below again, and I was the one who barred the door. The forge-master wanted a smith who stays. I am not one who stays." />
+    <string id="aom_response_1.spc_wanderer_mistymountainorcs_5_text" text="Few would have held that door. Good work." />
+    <string id="aom_response_2.spc_wanderer_mistymountainorcs_5_text" text="You shut your own crew in with a monster. Brave, or cruel?" />
+    <string id="aom_backstory_d.spc_wanderer_mistymountainorcs_5_text" text="Feed me, give me a hammer and an anvil, and I will turn your steel into something that kills." />
+    <string id="aom_generic_backstory.spc_wanderer_mistymountainorcs_5_text" text="I am a smith of the Misty Mountain holds, working iron by the Dimrill gate and in the deeps. Every warband needs one." />
+    <string id="aom_prebackstory.spc_wanderer_mistymountainorcs_6_text" text="Stay still. Do not look at the reeds." />
+    <string id="aom_backstory_a.spc_wanderer_mistymountainorcs_6_text" text="I lay in the reeds at the Gladden Fields for three days at a time, bow in the mud, waiting for river boats. Woodmen traders, fishermen, anyone with a cargo. A good shot needs no warband." />
+    <string id="aom_backstory_b.spc_wanderer_mistymountainorcs_6_text" text="My captain took two thirds of every haul and called it the hold's share. I put an arrow in his thigh when he demanded the last of it. He lived. I did not stay to find out how long he would hold the grudge." />
+    <string id="aom_backstory_c.spc_wanderer_mistymountainorcs_6_text" text="Now I hunt for myself along the river, with a price on me from both banks. A bowman with no captain eats badly but dies slowly." />
+    <string id="aom_response_1.spc_wanderer_mistymountainorcs_6_text" text="Two thirds is a robbery. I would have shot him too." />
+    <string id="aom_response_2.spc_wanderer_mistymountainorcs_6_text" text="You shot your commander. What will you do to me?" />
+    <string id="aom_backstory_d.spc_wanderer_mistymountainorcs_6_text" text="Keep your share fair and I will shoot whoever you name." />
+    <string id="aom_generic_backstory.spc_wanderer_mistymountainorcs_6_text" text="I shoot from cover along the rivers and the edge of the Vales of Anduin. The holds have plenty of bowmen, and most of us prefer not to be seen." />
+    <string id="aom_prebackstory.spc_wanderer_mistymountainorcs_7_text" text="Doomed, they say. How restful. Nothing left to worry about." />
+    <string id="aom_backstory_a.spc_wanderer_mistymountainorcs_7_text" text="I was whelped at Mount Gram in a hard winter, and the old shaman looked at the afterbirth, then at me, and said I was marked. The name stuck. So did the stares. I hid in the siege shops and learned rams, ladders and sapping, because stone does not care about omens." />
+    <string id="aom_backstory_b.spc_wanderer_mistymountainorcs_7_text" text="No warband would take me. A marked one brings bad luck, they said, and every storm and cave-in was blamed on me. When a sapping tunnel fell in on its crew, the doom got the blame, never the rotten props I had warned them about." />
+    <string id="aom_backstory_c.spc_wanderer_mistymountainorcs_7_text" text="So I left, and I have been unlucky in a wider world ever since. Strange, though: the arrows still miss me. Perhaps the doom is waiting for something larger." />
+    <string id="aom_response_1.spc_wanderer_mistymountainorcs_7_text" text="A mark is only a mark. Your hands decide the rest." />
+    <string id="aom_response_2.spc_wanderer_mistymountainorcs_7_text" text="I have no use for bad luck in my host." />
+    <string id="aom_backstory_d.spc_wanderer_mistymountainorcs_7_text" text="Take me along and I will bring your enemies' walls down; if the doom comes, it will find a bigger prize than me standing next to you." />
+    <string id="aom_generic_backstory.spc_wanderer_mistymountainorcs_7_text" text="I build siege works for the Misty Mountain holds: rams, ladders and sapping tunnels. Every hold sends its engineers out sooner or later." />
+    <string id="aom_prebackstory.spc_wanderer_mistymountainorcs_8_text" text="Look at my face and tell me I am not who I say I am." />
+    <string id="aom_backstory_a.spc_wanderer_mistymountainorcs_8_text" text="I am of Azog's line, a cousin's whelp, raised on the stories of Azanulbizar. I took a pike and a shield at Mount Gram, and no son of Bolg ever beat me in the ring." />
+    <string id="aom_backstory_b.spc_wanderer_mistymountainorcs_8_text" text="Bolg's brood did not like one with Azog's name beating them. They called a feud. They held me down and carved the ring-scar across my jaw, and left me in the snow to die for the shame of it." />
+    <string id="aom_backstory_c.spc_wanderer_mistymountainorcs_8_text" text="I did not die. I came down out of the snow with nothing but my name, and I mean to take Mount Gram back, one son of Bolg at a time." />
+    <string id="aom_response_1.spc_wanderer_mistymountainorcs_8_text" text="A fine grudge. I hope you finish it." />
+    <string id="aom_response_2.spc_wanderer_mistymountainorcs_8_text" text="Blood feuds lose armies. Why should I fight yours?" />
+    <string id="aom_backstory_d.spc_wanderer_mistymountainorcs_8_text" text="Give me a pike and a road north, and I will give you the best killer you have ever marched beside." />
+    <string id="aom_generic_backstory.spc_wanderer_mistymountainorcs_8_text" text="I come from the old bloodlines of Mount Gram, raised to the pike and the shield. Blood feuds are common among us." />
+    <string id="aom_prebackstory.spc_wanderer_mistymountainorcs_9_text" text="Ah, a new face. Would you like to hear what the White Hand pays?" />
+    <string id="aom_backstory_a.spc_wanderer_mistymountainorcs_9_text" text="Saruman's agents came through the northern holds with sacks of coin and maps, and I was the one who drew up the marches. I was good at it. Cutting a throat takes a moment, but a plan lasts for seasons." />
+    <string id="aom_backstory_b.spc_wanderer_mistymountainorcs_9_text" text="I planned the road south for three hundred of our best, every ford and every ration, with the white hand on their shields at the end of it. Then one came back with a brand on his arm and a story about pits and digging. The pay stopped, and so did my nerve." />
+    <string id="aom_backstory_c.spc_wanderer_mistymountainorcs_9_text" text="I cannot go home, since I sent three hundred orcs to the wizard, and I cannot go south either. So I sell the same plans to different masters, and wait to see which one trusts me longest." />
+    <string id="aom_response_1.spc_wanderer_mistymountainorcs_9_text" text="A good plan is a weapon too. Use it for me." />
+    <string id="aom_response_2.spc_wanderer_mistymountainorcs_9_text" text="You sent your own kin to a wizard. Spare me the excuses." />
+    <string id="aom_backstory_d.spc_wanderer_mistymountainorcs_9_text" text="Hire me, and I will plan every march and every retreat, and you will never see the bill." />
+    <string id="aom_generic_backstory.spc_wanderer_mistymountainorcs_9_text" text="I plan campaigns for the war chiefs of the northern holds. Sooner or later every host needs someone who thinks ahead." />
+    <string id="aom_prebackstory.spc_wanderer_bluecraig_0_text" text="Hush. The sea speaks first in the mist, and I am listening." />
+    <string id="aom_backstory_a.spc_wanderer_bluecraig_0_text" text="I was a tide-reader on the cliffs by Blue Craig. I counted the white ships that crept in and out of the Gulf of Lune, how often, how laden, which watch-fires burned at Mithlond. The chiefs fed me because I could say when the elves slept." />
+    <string id="aom_backstory_b.spc_wanderer_bluecraig_0_text" text="My partner and I sold the tallies to the Lindon watch for a promise of a pardon. Círdan's people took the pardon back. They hanged my partner from a mooring post and left him to turn in the wind. I swam out in the fog and kept swimming." />
+    <string id="aom_backstory_c.spc_wanderer_bluecraig_0_text" text="I walk the coast roads now, with the sea on my left. I sell tide tables and ship-tallies to any warband that wants to know when the water will let it through. Not to elves again. Never again." />
+    <string id="aom_response_1.spc_wanderer_bluecraig_0_text" text="A bad bargain, but you lived." />
+    <string id="aom_response_2.spc_wanderer_bluecraig_0_text" text="You sold to the elves. You will sell to me." />
+    <string id="aom_backstory_d.spc_wanderer_bluecraig_0_text" text="Pay in salt and iron and I will name the hour your raid should land, and bind the cuts after." />
+    <string id="aom_generic_backstory.spc_wanderer_bluecraig_0_text" text="I read the tides and bound the wounded in Blue Craig, on the cliffs of the Ered Luin. A healer who knows the sea has work wherever there are ships." />
+    <string id="aom_prebackstory.spc_wanderer_bluecraig_1_text" text="Dust in my teeth, blue stone in my knuckles. You want to try me?" />
+    <string id="aom_backstory_a.spc_wanderer_bluecraig_1_text" text="I broke rock in the blue-stone seams under Luinkrag, and when the Longbeards came up the old tunnels to take the seams back, I broke them, too. A shift-boss gave me a pick-haft for my own and a bone for every dwarf." />
+    <string id="aom_backstory_b.spc_wanderer_bluecraig_1_text" text="The Longbeards came in force and the shift-boss ordered the tunnel sealed. I refused. I stood in the gap with the haft and held it until the roof came down on half my crew. The boss lived. He called it my doing." />
+    <string id="aom_backstory_c.spc_wanderer_bluecraig_1_text" text="I crawled out under a cart of ore with my arm hanging off. I will not forgive the stone, the boss, or the beards. Give me a fight and I will not tell you about the rest." />
+    <string id="aom_response_1.spc_wanderer_bluecraig_1_text" text="You held when others would have run." />
+    <string id="aom_response_2.spc_wanderer_bluecraig_1_text" text="The roof fell on your crew because you were stubborn." />
+    <string id="aom_backstory_d.spc_wanderer_bluecraig_1_text" text="Put me at the head of the line, under a hill if you can." />
+    <string id="aom_generic_backstory.spc_wanderer_bluecraig_1_text" text="I broke blue stone in the mines under Luinkrag and fought the Longbeards over the seams. A mine fighter goes where the rock and the pay are." />
+    <string id="aom_prebackstory.spc_wanderer_bluecraig_2_text" text="You have a fast pony? I had forty. Do not laugh." />
+    <string id="aom_backstory_a.spc_wanderer_bluecraig_2_text" text="My sire stole shaggy ponies from the coastal farms, and I rode them back across the foothills to Blue Craig. I was young and a good rider. I kept every silver ear-ring, every iron nail, every pot of salt from the raids in a hollow in the cliff." />
+    <string id="aom_backstory_b.spc_wanderer_bluecraig_2_text" text="One tide the herd crossed the sands of the Lune estuary with me at the front. The sea came in faster than I had reckoned, and I would not drop my saddlebags. Thirty-eight ponies drowned. I kept the bags, and my sire kept the belt." />
+    <string id="aom_backstory_c.spc_wanderer_bluecraig_2_text" text="I have the bags yet. I have no ponies. I will ride whatever you give me, and I will count every coin you pay, twice." />
+    <string id="aom_response_1.spc_wanderer_bluecraig_2_text" text="The sea takes more than ponies." />
+    <string id="aom_response_2.spc_wanderer_bluecraig_2_text" text="You saved your bags and drowned your herd. Greed." />
+    <string id="aom_backstory_d.spc_wanderer_bluecraig_2_text" text="Give me a mount and a fair share, and I will outride your enemies." />
+    <string id="aom_generic_backstory.spc_wanderer_bluecraig_2_text" text="I rode shaggy ponies in the raids on the farms along the Gulf of Lune. A rider is always wanted by the Craig, and I ride for coin now." />
+    <string id="aom_prebackstory.spc_wanderer_bluecraig_3_text" text="Captain, once. The Gulf remembers me. Do not ask how." />
+    <string id="aom_backstory_a.spc_wanderer_bluecraig_3_text" text="Nine years I led the boat-raids from Blue Craig, taking coastal hamlets and the herring fleets, with the elven watch behind my back. My plans were slow and sure. My crews came back with their fingers." />
+    <string id="aom_backstory_b.spc_wanderer_bluecraig_3_text" text="The Lindon watch laid a net for me at the river-mouth. I saw the white sails too late. I let the second boat take the arrows and slipped away with the first. The second boat's crew were mine for nine years, and they drowned in the shallows within sight of land." />
+    <string id="aom_backstory_c.spc_wanderer_bluecraig_3_text" text="I do not say I was wrong. A captain lives so another raid can be planned. The chiefs here do not like the sum, so I sell my head for plans, away from the Craig." />
+    <string id="aom_response_1.spc_wanderer_bluecraig_3_text" text="A captain who lives can plan again." />
+    <string id="aom_response_2.spc_wanderer_bluecraig_3_text" text="You let your own crew drown. I will not turn my back." />
+    <string id="aom_backstory_d.spc_wanderer_bluecraig_3_text" text="Hire me for a single raid. If it fails, I will not be near." />
+    <string id="aom_generic_backstory.spc_wanderer_bluecraig_3_text" text="I led boat-raids out of Blue Craig against the coast of Lindon. A captain with a plan finds work, and I sell mine where they pay." />
+    <string id="aom_prebackstory.spc_wanderer_bluecraig_4_text" text="Quiet steps. Quiet words. The old stones do not like loud." />
+    <string id="aom_backstory_a.spc_wanderer_bluecraig_4_text" text="I scouted the ruins of Belegost and Nogrod for Blue Craig. The old dwarf halls have more graves than walls, and each grave has a little hoard. The chief wanted maps and I gave him maps. I gave myself the hoards." />
+    <string id="aom_backstory_b.spc_wanderer_bluecraig_4_text" text="I hid my take in a cairn above Luinkrag, and a rival clan found it, and the chief heard from them that I held back. His men came with spears. I left everything: the cairn, the maps, my sleeping fur, with only my knives and three coins." />
+    <string id="aom_backstory_c.spc_wanderer_bluecraig_4_text" text="I walk the old road now, looking for new graves. The dwarves are long gone from the best of them. The dead do not count their possessions, and I never stop." />
+    <string id="aom_response_1.spc_wanderer_bluecraig_4_text" text="A scout should be paid in full." />
+    <string id="aom_response_2.spc_wanderer_bluecraig_4_text" text="You robbed the dead and your chief. Brave." />
+    <string id="aom_backstory_d.spc_wanderer_bluecraig_4_text" text="Take me. I know every unguarded door in the old halls." />
+    <string id="aom_generic_backstory.spc_wanderer_bluecraig_4_text" text="I scouted the old dwarf ruins of Belegost and Nogrod for the Craig. A scout knows where the old roads go, and sells that knowledge." />
+    <string id="aom_prebackstory.spc_wanderer_bluecraig_5_text" text="Blue stone under my nails. Does it show? It always shows." />
+    <string id="aom_backstory_a.spc_wanderer_bluecraig_5_text" text="I worked the smelters under Krathol, melting down the blue ore into hard, pale metal that holds an edge like a winter morning. I was the best hand at the bellows. The overseers beat the lazy; I beat harder." />
+    <string id="aom_backstory_b.spc_wanderer_bluecraig_5_text" text="The Firebeard dwarves broke through from below, and a flood of mine-water came with them. The smelters went cold, fire to steam in one breath. Forty of my forge-brothers boiled. I carried the last of the good ore out on my back, and the overseer took it, and took my hammer too." />
+    <string id="aom_backstory_c.spc_wanderer_bluecraig_5_text" text="I still know the secret of that metal. Give me an anvil and a week, and I will make you a blade the elves will not like to see." />
+    <string id="aom_response_1.spc_wanderer_bluecraig_5_text" text="A smith like you is hard to replace." />
+    <string id="aom_response_2.spc_wanderer_bluecraig_5_text" text="You beat your own and lost the forge. Fine work." />
+    <string id="aom_backstory_d.spc_wanderer_bluecraig_5_text" text="A host that wants a hammer on its side, I am here." />
+    <string id="aom_generic_backstory.spc_wanderer_bluecraig_5_text" text="I smelted blue-stone steel in the forges under Krathol. A smith with that skill is wanted by every warband on the coast." />
+    <string id="aom_prebackstory.spc_wanderer_bluecraig_6_text" text="Bow. Cliff. Ship. In that order." />
+    <string id="aom_backstory_a.spc_wanderer_bluecraig_6_text" text="I stood the sea-wall above Luinkrag with a long bow and a quiver of gull-feather shafts. When the white ships came near the rocks, I shot their steersmen. A good shot at that range takes patience and wind-sense." />
+    <string id="aom_backstory_b.spc_wanderer_bluecraig_6_text" text="One grey morning in the sea-fog a small boat came in under my cliff. I loosed. The shaft took a man in the chest, and he was only a fisherman, not an elf, with nets in the boat. The captain of the wall said I had shamed the walls with a fishmonger's blood." />
+    <string id="aom_backstory_c.spc_wanderer_bluecraig_6_text" text="They stripped me of the bow-post and chained my hand to the oar-bench. I broke the chain on the third night. A bowman has no use for shame. Give me a target and a wind." />
+    <string id="aom_response_1.spc_wanderer_bluecraig_6_text" text="A shot is a shot. The sea is not choosy." />
+    <string id="aom_response_2.spc_wanderer_bluecraig_6_text" text="You killed a fisherman. Your eyes are bad." />
+    <string id="aom_backstory_d.spc_wanderer_bluecraig_6_text" text="Point me at the white ships and I will empty them." />
+    <string id="aom_generic_backstory.spc_wanderer_bluecraig_6_text" text="I shot from the sea-cliffs of Luinkrag at the white ships of Lindon. A long bow in the mist is wanted wherever elves sail." />
+    <string id="aom_prebackstory.spc_wanderer_bluecraig_7_text" text="Sea fog today. A bad day for doom. A fine day for a joke." />
+    <string id="aom_backstory_a.spc_wanderer_bluecraig_7_text" text="I raided the coastal farms south of the Gulf, building the ladders and ram-beams for every wall, with a crew that laughed at every word of mine. Sheep, boats, nets, once a small bell from a village shrine. Everyone loved me in the grey hours before a raid." />
+    <string id="aom_backstory_b.spc_wanderer_bluecraig_7_text" text="A white gull sat on my shoulder before the last landing and would not leave. The old shaman saw it and spat. A gull on the shoulder, he said, is the sea claiming you. The crew moved their bedrolls away from mine. I talked louder to cover the silence." />
+    <string id="aom_backstory_c.spc_wanderer_bluecraig_7_text" text="I am still dry. Still alive. The gull is gone. If the sea wants me, it can come and collect, and I will have a joke ready. In the meantime, I am for hire." />
+    <string id="aom_response_1.spc_wanderer_bluecraig_7_text" text="Omens are for old men and fools." />
+    <string id="aom_response_2.spc_wanderer_bluecraig_7_text" text="Cursed by the sea. I will sit upwind of you." />
+    <string id="aom_backstory_d.spc_wanderer_bluecraig_7_text" text="I fear the sea less than I fear a dull evening. Take me." />
+    <string id="aom_generic_backstory.spc_wanderer_bluecraig_7_text" text="I raided the coastal farms of the Gulf of Lune and built the ladders and ram-beams for the walls. The sea gives omens; I give a good joke." />
+    <string id="aom_prebackstory.spc_wanderer_bluecraig_8_text" text="Do not look away. I want you to remember this face." />
+    <string id="aom_backstory_a.spc_wanderer_bluecraig_8_text" text="I was a captain on the Luinkrag road, a post for whoever could hold the way to the coast. My band, thirty strong, guarded the ore-carts from the mines to the shore. We raided the Lindon outposts when the week was dull." />
+    <string id="aom_backstory_b.spc_wanderer_bluecraig_8_text" text="A Lindon patrol with grey-feathered arrows came out of the mist by the Gulf. They killed my band in the time it takes to cough. I survived with a stolen shield and three arrow-wounds. The Craig council said I should have run, and also that I should have died." />
+    <string id="aom_backstory_c.spc_wanderer_bluecraig_8_text" text="So I do neither. I walk, I eat, and I keep a count of every grey-feathered arrow I find. When I have enough, I will walk up to Mithlond's gate and ask for the patrol-captain." />
+    <string id="aom_response_1.spc_wanderer_bluecraig_8_text" text="A captain who lives to avenge is worth more than a dead one." />
+    <string id="aom_response_2.spc_wanderer_bluecraig_8_text" text="Thirty dead and you stand there. What kind of captain?" />
+    <string id="aom_backstory_d.spc_wanderer_bluecraig_8_text" text="Give me elves to kill and I will give you my whole arm." />
+    <string id="aom_generic_backstory.spc_wanderer_bluecraig_8_text" text="I held the Luinkrag road for the Craig and fought the elf patrols of Lindon. A spear-arm is always wanted on the coast, and I carry mine." />
+    <string id="aom_prebackstory.spc_wanderer_bluecraig_9_text" text="Elf-wine, dwarf-iron, salt, rope. All for sale. Even rope." />
+    <string id="aom_backstory_a.spc_wanderer_bluecraig_9_text" text="At Blue Craig the quays were my business, and the council asked me to plan every raid that left them. I took elf-wine from the Lindon coast and traded it for dwarf-iron from the old Blue Mountain roads, and took a share from each end. The council knew and did not care. I paid them well to know less." />
+    <string id="aom_backstory_b.spc_wanderer_bluecraig_9_text" text="Then I sold the same lot of iron to the Krathol quartermaster twice, and he found the second bill in his own hand. He did not shout. He sent two throwers to find me. I will say only that I am grateful for the fog." />
+    <string id="aom_backstory_c.spc_wanderer_bluecraig_9_text" text="I have good friends in every port from the Gulf of Lune to the Misty foothills, which is to say, no friends at all, only buyers. Everything can be sold, even a warband's lunch." />
+    <string id="aom_response_1.spc_wanderer_bluecraig_9_text" text="A smuggler is only a merchant without a council." />
+    <string id="aom_response_2.spc_wanderer_bluecraig_9_text" text="You double-sold the quartermaster. Do you expect me to trust you?" />
+    <string id="aom_backstory_d.spc_wanderer_bluecraig_9_text" text="Hire me to plan your battles. I find the weak flank and the open road before you see them." />
+    <string id="aom_generic_backstory.spc_wanderer_bluecraig_9_text" text="I planned the raids and ran the quays of Blue Craig. A tactician who can see an open road is worth more than a captain, and I hire out as one." />
+    <string id="aom_prebackstory.spc_wanderer_lindon_0_text" text="I once counted every ship in the Havens by the tide, and every one of them by what it carried..." />
+    <string id="aom_backstory_a.spc_wanderer_lindon_0_text" text="I kept the harbor watch at Mithlond for three hundred years, planning how the Havens should answer anything that came up the Gulf of Lhûn. Círdan listened to my charts more often than he liked to admit." />
+    <string id="aom_backstory_b.spc_wanderer_lindon_0_text" text="A corsair fleet put in under a truce flag, and I judged the truce a lie. I fired the ships at anchor with their crews still sleeping below, and I was right about the lie. The council did not thank me; they asked how many I had not needed to burn." />
+    <string id="aom_backstory_c.spc_wanderer_lindon_0_text" text="I was relieved of the watch and sent to walk the Harlindon shore, which is a polite exile. I would make the same count again, and that is what keeps me from the quays." />
+    <string id="aom_response_1.spc_wanderer_lindon_0_text" text="You saw the danger when others hoped it away." />
+    <string id="aom_response_2.spc_wanderer_lindon_0_text" text="Sleeping men are not a fleet, whatever flag they sailed under." />
+    <string id="aom_backstory_d.spc_wanderer_lindon_0_text" text="Give me your maps and your enemies, and I will tell you where the fight is already decided." />
+    <string id="aom_generic_backstory.spc_wanderer_lindon_0_text" text="I kept the harbor watch at the Grey Havens, planning for every ship that comes up the Gulf. The Havens lean on that watch more than they admit." />
+    <string id="aom_prebackstory.spc_wanderer_lindon_1_text" text="Do not ask me to be gentle with the creatures of the Blue Mountains..." />
+    <string id="aom_backstory_a.spc_wanderer_lindon_1_text" text="I commanded a company of the watch on the Ered Luin, where Lindon's last farmsteads lean against the mountains. We held the passes for a hundred winters, and I knew each of my spearmen by their step." />
+    <string id="aom_backstory_b.spc_wanderer_lindon_1_text" text="A goblin raid from Blue Craig took a steading and everyone in it. We caught the raiders at the ford and I let no one yield. The Havens call that murder; the steading's dead have no opinion." />
+    <string id="aom_backstory_c.spc_wanderer_lindon_1_text" text="They took my company and my banner, and told me mercy is what separates us from what we fight. I am not certain they are right. I walk the roads now with a spear and no one left to keep safe." />
+    <string id="aom_response_1.spc_wanderer_lindon_1_text" text="Grief like that makes a hard judge of any of us." />
+    <string id="aom_response_2.spc_wanderer_lindon_1_text" text="Men who kill the yielding are not guards, whatever they guard." />
+    <string id="aom_backstory_d.spc_wanderer_lindon_1_text" text="Point me at the goblins and I will stand where you place me." />
+    <string id="aom_generic_backstory.spc_wanderer_lindon_1_text" text="The watch on the Ered Luin is a hard post, and it makes hard people. We stand between Lindon's last farms and the goblins of Blue Craig." />
+    <string id="aom_prebackstory.spc_wanderer_lindon_2_text" text="Oh, another traveler. How rare, on a road the Havens have all but forgotten..." />
+    <string id="aom_backstory_a.spc_wanderer_lindon_2_text" text="I scouted from the Tower Hills, keeping watch beside the keepers of Emyn Beraid when the white towers still looked west for something other than rain. I walked the old north road to Arthedain more often than their own messengers did." />
+    <string id="aom_backstory_b.spc_wanderer_lindon_2_text" text="I reported honestly that a lord of Arthedain had lost a border holding through carelessness. The lord was a friend of the Havens, and my report was inconvenient. I was asked to rewrite it, politely, three times." />
+    <string id="aom_backstory_c.spc_wanderer_lindon_2_text" text="I declined all three, and so I now carry my truthful report in my head instead of an archive. It is a lonely sort of virtue, though the bow keeps me company." />
+    <string id="aom_response_1.spc_wanderer_lindon_2_text" text="An honest report is worth a few cold years." />
+    <string id="aom_response_2.spc_wanderer_lindon_2_text" text="A little polish on one page would have saved you a great deal." />
+    <string id="aom_backstory_d.spc_wanderer_lindon_2_text" text="I will scout for you, and I promise to report exactly what I find, however unwelcome." />
+    <string id="aom_generic_backstory.spc_wanderer_lindon_2_text" text="Scouts of the Tower Hills read the road before it is walked. We watch the north for the Havens, and we do not flatter what we see." />
+    <string id="aom_prebackstory.spc_wanderer_lindon_3_text" text="Forgive me; I only wished to watch the water a little longer..." />
+    <string id="aom_backstory_a.spc_wanderer_lindon_3_text" text="I was young among the shipwrights of Mithlond, set to learning the grain of pale wood and the way a hull listens to the sea. I helped lay the keel of the last great ship of my year, and I loved her more than was sensible. Between launchings I tended the yard's injured, for my hands knew herbs and bandages almost as well as timber." />
+    <string id="aom_backstory_b.spc_wanderer_lindon_3_text" text="When she was ready to sail into the West, I had my berth. But a friend of mine had buried her husband, a mortal, and could no longer bear the shores of Middle-earth. I gave her my place and watched the ship pass beyond the lamps." />
+    <string id="aom_backstory_c.spc_wanderer_lindon_3_text" text="Another ship will be built one day, but I find I cannot return to the slipways yet. So I wander inland, learning what the land beyond the Havens still has to teach, and healing whoever will let me." />
+    <string id="aom_response_1.spc_wanderer_lindon_3_text" text="That was a generous thing to give away." />
+    <string id="aom_response_2.spc_wanderer_lindon_3_text" text="You gave up the Straight Road for someone else's sorrow?" />
+    <string id="aom_backstory_d.spc_wanderer_lindon_3_text" text="If you have a road that needs walking, I would walk it with you rather than alone, and I will tend your wounded on the way." />
+    <string id="aom_generic_backstory.spc_wanderer_lindon_3_text" text="Shipwrights of Mithlond build for the West, but not all of us take the passage. Some of us walk inland instead." />
+    <string id="aom_prebackstory.spc_wanderer_lindon_4_text" text="I know the worth of a good horse, and the worth of a debt, down to the last copper..." />
+    <string id="aom_backstory_a.spc_wanderer_lindon_4_text" text="My family bred riding horses on the green slopes of Harlindon, selling to the rangers of Arthedain and the lords of the Havens alike. I rode before I could properly walk, and counted the herd before I could count much else." />
+    <string id="aom_backstory_b.spc_wanderer_lindon_4_text" text="One hard winter a border village begged me for horses to haul out their sick. I named a price I knew they could not pay and was within my rights. Some of them died on the road, and the rest remember my name." />
+    <string id="aom_backstory_c.spc_wanderer_lindon_4_text" text="The herds are sold now, and the stud-lands have grown over. I have gone looking for work that will let me earn back what that winter cost, though I have never been able to say how much that is." />
+    <string id="aom_response_1.spc_wanderer_lindon_4_text" text="Wanting to make it right is a fair beginning." />
+    <string id="aom_response_2.spc_wanderer_lindon_4_text" text="You priced a village's lives and found them too dear." />
+    <string id="aom_backstory_d.spc_wanderer_lindon_4_text" text="I can keep your mounts sound and your accounts honest, and I will not ask more than my share." />
+    <string id="aom_generic_backstory.spc_wanderer_lindon_4_text" text="The horse-lords of Harlindon breed good mounts for Arthedain and the Havens alike. Trade is old among us, and so are its debts." />
+    <string id="aom_prebackstory.spc_wanderer_lindon_5_text" text="You look like someone who pays for good information. Do you?" />
+    <string id="aom_backstory_a.spc_wanderer_lindon_5_text" text="I piloted small boats through the shoals of the Gulf at night, and I knew which captains wanted their cargo unlooked at. Mithlond is a tidy harbor, but no harbor is as tidy as it appears." />
+    <string id="aom_backstory_b.spc_wanderer_lindon_5_text" text="I sold charts of the northern coves to a Man who paid in silver and asked no questions. Those charts reached the goblins of Blue Craig, who found the coves useful. People died in them." />
+    <string id="aom_backstory_c.spc_wanderer_lindon_5_text" text="The Havens learned who held the pen, and I left before the council finished its sentence. I still have the silver. I find I cannot spend it." />
+    <string id="aom_response_1.spc_wanderer_lindon_5_text" text="Plainly told. That is a start toward mending it." />
+    <string id="aom_response_2.spc_wanderer_lindon_5_text" text="You sold your own coast and want me to trust you with mine?" />
+    <string id="aom_backstory_d.spc_wanderer_lindon_5_text" text="I know every back way and every liar between here and the sea; hire me, and watch me." />
+    <string id="aom_generic_backstory.spc_wanderer_lindon_5_text" text="The pilots of the Gulf know every cove and shoal after dark. We carry cargo that others cannot find their own way to." />
+    <string id="aom_prebackstory.spc_wanderer_lindon_6_text" text="I have stood in the shadow of a fallen king, and I have never quite left it..." />
+    <string id="aom_backstory_a.spc_wanderer_lindon_6_text" text="I marched with Gil-galad's host in the last days of the Second Age, young then and sure of the plan. I saw the High King fall on the slopes of Orodruin, and I came home to Lindon with the other survivors, to a realm that was now only a memory of a kingdom." />
+    <string id="aom_backstory_b.spc_wanderer_lindon_6_text" text="Centuries later I led a company against a goblin column in the Ered Luin, a clever plan on a map. I lost thirty of my people in an afternoon because I trusted the map over the ground. It was the same arrogance, in a smaller war." />
+    <string id="aom_backstory_c.spc_wanderer_lindon_6_text" text="I have not held a command since. The Havens are quiet and I cannot bear quiet, so I take my small lessons out into the larger world." />
+    <string id="aom_response_1.spc_wanderer_lindon_6_text" text="A commander who remembers their dead is worth more than a lucky one." />
+    <string id="aom_response_2.spc_wanderer_lindon_6_text" text="Thirty lives, and you want another army to lose?" />
+    <string id="aom_backstory_d.spc_wanderer_lindon_6_text" text="Let me advise you, and I will never again trust a map over the ground." />
+    <string id="aom_generic_backstory.spc_wanderer_lindon_6_text" text="Some of us remember Gil-galad's host and what its fall cost. That memory sits heavily on the Elves who stayed in Lindon." />
+    <string id="aom_prebackstory.spc_wanderer_lindon_7_text" text="Careful with that blade, friend; I know what it cost the one who made it..." />
+    <string id="aom_backstory_a.spc_wanderer_lindon_7_text" text="I was a smith in Forlindon, working in the cold forges where iron from the Blue Mountains comes down in carts. I made good plain blades, and I had a name for them among the captains of the Havens." />
+    <string id="aom_backstory_b.spc_wanderer_lindon_7_text" text="I forged a long sword for one of Círdan's captains, my finest work. He drew it against a crowd of unarmed raiders who had thrown down their weapons. I did not forget what the edge was for." />
+    <string id="aom_backstory_c.spc_wanderer_lindon_7_text" text="I took the blade from him and dropped it into the Gulf, and the captain called that theft. Now I have no forge of my own, and I make my living mending other people's swords, which is humbler work than I deserve." />
+    <string id="aom_response_1.spc_wanderer_lindon_7_text" text="You were right to hold the maker responsible." />
+    <string id="aom_response_2.spc_wanderer_lindon_7_text" text="A fine sword at the bottom of the sea helps nobody." />
+    <string id="aom_backstory_d.spc_wanderer_lindon_7_text" text="I will keep your steel sharp and swing a hammer in a fight, if you swear to use it well." />
+    <string id="aom_generic_backstory.spc_wanderer_lindon_7_text" text="The smiths of Forlindon work the iron that comes down from the Blue Mountains. We make good blades, and we ask what they are for." />
+    <string id="aom_prebackstory.spc_wanderer_lindon_8_text" text="The old alliance still means something to me, even if the Havens would rather forget it..." />
+    <string id="aom_backstory_a.spc_wanderer_lindon_8_text" text="I rode as a lancer in the escort the Havens sent north to the kings of Arnor, as Círdan's people had done since Elendil's day. I learned to fight beside Dúnedain, and I came to admire their stubborn, short-lived courage." />
+    <string id="aom_backstory_b.spc_wanderer_lindon_8_text" text="When Arthedain called for help against a northern host, the council of the Havens weighed it and refused to send riders. I went anyway, without leave, and fought at the ford until we were overrun. I came home to a stern silence and a closed gate." />
+    <string id="aom_backstory_c.spc_wanderer_lindon_8_text" text="I do not regret the ride. I regret that I rode alone, and that Arthedain's dead had so few of my kin among them. Now I ride where my oath still has a place to go." />
+    <string id="aom_response_1.spc_wanderer_lindon_8_text" text="Keeping faith unasked is rare, among any people." />
+    <string id="aom_response_2.spc_wanderer_lindon_8_text" text="You broke your council's word for a doomed cause." />
+    <string id="aom_backstory_d.spc_wanderer_lindon_8_text" text="If you ride for the north, my lance is already pledged to you." />
+    <string id="aom_generic_backstory.spc_wanderer_lindon_8_text" text="The lancers of Lindon have ridden north to Arnor since the days of Elendil. The old alliance is no small thing to those of us who kept it." />
+    <string id="aom_prebackstory.spc_wanderer_lindon_9_text" text="Please, speak quietly. I have learned that loud places are rarely safe ones..." />
+    <string id="aom_backstory_a.spc_wanderer_lindon_9_text" text="I was an archer of the sea-watch on the Ered Luin foothills, one of the best the Falathrim ever trained. I could put an arrow through a gull's eye at two hundred paces, and I thought that made me a soldier." />
+    <string id="aom_backstory_b.spc_wanderer_lindon_9_text" text="When goblins from Blue Craig came down on our post, I counted the odds and slipped away before the gate fell. I told myself the arithmetic was sound. The post held for an hour after I left; I heard it from the hills." />
+    <string id="aom_backstory_c.spc_wanderer_lindon_9_text" text="No one outside that post knows what I did, and that is somehow worse. I keep to the roads, shoot well, and do not look back toward the mountains." />
+    <string id="aom_response_1.spc_wanderer_lindon_9_text" text="Fear is not a crime, and you are speaking of it now." />
+    <string id="aom_response_2.spc_wanderer_lindon_9_text" text="You left your comrades to die and call it arithmetic." />
+    <string id="aom_backstory_d.spc_wanderer_lindon_9_text" text="Let me shoot from behind your line, and perhaps this time I will not leave it." />
+    <string id="aom_generic_backstory.spc_wanderer_lindon_9_text" text="The sea-watch archers of the Falathrim guard the coast and the foothills. We are trained to shoot true and to hold the line." />
+    <string id="aom_prebackstory.spc_wanderer_arthedain_0_text" text="The wall at Fornost Erain stands because someone counted every stone, every sack of grain, every mouth..." />
+    <string id="aom_backstory_a.spc_wanderer_arthedain_0_text" text="I kept the stores and the siege works at Fornost Erain, under a marshal who trusted my reckoning over his own eyes. I knew which towers would hold and which would fall, and to the day how long the grain would last. Few in the capital liked how I spoke of it." />
+    <string id="aom_backstory_b.spc_wanderer_arthedain_0_text" text="The autumn the Angmar host came down the North Road, villagers crowded the postern begging shelter we could not feed. I advised that the gate stay shut, and it did. The garrison lived through the winter, and the marshal never looked at me again." />
+    <string id="aom_backstory_c.spc_wanderer_arthedain_0_text" text="I do not regret the sum, only that it fell to me to make it. His friends found me a post far from the walls, which is to say none. Now I sell my reckoning to anyone with the sense to use it." />
+    <string id="aom_response_1.spc_wanderer_arthedain_0_text" text="Hard choices fall on whoever is clear-sighted enough to see them." />
+    <string id="aom_response_2.spc_wanderer_arthedain_0_text" text="You shut out your own people and call it arithmetic." />
+    <string id="aom_backstory_d.spc_wanderer_arthedain_0_text" text="Give me a company to feed and a fortress to hold, and I will make the numbers work for you." />
+    <string id="aom_generic_backstory.spc_wanderer_arthedain_0_text" text="The quartermasters of Fornost Erain keep the grain and the siege works, and we answer for every hard sum the walls demand. Few in the capital thank us for it." />
+    <string id="aom_prebackstory.spc_wanderer_arthedain_1_text" text="If you came to hear that I was wrong below the Weather Hills, save your breath. I have heard it..." />
+    <string id="aom_backstory_a.spc_wanderer_arthedain_1_text" text="I was a spearman of the Emyn Beraid watch, first over the ditch in every drill and first to volunteer for every sortie. My captain called me the best blade in the company and the worst listener. I took both as praise." />
+    <string id="aom_backstory_b.spc_wanderer_arthedain_1_text" text="In a skirmish I saw an orc band break, and I led the charge after them against orders. We cut down every one, even those who dropped their weapons, but two of my own died in an ambush I never scouted. The captain stripped me of my place before the whole watch." />
+    <string id="aom_backstory_c.spc_wanderer_arthedain_1_text" text="I do not mourn the orcs, only the two who followed me. Since then I walk alone, and a spear needs a line behind it. I would rather it be a line worth following." />
+    <string id="aom_response_1.spc_wanderer_arthedain_1_text" text="Courage that outruns its orders can still be steered." />
+    <string id="aom_response_2.spc_wanderer_arthedain_1_text" text="Two good men died so you could chase a charge." />
+    <string id="aom_backstory_d.spc_wanderer_arthedain_1_text" text="Put me at the front and tell me when to stop, and I will hold to it." />
+    <string id="aom_generic_backstory.spc_wanderer_arthedain_1_text" text="The spearmen of the Emyn Beraid watch are first over the ditch and last to hear an order. Most of us have been punished for it at least once." />
+    <string id="aom_prebackstory.spc_wanderer_arthedain_2_text" text="Mind my pack, stranger. I have carried it a long way and I mean to carry it further..." />
+    <string id="aom_backstory_a.spc_wanderer_arthedain_2_text" text="I grew up on the ice shore of Forochel, where my father hunted seal and my mother cured furs for the Lossoth traders. By fifteen I could put an arrow through a gull on the wing. We lived on what the hunt gave, and some winters it gave little." />
+    <string id="aom_backstory_b.spc_wanderer_arthedain_2_text" text="The year the snows came early, a band of rangers passed through asking for food in the king's name. My father gave them half our store, and by midwinter my brother was dead of hunger. Nobody from Fornost ever came back to repay it." />
+    <string id="aom_backstory_c.spc_wanderer_arthedain_2_text" text="I took the bow south the next spring and have kept every coin since. I fight well and I am not afraid, but I give nothing away, because I learned what giving costs. Pay me fairly and I will never leave my post." />
+    <string id="aom_response_1.spc_wanderer_arthedain_2_text" text="You have earned your caution, and your bow." />
+    <string id="aom_response_2.spc_wanderer_arthedain_2_text" text="Then you carry a grudge and call it thrift." />
+    <string id="aom_backstory_d.spc_wanderer_arthedain_2_text" text="I can put arrows where you need them, if the pay is steady and honest." />
+    <string id="aom_generic_backstory.spc_wanderer_arthedain_2_text" text="Folk of the Forochel shore live on seal, fur and whatever the hunt gives. We learn early to count every arrow and every coin." />
+    <string id="aom_prebackstory.spc_wanderer_arthedain_3_text" text="Patrol routes, ford depths, watch rotas. I know them all. Few have asked what they are worth..." />
+    <string id="aom_backstory_a.spc_wanderer_arthedain_3_text" text="I commanded a patrol company at Barad Forn, twelve years a captain on the Greenway. I knew every track from the North Downs to Bree. The men respected me and I let them." />
+    <string id="aom_backstory_b.spc_wanderer_arthedain_3_text" text="A Bree smuggler offered coin for the hours my patrols passed each crossing. I took it, then took more; the road was long and a captain's pay was short. A rival officer counted the gaps and brought them to the commander of the post." />
+    <string id="aom_backstory_c.spc_wanderer_arthedain_3_text" text="I left before the hearing, with my purse and my maps. Call me a traitor if you like. I sold a schedule, not a gate, and I still know every road in the North." />
+    <string id="aom_response_1.spc_wanderer_arthedain_3_text" text="A short purse tempts many officers; the ones who stop are rarer." />
+    <string id="aom_response_2.spc_wanderer_arthedain_3_text" text="You sold the road to smugglers. Next it will be orcs." />
+    <string id="aom_backstory_d.spc_wanderer_arthedain_3_text" text="I can plan your march and your ambushes. My price is plain, and I name it first." />
+    <string id="aom_generic_backstory.spc_wanderer_arthedain_3_text" text="The patrol captains of Barad Forn walk the Greenway and the North Downs, and we know every ford and track. Some of us sell that knowledge more freely than we should." />
+    <string id="aom_prebackstory.spc_wanderer_arthedain_4_text" text="I would rather you did not ask which company I came from..." />
+    <string id="aom_backstory_a.spc_wanderer_arthedain_4_text" text="I was a young pikeman levied from a farm near the North Downs, one of three hundred sent to hold the line below the old barrows. I drilled hard and bragged of it. In truth I had never seen blood." />
+    <string id="aom_backstory_b.spc_wanderer_arthedain_4_text" text="When an Angmar warband hit our shield wall at dawn, I felt the ranks tremble and ran. I left the man beside me, a friend from home, still holding his place. I heard later the line held another hour and he did not come back." />
+    <string id="aom_backstory_c.spc_wanderer_arthedain_4_text" text="I sold my spear in Bree for bread and slept in barns for a season. Deserters are called traitors, and perhaps I am one. Still, I am alive, and I would take pay for another chance." />
+    <string id="aom_response_1.spc_wanderer_arthedain_4_text" text="Fear has taken more men than orcs ever did." />
+    <string id="aom_response_2.spc_wanderer_arthedain_4_text" text="You left your friend to die and now you want wages?" />
+    <string id="aom_backstory_d.spc_wanderer_arthedain_4_text" text="I can fight, if I am paid well and the line is thick enough to stand behind." />
+    <string id="aom_generic_backstory.spc_wanderer_arthedain_4_text" text="Levies from the farms of the North Downs are sent to hold the line below the old barrows. Not all of us stand when the warbands come." />
+    <string id="aom_prebackstory.spc_wanderer_arthedain_5_text" text="I lost a company once. Forty swords, and I buried none of them..." />
+    <string id="aom_backstory_a.spc_wanderer_arthedain_5_text" text="I led forty men on the Greenway, sworn to the king and to each other. We held the road between Bree and the Barrow-downs for three summers. Every man of mine could be trusted at my back." />
+    <string id="aom_backstory_b.spc_wanderer_arthedain_5_text" text="A Gundabad raiding party burned a farm that belonged to my wife's kin and left nothing standing. I pulled my company off the line to hunt them and found them camped. We killed them all, wounded and captive alike, and I did not stop my hand." />
+    <string id="aom_backstory_c.spc_wanderer_arthedain_5_text" text="The marshal called it butchery and broke the company. Half my men went home; the rest followed other captains. I am not sorry, only alone." />
+    <string id="aom_response_1.spc_wanderer_arthedain_5_text" text="Grief has bent better captains than you." />
+    <string id="aom_response_2.spc_wanderer_arthedain_5_text" text="You broke a company to feed your own vengeance." />
+    <string id="aom_backstory_d.spc_wanderer_arthedain_5_text" text="Give me forty good swords and a road to hold, and I will hold it past the last man." />
+    <string id="aom_generic_backstory.spc_wanderer_arthedain_5_text" text="The Greenway companies hold the road between Bree and the Barrow-downs for the king. We are sworn to each other, and the Gundabad raiders have given many of us cause for hatred." />
+    <string id="aom_prebackstory.spc_wanderer_arthedain_6_text" text="You are bleeding on the road. I know a wound when I see one, and a lost cause too..." />
+    <string id="aom_backstory_a.spc_wanderer_arthedain_6_text" text="At fourteen I was taken in by a healer who kept the old infirmary of Annúminas. She taught me to sew a wound and set a bone, and to bear what cannot be cured. I worked her ward through three winters." />
+    <string id="aom_backstory_b.spc_wanderer_arthedain_6_text" text="After a skirmish on the lake shore, thirty wounded came at once and we had herbs for ten. I treated the ones who could fight again and let the rest die as easily as I could manage. She called it murder and said she would not train a hand that chose." />
+    <string id="aom_backstory_c.spc_wanderer_arthedain_6_text" text="I left that night. Since then I have stitched men across the North, by roadside fires and in rangers' camps. I am not gentle, but my patients walk away more often than not." />
+    <string id="aom_response_1.spc_wanderer_arthedain_6_text" text="Someone has to choose, and you chose to keep the ones who can fight." />
+    <string id="aom_response_2.spc_wanderer_arthedain_6_text" text="A healer who leaves the dying is no healer." />
+    <string id="aom_backstory_d.spc_wanderer_arthedain_6_text" text="Take me on and your wounded will walk again, the ones who can." />
+    <string id="aom_generic_backstory.spc_wanderer_arthedain_6_text" text="Healers of Annúminas work the old infirmary and the lake shore, where the wounded outnumber the herbs. We learn to choose, and not everyone forgives that." />
+    <string id="aom_prebackstory.spc_wanderer_arthedain_7_text" text="A hero of the Annúminas road, at your service, or so the dispatches said..." />
+    <string id="aom_backstory_a.spc_wanderer_arthedain_7_text" text="I am the second son of a Dúnedain house whose lands lie mostly in my grandfather's memory. My elder brother had the title, and I had a sword and a flair for being noticed. At Annúminas I commanded a company of sixty, which sounds finer than it was." />
+    <string id="aom_backstory_b.spc_wanderer_arthedain_7_text" text="After a brush with some Angmar scouts I sent word to the king that I had routed a host. I had routed four orcs and a goat, but the dispatch was well written. The king granted me land on the strength of it, until a ranger passed through and asked where the bodies were." />
+    <string id="aom_backstory_c.spc_wanderer_arthedain_7_text" text="I was stripped of the land before I had seen it. Since then I have lived by wit, which is thin fare in a country at war. I did kill the four orcs, though. Nobody ever mentions that." />
+    <string id="aom_response_1.spc_wanderer_arthedain_7_text" text="Four orcs is still four fewer than before." />
+    <string id="aom_response_2.spc_wanderer_arthedain_7_text" text="You lied to the king and are surprised it caught up with you." />
+    <string id="aom_backstory_d.spc_wanderer_arthedain_7_text" text="Hire me, and I promise to report only what truly happened. Mostly." />
+    <string id="aom_generic_backstory.spc_wanderer_arthedain_7_text" text="Younger sons of the old Dúnedain houses grow up with a sword and no land. Some of us write our own legends to make up for it." />
+    <string id="aom_prebackstory.spc_wanderer_arthedain_8_text" text="I have walked the Weather Hills since I could walk. Do not ask me to be gentle there..." />
+    <string id="aom_backstory_a.spc_wanderer_arthedain_8_text" text="I was a ranger of the Weather Hills, trained by an old captain who taught me to move unseen and leave no track. For six years I watched the road below Amon Sûl and counted every orc that passed. I was the best scout in the Hills, and I knew it." />
+    <string id="aom_backstory_b.spc_wanderer_arthedain_8_text" text="When an Angmar emissary came under a white cloth to speak with the captain, I shot him from the rocks before he said a word. I judged that anything from that country carried a lie. The captain disowned me before the other rangers, for breaking a truce was not our way." />
+    <string id="aom_backstory_c.spc_wanderer_arthedain_8_text" text="I took my bow and went north. The rangers say I broke faith. His escort carried pitch and torches meant for the villages below, and nobody thanks me for that." />
+    <string id="aom_response_1.spc_wanderer_arthedain_8_text" text="If the torches were real, you saved those villages." />
+    <string id="aom_response_2.spc_wanderer_arthedain_8_text" text="A truce broken once is never trusted again." />
+    <string id="aom_backstory_d.spc_wanderer_arthedain_8_text" text="Use me as your eyes and your bow. I will see them coming, and I will not wait for a white cloth." />
+    <string id="aom_generic_backstory.spc_wanderer_arthedain_8_text" text="Rangers of the Weather Hills watch the road below Amon Sûl and count every Angmar patrol. We are hard folk, and not every captain approves of our methods." />
+    <string id="aom_prebackstory.spc_wanderer_arthedain_9_text" text="Honest work is for those who can afford it. Care to hear about the other kind..." />
+    <string id="aom_backstory_a.spc_wanderer_arthedain_9_text" text="I ran a toll on the Greenway with a dozen hard men, and for a long while it was almost legal. We took a share of every grain wagon bound for Bree and called it protection. The wagons were never robbed while we were paid, which is more than the king's patrols could say." />
+    <string id="aom_backstory_b.spc_wanderer_arthedain_9_text" text="Then grain ran short at Fornost, and the garrison went hungry while my men sat on stored sacks. A steward worked out where it had gone. My company scattered at the first sound of the king's riders, and I, the leader, scattered fastest." />
+    <string id="aom_backstory_c.spc_wanderer_arthedain_9_text" text="I keep a smaller purse now, and a smaller company, which is to say none. Here I am, an honest wanderer at last, if only for lack of opportunity. I will admit the grain was not my finest work." />
+    <string id="aom_response_1.spc_wanderer_arthedain_9_text" text="Even a thief can learn what hunger costs." />
+    <string id="aom_response_2.spc_wanderer_arthedain_9_text" text="You starved a fortress to fatten your purse." />
+    <string id="aom_backstory_d.spc_wanderer_arthedain_9_text" text="Hire me. I know every thief on the Greenway, which makes me oddly useful against them." />
+    <string id="aom_generic_backstory.spc_wanderer_arthedain_9_text" text="Traders and toll-keepers along the Greenway live off the grain wagons bound for Bree. A few of us take a larger share than the king allows." />
+    <string id="aom_prebackstory.spc_wanderer_arthedain_10_text" text="I made a promise at Combe once, and I have not yet found a way to keep it..." />
+    <string id="aom_backstory_a.spc_wanderer_arthedain_10_text" text="I was a ranger who served as warden of Combe in Bree-land, guarding it against wolves and Dunlending raiders. The villagers fed me, mended my cloak and made me one of their own. I swore on the Greenway stone that I would not let their roofs burn." />
+    <string id="aom_backstory_b.spc_wanderer_arthedain_10_text" text="My captain called every ranger north to meet a Gundabad column on the North Downs. Duty bound me, so I went, and in nine days the column was beaten. When I returned Combe was ash, and a dozen of its children were gone, taken or dead; no one could say which." />
+    <string id="aom_backstory_c.spc_wanderer_arthedain_10_text" text="I kept my oath to the king and broke my word to them, and I cannot tell which weighs more. I have searched the old roads for the taken ever since. I will not stop until I know what became of them." />
+    <string id="aom_response_1.spc_wanderer_arthedain_10_text" text="A man cannot be in two places. You did what duty asked." />
+    <string id="aom_response_2.spc_wanderer_arthedain_10_text" text="You swore to guard them, and you left. Words are cheap." />
+    <string id="aom_backstory_d.spc_wanderer_arthedain_10_text" text="Let me search beside you, and I will give my bow and my word to your road." />
+    <string id="aom_generic_backstory.spc_wanderer_arthedain_10_text" text="The rangers who ward the villages of Bree-land swear to keep their roofs from burning. Duty calls us north as often as it keeps us home." />
+    <string id="aom_prebackstory.spc_wanderer_arthedain_11_text" text="Forgive me. Have you any bread to spare? Not for me, you understand..." />
+    <string id="aom_backstory_a.spc_wanderer_arthedain_11_text" text="I was a house guard in the hall of a minor lord near Emyn Beraid. He paid little and I gave most of it away, to the widows of the garrison and the families of rangers who did not come back. A guard's work is quiet, and I liked that mine was useful." />
+    <string id="aom_backstory_b.spc_wanderer_arthedain_11_text" text="A raid by the goblins of Blue Craig burned the hall one winter night. The lord died on the stair and I carried his steward's children out. The survivors of the village, nearly forty, followed me to Fornost, where the king's stewards found them a corner of a warehouse and little else." />
+    <string id="aom_backstory_c.spc_wanderer_arthedain_11_text" text="I stay with them when I can and send what I earn, which is never enough. A guard with no hall is a guard for hire, and I will take any honest wage that feeds them." />
+    <string id="aom_response_1.spc_wanderer_arthedain_11_text" text="Looking after the survivors is as worthy as any battle." />
+    <string id="aom_response_2.spc_wanderer_arthedain_11_text" text="You cannot keep forty people alive with one sword and no pay." />
+    <string id="aom_backstory_d.spc_wanderer_arthedain_11_text" text="If you can pay a fair wage and spare a ration for my people, I will serve you faithfully." />
+    <string id="aom_generic_backstory.spc_wanderer_arthedain_11_text" text="Guards of the minor lords' halls near Emyn Beraid earn little and keep the village widows fed. When a hall burns, the survivors turn to us." />
+    <string id="aom_prebackstory.spc_wanderer_arthedain_12_text" text="Have you a moment? The families at the south gate need someone to speak for them..." />
+    <string id="aom_backstory_a.spc_wanderer_arthedain_12_text" text="I was a junior clerk to the king's stewards at Fornost Erain, tallying grain and writing letters for lords who could not write their own. I was good with people, and the old clerks sent me to talk to the angry ones. I came to like it." />
+    <string id="aom_backstory_b.spc_wanderer_arthedain_12_text" text="When families fleeing the burned villages of the North Downs reached the capital by the hundreds, a clan lord argued the gates should close to save the stores. I wrote down their names, kept a ledger of who was sick and who was starving, and put it before the council. They called it sentiment and had me removed from my post." />
+    <string id="aom_backstory_c.spc_wanderer_arthedain_12_text" text="I learned that a ledger can be a plea if you write it well. Now I go from town to town gathering food, coin and sworn blades for those families. The North is poor, but there is more kindness in it than anyone admits." />
+    <string id="aom_response_1.spc_wanderer_arthedain_12_text" text="Names on a page can save lives, and you wrote them." />
+    <string id="aom_response_2.spc_wanderer_arthedain_12_text" text="The council was right to count the stores before the sentiment." />
+    <string id="aom_backstory_d.spc_wanderer_arthedain_12_text" text="Take me with you, and I will find you provisions, goodwill and honest allies." />
+    <string id="aom_generic_backstory.spc_wanderer_arthedain_12_text" text="Fornost's stewards keep the counts of grain and refugees. A few of us have spoken up for the North Downs folk and been sent away for it." />
   </strings>
 </base>

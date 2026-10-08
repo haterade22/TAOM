@@ -272,6 +272,7 @@ public class LanguageTextIntegrityTests
         var files = Directory.GetFiles(LanguagesPath, "std_taom_*.xml", SearchOption.AllDirectories);
         Assert.IsTrue(files.Length > 100, $"Only {files.Length} language files found; the scan is broken.");
 
+        var english = LocalizationKeyConsistencyTests.RegisteredEnglish();
         var offenders = new List<string>();
         foreach (var file in files)
         {
@@ -287,7 +288,14 @@ public class LanguageTextIntegrityTests
             }
             foreach (var row in doc.Descendants("string"))
             {
-                var problems = WritingSystemProblems(language, (string)row.Attribute("text"));
+                var text = (string)row.Attribute("text");
+                // An untranslated row keeps its English verbatim: the translator's own "translate me" marker
+                // (translate_with_claude.py, AccentStrippedTranslationTests), so it carries no translator damage.
+                if (english.TryGetValue((string)row.Attribute("id") ?? string.Empty, out var registered) && text == registered)
+                {
+                    continue;
+                }
+                var problems = WritingSystemProblems(language, text);
                 if (problems.Count > 0)
                 {
                     offenders.Add($"  {language}/{Path.GetFileName(file)} [{(string)row.Attribute("id")}] {problems[0]}");

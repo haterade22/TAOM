@@ -61,7 +61,7 @@ hand edits, so land a repo-side validator gate with any fix.
 
 - Does a named companion's backstory dialogue ever fire in game? The chain is gated by HasMet, which TAOM sets at placement (NamedCompanionService.cs:54, LordConversationsCampaignBehavior.cs:1222-1226), and it keys off Hero.Template.StringId, which is null for a heroes.xml hero (Hero.cs:298, CharacterObject.cs:419). named-companions.md claims the flow triggers; no in-game check is on record. Settle it by talking to a companion in game.
 - Can a named companion added after a save was made ever appear in that save? EnsureCompanionsPlaced re-places only heroes that already exist (NamedCompanionAdapter.cs:10-14); whether a new heroes.xml row reaches an existing save is undocumented in TAOM. The chapter states 'new campaign only' as the safe answer.
-- Why do goblin, mistymountainorcs, lindon and bluecraig ship 40 wanderers with no backstory strings and borrowed skill sets? No doc records whether that is deliberate or an unfinished batch; generate_batch2_wanderers.py's KINGDOMS map is the place to look.
+- Answered 2026-10-08: the goblin, mistymountainorcs, lindon, bluecraig (and later arthedain) wanderers had no backstory strings because their blocks were cloned from donor cultures without them, an unfinished batch rather than a choice. They now have their own rows, gated by `WandererBackstoryCoverageTests`; the borrowed skill sets remain.
 - Nothing in TAOM.Tests reads the shipped companion data (both test files use mocks and a temp dir), so the 17/17/17/119 agreement across named_companions.xml, heroes.xml, named_companion_config.json and the strings file is held by hand. It agrees today; there is no gate.
 
 ## troops.md
