@@ -36,6 +36,13 @@ when Mike asks for them.
 | `Research:` | what was decompiled to inform the change | `Research: DefaultPartyWageModel.GetCharacterWage` |
 | `Save-compat:` | save file impact | `Save-compat: New field, safe, defaults to 0 on load` |
 
+**One commit per concern.** TDD tests and the `IoC.cs` / `SubModule.cs` wiring go in the commit of
+the feature they serve, and one feature's C# and XML stay together; tests written after the code get
+their own `test:` commit. Types by path: `Main/Features/**` is `feat:` or `fix:`, ModuleData XML and
+XSLT on their own is `data:`, `docs/**` is `docs:`, CLAUDE.md and `.claude/**` are `chore:`.
+`CHANGELOG.md` changes only in a `/release` commit; any other staged edit to it is a hand edit to
+flag, never commit.
+
 **Release tags:** the release commit is tagged `vX.Y.Z` (annotated, `git tag -a`) and the tag pushed
 with its own refspec, because `git push` does not push tags. Never move a pushed tag. The full
 sequence, the #371 Dependencies pairing check and the list of phantom versions players ran (v2.0.12

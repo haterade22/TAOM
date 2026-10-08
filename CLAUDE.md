@@ -50,25 +50,25 @@ instructions: follow its phases in order.
 |---|---|---|
 | Crash, exception, "why is this broken" | `/investigate` | always; never debug ad hoc |
 | Native AV in `TaleWorlds.Native.dll`, CTD with no managed culprit, a hang | `/native-crash-triage` | always; never blind-retry |
-| `error CS####`, build won't compile | `/build-fix` | always; missing TaleWorlds type: `/research`; retries spent: `/investigate` |
-| Before overriding, patching or adapting a TaleWorlds type | `/research`, `/taom-src` | always |
+| `error CS####`, build won't compile | fix it within the retry budget in `docs/ai-includes/agent-operating-manual.md` | missing TaleWorlds type: `taom-src`; budget spent: `/investigate` |
+| Before overriding, patching or adapting a TaleWorlds type | `pwsh tools/taom-src.ps1 path <Type>` | always |
 | Before any commit touching C# or XML/XSLT, repo or live install | `/deep-review` | every such commit; skip only config and docs |
 | Before claiming done | `/verify` | always |
 | "Let's merge", "ready to PR" | `/ship` | runs `/verify`, `/deep-review`, `/review-codex`, then issue and docs |
 | Versioning a build for players | `/release` | after `/ship`, never instead of it |
 | Game updated, or the GAME VERSION DRIFT banner | `/engine-bump` | before any build or test |
 | Armory sync or art drop, or the ARMORY ART DRIFT banner | `/armory-audit` | before any battle or tournament smoke |
-| New creature or mount; creature animation looks wrong | `/new-creature-mount`; `/refine-creature-anim` | once told "do it", not while sketching |
-| Custom static prop (camp, landmark) without the Kit | `/new-map-prop` | once told "do it" |
+| New creature or mount; creature animation looks wrong | `creature-mount-authoring.md`; `creature-animation-blender-mcp-workflow.md` (`docs/ai-includes/`) | once told "do it", not while sketching |
+| Custom static prop (camp, landmark) without the Kit | `docs/reference/tpac-static-prop-authoring.md` | once told "do it" |
 | New feature | `/new-feature`, then offer `/freeze` | once told "do it" |
-| Culture, armor, lord skills | `/new-culture`, `/author-armor`, `/lord-skills` | |
-| New player-facing text; any `.xslt` edit | `/localize`; `/xslt-check` | always |
-| Patch, model or reflection bindings after an engine or patch change | `/verify-bindings` | |
-| Mixed concerns staged; an architectural decision | `/commit-split`; `/new-adr` | |
+| Culture, armor, lord skills | `new-culture-authoring.md`, `lord-skills-authoring.md` (`docs/ai-includes/`); `docs/features/troop-tree-revamp.md` | |
+| New player-facing text | `/localize` | always |
+| Patch, model or reflection bindings after an engine or patch change | the binding gate: `docs/reference/taleworlds-api-snapshot/README.md` | |
+| An architectural decision | `docs/adrs/000-template.md` | |
 | External repo, article or skill to adopt | `/adopt-external` | security-vet first |
 | After editing hooks, settings, MCP config or CLAUDE.md | `/security-scan` | skip for routine feature edits |
 | Repo-wide audit, "what next", handoff plans; execute, review, merge or resume a plans backlog | `/improve` | merge, push, issues and paid calls only on the maintainer's word |
-| Offer, don't auto-invoke | `/freeze`, `/unfreeze`, `/context-budget` | |
+| Offer, don't auto-invoke | `/freeze`, `/unfreeze` | |
 | Never auto-invoke | `/review-codex` (paid), `/issue` (public) | |
 
 ## Subagents

@@ -17,7 +17,7 @@ tools:
 Behavior-preserving structural refactoring of TAOM C#. Use when code is hard to read or extend, or when it is *redundant* (see "Deleting redundant code"). The boundary:
 
 ## Execution model (read first)
-Fixed tool allowlist (Read/Write/Edit/Bash/Glob/Grep); you **cannot invoke skills or spawn agents**. Where this references a skill (`/build-fix`, `/investigate`, `/new-adr`), **recommend it in your report**; don't try to invoke it. Tests must be green before AND after (`dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true`). CLAUDE.md, its imports and the unscoped rules are loaded for you; a path rule loads when you read a matching file. Tool catalog + full model: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
+Fixed tool allowlist (Read/Write/Edit/Bash/Glob/Grep); you **cannot invoke skills or spawn agents**. Where this references a skill (`/investigate`), **recommend it in your report**; don't try to invoke it. Tests must be green before AND after (`dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true`). CLAUDE.md, its imports and the unscoped rules are loaded for you; a path rule loads when you read a matching file. Tool catalog + full model: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
 
 | Tool | Purpose | Mode |
 |------|---------|------|
@@ -29,7 +29,7 @@ Fixed tool allowlist (Read/Write/Edit/Bash/Glob/Grep); you **cannot invoke skill
 
 **Tests must be green before refactoring AND after.** A refactor that requires changing tests is not a refactor — it's a behavior change masquerading as one. If you're tempted to update tests "to match the new structure," stop and re-think.
 
-If the test suite isn't green going in, fix the tests first via the appropriate skill (`/build-fix` for compile, `/investigate` for runtime), THEN refactor.
+If the test suite isn't green going in, fix the tests first (compile errors within the retry budget in `docs/ai-includes/agent-operating-manual.md`, `/investigate` for runtime), THEN refactor.
 
 ## When to invoke
 
@@ -44,7 +44,7 @@ If the test suite isn't green going in, fix the tests first via the appropriate 
 
 - Code needs new functionality → `feature-builder`
 - Code is failing → `/investigate` first; refactor after the fix
-- The refactor would touch >5 files → that's a design change, not a refactor; flag it to the user and probably `/new-adr`
+- The refactor would touch >5 files → that's a design change, not a refactor; flag it to the user and probably write an ADR (`docs/adrs/000-template.md`)
 
 ## Deleting redundant code
 
@@ -101,7 +101,7 @@ Status:         REFACTORED | NEEDS TESTS FIRST | OUT OF SCOPE
 ## When to escalate
 
 - Tests start failing after a refactor → revert, then `/investigate` to find what behavior actually changed
-- Refactor would benefit but requires breaking the public API of a feature module → flag, possibly `/new-adr`
+- Refactor would benefit but requires breaking the public API of a feature module → flag, possibly an ADR
 - The "cleanest" refactor would conflict with TAOM conventions → keep the convention; if the convention is wrong, that's an ADR change, not a refactoring decision
 
 Source: VoltAgent/awesome-claude-code-subagents (adapted with TAOM ADR rules; the deletion rules came from TAOM's former deslop skill).

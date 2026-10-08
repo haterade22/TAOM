@@ -464,7 +464,7 @@ monster leaves null native entries → spawn AV.
 
 Steam force-bumped the engine mid-campaign (2026-06-11 17:39) and three latent data quirks became
 CTDs because the rewritten native lookups stopped tolerating misses. After ANY engine bump:
-run `/verify-bindings`, re-run the parity audit + control battles, and check the Event Log fault
+run the binding gate ([Running the gate](../reference/taleworlds-api-snapshot/README.md)), re-run the parity audit + control battles, and check the Event Log fault
 offsets against the previous version's known sites before assuming your last change caused a
 crash. **Include a mounted-death pass in the control battle** — kill the ridden creature, and kill
 its rider while mounted. That is the one path a data-only creature can regress on with zero managed

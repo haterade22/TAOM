@@ -137,7 +137,7 @@ These were considered and intentionally **not** built in v1 (scope + ROI; see th
 
 - **`--infer` confidence-tagged edges** — graphify tags edges `EXTRACTED` vs `INFERRED`. The literal links here are all `EXTRACTED`. An `INFERRED` layer (keyword-overlap candidates, reusing `compile_research.extract_keywords`) could surface *latent* relationships, rendered distinctly and excluded from metrics by default. Deferred: keyword overlap is noisy and the compile workflow in [docs/research/README.md](../research/README.md) already does human-audited semantic linking.
 - **Memory-layer ingestion** — the out-of-repo memory files (`[[wikilinks]]` + markdown) could be a second labelled subgraph. Deferred: the memory dir path is harness-coupled (project-slug encoding of cwd), the syntax is mixed, and `[[ ]]` targets can dangle. If built: opt-in (`--include-memory`), best-effort path derivation, failure-tolerant (skip + warn, never crash).
-- **MCP exposure** — the verbs already return dicts, so wrapping them in a stdio MCP server (like `taom_mcp_server.py`) is trivial. Deferred: an always-loaded MCP is a standing token cost ([context-budget](../../.claude/skills/context-budget/SKILL.md)) for a low-frequency tool; the CLI is the right surface until usage proves otherwise.
+- **MCP exposure** — the verbs already return dicts, so wrapping them in a stdio MCP server (like `taom_mcp_server.py`) is trivial. Deferred: an always-loaded MCP is a standing token cost (`bash tools/context_budget_scan.sh` measures it) for a low-frequency tool; the CLI is the right surface until usage proves otherwise.
 
 ### Not to be confused with graphify itself
 

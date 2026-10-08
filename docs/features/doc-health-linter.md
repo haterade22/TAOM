@@ -61,7 +61,7 @@ gate; a `size-warn` finding is report-only by design. `--drift-only` runs just t
 ### Budget constants (check 7)
 
 The caps are ADR-011's. Live numbers: `python tools/lint_docs.py --context-budget-json`, which is
-also what `/context-budget`'s `scan.sh` reads, so the report and the gate cannot disagree.
+also what `bash tools/context_budget_scan.sh` reads, so the report and the gate cannot disagree.
 
 | Constant | Value | Covers |
 |---|---|---|

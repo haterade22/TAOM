@@ -74,7 +74,7 @@ KINGDOMS = {
         name="Kingdom of Arthedain", short="Arthedain", title="North-Kingdom of Arthedain", ruler="King",
         desc="The last of the three realms into which Arnor was sundered, Arthedain did not fall. Arvedui's line still holds Fornost upon the North Downs, though its lords are few, its towns poor, and Angmar's shadow lies always on the northern hills.",
         # The templates' own skill sets: lords.xml rows carry inline skills equal to their template
-        # (SKILL_TEMPLATE_MISMATCH), so a clone keeps its source's set until /lord-skills retunes it.
+        # (SKILL_TEMPLATE_MISMATCH), so a clone keeps its source's set until docs/ai-includes/lord-skills-authoring.md retunes it.
         lord_skill=("taom_gondor_knight_skills", "taom_gondor_knight_skills", "taom_gondor_young_lady_skills"),
         lords_per_clan=4,  # 5 clans x 4 = 20 lords (2 male + 2 female, married within the clan)
         clans=[("clan_arthedain_1", 4, "town_AN2", "House of Arvedui"),

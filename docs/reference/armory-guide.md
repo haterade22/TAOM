@@ -1,6 +1,6 @@
 # Equipment & Armory guide
 
-> LOTRLOME_Armory item layout, canonical-folder-per-prefix table, Gondor prefixes, CC facegen action_sets. Extracted from CLAUDE.md 2026-07-18. Authoring workflow: `/author-armor`.
+> LOTRLOME_Armory item layout, canonical-folder-per-prefix table, Gondor prefixes, CC facegen action_sets. Extracted from CLAUDE.md 2026-07-18. Authoring workflow: `docs/features/troop-tree-revamp.md`.
 
 
 | Item | Details |

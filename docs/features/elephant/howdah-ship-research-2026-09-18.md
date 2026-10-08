@@ -89,7 +89,7 @@ without a freeze, and the crew leave with their formation.
   export works here). Name it `taom_`-prefixed: navmesh prefab names are global across modules (UNVERIFIED which wins).
 - **Wiring:** `NavMeshPrefabName` on `TaomHowdahMachine`. The base attach expects the siege layout (groups 1 inside,
   2 enter, 3 exit, 4 blocker); a howdah has no enter or exit, so the machine likely needs a ship-style override of
-  `AttachDynamicNavmeshToEntity` (`/research` before writing it).
+  `AttachDynamicNavmeshToEntity` (read the [research guide](../../ai-includes/taleworlds-research-guide.md) before writing it).
 - **Crew:** spawn at four TAOM-tagged deck frames with `Mission.SpawnTroop` and hold them with a TAOM
   `IDetachment` (howdah-local slots recomposed each call), not a `StandingPoint`: seat users get the engine's
   no-attack scripted flag, which is why TAOM calls `OnUse` directly today.

@@ -16,17 +16,17 @@ not a grant of authority or a description of Codex's available tools.
 
 1. **You can only use the tools in your `tools:` frontmatter.** It's an enforced allowlist with no fallback. If you reach for a tool you don't have, it fails.
 2. **You cannot invoke skills (slash commands), and you cannot spawn other agents.** None of the TAOM custom agents are granted the `Skill` or `Task` tool. So when a job calls for a skill, **you recommend it — you do not run it.** Put the recommendation in your final report and let the orchestrator (the main session) invoke it. Examples you will commonly want to recommend:
-   - build won't compile → recommend **`/build-fix`**
+   - build won't compile → fix it within the compile-error retry budget (item 5); a spent budget → recommend **`/investigate`**
    - a TAOM C# bug / "why is this broken" → recommend **`/investigate`**
    - a NATIVE crash (`0xC0000005` / AV in `TaleWorlds.Native.dll`) → recommend **`/native-crash-triage`** (you CAN run its tool yourself: `python tools/native_crash_triage.py --rva 0x<offset>`)
    - the installed game version changed / "GAME VERSION DRIFT" in session output → recommend **`/engine-bump`** and treat all crash evidence as suspect until it runs
-   - creature/mount authoring work → recommend **`/new-creature-mount`** (and READ `docs/ai-includes/creature-mount-authoring.md` yourself — it is the authoritative workflow)
+   - creature/mount authoring work → READ `docs/ai-includes/creature-mount-authoring.md` yourself: it is the authoritative workflow
    - scope-locking edits to one dir → recommend **`/freeze`**
    - pre-merge review of a finished feature → recommend **`/deep-review`** / **`/ship`**
-   - an engine-binding or signature concern → recommend **`/verify-bindings`** / **`/research`**
+   - an engine-binding or signature concern → run the engine-binding gate and `taom-src` yourself (tool catalog below)
 3. **Report, don't guess, on environment failures.** Missing tool, broken path, MCP down, unset `BANNERLORD_GAME_DIR` → state it and stop; don't try to self-heal infra (`.claude/rules/environment-failures.md`).
 4. **Stay in your lane.** Respect the scope your spawn prompt gave you. `Main/IoC.cs` and `Main/SubModule.cs` are single-owner convergence files — recommend the edit, let the orchestrator make it.
-5. **Have a retry budget.** Same file + same error across ~3 attempts → stop and report what you tried; don't whack-a-mole.
+5. **Keep the compile-error retry budget.** One attempt is one edit plus a rebuild aimed at the same error at the same place. Attempt 1: the likeliest fix. Attempt 2: re-read the file (it may be stale) and try a different approach. Attempt 3: a fix that differs meaningfully from the first two. There is no fourth: stop, report what you tried, and recommend `/investigate`. A changed error (another code, another file, or a line moved more than 5) resets the count; say so if you suspect whack-a-mole. A fix that adds more errors than it removes is at the wrong layer: stop the same way.
 
 ---
 
@@ -65,11 +65,10 @@ not a grant of authority or a description of Codex's available tools.
 
 Grouped by purpose. Authoritative list + when-to-use routing: the **Skills** index in [`CLAUDE.md`](../../CLAUDE.md).
 
-- **Build/debug:** `/build-fix` (compile errors, minimal diffs), `/investigate` (root-cause C# debugging), `/native-crash-triage` (native CTDs — Event Log offsets + `tools/native_crash_triage.py` + debugger protocol), `/engine-bump` (game version changed — baseline-preserve, regen, re-verify).
-- **Build/verify a change:** `/verify` (build+test+git), `/verify-bindings` (engine API bindings + snapshot), `/deep-review` (multi-agent review), `/review-codex` (Codex, costs money), `/ship` (full completion sequence).
-- **Research:** `/research` (decompile + analyze a TaleWorlds class), `/taom-src` (one-shot signature lookup), `/xslt-check` (XSLT passthrough).
-- **Authoring:** `/new-feature`, `/new-culture`, `/new-creature-mount` (rideable creatures — warg-parity workflow over `docs/ai-includes/creature-mount-authoring.md`), `/lord-skills`, `/author-armor`, `/localize`, `/new-adr`, `/issue`.
-- **Scope/hygiene:** `/freeze` + `/unfreeze` (edit lock), `/commit-split`, `/context-budget`.
+- **Build/debug:** `/investigate` (root-cause C# debugging), `/native-crash-triage` (native CTDs — Event Log offsets + `tools/native_crash_triage.py` + debugger protocol), `/engine-bump` (game version changed — baseline-preserve, regen, re-verify).
+- **Build/verify a change:** `/verify` (build+test+git), `/deep-review` (multi-agent review), `/review-codex` (Codex, costs money), `/ship` (full completion sequence).
+- **Authoring:** `/new-feature`, `/localize`, `/issue`. Cultures, lords, armor, creatures and ADRs have no skill: follow `new-culture-authoring.md`, `lord-skills-authoring.md`, `creature-mount-authoring.md` (warg parity) and `docs/adrs/000-template.md`.
+- **Scope/hygiene:** `/freeze` + `/unfreeze` (edit lock).
 - **Adoption/security:** `/adopt-external` (review an external repo/article and fold useful parts into TAOM — if your job is evaluating an outside source, recommend this), `/security-scan` (audit TAOM's own Claude config for secrets / permission / hook-exfil / MCP risk via `tools/audit_claude_config.py`; for a FOREIGN/untrusted skill repo run `python tools/audit_claude_config.py --root <repo> --external` to fire the SkillSpector-derived threat categories at full severity BEFORE recommending adoption — the automated supplement to `/adopt-external`'s manual security-pass).
 
 When your job hits one of these situations, finish your analysis and **name the skill in your report** so the orchestrator runs it.

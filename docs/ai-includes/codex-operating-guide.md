@@ -66,7 +66,7 @@ subagents or automatic paid dispatchers. Choosing a skill does not authorize
 extra writes or paid model calls. Plain `.ai/roles/` documents are not Codex
 runtime profiles.
 
-Claude's `/verify`, `/research`, `/deep-review`, `/review-codex` and `/ship` are
+Claude's `/verify`, `/deep-review`, `/review-codex` and `/ship` are
 not Codex commands. Use the workflows above; do not simulate success by claiming
 to have invoked unavailable skills or hooks. Technical Markdown rules under
 `.claude/rules/` are shared by explicit links in the scope map. Claude-specific

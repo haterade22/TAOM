@@ -112,7 +112,7 @@ td code, th code { font-size: .92em; }
 <p><code>taom-moduledata</code> MCP (<code>item_exists</code> / <code>troop_exists</code> / <code>culture_exists</code>) for every id the config references.</p>
 <ul><li><strong>Build/test:</strong> service + provider 100% (ADR-008: one test per validation rule, per objective-type progress branch,</li></ul>
 <p>per reward type) + a <strong>suppression-list test</strong> asserting the removal list equals the authoritative 43-issue set. <code>/verify</code> for the full gate.</p>
-<ul><li><strong>Bindings:</strong> <code>/verify-bindings</code> after an engine bump to confirm <code>IssueManager.AddPotentialIssueData</code>,</li></ul>
+<ul><li><strong>Bindings:</strong> The binding gate (Running the gate in the API snapshot README) after an engine bump to confirm <code>IssueManager.AddPotentialIssueData</code>,</li></ul>
 <p><code>CampaignGameStarter.RemoveBehaviors</code>, the <code>IssueModel</code> virtuals, and every vanilla issue type name still resolve.</p>
 <ul><li><strong>In-game smoke (only confirmable live):</strong> new sandbox campaign — (a) a LOTR issue spawns with culture-correct</li></ul>
 <p>troops; (b) its text + every <code>{VAR}</code> renders (English + one other language); (c) NO vanilla Calradic issue appears over several weeks of cheat-time-skip; (d) accept → progress → complete an issue-quest, save/load mid-quest, confirm survival.</p>

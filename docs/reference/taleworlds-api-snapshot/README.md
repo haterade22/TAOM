@@ -42,11 +42,32 @@ Runs under `dotnet test`, no game launch. TAOM.Tests references the installed `T
 | `GameModelOverrideBindingTests` | All 46 GameModels: registered in `SubModule.cs`, override ≥1 base virtual, no shadow-without-`override`. | 2 tests |
 | `ReflectionSiteBindingTests` | The 32 auxiliary static-engine reflection members from `reflection-sites.md` Category B. | one `[DataRow]` per site |
 
+> **First run (2026-05-28) caught a real defect.** `HeroViewModel_FillFrom_Patch` used a name-only `[HarmonyPatch(typeof(HeroViewModel), "FillFrom")]`. `HeroViewModel` inherits two more `FillFrom` overloads from `CharacterViewModel`, so Harmony's `AccessTools.Method` resolution found 3 candidates and threw `AmbiguousMatchException` — the postfix silently never applied in v1.4.5 (hero-portrait clan colors broken). Fixed by pinning argument types. This is exactly the gap the compiler and the BUTR analyzer miss.
+
+## Running the gate
+
 ```bash
 dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification"
 ```
 
-> **First run (2026-05-28) caught a real defect.** `HeroViewModel_FillFrom_Patch` used a name-only `[HarmonyPatch(typeof(HeroViewModel), "FillFrom")]`. `HeroViewModel` inherits two more `FillFrom` overloads from `CharacterViewModel`, so Harmony's `AccessTools.Method` resolution found 3 candidates and threw `AmbiguousMatchException` — the postfix silently never applied in v1.4.5 (hero-portrait clan colors broken). Fixed by pinning argument types. This is exactly the gap the compiler and the BUTR analyzer miss.
+The three classes are in `TAOM.Tests/Migration/`: `HarmonyPatchBindingTests`, `GameModelOverrideBindingTests` and `ReflectionSiteBindingTests`.
+
+**Skipped is never green.** `BANNERLORD_GAME_DIR` (or `BANNERLORD_OVERRIDE_DIR`) points the gate at the install. With no usable install, the tests that need the module DLLs call `Assert.Inconclusive`, and `binding-gate.runsettings` turns each one into a failure. Without that file MSTest reports them as Skipped and exits 0: never quote such a run, or any run with a non-zero `Skipped:` count, as a green gate. A missing install is an environment fact to report, not to fix.
+
+**Reading a failure (do not just rerun):**
+
+- `Game assemblies not loaded`, `unavailable` or `Game dir unresolved` means no install resolved. Report it and change no code.
+- `Main/SubModule.cs not found`: the test ran outside a `TAOM.sln` tree. Rerun from the repo.
+- `No test matches the given testcase filter` with a non-zero exit on the command as written is a finding, not a command to edit. An MSTest discovery warning above it means `/investigate`; with none, the gate tests have most likely lost their `BindingVerification` category. Never edit the settings.
+
+| Failure | Meaning | Fix |
+|---|---|---|
+| `Only N [HarmonyPatch] types discovered` or `Only N GameModel subclasses discovered` | TAOM types failed to load: a stale build, or a test-time variable naming a different install | Rebuild without `--no-build`, check the variables, then `/investigate` |
+| `AmbiguousMatchException` on a patch | A name-only `[HarmonyPatch]` on an overloaded method | Pin the argument types |
+| A target or member `did not resolve` or `not found` | The engine renamed, moved or removed it | Look up the new signature (`pwsh tools/taom-src.ps1 path <Type>`) and update the patch, adapter or GameModel; for a reflection site update both `reflection-sites.md` and the `[DataRow]` |
+| A GameModel `never AddModel'd` | The model compiles but is not registered | Add the `AddModel` call in `Main/SubModule.cs` |
+
+**Refresh:** `pwsh tools/snapshot_api_surface.ps1`, then `pwsh tools/snapshot_api_surface.ps1 -Check` (exit 0 means the committed files reproduce). A new reflection site needs a row in `reflection-sites.md` Category B and a matching `[DataRow]` in `ReflectionSiteBindingTests.cs`; runtime-dynamic sites go in Category C. The gate is offline only: the in-game residue is in `docs/migration/s6-runtime-punchlist.md`.
 
 ## Relationship to BUTR.Harmony.Analyzer (compile-time)
 
@@ -63,9 +84,7 @@ In short: the analyzer is compile-time existence checking against referenced met
 
 ## Maintenance
 
-- After a Bannerlord version bump (or any patch/GameModel change): `pwsh tools/snapshot_api_surface.ps1` to refresh the two generated files, then `dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "TestCategory=BindingVerification"`.
-- When you add a reflection site against an engine member: add a row to `reflection-sites.md` Category B **and** a `[DataRow]` to `ReflectionSiteBindingTests`.
-- CI/local reproducibility check: `pwsh tools/snapshot_api_surface.ps1 -Check` (exits non-zero if the committed files don't reproduce).
+After a Bannerlord version bump, or any patch or GameModel change, refresh the snapshot and run the gate as described in "Running the gate" above.
 
 ## External references
 

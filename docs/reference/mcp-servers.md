@@ -13,7 +13,7 @@
 | **taom-moduledata** | Project | Query TAOM ModuleData integrity (validate, item/troop/culture exists, find-references, list cultures/schemas) — wraps `tools/taom_query.py`. Needs the `mcp` SDK; restart Claude to load. See `docs/features/moduledata-validation.md`. | `.mcp.json` |
 | **imagine** | Project | AI image generation for TAOM's 2D work (`https://mcp.imagine.art`, HTTP; needs auth, so unauthenticated sessions can't use it) | `.mcp.json` |
 | **elevenlabs** | Project | Voice design and generation into `.voice-scratch/` ([kingdom-voices.md](../features/kingdom-voices.md)) | `.mcp.json` |
-| **blender** | Local (`E:\repos\TAOM` only) | Live Blender session for creature animation (`/refine-creature-anim`) | `~/.claude.json` |
+| **blender** | Local (`E:\repos\TAOM` only) | Live Blender session for creature animation ([workflow](../ai-includes/creature-animation-blender-mcp-workflow.md)) | `~/.claude.json` |
 | **substance-painter** | Local (`E:\repos\TAOM` only) | Live Substance Painter session for texturing | `~/.claude.json` |
 | **sequential-thinking** | User | Extended reasoning for complex design decisions | `~/.claude/.mcp/user.json` |
 | **context7** | User | Library documentation lookup | `~/.claude/.mcp/user.json` |
@@ -79,7 +79,7 @@ across several sites until 2026-08-31. The real name is `decompile_assembly(asse
 | 3. **ILSpy MCP** | `mcp__ilspy__decompile_assembly` / `mcp__ilspy__list_types` | Fallback if `taom-src` fails (e.g., need a full DLL type listing) |
 | 4. **`python tools/native_decompile.py`** | `--engine-method <name>`, `--string <text>` or `--rva <offset>`: native engine code as C, through headless Ghidra | When the managed trail ends at an `[EngineMethod]`, or the engine parses the data itself. [ghidra-native-decompile.md](../features/ghidra-native-decompile.md) |
 
-See `.claude/skills/taom-src/SKILL.md` for full usage. Composes with standard tools:
+Full usage is in the help block at the top of `tools/taom-src.ps1`. Composes with standard tools:
 ```bash
 rg "GetCharacterWage" $(pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.GameComponents.DefaultPartyWageModel)
 ```

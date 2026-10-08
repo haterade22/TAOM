@@ -8,8 +8,8 @@ using headless Ghidra 12.1 through PyGhidra. It answers three questions, one fla
 | Flag | Question | Used by |
 |---|---|---|
 | `--rva 0x<offset>` | what does the code at this address do (a crash site, a hang frame) | `/native-crash-triage`, `/investigate` |
-| `--engine-method <name>` | what does this managed `[EngineMethod]` call really do | `/research`, the `taleworlds-researcher` agent, the deep-review engine lens |
-| `--string <text>` | which native code uses this attribute, file name or assert text | `/research`, `/new-creature-mount` |
+| `--engine-method <name>` | what does this managed `[EngineMethod]` call really do | the [research guide](../ai-includes/taleworlds-research-guide.md), the `taleworlds-researcher` agent, the deep-review engine lens |
+| `--string <text>` | which native code uses this attribute, file name or assert text | the research guide, `docs/ai-includes/creature-mount-authoring.md` |
 
 Every printed function that implements engine methods is labelled with each of them, callers
 included. Issue [#688](https://github.com/haterade22/TAOM/issues/688); adoption record
@@ -117,7 +117,7 @@ has none of it; the tool exits 2 there naming that page. The map also needs `ils
 | `tools/native_decompile.py` | the tool: modes, cache key, venv re-run, Ghidra backend, seeding, report |
 | `tools/native_engine_methods.py` | the engine-method map: enum parse, registration sweep, join, cache |
 | `tools/native_crash_triage.py` | prints the `native_decompile.py` line after naming a site |
-| `.claude/skills/native-crash-triage/SKILL.md`, `.claude/skills/research/SKILL.md`, `.claude/skills/investigate/SKILL.md` | the processes that call it |
+| `.claude/skills/native-crash-triage/SKILL.md`, `docs/ai-includes/taleworlds-research-guide.md`, `.claude/skills/investigate/SKILL.md` | the processes that call it |
 | `tools/tests/test_native_decompile.py`, `tools/tests/test_native_engine_methods.py` | unit tests plus opt-in integration tests |
 
 ## Dependencies

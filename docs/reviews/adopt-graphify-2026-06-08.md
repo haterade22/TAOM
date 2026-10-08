@@ -52,7 +52,7 @@ It reuses `lint_docs`'s link parser rather than copy-pasting it (`build_backlink
 - **C# code graph** — Serena owns it. **Game-data graph** — `taom_schema` owns it. Building either here would duplicate + add token overhead. Rejected.
 - **LLM-inferred edges at build time, embeddings, Leiden community detection** — content egress, inference noise, and the stdlib-clean boundary stops at community detection. `INFERRED` edges are deferred as an opt-in, metrics-excluded future phase only.
 - **HTML/D3 viz, Obsidian vault, Neo4j/GraphML** — ADR-010 rejected viz + wikilinks for documented reasons (GitHub renders markdown; the audience is Claude + Mike, not external browsers). Rejected.
-- **Always-loaded MCP server** — standing token cost for a low-frequency tool ([context-budget](../../.claude/skills/context-budget/SKILL.md)). The verbs return dicts so an MCP wrapper is trivial *later* if usage proves it out. Deferred.
+- **Always-loaded MCP server** — standing token cost for a low-frequency tool (`.claude/skills/context-budget/SKILL.md`, now `tools/context_budget_scan.sh`). The verbs return dicts so an MCP wrapper is trivial *later* if usage proves it out. Deferred.
 - **The `query` verb** — graphify's free-text `query` overlaps grep + INDEX.md. `explain`'s fuzzy resolver already covers "find the doc about X." Cut.
 - **Memory-layer ingestion** — out-of-repo, harness-coupled path, mixed `[[ ]]`/markdown syntax, dangling links. Deferred (opt-in + failure-tolerant if ever built).
 

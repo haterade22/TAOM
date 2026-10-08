@@ -25,8 +25,8 @@ completely, in the output format it gives.
   a matching file. [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md)
   is the tool catalog; its build and test rows are for
   builders; as a reviewer you never build or run `dotnet` (below).
-- You **cannot invoke skills or spawn agents**. When a finding calls for one (`/investigate`,
-  `/research`, `/xslt-check`), recommend it in your report.
+- You **cannot invoke skills or spawn agents**. When a finding calls for one (`/investigate`),
+  recommend it in your report.
 - You are **read-only**. Bash is for reading and proving: `pwsh tools/taom-src.ps1 path <Type>`,
   `ilspycmd`, `git diff`, `gh issue list`, and the read-only validators under `tools/`
   (`validate_xml_schemas.py`, `validate_moduledata.py`, the `audit_*` and `check_*` gates;

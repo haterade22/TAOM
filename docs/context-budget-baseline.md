@@ -4,8 +4,12 @@ Recorded after the 2026-08-05 eager-context diet (CLAUDE.md prune round 2 + alwa
 diet + hook fixes). Supersedes the 2026-07-12 baseline, which had drifted badly: it recorded
 CLAUDE.md at 14,173 tok / 91 KB, but two subsequent restructures (2026-07-18 Tier 2, 2026-08-05
 round 2) landed it at 4,717 tok / 28 KB — the old doc overstated the single largest line item 3×.
-Method: `bash .claude/skills/context-budget/scan.sh` — with `scan_plugins()` added this date
+Method: `bash tools/context_budget_scan.sh` — with `scan_plugins()` added this date
 (enabled plugins' skill/command descriptions were previously invisible to the scan).
+
+## Reading the scan
+
+Run `bash tools/context_budget_scan.sh` (`--verbose` for per-file numbers). Eager markdown is estimated at bytes/4: words x1.3 undercounted text dense with paths and code (the 49 KB CLAUDE.md of 2026-09-22 came out at 8.5K tokens instead of about 12K). Skill and agent descriptions use words x1.3, a deferred MCP tool name costs about 15 tokens and a loaded schema about 500. Treat the numbers as ordinal. The caps are constants in `tools/lint_docs.py` (`--context-budget-json` prints them); the commit hook enforces them, and the scan adds the per-spawn view, MCP and memory.
 
 ## Eager (startup) baseline
 

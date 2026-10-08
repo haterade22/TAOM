@@ -102,7 +102,7 @@ triage cannot bound; `--callers 1` adds the callers' C; the first run on a new b
 for minutes, once: [ghidra-native-decompile.md](../../../docs/features/ghidra-native-decompile.md)).
 Read the crash row against the C, and hand-decode the instructions only when Ghidra is absent. When
 the site implements a managed engine call, the output says which (`engine method: IMBAgent.X = x`):
-that is the managed call TAOM can see, and `/research` can follow it from there. The
+that is the managed call TAOM can see, and `pwsh tools/taom-src.ps1 path <Type>` can follow it from there. The
 common patterns:
 - `cmp [reg+disp], imm` with reg=0 → **null + field-offset** (missing data surface)
 - chain-walk loop (`cmp r10d,[rax]` / `mov rax,[rax+8]`) ending in a deref → **hash-map miss

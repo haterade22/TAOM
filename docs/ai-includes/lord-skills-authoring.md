@@ -175,7 +175,7 @@ Boromir verification example: SkillSet base OneHanded=295, expected in-game 295-
 
 ### Step 8 — Commit-split + GitHub issue
 
-Use the `/commit-split` skill. Default split:
+Commit one concern at a time ([git and commits](git-and-commits.md)). Default split:
 
 | Commit | Files | Type |
 |---|---|---|

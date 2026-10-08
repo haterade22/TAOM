@@ -758,7 +758,7 @@ are now checked (2026-08-03).
 ### Foreign-module sweep (`extra_ref_roots`)
 
 The CLI passes `LOTRLOME_Armory/ModuleData` as an extra ref root. TAOM authors item XML directly
-into that module (see `/author-armor`), so it is TAOM's to keep correct even though it lives
+into that module (see `docs/features/troop-tree-revamp.md`), so it is TAOM's to keep correct even though it lives
 outside this repo and outside git. Extra roots are swept for **cross-references only** — the schema
 contracts (duplicate ids, civilian `equipmentType`, enums) describe TAOM's own files and must not
 report defects against a module this validator does not own.
@@ -780,7 +780,7 @@ Counts measured 2026-08-18:
 
 | Module | Location | XML (ModuleData / all) | XSLT | XML well-formedness | Cross-ref sweep | XSLT checked |
 |---|---|---|---|---|---|---|
-| TAOM | this repo | 259 / 338 | 8 | CI, `Main/_Module/ModuleData/**` | full (259 files), plus schema contracts | CI (8 of 8) + `check_external_xslt.py`; `/xslt-check` maps 6 of 8 |
+| TAOM | this repo | 259 / 338 | 8 | CI, `Main/_Module/ModuleData/**` | full (259 files), plus schema contracts | CI (8 of 8) + `check_external_xslt.py` |
 | TAOM_Map | game install | 44 / 313 | 1 | `check_external_xslt.py` | full (44 files) since #462 | `check_external_xslt.py` |
 | LOTRLOME_Armory | game install | 382 / 406 | 7 | `check_external_xslt.py` | **full (382 files)** via `extra_ref_roots` | `check_external_xslt.py` |
 | total | | 685 / **1,057** | **16** | | **685 files swept** | **16 of 16** |
@@ -798,7 +798,7 @@ ModuleData XML are swept for dangling refs, and it contributes to two registries
 civilian `equipmentType`), because those describe TAOM's own files. That is currently free: the
 Armory defines 3,727 items and 63 monsters and **zero** NPCCharacters, EquipmentRosters, party
 templates, cultures or body properties, so the passes that skip it have nothing to miss. That is an
-assumption about today's data, not a guarantee, and `/author-armor`'s workflow makes it plausible
+assumption about today's data, not a guarantee, and the troop-tree workflow (`docs/features/troop-tree-revamp.md`) makes it plausible
 someone authors a troop there. Worth an invariant test that fails loudly when it stops holding.
 
 **`TAOM_Map` WAS the sharp gap, closed by #462.** Its ModuleData is now an `extra_ref_root`, so all
@@ -843,9 +843,8 @@ the live file.
 three modules: XML well-formedness always, a root-element check (a stylesheet the engine will
 silently ignore is worse than a broken one), and a real stylesheet compile when `lxml` is present.
 It is a developer-side script by necessity, since CI cannot see the live modules. The limitation
-below is why it exists. `/xslt-check` resolves its target
-under `Main/_Module/ModuleData/`, and the CI `validate-xml` job globs that same repo path, so
-neither reaches them; CI *structurally* cannot, because those modules are not in the checkout. Two
+below is why it exists. The CI `validate-xml` job globs
+only `Main/_Module/ModuleData/`, so it does not reach them; CI *structurally* cannot, because those modules are not in the checkout. Two
 are read narrowly for unrelated purposes and both fail open: `audit_mount_parity.py` string-replaces
 `action_sets.xml` to `action_sets.xslt` and regexes out chariot animations behind an `os.path.exists`
 guard, and `weapon_xml/verify.py` regex-checks only the piece ids a given `build_weapon_xml.py` run

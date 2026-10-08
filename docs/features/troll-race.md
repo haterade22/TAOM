@@ -189,7 +189,7 @@ empty: `tools/bind_troll_action_set.py` owns its 213 overrides.
   authored on `human_skeleton` (pelvis/spine sway ×1.4 for a heavier gait), staged armature-only at
   `E:\LOTRAOMAssets\troll_clips_to_import\` (**NON-Armory** — the user imports + Kit-compiles). Then 20
   `as_cave_troll_warrior` forward walk/run overrides (`act_{walk,run}_forward_{2h,2h_axe,polearm,1h,unarmed}`
-  + each `_left_stance`) bind them; refine the look interactively (`/refine-creature-anim`) after the
+  + each `_left_stance`) bind them; refine the look interactively (`docs/ai-includes/creature-animation-blender-mcp-workflow.md`) after the
   in-game look. **Authored anim FBXs stage OUTSIDE LOTRLOME_Armory until the user imports them** (standing rule).
 
 - 🟡 **Fab clip set (2026-09-17, pending Kit-compile):** all 52 clips of the Fab "Cave Troll Lightweight"

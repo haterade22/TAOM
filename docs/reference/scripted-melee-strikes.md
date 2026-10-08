@@ -19,7 +19,7 @@ never runs a melee collision for it. It hands a collision of its own making to t
 after its own collisions, and everything after "did it hit, was it blocked" is then vanilla. This page records how,
 what that buys and what it costs, so a TAOM decision (Tier 2 in
 [adopt-yotthani-animation-handoff-2026-09-18.md](../reviews/adopt-yotthani-animation-handoff-2026-09-18.md)) starts
-from facts. Nothing here is adopted; a port is a feature with an issue, `/research` and TDD.
+from facts. Nothing here is adopted; a port is a feature with an issue, the [research guide](../ai-includes/taleworlds-research-guide.md) and TDD.
 
 ## 1. Handing a collision to vanilla
 
@@ -241,7 +241,7 @@ The decision is Mike's; these are the trade-offs as the facts stand.
 
 - **Vanilla damage for creature strikes** (routing `CustomAttacksUtils` through `MeleeHitCallback`). Win: armour,
   shields, skill and swing speed would count, with vanilla's reactions and perks. Cost: reflection into an internal
-  method that an engine bump can move (it would join `/verify-bindings`), a 37-argument collision to build, the
+  method that an engine bump can move (it would join the binding gate), a 37-argument collision to build, the
   particles and sounds to play ourselves, TAOM's own `OnMeleeHit` handlers seeing every creature hit, and
   `GetDefendCollisionResults` throwing for a creature defender. By [simplicity-criterion.md](../../.claude/rules/simplicity-criterion.md)
   it is a large win that needs its own issue and a stated trade-off.

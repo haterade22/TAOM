@@ -32,7 +32,7 @@ TAOM ships many XML files that **mirror, extend, or transform vanilla Bannerlord
 | any `scene_name=` that no longer resolves | — | `python tools/remap_stale_scene_names.py --dry-run` |
 | TaleWorlds API signatures | installed DLLs | `pwsh tools/taom-src.ps1 path <Type>` (NOT the decompiled dump) |
 | culture/clan/kingdom IDs | vanilla `SandBoxCore` XML | grep + `xml-data.md` ID table |
-| XSLT passthrough attributes | vanilla source the XSLT transforms | `/xslt-check`, `feedback_xslt_passthrough_unintended_inheritance.md` |
+| XSLT passthrough attributes | vanilla source the XSLT transforms (`xslt.md` file map) | transform and diff, `feedback_xslt_passthrough_unintended_inheritance.md` |
 | a culture's party-template bindings (`spcultures.xslt` or `taom_spcultures.xml`) | what the block EMITS vs what vanilla supplies for everything it does not name | `dotnet test TAOM.Tests --filter FullyQualifiedName~CulturePartyTemplate`; see "Passthrough inherits, it does not preserve" below |
 | GUI prefab **clones** (full `<Prefab>` copies of a vanilla prefab) | vanilla `Modules/{SandBox,SandBoxCore,Native}/GUI/Prefabs/<same-name>.xml` | `diff -w --strip-trailing-cr <vanilla> <taom>`; see "GUI prefab clones" below |
 
@@ -111,8 +111,8 @@ block's `not(self::...)` filter and the culture rolls Calradian roughly half the
 session can easily miss.
 
 **Compare the OUTPUT against vanilla, never the markup against your intent.** Transform with lxml and
-flag every emitted attribute whose value still carries a vanilla id. `/xslt-check` reported clean on
-all four instances because it reads the stylesheet. `TAOM.Tests/Core/CulturePartyTemplateTests.cs`
+flag every emitted attribute whose value still carries a vanilla id. A check that read the stylesheet
+reported clean on all four instances. `TAOM.Tests/Core/CulturePartyTemplateTests.cs`
 mechanizes the output comparison with a sentinel stub and is the gate that actually holds.
 
 ## Authored data can be complete and still be orphaned

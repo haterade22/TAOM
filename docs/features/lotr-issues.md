@@ -300,7 +300,7 @@ seeds…`). Two relevant facts:
 - **Build/test:** service + provider 100% (ADR-008: one test per validation rule, per objective-type progress branch,
   per reward type) + a **suppression-list test** asserting the removal list equals the authoritative 43-issue set.
   `/verify` for the full gate.
-- **Bindings:** `/verify-bindings` after an engine bump to confirm `IssueManager.AddPotentialIssueData`,
+- **Bindings:** The binding gate ([Running the gate](../reference/taleworlds-api-snapshot/README.md)) after an engine bump to confirm `IssueManager.AddPotentialIssueData`,
   `CampaignGameStarter.RemoveBehaviors`, the `IssueModel` virtuals, and every vanilla issue type name still resolve.
 - **In-game smoke (only confirmable live):** new sandbox campaign — (a) a LOTR issue spawns with culture-correct
   troops; (b) its text + every `{VAR}` renders (English + one other language); (c) NO vanilla Calradic issue appears

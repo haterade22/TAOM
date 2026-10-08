@@ -3,8 +3,7 @@
 
 TAOM ships 16 stylesheets across three modules and, until #462, only the repo's 8
 had any gate at all. CI's "Validate XML & XSLT" job globs
-`Main/_Module/ModuleData/**/*.xslt`, and `/xslt-check` resolves its target under the
-same path, so neither can reach `TAOM_Map`'s one or `LOTRLOME_Armory`'s seven. CI
+`Main/_Module/ModuleData/**/*.xslt`, so it cannot reach `TAOM_Map`'s one or `LOTRLOME_Armory`'s seven. CI
 *structurally* cannot: those modules are not in the checkout. This script is the
 developer-side counterpart, which is the only place such a check can live.
 

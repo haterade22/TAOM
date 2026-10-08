@@ -88,7 +88,7 @@ Known gaps on the laptop, both deliberate:
 - **`yara-python`** has no wheel for Python 3.14 and building it needs MSVC Build Tools.
   `tools/audit_claude_config.py` treats the YARA scan as optional and prints an INFO note when the
   import fails, so `/security-scan` still runs, minus that one pass.
-- **Blender** is absent, so creature-animation work (`/refine-creature-anim`, the Blender MCP,
+- **Blender** is absent, so creature-animation work (`docs/ai-includes/creature-animation-blender-mcp-workflow.md`, the Blender MCP,
   `tools/dump_engine_skeleton.ps1` round trips) has to happen on the desktop.
 - **Unreal Engine** is desktop-only as well: launcher installs `E:\UE_5.7` (5.7.4, since May), `E:\UE_5.4`
   (5.4.4) and `E:\UE_5.3` (5.3.2, both 2026-09-17), each with the Fab plugin; `E:\UE_5.6` is an empty shell

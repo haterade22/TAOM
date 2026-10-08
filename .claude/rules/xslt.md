@@ -7,9 +7,17 @@ paths:
 # XSLT Transformation Rules
 
 ## Authoritative Source
-- **SandBoxCore/ModuleData/** is the authoritative reference for vanilla XML structure
-- NEVER use SandBox/ModuleData/ — it has different element names the engine ignores
-- Example: SandBoxCore uses `<notable_templates>` (engine reads), SandBox uses `<notable_and_wanderer_templates>` (engine ignores)
+- Where a vanilla file exists in both modules, **SandBoxCore/ModuleData/** is authoritative: SandBox's
+  copy can use element names the engine ignores. Example: SandBoxCore `spcultures.xml` uses
+  `<notable_templates>` (engine reads), SandBox uses `<notable_and_wanderer_templates>` (engine ignores).
+- Most inputs exist in only one module. Transform and diff against this file (checked against the
+  v1.5.4 install, 2026-10-08):
+
+| Stylesheet | Vanilla input |
+|---|---|
+| `spcultures.xslt` | `SandBoxCore/ModuleData/spcultures.xml` |
+| `spkingdoms.xslt`, `spclans.xslt`, `lords.xslt`, `heroes.xslt`, `module_strings.xslt` | `SandBox/ModuleData/` file of the same name (SandBoxCore has none) |
+| `lord_template_rosters.xslt` | `SandBoxCore/ModuleData/sandboxcore_equipment_sets.xml` **and** `SandBox/ModuleData/sandbox_equipment_sets.xml` (it strips SandBox's noble teen templates); gate: `LordTemplateRosterTests` |
 
 ## Passthrough Requirements (CRITICAL)
 - Always pass through ALL vanilla attributes: `<xsl:apply-templates select="@*"/>`

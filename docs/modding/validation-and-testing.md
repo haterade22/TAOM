@@ -122,7 +122,8 @@ Three consequences the table cannot show on its own.
   entirely unvalidated ([moduledata-validation rule](../../.claude/rules/moduledata-validation.md)).
 - **No tool models XSLT.** `check_external_xslt.py` proves 17 stylesheets are well formed and
   nothing more. `TAOM_Map/ModuleData/settlements.xslt` is opened only to regex one boolean, and
-  `/xslt-check` reads the repo's copies alone. A stylesheet that rewrites a vanilla culture in place
+  only three test classes transform the repo's copies (`CulturePartyTemplateTests`,
+  `LordFamilyTransformTests`, `LordTemplateRosterTests`). A stylesheet that rewrites a vanilla culture in place
   is invisible to every gate here ([tools/README.md](../../tools/README.md) "No tool in this section
   models XSLT").
 

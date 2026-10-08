@@ -129,7 +129,7 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
 
 ## Phase 4 — Re-verify TAOM against the new engine
 
-1. **`/verify-bindings`**: every Harmony patch / GameModel / reflection site, and the prefab gates
+1. **The binding gate** ([Running the gate](../../../docs/reference/taleworlds-api-snapshot/README.md)): every Harmony patch / GameModel / reflection site, and the prefab gates
    in the same category. `PrefabCloneWidgetReferenceTests` is the one to read when a vanilla prefab
    moved: a TAOM clone REPLACES the vanilla file, so a widget reference the engine adds (v1.5.0
    `BloodFeudIconWidget`, v1.5.3 the ship banners) is a null the widget dereferences on frame one.

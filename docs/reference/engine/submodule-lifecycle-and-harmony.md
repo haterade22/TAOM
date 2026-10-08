@@ -71,7 +71,7 @@ they exist (Phase 7/9).
   drift degrades gracefully instead of crashing. Its owner-filter must enumerate every `new Harmony("X")` in vendored
   DLLs we ship, not namespace prefixes (`feedback_harmony_owner_allowlist_from_vendored_dll_enumeration`).
 - **Patch signature verification** — before writing/maintaining a patch, verify the target signature with `ilspycmd` on
-  the *installed* DLLs (CLAUDE.md "Research First"; `/verify-bindings` refreshes the committed API snapshot after an
+  the *installed* DLLs (CLAUDE.md "Research First"; [Running the gate](../taleworlds-api-snapshot/README.md) refreshes the committed API snapshot after an
   engine bump). A wrong target = silent no-op (Postfix) or TypeLoad at startup (Prefix/Transpiler).
 
 ## The native boundary

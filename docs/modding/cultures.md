@@ -364,7 +364,7 @@ Code: No code changes needed
 | `dotnet test TAOM.Tests --filter CultureLordTemplate` | The `<lord_templates>` side of the same contract. |
 | `python tools/audit_cc_bonuses.py --report` | Read-only. The skill, attribute and focus bonuses each culture's character-creation options grant, which is where a new culture ends up over- or under-powered against the rest. |
 
-`/xslt-check` is a Claude Code skill, not a shell command. It validates a stylesheet against vanilla passthrough, and it only reaches stylesheets under `Main/_Module/ModuleData/`.
+The passthrough rules and the vanilla file map a stylesheet must match are in [.claude/rules/xslt.md](../../.claude/rules/xslt.md). `CulturePartyTemplateTests` runs `spcultures.xslt` over a sentinel stub; for the other stylesheets, transform the vanilla file and diff the output by hand.
 
 None of these checks a number for being sensible. A troop bound to the wrong tier, a patrol template of 400 men, a colour that reads as black on the map: all of that is green.
 

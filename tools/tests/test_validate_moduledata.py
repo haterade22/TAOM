@@ -2031,7 +2031,7 @@ class ArmoryStructuralAssumptionTests(unittest.TestCase):
     MOUNTED_DWARF therefore never run against the Armory.
 
     That costs nothing purely because of what the Armory currently contains: items
-    and monsters, nothing else. `/author-armor`'s workflow makes it plausible somebody
+    and monsters, nothing else. the troop-tree workflow makes it plausible somebody
     authors a troop or a roster there, at which point those checks no-op in silence.
     This test makes that assumption fail loudly instead. Issue #462.
     """

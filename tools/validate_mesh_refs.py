@@ -65,7 +65,7 @@ Usage:
 --check-name skips the audit and scans every module's loose Assets/ and AssetPackages/ alike
 (case ignored; the engine lowercases a requested name): exit 0 free, 1 taken (the holding
 packages are listed), 2 when a package could not be read and "free" cannot be claimed. The
-/new-map-prop skill runs it before a prop is built.
+procedure in docs/reference/tpac-static-prop-authoring.md runs it before a prop is built.
 
 Exit code (mirrors validate_moduledata.py): 1 if any ERROR (or any WARNING with
 --warnings-as-errors), 2 if an input path is bad, else 0.

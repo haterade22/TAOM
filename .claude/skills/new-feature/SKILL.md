@@ -56,5 +56,5 @@ Before scaffolding, suggest `/freeze` to the user with the new feature dir as th
 - [ ] IoC registered in `Main/IoC.cs`
 - [ ] Entry points <150 lines
 - [ ] No `#region`, `[Obsolete]`, or `#if DEBUG`
-- [ ] Build passes: `./build.ps1 -RunTests` — if it fails, route to `/build-fix`; if structural, `/investigate`
+- [ ] Build passes: `./build.ps1 -RunTests` — if it fails, fix compile errors within the retry budget in `docs/ai-includes/agent-operating-manual.md`; if structural, `/investigate`
 - [ ] `/deep-review` clean before commit (per the CLAUDE.md Skills index)

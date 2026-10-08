@@ -91,7 +91,7 @@ DEFAULT_GAME_MODULES = resolve_game_modules(
 
 # TAOM's data lives in three modules and two of them are outside this repo and
 # outside git: LOTRLOME_Armory (TAOM authors item XML straight into it, see
-# /author-armor) and TAOM_Map. Sweeping only Main/_Module/ModuleData missed 28 of
+# docs/features/troop-tree-revamp.md) and TAOM_Map. Sweeping only Main/_Module/ModuleData missed 28 of
 # the 33 dangling refs the engine reported on 2026-08-02, which is why the Armory
 # was added; TAOM_Map went unswept on the same reasoning nobody re-applied to it
 # (#462). Cross-references ONLY -- TAOM's schema contracts describe TAOM's own

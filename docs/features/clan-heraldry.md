@@ -129,7 +129,7 @@ An empty/absent `roster` ⇒ colours-only (no template, no `default_party_templa
 - `python tools/check_external_xslt.py` → **PASS** on all 17 stylesheets across the three modules.
 - Transform `spclans.xslt` over the installed `SandBox/ModuleData/spclans.xml` with lxml and assert
   the emitted `color`/`color2` plus the passthrough attributes. Reading the stylesheet text cannot
-  prove passthrough survived, which is the failure mode `/xslt-check` alone would miss.
+  prove passthrough survived, which is the failure mode a well-formedness check alone would miss.
 - All touched XML/XSLT parse as well-formed (`xml.dom.minidom`).
 - `dotnet build Main/TAOM.csproj` → 0 errors (data-only; C# unaffected).
 - **Human seam (not automatable):** in-game render of the new clan colours, kingdom troop-armor tint,

@@ -2517,11 +2517,11 @@ fi
 rm -rf "$PG"
 
 # ---------------------------------------------------------------------------
-head2 "8. /context-budget scan.sh runs under set -u and measures the launch load"
+head2 "8. tools/context_budget_scan.sh runs under set -u and measures the launch load"
 # Nothing else runs this script, and it reads the budget from tools/lint_docs.py: an unbound
-# variable or a broken JSON handshake would otherwise surface only when someone runs the skill.
+# variable or a broken JSON handshake would otherwise surface only when someone runs the scan.
 for mode in "" "--verbose"; do
-    SCAN_OUT=$(timeout -k 2 60 bash -u .claude/skills/context-budget/scan.sh $mode 2>&1)
+    SCAN_OUT=$(timeout -k 2 60 bash -u tools/context_budget_scan.sh $mode 2>&1)
     SCAN_RC=$?
     if [[ $SCAN_RC -ne 0 ]]; then
         bad "scan.sh ${mode:-(default)} exit $SCAN_RC: $(printf '%s' "$SCAN_OUT" | tail -2 | tr '\n' ' ')"

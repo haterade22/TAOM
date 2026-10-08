@@ -53,7 +53,7 @@ The highest-trust category: real bugs found by reading, not speculation.
   campaign, unguarded `Mission.Current`.
 - Harmony patch correctness: private-field injection underscore counts (`____match` is `___` plus
   `_match`), patch signatures against the installed engine (AGENTS.md "Target"; bindings are verified
-  in the committed API snapshot by `/verify-bindings`), Prefixes returning `false` that drop a vanilla
+  in the committed API snapshot by the binding gate), Prefixes returning `false` that drop a vanilla
   safety gate buried in a helper, patches with `MovementOrder` in their signature outside the deferred
   `Patch_MissionTime_SetMovementOrder` category.
 - Threads: engine `_MT` callers mean patches fire from worker threads; mutable service state without
@@ -168,7 +168,7 @@ Cite the ADR or rule in each finding (AGENTS.md "Architecture"):
 
 - BUTR stack (Harmony, UIExtenderEx, ButterLib, MCM): pinning against
   `docs/migration/dr3-maintenance.md`; stub-module `vX.Y.99.0` rows behind a bumped minor.
-- Engine drift: bindings against the installed version (`/verify-bindings` and the API snapshot: cite,
+- Engine drift: bindings against the installed version (the binding gate and the API snapshot: cite,
   don't re-derive); decompile caches keyed to an old version still consulted.
 - Deprecated APIs with announced removal.
 - Vendored dependencies: the inlined BehaviorTrees source is decided; flag only divergence from that
@@ -188,7 +188,7 @@ Cite the ADR or rule in each finding (AGENTS.md "Architecture"):
 - Slow feedback: build times, test startup, `taom-src` cache misses, hook cost per tool call.
 - Onboarding: wrong setup steps, undocumented environment variables (`BANNERLORD_GAME_DIR`), paths that
   assume one machine.
-- Harness health: `/context-budget` and `bash tools/test_hooks.sh` own the skills, agents and rules
+- Harness health: `bash tools/context_budget_scan.sh` and `bash tools/test_hooks.sh` own the skills, agents and rules
   audit; run or cite them and flag only what they cannot see.
 - Silent failures: features that fail in game with nothing in any log.
 

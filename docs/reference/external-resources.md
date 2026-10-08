@@ -9,7 +9,7 @@ Curated, verified external references for improving TAOM (Bannerlord 1.4.5 LOTR 
 | Resource | Status | Use for |
 |---|---|---|
 | **[moddocs.bannerlord.com](https://moddocs.bannerlord.com/)** — *OFFICIAL (TaleWorlds)* | ✅ | The authoritative modding reference: asset management, XSLT usage, best practices, editor, audio, Workshop. **Canonical — prefer over the community mirrors.** |
-| **[apidoc.bannerlord.com](https://apidoc.bannerlord.com/)** — *OFFICIAL API ref* | 🔎 | TaleWorlds.Core/CampaignSystem/Engine API surface. **⚠️ lags at v1.3.14** — for 1.4.5 keep using `pwsh tools/taom-src.ps1` + `/verify-bindings` (decompilation is our source of truth). |
+| **[apidoc.bannerlord.com](https://apidoc.bannerlord.com/)** — *OFFICIAL API ref* | 🔎 | TaleWorlds.Core/CampaignSystem/Engine API surface. **⚠️ lags at v1.3.14** — for 1.4.5 keep using `pwsh tools/taom-src.ps1` + the binding gate (decompilation is our source of truth). |
 | **[docs.bannerlordmodding.com](https://docs.bannerlordmodding.com/)** — *community* ([Bannerlord-Modding/Documentation](https://github.com/Bannerlord-Modding/Documentation)) | ✅ | Community C# API / Gauntlet / XML reference. Practical, but **not official** (the research initially mislabeled it "official" — it isn't). |
 | **[docs.bannerlordmodding.lt](https://docs.bannerlordmodding.lt/modding/models/)** — *community* | ✅ | Has the clearest **GameModel decorator-pattern** write-up (wrap-previous-model, delegate, override) + localization notes. |
 | **[BUTR ReferenceAssemblies docs](https://butr.github.io/Bannerlord.ReferenceAssemblies.Documentation/)** | 🔎 | DocFX API reference; sometimes more current than apidoc when TaleWorlds lags. |
@@ -25,7 +25,7 @@ Curated, verified external references for improving TAOM (Bannerlord 1.4.5 LOTR 
 
 - **[Tolkien Gateway](https://tolkiengateway.net/)** ✅ — canonical wiki; primary authority for faction/culture/settlement/character lookups (the culture→LOTR mapping work).
 - **[Encyclopedia of Arda](https://encyclopedia-of-arda.com/)** ✅ + **[Arda Maps](http://arda-maps.org/)** 🔎 — names/pronunciation + interactive geography for authentic settlement placement.
-- **Naming generators** ([RealElvish — Gondor](https://realelvish.net/naming/gondor/) ✅ · [Rohirrim](https://realelvish.net/naming/rohirrim/) ✅) — culturally-correct lord/NPC names (Sindarin vs Old-English; Rohirrim "echo the parent's name" rule). **Feed these into `/new-culture` + `/lord-skills`.**
+- **Naming generators** ([RealElvish — Gondor](https://realelvish.net/naming/gondor/) ✅ · [Rohirrim](https://realelvish.net/naming/rohirrim/) ✅) — culturally-correct lord/NPC names (Sindarin vs Old-English; Rohirrim "echo the parent's name" rule). **Feed these into `docs/ai-includes/new-culture-authoring.md` + `docs/ai-includes/lord-skills-authoring.md`.**
 - **Books**: *The Atlas of Middle-earth* (Karen Wynn Fonstad, ISBN 9780618126996) — maps incl. travel-days for settlement/distance authenticity; *The Complete Guide to Middle-earth* (Robert Foster, 2022, ISBN 9780008537814); *The Peoples of Middle-earth* (HoME Vol. 12) for Dúnedain/Gondor/Rohan ancestry; Tolkien's own *Guide to the Names in LOTR* (naming principles).
 - ⚠️ **Skip** Ruth Noel's *The Languages of Tolkien's Middle-earth* — pre-Silmarillion, known errors. The `lotr.fandom.com` wiki is fan-driven — cross-check against Tolkien Gateway, don't treat as canon.
 
@@ -37,7 +37,7 @@ Curated, verified external references for improving TAOM (Bannerlord 1.4.5 LOTR 
 
 ## Known gaps (no good external resource exists)
 
-- **No published v1.4.5 API docs** — decompilation (`taom-src` / `/verify-bindings`) is the source of truth. Already handled.
+- **No published v1.4.5 API docs** — decompilation (`taom-src` / the binding gate) is the source of truth. Already handled.
 - **No Bannerlord-specific perf profiler/guide** — profile our own hot paths (GameModel ticks, Harmony per-frame patches, SpatialGrid) if/when a perf issue actually surfaces. Don't pre-build a harness.
 - **No LOTR-mod-authoring resource library** — TAOM's own domain docs (`docs/ai-includes/new-culture-authoring.md`, etc.) are the asset; nothing external matches.
 

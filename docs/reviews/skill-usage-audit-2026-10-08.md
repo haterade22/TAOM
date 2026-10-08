@@ -63,11 +63,14 @@ script or the doc.
 | Keep | 17 skills (below) | Keep | |
 | A | migration-status, agent-introspection-debugging, knowledge-compile, skill-stocktake, lint-cleanup-loop, finish-branch, context-save, context-restore | Remove | Approved, removed |
 | B | humanizer, doc-graph, lint-docs, codex-verify, deslop, scope-check | Remove | Approved, removed |
-| C | taom-src, research, build-fix, verify-bindings, xslt-check, commit-split, context-budget | Remove | Approved; waits until another session commits its edits to `engine-bump/SKILL.md` and `.claude/rules/moduledata-validation.md` |
-| D | author-armor, new-culture, lord-skills, new-adr, new-map-prop, refine-creature-anim, new-creature-mount | Remove | Approved; waits with group C |
+| C | taom-src, research, build-fix, verify-bindings, xslt-check, commit-split, context-budget | Remove | Approved, removed (`scan.sh` moved to `tools/context_budget_scan.sh`) |
+| D | author-armor, new-culture, lord-skills, new-adr, new-map-prop, refine-creature-anim, new-creature-mount | Remove | Approved, removed |
 
 One change from the plan: skill-stocktake's "un-skilled workflow" check was dropped rather than moved,
-since it asks for more skills and this audit found the opposite problem.
+since it asks for more skills and this audit found the opposite problem. Left as found: the doc
+comments and assert messages in `TAOM.Tests/Features/XmlMerge/XmlMergeLiveEquivalence*Tests.cs`
+still say `/verify-bindings`, because a C# edit needs `/deep-review`; fold them into the next
+reviewed change to those files.
 
 ## Keep (17)
 

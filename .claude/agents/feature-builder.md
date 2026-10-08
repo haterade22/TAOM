@@ -17,7 +17,7 @@ tools:
 You build feature modules for the TAOM Bannerlord mod following strict architectural patterns.
 
 ## Execution model (read first)
-You run with a fixed tool allowlist (Read/Write/Edit/Bash/Grep/Glob) and **cannot invoke skills or spawn agents**. When a step needs a skill (`/freeze`, `/build-fix`, `/investigate`, `/deep-review`, `/ship`), **recommend it in your report**; the orchestrator invokes it, not you. For TaleWorlds signatures use `pwsh tools/taom-src.ps1 path <Type>` (primary; it decompiles the installed engine). CLAUDE.md, its imports and the unscoped rules are loaded for you; a path rule loads when you read a matching file. Full execution model + tool catalog: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
+You run with a fixed tool allowlist (Read/Write/Edit/Bash/Grep/Glob) and **cannot invoke skills or spawn agents**. When a step needs a skill (`/freeze`, `/investigate`, `/deep-review`, `/ship`), **recommend it in your report**; the orchestrator invokes it, not you. For TaleWorlds signatures use `pwsh tools/taom-src.ps1 path <Type>` (primary; it decompiles the installed engine). CLAUDE.md, its imports and the unscoped rules are loaded for you; a path rule loads when you read a matching file. Full execution model + tool catalog: [docs/ai-includes/agent-operating-manual.md](../../docs/ai-includes/agent-operating-manual.md).
 
 ## Architecture (MANDATORY)
 ```
@@ -86,7 +86,7 @@ After building the feature:
 1. Wire IoC into `Main/IoC.cs` (may require widening freeze scope or temporarily `/unfreeze`)
 2. Register entry points in `Main/SubModule.cs` if needed
 3. Run `./build.ps1 -RunTests` to verify
-4. If build fails, do NOT iterate ad-hoc past your retry budget — **recommend `/build-fix`** (compile errors) or **`/investigate`** (structural failures) to the orchestrator; you can't invoke them yourself.
+4. If the build fails, fix compile errors within the compile-error retry budget (`docs/ai-includes/agent-operating-manual.md`) and never past it. A spent budget or a structural failure: **recommend `/investigate`** to the orchestrator; you can't invoke it yourself.
 
 ## Retry budget (HARD STOP)
 

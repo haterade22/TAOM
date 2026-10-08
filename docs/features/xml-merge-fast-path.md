@@ -272,7 +272,7 @@ every file still loads through the engine's loader.
   first XSLT, a single entry, an empty XSD path, `_replaceWhileMerging`, two XSLTs in a row, a missing file.
 - `XmlMergeLiveEquivalenceTests` (`RequiresGame`, `LiveInstall`, `BindingVerification`): the gate. Every type of the
   live module set, for `Campaign` and `CustomGame`, the timing table, and the acceptance rules in "How to run the
-  harness". Opt-in: a default run skips it unless `TAOM_RUN_BENCHMARKS=1`; `/verify-bindings` runs it.
+  harness". Opt-in: a default run skips it unless `TAOM_RUN_BENCHMARKS=1`; the binding gate runs it.
 - `LiveGateRulesTests` and `LiveMergeListBuilderTests`: those acceptance rules, pinned without the game, so they run in
   the default suite and on hosted CI. An engine exception fails even when the fast path throws the same type, and the
   message says what the fast path did; a requested module must exist (`FastMode` may be absent from the default order
@@ -288,7 +288,7 @@ every file still loads through the engine's loader.
   fingerprint (`IlCallScanner.Fingerprint`) of `CreateMergedXmlFile`, `MergeTwoXmls`, `ApplyXslt` (which
   `XsltTransformCache` copies), `ToXDocument` and `ToXmlDocument` (whose round trip the fast path drops): in order,
   each call with its constructed declaring type and parameter list, each constant (`keepDuplicates`, the loop start,
-  list indices, `""`), and each comparison and conditional branch. So `/verify-bindings` after an engine update fails
+  list indices, `""`), and each comparison and conditional branch. So the binding gate after an engine update fails
   on a reordered loop, another overload or member, a changed constant argument or a changed comparison. It does not
   pin which local or argument feeds a call, which statements a branch skips (a dropped `else`, an added `continue`, a
   nested `if`), or anything outside those five bodies (the engine's `MergeElements` included). The harness runs in the
@@ -305,7 +305,7 @@ every file still loads through the engine's loader.
 2026-10-03 on the default module order), so a plain `dotnet test` reports its two tests Skipped, with the reason
 `Opt-in: set TAOM_RUN_BENCHMARKS=1 ...`. That is the repo's switch for slow checks. A Skipped harness checked nothing.
 
-**Inside `/verify-bindings`.** No extra step. The class carries `BindingVerification`, the category the skill filters
+**Inside the binding gate.** No extra step. The class carries `BindingVerification`, the category the gate filters
 on, and `TAOM.Tests/binding-gate.runsettings` sets `TAOM_RUN_BENCHMARKS=1` for the gate's test host, because the gate
 turns every skip into a failure (without the variable the gate would fail the harness's two tests). Two default-suite
 tests pin the halves: `XmlMergeLiveEquivalenceOptInTests` the category, `BindingGateRunSettingsTests` the variable.
@@ -326,7 +326,7 @@ The module order defaults to `TAOM.Dependencies;Native;SandBoxCore;CustomBattle;
 `TAOM_XMLMERGE_MODULES` (semicolon-separated; each name is trimmed and a blank segment is ignored) to test another
 order, and every module it names must exist (an explicit list copied from the default order drops `FastMode` on an
 install without it).
-`/verify-bindings` runs it after every engine update, which is the point of having it there: a red
+The binding gate runs it after every engine update, which is the point of having it there: a red
 `MirroredEngineBodies_CallExactlyThePinnedSequence` says the engine's merge code changed, and a green one does not
 prove it did not. Also run it after a change to this feature, and whenever the module set changes shape.
 
@@ -408,7 +408,7 @@ hits. The in-game `load_ms` fields are the data to re-decide it; a cache built l
 
 The plan's three open levers were settled by the maintainer on 2026-10-03 (decision D14 of the perf run, "as
 recommended", with the review's other choices: the compiled-XSLT cache stays, the two unwritten schema counters are
-dropped, the harness is opt-in and runs in `/verify-bindings`, and every fallback writes the exception's full text at
+dropped, the harness is opt-in and runs in the binding gate, and every fallback writes the exception's full text at
 DEBUG):
 
 1. **`lords.xslt`** (about 1.1 s of the remaining NPCCharacters merge on each process's first load, 0.05 to 0.1 s
@@ -439,7 +439,7 @@ ratio ("Performance", "Timing policy"). The bar stays at 50%.
   down, the finalizer and caller notes corrected.
 - 2026-10-03: the maintainer's choices on the review's open items. The log lines lost `schema_builds`,
   `schema_cache_hits` and the header's `schema cache off`; every fast-path fallback also writes the exception's full
-  text at DEBUG; the live harness is opt-in in a default run (`TAOM_RUN_BENCHMARKS=1`) and runs in `/verify-bindings`.
+  text at DEBUG; the live harness is opt-in in a default run (`TAOM_RUN_BENCHMARKS=1`) and runs in the binding gate.
   The compiled-XSLT cache stays.
 - 2026-10-03: review and Codex follow-ups. The live gate can no longer pass on an engine exception the fast path
   matches, a missing heavy type, a requested module that is absent (`FastMode` excepted in the default order) or a fast

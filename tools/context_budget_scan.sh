@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# context-budget scanner — TAOM-adapted
+# context-budget scanner, TAOM-adapted (was the /context-budget skill's scan.sh until 2026-10-08).
 # Estimates *startup* token consumption across .claude/ components.
+# Usage: bash tools/context_budget_scan.sh [--verbose]. Reading the numbers: docs/context-budget-baseline.md.
 #
 # Important Claude Code load semantics (per https://code.claude.com/docs/en/skills):
 #   - Skill DESCRIPTIONS load at conversation start. Skill BODIES load only
@@ -33,7 +34,7 @@ VERBOSE=0
 
 # Resolve repo root from script location.
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # --- token estimators ---
 

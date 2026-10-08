@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Unit tests for tools/check_external_xslt.py (issue #462).
 
-The gap this tool closes: CI's "Validate XML & XSLT" job and `/xslt-check` both
-glob `Main/_Module/ModuleData`, so the 8 stylesheets in the live `TAOM_Map` and
+The gap this tool closes: CI's "Validate XML & XSLT" job
+globs `Main/_Module/ModuleData`, so the 8 stylesheets in the live `TAOM_Map` and
 `LOTRLOME_Armory` installs had no gate of any kind. CI structurally cannot cover
 them, because those modules are not in the checkout.
 

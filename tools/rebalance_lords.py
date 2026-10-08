@@ -19,7 +19,7 @@ the curve above and never touches a SkillSet. Through v1.4.8 those rows were dea
 skill_template; since v1.5.2 the engine lays them over the template, so they would change the lord,
 and validate_moduledata.py's SKILL_TEMPLATE_MISMATCH blocks the commit (the repair,
 sync_lord_inline_skills.py --apply, would put the SkillSet's numbers back). Retune lord skills in
-the SkillSets through apply_culture_skills_traits.py (/lord-skills). The report modes and the
+the SkillSets through apply_culture_skills_traits.py (docs/ai-includes/lord-skills-authoring.md). The report modes and the
 helpers other tools import (CULTURE_MAP, calculate_skills, detect_archetype, the parsers) stand.
 """
 

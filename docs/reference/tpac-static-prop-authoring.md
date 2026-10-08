@@ -79,6 +79,8 @@ GUID repeats, and every package is structurally sound. It cannot see whether the
 11. **Round-trip every write** before claiming it loads: reload the package and compare vertex count, positions, UV,
     channel lengths and the material's diffuse against the source. MithrilForge's `PropVerifier` deletes a package
     that fails.
+12. **If the package lives in `Main/_Module/AssetPackages/`**, add its constant to `MESH_CONSTANTS` in
+    `tools/tests/test_prefab_asset_packages.py`, then run `python -m unittest tools.tests.test_prefab_asset_packages`.
 
 ## Package layout facts
 
@@ -108,7 +110,7 @@ fallback.
   (`_7` on 1.4.6 per MithrilForge; `_9` on 1.5.3, read by TAOM). Check a new name against every tpac of every loaded
   module, not one package. MithrilForge's own check covers `Native/AssetPackages` only; TAOM also loads the `Assets/`
   trees of `TAOM_Map`, `LOTRLOME_Armory` and TAOM. **TAOM:** `python tools/validate_mesh_refs.py --check-name <name>`
-  checks both trees of every module (exit 0 free, 1 taken, 2 unverified). The procedure is `/new-map-prop`.
+  checks both trees of every module (exit 0 free, 1 taken, 2 unverified). The procedure is the recipe below.
 - Names go into XML attributes: lowercase ASCII letters, digits and underscore. Prefix TAOM props `taom_`.
 
 ## Budget

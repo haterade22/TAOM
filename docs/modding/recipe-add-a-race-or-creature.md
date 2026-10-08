@@ -151,7 +151,7 @@ That inherits `Mountable`, `CanRear`, `CanCharge`, `family_type="1"`, `monster_u
 
 ### Add a creature with its own skeleton
 
-Do not start here from this chapter. Invoke `/new-creature-mount`, then follow [creature-mount-authoring](../ai-includes/creature-mount-authoring.md) phases 1 to 5 in order: skeleton tpac, clips with `quad_movement` tagged on every movement bound clip, `action_types.xml`, `action_sets.xml` plus its `_map` and `_town_and_village` children, `monster_usage_sets.xml`, then the rider partial. `LOTRLOME_Armory/ModuleData/Monsters/LOTR/` holds the seven creature Monsters TAOM ships and is the folder your file belongs in.
+Do not start here from this chapter. Follow [creature-mount-authoring](../ai-includes/creature-mount-authoring.md) phases 1 to 5 in order: skeleton tpac, clips with `quad_movement` tagged on every movement bound clip, `action_types.xml`, `action_sets.xml` plus its `_map` and `_town_and_village` children, `monster_usage_sets.xml`, then the rider partial. `LOTRLOME_Armory/ModuleData/Monsters/LOTR/` holds the seven creature Monsters TAOM ships and is the folder your file belongs in.
 
 **Check:** `python tools/verify_mount_assets.py spider` (substitute your creature once it is registered in that script's `CREATURES` table, which today holds `spider`, `elephant` and `mumakil`), then `python tools/audit_action_set_parity.py`.
 **Then fit the hit capsules:** `python tools/skeleton_hit_capsules.py show --tpac <geo.tpac>` lists them; a radius about a ninth of a capsule's length is the Kit's default, and weapons pass through it. Fit and patch them against the skinned mesh as [bannerlord-skeleton-authoring](../reference/bannerlord-skeleton-authoring.md) "Hit capsules" describes.

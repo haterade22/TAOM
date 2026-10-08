@@ -19,7 +19,7 @@ Write `description:` as triggering conditions, ideally starting with "Use when�
 - Good: *"Use when a culture's troop tree or armor set needs authoring or revamping end-to-end."*
 - Bad: *"Scaffolds armor XML, swaps rosters, then validates."* (summarizes the body)
 
-> **CRITICAL divergence from the upstream source.** obra/superpowers permits descriptions up to **1024 characters** because they enumerate triggers verbatim. **TAOM caps descriptions at ≤30 words** (`harness-facts.md`: descriptions load eagerly into every session AND every Task spawn). Adopt the *"Use when…" framing*, NOT the length. Do not "fix" a short TAOM description by expanding it toward the upstream's. `/context-budget` flags >30-word descriptions.
+> **CRITICAL divergence from the upstream source.** obra/superpowers permits descriptions up to **1024 characters** because they enumerate triggers verbatim. **TAOM caps descriptions at ≤30 words** (`harness-facts.md`: descriptions load eagerly into every session AND every Task spawn). Adopt the *"Use when…" framing*, NOT the length. Do not "fix" a short TAOM description by expanding it toward the upstream's. `bash tools/context_budget_scan.sh` flags >30-word descriptions.
 
 ### Naming
 
@@ -126,7 +126,7 @@ For every hardcoded constant the upstream uses (tool counts, file size caps, ver
 
 After porting:
 
-1. **Run `bash .claude/skills/context-budget/scan.sh --verbose`** — confirm the new skill appears with reasonable eager (frontmatter) and lazy (body) tokens. Description over 30 words gets flagged.
+1. **Run `bash tools/context_budget_scan.sh --verbose`**: confirm the new skill appears with reasonable eager (frontmatter) and lazy (body) tokens. Description over 30 words gets flagged.
 2. **Describe the port in the commit body**: it is the changelog entry (`/release` generates `CHANGELOG.md` from commit bodies).
 3. **Commit + run `/review-codex`** for any non-trivial port: Codex catches the lifecycle and load-semantic mistakes Claude tends to make on first port.
 4. **Re-run `/security-scan`** on TAOM's own tree after the port lands. The SkillSpector regex categories run advisory (INFO) on a self-audit; the loud, full-severity pass is the foreign-tree `--external` run you did in "Security-vet FIRST" above — don't conflate the two.

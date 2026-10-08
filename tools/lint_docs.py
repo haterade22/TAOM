@@ -927,8 +927,8 @@ def _loaded_bytes(text: str) -> int:
 
 
 def context_budget_snapshot() -> dict:
-    """What the context budget measures, for tools that report it (the /context-budget skill's
-    scan.sh reads this through --context-budget-json rather than re-deriving it)."""
+    """What the context budget measures, for tools that report it (tools/context_budget_scan.sh
+    reads this through --context-budget-json rather than re-deriving it)."""
     docs, missing = entry_docs()
     entries = []
     for p in docs:

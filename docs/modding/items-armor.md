@@ -364,7 +364,7 @@ These come up on every armour job and no doc in the repo settles them. Say so ra
 - [rca-armoury-keyforce-cleanup-2026-09-01](../reviews/rca-armoury-keyforce-cleanup-2026-09-01.md) for why one gate is never enough on a deletion.
 - [module-backup-sweep](../reference/module-backup-sweep.md) for the backup-suffix rule that keeps a sidecar out of the loader.
 - [bannerlord-engine-and-toolchain](../reference/bannerlord-engine-and-toolchain.md) section 6 for the art half: FBX and textures through to a `.tpac` and the name you type into `mesh=`.
-- [author-armor skill](../../.claude/skills/author-armor/SKILL.md) for the repo's own step order, read with the cover-flag correction in this chapter.
+- [troop-tree-revamp](../features/troop-tree-revamp.md) for the repo's own step order, read with the cover-flag correction in this chapter.
 
 ---
 
