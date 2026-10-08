@@ -95,7 +95,8 @@ public sealed class ArmourAcquisitionConfigProvider : IArmourAcquisitionConfigPr
         var knockouts = ladder == null ? d.CountsKnockouts : ReadBool(ladder, "count_knockouts", d.CountsKnockouts);
         var materials = root.Element("LordsMaterials");
         return new LordsLadderConfig(steps, knockouts, ReadMaterialRows(materials, d.Materials),
-            ReadDrop(materials, d.Drop), ReadWeapons(root.Element("LadderWeapons"), d.Weapons));
+            ReadDrop(materials, d.Drop), ReadWeapons(root.Element("LadderWeapons"), d.Weapons),
+            ReadPieces(root.Element("LadderPieces"), d.Pieces));
     }
 
     private IReadOnlyList<LadderStep> ReadSteps(XElement? ladder, IReadOnlyList<LadderStep> fallback)
@@ -242,6 +243,50 @@ public sealed class ArmourAcquisitionConfigProvider : IArmourAcquisitionConfigPr
         // An empty weapon list would leave every weapon rung unclaimable.
         Revert("<LadderWeapons> has no valid <Weapon>; keeping the default picks.");
         return fallback;
+    }
+
+    private IReadOnlyDictionary<(string Culture, LadderSlot Slot), IReadOnlyList<string>> ReadPieces(XElement? pieces,
+        IReadOnlyDictionary<(string Culture, LadderSlot Slot), IReadOnlyList<string>> fallback)
+    {
+        var elements = pieces?.Elements("Piece").ToList();
+        if (elements == null || elements.Count == 0)
+            return fallback;
+
+        var lists = new Dictionary<(string Culture, LadderSlot Slot), List<string>>();
+        foreach (var el in elements)
+        {
+            var culture = el.Attribute("culture")?.Value?.Trim();
+            var item = el.Attribute("item")?.Value?.Trim();
+            var rawSlot = el.Attribute("slot")?.Value;
+            if (culture is null || culture.Length == 0)
+            {
+                Revert($"a <Piece item=\"{item}\"> names no culture; skipped.");
+                continue;
+            }
+            if (item is null || item.Length == 0)
+            {
+                Revert($"<Piece culture=\"{culture}\"> names no item; skipped.");
+                continue;
+            }
+            // The weapon rung's picks are <LadderWeapons>; a piece there would never be offered.
+            if (!LadderSlotRules.TryParse(rawSlot, out var slot) || slot == LadderSlot.Weapon)
+            {
+                Revert($"<Piece culture=\"{culture}\" item=\"{item}\"> slot=\"{rawSlot}\" is not hands, legs, shoulders, head or body "
+                       + "(a weapon belongs in <LadderWeapons>); skipped.");
+                continue;
+            }
+            var key = LordsLadderConfig.PieceKey(culture, slot);
+            if (!lists.TryGetValue(key, out var list))
+                lists[key] = list = new List<string>();
+            if (list.Contains(item))
+            {
+                Revert($"<Piece culture=\"{culture}\" slot=\"{rawSlot}\" item=\"{item}\"> is listed twice; kept once.");
+                continue;
+            }
+            list.Add(item);
+        }
+        // Unlike the weapon picks, no row is a valid state: a rung with no configured piece offers its ordinary choices.
+        return lists.ToDictionary(p => p.Key, p => (IReadOnlyList<string>)p.Value);
     }
 
     private (int heavy, int elite, int lord) ReadGate(XElement? gate, ArmourAcquisitionConfig d)

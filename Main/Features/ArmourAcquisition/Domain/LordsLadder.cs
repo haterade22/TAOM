@@ -130,14 +130,23 @@ public sealed class LordsLadderConfig
 {
     public LordsLadderConfig(IReadOnlyList<LadderStep> steps, bool countsKnockouts,
         IReadOnlyDictionary<string, string> materials, MaterialDrop drop,
-        IReadOnlyDictionary<string, IReadOnlyList<string>> weapons)
+        IReadOnlyDictionary<string, IReadOnlyList<string>> weapons,
+        IReadOnlyDictionary<(string Culture, LadderSlot Slot), IReadOnlyList<string>>? pieces = null)
     {
         Steps = steps;
         CountsKnockouts = countsKnockouts;
         Materials = materials;
         Drop = drop;
         Weapons = weapons;
+        Pieces = pieces ?? NoPieces;
     }
+
+    private static readonly IReadOnlyDictionary<(string Culture, LadderSlot Slot), IReadOnlyList<string>> NoPieces =
+        new Dictionary<(string Culture, LadderSlot Slot), IReadOnlyList<string>>();
+
+    /// <summary>The key of <see cref="Pieces"/>: the culture id without case, and an armour rung's slot.</summary>
+    public static (string Culture, LadderSlot Slot) PieceKey(string cultureId, LadderSlot slot) =>
+        (cultureId.ToLowerInvariant(), slot);
 
     /// <summary>The rungs in the order they are climbed.</summary>
     public IReadOnlyList<LadderStep> Steps { get; }
@@ -152,4 +161,10 @@ public sealed class LordsLadderConfig
 
     /// <summary>Culture id to the weapons its weapon rung may award, in the order offered.</summary>
     public IReadOnlyDictionary<string, IReadOnlyList<string>> Weapons { get; }
+
+    /// <summary>
+    /// Named pieces a culture's armour rung offers before its ordinary choices, by <see cref="PieceKey"/>; empty
+    /// when the config has none. Looked up for the hero's own culture only, never through its armour donor.
+    /// </summary>
+    public IReadOnlyDictionary<(string Culture, LadderSlot Slot), IReadOnlyList<string>> Pieces { get; }
 }

@@ -68,10 +68,10 @@ These two are written on all 14 entries and on all 8 XSLT rewrites, and nothing 
 | `clan` | `Faction.<id>` | One of `kingdom` or `clan` | see above | Targets a single clan instead of a kingdom. Wins over `kingdom` when both are written. | `Kingdom.cs:783` |
 | `value` | integer | Yes | the load throws | Only the sign is read. Below zero declares war, zero or above sets neutral. `-1` and `-100` are the same row; `0` and `1` are the same row. | `Kingdom.cs:784` |
 | `isAtWar` | `true` or `false` | No | nothing extra happens | `true` declares war on top of whatever `value` already did. `false` does nothing at all: it cannot cancel a war that a negative `value` just declared. | `Kingdom.cs:792` |
-| `<policies>` | wrapper element | No | only the culture's default policies apply | Matched by exact lower-case name, in the `else` branch, so one element cannot be both this and `relationships`. | `Kingdom.cs:800` |
-| `id` | policy id | Yes on a policy row | the load throws | The raw policy id, for example `policy_castle_charters`, with **no** `Policy.` prefix, unlike every other reference in this file. An id that does not resolve is skipped in silence. | `Kingdom.cs:806` |
+| `<policies>` | wrapper element | No | only the culture's default policies apply | Matched by exact lower-case name, in the `else` branch, so one element cannot be both this and `relationships`. | `Kingdom.cs:796` (v1.5.4) |
+| `id` | policy id | Yes on a policy row | the load throws | The raw policy id, for example `policy_castle_charters`, with **no** `Policy.` prefix, unlike every other reference in this file. An id that does not resolve is skipped in silence; `KingdomPolicyIdsTests` fails on one. Vanilla's own `policy_land_grants_for_veterans` is such an id (the engine spells it `policy_land_grands_for_veteran`), fixed in `spkingdoms.xslt` (#756), so new campaigns start Gondor with Land Grants for Veterans. | `Kingdom.cs:802-803` (v1.5.4) |
 
-Policies are additive. `InitializeKingdom` has already applied the culture's `DefaultPolicyList` by the time this block is read (`Kingdom.cs:573-576`) and `AddPolicy` de-duplicates (`Kingdom.cs:725-731`), so a `<policies>` block can only add. There is no way to remove a culture default from XML.
+Policies are additive. `InitializeKingdom` has already applied the culture's `DefaultPolicyList` by the time this block is read (`Kingdom.cs:571-574`, v1.5.4) and `AddPolicy` de-duplicates (`Kingdom.cs:712-718`), so a `<policies>` block can only add. There is no way to remove a culture default from XML.
 
 ## Worked example
 
@@ -113,10 +113,6 @@ Thirteen more `<relationship>` rows follow, then the tail: <!-- measured: python
         <policies>
             <policy
                 id="policy_royal_privilege" />
-            <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
             <policy
                 id="policy_castle_charters" />
         </policies>
@@ -202,7 +198,7 @@ Code: No code changes needed
 - **A pair you never mention is at peace, not at war.** The default stance between two kingdoms is Neutral (`DefaultDiplomacyModel.cs:1082-1089`), so the "list every other kingdom" advice in `docs/features/kingdom-creation.md` is a habit, not a requirement. The shipped file does not follow it: 186 of the 231 possible pairs are declared and the rest are neutral by default. <!-- measured: python pair sweep over taom_spkingdoms.xml + spkingdoms.xslt 2026-09-05 -->
 - **For a pair declared twice, the last row processed wins.** Both `DeclareWar` and `SetNeutral` overwrite the shared stance link unconditionally, because the guard they carry only ever trips for bandit factions (`FactionManager.cs:119-140`, `DefaultDiplomacyModel.cs:1073-1080`). No shipped pair currently disagrees with itself.
 - **A misspelled attribute name is ignored in silence, and the schema does not stop it.** There is a schema, `Kingdoms.xsd`, but it lives in the game root's `XmlSchemas` folder rather than with the modules: 0 `.xsd` files exist anywhere under `Modules` <!-- measured: find . -name '*.xsd' under the game's Modules folder 2026-09-05 -->, and the engine looks for it at `XmlSchemas/Kingdoms.xsd` beside the executable, or at `<your module>/ModuleData/XmlSchemas/Kingdoms.xsd` if you ship your own (`ModuleHelper.cs:242-250`). What that file governs is the merge above, not your spelling: a validation failure is printed to the log and never thrown (`MBObjectManager.cs:1324-1336`), so `colour=` instead of `color=` still gives you a black kingdom and no warning you will see.
-- **An unknown policy id is skipped, not reported** (`Kingdom.cs:806-810`), and there is no XML way to remove a policy the culture already granted.
+- **An unknown policy id is skipped, not reported** (`Kingdom.cs:802-806`, v1.5.4; `KingdomPolicyIdsTests` now fails on one, #756), and there is no XML way to remove a policy the culture already granted.
 - **Kingdom display names are English-only for 12 of the 14.** The inline `{=key}Default` is the English text, but 60 of the 70 string keys on these entries have no `<string>` row anywhere in ModuleData <!-- measured: python sweep of Main/_Module/ModuleData/**/*.xml outside Languages 2026-09-05 -->, so nothing can translate them. Only `shaghana` and `abanissa` are registered. The XSLT side does it properly, through `taom_xslt_strings.xml`, and its keys are present in all 12 language folders. <!-- measured: rg -l 'TAOM_dunland"' Main/_Module/ModuleData/Languages/*/*.xml 2026-09-05 --> See [Strings and localization](strings-and-localization.md).
 - **In the XSLT, a localization brace must be doubled.** `spkingdoms.xslt` writes `name="{{=TAOM_dunland}}Dunland"` because a single `{` inside an XSLT attribute starts an attribute value template. Copying a name out of `taom_spkingdoms.xml` into the XSLT without doubling the braces changes what the player sees (`spkingdoms.xslt:26`).
 - **Adding a kingdom means updating every kingdom-keyed config, not just diplomacy.** The RCA behind that rule is in [`docs/features/new-factions-misty-mountains-lindon.md`](../features/new-factions-misty-mountains-lindon.md).
@@ -225,7 +221,7 @@ All measured 2026-09-05, from the repo at `bannerlord-1.4.5`.
 - **22** live kingdom ids, **231** possible pairs, **186** declared: one script over both files, the same pair of sources `WarTheaterConfigInvariantsTests.LoadKingdomIds` reads. <!-- measured: python over taom_spkingdoms.xml + spkingdoms.xslt 2026-09-05 -->
 - **16** attributes on every entry, of which **14** are read and **2** are dead: `python -c "import xml.etree.ElementTree as ET;print(len(ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot()[0].attrib))"` <!-- measured 2026-09-05 -->
 - **90** numbers in Erebor's `banner_key`, which is 9 layers of 10: `python -c "import xml.etree.ElementTree as ET;print(len(ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot()[0].get('banner_key').split('.')))"` <!-- measured 2026-09-05 -->
-- **220** `<relationship>` rows and **56** `<policy>` rows in `taom_spkingdoms.xml`: `rg -c '<relationship\b' <file>` and `rg -c '<policy\b' <file>` <!-- measured 2026-09-05 -->
+- **226** `<relationship>` rows and **30** `<policy>` rows in `taom_spkingdoms.xml`: `rg -c '<relationship\b' <file>` and `rg -c '<policy\b' <file>` <!-- measured 2026-10-08 -->
 - **2** rows in `taom_spkingdoms.xml` declare war, both on `empire_w`: `rg -c 'value="-1"' Main/_Module/ModuleData/taom_spkingdoms.xml` <!-- measured 2026-09-05 -->
 - **8** relationship rows in the XSLT, forming **4** mutual pairs: `rg -c '<relationship$' Main/_Module/ModuleData/spkingdoms.xslt` plus a per-template extraction. <!-- measured 2026-09-05 -->
 - **14** ids that are both a kingdom id and a culture id: a set intersection of the kingdom ids with the `<Culture id=>` ids in `taom_spcultures.xml`. <!-- measured: python over taom_spkingdoms.xml, spkingdoms.xslt, taom_spcultures.xml 2026-09-05 -->
@@ -235,7 +231,7 @@ All measured 2026-09-05, from the repo at `bannerlord-1.4.5`.
 - **130** rows in `diplomacy.json` over **22** kingdom ids, split 61 `Hostile`, 38 `Permanent`, 24 `Natural`, 7 `Neutral`: `python -c "import json,collections;d=json.load(open('Main/_Module/ModuleData/diplomacy/diplomacy.json',encoding='utf-8-sig'))['relationships'];print(len(d),collections.Counter(r['tier'] for r in d))"` <!-- measured 2026-09-05 -->
 - **24** keys in `execution/alignment.json`, being the 22 kingdom ids plus the culture ids `gondor` and `mordor`: `python -c "import json;print(len(json.load(open('Main/_Module/ModuleData/execution/alignment.json',encoding='utf-8-sig'))))"` <!-- measured 2026-09-05 -->
 - **22** `KingdomTheaters` keys in `configs/army_targeting.json`, **18** `KingdomMessages` keys in `siege/siege_defense_config.json` (missing `goblin`, `mistymountainorcs`, `bluecraig`, `lindon`), **45** keys in `factionmap/factions.json`: `python -c "import json;print(len(json.load(open(<file>,encoding='utf-8-sig'))[<section>]))"` per file. <!-- measured 2026-09-05 -->
-- **14** `<relationship>` rows and **4** `<policy>` rows on the Erebor entry alone: `python -c "import xml.etree.ElementTree as ET;e=ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot()[0];print(len(e.find('relationships')),len(e.find('policies')))"` <!-- measured 2026-09-05 -->
+- **14** `<relationship>` rows and **2** `<policy>` rows on the Erebor entry alone: `python -c "import xml.etree.ElementTree as ET;e=ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot()[0];print(len(e.find('relationships')),len(e.find('policies')))"` <!-- measured 2026-10-08 -->
 - **13** of the 14 `owner=` heroes are declared in `characters/heroes.xml`; Dol Guldur's `lord_1_48` is not, and is matched instead by `rg -n "lord_1_48" Main/_Module/ModuleData/heroes.xslt`. <!-- measured 2026-09-05 -->
 - **12** of the 14 kingdoms have no registered string at all, and **12** language folders carry the XSLT keys: `ls Main/_Module/ModuleData/Languages/*/std_taom_xslt_strings_*.xml` and `rg -l 'TAOM_dunland"' Main/_Module/ModuleData/Languages/*/*.xml`, both 12. <!-- measured 2026-09-05 -->
 - **8** lines of `docs/features/kingdom-creation.md` spell the file `TAOM_spkingdoms.xml`: `rg -c 'TAOM_spkingdoms' docs/features/kingdom-creation.md` <!-- measured 2026-09-05 -->

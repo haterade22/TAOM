@@ -14,6 +14,17 @@
                                                         draws the named culture's character
                                                         armour into its pool, and its lord kit
                                                         (docs/features/armour-acquisition.md)
+       <Stock from="rivendell" kind="armour" match="silver" weight="1" />
+                                                        items this culture's markets carry
+                                                        beyond its own (#755): from one
+                                                        culture's items (or, without from,
+                                                        any item), kind any | armour |
+                                                        weapons | not_armour, ids the match
+                                                        pattern finds.
+                                                        Rows apply in order; the first to add
+                                                        an item sets its weight. A culture
+                                                        with Stock rows takes its market
+                                                        armour from them, not armour_from.
 
   2. <Routing> — cross-culture item routing (top-level).
        <Item id="warg_brown" cultures="isengard,mordor,gundabad,dolguldur" min_stock="1" />
@@ -37,10 +48,34 @@
        Commission rows use (Mike, 2026-09-27: "Lord kit and markets"). Their towns' markets then carry
        that culture's armour, which the armour acquisition gate sells by armoury level, and their lord
        harness is that culture's lord kit. -->
-  <Culture id="lindon" armour_from="rivendell" />
-  <!-- Arthedain's own Arnor pack is tagged Culture.gondor in the Armory, so its markets draw on
-       Gondor's, which is where the Arnor pieces are counted (2026-10-07). -->
-  <Culture id="arthedain" armour_from="gondor" />
+  <!-- Lindon stocks Rivendell's silver and silver-gold armour, never the gold, the plain cloth and
+       leather pieces that are neither (capes, leather boots, light torsos, the mask hood: what Lindon's
+       troops wear), and every Rivendell weapon (Mike, 2026-10-08, #755). <Stock> rows replace
+       armour_from for the market; armour_from still names its lord kit and material donor. -->
+  <Culture id="lindon" armour_from="rivendell">
+    <Stock from="rivendell" kind="armour" match="silver" />
+    <Stock from="rivendell" kind="armour" match="^(rivendell_(boots|boots_leather[0-9]|cape_[ab]|helmet_mask_hood|pauldron_cape|pauldron_leather_(cape|robe)|torso_light_light_tier[0-9]|vambraces_gloves1)|starter_(cavalry|infantry|ranged)_rivendell_(body|leg)_a)$" />
+    <Stock from="rivendell" kind="weapons" />
+  </Culture>
+  <!-- Arthedain stocks the Arnor kit and the Numenorean blades, and Gondor's goods only where the Arnor
+       kit has no slot: swords, axes, spears, lances, bows, shields, harness (Mike, 2026-10-08, #755). The Arnor
+       pieces are tagged Culture.gondor and the blades carry no culture, so both are picked by id; the
+       first row to add an item sets its weight. The king's crown is never sold (Mike, 2026-10-08): it is
+       Arthedain's lord's-ladder head reward (armour_acquisition_config.xml, <LadderPieces>). -->
+  <Culture id="arthedain" armour_from="gondor">
+    <Blacklist>
+      <Item id="sk_ar_art_crown_king_a" />
+    </Blacklist>
+    <Stock match="^sk_ar_art_" weight="3" />
+    <Stock match="^numenorean_" weight="3" />
+    <Stock from="gondor" kind="not_armour" weight="0.5" />
+  </Culture>
+  <!-- Gondor's own pool carries the Arnor pieces (tagged Culture.gondor); the crown stays out of it too. -->
+  <Culture id="gondor">
+    <Blacklist>
+      <Item id="sk_ar_art_crown_king_a" />
+    </Blacklist>
+  </Culture>
   <Culture id="lothlorien" armour_from="rivendell" />
   <Culture id="abanissa" armour_from="aserai" />
   <Culture id="shaghana" armour_from="aserai" />

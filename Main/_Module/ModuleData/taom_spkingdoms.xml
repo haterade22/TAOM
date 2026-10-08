@@ -80,10 +80,6 @@
             <policy
                 id="policy_royal_privilege" />
             <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
-            <policy
                 id="policy_castle_charters" />
         </policies>
     </Kingdom>
@@ -165,10 +161,6 @@
         <policies>
             <policy
                 id="policy_royal_privilege" />
-            <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
             <policy
                 id="policy_castle_charters" />
         </policies>
@@ -253,10 +245,6 @@
             <policy
                 id="policy_royal_privilege" />
             <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
-            <policy
                 id="policy_castle_charters" />
         </policies>
     </Kingdom>
@@ -339,10 +327,6 @@
         <policies>
             <policy
                 id="policy_royal_privilege" />
-            <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
             <policy
                 id="policy_castle_charters" />
         </policies>
@@ -431,10 +415,6 @@
             <policy
                 id="policy_royal_privilege" />
             <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
-            <policy
                 id="policy_castle_charters" />
         </policies>
     </Kingdom>
@@ -521,10 +501,6 @@
         <policies>
             <policy
                 id="policy_royal_privilege" />
-            <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
             <policy
                 id="policy_castle_charters" />
         </policies>
@@ -613,10 +589,6 @@
             <policy
                 id="policy_royal_privilege" />
             <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
-            <policy
                 id="policy_castle_charters" />
         </policies>
     </Kingdom>
@@ -703,10 +675,6 @@
         <policies>
             <policy
                 id="policy_royal_privilege" />
-            <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
             <policy
                 id="policy_castle_charters" />
         </policies>
@@ -798,10 +766,6 @@
         <policies>
             <policy
                 id="policy_royal_privilege" />
-            <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
             <policy
                 id="policy_castle_charters" />
         </policies>
@@ -897,10 +861,6 @@
         <policies>
             <policy
                 id="policy_royal_privilege" />
-            <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
             <policy
                 id="policy_castle_charters" />
         </policies>
@@ -1000,10 +960,6 @@
         <policies>
             <policy
                 id="policy_royal_privilege" />
-            <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
             <policy
                 id="policy_castle_charters" />
         </policies>
@@ -1105,10 +1061,6 @@
             <policy
                 id="policy_royal_privilege" />
             <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
-            <policy
                 id="policy_castle_charters" />
         </policies>
     </Kingdom>
@@ -1209,10 +1161,6 @@
             <policy
                 id="policy_royal_privilege" />
             <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
-            <policy
                 id="policy_castle_charters" />
         </policies>
     </Kingdom>
@@ -1308,10 +1256,6 @@
             <policy
                 id="policy_royal_privilege" />
             <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
-            <policy
                 id="policy_castle_charters" />
         </policies>
     </Kingdom>
@@ -1362,10 +1306,6 @@
         <policies>
             <policy
                 id="policy_royal_privilege" />
-            <policy
-                id="policy_lord_prerogative" />
-            <policy
-                id="policy_religious_privilege" />
             <policy
                 id="policy_castle_charters" />
         </policies>

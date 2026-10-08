@@ -28,8 +28,8 @@ public sealed class LordHarnessService
 
     /// <summary>
     /// The pieces a lord harness of a culture may be, from the class table only (never a vanilla piece
-    /// classed by its engine tier). A culture with no armour of its own uses the culture its markets draw
-    /// armour from (culture_marketplace_config.xml, armour_from). The culture's lord pieces; a culture with
+    /// classed by its engine tier). A culture with no armour of its own uses its armour_from donor
+    /// (culture_marketplace_config.xml). The culture's lord pieces; a culture with
     /// none offers its elite pieces; with neither, any culture's lord pieces as a last resort.
     /// </summary>
     public IReadOnlyList<string> LordPieceChoices(string? cultureId)

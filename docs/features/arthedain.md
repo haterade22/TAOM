@@ -134,7 +134,7 @@ decided one by one:
 | The compiled defaults of those three (`BattleBalanceConfig.cs`, `CombatMechanicsConfig.cs`, `BannerBearerConfig.cs`) | the same rows | the fallback for a missing file; a test per table now holds compiled and shipped equal |
 | `race_abilities/race_abilities.json` and `RaceAbilityDefaults.cs` | on Gondor's key: the Citadel Guard rally | human troops resolve their ability by culture; without a row they had none |
 | `CareerSystemIoC` archetype map | Ranger of the North (Ranged), Warden of Fornost (Infantry), Knight of Arthedain (Cavalry) | an unmapped career's ability is a no-op that still shows its toast |
-| `culture_marketplace/culture_marketplace_config.xml` | `armour_from="gondor"` | the Arnor pack is tagged `Culture.gondor` in the Armory, so Gondor's market pool is where it sits |
+| `culture_marketplace/culture_marketplace_config.xml` | `armour_from="gondor"` (lord kit and material) and three `<Stock>` rows: the Arnor kit and Numenorean blades at weight 3, Gondor's non-armour goods at 0.5 (#755); the King's Crown blacklisted | Arthedain's markets sell mostly its own gear (about 89% of the draw weight), Gondor's only for what the Arnor kit lacks (spears, lances, bows, shields, harness, more swords); the crown is never sold |
 | `special_resources/troop_resource_costs.xml` | Castar costs for the King's Guard, Knight, Ranger Captain and Warden | Gondor's elites pay Castar; so do Arthedain's |
 | `settlement_guards/settlement_guards_config.xml` | Fornost (`town_AN2`): King's Guard, Wardens, Fornost Guards | the capital's own garrison |
 | `armour_acquisition` lord's materials and weapon picks | none of its own | one material per culture that owns armour by item culture; Arthedain owns none, so through `armour_from` its lord's ladder spends Gondor's material and offers Gondor's five weapon picks (Andúril among them) |
@@ -231,8 +231,6 @@ both map tools append and `add_map_fortifications.py --check` refuses any other 
 - The faction screen has no painted portraits or special characters for Arthedain (art owed).
 - Lords, rulers, heirs and enlisted players wear the Arnor kit, but their weapons, horses and
   harnesses are still Gondor's, and the child and education rosters are Gondor's clones.
-- No item carries `Culture.arthedain`, so Arthedain towns never stock Gondor-tagged weapons and gear
-  (the market's daily filter strips them); Lindon has the same shape. Follow-up #755.
 - Combe (`village_AN3_3`) is bound to Emyn Beraid, its nearest fortification; its Bree-land name and
   its place on the map may want a second look.
 
@@ -246,6 +244,9 @@ both map tools append and `add_map_fortifications.py --check` refuses any other 
   named "[Arnor] Ranger's Bow" (`names` on the `arthedain` ranged ladder line). Emyn Forn moved
   from Fornost to Annúminas and Combe from Bree to Emyn Beraid, each to its nearest fortification.
   The 18 careers of the six cultures promoted in August got their archetypes too.
+- 2026-10-08 (#755): Arthedain's markets sell mostly its own gear, with Gondor's only where the Arnor kit
+  has no slot. The King's Crown is never sold: it is classed `named` and is the first choice on an
+  Arthedain hero's lord's-ladder head rung (`<LadderPieces>`).
 - 2026-10-07, deep review: the three careers got their battle abilities (archetype rows), the troops
   their race ability (Gondor's Citadel Guard), and Arthedain its Armourer's Commission and a place on
   Gondor's Deep Seam row; the veteran militia dropped to level 16; 64 unused cloned Gondor rosters
@@ -260,5 +261,5 @@ both map tools append and `add_map_fortifications.py --check` refuses any other 
 ## GitHub Issue
 
 - **Issue:** #753; follow-ups #754 (translations, backlog), #755 (donor-culture market weapons),
-  #756 (policy ids no kingdom can use).
+  #756 (policy ids no kingdom can use), both resolved 2026-10-08.
 - **Status:** built and verified in data; in-game check owed (#753 checklist).

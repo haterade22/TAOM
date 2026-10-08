@@ -243,12 +243,11 @@ The `<relationships>` block must include **every other kingdom** — both custom
 | Neutral | `0` | `false` |
 | Allied | `1` | `false` |
 
-The `<policies>` block should include at minimum:
+The `<policies>` block lists ids the engine defines (`DefaultPolicies`); an unknown id is dropped
+without a message, and `KingdomPolicyIdsTests` fails on one (#756). TAOM's kingdoms start with:
 ```xml
 <policies>
     <policy id="policy_royal_privilege" />
-    <policy id="policy_lord_prerogative" />
-    <policy id="policy_religious_privilege" />
     <policy id="policy_castle_charters" />
 </policies>
 ```
@@ -610,7 +609,8 @@ This feature is pure data — no C# dependencies. It does depend on:
 
 ## Tests
 
-There are no automated unit tests for kingdom XML data. Validation is performed by:
+`KingdomPolicyIdsTests` checks every kingdom and culture policy id against the engine's list (#756);
+the rest of a kingdom's data is validated by:
 
 1. Loading the game and starting a new campaign — crashes indicate missing Hero entries or broken references
 2. Checking the startup log for `"Null object reference found with ID"` entries

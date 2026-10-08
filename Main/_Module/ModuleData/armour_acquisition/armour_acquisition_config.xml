@@ -64,6 +64,13 @@
                      culture's named weapons where it has them, else a pick (Mike, 2026-09-28). A
                      culture with none uses its armour donor's. When present it lists them all;
                      a section that yields no valid row keeps the compiled defaults.
+
+  <LadderPieces>     optional: named armour pieces an armour rung offers before its ordinary choices,
+                     one <Piece culture slot item> per piece (slot is hands, legs, shoulders, head or
+                     body; a weapon belongs in <LadderWeapons>). Looked up for the hero's own culture
+                     only, never its armour donor's, and a piece the Armory does not load is skipped.
+                     Meant for a named piece (armour_classes.xml) that is never sold, so the ladder is
+                     its only route (Mike, 2026-10-08). Absent or empty: no rung gets a named piece.
 -->
 <ArmourAcquisition enabled="true">
   <Gate heavy="1" elite="2" lord="3" />
@@ -194,4 +201,9 @@
     <Weapon culture="empire" item="dunland_caerdh_axe_1h_d" />
     <Weapon culture="empire" item="dunland_caerdh_spear_o" />
   </LadderWeapons>
+
+  <!-- Arthedain's king's crown is never sold; the head rung is where it is earned (Mike, 2026-10-08) -->
+  <LadderPieces>
+    <Piece culture="arthedain" slot="head" item="sk_ar_art_crown_king_a" />
+  </LadderPieces>
 </ArmourAcquisition>

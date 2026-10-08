@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
@@ -146,8 +147,8 @@ public class CultureMarketplaceConfigProvider : ICultureMarketplaceConfigProvide
                 }
             }
 
-            // armour_from: a culture with no armour of its own draws its markets' armour, and its lord
-            // kit (docs/features/armour-acquisition.md), from another culture.
+            // armour_from: a culture with no armour of its own draws its lord kit (docs/features/armour-acquisition.md),
+            // and its markets' armour when it has no <Stock> rows, from another culture.
             var armourFrom = cultureEl.Attribute("armour_from")?.Value?.Trim();
             if (string.IsNullOrEmpty(armourFrom))
                 armourFrom = null;
@@ -158,7 +159,8 @@ public class CultureMarketplaceConfigProvider : ICultureMarketplaceConfigProvide
                 revertedFields++;
             }
 
-            _byCulture[cultureId] = new MarketplaceConfigOverride(cultureId, blacklist, boosts, armourFrom);
+            var stock = ParseStock(cultureEl, cultureId, ref revertedFields);
+            _byCulture[cultureId] = new MarketplaceConfigOverride(cultureId, blacklist, boosts, armourFrom, stock);
         }
 
         // A donor that itself draws from another culture would hand on nothing of its own: refuse the chain.
@@ -167,7 +169,7 @@ public class CultureMarketplaceConfigProvider : ICultureMarketplaceConfigProvide
             if (ov.ArmourFrom == null || !_byCulture.TryGetValue(ov.ArmourFrom, out var donor) || donor.ArmourFrom == null)
                 continue;
             _logger.LogWarning($"[CultureMarketplace] <Culture id='{ov.CultureId}'> armour_from='{ov.ArmourFrom}' draws on a culture that draws from '{donor.ArmourFrom}': ignored");
-            _byCulture[ov.CultureId] = new MarketplaceConfigOverride(ov.CultureId, ov.Blacklist, ov.WeightBoosts);
+            _byCulture[ov.CultureId] = new MarketplaceConfigOverride(ov.CultureId, ov.Blacklist, ov.WeightBoosts, null, ov.Stock);
             revertedFields++;
         }
 
@@ -233,5 +235,79 @@ public class CultureMarketplaceConfigProvider : ICultureMarketplaceConfigProvide
             _logger.LogWarning($"[CultureMarketplace] {revertedFields} override field(s) reverted to defaults — review prior warnings");
 
         _logger.LogInfo($"[CultureMarketplace] Loaded overrides for {_byCulture.Count} culture(s); {_routing.Count} cross-culture item route(s)");
+    }
+
+    /// <summary>
+    /// The culture's &lt;Stock&gt; rows (#755). A row needs a `from` culture or a `match` id pattern (a row with
+    /// neither would stock every item in the game); `kind` is any, armour, weapons or not_armour; `weight` follows the
+    /// Boost rule. A row that cannot work is skipped with a warning, a bad weight reverts to 1.
+    /// </summary>
+    private List<StockRule> ParseStock(XElement cultureEl, string cultureId, ref int revertedFields)
+    {
+        var rules = new List<StockRule>();
+        foreach (var el in cultureEl.Elements("Stock"))
+        {
+            var from = el.Attribute("from")?.Value?.Trim();
+            if (string.IsNullOrEmpty(from)) from = null;
+            var matchRaw = el.Attribute("match")?.Value;
+            if (string.IsNullOrEmpty(matchRaw)) matchRaw = null;
+            if (from == null && matchRaw == null)
+            {
+                _logger.LogWarning($"[CultureMarketplace] <Stock> in culture '{cultureId}' names neither from nor match: skipped");
+                revertedFields++;
+                continue;
+            }
+
+            var kindRaw = el.Attribute("kind")?.Value?.Trim();
+            StockKind kind;
+            if (string.IsNullOrEmpty(kindRaw) || string.Equals(kindRaw, "any", StringComparison.OrdinalIgnoreCase))
+                kind = StockKind.Any;
+            else if (string.Equals(kindRaw, "armour", StringComparison.OrdinalIgnoreCase))
+                kind = StockKind.Armour;
+            else if (string.Equals(kindRaw, "weapons", StringComparison.OrdinalIgnoreCase))
+                kind = StockKind.Weapons;
+            else if (string.Equals(kindRaw, "not_armour", StringComparison.OrdinalIgnoreCase))
+                kind = StockKind.NotArmour;
+            else
+            {
+                _logger.LogWarning($"[CultureMarketplace] <Stock> in culture '{cultureId}' has kind='{kindRaw}' (any, armour, weapons or not_armour): skipped");
+                revertedFields++;
+                continue;
+            }
+
+            Regex match = null;
+            if (matchRaw != null)
+            {
+                try
+                {
+                    match = new Regex(matchRaw, RegexOptions.CultureInvariant);
+                }
+                catch (ArgumentException ex)
+                {
+                    _logger.LogWarning($"[CultureMarketplace] <Stock> in culture '{cultureId}' has an invalid match '{matchRaw}' ({ex.Message}): skipped");
+                    revertedFields++;
+                    continue;
+                }
+            }
+
+            var weight = 1f;
+            var weightRaw = el.Attribute("weight")?.Value;
+            if (weightRaw != null)
+            {
+                if (!float.TryParse(weightRaw, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed)
+                    || !FiniteFloatValidator.IsFiniteInRange(parsed, 0f, MaxWeight))
+                {
+                    _logger.LogWarning($"[CultureMarketplace] <Stock> in culture '{cultureId}' weight='{weightRaw}' unparseable or outside [0,{MaxWeight}]: reverted to 1.0");
+                    revertedFields++;
+                }
+                else
+                {
+                    weight = parsed;
+                }
+            }
+
+            rules.Add(new StockRule(from, kind, match, weight));
+        }
+        return rules;
     }
 }

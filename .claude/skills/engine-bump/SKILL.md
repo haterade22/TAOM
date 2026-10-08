@@ -199,6 +199,9 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
      `tools/handbook_attribute_manifest.json`, its test).
    - `git grep -n "v<old>"` over README.md, `docs/modding/` and `docs/reference/` for statements of
      the current version.
+   - The hand-copied engine id sets, which stay green when the engine drops an id: the 32 policy ids
+     in `KingdomPolicyIdsTests.EnginePolicyIds` (re-read `DefaultPolicies.RegisterAll`, #756) and
+     `ENGINE_REGISTERED_ITEMS` in `tools/validate_moduledata.py` (`DefaultItems`).
 
 ## Phase 5 — Control battles before believing anything
 

@@ -52,13 +52,10 @@ public class CultureItemPoolService : ICultureItemPoolService
         var prefixHits = 0;
         var unresolved = 0;
         var routedItems = 0;
-        var armourIds = new HashSet<string>(StringComparer.Ordinal);
 
         for (var i = 0; i < all.Count; i++)
         {
             var item = all[i];
-            if (item.IsCharacterArmour)
-                armourIds.Add(item.ItemId);
 
             // Item routing OVERRIDES attribute + prefix. The item appears ONLY in the listed
             // cultures' pools (e.g., a Warg tagged Culture.isengard but routed to Isengard +
@@ -104,9 +101,9 @@ public class CultureItemPoolService : ICultureItemPoolService
             AddToGroup(grouped, overrides, cultureId, item.ItemId);
         }
 
-        var drawnArmour = MergeArmourDonors(grouped, overrides, armourIds);
-        if (drawnArmour > 0)
-            _logger.LogInfo($"[CultureMarketplace] {drawnArmour} armour piece(s) drawn into the pools of cultures with none of their own (armour_from)");
+        var stocked = ApplyStockRules(grouped, overrides, all);
+        if (stocked > 0)
+            _logger.LogInfo($"[CultureMarketplace] {stocked} item(s) drawn into pools by <Stock> rows and armour_from");
 
         _pools = new Dictionary<string, CultureItemPool>(StringComparer.OrdinalIgnoreCase);
         _totalItems = 0;
@@ -134,40 +131,74 @@ public class CultureItemPoolService : ICultureItemPoolService
         CultureAliases.TryGetValue(cultureId, out var canonical) ? canonical : cultureId;
 
     /// <summary>
-    /// A culture with no armour of its own draws on another's (<c>&lt;Culture id="lindon" armour_from="rivendell" /&gt;</c>,
-    /// docs/features/armour-acquisition.md): the donor's character armour joins its pool, under its own
-    /// blacklist and boosts. The donors' own entries are taken first, so no culture passes on armour it drew
-    /// from a third. Returns how many entries were added.
+    /// What each culture's markets carry beyond its own items. Its &lt;Stock&gt; rows (#755) apply in file order;
+    /// a culture with none but an armour_from donor (docs/features/armour-acquisition.md) takes the implicit
+    /// row &lt;Stock from="donor" kind="armour" /&gt;. A `from` row draws on the donor's own pool as built before
+    /// any culture draws on another, so routing and the donor's blacklist hold and no culture passes on what
+    /// it drew from a third; without `from` a row reads every loaded item. The first row to add an item sets
+    /// its weight, a Boost still wins, the receiver's blacklist holds, and a row that adds nothing is warned.
+    /// Returns how many entries were added.
     /// </summary>
-    private static int MergeArmourDonors(
+    private int ApplyStockRules(
         Dictionary<string, List<ItemPoolEntry>> grouped,
         IReadOnlyDictionary<string, MarketplaceConfigOverride> overrides,
-        HashSet<string> armourIds)
+        IReadOnlyList<ItemPoolItem> all)
     {
-        var donated = new List<(string CultureId, string ItemId)>();
-        foreach (var ov in overrides.Values)
-        {
-            if (string.IsNullOrEmpty(ov.ArmourFrom) || !grouped.TryGetValue(ApplyCultureAlias(ov.ArmourFrom), out var donorItems))
-                continue;
-            foreach (var entry in donorItems)
-                if (armourIds.Contains(entry.ItemId))
-                    donated.Add((ApplyCultureAlias(ov.CultureId), entry.ItemId));
-        }
+        var own = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var kvp in grouped)
+            own[kvp.Key] = kvp.Value.Select(e => e.ItemId).ToList();
+        var byId = new Dictionary<string, ItemPoolItem>(StringComparer.Ordinal);
+        for (var i = 0; i < all.Count; i++)
+            if (!byId.ContainsKey(all[i].ItemId))
+                byId[all[i].ItemId] = all[i];
 
         var added = 0;
         var present = new Dictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
-        foreach (var (cultureId, itemId) in donated)
+        foreach (var ov in overrides.Values)
         {
-            if (!present.TryGetValue(cultureId, out var ids))
+            IReadOnlyList<StockRule> rules = ov.Stock;
+            if (rules.Count == 0)
             {
-                ids = new HashSet<string>(StringComparer.Ordinal);
-                if (grouped.TryGetValue(cultureId, out var own))
-                    foreach (var entry in own)
-                        ids.Add(entry.ItemId);
-                present[cultureId] = ids;
+                if (string.IsNullOrEmpty(ov.ArmourFrom)) continue;
+                rules = new[] { new StockRule(ov.ArmourFrom, StockKind.Armour, null, 1f) };
             }
-            if (ids.Add(itemId) && AddToGroup(grouped, overrides, cultureId, itemId))
-                added++;
+
+            var cultureId = ApplyCultureAlias(ov.CultureId);
+            if (!present.TryGetValue(cultureId, out var have))
+            {
+                have = own.TryGetValue(cultureId, out var mine)
+                    ? new HashSet<string>(mine, StringComparer.Ordinal)
+                    : new HashSet<string>(StringComparer.Ordinal);
+                present[cultureId] = have;
+            }
+
+            foreach (var rule in rules)
+            {
+                IEnumerable<ItemPoolItem> candidates;
+                if (rule.From == null)
+                    candidates = all;
+                else if (own.TryGetValue(ApplyCultureAlias(rule.From), out var donorIds))
+                    candidates = donorIds.Select(id => byId[id]);
+                else
+                    candidates = Array.Empty<ItemPoolItem>();
+
+                var rowAdded = 0;
+                foreach (var item in candidates)
+                {
+                    if (rule.Kind == StockKind.Armour && !item.IsCharacterArmour) continue;
+                    if (rule.Kind == StockKind.Weapons && !item.IsWeapon) continue;
+                    if (rule.Kind == StockKind.NotArmour && item.IsCharacterArmour) continue;
+                    if (rule.Match != null && !rule.Match.IsMatch(item.ItemId)) continue;
+                    if (!have.Add(item.ItemId)) continue;
+                    if (AddToGroup(grouped, overrides, cultureId, item.ItemId, rule.Weight))
+                        rowAdded++;
+                }
+                if (rowAdded == 0)
+                    _logger.LogWarning(
+                        $"[CultureMarketplace] culture '{ov.CultureId}': a stock row (from={rule.From ?? "any"}, kind={rule.Kind}, " +
+                        $"match={rule.Match?.ToString() ?? "any"}) adds no item; check the culture id and the pattern against the loaded items");
+                added += rowAdded;
+            }
         }
         return added;
     }
@@ -176,12 +207,13 @@ public class CultureItemPoolService : ICultureItemPoolService
         Dictionary<string, List<ItemPoolEntry>> grouped,
         IReadOnlyDictionary<string, MarketplaceConfigOverride> overrides,
         string cultureId,
-        string itemId)
+        string itemId,
+        float baseWeight = 1f)
     {
         if (overrides.TryGetValue(cultureId, out var ov) && ov.Blacklist.Contains(itemId))
             return false;
 
-        var weight = 1f;
+        var weight = baseWeight;
         if (ov != null && ov.WeightBoosts.TryGetValue(itemId, out var boostWeight))
             weight = boostWeight;
 

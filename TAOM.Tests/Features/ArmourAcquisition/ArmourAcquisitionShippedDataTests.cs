@@ -92,6 +92,17 @@ public class ArmourAcquisitionShippedDataTests
     }
 
     [TestMethod]
+    public void Ladder_ArthedainsHeadRungOffersTheKingsCrown_AndNoOtherCultureDoes()
+    {
+        // Mike, 2026-10-08: the king's crown is never sold; it is earned through the head rung.
+        var ladder = new ArmourAcquisitionConfigProvider(_paths, _logger).GetConfig().Ladder;
+
+        CollectionAssert.AreEqual(new[] { "sk_ar_art_crown_king_a" },
+            ladder.Pieces[LordsLadderConfig.PieceKey("arthedain", LadderSlot.Head)].ToArray());
+        Assert.AreEqual(1, ladder.Pieces.Count, "no other culture or slot has a configured piece");
+    }
+
+    [TestMethod]
     public void LordsMaterials_TheItemsFileKeepsThemOutOfEveryEconomy()
     {
         // RCA 2026-09-28 rows 16 and 20: what keeps a material out of workshops, caravans, loot and the hideout pool.
@@ -192,7 +203,8 @@ public class ArmourAcquisitionShippedDataTests
     [TestMethod]
     public void Marketplace_CulturesWithoutArmourDrawOnTheCommissionMapping()
     {
-        // Mike, 2026-09-27: the Armourer's Commission mapping fills both the markets and the lord kit.
+        // Mike, 2026-09-27: the Armourer's Commission mapping fills the lord kit, and the markets of a culture
+        // without <Stock> rows (Lindon and Arthedain stock theirs through Stock rows, #755).
         var marketplace = new TAOM.Features.CultureMarketplace.CultureMarketplaceConfigProvider(_paths, _logger);
         var expected = new (string Culture, string Donor)[]
         {

@@ -2827,10 +2827,11 @@ class ArmourAcquisitionRefTests(unittest.TestCase):
     MARKET = "culture_marketplace/culture_marketplace_config.xml"
     QUESTS = "career_system/taom_career_quests.xml"
 
-    # The lord's gear ladder (#693): its rung quests, lord's materials and weapon picks.
+    # The lord's gear ladder (#693): its rung quests, lord's materials, weapon picks and named armour pieces.
     LADDER = ('<LordsLadder><Step slot="hands" quest="q_hands" materials="10" /></LordsLadder>'
               '<LordsMaterials><Material culture="gondor" item="lm_gondor" /></LordsMaterials>'
-              '<LadderWeapons><Weapon culture="gondor" item="anduril" /></LadderWeapons>')
+              '<LadderWeapons><Weapon culture="gondor" item="anduril" /></LadderWeapons>'
+              '<LadderPieces><Piece culture="gondor" slot="head" item="riv_chest" /></LadderPieces>')
 
     CLEAN = {
         ISSUES: '<LotrIssues><LotrIssue id="c1" cultures="lindon,rivendell" reward_item="riv_chest" '
@@ -2893,6 +2894,22 @@ class ArmourAcquisitionRefTests(unittest.TestCase):
                                    '<Material item="ironIngot4" count="3" /><Material item="mithril" count="1" />'
                                    '</Upgrade></Upgrades></ArmourAcquisition>'), "'mithril'")
 
+    def test_a_stock_row_culture_nothing_defines_is_an_error(self):
+        self._one(self._run(MARKET='<CultureMarketplaceConfig><Culture id="lindon">'
+                                   '<Stock from="gondr" /></Culture></CultureMarketplaceConfig>'), "'gondr'")
+
+    def test_a_stock_match_that_does_not_compile_is_an_error(self):
+        self._one(self._run(MARKET='<CultureMarketplaceConfig><Culture id="lindon">'
+                                   '<Stock match="[unclosed" /></Culture></CultureMarketplaceConfig>'), "does not compile")
+
+    def test_a_stock_match_that_finds_no_item_is_an_error(self):
+        self._one(self._run(MARKET='<CultureMarketplaceConfig><Culture id="lindon">'
+                                   '<Stock match="^sk_ar_art_" /></Culture></CultureMarketplaceConfig>'), "finds no item")
+
+    def test_a_stock_match_that_finds_an_item_is_clean(self):
+        self.assertEqual(self._run(MARKET='<CultureMarketplaceConfig><Culture id="lindon">'
+                                          '<Stock from="rivendell" match="chest" /></Culture></CultureMarketplaceConfig>'), [])
+
     def test_an_armour_donor_nothing_defines_is_an_error(self):
         self._one(self._run(MARKET='<CultureMarketplaceConfig><Culture id="lindon" armour_from="rivendel" />'
                                    '</CultureMarketplaceConfig>'), "'rivendel'")
@@ -2912,6 +2929,15 @@ class ArmourAcquisitionRefTests(unittest.TestCase):
     def test_a_ladder_weapon_culture_nothing_defines_is_an_error(self):
         self._one(self._run(CONFIG=self._config('<LadderWeapons><Weapon culture="rohann" item="anduril" /></LadderWeapons>')),
                   "'rohann'")
+
+    def test_a_ladder_piece_nothing_defines_is_an_error(self):
+        issues = self._run(CONFIG=self._config('<LadderPieces><Piece culture="gondor" slot="head" item="lost_crown" /></LadderPieces>'))
+        self._one(issues, "'lost_crown'")
+        self.assertEqual(issues[0].entry_id, "LadderPieces")
+
+    def test_a_ladder_piece_culture_nothing_defines_is_an_error(self):
+        self._one(self._run(CONFIG=self._config('<LadderPieces><Piece culture="arthedan" slot="head" item="riv_chest" /></LadderPieces>')),
+                  "'arthedan'")
 
     def test_a_lords_material_nothing_defines_is_an_error(self):
         issues = self._run(CONFIG=self._config('<LordsMaterials><Material culture="gondor" item="lost_ore" /></LordsMaterials>'))
@@ -2946,7 +2972,7 @@ class ArmourAcquisitionRefTests(unittest.TestCase):
         # A section renamed in the XML and the C# together would leave the gate checking nothing.
         config = vm.ET.parse(vm.MODULEDATA / self.CONFIG).getroot()
         for path in ("Upgrades/Upgrade/Material", "NamedWeapons/Item", "LordsLadder/Step",
-                     "LordsMaterials/Material", "LadderWeapons/Weapon"):
+                     "LordsMaterials/Material", "LadderWeapons/Weapon", "LadderPieces/Piece"):
             self.assertTrue(config.findall(path), f"the shipped armour config has no {path}")
         quests = vm.ET.parse(vm.MODULEDATA / self.QUESTS).getroot()
         self.assertTrue(quests.findall("CareerQuest"), "the shipped career quests have no root-level <CareerQuest>")

@@ -498,6 +498,66 @@ public class ArmourAcquisitionConfigProviderTests
     }
 
     [TestMethod]
+    public void GetConfig_LadderPieces_GroupByCultureAndSlotInTheirOrder()
+    {
+        var config = Load(Wrap(
+            "<LadderPieces><Piece culture=\"Arthedain\" slot=\"Head\" item=\"p_b\" /><Piece culture=\"arthedain\" slot=\"body\" item=\"p_c\" />" +
+            "<Piece culture=\"arthedain\" slot=\"head\" item=\"p_a\" /><Piece culture=\"arthedain\" slot=\"head\" item=\"p_b\" /></LadderPieces>"));
+
+        CollectionAssert.AreEqual(new[] { "p_b", "p_a" },
+            config.Ladder.Pieces[LordsLadderConfig.PieceKey("arthedain", LadderSlot.Head)].ToArray(),
+            "a repeated piece is kept once, and the culture is compared without case");
+        CollectionAssert.AreEqual(new[] { "p_c" }, config.Ladder.Pieces[LordsLadderConfig.PieceKey("arthedain", LadderSlot.Body)].ToArray());
+        Assert.AreEqual(2, config.Ladder.Pieces.Count);
+        AssertWarned("listed twice");
+    }
+
+    [TestMethod]
+    public void GetConfig_PieceWithoutAnItem_IsSkipped()
+    {
+        var config = Load(Wrap("<LadderPieces><Piece culture=\"arthedain\" slot=\"head\" /></LadderPieces>"));
+
+        Assert.AreEqual(0, config.Ladder.Pieces.Count);
+        AssertWarned("names no item");
+    }
+
+    [TestMethod]
+    public void GetConfig_PieceWithoutACulture_IsSkipped()
+    {
+        var config = Load(Wrap("<LadderPieces><Piece slot=\"head\" item=\"p_a\" /></LadderPieces>"));
+
+        Assert.AreEqual(0, config.Ladder.Pieces.Count);
+        AssertWarned("names no culture");
+    }
+
+    [TestMethod]
+    public void GetConfig_PieceOnTheWeaponSlot_IsSkipped()
+    {
+        // The weapon rung's picks are <LadderWeapons>; a weapon is no armour piece.
+        var config = Load(Wrap("<LadderPieces><Piece culture=\"arthedain\" slot=\"weapon\" item=\"p_a\" /></LadderPieces>"));
+
+        Assert.AreEqual(0, config.Ladder.Pieces.Count);
+        AssertWarned("weapon");
+    }
+
+    [TestMethod]
+    public void GetConfig_PieceOnAnUnknownSlot_IsSkipped()
+    {
+        var config = Load(Wrap("<LadderPieces><Piece culture=\"arthedain\" slot=\"helm\" item=\"p_a\" /></LadderPieces>"));
+
+        Assert.AreEqual(0, config.Ladder.Pieces.Count);
+        AssertWarned("helm");
+    }
+
+    [TestMethod]
+    public void GetConfig_NoLadderPieces_IsEmpty()
+    {
+        var config = Load(Wrap(""));
+
+        Assert.AreEqual(0, config.Ladder.Pieces.Count);
+    }
+
+    [TestMethod]
     public void GetConfig_NoLadderSections_UsesTheDefaults()
     {
         var config = Load(Wrap(""));

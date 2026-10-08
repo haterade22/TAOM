@@ -42,6 +42,10 @@ class Classify(unittest.TestCase):
         # rebalance_armor.is_excluded: a HERO_NAMES display name marks hero kit.
         self.assertEqual(gac.classify('faramir_armor_lord_a', "Faramir's Armour", 'elite', None), 'named')
 
+    def test_arthedains_crown_is_named_kit(self):
+        # Mike, 2026-10-08: never sold or looted; earned on Arthedain's lord's ladder.
+        self.assertEqual(gac.classify('sk_ar_art_crown_king_a', "[Arnor] King's Crown", None, 'light'), 'named')
+
     def test_lord_token_beats_the_roster_band(self):
         # derive_armor_tiers bands a lord chest worn from level 41 as elite; the artist named it lord.
         self.assertEqual(gac.classify('sk_gb_uruk_chest_lord_c', 'Uruk Lord Chest III', 'elite', None), 'lord')

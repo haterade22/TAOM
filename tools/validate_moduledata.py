@@ -37,8 +37,9 @@ Checks (each maps to a recurring TAOM bug class):
                              generate_armour_classes.py --apply)
   ARMOUR_ACQUISITION_REF     a LotrIssue culture / reward_item / item_source, an armour
                              acquisition named weapon or upgrade metal, a ladder weapon
-                             pick, lord's material or rung quest, or a marketplace
-                             <Culture> / armour_from that nothing defines (needs the install)
+                             pick, ladder piece, lord's material or rung quest, or a
+                             marketplace <Culture> / armour_from / <Stock from> that nothing
+                             defines, or a <Stock match> that finds no item (needs the install)
   MISSING_COLLISION_BODY     an item or crafting piece whose body_name / holster body /
                              collision body names a PhysicsShape no loaded tpac ships.
                              PreloadHelper.WaitForMeshesToBeLoaded polls that name forever:
@@ -231,8 +232,10 @@ def armour_acquisition_ref_issues(registries, moduledata: Path) -> list:
     a lord's material or a weapon pick that resolves to nothing is never handed out.
     Checked: every LotrIssue row's cultures, reward_item and item_source="item:X"; the armour
     config's NamedWeapons, upgrade Material ids, <LordsLadder> rung quests (against
-    taom_career_quests.xml), <LordsMaterials> and <LadderWeapons> items and cultures; the culture
-    marketplace config's <Culture id> and armour_from. A file that does not parse is reported, never
+    taom_career_quests.xml), <LordsMaterials>, <LadderWeapons> and <LadderPieces> items and cultures; the culture
+    marketplace config's <Culture id>, armour_from and <Stock> rows (a `from` culture that exists, a
+    `match` that compiles and finds at least one id: an empty row silently drops a culture's market
+    stock, #755). A file that does not parse is reported, never
     passed. Callers skip the pass without the install: the registry is TAOM-only then, and every
     Armory id would read as unknown."""
     items = set(registries.items) | ENGINE_REGISTERED_ITEMS
@@ -287,6 +290,10 @@ def armour_acquisition_ref_issues(registries, moduledata: Path) -> list:
             for weapon in weapons.iter("Weapon"):
                 check(rel, "LadderWeapons", "ladder weapon culture", (weapon.get("culture") or "").strip(), cultures)
                 check(rel, "LadderWeapons", "ladder weapon", (weapon.get("item") or "").strip(), items)
+        for pieces in root.iter("LadderPieces"):
+            for piece in pieces.iter("Piece"):
+                check(rel, "LadderPieces", "ladder piece culture", (piece.get("culture") or "").strip(), cultures)
+                check(rel, "LadderPieces", "ladder piece", (piece.get("item") or "").strip(), items)
         steps = [step for ladder in root.iter("LordsLadder") for step in ladder.iter("Step")]
         quests_rel = "career_system/taom_career_quests.xml"
         quests_exist = (Path(moduledata) / quests_rel).exists()
@@ -304,6 +311,18 @@ def armour_acquisition_ref_issues(registries, moduledata: Path) -> list:
         cid = (culture.get("id") or "").strip()
         check(rel, cid, "culture", cid, cultures)
         check(rel, cid, "armour_from culture", (culture.get("armour_from") or "").strip(), cultures)
+        for stock in culture.iter("Stock"):
+            check(rel, cid, "<Stock> from culture", (stock.get("from") or "").strip(), cultures)
+            pattern = stock.get("match")
+            if not pattern:
+                continue
+            try:
+                compiled = re.compile(pattern)
+            except re.error as exc:
+                report(rel, cid, f"<Stock> match '{pattern}' does not compile ({exc})")
+                continue
+            if not any(compiled.search(item) for item in items):
+                report(rel, cid, f"<Stock> match '{pattern}' finds no item id (an Armory rename empties the row)")
     return issues
 
 

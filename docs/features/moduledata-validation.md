@@ -581,7 +581,8 @@ arrives) or `item_source="item:X"`; a named weapon (it stays on sale) or an upgr
 lord's gear ladder's weapon picks and lord's materials and their cultures (never handed out), and each
 rung's quest, which must be a root-level `<CareerQuest>` in `taom_career_quests.xml` as the game reads
 it (the rung never starts); a marketplace `<Culture id>` or `armour_from` (the culture draws on no
-armour). Each resolves against `Registries.items` and `Registries.cultures`, plus the items the engine
+armour), and a `<Stock>` row's `from` culture or a `match` that does not compile or finds no item id
+(the row silently stocks nothing, #755), and a `<LadderPieces><Piece>` culture or item (the rung offers nothing). Each resolves against `Registries.items` and `Registries.cultures`, plus the items the engine
 registers in C# (`DefaultItems`: the metals among them), which no XML defines. The item registry counts
 only documents with an `<Items>` root, so a config or the generated class table quoting an id never
 defines it. A file that does not parse, or declares an unknown encoding, is reported. Without the

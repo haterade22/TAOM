@@ -103,7 +103,8 @@ public sealed class LordsLadderService
     /// <summary>
     /// What a rung may award a culture's hero. An armour rung: every lord piece of the culture for its slot, else
     /// the culture's single best elite piece there, else its best heavy piece, else any culture's lord pieces for
-    /// the slot. The weapon rung: the culture's configured weapons that are loaded.
+    /// the slot, with the culture's configured named pieces for the slot (LadderPieces) that are loaded offered
+    /// first. The weapon rung: the culture's configured weapons that are loaded.
     /// </summary>
     public IReadOnlyList<string> RewardChoices(LadderStep step, string? cultureId)
     {
@@ -113,7 +114,24 @@ public sealed class LordsLadderService
             return weapons.Where(id => _gate.GetRecord(id) != null).ToList();
         }
 
-        var slot = LadderSlotRules.ArmourSlotOf(step.Slot);
+        var named = NamedPieces(step.Slot, cultureId);
+        var ordinary = OrdinaryChoices(LadderSlotRules.ArmourSlotOf(step.Slot), cultureId);
+        return named.Count == 0 ? ordinary : named.Concat(ordinary).Distinct().ToList();
+    }
+
+    // Only the hero's own culture, never its armour donor's: a named piece belongs to one culture's story.
+    private IReadOnlyList<string> NamedPieces(LadderSlot step, string? cultureId)
+    {
+        if (cultureId is null || cultureId.Length == 0
+            || !Ladder.Pieces.TryGetValue(LordsLadderConfig.PieceKey(cultureId, step), out var pieces))
+            return Array.Empty<string>();
+        // Loaded, and fitting the rung's slot: a piece of another slot would settle this one.
+        var slot = LadderSlotRules.ArmourSlotOf(step);
+        return pieces.Where(id => _gate.GetRecord(id)?.Slot == slot).ToList();
+    }
+
+    private IReadOnlyList<string> OrdinaryChoices(ArmourSlot slot, string? cultureId)
+    {
         if (Kit(cultureId) is { } kit)
         {
             var lord = _gate.GetPieces(ArmourClass.Lord, kit, slot);

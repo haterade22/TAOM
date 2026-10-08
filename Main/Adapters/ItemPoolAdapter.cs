@@ -78,7 +78,8 @@ public class ItemPoolAdapter : IItemPoolAdapter
                 var isArmour = type == ItemObject.ItemTypeEnum.HeadArmor || type == ItemObject.ItemTypeEnum.BodyArmor
                     || type == ItemObject.ItemTypeEnum.LegArmor || type == ItemObject.ItemTypeEnum.HandArmor
                     || type == ItemObject.ItemTypeEnum.Cape;
-                items.Add(new ItemPoolItem(item.StringId, attribCulture, prefixCulture, isArmour));
+                // The engine's own test (a WeaponComponent): melee, launchers, ammunition, thrown, shields.
+                items.Add(new ItemPoolItem(item.StringId, attribCulture, prefixCulture, isArmour, item.HasWeaponComponent));
             }
 
             _logger.LogInfo($"[CultureMarketplace] ItemPoolAdapter cached {items.Count} ItemObjects from MBObjectManager");

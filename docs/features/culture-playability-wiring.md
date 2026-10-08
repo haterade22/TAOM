@@ -113,6 +113,7 @@ stage; the rest fail silently.
 | 12 | Volunteer recruitment pool | `Main/Features/TroopProgression/RecruitmentPools/` | silent — empty recruit slots |
 | 13 | Party templates: all twelve authored, all eight attributes bound, both caravan child lists bound | `taom_partyTemplates.xml` **plus** `taom_spcultures.xml` or `spcultures.xslt` | mixed: an unbound one is silently Calradian, a null or empty one is an NRE in `SpawnPatrolParty` / `SpawnCaravan`. See the contract above |
 | 14 | `as_<race>_facegen` action set, if it introduces a race | `LOTRLOME_Armory/ModuleData/action_sets.xml` (**live, external**) | fatal — T-pose / contorted mesh |
+| 15 | Market stock, if the culture owns no items of its own (its gear tagged another culture's, or untagged): `armour_from` for its lord kit and `<Stock>` rows for its markets | `culture_marketplace/culture_marketplace_config.xml` | silent: its towns never stock its gear, and the daily filter strips what arrives (#755) |
 
 Rows 1 to 3 and 8 to 9 are the ones that produce a visible break. Rows 5 to 7, 10 and 12 are the ones
 that ship. Row 13 sits in both camps and is the one that shipped nine times over: an unbound template is

@@ -445,7 +445,9 @@ HERO_NAMES = {
 # would have flattened it. The kingdom-cap curve tiers a worn item by its wearer's level
 # (--tier-source roster-first), which is what the set wanted all along, and it has its own cap
 # (mordor_numenorean, 57), so the exclusion is lifted (#583).
-EXCLUDE_ID_SUBSTRINGS = ('lotr_troll', 'cave_troll', 'glorfindel', 'gf_', 'dain_crown')
+# 'sk_ar_art_crown_king': the Arnor King's Crown, Arthedain's lord's-ladder head reward, never sold or looted
+# (Mike, 2026-10-08); generate_armour_classes.py classes an excluded piece `named`.
+EXCLUDE_ID_SUBSTRINGS = ('lotr_troll', 'cave_troll', 'glorfindel', 'gf_', 'dain_crown', 'sk_ar_art_crown_king')
 
 
 # Generated troop kit whose display names carry a hero's name: the Dol Guldur "Khamul ..." line

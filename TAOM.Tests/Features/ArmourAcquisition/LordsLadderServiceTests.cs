@@ -51,6 +51,10 @@ public class LordsLadderServiceTests
             {
                 ["gondor"] = new[] { "anduril", "not_loaded_sword" },
                 ["rivendell"] = new[] { "riv_sword" },
+            },
+            new Dictionary<(string Culture, LadderSlot Slot), IReadOnlyList<string>>
+            {
+                [LordsLadderConfig.PieceKey("arthedain", LadderSlot.Head)] = new[] { "ar_crown_king", "not_loaded_crown" },
             });
         return new ArmourAcquisitionConfig(d.Enabled, d.HeavyLevel, d.EliteLevel, d.LordLevel, d.Recipes, d.NamedWeapons,
             d.LordEventChance, d.LordEventCooldownDays, d.LordEventLeaveRelation,
@@ -67,6 +71,7 @@ public class LordsLadderServiceTests
         _gate.GetPieces(Arg.Any<ArmourClass>(), Arg.Any<string?>(), Arg.Any<ArmourSlot?>()).Returns(Array.Empty<string>());
         foreach (var id in new[] { "anduril", "riv_sword" })
             _gate.GetRecord(id).Returns(new ArmourItemRecord(id, ArmourSlot.None, 5, true, "gondor", 5000));
+        _gate.GetRecord("ar_crown_king").Returns(new ArmourItemRecord("ar_crown_king", ArmourSlot.Head, 5, false, "arthedain", 9000));
         _player = Substitute.For<IArmouryPlayerAdapter>();
         _player.HeroId.Returns(Hero);
         _player.CultureId.Returns("gondor");
@@ -378,6 +383,85 @@ public class LordsLadderServiceTests
         CollectionAssert.AreEqual(new[] { "riv_sword" }, _service.RewardChoices(Weapon, "lindon").ToArray());
     }
 
+    [TestMethod]
+    public void RewardChoices_AConfiguredPieceForTheCultureAndSlot_IsOfferedFirst()
+    {
+        Piece("ar_lord_helm", ArmourClass.Lord, ArmourSlot.Head, 900, culture: "arthedain");
+
+        CollectionAssert.AreEqual(new[] { "ar_crown_king", "ar_lord_helm" }, _service.RewardChoices(Head, "arthedain").ToArray());
+    }
+
+    [TestMethod]
+    public void RewardChoices_AConfiguredPiece_IsNotRepeatedWhenTheKitAlsoListsIt()
+    {
+        Piece("ar_lord_helm", ArmourClass.Lord, ArmourSlot.Head, 900, culture: "arthedain");
+        Piece("ar_crown_king", ArmourClass.Lord, ArmourSlot.Head, 9000, culture: "arthedain");
+
+        CollectionAssert.AreEqual(new[] { "ar_crown_king", "ar_lord_helm" }, _service.RewardChoices(Head, "arthedain").ToArray());
+    }
+
+    [TestMethod]
+    public void RewardChoices_AConfiguredPiece_CultureIdIsComparedWithoutCase()
+    {
+        CollectionAssert.AreEqual(new[] { "ar_crown_king" }, _service.RewardChoices(Head, "Arthedain").ToArray());
+    }
+
+    [TestMethod]
+    public void RewardChoices_AConfiguredPieceOfAnotherCulture_IsNotOffered()
+    {
+        Piece("gd_lord_helm", ArmourClass.Lord, ArmourSlot.Head, 900);
+
+        CollectionAssert.AreEqual(new[] { "gd_lord_helm" }, _service.RewardChoices(Head, "gondor").ToArray());
+    }
+
+    [TestMethod]
+    public void RewardChoices_AConfiguredPiece_IsNotOfferedThroughTheArmourDonor()
+    {
+        // Arthedain's donor is Gondor; a Gondor hero must not see the crown, and a hero whose donor is Arthedain
+        // would not either: the pieces are looked up for the hero's own culture only.
+        _marketplace.GetArmourDonor("arthedain").Returns("gondor");
+        _marketplace.GetArmourDonor("lindon").Returns("arthedain");
+        Piece("gd_lord_helm", ArmourClass.Lord, ArmourSlot.Head, 900);
+
+        CollectionAssert.AreEqual(new[] { "ar_crown_king", "gd_lord_helm" }, _service.RewardChoices(Head, "arthedain").ToArray());
+        CollectionAssert.AreEqual(new[] { "gd_lord_helm" }, _service.RewardChoices(Head, "gondor").ToArray());
+        Assert.IsFalse(_service.RewardChoices(Head, "lindon").Contains("ar_crown_king"));
+    }
+
+    [TestMethod]
+    public void RewardChoices_AConfiguredPiece_IsNotOfferedOnAnotherSlot()
+    {
+        ClaimableGauntlets();
+        Piece("ar_lord_gloves", ArmourClass.Lord, ArmourSlot.Hand, 900, culture: "arthedain");
+
+        CollectionAssert.AreEqual(new[] { "ar_lord_gloves" }, _service.RewardChoices(Hands, "arthedain").ToArray());
+    }
+
+    [TestMethod]
+    public void RewardChoices_AConfiguredPieceThatIsNotLoaded_IsSkipped()
+    {
+        // not_loaded_crown has no record: the Armory no longer ships it.
+        Assert.IsFalse(_service.RewardChoices(Head, "arthedain").Contains("not_loaded_crown"));
+    }
+
+    [TestMethod]
+    public void RewardChoices_AConfiguredPieceOfAnotherSlot_IsNotOffered()
+    {
+        // A row naming a chest on the head rung would let the chest settle the head slot.
+        _gate.GetRecord("ar_crown_king").Returns(new ArmourItemRecord("ar_crown_king", ArmourSlot.Body, 5, false, "arthedain", 9000));
+
+        Assert.IsFalse(_service.RewardChoices(Head, "arthedain").Contains("ar_crown_king"));
+    }
+
+    [TestMethod]
+    public void RewardChoices_AConfiguredPieceAndNothingElseInTheKit_FallsBackToAnyLordPieces()
+    {
+        _gate.GetRecord("ar_crown_king").Returns((ArmourItemRecord?)null);
+        _gate.GetPieces(ArmourClass.Lord, null, ArmourSlot.Head).Returns(new[] { "any_lord_helm" });
+
+        CollectionAssert.AreEqual(new[] { "any_lord_helm" }, _service.RewardChoices(Head, "arthedain").ToArray());
+    }
+
     // --- The claim ---
 
     [TestMethod]
@@ -401,6 +485,30 @@ public class LordsLadderServiceTests
         Assert.IsFalse(_service.IsReady(Hero));
         Assert.IsFalse(_state.LadderReady.ContainsKey(Hero), "no rung is left waiting");
         Assert.AreSame(Head, _service.CurrentStep(Hero));
+    }
+
+    [TestMethod]
+    public void Claim_TheConfiguredNamedPiece_GivesItToTheCulturesHero()
+    {
+        // The crown is classed named in armour_classes.xml; Claim checks only the rung's choices, not a class.
+        _player.CultureId.Returns("arthedain");
+        Claimed(LadderSlot.Hands);
+        Ready(LadderSlot.Head);
+
+        Assert.IsTrue(_service.Claim("ar_crown_king"));
+
+        _player.Received(1).AddPiece("ar_crown_king", null, 1);
+        Assert.AreEqual(LadderSlotRules.Bit(LadderSlot.Hands) | LadderSlotRules.Bit(LadderSlot.Head), _state.LadderClaimed[Hero]);
+    }
+
+    [TestMethod]
+    public void Claim_TheConfiguredPiece_IsRefusedToAnotherCulturesHero()
+    {
+        Claimed(LadderSlot.Hands);
+        Ready(LadderSlot.Head);
+
+        Assert.IsFalse(_service.Claim("ar_crown_king"));
+        _player.DidNotReceive().AddPiece(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<int>());
     }
 
     [TestMethod]

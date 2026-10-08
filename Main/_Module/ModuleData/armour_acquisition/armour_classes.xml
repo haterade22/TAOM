@@ -590,7 +590,7 @@
   <Item id="sk_ar_art_chest_noble_heavy_b" class="heavy" />
   <Item id="sk_ar_art_chest_noble_med_a" class="heavy" />
   <Item id="sk_ar_art_chest_noble_med_b" class="heavy" />
-  <Item id="sk_ar_art_crown_king_a" class="light" next="sk_ar_art_helmet_inf_hvy_a" />
+  <Item id="sk_ar_art_crown_king_a" class="named" />
   <Item id="sk_ar_art_gloves_a" class="light" next="sk_ar_art_bracer_inf_med_a" />
   <Item id="sk_ar_art_grvs_inf_heavy_a" class="heavy" next="sk_ar_art_grvs_noble_elite_a" />
   <Item id="sk_ar_art_grvs_inf_light_a" class="light" next="sk_ar_art_grvs_inf_med_a" />

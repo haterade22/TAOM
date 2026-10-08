@@ -128,9 +128,11 @@ to 1.0 through 5.0, read live on every call (`Main/Features/ArmyTargeting/ArmyTa
 <!-- engine-ref type="TAOM.Features.CultureMarketplace.Domain.RoutedItem" file="Main/Features/CultureMarketplace/Domain/RoutedItem.cs" lines="13-15" -->
 
 `culture_marketplace_config.xml` is optional. When it is absent or empty the pools are derived from
-`MBObjectManager` ([culture-marketplace.md:62](../features/culture-marketplace.md)). The shipped
-file carries **no `<Culture>` blocks at all**: it is one `<Routing>` section with 14 `<Item>` rows.
-<!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml').getroot();print(len(r.findall('Culture')),len(r.findall('Routing')),collections.Counter(e.tag for e in r.iter()))" 2026-09-05 -->
+`MBObjectManager` ([culture-marketplace.md:63](../features/culture-marketplace.md)). The shipped
+file carries 11 `<Culture>` blocks (ten receiving cultures with `armour_from`, two of them with `<Stock>`
+rows, and Gondor's, which only blacklists the Arnor crown) and one `<Routing>` section; 20 `<Item>` rows
+in all (18 routing, 2 blacklist).
+<!-- measured: python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml').getroot();print(len(r.findall('Culture')),len(r.findall('Routing')),collections.Counter(e.tag for e in r.iter()))" 2026-10-08 -->
 
 ### The battlefield and presentation files
 
@@ -249,8 +251,10 @@ The full cost table is in [configs-balance](configs-balance.md); price bands are
 
 | Child element (`culture_marketplace_config.xml`) | Attributes | Required | Default when absent | What it does | Read at (file:line) |
 |---|---|---|---|---|---|
-| `<Culture>/<Blacklist>/<Item>` | `id` | yes | not excluded | Keeps an item out of that culture's pool | [culture-marketplace.md:68](../features/culture-marketplace.md) |
-| `<Culture>/<Boost>/<Item>` | `id`, `weight` | `id` yes | weight 1.0 | Draw weight in 0 to 1000; a bad value reverts to 1.0 with a warning | [culture-marketplace.md:69-70](../features/culture-marketplace.md) |
+| `<Culture>/<Blacklist>/<Item>` | `id` | yes | not excluded | Keeps an item out of that culture's pool | [culture-marketplace.md:70](../features/culture-marketplace.md) |
+| `<Culture>/<Boost>/<Item>` | `id`, `weight` | `id` yes | weight 1.0 | Draw weight in 0 to 1000; a bad value reverts to 1.0 with a warning | [culture-marketplace.md:71-72](../features/culture-marketplace.md) |
+| `<Culture>` `armour_from` | culture id | no | none | The culture's lord-kit donor, and its market armour donor when it has no `<Stock>` rows | `CultureMarketplaceConfigProvider.cs` |
+| `<Culture>/<Stock>` | `from`, `kind`, `match`, `weight` | `from` or `match` | kind any, weight 1.0 | Items the culture's markets carry beyond its own, in file order (#755) | `CultureMarketplaceConfigProvider.ParseStock` |
 | `<Routing>/<Item>` | `id`, `cultures`, `min_stock` | `id`, `cultures` | `min_stock` 0 | The item ignores its own `culture=` and appears only in the listed cultures' pools | `RoutedItem.cs:13-15` |
 
 `min_stock` bypasses the per-town roster cap, which is the only reason the ten Erebor war-ram rows
@@ -440,10 +444,9 @@ Code: No code changes needed
   (`Main/Features/SettlementGuards/SettlementGuardService.cs:46-52`).
 - **An emissary troop with no `merchant_cost` row is dropped at load, not priced at zero**
   (`Main/_Module/ModuleData/elite_emissary/elite_emissary_config.xml:5-6`).
-- **`culture_marketplace_config.xml` ships with no `<Culture>` blocks.** The blacklist and boost
-  sections documented in [culture-marketplace.md:60-82](../features/culture-marketplace.md) are
-  supported but unused, so there is no shipped example to copy from; the header comment inside the
-  file is the reference.
+- **`culture_marketplace_config.xml` ships no `<Boost>` section** and one blacklisted item, the
+  Arnor King's Crown under `arthedain` and `gondor` (the shipped `<Blacklist>` example). Its other
+  `<Culture>` blocks carry `armour_from` and, for Lindon and Arthedain, `<Stock>` rows.
 - **`regions.json` carries one key that is not a faction**, `map_boundary`, so a script that treats
   the two files as parallel maps will trip on it (measured, command below).
 - **Dread aura race names and hero ids are not validated at load**, because the FaceGen registry is
@@ -468,7 +471,7 @@ All measured 2026-09-05 from the repo working tree at `Main/_Module/ModuleData/`
 | `settlement_guards_config.xml`: 16 `<Settlement>`, 0 `<Clan>`, 1 `<Culture>`, 38 `<Guard>` (37 with `spawn_points`), 16 `<Spear>` | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/settlement_guards/settlement_guards_config.xml').getroot();g=r.findall('.//Guard');print(len(r.findall('Settlement')),len(r.findall('Clan')),len(r.findall('Culture')),len(g),sum(1 for x in g if 'spawn_points' in x.attrib),len(r.findall('.//Spear')))"` |
 | `elite_emissary_config.xml`: 11 key settlements, 11 culture offer lists, 70 `<Troop>` rows | `python -c "import xml.etree.ElementTree as ET;r=ET.parse('Main/_Module/ModuleData/elite_emissary/elite_emissary_config.xml').getroot();print(len(r.findall('.//KeySettlements/Settlement')),len(r.findall('.//CultureOffers/Culture')),len(r.findall('.//Troop')))"` |
 | `troop_resource_costs.xml`: 77 `<Troop>` rows, 70 with `merchant_cost` | `python -c "import xml.etree.ElementTree as ET,collections;rows=ET.parse('Main/_Module/ModuleData/special_resources/troop_resource_costs.xml').getroot().findall('.//Troop');c=collections.Counter();[c.update(x.attrib) for x in rows];print(len(rows),dict(c))"` |
-| `culture_marketplace_config.xml`: 0 `<Culture>` blocks, 1 `<Routing>`, 14 `<Item>` rows | `python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml').getroot();print(len(r.findall('Culture')),len(r.findall('Routing')),collections.Counter(e.tag for e in r.iter())['Item'])"` |
+| `culture_marketplace_config.xml`: 11 `<Culture>` blocks, 1 `<Routing>`, 20 `<Item>` rows (2026-10-08) | `python -c "import xml.etree.ElementTree as ET,collections;r=ET.parse('Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml').getroot();print(len(r.findall('Culture')),len(r.findall('Routing')),collections.Counter(e.tag for e in r.iter())['Item'])"` |
 | `factions.json`: 45 factions, 20 playable, 17 evil, 15 free, 13 neutral, 14 fields per entry; `regions.json` 46 entries, the extra key being `map_boundary` | `python -c "import json,collections;f=json.load(open('Main/_Module/ModuleData/factionmap/factions.json'));r=json.load(open('Main/_Module/ModuleData/factionmap/regions.json'));k=set();[k.update(v) for v in f.values()];print(len(f),sum(1 for v in f.values() if v['playable']),collections.Counter(v['side'] for v in f.values()),len(k),len(r),sorted(set(r)-set(f)))"` |
 | `banner_bearers_config.json`: 28 `CultureBanners`, 5 `ExcludedRaces`, `DefaultBannerItemId` empty | `python -c "import json;b=json.load(open('Main/_Module/ModuleData/banner_bearers/banner_bearers_config.json'));print(len(b['CultureBanners']),b['ExcludedRaces'],repr(b['DefaultBannerItemId']))"` |
 | `dread_aura_config.json`: 1 hero set, 1 hero id, 1 race, 2 `raceResist` rows | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/dread_aura/dread_aura_config.json'));print(len(d['heroSets']),len(d['heroIds']),len(d['races']),len(d['raceResist']))"` |

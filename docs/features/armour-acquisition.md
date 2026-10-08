@@ -110,8 +110,9 @@ engine's own ItemCategory is an absolute tier that ignores TAOM's per-kingdom ca
    lord 3, named pieces never qualify, and an item whose XML marks it non-merchandise never does (the
    ranged ladders and starter kits were leaking). A town's level is its Barracks level plus a visiting
    master armourer's bonus, capped at 3 (`ArmouryLevelService.GetTownLevel`). A culture with no armour of
-   its own draws on another's: `<Culture id="lindon" armour_from="rivendell" />` in
-   `culture_marketplace_config.xml` merges the donor's character armour into its pool. A **daily sweep**
+   its own draws on another's: `<Culture id="lothlorien" armour_from="rivendell" />` in
+   `culture_marketplace_config.xml` merges the donor's character armour into its pool, unless the culture
+   lists `<Stock>` rows, which then decide its market stock (Lindon and Arthedain, #755). A **daily sweep**
    (`DailyTickSettlementEvent`) takes out of each town's market the gated pieces its armoury does not
    allow today: stock from before the gate, stock a visiting armourer allowed after he leaves, AI lords
    selling old loot, pieces the player sells.
@@ -246,6 +247,7 @@ target inside their kit line (the rest are mostly elite pieces with no lord sibl
 | `<LordsLadder>` | count_knockouts; `<Step slot quest materials>` | true; hands 10, legs 15, shoulders 20, head 30, body 40, weapon 60 | The rungs in climbing order, each slot once, each on its own career quest; materials 1 to 999 |
 | `<LordsMaterials>` | base_chance, chance_per_ten_kills, max_chance, min_units, max_units; `<Material culture item>` | 0.1, 0.01, 0.6, 1, 3; 13 cultures | The find after a battle won: 10%, plus 1 point per ten enemies the hero struck down in it, at most 60%, for 1 to 3 units |
 | `<LadderWeapons>` | `<Weapon culture item>` | 39 rows, 14 cultures | The weapon rung's choices per culture, in order |
+| `<LadderPieces>` | `<Piece culture slot item>` | 1 row: Arthedain's head rung, the Arnor King's Crown | Named armour an armour rung offers first, for the hero's own culture only (never through its armour donor); a piece the Armory does not load is skipped (2026-10-08) |
 
 The rung quests' deeds live in `taom_career_quests.xml` (Mike's placeholders, 2026-09-28):
 
@@ -278,7 +280,9 @@ thamaskene 260. Special resources earn about 14 per battle won, so 150 is roughl
 Ten `<Culture id armour_from>` rows, the Armourer's Commission mapping: Lindon and Lórien draw on
 Rivendell, Abanissa and Shaghana on Harad (`aserai`), Khand (`battania`) on Rhûn (`khuzait`), the
 three orc cultures and Umbar on Mordor, and Arthedain on Gondor (2026-10-07). Those cultures own 26
-of the 82 towns. The Animalia moose is
+of the 82 towns. `armour_from` always names the lord kit, ladder weapon and lord's material donor;
+for the market it only applies to a culture without `<Stock>` rows. Lindon and Arthedain stock their
+markets through `<Stock>` rows instead (#755, [culture marketplace](culture-marketplace.md)). The Animalia moose is
 routed to Mirkwood with `min_stock="1"`.
 
 ### MCM: "Armour Acquisition"
@@ -308,6 +312,11 @@ and are never sold or looted. Mike named the first seventeen on 2026-09-27 and t
 after Tuor's heirloom axe turned up for sale in play. The ladder's weapon rung is the named weapons'
 route (Mike, 2026-09-28: "named weapons, then a pick"): a hero of the weapon's culture, or of a culture
 that draws on it, chooses one at the top of the ladder. The two shields have no route yet.
+
+Named armour has one route so far: `<LadderPieces>`. The Arnor King's Crown (`sk_ar_art_crown_king_a`, classed
+`named` through `rebalance_armor.EXCLUDE_ID_SUBSTRINGS`, and blacklisted in the Arthedain and Gondor markets) is
+the first choice on an Arthedain hero's head rung, so it is earned, never sold or looted (Mike, 2026-10-08).
+King Arvegil II starts with it (`generate_new_faction_kingdoms.py`, `leader_head`).
 
 | Item | Id | Culture | Route |
 |---|---|---|---|
@@ -438,7 +447,8 @@ Run it after any troop roster change that moves a piece's lowest wearer across a
 - **With the master switch off:** the Armourer's Commission quests still appear (their chests are then
   ordinary merchandise), "The Deep Seam" still pays lord's materials that nothing spends until the switch
   is on again, the career-quest blocking change above still applies, and the `armour_from` pool merge
-  still runs, so the nine receiving cultures' markets carry their donor's armour of every class. An item
+  still runs, so the receiving cultures' markets carry their donor's armour of every class (Lindon and
+Arthedain carry what their `<Stock>` rows name). An item
   its XML marks non-merchandise (the troll gear, start kits, ladders) still never reaches a stall: the
   stock gate reads the gate's record even while gating is off (2026-10-02). The kill
   counter counts nothing, and a rung quest that still completes readies its rung without the message.

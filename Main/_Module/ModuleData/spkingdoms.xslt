@@ -68,7 +68,7 @@
       </relationships>
       <policies>
         <policy
-					id="policy_land_grants_for_veterans" />
+					id="policy_land_grands_for_veteran" />
       </policies>
     </Kingdom>
   </xsl:template>

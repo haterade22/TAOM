@@ -65,7 +65,8 @@ Optional. If absent or empty, the engine auto-derives all pools from `MBObjectMa
 | Element | Attribute | Type | Description |
 |---------|-----------|------|-------------|
 | `<Culture>` | `id` | string | Bannerlord culture StringId (e.g., `gondor`, `mordor`, `aserai`). |
-| `<Culture>` | `armour_from` | string | Optional. A culture with no armour of its own draws this culture's character armour (head, body, leg, hand, cape) into its pool, under its own blacklist and boosts; [armour acquisition](armour-acquisition.md) uses the same map for lord kit. Naming itself, or a culture that itself draws on another, is ignored with a warning. |
+| `<Culture>` | `armour_from` | string | Optional. A culture with no armour of its own draws this culture's character armour (head, body, leg, hand, cape) into its pool, under its own blacklist and boosts, unless it lists `<Stock>` rows; [armour acquisition](armour-acquisition.md) uses the same map for lord kit. Naming itself, or a culture that itself draws on another, is ignored with a warning. |
+| `<Culture><Stock>` | `from`, `kind`, `match`, `weight` | rows | Optional. What the culture's markets carry beyond its own items (#755); see "Stock rows" below. A row needs `from` or `match`. |
 | `<Blacklist><Item>` | `id` | string | Item StringId to exclude from this culture's pool. |
 | `<Boost><Item>` | `id` | string | Item StringId whose draw weight should change from the default 1.0. |
 | `<Boost><Item>` | `weight` | float | Draw weight in `[0, 1000]`. NaN / Infinity / negative / above max → revert to 1.0 with warning. |
@@ -87,14 +88,14 @@ Optional. If absent or empty, the engine auto-derives all pools from `MBObjectMa
 |------|---------|
 | `Main/Features/CultureMarketplace/CultureMarketplaceBehavior.cs` | Thin `CampaignBehaviorBase` — wires `DailyTickSettlementEvent` / `DailyTickEvent` (digest flush) / `OnGameLoaded` / `OnNewGameCreated` / `OnNewGameCreatedPartialFollowUp`. Daily tick runs three passes in order: guaranteed-stock top-up (cap-bypassing) → cross-culture filter (capped) → weighted-random injection. The follow-up event runs an uncapped initial filter sweep to clean vanilla's `DistributeInitialItemsToTowns` seed. |
 | `Main/Features/CultureMarketplace/CultureMarketplaceConfigProvider.cs` | Loads optional XML overrides, validates weights via `FiniteFloatValidator`. |
-| `Main/Features/CultureMarketplace/CultureItemPoolService.cs` | Builds the culture → `CultureItemPool` dict from `IItemPoolAdapter`, applies blacklist + weight boosts, falls through to ID prefix when attribute is missing. |
+| `Main/Features/CultureMarketplace/CultureItemPoolService.cs` | Builds the culture → `CultureItemPool` dict from `IItemPoolAdapter`, applies blacklist + weight boosts, falls through to ID prefix when attribute is missing, then applies `<Stock>` rows and `armour_from` (one draw path: a culture without Stock rows takes the implicit row `<Stock from="donor" kind="armour" />`). |
 | `Main/Features/CultureMarketplace/CultureMarketplaceInjectionService.cs` | Weighted-random draw with per-town headroom enforcement. |
 | `Main/Features/CultureMarketplace/CultureMarketplaceIoC.cs` | DryIoc registrations (all `Reuse.Singleton`). |
-| `Main/Features/CultureMarketplace/Domain/*.cs` | `MarketplaceTuning` (+ `MaxFilterRemovalsPerTick`), `CultureItemPool`, `ItemPoolEntry`, `ItemPoolItem`, `MarketplaceConfigOverride`, `RoutedItem` (item-id + cultures + min_stock), `MarketplaceDailyDigest` (accumulates the staggered per-settlement passes, renders one line per in-game day). |
-| `Main/Adapters/IItemPoolAdapter.cs` + `ItemPoolAdapter.cs` | Wraps `MBObjectManager.GetObjectTypeList<ItemObject>()`; ID-prefix table for culture fallback. |
+| `Main/Features/CultureMarketplace/Domain/*.cs` | `MarketplaceTuning` (+ `MaxFilterRemovalsPerTick`), `CultureItemPool`, `ItemPoolEntry`, `ItemPoolItem`, `MarketplaceConfigOverride`, `StockRule` (+ `StockKind`), `RoutedItem` (item-id + cultures + min_stock), `MarketplaceDailyDigest` (accumulates the staggered per-settlement passes, renders one line per in-game day). |
+| `Main/Adapters/IItemPoolAdapter.cs` + `ItemPoolAdapter.cs` | Wraps `MBObjectManager.GetObjectTypeList<ItemObject>()`; ID-prefix table for culture fallback; flags character armour and weapons (`HasWeaponComponent`). |
 | `Main/Adapters/ITownRosterAdapter.cs` + `TownRosterAdapter.cs` | Wraps `Settlement.OwnerClan.Culture` + `Settlement.ItemRoster` operations per ADR-007. Exposes `AddItem`, `GetItemCounts`, `RemoveItem` (via `AddToCounts(-N)`), `EnumerateRoster` (returning `RosterItemSnapshot` DTOs that keep `ItemObject` out of the service layer). |
 | `Main/Adapters/RosterItemSnapshot.cs` | TAOM-owned DTO carrying `ItemId + CultureStringId + Count` for one roster entry. |
-| `Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml` | Optional XML override (ships empty). |
+| `Main/_Module/ModuleData/culture_marketplace/culture_marketplace_config.xml` | Optional XML override: `armour_from` donors, Arthedain's and Lindon's `<Stock>` rows, the crown blacklist, routing. |
 
 ## Dependencies
 
@@ -103,10 +104,31 @@ Optional. If absent or empty, the engine auto-derives all pools from `MBObjectMa
 - `FiniteFloatValidator` (Core/Validation) — NaN/Infinity guard for the XML weights.
 - `MBObjectManager` (TaleWorlds) — wrapped by `IItemPoolAdapter`; the source of every loaded `ItemObject`.
 - `Settlement.ItemRoster` (TaleWorlds) — wrapped by `ITownRosterAdapter`; receives injected items via `AddToCounts(EquipmentElement, int)` (modifier-preserving overload per `.claude/rules/adapters.md`).
-- `IMarketplaceStockGate` (owned here, implemented by [armour acquisition](armour-acquisition.md)): `ForTown(townId)` hands the daily draw that town's eligibility test, so the draw narrows to the items its armoury level allows. With that feature on, heavy, elite and lord pieces need armoury level 1, 2 and 3, named pieces never qualify, and an item its XML marks `is_merchandise="false"` (ranged ladders, starter kits, the troll gear) is never injected. With it off the class rules lapse but that last one holds: the gate's record keeps each item's XML flag either way (2026-10-02; before, every item qualified, the troll gear included). The guaranteed-stock pass adds routed items by id without asking it, which is how the Animalia elk and moose reach Mirkwood markets. The `armour_from` merge is this feature's own and runs either way, so with armour acquisition off the ten receiving cultures' markets also carry their donor's armour, every class.
+- `IMarketplaceStockGate` (owned here, implemented by [armour acquisition](armour-acquisition.md)): `ForTown(townId)` hands the daily draw that town's eligibility test, so the draw narrows to the items its armoury level allows. With that feature on, heavy, elite and lord pieces need armoury level 1, 2 and 3, named pieces never qualify, and an item its XML marks `is_merchandise="false"` (ranged ladders, starter kits, the troll gear) is never injected. With it off the class rules lapse but that last one holds: the gate's record keeps each item's XML flag either way (2026-10-02; before, every item qualified, the troll gear included). The guaranteed-stock pass adds routed items by id without asking it, which is how the Animalia elk and moose reach Mirkwood markets. The `armour_from` merge is this feature's own and runs either way, so with armour acquisition off the receiving cultures' markets also carry their donor's armour, every class.
+
+## Stock rows (#755)
+
+A `<Culture>` override may list `<Stock>` rows naming what its markets carry beyond its own items:
+`from` (one culture's items; without it, every item, tagged or not), `kind` (`any`, `armour`,
+`weapons`, `not_armour`), `match` (an id pattern) and `weight` (the Boost rule, default 1). Rows apply in file
+order and the first to add an item sets its weight; the culture's blacklist holds. A culture with
+Stock rows takes its market armour from them and no longer from `armour_from`, which keeps naming
+its lord kit and lord's material donor. The town filter keeps whatever the pool carries.
+
+`match` is a .NET regex searched (not anchored) in the item id, case-sensitive: anchor it with `^`
+for a prefix. A `from` row reads the donor's pool as built, so routing and the donor's blacklist
+hold. A `<Boost>` weight beats a Stock row's weight. A row that adds nothing is warned at pool build,
+and `python tools/validate_moduledata.py` (ARMOUR_ACQUISITION_REF) fails a `from` culture that does
+not exist or a `match` that does not compile or finds no item.
+
+| Culture | Rows | Why |
+|---|---|---|
+| `arthedain` | `^sk_ar_art_` and `^numenorean_` at weight 3, then `gondor` `not_armour` at 0.5; the King's Crown blacklisted here and in `gondor` | the Arnor kit (tagged `Culture.gondor`) and the untagged Numenorean blades as the majority (about 89% of the draw weight), Gondor's goods only where the Arnor kit has no slot (swords, axes, spears, lances, bows, shields, harness); the crown is earned on the lord's ladder, never sold (Mike, 2026-10-08) |
+| `lindon` | `rivendell` armour matching `silver`, `rivendell` plain cloth and leather armour (an anchored id list), every `rivendell` weapon | silver and silver-gold Rivendell armour, never the gold, the capes, leather and light pieces Lindon's troops wear, and all weapons (Mike, 2026-10-08) |
 
 ## Tests
 
+- `TAOM.Tests/Features/CultureMarketplace/CultureMarketplaceStockRuleTests.cs`: Stock rows: Arthedain's and Lindon's shipped shape, an armour row taking no weapon, routing and the donor's blacklist holding for a `from` row, owned items neither duplicated nor reweighted, a Boost beating a Stock weight, a row that adds nothing warned, parse and validation per attribute, a refused `armour_from` chain keeping its Stock rows, and the shipped config.
 - `TAOM.Tests/Features/CultureMarketplace/CultureMarketplaceConfigProviderTests.cs`: 23 tests: missing file, malformed XML, blacklist/boost happy paths, NaN/Infinity/negative/over-max weight rejection, missing weight attribute, culture-without-id skip, idempotent re-read, **`<Routing>` parsing happy path (4 wargs)**, **`<Routing>` missing id/cultures skip + warn**, **`<Routing>` whitespace-trimming**, **`<Routing>` empty cultures string skip**.
 - `TAOM.Tests/Features/CultureMarketplace/CultureItemPoolServiceTests.cs`: 18 tests: attribute grouping, prefix fallback, no-culture-signal exclusion, blacklist application, weight boost, idempotent build, unknown-culture null return, pre-build invocation throws, attribute-vs-prefix precedence, Rohan alias normalization (Codex C2), case-insensitive alias, **routed item appears in all listed cultures**, **routed item does NOT appear in attribute culture if not in routing list**, **routing overrides attribute**, **routing honors blacklist**, **routing culture alias normalized**.
 - `TAOM.Tests/Features/CultureMarketplace/CultureMarketplaceInjectionServiceTests.cs`: 14 tests: null/unknown culture, at-cap + near-cap clamping, typical draw count, picks belong to pool, weighted-bias holds across 2000 trials (0.70 ≤ ratio ≤ 0.95 for a 10:1:1 split), empty pool, zero-total-weight pool, null RNG throws; the per-town filter: a refused item is never drawn, a filter refusing everything draws nothing, and a filter keeping everything draws exactly as no filter does.
@@ -167,7 +189,7 @@ Vanilla's `VillageGoodProductionCampaignBehavior.DistributeInitialItemsToTowns` 
 [`CultureMarketplaceMaintenanceService.FilterForeignCultureItems`](../../Main/Features/CultureMarketplace/CultureMarketplaceMaintenanceService.cs) snapshots the roster (`ITownRosterAdapter.EnumerateRoster`), computes each item's effective culture via the shared [`ICultureItemPoolService.ClassifyEffectiveCulture`](../../Main/Features/CultureMarketplace/ICultureItemPoolService.cs) (attribute → prefix → alias chain, the same logic the pool builder uses), and removes items whose effective culture is non-empty AND ≠ the town owner's culture AND NOT in the routing list for this culture AND NOT in this culture's own pool.
 
 Three safeguards:
-- **What the culture's pool carries is preserved.** A culture with no armour of its own draws its donor's through `armour_from`: a Rivendell helm in a Lindon town has effective culture `rivendell` but is in the Lindon pool, so it stays (without this, the draw and the filter would add and strip the same donated pieces every day).
+- **What the culture's pool carries is preserved.** A culture with no armour of its own draws its donor's through `armour_from` or `<Stock>` rows: a silver Rivendell helm in a Lindon town has effective culture `rivendell` but is in the Lindon pool, so it stays (and a gold one, outside Lindon's rows, is stripped) (without this, the draw and the filter would add and strip the same donated pieces every day).
 - **Routed items are preserved.** A warg in a Mordor town has effective culture `isengard` but is in the routing list for `mordor` → kept. Without this protection, the filter would treat the warg as foreign and remove it.
 - **Vanilla universals are preserved.** Items with no `Culture` attribute AND no recognized ID-prefix (food, trade goods, base vanilla armour) are left alone. The filter ONLY targets items that have positively been classified into a culture.
 
@@ -194,7 +216,7 @@ If LOTRLOME ships items for a new culture in the future, **no code changes are n
 1. an `<Item culture="Culture.<id>">` attribute pointing at a valid Bannerlord culture StringId, OR
 2. a recognizable item-ID prefix already in `ItemPoolAdapter.PrefixMap`.
 
-If the new items use a new prefix that doesn't map to an existing culture, add one row to `ItemPoolAdapter.PrefixMap` (`Main/Adapters/ItemPoolAdapter.cs`) and rebuild. The `culture_marketplace_config.xml` is only for blacklists / weight tuning, not for declaring cultures.
+If the new items use a new prefix that doesn't map to an existing culture, add one row to `ItemPoolAdapter.PrefixMap` (`Main/Adapters/ItemPoolAdapter.cs`) and rebuild. The `culture_marketplace_config.xml` tunes and extends pools (blacklists, boosts, routing, `armour_from`, `<Stock>` rows); it does not declare cultures.
 
 ## How to keep a specific item out of markets
 
@@ -238,6 +260,7 @@ Restart Bannerlord (the config is `Reuse.Singleton` and cached for the process l
 
 - **Issue:** [#207 — feat(marketplace): culture-aware item injection for town markets](https://github.com/haterade22/TAOM/issues/207)
 - **Status:** Closed
+- **Follow-up:** #755, `<Stock>` rows for Arthedain and Lindon (2026-10-08)
 
 ---
 
