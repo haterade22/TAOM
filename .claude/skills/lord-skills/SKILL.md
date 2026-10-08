@@ -24,5 +24,5 @@ The SkillSet named by `skill_template="SkillSet.taom_..."` is the source of trut
 
 ## Gotchas
 - **Saves bake values** — XML edits affect NEW campaigns + un-spawned heroes only; existing saves keep locked-in stats.
-- **Last-loaded wins** — if an id exists in both `lords.xml` and `lords.xslt`, the lords.xml version is live; the XSLT one is dead code.
+- **An id in both files merges:** `characters/lords.xml` wins each attribute and `<skill id>` it redeclares, `lords.xslt` supplies the rest, and differing `<Equipments>` sets union into a random per-campaign pick (lesson #644). Grep both files before editing a lord.
 - After any rename, grep ALL `Main/_Module/ModuleData/**/*.xml` for the OLD name (lore flavor text goes stale silently — memory `feedback_rename_grep_all_moduledata.md`).
