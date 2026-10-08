@@ -61,6 +61,16 @@ The "lightweight design pass" section was added 2026-05-29 from obra/superpowers
 
 The "reuse ladder" section was added 2026-06-18 from [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) (MIT) — its YAGNI "decision ladder" (need it? → stdlib → native → reuse dep → one-liner → build), TAOM-translated to the TaleWorlds/ADR domain (engine API → existing service or adapter → one-line delegation → minimal new code). The rest of ponytail was evaluated and consciously not adopted — already covered harder by `simplicity-criterion.md` / `/deslop` / `/deep-review` / `/improve`; full novel-vs-duplicative map + skip reasons in `docs/reviews/adopt-ponytail-2026-06-18.md`.
 
+## model-effort-selection.md
+
+Mike's request, 2026-10-08: sessions ran Opus 5.5 at high effort for everything, including searches
+and test runs. The rule routes each delegated task to the cheapest model and effort that fits and
+adds the `fast-reader`, `implementer` and `architect` tier agents (his drafts). It is an unscoped
+rule rather than a CLAUDE.md section because CLAUDE.md with its imports stood at 24,033 B against
+the 24,576 B `lint_docs.py` cap; the CLAUDE.md section is a pointer. Field names came from
+https://code.claude.com/docs/en/sub-agents and the Agent tool schema; effort precedence between a
+spawn and a definition is undocumented, hence "pass `effort` whenever you override".
+
 ## response-style.md _(merged into `output-style.md` Part 1, 2026-08-05)_
 
 ### Why this rule exists

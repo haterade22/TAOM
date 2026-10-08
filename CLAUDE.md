@@ -86,15 +86,15 @@ instructions: follow its phases in order.
 - Agents: `taleworlds-researcher`, `feature-builder`, `deep-reviewer` (the `/deep-review` lenses;
   Opus 5.5 at max effort is set in its definition, so never pass `model`), `debugger` (tooling and
   scripts; TAOM C# goes to `/investigate`), `error-detective` (several bugs, one root),
-  `refactoring-specialist` (tests green before and after).
+  `refactoring-specialist` (tests green before and after); tiers `fast-reader`, `implementer`,
+  `architect` (below).
 - Stopping or interrupting a turn kills every running subagent; read their progress from disk.
 
-## Model routing
+## Model & Effort Selection
 
-Architecture and trade-offs: Opus. Feature implementation and Plan agents: Sonnet. Lightweight
-research, docs and Explore searches: Haiku, passed explicitly as `model` (a spawn otherwise inherits
-yours).
-`/deep-review` lenses: Opus 5.5 (`claude-opus-5-5`) at max effort.
+Each task runs on the cheapest model and lowest effort that does it well: the table, escalation and
+the one-line note before each spawn are in `.claude/rules/model-effort-selection.md`. Tier agents:
+`fast-reader` (Haiku/low), `implementer` (Sonnet/medium), `architect` (Opus/high).
 
 ## MCP and shell
 

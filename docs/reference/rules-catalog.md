@@ -14,12 +14,13 @@ every session and subagent. The details and their sources (never for a file outs
 
 ## Always-load rules (no `paths:`)
 
-_(6 rules; `python tools/lint_docs.py --context-budget-json` gives their sizes. `harness-facts.md` became path-scoped on 2026-09-23.)_
+_(7 rules; `python tools/lint_docs.py --context-budget-json` gives their sizes. `harness-facts.md` became path-scoped on 2026-09-23.)_
 
 | Rule | Content |
 |------|---------|
 | `environment-failures.md` | Report environment failures (missing tools, paths, MCP down) and stop; don't fix infra. Check which machine you are on first. |
 | `evidence-over-claims.md` | Verify a review finding before implementing it; no performative agreement; no "done" without fresh output (a subagent's self-report doesn't count); never state an unread fact. |
+| `model-effort-selection.md` | The main session orchestrates; each subagent gets the cheapest model and effort that fits (routing table, one-tier escalation, a one-line note before each spawn). Tier agents `fast-reader`, `implementer`, `architect`. |
 | `output-style.md` | Part 1 (chat): open with scrutiny, not agreement; tag every response `[Certain]`/`[Likely]`/`[Guessing]`; one step per message in a live session. Part 2 (produced prose): no em or en dash, no AI-writing tells; boldface and tables stay. |
 | `simplicity-criterion.md` | Keep-or-reject matrix: a tiny gain with added complexity is rejected; a deletion that holds parity always wins. |
 | `think-before-coding.md` | State load-bearing assumptions before the first edit and ask when one is uncertain; don't ask on trivial work; make the goal testable; reuse-before-write ladder. |
