@@ -1,0 +1,118 @@
+{
+ "version": 1,
+ "inventory_sha1": {
+  "SK_Dwarf_Beard_A_01": "0f046a72c11201e1b6f3815d5a74fe3a4aa401cd",
+  "SK_Dwarf_Beard_A_02": "0f046a72c11201e1b6f3815d5a74fe3a4aa401cd",
+  "SK_Dwarf_Beard_A_03": "0f046a72c11201e1b6f3815d5a74fe3a4aa401cd",
+  "SK_Dwarf_Beard_A_05": "0f046a72c11201e1b6f3815d5a74fe3a4aa401cd",
+  "SK_Dwarf_Beard_A_06": "0f046a72c11201e1b6f3815d5a74fe3a4aa401cd",
+  "SK_Dwarf_Beard_A_07": "0f046a72c11201e1b6f3815d5a74fe3a4aa401cd",
+  "SK_Dwarf_Beard_A_08": "0f046a72c11201e1b6f3815d5a74fe3a4aa401cd",
+  "SK_Dwarf_Beard_A_09": "0f046a72c11201e1b6f3815d5a74fe3a4aa401cd",
+  "SK_Dwarf_Beard_A_10": "0f046a72c11201e1b6f3815d5a74fe3a4aa401cd",
+  "SK_Dwarf_Beard_A_11": "0f046a72c11201e1b6f3815d5a74fe3a4aa401cd",
+  "SK_Dwarf_Beard_A_12": "0f046a72c11201e1b6f3815d5a74fe3a4aa401cd",
+  "Dwarf_Hair_A_lod0": "471cb8ba4e6e3ea76caecf16fa886523af3677f6",
+  "Dwarf_Hair_B_lod0": "471cb8ba4e6e3ea76caecf16fa886523af3677f6",
+  "Dwarf_Hair_C_lod0": "471cb8ba4e6e3ea76caecf16fa886523af3677f6",
+  "Dwarf_Hair_D_lod0": "471cb8ba4e6e3ea76caecf16fa886523af3677f6",
+  "Dwarf_Hair_E_lod0": "471cb8ba4e6e3ea76caecf16fa886523af3677f6",
+  "Dwarf_Hair_G_lod0": "dde670b29af69742a1dfbcb045f58d3e35e4a950",
+  "Dwarf_Hair_H_lod0": "dde670b29af69742a1dfbcb045f58d3e35e4a950",
+  "Dwarf_Hair_I_lod0": "dde670b29af69742a1dfbcb045f58d3e35e4a950",
+  "Dwarf_Hair_J_lod0": "dde670b29af69742a1dfbcb045f58d3e35e4a950"
+ },
+ "families": {
+  "beard": {
+   "target": "Beards/SK_Dwarf_Beards_B.fbx",
+   "materials": {"cards": "M_Dwarf_Beards_A", "ring": "M_Dwarf_Beard_Ring_A"}
+  },
+  "hair": {
+   "target": "Hair/Dwarf_Hairs_ThirdBatch.fbx",
+   "materials": {"cards": "m_dwarf_beards_b", "ring": "m_dwarf_beard_ring_b"}
+  }
+ },
+ "candidates": [
+  {"id": "b01", "family": "beard", "note": "walrus moustache over a short beard",
+   "parts": [
+    {"source": "SK_Dwarf_Beard_A_11", "regions": ["moustache"]},
+    {"source": "SK_Dwarf_Beard_A_01", "regions": ["chin", "cheek", "sideburn", "fill"]}]},
+  {"id": "b02", "family": "beard", "note": "braided moustache over a short beard",
+   "parts": [
+    {"source": "SK_Dwarf_Beard_A_09", "regions": ["moustache"], "braids": [1, 3]},
+    {"source": "SK_Dwarf_Beard_A_01", "regions": ["chin", "cheek", "sideburn", "fill"]}]},
+  {"id": "b03", "family": "beard", "note": "pointed beard with one long centre braid",
+   "parts": [
+    {"source": "SK_Dwarf_Beard_A_10", "regions": ["moustache", "chin", "cheek", "sideburn", "fill"]},
+    {"source": "SK_Dwarf_Beard_A_12", "braids": [0]}]},
+  {"id": "b04", "family": "beard", "note": "mutton chops and moustache, bare chin",
+   "parts": [
+    {"source": "SK_Dwarf_Beard_A_08", "regions": ["moustache", "cheek", "sideburn"]}]},
+  {"id": "b05", "family": "beard", "note": "full moustache with a chin beard (goatee)",
+   "parts": [
+    {"source": "SK_Dwarf_Beard_A_06", "regions": ["moustache"]},
+    {"source": "SK_Dwarf_Beard_A_10", "regions": ["chin"]}]},
+  {"id": "b06", "family": "beard", "note": "full beard with four cheek braids",
+   "parts": [
+    {"source": "SK_Dwarf_Beard_A_08", "regions": ["moustache", "chin", "cheek", "sideburn", "fill"]},
+    {"source": "SK_Dwarf_Beard_A_05", "braids": [2, 3, 5, 6]}]},
+  {"id": "b07", "family": "beard", "note": "forked double braids with a walrus moustache",
+   "parts": [
+    {"source": "SK_Dwarf_Beard_A_02", "regions": ["chin", "fill"], "braids": "all"},
+    {"source": "SK_Dwarf_Beard_A_11", "regions": ["moustache", "cheek", "sideburn"]}]},
+  {"id": "b08", "family": "beard", "note": "rounded beard with three braids",
+   "parts": [
+    {"source": "SK_Dwarf_Beard_A_06", "regions": ["moustache", "chin", "cheek", "sideburn", "fill"]},
+    {"source": "SK_Dwarf_Beard_A_03", "braids": "all"}]},
+  {"id": "b09", "family": "beard", "note": "chest-length beard with a braided moustache",
+   "parts": [
+    {"source": "SK_Dwarf_Beard_A_09", "regions": ["moustache"], "braids": [1, 3]},
+    {"source": "SK_Dwarf_Beard_A_07", "regions": ["chin", "cheek", "sideburn", "fill"]}]},
+  {"id": "b10", "family": "beard", "note": "chest-length beard with a broad moustache",
+   "parts": [
+    {"source": "SK_Dwarf_Beard_A_08", "regions": ["moustache"]},
+    {"source": "SK_Dwarf_Beard_A_07", "regions": ["chin", "cheek", "sideburn"]}]},
+
+  {"id": "h01", "family": "hair", "note": "crest with long side locks",
+   "parts": [
+    {"source": "Dwarf_Hair_A_lod0", "regions": ["crown", "back", "fill"], "braids": "all"},
+    {"source": "Dwarf_Hair_D_lod0", "regions": ["side"]}]},
+  {"id": "h02", "family": "hair", "note": "top-knot with two back ties",
+   "parts": [
+    {"source": "Dwarf_Hair_D_lod0", "regions": ["crown", "side", "back", "fill"], "braids": "all"},
+    {"source": "Dwarf_Hair_E_lod0", "braids": "all"}]},
+  {"id": "h03", "family": "hair", "note": "long loose hair with a back tie",
+   "parts": [
+    {"source": "Dwarf_Hair_J_lod0", "regions": ["crown", "side", "back", "fill"]},
+    {"source": "Dwarf_Hair_I_lod0", "braids": "all"}]},
+  {"id": "h04", "family": "hair", "note": "long hair with a top-knot",
+   "parts": [
+    {"source": "Dwarf_Hair_H_lod0", "regions": ["crown", "side", "back"]},
+    {"source": "Dwarf_Hair_D_lod0", "braids": "all"}]},
+  {"id": "h05", "family": "hair", "note": "long hair with a long back braid",
+   "parts": [
+    {"source": "Dwarf_Hair_G_lod0", "regions": ["crown", "side", "back"]},
+    {"source": "Dwarf_Hair_B_lod0", "braids": "all"}]},
+  {"id": "h06", "family": "hair", "note": "tied back with a top-knot",
+   "parts": [
+    {"source": "Dwarf_Hair_E_lod0", "regions": ["crown", "side", "back", "fill"], "braids": "all"},
+    {"source": "Dwarf_Hair_D_lod0", "braids": "all"}]},
+  {"id": "h07", "family": "hair", "note": "top-knot with long side locks",
+   "parts": [
+    {"source": "Dwarf_Hair_C_lod0", "regions": ["crown", "side", "back"], "braids": "all"},
+    {"source": "Dwarf_Hair_J_lod0", "regions": ["side"]}]},
+  {"id": "h08", "family": "hair", "note": "narrow crest with long sides and back",
+   "parts": [
+    {"source": "Dwarf_Hair_B_lod0", "regions": ["crown", "back", "fill"], "braids": "all"},
+    {"source": "Dwarf_Hair_D_lod0", "regions": ["side", "back"]}]},
+  {"id": "h09", "family": "hair", "note": "long tied-back hair with a top-knot",
+   "parts": [
+    {"source": "Dwarf_Hair_I_lod0", "regions": ["crown", "side", "back", "fill"], "braids": "all"},
+    {"source": "Dwarf_Hair_D_lod0", "braids": "all"}]}
+ ],
+ "final": {
+  "SK_Dwarf_Beard_Test_Ch": {"candidate": "b04", "channels": "keep"},
+  "SK_Dwarf_Beard_Test_NoCh": {"candidate": "b04", "channels": "drop"},
+  "Dwarf_Hair_K": {"candidate": "h07", "channels": "keep"}
+ }
+}
