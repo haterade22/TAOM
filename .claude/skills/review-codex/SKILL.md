@@ -120,7 +120,7 @@ The prompt must include:
    Bash tool call:
      command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < "docs/reviews/codex-adversarial-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-adversarial-{feature}-{date}.md" 2>&1
      run_in_background: true
-     timeout: 600000  (the background job outlives this; the harness notifies when Codex actually finishes)
+     timeout: 7200000  (an unattended run, such as `claude -p` or a cloud session, stops a background command at its timeout, 2 h at most; an interactive session has no limit; the harness notifies when Codex finishes)
    ```
 4. **Tell the user once** what was dispatched: feature name, prompt path, output path, the reasoning level chosen and the one-line reason, and the expected window for that level (dispatch contract above). Do NOT poll the background job: the harness sends a notification when the job actually completes.
 5. **Continue with other work or stop**. When the background notification arrives, automatically proceed to Phase 3 by reading the output file. Do NOT re-prompt the user to "run /review-codex again" — Claude continues the lifecycle itself.

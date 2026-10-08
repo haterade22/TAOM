@@ -14,14 +14,15 @@ authorizes no `/ship`, no fixes and no extra paid reviewers.
 - **Always**, in every session, every custom or general-purpose subagent, and again after
   `/compact`: this file, its two imports, and the rules in `.claude/rules/` that have no `paths:`.
   The Explore and Plan agents get none of it.
-- **On read**, in a session or a subagent: a rule with `paths:` loads when a matching file inside
-  this repo is Read, and drops at `/compact` until the next matching read. No rule fires for a file
-  outside the repo (the live Armory, TAOM_Map, the Modding Kit); the skill for that work carries
-  its traps ([rules catalog](docs/reference/rules-catalog.md)).
+- **On access**, in a session or a subagent: a rule with `paths:` loads when a matching file inside
+  this repo is read, written or edited, and drops at `/compact` until the next matching access. No
+  rule fires for a file outside the repo (the live Armory, TAOM_Map, the Modding Kit); the skill for
+  that work carries its traps ([rules catalog](docs/reference/rules-catalog.md)).
 - **On invoke:** a skill's body. After `/compact` only its first ~5,000 tokens come back.
 - **Memory:** MEMORY.md loads in the main session only, on this machine only, never in a subagent.
-- **Hooks** reach you only as SessionStart output, a deny reason, exit-2 stderr or a Stop hook's
-  block reason (an ask reason goes to the user); follow the instruction in the message
+- **Hooks** reach you only as SessionStart output, a deny reason, exit-2 stderr, a Stop hook's
+  block reason or `additionalContext` beside a tool result (an ask reason goes to the user); follow
+  the instruction in the message
   ([hooks catalog](docs/reference/hooks-catalog.md)).
 
 ## Where new knowledge goes
@@ -86,7 +87,8 @@ instructions: follow its phases in order.
   scripts; TAOM C# goes to `/investigate`), `error-detective` (several bugs, one root),
   `refactoring-specialist` (tests green before and after); tiers `fast-reader`, `implementer`,
   `architect` (below).
-- Stopping or interrupting a turn kills every running subagent; read their progress from disk.
+- In the VS Code panel, Stop and Escape end only the turn; background subagents keep running until
+  stopped from the agent map. A stopped subagent's progress is on disk, not in its report.
 
 ## Model & Effort Selection
 

@@ -26,6 +26,7 @@
   },
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "1",
     "TAOM_PYBIN": "C:/Python314/python.exe"
   },
   "statusLine": {
@@ -251,13 +252,13 @@
     ]
   },
   "enabledPlugins": {
-    "context7@claude-plugins-official": true,
-    "code-review@claude-plugins-official": true,
+    "context7@claude-plugins-official": false,
+    "code-review@claude-plugins-official": false,
     "code-simplifier@claude-plugins-official": false,
     "github@claude-plugins-official": false,
-    "feature-dev@claude-plugins-official": true,
-    "playwright@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true,
-    "codex@openai-codex": true
+    "feature-dev@claude-plugins-official": false,
+    "playwright@claude-plugins-official": false,
+    "skill-creator@claude-plugins-official": false,
+    "codex@openai-codex": false
   }
 }

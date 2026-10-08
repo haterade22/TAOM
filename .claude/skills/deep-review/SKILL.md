@@ -30,7 +30,7 @@ If triggered:
      ```
      command: cd "<repo-root>" && mkdir -p docs/reviews/raw && codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < "docs/reviews/codex-prereview-{feature}-{date}.prompt.md" > "docs/reviews/raw/codex-prereview-{feature}-{date}.md" 2>&1
      run_in_background: true
-     timeout: 600000
+     timeout: 7200000  (an unattended run stops a background command at its timeout, 2 h at most)
      ```
    - `<level>` is the session's call (`/review-codex` "Reasoning effort is the session's call"), sized to the change as for any first pass; the shorter prompt shortens the run, not the level.
    - See `.claude/skills/review-codex/SKILL.md` "Codex CLI invocation contract" for full dispatch semantics.

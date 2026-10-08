@@ -26,4 +26,6 @@ executes it.
 
 **Mechanics:** an agent definition sets `model:` and `effort:`; a spawn overrides them with the
 Agent tool's `model` and `effort` parameters (pass both, since effort precedence is undocumented).
-Never pass either to `deep-reviewer`, which pins Opus 5.5 at max for `/deep-review`.
+Never pass either to `deep-reviewer`, which pins Opus 5.5 at max for `/deep-review`. Built-in
+agents (Explore, Plan, general-purpose) carry no tier and run on the main session's model: name a
+`model` on every such spawn.
