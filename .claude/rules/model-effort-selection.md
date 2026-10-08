@@ -11,8 +11,9 @@ or mechanical work itself.
 | **Opus, high** | `architect` | Architecture and design, ambiguous or cross-cutting changes, hard debugging with an unknown cause, security-sensitive code, data migrations, anything expensive to get wrong or hard to undo |
 | **Fable** | none | Only the hardest reasoning problems, or after Opus has failed; never routine. Spawn with `model: "fable"` |
 
-The TAOM specialists (`feature-builder`, `refactoring-specialist`, `taleworlds-researcher`,
-`debugger`) are Sonnet-tier.
+Specialists set their own tier in their definitions. An agent runs one model, so refactors, new
+features and non-obvious debugging start with an `architect` plan, then a Sonnet specialist
+executes it.
 
 **Escalation and de-escalation:**
 

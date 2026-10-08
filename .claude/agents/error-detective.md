@@ -1,6 +1,8 @@
 ---
 name: error-detective
 description: Cross-system error correlation. Find recurring failure patterns across multiple TAOM features (Harmony patch + GameModel + service) when one bug surfaces as several seemingly-unrelated symptoms.
+model: opus
+effort: high
 tools:
   - Read
   - Grep

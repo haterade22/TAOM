@@ -2,6 +2,7 @@
 name: feature-builder
 description: Build new TAOM feature modules following project architecture, TDD, and adapter patterns. Use for creating complete feature implementations.
 model: sonnet
+effort: high
 tools:
   - Read
   - Write

@@ -2,6 +2,7 @@
 name: refactoring-specialist
 description: Behavior-preserving structural refactoring (extract method, rename, move type, simplify conditional). Use for clean code reshaping; use /deslop for redundant-code deletion. Tests must be green before AND after.
 model: sonnet
+effort: medium
 tools:
   - Read
   - Write
