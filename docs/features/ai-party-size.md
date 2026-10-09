@@ -245,7 +245,7 @@ Asked often enough to belong here. **A new campaign is not needed.**
 |---|---|
 | The value in `TaomSettings.Instance` | Immediately, as the handle moves. MCM's `PropertyRef` setter writes the registered object by reflection, and that object is `TaomSettings.Instance`. There is no copy and no staging. |
 | The party tooltip (`PartySizeLimitExplainer`) | Immediately. It calls the model fresh, which is why the tooltip can disagree with the cap actually being enforced. |
-| The enforced cap, per party | On Done, now. `AiPartySizeSettingsWatcher` sweeps `MobileParty.All` and bumps each `MemberRoster.VersionNo` when MCM raises `SAVE_TRIGGERED`. |
+| The enforced cap, per party | On Done, now. `AiPartySizeSettingsWatcher` calls `IPartySizeCacheInvalidator.InvalidateAll`, which sweeps `MobileParty.All` and bumps each `MemberRoster.VersionNo`, when MCM raises `SAVE_TRIGGERED`. A career pick does the same for only the parties its hero leads, through `InvalidateLedBy` (#768). |
 | Without that sweep | Whenever that party's roster next changed on its own. `PartyHealingBehavior`'s 6-hourly heal/starve tick catches most AI parties within a campaign day, but an idle, healthy, non-recruiting party could stay stale indefinitely. |
 | Save and reload | Always worked, and still does. `PartyBase.OnLoad` calls `InitCache()`, which resets every cached limit. |
 
@@ -358,6 +358,7 @@ number hides that.
 | `Main/Features/AiPartySize/AiPartySizeService.cs` | Gate plus the pure frame arithmetic |
 | `Main/Features/AiPartySize/IAiPartySizeService.cs` | Contract, including the ordering requirement |
 | `Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs` | Party-size and garrison call sites |
+| `Main/Adapters/PartySizeCacheInvalidator.cs` | The shared cache bump, registered in `IoC.RegisterCoreServices`: `InvalidateAll` for the MCM watcher, `InvalidateLedBy` for career refreshes |
 | `Main/Features/CulturalFeats/Models/TaomFoodConsumptionModel.cs` | Food relief call site |
 | `Main/Features/TroopProgression/Models/TaomPartyWageModel.cs` | Wage relief call site |
 | `Main/_Module/ModuleData/startup_resources/startup_resources_config.xml` | Re-derived at `K = 100` |
@@ -397,12 +398,15 @@ the gating predicate, and one non-finite case per knob per the engine-float gate
   caught it collecting the full AI treatment. The garrison multiplier deliberately does NOT have a
   player test, because it is siege balance: your own settlements defend as well as everyone else's.
 - **Career flat passives are now literal (fixed here).** `CareerPassiveService.ApplyFlat` used to add
-  its magnitude in the BASE frame, so it was multiplied by every factor on the number: with this
-  feature's 3x garrison multiplier in play, a "+4 party size" perk was worth about +13 and the career
+  its magnitude in the BASE frame, so it was multiplied by every factor on the number: with a 3x
+  party-size factor in play, a "+4 party size" perk was worth about +13 and the career
   screen's promise stopped being true. `ApplyFlat` now divides the factor frame back out, so an
   authored count is worth exactly that count. The Health call site is unaffected because vanilla
   `DefaultCharacterStatsModel.MaxHitpoints` uses only `Add` and never `AddFactor`, so its frame has no
   factors and the conversion is a no-op there. Pinned by four tests in `CareerPassiveServiceTests`.
+  Since #768 the passive is keyed on the party's leader hero, so a garrison (no hero leader) never
+  receives it, and `TaomPartySizeModel` calls `ApplyFlat` after the last `AddFactor`, so the AI lord
+  multiplier cannot amplify the count again.
 
 ## How to verify in game
 

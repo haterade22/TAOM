@@ -713,7 +713,7 @@
     <string id="taom_ws_t3_a_p2" text="Guardia Inmortal" />
     <string id="taom_ws_t3_a_p2_desc" text="La guardia nunca termina. +9 salud." />
     <string id="taom_ws_t3_a_p3" text="Comandante de Guarnición" />
-    <string id="taom_ws_t3_a_p3_desc" text="Tu guarnición se llena de voluntarios. +4 tamaño del grupo." />
+    <string id="taom_ws_t3_a_p3_desc" text="Your company swells with volunteers. +4 party size." />
     <string id="taom_ws_t3_a_p4" text="Gloria del Defensor" />
     <string id="taom_ws_t3_a_p4_desc" text="La victoria en defensa trae gran honor. +12% ganancia de renombre en batalla." />
     <string id="taom_ws_t3_b_key" text="Siempre Vigilante" />

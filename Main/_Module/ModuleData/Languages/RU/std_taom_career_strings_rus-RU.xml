@@ -713,7 +713,7 @@
     <string id="taom_ws_t3_a_p2" text="Бессмертная Стража" />
     <string id="taom_ws_t3_a_p2_desc" text="Дозор никогда не кончается. +9 здоровья." />
     <string id="taom_ws_t3_a_p3" text="Командир Гарнизона" />
-    <string id="taom_ws_t3_a_p3_desc" text="Ваш гарнизон пополняется добровольцами. +4 размер отряда." />
+    <string id="taom_ws_t3_a_p3_desc" text="Your company swells with volunteers. +4 party size." />
     <string id="taom_ws_t3_a_p4" text="Слава Защитника" />
     <string id="taom_ws_t3_a_p4_desc" text="Победа в обороне приносит великую честь. +12% получение славы в бою." />
     <string id="taom_ws_t3_b_key" text="Вечно Бдительный" />

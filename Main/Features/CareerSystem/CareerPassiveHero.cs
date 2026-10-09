@@ -13,7 +13,9 @@ namespace TAOM.Features.CareerSystem;
 ///
 /// <c>MobileParty.Owner</c> (<c>=&gt; _partyComponent?.PartyOwner</c>) is the safe owner accessor
 /// and keeps the owner-first precedence — player-owned caravans/garrisons led by non-career
-/// companions still resolve to the player. Settlement parties resolve to null and the passive
+/// companions still resolve to the player. Owner-first is the rule for party passives EXCEPT
+/// PartySize, which <c>TaomPartySizeModel</c> keys on <c>party.LeaderHero</c> (#768), so a +50 pick
+/// grows the party its hero leads and not every party the owner's clan touches. Settlement parties resolve to null and the passive
 /// skips (<c>ApplyFactor</c>/<c>ApplyFlat</c> no-op on a null id), matching intent: career
 /// passives are authored for hero-run parties, not a fief's static settlement party. The engine
 /// getter's remaining limb, the private <c>_customOwner</c>, has no public accessor and is only

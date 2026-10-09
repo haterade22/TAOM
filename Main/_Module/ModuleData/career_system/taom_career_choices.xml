@@ -2533,7 +2533,7 @@
     </Choice>
     <Choice id="watchman_of_stangard_t3_a_p3" type="Passive"
             display_name="{=taom_ws_t3_a_p3}Garrison Commander"
-            description="{=taom_ws_t3_a_p3_desc}Your garrison swells with volunteers. +4 party size."
+            description="{=taom_ws_t3_a_p3_desc}Your company swells with volunteers. +4 party size."
             icon_sprite="career_choice_ws_t3_a_p3">
       <PassiveEffects>
         <PassiveEffect type="PartySize" magnitude="4" operation="Add" />

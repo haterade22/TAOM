@@ -251,6 +251,9 @@ public static class IoC
         container.Register<IMissionAdapterFactory, MissionAdapterFactory>(Reuse.Singleton);
         container.Register<IObjectManagerAdapter, ObjectManagerAdapter>(Reuse.Singleton);
         container.Register<ICampaignSessionAdapter, CampaignSessionAdapter>(Reuse.Singleton);
+        // Shared by two features (#768): the AI party size MCM watcher and the career passive
+        // refresh. Registered here so neither feature silently owns the other's dependency.
+        container.Register<IPartySizeCacheInvalidator, PartySizeCacheInvalidator>(Reuse.Singleton);
     }
 
     private static void RegisterLoggingServices(IContainer container)

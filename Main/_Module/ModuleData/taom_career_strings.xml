@@ -715,7 +715,7 @@
 	<string id="taom_ws_t3_a_p2" text="{=taom_ws_t3_a_p2}Immortal Guard" />
 	<string id="taom_ws_t3_a_p2_desc" text="{=taom_ws_t3_a_p2_desc}The watch never ends. +9 health." />
 	<string id="taom_ws_t3_a_p3" text="{=taom_ws_t3_a_p3}Garrison Commander" />
-	<string id="taom_ws_t3_a_p3_desc" text="{=taom_ws_t3_a_p3_desc}Your garrison swells with volunteers. +4 party size." />
+	<string id="taom_ws_t3_a_p3_desc" text="{=taom_ws_t3_a_p3_desc}Your company swells with volunteers. +4 party size." />
 	<string id="taom_ws_t3_a_p4" text="{=taom_ws_t3_a_p4}Defender's Glory" />
 	<string id="taom_ws_t3_a_p4_desc" text="{=taom_ws_t3_a_p4_desc}Victory in defence brings great honour. +12% battle renown gain." />
 	<string id="taom_ws_t3_b_key" text="{=taom_ws_t3_b_key}Ever Vigilant" />

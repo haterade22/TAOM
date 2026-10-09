@@ -2,6 +2,7 @@ using System.ComponentModel;
 using MCM.Abstractions.Base;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.AiPartySize;
 
@@ -47,13 +48,37 @@ public class AiPartySizeSettingsWatcherTests
         Assert.IsFalse(AiPartySizeSettingsWatcher.ShouldInvalidate("", campaignActive: true));
     }
 
+    [TestMethod]
+    public void HandleSettingsChanged_SaveTriggeredWithCampaign_InvalidatesOnce()
+    {
+        var invalidator = Substitute.For<IPartySizeCacheInvalidator>();
+        var sut = new AiPartySizeSettingsWatcher(Substitute.For<IModLogger>(), invalidator);
+
+        sut.HandleSettingsChanged(BaseSettings.SaveTriggered, campaignActive: true);
+
+        invalidator.Received(1).InvalidateAll();
+    }
+
+    [TestMethod]
+    public void HandleSettingsChanged_NoCampaignOrOtherNotification_DoesNotInvalidate()
+    {
+        var invalidator = Substitute.For<IPartySizeCacheInvalidator>();
+        var sut = new AiPartySizeSettingsWatcher(Substitute.For<IModLogger>(), invalidator);
+
+        sut.HandleSettingsChanged(BaseSettings.SaveTriggered, campaignActive: false);
+        sut.HandleSettingsChanged(BaseSettings.LoadingComplete, campaignActive: true);
+        sut.HandleSettingsChanged(null, campaignActive: true);
+
+        invalidator.DidNotReceive().InvalidateAll();
+    }
+
     // Re-attaching must not stack a second handler, because a second campaign in the same process
     // runs the registration again. BaseSettings.PropertyChanged is virtual, so a stub can count the
     // add/remove calls and assert the guard rather than merely asserting no exception.
     [TestMethod]
     public void EnsureSubscribed_SameInstanceTwice_DoesNotStackHandlers()
     {
-        var sut = new AiPartySizeSettingsWatcher(Substitute.For<IModLogger>());
+        var sut = new AiPartySizeSettingsWatcher(Substitute.For<IModLogger>(), Substitute.For<IPartySizeCacheInvalidator>());
         var settings = new CountingSettings();
 
         sut.EnsureSubscribed(settings);
@@ -68,7 +93,7 @@ public class AiPartySizeSettingsWatcherTests
     [TestMethod]
     public void EnsureSubscribed_DifferentInstance_DetachesTheOldOne()
     {
-        var sut = new AiPartySizeSettingsWatcher(Substitute.For<IModLogger>());
+        var sut = new AiPartySizeSettingsWatcher(Substitute.For<IModLogger>(), Substitute.For<IPartySizeCacheInvalidator>());
         var first = new CountingSettings();
         var second = new CountingSettings();
 
@@ -86,7 +111,7 @@ public class AiPartySizeSettingsWatcherTests
     public void EnsureSubscribed_NullSettings_DoesNotSubscribeAndWarns()
     {
         var logger = Substitute.For<IModLogger>();
-        var sut = new AiPartySizeSettingsWatcher(logger);
+        var sut = new AiPartySizeSettingsWatcher(logger, Substitute.For<IPartySizeCacheInvalidator>());
 
         sut.EnsureSubscribed(null);
         sut.EnsureSubscribed(null);
@@ -98,7 +123,7 @@ public class AiPartySizeSettingsWatcherTests
     [TestMethod]
     public void EnsureSubscribed_NullAfterASuccessfulAttach_KeepsTheExistingHandler()
     {
-        var sut = new AiPartySizeSettingsWatcher(Substitute.For<IModLogger>());
+        var sut = new AiPartySizeSettingsWatcher(Substitute.For<IModLogger>(), Substitute.For<IPartySizeCacheInvalidator>());
         var settings = new CountingSettings();
 
         sut.EnsureSubscribed(settings);

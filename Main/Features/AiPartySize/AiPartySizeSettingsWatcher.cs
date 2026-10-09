@@ -1,8 +1,8 @@
 using System.ComponentModel;
 using MCM.Abstractions.Base;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TaleWorlds.CampaignSystem;
-using TaleWorlds.CampaignSystem.Party;
 
 namespace TAOM.Features.AiPartySize;
 
@@ -30,10 +30,15 @@ namespace TAOM.Features.AiPartySize;
 public sealed class AiPartySizeSettingsWatcher : IAiPartySizeSettingsWatcher
 {
     private readonly IModLogger _logger;
+    private readonly IPartySizeCacheInvalidator _invalidator;
 
     private BaseSettings? _subscribedTo;
 
-    public AiPartySizeSettingsWatcher(IModLogger logger) => _logger = logger;
+    public AiPartySizeSettingsWatcher(IModLogger logger, IPartySizeCacheInvalidator invalidator)
+    {
+        _logger = logger;
+        _invalidator = invalidator;
+    }
 
     /// <summary>
     /// Attach to the live settings object, at most once per object. Callable from any campaign start:
@@ -74,18 +79,12 @@ public sealed class AiPartySizeSettingsWatcher : IAiPartySizeSettingsWatcher
         => campaignActive && propertyName == BaseSettings.SaveTriggered;
 
     private void OnSettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
-    {
-        if (ShouldInvalidate(e?.PropertyName, Campaign.Current != null))
-            InvalidatePartySizeCaches();
-    }
+        => HandleSettingsChanged(e?.PropertyName, Campaign.Current != null);
 
-    /// <summary>
-    /// One counter increment per party. Garrisons are MobileParty too, so the garrison multiplier is
-    /// covered by the same sweep.
-    /// </summary>
-    private static void InvalidatePartySizeCaches()
+    // Internal for TAOM.Tests (InternalsVisibleTo): Campaign.Current cannot be set outside the game.
+    internal void HandleSettingsChanged(string? propertyName, bool campaignActive)
     {
-        foreach (var party in MobileParty.All)
-            party?.MemberRoster?.UpdateVersion();
+        if (ShouldInvalidate(propertyName, campaignActive))
+            _invalidator.InvalidateAll();
     }
 }
