@@ -137,6 +137,7 @@ public class CareerChoiceIntegrityTests
         var careers = LoadCareerFile("taom_careers.xml");
         var choices = LoadCareerFile("taom_career_choices.xml");
 
+        var mismatched = new List<string>();
         var declaredBy = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         foreach (var career in careers.Descendants("Career"))
         {
@@ -144,15 +145,21 @@ public class CareerChoiceIntegrityTests
             foreach (var group in career.Descendants("Group"))
             {
                 var groupId = group.Attribute("id")?.Value;
-                if (!string.IsNullOrEmpty(groupId))
-                    declaredBy[groupId!] = careerId;
+                if (string.IsNullOrEmpty(groupId)) continue;
+                // A second lister is reported, never allowed to overwrite the first.
+                if (declaredBy.TryGetValue(groupId!, out var firstLister))
+                {
+                    if (!string.Equals(firstLister, careerId, StringComparison.OrdinalIgnoreCase))
+                        mismatched.Add($"{groupId} is declared by both '{firstLister}' and '{careerId}'");
+                    continue;
+                }
+                declaredBy[groupId!] = careerId;
             }
         }
 
         // Act — a group whose career_id points somewhere other than the career declaring it
         // would apply another career's perks; only groups that ARE declared are checked here,
         // since an undeclared group is the orphan case rather than the mismatch case.
-        var mismatched = new List<string>();
         foreach (var group in choices.Descendants("ChoiceGroup"))
         {
             var groupId = group.Attribute("id")?.Value;
@@ -168,5 +175,58 @@ public class CareerChoiceIntegrityTests
         Assert.AreEqual(0, mismatched.Count,
             $"ChoiceGroup career_id back-references that disagree with the declaring Career: " +
             string.Join(", ", mismatched));
+    }
+
+    [TestMethod]
+    public void ShippedData_EveryOwnershipIdHasExactlyOneOwner()
+    {
+        // The repair pass deletes a held choice only when its owner is proven. An id with two
+        // claimants has no owner at runtime, so a shipped duplicate silently disables the repair
+        // for that id (W1-02). Every offender is named so one run lists the whole backlog.
+        var careers = LoadCareerFile("taom_careers.xml");
+        var choices = LoadCareerFile("taom_career_choices.xml");
+        var offenders = new List<string>();
+
+        var groupListers = new Dictionary<string, SortedSet<string>>(StringComparer.OrdinalIgnoreCase);
+        var rootUsers = new Dictionary<string, SortedSet<string>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var career in careers.Descendants("Career"))
+        {
+            var careerId = career.Attribute("id")?.Value ?? "(unnamed)";
+            foreach (var group in career.Descendants("Group"))
+                Record(groupListers, group.Attribute("id")?.Value, careerId);
+            Record(rootUsers, career.Attribute("root_choice_id")?.Value, careerId);
+        }
+        foreach (var pair in groupListers.Where(p => p.Value.Count != 1))
+            offenders.Add($"Group '{pair.Key}' listed by careers: {string.Join(", ", pair.Value)}");
+        foreach (var pair in rootUsers.Where(p => p.Value.Count != 1))
+            offenders.Add($"root_choice_id '{pair.Key}' used by careers: {string.Join(", ", pair.Value)}");
+
+        var rootChoiceIds = choices.Root!.Elements("Choice")
+            .Select(e => e.Attribute("id")?.Value).Where(id => !string.IsNullOrEmpty(id)).ToList();
+        var nestedChoiceIds = choices.Root.Elements("ChoiceGroup").Elements("Choice")
+            .Select(e => e.Attribute("id")?.Value).Where(id => !string.IsNullOrEmpty(id)).ToList();
+        foreach (var g in rootChoiceIds.Concat(nestedChoiceIds).GroupBy(id => id, StringComparer.OrdinalIgnoreCase)
+                     .Where(g => g.Count() > 1))
+            offenders.Add($"Choice '{g.Key}' declared {g.Count()} times");
+        var rootSet = new HashSet<string>(rootChoiceIds!, StringComparer.OrdinalIgnoreCase);
+        foreach (var id in nestedChoiceIds.Where(id => rootSet.Contains(id!)).Distinct(StringComparer.OrdinalIgnoreCase))
+            offenders.Add($"Nested choice '{id}' has the same id as a root choice");
+
+        foreach (var g in choices.Root.Elements("ChoiceGroup")
+                     .Select(e => e.Attribute("id")?.Value).Where(id => !string.IsNullOrEmpty(id))
+                     .GroupBy(id => id, StringComparer.OrdinalIgnoreCase).Where(g => g.Count() > 1))
+            offenders.Add($"ChoiceGroup '{g.Key}' declared {g.Count()} times");
+
+        Assert.AreEqual(0, offenders.Count,
+            "Ids with an ambiguous owner (CareerRegistry gives them none, so RepairForeignChoices keeps them): "
+            + string.Join("; ", offenders));
+    }
+
+    private static void Record(Dictionary<string, SortedSet<string>> index, string? id, string careerId)
+    {
+        if (string.IsNullOrEmpty(id)) return;
+        if (!index.TryGetValue(id!, out var set))
+            index[id!] = set = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
+        set.Add(careerId);
     }
 }

@@ -664,6 +664,7 @@
     <string id="taom_career_tier2" text="Poziom 2" />
     <string id="taom_career_tier3" text="Poziom 3" />
     <string id="taom_career_free_points" text="Wolne punkty: {COUNT}" />
+    <string id="taom_career_repair_refund" text="Career choices that belonged to another career were refunded: {COUNT}." />
     <string id="taom_career_tier_requirement" text="Wymaga poziomu {LEVEL}" />
     <string id="taom_career_choice_while_active" text="Gdy aktywne" />
     <string id="taom_career_active_effects" text="Aktywne efekty" />

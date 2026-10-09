@@ -491,6 +491,115 @@ public class CareerScreenVMTests
         Assert.AreEqual(0, vm.PassiveEffectLines.Count);
     }
 
+    // -- #766 click path: the REAL parser feeds the REAL registry, and the click goes through
+    // CareerChoiceObjectVM.ExecuteToggleChoice. Hand-built definitions (everything above) carry a
+    // GroupId the parser never stamped, so they could not see the tier gate and the keystone rule
+    // going inert. --
+
+    private const string ClickPathCareersXml = @"<?xml version='1.0'?>
+<Careers max_perk_points=""30"">
+  <Career id=""tester"" display_name=""Tester"" description="""" portrait_sprite="""" ability_template_id=""t_ability""
+          min_clan_tier=""0"" root_choice_id=""t_root"">
+    <EligibleCultures><Culture id=""mordor"" /></EligibleCultures>
+    <ChoiceGroups>
+      <Group id=""t_g1"" /><Group id=""t_g2"" /><Group id=""t_g3"" />
+    </ChoiceGroups>
+  </Career>
+</Careers>";
+
+    private const string ClickPathChoicesXml = @"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""t_root"" type=""Passive"" description=""r"" icon_sprite=""i"" />
+  <ChoiceGroup id=""t_g1"" career_id=""tester"" tier=""1"">
+    <Choice id=""t_g1_key"" type=""Keystone"" description=""k1"" icon_sprite=""i"" />
+    <Choice id=""t_g1_p1"" type=""Passive"" description=""p1"" icon_sprite=""i"">
+      <PassiveEffect type=""Damage"" magnitude=""0.1"" />
+    </Choice>
+  </ChoiceGroup>
+  <ChoiceGroup id=""t_g2"" career_id=""tester"" tier=""1"">
+    <Choice id=""t_g2_key"" type=""Keystone"" description=""k2"" icon_sprite=""i"" />
+  </ChoiceGroup>
+  <ChoiceGroup id=""t_g3"" career_id=""tester"" tier=""3"">
+    <Choice id=""t_g3_p1"" type=""Passive"" description=""p3"" icon_sprite=""i"">
+      <PassiveEffect type=""Damage"" magnitude=""0.1"" />
+    </Choice>
+    <Choice id=""t_g3_p2"" type=""Passive"" description=""p3b"" icon_sprite=""i"">
+      <PassiveEffect type=""Damage"" magnitude=""0.1"" />
+    </Choice>
+  </ChoiceGroup>
+</CareerChoices>";
+
+    private (CareerScreenVM Vm, CareerRegistry Registry, string Dir) CreateParsedVM(int heroLevel)
+    {
+        var dir = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "taom_test_" + System.IO.Path.GetRandomFileName());
+        System.IO.Directory.CreateDirectory(System.IO.Path.Combine(dir, "career_system"));
+        System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "career_system", "taom_careers.xml"), ClickPathCareersXml);
+        System.IO.File.WriteAllText(System.IO.Path.Combine(dir, "career_system", "taom_career_choices.xml"), ClickPathChoicesXml);
+
+        var pathService = Substitute.For<TAOM.Core.Infrastructure.IPathService>();
+        pathService.ModuleDataPath.Returns(dir);
+        var provider = new CareerConfigProvider(pathService, _logger);
+        var registry = new CareerRegistry(provider, _logger);
+
+        _dataService.SetCareer("hero1", "tester");
+        var vm = new CareerScreenVM(_dataService, registry, _passiveService, provider, _logger,
+            "hero1", heroLevel, () => _closeCalled = true);
+        return (vm, registry, dir);
+    }
+
+    private static CareerChoiceObjectVM FindChoiceVM(CareerScreenVM vm, string choiceId)
+        => vm.ChoiceGroupsTier1.Concat(vm.ChoiceGroupsTier2).Concat(vm.ChoiceGroupsTier3)
+            .SelectMany(g => g.Choices).First(c => c.ChoiceId == choiceId);
+
+    [TestMethod]
+    public void ExecuteToggleChoice_ParsedTier3ChoiceAtLevel1_IsRefused()
+    {
+        var (vm, registry, dir) = CreateParsedVM(heroLevel: 1);
+        try
+        {
+            Assert.AreEqual("t_g3", registry.GetChoice("t_g3_p1").GroupId);
+            Assert.IsTrue(vm.FreeCareerPoints > 0, "points must not be the refuser");
+
+            FindChoiceVM(vm, "t_g3_p1").ExecuteToggleChoice();
+
+            Assert.IsFalse(_dataService.GetOrCreateData("hero1").HasChoice("t_g3_p1"), "tier 3 is locked at level 1");
+            Assert.IsFalse(FindChoiceVM(vm, "t_g3_p1").IsTaken);
+
+            // Positive control: a tier-1 passive in the same VM is accepted.
+            FindChoiceVM(vm, "t_g1_p1").ExecuteToggleChoice();
+            Assert.IsTrue(_dataService.GetOrCreateData("hero1").HasChoice("t_g1_p1"));
+        }
+        finally
+        {
+            System.IO.Directory.Delete(dir, true);
+        }
+    }
+
+    [TestMethod]
+    public void ExecuteToggleChoice_ParsedSecondKeystoneInSameTier_IsRefused()
+    {
+        var (vm, registry, dir) = CreateParsedVM(heroLevel: 5);
+        try
+        {
+            Assert.AreEqual("t_g1", registry.GetChoice("t_g1_key").GroupId);
+            Assert.AreEqual("t_g2", registry.GetChoice("t_g2_key").GroupId);
+
+            FindChoiceVM(vm, "t_g1_key").ExecuteToggleChoice();
+            Assert.IsTrue(_dataService.GetOrCreateData("hero1").HasChoice("t_g1_key"), "the first keystone is taken");
+            Assert.IsTrue(vm.FreeCareerPoints > 0, "points must not be the refuser");
+
+            // RefreshValues rebuilt every choice VM, so fetch the second one fresh.
+            FindChoiceVM(vm, "t_g2_key").ExecuteToggleChoice();
+
+            Assert.IsFalse(_dataService.GetOrCreateData("hero1").HasChoice("t_g2_key"), "one keystone per tier");
+            Assert.IsFalse(FindChoiceVM(vm, "t_g2_key").IsTaken);
+        }
+        finally
+        {
+            System.IO.Directory.Delete(dir, true);
+        }
+    }
+
     private void SetupHeroWithCareer()
     {
         _dataService.SetCareer("hero1", "warboss");

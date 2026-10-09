@@ -664,6 +664,7 @@
     <string id="taom_career_tier2" text="第二阶" />
     <string id="taom_career_tier3" text="第三阶" />
     <string id="taom_career_free_points" text="可用点数:{COUNT}" />
+    <string id="taom_career_repair_refund" text="Career choices that belonged to another career were refunded: {COUNT}." />
     <string id="taom_career_tier_requirement" text="需要等级 {LEVEL}" />
     <string id="taom_career_choice_while_active" text="进行中时" />
     <string id="taom_career_active_effects" text="生效效果" />

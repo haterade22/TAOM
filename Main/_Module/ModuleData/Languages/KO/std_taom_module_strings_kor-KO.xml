@@ -664,6 +664,7 @@
     <string id="taom_career_tier2" text="2단계" />
     <string id="taom_career_tier3" text="3단계" />
     <string id="taom_career_free_points" text="사용 가능 포인트: {COUNT}" />
+    <string id="taom_career_repair_refund" text="Career choices that belonged to another career were refunded: {COUNT}." />
     <string id="taom_career_tier_requirement" text="레벨 {LEVEL} 필요" />
     <string id="taom_career_choice_while_active" text="활동 중" />
     <string id="taom_career_active_effects" text="활성 효과" />

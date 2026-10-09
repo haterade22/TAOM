@@ -52,6 +52,34 @@ public class CareerChoicesIntegrationTests
     // protection; a data invariant here would either miss the case or fail on valid data.
 
     [TestMethod]
+    public void RealChoicesXml_EveryGroupedChoice_CarriesItsGroupsId()
+    {
+        // #766: group choices carry no group_id attribute, so GroupId was "" for all of them and the
+        // tier gate, keystone exclusivity and GetOwningCareerId never saw a group choice.
+        var choices = _provider.LoadChoices().ToDictionary(c => c.Id);
+        var groups = _provider.LoadChoiceGroups();
+        Assert.IsTrue(groups.Count > 0, "real file should load choice groups");
+
+        var checkedCount = 0;
+        var wrong = new System.Collections.Generic.List<string>();
+        foreach (var group in groups)
+        {
+            foreach (var choiceId in group.ChoiceIds)
+            {
+                checkedCount++;
+                if (!choices.TryGetValue(choiceId, out var choice))
+                    wrong.Add($"{choiceId} (not loaded)");
+                else if (choice.GroupId != group.Id)
+                    wrong.Add($"{choiceId} (GroupId='{choice.GroupId}', expected '{group.Id}')");
+            }
+        }
+
+        Assert.IsTrue(checkedCount > 0, "no grouped choices were checked");
+        Assert.AreEqual(0, wrong.Count,
+            $"{wrong.Count} of {checkedCount} grouped choices lack their group's id: " + string.Join("; ", wrong));
+    }
+
+    [TestMethod]
     public void RealChoicesXml_EveryPassiveChoice_ParsesNonNullPassive()
     {
         // The wrapped-schema bug (#250): 310 <PassiveEffects> choices parsed to a null Passive

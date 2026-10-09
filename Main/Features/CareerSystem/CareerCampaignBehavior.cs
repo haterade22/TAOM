@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Abilities;
 
@@ -65,7 +67,13 @@ public class CareerCampaignBehavior : CampaignBehaviorBase
         // was written into the save. Idempotent: a healthy hero has nothing to drop.
         var pruned = _lifecycle.RepairForeignChoices(hero.StringId);
         if (pruned > 0)
+        {
             _logger.LogInfo($"CareerSystem: Repaired {hero.Name}'s career data — dropped {pruned} choice(s) belonging to another career");
+            // The refund is otherwise silent: the player's points just change on load.
+            InformationManager.DisplayMessage(new InformationMessage(
+                new TextObject("{=taom_career_repair_refund}Career choices that belonged to another career were refunded: {COUNT}.")
+                    .SetTextVariable("COUNT", pruned).ToString()));
+        }
 
         _logger.LogInfo("CareerSystem: Refreshing passive cache after session launch");
         _passiveService.RefreshCache(_dataService, _registry);

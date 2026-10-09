@@ -802,6 +802,7 @@
 	<string id="taom_career_tier2" text="{=taom_career_tier2}Tier 2" />
 	<string id="taom_career_tier3" text="{=taom_career_tier3}Tier 3" />
 	<string id="taom_career_free_points" text="{=taom_career_free_points}Free Points: {COUNT}" />
+	<string id="taom_career_repair_refund" text="{=taom_career_repair_refund}Career choices that belonged to another career were refunded: {COUNT}." />
 	<string id="taom_career_tier_requirement" text="{=taom_career_tier_requirement}Requires Level {LEVEL}" />
 	<!-- Choice tree effect-scope badges (passive vs ability-bound) -->
 	<string id="taom_career_choice_while_active" text="{=taom_career_choice_while_active}While active" />

@@ -664,6 +664,7 @@
     <string id="taom_career_tier2" text="2. Seviye" />
     <string id="taom_career_tier3" text="3. Seviye" />
     <string id="taom_career_free_points" text="Serbest Puan: {COUNT}" />
+    <string id="taom_career_repair_refund" text="Career choices that belonged to another career were refunded: {COUNT}." />
     <string id="taom_career_tier_requirement" text="{LEVEL}. Seviye Gerektirir" />
     <string id="taom_career_choice_while_active" text="Aktifken" />
     <string id="taom_career_active_effects" text="Etkin Etkiler" />
