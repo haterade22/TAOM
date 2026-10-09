@@ -70,6 +70,8 @@ None. Tier values and wage tables are hardcoded in `VolunteerTierService` and `T
 - `IVolunteerContextAdapter` — wraps `Hero` to extract string context
 - `IRandomProvider` — `System.Random` wrapper for testability
 - `TaomCulturalFeats` — feat constants used in wage calculation
+- `VolunteerProductionService` (this feature): the daily volunteer probability, culture respawn feats then the War Chronicle multiplier
+- `IWarEffectService` (WarChronicle): the `VolunteerRate` multiplier of the settlement owner's kingdom (#765, [war-chronicle.md](war-chronicle.md))
 
 ## Tests
 - `TroopCostServiceTests.cs` — verifies wage for each tier 0–10, mounted/mercenary multipliers, and recruitment costs across the level breakpoints.

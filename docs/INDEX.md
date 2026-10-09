@@ -150,6 +150,7 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [named-companions](features/named-companions.md) — 18 lore companions as recruitable wanderers
 - [war-of-the-ring](features/war-of-the-ring.md) — endgame WotR phase machine (Peace→IsengardWar→FullWar→WarEnded)
 - [war-of-the-ring-momentum](features/war-of-the-ring-momentum.md) — Evil-vs-Good progress meter + on-map bar/popup + victory-ends-the-war (#327)
+- [war-chronicle](features/war-chronicle.md): timed war effects, rally catch-up for losing AI kingdoms, daily war ledger + analyzer (#765)
 - [diplomacy](features/diplomacy.md), [army-targeting](features/army-targeting.md) — see also TaomTargetScoreModel + Patch22 (border proximity floor)
 
 ### Sandbox, lifecycle, & UI

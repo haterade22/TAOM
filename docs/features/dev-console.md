@@ -184,8 +184,9 @@ appears **zero times**.
 `print_` also sorts adjacent to `campaign.print_*` in console autocomplete, which is a real
 discoverability win.
 
-`ConsoleCommandBindingTests` enforces the ban list literally — `dump_`, `list_`, `get_` — not the
-`print_`-first rule, so any other new read-only verb compiles and passes the suite. It has to be
+`ConsoleCommandBindingTests` enforces the ban list on every `_`-separated token of a name, so `dump`,
+`list` and `get` fail anywhere in it (`war_ledger_dump` as much as `dump_war_ledger`), but it does not
+enforce the `print_`-first rule, so any other new read-only verb compiles and passes the suite. It has to be
 argued into the table above first; that argument is the only gate there is.
 
 ### Risk tiers — apply ceremony only where it is earned
@@ -292,6 +293,10 @@ answer is conclusive and fails open in every path.
 | `taom.add_special_resources [amount]` | B | campaign | — (see [special-resources.md](special-resources.md)) |
 | `taom.print_special_resources` | A | campaign | Read-only balance/cap/tier plus the daily breakdown (income with town count, one upkeep line per troop type, net) since 2026-09-11. **Not** `GrantAmount(…, 0f)` — that clamps and writes back |
 | `taom.print_momentum [keys]` | A | campaign | ~50 in-game days of play to reach the 32 KB save-corruption threshold |
+| `taom.war_effects` | A | campaign | Nothing else shows the War Chronicle registry: every active timed effect with its time left, plus each affected kingdom's volunteer and escape multiplier with the MCM strength applied. See [war-chronicle.md](war-chronicle.md) |
+| `taom.war_effect_add <kingdomId> <VolunteerRate\|PrisonerEscape> <magnitude> <days>` | B | campaign | Hand-editing a save. Adds a timed effect from source `console` (magnitude -1 to 1, days above 0 up to 365, kingdom must exist), echoes the multiplier before and after; run it again to refresh. Refused on a BannerlordCoop client |
+| `taom.rally_status` | A | campaign | Per kingdom: fortification points, baseline, share lost, stored rally tier (0 to 2) and eligibility, plus whether the rally is on. Reads the tier the last daily tick left |
+| `taom.print_war_ledger` | A | campaign | Waiting a day for the log. Prints the `[WarLedger]` lines the daily tick would write now; logs and changes nothing |
 | `taom.print_party_size` | A | campaign | The #337 weight-deflation chain, invisible in-game. Distinguishes a light party from a degenerate base limit, and since #545 prints the ENFORCED frame (`raw/deflated`) beside the DISPLAYED one (`weighted/true-base`) so the two can be compared in one line |
 | `taom.print_town_economy [town]` | A | campaign | A 4–8 in-game-day observation for #317, plus the vanilla side-by-side that answers "is the buff doing anything" |
 | `taom.print_town_ledger [town]` | A | campaign | Where the town's gold actually went, by day and by flow. **No engine code logs a gold movement at all** — the alternative is inferring the drain from a balance that changes once a day. See [economy-diagnostics.md](economy-diagnostics.md) |
