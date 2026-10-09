@@ -730,8 +730,8 @@ class DumpRootResolutionTests(unittest.TestCase):
         env = {cha.DUMP_ENV_VAR: "   "}
         self.assertEqual(cha.resolve_dump_root(None, env), Path(cha.DEFAULT_DUMP_ROOT))
 
-    def test_default_names_the_v148_dump(self):
-        self.assertTrue(cha.DEFAULT_DUMP_ROOT.endswith("_categories_v1.5.4"))
+    def test_default_names_the_current_dump(self):
+        self.assertTrue(cha.DEFAULT_DUMP_ROOT.endswith("_categories_v1.5.5"))
 
 
 class CliTests(_Tree):

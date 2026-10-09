@@ -6,9 +6,9 @@ permanently the builder or reviewer. This file is the single source for the proj
 client file such as CLAUDE.md adds only what its own tooling needs
 ([ADR-011](docs/adrs/011-knowledge-delivery-tiers.md)).
 
-Target: Bannerlord v1.5.4 (installed Steam beta, pinned in `.claude/pinned-game-version.txt`).
+Target: Bannerlord v1.5.5 (installed Steam beta, pinned in `.claude/pinned-game-version.txt`).
 Engine migrations: [TRACKING.md](docs/migration/TRACKING.md), latest
-[v1.5.4-impact.md](docs/migration/v1.5.4-impact.md).
+[v1.5.5-impact.md](docs/migration/v1.5.5-impact.md).
 
 ## Start here
 

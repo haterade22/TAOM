@@ -17,7 +17,7 @@ namespace TAOM.Tests.Core;
 [TestClass]
 public class KingdomPolicyIdsTests
 {
-    // DefaultPolicies.RegisterAll, v1.5.4 (TaleWorlds.CampaignSystem.DefaultPolicies; `pwsh tools/taom-src.ps1
+    // DefaultPolicies.RegisterAll, v1.5.5, re-read 2026-10-09 (TaleWorlds.CampaignSystem.DefaultPolicies; `pwsh tools/taom-src.ps1
     // path TaleWorlds.CampaignSystem.DefaultPolicies`). The engine's own spelling, typo included:
     // policy_land_grands_for_veteran. Re-read on an engine bump (/engine-bump lists this set).
     private static readonly HashSet<string> EnginePolicyIds = new()

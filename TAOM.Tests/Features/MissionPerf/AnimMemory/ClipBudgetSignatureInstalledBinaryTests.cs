@@ -22,6 +22,7 @@ public class ClipBudgetSignatureInstalledBinaryTests
         {
             [14209376] = ("v1.5.3", 0x21E00F, 0x21E034, 0xDABE40, 0xB2E2DC),
             [14209888] = ("v1.5.4", 0x21E00F, 0x21E034, 0xDABE40, 0xB2E2CC),
+            [14212960] = ("v1.5.5", 0x21E50F, 0x21E534, 0xDACE40, 0xB2E3EC),
         };
 
     [TestMethod]

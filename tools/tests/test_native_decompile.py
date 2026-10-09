@@ -641,6 +641,9 @@ class GhidraIntegrationTests(unittest.TestCase):
         "v1.5.4": {"set_attack_state": "0x6DF900", "weapon_equipped": "0x6E0390",
                    "process_preload_queue": "0x4A0D50", "import_stub": "0x9DB920",
                    "get_current_action_type": 0x6E1C40},
+        "v1.5.5": {"set_attack_state": "0x6DFE30", "weapon_equipped": "0x6E08C0",
+                   "process_preload_queue": "0x4A1270", "import_stub": "0x9DC050",
+                   "get_current_action_type": 0x6E2170, "thunk_target": "0x153D50"},
     }
 
     def _pins(self):
@@ -676,7 +679,9 @@ class GhidraIntegrationTests(unittest.TestCase):
         code, out, err = self._cli("--engine-method", "IPhysicsShape.ProcessPreloadQueue")
         self.assertEqual(code, 0, out + err)
         self.assertIn(f"function: IPhysicsShape_ProcessPreloadQueue  entry {entry}", out)
-        self.assertIn("thunk to: FUN_180153850  entry 0x153850", out)
+        # The thunk's target moved at v1.5.5; v1.5.3 and v1.5.4 share 0x153850.
+        target = self._pins().get("thunk_target", "0x153850")
+        self.assertIn(f"thunk to: FUN_18{target[2:].lower().zfill(7)}  entry {target}", out)
 
     def test_a_stub_that_jumps_to_an_import_does_not_crash(self):
         code, out, err = self._cli("--rva", self._pins()["import_stub"])

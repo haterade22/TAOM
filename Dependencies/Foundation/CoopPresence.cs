@@ -121,16 +121,16 @@ public static class CoopPresence
     }
 
     // KNOWN GAP, deliberately not papered over: detection is based on the launcher's ACTIVE-module
-    // list, which reflects what the player enabled, not what successfully constructed. If a co-op
-    // module's SubModule constructor throws, SubModuleConstructionGuard swallows it (crashing the
-    // launcher helps nobody) and this probe still reports the module as active — so TAOM runs the
-    // session in co-op mode for a co-op layer that is dead: PatchShield withholds its rescue and
-    // SaveShield rethrows save-load faults. An earlier draft carried a MarkConstructionFailed()
-    // method for this, but nothing called it and Refresh() would have re-added the id from the
-    // launcher list anyway, so it was a documented guarantee the code did not provide. Closing this
-    // properly needs the construction guard to map a failing assembly back to its module id AND a
-    // suppression set that survives re-probing; until then the honest statement is that this gap
-    // exists. See docs/features/bannerlord-together-compat.md "Known limitations".
+    // list, which reflects what the player enabled, not what successfully constructed. On
+    // Bannerlord v1.5.5 (changeset 124170) Module.AddSubModule catches an exception thrown by a
+    // module's SubModule constructor body, shows a message box naming the module and ends the game,
+    // so a co-op module that fails there never reaches a session. What remains is a failure that
+    // SubModuleConstructionGuard swallows (a base-constructor or field-initialiser exception): the
+    // constructor then returns normally, this probe still reports the module as active, and TAOM
+    // runs in co-op mode for a co-op layer that is dead: PatchShield withholds its rescue and
+    // SaveShield rethrows save-load faults. Closing it needs the guard to map a failing assembly
+    // back to its module id AND a suppression set that survives re-probing.
+    // See docs/features/bannerlord-together-compat.md "Known limitations".
 
     private static void EnsureProbed()
     {

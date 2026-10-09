@@ -575,7 +575,7 @@ Engine concepts come from the process docs; signatures come only from the instal
 
 ### Pre-Decompiled Source (`E:\Decompiled_Bannerlord\`)
 
-The entire Bannerlord v1.5.2 codebase is pre-decompiled and organized by category (`E:\Decompiled_Bannerlord\_categories_v1.5.2`; older trees beside it):
+The entire Bannerlord v1.5.5 codebase is pre-decompiled and organized by category (`E:\Decompiled_Bannerlord\_categories_v1.5.5`; older trees beside it):
 
 | Folder | Contents |
 |--------|----------|

@@ -214,7 +214,8 @@ def armour_class_table_issues(game_modules: Path) -> list:
 
 ARMOUR_REF_CODE = "ARMOUR_ACQUISITION_REF"
 
-# The items the engine registers in code, not XML (v1.5.3 DefaultItems.cs:93-108), so no module's
+# The items the engine registers in code, not XML (DefaultItems.RegisterAll; same 16 ids in v1.5.3
+# and v1.5.5, re-read 2026-10-09), so no module's
 # XML defines them: the metals the armoury charges are among them.
 ENGINE_REGISTERED_ITEMS = frozenset({
     "grain", "felt", "planks", "meat", "hides", "tools", "iron", "hardwood", "charcoal",

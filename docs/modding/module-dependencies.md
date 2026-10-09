@@ -176,10 +176,10 @@ Two facts about the numbers. The Dependencies `<Version>` is `v2.0.6` (`Dependen
 while Main's is `v2.0.28` (`Main/_Module/SubModule.xml:6`); the two are not meant to match, and
 `v2.0.6` is not a phantom Main version ([release-process.md](../reference/release-process.md) line
 152). The engine target is pinned separately: `NativeConstraint_MatchesPinnedGameVersion` asserts that
-Main's `<DependedModuleMetadata id="Native" version="v1.5.4.*" />` equals
+Main's `<DependedModuleMetadata id="Native" version="v1.5.5.*" />` equals
 `.claude/pinned-game-version.txt` plus `.*`
 (`TAOM.Tests/Infrastructure/Dependencies/BundledDependencyManifestTests.cs:200-224`); the pin file
-reads `v1.5.4`. <!-- measured: cat .claude/pinned-game-version.txt 2026-10-05 -->
+reads `v1.5.5`. <!-- measured: cat .claude/pinned-game-version.txt 2026-10-09 -->
 
 ## Vendored DLLs, the allowlist and THIRD-PARTY-LICENSES
 
@@ -899,7 +899,7 @@ except the two MCM FileVersion values (`5.12.3.0`), which were re-read on 2026-1
 | 17 / 17 | language folders under the live `ModuleData/Languages` / `ModuleData/Languages_MCM` | `ls "<game>/Modules/TAOM.Dependencies/ModuleData/Languages" \| wc -l` (and `_MCM`) |
 | 3,150,674 | bytes in the live `diag.log` | `ls -la "<game>/Modules/TAOM.Dependencies"` |
 | 19 | folders under the live `Modules/` | `ls "<game>/Modules" \| wc -l` |
-| v1.5.4 | pinned engine version | `cat .claude/pinned-game-version.txt` |
+| v1.5.5 | pinned engine version | `cat .claude/pinned-game-version.txt` |
 | 2026-08-11 | date of `cc1713eb`, the commit that removed the #371 rows | `git log -1 --format='%h %ad' --date=short cc1713eb` |
 | 0 | hits for `DependedModuleMetadata` in the v1.4.8 managed decompile | `rg -n DependedModuleMetadata <decompile root>` |
 
