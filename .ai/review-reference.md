@@ -42,6 +42,10 @@ VERDICT: CLEAN / ISSUES FOUND
 ### Lessons From Prior Reviews (87 reviews, 193+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Mutation-checks a new guard in memory** (2026-10-08, War of the Ring session reset #764, 1 of 1
+  MEDIUM real): it rewrote the guarded line into a cached construction as a string and showed every
+  predicate of the new source-text pin still held. For a new wiring or source-text test, ask for the
+  cheapest regression that keeps it green.
 - **Feeds a new filter or gate the input that should fail it** (2026-09-30, KEYforce art, 2 of 2 LOW
   real): a troop whose spider sat only in its second battle set (the filter kept it), and three XML
   fragments the new siege-scene gate misjudged. For a new filter or gate, ask for that input.

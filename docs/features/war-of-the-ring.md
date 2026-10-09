@@ -169,6 +169,8 @@ Phase escalation is driven by elapsed campaign days, so it survives save/load wi
 
 `WarOfTheRingBehavior.SyncData` persists two ints: `WarOfTheRing_CurrentPhase` (Phase 9b #129 — so past-Phase2 saves don't replay transitions) and `WarOfTheRing_Outcome` (WotR-momentum #327 — the victor once the war ends). Both are additive keys; older saves lacking them load as `Peace` / `None` (vanilla `SyncData` returns false on a missing key without overwriting the ref). The elapsed-time computation still drives escalation; the persisted phase just avoids re-firing transitions on load.
 
+A new campaign in the same process now starts from a reset service (#764). `WarOfTheRingBehavior` is built fresh in every campaign's `OnGameStart`, before any campaign event and before a load's `SyncData`, and its constructor calls `ResetForNewSession()`; a load then restores the saved phase and outcome in `SyncData`. The service is a process-lifetime singleton and `SyncData` never runs in loading mode for a brand-new game, so before the fix a second campaign inherited the previous phase and outcome: stuck at FullWar it never declared the Phase 1 and 2 wars, and at WarEnded `EndWar` was a no-op. The reset cannot live in `OnSessionLaunched`, because two readers get there first. Campaign-event listeners run newest-first, so the momentum behavior, added after this one, runs its own session-launch code before ours; and vanilla caches each kingdom's at-war list in `OnNewGameCreated`, which the engine dispatches before `OnSessionLaunched`. The reset also cannot live in `RegisterEvents`: on a load that runs after `SyncData` and would wipe the restored phase. `WarOfTheRingWiringTests` pins that SubModule builds the behavior inline as `AddBehavior`'s argument, exactly once, and that no other production file constructs or registers it, since a cached or container-singleton instance would reset only once per process. The fix prevents new cases only: a save already written by an affected campaign keeps the phase it saved.
+
 Benefits: MCM config changes take effect immediately on next tick. No save migration needed (new keys default safely).
 
 ### Phases
@@ -195,7 +197,7 @@ MCM settings are accessed through an injected `ITaomSettingsProvider` interface 
 | `Main/Features/Diplomacy/WarOfTheRingConfigProvider.cs` | JSON loader |
 | `Main/Features/Diplomacy/ITaomSettingsProvider.cs` | MCM settings interface (testable) |
 | `Main/Features/Diplomacy/TaomSettingsProvider.cs` | MCM settings implementation |
-| `Main/Features/Diplomacy/WarOfTheRingBehavior.cs` | DailyTick timer (uses CampaignStartTime) |
+| `Main/Features/Diplomacy/WarOfTheRingBehavior.cs` | DailyTick timer (uses CampaignStartTime); its constructor resets the singleton service for each campaign (#764) |
 | `Main/Features/Diplomacy/Hooks/IOnPeaceAction.cs` | Peace hook interface |
 | `Main/Features/Diplomacy/Hooks/PeaceActionHook.cs` | Hook implementation |
 | `Main/Features/Diplomacy/Hooks/MakePeaceAction_ApplyInternal_Patch.cs` | Harmony safety net |
@@ -219,10 +221,12 @@ The WotR system **extends** the existing Diplomacy feature, not replaces it:
 
 ## Tests
 
-- `TAOM.Tests/Features/Diplomacy/WarOfTheRingServiceTests.cs` — 31 tests covering phase transitions, war declarations, peace blocking, test mode, idempotent re-checks, and the day-ordering clamp across all four sources
+- `TAOM.Tests/Features/Diplomacy/WarOfTheRingServiceTests.cs`: 34 tests covering phase transitions, war declarations, peace blocking, test mode, idempotent re-checks, the day-ordering clamp across all four sources, and the session reset (#764)
+- `TAOM.Tests/Features/Diplomacy/WarOfTheRingBehaviorSessionResetTests.cs`: 6 tests pinning the constructor reset, a save-then-load round trip that restores a non-default phase and outcome, a save without the keys, a new campaign after a WarEnded campaign, a save pass doing neither, and the co-op client gate on `OnSessionLaunched`
+- `TAOM.Tests/Features/Diplomacy/WarOfTheRingWiringTests.cs`: 7 source-text tests pinning that SubModule builds the behavior inline as `AddBehavior`'s argument exactly once, that no other production file constructs or registers it, and that the predicate rejects cached, static, duplicated and container-resolved shapes (untagged, so the reference-assembly build runs them)
 - `TAOM.Tests/Features/Diplomacy/WarOfTheRingConfigProviderTests.cs` — 12 tests, one per `ValidateConfig` rule (phase + test-mode ordering, sub-config nulls, missing file, malformed JSON)
 - `TAOM.Tests/Features/Diplomacy/WarOfTheRingShippedConfigTests.cs` — 6 tests pinning the shipped `war_of_the_ring.json`, so a doc/code drift in the shipped days fails the suite rather than waiting for a review
-- `TAOM.Tests/Features/Diplomacy/PeaceActionHookTests.cs` — 3 tests for hook behavior
+- `TAOM.Tests/Features/Diplomacy/PeaceActionHookTests.cs`: 5 tests for hook behavior
 
 The MCM branch of `GetEffectivePhaseDays` had no coverage until 2026-07-30 — every test pinned `IsAvailable = false` in `Setup()`. When adding a test here, check which of the four day sources it actually exercises.
 
@@ -233,6 +237,7 @@ The MCM branch of `GetEffectivePhaseDays` had no coverage until 2026-07-30 — e
 3. Phase 1 triggers on Day 1 — check Rohan is at war with Isengard and Dunland
 4. Phase 2 triggers on Day 3 — check all hostile pairs are at war, peace proposals blocked
 5. Verify Harad/Umbar/Khand can still make peace with each other (Rhun cannot — it's a Dark Power)
+6. Second campaign in one process (#764): play past the Phase 2 day, exit to the main menu without closing the game, and start a new campaign. The log shows "phase reset to Peace at campaign start", then the Phase 1 wars on day 1, and the War of the Ring meter stays hidden until Full War.
 
 ## How to Add New War Phases
 
@@ -280,6 +285,7 @@ The MCM branch of `GetEffectivePhaseDays` had no coverage until 2026-07-30 — e
 <!-- backlinks-end -->
 ## Changelog
 
+- 2026-10-08: A new campaign in the same process no longer inherits the previous campaign's phase and outcome: `WarOfTheRingBehavior`'s constructor calls `WarOfTheRingService.ResetForNewSession()` before any campaign event can read the service (#764).
 - 2026-07-30 — Phase defaults retuned to Day 30 (Isengard/Dunland attack Rohan) / Day 44 (full War of the Ring), set at all four sources (shipped JSON, MCM defaults, `TaomSettingsProvider` fallbacks, `WarOfTheRingConfig` compiled defaults). `GetEffectivePhaseDays` now clamps `phase2 > phase1 >= 1` for every source — previously only the JSON pair was validated (strictly-`<`, so equal days passed) while the MCM sliders were unvalidated, and an equal or inverted pair ran both transitions in one tick with `IsengardWar` never observable. RCA: `docs/reviews/rca-wotr-phase-ordering-2026-07-30.md`.
 - 2026-05-22 — WotR phase defaults retuned to Day 2 (Phase 1) / Day 14 (Phase 2); `testMode` tightened to 1/3; phase state persists via `SyncData` (`WarOfTheRing_CurrentPhase`).
 - 2026-05-13 — Phase 9b: `WarOfTheRingService.CurrentPhase` now persisted (no per-load transition replay); `WarOfTheRingConfigProvider` gains null-literal JSON fallback + semantic TriggerDay validation (closes #129).

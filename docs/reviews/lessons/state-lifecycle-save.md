@@ -7,6 +7,7 @@ A DryIoc `Reuse.Singleton` service is created once in `OnSubModuleLoad` and live
 - **Why missed:** the design reasoned about the *within-campaign* rebuild and the *save-load one-hop* cost, but never enumerated the *new/loaded campaign in the SAME process* state. Two deep-review agents (Completeness, Data Flow) both read "no SyncData — ephemeral" and accepted it; the data-flow "Lifecycle State Matrix" check lists entity states (alive/killed/removed/session-end) for entity mutations but doesn't name "process-singleton survives a campaign switch" as a state to enumerate for a shared cache.
 - **Prevent:** any behavior fronting a process-singleton runtime cache subscribes `CampaignEvents.OnSessionLaunchedEvent` (fires on both new game and load) → `ClearAll()`, so no state leaks from campaign A into campaign B. Whenever a cache is a `Reuse.Singleton` keyed by a campaign-reused id (`*.StringId`), enumerate the cross-campaign-same-process state, not only the within-campaign and save-load states. Distinct from the `OnGameLoaded` entity-mutation matrix — this is about a shared cache outliving the campaign, not about mutating a loaded entity. **Carve-out — cross-campaign hand-off is a legitimate use:** the rule targets caches keyed on a campaign-reused `StringId`, not every singleton. `PlayerPossession` registers both its services `Reuse.Singleton` precisely so the character-creation choices survive into the campaign that REPLACES the one that recorded them (a multiplayer join discards the CC hero), and its `ResetForNewCampaign` deliberately clears the baseline hero id while keeping `_choices`. Before applying the clear-on-session-launch reflex, ask whether the state is a per-campaign cache or a payload the next campaign is meant to consume.
 - **Source:** docs/reviews/rca-caravan-trade-recency-2026-07-11.md (#335; Codex adversarial pass).
+- **Update 2026-10-08 (#764):** an `OnSessionLaunched` reset is safe only when nothing reads the singleton before your listener runs, and listeners run newest-first. For persisted per-campaign state, use the constructor reset in the last lesson of this file.
 
 ### An engine bump can regress a feature whose managed bindings are unchanged — behavior-only changes in an engine method the feature drives unusually
 Binding-test-green (`ilspycmd` confirms the method still exists with the same signature) does NOT mean the method's *body* is unchanged. 1.4.7 added an **unconditional** `Mission.InitialPlayerAgent` deref inside `DeploymentMissionController.SetupTeams()`/`FinishDeployment()` — invisible to binding tests, invisible to the category-tree decompile ("unaffected"), and harmless to every *normal* battle (which always has a player-controlled agent → non-null). It only NREs TAOM's **headless** shader-precompile battle, the one place that opens a battle with no human. The bump had dispositioned shader-precompile "unaffected" on the strength of the passing binding tests; the regression was invisible until the feature ran in-game.
@@ -257,6 +258,8 @@ what lets the previous campaign's state through. Naming the split in code (TAOM 
 
 **Source:** `docs/reviews/rca-field-commission-2026-08-07.md` findings 2 and 14.
 
+**Update 2026-10-08 (#764):** "clear it at the session boundary" must still come before every reader. For persisted per-campaign state, use the constructor reset in the last lesson of this file.
+
 ### A hand-back that reads only the OTHER actor's position will strand the player (Enlistment, 2026-08-08)
 
 `DischargeService.RestoreCampaignContext` decided where to put the player entirely from
@@ -470,6 +473,10 @@ and a load-with-same-ids.
 
 **Source:** docs/reviews/rca-yotthani-camps-2026-08-23.md Class 1 (2 CRITICAL, found independently
 by the unbiased round-A review and Codex).
+
+**Update 2026-10-08 (#764):** the `OnSessionLaunched` reset above ran too late for the War of the Ring
+service, because a behavior added later read the singleton first. See the constructor reset in the
+last lesson of this file.
 
 ### A redirect list is a MASK over an invalid state, and every mask is one un-masking away from the crash
 
@@ -855,6 +862,7 @@ guard, keeps the previous campaign's balances, and its `Contains`-gated legacy s
   `OnSessionLaunched`: `Campaign.cs:1685-1686` raises `OnGameLoaded` before `OnSessionStart`, so a
   later reset would wipe the seed.
 - **Source:** `docs/reviews/rca-cross-campaign-singleton-resets-2026-09-24.md` F1, F2.
+- **Update 2026-10-08 (#764):** the `_syncedThisSession` latch answers "did a record load", but not "who read the singleton first". Prefer the constructor reset in the last lesson of this file, which needs no latch.
 
 ### "No save data" means no TAOM save data; say what vanilla persists of what the feature changed (plan 022, 2026-09-24)
 `companion-tactics.md` said OOB Auto-Assign changes "nothing campaign-side or save-backed" and used that as the reason
@@ -990,3 +998,9 @@ A save made before a batch still loads `settlements.xml` (`SandBoxManager.Initia
 - **Why missed:** the map tools inserted after a region anchor to keep the file readable, a choice nobody had weighed against saves, and `docs/modding/settlements.md` predicted a crash from a v1.4.8 reading that missed the `catch`. Earlier mid-file batches had shipped as "new campaign only", so the order looked harmless.
 - **Prevent:** both map tools append (`add_map_villages.append_settlements`), and `add_map_fortifications.py --check` fails unless the unreleased batch is the file's tail under a town (`save_order_findings`). Any hand edit to the live file follows the same rule.
 - **Source:** `docs/reviews/rca-arthedain-2026-10-07.md` finding 1.
+
+### Reset a per-campaign singleton in the constructor of a behavior built per campaign, not in a campaign event (#764, 2026-10-08)
+A process-lifetime singleton that holds persisted per-campaign state must be reset before anything can read it. The one point TAOM owns that precedes every campaign event on both paths is the constructor of a behavior built with `new` in `SubModule.OnGameStart`: `Campaign.cs:1410` runs before `LoadBehaviorData` (`:1448`) on a load and before `OnNewGameCreated` (`:1709`) on a new game, and a load's `SyncData` then restores the saved record over the reset (v1.5.4). `OnSessionLaunched` is too late whenever another reader gets there first: listeners run newest-first (see "Campaign-event listener dispatch is LIFO" in `harmony-il.md`), so a behavior added later runs its handler before yours, and vanilla's `OnNewGameCreated` handlers run before any session event. `RegisterEvents` is wrong too: on a load it runs after `LoadBehaviorData` and would wipe the restored record.
+- **Why missed:** #764's first cut followed the session-reset rule in `csharp-architecture.md` and the earlier lessons in this file, which prescribe an `OnSessionLaunched` reset behind a `_syncedThisSession` latch. `WarOfTheRingMomentumBehavior`, added two lines later in `SubModule.cs`, read the stale FullWar in its own `OnSessionLaunched` and started the momentum war on day 0, and vanilla's `CampaignFactionManagerBehaviour` cached the stale "constant war" in `OnNewGameCreated`. The LIFO lesson had existed since #557, but it was filed under Harmony, not under resets.
+- **Prevent:** put the reset in the constructor of a per-campaign behavior, and pin with a source-text test that `SubModule.cs` builds it with `new`: a container-singleton behavior is constructed once per process, so its constructor reset would run once. A behavior that is itself a container singleton must become per-campaign first. Before choosing any other reset point, list every reader of the singleton and the event it reads in.
+- **Source:** `docs/reviews/rca-wotr-session-reset-2026-10-08.md` (#764).

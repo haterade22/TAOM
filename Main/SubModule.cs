@@ -1178,6 +1178,8 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomDiplomacyModel(wotrService, coopSession));
 
         var wotrLogger = IoC.Resolve<IModLogger>();
+        // #764: must stay `new` per campaign. Its constructor resets the process-lifetime WotR service;
+        // a container singleton would reset it once per process (WarOfTheRingWiringTests).
         campaignStarter.AddBehavior(new WarOfTheRingBehavior(wotrService, wotrLogger,
             IoC.Resolve<Features.CoopInterop.ICoopSessionProvider>()));
         // WotR Momentum #327 — Evil-vs-Good progress tracking + victory; behavior is a

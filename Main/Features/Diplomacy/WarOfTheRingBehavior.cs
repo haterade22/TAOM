@@ -25,16 +25,19 @@ public class WarOfTheRingBehavior : CampaignBehaviorBase
         _wotrService = wotrService;
         _logger = logger;
         _coopSession = coopSession;
+
+        // #764: the service is a process-lifetime singleton, and this behavior is built fresh in every
+        // campaign's OnGameStart, before any campaign event and before a load's SyncData. Resetting
+        // here means no reader sees the previous campaign's phase; a load then restores the saved one
+        // in SyncData. OnSessionLaunched was too late: campaign-event listeners run newest-first, so
+        // the momentum behavior (added after this one) read the stale phase first, and vanilla caches
+        // each kingdom's at-war list during OnNewGameCreated.
+        _wotrService.ResetForNewSession();
     }
 
     public override void RegisterEvents()
     {
         _logger.LogInfo("[WarOfTheRing] WarOfTheRingBehavior registering events");
-        CampaignEvents.OnNewGameCreatedEvent.AddNonSerializedListener(this, _ =>
-        {
-            _persistedPhase = (int)WarPhase.Peace;
-            _persistedOutcome = (int)WarOutcome.None;
-        });
         CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, OnDailyTick);
         CampaignEvents.OnSessionLaunchedEvent.AddNonSerializedListener(this, OnSessionLaunched);
     }
