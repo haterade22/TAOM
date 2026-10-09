@@ -574,4 +574,7 @@ engine folds into raid and extortion events.
 - **Prevent:** key payouts on the engine's own verdict (`Village.VillageState == Looted`, set just
   before `RaidCompleted`) and on who was beaten (a field party with healthy men at the start), not on
   the event type; when an event turns out to mean more than its name, grep every listener of it.
+  The same holds for completions: a hideout "send troops" clear raises `OnHideoutBattleCompleted`
+  twice for one event (#790), so a payout keyed on an event checks a state the engine sets once (here
+  `MapEvent.IsFinalized`), not a field the payout remembers, which a save and load would reset.
 - **Source:** `docs/reviews/rca-career-e1e3-2026-10-08.md` (#770, #774).

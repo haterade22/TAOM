@@ -75,6 +75,22 @@ comment defects, all fixed. Full suite at the end: 15,139 passed, 6 skipped, 2 f
 
 ## Owed
 
-In-game checks per issue (the commit bodies list them), and the hideout lead from the final pass: on
-v1.5.5 the "send troops" hideout result may raise the hideout-completed event twice, which would pay
-`per_hideout_clear` twice. Unverified; to be checked in game before the hideout doc line is trusted.
+In-game checks per issue (the commit bodies list them).
+
+## Codex review (2026-10-09)
+
+Codex (`gpt-6-astra`, `xhigh`) reviewed the six commits against the installed v1.5.5 DLLs. It
+disputed four of the five suspects with decompiled evidence (no legitimate choice is deleted by the
+repair pass; the raid gates hold for every raid shape; no hero is missed by the cache union and no
+`RefreshCache` caller runs off the main thread; the static handler survives loads, new campaigns,
+Game Over and the test suite; payouts at gain 0 and the upkeep float parity are unchanged).
+
+It confirmed the hideout lead as a P2: a "send troops" clear raises `OnHideoutBattleCompleted`
+from its success menu and again when the map event finalizes, and TAOM credited both. Verified in
+the decompiled `HideoutCampaignBehavior` and `HideoutEventComponent`; fixed as #790 by paying
+only a finalized hideout event (a first fix that remembered the last credited event was rejected
+by its own review: a save made in the success menu still paid twice, and the field kept the old
+campaign alive). Category: one engine event raised twice for one outcome. Why missed: the
+handler assumed one completion per event, the same trust in an event's name as #770; the deep
+review flagged it but left it unverified. Prevent: the `campaign-mechanics.md` lesson on map events
+now names this case.
