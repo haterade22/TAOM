@@ -470,11 +470,14 @@ public class CoopVetoClassificationTests
     // OnSessionLaunched calls EnforcePermanentAlliances, which reaches MakePeace/StartAlliance
     // straight from TAOM config and touches none of the three predicates. Codex found it (P1) after
     // this test had already passed over it. A divergence surface is not only "decisions that read
-    // drifting state" — it is also "writes that happen on every peer".
+    // drifting state" — it is also "writes that happen on every peer". WarOfTheRingBehavior's
+    // war-declaring entry points are listed too (CheckPhaseTransition, ReconcileDeclaredWars, #772).
     private static readonly string[] DivergenceProneMutators =
     {
         "EnforcePermanentAlliances",
         "EstablishInitialAlliances",
+        "ReconcileDeclaredWars",
+        "CheckPhaseTransition",
     };
 
     [TestMethod]

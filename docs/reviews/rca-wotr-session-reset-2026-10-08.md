@@ -54,7 +54,7 @@ mid-campaign path to `OnGameStart`); S3 and S4 confirmed; S6 confirmed as a pre-
 | # | Sev | Bug | Category | Why missed | Preventive action |
 |---|---|---|---|---|---|
 | C1 | MEDIUM | The first `WarOfTheRingWiringTests` passed a cached construction (`_cachedWotr ??= new WarOfTheRingBehavior(...)`): it only checked that `new WarOfTheRingBehavior(` appeared and that no `Resolve<...>` did. Codex evaluated the predicates on that mutant in memory and all four held. | Weak guard | The pin was written in the contains-check shape of `FieldCampWiringTests`, and nobody, the design lens included, tried the cheapest regression that keeps the predicate true. | The pin now requires the construction inline as `campaignStarter.AddBehavior`'s argument, exactly once, scans every production file for any other mention, and carries the cached, static, duplicated and container-resolved shapes as negative rows. Lesson in `lessons/testing-qa.md`. |
-| S6 | HIGH, pre-existing | At Phase 2, `TransitionToPhase` sets `CurrentPhase = FullWar` before `DeclareHostileTierWars`, so `AreAtWar` answers true through `TaomDiplomacyModel.IsAtConstantWar` and every declaration is skipped. The real stances stay neutral, no `OnWarDeclared` fires, and AI target selection reads `FactionsAtWarWith`, which nothing rebuilds. `AllianceAdapter.DeclareWar` repeats the same guard. | Logic order | Every test fakes `AreAtWar` independently of the phase, so the feedback loop through the model cannot show. | Its own issue and fix (milestone M0b): declare before the phase flips, check the real stance in the adapter, reconcile existing Full War saves, and a test whose `AreAtWar` follows the phase. |
+| S6 | HIGH, pre-existing | At Phase 2, `TransitionToPhase` sets `CurrentPhase = FullWar` before `DeclareHostileTierWars`, so `AreAtWar` answers true through `TaomDiplomacyModel.IsAtConstantWar` and every declaration is skipped. The real stances stay neutral, no `OnWarDeclared` fires, and AI target selection reads `FactionsAtWarWith`, which nothing rebuilds. `AllianceAdapter.DeclareWar` repeats the same guard. | Logic order | Every test fakes `AreAtWar` independently of the phase, so the feedback loop through the model cannot show. | Its own issue (#772) and fix (milestone M0b): guard each declaration on the real stance (`HasDeclaredWar`), reconcile existing Full War saves, and a test whose `AreAtWar` follows the phase. |
 
 ## Follow-ups (outside this change; issues on Mike's word)
 
@@ -70,10 +70,7 @@ mid-campaign path to `OnGameStart`); S3 and S4 confirmed; S6 confirmed as a pre-
   deletion; the other three first need a check that their visuals reset is safe at `OnGameStart`.
   TournamentRewards and Enlistment also reset in `OnSessionLaunched`; whether anything reads them
   earlier is unchecked.
-- Unverified lead, pre-existing: at Full War, `TransitionToPhase` sets the phase before
-  `DeclareHostileTierWars`, so `AreAtWar` may already answer true through `IsAtConstantWar` and skip
-  every declaration (`WarOfTheRingService.cs` around `:139-186`). It needs an investigation before
-  anyone calls it a bug.
+- Phase 2 never declared the Hostile-pair wars (Codex S6 above, confirmed): filed as #772 and fixed as milestone M0b of #765; see `rca-wotr-phase2-wars-2026-10-08.md`.
 
 ## Lesson recorded
 

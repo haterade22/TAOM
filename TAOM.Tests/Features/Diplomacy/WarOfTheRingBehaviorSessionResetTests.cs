@@ -146,6 +146,36 @@ public class WarOfTheRingBehaviorSessionResetTests
 
         _service.DidNotReceive().ResetForNewSession();
         _service.DidNotReceive().CheckPhaseTransition(Arg.Any<float>());
+        _service.DidNotReceive().ReconcileDeclaredWars();
+    }
+
+    // #772 Codex R2: the host path must call the repair, and before the phase check, so the repair
+    // sees only the phase the save restored. Deleting or reordering the call fails this test.
+    [TestMethod]
+    public void OnSessionLaunched_Host_ReconcilesBeforeThePhaseCheck()
+    {
+        var sut = new WarOfTheRingBehavior(_service, Substitute.For<IModLogger>(), _coop, () => 50f);
+        _service.ClearReceivedCalls();
+
+        sut.OnSessionLaunched(null!);
+
+        Received.InOrder(() =>
+        {
+            _service.ReconcileDeclaredWars();
+            _service.CheckPhaseTransition(50f);
+        });
+    }
+
+    [TestMethod]
+    public void OnDailyTick_Host_ChecksThePhaseWithoutTheRepair()
+    {
+        var sut = new WarOfTheRingBehavior(_service, Substitute.For<IModLogger>(), _coop, () => 45f);
+        _service.ClearReceivedCalls();
+
+        sut.OnDailyTick();
+
+        _service.Received(1).CheckPhaseTransition(45f);
+        _service.DidNotReceive().ReconcileDeclaredWars();
     }
 
     /// <summary>

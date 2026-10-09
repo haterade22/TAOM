@@ -42,6 +42,11 @@ VERDICT: CLEAN / ISSUES FOUND
 ### Lessons From Prior Reviews (87 reviews, 193+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Deletes and reorders a call the unit tests cannot reach** (2026-10-08, War of the Ring Phase 2 wars
+  #772, 3 of 3 findings real): handed a host-only handler that reads `Campaign.Current`, it ran the real
+  fixtures in memory, then removed `ReconcileDeclaredWars()` and moved it after the phase check; both
+  mutants kept all six behavior tests green. For a handler with a client gate, ask for the deletion and
+  reorder mutants of the host call.
 - **Mutation-checks a new guard in memory** (2026-10-08, War of the Ring session reset #764, 1 of 1
   MEDIUM real): it rewrote the guarded line into a cached construction as a string and showed every
   predicate of the new source-text pin still held. For a new wiring or source-text test, ask for the
