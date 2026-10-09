@@ -380,7 +380,10 @@ ends up controlling, resolving it from the character-creation culture and the li
 - **`per_raid`:** once per raid, only when the village ends Looted (the engine sets that state just
   before it raises `RaidCompleted`), and only to the attacker. Beating the militia first pays nothing.
 - **`per_siege_victory`:** a won siege assault or siege outside fight.
-- **Hideout clear:** pays both the battle credit and `per_hideout_clear`, on purpose.
+- **Hideout clear:** pays both the battle credit and `per_hideout_clear`, on purpose. A "send
+  troops" clear raises the completed event twice (from its success menu, then at finalize); only
+  the finalized event pays `per_hideout_clear`, so it pays once, even across a save made in the
+  success menu (#790).
 
 ## Desertion Mechanics
 
@@ -406,7 +409,11 @@ ends up controlling, resolving it from the character-creation culture and the li
 
 ## Changelog
 
-- 2026-10-08 (#771): one party-screen subscriber per process. `ScreenManager.OnPushScreen` is a static event, so a behavior left subscribed by a save load without a Game Over never became garbage, and after N loads each party-screen open wrote N `[SpecRes] PartyScreen session BEGUN` lines. `SpecialResourcesBehavior` now keeps its handler in a private static field of the engine's `ScreenManager.OnPushScreenEvent` type, removing the previous one before adding its own; Game Over removes it and clears the field. `TroopCountDiagnosticsBehavior` (a singleton) removes its handler before adding it, so its dump is written once. No unit test covers it (campaign entry point). The in-game check is still owed: load a save three times in one session, open the party screen once, and expect one `[SpecRes] PartyScreen session BEGUN` line and one `[TroopCountDiag]` dump.
+- 2026-10-08 (#771): one party-screen subscriber per process. `ScreenManager.OnPushScreen` is a static event, so a behavior left subscribed by a save load without a Game Over never became garbage, and after N loads each party-screen open wrote N `[SpecRes] PartyScreen session BEGUN` lines. `SpecialResourcesBehavior` now keeps its handler in a private static field of the engine's `ScreenManager.OnPushScreenEvent` type, removing the previous one before adding its own; the next campaign's `RegisterEvents` or a Game Over (a no-heir death) removes it and clears the field. `TroopCountDiagnosticsBehavior` (a singleton) removes its handler before adding it, so its dump is written once. No unit test covers it (campaign entry point). The in-game check is still owed: load a save three times in one session, open the party screen once, and expect one `[SpecRes] PartyScreen session BEGUN` line and one `[TroopCountDiag]` dump.
+- 2026-10-09 (#790): a "send troops" hideout clear paid `per_hideout_clear` twice; it now pays
+  only when the hideout event is finalized. No unit test covers it (campaign entry point). Owed in
+  game: one send-troops clear writes one `[SpecRes] HIDEOUT:` line, also after saving in its success
+  menu and loading.
 - 2026-10-09 (#770): a raid no longer also pays the battle credit for a militia-only fight. `SpecialResourceEarnPolicy.PaysBattleCredit(type, beatAFieldParty)` is false for a raid, forced supplies and forced volunteers unless the enemy side held a non-militia, non-villager party that started with healthy troops, so a real fight against a lord inside those events (defending your own village, a lord inside a village you raid, an army raid in which a lord's party is beaten) pays. `per_raid` is paid once, only when the village state is Looted and the player is on the winning side, so a resisted raid no longer pays it twice, and the tournament, hideout and raid toasts show the earned delta, so a `per_raid="0"` culture sees none. Tests in `SpecialResourceEarnPolicyTests`. Owed in game: a raid with a same-faction lord inside shows one BATTLE and one RAID line; defending your own village from an enemy lord raid and winning shows one BATTLE line and no RAID; a militia-only raid shows no BATTLE and one RAID; a Rohan raid with no lord shows no BATTLE line, a `RAID: +0` line and no toast.
 - 2026-10-08 (#767): the career gain scales every earning source (battle, raid, siege, prisoners, tournament, hideout) as well as the daily town income, through one public `ScaleEarned` that the map-bar tooltip also reads. Upkeep has one computation (`BuildUpkeepLines`) shared by the breakdown and desertion, so a non-finite upkeep modifier charges the configured upkeep and a troop whose career-modified upkeep is zero no longer deserts or triggers warnings. The six earning methods share one `Earn` helper. Tests in `SpecialResourceGainTests`.
 - 2026-09-25: the cave and hill trolls became special-resource troops (Mike: "cost should be high and upkeep lowish, 4 to 5"): recruit 50, upkeep 5 and 4, outside the tree-troop 0.4 ceiling with the other creatures (`TroopResourceCostDataTests`).
