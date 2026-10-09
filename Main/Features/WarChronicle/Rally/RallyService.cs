@@ -135,8 +135,8 @@ public sealed class RallyService
                 continue;
 
             var source = SourcePrefix + kingdom.Id;
-            if (after != before)
-                _effects.RemoveSource(source);
+            // Rebuild the source whole: a saved kind whose magnitude is now zero must not survive a refresh.
+            _effects.RemoveSource(source);
 
             var tier = after == 2 ? config.Tier2 : config.Tier1;
             Apply(source, kingdom.Id, WarEffectKind.VolunteerRate, tier.VolunteerRate, endTime);

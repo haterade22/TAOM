@@ -213,6 +213,26 @@ public class RallyServiceTests
     }
 
     [TestMethod]
+    public void RunDaily_ASavedKindWhoseConfiguredMagnitudeIsNowZero_IsRemovedAtTheSameTier()
+    {
+        _config.Tier1.VolunteerRate = 0f;
+        _config.Tier2.VolunteerRate = 0f;
+        _baselines.EnsureBaselines(new[] { K("empire_w", towns: 10) });
+        _tiers.Restore(new Dictionary<string, int> { ["empire_w"] = 2 });
+        _effects.RestoreFromSave(new[]
+        {
+            new WarEffect("rally:empire_w", "empire_w", WarEffectKind.VolunteerRate, 0.20f, Now + 48),
+            new WarEffect("rally:empire_w", "empire_w", WarEffectKind.PrisonerEscape, 1.00f, Now + 48),
+        });
+
+        _sut.RunDaily(new[] { K("empire_w", towns: 4) }, Now + 24);
+
+        Assert.AreEqual(2, _tiers.GetTier("empire_w"));
+        Assert.AreEqual(1.0f, _effects.GetMultiplier("empire_w", WarEffectKind.VolunteerRate), 0.0001f);
+        Assert.AreEqual(2.0f, _effects.GetMultiplier("empire_w", WarEffectKind.PrisonerEscape), 0.0001f);
+    }
+
+    [TestMethod]
     public void RunDaily_ADropToTierZero_RemovesTheRallySource()
     {
         _baselines.EnsureBaselines(new[] { K("empire_w", towns: 4) });

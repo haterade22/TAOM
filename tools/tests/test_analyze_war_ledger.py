@@ -326,6 +326,60 @@ class TargetTests(unittest.TestCase):
         self.assertEqual(m["target_capital"], "FAIL")
         self.assertIn("day 51", m["target_capital_reason"])
 
+    def test_a_capital_unheld_in_the_first_observation_fails_as_lost_by_that_day(self):
+        m = metrics(kdays([50], k="w", cap="0"))
+        self.assertEqual(m["target_capital"], "FAIL")
+        self.assertIn("lost by day 50", m["target_capital_reason"])
+        m = metrics(kdays(range(1, 120), k="w", cap="0"))
+        self.assertEqual(m["target_capital"], "FAIL")
+        self.assertIn("lost by day 1", m["target_capital_reason"])
+
+    def test_an_observed_transition_reports_the_exact_day_not_lost_by(self):
+        m = metrics([kl(50, "a", cap="1"), kl(51, "a", cap="0")])
+        self.assertNotIn("lost by", m["target_capital_reason"])
+
+    def test_an_unheld_capital_on_day_120_or_later_is_not_a_failure_by_itself(self):
+        self.assertNotEqual(metrics(kdays([120, 121], cap="0"))["target_capital"], "FAIL")
+
+    def test_one_kingdoms_complete_rows_do_not_hide_anothers_gap(self):
+        m = metrics(kdays(range(1, 120), k="empire_s", side="evil")
+                    + [kl(1, "empire_w", cap="1"), kl(120, "empire_w", cap="0")])
+        self.assertEqual(m["target_capital"], "UNKNOWN")
+        self.assertIn("empire_w", m["target_capital_reason"])
+        self.assertIn("first missing day 2", m["target_capital_reason"])
+
+    def test_two_kingdoms_with_complete_rows_pass(self):
+        m = metrics(kdays(range(1, 120), k="a") + kdays(range(1, 120), k="b", side="evil"))
+        self.assertEqual(m["target_capital"], "PASS")
+
+    def test_a_kingdom_with_only_na_capital_rows_blocks_pass(self):
+        m = metrics(kdays(range(1, 120), k="a") + kdays(range(1, 120), k="b", cap="na"))
+        self.assertEqual(m["target_capital"], "UNKNOWN")
+        self.assertIn("b", m["target_capital_reason"])
+
+    def test_na_days_inside_one_kingdoms_series_are_a_hole(self):
+        m = metrics(kdays(range(1, 120), k="a") + kdays(range(1, 120), k="b")
+                    + [kl(60, "b", cap="na")])
+        self.assertEqual(m["target_capital"], "UNKNOWN")
+        self.assertIn("first missing day 60", m["target_capital_reason"])
+
+    def test_a_kingdom_first_seen_after_day_1_blocks_pass(self):
+        m = metrics(kdays(range(1, 120), k="a") + kdays(range(50, 120), k="b"))
+        self.assertEqual(m["target_capital"], "UNKNOWN")
+        self.assertIn("first missing day 1", m["target_capital_reason"])
+
+    def test_a_destroyed_kingdom_needs_coverage_only_until_its_destruction(self):
+        base = kdays(range(1, 120), k="a")
+        gone = kdays(range(1, 60), k="b") + [ev_destroyed(60, "b")]
+        self.assertEqual(metrics(base + gone)["target_capital"], "PASS")
+        short = kdays(range(1, 40), k="b") + [ev_destroyed(60, "b")]
+        m = metrics(base + short)
+        self.assertEqual(m["target_capital"], "UNKNOWN")
+        self.assertIn("first missing day 40", m["target_capital_reason"])
+
+    def test_a_destroyed_kingdom_with_no_rows_blocks_pass(self):
+        m = metrics(kdays(range(1, 120), k="a") + [ev_destroyed(60, "b")])
+        self.assertEqual(m["target_capital"], "UNKNOWN")
 
 class CliTests(unittest.TestCase):
     def setUp(self):

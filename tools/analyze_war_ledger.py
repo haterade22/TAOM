@@ -21,10 +21,15 @@ read oldest first (by the taom_debug_ name stamp, else file time), so the newer 
 the argument order. A reload of an OLDER save leaves the abandoned run's later days and events in the
 report: the log carries no marker for the rewind yet.
 
-Capital target (b) has four verdicts. FAIL: a capital was seen lost before day 120. PASS: kingdom lines
-with a cap of 0 or 1 cover every day 1 to 119 and none was lost earlier. NO DATA: no kingdom line
-carries a capital state (also what a drifted key looks like). UNKNOWN: coverage of days 1 to 119 has a
-hole, so a loss could have happened unseen. --compare reads one file per side: concatenate a run's
+Capital target (b) has four verdicts, judged per kingdom. FAIL: any kingdom line with cap=0 before day
+120; the report says "day N" for an observed 1 to 0 transition and "lost by day N" when the kingdom's first
+capital state is already 0. NO DATA: no kingdom line carries a cap of 0 or 1 (also what a drifted key looks
+like). UNKNOWN: some kingdom lacks a cap of 0 or 1 on a day it must cover, so a loss could have happened
+unseen; the reason names the kingdom. PASS: every kingdom covers every day 1 to 119 and none was unheld.
+One kingdom's rows never fill another's days. A cap=na day is a hole, a kingdom first seen after day 1 has
+a hole before it (the log cannot say it did not exist), and a kingdom with an ev=destroyed line on day D
+must cover days 1 to D-1 only; a destroyed kingdom with no rows at all counts as a hole unless D is 1.
+--compare reads one file per side: concatenate a run's
 logs (oldest first) to compare it.
 
 Usage:
@@ -224,6 +229,37 @@ def _by_kingdom(camp):
     return out
 
 
+def _capital_verdict(camp, loss):
+    """(verdict, reason) for target (b), judged per kingdom so one kingdom's rows never fill another's."""
+    unheld, covered, observed_any = {}, {}, False
+    for (day, k), rec in camp.kingdoms.items():
+        covered.setdefault(k, set())
+        if rec['cap'] in ('0', '1'):
+            observed_any = True
+            covered[k].add(day)
+        if rec['cap'] == '0' and day < CAPITAL_TARGET_DAY and (k not in unheld or day < unheld[k]):
+            unheld[k] = day
+    if unheld:
+        # A transition seen at day N is exact; a first observation already unheld only proves "lost by day N".
+        day, k = min((d, k) for k, d in unheld.items())
+        return 'FAIL', f'day {day}' if loss.get(k) == day else f'lost by day {day}'
+    if not observed_any:
+        return 'NO DATA', 'no kingdom line carries cap=0 or 1'
+
+    destroyed = {f['k']: d for d, f in camp.events if f['ev'] == 'destroyed'}
+    for k in destroyed:
+        covered.setdefault(k, set())
+    for k in sorted(covered):
+        last = CAPITAL_TARGET_DAY - 1
+        if k in destroyed:
+            last = min(last, destroyed[k] - 1)
+        missing = [d for d in range(FIRST_TICK_DAY, last + 1) if d not in covered[k]]
+        if missing:
+            return 'UNKNOWN', (f'{k}: no capital data for {len(missing)} of days '
+                               f'{FIRST_TICK_DAY}-{last}, first missing day {missing[0]}')
+    return 'PASS', 'no capital lost' if not loss else f'day {min(loss.values())}'
+
+
 def compute_metrics(camp):
     m = {}
     days = camp.days()
@@ -297,18 +333,7 @@ def compute_metrics(camp):
 
     m['target_share_pass'] = (m['in_band_fraction'] is not None
                               and m['in_band_fraction'] >= SHARE_TARGET_FRACTION)
-    early = m['earliest_capital_loss']
-    observed = {d for (d, _), r in camp.kingdoms.items() if r['cap'] in ('0', '1')}
-    missing = [d for d in range(FIRST_TICK_DAY, CAPITAL_TARGET_DAY) if d not in observed]
-    if early is not None and early < CAPITAL_TARGET_DAY:
-        verdict, why = 'FAIL', f'day {early}'
-    elif not observed:
-        verdict, why = 'NO DATA', 'no kingdom line carries cap=0 or 1'
-    elif missing:
-        verdict, why = 'UNKNOWN', (f'no capital data for {len(missing)} of days '
-                                   f'{FIRST_TICK_DAY}-{CAPITAL_TARGET_DAY - 1}, first missing day {missing[0]}')
-    else:
-        verdict, why = 'PASS', 'no capital lost' if early is None else f'day {early}'
+    verdict, why = _capital_verdict(camp, loss)
     m['target_capital'], m['target_capital_reason'] = verdict, why
     return m
 
