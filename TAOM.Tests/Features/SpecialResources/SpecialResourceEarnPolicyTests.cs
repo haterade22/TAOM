@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.SpecialResources;
+using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.Core;
 
 namespace TAOM.Tests.Features.SpecialResources;
@@ -74,5 +75,47 @@ public class SpecialResourceEarnPolicyTests
         // Single-player AND a client-hosted session's host both land here — the host is a real
         // player despite also being the server, and must keep earning.
         Assert.IsTrue(SpecialResourceEarnPolicy.MayCreditMainHero(isDedicatedServer: false));
+    }
+
+    // --- #770: a raid or extortion event pays the battle credit only when a field party was beaten ---
+
+    private static readonly MapEvent.BattleTypes[] KnownBattleTypes =
+    {
+        MapEvent.BattleTypes.None,
+        MapEvent.BattleTypes.FieldBattle,
+        MapEvent.BattleTypes.Raid,
+        MapEvent.BattleTypes.IsForcingVolunteers,
+        MapEvent.BattleTypes.IsForcingSupplies,
+        MapEvent.BattleTypes.Siege,
+        MapEvent.BattleTypes.Hideout,
+        MapEvent.BattleTypes.SallyOut,
+        MapEvent.BattleTypes.SiegeOutside,
+        MapEvent.BattleTypes.BlockadeBattle,
+        MapEvent.BattleTypes.BlockadeSallyOutBattle,
+        MapEvent.BattleTypes.SiegeAmbush,
+    };
+
+    [TestMethod]
+    public void PaysBattleCredit_EveryEventTypeWithBothFlagValues_MatchesTheExpectation()
+    {
+        foreach (MapEvent.BattleTypes type in System.Enum.GetValues(typeof(MapEvent.BattleTypes)))
+        {
+            var villageHostile = type == MapEvent.BattleTypes.Raid
+                || type == MapEvent.BattleTypes.IsForcingSupplies
+                || type == MapEvent.BattleTypes.IsForcingVolunteers;
+
+            Assert.AreEqual(true, SpecialResourceEarnPolicy.PaysBattleCredit(type, beatAFieldParty: true),
+                $"{type} with a beaten field party");
+            Assert.AreEqual(!villageHostile, SpecialResourceEarnPolicy.PaysBattleCredit(type, beatAFieldParty: false),
+                $"{type} without a beaten field party");
+        }
+    }
+
+    [TestMethod]
+    public void PaysBattleCredit_EnumStillHoldsExactlyTheValuesTheTestKnows()
+    {
+        // A new engine event type must be a conscious decision here, not a silent default.
+        var actual = (MapEvent.BattleTypes[])System.Enum.GetValues(typeof(MapEvent.BattleTypes));
+        CollectionAssert.AreEquivalent(KnownBattleTypes, actual);
     }
 }

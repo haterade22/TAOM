@@ -325,10 +325,19 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
             // (deep-review 2026-07-11 GAP#2 — otherwise "off = vanilla" breaks for this consumer).
             bool weightOn = TaomSettings.Instance?.EnableTroopWeight ?? true;
             var enemyCount = 0;
+            var beatAFieldParty = false;
             foreach (var p in enemySide.Parties)
+            {
                 enemyCount += weightOn
                     ? (int)System.Math.Ceiling(_troopWeight.CalculateWeightedMemberCount(p.Party))
                     : (p.Party?.NumberOfAllMembers ?? 0);
+                if (p.Party?.MobileParty is { IsMilitia: false, IsVillager: false } && p.HealthyManCountAtStart > 0)
+                    beatAFieldParty = true;
+            }
+
+            // A raid or extortion event pays only when a real field party was beaten in it (#770).
+            if (!SpecialResourceEarnPolicy.PaysBattleCredit(mapEvent.EventType, beatAFieldParty))
+                return;
 
             var playerCount = hero.PartyBelongedTo?.MemberRoster?.TotalManCount ?? 1;
             var ratio = (float)enemyCount / playerCount;
@@ -350,13 +359,18 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
     {
         if (side != BattleSideEnum.Attacker) return;
         if (component?.MapEvent == null || !component.MapEvent.IsPlayerMapEvent) return;
+        // RaidCompleted also reports the attacker as winner when only the militia was beaten (#770);
+        // per_raid is for the loot. The engine sets the village to Looted just before raising the event.
+        if (component.MapEventSettlement?.Village?.VillageState != Village.VillageStates.Looted) return;
+        if (!SpecialResourceEarnPolicy.IsPlayerVictory(component.MapEvent.PlayerSide, side)) return;
         if (!CanEarn()) return;
 
         var hero = Hero.MainHero;
         GetHeroIds(hero, out var kingdomId, out var cultureId);
 
+        var before = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
         _service.EarnFromRaid(hero.StringId, kingdomId, cultureId);
-        NotifyEarning(hero.StringId, kingdomId, cultureId, "raid");
+        NotifyEarning(hero.StringId, kingdomId, cultureId, "raid", before);
     }
 
     private void OnPrisonerTaken(FlattenedTroopRoster roster)
@@ -384,8 +398,9 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         if (!CanEarn()) return;
 
         GetHeroIds(Hero.MainHero, out var kingdomId, out var cultureId);
+        var before = _service.GetCurrentAmount(Hero.MainHero.StringId, kingdomId, cultureId);
         _service.EarnFromTournament(Hero.MainHero.StringId, kingdomId, cultureId);
-        NotifyEarning(Hero.MainHero.StringId, kingdomId, cultureId, "tournament");
+        NotifyEarning(Hero.MainHero.StringId, kingdomId, cultureId, "tournament", before);
     }
 
     // v1.4.3 added the 3rd param HideoutBattleEndState; we don't act on it (any attacker win
@@ -399,8 +414,9 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         var hero = Hero.MainHero;
         GetHeroIds(hero, out var kingdomId, out var cultureId);
 
+        var before = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
         _service.EarnFromHideout(hero.StringId, kingdomId, cultureId);
-        NotifyEarning(hero.StringId, kingdomId, cultureId, "hideout");
+        NotifyEarning(hero.StringId, kingdomId, cultureId, "hideout", before);
     }
 
     // Charges the one-time recruit_cost for the recruited troop (no-op unless it carries one). Player-only
@@ -424,25 +440,14 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         }
     }
 
-    // Unified earning toast (round-4 O1 — was NotifyEarning + NotifyEarningDelta + an inline copy in
-    // OnMapEventEnded): resolves the hero's resource, then displays either the running total
-    // (before == null — sources whose earn call has no readable delta) or the positive delta earned
-    // across the earn call (before != null; non-positive deltas stay silent).
-    private void NotifyEarning(string heroId, string kingdomId, string cultureId, string source, float? before = null)
+    // Unified earning toast (round-4 O1): resolves the hero's resource, then displays the positive
+    // delta earned across the earn call; a zero or negative delta stays silent.
+    private void NotifyEarning(string heroId, string kingdomId, string cultureId, string source, float before)
     {
         var resource = _service.ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
-        var amount = _service.GetCurrentAmount(heroId, kingdomId, cultureId);
-        if (before == null)
-        {
-            InformationManager.DisplayMessage(new InformationMessage(
-                $"{resource.DisplayName} earned from {source} (total: {amount:F0})",
-                Colors.Green));
-            return;
-        }
-
-        var earned = amount - before.Value;
+        var earned = _service.GetCurrentAmount(heroId, kingdomId, cultureId) - before;
         if (earned > 0f)
         {
             InformationManager.DisplayMessage(new InformationMessage(
