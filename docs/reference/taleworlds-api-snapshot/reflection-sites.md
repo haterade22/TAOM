@@ -10,7 +10,7 @@ It also exists so that an agent working on TAOM does not need the external decom
 dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId= --settings TAOM.Tests/binding-gate.runsettings --filter "FullyQualifiedName~ReflectionSiteBindingTests"
 ```
 
-**Maintenance.** When you add a reflection site against an engine member, add a row to Category B *and* a `[DataRow]` to the test. When you change a site, update both. When an engine update removes a member, the gate goes red here before the silent breakage ships.
+**Maintenance.** When you add a reflection site against an engine member, add a row to Category B *and* a `[DataRow]` to the test. When you change a site, update both. Label the line that spells the member (its string literal, its `nameof`, or the name filter inside the lookup), not the first line of a multi-line call and not a declaration; `EveryLineLabel_PointsAtALineThatNamesItsMember` checks this with comments blanked, and `EveryDataRow_HasAMatchingRowInTheCatalogue` checks that every `[DataRow]` has its row here. When an engine update removes a member, the gate goes red here before the silent breakage ships.
 
 ---
 
@@ -34,31 +34,32 @@ Reflection against engine members performed *outside* a patch's target resolutio
 |---|---|---|---|---|
 | `…ViewModelCollection.Inventory.SPInventoryVM` | `_currentCharacter` | field | `InventoryScreenAdapter.cs:29` | EquipPresets active hero |
 | `…ViewModelCollection.Inventory.SPInventoryVM` | `_inventoryLogic` | field | `InventoryScreenAdapter.cs:32` | EquipPresets transfer commands |
-| `…GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler` | `_isActive` | field | `OOBOverlayService.cs:60` | CompanionTactics OOB overlay attach |
-| `…MissionGauntletOrderOfBattleUIHandler` | `_dataSource` | field | `OOBOverlayService.cs:61` | CompanionTactics OOB overlay data |
+| `…GauntletUI.Mission.Singleplayer.MissionGauntletOrderOfBattleUIHandler` | `_isActive` | field | `OOBOverlayService.cs:64` | CompanionTactics OOB overlay attach |
+| `…MissionGauntletOrderOfBattleUIHandler` | `_dataSource` | field | `OOBOverlayService.cs:65` | CompanionTactics OOB overlay data |
 | `…ViewModelCollection.Party.PartyCharacterVM` | `TypeIconData` | property | `RoleTooltipDecorator.cs:40` | Companion role tooltip |
 | `…ViewModelCollection.OrderOfBattle.OrderOfBattleHeroItemVM` | `_cachedTooltipProperties` | field | `RoleTooltipDecorator.cs:41` | Companion role tooltip cache bust |
-| `…OrderOfBattleHeroItemVM` | `GetCaptainTooltip` | method | `SubModule.cs:503` (manual patch) | Captain tooltip role hint |
+| `…OrderOfBattleHeroItemVM` | `GetCaptainTooltip` | method | `ManualPatchApplicator.cs:24` (manual patch) | Captain tooltip role hint |
 | `…ViewModelCollection.FaceGenerator.FaceGenVM` | `_selectedRace` | field | `FaceGenRaceSelectorRebuilder.cs:208` | CC culture-restricted race dropdown |
 | `…Core.ViewModelCollection.Selector.SelectorVM`1` | `_selectedIndex` | field | `FaceGenRaceSelectorRebuilder.cs:211` | Selector reset trick (no-op-setter bypass) |
 | `…SelectorVM`1` | `_selectedItem` | field | `FaceGenRaceSelectorRebuilder.cs:212` | Selector reset trick |
 | `…SelectorVM`1` | `_onChange` | field | `FaceGenRaceSelectorRebuilder.cs:213`, `CommanderSelectorRebuilder.cs:21` | Selector callback rewire |
 | `…CustomBattle.CustomBattleSideVM` | `OnCultureSelection` | method | `CustomBattleSideVM_Constructor_Patch.cs:23` | CustomBattles faction injection |
-| `TaleWorlds.MountAndBlade.Mission` | `RegisterBlow` | method | `CustomAttacksUtils.cs:55` | AdvancedCombat custom attacks |
+| `TaleWorlds.MountAndBlade.Mission` | `RegisterBlow` | method | `CustomAttacksUtils.cs:60` | AdvancedCombat custom attacks |
 | `TaleWorlds.MountAndBlade.Mission` | `WaitTickCompletion` | method | `MissionTickProfilerInstaller.cs:31,54` | Patch97 tick profiler: the wait's open delegate and its call-site swap |
 | `TaleWorlds.Engine.ScriptComponentBehavior` | `OnTick` | method (protected internal virtual) | `MissionAttributionInstaller.cs:35,66` | Patch97 attribution (plan 041): the script tick's open delegate and its call-site swap. Missing: one WARNING, per-component script attribution off, the script totals stay |
 | `TaleWorlds.CampaignSystem.MbEvent`1` | `_nonSerializedListenerList` | field | `TickEventListenerWalker.cs:47` | Patch101 map profiler: the TickEvent listener walk. Missing: the walk stays unbound and listeners are not attributed (one warning) |
 | `…MbEvent`1+EventHandlerRec`1` | `Next` | field | `TickEventListenerWalker.cs:51` | Patch101 map profiler: the TickEvent listener walk. Missing: the walk stays unbound and listeners are not attributed (one warning) |
 | `…MbEvent`1+EventHandlerRec`1` | `<Action>k__BackingField` | field | `TickEventListenerWalker.cs:54` | Patch101 map profiler: the TickEvent listener walk. Missing: the walk stays unbound and listeners are not attributed (one warning) |
 | `…MbEvent`1+EventHandlerRec`1` | `<Owner>k__BackingField` | field | `TickEventListenerWalker.cs:57` | Patch101 map profiler: the TickEvent listener walk. Missing: the walk stays unbound and listeners are not attributed (one warning) |
-| `TaleWorlds.Core.HorseComponent` | `set_BodyLength` | method (private setter) | `MonsterSizeCatalogAdapter.cs:22` | MonsterSize (#646): a Monster's `taom_body_length` written into its items. Missing: every sized mount builds at its item's placeholder, 1.0x, with one error logged per item |
+| `TaleWorlds.Core.HorseComponent` | `set_BodyLength` | method (private setter) | `MonsterSizeCatalogAdapter.cs:23` | MonsterSize (#646): a Monster's `taom_body_length` written into its items. Missing: every sized mount builds at its item's placeholder, 1.0x, with one error logged per item |
 | `TaleWorlds.Core.ItemObject` | `CalculateEffectiveness` | method (private) | `MonsterSizeCatalogAdapter.cs:28` | MonsterSize: recomputes the cached tournament rating after the resize. Missing: a warning, the rating keeps the old size |
-| `TaleWorlds.Core.ItemObject` | `set_Effectiveness` | method (private setter) | `MonsterSizeCatalogAdapter.cs:29` | MonsterSize: stores that recompute |
+| `TaleWorlds.Core.ItemObject` | `set_Effectiveness` | method (private setter) | `MonsterSizeCatalogAdapter.cs:30` | MonsterSize: stores that recompute |
 | `TaleWorlds.MountAndBlade.Agent` | `_primaryWieldedItemIndexPointer` | field (private) | `CreatureRouteAUnmount.cs:22` | Creature Bandits route A (#692): whether the creature's native weapon state exists, read without a dereference. Missing: every creature reads as unallocated, route A is skipped and soldiers never target it (safe, logged per spawn) |
 | `TaleWorlds.Core.ItemObject` | `set_NotMerchandise` | method (private setter) | `ArmourItemCatalogAdapter.cs:20` | ArmourAcquisition: marks heavy, elite, lord and named pieces non-merchandise at every game init. Missing: an error, and gating is off for the game (markets and loot behave as before) |
-| `SandBox.GauntletUI.BannerEditor.BannerEditorView` | `RefreshShieldAndCharacter` | method | `BannerEditorView_OnTick_Patch.cs:21` | Banner paste refresh |
-| `…Party.PartyScreenLogic+PartyCommand` | `TotalNumber` | member | `PartyScreenLogic_AddCommand_Patch.cs:71` | SpecialResources transactional spend |
-| `…ViewModelCollection.Encyclopedia.Items.EncyclopediaUnitVM` | `_character` | field (private) | `EncyclopediaUnitBadgeMixin.cs:31` | SpecialResources encyclopedia troop badge (#590). The unit VM keeps the troop only here, so the badge reads its `StringId` once at construction; a null read hides the badge |
+| `TaleWorlds.MountAndBlade.Mission` | `_initialPlayerAgent` | field (private) | `ShaderPrecompilePlayerAgentGuard.cs:44` | ShaderPrecompilation deployment fallback, shader-precompile battles only: when no player agent set this field (the engine sets it itself on the normal path since #560), the guard writes the first player-team agent into it, so the engine's deployment dereference of InitialPlayerAgent does not throw. Missing: the lookup returns null and the fallback cannot seed the field |
+| `SandBox.GauntletUI.BannerEditor.BannerEditorView` | `RefreshShieldAndCharacter` | method | `BannerEditorView_OnTick_Patch.cs:22` | Banner paste refresh |
+| `…Party.PartyScreenLogic+PartyCommand` | `TotalNumber` | member | `PartyScreenLogic_AddCommand_Patch.cs:72` | SpecialResources transactional spend |
+| `…ViewModelCollection.Encyclopedia.Items.EncyclopediaUnitVM` | `_character` | field (private) | `EncyclopediaUnitBadgeMixin.cs:32` | SpecialResources encyclopedia troop badge (#590). The unit VM keeps the troop only here, so the badge reads its `StringId` once at construction; a null read hides the badge |
 | `…Map.DistanceCache.NavigationCache`1` | `_settlementToSettlementDistanceWithLandRatio` | field | `NavigationCacheAdapter.cs:71` | Distance cache rebuild |
 | `…NavigationCache`1` | `_fortificationNeighbors` | field | `NavigationCacheAdapter.cs:73` | Neighbor cache |
 | `…NavigationCache`1` | `_navigationType` | property | `NavigationCacheAdapter.cs:76` | Nav type (property, not field, in v1.4.5) |
@@ -66,18 +67,18 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `…NavigationCache`1` | `GetUpdatedSettlementsForNeighborDetection` | method | `NavigationCacheAdapter.cs:81` | Neighbor detection |
 | `…NavigationCache`1` | `AddClosestEntrancePairBase` | method | `NavigationCacheAdapter.cs:83` | Entrance-pair build |
 | `…NavigationCache`1` | `AddNeighbor` | method | `NavigationCacheAdapter.cs:85` | Neighbor build |
-| `…NavigationCache`1` | `CheckBeingNeighbor` | method | `NavigationCacheAdapter.cs:88` | Neighbor predicate (3-arg overload) |
-| `…NavigationCache`1` | `GetCacheElement` | method | `NavigationCacheAdapter.cs:91` | Cache element lookup |
-| `…NavigationCache`1` | `GetRealDistanceAndLandRatioBetweenSettlements` | method | `NavigationCacheAdapter.cs:94` | Distance compute |
-| `…NavigationCache`1` | `SetSettlementToSettlementDistanceWithLandRatio` | method | `NavigationCacheAdapter.cs:97` | Distance write |
+| `…NavigationCache`1` | `CheckBeingNeighbor` | method | `NavigationCacheAdapter.cs:374` | Neighbor predicate (3-arg overload) |
+| `…NavigationCache`1` | `GetCacheElement` | method | `NavigationCacheAdapter.cs:388` | Cache element lookup |
+| `…NavigationCache`1` | `GetRealDistanceAndLandRatioBetweenSettlements` | method | `NavigationCacheAdapter.cs:404` | Distance compute |
+| `…NavigationCache`1` | `SetSettlementToSettlementDistanceWithLandRatio` | method | `NavigationCacheAdapter.cs:420` | Distance write |
 | `…NavigationCache`1` | `GenerateClosestSettlementToFaceCache` | method | `NavigationCacheAdapter.cs:104` | Closest-settlement cache |
 | `…NavigationCache`1` | `Serialize` | method | `NavigationCacheAdapter.cs:110` | Cache serialize |
 | `…NavigationCache`1` | `Deserialize` | method | `NavigationCacheAdapter.cs:113` | Cache deserialize |
 | `…Map.DistanceCache.NavigationCacheElement`1` | `Sort` | method (static) | `NavigationCacheAdapter.cs:101` | Element sort |
 | `…Map.DistanceCache.SandBoxNavigationCache` | `GetSceneXmlCrcValues` | method | `NavigationCacheAdapter.cs:107` | Scene CRC validation |
-| `SandBox.CampaignBehaviors.GuardsCampaignBehavior` | `PrepareGuardAgentDataFromGarrison` | method (static) | `GuardsCampaignBehavior_TakeGuardAgentData_Patch.cs:30` | SettlementGuards config-pool guard build (backfilled 2026-07-14 — predates the gate) |
+| `SandBox.CampaignBehaviors.GuardsCampaignBehavior` | `PrepareGuardAgentDataFromGarrison` | method (static) | `GuardsCampaignBehavior_TakeGuardAgentData_Patch.cs:32` | SettlementGuards config-pool guard build (backfilled 2026-07-14; predates the gate) |
 | `…GuardsCampaignBehavior` | `_garrisonTroops` | field | `GuardsCampaignBehavior_InitializeGarrisonCharacters_Patch.cs:33` | Excluded-race guard scrub (#346) |
-| `TaleWorlds.CampaignSystem.Campaign` | `PlayerDefaultFaction` | property (internal) | `PlayerIdentityAdapter.cs:34` | Player Switcher (#514). `Clan.PlayerClan` is a computed getter over it and `ChangePlayerCharacterAction` never updates it. Probed at construction; a failed probe disables the feature for the session |
+| `TaleWorlds.CampaignSystem.Campaign` | `PlayerDefaultFaction` | property (internal) | `PlayerIdentityAdapter.cs:35` | Player Switcher (#514). `Clan.PlayerClan` is a computed getter over it and `ChangePlayerCharacterAction` never updates it. Probed at construction; a failed probe disables the feature for the session |
 | `…GauntletUI.BodyGenerator.BodyGeneratorView` | `_dressedEquipment` | field (private readonly) | `BodyGeneratorPreviewSink.cs:26` | Player Switcher (#514). Readonly, so the preview mutates its slots in place. Soft-fails to an undressed preview |
 | `…ViewModelCollection.FaceGenerator.FaceGenVM` | `_faceGenerationParams` | field (private) | `BodyGeneratorPreviewSink.cs` | Player Switcher (#514). The preview clamps this struct to the target race via the engine's own `SetRaceGenderAndAdjustParams`, which `SetBodyProperties` omits. Without it a lord whose body key carries a voice index his new race lacks aborts `Refresh` and the race never commits |
 | `…ViewModelCollection.FaceGenerator.FaceGenVM` | `_characterRefreshEnabled` | field (private) | `BodyGeneratorPreviewSink.cs` | Player Switcher (#514). `Refresh` early-returns unless set, and the aborted call leaves it false, so the repair must re-arm it |
@@ -103,18 +104,18 @@ Reflection against engine members performed *outside* a patch's target resolutio
 | `` TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2 `` | `Action` | property (internal) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
 | `` TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2 `` | `set_Action` | method (private setter) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
 | `` TaleWorlds.CampaignSystem.MbEvent`2+EventHandlerRec`2 `` | `Owner` | property (internal) | `CampaignListenerAdapter.cs` | LoadTimeStamps per-handler timing; missing: dispatch totals only |
-| `TaleWorlds.ObjectSystem.MBObjectManager` | `CreateDocumentFromXmlFile` | method (private static) | `XmlMergeEngineAdapter.cs:52` | XmlMerge (plan 042). The fast path loads and validates every module XML file through the engine's own loader, bound once to a delegate. Missing: the fast path turns itself off at start (`[XmlMerge] fast path off`) and every merge runs the engine's own code |
+| `TaleWorlds.ObjectSystem.MBObjectManager` | `CreateDocumentFromXmlFile` | method (private static) | `XmlMergeEngineAdapter.cs:53` | XmlMerge (plan 042). The fast path loads and validates every module XML file through the engine's own loader, bound once to a delegate. Missing: the fast path turns itself off at start (`[XmlMerge] fast path off`) and every merge runs the engine's own code |
 | `TaleWorlds.CampaignSystem.TournamentGames.TournamentGame` | `set_Prize` | method (private setter) | `TournamentJoinAdapter.cs:18` | TournamentRewards (Patch96): the prize the player picks at Join is written through it. Missing: a warning per Join and the advertised prize stands, though the dialog promised the pick |
 | `TaleWorlds.MountAndBlade.MissionObject` | `DynamicNavmeshIdStart` | field (protected) | `CreatureSiegeMissionAdapter.cs:227` | Creature Siege Role. Read through `AccessTools.FieldRefAccess` to tell a siege tower's deck navmesh from none. Missing: the binding is null, fail-soft, every tower reads as having no navmesh (start 0) and the role rules skip it with a named warning |
-| `SandBox.ViewModelCollection.Nameplate.SettlementNameplatesVM` | `_mapCamera` | field (private) | `NameplateCullAdapter.cs:47` | NameplateCull (Patch104). Read through `AccessTools.FieldRefAccess` to get the map camera the vanilla `Update` reads. Missing: `Initialize` returns a reason, the cull stays off and the vanilla nameplate update runs |
-| `SandBox.ViewModelCollection.Nameplate.SettlementNameplateVM` | `_bindIsVisibleOnMap` | field (private) | `NameplateCullAdapter.cs:48` | NameplateCull. The bound visibility a plate must agree with before it may be skipped. Missing: as `_mapCamera` |
-| `SandBox.ViewModelCollection.Nameplate.SettlementNameplateVM` | `_worldPos` | field (private) | `NameplateCullAdapter.cs:49` | NameplateCull. The plate's world position, for the distance half of the visibility test. Missing: as `_mapCamera` |
-| `TaleWorlds.MountAndBlade.MBSubModuleBase` | `OnBeforeMissionBehaviorInitialize` | method (public virtual) | `MissionStartGuardSwaps.cs:23,32` | MissionStartGuard (Patch103). One of six start calls the transpiler swaps for a same-named helper, found by `AccessTools.Method`. Missing: `AccessTools.Method` returns null, `TickProfilerTranspiler.Rewrite`'s fit check rejects the null target and `Mission.AfterStart` stays vanilla (the install line says `OFF: wrapped 0 of 6`) |
-| `TaleWorlds.MountAndBlade.MissionBehavior` | `OnBehaviorInitialize` | method (public virtual) | `MissionStartGuardSwaps.cs:24,32` | MissionStartGuard. As above |
-| `TaleWorlds.MountAndBlade.MBSubModuleBase` | `OnMissionBehaviorInitialize` | method (public virtual) | `MissionStartGuardSwaps.cs:25,32` | MissionStartGuard. As above |
-| `TaleWorlds.MountAndBlade.MissionBehavior` | `EarlyStart` | method (public virtual) | `MissionStartGuardSwaps.cs:26,32` | MissionStartGuard. As above |
-| `TaleWorlds.MountAndBlade.MissionBehavior` | `AfterStart` | method (public virtual) | `MissionStartGuardSwaps.cs:27,32` | MissionStartGuard. As above |
-| `TaleWorlds.MountAndBlade.MissionObject` | `AfterMissionStart` | method (public virtual) | `MissionStartGuardSwaps.cs:28,32` | MissionStartGuard. As above |
+| `SandBox.ViewModelCollection.Nameplate.SettlementNameplatesVM` | `_mapCamera` | field (private) | `NameplateCullAdapter.cs:49` | NameplateCull (Patch104). Read through `AccessTools.FieldRefAccess` to get the map camera the vanilla `Update` reads. Missing: `Initialize` returns a reason, the cull stays off and the vanilla nameplate update runs |
+| `SandBox.ViewModelCollection.Nameplate.SettlementNameplateVM` | `_bindIsVisibleOnMap` | field (private) | `NameplateCullAdapter.cs:50` | NameplateCull. The bound visibility a plate must agree with before it may be skipped. Missing: as `_mapCamera` |
+| `SandBox.ViewModelCollection.Nameplate.SettlementNameplateVM` | `_worldPos` | field (private) | `NameplateCullAdapter.cs:51` | NameplateCull. The plate's world position, for the distance half of the visibility test. Missing: as `_mapCamera` |
+| `TaleWorlds.MountAndBlade.MBSubModuleBase` | `OnBeforeMissionBehaviorInitialize` | method (public virtual) | `MissionStartGuardSwaps.cs:23` | MissionStartGuard (Patch103). One of six start calls the transpiler swaps for a same-named helper, found by `AccessTools.Method`. Missing: `AccessTools.Method` returns null, `TickProfilerTranspiler.Rewrite`'s fit check rejects the null target and `Mission.AfterStart` stays vanilla (the install line says `OFF: wrapped 0 of 6`) |
+| `TaleWorlds.MountAndBlade.MissionBehavior` | `OnBehaviorInitialize` | method (public virtual) | `MissionStartGuardSwaps.cs:24` | MissionStartGuard. As above |
+| `TaleWorlds.MountAndBlade.MBSubModuleBase` | `OnMissionBehaviorInitialize` | method (public virtual) | `MissionStartGuardSwaps.cs:25` | MissionStartGuard. As above |
+| `TaleWorlds.MountAndBlade.MissionBehavior` | `EarlyStart` | method (public virtual) | `MissionStartGuardSwaps.cs:26` | MissionStartGuard. As above |
+| `TaleWorlds.MountAndBlade.MissionBehavior` | `AfterStart` | method (public virtual) | `MissionStartGuardSwaps.cs:27` | MissionStartGuard. As above |
+| `TaleWorlds.MountAndBlade.MissionObject` | `AfterMissionStart` | method (public virtual) | `MissionStartGuardSwaps.cs:28` | MissionStartGuard. As above |
 
 Status (2026-10-08): NameplateCull adds three rows (private plate and view-model fields bound with `AccessTools.FieldRefAccess`) and MissionStartGuard six (the swapped start calls); they resolve against installed v1.5.4 (`ReflectionSiteBindingTests`).
 Status (2026-10-04): TournamentRewards (Patch96) adds one row (`TournamentGame.set_Prize`); it resolves against installed v1.5.3 (`ReflectionSiteBindingTests` 71/71 with the binding-gate runsettings).

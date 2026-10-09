@@ -1710,3 +1710,18 @@ yotthani's `save-fast` patch cut allocation and was byte-identical to vanilla on
 - **Why missed:** the Lindon survival-bonus test copied `BattleBalanceConfigProvider`'s `JsonConvert.DeserializeObject<T>(json)`. Json.NET's default `ObjectCreationHandling.Auto` reuses a pre-initialised dictionary property and merges the file's keys into it, so with the compiled default also holding `lindon`, the "file has no lindon row" assert could never fire. RED had been checked only when both rows were absent.
 - **Prevent:** when a test pins what a JSON file carries and the target class initialises a collection, deserialize with `ObjectCreationHandling.Replace`, then prove RED by removing the row from the file while the compiled default still has it.
 - **Source:** `docs/reviews/rca-lindon-balance-tables-2026-10-06.md` finding 1.
+
+### A line-number label that drifted twice gets a gate (formation presets, 2026-10-09)
+`ReflectionSiteBindingTests` labels each reflection site `File.cs:N`, and `reflection-sites.md` repeats the labels.
+Plan 022 found the `OOBOverlayService` labels three lines off after a constructor change, fixed them, and recorded line
+labels as "a known weak pointer". Item 5 grew the same constructor and moved them again; a repo-wide check then
+found six labels pointing at the wrong code, three of them wrong since the commit that added them the day before, and
+a catalogue row missing.
+- **Why missed:** a label shows only in a failure message, so a stale one costs nothing until someone follows it; and
+  no convention said which line of a multi-line lookup to label.
+- **Prevent:** `ReflectionSiteBindingTests.EveryLineLabel_PointsAtALineThatNamesItsMember` (comments blanked) fails
+  when a labelled line does not spell its member, and `EveryDataRow_HasAMatchingRowInTheCatalogue` fails when
+  `reflection-sites.md` lacks a row. Write the convention a gate enforces beside it (label the line that spells the
+  member). A pointer that drifts a second time gets a gate, not a third hand edit.
+- **Source:** `docs/reviews/rca-formation-presets-2026-10-09.md` finding 8;
+  `docs/reviews/rca-order-of-battle-auto-assign-2026-09-24.md` row 6.
