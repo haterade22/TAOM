@@ -522,7 +522,10 @@ game-tested per ADR-008; the A/B below is that test.
 
 ## Verification: the A/B protocol
 
-Custom Battle, `CultureDoctrineDebug` and `EnableMissionPerfHeartbeat` on, `[MemSample]` on. One
+Custom Battle, `CultureDoctrineDebug` and `EnableMissionPerfHeartbeat` on, `[MemSample]` on. Since #788
+Custom Battle also runs Combat Mechanics' crush-through, cleave, stagger and charge knockdown rules
+([combat-mechanics.md](combat-mechanics.md), "Custom Battle"), so a result recorded before it is a pre-#788
+baseline: re-baseline before the next comparison. One
 flat open scene and one sloped scene. Press F6 on the first frame so both sides are AI-controlled.
 300 v 300 for behaviour, 800 v 800 for the perf ceiling. Matchups: Erebor (defender) vs Mordor,
 Rohirrim vs Dunlendings, Lindon (defender) vs Gundabad, Erebor as attacker vs Mordor; toggle off
@@ -645,6 +648,8 @@ Square of archers, attacking Erebor's infantry shows `BehaviorBracedAdvance` and
   own pairing shares) are folded in above. Re-dispatch with the same prompt when credits allow.
 - Per-formation flavour is still absent: a Rohan cavalry formation inside a Gondor army fights
   under Gondor's doctrine, morale and aggression (the side's majority culture decides).
+- Every Custom Battle run recorded below is a pre-#788 baseline: #788 changed Custom Battle combat (crush-through,
+  cleave, stagger, charge knockdown), so re-baseline before the next comparison.
 - The first Custom Battle A/B (Erebor defender v Mordor, 300 v 300, 2026-09-17) ran clean:
   registration on both sides, routing subscribed, no failed latch, 172 to 183 fps at 661 agents,
   gen 2 collections zero. Its two failures (the wall marching 95 s to a far hill, the foot

@@ -7,7 +7,7 @@ namespace TAOM.Features.SignatureStrikes.Hooks;
 /// <summary>
 /// The one boundary that turns an engine melee collision into a <see cref="StrikeContext"/>.
 /// Shared by <see cref="SignatureStrikeVerdicts"/> (the primary-victim verdicts <c>TaomCombatMechanicsModel</c>
-/// asks from <c>CreateMeleeBlow</c> and <c>MissileHitCallback</c>; a missile gets none, the service declines it)
+/// and <c>TaomCustomBattleDamageModel</c> ask from <c>CreateMeleeBlow</c> and <c>MissileHitCallback</c>; a missile gets none, the service declines it)
 /// and <see cref="SignatureStrikesMissionLogic"/> (the ring, called from
 /// <c>OnMeleeHit</c>) so the two paths cannot describe the same hit differently: both see the
 /// same direction, the same weapon gate and the same cooldown stamps.

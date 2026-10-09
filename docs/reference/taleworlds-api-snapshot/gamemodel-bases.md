@@ -145,14 +145,22 @@ Models: 52. Regenerate after any engine bump: `pwsh tools/snapshot_api_surface.p
 - `Boolean CanAgentBecomeBannerBearer(Agent agent)`
 - `Boolean CanAgentPickUpAnyBanner(Agent agent)`
 
-## TaomCustomBattleCreatureDamageModel : CustomAgentApplyDamageModel
+## TaomCustomBattleDamageModel : CustomAgentApplyDamageModel
 `Base: TaleWorlds.MountAndBlade.CustomAgentApplyDamageModel`
 
 - `Single ApplyDamageAmplifications(ref AttackInformation attackInformation, ref AttackCollisionData collisionData, Single baseDamage)`
 - `Single ApplyDamageReductions(ref AttackInformation attackInformation, ref AttackCollisionData collisionData, Single baseDamage)`
 - `Single ApplyDamageScaling(ref AttackInformation attackInformation, ref AttackCollisionData collisionData, Single baseDamage)`
+- `Single CalculateRemainingMomentum(Single originalMomentum, ref Blow b, ref AttackCollisionData collisionData, Agent attacker, Agent victim, ref MissionWeapon attackerWeapon, Boolean isCrushThrough)`
+- `Single CalculateShieldDamage(ref AttackInformation attackInformation, Single baseDamage)`
+- `Single CalculateStaggerThresholdDamage(Agent defenderAgent, ref Blow blow)`
+- `Boolean DecideAgentKnockedBackByBlow(Agent attackerAgent, Agent victimAgent, ref AttackCollisionData collisionData, WeaponComponentData attackerWeapon, ref Blow blow)`
+- `Boolean DecideAgentKnockedDownByBlow(Agent attackerAgent, Agent victimAgent, ref AttackCollisionData collisionData, WeaponComponentData attackerWeapon, ref Blow blow)`
 - `Boolean DecideAgentShrugOffBlow(Agent victimAgent, ref AttackCollisionData collisionData, ref Blow blow)`
 - `Boolean DecideCrushedThrough(Agent attackerAgent, Agent defenderAgent, Single totalAttackEnergy, UsageDirection attackDirection, StrikeType strikeType, WeaponComponentData defendItem, Boolean isPassiveUsageHit)`
+- `Void DecideMissileWeaponFlags(Agent attackerAgent, ref MissionWeapon missileWeapon, ref WeaponFlags missileWeaponFlags)`
+- `Void DecideWeaponCollisionReaction(ref Blow registeredBlow, ref AttackCollisionData collisionData, Agent attacker, Agent defender, ref MissionWeapon attackerWeapon, Boolean isFatalHit, Boolean isShruggedOff, Single momentumRemaining, ref MeleeCollisionReaction colReaction)`
+- `Single GetHorseChargePenetration()`
 
 ## TaomCustomBattleMoraleModel : CustomBattleMoraleModel
 `Base: TaleWorlds.MountAndBlade.CustomBattleMoraleModel`

@@ -11,7 +11,7 @@ using TAOM.Features.CombatMechanics.Hooks;
 namespace TAOM.Tests.Features.CombatMechanics;
 
 /// <summary>
-/// <c>SubModule</c> resolves <see cref="CombatMechanicsHooks"/> for the campaign damage model at every game start (#737),
+/// <c>SubModule</c> resolves <see cref="CombatMechanicsHooks"/> for the campaign damage model and Custom Battle's twin at every game start (#737, #788),
 /// so a registration the container cannot satisfy fails only there, in game. DryIoc's Validate walks the graph without
 /// constructing anything, so this needs no campaign; the three substitutes are the dependencies other modules register.
 /// </summary>

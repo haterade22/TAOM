@@ -201,6 +201,12 @@ unaffected", which was true of the density policy and false of the race gate.
   carrying only that rule.
 - **Source:** `docs/features/banner-bearers.md` "Race gate".
 
+### A Custom Battle twin must be hand-wired, and must not extend the Sandbox model (#788, 2026-10-09)
+The Combat Mechanics damage rules (crush-through, cleave, stagger, charge knockdown, Signature Strikes knockdown) lived only in `TaomCombatMechanicsModel`, so Custom Battle ran vanilla for all of them. The Custom Battle damage slot was already taken by a model a feature module declared, and the docs recorded the gap as a fact ("the rest of Combat Mechanics stays campaign-only") instead of a decision.
+- **Why missed:** the module-declared model looked like the Custom Battle model, so nobody asked what the campaign model carried that it did not. Registering the campaign model there is not an option: it derives from `SandboxAgentApplyDamageModel`, which reads `Campaign.Current` on the first mounted hit and throws.
+- **Prevent:** a Custom Battle twin extends the engine's Custom Battle base and is added in `RegisterCustomBattleModels`; a module may not declare a slot that method fills (the module step runs after it, the last model added wins, and a module fault drops the model for the session; `FeatureModulesTests` pins it). When you mirror a campaign model, pin the twin's hook call order against the campaign model's IL, and document each place the Custom Battle base answers differently from Sandbox's. A doc line that says a rule is campaign-only needs a named reason, or it is a gap. When a mode's behaviour changes, sweep the docs by the mode name ("Custom Battle") together with the mechanics' names, not only by type name.
+- **Source:** `docs/features/combat-mechanics.md` "Custom Battle".
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

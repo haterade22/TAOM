@@ -46,8 +46,8 @@ internal static class CreatureDiagSpawn
                 "backstop", B(mission.GetMissionBehavior<CreatureBanditMissionBehavior>() != null),
                 "diag", B(mission.GetMissionBehavior<CreatureBanditDiagnosticsBehavior>() != null),
                 "agents", I(mission.Agents.Count),
-                // The damage model the engine resolves: in Custom Battle it must be TaomCustomBattleCreatureDamageModel for the
-                // creatures' damage-taken rules to apply (the first model a feature module declares).
+                // The damage model the engine resolves: in Custom Battle it must be TaomCustomBattleDamageModel for the
+                // creatures' damage-taken rules to apply (SubModule.RegisterCustomBattleModels adds it).
                 "damageModel", MissionGameModels.Current?.AgentApplyDamageModel?.GetType().Name ?? "-",
                 "tuning", Name(CreatureBanditTuning.Current.Describe())));
         }

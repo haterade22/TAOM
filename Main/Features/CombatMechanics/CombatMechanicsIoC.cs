@@ -14,7 +14,7 @@ public static class CombatMechanicsIoC
         container.Register<IChargeDamageService, ChargeDamageService>(Reuse.Singleton);
         container.Register<ICreatureCombatService, CreatureCombatService>(Reuse.Singleton);
         container.Register<IShieldPenetrationService, ShieldPenetrationService>(Reuse.Singleton);
-        // The campaign damage model's boundary to the four services above (#737); SubModule resolves it once per game start.
+        // The damage models' boundary to the four services above (#737; the campaign model and Custom Battle's twin, #788); SubModule resolves it once per game start for each.
         container.Register<Hooks.CombatMechanicsHooks>(Reuse.Transient);
     }
 }

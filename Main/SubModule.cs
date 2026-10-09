@@ -1346,8 +1346,13 @@ public class SubModule : MBSubModuleBase
     /// Custom Battle (and the editor's test battle) hand a BasicGameStarter here after the game
     /// type has added its own models (CustomGame.OnInitialize: InitializeGameModels, then
     /// GameManager.OnGameStart), so a model added now is the one MissionGameModels resolves.
-    /// Mirrored: the culture doctrine's mission-side models (what the Custom Battle A/B measures)
-    /// and the banner bearers' race gate. Every other TAOM model stays campaign-only.
+    /// Mirrored: the culture doctrine's mission-side models (what the Custom Battle A/B measures),
+    /// the banner bearers' race gate and the damage model (Combat Mechanics, the Race Abilities,
+    /// Creature Bandits and Creature Siege Role damage hooks, Signature Strikes knockdown and knock-back). The damage
+    /// twin extends the engine's Custom Battle base, never SandBox's (it throws on a mounted hit outside
+    /// a campaign). Stays campaign-only: the career passives and the Refuge reduction, which read heroes
+    /// and parties, and every other model. No feature module may declare a Custom Battle model for a slot
+    /// filled here: the module step runs after this one and the last model added wins.
     /// </summary>
     private static void RegisterCustomBattleModels(IGameStarter gameStarterObject)
     {
@@ -1360,6 +1365,12 @@ public class SubModule : MBSubModuleBase
         // BannerBearers: trolls never carry a standard, in Custom Battle too (race gate only).
         basicStarter.AddModel<BattleBannerBearersModel>(new TaomCustomBattleBannerBearersModel(
             IoC.Resolve<Features.BannerBearers.IBannerBearerService>()));
+        // CombatMechanics (#788): the damage rules run in Custom Battle too, with the same collaborators the campaign
+        // registration resolves; the two Signature Strikes resolves are what turn its knockdown and knock-back verdicts on.
+        basicStarter.AddModel<AgentApplyDamageModel>(new TaomCustomBattleDamageModel(
+            IoC.Resolve<Features.CombatMechanics.Hooks.CombatMechanicsHooks>(),
+            IoC.Resolve<Features.SignatureStrikes.ISignatureStrikeService>(),
+            IoC.Resolve<Features.SignatureStrikes.Hooks.ISignatureAgentRoster>()));
     }
 
     // Campaign-life behaviors: startup resources, companions, inventory/equipment QoL, fief +

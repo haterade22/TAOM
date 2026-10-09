@@ -84,8 +84,10 @@ troop needs, in order, without a formation, and then makes it an enemy the engin
   Custom Battle has no party, so it shows under a generic "Party" row.
 - **Damage taken.** `CreatureBanditDamage` scales every connected blow on a creature in the damage model's
   `ApplyDamageReductions`: in the campaign's `TaomCombatMechanicsModel`, and in Custom Battle through
-  `TaomCustomBattleCreatureDamageModel`, which extends the engine's own Custom Battle model and is declared by the
-  feature module. A charge, kick, bash or hilt hit counts as Blunt, as vanilla computes it.
+  `TaomCustomBattleDamageModel` (CombatMechanics, #788), which extends the engine's own Custom Battle model and is added
+  by `SubModule.RegisterCustomBattleModels`. This module declares no model: before #788 it declared the Custom Battle
+  damage model itself, which a module fault would drop for the session and which would shadow any model added by hand.
+  A charge, kick, bash or hilt hit counts as Blunt, as vanilla computes it.
 - **Campaign.** `CreatureBroodSpawnBehavior` keeps up to twenty broods around the 47 Mirkwood and Dol Guldur
   settlements (every town, castle and village of both cultures on the live map), one new brood a day, while the
   MCM switch is on; `TaomBanditDensityModel` caps vanilla's map-wide
@@ -137,7 +139,7 @@ Patch93      Patch94   CreatureBroodSpawn  TaomBattleRewardModel /  |
 (battle)    (map UI)   TrollBandSpawn      TaomBanditDensityModel / |
    |                   -> CreatureBandParties  morale models        |
 CreatureBanditSpawner -> CreatureBanditBehaviorTree (hold, hunt, spider strikes) <-+
-            \-> CreatureBanditDamage (TaomCombatMechanicsModel, TaomCustomBattleCreatureDamageModel)
+            \-> CreatureBanditDamage (TaomCombatMechanicsModel, TaomCustomBattleDamageModel)
 ```
 
 ## Configuration
@@ -203,7 +205,7 @@ template and culture.
 | `Main/Features/CreatureBandits/Cheats/CreatureBandCheats.cs` | `taom.spawn_creature_band`: one band or brood beside the player, for testing |
 | `Main/Features/CreatureBandits/CreatureBanditTuning.cs`, `Main/Features/TaomSettings.cs` (group "Creature Bandits") | The creature's numbers and their MCM options; the MCM object is kept after its first non-null read, and the per-hit damage step asks the allocation-free `CurrentTakenFactor` (#746) |
 | `Main/Features/Spider/SpiderStrikes.cs` | Strike rules as data: per-attack target cap, damage multiplier, crit-only knockdown |
-| `Main/Features/CreatureBandits/Hooks/CreatureBanditDamage.cs`, `Models/TaomCustomBattleCreatureDamageModel.cs` | Damage taken, campaign and Custom Battle |
+| `Main/Features/CreatureBandits/Hooks/CreatureBanditDamage.cs` | Damage taken; called by `TaomCombatMechanicsModel` (campaign) and `TaomCustomBattleDamageModel` (Custom Battle), both in CombatMechanics |
 | `Main/Features/CreatureBandits/CreatureBanditLog.cs` | The error log for the spawner and the weapon-state hook |
 | `Main/Features/CreatureBandits/Hooks/CreatureScoreboardBridge.cs` | Creature troops, casualties and kills on the battle scoreboard |
 | `Main/Features/CreatureBandits/CreatureBanditsModule.cs` | Feature module wiring |

@@ -323,7 +323,7 @@ public class CreatureSiegeRoleBindingTests
         foreach (var name in new[]
                  {
                      "TAOM.Features.CombatMechanics.Models.TaomCombatMechanicsModel",
-                     "TAOM.Features.CreatureBandits.Models.TaomCustomBattleCreatureDamageModel",
+                     "TAOM.Features.CombatMechanics.Models.TaomCustomBattleDamageModel",
                  })
         {
             var ours = ModelType(name).GetMethod("ApplyDamageScaling",
@@ -364,7 +364,7 @@ public class CreatureSiegeRoleBindingTests
                      ("TAOM.Features.CareerSystem.Models.TaomAgentStatCalculateModel", "GetDetachmentCostMultiplierOfAgent"),
                      ("TAOM.Features.CultureDoctrine.Models.TaomCustomBattleAgentStatCalculateModel", "GetDetachmentCostMultiplierOfAgent"),
                      ("TAOM.Features.CombatMechanics.Models.TaomCombatMechanicsModel", "ApplyDamageScaling"),
-                     ("TAOM.Features.CreatureBandits.Models.TaomCustomBattleCreatureDamageModel", "ApplyDamageScaling"),
+                     ("TAOM.Features.CombatMechanics.Models.TaomCustomBattleDamageModel", "ApplyDamageScaling"),
                  })
         {
             var info = ModelType(name).GetMethod(method, BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);

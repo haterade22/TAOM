@@ -7,7 +7,7 @@ namespace TAOM.Features.RaceAbilities.Hooks;
 /// What the shared models ask of the race abilities, one call per seam so each model body stays a one-line
 /// delegate (gamemodels.md rule 4). Six models carry it: the campaign <c>TaomAgentStatCalculateModel</c>,
 /// <c>TaomCombatMechanicsModel</c> and <c>TaomBattleMoraleModel</c>, and their Custom Battle twins
-/// <c>TaomCustomBattleAgentStatCalculateModel</c>, <c>TaomCustomBattleCreatureDamageModel</c> and
+/// <c>TaomCustomBattleAgentStatCalculateModel</c>, <c>TaomCustomBattleDamageModel</c> and
 /// <c>TaomCustomBattleMoraleModel</c>. The engine calls these from any thread; each reads one immutable
 /// state from the store, asks the service, and counts what changed in the telemetry. Until
 /// RaceAbilitiesModule sets <see cref="Runtime"/>, and with no ability live, every call hands its input back.

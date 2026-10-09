@@ -52,7 +52,8 @@ public static class Native2ManagedTargets
         (CoreAssembly, CoreCallbacks, "Mission_MissileAreaDamageCallback"),
         // Mission.OnAgentHitBlocked: Mission.OnAgentHit, as above.
         (CoreAssembly, CoreCallbacks, "Mission_OnAgentHitBlocked"),
-        // MissionCombatMechanicsHelper.GetDefendCollisionResults: TaomCombatMechanicsModel.DecideCrushedThrough.
+        // MissionCombatMechanicsHelper.GetDefendCollisionResults: TaomCombatMechanicsModel.DecideCrushedThrough (campaign) and
+        // TaomCustomBattleDamageModel.DecideCrushedThrough (Custom Battle).
         (CoreAssembly, CoreCallbacks, "Mission_GetDefendCollisionResults"),
         // These three loop over every MissionBehavior, TAOM's included.
         (CoreAssembly, CoreCallbacks, "Mission_OnAgentRemoved"),

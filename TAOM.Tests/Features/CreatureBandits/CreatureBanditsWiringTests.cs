@@ -11,7 +11,6 @@ using TAOM.Composition;
 using TAOM.Dependencies.Foundation;
 using TAOM.Features.CreatureBandits;
 using TAOM.Features.CreatureBandits.Hooks;
-using TAOM.Features.CreatureBandits.Models;
 using TAOM.Features.BanditManagement.Models;
 using TAOM.Features.CulturalFeats.Models;
 using TAOM.Features.CultureDoctrine.Models;
@@ -243,23 +242,22 @@ public class CreatureBanditsWiringTests
     [TestMethod]
     public void Resistances_AreAppliedInTheCampaignAndInCustomBattle()
     {
-        // Custom Battle runs the engine's own damage model (CustomGame installs CustomAgentApplyDamageModel) and TAOM's
-        // campaign model is TaomCombatMechanicsModel: the creature's damage-taken rule must sit in both.
+        // Custom Battle installs CustomAgentApplyDamageModel and TAOM's campaign model is TaomCombatMechanicsModel: the
+        // creature's damage-taken rule must sit in both. The Custom Battle twin is owned by CombatMechanics and added by
+        // SubModule.RegisterCustomBattleModels (#788), so this module declares no model.
         var campaign = RepoPaths.ReadSource("Main/Features/CombatMechanics/Models/TaomCombatMechanicsModel.cs", stripComments: true);
         StringAssert.Contains(campaign, "CreatureBanditDamage.Reduce(");
 
-        var customBattle = RepoPaths.ReadSource("Main/Features/CreatureBandits/Models/TaomCustomBattleCreatureDamageModel.cs", stripComments: true);
+        var customBattle = RepoPaths.ReadSource("Main/Features/CombatMechanics/Models/TaomCustomBattleDamageModel.cs", stripComments: true);
         StringAssert.Contains(customBattle, "CreatureBanditDamage.Reduce(");
         StringAssert.Contains(RepoPaths.ReadSource("Main/Features/CreatureBandits/Hooks/CreatureBanditDamage.cs", stripComments: true),
             "TaomAgentApplyDamageModel.BluntByVanillaRule(in attackInformation, in collisionData)",
             "a charge, kick or bash is Blunt, as vanilla computes it");
 
-        var decl = new CreatureBanditsModule().GameModels.Single();
-        Assert.AreEqual(ModelTarget.CustomBattle, decl.Target);
-        Assert.AreEqual(typeof(TaleWorlds.MountAndBlade.ComponentInterfaces.AgentApplyDamageModel), decl.SlotType);
-        Assert.AreEqual(typeof(TaomCustomBattleCreatureDamageModel), decl.ModelType);
-        Assert.AreEqual(typeof(TaleWorlds.MountAndBlade.CustomAgentApplyDamageModel), decl.ModelType.BaseType,
-            "extend the model Custom Battle installs, so every other rule stays the engine's");
+        Assert.AreEqual(0, new CreatureBanditsModule().GameModels.Count,
+            "a module declaration is added after RegisterCustomBattleModels and would shadow the twin (the last model added wins)");
+        StringAssert.Contains(RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true),
+            "basicStarter.AddModel<AgentApplyDamageModel>(new TaomCustomBattleDamageModel(");
     }
 
     [TestMethod]

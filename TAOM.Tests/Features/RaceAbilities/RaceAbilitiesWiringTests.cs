@@ -53,7 +53,7 @@ public class RaceAbilitiesWiringTests
             "RaceAbilityHooks.ShrugsOff(victimAgent)",
         };
         AssertCalls("Main/Features/CombatMechanics/Models/TaomCombatMechanicsModel.cs", calls);
-        AssertCalls("Main/Features/CreatureBandits/Models/TaomCustomBattleCreatureDamageModel.cs", calls);
+        AssertCalls("Main/Features/CombatMechanics/Models/TaomCustomBattleDamageModel.cs", calls);
     }
 
     [TestMethod]

@@ -9,7 +9,7 @@ namespace TAOM.Features.CreatureSiegeRole.Hooks;
 /// <summary>
 /// What the shared game models ask of the creature siege role, one call per seam so each model body stays a one-line delegate
 /// (gamemodels.md rule 4). Four models carry it: <c>TaomAgentStatCalculateModel</c> and <c>TaomCustomBattleAgentStatCalculateModel</c>
-/// call <see cref="DetachmentCost(Agent, float)"/>, <c>TaomCombatMechanicsModel</c> and <c>TaomCustomBattleCreatureDamageModel</c>
+/// call <see cref="DetachmentCost(Agent, float)"/>, <c>TaomCombatMechanicsModel</c> and <c>TaomCustomBattleDamageModel</c>
 /// call <see cref="ScaleGateDamage"/> after their base. Both read the one published <see cref="CreatureSiegeSnapshot"/>, which is
 /// null outside an active wall battle, so every call in any other mission hands its input back after one volatile read.
 ///

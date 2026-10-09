@@ -38,7 +38,9 @@ ability did in a battle. Issue: #730 (the feature), #731 (the translation of its
   `BehaviorTreeMissionLogic` copies its schedule without allocating.
 - **Two model stacks.** Custom Battle installs its own stat, damage and morale models. Its damage model
   (`CustomAgentApplyDamageModel`) reads no driven-property damage bonus at all, so ability damage cannot ride the
-  stat bag; and none of Combat Mechanics' crush-through or shrug-off rules run there.
+  stat bag. Since #788 TAOM's Custom Battle damage model (`TaomCustomBattleDamageModel`) also runs Combat Mechanics'
+  crush-through, shrug-off and stagger rules there, on the Custom Battle base's answers (combat-mechanics.md,
+  "Custom Battle").
 - **Stats that compound.** A post-pass that multiplies a driven property is only safe when the base model
   rewrites that property on every `UpdateAgentStats`. Custom Battle sets armour and
   `OffhandWeaponDefendSpeedMultiplier` once, at spawn, so those are never touched (Engine levers).
@@ -102,7 +104,7 @@ The effects reach the engine through six shared models, each calling one `RaceAb
 | `TaomAgentStatCalculateModel` | campaign | stat post-pass after the aggression pass (a horse gets its rider's mount speed); knockdown, knock-back and dismount resistance |
 | `TaomCustomBattleAgentStatCalculateModel` | Custom Battle | the same |
 | `TaomCombatMechanicsModel` | campaign | crush-through verdict first; melee and ranged damage amplification; damage reduction last; shrug-off |
-| `TaomCustomBattleCreatureDamageModel` | Custom Battle | the same four, nothing else of Combat Mechanics |
+| `TaomCustomBattleDamageModel` | Custom Battle | the same four, plus Combat Mechanics' own rules (#788) |
 | `TaomBattleMoraleModel` | campaign | no panic while a morale floor is live |
 | `TaomCustomBattleMoraleModel` | Custom Battle | the same |
 
@@ -166,7 +168,7 @@ Checked against the v1.5.3 decompile (`SandboxAgentStatCalculateModel`, `CustomB
 | `drawSpeedPercent` | `ThrustOrRangedReadySpeedMultiplier` (the skill-driven bow draw, throw and thrust readying) | rewritten every update |
 | `reloadSpeedPercent`, `missileSpeedPercent` | `ReloadSpeed`, `MissileSpeedMultiplier` | rewritten every update. Whether `MissileSpeedMultiplier` speeds a bow's arrows is UNVERIFIED, though likely: vanilla's own wet-weather penalty writes it for bows and crossbows |
 | `blockAbilityPercent`, `parryAbilityPercent`, `attackEagernessPercent`, `aimErrorPercent` | `AIBlockOnDecideAbility`, `AIParryOnDecideAbility`, `AIAttackOnDecideChance` (each kept in 0 to 1), `AiShooterError` | rewritten in `SetAiRelatedProperties` on every update; how native weighs `AiShooterError` (base 0.008) is UNVERIFIED |
-| `knockdownResistancePercent` | `GetKnockDownResistance` | on foot, the engine floors a soldier when the hit reaches `HealthLimit x (resistance - penetration)`, on weapon hits and on a horse charge that knocked him back. In campaign, Combat Mechanics floors any victim of a full-speed charge whose weight times 6 is at most the horse's and rider's before it reads resistance (`ChargeKnockdownService`, Branch A): every man, while dwarves and the uruk races are heavy enough to stay in Branch B, where resistance counts. Custom Battle reads the resistance on every charge. A rider is never floored as such: his knockdown resistance is the second roll of the dismount decision (below) |
+| `knockdownResistancePercent` | `GetKnockDownResistance` | on foot, the engine floors a soldier when the hit reaches `HealthLimit x (resistance - penetration)`, on weapon hits and on a horse charge that knocked him back. In campaign, Combat Mechanics floors any victim of a full-speed charge whose weight times 6 is at most the horse's and rider's before it reads resistance (`ChargeKnockdownService`, Branch A): every man, while dwarves and the uruk races are heavy enough to stay in Branch B, where resistance counts. Since #788 Custom Battle runs the same Branch A (before it, resistance counted on every charge there). A rider is never floored as such: his knockdown resistance is the second roll of the dismount decision (below) |
 | `knockbackResistancePercent` | `GetKnockBackResistance` | read only for a soldier on foot, for missiles, crush-throughs and wide-grip thrusts, and never for a hit that is shrugged off: a frontal horse charge and a kick or shield bash knock back regardless. So Stand Fast carries none: its shrug-off already prevents every knock-back that reads it |
 | `dismountResistancePercent` | `GetDismountResistance` | a rider's first roll when a blow can dismount (a thrust with the dismount flag, or a hook swung by a man on foot, to the head, neck, chest, abdomen or shoulders; in campaign also a hero's bolt with the Hammer Bolts perk or throw with Knock Off); if he keeps his seat, a blow that can knock down then rolls his knockdown resistance (`MissionCombatMechanicsHelper.DecideAgentDismountedByBlow`), and either roll unhorses him |
 | `meleeDamagePercent`, `rangedDamagePercent`, `damageReductionPercent` | the damage models' amplification and reduction steps | Custom Battle reads no driven-property damage bonus. They also scale damage to and from shields (Berserk breaks shields faster) and to objects; a fall keeps its damage both ways, and a hit on the soldier's horse is the horse's |
@@ -347,8 +349,8 @@ spent per ability), how many soldiers are outlined, and the counters.
 - `DeferredCallbackQueue` (BehaviorTreeWrapper): deaths off the main thread.
 - `SignatureMissionGate` (SignatureStrikes): which missions carry battle abilities.
 - `DreadAgentGate` (DreadAura): who fear can reach.
-- `CreatureBanditsModule` (CreatureBandits) declares `TaomCustomBattleCreatureDamageModel` for Custom Battle, so the
-  Custom Battle damage, crush and shrug-off hooks ride that module's declaration.
+- `TaomCustomBattleDamageModel` (CombatMechanics) carries the Custom Battle damage, crush and shrug-off hooks; it is
+  added by `SubModule.RegisterCustomBattleModels`, not declared by a module (#788).
 
 ## Tests
 
@@ -408,8 +410,8 @@ Custom Battle:
 4. Dol Guldur against anyone: `fear landed` under `necromancer_shadow`.
 5. `taom.print_race_abilities` mid-battle; the mission-end summary in the log.
 6. A 1,000-agent Custom Battle with the MCM switch on and off, comparing frame time.
-7. One campaign field battle, to see the campaign models behave as Custom Battle's do; Rhun spearmen against a
-   full-speed charge there shows the Branch A limit.
+7. One campaign field battle, to see the campaign models behave as Custom Battle's do; since #788 both run the
+   same charge rules, so Rhun spearmen against a full-speed charge show the Branch A limit in either.
 8. A Rohirrim unhorsed mid-ability: whether his horse keeps its boost (the UNVERIFIED row above).
 9. Outlines and sparks: active soldiers wear their kind's colour and lose it when the ability ends or they fall,
    bodies carry none, sparks pop as abilities fire, `Ability Glow and Sparks` off clears every outline within half a

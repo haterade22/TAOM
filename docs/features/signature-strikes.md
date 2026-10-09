@@ -71,7 +71,7 @@ every seam is an engine virtual.
 | Seam | What | Why |
 |---|---|---|
 | `MissionBehavior.OnMeleeHit(attacker, victim, isCanceled, collisionData)` | fires after every melee collision (`Mission.cs:5445-5447`), world hits included (`victim == null`, `CollisionResult == HitWorld`) | the trigger; carries `AttackDirection`, `CollisionResult`, `InflictedDamage`, `CollisionGlobalPosition` |
-| `AgentApplyDamageModel.DecideAgentKnockedDownByBlow` / `DecideAgentKnockedBackByBlow` on the already-registered `TaomCombatMechanicsModel` | the primary-victim verdicts, asked from inside `CreateMeleeBlow` (`:5634-5641`) for an unmounted human | guaranteed knockdown on a slam, knock-back on a sweep or a scream, everything else `base` |
+| `AgentApplyDamageModel.DecideAgentKnockedDownByBlow` / `DecideAgentKnockedBackByBlow` on the already-registered `TaomCombatMechanicsModel` and, since #788, Custom Battle's `TaomCustomBattleDamageModel` | the primary-victim verdicts, asked from inside `CreateMeleeBlow` (`:5634-5641`) for an unmounted human | guaranteed knockdown on a slam, knock-back on a sweep or a scream, everything else `base` |
 | `CustomAttacksUtils.TakeDamage(victim, attacker, damage, magnitude, knockDown, extraFlags)` | the one synthetic-blow primitive every creature tree uses, extended with a trailing `BlowFlags extraFlags` so a sweep or a scream can set `KnockBack` | ring victims |
 | `Mission.GetNearbyEnemyAgents(Vec2, float, Team, MBList<Agent>)` | enemies only, filtered native-side | the ring; allies are never flattened |
 | DreadAura's policy-free pieces: `DreadAgentGate.CanAffect`, `IDreadRegistry.ResolveResist`, the CALL to `BattleMoraleModel.CalculateMoraleChangeToCharacter` | the fear burst | tier, hero and race resistance at parity with the aura; NOT `DreadAuraService.ComputeDrain`, which is gated on the Dread Aura toggle and clamped to Dread's own morale floor |
@@ -148,7 +148,7 @@ SignatureStrikeRegistry         SignatureStrikesSettingsProvider (MCM toggle + c
 SignatureAgentRoster                   /                      \
  (Agent -> signature + stamps)        /                        \
         |                            /                          \
-SignatureStrikesMissionLogic --- StrikeContextFactory --- SignatureStrikeVerdicts <- TaomCombatMechanicsModel
+SignatureStrikesMissionLogic --- StrikeContextFactory --- SignatureStrikeVerdicts <- TaomCombatMechanicsModel, TaomCustomBattleDamageModel
  OnAgentBuild -> roster           (one boundary,          DecideAgentKnockedDownByBlow
  OnMeleeHit   -> Evaluate,         both paths)            DecideAgentKnockedBackByBlow
                  stamp, centre, enqueue                    (primary victim, ?? base)
@@ -259,8 +259,9 @@ race resistance (elf 0.4, dwarf 0.5) and falloff, clamped to what the agent has;
 
 Registration: `Main/IoC.cs` (`SignatureStrikesIoC.RegisterSignatureStrikesFeature`; DryIoc wires
 `INazgulRegistry` into the registry), `Main/SubModule.cs` (the logic after `DreadAuraMissionLogic`;
-the two services appended to the `TaomCombatMechanicsModel` constructor call, which is
-campaign-only, so a Custom Battle gets the ring but vanilla primary knockdown and knock-back).
+the two services appended to the `TaomCombatMechanicsModel` constructor call, and, since #788, to the
+`TaomCustomBattleDamageModel` constructor call in `RegisterCustomBattleModels`, so a Custom Battle gets the
+primary-victim knockdown and knock-back as well as the ring.
 
 ## Dependencies
 
@@ -327,16 +328,17 @@ registration lines); `hit by ... -> no effect` on every swing means the gates in
   4 m fall, the log line reads `feared > 0`. Overhead into the ground near a clump: the ring fires
   on the world-hit basis. Side swing: struck agent staggers, neighbours in front stagger. A second
   slam inside 20 s: no ring. Parries and blocks: no `[SignatureStrikes]` line.
-- Route B (ring only): Custom Battle, Mordor, commander Sauron. Registers via the hero id (the
-  character's own) or the race; the model is campaign-only, so expect ring falls with vanilla
-  primary knockdown.
+- Route B (ring and primary-victim verdicts): Custom Battle, Mordor, commander Sauron. Registers via the hero id (the
+  character's own) or the race; since #788 the Custom Battle damage model asks the
+  primary-victim verdicts too, so the struck foe falls and neighbours fall with the ring. A pre-#788 smoke result
+  showed vanilla primary knockdown here: re-baseline it.
 - Route C (the Nine): Custom Battle, Mordor, commander the Witch-king (`lord_1_15`; all nine are
   Mordor commanders, `custom_battle_commanders.json:4`) against Gondor. The log registers him for
   `nazgul`. An overhead and a side swing each log a Scream: ring foes stagger, the struck foe is
   counted in `feared`, the shriek is audible; a second scream inside 15 s, whichever direction,
   does nothing; a thrust does nothing. Note which directions a MOUNTED swing reports in the
   `hit by` line. Then the campaign: PlayerSwitcher to the Witch-king, attack a Gondor party, the
-  struck foe is knocked back (the model is campaign-only) and DreadAura still pulses.
+  struck foe is knocked back (in Custom Battle too since #788; compare the two) and DreadAura still pulses.
 - Deploy first and restart the game (the installed `module_sounds.xml` must name
   `nazgul_scream.ogg`). Listen to the scream and check it carries over a battle at its volume, and
   that several of the Nine screaming close together do not sound like one clip on a loop; if they

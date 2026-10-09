@@ -10,8 +10,8 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Tests.Features.SignatureStrikes;
 
 /// <summary>
-/// The campaign damage model's knockdown and knock-back verdicts for a signature hero (#605, moved out of the model by
-/// #737). A null service or roster is the feature absent; a horse charge is never a signature verdict, so the roster is
+/// The campaign and Custom Battle damage models' knockdown and knock-back verdicts for a signature hero (#605, moved out of
+/// the model by #737). A null service or roster is the feature absent; a horse charge is never a signature verdict, so the roster is
 /// not even probed; an attacker off the roster costs one lookup and has no opinion. A rostered attacker reaches the
 /// service with a bare agent: the strike context reads the attacker only past its weapon-slot check, so slot -1 keeps
 /// it off the uninitialized object, and it reads the victim only behind a null check.

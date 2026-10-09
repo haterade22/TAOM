@@ -61,7 +61,7 @@ No Harmony patch. Two GameModel seams, one `MissionLogic`, two adapters:
 | Seam | Where | What |
 |---|---|---|
 | Detachment cost | `GetDetachmentCostMultiplierOfAgent` in `TaomAgentStatCalculateModel` (campaign) and `TaomCustomBattleAgentStatCalculateModel` (Custom Battle) | `+Infinity` for a creature of the active wall battle. The engine starts its selection at `float.MaxValue` and keeps a candidate only on a strict greater-than, so `+Infinity`, and the NaN of `0 x +Infinity`, always lose. `float.MaxValue` would not: the product stays under it for any distance under 1 m. Closes every standing point on both sides, deployment auto-assign included |
-| Gate damage | `ApplyDamageScaling` in `TaomCombatMechanicsModel` (campaign) and `TaomCustomBattleCreatureDamageModel` (Custom Battle), after `base` | A creature's melee blow on one of the battle's gates is multiplied. Not for friendly fire, a mount's blow or a missile; only for a finite positive damage, and only when the product stays finite |
+| Gate damage | `ApplyDamageScaling` in `TaomCombatMechanicsModel` (campaign) and `TaomCustomBattleDamageModel` (Custom Battle, CombatMechanics), after `base` | A creature's melee blow on one of the battle's gates is multiplied. Not for friendly fire, a mount's blow or a missile; only for a finite positive damage, and only when the product stays finite |
 | Routing | `CreatureSiegeRoleMissionBehavior` -> `CreatureSiegeRoleService` | Activation at `AfterStart`; a reconcile every 0.5 s in `OnMissionTick` once deployment is over |
 
 Each model body is one line delegating to `CreatureSiegeHooks` (gamemodels.md rule 4). Both hooks read one

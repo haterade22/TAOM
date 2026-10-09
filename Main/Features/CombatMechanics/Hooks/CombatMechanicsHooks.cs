@@ -7,7 +7,7 @@ using TAOM.Features.CombatMechanics.Domain;
 namespace TAOM.Features.CombatMechanics.Hooks;
 
 /// <summary>
-/// What the campaign damage model (<c>TaomCombatMechanicsModel</c>) asks of the four combat services, one call per seam so
+/// What the damage models (<c>TaomCombatMechanicsModel</c> in the campaign, <c>TaomCustomBattleDamageModel</c> in Custom Battle) ask of the four combat services, one call per seam so
 /// each override there stays base plus a delegate (gamemodels.md rule 4; ADR-002's 150 lines, #737). Each method turns the
 /// engine's arguments into the primitives or context its service takes and returns the service's answer; the model keeps
 /// the order the features run in. Two gates live here rather than in a service: <see cref="ChargeKnockdown"/> declines any

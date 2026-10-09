@@ -10,7 +10,7 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Tests.Features.CombatMechanics;
 
 /// <summary>
-/// The boundary the campaign damage model hands its combat seams to (#737). A live <c>Agent</c> cannot be built outside the
+/// The boundary the campaign and Custom Battle damage models hand their combat seams to (#737, #788). A live <c>Agent</c> cannot be built outside the
 /// game, so these pin what each seam gives its service when the engine hands it no agent, and that the service's answer,
 /// or the vanilla value when it has none, comes back. The collision and blow carry a non-default value for each field a seam
 /// maps from them, so a dropped or swapped field fails. With no agents, both sides of a context builder read the same

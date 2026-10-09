@@ -293,13 +293,13 @@ No restart is needed before TAOM's first capture of the session: TAOM's finalize
 
   | Callback (`CoreCallbacksGenerated`) | Managed target (v1.5.3) | TAOM code reached |
   |---|---|---|
-  | `Mission_MeleeHitCallback` | `Mission.MeleeHitCallback` | `OnMeleeHit` (`SignatureStrikesMissionLogic`); `TaomCombatMechanicsModel.DecideWeaponCollisionReaction` (campaign); `RegisterBlow` into `Agent.HandleBlow`: `Mission.OnAgentHit` (`BehaviorTreeMissionLogic.OnAgentHit`, `CareerPerkMissionBehavior.OnScoreHit`), `Agent.Die` and `Agent.HandleBlowAux` (BlowDiagnostics and Spider patches) |
+  | `Mission_MeleeHitCallback` | `Mission.MeleeHitCallback` | `OnMeleeHit` (`SignatureStrikesMissionLogic`); `TaomCombatMechanicsModel.DecideWeaponCollisionReaction` (campaign) and `TaomCustomBattleDamageModel.DecideWeaponCollisionReaction` (Custom Battle); `RegisterBlow` into `Agent.HandleBlow`: `Mission.OnAgentHit` (`BehaviorTreeMissionLogic.OnAgentHit`, `CareerPerkMissionBehavior.OnScoreHit`), `Agent.Die` and `Agent.HandleBlowAux` (BlowDiagnostics and Spider patches) |
   | `Mission_MissileHitCallback` | `Mission.MissileHitCallback` | the same `RegisterBlow` chain |
   | `Mission_ChargeDamageCallback` | `Mission.ChargeDamageCallback` | the same `RegisterBlow` chain |
   | `Mission_FallDamageCallback` | `Mission.FallDamageCallback` | the same `RegisterBlow` chain |
   | `Mission_MissileAreaDamageCallback` | `Mission.MissileAreaDamageCallback` | the same `RegisterBlow` chain |
   | `Mission_OnAgentHitBlocked` | `Mission.OnAgentHitBlocked` | `Mission.OnAgentHit`: `BehaviorTreeMissionLogic.OnAgentHit`, `CareerPerkMissionBehavior.OnScoreHit` |
-  | `Mission_GetDefendCollisionResults` | `Mission.GetDefendCollisionResults` | `MissionCombatMechanicsHelper.GetDefendCollisionResults`: `TaomCombatMechanicsModel.DecideCrushedThrough` (campaign) |
+  | `Mission_GetDefendCollisionResults` | `Mission.GetDefendCollisionResults` | `MissionCombatMechanicsHelper.GetDefendCollisionResults`: `TaomCombatMechanicsModel.DecideCrushedThrough` (campaign) and `TaomCustomBattleDamageModel.DecideCrushedThrough` (Custom Battle) |
   | `Mission_OnAgentRemoved` | `Mission.OnAgentRemoved` | `OnAgentRemoved` in `BehaviorTreeMissionLogic`, `CareerPerkMissionBehavior`, `EnlistmentMeritMissionBehavior`, `FieldCommissionMissionLogic`, `MountDespawnMissionBehavior`; `Agent.OnRemove` into `BehaviorTreeAgentComponent.OnAgentRemoved` |
   | `Mission_OnAgentDeleted` | `Mission.OnAgentDeleted` | `OnAgentDeleted` in `BehaviorTreeMissionLogic`, `AdvancedCombatBehavior`, `CareerPerkMissionBehavior`, `MixedFormationsMissionBehavior`, `MountDespawnMissionBehavior`, `SignatureStrikesMissionLogic` |
   | `Mission_OnAgentShootMissile` | `Mission.OnAgentShootMissile` | `OnAgentShootMissile` in `BehaviorTreeMissionLogic`, `ElephantMissionBehavior` |

@@ -6,7 +6,7 @@ namespace TAOM.Features.CreatureBandits.Hooks;
 
 /// <summary>
 /// The riderless creatures' damage-taken rules (#692), for the damage models' ApplyDamageReductions: the campaign's
-/// TaomCombatMechanicsModel and Custom Battle's <see cref="Models.TaomCustomBattleCreatureDamageModel"/>. The engine runs
+/// TaomCombatMechanicsModel and Custom Battle's TaomCustomBattleDamageModel (both CombatMechanics models). The engine runs
 /// every melee and missile hit that connects through that step (<c>AgentApplyDamageModel.CalculateDamage</c>, called
 /// from <c>Mission.GetAttackCollisionResults</c>, v1.5.3 <c>Mission.cs:6542</c>). Inert for every other victim: the
 /// fingerprint's first read is the managed Character, null on every ordinary mount. The rules are

@@ -25,7 +25,7 @@ public class CreatureSiegeRoleWiringTests
     private const string AgentStatModel = "TAOM.Features.CareerSystem.Models.TaomAgentStatCalculateModel";
     private const string CustomBattleAgentStatModel = "TAOM.Features.CultureDoctrine.Models.TaomCustomBattleAgentStatCalculateModel";
     private const string CombatMechanicsModel = "TAOM.Features.CombatMechanics.Models.TaomCombatMechanicsModel";
-    private const string CustomBattleDamageModel = "TAOM.Features.CreatureBandits.Models.TaomCustomBattleCreatureDamageModel";
+    private const string CustomBattleDamageModel = "TAOM.Features.CombatMechanics.Models.TaomCustomBattleDamageModel";
 
     [ClassInitialize]
     public static void Init(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext _) => GameAssemblies.EnsureLoaded();

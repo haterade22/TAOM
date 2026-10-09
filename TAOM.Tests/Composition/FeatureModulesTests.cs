@@ -65,10 +65,33 @@ public class FeatureModulesTests
         var declared = FeatureModules.All.SelectMany(m => m.GameModels.Select(d => (Module: m.Id, Decl: d))).ToList();
 
         // One engine model per slot among the modules: a second AddModel for the same slot silently
-        // shadows the first. Not checked yet: a module slot that SubModule also fills by hand with a
-        // different type (the first model migration adds that, with gamemodels.md rule 7).
+        // shadows the first. A Custom Battle slot that SubModule.RegisterCustomBattleModels fills by hand is
+        // checked below; a campaign slot filled by hand with a different type is not checked yet.
         AssertDeclaredOnce(declared.Select(d => d.Decl.Target + ":" + d.Decl.SlotType.FullName), "model slot");
         AssertNotHandWiredToo(declared.Select(d => (d.Module, Type: d.Decl.ModelType)).ToList(), "registered");
+    }
+
+    // The module step (AddGameStartContent) runs after RegisterCustomBattleModels and MissionGameModels takes the LAST model
+    // added for a slot, so a module declaration for a slot the Custom Battle step fills by hand would shadow it silently. The
+    // Custom Battle damage twin (#788) is the case: it is hand-wired, so no module may declare AgentApplyDamageModel for it.
+    [TestMethod]
+    public void NoCustomBattleModelSlot_IsFilledByAModuleAndByRegisterCustomBattleModels()
+    {
+        var subModule = RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true);
+        var start = subModule.IndexOf("private static void RegisterCustomBattleModels(", StringComparison.Ordinal);
+        Assert.IsTrue(start >= 0, "RegisterCustomBattleModels is gone; update this test.");
+        var body = subModule.Substring(start, subModule.IndexOf("private static void", start + 20, StringComparison.Ordinal) - start);
+        var handWiredSlots = Regex.Matches(body, @"\.AddModel<(\w+)>").Cast<Match>().Select(m => m.Groups[1].Value).ToList();
+        Assert.IsTrue(handWiredSlots.Contains("AgentApplyDamageModel"), "the Custom Battle damage twin is added by hand");
+
+        var shadowing = FeatureModules.All
+            .SelectMany(m => m.GameModels.Select(d => (Module: m.Id, Decl: d)))
+            .Where(x => x.Decl.Target == ModelTarget.CustomBattle && handWiredSlots.Contains(x.Decl.SlotType.Name))
+            .Select(x => x.Module + ":" + x.Decl.SlotType.Name)
+            .ToList();
+
+        Assert.AreEqual(0, shadowing.Count,
+            "a module declaration for a slot RegisterCustomBattleModels fills is added after it and shadows it: " + string.Join(", ", shadowing));
     }
 
     [TestMethod]

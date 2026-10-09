@@ -4,9 +4,9 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.SignatureStrikes.Hooks;
 
 /// <summary>
-/// The primary-victim knockdown and knock-back verdicts the campaign damage model asks for a signature hero's hit (#605):
-/// <c>TaomCombatMechanicsModel.DecideAgentKnockedDownByBlow</c> and <c>DecideAgentKnockedBackByBlow</c>, moved out of the
-/// model by #737. The strike context comes from <see cref="StrikeContextFactory"/>, the boundary the mission logic's ring
+/// The primary-victim knockdown and knock-back verdicts the damage models ask for a signature hero's hit (#605):
+/// <c>DecideAgentKnockedDownByBlow</c> and <c>DecideAgentKnockedBackByBlow</c> of <c>TaomCombatMechanicsModel</c> (campaign)
+/// and <c>TaomCustomBattleDamageModel</c> (Custom Battle, #788), moved out of the model by #737. The strike context comes from <see cref="StrikeContextFactory"/>, the boundary the mission logic's ring
 /// also uses, so both paths describe one hit the same way. Null when the feature is absent, for a horse charge, and for an
 /// attacker off the roster, so the model asks its next seam.
 /// </summary>
