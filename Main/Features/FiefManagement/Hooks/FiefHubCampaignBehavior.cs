@@ -33,8 +33,8 @@ public class FiefHubCampaignBehavior : CampaignBehaviorBase
     private void OnNewGameCreated(CampaignGameStarter starter) => _presenter.Reset();
     private void OnGameLoaded(CampaignGameStarter starter) => _presenter.Reset();
 
-    // Register the menu UNCONDITIONALLY. The runtime EnableFiefManagement gate lives at the F6
-    // patch and at the option conditions below — that way an MCM toggle mid-session takes effect
+    // Register the menu UNCONDITIONALLY. The runtime EnableFiefManagement gate lives in
+    // FiefHubOpener (F6 and the Fiefs button) and at the option conditions below — that way an MCM toggle mid-session takes effect
     // immediately. Codex review #36 caught: registering only when the setting was true at session
     // launch left "F6 -> ActivateGameMenu" calling into an unregistered menu after a runtime enable.
     public void OnSessionLaunched(CampaignGameStarter starter)

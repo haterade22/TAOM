@@ -9,8 +9,9 @@ namespace TAOM.Features.FieldCamp.UI;
 public interface ICampMenuActivationQuery
 {
     /// <summary>MapState is the active game state AND no vanilla modal sub-state is open (menu,
-    /// army management, marriage/heir popups, map cheats, incidents, encyclopedia, context menu).
-    /// Same guard set as Patch36_MapScreenF6: any of those modals can react to a menu push.</summary>
+    /// army management, marriage/heir popups, map cheats, incidents, encyclopedia, context menu,
+    /// escape menu, or a state vanilla's map-action gate refuses). Both this query and F6 and the
+    /// Fiefs button delegate to the one <c>MapMenuGate</c>.</summary>
     bool IsMapScreenClear { get; }
 
     /// <summary>The main party exists and is holding still. Camping while moving would fight the

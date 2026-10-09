@@ -12,6 +12,8 @@ public static class FiefManagementIoC
         container.Register<IMapScreenInputAdapter, MapScreenInputAdapter>(Reuse.Singleton);
         container.Register<IRemoteFiefSettlementSwapper, RemoteFiefSettlementSwapper>(Reuse.Singleton);
         container.Register<IFiefHubService, FiefHubService>(Reuse.Singleton);
+        container.Register<IFiefHubHostAdapter, FiefHubHostAdapter>(Reuse.Singleton);
+        container.Register<FiefHubOpener>(Reuse.Singleton);
         container.Register<IFiefHubMenuPresenter, FiefHubMenuPresenter>(Reuse.Singleton);
     }
 }

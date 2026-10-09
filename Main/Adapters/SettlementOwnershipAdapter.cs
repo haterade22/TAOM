@@ -27,8 +27,8 @@ public class SettlementOwnershipAdapter : ISettlementOwnershipAdapter
 
     public int GetPlayerOwnedFiefCount()
     {
-        // Fast path for Patch36_MapScreenF6.Postfix (polled every frame) and the FiefHubService
-        // Count / Clamp / Next / Previous routines. Iterates Clan.PlayerClan.Settlements — a
+        // Fast path for FiefHubOpener.GetAvailability (polled every frame by the Fiefs button) and the
+        // FiefHubService Count / Clamp / Next / Previous routines. Iterates Clan.PlayerClan.Settlements — a
         // cached MBReadOnlyList of just the player's own settlements (typically 1-10 entries) —
         // instead of Settlement.All (~862 entries). Filters to towns + castles to match
         // GetPlayerOwnedFiefs (the cache also contains BoundVillages). Audit issue #143.

@@ -288,6 +288,7 @@
       <BrushLayer Name="clan" Sprite="MapBar\bottom_left_button6_clan" />
       <BrushLayer Name="manage_fleet" Sprite="MapBar\bottom_left_button4_party" />
       <BrushLayer Name="kingdom" Sprite="MapBar\bottom_left_button7_kingdom" />
+      <BrushLayer Name="taom_fiefs" Sprite="MapBar\bottom_left_button4_party" />
     </Layers>
   </Brush>
 
@@ -335,6 +336,7 @@
       <BrushLayer Name="clan" Sprite="MapBar\mapbar_icon7" ImageFit.Type="Contain" ImageFit.VerticalAlignment="Center" ImageFit.HorizontalAlignment="Center" />
       <BrushLayer Name="manage_fleet" Sprite="Map\ship" ImageFit.Type="Contain" ImageFit.VerticalAlignment="Center" ImageFit.HorizontalAlignment="Center" />
       <BrushLayer Name="kingdom" Sprite="MapBar\mapbar_icon6" XOffset="-13" ImageFit.Type="Contain" ImageFit.VerticalAlignment="Center" ImageFit.HorizontalAlignment="Center" />
+      <BrushLayer Name="taom_fiefs" Sprite="SaveLoad\icon_fiefs" ImageFit.Type="Contain" ImageFit.VerticalAlignment="Center" ImageFit.HorizontalAlignment="Center" />
     </Layers>
   </Brush>
 

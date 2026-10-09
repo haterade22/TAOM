@@ -704,12 +704,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Fief Management", GroupOrder = 26)]
     [SettingPropertyBool("Enable Fief Management", Order = 0, RequireRestart = false,
-        HintText = "Master toggle. When off, the F6 hotkey is inert and the carousel options are disabled. Effective immediately at runtime. Default: true.")]
+        HintText = "Master toggle. When off, the F6 hotkey and the Fiefs button on the map bar are inert and the carousel options are disabled. Effective immediately at runtime. Default: true.")]
     public bool EnableFiefManagement { get; set; } = true;
 
     [SettingPropertyGroup("Fief Management")]
     [SettingPropertyBool("Allow Remote Building Queue", Order = 1, RequireRestart = false,
-        HintText = "When on, you can manage any owned fief from anywhere via F6. When off, the Manage option is disabled unless you are physically at the selected fief. Default: true.")]
+        HintText = "When on, you can manage any owned fief from anywhere via F6 or the Fiefs button on the map bar. When off, the Manage option is disabled unless you are physically at the selected fief. Default: true.")]
     public bool AllowRemoteBuildingQueue { get; set; } = true;
 
     [SettingPropertyGroup("Fief Management")]

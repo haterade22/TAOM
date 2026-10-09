@@ -3207,4 +3207,9 @@
   <string id="str_player_mother_name.arthedain" text="{=taom_str_player_mother_name.arthedain}Ivorwen" />
 
   <!-- TAOM-NEWCULTURE:arthedain:END -->
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- FiefManagement -->
+	<string id="taom_fief_nav_disabled" text="{=taom_fief_nav_disabled}Fief management is turned off in the mod options." />
+	<string id="taom_fief_nav_busy" text="{=taom_fief_nav_busy}The fief hub cannot be opened right now." />
+
 </strings>
