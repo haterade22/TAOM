@@ -179,6 +179,9 @@ MCM, Battle Load Diagnostics page, group "Map Performance":
 |---|---|---|
 | Enable Map Profiler | off | `RequireRestart = true`: read at the first game start, where Patch101 installs or is skipped. Turning it on needs a restart; turning it off stops measuring from the next campaign session while the patches stay until a restart |
 | Tick Profiler Top Behaviours (Mission Performance, shared) | 8 | how many entries each `[MapProfile]` and `[MapProfileSummary]` line lists, read at each campaign session start |
+| Cull Hidden Settlement Nameplates | on | live; [nameplate-cull.md](nameplate-cull.md) |
+| Release Map View Memory | on | live; [map-view-release.md](map-view-release.md) |
+| Map View Release Interval | 20 | live, 1 to 1000; [map-view-release.md](map-view-release.md) |
 
 The toggle is co-op excluded (instrumentation, `CoopSettingsRelevance.Instrumentation`).
 

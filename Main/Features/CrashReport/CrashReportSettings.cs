@@ -31,6 +31,21 @@ public sealed class CrashReportSettings : AttributeGlobalSettings<CrashReportSet
         HintText = "Logs and survives exceptions thrown inside a short list of native-to-managed callbacks (screen early, late and input ticks, scene-script ticks, thumbnail and tableau rendering, and mission combat callbacks for hits, blocks, missiles, charges, falls and agent removal) instead of crashing. When off, those exceptions pass straight through. Takes effect immediately. Default ON.")]
     public bool EnableNativeToManagedCapture { get; set; } = true;
 
+    [SettingPropertyGroup("Master")]
+    [SettingPropertyBool("Survive Mission Start Failures", Order = 3, RequireRestart = false,
+        HintText = "When a mission behavior, a module's mission-start callback or a mission object throws in one of the six start calls of Mission.AfterStart while a mission is loading, log it, show a short message, cut that call short and let the mission start, instead of the game loading the mission again every frame for ever. A throw elsewhere in the load, such as a behavior's OnMissionScreenPreLoad, is not covered. Enable Crash Capture does not affect this setting. When off, the exception passes straight through as in the vanilla game. Takes effect immediately. Default ON.")]
+    public bool SurviveMissionStartFailures { get; set; } = true;
+
+    [SettingPropertyGroup("Master")]
+    [SettingPropertyBool("Skeleton Buffer Guard", Order = 4, RequireRestart = true,
+        HintText = "The engine reserves room for the skeletons drawn in each frame in two per-frame buffers (65,536 and 262,144 entries) and never checks that the next one fits; one skeleton too many (about 2,340 in view for the first buffer) freezes the battle for good. When on, TAOM bounds-checks both buffers by rewriting 13 bytes of the engine at launch at each one, so a skeleton that would not fit is drawn from that buffer's first slots instead (its bones may look wrong for that frame). TAOM installs each check only where the exact engine bytes are found exactly once: a build that only moves the function is still patched, and a changed build gets nothing written. It also writes nothing for a buffer another module already guards, and guards the other one regardless. Takes effect at the next launch. Default ON.")]
+    public bool SkeletonBufferGuard { get; set; } = true;
+
+    [SettingPropertyGroup("Master")]
+    [SettingPropertyBool("Skeleton Buffer Watch", Order = 5, RequireRestart = false,
+        HintText = "Reads how full those two buffers get during every mission, not only battles, and writes the peaks to the log when the mission ends, with how many times each guard had to step in. If nothing guards the first buffer, also shows one warning at 90 percent full. Takes effect at the start of the next mission. Default ON.")]
+    public bool SkeletonBufferWatch { get; set; } = true;
+
     // --- Bundle ---
 
     [SettingPropertyGroup("Bundle")]
@@ -52,6 +67,6 @@ public sealed class CrashReportSettings : AttributeGlobalSettings<CrashReportSet
 
     [SettingPropertyGroup("QA — Dev Triggers")]
     [SettingPropertyBool("Throw On Next Mission AfterStart", Order = 2, RequireRestart = false,
-        HintText = "QA only. Throws a tagged TaomDevTriggerException from a TAOM mission behavior's AfterStart on the next mission start, the #699 shape. Expect the mission load to misbehave. Auto-resets to OFF after firing.")]
+        HintText = "QA only. Throws a tagged TaomDevTriggerException from a TAOM mission behavior's AfterStart on the next mission start, the #699 shape. Needs Enable Crash Capture on. With Survive Mission Start Failures on, the mission starts with that behavior's AfterStart cut short, and one message shows. With it off, the throw escapes once, TAOM's crash capture shows its crash dialog and writes a bundle, and the engine loads the mission again. Auto-resets to OFF after firing.")]
     public bool ThrowOnNextMissionAfterStart { get; set; }
 }

@@ -190,7 +190,8 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
      NuGet flat-container index for `bannerlord.referenceassemblies.core`; BUTR can publish hours
      after Steam, so re-check before calling it blocked.
    - The per-build native address pins, which SKIP rather than fail on an unknown build: the
-     `KnownBuilds` table in `ClipBudgetSignatureInstalledBinaryTests`, `PINS` in
+     `KnownBuilds` tables in `ClipBudgetSignatureInstalledBinaryTests` and
+     `SkeletonBufferInstalledBinaryTests`, `PINS` in
      `tools/tests/test_native_decompile.py` and the `pins` table in
      `tools/tests/test_native_engine_methods.py` (run those two with `TAOM_GHIDRA_IT=1`). Add a row
      per build; derive engine methods with `native_engine_methods.load_or_build`.
@@ -205,7 +206,10 @@ abstract method resolves by name. Record the verdicts in `docs/migration/v<ver>-
 
 ## Phase 5 — Control battles before believing anything
 
-Vanilla-only → warg → each TAOM creature, charging and meleeing. **On any CTD, compare the
+First read the new build's first start in `taom_debug_*.log` for the native guards
+(`docs/features/skeleton-buffer-guard.md`, "After an engine bump"): both `[SkeletonBuffer] guard ON pool 1` and
+`guard ON pool 2` must appear; a `guard OFF pool N` (or one `guard OFF:`) with a pattern reason means players lost
+that pool's freeze protection until the patterns are re-derived. Then: vanilla-only → warg → each TAOM creature, charging and meleeing. **On any CTD, compare the
 Windows Event Log fault offset against the previous version's known sites BEFORE assuming your
 last change caused it** (`/native-crash-triage` Phase 1) — the rewritten native lookups in new
 engine versions turn previously-tolerated data misses into AVs

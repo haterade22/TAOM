@@ -311,12 +311,81 @@ managed decompile and profile; v1.5.4: not re-checked.)
 The reverse case, a perf change costed by call names instead of bodies, is the lesson "A perf commit's win names
 the cost it removes" in [adapters-taleworlds-api.md](../../reviews/lessons/adapters-taleworlds-api.md).
 
+## 10. The per-frame skeleton buffer (v1.5.4)
+
+[TAOM-verified, 2026-10-08, on the v1.5.4 binary: 14,209,888 bytes, Ghidra project key
+`Win64_Shipping_Client-1e6f5ef562cd2010`; `python tools/native_decompile.py --rva 0x69D1C`, function
+`FUN_180069aa0`, entry `0x69AA0`]
+
+- **Layout.** Two buffers of `0x128` bytes start at `[0xD9D160] + 0x9D0`; the int at `[0xD9D160] + 0xC20`
+  picks the current one. Each holds a fill counter at `+0x0`, 32 block pointers at `+0x8` and 32 "block ready"
+  bytes at `+0x108` (0 means ready). A block is `0x2000` bytes, 2,048 four-byte entries, allocated on first
+  use, so a buffer holds 65,536 entries.
+- **No bounds check.** Each skeleton drawn reserves its entries with one locked add on the fill counter (RVA
+  `0x69D1C`). The count is read per skeleton from a byte (`movsx rbx, byte [rdi+0x44]` at `0x69B21`). The block
+  index is `fill >> 11`, and nothing compares it with 32.
+- **What happens past the end.** Block 32's pointer slot is the first eight ready bytes. When they are all 0,
+  the thread allocates a block and writes its pointer over them, and every thread that waits for one of those
+  bytes spins for ever in `movzx eax, byte [rbx]; test al, al; jnz`: at RVA `0x69DA4` to `0x69DAA`, or at
+  `0x69D90` to `0x69D96` for a thread that lost the race to allocate the block. The battle stands still and the
+  function logs nothing: a hang, not a crash (`/native-crash-triage` Phase 2b). yotthani saw several cores stay
+  busy.
+- **One site.** Of the 210 RIP-relative references to the global `0xD9D160` in `.text`, one has `+0x9D0` within
+  40 bytes: the load at `0x69CE1` in the same function (count re-taken by the 2026-10-08 review with a capstone
+  sweep and a raw displacement scan; `tools/native_sig_author.py xref` sees only the first 2.8 % of `.text`).
+- **A second pool, the same flaw.** Earlier in the same function (RVA `0x69AD5`) the engine loads the same global,
+  adds `0xC28` and picks one of two more `0x128`-byte buffers by the int at `+0x250`, then reserves through
+  `FUN_18006af30`: `lock xadd` at `0x6AF58`, block index `fill >> 13`, blocks of `0x80000` bytes, 32 block pointers
+  at `+0x8` and ready bytes at `+0x108`, so 262,144 entries. It compares only the first and the last block it
+  needs, never against 32, and its waiting threads spin at `0x6AFD7` to `0x6AFDD` and `0x6AFF0` to `0x6AFF6`. A
+  skeleton without a remap table (`cmp qword [rdi+0x10], 0` at `0x69B16`) reserves only from this pool and skips
+  the first. Three other functions reserve in the same pool through `FUN_18006af30` (calls at `0x341878`,
+  `0x341907` and `0x49EDC8`, each with a count from a byte at `+0x20` of its object), so a guard inside it bounds
+  all four callers. Which pool fills first in a battle is unmeasured.
+- [yotthani, MithrilForge `docs/engine/native.md` at `4fab7e19`, measured on v1.5.4] A vanilla human
+  skeleton takes 28 entries of the first pool, so about 2,340 such skeletons in view fill it. Skeletons per unit: a foot soldier 1, an archer about
+  1.5, a spider mount 1 more, horses, wargs and the mumak 0 (a mumak brings eight crew), a siege about 200
+  more, close melee near the camera 300 to 450 more. Reproduced: 1,501 agents ran; 1,751 hung in 1 of 3 runs
+  at the first clash; 2,001 hung in 3 of 3 at the start.
+- **The same design in at least nine more pools.** The global is the engine's per-frame allocator, and every pool
+  found in it so far has this layout: a fill counter, a table of block pointers, one ready byte per block, and two
+  such buffers picked by an int after them. A raw scan of the 208 `mov r64, [rip+disp]` loads of `0xD9D160` for an
+  `add reg, imm32` and a locked add within 160 bytes finds the eleven below (the ready-byte offset gives the table
+  size, the shift the block size). In each, the 70 instructions after the locked add hold no compare of the block
+  index with the table size (capstone, 2026-10-08). A pool reserved only through a shared function, as pools 2 and 3
+  are, shows in this scan only by its load, so the list may be incomplete.
+
+  | Offset | Blocks x entries | Entries | Locked add | Where |
+  |---|---|---|---|---|
+  | `+0xB8` | 128 x 2,048 | 262,144 | `0x6B058`, in `FUN_18006b030` | the same draw path: `FUN_1800619c0` calls `FUN_180069020`, which reserves here twice, for an object with flag `0x800` at `+0x100`; the count is the length of a list at the object's `+0x2c8`; spins at `0x6B0E0` to `0x6B0E6` and `0x6B131` to `0x6B137` |
+  | `+0x9D0` | 32 x 2,048 | 65,536 | `0x69D1C` | pool 1, guarded |
+  | `+0xC28` | 32 x 8,192 | 262,144 | `0x6AF58`, in `FUN_18006af30` | pool 2, guarded |
+  | `+0x1A68` | 128 x 16,384 | 2,097,152 | `0x30E3EA` | not traced |
+  | `+0x3D88` | 128 x 16 | 2,048 | `0xC96F6` | not traced |
+  | `+0x46A0` | 2,048 x 512 | 1,048,576 | `0xC9AC6` | not traced |
+  | `+0xD6B8` | 256 x 512 | 131,072 | `0x61AF6`, inline in `FUN_1800619c0` | the same draw path: one entry per object per frame, after the call to `FUN_180063390`, whose tail jump at `0x63757` enters the function of pools 1 and 2; spins at `0x61B60` to `0x61B66` and `0x61B82` to `0x61B88` |
+  | `+0xE8D0` | 8 x 512 | 4,096 | `0xC9C07` | not traced |
+  | `+0xE978` | 128 x 512 | 65,536 | `0x26FA8E` | not traced |
+  | `+0xF290` | 8 x 512 | 4,096 | `0x3F2F1F` | not traced |
+  | `+0xF338` | 16 x 512 | 8,192 | `0xC9D41` | not traced |
+
+  TAOM guards only the two that skeletons fill. yotthani's 2,001-agent battle ran through with only the first pool
+  guarded, so in that battle none of the others reached its end; how close they came is unmeasured. A guard for
+  another pool waits for a measurement (issue draft 9 of
+  [adopt-yotthani-2026-10-08.md](../../reviews/adopt-yotthani-2026-10-08.md)).
+
+TAOM consequence: battles above the menu's 1,000 soldiers (another mod's battle size) and large sieges with
+melee near the camera can reach the limit. TAOM guards and watches the two skeleton pools: see
+[skeleton-buffer-guard.md](../../features/skeleton-buffer-guard.md) (the decision is item 2 of
+[adopt-yotthani-2026-10-08.md](../../reviews/adopt-yotthani-2026-10-08.md)).
+
 ## How to re-verify
 
 | Claim | Command |
 |---|---|
 | A native method's body | `python tools/native_decompile.py --engine-method IMBMission.GetNearbyAgentsAux` |
 | A native function by address | `python tools/native_decompile.py --rva 0x27DAC --callers 1` |
-| An import's callers | the IAT slot from `pefile`, then `python tools/native_sig_author.py xref <slot rva>` |
+| The skeleton buffer's reservation (section 10) | `python tools/native_decompile.py --rva 0x69D1C`; the second pool's `--rva 0x6AF58`; any other pool's, `--rva` of its locked add in the table |
+| An import's callers | the IAT slot from `pefile`, then `python tools/native_sig_author.py xref <slot rva>` (it sweeps `.text` once with capstone and stops at the first byte it cannot decode, 2.8 % in on v1.5.4: treat a short list as incomplete) |
 | A class's vtable | `python tools/native_sig_author.py vtable rglAnimation_memory_manager_task` |
 | A managed body | `pwsh tools/taom-src.ps1 path TaleWorlds.MountAndBlade.Mission` |

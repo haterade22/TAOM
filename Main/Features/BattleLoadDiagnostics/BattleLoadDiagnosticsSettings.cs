@@ -90,6 +90,21 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
         HintText = "Off by default. Times the campaign map's frame: the campaign tick, every per-frame tick-event listener by its owner, the map screen and TAOM's map views, and TAOM's application tick. Writes a [MapProfile] line to the TAOM debug log every 5 seconds while the map runs and a [MapProfileSummary] line when the campaign ends. Turning it on takes effect after a restart (the profiler is installed once, at game start); turning it off stops measuring from the next campaign session.")]
     public bool EnableMapProfiler { get; set; } = false;
 
+    [SettingPropertyGroup("Map Performance")]
+    [SettingPropertyBool("Cull Hidden Settlement Nameplates", Order = 1, RequireRestart = false,
+        HintText = "The campaign map updates every settlement nameplate every frame (about a thousand in TAOM), hidden ones included. When on, a nameplate that is hidden and cannot become visible this frame (out of height range, not tracked, not in range, nothing about its settlement changed) is left alone, which saves frame time on the map, most in fast forward. Everything else updates exactly as in the vanilla game. Takes effect on the next frame, so it can be switched with the map profiler on to compare the [MapProfile] lines. Default ON.")]
+    public bool CullHiddenNameplates { get; set; } = true;
+
+    [SettingPropertyGroup("Map Performance")]
+    [SettingPropertyBool("Release Map View Memory", Order = 2, RequireRestart = false,
+        HintText = "In the measurement this feature is adapted from, every screen or menu that covered the campaign map left three colour targets and one depth target of the map view's old set behind (tens of megabytes of graphics memory per closed screen, more at a high resolution). That memory stays until a battle, or a town, village or arena scene, starts. When on, every Nth cover (see Map View Release Interval) has the map view release its graphics memory as you return to the map. The map then shows a short loading screen until its view is ready again, on one return in N (about 0.4 s instead of 0.08 s in that measurement). Takes effect at the next cover. Default ON.")]
+    public bool ReleaseMapViewMemory { get; set; } = true;
+
+    [SettingPropertyGroup("Map Performance")]
+    [SettingPropertyInteger("Map View Release Interval", 1, 1000, Order = 3, RequireRestart = false,
+        HintText = "Release the map view's memory on every Nth cover of the map. Default 20. A lower number gives memory back sooner but shows the short loading screen on more returns to the map (about 0.4 s in the measurement this feature is adapted from); 1 releases on every cover. Takes effect at the next cover.")]
+    public int MapViewReleaseInterval { get; set; } = 20;
+
     [SettingPropertyGroup("Load-Time Stamps")]
     [SettingPropertyBool("Enable Load-Time Stamps", Order = 0, RequireRestart = false,
         HintText = "Writes the detailed load-time lines to the TAOM debug log: one [PatchApply] line per Harmony patch group with its apply time (written at game initialization), [LoadPhase] steps of TAOM's game start and game initialization, and [Lifecycle] lines timing every campaign handler of a new game, a loaded save and the session start (a line for each handler taking 10 ms or more, and a total per event). The per-type [LoadXml] lines, the patch phase totals and one [Lifecycle] dispatch line per campaign dispatch are always written. Costs a few microseconds per handler while a campaign loads and nothing during play. Default OFF.")]

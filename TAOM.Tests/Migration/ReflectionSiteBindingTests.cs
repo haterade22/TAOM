@@ -148,6 +148,19 @@ public class ReflectionSiteBindingTests
     // --- CreatureSiegeRole: a siege tower's navmesh id start is a protected field, read through AccessTools.FieldRefAccess.
     // A miss binds nothing (fail-soft): every tower then reads as having no navmesh (start 0) and the role rules skip it with a named warning.
     [DataRow("TaleWorlds.MountAndBlade.MissionObject", "MissionObject", "DynamicNavmeshIdStart", "Field", "CreatureSiegeMissionAdapter.cs:227")]
+    // --- NameplateCull (Patch104): the three private fields the adapter binds with AccessTools.FieldRefAccess.
+    // A miss makes Initialize return a reason, the cull stays off and the vanilla nameplate update runs (one WARNING line).
+    [DataRow("SandBox.ViewModelCollection.Nameplate.SettlementNameplatesVM", "SettlementNameplatesVM", "_mapCamera", "Field", "NameplateCullAdapter.cs:47")]
+    [DataRow("SandBox.ViewModelCollection.Nameplate.SettlementNameplateVM", "SettlementNameplateVM", "_bindIsVisibleOnMap", "Field", "NameplateCullAdapter.cs:48")]
+    [DataRow("SandBox.ViewModelCollection.Nameplate.SettlementNameplateVM", "SettlementNameplateVM", "_worldPos", "Field", "NameplateCullAdapter.cs:49")]
+    // --- MissionStartGuard (Patch103): the six start calls the transpiler swaps, found by AccessTools.Method at install.
+    // A miss makes AccessTools.Method return null; Rewrite's fit check rejects the null target, so Mission.AfterStart stays vanilla.
+    [DataRow("TaleWorlds.MountAndBlade.MBSubModuleBase", "MBSubModuleBase", "OnBeforeMissionBehaviorInitialize", "Method", "MissionStartGuardSwaps.cs:23,32")]
+    [DataRow("TaleWorlds.MountAndBlade.MissionBehavior", "MissionBehavior", "OnBehaviorInitialize", "Method", "MissionStartGuardSwaps.cs:24,32")]
+    [DataRow("TaleWorlds.MountAndBlade.MBSubModuleBase", "MBSubModuleBase", "OnMissionBehaviorInitialize", "Method", "MissionStartGuardSwaps.cs:25,32")]
+    [DataRow("TaleWorlds.MountAndBlade.MissionBehavior", "MissionBehavior", "EarlyStart", "Method", "MissionStartGuardSwaps.cs:26,32")]
+    [DataRow("TaleWorlds.MountAndBlade.MissionBehavior", "MissionBehavior", "AfterStart", "Method", "MissionStartGuardSwaps.cs:27,32")]
+    [DataRow("TaleWorlds.MountAndBlade.MissionObject", "MissionObject", "AfterMissionStart", "Method", "MissionStartGuardSwaps.cs:28,32")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

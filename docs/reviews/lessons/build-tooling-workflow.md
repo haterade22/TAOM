@@ -3497,3 +3497,11 @@ caught by gates, never by skill text.
 - **Prevent:** before adding a skill, check whether the model already does the job by running the script;
   measure Skill-tool calls in the transcripts before keeping one. A gate beats skill text.
 - **Source:** `docs/reviews/skill-usage-audit-2026-10-08.md`.
+
+### A dry run and the patch that adds it are chained with `&&` (2026-10-08)
+- **Why missed:** a heredoc patch meant to add a `--dry` flag to a doc-fix script failed on mangled backslashes (the
+  known heredoc trap), and the next command on the same shell line ran the unpatched script, which ignored `--dry`
+  and wrote 13 docs while review agents were still reading them.
+- **Prevent:** write scripts with the Write tool and give a script its dry-run mode when it is written; chain
+  dependent shell steps with `&&` so a failed step stops the rest.
+- **Source:** `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 28.

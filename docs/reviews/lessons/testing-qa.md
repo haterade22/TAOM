@@ -37,6 +37,8 @@ TDD's RED step is not ceremony; it is the only evidence that a test *can* fail, 
 - **Why missed:** PrisonerRecruitment (2026-07-16). Tests were authored before the implementation (satisfying the letter of test-first) but both were written before anything was executed, so RED was never observed. The suite went green on the first run and the gap was invisible; it surfaced only because the author flagged it against their own work.
 - **Prevent:** run the suite once before the implementation exists, even if it just fails to compile. If that ordering has already been lost, recover the evidence with **mutation testing**: disable each load-bearing rule in turn (`if (false && …)`) and confirm the expected tests fail, and that the COUNT matches what that rule owns. On PrisonerRecruitment: disabling the same-culture rule failed exactly 3 tests, removing the Neutral guard exactly 2; that, not the green run, is what proved the tests real. Cheap (two edits + two filtered runs) and it also pins which test owns which behavior. Corollary for derived/scanning tests: add a floor assertion on the scan count (`Assert.IsTrue(found >= 8)`) so a regex matching nothing fails instead of vacuously passing every row.
 - **Source:** docs/reviews/rca-prisoner-recruitment-2026-07-16.md finding 4
+- **Recurrence (2026-10-08):** the skeleton-buffer tests were written first but never run RED; two mutations there,
+  and two in the nameplate cull, recovered the evidence (`docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 9).
 
 ### A warm-cache pass is not proof the cold path works, validate render/compile/deployment fixes cold
 A shader-precompile / render / battle-load fix that "completes fine in-game" may be riding a WARM cache that short-circuits the very path the fix targets. The ShaderPrecompilation 1.4.7 fix (#336) completed the all-characters battle in 20s on a warm shader cache, so fast it settled *before* the deployment phase could matter, meaning the force-finish path (the item's specific hang fix) never actually fired. A cold run (the prior attempt) had hung on that same item. A fast green run nearly read as full validation; only the per-item log detail (no seed line, no force-finish line, 20s vs the earlier multi-hour hang) exposed that the targeted path was skipped.
@@ -295,6 +297,28 @@ window open in the very writer whose fix was meant to close it.
   as mandatory rather than optional, and treat a fix that changes data assignments (not just a guard)
   as needing the same balance/data checks the original assignment needed.
 - **Source:** `docs/reviews/rca-black-numenorean-2026-08-17.md` findings C2 and C3.
+
+### A new hot-path settings provider, name-based private access or engine-executing binding test joins its repo-wide gate in the same commit (2026-10-08)
+- **Why missed:** the four yotthani ports passed every test in their own folders, but the per-frame
+  `NameplateCullSettingsProvider` was not in the hot-path provider gate, four `FieldRefAccess` sites and six swap
+  targets had no reflection-site rows, and one binding test that runs engine code lacked `RequiresGameIL`. Those
+  gates live in other folders and the builder briefs named only the feature's own tests.
+- **Prevent:** a builder brief for a new feature names these gates explicitly: `CampaignHotPathSettingsProvidersTests`
+  or `HotPathSettingsProvidersTests` for a provider read per frame or per hit, `ReflectionSiteBindingTests` and
+  `reflection-sites.md` for private members reached by name, `RequiresGameIL` for a binding test that executes
+  engine code.
+- **Source:** `docs/reviews/rca-yotthani-adoption-2026-10-08.md` findings 5 to 7.
+- **Recurrence (2026-10-08, fix round):** two settings-provider pins sat in `RequiresGame` binding classes, so no
+  no-game run, CI included, executed them. A pin that needs no game goes in an untagged class beside its siblings
+  (finding 25).
+
+### An in-game check names the log line it expects and traces the trigger that produces it (2026-10-08)
+- **Why missed:** the mission-start guard's "guard off" step promised an endless loading loop, but the QA trigger
+  resets itself before it throws, so the second load runs clean; the nameplate cull's A/B pointed at a window line
+  that a one-minute A/B could never produce; the map-view release's load-game step ran before its patch existed.
+- **Prevent:** write each in-game step with the exact log line it expects, and read the trigger's code and the
+  line's writer before writing the expected outcome.
+- **Source:** `docs/reviews/rca-yotthani-adoption-2026-10-08.md` findings 10 and 11.
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 

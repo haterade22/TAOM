@@ -38,7 +38,7 @@ Each phase is a thin Harmony hook (or `MissionLogic`) that delegates one call to
 | 4d | `FinishMissionLoadingBegin` | `MissionState_FinishMissionLoading_BattleLoad_Patch` (Prefix) | `MissionState.FinishMissionLoading()` (**private**) — the native `IsLoadingFinished` poll finally returned true. Carries `polls=` / `waitMs=` |
 | 4b | `MissionAfterStartBegin` / `Done` | `Mission_AfterStart_BattleLoad_Patch` (Prefix + Postfix) | `Mission.AfterStart()` — runs `OnMissionBehaviorInitialize` for **every** submodule. Called from *inside* `FinishMissionLoading` |
 | 4e | `FinishMissionLoadingDone` | `MissionState_FinishMissionLoading_BattleLoad_Patch` (**Postfix**) | `FinishMissionLoading` returned — `OnMissionLoadingFinished` + `Scene.ResumeLoadingRenderings` done |
-| 4c | `TaomBehaviorsBegin` / `TaomBehaviorAdded` / `TaomBehaviorsDone` | `AddTaomBehavior` helper in `SubModule.OnMissionBehaviorInitialize` (no patch) | TAOM's own behaviors, each stamped by name |
+| 4c | `TaomBehaviorsBegin` / `TaomBehaviorAdded` / `TaomBehaviorsDone` | `AddTaomBehavior` helper in `SubModule.OnMissionBehaviorInitialize` (no patch) | TAOM's own behaviors, each stamped by name, except `BattleLoadPhaseBehavior`: it is registered after `TaomBehaviorsDone`, in a `finally`, and is not in the count |
 | 5 | `AgentEquipBegin` / `AgentEquipOk` | `Agent_EquipItemsFromSpawnEquipment_BattleLoad_Patch` (Prefix + Postfix) | `Agent.EquipItemsFromSpawnEquipment(bool,bool,bool,int)` — **the money hook** |
 | 4f | `WaitingForRender` | `MissionState_OnTick_RenderWait_Patch` (**Postfix**) | `MissionState.OnTick(float)` (**protected**): one call per frame the mission is loaded but not yet ticking, i.e. while `Handler.RenderIsReady()` is false. Throttled to 1 Hz in the service; carries `waitedMs=` and the live `shaders=` count |
 | 6 | `BattlePlayable` | `BattleLoadPhaseBehavior : MissionLogic` (first `OnMissionTick`) | closes the loading window — load succeeded |
@@ -654,8 +654,12 @@ provider fails open when MCM has not registered yet. The hook re-fires on **ever
 main menu, so the relocation rests entirely on `Start()` being idempotent — pinned by
 `MemoryPressureSamplerTests.Start_CalledTwice_ReusesTheSameTimer`.
 
-`BattleLoadPhaseBehavior` is registered **unconditionally** (no `IsEnabled` check at the
-`AddTaomBehavior` call). It is the loading window's only closer while the opener runs in
+`BattleLoadPhaseBehavior` is registered **unconditionally** (no `IsEnabled` check), in the `finally` of
+`SubModule.OnMissionBehaviorInitialize` around all of TAOM's mission wiring: it exists whatever that wiring threw
+(the mission-start guard, Patch103, survives such a throw and starts the mission), only when the mission has none yet
+(with the guard off, a throw makes the engine load the same Mission again), it is the last TAOM behaviour
+registered, so it ticks first, and it is not stamped as a `TaomBehaviorAdded` line (2026-10-08 reviews). It is the
+loading window's only closer while the opener runs in
 `Mission.Initialize`'s prefix, and the two evaluations are separated by a tick boundary and a
 measured ~11.9 s native load — so a toggle flipped inside that window used to latch the window open
 until the next `Mission.Initialize`, after which the stall watchdog fired at 300 s and wrote a

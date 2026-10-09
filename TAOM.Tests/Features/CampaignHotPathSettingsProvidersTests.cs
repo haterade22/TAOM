@@ -7,12 +7,14 @@ using NSubstitute;
 using TAOM.Core.Logging;
 using TAOM.Features;
 using TAOM.Features.AlignmentDesertion;
+using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.FieldCamp;
 using TAOM.Features.SupplyLines;
 using TAOM.Features.CaravanTrade;
 using TAOM.Features.CastleRecruitment;
 using TAOM.Features.FieldCommission;
 using TAOM.Features.FieldCommission.Domain;
+using TAOM.Features.NameplateCull;
 using TAOM.Features.PartyIconScale;
 using TAOM.Features.QuickActions;
 using TAOM.Features.RealmBorders;
@@ -34,9 +36,11 @@ public class CampaignHotPathSettingsProvidersTests
     private const BindingFlags Declared = BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.NonPublic
                                           | BindingFlags.Instance | BindingFlags.Static;
 
-    // MCM declares Instance on a generic base (GlobalSettings<T>), so match any type TaomSettings derives from.
+    // MCM declares Instance on a generic base (GlobalSettings<T>), so match any declaring type the settings class derives from.
     private static bool IsInstanceGetter(MethodBase m) =>
-        m.Name == "get_Instance" && m.DeclaringType != null && m.DeclaringType.IsAssignableFrom(typeof(TaomSettings));
+        m.Name == "get_Instance" && m.DeclaringType != null
+        && (m.DeclaringType.IsAssignableFrom(typeof(TaomSettings))
+            || m.DeclaringType.IsAssignableFrom(typeof(BattleLoadDiagnosticsSettings)));
 
     private static bool CallsInstance(MethodBase m)
     {
@@ -56,6 +60,8 @@ public class CampaignHotPathSettingsProvidersTests
     // #746: read every campaign frame (supply lines always, the field camp while it stands).
     [DataRow(typeof(SupplyLinesSettingsProvider))]
     [DataRow(typeof(CampSettingsProvider))]
+    // Read every campaign-map frame, from the Battle Load Diagnostics page.
+    [DataRow(typeof(NameplateCullSettingsProvider))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
         var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
@@ -84,6 +90,7 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(ITimeAccelerationSettingsProvider), typeof(TimeAccelerationSettingsProvider))]
     [DataRow(typeof(ISupplyLinesSettingsProvider), typeof(SupplyLinesSettingsProvider))]
     [DataRow(typeof(ICampSettingsProvider), typeof(CampSettingsProvider))]
+    [DataRow(typeof(INameplateCullSettingsProvider), typeof(NameplateCullSettingsProvider))]
     public void Provider_ResolvesFromARealContainer(Type service, Type implementation)
     {
         using var container = new Container();
@@ -239,6 +246,18 @@ public class CampaignHotPathSettingsProvidersTests
         Assert.AreEqual(32, sut.CtrlSpaceMultiplier);
     }
 
+    [TestMethod]
+    public void NameplateCull_ReadsThroughTheCachedSettings()
+    {
+        var settings = new BattleLoadDiagnosticsSettings();
+        var sut = new NameplateCullSettingsProvider(settings);
+        Assert.IsTrue(sut.CullEnabled);
+
+        settings.CullHiddenNameplates = false;
+
+        Assert.IsFalse(sut.CullEnabled);
+    }
+
     // No-MCM pins: TaomSettings.Instance is null in the test host (MCM is never initialised), so these
     // hold today's fallbacks through the caching change.
     [TestMethod]
@@ -248,6 +267,10 @@ public class CampaignHotPathSettingsProvidersTests
     [TestMethod]
     public void PartyIconScale_NoMcm_GetScaleIsTheDefault()
         => Assert.AreEqual(PartyIconScaleConfig.Default, PartyIconScaleConfig.GetScale(), 0.0001f);
+
+    [TestMethod]
+    public void NameplateCull_NoMcm_CullDefaultsOn()
+        => Assert.IsTrue(new NameplateCullSettingsProvider().CullEnabled);
 
     [TestMethod]
     public void CastleRecruitment_NoMcm_TogglesFallBackToJson()

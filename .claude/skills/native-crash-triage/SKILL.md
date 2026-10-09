@@ -147,6 +147,16 @@ full dump (proven on #599):
 5. **Read the native frames as C.** Each `TaleWorlds_Native+0x<off>` frame's offset is an RVA:
    `python tools/native_decompile.py --rva 0x<off>`. Read the stuck loop's exit condition in the C,
    then find what should have set it.
+   Known on v1.5.4: a battle frozen with threads spinning at `TaleWorlds_Native+0x69DA4` to `+0x69DAA` or
+   `+0x69D90` to `+0x69D96` is a full first skeleton pool; at `+0x6AFD7` to `+0x6AFDD` or `+0x6AFF0` to
+   `+0x6AFF6`, a full second pool. A `movzx`/`test`/`jne` spin a little after another `lock xadd` can be one of
+   the engine's nine other unbounded per-frame pools: section 10 of
+   [mission-frame-threads-and-native-costs.md](../../../docs/reference/engine/mission-frame-threads-and-native-costs.md)
+   lists them with their addresses. TAOM guards the first two: read the session's `[SkeletonBuffer] guard`
+   lines (`guard ON pool N`, `guard OFF pool N: <reason>`, or one `guard OFF: <reason>` when the whole install
+   stopped), since a hang in pool 1 or 2 means that pool's guard was off or another module's. A frame or fault address in an anonymous page
+   just below `TaleWorlds.Native.dll` is one of the guard's code blocks (43 and 42 bytes), which have no unwind
+   information.
 
 Heap values from the same log: `!do <obj>` for fields, `!DumpArray -details -length 3` for a struct
 array's layout, and `da poi(<address>)` to print the ASCII text a pointer stored at `<address>`

@@ -9,6 +9,7 @@ using MCM.Abstractions.Base.Global;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Features;
+using TAOM.Features.BattleLoadDiagnostics;
 using TAOM.Features.BlowDiagnostics;
 using TAOM.Features.CombatMechanics;
 using TAOM.Features.CompanionTactics;
@@ -93,6 +94,7 @@ public class HotPathSettingsProvidersTests
     [DataTestMethod]
     [DataRow(typeof(TaomSettings))]
     [DataRow(typeof(BlowDiagnosticsSettings))]
+    [DataRow(typeof(BattleLoadDiagnosticsSettings))]
     public void CachedSettingsClasses_AreMcmGlobalSettings(Type settings)
     {
         Assert.IsTrue(typeof(GlobalSettings).IsAssignableFrom(settings),

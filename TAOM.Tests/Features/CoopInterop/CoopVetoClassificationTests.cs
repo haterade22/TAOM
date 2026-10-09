@@ -109,6 +109,13 @@ public class CoopVetoClassificationTests
             "sync, and no TAOM SyncData or config. Replication is asynchronous, so this is a " +
             "same-integration-as-vanilla argument, not a claim of identical snapshots; two-peer " +
             "execution is UNVERIFIED (Codex review 98)."),
+        ["SettlementNameplatesVM_Update_NameplateCull_Patch"] = new(CoopVeto.ReviewedSafe,
+            "Patch104: client-side UI. The prefix replaces SettlementNameplatesVM.Update, the campaign map's per-frame " +
+            "nameplate refresh, with the same update over the plates that are hidden-and-staying-hidden left out. The " +
+            "view model feeds widgets on this client only: it reads settlement state, the camera and the visual " +
+            "tracker, and writes nothing to campaign state, so there is no replicated mutation to skip and nothing for " +
+            "two peers to disagree about. Every other outcome (toggle off, cull unavailable, any error) returns true " +
+            "and runs vanilla whole. The toggle is presentation in CoopSettingsRelevance."),
         ["Patch86_HideoutAssaultBossFight"] = new(CoopVeto.ReviewedSafe,
             "Replaces MapEventHelper.GetPriorityListForHideoutMission, a pure roster-ORDERING " +
             "function for the local hideout mission: it decides which troops spawn in phase 1 and " +

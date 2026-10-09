@@ -38,6 +38,40 @@ The probe's summary said every address is proven inside a mapped section before 
 - **Prevent:** write a safety comment as three lists (checked, trusted, outside the checks) and give each forwarded engine call its own entry. A doc that ships a diagnostic on by default says what was not measured and how to measure it.
 - **Source:** `docs/reviews/rca-anim-memory-probe-2026-10-02.md` X3.
 
+### A native guard covers every reservation of the same shape in the function, not only the one upstream named (2026-10-08)
+- **Why missed:** the skeleton-buffer guard was ported from yotthani's fix for one `lock xadd` reservation
+  (`0x69D1C`). TAOM re-derived that site's missing bound with Ghidra and stopped there; the same function first
+  reserves from a second pool (`0x6AF58`, 262,144 entries) with the identical flaw, which the review's engine lens
+  found by disassembling the whole function.
+- **Prevent:** before guarding or documenting a native defect, list every instruction of the same shape in the
+  function (and in the callees it shares data with), not only the site the source named; record each as guarded,
+  watched or out of scope.
+- **Source:** `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 1.
+- **Recurrence (2026-10-08, the same day):** the fix round's survey found that the pool belongs to an allocator: the
+  global `0xD9D160` holds at least eleven pools with the same missing bound, two more on the same draw path. Survey the
+  allocator the pool belongs to, not only the function (finding 23).
+
+### A native call's side effects decide when it may run: read what the engine checks next on that path (2026-10-08)
+- **Why missed:** the map-view release was ported with upstream's timing, on the cover. Nobody read what
+  `SceneView.ClearAll` writes besides freeing memory: it zeroes the view's ready word (`0x34B769`), and
+  `MapScreen.OnPause`, which runs right after the layers deactivate, reads that word and raises the global loading
+  window over the covering screen. The feature doc's own in-game step had flagged the effect as unverified.
+- **Prevent:** before calling an engine method from an event, list the state it writes (decompile the native body for
+  an engine call) and read the code that runs next on the same path; an effect a doc marks "unverified" is checked
+  before the change is called done.
+- **Source:** `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 19.
+
+### A count in a reference doc names its method and is taken two ways (2026-10-08)
+- **Why missed:** a byte scan for RIP-relative references to `0xD9D160` tried every offset with three instruction
+  lengths and counted each reference three times (630 instead of 210); the number went into the engine doc straight
+  from the script.
+- **Prevent:** take a count two independent ways (a disassembler sweep with skipdata and a raw displacement scan)
+  and write the method beside the number; a single ad hoc scan is a lead, not a fact.
+- **Source:** `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 12.
+- **Recurrence (2026-10-08, fix round):** the cull's MCM hint gave yotthani's 1,002 settlements as TAOM's count (the
+  live `TAOM_Map` file holds 1,040), and both map-view hints stated his measurements as fact. Player-facing text
+  carries only counts TAOM took, with their basis, or attributes the figure (finding 26).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

@@ -2045,6 +2045,51 @@ public class SubModule : MBSubModuleBase
     {
         base.OnMissionBehaviorInitialize(mission);
 
+        // BattleLoadDiagnostics phase-6: "battle playable" marker on first tick + closes
+        // the loading window so the stall watchdog stands down and phase-5 stops logging.
+        //
+        // Registered UNCONDITIONALLY (TAOM convention, and latch rule 3 in
+        // .claude/rules/harmony-patches.md: verify "unconditional" at the OUTERMOST gate). This
+        // behavior is the loading window's ONLY closer; the opener runs in Mission.Initialize's
+        // prefix. The 2026-07-06 RCA deferred this one as "the same synchronous call chain", and
+        // the three-bucket measurement disproves that premise: the two evaluations are separated by
+        // a tick boundary AND a measured ~11.9 s native load (MissionState.cs:221-350). A toggle
+        // flipped inside that window latched the loading window open until the next
+        // Mission.Initialize, and the stall watchdog then fired at 300 s and wrote a spurious
+        // bundle. This changeset makes toggling MCM mid-session an EXPECTED operator action during
+        // the commit-attribution matrix, so the window is no longer theoretical.
+        //
+        // Registered in the finally around ALL of TAOM's mission wiring: the mission-start guard
+        // (Patch103) survives a throw out of this method, the first mission's patch application
+        // included, and starts the mission, so the closer must exist whatever the wiring did. It is
+        // registered last, so it ticks first: a TAOM behavior that throws in every tick cannot keep
+        // the window open (2026-10-08 reviews). No catch: the throw still reaches the guard.
+        //
+        // Safe to register while disabled: BattleLoadPhaseBehavior already self-gates its logging
+        // (LogBattlePlayable returns early when disabled) while Close()/ClearInflight() are
+        // unconditional state transitions. Steady-state cost is one `if (_playableLogged) return;`
+        // per mission tick.
+        try
+        {
+            AddTaomMissionBehaviors(mission);
+        }
+        finally
+        {
+            // One closer per mission: with the guard off, a throw makes the engine load the same Mission
+            // again, and a second closer would stamp BattlePlayable twice (Codex pass 2).
+            var loadDiagnostics = IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadDiagnosticsService>();
+            if (loadDiagnostics != null
+                && mission.GetMissionBehavior<Features.BattleLoadDiagnostics.Hooks.BattleLoadPhaseBehavior>() == null)
+                mission.AddMissionBehavior(new Features.BattleLoadDiagnostics.Hooks.BattleLoadPhaseBehavior(
+                    loadDiagnostics, IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadStallMarker>()));
+        }
+    }
+
+    // TAOM's mission wiring: the first mission's patch application, then every TAOM mission behavior.
+    // Runs inside OnMissionBehaviorInitialize's try, so the loading window's closer exists whatever
+    // this throws.
+    private void AddTaomMissionBehaviors(Mission mission)
+    {
         // Apply Formation.SetMovementOrder patches (Patch31_SmartCavalryAI + Patch35
         // CancelStanceOnMove) only once Mission.Current is non-null — MovementOrder's
         // type initializer constructs static fields whose ctor reads
@@ -2163,7 +2208,7 @@ public class SubModule : MBSubModuleBase
         AddTaomBehavior(new Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView());
 
         // Feature modules' mission behaviors: after the feature behaviors above, before the kernel tail
-        // below (MissionDiagnostic, BattleLoadPhase, the CrashReport dev trigger, CareerPerk).
+        // below (MissionDiagnostic, the CrashReport dev trigger, CareerPerk).
         FeatureModuleHooks.AddMissionBehaviors(mission, AddTaomBehavior);
 
         // MissionDiagnostic: added LAST so it sees all behaviors added by TAOM AND
@@ -2176,28 +2221,6 @@ public class SubModule : MBSubModuleBase
         var diagLogger = IoC.Resolve<IModLogger>();
         if (diagSvc != null && raceMgr != null && diagLogger != null)
             AddTaomBehavior(new Features.MissionDiagnostic.Hooks.MissionDiagnosticBehavior(diagSvc, raceMgr, diagLogger));
-
-        // BattleLoadDiagnostics phase-6: "battle playable" marker on first tick + closes
-        // the loading window so the stall watchdog stands down and phase-5 stops logging.
-        //
-        // Registered UNCONDITIONALLY (TAOM convention, and latch rule 3 in
-        // .claude/rules/harmony-patches.md — verify "unconditional" at the OUTERMOST gate). This
-        // behavior is the loading window's ONLY closer; the opener runs in Mission.Initialize's
-        // prefix. The 2026-07-06 RCA deferred this one as "the same synchronous call chain", and
-        // the three-bucket measurement disproves that premise: the two evaluations are separated by
-        // a tick boundary AND a measured ~11.9 s native load (MissionState.cs:221-350). A toggle
-        // flipped inside that window latched the loading window open until the next
-        // Mission.Initialize, and the stall watchdog then fired at 300 s and wrote a spurious
-        // bundle. This changeset makes toggling MCM mid-session an EXPECTED operator action during
-        // the commit-attribution matrix, so the window is no longer theoretical.
-        //
-        // Safe to register while disabled: BattleLoadPhaseBehavior already self-gates its logging
-        // (LogBattlePlayable returns early when disabled) while Close()/ClearInflight() are
-        // unconditional state transitions. Steady-state cost is one `if (_playableLogged) return;`
-        // per mission tick.
-        if (battleLoadDiagSvc != null)
-            AddTaomBehavior(new Features.BattleLoadDiagnostics.Hooks.BattleLoadPhaseBehavior(
-                battleLoadDiagSvc, IoC.Resolve<Features.BattleLoadDiagnostics.IBattleLoadStallMarker>()));
 
         // Dev-trigger behavior watches the CrashReport MCM toggle and throws a tagged
         // TaomDevTriggerException on the next OnMissionTick when the player flips

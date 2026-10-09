@@ -124,7 +124,8 @@ open the caller of any lifecycle virtual before wiring it, and quote the line in
 
 `AddTaomBehavior` adds a behavior to every mission, Custom Battle included, where there is no campaign: its
 `EarlyStart`/`AfterStart` reads no campaign static unguarded (adapters.md), keeps every adapter call inside a
-`try` (an exception leaving `AfterStart` restarts the mission load every frame, #699), and a change that makes
+`try` (an exception leaving `AfterStart` is survived by Patch103 and cuts that setup short; with its toggle off it
+restarts the mission load every frame, #699), and a change that makes
 such code run for the first time gets one Custom Battle run.
 
 ## Which thread runs your target (MANDATORY before the first line of a patch)

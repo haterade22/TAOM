@@ -307,6 +307,17 @@ patch in it, not just the offending method.
   vacuously green. Verified red-then-green by reintroducing the defect.
 - **Source:** #389 (Patch67 render census), 2026-08-06.
 
+### Recurrence: a new patch on a shielded method also needs its loss noticed (2026-10-08)
+- **Why missed:** Patch103 (the mission-start guard) shares `Mission.AfterStart` with Patch43 and PatchShield; from
+  the second game start a swallowed MissingMethod, MissingField or TypeLoad throw there strips TAOM's prefix and
+  transpiler (owner `com.taom.mod` is not protected), and the module had logged "ON" once at install. The
+  2026-10-03 lesson above already said to look again where each measurement starts; the builder brief did not
+  carry it.
+- **Prevent:** when the patch has a finalizer, use the cheaper canary: PatchShield never strips finalizers, so the
+  finalizer can check that the same call's prefix ran (and that a transpiler's live swap count is whole) and warn
+  once per process. Carry this lesson in every brief for a patch on a method PatchShield wraps.
+- **Source:** `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 2.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
@@ -939,6 +950,10 @@ reported at each mission's end, not only warned about once.
   `docs/reviews/deep-review-028-mission-tick-profiler-2026-10-02.md` ("A cost for the maintainer to weigh");
   `HitchProbeHooksTests.StrippedPrefix_FinalizerRunsAlone_WarnsOnceAndRecordsNothing`;
   `HitchProbePrefixGuardTests` and the fix pass in `docs/reviews/deep-review-041-profiler-extensions-and-hitch-probe-2026-10-02.md`.
+- **Recurrence (2026-10-08):** Patch103's canary kept "this call's prefix ran" in a process-wide flag, five days after
+  this lesson; a finalizer rerun would have faked a lost guard and spent its once-per-process warning. It now uses
+  `__state`, tested through real Harmony, and the rule is one line in `.claude/rules/harmony-patches.md`, which loads
+  with every patch file (`docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 21).
 
 ### A new patch on an engine method also gets PatchShield's finalizer: describe the target's whole finalizer set (2026-10-02)
 Patch99's comment, feature doc and registry row said its `void` finalizer keeps Harmony on `rethrow`. PatchShield's
@@ -1010,3 +1025,24 @@ yotthani's PerfProbe gave each timing probe its own closed generic class (`Slot<
 - **Why missed:** the bench test put one patch on each target, so the re-resolution that a second patch triggers never ran.
 - **Prevent:** declare patch methods on ordinary non-generic types (a generated class per probe works; a closed generic or a `DynamicMethod` does not), and test a patch together with a foreign patch on the same target, in both orders. Rule text: [submodule-lifecycle-and-harmony.md](../../reference/engine/submodule-lifecycle-and-harmony.md) "Harmony mechanics".
 - **Source:** yotthani, MithrilForge `docs/engine/perf.md`, PerfProbe section of 2026-10-04 (in game on v1.5.3, Harmony 2.4.2; v1.5.4: not re-checked).
+
+### A guard that turns a throw into survival keeps the code after the throw that cannot be skipped (2026-10-08)
+- **Why missed:** Patch103 wraps every submodule's `OnMissionBehaviorInitialize`, TAOM's own included. A throw in
+  TAOM's registrations used to loop the load; survived, it skipped the BattleLoad loading window's only closer,
+  registered near the end, so the window stayed open for the battle and the stall watchdog would bundle a running
+  battle. The design took "TAOM's behaviours guard themselves" (#699) as given and never asked what the cut-short
+  method still had to do.
+- **Prevent:** when a change makes a throw survivable, list what the code after each wrapped call is responsible for
+  (closers, counters, registrations) and put the part that cannot be skipped in a `finally` around all of that work;
+  pin it with a source test. Moving it ahead of the registrations was the first fix here, and it fell short twice: a
+  throw in the work before it still skipped it (Codex), and the move reversed its tick order (a convergence lens).
+- **Source:** `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 20.
+
+### An install line claims only what was checked (2026-10-08)
+- **Why missed:** `ModuleRunner.RunPhase` calls a module's `OnPhase` whether or not its patch category applied, and
+  Patch103's and Patch104's ON lines were written there; Patch103's swap count is set by its transpiler, which runs
+  before Harmony can still fail and register nothing.
+- **Prevent:** derive an ON line from the applied state: `Harmony.GetPatchInfo` lists the patch (the
+  `MapFrameProfilerInstaller` precedent), or a `[HarmonyCleanup]` method resets a transpiler's count when the apply
+  fails.
+- **Source:** `docs/reviews/rca-yotthani-adoption-2026-10-08.md` finding 22.

@@ -58,6 +58,14 @@ public static class CoopSettingsRelevance
         "EquipPresetsDebug", "QuickActionsDebug", "RaceAbilityDebugLog",
         "EnableBattleLoadDiagnostics", "EnableBlowDiagnostics", "EnableCrashCapture",
         "EnableNativeToManagedCapture", "SuspendButterLibHandler", "WriteCrashBundle",
+        // Whether a throw out of a mission start call is survived (Patch103): crash containment, filed here with
+        // EnableCrashCapture and EnableNativeToManagedCapture, which also change what runs after an exception. None of the
+        // four reasons above fits the three exactly (a peer with it off reloads and may run the throwing start in full);
+        // reclassifying all three is a co-op doctrine change left to the maintainer (2026-10-08 review).
+        "SurviveMissionStartFailures",
+        // The skeleton buffer watch (docs/features/skeleton-buffer-guard.md): a log line and one on-screen warning. The guard
+        // beside it is Presentation.
+        "SkeletonBufferWatch",
         "EnableMemorySampler", "MemorySampleIntervalSeconds",
         "EnableStallWatchdog", "EnableStallWatchdogBundle", "StallWatchdogSeconds",
         "EnableExitStallSampler", "EnableMissionTickStallSampler",
@@ -145,6 +153,13 @@ public static class CoopSettingsRelevance
         // The faction picker shapes the local player's own character creation, which each peer runs
         // for themselves; the co-op layer replicates the hero that results, not the screen.
         "FrontEndFactionScreen",
+        // Campaign map performance (Battle Load Diagnostics page, Map Performance): whether hidden settlement
+        // nameplates are skipped each frame (Patch104), and whether a covered map releases its render targets and how
+        // often (a layer-event handler, no patch). Both change what this client draws and how much graphics memory it holds, never the campaign.
+        "CullHiddenNameplates", "ReleaseMapViewMemory", "MapViewReleaseInterval",
+        // The skeleton buffer guard: where the engine writes a frame's skeleton data when a pool is full. A peer that differs
+        // either draws a few wrong-looking skeletons or, with the guard off, freezes; neither makes two running simulations differ.
+        "SkeletonBufferGuard",
         "RealmColourGondor", "RealmColourRohan", "RealmColourDunland", "RealmColourIsengard", "RealmColourMordor", "RealmColourHarad", "RealmColourUmbar", "RealmColourShaghana", "RealmColourAbanissa", "RealmColourKhand", "RealmColourRhun", "RealmColourDale", "RealmColourErebor", "RealmColourRivendell", "RealmColourLothlorien", "RealmColourMirkwood", "RealmColourLindon", "RealmColourDolGuldur", "RealmColourGundabad", "RealmColourMistyMountainOrcs", "RealmColourGoblins", "RealmColourBlueCraig", "RealmColourArthedain", "RealmColourYourRealm",
     };
 

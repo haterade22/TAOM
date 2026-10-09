@@ -20,11 +20,11 @@ namespace TAOM.Tests.Features.Mcm;
 /// took, until the next launch reverts it. Player-reported for Troop Weight 2026-09-06 and for
 /// Bandit Scaling 2026-09-11 (#559).
 ///
-/// Every TAOM setting but three is read live through its settings instance, so the honest posture
+/// Every TAOM setting but four is read live through its settings instance, so the honest posture
 /// is <c>RequireRestart = false</c> everywhere, and a new setting that omits the flag is a bug this
 /// test catches. The allowlist holds the exceptions, each with its reason: the three settings a
 /// Harmony category is gated on at apply time, <c>EnableTickProfiler</c> (Patch97), <c>EnableHitchProbe</c> (Patch98) and
-/// <c>EnableMapProfiler</c> (Patch101), each read once per process.
+/// <c>EnableMapProfiler</c> (Patch101), each read once per process, and <c>SkeletonBufferGuard</c>, read once at the first main menu.
 /// Note that no MCM setting can gate anything in OnSubModuleLoad:
 /// <c>GlobalSettings&lt;T&gt;.Instance</c> is null
 /// until MCM's own OnBeforeInitialModuleScreenSetAsRoot, which is why the two CrashReport toggles
@@ -41,6 +41,7 @@ public class SettingRequireRestartPostureTests
         [$"{nameof(BattleLoadDiagnosticsSettings)}.{nameof(BattleLoadDiagnosticsSettings.EnableTickProfiler)}"] = "Read at the first game init, where Patch97 installs or is skipped: turning it on needs a restart (turning it off applies from the next mission)",
         [$"{nameof(BattleLoadDiagnosticsSettings)}.{nameof(BattleLoadDiagnosticsSettings.EnableHitchProbe)}"] = "Read at the first game init, where Patch98 installs or is skipped: turning it on needs a restart (turning it off applies from the next mission while the tick profiler is off)",
         [$"{nameof(BattleLoadDiagnosticsSettings)}.{nameof(BattleLoadDiagnosticsSettings.EnableMapProfiler)}"] = "Read at the first game init, where Patch101 installs or is skipped: turning it on needs a restart (turning it off applies from the next campaign session)",
+        [$"{nameof(CrashReportSettings)}.{nameof(CrashReportSettings.SkeletonBufferGuard)}"] = "Read once, at the first main menu, where the guard rewrites 13 bytes at each of up to two sites in engine code or does not: the write is never undone, so turning it on or off needs a restart (docs/features/skeleton-buffer-guard.md)",
     };
 
     private static readonly Type[] SettingsClasses =

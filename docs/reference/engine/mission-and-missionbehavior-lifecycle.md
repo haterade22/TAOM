@@ -55,7 +55,9 @@ at teardown, and (for `MissionLogics`) `OnBattleEnded`/`MissionEnded`.
 ### Lifecycle order (typical)
 ```
 SubModule.OnMissionBehaviorInitialize(mission)   → mission.AddMissionBehavior(new XxxBehavior())  [OnCreated]
-  → OnBehaviorInitialize → OnAfterMissionCreated → EarlyStart → AfterStart
+  → EarlyStart → AfterStart   (TAOM's path: OnBehaviorInitialize and OnAfterMissionCreated never fire for it)
+  [a behaviour handed to MissionState.OpenNew: OnAfterMissionCreated → OnCreated → OnBehaviorInitialize → EarlyStart
+   → AfterStart; Mission.cs:3823-3831, MissionState.cs:263]
   → per frame: OnPreMissionTick → OnMissionTick (+ OnFixedMissionTick)
   → per agent spawn: OnAgentCreated → OnAgentBuild
   → on hit: OnAgentHit / OnScoreHit; on removal: OnAgentRemoved
@@ -102,6 +104,15 @@ and apply a patch that touches a type with a static initializer only after the g
 (TAOM's deferred categories, [submodule-lifecycle-and-harmony.md](submodule-lifecycle-and-harmony.md) "Deferred
 application"). (yotthani, MithrilForge `docs/engine/bugs.md` B3, v1.5.3; v1.5.4: the managed sequence confirmed in
 the v1.5.4 decompile via `taom-src`, the swallowed exception and the log line not re-checked.)
+
+Since 2026-10-08 TAOM's mission-start guard (Patch103,
+[mission-start-guard.md](../../features/mission-start-guard.md)) wraps the six start calls inside `Mission.AfterStart`
+(both submodule callbacks, each behaviour's `OnBehaviorInitialize`, `EarlyStart` and `AfterStart`, each mission
+object's `AfterMissionStart`): a throw from one of them is logged as `[MissionStartGuard]` and survived, and the battle
+starts with that behaviour's call cut short. A throw from the calls it does not wrap (the spawn-path selector, and the
+deployment plan and the weather model, which a mod can supply) still makes the engine load the mission again, and so
+does a throw from a behaviour's `OnMissionScreenPreLoad`, which `MissionState.LoadMission` calls before `AfterStart`. Keeping every `AfterStart`
+throw-safe stays the rule: the guard saves the battle, not the behaviour's setup.
 
 ## ⚠️ The `: MissionLogic` gotcha (confirmed at the source)
 

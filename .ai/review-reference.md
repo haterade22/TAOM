@@ -178,6 +178,8 @@ archive the 6th-oldest, harvest durable patterns into `docs/reviews/lessons/<cat
 - **A ratchet or suppression list with no multiplicity.** Keyed on `(owner, item)` alone, 10 entries were suppressing 13 occurrences, so an already-listed roster gaining a SECOND copy of the same bad item filed as old debt.
 - **What the deserializer assembles, not the XML's shape** (2026-09-30, KEYforce art: a Codex miss that three scoped Claude lenses caught in the fix review). Codex's fix for a first-roster-only mount read named every battle roster and battle `EquipmentSet` references, but not the `<equipment>` written directly under `<Equipments>`, which `MBEquipmentRoster.AddOverriddenEquipments` writes over its slot in every set; 88 troops mount that way. When a finding models what a troop carries, list every path `BasicCharacterObject.Deserialize` takes.
 
+- **State that one screen event sets and another clears** (2026-10-08, yotthani adoption: a Codex miss that a convergence lens caught). A pending map-view release keyed on a layer reference survived Save/Load (itself a cover) into the next campaign's new map screen. Name as suspects the paths that replace the object without the clearing event (load, exit to menu, new campaign), and check ordering claims about Harmony priorities against equal priorities and `HarmonyBefore`.
+
 **False positives to NOT repeat + the Evidence Calibration Rule above** (downgrade a claim you cannot back with quoted decompiled vanilla): full list in the track record. When two agents disagree on a TaleWorlds API, re-run `ilspycmd` rather than siding with confidence.
 
 ### Intentional Patterns (Do NOT flag these)
