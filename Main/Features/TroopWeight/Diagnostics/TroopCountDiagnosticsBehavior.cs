@@ -42,6 +42,9 @@ public class TroopCountDiagnosticsBehavior : CampaignBehaviorBase
 
     public override void RegisterEvents()
     {
+        // Singleton added to every campaign: the previous load left its handler on the static event,
+        // so remove it first and keep one live subscription (#771).
+        ScreenManager.OnPushScreen -= OnScreenPushed;
         ScreenManager.OnPushScreen += OnScreenPushed;
         _subscribed = true;
         CampaignEvents.OnGameOverEvent.AddNonSerializedListener(this, Unsubscribe);

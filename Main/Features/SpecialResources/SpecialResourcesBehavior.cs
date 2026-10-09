@@ -76,29 +76,27 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         // one (elephant/spider). The RecruitmentVM gate (Patch51) blocks confirming an unaffordable
         // cart, so this deduction never drives the balance negative for those troops.
         CampaignEvents.OnUnitRecruitedEvent.AddNonSerializedListener(this, OnUnitRecruited);
-        // Phase 9b #133 P1 — ScreenManager is static/global and outlives any campaign. New campaign
-        // in same process: a second behavior instance registers another listener; first instance's
-        // listener stays alive, calling _service.BeginPartyScreenSession() on the shared singleton
-        // service → resets _pendingSpend/_inSession for new campaign sessions, potentially
-        // cancelling legitimate spends. OnGameOverEvent is the only public lifecycle hook in
-        // v1.3.15 that fires when a campaign ends; CampaignBehaviorBase has no OnFinalize/OnGameEnd
-        // overrides. Best-effort: unsubscribe on game over. (If a player exits via main menu
-        // without "Game Over" firing, the listener is still orphaned — but the next campaign's
-        // ScreenManager.OnPushScreen += in its OWN RegisterEvents at least won't double-subscribe
-        // because the orphan listener was bound to the prior behavior instance, which is GC-eligible
-        // once its CampaignGameStarter is released.)
-        ScreenManager.OnPushScreen += OnScreenPushed;
+        // ScreenManager.OnPushScreen is a static event: it outlives every campaign and keeps each
+        // subscribed delegate's target alive, so an orphaned handler is never garbage-collected. A
+        // behavior instance is built on every campaign start or save load, and a load without a Game
+        // Over leaves the previous instance subscribed, still calling BeginPartyScreenSession on the
+        // shared singleton service (#133 P1, #771). So the behavior keeps exactly one live handler per
+        // process: remove the stored one, then store and add this instance's.
+        if (_screenPushHandler != null)
+            ScreenManager.OnPushScreen -= _screenPushHandler;
+        _screenPushHandler = OnScreenPushed;
+        ScreenManager.OnPushScreen += _screenPushHandler;
         CampaignEvents.OnGameOverEvent.AddNonSerializedListener(this, UnsubscribeScreenManager);
     }
 
-    private bool _screenManagerSubscribed = true;
+    private static ScreenManager.OnPushScreenEvent _screenPushHandler;
 
     private void UnsubscribeScreenManager()
     {
-        if (!_screenManagerSubscribed) return;
-        ScreenManager.OnPushScreen -= OnScreenPushed;
-        _screenManagerSubscribed = false;
-        _logger.LogInfo("[SpecRes] OnGameOver — unsubscribed from ScreenManager.OnPushScreen");
+        if (_screenPushHandler == null) return;
+        ScreenManager.OnPushScreen -= _screenPushHandler;
+        _screenPushHandler = null;
+        _logger.LogInfo("[SpecRes] OnGameOver - unsubscribed from ScreenManager.OnPushScreen");
     }
 
     public override void SyncData(IDataStore dataStore)
