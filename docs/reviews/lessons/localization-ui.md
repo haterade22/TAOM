@@ -934,3 +934,14 @@ material binds it. Vanilla still shows for about a second at launch, before TAOM
   memory) and read the material's `MeshVectorArgument` before authoring art. Treat a guide's resource name as
   version-bound.
 - **Source:** `docs/features/native-loading-screen.md`.
+
+### Player-typed text never goes into a TextObject template with its braces (formation presets, 2026-10-09)
+The localized preset messages pass the preset's name through `SetTextVariable("NAME", name)`. The string is stored
+as it is, but at render time `TextObject.GetVariableValue` wraps it in a new `TextObject` and the text processor
+reads it again as markup, so a name with braces renders with that part empty, and a `{=key}` prefix is taken as a
+localization key. The old code interpolated the name raw, so the localization pass brought the bug in.
+- **Why missed:** a variable value reads as data; nothing at the call site shows that it is parsed again.
+- **Prevent:** remove `{` and `}` from player-typed text (preset names, party names, search text) before it reaches
+  a template, or keep that text out of the template.
+- **Source:** `docs/reviews/rca-formation-presets-2026-10-09.md` finding 7; `TextObject.cs:149-151, 319-381` and
+  `TextProcessingContext.GetVariableValue` (v1.5.4).

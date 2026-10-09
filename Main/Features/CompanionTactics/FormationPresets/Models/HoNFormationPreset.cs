@@ -68,21 +68,4 @@ public class HoNFormationPreset
 
     public bool IsCaptain(string heroId) =>
         _captainHeroIds != null && _captainHeroIds.Contains(heroId);
-
-    public int GetFormationClass(int formationIndex) =>
-        _formationClasses != null && _formationClasses.TryGetValue(formationIndex, out var v) ? v : -1;
-
-    public string GetSummary()
-    {
-        var captainCount = _captainHeroIds?.Count ?? 0;
-        var totalAssign = _heroFormationAssignments?.Count ?? 0;
-        var troopCount = totalAssign - captainCount;
-        var formCount = 0;
-        if (_formationClasses != null)
-        {
-            foreach (var kvp in _formationClasses)
-                if (kvp.Value >= 0) formCount++;
-        }
-        return $"{formCount} formations, {captainCount} captains, {troopCount} troops";
-    }
 }

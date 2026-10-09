@@ -459,6 +459,15 @@ donor's TaleWorlds SaveSystem `BaseId 726900601` so its saves import.
 **To resolve:** a licence line from yotthani for `yotthani/bannerlord` (MIT, as on VanillaTuning and
 ShaderCacheKeeper); the drop folder itself is gone.
 
+**Formation preset Save and Load (2026-10-09, #779).** Written after the behaviour of yotthani's HoN
+`FormationPresetManager.cs` (read at `1ad701bd`): capture each formation's class, captain and hero troops; apply the
+classes, then the captains, then the hero troops. Nothing was copied, and TAOM's version drives vanilla's public view
+model flows where the HoN code sets the class selector by reflection. The new files
+(`Main/Features/CompanionTactics/FormationPresets/FormationPresetLayout.cs`, `OOBPresetApplier.cs`,
+`IOOBPresetApplier.cs`, `Models/PresetApplyResult.cs`), the Save and Load paths of `UI/OOBButtonsVM.cs` and their
+tests are TAOM's own code. Row 76's `Main/Features/CompanionTactics/**` pattern covers them too: they are a
+behavioural port, not verbatim, and the row stays uncleared until the licence line above.
+
 ### TAOM_Promoted / RF_Promoted (UNCLEARED)
 
 `Main/Features/FieldCommission/**` is described at [`docs/features/field-commission.md:20`](../features/field-commission.md)

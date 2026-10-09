@@ -1,5 +1,6 @@
 using System.Reflection;
 using HarmonyLib;
+using TaleWorlds.CampaignSystem;
 using TaleWorlds.Engine.GauntletUI;
 using TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer;
 using TaleWorlds.MountAndBlade.View.MissionViews;
@@ -28,6 +29,7 @@ public sealed class OOBOverlayService : IOOBOverlayService
     private readonly IOrderOfBattleVMTracker _vmTracker;
     private readonly ICompanionTacticsSettingsProvider _settings;
     private readonly IOOBCaptainAutoAssigner _captainAutoAssigner;
+    private readonly IOOBPresetApplier _presetApplier;
 
     private FieldInfo _isActiveField;
     private FieldInfo _dataSourceField;
@@ -44,13 +46,15 @@ public sealed class OOBOverlayService : IOOBOverlayService
         IFormationPresetService presetService,
         IOrderOfBattleVMTracker vmTracker,
         ICompanionTacticsSettingsProvider settings,
-        IOOBCaptainAutoAssigner captainAutoAssigner)
+        IOOBCaptainAutoAssigner captainAutoAssigner,
+        IOOBPresetApplier presetApplier)
     {
         _logger = logger;
         _presetService = presetService;
         _vmTracker = vmTracker;
         _settings = settings;
         _captainAutoAssigner = captainAutoAssigner;
+        _presetApplier = presetApplier;
     }
 
     private void EnsureInitialized()
@@ -70,9 +74,12 @@ public sealed class OOBOverlayService : IOOBOverlayService
     {
         EnsureInitialized();
         if (_inertMode || handler == null) return;
-        if (!_settings.EnableFormationPresets)
+        // Campaign only: only the campaign behavior persists the preset store (SyncData) or resets it (a new game), so
+        // a preset saved in Custom Battle would be lost; and Custom Battle agents are BasicCharacterObject
+        // (TaleWorlds.MountAndBlade.CustomBattle.dll references no TaleWorlds.CampaignSystem), so Auto-Assign finds no hero there.
+        if (!_settings.EnableFormationPresets || Campaign.Current == null)
         {
-            // Toggle flipped to off mid-mission — guarantee detach.
+            // Toggle flipped to off mid-mission (or no campaign) — guarantee detach.
             if (_wasActive) Detach();
             _wasActive = false;
             return;
@@ -113,7 +120,7 @@ public sealed class OOBOverlayService : IOOBOverlayService
             var missionScreen = (handler as MissionView)?.MissionScreen;
             if (missionScreen == null) return;
 
-            _vm = new OOBButtonsVM(_presetService, _vmTracker, _captainAutoAssigner, _logger);
+            _vm = new OOBButtonsVM(_presetService, _vmTracker, _captainAutoAssigner, _presetApplier, _logger);
             _layer = new GauntletLayer("GauntletLayer", 200, false);
             // Required: without InputRestrictions the layer renders but never registers with the
             // MissionScreen's input dispatcher — buttons paint, clicks pass through. Same bug

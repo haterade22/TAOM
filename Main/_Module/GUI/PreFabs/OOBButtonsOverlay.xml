@@ -29,7 +29,7 @@
                     WidthSizePolicy="StretchToParent" 
                     HeightSizePolicy="StretchToParent"
                     Brush="Order.Siege.MainButton.Text"
-                    Text="Assign Heroes" />
+                    Text="@AssignHeroesText" />
               </Children>
             </ButtonWidget>
             

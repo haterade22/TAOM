@@ -11,7 +11,7 @@ namespace TAOM.Tests.Features.CompanionTactics;
 /// <summary>
 /// The OOB overlay is resolved inside Patch35_OOBUIHandler_Tick's empty catch, every frame, so a
 /// dependency that stops resolving makes both overlay buttons vanish with no log line. Plan 022
-/// added IOOBCaptainAutoAssigner to that graph; this pins that it closes (the
+/// added IOOBCaptainAutoAssigner to that graph and the presets work IOOBPresetApplier; this pins that it closes (the
 /// CampsContainerWiringTests shape: Validate walks the graph without constructing anything).
 /// </summary>
 [TestClass]
@@ -24,7 +24,7 @@ public class CompanionTacticsWiringTests
         container.RegisterInstance(Substitute.For<IModLogger>());
         CompanionTacticsIoC.RegisterCompanionTacticsFeature(container);
 
-        var errors = container.Validate(typeof(IOOBOverlayService), typeof(IOOBCaptainAutoAssigner));
+        var errors = container.Validate(typeof(IOOBOverlayService), typeof(IOOBCaptainAutoAssigner), typeof(IOOBPresetApplier));
 
         Assert.AreEqual(0, errors.Length, string.Join("; ", errors.Select(e => e.Value.Message)));
     }

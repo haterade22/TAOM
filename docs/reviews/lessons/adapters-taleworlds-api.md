@@ -879,6 +879,11 @@ The takeover changes the stage list from a handler's `OnStageCompleted`, which d
 - **Why missed:** the branch was written against the campaign's type; the service tests mock the adapter, so nothing executed it under the game type that calls it, and its only runtime trace was a DEBUG line that never printed.
 - **Prevent:** before an adapter casts to an engine subtype, check what type each calling game type registers (`OnRegisterTypes` of `CustomGame`, `Campaign`). When the base type drops the data, read it back from the merged XML for the current game type (`MBObjectManager.GetMergedXmlForManaged` with `Game.Current.GameType.GameTypeStringId`, as `MonsterSizeCatalogAdapter` does and `ObjectManagerAdapter` now does for cultures, parsing with `CultureTroopIdReader`), and log once at INFO that the read ran. Then check the data the read returns against the consumer's own filter: the culture troops TAOM reads fit vanilla's Custom Battle slot filter in only 33 of 88 slots, so the service also checks culture and formation class before offering one.
 - **Source:** `docs/reviews/rca-custom-battle-bannerless-factions-2026-10-02.md` "Two older Custom Battle defects", B.
+- **Recurrence (2026-10-09):** the CompanionTactics Order of Battle overlay attached in Custom Battle too. Its
+  Auto-Assign resolves heroes as `CharacterObject` and finds none there (Custom Battle agents are
+  `BasicCharacterObject`), and its presets wrote to a store that only the campaign behavior's `SyncData` persists.
+  Fixed with a `Campaign.Current` gate in `OOBOverlayService.OnTick`
+  (`docs/reviews/rca-formation-presets-2026-10-09.md` finding 4).
 
 ### A drift guard pins an engine dependency at the strength the code relies on it (2026-10-02)
 Patch99 re-implements `CreateMergedXmlFile`'s loop, copies `ApplyXslt`, and drops the `ToXDocument`/`ToXmlDocument`

@@ -11,7 +11,7 @@ namespace TAOM.Features.CompanionTactics.FormationPresets;
 /// <summary>
 /// Boundary class for the OOB Auto-Assign button. Reads the live vanilla view model, adapts each
 /// candidate hero for <see cref="IHeroAutoAssigner.PlanCaptains"/>, and applies the plan through
-/// vanilla's own manual-drag path (select the hero, then the formation's accept-captain
+/// vanilla's own click path (select the hero, then the formation's accept-captain
 /// command), so vanilla keeps every side effect: agent formation, Formation.Captain, banner,
 /// unassigned list and the tutorial event. Uses public members only; no reflection.
 /// Keeps every captain already placed and never places the player's own hero.

@@ -941,7 +941,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Battle Tactics/Formation Presets", GroupOrder = 28)]
     [SettingPropertyBool("Enable Formation Presets", Order = 0, RequireRestart = false,
-        HintText = "Save/load named OOB hero-to-formation assignments per campaign. Work-in-progress (loading a preset is not yet wired) — off by default; opt in to try it.")]
+        HintText = "Presets save and load the formation types, captains and hero troops of the Order of Battle, per campaign. Off by default until it is checked in game; opt in to try it.")]
     public bool EnableFormationPresets { get; set; } = false;
 
     [SettingPropertyGroup("Battle Tactics/Formation Presets")]

@@ -49,7 +49,7 @@ Mike approved the plan on 2026-10-08. Tier 1 is approved; Tier 2 waits for his w
 | 2 | Skeleton-buffer guard and watch | VanillaTuning `FrameBufferGuardPatch.cs`, `FrameBufferWatch.cs` (MIT), adapted | Tier 1; **Mike: both ON by default**; after the review found the second pool, **Mike: guard it too** (TAOM's own code block, mirroring the first); the engine's nine other pools of this design are documented, not guarded (decided in this session under the maintainer's "full control" instruction, 2026-10-08; draft 9) |
 | 3 | Settlement nameplate cull on the campaign map | VanillaTuning `NameplateCullPatch.cs`, `Core/NameplateCull.cs` (MIT), adapted | Tier 1; **Mike: ON now, his MapPerf A/B before the next release** (the default can still flip before release: no player has it saved) |
 | 4 | Map-view release (GPU memory left by closed menus) | VanillaTuning `MapViewReleasePatch.cs` (MIT), adapted | Tier 1, ON, interval 20; an engine event instead of a Harmony patch (review) |
-| 5 | Formation presets that really save and load | yotthani's HoN `FormationPresetManager.cs`, behaviour only | Tier 1, feature stays off by default |
+| 5 | Formation presets that really save and load | yotthani's HoN `FormationPresetManager.cs`, behaviour only | Tier 1, built 2026-10-09 (#779), off by default until the in-game check; troop shares, filters and single-class swaps in #787 |
 | 6 | This review, engine knowledge, provenance | | Tier 1, committed with items 1 to 4 (its links point at their files) |
 | 7 | Focus-ray throttle (0.2 to 0.3 ms per battle frame) | VanillaTuning `FocusRayPatch.cs` (MIT) | Tier 2, after a TAOM measurement |
 | 8 | Read MithrilForge's `perf.md` and `modding-kit.md` against TAOM's engine docs | MithrilForge (MIT) | Tier 2 |
@@ -73,6 +73,13 @@ Where TAOM's version beats the upstream one (decided in the plan, built with eac
   the tutorial targets) and reads its settings once per frame through a cached provider.
 - **Item 4** needs no Harmony patch: it listens to the engine's own `ScreenLayer.OnLayerActiveStateChanged`,
   raised right after `OnDeactivate`, and releases through vanilla's own `SceneLayer.ClearRuntimeGPUMemory(false)`.
+- **Item 5** reads and drives vanilla's public Order of Battle view models only, where the HoN code sets the class
+  selector by reflection: a class change goes through the formation's class selector, a hero through vanilla's
+  select-then-accept click path, and each step is checked afterwards. Class changes repeat in passes while vanilla's
+  `IsAdjustable` rule allows them, a hero goes only into a formation whose saved class is in place, a siege maps
+  mounted classes the way vanilla's own layout load does, and only the general can save or load, in a campaign. A
+  preset stores formation classes, captains and hero troops; it does not restore troop shares or filters, and it
+  cannot swap two formations that are each the only one of a class (#787).
 - **One rule for VanillaTuning running beside TAOM:** detect its effect, not its presence. The skeleton guard
   finds VanillaTuning's jump at the site (it always installs first, at `OnSubModuleLoad`); the cull relies on
   Harmony skipping a second replacing prefix; the start guard catches only what VanillaTuning's per-method
@@ -141,7 +148,8 @@ Where TAOM's version beats the upstream one (decided in the plan, built with eac
    memory through vanilla's `SceneLayer.ClearRuntimeGPUMemory(false)`. Labels: bug, perf, triage-needs-ingame.
 5. **feat: formation presets save and load the order of battle.** (#779) Save stores only a name and Load is a stub
    (`OOBButtonsVM.cs:149-193`). Capture and apply formation classes, captains and hero-troops through the
-   public OOB API, after yotthani's HoN `FormationPresetManager` (behaviour only). Labels: enhancement.
+   public OOB API, after yotthani's HoN `FormationPresetManager` (behaviour only). Labels: enhancement. Built
+   2026-10-09; its review's follow-up is draft 13 (#787).
 6. **fix(tools): `native_sig_author.py xref` reads only the start of `.text`.** (#780) Its one capstone linear sweep
    stops at the first byte capstone cannot decode (RVA `0x48B36`, 2.8 % of `.text` on v1.5.4), so it reported
    16 references to `0xD9D160` where there are 210, and missed `0x69CE1`. Sweep function by function, or turn on
@@ -151,7 +159,8 @@ Where TAOM's version beats the upstream one (decided in the plan, built with eac
    more (four already sit mid-file in `taom_module_strings.xml`). `lines[at:close] = block` does what the comment
    says. Labels: bug.
 8. **chore(localization): translate the two new notices.** (#782) `taom_mission_start_guard_notice` and
-   `taom_skeleton_buffer_warning` have no rows in the 12 languages; one `--sync-ids` pass also covers the 32
+   `taom_skeleton_buffer_warning` have no rows in the 12 languages, nor have the 21 `taom_oob_*` keys of item 5
+   (added 2026-10-09); one `--sync-ids` pass also covers the 32
    untranslated race-ability keys (#754 is the precedent). A paid run, on the maintainer's word. Labels:
    enhancement, triage-blocked-decision.
 9. **perf: measure the engine's other per-frame pools before guarding more.** (#783) The engine's per-frame allocator
@@ -175,11 +184,21 @@ Where TAOM's version beats the upstream one (decided in the plan, built with eac
     `CoopSettingsRelevance`'s four exclusion reasons fits them; they are filed as instrumentation. Either add a fifth
     reason or count them as simulation-relevant, which moves every peer's settings fingerprint. Labels:
     triage-blocked-decision.
+13. **feat: formation presets restore troop shares, filters and single-class swaps.** (#787, filed 2026-10-09 after
+    item 5's review) A preset stores no class weights and no filters, so a class that another formation already has
+    loads at 0 percent; a swap between formations that are each the only one of a class cannot apply under vanilla's
+    `IsAdjustable` rule; a dead hero's assignment stays and counts as skipped. Weights and filters change the preset's
+    save format. Labels: enhancement, triage-blocked-decision.
 
 ## The deep review
 
 The `/deep-review` of items 1 to 4 (seven lenses, 2026-10-08) found no HIGH or CRITICAL defect. What it found
 and what was done about each finding is in [rca-yotthani-adoption-2026-10-08.md](rca-yotthani-adoption-2026-10-08.md).
+
+The `/deep-review` of item 5 (seven lenses in two waves, 2026-10-09) found no HIGH or CRITICAL defect either. It
+found one apply defect, two scope limits, a Custom Battle reach gap and a verification gap; the findings, fixes and
+the two limits left for the maintainer (#787) are in
+[rca-formation-presets-2026-10-09.md](rca-formation-presets-2026-10-09.md).
 
 ## For yotthani
 

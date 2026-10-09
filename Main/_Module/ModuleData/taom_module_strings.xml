@@ -3212,5 +3212,28 @@
 	<string id="taom_mission_start_guard_notice" text="{=taom_mission_start_guard_notice}{MODULE} failed in {CALL} ({EXCEPTION}). The mission goes on, with that step cut short." />
 	<!-- SkeletonBufferEngineAdapter -->
 	<string id="taom_skeleton_buffer_warning" text="{=taom_skeleton_buffer_warning}This mission uses {PERCENT} percent of the engine's skeleton buffer, and the game freezes for good when it is full. Lower the battle size." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- CompanionTactics -->
+	<string id="taom_oob_assign_heroes" text="{=taom_oob_assign_heroes}Assign Heroes" />
+	<string id="taom_oob_no_screen" text="{=taom_oob_no_screen}No Order of Battle screen detected." />
+	<string id="taom_oob_preset_save_option" text="{=taom_oob_preset_save_option}Save Current Layout as Preset" />
+	<string id="taom_oob_preset_load_option" text="{=taom_oob_preset_load_option}Load: {NAME}" />
+	<string id="taom_oob_preset_delete_option" text="{=taom_oob_preset_delete_option}Delete: {NAME}" />
+	<string id="taom_oob_presets_title" text="{=taom_oob_presets_title}Formation Presets" />
+	<string id="taom_oob_presets_description" text="{=taom_oob_presets_description}Save, load or delete a layout of formation types, captains and hero troops." />
+	<string id="taom_oob_preset_deleted" text="{=taom_oob_preset_deleted}Preset &quot;{NAME}&quot; deleted." />
+	<string id="taom_oob_preset_not_general" text="{=taom_oob_preset_not_general}Only the general of this battle can use presets." />
+	<string id="taom_oob_preset_loaded" text="{=taom_oob_preset_loaded}Preset &quot;{NAME}&quot; loaded. Formation types: {CLASSES}, captains: {CAPTAINS}, hero troops: {TROOPS}." />
+	<string id="taom_oob_preset_skipped" text="{=taom_oob_preset_skipped}Saved assignments that do not fit this battle: {COUNT}." />
+	<string id="taom_oob_preset_save_title" text="{=taom_oob_preset_save_title}Save Formation Preset" />
+	<string id="taom_oob_preset_save_prompt" text="{=taom_oob_preset_save_prompt}Enter a name for this preset:" />
+	<string id="taom_oob_preset_save_button" text="{=taom_oob_preset_save_button}Save" />
+	<string id="taom_oob_preset_name_empty" text="{=taom_oob_preset_name_empty}Preset name cannot be empty." />
+	<string id="taom_oob_preset_saved" text="{=taom_oob_preset_saved}Preset &quot;{NAME}&quot; saved. Formation types: {CLASSES}, captains: {CAPTAINS}, hero troops: {TROOPS}." />
+	<string id="taom_oob_preset_limit" text="{=taom_oob_preset_limit}Preset limit reached. Delete one before saving." />
+	<string id="taom_oob_preset_name_in_use" text="{=taom_oob_preset_name_in_use}A preset named &quot;{NAME}&quot; already exists." />
+	<string id="taom_oob_preset_save_failed" text="{=taom_oob_preset_save_failed}Could not save the preset." />
+	<string id="taom_oob_presets_button_count" text="{=taom_oob_presets_button_count}Presets ({COUNT})" />
+	<string id="taom_oob_presets_button" text="{=taom_oob_presets_button}Presets" />
 
 </strings>
