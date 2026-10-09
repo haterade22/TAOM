@@ -73,9 +73,9 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | BehaviorTrees | `BehaviorTrees.dll` | maintainer-owned | verbatim-port | `Main/BehaviorTrees/**` | cleared |
 | BannerlordTogether | `BannerlordTogether` `BattleLinkMPClient` | no-decompile policy, see detail | interop-only | (none) | cleared |
 | BannerlordCoop | `BannerlordCoop` `Bannerlord-Coop-Team` `Bannerlord.Coop` | UNKNOWN | comparison-only | (none) | uncleared |
-| Yotthani HoN mods (external developer drop) | `Features_fixed` `HoN` `yotthani/bannerlord` | UNKNOWN | verbatim-port | `Main/Features/SiegeDismount/**` `Main/Features/MixedFormations/**` `Main/Features/SmartCavalryAI/**` `Main/Features/FiefManagement/**` `Main/Features/QuickActions/**` `Main/Features/EquipPresets/**` `Main/Features/CompanionTactics/**` | uncleared |
+| Yotthani HoN mods (external developer drop) | `Features_fixed` `HoN` `yotthani/bannerlord` | MIT, (c) 2026 yotthani (the maintainer's statement of 2026-10-09; no root `LICENSE` in `yotthani/bannerlord` yet, asked for) | verbatim-port | `Main/Features/SiegeDismount/**` `Main/Features/MixedFormations/**` `Main/Features/SmartCavalryAI/**` `Main/Features/FiefManagement/**` `Main/Features/QuickActions/**` `Main/Features/EquipPresets/**` `Main/Features/CompanionTactics/**` | cleared |
 | TAOM_Promoted | `TAOM_Promoted` `RF_Promoted` | UNKNOWN | behavioural-port | `Main/Features/FieldCommission/**` | uncleared |
-| Yotthani TransferbuttonMenu | `TransferbuttonMenu` `HoN/TransferbuttonMenu` | UNKNOWN | behavioural-port | `Main/Features/QuickActions/**` | uncleared |
+| Yotthani TransferbuttonMenu | `TransferbuttonMenu` `HoN/TransferbuttonMenu` | MIT, (c) 2026 yotthani (the maintainer's statement of 2026-10-09; no root `LICENSE` in `yotthani/bannerlord` yet, asked for) | behavioural-port | `Main/Features/QuickActions/**` | cleared |
 | ServeAsSoldier | `ServeAsSoldier` `Serve as Soldier` | UNKNOWN | comparison-only | (none) | uncleared |
 | BetaDeps | `BetaDeps` | UNKNOWN | behavioural-port | `Dependencies/Foundation/{DiagLog,RuntimeLog,ReflectionUtils,VersionProbe,IncompatibleModDetector,PatchShield,SaveShield,FailureRecord,FailedModsCatalog,SubModuleConstructionGuard,CollectAssemblyTypesShim}.cs` `Dependencies/AliasStubSubModule.cs` `Dependencies/SubModule.cs` | uncleared |
 | NativeSkinFixes | `NativeSkinFixes` | UNKNOWN | verbatim-port | (removed 2026-10-05) `Dependencies/NativeSkinFixes.NativeHooks/**` `Main/_Module/bin/Win64_Shipping_Client/TAOM.NativeSkinFixes.dll` | removed |
@@ -95,7 +95,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | Cave Troll Lightweight (Fab) | `Cave Troll Lightweight` `cave_troll_lightweight` | purchased-asset, code terms informal | data-port | `tools/oneoff/ue_export_cave_troll.py` `tools/blender/retarget_mannequin_to_human.py`; the retargeted `anim_troll_*` clips in `LOTRLOME_Armory` (live, outside the repo) | cleared |
 | Animalia - Elk (male), Animalia - Moose (male) (Fab) | `Animalia` `Elk_M` `Moose_M` `animalia_elk` `animalia_moose` | purchased-asset, code terms informal | data-port | `tools/blender/reskin_animalia_to_horse.py` `tools/blender/retarget_animalia_to_horse.py` `tools/blender/animalia_to_horse_map.json` `tools/blender/measure_animalia_clips.py` `tools/blender/animalia_elk_clip_measure.json` `tools/blender/animalia_moose_clip_measure.json` `tools/gen_animalia_anim_clips.ps1` `docs/features/animalia-elk-moose.md`; meshes, clips and textures in `LOTRLOME_Armory/AssetSources/creature/elk/` and their Kit packages in `LOTRLOME_Armory/Assets/creature/elk/` (live, outside the repo) | cleared |
 | Yotthani DualWield handoff, MithrilForge | `MithrilForge` `DualWield` `Bannerlord_Animation_Handoff` `TpacTool-bannerlord` | MIT (MithrilForge); the handoff document was shared with the maintainer by its author, no licence stated | comparison-only | (none; restated facts in `docs/reference/tpac-static-prop-authoring.md`, the animation reference docs and `docs/reference/engine/mission-frame-threads-and-native-costs.md`; the measurement cited in `docs/features/butter-lib-distance-matrix.md`) | cleared |
-| Yotthani `bannerlord` repository (DualWield, FaceLearner) | `yotthani/bannerlord` `HoN/DualWield` `FaceLearner` `FaceLearner.HeadExtract` | UNKNOWN (no licence file; shared with the maintainer by its author) | comparison-only | (none; restated facts in `docs/reference/scripted-melee-strikes.md`, `docs/reference/head-mesh-and-groom-authoring.md` and `docs/reference/engine/mission-frame-threads-and-native-costs.md`) | uncleared |
+| Yotthani `bannerlord` repository (DualWield, FaceLearner) | `yotthani/bannerlord` `HoN/DualWield` `FaceLearner` `FaceLearner.HeadExtract` | MIT, (c) 2026 yotthani (the maintainer's statement of 2026-10-09; no root `LICENSE` yet, asked for; shared with the maintainer by its author) | comparison-only | (none; restated facts in `docs/reference/scripted-melee-strikes.md`, `docs/reference/head-mesh-and-groom-authoring.md` and `docs/reference/engine/mission-frame-threads-and-native-costs.md`) | cleared |
 | Yotthani VanillaTuning | `VanillaTuning` `HoN/VanillaTuning` `ShaderCompileNotice` | MIT, (c) 2026 yotthani (`HoN/VanillaTuning/LICENSE`, since `1b9ce3ba`, 2026-10-07) | verbatim-port | `Main/Features/ShaderCompileNotice/**` `Main/Features/MissionStartGuard/**` `Main/Features/SkeletonBuffer/**` `Main/Features/NameplateCull/**` `Main/Features/MapViewRelease/**`; their adapters `Main/Adapters/{I,}{MissionStartGuard,SkeletonBufferMemory,SkeletonBufferEngine,NameplateCull,MapViewRelease}Adapter.cs`; their tests `TAOM.Tests/Features/{MissionStartGuard,SkeletonBuffer,NameplateCull,MapViewRelease}/**` | cleared |
 | Yotthani ShaderCacheKeeper | `ShaderCacheKeeper` `yotthani/bannerlord` `HoN/ShaderCacheKeeper` `xinput9_1_0.dll` | MIT, (c) 2026 yotthani (its own `LICENSE`) | verbatim-port | `Native/ShaderCacheKeeper/**`; the built `bin/Win64_Shipping_Client/xinput9_1_0.dll` shipped through the launcher manifest | cleared |
 | Ghidra | `Ghidra` `NationalSecurityAgency/ghidra` `pyghidra` | Apache-2.0 | interop-only | `tools/native_decompile.py` runs the installed tool (see detail) | cleared |
@@ -310,7 +310,7 @@ the v1.5.3 client with TAOM's tools; the rest is tagged as yotthani's in
 [`engine/mission-frame-threads-and-native-costs.md`](engine/mission-frame-threads-and-native-costs.md). Review:
 [`docs/reviews/adopt-mithrilforge-engine-perf-2026-10-02.md`](../reviews/adopt-mithrilforge-engine-perf-2026-10-02.md).
 
-Fourth pass on 2026-10-06: `docs/engine/*` and `docs/perf-audit/*` at commit `2e6fe97`, read in a local clone. The ButterLib Distance Matrix stall (#740) was measured there (`docs/engine/perf.md`); TAOM's fix is its own (it switches ButterLib's subsystem off by reflection, from ButterLib's MIT code), and yotthani's patch code in the unlicensed `yotthani/bannerlord` repository was not read. No code was copied. The ButterLib switch it led to was reviewed in [`docs/reviews/rca-butterlib-distance-matrix-2026-10-06.md`](../reviews/rca-butterlib-distance-matrix-2026-10-06.md).
+Fourth pass on 2026-10-06: `docs/engine/*` and `docs/perf-audit/*` at commit `2e6fe97`, read in a local clone. The ButterLib Distance Matrix stall (#740) was measured there (`docs/engine/perf.md`); TAOM's fix is its own (it switches ButterLib's subsystem off by reflection, from ButterLib's MIT code), and yotthani's patch code in the `yotthani/bannerlord` repository, which had no licence file then, was not read. No code was copied. The ButterLib switch it led to was reviewed in [`docs/reviews/rca-butterlib-distance-matrix-2026-10-06.md`](../reviews/rca-butterlib-distance-matrix-2026-10-06.md).
 
 Fifth pass on 2026-10-08 at `4fab7e19`: the product projects (`TpacFormat`, `Tpac`, `Core`, `Anim`, `Cli`) no longer
 reference the `TpacTool-bannerlord` fork; only the two test projects do, as a second reader. The skeleton-buffer
@@ -323,12 +323,13 @@ Nothing was copied. Review: [`docs/reviews/adopt-yotthani-2026-10-08.md`](../rev
 yotthani's private monorepo `yotthani/bannerlord`, shared with the maintainer by its author (the same collaborator as
 the two sections above), read on 2026-09-30 at commit `8e040ab` through `/adopt-external`. It holds the DualWield
 mod's source (`HoN/DualWield`), the FaceLearner mod and its head tools (`bn faces/`), and other work that was
-surveyed and parked. The repository carries no licence file, so the terms are `UNKNOWN`. Nothing in TAOM derives from
+surveyed and parked. The repository had no licence file then, so the terms were `UNKNOWN`. Nothing in TAOM derives from
 it: no code, data or asset was taken. Engine and file-format facts from DualWield and FaceLearner were checked against
 the v1.5.3 decompile where possible and restated in TAOM's words, each tagged as verified by TAOM or as yotthani's
 measurement, in [`scripted-melee-strikes.md`](scripted-melee-strikes.md) and
-[`head-mesh-and-groom-authoring.md`](head-mesh-and-groom-authoring.md). Restating facts needs no licence; the row
-stays `uncleared` until the terms are known, and a licence line from yotthani would clear it. Review:
+[`head-mesh-and-groom-authoring.md`](head-mesh-and-groom-authoring.md). Restating facts needs no licence. On
+2026-10-09 the maintainer stated that yotthani made everything MIT, which clears the row; the repository has no root
+licence file yet, so yotthani is asked to add one. Review:
 [`docs/reviews/adopt-yotthani-bannerlord-2026-09-30.md`](../reviews/adopt-yotthani-bannerlord-2026-09-30.md).
 
 Read again on 2026-10-02 at commit `2e44db7` for its performance work only (`HoN/DualWield/Core/DwPerf.cs`, the
@@ -337,7 +338,7 @@ comparison only, nothing taken. Review:
 [`docs/reviews/adopt-mithrilforge-engine-perf-2026-10-02.md`](../reviews/adopt-mithrilforge-engine-perf-2026-10-02.md).
 
 Read again on 2026-10-08 at `1ad701bd`, the whole repository this time: `HoN/VanillaTuning` (now MIT, its own row),
-`HoN/PerfProbe` and `HoN/SaveBench` feature by feature (ideas only: no licence), the HoN features TAOM carries (their
+`HoN/PerfProbe` and `HoN/SaveBench` feature by feature (ideas only; they had no licence file then), the HoN features TAOM carries (their
 rows above and below), and the rest surveyed. Review:
 [`docs/reviews/adopt-yotthani-2026-10-08.md`](../reviews/adopt-yotthani-2026-10-08.md).
 
@@ -375,8 +376,8 @@ touched.
 
 ### Yotthani ShaderCacheKeeper
 
-`HoN/ShaderCacheKeeper` in the same repository carries its own MIT licence ((c) 2026 yotthani), unlike the rest of
-the repository, so its row is separate and `cleared`. Read in full on 2026-10-06 at commit `1bbdc17d`, and vendored
+`HoN/ShaderCacheKeeper` in the same repository carries its own MIT licence file ((c) 2026 yotthani), one of the two
+folders of the repository that has one, so its row is separate and `cleared`. Read in full on 2026-10-06 at commit `1bbdc17d`, and vendored
 as code: `keeper.c`, `keeper.rc`, `build.py`, `LICENSE` and `test/host.c` are his files with TAOM's changes (listed at
 the top of `keeper.c`); `test/run_tests.ps1` is his test reworked to run hermetically; `keeper.def`, `README.md` and
 `test/parse_tests.c` are TAOM's. The built DLL ships in the game's `bin` folder, outside every module, and its MIT
@@ -429,7 +430,7 @@ than `n/a`. The reasoning recorded at the time was that BannerlordCoop is a publ
 shipping generated sources in plaintext and carries no policy forbidding it, unlike BT. That
 reasoning is worth confirming against the project's actual licence rather than left as an inference.
 
-### Yotthani HoN mods, the external developer drop `Downloads/Features_fixed/` (UNCLEARED)
+### Yotthani HoN mods, the external developer drop `Downloads/Features_fixed/`
 
 Seven features were ported from a drop of decompiled C# supplied by an external developer:
 SiegeDismount, MixedFormations, SmartCavalryAI, FiefManagement, QuickActions, EquipPresets,
@@ -445,8 +446,11 @@ not a byte comparison. `FiefManagement` may instead come from LOTRAOM: TAOM's po
 "port LOTRAOM remote-fief manage screen". Review:
 [`docs/reviews/adopt-yotthani-2026-10-08.md`](../reviews/adopt-yotthani-2026-10-08.md).
 
-No license, grant, or terms are recorded anywhere in the repo. Several sites declare the derivation as
-verbatim rather than behavioural:
+Until 2026-10-09 no license, grant, or terms were recorded anywhere in the repo. On 2026-10-09 the maintainer
+stated: "Yotthani made everything MIT." That covers this code. `yotthani/bannerlord` has no root licence file yet
+(only `HoN/VanillaTuning` and `HoN/ShaderCacheKeeper` carry one), so yotthani is asked to add one. Several sites
+declare the derivation as verbatim rather than behavioural, which MIT allows with the notice now in
+`Main/_Module/THIRD-PARTY-LICENSES.txt`:
 
 - `Main/Features/CompanionTactics/Roles/Models/CombatRole.cs:5` says "Ported verbatim from the original developer's drop"
 - `Main/Features/EquipPresets/Models/HoNEquipmentPreset.cs:7` says "Mirrors the decompiled-source shape verbatim"
@@ -456,8 +460,9 @@ Two artefacts carry the donor's identity into TAOM's own public surface: the `Ho
 (`HoNFormationPreset`, `HoNEquipmentPreset`, `HoNPresetItemReference`) and the deliberate reuse of the
 donor's TaleWorlds SaveSystem `BaseId 726900601` so its saves import.
 
-**To resolve:** a licence line from yotthani for `yotthani/bannerlord` (MIT, as on VanillaTuning and
-ShaderCacheKeeper); the drop folder itself is gone.
+**Resolved 2026-10-09** by the maintainer's statement above; the MIT notice is in
+`Main/_Module/THIRD-PARTY-LICENSES.txt`. **Still owed:** a root `LICENSE` in `yotthani/bannerlord`, asked of
+yotthani. The drop folder itself is gone.
 
 **Formation preset Save and Load (2026-10-09, #779).** Written after the behaviour of yotthani's HoN
 `FormationPresetManager.cs` (read at `1ad701bd`): capture each formation's class, captain and hero troops; apply the
@@ -466,7 +471,7 @@ model flows where the HoN code sets the class selector by reflection. The new fi
 (`Main/Features/CompanionTactics/FormationPresets/FormationPresetLayout.cs`, `OOBPresetApplier.cs`,
 `IOOBPresetApplier.cs`, `Models/PresetApplyResult.cs`), the Save and Load paths of `UI/OOBButtonsVM.cs` and their
 tests are TAOM's own code. Row 76's `Main/Features/CompanionTactics/**` pattern covers them too: they are a
-behavioural port, not verbatim, and the row stays uncleared until the licence line above.
+behavioural port, not verbatim, under the same MIT terms.
 
 ### TAOM_Promoted / RF_Promoted (UNCLEARED)
 
@@ -475,12 +480,13 @@ as a "TAOM native rewrite of the `TAOM_Promoted` ('RF_Promoted') donor mod". `Do
 records "Ported from the donor mod's `FindUpgradedDescendantInParty`". No terms recorded. Distinct from
 the `Features_fixed` drop.
 
-### TransferbuttonMenu (UNCLEARED)
+### TransferbuttonMenu
 
 `Main/Features/QuickActions/**` is declared at [`docs/features/quick-actions.md:5`](../features/quick-actions.md)
-as "Ported from the external 1.2.x `TransferbuttonMenu` module". No terms recorded. The module is yotthani's:
+as "Ported from the external 1.2.x `TransferbuttonMenu` module". No terms were recorded until 2026-10-09. The module is yotthani's:
 `yotthani/bannerlord` holds it as `HoN/TransferbuttonMenu`, with the same settings and actions (Sell Damaged, Sell
-Low Value, Unequip), compared on 2026-10-08. The licence line asked for in the section above would clear it too.
+Low Value, Unequip), compared on 2026-10-08. The maintainer's statement of 2026-10-09 in the section above (MIT)
+clears it too; its notice is the HoN section of `Main/_Module/THIRD-PARTY-LICENSES.txt`.
 
 ### ServeAsSoldier (UNCLEARED)
 

@@ -10,7 +10,7 @@ Three independently-toggleable battle-tactics features bundled in one TAOM modul
 
 Ported from `Downloads/Features_fixed/CompanionTactics/` (Bannerlord 1.3 mod template) for TAOM v1.3.15. Patch35 reserves the Harmony category. SaveableTypeDefiner BaseId 726900601 (matches the original mod for save-import compat).
 
-Formation presets (Save and Load) follow the behaviour of yotthani's HoN FormationPresetManager. Its licence is unknown, so only the behaviour is followed; the code is TAOM's own. See [adopt-yotthani-2026-10-08.md](../reviews/adopt-yotthani-2026-10-08.md) and [provenance-register.md](../reference/provenance-register.md).
+Formation presets (Save and Load) follow the behaviour of yotthani's HoN FormationPresetManager; nothing was copied, and the code is TAOM's own. His HoN code is MIT (the maintainer's statement of 2026-10-09), and CompanionTactics, which began as his HoN mod, carries his MIT notice in `Main/_Module/THIRD-PARTY-LICENSES.txt`. See [adopt-yotthani-2026-10-08.md](../reviews/adopt-yotthani-2026-10-08.md) and [provenance-register.md](../reference/provenance-register.md).
 
 ## Why This Exists
 

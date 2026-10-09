@@ -7,7 +7,8 @@ _Module/bin/, the audio under _Module/ModuleSounds/, the fonts under
 _Module/GUI/Fonts/, and the runtime fonts under _Module/GUI/FactionUI/RuntimeFonts/.
 Each is listed below. It also covers one file the TAOM launcher installs outside the
 module, in the game's bin folder: xinput9_1_0.dll (ShaderCacheKeeper). And it covers
-the parts of TAOM.dll adapted from yotthani's VanillaTuning (MIT).
+the parts of TAOM.dll adapted from yotthani's VanillaTuning and from his Heir of
+Numenor (HoN) mods (MIT).
 
 TAOM's own art, 3D and 2D assets, world map, and game data are NOT covered here.
 They are original TAOM work licensed under CC BY-NC-SA 4.0; see LICENSE-CONTENT.md
@@ -152,6 +153,20 @@ the mission-start guard, the skeleton-buffer guard and watch (whose first-pool
 machine code block is his), the settlement nameplate cull and the map-view release (sources:
 Main/Features/MissionStartGuard/, SkeletonBuffer/, NameplateCull/ and MapViewRelease/,
 and their adapters in Main/Adapters/, in the TAOM repository).
+
+Copyright (c) 2026 yotthani
+Licensed under the MIT License (full text above, under RUNTIME LIBRARIES).
+
+----
+
+HEIR OF NUMENOR (HoN) PORTIONS  --  inside TAOM.dll
+
+TAOM.dll contains code ported from yotthani's Heir of Numenor (HoN) mods, with
+TAOM's changes: siege dismount, mixed formations, smart cavalry AI, fief management,
+quick actions (his TransferbuttonMenu), equipment presets and companion tactics
+(sources: Main/Features/SiegeDismount/, MixedFormations/, SmartCavalryAI/,
+FiefManagement/, QuickActions/, EquipPresets/ and CompanionTactics/ in the TAOM
+repository).
 
 Copyright (c) 2026 yotthani
 Licensed under the MIT License (full text above, under RUNTIME LIBRARIES).

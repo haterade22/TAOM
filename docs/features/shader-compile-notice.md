@@ -102,8 +102,8 @@ only; the translator run (`/localize`, paid) is owed.
 
 ## Changelog
 
-- 2026-10-06: added. Idea and measurements from yotthani's VanillaTuning `ShaderCompileNotice` (no licence; read,
-  then written anew for TAOM).
+- 2026-10-06: added. Idea and measurements from yotthani's VanillaTuning `ShaderCompileNotice` (no licence file then,
+  MIT since 2026-10-07; read, then written anew for TAOM).
 
 ## GitHub Issue
 

@@ -20,8 +20,10 @@ checked against the files or the binary named below.
 
 - **Safe to learn from:** yes. Nothing was cloned, built or run.
 - **Licences:** VanillaTuning is MIT since `1b9ce3ba` (2026-10-07, its own `LICENSE`, (c) 2026 yotthani), so its
-  code can be ported with the notice. ShaderCacheKeeper is MIT (vendored 2026-10-06). MithrilForge is MIT. Every
-  other folder of `yotthani/bannerlord` has no licence file: `UNKNOWN`, so only behaviour is ported from them.
+  code can be ported with the notice. ShaderCacheKeeper is MIT (vendored 2026-10-06). MithrilForge is MIT. On
+  2026-10-08 every other folder of `yotthani/bannerlord` had no licence file, so only behaviour was ported from
+  them. On 2026-10-09 Mike stated that yotthani made everything MIT; the repository has no root licence file yet,
+  so yotthani is asked to add one ("For yotthani", item 5).
 - **Runnable surface seen, not taken:** PerfProbe's alloc watch detours `ntdll!NtAllocateVirtualMemory` through
   MinHook with a hand-written stub, and its texture watch overwrites a D3D11 method-table slot; MithrilForge's
   perf scripts start and stop the game and write a `Bannerlord.exe.config` beside it; its PhysX cooker loads the
@@ -53,9 +55,9 @@ Mike approved the plan on 2026-10-08. Tier 1 is approved; Tier 2 waits for his w
 | 6 | This review, engine knowledge, provenance | | Tier 1, committed with items 1 to 4 (its links point at their files) |
 | 7 | Focus-ray throttle (0.2 to 0.3 ms per battle frame) | VanillaTuning `FocusRayPatch.cs` (MIT) | Tier 2, after a TAOM measurement |
 | 8 | Read MithrilForge's `perf.md` and `modding-kit.md` against TAOM's engine docs | MithrilForge (MIT) | Tier 2 |
-| 9 | Equipment-preset item locking | yotthani's `PresetManager.cs`, behaviour only | Tier 2 |
-| 10 | Time and GC per save in SaveLoadDiagnostics | PerfProbe `SaveDiagnostics.cs`, idea only | Tier 2 |
-| 11 | Auto-assign scoring extras; party-screen role icon | CompanionTactics, behaviour only | Tier 2 |
+| 9 | Equipment-preset item locking | yotthani's `PresetManager.cs` (MIT since 2026-10-09) | Tier 2 |
+| 10 | Time and GC per save in SaveLoadDiagnostics | PerfProbe `SaveDiagnostics.cs` (MIT since 2026-10-09) | Tier 2 |
+| 11 | Auto-assign scoring extras; party-screen role icon | CompanionTactics (MIT since 2026-10-09) | Tier 2 |
 
 Where TAOM's version beats the upstream one (decided in the plan, built with each item):
 
@@ -116,9 +118,11 @@ Where TAOM's version beats the upstream one (decided in the plan, built with eac
    scan for RIP-relative operands) wants its own issue.
 3. **`Main/Features/FiefManagement/UI/FiefManagementNavItemVM.cs`** has no reference outside its own file:
    a deletion for a separate change.
-4. **A licence line from yotthani** (MIT for the whole `bannerlord` repository, as on VanillaTuning and
-   ShaderCacheKeeper) would clear the seven features ported from his drop in May at once (QuickActions among
-   them, which the register also lists under `TransferbuttonMenu`).
+4. **Licence settled (2026-10-09):** Mike stated that yotthani made everything MIT. That clears the seven
+   features ported from his drop in May (QuickActions among them, which the register also lists under
+   `TransferbuttonMenu`) and the `yotthani/bannerlord` row; their MIT notice is in
+   `Main/_Module/THIRD-PARTY-LICENSES.txt`. The repository has no root licence file yet, so the ask to yotthani
+   ("For yotthani", item 5) is now for that file.
 
 ## Issue drafts (filed 2026-10-08 as #775 to #786, under the maintainer's "full control" instruction)
 
@@ -236,7 +240,8 @@ map-view-release (with your MIT notice). What we changed while porting, in case 
    `OnMissionBehaviorInitialize` itself still loops. TAOM instead swaps the six start calls inside
    `Mission.AfterStart` for helpers with a `try` and an exception filter: one transpiler, every module in any
    load order, the submodule callbacks and `MissionObject.AfterMissionStart` included.
-5. Would you add a licence line (MIT, as on VanillaTuning and ShaderCacheKeeper) for the rest of
-   `yotthani/bannerlord`? TAOM carries seven features that began as your HoN mods (SiegeDismount,
-   MixedFormations, SmartCavalryAI, FiefManagement, QuickActions, EquipPresets, CompanionTactics), and the
-   provenance register lists their terms as unknown.
+5. Thank you for making all of it MIT (Mike passed it on, 2026-10-09). Would you add a `LICENSE` file at the root
+   of `yotthani/bannerlord`, so the grant is written down where the code lives? Today only `HoN/VanillaTuning` and
+   `HoN/ShaderCacheKeeper` carry one. TAOM carries seven features that began as your HoN mods (SiegeDismount,
+   MixedFormations, SmartCavalryAI, FiefManagement, QuickActions, EquipPresets, CompanionTactics) and credits them
+   to you under MIT in its `THIRD-PARTY-LICENSES.txt`.
