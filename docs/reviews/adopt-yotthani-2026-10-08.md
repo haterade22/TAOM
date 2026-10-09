@@ -38,7 +38,7 @@ checked against the files or the binary named below.
 | One reservation site | of 210 RIP-relative references to `0xD9D160` in `.text`, one has `+0x9D0` within 40 bytes (`0x69CE1`, same function) |
 | One throw skips the mission's start | v1.5.4 `Mission.AfterStart` sets `CurrentState = State.Continuing` only after the submodule callbacks and every behaviour's `OnBehaviorInitialize`, `EarlyStart` and `AfterStart` loop (cache `Mission.cs:3815-3852`); every behaviour enters through `Mission.AddMissionBehavior` (`:4686`) |
 | TAOM's formation presets are half-built | `OOBButtonsVM.cs:149-153` (Load is a "Phase-1 stub") and `:185-193` (Save stores a name only) |
-| Custom Battle runs none of TAOM's damage-model mechanics | `Main/SubModule.cs:1350-1362` registers only the morale, stat and banner-bearer models off a `BasicGameStarter` (yotthani's balance notes say the same) |
+| Custom Battle ran none of TAOM's Combat Mechanics damage rules (fixed by #788) | `Main/SubModule.cs:1350-1362` registered only the morale, stat and banner-bearer models off a `BasicGameStarter`, plus one creature damage model (yotthani's balance notes say the same) |
 | The `external developer drop` is yotthani's HoN code | identical SaveSystem ids (726900501 with classes 101 and 102 for equipment presets, 726900601 with class 101 for formation presets), identical class and field names, the same layout maths and minority thresholds, and his 2026-09-30 restore commits from his 2026-04-29 release, a week before TAOM's 2026-05-07 port. The drop folder itself no longer exists, so this is a fit, not a byte comparison |
 
 ## Decisions
@@ -109,15 +109,18 @@ Where TAOM's version beats the upstream one (decided in the plan, built with eac
 
 ## Findings for Mike (no code here)
 
-1. **Custom Battle runs none of TAOM's seven damage-model mechanics** (crush-through, charge knockdown,
-   unstoppable, stagger, cleave, the troll health bonus): only morale, stat and banner models register there.
-   Confirm that is intended; Custom Battle balance tests do not show campaign combat.
+1. **Custom Battle ran none of TAOM's Combat Mechanics damage rules** (crush-through, charge knockdown,
+   unstoppable, stagger, cleave): Custom Battle had one TAOM damage model, which carried only the creature,
+   race ability and siege rules. Mike asked for the fix on 2026-10-09: #788, branch
+   `fix/custom-battle-damage-models`, RCA `rca-custom-battle-damage-2026-10-09.md`. The troll health bonus and
+   the career passives stay campaign only.
 2. **`tools/native_sig_author.py xref` scans 2.8 % of `.text`.** Its single capstone linear sweep stops at the
    first byte it cannot decode (RVA `0x48B36` on v1.5.4), so it reported 16 references to `0xD9D160` where a
    byte scan finds 210, and it missed the one at `0x69CE1`. A fix (sweep function by function, or a byte
    scan for RIP-relative operands) wants its own issue.
-3. **`Main/Features/FiefManagement/UI/FiefManagementNavItemVM.cs`** has no reference outside its own file:
-   a deletion for a separate change.
+3. **`Main/Features/FiefManagement/UI/FiefManagementNavItemVM.cs`** had no reference outside its own file: it
+   was meant for a "Fiefs (F6)" map-bar entry that was never built. Mike asked for the entry on 2026-10-09:
+   #789, branch `feat/fief-nav-button`, which adds the button and deletes the unused view model.
 4. **Licence settled (2026-10-09):** Mike stated that yotthani made everything MIT. That clears the seven
    features ported from his drop in May (QuickActions among them, which the register also lists under
    `TransferbuttonMenu`) and the `yotthani/bannerlord` row; their MIT notice is in
