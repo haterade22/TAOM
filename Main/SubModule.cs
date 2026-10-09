@@ -871,12 +871,10 @@ public class SubModule : MBSubModuleBase
             // + TroopProgression model registration block. Replaces all CareerPassiveHelper static
             // calls with instance-injected ICareerPassiveService.
             var careerPassives = IoC.Resolve<TAOM.Features.CareerSystem.ICareerPassiveService>();
-            // Hoisted: TaomVolunteerModel consumes ICulturalFeatsService for the village
-            // volunteer-respawn-rate feats (Dunland/Gundabad/Dol Guldur/Mordor); the cultural-feat
-            // model group reuses this same reference.
+            // Resolved once for the cultural-feat model group (RegisterCulturalFeatModels).
             var culturalFeats = IoC.Resolve<TAOM.Features.CulturalFeats.ICulturalFeatsService>();
 
-            RegisterProgressionAndIdentity(campaignStarter, careerPassives, culturalFeats);
+            RegisterProgressionAndIdentity(campaignStarter, careerPassives);
             RegisterRaceAgeAndFamily(campaignStarter);
             RegisterDiplomacyAndConflict(campaignStarter);
             RegisterCulturalFeatModels(campaignStarter, culturalFeats, careerPassives);
@@ -1033,8 +1031,7 @@ public class SubModule : MBSubModuleBase
     // former OnGameStart inline block — bodies are verbatim, order unchanged).
     private static void RegisterProgressionAndIdentity(
         CampaignGameStarter campaignStarter,
-        ICareerPassiveService careerPassives,
-        TAOM.Features.CulturalFeats.ICulturalFeatsService culturalFeats)
+        ICareerPassiveService careerPassives)
     {
         var racePersistenceService = IoC.Resolve<IRacePersistenceService>();
         campaignStarter.AddBehavior(new RacePersistenceBehavior(racePersistenceService));
@@ -1116,7 +1113,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomCharacterStatsModel(careerPassives,
             IoC.Resolve<TAOM.Features.CombatMechanics.IRaceCombatModifiersResolver>()));
         campaignStarter.AddModel(new TaomPartyWageModel(costService, careerPassives, wageModifiers, aiPartySize));
-        campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, culturalFeats, recruitmentAlignment));
+        campaignStarter.AddModel(new TaomVolunteerModel(volunteerService, recruitmentService, volunteerContextAdapter, IoC.Resolve<VolunteerProductionService>(), recruitmentAlignment));
 
         // Prisoner-recruitment morale waiver: no morale lost recruiting a prisoner of your own
         // faction or alignment side (Isengard taking on Mordor/Gundabad/Dunland troops). Vanilla
@@ -1202,7 +1199,7 @@ public class SubModule : MBSubModuleBase
     // Cultural feat models — Phase 9b #144/#176: dispatch logic extracted to
     // ICulturalFeatsService. Each model is a thin boundary that converts
     // CultureObject → ICultureFeatAdapter and delegates (gamemodels.md rule 4).
-    // `culturalFeats` is passed in (hoisted resolve, shared with TaomVolunteerModel).
+    // `culturalFeats` is passed in (hoisted resolve).
     private static void RegisterCulturalFeatModels(
         CampaignGameStarter campaignStarter,
         TAOM.Features.CulturalFeats.ICulturalFeatsService culturalFeats,

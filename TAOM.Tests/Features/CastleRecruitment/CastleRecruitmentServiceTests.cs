@@ -1,6 +1,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Features.CastleRecruitment;
+using TAOM.Features.CulturalFeats;
+using TAOM.Features.TroopProgression;
+using TAOM.Features.WarChronicle.Effects;
 
 namespace TAOM.Tests.Features.CastleRecruitment;
 
@@ -8,6 +11,7 @@ namespace TAOM.Tests.Features.CastleRecruitment;
 public class CastleRecruitmentServiceTests
 {
     private ICastleRecruitmentSettingsProvider _settings = null!;
+    private IWarEffectService _war = null!;
     private CastleRecruitmentService _sut = null!;
 
     [TestInitialize]
@@ -17,7 +21,11 @@ public class CastleRecruitmentServiceTests
         _settings.IsEnabled.Returns(true);
         _settings.IsAiEnabled.Returns(true);
         _settings.NotablesPerCastle.Returns(3);
-        _sut = new CastleRecruitmentService(_settings);
+        _war = Substitute.For<IWarEffectService>();
+        _war.GetMultiplier(Arg.Any<string?>(), Arg.Any<WarEffectKind>()).Returns(1f);
+        // The real production service: with no culture it runs no engine code, so this class needs no game.
+        _sut = new CastleRecruitmentService(
+            _settings, new VolunteerProductionService(Substitute.For<ICulturalFeatsService>(), _war));
     }
 
     // --- IsEnabled / IsAiEnabled gating ---
@@ -134,7 +142,7 @@ public class CastleRecruitmentServiceTests
     [TestMethod]
     public void GetSlotProductionProbability_Slot0_PositiveAndBelowOne()
     {
-        var p = _sut.GetSlotProductionProbability(0);
+        var p = _sut.GetSlotProductionProbability(0, null, false);
         Assert.IsTrue(p > 0f && p < 1f, $"expected (0,1), got {p}");
     }
 
@@ -142,14 +150,14 @@ public class CastleRecruitmentServiceTests
     public void GetSlotProductionProbability_MonotonicallyDecreasing()
     {
         for (int i = 0; i < 5; i++)
-            Assert.IsTrue(_sut.GetSlotProductionProbability(i) > _sut.GetSlotProductionProbability(i + 1),
+            Assert.IsTrue(_sut.GetSlotProductionProbability(i, null, false) > _sut.GetSlotProductionProbability(i + 1, null, false),
                 $"slot {i} should exceed slot {i + 1}");
     }
 
     [TestMethod]
     public void GetSlotProductionProbability_NegativeIndex_ReturnsZero()
     {
-        Assert.AreEqual(0f, _sut.GetSlotProductionProbability(-1), 0.0001f);
+        Assert.AreEqual(0f, _sut.GetSlotProductionProbability(-1, null, false), 0.0001f);
     }
 
     [TestMethod]
@@ -157,10 +165,44 @@ public class CastleRecruitmentServiceTests
     {
         for (int i = 0; i < 6; i++)
         {
-            var p = _sut.GetSlotProductionProbability(i);
+            var p = _sut.GetSlotProductionProbability(i, null, false);
             Assert.IsTrue(p >= 0f && p <= 1f, $"slot {i} probability {p} outside [0,1]");
         }
     }
+
+    [TestMethod]
+    public void GetSlotProductionProbability_NoKingdom_IsTheFixedCurve()
+    {
+        for (int i = 0; i < 6; i++)
+            Assert.AreEqual(Curve(i), _sut.GetSlotProductionProbability(i, null, false), 1e-6f, $"slot {i}");
+    }
+
+    [TestMethod]
+    public void GetSlotProductionProbability_KingdomWithAVolunteerEffect_ScalesTheCurve()
+    {
+        _war.GetMultiplier("k1", WarEffectKind.VolunteerRate).Returns(1.2f);
+
+        for (int i = 0; i < 6; i++)
+            Assert.AreEqual(Curve(i) * 1.2f, _sut.GetSlotProductionProbability(i, "k1", false), 1e-6f, $"slot {i}");
+    }
+
+    [TestMethod]
+    public void GetSlotProductionProbability_PlayerClanCastle_IgnoresTheVolunteerEffect()
+    {
+        _war.GetMultiplier("k1", WarEffectKind.VolunteerRate).Returns(1.2f);
+
+        Assert.AreEqual(Curve(0), _sut.GetSlotProductionProbability(0, "k1", true), 1e-6f);
+    }
+
+    [TestMethod]
+    public void GetSlotProductionProbability_NegativeIndex_AsksNoMultiplier()
+    {
+        _sut.GetSlotProductionProbability(-1, "k1", false);
+
+        _war.DidNotReceiveWithAnyArgs().GetMultiplier(default, default);
+    }
+
+    private static float Curve(int slot) => 0.75f * (float)System.Math.Pow(0.85, slot + 1);
 
     private static int Sum(System.Collections.Generic.IReadOnlyDictionary<CastleNotableOccupation, int> d)
     {

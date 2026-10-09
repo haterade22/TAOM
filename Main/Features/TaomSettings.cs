@@ -295,6 +295,18 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "How many battles/sieges you must take part in before either side can win. Default 5.")]
     public int MomentumMinPlayerEvents { get; set; } = 5;
 
+    // --- War of the Ring / Rally (#765) ---
+
+    [SettingPropertyGroup("War of the Ring/Rally")]
+    [SettingPropertyBool("Enable Rally", Order = 0, RequireRestart = false,
+        HintText = "Gives AI kingdoms that have lost a large share of their towns and castles a small, temporary boost: a higher daily volunteer roll in their towns, castles and villages (empty recruit slots fill faster and waiting recruits are promoted sooner) and faster escapes for their captured lords. Never applies to a kingdom you rule, or to your own clan's settlements and lords; its lords in your prisons escape faster too. Takes effect at the next daily tick; turning it off removes every rally effect. Default on.")]
+    public bool WarRallyEnabled { get; set; } = true;
+
+    [SettingPropertyGroup("War of the Ring/Rally")]
+    [SettingPropertyFloatingInteger("War Effect Strength", 0.0f, 2.0f, "#0.00", Order = 1, RequireRestart = false,
+        HintText = "Scales every War of the Ring catch-up and event effect (a higher daily volunteer roll, which fills recruit slots faster and promotes waiting recruits sooner; faster escapes of captured lords). 0 turns them off, 1 is the authored size, 2 doubles it. Default 1.")]
+    public float WarEffectStrength { get; set; } = 1.0f;
+
     // --- Battle Balance / Troop Power ---
 
     [SettingPropertyGroup("Battle Balance/Troop Power")]

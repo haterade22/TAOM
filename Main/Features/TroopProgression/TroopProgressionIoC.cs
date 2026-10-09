@@ -15,5 +15,7 @@ public static class TroopProgressionIoC
         // Phase 9b #148 P2 — moved from global Main/IoC.cs; only consumer is TaomVolunteerModel
         // in this feature, so registration belongs here (cohesion).
         container.Register<IVolunteerContextAdapter, VolunteerContextAdapter>(Reuse.Singleton);
+        // The daily volunteer probability: culture feats plus the War Chronicle multiplier (TaomVolunteerModel).
+        container.Register<VolunteerProductionService>(Reuse.Singleton);
     }
 }

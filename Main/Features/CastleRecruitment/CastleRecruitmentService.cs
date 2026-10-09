@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TAOM.Features.TroopProgression;
 
 namespace TAOM.Features.CastleRecruitment;
 
@@ -16,10 +17,12 @@ public class CastleRecruitmentService : ICastleRecruitmentService
     };
 
     private readonly ICastleRecruitmentSettingsProvider _settings;
+    private readonly VolunteerProductionService _production;
 
-    public CastleRecruitmentService(ICastleRecruitmentSettingsProvider settings)
+    public CastleRecruitmentService(ICastleRecruitmentSettingsProvider settings, VolunteerProductionService production)
     {
         _settings = settings;
+        _production = production;
     }
 
     public bool IsEnabled => _settings.IsEnabled;
@@ -40,7 +43,7 @@ public class CastleRecruitmentService : ICastleRecruitmentService
         return dict;
     }
 
-    public float GetSlotProductionProbability(int slotIndex)
+    public float GetSlotProductionProbability(int slotIndex, string? kingdomKey, bool ownerIsPlayerClan)
     {
         if (slotIndex < 0)
             return 0f;
@@ -48,6 +51,9 @@ public class CastleRecruitmentService : ICastleRecruitmentService
         // (0.75 * pow(~0.85, index+1)) without the faction-fief term that requires the engine
         // settlement graph (and NREs for castles).
         float p = 0.75f * (float)Math.Pow(0.85, slotIndex + 1);
-        return p < 0f ? 0f : p > 1f ? 1f : p;
+        p = p < 0f ? 0f : p > 1f ? 1f : p;
+        // The War Chronicle's VolunteerRate multiplier of the owner's kingdom (#765), as towns and
+        // villages get it through TaomVolunteerModel. No culture: castles never had the respawn feats.
+        return _production.Compute(p, null, kingdomKey, ownerIsPlayerClan);
     }
 }

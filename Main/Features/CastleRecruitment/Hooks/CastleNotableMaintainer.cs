@@ -138,10 +138,14 @@ internal sealed class CastleNotableMaintainer
     /// <summary>Castle-safe mirror of vanilla
     /// <c>RecruitmentCampaignBehavior.UpdateVolunteersOfNotablesInSettlement</c> (which skips castles,
     /// and whose production model NREs for them). Uses the service's pure slot probability instead of
-    /// <c>VolunteerModel.GetDailyVolunteerProductionProbability</c>.</summary>
+    /// <c>VolunteerModel.GetDailyVolunteerProductionProbability</c>, never calling the model for a castle.
+    /// The owner's kingdom and player-clan facts are read once per castle for the War Chronicle's
+    /// volunteer multiplier (#765).</summary>
     private void FillCastleVolunteers(Settlement castle)
     {
         int maxTier = Campaign.Current.Models.VolunteerModel.MaxVolunteerTier;
+        string? kingdomKey = castle.OwnerClan?.Kingdom?.StringId;
+        bool ownerIsPlayerClan = castle.OwnerClan != null && castle.OwnerClan == Clan.PlayerClan;
         foreach (Hero notable in castle.Notables)
         {
             if (!notable.CanHaveRecruits || !notable.IsAlive)
@@ -154,7 +158,7 @@ internal sealed class CastleNotableMaintainer
 
             for (int i = 0; i < 6; i++)
             {
-                if (MBRandom.RandomFloat >= _service.GetSlotProductionProbability(i))
+                if (MBRandom.RandomFloat >= _service.GetSlotProductionProbability(i, kingdomKey, ownerIsPlayerClan))
                     continue;
                 CharacterObject current = notable.VolunteerTypes[i];
                 if (current == null)

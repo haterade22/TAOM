@@ -17,6 +17,7 @@ using TAOM.Features.PartyIconScale;
 using TAOM.Features.QuickActions;
 using TAOM.Features.RealmBorders;
 using TAOM.Features.TimeAcceleration;
+using TAOM.Features.WarChronicle;
 using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features;
@@ -56,6 +57,8 @@ public class CampaignHotPathSettingsProvidersTests
     // #746: read every campaign frame (supply lines always, the field camp while it stands).
     [DataRow(typeof(SupplyLinesSettingsProvider))]
     [DataRow(typeof(CampSettingsProvider))]
+    // #765: the war-effect strength is re-read by the registry's daily re-bake.
+    [DataRow(typeof(WarChronicleSettingsProvider))]
     public void OnlyTheLazySettingsAccessor_ReadsTheMcmInstance(Type provider)
     {
         var accessor = provider.GetProperty("Settings", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
@@ -84,6 +87,7 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(ITimeAccelerationSettingsProvider), typeof(TimeAccelerationSettingsProvider))]
     [DataRow(typeof(ISupplyLinesSettingsProvider), typeof(SupplyLinesSettingsProvider))]
     [DataRow(typeof(ICampSettingsProvider), typeof(CampSettingsProvider))]
+    [DataRow(typeof(IWarChronicleSettingsProvider), typeof(WarChronicleSettingsProvider))]
     public void Provider_ResolvesFromARealContainer(Type service, Type implementation)
     {
         using var container = new Container();

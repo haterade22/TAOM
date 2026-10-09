@@ -22,6 +22,8 @@ public interface ICastleRecruitmentService
     /// <summary>Per-slot daily probability that a notable produces/upgrades a volunteer in
     /// volunteer slot <paramref name="slotIndex"/> (0..5). A monotonically-decreasing curve
     /// mirroring vanilla's shape; pure so it is unit-testable and castle-safe (vanilla's own
-    /// production model NREs for castles).</summary>
-    float GetSlotProductionProbability(int slotIndex);
+    /// production model NREs for castles). The curve is then scaled by the War Chronicle's
+    /// VolunteerRate multiplier of <paramref name="kingdomKey"/> (the owner clan's kingdom id, null
+    /// for none), except for a castle of the player's own clan.</summary>
+    float GetSlotProductionProbability(int slotIndex, string? kingdomKey, bool ownerIsPlayerClan);
 }

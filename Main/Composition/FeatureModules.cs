@@ -29,5 +29,6 @@ internal static class FeatureModules
         new Features.CreatureSiegeRole.CreatureSiegeRoleModule(),
         new Features.ButterLibDistanceMatrix.ButterLibDistanceMatrixModule(),
         new Features.MapEventGuard.StuckBattleModule(),
+        new Features.WarChronicle.WarChronicleModule(),
     };
 }

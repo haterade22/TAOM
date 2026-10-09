@@ -1,0 +1,11 @@
+[WarLedger] v=1 t=kingdom cid=c1 day=12 phase=FullWar k=empire_w side=free ai=1 war=1 towns=3 castles=1 pts=7 base=10 loss=0.300 cap=1 str=1234 pris=2 tier=1 vr=1.10 pe=1.50
+[WarLedger] v=1 t=kingdom cid=c1 day=0 phase=Peace k=rebels side=neutral ai=1 war=0 towns=0 castles=1 pts=1 base=na loss=na cap=na str=0 pris=0 tier=0 vr=1.00 pe=1.00
+[WarLedger] v=1 t=side cid=c1 day=12 side=evil pts=31 base=40 alive=3
+[WarLedger] v=1 t=side cid=c1 day=5 side=neutral pts=0 base=na alive=0
+[WarLedger] v=1 t=share cid=c1 day=12 share=0.524
+[WarLedger] v=1 t=share cid=c1 day=13 share=0.000
+[WarLedger] v=1 t=share cid=c1 day=14 share=na
+[WarLedger] v=1 t=event cid=c1 day=40 ev=tier k=empire_w from=0 to=1 loss=0.250
+[WarLedger] v=1 t=event cid=c1 day=70 ev=destroyed k=vlandia
+[WarLedger] v=1 t=event cid=c1 day=71 ev=chronicle id=hornburg outcome=Held
+[WarLedger] v=1 t=event cid=c1 day=41 ev=tier k=k from=0 to=2 loss=0.000

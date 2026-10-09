@@ -49,8 +49,10 @@ public class ConsoleCommandBindingTests
 
     // Read-only output uses `print_` and nothing else. Enumerated across all 130 commands in the
     // v1.4.7 dump: `print_` appears 9 times in the campaign group, `dump_` zero times anywhere.
-    // Admitting synonyms is how the convention drifts, so they fail the build instead of review.
-    private static readonly string[] BannedNamePrefixes = { "dump_", "list_", "get_" };
+    // Admitting synonyms is how the convention drifts, so they fail the build instead of review. The ban
+    // covers any '_'-separated token, not only the first: 'war_ledger_dump' is the same synonym moved
+    // to the end. A raw substring check would trip on 'target', 'budget' or 'playlist'.
+    private static readonly string[] BannedNameTokens = { "dump", "list", "get" };
 
     private static readonly Regex NameShape = new Regex("^[a-z][a-z0-9_]*$", RegexOptions.Compiled);
 
@@ -143,7 +145,7 @@ public class ConsoleCommandBindingTests
 
     /// <summary>
     /// Settles the naming convention at build time instead of at review time, across however many
-    /// commands the suite grows to. See <see cref="BannedNamePrefixes"/> for the evidence.
+    /// commands the suite grows to. See <see cref="BannedNameTokens"/> for the evidence.
     /// </summary>
     [TestMethod]
     public void ConsoleCommands_AllAttributedMethods_UseLowerSnakeCaseNames()
@@ -155,9 +157,10 @@ public class ConsoleCommandBindingTests
             Assert.IsTrue(NameShape.IsMatch(commandName),
                 $"{Describe(method)} declares '{commandName}'; console names must match ^[a-z][a-z0-9_]*$.");
 
-            foreach (var banned in BannedNamePrefixes)
+            var tokens = commandName.Split('_');
+            foreach (var banned in BannedNameTokens)
             {
-                Assert.IsFalse(commandName.StartsWith(banned, StringComparison.Ordinal),
+                Assert.IsFalse(tokens.Contains(banned),
                     $"{Describe(method)} declares '{commandName}'. Read-only commands use the 'print_' prefix "
                     + $"(vanilla uses it 9 times and '{banned}' zero times). See docs/features/dev-console.md.");
             }
