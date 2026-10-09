@@ -1021,3 +1021,11 @@ opposite of the comment above it. The unit tests passed: they pinned the service
 - **Why missed:** `TaomCombatMechanicsModel` kept two `if (IsHorseCharge)` routing guards, which gamemodels.md rule 4 forbids in an override body, because its own header called them "the parent's accepted idiom". No ADR and no `.ai/review-reference.md` "Intentional Patterns" entry records that idiom; the claim outlived several reviews and the #737 plan because each reader took the file's account of itself.
 - **Prevent:** before keeping code a rule forbids, find its exception in `.ai/review-reference.md` "Intentional Patterns" or an ADR. With none, fix the code (here each facade declines the hits it does not own, so the override is a `??` chain) or record the exception with its reason; either way the excusing comment goes.
 - **Source:** `docs/reviews/rca-combat-mechanics-model-split-2026-10-05.md` F1.
+
+### A flat ApplyFlat term goes after the last AddFactor
+`ApplyFlat` divides out only the factors already on the number. The career party-size count ran before
+the AI lord scaling added its factor, so "+4 party size" became about +12 under a 3x host setting.
+- **Why missed:** the helper's comment promised it worked whatever the call order.
+- **Prevent:** call `ApplyFlat` after every `AddFactor` in the model, and pin the order with a
+  call-token test.
+- **Source:** `docs/reviews/rca-career-e1e3-2026-10-08.md` (WIRE-02).

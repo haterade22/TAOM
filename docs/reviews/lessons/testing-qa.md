@@ -1686,3 +1686,15 @@ yotthani's `save-fast` patch cut allocation and was byte-identical to vanilla on
 - **Why missed:** the Lindon survival-bonus test copied `BattleBalanceConfigProvider`'s `JsonConvert.DeserializeObject<T>(json)`. Json.NET's default `ObjectCreationHandling.Auto` reuses a pre-initialised dictionary property and merges the file's keys into it, so with the compiled default also holding `lindon`, the "file has no lindon row" assert could never fire. RED had been checked only when both rows were absent.
 - **Prevent:** when a test pins what a JSON file carries and the target class initialises a collection, deserialize with `ObjectCreationHandling.Replace`, then prove RED by removing the row from the file while the compiled default still has it.
 - **Source:** `docs/reviews/rca-lindon-balance-tables-2026-10-06.md` finding 1.
+
+### A rule that reads a parsed field needs a shipped-data test that the field is populated
+`CareerChoiceDefinition.GroupId` was empty for all 2,100 shipped group choices because the loader read
+it from an attribute no nested choice carries. The tier gate, the keystone rule and the foreign-choice
+repair all keyed on it and silently did nothing; every test built the definitions by hand with the
+field set, and the one click test drove an unbound method instead of the command the prefab binds.
+- **Why missed:** the tests encoded the author's belief about the data, not the parser's output. Second
+  occurrence of the stubbed-collaborator lesson in `state-lifecycle-save.md`.
+- **Prevent:** for every rule that reads a field the loader fills, add one test over the SHIPPED data
+  that the field is populated, and drive behaviour tests through the command the UI binds
+  (`Command.Click`), never a sibling method.
+- **Source:** `docs/reviews/rca-career-e1e3-2026-10-08.md` (#766, W1-01).

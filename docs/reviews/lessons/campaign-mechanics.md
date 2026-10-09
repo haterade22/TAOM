@@ -563,3 +563,15 @@ never finishes. `IsAuthority` also fails open under BannerlordTogether.
 - **Prevent:** a world-mutating pass over shared entities (battles, parties, settlements) either asks who controls each
   entity or stands down while `IsSessionActive || ShouldDeferToHost`, and says which in `coop-interop.md`'s gated table.
 - **Source:** `docs/reviews/rca-stuck-battle-guard-2026-10-06.md` row 2 (Engine and Data-flow lenses, independently).
+
+### A map event with a winner is not always a battle, and RaidCompleted is not always a loot
+A looting raid ends as an attacker victory, so `OnMapEventEnded` paid the battle credit on every raid;
+`RaidCompleted` reports the attacker as winner for a won militia fight too, so a resisted raid paid
+`per_raid` twice. The first fix keyed the credit on the event type and then zeroed real lord fights the
+engine folds into raid and extortion events.
+- **Why missed:** each handler trusted its event's name. War of the Ring momentum trusts the same event
+  (#774).
+- **Prevent:** key payouts on the engine's own verdict (`Village.VillageState == Looted`, set just
+  before `RaidCompleted`) and on who was beaten (a field party with healthy men at the start), not on
+  the event type; when an event turns out to mean more than its name, grep every listener of it.
+- **Source:** `docs/reviews/rca-career-e1e3-2026-10-08.md` (#770, #774).
