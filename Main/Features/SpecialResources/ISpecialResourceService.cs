@@ -13,6 +13,13 @@ public interface ISpecialResourceService
     void EarnFromPrisoners(string heroId, string kingdomId, string cultureId, int prisonerCount);
     void EarnFromTournament(string heroId, string kingdomId, string cultureId);
     void EarnFromHideout(string heroId, string kingdomId, string cultureId);
+    /// <summary>
+    /// The amount an earning source of <paramref name="amount"/> base pays this hero after the career
+    /// SpecialResourceGain (#767); 0 when the result is not a finite positive. The tooltip projects
+    /// through this so it shows what the earning paths store.
+    /// </summary>
+    float ScaleEarned(string heroId, float amount);
+
     void ApplyDailyTick(string heroId, string kingdomId, string cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep);
     bool CanAffordUpgrade(string heroId, string kingdomId, string cultureId, string troopId, int count);
     void SpendForUpgrade(string heroId, string kingdomId, string cultureId, string troopId, int count);

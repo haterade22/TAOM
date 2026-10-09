@@ -72,11 +72,8 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         if (resource == null) return;
 
         var clampedRatio = Math.Max(0.5f, Math.Min(2f, enemySizeRatio));
-        var amount = resource.PerBattleVictoryBase * clampedRatio;
-        var before = _storage.Get(heroId, resource.Id);
-        AddCapped(heroId, resource, amount);
-        var after = _storage.Get(heroId, resource.Id);
-        _logger.LogInfo($"[SpecRes] BATTLE: +{amount:F1} {resource.DisplayName} (ratio {enemySizeRatio:F2}→{clampedRatio:F2}) | {before:F0}→{after:F0}");
+        Earn(heroId, resource, "BATTLE", resource.PerBattleVictoryBase * clampedRatio, "F1",
+            $" (ratio {enemySizeRatio:F2}→{clampedRatio:F2})");
     }
 
     public void EarnFromRaid(string heroId, string kingdomId, string cultureId)
@@ -84,10 +81,7 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
-        var before = _storage.Get(heroId, resource.Id);
-        AddCapped(heroId, resource, resource.PerRaid);
-        var after = _storage.Get(heroId, resource.Id);
-        _logger.LogInfo($"[SpecRes] RAID: +{resource.PerRaid:F0} {resource.DisplayName} | {before:F0}→{after:F0}");
+        Earn(heroId, resource, "RAID", resource.PerRaid, "F0", "");
     }
 
     public void EarnFromSiege(string heroId, string kingdomId, string cultureId)
@@ -95,10 +89,7 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
-        var before = _storage.Get(heroId, resource.Id);
-        AddCapped(heroId, resource, resource.PerSiegeVictory);
-        var after = _storage.Get(heroId, resource.Id);
-        _logger.LogInfo($"[SpecRes] SIEGE: +{resource.PerSiegeVictory:F0} {resource.DisplayName} | {before:F0}→{after:F0}");
+        Earn(heroId, resource, "SIEGE", resource.PerSiegeVictory, "F0", "");
     }
 
     public void EarnFromPrisoners(string heroId, string kingdomId, string cultureId, int prisonerCount)
@@ -106,11 +97,7 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
-        var earned = resource.PerPrisoner * prisonerCount;
-        var before = _storage.Get(heroId, resource.Id);
-        AddCapped(heroId, resource, earned);
-        var after = _storage.Get(heroId, resource.Id);
-        _logger.LogInfo($"[SpecRes] PRISONERS: +{earned:F0} {resource.DisplayName} ({prisonerCount} captured) | {before:F0}→{after:F0}");
+        Earn(heroId, resource, "PRISONERS", resource.PerPrisoner * prisonerCount, "F0", $" ({prisonerCount} captured)");
     }
 
     public void EarnFromTournament(string heroId, string kingdomId, string cultureId)
@@ -118,10 +105,7 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
-        var before = _storage.Get(heroId, resource.Id);
-        AddCapped(heroId, resource, resource.PerTournamentWin);
-        var after = _storage.Get(heroId, resource.Id);
-        _logger.LogInfo($"[SpecRes] TOURNAMENT: +{resource.PerTournamentWin:F0} {resource.DisplayName} | {before:F0}→{after:F0}");
+        Earn(heroId, resource, "TOURNAMENT", resource.PerTournamentWin, "F0", "");
     }
 
     public void EarnFromHideout(string heroId, string kingdomId, string cultureId)
@@ -129,10 +113,17 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         var resource = ResolveResource(kingdomId, cultureId);
         if (resource == null) return;
 
+        Earn(heroId, resource, "HIDEOUT", resource.PerHideoutClear, "F0", "");
+    }
+
+    // The one earning path: scale by the career gain, add under the cap, log with the source label.
+    private void Earn(string heroId, SpecialResource resource, string source, float baseAmount, string amountFormat, string detail)
+    {
+        var earned = ScaleEarned(heroId, baseAmount);
         var before = _storage.Get(heroId, resource.Id);
-        AddCapped(heroId, resource, resource.PerHideoutClear);
+        AddCapped(heroId, resource, earned);
         var after = _storage.Get(heroId, resource.Id);
-        _logger.LogInfo($"[SpecRes] HIDEOUT: +{resource.PerHideoutClear:F0} {resource.DisplayName} | {before:F0}→{after:F0}");
+        _logger.LogInfo($"[SpecRes] {source}: +{earned.ToString(amountFormat)} {resource.DisplayName}{detail} | {before:F0}→{after:F0}");
     }
 
     public void ApplyDailyTick(string heroId, string kingdomId, string cultureId, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
@@ -163,40 +154,54 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
     // lines sum to the total). ApplyDailyTick applies its Net; every display reads the same object.
     private DailyResourceBreakdown ComputeBreakdown(string heroId, SpecialResource resource, int ownedTownCount, IReadOnlyList<TroopUpkeepInfo> troopsWithUpkeep)
     {
-        var earning = resource.DailyPerTown * ownedTownCount;
-        var gainModifier = GetPassiveMagnitude(heroId, PassiveEffectType.SpecialResourceGain);
-        if (gainModifier != 0f)
-            earning *= (1f + gainModifier);
+        var earning = ScaleEarned(heroId, resource.DailyPerTown * ownedTownCount);
 
-        var lines = new List<TroopUpkeepLine>();
-        if (troopsWithUpkeep != null)
-        {
-            var upkeepModifier = GetPassiveMagnitude(heroId, PassiveEffectType.SpecialResourceUpkeepModifier);
-            foreach (var troop in troopsWithUpkeep)
-            {
-                if (troop == null || troop.Count <= 0) continue;
-                var perUnit = DailyUpkeepPerUnit(troop.TroopId);
-                if (!(perUnit > 0f)) continue;
-
-                // Total is scaled after the multiply, the order the old single-total math used, so a
-                // one-type party debits the same float it always did.
-                var total = perUnit * troop.Count;
-                if (upkeepModifier != 0f)
-                {
-                    perUnit = Math.Max(0f, perUnit * (1f + upkeepModifier));
-                    total = Math.Max(0f, total * (1f + upkeepModifier));
-                }
-                lines.Add(new TroopUpkeepLine(troop.TroopId, troop.Count, perUnit, total));
-            }
-        }
+        var lines = BuildUpkeepLines(heroId, troopsWithUpkeep);
 
         return new DailyResourceBreakdown(earning, lines);
     }
 
-    // A cost row is not an upkeep row: the Elite Emissary's merchant-only rows and any row without a
-    // daily_upkeep return 0 here, which keeps them out of the upkeep lines AND out of desertion.
-    private float DailyUpkeepPerUnit(string troopId)
-        => _config.GetTroopCost(troopId)?.DailyUpkeep ?? 0f;
+    // The one upkeep computation, read by the breakdown and by desertion. A cost row is not an
+    // upkeep row: the Elite Emissary's merchant-only rows and any row without a daily_upkeep fail the
+    // CONFIGURED-value gate, which keeps them out of the lines AND out of desertion. A non-finite
+    // modifier is treated as no modifier, so the configured upkeep is charged.
+    private List<TroopUpkeepLine> BuildUpkeepLines(string heroId, IReadOnlyList<TroopUpkeepInfo> troops)
+    {
+        var lines = new List<TroopUpkeepLine>();
+        if (troops == null) return lines;
+
+        var upkeepModifier = GetPassiveMagnitude(heroId, PassiveEffectType.SpecialResourceUpkeepModifier);
+        if (!FiniteFloatValidator.IsFinite(upkeepModifier)) upkeepModifier = 0f;
+
+        foreach (var troop in troops)
+        {
+            if (troop == null || troop.Count <= 0) continue;
+            var perUnit = _config.GetTroopCost(troop.TroopId)?.DailyUpkeep ?? 0f;
+            if (!(FiniteFloatValidator.IsFinite(perUnit) && perUnit > 0f)) continue;
+
+            // Total is scaled after the multiply, the order the old single-total math used, so a
+            // one-type party debits the same float it always did.
+            var total = perUnit * troop.Count;
+            if (upkeepModifier != 0f)
+            {
+                perUnit = Math.Max(0f, perUnit * (1f + upkeepModifier));
+                total = Math.Max(0f, total * (1f + upkeepModifier));
+            }
+            lines.Add(new TroopUpkeepLine(troop.TroopId, troop.Count, perUnit, total));
+        }
+        return lines;
+    }
+
+    // The career gain applies to every earning path, not just the daily town income (#767). It always
+    // multiplies (a gain of 0 gives back the base), and a result that is not a finite positive earns
+    // nothing, so a -200% pick or a NaN passive can neither debit the wallet nor poison it. Public so
+    // the map-bar tooltip projects the same number the earning paths store.
+    public float ScaleEarned(string heroId, float amount)
+    {
+        var gain = GetPassiveMagnitude(heroId, PassiveEffectType.SpecialResourceGain);
+        var scaled = amount * (1f + gain);
+        return FiniteFloatValidator.IsFinite(scaled) && scaled > 0f ? scaled : 0f;
+    }
 
     public bool CanAffordUpgrade(string heroId, string kingdomId, string cultureId, string troopId, int count)
     {
@@ -444,13 +449,13 @@ public class SpecialResourceService : ISpecialResourceService, ISpecialResourceS
         // At 0 resources: 10% of each upkeep troop type deserts per day (min 1). Desertion is the
         // consequence of UNPAID UPKEEP, so a troop whose row carries none (the Elite Emissary's
         // merchant-only rows: 50 normal tree troops) is not in arrears and stays (#558 finding 5).
-        foreach (var troop in troopsWithUpkeep)
+        foreach (var line in BuildUpkeepLines(heroId, troopsWithUpkeep))
         {
-            if (troop == null || troop.Count <= 0 || !(DailyUpkeepPerUnit(troop.TroopId) > 0f)) continue;
+            if (!(line.PerUnit > 0f)) continue;
 
-            var desertCount = Math.Max(1, (int)(troop.Count * 0.1f));
-            desertCount = Math.Min(desertCount, troop.Count);
-            result.Add(new TroopDesertionEntry(troop.TroopId, desertCount));
+            var desertCount = Math.Max(1, (int)(line.Count * 0.1f));
+            desertCount = Math.Min(desertCount, line.Count);
+            result.Add(new TroopDesertionEntry(line.TroopId, desertCount));
         }
 
         if (result.Count > 0)

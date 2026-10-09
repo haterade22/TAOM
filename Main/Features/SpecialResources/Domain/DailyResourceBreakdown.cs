@@ -46,6 +46,7 @@ public sealed class DailyResourceBreakdown
     public float Earning { get; }
     public float Upkeep { get; }
     public float Net => Earning - Upkeep;
+    public bool HasUpkeepDue => Upkeep > 0f;
     public IReadOnlyList<TroopUpkeepLine> UpkeepLines { get; }
 
     public DailyResourceBreakdown(float earning, IReadOnlyList<TroopUpkeepLine> upkeepLines)

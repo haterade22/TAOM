@@ -229,13 +229,14 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
 
         var balance = _service.GetCurrentAmount(hero.StringId, kingdomId, cultureId);
         // Only troops whose row carries a daily_upkeep count: a merchant-only row is not an upkeep
-        // troop and must neither desert nor trigger the warnings (#558 finding 5).
-        var hasUpkeepTroops = breakdown.UpkeepLines.Count > 0;
+        // troop and must neither desert nor trigger the warnings (#558 finding 5). A troop whose
+        // career-modified upkeep is zero is not in arrears either (#767).
+        var hasUpkeepDue = breakdown.HasUpkeepDue;
 
         // The daily line and the overdraft line show on the grace tick too: the deduction happened,
         // only the desertion below is deferred by one day, and a line that goes quiet on the tick the
         // player loads into would hide the one deduction they most want explained.
-        if (hasUpkeepTroops)
+        if (hasUpkeepDue)
         {
             var daily = SpecialResourceMessages.DailyUpkeep(resource.DisplayName, breakdown.Earning, breakdown.Upkeep, balance).ToString();
             InformationManager.DisplayMessage(breakdown.Net < 0f
@@ -257,7 +258,7 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         // SECOND daily tick (one in-game day later) applies desertion as normal.
         var inGracePeriod = _isFirstTickAfterLoad;
 
-        if (balance <= 0f && hasUpkeepTroops && !inGracePeriod)
+        if (balance <= 0f && hasUpkeepDue && !inGracePeriod)
         {
             // Desertion: remove troops from roster
             var desertions = _service.CalculateDesertion(hero.StringId, kingdomId, cultureId, troopUpkeep);
@@ -277,11 +278,11 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
                     extraTimeInMs: 3000);
             }
         }
-        else if (balance <= 0f && hasUpkeepTroops && inGracePeriod)
+        else if (balance <= 0f && hasUpkeepDue && inGracePeriod)
         {
             _logger.LogInfo($"[SpecRes] DailyTick: desertion grace active (first tick after load) — {breakdown.UpkeepLines.Count} upkeep troop types spared this tick");
         }
-        else if (balance > 0f && hasUpkeepTroops)
+        else if (balance > 0f && hasUpkeepDue)
         {
             // Warn only when heading into a deficit: the next daily tick (steady-state — same
             // towns/party as this tick) would push the balance to zero or below, which is exactly the
