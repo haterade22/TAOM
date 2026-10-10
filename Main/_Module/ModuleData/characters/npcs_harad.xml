@@ -11,11 +11,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -34,20 +34,20 @@
 			<skill id="Throwing" value="20" />
 		</skills>
 		<upgrade_targets>
-			<upgrade_target id="NPCCharacter.harad_levy" />
+			<upgrade_target id="NPCCharacter.harad_reg_levy" />
 		</upgrade_targets>
 		<Equipments>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -59,19 +59,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -89,10 +89,10 @@
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 				<equipment slot="Item1" id="Item.desert_round_shield" />
-				<equipment slot="Head" id="Item.haradrim_head" />
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -108,7 +108,7 @@
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -125,10 +125,10 @@
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 				<equipment slot="Item1" id="Item.desert_round_shield" />
-				<equipment slot="Head" id="Item.haradrim_head" />
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -145,10 +145,10 @@
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 				<equipment slot="Item1" id="Item.desert_round_shield" />
-				<equipment slot="Head" id="Item.haradrim_head" />
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -187,18 +187,18 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 				<equipment slot="Item1" id="Item.desert_round_shield" />
-				<equipment slot="Head" id="Item.haradrim_head" />
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 				<equipment slot="Item1" id="Item.desert_round_shield" />
-				<equipment slot="Head" id="Item.haradrim_head" />
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -210,19 +210,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -233,19 +233,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -269,11 +269,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -284,11 +284,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -312,11 +312,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -327,11 +327,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -356,11 +356,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -384,11 +384,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -400,19 +400,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -424,23 +424,23 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -452,26 +452,26 @@
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -481,24 +481,24 @@
 		<skills></skills>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -509,19 +509,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -533,19 +533,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -556,19 +556,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -579,19 +579,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -602,19 +602,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -626,19 +626,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -649,19 +649,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -672,19 +672,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -696,15 +696,15 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -716,11 +716,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -731,11 +731,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -746,19 +746,19 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -771,11 +771,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -786,11 +786,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -801,11 +801,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -815,12 +815,12 @@
 		<Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -831,13 +831,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -848,13 +848,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -865,13 +865,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -881,14 +881,14 @@
 		<Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -899,11 +899,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -914,11 +914,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -930,11 +930,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -943,12 +943,12 @@
 		<Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -958,13 +958,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -976,13 +976,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -992,13 +992,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1009,14 +1009,14 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1026,13 +1026,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1041,12 +1041,12 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1056,13 +1056,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1072,11 +1072,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1085,14 +1085,14 @@
 		<Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1104,11 +1104,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1118,11 +1118,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1133,12 +1133,12 @@
 		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
 		<Equipments>
 			<EquipmentRoster civilian="true">
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1148,11 +1148,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1162,13 +1162,13 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1180,7 +1180,7 @@
 		<Equipments>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_b" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1192,7 +1192,7 @@
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.empire_sword_1_t2" />
 				<equipment slot="Body" id="Item.aserai_civil_c" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1203,8 +1203,8 @@
 		<Equipments>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.empire_sword_3_t3" />
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1215,9 +1215,9 @@
 		<Equipments>
 			<EquipmentRoster>
 				<equipment slot="Item0" id="Item.empire_sword_5_t4" />
-				<equipment slot="Body" id="Item.haradrim_torso" />
-				<equipment slot="Gloves" id="Item.haradrim_gloves" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>
@@ -1228,11 +1228,11 @@
 		<Equipments>
 			<EquipmentRoster civilian="true">
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster>
 				<equipment slot="Body" id="Item.aserai_civil_a" />
-				<equipment slot="Leg" id="Item.haradrim_boots" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 		</Equipments>
 	</NPCCharacter>

@@ -779,6 +779,24 @@
       </IncludedGameTypes>
     </XmlNode>
     <XmlNode>
+      <XmlName id="NPCCharacters" path="characters/taom_vanilla_troop_obsolete_overrides"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="characters/npcs_harad_lords"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
       <XmlName id="NPCCharacters" path="characters/npcs_abanissa"/>
       <IncludedGameTypes>
         <GameType value ="Campaign"/>

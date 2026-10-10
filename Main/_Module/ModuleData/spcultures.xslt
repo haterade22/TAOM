@@ -332,9 +332,9 @@
 			<xsl:attribute name="color2">0xFFB28944</xsl:attribute>
 
 			<!-- Troop references -->
-			<xsl:attribute name="basic_troop">NPCCharacter.harad_levy</xsl:attribute>
-			<xsl:attribute name="elite_basic_troop">NPCCharacter.harad_noble</xsl:attribute>
-			<xsl:attribute name="executioner">NPCCharacter.harad_noble</xsl:attribute>
+			<xsl:attribute name="basic_troop">NPCCharacter.harad_reg_levy</xsl:attribute>
+			<xsl:attribute name="elite_basic_troop">NPCCharacter.harad_serp_noble</xsl:attribute>
+			<xsl:attribute name="executioner">NPCCharacter.harad_serp_noble</xsl:attribute>
 			<xsl:attribute name="melee_militia_troop">NPCCharacter.harad_militia_spearman</xsl:attribute>
 			<xsl:attribute name="ranged_militia_troop">NPCCharacter.harad_militia_archer</xsl:attribute>
 			<xsl:attribute name="melee_elite_militia_troop">NPCCharacter.harad_militia_veteran_spearman</xsl:attribute>

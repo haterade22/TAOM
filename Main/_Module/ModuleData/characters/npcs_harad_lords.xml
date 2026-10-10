@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+	<!-- Harwan/Harad (Culture.aserai) Custom Battle commanders -->
+
+	<NPCCharacter id="harad_lord_infantry" name="{=aom_harad_lord_infantry_name}Lord of Harwan (Infantry)" culture="Culture.aserai" is_hero="true" default_group="Infantry" occupation="Wanderer" level="31">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<skills>
+			<skill id="OneHanded" value="150" />
+			<skill id="TwoHanded" value="120" />
+			<skill id="Polearm" value="100" />
+			<skill id="Athletics" value="120" />
+			<skill id="Leadership" value="100" />
+			<skill id="Tactics" value="90" />
+		</skills>
+		<Traits>
+			<Trait id="Valor" value="2" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+				<equipment slot="Item1" id="Item.desert_round_shield" />
+				<equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_heavy_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+				<equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_elite_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="harad_lord_cavalry" name="{=aom_harad_lord_cavalry_name}Lord of Harwan (Cavalry)" culture="Culture.aserai" is_hero="true" default_group="Cavalry" occupation="Wanderer" level="31">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<skills>
+			<skill id="Riding" value="150" />
+			<skill id="OneHanded" value="140" />
+			<skill id="Polearm" value="130" />
+			<skill id="Athletics" value="90" />
+			<skill id="Leadership" value="100" />
+			<skill id="Tactics" value="90" />
+		</skills>
+		<Traits>
+			<Trait id="Valor" value="2" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+				<equipment slot="Item1" id="Item.eastern_spear_4_t4" />
+				<equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_cav_heavy_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+				<equipment slot="Cape" id="Item.sk_hr_st_pauld_cav_elite_a" />
+				<equipment slot="Horse" id="Item.t3_aserai_horse" />
+				<equipment slot="HorseHarness" id="Item.desert_cloth_harness" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="harad_lord_archer" name="{=aom_harad_lord_archer_name}Lord of Harwan (Archer)" culture="Culture.aserai" is_hero="true" default_group="Ranged" occupation="Wanderer" level="31">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<skills>
+			<skill id="Bow" value="170" />
+			<skill id="OneHanded" value="100" />
+			<skill id="Athletics" value="110" />
+			<skill id="Scouting" value="90" />
+			<skill id="Leadership" value="100" />
+			<skill id="Tactics" value="90" />
+		</skills>
+		<Traits>
+			<Trait id="Valor" value="2" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.ladder_harad_bow_t5" />
+				<equipment slot="Item1" id="Item.piercing_arrows" />
+				<equipment slot="Item2" id="Item.piercing_arrows" />
+				<equipment slot="Item3" id="Item.aserai_sword_5_t4" />
+				<equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_c" />
+				<equipment slot="Body" id="Item.sk_hr_st_chest_arc_heavy_a" />
+				<equipment slot="Gloves" id="Item.sk_hr_st_bracer_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_hr_st_grvs_heavy_a" />
+				<equipment slot="Cape" id="Item.sk_hr_st_pauld_arc_elite_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<!-- Shaghana (Culture.shaghana) Custom Battle commanders -->
+
+	<NPCCharacter id="shaghana_lord_infantry" name="{=aom_shaghana_lord_infantry_name}Lord of Shaghana (Infantry)" culture="Culture.shaghana" is_hero="true" default_group="Infantry" occupation="Wanderer" level="31">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<skills>
+			<skill id="OneHanded" value="150" />
+			<skill id="TwoHanded" value="120" />
+			<skill id="Polearm" value="100" />
+			<skill id="Athletics" value="120" />
+			<skill id="Leadership" value="100" />
+			<skill id="Tactics" value="90" />
+		</skills>
+		<Traits>
+			<Trait id="Valor" value="2" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+				<equipment slot="Item1" id="Item.desert_round_shield" />
+				<equipment slot="Head" id="Item.sk_sg_st_helmet_heavy_c" />
+				<equipment slot="Body" id="Item.sk_sg_st_chest_inf_chest_heavy_a" />
+				<equipment slot="Gloves" id="Item.sk_sg_st_bracer_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_sg_st_grvs_heavy_a" />
+				<equipment slot="Cape" id="Item.sk_sg_st_pauld_inf_elite_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="shaghana_lord_cavalry" name="{=aom_shaghana_lord_cavalry_name}Lord of Shaghana (Cavalry)" culture="Culture.shaghana" is_hero="true" default_group="Cavalry" occupation="Wanderer" level="31">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<skills>
+			<skill id="Riding" value="150" />
+			<skill id="OneHanded" value="140" />
+			<skill id="Polearm" value="130" />
+			<skill id="Athletics" value="90" />
+			<skill id="Leadership" value="100" />
+			<skill id="Tactics" value="90" />
+		</skills>
+		<Traits>
+			<Trait id="Valor" value="2" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.aserai_sword_5_t4" />
+				<equipment slot="Item1" id="Item.eastern_spear_4_t4" />
+				<equipment slot="Head" id="Item.sk_sg_st_helmet_heavy_c" />
+				<equipment slot="Body" id="Item.sk_sg_st_chest_cav_heavy_a" />
+				<equipment slot="Gloves" id="Item.sk_sg_st_bracer_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_sg_st_grvs_heavy_a" />
+				<equipment slot="Cape" id="Item.sk_sg_st_pauld_cav_elite_a" />
+				<equipment slot="Horse" id="Item.t3_aserai_horse" />
+				<equipment slot="HorseHarness" id="Item.desert_cloth_harness" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+	<NPCCharacter id="shaghana_lord_archer" name="{=aom_shaghana_lord_archer_name}Lord of Shaghana (Archer)" culture="Culture.shaghana" is_hero="true" default_group="Ranged" occupation="Wanderer" level="31">
+		<face>
+			<face_key_template value="BodyProperty.fighter_haradrim" />
+		</face>
+		<skills>
+			<skill id="Bow" value="170" />
+			<skill id="OneHanded" value="100" />
+			<skill id="Athletics" value="110" />
+			<skill id="Scouting" value="90" />
+			<skill id="Leadership" value="100" />
+			<skill id="Tactics" value="90" />
+		</skills>
+		<Traits>
+			<Trait id="Valor" value="2" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentRoster>
+				<equipment slot="Item0" id="Item.ladder_harad_bow_t5" />
+				<equipment slot="Item1" id="Item.piercing_arrows" />
+				<equipment slot="Item2" id="Item.piercing_arrows" />
+				<equipment slot="Item3" id="Item.aserai_sword_5_t4" />
+				<equipment slot="Head" id="Item.sk_sg_st_helmet_heavy_c" />
+				<equipment slot="Body" id="Item.sk_sg_st_chest_arc_heavy_a" />
+				<equipment slot="Gloves" id="Item.sk_sg_st_bracer_heavy_a" />
+				<equipment slot="Leg" id="Item.sk_sg_st_grvs_heavy_a" />
+				<equipment slot="Cape" id="Item.sk_sg_st_pauld_arc_elite_a" />
+			</EquipmentRoster>
+		</Equipments>
+	</NPCCharacter>
+
+</NPCCharacters>

@@ -1470,10 +1470,10 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Body"
-					id="Item.haradrim_torso" />
+					id="Item.sk_hr_st_chest_inf_chest_light_a" />
 				<equipment
 					slot="Leg"
-					id="Item.haradrim_boots" />
+					id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster
 				civilian="true" />
@@ -1498,13 +1498,13 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Head"
-					id="Item.haradrim_head" />
+					id="Item.sk_hr_st_helmet_light_a" />
 				<equipment
 					slot="Body"
-					id="Item.haradrim02_toso" />
+					id="Item.sk_hr_st_chest_inf_chest_med_a" />
 				<equipment
 					slot="Leg"
-					id="Item.haradrim02_boots" />
+					id="Item.sk_hr_st_grvs_med_a" />
 			</EquipmentRoster>
 			<EquipmentRoster
 				civilian="true" />
@@ -1529,10 +1529,10 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Body"
-					id="Item.haradrim02a_toso" />
+					id="Item.sk_hr_st_chest_inf_chest_med_b" />
 				<equipment
 					slot="Leg"
-					id="Item.haradrim02_boots" />
+					id="Item.sk_hr_st_grvs_med_a" />
 			</EquipmentRoster>
 			<EquipmentRoster
 				civilian="true" />
@@ -1557,13 +1557,13 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Head"
-					id="Item.haradrim02_head" />
+					id="Item.sk_hr_st_helmet_med_a" />
 				<equipment
 					slot="Body"
-					id="Item.haradrim02c_toso" />
+					id="Item.sk_hr_st_chest_inf_chest_heavy_b" />
 				<equipment
 					slot="Leg"
-					id="Item.haradrim02_boots" />
+					id="Item.sk_hr_st_grvs_med_a" />
 			</EquipmentRoster>
 			<EquipmentRoster
 				civilian="true" />
@@ -1588,13 +1588,13 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Head"
-					id="Item.haradrim02a_head" />
+					id="Item.sk_hr_st_helmet_med_b" />
 				<equipment
 					slot="Body"
-					id="Item.haradrim_torso" />
+					id="Item.sk_hr_st_chest_inf_chest_light_a" />
 				<equipment
 					slot="Leg"
-					id="Item.haradrim_boots" />
+					id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster
 				civilian="true" />
@@ -1619,13 +1619,13 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Head"
-					id="Item.haradrim02c_head" />
+					id="Item.sk_hr_st_helmet_heavy_b" />
 				<equipment
 					slot="Body"
-					id="Item.haradrim02a_toso" />
+					id="Item.sk_hr_st_chest_inf_chest_med_b" />
 				<equipment
 					slot="Leg"
-					id="Item.haradrim02_boots" />
+					id="Item.sk_hr_st_grvs_med_a" />
 			</EquipmentRoster>
 			<EquipmentRoster
 				civilian="true" />
@@ -1651,10 +1651,10 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Body"
-					id="Item.haradrim_torso" />
+					id="Item.sk_hr_st_chest_inf_chest_light_a" />
 				<equipment
 					slot="Leg"
-					id="Item.haradrim_boots" />
+					id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster
 				civilian="true" />
@@ -1679,13 +1679,13 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Head"
-					id="Item.haradrim_head" />
+					id="Item.sk_hr_st_helmet_light_a" />
 				<equipment
 					slot="Body"
-					id="Item.haradrim02_toso" />
+					id="Item.sk_hr_st_chest_inf_chest_med_a" />
 				<equipment
 					slot="Leg"
-					id="Item.haradrim02_boots" />
+					id="Item.sk_hr_st_grvs_med_a" />
 			</EquipmentRoster>
 			<EquipmentRoster
 				civilian="true" />
@@ -1710,10 +1710,10 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Body"
-					id="Item.haradrim02a_toso" />
+					id="Item.sk_hr_st_chest_inf_chest_med_b" />
 				<equipment
 					slot="Leg"
-					id="Item.haradrim02_boots" />
+					id="Item.sk_hr_st_grvs_med_a" />
 			</EquipmentRoster>
 			<EquipmentRoster
 				civilian="true" />
@@ -1738,13 +1738,13 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Head"
-					id="Item.haradrim02_head" />
+					id="Item.sk_hr_st_helmet_med_a" />
 				<equipment
 					slot="Body"
-					id="Item.haradrim02c_toso" />
+					id="Item.sk_hr_st_chest_inf_chest_heavy_b" />
 				<equipment
 					slot="Leg"
-					id="Item.haradrim02_boots" />
+					id="Item.sk_hr_st_grvs_med_a" />
 			</EquipmentRoster>
 			<EquipmentRoster
 				civilian="true" />
@@ -1769,13 +1769,13 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Head"
-					id="Item.haradrim02a_head" />
+					id="Item.sk_hr_st_helmet_med_b" />
 				<equipment
 					slot="Body"
-					id="Item.haradrim_torso" />
+					id="Item.sk_hr_st_chest_inf_chest_light_a" />
 				<equipment
 					slot="Leg"
-					id="Item.haradrim_boots" />
+					id="Item.sk_hr_st_grvs_light_a" />
 			</EquipmentRoster>
 			<EquipmentRoster
 				civilian="true" />
@@ -1800,13 +1800,13 @@
 			<EquipmentRoster>
 				<equipment
 					slot="Head"
-					id="Item.haradrim02c_head" />
+					id="Item.sk_hr_st_helmet_heavy_b" />
 				<equipment
 					slot="Body"
-					id="Item.haradrim02a_toso" />
+					id="Item.sk_hr_st_chest_inf_chest_med_b" />
 				<equipment
 					slot="Leg"
-					id="Item.haradrim02_boots" />
+					id="Item.sk_hr_st_grvs_med_a" />
 			</EquipmentRoster>
 			<EquipmentRoster
 				civilian="true" />

@@ -12,32 +12,32 @@
       "color2": "FFAB6121",
       "roster": [
         {
-          "troop": "harad_levy",
+          "troop": "harad_reg_levy",
           "min": 2,
           "max": 16
         },
         {
-          "troop": "harad_militia",
+          "troop": "harad_reg_militia",
           "min": 2,
           "max": 16
         },
         {
-          "troop": "harad_swordfighter",
+          "troop": "harad_reg_warrior",
           "min": 1,
           "max": 15
         },
         {
-          "troop": "harad_sandblade",
+          "troop": "harad_serp_footman",
           "min": 1,
           "max": 15
         },
         {
-          "troop": "harad_footman",
+          "troop": "harad_reg_footman",
           "min": 0,
           "max": 14
         },
         {
-          "troop": "harad_skirmisher",
+          "troop": "harad_reg_bowman",
           "min": 2,
           "max": 16
         },
@@ -47,32 +47,32 @@
           "max": 16
         },
         {
-          "troop": "harad_archer",
+          "troop": "harad_reg_bowman",
           "min": 1,
           "max": 15
         },
         {
-          "troop": "harad_marksman",
+          "troop": "harad_reg_scout_arc",
           "min": 0,
           "max": 15
         },
         {
-          "troop": "harad_noble",
+          "troop": "harad_serp_noble",
           "min": 2,
           "max": 16
         },
         {
-          "troop": "harad_camel_lancer",
+          "troop": "harad_reg_cavalry",
           "min": 0,
           "max": 15
         },
         {
-          "troop": "harad_horsearcher",
+          "troop": "harad_reg_scout_arc",
           "min": 2,
           "max": 16
         },
         {
-          "troop": "harad_serpenthorsearcher",
+          "troop": "harad_serp_archer",
           "min": 0,
           "max": 15
         }
@@ -87,7 +87,7 @@
       "color2": "FFB37023",
       "roster": [
         {
-          "troop": "harad_militia",
+          "troop": "harad_reg_militia",
           "min": 2,
           "max": 15
         },
@@ -97,17 +97,17 @@
           "max": 15
         },
         {
-          "troop": "harad_spearfighter",
+          "troop": "harad_reg_warrior",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_levy",
+          "troop": "harad_reg_levy",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_sandblade",
+          "troop": "harad_serp_footman",
           "min": 1,
           "max": 14
         },
@@ -117,12 +117,12 @@
           "max": 14
         },
         {
-          "troop": "harad_sunlance",
+          "troop": "harad_reg_cavalry",
           "min": 0,
           "max": 13
         },
         {
-          "troop": "harad_bronzefang",
+          "troop": "harad_reg_infantry",
           "min": 0,
           "max": 13
         },
@@ -132,27 +132,27 @@
           "max": 15
         },
         {
-          "troop": "harad_vipereye",
+          "troop": "harad_reg_archer",
           "min": 0,
           "max": 14
         },
         {
-          "troop": "harad_camelscout",
+          "troop": "harad_reg_horseman",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_serpentguard",
+          "troop": "harad_serp_guard",
           "min": 0,
           "max": 14
         },
         {
-          "troop": "harad_horsearcher",
+          "troop": "harad_reg_scout_arc",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_serpenthorsearcher",
+          "troop": "harad_serp_archer",
           "min": 0,
           "max": 13
         }
@@ -172,7 +172,7 @@
           "max": 15
         },
         {
-          "troop": "harad_spearfighter",
+          "troop": "harad_reg_warrior",
           "min": 2,
           "max": 15
         },
@@ -182,17 +182,17 @@
           "max": 14
         },
         {
-          "troop": "harad_spearguard",
+          "troop": "harad_reg_footman",
           "min": 1,
           "max": 14
         },
         {
-          "troop": "harad_bronzefang",
+          "troop": "harad_reg_infantry",
           "min": 0,
           "max": 14
         },
         {
-          "troop": "harad_skirmisher",
+          "troop": "harad_reg_bowman",
           "min": 2,
           "max": 15
         },
@@ -202,37 +202,37 @@
           "max": 15
         },
         {
-          "troop": "harad_archer",
+          "troop": "harad_reg_bowman",
           "min": 1,
           "max": 14
         },
         {
-          "troop": "harad_serpent_eye",
+          "troop": "harad_reg_archer",
           "min": 0,
           "max": 14
         },
         {
-          "troop": "harad_marksman",
+          "troop": "harad_reg_scout_arc",
           "min": 0,
           "max": 14
         },
         {
-          "troop": "harad_noble",
+          "troop": "harad_serp_noble",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_fangking",
+          "troop": "harad_serp_lancer",
           "min": 0,
           "max": 13
         },
         {
-          "troop": "harad_horsearcher",
+          "troop": "harad_reg_scout_arc",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_serpenthorsearcher",
+          "troop": "harad_serp_archer",
           "min": 0,
           "max": 13
         }
@@ -247,22 +247,22 @@
       "color2": "FFC29026",
       "roster": [
         {
-          "troop": "harad_spearfighter",
+          "troop": "harad_reg_warrior",
           "min": 2,
           "max": 16
         },
         {
-          "troop": "harad_levy",
+          "troop": "harad_reg_levy",
           "min": 2,
           "max": 16
         },
         {
-          "troop": "harad_spearguard",
+          "troop": "harad_reg_footman",
           "min": 1,
           "max": 15
         },
         {
-          "troop": "harad_warlance",
+          "troop": "harad_reg_cavalry",
           "min": 0,
           "max": 14
         },
@@ -272,42 +272,42 @@
           "max": 16
         },
         {
-          "troop": "harad_marksman",
+          "troop": "harad_reg_scout_arc",
           "min": 0,
           "max": 15
         },
         {
-          "troop": "harad_camelscout",
+          "troop": "harad_reg_horseman",
           "min": 2,
           "max": 16
         },
         {
-          "troop": "harad_noble",
+          "troop": "harad_serp_noble",
           "min": 2,
           "max": 16
         },
         {
-          "troop": "harad_gildedfang",
+          "troop": "harad_serp_infantry",
           "min": 1,
           "max": 15
         },
         {
-          "troop": "harad_camelrider",
+          "troop": "harad_reg_scout_cav",
           "min": 1,
           "max": 15
         },
         {
-          "troop": "harad_camel_lancer",
+          "troop": "harad_reg_cavalry",
           "min": 0,
           "max": 15
         },
         {
-          "troop": "harad_horsearcher",
+          "troop": "harad_reg_scout_arc",
           "min": 2,
           "max": 16
         },
         {
-          "troop": "harad_serpenthorsearcher",
+          "troop": "harad_serp_archer",
           "min": 0,
           "max": 15
         }
@@ -322,12 +322,12 @@
       "color2": "FFC9A227",
       "roster": [
         {
-          "troop": "harad_swordfighter",
+          "troop": "harad_reg_warrior",
           "min": 1,
           "max": 17
         },
         {
-          "troop": "harad_sandblade",
+          "troop": "harad_serp_footman",
           "min": 1,
           "max": 17
         },
@@ -337,47 +337,47 @@
           "max": 17
         },
         {
-          "troop": "harad_champion",
+          "troop": "harad_reg_infantry",
           "min": 0,
           "max": 16
         },
         {
-          "troop": "harad_footman",
+          "troop": "harad_reg_footman",
           "min": 0,
           "max": 16
         },
         {
-          "troop": "harad_archer",
+          "troop": "harad_reg_bowman",
           "min": 1,
           "max": 17
         },
         {
-          "troop": "harad_vipereye",
+          "troop": "harad_reg_archer",
           "min": 0,
           "max": 17
         },
         {
-          "troop": "harad_serpent_eye",
+          "troop": "harad_reg_archer",
           "min": 0,
           "max": 17
         },
         {
-          "troop": "harad_camelrider",
+          "troop": "harad_reg_scout_cav",
           "min": 1,
           "max": 17
         },
         {
-          "troop": "harad_serpentguard",
+          "troop": "harad_serp_guard",
           "min": 0,
           "max": 17
         },
         {
-          "troop": "harad_fangking",
+          "troop": "harad_serp_lancer",
           "min": 0,
           "max": 16
         },
         {
-          "troop": "harad_serpenthorsearcher",
+          "troop": "harad_serp_archer",
           "min": 0,
           "max": 16
         }
@@ -392,7 +392,7 @@
       "color2": "FFD0B528",
       "roster": [
         {
-          "troop": "harad_militia",
+          "troop": "harad_reg_militia",
           "min": 2,
           "max": 15
         },
@@ -402,12 +402,12 @@
           "max": 15
         },
         {
-          "troop": "harad_sandblade",
+          "troop": "harad_serp_footman",
           "min": 1,
           "max": 14
         },
         {
-          "troop": "harad_footman",
+          "troop": "harad_reg_footman",
           "min": 0,
           "max": 14
         },
@@ -417,7 +417,7 @@
           "max": 15
         },
         {
-          "troop": "harad_skirmisher",
+          "troop": "harad_reg_bowman",
           "min": 2,
           "max": 15
         },
@@ -427,37 +427,37 @@
           "max": 14
         },
         {
-          "troop": "harad_archer",
+          "troop": "harad_reg_bowman",
           "min": 1,
           "max": 14
         },
         {
-          "troop": "harad_serpent_eye",
+          "troop": "harad_reg_archer",
           "min": 0,
           "max": 14
         },
         {
-          "troop": "harad_marksman",
+          "troop": "harad_reg_scout_arc",
           "min": 0,
           "max": 14
         },
         {
-          "troop": "harad_camelscout",
+          "troop": "harad_reg_horseman",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_fangking",
+          "troop": "harad_serp_lancer",
           "min": 0,
           "max": 13
         },
         {
-          "troop": "harad_horsearcher",
+          "troop": "harad_reg_scout_arc",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_serpenthorsearcher",
+          "troop": "harad_serp_archer",
           "min": 0,
           "max": 13
         }
@@ -477,7 +477,7 @@
           "max": 16
         },
         {
-          "troop": "harad_spearfighter",
+          "troop": "harad_reg_warrior",
           "min": 2,
           "max": 16
         },
@@ -487,17 +487,17 @@
           "max": 15
         },
         {
-          "troop": "harad_spearguard",
+          "troop": "harad_reg_footman",
           "min": 1,
           "max": 15
         },
         {
-          "troop": "harad_sunlance",
+          "troop": "harad_reg_cavalry",
           "min": 0,
           "max": 14
         },
         {
-          "troop": "harad_skirmisher",
+          "troop": "harad_reg_bowman",
           "min": 2,
           "max": 16
         },
@@ -507,32 +507,32 @@
           "max": 16
         },
         {
-          "troop": "harad_archer",
+          "troop": "harad_reg_bowman",
           "min": 1,
           "max": 15
         },
         {
-          "troop": "harad_marksman",
+          "troop": "harad_reg_scout_arc",
           "min": 0,
           "max": 15
         },
         {
-          "troop": "harad_noble",
+          "troop": "harad_serp_noble",
           "min": 2,
           "max": 16
         },
         {
-          "troop": "harad_camel_lancer",
+          "troop": "harad_reg_cavalry",
           "min": 0,
           "max": 15
         },
         {
-          "troop": "harad_horsearcher",
+          "troop": "harad_reg_scout_arc",
           "min": 2,
           "max": 16
         },
         {
-          "troop": "harad_serpenthorsearcher",
+          "troop": "harad_serp_archer",
           "min": 0,
           "max": 15
         }
@@ -547,17 +547,17 @@
       "color2": "FFD7D533",
       "roster": [
         {
-          "troop": "harad_spearfighter",
+          "troop": "harad_reg_warrior",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_levy",
+          "troop": "harad_reg_levy",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_militia",
+          "troop": "harad_reg_militia",
           "min": 2,
           "max": 15
         },
@@ -567,22 +567,22 @@
           "max": 15
         },
         {
-          "troop": "harad_spearguard",
+          "troop": "harad_reg_footman",
           "min": 1,
           "max": 14
         },
         {
-          "troop": "harad_swordfighter",
+          "troop": "harad_reg_warrior",
           "min": 1,
           "max": 14
         },
         {
-          "troop": "harad_bronzefang",
+          "troop": "harad_reg_infantry",
           "min": 0,
           "max": 13
         },
         {
-          "troop": "harad_warlance",
+          "troop": "harad_reg_cavalry",
           "min": 0,
           "max": 13
         },
@@ -592,27 +592,27 @@
           "max": 15
         },
         {
-          "troop": "harad_vipereye",
+          "troop": "harad_reg_archer",
           "min": 0,
           "max": 14
         },
         {
-          "troop": "harad_camelscout",
+          "troop": "harad_reg_horseman",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_serpentguard",
+          "troop": "harad_serp_guard",
           "min": 0,
           "max": 14
         },
         {
-          "troop": "harad_horsearcher",
+          "troop": "harad_reg_scout_arc",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_serpenthorsearcher",
+          "troop": "harad_serp_archer",
           "min": 0,
           "max": 13
         }
@@ -627,32 +627,32 @@
       "color2": "FFD0D93B",
       "roster": [
         {
-          "troop": "harad_levy",
+          "troop": "harad_reg_levy",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_militia",
+          "troop": "harad_reg_militia",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_swordfighter",
+          "troop": "harad_reg_warrior",
           "min": 1,
           "max": 14
         },
         {
-          "troop": "harad_sandblade",
+          "troop": "harad_serp_footman",
           "min": 1,
           "max": 14
         },
         {
-          "troop": "harad_warlance",
+          "troop": "harad_reg_cavalry",
           "min": 0,
           "max": 14
         },
         {
-          "troop": "harad_skirmisher",
+          "troop": "harad_reg_bowman",
           "min": 2,
           "max": 15
         },
@@ -662,37 +662,37 @@
           "max": 15
         },
         {
-          "troop": "harad_archer",
+          "troop": "harad_reg_bowman",
           "min": 1,
           "max": 14
         },
         {
-          "troop": "harad_serpent_eye",
+          "troop": "harad_reg_archer",
           "min": 0,
           "max": 14
         },
         {
-          "troop": "harad_marksman",
+          "troop": "harad_reg_scout_arc",
           "min": 0,
           "max": 14
         },
         {
-          "troop": "harad_noble",
+          "troop": "harad_serp_noble",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_fangking",
+          "troop": "harad_serp_lancer",
           "min": 0,
           "max": 13
         },
         {
-          "troop": "harad_horsearcher",
+          "troop": "harad_reg_scout_arc",
           "min": 2,
           "max": 15
         },
         {
-          "troop": "harad_serpenthorsearcher",
+          "troop": "harad_serp_archer",
           "min": 0,
           "max": 13
         }

@@ -48,10 +48,10 @@
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
             <Equipment slot="Item1" id="Item.desert_round_shield" />
-            <Equipment slot="Head" id="Item.haradrim_head" />
-            <Equipment slot="Body" id="Item.haradrim_torso" />
-            <Equipment slot="Leg" id="Item.haradrim_boots" />
-            <Equipment slot="Gloves" id="Item.haradrim_gloves" />
+            <Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
+            <Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+            <Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_aserai_archer_recruit" culture="Culture.aserai">
@@ -60,10 +60,10 @@
             <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
             <Equipment slot="Item2" id="Item.bodkin_arrows_b" />
             <Equipment slot="Item3" id="Item.aserai_sword_3_t3" />
-            <Equipment slot="Head" id="Item.haradrim_head" />
-            <Equipment slot="Body" id="Item.haradrim_torso" />
-            <Equipment slot="Leg" id="Item.haradrim_boots" />
-            <Equipment slot="Gloves" id="Item.haradrim_gloves" />
+            <Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
+            <Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+            <Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_aserai_cavalry_recruit" culture="Culture.aserai">
@@ -71,20 +71,19 @@
             <Equipment slot="Item0" id="Item.aserai_lance_1_t5" />
             <Equipment slot="Item1" id="Item.ornate_adarga" />
             <Equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
-            <Equipment slot="Head" id="Item.harad05_v1_helmet" />
-            <Equipment slot="Body" id="Item.harad05_v4_torso" />
-            <Equipment slot="Leg" id="Item.harad05_v4_boots" />
-            <Equipment slot="Gloves" id="Item.harad05_v1_gloves" />
-            <Equipment slot="Cape" id="Item.harad05_v4_cape" />
+            <Equipment slot="Head" id="Item.brass_aserai_helmet_b_open" />
+            <Equipment slot="Body" id="Item.aserai_scale_armor_on_chain" />
+            <Equipment slot="Leg" id="Item.strapped_mail_chausses" />
+            <Equipment slot="Gloves" id="Item.rough_tied_bracers" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_aserai_support_recruit" culture="Culture.aserai">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
-            <Equipment slot="Head" id="Item.haradrim_head" />
-            <Equipment slot="Body" id="Item.haradrim_torso" />
-            <Equipment slot="Leg" id="Item.haradrim_boots" />
-            <Equipment slot="Gloves" id="Item.haradrim_gloves" />
+            <Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
+            <Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+            <Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
+            <Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_aserai_infantry_soldier" culture="Culture.aserai">
@@ -92,11 +91,10 @@
             <Equipment slot="Item0" id="Item.aserai_lance_1_t5" />
             <Equipment slot="Item1" id="Item.ornate_adarga" />
             <Equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
-            <Equipment slot="Head" id="Item.harad05_v1_helmet" />
-            <Equipment slot="Body" id="Item.harad05_v4_torso" />
-            <Equipment slot="Leg" id="Item.harad05_v4_boots" />
-            <Equipment slot="Gloves" id="Item.harad05_v1_gloves" />
-            <Equipment slot="Cape" id="Item.harad05_v4_cape" />
+            <Equipment slot="Head" id="Item.brass_aserai_helmet_b_open" />
+            <Equipment slot="Body" id="Item.aserai_scale_armor_on_chain" />
+            <Equipment slot="Leg" id="Item.strapped_mail_chausses" />
+            <Equipment slot="Gloves" id="Item.rough_tied_bracers" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_aserai_archer_soldier" culture="Culture.aserai">
@@ -105,21 +103,20 @@
             <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
             <Equipment slot="Item2" id="Item.bodkin_arrows_b" />
             <Equipment slot="Item3" id="Item.aserai_sword_3_t3" />
-            <Equipment slot="Head" id="Item.haradrim02a_head" />
-            <Equipment slot="Body" id="Item.haradrim02a_toso" />
-            <Equipment slot="Leg" id="Item.haradrim02_boots" />
-            <Equipment slot="Gloves" id="Item.haradrim02a_gloves" />
-            <Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
+            <Equipment slot="Head" id="Item.sk_hr_st_helmet_med_b" />
+            <Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_med_b" />
+            <Equipment slot="Leg" id="Item.sk_hr_st_grvs_med_a" />
+            <Equipment slot="Gloves" id="Item.sk_hr_st_bracer_med_b" />
+            <Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_med_a" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_aserai_support_soldier" culture="Culture.aserai">
         <EquipmentSet>
             <Equipment slot="Item0" id="Item.aserai_lance_1_t5" />
-            <Equipment slot="Head" id="Item.harad05_v1_helmet" />
-            <Equipment slot="Body" id="Item.harad05_v4_torso" />
-            <Equipment slot="Leg" id="Item.harad05_v4_boots" />
-            <Equipment slot="Gloves" id="Item.harad05_v1_gloves" />
-            <Equipment slot="Cape" id="Item.harad05_v4_cape" />
+            <Equipment slot="Head" id="Item.brass_aserai_helmet_b_open" />
+            <Equipment slot="Body" id="Item.aserai_scale_armor_on_chain" />
+            <Equipment slot="Leg" id="Item.strapped_mail_chausses" />
+            <Equipment slot="Gloves" id="Item.rough_tied_bracers" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_aserai_archer_veteran" culture="Culture.aserai">
@@ -128,11 +125,10 @@
             <Equipment slot="Item1" id="Item.steppe_arrows" />
             <Equipment slot="Item2" id="Item.steppe_arrows" />
             <Equipment slot="Item3" id="Item.aserai_sword_5_t4" />
-            <Equipment slot="Head" id="Item.harad06_v1_helmet" />
-            <Equipment slot="Body" id="Item.harad06_v1_torso" />
-            <Equipment slot="Leg" id="Item.harad06_v1_boots" />
-            <Equipment slot="Gloves" id="Item.harad05_v1_gloves" />
-            <Equipment slot="Cape" id="Item.harad05_v1_cape" />
+            <Equipment slot="Head" id="Item.brass_aserai_helmet_b_open" />
+            <Equipment slot="Body" id="Item.aserai_scale_armor_on_chain" />
+            <Equipment slot="Leg" id="Item.strapped_mail_chausses" />
+            <Equipment slot="Gloves" id="Item.rough_tied_bracers" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_aserai_cavalry_veteran" culture="Culture.aserai">
@@ -141,11 +137,10 @@
             <Equipment slot="Item1" id="Item.steppe_arrows" />
             <Equipment slot="Item2" id="Item.steppe_arrows" />
             <Equipment slot="Item3" id="Item.aserai_sword_5_t4" />
-            <Equipment slot="Head" id="Item.harad07_helmet" />
-            <Equipment slot="Body" id="Item.harad07_torso" />
-            <Equipment slot="Leg" id="Item.harad06_v1_boots" />
-            <Equipment slot="Gloves" id="Item.harad07_glove" />
-            <Equipment slot="Cape" id="Item.harad06_v1_cape" />
+            <Equipment slot="Head" id="Item.brass_aserai_helmet_b_open" />
+            <Equipment slot="Body" id="Item.aserai_scale_armor_on_chain" />
+            <Equipment slot="Leg" id="Item.strapped_mail_chausses" />
+            <Equipment slot="Gloves" id="Item.rough_tied_bracers" />
         </EquipmentSet>
     </EquipmentRoster>
     <EquipmentRoster id="enlist_aserai_archer_sergeant" culture="Culture.aserai">
@@ -154,11 +149,10 @@
             <Equipment slot="Item1" id="Item.steppe_arrows" />
             <Equipment slot="Item2" id="Item.steppe_arrows" />
             <Equipment slot="Item3" id="Item.aserai_sword_5_t4" />
-            <Equipment slot="Head" id="Item.harad07_helmet" />
-            <Equipment slot="Body" id="Item.harad07_torso" />
-            <Equipment slot="Leg" id="Item.harad06_v1_boots" />
-            <Equipment slot="Gloves" id="Item.harad07_glove" />
-            <Equipment slot="Cape" id="Item.harad06_v1_cape" />
+            <Equipment slot="Head" id="Item.brass_aserai_helmet_b_open" />
+            <Equipment slot="Body" id="Item.aserai_scale_armor_on_chain" />
+            <Equipment slot="Leg" id="Item.strapped_mail_chausses" />
+            <Equipment slot="Gloves" id="Item.rough_tied_bracers" />
         </EquipmentSet>
     </EquipmentRoster>
 

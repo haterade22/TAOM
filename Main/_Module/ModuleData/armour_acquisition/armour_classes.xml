@@ -250,62 +250,24 @@
   <Item id="gondor_noble_coat_b" class="light" next="ithilien_jerkin_long" />
   <Item id="gondor_noble_jerkin_a" class="light" next="ithilien_jerkin_long" />
   <Item id="gondor_noble_jerkin_b" class="light" next="ithilien_jerkin_long" />
-  <Item id="harad03_boots" class="medium" next="harad05_v1_boots" />
-  <Item id="harad03_cape" class="medium" next="harad05_v1_cape" />
-  <Item id="harad03_glove" class="medium" next="harad04_glove" />
-  <Item id="harad03_helmet" class="medium" next="harad06_v1_helmet" />
-  <Item id="harad03_torso" class="medium" next="harad05_v1_torso" />
-  <Item id="harad04_body" class="light" next="harad03_torso" />
-  <Item id="harad04_boots" class="elite" />
-  <Item id="harad04_cape" class="elite" />
-  <Item id="harad04_glove" class="heavy" next="haradrim02b_gloves" />
-  <Item id="harad04_helmet" class="light" next="harad03_helmet" />
-  <Item id="harad05_v1_boots" class="heavy" next="harad04_boots" />
-  <Item id="harad05_v1_cape" class="heavy" next="harad04_cape" />
-  <Item id="harad05_v1_gloves" class="light" next="harad03_glove" />
-  <Item id="harad05_v1_helmet" class="light" next="harad03_helmet" />
-  <Item id="harad05_v1_torso" class="heavy" />
-  <Item id="harad05_v2_boots" class="heavy" next="harad04_boots" />
-  <Item id="harad05_v2_cape" class="heavy" next="harad04_cape" />
-  <Item id="harad05_v2_torso" class="heavy" />
-  <Item id="harad05_v3_boots" class="heavy" next="harad04_boots" />
-  <Item id="harad05_v3_cape" class="medium" next="harad05_v1_cape" />
-  <Item id="harad05_v3_torso" class="medium" next="harad05_v1_torso" />
-  <Item id="harad05_v4_boots" class="light" next="harad03_boots" />
-  <Item id="harad05_v4_cape" class="light" next="harad05_v3_cape" />
-  <Item id="harad05_v4_torso" class="light" next="harad05_v3_torso" />
-  <Item id="harad06_v1_boots" class="heavy" next="harad04_boots" />
-  <Item id="harad06_v1_cape" class="heavy" next="harad04_cape" />
-  <Item id="harad06_v1_glove" class="heavy" next="haradrim02b_gloves" />
-  <Item id="harad06_v1_helmet" class="heavy" />
-  <Item id="harad06_v1_torso" class="heavy" />
-  <Item id="harad07_boots" class="heavy" next="harad04_boots" />
-  <Item id="harad07_cape" class="heavy" next="harad04_cape" />
-  <Item id="harad07_glove" class="heavy" next="haradrim02b_gloves" />
-  <Item id="harad07_helmet" class="heavy" />
-  <Item id="harad07_torso" class="heavy" />
-  <Item id="harad08_boots" class="medium" next="harad05_v1_boots" />
-  <Item id="harad08_gloves" class="medium" next="harad04_glove" />
-  <Item id="harad08_helmet" class="heavy" />
-  <Item id="harad08_torso" class="heavy" />
-  <Item id="haradrim02_boots" class="medium" next="harad05_v1_boots" />
-  <Item id="haradrim02_gloves" class="medium" next="harad04_glove" />
-  <Item id="haradrim02_head" class="medium" next="harad06_v1_helmet" />
-  <Item id="haradrim02_pauldrons" class="light" next="harad03_cape" />
-  <Item id="haradrim02_toso" class="light" next="haradrim02a_toso" />
-  <Item id="haradrim02a_gloves" class="medium" next="harad04_glove" />
-  <Item id="haradrim02a_head" class="medium" next="harad06_v1_helmet" />
-  <Item id="haradrim02a_toso" class="medium" next="harad05_v1_torso" />
-  <Item id="haradrim02b_gloves" class="elite" />
-  <Item id="haradrim02b_head" class="light" next="haradrim02_head" />
-  <Item id="haradrim02b_toso" class="light" next="haradrim02a_toso" />
-  <Item id="haradrim02c_gloves" class="medium" next="harad04_glove" />
-  <Item id="haradrim02c_head" class="medium" next="harad06_v1_helmet" />
-  <Item id="haradrim02c_toso" class="medium" next="harad05_v1_torso" />
-  <Item id="haradrim_boots" class="light" next="haradrim02_boots" />
-  <Item id="haradrim_gloves" class="light" next="haradrim02_gloves" />
-  <Item id="haradrim_head" class="light" next="haradrim02_head" />
-  <Item id="haradrim_torso" class="light" next="haradrim02a_toso" />
+  <Item id="sk_hr_st_grvs_med_a" class="medium" />
+  <Item id="sk_hr_st_bracer_med_a" class="medium" />
+  <Item id="sk_hr_st_helmet_med_a" class="medium" />
+  <Item id="sk_hr_st_pauld_inf_med_a" class="light" />
+  <Item id="sk_hr_st_chest_inf_chest_med_a" class="light" next="sk_hr_st_chest_inf_chest_med_b" />
+  <Item id="sk_hr_st_bracer_med_b" class="medium" />
+  <Item id="sk_hr_st_helmet_med_b" class="medium" />
+  <Item id="sk_hr_st_chest_inf_chest_med_b" class="medium" />
+  <Item id="sk_hr_st_bracer_heavy_a" class="elite" />
+  <Item id="sk_hr_st_helmet_heavy_a" class="light" next="sk_hr_st_helmet_med_a" />
+  <Item id="sk_hr_st_chest_inf_chest_heavy_a" class="light" next="sk_hr_st_chest_inf_chest_med_b" />
+  <Item id="sk_hr_st_bracer_heavy_b" class="medium" />
+  <Item id="sk_hr_st_helmet_heavy_b" class="medium" />
+  <Item id="sk_hr_st_chest_inf_chest_heavy_b" class="medium" />
+  <Item id="sk_hr_st_grvs_light_a" class="light" next="sk_hr_st_grvs_med_a" />
+  <Item id="sk_hr_st_bracer_light_a" class="light" next="sk_hr_st_bracer_med_a" />
+  <Item id="sk_hr_st_helmet_light_a" class="light" next="sk_hr_st_helmet_med_a" />
+  <Item id="sk_hr_st_chest_inf_chest_light_a" class="light" next="sk_hr_st_chest_inf_chest_med_b" />
   <Item id="ithilien_boots" class="medium" next="ithilien_boots_heavy" />
   <Item id="ithilien_boots_heavy" class="heavy" next="sk_gd_ano_grvs_noble_elite_a" />
   <Item id="ithilien_bracers" class="light" next="sk_gd_ano_bracer_inf_med_a" />

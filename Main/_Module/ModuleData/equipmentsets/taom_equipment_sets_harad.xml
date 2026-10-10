@@ -7,10 +7,10 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.haradrim_head" />
-			<Equipment slot="Body" id="Item.haradrim_torso" />
-			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
-			<Equipment slot="Leg" id="Item.haradrim_boots" />
+			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -20,11 +20,11 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.haradrim02_head" />
-			<Equipment slot="Body" id="Item.haradrim02_toso" />
-			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
-			<Equipment slot="Gloves" id="Item.haradrim02_gloves" />
-			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+			<Equipment slot="Head" id="Item.sk_hr_st_helmet_med_a" />
+			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_med_a" />
+			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_med_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -34,11 +34,11 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.haradrim02a_head" />
-			<Equipment slot="Body" id="Item.haradrim02a_toso" />
-			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
-			<Equipment slot="Gloves" id="Item.haradrim02a_gloves" />
-			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+			<Equipment slot="Head" id="Item.sk_hr_st_helmet_med_b" />
+			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_med_b" />
+			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_med_b" />
+			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_med_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -49,11 +49,11 @@
 			<Equipment slot="Item0" id="Item.aserai_lance_1_t5" />
 			<Equipment slot="Item1" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item2" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.haradrim02c_head" />
-			<Equipment slot="Body" id="Item.haradrim02c_toso" />
-			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
-			<Equipment slot="Gloves" id="Item.haradrim02c_gloves" />
-			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_heavy_b" />
+			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_med_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -63,11 +63,11 @@
 		<EquipmentSet>
 			<Equipment slot="Item0" id="Item.aserai_sword_6_t4" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.haradrim_head" />
-			<Equipment slot="Body" id="Item.haradrim02a_toso" />
-			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
-			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
-			<Equipment slot="Leg" id="Item.haradrim_boots" />
+			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_med_b" />
+			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -79,10 +79,10 @@
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.haradrim_head" />
-			<Equipment slot="Body" id="Item.haradrim_torso" />
-			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
-			<Equipment slot="Leg" id="Item.haradrim_boots" />
+			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -92,11 +92,11 @@
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.haradrim02_head" />
-			<Equipment slot="Body" id="Item.haradrim02_toso" />
-			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
-			<Equipment slot="Gloves" id="Item.haradrim02_gloves" />
-			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+			<Equipment slot="Head" id="Item.sk_hr_st_helmet_med_a" />
+			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_med_a" />
+			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_med_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -106,11 +106,11 @@
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.haradrim02a_head" />
-			<Equipment slot="Body" id="Item.haradrim02a_toso" />
-			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
-			<Equipment slot="Gloves" id="Item.haradrim02a_gloves" />
-			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+			<Equipment slot="Head" id="Item.sk_hr_st_helmet_med_b" />
+			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_med_b" />
+			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_med_b" />
+			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_med_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -121,11 +121,11 @@
 			<Equipment slot="Item0" id="Item.aserai_lance_1_t5" />
 			<Equipment slot="Item1" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item2" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.haradrim02c_head" />
-			<Equipment slot="Body" id="Item.haradrim02c_toso" />
-			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
-			<Equipment slot="Gloves" id="Item.haradrim02c_gloves" />
-			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+			<Equipment slot="Head" id="Item.sk_hr_st_helmet_heavy_b" />
+			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_heavy_b" />
+			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_heavy_b" />
+			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_med_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>
@@ -135,11 +135,11 @@
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_sword_6_t4" />
 			<Equipment slot="Item1" id="Item.desert_round_shield" />
-			<Equipment slot="Head" id="Item.haradrim_head" />
-			<Equipment slot="Body" id="Item.haradrim02a_toso" />
-			<Equipment slot="Cape" id="Item.haradrim02_pauldrons" />
-			<Equipment slot="Gloves" id="Item.haradrim_gloves" />
-			<Equipment slot="Leg" id="Item.haradrim_boots" />
+			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_med_b" />
+			<Equipment slot="Cape" id="Item.sk_hr_st_pauld_inf_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_light_a" />
+			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
 			<Equipment slot="Horse" id="Item.charger" />
 		</EquipmentSet>

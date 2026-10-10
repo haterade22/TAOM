@@ -437,21 +437,19 @@
 				<equipment slot="Item0" id="Item.aserai_lance_1_t5" />
 				<equipment slot="Item1"	id="Item.ornate_adarga" />
 				<equipment slot="Item2" id="Item.wm_swan_knight_sworda" />
-				<equipment slot="Body" id="Item.harad07_torso" />
-				<equipment slot="Head" id="Item.harad07_helmet" />
-				<equipment slot="Gloves" id="Item.harad07_glove" />
-				<equipment slot="Leg" id="Item.harad06_v1_boots" />
-				<equipment slot="Cape" id="Item.harad06_v1_cape" />
+				<equipment slot="Body" id="Item.aserai_scale_armor_on_chain" />
+				<equipment slot="Head" id="Item.brass_aserai_helmet_b_open" />
+				<equipment slot="Gloves" id="Item.rough_tied_bracers" />
+				<equipment slot="Leg" id="Item.strapped_mail_chausses" />
 				</EquipmentRoster>
 				<EquipmentRoster civilian="true">
 				<equipment slot="Item0" id="Item.aserai_lance_1_t5" />
 				<equipment slot="Item1"	id="Item.ornate_adarga" />
 				<equipment slot="Item2" id="Item.wm_swan_knight_sworda" />
-				<equipment slot="Body" id="Item.harad07_torso" />
-				<equipment slot="Head" id="Item.harad07_helmet" />
-				<equipment slot="Gloves" id="Item.harad07_glove" />
-				<equipment slot="Leg" id="Item.harad06_v1_boots" />
-				<equipment slot="Cape" id="Item.harad06_v1_cape" />
+				<equipment slot="Body" id="Item.aserai_scale_armor_on_chain" />
+				<equipment slot="Head" id="Item.brass_aserai_helmet_b_open" />
+				<equipment slot="Gloves" id="Item.rough_tied_bracers" />
+				<equipment slot="Leg" id="Item.strapped_mail_chausses" />
 				</EquipmentRoster>
 			</Equipments>
 		</NPCCharacter>

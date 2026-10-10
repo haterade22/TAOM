@@ -157,9 +157,9 @@
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.peasant_2haxe_1_t1" />
 			<Equipment slot="Item2" id="Item.throwing_stone" />
-			<Equipment slot="Head" id="Item.haradrim_head" />
-			<Equipment slot="Body" id="Item.haradrim_torso" />
-			<Equipment slot="Leg" id="Item.haradrim_boots" />
+			<Equipment slot="Head" id="Item.sk_hr_st_helmet_light_a" />
+			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_light_a" />
+			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
@@ -167,20 +167,20 @@
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_sword_3_t3" />
 			<Equipment slot="Item2" id="Item.throwing_stone" />
-			<Equipment slot="Head" id="Item.haradrim02_head" />
-			<Equipment slot="Body" id="Item.haradrim02_toso" />
-			<Equipment slot="Gloves" id="Item.haradrim02_gloves" />
-			<Equipment slot="Leg" id="Item.haradrim02_boots" />
+			<Equipment slot="Head" id="Item.sk_hr_st_helmet_med_a" />
+			<Equipment slot="Body" id="Item.sk_hr_st_chest_inf_chest_med_a" />
+			<Equipment slot="Gloves" id="Item.sk_hr_st_bracer_med_a" />
+			<Equipment slot="Leg" id="Item.sk_hr_st_grvs_med_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
 
 	<EquipmentRoster id="umbar_troop_civilian_template_t3" culture="Culture.umbar">
 		<EquipmentSet equipmentType="Civilian">
 			<Equipment slot="Item0" id="Item.aserai_sword_5_t4" />
-			<Equipment slot="Head" id="Item.harad03_helmet" />
-			<Equipment slot="Body" id="Item.harad03_torso" />
-			<Equipment slot="Gloves" id="Item.harad03_glove" />
-			<Equipment slot="Leg" id="Item.harad03_boots" />
+			<Equipment slot="Head" id="Item.brass_aserai_helmet_b_open" />
+			<Equipment slot="Body" id="Item.aserai_scale_armor_on_chain" />
+			<Equipment slot="Gloves" id="Item.rough_tied_bracers" />
+			<Equipment slot="Leg" id="Item.strapped_mail_chausses" />
 		</EquipmentSet>
 	</EquipmentRoster>
 </EquipmentRosters>

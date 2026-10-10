@@ -616,7 +616,7 @@
 
   <LotrIssue id="lotr_armourer_commission_harad" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
              cultures="aserai,abanissa" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
-             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="harad05_v1_torso" relation_min="0"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="aserai_scale_armor_on_chain" relation_min="0"
              title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
              description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
              brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
@@ -627,7 +627,7 @@
 
   <LotrIssue id="lotr_armourer_commission_shaghana" template="DeliverGoods" giver_occupation="Artisan" frequency="Common"
              cultures="shaghana" count="4" count_per_difficulty="12" item_source="item:ironIngot4"
-             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="harad05_v2_torso" relation_min="0"
+             reward_gold_base="0" reward_gold_per_difficulty="600" reward_renown="2" reward_item="aserai_scale_armor_on_chain" relation_min="0"
              title_key="{=taom_lotr_issue_armourer_title}The Armourer's Commission"
              description_key="{=taom_lotr_issue_armourer_desc}The master armourer of {ISSUE_SETTLEMENT} has a heavy harness half-forged and no steel to finish it."
              brief_key="{=taom_lotr_issue_armourer_brief}The war takes every bar of good steel before it reaches my forge. I have a harness on the anvil that would turn an arrow, and nothing left to finish it with."
