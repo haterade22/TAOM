@@ -174,6 +174,9 @@ existing saves are not supported.
 
 ## Contributing
 
+Pull requests go to `bannerlord-1.5.x`, or `bannerlord-1.4.5` for 1.4.8 bug fixes. [CONTRIBUTING.md](CONTRIBUTING.md) covers the route, what a
+PR needs and the checks every PR goes through.
+
 1. Read [AGENTS.md](AGENTS.md) for coding standards and conventions
 2. Write tests first — TDD is mandatory
 3. Use the adapter pattern for any TaleWorlds sealed type
