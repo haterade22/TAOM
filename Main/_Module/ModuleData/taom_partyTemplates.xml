@@ -1615,6 +1615,24 @@
 		</stacks>
 	</MBPartyTemplate>
 
+	<!-- Feral Orcs (bandit culture; mixed Mordor, goblin, Gundabad and Dol Guldur gear) -->
+	<MBPartyTemplate id="feral_orcs_raider_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="4" max_value="20" troop="NPCCharacter.feral_orcs_snaga" />
+			<PartyTemplateStack min_value="2" max_value="20" troop="NPCCharacter.feral_orcs_archer" />
+			<PartyTemplateStack min_value="2" max_value="20" troop="NPCCharacter.feral_orcs_raider" />
+			<PartyTemplateStack min_value="1" max_value="20" troop="NPCCharacter.feral_orcs_brute" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="feral_orcs_boss_party_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.feral_orcs_boss" />
+			<PartyTemplateStack min_value="1" max_value="2" troop="NPCCharacter.feral_orcs_brute" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.feral_orcs_raider" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.feral_orcs_archer" />
+		</stacks>
+	</MBPartyTemplate>
+
 	<!-- Umbar Corsairs (replaces sea_raiders) -->
 	<MBPartyTemplate id="umbar_corsairs_raider_party_template">
 		<stacks>

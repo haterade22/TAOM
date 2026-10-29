@@ -45,6 +45,7 @@ The full set. 30 cultures are authored in `Main/_Module/ModuleData/taom_spcultur
 | `harad_raiders` | Haradrim Raiders | custom, bandit (hideouts) | 33 |
 | `rhun_raiders` | Rhûn Raiders | custom, bandit (hideouts) | 20 |
 | `gundabad_raiders` | Gundabad Orc Raiders | custom, bandit (hideouts) | 20 |
+| `feral_orcs` | Feral Orcs | custom, bandit (hideouts, added 2026-10-29) | 23 |
 | `dunland_raiders` | Dunlending Raiders | custom, bandit (hideouts) | 19 |
 | `gondor_soldiers` | Gondor Soldiers | custom, bandit (hideouts) | 10 |
 | `erebor_warriors` | Blacklocks | custom, bandit (hideouts) | 10 |

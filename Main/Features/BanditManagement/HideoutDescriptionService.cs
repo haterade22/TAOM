@@ -13,6 +13,7 @@ public sealed class HideoutDescriptionService : IHideoutDescriptionService
         new Dictionary<string, string>
         {
             ["dunland_raiders"] = "{=taom_hideout_desc_dunland}Among the wooded hills of Dunland you spy a rough camp of hide tents and a crude palisade, half-hidden in a clearing.",
+            ["feral_orcs"] = "{=taom_hideout_desc_feral_orcs}Deep in a scarred hollow of the wilds you find a ragged den of feral orcs, ringed with gnawed bones and stolen iron.",
             ["gundabad_raiders"] = "{=taom_hideout_desc_gundabad}Beneath the crags of the Misty Mountains you find a foul warren of Gundabad orcs burrowed into the bare rock.",
             ["harad_raiders"] = "{=taom_hideout_desc_harad}Out among the dunes of Harad you come upon a camouflaged Southron camp gathered about a hidden desert well.",
             ["rhun_raiders"] = "{=taom_hideout_desc_rhun}On the wide grasslands of Rhûn you make out the wagons and hide-tents of an Easterling raiding band camped in a gully.",

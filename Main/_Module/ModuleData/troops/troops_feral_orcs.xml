@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+    <!-- Feral Orcs (bandit culture feral_orcs): a deliberately mismatched warband. Every troop mixes Mordor, goblin, Gundabad and Dol Guldur pieces. A shield never shares a roster with a spear or polearm; only the brute carries those, and it carries no shield. -->
+    <NPCCharacter
+        id="feral_orcs_snaga"
+        race="goblin"
+        default_group="Infantry"
+        level="6"
+        name="{=taom_feral_orcs_snaga_name}[Feral] Feral Snaga"
+        occupation="Bandit"
+        is_hidden_encyclopedia="true"
+        culture="Culture.feral_orcs">
+        <face>
+            <face_key_template value="BodyProperty.fighter_goblin" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="30" />
+            <skill id="Riding" value="0" />
+            <skill id="OneHanded" value="35" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="30" />
+            <skill id="Bow" value="0" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="15" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.feral_orcs_raider" />
+            <upgrade_target id="NPCCharacter.feral_orcs_archer" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a01" />
+                <equipment slot="Item1" id="Item.sm_mordor_shield_small_a" />
+                <equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
+                <equipment slot="Item1" id="Item.starter_wm_gundabad_shield_a01" />
+                <equipment slot="Head" id="Item.sk_gn_orc_helmet_light_b" />
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a01" />
+                <equipment slot="Item1" id="Item.sm_mordor_shield_small_b" />
+                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_a" />
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
+                <equipment slot="Item1" id="Item.starter_wm_gundabad_shield_a02" />
+                <equipment slot="Head" id="Item.sk_dg_uruk_helmet_light_a" />
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="feral_orcs_archer"
+        race="goblin"
+        default_group="Ranged"
+        level="11"
+        name="{=taom_feral_orcs_archer_name}[Feral] Feral Bowman"
+        occupation="Bandit"
+        is_hidden_encyclopedia="true"
+        culture="Culture.feral_orcs">
+        <face>
+            <face_key_template value="BodyProperty.fighter_gundabad" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="55" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="35" />
+            <skill id="TwoHanded" value="35" />
+            <skill id="Polearm" value="35" />
+            <skill id="Bow" value="35" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="25" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_goblin_bow_t2" />
+                <equipment slot="Item1" id="Item.default_arrows" />
+                <equipment slot="Item2" id="Item.wm_mordor_set1_axe_a01" />
+                <equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
+                <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_mordor_bow_t2" />
+                <equipment slot="Item1" id="Item.barbed_arrows" />
+                <equipment slot="Item2" id="Item.wm_dol_goldur_axe_a01" />
+                <equipment slot="Head" id="Item.sk_gn_orc_helmet_light_b" />
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
+                <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_b" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_goblin_bow_t2" />
+                <equipment slot="Item1" id="Item.default_arrows" />
+                <equipment slot="Item2" id="Item.wm_gundabad_axe_a02" />
+                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_b" />
+                <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_c" />
+                <equipment slot="Cape" id="Item.sk_gb_uruk_cape_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_mordor_bow_t2" />
+                <equipment slot="Item1" id="Item.barbed_arrows" />
+                <equipment slot="Item2" id="Item.wm_mordor_set1_axe_a02" />
+                <equipment slot="Head" id="Item.sk_dg_uruk_helmet_light_b" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+                <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_c" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="feral_orcs_raider"
+        race="orc"
+        default_group="Infantry"
+        level="11"
+        name="{=taom_feral_orcs_raider_name}[Feral] Feral Raider"
+        occupation="Bandit"
+        is_hidden_encyclopedia="true"
+        culture="Culture.feral_orcs">
+        <face>
+            <face_key_template value="BodyProperty.fighter_orc_mordor" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="53" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="0" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="25" />
+        </skills>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.feral_orcs_brute" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_mordor_set1_sword_a01" />
+                <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+                <equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_med_a" />
+                <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_a" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_gundabad_axe_a02" />
+                <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_c" />
+                <equipment slot="Body" id="Item.sk_md_orc_inf_chest_med_a" />
+                <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_b" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_gundabad_mace_a01" />
+                <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+                <equipment slot="Head" id="Item.sk_dg_uruk_helmet_light_c" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_b" />
+                <equipment slot="Cape" id="Item.sk_gb_uruk_cape_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_mordor_set1_sword_a02" />
+                <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+                <equipment slot="Head" id="Item.sk_gn_orc_helmet_light_b" />
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_a" />
+                <equipment slot="Cape" id="Item.sk_md_orc_pauldron_light_c" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="feral_orcs_brute"
+        race="uruk"
+        default_group="Infantry"
+        level="16"
+        name="{=taom_feral_orcs_brute_name}[Feral] Feral Brute"
+        occupation="Bandit"
+        is_hidden_encyclopedia="true"
+        culture="Culture.feral_orcs">
+        <face>
+            <face_key_template value="BodyProperty.fighter_uruk_mordor" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="80" />
+            <skill id="Riding" value="10" />
+            <skill id="OneHanded" value="85" />
+            <skill id="TwoHanded" value="85" />
+            <skill id="Polearm" value="90" />
+            <skill id="Bow" value="0" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="40" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_gundabad_spear_a01" />
+                <equipment slot="Item1" id="Item.wm_mordor_set1_mace_a01" />
+                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_a" />
+                <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_a" />
+                <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_a" />
+                <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_a" />
+                <equipment slot="Leg" id="Item.sk_uruk_mordor_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a02" />
+                <equipment slot="Item1" id="Item.wm_gundabad_axe_a02" />
+                <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_a" />
+                <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_b" />
+                <equipment slot="Cape" id="Item.sk_gb_uruk_pauldron_med_a" />
+                <equipment slot="Gloves" id="Item.sk_gb_uruk_bracer_med_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_gundabad_spear_a02" />
+                <equipment slot="Item1" id="Item.wm_dol_goldur_axe_a03" />
+                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_med_b" />
+                <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_light_c" />
+                <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_mordor_set1_polearm_a03" />
+                <equipment slot="Item1" id="Item.wm_gundabad_mace_a02" />
+                <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_b" />
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_light_c" />
+                <equipment slot="Cape" id="Item.sk_md_orc_pauldron_med_b" />
+                <equipment slot="Gloves" id="Item.sk_md_orc_bracer_med_b" />
+                <equipment slot="Leg" id="Item.sk_md_orc_boots_med_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="feral_orcs_boss"
+        race="uruk"
+        default_group="Infantry"
+        level="26"
+        name="{=taom_feral_orcs_boss_name}[Feral] Warchief of the Wild Hosts"
+        occupation="Bandit"
+        is_hidden_encyclopedia="true"
+        culture="Culture.feral_orcs">
+        <face>
+            <face_key_template value="BodyProperty.fighter_uruk_mordor" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="130" />
+            <skill id="Riding" value="40" />
+            <skill id="OneHanded" value="150" />
+            <skill id="TwoHanded" value="120" />
+            <skill id="Polearm" value="120" />
+            <skill id="Bow" value="30" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="60" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_uruk_sword_e" />
+                <equipment slot="Item1" id="Item.sm_mordor_shield_mid_a" />
+                <equipment slot="Item2" id="Item.wm_mordor_set1_mace_a02" />
+                <equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_gb_uruk_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_gb_uruk_cape_a" />
+                <equipment slot="Gloves" id="Item.sk_uruk_mordor_bracer_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_gb_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_uruk_sword_e" />
+                <equipment slot="Item1" id="Item.sm_mordor_shield_mid_a" />
+                <equipment slot="Item2" id="Item.wm_mordor_set1_mace_a02" />
+                <equipment slot="Head" id="Item.sk_gb_uruk_helmet_heavy_b" />
+                <equipment slot="Body" id="Item.sk_uruk_mordor_chainmail_heavy_a1" />
+                <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+</NPCCharacters>

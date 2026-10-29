@@ -1335,6 +1335,22 @@
 	<string id="taom_bandit_gundabad_f3" text="{=taom_bandit_gundabad_f3}Mazra" />
 	<string id="taom_bandit_gundabad_f4" text="{=taom_bandit_gundabad_f4}Grishta" />
 	<string id="taom_bandit_gundabad_f5" text="{=taom_bandit_gundabad_f5}Narzga" />
+	<string id="taom_bandit_feral_name" text="{=taom_bandit_feral_name}Feral Orcs" />
+	<string id="taom_bandit_feral_m1" text="{=taom_bandit_feral_m1}Ghashrak" />
+	<string id="taom_bandit_feral_m2" text="{=taom_bandit_feral_m2}Durbul" />
+	<string id="taom_bandit_feral_m3" text="{=taom_bandit_feral_m3}Skaglug" />
+	<string id="taom_bandit_feral_m4" text="{=taom_bandit_feral_m4}Mogthar" />
+	<string id="taom_bandit_feral_m5" text="{=taom_bandit_feral_m5}Zogrul" />
+	<string id="taom_bandit_feral_m6" text="{=taom_bandit_feral_m6}Hrakkash" />
+	<string id="taom_bandit_feral_m7" text="{=taom_bandit_feral_m7}Blagdush" />
+	<string id="taom_bandit_feral_m8" text="{=taom_bandit_feral_m8}Urgnak" />
+	<string id="taom_bandit_feral_m9" text="{=taom_bandit_feral_m9}Thrugash" />
+	<string id="taom_bandit_feral_m10" text="{=taom_bandit_feral_m10}Vurzog" />
+	<string id="taom_bandit_feral_f1" text="{=taom_bandit_feral_f1}Ghulka" />
+	<string id="taom_bandit_feral_f2" text="{=taom_bandit_feral_f2}Dushkra" />
+	<string id="taom_bandit_feral_f3" text="{=taom_bandit_feral_f3}Rakhna" />
+	<string id="taom_bandit_feral_f4" text="{=taom_bandit_feral_f4}Zurgha" />
+	<string id="taom_bandit_feral_f5" text="{=taom_bandit_feral_f5}Brushka" />
 
 	<!-- Corsairs of Umbar (replaces sea_raiders) -->
 	<string id="taom_bandit_umbar_name" text="{=taom_bandit_umbar_name}Corsairs of Umbar" />
@@ -1425,6 +1441,7 @@
 	<!-- ============================================== -->
 	<string id="taom_hideout_desc_dunland" text="{=taom_hideout_desc_dunland}Among the wooded hills of Dunland you spy a rough camp of hide tents and a crude palisade, half-hidden in a clearing." />
 	<string id="taom_hideout_desc_gundabad" text="{=taom_hideout_desc_gundabad}Beneath the crags of the Misty Mountains you find a foul warren of Gundabad orcs burrowed into the bare rock." />
+	<string id="taom_hideout_desc_feral_orcs" text="{=taom_hideout_desc_feral_orcs}Deep in a scarred hollow of the wilds you find a ragged den of feral orcs, ringed with gnawed bones and stolen iron." />
 	<string id="taom_hideout_desc_harad" text="{=taom_hideout_desc_harad}Out among the dunes of Harad you come upon a camouflaged Southron camp gathered about a hidden desert well." />
 	<string id="taom_hideout_desc_rhun" text="{=taom_hideout_desc_rhun}On the wide grasslands of Rhûn you make out the wagons and hide-tents of an Easterling raiding band camped in a gully." />
 	<string id="taom_hideout_desc_umbar" text="{=taom_hideout_desc_umbar}Along the southern shore you find a sheltered cove where the black ships of the Corsairs of Umbar lie at anchor." />

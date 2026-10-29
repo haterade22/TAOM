@@ -162,8 +162,9 @@ T1–T4 troops only (vanilla bandits never field elite kingdom troops):
 | `harad_raiders` | `harad_reg_levy` (L6) | `harad_reg_bowman` (L16) | `harad_reg_footman` (L21) | `harad_raiders_boss` (L21) |
 | `gundabad_raiders` | `gundabad_snaga`, `gundabad_hunter` (L11) | `gundabad_grunt`, `gundabad_lurker` (L16) | `gundabad_scout` (L21) | `gundabad_raiders_boss` (L26) |
 | `umbar_corsairs` | `aux_basic` (L6) | `umbar_elite`, `umbar_elite_root1` (L11-16) | `umbar_elite_root0` (L16) | `umbar_corsairs_boss` (L21) |
+| `feral_orcs` | `feral_orcs_snaga` (L6) | `feral_orcs_raider`, `feral_orcs_archer` (L11) | `feral_orcs_brute` (L16) | `feral_orcs_boss` (L26) |
 
-The three Wave-2 offshoot cultures use the same pattern: `gondor_soldiers_boss`, `erebor_warriors_boss`, `mirkwood_stalkers_boss`.
+The three Wave-2 offshoot cultures use the same pattern: `gondor_soldiers_boss`, `erebor_warriors_boss`, `mirkwood_stalkers_boss`. The Feral Orcs ([feral-orcs.md](feral-orcs.md)) are the one bandit culture with a troop line of its own rather than a kingdom's roster.
 
 ### Dedicated hideout-boss troops (`occupation="Bandit"` is load-bearing)
 
@@ -223,6 +224,7 @@ When the player visits a hideout, the encounter menu prose led with the literal 
 | `harad_raiders` | `taom_hideout_desc_harad` | Dunes of Harad |
 | `rhun_raiders` | `taom_hideout_desc_rhun` | Grasslands of Rhûn |
 | `umbar_corsairs` | `taom_hideout_desc_umbar` | Sheltered southern cove |
+| `feral_orcs` | `taom_hideout_desc_feral_orcs` | A ragged den in a scarred hollow |
 
 The five strings live in [`taom_module_strings.xml`](../../Main/_Module/ModuleData/taom_module_strings.xml). The C# default text in `HideoutDescriptionService` matches the XML default verbatim (so the compiled fallback equals the loaded string).
 

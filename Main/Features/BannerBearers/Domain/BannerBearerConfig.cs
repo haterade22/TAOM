@@ -91,6 +91,7 @@ public sealed class BannerBearerConfig
         { "dolguldur", "standard_of_fury_t1" },
         { "gundabad", "standard_of_fury_t1" },
         { "gundabad_raiders", "standard_of_fury_t1" },
+        { "feral_orcs", "standard_of_fury_t1" },
         { "goblin", "standard_of_fury_t1" },
         { "mistymountainorcs", "standard_of_fury_t1" },
         { "bluecraig", "standard_of_fury_t1" },

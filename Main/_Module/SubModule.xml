@@ -395,6 +395,15 @@
       </IncludedGameTypes>
     </XmlNode>
     <XmlNode>
+      <XmlName id="NPCCharacters" path="troops/troops_feral_orcs"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
       <XmlName id="NPCCharacters" path="characters/npcs_gundabad"/>
       <IncludedGameTypes>
         <GameType value ="Campaign"/>

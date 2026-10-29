@@ -6970,6 +6970,40 @@
 
     <string id="taom_aso_kingdom.angaladh" text="Angáladh" />
 
+    <string id="taom_bandit_feral_name" text="Feral Orcs" />
+
+    <string id="taom_bandit_feral_m1" text="Ghashrak" />
+
+    <string id="taom_bandit_feral_m2" text="Durbul" />
+
+    <string id="taom_bandit_feral_m3" text="Skaglug" />
+
+    <string id="taom_bandit_feral_m4" text="Mogthar" />
+
+    <string id="taom_bandit_feral_m5" text="Zogrul" />
+
+    <string id="taom_bandit_feral_m6" text="Hrakkash" />
+
+    <string id="taom_bandit_feral_m7" text="Blagdush" />
+
+    <string id="taom_bandit_feral_m8" text="Urgnak" />
+
+    <string id="taom_bandit_feral_m9" text="Thrugash" />
+
+    <string id="taom_bandit_feral_m10" text="Vurzog" />
+
+    <string id="taom_bandit_feral_f1" text="Ghulka" />
+
+    <string id="taom_bandit_feral_f2" text="Dushkra" />
+
+    <string id="taom_bandit_feral_f3" text="Rakhna" />
+
+    <string id="taom_bandit_feral_f4" text="Zurgha" />
+
+    <string id="taom_bandit_feral_f5" text="Brushka" />
+
+    <string id="taom_hideout_desc_feral_orcs" text="Deep in a scarred hollow of the wilds you find a ragged den of feral orcs, ringed with gnawed bones and stolen iron." />
+
   </strings>
 
 </base>

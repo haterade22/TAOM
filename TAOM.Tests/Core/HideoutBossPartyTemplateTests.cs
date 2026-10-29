@@ -86,9 +86,9 @@ public class HideoutBossPartyTemplateTests
     public void BossTemplateSweep_IsNotVacuous()
     {
         // A renamed file or folder would empty both indexes and every assertion below would pass
-        // against nothing. TAOM ships eight bandit cultures, each with its own boss template.
-        Assert.AreEqual(8, Cultures.Count, "bandit culture count changed: " + string.Join(", ", Cultures.Select(c => c.Id)));
-        Assert.AreEqual(8, BossTemplates().Count(), "boss template count changed: " + string.Join(", ", BossTemplates().Select(kv => kv.Key)));
+        // against nothing. TAOM ships nine bandit cultures, each with its own boss template.
+        Assert.AreEqual(9, Cultures.Count, "bandit culture count changed: " + string.Join(", ", Cultures.Select(c => c.Id)));
+        Assert.AreEqual(9, BossTemplates().Count(), "boss template count changed: " + string.Join(", ", BossTemplates().Select(kv => kv.Key)));
     }
 
     [TestMethod]

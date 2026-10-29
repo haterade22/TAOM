@@ -1023,5 +1023,10 @@
     <string id="aom_angaladh_woodman_axeman_name" text="[Angáladh] Woodman Axeman" />
     <string id="aom_angaladh_woodman_bowman_name" text="[Angáladh] Woodman Bowman" />
     <string id="aom_angaladh_woodmen_guard_name" text="[Angáladh] Guard of Woodmen-town" />
+    <string id="taom_feral_orcs_snaga_name" text="[Feral] Feral Snaga" />
+    <string id="taom_feral_orcs_archer_name" text="[Feral] Feral Bowman" />
+    <string id="taom_feral_orcs_raider_name" text="[Feral] Feral Raider" />
+    <string id="taom_feral_orcs_brute_name" text="[Feral] Feral Brute" />
+    <string id="taom_feral_orcs_boss_name" text="[Feral] Warchief of the Wild Hosts" />
   </strings>
 </base>

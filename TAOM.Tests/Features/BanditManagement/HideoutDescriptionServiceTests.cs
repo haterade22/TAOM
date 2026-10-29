@@ -20,6 +20,15 @@ public class HideoutDescriptionServiceTests
     }
 
     [TestMethod]
+    public void GetDescription_FeralOrcs_ReturnsFeralTemplate()
+    {
+        var result = _sut.GetDescription("feral_orcs");
+        Assert.AreEqual(
+            "{=taom_hideout_desc_feral_orcs}Deep in a scarred hollow of the wilds you find a ragged den of feral orcs, ringed with gnawed bones and stolen iron.",
+            result);
+    }
+
+    [TestMethod]
     public void GetDescription_GundabadRaiders_ReturnsGundabadTemplate()
     {
         var result = _sut.GetDescription("gundabad_raiders");

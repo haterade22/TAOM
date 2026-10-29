@@ -1012,6 +1012,11 @@
 	<string id="iron_hills_noble_veteran_sharpshooter_name" text="{=iron_hills_noble_veteran_sharpshooter_name}[Iron Hills] Veteran Sharpshooter" />
 	<string id="taom_dunland_raiders_boss_name" text="{=taom_dunland_raiders_boss_name}[Dunland] Blaidd-lûth Warlord" />
 	<string id="taom_erebor_warriors_boss_name" text="{=taom_erebor_warriors_boss_name}Blacklock Chieftain" />
+	<string id="taom_feral_orcs_archer_name" text="{=taom_feral_orcs_archer_name}[Feral] Feral Bowman" />
+	<string id="taom_feral_orcs_boss_name" text="{=taom_feral_orcs_boss_name}[Feral] Warchief of the Wild Hosts" />
+	<string id="taom_feral_orcs_brute_name" text="{=taom_feral_orcs_brute_name}[Feral] Feral Brute" />
+	<string id="taom_feral_orcs_raider_name" text="{=taom_feral_orcs_raider_name}[Feral] Feral Raider" />
+	<string id="taom_feral_orcs_snaga_name" text="{=taom_feral_orcs_snaga_name}[Feral] Feral Snaga" />
 	<string id="taom_gondor_soldiers_boss_name" text="{=taom_gondor_soldiers_boss_name}[Gondor] Soldier Captain" />
 	<string id="taom_gundabad_raiders_boss_name" text="{=taom_gundabad_raiders_boss_name}[Gundabad] Warlord of the Vale" />
 	<string id="taom_harad_raiders_boss_name" text="{=taom_harad_raiders_boss_name}[Harad] Haradrim Warlord" />

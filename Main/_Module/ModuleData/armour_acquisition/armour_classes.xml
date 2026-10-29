@@ -1068,7 +1068,7 @@
   <Item id="sk_dg_uruk_pauldron_heavy_b" class="heavy" next="sk_dg_uruk_pauldron_elite_b" />
   <Item id="sk_dg_uruk_pauldron_heavy_c" class="heavy" next="sk_dg_uruk_pauldron_elite_c" />
   <Item id="sk_dg_uruk_pauldron_heavy_d" class="heavy" next="sk_dg_uruk_pauldron_elite_d" />
-  <Item id="sk_dg_uruk_pauldron_med_a" class="heavy" next="sk_dg_uruk_pauldron_elite_a" />
+  <Item id="sk_dg_uruk_pauldron_med_a" class="medium" next="sk_dg_uruk_pauldron_med_b" />
   <Item id="sk_dg_uruk_pauldron_med_b" class="heavy" next="sk_dg_uruk_pauldron_elite_b" />
   <Item id="sk_dg_uruk_pauldron_med_c" class="heavy" next="sk_dg_uruk_pauldron_elite_c" />
   <Item id="sk_dwarf_dain_boots_elite_a" class="named" />
@@ -1373,7 +1373,7 @@
   <Item id="sk_gb_uruk_boots_elite_a" class="elite" />
   <Item id="sk_gb_uruk_boots_elite_b" class="elite" />
   <Item id="sk_gb_uruk_boots_elite_c" class="elite" />
-  <Item id="sk_gb_uruk_boots_heavy_a" class="elite" />
+  <Item id="sk_gb_uruk_boots_heavy_a" class="heavy" next="sk_gb_uruk_boots_elite_a" />
   <Item id="sk_gb_uruk_boots_heavy_b" class="heavy" next="sk_gb_uruk_boots_elite_b" />
   <Item id="sk_gb_uruk_boots_heavy_c" class="heavy" next="sk_gb_uruk_boots_elite_c" />
   <Item id="sk_gb_uruk_boots_heavy_d" class="elite" />
@@ -1381,7 +1381,7 @@
   <Item id="sk_gb_uruk_boots_heavy_f" class="elite" />
   <Item id="sk_gb_uruk_boots_light_a" class="light" next="sk_gb_uruk_boots_med_a" />
   <Item id="sk_gb_uruk_boots_light_b" class="light" next="sk_gb_uruk_boots_med_b" />
-  <Item id="sk_gb_uruk_boots_med_a" class="medium" next="sk_gb_uruk_boots_heavy_b" />
+  <Item id="sk_gb_uruk_boots_med_a" class="medium" next="sk_gb_uruk_boots_heavy_a" />
   <Item id="sk_gb_uruk_boots_med_b" class="medium" next="sk_gb_uruk_boots_heavy_b" />
   <Item id="sk_gb_uruk_boots_med_c" class="heavy" next="sk_gb_uruk_boots_elite_c" />
   <Item id="sk_gb_uruk_bracer_elite_a" class="elite" />
@@ -1395,16 +1395,16 @@
   <Item id="sk_gb_uruk_bracer_med_a" class="medium" next="sk_gb_uruk_bracer_heavy_a" />
   <Item id="sk_gb_uruk_bracer_med_b" class="medium" next="sk_gb_uruk_bracer_heavy_b" />
   <Item id="sk_gb_uruk_bracer_med_c" class="medium" next="sk_gb_uruk_bracer_heavy_c" />
-  <Item id="sk_gb_uruk_cape_a" class="medium" next="sk_gb_uruk_pauldron_heavy_a" />
-  <Item id="sk_gb_uruk_cape_b" class="light" next="sk_gb_uruk_cape_a" />
-  <Item id="sk_gb_uruk_cape_c" class="light" next="sk_gb_uruk_cape_a" />
+  <Item id="sk_gb_uruk_cape_a" class="light" next="sk_gb_uruk_pauldron_med_a" />
+  <Item id="sk_gb_uruk_cape_b" class="light" next="sk_gb_uruk_pauldron_med_a" />
+  <Item id="sk_gb_uruk_cape_c" class="light" next="sk_gb_uruk_pauldron_med_a" />
   <Item id="sk_gb_uruk_chest_elite_a" class="elite" next="sk_gb_uruk_chest_lord_a" />
   <Item id="sk_gb_uruk_chest_elite_b" class="elite" next="sk_gb_uruk_chest_lord_b" />
   <Item id="sk_gb_uruk_chest_elite_c" class="elite" next="sk_gb_uruk_chest_lord_c" />
   <Item id="sk_gb_uruk_chest_elite_d" class="elite" next="sk_gb_uruk_chest_lord_d" />
   <Item id="sk_gb_uruk_chest_elite_e" class="elite" next="sk_gb_uruk_chest_lord_e" />
   <Item id="sk_gb_uruk_chest_elite_f" class="elite" next="sk_gb_uruk_chest_lord_f" />
-  <Item id="sk_gb_uruk_chest_heavy_a" class="elite" next="sk_gb_uruk_chest_lord_a" />
+  <Item id="sk_gb_uruk_chest_heavy_a" class="heavy" next="sk_gb_uruk_chest_elite_a" />
   <Item id="sk_gb_uruk_chest_heavy_b" class="heavy" next="sk_gb_uruk_chest_elite_b" />
   <Item id="sk_gb_uruk_chest_heavy_c" class="heavy" next="sk_gb_uruk_chest_elite_c" />
   <Item id="sk_gb_uruk_chest_heavy_d" class="heavy" next="sk_gb_uruk_chest_elite_d" />
@@ -1420,7 +1420,7 @@
   <Item id="sk_gb_uruk_chest_lord_d" class="lord" />
   <Item id="sk_gb_uruk_chest_lord_e" class="lord" />
   <Item id="sk_gb_uruk_chest_lord_f" class="lord" />
-  <Item id="sk_gb_uruk_chest_med_a" class="medium" next="sk_gb_uruk_chest_heavy_b" />
+  <Item id="sk_gb_uruk_chest_med_a" class="medium" next="sk_gb_uruk_chest_heavy_a" />
   <Item id="sk_gb_uruk_chest_med_b" class="medium" next="sk_gb_uruk_chest_heavy_b" />
   <Item id="sk_gb_uruk_chest_med_c" class="medium" next="sk_gb_uruk_chest_heavy_c" />
   <Item id="sk_gb_uruk_chest_med_d" class="medium" next="sk_gb_uruk_chest_heavy_d" />
@@ -1446,7 +1446,7 @@
   <Item id="sk_gb_uruk_helmet_heavy_k" class="heavy" next="sk_gb_uruk_helmet_elite_a" />
   <Item id="sk_gb_uruk_helmet_light_a" class="light" next="sk_gb_uruk_helmet_med_a" />
   <Item id="sk_gb_uruk_helmet_light_b" class="light" next="sk_gb_uruk_helmet_med_b" />
-  <Item id="sk_gb_uruk_helmet_light_c" class="medium" next="sk_gb_uruk_helmet_heavy_c" />
+  <Item id="sk_gb_uruk_helmet_light_c" class="light" next="sk_gb_uruk_helmet_med_c" />
   <Item id="sk_gb_uruk_helmet_light_d" class="light" next="sk_gb_uruk_helmet_med_d" />
   <Item id="sk_gb_uruk_helmet_med_a" class="medium" next="sk_gb_uruk_helmet_heavy_a" />
   <Item id="sk_gb_uruk_helmet_med_b" class="medium" next="sk_gb_uruk_helmet_heavy_b" />
@@ -2104,8 +2104,8 @@
   <Item id="sk_md_orc_brt_helmet_heavy_a" class="heavy" next="sk_md_orc_arc_helmet_heavy_a" />
   <Item id="sk_md_orc_brt_helmet_light_a" class="light" next="sk_md_orc_brt_helmet_med_a" />
   <Item id="sk_md_orc_brt_helmet_med_a" class="medium" next="sk_md_orc_brt_helmet_heavy_a" />
-  <Item id="sk_md_orc_inf_chainmail_light_a" class="light" next="sk_md_orc_inf_chainmail_med_a" />
-  <Item id="sk_md_orc_inf_chainmail_med_a" class="medium" next="sk_md_orc_inf_chest_heavy_a" />
+  <Item id="sk_md_orc_inf_chainmail_light_a" class="light" next="sk_md_orc_inf_chainmail_med_b" />
+  <Item id="sk_md_orc_inf_chainmail_med_a" class="light" next="sk_md_orc_inf_chainmail_med_b" />
   <Item id="sk_md_orc_inf_chainmail_med_b" class="medium" next="sk_md_orc_inf_chest_heavy_a" />
   <Item id="sk_md_orc_inf_chest_elite_a" class="elite" />
   <Item id="sk_md_orc_inf_chest_heavy_a" class="heavy" next="sk_md_orc_inf_chest_elite_a" />
@@ -2123,10 +2123,10 @@
   <Item id="sk_md_orc_pauldron_heavy_a" class="heavy" />
   <Item id="sk_md_orc_pauldron_heavy_b" class="heavy" />
   <Item id="sk_md_orc_pauldron_light_a" class="light" next="sk_md_orc_pauldron_med_a" />
-  <Item id="sk_md_orc_pauldron_light_b" class="light" next="sk_md_orc_pauldron_med_a" />
+  <Item id="sk_md_orc_pauldron_light_b" class="light" next="sk_md_orc_pauldron_med_b" />
   <Item id="sk_md_orc_pauldron_light_c" class="light" next="sk_md_orc_pauldron_med_a" />
   <Item id="sk_md_orc_pauldron_med_a" class="medium" next="sk_md_orc_pauldron_heavy_a" />
-  <Item id="sk_md_orc_pauldron_med_b" class="heavy" />
+  <Item id="sk_md_orc_pauldron_med_b" class="medium" next="sk_md_orc_pauldron_heavy_b" />
   <Item id="sk_md_orc_pik_helmet_heavy_a" class="heavy" next="sk_md_orc_arc_helmet_heavy_a" />
   <Item id="sk_md_orc_pik_helmet_med_a" class="medium" next="sk_md_orc_pik_helmet_heavy_a" />
   <Item id="sk_md_orc_rdr_helmet_light_a" class="light" next="sk_md_orc_rdr_helmet_med_a" />

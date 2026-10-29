@@ -48,7 +48,7 @@ public sealed class VoiceAccentMap
         Add(cultures, "khuzait", "battania");
         Add(cultures, "sturgian", "nord", "vakken");
         Add(cultures, Silent, "mordor", "isengard", "gundabad", "dolguldur", "goblin", "bluecraig", "mistymountainorcs",
-            "gundabad_raiders", "wild_trolls", "mirkwood_spiders");
+            "gundabad_raiders", "feral_orcs", "wild_trolls", "mirkwood_spiders");
         Add(cultures, "looters", "dunland_raiders", "mirkwood_stalkers");
         Add(cultures, "steppe_bandits", "rhun_raiders");
         Add(cultures, "desert_bandits", "harad_raiders");

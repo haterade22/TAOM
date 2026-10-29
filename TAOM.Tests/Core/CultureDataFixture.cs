@@ -50,7 +50,7 @@ internal static class CultureDataFixture
     /// </summary>
     public static readonly HashSet<string> HideoutOnlyCultures = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
     {
-        "dunland_raiders", "rhun_raiders", "harad_raiders", "gundabad_raiders",
+        "dunland_raiders", "rhun_raiders", "harad_raiders", "gundabad_raiders", "feral_orcs",
         "umbar_corsairs", "gondor_soldiers", "erebor_warriors", "mirkwood_stalkers"
     };
 

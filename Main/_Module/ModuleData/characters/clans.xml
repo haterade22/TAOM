@@ -1691,6 +1691,20 @@
 		tier="1"></Faction>
 
 	<Faction
+		id="feral_orcs"
+		initial_home_settlement="Settlement.hideout_feral_1"
+		banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0"
+		color="FF3A3226"
+		color2="FF6A4A2E"
+		culture="Culture.feral_orcs"
+		default_party_template="PartyTemplate.feral_orcs_raider_party_template"
+		settlement_banner_mesh="none"
+		is_bandit="true"
+		is_outlaw="true"
+		name="{=taom_bandit_feral_name}Feral Orcs"
+		tier="1"></Faction>
+
+	<Faction
 		id="umbar_corsairs"
 		initial_home_settlement="Settlement.hideout_seaside_1"
 		banner_key="11.149.166.1528.1528.764.764.1.0.0.505.266.171.483.483.764.764.0.0.44.505.142.171.451.451.764.764.0.0.43.505.266.171.483.483.764.764.0.0.0.505.2014.171.451.451.764.764.0.0.0.503.266.171.40.40.764.532.0.0.0.503.266.171.40.40.764.995.0.0.0.503.266.171.40.40.995.764.0.0.0.503.266.171.40.40.533.764.0.0.0.12000.266.116.200.200.768.774.1.0.0.502.266.116.350.350.765.765.1.0.45.502.266.116.350.350.765.765.1.0.0"

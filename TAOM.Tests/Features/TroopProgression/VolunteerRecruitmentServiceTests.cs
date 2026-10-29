@@ -3003,6 +3003,7 @@ public class VolunteerRecruitmentServiceTests
     private static bool IsIntentionallyUnrecruited(string troopId)
         => troopId.Contains("_militia_")          // settlement militia — spawned, not recruited
            || troopId.EndsWith("_boss")           // bandit-hideout bosses
+           || troopId.StartsWith("feral_orcs_")   // bandit-only line: roams and holds hideouts, no kingdom recruits it
            || troopId.EndsWith("_merc")           // tavern mercenaries — hired for gold, not volunteered
            || troopId == "cave_troll"             // non-humanoid monster; deferred pending spider-style spawn support
            || troopId == "hill_troll"             // the same monster rule: a Mordor lord's troll, never a volunteer (2026-09-25)

@@ -2109,6 +2109,7 @@
    "plain_by_category": {
     "kingdom": "{.MN}",
     "minor_faction": "{.MN}",
+    "taom_bandit_feral_name": "{.NS}",
     "clan": "{.MN}"
    },
    "plain_by_kind": {
@@ -4214,3 +4215,4 @@
   }
  }
 }
+    "taom_bandit_feral_name": "{.MN}",

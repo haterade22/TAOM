@@ -4102,6 +4102,47 @@
   </banner_bearer_replacement_weapons>
   </Culture>
 
+  <!-- Feral Orcs (bandit culture, hideouts hideout_feral_N; no clan row until the live hideouts exist) -->
+  <Culture
+    id="feral_orcs"
+    name="{=taom_bandit_feral_name}Feral Orcs"
+    bandit_chief="NPCCharacter.feral_orcs_brute"
+    bandit_raider="NPCCharacter.feral_orcs_raider"
+    bandit_bandit="NPCCharacter.feral_orcs_snaga"
+    bandit_boss="NPCCharacter.feral_orcs_boss"
+    elite_basic_troop="NPCCharacter.feral_orcs_raider"
+    executioner="NPCCharacter.feral_orcs_raider"
+    basic_troop="NPCCharacter.feral_orcs_snaga"
+    is_bandit="true"
+    can_have_settlement="true"
+    encounter_background_mesh="encounter_mountain_bandit"
+    faction_banner_key="11.330.166.1528.1528.764.764.1.0.0.22000.149.171.700.700.764.764.0.0.0.22001.142.116.350.350.765.854.1.0.0"
+    bandit_boss_party_template="PartyTemplate.feral_orcs_boss_party_template">
+    <male_names>
+      <name name="{=taom_bandit_feral_m1}Ghashrak" />
+      <name name="{=taom_bandit_feral_m2}Durbul" />
+      <name name="{=taom_bandit_feral_m3}Skaglug" />
+      <name name="{=taom_bandit_feral_m4}Mogthar" />
+      <name name="{=taom_bandit_feral_m5}Zogrul" />
+      <name name="{=taom_bandit_feral_m6}Hrakkash" />
+      <name name="{=taom_bandit_feral_m7}Blagdush" />
+      <name name="{=taom_bandit_feral_m8}Urgnak" />
+      <name name="{=taom_bandit_feral_m9}Thrugash" />
+      <name name="{=taom_bandit_feral_m10}Vurzog" />
+    </male_names>
+    <female_names>
+      <name name="{=taom_bandit_feral_f1}Ghulka" />
+      <name name="{=taom_bandit_feral_f2}Dushkra" />
+      <name name="{=taom_bandit_feral_f3}Rakhna" />
+      <name name="{=taom_bandit_feral_f4}Zurgha" />
+      <name name="{=taom_bandit_feral_f5}Brushka" />
+    </female_names>
+  <banner_bearer_replacement_weapons>
+    <item id="Item.wm_mordor_set1_axe_a01" />
+    <item id="Item.wm_mordor_set1_axe_a02" />
+  </banner_bearer_replacement_weapons>
+  </Culture>
+
   <!-- Umbar Corsairs (replaces sea_raiders) -->
   <Culture
     id="umbar_corsairs"
