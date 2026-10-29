@@ -1693,6 +1693,11 @@ public class SubModule : MBSubModuleBase
         TAOM.Features.BanditManagement.Hooks.Patch86_HideoutBossFight.Initialize(
             IoC.Resolve<IModLogger>(), () => IoC.Resolve<IHideoutBossFightService>());
         TryPatchCategory("Patch86_HideoutBossFight");
+        // Patch125 (#1063) — a bandit clan and its culture's hideouts ship in different modules (TAOM and
+        // TAOM_Map). Guards GetInfestedHideoutCount (clan without hideouts: new-game stage 11 and the hourly
+        // tick) and AddBanditToHideout (hideout without a clan: an old save, the Gold Rush incident). Both
+        // first run after Campaign.OnInitialize, so the standard batch is early enough.
+        TryPatchCategory("Patch125_HideoutClanGuard");
         // Patch64 — retints game-menu hyperlinks by faction. GameMenuVM is constructed when the
         // map/menu state opens, well after initialization, so the standard batch is early enough.
         TryPatchCategory("Patch64_MenuLinkColors");

@@ -6970,7 +6970,7 @@
 
     <string id="taom_aso_kingdom.angaladh" text="Angáladh" />
 
-    <string id="taom_bandit_feral_name" text="Feral Orcs" />
+    <string id="taom_bandit_feral_name" text="{.MN}Feral Orcs" />
 
     <string id="taom_bandit_feral_m1" text="Ghashrak" />
 

@@ -376,7 +376,7 @@
     {
       "id": "goblin",
       "folder": "gundabad",
-      "files": ["goblin", "feral_orcs"],
+      "files": ["goblin"],
       "ranks": {"overall": 9, "damage": 9, "accuracy": 10},
       "tiers": {
         "Bow": [2, 3, 4, 5]

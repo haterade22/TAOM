@@ -271,6 +271,18 @@
       "morale": { "neverRout": true, "bravery": 0 },
       "aggression": { "attack": 1.4, "shield": 0.7, "shooterError": 1.3, "chargeDistance": 1.0 }
     },
+    "feral_orcs": {
+      "tactics": [
+        { "id": "InfantryMass" },
+        { "id": "Envelop" },
+        { "id": "Charge", "multiplier": 2.0 },
+        { "id": "FullScaleAttack", "multiplier": 0.5 },
+        { "id": "FrontalCavalryCharge", "multiplier": 0.8 },
+        { "id": "DefensiveEngagement", "multiplier": 0.3, "side": "defender" }
+      ],
+      "morale": { "neverRout": true, "bravery": 0 },
+      "aggression": { "attack": 1.4, "shield": 0.7, "shooterError": 1.3, "chargeDistance": 1.0 }
+    },
     "mistymountainorcs": {
       "tactics": [
         { "id": "InfantryMass" },

@@ -2,8 +2,8 @@
 
 ## Overview
 
-The Feral Orcs are a bandit faction of masterless orcs and goblins. They live in 23 dens spread over the
-north and middle of the map, and their roaming parties come out of those dens. They answer to no Dark Lord,
+The Feral Orcs are a bandit faction of masterless orcs and goblins. They live in 23 dens across the north of the
+map, and their roaming parties come out of those dens. They answer to no Dark Lord,
 so their gear is whatever they took: Mordor, goblin, Gundabad and Dol Guldur pieces mixed in one party.
 
 ## Why This Exists
@@ -60,12 +60,33 @@ Each carries up to four inline rosters, each mixing the four orc kits.
 | `feral_orcs_boss` | uruk | 26 | hideout boss, heavy mixed kit | |
 
 The brute carries no shield because its spears are two-handed polearms (`audit_polearm_shield_parity.py`).
-The archer belongs to the goblin line in `tools/ranged_ladders.json`.
+Mike's choices from the review (2026-10-29):
+
+- **Stolen kit stays off the ladders.** All five troops are in `_ARMOUR_LADDER_EXEMPT` (`tools/taom_schema.py`):
+  they wear kingdom pieces but never set a piece's tier, so markets, loot, armoury levels and the next restat
+  ignore them. The archer is in `_RANGED_LADDER_EXEMPT` and its file is on no line in `tools/ranged_ladders.json`,
+  so it keeps both its goblin and its Mordor bow through a ladder apply.
+- **They never rout,** with the Gundabad raiders' doctrine (`culture_doctrines.json`).
+- **They grow in the field.** Every troop is bandit-cultured, so vanilla's AI upgrade rule lets a living warband
+  upgrade snaga to raider and raider to brute; the other TAOM bandit lines reuse kingdom troops and cannot.
+- **Their prisoners cannot be recruited:** vanilla refuses any troop whose culture is a bandit culture.
 
 ## Dens
 
-Mike placed the 23 dens in the map editor. `posX`/`posY` are the scene entity's `x`/`y`. All use the mountain
-hideout prefab, `map_icon="bandit_hideout_c"`, and alternate the stock SandBox scenes
+Mike placed the 23 dens in the map editor. `posX`/`posY` are the scene entity's `x`/`y`. Nearest town or castle,
+measured on the live map on 2026-10-29:
+
+| Dens | Region |
+|---|---|
+| 1 to 13, 23 | Eriador: Arthedain, Rhudaur, Cardolan, Ered Luin and the Lindon border |
+| 14 to 16 | Anduin Vale and Angáladh |
+| 17 | Dale |
+| 18 to 21 | South Rhun and Dorwinion |
+| 22 | Dol Guldur |
+
+The map draws each den with its scene entity (the mountain hideout prefab, mesh `map_icon_bandit_hideout_d`); no
+managed code reads the XML row's `map_icon`, which copies Gundabad's `bandit_hideout_c`. The dens alternate the stock
+SandBox scenes
 `mountain_hideout_002_sv` (odd ids) and `mountain_hideout_004_sv` (even ids). The name is "Feral Orc Den" in
 English, with a written translation in each of the 12 languages.
 
@@ -77,7 +98,8 @@ settlement distance cache (MCM, Map Tools).
 
 | Gate | Checks |
 |---|---|
-| `BanditHideoutLiveDataTests` (`LiveInstall`) | every hideout bandit clan owns a live hideout of its culture; the `feral_orcs` clan is homed on a live feral den; each den scene exists in some module's `SceneObj`; each den has a name row in all 12 languages |
+| `BanditHideoutLiveDataTests` (`LiveInstall`) | every hideout bandit clan (culture `is_bandit` and `can_have_settlement`, read from `taom_spcultures.xml`) owns a live hideout of its culture; the `feral_orcs` clan is homed on a live feral den; each den names exactly one scene, and that scene exists in some module's `SceneObj`; each den has a name row in all 12 languages |
+| `Patch125_HideoutClanGuard` | runtime: a clan whose culture has no den spawns nothing instead of crashing a new game; a den whose culture has no clan stays empty instead of crashing an incident ([registry](../reference/harmony-patch-registry.md#patch125_hideoutclanguard)) |
 | `HideoutBossPartyTemplateTests` | boss template shape |
 | `python tools/validate_moduledata.py` | item, troop and template refs, ladders |
 
@@ -86,7 +108,8 @@ The dens live in an unversioned module. A reinstall of an older `TAOM_Map` drops
 
 ## How to verify in game
 
-1. Restart Bannerlord, then start a new campaign. A loaded save has no Feral Orcs.
+1. Restart Bannerlord, then start a new campaign. A save made before this change shows the 23 dens but never
+   fills them (see Known limitations).
 2. Open the encyclopedia clan list and find "Feral Orcs" among the bandit clans.
 3. Travel to `hideout_feral_1` (west of the Misty Mountains, near 611, 1144) and confirm feral orc parties
    roam near it.
@@ -97,7 +120,12 @@ The dens live in an unversioned module. A reinstall of an older `TAOM_Map` drops
 
 ## Known limitations
 
-- Clans and cultures are read at new-game load: a running campaign gets no Feral Orcs.
+- A save made before this change gets no Feral Orcs clan, because the engine reads clans only on a new game. It
+  does load the culture and the 23 dens, which stay visible and empty ("There seems to be no one inside").
+  `Patch125_HideoutClanGuard` keeps the Gold Rush incident from crashing on such a den.
+- TAOM and TAOM_Map must ship together: the clan is in TAOM, the dens in TAOM_Map
+  ([release-process.md](../reference/release-process.md)). With an older map the clan raids nothing, and
+  Patch125 logs one warning.
 - The faction uses the Gundabad banner key unchanged.
 - The culture name, orc names, troop names and den description are English in every language until the
   paid translation run (#763).

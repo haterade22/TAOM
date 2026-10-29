@@ -1327,3 +1327,17 @@ on a private method that an engine bump can rename.
   (`WardensTallyBindingTests`). Also: a menu text with no attributes is re-rendered every frame by
   `GameMenuVM.IsMenuTextChanged`, so set a menu text variable as a rendered string, not a nested `TextObject`.
 - **Source:** [rca-wardens-tally-2026-10-28.md](../rca-wardens-tally-2026-10-28.md).
+
+### A pair that must load together across modules or a save needs a guard on every engine lookup between them (#1063, 2026-10-29)
+A TAOM bandit clan lives in TAOM's `clans.xml` and the hideouts of its culture in TAOM_Map's `settlements.xml`; a saved
+campaign reloads settlements but not clans (`SandBoxManager.InitializeSandboxXMLs`). So the pair can arrive half: a clan
+with no dens (TAOM with an older map) and vanilla `GetInfestedHideoutCount` throws on every new game; dens with no clan
+(a save made before the clan) and `AddBanditToHideout` dereferences a null clan from the Gold Rush incident.
+- **Why missed:** "author the dens before the clan" was written as an authoring order on one machine, never as a load
+  invariant. Every earlier bandit faction had the same exposure; the Feral Orcs were the first pair added after a release.
+  The data-flow lens traced the load to "no crash on load" and stopped one class short of the incident caller.
+- **Prevent:** when a feature adds an object whose engine consumer looks up a partner in another module or across the
+  save boundary, list each lookup and guard the missing-partner state at the engine seam (`Patch125_HideoutClanGuard`,
+  as Patch65 does for a lord's landless culture), and add a release check in both directions. For a saved campaign, read
+  which XML the load path re-reads before writing "new campaigns only".
+- **Source:** [rca-feral-orcs-2026-10-29.md](../rca-feral-orcs-2026-10-29.md).

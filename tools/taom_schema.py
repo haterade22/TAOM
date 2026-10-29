@@ -1587,6 +1587,13 @@ class Validator:
         "harad_elephant_rider": "bespoke mount rider at level 51 in light kit (rebalance_troops.SKIP_TROOP_IDS)",
         "harad_mumakil_rider": "bespoke mount rider at level 51 in light kit (rebalance_troops.SKIP_TROOP_IDS)",
         "gondor_ithilien_ranger": "tier-10 light ranger kit by design (docs/features/gondor-ithilien-ranger.md)",
+        # Feral Orcs (#1063, Mike 2026-10-29): bandits in stolen kingdom kit. As the lowest wearers they would
+        # re-tier 13 Mordor, Gundabad and Dol Guldur pieces (markets, loot, armoury levels, the next restat).
+        "feral_orcs_snaga": "bandit in stolen kingdom armour; must not anchor its tier (#1063)",
+        "feral_orcs_archer": "bandit in stolen kingdom armour; must not anchor its tier (#1063)",
+        "feral_orcs_raider": "bandit in stolen kingdom armour; must not anchor its tier (#1063)",
+        "feral_orcs_brute": "bandit in stolen kingdom armour; must not anchor its tier (#1063)",
+        "feral_orcs_boss": "bandit in stolen kingdom armour; must not anchor its tier (#1063)",
     }
     # Gondor noble lines at engine tier 2 to 7 (level 11 to 36), from the "<Region> Noble" troop
     # trees of KEYforce's spec (lotraom-assets tools/gondor_armors_and_troops.md). Mike, 2026-09-25:
@@ -1945,7 +1952,10 @@ class Validator:
     # launcher a lord or wanderer can carry above the spec's hero_ceiling. Launcher stats come from
     # the install, so the check is skipped, never faked, without it; a missing or self-contradicting
     # spec is itself a finding, because a gate that quietly checks nothing reads like a clean run.
-    _RANGED_LADDER_EXEMPT: dict = {}   # troop id -> why its launcher is off the ladder on purpose
+    _RANGED_LADDER_EXEMPT: dict = {   # troop id -> why its launcher is off the ladder on purpose
+        # Its file is on no line in tools/ranged_ladders.json, so rebalance_ranged_ladders.py leaves it alone too.
+        "feral_orcs_archer": "carries a goblin or a Mordor ladder bow by design, stolen kit (Mike, 2026-10-29, #1063)",
+    }
 
     def _ranged_ladder_inversions(self) -> list:
         launchers = getattr(self.reg, "launchers", None) or {}

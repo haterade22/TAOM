@@ -39,13 +39,25 @@ public class BanditHideoutLiveDataTests
         XDocument.Load(Path.Combine(CultureDataFixture.ModuleDataPath(), "characters", "clans.xml"))
             .Descendants("Faction").Where(f => (string?)f.Attribute("is_bandit") == "true");
 
+    // The engine's own test for a hideout gang (BanditSpawnCampaignBehavior.IsBanditFaction): a bandit culture that
+    // can have settlements. Read from the data, so a new hideout culture is covered without editing a list.
+    private static HashSet<string> HideoutBanditCultures() =>
+        new HashSet<string>(
+            XDocument.Load(Path.Combine(CultureDataFixture.ModuleDataPath(), "taom_spcultures.xml")).Descendants("Culture")
+                .Where(c => (string?)c.Attribute("is_bandit") == "true" && (string?)c.Attribute("can_have_settlement") == "true")
+                .Select(c => "Culture." + (string)c.Attribute("id")!),
+            StringComparer.OrdinalIgnoreCase);
+
     [TestMethod]
     public void EveryHideoutCultureBanditClan_OwnsALiveHideout()
     {
         var hideoutCultures = new HashSet<string>(
             LiveHideouts().Select(h => (string?)h.Attribute("culture") ?? ""), StringComparer.OrdinalIgnoreCase);
+        var banditHideoutCultures = HideoutBanditCultures();
+        Assert.IsTrue(banditHideoutCultures.Contains("Culture.feral_orcs"),
+            "taom_spcultures.xml yields no feral_orcs hideout culture: the culture scan is reading nothing");
         var orphans = BanditClans()
-            .Where(f => CultureDataFixture.HideoutOnlyCultures.Contains(((string?)f.Attribute("culture") ?? "").Replace("Culture.", "")))
+            .Where(f => banditHideoutCultures.Contains((string?)f.Attribute("culture") ?? ""))
             .Where(f => !hideoutCultures.Contains((string?)f.Attribute("culture") ?? ""))
             .Select(f => (string)f.Attribute("id")!).ToList();
         Assert.AreEqual(0, orphans.Count,
@@ -68,6 +80,13 @@ public class BanditHideoutLiveDataTests
     {
         var dens = LiveHideouts().Where(h => ((string)h.Attribute("id")!).StartsWith("hideout_feral_", StringComparison.Ordinal)).ToList();
         Assert.IsTrue(dens.Count > 0, "the live map has no hideout_feral_ dens");
+
+        // A den without its own scene_name falls back to the location template's empty one, and the hideout
+        // mission opens that empty name: every den must name a scene, not only the dens that still have one.
+        var sceneless = dens.Where(h => h.Descendants("Location")
+                .Count(l => !string.IsNullOrWhiteSpace((string?)l.Attribute("scene_name"))) != 1)
+            .Select(h => (string)h.Attribute("id")!).ToList();
+        Assert.AreEqual(0, sceneless.Count, $"these dens do not name exactly one scene: {string.Join(", ", sceneless)}");
 
         var missingScenes = dens
             .SelectMany(h => h.Descendants("Location").Select(l => (string?)l.Attribute("scene_name") ?? ""))

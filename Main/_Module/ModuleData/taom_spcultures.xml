@@ -4102,7 +4102,7 @@
   </banner_bearer_replacement_weapons>
   </Culture>
 
-  <!-- Feral Orcs (bandit culture, hideouts hideout_feral_N; no clan row until the live hideouts exist) -->
+  <!-- Feral Orcs (#1063): bandit culture; its clan is in characters/clans.xml and its 23 dens hideout_feral_N in the live TAOM_Map -->
   <Culture
     id="feral_orcs"
     name="{=taom_bandit_feral_name}Feral Orcs"
