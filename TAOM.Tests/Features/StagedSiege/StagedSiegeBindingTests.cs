@@ -8,13 +8,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.CampaignSystem.Settlements.Locations;
 using TaleWorlds.Core;
+using TaleWorlds.InputSystem;
+using TaleWorlds.Localization;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.Objects;
+using TaleWorlds.MountAndBlade.Source.Missions.Handlers;
 using TAOM.Adapters;
 using TAOM.Features.StagedSiege.Hooks;
+using TAOM.Tests.Migration;
 
 namespace TAOM.Tests.Features.StagedSiege;
 
@@ -32,6 +37,11 @@ public class StagedSiegeBindingTests
 {
     private const BindingFlags AnyMember =
         BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static;
+
+    // Loads the installed engine assemblies (Native's module bin included), so the client view below resolves its
+    // TaleWorlds.MountAndBlade.View base when this class runs alone, as TurboClickBindingTests does.
+    [ClassInitialize]
+    public static void Init(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext _) => GameAssemblies.EnsureLoaded();
 
     // --- the two patch targets -----------------------------------------------------------------------------------------
 
@@ -214,6 +224,8 @@ public class StagedSiegeBindingTests
         Property(typeof(Team), "HasTeamAi", typeof(bool));
         Property(typeof(Team), "IsPlayerTeam", typeof(bool));
         Property(typeof(Team), "IsPlayerGeneral", typeof(bool));
+        Property(typeof(Team), "IsPlayerAlly", typeof(bool));
+        Property(typeof(Mission), "PlayerTeam", typeof(Team));
         Property(typeof(Team), "ActiveAgents", typeof(MBReadOnlyList<Agent>));
         Property(typeof(Team), "Mission", typeof(Mission));
         Property(typeof(Team), "FormationsIncludingEmpty", typeof(MBList<Formation>));
@@ -272,6 +284,40 @@ public class StagedSiegeBindingTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
+    public void TheLordsHallMembers_StillResolve()
+    {
+        // Point E (StagedHallMissionAdapter): the hall controller is the hall mission's marker and its spawner, the fight area
+        // markers are read as plain values, and the capture is announced and ended through the engine's own message and result.
+        Assert.IsTrue(typeof(MissionLogic).IsAssignableFrom(typeof(LordsHallFightMissionController)));
+        Assert.IsTrue(typeof(IMissionAgentSpawnLogic).IsAssignableFrom(typeof(LordsHallFightMissionController)),
+            "the hall controller must still be a spawn logic: the capture stops both spawners through it");
+        Assert.IsTrue(typeof(MissionObject).IsAssignableFrom(typeof(FightAreaMarker)));
+        Assert.AreSame(typeof(AreaMarker), typeof(FightAreaMarker).BaseType);
+        Field(typeof(AreaMarker), "AreaIndex", typeof(int));
+        Field(typeof(AreaMarker), "AreaRadius", typeof(float));
+        Method(typeof(AreaMarker), "GetPosition", typeof(Vec3));
+
+        Method(typeof(InformationManager), "DisplayMessage", typeof(void), typeof(InformationMessage));
+        Assert.IsNotNull(typeof(InformationMessage).GetConstructor(new[] { typeof(string) }), "InformationMessage(string)");
+        Property(typeof(Settlement), "StringId", typeof(string));
+        // Phase 2 review fixes: the walls scene the arming reads (PlayerSiege.StartSiegeMission v1.5.6 PlayerSiege.cs:171-172) and the
+        // win cue (BattleEndLogic :110-111, :138).
+        Field(typeof(Settlement), "Town", typeof(Town));
+        Property(typeof(Settlement), "LocationComplex", typeof(LocationComplex));
+        Method(typeof(LocationComplex), "GetLocationWithId", typeof(Location), typeof(string));
+        Method(typeof(Location), "GetSceneName", typeof(string), typeof(int));
+        Method(typeof(Town), "GetWallLevel", typeof(int));
+        Method(typeof(MBInformationManager), "AddQuickInformation", typeof(void), typeof(TextObject), typeof(int),
+            typeof(BasicCharacterObject), typeof(Equipment), typeof(string));
+        Method(typeof(GameTexts), "FindText", typeof(TextObject), typeof(string), typeof(string));
+        Method(typeof(GameTexts), "SetVariable", typeof(void), typeof(string), typeof(string));
+        Method(typeof(HotKeyManager), "GetHotKeyId", typeof(string), typeof(string), typeof(int));
+        Method(typeof(HyperlinkTexts), "GetKeyHyperlinkText", typeof(string), typeof(string), typeof(float));
+        Method(typeof(MissionResult), "CreateSuccessful", typeof(MissionResult), typeof(IMission), typeof(bool));
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
     public void TheFoldedEnumValues_MatchTheEngine()
     {
         // `x == BattleSideEnum.Attacker` and the enum arguments of the settings constructor are folded to constants at COMPILE
@@ -281,6 +327,7 @@ public class StagedSiegeBindingTests
         Assert.AreEqual(0, Convert.ToInt32(Enum.Parse(typeof(MissionSpawnSettings.ReinforcementSpawnMethod), "Balanced")));
         Assert.AreEqual(1, Convert.ToInt32(Enum.Parse(typeof(MissionSpawnSettings.ReinforcementTimingMethod), "CustomTimer")));
         Assert.AreEqual(0, Convert.ToInt32(Enum.Parse(typeof(Settlement.SiegeState), "OnTheWalls")));
+        Assert.AreEqual(1, Convert.ToInt32(Enum.Parse(typeof(Settlement.SiegeState), "InTheLordsHall")));
         Assert.AreEqual(4, Convert.ToInt32(Enum.Parse(typeof(FormationClass), "Skirmisher")));
         Assert.AreEqual(5, Convert.ToInt32(Enum.Parse(typeof(FormationClass), "HeavyInfantry")));
         Assert.AreEqual(6, Convert.ToInt32(Enum.Parse(typeof(FormationClass), "LightCavalry")));
@@ -297,19 +344,19 @@ public class StagedSiegeBindingTests
         // RuntimeHelpers.PrepareMethod forces the JIT, which resolves every member a body references. A drifted member throws
         // here instead of at the first assault (lessons/harmony-il.md: a body's own try cannot catch it). RequiresGameIL, like
         // SiegeForcesBindingTests: the claim is about the INSTALLED engine, and CI's binding gate runs against the
-        // metadata-only reference assemblies. The client view (StagedSiegeMissionView) is left out on purpose: its base type
-        // lives in TaleWorlds.MountAndBlade.View.dll, which sits only under Modules/Native/bin, outside this test's assembly
-        // probe, so preparing it fails alone and passes only after another test loaded the DLL. The Client build checks it.
+        // metadata-only reference assemblies. The client view's base type lives in TaleWorlds.MountAndBlade.View.dll under
+        // Modules/Native/bin; the class initializer loads it, so this test passes alone as well as in the full run.
         var prepared = 0;
         foreach (var type in new[]
                  {
                      typeof(StagedSiegeMissionAdapter), typeof(StagedSiegeSpawnSettingsPatch), typeof(StagedSiegeSpawnFramePatch),
                      typeof(StagedReinforcementTimer), typeof(TacticStagedObjective), typeof(StagedSiegeMissionBehavior),
-                     typeof(StagedSiegeMissionEdge), typeof(StagedSiegeCommandQueue),
+                     typeof(StagedSiegeMissionEdge), typeof(StagedSiegeCommandQueue), typeof(StagedHallMissionAdapter),
+                     typeof(StagedSiegeMissionView),
                  })
             prepared += PrepareAll(type);
 
-        Assert.IsTrue(prepared >= 40, $"expected to compile every method of the eight types and their closures, compiled {prepared}");
+        Assert.IsTrue(prepared >= 40, $"expected to compile every method of the ten types and their closures, compiled {prepared}");
     }
 
     private static int PrepareAll(Type type)

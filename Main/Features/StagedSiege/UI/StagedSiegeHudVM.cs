@@ -143,6 +143,17 @@ public sealed class StagedSiegeHudVM : ViewModel
         IsVisible = true;
     }
 
+    /// <summary>The lord's hall fight: point E is the objective, and the progress line goes once it is taken.</summary>
+    public void Refresh(HallSnapshot snapshot)
+    {
+        var model = StagedSiegeHudModel.FromHall(snapshot);
+        StripText = model.Strip;
+        MarkerText = model.PointLetter.ToString();
+        ObjectiveText = ObjectiveLine(model.ObjectiveKind, MarkerText);
+        ProgressText = snapshot.Finished ? string.Empty : ProgressLine(model);
+        IsVisible = true;
+    }
+
     public void PlaceMarker(bool visible, float offsetX, float offsetY)
     {
         IsMarkerVisible = visible;
@@ -158,6 +169,10 @@ public sealed class StagedSiegeHudVM : ViewModel
                 return new TextObject("{=taom_staged_siege_take}Take point {POINT}").SetTextVariable("POINT", letter).ToString();
             case HudObjectiveKind.Hold:
                 return new TextObject("{=taom_staged_siege_hold}Hold point {POINT}").SetTextVariable("POINT", letter).ToString();
+            case HudObjectiveKind.TakeHall:
+                return new TextObject("{=taom_staged_siege_take_hall}Take the lord's hall").ToString();
+            case HudObjectiveKind.HallTaken:
+                return new TextObject("{=taom_staged_siege_hall_taken}The lord's hall is taken.").ToString();
             case HudObjectiveKind.Hall:
                 return new TextObject("{=taom_staged_siege_hall}The defenders fall back to the lord's hall").ToString();
             default:

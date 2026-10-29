@@ -8,6 +8,7 @@ using TAOM.Core.Domain;
 using TAOM.Core.Logging;
 using TAOM.Features.CreatureSiegeRole;
 using TAOM.Features.CreatureSiegeRole.Domain;
+using TAOM.Features.StagedSiege;
 using TAOM.Tests.Features.SiegeForces;
 using static TAOM.Tests.Features.CreatureSiegeRole.CreatureSiegeFixtures;
 
@@ -133,7 +134,7 @@ internal sealed class FakeCreature
 /// </summary>
 internal sealed class SiegeSceneFixture : IDisposable
 {
-    public SiegeSceneFixture(FakeRaceManager? races = null)
+    public SiegeSceneFixture(FakeRaceManager? races = null, IStagedSiegeFieldReader? staged = null)
     {
         Mission = Substitute.For<ICreatureSiegeMissionAdapter>();
         Logger = Substitute.For<IModLogger>();
@@ -163,7 +164,7 @@ internal sealed class SiegeSceneFixture : IDisposable
             return Creatures.Select(c => c.Adapter).ToList();
         });
 
-        Service = new CreatureSiegeRoleService(Mission, Races, 2f, Logger);
+        Service = new CreatureSiegeRoleService(Mission, Races, 2f, Logger, staged);
     }
 
     public ICreatureSiegeMissionAdapter Mission { get; }

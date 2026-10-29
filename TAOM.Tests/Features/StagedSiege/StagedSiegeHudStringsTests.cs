@@ -43,6 +43,21 @@ public class StagedSiegeHudStringsTests
     }
 
     [TestMethod]
+    public void TheHallKeys_ShipAndTheViewModelUsesThem()
+    {
+        var rows = XDocument.Load(RepoPaths.RepoPath("Main", "_Module", "ModuleData", "taom_module_strings.xml")).Descendants("string")
+            .ToDictionary(s => (string)s.Attribute("id")!, s => (string)s.Attribute("text")!);
+        var source = RepoPaths.ReadSource("Main/Features/StagedSiege/UI/StagedSiegeHudVM.cs", stripComments: true);
+        var adapter = RepoPaths.ReadSource("Main/Adapters/StagedHallMissionAdapter.cs", stripComments: true);
+
+        StringAssert.EndsWith(rows["taom_staged_siege_take_hall"], "}Take the lord's hall");
+        StringAssert.EndsWith(rows["taom_staged_siege_hall_taken"], "}The lord's hall is taken.");
+        StringAssert.Contains(source, "{=taom_staged_siege_take_hall}");
+        StringAssert.Contains(source, "{=taom_staged_siege_hall_taken}");
+        StringAssert.Contains(adapter, "{=taom_staged_siege_hall_taken}");
+    }
+
+    [TestMethod]
     public void TheFragmentKeys_AreRetiredFromTheEnglishFileAndEveryLanguage()
     {
         foreach (var key in RetiredKeys)

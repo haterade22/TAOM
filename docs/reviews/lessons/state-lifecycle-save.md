@@ -1271,3 +1271,13 @@ A kingdom name lives in the save as `{=taom_arthedain_name}Kingdom of Arthedain`
 - **Why missed:** "the game saves the name" was written down without reading how a saved `TextObject` resolves.
 - **Prevent:** when you change the English of a saved text, state the old-save result per language: English keeps the saved inline text; the other languages follow the key (`MBTextManager.GetLocalizedText`, v1.5.6).
 - **Source:** [rca-bare-kingdom-names-2026-10-28.md](../rca-bare-kingdom-names-2026-10-28.md) finding 1.
+
+### Read the state the campaign saves; do not hand the same fact across missions in memory (#1054, 2026-10-29)
+Staged Siege's lord's hall armed point E from an in-memory record the walls mission left behind, and the first hall
+mission used it up. Vanilla saves the same fact: the settlement stays `InTheLordsHall` (`[SaveableProperty(142)]`,
+Settlement.cs:490) through a retreat and a reload until `FinalizeSiegeEvent` resets it. A retreat and re-attack, a reload
+or a restart gave a vanilla hall.
+- **Why missed:** the design paired two missions through memory without asking which state the engine already saves.
+- **Prevent:** when a feature follows campaign state across missions, read the saved state when it acts (here: the siege
+  state, the settlement's walls scene, the switch). A static or in-memory record is only for diagnostics.
+- **Source:** [rca-staged-siege-phase2-2026-10-29.md](../rca-staged-siege-phase2-2026-10-29.md) finding 1.

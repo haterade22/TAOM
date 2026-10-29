@@ -1549,7 +1549,7 @@ Vanilla grants 1000 Steward XP through `OnSettlementSkillExercised` each time a 
 
 **Coexistence.** Patch102 (Siege Forces) is Normal priority on the same method and writes only the four spawn-total ints; this prefix writes only `spawnSettings` and reads none of the ints, so order cannot change either result, and Low priority runs it second. The mission behavior arms the service in `EarlyStart`, before the siege spawn handler's `AfterStart` calls `InitWithSinglePhase`, which the prefix needs.
 
-**Verified by IL, confirmed at runtime.** (1) The ref write into the `in` argument reaches `Init`: the vanilla siege handler passes its local by address (`SandBoxSiegeMissionSpawnHandler.cs:18-19`), `InitWithSinglePhase` forwards the same pointer (`DefaultBattleMissionAgentSpawnLogic.cs:199`) and `Init` copies it (:397); the `S2 deployment over: settings live` line confirms it in the first game run.
+**Verified by IL; owed in game: the S2 settings-live line.** (1) The ref write into the `in` argument reaches `Init`: the vanilla siege handler passes its local by address (`SandBoxSiegeMissionSpawnHandler.cs:18-19`), `InitWithSinglePhase` forwards the same pointer (`DefaultBattleMissionAgentSpawnLogic.cs:199`) and `Init` copies it (:397); the `S2 deployment over: settings live` line confirms it in the first game run.
 
 **UNVERIFIED until the first game run.** (2) Whether a navmesh-less `WorldPosition` resolves in the troop spawn (the spawn projects onto the navmesh, :3983-3995): the `S2 reinforcement ... m from the staged frame` lines carry the distance.
 

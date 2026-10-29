@@ -13,9 +13,10 @@ namespace TAOM.Features.StagedSiege.Hooks;
 
 /// <summary>
 /// The staged siege HUD layer. Built by the engine as a <c>[DefaultView]</c> in every mission with a screen (a view TAOM adds
-/// itself is never registered, #970); inert unless the mission is a siege battle. Each screen tick reads
-/// <see cref="StagedSiegeSlot.SnapshotFor"/> (null when no staged siege is armed for this mission, which detaches the layer),
-/// refreshes the text four times a second and projects the marker over the current point every frame. The layer takes no input
+/// itself is never registered, #970); inert unless a staged siege or a staged hall is armed for the mission. Each screen tick reads
+/// <see cref="StagedSiegeSlot.SnapshotFor"/> or, in the lord's hall, <see cref="StagedSiegeSlot.HallFor"/> (both null when nothing is
+/// armed for this mission, which detaches the layer), refreshes the text four times a second and projects the marker over the
+/// current point every frame. The layer takes no input
 /// restrictions and every widget ignores events, so attack, block and the camera are untouched. The core assembly's internals
 /// are visible to TAOM.Client, so no seam interface sits between the slot and this view.
 /// </summary>
@@ -35,13 +36,14 @@ public sealed class StagedSiegeMissionView : MissionView
     {
         base.OnMissionScreenTick(dt);
         // Latched: a repeating fault would otherwise log and rebuild the layer every frame.
-        if (_failed || Mission == null || !Mission.IsSiegeBattle)
+        if (_failed || Mission == null)
             return;
 
         try
         {
             var snapshot = StagedSiegeSlot.SnapshotFor(Mission);
-            if (snapshot == null)
+            var hall = snapshot == null ? StagedSiegeSlot.HallFor(Mission) : null;
+            if (snapshot == null && hall == null)
             {
                 Detach();
                 return;
@@ -56,10 +58,16 @@ public sealed class StagedSiegeMissionView : MissionView
             if (_sinceRefresh >= RefreshIntervalSec)
             {
                 _sinceRefresh = 0f;
-                _vm.Refresh(snapshot);
+                if (snapshot != null)
+                    _vm.Refresh(snapshot);
+                else
+                    _vm.Refresh(hall!);
             }
 
-            PlaceMarker(snapshot);
+            if (snapshot != null)
+                PlaceMarker(snapshot.Finished, snapshot.Zone.Center);
+            else
+                PlaceMarker(hall!.Finished, hall.Centre);
         }
         catch (System.Exception ex)
         {
@@ -115,16 +123,15 @@ public sealed class StagedSiegeMissionView : MissionView
         _movie = null;
     }
 
-    private void PlaceMarker(Domain.StageSnapshot snapshot)
+    private void PlaceMarker(bool finished, Domain.StagePoint centre)
     {
         var camera = MissionScreen?.CombatCamera;
-        if (_vm == null || camera == null || snapshot.Finished)
+        if (_vm == null || camera == null || finished)
         {
             _vm?.PlaceMarker(false, 0f, 0f);
             return;
         }
 
-        var centre = snapshot.Zone.Center;
         // Copied from RealmBordersMapView.Project: w < 0 is behind the camera; keep a margin off-screen. WorldToScreenInsideUsableArea
         // answers inside the usable area, so the extent below is the usable area too.
         float width = Screen.RealScreenResolutionWidth * ScreenManager.UsableArea.x;

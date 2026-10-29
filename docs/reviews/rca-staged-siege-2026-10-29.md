@@ -7,14 +7,14 @@ game (the flag object, the gates and the recorder) and before any Phase 1 game r
 mission-tick service, an AI-thread tactic, native calls). Three lenses ran in one wave: data flow, engine compatibility,
 XML. Codex was not dispatched: the session had no paid-dispatch word for this work.
 
-- **Severity:** 0 CRITICAL, 0 HIGH, 8 MEDIUM, 12 LOW. No second wave was due. The fix re-review (data flow) added 1
-  MEDIUM and 5 LOW, rows 21 to 26.
+- **Severity:** 0 CRITICAL, 0 HIGH, 8 MEDIUM, 12 LOW. No second wave was due. The fix re-reviews added 2 MEDIUM and 7
+  LOW: rows 21 to 26 (data flow) and 27 to 29 (engine).
 - **Where they came from:** mostly the seams between this feature and the rest of the game: a vanilla tactic helper that
   ignores who commands a formation, a vanilla rout check that reads a value the staged timer made meaningless, the
   engine's refusal to split a player's formation, the sergeant popup keyed on the tactic's type name, the console thread.
-- **Outcome:** 25 of 26 findings fixed in the working tree with tests; one (row 19) not applied, with the reason below.
-  The engine-compatibility re-review of the fixes stopped part way on the weekly usage limit and is owed (it resumes
-  after 2026-10-31). The first Phase 1 game run is owed.
+- **Outcome:** all 29 findings fixed with tests (rows 1 to 26 in commit `77306cf6b`, rows 27 to 29 after it). The
+  engine-compatibility re-review stopped once on the weekly usage limit and finished after it lifted. The first Phase 1
+  game run is owed.
 
 Feature doc: [staged-siege.md](../features/staged-siege.md). Fix list as applied: rows below.
 
@@ -43,7 +43,7 @@ DLLs (taom-src cache) before it was entered here.
 | 16 | LOW | An "S2 release" log line was a reservation, not a batch. Lens: engine. | Log semantics | | Renamed `S2 reservation`; doc rows say "interval between reservations". |
 | 17 | LOW | Doc and comment wording about the deployment plan and the adapter's try; `S4 gates opened` counted disabled gates. Lens: engine. | Docs, count | | Reworded; `OpenGates` skips `IsDisabled`. |
 | 18 | LOW | The `in` write of the spawn settings was marked UNVERIFIED; the IL proves it reaches `Init`. Lens: engine. | Stale UNVERIFIED | | Comment and registry say the IL proves it, the S2 line confirms it. |
-| 19 | LOW | The client HUD view is outside the binding test's PrepareMethod gate. Lens: engine. | Gate coverage | | NOT APPLIED: adding it made the test depend on test order (`TaleWorlds.MountAndBlade.View.dll` sits only under `Modules/Native/bin`, which the test's assembly probe does not search; it failed alone with FileNotFoundException). The Client build compile-checks the view. |
+| 19 | LOW | The client HUD view is outside the binding test's PrepareMethod gate. Lens: engine. | Gate coverage | | First not applied (it failed alone with FileNotFoundException, misread as a probe gap); applied in row 28 once the real cause was found. |
 | 20 | LOW | Doc owed list lacked two checks: the hall when about 20% of the defender reserve is unspent, and defender reinforcements possibly assigned into the detachment formation. Lens: engine. | Owed checks | | Both added to the doc's open list. |
 | 21 | MEDIUM | Re-review of row 2's fix: the standing count was sampled once per 0.5 s pass, so a softlock kept approving on every engine tick after reinforcements began to spawn. Each approval runs `CheckReinforcementBatch`, which restarts every formation's spawn slot (`ResetReinforcementSpawnedUnitCountsPerFormation`, MissionBattleSideSpawnContext.cs:224-233, :503-517), so about 30 troops a side would spawn stacked on slot 0. Lens: data flow (fix re-review). | A cache sampled slower than its consumer acts | The fix moved the read from a live per-tick count to a per-pass cache without asking what each extra approval costs the engine. | `NoteAgentBuilt` raises the side's standing to at least 1, so the first built agent ends the softlock; RED-then-GREEN test `ShouldReleaseBatch_Softlock_EndsOnTheFirstBuiltAgent_BeforeTheNextPass`. Lesson in `lessons/adapters-taleworlds-api.md`. |
 | 22 | LOW | `CountStanding` read only the main team of a side; vanilla's rout check walks every team of the side, and a campaign siege can field an ally team. Lens: data flow (fix re-review). | Scope narrower than the mirrored rule | | Counts every team with that side, as `CountInZone` does. |
@@ -51,6 +51,9 @@ DLLs (taom-src cache) before it was entered here.
 | 24 | LOW | The steep-look refusal also refused point records, whose facing is never read. Lens: data flow (fix re-review). | Validation on an unused field | | Refused only for defender and detachment frames. |
 | 25 | LOW | `trickleSeconds` now also sets the rout grace (interval plus 3 s), and the tunables table did not say so. Lens: data flow (fix re-review). | Doc | | Table row says it. |
 | 26 | LOW | Nothing in the binding test said why the client view is absent from its list. Lens: data flow (fix re-review). | Unexplained omission | | A comment beside the list gives the reason (row 19). |
+| 27 | MEDIUM | Re-review of row 1's fix: the guard asked about the player's own TEAM, but `StopUsingAllMachines` clears `ForcedUse` (the player's engine order) on every engine of the SIDE (TacticComponent.cs:536-540). An AI ally team on the player's side (a lord who joins the assault outside his army, MissionCombatantsLogic.cs:103-105) still reset a player general's orders in stage A. Lens: engine (fix re-review, resumed after the usage limit). | Per-team guard on per-side state | Row 1's fix read only the `StopUsingMachine` half of the helper, which does filter by team. | Mike chose the per-side rule: `StagePlan.StopsMachines(stage, side, playerCommandsSide)`, with `playerCommandsSide = Team.IsPlayerAlly && PlayerTeam.IsPlayerGeneral`; RED-then-GREEN unit test; both members pinned. Lesson in `lessons/adapters-taleworlds-api.md` (the "every reader and guard" entry covers it). |
+| 28 | LOW | Row 19's reason was wrong: the test's assembly probe does cover Native's bin; the class just never called `GameAssemblies.EnsureLoaded()`. Lens: engine (fix re-review). | Wrong diagnosis | | A class initializer loads the assemblies, the client view joined the IL-compile list, and the test passes alone (1/1, run in isolation). Row 19 is now applied. |
+| 29 | LOW | The registry heading said "confirmed at runtime" before any game run. Lens: engine (fix re-review). | Claim ahead of evidence | | "Verified by IL; the first game run confirms it." |
 
 ## Root-cause patterns
 
@@ -74,7 +77,7 @@ player-facing joins. Where a cheap gate can cover the whole rule, widen the gate
 - **XML** ran 12 gates (0 failed) and found the markup, the dead tunable and the fragment keys: rows 6, 7, 9, 10.
 - **Standards, efficiency, completeness, design:** skipped by tier (no CRITICAL or HIGH).
 - **Fix re-review:** data flow re-traced every fix and found rows 21 to 26; engine compatibility stopped on the weekly
-  usage limit before it reported, so its re-review of rows 1 to 5 is owed.
+  usage limit, resumed against commit `77306cf6b` once it lifted, verified 21 items and found rows 27 to 29.
 
 ## Feedback memories to codify
 
@@ -83,7 +86,5 @@ None. The lessons below carry the rules.
 ## Follow-ups
 
 - FOLLOW-UP #1054: Creature Siege Role reads the stage (row 8), Phase 2.
-- FOLLOW-UP #1054: the engine-compatibility re-review of the fixes, owed after the usage limit resets (2026-10-31).
 - FOLLOW-UP #763: paid translation of the staged siege keys (all 12 languages hold English seeds).
 - FOLLOW-UP no issue: `BattleActionBar.xml:4` carries the same dead root `DataSource` (row 7); pre-existing, outside this change, harmless at runtime; it goes with that feature's next edit.
-- FOLLOW-UP no issue: the PrepareMethod gate cannot load `TaleWorlds.MountAndBlade.View.dll` (row 19); it applies to every client view, and the Client build compile-checks them.

@@ -108,6 +108,102 @@ public class StagedSiegeSlotTests
     }
 
     [TestMethod]
+    public void ClearArmed_KeepsLastEnded()
+    {
+        // The next mission's OnCreated runs ClearArmed; the walls end it left must survive for that battle's inert log.
+        StagedSiegeSlot.Arm(_service);
+        StagedSiegeSlot.SetLastEnded("a_scene", StagedEnd.DefenderPushedBack, new DateTime(2026, 10, 29, 12, 0, 0, DateTimeKind.Utc));
+
+        StagedSiegeSlot.ClearArmed();
+
+        Assert.IsFalse(StagedSiegeSlot.HasArmed);
+        Assert.IsNotNull(StagedSiegeSlot.LastEnded);
+        Assert.AreEqual("a_scene", StagedSiegeSlot.LastEnded!.Value.Scene);
+    }
+
+    // --- the lord's hall -----------------------------------------------------------------------------------------------
+
+    private StagedHallService _hall = null!;
+
+    private void ArmHall(object token)
+    {
+        var adapter = Substitute.For<IStagedHallAdapter>();
+        adapter.MissionToken.Returns(token);
+        _hall = new StagedHallService(adapter, StagedSiegeSceneCatalog.FromText(null, Substitute.For<IModLogger>()), Substitute.For<IModLogger>());
+        StagedSiegeSlot.ArmHall(_hall);
+    }
+
+    private static HallSnapshot HallOf(object token, float progress = 0.3f, bool finished = false) =>
+        new(token, progress, CaptureStatus.Rising, new StagePoint(1f, 2f, 3f), finished);
+
+    [TestMethod]
+    public void PublishHall_ArmedMission_ReadBack()
+    {
+        ArmHall(_token);
+        var snapshot = HallOf(_token);
+
+        StagedSiegeSlot.PublishHall(snapshot);
+
+        Assert.AreSame(snapshot, StagedSiegeSlot.HallFor(_token));
+    }
+
+    [TestMethod]
+    public void PublishHall_OtherMission_OrNothingArmed_Dropped()
+    {
+        StagedSiegeSlot.PublishHall(HallOf(_token));
+        Assert.IsNull(StagedSiegeSlot.HallFor(_token));
+
+        ArmHall(_token);
+        StagedSiegeSlot.PublishHall(HallOf(new object()));
+
+        Assert.IsNull(StagedSiegeSlot.HallFor(_token));
+    }
+
+    [TestMethod]
+    public void HallFor_OtherMission_Null()
+    {
+        ArmHall(_token);
+        StagedSiegeSlot.PublishHall(HallOf(_token));
+
+        Assert.IsNull(StagedSiegeSlot.HallFor(new object()));
+        Assert.IsNull(StagedSiegeSlot.HallFor(null));
+    }
+
+    [TestMethod]
+    public void ClearHallIf_OtherMissionKeeps_OwnClears()
+    {
+        ArmHall(_token);
+        StagedSiegeSlot.PublishHall(HallOf(_token));
+
+        StagedSiegeSlot.ClearHallIf(new object());
+        Assert.IsNotNull(StagedSiegeSlot.HallFor(_token));
+
+        StagedSiegeSlot.ClearHallIf(_token);
+        Assert.IsNull(StagedSiegeSlot.HallFor(_token));
+    }
+
+    [TestMethod]
+    public void ClearArmed_AlsoDropsTheHall()
+    {
+        ArmHall(_token);
+        StagedSiegeSlot.PublishHall(HallOf(_token));
+
+        StagedSiegeSlot.ClearArmed();
+
+        Assert.IsNull(StagedSiegeSlot.HallFor(_token));
+    }
+
+    [TestMethod]
+    public void TheHallAndTheWalls_DoNotShareASnapshot()
+    {
+        ArmHall(_token);
+        StagedSiegeSlot.PublishHall(HallOf(_token));
+
+        Assert.IsNull(StagedSiegeSlot.SnapshotFor(_token), "the wall snapshot reader sees no stage in a hall mission");
+        Assert.IsFalse(StagedSiegeSlot.HasArmed);
+    }
+
+    [TestMethod]
     public void ClearArmed_DropsServiceAndSnapshot()
     {
         StagedSiegeSlot.Arm(_service);

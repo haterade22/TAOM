@@ -693,3 +693,14 @@ no patrols or that patrol limits are 15/20/25 (`bandit-management.md`, `party-te
 - **Prevent:** list each fact the change makes false, and grep the docs for that fact's words and numbers
   (`patrol`, `10 + 5`, `15, 20`), not only for the feature's names.
 - **Source:** `docs/reviews/rca-keep-wardens-security-2026-10-26.md` finding 7.
+
+### A rule that takes control of the player's side leaves alone what the player commands (#1054, 2026-10-29)
+Staged Siege took control of things on the player's side three times, and each first version forgot that the player may
+command them: siege engines (the stage tactic undid his orders), engines again through an AI ally team (the stop clears
+`ForcedUse` side-wide), then troll formations (a staged release ran before Creature Siege Role's player-command rules).
+- **Why missed:** each rule was written for the formations the feature steers, and the carve-out decided for the first
+  case was not carried to the next.
+- **Prevent:** a TAOM rule that steers or releases units acts only on AI-controlled formations (`Formation.IsAIControlled`)
+  and asks whether the player commands the side before it changes side-wide state. State it once in the feature doc and
+  test the player-commanded case for every new rule.
+- **Source:** [rca-staged-siege-phase2-2026-10-29.md](../rca-staged-siege-phase2-2026-10-29.md) finding 2; [rca-staged-siege-2026-10-29.md](../rca-staged-siege-2026-10-29.md) findings 1 and 27.

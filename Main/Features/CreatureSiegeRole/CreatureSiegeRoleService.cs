@@ -8,6 +8,8 @@ using TAOM.Core.Logging;
 using TAOM.Core.Validation;
 using TAOM.Features.CreatureSiegeRole.Domain;
 using TAOM.Features.SiegeForces.Domain;
+using TAOM.Features.StagedSiege;
+using StagedSide = TAOM.Features.StagedSiege.Domain.StagedSide;
 
 namespace TAOM.Features.CreatureSiegeRole;
 
@@ -41,6 +43,10 @@ public sealed class CreatureSiegeRoleService
     private readonly IRaceManager _raceManager;
     private readonly float _gateDamageMultiplier;
     private readonly IModLogger _logger;
+    private readonly IStagedSiegeFieldReader? _staged;
+
+    // What the staged siege said about each side (index: SiegeSide Attacker 1, Defender 2, minus 1) this pass; null until asked.
+    private readonly bool?[] _stagedOwns = new bool?[2];
 
     private readonly Dictionary<object, Route> _routes = new(ReferenceIdentity.Instance);
     private readonly List<object> _forget = new();
@@ -71,12 +77,13 @@ public sealed class CreatureSiegeRoleService
     private bool _warnedQueue;
 
     public CreatureSiegeRoleService(ICreatureSiegeMissionAdapter mission, IRaceManager raceManager, float gateDamageMultiplier,
-        IModLogger logger)
+        IModLogger logger, IStagedSiegeFieldReader? staged = null)
     {
         _mission = mission;
         _raceManager = raceManager;
         _gateDamageMultiplier = gateDamageMultiplier;
         _logger = logger;
+        _staged = staged;
     }
 
     /// <summary>True from a successful <see cref="TryActivate"/> until <see cref="Shutdown"/>. A fault stops routing but not this.</summary>
@@ -145,6 +152,8 @@ public sealed class CreatureSiegeRoleService
             UpdateGates(now);
             creatures = _mission.CollectCreatures(_isCreatureRace!);
             _pass++;
+            _stagedOwns[0] = null;
+            _stagedOwns[1] = null;
             for (var i = 0; i < creatures.Count; i++)
                 Process(creatures[i]);
 
@@ -295,7 +304,20 @@ public sealed class CreatureSiegeRoleService
 
         var side = agent.Side;
         var past = side == SiegeSide.Attacker && !_outerPassable && IsPastOuterGate(agent);
-        return new RoleInputs(true, agent.IsFleeing, side, agent.Formation, _outerPassable, innerPresent, _innerPassable, past, _ramWorking);
+        return new RoleInputs(true, agent.IsFleeing, side, agent.Formation, _outerPassable, innerPresent, _innerPassable, past, _ramWorking,
+            StagedPlanOwns(side));
+    }
+
+    // Asked once per side per pass, on the first creature of that side: a staged siege (docs/features/staged-siege.md) steers
+    // the side's formations in some stages, and a creature's script would override them.
+    private bool StagedPlanOwns(SiegeSide side)
+    {
+        if (_staged == null || (side != SiegeSide.Attacker && side != SiegeSide.Defender)) return false;
+
+        var slot = side == SiegeSide.Attacker ? 0 : 1;
+        _stagedOwns[slot] ??= _staged.OwnsField(_token!,
+            side == SiegeSide.Attacker ? StagedSide.Attacker : StagedSide.Defender);
+        return _stagedOwns[slot]!.Value;
     }
 
     private bool IsPastOuterGate(ICreatureSiegeAgentAdapter agent)

@@ -12,6 +12,8 @@ public static partial class CreatureSiegeRules
     /// What a creature should be doing. The order of the rules is the order of the decision:
     /// <list type="number">
     /// <item>Released, whatever else holds: not AI-controlled, fleeing, a Retreat order, no side.</item>
+    /// <item>Released while a staged siege steers the creature's side and the formation is AI-controlled: the tactic steers it. A
+    /// formation the player commands falls through to the player-order rules below.</item>
     /// <item>A defender holds the gate under AI command and obeys the player's order otherwise (D8).</item>
     /// <item>An attacker the player commands goes to the gate only on a Charge or ChargeToTarget given before both gates are
     /// passable; any other order, or any order after the breach, is obeyed (D7).</item>
@@ -24,6 +26,7 @@ public static partial class CreatureSiegeRules
         if (!inputs.IsAIControlled) return Release(RoleReason.NotAIControlled);
         if (inputs.IsFleeing) return Release(RoleReason.Fleeing);
         if (inputs.Formation.Order == SiegeFormationOrder.Retreat) return Release(RoleReason.RetreatOrder);
+        if (inputs.StagedPlanOwnsSide && !inputs.Formation.IsPlayerCommanded) return Release(RoleReason.StagedSiege);
 
         var playerCommanded = inputs.Formation.IsPlayerCommanded;
 

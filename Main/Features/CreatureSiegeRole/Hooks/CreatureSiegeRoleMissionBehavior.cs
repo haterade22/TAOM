@@ -4,6 +4,7 @@ using TAOM.Core.Domain;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.CreatureSiegeRole.Domain;
+using TAOM.Features.StagedSiege;
 using TaleWorlds.MountAndBlade;
 
 namespace TAOM.Features.CreatureSiegeRole.Hooks;
@@ -31,18 +32,20 @@ public sealed class CreatureSiegeRoleMissionBehavior : MissionLogic
     private readonly CreatureSiegeRoleConfigProvider _config;
     private readonly IRaceManager _raceManager;
     private readonly IModLogger _logger;
+    private readonly IStagedSiegeFieldReader? _stagedField;
     private readonly Action<string> _reportOffThread;
 
     // Set only by a successful activation. Null in every battle the role does not act in, so the tick costs a thread check.
     private CreatureSiegeRoleService? _service;
 
     public CreatureSiegeRoleMissionBehavior(CreatureSiegeRoleSettingsProvider settings, CreatureSiegeRoleConfigProvider config,
-        IRaceManager raceManager, IModLogger logger)
+        IRaceManager raceManager, IModLogger logger, IStagedSiegeFieldReader? stagedField = null)
     {
         _settings = settings;
         _config = config;
         _raceManager = raceManager;
         _logger = logger;
+        _stagedField = stagedField;
         // Made once: the tripwire is called every tick.
         _reportOffThread = logger.LogWarning;
     }
@@ -59,7 +62,7 @@ public sealed class CreatureSiegeRoleMissionBehavior : MissionLogic
         try
         {
             var service = new CreatureSiegeRoleService(new CreatureSiegeMissionAdapter(Mission), _raceManager,
-                _config.GateDamageMultiplier, _logger);
+                _config.GateDamageMultiplier, _logger, _stagedField);
             if (service.TryActivate(_settings.IsEnabled))
                 _service = service;
         }

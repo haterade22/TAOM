@@ -39,10 +39,30 @@ public static class StagePlan
         ModeFor(stage, team) == TacticMode.Vanilla ? 0f : ActiveWeight;
 
     /// <summary>
-    /// An AI-led attacker team leaves its siege machines idle while it takes the outer point. The tactic never applies this to a
-    /// player general's team: his engines stay under his own orders.
+    /// An AI-led attacker side leaves its siege machines idle while it takes the outer point.
     /// </summary>
     public static bool StopsMachines(StageId stage, StagedSide team) => stage == StageId.A && team == StagedSide.Attacker;
+
+    /// <summary>
+    /// The rule as the tactic applies it. Stopping machines clears the player's engine order (ForcedUse) on every engine of
+    /// the side, not just the team's, so when the player commands the side no team of it stops them: an AI ally team would
+    /// otherwise reset his ram, tower and ladder orders.
+    /// </summary>
+    public static bool StopsMachines(StageId stage, StagedSide team, bool playerCommandsSide) =>
+        !playerCommandsSide && StopsMachines(stage, team);
+
+    /// <summary>
+    /// Where a steered formation goes: melee to the point itself; attacking ranged to the point taken before (the zone in A,
+    /// which has none); defending ranged to the hold frame behind the point (the zone when the stage has none).
+    /// </summary>
+    public static StagePoint TargetFor(bool isRanged, TacticMode mode, StageSnapshot snapshot)
+    {
+        if (!isRanged)
+            return snapshot.Zone.Center;
+        if (mode == TacticMode.TakePoint)
+            return snapshot.AttackerSupport ?? snapshot.Zone.Center;
+        return snapshot.DefenderHold?.Position ?? snapshot.Zone.Center;
+    }
 
     /// <summary>
     /// One bit for a formation index, 0 outside 0 to 30. The tactic ORs these over its eligible formations so a swap (one empties,

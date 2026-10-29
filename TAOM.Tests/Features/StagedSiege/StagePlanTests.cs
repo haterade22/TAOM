@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.StagedSiege.Domain;
+using static TAOM.Tests.Features.StagedSiege.StagedSiegeFixtures;
 
 namespace TAOM.Tests.Features.StagedSiege;
 
@@ -7,6 +8,42 @@ namespace TAOM.Tests.Features.StagedSiege;
 [TestClass]
 public class StagePlanTests
 {
+    [TestMethod]
+    public void TargetFor_Melee_IsTheZoneCentre_ForBothRoles()
+    {
+        var s = StageC();
+        Assert.AreEqual(s.Zone.Center, StagePlan.TargetFor(isRanged: false, TacticMode.TakePoint, s));
+        Assert.AreEqual(s.Zone.Center, StagePlan.TargetFor(isRanged: false, TacticMode.HoldPoint, s));
+    }
+
+    [TestMethod]
+    public void TargetFor_RangedAttackers_StandAtThePreviousPoint()
+    {
+        var s = StageC();
+        Assert.AreEqual(s.AttackerSupport!.Value, StagePlan.TargetFor(isRanged: true, TacticMode.TakePoint, s));
+    }
+
+    [TestMethod]
+    public void TargetFor_RangedDefenders_StandAtTheHoldFrame()
+    {
+        var s = StageC();
+        Assert.AreEqual(s.DefenderHold!.Value.Position, StagePlan.TargetFor(isRanged: true, TacticMode.HoldPoint, s));
+    }
+
+    [TestMethod]
+    public void TargetFor_RangedInStageA_FallsBackToTheZoneCentre()
+    {
+        var s = StageSnapshot.Build(new object(), LinePlan(), new StageMachine(StagedSide.Attacker), 0f, CaptureStatus.Idle);
+        Assert.AreEqual(s.Zone.Center, StagePlan.TargetFor(isRanged: true, TacticMode.TakePoint, s));
+    }
+
+    private static StageSnapshot StageC()
+    {
+        var m = new StageMachine(StagedSide.Attacker);
+        m.Force(StageId.C);
+        return StageSnapshot.Build(new object(), LinePlan(), m, 0f, CaptureStatus.Idle);
+    }
+
     [TestMethod]
     public void ModeFor_A_AttackerTakesDefenderVanilla()
     {
@@ -37,6 +74,17 @@ public class StagePlanTests
         Assert.AreEqual(1000f, StagePlan.TacticWeight(StageId.D, StagedSide.Defender));
         Assert.AreEqual(0f, StagePlan.TacticWeight(StageId.A, StagedSide.Defender));
         Assert.AreEqual(0f, StagePlan.TacticWeight(StageId.B, StagedSide.Attacker));
+    }
+
+    [TestMethod]
+    public void StopsMachines_PlayerCommandsTheSide_LeavesEveryTeamsEngines()
+    {
+        // StopUsingAllMachines clears ForcedUse on every engine of the SIDE, so an AI ally team would reset a player
+        // general's engine orders unless the rule asks about the side, not the team.
+        Assert.IsFalse(StagePlan.StopsMachines(StageId.A, StagedSide.Attacker, playerCommandsSide: true));
+        Assert.IsTrue(StagePlan.StopsMachines(StageId.A, StagedSide.Attacker, playerCommandsSide: false));
+        Assert.IsFalse(StagePlan.StopsMachines(StageId.A, StagedSide.Defender, playerCommandsSide: false));
+        Assert.IsFalse(StagePlan.StopsMachines(StageId.B, StagedSide.Attacker, playerCommandsSide: false));
     }
 
     [TestMethod]

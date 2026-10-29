@@ -117,6 +117,8 @@ public sealed class StagedSiegeService
             _machine = new StageMachine(playerSide!.Value);
             _cadence = new ReinforcementCadence(_t);
             _armed = true;
+            // A record from an older walls fight must not be reported by the inert log of a later battle.
+            StagedSiegeSlot.ClearLastEnded();
             StagedSiegeSlot.Arm(this);
             Publish();
             Info($"armed: scene {scene.Scene}, player {playerSide.Value}");

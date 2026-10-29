@@ -192,6 +192,7 @@ CreatureSiegeRoleConfigProvider     CreatureSiegeRoleSettingsProvider
 | A task force pulls a troll | The role's flags persist while it lasts; its disband clears them and the role reapplies them |
 | Fleeing or retreating creature | Released, never routed again while fleeing |
 | Sally-out, relief force, lord's hall | Inert |
+| A [staged siege](staged-siege.md) is armed and its current stage gives the troll's side a tactic of its own | An AI-controlled troll formation is released (reason `StagedSiege`), so the formation, steered by `TacticStagedObjective`, carries it. A formation the player commands is not released for the staged plan: the player-order rules decide (a Charge given with the gates shut still strikes the gate, any other order is obeyed), because the tactic steers only AI-controlled formations. In stage B, and for the defenders in stage A, the stage plan is vanilla and the role works as before. Asked once per side per pass through `IStagedSiegeFieldReader` |
 | Custom Battle siege | The same behaviour, through the Custom Battle models. No wall battle spawns horses, so mounted creatures do not arise |
 | Co-op | Not on a client or replay. Puppets have `Controller` None, so they are never routed. The setting is in the co-op fingerprint |
 | Player as a troll; Player Switcher | `IsAIControlled` is read every pass, so the player is never routed; the exclusion, once applied, stays |
@@ -417,6 +418,7 @@ All owed unless marked done.
 
 ## Changelog
 
+- 2026-10-29: yields to the Staged Siege plan (#1054, Phase 2). `RoleInputs.StagedPlanOwnsSide` and `RoleReason.StagedSiege`: after the three universal releases and before the side rules, a troll in an AI-controlled formation whose side the stage plan steers is released; a formation the player commands keeps the player's order rules (D7, D8).
 - 2026-10-05: first build on `feat/siege-forces` (#735). Detachment cost and gate damage seams on four
   models, per-agent face exclusion, gate roles, anchors, MCM switch, JSON multiplier (provisional 2.0).
   Checked against the v1.5.4 DLLs. Not yet seen in game.

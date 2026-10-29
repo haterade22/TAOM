@@ -151,12 +151,17 @@ public static class StagedSiegeCheats
             var mission = Mission.Current;
             if (mission == null)
                 return "No mission is running.";
-            var service = mission.GetMissionBehavior<StagedSiegeMissionBehavior>()?.Service;
-            if (service == null)
+            var behavior = mission.GetMissionBehavior<StagedSiegeMissionBehavior>();
+            if (behavior == null)
                 return "The StagedSiege mission behavior is not attached to this mission.";
             var sb = new StringBuilder();
             sb.AppendLine($"Mission: scene {mission.SceneName}, siege {mission.IsSiegeBattle}, player side {mission.PlayerTeam?.Side.ToString() ?? "none"}.");
-            sb.Append(service.DescribeStatus());
+            if (behavior.Hall != null)
+                sb.Append(behavior.Hall.DescribeStatus());
+            else if (behavior.Service != null)
+                sb.Append(behavior.Service.DescribeStatus());
+            else
+                return "The StagedSiege mission behavior is not attached to this mission.";
             return sb.ToString();
         });
 

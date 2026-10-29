@@ -178,6 +178,17 @@ public class StagedSiegeServiceTests
     }
 
     [TestMethod]
+    public void TryArm_AllPass_ClearsAStaleWallsEnd()
+    {
+        // A record left by an earlier siege must not be reported again by the inert log of a later battle.
+        StagedSiegeSlot.SetLastEnded("old_scene", StagedEnd.DefenderPushedBack, DateTime.UtcNow.AddSeconds(-600));
+
+        Assert.IsTrue(_svc.TryArm(true));
+
+        Assert.IsNull(StagedSiegeSlot.LastEnded);
+    }
+
+    [TestMethod]
     public void TryArm_AllPass_PublishesStageA()
     {
         Assert.IsTrue(_svc.TryArm(true));

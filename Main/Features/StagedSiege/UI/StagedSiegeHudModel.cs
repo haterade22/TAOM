@@ -18,6 +18,12 @@ public enum HudObjectiveKind
 
     /// <summary>The player defended and D fell.</summary>
     Fallen,
+
+    /// <summary>The lord's hall fight: the attackers hold the player's side and point E is not yet taken.</summary>
+    TakeHall,
+
+    /// <summary>The lord's hall fight: point E has been taken.</summary>
+    HallTaken,
 }
 
 /// <summary>The HUD's wording-free reading of one <see cref="StageSnapshot"/>.</summary>
@@ -57,11 +63,16 @@ public readonly struct StagedSiegeHudModel
             ? (attacker ? HudObjectiveKind.Hall : HudObjectiveKind.Fallen)
             : (attacker ? HudObjectiveKind.Take : HudObjectiveKind.Hold);
         var letter = (char)('A' + (int)s.Stage);
-        var percent = float.IsNaN(s.Progress) || float.IsInfinity(s.Progress)
-            ? 0
-            : (int)Math.Round(Math.Max(0f, Math.Min(1f, s.Progress)) * 100f);
-        return new StagedSiegeHudModel(kind, letter, percent, s.Status, BuildStrip(s, attacker));
+        return new StagedSiegeHudModel(kind, letter, ToPercent(s.Progress), s.Status, BuildStrip(s, attacker));
     }
+
+    /// <summary>The lord's hall reading: every wall point is behind the player, E is the objective, and the strip says so.</summary>
+    public static StagedSiegeHudModel FromHall(HallSnapshot s) =>
+        new StagedSiegeHudModel(s.Finished ? HudObjectiveKind.HallTaken : HudObjectiveKind.TakeHall, Hall, ToPercent(s.Progress), s.Status,
+            s.Finished ? "A+ B+ C+ D+ " + Hall + "+" : "A+ B+ C+ D+ [" + Hall + "]");
+
+    private static int ToPercent(float progress) =>
+        float.IsNaN(progress) || float.IsInfinity(progress) ? 0 : (int)Math.Round(Math.Max(0f, Math.Min(1f, progress)) * 100f);
 
     private static string BuildStrip(StageSnapshot s, bool attacker)
     {

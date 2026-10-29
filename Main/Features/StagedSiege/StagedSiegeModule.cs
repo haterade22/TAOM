@@ -40,6 +40,7 @@ internal sealed class StagedSiegeModule : TaomFeatureModule
     {
         registrator.Register<StagedSiegeSettingsProvider>(Reuse.Singleton);
         registrator.Register<StagedSiegeSceneCatalog>(Reuse.Singleton);
+        registrator.Register<IStagedSiegeFieldReader, StagedSiegeFieldReader>(Reuse.Singleton);
     }
 
     public override IReadOnlyList<PatchCategoryDecl> PatchCategories => Categories;

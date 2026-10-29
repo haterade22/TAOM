@@ -18,6 +18,7 @@ internal sealed class StagedSiegeMissionEdge
     private readonly IModLogger _logger;
     private bool _spawnersStopped;
     private bool _endLogged;
+    private bool _hallEndLogged;
 
     public StagedSiegeMissionEdge(IModLogger logger) => _logger = logger;
 
@@ -70,12 +71,17 @@ internal sealed class StagedSiegeMissionEdge
         }
     }
 
-    public void LogResultReady(StagedSiegeService? service, MissionResult? missionResult)
+    public void LogResultReady(StagedSiegeService? service, StagedHallService? hall, MissionResult? missionResult)
     {
         try
         {
-            if (service?.IsArmed == true && missionResult != null)
+            if (missionResult == null)
+                return;
+            if (service?.IsArmed == true)
                 _logger.LogInfo($"{StagedSiegeService.Tag} S5 result ready: state {missionResult.BattleState} "
+                    + $"victory {missionResult.PlayerVictory} defeated {missionResult.PlayerDefeated}");
+            if (hall?.IsArmed == true)
+                _logger.LogInfo($"{StagedSiegeService.Tag} hall result ready: state {missionResult.BattleState} "
                     + $"victory {missionResult.PlayerVictory} defeated {missionResult.PlayerDefeated}");
         }
         catch (Exception ex)
@@ -104,11 +110,53 @@ internal sealed class StagedSiegeMissionEdge
         }
     }
 
-    public void Shutdown(StagedSiegeService? service)
+    /// <summary>
+    /// The <c>EarlyStart</c> half of the lord's hall: a service for a hall mission, armed or inert, and null for any other mission so
+    /// the caller runs the walls path. Decided here, before the walls adapter is built, so a hall mission never reaches the walls rules.
+    /// </summary>
+    public StagedHallService? TryArmHall(Mission mission, StagedSiegeSceneCatalog catalog, bool enabled)
+    {
+        var adapter = new StagedHallMissionAdapter(mission);
+        if (!adapter.IsHallMission)
+            return null;
+        var hall = new StagedHallService(adapter, catalog, _logger);
+        hall.TryArm(enabled);
+        return hall;
+    }
+
+    /// <summary>
+    /// The hall's <c>MissionEnded</c> body: true, with an attacker victory, once point E is taken. It runs after the walls half and
+    /// after vanilla's <c>BattleEndLogic</c> in the behavior list, so a depleted side still ends the hall the vanilla way first.
+    /// </summary>
+    public bool TryEndHall(StagedHallService? hall, Mission mission, ref MissionResult missionResult)
+    {
+        try
+        {
+            if (hall == null || !hall.TryGetCaptured())
+                return false;
+
+            missionResult = MissionResult.CreateSuccessful(mission);
+            if (!_hallEndLogged)
+            {
+                _hallEndLogged = true;
+                _logger.LogInfo($"{StagedSiegeService.Tag} hall MissionEnded returned CreateSuccessful");
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Fault("MissionEnded (hall)", ex);
+            return false;
+        }
+    }
+
+    public void Shutdown(StagedSiegeService? service, StagedHallService? hall)
     {
         try
         {
             service?.Shutdown();
+            hall?.Shutdown();
         }
         catch (Exception ex)
         {

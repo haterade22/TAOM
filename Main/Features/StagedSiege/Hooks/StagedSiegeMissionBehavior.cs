@@ -46,6 +46,9 @@ public sealed class StagedSiegeMissionBehavior : MissionLogic
     /// <summary>Built in <c>EarlyStart</c> for every battle; armed only when the rules say this is a staged siege.</summary>
     internal StagedSiegeService? Service { get; private set; }
 
+    /// <summary>Built in <c>EarlyStart</c> of the lord's hall mission only: point E at a recorded settlement whose siege is saved as the lord's hall.</summary>
+    internal StagedHallService? Hall { get; private set; }
+
     /// <summary>The console's requests, applied at the start of the next mission tick.</summary>
     internal StagedSiegeCommandQueue Commands { get; } = new();
 
@@ -60,6 +63,11 @@ public sealed class StagedSiegeMissionBehavior : MissionLogic
         base.EarlyStart();
         try
         {
+            // The hall mission is decided first: there the hall path runs, and only otherwise the walls path.
+            Hall = _edge.TryArmHall(Mission, _catalog, _settings.IsEnabled);
+            if (Hall != null)
+                return;
+
             var adapter = new StagedSiegeMissionAdapter(Mission, team => new TacticStagedObjective(team));
             var service = new StagedSiegeService(adapter, _catalog, _logger);
             Service = service;
@@ -68,7 +76,9 @@ public sealed class StagedSiegeMissionBehavior : MissionLogic
         catch (Exception ex)
         {
             Service = null;
+            Hall = null;
             StagedSiegeSlot.ClearIf(Mission);
+            StagedSiegeSlot.ClearHallIf(Mission);
             _edge.Fault("EarlyStart", ex);
         }
     }
@@ -93,27 +103,29 @@ public sealed class StagedSiegeMissionBehavior : MissionLogic
 
         _edge.DrainCommands(Commands, Service, Mission);
         Service?.Tick();
+        Hall?.Tick();
     }
 
     public override void OnAgentBuild(Agent agent, Banner banner) => _edge.NoteAgentBuilt(Service, agent);
 
-    public override bool MissionEnded(ref MissionResult missionResult) => _edge.TryEnd(Service, Mission, ref missionResult);
+    public override bool MissionEnded(ref MissionResult missionResult) =>
+        _edge.TryEnd(Service, Mission, ref missionResult) || _edge.TryEndHall(Hall, Mission, ref missionResult);
 
     public override void OnMissionResultReady(MissionResult missionResult)
     {
         base.OnMissionResultReady(missionResult);
-        _edge.LogResultReady(Service, missionResult);
+        _edge.LogResultReady(Service, Hall, missionResult);
     }
 
     protected override void OnEndMission()
     {
         base.OnEndMission();
-        _edge.Shutdown(Service);
+        _edge.Shutdown(Service, Hall);
     }
 
     public override void OnRemoveBehavior()
     {
-        _edge.Shutdown(Service);
+        _edge.Shutdown(Service, Hall);
         base.OnRemoveBehavior();
     }
 }

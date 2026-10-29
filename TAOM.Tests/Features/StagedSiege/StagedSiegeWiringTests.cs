@@ -1,6 +1,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DryIoc;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
@@ -57,6 +58,50 @@ public class StagedSiegeWiringTests
         Assert.AreEqual(typeof(StagedSiegeMissionBehavior), module.MissionBehaviors[0].BehaviorType);
         Assert.IsFalse(RepoPaths.ReadSource("Main/SubModule.cs", stripComments: true).Contains(nameof(StagedSiegeMissionBehavior)),
             "the module's declaration is what adds the behavior; a hand add would run it twice");
+    }
+
+    [TestMethod]
+    public void Module_RegistersTheFieldReaderCreatureSiegeRoleAsks()
+    {
+        var container = new Container();
+        new StagedSiegeModule().RegisterServices(container);
+
+        Assert.IsInstanceOfType(container.Resolve<IStagedSiegeFieldReader>(), typeof(StagedSiegeFieldReader));
+        Assert.AreSame(container.Resolve<IStagedSiegeFieldReader>(), container.Resolve<IStagedSiegeFieldReader>());
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Features/CreatureSiegeRole/CreatureSiegeRoleModule.cs", stripComments: true),
+            "resolver.Resolve<IStagedSiegeFieldReader>()");
+    }
+
+    [TestMethod]
+    public void TheMissionBehavior_StaysUnder150Lines()
+    {
+        var lines = File.ReadAllLines(RepoPaths.RepoPath("Main", "Features", "StagedSiege", "Hooks", "StagedSiegeMissionBehavior.cs")).Length;
+
+        Assert.IsTrue(lines < 150, $"StagedSiegeMissionBehavior.cs is {lines} lines (ADR-002: entry points under 150)");
+    }
+
+    [TestMethod]
+    public void TheHallPath_AddsNoHarmonyPatch()
+    {
+        foreach (var file in new[]
+                 {
+                     "Main/Features/StagedSiege/StagedHallService.cs", "Main/Adapters/StagedHallMissionAdapter.cs",
+                     "Main/Features/StagedSiege/Domain/HallZone.cs", "Main/Features/StagedSiege/Domain/StagedHallActivation.cs",
+                 })
+        {
+            var source = RepoPaths.ReadSource(file, stripComments: true);
+            Assert.IsFalse(source.Contains("Harmony"), file + " must not patch: the hall rides a MissionLogic");
+        }
+    }
+
+    [TestMethod]
+    public void TheHallService_ReadsNoEngineType()
+    {
+        // ADR-007: the service takes the adapter; the engine's marker, controller and message classes stay behind it.
+        var source = RepoPaths.ReadSource("Main/Features/StagedSiege/StagedHallService.cs", stripComments: true);
+
+        foreach (var banned in new[] { "FightAreaMarker", "LordsHallFightMissionController", "InformationManager", "PlayerEncounter", "TaleWorlds" })
+            Assert.IsFalse(source.Contains(banned), $"StagedHallService must not name {banned}");
     }
 
     [TestMethod]

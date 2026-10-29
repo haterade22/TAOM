@@ -38,9 +38,10 @@ internal static class CreatureSiegeFixtures
         bool innerPresent = true,
         bool innerPassable = false,
         bool pastOuterGate = false,
-        bool ramWorking = false) =>
+        bool ramWorking = false,
+        bool stagedPlanOwnsSide = false) =>
         new(isAIControlled, isFleeing, side, formation ?? SiegeFormationState.None, outerPassable, innerPresent, innerPassable,
-            pastOuterGate, ramWorking);
+            pastOuterGate, ramWorking, stagedPlanOwnsSide);
 
     public static SiegeFormationState PlayerFormation(SiegeFormationOrder order) => new(IsPlayerCommanded: true, order);
 

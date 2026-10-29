@@ -98,8 +98,10 @@ public sealed class TacticStagedObjective : TacticComponent, IStagedTacticProbe
             return;
         }
 
-        // A player general keeps his own engine orders; only an AI-led team waits for the point.
-        if (StagePlan.StopsMachines(stage, Side) && !(Team.IsPlayerTeam && Team.IsPlayerGeneral))
+        // When the player commands the side, no team of it stops the engines: stopping clears his orders side-wide.
+        var playerTeam = Team.Mission.PlayerTeam;
+        var playerCommandsSide = Team.IsPlayerAlly && playerTeam != null && playerTeam.IsPlayerGeneral;
+        if (StagePlan.StopsMachines(stage, Side, playerCommandsSide))
             StopUsingAllMachines();
 
         // A mask of which formations are eligible, not a count: one emptying while another fills must still reapply.
@@ -123,7 +125,8 @@ public sealed class TacticStagedObjective : TacticComponent, IStagedTacticProbe
             if (!IsEligible(formation))
                 continue;
             formation.AI.ResetBehaviorWeights();
-            formation.AI.SetBehaviorWeight<BehaviorDefend>(1f).DefensePosition = Position(TargetFor(formation, mode, snapshot));
+            var target = StagePlan.TargetFor(formation.QuerySystem.IsRangedFormation, mode, snapshot);
+            formation.AI.SetBehaviorWeight<BehaviorDefend>(1f).DefensePosition = Position(target);
         }
 
         _appliedStage = stage;
@@ -134,15 +137,6 @@ public sealed class TacticStagedObjective : TacticComponent, IStagedTacticProbe
 
     private static bool IsEligible(Formation formation) =>
         formation.CountOfUnits > 0 && formation.IsAIControlled && formation.AI.GetBehavior<BehaviorDefend>() != null;
-
-    private static StagePoint TargetFor(Formation formation, TacticMode mode, StageSnapshot snapshot)
-    {
-        if (!formation.QuerySystem.IsRangedFormation)
-            return snapshot.Zone.Center;
-        if (mode == TacticMode.TakePoint)
-            return snapshot.AttackerSupport ?? snapshot.Zone.Center;
-        return snapshot.DefenderHold?.Position ?? snapshot.Zone.Center;
-    }
 
     private WorldPosition Position(StagePoint p) =>
         new WorldPosition(Team.Mission.Scene, UIntPtr.Zero, new Vec3(p.X, p.Y, p.Z), false);

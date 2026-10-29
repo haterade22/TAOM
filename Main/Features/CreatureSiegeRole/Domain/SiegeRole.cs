@@ -40,6 +40,9 @@ public enum RoleReason
     InnerGateClosed,
     BothGatesOpen,
     DefendingGate,
+
+    /// <summary>A staged siege (docs/features/staged-siege.md) steers this side's formations at the current stage, so the script yields.</summary>
+    StagedSiege,
 }
 
 /// <summary>The outcome of <see cref="CreatureSiegeRules.DecideRole"/>.</summary>
@@ -58,6 +61,7 @@ public readonly record struct RoleDecision(SiegeRole Role, RoleReason Reason);
 /// <param name="InnerPassable">The inner gate is passable. Meaningless when there is none.</param>
 /// <param name="PastOuterGate">The agent is already through the outer gate.</param>
 /// <param name="RamWorking">A battering ram is at work on the gate.</param>
+/// <param name="StagedPlanOwnsSide">A staged siege is running and its tactic, not this feature, steers the creature's side right now.</param>
 public readonly record struct RoleInputs(
     bool IsAIControlled,
     bool IsFleeing,
@@ -67,4 +71,5 @@ public readonly record struct RoleInputs(
     bool InnerPresent,
     bool InnerPassable,
     bool PastOuterGate,
-    bool RamWorking);
+    bool RamWorking,
+    bool StagedPlanOwnsSide = false);

@@ -4336,13 +4336,15 @@
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- TaomSettings.cs -->
 	<string id="taom_staged_siege_mcm_enable" text="{=taom_staged_siege_mcm_enable}Staged Sieges (Capture Points)" />
-	<string id="taom_staged_siege_mcm_enable_hint" text="{=taom_staged_siege_mcm_enable_hint}In a castle assault on a scene with recorded capture points, the attackers must take points A to D in order: outside the walls, the gatehouse, the courtyard and an inner point. Each captured point brings fresh troops from both armies. As the attacker, taking D sends the defenders back to the lord's hall; as the defender, losing D loses the castle. Scenes without recorded points stay vanilla, and in a staged siege the Reinforcement Wave Count option does not apply. Takes effect from the next battle. Default: off." />
+	<string id="taom_staged_siege_mcm_enable_hint" text="{=taom_staged_siege_mcm_enable_hint}In a castle assault on a scene with recorded capture points, the attackers must take points A to D in order: outside the walls, the gatehouse, the courtyard and an inner point. Each captured point brings fresh troops from both armies. As the attacker, taking D sends the defenders back to the lord's hall, and taking the hall's last room (point E) wins the castle; as the defender, losing D loses the castle. Scenes without recorded points stay vanilla, and in a staged siege the Reinforcement Wave Count option does not apply. Takes effect from the next battle. Default: off." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- StagedSiege -->
 	<string id="taom_staged_siege_take" text="{=taom_staged_siege_take}Take point {POINT}" />
 	<string id="taom_staged_siege_hold" text="{=taom_staged_siege_hold}Hold point {POINT}" />
 	<string id="taom_staged_siege_hall" text="{=taom_staged_siege_hall}The defenders fall back to the lord's hall" />
 	<string id="taom_staged_siege_fallen" text="{=taom_staged_siege_fallen}The last point has fallen" />
+	<string id="taom_staged_siege_take_hall" text="{=taom_staged_siege_take_hall}Take the lord's hall" />
+	<string id="taom_staged_siege_hall_taken" text="{=taom_staged_siege_hall_taken}The lord's hall is taken." />
 	<!-- harvested by tools/harvest_literal_loc_keys.py -->
 	<!-- StagedSiege -->
 	<string id="taom_staged_siege_progress_rising" text="{=taom_staged_siege_progress_rising}Capture {PERCENT}%: attackers gaining" />

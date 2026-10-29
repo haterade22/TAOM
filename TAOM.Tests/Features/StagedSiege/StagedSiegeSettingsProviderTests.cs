@@ -93,6 +93,7 @@ public class StagedSiegeSettingsProviderTests
         var hint = (string)Read(value, "HintText");
 
         StringAssert.Contains(hint, "points A to D");
+        StringAssert.Contains(hint, "point E", "the hint must say that the hall's last room wins the castle");
         StringAssert.Contains(hint, "Reinforcement Wave Count");
         StringAssert.Contains(hint, "next battle");
         StringAssert.Contains(hint, "Default: off");

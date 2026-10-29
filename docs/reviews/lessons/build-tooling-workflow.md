@@ -4674,3 +4674,12 @@ the same batch found them. A separate lens found four more call sites with the s
   commit, and treat each hit as fix, history (reviews, changelog archive, snapshots) or follow-up with an issue.
   The rename-sweep lesson above is the same miss for identifiers.
 - **Source:** [rca-actionset-guard-popup-2026-10-29.md](../rca-actionset-guard-popup-2026-10-29.md) findings 2, 3 and 8.
+### Re-check a new patch number against trunk before every commit and merge (#1054, 2026-10-29)
+Staged Siege took `Patch125` after checking trunk and every worktree when its spec was written. A parallel session then
+landed `Patch125_HideoutClanGuard` on trunk, so the branch would have failed `PatchCategoryNumberTests` after a merge and
+conflicted in the registry.
+- **Why missed:** the number was checked once, at spec time; the gate only runs after the merge.
+- **Prevent:** before committing a branch that adds a patch category, grep trunk HEAD, every worktree and every branch head
+  for the number (`git grep -n "Patch<N>_" $(git for-each-ref --format='%(refname)' refs/heads refs/remotes)` plus the
+  registry), and renumber before the merge, not after.
+- **Source:** [rca-staged-siege-phase2-2026-10-29.md](../rca-staged-siege-phase2-2026-10-29.md) finding 3.

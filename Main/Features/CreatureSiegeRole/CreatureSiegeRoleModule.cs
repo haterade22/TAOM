@@ -4,6 +4,7 @@ using TAOM.Composition;
 using TAOM.Core.Domain;
 using TAOM.Core.Logging;
 using TAOM.Features.CreatureSiegeRole.Hooks;
+using TAOM.Features.StagedSiege;
 
 namespace TAOM.Features.CreatureSiegeRole;
 
@@ -29,7 +30,8 @@ internal sealed class CreatureSiegeRoleModule : TaomFeatureModule
             resolver.Resolve<CreatureSiegeRoleSettingsProvider>(),
             resolver.Resolve<CreatureSiegeRoleConfigProvider>(),
             resolver.Resolve<IRaceManager>(),
-            resolver.Resolve<IModLogger>())),
+            resolver.Resolve<IModLogger>(),
+            resolver.Resolve<IStagedSiegeFieldReader>())),
     };
 
     public override string Id => "CreatureSiegeRole";

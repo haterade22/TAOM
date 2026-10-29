@@ -1594,8 +1594,11 @@ detachment taken from a player general's troops never formed.
 - **Why missed:** the spec read each member's signature and its obvious caller, not its body, its guard clauses or every
   other reader. `rca-lost-footing-2026-10-20.md` named the same planning gap.
 - **Prevent:** before an engine member goes into a spec, read its body and grep every caller of the value it reads or
-  writes in the installed DLL. A tactic added to every team must ask `Team.IsPlayerGeneral` before it touches machines or
-  formations; a replaced timing mechanism must leave no value another engine check still reads.
+  writes in the installed DLL. A tactic added to every team must ask whether the player commands the side
+  (`Team.IsPlayerAlly && Mission.PlayerTeam.IsPlayerGeneral`) before it stops machines, because `StopUsingAllMachines`
+  clears `ForcedUse` on every engine of the side (TacticComponent.cs:536-540); before it touches its own team's formations,
+  ask `Formation.IsAIControlled` (`Team.IsPlayerGeneral` reads true on every team but the player's, Team.cs:213,
+  Mission.cs:739-745). A replaced timing mechanism must leave no value another engine check still reads.
 - **Source:** [rca-staged-siege-2026-10-29.md](../rca-staged-siege-2026-10-29.md) findings 1 to 3.
 
 ### Approve a reinforcement batch once, never on every engine tick (#1054, 2026-10-29)
