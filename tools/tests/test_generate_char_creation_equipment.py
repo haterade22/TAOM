@@ -118,6 +118,47 @@ class TestDaleCloneTables(unittest.TestCase):
                 self.assertEqual(has_horse, mounted)
 
 
+DORWINION_GEAR = DALE_GEAR + ("ladder_dale_",)
+SOUTH_RHOVANION_GEAR = ("wm_rohan_", "rohan_", "cts_rohan_", "ladder_rohan_", "default_arrows",
+                        "sumpter_horse", "light_harness")
+
+
+class TestDorwinionAndSouthRhovanionTables(unittest.TestCase):
+    """Dorwinion (Dale items) and South Rhovanion (Rohan items), both mounted: each table is authored
+    from the gear its own troops wear, since neither Dale nor Rohan has a table of its own here."""
+
+    def test_both_are_mounted_with_a_harness_on_every_horse(self):
+        for culture in ("dorwinion", "southrhovanion"):
+            rosters = generated(culture)
+            self.assertTrue(any(e.get("slot") == "Horse" for r in rosters.values() for e in r.iter("Equipment")))
+            for rid, r in rosters.items():
+                slots = [e.get("slot") for e in r.iter("Equipment")]
+                with self.subTest(roster=rid):
+                    self.assertEqual("Horse" in slots, "HorseHarness" in slots,
+                                     "MOUNT_WITHOUT_HARNESS: a Horse needs a HorseHarness")
+
+    def test_each_hands_out_only_its_source_kingdoms_gear(self):
+        for culture, gear in (("dorwinion", DORWINION_GEAR), ("southrhovanion", SOUTH_RHOVANION_GEAR)):
+            foreign = sorted({bare(e.get("id")) for r in generated(culture).values() for e in r.iter("Equipment")
+                              if not bare(e.get("id")).startswith(gear)})
+            with self.subTest(culture=culture):
+                self.assertEqual(foreign, [])
+
+    def test_each_writes_the_full_roster_set_under_its_own_culture(self):
+        for culture in ("dorwinion", "southrhovanion"):
+            rosters = generated(culture)
+            with self.subTest(culture=culture):
+                self.assertEqual(len(rosters), 55)
+                self.assertEqual({r.get("culture") for r in rosters.values()}, {"Culture." + culture})
+
+    def test_shipped_rosters_are_present_and_mounted(self):
+        for culture in ("dorwinion", "southrhovanion"):
+            rosters = [r for r in shipped().iter("EquipmentRoster") if r.get("culture") == "Culture." + culture]
+            with self.subTest(culture=culture):
+                self.assertEqual(len(rosters), 55, f"run generate_char_creation_equipment.py --append {culture} --apply")
+                self.assertTrue(any(e.get("slot") in MOUNT_SLOTS for r in rosters for e in r.iter("Equipment")))
+
+
 class TestParentBodiesAreOptional(unittest.TestCase):
     def test_a_culture_without_parent_bodies_keeps_the_old_shape(self):
         gondor = cc.CULTURES["gondor"]

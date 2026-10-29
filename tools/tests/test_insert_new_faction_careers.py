@@ -45,6 +45,17 @@ DALE_CLONES = {
                    "rider_of_the_vales": "Cavalry"},
     "angaladh": {"warden_of_the_forest_gate": "Infantry", "hewer_of_ironwood_hall": "TwoHanded",
                  "woodward_of_the_forest_road": "Ranged"},
+    "dorwinion": {"spear_warden_of_vinewatch": "Infantry", "bowman_of_redwater": "Ranged",
+                  "river_rider_of_seagate": "Cavalry"},
+}
+# Rohan's places and people (South Rhovanion is cut from Rohan, culture id `vlandia`), from the lore
+# rather than from the tool's tables.
+ROHAN_IDENTITY = ("Rohan", "Rohirrim", "Eorl", "Éored", "Eored", "Eothéod", "Eotheod", "Eastfold",
+                  "Aldburg", "Fangorn", "Riddermark", "Mearas", "Pelennor", "Stangard", "Limlight",
+                  "Entwash", "Wold", "Folde", "the Mark", "Mark's", "Edoras", "Helm's Deep", "Isengard")
+ROHAN_CLONES = {
+    "rider_of_vidugard": "Cavalry", "marksman_of_westmark": "Ranged",
+    "warden_of_wainwatch": "Infantry",
 }
 
 
@@ -294,6 +305,74 @@ class DaleClones(unittest.TestCase):
         for careers in DALE_CLONES.values():
             for career_id in careers:
                 self.assertIn(career_id, ids)
+
+
+class RohanClones(unittest.TestCase):
+    """South Rhovanion (a cavalry lancer, a bowman and a spear career) is cloned from Rohan's
+    windrider, marksman and watchman; Dorwinion's three are Dale's (DaleClones)."""
+
+    def test_the_career_set_and_its_sources(self):
+        self.assertEqual([(r[0], r[2]) for r in ic.targets_for("southrhovanion")],
+                         [("eotheod_windrider", "rider_of_vidugard"),
+                          ("marksman_of_aldburg", "marksman_of_westmark"),
+                          ("watchman_of_stangard", "warden_of_wainwatch")])
+        self.assertEqual(ic.ELIGIBILITY_SRC["southrhovanion"], "vlandia")
+
+    def test_each_career_is_eligible_for_south_rhovanion_alone(self):
+        root = ET.parse(ic.CAREERS_XML).getroot()
+        for career_id in ROHAN_CLONES:
+            career = root.find(f"./Career[@id='{career_id}']")
+            with self.subTest(career=career_id):
+                self.assertIsNotNone(career)
+                self.assertEqual([c.get("id") for c in career.iter("Culture")], ["southrhovanion"])
+
+    def test_career_text_names_no_rohan_place_or_person(self):
+        for career_id in ROHAN_CLONES:
+            for value in career_text(career_id):
+                for word in ROHAN_IDENTITY:
+                    with self.subTest(career=career_id, word=word):
+                        self.assertNotIn(word, value)
+
+    def test_career_text_has_no_em_or_en_dash(self):
+        for career_id in ROHAN_CLONES:
+            for value in career_text(career_id):
+                with self.subTest(career=career_id, value=value[:40]):
+                    self.assertNotIn("\u2014", value)
+                    self.assertNotIn("\u2013", value)
+
+    def test_the_contamination_gate_refuses_rohans_words(self):
+        # A CAREER_TEXT_REMAP row that misses one of Rohan's words must stop the run, not ship it.
+        broken = dict(ic.CAREER_TEXT_REMAP)
+        broken["rider_of_vidugard"] = [r for r in broken["rider_of_vidugard"]
+                                       if r[0] != "Lord of the Mearas"]
+        tmp = Path(tempfile.mkdtemp(prefix="careers_gate_"))
+        self.addCleanup(shutil.rmtree, tmp, True)
+        patches = [mock.patch.object(ic, "CAREER_TEXT_REMAP", broken),
+                   mock.patch.dict(ic.TARGETS, {"southrhovanion": ic.TARGETS["southrhovanion"]}, clear=True)]
+        for name in FILES:
+            text, nl = ic.read(getattr(ic, name))
+            if name == "CAREERS_XML":
+                text = text.replace('<Culture id="southrhovanion" />', '<Culture id="elsewhere" />')
+            ic.write(tmp / getattr(ic, name).name, text, nl)
+            patches.append(mock.patch.object(ic, name, tmp / getattr(ic, name).name))
+        for patch in patches:
+            patch.start()
+            self.addCleanup(patch.stop)
+        with self.assertRaises(SystemExit) as raised:
+            run([])
+        self.assertIn("contamination", str(raised.exception))
+
+    def test_every_career_has_the_right_archetype_in_the_ioc_map(self):
+        rows = dict(re.findall(r'\["([a-z_]+)"\]\s*=\s*CareerArchetype\.(\w+)',
+                               IOC.read_text(encoding="utf-8")))
+        for career_id, archetype in ROHAN_CLONES.items():
+            with self.subTest(career=career_id):
+                self.assertEqual(rows.get(career_id), archetype)
+
+    def test_every_career_has_a_career_menu_entry(self):
+        ids = {e["career_string_id"] for e in json.loads(ic.MENU_JSON.read_text(encoding="utf-8"))}
+        for career_id in ROHAN_CLONES:
+            self.assertIn(career_id, ids)
 
 
 class DryRunAndApply(unittest.TestCase):

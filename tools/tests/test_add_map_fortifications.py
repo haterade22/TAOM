@@ -167,6 +167,18 @@ class CheckTests(unittest.TestCase):
         found = amf.check([self.FORT], twin, self.scene, self.loc)
         self.assertTrue(any("'Checkton' is already on the map (castle_Y1)" in f for f in found))
 
+    def test_a_retagged_culture_is_named(self):
+        retagged = self.master.replace('culture="Culture.arthedain"', 'culture="Culture.sturgia"', 1)
+        found = amf.check([self.FORT], retagged, self.scene, self.loc)
+        self.assertEqual(len([f for f in found if "culture" in f]), 1)
+        self.assertTrue(any("town_X5" in f and "Culture.sturgia" in f and "Culture.arthedain" in f for f in found))
+
+    def test_a_reowned_row_is_named(self):
+        reowned = self.master.replace('owner="Faction.clan_x_1"', 'owner="Faction.clan_sturgia_1"', 1)
+        found = amf.check([self.FORT], reowned, self.scene, self.loc)
+        self.assertEqual(len([f for f in found if "owner" in f]), 1)
+        self.assertTrue(any("town_X5" in f and "clan_sturgia_1" in f and "clan_x_1" in f for f in found))
+
 
 def row(sid, common=False):
     areas = "<CommonAreas><Area type=\"Backstreet\" name=\"x\" /></CommonAreas>" if common else ""

@@ -206,6 +206,27 @@
 	<string id="aom_dg_warg_red_fang_name" text="{=aom_dg_warg_red_fang_name}[Dol Guldur] Warg Fang" />
 	<string id="aom_dg_warg_scout_name" text="{=aom_dg_warg_scout_name}[Dol Guldur] Warg Tracker" />
 	<string id="aom_dg_warg_skirmisher_name" text="{=aom_dg_warg_skirmisher_name}[Dol Guldur] Warg Ravager" />
+	<string id="aom_dorwinion_levy_name" text="{=aom_dorwinion_levy_name}[Dorwinion] Vineyard Levy" />
+	<string id="aom_dorwinion_militia_archer_name" text="{=aom_dorwinion_militia_archer_name}[Dorwinion] Militia Archer" />
+	<string id="aom_dorwinion_militia_spearman_name" text="{=aom_dorwinion_militia_spearman_name}[Dorwinion] Militia Spearman" />
+	<string id="aom_dorwinion_militia_veteran_archer_name" text="{=aom_dorwinion_militia_veteran_archer_name}[Dorwinion] Veteran Militia Archer" />
+	<string id="aom_dorwinion_militia_veteran_spearman_name" text="{=aom_dorwinion_militia_veteran_spearman_name}[Dorwinion] Veteran Militia Spearman" />
+	<string id="aom_dorwinion_noble_merc_name" text="{=aom_dorwinion_noble_merc_name}[Dorwinion] Dorwinion Sellsword" />
+	<string id="aom_dorwinion_noble_name" text="{=aom_dorwinion_noble_name}[Dorwinion] Dorwinion Noble" />
+	<string id="aom_dorwinion_redwater_archer_name" text="{=aom_dorwinion_redwater_archer_name}[Dorwinion] Redwater Archer" />
+	<string id="aom_dorwinion_redwater_guard_name" text="{=aom_dorwinion_redwater_guard_name}[Dorwinion] Redwater Guard" />
+	<string id="aom_dorwinion_river_cavalier_name" text="{=aom_dorwinion_river_cavalier_name}[Dorwinion] River Cavalier" />
+	<string id="aom_dorwinion_river_rider_name" text="{=aom_dorwinion_river_rider_name}[Dorwinion] River Rider" />
+	<string id="aom_dorwinion_river_spearman_name" text="{=aom_dorwinion_river_spearman_name}[Dorwinion] River Spearman" />
+	<string id="aom_dorwinion_spearman_name" text="{=aom_dorwinion_spearman_name}[Dorwinion] Vineyard Spearman" />
+	<string id="aom_dorwinion_veteran_redwater_guard_name" text="{=aom_dorwinion_veteran_redwater_guard_name}[Dorwinion] Veteran Redwater Guard" />
+	<string id="aom_dorwinion_vine_bow_master_name" text="{=aom_dorwinion_vine_bow_master_name}[Dorwinion] Master of the Vine-bow" />
+	<string id="aom_dorwinion_vine_warden_name" text="{=aom_dorwinion_vine_warden_name}[Dorwinion] Warden of the Vines" />
+	<string id="aom_dorwinion_vineholm_guard_name" text="{=aom_dorwinion_vineholm_guard_name}[Dorwinion] Guard of Vineholm" />
+	<string id="aom_dorwinion_vineholm_retainer_name" text="{=aom_dorwinion_vineholm_retainer_name}[Dorwinion] Vineholm Retainer" />
+	<string id="aom_dorwinion_vineholm_sergeant_name" text="{=aom_dorwinion_vineholm_sergeant_name}[Dorwinion] Sergeant of Vineholm" />
+	<string id="aom_dorwinion_vintner_archer_name" text="{=aom_dorwinion_vintner_archer_name}[Dorwinion] Vintner Archer" />
+	<string id="aom_dorwinion_vintner_bowman_name" text="{=aom_dorwinion_vintner_bowman_name}[Dorwinion] Vintner Bowman" />
 	<string id="aom_dragon_wrath_acolyte_name" text="{=aom_dragon_wrath_acolyte_name}[Rhûn] Dragon-Wrath Acolyte" />
 	<string id="aom_dragon_wrath_archer_name" text="{=aom_dragon_wrath_archer_name}[Rhûn] Dragon-Wrath Archer" />
 	<string id="aom_dragon_wrath_ash_executioner_name" text="{=aom_dragon_wrath_ash_executioner_name}[Rhûn] Dragon-Wrath Ash Executioner" />
@@ -946,6 +967,28 @@
 	<string id="aom_sagarun_storm_helmed_naffatun_name" text="{=aom_sagarun_storm_helmed_naffatun_name}[Rhûn] Sagarûn Storm Helmed Naffatun" />
 	<string id="aom_sagarun_storm_marked_arbalest_name" text="{=aom_sagarun_storm_marked_arbalest_name}[Rhûn] Sagarûn Storm Marked Arbalest" />
 	<string id="aom_sagarun_watchman_name" text="{=aom_sagarun_watchman_name}[Rhûn] Sagarûn Watchman" />
+	<string id="aom_southrhovanion_ford_guard_name" text="{=aom_southrhovanion_ford_guard_name}[South Rhovanion] Ford Guard" />
+	<string id="aom_southrhovanion_ford_spearman_name" text="{=aom_southrhovanion_ford_spearman_name}[South Rhovanion] Ford Spearman" />
+	<string id="aom_southrhovanion_horse_archer_name" text="{=aom_southrhovanion_horse_archer_name}[South Rhovanion] Rhovanion Horse-archer" />
+	<string id="aom_southrhovanion_horse_lord_name" text="{=aom_southrhovanion_horse_lord_name}[South Rhovanion] Horse-lord of Rhovanion" />
+	<string id="aom_southrhovanion_horse_scout_name" text="{=aom_southrhovanion_horse_scout_name}[South Rhovanion] Plains Horse-scout" />
+	<string id="aom_southrhovanion_horse_thane_name" text="{=aom_southrhovanion_horse_thane_name}[South Rhovanion] Horse-thane" />
+	<string id="aom_southrhovanion_lancer_name" text="{=aom_southrhovanion_lancer_name}[South Rhovanion] Rhovanion Lancer" />
+	<string id="aom_southrhovanion_levy_name" text="{=aom_southrhovanion_levy_name}[South Rhovanion] Plains Levy" />
+	<string id="aom_southrhovanion_militia_archer_name" text="{=aom_southrhovanion_militia_archer_name}[South Rhovanion] Militia Archer" />
+	<string id="aom_southrhovanion_militia_spearman_name" text="{=aom_southrhovanion_militia_spearman_name}[South Rhovanion] Militia Spearman" />
+	<string id="aom_southrhovanion_militia_veteran_archer_name" text="{=aom_southrhovanion_militia_veteran_archer_name}[South Rhovanion] Veteran Militia Archer" />
+	<string id="aom_southrhovanion_militia_veteran_spearman_name" text="{=aom_southrhovanion_militia_veteran_spearman_name}[South Rhovanion] Veteran Militia Spearman" />
+	<string id="aom_southrhovanion_northman_youth_merc_name" text="{=aom_southrhovanion_northman_youth_merc_name}[South Rhovanion] Rhovanion Sellsword" />
+	<string id="aom_southrhovanion_northman_youth_name" text="{=aom_southrhovanion_northman_youth_name}[South Rhovanion] Northman Youth" />
+	<string id="aom_southrhovanion_plains_bowman_name" text="{=aom_southrhovanion_plains_bowman_name}[South Rhovanion] Plains Bowman" />
+	<string id="aom_southrhovanion_rider_captain_name" text="{=aom_southrhovanion_rider_captain_name}[South Rhovanion] Rider-captain" />
+	<string id="aom_southrhovanion_rider_name" text="{=aom_southrhovanion_rider_name}[South Rhovanion] Rhovanion Rider" />
+	<string id="aom_southrhovanion_southwood_archer_name" text="{=aom_southrhovanion_southwood_archer_name}[South Rhovanion] Southwood Archer" />
+	<string id="aom_southrhovanion_southwood_marksman_name" text="{=aom_southrhovanion_southwood_marksman_name}[South Rhovanion] Southwood Marksman" />
+	<string id="aom_southrhovanion_spearman_name" text="{=aom_southrhovanion_spearman_name}[South Rhovanion] Plainsman Spearman" />
+	<string id="aom_southrhovanion_veteran_ford_guard_name" text="{=aom_southrhovanion_veteran_ford_guard_name}[South Rhovanion] Veteran Ford Guard" />
+	<string id="aom_southrhovanion_veteran_horse_archer_name" text="{=aom_southrhovanion_veteran_horse_archer_name}[South Rhovanion] Veteran Horse-archer" />
 	<string id="aom_umbar_elite_name" text="{=aom_umbar_elite_name}[Umbar] Adûnaim Recruits" />
 	<string id="aom_umbar_elite_root0000_name" text="{=aom_umbar_elite_root0000_name}[Umbar] Naru n'Aru Royal Guard" />
 	<string id="aom_umbar_elite_root0001_name" text="{=aom_umbar_elite_root0001_name}[Umbar] Naru n'Aru Royal Knights" />

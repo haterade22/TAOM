@@ -275,9 +275,75 @@ KINGDOMS = {
                        "goblin": (0, False), "mistymountainorcs": (0, False), "anduinvale": (0, False)},
         face_template="fighter_sturgia", female_hair_tag="sturgia",
     ),
+    # Dorwinion and South Rhovanion (2026-10-29, #1062): Northmen realms by the Sea of Rhûn and on the
+    # plains south of Mirkwood, cut from Dale's and Rohan's cultures. Middling, as Ered Luin (tiers 5,
+    # 4, 4, 3) and Neutral, as Cardolan.
+    "dorwinion": dict(
+        region="DO", culture="dorwinion", race=None, capital="town_DO2", tmpl="rivendell", lords="dale",
+        equip="dorwinion", side="neutral", color="0xFF570D0D", color2="0xFFFBC841",
+        name="Dorwinion", short="Dorwinion", title="Kingdom of Dorwinion", ruler="King",
+        desc="The vintners of Dorwinion tend the warm slopes where the River Running meets the Sea of Rhûn. Their wine goes up the river to Dale, to the Elves of Mirkwood and to every hall that can pay for it, and their kings grow rich on it. They keep out of the wars of the West and buy peace from the East when they must.",
+        lord_skill=("taom_dale_lord_skills", "taom_dale_lord_skills", "taom_dale_lady_skills"),
+        lords_per_clan=4,  # 4 clans x 4 = 16 lords (2 male + 2 female, married within the clan)
+        clans=[("clan_dorwinion_1", 5, "town_DO2", "House of Vineholm"),
+               ("clan_dorwinion_2", 4, "town_DO1", "Wardens of the Redwater"),
+               ("clan_dorwinion_3", 4, "town_DO3", "House of Seagate"),
+               ("clan_dorwinion_4", 3, "castle_DO3", "Wardens of the Eastmarch")],
+        leader_name="Ostric",
+        male_names=["Halric", "Torvin", "Ostmar", "Gerulf", "Aldwin", "Berengar", "Raedric", "Sigmar",
+                    "Wendel", "Hartwin"],
+        female_names=["Aldith", "Berta", "Gisela", "Hilde", "Irmgard", "Liutgard", "Mathilde", "Oda",
+                      "Richenza", "Wiltrud"],
+        party_template="PartyTemplate.kingdom_hero_party_dorwinion_template",
+        # Misc icons no clan flies (30000-30015): the cluster (30011, a bunch of grapes) for the realm and
+        # the House of Vineholm, the tower (30015), the sunburst (30008), the phoenix shield (30014).
+        # Gold (2024, the realm's color2) on wine red (2015).
+        banner="11.2015.2015.1528.1528.764.764.1.0.0.{icon}.{fg}.{fg}.700.700.764.764.0.0.0",
+        kingdom_icon=30011, clan_icons=[30011, 30015, 30008, 30014],
+        sigil=2024, clan_sigils=[2024, 2024, 2024, 2024],
+        clan_colors=[("FF570D0D", "FFFBC841"), ("FF4A0B0B", "FFF0C050"), ("FF63110F", "FFFBC841"),
+                     ("FF3F0909", "FFE8B840")],
+        relationships={"sturgia": (0, False), "erebor": (0, False), "khuzait": (0, False),
+                       "mirkwood": (0, False), "dolguldur": (0, False), "anduinvale": (0, False),
+                       "angaladh": (0, False), "southrhovanion": (0, False)},
+        face_template="fighter_sturgia", female_hair_tag="sturgia",
+    ),
+    "southrhovanion": dict(
+        region="SRH", culture="southrhovanion", race=None, capital="town_SRH2", tmpl="rivendell",
+        lords="rohan", equip="southrhovanion", side="neutral", color="0xFF3F3831", color2="0xFFC99B6E",
+        name="South Rhovanion", short="South Rhovanion", title="Kingdom of South Rhovanion", ruler="King",
+        desc="The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Sea of Rhûn. They are horse-lords, kin of the Éothéod who rode north long ago, and they have not forgotten the Wainriders who once burned their halls. Their kings hold Vidugard and owe no lord in the West or the East.",
+        lord_skill=("taom_rohan_knight_skills", "taom_rohan_knight_skills", "taom_rohan_lady_skills"),
+        lords_per_clan=4,  # 4 clans x 4 = 16 lords (2 male + 2 female, married within the clan)
+        clans=[("clan_southrhovanion_1", 5, "town_SRH2", "House of Vidugard"),
+               ("clan_southrhovanion_2", 4, "town_SRH1", "Riders of Southwood"),
+               ("clan_southrhovanion_3", 4, "castle_SRH1", "Wainwatch Riders"),
+               ("clan_southrhovanion_4", 3, "castle_SRH3", "Wardens of the Northmark")],
+        leader_name="Vidumar",
+        male_names=["Marhwin", "Thrasaric", "Videric", "Beremud", "Gundric", "Hrodulf", "Sigiric",
+                    "Waldemar", "Theudis"],
+        female_names=["Amalaberga", "Hildegund", "Swanhilda", "Theodegotha", "Rotrudis", "Brunhildis",
+                      "Ansgard", "Gisla", "Wilgefort", "Odalinde"],
+        party_template="PartyTemplate.kingdom_hero_party_southrhovanion_template",
+        # Misc horse icons no clan flies: the sun between two horses (30006) for the realm and the House
+        # of Vidugard, the running horse (30001), the horn (30005), the horse's head (30004). Tan (2008,
+        # the realm's color2) on dark earth (2013).
+        banner="11.2013.2013.1528.1528.764.764.1.0.0.{icon}.{fg}.{fg}.700.700.764.764.0.0.0",
+        kingdom_icon=30006, clan_icons=[30006, 30001, 30005, 30004],
+        sigil=2008, clan_sigils=[2008, 2008, 2008, 2008],
+        clan_colors=[("FF3F3831", "FFC99B6E"), ("FF35302A", "FFC0925E"), ("FF4A4239", "FFC99B6E"),
+                     ("FF2F2A24", "FFB88A5A")],
+        relationships={"mirkwood": (0, False), "dolguldur": (0, False), "sturgia": (0, False),
+                       "khuzait": (0, False), "anduinvale": (0, False), "angaladh": (0, False),
+                       "lothlorien": (0, False), "dorwinion": (0, False)},
+        # TAOM's Rohan face range (fighter_rohan, as the culture's lord templates and tutors) drawn per
+        # lord; the ladies roll hair from Rohan's "vlandia" tag, as Rohan's ladies do.
+        face_template="fighter_rohan", female_hair_tag="vlandia",
+    ),
 }
 # The realms a regeneration reproduces (main() --only). See the note there.
-REGENERATABLE = ("arthedain", "cardolan", "rhudaur", "eredluin", "anduinvale", "angaladh")
+REGENERATABLE = ("arthedain", "cardolan", "rhudaur", "eredluin", "anduinvale", "angaladh", "dorwinion",
+                 "southrhovanion")
 # Leader (clan-1 lord-1) descriptions, period-correct for TA 3018 (War of the Ring).
 LEADER_BLURB = {
     "goblin": "the Great Goblin of Goblin Town, master of the warrens of the High Pass.",
@@ -290,6 +356,8 @@ LEADER_BLURB = {
     "eredluin": "King of Ered Luin, of the line of Borin, Lord of Thorin's Halls, who holds the Blue Mountains with the Broadbeams of Belegost and the Firebeards of Nogrod.",
     "anduinvale": "son of Beorn, Chieftain of the Beornings, who keeps the High Pass and the Old Ford and lets no orc cross the Vales of Anduin.",
     "angaladh": "King of Angáladh, lord of Woodmen-town, who keeps the eaves of Mirkwood against the shadow of Dol Guldur.",
+    "dorwinion": "King of Dorwinion, lord of Vineholm, whose wine goes up the River Running to Dale and the Elves of Mirkwood.",
+    "southrhovanion": "King of South Rhovanion, lord of Vidugard, who rides the plains south of Mirkwood and remembers the Wainriders.",
 }
 # lords per clan: ruling clan (first) 6, vassals 4
 LORDS_RULING, LORDS_VASSAL = 6, 4
@@ -405,9 +473,13 @@ def main():
     # dale_*_template_* rosters, with Dale's own skill sets.
     lord_dale_m = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_S10_1".*?</NPCCharacter>')
     lord_dale_f = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_S10_2".*?</NPCCharacter>')
+    # Rohan lords (South Rhovanion): a Rohan knight and lady on the generic rohan_*_template_* rosters,
+    # with Rohan's own skill sets.
+    lord_rohan_m = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_4_21_1".*?</NPCCharacter>')
+    lord_rohan_f = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_4_16_1".*?</NPCCharacter>')
     lord_templates = {"orc": (lord_orc_m, lord_orc_f), "elf": (lord_elf_m, lord_elf_f),
                       "human": (lord_human_m, lord_human_f), "dwarf": (lord_dwarf_m, lord_dwarf_f),
-                      "dale": (lord_dale_m, lord_dale_f)}
+                      "dale": (lord_dale_m, lord_dale_f), "rohan": (lord_rohan_m, lord_rohan_f)}
 
     new_kingdoms, new_clans, new_lords, new_heroes = {}, {}, {}, {}
 

@@ -425,6 +425,47 @@ class TestDaleCloneCareerRosters(unittest.TestCase):
             self.assertEqual(slots["Item0"], "Item.dale_great_axe_a")
 
 
+class TestDorwinionAndSouthRhovanionCareerRosters(unittest.TestCase):
+    """Both realms offer infantry, ranged and cavalry careers, so each has a cavalry pair with a Horse
+    and a HorseHarness and four rosters without one."""
+
+    def setUp(self):
+        root = ET.fromstring(ck.gk.read_xml(ck.CAREER_FILE)[0].encode("utf-8"))
+        self.rosters = {r.get("id"): r for r in root.iter("EquipmentRoster")}
+
+    def slots(self, rid):
+        return {e.get("slot"): e.get("id") for e in self.rosters[rid].iter("Equipment")}
+
+    def test_the_roster_sets(self):
+        for culture in ("dorwinion", "southrhovanion"):
+            have = sorted(r for r in self.rosters if r.startswith(f"player_career_{culture}_"))
+            self.assertEqual(have, [f"player_career_{culture}_{a}_{s}"
+                                    for a in ("cavalry", "infantry", "ranged") for s in ("f", "m")])
+
+    def test_only_the_cavalry_pairs_ride_and_each_horse_has_a_harness(self):
+        for rid in self.rosters:
+            if not rid.startswith(("player_career_dorwinion_", "player_career_southrhovanion_")):
+                continue
+            slots = self.slots(rid)
+            with self.subTest(roster=rid):
+                self.assertEqual("Horse" in slots, "_cavalry_" in rid)
+                self.assertEqual("Horse" in slots, "HorseHarness" in slots)
+
+    def test_each_kit_is_its_source_kingdoms_gear(self):
+        for rid in self.rosters:
+            for culture, prefixes in (("dorwinion", ("Item.dale_", "Item.wm_dale_", "Item.sk_dale_", "Item.ladder_dale_",
+                                                     "Item.default_arrows")),
+                                      ("southrhovanion", ("Item.wm_rohan_", "Item.rohan_", "Item.cts_rohan_",
+                                                          "Item.ladder_rohan_", "Item.default_arrows"))):
+                if not rid.startswith(f"player_career_{culture}_"):
+                    continue
+                for slot, item in self.slots(rid).items():
+                    if slot in ("Horse", "HorseHarness"):
+                        continue
+                    with self.subTest(roster=rid, slot=slot):
+                        self.assertTrue(item.startswith(prefixes), item)
+
+
 @unittest.skipUnless(ck.DEFAULT_ARMORY.exists(), "needs the LOTRLOME_Armory install; skipped, never faked")
 class TestCommittedCareerFile(unittest.TestCase):
     def test_the_committed_career_file_is_what_the_rule_derives(self):

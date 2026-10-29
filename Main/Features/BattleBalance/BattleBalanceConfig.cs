@@ -32,6 +32,7 @@ public class BattleBalanceConfig
             ["arthedain"] = 0.3f, ["cardolan"] = 0.3f,  ["rhudaur"] = 0.2f,
             ["eredluin"] = 0.3f,
             ["anduinvale"] = 0.1f, ["angaladh"] = 0.1f,
+            ["dorwinion"] = 0.1f, ["southrhovanion"] = 0.2f,
             ["mordor"] = -0.2f,   ["gundabad"] = -0.1f,  ["dolguldur"] = -0.1f
         };
 

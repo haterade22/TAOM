@@ -337,5 +337,25 @@
         "default_build": 0.7222,
         "focus_to_add": 0,
         "skill_level_to_add": 0
+    },
+    {
+        "culture_id": "dorwinion",
+        "races": ["human"],
+        "starting_settlement": "town_DO2",
+        "default_age": 20.0,
+        "default_weight": 0.0,
+        "default_build": 0.7222,
+        "focus_to_add": 0,
+        "skill_level_to_add": 0
+    },
+    {
+        "culture_id": "southrhovanion",
+        "races": ["human"],
+        "starting_settlement": "town_SRH2",
+        "default_age": 20.0,
+        "default_weight": 0.0,
+        "default_build": 0.7222,
+        "focus_to_add": 0,
+        "skill_level_to_add": 0
     }
 ]

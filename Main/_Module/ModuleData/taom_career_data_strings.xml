@@ -17,6 +17,8 @@
 	<string id="taom_ability_axe_warden_of_beorns_hall_tt" text="{=taom_ability_axe_warden_of_beorns_hall_tt}Plant your feet and hold the ford: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_bowman_of_minhiriath" text="{=taom_ability_bowman_of_minhiriath}Ambush" />
 	<string id="taom_ability_bowman_of_minhiriath_tt" text="{=taom_ability_bowman_of_minhiriath_tt}Spring a deadly ambush — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+	<string id="taom_ability_bowman_of_redwater" text="{=taom_ability_bowman_of_redwater}Seagate Volley" />
+	<string id="taom_ability_bowman_of_redwater_tt" text="{=taom_ability_bowman_of_redwater_tt}Loose the arrows of the Redwater bowmen: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_captain_of_cameth_brin" text="{=taom_ability_captain_of_cameth_brin}Hold the Line" />
 	<string id="taom_ability_captain_of_cameth_brin_tt" text="{=taom_ability_captain_of_cameth_brin_tt}Rally your soldiers with iron discipline — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_craig_crag_stalker" text="{=taom_ability_craig_crag_stalker}Poison Dart" />
@@ -45,6 +47,8 @@
 	<string id="taom_ability_knight_of_arthedain_tt" text="{=taom_ability_knight_of_arthedain_tt}Thunder forward with an unstoppable cavalry charge — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_knight_of_cardolan" text="{=taom_ability_knight_of_cardolan}Stampede" />
 	<string id="taom_ability_knight_of_cardolan_tt" text="{=taom_ability_knight_of_cardolan_tt}Thunder forward with an unstoppable cavalry charge — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+	<string id="taom_ability_marksman_of_westmark" text="{=taom_ability_marksman_of_westmark}Light Fletching" />
+	<string id="taom_ability_marksman_of_westmark_tt" text="{=taom_ability_marksman_of_westmark_tt}Nock a flight of swift light-fletch arrows: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_misty_deep_marksman" text="{=taom_ability_misty_deep_marksman}Poison Dart" />
 	<string id="taom_ability_misty_deep_marksman_tt" text="{=taom_ability_misty_deep_marksman_tt}Coat your bolts in cave fungus toxin — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_misty_troll_goad" text="{=taom_ability_misty_troll_goad}Moria Frenzy" />
@@ -61,12 +65,18 @@
 	<string id="taom_ability_rider_of_the_fells_tt" text="{=taom_ability_rider_of_the_fells_tt}Thunder forward with an unstoppable cavalry charge — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_rider_of_the_vales" text="{=taom_ability_rider_of_the_vales}Vale Gallop" />
 	<string id="taom_ability_rider_of_the_vales_tt" text="{=taom_ability_rider_of_the_vales_tt}Spur your horse along the Vale roads: boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+	<string id="taom_ability_rider_of_vidugard" text="{=taom_ability_rider_of_vidugard}Warcry of Vidugard" />
+	<string id="taom_ability_rider_of_vidugard_tt" text="{=taom_ability_rider_of_vidugard_tt}Raise the warcry of the horse-lords: boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+	<string id="taom_ability_river_rider_of_seagate" text="{=taom_ability_river_rider_of_seagate}Shore Gallop" />
+	<string id="taom_ability_river_rider_of_seagate_tt" text="{=taom_ability_river_rider_of_seagate_tt}Spur your horse along the river roads: boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_shaghana_beast_rider" text="{=taom_ability_shaghana_beast_rider}Horns of Mûmakan" />
 	<string id="taom_ability_shaghana_beast_rider_tt" text="{=taom_ability_shaghana_beast_rider_tt}Channel the ancient fear of Mûmakan — boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
 	<string id="taom_ability_shaghana_chatak_javelineer" text="{=taom_ability_shaghana_chatak_javelineer}Chatâk Volley" />
 	<string id="taom_ability_shaghana_chatak_javelineer_tt" text="{=taom_ability_shaghana_chatak_javelineer_tt}Unleash a blazing javelin barrage — boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ability_shaghana_zajana_tribesman" text="{=taom_ability_shaghana_zajana_tribesman}Serpent-Venom Blades" />
 	<string id="taom_ability_shaghana_zajana_tribesman_tt" text="{=taom_ability_shaghana_zajana_tribesman_tt}Coat your weapons in desert toxins — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+	<string id="taom_ability_spear_warden_of_vinewatch" text="{=taom_ability_spear_warden_of_vinewatch}Terrace Wall" />
+	<string id="taom_ability_spear_warden_of_vinewatch_tt" text="{=taom_ability_spear_warden_of_vinewatch_tt}Set your spear and hold the terrace wall: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_warden_of_fornost" text="{=taom_ability_warden_of_fornost}Hold the Line" />
 	<string id="taom_ability_warden_of_fornost_tt" text="{=taom_ability_warden_of_fornost_tt}Rally your soldiers with iron discipline — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_warden_of_the_forest_gate" text="{=taom_ability_warden_of_the_forest_gate}Thornwall" />
@@ -75,6 +85,8 @@
 	<string id="taom_ability_warden_of_thorins_halls_tt" text="{=taom_ability_warden_of_thorins_halls_tt}Invoke the strength of the mountain halls: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_warden_of_tyrn_gorthad" text="{=taom_ability_warden_of_tyrn_gorthad}Hold the Line" />
 	<string id="taom_ability_warden_of_tyrn_gorthad_tt" text="{=taom_ability_warden_of_tyrn_gorthad_tt}Rally your soldiers with iron discipline — boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+	<string id="taom_ability_warden_of_wainwatch" text="{=taom_ability_warden_of_wainwatch}Stand Fast" />
+	<string id="taom_ability_warden_of_wainwatch_tt" text="{=taom_ability_warden_of_wainwatch_tt}Dig in with iron resolve: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
 	<string id="taom_ability_woodward_of_the_forest_road" text="{=taom_ability_woodward_of_the_forest_road}Ironwood Volley" />
 	<string id="taom_ability_woodward_of_the_forest_road_tt" text="{=taom_ability_woodward_of_the_forest_road_tt}Loose the arrows of the woodwards: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 	<string id="taom_ahg_t1a_key" text="{=taom_ahg_t1a_key}Ivory-Ward Blades radius increased, the toxin spreads wider." />
@@ -260,6 +272,37 @@
 	<string id="taom_bom_t3b_p3" text="{=taom_bom_t3b_p3}+9 max health." />
 	<string id="taom_bom_t3b_p4" text="{=taom_bom_t3b_p4}+15% party spotting range." />
 	<string id="taom_bowman_of_minhiriath_root_desc" text="{=taom_bowman_of_minhiriath_root_desc}Ambush grants +5% ranged damage and scales duration with Bow skill." />
+	<string id="taom_bowman_of_redwater_root_desc" text="{=taom_bowman_of_redwater_root_desc}Seagate Volley grants +5% ranged damage in honor of the bowmen of the Redwater." />
+	<string id="taom_bwr_t1_a_key" text="{=taom_bwr_t1_a_key}Seagate Volley radius increased, covering wider kill zones." />
+	<string id="taom_bwr_t1_a_p1" text="{=taom_bwr_t1_a_p1}+8% ranged damage." />
+	<string id="taom_bwr_t1_a_p2" text="{=taom_bwr_t1_a_p2}+5% armor penetration." />
+	<string id="taom_bwr_t1_a_p3" text="{=taom_bwr_t1_a_p3}+7% movement speed." />
+	<string id="taom_bwr_t1_a_p4" text="{=taom_bwr_t1_a_p4}+5% battle renown gain." />
+	<string id="taom_bwr_t1_b_key" text="{=taom_bwr_t1_b_key}Seagate Volley duration extended, sustained barrage." />
+	<string id="taom_bwr_t1_b_p1" text="{=taom_bwr_t1_b_p1}+5% resistance." />
+	<string id="taom_bwr_t1_b_p2" text="{=taom_bwr_t1_b_p2}+5 max health." />
+	<string id="taom_bwr_t1_b_p3" text="{=taom_bwr_t1_b_p3}+5% party spotting range." />
+	<string id="taom_bwr_t1_b_p4" text="{=taom_bwr_t1_b_p4}+10% stealth bonus." />
+	<string id="taom_bwr_t2_a_key" text="{=taom_bwr_t2_a_key}Seagate Volley charge reduced, maintaining constant pressure." />
+	<string id="taom_bwr_t2_a_p1" text="{=taom_bwr_t2_a_p1}+10% party spotting range." />
+	<string id="taom_bwr_t2_a_p2" text="{=taom_bwr_t2_a_p2}+10% movement speed." />
+	<string id="taom_bwr_t2_a_p3" text="{=taom_bwr_t2_a_p3}+13% stealth bonus." />
+	<string id="taom_bwr_t2_a_p4" text="{=taom_bwr_t2_a_p4}+10% battle renown gain." />
+	<string id="taom_bwr_t2_b_key" text="{=taom_bwr_t2_b_key}Seagate Volley gains additional penetration while active." />
+	<string id="taom_bwr_t2_b_p1" text="{=taom_bwr_t2_b_p1}+12% ranged damage." />
+	<string id="taom_bwr_t2_b_p2" text="{=taom_bwr_t2_b_p2}+10% armor penetration." />
+	<string id="taom_bwr_t2_b_p3" text="{=taom_bwr_t2_b_p3}+8 max health." />
+	<string id="taom_bwr_t2_b_p4" text="{=taom_bwr_t2_b_p4}+3% troop damage." />
+	<string id="taom_bwr_t3_a_key" text="{=taom_bwr_t3_a_key}Seagate Volley radius greatly expanded, inescapable volleys." />
+	<string id="taom_bwr_t3_a_p1" text="{=taom_bwr_t3_a_p1}+18% ranged damage." />
+	<string id="taom_bwr_t3_a_p2" text="{=taom_bwr_t3_a_p2}+15% armor penetration." />
+	<string id="taom_bwr_t3_a_p3" text="{=taom_bwr_t3_a_p3}+15% battle renown gain." />
+	<string id="taom_bwr_t3_a_p4" text="{=taom_bwr_t3_a_p4}+5% troop damage." />
+	<string id="taom_bwr_t3_b_key" text="{=taom_bwr_t3_b_key}Seagate Volley charge greatly reduced, relentless fire." />
+	<string id="taom_bwr_t3_b_p1" text="{=taom_bwr_t3_b_p1}+15% stealth bonus." />
+	<string id="taom_bwr_t3_b_p2" text="{=taom_bwr_t3_b_p2}+15% movement speed." />
+	<string id="taom_bwr_t3_b_p3" text="{=taom_bwr_t3_b_p3}+9 max health." />
+	<string id="taom_bwr_t3_b_p4" text="{=taom_bwr_t3_b_p4}+15% party spotting range." />
 	<string id="taom_career_abanissa_house_guard" text="{=taom_career_abanissa_house_guard}House-Guard of Damudûr" />
 	<string id="taom_career_abanissa_house_guard_desc" text="{=taom_career_abanissa_house_guard_desc}A warrior of the Damudûr desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades." />
 	<string id="taom_career_abanissa_ivory_rider" text="{=taom_career_abanissa_ivory_rider}Ivory-Road Beast Rider" />
@@ -272,6 +315,8 @@
 	<string id="taom_career_axe_warden_of_beorns_hall_desc" text="{=taom_career_axe_warden_of_beorns_hall_desc}A broad-shouldered axeman of the House of Beorn who holds the fords and passes of the Vales against goblin and wolf alike." />
 	<string id="taom_career_bowman_of_minhiriath" text="{=taom_career_bowman_of_minhiriath}Bowman of Minhiriath" />
 	<string id="taom_career_bowman_of_minhiriath_desc" text="{=taom_career_bowman_of_minhiriath_desc}An elite scout who strikes from the river country of Minhiriath, ambushing raiders from Dunland with deadly precision." />
+	<string id="taom_career_bowman_of_redwater" text="{=taom_career_bowman_of_redwater}Bowman of Redwater" />
+	<string id="taom_career_bowman_of_redwater_desc" text="{=taom_career_bowman_of_redwater_desc}A bowman of the Redwater who shoots from the walls of Seagate and the reed-beds of the river, carrying on a tradition of unerring marksmanship." />
 	<string id="taom_career_captain_of_cameth_brin" text="{=taom_career_captain_of_cameth_brin}Captain of Cameth Brin" />
 	<string id="taom_career_captain_of_cameth_brin_desc" text="{=taom_career_captain_of_cameth_brin_desc}A battle-hardened infantry officer who holds the tower of Cameth Brin against the mountains, forging order from chaos when the fells burn. The Captain holds the line where others would break, rallying soldiers through sheer force of will." />
 	<string id="taom_career_craig_crag_stalker" text="{=taom_career_craig_crag_stalker}Blue Craig Crag Stalker" />
@@ -328,6 +373,12 @@
 	<string id="taom_career_grp_bowman_of_minhiriath_t2_b" text="{=taom_career_grp_bowman_of_minhiriath_t2_b}Bowman of the Greyflood" />
 	<string id="taom_career_grp_bowman_of_minhiriath_t3_a" text="{=taom_career_grp_bowman_of_minhiriath_t3_a}Arrow of the Gwathló" />
 	<string id="taom_career_grp_bowman_of_minhiriath_t3_b" text="{=taom_career_grp_bowman_of_minhiriath_t3_b}Shadow of Eryn Vorn" />
+	<string id="taom_career_grp_bowman_of_redwater_t1_a" text="{=taom_career_grp_bowman_of_redwater_t1_a}Bowman of Redwater" />
+	<string id="taom_career_grp_bowman_of_redwater_t1_b" text="{=taom_career_grp_bowman_of_redwater_t1_b}Watch of the Sea of Rhûn" />
+	<string id="taom_career_grp_bowman_of_redwater_t2_a" text="{=taom_career_grp_bowman_of_redwater_t2_a}Heir of the Redwater Bowmen" />
+	<string id="taom_career_grp_bowman_of_redwater_t2_b" text="{=taom_career_grp_bowman_of_redwater_t2_b}Falcon-Sighted Archer" />
+	<string id="taom_career_grp_bowman_of_redwater_t3_a" text="{=taom_career_grp_bowman_of_redwater_t3_a}Raider-Bane of Seagate" />
+	<string id="taom_career_grp_bowman_of_redwater_t3_b" text="{=taom_career_grp_bowman_of_redwater_t3_b}The Bow of King Ostric's Line" />
 	<string id="taom_career_grp_captain_of_cameth_brin_t1_a" text="{=taom_career_grp_captain_of_cameth_brin_t1_a}Warden of the Ettendale" />
 	<string id="taom_career_grp_captain_of_cameth_brin_t1_b" text="{=taom_career_grp_captain_of_cameth_brin_t1_b}Keeper of the Hoarwell Crossing" />
 	<string id="taom_career_grp_captain_of_cameth_brin_t2_a" text="{=taom_career_grp_captain_of_cameth_brin_t2_a}Vanguard of the Coldfells" />
@@ -412,6 +463,12 @@
 	<string id="taom_career_grp_knight_of_cardolan_t2_b" text="{=taom_career_grp_knight_of_cardolan_t2_b}Shieldwall of Aranthir" />
 	<string id="taom_career_grp_knight_of_cardolan_t3_a" text="{=taom_career_grp_knight_of_cardolan_t3_a}Knight of the Greenway" />
 	<string id="taom_career_grp_knight_of_cardolan_t3_b" text="{=taom_career_grp_knight_of_cardolan_t3_b}Charge of Caras Gorthad" />
+	<string id="taom_career_grp_marksman_of_westmark_t1_a" text="{=taom_career_grp_marksman_of_westmark_t1_a}Hawk of Westmark" />
+	<string id="taom_career_grp_marksman_of_westmark_t1_b" text="{=taom_career_grp_marksman_of_westmark_t1_b}Warden of the Western Plain" />
+	<string id="taom_career_grp_marksman_of_westmark_t2_a" text="{=taom_career_grp_marksman_of_westmark_t2_a}Captain of the Muster" />
+	<string id="taom_career_grp_marksman_of_westmark_t2_b" text="{=taom_career_grp_marksman_of_westmark_t2_b}Shadow of Mirkwood" />
+	<string id="taom_career_grp_marksman_of_westmark_t3_a" text="{=taom_career_grp_marksman_of_westmark_t3_a}Bowman of the Plain" />
+	<string id="taom_career_grp_marksman_of_westmark_t3_b" text="{=taom_career_grp_marksman_of_westmark_t3_b}Host of Rhovanion" />
 	<string id="taom_career_grp_misty_deep_marksman_t1_a" text="{=taom_career_grp_misty_deep_marksman_t1_a}Crag-Stalker" />
 	<string id="taom_career_grp_misty_deep_marksman_t1_b" text="{=taom_career_grp_misty_deep_marksman_t1_b}Tunnel Skulker" />
 	<string id="taom_career_grp_misty_deep_marksman_t2_a" text="{=taom_career_grp_misty_deep_marksman_t2_a}High Pass Ambusher" />
@@ -460,6 +517,18 @@
 	<string id="taom_career_grp_rider_of_the_vales_t2_b" text="{=taom_career_grp_rider_of_the_vales_t2_b}Outrider of the Woodmen's Friendship" />
 	<string id="taom_career_grp_rider_of_the_vales_t3_a" text="{=taom_career_grp_rider_of_the_vales_t3_a}The Charge of the Carrock" />
 	<string id="taom_career_grp_rider_of_the_vales_t3_b" text="{=taom_career_grp_rider_of_the_vales_t3_b}Courier of the Chieftain" />
+	<string id="taom_career_grp_rider_of_vidugard_t1_a" text="{=taom_career_grp_rider_of_vidugard_t1_a}Heir of the Horse-lords" />
+	<string id="taom_career_grp_rider_of_vidugard_t1_b" text="{=taom_career_grp_rider_of_vidugard_t1_b}Rider of the Open Plain" />
+	<string id="taom_career_grp_rider_of_vidugard_t2_a" text="{=taom_career_grp_rider_of_vidugard_t2_a}Oath of the Horse-lords" />
+	<string id="taom_career_grp_rider_of_vidugard_t2_b" text="{=taom_career_grp_rider_of_vidugard_t2_b}Lord of the Herds" />
+	<string id="taom_career_grp_rider_of_vidugard_t3_a" text="{=taom_career_grp_rider_of_vidugard_t3_a}Charge of the Plain" />
+	<string id="taom_career_grp_rider_of_vidugard_t3_b" text="{=taom_career_grp_rider_of_vidugard_t3_b}Song of Rhovanion" />
+	<string id="taom_career_grp_river_rider_of_seagate_t1_a" text="{=taom_career_grp_river_rider_of_seagate_t1_a}Rider of the Redwater" />
+	<string id="taom_career_grp_river_rider_of_seagate_t1_b" text="{=taom_career_grp_river_rider_of_seagate_t1_b}Warden of the Wine Road" />
+	<string id="taom_career_grp_river_rider_of_seagate_t2_a" text="{=taom_career_grp_river_rider_of_seagate_t2_a}Lance of the Vineyards" />
+	<string id="taom_career_grp_river_rider_of_seagate_t2_b" text="{=taom_career_grp_river_rider_of_seagate_t2_b}Outrider of the Eastern Trade" />
+	<string id="taom_career_grp_river_rider_of_seagate_t3_a" text="{=taom_career_grp_river_rider_of_seagate_t3_a}The Charge of the Shore" />
+	<string id="taom_career_grp_river_rider_of_seagate_t3_b" text="{=taom_career_grp_river_rider_of_seagate_t3_b}Courier of the King" />
 	<string id="taom_career_grp_shaghana_beast_rider_t1_a" text="{=taom_career_grp_shaghana_beast_rider_t1_a}Tusk Vanguard" />
 	<string id="taom_career_grp_shaghana_beast_rider_t1_b" text="{=taom_career_grp_shaghana_beast_rider_t1_b}Beast-Warden" />
 	<string id="taom_career_grp_shaghana_beast_rider_t2_a" text="{=taom_career_grp_shaghana_beast_rider_t2_a}Trampling Charge" />
@@ -478,6 +547,12 @@
 	<string id="taom_career_grp_shaghana_zajana_tribesman_t2_b" text="{=taom_career_grp_shaghana_zajana_tribesman_t2_b}Wearer of the Sands" />
 	<string id="taom_career_grp_shaghana_zajana_tribesman_t3_a" text="{=taom_career_grp_shaghana_zajana_tribesman_t3_a}Venom of Haradwaith" />
 	<string id="taom_career_grp_shaghana_zajana_tribesman_t3_b" text="{=taom_career_grp_shaghana_zajana_tribesman_t3_b}Scourge of the Southrons" />
+	<string id="taom_career_grp_spear_warden_of_vinewatch_t1_a" text="{=taom_career_grp_spear_warden_of_vinewatch_t1_a}Vine-warden of the Redwater" />
+	<string id="taom_career_grp_spear_warden_of_vinewatch_t1_b" text="{=taom_career_grp_spear_warden_of_vinewatch_t1_b}Shieldwall of the Terraces" />
+	<string id="taom_career_grp_spear_warden_of_vinewatch_t2_a" text="{=taom_career_grp_spear_warden_of_vinewatch_t2_a}Spear of King Ostric" />
+	<string id="taom_career_grp_spear_warden_of_vinewatch_t2_b" text="{=taom_career_grp_spear_warden_of_vinewatch_t2_b}Bulwark of the Redwater" />
+	<string id="taom_career_grp_spear_warden_of_vinewatch_t3_a" text="{=taom_career_grp_spear_warden_of_vinewatch_t3_a}Vanguard of King Ostric" />
+	<string id="taom_career_grp_spear_warden_of_vinewatch_t3_b" text="{=taom_career_grp_spear_warden_of_vinewatch_t3_b}The Last Stand at Sunwall" />
 	<string id="taom_career_grp_warden_of_fornost_t1_a" text="{=taom_career_grp_warden_of_fornost_t1_a}Warden of the Dike" />
 	<string id="taom_career_grp_warden_of_fornost_t1_b" text="{=taom_career_grp_warden_of_fornost_t1_b}Keeper of the Baranduin Crossing" />
 	<string id="taom_career_grp_warden_of_fornost_t2_a" text="{=taom_career_grp_warden_of_fornost_t2_a}Vanguard of the North Downs" />
@@ -502,6 +577,12 @@
 	<string id="taom_career_grp_warden_of_tyrn_gorthad_t2_b" text="{=taom_career_grp_warden_of_tyrn_gorthad_t2_b}Sword of Sarn Ford" />
 	<string id="taom_career_grp_warden_of_tyrn_gorthad_t3_a" text="{=taom_career_grp_warden_of_tyrn_gorthad_t3_a}Host of Aranthir" />
 	<string id="taom_career_grp_warden_of_tyrn_gorthad_t3_b" text="{=taom_career_grp_warden_of_tyrn_gorthad_t3_b}Keeper of the Royal Barrows" />
+	<string id="taom_career_grp_warden_of_wainwatch_t1_a" text="{=taom_career_grp_warden_of_wainwatch_t1_a}Gate of Wainwatch" />
+	<string id="taom_career_grp_warden_of_wainwatch_t1_b" text="{=taom_career_grp_warden_of_wainwatch_t1_b}Watch of the Plain" />
+	<string id="taom_career_grp_warden_of_wainwatch_t2_a" text="{=taom_career_grp_warden_of_wainwatch_t2_a}Shieldman of Wainwatch" />
+	<string id="taom_career_grp_warden_of_wainwatch_t2_b" text="{=taom_career_grp_warden_of_wainwatch_t2_b}Warden of the Eastern Fords" />
+	<string id="taom_career_grp_warden_of_wainwatch_t3_a" text="{=taom_career_grp_warden_of_wainwatch_t3_a}Bastion of the Northmark" />
+	<string id="taom_career_grp_warden_of_wainwatch_t3_b" text="{=taom_career_grp_warden_of_wainwatch_t3_b}Warden of Rhovanion" />
 	<string id="taom_career_grp_woodward_of_the_forest_road_t1_a" text="{=taom_career_grp_woodward_of_the_forest_road_t1_a}Bowman of Thornhold" />
 	<string id="taom_career_grp_woodward_of_the_forest_road_t1_b" text="{=taom_career_grp_woodward_of_the_forest_road_t1_b}Watch of the Forest Road" />
 	<string id="taom_career_grp_woodward_of_the_forest_road_t2_a" text="{=taom_career_grp_woodward_of_the_forest_road_t2_a}Heir of the Woodwards" />
@@ -516,6 +597,8 @@
 	<string id="taom_career_knight_of_arthedain_desc" text="{=taom_career_knight_of_arthedain_desc}An armored champion of the North-kingdom, whose thundering charge has broken countless enemy formations. The Knight of Arthedain combines Arthedain discipline with Fornost's proud cavalry tradition, becoming an immovable wall of steel." />
 	<string id="taom_career_knight_of_cardolan" text="{=taom_career_knight_of_cardolan}Knight of Cardolan" />
 	<string id="taom_career_knight_of_cardolan_desc" text="{=taom_career_knight_of_cardolan_desc}An armored champion of the southern kingdom, whose thundering charge has broken countless enemy formations. The Knight of Cardolan combines Cardolan discipline with Caras Gorthad's proud cavalry tradition, becoming an immovable wall of steel." />
+	<string id="taom_career_marksman_of_westmark" text="{=taom_career_marksman_of_westmark}Marksman of Westmark" />
+	<string id="taom_career_marksman_of_westmark_desc" text="{=taom_career_marksman_of_westmark_desc}A heavy archer of the Westmark garrison who has mastered the art of loosing light, high-velocity arrows with lethal precision, capable of penetrating armour at distances that leave enemies no safe quarter." />
 	<string id="taom_career_misty_deep_marksman" text="{=taom_career_misty_deep_marksman}Moria Deep-Marksman" />
 	<string id="taom_career_misty_deep_marksman_desc" text="{=taom_career_misty_deep_marksman_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows." />
 	<string id="taom_career_misty_troll_goad" text="{=taom_career_misty_troll_goad}Moria Troll-Goad" />
@@ -534,6 +617,7 @@
 	<string id="taom_career_rank1_archer_of_eastbank" text="{=taom_career_rank1_archer_of_eastbank}Bowman of the Gladden" />
 	<string id="taom_career_rank1_axe_warden_of_beorns_hall" text="{=taom_career_rank1_axe_warden_of_beorns_hall}Vale Axeman" />
 	<string id="taom_career_rank1_bowman_of_minhiriath" text="{=taom_career_rank1_bowman_of_minhiriath}Scout of Minhiriath" />
+	<string id="taom_career_rank1_bowman_of_redwater" text="{=taom_career_rank1_bowman_of_redwater}Bowman of Redwater" />
 	<string id="taom_career_rank1_captain_of_cameth_brin" text="{=taom_career_rank1_captain_of_cameth_brin}Ohtar of the Last Bridge" />
 	<string id="taom_career_rank1_craig_crag_stalker" text="{=taom_career_rank1_craig_crag_stalker}Crag-Lurker" />
 	<string id="taom_career_rank1_craig_pit_driver" text="{=taom_career_rank1_craig_pit_driver}Pit-Driver" />
@@ -548,6 +632,7 @@
 	<string id="taom_career_rank1_hewer_of_ironwood_hall" text="{=taom_career_rank1_hewer_of_ironwood_hall}Ironwood Axeman" />
 	<string id="taom_career_rank1_knight_of_arthedain" text="{=taom_career_rank1_knight_of_arthedain}Squire of Fornost" />
 	<string id="taom_career_rank1_knight_of_cardolan" text="{=taom_career_rank1_knight_of_cardolan}Squire of Caras Gorthad" />
+	<string id="taom_career_rank1_marksman_of_westmark" text="{=taom_career_rank1_marksman_of_westmark}Bowman of Westmark" />
 	<string id="taom_career_rank1_misty_deep_marksman" text="{=taom_career_rank1_misty_deep_marksman}Crag-Lurker" />
 	<string id="taom_career_rank1_misty_troll_goad" text="{=taom_career_rank1_misty_troll_goad}Pit-Driver" />
 	<string id="taom_career_rank1_misty_warg_chieftain" text="{=taom_career_rank1_misty_warg_chieftain}Warg-Rider of the Pack" />
@@ -556,13 +641,17 @@
 	<string id="taom_career_rank1_ranger_of_the_north" text="{=taom_career_rank1_ranger_of_the_north}Scout of Eriador" />
 	<string id="taom_career_rank1_rider_of_the_fells" text="{=taom_career_rank1_rider_of_the_fells}Squire of the Angle" />
 	<string id="taom_career_rank1_rider_of_the_vales" text="{=taom_career_rank1_rider_of_the_vales}Road-Rider of the Vales" />
+	<string id="taom_career_rank1_rider_of_vidugard" text="{=taom_career_rank1_rider_of_vidugard}Rider of the Plain" />
+	<string id="taom_career_rank1_river_rider_of_seagate" text="{=taom_career_rank1_river_rider_of_seagate}River-Rider of Seagate" />
 	<string id="taom_career_rank1_shaghana_beast_rider" text="{=taom_career_rank1_shaghana_beast_rider}Sormedân Beast-Tamer" />
 	<string id="taom_career_rank1_shaghana_chatak_javelineer" text="{=taom_career_rank1_shaghana_chatak_javelineer}Chatâk Javelineer" />
 	<string id="taom_career_rank1_shaghana_zajana_tribesman" text="{=taom_career_rank1_shaghana_zajana_tribesman}Zajâna Tribesman" />
+	<string id="taom_career_rank1_spear_warden_of_vinewatch" text="{=taom_career_rank1_spear_warden_of_vinewatch}Spearman of Vinewatch" />
 	<string id="taom_career_rank1_warden_of_fornost" text="{=taom_career_rank1_warden_of_fornost}Ohtar of the North Downs" />
 	<string id="taom_career_rank1_warden_of_the_forest_gate" text="{=taom_career_rank1_warden_of_the_forest_gate}Spear of the Forest Gate" />
 	<string id="taom_career_rank1_warden_of_thorins_halls" text="{=taom_career_rank1_warden_of_thorins_halls}Deep Warden" />
 	<string id="taom_career_rank1_warden_of_tyrn_gorthad" text="{=taom_career_rank1_warden_of_tyrn_gorthad}Ohtar of Sarn Ford" />
+	<string id="taom_career_rank1_warden_of_wainwatch" text="{=taom_career_rank1_warden_of_wainwatch}Watchman of Wainwatch" />
 	<string id="taom_career_rank1_woodward_of_the_forest_road" text="{=taom_career_rank1_woodward_of_the_forest_road}Bowman of Thornhold" />
 	<string id="taom_career_rank2_abanissa_house_guard" text="{=taom_career_rank2_abanissa_house_guard}Caravan Outrider" />
 	<string id="taom_career_rank2_abanissa_ivory_rider" text="{=taom_career_rank2_abanissa_ivory_rider}Mûmak Driver" />
@@ -570,6 +659,7 @@
 	<string id="taom_career_rank2_archer_of_eastbank" text="{=taom_career_rank2_archer_of_eastbank}Hawk-Eye of Eastbank" />
 	<string id="taom_career_rank2_axe_warden_of_beorns_hall" text="{=taom_career_rank2_axe_warden_of_beorns_hall}Axe-warden of Beorn's Hall" />
 	<string id="taom_career_rank2_bowman_of_minhiriath" text="{=taom_career_rank2_bowman_of_minhiriath}Bowman of Minhiriath" />
+	<string id="taom_career_rank2_bowman_of_redwater" text="{=taom_career_rank2_bowman_of_redwater}Hawk-Eye of Redwater" />
 	<string id="taom_career_rank2_captain_of_cameth_brin" text="{=taom_career_rank2_captain_of_cameth_brin}Warden of the Fells" />
 	<string id="taom_career_rank2_craig_crag_stalker" text="{=taom_career_rank2_craig_crag_stalker}Ered Luin Stalker" />
 	<string id="taom_career_rank2_craig_pit_driver" text="{=taom_career_rank2_craig_pit_driver}Troll-Goad of Blue Craig" />
@@ -584,6 +674,7 @@
 	<string id="taom_career_rank2_hewer_of_ironwood_hall" text="{=taom_career_rank2_hewer_of_ironwood_hall}Hewer of Ironwood Hall" />
 	<string id="taom_career_rank2_knight_of_arthedain" text="{=taom_career_rank2_knight_of_arthedain}Silver Knight" />
 	<string id="taom_career_rank2_knight_of_cardolan" text="{=taom_career_rank2_knight_of_cardolan}Barrow-Knight" />
+	<string id="taom_career_rank2_marksman_of_westmark" text="{=taom_career_rank2_marksman_of_westmark}Marksman of Westmark" />
 	<string id="taom_career_rank2_misty_deep_marksman" text="{=taom_career_rank2_misty_deep_marksman}High Pass Stalker" />
 	<string id="taom_career_rank2_misty_troll_goad" text="{=taom_career_rank2_misty_troll_goad}Troll-Goad of Moria" />
 	<string id="taom_career_rank2_misty_warg_chieftain" text="{=taom_career_rank2_misty_warg_chieftain}Fell Wolf-Captain" />
@@ -592,13 +683,17 @@
 	<string id="taom_career_rank2_ranger_of_the_north" text="{=taom_career_rank2_ranger_of_the_north}Ranger of the North" />
 	<string id="taom_career_rank2_rider_of_the_fells" text="{=taom_career_rank2_rider_of_the_fells}Fell-Knight" />
 	<string id="taom_career_rank2_rider_of_the_vales" text="{=taom_career_rank2_rider_of_the_vales}Warden of the Old Ford Road" />
+	<string id="taom_career_rank2_rider_of_vidugard" text="{=taom_career_rank2_rider_of_vidugard}Captain of the Riders" />
+	<string id="taom_career_rank2_river_rider_of_seagate" text="{=taom_career_rank2_river_rider_of_seagate}Warden of the Shore Road" />
 	<string id="taom_career_rank2_shaghana_beast_rider" text="{=taom_career_rank2_shaghana_beast_rider}Mûmak Driver" />
 	<string id="taom_career_rank2_shaghana_chatak_javelineer" text="{=taom_career_rank2_shaghana_chatak_javelineer}Throwing-Spear Skirmisher" />
 	<string id="taom_career_rank2_shaghana_zajana_tribesman" text="{=taom_career_rank2_shaghana_zajana_tribesman}Sandstorm Raider" />
+	<string id="taom_career_rank2_spear_warden_of_vinewatch" text="{=taom_career_rank2_spear_warden_of_vinewatch}Spear-warden of Vinewatch" />
 	<string id="taom_career_rank2_warden_of_fornost" text="{=taom_career_rank2_warden_of_fornost}Warden of the Walls" />
 	<string id="taom_career_rank2_warden_of_the_forest_gate" text="{=taom_career_rank2_warden_of_the_forest_gate}Warden of the Forest Gate" />
 	<string id="taom_career_rank2_warden_of_thorins_halls" text="{=taom_career_rank2_warden_of_thorins_halls}Warden of Thorin's Halls" />
 	<string id="taom_career_rank2_warden_of_tyrn_gorthad" text="{=taom_career_rank2_warden_of_tyrn_gorthad}Warden of the Barrows" />
+	<string id="taom_career_rank2_warden_of_wainwatch" text="{=taom_career_rank2_warden_of_wainwatch}Gate-warden of Wainwatch" />
 	<string id="taom_career_rank2_woodward_of_the_forest_road" text="{=taom_career_rank2_woodward_of_the_forest_road}Spider-Shooter" />
 	<string id="taom_career_rank3_abanissa_house_guard" text="{=taom_career_rank3_abanissa_house_guard}Ivory-Throne Chieftain" />
 	<string id="taom_career_rank3_abanissa_ivory_rider" text="{=taom_career_rank3_abanissa_ivory_rider}Mûmak War-Leader" />
@@ -606,6 +701,7 @@
 	<string id="taom_career_rank3_archer_of_eastbank" text="{=taom_career_rank3_archer_of_eastbank}Bow-lord of the Vales" />
 	<string id="taom_career_rank3_axe_warden_of_beorns_hall" text="{=taom_career_rank3_axe_warden_of_beorns_hall}Champion of the Carrock" />
 	<string id="taom_career_rank3_bowman_of_minhiriath" text="{=taom_career_rank3_bowman_of_minhiriath}Captain of the Bowmen" />
+	<string id="taom_career_rank3_bowman_of_redwater" text="{=taom_career_rank3_bowman_of_redwater}Bow-lord of the Redwater" />
 	<string id="taom_career_rank3_captain_of_cameth_brin" text="{=taom_career_rank3_captain_of_cameth_brin}Captain of Cameth Brin" />
 	<string id="taom_career_rank3_craig_crag_stalker" text="{=taom_career_rank3_craig_crag_stalker}Eye of Blue Craig" />
 	<string id="taom_career_rank3_craig_pit_driver" text="{=taom_career_rank3_craig_pit_driver}Maker of Broken Trolls" />
@@ -620,6 +716,7 @@
 	<string id="taom_career_rank3_hewer_of_ironwood_hall" text="{=taom_career_rank3_hewer_of_ironwood_hall}Great-axe of the Emyn Duir" />
 	<string id="taom_career_rank3_knight_of_arthedain" text="{=taom_career_rank3_knight_of_arthedain}Knight of the Seven Stars" />
 	<string id="taom_career_rank3_knight_of_cardolan" text="{=taom_career_rank3_knight_of_cardolan}Knight of the Barrow-Kings" />
+	<string id="taom_career_rank3_marksman_of_westmark" text="{=taom_career_rank3_marksman_of_westmark}Arrow-warden of the Plain" />
 	<string id="taom_career_rank3_misty_deep_marksman" text="{=taom_career_rank3_misty_deep_marksman}Eye of Moria" />
 	<string id="taom_career_rank3_misty_troll_goad" text="{=taom_career_rank3_misty_troll_goad}Maker of Broken Trolls" />
 	<string id="taom_career_rank3_misty_warg_chieftain" text="{=taom_career_rank3_misty_warg_chieftain}Wolf-Lord of the Wild Hunt" />
@@ -628,24 +725,34 @@
 	<string id="taom_career_rank3_ranger_of_the_north" text="{=taom_career_rank3_ranger_of_the_north}Chieftain of the Rangers" />
 	<string id="taom_career_rank3_rider_of_the_fells" text="{=taom_career_rank3_rider_of_the_fells}Knight of the Fells" />
 	<string id="taom_career_rank3_rider_of_the_vales" text="{=taom_career_rank3_rider_of_the_vales}Marshal of the Vales" />
+	<string id="taom_career_rank3_rider_of_vidugard" text="{=taom_career_rank3_rider_of_vidugard}Horse-lord of Rhovanion" />
+	<string id="taom_career_rank3_river_rider_of_seagate" text="{=taom_career_rank3_river_rider_of_seagate}Marshal of the Redwater" />
 	<string id="taom_career_rank3_shaghana_beast_rider" text="{=taom_career_rank3_shaghana_beast_rider}Mûmak War-Leader" />
 	<string id="taom_career_rank3_shaghana_chatak_javelineer" text="{=taom_career_rank3_shaghana_chatak_javelineer}Scarlet Spear-Master" />
 	<string id="taom_career_rank3_shaghana_zajana_tribesman" text="{=taom_career_rank3_shaghana_zajana_tribesman}Serpent-Banner Chieftain" />
+	<string id="taom_career_rank3_spear_warden_of_vinewatch" text="{=taom_career_rank3_spear_warden_of_vinewatch}Captain of Vineholm" />
 	<string id="taom_career_rank3_warden_of_fornost" text="{=taom_career_rank3_warden_of_fornost}Warden of Fornost" />
 	<string id="taom_career_rank3_warden_of_the_forest_gate" text="{=taom_career_rank3_warden_of_the_forest_gate}Captain of Woodmen-town" />
 	<string id="taom_career_rank3_warden_of_thorins_halls" text="{=taom_career_rank3_warden_of_thorins_halls}Shieldwall of the Blue Mountains" />
 	<string id="taom_career_rank3_warden_of_tyrn_gorthad" text="{=taom_career_rank3_warden_of_tyrn_gorthad}Warden of Tyrn Gorthad" />
+	<string id="taom_career_rank3_warden_of_wainwatch" text="{=taom_career_rank3_warden_of_wainwatch}Warden of the Eastern Plain" />
 	<string id="taom_career_rank3_woodward_of_the_forest_road" text="{=taom_career_rank3_woodward_of_the_forest_road}Bow-Master of the Woodwards" />
 	<string id="taom_career_rider_of_the_fells" text="{=taom_career_rider_of_the_fells}Rider of the Fells" />
 	<string id="taom_career_rider_of_the_fells_desc" text="{=taom_career_rider_of_the_fells_desc}An armored champion of the hill kingdom, whose thundering charge has broken countless enemy formations. The Rider of the Fells combines Rhudaur discipline with Cameth Brin's proud cavalry tradition, becoming an immovable wall of steel." />
 	<string id="taom_career_rider_of_the_vales" text="{=taom_career_rider_of_the_vales}Rider of the Vales" />
 	<string id="taom_career_rider_of_the_vales_desc" text="{=taom_career_rider_of_the_vales_desc}A mounted patrol of the Vales who rides the Old Ford road and the foot of the Misty Mountains, safeguarding farms and caravans from goblin raiders." />
+	<string id="taom_career_rider_of_vidugard" text="{=taom_career_rider_of_vidugard}Rider of Vidugard" />
+	<string id="taom_career_rider_of_vidugard_desc" text="{=taom_career_rider_of_vidugard_desc}A Northman horse-lord of the plains south of Mirkwood who rides with the thunder of generations of herdsmen, inspiring allies with a warcry that rolls across the grass and scattering enemies under the hooves of heavy cavalry." />
+	<string id="taom_career_river_rider_of_seagate" text="{=taom_career_river_rider_of_seagate}River-Rider of Seagate" />
+	<string id="taom_career_river_rider_of_seagate_desc" text="{=taom_career_river_rider_of_seagate_desc}A mounted patrol of the Redwater shore who rides the vineyard ways and the road to Seagate, safeguarding wine caravans from raiders out of the east." />
 	<string id="taom_career_shaghana_beast_rider" text="{=taom_career_shaghana_beast_rider}Sormedân Beast Rider" />
 	<string id="taom_career_shaghana_beast_rider_desc" text="{=taom_career_shaghana_beast_rider_desc}A fearsome rider of the Far Harad who drives great beasts into the enemy, breaking lines with shock and primal terror." />
 	<string id="taom_career_shaghana_chatak_javelineer" text="{=taom_career_shaghana_chatak_javelineer}Chatâk Javelineer" />
 	<string id="taom_career_shaghana_chatak_javelineer_desc" text="{=taom_career_shaghana_chatak_javelineer_desc}A fast-moving skirmisher of Chatâk who screens cavalry with a hail of javelins before withdrawing beyond reach of retaliation." />
 	<string id="taom_career_shaghana_zajana_tribesman" text="{=taom_career_shaghana_zajana_tribesman}Tribesman of Zajâna" />
 	<string id="taom_career_shaghana_zajana_tribesman_desc" text="{=taom_career_shaghana_zajana_tribesman_desc}A warrior of the Zajâna desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades." />
+	<string id="taom_career_spear_warden_of_vinewatch" text="{=taom_career_spear_warden_of_vinewatch}Spear-warden of Vinewatch" />
+	<string id="taom_career_spear_warden_of_vinewatch_desc" text="{=taom_career_spear_warden_of_vinewatch_desc}A stalwart guardian of Vinewatch who holds the vineyard roads and the walls above the Redwater against raiders and bandits with shield and spear." />
 	<string id="taom_career_warden_of_fornost" text="{=taom_career_warden_of_fornost}Warden of Fornost" />
 	<string id="taom_career_warden_of_fornost_desc" text="{=taom_career_warden_of_fornost_desc}A battle-hardened infantry officer who holds the walls of Fornost against the hosts of Angmar, forging order from chaos when the North Downs burn. The Warden holds the line where others would break, rallying soldiers through sheer force of will." />
 	<string id="taom_career_warden_of_the_forest_gate" text="{=taom_career_warden_of_the_forest_gate}Warden of the Forest Gate" />
@@ -654,6 +761,8 @@
 	<string id="taom_career_warden_of_thorins_halls_desc" text="{=taom_career_warden_of_thorins_halls_desc}An elite dwarven warrior in heavy mail of Blue Mountain iron who holds the gates of Thorin's Halls against goblin and orc alike." />
 	<string id="taom_career_warden_of_tyrn_gorthad" text="{=taom_career_warden_of_tyrn_gorthad}Warden of Tyrn Gorthad" />
 	<string id="taom_career_warden_of_tyrn_gorthad_desc" text="{=taom_career_warden_of_tyrn_gorthad_desc}A battle-hardened infantry officer who keeps the barrows of Tyrn Gorthad and the walls of Caras Gorthad, forging order from chaos when the downs burn. The Warden holds the line where others would break, rallying soldiers through sheer force of will." />
+	<string id="taom_career_warden_of_wainwatch" text="{=taom_career_warden_of_wainwatch}Warden of Wainwatch" />
+	<string id="taom_career_warden_of_wainwatch_desc" text="{=taom_career_warden_of_wainwatch_desc}A grizzled spear-warden of Wainwatch who patrols the eastern plain on foot and by pony, guarding the realm's eastern flank against the Wainriders through endurance, local knowledge and a tenacious grip on contested ground." />
 	<string id="taom_career_woodward_of_the_forest_road" text="{=taom_career_woodward_of_the_forest_road}Woodward of the Forest Road" />
 	<string id="taom_career_woodward_of_the_forest_road_desc" text="{=taom_career_woodward_of_the_forest_road_desc}A woodward bowman of western Mirkwood who shoots from the platforms of the Forest Gate and the trees of the road, carrying on a tradition of unerring marksmanship." />
 	<string id="taom_ccs_t1_a_key" text="{=taom_ccs_t1_a_key}Poison Dart radius increased, covering wider kill zones." />
@@ -1123,6 +1232,67 @@
 	<string id="taom_misty_deep_marksman_root_desc" text="{=taom_misty_deep_marksman_root_desc}Poison Dart grants +5% ranged damage with cave fungus toxin." />
 	<string id="taom_misty_troll_goad_root_desc" text="{=taom_misty_troll_goad_root_desc}Moria Frenzy grants +5 health and drives your trolls berserk." />
 	<string id="taom_misty_warg_chieftain_root_desc" text="{=taom_misty_warg_chieftain_root_desc}Alpha Howl grants +5% melee damage and the pack hunts." />
+	<string id="taom_mow_root_desc" text="{=taom_mow_root_desc}Light Fletching grants +5% ranged damage, making every shaft count." />
+	<string id="taom_mow_t1_a_key" text="{=taom_mow_t1_a_key}Eagle Eye" />
+	<string id="taom_mow_t1_a_key_desc" text="{=taom_mow_t1_a_key_desc}Your sight is keener than any hawk. Light Fletching radius +3." />
+	<string id="taom_mow_t1_a_p1" text="{=taom_mow_t1_a_p1}True Flight" />
+	<string id="taom_mow_t1_a_p1_desc" text="{=taom_mow_t1_a_p1_desc}Your arrows fly without deviation. +6% ranged damage." />
+	<string id="taom_mow_t1_a_p2" text="{=taom_mow_t1_a_p2}Gap Finder" />
+	<string id="taom_mow_t1_a_p2_desc" text="{=taom_mow_t1_a_p2_desc}You find the joints in every suit of armour. +5% armour penetration." />
+	<string id="taom_mow_t1_a_p3" text="{=taom_mow_t1_a_p3}Westmark Training" />
+	<string id="taom_mow_t1_a_p3_desc" text="{=taom_mow_t1_a_p3_desc}Westmark archers are the finest on the plain. +5 health." />
+	<string id="taom_mow_t1_a_p4" text="{=taom_mow_t1_a_p4}Full Quiver" />
+	<string id="taom_mow_t1_a_p4_desc" text="{=taom_mow_t1_a_p4_desc}You carry more white-feathered shafts than any other. +10% ammo." />
+	<string id="taom_mow_t1_b_key" text="{=taom_mow_t1_b_key}Steadfast Draw" />
+	<string id="taom_mow_t1_b_key_desc" text="{=taom_mow_t1_b_key_desc}You hold your draw longer for the perfect shot. Light Fletching duration +4s." />
+	<string id="taom_mow_t1_b_p1" text="{=taom_mow_t1_b_p1}Swift Nock" />
+	<string id="taom_mow_t1_b_p1_desc" text="{=taom_mow_t1_b_p1_desc}Your hands move faster than the eye can follow. +5% ranged damage." />
+	<string id="taom_mow_t1_b_p2" text="{=taom_mow_t1_b_p2}Bowman's Endurance" />
+	<string id="taom_mow_t1_b_p2_desc" text="{=taom_mow_t1_b_p2_desc}You draw and fire for hours without tiring. +6 health." />
+	<string id="taom_mow_t1_b_p3" text="{=taom_mow_t1_b_p3}Open Field Scout" />
+	<string id="taom_mow_t1_b_p3_desc" text="{=taom_mow_t1_b_p3_desc}You read the plains of Rhovanion as a book. +5% party spotting range." />
+	<string id="taom_mow_t1_b_p4" text="{=taom_mow_t1_b_p4}Northman Discipline" />
+	<string id="taom_mow_t1_b_p4_desc" text="{=taom_mow_t1_b_p4_desc}You drill your archers to hold the line. +10% troop resistance." />
+	<string id="taom_mow_t2_a_key" text="{=taom_mow_t2_a_key}Volley Captain" />
+	<string id="taom_mow_t2_a_key_desc" text="{=taom_mow_t2_a_key_desc}You coordinate devastating mass fire. Light Fletching charge cost -20." />
+	<string id="taom_mow_t2_a_p1" text="{=taom_mow_t2_a_p1}Pin the Line" />
+	<string id="taom_mow_t2_a_p1_desc" text="{=taom_mow_t2_a_p1_desc}Your volleys suppress enemy advances. +13% troop resistance." />
+	<string id="taom_mow_t2_a_p2" text="{=taom_mow_t2_a_p2}Bodkin Point" />
+	<string id="taom_mow_t2_a_p2_desc" text="{=taom_mow_t2_a_p2_desc}Hardened tips punch through mail and plate. +10% armour penetration." />
+	<string id="taom_mow_t2_a_p3" text="{=taom_mow_t2_a_p3}Field Craft" />
+	<string id="taom_mow_t2_a_p3_desc" text="{=taom_mow_t2_a_p3_desc}You use every fold of ground to your advantage. +13% stealth bonus." />
+	<string id="taom_mow_t2_a_p4" text="{=taom_mow_t2_a_p4}War Arrow Cache" />
+	<string id="taom_mow_t2_a_p4_desc" text="{=taom_mow_t2_a_p4_desc}Pre-positioned caches keep your quiver full. +13% ammo." />
+	<string id="taom_mow_t2_b_key" text="{=taom_mow_t2_b_key}Sustained Barrage" />
+	<string id="taom_mow_t2_b_key_desc" text="{=taom_mow_t2_b_key_desc}The rain of arrows does not abate. Light Fletching duration +2s." />
+	<string id="taom_mow_t2_b_p1" text="{=taom_mow_t2_b_p1}Covering Fire" />
+	<string id="taom_mow_t2_b_p1_desc" text="{=taom_mow_t2_b_p1_desc}Your archers cover every advance. +4% troop damage." />
+	<string id="taom_mow_t2_b_p2" text="{=taom_mow_t2_b_p2}Forged in Mirkwood's Shadow" />
+	<string id="taom_mow_t2_b_p2_desc" text="{=taom_mow_t2_b_p2_desc}Westmark's warriors are tempered by proximity to Mirkwood. +6 health." />
+	<string id="taom_mow_t2_b_p3" text="{=taom_mow_t2_b_p3}Horse-lord's Eye" />
+	<string id="taom_mow_t2_b_p3_desc" text="{=taom_mow_t2_b_p3_desc}The plains hold no secrets from you. +8% party spotting range." />
+	<string id="taom_mow_t2_b_p4" text="{=taom_mow_t2_b_p4}Precision Drilled" />
+	<string id="taom_mow_t2_b_p4_desc" text="{=taom_mow_t2_b_p4_desc}Your archers loose with mechanical perfection. +4% troop damage." />
+	<string id="taom_mow_t3_a_key" text="{=taom_mow_t3_a_key}Legendary Shot" />
+	<string id="taom_mow_t3_a_key_desc" text="{=taom_mow_t3_a_key_desc}Songs will be sung of your skill. Light Fletching radius +5." />
+	<string id="taom_mow_t3_a_p1" text="{=taom_mow_t3_a_p1}King's Arrow" />
+	<string id="taom_mow_t3_a_p1_desc" text="{=taom_mow_t3_a_p1_desc}One arrow, one kill -- every time. +12% ranged damage." />
+	<string id="taom_mow_t3_a_p2" text="{=taom_mow_t3_a_p2}Westmark's Champion" />
+	<string id="taom_mow_t3_a_p2_desc" text="{=taom_mow_t3_a_p2_desc}You are the finest shot in all of Rhovanion. +9 health." />
+	<string id="taom_mow_t3_a_p3" text="{=taom_mow_t3_a_p3}War Host Bowmen" />
+	<string id="taom_mow_t3_a_p3_desc" text="{=taom_mow_t3_a_p3_desc}Your legend draws the finest archers. +4 party size." />
+	<string id="taom_mow_t3_a_p4" text="{=taom_mow_t3_a_p4}Endless Shafts" />
+	<string id="taom_mow_t3_a_p4_desc" text="{=taom_mow_t3_a_p4_desc}Your supply lines keep the arrows flying. +15% ammo." />
+	<string id="taom_mow_t3_b_key" text="{=taom_mow_t3_b_key}Reflexive Loose" />
+	<string id="taom_mow_t3_b_key_desc" text="{=taom_mow_t3_b_key_desc}The nock and release is pure muscle memory. Light Fletching charge cost -30." />
+	<string id="taom_mow_t3_b_p1" text="{=taom_mow_t3_b_p1}Rain of Arrows" />
+	<string id="taom_mow_t3_b_p1_desc" text="{=taom_mow_t3_b_p1_desc}Your archers darken the sky. +6% troop damage." />
+	<string id="taom_mow_t3_b_p2" text="{=taom_mow_t3_b_p2}Swift March" />
+	<string id="taom_mow_t3_b_p2_desc" text="{=taom_mow_t3_b_p2_desc}Light infantry move swiftly across the plain. +5% party movement speed." />
+	<string id="taom_mow_t3_b_p3" text="{=taom_mow_t3_b_p3}Fame of Rhovanion" />
+	<string id="taom_mow_t3_b_p3_desc" text="{=taom_mow_t3_b_p3_desc}Your deeds bring glory to Westmark. +12% battle renown gain." />
+	<string id="taom_mow_t3_b_p4" text="{=taom_mow_t3_b_p4}Army of Rhovanion" />
+	<string id="taom_mow_t3_b_p4_desc" text="{=taom_mow_t3_b_p4_desc}The finest bowmen of Rhovanion rally to your banner. +5 party size." />
 	<string id="taom_mtg_t1_a_key" text="{=taom_mtg_t1_a_key}Moria Frenzy radius increased, empowering more warriors." />
 	<string id="taom_mtg_t1_a_p1" text="{=taom_mtg_t1_a_p1}+8% melee damage." />
 	<string id="taom_mtg_t1_a_p2" text="{=taom_mtg_t1_a_p2}+3% troop damage." />
@@ -1218,6 +1388,7 @@
 	<string id="taom_ranger_of_the_north_root_desc" text="{=taom_ranger_of_the_north_root_desc}Ambush grants +5% ranged damage and scales duration with Bow skill." />
 	<string id="taom_rider_of_the_fells_root_desc" text="{=taom_rider_of_the_fells_root_desc}Stampede grants +5% melee damage and scales with the force of a mounted charge." />
 	<string id="taom_rider_of_the_vales_root_desc" text="{=taom_rider_of_the_vales_root_desc}Vale Gallop grants +5% melee damage and your horse quickens." />
+	<string id="taom_river_rider_of_seagate_root_desc" text="{=taom_river_rider_of_seagate_root_desc}Shore Gallop grants +5% melee damage and your horse quickens." />
 	<string id="taom_rota_t1a_key" text="{=taom_rota_t1a_key}Ambush radius increased, arrows deal bonus damage from stealth." />
 	<string id="taom_rota_t1a_p1" text="{=taom_rota_t1a_p1}+8% ranged damage." />
 	<string id="taom_rota_t1a_p2" text="{=taom_rota_t1a_p2}+5% armor penetration." />
@@ -1338,6 +1509,97 @@
 	<string id="taom_rotv_t3_b_p2" text="{=taom_rotv_t3_b_p2}-15% troop wages." />
 	<string id="taom_rotv_t3_b_p3" text="{=taom_rotv_t3_b_p3}+15% party movement speed." />
 	<string id="taom_rotv_t3_b_p4" text="{=taom_rotv_t3_b_p4}+9 max health." />
+	<string id="taom_rov_root_desc" text="{=taom_rov_root_desc}Warcry of Vidugard grants +10% horse charge damage, summoning the thunder of the ancestors." />
+	<string id="taom_rov_t1_a_key" text="{=taom_rov_t1_a_key}Ancestor's Thunder" />
+	<string id="taom_rov_t1_a_key_desc" text="{=taom_rov_t1_a_key_desc}The warcry echoes across the plain. Warcry of Vidugard radius +3." />
+	<string id="taom_rov_t1_a_p1" text="{=taom_rov_t1_a_p1}First Charge" />
+	<string id="taom_rov_t1_a_p1_desc" text="{=taom_rov_t1_a_p1_desc}You lead the charge and none can match your speed. +10% horse charge damage." />
+	<string id="taom_rov_t1_a_p2" text="{=taom_rov_t1_a_p2}Born to Ride" />
+	<string id="taom_rov_t1_a_p2_desc" text="{=taom_rov_t1_a_p2_desc}Horse and rider are one. +10% horse health." />
+	<string id="taom_rov_t1_a_p3" text="{=taom_rov_t1_a_p3}Grassland Endurance" />
+	<string id="taom_rov_t1_a_p3_desc" text="{=taom_rov_t1_a_p3_desc}Riding the plains of Rhovanion has hardened you. +5 health." />
+	<string id="taom_rov_t1_a_p4" text="{=taom_rov_t1_a_p4}Rallying Cry" />
+	<string id="taom_rov_t1_a_p4_desc" text="{=taom_rov_t1_a_p4_desc}Your cry heartens the host. +3% troop morale." />
+	<string id="taom_rov_t1_b_key" text="{=taom_rov_t1_b_key}Sustained Warcry" />
+	<string id="taom_rov_t1_b_key_desc" text="{=taom_rov_t1_b_key_desc}The thunder rolls on. Warcry of Vidugard duration +4s." />
+	<string id="taom_rov_t1_b_p1" text="{=taom_rov_t1_b_p1}Swift Plains" />
+	<string id="taom_rov_t1_b_p1_desc" text="{=taom_rov_t1_b_p1_desc}The Northmen ride the wind itself. +5% movement speed." />
+	<string id="taom_rov_t1_b_p2" text="{=taom_rov_t1_b_p2}Rhovanion Warband" />
+	<string id="taom_rov_t1_b_p2_desc" text="{=taom_rov_t1_b_p2_desc}Northmen ride in close formation. +2% troop damage." />
+	<string id="taom_rov_t1_b_p3" text="{=taom_rov_t1_b_p3}Rider's Resolve" />
+	<string id="taom_rov_t1_b_p3_desc" text="{=taom_rov_t1_b_p3_desc}You do not break, no matter the odds. +6 health." />
+	<string id="taom_rov_t1_b_p4" text="{=taom_rov_t1_b_p4}Stalwart Mount" />
+	<string id="taom_rov_t1_b_p4_desc" text="{=taom_rov_t1_b_p4_desc}Your horse is battle-hardened. +10% horse health." />
+	<string id="taom_rov_t2_a_key" text="{=taom_rov_t2_a_key}The Horse-lords' Legacy" />
+	<string id="taom_rov_t2_a_key_desc" text="{=taom_rov_t2_a_key_desc}The ancestors ride with you always. Warcry charge cost -20." />
+	<string id="taom_rov_t2_a_p1" text="{=taom_rov_t2_a_p1}Unstoppable Charge" />
+	<string id="taom_rov_t2_a_p1_desc" text="{=taom_rov_t2_a_p1_desc}Nothing stands before the Northmen. +13% horse charge damage." />
+	<string id="taom_rov_t2_a_p2" text="{=taom_rov_t2_a_p2}Shield Wall Breaker" />
+	<string id="taom_rov_t2_a_p2_desc" text="{=taom_rov_t2_a_p2_desc}Your charge shatters shield walls. +8% melee damage." />
+	<string id="taom_rov_t2_a_p3" text="{=taom_rov_t2_a_p3}Northmen Morale" />
+	<string id="taom_rov_t2_a_p3_desc" text="{=taom_rov_t2_a_p3_desc}The cry of Rhovanion heartens all who hear it. +8% troop morale." />
+	<string id="taom_rov_t2_a_p4" text="{=taom_rov_t2_a_p4}Long Rider" />
+	<string id="taom_rov_t2_a_p4_desc" text="{=taom_rov_t2_a_p4_desc}You cover vast distances without tiring. +6 health." />
+	<string id="taom_rov_t2_b_key" text="{=taom_rov_t2_b_key}Riding Song" />
+	<string id="taom_rov_t2_b_key_desc" text="{=taom_rov_t2_b_key_desc}The song of the Northmen carries the riders onward. Warcry duration +2s." />
+	<string id="taom_rov_t2_b_p1" text="{=taom_rov_t2_b_p1}Herd-Bred" />
+	<string id="taom_rov_t2_b_p1_desc" text="{=taom_rov_t2_b_p1_desc}Your horse has the blood of the great herds. +13% horse health." />
+	<string id="taom_rov_t2_b_p2" text="{=taom_rov_t2_b_p2}Plains Master" />
+	<string id="taom_rov_t2_b_p2_desc" text="{=taom_rov_t2_b_p2_desc}You know every valley and ridge of the plain. +8% party spotting range." />
+	<string id="taom_rov_t2_b_p3" text="{=taom_rov_t2_b_p3}Honour Bound" />
+	<string id="taom_rov_t2_b_p3_desc" text="{=taom_rov_t2_b_p3_desc}Northmen need no coin to stay loyal. -5% troop wages." />
+	<string id="taom_rov_t2_b_p4" text="{=taom_rov_t2_b_p4}Iron Stirrups" />
+	<string id="taom_rov_t2_b_p4_desc" text="{=taom_rov_t2_b_p4_desc}Your riding is sure even in the fiercest melee. +7 health." />
+	<string id="taom_rov_t3_a_key" text="{=taom_rov_t3_a_key}Charge of the Northmen" />
+	<string id="taom_rov_t3_a_key_desc" text="{=taom_rov_t3_a_key_desc}The greatest charge in the age of men. Warcry radius +5." />
+	<string id="taom_rov_t3_a_p1" text="{=taom_rov_t3_a_p1}Thunder of the Plain" />
+	<string id="taom_rov_t3_a_p1_desc" text="{=taom_rov_t3_a_p1_desc}As in the great battles of the plain, your charge is unstoppable. +15% horse charge damage." />
+	<string id="taom_rov_t3_a_p2" text="{=taom_rov_t3_a_p2}Lord of the Plain" />
+	<string id="taom_rov_t3_a_p2_desc" text="{=taom_rov_t3_a_p2_desc}The greatest riders follow you. +9 health." />
+	<string id="taom_rov_t3_a_p3" text="{=taom_rov_t3_a_p3}Company Commander" />
+	<string id="taom_rov_t3_a_p3_desc" text="{=taom_rov_t3_a_p3_desc}A great company of riders rides at your back. +5 party size." />
+	<string id="taom_rov_t3_a_p4" text="{=taom_rov_t3_a_p4}Glory of Rhovanion" />
+	<string id="taom_rov_t3_a_p4_desc" text="{=taom_rov_t3_a_p4_desc}Your deeds bring glory to Rhovanion. +12% battle renown gain." />
+	<string id="taom_rov_t3_b_key" text="{=taom_rov_t3_b_key}Ever Ready" />
+	<string id="taom_rov_t3_b_key_desc" text="{=taom_rov_t3_b_key_desc}The warcry is always on your lips. Warcry charge cost -30." />
+	<string id="taom_rov_t3_b_p1" text="{=taom_rov_t3_b_p1}Wave of Riders" />
+	<string id="taom_rov_t3_b_p1_desc" text="{=taom_rov_t3_b_p1_desc}The Northmen crash over the enemy like a wave. +6% troop damage." />
+	<string id="taom_rov_t3_b_p2" text="{=taom_rov_t3_b_p2}Swift as the Wind" />
+	<string id="taom_rov_t3_b_p2_desc" text="{=taom_rov_t3_b_p2_desc}The Northmen are faster than legend. +8% party movement speed." />
+	<string id="taom_rov_t3_b_p3" text="{=taom_rov_t3_b_p3}Songs of Rhovanion" />
+	<string id="taom_rov_t3_b_p3_desc" text="{=taom_rov_t3_b_p3_desc}The deeds of the Northmen are sung for ages. +14% battle renown gain." />
+	<string id="taom_rov_t3_b_p4" text="{=taom_rov_t3_b_p4}The Great Host" />
+	<string id="taom_rov_t3_b_p4_desc" text="{=taom_rov_t3_b_p4_desc}The full host of the Northmen rides to war. +6 party size." />
+	<string id="taom_rros_t1_a_key" text="{=taom_rros_t1_a_key}Shore Gallop radius expanded, sweeping wider formations." />
+	<string id="taom_rros_t1_a_p1" text="{=taom_rros_t1_a_p1}+8% melee damage." />
+	<string id="taom_rros_t1_a_p2" text="{=taom_rros_t1_a_p2}+10% horse charge damage." />
+	<string id="taom_rros_t1_a_p3" text="{=taom_rros_t1_a_p3}+7% swing speed." />
+	<string id="taom_rros_t1_a_p4" text="{=taom_rros_t1_a_p4}+5% party movement speed." />
+	<string id="taom_rros_t1_b_key" text="{=taom_rros_t1_b_key}Shore Gallop duration extended, maintaining momentum." />
+	<string id="taom_rros_t1_b_p1" text="{=taom_rros_t1_b_p1}+10% horse health." />
+	<string id="taom_rros_t1_b_p2" text="{=taom_rros_t1_b_p2}+5 max health." />
+	<string id="taom_rros_t1_b_p3" text="{=taom_rros_t1_b_p3}-5% troop wages." />
+	<string id="taom_rros_t1_b_p4" text="{=taom_rros_t1_b_p4}+5% resistance." />
+	<string id="taom_rros_t2_a_key" text="{=taom_rros_t2_a_key}Shore Gallop charge reduced, swifter activation." />
+	<string id="taom_rros_t2_a_p1" text="{=taom_rros_t2_a_p1}+10% party movement speed." />
+	<string id="taom_rros_t2_a_p2" text="{=taom_rros_t2_a_p2}-10% troop wages." />
+	<string id="taom_rros_t2_a_p3" text="{=taom_rros_t2_a_p3}+10% troop morale." />
+	<string id="taom_rros_t2_a_p4" text="{=taom_rros_t2_a_p4}+10% battle renown gain." />
+	<string id="taom_rros_t2_b_key" text="{=taom_rros_t2_b_key}Shore Gallop boosts mount resilience while active." />
+	<string id="taom_rros_t2_b_p1" text="{=taom_rros_t2_b_p1}+12% melee damage." />
+	<string id="taom_rros_t2_b_p2" text="{=taom_rros_t2_b_p2}+13% horse charge damage." />
+	<string id="taom_rros_t2_b_p3" text="{=taom_rros_t2_b_p3}+13% horse health." />
+	<string id="taom_rros_t2_b_p4" text="{=taom_rros_t2_b_p4}+10% swing speed." />
+	<string id="taom_rros_t3_a_key" text="{=taom_rros_t3_a_key}Shore Gallop radius greatly expanded, unstoppable impact." />
+	<string id="taom_rros_t3_a_p1" text="{=taom_rros_t3_a_p1}+18% melee damage." />
+	<string id="taom_rros_t3_a_p2" text="{=taom_rros_t3_a_p2}+15% horse charge damage." />
+	<string id="taom_rros_t3_a_p3" text="{=taom_rros_t3_a_p3}+15% swing speed." />
+	<string id="taom_rros_t3_a_p4" text="{=taom_rros_t3_a_p4}+7% troop damage." />
+	<string id="taom_rros_t3_b_key" text="{=taom_rros_t3_b_key}Shore Gallop charge greatly reduced, ride without ceasing." />
+	<string id="taom_rros_t3_b_p1" text="{=taom_rros_t3_b_p1}+15% horse health." />
+	<string id="taom_rros_t3_b_p2" text="{=taom_rros_t3_b_p2}-15% troop wages." />
+	<string id="taom_rros_t3_b_p3" text="{=taom_rros_t3_b_p3}+15% party movement speed." />
+	<string id="taom_rros_t3_b_p4" text="{=taom_rros_t3_b_p4}+9 max health." />
 	<string id="taom_sbr_t1a_key" text="{=taom_sbr_t1a_key}Horns of Mûmakan radius expanded, fear spreads further." />
 	<string id="taom_sbr_t1a_p1" text="{=taom_sbr_t1a_p1}+10% horse charge damage." />
 	<string id="taom_sbr_t1a_p2" text="{=taom_sbr_t1a_p2}+8% melee damage." />
@@ -1401,6 +1663,37 @@
 	<string id="taom_shaghana_beast_rider_root_desc" text="{=taom_shaghana_beast_rider_root_desc}Horns of Mûmakan grants +10% horse charge damage and spreads fear." />
 	<string id="taom_shaghana_chatak_javelineer_root_desc" text="{=taom_shaghana_chatak_javelineer_root_desc}Chatâk Volley grants +5% ranged damage and quickens javelin throws." />
 	<string id="taom_shaghana_zajana_tribesman_root_desc" text="{=taom_shaghana_zajana_tribesman_root_desc}Serpent-Venom Blades grants +5% melee damage and applies attrition effects." />
+	<string id="taom_spear_warden_of_vinewatch_root_desc" text="{=taom_spear_warden_of_vinewatch_root_desc}Terrace Wall grants +5% resistance and steadies the defenders." />
+	<string id="taom_swov_t1_a_key" text="{=taom_swov_t1_a_key}Terrace Wall radius increased, empowering more warriors." />
+	<string id="taom_swov_t1_a_p1" text="{=taom_swov_t1_a_p1}+8% melee damage." />
+	<string id="taom_swov_t1_a_p2" text="{=taom_swov_t1_a_p2}+3% troop damage." />
+	<string id="taom_swov_t1_a_p3" text="{=taom_swov_t1_a_p3}+6 max health." />
+	<string id="taom_swov_t1_a_p4" text="{=taom_swov_t1_a_p4}+7% swing speed." />
+	<string id="taom_swov_t1_b_key" text="{=taom_swov_t1_b_key}Terrace Wall duration extended, fortifying the defense." />
+	<string id="taom_swov_t1_b_p1" text="{=taom_swov_t1_b_p1}+8% resistance." />
+	<string id="taom_swov_t1_b_p2" text="{=taom_swov_t1_b_p2}+5% troop morale." />
+	<string id="taom_swov_t1_b_p3" text="{=taom_swov_t1_b_p3}+10% troop resistance." />
+	<string id="taom_swov_t1_b_p4" text="{=taom_swov_t1_b_p4}+5% troop survival." />
+	<string id="taom_swov_t2_a_key" text="{=taom_swov_t2_a_key}Terrace Wall charge reduced, activating more frequently." />
+	<string id="taom_swov_t2_a_p1" text="{=taom_swov_t2_a_p1}+10% troop morale." />
+	<string id="taom_swov_t2_a_p2" text="{=taom_swov_t2_a_p2}+2 party size." />
+	<string id="taom_swov_t2_a_p3" text="{=taom_swov_t2_a_p3}+10% battle renown gain." />
+	<string id="taom_swov_t2_a_p4" text="{=taom_swov_t2_a_p4}-10% troop wages." />
+	<string id="taom_swov_t2_b_key" text="{=taom_swov_t2_b_key}Terrace Wall grants additional defensive buffs while active." />
+	<string id="taom_swov_t2_b_p1" text="{=taom_swov_t2_b_p1}+12% resistance." />
+	<string id="taom_swov_t2_b_p2" text="{=taom_swov_t2_b_p2}+8 max health." />
+	<string id="taom_swov_t2_b_p3" text="{=taom_swov_t2_b_p3}+13% troop resistance." />
+	<string id="taom_swov_t2_b_p4" text="{=taom_swov_t2_b_p4}+5% troop damage." />
+	<string id="taom_swov_t3_a_key" text="{=taom_swov_t3_a_key}Terrace Wall radius greatly expanded, devastating power." />
+	<string id="taom_swov_t3_a_p1" text="{=taom_swov_t3_a_p1}+15% melee damage." />
+	<string id="taom_swov_t3_a_p2" text="{=taom_swov_t3_a_p2}+10 max health." />
+	<string id="taom_swov_t3_a_p3" text="{=taom_swov_t3_a_p3}+7% troop damage." />
+	<string id="taom_swov_t3_a_p4" text="{=taom_swov_t3_a_p4}+4 party size." />
+	<string id="taom_swov_t3_b_key" text="{=taom_swov_t3_b_key}Terrace Wall charge greatly reduced, nearly always available." />
+	<string id="taom_swov_t3_b_p1" text="{=taom_swov_t3_b_p1}+18% resistance." />
+	<string id="taom_swov_t3_b_p2" text="{=taom_swov_t3_b_p2}+15% hero health regeneration." />
+	<string id="taom_swov_t3_b_p3" text="{=taom_swov_t3_b_p3}+20% troop morale." />
+	<string id="taom_swov_t3_b_p4" text="{=taom_swov_t3_b_p4}+15% troop survival." />
 	<string id="taom_szt_t1a_key" text="{=taom_szt_t1a_key}Serpent-Venom Blades radius increased, the toxin spreads wider." />
 	<string id="taom_szt_t1a_p1" text="{=taom_szt_t1a_p1}+8% melee damage." />
 	<string id="taom_szt_t1a_p2" text="{=taom_szt_t1a_p2}+3% troop damage." />
@@ -1586,5 +1879,66 @@
 	<string id="taom_woth_t3_b_p2" text="{=taom_woth_t3_b_p2}+15% hero health regeneration." />
 	<string id="taom_woth_t3_b_p3" text="{=taom_woth_t3_b_p3}+20% troop morale." />
 	<string id="taom_woth_t3_b_p4" text="{=taom_woth_t3_b_p4}+15% troop survival." />
+	<string id="taom_wwk_root_desc" text="{=taom_wwk_root_desc}Stand Fast grants +5% resistance and channels the vigilance of Wainwatch's border watchers." />
+	<string id="taom_wwk_t1_a_key" text="{=taom_wwk_t1_a_key}River Ford Mastery" />
+	<string id="taom_wwk_t1_a_key_desc" text="{=taom_wwk_t1_a_key_desc}You know every crossing. Stand Fast radius +3." />
+	<string id="taom_wwk_t1_a_p1" text="{=taom_wwk_t1_a_p1}Shield and Spear" />
+	<string id="taom_wwk_t1_a_p1_desc" text="{=taom_wwk_t1_a_p1_desc}Classic Northman infantry discipline. +5% melee damage." />
+	<string id="taom_wwk_t1_a_p2" text="{=taom_wwk_t1_a_p2}Watch Post Hardening" />
+	<string id="taom_wwk_t1_a_p2_desc" text="{=taom_wwk_t1_a_p2_desc}Years at isolated posts forge you like iron. +5 health." />
+	<string id="taom_wwk_t1_a_p3" text="{=taom_wwk_t1_a_p3}Border Eyes" />
+	<string id="taom_wwk_t1_a_p3_desc" text="{=taom_wwk_t1_a_p3_desc}Nothing crosses the plain unseen by you. +5% party spotting range." />
+	<string id="taom_wwk_t1_a_p4" text="{=taom_wwk_t1_a_p4}Wetland Endurance" />
+	<string id="taom_wwk_t1_a_p4_desc" text="{=taom_wwk_t1_a_p4_desc}The damp of the river country makes you resilient. +5% blunt resistance." />
+	<string id="taom_wwk_t1_b_key" text="{=taom_wwk_t1_b_key}Sustained Watch" />
+	<string id="taom_wwk_t1_b_key_desc" text="{=taom_wwk_t1_b_key_desc}The watch is maintained through all trials. Stand Fast duration +4s." />
+	<string id="taom_wwk_t1_b_p1" text="{=taom_wwk_t1_b_p1}Stream Swimmer" />
+	<string id="taom_wwk_t1_b_p1_desc" text="{=taom_wwk_t1_b_p1_desc}The river holds no fear for you. +5% movement speed." />
+	<string id="taom_wwk_t1_b_p2" text="{=taom_wwk_t1_b_p2}Warden's Constitution" />
+	<string id="taom_wwk_t1_b_p2_desc" text="{=taom_wwk_t1_b_p2_desc}Years of lonely watch service make you tough as old wood. +6 health." />
+	<string id="taom_wwk_t1_b_p3" text="{=taom_wwk_t1_b_p3}Loyal Guard" />
+	<string id="taom_wwk_t1_b_p3_desc" text="{=taom_wwk_t1_b_p3_desc}Your men need little pay -- duty is enough. -4% troop wages." />
+	<string id="taom_wwk_t1_b_p4" text="{=taom_wwk_t1_b_p4}Warden's Discipline" />
+	<string id="taom_wwk_t1_b_p4_desc" text="{=taom_wwk_t1_b_p4_desc}Your infantry hold firm when others break. +10% troop resistance." />
+	<string id="taom_wwk_t2_a_key" text="{=taom_wwk_t2_a_key}Prepared Crossing" />
+	<string id="taom_wwk_t2_a_key_desc" text="{=taom_wwk_t2_a_key_desc}You have scouted this ground for years. Stand Fast charge cost -20." />
+	<string id="taom_wwk_t2_a_p1" text="{=taom_wwk_t2_a_p1}Shield Line" />
+	<string id="taom_wwk_t2_a_p1_desc" text="{=taom_wwk_t2_a_p1_desc}Your men form an impenetrable wall. +13% troop resistance." />
+	<string id="taom_wwk_t2_a_p2" text="{=taom_wwk_t2_a_p2}Tested Steel" />
+	<string id="taom_wwk_t2_a_p2_desc" text="{=taom_wwk_t2_a_p2_desc}Every weapon is honed by the Wainwatch smiths. +8% melee damage." />
+	<string id="taom_wwk_t2_a_p3" text="{=taom_wwk_t2_a_p3}Mirkwood's Warning" />
+	<string id="taom_wwk_t2_a_p3_desc" text="{=taom_wwk_t2_a_p3_desc}The forest teaches you to sense danger early. +10% party spotting range." />
+	<string id="taom_wwk_t2_a_p4" text="{=taom_wwk_t2_a_p4}Fortified Will" />
+	<string id="taom_wwk_t2_a_p4_desc" text="{=taom_wwk_t2_a_p4_desc}The isolation of Wainwatch breeds iron resolve. +6 health." />
+	<string id="taom_wwk_t2_b_key" text="{=taom_wwk_t2_b_key}Tireless Patrol" />
+	<string id="taom_wwk_t2_b_key_desc" text="{=taom_wwk_t2_b_key_desc}You patrol without pause or rest. Stand Fast duration +2s." />
+	<string id="taom_wwk_t2_b_p1" text="{=taom_wwk_t2_b_p1}Wainwatch Hold" />
+	<string id="taom_wwk_t2_b_p1_desc" text="{=taom_wwk_t2_b_p1_desc}No enemy crosses the plain while you guard it. +8% troop morale." />
+	<string id="taom_wwk_t2_b_p2" text="{=taom_wwk_t2_b_p2}River Armour" />
+	<string id="taom_wwk_t2_b_p2_desc" text="{=taom_wwk_t2_b_p2_desc}Your armour is as a river's current -- relentless. +10% resistance to ranged." />
+	<string id="taom_wwk_t2_b_p3" text="{=taom_wwk_t2_b_p3}Fords Expert" />
+	<string id="taom_wwk_t2_b_p3_desc" text="{=taom_wwk_t2_b_p3_desc}You move swiftly through terrain that bogs others down. +6% party movement speed." />
+	<string id="taom_wwk_t2_b_p4" text="{=taom_wwk_t2_b_p4}Border Iron" />
+	<string id="taom_wwk_t2_b_p4_desc" text="{=taom_wwk_t2_b_p4_desc}Hard service at the border has made you indestructible. +7 health." />
+	<string id="taom_wwk_t3_a_key" text="{=taom_wwk_t3_a_key}Wainwatch's Bastion" />
+	<string id="taom_wwk_t3_a_key_desc" text="{=taom_wwk_t3_a_key_desc}You are the last line between civilisation and darkness. Stand Fast radius +5." />
+	<string id="taom_wwk_t3_a_p1" text="{=taom_wwk_t3_a_p1}Unbreakable Line" />
+	<string id="taom_wwk_t3_a_p1_desc" text="{=taom_wwk_t3_a_p1_desc}Your shieldwall has never broken. +15% troop resistance." />
+	<string id="taom_wwk_t3_a_p2" text="{=taom_wwk_t3_a_p2}Immortal Guard" />
+	<string id="taom_wwk_t3_a_p2_desc" text="{=taom_wwk_t3_a_p2_desc}The watch never ends. +9 health." />
+	<string id="taom_wwk_t3_a_p3" text="{=taom_wwk_t3_a_p3}Garrison Commander" />
+	<string id="taom_wwk_t3_a_p3_desc" text="{=taom_wwk_t3_a_p3_desc}Your company swells with volunteers. +4 party size." />
+	<string id="taom_wwk_t3_a_p4" text="{=taom_wwk_t3_a_p4}Defender's Glory" />
+	<string id="taom_wwk_t3_a_p4_desc" text="{=taom_wwk_t3_a_p4_desc}Victory in defence brings great honour. +12% battle renown gain." />
+	<string id="taom_wwk_t3_b_key" text="{=taom_wwk_t3_b_key}Ever Vigilant" />
+	<string id="taom_wwk_t3_b_key_desc" text="{=taom_wwk_t3_b_key_desc}The watch is always maintained. Stand Fast charge cost -30." />
+	<string id="taom_wwk_t3_b_p1" text="{=taom_wwk_t3_b_p1}Wall of Spears" />
+	<string id="taom_wwk_t3_b_p1_desc" text="{=taom_wwk_t3_b_p1_desc}Your infantry fight as one. +6% troop damage." />
+	<string id="taom_wwk_t3_b_p2" text="{=taom_wwk_t3_b_p2}Swift to the Call" />
+	<string id="taom_wwk_t3_b_p2_desc" text="{=taom_wwk_t3_b_p2_desc}Your men respond instantly to any threat. +6% party movement speed." />
+	<string id="taom_wwk_t3_b_p3" text="{=taom_wwk_t3_b_p3}Warden of the Plain" />
+	<string id="taom_wwk_t3_b_p3_desc" text="{=taom_wwk_t3_b_p3_desc}The plain's finest guardian. +12% battle renown gain." />
+	<string id="taom_wwk_t3_b_p4" text="{=taom_wwk_t3_b_p4}Host of Wainwatch" />
+	<string id="taom_wwk_t3_b_p4_desc" text="{=taom_wwk_t3_b_p4_desc}All of Wainwatch's strength rides behind you. +5 party size." />
 
 </strings>

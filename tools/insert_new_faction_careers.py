@@ -92,6 +92,13 @@ SOURCES_FOR = {
     # Ironguard, and Dale's marksman once.
     "anduinvale": [("dale_guardsman", "dg2"), ("dale_marksman", "dm"), ("dale_outrider", "dor")],
     "angaladh": [("dale_guardsman", "dg2"), ("dale_marksman", "dm")],
+    # Dorwinion (#1062) is cut from Dale as well, on the same three careers as Anduin Vale: an
+    # infantry spear career, a bowman career and a river-rider cavalry career.
+    "dorwinion": [("dale_guardsman", "dg2"), ("dale_marksman", "dm"), ("dale_outrider", "dor")],
+    # South Rhovanion (#1062) is cut from Rohan (culture id `vlandia`) and takes Rohan's three:
+    # the cavalry lancer, the bow career and the infantry spear career.
+    "southrhovanion": [("eotheod_windrider", "ew"), ("marksman_of_aldburg", "moa"),
+                       ("watchman_of_stangard", "ws")],
 }
 
 TARGETS = {
@@ -163,6 +170,17 @@ TARGETS = {
                            ("hewer_of_ironwood_hall", "hiwh", "Hewer of Ironwood Hall")],
         "dale_marksman": ("woodward_of_the_forest_road", "wfr", "Woodward of the Forest Road"),
     },
+    # The ids avoid the troop ids of the two realms, which the display names echo.
+    "dorwinion": {
+        "dale_guardsman": ("spear_warden_of_vinewatch", "swov", "Spear-warden of Vinewatch"),
+        "dale_marksman": ("bowman_of_redwater", "bwr", "Bowman of Redwater"),
+        "dale_outrider": ("river_rider_of_seagate", "rros", "River-Rider of Seagate"),
+    },
+    "southrhovanion": {
+        "eotheod_windrider": ("rider_of_vidugard", "rov", "Rider of Vidugard"),
+        "marksman_of_aldburg": ("marksman_of_westmark", "mow", "Marksman of Westmark"),
+        "watchman_of_stangard": ("warden_of_wainwatch", "wwk", "Warden of Wainwatch"),
+    },
 }
 
 
@@ -189,6 +207,7 @@ ELIGIBILITY_SRC = {
     "cardolan": "gondor", "rhudaur": "gondor",
     "eredluin": "erebor",
     "anduinvale": "sturgia", "angaladh": "sturgia",
+    "dorwinion": "sturgia", "southrhovanion": "vlandia",
 }
 
 # Player-facing wording. Longest phrase FIRST so a substring never double-substitutes — the same
@@ -409,6 +428,32 @@ TEXT_REMAP = {
     # CAREER_TEXT_REMAP.
     "anduinvale": [],
     "angaladh": [],
+    # Dorwinion clones Dale's careers, so its wording lives per career in CAREER_TEXT_REMAP.
+    "dorwinion": [],
+    # South Rhovanion clones Rohan's careers: the per-career tables hold the titled phrases, and
+    # these are the generic Rohan words that remain in the sentences around them.
+    "southrhovanion": [
+        ("Riddermark", "Rhovanion"),
+        ("Rohirrim", "Northmen"),
+        ("Rohan's", "Rhovanion's"),
+        ("Rohan", "Rhovanion"),
+        ("Eothéod", "Northmen"),
+        ("Eotheod", "Northmen"),
+        ("Éored", "company"),
+        ("Eored", "Company"),
+        ("Stangard", "Wainwatch"),
+        ("Limlight", "Wainwatch"),
+        ("Entwash", "stream"),
+        ("Aldburg", "Westmark"),
+        ("Eastfold", "Westmark"),
+        ("Fangorn", "Mirkwood"),
+        ("Eorl's", "Vidugard's"),
+        ("Eorl", "Vidugard"),
+        ("the Wold", "the plain"),
+        ("the Mark's", "the plain's"),
+        ("the Mark", "the plain"),
+        ("Mark's", "Plain's"),
+    ],
 }
 
 # Per CLONED career, applied before the culture's TEXT_REMAP: a culture that clones one source twice
@@ -556,6 +601,139 @@ CAREER_TEXT_REMAP = {
         ("Dragonslayer of Dale", "Spider-Slayer of the Emyn Duir"),
         ("The Bow of Girion's Line", "The Bow of Ingomar's Line"),
         ("Black Arrow", "Ironwood Volley"),
+    ],
+
+    # Dorwinion (#1062): the vintners and river-traders under King Ostric, on Dale's three careers
+    # (the same sources as Anduin Vale). A spear career, a bowman career and a river-rider career.
+    "spear_warden_of_vinewatch": [
+        ("Plant your feet and hold the gate — boosts", "Set your spear and hold the terrace wall: boosts"),
+        ("A stalwart protector of the rebuilt city of Dale who holds the gate against all comers with shield and spear.",
+         "A stalwart guardian of Vinewatch who holds the vineyard roads and the walls above the Redwater against raiders and bandits with shield and spear."),
+        ("Gate-Warden of Dale", "Spearman of Vinewatch"),
+        ("Shieldman of Girion", "Spear-warden of Vinewatch"),
+        ("Knight of Dale", "Captain of Vineholm"),
+        ("Gate Warden of Dale", "Vine-warden of the Redwater"),
+        ("Shieldwall of Esgaroth", "Shieldwall of the Terraces"),
+        ("Spear of Girion", "Spear of King Ostric"),
+        ("Bulwark of the Running", "Bulwark of the Redwater"),
+        ("Vanguard of King Brand", "Vanguard of King Ostric"),
+        ("The Last Stand at Erebor", "The Last Stand at Sunwall"),
+        ("Gate Hold", "Terrace Wall"),
+    ],
+    "bowman_of_redwater": [
+        ("Channel the legacy of Bard the Bowman — boosts", "Loose the arrows of the Redwater bowmen: boosts"),
+        ("A legendary bowman of Dale whose ancestors slew Smaug, carrying on the tradition of unerring marksmanship.",
+         "A bowman of the Redwater who shoots from the walls of Seagate and the reed-beds of the river, carrying on a tradition of unerring marksmanship."),
+        ("in honor of Bard the Bowman", "in honor of the bowmen of the Redwater"),
+        ("Bowman of Esgaroth", "Bowman of Redwater"),
+        ("Dragon-Shooter", "Hawk-Eye of Redwater"),
+        ("Bearer of the Black Arrow", "Bow-lord of the Redwater"),
+        ("Watch of the Long Lake", "Watch of the Sea of Rhûn"),
+        ("Heir of the Black Arrow", "Heir of the Redwater Bowmen"),
+        ("Thrush-Sighted Archer", "Falcon-Sighted Archer"),
+        ("Dragonslayer of Dale", "Raider-Bane of Seagate"),
+        ("The Bow of Girion's Line", "The Bow of King Ostric's Line"),
+        ("Black Arrow", "Seagate Volley"),
+    ],
+    "river_rider_of_seagate": [
+        ("Spur your horse along familiar roads — boosts", "Spur your horse along the river roads: boosts"),
+        ("A mounted patrol of the northern trade roads who safeguards caravans between Dale and the Lonely Mountain.",
+         "A mounted patrol of the Redwater shore who rides the vineyard ways and the road to Seagate, safeguarding wine caravans from raiders out of the east."),
+        ("Road-Rider of Dale", "River-Rider of Seagate"),
+        ("Warden of the North-Road", "Warden of the Shore Road"),
+        ("Marshal of the Bardings", "Marshal of the Redwater"),
+        ("Rider of the Running", "Rider of the Redwater"),
+        ("Warden of the Caravan Road", "Warden of the Wine Road"),
+        ("Lance of the Long Valley", "Lance of the Vineyards"),
+        ("Outrider of Erebor's Friendship", "Outrider of the Eastern Trade"),
+        ("The Northman Charge", "The Charge of the Shore"),
+        ("Courier of the Two Kings", "Courier of the King"),
+        ("Trade Road Sprint", "Shore Gallop"),
+    ],
+
+    # South Rhovanion (#1062): the Northmen horse-lords of the plains south of Mirkwood under King
+    # Vidumar, on Rohan's three careers (culture `vlandia`). The specific phrases come first; the
+    # generic Rohan words are caught by TEXT_REMAP["southrhovanion"].
+    # The cavalry lancer career (Rohan's windrider).
+    "rider_of_vidugard": [
+        ("Raise the ancient warcry of Eorl the Young — boosts", "Raise the warcry of the horse-lords: boosts"),
+        ("A descendant of the ancient Eothéod horsemasters who rides with the thunder of generations of legend, inspiring allies with a warcry that echoes Eorl the Young and scattering enemies under hooves of unstoppable heavy cavalry.",
+         "A Northman horse-lord of the plains south of Mirkwood who rides with the thunder of generations of herdsmen, inspiring allies with a warcry that rolls across the grass and scattering enemies under the hooves of heavy cavalry."),
+        ("Marshal of the Riddermark", "Horse-lord of Rhovanion"),
+        ("Captain of the Éored", "Captain of the Riders"),
+        ("Rider of the Mark", "Rider of the Plain"),
+        ("Warcry of Eorl", "Warcry of Vidugard"),
+        ("Heir of Eorl", "Heir of the Horse-lords"),
+        ("Oath of Eorl", "Oath of the Horse-lords"),
+        ("Eorl's Legacy", "The Horse-lords' Legacy"),
+        ("Rider of the Wold", "Rider of the Open Plain"),
+        ("Lord of the Mearas", "Lord of the Herds"),
+        ("Mearas-Bred", "Herd-Bred"),
+        ("the blood of the Mearas", "the blood of the great herds"),
+        ("Charge of the Pelennor", "Charge of the Plain"),
+        ("Pelennor's Thunder", "Thunder of the Plain"),
+        ("As at the Fields of the Pelennor, your charge", "As in the great battles of the plain, your charge"),
+        ("Riding the Mark's plains", "Riding the plains of Rhovanion"),
+        ("You know every valley and ridge of the Mark.", "You know every valley and ridge of the plain."),
+        ("Your deeds bring glory to the Mark.", "Your deeds bring glory to Rhovanion."),
+        ("Lord of the Mark", "Lord of the Plain"),
+        ("A great eored rides at your back.", "A great company of riders rides at your back."),
+        ("Eored Commander", "Company Commander"),
+        ("Rohan's Glory", "Glory of Rhovanion"),
+        ("Songs of the Riddermark", "Songs of Rhovanion"),
+        ("Song of the Riddermark", "Song of Rhovanion"),
+    ],
+    # The bow career (Rohan's marksman).
+    "marksman_of_westmark": [
+        ("Nock a flight of swift light-fletch arrows — boosts", "Nock a flight of swift light-fletch arrows: boosts"),
+        ("A heavy archer of the Aldburg garrison", "A heavy archer of the Westmark garrison"),
+        ("Arrow-warden of the Mark", "Arrow-warden of the Plain"),
+        ("Bowman of the Eastfold", "Bowman of Westmark"),
+        ("Marksman of Aldburg", "Marksman of Westmark"),
+        ("Hawk of the Eastfold", "Hawk of Westmark"),
+        ("Warden of the Folde", "Warden of the Western Plain"),
+        ("Aldburg Training", "Westmark Training"),
+        ("Aldburg archers are the finest in the Mark.", "Westmark archers are the finest on the plain."),
+        ("Forged in Fangorn's Shadow", "Forged in Mirkwood's Shadow"),
+        ("Aldburg's warriors are tempered by proximity to Fangorn.", "Westmark's warriors are tempered by proximity to Mirkwood."),
+        ("Shadow of Fangorn", "Shadow of Mirkwood"),
+        ("Eorl's Eye", "Horse-lord's Eye"),
+        ("Bowman of the Mark", "Bowman of the Plain"),
+        ("Mark's Arrow", "King's Arrow"),
+        ("Aldburg's Champion", "Westmark's Champion"),
+        ("Host of the Riddermark", "Host of Rhovanion"),
+        ("Light infantry move swiftly across the Mark.", "Light infantry move swiftly across the plain."),
+        ("Fame of the Mark", "Fame of Rhovanion"),
+        ("Your deeds bring glory to Aldburg.", "Your deeds bring glory to Westmark."),
+        ("Army of the Mark", "Army of Rhovanion"),
+        ("The finest bowmen of Rohan rally to your banner.", "The finest bowmen of Rhovanion rally to your banner."),
+        ("You are the finest shot in all of Rohan.", "You are the finest shot in all of Rhovanion."),
+        ("You read the plains of Rohan as a book.", "You read the plains of Rhovanion as a book."),
+        ("Rohirrim Discipline", "Northman Discipline"),
+    ],
+    # The infantry spear career (Rohan's watchman).
+    "warden_of_wainwatch": [
+        ("Dig in with iron resolve — boosts", "Dig in with iron resolve: boosts"),
+        ("A grizzled river-warden of Stangard who patrols the Anduin crossings by flatboat and on foot, guarding Rohan's eastern flank through endurance, local knowledge, and a boatswain's tenacious grip on contested ground.",
+         "A grizzled spear-warden of Wainwatch who patrols the eastern plain on foot and by pony, guarding the realm's eastern flank against the Wainriders through endurance, local knowledge and a tenacious grip on contested ground."),
+        ("River Navigator", "Stand Fast"),
+        ("Ford-warden of the Limlight", "Gate-warden of Wainwatch"),
+        ("Ford of the Limlight", "Gate of Wainwatch"),
+        ("Warden of the East-marches", "Warden of the Eastern Plain"),
+        ("Watch of the Wold", "Watch of the Plain"),
+        ("Entwash Swimmer", "Stream Swimmer"),
+        ("Shieldman of the Entwash", "Shieldman of Wainwatch"),
+        ("Entwash Hold", "Wainwatch Hold"),
+        ("No enemy crosses the Entwash while you guard it.", "No enemy crosses the plain while you guard it."),
+        ("Nothing crosses the Entwash unseen by you.", "Nothing crosses the plain unseen by you."),
+        ("River Lord's Discipline", "Warden's Discipline"),
+        ("Warden of the Anduin", "Warden of the Eastern Fords"),
+        ("Bastion of the Mark", "Bastion of the Northmark"),
+        ("Warden of the Riddermark", "Warden of Rhovanion"),
+        ("Warden of the Mark", "Warden of the Plain"),
+        ("The Mark's finest guardian.", "The plain's finest guardian."),
+        ("Wall of Rohirrim", "Wall of Spears"),
+        ("Classic Rohirrim infantry discipline.", "Classic Northman infantry discipline."),
     ],
 }
 
@@ -723,7 +901,12 @@ def main(argv=None):
                             # Dale's (Anduin Vale and Angaladh): none of these survives a clone.
                             "Dale", "Dalian", "Barding", "Bard", "Esgaroth", "Smaug", "Girion",
                             "Brand", "Long Lake", "Black Arrow", "Gate Hold", "Trade Road",
-                            "Two Kings", "Dragon"]
+                            "Two Kings", "Dragon",
+                            # Rohan's (South Rhovanion): none of these survives a clone.
+                            "Rohan", "Rohirrim", "Eorl", "Éored", "Eored", "Eothéod", "Eotheod",
+                            "Eastfold", "Aldburg", "Fangorn", "Riddermark", "Mearas", "Pelennor",
+                            "Stangard", "Limlight", "Entwash", "Wold", "Folde", "the Mark",
+                            "Mark's", "River Navigator", "Isengard"]
     source_words = SOURCE_DISPLAY_WORDS + [s for s, _ in SOURCES] + [f"_{a}_" for _, a in SOURCES]
     for tgt in TARGETS:
         for s, a in SOURCES_FOR.get(tgt, []):

@@ -53,16 +53,18 @@
     <Culture id="rhudaur" />
   </Resource>
 
-  <!-- Marks (Rohan, Anduin Vale, Angaladh) — honor-driven holders of a border land -->
+  <!-- Marks (Rohan, South Rhovanion, Anduin Vale, Angaladh) — honor-driven holders of a border land -->
   <!-- High battle and tournament (martial culture), no raid (dishonorable) -->
   <Resource id="marks" display_name="Marks" icon_sprite="SpecialResources\taom_marks_icon"
     cap="10000" starting_amount="0" daily_per_town="0.4"
     per_battle_victory_base="12" per_raid="0" per_siege_victory="12"
     per_prisoner="1" per_tournament_win="10" per_hideout_clear="6">
     <Kingdom id="vlandia" />
+    <Kingdom id="southrhovanion" />
     <Kingdom id="anduinvale" />
     <Kingdom id="angaladh" />
     <Culture id="vlandia" />
+    <Culture id="southrhovanion" />
     <Culture id="anduinvale" />
     <Culture id="angaladh" />
   </Resource>
@@ -81,14 +83,16 @@
     <Culture id="mirkwood" />
   </Resource>
 
-  <!-- Lake Fish (Dale/Sturgia) — trade-based economy, Lake-town heritage -->
+  <!-- Lake Fish (Dale/Sturgia, Dorwinion) — trade-based economy, Lake-town heritage -->
   <!-- High daily (trade), moderate battle, high tournament (festive culture) -->
   <Resource id="lake_fish" display_name="Lake Fish" icon_sprite="SpecialResources\taom_lake_fish_icon"
     cap="10000" starting_amount="0" daily_per_town="0.7"
     per_battle_victory_base="7" per_raid="5" per_siege_victory="10"
     per_prisoner="1" per_tournament_win="8" per_hideout_clear="5">
     <Kingdom id="sturgia" />
+    <Kingdom id="dorwinion" />
     <Culture id="sturgia" />
+    <Culture id="dorwinion" />
   </Resource>
 
   <!-- War Drums (Harad/Shaghana/Abanissa) — martial escalation, momentum -->

@@ -240,7 +240,7 @@
         "moveSpeedPercent": -10
       }
     },
-    "vlandia": {
+    "vlandia,southrhovanion": {
       "abilityId": "forth_eorlingas",
       "cooldownSeconds": 120,
       "durationSeconds": 10,
@@ -258,7 +258,7 @@
         "moraleFloor": 40
       }
     },
-    "sturgia,anduinvale,angaladh": {
+    "sturgia,anduinvale,angaladh,dorwinion": {
       "abilityId": "bards_aim",
       "cooldownSeconds": 120,
       "durationSeconds": 8,

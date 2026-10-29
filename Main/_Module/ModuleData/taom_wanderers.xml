@@ -7257,4 +7257,482 @@
 	</NPCCharacter>
 
   <!-- TAOM-NEWCULTURE:angaladh:END -->
+  <!-- TAOM-NEWCULTURE:dorwinion:BEGIN -->
+	<NPCCharacter
+		id="spc_wanderer_dorwinion_0"
+		name="{=aom_spc_wanderer_dorwinion_0_name}{FIRSTNAME} Vinling"
+		voice="softspoken"
+		age="31"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dorwinion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dorwinion_1"
+		name="{=aom_spc_wanderer_dorwinion_1_name}{FIRSTNAME} Ermansson"
+		voice="earnest"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dorwinion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dorwinion_2"
+		name="{=aom_spc_wanderer_dorwinion_2_name}{FIRSTNAME} Hallwin"
+		voice="curt"
+		age="38"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dorwinion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dorwinion_3"
+		name="{=aom_spc_wanderer_dorwinion_3_name}{FIRSTNAME} Carnenling"
+		voice="ironic"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dorwinion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dorwinion_4"
+		name="{=aom_spc_wanderer_dorwinion_4_name}{FIRSTNAME} Vinecroft"
+		voice="earnest"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dorwinion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dorwinion_5"
+		name="{=aom_spc_wanderer_dorwinion_5_name}{FIRSTNAME} Longshoreson"
+		voice="softspoken"
+		age="34"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dorwinion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Generosity" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dorwinion_6"
+		name="{=aom_spc_wanderer_dorwinion_6_name}{FIRSTNAME} Redwyn"
+		voice="curt"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dorwinion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dorwinion_7"
+		name="{=aom_spc_wanderer_dorwinion_7_name}{FIRSTNAME} Vinehild"
+		voice="ironic"
+		age="41"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dorwinion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dorwinion_8"
+		name="{=aom_spc_wanderer_dorwinion_8_name}{FIRSTNAME} Sunfell"
+		voice="curt"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dorwinion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_dorwinion_9"
+		name="{=aom_spc_wanderer_dorwinion_9_name}{FIRSTNAME} Fellrider"
+		voice="earnest"
+		age="25"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.dorwinion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_dorwinion" />
+		</Equipments>
+	</NPCCharacter>
+
+  <!-- TAOM-NEWCULTURE:dorwinion:END -->
+  <!-- TAOM-NEWCULTURE:southrhovanion:BEGIN -->
+	<NPCCharacter
+		id="spc_wanderer_southrhovanion_0"
+		name="{=aom_spc_wanderer_southrhovanion_0_name}{FIRSTNAME} Marhaling"
+		voice="softspoken"
+		age="28"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.southrhovanion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_southrhovanion_1"
+		name="{=aom_spc_wanderer_southrhovanion_1_name}{FIRSTNAME} Vidurikson"
+		voice="earnest"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.southrhovanion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Calculating" value="-1" />
+			<Trait id="Mercy" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_southrhovanion_2"
+		name="{=aom_spc_wanderer_southrhovanion_2_name}{FIRSTNAME} Gaisaring"
+		voice="earnest"
+		age="21"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.southrhovanion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_southrhovanion_3"
+		name="{=aom_spc_wanderer_southrhovanion_3_name}{FIRSTNAME} Hrodulfsson"
+		voice="curt"
+		age="35"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.southrhovanion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="-1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_southrhovanion_4"
+		name="{=aom_spc_wanderer_southrhovanion_4_name}{FIRSTNAME} Ermanstaning"
+		voice="softspoken"
+		age="23"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.southrhovanion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Honor" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_southrhovanion_5"
+		name="{=aom_spc_wanderer_southrhovanion_5_name}{FIRSTNAME} Harjabranding"
+		voice="curt"
+		age="30"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.southrhovanion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_southrhovanion_6"
+		name="{=aom_spc_wanderer_southrhovanion_6_name}{FIRSTNAME} Guntharsson"
+		voice="curt"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.southrhovanion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Generosity" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_southrhovanion_7"
+		name="{=aom_spc_wanderer_southrhovanion_7_name}{FIRSTNAME} Wainbane"
+		voice="ironic"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.southrhovanion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_southrhovanion_8"
+		name="{=aom_spc_wanderer_southrhovanion_8_name}{FIRSTNAME} Balthingar"
+		voice="curt"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.southrhovanion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+			<Trait id="Mercy" value="-2" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_southrhovanion_9"
+		name="{=aom_spc_wanderer_southrhovanion_9_name}{FIRSTNAME} Steedheart"
+		voice="earnest"
+		age="26"
+		is_template="true"
+		default_group="Cavalry"
+		is_hero="false"
+		culture="Culture.southrhovanion"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_rohan" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="2" />
+			<Trait id="Honor" value="1" />
+			<Trait id="Mercy" value="0" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_southrhovanion" />
+		</Equipments>
+	</NPCCharacter>
+
+  <!-- TAOM-NEWCULTURE:southrhovanion:END -->
 </NPCCharacters>

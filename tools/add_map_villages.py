@@ -12,7 +12,8 @@ small per-parent offset is written and the row is printed as PLACEHOLDER. That i
 the editor overwrites posX/posY from the entity on the next scene save; DO NOT start a campaign
 while a PLACEHOLDER row has no scene entity, SettlementVisual.OnStartup NREs at map load (#269).
 `--check` is the gate for that: it fails on any table id whose master row, loc row or scene entity
-is missing, or whose master position drifted from the scene transform.
+is missing, whose master position drifted from the scene transform, or whose culture or bound
+differs from the table.
 
 Master rows are appended at the END of the file, never after an anchor (append_settlements): a
 save made before the batch still loads this file (until the distance cache is rebuilt with the new ids,
@@ -34,7 +35,7 @@ Precedent: tools/add_bluecraig_castles.py (#270). Next batch: append rows to VIL
 Usage:
   python tools/add_map_villages.py            # dry run: prints the plan and each position's source
   python tools/add_map_villages.py --apply    # writes the live master + 12 loc files (+ backups)
-  python tools/add_map_villages.py --check    # exit 1 on any missing row / entity / drifted position
+  python tools/add_map_villages.py --check    # exit 1 on any missing row / entity / drifted position / culture or bound mismatch
 """
 import argparse
 import datetime
@@ -83,6 +84,9 @@ MESHES = {
     "anduinvale": ("gui_bg_village_sturgia", "wait_sturgia_village", "gui_bg_castle_sturgia"),
     "angaladh": ("gui_bg_village_sturgia", "wait_sturgia_village", "gui_bg_castle_sturgia"),
 }
+# Dorwinion and South Rhovanion (#1062): their own cultures.
+MESHES["dorwinion"] = ("gui_bg_village_sturgia", "wait_sturgia_village", "gui_bg_castle_sturgia")  # Dale's village panels, as anduinvale
+MESHES["southrhovanion"] = ("gui_bg_village_vlanda", "wait_vlandia_village", "gui_bg_castle_vlanda")  # Rohan's village panels (vanilla vlandia)
 HEARTH = "500"  # the SETTLEMENT_ECONOMY_FLOOR for isengard (tools/settlement_economy_floor.json)
 
 # hearth and after are optional per row: hearth defaults to HEARTH, after to INSERT_AFTER (anchor_of).
@@ -285,6 +289,59 @@ VILLAGES = [
     Village("castle_village_AND4_1", "Ironroot", "castle_AND4", "iron_mine", "angaladh", "sturgia_village_h", hearth="300", after="castle_AND4"),
     Village("castle_village_AND4_2", "Cinderdell", "castle_AND4", "lumberjack", "angaladh", "sturgia_village_j", hearth="300", after="castle_AND4"),
     Village("castle_village_AND4_3", "Hallfold", "castle_AND4", "sheep_farm", "angaladh", "sturgia_village_l", hearth="300", after="castle_AND4"),
+    # Dorwinion (#1062; Mike placed the entities 2026-10-29): 23 villages of vineyards, presses, cellars and river
+    # landings in Northman and Westron. Types are those Dale's villages use; hearth 350 (middling, as Ered Luin);
+    # the sturgia village scenes in rotation, sturgia_village_f (54 uses) left out.
+    Village("village_DO1_1", "Redwater Landing", "town_DO1", "fisherman", "dorwinion", "sturgia_village_k", hearth="350", after="town_DO1"),
+    Village("village_DO1_2", "Sunbank", "town_DO1", "wheat_farm", "dorwinion", "sturgia_village_a", hearth="350", after="town_DO1"),
+    Village("village_DO1_3", "Cellarbrook", "town_DO1", "cattle_farm", "dorwinion", "sturgia_village_b", hearth="350", after="town_DO1"),
+    Village("village_DO1_4", "Pressmead", "town_DO1", "sheep_farm", "dorwinion", "sturgia_village_c", hearth="350", after="town_DO1"),
+    Village("village_DO2_1", "Amberslope", "town_DO2", "wheat_farm", "dorwinion", "sturgia_village_d", hearth="350", after="town_DO2"),
+    Village("village_DO2_2", "Vintnersted", "town_DO2", "flax_plant", "dorwinion", "sturgia_village_e", hearth="350", after="town_DO2"),
+    Village("village_DO2_3", "Reedquay", "town_DO2", "fisherman", "dorwinion", "sturgia_village_g", hearth="350", after="town_DO2"),
+    Village("village_DO2_4", "Terracefold", "town_DO2", "cattle_farm", "dorwinion", "sturgia_village_h", hearth="350", after="town_DO2"),
+    Village("village_DO3_1", "Seagate Strand", "town_DO3", "fisherman", "dorwinion", "sturgia_village_j", hearth="350", after="town_DO3"),
+    Village("village_DO3_2", "Saltmead", "town_DO3", "sheep_farm", "dorwinion", "sturgia_village_l", hearth="350", after="town_DO3"),
+    Village("village_DO3_3", "Wineward", "town_DO3", "wheat_farm", "dorwinion", "sturgia_village_k", hearth="350", after="town_DO3"),
+    Village("village_DO3_4", "Barrelwick", "town_DO3", "lumberjack", "dorwinion", "sturgia_village_a", hearth="350", after="town_DO3"),
+    Village("castle_village_DO1_1", "Vinewatch Slope", "castle_DO1", "wheat_farm", "dorwinion", "sturgia_village_b", hearth="350", after="castle_DO1"),
+    Village("castle_village_DO1_2", "Gravelford", "castle_DO1", "fisherman", "dorwinion", "sturgia_village_c", hearth="350", after="castle_DO1"),
+    Village("castle_village_DO1_3", "Oakcask", "castle_DO1", "lumberjack", "dorwinion", "sturgia_village_d", hearth="350", after="castle_DO1"),
+    Village("castle_village_DO2_1", "Northpress", "castle_DO2", "cattle_farm", "dorwinion", "sturgia_village_e", hearth="350", after="castle_DO2"),
+    Village("castle_village_DO2_2", "Runningreach", "castle_DO2", "fisherman", "dorwinion", "sturgia_village_g", hearth="350", after="castle_DO2"),
+    Village("castle_village_DO2_3", "Graperow", "castle_DO2", "wheat_farm", "dorwinion", "sturgia_village_h", hearth="350", after="castle_DO2"),
+    Village("castle_village_DO3_1", "Eastvine", "castle_DO3", "wheat_farm", "dorwinion", "sturgia_village_j", hearth="350", after="castle_DO3"),
+    Village("castle_village_DO3_2", "Marchcellar", "castle_DO3", "cattle_farm", "dorwinion", "sturgia_village_l", hearth="350", after="castle_DO3"),
+    Village("castle_village_DO4_1", "Sunwall Terrace", "castle_DO4", "wheat_farm", "dorwinion", "sturgia_village_k", hearth="350", after="castle_DO4"),
+    Village("castle_village_DO4_2", "Gullhythe", "castle_DO4", "fisherman", "dorwinion", "sturgia_village_a", hearth="350", after="castle_DO4"),
+    Village("castle_village_DO4_3", "Winelees", "castle_DO4", "flax_plant", "dorwinion", "sturgia_village_b", hearth="350", after="castle_DO4"),
+    # South Rhovanion (#1062): 25 villages of horse farms, meadows, fords and barrows. Types are those Rohan's
+    # villages use; hearth 350; the least used vlandia village scenes in rotation (d, h, l, n, b, c, e, f, j).
+    Village("village_SRH1_1", "Studfold", "town_SRH1", "vlandian_horse_ranch", "southrhovanion", "vlandia_village_d", hearth="350", after="town_SRH1"),
+    Village("village_SRH1_2", "Greenmead", "town_SRH1", "cattle_farm", "southrhovanion", "vlandia_village_h", hearth="350", after="town_SRH1"),
+    Village("village_SRH1_3", "Wainford", "town_SRH1", "fisherman", "southrhovanion", "vlandia_village_l", hearth="350", after="town_SRH1"),
+    Village("village_SRH1_4", "Barrowdown", "town_SRH1", "trapper", "southrhovanion", "vlandia_village_n", hearth="350", after="town_SRH1"),
+    Village("village_SRH2_1", "Mareholm", "town_SRH2", "vlandian_horse_ranch", "southrhovanion", "vlandia_village_b", hearth="350", after="town_SRH2"),
+    Village("village_SRH2_2", "Vidumead", "town_SRH2", "cattle_farm", "southrhovanion", "vlandia_village_c", hearth="350", after="town_SRH2"),
+    Village("village_SRH2_3", "Hartford", "town_SRH2", "fisherman", "southrhovanion", "vlandia_village_e", hearth="350", after="town_SRH2"),
+    Village("village_SRH2_4", "Oldbarrow", "town_SRH2", "trapper", "southrhovanion", "vlandia_village_f", hearth="350", after="town_SRH2"),
+    Village("village_SRH2_5", "Stallionfold", "town_SRH2", "vlandian_horse_ranch", "southrhovanion", "vlandia_village_j", hearth="350", after="town_SRH2"),
+    Village("village_SRH2_6", "Windmeadow", "town_SRH2", "wheat_farm", "southrhovanion", "vlandia_village_d", hearth="350", after="town_SRH2"),
+    Village("castle_village_SRH1_1", "Paddockside", "castle_SRH1", "vlandian_horse_ranch", "southrhovanion", "vlandia_village_h", hearth="350", after="castle_SRH1"),
+    Village("castle_village_SRH1_2", "Riderford", "castle_SRH1", "fisherman", "southrhovanion", "vlandia_village_l", hearth="350", after="castle_SRH1"),
+    Village("castle_village_SRH1_3", "Longmeadow", "castle_SRH1", "cattle_farm", "southrhovanion", "vlandia_village_n", hearth="350", after="castle_SRH1"),
+    Village("castle_village_SRH1_4", "Foalfield", "castle_SRH1", "vlandian_horse_ranch", "southrhovanion", "vlandia_village_b", hearth="350", after="castle_SRH1"),
+    Village("castle_village_SRH2_1", "Meadford", "castle_SRH2", "fisherman", "southrhovanion", "vlandia_village_c", hearth="350", after="castle_SRH2"),
+    Village("castle_village_SRH2_2", "Highbarrow", "castle_SRH2", "trapper", "southrhovanion", "vlandia_village_e", hearth="350", after="castle_SRH2"),
+    Village("castle_village_SRH2_3", "Rydefold", "castle_SRH2", "vlandian_horse_ranch", "southrhovanion", "vlandia_village_f", hearth="350", after="castle_SRH2"),
+    Village("castle_village_SRH2_4", "Goldmead", "castle_SRH2", "wheat_farm", "southrhovanion", "vlandia_village_j", hearth="350", after="castle_SRH2"),
+    Village("castle_village_SRH3_1", "Northfold", "castle_SRH3", "cattle_farm", "southrhovanion", "vlandia_village_d", hearth="350", after="castle_SRH3"),
+    Village("castle_village_SRH3_2", "Greyford", "castle_SRH3", "fisherman", "southrhovanion", "vlandia_village_h", hearth="350", after="castle_SRH3"),
+    Village("castle_village_SRH3_3", "Sorrelfold", "castle_SRH3", "vlandian_horse_ranch", "southrhovanion", "vlandia_village_l", hearth="350", after="castle_SRH3"),
+    Village("castle_village_SRH3_4", "Cairnmoor", "castle_SRH3", "trapper", "southrhovanion", "vlandia_village_n", hearth="350", after="castle_SRH3"),
+    Village("castle_village_SRH4_1", "Westmead", "castle_SRH4", "cattle_farm", "southrhovanion", "vlandia_village_b", hearth="350", after="castle_SRH4"),
+    Village("castle_village_SRH4_2", "Brownford", "castle_SRH4", "fisherman", "southrhovanion", "vlandia_village_c", hearth="350", after="castle_SRH4"),
+    Village("castle_village_SRH4_3", "Horsewick", "castle_SRH4", "vlandian_horse_ranch", "southrhovanion", "vlandia_village_e", hearth="350", after="castle_SRH4"),
 ]
 INSERT_AFTER = "village_isengard_a"   # default anchor: last settlement of the Isengard block, and its last loc row
 
@@ -354,6 +411,18 @@ def scene_position(scene_text, entity_id):
 def settlement_position(master_text, sid):
     m = re.search(r'<Settlement id=' + re.escape(f'"{sid}"') + r'[^>]*?\sposX="([^"]*)"\s+posY="([^"]*)"', master_text)
     return (m.group(1), m.group(2)) if m else None
+
+
+def master_attr(master_text, sid, attr):
+    """The value of `attr` on the <Settlement id="sid"> open tag, or None (absent row or absent attribute)."""
+    m = re.search(r'<Settlement id=' + re.escape(f'"{sid}"') + r'[^>]*?\s' + re.escape(attr) + r'="([^"]*)"', master_text)
+    return m.group(1) if m else None
+
+
+def master_village_bound(master_text, sid):
+    """The `bound` of the <Village> component inside <Settlement id="sid">, or None."""
+    m = re.search(r'<Settlement id=' + re.escape(f'"{sid}"') + r'(?:(?!</Settlement>).)*?<Village [^>]*?\sbound="([^"]*)"', master_text, re.S)
+    return m.group(1) if m else None
 
 
 def resolve_position(v, scene_text, master_text, k):
@@ -539,7 +608,8 @@ def insert_loc_rows(loc_text, anchor_id, rows):
 
 
 def check(villages, master_text, scene_text, loc_texts, tolerance=0.01):
-    """Findings (strings) for any table id whose data is missing, whose position drifted or whose name is taken."""
+    """Findings (strings) for any table id whose data is missing, whose position drifted or whose name is taken,
+    or whose master culture or bound settlement differs from the table's."""
     findings = name_collisions([(v.id, v.name) for v in villages], master_text)
     for v in villages:
         pos = settlement_position(master_text, v.id)
@@ -547,6 +617,12 @@ def check(villages, master_text, scene_text, loc_texts, tolerance=0.01):
             findings.append(f"{v.id}: no <Settlement> row in settlements.xml")
         if not settlement_position(master_text, v.bound):
             findings.append(f"{v.id}: bound settlement {v.bound} has no row in settlements.xml (a new campaign NREs)")
+        culture = master_attr(master_text, v.id, "culture")
+        if culture is not None and culture != f"Culture.{v.culture}":
+            findings.append(f"{v.id}: settlements.xml has culture={culture} but the table says Culture.{v.culture}")
+        bound = master_village_bound(master_text, v.id)
+        if bound is not None and bound != f"Settlement.{v.bound}" and settlement_position(master_text, v.bound):
+            findings.append(f"{v.id}: settlements.xml binds it to {bound} but the table says Settlement.{v.bound}")
         for lang, text in loc_texts.items():
             if f'id="Settlements.Settlement.name.{v.id}"' not in text:
                 findings.append(f"{v.id}: no loc row in Languages/{lang}/loc_settlements.xml")
@@ -580,7 +656,7 @@ def main():
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # the names carry accents
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--apply", action="store_true", help="write the live files (default: dry run)")
-    ap.add_argument("--check", action="store_true", help="verify every VILLAGES id is fully present and positioned; exit 1 otherwise")
+    ap.add_argument("--check", action="store_true", help="verify every VILLAGES id is fully present, positioned, and on its table culture and bound; exit 1 otherwise")
     args = ap.parse_args()
 
     for p in (LIVE, SCENE):
@@ -601,7 +677,7 @@ def main():
         if findings:
             print(f"\n{len(findings)} finding(s) across {len(VILLAGES)} table id(s).")
             return 1
-        print(f"OK: all {len(VILLAGES)} villages present in settlements.xml, all {len(locs)} loc files and scene.xscene; positions match; no other settlement carries their names.")
+        print(f"OK: all {len(VILLAGES)} villages present in settlements.xml, all {len(locs)} loc files and scene.xscene; positions, culture and bound match; no other settlement carries their names.")
         return 0
 
     loc_texts = {lang: text for lang, (_, text) in locs.items()}

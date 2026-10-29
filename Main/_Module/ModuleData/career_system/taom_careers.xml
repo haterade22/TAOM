@@ -1880,4 +1880,130 @@
     </ChoiceGroups>
   </Career>
 
+  <Career id="spear_warden_of_vinewatch" rank1_name="{=taom_career_rank1_spear_warden_of_vinewatch}Spearman of Vinewatch" rank2_name="{=taom_career_rank2_spear_warden_of_vinewatch}Spear-warden of Vinewatch" rank3_name="{=taom_career_rank3_spear_warden_of_vinewatch}Captain of Vineholm"
+          display_name="{=taom_career_spear_warden_of_vinewatch}Spear-warden of Vinewatch"
+          description="{=taom_career_spear_warden_of_vinewatch_desc}A stalwart guardian of Vinewatch who holds the vineyard roads and the walls above the Redwater against raiders and bandits with shield and spear."
+          portrait_sprite="career_dale_guardsman_portrait"
+          ability_template_id="spear_warden_of_vinewatch_ability"
+          min_clan_tier="0"
+          root_choice_id="spear_warden_of_vinewatch_root"
+          keystone_icon="27000">
+    <EligibleCultures>
+      <Culture id="dorwinion" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="spear_warden_of_vinewatch_t1_a" />
+      <Group id="spear_warden_of_vinewatch_t1_b" />
+      <Group id="spear_warden_of_vinewatch_t2_a" />
+      <Group id="spear_warden_of_vinewatch_t2_b" />
+      <Group id="spear_warden_of_vinewatch_t3_a" />
+      <Group id="spear_warden_of_vinewatch_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="bowman_of_redwater" rank1_name="{=taom_career_rank1_bowman_of_redwater}Bowman of Redwater" rank2_name="{=taom_career_rank2_bowman_of_redwater}Hawk-Eye of Redwater" rank3_name="{=taom_career_rank3_bowman_of_redwater}Bow-lord of the Redwater"
+          display_name="{=taom_career_bowman_of_redwater}Bowman of Redwater"
+          description="{=taom_career_bowman_of_redwater_desc}A bowman of the Redwater who shoots from the walls of Seagate and the reed-beds of the river, carrying on a tradition of unerring marksmanship."
+          portrait_sprite="career_dale_marksman_portrait"
+          ability_template_id="bowman_of_redwater_ability"
+          min_clan_tier="0"
+          root_choice_id="bowman_of_redwater_root"
+          keystone_icon="27001">
+    <EligibleCultures>
+      <Culture id="dorwinion" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="bowman_of_redwater_t1_a" />
+      <Group id="bowman_of_redwater_t1_b" />
+      <Group id="bowman_of_redwater_t2_a" />
+      <Group id="bowman_of_redwater_t2_b" />
+      <Group id="bowman_of_redwater_t3_a" />
+      <Group id="bowman_of_redwater_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="river_rider_of_seagate" rank1_name="{=taom_career_rank1_river_rider_of_seagate}River-Rider of Seagate" rank2_name="{=taom_career_rank2_river_rider_of_seagate}Warden of the Shore Road" rank3_name="{=taom_career_rank3_river_rider_of_seagate}Marshal of the Redwater"
+          display_name="{=taom_career_river_rider_of_seagate}River-Rider of Seagate"
+          description="{=taom_career_river_rider_of_seagate_desc}A mounted patrol of the Redwater shore who rides the vineyard ways and the road to Seagate, safeguarding wine caravans from raiders out of the east."
+          portrait_sprite="career_dale_outrider_portrait"
+          ability_template_id="river_rider_of_seagate_ability"
+          min_clan_tier="0"
+          root_choice_id="river_rider_of_seagate_root"
+          keystone_icon="27500">
+    <EligibleCultures>
+      <Culture id="dorwinion" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="river_rider_of_seagate_t1_a" />
+      <Group id="river_rider_of_seagate_t1_b" />
+      <Group id="river_rider_of_seagate_t2_a" />
+      <Group id="river_rider_of_seagate_t2_b" />
+      <Group id="river_rider_of_seagate_t3_a" />
+      <Group id="river_rider_of_seagate_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="rider_of_vidugard" rank1_name="{=taom_career_rank1_rider_of_vidugard}Rider of the Plain" rank2_name="{=taom_career_rank2_rider_of_vidugard}Captain of the Riders" rank3_name="{=taom_career_rank3_rider_of_vidugard}Horse-lord of Rhovanion"
+          display_name="{=taom_career_rider_of_vidugard}Rider of Vidugard"
+          description="{=taom_career_rider_of_vidugard_desc}A Northman horse-lord of the plains south of Mirkwood who rides with the thunder of generations of herdsmen, inspiring allies with a warcry that rolls across the grass and scattering enemies under the hooves of heavy cavalry."
+          portrait_sprite="career_eotheod_windrider_portrait"
+          ability_template_id="rider_of_vidugard_ability"
+          min_clan_tier="0"
+          root_choice_id="rider_of_vidugard_root"
+          keystone_icon="21005">
+    <EligibleCultures>
+      <Culture id="southrhovanion" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="rider_of_vidugard_t1_a" />
+      <Group id="rider_of_vidugard_t1_b" />
+      <Group id="rider_of_vidugard_t2_a" />
+      <Group id="rider_of_vidugard_t2_b" />
+      <Group id="rider_of_vidugard_t3_a" />
+      <Group id="rider_of_vidugard_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="marksman_of_westmark" rank1_name="{=taom_career_rank1_marksman_of_westmark}Bowman of Westmark" rank2_name="{=taom_career_rank2_marksman_of_westmark}Marksman of Westmark" rank3_name="{=taom_career_rank3_marksman_of_westmark}Arrow-warden of the Plain"
+          display_name="{=taom_career_marksman_of_westmark}Marksman of Westmark"
+          description="{=taom_career_marksman_of_westmark_desc}A heavy archer of the Westmark garrison who has mastered the art of loosing light, high-velocity arrows with lethal precision, capable of penetrating armour at distances that leave enemies no safe quarter."
+          portrait_sprite="career_marksman_of_aldburg_portrait"
+          ability_template_id="marksman_of_westmark_ability"
+          min_clan_tier="0"
+          root_choice_id="marksman_of_westmark_root"
+          keystone_icon="21004">
+    <EligibleCultures>
+      <Culture id="southrhovanion" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="marksman_of_westmark_t1_a" />
+      <Group id="marksman_of_westmark_t1_b" />
+      <Group id="marksman_of_westmark_t2_a" />
+      <Group id="marksman_of_westmark_t2_b" />
+      <Group id="marksman_of_westmark_t3_a" />
+      <Group id="marksman_of_westmark_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="warden_of_wainwatch" rank1_name="{=taom_career_rank1_warden_of_wainwatch}Watchman of Wainwatch" rank2_name="{=taom_career_rank2_warden_of_wainwatch}Gate-warden of Wainwatch" rank3_name="{=taom_career_rank3_warden_of_wainwatch}Warden of the Eastern Plain"
+          display_name="{=taom_career_warden_of_wainwatch}Warden of Wainwatch"
+          description="{=taom_career_warden_of_wainwatch_desc}A grizzled spear-warden of Wainwatch who patrols the eastern plain on foot and by pony, guarding the realm's eastern flank against the Wainriders through endurance, local knowledge and a tenacious grip on contested ground."
+          portrait_sprite="career_watchman_of_stangard_portrait"
+          ability_template_id="warden_of_wainwatch_ability"
+          min_clan_tier="0"
+          root_choice_id="warden_of_wainwatch_root"
+          keystone_icon="21006">
+    <EligibleCultures>
+      <Culture id="southrhovanion" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="warden_of_wainwatch_t1_a" />
+      <Group id="warden_of_wainwatch_t1_b" />
+      <Group id="warden_of_wainwatch_t2_a" />
+      <Group id="warden_of_wainwatch_t2_b" />
+      <Group id="warden_of_wainwatch_t3_a" />
+      <Group id="warden_of_wainwatch_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
 </Careers>

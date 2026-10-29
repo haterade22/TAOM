@@ -117,7 +117,7 @@ class EliteMilitiaBonusTests(unittest.TestCase):
                 else:
                     self.assertTrue(b <= v <= b + rb.MILITIA_ELITE_BONUS, f"{vet_id} {skill} {b}->{v}")
             checked += 1
-        self.assertEqual(checked, 42)  # +anduinvale +angaladh 2026-10-28, +arthedain 2026-10-07, +cardolan +rhudaur 2026-10-23 (#978), +eredluin 2026-10-27
+        self.assertEqual(checked, 46)  # +dorwinion +southrhovanion 2026-10-29, +anduinvale +angaladh 2026-10-28, +arthedain 2026-10-07, +cardolan +rhudaur 2026-10-23 (#978), +eredluin 2026-10-27
 
     def test_elite_ids_survive_a_basic_cache_filled_out_of_band(self):
         """A basic entry without its elite twin (something filled the basic cache directly) is

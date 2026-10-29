@@ -30,8 +30,8 @@ public static class RaceAbilityDefaults
     public static Dictionary<string, RaceAbilityProfile> CultureProfiles() => new Dictionary<string, RaceAbilityProfile>
     {
         ["gondor,gondor_soldiers,arthedain,cardolan,rhudaur"] = CitadelGuard(),
-        ["vlandia"] = ForthEorlingas(),
-        ["sturgia,anduinvale,angaladh"] = BardsAim(),
+        ["vlandia,southrhovanion"] = ForthEorlingas(),
+        ["sturgia,anduinvale,angaladh,dorwinion"] = BardsAim(),
         ["empire,dunland_raiders"] = HillClanFury(),
         ["aserai,harad_raiders,shaghana,abanissa"] = SerpentsVenom(),
         ["khuzait,rhun_raiders"] = WainriderWall(),

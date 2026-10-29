@@ -1982,4 +1982,148 @@
         </EquipmentSet>
     </EquipmentRoster>
 
+    <!-- Dorwinion (#1062, Dale's mechanics, parked at character creation until it has its own armour) and South Rhovanion
+         (Rohan's mechanics, parked likewise): each kit is the gear the realm's lowest troops carry (generate_career_kits.py).
+         Both field cavalry, so each has a cavalry pair with a Horse and a HorseHarness. -->
+
+    <!-- ═══ DORWINION: RANGED (Bowman of Redwater) ═══ -->
+
+    <EquipmentRoster id="player_career_dorwinion_ranged_m" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.ladder_dale_bow_t1" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_dorwinion_ranged_f" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.ladder_dale_bow_t1" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <!-- ═══ DORWINION: CAVALRY (River-Rider of Seagate) ═══ -->
+
+    <EquipmentRoster id="player_career_dorwinion_cavalry_m" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_spear_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a06" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+            <Equipment slot="Horse" id="Item.saddle_horse" />
+            <Equipment slot="HorseHarness" id="Item.starter_cavalry_gondor_horse_armor_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_dorwinion_cavalry_f" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_spear_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a06" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+            <Equipment slot="Horse" id="Item.saddle_horse" />
+            <Equipment slot="HorseHarness" id="Item.starter_cavalry_gondor_horse_armor_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <!-- ═══ DORWINION: INFANTRY (Spear-warden of Vinewatch) ═══ -->
+
+    <EquipmentRoster id="player_career_dorwinion_infantry_m" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a06" />
+            <Equipment slot="Item2" id="Item.dale_spear_a" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_dorwinion_infantry_f" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a06" />
+            <Equipment slot="Item2" id="Item.dale_spear_a" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <!-- ═══ SOUTH RHOVANION: RANGED (Marksman of Westmark) ═══ -->
+
+    <EquipmentRoster id="player_career_southrhovanion_ranged_m" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.ladder_rohan_bow_t2" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_southrhovanion_ranged_f" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.ladder_rohan_bow_t2" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <!-- ═══ SOUTH RHOVANION: CAVALRY (Rider of Vidugard) ═══ -->
+
+    <EquipmentRoster id="player_career_southrhovanion_cavalry_m" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_rohan_spear_b" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            <Equipment slot="Horse" id="Item.saddle_horse" />
+            <Equipment slot="HorseHarness" id="Item.light_harness" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_southrhovanion_cavalry_f" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_rohan_spear_b" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            <Equipment slot="Horse" id="Item.saddle_horse" />
+            <Equipment slot="HorseHarness" id="Item.light_harness" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <!-- ═══ SOUTH RHOVANION: INFANTRY (Warden of Wainwatch) ═══ -->
+
+    <EquipmentRoster id="player_career_southrhovanion_infantry_m" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            <Equipment slot="Item2" id="Item.wm_rohan_spear_b" />
+            <Equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_southrhovanion_infantry_f" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a01" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            <Equipment slot="Item2" id="Item.wm_rohan_spear_b" />
+            <Equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots3" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
 </EquipmentRosters>

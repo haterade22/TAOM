@@ -158,5 +158,13 @@
     <string id="aom_clan_angaladh_1_name" text="House of Angáladh" />
     <string id="aom_clan_angaladh_2_name" text="{.MN}Woodwards of the Forest Road" />
     <string id="aom_clan_angaladh_3_name" text="Wardens of Emyn Duir" />
+    <string id="aom_clan_dorwinion_1_name" text="House of Vineholm" />
+    <string id="aom_clan_dorwinion_2_name" text="Wardens of the Redwater" />
+    <string id="aom_clan_dorwinion_3_name" text="House of Seagate" />
+    <string id="aom_clan_dorwinion_4_name" text="Wardens of the Eastmarch" />
+    <string id="aom_clan_southrhovanion_1_name" text="House of Vidugard" />
+    <string id="aom_clan_southrhovanion_2_name" text="{.MN}Riders of Southwood" />
+    <string id="aom_clan_southrhovanion_3_name" text="{.MN}Wainwatch Riders" />
+    <string id="aom_clan_southrhovanion_4_name" text="Wardens of the Northmark" />
   </strings>
 </base>

@@ -84,7 +84,8 @@ class RenderXsltCultureTests(unittest.TestCase):
         real = promo.render_xslt_culture
         promo.render_xslt_culture = lambda cid: real(cid, self.xslt, self.source)
         try:
-            block = promo.source_blocks("culture", "", "dale", {"culture_xslt": "sturgia"})
+            block = promo.source_blocks("culture", "", "dale", {
+                "culture_xslt": "sturgia", "culture_xslt_keys": promo.NORTHMAN_SCAFFOLDS["dale"]["culture_xslt_keys"]})
         finally:
             promo.render_xslt_culture = real
         self.assertIn('\n    id="dale"\n', block)

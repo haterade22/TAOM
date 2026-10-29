@@ -780,4 +780,53 @@
                    sound_effect="dale_marksman_activate"
                    tooltip="{=taom_ability_woodward_of_the_forest_road_tt}Loose the arrows of the woodwards: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
+  <AbilityTemplate id="spear_warden_of_vinewatch_ability"
+                   display_name="{=taom_ability_spear_warden_of_vinewatch}Terrace Wall"
+                   sprite="ability_dale_guardsman_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="dale_guardsman_particle"
+                   sound_effect="dale_guardsman_activate"
+                   tooltip="{=taom_ability_spear_warden_of_vinewatch_tt}Set your spear and hold the terrace wall: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+  <AbilityTemplate id="bowman_of_redwater_ability"
+                   display_name="{=taom_ability_bowman_of_redwater}Seagate Volley"
+                   sprite="ability_dale_marksman_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="dale_marksman_particle"
+                   sound_effect="dale_marksman_activate"
+                   tooltip="{=taom_ability_bowman_of_redwater_tt}Loose the arrows of the Redwater bowmen: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+  <AbilityTemplate id="river_rider_of_seagate_ability"
+                   display_name="{=taom_ability_river_rider_of_seagate}Shore Gallop"
+                   sprite="ability_dale_outrider_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="dale_outrider_particle"
+                   sound_effect="dale_outrider_activate"
+                   tooltip="{=taom_ability_river_rider_of_seagate_tt}Spur your horse along the river roads: boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+  <AbilityTemplate id="rider_of_vidugard_ability"
+                   display_name="{=taom_ability_rider_of_vidugard}Warcry of Vidugard"
+                   sprite="ability_eotheod_windrider_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="eotheod_windrider_particle"
+                   sound_effect="eotheod_windrider_activate"
+                   tooltip="{=taom_ability_rider_of_vidugard_tt}Raise the warcry of the horse-lords: boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+  <AbilityTemplate id="marksman_of_westmark_ability"
+                   display_name="{=taom_ability_marksman_of_westmark}Light Fletching"
+                   sprite="ability_marksman_of_aldburg_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="marksman_of_aldburg_particle"
+                   sound_effect="marksman_of_aldburg_activate"
+                   tooltip="{=taom_ability_marksman_of_westmark_tt}Nock a flight of swift light-fletch arrows: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+  <AbilityTemplate id="warden_of_wainwatch_ability"
+                   display_name="{=taom_ability_warden_of_wainwatch}Stand Fast"
+                   sprite="ability_watchman_of_stangard_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="watchman_of_stangard_particle"
+                   sound_effect="watchman_of_stangard_activate"
+                   tooltip="{=taom_ability_warden_of_wainwatch_tt}Dig in with iron resolve: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+
 </AbilityTemplates>

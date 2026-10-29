@@ -4477,4 +4477,364 @@
     </EquipmentRoster>
 
   <!-- TAOM-NEWCULTURE:angaladh:END -->
+  <!-- TAOM-NEWCULTURE:dorwinion:BEGIN -->
+    <EquipmentRoster id="enlist_dorwinion_infantry_recruit" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_spear_a" />
+            <Equipment slot="Item1" id="Item.dale_sword_c" />
+            <Equipment slot="Item2" id="Item.wm_dale_shield_a08" />
+            <Equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_dorwinion_archer_recruit" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_recurve_bow_a" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_archer_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_dorwinion_cavalry_recruit" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_b" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_b03" />
+            <Equipment slot="Item2" id="Item.dale_winged_spear_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_dorwinion_support_recruit" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_dorwinion_infantry_soldier" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_b" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+            <Equipment slot="Item2" id="Item.dale_spear_b" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_dorwinion_support_soldier" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_b" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_dorwinion_infantry_veteran" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+            <Equipment slot="Item2" id="Item.dale_winged_spear_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a02" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a02" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a02" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a02" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a02" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_dorwinion_archer_veteran" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_longbow_a" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.dale_sword_b" />
+            <Equipment slot="Item3" id="Item.wm_dale_shield_a06" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_archer_a02" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a02" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a02" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a02" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_dorwinion_cavalry_veteran" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_winged_spear_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_b02" />
+            <Equipment slot="Item2" id="Item.dale_sword_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b02" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_chivalry_b02" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b02" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b02" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b02" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_dorwinion_support_veteran" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a02" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a02" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a02" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a02" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a02" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_dorwinion_infantry_sergeant" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a01" />
+            <Equipment slot="Item2" id="Item.dale_winged_spear_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a04" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a04" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a04" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a04" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a04" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_dorwinion_archer_sergeant" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_longbow_a" />
+            <Equipment slot="Item1" id="Item.barbed_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_a" />
+            <Equipment slot="Item3" id="Item.wm_dale_shield_a04" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_dorwinion_cavalry_sergeant" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_winged_spear_b" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a01" />
+            <Equipment slot="Item2" id="Item.dale_sword_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_dorwinion_support_sergeant" culture="Culture.dorwinion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a04" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a04" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a04" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a04" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a04" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+  <!-- TAOM-NEWCULTURE:dorwinion:END -->
+  <!-- TAOM-NEWCULTURE:southrhovanion:BEGIN -->
+    <EquipmentRoster id="enlist_southrhovanion_infantry_recruit" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a02" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_spear_a03" />
+            <Equipment slot="Head" id="Item.cts_rohan_helmet4a" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.roh_sol_bts" />
+            <Equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            <Equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_archer_recruit" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.woodland_yew_bow" />
+            <Equipment slot="Item1" id="Item.range_arrows" />
+            <Equipment slot="Item2" id="Item.range_arrows" />
+            <Equipment slot="Item3" id="Item.sturgia_sword_2_t3" />
+            <Equipment slot="Head" id="Item.cts_rohan_helmet1b" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            <Equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+            <Equipment slot="Cape" id="Item.cts_rohan_cape3" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_cavalry_recruit" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.composite_steppe_bow" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.wm_rohan_shield_a02_gsw" />
+            <Equipment slot="Item3" id="Item.eastern_spear_4_t4" />
+            <Equipment slot="Head" id="Item.cts_rohan_helmet2a" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_e" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            <Equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+            <Equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_support_recruit" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a02" />
+            <Equipment slot="Head" id="Item.cts_rohan_helmet4a" />
+            <Equipment slot="Body" id="Item.rohan_militia_armour_c" />
+            <Equipment slot="Leg" id="Item.roh_sol_bts" />
+            <Equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            <Equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_infantry_soldier" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a03" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsg" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a02" />
+            <Equipment slot="Head" id="Item.cts_rohan_helmet4c" />
+            <Equipment slot="Body" id="Item.cts_rohan_armor4444" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            <Equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+            <Equipment slot="Cape" id="Item.cts_rohan_cape4" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_archer_soldier" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.woodland_longbow" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item3" id="Item.sturgia_sword_2_t3" />
+            <Equipment slot="Head" id="Item.cts_rohan_helmet1c" />
+            <Equipment slot="Body" id="Item.cts_rohan_armor4444" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            <Equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+            <Equipment slot="Cape" id="Item.cts_rohan_cape4" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_cavalry_soldier" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.composite_steppe_bow" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_b" />
+            <Equipment slot="Item2" id="Item.wm_rohan_shield_a03_gsw" />
+            <Equipment slot="Item3" id="Item.eastern_spear_4_t4" />
+            <Equipment slot="Head" id="Item.cts_rohan_helmet2" />
+            <Equipment slot="Body" id="Item.cts_rohan_armor4444" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            <Equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+            <Equipment slot="Cape" id="Item.cts_rohan_cape4" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_support_soldier" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a02" />
+            <Equipment slot="Head" id="Item.cts_rohan_helmet4c" />
+            <Equipment slot="Body" id="Item.cts_rohan_armor4444" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            <Equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+            <Equipment slot="Cape" id="Item.cts_rohan_cape4" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_infantry_veteran" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a03" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_b01_gbw" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a02" />
+            <Equipment slot="Head" id="Item.cts_rohan_helmet1" />
+            <Equipment slot="Body" id="Item.cts_rohan_armor1111" />
+            <Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+            <Equipment slot="Gloves" id="Item.cts_rohan_captain_bracer" />
+            <Equipment slot="Cape" id="Item.cts_roha_cape1" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_archer_veteran" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.composite_steppe_bow" />
+            <Equipment slot="Item1" id="Item.piercing_arrows" />
+            <Equipment slot="Item2" id="Item.wm_rohan_shield_a03_gsw" />
+            <Equipment slot="Item3" id="Item.eastern_spear_4_t4" />
+            <Equipment slot="Head" id="Item.cts_rohan_helmet3a" />
+            <Equipment slot="Body" id="Item.cts_rohan_armor1111" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            <Equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            <Equipment slot="Cape" id="Item.cts_rohan_cape3" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_cavalry_veteran" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.composite_steppe_bow" />
+            <Equipment slot="Item1" id="Item.piercing_arrows" />
+            <Equipment slot="Item2" id="Item.wm_rohan_shield_a03_gsw" />
+            <Equipment slot="Item3" id="Item.eastern_spear_4_t4" />
+            <Equipment slot="Head" id="Item.cts_rohan_helmet3a" />
+            <Equipment slot="Body" id="Item.cts_rohan_armor1111" />
+            <Equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            <Equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            <Equipment slot="Cape" id="Item.cts_rohan_cape3" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_support_veteran" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a02" />
+            <Equipment slot="Head" id="Item.cts_rohan_helmet1" />
+            <Equipment slot="Body" id="Item.cts_rohan_armor1111" />
+            <Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+            <Equipment slot="Gloves" id="Item.cts_rohan_captain_bracer" />
+            <Equipment slot="Cape" id="Item.cts_roha_cape1" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_infantry_sergeant" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a03" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_b01_gbw" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a02" />
+            <Equipment slot="Head" id="Item.whiterun_helm" />
+            <Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+            <Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+            <Equipment slot="Gloves" id="Item.roh_nbl_glv" />
+            <Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_archer_sergeant" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.steppe_war_bow" />
+            <Equipment slot="Item1" id="Item.piercing_arrows" />
+            <Equipment slot="Item2" id="Item.wm_rohan_shield_a01_gsw" />
+            <Equipment slot="Item3" id="Item.eastern_spear_4_t4" />
+            <Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
+            <Equipment slot="Body" id="Item.cts_rohan_armor1" />
+            <Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+            <Equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+            <Equipment slot="Cape" id="Item.cts_rohan_cape3" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_cavalry_sergeant" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_spear_a03" />
+            <Equipment slot="Item1" id="Item.wm_rohan_shield_a03_gsg" />
+            <Equipment slot="Item2" id="Item.wm_rohan_ws_sword_a02" />
+            <Equipment slot="Item3" id="Item.eastern_javelin_3_t4" />
+            <Equipment slot="Head" id="Item.cts_cts_rohan_royal_guard_helmet_tail" />
+            <Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+            <Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+            <Equipment slot="Gloves" id="Item.cts_rohan_captain_bracer" />
+            <Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_southrhovanion_support_sergeant" culture="Culture.southrhovanion">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.wm_rohan_ws_sword_a02" />
+            <Equipment slot="Head" id="Item.whiterun_helm" />
+            <Equipment slot="Body" id="Item.cts_rohan_royal_guard_armor" />
+            <Equipment slot="Leg" id="Item.cts_rohan_royal_guard_boots" />
+            <Equipment slot="Gloves" id="Item.roh_nbl_glv" />
+            <Equipment slot="Cape" id="Item.cts_rohan_royal_guard_shoulder_armor" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+  <!-- TAOM-NEWCULTURE:southrhovanion:END -->
 </EquipmentRosters>

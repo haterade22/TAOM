@@ -1028,5 +1028,48 @@
     <string id="taom_feral_orcs_raider_name" text="[Feral] Feral Raider" />
     <string id="taom_feral_orcs_brute_name" text="[Feral] Feral Brute" />
     <string id="taom_feral_orcs_boss_name" text="[Feral] Warchief of the Wild Hosts" />
+    <string id="aom_dorwinion_levy_name" text="[Dorwinion] Vineyard Levy" />
+    <string id="aom_dorwinion_militia_archer_name" text="[Dorwinion] Militia Archer" />
+    <string id="aom_dorwinion_militia_spearman_name" text="[Dorwinion] Militia Spearman" />
+    <string id="aom_dorwinion_militia_veteran_archer_name" text="[Dorwinion] Veteran Militia Archer" />
+    <string id="aom_dorwinion_militia_veteran_spearman_name" text="[Dorwinion] Veteran Militia Spearman" />
+    <string id="aom_dorwinion_noble_merc_name" text="[Dorwinion] Dorwinion Sellsword" />
+    <string id="aom_dorwinion_noble_name" text="[Dorwinion] Dorwinion Noble" />
+    <string id="aom_dorwinion_redwater_archer_name" text="[Dorwinion] Redwater Archer" />
+    <string id="aom_dorwinion_redwater_guard_name" text="[Dorwinion] Redwater Guard" />
+    <string id="aom_dorwinion_river_cavalier_name" text="[Dorwinion] River Cavalier" />
+    <string id="aom_dorwinion_river_rider_name" text="[Dorwinion] River Rider" />
+    <string id="aom_dorwinion_river_spearman_name" text="[Dorwinion] River Spearman" />
+    <string id="aom_dorwinion_spearman_name" text="[Dorwinion] Vineyard Spearman" />
+    <string id="aom_dorwinion_veteran_redwater_guard_name" text="[Dorwinion] Veteran Redwater Guard" />
+    <string id="aom_dorwinion_vine_bow_master_name" text="[Dorwinion] Master of the Vine-bow" />
+    <string id="aom_dorwinion_vine_warden_name" text="[Dorwinion] Warden of the Vines" />
+    <string id="aom_dorwinion_vineholm_guard_name" text="[Dorwinion] Guard of Vineholm" />
+    <string id="aom_dorwinion_vineholm_retainer_name" text="[Dorwinion] Vineholm Retainer" />
+    <string id="aom_dorwinion_vineholm_sergeant_name" text="[Dorwinion] Sergeant of Vineholm" />
+    <string id="aom_dorwinion_vintner_archer_name" text="[Dorwinion] Vintner Archer" />
+    <string id="aom_dorwinion_vintner_bowman_name" text="[Dorwinion] Vintner Bowman" />
+    <string id="aom_southrhovanion_ford_guard_name" text="[South Rhovanion] Ford Guard" />
+    <string id="aom_southrhovanion_ford_spearman_name" text="[South Rhovanion] Ford Spearman" />
+    <string id="aom_southrhovanion_horse_archer_name" text="[South Rhovanion] Rhovanion Horse-archer" />
+    <string id="aom_southrhovanion_horse_lord_name" text="[South Rhovanion] Horse-lord of Rhovanion" />
+    <string id="aom_southrhovanion_horse_scout_name" text="[South Rhovanion] Plains Horse-scout" />
+    <string id="aom_southrhovanion_horse_thane_name" text="[South Rhovanion] Horse-thane" />
+    <string id="aom_southrhovanion_lancer_name" text="[South Rhovanion] Rhovanion Lancer" />
+    <string id="aom_southrhovanion_levy_name" text="[South Rhovanion] Plains Levy" />
+    <string id="aom_southrhovanion_militia_archer_name" text="[South Rhovanion] Militia Archer" />
+    <string id="aom_southrhovanion_militia_spearman_name" text="[South Rhovanion] Militia Spearman" />
+    <string id="aom_southrhovanion_militia_veteran_archer_name" text="[South Rhovanion] Veteran Militia Archer" />
+    <string id="aom_southrhovanion_militia_veteran_spearman_name" text="[South Rhovanion] Veteran Militia Spearman" />
+    <string id="aom_southrhovanion_northman_youth_merc_name" text="[South Rhovanion] Rhovanion Sellsword" />
+    <string id="aom_southrhovanion_northman_youth_name" text="[South Rhovanion] Northman Youth" />
+    <string id="aom_southrhovanion_plains_bowman_name" text="[South Rhovanion] Plains Bowman" />
+    <string id="aom_southrhovanion_rider_captain_name" text="[South Rhovanion] Rider-captain" />
+    <string id="aom_southrhovanion_rider_name" text="[South Rhovanion] Rhovanion Rider" />
+    <string id="aom_southrhovanion_southwood_archer_name" text="[South Rhovanion] Southwood Archer" />
+    <string id="aom_southrhovanion_southwood_marksman_name" text="[South Rhovanion] Southwood Marksman" />
+    <string id="aom_southrhovanion_spearman_name" text="[South Rhovanion] Plainsman Spearman" />
+    <string id="aom_southrhovanion_veteran_ford_guard_name" text="[South Rhovanion] Veteran Ford Guard" />
+    <string id="aom_southrhovanion_veteran_horse_archer_name" text="[South Rhovanion] Veteran Horse-archer" />
   </strings>
 </base>

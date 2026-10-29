@@ -102,6 +102,16 @@
     <Stock from="sturgia" kind="armour" />
     <Stock from="sturgia" kind="weapons" />
   </Culture>
+  <!-- Dorwinion (#1062), cut from Dale, takes Dale's pool as the two realms above do; South Rhovanion,
+       cut from Rohan, takes Rohan's. Neither source has a row: the auto-derived pool is what they draw on. -->
+  <Culture id="dorwinion" armour_from="sturgia">
+    <Stock from="sturgia" kind="armour" />
+    <Stock from="sturgia" kind="weapons" />
+  </Culture>
+  <Culture id="southrhovanion" armour_from="vlandia">
+    <Stock from="vlandia" kind="armour" />
+    <Stock from="vlandia" kind="weapons" />
+  </Culture>
   <!-- Gondor's own pool carries the Arnor pieces (tagged Culture.gondor); the crown stays out of it too. -->
   <Culture id="gondor">
     <Blacklist>

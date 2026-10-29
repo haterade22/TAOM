@@ -191,6 +191,7 @@ public class CareerChoicesIntegrationTests
                 "black_uruk_captain_t1_a_p2",
                 "black_uruk_captain_t2_a_p3",
                 "olog_hai_warchief_t1_a_p2",
+                "warden_of_wainwatch_t1_a_p4",   // South Rhovanion's clone of the Stangard pip: "+5% blunt resistance"
                 "watchman_of_stangard_t1_a_p4",
             },
             kinded,

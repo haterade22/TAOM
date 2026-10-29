@@ -28,7 +28,7 @@ CC = os.path.join(ROOT, "Main", "_Module", "ModuleData", "charactercreation")
 MENUS = ["parents", "youth", "adulthood", "education"]
 SRC = "gundabad"
 NEW = ["goblin", "mistymountainorcs", "bluecraig", "lindon", "arthedain", "cardolan", "rhudaur",
-       "eredluin", "anduinvale", "angaladh"]
+       "eredluin", "anduinvale", "angaladh", "dorwinion", "southrhovanion"]
 
 # Which culture each new one clones its narrative options from. The first two were carved out of
 # Gundabad; Blue Craig is carved out of Goblin-town and Lindon out of Rivendell, so they clone the
@@ -53,6 +53,10 @@ SRC_FOR = {
     # entry, their own AUTHORED text, because Dale's wording is Dale (the Lonely Mountain, Lake-town).
     "anduinvale": "sturgia",
     "angaladh": "sturgia",
+    # Dorwinion is cut from Dale and South Rhovanion from Rohan (culture id `vlandia`): the source's
+    # mechanics entry for entry, their own AUTHORED text (#1062).
+    "dorwinion": "sturgia",
+    "southrhovanion": "vlandia",
 }
 
 # Per culture, per menu: (text, description) in the SOURCE culture's entry order. A culture listed
@@ -410,6 +414,128 @@ AUTHORED = {
              "For months looted goods had been turning up in the back rooms of Woodmen-town. You traced the trade, found the men behind it and handed them to the king's wardens, keeping a little of the silver for your trouble."),
         ],
     },
+    # Dorwinion: the vintners and river-traders under King Ostric in Vineholm; the Redwater, the
+    # River Running and the Sea of Rhun, Seagate and Sunwall, Vinewatch and Eastmarch Hold; raiders
+    # out of the eastern steppe. No Dale person or place.
+    "dorwinion": {
+        "parents": [
+            ("Household of King Ostric",
+             "Your family served in the hall of King Ostric at Vineholm, riding in his household and carrying his word along the river roads wherever the vintage and the realm required it."),
+            ("Wine-merchants of Redwater",
+             "Your family kept a wine-house at Redwater, shipping casks down the river and across the Sea of Rhûn, and every cask paid its toll before it left the quay."),
+            ("Vineyard Farmers",
+             "Your family tended vines and orchards on the sunlit slopes above the Redwater, with a spear by the door, for raiders from the east came up the shore more often than the frost."),
+            ("Coopers and Vintners of Vineholm",
+             "Your family were coopers and press-wrights in Vineholm, building the barrels and presses the realm's wealth depends on, and forging the short swords of the town guard."),
+            ("Fowlers of the River Running",
+             "Your family hunted the reed-beds and river-woods along the River Running, taking fowl and deer for the markets of Seagate and keeping a sharp eye on the water."),
+            ("Dockside Drifters of Seagate",
+             "Your family lived among the quays of Seagate, working the boats for coin and learning that a harbour-master hears more than he says."),
+        ],
+        "youth": [
+            ("Rode with the vine-wardens of Vineholm.",
+             "You joined the mounted wardens who patrol the vineyards and the Redwater banks, learning to ride and fight with the spear along the narrow terraces."),
+            ("Stood watch on the walls of Seagate.",
+             "You served in the garrison of Seagate, shooting from the wall at raiders on the Sea of Rhûn and learning how a few bowmen can hold a harbour."),
+            ("Fought in the vineyard levy.",
+             "You trained with the levy of the vineyards, learning to hurl javelins from between the vines and to close with the sword when raiders broke through the rows."),
+            ("Tracked raiders along the Eastmarch.",
+             "You rode the dry country of the Eastmarch, east of the vines, tracking raiders and wolves from the saddle and learning to loose a bow at a gallop."),
+            ("Joined the spear-line of Vinewatch.",
+             "You took your place in the spear-line of Vinewatch, learning to stand firm with spear and shield against the riders who come up out of the east."),
+            ("Worked the wine barges of the Redwater.",
+             "You went up and down the Redwater and across the Sea of Rhûn with the wine barges, minding casks and learning how to pass a toll, a watchman and a doubtful buyer."),
+        ],
+        "education": [
+            ("Trained in the hall of King Ostric.",
+             "You grew up among the king's household at Vineholm, learning to ride in full gear and to swing heavy weapons under the old guardsmen. Every bruise was a lesson, and the songs of the hall taught you what you owe your lord."),
+            ("Clerked in the wine-houses of Redwater.",
+             "You learned to keep tallies and charm buyers in the cellars of Redwater, where every cask is sampled and every price argued, and to tell a fair bargain from a quick tongue."),
+            ("Worked the terraces above the Redwater.",
+             "You grew up hauling baskets and driving carts on the vine terraces, building a strong back and sound legs. When the levy was called you were handed a spear and taught to hold a line."),
+            ("Apprenticed to a cooper of Vineholm.",
+             "You learned your trade in the cooperages of Vineholm, bending staves and hooping barrels under a master who judged every join by its sound. By the time you were grown your hands knew the work better than your head."),
+            ("Hunted the reed-beds of the River Running.",
+             "You ranged the marshes and river-woods with the fowlers, learning to move without sound and to loose a bow at a shadow among the reeds."),
+            ("Scraped by on the quays of Seagate.",
+             "You grew up among the dockhands and petty thieves of Seagate, running errands for coin and selling what fell off the barges. The harbour taught you quick hands, a quicker tongue and when to vanish."),
+        ],
+        "adulthood": [
+            ("You held the gate of Sunwall against a host from the east.",
+             "When a war-band came out of the eastern steppe and rode at the walls of Sunwall, you held the gate with the king's guard until the riders of Vineholm came round their flank. Your name was spoken in the hall that night."),
+            ("You opened the first free market on the Sea of Rhûn.",
+             "No merchant wanted to go first with raiders on every shore. You sailed, settled the tolls and brought the vintners of Redwater and the buyers of the east to one table. The king's steward does not forget who filled the cellars."),
+            ("You saved the vintage of Redwater from an early frost.",
+             "When frost came a month early to the terraces, you gathered the pickers and brought the grapes in within three days. The villages remember."),
+            ("You built the great press of Vineholm.",
+             "The vintners commissioned a new press for the king's cellar. You designed it and cut its beams yourself, and when the first juice ran the cellarmen named it after you."),
+            ("You guided families out of the burning Eastmarch.",
+             "When raiders fired the farms of the Eastmarch and the families fled west, you led them along dry ravines no rider had scouted, and lost not one child. The king gave you his hand."),
+            ("You exposed a smuggling ring on the quays of Seagate.",
+             "For months wine had been leaving the king's warehouses without paying a toll. You traced the cargo, found the harbour official behind it and handed him to the wardens, keeping a little of the silver for your trouble."),
+        ],
+    },
+    # South Rhovanion: the Northmen horse-lords of the plains south of Mirkwood under King Vidumar
+    # in Vidugard; Horsemead, Southwood, Westmark, Wainwatch and the Northmark; the Wainriders of
+    # the east, the southern eaves of Mirkwood, Dol Guldur. No Rohan person or place.
+    "southrhovanion": {
+        "parents": [
+            ("Retainers of King Vidumar",
+             "Your family served in the hall of King Vidumar at Vidugard, riding in his household and carrying his spear wherever the plains required it."),
+            ("Horse-traders of Southwood",
+             "Your family were horse-traders in Southwood, bringing herds to the fairs and selling mounts to every lord from the forest to the eastern sea."),
+            ("Freeholders of the Northmark",
+             "Your family were free farmers of the Northmark, raising horses and barley on the long grass-lands, with a spear by the door, for wolves and Wainrider scouts came over the plain more often than the rain."),
+            ("Smiths of Horsemead",
+             "Your family were smiths at Horsemead, shoeing the king's herds and forging the bits, spurs and blades of his riders."),
+            ("Hunters of the Southern Eaves",
+             "Your family hunted along the southern eaves of Mirkwood, skilled with the bow and watchful of whatever crept out from under the trees."),
+            ("Wanderers of the Plains",
+             "Your family drifted across the open plains south of the forest, following the herds, taking what work they could find and sometimes what they could not."),
+        ],
+        "youth": [
+            ("Rode with the household riders of Vidugard.",
+             "You proved your skill in the saddle among the king's household riders, learning to charge with the lance and to fight with spear and sword from horseback."),
+            ("Stood watch on the wall of Wainwatch.",
+             "You served in the garrison of Wainwatch, shooting from its wall and learning tactics and discipline from the captains who watch the eastern plain."),
+            ("Joined the skirmishers of Westmark.",
+             "You joined the skirmishers of Westmark, learning to throw javelins and to fight with the sword on foot beside the riders."),
+            ("Rode with the scouts of the open plain.",
+             "You ranged far across the grass with the scouts, watching for Wainrider smoke and wolf-packs and learning to shoot from the saddle."),
+            ("Stood among the spearmen of the Northmark.",
+             "As a spearman of the Northmark you learned to hold the line with spear and shield against a charge."),
+            ("Followed the herds with the wagon-folk.",
+             "Rather than take up arms, you travelled with the herd-wagons and the camp-followers, learning to live by wit, trade and a quick hand."),
+        ],
+        "education": [
+            ("Rode in training with the household of King Vidumar.",
+             "You spent your youth learning the art of mounted war among the king's household at Vidugard, where the old riders taught you to keep your seat, your spear and your temper through a long day in the saddle."),
+            ("Traded horses at the fairs of Southwood.",
+             "You carried prices and tallies between the horse-fairs of Southwood and the lesser holds of the plain, learning to judge a mount at a glance and a buyer in a breath."),
+            ("Raised horses and stood levy on the Northmark.",
+             "You worked your family's pastures on the Northmark, learning to handle horses almost before you could walk. When the levy was called you took a spear and a place in the line."),
+            ("Apprenticed to the smiths of Horsemead.",
+             "You learned to shape bits, spurs and blades in the forge-houses of Horsemead, under a master who judged a sword by how it sat in the hand of a rider."),
+            ("Hunted the southern eaves and watched the horizon.",
+             "You ranged widely along the forest edge with your bow, hunting game and keeping a sharp eye on both the trees and the open grass."),
+            ("Drifted across the plains with no fixed allegiance.",
+             "You wandered the open grass without clan or hold to call your own, learning to live by wit and trade, and to read a stranger before he reached your fire."),
+        ],
+        "adulthood": [
+            ("You rode in the charge that broke a Wainrider host before Wainwatch.",
+             "When a Wainrider host came up the eastern plain and the line wavered at its centre, you rode into the charge and held your place until the host broke. The riders of Vidugard still speak of it."),
+            ("You made the best horse-fair prices Southwood had seen in five years.",
+             "The buyers from the south had come expecting to set the price as they always did. You rallied the breeders, held out together, and the herds sold at a price the fair still remembers."),
+            ("You broke a Wainrider raid that struck the Northmark in early autumn.",
+             "The raiders had timed their strike for the harvest, when the farmsteads lay open. You gathered the levy, met them on foot at the stream-crossing and held them there until the riders came."),
+            ("You forged a sword the king chose for his household guard.",
+             "The commission came from the king's stables: a blade that could be carried at the saddle and drawn without a pause. When Vidumar chose your pattern for his own riders, your name was made."),
+            ("You tracked the scouts mapping the approaches to Westmark.",
+             "You noticed the signs of careful watching: grass pressed back upright, stones turned, a fire dug over. You followed the trail south and brought the report back in time for the riders to act."),
+            ("You exposed a spy working inside Vidugard.",
+             "The spy had been in the town for two years, passing word of the herds and the garrison to the east. You watched him until you knew the pattern, and delivered him to the king's wardens."),
+        ],
+    },
 }
 
 # Words that must not survive the remap, per clone source. A leftover here is the defect the
@@ -430,6 +556,13 @@ FORBIDDEN_FOR = {
     # king or its neighbours.
     "sturgia": ("Dale", "Bard", "Esgaroth", "Lake-town", "Lonely Mountain", "Girion", "Erebor",
                 "King Brand", "Long Lake", "Smaug"),
+    # Rohan's places and people: South Rhovanion is cut from it (culture id `vlandia`) and must not
+    # borrow its hall-city, its kings or its fields.
+    "vlandia": ("Rohan", "Rohirrim", "Edoras", "Meduseld", "Théoden", "Éomer", "Éowyn", "Helm's Deep",
+                "Westfold", "Eastfold", "Eorl", "Riddermark", "Aldburg", "Isengard", "Isen", "Saruman",
+                "Dunlending", "Wold", "Theoden", "Eomer", "Eowyn", "Théodred", "Theodred", "Helm Hammerhand",
+                "Harrowdale", "Dunharrow", "Snowbourn", "Entwash", "Gap of Rohan", "Fenmark", "Folde",
+                "the Mark"),
 }
 
 # Per-culture display-text remap of the gundabad flavor (longest phrase FIRST so substrings don't
@@ -492,6 +625,8 @@ SUBS = {
     "eredluin": [],  # AUTHORED
     "anduinvale": [],  # AUTHORED
     "angaladh": [],  # AUTHORED
+    "dorwinion": [],  # AUTHORED (#1062)
+    "southrhovanion": [],  # AUTHORED (#1062)
 }
 
 CC_STRINGS = os.path.join(os.path.dirname(CC), "taom_cc_strings.xml")

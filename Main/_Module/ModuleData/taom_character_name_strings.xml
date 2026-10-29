@@ -589,6 +589,82 @@
 	<string id="aom_dn_weaponsmith" text="{=aom_dn_weaponsmith}Weaponsmith" />
 	<string id="aom_dolguldur_lord_1" text="{=aom_dolguldur_lord_1}Bold Dol Guldur captain" />
 	<string id="aom_dolguldur_lord_2" text="{=aom_dolguldur_lord_2}Cautious Dol Guldur captain" />
+	<string id="aom_dor_arena" text="{=aom_dor_arena}Arena Master" />
+	<string id="aom_dor_armed_trader" text="{=aom_dor_armed_trader}Dorwinion Armed Trader" />
+	<string id="aom_dor_armorer" text="{=aom_dor_armorer}Armorer" />
+	<string id="aom_dor_barber" text="{=aom_dor_barber}Barber" />
+	<string id="aom_dor_beggar" text="{=aom_dor_beggar}Beggar" />
+	<string id="aom_dor_blacksmith" text="{=aom_dor_blacksmith}Blacksmith" />
+	<string id="aom_dor_caravan_guard" text="{=aom_dor_caravan_guard}Dorwinion Caravan Guard" />
+	<string id="aom_dor_caravan_master" text="{=aom_dor_caravan_master}Dorwinion Caravan Master" />
+	<string id="aom_dor_dancer" text="{=aom_dor_dancer}Dancer" />
+	<string id="aom_dor_edu_1" text="{=aom_dor_edu_1}Dorwinion Youth" />
+	<string id="aom_dor_edu_2" text="{=aom_dor_edu_2}Dorwinion Youth" />
+	<string id="aom_dor_edu_3" text="{=aom_dor_edu_3}Dorwinion Youth" />
+	<string id="aom_dor_edu_4" text="{=aom_dor_edu_4}Dorwinion Youth" />
+	<string id="aom_dor_edu_5" text="{=aom_dor_edu_5}Dorwinion Youth" />
+	<string id="aom_dor_edu_6" text="{=aom_dor_edu_6}Dorwinion Youth" />
+	<string id="aom_dor_female_beggar" text="{=aom_dor_female_beggar}Beggar" />
+	<string id="aom_dor_gamehost" text="{=aom_dor_gamehost}Game Host" />
+	<string id="aom_dor_gang_bodyguard" text="{=aom_dor_gang_bodyguard}Gang Bodyguard" />
+	<string id="aom_dor_gear_dummy" text="{=aom_dor_gear_dummy}Gear Dummy" />
+	<string id="aom_dor_guard" text="{=aom_dor_guard}Guard" />
+	<string id="aom_dor_headman_1" text="{=aom_dor_headman_1}Steadfast Dorwinion headman" />
+	<string id="aom_dor_headman_2" text="{=aom_dor_headman_2}Conservative Dorwinion headman" />
+	<string id="aom_dor_headman_3" text="{=aom_dor_headman_3}Shrewd Dorwinion headman" />
+	<string id="aom_dor_horse_merchant" text="{=aom_dor_horse_merchant}Horse Merchant" />
+	<string id="aom_dor_merchant" text="{=aom_dor_merchant}Trader" />
+	<string id="aom_dor_musician" text="{=aom_dor_musician}Musician" />
+	<string id="aom_dor_notable_0" text="{=aom_dor_notable_0}Cautious Dorwinion trader" />
+	<string id="aom_dor_notable_0b" text="{=aom_dor_notable_0b}Shrewd riverside merchant" />
+	<string id="aom_dor_notable_1" text="{=aom_dor_notable_1}Ruthless Dorwinion fur trader" />
+	<string id="aom_dor_notable_10" text="{=aom_dor_notable_10}Sardonic Dorwinion outlaw" />
+	<string id="aom_dor_notable_11" text="{=aom_dor_notable_11}Intimidating Dorwinion enforcer" />
+	<string id="aom_dor_notable_12" text="{=aom_dor_notable_12}Cunning Dorwinion smuggler" />
+	<string id="aom_dor_notable_13" text="{=aom_dor_notable_13}Menacing riverside schemer" />
+	<string id="aom_dor_notable_1b" text="{=aom_dor_notable_1b}Cold Dorwinion merchant" />
+	<string id="aom_dor_notable_2" text="{=aom_dor_notable_2}Dorwinion gem dealer" />
+	<string id="aom_dor_notable_21" text="{=aom_dor_notable_21}Weathered Dorwinion landowner" />
+	<string id="aom_dor_notable_22" text="{=aom_dor_notable_22}Agreeable Dorwinion elder" />
+	<string id="aom_dor_notable_2b" text="{=aom_dor_notable_2b}Wise Dorwinion merchant" />
+	<string id="aom_dor_notable_3" text="{=aom_dor_notable_3}Self-made Dorwinion merchant" />
+	<string id="aom_dor_notable_3b" text="{=aom_dor_notable_3b}Jovial riverside merchant" />
+	<string id="aom_dor_notable_4" text="{=aom_dor_notable_4}Shrewd Dorwinion merchant" />
+	<string id="aom_dor_notable_4b" text="{=aom_dor_notable_4b}Devious Dorwinion merchant" />
+	<string id="aom_dor_notable_5" text="{=aom_dor_notable_5}Devout Dorwinion elder" />
+	<string id="aom_dor_notable_6" text="{=aom_dor_notable_6}Stern Dorwinion lorekeeper" />
+	<string id="aom_dor_notable_7" text="{=aom_dor_notable_7}Dorwinion keeper of traditions" />
+	<string id="aom_dor_notable_8" text="{=aom_dor_notable_8}Skilled Dorwinion smith" />
+	<string id="aom_dor_notable_9" text="{=aom_dor_notable_9}Gifted Dorwinion craftsman" />
+	<string id="aom_dor_notable_gl1" text="{=aom_dor_notable_gl1}Bold riverside ringleader" />
+	<string id="aom_dor_notable_gl4" text="{=aom_dor_notable_gl4}Ruthless Dorwinion thug" />
+	<string id="aom_dor_practice_1" text="{=aom_dor_practice_1}Practice Fighter" />
+	<string id="aom_dor_practice_2" text="{=aom_dor_practice_2}Practice Fighter" />
+	<string id="aom_dor_practice_3" text="{=aom_dor_practice_3}Practice Fighter" />
+	<string id="aom_dor_practice_dummy" text="{=aom_dor_practice_dummy}Practice Dummy" />
+	<string id="aom_dor_prison_guard" text="{=aom_dor_prison_guard}Prison Guard" />
+	<string id="aom_dor_ransom_broker" text="{=aom_dor_ransom_broker}Ransom Broker" />
+	<string id="aom_dor_shop_worker" text="{=aom_dor_shop_worker}Shop Worker" />
+	<string id="aom_dor_tavern_wench" text="{=aom_dor_tavern_wench}Tavern Wench" />
+	<string id="aom_dor_tavernkeeper" text="{=aom_dor_tavernkeeper}Tavern Keeper" />
+	<string id="aom_dor_townsman" text="{=aom_dor_townsman}Townsman" />
+	<string id="aom_dor_townsman_child" text="{=aom_dor_townsman_child}Townsman" />
+	<string id="aom_dor_townsman_infant" text="{=aom_dor_townsman_infant}Townsman" />
+	<string id="aom_dor_townsman_teen" text="{=aom_dor_townsman_teen}Townsman" />
+	<string id="aom_dor_townswoman" text="{=aom_dor_townswoman}Townswoman" />
+	<string id="aom_dor_townswoman_child" text="{=aom_dor_townswoman_child}Townswoman" />
+	<string id="aom_dor_townswoman_infant" text="{=aom_dor_townswoman_infant}Townswoman" />
+	<string id="aom_dor_townswoman_teen" text="{=aom_dor_townswoman_teen}Townswoman" />
+	<string id="aom_dor_vet_caravan_guard" text="{=aom_dor_vet_caravan_guard}Dorwinion Veteran Caravan Guard" />
+	<string id="aom_dor_village_woman" text="{=aom_dor_village_woman}Village Woman" />
+	<string id="aom_dor_village_woman_child" text="{=aom_dor_village_woman_child}Village Child" />
+	<string id="aom_dor_village_woman_teen" text="{=aom_dor_village_woman_teen}Village Teenager" />
+	<string id="aom_dor_villager" text="{=aom_dor_villager}Villager" />
+	<string id="aom_dor_villager_child" text="{=aom_dor_villager_child}Village Child" />
+	<string id="aom_dor_villager_teen" text="{=aom_dor_villager_teen}Village Teenager" />
+	<string id="aom_dor_weaponsmith" text="{=aom_dor_weaponsmith}Weaponsmith" />
+	<string id="aom_dorwinion_lord_1" text="{=aom_dorwinion_lord_1}Bold Dorwinion lord" />
+	<string id="aom_dorwinion_lord_2" text="{=aom_dorwinion_lord_2}Cautious Dorwinion lord" />
 	<string id="aom_elu_arena" text="{=aom_elu_arena}Arena Master" />
 	<string id="aom_elu_armed_trader" text="{=aom_elu_armed_trader}Ered Luin Armed Trader" />
 	<string id="aom_elu_armorer" text="{=aom_elu_armorer}Armorer" />
@@ -1705,6 +1781,8 @@
 	<string id="aom_shaghana_lord_archer_name" text="{=aom_shaghana_lord_archer_name}Lord of Shaghana (Archer)" />
 	<string id="aom_shaghana_lord_cavalry_name" text="{=aom_shaghana_lord_cavalry_name}Lord of Shaghana (Cavalry)" />
 	<string id="aom_shaghana_lord_infantry_name" text="{=aom_shaghana_lord_infantry_name}Lord of Shaghana (Infantry)" />
+	<string id="aom_southrhovanion_lord_1" text="{=aom_southrhovanion_lord_1}Bold Rhovanion lord" />
+	<string id="aom_southrhovanion_lord_2" text="{=aom_southrhovanion_lord_2}Cautious Rhovanion lord" />
 	<string id="aom_spc_wanderer_ab_0_name" text="{=aom_spc_wanderer_ab_0_name}{FIRSTNAME} Phaxar-dal" />
 	<string id="aom_spc_wanderer_ab_1_name" text="{=aom_spc_wanderer_ab_1_name}{FIRSTNAME} Hoshed-van" />
 	<string id="aom_spc_wanderer_ab_2_name" text="{=aom_spc_wanderer_ab_2_name}{FIRSTNAME} Vasnar-tal" />
@@ -1791,6 +1869,16 @@
 	<string id="aom_spc_wanderer_dolguldur_7_name" text="{=aom_spc_wanderer_dolguldur_7_name}{FIRSTNAME} Lugdush" />
 	<string id="aom_spc_wanderer_dolguldur_8_name" text="{=aom_spc_wanderer_dolguldur_8_name}{FIRSTNAME} Krimpash" />
 	<string id="aom_spc_wanderer_dolguldur_9_name" text="{=aom_spc_wanderer_dolguldur_9_name}{FIRSTNAME} Gorbag" />
+	<string id="aom_spc_wanderer_dorwinion_0_name" text="{=aom_spc_wanderer_dorwinion_0_name}{FIRSTNAME} Vinling" />
+	<string id="aom_spc_wanderer_dorwinion_1_name" text="{=aom_spc_wanderer_dorwinion_1_name}{FIRSTNAME} Ermansson" />
+	<string id="aom_spc_wanderer_dorwinion_2_name" text="{=aom_spc_wanderer_dorwinion_2_name}{FIRSTNAME} Hallwin" />
+	<string id="aom_spc_wanderer_dorwinion_3_name" text="{=aom_spc_wanderer_dorwinion_3_name}{FIRSTNAME} Carnenling" />
+	<string id="aom_spc_wanderer_dorwinion_4_name" text="{=aom_spc_wanderer_dorwinion_4_name}{FIRSTNAME} Vinecroft" />
+	<string id="aom_spc_wanderer_dorwinion_5_name" text="{=aom_spc_wanderer_dorwinion_5_name}{FIRSTNAME} Longshoreson" />
+	<string id="aom_spc_wanderer_dorwinion_6_name" text="{=aom_spc_wanderer_dorwinion_6_name}{FIRSTNAME} Redwyn" />
+	<string id="aom_spc_wanderer_dorwinion_7_name" text="{=aom_spc_wanderer_dorwinion_7_name}{FIRSTNAME} Vinehild" />
+	<string id="aom_spc_wanderer_dorwinion_8_name" text="{=aom_spc_wanderer_dorwinion_8_name}{FIRSTNAME} Sunfell" />
+	<string id="aom_spc_wanderer_dorwinion_9_name" text="{=aom_spc_wanderer_dorwinion_9_name}{FIRSTNAME} Fellrider" />
 	<string id="aom_spc_wanderer_dunland_0_name" text="{=aom_spc_wanderer_dunland_0_name}{FIRSTNAME} Breghorn" />
 	<string id="aom_spc_wanderer_dunland_1_name" text="{=aom_spc_wanderer_dunland_1_name}{FIRSTNAME} Cerdic" />
 	<string id="aom_spc_wanderer_dunland_2_name" text="{=aom_spc_wanderer_dunland_2_name}{FIRSTNAME} Dunhere" />
@@ -1996,6 +2084,16 @@
 	<string id="aom_spc_wanderer_sh_7_name" text="{=aom_spc_wanderer_sh_7_name}{FIRSTNAME} ibn-Banûg" />
 	<string id="aom_spc_wanderer_sh_8_name" text="{=aom_spc_wanderer_sh_8_name}{FIRSTNAME} al-Acam" />
 	<string id="aom_spc_wanderer_sh_9_name" text="{=aom_spc_wanderer_sh_9_name}{FIRSTNAME} ibn-Shakar" />
+	<string id="aom_spc_wanderer_southrhovanion_0_name" text="{=aom_spc_wanderer_southrhovanion_0_name}{FIRSTNAME} Marhaling" />
+	<string id="aom_spc_wanderer_southrhovanion_1_name" text="{=aom_spc_wanderer_southrhovanion_1_name}{FIRSTNAME} Vidurikson" />
+	<string id="aom_spc_wanderer_southrhovanion_2_name" text="{=aom_spc_wanderer_southrhovanion_2_name}{FIRSTNAME} Gaisaring" />
+	<string id="aom_spc_wanderer_southrhovanion_3_name" text="{=aom_spc_wanderer_southrhovanion_3_name}{FIRSTNAME} Hrodulfsson" />
+	<string id="aom_spc_wanderer_southrhovanion_4_name" text="{=aom_spc_wanderer_southrhovanion_4_name}{FIRSTNAME} Ermanstaning" />
+	<string id="aom_spc_wanderer_southrhovanion_5_name" text="{=aom_spc_wanderer_southrhovanion_5_name}{FIRSTNAME} Harjabranding" />
+	<string id="aom_spc_wanderer_southrhovanion_6_name" text="{=aom_spc_wanderer_southrhovanion_6_name}{FIRSTNAME} Guntharsson" />
+	<string id="aom_spc_wanderer_southrhovanion_7_name" text="{=aom_spc_wanderer_southrhovanion_7_name}{FIRSTNAME} Wainbane" />
+	<string id="aom_spc_wanderer_southrhovanion_8_name" text="{=aom_spc_wanderer_southrhovanion_8_name}{FIRSTNAME} Balthingar" />
+	<string id="aom_spc_wanderer_southrhovanion_9_name" text="{=aom_spc_wanderer_southrhovanion_9_name}{FIRSTNAME} Steedheart" />
 	<string id="aom_spc_wanderer_umbar_0_name" text="{=aom_spc_wanderer_umbar_0_name}{FIRSTNAME} Castamir" />
 	<string id="aom_spc_wanderer_umbar_1_name" text="{=aom_spc_wanderer_umbar_1_name}{FIRSTNAME} Sangahyando" />
 	<string id="aom_spc_wanderer_umbar_2_name" text="{=aom_spc_wanderer_umbar_2_name}{FIRSTNAME} Angamaitë" />
@@ -2006,6 +2104,74 @@
 	<string id="aom_spc_wanderer_umbar_7_name" text="{=aom_spc_wanderer_umbar_7_name}{FIRSTNAME} Falastur" />
 	<string id="aom_spc_wanderer_umbar_8_name" text="{=aom_spc_wanderer_umbar_8_name}{FIRSTNAME} Hyarmendacil" />
 	<string id="aom_spc_wanderer_umbar_9_name" text="{=aom_spc_wanderer_umbar_9_name}{FIRSTNAME} Ciryandil" />
+	<string id="aom_srh_armed_trader" text="{=aom_srh_armed_trader}Armed Trader" />
+	<string id="aom_srh_armorer" text="{=aom_srh_armorer}Armorer" />
+	<string id="aom_srh_barber" text="{=aom_srh_barber}Barber" />
+	<string id="aom_srh_beggar" text="{=aom_srh_beggar}Beggar" />
+	<string id="aom_srh_blacksmith" text="{=aom_srh_blacksmith}Blacksmith" />
+	<string id="aom_srh_caravan_guard" text="{=aom_srh_caravan_guard}Caravan Guard" />
+	<string id="aom_srh_caravan_master" text="{=aom_srh_caravan_master}Caravan Master" />
+	<string id="aom_srh_female_beggar" text="{=aom_srh_female_beggar}Beggar" />
+	<string id="aom_srh_female_dancer" text="{=aom_srh_female_dancer}Dancer" />
+	<string id="aom_srh_gangleader_bg" text="{=aom_srh_gangleader_bg}Bodyguard" />
+	<string id="aom_srh_gear_dummy" text="{=aom_srh_gear_dummy}Gear Dummy" />
+	<string id="aom_srh_gear_practice_dummy" text="{=aom_srh_gear_practice_dummy}Gear Practice Dummy" />
+	<string id="aom_srh_guard" text="{=aom_srh_guard}Guard" />
+	<string id="aom_srh_headman_1" text="{=aom_srh_headman_1}Steadfast Rhovanion headman" />
+	<string id="aom_srh_headman_2" text="{=aom_srh_headman_2}Cautious Rhovanion headman" />
+	<string id="aom_srh_headman_3" text="{=aom_srh_headman_3}Cunning horse-lord headman" />
+	<string id="aom_srh_horse_merchant" text="{=aom_srh_horse_merchant}Horse Trader" />
+	<string id="aom_srh_merchant" text="{=aom_srh_merchant}Merchant" />
+	<string id="aom_srh_musician" text="{=aom_srh_musician}Musician" />
+	<string id="aom_srh_notable_0" text="{=aom_srh_notable_0}Cautious Rhovanion trader" />
+	<string id="aom_srh_notable_0b" text="{=aom_srh_notable_0b}Rhovanion vintner" />
+	<string id="aom_srh_notable_1" text="{=aom_srh_notable_1}Proud horse-lord merchant" />
+	<string id="aom_srh_notable_10" text="{=aom_srh_notable_10}Mocking Rhovanion gang boss" />
+	<string id="aom_srh_notable_11" text="{=aom_srh_notable_11}Brutal Rhovanion enforcer" />
+	<string id="aom_srh_notable_12" text="{=aom_srh_notable_12}Sly Rhovanion smuggler" />
+	<string id="aom_srh_notable_13" text="{=aom_srh_notable_13}Menacing Rhovanion gang leader" />
+	<string id="aom_srh_notable_1b" text="{=aom_srh_notable_1b}Cold Rhovanion dealer" />
+	<string id="aom_srh_notable_2" text="{=aom_srh_notable_2}Quiet Rhovanion provisioner" />
+	<string id="aom_srh_notable_21" text="{=aom_srh_notable_21}Weathered Rhovanion landowner" />
+	<string id="aom_srh_notable_22" text="{=aom_srh_notable_22}Respected Rhovanion elder" />
+	<string id="aom_srh_notable_2b" text="{=aom_srh_notable_2b}Cautious Rhovanion grain trader" />
+	<string id="aom_srh_notable_3" text="{=aom_srh_notable_3}Self-made Rhovanion merchant" />
+	<string id="aom_srh_notable_3b" text="{=aom_srh_notable_3b}Jovial Rhovanion merchant" />
+	<string id="aom_srh_notable_4" text="{=aom_srh_notable_4}Shrewd Rhovanion trader" />
+	<string id="aom_srh_notable_4b" text="{=aom_srh_notable_4b}Devious horse-lord merchant" />
+	<string id="aom_srh_notable_5" text="{=aom_srh_notable_5}Devout Rhovanion elder" />
+	<string id="aom_srh_notable_6" text="{=aom_srh_notable_6}Stern Rhovanion wise-man" />
+	<string id="aom_srh_notable_7" text="{=aom_srh_notable_7}Keeper of Rhovanion traditions" />
+	<string id="aom_srh_notable_8" text="{=aom_srh_notable_8}Skilled Rhovanion smith" />
+	<string id="aom_srh_notable_9" text="{=aom_srh_notable_9}Gifted Rhovanion craftsman" />
+	<string id="aom_srh_notable_gl1" text="{=aom_srh_notable_gl1}Bold Rhovanion ringleader" />
+	<string id="aom_srh_notable_gl4" text="{=aom_srh_notable_gl4}Savage horse-lord thug" />
+	<string id="aom_srh_prison_guard" text="{=aom_srh_prison_guard}Prison Guard" />
+	<string id="aom_srh_ransom_broker" text="{=aom_srh_ransom_broker}Ransom Broker" />
+	<string id="aom_srh_shop_worker" text="{=aom_srh_shop_worker}Shop Worker" />
+	<string id="aom_srh_tavern_wench" text="{=aom_srh_tavern_wench}Tavern Maid" />
+	<string id="aom_srh_taverngamehost" text="{=aom_srh_taverngamehost}Tavern Game Host" />
+	<string id="aom_srh_tavernkeeper" text="{=aom_srh_tavernkeeper}Tavernkeeper" />
+	<string id="aom_srh_tournament_master" text="{=aom_srh_tournament_master}Tournament Master" />
+	<string id="aom_srh_townsman" text="{=aom_srh_townsman}Townsman" />
+	<string id="aom_srh_townsman_child" text="{=aom_srh_townsman_child}Townsman" />
+	<string id="aom_srh_townsman_infant" text="{=aom_srh_townsman_infant}Townsman" />
+	<string id="aom_srh_townsman_teen" text="{=aom_srh_townsman_teen}Townsman" />
+	<string id="aom_srh_townswoman" text="{=aom_srh_townswoman}Townswoman" />
+	<string id="aom_srh_townswoman_child" text="{=aom_srh_townswoman_child}Townswoman" />
+	<string id="aom_srh_townswoman_infant" text="{=aom_srh_townswoman_infant}Townswoman" />
+	<string id="aom_srh_townswoman_teen" text="{=aom_srh_townswoman_teen}Townswoman" />
+	<string id="aom_srh_vet_caravan_guard" text="{=aom_srh_vet_caravan_guard}Veteran Caravan Guard" />
+	<string id="aom_srh_village_woman" text="{=aom_srh_village_woman}Village Woman" />
+	<string id="aom_srh_village_woman_child" text="{=aom_srh_village_woman_child}Village Girl" />
+	<string id="aom_srh_village_woman_teen" text="{=aom_srh_village_woman_teen}Village Girl" />
+	<string id="aom_srh_villager" text="{=aom_srh_villager}Villager" />
+	<string id="aom_srh_villager_child" text="{=aom_srh_villager_child}Villager" />
+	<string id="aom_srh_villager_teen" text="{=aom_srh_villager_teen}Villager" />
+	<string id="aom_srh_weaponsmith" text="{=aom_srh_weaponsmith}Weaponsmith" />
+	<string id="aom_srh_wpractice_1" text="{=aom_srh_wpractice_1}Weapon Practice Dummy Stage 1" />
+	<string id="aom_srh_wpractice_2" text="{=aom_srh_wpractice_2}Weapon Practice Dummy Stage 2" />
+	<string id="aom_srh_wpractice_3" text="{=aom_srh_wpractice_3}Weapon Practice Dummy Stage 3" />
 	<string id="aom_um_headman_1" text="{=aom_um_headman_1}Rebellious Umbar headman" />
 	<string id="aom_um_headman_2" text="{=aom_um_headman_2}Conservative Umbar headman" />
 	<string id="aom_um_headman_3" text="{=aom_um_headman_3}Devious Umbar headman" />

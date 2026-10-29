@@ -427,6 +427,22 @@
 	<string id="aom_lord_D9_6_name" text="{=aom_lord_D9_6_name}Morgza" />
 	<string id="aom_lord_D9_7_name" text="{=aom_lord_D9_7_name}Skâlna" />
 	<string id="aom_lord_D9_8_name" text="{=aom_lord_D9_8_name}Brûzha" />
+	<string id="aom_lord_DO1_1_name" text="{=aom_lord_DO1_1_name}Ostric" />
+	<string id="aom_lord_DO1_2_name" text="{=aom_lord_DO1_2_name}Halric" />
+	<string id="aom_lord_DO1_3_name" text="{=aom_lord_DO1_3_name}Aldith" />
+	<string id="aom_lord_DO1_4_name" text="{=aom_lord_DO1_4_name}Berta" />
+	<string id="aom_lord_DO2_1_name" text="{=aom_lord_DO2_1_name}Torvin" />
+	<string id="aom_lord_DO2_2_name" text="{=aom_lord_DO2_2_name}Ostmar" />
+	<string id="aom_lord_DO2_3_name" text="{=aom_lord_DO2_3_name}Gisela" />
+	<string id="aom_lord_DO2_4_name" text="{=aom_lord_DO2_4_name}Hilde" />
+	<string id="aom_lord_DO3_1_name" text="{=aom_lord_DO3_1_name}Gerulf" />
+	<string id="aom_lord_DO3_2_name" text="{=aom_lord_DO3_2_name}Aldwin" />
+	<string id="aom_lord_DO3_3_name" text="{=aom_lord_DO3_3_name}Irmgard" />
+	<string id="aom_lord_DO3_4_name" text="{=aom_lord_DO3_4_name}Liutgard" />
+	<string id="aom_lord_DO4_1_name" text="{=aom_lord_DO4_1_name}Berengar" />
+	<string id="aom_lord_DO4_2_name" text="{=aom_lord_DO4_2_name}Raedric" />
+	<string id="aom_lord_DO4_3_name" text="{=aom_lord_DO4_3_name}Mathilde" />
+	<string id="aom_lord_DO4_4_name" text="{=aom_lord_DO4_4_name}Oda" />
 	<string id="aom_lord_E1_11_name" text="{=aom_lord_E1_11_name}Thris" />
 	<string id="aom_lord_E1_1_name" text="{=aom_lord_E1_1_name}Dáin II Ironfoot" />
 	<string id="aom_lord_E1_2_name" text="{=aom_lord_E1_2_name}Thorin Stonehelm" />
@@ -1091,6 +1107,22 @@
 	<string id="aom_lord_SH9_7_name" text="{=aom_lord_SH9_7_name}Zarrîn" />
 	<string id="aom_lord_SH9_8_name" text="{=aom_lord_SH9_8_name}Anâhita" />
 	<string id="aom_lord_SH9_9_name" text="{=aom_lord_SH9_9_name}Bahâra" />
+	<string id="aom_lord_SRH1_1_name" text="{=aom_lord_SRH1_1_name}Vidumar" />
+	<string id="aom_lord_SRH1_2_name" text="{=aom_lord_SRH1_2_name}Marhwin" />
+	<string id="aom_lord_SRH1_3_name" text="{=aom_lord_SRH1_3_name}Amalaberga" />
+	<string id="aom_lord_SRH1_4_name" text="{=aom_lord_SRH1_4_name}Hildegund" />
+	<string id="aom_lord_SRH2_1_name" text="{=aom_lord_SRH2_1_name}Thrasaric" />
+	<string id="aom_lord_SRH2_2_name" text="{=aom_lord_SRH2_2_name}Videric" />
+	<string id="aom_lord_SRH2_3_name" text="{=aom_lord_SRH2_3_name}Swanhilda" />
+	<string id="aom_lord_SRH2_4_name" text="{=aom_lord_SRH2_4_name}Theodegotha" />
+	<string id="aom_lord_SRH3_1_name" text="{=aom_lord_SRH3_1_name}Beremud" />
+	<string id="aom_lord_SRH3_2_name" text="{=aom_lord_SRH3_2_name}Gundric" />
+	<string id="aom_lord_SRH3_3_name" text="{=aom_lord_SRH3_3_name}Rotrudis" />
+	<string id="aom_lord_SRH3_4_name" text="{=aom_lord_SRH3_4_name}Brunhildis" />
+	<string id="aom_lord_SRH4_1_name" text="{=aom_lord_SRH4_1_name}Hrodulf" />
+	<string id="aom_lord_SRH4_2_name" text="{=aom_lord_SRH4_2_name}Sigiric" />
+	<string id="aom_lord_SRH4_3_name" text="{=aom_lord_SRH4_3_name}Ansgard" />
+	<string id="aom_lord_SRH4_4_name" text="{=aom_lord_SRH4_4_name}Gisla" />
 	<string id="aom_lord_U1_11_name" text="{=aom_lord_U1_11_name}Lord Gimilzôr" />
 	<string id="aom_lord_U1_12_name" text="{=aom_lord_U1_12_name}Gimilthôn" />
 	<string id="aom_lord_U1_13_name" text="{=aom_lord_U1_13_name}Pharazôn" />

@@ -26978,4 +26978,2372 @@
 				id="Item.sk_dale_boots_infrantry_a01" />
 		</EquipmentSet>
 	</EquipmentRoster>
+	<!-- ═══ Culture: DORWINION ═══ -->
+	<!-- Parent fallback -->
+	<EquipmentRoster
+		id="mother_char_creation_none_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_dale_shoulder_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_none_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--1.Retainer-->
+	<EquipmentRoster
+		id="mother_char_creation_retainer_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_dale_helmet_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_dale_shoulder_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_retainer_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_lake_town_boots_mariner_a01" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_dale_helmet_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--2.Merchant-->
+	<EquipmentRoster
+		id="mother_char_creation_merchant_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_merchant_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_lake_town_chest_mariner_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_lake_town_boots_mariner_a01" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_dale_helmet_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--3.Farmer-->
+	<EquipmentRoster
+		id="mother_char_creation_farmer_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_farmer_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_lake_town_boots_mariner_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--4.Artisan-->
+	<EquipmentRoster
+		id="mother_char_creation_artisan_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_dale_shoulder_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_artisan_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_lake_town_boots_mariner_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--5.Hunter-->
+	<EquipmentRoster
+		id="mother_char_creation_hunter_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_hunter_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_lake_town_boots_mariner_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_dale_helmet_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--6.Vagabond-->
+	<EquipmentRoster
+		id="mother_char_creation_vagabond_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_vagabond_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_lake_town_boots_mariner_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Childhood & Education age -->
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_dorwinion_retainer_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_lake_town_chest_mariner_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_dorwinion_retainer_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_lake_town_chest_mariner_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_dorwinion_retainer_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_dorwinion_retainer_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_dorwinion_merchant_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_lake_town_chest_mariner_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_dorwinion_merchant_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_lake_town_chest_mariner_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_dorwinion_merchant_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_dorwinion_merchant_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_dorwinion_farmer_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_dorwinion_farmer_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_dorwinion_farmer_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_dorwinion_farmer_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_dorwinion_artisan_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_dorwinion_artisan_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_dorwinion_artisan_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_dorwinion_artisan_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_dorwinion_hunter_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_lake_town_boots_mariner_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_dorwinion_hunter_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_lake_town_boots_mariner_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_dorwinion_hunter_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_dorwinion_hunter_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_dorwinion_vagabond_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_dorwinion_vagabond_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_dorwinion_vagabond_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_dorwinion_vagabond_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Adult careers -->
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_retainer_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_lake_town_chest_mariner_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_retainer_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_lake_town_chest_mariner_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_mercenary_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_lake_town_chest_mariner_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_mercenary_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_lake_town_chest_mariner_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_guard_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_dale_bow_t1" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_guard_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_dale_bow_t1" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_hunter_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_dale_bow_t1" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_hunter_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_dale_bow_t1" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_infantry_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_infantry_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_skirmisher_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_dale_bow_t1" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_skirmisher_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_dale_bow_t1" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_bard_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_dale_bow_t1" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_bard_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_dale_bow_t1" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_6_m"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_dorwinion_6_f"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Show -->
+	<EquipmentRoster
+		id="player_char_creation_show_dorwinion"
+		culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Gloves"
+				id="Item.sk_dale_gauntlet_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.dale_sword_c" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- ═══ Culture: SOUTHRHOVANION ═══ -->
+	<!-- Parent fallback -->
+	<EquipmentRoster
+		id="mother_char_creation_none_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+			<Equipment
+				slot="Cape"
+				id="Item.rohan_militia_pauldron_both" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_none_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--1.Retainer-->
+	<EquipmentRoster
+		id="mother_char_creation_retainer_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+			<Equipment
+				slot="Head"
+				id="Item.cts_rohan_helmet1" />
+			<Equipment
+				slot="Cape"
+				id="Item.rohan_militia_pauldron_both" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_retainer_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+			<Equipment
+				slot="Head"
+				id="Item.cts_rohan_helmet2a" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--2.Merchant-->
+	<EquipmentRoster
+		id="mother_char_creation_merchant_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_merchant_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+			<Equipment
+				slot="Head"
+				id="Item.cts_rohan_helmet1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--3.Farmer-->
+	<EquipmentRoster
+		id="mother_char_creation_farmer_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_farmer_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--4.Artisan-->
+	<EquipmentRoster
+		id="mother_char_creation_artisan_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+			<Equipment
+				slot="Cape"
+				id="Item.rohan_militia_pauldron_both" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_artisan_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--5.Hunter-->
+	<EquipmentRoster
+		id="mother_char_creation_hunter_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_hunter_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+			<Equipment
+				slot="Cape"
+				id="Item.rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Head"
+				id="Item.cts_rohan_helmet1" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--6.Vagabond-->
+	<EquipmentRoster
+		id="mother_char_creation_vagabond_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_vagabond_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Childhood & Education age -->
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_southrhovanion_retainer_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_southrhovanion_retainer_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_southrhovanion_retainer_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_southrhovanion_retainer_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_southrhovanion_merchant_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_southrhovanion_merchant_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_southrhovanion_merchant_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_southrhovanion_merchant_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_southrhovanion_farmer_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_southrhovanion_farmer_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_southrhovanion_farmer_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_southrhovanion_farmer_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_southrhovanion_artisan_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_southrhovanion_artisan_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_southrhovanion_artisan_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_southrhovanion_artisan_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_southrhovanion_hunter_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_southrhovanion_hunter_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_southrhovanion_hunter_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_southrhovanion_hunter_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_southrhovanion_vagabond_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_southrhovanion_vagabond_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_southrhovanion_vagabond_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_southrhovanion_vagabond_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Adult careers -->
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_retainer_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_rohan_shield_a01_gsw" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_rohan_ws_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_retainer_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_rohan_shield_a01_gsw" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_rohan_ws_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_mercenary_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_rohan_shield_a01_gsw" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_rohan_ws_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_mercenary_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_rohan_shield_a01_gsw" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_rohan_ws_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_b" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_guard_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_shield_a01_gsw" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_rohan_bow_t2" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_guard_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_shield_a01_gsw" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_rohan_bow_t2" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_hunter_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_rohan_bow_t2" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_hunter_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_rohan_bow_t2" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_infantry_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_rohan_ws_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_infantry_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_rohan_ws_spear_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_skirmisher_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_rohan_bow_t2" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_skirmisher_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_rohan_bow_t2" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_bard_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_spear_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_rohan_bow_t2" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_bard_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_spear_a01" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_ladder_rohan_bow_t2" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_6_m"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_rohan_ws_spear_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_wm_rohan_shield_a01_gsw" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_southrhovanion_6_f"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.starter_wm_rohan_ws_spear_a01" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_wm_rohan_shield_a01_gsw" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_armour_b" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_rohan_militia_tunic_a" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_rohan_militia_pauldron_both" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Show -->
+	<EquipmentRoster
+		id="player_char_creation_show_southrhovanion"
+		culture="Culture.southrhovanion">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_armour_b" />
+			<Equipment
+				slot="Gloves"
+				id="Item.cts_rohan_armguard1" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.wm_rohan_ws_sword_a01" />
+			<Equipment
+				slot="Body"
+				id="Item.rohan_militia_tunic_a" />
+			<Equipment
+				slot="Leg"
+				id="Item.cts_rohan_boots3" />
+		</EquipmentSet>
+	</EquipmentRoster>
 </EquipmentRosters>

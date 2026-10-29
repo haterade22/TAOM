@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EquipmentRosters>
+
+	<!-- ==================== DALE LORD BATTLE EQUIPMENT ==================== -->
+
+		<EquipmentRoster id="dorwinion_bat_template_medium_a" culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
+			<Equipment slot="Item1" id="Item.wm_dale_shield_a01" />
+			<Equipment slot="Item2" id="Item.dale_longbow_a" />
+			<Equipment slot="Item3" id="Item.bodkin_arrows_c" />
+			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="dorwinion_bat_template_medium_b" culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sturgia_noble_sword_2_t5" />
+			<Equipment slot="Item1" id="Item.wm_dale_shield_a02" />
+			<Equipment slot="Item2" id="Item.dale_recurve_bow_a" />
+			<Equipment slot="Item3" id="Item.bodkin_arrows_c" />
+			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_b04" />
+			<Equipment slot="Body" id="Item.sk_dale_chest_archer_b04" />
+			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b04" />
+			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b04" />
+			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_b04" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="dorwinion_bat_template_medium_c" culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="dorwinion_bat_template_medium_d" culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sturgia_noble_sword_4_t5" />
+			<Equipment slot="Item1" id="Item.wm_dale_shield_a04" />
+			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b04" />
+			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_b04" />
+			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b04" />
+			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b04" />
+			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b04" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="dorwinion_bat_template_medium_e" culture="Culture.dorwinion">
+		<EquipmentSet>
+			<Equipment slot="Item0" id="Item.sturgia_axe_5_t5" />
+			<Equipment slot="Item1" id="Item.wm_dale_shield_b01" />
+			<Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a04" />
+			<Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a04" />
+			<Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a04" />
+			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a04" />
+			<Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a04" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+	<!-- ==================== DALE LORD CIVILIAN EQUIPMENT ==================== -->
+
+		<EquipmentRoster id="dorwinion_civ_template_default_a" culture="Culture.dorwinion">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sturgia_noble_sword_1_t5" />
+			<Equipment slot="Item1" id="Item.wm_dale_shield_a01" />
+			<Equipment slot="Item2" id="Item.dale_longbow_a" />
+			<Equipment slot="Item3" id="Item.bodkin_arrows_c" />
+			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+			<Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="dorwinion_civ_template_default_b" culture="Culture.dorwinion">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sturgia_noble_sword_2_t5" />
+			<Equipment slot="Item1" id="Item.wm_dale_shield_a02" />
+			<Equipment slot="Item2" id="Item.dale_recurve_bow_a" />
+			<Equipment slot="Item3" id="Item.bodkin_arrows_c" />
+			<Equipment slot="Head" id="Item.sk_dale_helmet_archer_b04" />
+			<Equipment slot="Body" id="Item.sk_dale_chest_archer_b04" />
+			<Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b04" />
+			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b04" />
+			<Equipment slot="Leg" id="Item.sk_dale_boots_archer_b04" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="dorwinion_civ_template_default_c" culture="Culture.dorwinion">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="dorwinion_civ_template_default_d" culture="Culture.dorwinion">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sturgia_noble_sword_4_t5" />
+			<Equipment slot="Item1" id="Item.wm_dale_shield_a04" />
+			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b04" />
+			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_b04" />
+			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b04" />
+			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b04" />
+			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b04" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+		<EquipmentRoster id="dorwinion_civ_template_default_e" culture="Culture.dorwinion">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Item0" id="Item.sturgia_axe_5_t5" />
+			<Equipment slot="Item1" id="Item.wm_dale_shield_b01" />
+			<Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a04" />
+			<Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a04" />
+			<Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a04" />
+			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a04" />
+			<Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a04" />
+			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+			<Equipment slot="Horse" id="Item.charger" />
+		</EquipmentSet>
+	</EquipmentRoster>
+
+</EquipmentRosters>

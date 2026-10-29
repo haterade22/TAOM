@@ -616,6 +616,84 @@
 	<string id="aom_dolguldur_male_name_8" text="{=aom_dolguldur_male_name_8}Narzugh" />
 	<string id="aom_dolguldur_male_name_9" text="{=aom_dolguldur_male_name_9}Durkar" />
 	<string id="aom_dolguldur_name" text="{=aom_dolguldur_name}Dol Guldur Orcs" />
+	<string id="aom_dorwinion_clan_1" text="{=aom_dorwinion_clan_1}House of the Wine-presses" />
+	<string id="aom_dorwinion_clan_10" text="{=aom_dorwinion_clan_10}Wardens of the Southern Vines" />
+	<string id="aom_dorwinion_clan_11" text="{=aom_dorwinion_clan_11}Folk of the Vineyards" />
+	<string id="aom_dorwinion_clan_12" text="{=aom_dorwinion_clan_12}House of the Elf-wine" />
+	<string id="aom_dorwinion_clan_2" text="{=aom_dorwinion_clan_2}Vintners of the Redwater" />
+	<string id="aom_dorwinion_clan_3" text="{=aom_dorwinion_clan_3}Boatmen of the River Running" />
+	<string id="aom_dorwinion_clan_4" text="{=aom_dorwinion_clan_4}House of the Sunward Slopes" />
+	<string id="aom_dorwinion_clan_5" text="{=aom_dorwinion_clan_5}Cellarers of Vineholm" />
+	<string id="aom_dorwinion_clan_6" text="{=aom_dorwinion_clan_6}Shoremen of the Inland Sea" />
+	<string id="aom_dorwinion_clan_7" text="{=aom_dorwinion_clan_7}Traders of the Wine-road" />
+	<string id="aom_dorwinion_clan_8" text="{=aom_dorwinion_clan_8}House of the Golden Grape" />
+	<string id="aom_dorwinion_clan_9" text="{=aom_dorwinion_clan_9}Bargemen of the Carnen" />
+	<string id="aom_dorwinion_desc" text="{=aom_dorwinion_desc}The Men of Dorwinion tend the vineyards on the warm slopes above the Sea of Rhûn, and their wine goes up the Redwater and the River Running to the halls of Elves and Men far to the west. They are vintners, boatmen and river traders, a Northman folk who would rather sell to a stranger than fight him. Their king keeps his court at Vineholm, and every year the Easterlings across the inland sea look harder at his rich and lightly guarded land." />
+	<string id="aom_dorwinion_female_name_1" text="{=aom_dorwinion_female_name_1}Gundeperga" />
+	<string id="aom_dorwinion_female_name_10" text="{=aom_dorwinion_female_name_10}Anselperga" />
+	<string id="aom_dorwinion_female_name_11" text="{=aom_dorwinion_female_name_11}Liutperga" />
+	<string id="aom_dorwinion_female_name_12" text="{=aom_dorwinion_female_name_12}Ratruda" />
+	<string id="aom_dorwinion_female_name_13" text="{=aom_dorwinion_female_name_13}Tassia" />
+	<string id="aom_dorwinion_female_name_14" text="{=aom_dorwinion_female_name_14}Gaila" />
+	<string id="aom_dorwinion_female_name_15" text="{=aom_dorwinion_female_name_15}Wigilinda" />
+	<string id="aom_dorwinion_female_name_16" text="{=aom_dorwinion_female_name_16}Romilda" />
+	<string id="aom_dorwinion_female_name_17" text="{=aom_dorwinion_female_name_17}Aldegunda" />
+	<string id="aom_dorwinion_female_name_18" text="{=aom_dorwinion_female_name_18}Guntrada" />
+	<string id="aom_dorwinion_female_name_19" text="{=aom_dorwinion_female_name_19}Sindrada" />
+	<string id="aom_dorwinion_female_name_2" text="{=aom_dorwinion_female_name_2}Ansa" />
+	<string id="aom_dorwinion_female_name_20" text="{=aom_dorwinion_female_name_20}Hildegarda" />
+	<string id="aom_dorwinion_female_name_21" text="{=aom_dorwinion_female_name_21}Gundrada" />
+	<string id="aom_dorwinion_female_name_22" text="{=aom_dorwinion_female_name_22}Theodorada" />
+	<string id="aom_dorwinion_female_name_23" text="{=aom_dorwinion_female_name_23}Ermelinda" />
+	<string id="aom_dorwinion_female_name_24" text="{=aom_dorwinion_female_name_24}Ansperga" />
+	<string id="aom_dorwinion_female_name_3" text="{=aom_dorwinion_female_name_3}Ratperga" />
+	<string id="aom_dorwinion_female_name_4" text="{=aom_dorwinion_female_name_4}Clotsuinda" />
+	<string id="aom_dorwinion_female_name_5" text="{=aom_dorwinion_female_name_5}Walderada" />
+	<string id="aom_dorwinion_female_name_6" text="{=aom_dorwinion_female_name_6}Rosamund" />
+	<string id="aom_dorwinion_female_name_7" text="{=aom_dorwinion_female_name_7}Ermengarda" />
+	<string id="aom_dorwinion_female_name_8" text="{=aom_dorwinion_female_name_8}Gisela" />
+	<string id="aom_dorwinion_female_name_9" text="{=aom_dorwinion_female_name_9}Adelperga" />
+	<string id="aom_dorwinion_male_name_1" text="{=aom_dorwinion_male_name_1}Alboin" />
+	<string id="aom_dorwinion_male_name_10" text="{=aom_dorwinion_male_name_10}Perctarit" />
+	<string id="aom_dorwinion_male_name_11" text="{=aom_dorwinion_male_name_11}Cunincpert" />
+	<string id="aom_dorwinion_male_name_12" text="{=aom_dorwinion_male_name_12}Aripert" />
+	<string id="aom_dorwinion_male_name_13" text="{=aom_dorwinion_male_name_13}Rothari" />
+	<string id="aom_dorwinion_male_name_14" text="{=aom_dorwinion_male_name_14}Ariwald" />
+	<string id="aom_dorwinion_male_name_15" text="{=aom_dorwinion_male_name_15}Wacho" />
+	<string id="aom_dorwinion_male_name_16" text="{=aom_dorwinion_male_name_16}Tato" />
+	<string id="aom_dorwinion_male_name_17" text="{=aom_dorwinion_male_name_17}Godepert" />
+	<string id="aom_dorwinion_male_name_18" text="{=aom_dorwinion_male_name_18}Garibald" />
+	<string id="aom_dorwinion_male_name_19" text="{=aom_dorwinion_male_name_19}Ansprand" />
+	<string id="aom_dorwinion_male_name_2" text="{=aom_dorwinion_male_name_2}Audoin" />
+	<string id="aom_dorwinion_male_name_20" text="{=aom_dorwinion_male_name_20}Hildeprand" />
+	<string id="aom_dorwinion_male_name_21" text="{=aom_dorwinion_male_name_21}Rodoald" />
+	<string id="aom_dorwinion_male_name_22" text="{=aom_dorwinion_male_name_22}Adaloald" />
+	<string id="aom_dorwinion_male_name_23" text="{=aom_dorwinion_male_name_23}Alahis" />
+	<string id="aom_dorwinion_male_name_24" text="{=aom_dorwinion_male_name_24}Gundahar" />
+	<string id="aom_dorwinion_male_name_25" text="{=aom_dorwinion_male_name_25}Gundioc" />
+	<string id="aom_dorwinion_male_name_26" text="{=aom_dorwinion_male_name_26}Godegisel" />
+	<string id="aom_dorwinion_male_name_27" text="{=aom_dorwinion_male_name_27}Gundomar" />
+	<string id="aom_dorwinion_male_name_28" text="{=aom_dorwinion_male_name_28}Gislahar" />
+	<string id="aom_dorwinion_male_name_29" text="{=aom_dorwinion_male_name_29}Gibica" />
+	<string id="aom_dorwinion_male_name_3" text="{=aom_dorwinion_male_name_3}Agilulf" />
+	<string id="aom_dorwinion_male_name_30" text="{=aom_dorwinion_male_name_30}Gaiseric" />
+	<string id="aom_dorwinion_male_name_31" text="{=aom_dorwinion_male_name_31}Huneric" />
+	<string id="aom_dorwinion_male_name_32" text="{=aom_dorwinion_male_name_32}Thrasamund" />
+	<string id="aom_dorwinion_male_name_33" text="{=aom_dorwinion_male_name_33}Gelimer" />
+	<string id="aom_dorwinion_male_name_34" text="{=aom_dorwinion_male_name_34}Godigisel" />
+	<string id="aom_dorwinion_male_name_35" text="{=aom_dorwinion_male_name_35}Ardaric" />
+	<string id="aom_dorwinion_male_name_36" text="{=aom_dorwinion_male_name_36}Thurisind" />
+	<string id="aom_dorwinion_male_name_37" text="{=aom_dorwinion_male_name_37}Cunimund" />
+	<string id="aom_dorwinion_male_name_38" text="{=aom_dorwinion_male_name_38}Turismod" />
+	<string id="aom_dorwinion_male_name_39" text="{=aom_dorwinion_male_name_39}Gisulf" />
+	<string id="aom_dorwinion_male_name_4" text="{=aom_dorwinion_male_name_4}Authari" />
+	<string id="aom_dorwinion_male_name_40" text="{=aom_dorwinion_male_name_40}Romuald" />
+	<string id="aom_dorwinion_male_name_5" text="{=aom_dorwinion_male_name_5}Cleph" />
+	<string id="aom_dorwinion_male_name_6" text="{=aom_dorwinion_male_name_6}Grimoald" />
+	<string id="aom_dorwinion_male_name_7" text="{=aom_dorwinion_male_name_7}Liutprand" />
+	<string id="aom_dorwinion_male_name_8" text="{=aom_dorwinion_male_name_8}Ratchis" />
+	<string id="aom_dorwinion_male_name_9" text="{=aom_dorwinion_male_name_9}Aistulf" />
+	<string id="aom_dorwinion_name" text="{=aom_dorwinion_name}Men of Dorwinion" />
 	<string id="aom_erebor_clan_1" text="{=aom_erebor_clan_1}Longbeards" />
 	<string id="aom_erebor_clan_10" text="{=aom_erebor_clan_10}Silveraxe" />
 	<string id="aom_erebor_clan_11" text="{=aom_erebor_clan_11}Oakenshield" />
@@ -2146,6 +2224,84 @@
 	<string id="aom_shaghana_male_name_7" text="{=aom_shaghana_male_name_7}Azrak" />
 	<string id="aom_shaghana_male_name_8" text="{=aom_shaghana_male_name_8}Samir" />
 	<string id="aom_shaghana_male_name_9" text="{=aom_shaghana_male_name_9}Kazan" />
+	<string id="aom_southrhovanion_clan_1" text="{=aom_southrhovanion_clan_1}House of the Barrow-kings" />
+	<string id="aom_southrhovanion_clan_10" text="{=aom_southrhovanion_clan_10}House of the Old Forest Road" />
+	<string id="aom_southrhovanion_clan_11" text="{=aom_southrhovanion_clan_11}Folk of the Brown Lands" />
+	<string id="aom_southrhovanion_clan_12" text="{=aom_southrhovanion_clan_12}Watchers of the Dagorlad" />
+	<string id="aom_southrhovanion_clan_2" text="{=aom_southrhovanion_clan_2}Riders of the East Bight" />
+	<string id="aom_southrhovanion_clan_3" text="{=aom_southrhovanion_clan_3}Horse-herds of the Plains" />
+	<string id="aom_southrhovanion_clan_4" text="{=aom_southrhovanion_clan_4}Folk of the Southern Eaves" />
+	<string id="aom_southrhovanion_clan_5" text="{=aom_southrhovanion_clan_5}House of the Wain-breakers" />
+	<string id="aom_southrhovanion_clan_6" text="{=aom_southrhovanion_clan_6}Spearmen of the Fords" />
+	<string id="aom_southrhovanion_clan_7" text="{=aom_southrhovanion_clan_7}House of the White Mares" />
+	<string id="aom_southrhovanion_clan_8" text="{=aom_southrhovanion_clan_8}Keepers of the Horse-fields" />
+	<string id="aom_southrhovanion_clan_9" text="{=aom_southrhovanion_clan_9}Riders of the Celduin" />
+	<string id="aom_southrhovanion_desc" text="{=aom_southrhovanion_desc}The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Brown Lands, a free people of horse-breeders who count the Éothéod of the north as their kin. Their fathers were the lords of the Northmen in the days of the old kings, and the barrows of those kings still stand on the grasslands. Twice the Wainriders came out of the East with wagon and fire and broke them, and the riders of the plains have not forgotten it." />
+	<string id="aom_southrhovanion_female_name_1" text="{=aom_southrhovanion_female_name_1}Viduhilda" />
+	<string id="aom_southrhovanion_female_name_10" text="{=aom_southrhovanion_female_name_10}Ansawintha" />
+	<string id="aom_southrhovanion_female_name_11" text="{=aom_southrhovanion_female_name_11}Sigihilda" />
+	<string id="aom_southrhovanion_female_name_12" text="{=aom_southrhovanion_female_name_12}Gaisahildo" />
+	<string id="aom_southrhovanion_female_name_13" text="{=aom_southrhovanion_female_name_13}Wulfahilda" />
+	<string id="aom_southrhovanion_female_name_14" text="{=aom_southrhovanion_female_name_14}Athalgunda" />
+	<string id="aom_southrhovanion_female_name_15" text="{=aom_southrhovanion_female_name_15}Frithuwara" />
+	<string id="aom_southrhovanion_female_name_16" text="{=aom_southrhovanion_female_name_16}Harjahildo" />
+	<string id="aom_southrhovanion_female_name_17" text="{=aom_southrhovanion_female_name_17}Gunthiwintha" />
+	<string id="aom_southrhovanion_female_name_18" text="{=aom_southrhovanion_female_name_18}Thiudawara" />
+	<string id="aom_southrhovanion_female_name_19" text="{=aom_southrhovanion_female_name_19}Austrahilda" />
+	<string id="aom_southrhovanion_female_name_2" text="{=aom_southrhovanion_female_name_2}Marhawintha" />
+	<string id="aom_southrhovanion_female_name_20" text="{=aom_southrhovanion_female_name_20}Sunjawintha" />
+	<string id="aom_southrhovanion_female_name_21" text="{=aom_southrhovanion_female_name_21}Swinthahilda" />
+	<string id="aom_southrhovanion_female_name_22" text="{=aom_southrhovanion_female_name_22}Vidurada" />
+	<string id="aom_southrhovanion_female_name_23" text="{=aom_southrhovanion_female_name_23}Marhamavi" />
+	<string id="aom_southrhovanion_female_name_24" text="{=aom_southrhovanion_female_name_24}Ermanaberga" />
+	<string id="aom_southrhovanion_female_name_3" text="{=aom_southrhovanion_female_name_3}Marhildo" />
+	<string id="aom_southrhovanion_female_name_4" text="{=aom_southrhovanion_female_name_4}Forthiwintha" />
+	<string id="aom_southrhovanion_female_name_5" text="{=aom_southrhovanion_female_name_5}Hrodagunda" />
+	<string id="aom_southrhovanion_female_name_6" text="{=aom_southrhovanion_female_name_6}Ermanahilda" />
+	<string id="aom_southrhovanion_female_name_7" text="{=aom_southrhovanion_female_name_7}Aiwigunda" />
+	<string id="aom_southrhovanion_female_name_8" text="{=aom_southrhovanion_female_name_8}Gaisawintha" />
+	<string id="aom_southrhovanion_female_name_9" text="{=aom_southrhovanion_female_name_9}Balthildo" />
+	<string id="aom_southrhovanion_male_name_1" text="{=aom_southrhovanion_male_name_1}Vidurik" />
+	<string id="aom_southrhovanion_male_name_10" text="{=aom_southrhovanion_male_name_10}Forthagast" />
+	<string id="aom_southrhovanion_male_name_11" text="{=aom_southrhovanion_male_name_11}Hrodamund" />
+	<string id="aom_southrhovanion_male_name_12" text="{=aom_southrhovanion_male_name_12}Hrodarik" />
+	<string id="aom_southrhovanion_male_name_13" text="{=aom_southrhovanion_male_name_13}Ermanagast" />
+	<string id="aom_southrhovanion_male_name_14" text="{=aom_southrhovanion_male_name_14}Ermanamund" />
+	<string id="aom_southrhovanion_male_name_15" text="{=aom_southrhovanion_male_name_15}Aiwarik" />
+	<string id="aom_southrhovanion_male_name_16" text="{=aom_southrhovanion_male_name_16}Aiwulf" />
+	<string id="aom_southrhovanion_male_name_17" text="{=aom_southrhovanion_male_name_17}Gaisamund" />
+	<string id="aom_southrhovanion_male_name_18" text="{=aom_southrhovanion_male_name_18}Gaisarik" />
+	<string id="aom_southrhovanion_male_name_19" text="{=aom_southrhovanion_male_name_19}Balthamar" />
+	<string id="aom_southrhovanion_male_name_2" text="{=aom_southrhovanion_male_name_2}Viduhari" />
+	<string id="aom_southrhovanion_male_name_20" text="{=aom_southrhovanion_male_name_20}Balthulf" />
+	<string id="aom_southrhovanion_male_name_21" text="{=aom_southrhovanion_male_name_21}Ansamar" />
+	<string id="aom_southrhovanion_male_name_22" text="{=aom_southrhovanion_male_name_22}Ansulf" />
+	<string id="aom_southrhovanion_male_name_23" text="{=aom_southrhovanion_male_name_23}Sigiwini" />
+	<string id="aom_southrhovanion_male_name_24" text="{=aom_southrhovanion_male_name_24}Sigirik" />
+	<string id="aom_southrhovanion_male_name_25" text="{=aom_southrhovanion_male_name_25}Hildimar" />
+	<string id="aom_southrhovanion_male_name_26" text="{=aom_southrhovanion_male_name_26}Hildiwini" />
+	<string id="aom_southrhovanion_male_name_27" text="{=aom_southrhovanion_male_name_27}Wulfamund" />
+	<string id="aom_southrhovanion_male_name_28" text="{=aom_southrhovanion_male_name_28}Wulfarik" />
+	<string id="aom_southrhovanion_male_name_29" text="{=aom_southrhovanion_male_name_29}Athalwini" />
+	<string id="aom_southrhovanion_male_name_3" text="{=aom_southrhovanion_male_name_3}Vidumund" />
+	<string id="aom_southrhovanion_male_name_30" text="{=aom_southrhovanion_male_name_30}Athalgast" />
+	<string id="aom_southrhovanion_male_name_31" text="{=aom_southrhovanion_male_name_31}Frithumar" />
+	<string id="aom_southrhovanion_male_name_32" text="{=aom_southrhovanion_male_name_32}Frithuwini" />
+	<string id="aom_southrhovanion_male_name_33" text="{=aom_southrhovanion_male_name_33}Harjamund" />
+	<string id="aom_southrhovanion_male_name_34" text="{=aom_southrhovanion_male_name_34}Harjarik" />
+	<string id="aom_southrhovanion_male_name_35" text="{=aom_southrhovanion_male_name_35}Gunthamar" />
+	<string id="aom_southrhovanion_male_name_36" text="{=aom_southrhovanion_male_name_36}Gunthiwini" />
+	<string id="aom_southrhovanion_male_name_37" text="{=aom_southrhovanion_male_name_37}Thiudawini" />
+	<string id="aom_southrhovanion_male_name_38" text="{=aom_southrhovanion_male_name_38}Austrowini" />
+	<string id="aom_southrhovanion_male_name_39" text="{=aom_southrhovanion_male_name_39}Sunjamar" />
+	<string id="aom_southrhovanion_male_name_4" text="{=aom_southrhovanion_male_name_4}Vidugast" />
+	<string id="aom_southrhovanion_male_name_40" text="{=aom_southrhovanion_male_name_40}Swinthamar" />
+	<string id="aom_southrhovanion_male_name_5" text="{=aom_southrhovanion_male_name_5}Marhamund" />
+	<string id="aom_southrhovanion_male_name_6" text="{=aom_southrhovanion_male_name_6}Marhagast" />
+	<string id="aom_southrhovanion_male_name_7" text="{=aom_southrhovanion_male_name_7}Marharik" />
+	<string id="aom_southrhovanion_male_name_8" text="{=aom_southrhovanion_male_name_8}Marhulf" />
+	<string id="aom_southrhovanion_male_name_9" text="{=aom_southrhovanion_male_name_9}Forthari" />
+	<string id="aom_southrhovanion_name" text="{=aom_southrhovanion_name}Northmen of Rhovanion" />
 	<string id="aom_umbar_clan_1" text="{=aom_umbar_clan_1}Black Sail Fleet" />
 	<string id="aom_umbar_clan_10" text="{=aom_umbar_clan_10}Southron Alliance" />
 	<string id="aom_umbar_clan_11" text="{=aom_umbar_clan_11}Sea Wolf Clan" />

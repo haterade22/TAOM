@@ -28,7 +28,9 @@
     "rhudaur": ["north"],
     "eredluin": ["north"],
     "anduinvale": ["north", "east"],
-    "angaladh": ["north", "east"]
+    "angaladh": ["north", "east"],
+    "dorwinion": ["north", "east"],
+    "southrhovanion": ["central"]
   },
   "BorderRescueRadiusInTownGaps": 3.2,
   "PrimaryTheaterWeight": 1.25,

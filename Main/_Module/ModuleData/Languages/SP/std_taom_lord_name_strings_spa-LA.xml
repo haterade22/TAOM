@@ -1127,5 +1127,37 @@
     <string id="aom_lord_AV4_2_name" text="Brunwald" />
     <string id="aom_lord_AV4_3_name" text="Mildgyth" />
     <string id="aom_lord_AV4_4_name" text="Hrothwyn" />
+    <string id="aom_lord_DO1_1_name" text="Ostric" />
+    <string id="aom_lord_DO1_2_name" text="Halric" />
+    <string id="aom_lord_DO1_3_name" text="Aldith" />
+    <string id="aom_lord_DO1_4_name" text="Berta" />
+    <string id="aom_lord_DO2_1_name" text="Torvin" />
+    <string id="aom_lord_DO2_2_name" text="Ostmar" />
+    <string id="aom_lord_DO2_3_name" text="Gisela" />
+    <string id="aom_lord_DO2_4_name" text="Hilde" />
+    <string id="aom_lord_DO3_1_name" text="Gerulf" />
+    <string id="aom_lord_DO3_2_name" text="Aldwin" />
+    <string id="aom_lord_DO3_3_name" text="Irmgard" />
+    <string id="aom_lord_DO3_4_name" text="Liutgard" />
+    <string id="aom_lord_DO4_1_name" text="Berengar" />
+    <string id="aom_lord_DO4_2_name" text="Raedric" />
+    <string id="aom_lord_DO4_3_name" text="Mathilde" />
+    <string id="aom_lord_DO4_4_name" text="Oda" />
+    <string id="aom_lord_SRH1_1_name" text="Vidumar" />
+    <string id="aom_lord_SRH1_2_name" text="Marhwin" />
+    <string id="aom_lord_SRH1_3_name" text="Amalaberga" />
+    <string id="aom_lord_SRH1_4_name" text="Hildegund" />
+    <string id="aom_lord_SRH2_1_name" text="Thrasaric" />
+    <string id="aom_lord_SRH2_2_name" text="Videric" />
+    <string id="aom_lord_SRH2_3_name" text="Swanhilda" />
+    <string id="aom_lord_SRH2_4_name" text="Theodegotha" />
+    <string id="aom_lord_SRH3_1_name" text="Beremud" />
+    <string id="aom_lord_SRH3_2_name" text="Gundric" />
+    <string id="aom_lord_SRH3_3_name" text="Rotrudis" />
+    <string id="aom_lord_SRH3_4_name" text="Brunhildis" />
+    <string id="aom_lord_SRH4_1_name" text="Hrodulf" />
+    <string id="aom_lord_SRH4_2_name" text="Sigiric" />
+    <string id="aom_lord_SRH4_3_name" text="Ansgard" />
+    <string id="aom_lord_SRH4_4_name" text="Gisla" />
   </strings>
 </base>

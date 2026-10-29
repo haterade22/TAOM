@@ -1,0 +1,1702 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NPCCharacters>
+
+    <!-- ==================== TOWNSFOLK ==================== -->
+
+    <NPCCharacter
+        id="townsman_southrhovanion"
+        name="{=aom_srh_townsman}Townsman"
+        occupation="Townsfolk"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="townswoman_southrhovanion"
+        name="{=aom_srh_townswoman}Townswoman"
+        occupation="Townsfolk"
+        is_female="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="townsman_infant_southrhovanion"
+        name="{=aom_srh_townsman_infant}Townsman"
+        occupation="Townsfolk"
+        is_child_template="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="townswoman_infant_southrhovanion"
+        name="{=aom_srh_townswoman_infant}Townswoman"
+        occupation="Townsfolk"
+        is_female="true"
+        is_child_template="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="townsman_child_southrhovanion"
+        name="{=aom_srh_townsman_child}Townsman"
+        occupation="Townsfolk"
+        is_child_template="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="townswoman_child_southrhovanion"
+        name="{=aom_srh_townswoman_child}Townswoman"
+        occupation="Townsfolk"
+        is_female="true"
+        is_child_template="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="townsman_teenager_southrhovanion"
+        name="{=aom_srh_townsman_teen}Townsman"
+        occupation="Townsfolk"
+        is_child_template="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="townswoman_teenager_southrhovanion"
+        name="{=aom_srh_townswoman_teen}Townswoman"
+        occupation="Townsfolk"
+        is_female="true"
+        is_child_template="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== VILLAGERS ==================== -->
+
+    <NPCCharacter
+        id="villager_southrhovanion"
+        name="{=aom_srh_villager}Villager"
+        occupation="Villager"
+        culture="Culture.southrhovanion"
+        default_group="Infantry"
+        >
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <upgrade_targets>
+            <upgrade_target id="NPCCharacter.southrhovanion_levy" />
+        </upgrade_targets>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="village_woman_southrhovanion"
+        name="{=aom_srh_village_woman}Village Woman"
+        occupation="Villager"
+        is_female="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="villager_child_southrhovanion"
+        name="{=aom_srh_villager_child}Villager"
+        occupation="Villager"
+        is_child_template="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="village_woman_child_southrhovanion"
+        name="{=aom_srh_village_woman_child}Village Girl"
+        occupation="Villager"
+        is_female="true"
+        is_child_template="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="villager_teenager_southrhovanion"
+        name="{=aom_srh_villager_teen}Villager"
+        occupation="Villager"
+        is_child_template="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="village_woman_teenager_southrhovanion"
+        name="{=aom_srh_village_woman_teen}Village Girl"
+        occupation="Villager"
+        is_female="true"
+        is_child_template="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== MERCHANTS & TRADERS ==================== -->
+
+    <NPCCharacter
+        id="merchant_southrhovanion"
+        name="{=aom_srh_merchant}Merchant"
+        occupation="GoodsTrader"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== CRAFTERS ==================== -->
+
+    <NPCCharacter
+        id="blacksmith_southrhovanion"
+        name="{=aom_srh_blacksmith}Blacksmith"
+        occupation="Blacksmith"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="weaponsmith_southrhovanion"
+        name="{=aom_srh_weaponsmith}Weaponsmith"
+        occupation="Weaponsmith"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="armorer_southrhovanion"
+        name="{=aom_srh_armorer}Armorer"
+        occupation="Armorer"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="horseMerchant_southrhovanion"
+        name="{=aom_srh_horse_merchant}Horse Trader"
+        occupation="HorseTrader"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== TAVERN ==================== -->
+
+    <NPCCharacter
+        id="tavernkeeper_southrhovanion"
+        name="{=aom_srh_tavernkeeper}Tavernkeeper"
+        occupation="Tavernkeeper"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="taverngamehost_southrhovanion"
+        name="{=aom_srh_taverngamehost}Tavern Game Host"
+        occupation="TavernGameHost"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="tavern_wench_southrhovanion"
+        name="{=aom_srh_tavern_wench}Tavern Maid"
+        occupation="TavernWench"
+        is_female="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="musician_southrhovanion"
+        name="{=aom_srh_musician}Musician"
+        occupation="Musician"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== ARENA & SHOPS ==================== -->
+
+    <NPCCharacter
+        id="tournament_master_southrhovanion"
+        name="{=aom_srh_tournament_master}Tournament Master"
+        occupation="ArenaMaster"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="shop_worker_southrhovanion"
+        name="{=aom_srh_shop_worker}Shop Worker"
+        occupation="ShopWorker"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== GUARDS ==================== -->
+
+    <NPCCharacter
+        id="prison_guard_southrhovanion"
+        name="{=aom_srh_prison_guard}Prison Guard"
+        occupation="PrisonGuard"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet1" />
+                <equipment slot="Leg" id="Item.roh_sol_bts" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2" />
+                <equipment slot="Leg" id="Item.roh_sol_bts" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="guard_southrhovanion"
+        name="{=aom_srh_guard}Guard"
+        occupation="Soldier"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor2" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet_captain1" />
+                <equipment slot="Leg" id="Item.cts_rohan_captain_boots" />
+                <equipment slot="Gloves" id="Item.cts_rohan_captain_bracer" />
+                <equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2" />
+                <equipment slot="Leg" id="Item.roh_sol_bts" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2a" />
+                <equipment slot="Leg" id="Item.roh_sol_bts" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== CARAVAN ==================== -->
+
+    <NPCCharacter
+        id="armed_trader_southrhovanion"
+        level="16"
+        name="{=aom_srh_armed_trader}Armed Trader"
+        occupation="CaravanGuard"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="40" />
+            <skill id="OneHanded" value="80" />
+            <skill id="Polearm" value="60" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="caravan_master_southrhovanion"
+        level="26"
+        name="{=aom_srh_caravan_master}Caravan Master"
+        occupation="CaravanGuard"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="60" />
+            <skill id="OneHanded" value="120" />
+            <skill id="Polearm" value="80" />
+            <skill id="Trade" value="100" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_c" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="caravan_guard_southrhovanion"
+        level="21"
+        name="{=aom_srh_caravan_guard}Caravan Guard"
+        occupation="CaravanGuard"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="50" />
+            <skill id="OneHanded" value="100" />
+            <skill id="Polearm" value="100" />
+            <skill id="Bow" value="40" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_c" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="veteran_caravan_guard_southrhovanion"
+        level="26"
+        name="{=aom_srh_vet_caravan_guard}Veteran Caravan Guard"
+        occupation="CaravanGuard"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="60" />
+            <skill id="OneHanded" value="130" />
+            <skill id="Polearm" value="130" />
+            <skill id="Bow" value="50" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard4" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor4" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+                <equipment slot="Item1" id="Item.wm_rohan_shield_a01_gsw" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== NOTABLES & SPECIAL TOWNSFOLK ==================== -->
+
+    <NPCCharacter
+        id="ransom_broker_southrhovanion"
+        name="{=aom_srh_ransom_broker}Ransom Broker"
+        occupation="Townsfolk"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="gangleader_bodyguard_southrhovanion"
+        name="{=aom_srh_gangleader_bg}Bodyguard"
+        occupation="Townsfolk"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_armour_d" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_armour_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_d" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Item0" id="Item.vlandia_sword_1_t2" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- Notables: Merchants (10) -->
+    <NPCCharacter id="spc_notable_southrhovanion_0" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.southrhovanion" name="{=aom_srh_notable_0}Cautious Rhovanion trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_0b" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.southrhovanion" name="{=aom_srh_notable_0b}Rhovanion vintner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.southrhovanion" name="{=aom_srh_notable_1}Proud horse-lord merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_1b" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.southrhovanion" name="{=aom_srh_notable_1b}Cold Rhovanion dealer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Generosity" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_2" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.southrhovanion" name="{=aom_srh_notable_2}Quiet Rhovanion provisioner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Honor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_2b" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.southrhovanion" name="{=aom_srh_notable_2b}Cautious Rhovanion grain trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Valor" value="-1" /><Trait id="Honor" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_3" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.southrhovanion" name="{=aom_srh_notable_3}Self-made Rhovanion merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_3b" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.southrhovanion" name="{=aom_srh_notable_3b}Jovial Rhovanion merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Generosity" value="1" /><Trait id="Honor" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_4" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.southrhovanion" name="{=aom_srh_notable_4}Shrewd Rhovanion trader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Calculating" value="1" /><Trait id="Mercy" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_4b" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.southrhovanion" name="{=aom_srh_notable_4b}Devious horse-lord merchant" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Merchant">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <skills></skills>
+        <Traits><Trait id="Honor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- Notables: Preachers (3) -->
+    <NPCCharacter id="spc_notable_southrhovanion_5" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.southrhovanion" name="{=aom_srh_notable_5}Devout Rhovanion elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_6" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.southrhovanion" name="{=aom_srh_notable_6}Stern Rhovanion wise-man" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Honor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_7" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.southrhovanion" name="{=aom_srh_notable_7}Keeper of Rhovanion traditions" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Preacher">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Mercy" value="1" /><Trait id="Generosity" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- Notables: Artisans (2) -->
+    <NPCCharacter id="spc_notable_southrhovanion_8" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.southrhovanion" name="{=aom_srh_notable_8}Skilled Rhovanion smith" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_9" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.southrhovanion" name="{=aom_srh_notable_9}Gifted Rhovanion craftsman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Artisan">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Generosity" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- Notables: Gang Leaders (6) -->
+    <NPCCharacter id="spc_notable_southrhovanion_gl1" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.southrhovanion" name="{=aom_srh_notable_gl1}Bold Rhovanion ringleader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_10" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.southrhovanion" name="{=aom_srh_notable_10}Mocking Rhovanion gang boss" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_11" is_female="true" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.southrhovanion" name="{=aom_srh_notable_11}Brutal Rhovanion enforcer" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Valor" value="1" /><Trait id="Generosity" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_gl4" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.southrhovanion" name="{=aom_srh_notable_gl4}Savage horse-lord thug" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Honor" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_12" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.southrhovanion" name="{=aom_srh_notable_12}Sly Rhovanion smuggler" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Valor" value="1" /><Trait id="Honor" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_13" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.southrhovanion" name="{=aom_srh_notable_13}Menacing Rhovanion gang leader" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="GangLeader">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Calculating" value="1" /><Trait id="Generosity" value="-1" /><Trait id="Mercy" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- Notables: Rural Notables (2) -->
+    <NPCCharacter id="spc_notable_southrhovanion_21" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.southrhovanion" name="{=aom_srh_notable_21}Weathered Rhovanion landowner" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Calculating" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_notable_southrhovanion_22" default_group="Infantry" is_template="true" is_hero="false" voice="softspoken" culture="Culture.southrhovanion" name="{=aom_srh_notable_22}Respected Rhovanion elder" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="RuralNotable">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Honor" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- Notables: Headmen (3) -->
+    <NPCCharacter id="spc_southrhovanion_headman_1" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.southrhovanion" name="{=aom_srh_headman_1}Steadfast Rhovanion headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor1" />
+                <equipment slot="Cape" id="Item.cts_rohan_cape2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_southrhovanion_headman_2" default_group="Infantry" is_template="true" is_hero="false" voice="ironic" culture="Culture.southrhovanion" name="{=aom_srh_headman_2}Cautious Rhovanion headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Valor" value="-1" /><Trait id="Generosity" value="1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="spc_southrhovanion_headman_3" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.southrhovanion" name="{=aom_srh_headman_3}Cunning horse-lord headman" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Headman">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Traits><Trait id="Calculating" value="1" /><Trait id="Honor" value="-1" /></Traits>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Cape" id="Item.cts_roha_cape1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="barber_southrhovanion"
+        name="{=aom_srh_barber}Barber"
+        occupation="Townsfolk"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="beggar_southrhovanion"
+        name="{=aom_srh_beggar}Beggar"
+        occupation="Townsfolk"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="female_beggar_southrhovanion"
+        name="{=aom_srh_female_beggar}Beggar"
+        occupation="Townsfolk"
+        is_female="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_b" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="female_dancer_southrhovanion"
+        name="{=aom_srh_female_dancer}Dancer"
+        occupation="Townsfolk"
+        is_female="true"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+        </face>
+        <Equipments>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster civilian="true">
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_tunic_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <!-- ==================== PRACTICE DUMMIES ==================== -->
+
+    <NPCCharacter
+        id="gear_practice_dummy_southrhovanion"
+        name="{=aom_srh_gear_practice_dummy}Gear Practice Dummy"
+        occupation="Soldier"
+        level="15"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="weapon_practice_stage_1_southrhovanion"
+        name="{=aom_srh_wpractice_1}Weapon Practice Dummy Stage 1"
+        occupation="Soldier"
+        level="15"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_a" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="weapon_practice_stage_2_southrhovanion"
+        name="{=aom_srh_wpractice_2}Weapon Practice Dummy Stage 2"
+        occupation="Soldier"
+        level="25"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_b" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet1" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots3" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard1" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="weapon_practice_stage_3_southrhovanion"
+        name="{=aom_srh_wpractice_3}Weapon Practice Dummy Stage 3"
+        occupation="Soldier"
+        level="35"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.cts_rohan_armor3" />
+                <equipment slot="Head" id="Item.cts_rohan_helmet2" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots1" />
+                <equipment slot="Gloves" id="Item.cts_rohan_armguard2" />
+                <equipment slot="Cape" id="Item.rohan_militia_pauldron_both" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="gear_dummy_southrhovanion"
+        name="{=aom_srh_gear_dummy}Gear Dummy"
+        occupation="Soldier"
+        level="15"
+        culture="Culture.southrhovanion"
+        default_group="Infantry">
+        <face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Body" id="Item.rohan_militia_armour_c" />
+                <equipment slot="Leg" id="Item.cts_rohan_boots4" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+	<!-- Lord templates, referenced from taom_spcultures.xml <lord_templates> and
+	     <rebellion_hero_templates> (a hero keeps its template's culture). -->
+	<NPCCharacter id="spc_southrhovanion_lord_1" default_group="Infantry" is_template="true" is_hero="false" voice="curt" culture="Culture.southrhovanion" name="{=aom_southrhovanion_lord_1}Bold Rhovanion lord" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Lord">
+		<face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+		<Traits><Trait id="Valor" value="1" /><Trait id="Calculating" value="-1" /></Traits>
+		<Equipments>
+			<EquipmentSet id="taom_southrhovanion_lord_battle_male" />
+			<EquipmentSet id="taom_southrhovanion_lord_civilian_male" equipmentType="Civilian" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter id="spc_southrhovanion_lord_2" default_group="Infantry" is_template="true" is_hero="false" voice="earnest" culture="Culture.southrhovanion" name="{=aom_southrhovanion_lord_2}Cautious Rhovanion lord" skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Lord">
+		<face><face_key_template value="BodyProperty.fighter_rohan" /></face>
+		<Traits><Trait id="Valor" value="-1" /><Trait id="Calculating" value="1" /></Traits>
+		<Equipments>
+			<EquipmentSet id="taom_southrhovanion_lord_battle_male" />
+			<EquipmentSet id="taom_southrhovanion_lord_civilian_male" equipmentType="Civilian" />
+		</Equipments>
+	</NPCCharacter>
+
+</NPCCharacters>

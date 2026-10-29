@@ -96,5 +96,15 @@
     <string id="taom_angaladh_ruler_title" text="King" />
     <string id="taom_angaladh_short_name" text="{.NS}Angáladh" />
     <string id="taom_angaladh_title" text="Kingdom of Angáladh" />
+    <string id="taom_dorwinion_desc" text="The vintners of Dorwinion tend the warm slopes where the River Running meets the Sea of Rhûn. Their wine goes up the river to Dale, to the Elves of Mirkwood and to every hall that can pay for it, and their kings grow rich on it. They keep out of the wars of the West and buy peace from the East when they must." />
+    <string id="taom_dorwinion_name" text="{.NS}Dorwinion" />
+    <string id="taom_dorwinion_ruler_title" text="King" />
+    <string id="taom_dorwinion_short_name" text="{.NS}Dorwinion" />
+    <string id="taom_dorwinion_title" text="Kingdom of Dorwinion" />
+    <string id="taom_southrhovanion_desc" text="The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Sea of Rhûn. They are horse-lords, kin of the Éothéod who rode north long ago, and they have not forgotten the Wainriders who once burned their halls. Their kings hold Vidugard and owe no lord in the West or the East." />
+    <string id="taom_southrhovanion_name" text="{.NS}South Rhovanion" />
+    <string id="taom_southrhovanion_ruler_title" text="King" />
+    <string id="taom_southrhovanion_short_name" text="{.NS}South Rhovanion" />
+    <string id="taom_southrhovanion_title" text="Kingdom of South Rhovanion" />
   </strings>
 </base>

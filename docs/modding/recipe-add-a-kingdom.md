@@ -10,17 +10,17 @@ the chapter that owns that file. The written source is
 was re-checked against disk on 2026-09-05, re-measured on 2026-10-07 after Arthedain and again on
 2026-10-27 after Cardolan, Rhudaur and Ered Luin, and where the two disagree the disk wins.
 
-## Two kinds of kingdom, and 28 live ids
+## Two kinds of kingdom, and 30 live ids
 
 A kingdom reaches the game by one of two routes.
 
 | Route | File | Count | Use it when |
 |---|---|---|---|
-| A new `<Kingdom>` entry | [`Main/_Module/ModuleData/taom_spkingdoms.xml`](../../Main/_Module/ModuleData/taom_spkingdoms.xml) | 20 <!-- measured: rg -c '<Kingdom\b' Main/_Module/ModuleData/taom_spkingdoms.xml 2026-10-28 --> | The realm has no vanilla counterpart worth reusing |
+| A new `<Kingdom>` entry | [`Main/_Module/ModuleData/taom_spkingdoms.xml`](../../Main/_Module/ModuleData/taom_spkingdoms.xml) | 22 <!-- measured: rg -c '<Kingdom\b' Main/_Module/ModuleData/taom_spkingdoms.xml 2026-10-29 --> | The realm has no vanilla counterpart worth reusing |
 | An `<xsl:template>` that rewrites a vanilla kingdom | [`Main/_Module/ModuleData/spkingdoms.xslt`](../../Main/_Module/ModuleData/spkingdoms.xslt) | 8 <!-- measured: rg -c 'Kingdom\[@id=' Main/_Module/ModuleData/spkingdoms.xslt 2026-10-27 --> | You want a vanilla kingdom's whole world position, renamed |
 
-That is **28 kingdom ids in play**, and every config, test and JSON map keyed on a kingdom is keyed
-on one of those 28. The eight rewritten ones keep their vanilla `id` and only change what the player
+That is **30 kingdom ids in play**, and every config, test and JSON map keyed on a kingdom is keyed
+on one of those 30. The eight rewritten ones keep their vanilla `id` and only change what the player
 reads: `empire` is Dunland, `empire_w` is Gondor, `empire_s` is Mordor, `sturgia` is Dale, `aserai`
 is Harad, `vlandia` is Rohan, `battania` is Khand and `khuzait` is Rhun
 (`spkingdoms.xslt:13-210`, one `<xsl:template>` each).
@@ -138,12 +138,12 @@ id. An empty list is legal and means "deliberately passive"; the two kingdoms th
 by name in `ExpectedPassiveKingdoms`, so a third cannot go passive quietly
 ([`TAOM.Tests/Features/ArmyTargeting/WarTheaterConfigInvariantsTests.cs`](../../TAOM.Tests/Features/ArmyTargeting/WarTheaterConfigInvariantsTests.cs)).
 
-`alignment.json` is the one to read before trusting any doc about it. It holds **34 keys**: 28
+`alignment.json` is the one to read before trusting any doc about it. It holds **36 keys**: 30
 kingdom ids, `gondor` and `mordor` (culture ids sitting in the same flat map) and 4 minor clan ids
 (`ghilman`, `skolderbrotva`, `forest_people`, `eleftheroi`).
-<!-- measured: python -c "import json;d=json.load(open('Main/_Module/ModuleData/execution/alignment.json'));print(len(d))" 2026-10-28 -->
-A new kingdom whose clans resolve Neutral outside the eight Neutral realms (`NeutralRealmIds`: `battania`,
-`shaghana`, `abanissa`, `umbar`, `cardolan`, `rhudaur`, `anduinvale`, `angaladh`) fails `ShippedClanSideCoverageTests`.
+<!-- measured: python -c "import json;d=json.load(open('Main/_Module/ModuleData/execution/alignment.json'));print(len(d))" 2026-10-29 -->
+A new kingdom whose clans resolve Neutral outside the ten Neutral realms (`NeutralRealmIds`: `battania`,
+`shaghana`, `abanissa`, `umbar`, `cardolan`, `rhudaur`, `anduinvale`, `angaladh`, `dorwinion`, `southrhovanion`) fails `ShippedClanSideCoverageTests`.
 Two feature docs call it a kingdom map with 16 and with 22 entries. Both are wrong, and the file is
 one line to check.
 
@@ -254,7 +254,7 @@ See [arthedain.md](../features/arthedain.md).
    files run from 28 to 80 notables.
 8. Add the education templates, the wanderers, the wanderer skill sets and each wanderer's seven
    backstory rows in `taom_wanderer_strings.xml` (`WandererBackstoryCoverageTests`). Ten wanderers is
-   the shipped norm; 21 of the 28 cultures with wanderers have exactly ten. Also list them in the
+   the shipped norm; 23 of the 30 cultures with wanderers have exactly ten. Also list them in the
    culture's `notable_templates` (`RenamedCultureWandererListTests` for the XSLT cultures), or the
    Faction screen's Wanderer tab stays empty.
 9. Assign fiefs in `TAOM_Map/ModuleData/settlements.xml`: set both `owner` and `culture` on every
@@ -262,7 +262,7 @@ See [arthedain.md](../features/arthedain.md).
    map author places and saves the entities in `Main_map/scene.xscene` first; then
    `tools/add_map_fortifications.py` writes the towns and castles (gates computed from the scene) and
    `tools/add_map_villages.py` the villages, each with its 12 loc rows, and both `--check`s must pass
-   before any campaign load. While a feature branch is being built these two tools stay dry runs: the live map is shared by every checkout, so rows that name cultures and clans trunk lacks block their ModuleData commits (#1055). The villages dry run refuses (exit 1) until the fort rows exist, because `add_map_villages.py` checks its anchors before its dry-run exit; so during the build run `add_map_fortifications.py` as a dry run and expect the villages dry run to report the missing forts. In the merge sitting apply the forts, then the villages, then `python tools/name_tags.py --target live-map --apply --allow-live-write` ([anduin-vale-angaladh.md](../features/anduin-vale-angaladh.md#merging-this-branch)). Both tools append at the END of the file, a town first: a new row ahead
+   before any campaign load. While a feature branch is being built these two tools stay dry runs: the live map is shared by every checkout, so rows that name cultures and clans trunk lacks block their ModuleData commits (#1055). The villages dry run refuses (exit 1) until the fort rows exist, because `add_map_villages.py` checks its anchors before its dry-run exit; so during the build run `add_map_fortifications.py` as a dry run and expect the villages dry run to report the missing forts. In the merge sitting apply the forts, then the villages, then `python tools/name_tags.py --target live-map --apply --allow-live-write` ([anduin-vale-angaladh.md](../features/anduin-vale-angaladh.md#merging-this-branch)). **Variant used for Dorwinion and South Rhovanion (#1062):** write the rows first on interim owners whose cultures and clans every build already defines (Dale's and Rohan's), so every checkout stays green and the distance cache can be rebuilt early. Retag to the final culture and owner only right after the build that defines them is deployed, and only once every checkout that deploys has that build; a deploy from another checkout in between leaves the map naming cultures the game lacks. The dry-run rule above stays the default. Both tools append at the END of the file, a town first: a new row ahead
    of an existing one makes an older save skip the existing one (see the save-order gotcha below).
    Then, in a new campaign, run `taom.audit_settlement_entrances`, correct any entrance it lists in
    the map editor, and only then rebuild the distance cache ([settlements](settlements.md) "Add"
@@ -341,10 +341,10 @@ Code: No code changes needed
   table, in `taom_spkingdoms.xml` or `spkingdoms.xslt`, and a language row of a bare name that adds
   its language's word for kingdom.
 - **A generated clan keeps its template's banner.** The generator rewrites ids, names, tiers and
-  colours and deliberately leaves `banner_key` alone, so 32 of the 172 clans in `characters/clans.xml`
+  colours and deliberately leaves `banner_key` alone, so 33 of the 188 clans in `characters/clans.xml`
   fly the same banner as `clan_gundabad_1` (the six Lindon clans did too, until 2026-10-28; a realm that names a
   `banner` and `clan_icons` gets its own).
-  <!-- measured: python -c "import xml.etree.ElementTree as ET;f=[e for e in ET.parse('Main/_Module/ModuleData/characters/clans.xml').getroot().iter('Faction')];k={e.get('id'):e.get('banner_key') for e in f};print(sum(1 for v in k.values() if v==k['clan_gundabad_1']))" 2026-10-28 -->
+  <!-- measured: python -c "import xml.etree.ElementTree as ET;f=[e for e in ET.parse('Main/_Module/ModuleData/characters/clans.xml').getroot().iter('Faction')];k={e.get('id'):e.get('banner_key') for e in f};print(sum(1 for v in k.values() if v==k['clan_gundabad_1']))" 2026-10-29 -->
   Fixing it is a per-clan copy from a source clan, or the in-game banner editor
   ([banners-and-heraldry](banners-and-heraldry.md)).
 - **Wanderers with the wrong `culture` never appear.** They spawn only in settlements of the culture
@@ -365,10 +365,10 @@ Code: No code changes needed
   tools append, and `add_map_fortifications.py --check` refuses any other order. Arthedain's batch
   first landed with Luinkrag ahead of 34 existing rows; the 2026-10-07 review caught it
   ([rca](../reviews/rca-arthedain-2026-10-07.md)).
-- **Four kingdoms have no special resource.** `special_resources_config.xml` names 24 of the 28
+- **Four kingdoms have no special resource.** `special_resources_config.xml` names 26 of the 30
   kingdom ids; `goblin`, `mistymountainorcs`, `bluecraig` and `lindon` are the four absent ones.
   Nothing reports it.
-  <!-- measured: rg -o '<Kingdom id="[a-z_]+"' Main/_Module/ModuleData/special_resources/special_resources_config.xml | sort -u | wc -l 2026-10-28 -->
+  <!-- measured: rg -o '<Kingdom id="[a-z_]+"' Main/_Module/ModuleData/special_resources/special_resources_config.xml | sort -u | wc -l 2026-10-29 -->
 - **TAOM has never written down whether the row order inside `SubModule.xml` matters.** What is on
   disk is that the XSLT rows sit above the plain-XML rows (`SubModule.xml:70` and `:130` for
   `Kingdoms`, `:96` and `:157` for `NPCCharacters`) and no doc says whether that is load-bearing.
@@ -377,25 +377,25 @@ Code: No code changes needed
 
 ## Numbers in this chapter
 
-| Number | What | Command, run 2026-10-27 (rows that moved with Anduin Vale and Angáladh re-measured 2026-10-28) |
+| Number | What | Command, run 2026-10-27 (rows that moved with Anduin Vale, Angáladh, Dorwinion and South Rhovanion re-measured 2026-10-29) |
 |---|---|---|
-| 20 | `<Kingdom>` entries in `taom_spkingdoms.xml` | `rg -c '<Kingdom\b' Main/_Module/ModuleData/taom_spkingdoms.xml` |
+| 22 | `<Kingdom>` entries in `taom_spkingdoms.xml` | `rg -c '<Kingdom\b' Main/_Module/ModuleData/taom_spkingdoms.xml` |
 | 8 | vanilla kingdoms rewritten by XSLT | `rg -c 'Kingdom\[@id=' Main/_Module/ModuleData/spkingdoms.xslt` |
-| 28 | live kingdom ids (20 plus 8) | the two rows above |
-| 34 | keys in `execution/alignment.json`, of which 28 are kingdom ids, 2 (`gondor`, `mordor`) are culture ids and 4 are minor clan ids | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/execution/alignment.json'));print(len(d))"` |
-| 28 | keys under `KingdomTheaters` in `configs/army_targeting.json`, exactly the 28 kingdom ids | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/configs/army_targeting.json'));print(len(d['KingdomTheaters']))"` |
-| 153 / 24 | rows in `diplomacy/diplomacy.json`, and the kingdom ids they cover: every id but `cardolan`, `rhudaur`, `anduinvale` and `angaladh`, which are Neutral by having no row ([cardolan-rhudaur](../features/cardolan-rhudaur.md), [anduin-vale-angaladh](../features/anduin-vale-angaladh.md)) | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/diplomacy/diplomacy.json'))['relationships'];print(len(d),len({r['kingdomA'] for r in d}\|{r['kingdomB'] for r in d}))"` |
-| 45 / 18 / 46 | entries in `factionmap/factions.json`, how many are `playable` (six [parked](../features/faction-map.md#parked-realms) on 2026-10-28), and entries in `factionmap/regions.json` | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/factionmap/factions.json'));r=json.load(open('Main/_Module/ModuleData/factionmap/regions.json'));print(len(d),sum(1 for v in d.values() if v.get('playable')),len(r))"` |
-| 24 | kingdom ids named in `special_resources_config.xml`, 4 short of 28 | `rg -o '<Kingdom id="[a-z_]+"' Main/_Module/ModuleData/special_resources/special_resources_config.xml \| sort -u \| wc -l` |
-| 28 | culture entries in `startup_resources_config.xml` | `python -c "import xml.etree.ElementTree as ET;print(len(ET.parse('Main/_Module/ModuleData/startup_resources/startup_resources_config.xml').getroot().findall('.//Culture')))"` |
-| 28 | entries in `charactercreation/cultures.json` | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/charactercreation/cultures.json'));print(len(d))"` |
-| 179 | `<Faction>` entries in `characters/clans.xml` | `rg -c '<Faction\b' Main/_Module/ModuleData/characters/clans.xml` |
-| 32 | of those clans share `clan_gundabad_1`'s `banner_key` (2026-10-28) | the ElementTree one-liner in Gotchas |
-| 1134 / 1314 | `<Hero>` entries in `characters/heroes.xml` and `<NPCCharacter>` entries in `characters/lords.xml` | `rg -c '<Hero\b' Main/_Module/ModuleData/characters/heroes.xml ; rg -c '<NPCCharacter\b' Main/_Module/ModuleData/characters/lords.xml` |
-| 29 / 1851 / 6 to 80 | `npcs_*.xml` files, `<NPCCharacter>` entries in them, and the per-file range; the 6 is `npcs_harad_lords.xml`, which holds Harad lord troops, so the culture notable files run from 28 to 80 | `python -c "import glob,xml.etree.ElementTree as ET;n=[len([x for x in ET.parse(p).getroot().iter('NPCCharacter')]) for p in glob.glob('Main/_Module/ModuleData/characters/npcs_*.xml')];print(len(n),sum(n),min(n),max(n))"` |
-| 301 / 28 / 21 | wanderer entries, cultures covered, and cultures with exactly 10 | `python -c "import xml.etree.ElementTree as ET,collections;c=collections.Counter(e.get('culture') for e in ET.parse('Main/_Module/ModuleData/taom_wanderers.xml').getroot().iter('NPCCharacter'));print(sum(c.values()),len(c),sum(1 for v in c.values() if v==10))"` |
-| 22 | troop files, every one swept by `validate_all_troop_refs.py` | `ls Main/_Module/ModuleData/troops/ \| rg '^troops_[a-z_]+\.xml$' \| wc -l` |
-| 1141 | settlements in the live map module (re-counted 2026-10-27, after Carn Dûm, Lithur, Cardolan, Rhudaur, the Lindon expansion and Ered Luin) | `rg -c '<Settlement\b' "$BANNERLORD_GAME_DIR/Modules/TAOM_Map/ModuleData/settlements.xml"` |
+| 30 | live kingdom ids (22 plus 8) | the two rows above |
+| 36 | keys in `execution/alignment.json`, of which 30 are kingdom ids, 2 (`gondor`, `mordor`) are culture ids and 4 are minor clan ids | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/execution/alignment.json'));print(len(d))"` |
+| 30 | keys under `KingdomTheaters` in `configs/army_targeting.json`, exactly the 30 kingdom ids | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/configs/army_targeting.json'));print(len(d['KingdomTheaters']))"` |
+| 153 / 24 | rows in `diplomacy/diplomacy.json`, and the kingdom ids they cover: every id but `cardolan`, `rhudaur`, `anduinvale`, `angaladh`, `dorwinion` and `southrhovanion`, which are Neutral by having no row ([cardolan-rhudaur](../features/cardolan-rhudaur.md), [anduin-vale-angaladh](../features/anduin-vale-angaladh.md), [dorwinion-south-rhovanion](../features/dorwinion-south-rhovanion.md)) | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/diplomacy/diplomacy.json'))['relationships'];print(len(d),len({r['kingdomA'] for r in d}\|{r['kingdomB'] for r in d}))"` |
+| 45 / 18 / 46 | entries in `factionmap/factions.json`, how many are `playable` (ten [parked](../features/faction-map.md#parked-realms) on 2026-10-29), and entries in `factionmap/regions.json` | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/factionmap/factions.json'));r=json.load(open('Main/_Module/ModuleData/factionmap/regions.json'));print(len(d),sum(1 for v in d.values() if v.get('playable')),len(r))"` |
+| 26 | kingdom ids named in `special_resources_config.xml`, 4 short of 30 | `rg -o '<Kingdom id="[a-z_]+"' Main/_Module/ModuleData/special_resources/special_resources_config.xml \| sort -u \| wc -l` |
+| 30 | culture entries in `startup_resources_config.xml` | `python -c "import xml.etree.ElementTree as ET;print(len(ET.parse('Main/_Module/ModuleData/startup_resources/startup_resources_config.xml').getroot().findall('.//Culture')))"` |
+| 30 | entries in `charactercreation/cultures.json` | `python -c "import json;d=json.load(open('Main/_Module/ModuleData/charactercreation/cultures.json'));print(len(d))"` |
+| 188 | `<Faction>` entries in `characters/clans.xml` | `rg -c '<Faction\b' Main/_Module/ModuleData/characters/clans.xml` |
+| 33 | of those clans share `clan_gundabad_1`'s `banner_key` (2026-10-29) | the ElementTree one-liner in Gotchas |
+| 1167 / 1346 | `<Hero>` entries in `characters/heroes.xml` and `<NPCCharacter>` entries in `characters/lords.xml` | `rg -c '<Hero\b' Main/_Module/ModuleData/characters/heroes.xml ; rg -c '<NPCCharacter\b' Main/_Module/ModuleData/characters/lords.xml` |
+| 31 / 1997 / 6 to 80 | `npcs_*.xml` files, `<NPCCharacter>` entries in them, and the per-file range; the 6 is `npcs_harad_lords.xml`, which holds Harad lord troops, so the culture notable files run from 28 to 80 | `python -c "import glob,xml.etree.ElementTree as ET;n=[len([x for x in ET.parse(p).getroot().iter('NPCCharacter')]) for p in glob.glob('Main/_Module/ModuleData/characters/npcs_*.xml')];print(len(n),sum(n),min(n),max(n))"` |
+| 321 / 30 / 23 | wanderer entries, cultures covered, and cultures with exactly 10 | `python -c "import xml.etree.ElementTree as ET,collections;c=collections.Counter(e.get('culture') for e in ET.parse('Main/_Module/ModuleData/taom_wanderers.xml').getroot().iter('NPCCharacter'));print(sum(c.values()),len(c),sum(1 for v in c.values() if v==10))"` |
+| 25 | troop files, every one swept by `validate_all_troop_refs.py` | `ls Main/_Module/ModuleData/troops/ \| rg '^troops_[a-z_]+\.xml$' \| wc -l` |
+| 1266 | settlements in the live map module (re-counted 2026-10-29, after Anduin Vale, Angáladh, Dorwinion, South Rhovanion and the Feral Orcs hideouts) | `rg -c '<Settlement\b' "$BANNERLORD_GAME_DIR/Modules/TAOM_Map/ModuleData/settlements.xml"` |
 | 3 / 12 / 15 | Rhudaur's clans, heroes and settlements, the smallest shipped realm | the python count quoted under "The floor" |
 | 14 / 7 | kingdoms other than goblin, mistymountainorcs, bluecraig and lindon, and how many `<relationship>` rows among them name one of those four (all 7 on Arthedain, Cardolan, Rhudaur and Ered Luin) | the ElementTree one-liner under "Worked example" |
 | 78.79 / 236 | average town gap over 78 towns, and the resulting march radius, from the 2026-08-26 position snapshot the analyzer reads (before Arthedain's three towns and Luinkrag, and so before Cardolan, Rhudaur and Ered Luin; the in-game Map Tools rebuild refreshes it) | `python tools/analyze_war_theaters.py` |

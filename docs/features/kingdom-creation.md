@@ -571,6 +571,7 @@ pass to keep that change to party data. If you are here to add a culture, do not
 | Arthedain, Cardolan, Rhudaur | `arthedain`, `cardolan`, `rhudaur` | Generated | `AN`, `CA`, `RH` | Built by the generators, not by hand: [arthedain.md](arthedain.md), [cardolan-rhudaur.md](cardolan-rhudaur.md) |
 | Ered Luin | `eredluin` | Generated | `EL` | The first non-human realm on the generators: dwarf race, Erebor's culture as the scaffold. [ered-luin.md](ered-luin.md) |
 | Anduin Vale, Angáladh | `anduinvale`, `angaladh` | Generated | `AV`, `AND` | The first human realms cut from Dale, which has no `<Culture>` of its own, so the promoter renders it from the XSLT. Both Neutral and parked at character creation. [anduin-vale-angaladh.md](anduin-vale-angaladh.md) |
+| Dorwinion, South Rhovanion | `dorwinion`, `southrhovanion` | Generated | `DO`, `SRH` | Northmen realms of Rhovanion: Dorwinion on the Dale scaffold, South Rhovanion on the Rohan scaffold (`_northman_successor`). Both Neutral and parked at character creation. [dorwinion-south-rhovanion.md](dorwinion-south-rhovanion.md) |
 
 When in doubt, use Umbar as the reference implementation — it is the most complete custom kingdom and all 13 files are present.
 

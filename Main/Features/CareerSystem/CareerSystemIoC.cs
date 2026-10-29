@@ -169,6 +169,16 @@ public static class CareerSystemIoC
         ["hewer_of_ironwood_hall"]      = CareerArchetype.TwoHanded,
         ["woodward_of_the_forest_road"] = CareerArchetype.Ranged,
 
+        // ═══ DORWINION ═══ (Dale's careers, re-themed by tools/insert_new_faction_careers.py)
+        ["spear_warden_of_vinewatch"] = CareerArchetype.Infantry,
+        ["bowman_of_redwater"]        = CareerArchetype.Ranged,
+        ["river_rider_of_seagate"]    = CareerArchetype.Cavalry,
+
+        // ═══ SOUTH RHOVANION ═══ (Rohan's careers, re-themed by tools/insert_new_faction_careers.py)
+        ["rider_of_vidugard"]    = CareerArchetype.Cavalry,
+        ["marksman_of_westmark"] = CareerArchetype.Ranged,
+        ["warden_of_wainwatch"]  = CareerArchetype.Infantry,
+
         // ═══ RIVENDELL ═══
         ["blade_dancer"]           = CareerArchetype.Infantry,
         ["elven_archer"]           = CareerArchetype.Ranged,

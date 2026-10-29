@@ -290,6 +290,25 @@ class CheckTests(unittest.TestCase):
         self.assertEqual(len(findings), 1)
         self.assertIn("scene.xscene", findings[0])
 
+    def test_check_names_a_retagged_culture(self):
+        retagged = MASTER.replace('posY="812.459" culture="Culture.isengard"', 'posY="812.459" culture="Culture.rohan"')
+        findings = amv.check([PRESENT], retagged, SCENE, {"DE": LOC})
+        self.assertEqual(len(findings), 1)
+        self.assertIn("Culture.rohan", findings[0])
+        self.assertIn("Culture.isengard", findings[0])
+
+    def test_check_names_a_rebound_village(self):
+        rebound = MASTER.replace('bound="Settlement.castle_I2"', 'bound="Settlement.castle_L1"')
+        findings = amv.check([PRESENT], rebound, SCENE, {"DE": LOC})
+        self.assertEqual(len(findings), 1)
+        self.assertIn("Settlement.castle_L1", findings[0])
+
+    def test_master_attr_reads_the_open_tag_only(self):
+        self.assertEqual(amv.master_attr(MASTER, "castle_I2", "owner"), "Faction.clan_isengard_10")
+        self.assertEqual(amv.master_attr(MASTER, "castle_I2", "culture"), "Culture.isengard")
+        self.assertIsNone(amv.master_attr(MASTER, "castle_village_I2_3", "owner"))
+        self.assertIsNone(amv.master_attr(MASTER, "castle_I20", "culture"))
+
 
 class NameCollisionTests(unittest.TestCase):
     """A new name is checked against every name already on the map, not only against its own table."""

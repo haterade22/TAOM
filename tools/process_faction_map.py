@@ -15,6 +15,9 @@ Output: - deploy/<region_name>.png              (cropped to bbox, max 512px wide
         - regions.json                           (normalized bounding boxes + capital positions)
         - factions.json                          (faction data with new names, migrated from old)
         - CharacterCreationCultureStage.xml      (updated PolygonWidget entries)
+WARNING (#1062 review, 2026-10-29): factions.json is maintained by hand. This tool's tables still
+disagree with it on other rows and its output drops the {=taom_faction_*_name} keys, so never copy
+its output over factions.json.
 """
 
 import argparse
@@ -62,8 +65,8 @@ REGIONS = [
     ("kingdom_of_neldoreth",         "Kingdom of Neldoreth",         "elves_of_neldoreth",           "mirkwood",  False, "free"),
     ("kingdom_of_angaladh",          "Kingdom of Angaladh",          None,                           "",          False, "free"),
     ("overlordship_of_dol_guldur",   "Overlordship of Dol Guldur",   "shadow_of_dol_guldur",        "dolguldur", True,  "evil"),
-    ("kingdom_of_dorwinion",         "Kingdom of Dorwinion",         "realm_of_dorwinion",           "vlandia",   False, "neutral"),
-    ("kingdom_of_south_rhovanion",   "Kingdom of South Rhovanion",   None,                           "",          False, "neutral"),
+    ("kingdom_of_dorwinion",         "Kingdom of Dorwinion",         "realm_of_dorwinion",           "dorwinion", False, "neutral"),
+    ("kingdom_of_south_rhovanion",   "Kingdom of South Rhovanion",   None,                           "southrhovanion", False, "neutral"),
 
     # --- South: Gondor, Rohan ---
     ("kingdom_of_rohan",             "Kingdom of Rohan",             "kingdom_of_rohan",             "vlandia",   True,  "free"),

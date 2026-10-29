@@ -2590,4 +2590,112 @@
 		default_party_template="PartyTemplate.kingdom_hero_party_angaladh_template"
 		banner_key="11.2021.2021.1528.1528.764.764.1.0.0.20001.2022.2022.700.700.764.764.0.0.0" />
   <!-- TAOM-NEWFACTIONS:angaladh:END -->
+  <!-- TAOM-NEWFACTIONS:dorwinion:BEGIN -->
+  <Faction
+		id="clan_dorwinion_1"
+		initial_home_settlement="Settlement.town_DO2"
+		name="{=aom_clan_dorwinion_1_name}House of Vineholm"
+		tier="5"
+		owner="Hero.lord_DO1_1"
+		culture="Culture.dorwinion"
+		super_faction="Kingdom.dorwinion"
+		is_noble="true"
+		color="FF570D0D"
+		color2="FFFBC841"
+		default_party_template="PartyTemplate.kingdom_hero_party_dorwinion_template"
+		banner_key="11.2015.2015.1528.1528.764.764.1.0.0.30011.2024.2024.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_dorwinion_2"
+		initial_home_settlement="Settlement.town_DO1"
+		name="{=aom_clan_dorwinion_2_name}Wardens of the Redwater"
+		tier="4"
+		owner="Hero.lord_DO2_1"
+		culture="Culture.dorwinion"
+		super_faction="Kingdom.dorwinion"
+		is_noble="true"
+		color="FF4A0B0B"
+		color2="FFF0C050"
+		default_party_template="PartyTemplate.kingdom_hero_party_dorwinion_template"
+		banner_key="11.2015.2015.1528.1528.764.764.1.0.0.30015.2024.2024.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_dorwinion_3"
+		initial_home_settlement="Settlement.town_DO3"
+		name="{=aom_clan_dorwinion_3_name}House of Seagate"
+		tier="4"
+		owner="Hero.lord_DO3_1"
+		culture="Culture.dorwinion"
+		super_faction="Kingdom.dorwinion"
+		is_noble="true"
+		color="FF63110F"
+		color2="FFFBC841"
+		default_party_template="PartyTemplate.kingdom_hero_party_dorwinion_template"
+		banner_key="11.2015.2015.1528.1528.764.764.1.0.0.30008.2024.2024.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_dorwinion_4"
+		initial_home_settlement="Settlement.castle_DO3"
+		name="{=aom_clan_dorwinion_4_name}Wardens of the Eastmarch"
+		tier="3"
+		owner="Hero.lord_DO4_1"
+		culture="Culture.dorwinion"
+		super_faction="Kingdom.dorwinion"
+		is_noble="true"
+		color="FF3F0909"
+		color2="FFE8B840"
+		default_party_template="PartyTemplate.kingdom_hero_party_dorwinion_template"
+		banner_key="11.2015.2015.1528.1528.764.764.1.0.0.30014.2024.2024.700.700.764.764.0.0.0" />
+  <!-- TAOM-NEWFACTIONS:dorwinion:END -->
+  <!-- TAOM-NEWFACTIONS:southrhovanion:BEGIN -->
+  <Faction
+		id="clan_southrhovanion_1"
+		initial_home_settlement="Settlement.town_SRH2"
+		name="{=aom_clan_southrhovanion_1_name}House of Vidugard"
+		tier="5"
+		owner="Hero.lord_SRH1_1"
+		culture="Culture.southrhovanion"
+		super_faction="Kingdom.southrhovanion"
+		is_noble="true"
+		color="FF3F3831"
+		color2="FFC99B6E"
+		default_party_template="PartyTemplate.kingdom_hero_party_southrhovanion_template"
+		banner_key="11.2013.2013.1528.1528.764.764.1.0.0.30006.2008.2008.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_southrhovanion_2"
+		initial_home_settlement="Settlement.town_SRH1"
+		name="{=aom_clan_southrhovanion_2_name}Riders of Southwood"
+		tier="4"
+		owner="Hero.lord_SRH2_1"
+		culture="Culture.southrhovanion"
+		super_faction="Kingdom.southrhovanion"
+		is_noble="true"
+		color="FF35302A"
+		color2="FFC0925E"
+		default_party_template="PartyTemplate.kingdom_hero_party_southrhovanion_template"
+		banner_key="11.2013.2013.1528.1528.764.764.1.0.0.30001.2008.2008.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_southrhovanion_3"
+		initial_home_settlement="Settlement.castle_SRH1"
+		name="{=aom_clan_southrhovanion_3_name}Wainwatch Riders"
+		tier="4"
+		owner="Hero.lord_SRH3_1"
+		culture="Culture.southrhovanion"
+		super_faction="Kingdom.southrhovanion"
+		is_noble="true"
+		color="FF4A4239"
+		color2="FFC99B6E"
+		default_party_template="PartyTemplate.kingdom_hero_party_southrhovanion_template"
+		banner_key="11.2013.2013.1528.1528.764.764.1.0.0.30005.2008.2008.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_southrhovanion_4"
+		initial_home_settlement="Settlement.castle_SRH3"
+		name="{=aom_clan_southrhovanion_4_name}Wardens of the Northmark"
+		tier="3"
+		owner="Hero.lord_SRH4_1"
+		culture="Culture.southrhovanion"
+		super_faction="Kingdom.southrhovanion"
+		is_noble="true"
+		color="FF2F2A24"
+		color2="FFB88A5A"
+		default_party_template="PartyTemplate.kingdom_hero_party_southrhovanion_template"
+		banner_key="11.2013.2013.1528.1528.764.764.1.0.0.30004.2008.2008.700.700.764.764.0.0.0" />
+  <!-- TAOM-NEWFACTIONS:southrhovanion:END -->
 </Factions>

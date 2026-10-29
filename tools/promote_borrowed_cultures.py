@@ -452,28 +452,62 @@ TARGETS["eredluin"] = {
 }
 
 
-def _dale_successor(**over):
-    """Anduin Vale and Angáladh (2026-10-28) are human realms cut from Dale, each with its own troop
-    tree (tools/generate_<c>_troops.py). Dale is not a TAOM culture of its own: its <Culture> is the
-    vanilla `sturgia` one rewritten by spcultures.xslt, and its data uses two names, so the keys below
-    say which. Each passes its own capital, words, names and strings."""
-    c = over["c"]
-    cfg = {
-        "src": "dale",
+# Dale and Rohan are not TAOM cultures of their own: each <Culture> is a vanilla one rewritten by
+# spcultures.xslt, and each realm's data uses two names, the vanilla culture id and its own.
+NORTHMAN_SCAFFOLDS = {
+    "dale": {
+        "culture": "sturgia",
         # Dale's notable and townsfolk name keys are aom_dl_*.
         "src_short": "dl",
-        # Rendered from spcultures.xslt over vanilla spcultures.xml: taom_spcultures.xml has no Dale.
-        # The render follows the installed game, so an engine bump that changes vanilla sturgia shows
-        # as --check drift on both targets, fixed by --apply.
-        "culture_xslt": "sturgia",
-        # Shared files whose source rows are not under `dale`. Dale's strings, lord kits and enlistment
-        # kits are under `sturgia`. Dale has no TAOM child, education equipment or stage-2 education
-        # templates (it uses vanilla's), and a culture without them throws at new game or CTDs at age 8
-        # (MISSING_EDUCATION_TEMPLATES), so those three are Gondor's, as Cardolan's are.
+        # The localization keys spcultures.xslt gives the culture's name and description.
+        "culture_xslt_keys": ("TAOM_sturgia_culture", "TAOM_sturgia_desc"),
+        # The culture's basic and elite basic troops (the elite is also its executioner), as the
+        # blanket rename leaves them: `<c>_recruit`, `<c>_squire`.
+        "basic": "recruit", "elite": "squire",
+        "face": "fighter_sturgia",
+        # Dale's feats, verbatim (see Lindon's note), less the two that are Dale's own story and
+        # strength: Black Arrow Tradition (battle renown) and Dwarven Trade Alliance (tariffs).
+        "feats": ["taom_dale_plain_speed", "taom_dale_loyalty"],
+    },
+    "rohan": {
+        "culture": "vlandia",
+        "src_short": "roh",
+        "culture_xslt_keys": ("aom_vlandia_name", "aom_vlandia_desc"),
+        "basic": "edoras_recruit", "elite": "edoras_golden_hall_rider",
+        "face": "fighter_rohan",
+        # Rohan's feats, verbatim (see Lindon's note), less the two that make Rohan's cavalry the
+        # cheapest in Middle-earth: Horse-lord Heritage (mounted recruit and upgrade cost) and Riders
+        # of the Mark (mounted wages, named for Rohan). Plains speed, loyalty, morale and the
+        # Cavalry Dependent penalty stay: a horse people, not a second Rohan.
+        "feats": ["taom_rohan_infantry_speed", "taom_rohan_loyalty", "taom_rohan_morale",
+                  "taom_rohan_plain_speed"],
+    },
+}
+
+
+def _northman_successor(scaffold, **over):
+    """Human realms cut from Dale (Anduin Vale, Angáladh, Dorwinion) or Rohan (South Rhovanion), each
+    with its own troop tree (tools/generate_<c>_troops.py). `scaffold` names the realm in
+    NORTHMAN_SCAFFOLDS; each target passes its own capital, words, names and strings."""
+    s = NORTHMAN_SCAFFOLDS[scaffold]
+    c, vid = over["c"], s["culture"]
+    cfg = {
+        "src": scaffold,
+        "src_short": s["src_short"],
+        # Rendered from spcultures.xslt over vanilla spcultures.xml: taom_spcultures.xml has neither
+        # realm. The render follows the installed game, so an engine bump that changes the vanilla
+        # culture shows as --check drift on every target cut from it, fixed by --apply.
+        "culture_xslt": vid,
+        "culture_xslt_keys": s["culture_xslt_keys"],
+        # Shared files whose source rows are not under the realm's own name. The strings, lord kits
+        # and enlistment kits are under the vanilla culture id. Neither realm has a TAOM child,
+        # education equipment or stage-2 education templates (both use vanilla's), and a culture
+        # without them throws at new game or CTDs at age 8 (MISSING_EDUCATION_TEMPLATES), so those
+        # three are Gondor's, as Cardolan's are.
         "block_src": {
-            "taom_module_strings.xml": "sturgia",
-            "equipmentsets/taom_lord_template_equipment.xml": "sturgia",
-            "equipmentsets/taom_enlistment_equipment.xml": "sturgia",
+            "taom_module_strings.xml": vid,
+            "equipmentsets/taom_lord_template_equipment.xml": vid,
+            "equipmentsets/taom_enlistment_equipment.xml": vid,
             "equipmentsets/taom_child_equipment_templates.xml": "gondor",
             "equipmentsets/taom_education_equipment_templates.xml": "gondor",
             "taom_education_character_templates.xml": "gondor",
@@ -481,21 +515,20 @@ def _dale_successor(**over):
         "race": None,
         "raceword": "Man",
         "orc_remap": False,
-        # Dale's feats, verbatim (see Lindon's note), less the two that are Dale's own story and
-        # strength: Black Arrow Tradition (battle renown) and Dwarven Trade Alliance (tariffs).
-        "feats": ["taom_dale_plain_speed", "taom_dale_loyalty"],
+        "feats": s["feats"],
         "standalone": ["characters/npcs_{c}.xml", "equipmentsets/taom_equipment_sets_{c}.xml"],
-        # Dale's rosters a to h: the lord template family a to e only, as Arthedain's.
+        # The lord template family a to e only, as Arthedain's (Dale has a to h, and Rohan its named
+        # lords' kits besides).
         "rosters_kept": rf"^{c}_(bat_template_medium|civ_template_default)_[a-e]$",
         "party_names": ["villager_{c}_template", "caravan_template_{c}", "elite_caravan_template_{c}"],
         # The culture's basic and elite basic troops (and executioner) land on the generated tree. The
-        # four militia ids are the same names in both trees. Dale's npcs, equipment sets and wanderers
-        # carry Culture.sturgia: the whole token is renamed, never bare `sturgia`, which also names
-        # vanilla assets the clone keeps (Culture.sturgia_raiders survives the token boundary). The
-        # education tutors borrowed from Gondor take Dale's face, as the realm's lords do.
-        "id_overrides": {f"{c}_recruit": f"{c}_levy", f"{c}_squire": over["elite"],
-                         "Culture.sturgia": f"Culture.{c}", "fighter_gondor": "fighter_sturgia"},
-        "lord_face": "fighter_sturgia",
+        # four militia ids are the same names in both trees. The source npcs, equipment sets and
+        # wanderers carry Culture.<vanilla id>: the whole token is renamed, never the bare id, which
+        # also names vanilla assets the clone keeps (Culture.sturgia_raiders survives the token
+        # boundary). The education tutors borrowed from Gondor take the realm's face, as its lords do.
+        "id_overrides": {f"{c}_{s['basic']}": f"{c}_levy", f"{c}_{s['elite']}": over["elite"],
+                         f"Culture.{vid}": f"Culture.{c}", "fighter_gondor": s["face"]},
+        "lord_face": s["face"],
         "mercenaries": [over["elite"] + "_merc"],
         "own_reg": True,
     }
@@ -503,7 +536,8 @@ def _dale_successor(**over):
     return cfg
 
 
-TARGETS["anduinvale"] = _dale_successor(
+TARGETS["anduinvale"] = _northman_successor(
+    "dale",
     c="anduinvale", elite="anduinvale_beorning_youth",
     capital="town_AV1",  # Beorn's Hall
     adjective="Beorning", tag="Anduin Vale", short="av",
@@ -565,7 +599,8 @@ TARGETS["anduinvale"] = _dale_successor(
     },
 )
 
-TARGETS["angaladh"] = _dale_successor(
+TARGETS["angaladh"] = _northman_successor(
+    "dale",
     c="angaladh", elite="angaladh_ironwood_youth",
     capital="town_AND1",  # Woodmen-town
     adjective="Woodman", tag="Angáladh", short="ang",
@@ -617,6 +652,121 @@ TARGETS["angaladh"] = _dale_successor(
             "Folk of Rhosgobel", "Hunters of the Narrows", "Charcoal-burners of the Greenwood",
             "House of the Great Oak", "Spider-slayers of the Eaves", "Folk of the Eastern Shore",
             "House of the Elder Kings", "Keepers of the Woodmen-road", "Folk of the Black Mere"],
+    },
+)
+
+TARGETS["dorwinion"] = _northman_successor(
+    "dale",
+    c="dorwinion", elite="dorwinion_noble",
+    capital="town_DO2",  # Vineholm
+    adjective="Dorwinion", tag="Dorwinion", short="dor",
+    color="0xFF570D0D", color2="0xFFFBC841",  # the realm's banner: wine red and gold
+    lord_templates=[("Bold Dorwinion lord", "curt", 1), ("Cautious Dorwinion lord", "earnest", -1)],
+    subs=[
+        ("Bainling", "Vinling"),
+        ("Ravenhild", "Vinehild"),
+        ("Girionsson", "Ermansson"),
+        ("Esgarothing", "Carnenling"),
+        ("Longlakeson", "Longshoreson"),
+        ("Lonelyfell", "Sunfell"),
+        ("Hallbrand", "Hallwin"),
+        ("Brandwyn", "Redwyn"),
+        ("Dalecroft", "Vinecroft"),
+        ("Bardings", "Men of Dorwinion"),
+        ("Barding", "Dorwinion"),
+        ("Bard", "Authari"),
+        ("Esgaroth", "Seagate"),
+        ("laketown", "riverside"),
+        ("Erebor", "Rhûn"),
+        ("Dale", "Dorwinion"),
+    ],
+    culture_name="Men of Dorwinion",
+    culture_desc=(
+        "The Men of Dorwinion tend the vineyards on the warm slopes above the Sea of Rhûn, and their "
+        "wine goes up the Redwater and the River Running to the halls of Elves and Men far to the west. "
+        "They are vintners, boatmen and river traders, a Northman folk who would rather sell to a "
+        "stranger than fight him. Their king keeps his court at Vineholm, and every year the "
+        "Easterlings across the inland sea look harder at his rich and lightly guarded land."),
+    string_overrides=_ruler_strings("dorwinion", "Kingdom of Dorwinion", "Dorwinion", "Men of Dorwinion",
+                                    "Wine-folk of Dorwinion", "Dorwinion", "Authari", "Walderada"),
+    # Lombard, Burgundian, Vandal and Gepid names, the Northman tongues beside the Gothic of
+    # Rhovanion, avoiding every name the lords, the clans, every culture pool and Dale's pool use.
+    names={
+        "male_names": [
+            "Alboin", "Audoin", "Agilulf", "Authari", "Cleph", "Grimoald", "Liutprand", "Ratchis",
+            "Aistulf", "Perctarit", "Cunincpert", "Aripert", "Rothari", "Ariwald", "Wacho", "Tato",
+            "Godepert", "Garibald", "Ansprand", "Hildeprand", "Rodoald", "Adaloald", "Alahis",
+            "Gundahar", "Gundioc", "Godegisel", "Gundomar", "Gislahar", "Gibica", "Gaiseric",
+            "Huneric", "Thrasamund", "Gelimer", "Godigisel", "Ardaric", "Thurisind", "Cunimund",
+            "Turismod", "Gisulf", "Romuald"],
+        "female_names": [
+            "Gundeperga", "Ansa", "Ratperga", "Clotsuinda", "Walderada", "Rosamund", "Ermengarda",
+            "Gisela", "Adelperga", "Anselperga", "Liutperga", "Ratruda", "Tassia", "Gaila",
+            "Wigilinda", "Romilda", "Aldegunda", "Guntrada", "Sindrada", "Hildegarda", "Gundrada",
+            "Theodorada", "Ermelinda", "Ansperga"],
+        "clan_names": [
+            "House of the Wine-presses", "Vintners of the Redwater", "Boatmen of the River Running",
+            "House of the Sunward Slopes", "Cellarers of Vineholm", "Shoremen of the Inland Sea",
+            "Traders of the Wine-road", "House of the Golden Grape", "Bargemen of the Carnen",
+            "Wardens of the Southern Vines", "Folk of the Vineyards", "House of the Elf-wine"],
+    },
+)
+
+TARGETS["southrhovanion"] = _northman_successor(
+    "rohan",
+    c="southrhovanion", elite="southrhovanion_northman_youth",
+    capital="town_SRH2",  # Vidugard
+    adjective="Rhovanion", tag="South Rhovanion", short="srh",
+    color="0xFF3F3831", color2="0xFFC99B6E",  # the realm's banner: dark earth and tan
+    lord_templates=[("Bold Rhovanion lord", "curt", 1), ("Cautious Rhovanion lord", "earnest", -1)],
+    subs=[
+        ("Wulfgarig", "Marhaling"),
+        ("Osricdarn", "Vidurikson"),
+        ("Thanegrím", "Gaisaring"),
+        ("Frithwineson", "Hrodulfsson"),
+        ("Leofstaning", "Ermanstaning"),
+        ("Herebranding", "Harjabranding"),
+        ("Godricsson", "Guntharsson"),
+        ("Thelredwain", "Wainbane"),
+        ("Hardingar", "Balthingar"),
+        ("Wulfheortan", "Steedheart"),
+        ("Riddermark", "Rhovanion"),
+        ("Rohirrim", "Northmen"),
+        ("Rohirric", "Rhovanion"),
+        ("Rohan", "South Rhovanion"),
+    ],
+    culture_name="Northmen of Rhovanion",
+    culture_desc=(
+        "The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood "
+        "and the Brown Lands, a free people of horse-breeders who count the Éothéod of the north as "
+        "their kin. Their fathers were the lords of the Northmen in the days of the old kings, and the "
+        "barrows of those kings still stand on the grasslands. Twice the Wainriders came out of the "
+        "East with wagon and fire and broke them, and the riders of the plains have not forgotten it."),
+    string_overrides=_ruler_strings("southrhovanion", "Kingdom of South Rhovanion", "the Northmen",
+                                    "Northmen", "Northmen of Rhovanion", "Rhovanion", "Marhamund",
+                                    "Marhildo"),
+    # Gothic names, the tongue Tolkien gave the Northmen of Rhovanion, built on its elements (vidu
+    # "wood", marh "horse", gaisa "spear", harja "host"). Angáladh holds the canonical ones (Vidugavia,
+    # Vidumavi, Marhari, Marhwini, Forthwini), so these avoid them, every lord and clan name, and
+    # every culture pool.
+    names={
+        "male_names": [
+            "Vidurik", "Viduhari", "Vidumund", "Vidugast", "Marhamund", "Marhagast", "Marharik",
+            "Marhulf", "Forthari", "Forthagast", "Hrodamund", "Hrodarik", "Ermanagast", "Ermanamund",
+            "Aiwarik", "Aiwulf", "Gaisamund", "Gaisarik", "Balthamar", "Balthulf", "Ansamar", "Ansulf",
+            "Sigiwini", "Sigirik", "Hildimar", "Hildiwini", "Wulfamund", "Wulfarik", "Athalwini",
+            "Athalgast", "Frithumar", "Frithuwini", "Harjamund", "Harjarik", "Gunthamar", "Gunthiwini",
+            "Thiudawini", "Austrowini", "Sunjamar", "Swinthamar"],
+        "female_names": [
+            "Viduhilda", "Marhawintha", "Marhildo", "Forthiwintha", "Hrodagunda", "Ermanahilda",
+            "Aiwigunda", "Gaisawintha", "Balthildo", "Ansawintha", "Sigihilda", "Gaisahildo",
+            "Wulfahilda", "Athalgunda", "Frithuwara", "Harjahildo", "Gunthiwintha", "Thiudawara",
+            "Austrahilda", "Sunjawintha", "Swinthahilda", "Vidurada", "Marhamavi", "Ermanaberga"],
+        "clan_names": [
+            "House of the Barrow-kings", "Riders of the East Bight", "Horse-herds of the Plains",
+            "Folk of the Southern Eaves", "House of the Wain-breakers", "Spearmen of the Fords",
+            "House of the White Mares", "Keepers of the Horse-fields", "Riders of the Celduin",
+            "House of the Old Forest Road", "Folk of the Brown Lands", "Watchers of the Dagorlad"],
     },
 )
 
@@ -934,9 +1084,10 @@ def source_blocks(kind, text, src, cfg=None):
             # Named as a TAOM culture `src` would be, so the shared rename and the name and
             # description rewrites match it.
             xid, block = cfg["culture_xslt"], render_xslt_culture(cfg["culture_xslt"])
+            name_key, desc_key = cfg["culture_xslt_keys"]
             for old, new in ((f'\n    id="{xid}"', f'\n    id="{src}"'),
-                             (f"{{=TAOM_{xid}_culture}}", f"{{=aom_{src}_name}}"),
-                             (f"{{=TAOM_{xid}_desc}}", f"{{=aom_{src}_desc}}")):
+                             (f"{{={name_key}}}", f"{{=aom_{src}_name}}"),
+                             (f"{{={desc_key}}}", f"{{=aom_{src}_desc}}")):
                 if block.count(old) != 1:
                     raise SystemExit(f"rendered <Culture> {xid}: expected one {old.strip()!r}, found {block.count(old)}")
                 block = block.replace(old, new)
@@ -1057,6 +1208,26 @@ def sub_once(text, pattern, value, what):
     if n != 1:
         raise SystemExit(f"expected to rewrite {what} exactly once, rewrote {n}")
     return out
+
+
+def cloned_wanderer_ids(target, cfg, id_map, wanderers_text):
+    """The `spc_wanderer_<target>_N` ids the wanderers file's clone defines, in file order."""
+    bcfg = block_cfg(cfg, "taom_wanderers.xml")
+    cloned = transform(source_blocks("wanderers", wanderers_text, bcfg["src"], bcfg), target, bcfg, id_map)
+    return re.findall(r'<NPCCharacter\b[^>]*\bid="(spc_wanderer_%s_\d+)"' % target, cloned)
+
+
+def list_unlisted_wanderers(block, target, wanderer_ids):
+    """Append every wanderer id the culture block does not list after its last listed wanderer. The
+    source culture's own list can miss one (Rohan's misses rohan_9, #762), and the clone inherits that."""
+    row = r'([ \t]*)<template name="NPCCharacter\.spc_wanderer_%s_\d+" />\n' % target
+    listed = list(re.finditer(row, block))
+    if not listed:
+        raise SystemExit(f"{target}: the culture block lists no spc_wanderer_{target}_N template")
+    missing = [w for w in wanderer_ids if f'name="NPCCharacter.{w}"' not in block]
+    last = listed[-1]
+    add = "".join(f'{last.group(1)}<template name="NPCCharacter.{w}" />\n' for w in missing)
+    return block[:last.end()] + add + block[last.end():]
 
 
 def duplicate_id_check(target, generated):
@@ -1207,6 +1378,9 @@ def main():
                                            lambda m: m.group(1) + rows + m.group(2), block, flags=re.DOTALL)
                         if n != 1:
                             raise SystemExit(f"{target}: expected one <{tag}> block, found {n}")
+                wanderers_text, _, _ = load(MD / "taom_wanderers.xml")
+                block = list_unlisted_wanderers(
+                    block, target, cloned_wanderer_ids(target, cfg, id_map, wanderers_text))
                 if cfg.get("mercenaries"):
                     rows = "".join(f'      <template name="NPCCharacter.{m}" />\n' for m in cfg["mercenaries"])
                     block, n = re.subn(r"(<basic_mercenary_troops>\n).*?([ \t]*</basic_mercenary_troops>)",

@@ -91,6 +91,15 @@ public class PosternGateDefinitionTests
     }
 
     [TestMethod]
+    public void Culvert_ServesRohanAndItsCutSouthRhovanion()
+    {
+        // South Rhovanion is cut from Rohan (#1062): its own culture id must reach Rohan's variant.
+        CollectionAssert.AreEqual(
+            new[] { "vlandia", "southrhovanion" },
+            Definition().Variants.Single(v => v.Id.EndsWith("_rohan")).CultureIds.ToArray());
+    }
+
+    [TestMethod]
     public void Text_UsesThePosternKeyPrefix_AndTheSiegeSentence()
     {
         // taom_bld_ belongs to Battle Load Diagnostics.

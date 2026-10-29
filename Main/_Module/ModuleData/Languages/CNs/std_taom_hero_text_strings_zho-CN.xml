@@ -473,5 +473,7 @@
     <string id="lord_EL1_1_description" text="Farin II, King of Ered Luin, of the line of Borin, Lord of Thorin's Halls, who holds the Blue Mountains with the Broadbeams of Belegost and the Firebeards of Nogrod." />
     <string id="lord_AND1_1_description" text="Ingomar, King of Angáladh, lord of Woodmen-town, who keeps the eaves of Mirkwood against the shadow of Dol Guldur." />
     <string id="lord_AV1_1_description" text="Grimbeorn, son of Beorn, Chieftain of the Beornings, who keeps the High Pass and the Old Ford and lets no orc cross the Vales of Anduin." />
+    <string id="lord_DO1_1_description" text="Ostric, King of Dorwinion, lord of Vineholm, whose wine goes up the River Running to Dale and the Elves of Mirkwood." />
+    <string id="lord_SRH1_1_description" text="Vidumar, King of South Rhovanion, lord of Vidugard, who rides the plains south of Mirkwood and remembers the Wainriders." />
   </strings>
 </base>

@@ -464,7 +464,7 @@ class ShippedTreeTests(unittest.TestCase):
 
     def test_inventory_KingdomCountMatchesTheEnglishSources(self):
         kingdoms = [n for n in self.names if n.category == "kingdom"]
-        self.assertEqual(len(kingdoms), 84)
+        self.assertEqual(len(kingdoms), 90)
 
     def test_table_TagsAgreeWithTheGeneratorForRepoNames(self):
         rows = {lang: inv.language_rows(lang) for lang in nt.TAGGED_LANGUAGES}

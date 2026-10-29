@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Design tests for the Cardolan and Rhudaur troop generators (#978), Ered Luin's and the Dale-scaffolded
-Anduin Vale and Angaladh, which share tools/realm_troops.py with Arthedain's (tools/tests/test_generate_arthedain_troops.py covers that one).
+"""Design tests for the Cardolan and Rhudaur troop generators (#978), Ered Luin's, the Dale-scaffolded
+Anduin Vale, Angaladh and Dorwinion and the Rohan-scaffolded South Rhovanion, which share tools/realm_troops.py
+with Arthedain's (tools/tests/test_generate_arthedain_troops.py covers that one).
 
 Run:  python -m unittest tools.tests.test_realm_troops
 
@@ -12,7 +13,8 @@ target. Ered Luin adds the dwarf options (race, body, a borrowed ladder line, cr
 dwarf) and the rule that a realm never becomes a borrowed armour piece's new lowest wearer below the
 band another kingdom wears it at (deep review XML-1). Anduin Vale and Angaladh borrow Dale's armour,
 whose ids carry no tier keyword: they never wear a Dale piece below Dale's lowest wearer, and shoot only
-at the levels where the Dale bow ladder has a cell.
+at the levels where the Dale bow ladder has a cell. South Rhovanion borrows Rohan's armour the same way,
+rides on Rohan's mounts (every horse with a harness) and adds the horse-archer role.
 """
 import dataclasses
 import os
@@ -26,15 +28,17 @@ import derive_armor_tiers as dat  # noqa: E402
 import generate_anduinvale_troops as gavt  # noqa: E402
 import generate_angaladh_troops as gaht  # noqa: E402
 import generate_cardolan_troops as gct  # noqa: E402
+import generate_dorwinion_troops as gdot  # noqa: E402
 import generate_eredluin_troops as gelt  # noqa: E402
 import generate_rhudaur_troops as grt  # noqa: E402
+import generate_southrhovanion_troops as gsrt  # noqa: E402
 import ranged_ladder as rl  # noqa: E402
 import realm_troops as rt  # noqa: E402
 import rebalance_armor as ra  # noqa: E402
 
-GENERATORS = (gct, grt, gelt, gavt, gaht)
-DALE_REALMS = (gavt, gaht)
-LAUNCHER = {"ranged": "Bow", "crossbow": "Crossbow"}
+GENERATORS = (gct, grt, gelt, gavt, gaht, gdot, gsrt)
+DALE_REALMS = (gavt, gaht, gdot)
+LAUNCHER = {"ranged": "Bow", "crossbow": "Crossbow", "horsearcher": "Bow"}
 BANDS = ("light", "medium", "heavy", "elite")
 
 
@@ -194,7 +198,7 @@ class BorrowedArmourAnchorTests(unittest.TestCase):
 
 
 class DaleRealmTests(unittest.TestCase):
-    """Anduin Vale and Angaladh are scaffolded from Dale: its armour (ids with no tier keyword, so
+    """Anduin Vale, Angaladh and Dorwinion are scaffolded from Dale: its armour (ids with no tier keyword, so
     ARMOUR_MESH_TIER_LADDER cannot check them), its bow ladder and its weapons."""
 
     FIXED_IDS = {
@@ -206,6 +210,10 @@ class DaleRealmTests(unittest.TestCase):
                "angaladh_militia_spearman", "angaladh_militia_archer",
                "angaladh_militia_veteran_spearman", "angaladh_militia_veteran_archer",
                "angaladh_woodmen_guard"},
+        gdot: {"dorwinion_levy", "dorwinion_noble", "dorwinion_noble_merc",
+               "dorwinion_militia_spearman", "dorwinion_militia_archer",
+               "dorwinion_militia_veteran_spearman", "dorwinion_militia_veteran_archer",
+               "dorwinion_vineholm_guard"},
     }
 
     @staticmethod
@@ -227,7 +235,8 @@ class DaleRealmTests(unittest.TestCase):
             self.assertLessEqual(self.FIXED_IDS[gen], ids, gen.CULTURE)
 
     def test_the_capstone_is_level_36_and_on_foot(self):
-        for gen, capstone in ((gavt, "anduinvale_bear_warden"), (gaht, "angaladh_woodmen_guard")):
+        for gen, capstone in ((gavt, "anduinvale_bear_warden"), (gaht, "angaladh_woodmen_guard"),
+                               (gdot, "dorwinion_vineholm_guard")):
             troop = next(t for t in built(gen) if t.id == capstone)
             self.assertEqual(troop.level, 36)
             self.assertIsNone(troop.horse)
@@ -265,7 +274,7 @@ class DaleRealmTests(unittest.TestCase):
             for t in archers:
                 self.assertIn(rl.engine_tier(t.level), bow_tiers, t.id)
 
-    def test_the_dale_ladder_claims_both_troop_files(self):
+    def test_the_dale_ladder_claims_every_dale_realms_troop_file(self):
         spec = rl.load_spec()
         dale = next(line for line in spec["lines"] if line["id"] == "dale")
         for gen in DALE_REALMS:
@@ -276,11 +285,17 @@ class DaleRealmTests(unittest.TestCase):
             self.assertIsNone(t.horse, t.id)
             self.assertNotIn(t.group, ("Cavalry", "HorseArcher"), t.id)
 
-    def test_every_anduin_horse_carries_a_harness(self):
-        riders = [t for t in built(gavt) if t.horse]
-        self.assertTrue(riders)
-        for t in riders:
-            self.assertTrue(t.horse[0] and t.horse[1], t.id)
+    def test_every_dale_realm_horse_carries_a_harness(self):
+        for gen in (gavt, gdot):
+            riders = [t for t in built(gen) if t.horse]
+            self.assertTrue(riders, gen.CULTURE)
+            for t in riders:
+                self.assertTrue(t.horse[0] and t.horse[1], t.id)
+                self.assertEqual(t.group, "Cavalry", t.id)
+
+    def test_dorwinion_rides_only_the_river_branch(self):
+        mounted = {t.id for t in built(gdot) if t.horse}
+        self.assertEqual(mounted, {"dorwinion_river_rider", "dorwinion_river_cavalier"})
 
     def test_every_troop_wears_dales_face_and_no_race_attribute(self):
         for gen in DALE_REALMS:
@@ -293,6 +308,98 @@ class DaleRealmTests(unittest.TestCase):
         wanted = {tid.replace("cardolan", "{c}") for tid, _ in gct.party_templates()}
         for gen in DALE_REALMS:
             self.assertEqual({tid.replace(gen.CULTURE, "{c}") for tid, _ in gen.party_templates()}, wanted)
+
+
+class RohanRealmTests(unittest.TestCase):
+    """South Rhovanion is scaffolded from Rohan: its armour (ids with no tier keyword), its mounts, its
+    bow ladder and its weapons. The Armory's wm_rohan_* blades top out at 47 DPS, so a troop from level 26
+    on carries only the vanilla blades that reach the tier 5 band (tools/melee_ladders.json)."""
+
+    FIXED_IDS = {"southrhovanion_levy", "southrhovanion_northman_youth", "southrhovanion_northman_youth_merc",
+                 "southrhovanion_militia_spearman", "southrhovanion_militia_archer",
+                 "southrhovanion_militia_veteran_spearman", "southrhovanion_militia_veteran_archer",
+                 "southrhovanion_horse_lord"}
+
+    @staticmethod
+    def rohan_lowest_wearer():
+        """Rohan item -> its lowest anchor level among Rohan's own troops, as the class table reads it."""
+        levels = {item: [w["level"] for w in ws if w["culture"] == "rohan"]
+                  for item, ws in dat.parse_rosters().items()}
+        return {item: min(found) for item, found in levels.items() if found}
+
+    def test_the_fixed_ids_other_work_depends_on_exist(self):
+        self.assertLessEqual(self.FIXED_IDS, {t.id for t in built(gsrt)})
+
+    def test_the_capstone_is_level_36_mounted_and_a_leaf(self):
+        troop = next(t for t in built(gsrt) if t.id == "southrhovanion_horse_lord")
+        self.assertEqual(troop.level, 36)
+        self.assertTrue(troop.horse)
+        self.assertEqual(troop.upgrades, [])
+
+    def test_no_rohan_piece_is_worn_below_its_lowest_rohan_wearer(self):
+        lowest = self.rohan_lowest_wearer()
+        self.assertTrue(lowest, "read no Rohan troop: the gate would check nothing")
+        troops = built(gsrt)
+        worn = {item for t in troops for gear in t.gear for item in gear.values()}
+        self.assertGreater(len(worn & set(lowest)), 20, "few Rohan pieces match: the ids no longer line up")
+        self.assertEqual(DaleRealmTests.worn_too_low(troops, lowest), [])
+
+    def test_the_gate_catches_a_rohan_piece_worn_too_low(self):
+        lowest = self.rohan_lowest_wearer()
+        item = "cts_rohan_royal_guard_armor"   # Rohan's level 31 body
+        self.assertEqual(lowest[item], 31)
+        levy = next(t for t in built(gsrt) if t.id == "southrhovanion_levy")
+        probe = dataclasses.replace(levy, gear=[dict(g, Body=item) for g in levy.gear])
+        self.assertEqual(len(DaleRealmTests.worn_too_low([probe], lowest)), len(probe.gear))
+
+    def test_no_other_kingdoms_armour_class_moves(self):
+        checker = BorrowedArmourAnchorTests()
+        lowest = checker.other_kingdoms_lowest_wearer(gsrt.REALM.culture)
+        self.assertEqual(checker.re_banded(built(gsrt), lowest), [])
+
+    def test_every_archer_stands_on_a_level_the_rohan_ladder_has_a_bow_cell_for(self):
+        bow_tiers = set(rl.tiers_for("rohan", "Bow", rl.load_spec()))
+        archers = [t for t in built(gsrt) if t.role in ("ranged", "horsearcher")]
+        self.assertTrue(archers)
+        for t in archers:
+            self.assertIn(rl.engine_tier(t.level), bow_tiers, t.id)
+
+    def test_the_rohan_ladder_claims_the_troop_file(self):
+        rohan = next(line for line in rl.load_spec()["lines"] if line["id"] == "rohan")
+        self.assertIn(gsrt.CULTURE, rohan["files"])
+
+    def test_every_mounted_troop_has_a_horse_and_a_harness_and_every_horse_a_mounted_troop(self):
+        mounted = [t for t in built(gsrt) if t.group in ("Cavalry", "HorseArcher")]
+        self.assertTrue(mounted)
+        for t in mounted:
+            self.assertTrue(t.horse and t.horse[0] and t.horse[1], t.id)
+        for t in built(gsrt):
+            if t.horse:
+                self.assertIn(t.group, ("Cavalry", "HorseArcher"), t.id)
+
+    def test_the_horse_archers_ride_and_shoot_from_the_ladder(self):
+        archers = [t for t in built(gsrt) if t.role == "horsearcher"]
+        self.assertEqual(len(archers), 3)
+        for t in archers:
+            self.assertEqual(t.group, "HorseArcher", t.id)
+            self.assertGreaterEqual(t.sk["Riding"], rt.RIDING[t.level], t.id)
+
+    def test_from_level_26_no_armory_rohan_blade_sits_under_the_band(self):
+        for t in built(gsrt):
+            if t.level >= 26:
+                for roster in t.weapons:
+                    self.assertEqual([w for w in roster if w.startswith(("wm_rohan_ws_", "wm_rohan_spear"))],
+                                     [], t.id)
+
+    def test_every_troop_wears_rohans_face_and_no_race_attribute(self):
+        root = ET.fromstring(gsrt.troops_xml(built(gsrt), "\r\n").encode("utf-8"))
+        for npc in root.findall("NPCCharacter"):
+            self.assertIsNone(npc.get("race"), npc.get("id"))
+            self.assertEqual(npc.find("face/face_key_template").get("value"), "BodyProperty.fighter_rohan")
+
+    def test_the_party_templates_are_the_nine_cardolan_names(self):
+        wanted = {tid.replace("cardolan", "{c}") for tid, _ in gct.party_templates()}
+        self.assertEqual({tid.replace(gsrt.CULTURE, "{c}") for tid, _ in gsrt.party_templates()}, wanted)
 
 
 class DwarfRealmOptionTests(unittest.TestCase):

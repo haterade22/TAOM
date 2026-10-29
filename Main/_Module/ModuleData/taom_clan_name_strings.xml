@@ -38,6 +38,10 @@
 	<string id="aom_clan_dolguldur_7_name" text="{=aom_clan_dolguldur_7_name}Ghâshrûz" />
 	<string id="aom_clan_dolguldur_8_name" text="{=aom_clan_dolguldur_8_name}Morbhak" />
 	<string id="aom_clan_dolguldur_9_name" text="{=aom_clan_dolguldur_9_name}Skûlgath" />
+	<string id="aom_clan_dorwinion_1_name" text="{=aom_clan_dorwinion_1_name}House of Vineholm" />
+	<string id="aom_clan_dorwinion_2_name" text="{=aom_clan_dorwinion_2_name}Wardens of the Redwater" />
+	<string id="aom_clan_dorwinion_3_name" text="{=aom_clan_dorwinion_3_name}House of Seagate" />
+	<string id="aom_clan_dorwinion_4_name" text="{=aom_clan_dorwinion_4_name}Wardens of the Eastmarch" />
 	<string id="aom_clan_empire_south_10_name" text="{=aom_clan_empire_south_10_name}Ârki" />
 	<string id="aom_clan_empire_south_11_name" text="{=aom_clan_empire_south_11_name}Îkhon" />
 	<string id="aom_clan_empire_south_12_name" text="{=aom_clan_empire_south_12_name}Akheth" />
@@ -132,6 +136,10 @@
 	<string id="aom_clan_rivendell_1_name" text="{=aom_clan_rivendell_1_name}Nos Peredhel" />
 	<string id="aom_clan_rivendell_2_name" text="{=aom_clan_rivendell_2_name}Nos Glorfindel" />
 	<string id="aom_clan_rivendell_3_name" text="{=aom_clan_rivendell_3_name}Elen-Nolmarë" />
+	<string id="aom_clan_southrhovanion_1_name" text="{=aom_clan_southrhovanion_1_name}House of Vidugard" />
+	<string id="aom_clan_southrhovanion_2_name" text="{=aom_clan_southrhovanion_2_name}Riders of Southwood" />
+	<string id="aom_clan_southrhovanion_3_name" text="{=aom_clan_southrhovanion_3_name}Wainwatch Riders" />
+	<string id="aom_clan_southrhovanion_4_name" text="{=aom_clan_southrhovanion_4_name}Wardens of the Northmark" />
 	<string id="aom_clan_sturgia_10_name" text="{=aom_clan_sturgia_10_name}House of the Running River" />
 	<string id="aom_clan_sturgia_11_name" text="{=aom_clan_sturgia_11_name}House of the Carnen" />
 	<string id="aom_clan_sturgia_12_name" text="{=aom_clan_sturgia_12_name}House of Ravenhill" />

@@ -40,7 +40,7 @@ internal static class PosternGateDefinition
             new TaomBuildingVariant("building_taom_postern_gate_rohan",
                 "{=taom_postern_rohan_name}Culvert",
                 "{=taom_postern_rohan_desc}A drain under the earthen wall, wide enough for a rider who leads his horse. In a siege, parties slip into or out of this fief with fewer losses.",
-                new[] { "vlandia" }),
+                new[] { "vlandia", "southrhovanion" }),
             new TaomBuildingVariant("building_taom_postern_gate_gondor",
                 "{=taom_postern_gondor_name}Sally Port",
                 "{=taom_postern_gondor_desc}A stout gate low in the wall, where a company can march out under the eyes of the watch. In a siege, parties slip into or out of this fief with fewer losses.",

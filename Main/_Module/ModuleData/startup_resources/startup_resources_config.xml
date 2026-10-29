@@ -126,6 +126,15 @@
        (6.04, 90,600), rounded to 85,000 and 90,000; influence 400 and playerGold 2,000 as Cardolan. -->
   <Culture id="anduinvale"  gold="85000"  influence="400"  playerGold="2000"  />
   <Culture id="angaladh"    gold="90000"  influence="400"  playerGold="2000"  />
+  <!-- Dorwinion and South Rhovanion (#1062): two middling Neutral realms, a step under the great
+       realms in lords but at Ered Luin's tier of 150 days. gold = 100 x 150 x the denars a head
+       measured from kingdom_hero_party_dorwinion_template (5.92, 88,846) and
+       kingdom_hero_party_southrhovanion_template (6.15, 92,308), both rounded to 90,000 (nearest
+       5,000); no mounted wage feat is folded in because South Rhovanion's culture lists none.
+       influence 400 and playerGold 2,000 as Ered Luin's influence and the other human realms'
+       playerGold. -->
+  <Culture id="dorwinion"      gold="90000"  influence="400"  playerGold="2000"  />
+  <Culture id="southrhovanion" gold="90000"  influence="400"  playerGold="2000"  />
 
   <!-- Human Evil / Eastern cultures. Rhûn's rate is the highest of this group because its
        clans field the costliest human rosters on the map (13.03/head), not as a favour. -->

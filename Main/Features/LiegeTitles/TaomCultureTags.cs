@@ -39,6 +39,24 @@ public sealed class TaomAngaladhCultureTag : ConversationTag
     public override bool IsApplicableTo(CharacterObject character) => character?.Culture?.StringId == CultureId;
 }
 
+public sealed class TaomDorwinionCultureTag : ConversationTag
+{
+    public const string CultureId = "dorwinion";
+
+    public override string StringId => "taom_culture_" + CultureId;
+
+    public override bool IsApplicableTo(CharacterObject character) => character?.Culture?.StringId == CultureId;
+}
+
+public sealed class TaomSouthRhovanionCultureTag : ConversationTag
+{
+    public const string CultureId = "southrhovanion";
+
+    public override string StringId => "taom_culture_" + CultureId;
+
+    public override bool IsApplicableTo(CharacterObject character) => character?.Culture?.StringId == CultureId;
+}
+
 public sealed class TaomArthedainCultureTag : ConversationTag
 {
     public const string CultureId = "arthedain";

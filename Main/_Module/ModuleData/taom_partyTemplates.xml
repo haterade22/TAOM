@@ -5196,6 +5196,12 @@
 			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_dolguldur" />
 		</stacks>
 	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_dorwinion">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_dorwinion" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_dorwinion" />
+		</stacks>
+	</MBPartyTemplate>
 	<MBPartyTemplate id="supply_caravan_template_dunland">
 		<stacks>
 			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_dunland" />
@@ -5290,6 +5296,12 @@
 		<stacks>
 			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_rohan" />
 			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_rohan" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_southrhovanion">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_southrhovanion" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_southrhovanion" />
 		</stacks>
 	</MBPartyTemplate>
 	<!-- ==== end SupplyLines crew templates ==== -->
@@ -5961,4 +5973,226 @@
 	</MBPartyTemplate>
 
   <!-- TAOM-NEWCULTURE:angaladh:END -->
+	<!-- TAOM-DORWINION-PT:BEGIN -->
+	<MBPartyTemplate id="kingdom_hero_party_dorwinion_template">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="26" troop="NPCCharacter.dorwinion_levy" />
+			<PartyTemplateStack min_value="2" max_value="22" troop="NPCCharacter.dorwinion_spearman" />
+			<PartyTemplateStack min_value="1" max_value="19" troop="NPCCharacter.dorwinion_noble" />
+			<PartyTemplateStack min_value="1" max_value="19" troop="NPCCharacter.dorwinion_river_spearman" />
+			<PartyTemplateStack min_value="1" max_value="19" troop="NPCCharacter.dorwinion_vintner_bowman" />
+			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.dorwinion_river_rider" />
+			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.dorwinion_redwater_guard" />
+			<PartyTemplateStack min_value="0" max_value="13" troop="NPCCharacter.dorwinion_vintner_archer" />
+			<PartyTemplateStack min_value="0" max_value="13" troop="NPCCharacter.dorwinion_vineholm_retainer" />
+			<PartyTemplateStack min_value="0" max_value="10" troop="NPCCharacter.dorwinion_river_cavalier" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.dorwinion_veteran_redwater_guard" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.dorwinion_redwater_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.dorwinion_vineholm_sergeant" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.dorwinion_vine_warden" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="kingdom_hero_party_mercenary_dorwinion_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.dorwinion_spearman" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.dorwinion_vintner_bowman" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.dorwinion_river_spearman" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.dorwinion_vintner_archer" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.dorwinion_river_rider" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="kingdom_hero_party_outlaw_dorwinion_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.dorwinion_levy" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.dorwinion_militia_spearman" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.dorwinion_militia_archer" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.dorwinion_vintner_bowman" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="militia_dorwinion_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dorwinion_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dorwinion_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_dorwinion_template_level_1">
+		<stacks>
+			<PartyTemplateStack min_value="6" max_value="6" troop="NPCCharacter.dorwinion_levy" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.dorwinion_spearman" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dorwinion_vintner_bowman" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_dorwinion_template_level_2">
+		<stacks>
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.dorwinion_spearman" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.dorwinion_river_spearman" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.dorwinion_vintner_archer" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dorwinion_river_rider" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_dorwinion_template_level_3">
+		<stacks>
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.dorwinion_redwater_guard" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.dorwinion_veteran_redwater_guard" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.dorwinion_redwater_archer" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dorwinion_river_cavalier" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dorwinion_vineholm_sergeant" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="rebels_dorwinion_template">
+		<stacks>
+			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.dorwinion_levy" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.dorwinion_militia_spearman" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.dorwinion_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="vassal_reward_troops_dorwinion">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.dorwinion_vineholm_guard" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.dorwinion_vine_warden" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.dorwinion_vineholm_sergeant" />
+		</stacks>
+	</MBPartyTemplate>
+	<!-- TAOM-DORWINION-PT:END -->
+	<!-- TAOM-SOUTHRHOVANION-PT:BEGIN -->
+	<MBPartyTemplate id="kingdom_hero_party_southrhovanion_template">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="26" troop="NPCCharacter.southrhovanion_levy" />
+			<PartyTemplateStack min_value="2" max_value="22" troop="NPCCharacter.southrhovanion_spearman" />
+			<PartyTemplateStack min_value="1" max_value="19" troop="NPCCharacter.southrhovanion_northman_youth" />
+			<PartyTemplateStack min_value="1" max_value="19" troop="NPCCharacter.southrhovanion_rider" />
+			<PartyTemplateStack min_value="1" max_value="19" troop="NPCCharacter.southrhovanion_plains_bowman" />
+			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.southrhovanion_ford_spearman" />
+			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.southrhovanion_horse_scout" />
+			<PartyTemplateStack min_value="0" max_value="13" troop="NPCCharacter.southrhovanion_southwood_archer" />
+			<PartyTemplateStack min_value="0" max_value="13" troop="NPCCharacter.southrhovanion_lancer" />
+			<PartyTemplateStack min_value="0" max_value="10" troop="NPCCharacter.southrhovanion_ford_guard" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.southrhovanion_horse_thane" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.southrhovanion_horse_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.southrhovanion_southwood_marksman" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.southrhovanion_rider_captain" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="kingdom_hero_party_mercenary_southrhovanion_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.southrhovanion_spearman" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.southrhovanion_plains_bowman" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.southrhovanion_ford_spearman" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.southrhovanion_southwood_archer" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.southrhovanion_rider" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="kingdom_hero_party_outlaw_southrhovanion_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.southrhovanion_levy" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.southrhovanion_militia_spearman" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.southrhovanion_militia_archer" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.southrhovanion_plains_bowman" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="militia_southrhovanion_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.southrhovanion_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.southrhovanion_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_southrhovanion_template_level_1">
+		<stacks>
+			<PartyTemplateStack min_value="6" max_value="6" troop="NPCCharacter.southrhovanion_levy" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.southrhovanion_spearman" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.southrhovanion_plains_bowman" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_southrhovanion_template_level_2">
+		<stacks>
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.southrhovanion_spearman" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.southrhovanion_ford_spearman" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.southrhovanion_southwood_archer" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.southrhovanion_rider" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_southrhovanion_template_level_3">
+		<stacks>
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.southrhovanion_ford_guard" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.southrhovanion_veteran_ford_guard" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.southrhovanion_southwood_marksman" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.southrhovanion_lancer" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.southrhovanion_horse_thane" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="rebels_southrhovanion_template">
+		<stacks>
+			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.southrhovanion_levy" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.southrhovanion_militia_spearman" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.southrhovanion_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="vassal_reward_troops_southrhovanion">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.southrhovanion_horse_lord" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.southrhovanion_rider_captain" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.southrhovanion_horse_thane" />
+		</stacks>
+	</MBPartyTemplate>
+	<!-- TAOM-SOUTHRHOVANION-PT:END -->
+  <!-- TAOM-NEWCULTURE:dorwinion:BEGIN -->
+	<MBPartyTemplate id="villager_dorwinion_template">
+		<stacks>
+			<PartyTemplateStack min_value="15" max_value="30" troop="NPCCharacter.villager_dorwinion" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="caravan_template_dorwinion">
+		<stacks>
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_dorwinion" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_dorwinion" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_dorwinion" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="elite_caravan_template_dorwinion">
+		<stacks>
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_dorwinion" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_dorwinion" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_dorwinion" />
+		</stacks>
+	</MBPartyTemplate>
+
+  <!-- TAOM-NEWCULTURE:dorwinion:END -->
+  <!-- TAOM-NEWCULTURE:southrhovanion:BEGIN -->
+	<MBPartyTemplate id="villager_southrhovanion_template">
+		<stacks>
+			<PartyTemplateStack min_value="15" max_value="30" troop="NPCCharacter.villager_southrhovanion" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="caravan_template_southrhovanion">
+		<stacks>
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_southrhovanion" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_southrhovanion" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_southrhovanion" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="elite_caravan_template_southrhovanion">
+		<stacks>
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_southrhovanion" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_southrhovanion" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_southrhovanion" />
+		</stacks>
+	</MBPartyTemplate>
+
+  <!-- TAOM-NEWCULTURE:southrhovanion:END -->
 </partyTemplates>

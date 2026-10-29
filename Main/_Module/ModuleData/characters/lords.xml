@@ -60474,4 +60474,1304 @@
         </Equipments>
     </NPCCharacter>
   <!-- TAOM-NEWFACTIONS:angaladh:END -->
+  <!-- TAOM-NEWFACTIONS:dorwinion:BEGIN -->
+    <NPCCharacter id="lord_DO1_1" name="{=aom_lord_DO1_1_name}Ostric" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_a" />
+            <EquipmentSet id="dorwinion_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO1_2" name="{=aom_lord_DO1_2_name}Halric" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_b" />
+            <EquipmentSet id="dorwinion_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO1_3" name="{=aom_lord_DO1_3_name}Aldith" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_c" />
+            <EquipmentSet id="dorwinion_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO1_4" name="{=aom_lord_DO1_4_name}Berta" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_d" />
+            <EquipmentSet id="dorwinion_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO2_1" name="{=aom_lord_DO2_1_name}Torvin" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_a" />
+            <EquipmentSet id="dorwinion_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO2_2" name="{=aom_lord_DO2_2_name}Ostmar" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_b" />
+            <EquipmentSet id="dorwinion_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO2_3" name="{=aom_lord_DO2_3_name}Gisela" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_c" />
+            <EquipmentSet id="dorwinion_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO2_4" name="{=aom_lord_DO2_4_name}Hilde" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_d" />
+            <EquipmentSet id="dorwinion_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO3_1" name="{=aom_lord_DO3_1_name}Gerulf" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_a" />
+            <EquipmentSet id="dorwinion_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO3_2" name="{=aom_lord_DO3_2_name}Aldwin" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_b" />
+            <EquipmentSet id="dorwinion_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO3_3" name="{=aom_lord_DO3_3_name}Irmgard" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_c" />
+            <EquipmentSet id="dorwinion_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO3_4" name="{=aom_lord_DO3_4_name}Liutgard" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_d" />
+            <EquipmentSet id="dorwinion_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO4_1" name="{=aom_lord_DO4_1_name}Berengar" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_a" />
+            <EquipmentSet id="dorwinion_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO4_2" name="{=aom_lord_DO4_2_name}Raedric" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_b" />
+            <EquipmentSet id="dorwinion_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO4_3" name="{=aom_lord_DO4_3_name}Mathilde" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_c" />
+            <EquipmentSet id="dorwinion_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_DO4_4" name="{=aom_lord_DO4_4_name}Oda" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.dorwinion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="dorwinion_bat_template_medium_d" />
+            <EquipmentSet id="dorwinion_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+  <!-- TAOM-NEWFACTIONS:dorwinion:END -->
+  <!-- TAOM-NEWFACTIONS:southrhovanion:BEGIN -->
+    <NPCCharacter id="lord_SRH1_1" name="{=aom_lord_SRH1_1_name}Vidumar" age="33" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="203" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="137" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_a" />
+            <EquipmentSet id="southrhovanion_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH1_2" name="{=aom_lord_SRH1_2_name}Marhwin" age="36" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="203" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="137" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_b" />
+            <EquipmentSet id="southrhovanion_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH1_3" name="{=aom_lord_SRH1_3_name}Amalaberga" age="25" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="153" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="247" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_c" />
+            <EquipmentSet id="southrhovanion_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH1_4" name="{=aom_lord_SRH1_4_name}Hildegund" age="26" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="153" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="247" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_d" />
+            <EquipmentSet id="southrhovanion_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH2_1" name="{=aom_lord_SRH2_1_name}Thrasaric" age="33" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="203" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="137" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_a" />
+            <EquipmentSet id="southrhovanion_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH2_2" name="{=aom_lord_SRH2_2_name}Videric" age="36" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="203" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="137" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_b" />
+            <EquipmentSet id="southrhovanion_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH2_3" name="{=aom_lord_SRH2_3_name}Swanhilda" age="25" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="153" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="247" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_c" />
+            <EquipmentSet id="southrhovanion_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH2_4" name="{=aom_lord_SRH2_4_name}Theodegotha" age="26" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="153" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="247" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_d" />
+            <EquipmentSet id="southrhovanion_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH3_1" name="{=aom_lord_SRH3_1_name}Beremud" age="33" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="203" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="137" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_a" />
+            <EquipmentSet id="southrhovanion_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH3_2" name="{=aom_lord_SRH3_2_name}Gundric" age="36" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="203" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="137" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_b" />
+            <EquipmentSet id="southrhovanion_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH3_3" name="{=aom_lord_SRH3_3_name}Rotrudis" age="25" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="153" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="247" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_c" />
+            <EquipmentSet id="southrhovanion_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH3_4" name="{=aom_lord_SRH3_4_name}Brunhildis" age="26" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="153" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="247" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_d" />
+            <EquipmentSet id="southrhovanion_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH4_1" name="{=aom_lord_SRH4_1_name}Hrodulf" age="33" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="203" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="137" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_a" />
+            <EquipmentSet id="southrhovanion_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH4_2" name="{=aom_lord_SRH4_2_name}Sigiric" age="36" voice="earnest" default_group="Cavalry" is_hero="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_knight_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="180" />
+            <skill id="Polearm" value="220" />
+            <skill id="Bow" value="100" />
+            <skill id="Crossbow" value="70" />
+            <skill id="Throwing" value="120" />
+            <skill id="Riding" value="250" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="60" />
+            <skill id="Scouting" value="140" />
+            <skill id="Tactics" value="203" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="160" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="90" />
+            <skill id="Steward" value="137" />
+            <skill id="Medicine" value="90" />
+            <skill id="Engineering" value="100" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="1" />
+            <Trait id="Calculating" value="0" />
+            <Trait id="Mercy" value="1" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="0" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_b" />
+            <EquipmentSet id="southrhovanion_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH4_3" name="{=aom_lord_SRH4_3_name}Ansgard" age="25" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="153" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="247" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_c" />
+            <EquipmentSet id="southrhovanion_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_SRH4_4" name="{=aom_lord_SRH4_4_name}Gisla" age="26" voice="ironic" default_group="Cavalry" is_hero="true" is_female="true" culture="Culture.southrhovanion" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_rohan_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rohan" />
+            <hair_tags>
+                <hair_tag name="vlandia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="153" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="172" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="247" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="southrhovanion_bat_template_medium_d" />
+            <EquipmentSet id="southrhovanion_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+  <!-- TAOM-NEWFACTIONS:southrhovanion:END -->
 </NPCCharacters>

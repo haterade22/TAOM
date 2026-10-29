@@ -175,4 +175,12 @@
   <Culture id="angaladh">
     <BodyProperties version="4" age="24.35" weight="0.5417" build="0.5231" key="000DF00FC00033CD8771188F38770F8801F188778888888888888888546AF0F90088860308888888000000000000000000000000000000000000000043044144" />
   </Culture>
+  <!-- Dorwinion: Dale's default body (the sturgia row); the vintners are cut from Dale. -->
+  <Culture id="dorwinion">
+    <BodyProperties version="4" age="24.35" weight="0.5417" build="0.5231" key="000DF00FC00033CD8771188F38770F8801F188778888888888888888546AF0F90088860308888888000000000000000000000000000000000000000043044144" />
+  </Culture>
+  <!-- South Rhovanion: Rohan's default body (the vlandia row); the horse-lords are cut from Rohan. -->
+  <Culture id="southrhovanion">
+    <BodyProperties version="4" age="24" weight="0.5139" build="0.6435" key="0005280140001242947E068A709500460C7250703EB70F135C85021887733A070089B6030822BA9000000000000000000000000000000000000000003F1C7002" />
+  </Culture>
 </CCBodyProperties>

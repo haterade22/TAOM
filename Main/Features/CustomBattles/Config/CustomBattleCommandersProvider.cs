@@ -31,7 +31,7 @@ public class CustomBattleCommandersProvider : ICustomBattleCommandersProvider
         "mirkwood", "isengard", "gundabad", "dolguldur", "umbar",
         "shaghana", "abanissa", "goblin", "mistymountainorcs",
         "bluecraig", "lindon", "arthedain", "cardolan", "rhudaur", "eredluin",
-        "anduinvale", "angaladh",
+        "anduinvale", "angaladh", "dorwinion", "southrhovanion",
         "vlandia", "empire", "aserai", "khuzait", "sturgia", "battania"
     };
 

@@ -93,18 +93,20 @@ One entry per faction id. Fields:
 
 ### Parked realms
 
-A realm that is on the campaign map but not ready for the player has `"playable": false`. Eight are
-parked until their troops have armour (2026-10-28): Lindon (`high_kingdom_of_lindon`), Ered Luin
+A realm that is on the campaign map but not ready for the player has `"playable": false`. Ten are
+parked until their troops have armour (2026-10-29): Lindon (`high_kingdom_of_lindon`), Ered Luin
 (`kingdom_of_ered_duin`), Cardolan (`kingdom_of_cardolan`), Rhudaur (`kingdom_of_rhudaur`), Umbar
-(`havens_of_umbar`), Khand (`khudorom_of_khand`), Anduin Vale (`anduin_vale`) and Angáladh
-(`kingdom_of_angaladh`). On the faction map a parked realm behaves like
+(`havens_of_umbar`), Khand (`khudorom_of_khand`), Anduin Vale (`anduin_vale`), Angáladh
+(`kingdom_of_angaladh`), Dorwinion (`kingdom_of_dorwinion`) and South Rhovanion
+(`kingdom_of_south_rhovanion`). On the faction map a parked realm behaves like
 any other realm that is not playable: it shows its border and lore card, shows no banner, and cannot
 be confirmed. The faction screen does not list it. Its kingdom, lords and settlements still run in
 the campaign, because only character creation reads this flag. `WorkInProgressFaction_IsNotPlayable`
 in `FactionMapDataTests` pins the first six and holds their cards to the playable content minimums;
-`DaleCutNeutralRealm_IsParkedNeutralAndCarriesItsFeats` pins the last two (two bonuses, not three); to
+`DaleCutNeutralRealm_IsParkedNeutralAndCarriesItsFeats` pins the three Dale-cut realms (two bonuses, not three) and
+`RohanCutNeutralRealm_IsParkedNeutralAndCarriesItsFeats` South Rhovanion (four bonuses); to
 restore a realm, set its flag to `true` and move its row to `PlayableFaction_HasMinimumContentSections`.
-The Advanced Starting Options menu still offers the eight kingdoms for a King, Vassal or Mercenary
+The Advanced Starting Options menu still offers the ten kingdoms for a King, Vassal or Mercenary
 start.
 
 ### Localization
@@ -209,6 +211,7 @@ One entry per region id (matching faction id). Fields:
 ## Referenced by
 
 - [docs/features/anduin-vale-angaladh.md](./anduin-vale-angaladh.md)
+- [docs/features/dorwinion-south-rhovanion.md](./dorwinion-south-rhovanion.md)
 - [docs/features/cardolan-rhudaur.md](./cardolan-rhudaur.md)
 - [docs/features/character-creation.md](./character-creation.md)
 - [docs/features/ered-luin.md](./ered-luin.md)

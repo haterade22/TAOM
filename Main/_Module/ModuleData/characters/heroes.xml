@@ -4470,5 +4470,139 @@
 		faction="Faction.clan_angaladh_3"
 		spouse="Hero.lord_AND3_2" />
   <!-- TAOM-NEWFACTIONS:angaladh:END -->
+  <!-- TAOM-NEWFACTIONS:dorwinion:BEGIN -->
+	<Hero
+		id="lord_DO1_1"
+		faction="Faction.clan_dorwinion_1"
+		spouse="Hero.lord_DO1_3"
+		text="{=lord_DO1_1_description}Ostric, King of Dorwinion, lord of Vineholm, whose wine goes up the River Running to Dale and the Elves of Mirkwood." />
+	<Hero
+		id="lord_DO1_2"
+		faction="Faction.clan_dorwinion_1"
+		spouse="Hero.lord_DO1_4" />
+	<Hero
+		id="lord_DO1_3"
+		faction="Faction.clan_dorwinion_1"
+		spouse="Hero.lord_DO1_1" />
+	<Hero
+		id="lord_DO1_4"
+		faction="Faction.clan_dorwinion_1"
+		spouse="Hero.lord_DO1_2" />
+	<Hero
+		id="lord_DO2_1"
+		faction="Faction.clan_dorwinion_2"
+		spouse="Hero.lord_DO2_3" />
+	<Hero
+		id="lord_DO2_2"
+		faction="Faction.clan_dorwinion_2"
+		spouse="Hero.lord_DO2_4" />
+	<Hero
+		id="lord_DO2_3"
+		faction="Faction.clan_dorwinion_2"
+		spouse="Hero.lord_DO2_1" />
+	<Hero
+		id="lord_DO2_4"
+		faction="Faction.clan_dorwinion_2"
+		spouse="Hero.lord_DO2_2" />
+	<Hero
+		id="lord_DO3_1"
+		faction="Faction.clan_dorwinion_3"
+		spouse="Hero.lord_DO3_3" />
+	<Hero
+		id="lord_DO3_2"
+		faction="Faction.clan_dorwinion_3"
+		spouse="Hero.lord_DO3_4" />
+	<Hero
+		id="lord_DO3_3"
+		faction="Faction.clan_dorwinion_3"
+		spouse="Hero.lord_DO3_1" />
+	<Hero
+		id="lord_DO3_4"
+		faction="Faction.clan_dorwinion_3"
+		spouse="Hero.lord_DO3_2" />
+	<Hero
+		id="lord_DO4_1"
+		faction="Faction.clan_dorwinion_4"
+		spouse="Hero.lord_DO4_3" />
+	<Hero
+		id="lord_DO4_2"
+		faction="Faction.clan_dorwinion_4"
+		spouse="Hero.lord_DO4_4" />
+	<Hero
+		id="lord_DO4_3"
+		faction="Faction.clan_dorwinion_4"
+		spouse="Hero.lord_DO4_1" />
+	<Hero
+		id="lord_DO4_4"
+		faction="Faction.clan_dorwinion_4"
+		spouse="Hero.lord_DO4_2" />
+  <!-- TAOM-NEWFACTIONS:dorwinion:END -->
+  <!-- TAOM-NEWFACTIONS:southrhovanion:BEGIN -->
+	<Hero
+		id="lord_SRH1_1"
+		faction="Faction.clan_southrhovanion_1"
+		spouse="Hero.lord_SRH1_3"
+		text="{=lord_SRH1_1_description}Vidumar, King of South Rhovanion, lord of Vidugard, who rides the plains south of Mirkwood and remembers the Wainriders." />
+	<Hero
+		id="lord_SRH1_2"
+		faction="Faction.clan_southrhovanion_1"
+		spouse="Hero.lord_SRH1_4" />
+	<Hero
+		id="lord_SRH1_3"
+		faction="Faction.clan_southrhovanion_1"
+		spouse="Hero.lord_SRH1_1" />
+	<Hero
+		id="lord_SRH1_4"
+		faction="Faction.clan_southrhovanion_1"
+		spouse="Hero.lord_SRH1_2" />
+	<Hero
+		id="lord_SRH2_1"
+		faction="Faction.clan_southrhovanion_2"
+		spouse="Hero.lord_SRH2_3" />
+	<Hero
+		id="lord_SRH2_2"
+		faction="Faction.clan_southrhovanion_2"
+		spouse="Hero.lord_SRH2_4" />
+	<Hero
+		id="lord_SRH2_3"
+		faction="Faction.clan_southrhovanion_2"
+		spouse="Hero.lord_SRH2_1" />
+	<Hero
+		id="lord_SRH2_4"
+		faction="Faction.clan_southrhovanion_2"
+		spouse="Hero.lord_SRH2_2" />
+	<Hero
+		id="lord_SRH3_1"
+		faction="Faction.clan_southrhovanion_3"
+		spouse="Hero.lord_SRH3_3" />
+	<Hero
+		id="lord_SRH3_2"
+		faction="Faction.clan_southrhovanion_3"
+		spouse="Hero.lord_SRH3_4" />
+	<Hero
+		id="lord_SRH3_3"
+		faction="Faction.clan_southrhovanion_3"
+		spouse="Hero.lord_SRH3_1" />
+	<Hero
+		id="lord_SRH3_4"
+		faction="Faction.clan_southrhovanion_3"
+		spouse="Hero.lord_SRH3_2" />
+	<Hero
+		id="lord_SRH4_1"
+		faction="Faction.clan_southrhovanion_4"
+		spouse="Hero.lord_SRH4_3" />
+	<Hero
+		id="lord_SRH4_2"
+		faction="Faction.clan_southrhovanion_4"
+		spouse="Hero.lord_SRH4_4" />
+	<Hero
+		id="lord_SRH4_3"
+		faction="Faction.clan_southrhovanion_4"
+		spouse="Hero.lord_SRH4_1" />
+	<Hero
+		id="lord_SRH4_4"
+		faction="Faction.clan_southrhovanion_4"
+		spouse="Hero.lord_SRH4_2" />
+  <!-- TAOM-NEWFACTIONS:southrhovanion:END -->
 </Heroes>
 

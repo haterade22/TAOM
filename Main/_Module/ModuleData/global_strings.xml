@@ -78,6 +78,8 @@
 	<string id="str_campaign_starting_options_item_name.eredluin" text="{=taom_aso_kingdom.eredluin}Ered Luin" />
 	<string id="str_campaign_starting_options_item_name.anduinvale" text="{=taom_aso_kingdom.anduinvale}Anduin Vale" />
 	<string id="str_campaign_starting_options_item_name.angaladh" text="{=taom_aso_kingdom.angaladh}Angáladh" />
+	<string id="str_campaign_starting_options_item_name.dorwinion" text="{=taom_aso_kingdom.dorwinion}Dorwinion" />
+	<string id="str_campaign_starting_options_item_name.southrhovanion" text="{=taom_aso_kingdom.southrhovanion}South Rhovanion" />
 
 	<!-- Scenario text that names Calradia directly. The United Empire scenario itself is
 	     removed by TaomStartOptionsProvider, so only the surviving scenarios are retitled. -->

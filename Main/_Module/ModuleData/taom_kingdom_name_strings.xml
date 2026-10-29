@@ -32,6 +32,11 @@
 	<string id="taom_dolguldur_ruler_title" text="{=taom_dolguldur_ruler_title}Dread-Lord" />
 	<string id="taom_dolguldur_short_name" text="{=taom_dolguldur_short_name}Dol Guldur" />
 	<string id="taom_dolguldur_title" text="{=taom_dolguldur_title}Necromancy of Dol Guldur" />
+	<string id="taom_dorwinion_desc" text="{=taom_dorwinion_desc}The vintners of Dorwinion tend the warm slopes where the River Running meets the Sea of Rhûn. Their wine goes up the river to Dale, to the Elves of Mirkwood and to every hall that can pay for it, and their kings grow rich on it. They keep out of the wars of the West and buy peace from the East when they must." />
+	<string id="taom_dorwinion_name" text="{=taom_dorwinion_name}Dorwinion" />
+	<string id="taom_dorwinion_ruler_title" text="{=taom_dorwinion_ruler_title}King" />
+	<string id="taom_dorwinion_short_name" text="{=taom_dorwinion_short_name}Dorwinion" />
+	<string id="taom_dorwinion_title" text="{=taom_dorwinion_title}Kingdom of Dorwinion" />
 	<string id="taom_erebor_desc" text="{=taom_erebor_desc}The Lonely Mountain, Erebor, stands as the greatest of the Dwarven kingdoms in the north. Rich in gold and mithril, it is home to the line of Durin. The Dwarves of Erebor are renowned craftsmen and fierce warriors, their halls echoing with the songs of their ancestors." />
 	<string id="taom_erebor_name" text="{=taom_erebor_name}Erebor" />
 	<string id="taom_erebor_ruler_title" text="{=taom_erebor_ruler_title}King" />
@@ -87,6 +92,11 @@
 	<string id="taom_rivendell_ruler_title" text="{=taom_rivendell_ruler_title}Lord" />
 	<string id="taom_rivendell_short_name" text="{=taom_rivendell_short_name}Imladris" />
 	<string id="taom_rivendell_title" text="{=taom_rivendell_title}Refuge of Imladris" />
+	<string id="taom_southrhovanion_desc" text="{=taom_southrhovanion_desc}The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Sea of Rhûn. They are horse-lords, kin of the Éothéod who rode north long ago, and they have not forgotten the Wainriders who once burned their halls. Their kings hold Vidugard and owe no lord in the West or the East." />
+	<string id="taom_southrhovanion_name" text="{=taom_southrhovanion_name}South Rhovanion" />
+	<string id="taom_southrhovanion_ruler_title" text="{=taom_southrhovanion_ruler_title}King" />
+	<string id="taom_southrhovanion_short_name" text="{=taom_southrhovanion_short_name}South Rhovanion" />
+	<string id="taom_southrhovanion_title" text="{=taom_southrhovanion_title}Kingdom of South Rhovanion" />
 	<string id="taom_umbar_desc" text="{=taom_umbar_desc}Umbar, the dark haven of the Corsairs, is a realm steeped in maritime power and treacherous ambition. The Corsairs raid the coasts of Middle-earth, spreading fear with their swift ships." />
 	<string id="taom_umbar_name" text="{=taom_umbar_name}Umbar" />
 	<string id="taom_umbar_ruler_title" text="{=taom_umbar_ruler_title}Corsair King" />

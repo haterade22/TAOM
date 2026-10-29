@@ -94,6 +94,7 @@ public class FactionMapDataTests
     [DataTestMethod]
     [DataRow("anduin_vale", "anduinvale")]
     [DataRow("kingdom_of_angaladh", "angaladh")]
+    [DataRow("kingdom_of_dorwinion", "dorwinion")]
     public void DaleCutNeutralRealm_IsParkedNeutralAndCarriesItsFeats(string factionKey, string gameFaction)
     {
         var faction = LoadFactions()[factionKey] as JObject;
@@ -116,6 +117,39 @@ public class FactionMapDataTests
         var bonuses = ((JArray)faction["bonuses"]!).Select(b => b.Value<string>("text") ?? "").ToList();
         Assert.IsTrue(bonuses.Any(b => b.Contains($"+{speed}% party speed on plains")), $"taom_dale_plain_speed is +{speed}%");
         Assert.IsTrue(bonuses.Any(b => b.Contains($"{loyalty} settlement loyalty per day")), $"taom_dale_loyalty is {loyalty}");
+    }
+
+    // South Rhovanion is cut from Rohan and carries the four feats its culture block lists
+    // (taom_spcultures.xml): plain speed, infantry speed, morale and loyalty. Parked and Neutral.
+    [TestMethod]
+    public void RohanCutNeutralRealm_IsParkedNeutralAndCarriesItsFeats()
+    {
+        const string factionKey = "kingdom_of_south_rhovanion";
+        var faction = LoadFactions()[factionKey] as JObject;
+        Assert.IsNotNull(faction, $"faction key '{factionKey}' missing from factions.json");
+        Assert.AreEqual(false, faction.Value<bool?>("playable"), "South Rhovanion has no armour yet and must stay unplayable");
+        Assert.AreEqual("southrhovanion", faction.Value<string>("game_faction"));
+        Assert.AreEqual("neutral", faction.Value<string>("side"));
+        AssertArrayLength(faction, "traits", min: 3, factionKey);
+        AssertArrayLength(faction, "bonuses", min: 4, factionKey);
+        AssertArrayLength(faction, "perks", min: 2, factionKey);
+        AssertArrayLength(faction, "special_units", min: 3, factionKey);
+        AssertArrayLength(faction, "strengths", min: 3, factionKey);
+        AssertArrayLength(faction, "weaknesses", min: 2, factionKey);
+
+        string Pct(string field) => (TAOM.Tests.Features.CulturalFeats.TaomCulturalFeatsDefinitionTests.ProductionEffectBonus(field) * 100m)
+            .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+        var plains = Pct("_rohanPlainSpeed");
+        var infantry = Pct("_rohanInfantrySpeed").TrimStart('-');
+        var morale = TAOM.Tests.Features.CulturalFeats.TaomCulturalFeatsDefinitionTests.ProductionEffectBonus("_rohanMorale")
+            .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+        var loyalty = TAOM.Tests.Features.CulturalFeats.TaomCulturalFeatsDefinitionTests.ProductionEffectBonus("_rohanLoyalty")
+            .ToString("0.0##", System.Globalization.CultureInfo.InvariantCulture);
+        var bonuses = ((JArray)faction["bonuses"]!).Select(b => b.Value<string>("text") ?? "").ToList();
+        Assert.IsTrue(bonuses.Any(b => b.Contains($"+{plains}% party speed on plains")), $"taom_rohan_plain_speed is +{plains}%");
+        Assert.IsTrue(bonuses.Any(b => b.Contains($"-{infantry}% party speed when over 50% infantry")), $"taom_rohan_infantry_speed is -{infantry}%");
+        Assert.IsTrue(bonuses.Any(b => b.Contains($"+{morale} party morale")), $"taom_rohan_morale is +{morale}");
+        Assert.IsTrue(bonuses.Any(b => b.Contains($"+{loyalty} settlement loyalty per day")), $"taom_rohan_loyalty is +{loyalty}");
     }
 
     private static void AssertMinimumContentSections(JObject faction, string factionKey)

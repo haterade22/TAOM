@@ -2391,5 +2391,165 @@
     <string id="aom_response_2.spc_wanderer_angaladh_9_text" text="A hothead who rides off without leave gets men killed." />
     <string id="aom_backstory_d.spc_wanderer_angaladh_9_text" text="I will ride for you gladly, and I will give my last coin to anyone you want to help." />
     <string id="aom_generic_backstory.spc_wanderer_angaladh_9_text" text="Horse-breeders of the Emyn Duir clearings raise sturdy mounts and riders who ask little. We are quick to the saddle when the raiders come." />
+    <string id="aom_prebackstory.spc_wanderer_dorwinion_0_text" text="The road from Vineholm to Redwater is longer than it looks, friend." />
+    <string id="aom_backstory_a.spc_wanderer_dorwinion_0_text" text="I rode the post between Vineholm and Redwater, carrying letters, coin and now and then a sick child to the healer. Every rider on that road knew me, and I knew every ford and farm along the River Running." />
+    <string id="aom_backstory_b.spc_wanderer_dorwinion_0_text" text="One autumn the grain wagon I was guarding came upon a village burned out by raiders from Rhûn. I gave the families half the load without asking leave. The wine factor called it theft and wrote my name in his ledger." />
+    <string id="aom_backstory_c.spc_wanderer_dorwinion_0_text" text="No vintner will hire a man marked for that, so I ride for whoever pays, and I still stop at every farm on the way. I cannot seem to help it. My horse is all that is left of that life." />
+    <string id="aom_response_1.spc_wanderer_dorwinion_0_text" text="Feeding the hungry is no crime to me." />
+    <string id="aom_response_2.spc_wanderer_dorwinion_0_text" text="A rider who gives away other men's grain is a poor courier." />
+    <string id="aom_backstory_d.spc_wanderer_dorwinion_0_text" text="Trust me with a message, a purse or a wounded man, and I will carry it anywhere you point." />
+    <string id="aom_generic_backstory.spc_wanderer_dorwinion_0_text" text="Riders of the Dorwinion roads know every landing between Vineholm and the Sea of Rhûn. We go wherever the roads still need carrying." />
+    <string id="aom_prebackstory.spc_wanderer_dorwinion_1_text" text="My name is older than my fortune. Have you heard of the House of Vineholm?" />
+    <string id="aom_backstory_a.spc_wanderer_dorwinion_1_text" text="My family claims kinship with the House of Vineholm, who planted the first terraces above the river, so I was taught young to lead men and to sit a horse. I rose to command thirty spears on the eastern road." />
+    <string id="aom_backstory_b.spc_wanderer_dorwinion_1_text" text="I held a ford on the Redwater with thirty spears when a larger band came through from the east. My captain withdrew in the night and left us the order to hold. I held it, and eleven men died before help arrived." />
+    <string id="aom_backstory_c.spc_wanderer_dorwinion_1_text" text="The council praised the ford and then quietly passed me over for every command, because I had named my captain's flight aloud. I carry the eleven names with me. A man who will not lie for his betters finds few doors open." />
+    <string id="aom_response_1.spc_wanderer_dorwinion_1_text" text="You did what honor asked of you." />
+    <string id="aom_response_2.spc_wanderer_dorwinion_1_text" text="Perhaps your captain saw the field better than you did." />
+    <string id="aom_backstory_d.spc_wanderer_dorwinion_1_text" text="If you need someone to hold a line and keep faith with the men in it, I will lead a company for you." />
+    <string id="aom_generic_backstory.spc_wanderer_dorwinion_1_text" text="The sons of Dorwinion's old vintner houses are raised to lead men and to ride out when the horns sound. Some of us find our commands elsewhere." />
+    <string id="aom_prebackstory.spc_wanderer_dorwinion_2_text" text="Looking for someone who knows the roads. I do." />
+    <string id="aom_backstory_a.spc_wanderer_dorwinion_2_text" text="I scouted for the wine caravans that run from Vineholm to the Sea of Rhûn landings and the Northgate road. Water, ambush ground, safe fords, I priced them all. A good scout is paid by the mile." />
+    <string id="aom_backstory_b.spc_wanderer_dorwinion_2_text" text="When the Easterling raids went quiet, the caravan master tried to cut my wage and said there was no danger left to pay for. Quiet was my work. I took my maps and left him to find his own way, and two carts were lost that season." />
+    <string id="aom_backstory_c.spc_wanderer_dorwinion_2_text" text="No factor trusts me now, and I trust none of them back. I carry my own pay and I count it twice." />
+    <string id="aom_response_1.spc_wanderer_dorwinion_2_text" text="A man should be paid for his craft." />
+    <string id="aom_response_2.spc_wanderer_dorwinion_2_text" text="You left honest drivers to the raiders." />
+    <string id="aom_backstory_d.spc_wanderer_dorwinion_2_text" text="Pay me on time and I will put you on the best ground between here and the sea." />
+    <string id="aom_generic_backstory.spc_wanderer_dorwinion_2_text" text="Caravan scouts of Dorwinion sell the roads they know to anyone who pays on time. We are not sentimental about it." />
+    <string id="aom_prebackstory.spc_wanderer_dorwinion_3_text" text="A man of Redwater on dry land. Try not to laugh, I have heard it all." />
+    <string id="aom_backstory_a.spc_wanderer_dorwinion_3_text" text="I walked the quays of Redwater Landing with the town watch, a boat-spear in my hands, keeping thieves out of the cask yards. Hold a long spear on a rocking deck for ten years and you can use it anywhere." />
+    <string id="aom_backstory_b.spc_wanderer_dorwinion_3_text" text="I noticed the harbor-master's toll-men taking more silver than they ever wrote down. I kept my own tally and took it to the council, and I was struck from the watch rolls before the ink dried. The week before, I had let a starving boy go, so I was blamed for that too." />
+    <string id="aom_backstory_c.spc_wanderer_dorwinion_3_text" text="So here I am, a watchman without a harbor, holding a ledger nobody wants. I keep the tally anyway, in case a better council ever asks." />
+    <string id="aom_response_1.spc_wanderer_dorwinion_3_text" text="Counting honestly should never cost a man his post." />
+    <string id="aom_response_2.spc_wanderer_dorwinion_3_text" text="A watchman who frees thieves has himself to blame." />
+    <string id="aom_backstory_d.spc_wanderer_dorwinion_3_text" text="I can hold a spear steady on any ground, and I can read your quartermaster's books, for a fair share." />
+    <string id="aom_generic_backstory.spc_wanderer_dorwinion_3_text" text="I learned the long spear on the pitching decks of the Redwater watch. Few things steady the hand like that." />
+    <string id="aom_prebackstory.spc_wanderer_dorwinion_4_text" text="The lads named me after Ostmar the Warden. I have not earned it yet, but I will." />
+    <string id="aom_backstory_a.spc_wanderer_dorwinion_4_text" text="My father told the tale of Ostmar, who held Northgate through a whole winter, every night of my childhood. The other boys named me after the Warden as a joke because I would not stop asking for more of it. At sixteen I took a spear from the Vineholm armory and swore to make the joke true." />
+    <string id="aom_backstory_b.spc_wanderer_dorwinion_4_text" text="Word came of raiders from Rhûn near our hills, and I led six lads out to meet them without waiting for the garrison. I never counted the enemy, and there were forty. Three of the six came home." />
+    <string id="aom_backstory_c.spc_wanderer_dorwinion_4_text" text="The garrison does not trust me with a command now, and my father will not speak of it. I would sooner die useful than live as a joke. I still carry the spear." />
+    <string id="aom_response_1.spc_wanderer_dorwinion_4_text" text="Courage learns from its mistakes." />
+    <string id="aom_response_2.spc_wanderer_dorwinion_4_text" text="You threw boys at forty men for the sake of a nickname." />
+    <string id="aom_backstory_d.spc_wanderer_dorwinion_4_text" text="Let me stand in your front rank, and I will earn what the lads called me or learn I never could." />
+    <string id="aom_generic_backstory.spc_wanderer_dorwinion_4_text" text="Young spearmen of Dorwinion grow up on the tale of Ostmar the Warden. Some of us go looking for a fight that big." />
+    <string id="aom_prebackstory.spc_wanderer_dorwinion_5_text" text="Forgive me, I only wished to see a friendly face." />
+    <string id="aom_backstory_a.spc_wanderer_dorwinion_5_text" text="My father fished the Sea of Rhûn and I fished it after him, hauling nets at dawn and mending them at dusk. When the watch needed spears, I took up the boat-hook and a place in the line, being strong and no worse than most." />
+    <string id="aom_backstory_b.spc_wanderer_dorwinion_5_text" text="When a raiding band came up out of the reeds in a morning fog, I froze. The lads on either side of me did not. Two never came back, and I was crouched behind a net-rack when they fell." />
+    <string id="aom_backstory_c.spc_wanderer_dorwinion_5_text" text="I do not blame the fog, for I know what I did. Since then I give away what coin I earn to the widows of Seagate, and it is never enough." />
+    <string id="aom_response_1.spc_wanderer_dorwinion_5_text" text="Fear touches every man. You have paid for it." />
+    <string id="aom_response_2.spc_wanderer_dorwinion_5_text" text="A man who breaks from the line is no use to me." />
+    <string id="aom_backstory_d.spc_wanderer_dorwinion_5_text" text="If you can use a man who knows his own failing, I will carry a spear for you and try to stand firmer than I did." />
+    <string id="aom_generic_backstory.spc_wanderer_dorwinion_5_text" text="Fishermen of the Sea of Rhûn take up the boat-hook and the spear when the watch calls. Not all of us stand when the shouting starts." />
+    <string id="aom_prebackstory.spc_wanderer_dorwinion_6_text" text="You carry a bow? Good. Then you will understand." />
+    <string id="aom_backstory_a.spc_wanderer_dorwinion_6_text" text="I was the best archer in Dorwinion at twenty, with a white-fletched arrow on my quiver in honor of the Vineholm butts. The great shoot at the vintage fair was mine to lose, and I wanted it badly." />
+    <string id="aom_backstory_b.spc_wanderer_dorwinion_6_text" text="A rival from Seagate shot as well as I did, so the night before the final I cut his string a third of the way through. He drew at the line and it snapped across his cheek. They found the cut ends in my pack." />
+    <string id="aom_backstory_c.spc_wanderer_dorwinion_6_text" text="I was stripped of my fletching and barred from the butts. I still shoot better than any man in the hall, and they know it, and it changes nothing. I am not sorry I wanted to win, only that I was caught." />
+    <string id="aom_response_1.spc_wanderer_dorwinion_6_text" text="Skill like yours should not rot unused." />
+    <string id="aom_response_2.spc_wanderer_dorwinion_6_text" text="A man who cuts his rival's string deserves the ban." />
+    <string id="aom_backstory_d.spc_wanderer_dorwinion_6_text" text="Take me on and I will put an arrow wherever you point. Do not ask me for more than that." />
+    <string id="aom_generic_backstory.spc_wanderer_dorwinion_6_text" text="Archers of Dorwinion shoot at the butts every vintage feast. Some of us carry the bow wherever the pay is fair." />
+    <string id="aom_prebackstory.spc_wanderer_dorwinion_7_text" text="Nothing watches a road like an old rider with a good horse." />
+    <string id="aom_backstory_a.spc_wanderer_dorwinion_7_text" text="My grandmother planted the first vines on the Amberslope terraces, and I grew up watching Dorwinion's presses and cellars rise year by year. I rode the Northgate post for twenty years, carrying word between the beacon tower above the keep and the gates of Vineholm." />
+    <string id="aom_backstory_b.spc_wanderer_dorwinion_7_text" text="One spring the beacon-keepers sent word of an Easterling muster in the east, and I rode to the council with it. The lord called beacon-smoke gossip and kept me waiting three weeks. By the time he believed it, the villages on the eastern slopes had burned." />
+    <string id="aom_backstory_c.spc_wanderer_dorwinion_7_text" text="I kept my honor and lost my post, since the lord could not forgive having been wrong. Now I ride where a warning is still welcome. It is a short list." />
+    <string id="aom_response_1.spc_wanderer_dorwinion_7_text" text="You were right, and they should have listened." />
+    <string id="aom_response_2.spc_wanderer_dorwinion_7_text" text="Beacon-keepers see smoke and call it fire. A sensible lord waits for proof." />
+    <string id="aom_backstory_d.spc_wanderer_dorwinion_7_text" text="I know the eastern roads and the minds of men who ignore warnings. I will ride ahead for you." />
+    <string id="aom_generic_backstory.spc_wanderer_dorwinion_7_text" text="I come from the Northgate riders, who watch the eastern roads for Dorwinion. A warning from us is sound, whatever the lords choose to do with it." />
+    <string id="aom_prebackstory.spc_wanderer_dorwinion_8_text" text="Hard country makes hard men. Do not expect me to apologize." />
+    <string id="aom_backstory_a.spc_wanderer_dorwinion_8_text" text="I served as a sergeant on the Eastmarch road, where Dorwinion's spearmen stand against whatever comes out of Rhûn. The old wardens taught me to keep the spear steady and the line closed, and to waste nothing, pity included." />
+    <string id="aom_backstory_b.spc_wanderer_dorwinion_8_text" text="We took a band of Easterling raiders who had burned three vineyards, and I put the prisoners down rather than march them for days to the stocks. My captain called it murder. The old wardens said nothing, which I took for agreement." />
+    <string id="aom_backstory_c.spc_wanderer_dorwinion_8_text" text="I was dismissed with no pay owed and no word to carry. I would do it again. The farms along that road stayed safe the rest of the year." />
+    <string id="aom_response_1.spc_wanderer_dorwinion_8_text" text="Hard choices keep the roads safe." />
+    <string id="aom_response_2.spc_wanderer_dorwinion_8_text" text="Killing prisoners is plain murder." />
+    <string id="aom_backstory_d.spc_wanderer_dorwinion_8_text" text="I fight hard and I do not flinch. If that suits you, put me at the front of your line." />
+    <string id="aom_generic_backstory.spc_wanderer_dorwinion_8_text" text="Dorwinion's spearmen hold the Eastmarch road against all comers, and the work there is not gentle. We learn it, and we do not forget it." />
+    <string id="aom_prebackstory.spc_wanderer_dorwinion_9_text" text="Have you heard whether the eastern slopes are quiet this season?" />
+    <string id="aom_backstory_a.spc_wanderer_dorwinion_9_text" text="I bred and broke horses on the downs east of the Redwater, where the grass is thin and the horses are hardy. I rode before I could properly walk, and half the mounts in the valley carry my training." />
+    <string id="aom_backstory_b.spc_wanderer_dorwinion_9_text" text="Raiders from Rhûn came at harvest and drove off our herd and half our village. I rode to Vineholm for help, but the council would not hear me before morning, so I gathered the farmhands and went after them myself." />
+    <string id="aom_backstory_c.spc_wanderer_dorwinion_9_text" text="We took back most of the horses and every child, but two farmhands did not return, and the village is a burned ring of posts. I sold the herd to pay the dead men's families. A rider's hands are all I have left." />
+    <string id="aom_response_1.spc_wanderer_dorwinion_9_text" text="You gave everything you had. That counts." />
+    <string id="aom_response_2.spc_wanderer_dorwinion_9_text" text="A hothead who rides off without leave gets men killed." />
+    <string id="aom_backstory_d.spc_wanderer_dorwinion_9_text" text="I will ride for you gladly, and I will give my last coin to anyone you want to help." />
+    <string id="aom_generic_backstory.spc_wanderer_dorwinion_9_text" text="Horse-breeders of the eastern downs raise sturdy mounts and riders who ask little. We are quick to the saddle when the raiders come." />
+    <string id="aom_prebackstory.spc_wanderer_southrhovanion_0_text" text="The horses grow restless, and strange wolves prowl the southern eaves..." />
+    <string id="aom_backstory_a.spc_wanderer_southrhovanion_0_text" text="I was a Marshal of Westmark, commanding a riding company of thirty. We patrolled from Westmark to the Southwood, watching the edge of Mirkwood for threats from Dol Guldur and beyond. But dark rumors came out of the forest." />
+    <string id="aom_backstory_b.spc_wanderer_southrhovanion_0_text" text="My scouts reported strange activity: fires burning in the trees night after night, hunters who never came back, and wolves unlike any we had seen. When I brought word to Vidugard, the King's steward Aldwulf dismissed my concerns and said the hill was empty and the tales were for children." />
+    <string id="aom_backstory_c.spc_wanderer_southrhovanion_0_text" text="I pressed the matter, and was relieved of command for 'spreading panic.' Now I ride alone, gathering proof of the threat. The King grows deaf under his steward's counsel while danger gathers at our doorstep." />
+    <string id="aom_response_1.spc_wanderer_southrhovanion_0_text" text="A watchful eye may save the plains yet." />
+    <string id="aom_response_2.spc_wanderer_southrhovanion_0_text" text="Perhaps you see threats where none exist." />
+    <string id="aom_backstory_d.spc_wanderer_southrhovanion_0_text" text="I offer my lance and knowledge of these lands, if you need them." />
+    <string id="aom_generic_backstory.spc_wanderer_southrhovanion_0_text" text="Marshals of Westmark ride the long line between the plains and the forest eaves, and we trust our own eyes before any steward's word." />
+    <string id="aom_prebackstory.spc_wanderer_southrhovanion_1_text" text="The blood of the old kings of Vidugard runs hot in my veins, demanding action..." />
+    <string id="aom_backstory_a.spc_wanderer_southrhovanion_1_text" text="I rode with the cavalry of Wainwatch, defending the eastern plains from Wainrider raids. My spear drank deep of enemy blood, and my horse Dustmane was known across Rhovanion for his speed." />
+    <string id="aom_backstory_b.spc_wanderer_southrhovanion_1_text" text="During a skirmish, we pursued a raiding band too far and discovered they wore mail stamped by the envoy from Rhun, who feasted at our King's table as a friend. When I reported this to my captain, he ordered me to forget what I had seen. He said the King's steward had forbidden such talk." />
+    <string id="aom_backstory_c.spc_wanderer_southrhovanion_1_text" text="I could not stay silent while treachery festered. I left my company and now ride as a masterless warrior, seeking those who still have the courage to face hard truths." />
+    <string id="aom_response_1.spc_wanderer_southrhovanion_1_text" text="The plains need warriors who won't be silenced." />
+    <string id="aom_response_2.spc_wanderer_southrhovanion_1_text" text="Disobedience weakens the realm." />
+    <string id="aom_backstory_d.spc_wanderer_southrhovanion_1_text" text="My spear and steed are yours, if you'll have them." />
+    <string id="aom_generic_backstory.spc_wanderer_southrhovanion_1_text" text="The riders of Wainwatch hold the eastern plains against every raid, and we carry the old kings' pride into every charge. Some of us ride on alone." />
+    <string id="aom_prebackstory.spc_wanderer_southrhovanion_2_text" text="Young blood seeks glory, but finds only shadow..." />
+    <string id="aom_backstory_a.spc_wanderer_southrhovanion_2_text" text="I earned my first horse at twelve, my first kill at sixteen. I rode with the younger riders of Vidugard, eager to prove ourselves worthy of our fathers' legacies. We dreamed of great charges and heroic songs." />
+    <string id="aom_backstory_b.spc_wanderer_southrhovanion_2_text" text="On patrol near the Southwood eaves, we found burnt villages, not raided by Wainriders, but destroyed by men on foot. The tracks led toward Dol Guldur. When we reported this, we were told we were mistaken, that Wainrider raiders were to blame." />
+    <string id="aom_backstory_c.spc_wanderer_southrhovanion_2_text" text="But I know horse tracks from wolf tracks, boot prints from orc spoor. Someone wanted those villages gone, and it wasn't the Wainriders. I left my company to seek the truth. The plains are threatened from within and without." />
+    <string id="aom_response_1.spc_wanderer_southrhovanion_2_text" text="Youth often sees clearly what age ignores." />
+    <string id="aom_response_2.spc_wanderer_southrhovanion_2_text" text="Young eyes can mistake shadows for substance." />
+    <string id="aom_backstory_d.spc_wanderer_southrhovanion_2_text" text="I offer eager strength and sharp eyes, if you'll have them." />
+    <string id="aom_generic_backstory.spc_wanderer_southrhovanion_2_text" text="Young riders of Vidugard are raised on tales of great charges. Some of us learn early that the real enemy leaves no banner." />
+    <string id="aom_prebackstory.spc_wanderer_southrhovanion_3_text" text="Honor lost is harder to bear than any wound..." />
+    <string id="aom_backstory_a.spc_wanderer_southrhovanion_3_text" text="I was thane of a small hall near Westmark, sworn to the Riders of Southwood. My people looked to me for protection and justice. I had good riders, strong walls, and fertile meadows. It should have been enough." />
+    <string id="aom_backstory_b.spc_wanderer_southrhovanion_3_text" text="The steward Aldwulf came with tax collectors, demanding twice our usual tribute. When I protested, he accused me of hoarding wealth while the King's treasury ran thin. He had documents, forged but convincing, showing I'd traded with the Wainriders." />
+    <string id="aom_backstory_c.spc_wanderer_southrhovanion_3_text" text="The King, trusting his steward, stripped me of lands and title. My own people were told I was a traitor. Now I wander, a thane without a hall, seeking to restore my name through deeds since words failed me." />
+    <string id="aom_response_1.spc_wanderer_southrhovanion_3_text" text="Aldwulf has destroyed many good men." />
+    <string id="aom_response_2.spc_wanderer_southrhovanion_3_text" text="Perhaps there was cause for suspicion." />
+    <string id="aom_backstory_d.spc_wanderer_southrhovanion_3_text" text="I offer a warrior's skill and bitter experience, if you'll take them." />
+    <string id="aom_generic_backstory.spc_wanderer_southrhovanion_3_text" text="Thanes of the plains hold small halls and large pride. When a hall falls, its lord rides on with nothing but his name." />
+    <string id="aom_prebackstory.spc_wanderer_southrhovanion_4_text" text="The shield-maidens of old knew no fear, neither should I..." />
+    <string id="aom_backstory_a.spc_wanderer_southrhovanion_4_text" text="My grandmother rode with the host in her youth, before marriage tamed her. She taught me spear and horse in secret, despite my father's wishes. When raiders struck our village while the men were away, I led the defense." />
+    <string id="aom_backstory_b.spc_wanderer_southrhovanion_4_text" text="We held, but I was seen fighting. The village elders said I brought shame, that women who took up arms invited chaos. They demanded I marry immediately or leave. My father, fearing scandal, sided with them." />
+    <string id="aom_backstory_c.spc_wanderer_southrhovanion_4_text" text="I chose exile over chains. Now I ride as my grandmother once did, free and fierce. The plains need every spear, regardless of who wields it. Let them whisper, I'll be too busy fighting to hear." />
+    <string id="aom_response_1.spc_wanderer_southrhovanion_4_text" text="The realm wastes half its strength ignoring women warriors." />
+    <string id="aom_response_2.spc_wanderer_southrhovanion_4_text" text="Tradition exists for good reasons." />
+    <string id="aom_backstory_d.spc_wanderer_southrhovanion_4_text" text="I offer a shield-maiden's courage, if you'll accept it." />
+    <string id="aom_generic_backstory.spc_wanderer_southrhovanion_4_text" text="Some daughters of the plains ride and fight as their grandmothers did. The villages call it shame, and the raiders call it a mistake." />
+    <string id="aom_prebackstory.spc_wanderer_southrhovanion_5_text" text="The weak die so the strong might live, such is war..." />
+    <string id="aom_backstory_a.spc_wanderer_southrhovanion_5_text" text="I rode with the most aggressive company of Wainwatch. We gave no quarter to the Wainriders, pursuing them to extinction. My commander said mercy to enemies was cruelty to our own people. I believed him." />
+    <string id="aom_backstory_b.spc_wanderer_southrhovanion_5_text" text="We caught a band of raiders stealing horses. My captain ordered them all killed, men, women, children. I obeyed, but one boy reminded me of my own son. After that night, I couldn't stop seeing his face." />
+    <string id="aom_backstory_c.spc_wanderer_southrhovanion_5_text" text="I left before I lost what humanity remained. Now I fight only those who can fight back. The line between warrior and butcher is thinner than most admit. I've been both, and prefer the former." />
+    <string id="aom_response_1.spc_wanderer_southrhovanion_5_text" text="Recognition of evil is the first step to redemption." />
+    <string id="aom_response_2.spc_wanderer_southrhovanion_5_text" text="War demands terrible choices." />
+    <string id="aom_backstory_d.spc_wanderer_southrhovanion_5_text" text="I offer hard skills and harder lessons, if you need them." />
+    <string id="aom_generic_backstory.spc_wanderer_southrhovanion_5_text" text="The riders of the Wainwatch frontier learn war without mercy. Not all of us can live with what we learn." />
+    <string id="aom_prebackstory.spc_wanderer_southrhovanion_6_text" text="The bow sings truest from horseback..." />
+    <string id="aom_backstory_a.spc_wanderer_southrhovanion_6_text" text="My father bred horses, my mother was from the Southwood, where archery is prized. I combined both traditions, becoming one of the few horse archers in the realm. I could put an arrow through a ring at full gallop." />
+    <string id="aom_backstory_b.spc_wanderer_southrhovanion_6_text" text="Scouting near Dol Guldur, I saw things that shouldn't exist: pits, strange fires, and twisted creatures. When I tried to get closer, wolves pursued me, but wolves that ran upright and spoke in dark tongues." />
+    <string id="aom_backstory_c.spc_wanderer_southrhovanion_6_text" text="My captain didn't believe me, said I'd been drinking. The steward heard my tale and declared me mad, suggesting I be confined. I fled that night. What I saw was real, and the plains must be warned." />
+    <string id="aom_response_1.spc_wanderer_southrhovanion_6_text" text="Dark times bring forth dark creatures." />
+    <string id="aom_response_2.spc_wanderer_southrhovanion_6_text" text="Fear can make men see monsters." />
+    <string id="aom_backstory_d.spc_wanderer_southrhovanion_6_text" text="My bow and knowledge are yours, if you'll trust them." />
+    <string id="aom_generic_backstory.spc_wanderer_southrhovanion_6_text" text="Horse archers of the Southwood shoot as well from the saddle as from the ground. We see farther than the halls care to know." />
+    <string id="aom_prebackstory.spc_wanderer_southrhovanion_7_text" text="The horses whisper of storms approaching..." />
+    <string id="aom_backstory_a.spc_wanderer_southrhovanion_7_text" text="I was born in the saddle, or near enough. My family supplied horses to the King's own stables at Vidugard. I could ride before I could properly walk, and understood horses better than people." />
+    <string id="aom_backstory_b.spc_wanderer_southrhovanion_7_text" text="The horses began refusing to go near the road toward Dol Guldur, and even the bravest stallions would rear and flee. Animals sense evil before men do. When I reported this to the horse masters, they blamed bad training." />
+    <string id="aom_backstory_c.spc_wanderer_southrhovanion_7_text" text="But I know horses. They weren't spooked, they were terrified. Something unnatural grows beneath the forest's southern shadow. I left the royal stables to investigate on my own. If the horses fear it, we should too." />
+    <string id="aom_response_1.spc_wanderer_southrhovanion_7_text" text="Animals often sense what men miss." />
+    <string id="aom_response_2.spc_wanderer_southrhovanion_7_text" text="Horses spook at many things." />
+    <string id="aom_backstory_d.spc_wanderer_southrhovanion_7_text" text="I offer a rider's skill and a horse's wisdom, if you'll have them." />
+    <string id="aom_generic_backstory.spc_wanderer_southrhovanion_7_text" text="Horse-masters of Vidugard trust the herd before the hall. A frightened stallion has saved more riders than any scout." />
+    <string id="aom_prebackstory.spc_wanderer_southrhovanion_8_text" text="The finest riders serve truth, not corrupted counsel..." />
+    <string id="aom_backstory_a.spc_wanderer_southrhovanion_8_text" text="I was chosen for the King's own guard, the elite who ride beside the Horse-lord. It was the highest honor a rider could achieve. I served with pride, until I saw how far the King's court had fallen under his steward's influence." />
+    <string id="aom_backstory_b.spc_wanderer_southrhovanion_8_text" text="The King, once mighty, now sits grey and weary while Aldwulf whispers poison. I heard orders given that made no sense: troops withdrawn from threatened borders, supplies sent to uncertain destinations." />
+    <string id="aom_backstory_c.spc_wanderer_southrhovanion_8_text" text="When I questioned these orders, Aldwulf marked me as 'unreliable.' I was reassigned to distant patrols, then dismissed entirely. I won't serve a puppet court while the real threats gather strength." />
+    <string id="aom_response_1.spc_wanderer_southrhovanion_8_text" text="Loyalty to the realm surpasses loyalty to its ruler." />
+    <string id="aom_response_2.spc_wanderer_southrhovanion_8_text" text="Abandoning your king seems like treachery." />
+    <string id="aom_backstory_d.spc_wanderer_southrhovanion_8_text" text="I offer elite training and unwavering purpose, if you need them." />
+    <string id="aom_generic_backstory.spc_wanderer_southrhovanion_8_text" text="The King's guard of Vidugard rides at his side in every hall and on every field. When the court rots, some of us ride away." />
+    <string id="aom_prebackstory.spc_wanderer_southrhovanion_9_text" text="The plains taught me more than any hall of warriors ever could..." />
+    <string id="aom_backstory_a.spc_wanderer_southrhovanion_9_text" text="I grew up on the meadows near Wainwatch, where the wild horses still run free and the Wainriders probe our borders. My father was a herder, not a soldier, but he taught me to read the land and the wind." />
+    <string id="aom_backstory_b.spc_wanderer_southrhovanion_9_text" text="When raiders came, our village had no riding company to protect it. I rallied the young riders and we drove them off ourselves. Word spread, and the Marshal offered me a place in the muster." />
+    <string id="aom_backstory_c.spc_wanderer_southrhovanion_9_text" text="But the marshals quarrel among themselves while the real enemy gathers. I left the muster to find a leader worth following, someone who sees beyond petty border disputes to the true darkness rising beneath Mirkwood." />
+    <string id="aom_response_1.spc_wanderer_southrhovanion_9_text" text="A rider who knows the land is worth ten who only know the charge." />
+    <string id="aom_response_2.spc_wanderer_southrhovanion_9_text" text="Leaving your people undefended seems reckless." />
+    <string id="aom_backstory_d.spc_wanderer_southrhovanion_9_text" text="I know every trail and ford in Rhovanion, and my horse has never failed me. That is what I bring." />
+    <string id="aom_generic_backstory.spc_wanderer_southrhovanion_9_text" text="Herders' sons of the Wainwatch meadows learn the land before they learn the lance. We ride well, and we ride where we are needed." />
   </strings>
 </base>

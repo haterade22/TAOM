@@ -80,7 +80,8 @@ def bow_skill(line, level):
 
 
 def skills(realm, level, role):
-    """One skill block per role. Roles: spear, sword, twohand, ranged, crossbow, cavalry."""
+    """One skill block per role. Roles: spear, sword, twohand, ranged, crossbow, cavalry,
+    horsearcher (a mounted bowman: the ranged Bow cell and the cavalry Riding)."""
     s = dict.fromkeys(SKILLS, 0)
     s["Athletics"] = ATH[level]
     s["Throwing"] = LOW[level]
@@ -103,6 +104,9 @@ def skills(realm, level, role):
     elif role == "cavalry":
         s.update(Riding=RIDING[level], Polearm=PRIMARY[level], OneHanded=SECONDARY[level],
                  TwoHanded=LOW[level] * 2, Bow=LOW[level], Athletics=ATH[level] - 10)
+    elif role == "horsearcher":
+        s.update(Bow=bow_skill(realm.line, level), Riding=RIDING[level], OneHanded=SECONDARY[level],
+                 Polearm=LOW[level] * 2, TwoHanded=LOW[level] * 2, Athletics=ATH[level] - 10)
     else:
         raise ValueError(role)
     return s

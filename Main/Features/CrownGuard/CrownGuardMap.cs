@@ -45,6 +45,8 @@ public sealed class CrownGuardMap
             ["eredluin"] = "eredluin_kings_guard",
             ["anduinvale"] = "anduinvale_bear_warden",
             ["angaladh"] = "angaladh_woodmen_guard",
+            ["dorwinion"] = "dorwinion_vineholm_guard",
+            ["southrhovanion"] = "southrhovanion_horse_lord",
             ["mirkwood"] = "mirkwood_palaceguard",
             ["rivendell"] = "imladris_warden",
             ["lothlorien"] = "imladris_warden",

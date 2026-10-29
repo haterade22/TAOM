@@ -72,6 +72,8 @@ public sealed class BannerBearerConfig
         { "sturgia", "close_shields_banner_t1" },        // Barding (Dale)
         { "anduinvale", "close_shields_banner_t1" },     // the two realms cut from Dale
         { "angaladh", "close_shields_banner_t1" },
+        { "dorwinion", "close_shields_banner_t1" },       // Dorwinion, cut from Dale
+        { "southrhovanion", "banner_of_the_horseman_t1" }, // South Rhovanion, cut from Rohan
 
         // Dwarves — heavy shield-wall standards
         { "erebor", "banner_of_oaken_shields_t1" },

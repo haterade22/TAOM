@@ -349,6 +349,7 @@
 	<string id="lord_AV1_1_description" text="{=lord_AV1_1_description}Grimbeorn, son of Beorn, Chieftain of the Beornings, who keeps the High Pass and the Old Ford and lets no orc cross the Vales of Anduin." />
 	<string id="lord_BC1_1_description" text="{=lord_BC1_1_description}Morgrub, the Great Goblin of Blue Craig, whose swarms infest the Blue Mountains of the far west, hard by the Grey Havens of Lindon." />
 	<string id="lord_CA1_1_description" text="{=lord_CA1_1_description}Aranthir, King of Cardolan, heir of Earendur's second son, who keeps the barrow-kings' crown at Caras Gorthad." />
+	<string id="lord_DO1_1_description" text="{=lord_DO1_1_description}Ostric, King of Dorwinion, lord of Vineholm, whose wine goes up the River Running to Dale and the Elves of Mirkwood." />
 	<string id="lord_EL1_1_description" text="{=lord_EL1_1_description}Farin II, King of Ered Luin, of the line of Borin, Lord of Thorin's Halls, who holds the Blue Mountains with the Broadbeams of Belegost and the Firebeards of Nogrod." />
 	<string id="lord_GB1_1_description" text="{=lord_GB1_1_description}Muzgash, the Great Goblin of Goblin Town, master of the warrens of the High Pass." />
 	<string id="lord_I1_10_text" text="{=lord_I1_10_text}Krazdra leads scouting parties for the Iron Fist. Her knowledge of the terrain surrounding Isengard is unmatched." />
@@ -376,6 +377,7 @@
 	<string id="lord_LN3_1_description" text="{=lord_LN3_1_description}Galdor of the Havens, who bore Círdan's counsel to the house of Elrond, keeps Forlond on the northern arm of the Gulf of Lhûn." />
 	<string id="lord_MM1_1_description" text="{=lord_MM1_1_description}Bûrzum, Warlord of the Misty Mountains, who holds the deep places of Moria and the cold peaks above." />
 	<string id="lord_RH1_1_description" text="{=lord_RH1_1_description}Belegorn, King of Rhudaur, heir of Earendur's third son, lord of Cameth Brin and of the hill-men of the Angle." />
+	<string id="lord_SRH1_1_description" text="{=lord_SRH1_1_description}Vidumar, King of South Rhovanion, lord of Vidugard, who rides the plains south of Mirkwood and remembers the Wainriders." />
 	<string id="lord_U1_2_text" text="{=lord_U1_2_text}Zimraphel, a descendant of the Black Númenóreans, commands the Corsair fleet with cunning and grace. Her knowledge of the sea and its treacherous currents is unrivaled among the captains of Umbar." />
 	<string id="lorgath_description" text="{=lorgath_description}Lorgath, master of the Black Spider Horde, breeds giant spiders, directly inspired by the arachnids of Mirkwood in The Hobbit." />
 	<string id="lothuial_description" text="{=lothuial_description}Lothuial, consort to Thranduil, draws from the elegant elven queens in Middle-earth's tales, providing counsel and healing wisdom to the royal house. Her presence strengthens the bonds of Nos Lasgalen, fostering unity among the Wood-elves as they confront the darkness spreading through Mirkwood." />

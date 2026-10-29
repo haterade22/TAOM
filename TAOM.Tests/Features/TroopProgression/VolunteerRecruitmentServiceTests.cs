@@ -3465,6 +3465,88 @@ public class VolunteerRecruitmentServiceTests
         Assert.IsTrue(_sut.HasCulturePool("angaladh"));
     }
 
+    // --- Dorwinion: levy-heavy, the Noble as the one elite root ---
+    // pool: dorwinion_levy(6)[0..5] + dorwinion_noble(2)[6..7] = total 8
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DorwinionCulture_Roll0_ReturnsLevy()
+    {
+        _random.Next(8).Returns(0);
+        var context = new VolunteerContext(null, null, null, "dorwinion");
+        Assert.AreEqual("dorwinion_levy", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DorwinionCulture_Roll5_ReturnsLevy()
+    {
+        _random.Next(8).Returns(5);
+        var context = new VolunteerContext(null, null, null, "dorwinion");
+        Assert.AreEqual("dorwinion_levy", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DorwinionCulture_Roll6_ReturnsNoble()
+    {
+        _random.Next(8).Returns(6);
+        var context = new VolunteerContext(null, null, null, "dorwinion");
+        Assert.AreEqual("dorwinion_noble", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_DorwinionCulture_Roll7_ReturnsNoble()
+    {
+        _random.Next(8).Returns(7);
+        var context = new VolunteerContext(null, null, null, "dorwinion");
+        Assert.AreEqual("dorwinion_noble", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void HasCulturePool_Dorwinion_True()
+    {
+        Assert.IsTrue(_sut.HasCulturePool("dorwinion"));
+    }
+
+    // --- South Rhovanion: levy-heavy, the Northman Youth as the one elite root ---
+    // pool: southrhovanion_levy(6)[0..5] + southrhovanion_northman_youth(2)[6..7] = total 8
+
+    [TestMethod]
+    public void GetVolunteerTroopId_SouthRhovanionCulture_Roll0_ReturnsLevy()
+    {
+        _random.Next(8).Returns(0);
+        var context = new VolunteerContext(null, null, null, "southrhovanion");
+        Assert.AreEqual("southrhovanion_levy", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_SouthRhovanionCulture_Roll5_ReturnsLevy()
+    {
+        _random.Next(8).Returns(5);
+        var context = new VolunteerContext(null, null, null, "southrhovanion");
+        Assert.AreEqual("southrhovanion_levy", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_SouthRhovanionCulture_Roll6_ReturnsNorthmanYouth()
+    {
+        _random.Next(8).Returns(6);
+        var context = new VolunteerContext(null, null, null, "southrhovanion");
+        Assert.AreEqual("southrhovanion_northman_youth", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_SouthRhovanionCulture_Roll7_ReturnsNorthmanYouth()
+    {
+        _random.Next(8).Returns(7);
+        var context = new VolunteerContext(null, null, null, "southrhovanion");
+        Assert.AreEqual("southrhovanion_northman_youth", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void HasCulturePool_SouthRhovanion_True()
+    {
+        Assert.IsTrue(_sut.HasCulturePool("southrhovanion"));
+    }
+
     [TestMethod]
     public void HasCulturePool_MirkwoodAndUmbar_NowTrue()
     {

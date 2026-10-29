@@ -12619,4 +12619,1204 @@
     </Choice>
   </ChoiceGroup>
 
+  <!-- ═══ Spear-warden of Vinewatch (dorwinion), cloned from dale_guardsman ═══ -->
+  <Choice id="spear_warden_of_vinewatch_root" group_id="" type="Passive"
+          description="{=taom_spear_warden_of_vinewatch_root_desc}Terrace Wall grants +5% resistance and steadies the defenders."
+          icon_sprite="career_choice_dale_guardsman_root">
+    <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+  </Choice>
+
+  <ChoiceGroup id="spear_warden_of_vinewatch_t1_a" display_name="{=taom_career_grp_spear_warden_of_vinewatch_t1_a}Vine-warden of the Redwater" career_id="spear_warden_of_vinewatch" tier="1">
+    <Choice id="spear_warden_of_vinewatch_t1_a_key" type="Keystone" description="{=taom_swov_t1_a_key}Terrace Wall radius increased, empowering more warriors." icon_sprite="career_choice_dg2_t1_a_key">
+      <Mutations><Mutation target_id="spear_warden_of_vinewatch_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t1_a_p1" type="Passive" description="{=taom_swov_t1_a_p1}+8% melee damage." icon_sprite="career_choice_dg2_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t1_a_p2" type="Passive" description="{=taom_swov_t1_a_p2}+3% troop damage." icon_sprite="career_choice_dg2_t1_a_p2">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t1_a_p3" type="Passive" description="{=taom_swov_t1_a_p3}+6 max health." icon_sprite="career_choice_dg2_t1_a_p3">
+      <PassiveEffect type="Health" magnitude="6" operation="Add" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t1_a_p4" type="Passive" description="{=taom_swov_t1_a_p4}+7% swing speed." icon_sprite="career_choice_dg2_t1_a_p4">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="spear_warden_of_vinewatch_t1_b" display_name="{=taom_career_grp_spear_warden_of_vinewatch_t1_b}Shieldwall of the Terraces" career_id="spear_warden_of_vinewatch" tier="1">
+    <Choice id="spear_warden_of_vinewatch_t1_b_key" type="Keystone" description="{=taom_swov_t1_b_key}Terrace Wall duration extended, fortifying the defense." icon_sprite="career_choice_dg2_t1_b_key">
+      <Mutations><Mutation target_id="spear_warden_of_vinewatch_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t1_b_p1" type="Passive" description="{=taom_swov_t1_b_p1}+8% resistance." icon_sprite="career_choice_dg2_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.08" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t1_b_p2" type="Passive" description="{=taom_swov_t1_b_p2}+5% troop morale." icon_sprite="career_choice_dg2_t1_b_p2">
+      <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t1_b_p3" type="Passive" description="{=taom_swov_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_dg2_t1_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t1_b_p4" type="Passive" description="{=taom_swov_t1_b_p4}+5% troop survival." icon_sprite="career_choice_dg2_t1_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="spear_warden_of_vinewatch_t2_a" display_name="{=taom_career_grp_spear_warden_of_vinewatch_t2_a}Spear of King Ostric" career_id="spear_warden_of_vinewatch" tier="2">
+    <Choice id="spear_warden_of_vinewatch_t2_a_key" type="Keystone" description="{=taom_swov_t2_a_key}Terrace Wall charge reduced, activating more frequently." icon_sprite="career_choice_dg2_t2_a_key">
+      <Mutations><Mutation target_id="spear_warden_of_vinewatch_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t2_a_p1" type="Passive" description="{=taom_swov_t2_a_p1}+10% troop morale." icon_sprite="career_choice_dg2_t2_a_p1">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t2_a_p2" type="Passive" description="{=taom_swov_t2_a_p2}+2 party size." icon_sprite="career_choice_dg2_t2_a_p2">
+      <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t2_a_p3" type="Passive" description="{=taom_swov_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_dg2_t2_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t2_a_p4" type="Passive" description="{=taom_swov_t2_a_p4}-10% troop wages." icon_sprite="career_choice_dg2_t2_a_p4">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="spear_warden_of_vinewatch_t2_b" display_name="{=taom_career_grp_spear_warden_of_vinewatch_t2_b}Bulwark of the Redwater" career_id="spear_warden_of_vinewatch" tier="2">
+    <Choice id="spear_warden_of_vinewatch_t2_b_key" type="Keystone" description="{=taom_swov_t2_b_key}Terrace Wall grants additional defensive buffs while active." icon_sprite="career_choice_dg2_t2_b_key">
+      <Mutations><Mutation target_id="spear_warden_of_vinewatch_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t2_b_p1" type="Passive" description="{=taom_swov_t2_b_p1}+12% resistance." icon_sprite="career_choice_dg2_t2_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.12" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t2_b_p2" type="Passive" description="{=taom_swov_t2_b_p2}+8 max health." icon_sprite="career_choice_dg2_t2_b_p2">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t2_b_p3" type="Passive" description="{=taom_swov_t2_b_p3}+13% troop resistance." icon_sprite="career_choice_dg2_t2_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t2_b_p4" type="Passive" description="{=taom_swov_t2_b_p4}+5% troop damage." icon_sprite="career_choice_dg2_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="spear_warden_of_vinewatch_t3_a" display_name="{=taom_career_grp_spear_warden_of_vinewatch_t3_a}Vanguard of King Ostric" career_id="spear_warden_of_vinewatch" tier="3">
+    <Choice id="spear_warden_of_vinewatch_t3_a_key" type="Keystone" description="{=taom_swov_t3_a_key}Terrace Wall radius greatly expanded, devastating power." icon_sprite="career_choice_dg2_t3_a_key">
+      <Mutations><Mutation target_id="spear_warden_of_vinewatch_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t3_a_p1" type="Passive" description="{=taom_swov_t3_a_p1}+15% melee damage." icon_sprite="career_choice_dg2_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t3_a_p2" type="Passive" description="{=taom_swov_t3_a_p2}+10 max health." icon_sprite="career_choice_dg2_t3_a_p2">
+      <PassiveEffect type="Health" magnitude="10" operation="Add" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t3_a_p3" type="Passive" description="{=taom_swov_t3_a_p3}+7% troop damage." icon_sprite="career_choice_dg2_t3_a_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t3_a_p4" type="Passive" description="{=taom_swov_t3_a_p4}+4 party size." icon_sprite="career_choice_dg2_t3_a_p4">
+      <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="spear_warden_of_vinewatch_t3_b" display_name="{=taom_career_grp_spear_warden_of_vinewatch_t3_b}The Last Stand at Sunwall" career_id="spear_warden_of_vinewatch" tier="3">
+    <Choice id="spear_warden_of_vinewatch_t3_b_key" type="Keystone" description="{=taom_swov_t3_b_key}Terrace Wall charge greatly reduced, nearly always available." icon_sprite="career_choice_dg2_t3_b_key">
+      <Mutations><Mutation target_id="spear_warden_of_vinewatch_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t3_b_p1" type="Passive" description="{=taom_swov_t3_b_p1}+18% resistance." icon_sprite="career_choice_dg2_t3_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t3_b_p2" type="Passive" description="{=taom_swov_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_dg2_t3_b_p2">
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t3_b_p3" type="Passive" description="{=taom_swov_t3_b_p3}+20% troop morale." icon_sprite="career_choice_dg2_t3_b_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="spear_warden_of_vinewatch_t3_b_p4" type="Passive" description="{=taom_swov_t3_b_p4}+15% troop survival." icon_sprite="career_choice_dg2_t3_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Bowman of Redwater (dorwinion), cloned from dale_marksman ═══ -->
+  <Choice id="bowman_of_redwater_root" group_id="" type="Passive"
+          description="{=taom_bowman_of_redwater_root_desc}Seagate Volley grants +5% ranged damage in honor of the bowmen of the Redwater."
+          icon_sprite="career_choice_dale_marksman_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+  </Choice>
+
+  <ChoiceGroup id="bowman_of_redwater_t1_a" display_name="{=taom_career_grp_bowman_of_redwater_t1_a}Bowman of Redwater" career_id="bowman_of_redwater" tier="1">
+    <Choice id="bowman_of_redwater_t1_a_key" type="Keystone" description="{=taom_bwr_t1_a_key}Seagate Volley radius increased, covering wider kill zones." icon_sprite="career_choice_dm_t1_a_key">
+      <Mutations><Mutation target_id="bowman_of_redwater_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="bowman_of_redwater_t1_a_p1" type="Passive" description="{=taom_bwr_t1_a_p1}+8% ranged damage." icon_sprite="career_choice_dm_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t1_a_p2" type="Passive" description="{=taom_bwr_t1_a_p2}+5% armor penetration." icon_sprite="career_choice_dm_t1_a_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t1_a_p3" type="Passive" description="{=taom_bwr_t1_a_p3}+7% movement speed." icon_sprite="career_choice_dm_t1_a_p3">
+      <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t1_a_p4" type="Passive" description="{=taom_bwr_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_dm_t1_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="bowman_of_redwater_t1_b" display_name="{=taom_career_grp_bowman_of_redwater_t1_b}Watch of the Sea of Rhûn" career_id="bowman_of_redwater" tier="1">
+    <Choice id="bowman_of_redwater_t1_b_key" type="Keystone" description="{=taom_bwr_t1_b_key}Seagate Volley duration extended, sustained barrage." icon_sprite="career_choice_dm_t1_b_key">
+      <Mutations><Mutation target_id="bowman_of_redwater_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="bowman_of_redwater_t1_b_p1" type="Passive" description="{=taom_bwr_t1_b_p1}+5% resistance." icon_sprite="career_choice_dm_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t1_b_p2" type="Passive" description="{=taom_bwr_t1_b_p2}+5 max health." icon_sprite="career_choice_dm_t1_b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t1_b_p3" type="Passive" description="{=taom_bwr_t1_b_p3}+5% party spotting range." icon_sprite="career_choice_dm_t1_b_p3">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t1_b_p4" type="Passive" description="{=taom_bwr_t1_b_p4}+10% stealth bonus." icon_sprite="career_choice_dm_t1_b_p4">
+      <PassiveEffect type="StealthBonus" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="bowman_of_redwater_t2_a" display_name="{=taom_career_grp_bowman_of_redwater_t2_a}Heir of the Redwater Bowmen" career_id="bowman_of_redwater" tier="2">
+    <Choice id="bowman_of_redwater_t2_a_key" type="Keystone" description="{=taom_bwr_t2_a_key}Seagate Volley charge reduced, maintaining constant pressure." icon_sprite="career_choice_dm_t2_a_key">
+      <Mutations><Mutation target_id="bowman_of_redwater_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="bowman_of_redwater_t2_a_p1" type="Passive" description="{=taom_bwr_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_dm_t2_a_p1">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t2_a_p2" type="Passive" description="{=taom_bwr_t2_a_p2}+10% movement speed." icon_sprite="career_choice_dm_t2_a_p2">
+      <PassiveEffect type="MovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t2_a_p3" type="Passive" description="{=taom_bwr_t2_a_p3}+13% stealth bonus." icon_sprite="career_choice_dm_t2_a_p3">
+      <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t2_a_p4" type="Passive" description="{=taom_bwr_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_dm_t2_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="bowman_of_redwater_t2_b" display_name="{=taom_career_grp_bowman_of_redwater_t2_b}Falcon-Sighted Archer" career_id="bowman_of_redwater" tier="2">
+    <Choice id="bowman_of_redwater_t2_b_key" type="Keystone" description="{=taom_bwr_t2_b_key}Seagate Volley gains additional penetration while active." icon_sprite="career_choice_dm_t2_b_key">
+      <Mutations><Mutation target_id="bowman_of_redwater_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="bowman_of_redwater_t2_b_p1" type="Passive" description="{=taom_bwr_t2_b_p1}+12% ranged damage." icon_sprite="career_choice_dm_t2_b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t2_b_p2" type="Passive" description="{=taom_bwr_t2_b_p2}+10% armor penetration." icon_sprite="career_choice_dm_t2_b_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t2_b_p3" type="Passive" description="{=taom_bwr_t2_b_p3}+8 max health." icon_sprite="career_choice_dm_t2_b_p3">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t2_b_p4" type="Passive" description="{=taom_bwr_t2_b_p4}+3% troop damage." icon_sprite="career_choice_dm_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="bowman_of_redwater_t3_a" display_name="{=taom_career_grp_bowman_of_redwater_t3_a}Raider-Bane of Seagate" career_id="bowman_of_redwater" tier="3">
+    <Choice id="bowman_of_redwater_t3_a_key" type="Keystone" description="{=taom_bwr_t3_a_key}Seagate Volley radius greatly expanded, inescapable volleys." icon_sprite="career_choice_dm_t3_a_key">
+      <Mutations><Mutation target_id="bowman_of_redwater_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="bowman_of_redwater_t3_a_p1" type="Passive" description="{=taom_bwr_t3_a_p1}+18% ranged damage." icon_sprite="career_choice_dm_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t3_a_p2" type="Passive" description="{=taom_bwr_t3_a_p2}+15% armor penetration." icon_sprite="career_choice_dm_t3_a_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t3_a_p3" type="Passive" description="{=taom_bwr_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_dm_t3_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t3_a_p4" type="Passive" description="{=taom_bwr_t3_a_p4}+5% troop damage." icon_sprite="career_choice_dm_t3_a_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="bowman_of_redwater_t3_b" display_name="{=taom_career_grp_bowman_of_redwater_t3_b}The Bow of King Ostric's Line" career_id="bowman_of_redwater" tier="3">
+    <Choice id="bowman_of_redwater_t3_b_key" type="Keystone" description="{=taom_bwr_t3_b_key}Seagate Volley charge greatly reduced, relentless fire." icon_sprite="career_choice_dm_t3_b_key">
+      <Mutations><Mutation target_id="bowman_of_redwater_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="bowman_of_redwater_t3_b_p1" type="Passive" description="{=taom_bwr_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_dm_t3_b_p1">
+      <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t3_b_p2" type="Passive" description="{=taom_bwr_t3_b_p2}+15% movement speed." icon_sprite="career_choice_dm_t3_b_p2">
+      <PassiveEffect type="MovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t3_b_p3" type="Passive" description="{=taom_bwr_t3_b_p3}+9 max health." icon_sprite="career_choice_dm_t3_b_p3">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+    <Choice id="bowman_of_redwater_t3_b_p4" type="Passive" description="{=taom_bwr_t3_b_p4}+15% party spotting range." icon_sprite="career_choice_dm_t3_b_p4">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ River-Rider of Seagate (dorwinion), cloned from dale_outrider ═══ -->
+  <Choice id="river_rider_of_seagate_root" group_id="" type="Passive"
+          description="{=taom_river_rider_of_seagate_root_desc}Shore Gallop grants +5% melee damage and your horse quickens."
+          icon_sprite="career_choice_dale_outrider_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+  </Choice>
+
+  <ChoiceGroup id="river_rider_of_seagate_t1_a" display_name="{=taom_career_grp_river_rider_of_seagate_t1_a}Rider of the Redwater" career_id="river_rider_of_seagate" tier="1">
+    <Choice id="river_rider_of_seagate_t1_a_key" type="Keystone" description="{=taom_rros_t1_a_key}Shore Gallop radius expanded, sweeping wider formations." icon_sprite="career_choice_dor_t1_a_key">
+      <Mutations><Mutation target_id="river_rider_of_seagate_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="river_rider_of_seagate_t1_a_p1" type="Passive" description="{=taom_rros_t1_a_p1}+8% melee damage." icon_sprite="career_choice_dor_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t1_a_p2" type="Passive" description="{=taom_rros_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_dor_t1_a_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t1_a_p3" type="Passive" description="{=taom_rros_t1_a_p3}+7% swing speed." icon_sprite="career_choice_dor_t1_a_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t1_a_p4" type="Passive" description="{=taom_rros_t1_a_p4}+5% party movement speed." icon_sprite="career_choice_dor_t1_a_p4">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="river_rider_of_seagate_t1_b" display_name="{=taom_career_grp_river_rider_of_seagate_t1_b}Warden of the Wine Road" career_id="river_rider_of_seagate" tier="1">
+    <Choice id="river_rider_of_seagate_t1_b_key" type="Keystone" description="{=taom_rros_t1_b_key}Shore Gallop duration extended, maintaining momentum." icon_sprite="career_choice_dor_t1_b_key">
+      <Mutations><Mutation target_id="river_rider_of_seagate_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="river_rider_of_seagate_t1_b_p1" type="Passive" description="{=taom_rros_t1_b_p1}+10% horse health." icon_sprite="career_choice_dor_t1_b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t1_b_p2" type="Passive" description="{=taom_rros_t1_b_p2}+5 max health." icon_sprite="career_choice_dor_t1_b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t1_b_p3" type="Passive" description="{=taom_rros_t1_b_p3}-5% troop wages." icon_sprite="career_choice_dor_t1_b_p3">
+      <PassiveEffect type="TroopWages" magnitude="-0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t1_b_p4" type="Passive" description="{=taom_rros_t1_b_p4}+5% resistance." icon_sprite="career_choice_dor_t1_b_p4">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="river_rider_of_seagate_t2_a" display_name="{=taom_career_grp_river_rider_of_seagate_t2_a}Lance of the Vineyards" career_id="river_rider_of_seagate" tier="2">
+    <Choice id="river_rider_of_seagate_t2_a_key" type="Keystone" description="{=taom_rros_t2_a_key}Shore Gallop charge reduced, swifter activation." icon_sprite="career_choice_dor_t2_a_key">
+      <Mutations><Mutation target_id="river_rider_of_seagate_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="river_rider_of_seagate_t2_a_p1" type="Passive" description="{=taom_rros_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_dor_t2_a_p1">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t2_a_p2" type="Passive" description="{=taom_rros_t2_a_p2}-10% troop wages." icon_sprite="career_choice_dor_t2_a_p2">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t2_a_p3" type="Passive" description="{=taom_rros_t2_a_p3}+10% troop morale." icon_sprite="career_choice_dor_t2_a_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t2_a_p4" type="Passive" description="{=taom_rros_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_dor_t2_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="river_rider_of_seagate_t2_b" display_name="{=taom_career_grp_river_rider_of_seagate_t2_b}Outrider of the Eastern Trade" career_id="river_rider_of_seagate" tier="2">
+    <Choice id="river_rider_of_seagate_t2_b_key" type="Keystone" description="{=taom_rros_t2_b_key}Shore Gallop boosts mount resilience while active." icon_sprite="career_choice_dor_t2_b_key">
+      <Mutations><Mutation target_id="river_rider_of_seagate_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="river_rider_of_seagate_t2_b_p1" type="Passive" description="{=taom_rros_t2_b_p1}+12% melee damage." icon_sprite="career_choice_dor_t2_b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t2_b_p2" type="Passive" description="{=taom_rros_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_dor_t2_b_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t2_b_p3" type="Passive" description="{=taom_rros_t2_b_p3}+13% horse health." icon_sprite="career_choice_dor_t2_b_p3">
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t2_b_p4" type="Passive" description="{=taom_rros_t2_b_p4}+10% swing speed." icon_sprite="career_choice_dor_t2_b_p4">
+      <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="river_rider_of_seagate_t3_a" display_name="{=taom_career_grp_river_rider_of_seagate_t3_a}The Charge of the Shore" career_id="river_rider_of_seagate" tier="3">
+    <Choice id="river_rider_of_seagate_t3_a_key" type="Keystone" description="{=taom_rros_t3_a_key}Shore Gallop radius greatly expanded, unstoppable impact." icon_sprite="career_choice_dor_t3_a_key">
+      <Mutations><Mutation target_id="river_rider_of_seagate_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="river_rider_of_seagate_t3_a_p1" type="Passive" description="{=taom_rros_t3_a_p1}+18% melee damage." icon_sprite="career_choice_dor_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t3_a_p2" type="Passive" description="{=taom_rros_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_dor_t3_a_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t3_a_p3" type="Passive" description="{=taom_rros_t3_a_p3}+15% swing speed." icon_sprite="career_choice_dor_t3_a_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t3_a_p4" type="Passive" description="{=taom_rros_t3_a_p4}+7% troop damage." icon_sprite="career_choice_dor_t3_a_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="river_rider_of_seagate_t3_b" display_name="{=taom_career_grp_river_rider_of_seagate_t3_b}Courier of the King" career_id="river_rider_of_seagate" tier="3">
+    <Choice id="river_rider_of_seagate_t3_b_key" type="Keystone" description="{=taom_rros_t3_b_key}Shore Gallop charge greatly reduced, ride without ceasing." icon_sprite="career_choice_dor_t3_b_key">
+      <Mutations><Mutation target_id="river_rider_of_seagate_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="river_rider_of_seagate_t3_b_p1" type="Passive" description="{=taom_rros_t3_b_p1}+15% horse health." icon_sprite="career_choice_dor_t3_b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t3_b_p2" type="Passive" description="{=taom_rros_t3_b_p2}-15% troop wages." icon_sprite="career_choice_dor_t3_b_p2">
+      <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t3_b_p3" type="Passive" description="{=taom_rros_t3_b_p3}+15% party movement speed." icon_sprite="career_choice_dor_t3_b_p3">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="river_rider_of_seagate_t3_b_p4" type="Passive" description="{=taom_rros_t3_b_p4}+9 max health." icon_sprite="career_choice_dor_t3_b_p4">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Rider of Vidugard (southrhovanion), cloned from eotheod_windrider ═══ -->
+  <Choice id="rider_of_vidugard_root" group_id="" type="Passive"
+          description="{=taom_rov_root_desc}Warcry of Vidugard grants +10% horse charge damage, summoning the thunder of the ancestors."
+          icon_sprite="career_choice_eotheod_windrider_root">
+    <PassiveEffects>
+      <PassiveEffect type="MountChargeDamage" value="0.10" />
+    </PassiveEffects>
+  </Choice>
+
+  <ChoiceGroup id="rider_of_vidugard_t1_a" display_name="{=taom_career_grp_rider_of_vidugard_t1_a}Heir of the Horse-lords" career_id="rider_of_vidugard" tier="1">
+    <Choice id="rider_of_vidugard_t1_a_key" type="Keystone"
+            display_name="{=taom_rov_t1_a_key}Ancestor's Thunder"
+            description="{=taom_rov_t1_a_key_desc}The warcry echoes across the plain. Warcry of Vidugard radius +3."
+            icon_sprite="career_choice_ew_t1_a_key">
+      <Mutations>
+        <Mutation target_id="rider_of_vidugard_ability" property="Radius" calculator="flat" value="3" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="MountChargeDamage" value="0.10" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t1_a_p1" type="Passive"
+            display_name="{=taom_rov_t1_a_p1}First Charge"
+            description="{=taom_rov_t1_a_p1_desc}You lead the charge and none can match your speed. +10% horse charge damage."
+            icon_sprite="career_choice_ew_t1_a_p1">
+      <PassiveEffects>
+        <PassiveEffect type="MountChargeDamage" value="0.10" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t1_a_p2" type="Passive"
+            display_name="{=taom_rov_t1_a_p2}Born to Ride"
+            description="{=taom_rov_t1_a_p2_desc}Horse and rider are one. +10% horse health."
+            icon_sprite="career_choice_ew_t1_a_p2">
+      <PassiveEffects>
+        <PassiveEffect type="MountHealth" value="0.10" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t1_a_p3" type="Passive"
+            display_name="{=taom_rov_t1_a_p3}Grassland Endurance"
+            description="{=taom_rov_t1_a_p3_desc}Riding the plains of Rhovanion has hardened you. +5 health."
+            icon_sprite="career_choice_ew_t1_a_p3">
+      <PassiveEffects>
+        <PassiveEffect type="Health" value="5" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t1_a_p4" type="Passive"
+            display_name="{=taom_rov_t1_a_p4}Rallying Cry"
+            description="{=taom_rov_t1_a_p4_desc}Your cry heartens the host. +3% troop morale."
+            icon_sprite="career_choice_ew_t1_a_p4">
+      <PassiveEffects>
+        <PassiveEffect type="TroopMorale" value="0.03" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="rider_of_vidugard_t1_b" display_name="{=taom_career_grp_rider_of_vidugard_t1_b}Rider of the Open Plain" career_id="rider_of_vidugard" tier="1">
+    <Choice id="rider_of_vidugard_t1_b_key" type="Keystone"
+            display_name="{=taom_rov_t1_b_key}Sustained Warcry"
+            description="{=taom_rov_t1_b_key_desc}The thunder rolls on. Warcry of Vidugard duration +4s."
+            icon_sprite="career_choice_ew_t1_b_key">
+      <Mutations>
+        <Mutation target_id="rider_of_vidugard_ability" property="Duration" calculator="flat" value="4" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="MountChargeDamage" value="0.10" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t1_b_p1" type="Passive"
+            display_name="{=taom_rov_t1_b_p1}Swift Plains"
+            description="{=taom_rov_t1_b_p1_desc}The Northmen ride the wind itself. +5% movement speed."
+            icon_sprite="career_choice_ew_t1_b_p1">
+      <PassiveEffects>
+        <PassiveEffect type="MovementSpeed" value="0.05" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t1_b_p2" type="Passive"
+            display_name="{=taom_rov_t1_b_p2}Rhovanion Warband"
+            description="{=taom_rov_t1_b_p2_desc}Northmen ride in close formation. +2% troop damage."
+            icon_sprite="career_choice_ew_t1_b_p2">
+      <PassiveEffects>
+        <PassiveEffect type="TroopDamage" value="0.02" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t1_b_p3" type="Passive"
+            display_name="{=taom_rov_t1_b_p3}Rider's Resolve"
+            description="{=taom_rov_t1_b_p3_desc}You do not break, no matter the odds. +6 health."
+            icon_sprite="career_choice_ew_t1_b_p3">
+      <PassiveEffects>
+        <PassiveEffect type="Health" value="6" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t1_b_p4" type="Passive"
+            display_name="{=taom_rov_t1_b_p4}Stalwart Mount"
+            description="{=taom_rov_t1_b_p4_desc}Your horse is battle-hardened. +10% horse health."
+            icon_sprite="career_choice_ew_t1_b_p4">
+      <PassiveEffects>
+        <PassiveEffect type="MountHealth" value="0.10" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="rider_of_vidugard_t2_a" display_name="{=taom_career_grp_rider_of_vidugard_t2_a}Oath of the Horse-lords" career_id="rider_of_vidugard" tier="2">
+    <Choice id="rider_of_vidugard_t2_a_key" type="Keystone"
+            display_name="{=taom_rov_t2_a_key}The Horse-lords' Legacy"
+            description="{=taom_rov_t2_a_key_desc}The ancestors ride with you always. Warcry charge cost -20."
+            icon_sprite="career_choice_ew_t2_a_key">
+      <Mutations>
+        <Mutation target_id="rider_of_vidugard_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="MountChargeDamage" value="0.13" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t2_a_p1" type="Passive"
+            display_name="{=taom_rov_t2_a_p1}Unstoppable Charge"
+            description="{=taom_rov_t2_a_p1_desc}Nothing stands before the Northmen. +13% horse charge damage."
+            icon_sprite="career_choice_ew_t2_a_p1">
+      <PassiveEffects>
+        <PassiveEffect type="MountChargeDamage" value="0.13" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t2_a_p2" type="Passive"
+            display_name="{=taom_rov_t2_a_p2}Shield Wall Breaker"
+            description="{=taom_rov_t2_a_p2_desc}Your charge shatters shield walls. +8% melee damage."
+            icon_sprite="career_choice_ew_t2_a_p2">
+      <PassiveEffects>
+        <PassiveEffect type="Damage" attack_type_mask="Melee" value="0.08" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t2_a_p3" type="Passive"
+            display_name="{=taom_rov_t2_a_p3}Northmen Morale"
+            description="{=taom_rov_t2_a_p3_desc}The cry of Rhovanion heartens all who hear it. +8% troop morale."
+            icon_sprite="career_choice_ew_t2_a_p3">
+      <PassiveEffects>
+        <PassiveEffect type="TroopMorale" value="0.08" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t2_a_p4" type="Passive"
+            display_name="{=taom_rov_t2_a_p4}Long Rider"
+            description="{=taom_rov_t2_a_p4_desc}You cover vast distances without tiring. +6 health."
+            icon_sprite="career_choice_ew_t2_a_p4">
+      <PassiveEffects>
+        <PassiveEffect type="Health" value="6" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="rider_of_vidugard_t2_b" display_name="{=taom_career_grp_rider_of_vidugard_t2_b}Lord of the Herds" career_id="rider_of_vidugard" tier="2">
+    <Choice id="rider_of_vidugard_t2_b_key" type="Keystone"
+            display_name="{=taom_rov_t2_b_key}Riding Song"
+            description="{=taom_rov_t2_b_key_desc}The song of the Northmen carries the riders onward. Warcry duration +2s."
+            icon_sprite="career_choice_ew_t2_b_key">
+      <Mutations>
+        <Mutation target_id="rider_of_vidugard_ability" property="Duration" calculator="flat" value="2" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="MountChargeDamage" value="0.13" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t2_b_p1" type="Passive"
+            display_name="{=taom_rov_t2_b_p1}Herd-Bred"
+            description="{=taom_rov_t2_b_p1_desc}Your horse has the blood of the great herds. +13% horse health."
+            icon_sprite="career_choice_ew_t2_b_p1">
+      <PassiveEffects>
+        <PassiveEffect type="MountHealth" value="0.13" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t2_b_p2" type="Passive"
+            display_name="{=taom_rov_t2_b_p2}Plains Master"
+            description="{=taom_rov_t2_b_p2_desc}You know every valley and ridge of the plain. +8% party spotting range."
+            icon_sprite="career_choice_ew_t2_b_p2">
+      <PassiveEffects>
+        <PassiveEffect type="PartySpottingRange" value="0.08" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t2_b_p3" type="Passive"
+            display_name="{=taom_rov_t2_b_p3}Honour Bound"
+            description="{=taom_rov_t2_b_p3_desc}Northmen need no coin to stay loyal. -5% troop wages."
+            icon_sprite="career_choice_ew_t2_b_p3">
+      <PassiveEffects>
+        <PassiveEffect type="TroopWages" value="-0.05" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t2_b_p4" type="Passive"
+            display_name="{=taom_rov_t2_b_p4}Iron Stirrups"
+            description="{=taom_rov_t2_b_p4_desc}Your riding is sure even in the fiercest melee. +7 health."
+            icon_sprite="career_choice_ew_t2_b_p4">
+      <PassiveEffects>
+        <PassiveEffect type="Health" value="7" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="rider_of_vidugard_t3_a" display_name="{=taom_career_grp_rider_of_vidugard_t3_a}Charge of the Plain" career_id="rider_of_vidugard" tier="3">
+    <Choice id="rider_of_vidugard_t3_a_key" type="Keystone"
+            display_name="{=taom_rov_t3_a_key}Charge of the Northmen"
+            description="{=taom_rov_t3_a_key_desc}The greatest charge in the age of men. Warcry radius +5."
+            icon_sprite="career_choice_ew_t3_a_key">
+      <Mutations>
+        <Mutation target_id="rider_of_vidugard_ability" property="Radius" calculator="flat" value="5" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="MountChargeDamage" value="0.15" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t3_a_p1" type="Passive"
+            display_name="{=taom_rov_t3_a_p1}Thunder of the Plain"
+            description="{=taom_rov_t3_a_p1_desc}As in the great battles of the plain, your charge is unstoppable. +15% horse charge damage."
+            icon_sprite="career_choice_ew_t3_a_p1">
+      <PassiveEffects>
+        <PassiveEffect type="MountChargeDamage" value="0.15" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t3_a_p2" type="Passive"
+            display_name="{=taom_rov_t3_a_p2}Lord of the Plain"
+            description="{=taom_rov_t3_a_p2_desc}The greatest riders follow you. +9 health."
+            icon_sprite="career_choice_ew_t3_a_p2">
+      <PassiveEffects>
+        <PassiveEffect type="Health" value="9" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t3_a_p3" type="Passive"
+            display_name="{=taom_rov_t3_a_p3}Company Commander"
+            description="{=taom_rov_t3_a_p3_desc}A great company of riders rides at your back. +5 party size."
+            icon_sprite="career_choice_ew_t3_a_p3">
+      <PassiveEffects>
+        <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t3_a_p4" type="Passive"
+            display_name="{=taom_rov_t3_a_p4}Glory of Rhovanion"
+            description="{=taom_rov_t3_a_p4_desc}Your deeds bring glory to Rhovanion. +12% battle renown gain."
+            icon_sprite="career_choice_ew_t3_a_p4">
+      <PassiveEffects>
+        <PassiveEffect type="RenownGain" value="0.12" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="rider_of_vidugard_t3_b" display_name="{=taom_career_grp_rider_of_vidugard_t3_b}Song of Rhovanion" career_id="rider_of_vidugard" tier="3">
+    <Choice id="rider_of_vidugard_t3_b_key" type="Keystone"
+            display_name="{=taom_rov_t3_b_key}Ever Ready"
+            description="{=taom_rov_t3_b_key_desc}The warcry is always on your lips. Warcry charge cost -30."
+            icon_sprite="career_choice_ew_t3_b_key">
+      <Mutations>
+        <Mutation target_id="rider_of_vidugard_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="MountChargeDamage" value="0.15" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t3_b_p1" type="Passive"
+            display_name="{=taom_rov_t3_b_p1}Wave of Riders"
+            description="{=taom_rov_t3_b_p1_desc}The Northmen crash over the enemy like a wave. +6% troop damage."
+            icon_sprite="career_choice_ew_t3_b_p1">
+      <PassiveEffects>
+        <PassiveEffect type="TroopDamage" value="0.06" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t3_b_p2" type="Passive"
+            display_name="{=taom_rov_t3_b_p2}Swift as the Wind"
+            description="{=taom_rov_t3_b_p2_desc}The Northmen are faster than legend. +8% party movement speed."
+            icon_sprite="career_choice_ew_t3_b_p2">
+      <PassiveEffects>
+        <PassiveEffect type="PartyMovementSpeed" value="0.08" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t3_b_p3" type="Passive"
+            display_name="{=taom_rov_t3_b_p3}Songs of Rhovanion"
+            description="{=taom_rov_t3_b_p3_desc}The deeds of the Northmen are sung for ages. +14% battle renown gain."
+            icon_sprite="career_choice_ew_t3_b_p3">
+      <PassiveEffects>
+        <PassiveEffect type="RenownGain" value="0.14" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="rider_of_vidugard_t3_b_p4" type="Passive"
+            display_name="{=taom_rov_t3_b_p4}The Great Host"
+            description="{=taom_rov_t3_b_p4_desc}The full host of the Northmen rides to war. +6 party size."
+            icon_sprite="career_choice_ew_t3_b_p4">
+      <PassiveEffects>
+        <PassiveEffect type="PartySize" magnitude="6" operation="Add" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Marksman of Westmark (southrhovanion), cloned from marksman_of_aldburg ═══ -->
+  <Choice id="marksman_of_westmark_root" group_id="" type="Passive"
+          description="{=taom_mow_root_desc}Light Fletching grants +5% ranged damage, making every shaft count."
+          icon_sprite="career_choice_marksman_of_aldburg_root">
+    <PassiveEffects>
+      <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.05" />
+    </PassiveEffects>
+  </Choice>
+
+  <ChoiceGroup id="marksman_of_westmark_t1_a" display_name="{=taom_career_grp_marksman_of_westmark_t1_a}Hawk of Westmark" career_id="marksman_of_westmark" tier="1">
+    <Choice id="marksman_of_westmark_t1_a_key" type="Keystone"
+            display_name="{=taom_mow_t1_a_key}Eagle Eye"
+            description="{=taom_mow_t1_a_key_desc}Your sight is keener than any hawk. Light Fletching radius +3."
+            icon_sprite="career_choice_moa_t1_a_key">
+      <Mutations>
+        <Mutation target_id="marksman_of_westmark_ability" property="Radius" calculator="flat" value="3" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.05" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t1_a_p1" type="Passive"
+            display_name="{=taom_mow_t1_a_p1}True Flight"
+            description="{=taom_mow_t1_a_p1_desc}Your arrows fly without deviation. +6% ranged damage."
+            icon_sprite="career_choice_moa_t1_a_p1">
+      <PassiveEffects>
+        <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.06" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t1_a_p2" type="Passive"
+            display_name="{=taom_mow_t1_a_p2}Gap Finder"
+            description="{=taom_mow_t1_a_p2_desc}You find the joints in every suit of armour. +5% armour penetration."
+            icon_sprite="career_choice_moa_t1_a_p2">
+      <PassiveEffects>
+        <PassiveEffect type="ArmorPenetration" value="0.05" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t1_a_p3" type="Passive"
+            display_name="{=taom_mow_t1_a_p3}Westmark Training"
+            description="{=taom_mow_t1_a_p3_desc}Westmark archers are the finest on the plain. +5 health."
+            icon_sprite="career_choice_moa_t1_a_p3">
+      <PassiveEffects>
+        <PassiveEffect type="Health" value="5" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t1_a_p4" type="Passive"
+            display_name="{=taom_mow_t1_a_p4}Full Quiver"
+            description="{=taom_mow_t1_a_p4_desc}You carry more white-feathered shafts than any other. +10% ammo."
+            icon_sprite="career_choice_moa_t1_a_p4">
+      <PassiveEffects>
+        <PassiveEffect type="Ammo" value="0.10" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="marksman_of_westmark_t1_b" display_name="{=taom_career_grp_marksman_of_westmark_t1_b}Warden of the Western Plain" career_id="marksman_of_westmark" tier="1">
+    <Choice id="marksman_of_westmark_t1_b_key" type="Keystone"
+            display_name="{=taom_mow_t1_b_key}Steadfast Draw"
+            description="{=taom_mow_t1_b_key_desc}You hold your draw longer for the perfect shot. Light Fletching duration +4s."
+            icon_sprite="career_choice_moa_t1_b_key">
+      <Mutations>
+        <Mutation target_id="marksman_of_westmark_ability" property="Duration" calculator="flat" value="4" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.05" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t1_b_p1" type="Passive"
+            display_name="{=taom_mow_t1_b_p1}Swift Nock"
+            description="{=taom_mow_t1_b_p1_desc}Your hands move faster than the eye can follow. +5% ranged damage."
+            icon_sprite="career_choice_moa_t1_b_p1">
+      <PassiveEffects>
+        <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.05" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t1_b_p2" type="Passive"
+            display_name="{=taom_mow_t1_b_p2}Bowman's Endurance"
+            description="{=taom_mow_t1_b_p2_desc}You draw and fire for hours without tiring. +6 health."
+            icon_sprite="career_choice_moa_t1_b_p2">
+      <PassiveEffects>
+        <PassiveEffect type="Health" value="6" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t1_b_p3" type="Passive"
+            display_name="{=taom_mow_t1_b_p3}Open Field Scout"
+            description="{=taom_mow_t1_b_p3_desc}You read the plains of Rhovanion as a book. +5% party spotting range."
+            icon_sprite="career_choice_moa_t1_b_p3">
+      <PassiveEffects>
+        <PassiveEffect type="PartySpottingRange" value="0.05" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t1_b_p4" type="Passive"
+            display_name="{=taom_mow_t1_b_p4}Northman Discipline"
+            description="{=taom_mow_t1_b_p4_desc}You drill your archers to hold the line. +10% troop resistance."
+            icon_sprite="career_choice_moa_t1_b_p4">
+      <PassiveEffects>
+        <PassiveEffect type="TroopResistance" value="0.10" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="marksman_of_westmark_t2_a" display_name="{=taom_career_grp_marksman_of_westmark_t2_a}Captain of the Muster" career_id="marksman_of_westmark" tier="2">
+    <Choice id="marksman_of_westmark_t2_a_key" type="Keystone"
+            display_name="{=taom_mow_t2_a_key}Volley Captain"
+            description="{=taom_mow_t2_a_key_desc}You coordinate devastating mass fire. Light Fletching charge cost -20."
+            icon_sprite="career_choice_moa_t2_a_key">
+      <Mutations>
+        <Mutation target_id="marksman_of_westmark_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.08" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t2_a_p1" type="Passive"
+            display_name="{=taom_mow_t2_a_p1}Pin the Line"
+            description="{=taom_mow_t2_a_p1_desc}Your volleys suppress enemy advances. +13% troop resistance."
+            icon_sprite="career_choice_moa_t2_a_p1">
+      <PassiveEffects>
+        <PassiveEffect type="TroopResistance" value="0.13" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t2_a_p2" type="Passive"
+            display_name="{=taom_mow_t2_a_p2}Bodkin Point"
+            description="{=taom_mow_t2_a_p2_desc}Hardened tips punch through mail and plate. +10% armour penetration."
+            icon_sprite="career_choice_moa_t2_a_p2">
+      <PassiveEffects>
+        <PassiveEffect type="ArmorPenetration" value="0.10" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t2_a_p3" type="Passive"
+            display_name="{=taom_mow_t2_a_p3}Field Craft"
+            description="{=taom_mow_t2_a_p3_desc}You use every fold of ground to your advantage. +13% stealth bonus."
+            icon_sprite="career_choice_moa_t2_a_p3">
+      <PassiveEffects>
+        <PassiveEffect type="StealthBonus" value="0.13" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t2_a_p4" type="Passive"
+            display_name="{=taom_mow_t2_a_p4}War Arrow Cache"
+            description="{=taom_mow_t2_a_p4_desc}Pre-positioned caches keep your quiver full. +13% ammo."
+            icon_sprite="career_choice_moa_t2_a_p4">
+      <PassiveEffects>
+        <PassiveEffect type="Ammo" value="0.13" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="marksman_of_westmark_t2_b" display_name="{=taom_career_grp_marksman_of_westmark_t2_b}Shadow of Mirkwood" career_id="marksman_of_westmark" tier="2">
+    <Choice id="marksman_of_westmark_t2_b_key" type="Keystone"
+            display_name="{=taom_mow_t2_b_key}Sustained Barrage"
+            description="{=taom_mow_t2_b_key_desc}The rain of arrows does not abate. Light Fletching duration +2s."
+            icon_sprite="career_choice_moa_t2_b_key">
+      <Mutations>
+        <Mutation target_id="marksman_of_westmark_ability" property="Duration" calculator="flat" value="2" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.08" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t2_b_p1" type="Passive"
+            display_name="{=taom_mow_t2_b_p1}Covering Fire"
+            description="{=taom_mow_t2_b_p1_desc}Your archers cover every advance. +4% troop damage."
+            icon_sprite="career_choice_moa_t2_b_p1">
+      <PassiveEffects>
+        <PassiveEffect type="TroopDamage" value="0.04" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t2_b_p2" type="Passive"
+            display_name="{=taom_mow_t2_b_p2}Forged in Mirkwood's Shadow"
+            description="{=taom_mow_t2_b_p2_desc}Westmark's warriors are tempered by proximity to Mirkwood. +6 health."
+            icon_sprite="career_choice_moa_t2_b_p2">
+      <PassiveEffects>
+        <PassiveEffect type="Health" value="6" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t2_b_p3" type="Passive"
+            display_name="{=taom_mow_t2_b_p3}Horse-lord's Eye"
+            description="{=taom_mow_t2_b_p3_desc}The plains hold no secrets from you. +8% party spotting range."
+            icon_sprite="career_choice_moa_t2_b_p3">
+      <PassiveEffects>
+        <PassiveEffect type="PartySpottingRange" value="0.08" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t2_b_p4" type="Passive"
+            display_name="{=taom_mow_t2_b_p4}Precision Drilled"
+            description="{=taom_mow_t2_b_p4_desc}Your archers loose with mechanical perfection. +4% troop damage."
+            icon_sprite="career_choice_moa_t2_b_p4">
+      <PassiveEffects>
+        <PassiveEffect type="TroopDamage" value="0.04" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="marksman_of_westmark_t3_a" display_name="{=taom_career_grp_marksman_of_westmark_t3_a}Bowman of the Plain" career_id="marksman_of_westmark" tier="3">
+    <Choice id="marksman_of_westmark_t3_a_key" type="Keystone"
+            display_name="{=taom_mow_t3_a_key}Legendary Shot"
+            description="{=taom_mow_t3_a_key_desc}Songs will be sung of your skill. Light Fletching radius +5."
+            icon_sprite="career_choice_moa_t3_a_key">
+      <Mutations>
+        <Mutation target_id="marksman_of_westmark_ability" property="Radius" calculator="flat" value="5" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.10" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t3_a_p1" type="Passive"
+            display_name="{=taom_mow_t3_a_p1}King's Arrow"
+            description="{=taom_mow_t3_a_p1_desc}One arrow, one kill -- every time. +12% ranged damage."
+            icon_sprite="career_choice_moa_t3_a_p1">
+      <PassiveEffects>
+        <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.12" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t3_a_p2" type="Passive"
+            display_name="{=taom_mow_t3_a_p2}Westmark's Champion"
+            description="{=taom_mow_t3_a_p2_desc}You are the finest shot in all of Rhovanion. +9 health."
+            icon_sprite="career_choice_moa_t3_a_p2">
+      <PassiveEffects>
+        <PassiveEffect type="Health" value="9" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t3_a_p3" type="Passive"
+            display_name="{=taom_mow_t3_a_p3}War Host Bowmen"
+            description="{=taom_mow_t3_a_p3_desc}Your legend draws the finest archers. +4 party size."
+            icon_sprite="career_choice_moa_t3_a_p3">
+      <PassiveEffects>
+        <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t3_a_p4" type="Passive"
+            display_name="{=taom_mow_t3_a_p4}Endless Shafts"
+            description="{=taom_mow_t3_a_p4_desc}Your supply lines keep the arrows flying. +15% ammo."
+            icon_sprite="career_choice_moa_t3_a_p4">
+      <PassiveEffects>
+        <PassiveEffect type="Ammo" value="0.15" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="marksman_of_westmark_t3_b" display_name="{=taom_career_grp_marksman_of_westmark_t3_b}Host of Rhovanion" career_id="marksman_of_westmark" tier="3">
+    <Choice id="marksman_of_westmark_t3_b_key" type="Keystone"
+            display_name="{=taom_mow_t3_b_key}Reflexive Loose"
+            description="{=taom_mow_t3_b_key_desc}The nock and release is pure muscle memory. Light Fletching charge cost -30."
+            icon_sprite="career_choice_moa_t3_b_key">
+      <Mutations>
+        <Mutation target_id="marksman_of_westmark_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="Damage" attack_type_mask="Ranged" value="0.10" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t3_b_p1" type="Passive"
+            display_name="{=taom_mow_t3_b_p1}Rain of Arrows"
+            description="{=taom_mow_t3_b_p1_desc}Your archers darken the sky. +6% troop damage."
+            icon_sprite="career_choice_moa_t3_b_p1">
+      <PassiveEffects>
+        <PassiveEffect type="TroopDamage" value="0.06" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t3_b_p2" type="Passive"
+            display_name="{=taom_mow_t3_b_p2}Swift March"
+            description="{=taom_mow_t3_b_p2_desc}Light infantry move swiftly across the plain. +5% party movement speed."
+            icon_sprite="career_choice_moa_t3_b_p2">
+      <PassiveEffects>
+        <PassiveEffect type="PartyMovementSpeed" value="0.05" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t3_b_p3" type="Passive"
+            display_name="{=taom_mow_t3_b_p3}Fame of Rhovanion"
+            description="{=taom_mow_t3_b_p3_desc}Your deeds bring glory to Westmark. +12% battle renown gain."
+            icon_sprite="career_choice_moa_t3_b_p3">
+      <PassiveEffects>
+        <PassiveEffect type="RenownGain" value="0.12" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="marksman_of_westmark_t3_b_p4" type="Passive"
+            display_name="{=taom_mow_t3_b_p4}Army of Rhovanion"
+            description="{=taom_mow_t3_b_p4_desc}The finest bowmen of Rhovanion rally to your banner. +5 party size."
+            icon_sprite="career_choice_moa_t3_b_p4">
+      <PassiveEffects>
+        <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Warden of Wainwatch (southrhovanion), cloned from watchman_of_stangard ═══ -->
+  <Choice id="warden_of_wainwatch_root" group_id="" type="Passive"
+          description="{=taom_wwk_root_desc}Stand Fast grants +5% resistance and channels the vigilance of Wainwatch's border watchers."
+          icon_sprite="career_choice_watchman_of_stangard_root">
+    <PassiveEffects>
+      <PassiveEffect type="Resistance" attack_type_mask="Melee" value="0.05" />
+    </PassiveEffects>
+  </Choice>
+
+  <ChoiceGroup id="warden_of_wainwatch_t1_a" display_name="{=taom_career_grp_warden_of_wainwatch_t1_a}Gate of Wainwatch" career_id="warden_of_wainwatch" tier="1">
+    <Choice id="warden_of_wainwatch_t1_a_key" type="Keystone"
+            display_name="{=taom_wwk_t1_a_key}River Ford Mastery"
+            description="{=taom_wwk_t1_a_key_desc}You know every crossing. Stand Fast radius +3."
+            icon_sprite="career_choice_ws_t1_a_key">
+      <Mutations>
+        <Mutation target_id="warden_of_wainwatch_ability" property="Radius" calculator="flat" value="3" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="Resistance" attack_type_mask="Melee" value="0.06" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t1_a_p1" type="Passive"
+            display_name="{=taom_wwk_t1_a_p1}Shield and Spear"
+            description="{=taom_wwk_t1_a_p1_desc}Classic Northman infantry discipline. +5% melee damage."
+            icon_sprite="career_choice_ws_t1_a_p1">
+      <PassiveEffects>
+        <PassiveEffect type="Damage" attack_type_mask="Melee" value="0.05" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t1_a_p2" type="Passive"
+            display_name="{=taom_wwk_t1_a_p2}Watch Post Hardening"
+            description="{=taom_wwk_t1_a_p2_desc}Years at isolated posts forge you like iron. +5 health."
+            icon_sprite="career_choice_ws_t1_a_p2">
+      <PassiveEffects>
+        <PassiveEffect type="Health" value="5" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t1_a_p3" type="Passive"
+            display_name="{=taom_wwk_t1_a_p3}Border Eyes"
+            description="{=taom_wwk_t1_a_p3_desc}Nothing crosses the plain unseen by you. +5% party spotting range."
+            icon_sprite="career_choice_ws_t1_a_p3">
+      <PassiveEffects>
+        <PassiveEffect type="PartySpottingRange" value="0.05" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t1_a_p4" type="Passive"
+            display_name="{=taom_wwk_t1_a_p4}Wetland Endurance"
+            description="{=taom_wwk_t1_a_p4_desc}The damp of the river country makes you resilient. +5% blunt resistance."
+            icon_sprite="career_choice_ws_t1_a_p4">
+      <PassiveEffects>
+        <PassiveEffect type="Resistance" attack_type_mask="Blunt" value="0.05" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="warden_of_wainwatch_t1_b" display_name="{=taom_career_grp_warden_of_wainwatch_t1_b}Watch of the Plain" career_id="warden_of_wainwatch" tier="1">
+    <Choice id="warden_of_wainwatch_t1_b_key" type="Keystone"
+            display_name="{=taom_wwk_t1_b_key}Sustained Watch"
+            description="{=taom_wwk_t1_b_key_desc}The watch is maintained through all trials. Stand Fast duration +4s."
+            icon_sprite="career_choice_ws_t1_b_key">
+      <Mutations>
+        <Mutation target_id="warden_of_wainwatch_ability" property="Duration" calculator="flat" value="4" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="Resistance" attack_type_mask="Melee" value="0.06" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t1_b_p1" type="Passive"
+            display_name="{=taom_wwk_t1_b_p1}Stream Swimmer"
+            description="{=taom_wwk_t1_b_p1_desc}The river holds no fear for you. +5% movement speed."
+            icon_sprite="career_choice_ws_t1_b_p1">
+      <PassiveEffects>
+        <PassiveEffect type="MovementSpeed" value="0.05" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t1_b_p2" type="Passive"
+            display_name="{=taom_wwk_t1_b_p2}Warden's Constitution"
+            description="{=taom_wwk_t1_b_p2_desc}Years of lonely watch service make you tough as old wood. +6 health."
+            icon_sprite="career_choice_ws_t1_b_p2">
+      <PassiveEffects>
+        <PassiveEffect type="Health" value="6" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t1_b_p3" type="Passive"
+            display_name="{=taom_wwk_t1_b_p3}Loyal Guard"
+            description="{=taom_wwk_t1_b_p3_desc}Your men need little pay -- duty is enough. -4% troop wages."
+            icon_sprite="career_choice_ws_t1_b_p3">
+      <PassiveEffects>
+        <PassiveEffect type="TroopWages" value="-0.04" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t1_b_p4" type="Passive"
+            display_name="{=taom_wwk_t1_b_p4}Warden's Discipline"
+            description="{=taom_wwk_t1_b_p4_desc}Your infantry hold firm when others break. +10% troop resistance."
+            icon_sprite="career_choice_ws_t1_b_p4">
+      <PassiveEffects>
+        <PassiveEffect type="TroopResistance" value="0.10" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="warden_of_wainwatch_t2_a" display_name="{=taom_career_grp_warden_of_wainwatch_t2_a}Shieldman of Wainwatch" career_id="warden_of_wainwatch" tier="2">
+    <Choice id="warden_of_wainwatch_t2_a_key" type="Keystone"
+            display_name="{=taom_wwk_t2_a_key}Prepared Crossing"
+            description="{=taom_wwk_t2_a_key_desc}You have scouted this ground for years. Stand Fast charge cost -20."
+            icon_sprite="career_choice_ws_t2_a_key">
+      <Mutations>
+        <Mutation target_id="warden_of_wainwatch_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="Resistance" attack_type_mask="Melee" value="0.08" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t2_a_p1" type="Passive"
+            display_name="{=taom_wwk_t2_a_p1}Shield Line"
+            description="{=taom_wwk_t2_a_p1_desc}Your men form an impenetrable wall. +13% troop resistance."
+            icon_sprite="career_choice_ws_t2_a_p1">
+      <PassiveEffects>
+        <PassiveEffect type="TroopResistance" value="0.13" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t2_a_p2" type="Passive"
+            display_name="{=taom_wwk_t2_a_p2}Tested Steel"
+            description="{=taom_wwk_t2_a_p2_desc}Every weapon is honed by the Wainwatch smiths. +8% melee damage."
+            icon_sprite="career_choice_ws_t2_a_p2">
+      <PassiveEffects>
+        <PassiveEffect type="Damage" attack_type_mask="Melee" value="0.08" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t2_a_p3" type="Passive"
+            display_name="{=taom_wwk_t2_a_p3}Mirkwood's Warning"
+            description="{=taom_wwk_t2_a_p3_desc}The forest teaches you to sense danger early. +10% party spotting range."
+            icon_sprite="career_choice_ws_t2_a_p3">
+      <PassiveEffects>
+        <PassiveEffect type="PartySpottingRange" value="0.10" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t2_a_p4" type="Passive"
+            display_name="{=taom_wwk_t2_a_p4}Fortified Will"
+            description="{=taom_wwk_t2_a_p4_desc}The isolation of Wainwatch breeds iron resolve. +6 health."
+            icon_sprite="career_choice_ws_t2_a_p4">
+      <PassiveEffects>
+        <PassiveEffect type="Health" value="6" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="warden_of_wainwatch_t2_b" display_name="{=taom_career_grp_warden_of_wainwatch_t2_b}Warden of the Eastern Fords" career_id="warden_of_wainwatch" tier="2">
+    <Choice id="warden_of_wainwatch_t2_b_key" type="Keystone"
+            display_name="{=taom_wwk_t2_b_key}Tireless Patrol"
+            description="{=taom_wwk_t2_b_key_desc}You patrol without pause or rest. Stand Fast duration +2s."
+            icon_sprite="career_choice_ws_t2_b_key">
+      <Mutations>
+        <Mutation target_id="warden_of_wainwatch_ability" property="Duration" calculator="flat" value="2" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="Resistance" attack_type_mask="Melee" value="0.08" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t2_b_p1" type="Passive"
+            display_name="{=taom_wwk_t2_b_p1}Wainwatch Hold"
+            description="{=taom_wwk_t2_b_p1_desc}No enemy crosses the plain while you guard it. +8% troop morale."
+            icon_sprite="career_choice_ws_t2_b_p1">
+      <PassiveEffects>
+        <PassiveEffect type="TroopMorale" value="0.08" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t2_b_p2" type="Passive"
+            display_name="{=taom_wwk_t2_b_p2}River Armour"
+            description="{=taom_wwk_t2_b_p2_desc}Your armour is as a river's current -- relentless. +10% resistance to ranged."
+            icon_sprite="career_choice_ws_t2_b_p2">
+      <PassiveEffects>
+        <PassiveEffect type="Resistance" attack_type_mask="Ranged" value="0.10" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t2_b_p3" type="Passive"
+            display_name="{=taom_wwk_t2_b_p3}Fords Expert"
+            description="{=taom_wwk_t2_b_p3_desc}You move swiftly through terrain that bogs others down. +6% party movement speed."
+            icon_sprite="career_choice_ws_t2_b_p3">
+      <PassiveEffects>
+        <PassiveEffect type="PartyMovementSpeed" value="0.06" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t2_b_p4" type="Passive"
+            display_name="{=taom_wwk_t2_b_p4}Border Iron"
+            description="{=taom_wwk_t2_b_p4_desc}Hard service at the border has made you indestructible. +7 health."
+            icon_sprite="career_choice_ws_t2_b_p4">
+      <PassiveEffects>
+        <PassiveEffect type="Health" value="7" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="warden_of_wainwatch_t3_a" display_name="{=taom_career_grp_warden_of_wainwatch_t3_a}Bastion of the Northmark" career_id="warden_of_wainwatch" tier="3">
+    <Choice id="warden_of_wainwatch_t3_a_key" type="Keystone"
+            display_name="{=taom_wwk_t3_a_key}Wainwatch's Bastion"
+            description="{=taom_wwk_t3_a_key_desc}You are the last line between civilisation and darkness. Stand Fast radius +5."
+            icon_sprite="career_choice_ws_t3_a_key">
+      <Mutations>
+        <Mutation target_id="warden_of_wainwatch_ability" property="Radius" calculator="flat" value="5" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="Resistance" attack_type_mask="Melee" value="0.12" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t3_a_p1" type="Passive"
+            display_name="{=taom_wwk_t3_a_p1}Unbreakable Line"
+            description="{=taom_wwk_t3_a_p1_desc}Your shieldwall has never broken. +15% troop resistance."
+            icon_sprite="career_choice_ws_t3_a_p1">
+      <PassiveEffects>
+        <PassiveEffect type="TroopResistance" value="0.15" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t3_a_p2" type="Passive"
+            display_name="{=taom_wwk_t3_a_p2}Immortal Guard"
+            description="{=taom_wwk_t3_a_p2_desc}The watch never ends. +9 health."
+            icon_sprite="career_choice_ws_t3_a_p2">
+      <PassiveEffects>
+        <PassiveEffect type="Health" value="9" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t3_a_p3" type="Passive"
+            display_name="{=taom_wwk_t3_a_p3}Garrison Commander"
+            description="{=taom_wwk_t3_a_p3_desc}Your company swells with volunteers. +4 party size."
+            icon_sprite="career_choice_ws_t3_a_p3">
+      <PassiveEffects>
+        <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t3_a_p4" type="Passive"
+            display_name="{=taom_wwk_t3_a_p4}Defender's Glory"
+            description="{=taom_wwk_t3_a_p4_desc}Victory in defence brings great honour. +12% battle renown gain."
+            icon_sprite="career_choice_ws_t3_a_p4">
+      <PassiveEffects>
+        <PassiveEffect type="RenownGain" value="0.12" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="warden_of_wainwatch_t3_b" display_name="{=taom_career_grp_warden_of_wainwatch_t3_b}Warden of Rhovanion" career_id="warden_of_wainwatch" tier="3">
+    <Choice id="warden_of_wainwatch_t3_b_key" type="Keystone"
+            display_name="{=taom_wwk_t3_b_key}Ever Vigilant"
+            description="{=taom_wwk_t3_b_key_desc}The watch is always maintained. Stand Fast charge cost -30."
+            icon_sprite="career_choice_ws_t3_b_key">
+      <Mutations>
+        <Mutation target_id="warden_of_wainwatch_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
+      </Mutations>
+      <PassiveEffects>
+        <PassiveEffect type="Resistance" attack_type_mask="Melee" value="0.12" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t3_b_p1" type="Passive"
+            display_name="{=taom_wwk_t3_b_p1}Wall of Spears"
+            description="{=taom_wwk_t3_b_p1_desc}Your infantry fight as one. +6% troop damage."
+            icon_sprite="career_choice_ws_t3_b_p1">
+      <PassiveEffects>
+        <PassiveEffect type="TroopDamage" value="0.06" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t3_b_p2" type="Passive"
+            display_name="{=taom_wwk_t3_b_p2}Swift to the Call"
+            description="{=taom_wwk_t3_b_p2_desc}Your men respond instantly to any threat. +6% party movement speed."
+            icon_sprite="career_choice_ws_t3_b_p2">
+      <PassiveEffects>
+        <PassiveEffect type="PartyMovementSpeed" value="0.06" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t3_b_p3" type="Passive"
+            display_name="{=taom_wwk_t3_b_p3}Warden of the Plain"
+            description="{=taom_wwk_t3_b_p3_desc}The plain's finest guardian. +12% battle renown gain."
+            icon_sprite="career_choice_ws_t3_b_p3">
+      <PassiveEffects>
+        <PassiveEffect type="RenownGain" value="0.12" />
+      </PassiveEffects>
+    </Choice>
+    <Choice id="warden_of_wainwatch_t3_b_p4" type="Passive"
+            display_name="{=taom_wwk_t3_b_p4}Host of Wainwatch"
+            description="{=taom_wwk_t3_b_p4_desc}All of Wainwatch's strength rides behind you. +5 party size."
+            icon_sprite="career_choice_ws_t3_b_p4">
+      <PassiveEffects>
+        <PassiveEffect type="PartySize" magnitude="5" operation="Add" />
+      </PassiveEffects>
+    </Choice>
+  </ChoiceGroup>
+
 </CareerChoices>

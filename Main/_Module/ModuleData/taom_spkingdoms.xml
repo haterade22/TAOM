@@ -1606,4 +1606,122 @@
         </policies>
     </Kingdom>
   <!-- TAOM-NEWFACTIONS:angaladh:END -->
+  <!-- TAOM-NEWFACTIONS:dorwinion:BEGIN -->
+    <Kingdom
+        id="dorwinion"
+        owner="Hero.lord_DO1_1"
+        initial_home_settlement="Settlement.town_DO2"
+        banner_key="11.2015.2015.1528.1528.764.764.1.0.0.30011.2024.2024.700.700.764.764.0.0.0"        primary_banner_color="0xFF570D0D"
+        secondary_banner_color="0xFFFBC841"
+        color="0xFF570D0D"
+        color2="0xFFFBC841"      
+        culture="Culture.dorwinion"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_dorwinion_name}Dorwinion"
+        short_name="{=taom_dorwinion_short_name}Dorwinion"
+        title="{=taom_dorwinion_title}Kingdom of Dorwinion"
+        ruler_title="{=taom_dorwinion_ruler_title}King"
+        text="{=taom_dorwinion_desc}The vintners of Dorwinion tend the warm slopes where the River Running meets the Sea of Rhûn. Their wine goes up the river to Dale, to the Elves of Mirkwood and to every hall that can pay for it, and their kings grow rich on it. They keep out of the wars of the West and buy peace from the East when they must.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.anduinvale"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.angaladh"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.southrhovanion"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+  <!-- TAOM-NEWFACTIONS:dorwinion:END -->
+  <!-- TAOM-NEWFACTIONS:southrhovanion:BEGIN -->
+    <Kingdom
+        id="southrhovanion"
+        owner="Hero.lord_SRH1_1"
+        initial_home_settlement="Settlement.town_SRH2"
+        banner_key="11.2013.2013.1528.1528.764.764.1.0.0.30006.2008.2008.700.700.764.764.0.0.0"        primary_banner_color="0xFF3F3831"
+        secondary_banner_color="0xFFC99B6E"
+        color="0xFF3F3831"
+        color2="0xFFC99B6E"      
+        culture="Culture.southrhovanion"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_southrhovanion_name}South Rhovanion"
+        short_name="{=taom_southrhovanion_short_name}South Rhovanion"
+        title="{=taom_southrhovanion_title}Kingdom of South Rhovanion"
+        ruler_title="{=taom_southrhovanion_ruler_title}King"
+        text="{=taom_southrhovanion_desc}The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Sea of Rhûn. They are horse-lords, kin of the Éothéod who rode north long ago, and they have not forgotten the Wainriders who once burned their halls. Their kings hold Vidugard and owe no lord in the West or the East.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.khuzait"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.anduinvale"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.angaladh"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dorwinion"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+  <!-- TAOM-NEWFACTIONS:southrhovanion:END -->
 </Kingdoms>

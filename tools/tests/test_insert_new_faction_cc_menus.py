@@ -50,7 +50,18 @@ DALE_CLONE_PLACES = {
                    "Eastbank", "Misty Mountains", "Mirkwood"),
     "angaladh": ("Woodmen-town", "Ironwood Hall", "Forest Gate", "Thornhold", "Emyn Duir",
                  "Forest Road", "Ingomar", "Mirkwood"),
+    "dorwinion": ("Vineholm", "Redwater", "Seagate", "Sunwall", "Vinewatch", "Eastmarch", "Ostric",
+                  "Sea of Rhûn", "River Running"),
 }
+
+# Rohan's own places and people for South Rhovanion (culture id `vlandia`), from the lore rather
+# than from the tool's FORBIDDEN_FOR table.
+ROHAN_IDENTITY = ("Rohan", "Rohirrim", "Edoras", "Meduseld", "Théoden", "Éomer", "Éowyn",
+                  "Helm's Deep", "Westfold", "Eastfold", "Eorl", "Riddermark", "Aldburg", "Isengard",
+                  "Saruman", "Dunlending", "Wold")
+SOUTH_RHOVANION_PLACES = ("Vidugard", "Horsemead", "Southwood", "Westmark", "Wainwatch", "Northmark",
+                          "Vidumar", "Mirkwood", "Wainrider")
+NEW_REALMS = ("eredluin", "anduinvale", "angaladh", "dorwinion", "southrhovanion")
 
 # The shipped files, captured before any test patches cc.CC or cc.CC_STRINGS.
 SHIPPED_CC = cc.CC
@@ -208,6 +219,55 @@ class DaleCloneText(unittest.TestCase):
                                          {k: v for k, v in b.items() if k not in NON_MECHANICS})
 
 
+class RohanCloneText(unittest.TestCase):
+    """South Rhovanion is cut from Rohan (culture id `vlandia`) and takes its mechanics."""
+
+    def test_the_realm_clones_rohan(self):
+        self.assertIn("southrhovanion", cc.NEW)
+        self.assertEqual(cc.SRC_FOR["southrhovanion"], "vlandia")
+        self.assertIn("southrhovanion", cc.AUTHORED)
+
+    def test_the_forbidden_table_lists_rohans_words(self):
+        for word in ROHAN_IDENTITY:
+            if word in ("Saruman", "Dunlending", "Wold"):
+                continue
+            with self.subTest(word=word):
+                self.assertIn(word, cc.FORBIDDEN_FOR["vlandia"])
+
+    def test_text_names_no_rohan_place_or_person(self):
+        for menu, rows in cc.AUTHORED["southrhovanion"].items():
+            for text, desc in rows:
+                for word in ROHAN_IDENTITY:
+                    with self.subTest(menu=menu, text=text, word=word):
+                        self.assertNotIn(word, text + " " + desc)
+
+    def test_each_menu_names_the_realms_own_places(self):
+        for menu, rows in cc.AUTHORED["southrhovanion"].items():
+            blob = " ".join(t + " " + d for t, d in rows)
+            with self.subTest(menu=menu):
+                self.assertTrue(any(p in blob for p in SOUTH_RHOVANION_PLACES))
+
+    def test_text_has_no_em_or_en_dash_and_six_entries_per_menu(self):
+        for menu, rows in cc.AUTHORED["southrhovanion"].items():
+            with self.subTest(menu=menu):
+                self.assertEqual(len(rows), 6)
+                for text, desc in rows:
+                    self.assertNotIn("\u2014", text + desc)
+                    self.assertNotIn("\u2013", text + desc)
+
+    def test_the_shipped_entries_keep_rohans_mechanics_entry_for_entry(self):
+        for menu in cc.MENUS:
+            data = load(menu, SHIPPED_CC)
+            rohan = [e for e in data if e.get("culture_id") == "vlandia"]
+            new = [e for e in data if e.get("culture_id") == "southrhovanion"]
+            with self.subTest(menu=menu):
+                self.assertEqual(len(new), len(rohan))
+                for a, b in zip(rohan, new):
+                    self.assertEqual({k: v for k, v in a.items() if k not in NON_MECHANICS},
+                                     {k: v for k, v in b.items() if k not in NON_MECHANICS})
+                    self.assertEqual(b["string_id"], a["string_id"].replace("vlandia", "southrhovanion"))
+
+
 class DryRunAndApply(unittest.TestCase):
     """The tool on a temp copy that lacks Ered Luin: a dry run writes nothing, --check fails, and
     --apply adds Erebor's count of entries in every menu and registers their strings. A clone
@@ -218,10 +278,10 @@ class DryRunAndApply(unittest.TestCase):
         self.cc_dir = os.path.join(self.tmp, "charactercreation")
         os.makedirs(self.cc_dir)
         for menu in cc.MENUS:
-            write_menu(self.cc_dir, menu, drop={"eredluin", "anduinvale", "angaladh"})
+            write_menu(self.cc_dir, menu, drop=set(NEW_REALMS))
         raw = open(cc.CC_STRINGS, "rb").read()
         bom = raw.startswith(b"\xef\xbb\xbf")
-        text = re.sub(r'[^\n]*id="taom_cc_taom_[a-z]+_(?:eredluin|anduinvale|angaladh)_\d+_(?:text|desc)"[^\n]*\n', "",
+        text = re.sub(r'[^\n]*id="taom_cc_taom_[a-z]+_(?:eredluin|anduinvale|angaladh|dorwinion|southrhovanion)_\d+_(?:text|desc)"[^\n]*\n', "",
                       raw.decode("utf-8-sig"))
         self.strings = os.path.join(self.tmp, "taom_cc_strings.xml")
         open(self.strings, "wb").write((b"\xef\xbb\xbf" if bom else b"") + text.encode("utf-8"))
@@ -278,6 +338,25 @@ class DryRunAndApply(unittest.TestCase):
         self.assertEqual(rc, 0, out)
         run(["--apply"])
         self.assertEqual(once, self.snapshot(), "a second --apply changed the files")
+
+    def test_apply_adds_dorwinion_and_south_rhovanion_with_their_sources_entry_count_and_registers_them(self):
+        run(["--apply"])
+        for menu in cc.MENUS:
+            after = load(menu, self.cc_dir)
+            for culture, source in (("dorwinion", "sturgia"), ("southrhovanion", "vlandia")):
+                src = [e for e in after if e.get("culture_id") == source]
+                new = [e for e in after if e.get("culture_id") == culture]
+                with self.subTest(menu=menu, culture=culture):
+                    self.assertEqual(len(new), len(src))
+                    self.assertTrue(all(culture in e["string_id"] and source not in e["string_id"]
+                                        for e in new))
+        rows = registered(self.strings)
+        for culture in ("dorwinion", "southrhovanion"):
+            for menu in cc.MENUS:
+                for e in load(menu, self.cc_dir):
+                    if e.get("culture_id") == culture:
+                        self.assertIn(f"taom_cc_{e['string_id']}_text", rows)
+                        self.assertIn(f"taom_cc_{e['string_id']}_desc", rows)
 
     def test_apply_adds_anduin_vale_and_angaladh_with_dales_entry_count_and_registers_them(self):
         run(["--apply"])

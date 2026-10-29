@@ -374,6 +374,54 @@ CULTURES["anduinvale"] = {
 CULTURES["angaladh"] = dict(CULTURES["anduinvale"], sword="dale_sword_b", shield="wm_dale_shield_a08",
                             axe_or_mace="dale_war_axe_c", no_mount=True)
 
+# Dorwinion (#1062) is cut from Dale (culture id `sturgia`), so like Anduin Vale its table is
+# authored from the Dale items its own troops wear (troops_dorwinion.xml): the L6 levy's archer and
+# mariner sets, the infantry set of its spear line, its sword, spear and shield, and the first rung
+# of the `dale` ranged ladder. It fields river-riders, so it is mounted.
+CULTURES["dorwinion"] = {
+    "body_civilian": "sk_dale_chest_archer_a01",
+    "body_alt": "sk_dale_lake_town_chest_mariner_a01",
+    "body_military": "sk_dale_chest_infrantry_a01",
+    "leg": "sk_dale_boots_archer_a01",
+    "leg_alt": "sk_dale_lake_town_boots_mariner_a01",
+    "head_light": "sk_dale_helmet_archer_a01",
+    "head_military": "sk_dale_helmet_infrantry_a01",
+    "gloves": "sk_dale_gauntlet_archer_a01",
+    "cape": "sk_dale_shoulder_archer_a01",
+    "cape_alt": "sk_dale_lake_town_shoulder_mariner_a01",
+    "sword": "dale_sword_c",
+    "spear": "dale_spear_a",
+    "bow": "ladder_dale_bow_t1",
+    "arrows": "default_arrows",
+    "shield": "wm_dale_shield_a06",
+    "axe_or_mace": None,
+}
+
+# South Rhovanion (#1062) is cut from Rohan (culture id `vlandia`), which has no table here and no
+# player_char_creation_vlandia_* rosters, so its table is authored from the Rohan items its own
+# troops wear (troops_southrhovanion.xml): the militia tunics and the militia armour of the early
+# levels, the cts_rohan boots, helm, armguards and pauldron, the ws sword and spear, the first
+# round shield and the L11 rung of the `rohan` ranged ladder. Rohan ships no civilian dress, so the
+# two militia tunics stand in for it. It is the horse realm, so it is mounted (horse and harness).
+CULTURES["southrhovanion"] = {
+    "body_civilian": "rohan_militia_tunic_a",
+    "body_alt": "rohan_militia_tunic_b",
+    "body_military": "rohan_militia_armour_b",
+    "leg": "cts_rohan_boots3",
+    "leg_alt": "cts_rohan_boots3",
+    "head_light": "cts_rohan_helmet1",
+    "head_military": "cts_rohan_helmet2a",
+    "gloves": "cts_rohan_armguard1",
+    "cape": "rohan_militia_pauldron_both",
+    "cape_alt": "rohan_militia_pauldron_both",
+    "sword": "wm_rohan_ws_sword_a01",
+    "spear": "wm_rohan_ws_spear_a01",
+    "bow": "ladder_rohan_bow_t2",
+    "arrows": "default_arrows",
+    "shield": "wm_rohan_shield_a01_gsw",
+    "axe_or_mace": None,
+}
+
 OCCUPATIONS = ["retainer", "merchant", "farmer", "artisan", "hunter", "vagabond"]
 CAREERS = ["retainer", "mercenary", "guard", "hunter", "infantry", "skirmisher", "bard", "6"]
 

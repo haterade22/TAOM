@@ -22,8 +22,8 @@ add_map_villages.append_settlements). `after` places only the loc rows.
 
 Idempotent per id: an id already in the master is skipped. `--check` fails on any table id whose
 row, loc row or scene entity is missing, whose master name differs from the table's (the live map
-is unversioned, so the table is the repo's only record of each name), or whose position or gate
-drifted from the scene, and when this batch's rows (BATCH: the FORTS ids not in RELEASED, plus the villages bound to them) are
+is unversioned, so the table is the repo's only record of each name), or whose culture, owner, position or gate
+drifted from the table or the scene, and when this batch's rows (BATCH: the FORTS ids not in RELEASED, plus the villages bound to them) are
 not the file's tail under a town. `--check` also names, and `--apply` refuses, a table name another
 settlement already carries, case ignored (add_map_villages.name_collisions, #1042).
 
@@ -132,6 +132,26 @@ FORTS = [
     Fort("castle_AND3", "Forest Gate", "clan_angaladh_2", "angaladh", "castle", "taom_dale_castle_001_forceatmo", 800, "castle_AND4"),
     Fort("castle_AND1", "Thornhold", "clan_angaladh_2", "angaladh", "castle", "sturgia_castle_c", 800, "castle_AND3"),
     Fort("castle_AND2", "Emyn Duir Watch", "clan_angaladh_3", "angaladh", "castle", "sturgia_castle_003", 800, "castle_AND1"),
+    # Dorwinion (#1062; Mike placed the entities 2026-10-29): Northman vintners on the Redwater and the
+    # River Running. Middling, as Ered Luin: capital 3200, other towns 3000 and 3100, castles 800, no
+    # economy-floor row. Dale's scenes, least used first: sturgia_town_e (2 uses), then _a and _b (3);
+    # the four castles take Dale's four castle scenes, each once.
+    Fort("town_DO2", "Vineholm", "clan_dorwinion_1", "dorwinion", "town", "sturgia_town_e", 3200, "castle_village_AND4_3"),
+    Fort("town_DO1", "Redwater", "clan_dorwinion_2", "dorwinion", "town", "sturgia_town_a", 3100, "town_DO2"),
+    Fort("town_DO3", "Seagate", "clan_dorwinion_3", "dorwinion", "town", "sturgia_town_b", 3000, "town_DO1"),
+    Fort("castle_DO1", "Vinewatch", "clan_dorwinion_1", "dorwinion", "castle", "taom_dale_castle_001_forceatmo", 800, "town_DO3"),
+    Fort("castle_DO2", "Northgate Keep", "clan_dorwinion_2", "dorwinion", "castle", "sturgia_castle_c", 800, "castle_DO1"),
+    Fort("castle_DO3", "Eastmarch Hold", "clan_dorwinion_4", "dorwinion", "castle", "sturgia_castle_003", 800, "castle_DO2"),
+    Fort("castle_DO4", "Sunwall", "clan_dorwinion_3", "dorwinion", "castle", "sturgia_castle_siege_001", 800, "castle_DO3"),
+    # South Rhovanion (#1062): Northman horse-lords south of Mirkwood, Rohan's kit. Same middling numbers.
+    # Rohan's scenes, least used first: vlandia_town_d and _e (unused so far) for the towns, and
+    # vlandia_castle_b (unused), _a, _c and _d (once each) for the castles.
+    Fort("town_SRH2", "Vidugard", "clan_southrhovanion_1", "southrhovanion", "town", "vlandia_town_d", 3200, "castle_DO4"),
+    Fort("town_SRH1", "Southwood", "clan_southrhovanion_2", "southrhovanion", "town", "vlandia_town_e", 3000, "town_SRH2"),
+    Fort("castle_SRH2", "Horsemead", "clan_southrhovanion_1", "southrhovanion", "castle", "vlandia_castle_b", 800, "town_SRH1"),
+    Fort("castle_SRH4", "Westmark", "clan_southrhovanion_2", "southrhovanion", "castle", "vlandia_castle_a", 800, "castle_SRH2"),
+    Fort("castle_SRH1", "Wainwatch", "clan_southrhovanion_3", "southrhovanion", "castle", "vlandia_castle_c", 800, "castle_SRH4"),
+    Fort("castle_SRH3", "Northmark", "clan_southrhovanion_4", "southrhovanion", "castle", "vlandia_castle_d", 800, "castle_SRH1"),
 ]
 
 # FORTS ids a release has shipped. The save-order check protects saves made BEFORE a batch only until the
@@ -275,6 +295,22 @@ STYLE["eredluin"] = dict(STYLE["gundabad"],
 # (town_S1 0.608, the S castles 0.908). Building levels are Cardolan's, a weak realm's.
 STYLE["anduinvale"] = STYLE["angaladh"] = dict(STYLE["gundabad"], gate_rotation={"town": "0.608", "castle": "0.908"},
                                                town_buildings=TOWN_BUILDINGS, castle_buildings=CASTLE_BUILDINGS)
+
+# Dorwinion (#1062) as Anduin Vale (Dale's town_S1 and castle_S2 style), with Ered Luin's middling
+# building levels. South Rhovanion from Rohan's own rows: town_V1 (gui_bg_town_vlanda, wait_vlandia_town,
+# gate rotation 0.378, arena_vlandia_a, vlandia_tavern_interior_a, vlandia_city_house_a_interior_house)
+# and the V castles (gui_bg_castle_vlanda, gate rotation 0.908, european keeps, vlandia_dungeon_stealth).
+# Keyed by the realm's culture id.
+STYLE["dorwinion"] = dict(STYLE["anduinvale"], town_buildings=STYLE["eredluin"]["town_buildings"],
+                          castle_buildings=STYLE["eredluin"]["castle_buildings"])
+STYLE["southrhovanion"] = dict(town_menu="gui_bg_town_vlanda", castle_menu="gui_bg_castle_vlanda", wait="wait_vlandia_town",
+                          gate_rotation={"town": "0.378", "castle": "0.908"},
+                          arena="arena_vlandia_a", tavern="vlandia_tavern_interior_a",
+                          keep=("european_castle_keep_a_l1_interior", "european_castle_keep_a_l2_interior",
+                                "european_castle_keep_a_l3_interior"),
+                          dungeon="vlandia_dungeon_stealth", house="vlandia_city_house_a_interior_house",
+                          town_buildings=STYLE["eredluin"]["town_buildings"],
+                          castle_buildings=STYLE["eredluin"]["castle_buildings"])
 
 
 # ---------------------------------------------------------------- scene transforms
@@ -441,6 +477,10 @@ def check(forts, master_text, scene_text, loc_texts, villages=(), released=froze
         pos = amv.settlement_position(master_text, f.id)
         if not pos:
             findings.append(f"{f.id}: no <Settlement> row in settlements.xml")
+        for attr, want in (("culture", f"Culture.{f.culture}"), ("owner", f"Faction.{f.owner}")):
+            have = amv.master_attr(master_text, f.id, attr)
+            if have is not None and have != want:
+                findings.append(f"{f.id}: settlements.xml has {attr}={have} but the table says {want}")
         name = master_name(master_text, f.id)
         if name is not None and name != f.name:
             findings.append(f"{f.id}: settlements.xml names it {name!r}, the table {f.name!r}")
@@ -489,7 +529,7 @@ def main():
         if findings:
             print(f"\n{len(findings)} finding(s) across {len(FORTS)} table id(s).")
             return 1
-        print(f"OK: all {len(FORTS)} fortifications present with loc rows; names match the table and no other settlement carries them; positions and gates match the scene; "
+        print(f"OK: all {len(FORTS)} fortifications present with loc rows; names, culture and owner match the table and no other settlement carries the names; positions and gates match the scene; "
               f"the batch's {len(batch_ids())} rows are the file's tail under a town.")
         return 0
 

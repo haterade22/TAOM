@@ -57,7 +57,7 @@ public class ShippedClanSideCoverageTests
     };
 
     /// <summary>Realms the table deliberately leaves Neutral: neither the kingdom nor its culture is listed free or evil.</summary>
-    private static readonly string[] NeutralRealmIds = { "battania", "shaghana", "abanissa", "umbar", "cardolan", "rhudaur", "anduinvale", "angaladh" };
+    private static readonly string[] NeutralRealmIds = { "battania", "shaghana", "abanissa", "umbar", "cardolan", "rhudaur", "anduinvale", "angaladh", "dorwinion", "southrhovanion" };
 
     private sealed class ClanRow
     {

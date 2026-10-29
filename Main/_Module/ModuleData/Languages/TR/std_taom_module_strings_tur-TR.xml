@@ -2890,7 +2890,7 @@
 
     <string id="taom_faction_kingdom_of_dale_weakness_2" text="İnatçı meclis diplomasiyi zorlar" />
 
-    <string id="taom_faction_kingdom_of_dorwinion_desc" text="Rhun Denizi'nin kuzeybatı kıyılarında bulunan şarap üreticisi Dorwinion krallığı. Özgür Halklar ile Doğu arasında sıkışmış müreffeh bir ticaret krallığı." />
+    <string id="taom_faction_kingdom_of_dorwinion_desc" text="The vintners of Dorwinion hold the warm slopes above the Sea of Rhûn, and their red wine is prized in every hall that can pay for it. King Ostric rules from Vineholm. The realm stands apart from the War of the Ring, but the Easterlings across the inland sea look harder at its rich, lightly guarded land every year." />
 
     <string id="taom_faction_kingdom_of_dorwinion_name" text="Dorwinion Krallığı" />
 
@@ -3339,7 +3339,7 @@
 
     <string id="taom_faction_kingdom_of_rohan_weakness_2" text="Mark dışarı çıktığında Miğfer Deresi savunmasız kalır" />
 
-    <string id="taom_faction_kingdom_of_south_rhovanion_desc" text="Güney Rhovanion Krallığı." />
+    <string id="taom_faction_kingdom_of_south_rhovanion_desc" text="The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Sea of Rhûn, horse-breeders and kin of the Éothéod far to the north. King Vidumar holds Vidugard, and the barrows of the old kings stand on his grasslands. The realm stands apart from the War of the Ring, but the Wainriders have broken it twice before, and the riders of the plains remember it." />
 
     <string id="taom_faction_kingdom_of_south_rhovanion_name" text="Güney Rhovanion Krallığı" />
 
@@ -6787,6 +6787,167 @@
     <string id="taom_bandit_feral_f5" text="Brushka" />
 
     <string id="taom_hideout_desc_feral_orcs" text="Deep in a scarred hollow of the wilds you find a ragged den of feral orcs, ringed with gnawed bones and stolen iron." />
+    <string id="taom_faction_kingdom_of_dorwinion_bonus_0" text="+10% party speed on plains (Vale Traders)" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_bonus_1" text="-0.5 settlement loyalty per day (Small Territory Exposure)" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_perk_0_desc" text="+10% party speed on plains, along the river roads and the open shore of the inland sea." />
+
+    <string id="taom_faction_kingdom_of_dorwinion_perk_0_name" text="Vale Traders" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_perk_1_desc" text="Stands outside the War of the Ring: no alliance and no sworn enemy at the start of a campaign." />
+
+    <string id="taom_faction_kingdom_of_dorwinion_perk_1_name" text="Apart from the War" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_strength_0" text="A deep bow line, from the Vintner Bowman to the Master of the Vine-bow" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_strength_1" text="Quick across the open river roads" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_strength_2" text="No sworn enemy at the start of a campaign" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_su_0_desc" text="Hall guard of the King at Vineholm, the finest foot of the realm." />
+
+    <string id="taom_faction_kingdom_of_dorwinion_su_0_name" text="Guard of Vineholm" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_su_1_desc" text="Master bowman of the vineyard slopes." />
+
+    <string id="taom_faction_kingdom_of_dorwinion_su_1_name" text="Master of the Vine-bow" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_su_2_desc" text="Mounted guard of the river roads." />
+
+    <string id="taom_faction_kingdom_of_dorwinion_su_2_name" text="River Cavalier" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_weakness_0" text="Few lords and small hosts" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_weakness_1" text="Loyalty slips in a small realm" />
+
+    <string id="taom_faction_kingdom_of_dorwinion_weakness_2" text="Rich land, lightly guarded, with the Easterlings across the sea" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_bonus_0" text="+10% party speed on plains (Riders of the Plains)" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_bonus_1" text="+5 party morale (Riders' Spirit)" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_bonus_2" text="+0.5 settlement loyalty per day (Horse-lord Fellowship)" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_bonus_3" text="-10% party speed when over 50% infantry (Cavalry Dependent)" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_perk_0_desc" text="+10% party speed on plains and +5 party morale: the wide grasslands are the riders' own ground." />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_perk_0_name" text="Riders of the Plains" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_perk_1_desc" text="+0.5 settlement loyalty per day. A host that is mostly foot-soldiers marches 10% slower." />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_perk_1_name" text="Horse-lord Fellowship" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_perk_2_desc" text="Stands outside the War of the Ring: no alliance and no sworn enemy at the start of a campaign." />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_perk_2_name" text="Apart from the War" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_strength_0" text="A full cavalry ladder, from the Northman Youth to the Horse-lord" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_strength_1" text="Quick and steady across the open plains" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_strength_2" text="No sworn enemy at the start of a campaign" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_su_0_desc" text="Mounted lord of the King's household." />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_su_0_name" text="Horse-lord of Rhovanion" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_su_1_desc" text="Veteran captain of the riders of the plains." />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_su_1_name" text="Rider-captain" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_su_2_desc" text="Mounted bowman of the open plains." />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_su_2_name" text="Veteran Horse-archer" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_trait_0" text="Northmen Horse-lords" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_trait_1" text="Barrows of the Old Kings" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_trait_2" text="Kin of the Éothéod" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_weakness_0" text="Foot columns march slowly" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_weakness_1" text="Few lords and small hosts" />
+
+    <string id="taom_faction_kingdom_of_south_rhovanion_weakness_2" text="The old Wainrider road lies open in the East" />
+
+    <string id="taom_str_liege_title.dorwinion" text="King of Dorwinion" />
+
+    <string id="taom_str_liege_title_female.dorwinion" text="Queen of Dorwinion" />
+
+    <string id="taom_str_liege_title.southrhovanion" text="King of South Rhovanion" />
+
+    <string id="taom_str_liege_title_female.southrhovanion" text="Queen of South Rhovanion" />
+
+    <string id="taom_round_drink_dorwinion" text="red wine of Dorwinion" />
+
+    <string id="taom_round_drink_southrhovanion" text="Rhovanion mead" />
+
+    <string id="taom_str_faction_official.dorwinion" text="a noble of Dorwinion" />
+
+    <string id="taom_str_faction_official.dorwinion_f" text="a lady of Dorwinion" />
+
+    <string id="taom_str_faction_ruler.dorwinion" text="King" />
+
+    <string id="taom_str_faction_ruler.dorwinion_f" text="Queen" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.dorwinion" text="{?RULER.GENDER}the Queen{?}the King{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.dorwinion" text="{?RULER.GENDER}Queen{?}King{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.dorwinion" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_formal_name_for_culture.dorwinion" text="Kingdom of Dorwinion" />
+
+    <string id="taom_str_faction_informal_name_for_culture.dorwinion" text="Dorwinion" />
+
+    <string id="taom_str_neutral_term_for_culture.dorwinion" text="Men of Dorwinion" />
+
+    <string id="taom_str_culture_description.dorwinion" text="The Men of Dorwinion tend the vineyards on the warm slopes above the Sea of Rhûn, and their wine goes up the Redwater and the River Running to the halls of Elves and Men far to the west. They are vintners, boatmen and river traders, a Northman folk who would rather sell to a stranger than fight him. Their king keeps his court at Vineholm, and every year the Easterlings across the inland sea look harder at his rich and lightly guarded land." />
+
+    <string id="taom_str_culture_rich_name.dorwinion" text="Wine-folk of Dorwinion" />
+
+    <string id="taom_str_adjective_for_culture.dorwinion" text="Dorwinion" />
+
+    <string id="taom_str_player_father_name.dorwinion" text="Authari" />
+
+    <string id="taom_str_player_mother_name.dorwinion" text="Walderada" />
+
+    <string id="taom_aso_kingdom.dorwinion" text="Dorwinion" />
+
+    <string id="taom_str_faction_official.southrhovanion" text="a noble of South Rhovanion" />
+
+    <string id="taom_str_faction_official.southrhovanion_f" text="a lady of South Rhovanion" />
+
+    <string id="taom_str_faction_ruler.southrhovanion" text="King" />
+
+    <string id="taom_str_faction_ruler.southrhovanion_f" text="Queen" />
+
+    <string id="taom_str_faction_ruler_term_in_speech.southrhovanion" text="{?RULER.GENDER}the Queen{?}the King{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_ruler_name_with_title.southrhovanion" text="{?RULER.GENDER}Queen{?}King{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_noble_name_with_title.southrhovanion" text="{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+
+    <string id="taom_str_faction_formal_name_for_culture.southrhovanion" text="Kingdom of South Rhovanion" />
+
+    <string id="taom_str_faction_informal_name_for_culture.southrhovanion" text="the Northmen" />
+
+    <string id="taom_str_neutral_term_for_culture.southrhovanion" text="Northmen" />
+
+    <string id="taom_str_culture_description.southrhovanion" text="The Northmen of South Rhovanion ride the wide plains between the southern eaves of Mirkwood and the Brown Lands, a free people of horse-breeders who count the Éothéod of the north as their kin. Their fathers were the lords of the Northmen in the days of the old kings, and the barrows of those kings still stand on the grasslands. Twice the Wainriders came out of the East with wagon and fire and broke them, and the riders of the plains have not forgotten it." />
+
+    <string id="taom_str_culture_rich_name.southrhovanion" text="Northmen of Rhovanion" />
+
+    <string id="taom_str_adjective_for_culture.southrhovanion" text="Rhovanion" />
+
+    <string id="taom_str_player_father_name.southrhovanion" text="Marhamund" />
+
+    <string id="taom_str_player_mother_name.southrhovanion" text="Marhildo" />
+
+    <string id="taom_aso_kingdom.southrhovanion" text="South Rhovanion" />
 
   </strings>
 

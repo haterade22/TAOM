@@ -94,6 +94,20 @@ public class ClonedCultureFlavorTests
         // country and stay legal.
         ["anduinvale"] = DaleSeats(),
         ["angaladh"] = DaleSeats(),
+        // Dorwinion (#1062) is cloned from Dale too, and South Rhovanion from Rohan: the Northmen of
+        // the plains south of Mirkwood, kin of the Eotheod, not the Rohirrim of Calenardhon. Their
+        // own people and seats are forbidden. Dorwinion's wine and boats travel the River Running and
+        // the Celduin, its own river country, so those two names stay legal.
+        ["dorwinion"] = DaleSeats().Where(w => w != "River Running" && w != "Celduin").ToArray(),
+        ["southrhovanion"] = RohanSeats(),
+    };
+
+    private static string[] RohanSeats() => new[]
+    {
+        "Rohan", "Rohirrim", "Riddermark", "Edoras", "Meduseld", "Eorl", "Helm's Deep", "Helm Hammerhand",
+        "Théoden", "Theoden", "Éomer", "Eomer", "Éowyn", "Eowyn", "Théodred", "Theodred", "Westfold",
+        "Eastfold", "Harrowdale", "Dunharrow", "Aldburg", "Snowbourn", "Entwash", "Gap of Rohan",
+        "Fenmark", "Folde", "Isengard", "Saruman", "the Mark",
     };
 
     private static string[] DaleSeats() => new[]

@@ -192,15 +192,15 @@ public class ShippedCultureDoctrinesConfigTests
     }
 
     /// <summary>The cultures Mike opted in, and whether their cavalry get off. Erebor rides war
-    /// rams, Isengard wargs; Dale rides ordinary horses. Ered Luin carries Erebor's row whole, Anduin Vale and Angaladh Dale's.</summary>
+    /// rams, Isengard wargs; Dale rides ordinary horses. Ered Luin carries Erebor's row whole, Anduin Vale, Angaladh and Dorwinion Dale's, South Rhovanion Rohan's.</summary>
     [TestMethod]
-    public void ShippedConfig_HorseStandCultures_AreTheSevenOptedIn_WithTheirDismountFlags()
+    public void ShippedConfig_HorseStandCultures_AreTheEightOptedIn_WithTheirDismountFlags()
     {
         var catalog = _sut.GetCatalog();
 
         var standing = catalog.CultureIds.Where(c => catalog.Resolve(c).HorseStand != null).OrderBy(c => c).ToArray();
 
-        CollectionAssert.AreEqual(new[] { "anduinvale", "angaladh", "erebor", "erebor_warriors", "eredluin", "isengard", "sturgia" }, standing);
+        CollectionAssert.AreEqual(new[] { "anduinvale", "angaladh", "dorwinion", "erebor", "erebor_warriors", "eredluin", "isengard", "sturgia" }, standing);
         Assert.IsFalse(catalog.Resolve("erebor").HorseStand!.Dismount, "erebor: its mounted troops ride war rams");
         Assert.IsFalse(catalog.Resolve("erebor_warriors").HorseStand!.Dismount, "erebor_warriors: no mounted troops");
         Assert.IsFalse(catalog.Resolve("eredluin").HorseStand!.Dismount, "eredluin: no mounted troops");
@@ -208,6 +208,8 @@ public class ShippedCultureDoctrinesConfigTests
         Assert.IsTrue(catalog.Resolve("sturgia").HorseStand!.Dismount, "sturgia: Dale rides ordinary horses");
         Assert.IsTrue(catalog.Resolve("anduinvale").HorseStand!.Dismount, "anduinvale: its riders sit ordinary horses");
         Assert.IsTrue(catalog.Resolve("angaladh").HorseStand!.Dismount, "angaladh: Dale's row whole; no Angaladh troop rides");
+        Assert.IsTrue(catalog.Resolve("dorwinion").HorseStand!.Dismount, "dorwinion: Dale's row whole; its river riders sit ordinary horses");
+        Assert.IsNull(catalog.Resolve("southrhovanion").HorseStand, "southrhovanion: Rohan's row whole, and Rohan has no horseStand");
     }
 
     [TestMethod]

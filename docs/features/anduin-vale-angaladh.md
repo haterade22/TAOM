@@ -44,12 +44,12 @@ The same recipe and generators, extended rather than copied:
 | Towns, castles, villages | `tools/add_map_fortifications.py`, `tools/add_map_villages.py` | An `anduinvale` and an `angaladh` `STYLE` (Gundabad's menus, meshes and building scenes with Dale's gate rotations, Dale's sturgia town and castle scenes); 11 fortifications and 30 villages, town first, written at the end of the live file in the merge sitting ("Merging this branch") (Anduin Vale 16 villages, Angáladh 14); village names and types are `VILLAGES` in the village tool |
 | Troops and party templates | `tools/generate_anduinvale_troops.py`, `tools/generate_angaladh_troops.py` on `tools/realm_troops.py` | Two new generators; the self-check now also counts `great_axe` as two-handed |
 | Bows | `tools/ranged_ladders.json` | The `dale` line's `files` list both troop files; archers appear only at L6, 16, 21, 26 and 31, where the line has cells |
-| Culture, notables, wanderers, villager and caravan templates, education templates, rosters | `tools/promote_borrowed_cultures.py --only anduinvale` / `--only angaladh` | `_dale_successor()`, `render_xslt_culture()`, `block_src`, `id_overrides` and `lord_templates` (below) |
+| Culture, notables, wanderers, villager and caravan templates, education templates, rosters | `tools/promote_borrowed_cultures.py --only anduinvale` / `--only angaladh` | `_northman_successor()`, `render_xslt_culture()`, `block_src`, `id_overrides` and `lord_templates` (below) |
 | Kingdom, clans, lords, heroes | `tools/generate_new_faction_kingdoms.py --only anduinvale` / `--only angaladh` | Both entries in `REGENERATABLE`, lord template kind `dale` |
 | Narrative menus, careers, starting gear | `insert_new_faction_cc_menus.py`, `insert_new_faction_careers.py`, `generate_char_creation_equipment.py`, `generate_career_kits.py` | Authored text on Dale's mechanics; Dale's Guardsman cloned for the foot careers, its Marksman and Outrider for the bow and horse careers |
 | Tables keyed on culture | hand edits to each table and its compiled C# twin | Dale's row wherever the rule is a Dale one ("Tables keyed on culture") |
 
-**What the promoter gained.** `_dale_successor()` builds the target from Dale's settings.
+**What the promoter gained.** `_northman_successor()` builds the target from Dale's settings.
 `render_xslt_culture()` renders Dale's `<Culture>` block through lxml. `block_src` names, per shared
 file, which source culture supplies the block: `sturgia` for the three files that use the culture
 id, and `gondor` for the child, education equipment and education character templates. The token
@@ -263,7 +263,7 @@ registered, so the file loads at the next campaign start or save load.
 |------|---------|
 | `tools/generate_anduinvale_troops.py`, `tools/generate_angaladh_troops.py` | each realm's tree and party templates; `--check` |
 | `tools/realm_troops.py` | shared troop machinery |
-| `tools/promote_borrowed_cultures.py` | the culture blocks (`_dale_successor`, `render_xslt_culture`, `block_src`, `lord_templates`) |
+| `tools/promote_borrowed_cultures.py` | the culture blocks (`_northman_successor`, `render_xslt_culture`, `block_src`, `lord_templates`) |
 | `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.AnduinVale.cs`, `.Angaladh.cs` | volunteer pools |
 | `Main/_Module/ModuleData/troops/troops_anduinvale.xml`, `troops_angaladh.xml` | generated trees |
 | `Main/_Module/ModuleData/characters/npcs_anduinvale.xml`, `npcs_angaladh.xml` | notables and townsfolk |

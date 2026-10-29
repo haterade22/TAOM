@@ -48,7 +48,7 @@ public class ShippedRaceAbilitiesConfigTests
         var config = Load(ModuleDataPath, logger);
 
         Assert.AreEqual(9, config.Races.Count);
-        Assert.AreEqual(22, config.Cultures.Count);
+        Assert.AreEqual(24, config.Cultures.Count);
         logger.DidNotReceive().LogWarning(Arg.Any<string>());
         logger.DidNotReceive().LogError(Arg.Any<string>());
     }
@@ -76,6 +76,16 @@ public class ShippedRaceAbilitiesConfigTests
 
         Assert.AreEqual(config.Cultures["sturgia"].AbilityId, config.Cultures["anduinvale"].AbilityId);
         Assert.AreEqual(config.Cultures["sturgia"].AbilityId, config.Cultures["angaladh"].AbilityId);
+    }
+
+    [TestMethod]
+    public void ShippedFile_DorwinionTakesDalesAbility_SouthRhovanionTakesRohans()
+    {
+        // Dorwinion is cut from Dale and South Rhovanion from Rohan (#1062): the same lesson as above.
+        var config = Load(ModuleDataPath, Substitute.For<IModLogger>());
+
+        Assert.AreEqual(config.Cultures["sturgia"].AbilityId, config.Cultures["dorwinion"].AbilityId);
+        Assert.AreEqual(config.Cultures["vlandia"].AbilityId, config.Cultures["southrhovanion"].AbilityId);
     }
 
     [TestMethod]
