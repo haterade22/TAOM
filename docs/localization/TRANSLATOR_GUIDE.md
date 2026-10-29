@@ -636,7 +636,7 @@ pipeline ships as its English fallback in all 12 languages, silently, with no er
 4. Run `generate_translation_template.py --all --apply`.
 5. Add a `<LanguageFile>` entry to all 12 `Languages/*/language_data.xml`.
 6. Bump the count in `LanguageDataXmlTests.AllLanguageDirs_HaveExactly…LanguageFiles`.
-7. Run `translate_with_claude.py --lang <L> --module TAOM --apply` per language (add `--sync-ids` for new keys). When translation is deferred, `--sync-ids --seed-only --apply` seeds the rows without the paid translate phase.
+7. Run `translate_with_claude.py --lang <L> --module TAOM --apply` per language (add `--sync-ids` for new keys). When translation is deferred, seed the rows without the paid translate phase: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --seed-only --apply`, run per language. Without `--module TAOM` the module defaults to `all` and the run also writes the live Armory's language files (#1056).
 
 **Step 1 must complete before step 4.** `generate_translation_template.py --apply` overwrites each
 per-language file with a fresh English template, discarding whatever translation is in it. The

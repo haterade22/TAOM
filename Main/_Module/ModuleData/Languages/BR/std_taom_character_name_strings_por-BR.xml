@@ -1886,5 +1886,177 @@
     <string id="aom_spc_wanderer_eredluin_7_name" text="{FIRSTNAME} Bit Gór" />
     <string id="aom_spc_wanderer_eredluin_8_name" text="{FIRSTNAME} Bit Lóin" />
     <string id="aom_spc_wanderer_eredluin_9_name" text="{FIRSTNAME} Bit Garin" />
+    <string id="aom_ang_arena" text="Arena Master" />
+    <string id="aom_ang_armed_trader" text="Angáladh Armed Trader" />
+    <string id="aom_ang_armorer" text="Armorer" />
+    <string id="aom_ang_barber" text="Barber" />
+    <string id="aom_ang_beggar" text="Beggar" />
+    <string id="aom_ang_blacksmith" text="Blacksmith" />
+    <string id="aom_ang_caravan_guard" text="Angáladh Caravan Guard" />
+    <string id="aom_ang_caravan_master" text="Angáladh Caravan Master" />
+    <string id="aom_ang_dancer" text="Dancer" />
+    <string id="aom_ang_edu_1" text="Angáladh Youth" />
+    <string id="aom_ang_edu_2" text="Angáladh Youth" />
+    <string id="aom_ang_edu_3" text="Angáladh Youth" />
+    <string id="aom_ang_edu_4" text="Angáladh Youth" />
+    <string id="aom_ang_edu_5" text="Angáladh Youth" />
+    <string id="aom_ang_edu_6" text="Angáladh Youth" />
+    <string id="aom_ang_female_beggar" text="Beggar" />
+    <string id="aom_ang_gamehost" text="Game Host" />
+    <string id="aom_ang_gang_bodyguard" text="Gang Bodyguard" />
+    <string id="aom_ang_gear_dummy" text="Gear Dummy" />
+    <string id="aom_ang_guard" text="Guard" />
+    <string id="aom_ang_headman_1" text="Steadfast Angáladh headman" />
+    <string id="aom_ang_headman_2" text="Conservative Woodman headman" />
+    <string id="aom_ang_headman_3" text="Shrewd Angáladh headman" />
+    <string id="aom_ang_horse_merchant" text="Horse Merchant" />
+    <string id="aom_ang_merchant" text="Trader" />
+    <string id="aom_ang_musician" text="Musician" />
+    <string id="aom_ang_notable_0" text="Cautious Woodman trader" />
+    <string id="aom_ang_notable_0b" text="Shrewd forest merchant" />
+    <string id="aom_ang_notable_1" text="Ruthless Angáladh fur trader" />
+    <string id="aom_ang_notable_10" text="Sardonic Woodman outlaw" />
+    <string id="aom_ang_notable_11" text="Intimidating Angáladh enforcer" />
+    <string id="aom_ang_notable_12" text="Cunning Angáladh smuggler" />
+    <string id="aom_ang_notable_13" text="Menacing forest schemer" />
+    <string id="aom_ang_notable_1b" text="Cold Woodman merchant" />
+    <string id="aom_ang_notable_2" text="Angáladh gem dealer" />
+    <string id="aom_ang_notable_21" text="Weathered Woodman landowner" />
+    <string id="aom_ang_notable_22" text="Agreeable Angáladh elder" />
+    <string id="aom_ang_notable_2b" text="Wise Woodman merchant" />
+    <string id="aom_ang_notable_3" text="Self-made Angáladh merchant" />
+    <string id="aom_ang_notable_3b" text="Jovial forest merchant" />
+    <string id="aom_ang_notable_4" text="Shrewd Woodman merchant" />
+    <string id="aom_ang_notable_4b" text="Devious Angáladh merchant" />
+    <string id="aom_ang_notable_5" text="Devout Angáladh elder" />
+    <string id="aom_ang_notable_6" text="Stern Woodman lorekeeper" />
+    <string id="aom_ang_notable_7" text="Angáladh keeper of traditions" />
+    <string id="aom_ang_notable_8" text="Skilled Woodman smith" />
+    <string id="aom_ang_notable_9" text="Gifted Angáladh craftsman" />
+    <string id="aom_ang_notable_gl1" text="Bold forest ringleader" />
+    <string id="aom_ang_notable_gl4" text="Ruthless Woodman thug" />
+    <string id="aom_ang_practice_1" text="Practice Fighter" />
+    <string id="aom_ang_practice_2" text="Practice Fighter" />
+    <string id="aom_ang_practice_3" text="Practice Fighter" />
+    <string id="aom_ang_practice_dummy" text="Practice Dummy" />
+    <string id="aom_ang_prison_guard" text="Prison Guard" />
+    <string id="aom_ang_ransom_broker" text="Ransom Broker" />
+    <string id="aom_ang_shop_worker" text="Shop Worker" />
+    <string id="aom_ang_tavern_wench" text="Tavern Wench" />
+    <string id="aom_ang_tavernkeeper" text="Tavern Keeper" />
+    <string id="aom_ang_townsman" text="Townsman" />
+    <string id="aom_ang_townsman_child" text="Townsman" />
+    <string id="aom_ang_townsman_infant" text="Townsman" />
+    <string id="aom_ang_townsman_teen" text="Townsman" />
+    <string id="aom_ang_townswoman" text="Townswoman" />
+    <string id="aom_ang_townswoman_child" text="Townswoman" />
+    <string id="aom_ang_townswoman_infant" text="Townswoman" />
+    <string id="aom_ang_townswoman_teen" text="Townswoman" />
+    <string id="aom_ang_vet_caravan_guard" text="Angáladh Veteran Caravan Guard" />
+    <string id="aom_ang_village_woman" text="Village Woman" />
+    <string id="aom_ang_village_woman_child" text="Village Child" />
+    <string id="aom_ang_village_woman_teen" text="Village Teenager" />
+    <string id="aom_ang_villager" text="Villager" />
+    <string id="aom_ang_villager_child" text="Village Child" />
+    <string id="aom_ang_villager_teen" text="Village Teenager" />
+    <string id="aom_ang_weaponsmith" text="Weaponsmith" />
+    <string id="aom_av_arena" text="Arena Master" />
+    <string id="aom_av_armed_trader" text="Vale Armed Trader" />
+    <string id="aom_av_armorer" text="Armorer" />
+    <string id="aom_av_barber" text="Barber" />
+    <string id="aom_av_beggar" text="Beggar" />
+    <string id="aom_av_blacksmith" text="Blacksmith" />
+    <string id="aom_av_caravan_guard" text="Vale Caravan Guard" />
+    <string id="aom_av_caravan_master" text="Vale Caravan Master" />
+    <string id="aom_av_dancer" text="Dancer" />
+    <string id="aom_av_edu_1" text="Vale Youth" />
+    <string id="aom_av_edu_2" text="Vale Youth" />
+    <string id="aom_av_edu_3" text="Vale Youth" />
+    <string id="aom_av_edu_4" text="Vale Youth" />
+    <string id="aom_av_edu_5" text="Vale Youth" />
+    <string id="aom_av_edu_6" text="Vale Youth" />
+    <string id="aom_av_female_beggar" text="Beggar" />
+    <string id="aom_av_gamehost" text="Game Host" />
+    <string id="aom_av_gang_bodyguard" text="Gang Bodyguard" />
+    <string id="aom_av_gear_dummy" text="Gear Dummy" />
+    <string id="aom_av_guard" text="Guard" />
+    <string id="aom_av_headman_1" text="Steadfast Vale headman" />
+    <string id="aom_av_headman_2" text="Conservative Beorning headman" />
+    <string id="aom_av_headman_3" text="Shrewd Vale headman" />
+    <string id="aom_av_horse_merchant" text="Horse Merchant" />
+    <string id="aom_av_merchant" text="Trader" />
+    <string id="aom_av_musician" text="Musician" />
+    <string id="aom_av_notable_0" text="Cautious Beorning trader" />
+    <string id="aom_av_notable_0b" text="Shrewd riverside merchant" />
+    <string id="aom_av_notable_1" text="Ruthless Vale fur trader" />
+    <string id="aom_av_notable_10" text="Sardonic Beorning outlaw" />
+    <string id="aom_av_notable_11" text="Intimidating Vale enforcer" />
+    <string id="aom_av_notable_12" text="Cunning Vale smuggler" />
+    <string id="aom_av_notable_13" text="Menacing riverside schemer" />
+    <string id="aom_av_notable_1b" text="Cold Beorning merchant" />
+    <string id="aom_av_notable_2" text="Vale gem dealer" />
+    <string id="aom_av_notable_21" text="Weathered Beorning landowner" />
+    <string id="aom_av_notable_22" text="Agreeable Vale elder" />
+    <string id="aom_av_notable_2b" text="Wise Beorning merchant" />
+    <string id="aom_av_notable_3" text="Self-made Vale merchant" />
+    <string id="aom_av_notable_3b" text="Jovial riverside merchant" />
+    <string id="aom_av_notable_4" text="Shrewd Beorning merchant" />
+    <string id="aom_av_notable_4b" text="Devious Vale merchant" />
+    <string id="aom_av_notable_5" text="Devout Vale elder" />
+    <string id="aom_av_notable_6" text="Stern Beorning lorekeeper" />
+    <string id="aom_av_notable_7" text="Vale keeper of traditions" />
+    <string id="aom_av_notable_8" text="Skilled Beorning smith" />
+    <string id="aom_av_notable_9" text="Gifted Vale craftsman" />
+    <string id="aom_av_notable_gl1" text="Bold riverside ringleader" />
+    <string id="aom_av_notable_gl4" text="Ruthless Beorning thug" />
+    <string id="aom_av_practice_1" text="Practice Fighter" />
+    <string id="aom_av_practice_2" text="Practice Fighter" />
+    <string id="aom_av_practice_3" text="Practice Fighter" />
+    <string id="aom_av_practice_dummy" text="Practice Dummy" />
+    <string id="aom_av_prison_guard" text="Prison Guard" />
+    <string id="aom_av_ransom_broker" text="Ransom Broker" />
+    <string id="aom_av_shop_worker" text="Shop Worker" />
+    <string id="aom_av_tavern_wench" text="Tavern Wench" />
+    <string id="aom_av_tavernkeeper" text="Tavern Keeper" />
+    <string id="aom_av_townsman" text="Townsman" />
+    <string id="aom_av_townsman_child" text="Townsman" />
+    <string id="aom_av_townsman_infant" text="Townsman" />
+    <string id="aom_av_townsman_teen" text="Townsman" />
+    <string id="aom_av_townswoman" text="Townswoman" />
+    <string id="aom_av_townswoman_child" text="Townswoman" />
+    <string id="aom_av_townswoman_infant" text="Townswoman" />
+    <string id="aom_av_townswoman_teen" text="Townswoman" />
+    <string id="aom_av_vet_caravan_guard" text="Vale Veteran Caravan Guard" />
+    <string id="aom_av_village_woman" text="Village Woman" />
+    <string id="aom_av_village_woman_child" text="Village Child" />
+    <string id="aom_av_village_woman_teen" text="Village Teenager" />
+    <string id="aom_av_villager" text="Villager" />
+    <string id="aom_av_villager_child" text="Village Child" />
+    <string id="aom_av_villager_teen" text="Village Teenager" />
+    <string id="aom_av_weaponsmith" text="Weaponsmith" />
+    <string id="aom_spc_wanderer_anduinvale_0_name" text="{FIRSTNAME} Grimling" />
+    <string id="aom_spc_wanderer_anduinvale_1_name" text="{FIRSTNAME} Oswinsson" />
+    <string id="aom_spc_wanderer_anduinvale_2_name" text="{FIRSTNAME} Hallbeorn" />
+    <string id="aom_spc_wanderer_anduinvale_3_name" text="{FIRSTNAME} Fordling" />
+    <string id="aom_spc_wanderer_anduinvale_4_name" text="{FIRSTNAME} Valecroft" />
+    <string id="aom_spc_wanderer_anduinvale_5_name" text="{FIRSTNAME} Langfloodson" />
+    <string id="aom_spc_wanderer_anduinvale_6_name" text="{FIRSTNAME} Gladwyn" />
+    <string id="aom_spc_wanderer_anduinvale_7_name" text="{FIRSTNAME} Bearhild" />
+    <string id="aom_spc_wanderer_anduinvale_8_name" text="{FIRSTNAME} Mistyfell" />
+    <string id="aom_spc_wanderer_anduinvale_9_name" text="{FIRSTNAME} Fellrider" />
+    <string id="aom_spc_wanderer_angaladh_0_name" text="{FIRSTNAME} Oakling" />
+    <string id="aom_spc_wanderer_angaladh_1_name" text="{FIRSTNAME} Hartsson" />
+    <string id="aom_spc_wanderer_angaladh_2_name" text="{FIRSTNAME} Hallwood" />
+    <string id="aom_spc_wanderer_angaladh_3_name" text="{FIRSTNAME} Eavesling" />
+    <string id="aom_spc_wanderer_angaladh_4_name" text="{FIRSTNAME} Woodcroft" />
+    <string id="aom_spc_wanderer_angaladh_5_name" text="{FIRSTNAME} Mirkwoodson" />
+    <string id="aom_spc_wanderer_angaladh_6_name" text="{FIRSTNAME} Ashwyn" />
+    <string id="aom_spc_wanderer_angaladh_7_name" text="{FIRSTNAME} Rowanhild" />
+    <string id="aom_spc_wanderer_angaladh_8_name" text="{FIRSTNAME} Darkfell" />
+    <string id="aom_spc_wanderer_angaladh_9_name" text="{FIRSTNAME} Fellrider" />
+    <string id="aom_anduinvale_lord_1" text="Bold Beorning lord" />
+    <string id="aom_anduinvale_lord_2" text="Cautious Beorning lord" />
+    <string id="aom_angaladh_lord_1" text="Bold Woodman lord" />
+    <string id="aom_angaladh_lord_2" text="Cautious Woodman lord" />
   </strings>
 </base>

@@ -214,6 +214,7 @@ Cross-reference validation:
 ## Referenced by
 
 - [docs/ai-includes/new-culture-authoring.md](../ai-includes/new-culture-authoring.md)
+- [docs/features/anduin-vale-angaladh.md](./anduin-vale-angaladh.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/modding/recipe-add-a-culture.md](../modding/recipe-add-a-culture.md)
 

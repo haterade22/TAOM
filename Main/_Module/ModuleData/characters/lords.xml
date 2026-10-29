@@ -59336,4 +59336,1142 @@
         </Equipments>
     </NPCCharacter>
   <!-- TAOM-NEWFACTIONS:eredluin:END -->
+  <!-- TAOM-NEWFACTIONS:anduinvale:BEGIN -->
+    <NPCCharacter id="lord_AV1_1" name="{=aom_lord_AV1_1_name}Grimbeorn" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_a" />
+            <EquipmentSet id="anduinvale_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV1_2" name="{=aom_lord_AV1_2_name}Osbeorn" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_b" />
+            <EquipmentSet id="anduinvale_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV1_3" name="{=aom_lord_AV1_3_name}Beornhild" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_c" />
+            <EquipmentSet id="anduinvale_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV1_4" name="{=aom_lord_AV1_4_name}Aldwyn" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_d" />
+            <EquipmentSet id="anduinvale_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV2_1" name="{=aom_lord_AV2_1_name}Hathbeorn" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_a" />
+            <EquipmentSet id="anduinvale_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV2_2" name="{=aom_lord_AV2_2_name}Eadbeorn" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_b" />
+            <EquipmentSet id="anduinvale_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV2_3" name="{=aom_lord_AV2_3_name}Hildeburg" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_c" />
+            <EquipmentSet id="anduinvale_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV2_4" name="{=aom_lord_AV2_4_name}Osgyth" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_d" />
+            <EquipmentSet id="anduinvale_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV3_1" name="{=aom_lord_AV3_1_name}Grimwulf" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_a" />
+            <EquipmentSet id="anduinvale_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV3_2" name="{=aom_lord_AV3_2_name}Thurstan" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_b" />
+            <EquipmentSet id="anduinvale_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV3_3" name="{=aom_lord_AV3_3_name}Eadwyn" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_c" />
+            <EquipmentSet id="anduinvale_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV3_4" name="{=aom_lord_AV3_4_name}Wulfrun" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_d" />
+            <EquipmentSet id="anduinvale_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV4_1" name="{=aom_lord_AV4_1_name}Wulfhere" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_a" />
+            <EquipmentSet id="anduinvale_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV4_2" name="{=aom_lord_AV4_2_name}Brunwald" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_b" />
+            <EquipmentSet id="anduinvale_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV4_3" name="{=aom_lord_AV4_3_name}Mildgyth" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_c" />
+            <EquipmentSet id="anduinvale_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AV4_4" name="{=aom_lord_AV4_4_name}Hrothwyn" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.anduinvale" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="anduinvale_bat_template_medium_d" />
+            <EquipmentSet id="anduinvale_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+  <!-- TAOM-NEWFACTIONS:anduinvale:END -->
+  <!-- TAOM-NEWFACTIONS:angaladh:BEGIN -->
+    <NPCCharacter id="lord_AND1_1" name="{=aom_lord_AND1_1_name}Ingomar" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="angaladh_bat_template_medium_a" />
+            <EquipmentSet id="angaladh_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AND1_2" name="{=aom_lord_AND1_2_name}Ansila" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="angaladh_bat_template_medium_b" />
+            <EquipmentSet id="angaladh_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AND1_3" name="{=aom_lord_AND1_3_name}Gudila" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="angaladh_bat_template_medium_c" />
+            <EquipmentSet id="angaladh_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AND1_4" name="{=aom_lord_AND1_4_name}Riquila" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="angaladh_bat_template_medium_d" />
+            <EquipmentSet id="angaladh_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AND2_1" name="{=aom_lord_AND2_1_name}Hrodiwar" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="angaladh_bat_template_medium_a" />
+            <EquipmentSet id="angaladh_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AND2_2" name="{=aom_lord_AND2_2_name}Gaisa" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="angaladh_bat_template_medium_b" />
+            <EquipmentSet id="angaladh_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AND2_3" name="{=aom_lord_AND2_3_name}Hildiwara" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="angaladh_bat_template_medium_c" />
+            <EquipmentSet id="angaladh_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AND2_4" name="{=aom_lord_AND2_4_name}Sunilda" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="angaladh_bat_template_medium_d" />
+            <EquipmentSet id="angaladh_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AND3_1" name="{=aom_lord_AND3_1_name}Liudric" age="33" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="angaladh_bat_template_medium_a" />
+            <EquipmentSet id="angaladh_civ_template_default_a" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AND3_2" name="{=aom_lord_AND3_2_name}Wandil" age="36" voice="curt" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lord_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+          </face>
+        <skills>
+            <skill id="OneHanded" value="215" />
+            <skill id="TwoHanded" value="155" />
+            <skill id="Polearm" value="205" />
+            <skill id="Bow" value="260" />
+            <skill id="Crossbow" value="120" />
+            <skill id="Throwing" value="170" />
+            <skill id="Riding" value="215" />
+            <skill id="Athletics" value="240" />
+            <skill id="Crafting" value="110" />
+            <skill id="Scouting" value="230" />
+            <skill id="Tactics" value="242" />
+            <skill id="Roguery" value="80" />
+            <skill id="Charm" value="200" />
+            <skill id="Leadership" value="235" />
+            <skill id="Trade" value="210" />
+            <skill id="Steward" value="215" />
+            <skill id="Medicine" value="140" />
+            <skill id="Engineering" value="170" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="2" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="angaladh_bat_template_medium_b" />
+            <EquipmentSet id="angaladh_civ_template_default_b" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AND3_3" name="{=aom_lord_AND3_3_name}Wiliswintha" age="25" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="angaladh_bat_template_medium_c" />
+            <EquipmentSet id="angaladh_civ_template_default_c" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+    <NPCCharacter id="lord_AND3_4" name="{=aom_lord_AND3_4_name}Ansiwara" age="26" voice="earnest" is_female="true" default_group="Infantry" is_hero="true" culture="Culture.angaladh" occupation="Lord" face_mesh_cache="true" skill_template="SkillSet.taom_dale_lady_skills">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+            <hair_tags>
+                <hair_tag name="sturgia" />
+            </hair_tags>
+          </face>
+        <skills>
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="30" />
+            <skill id="Polearm" value="50" />
+            <skill id="Bow" value="70" />
+            <skill id="Crossbow" value="50" />
+            <skill id="Throwing" value="50" />
+            <skill id="Riding" value="140" />
+            <skill id="Athletics" value="110" />
+            <skill id="Crafting" value="140" />
+            <skill id="Scouting" value="110" />
+            <skill id="Tactics" value="152" />
+            <skill id="Roguery" value="60" />
+            <skill id="Charm" value="240" />
+            <skill id="Leadership" value="160" />
+            <skill id="Trade" value="180" />
+            <skill id="Steward" value="240" />
+            <skill id="Medicine" value="210" />
+            <skill id="Engineering" value="130" />
+        </skills>
+        <Traits>
+            <Trait id="Honor" value="2" />
+            <Trait id="Generosity" value="2" />
+            <Trait id="Calculating" value="1" />
+            <Trait id="Mercy" value="2" />
+            <Trait id="Valor" value="0" />
+            <Trait id="Egalitarian" value="1" />
+            <Trait id="Oligarchic" value="1" />
+            <Trait id="Authoritarian" value="0" />
+        </Traits>
+        <Equipments>
+            <EquipmentSet id="angaladh_bat_template_medium_d" />
+            <EquipmentSet id="angaladh_civ_template_default_d" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+  <!-- TAOM-NEWFACTIONS:angaladh:END -->
 </NPCCharacters>

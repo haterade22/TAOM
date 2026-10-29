@@ -119,6 +119,13 @@
   <Culture id="rhudaur"     gold="80000"   influence="400"  playerGold="2000"  />
   <Culture id="vlandia"     gold="75000"  influence="400"  playerGold="2000"  />
   <Culture id="sturgia"     gold="85000"  influence="400"  playerGold="2000"  />
+  <!-- Anduin Vale and Angaladh: two small Dale-cut Neutral realms. Runway 150 days (the great
+       realms' tier, which puts them level with Dale and the Arnor remnants; Cardolan's 90,000 is
+       about 135 days of its own rate) on the denars a head measured from
+       kingdom_hero_party_anduinvale_template (5.77, 86,550) and kingdom_hero_party_angaladh_template
+       (6.04, 90,600), rounded to 85,000 and 90,000; influence 400 and playerGold 2,000 as Cardolan. -->
+  <Culture id="anduinvale"  gold="85000"  influence="400"  playerGold="2000"  />
+  <Culture id="angaladh"    gold="90000"  influence="400"  playerGold="2000"  />
 
   <!-- Human Evil / Eastern cultures. Rhûn's rate is the highest of this group because its
        clans field the costliest human rosters on the map (13.03/head), not as a favour. -->

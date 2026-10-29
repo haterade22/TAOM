@@ -322,7 +322,7 @@ def self_check(party_templates, troops):
         if tr.realm and tr.realm.race == "dwarf" and (tr.horse or tr.group in ("Cavalry", "HorseArcher")):
             errors.append(f"{tr.id}: a mounted dwarf (MOUNTED_DWARF)")
         shields = any("shield" in w for w in ra + rb)
-        twohanders = any(re.search(r"greatsword|poleaxe|_2h_", w) for w in ra + rb)
+        twohanders = any(re.search(r"greatsword|poleaxe|great_axe|_2h_", w) for w in ra + rb)
         if shields and twohanders:
             errors.append(f"{tr.id}: a shield and a two-handed weapon in the same troop")
     for tid, stacks in party_templates():

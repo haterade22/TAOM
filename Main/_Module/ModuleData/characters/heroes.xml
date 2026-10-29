@@ -4351,5 +4351,123 @@
 		faction="Faction.clan_eredluin_4"
 		spouse="Hero.lord_EL4_2" />
   <!-- TAOM-NEWFACTIONS:eredluin:END -->
+  <!-- TAOM-NEWFACTIONS:anduinvale:BEGIN -->
+	<Hero
+		id="lord_AV1_1"
+		faction="Faction.clan_anduinvale_1"
+		spouse="Hero.lord_AV1_3"
+		text="{=lord_AV1_1_description}Grimbeorn, son of Beorn, Chieftain of the Beornings, who keeps the High Pass and the Old Ford and lets no orc cross the Vales of Anduin." />
+	<Hero
+		id="lord_AV1_2"
+		faction="Faction.clan_anduinvale_1"
+		spouse="Hero.lord_AV1_4" />
+	<Hero
+		id="lord_AV1_3"
+		faction="Faction.clan_anduinvale_1"
+		spouse="Hero.lord_AV1_1" />
+	<Hero
+		id="lord_AV1_4"
+		faction="Faction.clan_anduinvale_1"
+		spouse="Hero.lord_AV1_2" />
+	<Hero
+		id="lord_AV2_1"
+		faction="Faction.clan_anduinvale_2"
+		spouse="Hero.lord_AV2_3" />
+	<Hero
+		id="lord_AV2_2"
+		faction="Faction.clan_anduinvale_2"
+		spouse="Hero.lord_AV2_4" />
+	<Hero
+		id="lord_AV2_3"
+		faction="Faction.clan_anduinvale_2"
+		spouse="Hero.lord_AV2_1" />
+	<Hero
+		id="lord_AV2_4"
+		faction="Faction.clan_anduinvale_2"
+		spouse="Hero.lord_AV2_2" />
+	<Hero
+		id="lord_AV3_1"
+		faction="Faction.clan_anduinvale_3"
+		spouse="Hero.lord_AV3_3" />
+	<Hero
+		id="lord_AV3_2"
+		faction="Faction.clan_anduinvale_3"
+		spouse="Hero.lord_AV3_4" />
+	<Hero
+		id="lord_AV3_3"
+		faction="Faction.clan_anduinvale_3"
+		spouse="Hero.lord_AV3_1" />
+	<Hero
+		id="lord_AV3_4"
+		faction="Faction.clan_anduinvale_3"
+		spouse="Hero.lord_AV3_2" />
+	<Hero
+		id="lord_AV4_1"
+		faction="Faction.clan_anduinvale_4"
+		spouse="Hero.lord_AV4_3" />
+	<Hero
+		id="lord_AV4_2"
+		faction="Faction.clan_anduinvale_4"
+		spouse="Hero.lord_AV4_4" />
+	<Hero
+		id="lord_AV4_3"
+		faction="Faction.clan_anduinvale_4"
+		spouse="Hero.lord_AV4_1" />
+	<Hero
+		id="lord_AV4_4"
+		faction="Faction.clan_anduinvale_4"
+		spouse="Hero.lord_AV4_2" />
+  <!-- TAOM-NEWFACTIONS:anduinvale:END -->
+  <!-- TAOM-NEWFACTIONS:angaladh:BEGIN -->
+	<Hero
+		id="lord_AND1_1"
+		faction="Faction.clan_angaladh_1"
+		spouse="Hero.lord_AND1_3"
+		text="{=lord_AND1_1_description}Ingomar, King of Angáladh, lord of Woodmen-town, who keeps the eaves of Mirkwood against the shadow of Dol Guldur." />
+	<Hero
+		id="lord_AND1_2"
+		faction="Faction.clan_angaladh_1"
+		spouse="Hero.lord_AND1_4" />
+	<Hero
+		id="lord_AND1_3"
+		faction="Faction.clan_angaladh_1"
+		spouse="Hero.lord_AND1_1" />
+	<Hero
+		id="lord_AND1_4"
+		faction="Faction.clan_angaladh_1"
+		spouse="Hero.lord_AND1_2" />
+	<Hero
+		id="lord_AND2_1"
+		faction="Faction.clan_angaladh_2"
+		spouse="Hero.lord_AND2_3" />
+	<Hero
+		id="lord_AND2_2"
+		faction="Faction.clan_angaladh_2"
+		spouse="Hero.lord_AND2_4" />
+	<Hero
+		id="lord_AND2_3"
+		faction="Faction.clan_angaladh_2"
+		spouse="Hero.lord_AND2_1" />
+	<Hero
+		id="lord_AND2_4"
+		faction="Faction.clan_angaladh_2"
+		spouse="Hero.lord_AND2_2" />
+	<Hero
+		id="lord_AND3_1"
+		faction="Faction.clan_angaladh_3"
+		spouse="Hero.lord_AND3_3" />
+	<Hero
+		id="lord_AND3_2"
+		faction="Faction.clan_angaladh_3"
+		spouse="Hero.lord_AND3_4" />
+	<Hero
+		id="lord_AND3_3"
+		faction="Faction.clan_angaladh_3"
+		spouse="Hero.lord_AND3_1" />
+	<Hero
+		id="lord_AND3_4"
+		faction="Faction.clan_angaladh_3"
+		spouse="Hero.lord_AND3_2" />
+  <!-- TAOM-NEWFACTIONS:angaladh:END -->
 </Heroes>
 

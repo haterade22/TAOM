@@ -24706,4 +24706,2276 @@
 				id="Item.sk_dwarf_erebor_boots_light_a" />
 		</EquipmentSet>
 	</EquipmentRoster>
+	<!-- ═══ Culture: ANDUINVALE ═══ -->
+	<!-- Parent fallback -->
+	<EquipmentRoster
+		id="mother_char_creation_none_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_dale_shoulder_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_none_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--1.Retainer-->
+	<EquipmentRoster
+		id="mother_char_creation_retainer_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_dale_helmet_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_dale_shoulder_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_retainer_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_dale_helmet_infrantry_b01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--2.Merchant-->
+	<EquipmentRoster
+		id="mother_char_creation_merchant_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_merchant_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_dale_helmet_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--3.Farmer-->
+	<EquipmentRoster
+		id="mother_char_creation_farmer_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_farmer_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--4.Artisan-->
+	<EquipmentRoster
+		id="mother_char_creation_artisan_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_dale_shoulder_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_artisan_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--5.Hunter-->
+	<EquipmentRoster
+		id="mother_char_creation_hunter_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_hunter_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_dale_helmet_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--6.Vagabond-->
+	<EquipmentRoster
+		id="mother_char_creation_vagabond_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_vagabond_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Childhood & Education age -->
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_anduinvale_retainer_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_anduinvale_retainer_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_anduinvale_retainer_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_anduinvale_retainer_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_anduinvale_merchant_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_anduinvale_merchant_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_anduinvale_merchant_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_anduinvale_merchant_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_anduinvale_farmer_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_anduinvale_farmer_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_anduinvale_farmer_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_anduinvale_farmer_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_anduinvale_artisan_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_anduinvale_artisan_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_anduinvale_artisan_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_anduinvale_artisan_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_anduinvale_hunter_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_anduinvale_hunter_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_anduinvale_hunter_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_anduinvale_hunter_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_anduinvale_vagabond_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_anduinvale_vagabond_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_anduinvale_vagabond_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_anduinvale_vagabond_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Adult careers -->
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_retainer_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_retainer_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_mercenary_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_mercenary_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_guard_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_guard_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_hunter_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_hunter_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_infantry_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_infantry_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_skirmisher_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_skirmisher_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_bard_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_bard_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_6_m"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_war_axe_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_anduinvale_6_f"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_war_axe_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_wm_dale_shield_a06" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Horse"
+				id="Item.sumpter_horse" />
+			<Equipment
+				slot="HorseHarness"
+				id="Item.light_harness" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Show -->
+	<EquipmentRoster
+		id="player_char_creation_show_anduinvale"
+		culture="Culture.anduinvale">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Gloves"
+				id="Item.sk_dale_gauntlet_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.dale_war_axe_a" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- ═══ Culture: ANGALADH ═══ -->
+	<!-- Parent fallback -->
+	<EquipmentRoster
+		id="mother_char_creation_none_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_dale_shoulder_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_none_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--1.Retainer-->
+	<EquipmentRoster
+		id="mother_char_creation_retainer_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_dale_helmet_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_dale_shoulder_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_retainer_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_dale_helmet_infrantry_b01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--2.Merchant-->
+	<EquipmentRoster
+		id="mother_char_creation_merchant_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_merchant_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_dale_helmet_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--3.Farmer-->
+	<EquipmentRoster
+		id="mother_char_creation_farmer_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_farmer_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--4.Artisan-->
+	<EquipmentRoster
+		id="mother_char_creation_artisan_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_dale_shoulder_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_artisan_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--5.Hunter-->
+	<EquipmentRoster
+		id="mother_char_creation_hunter_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_hunter_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Head"
+				id="Item.sk_dale_helmet_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!--6.Vagabond-->
+	<EquipmentRoster
+		id="mother_char_creation_vagabond_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="father_char_creation_vagabond_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Childhood & Education age -->
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_angaladh_retainer_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_angaladh_retainer_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_angaladh_retainer_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_angaladh_retainer_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_angaladh_merchant_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_angaladh_merchant_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_angaladh_merchant_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_angaladh_merchant_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_angaladh_farmer_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_angaladh_farmer_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_angaladh_farmer_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_angaladh_farmer_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_angaladh_artisan_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_angaladh_artisan_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_angaladh_artisan_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_angaladh_artisan_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_angaladh_hunter_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_angaladh_hunter_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_archer_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_angaladh_hunter_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_angaladh_hunter_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_angaladh_vagabond_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_angaladh_vagabond_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_childhood_age_angaladh_vagabond_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_education_age_angaladh_vagabond_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Adult careers -->
+	<EquipmentRoster
+		id="player_char_creation_angaladh_retainer_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_dale_shield_a08" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_retainer_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_dale_shield_a08" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_mercenary_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_dale_shield_a08" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_mercenary_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_wm_dale_shield_a08" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_guard_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_dale_shield_a08" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_guard_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_wm_dale_shield_a08" />
+			<Equipment
+				slot="Item1"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_hunter_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_hunter_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_infantry_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_infantry_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_skirmisher_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_skirmisher_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_bard_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_bard_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_spear_a" />
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_recurve_bow_a" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_default_arrows" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_6_m"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_wm_dale_shield_a08" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<EquipmentRoster
+		id="player_char_creation_angaladh_6_f"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Item2"
+				id="Item.starter_dale_war_axe_c" />
+			<Equipment
+				slot="Item3"
+				id="Item.starter_wm_dale_shield_a08" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.starter_dale_sword_b" />
+			<Equipment
+				slot="Body"
+				id="Item.starter_sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Cape"
+				id="Item.starter_sk_dale_shoulder_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.starter_sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
+	<!-- Show -->
+	<EquipmentRoster
+		id="player_char_creation_show_angaladh"
+		culture="Culture.angaladh">
+		<EquipmentSet>
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_infrantry_b01" />
+			<Equipment
+				slot="Gloves"
+				id="Item.sk_dale_gauntlet_infrantry_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+		<EquipmentSet
+			equipmentType="Civilian">
+			<Equipment
+				slot="Item0"
+				id="Item.dale_war_axe_c" />
+			<Equipment
+				slot="Body"
+				id="Item.sk_dale_chest_archer_a01" />
+			<Equipment
+				slot="Leg"
+				id="Item.sk_dale_boots_infrantry_a01" />
+		</EquipmentSet>
+	</EquipmentRoster>
 </EquipmentRosters>

@@ -70,6 +70,162 @@
 	<string id="aom_abanissa_male_name_7" text="{=aom_abanissa_male_name_7}Ardach" />
 	<string id="aom_abanissa_male_name_8" text="{=aom_abanissa_male_name_8}Tirdah" />
 	<string id="aom_abanissa_male_name_9" text="{=aom_abanissa_male_name_9}Sharun" />
+	<string id="aom_anduinvale_clan_1" text="{=aom_anduinvale_clan_1}House of the Langflood" />
+	<string id="aom_anduinvale_clan_10" text="{=aom_anduinvale_clan_10}Folk of the Misty Eaves" />
+	<string id="aom_anduinvale_clan_11" text="{=aom_anduinvale_clan_11}House of the Long Hall" />
+	<string id="aom_anduinvale_clan_12" text="{=aom_anduinvale_clan_12}Wolf-hunters of the Vale" />
+	<string id="aom_anduinvale_clan_2" text="{=aom_anduinvale_clan_2}Folk of the Gladden Fields" />
+	<string id="aom_anduinvale_clan_3" text="{=aom_anduinvale_clan_3}Keepers of the High Pass" />
+	<string id="aom_anduinvale_clan_4" text="{=aom_anduinvale_clan_4}House of Framsburg" />
+	<string id="aom_anduinvale_clan_5" text="{=aom_anduinvale_clan_5}Bear-kin of the Vale" />
+	<string id="aom_anduinvale_clan_6" text="{=aom_anduinvale_clan_6}Honey-wardens of Beorn's Hall" />
+	<string id="aom_anduinvale_clan_7" text="{=aom_anduinvale_clan_7}Ferrymen of the Anduin" />
+	<string id="aom_anduinvale_clan_8" text="{=aom_anduinvale_clan_8}House of the Eyrie" />
+	<string id="aom_anduinvale_clan_9" text="{=aom_anduinvale_clan_9}Herdsmen of the Upper Vale" />
+	<string id="aom_anduinvale_desc" text="{=aom_anduinvale_desc}The Beornings keep the upper vale of the Anduin between the Misty Mountains and Mirkwood, a folk of farmers, herdsmen and honey-keepers who share the river meadows with the Woodmen of the Vales. They hold the Carrock and the Old Ford, take no toll from honest travellers and a heavy one from orcs and wolves. Their chieftains are chosen for strength and plain speech, and they follow no king into a war that is not their own." />
+	<string id="aom_anduinvale_female_name_1" text="{=aom_anduinvale_female_name_1}Beornwyn" />
+	<string id="aom_anduinvale_female_name_10" text="{=aom_anduinvale_female_name_10}Osburh" />
+	<string id="aom_anduinvale_female_name_11" text="{=aom_anduinvale_female_name_11}Sigeburh" />
+	<string id="aom_anduinvale_female_name_12" text="{=aom_anduinvale_female_name_12}Wynflaed" />
+	<string id="aom_anduinvale_female_name_13" text="{=aom_anduinvale_female_name_13}Eanflaed" />
+	<string id="aom_anduinvale_female_name_14" text="{=aom_anduinvale_female_name_14}Bregoswith" />
+	<string id="aom_anduinvale_female_name_15" text="{=aom_anduinvale_female_name_15}Heahburh" />
+	<string id="aom_anduinvale_female_name_16" text="{=aom_anduinvale_female_name_16}Leofgyth" />
+	<string id="aom_anduinvale_female_name_17" text="{=aom_anduinvale_female_name_17}Mildthryth" />
+	<string id="aom_anduinvale_female_name_18" text="{=aom_anduinvale_female_name_18}Saethryth" />
+	<string id="aom_anduinvale_female_name_19" text="{=aom_anduinvale_female_name_19}Beornflaed" />
+	<string id="aom_anduinvale_female_name_2" text="{=aom_anduinvale_female_name_2}Eadgyth" />
+	<string id="aom_anduinvale_female_name_20" text="{=aom_anduinvale_female_name_20}Cwenburh" />
+	<string id="aom_anduinvale_female_name_21" text="{=aom_anduinvale_female_name_21}Eadburh" />
+	<string id="aom_anduinvale_female_name_22" text="{=aom_anduinvale_female_name_22}Frithuswith" />
+	<string id="aom_anduinvale_female_name_23" text="{=aom_anduinvale_female_name_23}Aelfwyn" />
+	<string id="aom_anduinvale_female_name_24" text="{=aom_anduinvale_female_name_24}Wulfthryth" />
+	<string id="aom_anduinvale_female_name_3" text="{=aom_anduinvale_female_name_3}Aelfgifu" />
+	<string id="aom_anduinvale_female_name_4" text="{=aom_anduinvale_female_name_4}Wulfwyn" />
+	<string id="aom_anduinvale_female_name_5" text="{=aom_anduinvale_female_name_5}Leofrun" />
+	<string id="aom_anduinvale_female_name_6" text="{=aom_anduinvale_female_name_6}Godgifu" />
+	<string id="aom_anduinvale_female_name_7" text="{=aom_anduinvale_female_name_7}Hildeswith" />
+	<string id="aom_anduinvale_female_name_8" text="{=aom_anduinvale_female_name_8}Cyneburh" />
+	<string id="aom_anduinvale_female_name_9" text="{=aom_anduinvale_female_name_9}Ealhswith" />
+	<string id="aom_anduinvale_male_name_1" text="{=aom_anduinvale_male_name_1}Beornwulf" />
+	<string id="aom_anduinvale_male_name_10" text="{=aom_anduinvale_male_name_10}Folcbeorn" />
+	<string id="aom_anduinvale_male_name_11" text="{=aom_anduinvale_male_name_11}Hunbeorn" />
+	<string id="aom_anduinvale_male_name_12" text="{=aom_anduinvale_male_name_12}Torhtbeorn" />
+	<string id="aom_anduinvale_male_name_13" text="{=aom_anduinvale_male_name_13}Wilbeorn" />
+	<string id="aom_anduinvale_male_name_14" text="{=aom_anduinvale_male_name_14}Cuthbeorn" />
+	<string id="aom_anduinvale_male_name_15" text="{=aom_anduinvale_male_name_15}Saebeorn" />
+	<string id="aom_anduinvale_male_name_16" text="{=aom_anduinvale_male_name_16}Tidbeorn" />
+	<string id="aom_anduinvale_male_name_17" text="{=aom_anduinvale_male_name_17}Osric" />
+	<string id="aom_anduinvale_male_name_18" text="{=aom_anduinvale_male_name_18}Oswine" />
+	<string id="aom_anduinvale_male_name_19" text="{=aom_anduinvale_male_name_19}Eadric" />
+	<string id="aom_anduinvale_male_name_2" text="{=aom_anduinvale_male_name_2}Beornoth" />
+	<string id="aom_anduinvale_male_name_20" text="{=aom_anduinvale_male_name_20}Ealdred" />
+	<string id="aom_anduinvale_male_name_21" text="{=aom_anduinvale_male_name_21}Wighard" />
+	<string id="aom_anduinvale_male_name_22" text="{=aom_anduinvale_male_name_22}Leofwine" />
+	<string id="aom_anduinvale_male_name_23" text="{=aom_anduinvale_male_name_23}Ceolwulf" />
+	<string id="aom_anduinvale_male_name_24" text="{=aom_anduinvale_male_name_24}Hereward" />
+	<string id="aom_anduinvale_male_name_25" text="{=aom_anduinvale_male_name_25}Aelfhere" />
+	<string id="aom_anduinvale_male_name_26" text="{=aom_anduinvale_male_name_26}Bregowine" />
+	<string id="aom_anduinvale_male_name_27" text="{=aom_anduinvale_male_name_27}Deorwine" />
+	<string id="aom_anduinvale_male_name_28" text="{=aom_anduinvale_male_name_28}Eanred" />
+	<string id="aom_anduinvale_male_name_29" text="{=aom_anduinvale_male_name_29}Frithuwald" />
+	<string id="aom_anduinvale_male_name_3" text="{=aom_anduinvale_male_name_3}Beornred" />
+	<string id="aom_anduinvale_male_name_30" text="{=aom_anduinvale_male_name_30}Guthlac" />
+	<string id="aom_anduinvale_male_name_31" text="{=aom_anduinvale_male_name_31}Heremod" />
+	<string id="aom_anduinvale_male_name_32" text="{=aom_anduinvale_male_name_32}Hygered" />
+	<string id="aom_anduinvale_male_name_33" text="{=aom_anduinvale_male_name_33}Merewald" />
+	<string id="aom_anduinvale_male_name_34" text="{=aom_anduinvale_male_name_34}Ordgar" />
+	<string id="aom_anduinvale_male_name_35" text="{=aom_anduinvale_male_name_35}Waermund" />
+	<string id="aom_anduinvale_male_name_36" text="{=aom_anduinvale_male_name_36}Wynstan" />
+	<string id="aom_anduinvale_male_name_37" text="{=aom_anduinvale_male_name_37}Ealhmund" />
+	<string id="aom_anduinvale_male_name_38" text="{=aom_anduinvale_male_name_38}Beornhelm" />
+	<string id="aom_anduinvale_male_name_39" text="{=aom_anduinvale_male_name_39}Hunwald" />
+	<string id="aom_anduinvale_male_name_4" text="{=aom_anduinvale_male_name_4}Beornstan" />
+	<string id="aom_anduinvale_male_name_40" text="{=aom_anduinvale_male_name_40}Wigstan" />
+	<string id="aom_anduinvale_male_name_5" text="{=aom_anduinvale_male_name_5}Ealdbeorn" />
+	<string id="aom_anduinvale_male_name_6" text="{=aom_anduinvale_male_name_6}Wigbeorn" />
+	<string id="aom_anduinvale_male_name_7" text="{=aom_anduinvale_male_name_7}Heahbeorn" />
+	<string id="aom_anduinvale_male_name_8" text="{=aom_anduinvale_male_name_8}Sigebeorn" />
+	<string id="aom_anduinvale_male_name_9" text="{=aom_anduinvale_male_name_9}Cynebeorn" />
+	<string id="aom_anduinvale_name" text="{=aom_anduinvale_name}Beornings" />
+	<string id="aom_angaladh_clan_1" text="{=aom_angaladh_clan_1}House of Woodmen-town" />
+	<string id="aom_angaladh_clan_10" text="{=aom_angaladh_clan_10}House of the Elder Kings" />
+	<string id="aom_angaladh_clan_11" text="{=aom_angaladh_clan_11}Keepers of the Woodmen-road" />
+	<string id="aom_angaladh_clan_12" text="{=aom_angaladh_clan_12}Folk of the Black Mere" />
+	<string id="aom_angaladh_clan_2" text="{=aom_angaladh_clan_2}Bowmen of the Western Eaves" />
+	<string id="aom_angaladh_clan_3" text="{=aom_angaladh_clan_3}House of the Ironwood" />
+	<string id="aom_angaladh_clan_4" text="{=aom_angaladh_clan_4}Folk of Rhosgobel" />
+	<string id="aom_angaladh_clan_5" text="{=aom_angaladh_clan_5}Hunters of the Narrows" />
+	<string id="aom_angaladh_clan_6" text="{=aom_angaladh_clan_6}Charcoal-burners of the Greenwood" />
+	<string id="aom_angaladh_clan_7" text="{=aom_angaladh_clan_7}House of the Great Oak" />
+	<string id="aom_angaladh_clan_8" text="{=aom_angaladh_clan_8}Spider-slayers of the Eaves" />
+	<string id="aom_angaladh_clan_9" text="{=aom_angaladh_clan_9}Folk of the Eastern Shore" />
+	<string id="aom_angaladh_desc" text="{=aom_angaladh_desc}The Woodmen of Angáladh live under the western eaves of Mirkwood, where their fathers cleared steads among trees so hard that axes ring on them like iron. They are bowmen, woodcutters and hunters, few in number and slow to trust, at peace with the Elves of the northern wood. Every year the shadow in the south of the forest grows, and every year their king sends more of his archers to watch the Narrows." />
+	<string id="aom_angaladh_female_name_1" text="{=aom_angaladh_female_name_1}Vidumavi" />
+	<string id="aom_angaladh_female_name_10" text="{=aom_angaladh_female_name_10}Hildigunda" />
+	<string id="aom_angaladh_female_name_11" text="{=aom_angaladh_female_name_11}Audofleda" />
+	<string id="aom_angaladh_female_name_12" text="{=aom_angaladh_female_name_12}Baddo" />
+	<string id="aom_angaladh_female_name_13" text="{=aom_angaladh_female_name_13}Sunigilda" />
+	<string id="aom_angaladh_female_name_14" text="{=aom_angaladh_female_name_14}Liuvigunda" />
+	<string id="aom_angaladh_female_name_15" text="{=aom_angaladh_female_name_15}Ragnahilda" />
+	<string id="aom_angaladh_female_name_16" text="{=aom_angaladh_female_name_16}Theudelinda" />
+	<string id="aom_angaladh_female_name_17" text="{=aom_angaladh_female_name_17}Gundiwara" />
+	<string id="aom_angaladh_female_name_18" text="{=aom_angaladh_female_name_18}Swanahilda" />
+	<string id="aom_angaladh_female_name_19" text="{=aom_angaladh_female_name_19}Aiwilda" />
+	<string id="aom_angaladh_female_name_2" text="{=aom_angaladh_female_name_2}Amalasuntha" />
+	<string id="aom_angaladh_female_name_20" text="{=aom_angaladh_female_name_20}Frithigunda" />
+	<string id="aom_angaladh_female_name_21" text="{=aom_angaladh_female_name_21}Wilithruda" />
+	<string id="aom_angaladh_female_name_22" text="{=aom_angaladh_female_name_22}Rodelinda" />
+	<string id="aom_angaladh_female_name_23" text="{=aom_angaladh_female_name_23}Ansigunda" />
+	<string id="aom_angaladh_female_name_24" text="{=aom_angaladh_female_name_24}Ermenberga" />
+	<string id="aom_angaladh_female_name_3" text="{=aom_angaladh_female_name_3}Matasuntha" />
+	<string id="aom_angaladh_female_name_4" text="{=aom_angaladh_female_name_4}Amalafrida" />
+	<string id="aom_angaladh_female_name_5" text="{=aom_angaladh_female_name_5}Thiudigotho" />
+	<string id="aom_angaladh_female_name_6" text="{=aom_angaladh_female_name_6}Ostrogotho" />
+	<string id="aom_angaladh_female_name_7" text="{=aom_angaladh_female_name_7}Gaatha" />
+	<string id="aom_angaladh_female_name_8" text="{=aom_angaladh_female_name_8}Galswintha" />
+	<string id="aom_angaladh_female_name_9" text="{=aom_angaladh_female_name_9}Goiswintha" />
+	<string id="aom_angaladh_male_name_1" text="{=aom_angaladh_male_name_1}Vidugavia" />
+	<string id="aom_angaladh_male_name_10" text="{=aom_angaladh_male_name_10}Fritigern" />
+	<string id="aom_angaladh_male_name_11" text="{=aom_angaladh_male_name_11}Athanaric" />
+	<string id="aom_angaladh_male_name_12" text="{=aom_angaladh_male_name_12}Gainas" />
+	<string id="aom_angaladh_male_name_13" text="{=aom_angaladh_male_name_13}Sarus" />
+	<string id="aom_angaladh_male_name_14" text="{=aom_angaladh_male_name_14}Sigeric" />
+	<string id="aom_angaladh_male_name_15" text="{=aom_angaladh_male_name_15}Wallia" />
+	<string id="aom_angaladh_male_name_16" text="{=aom_angaladh_male_name_16}Thorismund" />
+	<string id="aom_angaladh_male_name_17" text="{=aom_angaladh_male_name_17}Thiudimir" />
+	<string id="aom_angaladh_male_name_18" text="{=aom_angaladh_male_name_18}Gesimund" />
+	<string id="aom_angaladh_male_name_19" text="{=aom_angaladh_male_name_19}Hunimund" />
+	<string id="aom_angaladh_male_name_2" text="{=aom_angaladh_male_name_2}Vinitharya" />
+	<string id="aom_angaladh_male_name_20" text="{=aom_angaladh_male_name_20}Gunthamund" />
+	<string id="aom_angaladh_male_name_21" text="{=aom_angaladh_male_name_21}Hilderic" />
+	<string id="aom_angaladh_male_name_22" text="{=aom_angaladh_male_name_22}Agila" />
+	<string id="aom_angaladh_male_name_23" text="{=aom_angaladh_male_name_23}Athanagild" />
+	<string id="aom_angaladh_male_name_24" text="{=aom_angaladh_male_name_24}Liuva" />
+	<string id="aom_angaladh_male_name_25" text="{=aom_angaladh_male_name_25}Witteric" />
+	<string id="aom_angaladh_male_name_26" text="{=aom_angaladh_male_name_26}Gundemar" />
+	<string id="aom_angaladh_male_name_27" text="{=aom_angaladh_male_name_27}Swinthila" />
+	<string id="aom_angaladh_male_name_28" text="{=aom_angaladh_male_name_28}Chintila" />
+	<string id="aom_angaladh_male_name_29" text="{=aom_angaladh_male_name_29}Tulga" />
+	<string id="aom_angaladh_male_name_3" text="{=aom_angaladh_male_name_3}Marhari" />
+	<string id="aom_angaladh_male_name_30" text="{=aom_angaladh_male_name_30}Egica" />
+	<string id="aom_angaladh_male_name_31" text="{=aom_angaladh_male_name_31}Berimund" />
+	<string id="aom_angaladh_male_name_32" text="{=aom_angaladh_male_name_32}Ansigar" />
+	<string id="aom_angaladh_male_name_33" text="{=aom_angaladh_male_name_33}Thiudagast" />
+	<string id="aom_angaladh_male_name_34" text="{=aom_angaladh_male_name_34}Aiwamund" />
+	<string id="aom_angaladh_male_name_35" text="{=aom_angaladh_male_name_35}Baudila" />
+	<string id="aom_angaladh_male_name_36" text="{=aom_angaladh_male_name_36}Fravitta" />
+	<string id="aom_angaladh_male_name_37" text="{=aom_angaladh_male_name_37}Wulfila" />
+	<string id="aom_angaladh_male_name_38" text="{=aom_angaladh_male_name_38}Hrodigast" />
+	<string id="aom_angaladh_male_name_39" text="{=aom_angaladh_male_name_39}Audawin" />
+	<string id="aom_angaladh_male_name_4" text="{=aom_angaladh_male_name_4}Marhwini" />
+	<string id="aom_angaladh_male_name_40" text="{=aom_angaladh_male_name_40}Ermanaric" />
+	<string id="aom_angaladh_male_name_5" text="{=aom_angaladh_male_name_5}Forthwini" />
+	<string id="aom_angaladh_male_name_6" text="{=aom_angaladh_male_name_6}Athalaric" />
+	<string id="aom_angaladh_male_name_7" text="{=aom_angaladh_male_name_7}Theodemir" />
+	<string id="aom_angaladh_male_name_8" text="{=aom_angaladh_male_name_8}Valamir" />
+	<string id="aom_angaladh_male_name_9" text="{=aom_angaladh_male_name_9}Vidimir" />
+	<string id="aom_angaladh_name" text="{=aom_angaladh_name}Woodmen" />
 	<string id="aom_arthedain_clan_1" text="{=aom_arthedain_clan_1}House of Amlaith" />
 	<string id="aom_arthedain_clan_10" text="{=aom_arthedain_clan_10}House of Deadmen's Dike" />
 	<string id="aom_arthedain_clan_11" text="{=aom_arthedain_clan_11}House of the Weather Hills" />

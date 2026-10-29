@@ -48,7 +48,7 @@ public class ShippedRaceAbilitiesConfigTests
         var config = Load(ModuleDataPath, logger);
 
         Assert.AreEqual(9, config.Races.Count);
-        Assert.AreEqual(20, config.Cultures.Count);
+        Assert.AreEqual(22, config.Cultures.Count);
         logger.DidNotReceive().LogWarning(Arg.Any<string>());
         logger.DidNotReceive().LogError(Arg.Any<string>());
     }
@@ -65,6 +65,17 @@ public class ShippedRaceAbilitiesConfigTests
         // Cardolan and Rhudaur (#978) are the same Dunedain on the same scaffold.
         Assert.AreEqual(config.Cultures["gondor"].AbilityId, config.Cultures["cardolan"].AbilityId);
         Assert.AreEqual(config.Cultures["gondor"].AbilityId, config.Cultures["rhudaur"].AbilityId);
+    }
+
+    [TestMethod]
+    public void ShippedFile_AnduinValeAndAngaladh_ShareDalesAbility()
+    {
+        // Both realms are cut from Dale: human troops with no race ability of their own resolve to nothing
+        // without a culture row (lesson #749).
+        var config = Load(ModuleDataPath, Substitute.For<IModLogger>());
+
+        Assert.AreEqual(config.Cultures["sturgia"].AbilityId, config.Cultures["anduinvale"].AbilityId);
+        Assert.AreEqual(config.Cultures["sturgia"].AbilityId, config.Cultures["angaladh"].AbilityId);
     }
 
     [TestMethod]

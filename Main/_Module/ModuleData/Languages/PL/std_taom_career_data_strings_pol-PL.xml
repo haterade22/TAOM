@@ -1326,5 +1326,269 @@
     <string id="taom_hob_t3_b_p2" text="+15% hero health regeneration." />
     <string id="taom_hob_t3_b_p3" text="+20% troop morale." />
     <string id="taom_hob_t3_b_p4" text="+15% troop survival." />
+    <string id="taom_ability_archer_of_eastbank" text="Carrock Volley" />
+    <string id="taom_ability_archer_of_eastbank_tt" text="Loose the arrows of the Woodmen: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+    <string id="taom_ability_axe_warden_of_beorns_hall" text="Carrock Stand" />
+    <string id="taom_ability_axe_warden_of_beorns_hall_tt" text="Plant your feet and hold the ford: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+    <string id="taom_ability_hewer_of_ironwood_hall" text="Heartwood Storm" />
+    <string id="taom_ability_hewer_of_ironwood_hall_tt" text="Swing the great axe with your kin: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+    <string id="taom_ability_rider_of_the_vales" text="Vale Gallop" />
+    <string id="taom_ability_rider_of_the_vales_tt" text="Spur your horse along the Vale roads: boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+    <string id="taom_ability_warden_of_the_forest_gate" text="Thornwall" />
+    <string id="taom_ability_warden_of_the_forest_gate_tt" text="Set your spear in the path and hold the line: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+    <string id="taom_ability_woodward_of_the_forest_road" text="Ironwood Volley" />
+    <string id="taom_ability_woodward_of_the_forest_road_tt" text="Loose the arrows of the woodwards: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+    <string id="taom_aoe_t1_a_key" text="Carrock Volley radius increased, covering wider kill zones." />
+    <string id="taom_aoe_t1_a_p1" text="+8% ranged damage." />
+    <string id="taom_aoe_t1_a_p2" text="+5% armor penetration." />
+    <string id="taom_aoe_t1_a_p3" text="+7% movement speed." />
+    <string id="taom_aoe_t1_a_p4" text="+5% battle renown gain." />
+    <string id="taom_aoe_t1_b_key" text="Carrock Volley duration extended, sustained barrage." />
+    <string id="taom_aoe_t1_b_p1" text="+5% resistance." />
+    <string id="taom_aoe_t1_b_p2" text="+5 max health." />
+    <string id="taom_aoe_t1_b_p3" text="+5% party spotting range." />
+    <string id="taom_aoe_t1_b_p4" text="+10% stealth bonus." />
+    <string id="taom_aoe_t2_a_key" text="Carrock Volley charge reduced, maintaining constant pressure." />
+    <string id="taom_aoe_t2_a_p1" text="+10% party spotting range." />
+    <string id="taom_aoe_t2_a_p2" text="+10% movement speed." />
+    <string id="taom_aoe_t2_a_p3" text="+13% stealth bonus." />
+    <string id="taom_aoe_t2_a_p4" text="+10% battle renown gain." />
+    <string id="taom_aoe_t2_b_key" text="Carrock Volley gains additional penetration while active." />
+    <string id="taom_aoe_t2_b_p1" text="+12% ranged damage." />
+    <string id="taom_aoe_t2_b_p2" text="+10% armor penetration." />
+    <string id="taom_aoe_t2_b_p3" text="+8 max health." />
+    <string id="taom_aoe_t2_b_p4" text="+3% troop damage." />
+    <string id="taom_aoe_t3_a_key" text="Carrock Volley radius greatly expanded, inescapable volleys." />
+    <string id="taom_aoe_t3_a_p1" text="+18% ranged damage." />
+    <string id="taom_aoe_t3_a_p2" text="+15% armor penetration." />
+    <string id="taom_aoe_t3_a_p3" text="+15% battle renown gain." />
+    <string id="taom_aoe_t3_a_p4" text="+5% troop damage." />
+    <string id="taom_aoe_t3_b_key" text="Carrock Volley charge greatly reduced, relentless fire." />
+    <string id="taom_aoe_t3_b_p1" text="+15% stealth bonus." />
+    <string id="taom_aoe_t3_b_p2" text="+15% movement speed." />
+    <string id="taom_aoe_t3_b_p3" text="+9 max health." />
+    <string id="taom_aoe_t3_b_p4" text="+15% party spotting range." />
+    <string id="taom_archer_of_eastbank_root_desc" text="Carrock Volley grants +5% ranged damage in honor of the Woodmen bowmen of the Vales." />
+    <string id="taom_awbh_t1_a_key" text="Carrock Stand radius increased, empowering more warriors." />
+    <string id="taom_awbh_t1_a_p1" text="+8% melee damage." />
+    <string id="taom_awbh_t1_a_p2" text="+3% troop damage." />
+    <string id="taom_awbh_t1_a_p3" text="+6 max health." />
+    <string id="taom_awbh_t1_a_p4" text="+7% swing speed." />
+    <string id="taom_awbh_t1_b_key" text="Carrock Stand duration extended, fortifying the defense." />
+    <string id="taom_awbh_t1_b_p1" text="+8% resistance." />
+    <string id="taom_awbh_t1_b_p2" text="+5% troop morale." />
+    <string id="taom_awbh_t1_b_p3" text="+10% troop resistance." />
+    <string id="taom_awbh_t1_b_p4" text="+5% troop survival." />
+    <string id="taom_awbh_t2_a_key" text="Carrock Stand charge reduced, activating more frequently." />
+    <string id="taom_awbh_t2_a_p1" text="+10% troop morale." />
+    <string id="taom_awbh_t2_a_p2" text="+2 party size." />
+    <string id="taom_awbh_t2_a_p3" text="+10% battle renown gain." />
+    <string id="taom_awbh_t2_a_p4" text="-10% troop wages." />
+    <string id="taom_awbh_t2_b_key" text="Carrock Stand grants additional defensive buffs while active." />
+    <string id="taom_awbh_t2_b_p1" text="+12% resistance." />
+    <string id="taom_awbh_t2_b_p2" text="+8 max health." />
+    <string id="taom_awbh_t2_b_p3" text="+13% troop resistance." />
+    <string id="taom_awbh_t2_b_p4" text="+5% troop damage." />
+    <string id="taom_awbh_t3_a_key" text="Carrock Stand radius greatly expanded, devastating power." />
+    <string id="taom_awbh_t3_a_p1" text="+15% melee damage." />
+    <string id="taom_awbh_t3_a_p2" text="+10 max health." />
+    <string id="taom_awbh_t3_a_p3" text="+7% troop damage." />
+    <string id="taom_awbh_t3_a_p4" text="+4 party size." />
+    <string id="taom_awbh_t3_b_key" text="Carrock Stand charge greatly reduced, nearly always available." />
+    <string id="taom_awbh_t3_b_p1" text="+18% resistance." />
+    <string id="taom_awbh_t3_b_p2" text="+15% hero health regeneration." />
+    <string id="taom_awbh_t3_b_p3" text="+20% troop morale." />
+    <string id="taom_awbh_t3_b_p4" text="+15% troop survival." />
+    <string id="taom_axe_warden_of_beorns_hall_root_desc" text="Carrock Stand grants +5% resistance and steadies the defenders." />
+    <string id="taom_career_archer_of_eastbank" text="Archer of Eastbank" />
+    <string id="taom_career_archer_of_eastbank_desc" text="A Woodman bowman of the Vales who shoots from the eaves of Mirkwood and the banks of the Gladden, carrying on a tradition of unerring marksmanship." />
+    <string id="taom_career_axe_warden_of_beorns_hall" text="Axe-warden of Beorn's Hall" />
+    <string id="taom_career_axe_warden_of_beorns_hall_desc" text="A broad-shouldered axeman of the House of Beorn who holds the fords and passes of the Vales against goblin and wolf alike." />
+    <string id="taom_career_grp_archer_of_eastbank_t1_a" text="Bowman of the Gladden" />
+    <string id="taom_career_grp_archer_of_eastbank_t1_b" text="Watch of the Mirkwood Edge" />
+    <string id="taom_career_grp_archer_of_eastbank_t2_a" text="Heir of the Woodmen" />
+    <string id="taom_career_grp_archer_of_eastbank_t2_b" text="Hawk-Sighted Archer" />
+    <string id="taom_career_grp_archer_of_eastbank_t3_a" text="Wolfbane of the Vales" />
+    <string id="taom_career_grp_archer_of_eastbank_t3_b" text="The Bow of the Eaves" />
+    <string id="taom_career_grp_axe_warden_of_beorns_hall_t1_a" text="Axeman of the Vales" />
+    <string id="taom_career_grp_axe_warden_of_beorns_hall_t1_b" text="Axewall of the Old Ford" />
+    <string id="taom_career_grp_axe_warden_of_beorns_hall_t2_a" text="Axe of Beorn" />
+    <string id="taom_career_grp_axe_warden_of_beorns_hall_t2_b" text="Bulwark of the Gladden" />
+    <string id="taom_career_grp_axe_warden_of_beorns_hall_t3_a" text="Vanguard of Grimbeorn" />
+    <string id="taom_career_grp_axe_warden_of_beorns_hall_t3_b" text="The Last Stand at the Carrock" />
+    <string id="taom_career_grp_hewer_of_ironwood_hall_t1_a" text="Axe-bearer of Ironwood Hall" />
+    <string id="taom_career_grp_hewer_of_ironwood_hall_t1_b" text="Splitter of the Forest Road" />
+    <string id="taom_career_grp_hewer_of_ironwood_hall_t2_a" text="Axe of the Heartwood" />
+    <string id="taom_career_grp_hewer_of_ironwood_hall_t2_b" text="Hewing of the Emyn Duir" />
+    <string id="taom_career_grp_hewer_of_ironwood_hall_t3_a" text="Great-axe of King Ingomar" />
+    <string id="taom_career_grp_hewer_of_ironwood_hall_t3_b" text="The Felling of the Dark Wood" />
+    <string id="taom_career_grp_rider_of_the_vales_t1_a" text="Rider of the Gladden" />
+    <string id="taom_career_grp_rider_of_the_vales_t1_b" text="Warden of the Old Road" />
+    <string id="taom_career_grp_rider_of_the_vales_t2_a" text="Lance of the Vales" />
+    <string id="taom_career_grp_rider_of_the_vales_t2_b" text="Outrider of the Woodmen's Friendship" />
+    <string id="taom_career_grp_rider_of_the_vales_t3_a" text="The Charge of the Carrock" />
+    <string id="taom_career_grp_rider_of_the_vales_t3_b" text="Courier of the Chieftain" />
+    <string id="taom_career_grp_warden_of_the_forest_gate_t1_a" text="Spearman of Woodmen-town" />
+    <string id="taom_career_grp_warden_of_the_forest_gate_t1_b" text="Shieldwall of the Forest Gate" />
+    <string id="taom_career_grp_warden_of_the_forest_gate_t2_a" text="Spear of Ingomar" />
+    <string id="taom_career_grp_warden_of_the_forest_gate_t2_b" text="Bulwark of the Forest Road" />
+    <string id="taom_career_grp_warden_of_the_forest_gate_t3_a" text="Vanguard of King Ingomar" />
+    <string id="taom_career_grp_warden_of_the_forest_gate_t3_b" text="The Last Stand at Thornhold" />
+    <string id="taom_career_grp_woodward_of_the_forest_road_t1_a" text="Bowman of Thornhold" />
+    <string id="taom_career_grp_woodward_of_the_forest_road_t1_b" text="Watch of the Forest Road" />
+    <string id="taom_career_grp_woodward_of_the_forest_road_t2_a" text="Heir of the Woodwards" />
+    <string id="taom_career_grp_woodward_of_the_forest_road_t2_b" text="Owl-Sighted Archer" />
+    <string id="taom_career_grp_woodward_of_the_forest_road_t3_a" text="Spider-Slayer of the Emyn Duir" />
+    <string id="taom_career_grp_woodward_of_the_forest_road_t3_b" text="The Bow of Ingomar's Line" />
+    <string id="taom_career_hewer_of_ironwood_hall" text="Hewer of Ironwood Hall" />
+    <string id="taom_career_hewer_of_ironwood_hall_desc" text="An Ironwood hewer of Angáladh who swings a great axe in both hands, splitting shields and the orcs behind them." />
+    <string id="taom_career_rank1_archer_of_eastbank" text="Bowman of the Gladden" />
+    <string id="taom_career_rank1_axe_warden_of_beorns_hall" text="Vale Axeman" />
+    <string id="taom_career_rank1_hewer_of_ironwood_hall" text="Ironwood Axeman" />
+    <string id="taom_career_rank1_rider_of_the_vales" text="Road-Rider of the Vales" />
+    <string id="taom_career_rank1_warden_of_the_forest_gate" text="Spear of the Forest Gate" />
+    <string id="taom_career_rank1_woodward_of_the_forest_road" text="Bowman of Thornhold" />
+    <string id="taom_career_rank2_archer_of_eastbank" text="Hawk-Eye of Eastbank" />
+    <string id="taom_career_rank2_axe_warden_of_beorns_hall" text="Axe-warden of Beorn's Hall" />
+    <string id="taom_career_rank2_hewer_of_ironwood_hall" text="Hewer of Ironwood Hall" />
+    <string id="taom_career_rank2_rider_of_the_vales" text="Warden of the Old Ford Road" />
+    <string id="taom_career_rank2_warden_of_the_forest_gate" text="Warden of the Forest Gate" />
+    <string id="taom_career_rank2_woodward_of_the_forest_road" text="Spider-Shooter" />
+    <string id="taom_career_rank3_archer_of_eastbank" text="Bow-lord of the Vales" />
+    <string id="taom_career_rank3_axe_warden_of_beorns_hall" text="Champion of the Carrock" />
+    <string id="taom_career_rank3_hewer_of_ironwood_hall" text="Great-axe of the Emyn Duir" />
+    <string id="taom_career_rank3_rider_of_the_vales" text="Marshal of the Vales" />
+    <string id="taom_career_rank3_warden_of_the_forest_gate" text="Captain of Woodmen-town" />
+    <string id="taom_career_rank3_woodward_of_the_forest_road" text="Bow-Master of the Woodwards" />
+    <string id="taom_career_rider_of_the_vales" text="Rider of the Vales" />
+    <string id="taom_career_rider_of_the_vales_desc" text="A mounted patrol of the Vales who rides the Old Ford road and the foot of the Misty Mountains, safeguarding farms and caravans from goblin raiders." />
+    <string id="taom_career_warden_of_the_forest_gate" text="Warden of the Forest Gate" />
+    <string id="taom_career_warden_of_the_forest_gate_desc" text="A stalwart guardian of the Forest Gate who holds the narrow way under the trees against orc, wolf and spider with shield and spear." />
+    <string id="taom_career_woodward_of_the_forest_road" text="Woodward of the Forest Road" />
+    <string id="taom_career_woodward_of_the_forest_road_desc" text="A woodward bowman of western Mirkwood who shoots from the platforms of the Forest Gate and the trees of the road, carrying on a tradition of unerring marksmanship." />
+    <string id="taom_hewer_of_ironwood_hall_root_desc" text="Heartwood Storm grants +5% resistance and steadies the defenders." />
+    <string id="taom_hiwh_t1_a_key" text="Heartwood Storm radius increased, empowering more warriors." />
+    <string id="taom_hiwh_t1_a_p1" text="+8% melee damage." />
+    <string id="taom_hiwh_t1_a_p2" text="+3% troop damage." />
+    <string id="taom_hiwh_t1_a_p3" text="+6 max health." />
+    <string id="taom_hiwh_t1_a_p4" text="+7% swing speed." />
+    <string id="taom_hiwh_t1_b_key" text="Heartwood Storm duration extended, fortifying the defense." />
+    <string id="taom_hiwh_t1_b_p1" text="+8% resistance." />
+    <string id="taom_hiwh_t1_b_p2" text="+5% troop morale." />
+    <string id="taom_hiwh_t1_b_p3" text="+10% troop resistance." />
+    <string id="taom_hiwh_t1_b_p4" text="+5% troop survival." />
+    <string id="taom_hiwh_t2_a_key" text="Heartwood Storm charge reduced, activating more frequently." />
+    <string id="taom_hiwh_t2_a_p1" text="+10% troop morale." />
+    <string id="taom_hiwh_t2_a_p2" text="+2 party size." />
+    <string id="taom_hiwh_t2_a_p3" text="+10% battle renown gain." />
+    <string id="taom_hiwh_t2_a_p4" text="-10% troop wages." />
+    <string id="taom_hiwh_t2_b_key" text="Heartwood Storm grants additional defensive buffs while active." />
+    <string id="taom_hiwh_t2_b_p1" text="+12% resistance." />
+    <string id="taom_hiwh_t2_b_p2" text="+8 max health." />
+    <string id="taom_hiwh_t2_b_p3" text="+13% troop resistance." />
+    <string id="taom_hiwh_t2_b_p4" text="+5% troop damage." />
+    <string id="taom_hiwh_t3_a_key" text="Heartwood Storm radius greatly expanded, devastating power." />
+    <string id="taom_hiwh_t3_a_p1" text="+15% melee damage." />
+    <string id="taom_hiwh_t3_a_p2" text="+10 max health." />
+    <string id="taom_hiwh_t3_a_p3" text="+7% troop damage." />
+    <string id="taom_hiwh_t3_a_p4" text="+4 party size." />
+    <string id="taom_hiwh_t3_b_key" text="Heartwood Storm charge greatly reduced, nearly always available." />
+    <string id="taom_hiwh_t3_b_p1" text="+18% resistance." />
+    <string id="taom_hiwh_t3_b_p2" text="+15% hero health regeneration." />
+    <string id="taom_hiwh_t3_b_p3" text="+20% troop morale." />
+    <string id="taom_hiwh_t3_b_p4" text="+15% troop survival." />
+    <string id="taom_rider_of_the_vales_root_desc" text="Vale Gallop grants +5% melee damage and your horse quickens." />
+    <string id="taom_rotv_t1_a_key" text="Vale Gallop radius expanded, sweeping wider formations." />
+    <string id="taom_rotv_t1_a_p1" text="+8% melee damage." />
+    <string id="taom_rotv_t1_a_p2" text="+10% horse charge damage." />
+    <string id="taom_rotv_t1_a_p3" text="+7% swing speed." />
+    <string id="taom_rotv_t1_a_p4" text="+5% party movement speed." />
+    <string id="taom_rotv_t1_b_key" text="Vale Gallop duration extended, maintaining momentum." />
+    <string id="taom_rotv_t1_b_p1" text="+10% horse health." />
+    <string id="taom_rotv_t1_b_p2" text="+5 max health." />
+    <string id="taom_rotv_t1_b_p3" text="-5% troop wages." />
+    <string id="taom_rotv_t1_b_p4" text="+5% resistance." />
+    <string id="taom_rotv_t2_a_key" text="Vale Gallop charge reduced, swifter activation." />
+    <string id="taom_rotv_t2_a_p1" text="+10% party movement speed." />
+    <string id="taom_rotv_t2_a_p2" text="-10% troop wages." />
+    <string id="taom_rotv_t2_a_p3" text="+10% troop morale." />
+    <string id="taom_rotv_t2_a_p4" text="+10% battle renown gain." />
+    <string id="taom_rotv_t2_b_key" text="Vale Gallop boosts mount resilience while active." />
+    <string id="taom_rotv_t2_b_p1" text="+12% melee damage." />
+    <string id="taom_rotv_t2_b_p2" text="+13% horse charge damage." />
+    <string id="taom_rotv_t2_b_p3" text="+13% horse health." />
+    <string id="taom_rotv_t2_b_p4" text="+10% swing speed." />
+    <string id="taom_rotv_t3_a_key" text="Vale Gallop radius greatly expanded, unstoppable impact." />
+    <string id="taom_rotv_t3_a_p1" text="+18% melee damage." />
+    <string id="taom_rotv_t3_a_p2" text="+15% horse charge damage." />
+    <string id="taom_rotv_t3_a_p3" text="+15% swing speed." />
+    <string id="taom_rotv_t3_a_p4" text="+7% troop damage." />
+    <string id="taom_rotv_t3_b_key" text="Vale Gallop charge greatly reduced, ride without ceasing." />
+    <string id="taom_rotv_t3_b_p1" text="+15% horse health." />
+    <string id="taom_rotv_t3_b_p2" text="-15% troop wages." />
+    <string id="taom_rotv_t3_b_p3" text="+15% party movement speed." />
+    <string id="taom_rotv_t3_b_p4" text="+9 max health." />
+    <string id="taom_warden_of_the_forest_gate_root_desc" text="Thornwall grants +5% resistance and steadies the defenders." />
+    <string id="taom_wfg_t1_a_key" text="Thornwall radius increased, empowering more warriors." />
+    <string id="taom_wfg_t1_a_p1" text="+8% melee damage." />
+    <string id="taom_wfg_t1_a_p2" text="+3% troop damage." />
+    <string id="taom_wfg_t1_a_p3" text="+6 max health." />
+    <string id="taom_wfg_t1_a_p4" text="+7% swing speed." />
+    <string id="taom_wfg_t1_b_key" text="Thornwall duration extended, fortifying the defense." />
+    <string id="taom_wfg_t1_b_p1" text="+8% resistance." />
+    <string id="taom_wfg_t1_b_p2" text="+5% troop morale." />
+    <string id="taom_wfg_t1_b_p3" text="+10% troop resistance." />
+    <string id="taom_wfg_t1_b_p4" text="+5% troop survival." />
+    <string id="taom_wfg_t2_a_key" text="Thornwall charge reduced, activating more frequently." />
+    <string id="taom_wfg_t2_a_p1" text="+10% troop morale." />
+    <string id="taom_wfg_t2_a_p2" text="+2 party size." />
+    <string id="taom_wfg_t2_a_p3" text="+10% battle renown gain." />
+    <string id="taom_wfg_t2_a_p4" text="-10% troop wages." />
+    <string id="taom_wfg_t2_b_key" text="Thornwall grants additional defensive buffs while active." />
+    <string id="taom_wfg_t2_b_p1" text="+12% resistance." />
+    <string id="taom_wfg_t2_b_p2" text="+8 max health." />
+    <string id="taom_wfg_t2_b_p3" text="+13% troop resistance." />
+    <string id="taom_wfg_t2_b_p4" text="+5% troop damage." />
+    <string id="taom_wfg_t3_a_key" text="Thornwall radius greatly expanded, devastating power." />
+    <string id="taom_wfg_t3_a_p1" text="+15% melee damage." />
+    <string id="taom_wfg_t3_a_p2" text="+10 max health." />
+    <string id="taom_wfg_t3_a_p3" text="+7% troop damage." />
+    <string id="taom_wfg_t3_a_p4" text="+4 party size." />
+    <string id="taom_wfg_t3_b_key" text="Thornwall charge greatly reduced, nearly always available." />
+    <string id="taom_wfg_t3_b_p1" text="+18% resistance." />
+    <string id="taom_wfg_t3_b_p2" text="+15% hero health regeneration." />
+    <string id="taom_wfg_t3_b_p3" text="+20% troop morale." />
+    <string id="taom_wfg_t3_b_p4" text="+15% troop survival." />
+    <string id="taom_wfr_t1_a_key" text="Ironwood Volley radius increased, covering wider kill zones." />
+    <string id="taom_wfr_t1_a_p1" text="+8% ranged damage." />
+    <string id="taom_wfr_t1_a_p2" text="+5% armor penetration." />
+    <string id="taom_wfr_t1_a_p3" text="+7% movement speed." />
+    <string id="taom_wfr_t1_a_p4" text="+5% battle renown gain." />
+    <string id="taom_wfr_t1_b_key" text="Ironwood Volley duration extended, sustained barrage." />
+    <string id="taom_wfr_t1_b_p1" text="+5% resistance." />
+    <string id="taom_wfr_t1_b_p2" text="+5 max health." />
+    <string id="taom_wfr_t1_b_p3" text="+5% party spotting range." />
+    <string id="taom_wfr_t1_b_p4" text="+10% stealth bonus." />
+    <string id="taom_wfr_t2_a_key" text="Ironwood Volley charge reduced, maintaining constant pressure." />
+    <string id="taom_wfr_t2_a_p1" text="+10% party spotting range." />
+    <string id="taom_wfr_t2_a_p2" text="+10% movement speed." />
+    <string id="taom_wfr_t2_a_p3" text="+13% stealth bonus." />
+    <string id="taom_wfr_t2_a_p4" text="+10% battle renown gain." />
+    <string id="taom_wfr_t2_b_key" text="Ironwood Volley gains additional penetration while active." />
+    <string id="taom_wfr_t2_b_p1" text="+12% ranged damage." />
+    <string id="taom_wfr_t2_b_p2" text="+10% armor penetration." />
+    <string id="taom_wfr_t2_b_p3" text="+8 max health." />
+    <string id="taom_wfr_t2_b_p4" text="+3% troop damage." />
+    <string id="taom_wfr_t3_a_key" text="Ironwood Volley radius greatly expanded, inescapable volleys." />
+    <string id="taom_wfr_t3_a_p1" text="+18% ranged damage." />
+    <string id="taom_wfr_t3_a_p2" text="+15% armor penetration." />
+    <string id="taom_wfr_t3_a_p3" text="+15% battle renown gain." />
+    <string id="taom_wfr_t3_a_p4" text="+5% troop damage." />
+    <string id="taom_wfr_t3_b_key" text="Ironwood Volley charge greatly reduced, relentless fire." />
+    <string id="taom_wfr_t3_b_p1" text="+15% stealth bonus." />
+    <string id="taom_wfr_t3_b_p2" text="+15% movement speed." />
+    <string id="taom_wfr_t3_b_p3" text="+9 max health." />
+    <string id="taom_wfr_t3_b_p4" text="+15% party spotting range." />
+    <string id="taom_woodward_of_the_forest_road_root_desc" text="Ironwood Volley grants +5% ranged damage in honor of the woodwards of the Forest Road." />
   </strings>
 </base>

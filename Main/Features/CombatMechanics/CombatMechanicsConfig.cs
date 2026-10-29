@@ -89,6 +89,8 @@ public class ChargeDamageConfig
         ["cardolan"] = 1.3f,
         ["rhudaur"] = 1.2f,
         ["sturgia"] = 1.2f,
+        ["anduinvale"] = 1.2f,
+        ["angaladh"] = 1.2f,
         ["mordor"] = 1.2f,
         ["isengard"] = 1.2f,
         ["gundabad"] = 1.2f,

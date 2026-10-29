@@ -71,6 +71,53 @@ class TestEredLuinTable(unittest.TestCase):
                     self.assertEqual(body_of(gen[f"{parent}_char_creation_{occ}_eredluin"]), body_of(erebor))
 
 
+DALE_GEAR = ("dale_", "wm_dale_", "sk_dale_", "default_arrows", "sumpter_horse", "light_harness")
+
+
+class TestDaleCloneTables(unittest.TestCase):
+    """Anduin Vale (mounted) and Angaladh (on foot): tables authored from Dale items, since Dale has
+    no table and no player_char_creation_sturgia_* rosters."""
+
+    def test_anduin_vale_is_mounted_with_a_harness_on_every_horse(self):
+        for rid, r in generated("anduinvale").items():
+            slots = [e.get("slot") for e in r.iter("Equipment")]
+            with self.subTest(roster=rid):
+                self.assertEqual("Horse" in slots, "HorseHarness" in slots,
+                                 "MOUNT_WITHOUT_HARNESS: a Horse needs a HorseHarness")
+
+    def test_anduin_vale_has_a_horse_where_cardolan_has_one(self):
+        horses = lambda c: sorted(rid.replace(c, "X") for rid, r in generated(c).items()  # noqa: E731
+                                  if any(e.get("slot") == "Horse" for e in r.iter("Equipment")))
+        self.assertEqual(horses("anduinvale"), horses("cardolan"))
+
+    def test_angaladh_carries_no_mount(self):
+        mounts = [(rid, e.get("slot")) for rid, r in generated("angaladh").items()
+                  for e in r.iter("Equipment") if e.get("slot") in MOUNT_SLOTS]
+        self.assertEqual(mounts, [], "Angaladh is a realm of foot soldiers")
+
+    def test_both_hand_out_only_dale_gear(self):
+        for culture in ("anduinvale", "angaladh"):
+            foreign = sorted({bare(e.get("id")) for r in generated(culture).values() for e in r.iter("Equipment")
+                              if not bare(e.get("id")).startswith(DALE_GEAR)})
+            with self.subTest(culture=culture):
+                self.assertEqual(foreign, [])
+
+    def test_each_writes_the_full_roster_set_under_its_own_culture(self):
+        for culture in ("anduinvale", "angaladh"):
+            rosters = generated(culture)
+            with self.subTest(culture=culture):
+                self.assertEqual(len(rosters), 55)
+                self.assertEqual({r.get("culture") for r in rosters.values()}, {"Culture." + culture})
+
+    def test_shipped_rosters_are_present_and_match_the_mount_rule(self):
+        for culture, mounted in (("anduinvale", True), ("angaladh", False)):
+            rosters = [r for r in shipped().iter("EquipmentRoster") if r.get("culture") == "Culture." + culture]
+            with self.subTest(culture=culture):
+                self.assertEqual(len(rosters), 55, f"run generate_char_creation_equipment.py --append {culture} --apply")
+                has_horse = any(e.get("slot") in MOUNT_SLOTS for r in rosters for e in r.iter("Equipment"))
+                self.assertEqual(has_horse, mounted)
+
+
 class TestParentBodiesAreOptional(unittest.TestCase):
     def test_a_culture_without_parent_bodies_keeps_the_old_shape(self):
         gondor = cc.CULTURES["gondor"]

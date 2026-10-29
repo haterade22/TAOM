@@ -34,7 +34,7 @@ public sealed class HallOfFireMap
         var cultures = new Dictionary<string, string>(StringComparer.Ordinal);
         Add(cultures, "empire", "gondor", "arthedain", "cardolan", "rhudaur", "rivendell", "lindon");
         Add(cultures, "battania", "mirkwood", "lothlorien", "dolguldur", "empire");
-        Add(cultures, "sturgia", "erebor", "eredluin", "gundabad", "mistymountainorcs", "goblin", "bluecraig");
+        Add(cultures, "sturgia", "erebor", "eredluin", "anduinvale", "angaladh", "gundabad", "mistymountainorcs", "goblin", "bluecraig");
         Add(cultures, "aserai", "umbar", "shaghana", "abanissa");
         Add(cultures, "khuzait", "mordor", "battania");
         Add(cultures, "vlandia", "isengard");

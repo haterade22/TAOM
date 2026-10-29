@@ -3675,4 +3675,290 @@
   </EquipmentRoster>
 
   <!-- TAOM-NEWCULTURE:eredluin:END -->
+  <!-- TAOM-NEWCULTURE:anduinvale:BEGIN -->
+  <EquipmentRoster id="taom_anduinvale_lord_battle_male" culture="Culture.anduinvale">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_anduinvale_lord_battle_female" culture="Culture.anduinvale">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_anduinvale_lord_civilian_male" culture="Culture.anduinvale">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_anduinvale_lord_civilian_female" culture="Culture.anduinvale">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_anduinvale_lord_teen_male" culture="Culture.anduinvale">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_anduinvale_lord_teen_female" culture="Culture.anduinvale">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_anduinvale_ruler_battle_male" culture="Culture.anduinvale">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_anduinvale_ruler_battle_female" culture="Culture.anduinvale">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_anduinvale_ruler_civilian_male" culture="Culture.anduinvale">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_anduinvale_ruler_civilian_female" culture="Culture.anduinvale">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+
+  <!-- TAOM-NEWCULTURE:anduinvale:END -->
+  <!-- TAOM-NEWCULTURE:angaladh:BEGIN -->
+  <EquipmentRoster id="taom_angaladh_lord_battle_male" culture="Culture.angaladh">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_angaladh_lord_battle_female" culture="Culture.angaladh">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_angaladh_lord_civilian_male" culture="Culture.angaladh">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_angaladh_lord_civilian_female" culture="Culture.angaladh">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_angaladh_lord_teen_male" culture="Culture.angaladh">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_angaladh_lord_teen_female" culture="Culture.angaladh">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsLordTemplate="true" IsTeenagerEquipmentTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_angaladh_ruler_battle_male" culture="Culture.angaladh">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_angaladh_ruler_battle_female" culture="Culture.angaladh">
+    <EquipmentSet>
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_angaladh_ruler_civilian_male" culture="Culture.angaladh">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" />
+  </EquipmentRoster>
+  <EquipmentRoster id="taom_angaladh_ruler_civilian_female" culture="Culture.angaladh">
+    <EquipmentSet equipmentType="Civilian">
+    			<Equipment slot="Item0" id="Item.sturgia_noble_sword_3_t5" />
+    			<Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+    			<Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+    			<Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+    			<Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+    			<Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+    			<Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+    			<Equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+    			<Equipment slot="Horse" id="Item.charger" />
+    		</EquipmentSet>
+    <Flags IsKingdomRulerTemplate="true" IsFemaleTemplate="true" />
+  </EquipmentRoster>
+
+  <!-- TAOM-NEWCULTURE:angaladh:END -->
 </EquipmentRosters>

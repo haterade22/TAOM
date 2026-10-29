@@ -2481,4 +2481,99 @@
 		default_party_template="PartyTemplate.kingdom_hero_party_eredluin_template"
 		banner_key="11.200.200.1528.1528.764.764.1.0.0.24003.110.110.700.700.764.764.0.0.0" />
   <!-- TAOM-NEWFACTIONS:eredluin:END -->
+  <!-- TAOM-NEWFACTIONS:anduinvale:BEGIN -->
+  <Faction
+		id="clan_anduinvale_1"
+		initial_home_settlement="Settlement.town_AV1"
+		name="{=aom_clan_anduinvale_1_name}House of Beorn"
+		tier="4"
+		owner="Hero.lord_AV1_1"
+		culture="Culture.anduinvale"
+		super_faction="Kingdom.anduinvale"
+		is_noble="true"
+		color="FF654D37"
+		color2="FFFBC841"
+		default_party_template="PartyTemplate.kingdom_hero_party_anduinvale_template"
+		banner_key="11.2007.2007.1528.1528.764.764.1.0.0.20006.2024.2024.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_anduinvale_2"
+		initial_home_settlement="Settlement.town_AV2"
+		name="{=aom_clan_anduinvale_2_name}Folk of the Old Ford"
+		tier="3"
+		owner="Hero.lord_AV2_1"
+		culture="Culture.anduinvale"
+		super_faction="Kingdom.anduinvale"
+		is_noble="true"
+		color="FF5A4430"
+		color2="FFF0C050"
+		default_party_template="PartyTemplate.kingdom_hero_party_anduinvale_template"
+		banner_key="11.2007.2007.1528.1528.764.764.1.0.0.20004.2024.2024.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_anduinvale_3"
+		initial_home_settlement="Settlement.castle_AV1"
+		name="{=aom_clan_anduinvale_3_name}Wardens of the Carrock"
+		tier="2"
+		owner="Hero.lord_AV3_1"
+		culture="Culture.anduinvale"
+		super_faction="Kingdom.anduinvale"
+		is_noble="true"
+		color="FF6E563E"
+		color2="FFFBC841"
+		default_party_template="PartyTemplate.kingdom_hero_party_anduinvale_template"
+		banner_key="11.2007.2007.1528.1528.764.764.1.0.0.20003.2024.2024.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_anduinvale_4"
+		initial_home_settlement="Settlement.castle_AV3"
+		name="{=aom_clan_anduinvale_4_name}Riders of the Gladden"
+		tier="2"
+		owner="Hero.lord_AV4_1"
+		culture="Culture.anduinvale"
+		super_faction="Kingdom.anduinvale"
+		is_noble="true"
+		color="FF4E3C2A"
+		color2="FFE8B840"
+		default_party_template="PartyTemplate.kingdom_hero_party_anduinvale_template"
+		banner_key="11.2007.2007.1528.1528.764.764.1.0.0.20002.2024.2024.700.700.764.764.0.0.0" />
+  <!-- TAOM-NEWFACTIONS:anduinvale:END -->
+  <!-- TAOM-NEWFACTIONS:angaladh:BEGIN -->
+  <Faction
+		id="clan_angaladh_1"
+		initial_home_settlement="Settlement.town_AND1"
+		name="{=aom_clan_angaladh_1_name}House of Angáladh"
+		tier="4"
+		owner="Hero.lord_AND1_1"
+		culture="Culture.angaladh"
+		super_faction="Kingdom.angaladh"
+		is_noble="true"
+		color="FF4F6F5A"
+		color2="FFF2F4F7"
+		default_party_template="PartyTemplate.kingdom_hero_party_angaladh_template"
+		banner_key="11.2021.2021.1528.1528.764.764.1.0.0.17000.2022.2022.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_angaladh_2"
+		initial_home_settlement="Settlement.castle_AND3"
+		name="{=aom_clan_angaladh_2_name}Woodwards of the Forest Road"
+		tier="3"
+		owner="Hero.lord_AND2_1"
+		culture="Culture.angaladh"
+		super_faction="Kingdom.angaladh"
+		is_noble="true"
+		color="FF45614F"
+		color2="FFE8ECE8"
+		default_party_template="PartyTemplate.kingdom_hero_party_angaladh_template"
+		banner_key="11.2021.2021.1528.1528.764.764.1.0.0.17001.2022.2022.700.700.764.764.0.0.0" />
+  <Faction
+		id="clan_angaladh_3"
+		initial_home_settlement="Settlement.castle_AND2"
+		name="{=aom_clan_angaladh_3_name}Wardens of Emyn Duir"
+		tier="2"
+		owner="Hero.lord_AND3_1"
+		culture="Culture.angaladh"
+		super_faction="Kingdom.angaladh"
+		is_noble="true"
+		color="FF5A7A64"
+		color2="FFF2F4F2"
+		default_party_template="PartyTemplate.kingdom_hero_party_angaladh_template"
+		banner_key="11.2021.2021.1528.1528.764.764.1.0.0.20001.2022.2022.700.700.764.764.0.0.0" />
+  <!-- TAOM-NEWFACTIONS:angaladh:END -->
 </Factions>

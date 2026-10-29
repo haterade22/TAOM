@@ -1099,5 +1099,33 @@
     <string id="aom_lord_EL4_2_name" text="Virfir" />
     <string id="aom_lord_EL4_3_name" text="Ragna" />
     <string id="aom_lord_EL4_4_name" text="Herdís" />
+    <string id="aom_lord_AND1_1_name" text="Ingomar" />
+    <string id="aom_lord_AND1_2_name" text="Ansila" />
+    <string id="aom_lord_AND1_3_name" text="Gudila" />
+    <string id="aom_lord_AND1_4_name" text="Riquila" />
+    <string id="aom_lord_AND2_1_name" text="Hrodiwar" />
+    <string id="aom_lord_AND2_2_name" text="Gaisa" />
+    <string id="aom_lord_AND2_3_name" text="Hildiwara" />
+    <string id="aom_lord_AND2_4_name" text="Sunilda" />
+    <string id="aom_lord_AND3_1_name" text="Liudric" />
+    <string id="aom_lord_AND3_2_name" text="Wandil" />
+    <string id="aom_lord_AND3_3_name" text="Wiliswintha" />
+    <string id="aom_lord_AND3_4_name" text="Ansiwara" />
+    <string id="aom_lord_AV1_1_name" text="Grimbeorn" />
+    <string id="aom_lord_AV1_2_name" text="Osbeorn" />
+    <string id="aom_lord_AV1_3_name" text="Beornhild" />
+    <string id="aom_lord_AV1_4_name" text="Aldwyn" />
+    <string id="aom_lord_AV2_1_name" text="Hathbeorn" />
+    <string id="aom_lord_AV2_2_name" text="Eadbeorn" />
+    <string id="aom_lord_AV2_3_name" text="Hildeburg" />
+    <string id="aom_lord_AV2_4_name" text="Osgyth" />
+    <string id="aom_lord_AV3_1_name" text="Grimwulf" />
+    <string id="aom_lord_AV3_2_name" text="Thurstan" />
+    <string id="aom_lord_AV3_3_name" text="Eadwyn" />
+    <string id="aom_lord_AV3_4_name" text="Wulfrun" />
+    <string id="aom_lord_AV4_1_name" text="Wulfhere" />
+    <string id="aom_lord_AV4_2_name" text="Brunwald" />
+    <string id="aom_lord_AV4_3_name" text="Mildgyth" />
+    <string id="aom_lord_AV4_4_name" text="Hrothwyn" />
   </strings>
 </base>

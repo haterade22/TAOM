@@ -196,6 +196,8 @@ must print nothing.
 
 **TAOM and TAOM_Map ship Ered Luin together, or neither does.** Since 2026-10-27 the live `TAOM_Map/ModuleData/settlements.xml` holds Ered Luin's 31 settlements ([ered-luin.md](../features/ered-luin.md)): all carry `Culture.eredluin`, and `town_EL1` to `town_EL3` and `castle_EL1` to `castle_EL5` are owned by `clan_eredluin_1` to `_4`. Only a TAOM build with Ered Luin defines the culture (`taom_spcultures.xml`) and the clans (`characters/clans.xml`). A map with the rows beside an older TAOM points 31 settlements at an undefined culture and 8 at undefined clans; a TAOM with the culture beside a map without the rows leaves `eredluin` owning no settlement, the daily-tick crash `LANDLESS_CULTURE` reports (#374). Check each channel before publishing: `grep -cE 'id="(town_EL[1-3]|castle_EL[1-5])"'` on `E:/LOTRAOM_Releases/<channel>/Modules/TAOM_Map/ModuleData/settlements.xml` must print 8 when `grep -c 'id="eredluin"'` on that channel's `Modules/TAOM/ModuleData/taom_spcultures.xml` prints 1 and `grep -cE 'id="clan_eredluin_[1-4]"'` on its `characters/clans.xml` prints 4, and 0 when both print 0. On 2026-10-27 all three channels printed 0 three times.
 
+**TAOM and TAOM_Map ship Anduin Vale and Angáladh together, or neither does.** The map rows are held back from the live `TAOM_Map/ModuleData/settlements.xml` until the merge sitting ([anduin-vale-angaladh.md](../features/anduin-vale-angaladh.md#merging-this-branch)); once applied they hold 41 settlements, among them `town_AV1`, `town_AV2`, `town_AND1`, `castle_AV1` to `castle_AV4` and `castle_AND1` to `castle_AND4`. All carry `Culture.anduinvale` or `Culture.angaladh`, and the fortifications are owned by `clan_anduinvale_1` to `_4` and `clan_angaladh_1` to `_3`. Only a TAOM build with those cultures defines them (`taom_spcultures.xml`) and the clans (`characters/clans.xml`). A map with the rows beside an older TAOM points settlements at undefined cultures and clans; a TAOM with the cultures beside a map without the rows leaves `anduinvale` and `angaladh` owning no settlement, the daily-tick crash `LANDLESS_CULTURE` reports (#374). Check each channel before publishing: `grep -cE 'id="(town_AV[12]|town_AND1|castle_AV[1-4]|castle_AND[1-4])"'` on `E:/LOTRAOM_Releases/<channel>/Modules/TAOM_Map/ModuleData/settlements.xml` must print 11 when `grep -cE 'id="(anduinvale|angaladh)"'` on that channel's `Modules/TAOM/ModuleData/taom_spcultures.xml` prints 2 and `grep -cE 'id="clan_(anduinvale_[1-4]|angaladh_[1-3])"'` on its `characters/clans.xml` prints 7, and 0 when all three print 0.
+
 **Step 8 is the one that gets skipped**, which is why
 [`check-version-tagged.sh`](../../.claude/hooks/check-version-tagged.sh) reminds at turn end
 whenever the version in `SubModule.xml` has no tag pointing at any commit. That single condition
@@ -318,6 +320,7 @@ the engine version, the reported date) rather than inventing a commit range.
 ## Referenced by
 
 - [docs/ai-includes/git-and-commits.md](../ai-includes/git-and-commits.md)
+- [docs/features/anduin-vale-angaladh.md](../features/anduin-vale-angaladh.md)
 - [docs/features/coop-dedicated-server.md](../features/coop-dedicated-server.md)
 - [docs/features/dale-lord-expansion.md](../features/dale-lord-expansion.md)
 - [docs/features/ered-luin.md](../features/ered-luin.md)

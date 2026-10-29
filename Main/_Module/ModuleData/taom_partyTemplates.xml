@@ -5136,6 +5136,18 @@
 
   <!-- TAOM-NEWCULTURE:bluecraig:END -->
 	<!-- ==== SupplyLines crew templates (generated: tools/generate_supply_caravan_templates.py) ==== -->
+	<MBPartyTemplate id="supply_caravan_template_anduinvale">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_anduinvale" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_anduinvale" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="supply_caravan_template_angaladh">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_angaladh" />
+			<PartyTemplateStack min_value="1" max_value="3" troop="NPCCharacter.caravan_guard_angaladh" />
+		</stacks>
+	</MBPartyTemplate>
 	<MBPartyTemplate id="supply_caravan_template_arthedain">
 		<stacks>
 			<PartyTemplateStack min_value="3" max_value="5" troop="NPCCharacter.armed_trader_arthedain" />
@@ -5709,4 +5721,226 @@
 	</MBPartyTemplate>
 
   <!-- TAOM-NEWCULTURE:eredluin:END -->
+	<!-- TAOM-ANDUINVALE-PT:BEGIN -->
+	<MBPartyTemplate id="kingdom_hero_party_anduinvale_template">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="26" troop="NPCCharacter.anduinvale_levy" />
+			<PartyTemplateStack min_value="2" max_value="22" troop="NPCCharacter.anduinvale_axeman" />
+			<PartyTemplateStack min_value="1" max_value="19" troop="NPCCharacter.anduinvale_beorning_youth" />
+			<PartyTemplateStack min_value="1" max_value="19" troop="NPCCharacter.anduinvale_beorning_axeman" />
+			<PartyTemplateStack min_value="1" max_value="19" troop="NPCCharacter.anduinvale_woodman_bowman" />
+			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.anduinvale_vale_rider" />
+			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.anduinvale_axe_warrior" />
+			<PartyTemplateStack min_value="0" max_value="13" troop="NPCCharacter.anduinvale_woodman_archer" />
+			<PartyTemplateStack min_value="0" max_value="13" troop="NPCCharacter.anduinvale_carrock_guard" />
+			<PartyTemplateStack min_value="0" max_value="10" troop="NPCCharacter.anduinvale_vale_horseman" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.anduinvale_veteran_beorning" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.anduinvale_woodman_marksman" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.anduinvale_great_axe" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.anduinvale_champion" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="kingdom_hero_party_mercenary_anduinvale_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.anduinvale_axeman" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.anduinvale_woodman_bowman" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.anduinvale_beorning_axeman" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.anduinvale_woodman_archer" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.anduinvale_vale_rider" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="kingdom_hero_party_outlaw_anduinvale_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.anduinvale_levy" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.anduinvale_militia_spearman" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.anduinvale_militia_archer" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.anduinvale_woodman_bowman" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="militia_anduinvale_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.anduinvale_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.anduinvale_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_anduinvale_template_level_1">
+		<stacks>
+			<PartyTemplateStack min_value="6" max_value="6" troop="NPCCharacter.anduinvale_levy" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.anduinvale_axeman" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.anduinvale_woodman_bowman" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_anduinvale_template_level_2">
+		<stacks>
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.anduinvale_axeman" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.anduinvale_beorning_axeman" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.anduinvale_woodman_archer" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.anduinvale_vale_rider" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_anduinvale_template_level_3">
+		<stacks>
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.anduinvale_axe_warrior" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.anduinvale_veteran_beorning" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.anduinvale_woodman_marksman" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.anduinvale_vale_horseman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.anduinvale_great_axe" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="rebels_anduinvale_template">
+		<stacks>
+			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.anduinvale_levy" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.anduinvale_militia_spearman" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.anduinvale_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="vassal_reward_troops_anduinvale">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.anduinvale_bear_warden" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.anduinvale_champion" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.anduinvale_bear_guard" />
+		</stacks>
+	</MBPartyTemplate>
+	<!-- TAOM-ANDUINVALE-PT:END -->
+	<!-- TAOM-ANGALADH-PT:BEGIN -->
+	<MBPartyTemplate id="kingdom_hero_party_angaladh_template">
+		<stacks>
+			<PartyTemplateStack min_value="3" max_value="26" troop="NPCCharacter.angaladh_levy" />
+			<PartyTemplateStack min_value="2" max_value="22" troop="NPCCharacter.angaladh_spearman" />
+			<PartyTemplateStack min_value="1" max_value="19" troop="NPCCharacter.angaladh_ironwood_youth" />
+			<PartyTemplateStack min_value="1" max_value="19" troop="NPCCharacter.angaladh_forest_spearman" />
+			<PartyTemplateStack min_value="1" max_value="19" troop="NPCCharacter.angaladh_woodman_bowman" />
+			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.angaladh_woodman_archer" />
+			<PartyTemplateStack min_value="0" max_value="15" troop="NPCCharacter.angaladh_forest_guard" />
+			<PartyTemplateStack min_value="0" max_value="13" troop="NPCCharacter.angaladh_woodman_axeman" />
+			<PartyTemplateStack min_value="0" max_value="13" troop="NPCCharacter.angaladh_forest_archer" />
+			<PartyTemplateStack min_value="0" max_value="10" troop="NPCCharacter.angaladh_ironwood_guard" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.angaladh_veteran_forest_guard" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.angaladh_master_archer" />
+			<PartyTemplateStack min_value="0" max_value="8" troop="NPCCharacter.angaladh_woodman_axe_warrior" />
+			<PartyTemplateStack min_value="0" max_value="5" troop="NPCCharacter.angaladh_forest_warden" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="kingdom_hero_party_mercenary_angaladh_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.angaladh_spearman" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.angaladh_woodman_bowman" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.angaladh_forest_spearman" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.angaladh_woodman_archer" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.angaladh_woodman_axeman" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="kingdom_hero_party_outlaw_angaladh_template">
+		<stacks>
+			<PartyTemplateStack min_value="8" max_value="16" troop="NPCCharacter.angaladh_levy" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.angaladh_militia_spearman" />
+			<PartyTemplateStack min_value="4" max_value="8" troop="NPCCharacter.angaladh_militia_archer" />
+			<PartyTemplateStack min_value="2" max_value="4" troop="NPCCharacter.angaladh_woodman_bowman" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="militia_angaladh_template">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.angaladh_militia_spearman" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.angaladh_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_angaladh_template_level_1">
+		<stacks>
+			<PartyTemplateStack min_value="6" max_value="6" troop="NPCCharacter.angaladh_levy" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.angaladh_spearman" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.angaladh_woodman_bowman" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_angaladh_template_level_2">
+		<stacks>
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.angaladh_spearman" />
+			<PartyTemplateStack min_value="4" max_value="4" troop="NPCCharacter.angaladh_forest_spearman" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.angaladh_woodman_archer" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.angaladh_woodman_axeman" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="patrol_party_angaladh_template_level_3">
+		<stacks>
+			<PartyTemplateStack min_value="5" max_value="5" troop="NPCCharacter.angaladh_forest_guard" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.angaladh_veteran_forest_guard" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.angaladh_forest_archer" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.angaladh_woodman_axe_warrior" />
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.angaladh_ironwood_hewer" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="rebels_angaladh_template">
+		<stacks>
+			<PartyTemplateStack min_value="24" max_value="32" troop="NPCCharacter.angaladh_levy" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.angaladh_militia_spearman" />
+			<PartyTemplateStack min_value="2" max_value="3" troop="NPCCharacter.angaladh_militia_archer" />
+		</stacks>
+	</MBPartyTemplate>
+
+	<MBPartyTemplate id="vassal_reward_troops_angaladh">
+		<stacks>
+			<PartyTemplateStack min_value="1" max_value="1" troop="NPCCharacter.angaladh_woodmen_guard" />
+			<PartyTemplateStack min_value="3" max_value="3" troop="NPCCharacter.angaladh_forest_warden" />
+			<PartyTemplateStack min_value="2" max_value="2" troop="NPCCharacter.angaladh_ironwood_sentinel" />
+		</stacks>
+	</MBPartyTemplate>
+	<!-- TAOM-ANGALADH-PT:END -->
+  <!-- TAOM-NEWCULTURE:anduinvale:BEGIN -->
+	<MBPartyTemplate id="villager_anduinvale_template">
+		<stacks>
+			<PartyTemplateStack min_value="15" max_value="30" troop="NPCCharacter.villager_anduinvale" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="caravan_template_anduinvale">
+		<stacks>
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_anduinvale" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_anduinvale" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_anduinvale" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="elite_caravan_template_anduinvale">
+		<stacks>
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_anduinvale" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_anduinvale" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_anduinvale" />
+		</stacks>
+	</MBPartyTemplate>
+
+  <!-- TAOM-NEWCULTURE:anduinvale:END -->
+  <!-- TAOM-NEWCULTURE:angaladh:BEGIN -->
+	<MBPartyTemplate id="villager_angaladh_template">
+		<stacks>
+			<PartyTemplateStack min_value="15" max_value="30" troop="NPCCharacter.villager_angaladh" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="caravan_template_angaladh">
+		<stacks>
+			<PartyTemplateStack min_value="31" max_value="36" troop="NPCCharacter.armed_trader_angaladh" />
+			<PartyTemplateStack min_value="19" max_value="22" troop="NPCCharacter.caravan_guard_angaladh" />
+			<PartyTemplateStack min_value="10" max_value="12" troop="NPCCharacter.veteran_caravan_guard_angaladh" />
+		</stacks>
+	</MBPartyTemplate>
+	<MBPartyTemplate id="elite_caravan_template_angaladh">
+		<stacks>
+			<PartyTemplateStack min_value="24" max_value="28" troop="NPCCharacter.armed_trader_angaladh" />
+			<PartyTemplateStack min_value="19" max_value="21" troop="NPCCharacter.caravan_guard_angaladh" />
+			<PartyTemplateStack min_value="23" max_value="26" troop="NPCCharacter.veteran_caravan_guard_angaladh" />
+		</stacks>
+	</MBPartyTemplate>
+
+  <!-- TAOM-NEWCULTURE:angaladh:END -->
 </partyTemplates>

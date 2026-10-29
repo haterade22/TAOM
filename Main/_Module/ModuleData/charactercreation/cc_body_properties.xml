@@ -168,4 +168,11 @@
   <Culture id="eredluin">
     <BodyProperties version="4" age="22.25" weight="0.5278" build="0.7754"  key="00003C0780000141F8700FF70F781778FF7088778FF77FFF888878888D301084009C860309FFF0AE0000000000000000000000000000000000000000432C0140"  />
   </Culture>
+  <!-- Anduin Vale and Angaladh: Dale's default body (the sturgia row); the Woodmen and Beornings are cut from Dale. -->
+  <Culture id="anduinvale">
+    <BodyProperties version="4" age="24.35" weight="0.5417" build="0.5231" key="000DF00FC00033CD8771188F38770F8801F188778888888888888888546AF0F90088860308888888000000000000000000000000000000000000000043044144" />
+  </Culture>
+  <Culture id="angaladh">
+    <BodyProperties version="4" age="24.35" weight="0.5417" build="0.5231" key="000DF00FC00033CD8771188F38770F8801F188778888888888888888546AF0F90088860308888888000000000000000000000000000000000000000043044144" />
+  </Culture>
 </CCBodyProperties>

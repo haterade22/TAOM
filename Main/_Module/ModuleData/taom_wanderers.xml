@@ -6785,4 +6785,476 @@
 	</NPCCharacter>
 
   <!-- TAOM-NEWCULTURE:eredluin:END -->
+  <!-- TAOM-NEWCULTURE:anduinvale:BEGIN -->
+	<NPCCharacter
+		id="spc_wanderer_anduinvale_0"
+		name="{=aom_spc_wanderer_anduinvale_0_name}{FIRSTNAME} Grimling"
+		voice="softspoken"
+		age="31"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.anduinvale"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_anduinvale_1"
+		name="{=aom_spc_wanderer_anduinvale_1_name}{FIRSTNAME} Oswinsson"
+		voice="earnest"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.anduinvale"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_anduinvale_2"
+		name="{=aom_spc_wanderer_anduinvale_2_name}{FIRSTNAME} Hallbeorn"
+		voice="curt"
+		age="38"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.anduinvale"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_anduinvale_3"
+		name="{=aom_spc_wanderer_anduinvale_3_name}{FIRSTNAME} Fordling"
+		voice="ironic"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.anduinvale"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_anduinvale_4"
+		name="{=aom_spc_wanderer_anduinvale_4_name}{FIRSTNAME} Valecroft"
+		voice="earnest"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.anduinvale"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_anduinvale_5"
+		name="{=aom_spc_wanderer_anduinvale_5_name}{FIRSTNAME} Langfloodson"
+		voice="softspoken"
+		age="34"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.anduinvale"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Generosity" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_anduinvale_6"
+		name="{=aom_spc_wanderer_anduinvale_6_name}{FIRSTNAME} Gladwyn"
+		voice="curt"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.anduinvale"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_anduinvale_7"
+		name="{=aom_spc_wanderer_anduinvale_7_name}{FIRSTNAME} Bearhild"
+		voice="ironic"
+		age="41"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.anduinvale"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_anduinvale_8"
+		name="{=aom_spc_wanderer_anduinvale_8_name}{FIRSTNAME} Mistyfell"
+		voice="curt"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.anduinvale"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_anduinvale_9"
+		name="{=aom_spc_wanderer_anduinvale_9_name}{FIRSTNAME} Fellrider"
+		voice="earnest"
+		age="25"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.anduinvale"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_anduinvale" />
+		</Equipments>
+	</NPCCharacter>
+
+  <!-- TAOM-NEWCULTURE:anduinvale:END -->
+  <!-- TAOM-NEWCULTURE:angaladh:BEGIN -->
+	<NPCCharacter
+		id="spc_wanderer_angaladh_0"
+		name="{=aom_spc_wanderer_angaladh_0_name}{FIRSTNAME} Oakling"
+		voice="softspoken"
+		age="31"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.angaladh"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_0_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_angaladh_1"
+		name="{=aom_spc_wanderer_angaladh_1_name}{FIRSTNAME} Hartsson"
+		voice="earnest"
+		age="26"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.angaladh"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_1_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_angaladh_2"
+		name="{=aom_spc_wanderer_angaladh_2_name}{FIRSTNAME} Hallwood"
+		voice="curt"
+		age="38"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.angaladh"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_2_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_angaladh_3"
+		name="{=aom_spc_wanderer_angaladh_3_name}{FIRSTNAME} Eavesling"
+		voice="ironic"
+		age="29"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.angaladh"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_3_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Calculating" value="1" />
+			<Trait id="Mercy" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_angaladh_4"
+		name="{=aom_spc_wanderer_angaladh_4_name}{FIRSTNAME} Woodcroft"
+		voice="earnest"
+		age="24"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.angaladh"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_4_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="2" />
+			<Trait id="Calculating" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_angaladh_5"
+		name="{=aom_spc_wanderer_angaladh_5_name}{FIRSTNAME} Mirkwoodson"
+		voice="softspoken"
+		age="34"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.angaladh"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_5_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Mercy" value="1" />
+			<Trait id="Generosity" value="1" />
+			<Trait id="Valor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_angaladh_6"
+		name="{=aom_spc_wanderer_angaladh_6_name}{FIRSTNAME} Ashwyn"
+		voice="curt"
+		age="27"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.angaladh"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_6_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_angaladh_7"
+		name="{=aom_spc_wanderer_angaladh_7_name}{FIRSTNAME} Rowanhild"
+		voice="ironic"
+		age="41"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.angaladh"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_7_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Honor" value="1" />
+			<Trait id="Calculating" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_angaladh_8"
+		name="{=aom_spc_wanderer_angaladh_8_name}{FIRSTNAME} Darkfell"
+		voice="curt"
+		age="33"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.angaladh"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_8_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Mercy" value="-1" />
+			<Trait id="Generosity" value="-1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" />
+		</Equipments>
+	</NPCCharacter>
+	<NPCCharacter
+		id="spc_wanderer_angaladh_9"
+		name="{=aom_spc_wanderer_angaladh_9_name}{FIRSTNAME} Fellrider"
+		voice="earnest"
+		age="25"
+		is_template="true"
+		default_group="Infantry"
+		is_hero="false"
+		culture="Culture.angaladh"
+		occupation="Wanderer"
+		skill_template="SkillSet.spc_wanderer_rohan_9_skills">
+		<face>
+			<face_key_template value="BodyProperty.fighter_sturgia" />
+		</face>
+		<Traits>
+			<Trait id="Valor" value="1" />
+			<Trait id="Honor" value="1" />
+			<Trait id="Generosity" value="1" />
+		</Traits>
+		<Equipments>
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" equipmentType="Civilian" />
+			<EquipmentSet id="npc_companion_equipment_template_angaladh" />
+		</Equipments>
+	</NPCCharacter>
+
+  <!-- TAOM-NEWCULTURE:angaladh:END -->
 </NPCCharacters>

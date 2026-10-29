@@ -213,9 +213,71 @@ KINGDOMS = {
         # _k) instead of _a to _j. main() requires a tag on every face-template realm.
         face_template="fighter_erebor", female_hair_tag="TiedAcrossBack",
     ),
+    # Anduin Vale and Angáladh (2026-10-28, #1053): the Northmen of the upper Anduin and of western
+    # Mirkwood, each on its own culture cut from Dale's. Weak and Neutral, as Cardolan.
+    "anduinvale": dict(
+        region="AV", culture="anduinvale", race=None, capital="town_AV1", tmpl="rivendell", lords="dale",
+        equip="anduinvale", side="neutral", color="0xFF654D37", color2="0xFFFBC841",
+        name="Anduin Vale", short="Anduin Vale", title="Anduin Vale", ruler="Chieftain",
+        desc="The Beornings and the Woodmen of the Vales hold the upper Anduin between the Misty Mountains and Mirkwood. They keep the High Pass and the Old Ford open for honest travellers and take a heavy toll of orcs and wolves. Their chieftains hold Beorn's Hall and the Carrock and want no part in the wars of kings.",
+        lord_skill=("taom_dale_lord_skills", "taom_dale_lord_skills", "taom_dale_lady_skills"),
+        lords_per_clan=4,  # 4 clans x 4 = 16 lords (2 male + 2 female, married within the clan)
+        clans=[("clan_anduinvale_1", 4, "town_AV1", "House of Beorn"),
+               ("clan_anduinvale_2", 3, "town_AV2", "Folk of the Old Ford"),
+               ("clan_anduinvale_3", 2, "castle_AV1", "Wardens of the Carrock"),
+               ("clan_anduinvale_4", 2, "castle_AV3", "Riders of the Gladden")],
+        leader_name="Grimbeorn",
+        male_names=["Osbeorn", "Hathbeorn", "Eadbeorn", "Grimwulf", "Thurstan", "Wulfhere", "Brunwald",
+                    "Hunbeorn", "Ingwald", "Arnbeorn"],
+        female_names=["Beornhild", "Aldwyn", "Hildeburg", "Osgyth", "Eadwyn", "Wulfrun", "Mildgyth",
+                      "Hrothwyn", "Aelfgifu", "Thurwyn"],
+        party_template="PartyTemplate.kingdom_hero_party_anduinvale_template",
+        # The Anduin Vale icons (20000-20006, flown by no clan before) in honey gold (2024) on Beorning
+        # brown (palette 2007): the bear's head for the realm and the House of Beorn, the bee for the
+        # Old Ford, the paw for the Carrock, the horse trident for the riders.
+        banner="11.2007.2007.1528.1528.764.764.1.0.0.{icon}.{fg}.{fg}.700.700.764.764.0.0.0",
+        kingdom_icon=20006, clan_icons=[20006, 20004, 20003, 20002],
+        sigil=2024, clan_sigils=[2024, 2024, 2024, 2024],
+        clan_colors=[("FF654D37", "FFFBC841"), ("FF5A4430", "FFF0C050"), ("FF6E563E", "FFFBC841"),
+                     ("FF4E3C2A", "FFE8B840")],
+        relationships={"mirkwood": (0, False), "lothlorien": (0, False), "sturgia": (0, False),
+                       "erebor": (0, False), "dolguldur": (0, False), "gundabad": (0, False),
+                       "goblin": (0, False), "mistymountainorcs": (0, False), "angaladh": (0, False)},
+        # Dale's face range drawn per lord at campaign start; the ladies roll hair from Dale's
+        # "sturgia" tag (16 adult female hairs in the native skins, none bald), as Dale's ladies do.
+        face_template="fighter_sturgia", female_hair_tag="sturgia",
+    ),
+    "angaladh": dict(
+        region="AND", culture="angaladh", race=None, capital="town_AND1", tmpl="rivendell", lords="dale",
+        equip="angaladh", side="neutral", color="0xFF4F6F5A", color2="0xFFF2F4F7",
+        name="Angáladh", short="Angáladh", title="Kingdom of Angáladh", ruler="King",
+        desc="The Woodmen of western Mirkwood cleared their steads under the eaves of the forest and named their realm for the iron-hard trees that ring Woodmen-town. They are bowmen and woodwards, few in number, at peace with the Elves to the north and ever watchful of Dol Guldur to the south.",
+        lord_skill=("taom_dale_lord_skills", "taom_dale_lord_skills", "taom_dale_lady_skills"),
+        lords_per_clan=4,  # 3 clans x 4 = 12 lords (2 male + 2 female, married within the clan)
+        clans=[("clan_angaladh_1", 4, "town_AND1", "House of Angáladh"),
+               ("clan_angaladh_2", 3, "castle_AND3", "Woodwards of the Forest Road"),
+               ("clan_angaladh_3", 2, "castle_AND2", "Wardens of Emyn Duir")],
+        leader_name="Ingomar",
+        male_names=["Ansila", "Hrodiwar", "Gaisa", "Liudric", "Wandil", "Athalwin", "Thrasamund",
+                    "Vidimer"],
+        female_names=["Gudila", "Riquila", "Hildiwara", "Sunilda", "Wiliswintha", "Ansiwara", "Ranilda",
+                      "Gaila"],
+        party_template="PartyTemplate.kingdom_hero_party_angaladh_template",
+        # Icons no other clan flies (Mike 2026-10-28): Silvan 17000 and 17001 and the plain sun 20001.
+        # Mirkwood's Nos Galengrim flies 17006, 17007 and 17008. Off-white (palette 2022, the realm's
+        # color2 #F2F4F7, which the engine paints a clan's sigil in) on forest green (2021).
+        banner="11.2021.2021.1528.1528.764.764.1.0.0.{icon}.{fg}.{fg}.700.700.764.764.0.0.0",
+        kingdom_icon=17000, clan_icons=[17000, 17001, 20001],
+        sigil=2022, clan_sigils=[2022, 2022, 2022],
+        clan_colors=[("FF4F6F5A", "FFF2F4F7"), ("FF45614F", "FFE8ECE8"), ("FF5A7A64", "FFF2F4F2")],
+        relationships={"mirkwood": (0, False), "lothlorien": (0, False), "sturgia": (0, False),
+                       "erebor": (0, False), "dolguldur": (0, False), "gundabad": (0, False),
+                       "goblin": (0, False), "mistymountainorcs": (0, False), "anduinvale": (0, False)},
+        face_template="fighter_sturgia", female_hair_tag="sturgia",
+    ),
 }
 # The realms a regeneration reproduces (main() --only). See the note there.
-REGENERATABLE = ("arthedain", "cardolan", "rhudaur", "eredluin")
+REGENERATABLE = ("arthedain", "cardolan", "rhudaur", "eredluin", "anduinvale", "angaladh")
 # Leader (clan-1 lord-1) descriptions, period-correct for TA 3018 (War of the Ring).
 LEADER_BLURB = {
     "goblin": "the Great Goblin of Goblin Town, master of the warrens of the High Pass.",
@@ -226,6 +288,8 @@ LEADER_BLURB = {
     "cardolan": "King of Cardolan, heir of Earendur's second son, who keeps the barrow-kings' crown at Caras Gorthad.",
     "rhudaur": "King of Rhudaur, heir of Earendur's third son, lord of Cameth Brin and of the hill-men of the Angle.",
     "eredluin": "King of Ered Luin, of the line of Borin, Lord of Thorin's Halls, who holds the Blue Mountains with the Broadbeams of Belegost and the Firebeards of Nogrod.",
+    "anduinvale": "son of Beorn, Chieftain of the Beornings, who keeps the High Pass and the Old Ford and lets no orc cross the Vales of Anduin.",
+    "angaladh": "King of Angáladh, lord of Woodmen-town, who keeps the eaves of Mirkwood against the shadow of Dol Guldur.",
 }
 # lords per clan: ruling clan (first) 6, vassals 4
 LORDS_RULING, LORDS_VASSAL = 6, 4
@@ -337,8 +401,13 @@ def main():
     # erebor_*_template_* rosters.
     lord_dwarf_m = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_E1_4".*?</NPCCharacter>')
     lord_dwarf_f = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_E1_3".*?</NPCCharacter>')
+    # Dale lords (Anduin Vale, Angáladh): a Dale lord and lady on the generic
+    # dale_*_template_* rosters, with Dale's own skill sets.
+    lord_dale_m = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_S10_1".*?</NPCCharacter>')
+    lord_dale_f = get_block(lords, r'<NPCCharacter\b[^>]*\bid="lord_S10_2".*?</NPCCharacter>')
     lord_templates = {"orc": (lord_orc_m, lord_orc_f), "elf": (lord_elf_m, lord_elf_f),
-                      "human": (lord_human_m, lord_human_f), "dwarf": (lord_dwarf_m, lord_dwarf_f)}
+                      "human": (lord_human_m, lord_human_f), "dwarf": (lord_dwarf_m, lord_dwarf_f),
+                      "dale": (lord_dale_m, lord_dale_f)}
 
     new_kingdoms, new_clans, new_lords, new_heroes = {}, {}, {}, {}
 

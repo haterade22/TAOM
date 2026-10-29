@@ -38,7 +38,7 @@ public sealed class LordBannerMap
     {
         var cultures = new Dictionary<string, IReadOnlyList<string>>(StringComparer.Ordinal);
         Add(cultures, "empire", "gondor", "gondor_soldiers", "arthedain", "cardolan", "rhudaur");
-        Add(cultures, "sturgia", "erebor", "erebor_warriors", "eredluin");
+        Add(cultures, "sturgia", "erebor", "erebor_warriors", "eredluin", "anduinvale", "angaladh");
         Add(cultures, "battania", "mirkwood", "mirkwood_stalkers", "dunland_raiders");
         Add(cultures, "aserai", "umbar", "umbar_corsairs", "abanissa", "shaghana", "harad_raiders");
         Add(cultures, "khuzait", "rhun_raiders");

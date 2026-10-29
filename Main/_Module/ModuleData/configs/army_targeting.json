@@ -26,7 +26,9 @@
     "arthedain": ["north"],
     "cardolan": ["north"],
     "rhudaur": ["north"],
-    "eredluin": ["north"]
+    "eredluin": ["north"],
+    "anduinvale": ["north", "east"],
+    "angaladh": ["north", "east"]
   },
   "BorderRescueRadiusInTownGaps": 3.2,
   "PrimaryTheaterWeight": 1.25,

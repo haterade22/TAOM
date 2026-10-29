@@ -1441,11 +1441,29 @@
 
 	<!-- ===== FactionMap (CC) — auto-harvested by tools/harvest_factionmap_strings.py ===== -->
 
-	<string id="taom_faction_anduin_vale_desc" text="{=taom_faction_anduin_vale_desc}The fertile valley of the Great River Anduin, home to the Beornings and Woodmen. Simple folk who live between the Misty Mountains and Mirkwood." />
+	<string id="taom_faction_anduin_vale_desc" text="{=taom_faction_anduin_vale_desc}The Beornings and the Woodmen of the Vales hold the upper Anduin between the Misty Mountains and Mirkwood, with the Carrock and the Old Ford as their keys. Farmers, herdsmen and honey-keepers, they stand apart from the War of the Ring, but the orcs and wolves of the mountains test their few halls every year." />
 	<string id="taom_faction_anduin_vale_name" text="{=taom_faction_anduin_vale_name}Anduin Vale" />
 	<string id="taom_faction_anduin_vale_trait_0" text="{=taom_faction_anduin_vale_trait_0}Beornings" />
 	<string id="taom_faction_anduin_vale_trait_1" text="{=taom_faction_anduin_vale_trait_1}Woodmen of the Vales" />
 	<string id="taom_faction_anduin_vale_trait_2" text="{=taom_faction_anduin_vale_trait_2}Great River Trade" />
+	<string id="taom_faction_anduin_vale_bonus_0" text="{=taom_faction_anduin_vale_bonus_0}+10% party speed on plains (Vale Traders)" />
+	<string id="taom_faction_anduin_vale_bonus_1" text="{=taom_faction_anduin_vale_bonus_1}-0.5 settlement loyalty per day (Small Territory Exposure)" />
+	<string id="taom_faction_anduin_vale_perk_0_name" text="{=taom_faction_anduin_vale_perk_0_name}Vale Traders" />
+	<string id="taom_faction_anduin_vale_perk_0_desc" text="{=taom_faction_anduin_vale_perk_0_desc}+10% party speed on plains, the open river meadows the folk of the vales know best." />
+	<string id="taom_faction_anduin_vale_perk_1_name" text="{=taom_faction_anduin_vale_perk_1_name}Apart from the War" />
+	<string id="taom_faction_anduin_vale_perk_1_desc" text="{=taom_faction_anduin_vale_perk_1_desc}Stands outside the War of the Ring: no alliance and no sworn enemy at the start of a campaign." />
+	<string id="taom_faction_anduin_vale_su_0_name" text="{=taom_faction_anduin_vale_su_0_name}Bear-warden of the Carrock" />
+	<string id="taom_faction_anduin_vale_su_0_desc" text="{=taom_faction_anduin_vale_su_0_desc}Poleaxe guard of the Chieftain's hall." />
+	<string id="taom_faction_anduin_vale_su_1_name" text="{=taom_faction_anduin_vale_su_1_name}Beorning Axe-lord" />
+	<string id="taom_faction_anduin_vale_su_1_desc" text="{=taom_faction_anduin_vale_su_1_desc}Great-axe champion of the vale." />
+	<string id="taom_faction_anduin_vale_su_2_name" text="{=taom_faction_anduin_vale_su_2_name}Woodman Marksman" />
+	<string id="taom_faction_anduin_vale_su_2_desc" text="{=taom_faction_anduin_vale_su_2_desc}Bodkin archer of the river meadows." />
+	<string id="taom_faction_anduin_vale_strength_0" text="{=taom_faction_anduin_vale_strength_0}A strong axe line, from the Beorning Youth to the Bear-warden" />
+	<string id="taom_faction_anduin_vale_strength_1" text="{=taom_faction_anduin_vale_strength_1}Quick across the open river meadows" />
+	<string id="taom_faction_anduin_vale_strength_2" text="{=taom_faction_anduin_vale_strength_2}No sworn enemy at the start of a campaign" />
+	<string id="taom_faction_anduin_vale_weakness_0" text="{=taom_faction_anduin_vale_weakness_0}Few lords and small hosts" />
+	<string id="taom_faction_anduin_vale_weakness_1" text="{=taom_faction_anduin_vale_weakness_1}Loyalty slips in a small realm" />
+	<string id="taom_faction_anduin_vale_weakness_2" text="{=taom_faction_anduin_vale_weakness_2}Orcs and wolves of the Misty Mountains at the door" />
 	<string id="taom_faction_aru_thani_of_bellakar_desc" text="{=taom_faction_aru_thani_of_bellakar_desc}The coastal realm of Bellakar, settled by Numenorean Faithful who remained true to the Valar. A bastion of civilization on the southern shores." />
 	<string id="taom_faction_aru_thani_of_bellakar_name" text="{=taom_faction_aru_thani_of_bellakar_name}Aru-Thani of Bellakar" />
 	<string id="taom_faction_aru_thani_of_bellakar_trait_0" text="{=taom_faction_aru_thani_of_bellakar_trait_0}Numenorean Heritage" />
@@ -1760,8 +1778,29 @@
 	<string id="taom_faction_khudorom_of_khand_weakness_0" text="{=taom_faction_khudorom_of_khand_weakness_0}Crude workshops slow construction" />
 	<string id="taom_faction_khudorom_of_khand_weakness_1" text="{=taom_faction_khudorom_of_khand_weakness_1}Weak settlements" />
 	<string id="taom_faction_khudorom_of_khand_weakness_2" text="{=taom_faction_khudorom_of_khand_weakness_2}Mercenary captains are loyal to coin, not lord" />
-	<string id="taom_faction_kingdom_of_angaladh_desc" text="{=taom_faction_kingdom_of_angaladh_desc}The Kingdom of Angaladh." />
-	<string id="taom_faction_kingdom_of_angaladh_name" text="{=taom_faction_kingdom_of_angaladh_name}Kingdom of Angaladh" />
+	<string id="taom_faction_kingdom_of_angaladh_desc" text="{=taom_faction_kingdom_of_angaladh_desc}The Woodmen of Angáladh live under the western eaves of Mirkwood, where their fathers cleared steads among trees so hard that axes ring on them like iron. King Ingomar's archers watch the Narrows. The realm stands apart from the War of the Ring, but the shadow in the south of the forest grows every year." />
+	<string id="taom_faction_kingdom_of_angaladh_trait_0" text="{=taom_faction_kingdom_of_angaladh_trait_0}Woodmen of Mirkwood" />
+	<string id="taom_faction_kingdom_of_angaladh_trait_1" text="{=taom_faction_kingdom_of_angaladh_trait_1}Archers of the Eaves" />
+	<string id="taom_faction_kingdom_of_angaladh_trait_2" text="{=taom_faction_kingdom_of_angaladh_trait_2}Friends of the Northern Wood" />
+	<string id="taom_faction_kingdom_of_angaladh_bonus_0" text="{=taom_faction_kingdom_of_angaladh_bonus_0}+10% party speed on plains (Vale Traders)" />
+	<string id="taom_faction_kingdom_of_angaladh_bonus_1" text="{=taom_faction_kingdom_of_angaladh_bonus_1}-0.5 settlement loyalty per day (Small Territory Exposure)" />
+	<string id="taom_faction_kingdom_of_angaladh_perk_0_name" text="{=taom_faction_kingdom_of_angaladh_perk_0_name}Vale Traders" />
+	<string id="taom_faction_kingdom_of_angaladh_perk_0_desc" text="{=taom_faction_kingdom_of_angaladh_perk_0_desc}+10% party speed on plains, the open ground between the trees and the river." />
+	<string id="taom_faction_kingdom_of_angaladh_perk_1_name" text="{=taom_faction_kingdom_of_angaladh_perk_1_name}Apart from the War" />
+	<string id="taom_faction_kingdom_of_angaladh_perk_1_desc" text="{=taom_faction_kingdom_of_angaladh_perk_1_desc}Stands outside the War of the Ring: no alliance and no sworn enemy at the start of a campaign." />
+	<string id="taom_faction_kingdom_of_angaladh_su_0_name" text="{=taom_faction_kingdom_of_angaladh_su_0_name}Guard of Woodmen-town" />
+	<string id="taom_faction_kingdom_of_angaladh_su_0_desc" text="{=taom_faction_kingdom_of_angaladh_su_0_desc}Poleaxe and sword guard of the King's hall." />
+	<string id="taom_faction_kingdom_of_angaladh_su_1_name" text="{=taom_faction_kingdom_of_angaladh_su_1_name}Master Woodman Archer" />
+	<string id="taom_faction_kingdom_of_angaladh_su_1_desc" text="{=taom_faction_kingdom_of_angaladh_su_1_desc}Master bowman of the western eaves." />
+	<string id="taom_faction_kingdom_of_angaladh_su_2_name" text="{=taom_faction_kingdom_of_angaladh_su_2_name}Ironwood Hewer" />
+	<string id="taom_faction_kingdom_of_angaladh_su_2_desc" text="{=taom_faction_kingdom_of_angaladh_su_2_desc}Great-axe woodcutter of the ironwood." />
+	<string id="taom_faction_kingdom_of_angaladh_strength_0" text="{=taom_faction_kingdom_of_angaladh_strength_0}A deep archery line, from the Woodman Bowman to the Master Woodman Archer" />
+	<string id="taom_faction_kingdom_of_angaladh_strength_1" text="{=taom_faction_kingdom_of_angaladh_strength_1}Quick across open ground" />
+	<string id="taom_faction_kingdom_of_angaladh_strength_2" text="{=taom_faction_kingdom_of_angaladh_strength_2}No sworn enemy at the start of a campaign" />
+	<string id="taom_faction_kingdom_of_angaladh_weakness_0" text="{=taom_faction_kingdom_of_angaladh_weakness_0}On foot only, with no cavalry" />
+	<string id="taom_faction_kingdom_of_angaladh_weakness_1" text="{=taom_faction_kingdom_of_angaladh_weakness_1}Few lords and small hosts" />
+	<string id="taom_faction_kingdom_of_angaladh_weakness_2" text="{=taom_faction_kingdom_of_angaladh_weakness_2}The shadow of the south of Mirkwood at the border" />
+	<string id="taom_faction_kingdom_of_angaladh_name" text="{=taom_faction_kingdom_of_angaladh_name}Kingdom of Angáladh" />
 	<string id="taom_faction_kingdom_of_arthedain_bonus_0" text="{=taom_faction_kingdom_of_arthedain_bonus_0}+10% party speed on plains (Rangers' Roads)" />
 	<string id="taom_faction_kingdom_of_arthedain_bonus_1" text="{=taom_faction_kingdom_of_arthedain_bonus_1}-20% garrison wage (Wardens of the Walls)" />
 	<string id="taom_faction_kingdom_of_arthedain_bonus_2" text="{=taom_faction_kingdom_of_arthedain_bonus_2}+5 party morale (Dúnedain Resolve)" />
@@ -3534,6 +3573,26 @@
 			<tag tag_name="taom_culture_abanissa" />
 		</tags>
 	</string>
+	<string id="str_liege_title.anduinvale" text="{=taom_str_liege_title.anduinvale}Chieftain of Anduin Vale">
+		<tags>
+			<tag tag_name="taom_culture_anduinvale" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.anduinvale" text="{=taom_str_liege_title_female.anduinvale}Chieftain of Anduin Vale">
+		<tags>
+			<tag tag_name="taom_culture_anduinvale" />
+		</tags>
+	</string>
+	<string id="str_liege_title.angaladh" text="{=taom_str_liege_title.angaladh}King of Angáladh">
+		<tags>
+			<tag tag_name="taom_culture_angaladh" />
+		</tags>
+	</string>
+	<string id="str_liege_title_female.angaladh" text="{=taom_str_liege_title_female.angaladh}Queen of Angáladh">
+		<tags>
+			<tag tag_name="taom_culture_angaladh" />
+		</tags>
+	</string>
 	<string id="str_liege_title.arthedain" text="{=taom_str_liege_title.arthedain}King of Arthedain">
 		<tags>
 			<tag tag_name="taom_culture_arthedain" />
@@ -4055,6 +4114,8 @@
 	<string id="str_taom_round_drink.cardolan" text="{=taom_round_drink_cardolan}barrowdown ale" />
 	<string id="str_taom_round_drink.rhudaur" text="{=taom_round_drink_rhudaur}hill ale" />
 	<string id="str_taom_round_drink.eredluin" text="{=taom_round_drink_eredluin}blue-mountain stout" />
+	<string id="str_taom_round_drink.anduinvale" text="{=taom_round_drink_anduinvale}Beorn's honey mead" />
+	<string id="str_taom_round_drink.angaladh" text="{=taom_round_drink_angaladh}forest ale" />
 	<string id="str_taom_round_drink.empire" text="{=taom_round_drink_empire}heather ale" />
 	<string id="str_taom_round_drink.vlandia" text="{=taom_round_drink_vlandia}honey mead" />
 	<string id="str_taom_round_drink.battania" text="{=taom_round_drink_battania}spiced wine" />
@@ -4112,4 +4173,42 @@
   <string id="str_advanced_start_value_name.eredluin" text="{=taom_aso_kingdom.eredluin}Ered Luin" />
 
   <!-- TAOM-NEWCULTURE:eredluin:END -->
+  <!-- TAOM-NEWCULTURE:anduinvale:BEGIN -->
+  <string id="str_faction_official.anduinvale" text="{=taom_str_faction_official.anduinvale}a noble of the Vale" />
+  <string id="str_faction_official.anduinvale_f" text="{=taom_str_faction_official.anduinvale_f}a lady of the Vale" />
+  <string id="str_faction_ruler.anduinvale" text="{=taom_str_faction_ruler.anduinvale}Chieftain" />
+  <string id="str_faction_ruler.anduinvale_f" text="{=taom_str_faction_ruler.anduinvale_f}Chieftain" />
+  <string id="str_faction_ruler_term_in_speech.anduinvale" text="{=taom_str_faction_ruler_term_in_speech.anduinvale}the Chieftain {RULER.NAME}" />
+  <string id="str_faction_ruler_name_with_title.anduinvale" text="{=taom_str_faction_ruler_name_with_title.anduinvale}Chieftain {RULER.NAME}" />
+  <string id="str_faction_noble_name_with_title.anduinvale" text="{=taom_str_faction_noble_name_with_title.anduinvale}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+  <string id="str_faction_formal_name_for_culture.anduinvale" text="{=taom_str_faction_formal_name_for_culture.anduinvale}Anduin Vale" />
+  <string id="str_faction_informal_name_for_culture.anduinvale" text="{=taom_str_faction_informal_name_for_culture.anduinvale}the Beornings" />
+  <string id="str_neutral_term_for_culture.anduinvale" text="{=taom_str_neutral_term_for_culture.anduinvale}Beornings" />
+  <string id="str_culture_description.anduinvale" text="{=taom_str_culture_description.anduinvale}The Beornings keep the upper vale of the Anduin between the Misty Mountains and Mirkwood, a folk of farmers, herdsmen and honey-keepers who share the river meadows with the Woodmen of the Vales. They hold the Carrock and the Old Ford, take no toll from honest travellers and a heavy one from orcs and wolves. Their chieftains are chosen for strength and plain speech, and they follow no king into a war that is not their own." />
+  <string id="str_culture_rich_name.anduinvale" text="{=taom_str_culture_rich_name.anduinvale}Beornings of the Vale" />
+  <string id="str_adjective_for_culture.anduinvale" text="{=taom_str_adjective_for_culture.anduinvale}Beorning" />
+  <string id="str_player_father_name.anduinvale" text="{=taom_str_player_father_name.anduinvale}Beornwulf" />
+  <string id="str_player_mother_name.anduinvale" text="{=taom_str_player_mother_name.anduinvale}Eadgyth" />
+  <string id="str_advanced_start_value_name.anduinvale" text="{=taom_aso_kingdom.anduinvale}Anduin Vale" />
+
+  <!-- TAOM-NEWCULTURE:anduinvale:END -->
+  <!-- TAOM-NEWCULTURE:angaladh:BEGIN -->
+  <string id="str_faction_official.angaladh" text="{=taom_str_faction_official.angaladh}a noble of Angáladh" />
+  <string id="str_faction_official.angaladh_f" text="{=taom_str_faction_official.angaladh_f}a lady of Angáladh" />
+  <string id="str_faction_ruler.angaladh" text="{=taom_str_faction_ruler.angaladh}King" />
+  <string id="str_faction_ruler.angaladh_f" text="{=taom_str_faction_ruler.angaladh_f}Queen" />
+  <string id="str_faction_ruler_term_in_speech.angaladh" text="{=taom_str_faction_ruler_term_in_speech.angaladh}{?RULER.GENDER}the Queen{?}the King{\?} {RULER.NAME}" />
+  <string id="str_faction_ruler_name_with_title.angaladh" text="{=taom_str_faction_ruler_name_with_title.angaladh}{?RULER.GENDER}Queen{?}King{\?} {RULER.NAME}" />
+  <string id="str_faction_noble_name_with_title.angaladh" text="{=taom_str_faction_noble_name_with_title.angaladh}{?RULER.GENDER}Lady{?}Lord{\?} {RULER.NAME}" />
+  <string id="str_faction_formal_name_for_culture.angaladh" text="{=taom_str_faction_formal_name_for_culture.angaladh}Kingdom of Angáladh" />
+  <string id="str_faction_informal_name_for_culture.angaladh" text="{=taom_str_faction_informal_name_for_culture.angaladh}the Woodmen" />
+  <string id="str_neutral_term_for_culture.angaladh" text="{=taom_str_neutral_term_for_culture.angaladh}Woodmen" />
+  <string id="str_culture_description.angaladh" text="{=taom_str_culture_description.angaladh}The Woodmen of Angáladh live under the western eaves of Mirkwood, where their fathers cleared steads among trees so hard that axes ring on them like iron. They are bowmen, woodcutters and hunters, few in number and slow to trust, at peace with the Elves of the northern wood. Every year the shadow in the south of the forest grows, and every year their king sends more of his archers to watch the Narrows." />
+  <string id="str_culture_rich_name.angaladh" text="{=taom_str_culture_rich_name.angaladh}Woodmen of Mirkwood" />
+  <string id="str_adjective_for_culture.angaladh" text="{=taom_str_adjective_for_culture.angaladh}Woodman" />
+  <string id="str_player_father_name.angaladh" text="{=taom_str_player_father_name.angaladh}Theodemir" />
+  <string id="str_player_mother_name.angaladh" text="{=taom_str_player_mother_name.angaladh}Amalafrida" />
+  <string id="str_advanced_start_value_name.angaladh" text="{=taom_aso_kingdom.angaladh}Angáladh" />
+
+  <!-- TAOM-NEWCULTURE:angaladh:END -->
 </strings>

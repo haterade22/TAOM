@@ -138,7 +138,7 @@ public class GlobalStringsOverridesTests
         foreach (var kingdom in new[] { "sturgia", "vlandia", "battania", "empire", "empire_w", "empire_s", "khuzait", "aserai",
                                         "erebor", "rivendell", "mirkwood", "lothlorien", "isengard", "gundabad", "umbar",
                                         "dolguldur", "shaghana", "abanissa", "goblin", "mistymountainorcs", "lindon", "bluecraig",
-                                        "arthedain", "cardolan", "rhudaur", "eredluin" })
+                                        "arthedain", "cardolan", "rhudaur", "eredluin", "anduinvale", "angaladh" })
         {
             if (!manager.TryGetText(ItemName, kingdom, out var text)
                 || !text.Value.StartsWith("{=taom_aso_kingdom." + kingdom + "}"))

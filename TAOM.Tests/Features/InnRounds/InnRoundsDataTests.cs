@@ -53,12 +53,12 @@ public class InnRoundsDataTests
             .Select(m => (m.Groups[1].Value, m.Groups[2].Value.Replace("\\\\", "\\")));
 
     [TestMethod]
-    public void ThereAreTwentySixMainCultures_AndEveryOneHasAShippedDrinkRow_ThatIsBeerOrWine()
+    public void ThereAreTwentyEightMainCultures_AndEveryOneHasAShippedDrinkRow_ThatIsBeerOrWine()
     {
         var cultures = MainCultureIds().ToList();
         var drinks = ShippedDrinks();
 
-        Assert.AreEqual(26, cultures.Count);
+        Assert.AreEqual(28, cultures.Count);
         foreach (var culture in cultures)
         {
             Assert.IsTrue(drinks.TryGetValue(culture, out var drink), culture + " has no cultureDrinks row");

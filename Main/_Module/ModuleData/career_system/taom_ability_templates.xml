@@ -731,4 +731,53 @@
                    sound_effect="crossbow_master_activate"
                    tooltip="{=taom_ability_nogrod_arbalester_tt}Load bolts forged in Nogrod: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
 
+  <AbilityTemplate id="axe_warden_of_beorns_hall_ability"
+                   display_name="{=taom_ability_axe_warden_of_beorns_hall}Carrock Stand"
+                   sprite="ability_dale_guardsman_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="dale_guardsman_particle"
+                   sound_effect="dale_guardsman_activate"
+                   tooltip="{=taom_ability_axe_warden_of_beorns_hall_tt}Plant your feet and hold the ford: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+  <AbilityTemplate id="archer_of_eastbank_ability"
+                   display_name="{=taom_ability_archer_of_eastbank}Carrock Volley"
+                   sprite="ability_dale_marksman_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="dale_marksman_particle"
+                   sound_effect="dale_marksman_activate"
+                   tooltip="{=taom_ability_archer_of_eastbank_tt}Loose the arrows of the Woodmen: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+  <AbilityTemplate id="rider_of_the_vales_ability"
+                   display_name="{=taom_ability_rider_of_the_vales}Vale Gallop"
+                   sprite="ability_dale_outrider_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="dale_outrider_particle"
+                   sound_effect="dale_outrider_activate"
+                   tooltip="{=taom_ability_rider_of_the_vales_tt}Spur your horse along the Vale roads: boosts +25% charge damage, +20% mount speed, and +10% melee damage for 8s." />
+  <AbilityTemplate id="warden_of_the_forest_gate_ability"
+                   display_name="{=taom_ability_warden_of_the_forest_gate}Thornwall"
+                   sprite="ability_dale_guardsman_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="dale_guardsman_particle"
+                   sound_effect="dale_guardsman_activate"
+                   tooltip="{=taom_ability_warden_of_the_forest_gate_tt}Set your spear in the path and hold the line: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+  <AbilityTemplate id="hewer_of_ironwood_hall_ability"
+                   display_name="{=taom_ability_hewer_of_ironwood_hall}Heartwood Storm"
+                   sprite="ability_dale_guardsman_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="dale_guardsman_particle"
+                   sound_effect="dale_guardsman_activate"
+                   tooltip="{=taom_ability_hewer_of_ironwood_hall_tt}Swing the great axe with your kin: boosts +15% melee damage and +10% damage reduction to allies within 50m for 8s." />
+  <AbilityTemplate id="woodward_of_the_forest_road_ability"
+                   display_name="{=taom_ability_woodward_of_the_forest_road}Ironwood Volley"
+                   sprite="ability_dale_marksman_icon"
+                   cooldown="0" duration="8" radius="50"
+                   cast_type="Instant" target_type="Self" crosshair_type="Self"
+                   particle_effect="dale_marksman_particle"
+                   sound_effect="dale_marksman_activate"
+                   tooltip="{=taom_ability_woodward_of_the_forest_road_tt}Loose the arrows of the woodwards: boosts +20% ranged damage, +20% draw speed, and +15% movement speed for 8s." />
+
 </AbilityTemplates>

@@ -31,7 +31,7 @@ public static class RaceAbilityDefaults
     {
         ["gondor,gondor_soldiers,arthedain,cardolan,rhudaur"] = CitadelGuard(),
         ["vlandia"] = ForthEorlingas(),
-        ["sturgia"] = BardsAim(),
+        ["sturgia,anduinvale,angaladh"] = BardsAim(),
         ["empire,dunland_raiders"] = HillClanFury(),
         ["aserai,harad_raiders,shaghana,abanissa"] = SerpentsVenom(),
         ["khuzait,rhun_raiders"] = WainriderWall(),

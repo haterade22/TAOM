@@ -296,7 +296,7 @@ Erebor's default dwarf body.
 | File | Purpose |
 |------|---------|
 | `tools/generate_eredluin_troops.py` | the troop tree and soldier party templates; `--check` |
-| `tools/realm_troops.py` | shared troop machinery for the Arnor realms and Ered Luin |
+| `tools/realm_troops.py` | shared troop machinery for the Arnor realms, Ered Luin and [Anduin Vale and Angáladh](anduin-vale-angaladh.md) |
 | `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.EredLuin.cs` | volunteer pool (Delver 6, Noble 2) |
 | `Main/_Module/ModuleData/troops/troops_eredluin.xml` | generated troop tree |
 | `Main/_Module/ModuleData/characters/npcs_eredluin.xml` | notables and townsfolk |
@@ -488,6 +488,7 @@ Restart Bannerlord fully, then start a new campaign.
 
 ## Referenced by
 
+- [docs/features/anduin-vale-angaladh.md](./anduin-vale-angaladh.md)
 - [docs/features/armour-acquisition.md](./armour-acquisition.md)
 - [docs/features/army-targeting.md](./army-targeting.md)
 - [docs/features/cardolan-rhudaur.md](./cardolan-rhudaur.md)
@@ -502,5 +503,6 @@ Restart Bannerlord fully, then start a new campaign.
 - [docs/reference/release-process.md](../reference/release-process.md)
 - [docs/reference/taom-map-settlement-naming.md](../reference/taom-map-settlement-naming.md)
 - [docs/reviews/rca-ered-luin-2026-10-27.md](../reviews/rca-ered-luin-2026-10-27.md)
+- [docs/reviews/rca-ered-luin-two-handed-career-2026-10-28.md](../reviews/rca-ered-luin-two-handed-career-2026-10-28.md)
 
 <!-- backlinks-end -->

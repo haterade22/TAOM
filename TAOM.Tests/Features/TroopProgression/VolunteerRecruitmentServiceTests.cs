@@ -3382,6 +3382,88 @@ public class VolunteerRecruitmentServiceTests
         Assert.IsTrue(_sut.HasCulturePool("eredluin"));
     }
 
+    // --- Anduin Vale: levy-heavy, the Beorning Youth as the one elite root ---
+    // pool: anduinvale_levy(6)[0..5] + anduinvale_beorning_youth(2)[6..7] = total 8
+
+    [TestMethod]
+    public void GetVolunteerTroopId_AnduinValeCulture_Roll0_ReturnsLevy()
+    {
+        _random.Next(8).Returns(0);
+        var context = new VolunteerContext(null, null, null, "anduinvale");
+        Assert.AreEqual("anduinvale_levy", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_AnduinValeCulture_Roll5_ReturnsLevy()
+    {
+        _random.Next(8).Returns(5);
+        var context = new VolunteerContext(null, null, null, "anduinvale");
+        Assert.AreEqual("anduinvale_levy", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_AnduinValeCulture_Roll6_ReturnsBeorningYouth()
+    {
+        _random.Next(8).Returns(6);
+        var context = new VolunteerContext(null, null, null, "anduinvale");
+        Assert.AreEqual("anduinvale_beorning_youth", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_AnduinValeCulture_Roll7_ReturnsBeorningYouth()
+    {
+        _random.Next(8).Returns(7);
+        var context = new VolunteerContext(null, null, null, "anduinvale");
+        Assert.AreEqual("anduinvale_beorning_youth", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void HasCulturePool_AnduinVale_True()
+    {
+        Assert.IsTrue(_sut.HasCulturePool("anduinvale"));
+    }
+
+    // --- Angaladh: levy-heavy, the Ironwood Youth as the one elite root ---
+    // pool: angaladh_levy(6)[0..5] + angaladh_ironwood_youth(2)[6..7] = total 8
+
+    [TestMethod]
+    public void GetVolunteerTroopId_AngaladhCulture_Roll0_ReturnsLevy()
+    {
+        _random.Next(8).Returns(0);
+        var context = new VolunteerContext(null, null, null, "angaladh");
+        Assert.AreEqual("angaladh_levy", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_AngaladhCulture_Roll5_ReturnsLevy()
+    {
+        _random.Next(8).Returns(5);
+        var context = new VolunteerContext(null, null, null, "angaladh");
+        Assert.AreEqual("angaladh_levy", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_AngaladhCulture_Roll6_ReturnsIronwoodYouth()
+    {
+        _random.Next(8).Returns(6);
+        var context = new VolunteerContext(null, null, null, "angaladh");
+        Assert.AreEqual("angaladh_ironwood_youth", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void GetVolunteerTroopId_AngaladhCulture_Roll7_ReturnsIronwoodYouth()
+    {
+        _random.Next(8).Returns(7);
+        var context = new VolunteerContext(null, null, null, "angaladh");
+        Assert.AreEqual("angaladh_ironwood_youth", _sut.GetVolunteerTroopId(context));
+    }
+
+    [TestMethod]
+    public void HasCulturePool_Angaladh_True()
+    {
+        Assert.IsTrue(_sut.HasCulturePool("angaladh"));
+    }
+
     [TestMethod]
     public void HasCulturePool_MirkwoodAndUmbar_NowTrue()
     {

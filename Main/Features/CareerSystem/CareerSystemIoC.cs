@@ -158,6 +158,17 @@ public static class CareerSystemIoC
         ["hewer_of_belegost"]       = CareerArchetype.TwoHanded,
         ["nogrod_arbalester"]       = CareerArchetype.Ranged,
 
+        // ═══ ANDUIN VALE ═══ (Dale's careers, re-themed by tools/insert_new_faction_careers.py)
+        ["axe_warden_of_beorns_hall"] = CareerArchetype.Infantry,
+        ["archer_of_eastbank"]        = CareerArchetype.Ranged,
+        ["rider_of_the_vales"]        = CareerArchetype.Cavalry,
+
+        // ═══ ANGÁLADH ═══ (Dale's foot careers; the Woodmen of Mirkwood do not ride, so a TwoHanded
+        // career, a second clone of the Guardsman, stands where Dale has the Outrider)
+        ["warden_of_the_forest_gate"]   = CareerArchetype.Infantry,
+        ["hewer_of_ironwood_hall"]      = CareerArchetype.TwoHanded,
+        ["woodward_of_the_forest_road"] = CareerArchetype.Ranged,
+
         // ═══ RIVENDELL ═══
         ["blade_dancer"]           = CareerArchetype.Infantry,
         ["elven_archer"]           = CareerArchetype.Ranged,

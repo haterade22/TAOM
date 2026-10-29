@@ -89,6 +89,35 @@ public class FactionMapDataTests
         AssertMinimumContentSections(faction, factionKey);
     }
 
+    // The two Dale-cut Neutral realms carry only Dale's two culture feats (plain speed, loyalty), so their
+    // cards list two bonuses, not the playable cards' three; the rest of the minimums hold.
+    [DataTestMethod]
+    [DataRow("anduin_vale", "anduinvale")]
+    [DataRow("kingdom_of_angaladh", "angaladh")]
+    public void DaleCutNeutralRealm_IsParkedNeutralAndCarriesItsFeats(string factionKey, string gameFaction)
+    {
+        var faction = LoadFactions()[factionKey] as JObject;
+        Assert.IsNotNull(faction, $"faction key '{factionKey}' missing from factions.json");
+        Assert.AreEqual(false, faction.Value<bool?>("playable"), $"'{factionKey}' has no armour yet and must stay unplayable");
+        Assert.AreEqual(gameFaction, faction.Value<string>("game_faction"));
+        Assert.AreEqual("neutral", faction.Value<string>("side"));
+        AssertArrayLength(faction, "traits", min: 3, factionKey);
+        AssertArrayLength(faction, "bonuses", min: 2, factionKey);
+        AssertArrayLength(faction, "perks", min: 2, factionKey);
+        AssertArrayLength(faction, "special_units", min: 3, factionKey);
+        AssertArrayLength(faction, "strengths", min: 3, factionKey);
+        AssertArrayLength(faction, "weaknesses", min: 2, factionKey);
+
+        // The numbers come from the feats' own Initialize calls, so a feat change fails this card.
+        var speed = (TAOM.Tests.Features.CulturalFeats.TaomCulturalFeatsDefinitionTests.ProductionEffectBonus("_dalePlainSpeed") * 100m)
+            .ToString("0.##", System.Globalization.CultureInfo.InvariantCulture);
+        var loyalty = TAOM.Tests.Features.CulturalFeats.TaomCulturalFeatsDefinitionTests.ProductionEffectBonus("_daleLoyalty")
+            .ToString("0.0##", System.Globalization.CultureInfo.InvariantCulture);
+        var bonuses = ((JArray)faction["bonuses"]!).Select(b => b.Value<string>("text") ?? "").ToList();
+        Assert.IsTrue(bonuses.Any(b => b.Contains($"+{speed}% party speed on plains")), $"taom_dale_plain_speed is +{speed}%");
+        Assert.IsTrue(bonuses.Any(b => b.Contains($"{loyalty} settlement loyalty per day")), $"taom_dale_loyalty is {loyalty}");
+    }
+
     private static void AssertMinimumContentSections(JObject faction, string factionKey)
     {
         AssertArrayLength(faction, "perks", min: 2, factionKey);

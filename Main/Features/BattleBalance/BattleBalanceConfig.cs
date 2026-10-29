@@ -31,6 +31,7 @@ public class BattleBalanceConfig
             ["erebor"] = 0.3f,    ["rivendell"] = 0.4f,  ["lindon"] = 0.4f,
             ["arthedain"] = 0.3f, ["cardolan"] = 0.3f,  ["rhudaur"] = 0.2f,
             ["eredluin"] = 0.3f,
+            ["anduinvale"] = 0.1f, ["angaladh"] = 0.1f,
             ["mordor"] = -0.2f,   ["gundabad"] = -0.1f,  ["dolguldur"] = -0.1f
         };
 

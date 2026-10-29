@@ -515,6 +515,64 @@
       </IncludedGameTypes>
     </XmlNode>
     <!-- TAOM-NEWCULTURE-REG:END -->
+    <!-- TAOM-NEWCULTURE-REG:angaladh:BEGIN -->
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="troops/troops_angaladh"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="characters/npcs_angaladh"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_angaladh"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <!-- TAOM-NEWCULTURE-REG:angaladh:END -->
+    <!-- TAOM-NEWCULTURE-REG:anduinvale:BEGIN -->
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="troops/troops_anduinvale"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="NPCCharacters" path="characters/npcs_anduinvale"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <XmlNode>
+      <XmlName id="EquipmentRosters" path="equipmentsets/taom_equipment_sets_anduinvale"/>
+      <IncludedGameTypes>
+        <GameType value ="Campaign"/>
+        <GameType value ="CampaignStoryMode"/>
+        <GameType value = "CustomGame"/>
+        <GameType value = "EditorGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
+    <!-- TAOM-NEWCULTURE-REG:anduinvale:END -->
     <!-- TAOM-NEWCULTURE-REG:eredluin:BEGIN -->
     <XmlNode>
       <XmlName id="NPCCharacters" path="troops/troops_eredluin"/>

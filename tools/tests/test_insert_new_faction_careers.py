@@ -37,6 +37,17 @@ EREBOR_IDENTITY = ("Erebor", "Lonely Mountain", "Dale", "Esgaroth", "Smaug", "Ir
                    "Dáin", "Ironfoot", "Ravenhill", "Arkenstone", "Mithril", "mithril")
 
 
+# Dale's places and people, from the lore rather than from the tool's tables.
+DALE_IDENTITY = ("Dale", "Dalian", "Barding", "Bard", "Esgaroth", "Smaug", "Girion", "Brand",
+                 "Long Lake", "Black Arrow", "Lonely Mountain", "Erebor", "Lake-town")
+DALE_CLONES = {
+    "anduinvale": {"axe_warden_of_beorns_hall": "Infantry", "archer_of_eastbank": "Ranged",
+                   "rider_of_the_vales": "Cavalry"},
+    "angaladh": {"warden_of_the_forest_gate": "Infantry", "hewer_of_ironwood_hall": "TwoHanded",
+                 "woodward_of_the_forest_road": "Ranged"},
+}
+
+
 def eredluin_rows():
     return list(ic.targets_for("eredluin"))
 
@@ -187,6 +198,102 @@ class ShippedCareers(unittest.TestCase):
         for word in ("tower shield", "tower-shield", "spear", "shield-bearer"):
             self.assertNotIn(word, text)
         self.assertIn("mattock", text)
+
+
+class DaleClones(unittest.TestCase):
+    """Anduin Vale (axe infantry, bowman, Vale Rider) and Angaladh (spear, two-handed axe, bowman,
+    on foot) are cloned from Dale's guardsman, marksman and outrider."""
+
+    def rows(self, culture):
+        return list(ic.targets_for(culture))
+
+    def test_the_career_sets_and_their_sources(self):
+        anduin = [(r[0], r[2]) for r in self.rows("anduinvale")]
+        self.assertEqual(anduin, [("dale_guardsman", "axe_warden_of_beorns_hall"),
+                                  ("dale_marksman", "archer_of_eastbank"),
+                                  ("dale_outrider", "rider_of_the_vales")])
+        angaladh = [(r[0], r[2]) for r in self.rows("angaladh")]
+        self.assertEqual(angaladh, [("dale_guardsman", "warden_of_the_forest_gate"),
+                                    ("dale_guardsman", "hewer_of_ironwood_hall"),
+                                    ("dale_marksman", "woodward_of_the_forest_road")])
+        self.assertNotIn("dale_outrider", [r[0] for r in self.rows("angaladh")])
+
+    def test_each_career_is_eligible_for_its_culture_alone(self):
+        root = ET.parse(ic.CAREERS_XML).getroot()
+        for culture, careers in DALE_CLONES.items():
+            for career_id in careers:
+                career = root.find(f"./Career[@id='{career_id}']")
+                with self.subTest(career=career_id):
+                    self.assertIsNotNone(career)
+                    self.assertEqual([c.get("id") for c in career.iter("Culture")], [culture])
+
+    def test_career_text_names_no_dale_place_or_person(self):
+        for careers in DALE_CLONES.values():
+            for career_id in careers:
+                for value in career_text(career_id):
+                    for word in DALE_IDENTITY:
+                        with self.subTest(career=career_id, word=word):
+                            self.assertNotIn(word, value)
+
+    def test_career_text_has_no_em_or_en_dash(self):
+        for careers in DALE_CLONES.values():
+            for career_id in careers:
+                for value in career_text(career_id):
+                    with self.subTest(career=career_id, value=value[:40]):
+                        self.assertNotIn("\u2014", value)
+                        self.assertNotIn("\u2013", value)
+
+    def test_the_contamination_gate_refuses_dales_words(self):
+        # A CAREER_TEXT_REMAP row that misses one of Dale's words must stop the run, not ship it.
+        broken = dict(ic.CAREER_TEXT_REMAP)
+        broken["archer_of_eastbank"] = [r for r in broken["archer_of_eastbank"]
+                                        if r[0] != "Dragonslayer of Dale"]
+        tmp = Path(tempfile.mkdtemp(prefix="careers_gate_"))
+        self.addCleanup(shutil.rmtree, tmp, True)
+        patches = [mock.patch.object(ic, "CAREER_TEXT_REMAP", broken),
+                   mock.patch.dict(ic.TARGETS, {"anduinvale": ic.TARGETS["anduinvale"]}, clear=True)]
+        for name in FILES:
+            text, nl = ic.read(getattr(ic, name))
+            if name == "CAREERS_XML":
+                text = text.replace('<Culture id="anduinvale" />', '<Culture id="elsewhere" />')
+            ic.write(tmp / getattr(ic, name).name, text, nl)
+            patches.append(mock.patch.object(ic, name, tmp / getattr(ic, name).name))
+        for patch in patches:
+            patch.start()
+            self.addCleanup(patch.stop)
+        with self.assertRaises(SystemExit) as raised:
+            run([])
+        self.assertIn("contamination", str(raised.exception))
+
+    def test_every_career_has_the_right_archetype_in_the_ioc_map(self):
+        rows = dict(re.findall(r'\["([a-z_]+)"\]\s*=\s*CareerArchetype\.(\w+)',
+                               IOC.read_text(encoding="utf-8")))
+        for careers in DALE_CLONES.values():
+            for career_id, archetype in careers.items():
+                with self.subTest(career=career_id):
+                    self.assertEqual(rows.get(career_id), archetype)
+
+    def test_angaladh_has_no_rider_and_no_mount_passive(self):
+        root = ET.parse(ic.CHOICES_XML).getroot()
+        for career_id in DALE_CLONES["angaladh"]:
+            for group in root.findall(f"./ChoiceGroup[@career_id='{career_id}']"):
+                for effect in group.iter("PassiveEffect"):
+                    with self.subTest(career=career_id, group=group.get("id")):
+                        self.assertFalse(effect.get("type", "").startswith("Mount"))
+
+    def test_the_two_angaladh_foot_careers_name_their_groups_differently(self):
+        root = ET.parse(ic.CHOICES_XML).getroot()
+        names = {c: {re.sub(r"^\{=[^}]*\}", "", g.get("display_name"))
+                     for g in root.findall(f"./ChoiceGroup[@career_id='{c}']")}
+                 for c in ("warden_of_the_forest_gate", "hewer_of_ironwood_hall")}
+        self.assertEqual(len(names["hewer_of_ironwood_hall"]), 6)
+        self.assertEqual(names["warden_of_the_forest_gate"] & names["hewer_of_ironwood_hall"], set())
+
+    def test_every_career_has_a_career_menu_entry(self):
+        ids = {e["career_string_id"] for e in json.loads(ic.MENU_JSON.read_text(encoding="utf-8"))}
+        for careers in DALE_CLONES.values():
+            for career_id in careers:
+                self.assertIn(career_id, ids)
 
 
 class DryRunAndApply(unittest.TestCase):

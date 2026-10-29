@@ -91,6 +91,17 @@
     <Stock from="erebor" kind="armour" />
     <Stock from="erebor" kind="weapons" />
   </Culture>
+  <!-- Anduin Vale and Angaladh, cut from Dale: their troops wear Dale's armour and carry its weapons, so
+       their markets sell both and their lord kit and lord's material are Dale's. Dale has no row of its own;
+       its auto-derived pool is what these two draw on. -->
+  <Culture id="anduinvale" armour_from="sturgia">
+    <Stock from="sturgia" kind="armour" />
+    <Stock from="sturgia" kind="weapons" />
+  </Culture>
+  <Culture id="angaladh" armour_from="sturgia">
+    <Stock from="sturgia" kind="armour" />
+    <Stock from="sturgia" kind="weapons" />
+  </Culture>
   <!-- Gondor's own pool carries the Arnor pieces (tagged Culture.gondor); the crown stays out of it too. -->
   <Culture id="gondor">
     <Blacklist>

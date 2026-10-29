@@ -4147,4 +4147,334 @@
     </EquipmentRoster>
 
   <!-- TAOM-NEWCULTURE:eredluin:END -->
+  <!-- TAOM-NEWCULTURE:anduinvale:BEGIN -->
+    <EquipmentRoster id="enlist_anduinvale_infantry_recruit" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_spear_a" />
+            <Equipment slot="Item1" id="Item.dale_sword_c" />
+            <Equipment slot="Item2" id="Item.wm_dale_shield_a08" />
+            <Equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_anduinvale_archer_recruit" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_recurve_bow_a" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_archer_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_anduinvale_cavalry_recruit" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_b" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_b03" />
+            <Equipment slot="Item2" id="Item.dale_winged_spear_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_anduinvale_support_recruit" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_anduinvale_infantry_soldier" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_b" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+            <Equipment slot="Item2" id="Item.dale_spear_b" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_anduinvale_support_soldier" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_b" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_anduinvale_infantry_veteran" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+            <Equipment slot="Item2" id="Item.dale_winged_spear_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a02" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a02" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a02" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a02" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a02" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_anduinvale_archer_veteran" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_longbow_a" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.dale_sword_b" />
+            <Equipment slot="Item3" id="Item.wm_dale_shield_a06" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_archer_a02" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a02" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a02" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a02" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_anduinvale_cavalry_veteran" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_winged_spear_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_b02" />
+            <Equipment slot="Item2" id="Item.dale_sword_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b02" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_chivalry_b02" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b02" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b02" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b02" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_anduinvale_support_veteran" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a02" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a02" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a02" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a02" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a02" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_anduinvale_infantry_sergeant" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a01" />
+            <Equipment slot="Item2" id="Item.dale_winged_spear_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a04" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a04" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a04" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a04" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a04" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_anduinvale_archer_sergeant" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_longbow_a" />
+            <Equipment slot="Item1" id="Item.barbed_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_a" />
+            <Equipment slot="Item3" id="Item.wm_dale_shield_a04" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_anduinvale_cavalry_sergeant" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_winged_spear_b" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a01" />
+            <Equipment slot="Item2" id="Item.dale_sword_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_anduinvale_support_sergeant" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a04" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a04" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a04" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a04" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a04" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+  <!-- TAOM-NEWCULTURE:anduinvale:END -->
+  <!-- TAOM-NEWCULTURE:angaladh:BEGIN -->
+    <EquipmentRoster id="enlist_angaladh_infantry_recruit" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_spear_a" />
+            <Equipment slot="Item1" id="Item.dale_sword_c" />
+            <Equipment slot="Item2" id="Item.wm_dale_shield_a08" />
+            <Equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_angaladh_archer_recruit" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_recurve_bow_a" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_archer_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_angaladh_cavalry_recruit" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_b" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_b03" />
+            <Equipment slot="Item2" id="Item.dale_winged_spear_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_angaladh_support_recruit" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_angaladh_infantry_soldier" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_b" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+            <Equipment slot="Item2" id="Item.dale_spear_b" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_angaladh_support_soldier" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_b" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a01" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a01" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a01" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_angaladh_infantry_veteran" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+            <Equipment slot="Item2" id="Item.dale_winged_spear_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a02" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a02" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a02" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a02" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a02" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_angaladh_archer_veteran" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_longbow_a" />
+            <Equipment slot="Item1" id="Item.bodkin_arrows_a" />
+            <Equipment slot="Item2" id="Item.dale_sword_b" />
+            <Equipment slot="Item3" id="Item.wm_dale_shield_a06" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_archer_a02" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a02" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a02" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a02" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_angaladh_cavalry_veteran" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_winged_spear_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_b02" />
+            <Equipment slot="Item2" id="Item.dale_sword_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_b02" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_chivalry_b02" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_b02" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_b02" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_b02" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_angaladh_support_veteran" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a02" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a02" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a02" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a02" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a02" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_angaladh_infantry_sergeant" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a01" />
+            <Equipment slot="Item2" id="Item.dale_winged_spear_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a04" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a04" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a04" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a04" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a04" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_angaladh_archer_sergeant" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_longbow_a" />
+            <Equipment slot="Item1" id="Item.barbed_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_a" />
+            <Equipment slot="Item3" id="Item.wm_dale_shield_a04" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_angaladh_cavalry_sergeant" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_winged_spear_b" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a01" />
+            <Equipment slot="Item2" id="Item.dale_sword_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a04" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_chivalry_a04" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a04" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a04" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a04" />
+        </EquipmentSet>
+    </EquipmentRoster>
+    <EquipmentRoster id="enlist_angaladh_support_sergeant" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_a" />
+            <Equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a04" />
+            <Equipment slot="Body" id="Item.sk_dale_chest_infrantry_a04" />
+            <Equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a04" />
+            <Equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a04" />
+            <Equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a04" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+  <!-- TAOM-NEWCULTURE:angaladh:END -->
 </EquipmentRosters>

@@ -5520,3 +5520,11 @@ Scope: the fix on base `7bac0c9d4` in `E:\repos\taom-nogame-gate`. Codex skipped
 | 3 | `RequiresGameIL` alone keeps no test off the unit step (LOW) | Tag contract gap | Nothing enforced the tag's scope | Fixed: a `tests.md` sentence |
 | 4 | #1038 named `ManyHammersWiringTests` for `Patch109WiringTests` (LOW) | Record error | Failure list printed method names only | Fixed: failures listed with their class |
 | 5 | Two comments said a set variable still wins (LOW) | Doc rot | The decision came after the text | Fixed |
+
+## Review (number assigned at merge): Anduin Vale and Angáladh (#1053), tier-1 deep review (two waves, convergence) + Codex `ultra` (2026-10-28)
+
+Scope: the uncommitted worktree `E:epos	aom-anduin-angaladh` over `6589bdd11` and the live TAOM_Map and Armory writes. The Claude review's 32 rows are in `rca-anduin-vale-angaladh-2026-10-28.md`; Codex ran after their fixes and found one more.
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|
+| 1 | `ClonedCultureFlavorTests` did not cover `anduinvale` or `angaladh`, and for every culture skipped text over 200 characters and the culture-text and wanderer string files (LOW, Codex) | Hand-kept allowlist; capped regex | The recipe does not name the test, and its cap hid descriptions | Both cultures added with Dale's identity words; cap removed; two string files scanned; proven by injection |

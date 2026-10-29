@@ -116,6 +116,22 @@ FORTS = [
     Fort("castle_EL4", "Stonewatch", "clan_eredluin_3", "eredluin", "castle", "sturgia_castle_c", 800, "castle_EL1"),
     Fort("castle_EL2", "Dolmed Hold", "clan_eredluin_4", "eredluin", "castle", "sturgia_castle_003", 800, "castle_EL4"),
     Fort("castle_EL3", "Hammerdeep", "clan_eredluin_4", "eredluin", "castle", "sturgia_castle_siege_001", 800, "castle_EL2"),
+    # Anduin Vale (Beorn's Northmen) and Angaladh (the Woodmen of the Emyn Duir), two weak realms in
+    # the Cardolan mould: capitals 2800, the other town 2400, castles 800, no economy-floor row. The
+    # ruling clan holds the capital and the castle nearest it; each other clan one or two fiefs.
+    # Dale's sturgia scenes, the least used town scenes first (sturgia_town_e once, _a and _d twice)
+    # and Dale's three castle scenes in rotation.
+    Fort("town_AV1", "Beorn's Hall", "clan_anduinvale_1", "anduinvale", "town", "sturgia_town_e", 2800, "castle_village_EL5_2"),
+    Fort("town_AV2", "Old Ford", "clan_anduinvale_2", "anduinvale", "town", "sturgia_town_a", 2400, "town_AV1"),
+    Fort("castle_AV4", "Eastbank", "clan_anduinvale_1", "anduinvale", "castle", "sturgia_castle_c", 800, "town_AV2"),
+    Fort("castle_AV2", "High Pass Watch", "clan_anduinvale_2", "anduinvale", "castle", "sturgia_castle_003", 800, "castle_AV4"),
+    Fort("castle_AV1", "Carrock", "clan_anduinvale_3", "anduinvale", "castle", "taom_dale_castle_001_forceatmo", 800, "castle_AV2"),
+    Fort("castle_AV3", "Gladden Hold", "clan_anduinvale_4", "anduinvale", "castle", "sturgia_castle_c", 800, "castle_AV1"),
+    Fort("town_AND1", "Woodmen-town", "clan_angaladh_1", "angaladh", "town", "sturgia_town_d", 2800, "castle_AV3"),
+    Fort("castle_AND4", "Ironwood Hall", "clan_angaladh_1", "angaladh", "castle", "sturgia_castle_003", 800, "town_AND1"),
+    Fort("castle_AND3", "Forest Gate", "clan_angaladh_2", "angaladh", "castle", "taom_dale_castle_001_forceatmo", 800, "castle_AND4"),
+    Fort("castle_AND1", "Thornhold", "clan_angaladh_2", "angaladh", "castle", "sturgia_castle_c", 800, "castle_AND3"),
+    Fort("castle_AND2", "Emyn Duir Watch", "clan_angaladh_3", "angaladh", "castle", "sturgia_castle_003", 800, "castle_AND1"),
 ]
 
 # FORTS ids a release has shipped. The save-order check protects saves made BEFORE a batch only until the
@@ -253,6 +269,12 @@ STYLE["eredluin"] = dict(STYLE["gundabad"],
                              ("building_castle_granary", 1), ("building_castle_craftmans_quarters", 1),
                              ("building_castle_farmlands", 1), ("building_castle_mason", 1),
                              ("building_castle_roads_and_paths", 1)])
+
+# Anduin Vale and Angaladh from Dale's own rows (town_S1, castle_S2): sturgia menus, wait mesh,
+# arena, tavern, keeps, dungeon and house are Gundabad's, and the gate rotations are Dale's
+# (town_S1 0.608, the S castles 0.908). Building levels are Cardolan's, a weak realm's.
+STYLE["anduinvale"] = STYLE["angaladh"] = dict(STYLE["gundabad"], gate_rotation={"town": "0.608", "castle": "0.908"},
+                                               town_buildings=TOWN_BUILDINGS, castle_buildings=CASTLE_BUILDINGS)
 
 
 # ---------------------------------------------------------------- scene transforms

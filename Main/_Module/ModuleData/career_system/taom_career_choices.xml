@@ -11929,4 +11929,694 @@
     </Choice>
   </ChoiceGroup>
 
+  <!-- ═══ Axe-warden of Beorn's Hall (anduinvale), cloned from dale_guardsman ═══ -->
+  <Choice id="axe_warden_of_beorns_hall_root" group_id="" type="Passive"
+          description="{=taom_axe_warden_of_beorns_hall_root_desc}Carrock Stand grants +5% resistance and steadies the defenders."
+          icon_sprite="career_choice_dale_guardsman_root">
+    <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+  </Choice>
+
+  <ChoiceGroup id="axe_warden_of_beorns_hall_t1_a" display_name="{=taom_career_grp_axe_warden_of_beorns_hall_t1_a}Axeman of the Vales" career_id="axe_warden_of_beorns_hall" tier="1">
+    <Choice id="axe_warden_of_beorns_hall_t1_a_key" type="Keystone" description="{=taom_awbh_t1_a_key}Carrock Stand radius increased, empowering more warriors." icon_sprite="career_choice_dg2_t1_a_key">
+      <Mutations><Mutation target_id="axe_warden_of_beorns_hall_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t1_a_p1" type="Passive" description="{=taom_awbh_t1_a_p1}+8% melee damage." icon_sprite="career_choice_dg2_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t1_a_p2" type="Passive" description="{=taom_awbh_t1_a_p2}+3% troop damage." icon_sprite="career_choice_dg2_t1_a_p2">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t1_a_p3" type="Passive" description="{=taom_awbh_t1_a_p3}+6 max health." icon_sprite="career_choice_dg2_t1_a_p3">
+      <PassiveEffect type="Health" magnitude="6" operation="Add" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t1_a_p4" type="Passive" description="{=taom_awbh_t1_a_p4}+7% swing speed." icon_sprite="career_choice_dg2_t1_a_p4">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="axe_warden_of_beorns_hall_t1_b" display_name="{=taom_career_grp_axe_warden_of_beorns_hall_t1_b}Axewall of the Old Ford" career_id="axe_warden_of_beorns_hall" tier="1">
+    <Choice id="axe_warden_of_beorns_hall_t1_b_key" type="Keystone" description="{=taom_awbh_t1_b_key}Carrock Stand duration extended, fortifying the defense." icon_sprite="career_choice_dg2_t1_b_key">
+      <Mutations><Mutation target_id="axe_warden_of_beorns_hall_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t1_b_p1" type="Passive" description="{=taom_awbh_t1_b_p1}+8% resistance." icon_sprite="career_choice_dg2_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.08" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t1_b_p2" type="Passive" description="{=taom_awbh_t1_b_p2}+5% troop morale." icon_sprite="career_choice_dg2_t1_b_p2">
+      <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t1_b_p3" type="Passive" description="{=taom_awbh_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_dg2_t1_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t1_b_p4" type="Passive" description="{=taom_awbh_t1_b_p4}+5% troop survival." icon_sprite="career_choice_dg2_t1_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="axe_warden_of_beorns_hall_t2_a" display_name="{=taom_career_grp_axe_warden_of_beorns_hall_t2_a}Axe of Beorn" career_id="axe_warden_of_beorns_hall" tier="2">
+    <Choice id="axe_warden_of_beorns_hall_t2_a_key" type="Keystone" description="{=taom_awbh_t2_a_key}Carrock Stand charge reduced, activating more frequently." icon_sprite="career_choice_dg2_t2_a_key">
+      <Mutations><Mutation target_id="axe_warden_of_beorns_hall_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t2_a_p1" type="Passive" description="{=taom_awbh_t2_a_p1}+10% troop morale." icon_sprite="career_choice_dg2_t2_a_p1">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t2_a_p2" type="Passive" description="{=taom_awbh_t2_a_p2}+2 party size." icon_sprite="career_choice_dg2_t2_a_p2">
+      <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t2_a_p3" type="Passive" description="{=taom_awbh_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_dg2_t2_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t2_a_p4" type="Passive" description="{=taom_awbh_t2_a_p4}-10% troop wages." icon_sprite="career_choice_dg2_t2_a_p4">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="axe_warden_of_beorns_hall_t2_b" display_name="{=taom_career_grp_axe_warden_of_beorns_hall_t2_b}Bulwark of the Gladden" career_id="axe_warden_of_beorns_hall" tier="2">
+    <Choice id="axe_warden_of_beorns_hall_t2_b_key" type="Keystone" description="{=taom_awbh_t2_b_key}Carrock Stand grants additional defensive buffs while active." icon_sprite="career_choice_dg2_t2_b_key">
+      <Mutations><Mutation target_id="axe_warden_of_beorns_hall_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t2_b_p1" type="Passive" description="{=taom_awbh_t2_b_p1}+12% resistance." icon_sprite="career_choice_dg2_t2_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.12" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t2_b_p2" type="Passive" description="{=taom_awbh_t2_b_p2}+8 max health." icon_sprite="career_choice_dg2_t2_b_p2">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t2_b_p3" type="Passive" description="{=taom_awbh_t2_b_p3}+13% troop resistance." icon_sprite="career_choice_dg2_t2_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t2_b_p4" type="Passive" description="{=taom_awbh_t2_b_p4}+5% troop damage." icon_sprite="career_choice_dg2_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="axe_warden_of_beorns_hall_t3_a" display_name="{=taom_career_grp_axe_warden_of_beorns_hall_t3_a}Vanguard of Grimbeorn" career_id="axe_warden_of_beorns_hall" tier="3">
+    <Choice id="axe_warden_of_beorns_hall_t3_a_key" type="Keystone" description="{=taom_awbh_t3_a_key}Carrock Stand radius greatly expanded, devastating power." icon_sprite="career_choice_dg2_t3_a_key">
+      <Mutations><Mutation target_id="axe_warden_of_beorns_hall_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t3_a_p1" type="Passive" description="{=taom_awbh_t3_a_p1}+15% melee damage." icon_sprite="career_choice_dg2_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t3_a_p2" type="Passive" description="{=taom_awbh_t3_a_p2}+10 max health." icon_sprite="career_choice_dg2_t3_a_p2">
+      <PassiveEffect type="Health" magnitude="10" operation="Add" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t3_a_p3" type="Passive" description="{=taom_awbh_t3_a_p3}+7% troop damage." icon_sprite="career_choice_dg2_t3_a_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t3_a_p4" type="Passive" description="{=taom_awbh_t3_a_p4}+4 party size." icon_sprite="career_choice_dg2_t3_a_p4">
+      <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="axe_warden_of_beorns_hall_t3_b" display_name="{=taom_career_grp_axe_warden_of_beorns_hall_t3_b}The Last Stand at the Carrock" career_id="axe_warden_of_beorns_hall" tier="3">
+    <Choice id="axe_warden_of_beorns_hall_t3_b_key" type="Keystone" description="{=taom_awbh_t3_b_key}Carrock Stand charge greatly reduced, nearly always available." icon_sprite="career_choice_dg2_t3_b_key">
+      <Mutations><Mutation target_id="axe_warden_of_beorns_hall_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t3_b_p1" type="Passive" description="{=taom_awbh_t3_b_p1}+18% resistance." icon_sprite="career_choice_dg2_t3_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t3_b_p2" type="Passive" description="{=taom_awbh_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_dg2_t3_b_p2">
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t3_b_p3" type="Passive" description="{=taom_awbh_t3_b_p3}+20% troop morale." icon_sprite="career_choice_dg2_t3_b_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="axe_warden_of_beorns_hall_t3_b_p4" type="Passive" description="{=taom_awbh_t3_b_p4}+15% troop survival." icon_sprite="career_choice_dg2_t3_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Archer of Eastbank (anduinvale), cloned from dale_marksman ═══ -->
+  <Choice id="archer_of_eastbank_root" group_id="" type="Passive"
+          description="{=taom_archer_of_eastbank_root_desc}Carrock Volley grants +5% ranged damage in honor of the Woodmen bowmen of the Vales."
+          icon_sprite="career_choice_dale_marksman_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+  </Choice>
+
+  <ChoiceGroup id="archer_of_eastbank_t1_a" display_name="{=taom_career_grp_archer_of_eastbank_t1_a}Bowman of the Gladden" career_id="archer_of_eastbank" tier="1">
+    <Choice id="archer_of_eastbank_t1_a_key" type="Keystone" description="{=taom_aoe_t1_a_key}Carrock Volley radius increased, covering wider kill zones." icon_sprite="career_choice_dm_t1_a_key">
+      <Mutations><Mutation target_id="archer_of_eastbank_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="archer_of_eastbank_t1_a_p1" type="Passive" description="{=taom_aoe_t1_a_p1}+8% ranged damage." icon_sprite="career_choice_dm_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t1_a_p2" type="Passive" description="{=taom_aoe_t1_a_p2}+5% armor penetration." icon_sprite="career_choice_dm_t1_a_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t1_a_p3" type="Passive" description="{=taom_aoe_t1_a_p3}+7% movement speed." icon_sprite="career_choice_dm_t1_a_p3">
+      <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t1_a_p4" type="Passive" description="{=taom_aoe_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_dm_t1_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="archer_of_eastbank_t1_b" display_name="{=taom_career_grp_archer_of_eastbank_t1_b}Watch of the Mirkwood Edge" career_id="archer_of_eastbank" tier="1">
+    <Choice id="archer_of_eastbank_t1_b_key" type="Keystone" description="{=taom_aoe_t1_b_key}Carrock Volley duration extended, sustained barrage." icon_sprite="career_choice_dm_t1_b_key">
+      <Mutations><Mutation target_id="archer_of_eastbank_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="archer_of_eastbank_t1_b_p1" type="Passive" description="{=taom_aoe_t1_b_p1}+5% resistance." icon_sprite="career_choice_dm_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t1_b_p2" type="Passive" description="{=taom_aoe_t1_b_p2}+5 max health." icon_sprite="career_choice_dm_t1_b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t1_b_p3" type="Passive" description="{=taom_aoe_t1_b_p3}+5% party spotting range." icon_sprite="career_choice_dm_t1_b_p3">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t1_b_p4" type="Passive" description="{=taom_aoe_t1_b_p4}+10% stealth bonus." icon_sprite="career_choice_dm_t1_b_p4">
+      <PassiveEffect type="StealthBonus" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="archer_of_eastbank_t2_a" display_name="{=taom_career_grp_archer_of_eastbank_t2_a}Heir of the Woodmen" career_id="archer_of_eastbank" tier="2">
+    <Choice id="archer_of_eastbank_t2_a_key" type="Keystone" description="{=taom_aoe_t2_a_key}Carrock Volley charge reduced, maintaining constant pressure." icon_sprite="career_choice_dm_t2_a_key">
+      <Mutations><Mutation target_id="archer_of_eastbank_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="archer_of_eastbank_t2_a_p1" type="Passive" description="{=taom_aoe_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_dm_t2_a_p1">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t2_a_p2" type="Passive" description="{=taom_aoe_t2_a_p2}+10% movement speed." icon_sprite="career_choice_dm_t2_a_p2">
+      <PassiveEffect type="MovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t2_a_p3" type="Passive" description="{=taom_aoe_t2_a_p3}+13% stealth bonus." icon_sprite="career_choice_dm_t2_a_p3">
+      <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t2_a_p4" type="Passive" description="{=taom_aoe_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_dm_t2_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="archer_of_eastbank_t2_b" display_name="{=taom_career_grp_archer_of_eastbank_t2_b}Hawk-Sighted Archer" career_id="archer_of_eastbank" tier="2">
+    <Choice id="archer_of_eastbank_t2_b_key" type="Keystone" description="{=taom_aoe_t2_b_key}Carrock Volley gains additional penetration while active." icon_sprite="career_choice_dm_t2_b_key">
+      <Mutations><Mutation target_id="archer_of_eastbank_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="archer_of_eastbank_t2_b_p1" type="Passive" description="{=taom_aoe_t2_b_p1}+12% ranged damage." icon_sprite="career_choice_dm_t2_b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t2_b_p2" type="Passive" description="{=taom_aoe_t2_b_p2}+10% armor penetration." icon_sprite="career_choice_dm_t2_b_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t2_b_p3" type="Passive" description="{=taom_aoe_t2_b_p3}+8 max health." icon_sprite="career_choice_dm_t2_b_p3">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t2_b_p4" type="Passive" description="{=taom_aoe_t2_b_p4}+3% troop damage." icon_sprite="career_choice_dm_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="archer_of_eastbank_t3_a" display_name="{=taom_career_grp_archer_of_eastbank_t3_a}Wolfbane of the Vales" career_id="archer_of_eastbank" tier="3">
+    <Choice id="archer_of_eastbank_t3_a_key" type="Keystone" description="{=taom_aoe_t3_a_key}Carrock Volley radius greatly expanded, inescapable volleys." icon_sprite="career_choice_dm_t3_a_key">
+      <Mutations><Mutation target_id="archer_of_eastbank_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="archer_of_eastbank_t3_a_p1" type="Passive" description="{=taom_aoe_t3_a_p1}+18% ranged damage." icon_sprite="career_choice_dm_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t3_a_p2" type="Passive" description="{=taom_aoe_t3_a_p2}+15% armor penetration." icon_sprite="career_choice_dm_t3_a_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t3_a_p3" type="Passive" description="{=taom_aoe_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_dm_t3_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t3_a_p4" type="Passive" description="{=taom_aoe_t3_a_p4}+5% troop damage." icon_sprite="career_choice_dm_t3_a_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="archer_of_eastbank_t3_b" display_name="{=taom_career_grp_archer_of_eastbank_t3_b}The Bow of the Eaves" career_id="archer_of_eastbank" tier="3">
+    <Choice id="archer_of_eastbank_t3_b_key" type="Keystone" description="{=taom_aoe_t3_b_key}Carrock Volley charge greatly reduced, relentless fire." icon_sprite="career_choice_dm_t3_b_key">
+      <Mutations><Mutation target_id="archer_of_eastbank_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="archer_of_eastbank_t3_b_p1" type="Passive" description="{=taom_aoe_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_dm_t3_b_p1">
+      <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t3_b_p2" type="Passive" description="{=taom_aoe_t3_b_p2}+15% movement speed." icon_sprite="career_choice_dm_t3_b_p2">
+      <PassiveEffect type="MovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t3_b_p3" type="Passive" description="{=taom_aoe_t3_b_p3}+9 max health." icon_sprite="career_choice_dm_t3_b_p3">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+    <Choice id="archer_of_eastbank_t3_b_p4" type="Passive" description="{=taom_aoe_t3_b_p4}+15% party spotting range." icon_sprite="career_choice_dm_t3_b_p4">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Rider of the Vales (anduinvale), cloned from dale_outrider ═══ -->
+  <Choice id="rider_of_the_vales_root" group_id="" type="Passive"
+          description="{=taom_rider_of_the_vales_root_desc}Vale Gallop grants +5% melee damage and your horse quickens."
+          icon_sprite="career_choice_dale_outrider_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+  </Choice>
+
+  <ChoiceGroup id="rider_of_the_vales_t1_a" display_name="{=taom_career_grp_rider_of_the_vales_t1_a}Rider of the Gladden" career_id="rider_of_the_vales" tier="1">
+    <Choice id="rider_of_the_vales_t1_a_key" type="Keystone" description="{=taom_rotv_t1_a_key}Vale Gallop radius expanded, sweeping wider formations." icon_sprite="career_choice_dor_t1_a_key">
+      <Mutations><Mutation target_id="rider_of_the_vales_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="rider_of_the_vales_t1_a_p1" type="Passive" description="{=taom_rotv_t1_a_p1}+8% melee damage." icon_sprite="career_choice_dor_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t1_a_p2" type="Passive" description="{=taom_rotv_t1_a_p2}+10% horse charge damage." icon_sprite="career_choice_dor_t1_a_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t1_a_p3" type="Passive" description="{=taom_rotv_t1_a_p3}+7% swing speed." icon_sprite="career_choice_dor_t1_a_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t1_a_p4" type="Passive" description="{=taom_rotv_t1_a_p4}+5% party movement speed." icon_sprite="career_choice_dor_t1_a_p4">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="rider_of_the_vales_t1_b" display_name="{=taom_career_grp_rider_of_the_vales_t1_b}Warden of the Old Road" career_id="rider_of_the_vales" tier="1">
+    <Choice id="rider_of_the_vales_t1_b_key" type="Keystone" description="{=taom_rotv_t1_b_key}Vale Gallop duration extended, maintaining momentum." icon_sprite="career_choice_dor_t1_b_key">
+      <Mutations><Mutation target_id="rider_of_the_vales_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="rider_of_the_vales_t1_b_p1" type="Passive" description="{=taom_rotv_t1_b_p1}+10% horse health." icon_sprite="career_choice_dor_t1_b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t1_b_p2" type="Passive" description="{=taom_rotv_t1_b_p2}+5 max health." icon_sprite="career_choice_dor_t1_b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t1_b_p3" type="Passive" description="{=taom_rotv_t1_b_p3}-5% troop wages." icon_sprite="career_choice_dor_t1_b_p3">
+      <PassiveEffect type="TroopWages" magnitude="-0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t1_b_p4" type="Passive" description="{=taom_rotv_t1_b_p4}+5% resistance." icon_sprite="career_choice_dor_t1_b_p4">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="rider_of_the_vales_t2_a" display_name="{=taom_career_grp_rider_of_the_vales_t2_a}Lance of the Vales" career_id="rider_of_the_vales" tier="2">
+    <Choice id="rider_of_the_vales_t2_a_key" type="Keystone" description="{=taom_rotv_t2_a_key}Vale Gallop charge reduced, swifter activation." icon_sprite="career_choice_dor_t2_a_key">
+      <Mutations><Mutation target_id="rider_of_the_vales_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="rider_of_the_vales_t2_a_p1" type="Passive" description="{=taom_rotv_t2_a_p1}+10% party movement speed." icon_sprite="career_choice_dor_t2_a_p1">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t2_a_p2" type="Passive" description="{=taom_rotv_t2_a_p2}-10% troop wages." icon_sprite="career_choice_dor_t2_a_p2">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t2_a_p3" type="Passive" description="{=taom_rotv_t2_a_p3}+10% troop morale." icon_sprite="career_choice_dor_t2_a_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t2_a_p4" type="Passive" description="{=taom_rotv_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_dor_t2_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="rider_of_the_vales_t2_b" display_name="{=taom_career_grp_rider_of_the_vales_t2_b}Outrider of the Woodmen's Friendship" career_id="rider_of_the_vales" tier="2">
+    <Choice id="rider_of_the_vales_t2_b_key" type="Keystone" description="{=taom_rotv_t2_b_key}Vale Gallop boosts mount resilience while active." icon_sprite="career_choice_dor_t2_b_key">
+      <Mutations><Mutation target_id="rider_of_the_vales_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="rider_of_the_vales_t2_b_p1" type="Passive" description="{=taom_rotv_t2_b_p1}+12% melee damage." icon_sprite="career_choice_dor_t2_b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t2_b_p2" type="Passive" description="{=taom_rotv_t2_b_p2}+13% horse charge damage." icon_sprite="career_choice_dor_t2_b_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t2_b_p3" type="Passive" description="{=taom_rotv_t2_b_p3}+13% horse health." icon_sprite="career_choice_dor_t2_b_p3">
+      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t2_b_p4" type="Passive" description="{=taom_rotv_t2_b_p4}+10% swing speed." icon_sprite="career_choice_dor_t2_b_p4">
+      <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="rider_of_the_vales_t3_a" display_name="{=taom_career_grp_rider_of_the_vales_t3_a}The Charge of the Carrock" career_id="rider_of_the_vales" tier="3">
+    <Choice id="rider_of_the_vales_t3_a_key" type="Keystone" description="{=taom_rotv_t3_a_key}Vale Gallop radius greatly expanded, unstoppable impact." icon_sprite="career_choice_dor_t3_a_key">
+      <Mutations><Mutation target_id="rider_of_the_vales_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="rider_of_the_vales_t3_a_p1" type="Passive" description="{=taom_rotv_t3_a_p1}+18% melee damage." icon_sprite="career_choice_dor_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t3_a_p2" type="Passive" description="{=taom_rotv_t3_a_p2}+15% horse charge damage." icon_sprite="career_choice_dor_t3_a_p2">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t3_a_p3" type="Passive" description="{=taom_rotv_t3_a_p3}+15% swing speed." icon_sprite="career_choice_dor_t3_a_p3">
+      <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t3_a_p4" type="Passive" description="{=taom_rotv_t3_a_p4}+7% troop damage." icon_sprite="career_choice_dor_t3_a_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="rider_of_the_vales_t3_b" display_name="{=taom_career_grp_rider_of_the_vales_t3_b}Courier of the Chieftain" career_id="rider_of_the_vales" tier="3">
+    <Choice id="rider_of_the_vales_t3_b_key" type="Keystone" description="{=taom_rotv_t3_b_key}Vale Gallop charge greatly reduced, ride without ceasing." icon_sprite="career_choice_dor_t3_b_key">
+      <Mutations><Mutation target_id="rider_of_the_vales_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="rider_of_the_vales_t3_b_p1" type="Passive" description="{=taom_rotv_t3_b_p1}+15% horse health." icon_sprite="career_choice_dor_t3_b_p1">
+      <PassiveEffect type="MountHealth" magnitude="0.15" operation="Add" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t3_b_p2" type="Passive" description="{=taom_rotv_t3_b_p2}-15% troop wages." icon_sprite="career_choice_dor_t3_b_p2">
+      <PassiveEffect type="TroopWages" magnitude="-0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t3_b_p3" type="Passive" description="{=taom_rotv_t3_b_p3}+15% party movement speed." icon_sprite="career_choice_dor_t3_b_p3">
+      <PassiveEffect type="PartyMovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="rider_of_the_vales_t3_b_p4" type="Passive" description="{=taom_rotv_t3_b_p4}+9 max health." icon_sprite="career_choice_dor_t3_b_p4">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Warden of the Forest Gate (angaladh), cloned from dale_guardsman ═══ -->
+  <Choice id="warden_of_the_forest_gate_root" group_id="" type="Passive"
+          description="{=taom_warden_of_the_forest_gate_root_desc}Thornwall grants +5% resistance and steadies the defenders."
+          icon_sprite="career_choice_dale_guardsman_root">
+    <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+  </Choice>
+
+  <ChoiceGroup id="warden_of_the_forest_gate_t1_a" display_name="{=taom_career_grp_warden_of_the_forest_gate_t1_a}Spearman of Woodmen-town" career_id="warden_of_the_forest_gate" tier="1">
+    <Choice id="warden_of_the_forest_gate_t1_a_key" type="Keystone" description="{=taom_wfg_t1_a_key}Thornwall radius increased, empowering more warriors." icon_sprite="career_choice_dg2_t1_a_key">
+      <Mutations><Mutation target_id="warden_of_the_forest_gate_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t1_a_p1" type="Passive" description="{=taom_wfg_t1_a_p1}+8% melee damage." icon_sprite="career_choice_dg2_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t1_a_p2" type="Passive" description="{=taom_wfg_t1_a_p2}+3% troop damage." icon_sprite="career_choice_dg2_t1_a_p2">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t1_a_p3" type="Passive" description="{=taom_wfg_t1_a_p3}+6 max health." icon_sprite="career_choice_dg2_t1_a_p3">
+      <PassiveEffect type="Health" magnitude="6" operation="Add" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t1_a_p4" type="Passive" description="{=taom_wfg_t1_a_p4}+7% swing speed." icon_sprite="career_choice_dg2_t1_a_p4">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="warden_of_the_forest_gate_t1_b" display_name="{=taom_career_grp_warden_of_the_forest_gate_t1_b}Shieldwall of the Forest Gate" career_id="warden_of_the_forest_gate" tier="1">
+    <Choice id="warden_of_the_forest_gate_t1_b_key" type="Keystone" description="{=taom_wfg_t1_b_key}Thornwall duration extended, fortifying the defense." icon_sprite="career_choice_dg2_t1_b_key">
+      <Mutations><Mutation target_id="warden_of_the_forest_gate_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t1_b_p1" type="Passive" description="{=taom_wfg_t1_b_p1}+8% resistance." icon_sprite="career_choice_dg2_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.08" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t1_b_p2" type="Passive" description="{=taom_wfg_t1_b_p2}+5% troop morale." icon_sprite="career_choice_dg2_t1_b_p2">
+      <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t1_b_p3" type="Passive" description="{=taom_wfg_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_dg2_t1_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t1_b_p4" type="Passive" description="{=taom_wfg_t1_b_p4}+5% troop survival." icon_sprite="career_choice_dg2_t1_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="warden_of_the_forest_gate_t2_a" display_name="{=taom_career_grp_warden_of_the_forest_gate_t2_a}Spear of Ingomar" career_id="warden_of_the_forest_gate" tier="2">
+    <Choice id="warden_of_the_forest_gate_t2_a_key" type="Keystone" description="{=taom_wfg_t2_a_key}Thornwall charge reduced, activating more frequently." icon_sprite="career_choice_dg2_t2_a_key">
+      <Mutations><Mutation target_id="warden_of_the_forest_gate_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t2_a_p1" type="Passive" description="{=taom_wfg_t2_a_p1}+10% troop morale." icon_sprite="career_choice_dg2_t2_a_p1">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t2_a_p2" type="Passive" description="{=taom_wfg_t2_a_p2}+2 party size." icon_sprite="career_choice_dg2_t2_a_p2">
+      <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t2_a_p3" type="Passive" description="{=taom_wfg_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_dg2_t2_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t2_a_p4" type="Passive" description="{=taom_wfg_t2_a_p4}-10% troop wages." icon_sprite="career_choice_dg2_t2_a_p4">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="warden_of_the_forest_gate_t2_b" display_name="{=taom_career_grp_warden_of_the_forest_gate_t2_b}Bulwark of the Forest Road" career_id="warden_of_the_forest_gate" tier="2">
+    <Choice id="warden_of_the_forest_gate_t2_b_key" type="Keystone" description="{=taom_wfg_t2_b_key}Thornwall grants additional defensive buffs while active." icon_sprite="career_choice_dg2_t2_b_key">
+      <Mutations><Mutation target_id="warden_of_the_forest_gate_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t2_b_p1" type="Passive" description="{=taom_wfg_t2_b_p1}+12% resistance." icon_sprite="career_choice_dg2_t2_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.12" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t2_b_p2" type="Passive" description="{=taom_wfg_t2_b_p2}+8 max health." icon_sprite="career_choice_dg2_t2_b_p2">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t2_b_p3" type="Passive" description="{=taom_wfg_t2_b_p3}+13% troop resistance." icon_sprite="career_choice_dg2_t2_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t2_b_p4" type="Passive" description="{=taom_wfg_t2_b_p4}+5% troop damage." icon_sprite="career_choice_dg2_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="warden_of_the_forest_gate_t3_a" display_name="{=taom_career_grp_warden_of_the_forest_gate_t3_a}Vanguard of King Ingomar" career_id="warden_of_the_forest_gate" tier="3">
+    <Choice id="warden_of_the_forest_gate_t3_a_key" type="Keystone" description="{=taom_wfg_t3_a_key}Thornwall radius greatly expanded, devastating power." icon_sprite="career_choice_dg2_t3_a_key">
+      <Mutations><Mutation target_id="warden_of_the_forest_gate_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t3_a_p1" type="Passive" description="{=taom_wfg_t3_a_p1}+15% melee damage." icon_sprite="career_choice_dg2_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t3_a_p2" type="Passive" description="{=taom_wfg_t3_a_p2}+10 max health." icon_sprite="career_choice_dg2_t3_a_p2">
+      <PassiveEffect type="Health" magnitude="10" operation="Add" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t3_a_p3" type="Passive" description="{=taom_wfg_t3_a_p3}+7% troop damage." icon_sprite="career_choice_dg2_t3_a_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t3_a_p4" type="Passive" description="{=taom_wfg_t3_a_p4}+4 party size." icon_sprite="career_choice_dg2_t3_a_p4">
+      <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="warden_of_the_forest_gate_t3_b" display_name="{=taom_career_grp_warden_of_the_forest_gate_t3_b}The Last Stand at Thornhold" career_id="warden_of_the_forest_gate" tier="3">
+    <Choice id="warden_of_the_forest_gate_t3_b_key" type="Keystone" description="{=taom_wfg_t3_b_key}Thornwall charge greatly reduced, nearly always available." icon_sprite="career_choice_dg2_t3_b_key">
+      <Mutations><Mutation target_id="warden_of_the_forest_gate_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t3_b_p1" type="Passive" description="{=taom_wfg_t3_b_p1}+18% resistance." icon_sprite="career_choice_dg2_t3_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t3_b_p2" type="Passive" description="{=taom_wfg_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_dg2_t3_b_p2">
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t3_b_p3" type="Passive" description="{=taom_wfg_t3_b_p3}+20% troop morale." icon_sprite="career_choice_dg2_t3_b_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="warden_of_the_forest_gate_t3_b_p4" type="Passive" description="{=taom_wfg_t3_b_p4}+15% troop survival." icon_sprite="career_choice_dg2_t3_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Hewer of Ironwood Hall (angaladh), cloned from dale_guardsman ═══ -->
+  <Choice id="hewer_of_ironwood_hall_root" group_id="" type="Passive"
+          description="{=taom_hewer_of_ironwood_hall_root_desc}Heartwood Storm grants +5% resistance and steadies the defenders."
+          icon_sprite="career_choice_dale_guardsman_root">
+    <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+  </Choice>
+
+  <ChoiceGroup id="hewer_of_ironwood_hall_t1_a" display_name="{=taom_career_grp_hewer_of_ironwood_hall_t1_a}Axe-bearer of Ironwood Hall" career_id="hewer_of_ironwood_hall" tier="1">
+    <Choice id="hewer_of_ironwood_hall_t1_a_key" type="Keystone" description="{=taom_hiwh_t1_a_key}Heartwood Storm radius increased, empowering more warriors." icon_sprite="career_choice_dg2_t1_a_key">
+      <Mutations><Mutation target_id="hewer_of_ironwood_hall_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t1_a_p1" type="Passive" description="{=taom_hiwh_t1_a_p1}+8% melee damage." icon_sprite="career_choice_dg2_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t1_a_p2" type="Passive" description="{=taom_hiwh_t1_a_p2}+3% troop damage." icon_sprite="career_choice_dg2_t1_a_p2">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t1_a_p3" type="Passive" description="{=taom_hiwh_t1_a_p3}+6 max health." icon_sprite="career_choice_dg2_t1_a_p3">
+      <PassiveEffect type="Health" magnitude="6" operation="Add" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t1_a_p4" type="Passive" description="{=taom_hiwh_t1_a_p4}+7% swing speed." icon_sprite="career_choice_dg2_t1_a_p4">
+      <PassiveEffect type="SwingSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="hewer_of_ironwood_hall_t1_b" display_name="{=taom_career_grp_hewer_of_ironwood_hall_t1_b}Splitter of the Forest Road" career_id="hewer_of_ironwood_hall" tier="1">
+    <Choice id="hewer_of_ironwood_hall_t1_b_key" type="Keystone" description="{=taom_hiwh_t1_b_key}Heartwood Storm duration extended, fortifying the defense." icon_sprite="career_choice_dg2_t1_b_key">
+      <Mutations><Mutation target_id="hewer_of_ironwood_hall_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t1_b_p1" type="Passive" description="{=taom_hiwh_t1_b_p1}+8% resistance." icon_sprite="career_choice_dg2_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.08" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t1_b_p2" type="Passive" description="{=taom_hiwh_t1_b_p2}+5% troop morale." icon_sprite="career_choice_dg2_t1_b_p2">
+      <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t1_b_p3" type="Passive" description="{=taom_hiwh_t1_b_p3}+10% troop resistance." icon_sprite="career_choice_dg2_t1_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t1_b_p4" type="Passive" description="{=taom_hiwh_t1_b_p4}+5% troop survival." icon_sprite="career_choice_dg2_t1_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="hewer_of_ironwood_hall_t2_a" display_name="{=taom_career_grp_hewer_of_ironwood_hall_t2_a}Axe of the Heartwood" career_id="hewer_of_ironwood_hall" tier="2">
+    <Choice id="hewer_of_ironwood_hall_t2_a_key" type="Keystone" description="{=taom_hiwh_t2_a_key}Heartwood Storm charge reduced, activating more frequently." icon_sprite="career_choice_dg2_t2_a_key">
+      <Mutations><Mutation target_id="hewer_of_ironwood_hall_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t2_a_p1" type="Passive" description="{=taom_hiwh_t2_a_p1}+10% troop morale." icon_sprite="career_choice_dg2_t2_a_p1">
+      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t2_a_p2" type="Passive" description="{=taom_hiwh_t2_a_p2}+2 party size." icon_sprite="career_choice_dg2_t2_a_p2">
+      <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t2_a_p3" type="Passive" description="{=taom_hiwh_t2_a_p3}+10% battle renown gain." icon_sprite="career_choice_dg2_t2_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t2_a_p4" type="Passive" description="{=taom_hiwh_t2_a_p4}-10% troop wages." icon_sprite="career_choice_dg2_t2_a_p4">
+      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="hewer_of_ironwood_hall_t2_b" display_name="{=taom_career_grp_hewer_of_ironwood_hall_t2_b}Hewing of the Emyn Duir" career_id="hewer_of_ironwood_hall" tier="2">
+    <Choice id="hewer_of_ironwood_hall_t2_b_key" type="Keystone" description="{=taom_hiwh_t2_b_key}Heartwood Storm grants additional defensive buffs while active." icon_sprite="career_choice_dg2_t2_b_key">
+      <Mutations><Mutation target_id="hewer_of_ironwood_hall_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t2_b_p1" type="Passive" description="{=taom_hiwh_t2_b_p1}+12% resistance." icon_sprite="career_choice_dg2_t2_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.12" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t2_b_p2" type="Passive" description="{=taom_hiwh_t2_b_p2}+8 max health." icon_sprite="career_choice_dg2_t2_b_p2">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t2_b_p3" type="Passive" description="{=taom_hiwh_t2_b_p3}+13% troop resistance." icon_sprite="career_choice_dg2_t2_b_p3">
+      <PassiveEffect type="TroopResistance" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t2_b_p4" type="Passive" description="{=taom_hiwh_t2_b_p4}+5% troop damage." icon_sprite="career_choice_dg2_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="hewer_of_ironwood_hall_t3_a" display_name="{=taom_career_grp_hewer_of_ironwood_hall_t3_a}Great-axe of King Ingomar" career_id="hewer_of_ironwood_hall" tier="3">
+    <Choice id="hewer_of_ironwood_hall_t3_a_key" type="Keystone" description="{=taom_hiwh_t3_a_key}Heartwood Storm radius greatly expanded, devastating power." icon_sprite="career_choice_dg2_t3_a_key">
+      <Mutations><Mutation target_id="hewer_of_ironwood_hall_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t3_a_p1" type="Passive" description="{=taom_hiwh_t3_a_p1}+15% melee damage." icon_sprite="career_choice_dg2_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t3_a_p2" type="Passive" description="{=taom_hiwh_t3_a_p2}+10 max health." icon_sprite="career_choice_dg2_t3_a_p2">
+      <PassiveEffect type="Health" magnitude="10" operation="Add" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t3_a_p3" type="Passive" description="{=taom_hiwh_t3_a_p3}+7% troop damage." icon_sprite="career_choice_dg2_t3_a_p3">
+      <PassiveEffect type="TroopDamage" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t3_a_p4" type="Passive" description="{=taom_hiwh_t3_a_p4}+4 party size." icon_sprite="career_choice_dg2_t3_a_p4">
+      <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="hewer_of_ironwood_hall_t3_b" display_name="{=taom_career_grp_hewer_of_ironwood_hall_t3_b}The Felling of the Dark Wood" career_id="hewer_of_ironwood_hall" tier="3">
+    <Choice id="hewer_of_ironwood_hall_t3_b_key" type="Keystone" description="{=taom_hiwh_t3_b_key}Heartwood Storm charge greatly reduced, nearly always available." icon_sprite="career_choice_dg2_t3_b_key">
+      <Mutations><Mutation target_id="hewer_of_ironwood_hall_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t3_b_p1" type="Passive" description="{=taom_hiwh_t3_b_p1}+18% resistance." icon_sprite="career_choice_dg2_t3_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.18" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t3_b_p2" type="Passive" description="{=taom_hiwh_t3_b_p2}+15% hero health regeneration." icon_sprite="career_choice_dg2_t3_b_p2">
+      <PassiveEffect type="HeroHealing" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t3_b_p3" type="Passive" description="{=taom_hiwh_t3_b_p3}+20% troop morale." icon_sprite="career_choice_dg2_t3_b_p3">
+      <PassiveEffect type="TroopMorale" magnitude="0.20" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="hewer_of_ironwood_hall_t3_b_p4" type="Passive" description="{=taom_hiwh_t3_b_p4}+15% troop survival." icon_sprite="career_choice_dg2_t3_b_p4">
+      <PassiveEffect type="TroopSurvival" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <!-- ═══ Woodward of the Forest Road (angaladh), cloned from dale_marksman ═══ -->
+  <Choice id="woodward_of_the_forest_road_root" group_id="" type="Passive"
+          description="{=taom_woodward_of_the_forest_road_root_desc}Ironwood Volley grants +5% ranged damage in honor of the woodwards of the Forest Road."
+          icon_sprite="career_choice_dale_marksman_root">
+    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+  </Choice>
+
+  <ChoiceGroup id="woodward_of_the_forest_road_t1_a" display_name="{=taom_career_grp_woodward_of_the_forest_road_t1_a}Bowman of Thornhold" career_id="woodward_of_the_forest_road" tier="1">
+    <Choice id="woodward_of_the_forest_road_t1_a_key" type="Keystone" description="{=taom_wfr_t1_a_key}Ironwood Volley radius increased, covering wider kill zones." icon_sprite="career_choice_dm_t1_a_key">
+      <Mutations><Mutation target_id="woodward_of_the_forest_road_ability" property="Radius" calculator="flat" value="3" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t1_a_p1" type="Passive" description="{=taom_wfr_t1_a_p1}+8% ranged damage." icon_sprite="career_choice_dm_t1_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t1_a_p2" type="Passive" description="{=taom_wfr_t1_a_p2}+5% armor penetration." icon_sprite="career_choice_dm_t1_a_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t1_a_p3" type="Passive" description="{=taom_wfr_t1_a_p3}+7% movement speed." icon_sprite="career_choice_dm_t1_a_p3">
+      <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t1_a_p4" type="Passive" description="{=taom_wfr_t1_a_p4}+5% battle renown gain." icon_sprite="career_choice_dm_t1_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="woodward_of_the_forest_road_t1_b" display_name="{=taom_career_grp_woodward_of_the_forest_road_t1_b}Watch of the Forest Road" career_id="woodward_of_the_forest_road" tier="1">
+    <Choice id="woodward_of_the_forest_road_t1_b_key" type="Keystone" description="{=taom_wfr_t1_b_key}Ironwood Volley duration extended, sustained barrage." icon_sprite="career_choice_dm_t1_b_key">
+      <Mutations><Mutation target_id="woodward_of_the_forest_road_ability" property="Duration" calculator="flat" value="4" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t1_b_p1" type="Passive" description="{=taom_wfr_t1_b_p1}+5% resistance." icon_sprite="career_choice_dm_t1_b_p1">
+      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t1_b_p2" type="Passive" description="{=taom_wfr_t1_b_p2}+5 max health." icon_sprite="career_choice_dm_t1_b_p2">
+      <PassiveEffect type="Health" magnitude="5" operation="Add" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t1_b_p3" type="Passive" description="{=taom_wfr_t1_b_p3}+5% party spotting range." icon_sprite="career_choice_dm_t1_b_p3">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t1_b_p4" type="Passive" description="{=taom_wfr_t1_b_p4}+10% stealth bonus." icon_sprite="career_choice_dm_t1_b_p4">
+      <PassiveEffect type="StealthBonus" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="woodward_of_the_forest_road_t2_a" display_name="{=taom_career_grp_woodward_of_the_forest_road_t2_a}Heir of the Woodwards" career_id="woodward_of_the_forest_road" tier="2">
+    <Choice id="woodward_of_the_forest_road_t2_a_key" type="Keystone" description="{=taom_wfr_t2_a_key}Ironwood Volley charge reduced, maintaining constant pressure." icon_sprite="career_choice_dm_t2_a_key">
+      <Mutations><Mutation target_id="woodward_of_the_forest_road_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t2_a_p1" type="Passive" description="{=taom_wfr_t2_a_p1}+10% party spotting range." icon_sprite="career_choice_dm_t2_a_p1">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t2_a_p2" type="Passive" description="{=taom_wfr_t2_a_p2}+10% movement speed." icon_sprite="career_choice_dm_t2_a_p2">
+      <PassiveEffect type="MovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t2_a_p3" type="Passive" description="{=taom_wfr_t2_a_p3}+13% stealth bonus." icon_sprite="career_choice_dm_t2_a_p3">
+      <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t2_a_p4" type="Passive" description="{=taom_wfr_t2_a_p4}+10% battle renown gain." icon_sprite="career_choice_dm_t2_a_p4">
+      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="woodward_of_the_forest_road_t2_b" display_name="{=taom_career_grp_woodward_of_the_forest_road_t2_b}Owl-Sighted Archer" career_id="woodward_of_the_forest_road" tier="2">
+    <Choice id="woodward_of_the_forest_road_t2_b_key" type="Keystone" description="{=taom_wfr_t2_b_key}Ironwood Volley gains additional penetration while active." icon_sprite="career_choice_dm_t2_b_key">
+      <Mutations><Mutation target_id="woodward_of_the_forest_road_ability" property="Duration" calculator="flat" value="2" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t2_b_p1" type="Passive" description="{=taom_wfr_t2_b_p1}+12% ranged damage." icon_sprite="career_choice_dm_t2_b_p1">
+      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t2_b_p2" type="Passive" description="{=taom_wfr_t2_b_p2}+10% armor penetration." icon_sprite="career_choice_dm_t2_b_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.10" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t2_b_p3" type="Passive" description="{=taom_wfr_t2_b_p3}+8 max health." icon_sprite="career_choice_dm_t2_b_p3">
+      <PassiveEffect type="Health" magnitude="8" operation="Add" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t2_b_p4" type="Passive" description="{=taom_wfr_t2_b_p4}+3% troop damage." icon_sprite="career_choice_dm_t2_b_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="woodward_of_the_forest_road_t3_a" display_name="{=taom_career_grp_woodward_of_the_forest_road_t3_a}Spider-Slayer of the Emyn Duir" career_id="woodward_of_the_forest_road" tier="3">
+    <Choice id="woodward_of_the_forest_road_t3_a_key" type="Keystone" description="{=taom_wfr_t3_a_key}Ironwood Volley radius greatly expanded, inescapable volleys." icon_sprite="career_choice_dm_t3_a_key">
+      <Mutations><Mutation target_id="woodward_of_the_forest_road_ability" property="Radius" calculator="flat" value="5" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t3_a_p1" type="Passive" description="{=taom_wfr_t3_a_p1}+18% ranged damage." icon_sprite="career_choice_dm_t3_a_p1">
+      <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t3_a_p2" type="Passive" description="{=taom_wfr_t3_a_p2}+15% armor penetration." icon_sprite="career_choice_dm_t3_a_p2">
+      <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t3_a_p3" type="Passive" description="{=taom_wfr_t3_a_p3}+15% battle renown gain." icon_sprite="career_choice_dm_t3_a_p3">
+      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t3_a_p4" type="Passive" description="{=taom_wfr_t3_a_p4}+5% troop damage." icon_sprite="career_choice_dm_t3_a_p4">
+      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
+  <ChoiceGroup id="woodward_of_the_forest_road_t3_b" display_name="{=taom_career_grp_woodward_of_the_forest_road_t3_b}The Bow of Ingomar's Line" career_id="woodward_of_the_forest_road" tier="3">
+    <Choice id="woodward_of_the_forest_road_t3_b_key" type="Keystone" description="{=taom_wfr_t3_b_key}Ironwood Volley charge greatly reduced, relentless fire." icon_sprite="career_choice_dm_t3_b_key">
+      <Mutations><Mutation target_id="woodward_of_the_forest_road_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" /></Mutations>
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t3_b_p1" type="Passive" description="{=taom_wfr_t3_b_p1}+15% stealth bonus." icon_sprite="career_choice_dm_t3_b_p1">
+      <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t3_b_p2" type="Passive" description="{=taom_wfr_t3_b_p2}+15% movement speed." icon_sprite="career_choice_dm_t3_b_p2">
+      <PassiveEffect type="MovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t3_b_p3" type="Passive" description="{=taom_wfr_t3_b_p3}+9 max health." icon_sprite="career_choice_dm_t3_b_p3">
+      <PassiveEffect type="Health" magnitude="9" operation="Add" />
+    </Choice>
+    <Choice id="woodward_of_the_forest_road_t3_b_p4" type="Passive" description="{=taom_wfr_t3_b_p4}+15% party spotting range." icon_sprite="career_choice_dm_t3_b_p4">
+      <PassiveEffect type="PartySpottingRange" magnitude="0.15" operation="Add" is_percentage="true" />
+    </Choice>
+  </ChoiceGroup>
+
 </CareerChoices>

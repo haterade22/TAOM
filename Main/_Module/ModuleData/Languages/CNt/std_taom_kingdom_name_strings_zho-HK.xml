@@ -86,5 +86,15 @@
     <string id="taom_eredluin_ruler_title" text="King" />
     <string id="taom_eredluin_short_name" text="Ered Luin" />
     <string id="taom_eredluin_title" text="Kingdom of Ered Luin" />
+    <string id="taom_anduinvale_desc" text="The Beornings and the Woodmen of the Vales hold the upper Anduin between the Misty Mountains and Mirkwood. They keep the High Pass and the Old Ford open for honest travellers and take a heavy toll of orcs and wolves. Their chieftains hold Beorn's Hall and the Carrock and want no part in the wars of kings." />
+    <string id="taom_anduinvale_name" text="Anduin Vale" />
+    <string id="taom_anduinvale_ruler_title" text="Chieftain" />
+    <string id="taom_anduinvale_short_name" text="Anduin Vale" />
+    <string id="taom_anduinvale_title" text="Anduin Vale" />
+    <string id="taom_angaladh_desc" text="The Woodmen of western Mirkwood cleared their steads under the eaves of the forest and named their realm for the iron-hard trees that ring Woodmen-town. They are bowmen and woodwards, few in number, at peace with the Elves to the north and ever watchful of Dol Guldur to the south." />
+    <string id="taom_angaladh_name" text="Angáladh" />
+    <string id="taom_angaladh_ruler_title" text="King" />
+    <string id="taom_angaladh_short_name" text="Angáladh" />
+    <string id="taom_angaladh_title" text="Kingdom of Angáladh" />
   </strings>
 </base>

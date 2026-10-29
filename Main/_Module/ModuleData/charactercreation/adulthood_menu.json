@@ -1942,5 +1942,137 @@
         "focus_to_add": 1,
         "skill_level_to_add": 10,
         "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_anduinvale_1",
+        "culture_id": "anduinvale",
+        "text": "You held the Carrock ford beside Grimbeorn.",
+        "description": "When a goblin host came down from the High Pass to cut the Vales in two, you stood in the ford with the axe-men of the House of Beorn until the Vale Riders came round their flank. Your name was spoken in the hall that night.",
+        "skills": ["TwoHanded", "Riding"],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_anduinvale_2",
+        "culture_id": "anduinvale",
+        "text": "You opened a free market at the Old Ford.",
+        "description": "You brought Beornings, Woodmen and the Elves of Mirkwood to one table and settled the tolls at the Old Ford, so that honey and timber crossed the river without a quarrel. Grimbeorn's steward does not forget who filled the storehouses.",
+        "skills": ["Trade", "Charm"],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_anduinvale_3",
+        "culture_id": "anduinvale",
+        "text": "You rebuilt the farms of Eastbank after a goblin raid.",
+        "description": "When raiders burned the farms of Eastbank, you gathered the neighbours, raised the barns before the first frost and kept watch on the fields until the harvest was in. The villages remember.",
+        "skills": ["Athletics", "Polearm"],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_anduinvale_4",
+        "culture_id": "anduinvale",
+        "text": "You raised the gates of Gladden Hold.",
+        "description": "You framed and hung the great timber gates of Gladden Hold, hewing the beams yourself. When the first raiders broke against them and held, the garrison named the gates after you.",
+        "skills": ["Crafting", "OneHanded"],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_anduinvale_5",
+        "culture_id": "anduinvale",
+        "text": "You guided families out of the shadow of Dol Guldur.",
+        "description": "When the shadow in the south grew and Woodmen families fled north through the trees, you led them across the river by paths no orc scout knew, and lost not one child. Grimbeorn gave you his hand.",
+        "skills": ["Scouting", "Bow"],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_anduinvale_6",
+        "culture_id": "anduinvale",
+        "text": "You broke a ring of goblin fences at the Old Ford.",
+        "description": "For months stolen goods from the Misty Mountains had turned up in the back rooms along the river. You traced the trade, found the men behind it and handed them to the wardens, keeping a little of the silver for your trouble.",
+        "skills": ["Roguery", "Throwing"],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_angaladh_1",
+        "culture_id": "angaladh",
+        "text": "You held the Forest Gate beside King Ingomar.",
+        "description": "When a host of orcs came up from Dol Guldur to force the Forest Gate, you stood in the passage with the king's spearmen until the woodwards came round through the trees. Your name was spoken in the hall that night.",
+        "skills": ["TwoHanded", "Riding"],
+        "attribute": "Vigor",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_angaladh_2",
+        "culture_id": "angaladh",
+        "text": "You opened a timber market with the Beornings.",
+        "description": "You crossed the Anduin and put the case for Angáladh's timber to the Beornings with such plainness that a regular market was set up within the month. The king's steward learned your name.",
+        "skills": ["Trade", "Charm"],
+        "attribute": "Social",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_angaladh_3",
+        "culture_id": "angaladh",
+        "text": "You drove the spiders out of Thornhold's old fields.",
+        "description": "When the forest crept back over the abandoned clearings of Thornhold, you led the farmers in with fire and spears, cleared the nests and brought in a harvest where none had grown in a generation.",
+        "skills": ["Athletics", "Polearm"],
+        "attribute": "Endurance",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_angaladh_4",
+        "culture_id": "angaladh",
+        "text": "You raised the new gate-beams of Ironwood Hall.",
+        "description": "You chose, felled and hauled the ironwood for the great beams of the hall's gate, hewing them yourself. When the first raiders broke against them and held, the garrison named the gate-beams after you.",
+        "skills": ["Crafting", "OneHanded"],
+        "attribute": "Intelligence",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_angaladh_5",
+        "culture_id": "angaladh",
+        "text": "You brought a woodward patrol out of a spider-hollow.",
+        "description": "When a woodward patrol was cut off in a hollow under the Emyn Duir, you led them out by a deer-trail no spider watched, losing not a single man. Their captain clasped your arm and named you a friend of the woodwards.",
+        "skills": ["Scouting", "Bow"],
+        "attribute": "Control",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
+    },
+    {
+        "string_id": "taom_adulthood_angaladh_6",
+        "culture_id": "angaladh",
+        "text": "You broke a band of fences working the Forest Road.",
+        "description": "For months looted goods had been turning up in the back rooms of Woodmen-town. You traced the trade, found the men behind it and handed them to the king's wardens, keeping a little of the silver for your trouble.",
+        "skills": ["Roguery", "Throwing"],
+        "attribute": "Cunning",
+        "focus_to_add": 1,
+        "skill_level_to_add": 10,
+        "attribute_level_to_add": 1
     }
 ]

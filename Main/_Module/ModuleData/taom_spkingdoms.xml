@@ -1480,4 +1480,130 @@
         </policies>
     </Kingdom>
   <!-- TAOM-NEWFACTIONS:eredluin:END -->
+  <!-- TAOM-NEWFACTIONS:anduinvale:BEGIN -->
+    <Kingdom
+        id="anduinvale"
+        owner="Hero.lord_AV1_1"
+        initial_home_settlement="Settlement.town_AV1"
+        banner_key="11.2007.2007.1528.1528.764.764.1.0.0.20006.2024.2024.700.700.764.764.0.0.0"        primary_banner_color="0xFF654D37"
+        secondary_banner_color="0xFFFBC841"
+        color="0xFF654D37"
+        color2="0xFFFBC841"      
+        culture="Culture.anduinvale"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_anduinvale_name}Anduin Vale"
+        short_name="{=taom_anduinvale_short_name}Anduin Vale"
+        title="{=taom_anduinvale_title}Anduin Vale"
+        ruler_title="{=taom_anduinvale_ruler_title}Chieftain"
+        text="{=taom_anduinvale_desc}The Beornings and the Woodmen of the Vales hold the upper Anduin between the Misty Mountains and Mirkwood. They keep the High Pass and the Old Ford open for honest travellers and take a heavy toll of orcs and wolves. Their chieftains hold Beorn's Hall and the Carrock and want no part in the wars of kings.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.gundabad"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.goblin"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mistymountainorcs"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.angaladh"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+  <!-- TAOM-NEWFACTIONS:anduinvale:END -->
+  <!-- TAOM-NEWFACTIONS:angaladh:BEGIN -->
+    <Kingdom
+        id="angaladh"
+        owner="Hero.lord_AND1_1"
+        initial_home_settlement="Settlement.town_AND1"
+        banner_key="11.2021.2021.1528.1528.764.764.1.0.0.17000.2022.2022.700.700.764.764.0.0.0"        primary_banner_color="0xFF4F6F5A"
+        secondary_banner_color="0xFFF2F4F7"
+        color="0xFF4F6F5A"
+        color2="0xFFF2F4F7"      
+        culture="Culture.angaladh"
+        settlement_banner_mesh="encounter_flag_a"
+        flag_mesh="info_screen_flags_b"
+        name="{=taom_angaladh_name}Angáladh"
+        short_name="{=taom_angaladh_short_name}Angáladh"
+        title="{=taom_angaladh_title}Kingdom of Angáladh"
+        ruler_title="{=taom_angaladh_ruler_title}King"
+        text="{=taom_angaladh_desc}The Woodmen of western Mirkwood cleared their steads under the eaves of the forest and named their realm for the iron-hard trees that ring Woodmen-town. They are bowmen and woodwards, few in number, at peace with the Elves to the north and ever watchful of Dol Guldur to the south.">
+        <relationships>
+            <relationship
+                kingdom="Kingdom.mirkwood"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.lothlorien"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.sturgia"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.erebor"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.dolguldur"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.gundabad"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.goblin"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.mistymountainorcs"
+                value="0"
+                isAtWar="false" />
+            <relationship
+                kingdom="Kingdom.anduinvale"
+                value="0"
+                isAtWar="false" />
+        </relationships>
+        <policies>
+            <policy
+                id="policy_royal_privilege" />
+            <policy
+                id="policy_castle_charters" />
+        </policies>
+    </Kingdom>
+  <!-- TAOM-NEWFACTIONS:angaladh:END -->
 </Kingdoms>

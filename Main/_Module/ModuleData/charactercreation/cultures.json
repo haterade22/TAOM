@@ -317,5 +317,25 @@
         "default_build": 0.5347,
         "focus_to_add": 0,
         "skill_level_to_add": 0
+    },
+    {
+        "culture_id": "anduinvale",
+        "races": ["human"],
+        "starting_settlement": "town_AV1",
+        "default_age": 20.0,
+        "default_weight": 0.0,
+        "default_build": 0.7222,
+        "focus_to_add": 0,
+        "skill_level_to_add": 0
+    },
+    {
+        "culture_id": "angaladh",
+        "races": ["human"],
+        "starting_settlement": "town_AND1",
+        "default_age": 20.0,
+        "default_weight": 0.0,
+        "default_build": 0.7222,
+        "focus_to_add": 0,
+        "skill_level_to_add": 0
     }
 ]

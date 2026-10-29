@@ -344,6 +344,36 @@ CULTURES["rhudaur"] = dict(CULTURES["arthedain"], sword="sturgia_axe_2_t2", shie
 # actor in the narrative stages for a roster without one).
 CULTURES["eredluin"] = dict(CULTURES["erebor"], no_mount=True)
 
+# Anduin Vale and Angaladh are cut from Dale (culture id `sturgia`), which has no table here and no
+# player_char_creation_sturgia_* rosters, so each table is authored from the Dale items the realm's
+# own troops wear (troops_anduinvale.xml, troops_angaladh.xml: every piece below is on a troop).
+# Dale ships armour and weapons only, no civilian dress, so the lightest Dale pieces (the a01
+# archer and infantry sets) stand in for the civilian body and the bow is Dale's recurve bow.
+# Anduin Vale fights with axes and fields cavalry, so it is mounted and its sword slot holds a
+# Dale war axe. Angaladh is a spear and axe realm of foot soldiers with no rider: no_mount, so
+# its rosters carry no Horse or HorseHarness slot (Patch20 skips the horse actor in the narrative
+# stages for a roster without one).
+CULTURES["anduinvale"] = {
+    "body_civilian": "sk_dale_chest_archer_a01",
+    "body_alt": "sk_dale_chest_infrantry_a01",
+    "body_military": "sk_dale_chest_infrantry_b01",
+    "leg": "sk_dale_boots_infrantry_a01",
+    "leg_alt": "sk_dale_boots_archer_a01",
+    "head_light": "sk_dale_helmet_archer_a01",
+    "head_military": "sk_dale_helmet_infrantry_b01",
+    "gloves": "sk_dale_gauntlet_infrantry_a01",
+    "cape": "sk_dale_shoulder_archer_a01",
+    "cape_alt": "sk_dale_shoulder_infrantry_a01",
+    "sword": "dale_war_axe_c",
+    "spear": "dale_spear_a",
+    "bow": "dale_recurve_bow_a",
+    "arrows": "default_arrows",
+    "shield": "wm_dale_shield_a06",
+    "axe_or_mace": "dale_war_axe_a",
+}
+CULTURES["angaladh"] = dict(CULTURES["anduinvale"], sword="dale_sword_b", shield="wm_dale_shield_a08",
+                            axe_or_mace="dale_war_axe_c", no_mount=True)
+
 OCCUPATIONS = ["retainer", "merchant", "farmer", "artisan", "hunter", "vagabond"]
 CAREERS = ["retainer", "mercenary", "guard", "hunter", "infantry", "skirmisher", "bard", "6"]
 

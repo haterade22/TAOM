@@ -2254,3 +2254,15 @@ Cardolan's banner went green and white while its clans kept brown `color`/`color
 - **Why missed:** the change was made and reviewed where banners are defined.
 - **Prevent:** when a realm's banner or colours change, update in one change the kingdom banner key and colours, the clans' `color`/`color2` (Patch23 tint), the culture `color`/`color2`, the `factionmap/factions.json` colour, and every tool table that writes them (`generate_new_faction_kingdoms.py`, `promote_borrowed_cultures.py`, `make_new_factions_playable.py`).
 - **Source:** [rca-banner-packing-2026-10-28.md](../rca-banner-packing-2026-10-28.md) findings 4 and 5.
+
+### Apply a new kingdom's live map rows in its merge sitting, not mid-build (#1053, 2026-10-28)
+Anduin Vale's and Angáladh's 41 settlement rows went into the live, unversioned TAOM_Map while only the unmerged branch defined their cultures and clans. Every other checkout's validator then failed with 52 errors and its ModuleData commit hook blocked, and a campaign started with another build would have loaded those settlements on placeholder objects. Rolling the rows back reversed it: the branch's own validator then reported `LANDLESS_CULTURE`. One shared file can satisfy only one checkout at a time.
+- **Why missed:** the recipe orders the map step early, and the hazard was written down only as a Known gap of the previous realm (Ered Luin, recorded as a MEDIUM with no issue), which the next builder does not read.
+- **Prevent:** during a kingdom build, run the map tools as dry runs; apply the rows, then the BR/IT tags, in the merge sitting, and deploy right after ([recipe-add-a-kingdom.md](../../modding/recipe-add-a-kingdom.md) step 9). If rows must go in early for an in-game test, take them out again before other work resumes. #1055 is the gate.
+- **Source:** [rca-anduin-vale-angaladh-2026-10-28.md](../rca-anduin-vale-angaladh-2026-10-28.md) findings 1, 2, 8 and 9.
+
+### Check who else uses a reused id, not only that it exists (#1053, 2026-10-28)
+Angáladh's banners took Silvan icons the generator comment called unused; Mirkwood's Nos Galengrim flies three of them. The six new careers took Dale's portrait sprites, which no sprite sheet registers.
+- **Why missed:** existence was checked, and the banner check used a layer parser that does not match the key format.
+- **Prevent:** count a reused icon, sprite or template id with a plain token search over every file that can name it, and read the result before calling it unused.
+- **Source:** [rca-anduin-vale-angaladh-2026-10-28.md](../rca-anduin-vale-angaladh-2026-10-28.md) findings 12 and 13.

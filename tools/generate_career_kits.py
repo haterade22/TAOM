@@ -64,9 +64,13 @@ ARCH = "|".join(LAYOUT)   # the archetype alternation both roster regexes use
 SIDEARM = {"erebor": "OneHandedAxe",   # dwarves carry axes
            "eredluin": "OneHandedAxe", # so do the Blue Mountains dwarves
            "empire": "OneHandedAxe",   # Dunland has no non-vanilla one-handed sword
-           "rhudaur": "OneHandedAxe"}  # the hill-men carry Dunland's axes, no sword (#978)
+           "rhudaur": "OneHandedAxe",  # the hill-men carry Dunland's axes, no sword (#978)
+           "anduinvale": "OneHandedAxe"}  # the Beornings' axe line; Angaladh keeps Dale's sword
 SECOND = {"dolguldur": "TwoHandedAxe"}
 THROWN_CLASS = "ThrowingAxe"   # the THROWN token: the throwing weapon class; Ered Luin's Mattock Hewer throws one
+# No Angaladh troop (and no Dale one) carries a throwing weapon, so its two-handed career's second
+# slot is the culture's one-handed axe instead of a throwing axe.
+THROWN_FOR = {"angaladh": "OneHandedAxe"}
 RANGED = {"isengard": ("Crossbow", "Bolts"),   # Uruk Crossbow
           "erebor": ("Crossbow", "Bolts"),     # Crossbow Master
           "eredluin": ("Crossbow", "Bolts"),   # Firebeard Arbalester; no cavalry career (no rams)
@@ -116,7 +120,7 @@ def slot_classes(culture: str, archetype: str) -> dict[str, str]:
     culture = KIT_SOURCE.get(culture, culture)
     launcher, ammo = RANGED.get(culture, ("Bow", "Arrows"))
     resolve = {"SIDEARM": SIDEARM.get(culture, "OneHandedSword"), "SECOND": SECOND.get(culture, "TwoHandedPolearm"),
-               "LAUNCHER": launcher, "AMMO": ammo, "THROWN": THROWN_CLASS}
+               "LAUNCHER": launcher, "AMMO": ammo, "THROWN": THROWN_FOR.get(culture, THROWN_CLASS)}
     weapons = [resolve.get(k, k) for k in LAYOUT[archetype]]
     kit = {f"Item{i}": w for i, w in enumerate(weapons) if w}
     return {**kit, "Body": "BodyArmor", "Leg": "LegArmor"}

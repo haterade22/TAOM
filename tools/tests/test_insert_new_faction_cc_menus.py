@@ -39,6 +39,19 @@ EREBOR_IDENTITY = ("Erebor", "Lonely Mountain", "Dale", "Esgaroth", "Lake-town",
 ERED_LUIN_PLACES = ("Thorin's Halls", "Belegost", "Nogrod", "Blue Mountains", "Ered Luin",
                     "Mount Dolmed", "Dwarf-road", "Blue Craig", "Lindon")
 
+# Dale's own places and people for Anduin Vale and Angaladh, from the lore rather than from the tool's
+# FORBIDDEN_FOR table.
+DALE_IDENTITY = ("Dale", "Bard", "Esgaroth", "Lake-town", "Lonely Mountain", "Girion", "Erebor",
+                 "King Brand", "Long Lake", "Smaug")
+# At least one of these must appear in each menu of its realm, so the check above cannot pass on text
+# that names no place at all.
+DALE_CLONE_PLACES = {
+    "anduinvale": ("Beorn's Hall", "Old Ford", "Carrock", "Grimbeorn", "Gladden", "High Pass",
+                   "Eastbank", "Misty Mountains", "Mirkwood"),
+    "angaladh": ("Woodmen-town", "Ironwood Hall", "Forest Gate", "Thornhold", "Emyn Duir",
+                 "Forest Road", "Ingomar", "Mirkwood"),
+}
+
 # The shipped files, captured before any test patches cc.CC or cc.CC_STRINGS.
 SHIPPED_CC = cc.CC
 SHIPPED_STRINGS = cc.CC_STRINGS
@@ -148,6 +161,53 @@ class EredLuinText(unittest.TestCase):
                 self.assertTrue(any(p in blob for p in ERED_LUIN_PLACES))
 
 
+class DaleCloneText(unittest.TestCase):
+    """Anduin Vale and Angaladh are cut from Dale (culture id `sturgia`) and take its mechanics."""
+
+    def test_both_realms_clone_dale(self):
+        for culture in DALE_CLONE_PLACES:
+            with self.subTest(culture=culture):
+                self.assertIn(culture, cc.NEW)
+                self.assertEqual(cc.SRC_FOR[culture], "sturgia")
+                self.assertIn(culture, cc.AUTHORED)
+
+    def test_text_names_no_dale_place_or_person(self):
+        for culture in DALE_CLONE_PLACES:
+            for menu, rows in cc.AUTHORED[culture].items():
+                for text, desc in rows:
+                    for word in DALE_IDENTITY:
+                        with self.subTest(culture=culture, menu=menu, text=text, word=word):
+                            self.assertNotIn(word, text + " " + desc)
+
+    def test_each_menu_names_the_realms_own_places(self):
+        for culture, places in DALE_CLONE_PLACES.items():
+            for menu, rows in cc.AUTHORED[culture].items():
+                blob = " ".join(t + " " + d for t, d in rows)
+                with self.subTest(culture=culture, menu=menu):
+                    self.assertTrue(any(p in blob for p in places))
+
+    def test_text_has_no_em_or_en_dash_and_six_entries_per_menu(self):
+        for culture in DALE_CLONE_PLACES:
+            for menu, rows in cc.AUTHORED[culture].items():
+                with self.subTest(culture=culture, menu=menu):
+                    self.assertEqual(len(rows), 6)
+                    for text, desc in rows:
+                        self.assertNotIn("\u2014", text + desc)
+                        self.assertNotIn("\u2013", text + desc)
+
+    def test_the_shipped_entries_keep_dales_mechanics_entry_for_entry(self):
+        for menu in cc.MENUS:
+            data = load(menu, SHIPPED_CC)
+            dale = [e for e in data if e.get("culture_id") == "sturgia"]
+            for culture in DALE_CLONE_PLACES:
+                new = [e for e in data if e.get("culture_id") == culture]
+                with self.subTest(menu=menu, culture=culture):
+                    self.assertEqual(len(new), len(dale))
+                    for a, b in zip(dale, new):
+                        self.assertEqual({k: v for k, v in a.items() if k not in NON_MECHANICS},
+                                         {k: v for k, v in b.items() if k not in NON_MECHANICS})
+
+
 class DryRunAndApply(unittest.TestCase):
     """The tool on a temp copy that lacks Ered Luin: a dry run writes nothing, --check fails, and
     --apply adds Erebor's count of entries in every menu and registers their strings. A clone
@@ -158,10 +218,10 @@ class DryRunAndApply(unittest.TestCase):
         self.cc_dir = os.path.join(self.tmp, "charactercreation")
         os.makedirs(self.cc_dir)
         for menu in cc.MENUS:
-            write_menu(self.cc_dir, menu, drop={"eredluin"})
+            write_menu(self.cc_dir, menu, drop={"eredluin", "anduinvale", "angaladh"})
         raw = open(cc.CC_STRINGS, "rb").read()
         bom = raw.startswith(b"\xef\xbb\xbf")
-        text = re.sub(r'[^\n]*id="taom_cc_taom_[a-z]+_eredluin_\d+_(?:text|desc)"[^\n]*\n', "",
+        text = re.sub(r'[^\n]*id="taom_cc_taom_[a-z]+_(?:eredluin|anduinvale|angaladh)_\d+_(?:text|desc)"[^\n]*\n', "",
                       raw.decode("utf-8-sig"))
         self.strings = os.path.join(self.tmp, "taom_cc_strings.xml")
         open(self.strings, "wb").write((b"\xef\xbb\xbf" if bom else b"") + text.encode("utf-8"))
@@ -218,6 +278,24 @@ class DryRunAndApply(unittest.TestCase):
         self.assertEqual(rc, 0, out)
         run(["--apply"])
         self.assertEqual(once, self.snapshot(), "a second --apply changed the files")
+
+    def test_apply_adds_anduin_vale_and_angaladh_with_dales_entry_count_and_registers_them(self):
+        run(["--apply"])
+        for menu in cc.MENUS:
+            after = load(menu, self.cc_dir)
+            dale = [e for e in after if e.get("culture_id") == "sturgia"]
+            for culture in ("anduinvale", "angaladh"):
+                new = [e for e in after if e.get("culture_id") == culture]
+                with self.subTest(menu=menu, culture=culture):
+                    self.assertEqual(len(new), len(dale))
+                    self.assertTrue(all(culture in e["string_id"] and "sturgia" not in e["string_id"] for e in new))
+        rows = registered(self.strings)
+        for culture in ("anduinvale", "angaladh"):
+            for menu in cc.MENUS:
+                for e in load(menu, self.cc_dir):
+                    if e.get("culture_id") == culture:
+                        self.assertIn(f"taom_cc_{e['string_id']}_text", rows)
+                        self.assertIn(f"taom_cc_{e['string_id']}_desc", rows)
 
     def test_a_clone_source_with_no_entries_fails_every_mode_and_writes_nothing(self):
         # The shipped files, except that youth has neither Erebor's entries nor Ered Luin's. Ered

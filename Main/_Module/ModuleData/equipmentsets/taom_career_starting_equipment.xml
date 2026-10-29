@@ -1844,4 +1844,142 @@
         </EquipmentSet>
     </EquipmentRoster>
 
+    <!-- Anduin Vale and Angaladh (Dale's mechanics, parked at character creation until they have their own armour): each kit is the
+         gear the realm's lowest troops carry (generate_career_kits.py). Anduin Vale fields cavalry, so it has a cavalry
+         pair on Cardolan's saddle horse and starter harness; Angaladh is on foot only and no roster of it carries a Horse slot. -->
+
+    <!-- ═══ ANDUIN VALE: RANGED (Archer of Eastbank) ═══ -->
+
+    <EquipmentRoster id="player_career_anduinvale_ranged_m" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.ladder_dale_bow_t1" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_war_axe_a" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_anduinvale_ranged_f" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.ladder_dale_bow_t1" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_war_axe_a" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <!-- ═══ ANDUIN VALE: CAVALRY (Rider of the Vales) ═══ -->
+
+    <EquipmentRoster id="player_career_anduinvale_cavalry_m" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_spear_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a06" />
+            <Equipment slot="Item2" id="Item.dale_war_axe_a" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+            <Equipment slot="Horse" id="Item.saddle_horse" />
+            <Equipment slot="HorseHarness" id="Item.starter_cavalry_gondor_horse_armor_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_anduinvale_cavalry_f" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_spear_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a06" />
+            <Equipment slot="Item2" id="Item.dale_war_axe_a" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+            <Equipment slot="Horse" id="Item.saddle_horse" />
+            <Equipment slot="HorseHarness" id="Item.starter_cavalry_gondor_horse_armor_a" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <!-- ═══ ANDUIN VALE: INFANTRY (Axe-warden of Beorn's Hall) ═══ -->
+
+    <EquipmentRoster id="player_career_anduinvale_infantry_m" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_war_axe_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a06" />
+            <Equipment slot="Item2" id="Item.dale_spear_a" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_anduinvale_infantry_f" culture="Culture.anduinvale">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_war_axe_a" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a06" />
+            <Equipment slot="Item2" id="Item.dale_spear_a" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <!-- ═══ ANGALADH: RANGED (Woodward of the Forest Road) ═══ -->
+
+    <EquipmentRoster id="player_career_angaladh_ranged_m" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.ladder_dale_bow_t1" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_angaladh_ranged_f" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.ladder_dale_bow_t1" />
+            <Equipment slot="Item1" id="Item.default_arrows" />
+            <Equipment slot="Item2" id="Item.dale_sword_c" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <!-- ═══ ANGALADH: INFANTRY (Warden of the Forest Gate) ═══ -->
+
+    <EquipmentRoster id="player_career_angaladh_infantry_m" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a06" />
+            <Equipment slot="Item2" id="Item.dale_spear_a" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_angaladh_infantry_f" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_sword_c" />
+            <Equipment slot="Item1" id="Item.wm_dale_shield_a06" />
+            <Equipment slot="Item2" id="Item.dale_spear_a" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <!-- ═══ ANGALADH: TWO-HANDED (Hewer of Ironwood Hall); two-handed axe and a one-handed axe ═══ -->
+
+    <EquipmentRoster id="player_career_angaladh_twohanded_m" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_great_axe_a" />
+            <Equipment slot="Item1" id="Item.dale_war_axe_b" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
+    <EquipmentRoster id="player_career_angaladh_twohanded_f" culture="Culture.angaladh">
+        <EquipmentSet>
+            <Equipment slot="Item0" id="Item.dale_great_axe_a" />
+            <Equipment slot="Item1" id="Item.dale_war_axe_b" />
+            <Equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+            <Equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+        </EquipmentSet>
+    </EquipmentRoster>
+
 </EquipmentRosters>

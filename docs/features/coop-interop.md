@@ -588,13 +588,13 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **499** settings across
+- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **501** settings across
   four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
-  the split is 469 in `TaomSettings`, 19 in `BattleLoadDiagnosticsSettings`, 10 in
+  the split is 471 in `TaomSettings`, 19 in `BattleLoadDiagnosticsSettings`, 10 in
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
   **330 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
   ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 330 are in
-  `TaomSettings`. The 169 excluded (67 counted 2026-09-22, less the Native Skin Fixes toggle removed with the feature 2026-10-05, the 38 Realm Borders settings added from 2026-09-30 to 2026-10-08, the Crash Report AfterStart dev trigger added 2026-10-01, the Battle Corpses advice toggle and button added 2026-10-01, and the thirteen Menus & Loading Screens settings added 2026-10-01, #704, and the three tick profiler settings added 2026-10-02, and the hitch probe toggle added 2026-10-02, and the Animation Clip Memory probe toggle added 2026-10-02, and the map profiler toggle added 2026-10-03, and the Load-Time Stamps toggle added 2026-10-03, and the Race Abilities war cry, message and debug-log toggles added 2026-10-04, and the Race Abilities glow toggle added 2026-10-04, and the Crash Report mission-start survival toggle added 2026-10-08, and the Crash Report skeleton buffer guard and watch toggles added 2026-10-08, and the Map Performance nameplate cull and map view release settings added 2026-10-08, and the War Chronicle announcements toggle added 2026-10-08, and the three Animation Variety settings and the swing alternative probe toggle added 2026-10-17, and the Hidden Hosts toggle added 2026-10-18, and the Fell Foes debug log toggle added 2026-10-19, the two Telchar's Mark settings added 2026-10-19, #875, the two Reeve's Ledger switches added 2026-10-19, #857, and the Lost Footing census toggle added 2026-10-20, #894, the Watch-Silver and Tidings of the Lists switches added 2026-10-21, #859, less the two Quick Actions "include equipped" toggles removed 2026-10-23, #925, and the Cardolan and Rhudaur realm colours added 2026-10-23, #978, and the Loremaster's Line switch added 2026-10-23, #877, and the Hearth Roll tint toggle added 2026-10-23, #906, and the six camp work, rest healing and start-in-camp settings added 2026-10-24, #860, and the Notable Services switch added 2026-10-24, #899, and the Harvest Road notices toggle added 2026-10-26, #912, and the Make Tools switch added 2026-10-26, #910, and the two Many Hammers switches added 2026-10-26, #911, and the Bandit Voices greetings toggle added 2026-10-26, #900, less the two Auto-Resolve Diagnostics toggles removed with the feature 2026-10-26, and the Inn Rounds switch and its two scales added 2026-10-26, #901, and the Prisoner Banners toggle added 2026-10-27, #902, and the Ered Luin realm colour added 2026-10-27, and the Warden's Tally switch added 2026-10-27, #903) are instrumentation, player-local convenience,
+  `TaomSettings`. The 171 excluded (67 counted 2026-09-22, less the Native Skin Fixes toggle removed with the feature 2026-10-05, the 38 Realm Borders settings added from 2026-09-30 to 2026-10-08, the Crash Report AfterStart dev trigger added 2026-10-01, the Battle Corpses advice toggle and button added 2026-10-01, and the thirteen Menus & Loading Screens settings added 2026-10-01, #704, and the three tick profiler settings added 2026-10-02, and the hitch probe toggle added 2026-10-02, and the Animation Clip Memory probe toggle added 2026-10-02, and the map profiler toggle added 2026-10-03, and the Load-Time Stamps toggle added 2026-10-03, and the Race Abilities war cry, message and debug-log toggles added 2026-10-04, and the Race Abilities glow toggle added 2026-10-04, and the Crash Report mission-start survival toggle added 2026-10-08, and the Crash Report skeleton buffer guard and watch toggles added 2026-10-08, and the Map Performance nameplate cull and map view release settings added 2026-10-08, and the War Chronicle announcements toggle added 2026-10-08, and the three Animation Variety settings and the swing alternative probe toggle added 2026-10-17, and the Hidden Hosts toggle added 2026-10-18, and the Fell Foes debug log toggle added 2026-10-19, the two Telchar's Mark settings added 2026-10-19, #875, the two Reeve's Ledger switches added 2026-10-19, #857, and the Lost Footing census toggle added 2026-10-20, #894, the Watch-Silver and Tidings of the Lists switches added 2026-10-21, #859, less the two Quick Actions "include equipped" toggles removed 2026-10-23, #925, and the Cardolan and Rhudaur realm colours added 2026-10-23, #978, and the Loremaster's Line switch added 2026-10-23, #877, and the Hearth Roll tint toggle added 2026-10-23, #906, and the six camp work, rest healing and start-in-camp settings added 2026-10-24, #860, and the Notable Services switch added 2026-10-24, #899, and the Harvest Road notices toggle added 2026-10-26, #912, and the Make Tools switch added 2026-10-26, #910, and the two Many Hammers switches added 2026-10-26, #911, and the Bandit Voices greetings toggle added 2026-10-26, #900, less the two Auto-Resolve Diagnostics toggles removed with the feature 2026-10-26, and the Inn Rounds switch and its two scales added 2026-10-26, #901, and the Prisoner Banners toggle added 2026-10-27, #902, and the Ered Luin realm colour added 2026-10-27, and the Warden's Tally switch added 2026-10-27, #903, and the Anduin Vale and Angáladh realm colours added 2026-10-28) are instrumentation, player-local convenience,
   presentation, two action buttons, and the three time-acceleration knobs whose UI co-op already
   suppresses; the list with its reasons is
   `Main/Features/CoopInterop/CoopSettingsRelevance.cs`.
@@ -836,9 +836,12 @@ Owed by the #966 work (Batch B, co-op player attribution), none of it run in gam
 - [docs/ai-includes/orientation.md](../ai-includes/orientation.md)
 - [docs/features/alignment-desertion.md](./alignment-desertion.md)
 - [docs/features/animation-variety.md](./animation-variety.md)
+- [docs/features/bandit-voices.md](./bandit-voices.md)
 - [docs/features/bannerlord-together-compat.md](./bannerlord-together-compat.md)
+- [docs/features/bond-of-hire.md](./bond-of-hire.md)
 - [docs/features/coop-dedicated-server.md](./coop-dedicated-server.md)
 - [docs/features/dread-aura.md](./dread-aura.md)
+- [docs/features/encyclopedia.md](./encyclopedia.md)
 - [docs/features/enlistment.md](./enlistment.md)
 - [docs/features/eye-of-sauron.md](./eye-of-sauron.md)
 - [docs/features/far-watch.md](./far-watch.md)
@@ -848,25 +851,38 @@ Owed by the #966 work (Batch B, co-op player attribution), none of it run in gam
 - [docs/features/from-the-ashes.md](./from-the-ashes.md)
 - [docs/features/good-deeds.md](./good-deeds.md)
 - [docs/features/harvest-road.md](./harvest-road.md)
+- [docs/features/hearth-roll.md](./hearth-roll.md)
 - [docs/features/hero-race.md](./hero-race.md)
 - [docs/features/hidden-hosts.md](./hidden-hosts.md)
 - [docs/features/hold-the-walls.md](./hold-the-walls.md)
+- [docs/features/inn-rounds.md](./inn-rounds.md)
+- [docs/features/kings-muster.md](./kings-muster.md)
+- [docs/features/lines-of-descent.md](./lines-of-descent.md)
 - [docs/features/long-memory.md](./long-memory.md)
 - [docs/features/lord-courtesies.md](./lord-courtesies.md)
 - [docs/features/lord-face-variety.md](./lord-face-variety.md)
 - [docs/features/minor-clan-migration.md](./minor-clan-migration.md)
 - [docs/features/namegiving.md](./namegiving.md)
+- [docs/features/notable-services.md](./notable-services.md)
 - [docs/features/oaths-of-service.md](./oaths-of-service.md)
 - [docs/features/player-possession.md](./player-possession.md)
 - [docs/features/player-switcher.md](./player-switcher.md)
+- [docs/features/prisoner-banners.md](./prisoner-banners.md)
+- [docs/features/provender.md](./provender.md)
+- [docs/features/red-arrow.md](./red-arrow.md)
 - [docs/features/reeves-ledger.md](./reeves-ledger.md)
+- [docs/features/seasoned-hosts.md](./seasoned-hosts.md)
+- [docs/features/settlement-services.md](./settlement-services.md)
 - [docs/features/siege-dismount.md](./siege-dismount.md)
 - [docs/features/smart-cavalry-ai.md](./smart-cavalry-ai.md)
 - [docs/features/special-resources.md](./special-resources.md)
+- [docs/features/sworn-anew.md](./sworn-anew.md)
 - [docs/features/tokens-of-esteem.md](./tokens-of-esteem.md)
 - [docs/features/troop-weight-system.md](./troop-weight-system.md)
+- [docs/features/unlooked-for-aid.md](./unlooked-for-aid.md)
 - [docs/features/war-chronicle.md](./war-chronicle.md)
 - [docs/features/war-of-the-ring-momentum.md](./war-of-the-ring-momentum.md)
+- [docs/features/wardens-tally.md](./wardens-tally.md)
 - [docs/INDEX.md](../INDEX.md)
 - [docs/migration/dr3-maintenance.md](../migration/dr3-maintenance.md)
 - [docs/modding/module-dependencies.md](../modding/module-dependencies.md)

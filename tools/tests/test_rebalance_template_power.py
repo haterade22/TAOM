@@ -487,9 +487,9 @@ class HeroTroopHandling(unittest.TestCase):
             rtp.TARGET_FILE.read_bytes().decode("utf-8"),
             rtp.load_troop_levels(), rtp.load_power_table(), rtp.DEFAULT_BUDGETS,
             rtp.load_mounted_troops(), "all", heroes)
-        self.assertEqual(unknown, [], "every stack in the 50 templates must still be costable")
-        self.assertEqual(len(rows), 50,
-                         "all 50 templates (8 raider + 42 caravan, #978 added Cardolan's and Rhudaur's, Ered Luin added 2) must still be retuned, got %d"
+        self.assertEqual(unknown, [], "every stack in the 54 templates must still be costable")
+        self.assertEqual(len(rows), 54,
+                         "all 54 templates (8 raider + 46 caravan, #978 added Cardolan's and Rhudaur's, Ered Luin added 2, Anduin Vale and Angaladh 4) must still be retuned, got %d"
                          % len(rows))
 
 

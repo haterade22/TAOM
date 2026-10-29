@@ -763,17 +763,62 @@
   },
   "anduin_vale": {
     "name": "{=taom_faction_anduin_vale_name}Anduin Vale",
-    "color": "#688830FF",
+    "color": "#654D37FF",
     "playable": false,
-    "game_faction": "sturgia",
-    "side": "free",
-    "description": "{=taom_faction_anduin_vale_desc}The fertile valley of the Great River Anduin, home to the Beornings and Woodmen. Simple folk who live between the Misty Mountains and Mirkwood.",
+    "game_faction": "anduinvale",
+    "side": "neutral",
+    "description": "{=taom_faction_anduin_vale_desc}The Beornings and the Woodmen of the Vales hold the upper Anduin between the Misty Mountains and Mirkwood, with the Carrock and the Old Ford as their keys. Farmers, herdsmen and honey-keepers, they stand apart from the War of the Ring, but the orcs and wolves of the mountains test their few halls every year.",
     "traits": [
       "{=taom_faction_anduin_vale_trait_0}Beornings",
       "{=taom_faction_anduin_vale_trait_1}Woodmen of the Vales",
       "{=taom_faction_anduin_vale_trait_2}Great River Trade"
     ],
-    "image": "faction_anduin_vale"
+    "image": "faction_anduin_vale",
+    "bonuses": [
+      {
+        "text": "{=taom_faction_anduin_vale_bonus_0}+10% party speed on plains (Vale Traders)",
+        "positive": true
+      },
+      {
+        "text": "{=taom_faction_anduin_vale_bonus_1}-0.5 settlement loyalty per day (Small Territory Exposure)",
+        "positive": false
+      }
+    ],
+    "perks": [
+      {
+        "name": "{=taom_faction_anduin_vale_perk_0_name}Vale Traders",
+        "description": "{=taom_faction_anduin_vale_perk_0_desc}+10% party speed on plains, the open river meadows the folk of the vales know best."
+      },
+      {
+        "name": "{=taom_faction_anduin_vale_perk_1_name}Apart from the War",
+        "description": "{=taom_faction_anduin_vale_perk_1_desc}Stands outside the War of the Ring: no alliance and no sworn enemy at the start of a campaign."
+      }
+    ],
+    "special_units": [
+      {
+        "name": "{=taom_faction_anduin_vale_su_0_name}Bear-warden of the Carrock",
+        "description": "{=taom_faction_anduin_vale_su_0_desc}Poleaxe guard of the Chieftain's hall."
+      },
+      {
+        "name": "{=taom_faction_anduin_vale_su_1_name}Beorning Axe-lord",
+        "description": "{=taom_faction_anduin_vale_su_1_desc}Great-axe champion of the vale."
+      },
+      {
+        "name": "{=taom_faction_anduin_vale_su_2_name}Woodman Marksman",
+        "description": "{=taom_faction_anduin_vale_su_2_desc}Bodkin archer of the river meadows."
+      }
+    ],
+    "strengths": [
+      "{=taom_faction_anduin_vale_strength_0}A strong axe line, from the Beorning Youth to the Bear-warden",
+      "{=taom_faction_anduin_vale_strength_1}Quick across the open river meadows",
+      "{=taom_faction_anduin_vale_strength_2}No sworn enemy at the start of a campaign"
+    ],
+    "weaknesses": [
+      "{=taom_faction_anduin_vale_weakness_0}Few lords and small hosts",
+      "{=taom_faction_anduin_vale_weakness_1}Loyalty slips in a small realm",
+      "{=taom_faction_anduin_vale_weakness_2}Orcs and wolves of the Misty Mountains at the door"
+    ],
+    "difficulty": 5
   },
   "kingdom_of_lothlorien": {
     "name": "{=taom_faction_kingdom_of_lothlorien_name}Kingdom of Lothlorien",
@@ -1082,14 +1127,63 @@
     "image": "faction_kingdom_of_neldoreth"
   },
   "kingdom_of_angaladh": {
-    "name": "{=taom_faction_kingdom_of_angaladh_name}Kingdom of Angaladh",
-    "color": "#4870B8FF",
+    "name": "{=taom_faction_kingdom_of_angaladh_name}Kingdom of Angáladh",
+    "color": "#4F6F5AFF",
     "playable": false,
-    "game_faction": "",
-    "side": "free",
-    "description": "{=taom_faction_kingdom_of_angaladh_desc}The Kingdom of Angaladh.",
+    "game_faction": "angaladh",
+    "side": "neutral",
+    "description": "{=taom_faction_kingdom_of_angaladh_desc}The Woodmen of Angáladh live under the western eaves of Mirkwood, where their fathers cleared steads among trees so hard that axes ring on them like iron. King Ingomar's archers watch the Narrows. The realm stands apart from the War of the Ring, but the shadow in the south of the forest grows every year.",
+    "traits": [
+      "{=taom_faction_kingdom_of_angaladh_trait_0}Woodmen of Mirkwood",
+      "{=taom_faction_kingdom_of_angaladh_trait_1}Archers of the Eaves",
+      "{=taom_faction_kingdom_of_angaladh_trait_2}Friends of the Northern Wood"
+    ],
     "image": "faction_kingdom_of_angaladh",
-    "traits": []
+    "bonuses": [
+      {
+        "text": "{=taom_faction_kingdom_of_angaladh_bonus_0}+10% party speed on plains (Vale Traders)",
+        "positive": true
+      },
+      {
+        "text": "{=taom_faction_kingdom_of_angaladh_bonus_1}-0.5 settlement loyalty per day (Small Territory Exposure)",
+        "positive": false
+      }
+    ],
+    "perks": [
+      {
+        "name": "{=taom_faction_kingdom_of_angaladh_perk_0_name}Vale Traders",
+        "description": "{=taom_faction_kingdom_of_angaladh_perk_0_desc}+10% party speed on plains, the open ground between the trees and the river."
+      },
+      {
+        "name": "{=taom_faction_kingdom_of_angaladh_perk_1_name}Apart from the War",
+        "description": "{=taom_faction_kingdom_of_angaladh_perk_1_desc}Stands outside the War of the Ring: no alliance and no sworn enemy at the start of a campaign."
+      }
+    ],
+    "special_units": [
+      {
+        "name": "{=taom_faction_kingdom_of_angaladh_su_0_name}Guard of Woodmen-town",
+        "description": "{=taom_faction_kingdom_of_angaladh_su_0_desc}Poleaxe and sword guard of the King's hall."
+      },
+      {
+        "name": "{=taom_faction_kingdom_of_angaladh_su_1_name}Master Woodman Archer",
+        "description": "{=taom_faction_kingdom_of_angaladh_su_1_desc}Master bowman of the western eaves."
+      },
+      {
+        "name": "{=taom_faction_kingdom_of_angaladh_su_2_name}Ironwood Hewer",
+        "description": "{=taom_faction_kingdom_of_angaladh_su_2_desc}Great-axe woodcutter of the ironwood."
+      }
+    ],
+    "strengths": [
+      "{=taom_faction_kingdom_of_angaladh_strength_0}A deep archery line, from the Woodman Bowman to the Master Woodman Archer",
+      "{=taom_faction_kingdom_of_angaladh_strength_1}Quick across open ground",
+      "{=taom_faction_kingdom_of_angaladh_strength_2}No sworn enemy at the start of a campaign"
+    ],
+    "weaknesses": [
+      "{=taom_faction_kingdom_of_angaladh_weakness_0}On foot only, with no cavalry",
+      "{=taom_faction_kingdom_of_angaladh_weakness_1}Few lords and small hosts",
+      "{=taom_faction_kingdom_of_angaladh_weakness_2}The shadow of the south of Mirkwood at the border"
+    ],
+    "difficulty": 6
   },
   "overlordship_of_dol_guldur": {
     "name": "{=taom_faction_overlordship_of_dol_guldur_name}Overlordship of Dol Guldur",

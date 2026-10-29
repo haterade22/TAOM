@@ -65,6 +65,8 @@ public partial class VolunteerRecruitmentService : IVolunteerRecruitmentService
         InitializeCardolanCulture();
         InitializeRhudaurCulture();
         InitializeEredLuinCulture();
+        InitializeAnduinValeCulture();
+        InitializeAngaladhCulture();
     }
 
     public VolunteerRecruitmentService(IRandomProvider random, IModLogger logger)

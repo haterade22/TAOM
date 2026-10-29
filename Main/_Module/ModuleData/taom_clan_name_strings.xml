@@ -2,6 +2,13 @@
 <strings>
 
 	<!-- Generated clan-name strings: extracted from characters/clans.xml name= attributes by tools/generate_name_localization_strings.py. Keys already registered via taom_module_strings.xml (abanissa/shaghana/bandit clusters) are excluded on purpose. Do not hand-edit; re-run the generator instead. -->
+	<string id="aom_clan_anduinvale_1_name" text="{=aom_clan_anduinvale_1_name}House of Beorn" />
+	<string id="aom_clan_anduinvale_2_name" text="{=aom_clan_anduinvale_2_name}Folk of the Old Ford" />
+	<string id="aom_clan_anduinvale_3_name" text="{=aom_clan_anduinvale_3_name}Wardens of the Carrock" />
+	<string id="aom_clan_anduinvale_4_name" text="{=aom_clan_anduinvale_4_name}Riders of the Gladden" />
+	<string id="aom_clan_angaladh_1_name" text="{=aom_clan_angaladh_1_name}House of Angáladh" />
+	<string id="aom_clan_angaladh_2_name" text="{=aom_clan_angaladh_2_name}Woodwards of the Forest Road" />
+	<string id="aom_clan_angaladh_3_name" text="{=aom_clan_angaladh_3_name}Wardens of Emyn Duir" />
 	<string id="aom_clan_arthedain_1_name" text="{=aom_clan_arthedain_1_name}House of Arvedui" />
 	<string id="aom_clan_arthedain_2_name" text="{=aom_clan_arthedain_2_name}House of Evendim" />
 	<string id="aom_clan_arthedain_3_name" text="{=aom_clan_arthedain_3_name}Wardens of Amon Sûl" />

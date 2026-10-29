@@ -385,6 +385,46 @@ class TestEredLuinCareerRosters(unittest.TestCase):
         self.assertEqual(mounts, [])
 
 
+class TestDaleCloneCareerRosters(unittest.TestCase):
+    """Anduin Vale offers infantry (axe), ranged and cavalry careers; Angaladh infantry (spear), ranged and
+    two-handed careers on foot, so only Anduin Vale's cavalry pair carries a Horse slot."""
+
+    def setUp(self):
+        root = ET.fromstring(ck.gk.read_xml(ck.CAREER_FILE)[0].encode("utf-8"))
+        self.rosters = {r.get("id"): r for r in root.iter("EquipmentRoster")}
+
+    def slots(self, rid):
+        return {e.get("slot"): e.get("id") for e in self.rosters[rid].iter("Equipment")}
+
+    def test_the_roster_sets(self):
+        for culture, archetypes in (("anduinvale", ("cavalry", "infantry", "ranged")),
+                                    ("angaladh", ("infantry", "ranged", "twohanded"))):
+            have = sorted(r for r in self.rosters if r.startswith(f"player_career_{culture}_"))
+            self.assertEqual(have, [f"player_career_{culture}_{a}_{s}" for a in archetypes for s in ("f", "m")])
+
+    def test_only_the_anduin_vale_cavalry_pair_rides_and_each_horse_has_a_harness(self):
+        for rid, r in self.rosters.items():
+            if not rid.startswith(("player_career_anduinvale_", "player_career_angaladh_")):
+                continue
+            slots = self.slots(rid)
+            with self.subTest(roster=rid):
+                self.assertEqual("Horse" in slots, rid.startswith("player_career_anduinvale_cavalry_"))
+                self.assertEqual("Horse" in slots, "HorseHarness" in slots)
+
+    def test_anduin_vale_carries_the_axe_line(self):
+        self.assertTrue(self.slots("player_career_anduinvale_infantry_m")["Item0"].startswith("Item.dale_war_axe_"))
+        self.assertTrue(self.slots("player_career_anduinvale_cavalry_m")["Item2"].startswith("Item.dale_war_axe_"))
+
+    def test_angaladh_twohanded_is_a_two_handed_axe_and_a_one_handed_axe_with_no_throwing_weapon(self):
+        self.assertEqual(ck.slot_classes("angaladh", "twohanded"),
+                         {"Item0": "TwoHandedAxe", "Item1": "OneHandedAxe", "Body": "BodyArmor", "Leg": "LegArmor"})
+        self.assertEqual(ck.slot_classes("eredluin", "twohanded")["Item1"], "ThrowingAxe")
+        for sex in ("m", "f"):
+            slots = self.slots(f"player_career_angaladh_twohanded_{sex}")
+            self.assertEqual(sorted(slots), ["Body", "Item0", "Item1", "Leg"])
+            self.assertEqual(slots["Item0"], "Item.dale_great_axe_a")
+
+
 @unittest.skipUnless(ck.DEFAULT_ARMORY.exists(), "needs the LOTRLOME_Armory install; skipped, never faked")
 class TestCommittedCareerFile(unittest.TestCase):
     def test_the_committed_career_file_is_what_the_rule_derives(self):

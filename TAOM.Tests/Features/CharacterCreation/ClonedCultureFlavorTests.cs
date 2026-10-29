@@ -88,6 +88,19 @@ public class ClonedCultureFlavorTests
             "Lake-town", "Laketown", "Long Lake", "River Running", "Celduin", "Smaug", "Arkenstone",
             "Ravenhill", "Iron Hills", "Dáin", "Dain", "Ironfoot", "Stonehelm",
         },
+        // Anduin Vale and Angáladh (#1053) are cloned from Dale: the Bardings of Dale and Esgaroth
+        // on the Long Lake below the Lonely Mountain, Bard's line (Bain, Brand), Girion, the dragon
+        // and the Black Arrow. Mirkwood, the Anduin, the Misty Mountains and Dol Guldur are their own
+        // country and stay legal.
+        ["anduinvale"] = DaleSeats(),
+        ["angaladh"] = DaleSeats(),
+    };
+
+    private static string[] DaleSeats() => new[]
+    {
+        "Dale", "Barding", "Bard the Bowman", "King Bard", "Esgaroth", "Lake-town", "Laketown",
+        "Long Lake", "Lonely Mountain", "Erebor", "Ravenhill", "River Running", "Celduin", "Girion",
+        "Smaug", "Black Arrow", "King Bain", "King Brand",
     };
 
     private static string[] GondorAndArthedainSeats() => new[]
@@ -115,7 +128,8 @@ public class ClonedCultureFlavorTests
         var hits = new List<string>();
 
         // 1. Registered strings, scoped by the culture named in the string id.
-        foreach (var file in new[] { "taom_module_strings.xml", "taom_cc_strings.xml" })
+        foreach (var file in new[] { "taom_module_strings.xml", "taom_cc_strings.xml", "taom_culture_text_strings.xml",
+                                     "taom_wanderer_strings.xml" })
         {
             var path = Path.Combine(ModuleDataPath, file);
             Assert.IsTrue(File.Exists(path), $"{file} not found at {path}");
@@ -152,7 +166,8 @@ public class ClonedCultureFlavorTests
             var block = Regex.Match(cultures, $"<Culture\\b[^>]*\\bid=\"{culture}\".*?</Culture>",
                 RegexOptions.Singleline);
             Assert.IsTrue(block.Success, $"<Culture id=\"{culture}\"> not found");
-            foreach (Match m in Regex.Matches(block.Value, "\\}([^\"]{2,200})\""))
+            // No length cap: a culture's description runs past 200 characters, and a capped match skipped it.
+            foreach (Match m in Regex.Matches(block.Value, "\\}([^\"]{2,})\""))
                 Scan(hits, culture, $"taom_spcultures.xml:{culture}", m.Groups[1].Value);
         }
 

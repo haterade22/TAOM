@@ -1754,4 +1754,130 @@
     </ChoiceGroups>
   </Career>
 
+  <Career id="axe_warden_of_beorns_hall" rank1_name="{=taom_career_rank1_axe_warden_of_beorns_hall}Vale Axeman" rank2_name="{=taom_career_rank2_axe_warden_of_beorns_hall}Axe-warden of Beorn's Hall" rank3_name="{=taom_career_rank3_axe_warden_of_beorns_hall}Champion of the Carrock"
+          display_name="{=taom_career_axe_warden_of_beorns_hall}Axe-warden of Beorn's Hall"
+          description="{=taom_career_axe_warden_of_beorns_hall_desc}A broad-shouldered axeman of the House of Beorn who holds the fords and passes of the Vales against goblin and wolf alike."
+          portrait_sprite="career_dale_guardsman_portrait"
+          ability_template_id="axe_warden_of_beorns_hall_ability"
+          min_clan_tier="0"
+          root_choice_id="axe_warden_of_beorns_hall_root"
+          keystone_icon="27000">
+    <EligibleCultures>
+      <Culture id="anduinvale" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="axe_warden_of_beorns_hall_t1_a" />
+      <Group id="axe_warden_of_beorns_hall_t1_b" />
+      <Group id="axe_warden_of_beorns_hall_t2_a" />
+      <Group id="axe_warden_of_beorns_hall_t2_b" />
+      <Group id="axe_warden_of_beorns_hall_t3_a" />
+      <Group id="axe_warden_of_beorns_hall_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="archer_of_eastbank" rank1_name="{=taom_career_rank1_archer_of_eastbank}Bowman of the Gladden" rank2_name="{=taom_career_rank2_archer_of_eastbank}Hawk-Eye of Eastbank" rank3_name="{=taom_career_rank3_archer_of_eastbank}Bow-lord of the Vales"
+          display_name="{=taom_career_archer_of_eastbank}Archer of Eastbank"
+          description="{=taom_career_archer_of_eastbank_desc}A Woodman bowman of the Vales who shoots from the eaves of Mirkwood and the banks of the Gladden, carrying on a tradition of unerring marksmanship."
+          portrait_sprite="career_dale_marksman_portrait"
+          ability_template_id="archer_of_eastbank_ability"
+          min_clan_tier="0"
+          root_choice_id="archer_of_eastbank_root"
+          keystone_icon="27001">
+    <EligibleCultures>
+      <Culture id="anduinvale" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="archer_of_eastbank_t1_a" />
+      <Group id="archer_of_eastbank_t1_b" />
+      <Group id="archer_of_eastbank_t2_a" />
+      <Group id="archer_of_eastbank_t2_b" />
+      <Group id="archer_of_eastbank_t3_a" />
+      <Group id="archer_of_eastbank_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="rider_of_the_vales" rank1_name="{=taom_career_rank1_rider_of_the_vales}Road-Rider of the Vales" rank2_name="{=taom_career_rank2_rider_of_the_vales}Warden of the Old Ford Road" rank3_name="{=taom_career_rank3_rider_of_the_vales}Marshal of the Vales"
+          display_name="{=taom_career_rider_of_the_vales}Rider of the Vales"
+          description="{=taom_career_rider_of_the_vales_desc}A mounted patrol of the Vales who rides the Old Ford road and the foot of the Misty Mountains, safeguarding farms and caravans from goblin raiders."
+          portrait_sprite="career_dale_outrider_portrait"
+          ability_template_id="rider_of_the_vales_ability"
+          min_clan_tier="0"
+          root_choice_id="rider_of_the_vales_root"
+          keystone_icon="27500">
+    <EligibleCultures>
+      <Culture id="anduinvale" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="rider_of_the_vales_t1_a" />
+      <Group id="rider_of_the_vales_t1_b" />
+      <Group id="rider_of_the_vales_t2_a" />
+      <Group id="rider_of_the_vales_t2_b" />
+      <Group id="rider_of_the_vales_t3_a" />
+      <Group id="rider_of_the_vales_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="warden_of_the_forest_gate" rank1_name="{=taom_career_rank1_warden_of_the_forest_gate}Spear of the Forest Gate" rank2_name="{=taom_career_rank2_warden_of_the_forest_gate}Warden of the Forest Gate" rank3_name="{=taom_career_rank3_warden_of_the_forest_gate}Captain of Woodmen-town"
+          display_name="{=taom_career_warden_of_the_forest_gate}Warden of the Forest Gate"
+          description="{=taom_career_warden_of_the_forest_gate_desc}A stalwart guardian of the Forest Gate who holds the narrow way under the trees against orc, wolf and spider with shield and spear."
+          portrait_sprite="career_dale_guardsman_portrait"
+          ability_template_id="warden_of_the_forest_gate_ability"
+          min_clan_tier="0"
+          root_choice_id="warden_of_the_forest_gate_root"
+          keystone_icon="27000">
+    <EligibleCultures>
+      <Culture id="angaladh" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="warden_of_the_forest_gate_t1_a" />
+      <Group id="warden_of_the_forest_gate_t1_b" />
+      <Group id="warden_of_the_forest_gate_t2_a" />
+      <Group id="warden_of_the_forest_gate_t2_b" />
+      <Group id="warden_of_the_forest_gate_t3_a" />
+      <Group id="warden_of_the_forest_gate_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="hewer_of_ironwood_hall" rank1_name="{=taom_career_rank1_hewer_of_ironwood_hall}Ironwood Axeman" rank2_name="{=taom_career_rank2_hewer_of_ironwood_hall}Hewer of Ironwood Hall" rank3_name="{=taom_career_rank3_hewer_of_ironwood_hall}Great-axe of the Emyn Duir"
+          display_name="{=taom_career_hewer_of_ironwood_hall}Hewer of Ironwood Hall"
+          description="{=taom_career_hewer_of_ironwood_hall_desc}An Ironwood hewer of Angáladh who swings a great axe in both hands, splitting shields and the orcs behind them."
+          portrait_sprite="career_dale_guardsman_portrait"
+          ability_template_id="hewer_of_ironwood_hall_ability"
+          min_clan_tier="0"
+          root_choice_id="hewer_of_ironwood_hall_root"
+          keystone_icon="27000">
+    <EligibleCultures>
+      <Culture id="angaladh" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="hewer_of_ironwood_hall_t1_a" />
+      <Group id="hewer_of_ironwood_hall_t1_b" />
+      <Group id="hewer_of_ironwood_hall_t2_a" />
+      <Group id="hewer_of_ironwood_hall_t2_b" />
+      <Group id="hewer_of_ironwood_hall_t3_a" />
+      <Group id="hewer_of_ironwood_hall_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
+  <Career id="woodward_of_the_forest_road" rank1_name="{=taom_career_rank1_woodward_of_the_forest_road}Bowman of Thornhold" rank2_name="{=taom_career_rank2_woodward_of_the_forest_road}Spider-Shooter" rank3_name="{=taom_career_rank3_woodward_of_the_forest_road}Bow-Master of the Woodwards"
+          display_name="{=taom_career_woodward_of_the_forest_road}Woodward of the Forest Road"
+          description="{=taom_career_woodward_of_the_forest_road_desc}A woodward bowman of western Mirkwood who shoots from the platforms of the Forest Gate and the trees of the road, carrying on a tradition of unerring marksmanship."
+          portrait_sprite="career_dale_marksman_portrait"
+          ability_template_id="woodward_of_the_forest_road_ability"
+          min_clan_tier="0"
+          root_choice_id="woodward_of_the_forest_road_root"
+          keystone_icon="27001">
+    <EligibleCultures>
+      <Culture id="angaladh" />
+    </EligibleCultures>
+    <ChoiceGroups>
+      <Group id="woodward_of_the_forest_road_t1_a" />
+      <Group id="woodward_of_the_forest_road_t1_b" />
+      <Group id="woodward_of_the_forest_road_t2_a" />
+      <Group id="woodward_of_the_forest_road_t2_b" />
+      <Group id="woodward_of_the_forest_road_t3_a" />
+      <Group id="woodward_of_the_forest_road_t3_b" />
+    </ChoiceGroups>
+  </Career>
+
 </Careers>

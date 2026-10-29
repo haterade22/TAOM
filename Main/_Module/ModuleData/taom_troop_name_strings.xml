@@ -2,6 +2,50 @@
 <strings>
 
 	<!-- Generated troop-name strings: extracted from troops/troops_*.xml name= attributes by tools/generate_name_localization_strings.py. Do not hand-edit; re-run the generator after adding troops. -->
+	<string id="aom_anduinvale_axe_lord_name" text="{=aom_anduinvale_axe_lord_name}[Anduin Vale] Beorning Axe-lord" />
+	<string id="aom_anduinvale_axe_warrior_name" text="{=aom_anduinvale_axe_warrior_name}[Anduin Vale] Beorning Axe-warrior" />
+	<string id="aom_anduinvale_axeman_name" text="{=aom_anduinvale_axeman_name}[Anduin Vale] Vale Axeman" />
+	<string id="aom_anduinvale_bear_guard_name" text="{=aom_anduinvale_bear_guard_name}[Anduin Vale] Bear-guard" />
+	<string id="aom_anduinvale_bear_warden_name" text="{=aom_anduinvale_bear_warden_name}[Anduin Vale] Bear-warden of the Carrock" />
+	<string id="aom_anduinvale_beorning_axeman_name" text="{=aom_anduinvale_beorning_axeman_name}[Anduin Vale] Beorning Axeman" />
+	<string id="aom_anduinvale_beorning_youth_merc_name" text="{=aom_anduinvale_beorning_youth_merc_name}[Anduin Vale] Beorning Sellsword" />
+	<string id="aom_anduinvale_beorning_youth_name" text="{=aom_anduinvale_beorning_youth_name}[Anduin Vale] Beorning Youth" />
+	<string id="aom_anduinvale_carrock_guard_name" text="{=aom_anduinvale_carrock_guard_name}[Anduin Vale] Carrock Guard" />
+	<string id="aom_anduinvale_champion_name" text="{=aom_anduinvale_champion_name}[Anduin Vale] Beorning Champion" />
+	<string id="aom_anduinvale_great_axe_name" text="{=aom_anduinvale_great_axe_name}[Anduin Vale] Beorning Great-axe" />
+	<string id="aom_anduinvale_levy_name" text="{=aom_anduinvale_levy_name}[Anduin Vale] Vale Levy" />
+	<string id="aom_anduinvale_militia_archer_name" text="{=aom_anduinvale_militia_archer_name}[Anduin Vale] Militia Archer" />
+	<string id="aom_anduinvale_militia_spearman_name" text="{=aom_anduinvale_militia_spearman_name}[Anduin Vale] Militia Spearman" />
+	<string id="aom_anduinvale_militia_veteran_archer_name" text="{=aom_anduinvale_militia_veteran_archer_name}[Anduin Vale] Veteran Militia Archer" />
+	<string id="aom_anduinvale_militia_veteran_spearman_name" text="{=aom_anduinvale_militia_veteran_spearman_name}[Anduin Vale] Veteran Militia Spearman" />
+	<string id="aom_anduinvale_vale_horseman_name" text="{=aom_anduinvale_vale_horseman_name}[Anduin Vale] Vale Horseman" />
+	<string id="aom_anduinvale_vale_rider_name" text="{=aom_anduinvale_vale_rider_name}[Anduin Vale] Vale Rider" />
+	<string id="aom_anduinvale_veteran_beorning_name" text="{=aom_anduinvale_veteran_beorning_name}[Anduin Vale] Veteran Beorning" />
+	<string id="aom_anduinvale_woodman_archer_name" text="{=aom_anduinvale_woodman_archer_name}[Anduin Vale] Woodman Archer" />
+	<string id="aom_anduinvale_woodman_bowman_name" text="{=aom_anduinvale_woodman_bowman_name}[Anduin Vale] Woodman Bowman" />
+	<string id="aom_anduinvale_woodman_marksman_name" text="{=aom_anduinvale_woodman_marksman_name}[Anduin Vale] Woodman Marksman" />
+	<string id="aom_angaladh_forest_archer_name" text="{=aom_angaladh_forest_archer_name}[Angáladh] Forest Archer" />
+	<string id="aom_angaladh_forest_guard_name" text="{=aom_angaladh_forest_guard_name}[Angáladh] Forest Guard" />
+	<string id="aom_angaladh_forest_spearman_name" text="{=aom_angaladh_forest_spearman_name}[Angáladh] Forest Spearman" />
+	<string id="aom_angaladh_forest_warden_name" text="{=aom_angaladh_forest_warden_name}[Angáladh] Forest Warden" />
+	<string id="aom_angaladh_ironwood_guard_name" text="{=aom_angaladh_ironwood_guard_name}[Angáladh] Ironwood Guard" />
+	<string id="aom_angaladh_ironwood_hewer_name" text="{=aom_angaladh_ironwood_hewer_name}[Angáladh] Ironwood Hewer" />
+	<string id="aom_angaladh_ironwood_sentinel_name" text="{=aom_angaladh_ironwood_sentinel_name}[Angáladh] Ironwood Sentinel" />
+	<string id="aom_angaladh_ironwood_youth_merc_name" text="{=aom_angaladh_ironwood_youth_merc_name}[Angáladh] Woodman Sellsword" />
+	<string id="aom_angaladh_ironwood_youth_name" text="{=aom_angaladh_ironwood_youth_name}[Angáladh] Ironwood Youth" />
+	<string id="aom_angaladh_levy_name" text="{=aom_angaladh_levy_name}[Angáladh] Woodman Levy" />
+	<string id="aom_angaladh_master_archer_name" text="{=aom_angaladh_master_archer_name}[Angáladh] Master Woodman Archer" />
+	<string id="aom_angaladh_militia_archer_name" text="{=aom_angaladh_militia_archer_name}[Angáladh] Militia Archer" />
+	<string id="aom_angaladh_militia_spearman_name" text="{=aom_angaladh_militia_spearman_name}[Angáladh] Militia Spearman" />
+	<string id="aom_angaladh_militia_veteran_archer_name" text="{=aom_angaladh_militia_veteran_archer_name}[Angáladh] Veteran Militia Archer" />
+	<string id="aom_angaladh_militia_veteran_spearman_name" text="{=aom_angaladh_militia_veteran_spearman_name}[Angáladh] Veteran Militia Spearman" />
+	<string id="aom_angaladh_spearman_name" text="{=aom_angaladh_spearman_name}[Angáladh] Woodman Spearman" />
+	<string id="aom_angaladh_veteran_forest_guard_name" text="{=aom_angaladh_veteran_forest_guard_name}[Angáladh] Veteran Forest Guard" />
+	<string id="aom_angaladh_woodman_archer_name" text="{=aom_angaladh_woodman_archer_name}[Angáladh] Woodman Archer" />
+	<string id="aom_angaladh_woodman_axe_warrior_name" text="{=aom_angaladh_woodman_axe_warrior_name}[Angáladh] Woodman Axe-warrior" />
+	<string id="aom_angaladh_woodman_axeman_name" text="{=aom_angaladh_woodman_axeman_name}[Angáladh] Woodman Axeman" />
+	<string id="aom_angaladh_woodman_bowman_name" text="{=aom_angaladh_woodman_bowman_name}[Angáladh] Woodman Bowman" />
+	<string id="aom_angaladh_woodmen_guard_name" text="{=aom_angaladh_woodmen_guard_name}[Angáladh] Guard of Woodmen-town" />
 	<string id="aom_arthedain_citadel_guard_name" text="{=aom_arthedain_citadel_guard_name}[Arthedain] Guard of the Citadel" />
 	<string id="aom_arthedain_dunadan_youth_merc_name" text="{=aom_arthedain_dunadan_youth_merc_name}[Arthedain] Dunadan Sellsword" />
 	<string id="aom_arthedain_dunadan_youth_name" text="{=aom_arthedain_dunadan_youth_name}[Arthedain] Dunadan Youth" />

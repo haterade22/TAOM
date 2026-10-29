@@ -151,5 +151,12 @@
     <string id="aom_clan_eredluin_2_name" text="Broadbeams" />
     <string id="aom_clan_eredluin_3_name" text="Firebeards" />
     <string id="aom_clan_eredluin_4_name" text="Wardens of Dolmed" />
+    <string id="aom_clan_anduinvale_1_name" text="House of Beorn" />
+    <string id="aom_clan_anduinvale_2_name" text="Folk of the Old Ford" />
+    <string id="aom_clan_anduinvale_3_name" text="Wardens of the Carrock" />
+    <string id="aom_clan_anduinvale_4_name" text="Riders of the Gladden" />
+    <string id="aom_clan_angaladh_1_name" text="House of Angáladh" />
+    <string id="aom_clan_angaladh_2_name" text="Woodwards of the Forest Road" />
+    <string id="aom_clan_angaladh_3_name" text="Wardens of Emyn Duir" />
   </strings>
 </base>

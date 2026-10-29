@@ -2,13 +2,13 @@
 
 ## What this file is
 
-A kingdom is the map faction a clan swears to: the thing that owns fiefs, declares wars and paints the party banners on the campaign map. TAOM declares 18 of its own kingdoms in `taom_spkingdoms.xml` and rewrites the 8 vanilla ones in place with `spkingdoms.xslt`, for 26 live kingdoms in total. <!-- measured: python over taom_spkingdoms.xml + spkingdoms.xslt, see Numbers 2026-10-27 --> The entry itself is small (a name, a culture, a ruling hero, a capital, two pairs of colours, a banner code, its day-one stances and its starting policies), because lords, clans and settlements all point up at the kingdom from their own files rather than being listed here.
+A kingdom is the map faction a clan swears to: the thing that owns fiefs, declares wars and paints the party banners on the campaign map. TAOM declares 20 of its own kingdoms in `taom_spkingdoms.xml` and rewrites the 8 vanilla ones in place with `spkingdoms.xslt`, for 28 live kingdoms in total. <!-- measured: python over taom_spkingdoms.xml + spkingdoms.xslt, see Numbers 2026-10-28 --> The entry itself is small (a name, a culture, a ruling hero, a capital, two pairs of colours, a banner code, its day-one stances and its starting policies), because lords, clans and settlements all point up at the kingdom from their own files rather than being listed here.
 
 ## Where it lives and how it is registered
 
 | What | Where |
 |---|---|
-| TAOM's own 18 kingdoms | [`Main/_Module/ModuleData/taom_spkingdoms.xml`](../../Main/_Module/ModuleData/taom_spkingdoms.xml) |
+| TAOM's own 20 kingdoms | [`Main/_Module/ModuleData/taom_spkingdoms.xml`](../../Main/_Module/ModuleData/taom_spkingdoms.xml) |
 | The 8 vanilla rewrites | [`Main/_Module/ModuleData/spkingdoms.xslt`](../../Main/_Module/ModuleData/spkingdoms.xslt) |
 | Registration | [`Main/_Module/SubModule.xml`](../../Main/_Module/SubModule.xml) line 70 `<XmlName id="Kingdoms" path="spkingdoms"/>` and line 130 `<XmlName id="Kingdoms" path="taom_spkingdoms"/>` |
 | Root element | `<Kingdoms>` |
@@ -122,8 +122,8 @@ Thirteen more `<relationship>` rows follow, then the tail: <!-- measured: python
 The three you change first:
 
 1. **`color` and `color2`.** These are the faction tint, and on a campaign troop wearing grayscale cloth they are the armour colour you see in battle, because the troop's team colour resolves to its clan's map faction, which for a sworn clan is the kingdom. `primary_banner_color` and `secondary_banner_color` are a different pair and only touch banners.
-2. **`owner`.** `Hero.lord_E1_1` is a TAOM hero declared in [`Main/_Module/ModuleData/characters/heroes.xml`](../../Main/_Module/ModuleData/characters/heroes.xml). Seventeen of the 18 kingdoms name a TAOM hero there; Dol Guldur names the vanilla hero `lord_1_48`, which `heroes.xslt` retags. Either is legal. <!-- measured: python cross-check of every owner= against characters/heroes.xml 2026-10-27 --> See [Lords and heroes](lords-and-heroes.md).
-3. **`culture`.** `Culture.erebor` and the kingdom id `erebor` are the same word but two different objects, and 18 of the 26 live kingdom ids are also culture ids. <!-- measured: python set intersection of kingdom ids with taom_spcultures.xml Culture ids 2026-10-27 --> The 8 rewritten vanilla kingdoms are where this bites: the kingdom id stays `empire_w` while its culture is `Culture.gondor` (`spkingdoms.xslt:49`). Getting the two confused is the single most common way a config entry goes dead. See [Cultures](cultures.md).
+2. **`owner`.** `Hero.lord_E1_1` is a TAOM hero declared in [`Main/_Module/ModuleData/characters/heroes.xml`](../../Main/_Module/ModuleData/characters/heroes.xml). Nineteen of the 20 kingdoms name a TAOM hero there; Dol Guldur names the vanilla hero `lord_1_48`, which `heroes.xslt` retags. Either is legal. <!-- measured: python cross-check of every owner= against characters/heroes.xml 2026-10-28 --> See [Lords and heroes](lords-and-heroes.md).
+3. **`culture`.** `Culture.erebor` and the kingdom id `erebor` are the same word but two different objects, and 20 of the 28 live kingdom ids are also culture ids. <!-- measured: python set intersection of kingdom ids with taom_spcultures.xml Culture ids 2026-10-28 --> The 8 rewritten vanilla kingdoms are where this bites: the kingdom id stays `empire_w` while its culture is `Culture.gondor` (`spkingdoms.xslt:49`). Getting the two confused is the single most common way a config entry goes dead. See [Cultures](cultures.md).
 
 ## Recipes: Add / Modify / Delete
 
@@ -152,7 +152,7 @@ Code: No code changes needed
 
 **Change a kingdom's colours.**
 
-1. For one of TAOM's own 18, edit `color` / `color2` on the entry in `taom_spkingdoms.xml` by hand.
+1. For one of TAOM's own 20, edit `color` / `color2` on the entry in `taom_spkingdoms.xml` by hand.
 2. For one of the 8 rewritten vanilla kingdoms, edit the palette table in [`tools/repaint_kingdom_colors.py`](../../tools/repaint_kingdom_colors.py) and run it. It touches `color` and `color2` in `spkingdoms.xslt` only, never the banner colours or `banner_key`.
 3. Run it with no arguments first. That is a dry run and prints an old to new line per kingdom; `--apply` writes the file and a `.bak`.
 4. Remember the two pairs are independent. Repainting `color` leaves every clan banner in that kingdom exactly as it was.
@@ -177,7 +177,7 @@ Code: No code changes needed
 
 **Retire a kingdom, do not delete it.** Deleting a `<Kingdom>` entry orphans every clan whose `super_faction` names it, every lord in those clans and every config row keyed on the id, and none of that reports an error at load.
 
-1. For one of TAOM's 18: leave the entry in place and empty its `<relationships>` block, so it starts at peace with everyone. It is still a kingdom for the War of the Ring: a Hostile tier in `diplomacy.json` declares its war on day 44 whatever its relationships block says.
+1. For one of TAOM's 20: leave the entry in place and empty its `<relationships>` block, so it starts at peace with everyone. It is still a kingdom for the War of the Ring: a Hostile tier in `diplomacy.json` declares its war on day 44 whatever its relationships block says.
 2. Strip its settlements instead, and give it an `initial_home_settlement` anyway, so `FactionHelper.GetMidSettlementOfFaction` has something to return (`FactionHelper.cs:497-506`). A faction whose culture owns nothing is the #374 daily-tick crash, which is what the `LANDLESS_CULTURE` gate exists to catch.
 3. Deleting an `<xsl:template match="Kingdom[@id='...']">` block from `spkingdoms.xslt` is safe and different: it does not remove a kingdom, it restores the vanilla one under its vanilla name and colours.
 4. Whatever you do, remove the id from `configs/army_targeting.json` in the same edit or `WarTheaterConfigInvariantsTests` fails: it reads the kingdom list out of `taom_spkingdoms.xml` and `spkingdoms.xslt` rather than a hardcoded list.
@@ -207,32 +207,32 @@ Code: No code changes needed
 |---|---|---|---|
 | `diplomacy/diplomacy.json` | kingdom id pairs | no modifier for that pair | nothing, a typo is silent |
 | `diplomacy/war_of_the_ring.json` | kingdom ids in `wars` | that war is never declared | `WarOfTheRingShippedConfigTests` (days and the two phase-1 wars only) |
-| `execution/alignment.json` | kingdom id, culture id **or** minor clan id | `FactionSide.Neutral`, which mis-scores executions (`AlignmentService.cs:41`) | `ShippedClanSideCoverageTests` (a kingdom's clans must not resolve Neutral outside the six Neutral realms in `NeutralRealmIds`) |
+| `execution/alignment.json` | kingdom id, culture id **or** minor clan id | `FactionSide.Neutral`, which mis-scores executions (`AlignmentService.cs:41`) | `ShippedClanSideCoverageTests` (a kingdom's clans must not resolve Neutral outside the eight Neutral realms in `NeutralRealmIds`) |
 | `configs/army_targeting.json` | kingdom id | neutral theater weighting | `WarTheaterConfigInvariantsTests`, which fails the build on a dead key or a missing kingdom |
-| `siege/siege_defense_config.json` | kingdom id | no bespoke siege message | nothing, and 8 of the 26 kingdoms are absent: `goblin`, `mistymountainorcs`, `bluecraig`, `lindon`, `arthedain`, `cardolan`, `rhudaur`, `eredluin` |
+| `siege/siege_defense_config.json` | kingdom id | no bespoke siege message | nothing, and 10 of the 28 kingdoms are absent: `goblin`, `mistymountainorcs`, `bluecraig`, `lindon`, `arthedain`, `cardolan`, `rhudaur`, `eredluin`, `anduinvale`, `angaladh` |
 | `factionmap/factions.json` | a lore key, with `game_faction` naming a **culture** id | the region does not appear in character creation | `dotnet test TAOM.Tests --filter FactionMap` |
 
 ## Numbers in this chapter
 
 Each line carries its own measured date. The 2026-09-05 lines were run on `bannerlord-1.4.5`; the 2026-10-27 lines on `feat/ered-luin-kingdom`, after Cardolan, Rhudaur and Ered Luin.
 
-- **18** kingdoms in `taom_spkingdoms.xml`: `python -c "import xml.etree.ElementTree as ET;print(len(ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot().findall('Kingdom')))"` <!-- measured 2026-10-27 -->
+- **20** kingdoms in `taom_spkingdoms.xml`: `python -c "import xml.etree.ElementTree as ET;print(len(ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot().findall('Kingdom')))"` <!-- measured 2026-10-28 -->
 - **8** vanilla kingdoms rewritten by the XSLT: `rg -c "Kingdom\[@id=" Main/_Module/ModuleData/spkingdoms.xslt` <!-- measured 2026-10-27 -->
-- **26** live kingdom ids, **325** possible pairs, **214** declared: one script over both files, the same pair of sources `WarTheaterConfigInvariantsTests.LoadKingdomIds` reads. <!-- measured: python over taom_spkingdoms.xml + spkingdoms.xslt 2026-10-27 -->
+- **28** live kingdom ids, **378** possible pairs, **231** declared: one script over both files, the same pair of sources `WarTheaterConfigInvariantsTests.LoadKingdomIds` reads. <!-- measured: python over taom_spkingdoms.xml + spkingdoms.xslt 2026-10-28 -->
 - **16** attributes on every entry, of which **14** are read and **2** are dead: `python -c "import xml.etree.ElementTree as ET;print(len(ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot()[0].attrib))"`, and the same `len(k.attrib)` is 16 on all 18 entries <!-- measured 2026-10-27 -->
 - **90** numbers in Erebor's `banner_key`, which is 9 layers of 10: `python -c "import xml.etree.ElementTree as ET;print(len(ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot()[0].get('banner_key').split('.')))"` <!-- measured 2026-10-27 -->
 - **248** `<relationship>` rows and **36** `<policy>` rows in `taom_spkingdoms.xml`: `rg -c '<relationship\b' <file>` and `rg -c '<policy\b' <file>` <!-- measured 2026-10-27 -->
 - **0** rows in `taom_spkingdoms.xml` or `spkingdoms.xslt` declare war (every row is `value >= 0`, so no start war), pinned by `ShippedKingdomDataTests`: `rg -c 'value="-' Main/_Module/ModuleData/taom_spkingdoms.xml` <!-- measured 2026-10-27 -->
 - **2** relationship rows in the XSLT, forming **1** mutual pair (Gondor and Khand, both `value="0"`): `rg -c '<relationship$' Main/_Module/ModuleData/spkingdoms.xslt`. <!-- measured 2026-10-27 -->
-- **18** ids that are both a kingdom id and a culture id: a set intersection of the kingdom ids with the `<Culture id=>` ids in `taom_spcultures.xml`. <!-- measured: python over taom_spkingdoms.xml, spkingdoms.xslt, taom_spcultures.xml 2026-10-27 -->
+- **20** ids that are both a kingdom id and a culture id: a set intersection of the kingdom ids with the `<Culture id=>` ids in `taom_spcultures.xml`. <!-- measured: python over taom_spkingdoms.xml, spkingdoms.xslt, taom_spcultures.xml 2026-10-28 -->
 - **90** inline `{=key}` strings on the 18 entries, **0** with no `<string>` row: a python sweep of `Main/_Module/ModuleData/**/*.xml` outside `Languages/`. <!-- measured 2026-10-27 -->
 - **0** hits for `settlement_banner_mesh` or `flag_mesh` in the v1.4.8 managed decompile: `rg -l 'settlement_banner_mesh|flag_mesh' -g '*.cs' .` run in the decompile root. <!-- measured 2026-09-05 -->
 - **0** `.xsd` files under the game's `Modules` folder: `find . -name '*.xsd' | wc -l` run there. <!-- measured 2026-09-05 -->
-- **153** rows in `diplomacy.json` over **24** of the 26 kingdom ids (no row names `cardolan` or `rhudaur`), split 79 `Hostile`, 38 `Permanent`, 29 `Natural`, 7 `Neutral`: `python -c "import json,collections;d=json.load(open('Main/_Module/ModuleData/diplomacy/diplomacy.json',encoding='utf-8-sig'))['relationships'];print(len(d),collections.Counter(r['tier'] for r in d))"`, and a set of `kingdomA` and `kingdomB` for the id count <!-- measured 2026-10-27 -->
-- **32** keys in `execution/alignment.json`, being the 26 kingdom ids plus the culture ids `gondor` and `mordor` and 4 minor clan ids: `python -c "import json;print(len(json.load(open('Main/_Module/ModuleData/execution/alignment.json',encoding='utf-8-sig'))))"` <!-- measured 2026-10-27 -->
-- **26** `KingdomTheaters` keys in `configs/army_targeting.json`, **18** `KingdomMessages` keys in `siege/siege_defense_config.json` (missing `goblin`, `mistymountainorcs`, `bluecraig`, `lindon`, `arthedain`, `cardolan`, `rhudaur`, `eredluin`), **45** keys in `factionmap/factions.json`: `python -c "import json;print(len(json.load(open(<file>,encoding='utf-8-sig'))[<section>]))"` per file. <!-- measured 2026-10-27 -->
+- **153** rows in `diplomacy.json` over **24** of the 28 kingdom ids (no row names `cardolan`, `rhudaur`, `anduinvale` or `angaladh`), split 79 `Hostile`, 38 `Permanent`, 29 `Natural`, 7 `Neutral`: `python -c "import json,collections;d=json.load(open('Main/_Module/ModuleData/diplomacy/diplomacy.json',encoding='utf-8-sig'))['relationships'];print(len(d),collections.Counter(r['tier'] for r in d))"`, and a set of `kingdomA` and `kingdomB` for the id count <!-- measured 2026-10-28 -->
+- **34** keys in `execution/alignment.json`, being the 28 kingdom ids plus the culture ids `gondor` and `mordor` and 4 minor clan ids: `python -c "import json;print(len(json.load(open('Main/_Module/ModuleData/execution/alignment.json',encoding='utf-8-sig'))))"` <!-- measured 2026-10-28 -->
+- **28** `KingdomTheaters` keys in `configs/army_targeting.json`, **18** `KingdomMessages` keys in `siege/siege_defense_config.json` (missing `goblin`, `mistymountainorcs`, `bluecraig`, `lindon`, `arthedain`, `cardolan`, `rhudaur`, `eredluin`, `anduinvale`, `angaladh`), **45** keys in `factionmap/factions.json`: `python -c "import json;print(len(json.load(open(<file>,encoding='utf-8-sig'))[<section>]))"` per file. <!-- measured 2026-10-28 -->
 - **14** `<relationship>` rows and **2** `<policy>` rows on the Erebor entry alone: `python -c "import xml.etree.ElementTree as ET;e=ET.parse('Main/_Module/ModuleData/taom_spkingdoms.xml').getroot()[0];print(len(e.find('relationships')),len(e.find('policies')))"` <!-- measured 2026-10-27 -->
-- **17** of the 18 `owner=` heroes are declared in `characters/heroes.xml`; Dol Guldur's `lord_1_48` is not, and is matched instead by `rg -n "lord_1_48" Main/_Module/ModuleData/heroes.xslt`. <!-- measured 2026-10-27 -->
+- **19** of the 20 `owner=` heroes are declared in `characters/heroes.xml`; Dol Guldur's `lord_1_48` is not, and is matched instead by `rg -n "lord_1_48" Main/_Module/ModuleData/heroes.xslt`. <!-- measured 2026-10-28 -->
 - **0** of the 18 kingdoms lack a registered string, **12** language folders carry `std_taom_kingdom_name_strings_*.xml`, and **12** carry the XSLT keys: `ls Main/_Module/ModuleData/Languages/*/std_taom_kingdom_name_strings_*.xml`, `ls Main/_Module/ModuleData/Languages/*/std_taom_xslt_strings_*.xml` and `rg -l 'TAOM_dunland"' Main/_Module/ModuleData/Languages/*/*.xml`, each 12. <!-- measured 2026-10-27 -->
 - **8** lines of `docs/features/kingdom-creation.md` spell the file `TAOM_spkingdoms.xml`: `rg -c 'TAOM_spkingdoms' docs/features/kingdom-creation.md` <!-- measured 2026-10-27 -->
 - **Day 30** and **day 44** are the shipped phase triggers, with **2** wars listed in phase 1 and **0** in phase 2: `python -c "import json;w=json.load(open('Main/_Module/ModuleData/diplomacy/war_of_the_ring.json',encoding='utf-8-sig'));print(w['phase1']['triggerDay'],len(w['phase1']['wars']),w['phase2']['triggerDay'],len(w['phase2']['wars']))"` <!-- measured 2026-10-27 -->

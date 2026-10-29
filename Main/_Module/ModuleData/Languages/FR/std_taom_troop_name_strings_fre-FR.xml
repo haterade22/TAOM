@@ -979,5 +979,49 @@
     <string id="aom_eredluin_veteran_bowman_name" text="[Ered Luin] Veteran Bowman" />
     <string id="aom_eredluin_veteran_hall_warden_name" text="[Ered Luin] Veteran Hall Warden" />
     <string id="aom_eredluin_veteran_mattock_warrior_name" text="[Ered Luin] Veteran Mattock Warrior" />
+    <string id="aom_anduinvale_axe_lord_name" text="[Anduin Vale] Beorning Axe-lord" />
+    <string id="aom_anduinvale_axe_warrior_name" text="[Anduin Vale] Beorning Axe-warrior" />
+    <string id="aom_anduinvale_axeman_name" text="[Anduin Vale] Vale Axeman" />
+    <string id="aom_anduinvale_bear_guard_name" text="[Anduin Vale] Bear-guard" />
+    <string id="aom_anduinvale_bear_warden_name" text="[Anduin Vale] Bear-warden of the Carrock" />
+    <string id="aom_anduinvale_beorning_axeman_name" text="[Anduin Vale] Beorning Axeman" />
+    <string id="aom_anduinvale_beorning_youth_merc_name" text="[Anduin Vale] Beorning Sellsword" />
+    <string id="aom_anduinvale_beorning_youth_name" text="[Anduin Vale] Beorning Youth" />
+    <string id="aom_anduinvale_carrock_guard_name" text="[Anduin Vale] Carrock Guard" />
+    <string id="aom_anduinvale_champion_name" text="[Anduin Vale] Beorning Champion" />
+    <string id="aom_anduinvale_great_axe_name" text="[Anduin Vale] Beorning Great-axe" />
+    <string id="aom_anduinvale_levy_name" text="[Anduin Vale] Vale Levy" />
+    <string id="aom_anduinvale_militia_archer_name" text="[Anduin Vale] Militia Archer" />
+    <string id="aom_anduinvale_militia_spearman_name" text="[Anduin Vale] Militia Spearman" />
+    <string id="aom_anduinvale_militia_veteran_archer_name" text="[Anduin Vale] Veteran Militia Archer" />
+    <string id="aom_anduinvale_militia_veteran_spearman_name" text="[Anduin Vale] Veteran Militia Spearman" />
+    <string id="aom_anduinvale_vale_horseman_name" text="[Anduin Vale] Vale Horseman" />
+    <string id="aom_anduinvale_vale_rider_name" text="[Anduin Vale] Vale Rider" />
+    <string id="aom_anduinvale_veteran_beorning_name" text="[Anduin Vale] Veteran Beorning" />
+    <string id="aom_anduinvale_woodman_archer_name" text="[Anduin Vale] Woodman Archer" />
+    <string id="aom_anduinvale_woodman_bowman_name" text="[Anduin Vale] Woodman Bowman" />
+    <string id="aom_anduinvale_woodman_marksman_name" text="[Anduin Vale] Woodman Marksman" />
+    <string id="aom_angaladh_forest_archer_name" text="[Angáladh] Forest Archer" />
+    <string id="aom_angaladh_forest_guard_name" text="[Angáladh] Forest Guard" />
+    <string id="aom_angaladh_forest_spearman_name" text="[Angáladh] Forest Spearman" />
+    <string id="aom_angaladh_forest_warden_name" text="[Angáladh] Forest Warden" />
+    <string id="aom_angaladh_ironwood_guard_name" text="[Angáladh] Ironwood Guard" />
+    <string id="aom_angaladh_ironwood_hewer_name" text="[Angáladh] Ironwood Hewer" />
+    <string id="aom_angaladh_ironwood_sentinel_name" text="[Angáladh] Ironwood Sentinel" />
+    <string id="aom_angaladh_ironwood_youth_merc_name" text="[Angáladh] Woodman Sellsword" />
+    <string id="aom_angaladh_ironwood_youth_name" text="[Angáladh] Ironwood Youth" />
+    <string id="aom_angaladh_levy_name" text="[Angáladh] Woodman Levy" />
+    <string id="aom_angaladh_master_archer_name" text="[Angáladh] Master Woodman Archer" />
+    <string id="aom_angaladh_militia_archer_name" text="[Angáladh] Militia Archer" />
+    <string id="aom_angaladh_militia_spearman_name" text="[Angáladh] Militia Spearman" />
+    <string id="aom_angaladh_militia_veteran_archer_name" text="[Angáladh] Veteran Militia Archer" />
+    <string id="aom_angaladh_militia_veteran_spearman_name" text="[Angáladh] Veteran Militia Spearman" />
+    <string id="aom_angaladh_spearman_name" text="[Angáladh] Woodman Spearman" />
+    <string id="aom_angaladh_veteran_forest_guard_name" text="[Angáladh] Veteran Forest Guard" />
+    <string id="aom_angaladh_woodman_archer_name" text="[Angáladh] Woodman Archer" />
+    <string id="aom_angaladh_woodman_axe_warrior_name" text="[Angáladh] Woodman Axe-warrior" />
+    <string id="aom_angaladh_woodman_axeman_name" text="[Angáladh] Woodman Axeman" />
+    <string id="aom_angaladh_woodman_bowman_name" text="[Angáladh] Woodman Bowman" />
+    <string id="aom_angaladh_woodmen_guard_name" text="[Angáladh] Guard of Woodmen-town" />
   </strings>
 </base>

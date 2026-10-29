@@ -80,6 +80,8 @@ MESHES = {
     "bluecraig": ("gui_bg_village_sturgia", "wait_sturgia_village", "gui_bg_castle_sturgia"),
     "lindon": ("gui_bg_village_battania", "wait_battania_village", "gui_bg_castle_battania"),
     "eredluin": ("gui_bg_village_sturgia", "wait_sturgia_village", "gui_bg_castle_sturgia"),
+    "anduinvale": ("gui_bg_village_sturgia", "wait_sturgia_village", "gui_bg_castle_sturgia"),
+    "angaladh": ("gui_bg_village_sturgia", "wait_sturgia_village", "gui_bg_castle_sturgia"),
 }
 HEARTH = "500"  # the SETTLEMENT_ECONOMY_FLOOR for isengard (tools/settlement_economy_floor.json)
 
@@ -248,6 +250,41 @@ VILLAGES = [
     Village("castle_village_EL4_3", "Flintmoor", "castle_EL4", "wheat_farm", "eredluin", "sturgia_village_k", hearth="350", after="castle_EL4"),
     Village("castle_village_EL5_1", "Dwarrowstead", "castle_EL5", "wheat_farm", "eredluin", "sturgia_village_c", hearth="350", after="castle_EL5"),
     Village("castle_village_EL5_2", "Wayhearth", "castle_EL5", "swine_farm", "eredluin", "sturgia_village_d", hearth="350", after="castle_EL5"),
+    # Anduin Vale and Angaladh (Mike placed the entities 2026-10-28; tools/add_map_fortifications.py writes
+    # their fortifications first). Anduin Vale: Northman and Westron farm names, with canon Carrock,
+    # Gladden and Beorn's bees (Honeymead, Bearward). Angaladh: forest settlements of the Woodmen, with
+    # Ironwood Hall's charcoal and iron. Types are those Dale's villages use; hearth 300 as Cardolan's;
+    # the sturgia village scenes in rotation, the heavily used sturgia_village_f left out.
+    Village("village_AV1_1", "Honeymead", "town_AV1", "wheat_farm", "anduinvale", "sturgia_village_k", hearth="300", after="town_AV1"),
+    Village("village_AV1_2", "Oxenfold", "town_AV1", "cattle_farm", "anduinvale", "sturgia_village_a", hearth="300", after="town_AV1"),
+    Village("village_AV1_3", "Whitfold", "town_AV1", "sheep_farm", "anduinvale", "sturgia_village_b", hearth="300", after="town_AV1"),
+    Village("village_AV1_4", "Bearward", "town_AV1", "trapper", "anduinvale", "sturgia_village_c", hearth="300", after="town_AV1"),
+    Village("village_AV2_1", "Langford", "town_AV2", "fisherman", "anduinvale", "sturgia_village_d", hearth="300", after="town_AV2"),
+    Village("village_AV2_2", "Millholme", "town_AV2", "wheat_farm", "anduinvale", "sturgia_village_e", hearth="300", after="town_AV2"),
+    Village("village_AV2_3", "Withybed", "town_AV2", "flax_plant", "anduinvale", "sturgia_village_g", hearth="300", after="town_AV2"),
+    Village("castle_village_AV1_1", "Carrockfoot", "castle_AV1", "sheep_farm", "anduinvale", "sturgia_village_h", hearth="300", after="castle_AV1"),
+    Village("castle_village_AV1_2", "Rockwater", "castle_AV1", "fisherman", "anduinvale", "sturgia_village_j", hearth="300", after="castle_AV1"),
+    Village("castle_village_AV1_3", "Eagle's Reach", "castle_AV1", "trapper", "anduinvale", "sturgia_village_l", hearth="300", after="castle_AV1"),
+    Village("castle_village_AV2_1", "Passfold", "castle_AV2", "sheep_farm", "anduinvale", "sturgia_village_k", hearth="300", after="castle_AV2"),
+    Village("castle_village_AV2_2", "Pinewatch", "castle_AV2", "lumberjack", "anduinvale", "sturgia_village_a", hearth="300", after="castle_AV2"),
+    Village("castle_village_AV3_1", "Gladdenmere", "castle_AV3", "fisherman", "anduinvale", "sturgia_village_b", hearth="300", after="castle_AV3"),
+    Village("castle_village_AV3_2", "Irisholm", "castle_AV3", "flax_plant", "anduinvale", "sturgia_village_c", hearth="300", after="castle_AV3"),
+    Village("castle_village_AV4_1", "Eastmead", "castle_AV4", "wheat_farm", "anduinvale", "sturgia_village_d", hearth="300", after="castle_AV4"),
+    Village("castle_village_AV4_2", "Bankside", "castle_AV4", "cattle_farm", "anduinvale", "sturgia_village_e", hearth="300", after="castle_AV4"),
+    Village("village_AND1_1", "Oakstead", "town_AND1", "lumberjack", "angaladh", "sturgia_village_g", hearth="300", after="town_AND1"),
+    Village("village_AND1_2", "Hazelglade", "town_AND1", "trapper", "angaladh", "sturgia_village_h", hearth="300", after="town_AND1"),
+    Village("village_AND1_3", "Elmclearing", "town_AND1", "cattle_farm", "angaladh", "sturgia_village_j", hearth="300", after="town_AND1"),
+    Village("village_AND1_4", "Brackenwick", "town_AND1", "wheat_farm", "angaladh", "sturgia_village_l", hearth="300", after="town_AND1"),
+    Village("castle_village_AND1_1", "Thornbrook", "castle_AND1", "fisherman", "angaladh", "sturgia_village_k", hearth="300", after="castle_AND1"),
+    Village("castle_village_AND1_2", "Briarfold", "castle_AND1", "sheep_farm", "angaladh", "sturgia_village_a", hearth="300", after="castle_AND1"),
+    Village("castle_village_AND1_3", "Sloe Glade", "castle_AND1", "lumberjack", "angaladh", "sturgia_village_b", hearth="300", after="castle_AND1"),
+    Village("castle_village_AND2_1", "Dimhollow", "castle_AND2", "trapper", "angaladh", "sturgia_village_c", hearth="300", after="castle_AND2"),
+    Village("castle_village_AND2_2", "Greyscree", "castle_AND2", "iron_mine", "angaladh", "sturgia_village_d", hearth="300", after="castle_AND2"),
+    Village("castle_village_AND3_1", "Millgate", "castle_AND3", "wheat_farm", "angaladh", "sturgia_village_e", hearth="300", after="castle_AND3"),
+    Village("castle_village_AND3_2", "Fellingwick", "castle_AND3", "lumberjack", "angaladh", "sturgia_village_g", hearth="300", after="castle_AND3"),
+    Village("castle_village_AND4_1", "Ironroot", "castle_AND4", "iron_mine", "angaladh", "sturgia_village_h", hearth="300", after="castle_AND4"),
+    Village("castle_village_AND4_2", "Cinderdell", "castle_AND4", "lumberjack", "angaladh", "sturgia_village_j", hearth="300", after="castle_AND4"),
+    Village("castle_village_AND4_3", "Hallfold", "castle_AND4", "sheep_farm", "angaladh", "sturgia_village_l", hearth="300", after="castle_AND4"),
 ]
 INSERT_AFTER = "village_isengard_a"   # default anchor: last settlement of the Isengard block, and its last loc row
 

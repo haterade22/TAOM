@@ -258,7 +258,7 @@
         "moraleFloor": 40
       }
     },
-    "sturgia": {
+    "sturgia,anduinvale,angaladh": {
       "abilityId": "bards_aim",
       "cooldownSeconds": 120,
       "durationSeconds": 8,

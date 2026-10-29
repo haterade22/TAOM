@@ -630,5 +630,53 @@
         "focus_to_add": 0,
         "skill_level_to_add": 0,
         "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "axe_warden_of_beorns_hall",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "archer_of_eastbank",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "rider_of_the_vales",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "warden_of_the_forest_gate",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "hewer_of_ironwood_hall",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
+    },
+    {
+        "career_string_id": "woodward_of_the_forest_road",
+        "skills": [],
+        "attribute": "",
+        "focus_to_add": 0,
+        "skill_level_to_add": 0,
+        "attribute_level_to_add": 0
     }
 ]

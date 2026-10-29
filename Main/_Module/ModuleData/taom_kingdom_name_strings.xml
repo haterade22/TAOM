@@ -2,6 +2,16 @@
 <strings>
 
 	<!-- Generated kingdom-identity strings (name/short_name/title/ruler_title/text): extracted from taom_spkingdoms.xml by tools/generate_name_localization_strings.py. Do not hand-edit; re-run the generator after adding a kingdom. -->
+	<string id="taom_anduinvale_desc" text="{=taom_anduinvale_desc}The Beornings and the Woodmen of the Vales hold the upper Anduin between the Misty Mountains and Mirkwood. They keep the High Pass and the Old Ford open for honest travellers and take a heavy toll of orcs and wolves. Their chieftains hold Beorn's Hall and the Carrock and want no part in the wars of kings." />
+	<string id="taom_anduinvale_name" text="{=taom_anduinvale_name}Anduin Vale" />
+	<string id="taom_anduinvale_ruler_title" text="{=taom_anduinvale_ruler_title}Chieftain" />
+	<string id="taom_anduinvale_short_name" text="{=taom_anduinvale_short_name}Anduin Vale" />
+	<string id="taom_anduinvale_title" text="{=taom_anduinvale_title}Anduin Vale" />
+	<string id="taom_angaladh_desc" text="{=taom_angaladh_desc}The Woodmen of western Mirkwood cleared their steads under the eaves of the forest and named their realm for the iron-hard trees that ring Woodmen-town. They are bowmen and woodwards, few in number, at peace with the Elves to the north and ever watchful of Dol Guldur to the south." />
+	<string id="taom_angaladh_name" text="{=taom_angaladh_name}Angáladh" />
+	<string id="taom_angaladh_ruler_title" text="{=taom_angaladh_ruler_title}King" />
+	<string id="taom_angaladh_short_name" text="{=taom_angaladh_short_name}Angáladh" />
+	<string id="taom_angaladh_title" text="{=taom_angaladh_title}Kingdom of Angáladh" />
 	<string id="taom_arthedain_desc" text="{=taom_arthedain_desc}The last of the three realms into which Arnor was sundered, Arthedain did not fall. Arvedui's line still holds Fornost upon the North Downs, though its lords are few, its towns poor, and Angmar's shadow lies always on the northern hills." />
 	<string id="taom_arthedain_name" text="{=taom_arthedain_name}Arthedain" />
 	<string id="taom_arthedain_ruler_title" text="{=taom_arthedain_ruler_title}King" />

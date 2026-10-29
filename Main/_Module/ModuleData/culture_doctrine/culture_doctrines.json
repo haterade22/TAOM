@@ -396,6 +396,42 @@
       "aggression": { "attack": 1.0, "shield": 1.2, "shooterError": 1.0, "chargeDistance": 1.0 },
       "horseStand": { "dismount": true }
     },
+    "anduinvale": {
+      "tactics": [
+        { "id": "ShieldWall" },
+        { "id": "DisciplinedLine" },
+        { "id": "Charge", "multiplier": 0.6 },
+        { "id": "FullScaleAttack", "multiplier": 0.8 },
+        { "id": "DefensiveEngagement", "multiplier": 0.6, "side": "defender" },
+        { "id": "DefensiveLine", "multiplier": 0.6, "side": "defender" },
+        { "id": "HoldChokePoint", "multiplier": 0.6, "side": "defender" },
+        { "id": "DefensiveRing", "multiplier": 0.5, "side": "defender" },
+        { "id": "RangedHarrassmentOffensive", "multiplier": 0.8, "side": "attacker" },
+        { "id": "FrontalCavalryCharge", "multiplier": 0.6 },
+        { "id": "CoordinatedRetreat", "multiplier": 1.0, "minTactics": 50, "side": "attacker" }
+      ],
+      "morale": { "neverRout": false, "bravery": 0 },
+      "aggression": { "attack": 1.0, "shield": 1.2, "shooterError": 1.0, "chargeDistance": 1.0 },
+      "horseStand": { "dismount": true }
+    },
+    "angaladh": {
+      "tactics": [
+        { "id": "ShieldWall" },
+        { "id": "DisciplinedLine" },
+        { "id": "Charge", "multiplier": 0.6 },
+        { "id": "FullScaleAttack", "multiplier": 0.8 },
+        { "id": "DefensiveEngagement", "multiplier": 0.6, "side": "defender" },
+        { "id": "DefensiveLine", "multiplier": 0.6, "side": "defender" },
+        { "id": "HoldChokePoint", "multiplier": 0.6, "side": "defender" },
+        { "id": "DefensiveRing", "multiplier": 0.5, "side": "defender" },
+        { "id": "RangedHarrassmentOffensive", "multiplier": 0.8, "side": "attacker" },
+        { "id": "FrontalCavalryCharge", "multiplier": 0.6 },
+        { "id": "CoordinatedRetreat", "multiplier": 1.0, "minTactics": 50, "side": "attacker" }
+      ],
+      "morale": { "neverRout": false, "bravery": 0 },
+      "aggression": { "attack": 1.0, "shield": 1.2, "shooterError": 1.0, "chargeDistance": 1.0 },
+      "horseStand": { "dismount": true }
+    },
 
     "aserai": {
       "tactics": [

@@ -85,6 +85,13 @@ SOURCES_FOR = {
     # cloned (its passives are mount charge and mount health); Ironguard is cloned twice instead,
     # once per infantry career, through the list in TARGETS below.
     "eredluin": [("ironguard", "ig"), ("crossbow_master", "cbm")],
+    # Anduin Vale and Angaladh are cut from Dale (culture id `sturgia`), so they take Dale's
+    # careers. Anduin Vale: an axe infantry career, a bowman and a Vale Rider. Angaladh is a realm
+    # of foot soldiers with no riders (Dale's outrider is not cloned): the infantry career is cloned
+    # twice, once as the spear career and once as the two-handed axe career, as Ered Luin cloned
+    # Ironguard, and Dale's marksman once.
+    "anduinvale": [("dale_guardsman", "dg2"), ("dale_marksman", "dm"), ("dale_outrider", "dor")],
+    "angaladh": [("dale_guardsman", "dg2"), ("dale_marksman", "dm")],
 }
 
 TARGETS = {
@@ -144,6 +151,18 @@ TARGETS = {
                       ("hewer_of_belegost", "hob", "Mattock Hewer of Belegost")],
         "crossbow_master": ("nogrod_arbalester", "nga", "Firebeard Arbalester"),
     },
+    # The ids avoid the troop ids anduinvale_vale_rider and angaladh_ironwood_hewer, which the
+    # display names echo.
+    "anduinvale": {
+        "dale_guardsman": ("axe_warden_of_beorns_hall", "awbh", "Axe-warden of Beorn's Hall"),
+        "dale_marksman": ("archer_of_eastbank", "aoe", "Archer of Eastbank"),
+        "dale_outrider": ("rider_of_the_vales", "rotv", "Rider of the Vales"),
+    },
+    "angaladh": {
+        "dale_guardsman": [("warden_of_the_forest_gate", "wfg", "Warden of the Forest Gate"),
+                           ("hewer_of_ironwood_hall", "hiwh", "Hewer of Ironwood Hall")],
+        "dale_marksman": ("woodward_of_the_forest_road", "wfr", "Woodward of the Forest Road"),
+    },
 }
 
 
@@ -169,6 +188,7 @@ ELIGIBILITY_SRC = {
     "arthedain": "gondor",
     "cardolan": "gondor", "rhudaur": "gondor",
     "eredluin": "erebor",
+    "anduinvale": "sturgia", "angaladh": "sturgia",
 }
 
 # Player-facing wording. Longest phrase FIRST so a substring never double-substitutes — the same
@@ -385,6 +405,10 @@ TEXT_REMAP = {
     ],
     # Ered Luin clones Ironguard twice, so its wording lives per career in CAREER_TEXT_REMAP.
     "eredluin": [],
+    # Anduin Vale and Angaladh clone Dale's careers, so their wording lives per career in
+    # CAREER_TEXT_REMAP.
+    "anduinvale": [],
+    "angaladh": [],
 }
 
 # Per CLONED career, applied before the culture's TEXT_REMAP: a culture that clones one source twice
@@ -433,6 +457,105 @@ CAREER_TEXT_REMAP = {
         ("Engine of Erebor", "Engine of Nogrod"),
         ("Precision Barrage", "Firebeard Volley"),
         ("Bolt-Smith", "Bolt-Smith of Nogrod"),
+    ],
+
+    # Anduin Vale: the Beornings and Woodmen of the Vales under Grimbeorn, son of Beorn.
+    # The axe infantry career (Dale's guardsman: shield and spear in the source, the axe here).
+    "axe_warden_of_beorns_hall": [
+        ("Plant your feet and hold the gate — boosts", "Plant your feet and hold the ford: boosts"),
+        ("A stalwart protector of the rebuilt city of Dale who holds the gate against all comers with shield and spear.",
+         "A broad-shouldered axeman of the House of Beorn who holds the fords and passes of the Vales against goblin and wolf alike."),
+        ("Gate-Warden of Dale", "Vale Axeman"),
+        ("Shieldman of Girion", "Axe-warden of Beorn's Hall"),
+        ("Knight of Dale", "Champion of the Carrock"),
+        ("Gate Warden of Dale", "Axeman of the Vales"),
+        ("Shieldwall of Esgaroth", "Axewall of the Old Ford"),
+        ("Spear of Girion", "Axe of Beorn"),
+        ("Bulwark of the Running", "Bulwark of the Gladden"),
+        ("Vanguard of King Brand", "Vanguard of Grimbeorn"),
+        ("The Last Stand at Erebor", "The Last Stand at the Carrock"),
+        ("Gate Hold", "Carrock Stand"),
+    ],
+    # The Woodman bowmen of the Vales (Dale's marksman).
+    "archer_of_eastbank": [
+        ("Channel the legacy of Bard the Bowman — boosts", "Loose the arrows of the Woodmen: boosts"),
+        ("A legendary bowman of Dale whose ancestors slew Smaug, carrying on the tradition of unerring marksmanship.",
+         "A Woodman bowman of the Vales who shoots from the eaves of Mirkwood and the banks of the Gladden, carrying on a tradition of unerring marksmanship."),
+        ("in honor of Bard the Bowman", "in honor of the Woodmen bowmen of the Vales"),
+        ("Bowman of Esgaroth", "Bowman of the Gladden"),
+        ("Dragon-Shooter", "Hawk-Eye of Eastbank"),
+        ("Bearer of the Black Arrow", "Bow-lord of the Vales"),
+        ("Watch of the Long Lake", "Watch of the Mirkwood Edge"),
+        ("Heir of the Black Arrow", "Heir of the Woodmen"),
+        ("Thrush-Sighted Archer", "Hawk-Sighted Archer"),
+        ("Dragonslayer of Dale", "Wolfbane of the Vales"),
+        ("The Bow of Girion's Line", "The Bow of the Eaves"),
+        ("Black Arrow", "Carrock Volley"),
+    ],
+    # The Vale Rider cavalry career (Dale's outrider).
+    "rider_of_the_vales": [
+        ("Spur your horse along familiar roads — boosts", "Spur your horse along the Vale roads: boosts"),
+        ("A mounted patrol of the northern trade roads who safeguards caravans between Dale and the Lonely Mountain.",
+         "A mounted patrol of the Vales who rides the Old Ford road and the foot of the Misty Mountains, safeguarding farms and caravans from goblin raiders."),
+        ("Road-Rider of Dale", "Road-Rider of the Vales"),
+        ("Warden of the North-Road", "Warden of the Old Ford Road"),
+        ("Marshal of the Bardings", "Marshal of the Vales"),
+        ("Rider of the Running", "Rider of the Gladden"),
+        ("Warden of the Caravan Road", "Warden of the Old Road"),
+        ("Lance of the Long Valley", "Lance of the Vales"),
+        ("Outrider of Erebor's Friendship", "Outrider of the Woodmen's Friendship"),
+        ("The Northman Charge", "The Charge of the Carrock"),
+        ("Courier of the Two Kings", "Courier of the Chieftain"),
+        ("Trade Road Sprint", "Vale Gallop"),
+    ],
+    # Angaladh: the Woodmen of western Mirkwood under King Ingomar, on foot only.
+    # The spear career (Dale's guardsman keeps its shield and spear).
+    "warden_of_the_forest_gate": [
+        ("Plant your feet and hold the gate — boosts", "Set your spear in the path and hold the line: boosts"),
+        ("A stalwart protector of the rebuilt city of Dale who holds the gate against all comers with shield and spear.",
+         "A stalwart guardian of the Forest Gate who holds the narrow way under the trees against orc, wolf and spider with shield and spear."),
+        ("Gate-Warden of Dale", "Spear of the Forest Gate"),
+        ("Shieldman of Girion", "Warden of the Forest Gate"),
+        ("Knight of Dale", "Captain of Woodmen-town"),
+        ("Gate Warden of Dale", "Spearman of Woodmen-town"),
+        ("Shieldwall of Esgaroth", "Shieldwall of the Forest Gate"),
+        ("Spear of Girion", "Spear of Ingomar"),
+        ("Bulwark of the Running", "Bulwark of the Forest Road"),
+        ("Vanguard of King Brand", "Vanguard of King Ingomar"),
+        ("The Last Stand at Erebor", "The Last Stand at Thornhold"),
+        ("Gate Hold", "Thornwall"),
+    ],
+    # The two-handed axe career (the same source, a second time).
+    "hewer_of_ironwood_hall": [
+        ("Plant your feet and hold the gate — boosts", "Swing the great axe with your kin: boosts"),
+        ("A stalwart protector of the rebuilt city of Dale who holds the gate against all comers with shield and spear.",
+         "An Ironwood hewer of Angáladh who swings a great axe in both hands, splitting shields and the orcs behind them."),
+        ("Gate-Warden of Dale", "Ironwood Axeman"),
+        ("Shieldman of Girion", "Hewer of Ironwood Hall"),
+        ("Knight of Dale", "Great-axe of the Emyn Duir"),
+        ("Gate Warden of Dale", "Axe-bearer of Ironwood Hall"),
+        ("Shieldwall of Esgaroth", "Splitter of the Forest Road"),
+        ("Spear of Girion", "Axe of the Heartwood"),
+        ("Bulwark of the Running", "Hewing of the Emyn Duir"),
+        ("Vanguard of King Brand", "Great-axe of King Ingomar"),
+        ("The Last Stand at Erebor", "The Felling of the Dark Wood"),
+        ("Gate Hold", "Heartwood Storm"),
+    ],
+    # The woodwards' bowmen (Dale's marksman).
+    "woodward_of_the_forest_road": [
+        ("Channel the legacy of Bard the Bowman — boosts", "Loose the arrows of the woodwards: boosts"),
+        ("A legendary bowman of Dale whose ancestors slew Smaug, carrying on the tradition of unerring marksmanship.",
+         "A woodward bowman of western Mirkwood who shoots from the platforms of the Forest Gate and the trees of the road, carrying on a tradition of unerring marksmanship."),
+        ("in honor of Bard the Bowman", "in honor of the woodwards of the Forest Road"),
+        ("Bowman of Esgaroth", "Bowman of Thornhold"),
+        ("Dragon-Shooter", "Spider-Shooter"),
+        ("Bearer of the Black Arrow", "Bow-Master of the Woodwards"),
+        ("Watch of the Long Lake", "Watch of the Forest Road"),
+        ("Heir of the Black Arrow", "Heir of the Woodwards"),
+        ("Thrush-Sighted Archer", "Owl-Sighted Archer"),
+        ("Dragonslayer of Dale", "Spider-Slayer of the Emyn Duir"),
+        ("The Bow of Girion's Line", "The Bow of Ingomar's Line"),
+        ("Black Arrow", "Ironwood Volley"),
     ],
 }
 
@@ -596,7 +719,11 @@ def main(argv=None):
                             "Imrahil", "Henneth", "Emyn Arnen", "Rammas", "Anduin", "Swan",
                             # Erebor's (Ered Luin): no other clone source's careers use these.
                             "Lonely Mountain", "Iron Hills", "Arkenstone", "Erebor", "Mithril",
-                            "mithril", "of Dale", "Dáin"]
+                            "mithril", "of Dale", "Dáin",
+                            # Dale's (Anduin Vale and Angaladh): none of these survives a clone.
+                            "Dale", "Dalian", "Barding", "Bard", "Esgaroth", "Smaug", "Girion",
+                            "Brand", "Long Lake", "Black Arrow", "Gate Hold", "Trade Road",
+                            "Two Kings", "Dragon"]
     source_words = SOURCE_DISPLAY_WORDS + [s for s, _ in SOURCES] + [f"_{a}_" for _, a in SOURCES]
     for tgt in TARGETS:
         for s, a in SOURCES_FOR.get(tgt, []):

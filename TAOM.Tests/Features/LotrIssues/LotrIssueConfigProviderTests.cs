@@ -251,9 +251,9 @@ public class LotrIssueConfigProviderTests
         Assert.IsTrue(File.Exists(path), $"shipped config not found at {path}");
 
         var list = _sut.ParseIssues(XDocument.Load(path));
-        // 43 LOTR issues + 22 "Armourer's Commission" rows (armour acquisition, one per culture group;
-        // Arthedain's since 2026-10-07, Cardolan's and Rhudaur's since 2026-10-23, #978, Ered Luin's since 2026-10-27) + 13 "Deep Seam" rows (the lord's gear ladder's materials, one per culture that owns armour, #693).
-        Assert.AreEqual(78, list.Count, "every shipped issue must pass validation (none silently dropped)");
+        // 43 LOTR issues + 24 "Armourer's Commission" rows (armour acquisition, one per culture group;
+        // Arthedain's since 2026-10-07, Cardolan's and Rhudaur's since 2026-10-23, #978, Ered Luin's since 2026-10-27, Anduin Vale's and Angaladh's since 2026-10-28) + 13 "Deep Seam" rows (the lord's gear ladder's materials, one per culture that owns armour, #693).
+        Assert.AreEqual(80, list.Count, "every shipped issue must pass validation (none silently dropped)");
         foreach (var d in list)
         {
             Assert.IsTrue(

@@ -471,5 +471,7 @@
     <string id="lord_RH1_1_description" text="Belegorn, King of Rhudaur, heir of Earendur's third son, lord of Cameth Brin and of the hill-men of the Angle." />
     <string id="lord_LN3_1_description" text="Galdor of the Havens, who bore Círdan's counsel to the house of Elrond, keeps Forlond on the northern arm of the Gulf of Lhûn." />
     <string id="lord_EL1_1_description" text="Farin II, King of Ered Luin, of the line of Borin, Lord of Thorin's Halls, who holds the Blue Mountains with the Broadbeams of Belegost and the Firebeards of Nogrod." />
+    <string id="lord_AND1_1_description" text="Ingomar, King of Angáladh, lord of Woodmen-town, who keeps the eaves of Mirkwood against the shadow of Dol Guldur." />
+    <string id="lord_AV1_1_description" text="Grimbeorn, son of Beorn, Chieftain of the Beornings, who keeps the High Pass and the Old Ford and lets no orc cross the Vales of Anduin." />
   </strings>
 </base>

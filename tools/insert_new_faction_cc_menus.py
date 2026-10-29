@@ -28,7 +28,7 @@ CC = os.path.join(ROOT, "Main", "_Module", "ModuleData", "charactercreation")
 MENUS = ["parents", "youth", "adulthood", "education"]
 SRC = "gundabad"
 NEW = ["goblin", "mistymountainorcs", "bluecraig", "lindon", "arthedain", "cardolan", "rhudaur",
-       "eredluin"]
+       "eredluin", "anduinvale", "angaladh"]
 
 # Which culture each new one clones its narrative options from. The first two were carved out of
 # Gundabad; Blue Craig is carved out of Goblin-town and Lindon out of Rivendell, so they clone the
@@ -49,6 +49,10 @@ SRC_FOR = {
     # Ered Luin, the Dwarves of the Blue Mountains, takes Erebor's mechanics (the other Dwarf
     # kingdom) with AUTHORED text: Erebor's is the Lonely Mountain, Dale and Dain throughout.
     "eredluin": "erebor",
+    # Anduin Vale and Angáladh are cut from Dale (culture id `sturgia`): Dale's mechanics entry for
+    # entry, their own AUTHORED text, because Dale's wording is Dale (the Lonely Mountain, Lake-town).
+    "anduinvale": "sturgia",
+    "angaladh": "sturgia",
 }
 
 # Per culture, per menu: (text, description) in the SOURCE culture's entry order. A culture listed
@@ -283,6 +287,129 @@ AUTHORED = {
              "The band had struck three caravans on the Dwarf-road east of the mountains and slipped away before anyone could follow. You went alone into the hills, found the camp, counted them, sketched the approach, and brought the report back in time for the wardens to act on it."),
         ],
     },
+    # Anduin Vale: the Beornings and Woodmen of the Vales of Anduin under Grimbeorn, son of Beorn,
+    # in Beorn's Hall; the Old Ford, the Carrock, the High Pass and the Gladden; Mirkwood's Elves
+    # to the east, the Misty Mountains' goblins to the west, Dol Guldur and Lothlórien to the south.
+    "anduinvale": {
+        "parents": [
+            ("House of Beorn",
+             "Your family belonged to the House of Beorn, kin and companions to Grimbeorn, carrying great axes in the hall of Beorn and riding the sturdy ponies of the Vales wherever the chieftain's word sent them."),
+            ("Traders of the Old Ford",
+             "Your family kept a trading house at the Old Ford, where the road from the High Pass meets the river. Honey, hides and timber went across to the Woodmen and the Elves of Mirkwood, and every cart paid its due."),
+            ("Free Farmers of the Vales",
+             "Your family farmed the rich land between the Carrock and the Gladden, keeping cattle, bees and a spear by the door, for wolves and goblins came down from the Misty Mountains more often than the rain."),
+            ("Carpenters of Beorn's Hall",
+             "Your family were carpenters and axe-smiths in Beorn's Hall, raising the long timber houses of the Vales and forging the broad axes the Beornings are known for."),
+            ("Hunters of the Mirkwood Edge",
+             "Your family hunted the eaves of Mirkwood east of the river, taking deer and boar and keeping watch on the trees for spiders and the servants of Dol Guldur."),
+            ("Drifters of the Gladden",
+             "Your family drifted along the Gladden and the banks of the Anduin, trading what they found, taking what they could, and learning that a ferryman hears more than he says."),
+        ],
+        "youth": [
+            ("Rode messages for Grimbeorn.",
+             "You rode as a runner for the chieftain, carrying his word between Beorn's Hall, the Old Ford and the Carrock, and learned to read the Vales from the back of a pony."),
+            ("Stood watch at the High Pass.",
+             "You served in the garrison that watches the High Pass, shooting from the rocks at goblin raiders and learning how a few bowmen can hold a narrow way."),
+            ("Fought in the Gladden levy.",
+             "You fought in the river-levy of the Gladden, throwing hand-axes from the reeds and closing with the blade when the raiders from Dol Guldur came near the water."),
+            ("Tracked wolves and orcs along the Mirkwood edge.",
+             "You rode the forest margin east of the Anduin, tracking wolves and orc-bands to their dens and learning to shoot from the saddle between the trees."),
+            ("Joined the axe-men of Beorn's Hall.",
+             "You took the axe among the household men of Beorn's Hall, learning to fight shoulder to shoulder with spear and blade in the yard under the chieftain's eye."),
+            ("Travelled with the river-traders.",
+             "You went up and down the Anduin with the river-traders, minding boats and cargo, and learned how to pass a toll, a watchman and a doubtful stranger."),
+        ],
+        "education": [
+            ("Trained in the hall of Grimbeorn.",
+             "You grew up among the chieftain's household in Beorn's Hall, swinging the great axe against posts and learning to sit a pony in full gear. Every bruise was a lesson, and the old bear-tales taught you what a Beorning owes his kin."),
+            ("Kept tallies at the Old Ford.",
+             "You spent your youth counting carts and bales at the Old Ford market, learning to bargain with Woodmen, Elves and the occasional Dwarf, and to know a fair price from a quick tongue."),
+            ("Tended the bees and cattle of the Vales.",
+             "You worked from dawn to dusk among the hives and herds below the Carrock, hauling water and mending fences. When the levy was called you were handed a spear and taught to hold a line."),
+            ("Learned the woodwright's craft in Beorn's Hall.",
+             "You learned your trade in the timber yards of Beorn's Hall, shaping beams and hafting axes under a master who judged every cut by eye. By the time you were grown your hands knew the work better than your head."),
+            ("Hunted the Mirkwood borders and the Carrock slopes.",
+             "You ranged the edge of Mirkwood and the stony slopes of the Carrock with the hunters, learning to move without sound and to loose a bow at a shadow. Your first goblin fell to it soon after."),
+            ("Scraped by on the banks of the Gladden.",
+             "You grew up among the reed-huts and landings of the Gladden, running errands for coin and selling what the river brought. The water taught you quick hands, a quicker tongue and when to vanish."),
+        ],
+        "adulthood": [
+            ("You held the Carrock ford beside Grimbeorn.",
+             "When a goblin host came down from the High Pass to cut the Vales in two, you stood in the ford with the axe-men of the House of Beorn until the Vale Riders came round their flank. Your name was spoken in the hall that night."),
+            ("You opened a free market at the Old Ford.",
+             "You brought Beornings, Woodmen and the Elves of Mirkwood to one table and settled the tolls at the Old Ford, so that honey and timber crossed the river without a quarrel. Grimbeorn's steward does not forget who filled the storehouses."),
+            ("You rebuilt the farms of Eastbank after a goblin raid.",
+             "When raiders burned the farms of Eastbank, you gathered the neighbours, raised the barns before the first frost and kept watch on the fields until the harvest was in. The villages remember."),
+            ("You raised the gates of Gladden Hold.",
+             "You framed and hung the great timber gates of Gladden Hold, hewing the beams yourself. When the first raiders broke against them and held, the garrison named the gates after you."),
+            ("You guided families out of the shadow of Dol Guldur.",
+             "When the shadow in the south grew and Woodmen families fled north through the trees, you led them across the river by paths no orc scout knew, and lost not one child. Grimbeorn gave you his hand."),
+            ("You broke a ring of goblin fences at the Old Ford.",
+             "For months stolen goods from the Misty Mountains had turned up in the back rooms along the river. You traced the trade, found the men behind it and handed them to the wardens, keeping a little of the silver for your trouble."),
+        ],
+    },
+    # Angaladh: the Woodmen of western Mirkwood under King Ingomar of the House of Angaladh, in
+    # Woodmen-town; Ironwood Hall, the Forest Gate, Thornhold and the watch on the Emyn Duir; the
+    # Forest Road, spiders and wolves under the trees, Dol Guldur to the south, the Anduin and the
+    # Beornings to the west. A realm of foot soldiers: no riders.
+    "angaladh": {
+        "parents": [
+            ("House of Angáladh",
+             "Your family belonged to the House of Angáladh, kin to King Ingomar, bearing great axes in his hall at Woodmen-town and leading the forest levies along the Forest Road."),
+            ("Traders of Woodmen-town",
+             "Your family kept a trading house in Woodmen-town, where timber, furs and honey came in from the clearings and went out along the Forest Road, and where every load paid its toll."),
+            ("Clearing Farmers",
+             "Your family worked a clearing hacked out of the forest, felling trees in winter and sowing in spring, with a spear by the door because spiders and wolves came out of the trees more often than the rain."),
+            ("Woodwrights of Ironwood Hall",
+             "Your family were woodwrights and axe-smiths at Ironwood Hall, felling the dark heartwood the hall is named for and hafting the broad axes of the Woodmen."),
+            ("Woodwards of the Forest Road",
+             "Your family were woodwards of the Forest Road, walking its length with bow and hatchet to keep the way open and the spiders back. Few thanked them, but the road stayed passable."),
+            ("Outcasts of Thornhold",
+             "Your family lived on the thorny edges of the Thornhold marches, taking what the forest and the road gave, and learned that a stranger's purse was often looser than his tongue."),
+        ],
+        "youth": [
+            ("Ran dispatches for King Ingomar.",
+             "You carried the king's word between Woodmen-town and the outlying holds, running the forest trails from hold to hold."),
+            ("Manned the palisade of the Forest Gate.",
+             "You served on the wall of the Forest Gate, shooting from the platforms at wolves and goblins on the road below and learning how few bowmen can hold a narrow way."),
+            ("Fought in the Thornhold levy.",
+             "You fought in the levy of Thornhold, hurling hand-axes from behind the thorn-hedges and closing with the blade when raiders came through the gaps."),
+            ("Hunted spiders and wolves under the Emyn Duir.",
+             "You ranged the dark trees beneath the Emyn Duir, tracking wolf-packs and burning spider-nests, and learned to shoot at a running shadow between the trunks."),
+            ("Joined the spear-line of Woodmen-town.",
+             "You took the spear in the household guard of Woodmen-town, learning to stand shoulder to shoulder in the narrow ways between the trees, where a line of spears stops what a charge cannot."),
+            ("Peddled goods along the Forest Road.",
+             "You went up and down the Forest Road with a pack of knives, thread and honey-cakes, and learned how to pass a hungry stranger, a toll-warden and a doubtful bargain."),
+        ],
+        "education": [
+            ("Trained in the hall of King Ingomar.",
+             "You grew up among the king's household in Woodmen-town, swinging the great axe against stumps and learning to move through the trees in full gear. Every bruise was a lesson, and the old forest songs taught you what the Woodmen owe each other."),
+            ("Counted timber in the yards of Woodmen-town.",
+             "You spent your youth tallying logs and planks in the timber yards of Woodmen-town, learning to bargain with Beornings and caravan-masters and to tell sound wood from rot."),
+            ("Worked the clearings round Thornhold.",
+             "You worked from dawn to dusk in the clearings around Thornhold, hauling stumps and driving cattle out of the shadow of the trees. When the levy was called you were handed a spear and taught to hold a line."),
+            ("Learned the woodwright's craft at Ironwood Hall.",
+             "You learned your trade at Ironwood Hall, splitting the dark heartwood and hafting axes under a master who tested every handle with a blow. By the time you were grown your hands knew the work better than your head."),
+            ("Hunted the forest trails beneath the Emyn Duir.",
+             "You followed the woodwards under the Emyn Duir, learning to move without sound over the leaf-litter and to loose a bow at a shadow. Your first spider fell to it soon after."),
+            ("Scraped by around the Forest Gate.",
+             "You grew up among the lean-tos outside the Forest Gate, running errands for travellers and selling what the road dropped. The road taught you quick hands, a quicker tongue and when to vanish."),
+        ],
+        "adulthood": [
+            ("You held the Forest Gate beside King Ingomar.",
+             "When a host of orcs came up from Dol Guldur to force the Forest Gate, you stood in the passage with the king's spearmen until the woodwards came round through the trees. Your name was spoken in the hall that night."),
+            ("You opened a timber market with the Beornings.",
+             "You crossed the Anduin and put the case for Angáladh's timber to the Beornings with such plainness that a regular market was set up within the month. The king's steward learned your name."),
+            ("You drove the spiders out of Thornhold's old fields.",
+             "When the forest crept back over the abandoned clearings of Thornhold, you led the farmers in with fire and spears, cleared the nests and brought in a harvest where none had grown in a generation."),
+            ("You raised the new gate-beams of Ironwood Hall.",
+             "You chose, felled and hauled the ironwood for the great beams of the hall's gate, hewing them yourself. When the first raiders broke against them and held, the garrison named the gate-beams after you."),
+            ("You brought a woodward patrol out of a spider-hollow.",
+             "When a woodward patrol was cut off in a hollow under the Emyn Duir, you led them out by a deer-trail no spider watched, losing not a single man. Their captain clasped your arm and named you a friend of the woodwards."),
+            ("You broke a band of fences working the Forest Road.",
+             "For months looted goods had been turning up in the back rooms of Woodmen-town. You traced the trade, found the men behind it and handed them to the king's wardens, keeping a little of the silver for your trouble."),
+        ],
+    },
 }
 
 # Words that must not survive the remap, per clone source. A leftover here is the defect the
@@ -299,6 +426,10 @@ FORBIDDEN_FOR = {
     # must not borrow Erebor's halls, its King under the Mountain or its neighbours in Dale.
     "erebor": ("Erebor", "Lonely Mountain", "Dale", "Esgaroth", "Lake-town", "Smaug", "Iron Hills",
                "Dain", "Dáin", "Ironfoot", "Ravenhill", "Arkenstone", "Under the Mountain"),
+    # Dale's places and people: both realms are cut from it and must not borrow its town, its
+    # king or its neighbours.
+    "sturgia": ("Dale", "Bard", "Esgaroth", "Lake-town", "Lonely Mountain", "Girion", "Erebor",
+                "King Brand", "Long Lake", "Smaug"),
 }
 
 # Per-culture display-text remap of the gundabad flavor (longest phrase FIRST so substrings don't
@@ -359,6 +490,8 @@ SUBS = {
     "cardolan": [],  # AUTHORED (#978)
     "rhudaur": [],  # AUTHORED (#978)
     "eredluin": [],  # AUTHORED
+    "anduinvale": [],  # AUTHORED
+    "angaladh": [],  # AUTHORED
 }
 
 CC_STRINGS = os.path.join(os.path.dirname(CC), "taom_cc_strings.xml")

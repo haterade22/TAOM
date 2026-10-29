@@ -203,7 +203,7 @@
     {
       "id": "dale",
       "folder": "dale",
-      "files": ["dale"],
+      "files": ["dale", "anduinvale", "angaladh"],
       "ranks": {"overall": 6, "damage": 6, "accuracy": 7},
       "tiers": {
         "Bow": [1, 3, 4, 5, 6],

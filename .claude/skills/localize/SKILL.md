@@ -11,14 +11,14 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 ## Case A — new C# text shown to the player
 1. Wrap the string: `new TextObject("{=taom_my_feature_label}My Feature")` (always `{=KEY}default` form).
 2. Register it: `python tools/harvest_literal_loc_keys.py --apply` lifts the default out of the literal into `taom_module_strings.xml` (or the feature's own file). Idempotent, so a hand-tuned row survives.
-3. Propagate: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply` (one language per run: repeat for each of BR CNs CNt DE FR IT JP KO PL RU SP TR; overrides in `tools/translation_overrides/<lang>.json` always win). **`--sync-ids` is not optional for a new key**: the translator substitutes by id, so without a seeded row the translation is paid for and discarded. When translation is deferred, `--sync-ids --seed-only --apply` seeds the rows without the paid translate phase.
+3. Propagate: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply` (one language per run: repeat for each of BR CNs CNt DE FR IT JP KO PL RU SP TR; overrides in `tools/translation_overrides/<lang>.json` always win). **`--sync-ids` is not optional for a new key**: the translator substitutes by id, so without a seeded row the translation is paid for and discarded. When translation is deferred, seed the rows without the paid translate phase: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --seed-only --apply`, run per language. Without `--module TAOM` the module defaults to `all` and the run also writes the live Armory's language files (#1056).
 
 ## Case B — new SOURCE XML file containing in-game text
 1. Add its row to `tools/_loc_sources.py` (the one ordered table the translator, template and name generators read; `tools/tests/test_loc_sources.py` fails until it matches the files).
 2. Add a `<LanguageFile>` reference in **all 12** `language_data.xml` files (`LanguageManifests_EveryEnglishSource_HasExactlyOneLanguageFile` derives the expected list; no count to bump).
 3. Create empty per-language stubs (`Languages/<LANG>/std_taom_*.xml`, header copied from a sibling); never `generate_translation_template.py --apply` over existing files, it overwrites them with English.
 4. A `SubModule.xml` GameText node only when code looks the ids up through `GameTexts.FindText` (`str_*` or dotted ids). `{=KEY}` text resolves from the language files alone.
-5. Run `tools/translate_with_claude.py --sync-ids`.
+5. Run `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --seed-only --apply` per language (never without `--module TAOM`: the default `all` also writes the live Armory, #1056).
 
 ## Case C — XSLT injects new `{=KEY}default` text
 1. A TAOM key: harvest it into `Main/_Module/ModuleData/taom_xslt_strings.xml` (precedent: commit `20713a1`), then translate.

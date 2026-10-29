@@ -290,6 +290,7 @@ both map tools append and `add_map_fortifications.py --check` refuses any other 
 
 ## Referenced by
 
+- [docs/features/anduin-vale-angaladh.md](./anduin-vale-angaladh.md)
 - [docs/features/cardolan-rhudaur.md](./cardolan-rhudaur.md)
 - [docs/features/ered-luin.md](./ered-luin.md)
 - [docs/features/kingdom-creation.md](./kingdom-creation.md)

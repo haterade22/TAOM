@@ -2289,7 +2289,17 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
     public string RealmColourEredLuin { get; set; } = string.Empty;
 
     [SettingPropertyGroup("Realm Borders/Realm Colours")]
-    [SettingPropertyText("Your Realm", Order = 26, RequireRestart = false,
+    [SettingPropertyText("Anduin Vale", Order = 26, RequireRestart = false,
+        HintText = "Anduin Vale's colour on the map, written #RRGGBB. Blank uses the default, #654D37.")]
+    public string RealmColourAnduinVale { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Angáladh", Order = 27, RequireRestart = false,
+        HintText = "Angáladh's colour on the map, written #RRGGBB. Blank uses the default, #587A4A.")]
+    public string RealmColourAngaladh { get; set; } = string.Empty;
+
+    [SettingPropertyGroup("Realm Borders/Realm Colours")]
+    [SettingPropertyText("Your Realm", Order = 28, RequireRestart = false,
         HintText = "The colour of your realm when it is none of the kingdoms above: your clan's land while it serves no kingdom, then a kingdom you found. Written #RRGGBB. Blank gives it a free colour. In one of the kingdoms above, that kingdom's own field applies.")]
     public string RealmColourYourRealm { get; set; } = string.Empty;
 

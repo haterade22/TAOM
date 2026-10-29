@@ -35,6 +35,7 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from xml.sax.saxutils import escape
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _gamedir import game_dir  # noqa: E402
@@ -450,14 +451,188 @@ TARGETS["eredluin"] = {
     "own_reg": True,
 }
 
+
+def _dale_successor(**over):
+    """Anduin Vale and Angáladh (2026-10-28) are human realms cut from Dale, each with its own troop
+    tree (tools/generate_<c>_troops.py). Dale is not a TAOM culture of its own: its <Culture> is the
+    vanilla `sturgia` one rewritten by spcultures.xslt, and its data uses two names, so the keys below
+    say which. Each passes its own capital, words, names and strings."""
+    c = over["c"]
+    cfg = {
+        "src": "dale",
+        # Dale's notable and townsfolk name keys are aom_dl_*.
+        "src_short": "dl",
+        # Rendered from spcultures.xslt over vanilla spcultures.xml: taom_spcultures.xml has no Dale.
+        # The render follows the installed game, so an engine bump that changes vanilla sturgia shows
+        # as --check drift on both targets, fixed by --apply.
+        "culture_xslt": "sturgia",
+        # Shared files whose source rows are not under `dale`. Dale's strings, lord kits and enlistment
+        # kits are under `sturgia`. Dale has no TAOM child, education equipment or stage-2 education
+        # templates (it uses vanilla's), and a culture without them throws at new game or CTDs at age 8
+        # (MISSING_EDUCATION_TEMPLATES), so those three are Gondor's, as Cardolan's are.
+        "block_src": {
+            "taom_module_strings.xml": "sturgia",
+            "equipmentsets/taom_lord_template_equipment.xml": "sturgia",
+            "equipmentsets/taom_enlistment_equipment.xml": "sturgia",
+            "equipmentsets/taom_child_equipment_templates.xml": "gondor",
+            "equipmentsets/taom_education_equipment_templates.xml": "gondor",
+            "taom_education_character_templates.xml": "gondor",
+        },
+        "race": None,
+        "raceword": "Man",
+        "orc_remap": False,
+        # Dale's feats, verbatim (see Lindon's note), less the two that are Dale's own story and
+        # strength: Black Arrow Tradition (battle renown) and Dwarven Trade Alliance (tariffs).
+        "feats": ["taom_dale_plain_speed", "taom_dale_loyalty"],
+        "standalone": ["characters/npcs_{c}.xml", "equipmentsets/taom_equipment_sets_{c}.xml"],
+        # Dale's rosters a to h: the lord template family a to e only, as Arthedain's.
+        "rosters_kept": rf"^{c}_(bat_template_medium|civ_template_default)_[a-e]$",
+        "party_names": ["villager_{c}_template", "caravan_template_{c}", "elite_caravan_template_{c}"],
+        # The culture's basic and elite basic troops (and executioner) land on the generated tree. The
+        # four militia ids are the same names in both trees. Dale's npcs, equipment sets and wanderers
+        # carry Culture.sturgia: the whole token is renamed, never bare `sturgia`, which also names
+        # vanilla assets the clone keeps (Culture.sturgia_raiders survives the token boundary). The
+        # education tutors borrowed from Gondor take Dale's face, as the realm's lords do.
+        "id_overrides": {f"{c}_recruit": f"{c}_levy", f"{c}_squire": over["elite"],
+                         "Culture.sturgia": f"Culture.{c}", "fighter_gondor": "fighter_sturgia"},
+        "lord_face": "fighter_sturgia",
+        "mercenaries": [over["elite"] + "_merc"],
+        "own_reg": True,
+    }
+    cfg.update({k: v for k, v in over.items() if k not in ("c", "elite")})
+    return cfg
+
+
+TARGETS["anduinvale"] = _dale_successor(
+    c="anduinvale", elite="anduinvale_beorning_youth",
+    capital="town_AV1",  # Beorn's Hall
+    adjective="Beorning", tag="Anduin Vale", short="av",
+    color="0xFF654D37", color2="0xFFFBC841",  # the realm's banner: Beorning brown and honey gold
+    lord_templates=[("Bold Beorning lord", "curt", 1), ("Cautious Beorning lord", "earnest", -1)],
+    subs=[
+        ("Bainling", "Grimling"),
+        ("Ravenhild", "Bearhild"),
+        ("Girionsson", "Oswinsson"),
+        ("Esgarothing", "Fordling"),
+        ("Longlakeson", "Langfloodson"),
+        ("Lonelyfell", "Mistyfell"),
+        ("Hallbrand", "Hallbeorn"),
+        ("Brandwyn", "Gladwyn"),
+        ("Bardings", "Beornings"),
+        ("Barding", "Beorning"),
+        ("Bard", "Beorn"),
+        ("laketown", "riverside"),
+        ("Erebor", "the Carrock"),
+        ("of Dale", "of the Vale"),
+        ("Dale", "Vale"),
+    ],
+    culture_name="Beornings",
+    culture_desc=(
+        "The Beornings keep the upper vale of the Anduin between the Misty Mountains and Mirkwood, a "
+        "folk of farmers, herdsmen and honey-keepers who share the river meadows with the Woodmen of "
+        "the Vales. They hold the Carrock and the Old Ford, take no toll from honest travellers and a "
+        "heavy one from orcs and wolves. Their chieftains are chosen for strength and plain speech, and "
+        "they follow no king into a war that is not their own."),
+    # A chieftain, not a king: the kingdom's ruler_title is Chieftain (taom_spkingdoms.xml).
+    string_overrides=dict(
+        _ruler_strings("anduinvale", "Anduin Vale", "the Beornings", "Beornings", "Beornings of the Vale",
+                       "Beorning", "Beornwulf", "Eadgyth"),
+        **{"str_faction_ruler.anduinvale": "Chieftain",
+           "str_faction_ruler.anduinvale_f": "Chieftain",
+           "str_faction_ruler_term_in_speech.anduinvale": "the Chieftain {RULER.NAME}",
+           "str_faction_ruler_name_with_title.anduinvale": "Chieftain {RULER.NAME}",
+           "str_advanced_start_value_name.anduinvale": "Anduin Vale"}),
+    # Old English names in the Beorning manner, avoiding every name the realm's lords and Dale's lords
+    # and culture pool use.
+    names={
+        "male_names": [
+            "Beornwulf", "Beornoth", "Beornred", "Beornstan", "Ealdbeorn", "Wigbeorn", "Heahbeorn",
+            "Sigebeorn", "Cynebeorn", "Folcbeorn", "Hunbeorn", "Torhtbeorn", "Wilbeorn", "Cuthbeorn",
+            "Saebeorn", "Tidbeorn", "Osric", "Oswine", "Eadric", "Ealdred", "Wighard", "Leofwine",
+            "Ceolwulf", "Hereward", "Aelfhere", "Bregowine", "Deorwine", "Eanred", "Frithuwald",
+            "Guthlac", "Heremod", "Hygered", "Merewald", "Ordgar", "Waermund", "Wynstan", "Ealhmund",
+            "Beornhelm", "Hunwald", "Wigstan"],
+        "female_names": [
+            "Beornwyn", "Eadgyth", "Aelfgifu", "Wulfwyn", "Leofrun", "Godgifu", "Hildeswith",
+            "Cyneburh", "Ealhswith", "Osburh", "Sigeburh", "Wynflaed", "Eanflaed", "Bregoswith",
+            "Heahburh", "Leofgyth", "Mildthryth", "Saethryth", "Beornflaed", "Cwenburh", "Eadburh",
+            "Frithuswith", "Aelfwyn", "Wulfthryth"],
+        "clan_names": [
+            "House of the Langflood", "Folk of the Gladden Fields", "Keepers of the High Pass",
+            "House of Framsburg", "Bear-kin of the Vale", "Honey-wardens of Beorn's Hall",
+            "Ferrymen of the Anduin", "House of the Eyrie", "Herdsmen of the Upper Vale",
+            "Folk of the Misty Eaves", "House of the Long Hall", "Wolf-hunters of the Vale"],
+    },
+)
+
+TARGETS["angaladh"] = _dale_successor(
+    c="angaladh", elite="angaladh_ironwood_youth",
+    capital="town_AND1",  # Woodmen-town
+    adjective="Woodman", tag="Angáladh", short="ang",
+    color="0xFF4F6F5A", color2="0xFFF2F4F7",  # the realm's banner: forest green and white
+    lord_templates=[("Bold Woodman lord", "curt", 1), ("Cautious Woodman lord", "earnest", -1)],
+    subs=[
+        ("Bainling", "Oakling"),
+        ("Ravenhild", "Rowanhild"),
+        ("Girionsson", "Hartsson"),
+        ("Esgarothing", "Eavesling"),
+        ("Longlakeson", "Mirkwoodson"),
+        ("Lonelyfell", "Darkfell"),
+        ("Hallbrand", "Hallwood"),
+        ("Brandwyn", "Ashwyn"),
+        ("Dalecroft", "Woodcroft"),
+        ("Bardings", "Woodmen"),
+        ("Barding", "Woodman"),
+        ("Bard", "Vidugavia"),
+        ("laketown", "forest"),
+        ("Erebor", "Mirkwood"),
+        ("Dale", "Angáladh"),
+    ],
+    culture_name="Woodmen",
+    culture_desc=(
+        "The Woodmen of Angáladh live under the western eaves of Mirkwood, where their fathers cleared "
+        "steads among trees so hard that axes ring on them like iron. They are bowmen, woodcutters and "
+        "hunters, few in number and slow to trust, at peace with the Elves of the northern wood. Every "
+        "year the shadow in the south of the forest grows, and every year their king sends more of his "
+        "archers to watch the Narrows."),
+    string_overrides=_ruler_strings("angaladh", "Kingdom of Angáladh", "the Woodmen", "Woodmen",
+                                    "Woodmen of Mirkwood", "Woodman", "Theodemir", "Amalafrida"),
+    # Gothic names, the tongue Tolkien gave the Northmen of Rhovanion (Vidugavia, Vidumavi, Marhwini),
+    # avoiding every name the realm's lords and Dale's lords and culture pool use.
+    names={
+        "male_names": [
+            "Vidugavia", "Vinitharya", "Marhari", "Marhwini", "Forthwini", "Athalaric", "Theodemir",
+            "Valamir", "Vidimir", "Fritigern", "Athanaric", "Gainas", "Sarus", "Sigeric", "Wallia",
+            "Thorismund", "Thiudimir", "Gesimund", "Hunimund", "Gunthamund", "Hilderic", "Agila",
+            "Athanagild", "Liuva", "Witteric", "Gundemar", "Swinthila", "Chintila", "Tulga", "Egica",
+            "Berimund", "Ansigar", "Thiudagast", "Aiwamund", "Baudila", "Fravitta", "Wulfila",
+            "Hrodigast", "Audawin", "Ermanaric"],
+        "female_names": [
+            "Vidumavi", "Amalasuntha", "Matasuntha", "Amalafrida", "Thiudigotho", "Ostrogotho",
+            "Gaatha", "Galswintha", "Goiswintha", "Hildigunda", "Audofleda", "Baddo", "Sunigilda",
+            "Liuvigunda", "Ragnahilda", "Theudelinda", "Gundiwara", "Swanahilda", "Aiwilda",
+            "Frithigunda", "Wilithruda", "Rodelinda", "Ansigunda", "Ermenberga"],
+        "clan_names": [
+            "House of Woodmen-town", "Bowmen of the Western Eaves", "House of the Ironwood",
+            "Folk of Rhosgobel", "Hunters of the Narrows", "Charcoal-burners of the Greenwood",
+            "House of the Great Oak", "Spider-slayers of the Eaves", "Folk of the Eastern Shore",
+            "House of the Elder Kings", "Keepers of the Woodmen-road", "Folk of the Black Mere"],
+    },
+)
+
 # BANNERLORD_GAME_DIR overrides the install path (#404), as in tools/add_map_villages.py.
 LIVE_SETTLEMENTS = (Path(game_dir(r"E:/Steam/steamapps/common/Mount & Blade II Bannerlord"))
                     / "Modules" / "TAOM_Map" / "ModuleData" / "settlements.xml")
+# A culture that exists only as an XSLT rewrite of a vanilla one (Dale is `sturgia`): the stylesheet and
+# the vanilla file it runs over.
+SPCULTURES_XSLT = MD / "spcultures.xslt"
+VANILLA_SPCULTURES = (Path(game_dir(r"E:/Steam/steamapps/common/Mount & Blade II Bannerlord"))
+                      / "Modules" / "SandBoxCore" / "ModuleData" / "spcultures.xml")
 
 
 def capital_position(target, cfg):
     """(posX, posY) of the target's capital: the layout first, then the LIVE map, then a stated
-    provisional borrow. Never a made-up coordinate."""
+    provisional borrow, then the capital's scene entity. Never a made-up coordinate."""
     if cfg["capital"] in CAPITALS:
         return CAPITALS[cfg["capital"]], False
     if not LIVE_SETTLEMENTS.exists():
@@ -474,7 +649,16 @@ def capital_position(target, cfg):
             pos = {axis: "%.3f" % float(re.search(r'\b%s="([^"]+)"' % axis, head).group(1))
                    for axis in ("posX", "posY")}
             return pos, sid != cfg["capital"]
-    raise SystemExit(f"{target}: capital {cfg['capital']} is in neither the layout nor the live map, "
+    # A kingdom's map rows land in the live file only with its merge (#1053), so before that the
+    # capital is read from its scene entity, which is where add_map_fortifications.py takes posX/posY.
+    import add_map_villages  # lazy: only this fallback needs the scene reader
+    scene = Path(add_map_villages.SCENE)
+    # Decoded as the map tools decode it (add_map_villages.main), so one stray byte cannot stop a run.
+    scene_text = scene.read_bytes().decode("utf-8", errors="replace") if scene.exists() else ""
+    found = add_map_villages.scene_position(scene_text, cfg["capital"]) if scene_text else None
+    if found:
+        return {"posX": "%.3f" % float(found[0]), "posY": "%.3f" % float(found[1])}, False
+    raise SystemExit(f"{target}: capital {cfg['capital']} is in neither the layout, the live map nor the scene, "
                      "and no provisional_start_from resolves")
 
 
@@ -628,6 +812,32 @@ def build_id_map(src, target, texts):
     return mapping
 
 
+def add_lord_templates(body, target, cfg):
+    """Append the realm's lord templates (`lord_templates`: one (name, voice, valor) per template) to its
+    npcs file, in the shape of Cardolan's `spc_cardolan_lord_*`, on the `lord_face` template. Dale's npcs
+    file has none: its culture lists vanilla leaders. Equipment comes from the cloned taom_<target>_lord_*
+    rosters."""
+    rows = []
+    for i, (name, voice, valor) in enumerate(cfg["lord_templates"], 1):
+        rows.append(
+            f'\t<NPCCharacter id="spc_{target}_lord_{i}" default_group="Infantry" is_template="true" is_hero="false" '
+            f'voice="{voice}" culture="Culture.{target}" name="{{=aom_{target}_lord_{i}}}{name}" '
+            f'skill_template="SkillSet.infantry_heavyinfantry_level1_template_skills" occupation="Lord">\n'
+            f'\t\t<face><face_key_template value="BodyProperty.{cfg["lord_face"]}" /></face>\n'
+            f'\t\t<Traits><Trait id="Valor" value="{valor}" /><Trait id="Calculating" value="{-valor}" /></Traits>\n'
+            f'\t\t<Equipments>\n'
+            f'\t\t\t<EquipmentSet id="taom_{target}_lord_battle_male" />\n'
+            f'\t\t\t<EquipmentSet id="taom_{target}_lord_civilian_male" equipmentType="Civilian" />\n'
+            f'\t\t</Equipments>\n'
+            f'\t</NPCCharacter>\n')
+    payload = ("\n\t<!-- Lord templates, referenced from taom_spcultures.xml <lord_templates> and\n"
+               "\t     <rebellion_hero_templates> (a hero keeps its template's culture). -->\n" + "".join(rows))
+    head, sep, tail = body.rpartition("</NPCCharacters>")
+    if not sep:
+        raise SystemExit(f"{target}: no </NPCCharacters> in the npcs file")
+    return head.rstrip("\n") + "\n" + payload + "\n" + sep + tail
+
+
 def apply_id_map(text, mapping):
     """Replace mapped ids as whole tokens. Longest first so one id is never rewritten inside another
     (`imladris_recruit` must not be touched while replacing `imladris_recruit_veteran`)."""
@@ -691,8 +901,46 @@ def extract_rosters(text, substr):
     return "".join(out)
 
 
+def render_xslt_culture(cid, xslt=None, source=None):
+    """<Culture id=cid> as the game builds it: spcultures.xslt run over vanilla spcultures.xml, laid out as
+    the generated blocks are (one attribute per line, two-space indent)."""
+    try:
+        from lxml import etree
+    except ImportError:
+        raise SystemExit("lxml is needed to render an XSLT culture: python -m pip install lxml")
+    out = etree.XSLT(etree.parse(str(xslt or SPCULTURES_XSLT)))(etree.parse(str(source or VANILLA_SPCULTURES)))
+    found = out.getroot().findall(f"Culture[@id='{cid}']")
+    if len(found) != 1:
+        raise SystemExit(f"expected one rendered <Culture id=\"{cid}\">, found {len(found)}")
+    el = found[0]
+    el.tail = None
+    etree.indent(el, space="  ", level=1)
+    body = etree.tostring(el, encoding="unicode")
+    esc = {'"': "&quot;", "\n": "&#10;", "\t": "&#9;"}
+    head = "<Culture" + "".join(f'\n    {k}="{escape(v, esc)}"' for k, v in el.attrib.items()) + ">"
+    # lxml escapes `>` inside attribute values, so the first `>` closes the start tag.
+    return "  " + head + body[body.index(">") + 1:].replace('"/>', '" />') + "\n"
+
+
+def block_cfg(cfg, rel):
+    """The target's config with `src` swapped for the source this shared file's rows are under."""
+    src = cfg.get("block_src", {}).get(rel)
+    return dict(cfg, src=src) if src else cfg
+
+
 def source_blocks(kind, text, src, cfg=None):
     if kind == "culture":
+        if cfg and cfg.get("culture_xslt"):
+            # Named as a TAOM culture `src` would be, so the shared rename and the name and
+            # description rewrites match it.
+            xid, block = cfg["culture_xslt"], render_xslt_culture(cfg["culture_xslt"])
+            for old, new in ((f'\n    id="{xid}"', f'\n    id="{src}"'),
+                             (f"{{=TAOM_{xid}_culture}}", f"{{=aom_{src}_name}}"),
+                             (f"{{=TAOM_{xid}_desc}}", f"{{=aom_{src}_desc}}")):
+                if block.count(old) != 1:
+                    raise SystemExit(f"rendered <Culture> {xid}: expected one {old.strip()!r}, found {block.count(old)}")
+                block = block.replace(old, new)
+            return block
         return extract_one(text, r'([ \t]*<Culture\b[^>]*\bid="%s".*?</Culture>\n)' % src, f"<Culture> {src}")
     if kind == "wanderers":
         found = re.findall(r'[ \t]*<NPCCharacter\b[^>]*\bid="spc_wanderer_%s_\d+".*?</NPCCharacter>\n' % src,
@@ -926,7 +1174,8 @@ def main():
         for rel, close_tag, kind in SHARED_FILES:
             path = MD / rel
             text, nl, bom = load(path)
-            block = finish(transform(source_blocks(kind, text, src, cfg), target, cfg, id_map))
+            bcfg = block_cfg(cfg, rel)
+            block = finish(transform(source_blocks(kind, text, bcfg["src"], bcfg), target, bcfg, id_map))
             if rel in cfg.get("item_map_files", ()):
                 block = apply_id_map(block, cfg["item_map"])
 
@@ -948,6 +1197,16 @@ def main():
                                  cfg["culture_desc"], f"{target} culture description")
                 if cfg.get("names"):
                     block = replace_name_pools(block, target, cfg["names"])
+                if cfg.get("lord_templates"):
+                    # A hero keeps its template's culture, so a list of Dale's vanilla leaders would
+                    # make every rebel and spawned lord a Sturgian. Both lists name the realm's own.
+                    rows = "".join(f'      <template name="NPCCharacter.spc_{target}_lord_{i}" />\n'
+                                   for i in range(1, len(cfg["lord_templates"]) + 1))
+                    for tag in ("lord_templates", "rebellion_hero_templates"):
+                        block, n = re.subn(rf"(<{tag}>\n).*?([ \t]*</{tag}>)",
+                                           lambda m: m.group(1) + rows + m.group(2), block, flags=re.DOTALL)
+                        if n != 1:
+                            raise SystemExit(f"{target}: expected one <{tag}> block, found {n}")
                 if cfg.get("mercenaries"):
                     rows = "".join(f'      <template name="NPCCharacter.{m}" />\n' for m in cfg["mercenaries"])
                     block, n = re.subn(r"(<basic_mercenary_troops>\n).*?([ \t]*</basic_mercenary_troops>)",
@@ -962,6 +1221,9 @@ def main():
                 if f'id="{desc_id}"' in block:
                     block = apply_string_overrides(block, {desc_id: cfg["culture_desc"]})
 
+            if bcfg is not cfg:
+                # The whole-run check below scans for `src` only; this block's rows were under another name.
+                contamination_check(target, bcfg, block)
             generated.append(block)
             shared_state[path] = (upsert(text, close_tag, block, f"{MARKER}:{target}"), nl, bom)
 
@@ -973,6 +1235,8 @@ def main():
             if cfg.get("rosters_kept") and rel_tmpl.startswith("equipmentsets/"):
                 body, dropped = keep_rosters(body, cfg["rosters_kept"])
                 print(f"  {target}: kept the rosters matching {cfg['rosters_kept']}, dropped {len(dropped)}")
+            if cfg.get("lord_templates") and rel_tmpl.startswith("characters/npcs_"):
+                body = add_lord_templates(body, target, cfg)
             generated.append(body)
             pending_writes.append((MD / rel_tmpl.format(c=target), body, nl, bom))
 

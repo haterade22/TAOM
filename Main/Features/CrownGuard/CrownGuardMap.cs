@@ -43,6 +43,8 @@ public sealed class CrownGuardMap
             ["empire"] = "dunland_wolf_champion",
             ["erebor"] = "erebor_noble_royal_warden",
             ["eredluin"] = "eredluin_kings_guard",
+            ["anduinvale"] = "anduinvale_bear_warden",
+            ["angaladh"] = "angaladh_woodmen_guard",
             ["mirkwood"] = "mirkwood_palaceguard",
             ["rivendell"] = "imladris_warden",
             ["lothlorien"] = "imladris_warden",

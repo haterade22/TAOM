@@ -70,6 +70,8 @@ public sealed class BannerBearerConfig
         { "rhudaur", "standard_of_duty_t1" },
         { "vlandia", "banner_of_the_horseman_t1" },      // Rohirrim — charge standard
         { "sturgia", "close_shields_banner_t1" },        // Barding (Dale)
+        { "anduinvale", "close_shields_banner_t1" },     // the two realms cut from Dale
+        { "angaladh", "close_shields_banner_t1" },
 
         // Dwarves — heavy shield-wall standards
         { "erebor", "banner_of_oaken_shields_t1" },

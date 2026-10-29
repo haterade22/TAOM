@@ -143,7 +143,7 @@ Every table that names `arthedain` was decided for both. Four keep no row for ei
 
 | File | Purpose |
 |------|---------|
-| `tools/realm_troops.py` | shared troop machinery for the three Arnor realms and, since 2026-10-27, the dwarf realm of [Ered Luin](ered-luin.md) |
+| `tools/realm_troops.py` | shared troop machinery for the three Arnor realms and, since 2026-10-27, the dwarf realm of [Ered Luin](ered-luin.md) and the Dale-cut realms of [Anduin Vale and Angáladh](anduin-vale-angaladh.md) |
 | `tools/generate_cardolan_troops.py`, `tools/generate_rhudaur_troops.py` | each realm's tree and party templates; `--check` |
 | `Main/Features/TroopProgression/RecruitmentPools/VolunteerRecruitmentService.Cardolan.cs`, `.Rhudaur.cs` | volunteer pools (Levy 6, Dunadan 2) |
 | `Main/Features/LiegeTitles/TaomCultureTags.cs` | `TaomCardolanCultureTag`, `TaomRhudaurCultureTag` for the King and Queen titles |
@@ -271,6 +271,7 @@ generator and `--only <culture>`. Both `generate_new_faction_kingdoms.py` and
 
 ## Referenced by
 
+- [docs/features/anduin-vale-angaladh.md](./anduin-vale-angaladh.md)
 - [docs/features/arthedain.md](./arthedain.md)
 - [docs/features/ered-luin.md](./ered-luin.md)
 - [docs/features/kingdom-creation.md](./kingdom-creation.md)

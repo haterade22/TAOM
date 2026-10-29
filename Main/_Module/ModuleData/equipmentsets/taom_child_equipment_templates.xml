@@ -1209,4 +1209,142 @@
 	</EquipmentRoster>
 
   <!-- TAOM-NEWCULTURE:eredluin:END -->
+  <!-- TAOM-NEWCULTURE:anduinvale:BEGIN -->
+	<EquipmentRoster id="child_template_anduinvale_noble_male" culture="Culture.anduinvale">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_anduinvale_noble_female" culture="Culture.anduinvale">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_anduinvale_townsman_male" culture="Culture.anduinvale">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_anduinvale_townsman_female" culture="Culture.anduinvale">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_anduinvale_villager_male" culture="Culture.anduinvale">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_anduinvale_villager_female" culture="Culture.anduinvale">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+
+  <!-- TAOM-NEWCULTURE:anduinvale:END -->
+  <!-- TAOM-NEWCULTURE:angaladh:BEGIN -->
+	<EquipmentRoster id="child_template_angaladh_noble_male" culture="Culture.angaladh">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_angaladh_noble_female" culture="Culture.angaladh">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_angaladh_townsman_male" culture="Culture.angaladh">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_angaladh_townsman_female" culture="Culture.angaladh">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_angaladh_villager_male" culture="Culture.angaladh">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="false" IsLordTemplate="true" />
+	</EquipmentRoster>
+	<EquipmentRoster id="child_template_angaladh_villager_female" culture="Culture.angaladh">
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_long" />
+			<Equipment slot="Leg" id="Item.sk_gd_ano_boots_a" />
+		</EquipmentSet>
+		<EquipmentSet equipmentType="Civilian">
+			<Equipment slot="Body" id="Item.ithilien_jerkin_short" />
+			<Equipment slot="Leg" id="Item.ithilien_boots" />
+		</EquipmentSet>
+		<Flags IsChildEquipmentTemplate="true" IsFemaleTemplate="true" IsLordTemplate="true" />
+	</EquipmentRoster>
+
+  <!-- TAOM-NEWCULTURE:angaladh:END -->
 </EquipmentRosters>
