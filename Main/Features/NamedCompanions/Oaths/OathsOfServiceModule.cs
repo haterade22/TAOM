@@ -25,7 +25,8 @@ internal sealed class OathsOfServiceModule : TaomFeatureModule
         CampaignBehaviorDecl.Of(r => new OathsOfServiceDialogBehavior(
             r.Resolve<HireTermsService>(), r.Resolve<OathTopicService>(), r.Resolve<INamedCompanionConfigProvider>(),
             r.Resolve<INamedCompanionAdapter>(), r.Resolve<ICoopSessionProvider>(), r.Resolve<IItemPoolAdapter>(),
-            r.Resolve<IArmourItemCatalogAdapter>(), r.Resolve<IModLogger>())),
+            r.Resolve<IArmourItemCatalogAdapter>(), r.Resolve<WandererAllegiance.WandererAllegianceService>(),
+            r.Resolve<IModLogger>())),
     };
 
     public override string Id => "OathsOfService";

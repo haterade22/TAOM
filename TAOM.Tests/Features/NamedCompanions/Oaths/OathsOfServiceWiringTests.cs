@@ -135,6 +135,10 @@ public class OathsOfServiceWiringTests
         container.RegisterInstance(Substitute.For<ICareerPurseAdapter>());
         container.RegisterInstance(Substitute.For<IItemPoolAdapter>());
         container.RegisterInstance(Substitute.For<IArmourItemCatalogAdapter>());
+        // The backstory intro asks the Wanderer Allegiance verdict (#1061); that feature registers the service.
+        container.RegisterInstance(Substitute.For<TAOM.Features.Execution.IAlignmentService>());
+        container.RegisterInstance(Substitute.For<TAOM.Features.WandererAllegiance.IWandererAllegianceSettingsProvider>());
+        container.Register<TAOM.Features.WandererAllegiance.WandererAllegianceService>(Reuse.Singleton);
         var module = new OathsOfServiceModule();
         module.RegisterServices(container);
         var campaign = module.CampaignBehaviors.Single(d => d.BehaviorType == typeof(OathsOfServiceCampaignBehavior));
@@ -242,4 +246,42 @@ public class OathsOfServiceWiringTests
 
     private static bool IsFile(string path, string fileName) =>
         string.Equals(Path.GetFileName(path), fileName, StringComparison.OrdinalIgnoreCase);
+
+    private const string IntroDialogPath = "Main/Features/NamedCompanions/Oaths/Hooks/OathIntroDialog.cs";
+
+    [TestMethod]
+    public void IntroDialog_EntersOnLordStartAt110_ExitsToHeroMainOptions()
+    {
+        var src = RepoPaths.ReadSource(IntroDialogPath, stripComments: true);
+
+        Assert.IsTrue(Regex.IsMatch(src, "AddDialogLine\\(\\s*\"taom_nc_intro_a\"\\s*,\\s*\"lord_start\"\\s*,\\s*\"taom_nc_intro_pre\"[^;]*IntroCondition,\\s*RecordShown,\\s*Priority\\)"),
+            "the opening line must sit on lord_start at the intro priority, above vanilla's default 100 lines");
+        StringAssert.Contains(src, "private const int Priority = 110;");
+        Assert.IsTrue(Regex.IsMatch(src, "AddDialogLine\\(\\s*\"taom_nc_intro_d\"\\s*,\\s*\"taom_nc_intro_d\"\\s*,\\s*\"hero_main_options\""),
+            "the last line must hand the conversation back to hero_main_options");
+        foreach (var part in new[] { "PREBACKSTORY", "BACKSTORY_A", "BACKSTORY_B", "BACKSTORY_C", "BACKSTORY_D", "RESPONSE_1", "RESPONSE_2" })
+            StringAssert.Contains(src, "{=!}{TAOM_NC_" + part + "}");
+    }
+
+    [TestMethod]
+    public void IntroDialog_ConditionIsWrappedInTryCatch()
+    {
+        var src = RepoPaths.ReadSource(IntroDialogPath, stripComments: true);
+        var body = Regex.Match(src, @"private bool IntroCondition\(\)\s*\{(?<b>.*?)\n    \}", RegexOptions.Singleline).Groups["b"].Value;
+
+        Assert.IsTrue(body.Length > 0, "IntroCondition was not found");
+        Assert.IsTrue(Regex.IsMatch(body.Trim(), @"^try\s*\{.*\}\s*catch \(Exception", RegexOptions.Singleline),
+            "ConversationSentence.RunCondition has no catch: the whole condition body must be in try/catch");
+    }
+
+    [TestMethod]
+    public void DialogBehavior_RegistersTheIntro()
+    {
+        var src = RepoPaths.ReadSource("Main/Features/NamedCompanions/Oaths/Hooks/OathsOfServiceDialogBehavior.cs", stripComments: true);
+
+        StringAssert.Contains(src, "new OathIntroDialog(");
+        var resolve = src.IndexOf("OathConfigValidator.ResolveIds(", System.StringComparison.Ordinal);
+        var intro = src.IndexOf("_intro.Register(starter)", System.StringComparison.Ordinal);
+        Assert.IsTrue(intro > resolve && resolve > 0, "the intro registers after the ids resolve");
+    }
 }

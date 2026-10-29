@@ -152,6 +152,28 @@ public sealed class OathTopicService
             _roster.AddItem(pair.Key, pair.Value);
     }
 
+    /// <summary>
+    /// The ledger topic id of the one-time backstory intro (#1061). The dot can never be a config topic id
+    /// (<c>^[a-z0-9_]{1,48}$</c>, OathConfigValidator), so the record cannot hide or alter a real topic.
+    /// </summary>
+    public const string IntroTopicId = "intro.backstory";
+
+    /// <summary>True when this configured, enabled companion has not yet told their backstory to a player who has not recruited them.</summary>
+    public bool IntroDue(string characterId, bool recruited, bool isCoopClient, bool hireAllowed)
+    {
+        // Every backstory ends with an offer to join, so a companion the hire gate (#575) would refuse keeps it.
+        if (recruited || !hireAllowed || !CoopSessionPolicy.MayWriteSaveBackedState(isCoopClient)
+            || Find(characterId) == null) return false;
+        return !_ledger.TryGetTopicLastDay(characterId, IntroTopicId, out _);
+    }
+
+    /// <summary>Records that the intro was shown. False, with nothing recorded, on a co-op client.</summary>
+    public bool RecordIntro(string characterId, int today, bool isCoopClient)
+    {
+        if (!CoopSessionPolicy.MayWriteSaveBackedState(isCoopClient)) return false;
+        return _ledger.SetTopicLastDay(characterId, IntroTopicId, today);
+    }
+
     public TopicDefinition FindTopic(string characterId, string topicId)
     {
         var companion = Find(characterId);

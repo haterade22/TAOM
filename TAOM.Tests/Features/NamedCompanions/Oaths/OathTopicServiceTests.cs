@@ -549,4 +549,68 @@ public class OathTopicServiceTests
         Assert.IsFalse(_ledger.Has("x"));
         Assert.IsFalse(_ledger.TryGetTopicLastDay(Id, "t", out _));
     }
+
+    [TestMethod]
+    public void IntroDue_ConfiguredUnrecruitedCompanion_True()
+    {
+        Assert.IsTrue(_sut.IntroDue(Id, recruited: false, isCoopClient: false, hireAllowed: true));
+    }
+
+    [TestMethod]
+    public void IntroDue_Recruited_False()
+    {
+        Assert.IsFalse(_sut.IntroDue(Id, recruited: true, isCoopClient: false, hireAllowed: true));
+    }
+
+    [TestMethod]
+    public void IntroDue_UnknownOrDisabledCompanion_False()
+    {
+        Assert.IsFalse(_sut.IntroDue("not_configured", false, false, hireAllowed: true));
+        Assert.IsFalse(_sut.IntroDue(null, false, false, hireAllowed: true));
+        _companion.Enabled = false;
+        Assert.IsFalse(_sut.IntroDue(Id, false, false, hireAllowed: true));
+    }
+
+    [TestMethod]
+    public void IntroDue_CoopClient_False()
+    {
+        Assert.IsFalse(_sut.IntroDue(Id, recruited: false, isCoopClient: true, hireAllowed: true));
+    }
+
+    [TestMethod]
+    public void IntroDue_HireRefusedByWandererAllegiance_False()
+    {
+        // Every backstory ends with an offer to join; a companion who would refuse the hire (#575) keeps it.
+        Assert.IsFalse(_sut.IntroDue(Id, recruited: false, isCoopClient: false, hireAllowed: false));
+    }
+
+    [TestMethod]
+    public void IntroDue_AfterRecordIntro_False()
+    {
+        Assert.IsTrue(_sut.RecordIntro(Id, Today, isCoopClient: false));
+
+        Assert.IsFalse(_sut.IntroDue(Id, recruited: false, isCoopClient: false, hireAllowed: true));
+    }
+
+    [TestMethod]
+    public void RecordIntro_CoopClient_ReturnsFalseAndRecordsNothing()
+    {
+        Assert.IsFalse(_sut.RecordIntro(Id, Today, isCoopClient: true));
+
+        Assert.IsFalse(_ledger.TryGetTopicLastDay(Id, OathTopicService.IntroTopicId, out _));
+        Assert.IsTrue(_sut.IntroDue(Id, false, false, hireAllowed: true));
+    }
+
+    [TestMethod]
+    public void IntroRecord_DoesNotHideAConfigTopic()
+    {
+        var once = Add("t_once", once: true);
+        var plain = Add("t_plain");
+
+        _sut.RecordIntro(Id, Today, isCoopClient: false);
+
+        CollectionAssert.AreEquivalent(new[] { once, plain }, _sut.Visible(Id, recruited: false, Today).ToArray());
+        Assert.AreEqual(TopicBlocker.None, _sut.Blocker(Id, once, Today, isCoopClient: false));
+        Assert.IsFalse(_ledger.TryGetTopicLastDay(Id, "t_once", out _));
+    }
 }

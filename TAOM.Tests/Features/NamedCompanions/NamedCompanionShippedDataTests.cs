@@ -135,8 +135,8 @@ public class NamedCompanionShippedDataTests
     {
         // The four parts "How to Add a New Named Companion" lists, kept in agreement. A missing
         // Hero row makes the service skip the companion with a warning; a Hero row without
-        // faction= throws in Hero.Deserialize. The backstory strings are not shown in game today
-        // (docs/modding/wanderers-and-named-companions.md, unreachable dialogue).
+        // faction= throws in Hero.Deserialize. The backstory strings are shown by the intro dialog
+        // (OathIntroDialog, #1061), which skips a companion missing any of the seven.
         var md = RepoPaths.RepoPath("Main", "_Module", "ModuleData");
         var characters = File.ReadAllText(Path.Combine(md, "named_companions", "named_companions.xml"));
         var heroes = File.ReadAllText(Path.Combine(md, "characters", "heroes.xml"));

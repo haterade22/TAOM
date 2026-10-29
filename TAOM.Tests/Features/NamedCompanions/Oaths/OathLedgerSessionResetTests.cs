@@ -47,4 +47,22 @@ public class OathLedgerSessionResetTests
         Assert.IsTrue(ledger.TryGetTopicLastDay("c", "t", out var day));
         Assert.AreEqual(21, day);
     }
+
+    [TestMethod]
+    public void IntroRecord_SurvivesExportImport_AndIsClearedByReset()
+    {
+        var ledger = Fresh();
+        ledger.SetTopicLastDay("c", OathTopicService.IntroTopicId, 7);
+        var save = ledger.Export();
+
+        ledger.ResetForNewSession();
+        Assert.IsFalse(ledger.TryGetTopicLastDay("c", OathTopicService.IntroTopicId, out _));
+
+        ledger.Import(save);
+        Assert.IsTrue(ledger.TryGetTopicLastDay("c", OathTopicService.IntroTopicId, out var day));
+        Assert.AreEqual(7, day);
+
+        ledger.ResetForNewSession();
+        Assert.IsFalse(ledger.TryGetTopicLastDay("c", OathTopicService.IntroTopicId, out _));
+    }
 }

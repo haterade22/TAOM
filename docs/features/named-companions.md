@@ -20,7 +20,7 @@ Vanilla `CompanionsCampaignBehavior` manages all wanderers via `is_template="tru
 
 Named companions use `is_hero="true"` + `occupation="Wanderer"` in their NPCCharacter XML. This combination:
 1. Makes them **invisible** to `CompanionsCampaignBehavior` (it only iterates `IsTemplate` characters)
-2. **Triggers the vanilla recruitment dialog** (`LordConversationsCampaignBehavior` checks `IsHero && Occupation == Wanderer`). Since #575 the hire itself is gated by the culture on the companion: Aragorn, Legolas and Gimli refuse an Evil-aligned player and the Isengard pair refuse a Free one, see [wanderer-allegiance.md](wanderer-allegiance.md)
+2. **Triggers the vanilla recruitment dialog** (`LordConversationsCampaignBehavior` checks `IsHero && Occupation == Wanderer`). Vanilla's first-meeting chain does not run for them, because TAOM marks them as met at placement: the backstory comes from `OathIntroDialog` instead (#1061). Since #575 the hire itself is gated by the culture on the companion: Aragorn, Legolas and Gimli refuse an Evil-aligned player and the Isengard pair refuse a Free one, see [wanderer-allegiance.md](wanderer-allegiance.md)
 3. Gives them a **fixed StringId** (no cloning/renaming)
 
 A custom `NamedCompanionBehavior` places them in specific settlements on new game and re-pins them on load.
@@ -49,7 +49,7 @@ named_companion_config.json     named_companions.xml
 | Spawn event | `OnNewGameCreatedPartialFollowUpEvent` index 1 | Heroes fully hydrated; matches StartupResourcesBehavior pattern |
 | Load event | `OnGameLoadedEvent` | Re-pin displaced companions; skip recruited/in-party companions |
 | Dialog | Vanilla wanderer flow | Triggers automatically for `IsHero && Occupation == Wanderer`. A companion with `hire_terms`, `topics` or `stay_at_home` in the JSON gets custom hire terms, extra topics and a return home: [oaths-of-service.md](oaths-of-service.md) |
-| Backstory | Vanilla string key pattern | `prebackstory.{id}`, `backstory_a.{id}`, etc. read by LordConversationsCampaignBehavior |
+| Backstory | String key pattern `<part>.{id}` | `prebackstory.{id}`, `backstory_a.{id}`, etc., shown once to an unrecruited companion by `OathIntroDialog` ([oaths-of-service.md](oaths-of-service.md)); vanilla's chain is closed by `HasMet` |
 | Race | XML `race=` + existing RacePersistenceService | Native deserialization handles it; defensive SetHeroRace as insurance |
 | Faction | `faction="Faction.neutral"` in heroes.xml | Required — Hero.Deserialize accesses clan.StringId without null check |
 
@@ -159,6 +159,7 @@ A companion's JSON entry can carry `hire_terms` (gold, items, flags), `topics` a
 
 ## Changelog
 
+- 2026-10-29: the backstory strings are now shown (#1061). TAOM sets `HasMet` at placement, which closed vanilla's first-meeting chain, so `OathIntroDialog` plays the seven strings once to an unrecruited companion.
 - 2026-10-29: Elegost, a Dúnedain Ranger of the North, waits in Bree in new campaigns (#1060, player
   feedback; a save made before him never loads the new hero): the Arthedain Ranger's kit without the helm, a face rolled once from `fighter_gondor`, and a TAOM-original backstory (translations in #763).
 - 2026-10-19: optional oaths per companion (hire terms, topics, stay at home), #904, [oaths-of-service.md](oaths-of-service.md).

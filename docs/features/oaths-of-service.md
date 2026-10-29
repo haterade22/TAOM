@@ -107,6 +107,46 @@ without it a reply that cannot be built would stall the conversation.
 
 A state failure is swallowed to "no terms", so vanilla hiring applies and an error is logged.
 
+### Backstory intro
+
+The first time the player speaks to a configured, enabled named companion they have not recruited, the
+companion tells their story from the seven `<part>.<character_id>` strings in
+`named_companions/named_companion_strings.xml` (`prebackstory`, `backstory_a` to `backstory_d`,
+`response_1`, `response_2`). TAOM marks every companion as met at placement, which closes vanilla's
+first-meeting chain (and that chain would throw on a null `Hero.Template`), so `OathIntroDialog` (#1061)
+carries the story itself. It needs no config entry: any companion in `named_companion_config.json` with
+`enabled` true gets it.
+
+| Line | Input token | Output token | Speaker and text | Priority |
+|---|---|---|---|---|
+| `taom_nc_intro_a` | `lord_start` | `taom_nc_intro_pre` | NPC, `backstory_a` | 110 |
+| `taom_nc_intro_pre` | `taom_nc_intro_pre` | `taom_nc_intro_b` | player, `prebackstory` | default |
+| `taom_nc_intro_b` | `taom_nc_intro_b` | `taom_nc_intro_c` | NPC, `backstory_b` | default |
+| `taom_nc_intro_c` | `taom_nc_intro_c` | `taom_nc_intro_reaction` | NPC, `backstory_c` | default |
+| `taom_nc_intro_response_1`, `_2` | `taom_nc_intro_reaction` | `taom_nc_intro_d` | player, `response_1` or `response_2` | default |
+| `taom_nc_intro_d` | `taom_nc_intro_d` | `hero_main_options` | NPC, `backstory_d` | default |
+
+- **Entry:** vanilla's greeting (`start_default` or `start_default_under_24_hours`) always plays first and
+  hands over to `lord_start`. There vanilla's replies (`lord_ask` to `hero_ask_4`, "So, then. What is
+  it?") sit at the default priority 100, so the intro at 110 follows the greeting. The chain ends on
+  `hero_main_options`, the normal menu.
+- **Condition:** the conversation hero exists and is not a prisoner, `OathTopicService.IntroDue` is true
+  (configured and enabled, not recruited by the same `Hero.Clan != null` test the topics use, not a co-op
+  client, not shown before, and the Wanderer Allegiance verdict (#575) allows the hire), and all seven strings
+  resolve for that character id. Otherwise the line does not match and vanilla's `lord_start` reply
+  plays. The whole condition is in a try/catch that logs once.
+- **Recorded:** when the opening line is spoken, under the ledger topic id `intro.backstory` in the same
+  saved `_taom_oath_topicDays` dictionary as topics. The dot cannot appear in a config topic id
+  (`^[a-z0-9_]{1,48}$`), so the record never hides or alters a real topic.
+- **Unrecruited only:** a recruited companion never gets it.
+- **Only when the hire is allowed:** every backstory ends with an offer to join, so a companion the
+  Wanderer Allegiance gate would refuse (a Free companion to an Evil player) keeps it.
+- **Co-op client:** skipped, and nothing is recorded (`CoopSessionPolicy.MayWriteSaveBackedState`).
+- **Old saves:** the ledger has no `intro.backstory` record, so each unrecruited companion tells their
+  story once on the first talk after the update. A companion who served the player before the update
+  and was dismissed counts as unrecruited again (`RemoveCompanionAction` clears only `CompanionOf`),
+  so they tell it once too; nothing in the engine records that a hero served before.
+
 ### Topics
 
 A topic is visible when its `when` matches (recruited means the hero has a clan: `Hero.Clan` is `CompanionOf` or an own clan, so a companion the player promoted to lord counts as recruited, the same rule the daily anchor uses), it
@@ -185,7 +225,7 @@ NamedCompanionConfigProvider --(parse, then OathConfigValidator.Validate)
         \                 |                  /                      |
    NamedCompanionAdapter, PartyItemRosterAdapter, CareerPurseAdapter, ArmourItemCatalogAdapter
         |
-OathsOfServiceDialogBehavior (OathHireDialog, OathTopicDialog)   OathsOfServiceCampaignBehavior
+OathsOfServiceDialogBehavior (OathHireDialog, OathTopicDialog, OathIntroDialog)   OathsOfServiceCampaignBehavior
 ```
 
 ## Configuration
@@ -375,6 +415,7 @@ round trip through a dictionary-backed store into a fresh behavior).
 
 ## Changelog
 
+- 2026-10-29: the backstory intro (#1061): an unrecruited named companion tells their seven-string story once on the first talk.
 - 2026-10-19: initial feature (#904).
 - 2026-10-19: deep-review fixes. Aragorn moves to Bree (`town_AN3`). The anchor runs on the first hourly tick after the daily tick (SwapCompanions ran after it). A promoted companion (own clan) is never moved. An unknown hire item drops the whole terms block; `gold: 0` without items reverts to the vanilla price. A throw after the companion joined keeps the items. Gold rewards show the engine notification. Topic prompts localize when shown. A priority-1 fallback follows the reply line. The ledger saves a list and a dictionary under new keys. A syntax error in the config logs at error level; an unreadable `enabled` disables the entry.
 
