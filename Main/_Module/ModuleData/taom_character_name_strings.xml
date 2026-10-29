@@ -2037,6 +2037,7 @@
 	<string id="nc_aragorn_name" text="{=nc_aragorn_name}Aragorn" />
 	<string id="nc_balakhor_name" text="{=nc_balakhor_name}Balakhôr, the Lore-Grandmaster" />
 	<string id="nc_blackrose_name" text="{=nc_blackrose_name}BlackRose" />
+	<string id="nc_elegost_name" text="{=nc_elegost_name}Elegost" />
 	<string id="nc_gimli_name" text="{=nc_gimli_name}Gimli" />
 	<string id="nc_hart_name" text="{=nc_hart_name}Éohart, of the Wold" />
 	<string id="nc_haterade_name" text="{=nc_haterade_name}Hatérade" />

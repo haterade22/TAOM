@@ -66,7 +66,7 @@ Controls which companions spawn, where, and their race.
 | `race` | string | Race name from monsters.xml (human, elf, dwarf, uruk_hai, etc.) |
 | `enabled` | bool | Set false to disable without removing |
 
-### Current Values (17 companions)
+### Current Values (18 companions)
 
 | Companion | Race | Settlement | Culture |
 |-----------|------|-----------|---------|
@@ -87,6 +87,7 @@ Controls which companions spawn, where, and their race.
 | Solus, the Cairn | elf | town_R1 | rivendell |
 | Maztog, the Ostler's Dread | uruk_hai | town_isengard | isengard |
 | Balakhor, the Lore-Grandmaster | elf | town_R1 | rivendell |
+| Elegost, a Ranger of the North | human | town_AN3 (Bree) | arthedain |
 
 ## Key Files
 
@@ -101,7 +102,7 @@ Controls which companions spawn, where, and their race.
 | `Main/Features/NamedCompanions/NamedCompanionIoC.cs` | DryIoc registrations |
 | `Main/Adapters/INamedCompanionAdapter.cs` | Adapter interface |
 | `Main/Adapters/NamedCompanionAdapter.cs` | Wraps Hero/Settlement sealed types |
-| `Main/_Module/ModuleData/named_companions/named_companions.xml` | 17 NPCCharacter definitions |
+| `Main/_Module/ModuleData/named_companions/named_companions.xml` | 18 NPCCharacter definitions |
 | `Main/_Module/ModuleData/named_companions/named_companion_config.json` | Spawn settlement + race config |
 | `Main/_Module/ModuleData/named_companions/named_companion_strings.xml` | 126 backstory strings (7 per companion) |
 | `Main/_Module/ModuleData/characters/heroes.xml` | Hero entries (faction="Faction.neutral") |
@@ -117,13 +118,15 @@ Controls which companions spawn, where, and their race.
 ## Tests
 
 - `TAOM.Tests/Features/NamedCompanions/NamedCompanionConfigProviderTests.cs` — 7 tests: JSON parsing, missing file, malformed JSON, caching, disabled entries, default enabled, empty array
+- `TAOM.Tests/Features/NamedCompanions/NamedCompanionShippedDataTests.cs`: every configured companion has its character, a neutral `Hero` row and all seven backstory strings; Elegost waits in Bree as an Arthedain Ranger.
 - `TAOM.Tests/Features/NamedCompanions/NamedCompanionServiceTests.cs` — 13 tests: spawn placement, mark-as-met, race setting, disabled skip, missing hero warning, multiple companions, idempotent spawn, load re-placement, recruited-companion guard, already-placed skip, dead hero skip, missing hero skip, disabled skip on load
 
 ## How to Add a New Named Companion
 
 1. Add NPCCharacter to `named_companions/named_companions.xml`:
    - `is_hero="true"`, `occupation="Wanderer"`, `race="X"`, `culture="Culture.X"`
-   - Include `<BodyProperties>`, `<skills>`, `<Traits>`, `<Equipments>` with inline `<EquipmentRoster>`
+   - Include a `<face>` (an inline `<BodyProperties>` key, or a `face_key_template` that Lord Face
+     Variety rolls once per new campaign), `<skills>`, `<Traits>`, `<Equipments>` with inline `<EquipmentRoster>`
    - Verify all item IDs exist in LOTRLOME_Armory
 
 2. Add entry to `named_companions/named_companion_config.json`:
@@ -156,6 +159,8 @@ A companion's JSON entry can carry `hire_terms` (gold, items, flags), `topics` a
 
 ## Changelog
 
+- 2026-10-29: Elegost, a Dúnedain Ranger of the North, waits in Bree in new campaigns (#1060, player
+  feedback; a save made before him never loads the new hero): the Arthedain Ranger's kit without the helm, a face rolled once from `fighter_gondor`, and a TAOM-original backstory (translations in #763).
 - 2026-10-19: optional oaths per companion (hire terms, topics, stay at home), #904, [oaths-of-service.md](oaths-of-service.md).
 - 2026-09-12: the hire dialogue is alignment-gated (#575, [wanderer-allegiance.md](wanderer-allegiance.md)); no change to placement or data here.
 - 2026-05-13 — Entity State Matrix completion (#127 + #184): added prisoner/fugitive placement guards to `EnsureCompanionsPlaced` and a per-process `ResetSession()` so companions aren't force-placed onto captors/fugitives or skipped across campaigns in the same Bannerlord process.

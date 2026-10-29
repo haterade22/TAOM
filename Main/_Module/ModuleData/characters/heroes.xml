@@ -2823,6 +2823,7 @@
 	<Hero id="named_companion_solus" faction="Faction.neutral" />
 	<Hero id="named_companion_maztog" faction="Faction.neutral" />
 	<Hero id="named_companion_balakhor" faction="Faction.neutral" />
+	<Hero id="named_companion_elegost" faction="Faction.neutral" />
 
   <!-- TAOM-NEWFACTIONS:goblin:BEGIN -->
 	<Hero

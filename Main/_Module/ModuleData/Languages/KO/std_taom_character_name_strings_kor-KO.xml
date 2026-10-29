@@ -2058,5 +2058,6 @@
     <string id="aom_anduinvale_lord_2" text="Cautious Beorning lord" />
     <string id="aom_angaladh_lord_1" text="Bold Woodman lord" />
     <string id="aom_angaladh_lord_2" text="Cautious Woodman lord" />
+    <string id="nc_elegost_name" text="Elegost" />
   </strings>
 </base>

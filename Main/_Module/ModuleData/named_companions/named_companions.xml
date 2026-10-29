@@ -854,5 +854,52 @@
 			</Equipments>
 		</NPCCharacter>
 
+		<NPCCharacter id="named_companion_elegost" name="{=nc_elegost_name}Elegost" age="34" voice="earnest" culture="Culture.arthedain" race="human" default_group="Ranged" is_hero="true" occupation="Wanderer" face_mesh_cache="true">
+			<!-- #1060: a Ranger of the North met in Bree. The face is rolled once from the template,
+			     seeded by this id, so it is the same in every campaign. -->
+			<face>
+				<face_key_template value="BodyProperty.fighter_gondor" />
+			</face>
+			<skills>
+				<skill id="OneHanded" value="140"/>
+				<skill id="TwoHanded" value="90"/>
+				<skill id="Polearm" value="60"/>
+				<skill id="Bow" value="180"/>
+				<skill id="Throwing" value="40"/>
+				<skill id="Riding" value="120"/>
+				<skill id="Athletics" value="130"/>
+				<skill id="Scouting" value="160"/>
+				<skill id="Tactics" value="60"/>
+				<skill id="Roguery" value="40"/>
+				<skill id="Leadership" value="30"/>
+				<skill id="Medicine" value="60"/>
+				<skill id="Charm" value="20"/>
+			</skills>
+			<Traits>
+				<Trait id="Honor" value="1"/>
+				<Trait id="Valor" value="1"/>
+				<Trait id="Calculating" value="1"/>
+			</Traits>
+			<Equipments>
+				<!-- The Arthedain Ranger's kit (troops_arthedain.xml, arthedain_ranger) without the helm. -->
+				<EquipmentRoster>
+				<equipment slot="Item0" id="Item.ladder_arthedain_bow_t4" />
+				<equipment slot="Item1" id="Item.bodkin_arrows_a" />
+				<equipment slot="Item2" id="Item.bodkin_arrows_a" />
+				<equipment slot="Item3" id="Item.numenorean_bastard_heavy_b" />
+				<equipment slot="Body" id="Item.sk_ar_art_chainmail_full_a" />
+				<equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+				<equipment slot="Gloves" id="Item.sk_ar_art_bracer_noble_med_a" />
+				<equipment slot="Leg" id="Item.sk_ar_art_grvs_noble_med_a" />
+				</EquipmentRoster>
+				<EquipmentRoster civilian="true">
+				<equipment slot="Item0" id="Item.numenorean_bastard_heavy_b" />
+				<equipment slot="Body" id="Item.sk_ar_art_chainmail_half_a" />
+				<equipment slot="Cape" id="Item.sk_ar_art_cape_a" />
+				<equipment slot="Leg" id="Item.sk_ar_art_boots_a" />
+				</EquipmentRoster>
+			</Equipments>
+		</NPCCharacter>
+
 
 </NPCCharacters>

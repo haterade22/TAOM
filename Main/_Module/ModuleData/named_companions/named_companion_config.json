@@ -144,5 +144,11 @@
     "spawn_settlement": "town_R1",
     "race": "elf",
     "enabled": true
+  },
+  {
+    "character_id": "named_companion_elegost",
+    "spawn_settlement": "town_AN3",
+    "race": "human",
+    "enabled": true
   }
 ]

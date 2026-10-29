@@ -170,8 +170,8 @@ null (early startup, or MCM failed to load).
 ### Alignment coverage
 
 An unclassified culture resolves to Neutral, which is a silent permit. All 26 cultures on the 281
-wanderer templates in `taom_wanderers.xml` (counted 2026-10-27, Ered Luin's 12 included) and all 7 on
-the 17 named companions are classified in `alignment.json`;
+wanderer templates in `taom_wanderers.xml` (counted 2026-10-27, Ered Luin's 12 included) and all 8 on
+the 18 named companions are classified in `alignment.json`;
 `WandererCultureAlignmentCoverageTests` fails the build if a wanderer culture ever is not.
 
 ## Key Files

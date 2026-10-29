@@ -257,4 +257,20 @@
 	<string id="taom_oath_gimli_second_reply"
 		text="{=taom_oath_gimli_second_reply}You have earned the asking. The deep halls open to a friend. When this war lets us, you shall see the gold of Durin and the hammers of my people." />
 
+	<!-- #1060: Elegost, a Ranger of the North in Bree -->
+	<string id="backstory_a.named_companion_elegost"
+		text="{=nc_backstory_a.named_companion_elegost_text}I am Elegost, a Ranger of the North. My kin keep the roads of Eriador while the folk of Bree sleep and never ask who stood watch." />
+	<string id="prebackstory.named_companion_elegost"
+		text="{=nc_prebackstory.named_companion_elegost_text}A Ranger? The Bree-folk have hard words for your kind." />
+	<string id="backstory_b.named_companion_elegost"
+		text="{=nc_backstory_b.named_companion_elegost_text}Let them talk. We are the last of the Dúnedain who still walk the wild. I have tracked orcs down out of the Ettenmoors and turned wolves back at the Brandywine before the farmers knew they had come." />
+	<string id="backstory_c.named_companion_elegost"
+		text="{=nc_backstory_c.named_companion_elegost_text}Arthedain still holds Fornost, and our cousins hold Cardolan and Rhudaur, but the wild lands between them answer to no king. That is where my people keep their watch, and where I have spent my years." />
+	<string id="response_1.named_companion_elegost"
+		text="{=nc_response_1.named_companion_elegost_text}The North owes your people more than it knows." />
+	<string id="response_2.named_companion_elegost"
+		text="{=nc_response_2.named_companion_elegost_text}A wanderer who sleeps in ditches. What use is that to me?" />
+	<string id="backstory_d.named_companion_elegost"
+		text="{=nc_backstory_d.named_companion_elegost_text}I know every ford between the Greyflood and the Hoarwell, and my bow does not miss in the dark. Ride with me, and you will not walk into an ambush anywhere in Eriador." />
+
 </strings>

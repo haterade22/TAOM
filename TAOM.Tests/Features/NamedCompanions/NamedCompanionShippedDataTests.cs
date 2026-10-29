@@ -126,4 +126,50 @@ public class NamedCompanionShippedDataTests
             .Select(c => $"{c.CharacterId}: {c.HomeSettlement}").ToList();
         Assert.AreEqual(0, missing.Count, string.Join("; ", missing));
     }
+
+    private static readonly string[] BackstoryParts =
+        { "prebackstory", "backstory_a", "backstory_b", "backstory_c", "backstory_d", "response_1", "response_2" };
+
+    [TestMethod]
+    public void EveryConfiguredCompanion_HasItsCharacter_ANeutralHeroRow_AndAllSevenBackstoryStrings()
+    {
+        // The four parts "How to Add a New Named Companion" lists, kept in agreement. A missing
+        // Hero row makes the service skip the companion with a warning; a Hero row without
+        // faction= throws in Hero.Deserialize. The backstory strings are not shown in game today
+        // (docs/modding/wanderers-and-named-companions.md, unreachable dialogue).
+        var md = RepoPaths.RepoPath("Main", "_Module", "ModuleData");
+        var characters = File.ReadAllText(Path.Combine(md, "named_companions", "named_companions.xml"));
+        var heroes = File.ReadAllText(Path.Combine(md, "characters", "heroes.xml"));
+        var strings = ShippedStringIds();
+
+        var problems = new List<string>();
+        foreach (var c in Companions())
+        {
+            if (!characters.Contains($"<NPCCharacter id=\"{c.CharacterId}\""))
+                problems.Add($"{c.CharacterId}: no NPCCharacter");
+            if (!heroes.Contains($"<Hero id=\"{c.CharacterId}\" faction=\"Faction.neutral\""))
+                problems.Add($"{c.CharacterId}: no neutral Hero row");
+            problems.AddRange(BackstoryParts.Where(p => !strings.Contains($"{p}.{c.CharacterId}"))
+                .Select(p => $"{c.CharacterId}: no {p} string"));
+        }
+
+        Assert.AreEqual(0, problems.Count, string.Join("; ", problems));
+    }
+
+    [TestMethod]
+    public void Elegost_IsAnArthedainRangerWaitingInBree()
+    {
+        // #1060: player feedback asked for a Dunedain wanderer met on the road in Eriador.
+        var elegost = Companions().SingleOrDefault(c => c.CharacterId == "named_companion_elegost");
+        Assert.IsNotNull(elegost, "named_companion_elegost is not in named_companion_config.json");
+        Assert.AreEqual("town_AN3", elegost!.SpawnSettlement, "Elegost waits in Bree");
+        Assert.AreEqual("human", elegost.Race);
+
+        var characters = File.ReadAllText(RepoPaths.RepoPath(
+            "Main", "_Module", "ModuleData", "named_companions", "named_companions.xml"));
+        var entry = Regex.Match(characters, "<NPCCharacter id=\"named_companion_elegost\"[^>]*>");
+        StringAssert.Contains(entry.Value, "culture=\"Culture.arthedain\"");
+        StringAssert.Contains(entry.Value, "occupation=\"Wanderer\"");
+        StringAssert.Contains(entry.Value, "is_hero=\"true\"");
+    }
 }
