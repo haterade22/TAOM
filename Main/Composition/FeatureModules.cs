@@ -93,5 +93,6 @@ internal static class FeatureModules
         new Features.InnRounds.InnRoundsModule(),
         new Features.TimeAcceleration.TimeAccelerationModule(),
         new Features.WardensTally.WardensTallyModule(),
+        new Features.StagedSiege.Spike.StagedSiegeSpikeModule(),
     };
 }
