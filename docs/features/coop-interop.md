@@ -474,6 +474,7 @@ reason.
 | `FieldCommissionMissionLogic` | Unsafe | Not added. It already required `IsAuthority`, which is false on every peer that runs a mission, so a session runs no field commission logic. |
 | `FellFoesMissionLogic` | Unsafe | Not added. Mike kept the stand-down on 2026-10-19 (`FellFoesWiringTests`); co-op has no "stopped fleeing" message, so a rally would not replicate. |
 | `LostFootingMissionLogic` | Unsafe | Not added. It reuses Fell Foes' gate (`LostFootingModule`). |
+| `StagedSiegeMissionBehavior` | Unsafe | Not added. A staged siege moves flags, gates, a defender detachment and the reinforcement timer, none of which replicate to the other peers; the behavior also arms only on a non-client wall assault. |
 | `CultureDoctrineMissionLogic` | Local | Added everywhere, no check. Tactics move only AI-controlled agents, and on a guest the host's AI teams are puppets (`Controller` `None`), so a tactic has no agent of the host's to move there. The per-unit riding and firing orders it sets (`Formation.RidingOrder`, `FiringOrder`) only set values. Not checked in game: see the owed list. |
 | `BehaviorTreeMissionLogic` | AgentOwner | The tree seam: `BehaviorTreeAgentComponent.TickOnMissionThread` skips `RunTree` when the agent is not owned, and restarts its cadence, which throttles only a tree whose delay is 1000 ms or more (see Cost above). Every row below marked "tree seam" is covered by it. |
 | `AdvancedCombatBehavior` | AgentOwner | `BoneCheck` drops a hit whose attacker is not owned (a bite or slam in flight across an ownership change) and ends the check. |
@@ -588,12 +589,12 @@ to characterise. The existing try/catch around acceptance is containment, not co
 
 ## What is NOT done
 
-- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **503** settings across
+- **No MCM settings parity: reported, not yet exchanged.** TAOM ships **504** settings across
   four MCM classes (the 284 here counted `[SettingPropertyGroup]` lines alongside the properties;
-  the split is 473 in `TaomSettings`, 19 in `BattleLoadDiagnosticsSettings`, 10 in
+  the split is 474 in `TaomSettings`, 19 in `BattleLoadDiagnosticsSettings`, 10 in
   `CrashReportSettings` and 1 in `BlowDiagnosticsSettings`).
-  **330 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
-  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 330 are in
+  **331 are simulation-relevant**, traced to the feature that consumes each one and kept when that feature
+  ships a GameModel, CampaignBehavior, MissionBehavior or Harmony patch; all 331 are in
   `TaomSettings`. The 173 excluded (67 counted 2026-09-22, less the Native Skin Fixes toggle removed with the feature 2026-10-05, the 38 Realm Borders settings added from 2026-09-30 to 2026-10-08, the Crash Report AfterStart dev trigger added 2026-10-01, the Battle Corpses advice toggle and button added 2026-10-01, and the thirteen Menus & Loading Screens settings added 2026-10-01, #704, and the three tick profiler settings added 2026-10-02, and the hitch probe toggle added 2026-10-02, and the Animation Clip Memory probe toggle added 2026-10-02, and the map profiler toggle added 2026-10-03, and the Load-Time Stamps toggle added 2026-10-03, and the Race Abilities war cry, message and debug-log toggles added 2026-10-04, and the Race Abilities glow toggle added 2026-10-04, and the Crash Report mission-start survival toggle added 2026-10-08, and the Crash Report skeleton buffer guard and watch toggles added 2026-10-08, and the Map Performance nameplate cull and map view release settings added 2026-10-08, and the War Chronicle announcements toggle added 2026-10-08, and the three Animation Variety settings and the swing alternative probe toggle added 2026-10-17, and the Hidden Hosts toggle added 2026-10-18, and the Fell Foes debug log toggle added 2026-10-19, the two Telchar's Mark settings added 2026-10-19, #875, the two Reeve's Ledger switches added 2026-10-19, #857, and the Lost Footing census toggle added 2026-10-20, #894, the Watch-Silver and Tidings of the Lists switches added 2026-10-21, #859, less the two Quick Actions "include equipped" toggles removed 2026-10-23, #925, and the Cardolan and Rhudaur realm colours added 2026-10-23, #978, and the Loremaster's Line switch added 2026-10-23, #877, and the Hearth Roll tint toggle added 2026-10-23, #906, and the six camp work, rest healing and start-in-camp settings added 2026-10-24, #860, and the Notable Services switch added 2026-10-24, #899, and the Harvest Road notices toggle added 2026-10-26, #912, and the Make Tools switch added 2026-10-26, #910, and the two Many Hammers switches added 2026-10-26, #911, and the Bandit Voices greetings toggle added 2026-10-26, #900, less the two Auto-Resolve Diagnostics toggles removed with the feature 2026-10-26, and the Inn Rounds switch and its two scales added 2026-10-26, #901, and the Prisoner Banners toggle added 2026-10-27, #902, and the Ered Luin realm colour added 2026-10-27, and the Warden's Tally switch added 2026-10-27, #903, and the Anduin Vale and Angáladh realm colours added 2026-10-28, and the Dorwinion and South Rhovanion realm colours added 2026-10-29) are instrumentation, player-local convenience,
   presentation, two action buttons, and the three time-acceleration knobs whose UI co-op already
   suppresses; the list with its reasons is
@@ -606,7 +607,7 @@ to characterise. The existing try/catch around acceptance is containment, not co
   excluded name may stop matching a real property, and no two settings classes may share a
   property name.
 
-  `SettingsFingerprint` hashes those 330: one code per MCM group plus a global, culture-invariant
+  `SettingsFingerprint` hashes those 331: one code per MCM group plus a global, culture-invariant
   so a comma decimal separator cannot fake a mismatch — and `SettingsFingerprintLog` writes them
   to each peer's log under the co-op gate. Floats and doubles hash as their IEEE bit patterns
   (-0 folded to 0), not as runtime-formatted text, so a .NET 6 server and a net472 client agree on
@@ -615,7 +616,7 @@ to characterise. The existing try/catch around acceptance is containment, not co
   every diagnostics property is excluded so this moves no hash today (a test asserts exactly
   that), and it means a simulation-affecting setting added to a diagnostics page later is covered
   the day it lands. That makes the "compare settings manually" workaround a comparison of a few
-  short strings instead of 330 values read off two screens.
+  short strings instead of 331 values read off two screens.
 
   **All four classes are `AttributeGlobalSettings<T>`, and the reasoning above depends on it.**
   MCM has three scopes, and only one of them travels with a save. Verified against MCM 5.12.1:
@@ -634,12 +635,12 @@ to characterise. The existing try/catch around acceptance is containment, not co
   PerSave class would be equal by construction and need not be hashed; a PerCampaign one would
   need hashing more urgently than a global, not less.
 
-  **A matching fingerprint means the MCM settings agree, and nothing wider.** It covers the 330
+  **A matching fingerprint means the MCM settings agree, and nothing wider.** It covers the 331
   values on the four settings pages. It does not cover the `ModuleData` JSON/XML that several
   features fall back to when a setting is unset (on a client only; a server never reads them for an
   MCM-backed field), the `TAOM.Dependencies` flag files
   (`patchshield-disabled.flag`, `saveshield-swallow-disabled.flag`, `coop-force-active.flag`),
-  or any difference outside TAOM. None of those three flags gates a setting in the 330 (each
+  or any difference outside TAOM. None of those three flags gates a setting in the 331 (each
   governs a Dependencies-side shield with no MCM property), but the general point holds: read the
   log line as "our settings pages match", not as "our installs are equivalent".
 

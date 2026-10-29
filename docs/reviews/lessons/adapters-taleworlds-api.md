@@ -1582,3 +1582,28 @@ scope and chose a fix in the same release.
 - **Prevent:** before a question to Mike rests on engine behaviour, read the call path from the input to its effect
   in the installed DLL, and quote the method and line in the question.
 - **Source:** [rca-engine-bump-v1-5-6-2026-10-27.md](../rca-engine-bump-v1-5-6-2026-10-27.md) finding 2; #1040.
+
+### Read every reader and guard of an engine member before a design relies on it (#1054, 2026-10-29)
+Three Staged Siege defects were one engine member each, read only at its name. `TacticComponent.StopUsingAllMachines`
+stops every formation of the team on every siege weapon with no `IsAIControlled` check (TacticComponent.cs:528-550), so a
+stage tactic on the player's team undid a player general's own ram and ladder orders. Swapping to a custom reinforcement
+timer left `GlobalReinforcementInterval` at 3 s, and under that timer its only reader is BattleEndLogic's rout grace
+(`GetReinforcementInterval + 3`, BattleEndLogic.cs:299, :335), so a held reserve could not save a fleeing side.
+`Formation.TransferUnits` silently refuses a formation that is not `IsSplittableByAI` (Formation.cs:2157-2160), so a
+detachment taken from a player general's troops never formed.
+- **Why missed:** the spec read each member's signature and its obvious caller, not its body, its guard clauses or every
+  other reader. `rca-lost-footing-2026-10-20.md` named the same planning gap.
+- **Prevent:** before an engine member goes into a spec, read its body and grep every caller of the value it reads or
+  writes in the installed DLL. A tactic added to every team must ask `Team.IsPlayerGeneral` before it touches machines or
+  formations; a replaced timing mechanism must leave no value another engine check still reads.
+- **Source:** [rca-staged-siege-2026-10-29.md](../rca-staged-siege-2026-10-29.md) findings 1 to 3.
+
+### Approve a reinforcement batch once, never on every engine tick (#1054, 2026-10-29)
+Each true answer from a custom reinforcement timer runs `CheckReinforcementBatch`, which, while a batch is active, resets
+every formation's spawn slot (`ResetReinforcementSpawnedUnitCountsPerFormation`, MissionBattleSideSpawnContext.cs:224-233,
+:503-517). A softlock read from a count sampled every 0.5 s kept approving between samples, so the troops of one batch
+would have spawned stacked on slot 0.
+- **Why missed:** the fix moved a live per-tick count to a per-pass cache without asking what each extra approval costs.
+- **Prevent:** a timer's `Check` answers true only while the condition is still true now; refresh the condition from the
+  event that ends it (here, the first agent built for that side), not only from a periodic sample.
+- **Source:** [rca-staged-siege-2026-10-29.md](../rca-staged-siege-2026-10-29.md) finding 21.

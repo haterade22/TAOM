@@ -60,7 +60,7 @@ public class CoopMissionRolePolicyTests
         CollectionAssert.AreEqual(new[]
         {
             "EnlistmentMeritMissionBehavior", "FellFoesMissionLogic", "FieldCommissionMissionLogic",
-            "LostFootingMissionLogic", "ShaderPrecompilePlayerAgentGuard", "SiegeDismountMissionBehavior", "StagedSiegeSpikeMissionBehavior",
+            "LostFootingMissionLogic", "ShaderPrecompilePlayerAgentGuard", "SiegeDismountMissionBehavior", "StagedSiegeMissionBehavior",
         }, unsafeNames);
     }
 
@@ -85,6 +85,7 @@ public class CoopMissionRolePolicyTests
         {
             "TAOM.Features.AdvancedCombat.AutonomousMovementPlayerController",
             "TAOM.Features.CompanionTactics.BattleActionBar.Hooks.BattleActionBarMissionView",
+            "TAOM.Features.StagedSiege.Hooks.StagedSiegeMissionView",
         })
         {
             var type = client.GetType(fullName);
@@ -109,7 +110,7 @@ public class CoopMissionRolePolicyTests
         var outside = new[] { "BattleLoadPhaseBehavior", "CustomBattleTeamFixBehavior", "HostReviewMissionLogic" };
 
         // Built by the engine from [DefaultView] (TAOM.Client, ADR-013), outside AddTaomBehavior; Local by construction.
-        var defaultViews = new[] { "AutonomousMovementPlayerController", "BattleActionBarMissionView" };
+        var defaultViews = new[] { "AutonomousMovementPlayerController", "BattleActionBarMissionView", "StagedSiegeMissionView" };
         int variableAdds = Regex.Matches(subModule, @"AddTaomBehavior\(\s*\w+\s*\)").Count;
         Assert.AreEqual(0, variableAdds,
             "an AddTaomBehavior(variable) site appeared: a MissionView added there never ticks; make it a [DefaultView]");

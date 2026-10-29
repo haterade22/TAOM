@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prefab>
+  <Window>
+    <!-- Staged siege HUD (#1054): a strip of the points, the objective and the capture progress at the top centre, and a
+         marker over the current point. Display only: the root and every widget ignore events, so attack, block and the camera
+         keep working. The marker is a full-screen widget with its text centred; the view shifts that centre onto the
+         projected point in real pixels through ScaledPositionXOffset/YOffset (the TaomRealmNames pattern). -->
+    <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+            DoNotAcceptEvents="true" IsVisible="@IsVisible">
+      <Children>
+        <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="60" DoNotAcceptEvents="true">
+          <Children>
+            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                    Sprite="BlankWhiteSquare_9" Color="#00000099" DoNotAcceptEvents="true"
+                    MarginLeft="-14" MarginRight="-14" MarginTop="-8" MarginBottom="-8" />
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                            HorizontalAlignment="Center" Brush="Tooltip.Text" Brush.FontSize="22"
+                            Brush.FontColor="#FFD700FF" Text="@StripText" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                            HorizontalAlignment="Center" Brush="Tooltip.Text" Brush.FontSize="18"
+                            Brush.FontColor="#FFFFFFFF" Text="@ObjectiveText" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                            HorizontalAlignment="Center" Brush="Tooltip.Text" Brush.FontSize="14"
+                            Brush.FontColor="#CCCCCCFF" Text="@ProgressText" DoNotAcceptEvents="true" />
+              </Children>
+            </ListPanel>
+          </Children>
+        </Widget>
+        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent" DoNotAcceptEvents="true"
+                IsVisible="@IsMarkerVisible" ScaledPositionXOffset="@MarkerOffsetX" ScaledPositionYOffset="@MarkerOffsetY">
+          <Children>
+            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                        Brush="Tooltip.Text" Brush.FontSize="34" Brush.FontColor="#FFD700FF"
+                        Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center"
+                        Text="@MarkerText" DoNotAcceptEvents="true" />
+          </Children>
+        </Widget>
+      </Children>
+    </Widget>
+  </Window>
+</Prefab>

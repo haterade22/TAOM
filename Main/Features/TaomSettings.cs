@@ -612,6 +612,17 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "In a wall battle, trolls never use siege ladders, towers or siege engines. Attacking trolls break the gate down instead, and defending trolls hold the ground behind it and stay off the walls while the AI commands them; a formation you give orders to obeys them. Takes effect from the next battle. When off, trolls behave as in vanilla. Default: on.")]
     public bool EnableCreatureSiegeRole { get; set; } = true;
 
+    // --- Battle Tactics / Staged Siege (docs/features/staged-siege.md, #1054) ---
+    // Read ONCE per battle when the mission behavior decides whether to arm, so a change applies from the next battle and
+    // RequireRestart = false. Ships OFF: turning the default on later needs a renamed property, because MCM keeps a saved
+    // value over a changed default (the ShaderPrecompilation trap; check_mcm_default_flips.py). GroupOrder 81 is free
+    // (80 is Warden's Tally; it is the group's first property, so it carries the order).
+
+    [SettingPropertyGroup("Battle Tactics/Staged Siege", GroupOrder = 81)]
+    [SettingPropertyBool("{=taom_staged_siege_mcm_enable}Staged Sieges (Capture Points)", Order = 0, RequireRestart = false,
+        HintText = "{=taom_staged_siege_mcm_enable_hint}In a castle assault on a scene with recorded capture points, the attackers must take points A to D in order: outside the walls, the gatehouse, the courtyard and an inner point. Each captured point brings fresh troops from both armies. As the attacker, taking D sends the defenders back to the lord's hall; as the defender, losing D loses the castle. Scenes without recorded points stay vanilla, and in a staged siege the Reinforcement Wave Count option does not apply. Takes effect from the next battle. Default: off.")]
+    public bool EnableStagedSiege { get; set; } = false;
+
     // --- Battle Tactics / Siege Prop Diagnostics ---
     // Diagnostic only, no gameplay effect. The engine reports NOTHING when a rock pile or ammo
     // barrel is unusable, so this turns that silence into one log line per prop.

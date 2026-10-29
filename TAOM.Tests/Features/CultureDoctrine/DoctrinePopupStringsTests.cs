@@ -59,6 +59,33 @@ public class DoctrinePopupStringsTests
     }
 
     [TestMethod]
+    public void EveryConcreteTacticComponentInTaom_HasASergeantPopupRow()
+    {
+        // TeamAIComponent.MakeDecision shows FindText("str_team_ai_tactic_text", <tactic type name>) to a sergeant player for ANY
+        // tactic, not only the doctrine ones: the staged siege tactic ships without a TaomTacticBase parent.
+        Type[] types;
+        try
+        {
+            types = typeof(TaomTacticBase).Assembly.GetTypes();
+        }
+        catch (System.Reflection.ReflectionTypeLoadException e)
+        {
+            types = e.Types.Where(t => t != null).ToArray();
+        }
+
+        // VanillaTacticWrappers re-declare vanilla tactics under the vanilla type name, which the engine's own table already keys.
+        var tactics = types.Where(t => !t.IsAbstract && typeof(TaleWorlds.MountAndBlade.TacticComponent).IsAssignableFrom(t)
+                && t.BaseType?.Name != t.Name)
+            .OrderBy(t => t.Name).ToList();
+        Assert.IsTrue(tactics.Count >= 6, "expected the doctrine tactics and the staged siege tactic to load; got " + tactics.Count);
+        CollectionAssert.Contains(tactics.Select(t => t.Name).ToList(), "TacticStagedObjective");
+
+        var ids = ShippedIds();
+        var missing = tactics.Select(t => "str_team_ai_tactic_text." + t.Name).Where(id => !ids.Contains(id)).ToList();
+        Assert.AreEqual(0, missing.Count, "taom_module_strings.xml lacks: " + string.Join(", ", missing));
+    }
+
+    [TestMethod]
     public void EveryTaomBehaviour_HasBothBehaviourTextRows()
     {
         var ids = ShippedIds();

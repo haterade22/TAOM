@@ -1341,3 +1341,12 @@ with no dens (TAOM with an older map) and vanilla `GetInfestedHideoutCount` thro
   as Patch65 does for a lord's landless culture), and add a release check in both directions. For a saved campaign, read
   which XML the load path re-reads before writing "new campaigns only".
 - **Source:** [rca-feral-orcs-2026-10-29.md](../rca-feral-orcs-2026-10-29.md).
+
+### Never write engine AI or mission state from a console command: queue it for OnMissionTick (#1054, 2026-10-29)
+A console command can run while the async AI tick is in flight (docs/features/culture-doctrine.md:923), and that tick
+iterates `FormationAI._behaviors`. Staged Siege's stage, open-gates and show commands added behaviors, reset tactics,
+toggled AI control, opened gates and spawned mission objects straight from the console callback.
+- **Why missed:** the fact lived in one feature doc, not in a rule or lesson a builder reads.
+- **Prevent:** a console command only reads, or enqueues; the feature's mission behavior drains the queue on the main
+  thread at the start of `OnMissionTick` (`StagedSiegeCommandQueue` is the model, and it works with no feature armed).
+- **Source:** [rca-staged-siege-2026-10-29.md](../rca-staged-siege-2026-10-29.md) finding 5.

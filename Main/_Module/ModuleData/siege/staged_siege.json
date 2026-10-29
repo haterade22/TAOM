@@ -1,0 +1,37 @@
+{
+  "captureRadius": 8,
+  "heightBand": 3,
+  "minAttackers": 3,
+  "dominanceRatio": 3,
+  "captureSeconds": 20,
+  "decaySeconds": 30,
+  "reconcileSeconds": 0.5,
+  "detachmentShare": 0.25,
+  "detachmentCap": 60,
+  "trickleSeconds": 10,
+  "refillBurstSeconds": 20,
+  "refillBurstIntervalSeconds": 1,
+  "reinforcementBatchPercentage": 0.05,
+  "desiredReinforcementPercentage": 0.166,
+  "reserveShares": {
+    "attacker": [0.20, 0.30, 0.25, 0.25],
+    "defenderPlayerAttacks": [0.15, 0.25, 0.20, 0.20],
+    "defenderPlayerDefends": [0.15, 0.30, 0.25, 0.30]
+  },
+  "scenes": {
+    "sturgia_castle_siege_001": {
+      "points": {
+        "A": { "x": 559.6358, "y": 554.8117, "z": 67.8682861 },
+        "B": { "x": 555.8358, "y": 612.657166, "z": 80.72999 },
+        "C": { "x": 556.5566, "y": 650.799255, "z": 85.54184 },
+        "D": { "x": 522.4266, "y": 658.0432, "z": 89.89123 }
+      },
+      "detachment": { "x": 558.3057, "y": 593.3017, "z": 77.92095, "fx": 0.0932610855, "fy": -0.9956417 },
+      "defenders": {
+        "B": { "x": 553.6959, "y": 627.306946, "z": 80.5601044, "fx": 0.102272816, "fy": -0.9947564 },
+        "C": { "x": 529.451538, "y": 636.070251, "z": 85.41135, "fx": 0.8701325, "fy": 0.492817879 },
+        "D": { "x": 518.0589, "y": 661.8975, "z": 90.25453, "fx": 0.7023726, "fy": -0.711809456 }
+      }
+    }
+  }
+}

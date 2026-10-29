@@ -13,8 +13,10 @@ namespace TAOM.Features.SiegeForces;
 /// other campaign-menu patches. The exclusion seam is a campaign model, <see cref="TaomTroopSupplierProbabilityModel"/>,
 /// added by FeatureModuleHooks after SandBox's defaults. No mission behavior, no campaign behavior and no save data.
 ///
-/// Overlap census, 2026-10-05. No other TAOM code names the three targets (<c>StartSiegeMission</c>,
-/// <c>InitWithSinglePhase</c> and the model's <c>EnqueueTroopSpawnProbabilitiesAccordingToUnitSpawnPrioritization</c>).
+/// Overlap census, 2026-10-05. No other TAOM code named the three targets (<c>StartSiegeMission</c>,
+/// <c>InitWithSinglePhase</c> and the model's <c>EnqueueTroopSpawnProbabilitiesAccordingToUnitSpawnPrioritization</c>) until
+/// Staged Siege's Patch126 (2026-10-29), which prefixes <c>InitWithSinglePhase</c> at Low priority and writes only its
+/// <c>spawnSettings</c>, so the two cannot change each other's result.
 /// A byte scan by member name (a name built at runtime would not show) of every DLL under the game's Modules folder and
 /// the Steam Workshop folder finds them named by no module except the engine's own, Bannerlord Coop (Workshop
 /// CoopNightly v0.1.5; Coop v0.1.6 in the Modules folder) and TOR_Core v1.3.15 (Workshop). Bannerlord Coop stays

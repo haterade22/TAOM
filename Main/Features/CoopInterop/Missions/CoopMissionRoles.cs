@@ -36,9 +36,9 @@ using TAOM.Features.SiegeDismount.Hooks;
 using TAOM.Features.SiegePropDiagnostics.Hooks;
 using TAOM.Features.SignatureStrikes.Hooks;
 using TAOM.Features.SkeletonBuffer.Hooks;
-using TAOM.Features.StagedSiege.Spike;
 using TAOM.Features.SmartCavalryAI.Hooks;
 using TAOM.Features.Spider;
+using TAOM.Features.StagedSiege.Hooks;
 using TAOM.Features.TrollBruteForce;
 using TAOM.Features.Warg;
 using TAOM.Features.WarRam;
@@ -66,7 +66,7 @@ public static class CoopMissionRoles
         // "stopped fleeing" message, so a rally would not replicate. LostFooting reuses FellFoes' gate.
         [nameof(FellFoesMissionLogic)] = CoopMissionRole.Unsafe,
         [nameof(LostFootingMissionLogic)] = CoopMissionRole.Unsafe,
-        [nameof(StagedSiegeSpikeMissionBehavior)] = CoopMissionRole.Unsafe,
+        [nameof(StagedSiegeMissionBehavior)] = CoopMissionRole.Unsafe,
 
         // AgentOwner: acts only on agents this peer owns, by a live check or a named invariant (see the doc row).
         [nameof(BehaviorTreeMissionLogic)] = CoopMissionRole.AgentOwner,
@@ -99,6 +99,7 @@ public static class CoopMissionRoles
         [nameof(MissionPerfHeartbeatBehavior)] = CoopMissionRole.Local,
         [nameof(MissionTickProfilerBehavior)] = CoopMissionRole.Local,
         ["BattleActionBarMissionView"] = CoopMissionRole.Local,
+        ["StagedSiegeMissionView"] = CoopMissionRole.Local,
         [nameof(MissionDiagnosticBehavior)] = CoopMissionRole.Local,
         [nameof(CrashReportDevTriggerMissionBehavior)] = CoopMissionRole.Local,
         [nameof(HeroKillCounterMissionLogic)] = CoopMissionRole.Local,

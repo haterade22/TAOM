@@ -3085,6 +3085,8 @@
 	<string id="str_team_ai_tactic_text.TaomTacticEoredScreen" text="{=taom_tactic.eored_screen}Our plan is to screen the flanks with our riders and charge once they commit." />
 	<string id="str_team_ai_tactic_text.TaomTacticHitAndRun" text="{=taom_tactic.hit_and_run}Our plan is to throw, fall back, and throw again until their line breaks." />
 	<string id="str_team_ai_tactic_text.TaomTacticMumakVanguard" text="{=taom_tactic.mumak_vanguard}Our plan is to send the mumakil in first and follow in their wake." />
+	<!-- Staged siege (#1054): the same sergeant popup line for the capture-point tactic (TacticStagedObjective). -->
+	<string id="str_team_ai_tactic_text.TacticStagedObjective" text="{=taom_tactic.staged_objective}Our plan is to fight for the objective." />
 	<string id="str_formation_ai_sergeant_instruction_behavior_text.BehaviorBracedDefend" text="{=taom_behavior.braced_defend}Hold your position; square up against horse" />
 	<string id="str_formation_ai_sergeant_instruction_behavior_text.BehaviorBracedAdvance" text="{=taom_behavior.braced_advance}Advance in a wall; square up against horse" />
 	<string id="str_formation_ai_sergeant_instruction_behavior_text.BehaviorInfantrySkirmish" text="{=taom_behavior.infantry_skirmish}Close to throwing range, throw, and fall back" />
@@ -4331,4 +4333,21 @@
   <string id="str_advanced_start_value_name.southrhovanion" text="{=taom_aso_kingdom.southrhovanion}South Rhovanion" />
 
   <!-- TAOM-NEWCULTURE:southrhovanion:END -->
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- TaomSettings.cs -->
+	<string id="taom_staged_siege_mcm_enable" text="{=taom_staged_siege_mcm_enable}Staged Sieges (Capture Points)" />
+	<string id="taom_staged_siege_mcm_enable_hint" text="{=taom_staged_siege_mcm_enable_hint}In a castle assault on a scene with recorded capture points, the attackers must take points A to D in order: outside the walls, the gatehouse, the courtyard and an inner point. Each captured point brings fresh troops from both armies. As the attacker, taking D sends the defenders back to the lord's hall; as the defender, losing D loses the castle. Scenes without recorded points stay vanilla, and in a staged siege the Reinforcement Wave Count option does not apply. Takes effect from the next battle. Default: off." />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- StagedSiege -->
+	<string id="taom_staged_siege_take" text="{=taom_staged_siege_take}Take point {POINT}" />
+	<string id="taom_staged_siege_hold" text="{=taom_staged_siege_hold}Hold point {POINT}" />
+	<string id="taom_staged_siege_hall" text="{=taom_staged_siege_hall}The defenders fall back to the lord's hall" />
+	<string id="taom_staged_siege_fallen" text="{=taom_staged_siege_fallen}The last point has fallen" />
+	<!-- harvested by tools/harvest_literal_loc_keys.py -->
+	<!-- StagedSiege -->
+	<string id="taom_staged_siege_progress_rising" text="{=taom_staged_siege_progress_rising}Capture {PERCENT}%: attackers gaining" />
+	<string id="taom_staged_siege_progress_falling" text="{=taom_staged_siege_progress_falling}Capture {PERCENT}%: defenders pushing back" />
+	<string id="taom_staged_siege_progress_contested" text="{=taom_staged_siege_progress_contested}Capture {PERCENT}%: contested" />
+	<string id="taom_staged_siege_progress_idle" text="{=taom_staged_siege_progress_idle}Capture {PERCENT}%: quiet" />
+
 </strings>

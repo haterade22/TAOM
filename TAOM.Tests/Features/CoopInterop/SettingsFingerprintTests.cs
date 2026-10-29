@@ -224,7 +224,7 @@ public class SettingsFingerprintTests
         // guards nothing. The count is the guard that can fail: add a setting anywhere below and
         // one of these numbers moves, which is the moment to decide what it is. The same numbers
         // are quoted in docs/features/coop-interop.md.
-        AssertSplit(typeof(TaomSettings), reflected: 473, covered: 330);
+        AssertSplit(typeof(TaomSettings), reflected: 474, covered: 331);
         AssertSplit(typeof(BattleLoadDiagnosticsSettings), reflected: 19, covered: 0);
         AssertSplit(typeof(BlowDiagnosticsSettings), reflected: 1, covered: 0);
         AssertSplit(typeof(CrashReportSettings), reflected: 10, covered: 0);
@@ -376,7 +376,7 @@ public class SettingsFingerprintTests
         // neither throw on a diagnostic path nor cost the coverage of the objects that are there.
         var report = SettingsFingerprint.ComputeAcross(new TaomSettings(), null, new CrashReportSettings());
 
-        Assert.AreEqual(330, report.Covered, "a null entry cost coverage");
+        Assert.AreEqual(331, report.Covered, "a null entry cost coverage");
         Assert.AreEqual(SettingsFingerprint.Compute(new TaomSettings()).Global, report.Global);
     }
 
@@ -443,7 +443,7 @@ public class SettingsFingerprintTests
         var report = SettingsFingerprint.Compute(new TaomSettings());
         // Pinned, not a floor: the docs quote this number, and a change here means someone added
         // or reclassified a setting and the docs need the same edit.
-        Assert.AreEqual(330, report.Covered,
+        Assert.AreEqual(331, report.Covered,
             $"simulation-relevant settings changed — update docs/features/coop-interop.md too");
         Assert.AreEqual(64, report.Global.Length, "SHA-256 hex is 64 chars");
         Assert.IsTrue(report.ByGroup.Count > 5, "expected the fingerprint to span several groups");

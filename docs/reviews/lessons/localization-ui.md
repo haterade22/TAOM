@@ -1462,3 +1462,13 @@ The v1.5.2 changeset listed the file as changed, but that bump re-based only `Pa
   for element, excluding only TAOM's documented edits (`PartyTupleVanillaParityTests` is the model). A copy with no TAOM
   edit should not exist: delete it and let vanilla load.
 - **Source:** [rca-tuple-blood-feud-2026-10-27.md](../rca-tuple-blood-feud-2026-10-27.md).
+
+### Give every concrete TacticComponent in TAOM a sergeant popup row (#1054, 2026-10-29)
+`TeamAIComponent.MakeDecision` shows a sergeant player `GameTexts.FindText("str_team_ai_tactic_text", <tactic type name>)`
+when the team's tactic changes (TeamAIComponent.cs:330-334), and a missing variation renders "ERROR: Text with id
+str_team_ai_tactic_text doesn't exist!". Culture Doctrine added its rows, but `DoctrinePopupStringsTests` scanned only
+`TaomTacticBase` subclasses, so Staged Siege's `TacticStagedObjective` (a direct `TacticComponent`) shipped without one.
+- **Why missed:** the gate was scoped to one base class, narrower than the engine rule it protects.
+- **Prevent:** `EveryConcreteTacticComponentInTaom_HasASergeantPopupRow` now covers every concrete `TacticComponent` in
+  TAOM.dll; add the `str_team_ai_tactic_text.<TypeName>` row in `taom_module_strings.xml` with any new tactic.
+- **Source:** [rca-staged-siege-2026-10-29.md](../rca-staged-siege-2026-10-29.md) finding 4.
