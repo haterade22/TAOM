@@ -21,11 +21,13 @@ so their gear is whatever they took: Mordor, goblin, Gundabad and Dol Guldur pie
 
 Vanilla has no "hideouts plus map-wide spawn" shape. A culture with `can_have_settlement="false"` spawns
 looter-style around every town and village but cannot hold hideouts; a culture with
-`can_have_settlement="true"` holds hideouts and spawns only near them. Map-wide reach therefore comes from
-the number and spread of the dens, not from a spawner.
+`can_have_settlement="true"` holds hideouts and spawns only near infested ones. Map-wide reach therefore
+comes from the spread of the dens, not from a spawner: at most the per-faction cap of dens is infested at a
+time (MCM, vanilla 9), picked from the 23 with a weight that favours dens far from other infested ones.
 
-A bandit clan whose culture owns no hideout throws `KeyNotFoundException` in `GetInfestedHideoutCount` on a
-new game. The clan row and the dens must ship together.
+In vanilla, a bandit clan whose culture owns no hideout throws `KeyNotFoundException` in
+`GetInfestedHideoutCount` on a new game. `Patch125_HideoutClanGuard` turns that into a clan that raids
+nothing, but the clan row and the dens must still ship together.
 
 ### Solution Approach
 
@@ -66,7 +68,9 @@ Mike's choices from the review (2026-10-29):
   they wear kingdom pieces but never set a piece's tier, so markets, loot, armoury levels and the next restat
   ignore them. The archer is in `_RANGED_LADDER_EXEMPT` and its file is on no line in `tools/ranged_ladders.json`,
   so it keeps both its goblin and its Mordor bow through a ladder apply.
-- **They never rout,** with the Gundabad raiders' doctrine (`culture_doctrines.json`).
+- **With Culture Doctrine on (MCM, off by default) they never rout,** with the Gundabad raiders' doctrine
+  (`culture_doctrines.json`). Isengard and Dol Guldur never rout either; Mordor, goblin and Misty Mountain
+  orcs do.
 - **They grow in the field.** Every troop is bandit-cultured, so vanilla's AI upgrade rule lets a living warband
   upgrade snaga to raider and raider to brute; the other TAOM bandit lines reuse kingdom troops and cannot.
 - **Their prisoners cannot be recruited:** vanilla refuses any troop whose culture is a bandit culture.
@@ -104,14 +108,16 @@ settlement distance cache (MCM, Map Tools).
 | `python tools/validate_moduledata.py` | item, troop and template refs, ladders |
 
 The dens live in an unversioned module. A reinstall of an older `TAOM_Map` drops them and fails
-`BanditHideoutLiveDataTests` before a new game crashes.
+`BanditHideoutLiveDataTests`; in game the clan then raids nothing and Patch125 logs one warning.
 
 ## How to verify in game
 
 1. Restart Bannerlord, then start a new campaign. A save made before this change shows the 23 dens but never
    fills them (see Known limitations).
-2. Open the encyclopedia clan list and find "Feral Orcs" among the bandit clans.
-3. Travel to `hideout_feral_1` (west of the Misty Mountains, near 611, 1144) and confirm feral orc parties
+2. Rebuild the settlement distance cache (MCM, TAOM, Map Tools); the popup confirms its check.
+3. Hover a roaming party near a den: its tooltip names "Feral Orcs" and lists `[Feral]` troops. (The encyclopedia
+   clan list shows no bandit clans, and the first dens a new game fills are a weighted random pick, so
+   `hideout_feral_1` may be empty.) Confirm feral orc parties
    roam near it.
 4. Attack a party. Check that the troops wear mixed Mordor, goblin, Gundabad and Dol Guldur gear and that no
    troop spawns naked.
@@ -121,7 +127,8 @@ The dens live in an unversioned module. A reinstall of an older `TAOM_Map` drops
 ## Known limitations
 
 - A save made before this change gets no Feral Orcs clan, because the engine reads clans only on a new game. It
-  does load the culture and the 23 dens, which stay visible and empty ("There seems to be no one inside").
+  does load the culture and the 23 dens, which show on the map and stay empty ("There seems to be no one
+  inside"); a den the player enters and leaves turns invisible, as any empty den does.
   `Patch125_HideoutClanGuard` keeps the Gold Rush incident from crashing on such a den.
 - TAOM and TAOM_Map must ship together: the clan is in TAOM, the dens in TAOM_Map
   ([release-process.md](../reference/release-process.md)). With an older map the clan raids nothing, and

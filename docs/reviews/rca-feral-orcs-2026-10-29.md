@@ -43,17 +43,33 @@ without asking what the change did to other cultures.
 
 - **Lens 5 (Data flow)** found 1, 3, 5 to 9 and half of 2. It traced the old-save load to "no crash on load" and
   stopped at the hideout behaviour; the incident caller sits in another class.
-- **Lenses 2 and 7** stopped at the weekly usage limit before reporting (their partial work is saved). Their scope
-  (engine attribute semantics, XML gates) is covered here by Codex's refuted suspects 4, 6 and 7 and by the gates
-  rerun for this commit; they can resume after the limit resets on 2026-10-31.
+- **Lenses 2 and 7** stopped at the weekly usage limit before `cd06da904` and resumed after it, with both commits in
+  scope. Their findings are the second wave below.
 - **Codex** found 1 to 4. It did not raise 5 to 8 as defects (it confirmed 5's attribution and refuted drift).
+
+## Second wave (lenses 7 and 2, after `cd06da904`)
+
+| # | Sev | Finding | Why missed | Preventive action |
+|---|---|---|---|---|
+| 12 | HIGH (lens 7) | `tools/translation_name_tags.json` as committed in `0799af376` and `cd06da904` is not valid JSON: one tag landed in `IT.plain_by_category`, the other after the closing brace. Eight tools and `NameGrammarTagTests` fail on a clean checkout | The orchestrator staged two lines of a file that also held another session's lines with `git diff -U0` plus `git apply --cached --unidiff-zero`; with no context lines the hunks applied at the wrong offsets, and the staged blob was never parsed. The local tree hid it, because the working copy was valid | Rebuilt the blob from the working copy minus the other session's keys, with the generator's own writer, parsed it, and staged it with `git hash-object --path` and `update-index` |
+| 13 | HIGH (lens 7) | Snagas carried a shield in every set and the two-handed `wm_dol_goldur_axe_a01` in two; slots draw independently, so half the culture's basic troop got a weapon the AI will not draw | The scope check was "no polearm on a shield roster", narrower than the rule (`requires_no_shield`, across sets, `.claude/rules/troops.md`); `audit_polearm_shield_parity.py` passes it and lists it only under WARN | One-handed `wm_dol_goldur_1h_mace_a01`; every feral troop's weapons checked against its crafting template |
+| 14 | MEDIUM (lens 7) | Snaga shields were player-start twins (220 hit points, "(Starter)") | Picked by the Phase A builder from a list that did not mark starter items | Real `sm_mordor_shield_small_a/_b` |
+| 15 | MEDIUM (lens 7) | The den names were in no translation cache, so the next rebuild would revert all 12 languages to English | The writer wrote the live rows and nothing else | 23 ids added to all 12 caches |
+| 16 | MEDIUM (lens 7) | BR and IT den names had no grammar tag | The tag rules had no head noun for Covil or Covo | Head nouns added, table regenerated, live rows tagged; coverage complete |
+| 17 | MEDIUM (lens 2) | The doc said the faction never routs; doctrines act only with Culture Doctrine on, off by default. The review question to Mike also said every orc culture never routs, which is false (Mordor, goblin and Misty Mountain orcs rout) | The orchestrator relayed lens 5's claim into a decision question without checking it | Doc corrected; `ShippedCultureDoctrinesConfigTests` pins `feral_orcs`; Mike told the premise was wrong |
+| 18 | MEDIUM (lens 2) | Two in-game steps could not pass: the encyclopedia shows no bandit clans, and `hideout_feral_1` is not the den a new game fills | Steps written from the plan, not from the engine | Steps rewritten |
+| 19 | LOW (lens 2) | Registry and patch comment named the `:211` caller a new-game spawn and missed `AddNewHideouts`; no catalogue row for the injected `_hideouts`; `patch-targets.md` not regenerated | Caller list written before the full read | Corrected; reflection-site row and `[DataRow]`; snapshot regenerated |
+| 20 | LOW (lens 7) | The 23 live loc rows ended in `\r\n` in files whose rows end in `\r\r\n`; the writer parsed nothing before writing | The writer detected `\r\n` anywhere in the file | Rows rewritten with the file's own terminator by a script that parses before writing |
+| 21 | LOW (lens 7) | Commit bodies state that the faction never routs "like every other orc culture" and that the names are English everywhere (the den names are translated) | Bodies written from the same unchecked claim as 17 | Corrected in this commit's body |
 
 ## Follow-ups
 
-- FOLLOW-UP: the settlement distance cache predates the dens (2026-10-28); missing pairs are computed lazily, so it degrades rather than crashes. Rebuild it together with the Dorwinion and South Rhun owner, whose rows it would also bake in. no issue: a rebuild is a release step, recorded in `feral-orcs.md`.
 - FOLLOW-UP: `GarrisonCultureCoverageTests` lists minor factions by hand and lacks `feral_orcs`. no issue: a bandit culture owns no garrison, so the test does not apply; noted for the next edit of that test.
+- The settlement distance cache was rebuilt by Mike at 14:31 and holds all 23 dens (lens 2).
 
 ## Lessons codified
 
-`docs/reviews/lessons/harmony-il.md`: "A pair that must load together across modules or a save needs a guard on
-every engine lookup between them".
+- `docs/reviews/lessons/harmony-il.md`: "A pair that must load together across modules or a save needs a guard on
+  every engine lookup between them".
+- `docs/reviews/lessons/build-tooling-workflow.md`: "Stage part of a shared generated file by building and parsing
+  the blob, never with a zero-context patch".

@@ -4633,3 +4633,15 @@ The two-handed kit's throwing slot found no candidate in Ered Luin's troops, so 
 - **Why missed:** the tool, its refusals and its gate were judged on the one fresh tree they first ran on.
 - **Prevent:** when a doc describes a repeat use, test that use before the first run: the second run on the tool's own output must be a no-op, the gate's "something to do" must be the fixer's own plan, and each finding kind needs a test that turns it red.
 - **Source:** [rca-banner-packing-2026-10-28.md](../rca-banner-packing-2026-10-28.md) findings 1 to 3.
+
+### Stage part of a shared generated file by building and parsing the blob, never with a zero-context patch (#1063, 2026-10-29)
+To commit two lines of `tools/translation_name_tags.json` while another session's lines sat in the same file, the
+orchestrator staged a `git diff -U0` filtered to its hunks with `git apply --cached --unidiff-zero`. With no context
+lines the hunks applied at the wrong offsets: one tag landed in another section and the other after the closing
+brace. Two pushed commits held invalid JSON, and every local run passed because the working copy was valid.
+- **Why missed:** the staged blob was never read back. Local gates read the working tree, not the index.
+- **Prevent:** for a generated or structured file shared with another session, load the working copy, remove the
+  other session's entries, write it with the generator's own writer, parse it, and stage that blob with
+  `git hash-object -w --path <file>` and `git update-index --cacheinfo`. Then parse `git show :<file>` before the
+  commit. Never `--unidiff-zero` a structured file.
+- **Source:** [rca-feral-orcs-2026-10-29.md](../rca-feral-orcs-2026-10-29.md) finding 12.

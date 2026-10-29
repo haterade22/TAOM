@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <NPCCharacters>
-    <!-- Feral Orcs (bandit culture feral_orcs): a deliberately mismatched warband. Every troop mixes Mordor, goblin, Gundabad and Dol Guldur pieces. A shield never shares a roster with a spear or polearm; only the brute carries those, and it carries no shield. -->
+    <!-- Feral Orcs (bandit culture feral_orcs): a deliberately mismatched warband. Every troop mixes Mordor, goblin, Gundabad and Dol Guldur pieces. No troop that carries a shield in any set carries a requires_no_shield weapon (spear, polearm, two-handed axe) in any set, because the engine draws each slot from a different set; only the brute and the archer carry those, and neither carries a shield. -->
     <NPCCharacter
         id="feral_orcs_snaga"
         race="goblin"
@@ -29,7 +29,7 @@
         </upgrade_targets>
         <Equipments>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a01" />
+                <equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a01" />
                 <equipment slot="Item1" id="Item.sm_mordor_shield_small_a" />
                 <equipment slot="Head" id="Item.sk_gn_orc_helmet_light_a" />
                 <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
@@ -37,13 +37,13 @@
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_mordor_set1_axe_a01" />
-                <equipment slot="Item1" id="Item.starter_wm_gundabad_shield_a01" />
+                <equipment slot="Item1" id="Item.sm_mordor_shield_small_b" />
                 <equipment slot="Head" id="Item.sk_gn_orc_helmet_light_b" />
                 <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_a" />
                 <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
             </EquipmentRoster>
             <EquipmentRoster>
-                <equipment slot="Item0" id="Item.wm_dol_goldur_axe_a01" />
+                <equipment slot="Item0" id="Item.wm_dol_goldur_1h_mace_a01" />
                 <equipment slot="Item1" id="Item.sm_mordor_shield_small_b" />
                 <equipment slot="Head" id="Item.sk_gb_uruk_helmet_light_a" />
                 <equipment slot="Body" id="Item.sk_md_orc_arc_chest_light_b" />
@@ -51,7 +51,7 @@
             </EquipmentRoster>
             <EquipmentRoster>
                 <equipment slot="Item0" id="Item.wm_gundabad_axe_a01" />
-                <equipment slot="Item1" id="Item.starter_wm_gundabad_shield_a02" />
+                <equipment slot="Item1" id="Item.sm_mordor_shield_small_a" />
                 <equipment slot="Head" id="Item.sk_dg_uruk_helmet_light_a" />
                 <equipment slot="Body" id="Item.sk_md_orc_inf_chainmail_light_a" />
                 <equipment slot="Leg" id="Item.sk_md_orc_boots_light_b" />

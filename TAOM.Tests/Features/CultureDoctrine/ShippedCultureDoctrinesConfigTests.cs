@@ -105,7 +105,8 @@ public class ShippedCultureDoctrinesConfigTests
     public void ShippedConfig_NeverRoutCultures_AreTheOnesMikeNamed()
     {
         var catalog = _sut.GetCatalog();
-        var neverRout = new[] { "gundabad", "gundabad_raiders", "isengard", "dolguldur", "erebor", "erebor_warriors", "eredluin", "lindon", "lothlorien", "mirkwood", "mirkwood_stalkers", "rivendell" };
+        // feral_orcs: Mike, 2026-10-29 (#1063), the Gundabad raiders' doctrine.
+        var neverRout = new[] { "gundabad", "gundabad_raiders", "feral_orcs", "isengard", "dolguldur", "erebor", "erebor_warriors", "eredluin", "lindon", "lothlorien", "mirkwood", "mirkwood_stalkers", "rivendell" };
         var rout = new[] { "vlandia", "gondor", "gondor_soldiers", "mordor", "khuzait", "aserai", "umbar", "sturgia", "empire", "dunland_raiders", "battania", "goblin", "mistymountainorcs" };
 
         foreach (var id in neverRout)

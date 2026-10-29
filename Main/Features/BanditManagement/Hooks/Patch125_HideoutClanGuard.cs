@@ -15,11 +15,14 @@ namespace TAOM.Features.BanditManagement.Hooks;
 ///
 /// - <see cref="InfestedCountPrefix"/> on the private <c>GetInfestedHideoutCount(Clan)</c>: a clan whose culture
 ///   owns no hideout counts 0 infested hideouts, so it spawns nothing and fills no den, instead of throwing out of
-///   new-game stage 11 (<c>SpawnBanditsAroundHideoutAtNewGame</c>) and the hourly clan tick.
+///   new-game stage 11 (<c>SpawnBanditsAroundHideoutAtNewGame</c>), the hourly clan tick and the daily
+///   <c>AddNewHideouts</c> (where a count of 0 gives the clan the heaviest weight in that day's single pick, which
+///   then finds no den and fills nothing).
 /// - <see cref="AddBanditPrefix"/> on <c>AddBanditToHideout</c>: a bandit hideout whose culture has no clan gets no
 ///   party and the method returns null, the value vanilla already returns for a non-bandit hideout. The callers that
 ///   can reach such a den (the new-hideout fill and the Gold Rush incident's <c>InfestNearbyHideout</c>) ignore the
-///   result; the one caller that dereferences it (the new-game boss party) only runs for a den a clan just took.
+///   result; the one caller that dereferences it (<c>AddBossParty</c>, from a bandit party entering a visible den)
+///   never meets such a den, because a bandit party only enters a den of its own culture.
 ///
 /// Each state is reported once per culture: the fix is the matching TAOM_Map, and the log is how a player finds that.
 /// </summary>

@@ -127,6 +127,7 @@ public class ReflectionSiteBindingTests
     [DataRow("SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController", "HideoutAmbushMissionController", "_allEnemyTroops", "Field", "Patch86_HideoutAmbushBossFight.cs")]
     [DataRow("SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController", "HideoutAmbushMissionController", "_overriddenHideoutBossAgentOrigin", "Field", "Patch86_HideoutAmbushBossFight.cs")]
     [DataRow("SandBox.Missions.MissionLogics.Hideout.HideoutAmbushMissionController", "HideoutAmbushMissionController", "_allEnemyTroopTypesCache", "Field", "Patch86_HideoutAmbushBossFight.cs")]
+    [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.BanditSpawnCampaignBehavior", "BanditSpawnCampaignBehavior", "_hideouts", "Field", "Patch125_HideoutClanGuard.cs (____hideouts)")]
     // --- MonsterSize (#646): the size pass writes the private BodyLength setter, then recomputes the item's cached
     // Effectiveness. A missing setter leaves every sized mount at its item's placeholder 1.0x.
     [DataRow("TaleWorlds.Core.HorseComponent", "HorseComponent", "set_BodyLength", "Method", "MonsterSizeCatalogAdapter.cs:23")]
