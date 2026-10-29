@@ -8,7 +8,7 @@
 
 | Path | What it is |
 |---|---|
-| `TAOM_Map/ModuleData/settlements.xml` | **The live file.** 1,453,089 bytes, last written 2026-10-29 (it now holds the Anduin Vale and Angáladh rows, the Dorwinion and South Rhovanion rows and the 23 Feral Orcs hideouts; see [anduin-vale-angaladh.md](../features/anduin-vale-angaladh.md#merging-this-branch) and [dorwinion-south-rhovanion.md](../features/dorwinion-south-rhovanion.md)). Every edit that reaches a player is made here. |
+| `TAOM_Map/ModuleData/settlements.xml` | **The live file.** 1,453,028 bytes, last written 2026-10-29 17:23 (it now holds the Anduin Vale and Angáladh rows, the Dorwinion and South Rhovanion rows and the 23 Feral Orcs hideouts; see [anduin-vale-angaladh.md](../features/anduin-vale-angaladh.md#merging-this-branch) and [dorwinion-south-rhovanion.md](../features/dorwinion-south-rhovanion.md)). Every edit that reaches a player is made here. |
 | `TAOM_Map/ModuleData/settlements.xslt` | 15 lines. An identity transform plus `<xsl:template match="Settlement"/>`, which deletes every vanilla settlement so Calradia does not appear underneath TAOM's map. |
 | `TAOM_Map/ModuleData/Languages/<LANG>/loc_settlements.xml` | 12 files, 1,513 `<string>` rows each (2026-10-29). The translated display names and Encyclopedia text. |
 | `Main/_Module/ModuleData/settlements.xml` | **A stale shadow. Editing it changes nothing in game.** 1,023,041 bytes, last written 2026-05-26, 863 settlements against the live file's 1,266 (2026-10-29). |

@@ -4160,8 +4160,19 @@ lacked those clans. The two modules ship together; a map ahead of its build poin
   checkout deploys. The branch build was deployed at 13:42 and the 61 rows were retagged final at 13:43; at
   14:19:59 another session deployed a trunk build over it, so the deploy lacked both cultures while the map
   named them. Before a retag, coordinate the other sessions' deploys: retag only right after the defining
-  build is deployed, and only once every checkout that deploys has that build.
-- **Source:** `docs/reviews/rca-dale-lord-expansion-2026-10-20.md`.
+  build is deployed, and only once every checkout that deploys has that build. A script that writes such rows
+  reads the deployed ModuleData first and refuses when it lacks the ids (`tools/oneoff/retag_do_srh_live.py`,
+  `--deployed`).
+- **Source:** `docs/reviews/rca-dale-lord-expansion-2026-10-20.md`;
+  `docs/reviews/rca-dorwinion-south-rhovanion-2026-10-29.md` rows 1 and 24.
+
+### A gate's realm list comes from the generators, never from a hand-kept list (#1062, 2026-10-29)
+`test_generator_regions_in_sync.py` named each realm by hand. #1053's fix added two rows, so the next two realms
+(Dorwinion and South Rhovanion) were missed again.
+- **Why missed:** a list that a person extends is complete only for the realms that person remembered.
+- **Prevent:** derive the list from the generators' own tables (`REGENERATABLE`, `TARGETS`), and name the
+  known exceptions in one set with the reason.
+- **Source:** `docs/reviews/rca-dorwinion-south-rhovanion-2026-10-29.md` rows 2 and 8.
 
 ### A plan proved against one trunk is re-checked when the base moves (2026-10-20)
 

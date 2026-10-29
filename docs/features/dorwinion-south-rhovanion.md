@@ -85,11 +85,15 @@ distance cache could be rebuilt once for them.
    before them are now on the #1041 path (they stop loading; decompile-read, not reproduced).
 6. 14:55:49: the rows were put back on the interim values (backup
    `settlements.xml.bak_untag_do_srh_20261029_145549`).
+7. 17:22:56: the branch, now on trunk `1ef7d1af6`, was deployed. 17:23:15: the rows were retagged
+   final with `tools/oneoff/retag_do_srh_live.py` (backup
+   `settlements.xml.bak_retag_do_srh_20261029_172315`), and the change was pushed as `4b207f951`.
 
-Now the live map and the deployed trunk build agree. Until the merge sitting ("Merging this
-branch"), the branch validator shows 58 `LANDLESS_CULTURE`, because the final cultures own no
-settlement yet. Trunk's fort `--check` in other checkouts reports this change's rows ("an existing
-row after the new row") until they merge trunk, and their ModuleData commit hook blocks until then.
+Since 17:23 the live map names `Culture.dorwinion`, `Culture.southrhovanion` and their eight clans,
+and only a build that contains `4b207f951` defines them. A checkout based before that commit fails
+its ModuleData commit hook and must merge trunk before its next `./build.ps1`; a build from it
+throws on a new campaign. The live backups of this change are in
+`E:\taom-live-backups\2026-10-29-dorwinion-south-rhovanion\`.
 This differs from Anduin Vale and Angáladh, whose rows were held back from the live file
 ([merging that branch](anduin-vale-angaladh.md#merging-this-branch)). The structural fix for the
 shared live map is #1055. The branch contains trunk's Feral Orcs commit (`0799af376`), so
@@ -299,14 +303,16 @@ to stop loading (v1.5.6 decompile, not reproduced; #1041).
 
 ## Merging this branch
 
-For the person merging (Mike approved the sequence 2026-10-29; he tells the other session). The
-order matters: the build that defines the cultures must be deployed before the retag.
+Done 2026-10-29 (`4b207f951`). The sequence is kept as the record and as the model for the next
+realm whose live rows go in on interim owners. The order matters: the build that defines the
+cultures must be deployed before the retag, and the retag script refuses otherwise.
 
-1. Integrate trunk `cd06da904` into the branch.
+1. Integrate trunk (it was `1ef7d1af6` by then) into the branch.
 2. Run the full suites.
 3. Deploy this worktree with `./build.ps1`.
 4. Run `python tools/oneoff/retag_do_srh_live.py --apply`. It reads the owners from the map tool
-   tables and refuses unless every row is on the interim values.
+   tables and refuses unless every row is on the interim values and the deployed ModuleData
+   defines both cultures and all eight owner clans.
 5. Run the gates: `python tools/validate_moduledata.py` (0 errors), both map `--check`s (0; they now
    also compare culture and owner), `python tools/check_external_loc_coverage.py` (0) and
    `python tools/generate_starter_kit.py --verify` (0).
@@ -315,13 +321,14 @@ order matters: the build that defines the cultures must be deployed before the r
 8. Tell the Feral Orcs session (`E:\repos\TAOM`, 14 overlapping uncommitted files) to merge trunk
    before its next `./build.ps1`. Any build without this commit throws on a new campaign once the
    rows are final.
-9. Owed afterwards: the in-game checks, the dedicated-server re-stage (the scene changed), the #763
-   translations, and moving this change's 31 live backups out of the module folders:
-   `settlements.xml.bak_mapforts_20261029_122852`, `.bak_mapvillages_20261029_122857`,
-   `.bak_retag_do_srh_*`, `.bak_untag_do_srh_*`, the 12 loc `.bak_mapforts_` and `.bak_mapvillages_`
-   pairs, BR and IT `.bak_nametags_20261029_122917`, and the merge sitting's new backup.
+9. Move this change's live backups out of the module folders. Done: the 31 files
+   (`settlements.xml.bak_mapforts_20261029_122852`, `.bak_mapvillages_20261029_122857`, the three
+   `.bak_retag_do_srh_*` and `.bak_untag_do_srh_*`, the 12 loc `.bak_mapforts_` and
+   `.bak_mapvillages_` pairs, BR and IT `.bak_nametags_20261029_122917`) are in
+   `E:\taom-live-backups\2026-10-29-dorwinion-south-rhovanion\`, at their module-relative paths.
 
-Other worktrees based before the merge fail their ModuleData hook until they merge trunk.
+Owed after the merge: the in-game checks, the dedicated-server re-stage (the scene changed) and
+the #763 translations.
 
 ## How to Change the Realms
 
@@ -332,8 +339,8 @@ realm, set `playable` to `true` on its card ([faction-map.md](faction-map.md#par
 
 ## How to verify in game
 
-Restart Bannerlord fully, then start a new campaign, after the merge sitting above. The branch build
-must be the deployed one, so the live map and the deployed TAOM agree.
+Restart Bannerlord fully, then start a new campaign. The deployed build must contain `4b207f951`,
+so the live map and the deployed TAOM agree.
 
 1. Open the encyclopedia. Confirm both kingdoms ("Dorwinion", "South Rhovanion"), their 4 clans each
    and 16 lords each.
@@ -375,8 +382,8 @@ must be the deployed one, so the live map and the deployed TAOM agree.
 - **Cross-session deploy hazard:** a deploy from another checkout can undo the build that defines the
   cultures. This is the fourth recurrence of the #1055 class, and the first by a deploy from another
   checkout, which no validator sees (at 14:19:59 trunk `cd06da904` was deployed over the branch build
-  while the map named the final cultures). The retag stays out of the live map until the merge
-  sitting, and the Feral Orcs session must merge trunk before its next `./build.ps1`.
+  while the map named the final cultures). Since the 17:23 retag, every checkout must contain
+  `4b207f951` before it deploys; the structural fix is #1055.
 - Save compatibility: new campaign only; the distance cache already names these rows, so older
   saves stop loading (#1041).
 
@@ -386,11 +393,15 @@ must be the deployed one, so the live map and the deployed TAOM agree.
   gained the Rohan scaffold (`_dale_successor` became `_northman_successor` over `NORTHMAN_SCAFFOLDS`),
   `realm_troops.py` gained the `horsearcher` role, and the `dale` and `rohan` ranged-ladder lines
   claim the new troop files. The 61 live map rows went in first with interim Dale and Rohan owners;
-  a live retag was undone after another session's deploy, so the final retag waits for the merge
+  a live retag was undone after another session's deploy, so the final retag waited for the merge
   sitting.
+- 2026-10-29: merged as `4b207f951`, deployed at 17:22:56, live rows retagged at 17:23:15. The map
+  tools' `--check` now compares culture, owner and village binding, and the retag script refuses
+  unless the deployed build defines its cultures and clans (review:
+  [rca-dorwinion-south-rhovanion-2026-10-29.md](../reviews/rca-dorwinion-south-rhovanion-2026-10-29.md)).
 
 ## GitHub Issue
 
 - **Issue:** #1062.
-- **Status:** built in data; live map rows on interim owners, distance cache rebuilt; the merge
-  sitting ("Merging this branch") and the in-game checks ("How to verify in game") are owed.
+- **Status:** merged (`4b207f951`) and closed with `triage-needs-ingame`; the in-game checks
+  ("How to verify in game"), the dedicated-server re-stage and the #763 translations are owed.
