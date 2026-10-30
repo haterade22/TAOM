@@ -3095,6 +3095,139 @@ class SchemaInvalidPassTests(unittest.TestCase):
         self.assertIn("characters/clans.xml:3", out)
 
 
+class ItemSlotRejectedTests(unittest.TestCase):
+    """#729: `Equipment.DeserializeNode` assigns an item only when `IsItemFitsToSlot` passes and
+    otherwise asserts and leaves the slot empty. Two Uruk troops shipped BodyArmor in the Cape slot
+    and nothing noticed. The slot rule is audit_battle_equipment_memory's; this pass only turns its
+    refusals into ERRORs."""
+
+    ITEMS = ('<Items>\n'
+             '  <Item id="body_a" Type="BodyArmor" />\n'
+             '  <Item id="cape_a" Type="Cape" />\n'
+             '</Items>\n')
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        root = Path(self._tmp.name)
+        self.modules = root / "Modules"
+        self.taom = self.modules / "TAOM"
+        self.moduledata = self.taom / "ModuleData"
+        for name in ("Native", "SandBoxCore", "SandBox"):
+            self._module(self.modules / name, "")
+        self._module(self.modules / "LOTRLOME_Armory",
+                     '<XmlNode><XmlName id="Items" path="items" /></XmlNode>')
+        _write(self.modules / "LOTRLOME_Armory" / "ModuleData" / "items.xml", self.ITEMS)
+        self._module(self.taom,
+                     '<XmlNode><XmlName id="NPCCharacters" path="troops" /></XmlNode>'
+                     '<XmlNode><XmlName id="EquipmentRosters" path="rosters" /></XmlNode>')
+
+    @staticmethod
+    def _module(folder: Path, nodes: str) -> None:
+        _write(folder / "SubModule.xml", f'<Module><Xmls>{nodes}</Xmls></Module>')
+        (folder / "ModuleData").mkdir(parents=True, exist_ok=True)
+
+    def _troops(self, body: str) -> None:
+        _write(self.moduledata / "troops.xml", f"<NPCCharacters>\n{body}\n</NPCCharacters>\n")
+
+    @staticmethod
+    def _troop(troop_id: str, rows: str, extra: str = "") -> str:
+        return (f'<NPCCharacter id="{troop_id}" culture="Culture.empire">'
+                f'<Equipments>{extra}<EquipmentRoster>{rows}</EquipmentRoster></Equipments>'
+                f'</NPCCharacter>')
+
+    def _run(self) -> list:
+        return vm.slot_rejection_issues(self.modules, self.moduledata)
+
+    def test_a_refused_row_is_one_error_naming_troop_slot_and_item(self):
+        self._troops(self._troop("bad_troop", '<equipment slot="Cape" id="Item.body_a" />'))
+        issues = self._run()
+        self.assertEqual([(i.code, i.severity, i.entry_id) for i in issues],
+                         [(vm.SLOT_CODE, ts.Severity.ERROR, "bad_troop")])
+        self.assertIn("Cape", issues[0].message)
+        self.assertIn("body_a", issues[0].message)
+        self.assertIn("BodyArmor", issues[0].message)
+        self.assertIn("Body", issues[0].message.split("move it to the")[1])
+
+    def test_the_issue_names_the_repo_file(self):
+        self._troops(self._troop("bad_troop", '<equipment slot="Cape" id="Item.body_a" />'))
+        self.assertEqual(self._run()[0].file, "Main/_Module/ModuleData/troops.xml")
+
+    def test_a_fitting_row_gives_nothing(self):
+        self._troops(self._troop("good_troop", '<equipment slot="Body" id="Item.body_a" />'
+                                                '<equipment slot="Cape" id="Item.cape_a" />'))
+        self.assertEqual(self._run(), [])
+
+    def test_an_unknown_item_id_is_left_to_broken_item_ref(self):
+        self._troops(self._troop("t", '<equipment slot="Cape" id="Item.no_such_item" />'))
+        self.assertEqual(self._run(), [])
+
+    def test_a_refusal_in_a_civilian_set_is_reported(self):
+        self._troops('<NPCCharacter id="civ"><Equipments><EquipmentRoster civilian="true">'
+                     '<equipment slot="Cape" id="Item.body_a" /></EquipmentRoster></Equipments>'
+                     '</NPCCharacter>')
+        self.assertEqual([i.entry_id for i in self._run()], ["civ"])
+
+    def test_a_refusal_through_a_standalone_roster_is_reported(self):
+        _write(self.moduledata / "rosters.xml",
+               '<EquipmentRosters><EquipmentRoster id="r1"><EquipmentSet>'
+               '<equipment slot="Cape" id="Item.body_a" /></EquipmentSet></EquipmentRoster>'
+               '</EquipmentRosters>')
+        self._troops('<NPCCharacter id="via_roster"><Equipments><EquipmentSet id="r1" />'
+                     '</Equipments></NPCCharacter>')
+        self.assertEqual([i.entry_id for i in self._run()], ["via_roster"])
+
+    def test_a_refusal_through_a_troop_level_override_is_reported(self):
+        self._troops(self._troop("overridden", '<equipment slot="Body" id="Item.body_a" />',
+                                 extra='<equipment slot="Cape" id="Item.body_a" />'))
+        issues = self._run()
+        self.assertEqual([i.entry_id for i in issues], ["overridden"])
+        self.assertIn("Cape", issues[0].message)
+
+    def test_a_refusal_in_another_module_is_reported_too(self):
+        self._module(self.modules / "LOTRLOME_Armory",
+                     '<XmlNode><XmlName id="Items" path="items" /></XmlNode>'
+                     '<XmlNode><XmlName id="NPCCharacters" path="chars" /></XmlNode>')
+        _write(self.modules / "LOTRLOME_Armory" / "ModuleData" / "chars.xml",
+               "<NPCCharacters>" + self._troop("armory_troop",
+                                               '<equipment slot="Cape" id="Item.body_a" />')
+               + "</NPCCharacters>")
+        self._troops("")
+        issues = self._run()
+        self.assertEqual([i.entry_id for i in issues], ["armory_troop"])
+        self.assertEqual(issues[0].file, "LOTRLOME_Armory/chars.xml")
+
+    def test_a_missing_module_is_a_warning_not_a_pass(self):
+        import shutil
+        shutil.rmtree(self.modules / "SandBox")
+        self._troops(self._troop("good_troop", '<equipment slot="Body" id="Item.body_a" />'))
+        issues = self._run()
+        self.assertEqual([(i.code, i.severity) for i in issues],
+                         [(vm.SLOT_CODE, ts.Severity.WARNING)])
+        self.assertIn("NOT verified", issues[0].message)
+        self.assertIn("SandBox", issues[0].message)
+
+    def test_main_runs_the_pass_and_exits_1_on_a_refusal(self):
+        self._troops(self._troop("bad_troop", '<equipment slot="Cape" id="Item.body_a" />'))
+        with mock.patch.object(vm, "generator_item_ref_issues", return_value=[]), \
+             mock.patch.object(vm, "missing_collision_body_issues", return_value=[]), \
+             mock.patch.object(vm, "borrowed_body_issues", return_value=[]), \
+             mock.patch.object(vm, "skill_template_mismatch_issues", return_value=[]), \
+             mock.patch.object(vm, "armour_class_table_issues", return_value=[]):
+            code, out, _err = _run_main("--moduledata", str(self.moduledata),
+                                        "--game-modules", str(self.modules),
+                                        "--code", vm.SLOT_CODE)
+        self.assertIn("bad_troop", out)
+        self.assertEqual(code, 1)
+
+    def test_main_without_install_says_the_pass_was_skipped(self):
+        code, _out, err = _run_main("--moduledata", str(self.moduledata),
+                                    "--game-modules", str(self.modules / "nowhere"),
+                                    "--code", vm.SLOT_CODE)
+        self.assertIn(f"{vm.SLOT_CODE} SKIPPED", err)
+        self.assertEqual(code, 2)
+
+
 class CommitGateCoverageTests(unittest.TestCase):
     """The commit hook filters `validate_moduledata.py` down to an explicit
     `--code` allowlist, so an ERROR the validator can emit is only ever enforced

@@ -495,6 +495,19 @@ these checks were added, **four of the nine error codes were absent from that li
 and so could never block a commit. `CommitGateCoverageTests` now asserts the two sets
 agree in both directions. See [`.claude/rules/moduledata-validation.md`](../../.claude/rules/moduledata-validation.md).
 
+## Item in the wrong slot (`ITEM_SLOT_REJECTED`)
+
+**`ITEM_SLOT_REJECTED` (ERROR).** An equipment row, in any battle or civilian set, whose item
+type the engine will not put in that slot. `Equipment.DeserializeNode` assigns the item only when
+`IsItemFitsToSlot` passes; otherwise it asserts and leaves the slot empty, so the troop never
+wears it. Nothing else notices: the id resolves, and the XSD types `slot` as a plain string. Two
+Uruk troops shipped `BodyArmor` in the Cape slot until #729. The pass reuses
+`audit_battle_equipment_memory.py` (`load_definitions`, `slot_rejections`), so the slot rule, the
+standalone rosters and the troop-level `<equipment>` overrides are modelled once. It loads Native,
+SandBoxCore, SandBox, the live Armory and the repo's TAOM module, and reports every module's
+refusals. An item id no module defines is left to `BROKEN_ITEM_REF`; a module folder that is
+missing is a WARNING that the slot fit was not verified. Cost on the desktop: about 0.5 s.
+
 ## Upgrade armour regression (`UPGRADE_ARMOUR_REGRESSION`)
 
 **WARNING.** The equipment half of the ladder rule (#541). For every upgrade edge the validator

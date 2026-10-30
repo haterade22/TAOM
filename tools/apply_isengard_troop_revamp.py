@@ -269,18 +269,19 @@ EQUIPMENT: Dict[str, List[Tuple[str, str]]] = {
         ("Gloves", "sk_uruk_hai_bracer_heavy_a2"),
         ("Leg",    "sk_uruk_hai_greaves_heavy_a1"),
     ],
-    # Berserker/Champion line (NO chest — Berserker basemesh)
+    # Berserker/Champion line (NO chest — Berserker basemesh). The skirt is BodyArmor, which the
+    # engine accepts only in the Body slot; in Cape it was silently dropped (#729).
     "urukhai_champion": [
         ("Item0",  "isengard_berserker_sword_2h"),
         ("Head",   "sk_uruk_hai_helmet_officer_a2"),
-        ("Cape",   "sk_uruk_hai_skirt_a1"),
+        ("Body",   "sk_uruk_hai_skirt_a1"),
         ("Gloves", "sk_uruk_hai_bracer_medium_a3"),
         ("Leg",    "sk_uruk_hai_greaves_medium_a3"),
     ],
     "urukhai_berserker": [
         ("Item0",  "isengard_berserker_sword_2h"),
         ("Head",   "sk_uruk_hai_helmet_bers_a2"),
-        ("Cape",   "sk_uruk_hai_skirt_a1"),
+        ("Body",   "sk_uruk_hai_skirt_a1"),
         ("Gloves", "sk_uruk_hai_bracer_heavy_a1"),
         ("Leg",    "sk_uruk_hai_greaves_heavy_a1"),
     ],

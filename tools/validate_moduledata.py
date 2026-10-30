@@ -683,6 +683,54 @@ def schema_invalid_issues(module_dir: Path, game_schemas: Path) -> list:
     return issues
 
 
+SLOT_CODE = "ITEM_SLOT_REJECTED"
+_SLOT_MODULES = ("Native", "SandBoxCore", "SandBox", "LOTRLOME_Armory", "TAOM")
+
+
+def slot_rejection_issues(game_modules, moduledata) -> list:
+    """ERROR per troop equipment row whose item type the engine will not put in that slot (#729).
+
+    `Equipment.DeserializeNode` assigns an item only when `IsItemFitsToSlot` passes; otherwise it
+    asserts and the slot stays empty, so a BodyArmor written to `slot="Cape"` never reaches the
+    troop. No XSD catches it (`slot` is a plain string) and no ref is broken. The rule, the load
+    order and the roster and troop-level override handling are audit_battle_equipment_memory's;
+    this only turns its refusals into issues. Civilian sets count: the engine refuses those rows too.
+
+    The modules load in the audit's order, with TAOM taken from the repo (`moduledata.parent`),
+    not the installed copy. A module that cannot be read is one WARNING, never a silent pass,
+    because an item no loaded module defines is skipped and would hide its refusals."""
+    import audit_battle_equipment_memory as abem
+    game_modules = Path(game_modules)
+    folders = [(name, moduledata.parent if name == "TAOM" else game_modules / name)
+               for name in _SLOT_MODULES]
+    defs = abem.load_definitions(folders)
+    issues = []
+    missing = [name for name, folder in folders if not Path(folder).is_dir()]
+    if missing:
+        issues.append(ts.Issue(
+            severity=ts.Severity.WARNING, code=SLOT_CODE, file="", line=0, entry_id="",
+            message=f"slot fit was NOT verified against {', '.join(missing)}: module folder not "
+                    f"found under {game_modules}; items only that module defines are skipped"))
+    for char in defs.characters.values():
+        for slot, item_id in abem.slot_rejections(char, defs, include_civilian=True):
+            kind = abem.item_type(defs.items[item_id])
+            fix = abem.ARMOUR_ITEM_SLOTS.get(kind)
+            if fix:
+                target = f"{fix} slot"
+            elif defs.items[item_id].extra_slot_only:
+                target = f"the {abem.EXTRA_SLOT} slot"
+            else:
+                target = f"a weapon slot ({abem.WEAPON_SLOTS[0]} to {abem.WEAPON_SLOTS[-1]})"
+            rel = char.file.split("/", 1)
+            path = (f"Main/_Module/ModuleData/{rel[1]}" if char.module == "TAOM" and len(rel) == 2
+                    else char.file)
+            issues.append(ts.Issue(
+                severity=ts.Severity.ERROR, code=SLOT_CODE, file=path, line=0, entry_id=char.id,
+                message=f"the engine refuses a {kind} item ({item_id}) in slot {slot} and leaves the "
+                        f"slot empty, so {char.id} never wears it; move it to the {target}"))
+    return issues
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -760,6 +808,7 @@ def main() -> int:
         # commit hook's --code line for it blocked nothing.
         issues += missing_collision_body_issues(game_modules, moduledata)
         issues += borrowed_body_issues(game_modules, moduledata)
+        issues += slot_rejection_issues(game_modules, moduledata)
         # The install root: the vanilla SkillSets the spc_* templates name live in SandBox.
         issues += skill_template_mismatch_issues(game_modules.parent, moduledata)
     else:
@@ -767,6 +816,8 @@ def main() -> int:
               f"         checked against the live install.", file=sys.stderr)
         print(f"WARNING: {BODY_CODE} SKIPPED: collision bodies can only be checked against the\n"
               f"         live install's tpacs.", file=sys.stderr)
+        print(f"WARNING: {SLOT_CODE} SKIPPED: slot fit needs the vanilla and Armory items, which\n"
+              f"         only the live install has.", file=sys.stderr)
         print(f"WARNING: {TEMPLATE_CODE} SKIPPED: the vanilla SkillSets a template can name live\n"
               f"         in the install.", file=sys.stderr)
         print(f"WARNING: {ARMOUR_CLASS_CODE} SKIPPED: the armour class table can only be checked\n"
