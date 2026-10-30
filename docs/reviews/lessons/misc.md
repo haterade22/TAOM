@@ -602,6 +602,10 @@ inferred as observed, and "nothing ticks such a skeleton" from a lab that only t
   TAOM adds its own reading, tag it "(TAOM's reading)". The fidelity finder of the doc review reads every restated
   sentence beside its cited source line.
 - **Source:** `docs/reviews/adopt-yotthani-2026-10-15.md` "The doc review"; the 2026-10-06 review in `b5e1d0b3d`.
+- **Recurrence 2026-10-30:** porting PR #1064, a code comment said null exclusions crashed the supply path query.
+  The contributor's own note said the 1.4.8 crash was not isolated to one argument, and on 1.5.6 native code skips
+  the exclusion pointer when the count is 0. A crash mechanism from another engine version is checked on the pinned
+  engine (`native_decompile.py`) before it goes into a comment (`docs/reviews/rca-pr1064-port-2026-10-30.md` #3).
 
 ### A check inside a shared hook registration gets the time that is left, not a bound of its own (2026-10-16)
 The session-start hook's new upstream check had its own 8 s bound, after two 4 s checks, inside one 10 s registration. A

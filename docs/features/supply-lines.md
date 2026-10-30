@@ -263,6 +263,24 @@ localization-key sweeps that gate every feature.
 
 - The caravan party is **teleported**; anything else that moves that party fights the service.
   While the caravan is in a MapEvent its position is left alone.
+- **Routes follow vanilla's land rules, and the arrows check the heightmap first.**
+  `SupplyCaravanService.ComputeNavPathPoints` hands
+  `PartyNavigationModel.GetInvalidTerrainTypesForNavigationType(Default)` and both
+  `MapDistanceModel` region-switch costs to `AddLandPath`, which passes them to
+  `GetPathBetweenAIFaces` as `MobileParty.ComputePath` does. A caravan now walks around the
+  mountain, lake and river faces that the old soft 100/100 region cost let it cross. For a
+  settlement order the route and the ETA (`GetDistance(..., Default)`) now use one rule set; a
+  lord order's ETA is still the straight distance between the two parties. `AddLandPath` skips the
+  query when either endpoint face is invalid (a point off the land navmesh, face -1), as vanilla
+  checks too, because native code indexes the face table unchecked; such a route takes the
+  straight two-point line. `SupplyRouteVisualService.SyncArrows` reads `Scene.HasTerrainHeightmap`
+  before `GetTerrainHeightAndNormal`, because the native terrain query dereferences the heightmap
+  with no null check (v1.5.6) and a managed catch cannot recover a native fault. Without a
+  heightmap the arrow takes vanilla's land height through `IMapScene.GetHeightAtPoint`. Both
+  changes came from Jopila's PR #1064, which reported two 1.4.8 crashes (a remote supply order,
+  and the return to a siege after a defensive ambush). Neither was reproduced on 1.5.6, and the
+  path-query crash was not isolated to one argument. `SupplyNativeQueryTests` drives
+  `AddLandPath` with a fake map scene and pins the arrows' heightmap branch and fallback call.
 - `MobileParty.CreateParty` may uniquify the requested StringId: the order records
   `party.StringId`, never the requested string.
 - Every order records its dispatch origin at first spawn (SaveableFields 114-116) and

@@ -127,6 +127,14 @@ culture-id keys whose ids differ from their kingdom id:
 | `Main/_Module/ModuleData/alignment_desertion/alignment_desertion_config.json` | Defaults |
 | `Main/Features/TaomSettings.cs` | MCM group "World/Alignment Desertion" (GroupOrder 38) |
 
+## Battle rosters
+
+A field party or garrison in a map event loses nobody that day: both daily handlers return when
+`MobileParty.MapEvent` is set, and desertion resumes on the next daily tick after the battle. A battle
+owns its parties' rosters until it ends, and vanilla `DesertionCampaignBehavior.DailyTickParty` skips a
+party in a map event. The guard fixes #750 and matches Jopila's PR #1064 for the 1.4.8 branch; it
+does not claim to fix every stuck-battle report (#748).
+
 ## Co-op (#966)
 
 Under BannerlordCoop `Clan.PlayerClan` is only this peer's clan, so a remote player's clan used to read as an AI clan and its troops deserted on the AI settings. `AlignmentDesertionBehavior` now asks `IPlayerControlQuery.OfClan` for the owner (`TryResolveOwner`, `AlignmentDesertionBehavior.cs:96-101`) and `DesertionOwnerPolicy` decides:
@@ -155,8 +163,10 @@ The decision was to skip, not to relay: a remote player gets no desertion popup,
   and `ShouldEvaluate`: each gate, and a matrix proving a false answer always means `CalculateDesertion`
   would return nothing. A NaN rate (reachable only through a hand-edited MCM file) still passes the gate
   and sheds one troop per opposed type through the min-1 floor, exactly as before the gate existed (pinned by `ShouldEvaluate_NaNRate_IsTrue_ParityWithTheOriginalGate`).
-- `TAOM.Tests/Features/AlignmentDesertion/AlignmentDesertionBehaviorTests.cs`: 3 `RequiresGame` tests, 9
-  runs: an IL-order test that the behaviour asks `ShouldEvaluate` before it snapshots the roster, and two
+- `TAOM.Tests/Features/AlignmentDesertion/AlignmentDesertionBehaviorTests.cs`: 4 `RequiresGame` tests, 13
+  runs: one that stages a lord party and a garrison from uninitialized engine objects, in and out of a
+  map event, and checks that only the party out of battle reaches the owner check (four runs), an
+  IL-order test that the behaviour asks `ShouldEvaluate` before it snapshots the roster, and two
   that run `ApplyDesertion` on a real `TroopRoster`, each once for every combination of the two flags (a
   player-owned or AI-owned party, a player-owned or AI-owned garrison). A false answer never reaches
   `CalculateDesertion`; a true answer calls it over a snapshot of one non-hero row. An inverted or ignored
@@ -193,6 +203,7 @@ roster is scanned once into a small POCO list, decided, and written back.
 
 - **Issue:** _pending — open before the closing commit._
 - **Plan 037 (the `ShouldEvaluate` gate before the roster copy):** #719
+- **No desertion during a map event:** #750
 - **Status:** Open
 
 ---

@@ -46,7 +46,7 @@ public class AlignmentDesertionBehavior : CampaignBehaviorBase
 
     private void OnDailyTickParty(MobileParty party)
     {
-        if (!_service.IsEnabled || party == null)
+        if (!_service.IsEnabled || party == null || party.MapEvent != null) // a battle owns its roster, as in vanilla
             return;
 
         // Only lord field parties (incl. army members, which each tick individually) and the player's
@@ -75,7 +75,7 @@ public class AlignmentDesertionBehavior : CampaignBehaviorBase
             return;
 
         var garrison = settlement.Town?.GarrisonParty;
-        if (garrison?.MemberRoster == null)
+        if (garrison?.MemberRoster == null || garrison.MapEvent != null)
             return;
 
         var clan = settlement.OwnerClan;

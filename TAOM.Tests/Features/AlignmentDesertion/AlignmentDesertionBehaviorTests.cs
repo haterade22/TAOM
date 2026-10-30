@@ -1,10 +1,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Serialization;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.MapEvents;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Party.PartyComponents;
 using TaleWorlds.CampaignSystem.Roster;
+using TaleWorlds.CampaignSystem.Settlements;
 using TAOM.Core.Logging;
 using TAOM.Features.AlignmentDesertion;
 using TAOM.Features.AlignmentDesertion.Hooks;
@@ -28,6 +33,7 @@ namespace TAOM.Tests.Features.AlignmentDesertion;
 public class AlignmentDesertionBehaviorTests
 {
     private IAlignmentDesertionService _service = null!;
+    private IPlayerControlQuery _playerControl = null!;
     private AlignmentDesertionBehavior _sut = null!;
 
     [TestInitialize]
@@ -36,8 +42,8 @@ public class AlignmentDesertionBehaviorTests
         _service = Substitute.For<IAlignmentDesertionService>();
         _service.CalculateDesertion(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<IReadOnlyList<DesertionTroopInfo>>())
             .Returns(new List<TroopDesertionResult>());
-        _sut = new AlignmentDesertionBehavior(
-            _service, Substitute.For<IModLogger>(), Substitute.For<IPlayerControlQuery>());
+        _playerControl = Substitute.For<IPlayerControlQuery>();
+        _sut = new AlignmentDesertionBehavior(_service, Substitute.For<IModLogger>(), _playerControl);
     }
 
     // A roster is plain managed code (CreateDummyTroopRoster, a regular troop with no hero), so ApplyDesertion
@@ -102,5 +108,94 @@ public class AlignmentDesertionBehaviorTests
         Assert.IsTrue(gate >= 0, "ShouldEvaluate is called");
         Assert.IsTrue(walk >= 0, "GetTroopRoster is called");
         Assert.IsTrue(gate < walk, $"ShouldEvaluate (call #{gate}) comes before GetTroopRoster (call #{walk})");
+    }
+
+    private static T Bare<T>() => (T)FormatterServices.GetUninitializedObject(typeof(T));
+
+    // Walks the hierarchy: a private setter or field declared on a base type is invisible from the derived type.
+    private static void SetField(object target, string name, object value)
+    {
+        for (var type = target.GetType(); type != null; type = type.BaseType)
+        {
+            var field = type.GetField(name, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+            if (field != null) { field.SetValue(target, value); return; }
+        }
+        Assert.Fail($"{target.GetType().Name}.{name} is gone; the test cannot stage the party.");
+    }
+
+    private static void SetProperty(object target, string name, object value)
+    {
+        for (var type = target.GetType(); type != null; type = type.BaseType)
+        {
+            var setter = type.GetProperty(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+                ?.GetSetMethod(nonPublic: true);
+            if (setter != null) { setter.Invoke(target, new[] { value }); return; }
+        }
+        Assert.Fail($"{target.GetType().Name}.{name} lost its setter; the test cannot stage the party.");
+    }
+
+    // A battle owns its parties' rosters until it ends, and vanilla DesertionCampaignBehavior skips a party in a map
+    // event. So a lord party or garrison in a map event stops before the owner check, and the same party out of
+    // battle reaches it. The owner check (_playerControl.OfClan) is the first call that needs no live campaign;
+    // Clan.PlayerClan, read right after it, throws without one, and the test ignores that.
+    [DataTestMethod]
+    [DataRow("OnDailyTickParty", true)]
+    [DataRow("OnDailyTickParty", false)]
+    [DataRow("OnDailyTickSettlement", true)]
+    [DataRow("OnDailyTickSettlement", false)]
+    public void DailyTick_PartyInAMapEvent_StopsBeforeTheOwnerCheck(string handler, bool inMapEvent)
+    {
+        _service.IsEnabled.Returns(true);
+        var clan = Bare<Clan>();
+        SetField(clan, "_kingdom", Bare<Kingdom>());
+        var mobile = Bare<MobileParty>();
+        var party = Bare<PartyBase>();
+        SetProperty(mobile, nameof(MobileParty.Party), party);
+        SetProperty(party, nameof(PartyBase.MemberRoster), Bare<TroopRoster>());
+        if (inMapEvent)
+        {
+            var side = Bare<MapEventSide>();
+            SetField(side, "_mapEvent", Bare<MapEvent>());
+            SetField(party, "_mapEventSide", side);
+        }
+
+        object target;
+        if (handler == "OnDailyTickParty")
+        {
+            var hero = Bare<Hero>();
+            SetField(hero, "_clan", clan);
+            var component = Substitute.For<PartyComponent>();
+            component.Leader.Returns(hero);
+            SetProperty(mobile, nameof(MobileParty.IsLordParty), true);
+            SetField(mobile, "_partyComponent", component);
+            target = mobile;
+        }
+        else
+        {
+            var garrison = Bare<GarrisonPartyComponent>();
+            SetProperty(garrison, nameof(PartyComponent.MobileParty), mobile);
+            var town = Bare<Town>();
+            town.GarrisonPartyComponent = garrison;
+            SetField(town, "_ownerClan", clan);
+            var settlement = Bare<Settlement>();
+            settlement.Town = town;
+            target = settlement;
+        }
+
+        var method = typeof(AlignmentDesertionBehavior).GetMethod(handler, BindingFlags.NonPublic | BindingFlags.Instance);
+        Assert.IsNotNull(method, "AlignmentDesertionBehavior." + handler);
+        try
+        {
+            method!.Invoke(_sut, new[] { target });
+        }
+        catch (TargetInvocationException)
+        {
+            // Past the owner check Clan.PlayerClan needs a live campaign.
+        }
+
+        if (inMapEvent)
+            _playerControl.DidNotReceiveWithAnyArgs().OfClan(default!);
+        else
+            _playerControl.Received(1).OfClan(clan);
     }
 }

@@ -257,22 +257,25 @@ public sealed class SupplyRouteVisualService : ISupplyRouteVisualService
             entry.Arrows.RemoveAt(last);
         }
 
-        var mapScene = Campaign.Current?.MapSceneWrapper;
         for (int i = 0; i < entry.Arrows.Count; i++)
         {
             RouteSample sample = entry.Samples[i];
             float height = 0f;
             var normal = new Vec3(0f, 0f, 1f);
-            if (mapScene != null)
+            try
             {
-                try
-                {
-                    mapScene.GetTerrainHeightAndNormal(new Vec2(sample.X, sample.Y), out height, out normal);
-                }
-                catch (Exception)
-                {
-                    // A point off the navigable terrain keeps the flat default frame.
-                }
+                // The native terrain query dereferences the heightmap without a null check, and no
+                // managed catch recovers a native fault (1.4.8 siege-ambush return, PR #1064). Without
+                // a heightmap, take vanilla's land height on the same scene through the map wrapper.
+                var position = new Vec2(sample.X, sample.Y);
+                if (scene.HasTerrainHeightmap)
+                    scene.GetTerrainHeightAndNormal(position, out height, out normal);
+                else
+                    Campaign.Current.MapSceneWrapper.GetHeightAtPoint(new CampaignVec2(position, isOnLand: true), ref height);
+            }
+            catch (Exception)
+            {
+                // Defensive only: a managed exception keeps the flat default frame.
             }
 
             MatrixFrame frame = MatrixFrame.Identity;
