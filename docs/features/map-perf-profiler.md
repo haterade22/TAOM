@@ -492,6 +492,65 @@ from the first game start.
   and strip on the three shared targets, and the engine reads in `MapFrameBoundary` (`OnFrameBoundary` and the party
   count).
 
+## Is the map GPU-bound? Map graphics option runs [yotthani]
+
+Source for this section: MithrilForge `docs/engine/perf.md`@d09f44a4, section "Grafikoptionen auf der Karte: vier
+Läufe, kein Hebel in den Optionen" (German; quotes below are translated), four in-game runs on 18 to 20 Oct 2026,
+one save (`save013`), one machine, server GC with 8 heaps. The section does not name the game build (the same
+commit's findings document says 1.5.5; TAOM is on 1.5.6 and has not repeated these runs).
+
+| Run | Setting | Base frame time | GPU load | Hitches (max per segment) |
+|---|---|---|---|---|
+| A | 5120x2160, 20 cores | 6.5 to 9.6 ms | 98 to 99 % | "<= 90 ms" |
+| B | 1920x1080, 6 cores | 6.1 to 8.0 ms | 50 to 58 % | 300 to 1111 ms at 4 stations |
+| C | 1920x1080, 20 cores | 5.2 to 6.3 ms | not logged | "<= 117 ms (once)" |
+| B2 | 1920x1080, 6 cores (control for B) | 5.9 to 7.4 ms | about 55 % | "<= 131 ms (once), otherwise <= 44 ms" |
+
+- **At 5K the map is GPU-limited.** "Almost all options lie in the noise (+-0.3 ms); SSR off -0.5 ms, Bloom off
+  -0.4 ms, particles (Edoras) -0.9 ms; DLSS off +2.6 to +4 ms." ResolutionScale 50 % "has no effect at all - guess:
+  DLSS overrides it (untested)". The source lists DLSS off plus ResolutionScale 50 % as an open counter-test.
+- **At 1080p it is CPU-limited, on 6 and on 20 cores.** "No option moves the frame time measurably (+-0.1 ms)."
+  Six cores cost "around 0.8-1 ms per frame (B2 against C)", about 145 to 170 FPS instead of 160 to 190.
+- **The long hitches of run B did not come back in B2** with the same setting, so they are not the 6 cores or the
+  resolution. The source says B was disturbed (another session's test at the start, "Dump integrity" lines every 8 s
+  from 14:50, the game ended after 67 of 85 segments) and that what triggered the hitches "is not clarified".
+- **Run A's own CSV shows far-zoom maxima the text does not discuss** (TAOM's reading of
+  `docs/perf-audit/runs/c1/c1_mapgfx_20261018_141618.csv`@d09f44a4, `max_ms` column, read 2026-10-29): Minas Tirith
+  far, segment 64 (ShadowmapResolution 0) 55.6 ms, 66 (ShadowmapFiltering 0) 107.8, 67 (TerrainQuality 0) 122.9, 70
+  (LightingQuality 0) 113.3, against 12.6 ms, the max of the base segment at that place (segment 62; its mean is 9.7 ms). The source's table gives run A as "<= 90 ms". These
+  are the segments where an option was just changed, so they probably time the option change (a reload) and not the
+  steady state; that is TAOM's guess, not the source's.
+- **VRAM, an observation the source does not rate:** 12.3 GB at 5K, 10.6 GB in B, 8.2 GB in B2 at 1080p (whole card,
+  desktop and other programs included). "On an 8 GB card that would be at the limit; whether the game occupies less
+  there ... or pages out is untested."
+- **The source's result for its reference PC (6 cores, 1080p):** "no lever in the graphics options". Anyone who is
+  GPU-limited gains most from DLSS or the card's upscaler, and "the other options bring under 1 ms each". Treat this
+  as one save on one machine.
+
+**Method, if TAOM repeats it.** [yotthani, `yotthani/bannerlord` `HoN/PerfProbe/Integration/MapGfx.cs`@6265f4a2,
+code reading; the runs above were made with it.] Options change live with `NativeOptions.SetConfig(type, value)`
+followed by `NativeOptions.ApplyConfigChanges(resizeWindow: false)` (lines 204-208), "as the options screen does";
+`SaveConfig` is never called, so nothing reaches the player's config file, and the values found at the start are set
+back when the run ends (`RestoreOptions`, lines 229-237). The probe sweeps 21 `NativeOptionsType` members (lines
+39-52): `ResolutionScale`, `ShadowmapResolution`, `ShadowmapType`, `ShadowmapFiltering`, `TerrainQuality`,
+`EnvironmentDetail`, `FoliageQuality`, `LightingQuality`, `Occlusion`, `SSR`, `SunShafts`, `DepthOfField`, `Bloom`,
+`WaterQuality`, `Tesselation`, `DecalQuality`, `CharacterDetail`, `ParticleQuality`, `Antialiasing`, `DLSS`,
+`SSSSS`. The camera is moved by reflection on `MapScreen.Instance.MapCameraView` (the probe does not reference
+`SandBox.View`): `FastMoveCameraToPosition(CampaignVec2, bool)`, and the `TargetCameraDistance` and
+`MaximumCameraHeight` properties (lines 114-123, 186-195). The campaign time mode is set each segment, but
+"ignored by the game while TimeControlModeLock is set" (line 88), and the probe logs when the mode did not take.
+
+[TAOM-verified, decompile cache, 2026-10-29] All 21 names, `SetConfig(NativeOptionsType, float)` and
+`ApplyConfigChanges(bool resizeWindow)` exist in
+`C:/Users/mikew/.taom-src/v1.5.5/TaleWorlds.Engine.Options.NativeOptions.cs` (lines 390 and 396; `SetConfig` calls
+`SetRGLConfig` and raises `OnNativeOptionChanged`, and neither method calls `SaveConfig`).
+`FastMoveCameraToPosition(CampaignVec2, bool)` is `public virtual`, while `TargetCameraDistance` and
+`MaximumCameraHeight` are `protected virtual` (hence the reflection), in `SandBox.View.Map.MapCameraView.cs` of the
+same folder. The v1.5.6 folder holds neither file, so v1.5.6 itself was not checked for these. The
+`TimeControlModeLock` rule was checked on v1.5.6: `TaleWorlds.CampaignSystem.Campaign.cs:372` changes
+`TimeControlMode` only `if (!TimeControlModeLock && value != _timeControlMode)`. For the GPU side of such a run, see
+the GPU-bound recipe in [tools/README.md](../../tools/README.md) ("Performance logs").
+
 ## Reading the lines
 
 - Compare runs at the same speed class and a similar party count; the summary's `byspeed` says how the

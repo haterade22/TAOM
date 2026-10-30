@@ -25,6 +25,16 @@ Adapted from yotthani's VanillaTuning `map-view-release` (MIT, (c) 2026 yotthani
 - **Measurement (yotthani, not reproduced by TAOM):** about 94 MB of graphics memory per closed screen at 5120x2160 with
   DLSS. Calling `ClearAll` on every cover left nothing behind but made each close take about 0.4 s instead of 0.08 s,
   because the map's textures reload, hence the interval. Switching the view to render on demand had no effect.
+- **More from the same source** (yotthani, MithrilForge
+  `docs/engine/for-taleworlds/bannerlord-engine-findings.html`@d09f44a4, section "Map view leaks its render targets
+  every time a screen covers it", measured by hooking `ID3D11Device::CreateTexture2D`, game 1.5.5 per the header
+  with "most timings ... taken on 1.5.3 and 1.5.4"; TAOM has not reproduced it on 1.5.6): 42 of 42 colour targets and
+  14 of 14 depth targets were "still alive after 14 screens"; at 1920x1080 the cost is "~40 MB" a screen (the 5K figure is in the bullet above); and it "shows with only the official modules too (2.29 GB over 35 openings)", so it is
+  vanilla, not a mod effect. Tried "without effect": `SetRenderOnDemand`, `Texture.ReleaseGpuMemories`,
+  `Utilities.ClearOldResourcesAndObjects` and `ThumbnailCacheManager.ForceClearAllCache`. And: "Calling
+  SetEnable(false)/(true) by hand crashed." (the source's whole sentence; it names no build and does not say on
+  which view, so it is not the same test as the second-scene-view study below). The source could not find the
+  native allocation site ("the allocations are WDDM-backed and did not show in ntdll hooks"). [yotthani]
 - **Without this feature:** dedicated GPU memory grows with every screen opened over the map until the next battle or
   town visit.
 

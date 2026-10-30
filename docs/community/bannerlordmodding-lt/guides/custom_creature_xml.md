@@ -192,7 +192,7 @@ An action type is a name plus a **type**. An action set binds that name to a cli
 Two required siblings and one that is not:
 
 * **`as_<creature>_map` is required.** The campaign map builds its mount visual through
-  `MBGlobals.GetActionSet(monster.ActionSetCode + "_map")` at three unguarded call sites.
+  `MBGlobals.GetActionSet(monster.ActionSetCode + "_map")` at three call sites; a missing set does not throw but falls back to the engine's default (human) set, whose effect on a mount is untested.
   A bespoke creature builds it on `base_set="as_<creature>"`; TAOM's warg, spider, elephant and
   chariot also bind the four `act_map_mount_attack_*` actions to a clip of their own, as Native's
   `as_horse_map` does. A reskin's thin set builds on its donor's `_map` instead, keeping the donor's

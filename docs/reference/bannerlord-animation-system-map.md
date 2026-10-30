@@ -638,8 +638,7 @@ not find animation", 0 "undefined action" and 0 "default action set" lines [Cert
 - Bone attributes resolve through the action set's skeleton: `GetBoneIndexWithId(ActionSetCode, bone)`
   (`Monster.cs:646`, `MBActionSet.cs:80`).
 - Suffixed sets (`_villager`, `_map`) come from `MBGlobals.GetActionSetWithSuffix` (`MBGlobals.cs:28`), which calls
-  `GetActionSet`; a missing set there is a `FailedAssert` and then `throw new Exception("Invalid action set code")`
-  (`MBGlobals.cs:40-41`). `ActionIndexCache.Create(name)` resolves through `MBAnimation.GetActionCodeWithName`.
+  `GetActionSet`; a set that comes back not valid (a negative index) is a `FailedAssert` and then `throw new Exception("Invalid action set code")` (`MBGlobals.cs:38-41`, the same lines on v1.5.6). A name that is not found never reaches it: native returns the valid set 0 (below, "An unknown action set id returns a VALID set"). `ActionIndexCache.Create(name)` resolves through `MBAnimation.GetActionCodeWithName`.
 - The usage tables themselves and their crash rules: [creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md)
   Phase 5.
 
@@ -659,9 +658,9 @@ not measured by TAOM; review [adopt-mithrilforge-2026-09-29.md](../reviews/adopt
   `Agent.SetActionSet(ref AnimationSystemData)`, whose argument `Mission` builds with `FillAnimationSystemData`
   (`Mission.cs:4540-4541`).
 - **An unknown action set id returns a VALID set, set 0** [Certain, 2026-09-30; this corrects MithrilForge's "invalid
-  set"]. `MBActionSet.GetActionSet(id)` goes to native `get_index_with_id` (0x6DF010 on v1.5.3; on v1.5.5
-  `GetIndexWithID` is 0x6DF7D0, which calls 0x590060), which runs the same linear search as `base_set` (0x58FAC0 on
-  v1.5.3); on a miss that logs `Action set "%s" could not be found, using default action
+  set"]. `MBActionSet.GetActionSet(id)` goes to native `get_index_with_id` (0x6DF010 on v1.5.3; on v1.5.5 `GetIndexWithID` is 0x6DF7D0, which calls 0x590060; on v1.5.6 it is 0x6DFF50, which calls 0x5907E0, whose miss path logs the line below and returns 0 [Certain, `native_decompile.py --engine-method MBActionSet.GetIndexWithID` and `--rva 0x5907E0` on the v1.5.6 client, 2026-10-29]), which runs the same linear search as `base_set` (0x58FAC0 on
+  v1.5.3; it compares the length, then the bytes, case sensitive, so match an id with `StringComparison.Ordinal`,
+  as `ActionSetLookup.Found` does [Certain, the same v1.5.6 decompile]); on a miss that logs `Action set "%s" could not be found, using default action
   set!` and returns 0. Index 0 passes `IsValid` (`Index >= 0`), so `MBGlobals.GetActionSet` does not throw on a
   missing id either. Set 0 is `as_human_warrior`, the first set Native declares [Likely]. yotthani's DualWield hit it
   in game: `as_elf_warrior_dw` did not exist, the lookup answered with `as_human_warrior`, and elves ran vanilla's

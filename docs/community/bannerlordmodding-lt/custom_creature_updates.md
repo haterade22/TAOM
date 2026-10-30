@@ -106,8 +106,7 @@ A reskin that needs one clip stays on this path: the war ram's head-butt lives i
 ([the XML](/guides/custom_creature_xml/#the-minimum-if-you-are-reskinning)). With no clip, keep `as_horse`.
 
 !!! warning "A thin set needs its `_map` child"
-    The campaign map builds a mounted leader's mount from the Monster's set name plus `_map`, and the
-    engine code throws when that set is missing. Build it on the donor's: `as_war_ram_map` inherits
+    The campaign map builds a mounted leader's mount from the Monster's set name plus `_map`. If that set is missing, the engine logs that it could not be found and uses its default action set, a human one, so the mount would get human animations (what that does on the map is untested). Build it on the donor's: `as_war_ram_map` inherits
     `as_horse_map`. A `_town_and_village` child is optional.
 ````
 

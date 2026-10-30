@@ -385,6 +385,8 @@ building effect `GarrisonAutoRecruitment`. The recruit loop cuts the wage room t
 (`GarrisonRecruitmentCampaignBehavior.cs:169-184`); the room check reads `PartySizeLimit` (`:185`),
 and a food change at or under 0 stops it (`:225-227`).
 
+**Garrison recruitment, more from yotthani** [yotthani, reading of 1.5.5 `GarrisonRecruitmentCampaignBehavior.cs` lines 60, 95-106 and 223-230, `HoN/CampaignProbe/README.md`@6265f4a2:203; not re-read by TAOM]. Nothing happens at the fort's daily tick while it has a map event or a siege. The base change adds the faction's basic troop, "in vanilla 0 unless an issue effect or rebels". Auto-recruitment needs `Town.GarrisonAutoRecruitmentIsEnabled` and `Town.FoodChange > 0`, adds 1 plus the building effect men a day, and is cut to the volunteers of the fort and its villages, the wage budget and the room.
+
 **TAOM.** `TaomPartyWageModel` overrides `GetTotalWage` (which `MobileParty.TotalWage` reads, `MobileParty.cs:1098`) and raises
 `MaxWagePaymentLimit` from vanilla's 10000 (`DefaultPartyWageModel.cs:21`) to 20000 (`TaomPartyWageModel.cs:37`). That limit is
 the default `PaymentLimit` (`MobileParty.cs:328`), the ceiling of each fief's garrison wage limit

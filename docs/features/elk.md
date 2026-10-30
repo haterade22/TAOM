@@ -200,8 +200,7 @@ re-deserializes each override into every set). They rode `noble_horse_southern` 
 
 **On the campaign map a mount shows under a lord.** `SandBox.View.Map.Visuals.MobilePartyVisual` draws the party
 leader from `CharacterObject.Equipment`, which for a hero is `HeroObject.BattleEquipment` (v1.5.3), and builds
-the mount from `Equipment[Horse]` with `MBGlobals.GetActionSet(monster.ActionSetCode + "_map")`. That lookup
-THROWS when the set is missing, so the Armory's `as_war_ram_map` backs every party icon carrying a great elk (a
+the mount from `Equipment[Horse]` with `MBGlobals.GetActionSet(monster.ActionSetCode + "_map")`. A miss does not throw: native logs "Action set "%s" could not be found, using default action set!" and returns set 0, a human set, whose effect on a mount is untested ([animation system map](../reference/bannerlord-animation-system-map.md) section 7), so the Armory's `as_war_ram_map` backs every party icon carrying a great elk (a
 player who rides one, or the lords of a campaign started on a development build that carried #636's lord wiring),
 and `as_animalia_moose_map` the moose Thranduil and the lords ride in a new campaign. An Armory reinstall drops the
 Monster, the items and the set together.

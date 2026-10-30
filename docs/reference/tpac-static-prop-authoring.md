@@ -64,6 +64,23 @@ GUID repeats, and every package is structurally sound. It cannot see whether the
    canonicalised to `w >= 0` and then negated again for a left-handed tangent. Both negations are needed; one gives
    lighting that is almost right. Recomputed on the undeformed donor this matches the shipped normals exactly (mean
    cosine 1.0000 over 96 vertices).
+   **The sign of the second negation is UNVERIFIED, and yotthani's two projects disagree.** MithrilForge's recipe
+   (`src/MithrilForge.Core/Geometry/TangentBasis.cs@d09f44a4:120-123`) computes `w = dot(cross(N, T), B) < 0 ? -1 : 1`,
+   canonicalises to `q.w >= 0`, then negates when `w < 0`, so `q.w` ends negative for `Tangent.w = -1`. FaceLearner
+   (`bn faces/FaceLearner.HeadExtract/Program.cs@6265f4a2:4147-4151`, a comment dated 2026-10-08, after commit `73b6fe29`)
+   canonicalises and then negates when `w > 0f`, the opposite, and says "VORZEICHEN GEMESSEN": vanilla "setzt q.w NEGATIV
+   bei Tangent.w = +1 und POSITIV bei Tangent.w = -1" in `head_male_a` (1389 of 1389 vertices) and `body_male_a`
+   (1584 of 1586), measured with its `dumpnrm` tool on a package; the comment says its earlier code, which matched
+   MithrilForge's, had the handedness "vertauscht" on every mesh it built and had never been checked against the sign
+   because its validator "vergleicht nur die Normale aus q". The two files use the same `w` definition and an opposite
+   second negation; MithrilForge's pinned head still carries the old sign. Both stated engine versions are older than
+   v1.5.6 or unstated. **TAOM's check cannot see it:** `q` and `-q` are one rotation, so the decoded normal is identical
+   and the "mean cosine 1.0000 over 96 vertices" compares normals only (TAOM's reading); only the bitangent sign differs,
+   which acts through the normal map's green axis, and TAOM's props use flat 8x8 normal maps (step 3), where it is
+   invisible. A prop with a real normal map built from this recipe would show it. **To settle it:** read one vanilla
+   skinned mesh's stored QTangent and its tangent `w` and compare the sign of `q.w` (TAOM notes that vanilla head
+   packages do not open in TpacTool 0.4.0, so use a body or armour mesh in `core_game.tpac` or another readable
+   vanilla package). Until then do not copy either side's sign into a prop that has a real normal map.
 6. **UV is not flipped.** tpac UV is top-down, the same as glTF. The note "tpac is bottom-up" in older material is
    about image rows, not the UV convention. A flip mirrors the texture on the model and only shows in game.
 7. **Build textures from scratch; do not clone a texture.** The donor's diffuse is a 4096x4096 BC7 texture streamed

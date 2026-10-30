@@ -68,8 +68,7 @@ Inserted after the war ram's sets, before the `/WARG` marker. `as_animalia_elk` 
 twins (both gallop feet on one clip), backward walk, the kick, the falls and their `_continue` holds; the elk also
 binds `act_horse_rear` and the two hit reactions. Turns, jumps, strafes and quick stops stay the horse's. The
 `_town_and_village` and `_map` twins are empty children of the horse's variants. `_map` is required:
-`MobilePartyVisual` looks up the Monster's action set + `"_map"` and `MBGlobals.GetActionSet` throws when it is
-missing. `_town_and_village` only mirrors vanilla's `as_horse_town_and_village`; nothing in v1.5.3 appends it. The full binding list is `OVERRIDES` in
+`MobilePartyVisual` looks up the Monster's action set + `"_map"`; on a miss the lookup logs a native line and returns the default set 0, a human set, whose effect is untested (no throw; [animation system map](bannerlord-animation-system-map.md) section 7). `_town_and_village` only mirrors vanilla's `as_horse_town_and_village`; nothing in v1.5.3 appends it. The full binding list is `OVERRIDES` in
 `tools/apply_animalia_armory.py`; `AnimaliaMountWiringTests` asserts every bound clip exists and every bound type
 is an `as_horse` action.
 

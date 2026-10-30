@@ -139,8 +139,7 @@ does not load in game; masters never get one and play anyway.
 **10. Armory data.** `python tools/apply_animalia_armory.py` (dry run), then `--apply`: a Monster per animal
 (`base_monster="horse"`, its own `action_set`), its registration in `SubModule.xml`, one action set per animal
 (a child of `as_horse` whose overrides copy the vanilla action's attributes and change only the clip, plus the
-`_map` twin the campaign map requires (`MobilePartyVisual` looks up `ActionSetCode + "_map"` and throws on a
-miss) and the `_town_and_village` twin that only mirrors vanilla), the attack action declared `actt_kick` and bound, the
+`_map` twin the campaign map requires (`MobilePartyVisual` looks up `ActionSetCode + "_map"`; a miss returns the default set 0, a human set, whose effect is untested: [animation system map](../reference/bannerlord-animation-system-map.md) section 7) and the `_town_and_village` twin that only mirrors vanilla), the attack action declared `actt_kick` and bound, the
 Horse items with `body_length="100"`, the placeholder `Items.xsd` requires (the size is the Monster's
 `taom_body_length`, stage 13), and the items' English names in the Armory's root
 `Languages/loc_LOTRAOM_horses.xml` (the 12 languages follow through `/localize`). The dry run must print

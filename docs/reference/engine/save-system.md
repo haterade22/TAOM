@@ -103,6 +103,13 @@ objects.
   the same call. Removing it is worse: the runtime collects the same garbage later, longer (535 ms) and with
   about 2 GB more RAM in between. Vanilla's other forced collections on game state changes are in
   [battle-load-diagnostics.md](../../features/battle-load-diagnostics.md) (`OnPushState`, `OnPopState`).
+- **A faster rewrite measured offline was slower in the game** [yotthani, MithrilForge
+  `docs/engine/for-taleworlds/bannerlord-engine-findings.html`@d09f44a4, section "Saving: allocation volume and a
+  blocking collect", measured, game 1.5.5 per the header, timings mostly 1.5.3 and 1.5.4]: "A rewrite of the hot
+  paths was byte-identical and 23-35 % faster in an offline bench, but slower inside the game (cause not found); we
+  dropped it." The source gives no reason, so TAOM draws one conclusion only: a save-path rewrite needs an in-game
+  measurement before its offline result is believed (TAOM's reading). The same section also says "Skipping or
+  deferring the final collect moved the pause to later."
 - **Save bytes are not deterministic:** string ids depend on the order the parallel workers reach
   `AddOrGetStringId`, so two saves of one state differ. Compare a save-path patch in sequential mode or after a
   load, never byte for byte.

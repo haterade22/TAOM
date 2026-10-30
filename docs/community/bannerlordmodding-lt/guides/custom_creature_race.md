@@ -59,9 +59,7 @@ silently:
 
 Action sets are named the same way (v1.5.3 code): `as_`, the race id, `_female` for a woman, then
 one of 46 suffixes (`_warrior`, `_child`, `_poses`, `_facegen`, `_map` and more). The party,
-inventory and encyclopedia previews and the map conversation ask for `as_<race>_warrior`; a missing
-set asked for this way throws "Invalid action set code". **So a race needs its own family of sets,
-even on `human_skeleton`**: one that only fights still shows in those previews, and how few sets a
+inventory and encyclopedia previews and the map conversation ask for `as_<race>_warrior`; a missing set asked for this way does not fail: the engine logs that it uses its default action set and hands back a human set. **So a race that wants its own animations in those previews needs its own family of sets**: one that only fights still shows in those previews, and how few sets a
 race can ship with has not been tested.
 
 ### The cheapest race, step by step

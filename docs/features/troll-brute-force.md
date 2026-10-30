@@ -191,6 +191,7 @@ swing CTD").
 - The deployment plan sizes each formation's spawn area with the static `Formation.GetDefaultUnitDiameter`
   (`DefaultDeploymentPlan.GetFormationSpawnWidthAndDepth`), which Patch92 does not patch, so a troll formation's
   planned spawn area is sized for humans.
+- **Every unblocked ring hit asks for a knockdown, whatever its damage** [Certain, code reading at 0c5d81408: `TrollBruteForceService.cs`:79 returns `KnockDown: !shieldBlocked`]. yotthani's Armory_TAOM carries `SmashKnockdownGate` (`HoN/Armory_TAOM/src/Core/SmashKnockdownGate.cs`@6265f4a2:7-12; shipped threshold `smash_knockdown_min_damage="4"` in `armory_taom_compat.xml`:10, code default 8). Its comment, in yotthani's words: TAOM's troll smash asks for a knockdown "on every ring hit that no shield blocked - 97 % of the hits in the Black Gates round, even at <= 2 damage after Armory, so victims lay in the next ring again (pin-down loop)". The comment carries no year and no TAOM version; the 97 % and the loop are yotthani's observation in an Armory-on round and have not been reproduced. The by-name coupling is in [external-mod-couplings.md](../reference/external-mod-couplings.md). **Decision 2026-10-29: no TAOM change until an in-game check shows the loop.**
 
 ## Changelog
 

@@ -481,7 +481,7 @@ Cosmetically odd and pre-existing, but out of scope for a mount change.
 **Dependent: the great elk (#636).** `Monster.taom_elk` names this Monster's action set, `as_war_ram`, and
 plays `act_war_ram_butt` as its antler charge ([elk.md](elk.md)). Renaming the set, pointing the ram back at
 `as_horse`, restoring the ledger's section 5 backups or re-cutting the `war_ram_butt` clip reaches the elk too;
-a missing `as_war_ram_map` throws on every campaign-map icon that carries one.
+a missing `as_war_ram_map` gives every campaign-map icon that carries one the default set 0, a human set (no throw; the effect is untested, [animation system map](../reference/bannerlord-animation-system-map.md) section 7).
 
 ## Tests
 

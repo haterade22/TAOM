@@ -117,6 +117,66 @@ replacing whole screens (forward-compatible across patches, as long as the bound
   batch only for consecutive draws with the same texture pair (`TwoDimensionEnginePlatform.cs:39-57`); and
   pooled `SimpleMaterial`s keep the previous user's values, so set every field you rely on
   (`SimpleMaterial.cs:8-50`). TAOM has not re-read these on v1.5.5.
+- **A bool, int or float setter raises only its typed event** [yotthani, decompile reading of 1.5.5; TAOM-verified on
+  v1.5.6]. yotthani: "bool/int/float properties raise ONLY their typed PropertyChangedWith*Value event, never PropertyChanged
+  (ViewModel.cs:287-330 ...)", and the source corrects it: "some setters still use plain OnPropertyChanged
+  (KingdomCategoryVM.Show and .NotificationCount), others the object overload (CharacterDeveloperVM.CurrentCharacter,
+  HeroItem.CurrentSkill) ... (audit table: 5 of 39 were wrong)" (`yotthani/bannerlord`
+  `docs/realm-ui/research/bigwindows_vm_map.md`@6265f4a2:141, "check each subscribed property's setter"). TAOM read v1.5.6
+  `TaleWorlds.Library.ViewModel.cs` [Certain]: a separate event per type, `PropertyChanged` :68, `WithValue` :87, `Bool`
+  :106, `Int` :125, `Float` :144, `UInt` :163, `Color` :182, `Double` :201, `Vec2` :220. `OnPropertyChanged` (:274-285)
+  invokes only the plain handlers, `OnPropertyChangedWithValue<T>` (:287-298) only the `WithValue` list, the bool overload
+  (:300-311) only the bool list, and `SetField` (:263-272) raises the plain event. Every TAOM subscription to a vanilla view
+  model, by grep of `Main/` and `Client/`, picks the right event [Certain]: `FiefNamingMixin.cs`:43 and `MercenaryTermMixin.cs`:45
+  listen on `PropertyChangedWithValue` for object-typed `CurrentSelectedSettlement` and `CurrentSelectedClan`, whose v1.5.6
+  setters call `OnPropertyChangedWithValue` (`KingdomSettlementVM.cs`:65-77 and the `KingdomClanVM` setter); the third,
+  `AiPartySizeSettingsWatcher.cs`:70, is a plain `PropertyChanged` on MCM settings, not a vanilla view model. TAOM has no
+  subscription to a bool, int or float vanilla property. A mixin that adds one must read that property's setter first.
+- **A `DataSource` on the prefab root is ignored** [yotthani, on the party window per the commit message, which names neither a game build nor a test; no code line cited]. The commit c656a782 (2026-10-23): "Gauntlet binds the movie root to the movie VM, so the root's DataSource was
+  ignored", and `{..}` on the child "climbed above it to nothing". TAOM has not checked its own movie roots (Career,
+  SupplyOrder, the FactionUI movies, the PartyScreen clones) for a root `DataSource`; bind through the view model passed to
+  `LoadMovie`.
+- **Text shrinks when it runs out of lines, and the line box is taller than the font** [yotthani, screenshots plus code
+  comments, one source, version not stated at those lines, not re-read by TAOM]. The test comment
+  (`RealmUI/Game/Inventory.Tests/KingdomShapeTests.cs`@6265f4a2:209-210) reports that "the text ran out of its lines and the
+  engine shrank it (first card tiny, the next larger)" because the line count "missed the line breaks". The engine "centres a
+  line by its line box - the font's baseline plus 5 units (TwoDimension.Text: LineHeight = (Base + 5) x scale)", while the
+  ink fills only the lower part of that box, so a face sat some 4 px low at 14 px for Grenze (`RealmUI/Game/Inventory/Core/TextOptics.cs`:6-9).
+  The width of a word is "(advance + 0.5 extra padding) x size / face size" (`Inventory.Tests/ThemeData.cs`:135). The workaround is a
+  line a little taller than the font's, "so the engine never shrinks a text to fit" (`Inventory/Core/KingdomShape.cs`:367).
+- **The tooltip registry is a dictionary set: the last registration for a type wins** [yotthani, code reading of 1.5.5].
+  `InformationManager.RegisterTooltip<TRegistered, TVM>(refresh, "Movie")`; "NavalDLC already re-registers Settlement this
+  way" (`docs/realm-ui/research/tooltips.md`@6265f4a2:5-6). Campaign types are registered in
+  `SandBoxViewSubModule.OnSubModuleLoad` (:395-415), the generic ones (`List<TooltipProperty>`, `string`, `RundownLineVM`) in
+  `GauntletUISubModule.OnBeforeInitialModuleScreenSetAsRoot` (:186-195), and the refreshers
+  `TooltipRefresherCollection.Refresh*` are public static, so a new movie can keep vanilla's rows. TAOM's reading: TAOM adds
+  rows by a Harmony postfix on those refreshers ([harmony-patch-registry.md](../harmony-patch-registry.md)
+  `TooltipRefresherCollection_Subject_HiddenHosts_Patch`), which composes with a movie re-registration that keeps vanilla's
+  refresher; a mod that registers its own refresher would drop TAOM's rows.
+- **Vanilla sprite categories load per screen** [yotthani, code reading of 1.5.5, `bigwindows_vm_map.md`@6265f4a2:140]. The source names the categories
+  (`ui_partyscreen`, `ui_quest`, `ui_clan`, `ui_kingdom`, `ui_armymanagement`) and says they "are loaded by the screens before
+  LoadMovie and unloaded in OnFinalize; vanilla sprites used by Realm prefabs resolve only while those are loaded".
+  TAOM's reading, not tested: a TAOM prefab that names a vanilla sprite from a category its screen has not loaded renders
+  blank with no log line. TAOM's own sheets declare `<AlwaysLoad />` (`Main/_Module/GUI/TAOMSpriteData.xml`:6, 14), which is
+  probably why this has not shown.
+- **Inventory "apply changes" skips `DoneLogicExtrasDelegate`** [yotthani's code comment, `RealmUI/Game/Inventory/InventorySwap.cs`@6265f4a2:17;
+  TAOM-verified on v1.5.6]. The delegate runs in one place, `Helpers.InventoryScreenHelper.cs`:167, when `DoneLogic()` succeeds
+  on the Done path. `GauntletInventoryScreen.cs`:360-364 implements `IChangeableScreen.ApplyChanges` as
+  `ItemPreview.Close(); InventoryLogic.DoneLogic();` with no delegate, and `MapNavigationHelper.ApplyCurrentChanges`
+  (:75-88) calls it when the map bar switches screens, so that switch settles the trade and never runs the delegate. v1.5.6 `InventoryNavigationElement.cs`:20-29 locks navigation for any inventory mode but Default, which `MapNavigationHelper.cs`:61-67 honours, so a screen opened in `InventoryMode.Trade` cannot take that exit [Certain]. TAOM's provender sale hangs its town debit on the delegate (`ProvenderSaleAdapter.cs`:124) and relies on that lock ([provender.md](../../features/provender.md) "Remote selling"). Not checked: other exits that skip the delegate, such as a forced
+  state clean at game end. Any new TAOM commit hung on that delegate needs the same Trade lock.
+- **A 1,416-row party list held some 140,000 widgets (the author's estimate, about 100 a row) and one frame took about 100 s** [yotthani, measured in one probe run
+  with TAOM's troop list, version not stated in the commit]. With `cheat_mode = 1` in `engine_config.txt` the party screen opens
+  the cheat variant that lists every troop (1,416 rows with TAOM). Each row of that window was "a full kit row (~100 widgets,
+  19 texts)", so the window held "some 140,000 widgets" and "the log shows its second frame 100 s after the first"; the probe
+  had stalled for 11 minutes (commit c0ffdefa, 2026-10-29). The fix falls back to the game's own window above 400 rows. TAOM's
+  reading: vanilla rows are far lighter, and TAOM's party clone is not virtualised, so the cheat-mode party screen is a
+  dev-only slow path, like the inventory case above; the useful number is about 100 widgets a row times a row count in the
+  thousands.
+- **Commands and properties bind by reflection on the owning view model** [yotthani, code reading of 1.5.5,
+  `bigwindows_vm_map.md`@6265f4a2:14-15]. `ViewModel.ExecuteCommand` finds methods with `Instance|Public|NonPublic`
+  (`ViewModel.cs:497`), so a private `Execute*` binds, but only on the object that owns it. Properties are collected with
+  `Dictionary.Add` by name (`:621-624`), so a subclass that re-declares a property name with `new` throws.
 
 ### Map conversation + encyclopedia: two layers on one `MapScreen` (read 2026-09-22, #635)
 A conversation started from a settlement menu's character overlay, or from a map encounter, is a **map

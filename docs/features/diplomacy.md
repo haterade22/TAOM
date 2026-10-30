@@ -171,6 +171,74 @@ prefixes `ExecuteDone` and lets vanilla run only when `IsActive && IsKingsDecisi
 legitimate call already satisfies (the timer arms only on the true edge; nothing but `ExecuteDone`
 clears `IsActive`). A skipped call is a debug line and is expected once per seam D close.
 
+### Free/Shadow side boundary: yotthani's report and what TAOM decided (2026-10-29)
+
+yotthani (repo `yotthani/bannerlord`) wrote `docs/taom/side-boundary-report.md`@6265f4a2 (95 lines). It states it was
+"Checked against TAOM `bannerlord-1.5.x` at v2.0.35 (`bd1ac8292`)", with numbers from "29 unattended CampaignProbe
+campaigns (TAOM 2.0.34, 150 days each)" (lines 3-5). The report names no game version; the CampaignProbe docs of the same commit say 1.5.5 (`taom-baseline-2026-10-18.md`:10; that the same runs are meant is TAOM's reading). Its sides are TAOM's own `alignment.json`. It names
+three gaps. TAOM is now Bannerlord 1.5.6 and v2.0.36; each gap below was re-checked in the TAOM tree at 0c5d81408.
+
+**Gap 1: peace across the line before the War of the Ring** (report lines 13-29).
+- yotthani's measurement: "134 peace treaties between a Free and a Shadow realm in 29 campaigns, mostly between day 20 and
+  day 44", and one pair (bluecraig and lindon) "keeps making peace even after day 44". The cause given: `ShouldBlockPeace` "returns
+  true only in the FullWar phase, and only for pairs of Hostile tier".
+- TAOM [Certain, code reading at 0c5d81408]: `WarOfTheRingService.ShouldBlockPeace` (`WarOfTheRingService.cs`:74-80) returns
+  false unless the phase is `FullWar` and `blockPeaceBetweenHostileTiers` is set, then true only for the `Hostile` tier. Its
+  readers are `PeaceActionHook.cs`:33, `TaomKingdomDecisionPermissionModel.cs`:74 and `TaomDiplomacyModel.IsAtConstantWar`
+  (`:39`). No TAOM patch touches a barterable or `MakePeaceKingdomDecision.IsAllowed` (grep of `Main/` and `Client/`).
+- **The numbers probably predate 2410aec51** [Likely, the verifier's inference]. Since that commit (v2.0.34, 2026-10-18) the
+  campaign opens at peace: every start relationship is `value="0" isAtWar="false"` (`spkingdoms.xslt`:57-62, 181-186), and AI
+  wars are vetoed until phase 1 on day 30 (`war_of_the_ring.json`). Peaces "mostly between day 20 and day 44" cannot come
+  from those rules, so those runs most likely used a 2.0.34 build from before the commit. yotthani's own code check used `bd1ac8292`,
+  which does contain it (`git merge-base --is-ancestor` true). Do not read the 134 as a rate for 2.0.36. yotthani's suggestion to
+  lock peace from day 1 would also meet no starting wars to freeze.
+- **Engine qualification** [Certain, v1.5.6 decompile; scope: the partial v1.5.6 cache]. The report says AI peace offers go
+  "through barter (`PeaceBarterable`)". In v1.5.6 the only AI construction of a `PeaceBarterable` is `ConsiderPeace`
+  (`DiplomaticBartersBehavior.cs`:223-229), called from line 54 for a clan with `Kingdom == null` against another kingdomless,
+  non-minor clan. A kingdomless clan's peace with a kingdom is a direct `MakePeaceAction.Apply` (`:73`). The other
+  construction site is the player's conversation (`LordConversationsCampaignBehavior.cs`:2719). Realm against realm peace is
+  therefore a `MakePeaceKingdomDecision` plus `MakePeaceAction`, not a barter, and a barterable patch would reach only
+  independent clans and the player. The seams that matter for realms are the ones TAOM's three readers already use.
+
+**Gap 2: mercenary bands change sides** (report lines 31-44).
+- yotthani's measurement: "233 mercenary realm changes across the Free/Shadow line in 29 campaigns", and "97 % of 1373
+  cross-side town visits came from such bands". yotthani's data note: a clan row in `alignment.json` "only counts while the band
+  serves no kingdom (`FactionSides.OfHero` uses `MapFaction`)".
+- TAOM [Certain, 0c5d81408]: no side rule touches `JoinAsMercenary`, `MercenaryJoinKingdomBarterable` or
+  `ChangeKingdomAction` (grep of `Main/` and `Client/` C#: `KingdomJoinAdapter.cs`:64 joins the player clan to a kingdom for Player Switcher, the other hits are clan-changed-kingdom listeners in SwornAnew, Namegiving and three LotrIssues templates and comments in `BondOfHireService.cs`:10 and `SwornAnewService.cs`:54, and none tests a side). A band under contract resolves to its employer's side ([wanderer-allegiance.md](wanderer-allegiance.md) "Bands under contract take their employer's side"). `AlignmentDesertionService.cs`:73-74 already records the same effect. The intended band table the report points at is
+  `TAOM.Tests/Features/Execution/ShippedClanSideCoverageTests.cs`:43-56.
+- **A model seam without Harmony** [Certain for the call, side effects UNVERIFIED]. Before a minor clan considers a mercenary
+  contract, v1.5.6 asks `DiplomacyModel.IsAtConstantWar(clan, kingdom)` and returns on true
+  (`DiplomaticBartersBehavior.cs`:117; the minor-clan branch is `:135-137`, the barterable is built at `:197-199`; the
+  defection branch checks it too at `:94`). TAOM already overrides that model (`TaomDiplomacyModel.cs`:11, 35-44; registered at
+  `SubModule.cs`:1145). Not known: whether answering true also makes the pair fight. `FactionHelper.cs`:390
+  (`AdjustFactionStancesForClanJoiningKingdom`) and `LordConversationsCampaignBehavior.cs`:2686 read it as well, and
+  `FactionManager.IsAtConstantWarAgainstFaction` is not in the cache. Read those before using the seam.
+
+**Gap 3: wanderers spawn anywhere.** See [wanderer-allegiance.md](wanderer-allegiance.md) "Where a wanderer stands". TAOM
+places no wanderer by side [Certain: no `TeleportHeroAction` or `EnterSettlementAction` in the wanderer feature at 0c5d81408].
+
+**Peace hazard by pair class** (measured by yotthani in 22 pure-TAOM runs of 2.0.34, wars declared from day 7;
+`docs/balance-sim/campaign.md`@6265f4a2:1103-1109). Neutral against neutral: 22 peaces in 3,736 war-days at risk, 0.0059 a day
+(52 wars, mean length 72 days). Evil against neutral: 42 in 1,092, 0.0385 a day (44 wars, 25 days). Every other non-Hostile
+pair keeps the source model's flat 0.042. Shaghana against Umbar is at war 88.6 days a run (`:1097`). The source's hedge, word for word: the
+split is "a class split of a fitted process and not a rule of the game (the game decides by war score and a vote,
+`KingdomDecisionProposalBehavior.cs:256-345`)" (`:1099`). "From day 7 on" is the source's counting window, not a statement about the build. TAOM's inference [Likely]: these runs also predate 2410aec51, because the same 22 runs show the Shaghana and Umbar war declared at a median day 17 (`:1097`) and since that commit no AI war starts before day 30; the source does not state the build of its 14 runs of 21 October. The 2.0.36
+alignment table lists six more Neutral realms (cardolan, rhudaur, anduinvale, angaladh, dorwinion, southrhovanion; read in
+`alignment.json` at 0c5d81408), so neutral against neutral wars may become more common (TAOM's inference); the 72-day figure
+is the only measured length for such wars.
+
+**Coexistence** (report lines 75-95). yotthani's optional module VanillaTuning_TAOM carries all three rules behind the
+switches `side-peace-lock`, `side-mercenary` and `side-wanderer`. It states "If TAOM adopts any of these rules,
+we switch ours off", and that both modules prefix `MakePeaceAction.ApplyInternal` and "both only block, so the two prefixes
+combine without conflict". TAOM has not checked whether a later prefix still runs after an earlier one returns false.
+
+**Decision, 2026-10-29: no code change now.** All three gaps are real in TAOM's code, but they are design gaps, not defects,
+and the evidence for the first is stale. A change needs fresh evidence from 2.0.36 campaigns (a Free/Shadow peace count with
+2410aec51 in the build, and the mercenary and wanderer counts measured there). If the boundary is later meant to hold from
+day 1, widen `ShouldBlockPeace` at its existing readers; no barterable patch is needed. A mercenary rule changes the AI
+economy of the bands and needs the maintainer's call first.
+
 ### Personal relations (`TaomDiplomacyModel`, #862)
 
 `TaomDiplomacyModel` also carries three overrides for [personal relations](personal-relations.md), all asking `IPersonalRelationService` (the model's fourth constructor argument, built in `SubModule.OnGameStart`). They act only in a single player campaign whose save is seeded, while the MCM switch is on; otherwise every one is vanilla.
@@ -294,6 +362,7 @@ Phase 1 (Isengard and Dunland attack Rohan) triggers on day 30; Phase 2 (the ful
 
 ## Changelog
 
+- 2026-10-29: Recorded yotthani's Free/Shadow side-boundary report (three gaps, each confirmed in the code, the peace hazard by pair class, the v1.5.6 mercenary seam) and the decision to change no code until 2.0.36 evidence exists.
 - 2026-10-19: Three personal-relations overrides on `TaomDiplomacyModel` (the player's relation stays on the lord named, a larger disband cost for an army's leader, and an heir keeps his own relation), single player only, behind their own MCM group (#862).
 - 2026-10-18: Doc pass for the war rule: the side is checked before the phase, `CausedByKingdomCreation` counts as player-caused, a seventh prefix (`OnCallToWarAgreementProposedByPlayerKingdom`) keeps vetoed call-to-war notices off a player kingdom's map, and the enlistment edge and the lord-dialogue sponsor gap are recorded (#818).
 - 2026-10-08: A new campaign no longer inherits the previous campaign's War of the Ring phase and outcome: `WarOfTheRingBehavior`'s constructor resets the service (#764).

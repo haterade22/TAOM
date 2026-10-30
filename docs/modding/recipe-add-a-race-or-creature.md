@@ -143,7 +143,7 @@ TAOM's war ram is the whole reskin, seven attributes:
 		relative_speed_limit_for_charge="4.0" />
 ```
 
-That inherits `Mountable`, `CanRear`, `CanCharge`, `family_type="1"`, `monster_usage="horse"`, `num_paces="6"`, every bone name, the ground slope block and all twelve rein attributes. A pure reskin names `as_horse` there and gets `as_horse_map` and `as_horse_town_and_village` for free. The ram names its own `as_war_ram` (a child of `as_horse` that adds one bespoke clip, the head-butt, since 2026-09-18), so it defines `as_war_ram_map` and `as_war_ram_town_and_village` as well; a missing `_map` child breaks the campaign map (`MBGlobals.GetActionSet` throws `Invalid action set code`).
+That inherits `Mountable`, `CanRear`, `CanCharge`, `family_type="1"`, `monster_usage="horse"`, `num_paces="6"`, every bone name, the ground slope block and all twelve rein attributes. A pure reskin names `as_horse` there and gets `as_horse_map` and `as_horse_town_and_village` for free. The ram names its own `as_war_ram` (a child of `as_horse` that adds one bespoke clip, the head-butt, since 2026-09-18), so it defines `as_war_ram_map` and `as_war_ram_town_and_village` as well; a missing `_map` child does not throw: the lookup returns the default set 0, a human set, whose effect on the map icon is untested ([animation system map](../reference/bannerlord-animation-system-map.md) section 7).
 
 **Check:** `python tools/audit_action_set_parity.py`, then `python tools/validate_mesh_refs.py --no-rgl-log`.
 **Takes effect:** full game restart.

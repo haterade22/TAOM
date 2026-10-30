@@ -3,9 +3,9 @@
   "repos": [
     {
       "repo": "yotthani/bannerlord",
-      "reviewed": "2ff002be3013acbaff20a881ee7c1480fad9fa0e",
-      "reviewed_on": "2026-10-16",
-      "record": "docs/reviews/adopt-yotthani-2026-10-16.md",
+      "reviewed": "6265f4a2cce3d85364ba8aa7f803f32c6270178a",
+      "reviewed_on": "2026-10-29",
+      "record": "docs/reviews/adopt-yotthani-2026-10-29.md",
       "feature_paths": [
         "HoN/Armory",
         "HoN/Armory.Sim",
@@ -20,9 +20,9 @@
     },
     {
       "repo": "yotthani/MithrilForge",
-      "reviewed": "ae7834aa32f33e54fef05580fc69579c19e3d836",
-      "reviewed_on": "2026-10-16",
-      "record": "docs/reviews/adopt-yotthani-2026-10-16.md",
+      "reviewed": "d09f44a4ab5f0468c880ffa39306d8dcb1a817eb",
+      "reviewed_on": "2026-10-29",
+      "record": "docs/reviews/adopt-yotthani-2026-10-29.md",
       "feature_paths": []
     }
   ]

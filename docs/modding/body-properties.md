@@ -264,6 +264,21 @@ Code: No code changes needed.
 - **Redefining a vanilla id merges, it does not replace.** Every module's file is concatenated and merged on `@id`, with the later module's attributes layered on top (`MBObjectManager.cs:799-818`), and the Min and Max nodes are marked always-prefer-merge, so you can override just `weight=` and inherit vanilla's key. TAOM already does this by accident with `fighter_sturgia`. To wipe the vanilla version instead, put `_replaceWhileMerging="true"` on your node; the attribute is injected into every schema at load time (`MBObjectManager.cs:1092`), so it is legal even though the XSD never lists it.
 - **`race=` is the one attribute here that hard-crashes on a typo.** `FaceGen.GetRaceOrDefault` is a raw dictionary index despite its name (`FaceGen.cs:115-118`, the MountAndBlade one), so an unknown race string throws `KeyNotFoundException` out of `Deserialize` and into the same silent swallow, killing the rest of that character file.
 - **Race numbers are positions in the merged `skins.xml` list, not stable ids.** Inserting a `<race>` renumbers every race after it, which is why the `sauron` block was appended at the end with an authoring comment saying exactly that (`LOTRLOME_Armory/ModuleData/skins.xml:204236`) and why TAOM saves a `_taom_raceNameLegend` beside its saved race integers ([`docs/features/hero-race.md`](../features/hero-race.md) line 32).
+- **A race module that loads after every race-defining module is appended last and shifts no existing race index**
+  [yotthani, `yotthani/bannerlord` `HoN/ElbinTest/SubModule.xml@6265f4a2:15-16`, an XML comment on a test module; no engine version stated, and nothing in the file says it was checked in game]. The comment's
+  words: "Loads after every race-defining module so the new race is appended LAST and no existing race index shifts."
+  It is the same rule as the bullet above, from the load-order side: the position of a `<race>` in the merged list is
+  its number, so module order is part of a race's identity. The test race in that module (`elbin_test`, human skeleton,
+  body, head and animations, adult woman `min_scale` times 1.05, `build` bone scales times 0.93) needs a `Monsters`
+  XmlNode as well: the module's `SubModule.xml:27-28` says the managed table "only reads XmlNodes" and that without
+  the node the race had no monster and `AgentVisuals` threw a null reference ("NRE") on the map.
+- **`bone_scale` axes** [yotthani, `HoN/ElbinTest/erzeugen.py@6265f4a2:8`, a docstring: "bone_scale-Achsen laut Messung
+  15.10. (memory bl-bone-scale-axes): x = seitlich, y = Tiefe, z = Laenge (umgekehrt)"]. In English, as measured by
+  the author on 2026-10-15: x is lateral, y is depth, z is length, and the "umgekehrt" after z reads as "reversed"
+  (the docstring does not say reversed against what). The measurement itself lives in the author's private memory
+  note, not in the repo, and no engine version is stated. The script scales only x and y of the `build` key's bone
+  scales on trunk, shoulder, arm, leg and neck bones (`erzeugen.py:15` and `:35-38`), which is consistent with x and y
+  being width and depth. TAOM has not measured these axes: UNVERIFIED here.
 - **Tag names are validated by nobody on the managed side.** `MBBodyProperty` only concatenates strings. All 25 distinct tag names TAOM uses across 290 tag rows do exist somewhere in the merged `skins.xml`, but "somewhere" is not "on the race that uses the preset": the `dwarf` race declares only 7 style tags, while `fighter_erebor`, the preset every dwarf troop points at, lists `empire`, `sturgia`, `battania`, `khuzait` and `Cleanface`, none of which is among those 7. Whether a non-matching tag widens the pool or empties it is decided in native code. <!-- measured: python re.findall of style_tag names per race block in the Armory skins.xml against the tag names in TAOM_bodyproperties.xml 2026-09-05 -->
 
   | Race | Distinct `<style_tag>` names declared |

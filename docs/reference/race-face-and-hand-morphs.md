@@ -43,10 +43,15 @@ troll's head. The Kit never runs this morph, so every Kit look passes.
 none (the cave troll's head has 100 and works). Names differ by author (`shape_01` to `shape_101`, `..._frame_150`
 to `_250`, `Basis_0` to `Yell_100`), so the engine takes them by order. Each of the 63 `deform_key`s in a Native
 human skin names one channel by its `key_time_point`, 1 to 63 [Certain, Native `skins.xml` 2026-09-30]: 1 to 58 are
-sliders, 59 is `eyebump`, 60 to 63 are weight, build, height and age. No key names 64 to 100; yotthani's FaceLearner
+sliders **except four**, 46 `head_scaling`, 51 `hide_ears`, 57 `old_face` and 58 `kid_face`, which carry
+`group_id="-1"` and have no slider [Certain, v1.5.6 Native `skins.xml`, 2026-10-29; the parse, the ten skins and each key's range are in [head-mesh-and-groom-authoring.md](head-mesh-and-groom-authoring.md) section 1].
+59 is `eyebump`, 60 to 63 are weight, build, height and age. A tool that writes zero channels for 51 makes a race keep
+its ears under helmets that hide them (yotthani's finding and TAOM's reading of it:
+[head-mesh-and-groom-authoring.md](head-mesh-and-groom-authoring.md) section 1; not reproduced in TAOM). No key names
+64 to 100; yotthani's FaceLearner
 found those carry the facial animation, and zeroing them froze the eyelids (unmeasured by TAOM;
 [head-mesh-and-groom-authoring.md](head-mesh-and-groom-authoring.md) section 1). A tool that zeroes face channels
-keeps 59 and up.
+keeps 51 and 59 and up.
 
 **The eye must move with its socket** [Certain]. The morph moves each part by its own channels. On a working head
 the eye's channels carry the eyeball with the socket around it: the male dwarf's socket ring moves 6.2 mm on channel
@@ -151,7 +156,9 @@ vanilla's own head packages do not open in TpacTool 0.4.0): export the heads wit
 then `tools/oneoff/tune_face_slider_reach.py` (dry run, `--apply`, `--check`). It scales both ends of a range by
 one factor, so the slider position that shows the head as authored does not move. Vanilla also fixes `eyebump`
 (channel 59) at weight 1 on every skin; on a vanilla head that channel barely moves, but a custom head can author it
-large (Saruman's moved 13 mm), and then the face in game never matches the FBX.
+large (Saruman's moved 13 mm), and then the face in game never matches the FBX. TAOM's Saruman skin pins `eyebump` to
+0 and 0 (`tune_face_slider_reach.py --zero`), which also removes the one channel a head could use to carry its real
+shape to its groom ([head-mesh-and-groom-authoring.md](head-mesh-and-groom-authoring.md) section 6).
 
 ## Hair, beards and eyebrows
 
@@ -161,14 +168,37 @@ all** [Certain]: every beard and hair metamesh in `Native/EmAssetPackages/pack3/
 `beards_c_k`, `hair_male_c_b` and the rest, 50 to 3,728 vertices at LOD0) has 0 morph frames. Vanilla eyebrows were
 not measured.
 
-**How they follow the face** [Likely, from the v1.5.3 decompile]. The face builder (0x56D5C0) takes the GUID of
-the head sub-mesh tagged `face_base_mesh` and hands it, with each upper mesh, through 0x572B40 to 0x56EBA0. That
-function looks up a table by the two GUIDs and, for each of the head's channels (the count read off the head),
-adds to every upper-mesh vertex the delta of one head vertex (a uint16 index per upper vertex). A missing head
-entry logs "Mapping data could not be found between base mesh and upper mesh(beard, hair, eyebrow)."; a missing
-upper entry returns silently. The same tables are packed for the GPU as the shader constant `gpu_morph_mapping`
-(0x209360), logged once per skin at load. Nothing decompiled reads an upper mesh's own channels. Where the index
-table comes from (the rest proximity of the two meshes at load, or the Kit) is UNVERIFIED.
+**How they follow the face** [Likely, from the v1.5.3 decompile; the RVAs in this paragraph are v1.5.3's]. The face
+builder (0x56D5C0) takes the GUID of the head sub-mesh tagged `face_base_mesh` and hands it, with each upper mesh,
+through 0x572B40 to 0x56EBA0. That function looks up a table by the two GUIDs and, for each of the head's channels
+(the count read off the head), adds to every upper-mesh vertex the delta of one head vertex (a uint16 index per upper
+vertex). A missing head entry logs "Mapping data could not be found between base mesh and upper mesh(beard, hair,
+eyebrow)."; a missing upper entry returns silently. The same tables are packed for the GPU as the shader constant
+`gpu_morph_mapping` (0x209360), logged once per skin at load. Nothing decompiled reads an upper mesh's own channels.
+
+**On v1.5.6 the same function is `FUN_18056f8c0` at RVA 0x56F8C0** [Certain, Ghidra decompile of
+`TaleWorlds.Native.dll` v1.5.6 on 2026-10-29: the error string is referenced by this one function, called once from
+0x573860]. It looks the mapping up by GUID in the registry object, and for each deform key below the count at `+0x298` (stride 0xA8 from `+0x290`) reads the key's frame
+(`+0x44`), `key_min` (`+0x48`) and `key_max` (`+0x4c`), reads a uint16 bound head point per upper vertex, decodes the
+half-float3 delta at `(frame * pointCount + bound) * 3`, and adds `((key_max - key_min) * slider + key_min) * delta`.
+yotthani's Ghidra reading of the 1.5.3 function (56eba0) gives the same formula (`bn faces/FaceLearner.HeadExtract/Program.cs@6265f4a2:3250-3254`, a code
+comment dated 2026-10-02 whose engine version the comment does not state). The consequence, and the layout that uses it,
+is in [head-mesh-and-groom-authoring.md](head-mesh-and-groom-authoring.md) section 6 "Option A".
+
+**Where the index table comes from is settled** [Certain, v1.5.3, decompile plus a cdb trace]:
+[upper-mesh-mapping-2026-09-29.md](../investigations/upper-mesh-mapping-2026-09-29.md) line 31 records that the skin
+loader builds it with `produce_vertex_map_from_mesh` (function 0x56F360): for each upper-mesh vertex, the nearest
+vertex of the head metamesh's largest sub-mesh (line 33: 72,084 builds traced at load, 0 failures). The same page (line 35) found 0x56EBA0 logging zero calls while the face editor was open, "probably the baked
+path for agents in missions". yotthani's measurement agrees on the rule: the binding is "der naechste Basispunkt (97-100 %)"
+and the engine computes "exakt `g + T59[bindung]`", measured from the engine's own memory on 2026-10-03
+(`bn faces/FaceLearner.HeadExtract/tools/livedump/README.md@6265f4a2:3-5`; the README states no engine version).
+
+**Which deform keys move hair is UNVERIFIED.** In 0x56F8C0 a key is skipped when a caller flag is non-zero and the
+float at key `+0x74` is not above 0 (decompile lines 193-194 of TAOM's dump). Native's `skins.xml` has a `deforms_hair`
+attribute on many keys (283 lines carry it in the v1.5.6 file; it sits on, among others, `hide_ears`, `eyebump` and
+`head_scaling`, and not on the other nose, mouth, lip and chin keys), and 4 lines carry a typo, `eforms_hair`
+(counted with grep on 2026-10-29). [Guessing] that `+0x74` is `deforms_hair` and the flag marks hair; no TAOM doc, tool
+or test reads the attribute, and no one has changed it to see an effect.
 
 **So an upper mesh fits when its rest shape fits** the head it is built for:
 
@@ -213,7 +243,9 @@ a race therefore most likely moves every existing character's colour of that rac
 so a new colour goes on a race no existing character depends on: Sauron's gold and red went on `sauron`, not `elf`
 (`tools/oneoff/add_sauron_eye_colours.py`, 2026-09-28). The engine holds at most **32** stops per skin in a fixed
 array and does not clamp the count (the skin parser 0x577410, v1.5.3), so a gradient never grows past
-32. The skins XSD wants each stop unique; the engine does not check.
+32. The skins XSD wants each stop unique; the engine does not check. yotthani measured on a vanilla head that the engine
+stores the chosen colour as the colour of the `eye_mat` mesh ([head-mesh-and-groom-authoring.md](head-mesh-and-groom-authoring.md)
+section 5); that names the carrier, not the sampler.
 
 ## Tools
 
@@ -249,14 +281,16 @@ as a cause until the code that consumes it, or a third asset that has the differ
 ## Open questions
 
 - Whether channels 64 to 100 carry the facial animation on 1.5.3 (yotthani's finding on the 1.4 line; the key to
-  channel map above is settled).
+  channel map above is settled, with four non-slider keys: 46, 51, 57 and 58).
 - Whether the Kit or the engine applies `DeformPercent`.
 - The male eye's eyeball-only channels (60 to 63 and 15, iris and gaze) move the eye without the socket; a socket fit
   cannot reproduce them, so a fitted eye does not respond to those sliders. Native's `skins.xml` names 15
   `eye_shape` and 60 to 63 weight, build, height and age, so "iris and gaze" is an inference to recheck.
 - Whether vanilla hand meshes carry the 26 channels, and which Kit panel sets the face tags.
-- Where the upper-mesh index table comes from (rest proximity at load, or the Kit), and whether LOTRLOME's
-  channels on the dwarf beards change anything in game.
+- What the key attribute `deforms_hair` does in 0x56F8C0 (the `+0x74` gate; 283 lines carry it, 4 carry the typo
+  `eforms_hair`), and whether LOTRLOME's channels on the dwarf beards change anything in game. The index table's origin
+  is no longer open: the skin loader builds it by nearest vertex ([upper-mesh-mapping-2026-09-29.md](../investigations/upper-mesh-mapping-2026-09-29.md)
+  line 31).
 
 ## Sources
 

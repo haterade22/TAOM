@@ -253,9 +253,7 @@ The war ram is the whole reskin path in one element, and its file opens by sayin
    that adds the ram's one bespoke clip, the head-butt `act_war_ram_butt` (2026-09-18). Every other
    clip is the horse's. A reskin with no clip of its own names `as_horse` directly, as the ram did
    until then, and gets `as_horse_map` and `as_horse_town_and_village` for free. A thin set needs its
-   own `_map` and `_town_and_village` children (the ram's are in the Armory's `action_sets.xml`): a
-   missing `_map` child throws on the campaign map, and a missing `_town_and_village` one is the
-   elephant's native access-violation class.
+   own `_map` and `_town_and_village` children (the ram's are in the Armory's `action_sets.xml`): a missing `_map` child does not throw but gives the campaign map the default set 0, a human set, whose effect is untested ([animation system map](../reference/bannerlord-animation-system-map.md) section 7). A `_town_and_village` child only mirrors vanilla: no managed code appends that suffix, and the access-violation claim for it was found unsupported on 2026-08-28 ([creature-mount-authoring.md](../ai-includes/creature-mount-authoring.md) Phase 5).
 3. **`hit_points`, `weight`, `jump_acceleration`, `relative_speed_limit_for_charge`** are the
    balance numbers. Change these, leave the rest inherited.
 

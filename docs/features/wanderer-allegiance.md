@@ -223,6 +223,37 @@ New campaigns, each a couple of minutes:
 7. A Free-culture player (Gondor-born) who is a vassal of Umbar, a Neutral realm, talks to an Evil wanderer (Maztog in Isengard): the hire goes through, because the player's side is the realm's, not the player's culture's (#957).
 7. Gondor character takes a mercenary contract with Mordor, then talks to a Gondor wanderer: refused (kingdom first).
 
+## Where a wanderer stands: the daily swap, and bands under contract
+
+This feature gates the hire, not the wanderer's location. TAOM places no wanderer by side [Certain: no `TeleportHeroAction`
+or `EnterSettlementAction` in the wanderer feature at 0c5d81408]. yotthani's side-boundary report (`yotthani/bannerlord`,
+`docs/taom/side-boundary-report.md`@6265f4a2, lines 46-58; the full report and TAOM's decision of 2026-10-29 are in
+[diplomacy.md](diplomacy.md) "Free/Shadow side boundary") names it as its third gap: a wanderer of one side can stand in a
+tavern of the other. Two engine facts decide how any fix must work.
+
+- **A wanderer's town is not stable** [Certain, v1.5.6 decompile]. `CompanionsCampaignBehavior.DailyTick` runs
+  `TryKillCompanion(); SwapCompanions(); TrySpawnNewCompanion();` (`CompanionsCampaignBehavior.cs`:145-150). `SwapCompanions`
+  (`:250-276`) takes an unhired wanderer (`IsWanderer && CompanionOf == null`) from one town in the first half of
+  `Town.AllTowns` and swaps it with one from a town in the second half, every day, through
+  `EnterSettlementAction.ApplyForCharacterOnly`. The report says "wanderers never move to another town" (line 49), which is
+  wrong against this code. A fix that places a wanderer once, after the spawn, drifts back; it has to sweep daily. yotthani's
+  own code does sweep: `SideRules.cs`@6265f4a2:160-216 moves wanderers (`TeleportHeroAction.ApplyImmediateTeleportToSettlement`,
+  skipping hired, clan, party, prisoner and travelling heroes) after a spawn, at load, on `DailyTickEvent` and on a
+  settlement owner change.
+- **A `DailyTickEvent` listener added later runs before the swap** [Certain: the order is in [campaign-tick-time-and-party-ai.md](../reference/engine/campaign-tick-time-and-party-ai.md) "Listeners run newest first" (v1.5.5 `MbEvent.cs`), and v1.5.6 `CompanionsCampaignBehavior.cs`:122 registers `DailyTick` on `DailyTickEvent`]. So a sweep registered on the daily tick sees
+  yesterday's swap, and today's swap then runs after it: a wanderer can sit on the wrong side for up to a day (TAOM's reading
+  of the order; yotthani's sweep is registered exactly that way, `SideRules.cs`:215). Oaths of Service already avoids this
+  for its home anchor: the daily tick only raises a flag and the next hourly tick moves the companion
+  ([oaths-of-service.md](oaths-of-service.md) "Home anchor timing and state matrix"). A side fix should copy that shape.
+
+**Bands under contract take their employer's side** [Certain, code reading at 0c5d81408]. For a hero with a clan,
+`FactionSides.OfHero` returns `Of(clan.MapFaction)` (`Main/Adapters/FactionSides.cs`:33), and a mercenary clan keeps
+`Clan.Kingdom` set to its employer, so while a band serves a realm it resolves to that realm's id and side, and its own clan
+row in `alignment.json` is not read (yotthani's report says the same, line 40). The player's side in "The rule" above is the
+same reading (`OfPlayer`, `:55`). A clanless wanderer is the other branch: no faction id and its own culture (`:28-33`),
+which is why the wanderer rule keys on culture. A future rule that wants a band's own side has to read the clan before the
+map faction.
+
 ## Non-goals
 
 - Companions handed over by vanilla quests (`LordsNeedsTutorIssueBehavior`, `FamilyFeudIssueBehavior`) bypass the hire dialogue and are not gated.
@@ -233,6 +264,7 @@ New campaigns, each a couple of minutes:
 
 ## Changelog
 
+- 2026-10-29: Documented that vanilla swaps wanderers between towns every day, that a later `DailyTickEvent` listener runs before the swap, and that a band under contract resolves to its employer's side (from yotthani's side-boundary report).
 - 2026-10-19: Oaths of Service (#904) adds hire lines at priority 105 on the same token; the refusals at 110 still answer first by priority.
 - 2026-10-20 (#957, part 2): the player's side is one `SideIds` (the clan's map faction with that faction's culture) instead of the kingdom id with the player clan's or hero's culture; `Evaluate` takes it as its third argument.
 - 2026-09-12: initial feature (#575). Two condition-gated NPC lines on vanilla's `companion_hire` token; culture-keyed, symmetric, Neutral serves anyone; MCM toggle and scope dropdown.

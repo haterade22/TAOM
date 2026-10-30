@@ -140,8 +140,9 @@ Consequences for TAOM code:
 
 ## 3. Agent capacity
 
-- **2,040 agents, hard.** [TAOM-verified, Ghidra] `IMBAgent.GetMaximumNumberOfAgents` (RVA `0x6E4FA0`) is a
-  six-byte function returning `0x7F8`. [yotthani] The limit is baked into `Mission`'s native layout: two
+- **2,040 agents, hard.** [TAOM-verified, Ghidra] `IMBAgent.GetMaximumNumberOfAgents` (RVA `0x6E4FA0` on v1.5.3,
+  `0x6E5EE0` on v1.5.6, re-resolved 2026-10-29; the 2026-10-02 audit did not name the build, and by this page's
+  convention an unnamed offset is v1.5.3) is a six-byte function returning `0x7F8` on both. [yotthani] The limit is baked into `Mission`'s native layout: two
   embedded agent pools with element stride `0xC60` and 16-bit free lists; about 40 constants in 16
   functions and about 1,000 field offsets in 150 functions depend on it, so it is not patchable in
   practice. [TAOM-verified] The `0xC60` stride and a 16-bit next-index list both appear in the native
@@ -152,6 +153,18 @@ Consequences for TAOM code:
   `MaxNumberOfAgentsForMission / 2` because a mounted soldier takes two slots, riderless horses included.
   For TAOM, wargs, elk, mumakil and horses each hold a slot, and corpses hold theirs until deleted, so a
   creature-heavy battle reaches the cap with fewer combatants than the slider suggests.
+- **Soldiers held in reserve near the limit hung the battle start** [yotthani, MithrilForge
+  `docs/engine/for-taleworlds/bannerlord-engine-findings.html`@d09f44a4, section "Other native observations", game
+  1.5.5 per the file header, "most timings were taken on 1.5.3 and 1.5.4", in-game observation, no native
+  analysis]. The source says "battles hung in native code when soldiers were held in reserve near the limit: 1999 at
+  once with 1 in reserve froze at the start, 1750 with 249 in reserve at the first losses. Without reserves 1500 and
+  1750 ran through." UNVERIFIED by TAOM: the cause is not given and no native path was read. (TAOM's reading: these
+  counts exceed the vanilla spawn cap of `MaxNumberOfAgentsForMission / 2` troops, so they come from a modded spawn
+  path; TAOM has no grep hit for the case.)
+- **Log volume at a mass spawn** [yotthani, same file and section, observation in one scene, build not stated for
+  this item]: "At the start of one battle scene the engine wrote 242,272 lines (45.8 MB) of 'Possible spawn or
+  teleport problem ... Too many physics contacts between agents' in one moment." The source gives no cause and no
+  second scene. [yotthani]
 
 ## 4. Nearby-agent queries
 
@@ -470,6 +483,11 @@ the cost it removes" in [adapters-taleworlds-api.md](../../reviews/lessons/adapt
   guarded, so in that battle none of the others reached its end; how close they came is unmeasured. A guard for
   another pool waits for a measurement (issue draft 9 of
   [adopt-yotthani-2026-10-08.md](../../reviews/adopt-yotthani-2026-10-08.md)).
+- [yotthani, MithrilForge `docs/engine/for-taleworlds/bannerlord-engine-findings.html`@d09f44a4, section "Skeleton
+  frame buffer overflows without a check", suggestion paragraph, code reading plus measurement, game 1.5.5 per the
+  header] "The same chunked-allocator template is inlined at ~20 other places with other buffers; we did not check
+  those for the same missing check." So the table above is the pools TAOM traced, not a count of every site, and
+  about 20 further sites are unexamined by yotthani and by TAOM. UNVERIFIED.
 
 - **On v1.5.5** [TAOM-verified, 2026-10-15: the 14,212,960-byte client's row in
   `SkeletonBufferInstalledBinaryTests.KnownBuilds` and TAOM's own first-start log]: watch load `0x6A1A1`, global
