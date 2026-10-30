@@ -231,20 +231,20 @@ The six vanilla-wrapped cultures get their terrain feat appended to their `<cult
 | `Main/Features/CulturalFeats/Models/TaomArmyManagementModel.cs` | Army influence award/cost feats |
 | `Main/Features/CulturalFeats/Models/TaomPartySpeedModel.cs` | Terrain movement-speed feats + night + Rohan infantry speed |
 | `Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs` | Party size limit feats |
-| `Main/Features/CulturalFeats/Models/TaomFoodConsumptionModel.cs` | Food consumption feats |
+| `Main/Features/CulturalFeats/Models/TaomFoodConsumptionModel.cs` | Food consumption feats; then the leader's career `FoodConsumption` factor (#769 E11) |
 | `Main/Features/CulturalFeats/Models/TaomSettlementProsperityModel.cs` | Hearth growth feats |
 | `Main/Features/CulturalFeats/Models/TaomSettlementMilitiaModel.cs` | Veteran militia feats |
 | `Main/Features/CulturalFeats/Models/TaomBuildingConstructionModel.cs` | Construction speed feats |
 | `Main/Features/CulturalFeats/Models/TaomVillageProductionModel.cs` | Production feats |
 | `Main/Features/CulturalFeats/Models/TaomCaravanModel.cs` | Caravan cost feat |
-| `Main/Features/CulturalFeats/Models/TaomBattleRewardModel.cs` | Renown feat |
+| `Main/Features/CulturalFeats/Models/TaomBattleRewardModel.cs` | Renown feat; career `InfluenceGain` factor and `LootGold` share scale at battle end (#769 E11) |
 | `Main/Features/CulturalFeats/Models/TaomPartyTroopUpgradeModel.cs` | Recruit cost feat |
 | `Main/Features/CulturalFeats/Models/TaomSettlementLoyaltyModel.cs` | Settlement loyalty feats |
 | `Main/Features/CulturalFeats/Models/TaomPartyMoraleModel.cs` | Party morale feats |
 | `Main/Features/CulturalFeats/Models/TaomSmithingModel.cs` | Smithing energy cost feats |
-| `Main/Features/CulturalFeats/Models/TaomClanFinanceModel.cs` | Tariff income feats |
-| `Main/Features/CulturalFeats/Models/TaomRaidModel.cs` | Raid damage feats |
-| `Main/Features/TroopProgression/Models/TaomPartyWageModel.cs` | Wage/garrison feat checks (extended) |
+| `Main/Features/CulturalFeats/Models/TaomClanFinanceModel.cs` | Tariff income feats; the enlistment wage line (display only); the career `DailyGold` count on both projections, also when `applyWithdrawals` is true (#769 E11) |
+| `Main/Features/CulturalFeats/Models/TaomRaidModel.cs` | Raid damage feats; the raid speed also applies the leader's career `TroopDamage` through `ApplyFactor`, which reads only the army-wide (All-class) pips of that class-filtered type (#769); `GetRaidLootMultiplier` is scaled by the receiving leader's career `RaidLoot` (#769 E11) |
+| `Main/Features/TroopProgression/Models/TaomPartyWageModel.cs` | Wage/garrison feat checks (extended); the buyer's career `RecruitCost` in the recruitment cost (#769 E11) |
 | `Main/Features/Diplomacy/Models/TaomDiplomacyModel.cs` | Decision penalty feat (extended) |
 | `Main/_Module/ModuleData/taom_spcultures.xml` | Culture feat XML assignments (custom cultures) |
 | `Main/_Module/ModuleData/spcultures.xslt` | Vanilla-wrapped culture feat overrides + terrain-feat append templates |

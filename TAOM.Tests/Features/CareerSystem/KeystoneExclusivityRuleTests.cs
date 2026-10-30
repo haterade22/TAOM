@@ -122,10 +122,10 @@ public class KeystoneExclusivityRuleTests
 
     private static CareerChoiceDefinition Keystone(string id, string groupId) =>
         new CareerChoiceDefinition(id: id, groupId: groupId, type: ChoiceType.Keystone,
-            description: "", iconSprite: "", passive: null, mutations: null);
+            description: "", iconSprite: "", passives: null, mutations: null);
 
     private static CareerChoiceDefinition Passive(string id, string groupId) =>
         new CareerChoiceDefinition(id: id, groupId: groupId, type: ChoiceType.Passive,
             description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.Damage, 0.1f), mutations: null);
+            passives: new[] { new PassiveEffect(PassiveEffectType.Damage, 0.1f) }, mutations: null);
 }

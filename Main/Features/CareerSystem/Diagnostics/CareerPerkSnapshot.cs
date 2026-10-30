@@ -22,17 +22,24 @@ public sealed class CareerPerkSnapshot
 
 public sealed class CareerPerkRow
 {
-    public CareerPerkRow(PassiveEffectType type, float magnitude, List<(AttackTypeMask mask, float magnitude)>? masked)
+    public CareerPerkRow(
+        PassiveEffectType type,
+        float magnitude,
+        List<(AttackTypeMask mask, float magnitude)>? masked,
+        List<(TroopClassMask troopClass, float magnitude)>? byClass = null)
     {
         Type = type;
         Magnitude = magnitude;
         Masked = masked;
+        ByClass = byClass;
     }
 
     public PassiveEffectType Type { get; }
     public float Magnitude { get; }
-    /// <summary>Per-mask buckets for the Damage / Resistance types; null for the rest.</summary>
+    /// <summary>Per-mask buckets for the four mask-gated types (Damage, Resistance, TroopDamage, TroopResistance); null for the rest.</summary>
     public List<(AttackTypeMask mask, float magnitude)>? Masked { get; }
+    /// <summary>Per-troop-class values (any hit) for the class-filtered types (#769 E9); null for the rest.</summary>
+    public List<(TroopClassMask troopClass, float magnitude)>? ByClass { get; }
 }
 
 public sealed class CareerPerkMissionSnapshot

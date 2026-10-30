@@ -47,5 +47,26 @@ public enum PassiveEffectType
     // Special resources (SpecialResources feature)
     SpecialResourceGain,
     SpecialResourceUpkeepModifier,
-    SpecialResourceUpgradeCostModifier
+    SpecialResourceUpgradeCostModifier,
+
+    // Troop counters (#769 E10): what the leader's non-hero troops resist of the enemy's fear, knockdown
+    // and crush-through. Class-filtered; read through CareerTroopHooks at the morale, stat and combat seams.
+    TroopFearResistance,
+    TroopKnockdownResistance,
+    TroopCrushHold,
+
+    // Campaign consumers (#769 E11): ten passives read by a GameModel override each. Sign convention: a positive
+    // magnitude is "more" except where the name is a cost, a consumption or a penalty, which are authored
+    // negative for a cut (RecruitCost, FoodConsumption, TradePrices), as TroopWages and TroopUpgradeCost are.
+    // DailyGold and TroopTraining are counts; the rest are fractions.
+    InfluenceGain,
+    RecruitCost,
+    PrisonerConversion,
+    FoodConsumption,
+    WoundRecovery,
+    DailyGold,
+    LootGold,
+    RaidLoot,
+    TroopTraining,
+    TradePrices
 }

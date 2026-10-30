@@ -49,6 +49,8 @@ public class ShieldBashKnockdownService : IShieldBashKnockdownService
         chance /= _raceModifiers.Resolve(context.VictimRaceId).KnockdownResistanceMultiplier;
 
         float abilityResistance = context.VictimAbilityResistanceFactor;
+        if (context.VictimCareerResistanceScale != null)
+            abilityResistance = context.VictimCareerResistanceScale(abilityResistance);
         if (FiniteFloatValidator.IsFinite(abilityResistance) && abilityResistance > 0f)
             chance /= abilityResistance;
 

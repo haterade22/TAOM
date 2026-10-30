@@ -4728,3 +4728,27 @@ there. No conflict marked it.
 - **Prevent:** for each quantity the branch changes (a resistance, a cost, an XP term, a model slot), grep trunk for
   every reader added since the branch's base, not only the method the branch hooks.
 - **Source:** `docs/reviews/rca-merge-ui-speed-career-forks-2026-10-30.md` finding 5.
+
+### A finding that repeats a lesson means the brief did not carry it (#769 E8 to E10, 2026-10-14)
+The E8 to E10 review found seven defects that match lessons already on file: a service locator in a hook, an
+outcome keyed on one path, an owed in-game check with no log line, one predicate made to answer a second
+question, a new filter that an old reader missed, a sentence built from fragment keys, and tests that could
+not fail. The builder had not read
+the lesson files, and the orchestrator's brief had not named them.
+- **Why missed:** a brief names files, steps and seams. The lessons live in 13 cross-cutting category files
+  (the five this change repeated hold about 8,000 lines), and nothing in the spawn path opens them.
+- **Prevent:** the Feature Developer template (`docs/ai-includes/agent-teams.md`) has a `Lessons:` slot. The
+  lead fills it with the lesson headings that apply, by name and file, and the builder's report says what it
+  did about each. A review that finds a repeat checks the brief first.
+- **Source:** `docs/reviews/rca-career-e8e10-2026-10-14.md` pattern 1.
+
+### A generator reads every fact the runtime owns from the runtime's source (#769 C1, 2026-10-15)
+The career forks generator parsed the effect enum from C#, but kept hand copies of which types are flat,
+class-filtered and mask-gated, which sign helps the player, and which troops pay upkeep. Each copy was wrong
+or drifted while it was under review: TroopMorale priced as a count, penalties priced as perks, a new
+class-filtered type refused, and upkeep counted by a field the runtime calls documentation only.
+- **Why missed:** a rules file feels like configuration, so facts the code decides were typed into it.
+- **Prevent:** before a generator writes a rule into its own config, ask who decides it at run time; if the
+  answer is C# or data, parse that source at run time and fail with exit 2 when it cannot be found. Keep only
+  design choices (units, budgets, caps, bans) in the rules file.
+- **Source:** `docs/reviews/rca-career-forks-generator-2026-10-15.md` pattern 1.

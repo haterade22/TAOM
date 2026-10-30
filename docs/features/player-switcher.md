@@ -355,8 +355,8 @@ saves are untouched and the resulting save is structurally the same shape as one
 heir succession.
 
 One accepted cost: the throwaway hero's career row is left in the career store rather than deleted,
-because `ICareerDataService` has no `ClearCareer` and adding one would reach into another feature
-for one orphan dictionary entry.
+because the switcher does not reach into the career store for one orphan dictionary entry. Since
+#769 `MigrateAllTreeVersions` and `RefreshCache` also walk that row, which is harmless.
 
 **A consequence worth knowing: nothing persists the fact that a takeover happened.** The reassigned
 `Campaign.PlayerDefaultFaction` survives, but the knowledge that TAOM moved it does not, so any rule

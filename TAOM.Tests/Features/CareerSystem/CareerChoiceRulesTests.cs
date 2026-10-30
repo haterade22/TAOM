@@ -28,7 +28,7 @@ public class CareerChoiceRulesTests
     private static readonly CareerChoiceDefinition Stray = Passive("stray", "elsewhere");
     private static readonly CareerChoiceDefinition Root = new CareerChoiceDefinition(
         id: "root", groupId: "", type: ChoiceType.Passive,
-        description: "", iconSprite: "", passive: null, mutations: null);
+        description: "", iconSprite: "", passives: null, mutations: null);
 
     private static readonly CareerDefinition Career = new CareerDefinition(
         id: "warboss", displayName: "Warboss", description: "", portraitSprite: "",

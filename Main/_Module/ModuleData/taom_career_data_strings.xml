@@ -385,6 +385,12 @@
 	<string id="taom_career_grp_captain_of_cameth_brin_t2_b" text="{=taom_career_grp_captain_of_cameth_brin_t2_b}Sword of the Last Bridge" />
 	<string id="taom_career_grp_captain_of_cameth_brin_t3_a" text="{=taom_career_grp_captain_of_cameth_brin_t3_a}Host of Belegorn" />
 	<string id="taom_career_grp_captain_of_cameth_brin_t3_b" text="{=taom_career_grp_captain_of_cameth_brin_t3_b}Lord of the Tower of Cameth Brin" />
+	<string id="taom_career_grp_captain_of_osgiliath_f1" text="{=taom_career_grp_captain_of_osgiliath_f1}Oath of the Crossing" />
+	<string id="taom_career_grp_captain_of_osgiliath_f2" text="{=taom_career_grp_captain_of_osgiliath_f2}Steward's Ledger" />
+	<string id="taom_career_grp_captain_of_osgiliath_f3" text="{=taom_career_grp_captain_of_osgiliath_f3}Muster of the Fiefs" />
+	<string id="taom_career_grp_captain_of_osgiliath_f4" text="{=taom_career_grp_captain_of_osgiliath_f4}Ward of the White Tower" />
+	<string id="taom_career_grp_captain_of_osgiliath_f5" text="{=taom_career_grp_captain_of_osgiliath_f5}Tower Guard Drill" />
+	<string id="taom_career_grp_captain_of_osgiliath_f6" text="{=taom_career_grp_captain_of_osgiliath_f6}Endurance of Westernesse" />
 	<string id="taom_career_grp_craig_crag_stalker_t1_a" text="{=taom_career_grp_craig_crag_stalker_t1_a}Crag-Stalker" />
 	<string id="taom_career_grp_craig_crag_stalker_t1_b" text="{=taom_career_grp_craig_crag_stalker_t1_b}Tunnel Skulker" />
 	<string id="taom_career_grp_craig_crag_stalker_t2_a" text="{=taom_career_grp_craig_crag_stalker_t2_a}High Pass Ambusher" />
@@ -457,6 +463,12 @@
 	<string id="taom_career_grp_knight_of_arthedain_t2_b" text="{=taom_career_grp_knight_of_arthedain_t2_b}Shieldwall of Arvegil" />
 	<string id="taom_career_grp_knight_of_arthedain_t3_a" text="{=taom_career_grp_knight_of_arthedain_t3_a}Knight of the Silver Crown" />
 	<string id="taom_career_grp_knight_of_arthedain_t3_b" text="{=taom_career_grp_knight_of_arthedain_t3_b}Charge of Fornost" />
+	<string id="taom_career_grp_knight_of_belfalas_f1" text="{=taom_career_grp_knight_of_belfalas_f1}Oath of the Swan" />
+	<string id="taom_career_grp_knight_of_belfalas_f2" text="{=taom_career_grp_knight_of_belfalas_f2}Steward's Ledger" />
+	<string id="taom_career_grp_knight_of_belfalas_f3" text="{=taom_career_grp_knight_of_belfalas_f3}Muster of the Fiefs" />
+	<string id="taom_career_grp_knight_of_belfalas_f4" text="{=taom_career_grp_knight_of_belfalas_f4}Ward of the White Tower" />
+	<string id="taom_career_grp_knight_of_belfalas_f5" text="{=taom_career_grp_knight_of_belfalas_f5}Stables of Dol Amroth" />
+	<string id="taom_career_grp_knight_of_belfalas_f6" text="{=taom_career_grp_knight_of_belfalas_f6}The Silver Swan" />
 	<string id="taom_career_grp_knight_of_cardolan_t1_a" text="{=taom_career_grp_knight_of_cardolan_t1_a}Lancer of Minhiriath" />
 	<string id="taom_career_grp_knight_of_cardolan_t1_b" text="{=taom_career_grp_knight_of_cardolan_t1_b}Warden of Tharbad" />
 	<string id="taom_career_grp_knight_of_cardolan_t2_a" text="{=taom_career_grp_knight_of_cardolan_t2_a}Rider of the Plains" />
@@ -493,6 +505,12 @@
 	<string id="taom_career_grp_nogrod_arbalester_t2_b" text="{=taom_career_grp_nogrod_arbalester_t2_b}Ballista of the Mountain" />
 	<string id="taom_career_grp_nogrod_arbalester_t3_a" text="{=taom_career_grp_nogrod_arbalester_t3_a}Storm of Steel" />
 	<string id="taom_career_grp_nogrod_arbalester_t3_b" text="{=taom_career_grp_nogrod_arbalester_t3_b}Engine of Nogrod" />
+	<string id="taom_career_grp_ranger_of_ithilien_f1" text="{=taom_career_grp_ranger_of_ithilien_f1}Oath of Henneth Annun" />
+	<string id="taom_career_grp_ranger_of_ithilien_f2" text="{=taom_career_grp_ranger_of_ithilien_f2}Steward's Ledger" />
+	<string id="taom_career_grp_ranger_of_ithilien_f3" text="{=taom_career_grp_ranger_of_ithilien_f3}Muster of the Fiefs" />
+	<string id="taom_career_grp_ranger_of_ithilien_f4" text="{=taom_career_grp_ranger_of_ithilien_f4}Ward of the White Tower" />
+	<string id="taom_career_grp_ranger_of_ithilien_f5" text="{=taom_career_grp_ranger_of_ithilien_f5}Watch on the Poros" />
+	<string id="taom_career_grp_ranger_of_ithilien_f6" text="{=taom_career_grp_ranger_of_ithilien_f6}Shadow of Ithilien" />
 	<string id="taom_career_grp_ranger_of_the_angle_t1_a" text="{=taom_career_grp_ranger_of_the_angle_t1_a}Hunter of the East Road" />
 	<string id="taom_career_grp_ranger_of_the_angle_t1_b" text="{=taom_career_grp_ranger_of_the_angle_t1_b}Watcher of the Last Bridge" />
 	<string id="taom_career_grp_ranger_of_the_angle_t2_a" text="{=taom_career_grp_ranger_of_the_angle_t2_a}Scout of the Ettenmoors" />
@@ -795,6 +813,51 @@
 	<string id="taom_ccs_t3_b_p2" text="{=taom_ccs_t3_b_p2}+15% movement speed." />
 	<string id="taom_ccs_t3_b_p3" text="{=taom_ccs_t3_b_p3}+9 max health." />
 	<string id="taom_ccs_t3_b_p4" text="{=taom_ccs_t3_b_p4}+15% party spotting range." />
+	<string id="taom_cf_captain_of_osgiliath_f1_a" text="{=taom_cf_captain_of_osgiliath_f1_a}+15% melee damage." />
+	<string id="taom_cf_captain_of_osgiliath_f1_b" text="{=taom_cf_captain_of_osgiliath_f1_b}Your infantry deal 8% more damage." />
+	<string id="taom_cf_captain_of_osgiliath_f2_a" text="{=taom_cf_captain_of_osgiliath_f2_a}+25% renown, and +25% influence while you serve a kingdom." />
+	<string id="taom_cf_captain_of_osgiliath_f2_b" text="{=taom_cf_captain_of_osgiliath_f2_b}Your elite troops cost no daily upkeep in your realm's special resource." />
+	<string id="taom_cf_captain_of_osgiliath_f3_a" text="{=taom_cf_captain_of_osgiliath_f3_a}+50 party size." />
+	<string id="taom_cf_captain_of_osgiliath_f3_b" text="{=taom_cf_captain_of_osgiliath_f3_b}Double your realm's special resource from every source." />
+	<string id="taom_cf_captain_of_osgiliath_f4_a" text="{=taom_cf_captain_of_osgiliath_f4_a}Your troops lose 60% less morale to dread and terror." />
+	<string id="taom_cf_captain_of_osgiliath_f4_b" text="{=taom_cf_captain_of_osgiliath_f4_b}Your troops' blocks hold against a crush-through half the time." />
+	<string id="taom_cf_captain_of_osgiliath_f4_c" text="{=taom_cf_captain_of_osgiliath_f4_c}Your troops resist knockdown from blows and light charges 50% better." />
+	<string id="taom_cf_captain_of_osgiliath_f5_a" text="{=taom_cf_captain_of_osgiliath_f5_a}Your infantry gain 15 experience each day." />
+	<string id="taom_cf_captain_of_osgiliath_f5_b" text="{=taom_cf_captain_of_osgiliath_f5_b}+20 party size, and recruits cost 30% less." />
+	<string id="taom_cf_captain_of_osgiliath_f6_a" text="{=taom_cf_captain_of_osgiliath_f6_a}You take 20% less damage." />
+	<string id="taom_cf_captain_of_osgiliath_f6_b" text="{=taom_cf_captain_of_osgiliath_f6_b}Your infantry take 12% less damage." />
+	<string id="taom_cf_captain_of_osgiliath_f6_c" text="{=taom_cf_captain_of_osgiliath_f6_c}Your Career Ability lasts 8 seconds longer and reaches 20 meters further." />
+	<string id="taom_cf_captain_of_osgiliath_root" text="{=taom_cf_captain_of_osgiliath_root}+5% melee damage." />
+	<string id="taom_cf_knight_of_belfalas_f1_a" text="{=taom_cf_knight_of_belfalas_f1_a}Your mount's charge deals 10% more damage." />
+	<string id="taom_cf_knight_of_belfalas_f1_b" text="{=taom_cf_knight_of_belfalas_f1_b}Your cavalry deal 8% more damage." />
+	<string id="taom_cf_knight_of_belfalas_f2_a" text="{=taom_cf_knight_of_belfalas_f2_a}+25% renown, and +25% influence while you serve a kingdom." />
+	<string id="taom_cf_knight_of_belfalas_f2_b" text="{=taom_cf_knight_of_belfalas_f2_b}Your elite troops cost no daily upkeep in your realm's special resource." />
+	<string id="taom_cf_knight_of_belfalas_f3_a" text="{=taom_cf_knight_of_belfalas_f3_a}+50 party size." />
+	<string id="taom_cf_knight_of_belfalas_f3_b" text="{=taom_cf_knight_of_belfalas_f3_b}Double your realm's special resource from every source." />
+	<string id="taom_cf_knight_of_belfalas_f4_a" text="{=taom_cf_knight_of_belfalas_f4_a}Your troops lose 60% less morale to dread and terror." />
+	<string id="taom_cf_knight_of_belfalas_f4_b" text="{=taom_cf_knight_of_belfalas_f4_b}Your troops' blocks hold against a crush-through half the time." />
+	<string id="taom_cf_knight_of_belfalas_f4_c" text="{=taom_cf_knight_of_belfalas_f4_c}Your troops resist knockdown from blows and light charges 50% better." />
+	<string id="taom_cf_knight_of_belfalas_f5_a" text="{=taom_cf_knight_of_belfalas_f5_a}Your cavalry gain 15 experience each day." />
+	<string id="taom_cf_knight_of_belfalas_f5_b" text="{=taom_cf_knight_of_belfalas_f5_b}+20 party size, and recruits cost 30% less." />
+	<string id="taom_cf_knight_of_belfalas_f6_a" text="{=taom_cf_knight_of_belfalas_f6_a}You take 20% less damage." />
+	<string id="taom_cf_knight_of_belfalas_f6_b" text="{=taom_cf_knight_of_belfalas_f6_b}Your cavalry take 12% less damage." />
+	<string id="taom_cf_knight_of_belfalas_f6_c" text="{=taom_cf_knight_of_belfalas_f6_c}Your Career Ability lasts 8 seconds longer and reaches 20 meters further." />
+	<string id="taom_cf_knight_of_belfalas_root" text="{=taom_cf_knight_of_belfalas_root}+5% melee damage." />
+	<string id="taom_cf_ranger_of_ithilien_f1_a" text="{=taom_cf_ranger_of_ithilien_f1_a}+15% ranged damage." />
+	<string id="taom_cf_ranger_of_ithilien_f1_b" text="{=taom_cf_ranger_of_ithilien_f1_b}Your ranged troops deal 8% more damage." />
+	<string id="taom_cf_ranger_of_ithilien_f2_a" text="{=taom_cf_ranger_of_ithilien_f2_a}+25% renown, and +25% influence while you serve a kingdom." />
+	<string id="taom_cf_ranger_of_ithilien_f2_b" text="{=taom_cf_ranger_of_ithilien_f2_b}Your elite troops cost no daily upkeep in your realm's special resource." />
+	<string id="taom_cf_ranger_of_ithilien_f3_a" text="{=taom_cf_ranger_of_ithilien_f3_a}+50 party size." />
+	<string id="taom_cf_ranger_of_ithilien_f3_b" text="{=taom_cf_ranger_of_ithilien_f3_b}Double your realm's special resource from every source." />
+	<string id="taom_cf_ranger_of_ithilien_f4_a" text="{=taom_cf_ranger_of_ithilien_f4_a}Your troops lose 60% less morale to dread and terror." />
+	<string id="taom_cf_ranger_of_ithilien_f4_b" text="{=taom_cf_ranger_of_ithilien_f4_b}Your troops' blocks hold against a crush-through half the time." />
+	<string id="taom_cf_ranger_of_ithilien_f4_c" text="{=taom_cf_ranger_of_ithilien_f4_c}Your troops resist knockdown from blows and light charges 50% better." />
+	<string id="taom_cf_ranger_of_ithilien_f5_a" text="{=taom_cf_ranger_of_ithilien_f5_a}Your ranged troops gain 15 experience each day." />
+	<string id="taom_cf_ranger_of_ithilien_f5_b" text="{=taom_cf_ranger_of_ithilien_f5_b}+20 party size, and recruits cost 30% less." />
+	<string id="taom_cf_ranger_of_ithilien_f6_a" text="{=taom_cf_ranger_of_ithilien_f6_a}You take 20% less damage." />
+	<string id="taom_cf_ranger_of_ithilien_f6_b" text="{=taom_cf_ranger_of_ithilien_f6_b}Your ranged troops take 12% less damage." />
+	<string id="taom_cf_ranger_of_ithilien_f6_c" text="{=taom_cf_ranger_of_ithilien_f6_c}Your Career Ability lasts 8 seconds longer and reaches 20 meters further." />
+	<string id="taom_cf_ranger_of_ithilien_root" text="{=taom_cf_ranger_of_ithilien_root}+5% ranged damage." />
 	<string id="taom_cocb_root_desc" text="{=taom_cocb_root_desc}Career Ability grants +5% melee damage and improves troop morale near rivers and coasts." />
 	<string id="taom_cocb_t1a_key" text="{=taom_cocb_t1a_key}Career Ability radius increased, commanding wider river approaches." />
 	<string id="taom_cocb_t1a_p1" text="{=taom_cocb_t1a_p1}+8% melee damage." />

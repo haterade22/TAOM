@@ -2,12 +2,12 @@
 
 ## Overview
 
-Adds a 6th narrative menu stage to Bannerlord's character creation flow that lets players choose their career from culture-eligible options. Each career grants skill and attribute bonuses during CC, and the selected career is assigned via the existing CareerSystem during finalization.
+Adds a 6th narrative menu stage to Bannerlord's character creation flow that lets players choose their career from culture-eligible options. The selected career is assigned via the existing CareerSystem during finalization.
 
 ## Why This Exists
 
 - **Vanilla behavior:** Bannerlord has 5 narrative stages (parent, childhood, education, youth, adulthood). No career/class system.
-- **TAOM requirement:** TAOM has 50 careers across 16 cultures, but the CC flow auto-assigned the first eligible career with no player choice. Most cultures have 2-4 careers, so players always got the same one.
+- **TAOM requirement:** TAOM has 70 careers across 25 culture ids, but the CC flow auto-assigned the first eligible career with no player choice. Most cultures have 2-4 careers, so players always got the same one.
 - **Without this feature:** Players start every game with the same career for their culture. No meaningful class selection during character creation.
 
 ## Architecture
@@ -16,7 +16,7 @@ Adds a 6th narrative menu stage to Bannerlord's character creation flow that let
 
 Bannerlord's `CharacterCreationManager` manages narrative menus as a linked list via `InputMenuId` -> `StringId`. Adding a new stage requires inserting into this chain without Harmony patches or reflection — just using the public `AddNewMenu()` API.
 
-Cultures with no eligible careers (shaghana, abanissa) would produce an empty menu, causing a `KeyNotFoundException` crash in vanilla's `TrySwitchToNextMenu` when `SelectedOptions` has no entry.
+A culture that appears in no career's `EligibleCultures` would produce an empty menu, causing a `KeyNotFoundException` crash in vanilla's `TrySwitchToNextMenu` when `SelectedOptions` has no entry.
 
 ### Solution Approach
 
@@ -53,13 +53,13 @@ Each entry maps a career to its CC skill/attribute bonuses. Career names, descri
 | `career_string_id` | string | Must match a `Career id` in `taom_careers.xml` |
 | `skills` | string[] | Skills to boost (from: OneHanded, TwoHanded, Polearm, Bow, Crossbow, Throwing, Riding, Athletics, Crafting, Scouting, Tactics, Roguery, Charm, Leadership, Trade, Steward, Medicine, Engineering) |
 | `attribute` | string | Attribute to boost (from: Vigor, Control, Endurance, Cunning, Social, Intelligence) |
-| `focus_to_add` | int | Focus points added to each skill (default: 1) |
-| `skill_level_to_add` | int | Skill XP added to each skill (default: 10) |
-| `attribute_level_to_add` | int | Attribute points added (default: 1) |
+| `focus_to_add` | int | Focus points added to each skill (default: 0) |
+| `skill_level_to_add` | int | Skill XP added to each skill (default: 0) |
+| `attribute_level_to_add` | int | Attribute points added (default: 0) |
 
 ### Current Values
 
-50 entries, one per career. All use standard bonuses (1 focus, 10 skill XP, 1 attribute point). Skills and attributes are thematically matched to each career.
+70 entries, one per career. Every bonus is zero (`focus_to_add`, `skill_level_to_add` and `attribute_level_to_add` are 0, `skills` and `attribute` are empty), so the career drives specialization and the starting kit only.
 
 ## Key Files
 
@@ -73,7 +73,7 @@ Each entry maps a career to its CC skill/attribute bonuses. Career names, descri
 | `Main/Features/CharacterCreation/CharacterCreationContentService.cs` | CC orchestrator — `AssignCareer()` uses stored selection |
 | `Main/Features/CharacterCreation/TaomCharacterCreationContentHandler.cs` | Entry point — calls `RegisterCareerMenu()` |
 | `Main/Features/CharacterCreation/CharacterCreationIoC.cs` | DryIoc registration |
-| `Main/_Module/ModuleData/charactercreation/career_menu.json` | 50 career CC bonus definitions |
+| `Main/_Module/ModuleData/charactercreation/career_menu.json` | 70 career CC bonus definitions |
 
 ## Dependencies
 
@@ -83,13 +83,13 @@ Each entry maps a career to its CC skill/attribute bonuses. Career names, descri
 
 ## Tests
 
-- `TAOM.Tests/Features/CharacterCreation/CareerMenuServiceTests.cs` — 12 tests covering option building, culture filtering, selection storage, fallback option, registry edge cases
+- `TAOM.Tests/Features/CharacterCreation/CareerMenuServiceTests.cs`: 14 tests covering option building, culture filtering, selection storage, fallback option, registry edge cases
 - `TAOM.Tests/Features/CharacterCreation/CareerMenuDataProviderTests.cs` — 9 tests covering JSON loading, parsing, caching, error handling, career lookup
 
 ## How to Add a Career to CC
 
 1. Add the `<Career>` element to `Main/_Module/ModuleData/career_system/taom_careers.xml` with `<EligibleCultures>`
-2. Add a matching entry to `Main/_Module/ModuleData/charactercreation/career_menu.json` with the same `career_string_id` and appropriate skill/attribute bonuses
+2. Add a matching entry to `Main/_Module/ModuleData/charactercreation/career_menu.json` with the same `career_string_id` and zero bonuses (`skills` and `attribute` empty, all three counts 0), as every shipped entry has
 3. No code changes needed — the service reads both at runtime
 
 ## How to Add Careers for a New Culture
@@ -187,15 +187,7 @@ Generate a landscape image. [Scene description]. Single warrior only. Art style:
 
 ### Current Portrait Status
 
-| Faction | Career | Portrait | Ability Icon |
-|---------|--------|----------|-------------|
-| Gondor | Ranger of Ithilien | Done | Done (Ambush) |
-| Gondor | Captain of Osgiliath | Done | Done (Hold the Line) |
-| Gondor | Knight of Belfalas | Done | Done (Stampede) |
-| Rohan | Marksman of Aldburg | Done | Done (Light Fletching) |
-| Rohan | Eotheod Windrider | Done | Done (Warcry of Eorl) |
-| Rohan | Watchman of Stangard | Done | Done (Stand Fast) |
-| All others | — | Pending | Pending |
+The art is not tied to the 70 careers one to one: new-faction careers reuse portraits. <!-- measured: ls of SpriteParts/ui_taom_career_system/CareerSystem/Portraits (21 PNGs) and .../Abilities (49 PNGs) 2026-10-14 --> `Portraits` holds 21 PNGs and `Abilities` holds 49, so 21 careers still lack an ability icon. The per-career split is in [gui-sprite-system.md](gui-sprite-system.md) "Sprites Needed".
 
 ## Performance
 
@@ -224,6 +216,7 @@ Character creation runs once per new game. All data is loaded and cached on firs
 <!-- backlinks-end -->
 ## Changelog
 
+- 2026-10-14 (#769): `ICareerCreationHandler.OnCareerSelected` (character creation, a career switch, a co-op join, a hero switch, and the legacy-save fallback `AssignFallbackCareerIfMissing`) stamps the tree version through `CareerTreeVersion.Stamp`, so a new player's picks are not refunded as an old save on the first load. A career switch costs gold only when the old career holds a fork pick (`CareerSwitchService.GetSwitchCost`, the registry's `GetRetrainCost`, 1000 + 250 x level by default), otherwise it is free.
 - 2026-05-30 — Zeroed the Career CC stage bonuses (`career_menu.json`, 49 entries): `focus/skill_level/attribute_to_add → 0` and `skills`/`attribute` arrays cleared, so a selected career renders a clean zero-bonus line; career still drives specialization + starting equipment.
 - 2026-05-20 — `CareerMenuService.UpdateCareerEquipmentPreview` now applies the culture-default → career-roster two-step chain so the review-stage 3D preview matches the chosen career, and switching careers mid-CC starts from a clean slate (#206).
 - 2026-05-19 — Removed orphan `career_menu.json` entries for the disabled WIP careers `far_harad_halftroll` and `cave_troll_master`, fixing the `EveryJsonEntry_HasMatchingCareerInXml` cross-reference test.

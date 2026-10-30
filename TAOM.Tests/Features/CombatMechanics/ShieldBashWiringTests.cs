@@ -84,6 +84,15 @@ public class ShieldBashWiringTests
         StringAssert.Contains(builder, "randomRoll: MBRandom.RandomFloat");
     }
 
+    // A Hammerhand bash or kick never asks GetKnockDownResistance, so the career TroopKnockdownResistance counter (#769 E10)
+    // reaches it only through the ability factor; without this, a "+50% troop knockdown resistance" pick did nothing here.
+    [TestMethod]
+    public void HooksFacade_VictimResistanceFactor_PassesThroughTheCareerKnockdownCounter()
+    {
+        StringAssert.Contains(Builder(),
+            "victimCareerResistanceScale: factor => CareerTroopHooks.KnockDownResistance(_careerAgentStatService, victimAgent, factor)");
+    }
+
     [TestMethod]
     public void HooksFacade_ReadsAthleticsThroughTheRegisteredStatModel()
     {

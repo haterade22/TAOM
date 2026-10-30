@@ -2266,3 +2266,13 @@ Angáladh's banners took Silvan icons the generator comment called unused; Mirkw
 - **Why missed:** existence was checked, and the banner check used a layer parser that does not match the key format.
 - **Prevent:** count a reused icon, sprite or template id with a plain token search over every file that can name it, and read the result before calling it unused.
 - **Source:** [rca-anduin-vale-angaladh-2026-10-28.md](../rca-anduin-vale-angaladh-2026-10-28.md) findings 12 and 13.
+### A generated option's text is checked against its consumer, not only its numbers (#769 C2, 2026-10-15)
+The career forks generator prices every option and validates its types, but the text a player reads came
+from the plan's drafting language. In the Gondor pilot one option promised knockdown resistance against
+charges that Combat Mechanics decides before any resistance is read, two named Castar where the resource
+follows the player's kingdom, and one said "shields" where weapon parries count too.
+- **Why missed:** the balance gate checks magnitudes and types; nothing reads the words.
+- **Prevent:** before a kingdom's review table is approved, read each option's description against its
+  effect type's line in `CareerPerkConsumerMap.Describe` and the traps in `docs/features/career-system.md`
+  (forced and heavy-charge knockdowns, the kingdom-first resource, influence outside a kingdom).
+- **Source:** `docs/reviews/rca-career-gondor-pilot-2026-10-15.md` pattern.

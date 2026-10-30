@@ -984,6 +984,12 @@ def main(argv=None):
         p.error("Specify either --dry-run or --apply")
     if args.seed_only and not args.sync_ids:
         p.error("--seed-only is only valid with --sync-ids")
+    if args.seed_only and args.module == "TAOM_Map":
+        p.error("--seed-only has no TAOM_Map pass; use --module TAOM, Armory or all")
+    if args.sync_ids and args.module in ("Armory", "all"):
+        # Before the TAOM rows are written: a sync that reaches the Armory needs the install, and failing later
+        # would leave the TAOM files seeded by a run that reported an error.
+        ensure_exists(game_modules_root(), "the Bannerlord Modules folder")
     if args.max_entries is not None and args.max_entries < 0:
         p.error("--max-entries must be 0 or more")  # a negative slice would send all but one entry to the provider
 

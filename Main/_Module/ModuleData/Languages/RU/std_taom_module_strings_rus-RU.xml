@@ -1339,18 +1339,6 @@
 
     <string id="taom_career_grp_blademaster_of_ren_t3_b" text="Несломленный Мечелорд" />
 
-    <string id="taom_career_grp_captain_of_osgiliath_t1_a" text="Страж Восточного Берега" />
-
-    <string id="taom_career_grp_captain_of_osgiliath_t1_b" text="Хранитель Переправы через Андуин" />
-
-    <string id="taom_career_grp_captain_of_osgiliath_t2_a" text="Авангард Раммаса" />
-
-    <string id="taom_career_grp_captain_of_osgiliath_t2_b" text="Меч Последнего Моста" />
-
-    <string id="taom_career_grp_captain_of_osgiliath_t3_a" text="Воинство Фарамира" />
-
-    <string id="taom_career_grp_captain_of_osgiliath_t3_b" text="Владыка Купола Звёзд" />
-
     <string id="taom_career_grp_cave_troll_master_t1_a" text="Погонщик с Кнутом" />
 
     <string id="taom_career_grp_cave_troll_master_t1_b" text="Страж Входа в Пещеру" />
@@ -1567,18 +1555,6 @@
 
     <string id="taom_career_grp_ironguard_t3_b" text="Страж Аркенстона" />
 
-    <string id="taom_career_grp_knight_of_belfalas_t1_a" text="Копейщик Дол Амрота" />
-
-    <string id="taom_career_grp_knight_of_belfalas_t1_b" text="Страж Залива" />
-
-    <string id="taom_career_grp_knight_of_belfalas_t2_a" text="Всадник Серебряного Лебедя" />
-
-    <string id="taom_career_grp_knight_of_belfalas_t2_b" text="Щитовая Стена Имрахиля" />
-
-    <string id="taom_career_grp_knight_of_belfalas_t3_a" text="Рыцарь Лебединого Носа" />
-
-    <string id="taom_career_grp_knight_of_belfalas_t3_b" text="Натиск Дол Амрота" />
-
     <string id="taom_career_grp_lokhas_drus_marksman_t1_a" text="Залп Руна" />
 
     <string id="taom_career_grp_lokhas_drus_marksman_t1_b" text="Стойкий Лучник" />
@@ -1674,18 +1650,6 @@
     <string id="taom_career_grp_ram_rider_t3_a" text="Авангард Железностопа" />
 
     <string id="taom_career_grp_ram_rider_t3_b" text="Всадник Одинокой Горы" />
-
-    <string id="taom_career_grp_ranger_of_ithilien_t1_a" text="Охотник Итилиэнской Дороги" />
-
-    <string id="taom_career_grp_ranger_of_ithilien_t1_b" text="Дозорный Хеннет Аннуна" />
-
-    <string id="taom_career_grp_ranger_of_ithilien_t2_a" text="Разведчик Северного Итилиэна" />
-
-    <string id="taom_career_grp_ranger_of_ithilien_t2_b" text="Лучник Фарамира" />
-
-    <string id="taom_career_grp_ranger_of_ithilien_t3_a" text="Стрела Заповедного Озера" />
-
-    <string id="taom_career_grp_ranger_of_ithilien_t3_b" text="Тень Эмин Арнен" />
 
     <string id="taom_career_grp_rivendell_knight_t1_a" text="Атака Имладриса" />
 
@@ -5486,6 +5450,108 @@
     <string id="taom_career_retrain_confirm" text="Retrain" />
 
     <string id="taom_career_retrain_no_gold" text="You need {GOLD} gold to retrain." />
+
+    <string id="taom_career_effect_special" text="{VALUE} special" />
+
+    <string id="taom_career_effect_health" text="{VALUE} max health" />
+
+    <string id="taom_career_effect_damage" text="{VALUE} damage" />
+
+    <string id="taom_career_effect_resistance" text="{VALUE} resistance" />
+
+    <string id="taom_career_effect_armor_penetration" text="{VALUE} armor penetration" />
+
+    <string id="taom_career_effect_swing_speed" text="{VALUE} swing speed" />
+
+    <string id="taom_career_effect_movement_speed" text="{VALUE} movement speed" />
+
+    <string id="taom_career_effect_ammo" text="{VALUE} ammo" />
+
+    <string id="taom_career_effect_shrug_off" text="{VALUE} shrug off" />
+
+    <string id="taom_career_effect_stealth_bonus" text="{VALUE} stealth bonus" />
+
+    <string id="taom_career_effect_buff_duration" text="{VALUE} buff duration" />
+
+    <string id="taom_career_effect_mount_health" text="{VALUE} mount health" />
+
+    <string id="taom_career_effect_mount_charge_damage" text="{VALUE} mount charge damage" />
+
+    <string id="taom_career_effect_party_movement_speed" text="{VALUE} party speed" />
+
+    <string id="taom_career_effect_party_spotting_range" text="{VALUE} party spotting range" />
+
+    <string id="taom_career_effect_party_size" text="{VALUE} party size" />
+
+    <string id="taom_career_effect_companion_limit" text="{VALUE} companion limit" />
+
+    <string id="taom_career_effect_inventory_capacity" text="{VALUE} inventory capacity" />
+
+    <string id="taom_career_effect_troop_damage" text="{VALUE} troop damage" />
+
+    <string id="taom_career_effect_troop_resistance" text="{VALUE} troop resistance" />
+
+    <string id="taom_career_effect_troop_morale" text="{VALUE} troop morale" />
+
+    <string id="taom_career_effect_troop_wages" text="{VALUE} troop wages" />
+
+    <string id="taom_career_effect_troop_upgrade_cost" text="{VALUE} troop upgrade cost" />
+
+    <string id="taom_career_effect_troop_survival" text="{VALUE} troop survival" />
+
+    <string id="taom_career_effect_troop_fear_resistance" text="{VALUE} troop fear resistance" />
+
+    <string id="taom_career_effect_troop_knockdown_resistance" text="{VALUE} troop knockdown resistance" />
+
+    <string id="taom_career_effect_troop_crush_hold" text="{VALUE} troop crush hold" />
+
+    <string id="taom_career_effect_hero_healing" text="{VALUE} healing" />
+
+    <string id="taom_career_effect_renown_gain" text="{VALUE} battle renown gain" />
+
+    <string id="taom_career_effect_smithing_cost_reduction" text="{VALUE} smithing cost" />
+
+    <string id="taom_career_effect_special_resource_gain" text="{VALUE} resource gain" />
+
+    <string id="taom_career_effect_special_resource_upkeep_modifier" text="{VALUE} resource upkeep" />
+
+    <string id="taom_career_effect_special_resource_upgrade_cost_modifier" text="{VALUE} resource upgrade cost" />
+
+    <string id="taom_career_class_line_infantry" text="{EFFECT} for infantry" />
+
+    <string id="taom_career_class_line_ranged" text="{EFFECT} for ranged troops" />
+
+    <string id="taom_career_class_line_cavalry" text="{EFFECT} for cavalry" />
+
+    <string id="taom_career_class_line_infantry_ranged" text="{EFFECT} for infantry and ranged troops" />
+
+    <string id="taom_career_class_line_infantry_cavalry" text="{EFFECT} for infantry and cavalry" />
+
+    <string id="taom_career_class_line_ranged_cavalry" text="{EFFECT} for ranged troops and cavalry" />
+
+    <string id="taom_career_value_percent" text="{NUMBER}%" />
+
+    <string id="taom_career_value_flat" text="{NUMBER}" />
+
+    <string id="taom_career_effect_influence_gain" text="{VALUE} battle influence gain" />
+
+    <string id="taom_career_effect_recruit_cost" text="{VALUE} recruit cost" />
+
+    <string id="taom_career_effect_prisoner_conversion" text="{VALUE} prisoner conversion speed" />
+
+    <string id="taom_career_effect_food_consumption" text="{VALUE} food consumption" />
+
+    <string id="taom_career_effect_wound_recovery" text="{VALUE} troop wound recovery" />
+
+    <string id="taom_career_effect_daily_gold" text="{VALUE} gold per day" />
+
+    <string id="taom_career_effect_loot_gold" text="{VALUE} battle loot gold" />
+
+    <string id="taom_career_effect_raid_loot" text="{VALUE} raid loot" />
+
+    <string id="taom_career_effect_troop_training" text="{VALUE} experience per troop per day" />
+
+    <string id="taom_career_effect_trade_prices" text="{VALUE} trade penalty" />
 
     <string id="taom_war_blocked_alignment" text="These kingdoms stand on the same side of the War of the Ring." />
 

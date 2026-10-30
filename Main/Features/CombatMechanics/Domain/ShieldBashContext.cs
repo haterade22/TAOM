@@ -1,3 +1,5 @@
+using System;
+
 namespace TAOM.Features.CombatMechanics.Domain;
 
 // Boundary DTO for the shield-bash and kick knockdown decision (ADR-007). Built by CombatMechanicsHooks from the sealed
@@ -31,6 +33,10 @@ public readonly struct ShieldBashContext
     // non-finite or non-positive value as 1.
     public readonly float VictimAbilityResistanceFactor;
 
+    // The career TroopKnockdownResistance counter (#769 E10) as a scale on that factor, or null. The service calls it only
+    // once every gate has passed, because the call counts the troop for the mission-end [CareerPerks] summary.
+    public readonly Func<float, float>? VictimCareerResistanceScale;
+
     // The agent the player controls now (after a takeover, the soldier taken over).
     public readonly bool VictimIsPlayer;
 
@@ -49,7 +55,8 @@ public readonly struct ShieldBashContext
         int? victimRaceId,
         float victimAbilityResistanceFactor,
         bool victimIsPlayer,
-        float randomRoll)
+        float randomRoll,
+        Func<float, float>? victimCareerResistanceScale = null)
     {
         IsAlternativeAttack = isAlternativeAttack;
         IsHorseCharge = isHorseCharge;
@@ -63,5 +70,6 @@ public readonly struct ShieldBashContext
         VictimAbilityResistanceFactor = victimAbilityResistanceFactor;
         VictimIsPlayer = victimIsPlayer;
         RandomRoll = randomRoll;
+        VictimCareerResistanceScale = victimCareerResistanceScale;
     }
 }

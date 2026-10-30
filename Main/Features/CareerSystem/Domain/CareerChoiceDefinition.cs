@@ -9,7 +9,9 @@ public sealed class CareerChoiceDefinition
     public ChoiceType Type { get; }
     public string Description { get; }
     public string IconSprite { get; }
-    public PassiveEffect Passive { get; }
+    // Up to CareerConfigProvider.MaxPassivesPerChoice effects, in document order. Never null; empty when
+    // the choice grants no passive (a keystone, a mutation-only choice).
+    public IReadOnlyList<PassiveEffect> Passives { get; }
     public IReadOnlyList<MutationDefinition> Mutations { get; }
 
     public CareerChoiceDefinition(
@@ -18,7 +20,7 @@ public sealed class CareerChoiceDefinition
         ChoiceType type,
         string description,
         string iconSprite,
-        PassiveEffect passive,
+        IReadOnlyList<PassiveEffect> passives,
         IReadOnlyList<MutationDefinition> mutations)
     {
         Id = id;
@@ -26,7 +28,7 @@ public sealed class CareerChoiceDefinition
         Type = type;
         Description = description;
         IconSprite = iconSprite;
-        Passive = passive;
+        Passives = passives ?? new List<PassiveEffect>();
         Mutations = mutations ?? new List<MutationDefinition>();
     }
 }

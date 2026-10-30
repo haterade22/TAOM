@@ -1,6 +1,7 @@
 using System;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.DreadAura;
 using TAOM.Features.SignatureStrikes.Domain;
 using TaleWorlds.Core;
@@ -34,7 +35,7 @@ public sealed class SignatureStrikesMissionLogic : MissionLogic
         _service = IoC.Resolve<ISignatureStrikeService>();
         _roster = IoC.Resolve<ISignatureAgentRoster>();
         _logger = IoC.Resolve<IModLogger>();
-        _runner = new SignatureStrikeRunner(_service, IoC.Resolve<IDreadRegistry>(), _logger);
+        _runner = new SignatureStrikeRunner(_service, IoC.Resolve<IDreadRegistry>(), _logger, IoC.Resolve<ICareerAgentStatService>());
     }
 
     public override void OnCreated() => Reset();

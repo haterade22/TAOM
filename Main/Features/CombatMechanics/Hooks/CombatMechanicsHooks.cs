@@ -4,6 +4,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.CareerSystem.Abilities;
+using TAOM.Features.CareerSystem.Hooks;
 using TAOM.Features.CombatMechanics.Domain;
 using TAOM.Features.RaceAbilities.Hooks;
 
@@ -181,7 +182,10 @@ public sealed class CombatMechanicsHooks
             victimRaceId: GetRaceId(victimAgent),
             victimAbilityResistanceFactor: RaceAbilityHooks.KnockDownResistance(victimAgent, 1f),
             victimIsPlayer: victimAgent.IsMainAgent,
-            randomRoll: MBRandom.RandomFloat);
+            randomRoll: MBRandom.RandomFloat,
+            // The career TroopKnockdownResistance counter (#769 E10) reaches a bash or kick only here: Hammerhand never asks
+            // GetKnockDownResistance. The service applies the 1 + magnitude scale after its gates, so a declined bash is not counted.
+            victimCareerResistanceScale: factor => CareerTroopHooks.KnockDownResistance(_careerAgentStatService, victimAgent, factor));
     }
 
     internal static bool IsShieldClass(WeaponComponentData weapon)

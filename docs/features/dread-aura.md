@@ -188,6 +188,11 @@ arrives in the caller's buffer as a null entry.
 Allies are never candidates: `GetNearbyEnemyAgents` filters them out native-side. That is also why
 "a wraith's own orcs are unaffected" needs no explicit guard.
 
+**Career counter (#769 E10).** The pulse runner wraps the morale model's answer in
+`CareerTroopHooks.ScaleFearDrain(<career service>, target, ...)` (the stat service `DreadAuraMissionLogic` hands the runner), so a victim troop whose party leader is a player with a
+`TroopFearResistance` pip loses that fraction less morale (see [career-system.md](career-system.md)). It
+never touches the player or a hero, and it does not override the morale model, which also scales kill-morale gains.
+
 ## Mission types
 
 `DreadMissionGate.IsEligible` is an **allowlist**, re-read every tick:

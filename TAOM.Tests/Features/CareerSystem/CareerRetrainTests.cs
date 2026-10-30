@@ -30,7 +30,7 @@ public class CareerRetrainTests
 
     private static CareerChoiceDefinition Choice(string id, string groupId) => new CareerChoiceDefinition(
         id: id, groupId: groupId, type: ChoiceType.Passive, description: id,
-        iconSprite: "", passive: null, mutations: null);
+        iconSprite: "", passives: null, mutations: null);
 
     private static CareerDefinition Career(int treeVersion, params string[] groupIds) => new CareerDefinition(
         id: "ranger", displayName: "Ranger", description: "", portraitSprite: "",

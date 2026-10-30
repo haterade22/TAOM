@@ -24,7 +24,8 @@ internal sealed class SeasonedHostsModule : TaomFeatureModule
         GameModelDecl.Of<GenericXpModel, TaomGenericXpModel>(ModelTarget.Campaign,
             r => new TaomGenericXpModel(r.Resolve<SeasonedHostsService>(), r.Resolve<ISeasonedHostsAdapter>())),
         GameModelDecl.Of<PartyTrainingModel, TaomPartyTrainingModel>(ModelTarget.Campaign,
-            r => new TaomPartyTrainingModel(r.Resolve<SeasonedHostsService>(), r.Resolve<ISeasonedHostsAdapter>())),
+            r => new TaomPartyTrainingModel(r.Resolve<SeasonedHostsService>(), r.Resolve<ISeasonedHostsAdapter>(),
+                r.Resolve<TAOM.Features.CareerSystem.ICareerPassiveService>())),
         GameModelDecl.Of<CharacterDevelopmentModel, TaomCharacterDevelopmentModel>(ModelTarget.Campaign,
             r => new TaomCharacterDevelopmentModel(r.Resolve<SeasonedHostsService>())),
     };

@@ -1,0 +1,168 @@
+{
+  "kingdom": "Gondor",
+  "culture_ids": ["gondor", "empire_w"],
+  "careers": [
+    {
+      "id": "captain_of_osgiliath",
+      "archetype": "infantry",
+      "tree_version": 2,
+      "point_levels": [1, 5, 10, 15, 20, 25],
+      "root": {
+        "description": "+5% melee damage.",
+        "effects": [{"type": "Damage", "magnitude": 0.05, "attack_type_mask": "Melee"}]
+      },
+      "forks": [
+        {"slot": 1, "name": "Oath of the Crossing", "options": [
+          {"name": "Blade of the Ford", "description": "+15% melee damage.",
+           "effects": [{"type": "Damage", "magnitude": 0.15, "attack_type_mask": "Melee"}]},
+          {"name": "Word of the Captain", "description": "Your infantry deal 8% more damage.",
+           "effects": [{"type": "TroopDamage", "magnitude": 0.08, "troop_class": "Infantry"}]}
+        ]},
+        {"slot": 2, "name": "Steward's Ledger", "options": [
+          {"name": "Heir of the Faithful", "description": "+25% renown, and +25% influence while you serve a kingdom.",
+           "effects": [{"type": "RenownGain", "magnitude": 0.25}, {"type": "InfluenceGain", "magnitude": 0.25}]},
+          {"name": "Steward's Provision", "description": "Your elite troops cost no daily upkeep in your realm's special resource.",
+           "effects": [{"type": "SpecialResourceUpkeepModifier", "magnitude": -1.0}]}
+        ]},
+        {"slot": 3, "name": "Muster of the Fiefs", "options": [
+          {"name": "Companies of the Outlands", "description": "+50 party size.",
+           "effects": [{"type": "PartySize", "magnitude": 50}]},
+          {"name": "Coffers of the Steward", "description": "Double your realm's special resource from every source.",
+           "effects": [{"type": "SpecialResourceGain", "magnitude": 1.0}]}
+        ]},
+        {"slot": 4, "name": "Ward of the White Tower", "options": [
+          {"name": "Light of Mithrandir", "description": "Your troops lose 60% less morale to dread and terror.",
+           "effects": [{"type": "TroopFearResistance", "magnitude": 0.60}]},
+          {"name": "Locked Shields of Osgiliath", "description": "Your troops' blocks hold against a crush-through half the time.",
+           "effects": [{"type": "TroopCrushHold", "magnitude": 0.50}]},
+          {"name": "Spears of the Rammas", "description": "Your troops resist knockdown from blows and light charges 50% better.",
+           "effects": [{"type": "TroopKnockdownResistance", "magnitude": 0.50}]}
+        ]},
+        {"slot": 5, "name": "Tower Guard Drill", "options": [
+          {"name": "Veterans of the Citadel", "description": "Your infantry gain 15 experience each day.",
+           "effects": [{"type": "TroopTraining", "magnitude": 15, "troop_class": "Infantry"}]},
+          {"name": "Levies of Lossarnach", "description": "+20 party size, and recruits cost 30% less.",
+           "effects": [{"type": "PartySize", "magnitude": 20}, {"type": "RecruitCost", "magnitude": -0.30}]}
+        ]},
+        {"slot": 6, "name": "Endurance of Westernesse", "options": [
+          {"name": "Last upon the Bridge", "description": "You take 20% less damage.",
+           "effects": [{"type": "Resistance", "magnitude": 0.20}]},
+          {"name": "Guard of the Citadel", "description": "Your infantry take 12% less damage.",
+           "effects": [{"type": "TroopResistance", "magnitude": 0.12, "troop_class": "Infantry"}]},
+          {"name": "Horn of Gondor", "description": "Your Career Ability lasts 8 seconds longer and reaches 20 meters further.",
+           "vu": 5, "mutations": [
+             {"property": "Duration", "calculator": "flat", "value": 8, "operation": "Add"},
+             {"property": "Radius", "calculator": "flat", "value": 20, "operation": "Add"}]}
+        ]}
+      ]
+    },
+    {
+      "id": "ranger_of_ithilien",
+      "archetype": "ranged",
+      "tree_version": 2,
+      "point_levels": [1, 5, 10, 15, 20, 25],
+      "root": {
+        "description": "+5% ranged damage.",
+        "effects": [{"type": "Damage", "magnitude": 0.05, "attack_type_mask": "Ranged"}]
+      },
+      "forks": [
+        {"slot": 1, "name": "Oath of Henneth Annun", "options": [
+          {"name": "Arrow of the Ithil-wood", "description": "+15% ranged damage.",
+           "effects": [{"type": "Damage", "magnitude": 0.15, "attack_type_mask": "Ranged"}]},
+          {"name": "Captain's Volley", "description": "Your ranged troops deal 8% more damage.",
+           "effects": [{"type": "TroopDamage", "magnitude": 0.08, "troop_class": "Ranged"}]}
+        ]},
+        {"slot": 2, "name": "Steward's Ledger", "options": [
+          {"name": "Heir of the Faithful", "description": "+25% renown, and +25% influence while you serve a kingdom.",
+           "effects": [{"type": "RenownGain", "magnitude": 0.25}, {"type": "InfluenceGain", "magnitude": 0.25}]},
+          {"name": "Steward's Provision", "description": "Your elite troops cost no daily upkeep in your realm's special resource.",
+           "effects": [{"type": "SpecialResourceUpkeepModifier", "magnitude": -1.0}]}
+        ]},
+        {"slot": 3, "name": "Muster of the Fiefs", "options": [
+          {"name": "Companies of the Outlands", "description": "+50 party size.",
+           "effects": [{"type": "PartySize", "magnitude": 50}]},
+          {"name": "Coffers of the Steward", "description": "Double your realm's special resource from every source.",
+           "effects": [{"type": "SpecialResourceGain", "magnitude": 1.0}]}
+        ]},
+        {"slot": 4, "name": "Ward of the White Tower", "options": [
+          {"name": "Light of Mithrandir", "description": "Your troops lose 60% less morale to dread and terror.",
+           "effects": [{"type": "TroopFearResistance", "magnitude": 0.60}]},
+          {"name": "Locked Shields of Osgiliath", "description": "Your troops' blocks hold against a crush-through half the time.",
+           "effects": [{"type": "TroopCrushHold", "magnitude": 0.50}]},
+          {"name": "Spears of the Rammas", "description": "Your troops resist knockdown from blows and light charges 50% better.",
+           "effects": [{"type": "TroopKnockdownResistance", "magnitude": 0.50}]}
+        ]},
+        {"slot": 5, "name": "Watch on the Poros", "options": [
+          {"name": "Veterans of Henneth Annun", "description": "Your ranged troops gain 15 experience each day.",
+           "effects": [{"type": "TroopTraining", "magnitude": 15, "troop_class": "Ranged"}]},
+          {"name": "Levies of Lossarnach", "description": "+20 party size, and recruits cost 30% less.",
+           "effects": [{"type": "PartySize", "magnitude": 20}, {"type": "RecruitCost", "magnitude": -0.30}]}
+        ]},
+        {"slot": 6, "name": "Shadow of Ithilien", "options": [
+          {"name": "Unseen Archer", "description": "You take 20% less damage.",
+           "effects": [{"type": "Resistance", "magnitude": 0.20}]},
+          {"name": "Green-cloaked Wardens", "description": "Your ranged troops take 12% less damage.",
+           "effects": [{"type": "TroopResistance", "magnitude": 0.12, "troop_class": "Ranged"}]},
+          {"name": "Hidden Watch", "description": "Your Career Ability lasts 8 seconds longer and reaches 20 meters further.",
+           "vu": 5, "mutations": [
+             {"property": "Duration", "calculator": "flat", "value": 8, "operation": "Add"},
+             {"property": "Radius", "calculator": "flat", "value": 20, "operation": "Add"}]}
+        ]}
+      ]
+    },
+    {
+      "id": "knight_of_belfalas",
+      "archetype": "cavalry",
+      "tree_version": 2,
+      "point_levels": [1, 5, 10, 15, 20, 25],
+      "root": {
+        "description": "+5% melee damage.",
+        "effects": [{"type": "Damage", "magnitude": 0.05, "attack_type_mask": "Melee"}]
+      },
+      "forks": [
+        {"slot": 1, "name": "Oath of the Swan", "options": [
+          {"name": "Charge of the Swan-Knights", "description": "Your mount's charge deals 10% more damage.",
+           "effects": [{"type": "MountChargeDamage", "magnitude": 0.10}]},
+          {"name": "Banner of Dol Amroth", "description": "Your cavalry deal 8% more damage.",
+           "effects": [{"type": "TroopDamage", "magnitude": 0.08, "troop_class": "Cavalry"}]}
+        ]},
+        {"slot": 2, "name": "Steward's Ledger", "options": [
+          {"name": "Heir of the Faithful", "description": "+25% renown, and +25% influence while you serve a kingdom.",
+           "effects": [{"type": "RenownGain", "magnitude": 0.25}, {"type": "InfluenceGain", "magnitude": 0.25}]},
+          {"name": "Steward's Provision", "description": "Your elite troops cost no daily upkeep in your realm's special resource.",
+           "effects": [{"type": "SpecialResourceUpkeepModifier", "magnitude": -1.0}]}
+        ]},
+        {"slot": 3, "name": "Muster of the Fiefs", "options": [
+          {"name": "Companies of the Outlands", "description": "+50 party size.",
+           "effects": [{"type": "PartySize", "magnitude": 50}]},
+          {"name": "Coffers of the Steward", "description": "Double your realm's special resource from every source.",
+           "effects": [{"type": "SpecialResourceGain", "magnitude": 1.0}]}
+        ]},
+        {"slot": 4, "name": "Ward of the White Tower", "options": [
+          {"name": "Light of Mithrandir", "description": "Your troops lose 60% less morale to dread and terror.",
+           "effects": [{"type": "TroopFearResistance", "magnitude": 0.60}]},
+          {"name": "Locked Shields of Osgiliath", "description": "Your troops' blocks hold against a crush-through half the time.",
+           "effects": [{"type": "TroopCrushHold", "magnitude": 0.50}]},
+          {"name": "Spears of the Rammas", "description": "Your troops resist knockdown from blows and light charges 50% better.",
+           "effects": [{"type": "TroopKnockdownResistance", "magnitude": 0.50}]}
+        ]},
+        {"slot": 5, "name": "Stables of Dol Amroth", "options": [
+          {"name": "Veteran Swan-Knights", "description": "Your cavalry gain 15 experience each day.",
+           "effects": [{"type": "TroopTraining", "magnitude": 15, "troop_class": "Cavalry"}]},
+          {"name": "Levies of Lossarnach", "description": "+20 party size, and recruits cost 30% less.",
+           "effects": [{"type": "PartySize", "magnitude": 20}, {"type": "RecruitCost", "magnitude": -0.30}]}
+        ]},
+        {"slot": 6, "name": "The Silver Swan", "options": [
+          {"name": "Prince's Mail", "description": "You take 20% less damage.",
+           "effects": [{"type": "Resistance", "magnitude": 0.20}]},
+          {"name": "Swan Guard", "description": "Your cavalry take 12% less damage.",
+           "effects": [{"type": "TroopResistance", "magnitude": 0.12, "troop_class": "Cavalry"}]},
+          {"name": "Stampede of Belfalas", "description": "Your Career Ability lasts 8 seconds longer and reaches 20 meters further.",
+           "vu": 5, "mutations": [
+             {"property": "Duration", "calculator": "flat", "value": 8, "operation": "Add"},
+             {"property": "Radius", "calculator": "flat", "value": 20, "operation": "Add"}]}
+        ]}
+      ]
+    }
+  ]
+}

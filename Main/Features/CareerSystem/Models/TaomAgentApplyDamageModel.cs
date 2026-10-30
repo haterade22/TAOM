@@ -1,6 +1,7 @@
 using SandBox.GameComponents;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.ComponentInterfaces;
 using TAOM.Features.CareerSystem.Abilities;
@@ -24,12 +25,16 @@ public abstract class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
         _agentStatService = agentStatService;
     }
 
+    // For the derived model's own career hooks (the crush hold, #769 E10): it is handed the service its base holds.
+    protected ICareerAgentStatService AgentStatService => _agentStatService;
+
     public override float ApplyDamageAmplifications(in AttackInformation attackInformation, in AttackCollisionData collisionData, float baseDamage)
     {
         var baseResult = base.ApplyDamageAmplifications(in attackInformation, in collisionData, baseDamage);
         return _agentStatService.CalculateDamageAmplification(
             attackerHeroId: GetAttackerHeroId(in attackInformation),
             attackerTroopLeaderHeroId: GetAttackerTroopLeaderHeroId(in attackInformation),
+            attackerTroopClass: TroopClassMapper.FromCharacter(AttackerCharacter(in attackInformation)),
             hitMask: HitMask(in attackInformation, in collisionData),
             baseResult: baseResult);
     }
@@ -41,6 +46,7 @@ public abstract class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
             victimHeroId: GetVictimHeroId(in attackInformation),
             victimAgentIndex: GetVictimAgent(in attackInformation)?.Index,
             troopLeaderHeroId: GetVictimTroopLeaderHeroId(in attackInformation),
+            victimTroopClass: TroopClassMapper.FromCharacter(VictimCharacter(in attackInformation)),
             hitMask: HitMask(in attackInformation, in collisionData),
             baseResult: baseResult);
     }
@@ -73,6 +79,16 @@ public abstract class TaomAgentApplyDamageModel : SandboxAgentApplyDamageModel
     // private + static so they don't surface on the boundary.
     private static Agent GetVictimAgent(in AttackInformation info)
         => info.IsVictimAgentMount ? info.VictimAgent?.RiderAgent : info.VictimAgent;
+
+    // The character the troop class (#769 E9) is read from, taken the way the leader id is: off the
+    // AttackInformation snapshot, the RIDER's for a mount hit. TroopClassMapper.FromCharacter gives None for a
+    // hero (covered by Damage / Resistance), no agent or no character; such a troop still receives the
+    // All-class passives. The same rule the troop counters use (CareerTroopHooks).
+    private static BasicCharacterObject AttackerCharacter(in AttackInformation info)
+        => info.IsAttackerAgentMount ? info.AttackerRiderAgentCharacter : info.AttackerAgentCharacter;
+
+    private static BasicCharacterObject VictimCharacter(in AttackInformation info)
+        => info.IsVictimAgentMount ? info.VictimRiderAgentCharacter : info.VictimAgentCharacter;
 
     private static string GetAttackerHeroId(in AttackInformation info)
     {

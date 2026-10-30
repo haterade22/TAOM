@@ -46,10 +46,11 @@ public class ShieldBashKnockdownServiceTests
         int? victimRaceId = null,
         float victimAbilityResistanceFactor = 1f,
         bool victimIsPlayer = false,
-        float randomRoll = 0f)
+        float randomRoll = 0f,
+        System.Func<float, float>? victimCareerResistanceScale = null)
         => new ShieldBashContext(isAlternativeAttack, isHorseCharge, attackerWeaponIsNull, attackerWeaponIsShield,
             attackerIsHuman, victimIsImmune, attackerAthletics, victimAthletics, victimRaceId, victimAbilityResistanceFactor,
-            victimIsPlayer, randomRoll);
+            victimIsPlayer, randomRoll, victimCareerResistanceScale);
 
     // The chance is in percent; the roll is 0..1, so a roll of chance / 100 is exactly the boundary.
     private static float RollFor(float chancePercent) => chancePercent / 100f;
@@ -416,6 +417,44 @@ public class ShieldBashKnockdownServiceTests
         Assert.IsNull(_sut.Decide(WithRoll(kick, RollFor(5f))));
     }
 
+    // ---- the career knockdown counter (#769 E10) ----
+
+    // The scale runs only once every gate has passed, so the career counter it feeds never counts a bash Hammerhand ignores.
+    [TestMethod]
+    public void Decide_CareerScale_DividesTheChanceOfAnEligibleRoll()
+    {
+        _config.ShieldBash.MinChancePercent = 0f;
+        _config.ShieldBash.MaxChancePercent = 100f;
+        _sut = CreateSut();
+        var calls = 0;
+        System.Func<float, float> doubled = f => { calls++; return f * 2f; };
+
+        // 100 against 50 Athletics: a 50% chance, halved to 25% by the scale.
+        Assert.AreEqual(true, _sut.Decide(Context(randomRoll: RollFor(30f))));
+        Assert.IsNull(_sut.Decide(Context(randomRoll: RollFor(30f), victimCareerResistanceScale: doubled)));
+        Assert.AreEqual(true, _sut.Decide(Context(randomRoll: RollFor(24.9f), victimCareerResistanceScale: doubled)));
+        Assert.AreEqual(2, calls);
+    }
+
+    [TestMethod]
+    public void Decide_ToggleOff_NeverAsksTheCareerScale()
+    {
+        _settings.ShieldBashKnockdownEnabled.Returns(false);
+        var calls = 0;
+
+        Assert.IsNull(_sut.Decide(Context(victimCareerResistanceScale: f => { calls++; return f; })));
+        Assert.AreEqual(0, calls);
+    }
+
+    [TestMethod]
+    public void Decide_ImmuneVictim_NeverAsksTheCareerScale()
+    {
+        var calls = 0;
+
+        Assert.IsNull(_sut.Decide(Context(victimIsImmune: true, victimCareerResistanceScale: f => { calls++; return f; })));
+        Assert.AreEqual(0, calls);
+    }
+
     // The strict < already refuses a NaN roll; MBRandom.RandomFloat is finite, so this row only pins the polarity.
     [TestMethod]
     public void Decide_NaNRoll_ReturnsNull()
@@ -436,5 +475,5 @@ public class ShieldBashKnockdownServiceTests
     private static ShieldBashContext WithRoll(ShieldBashContext c, float roll)
         => new ShieldBashContext(c.IsAlternativeAttack, c.IsHorseCharge, c.AttackerWeaponIsNull, c.AttackerWeaponIsShield,
             c.AttackerIsHuman, c.VictimIsImmune, c.AttackerAthletics, c.VictimAthletics, c.VictimRaceId, c.VictimAbilityResistanceFactor,
-            c.VictimIsPlayer, roll);
+            c.VictimIsPlayer, roll, c.VictimCareerResistanceScale);
 }

@@ -44,6 +44,35 @@ public class TaomBattleRewardModel : DefaultBattleRewardModel
         return result;
     }
 
+    // Career InfluenceGain (#769 E11). Additive: vanilla's answer first (0 outside a kingdom, which the factor keeps), then
+    // the leader's factor, keyed owner-first like RenownGain because the two ship bundled. Callers (v1.5.5): only
+    // MapEvent.cs:1620 at the end of a battle, once per winning party that has a LeaderHero; no null-argument call.
+    public override ExplainedNumber CalculateInfluenceGain(
+        PartyBase winnerParty,
+        float influenceValueOfBattleForWinnerSide,
+        float contributionShareOfWinnerParty,
+        float influenceMultiplierForWinnerSide,
+        bool includeDescriptions)
+    {
+        var result = base.CalculateInfluenceGain(
+            winnerParty,
+            influenceValueOfBattleForWinnerSide,
+            contributionShareOfWinnerParty,
+            influenceMultiplierForWinnerSide,
+            includeDescriptions);
+        _careerPassives.ApplyFactor(CareerPassiveHero.ResolveId(winnerParty), ref result, PassiveEffectType.InfluenceGain);
+        return result;
+    }
+
+    // Career LootGold (#769 E11). Vanilla returns one share per winning party (contribution over the total); MapEvent pays
+    // each party plundered * share, to the party's LeaderHero, with no renormalisation (CalculatePlunderedAndLostGoldAmounts,
+    // v1.5.5 MapEvent.cs:1271-1278; the gold is minted, MapEventParty.CommitGoldChanges). So scaling a share scales that
+    // party's pay alone. Keyed on the winner's own LeaderHero, not owner-first: the gold goes to the LeaderHero, and an
+    // owner-first key would pay the player's bonus on a caravan he owns. Callers: only MapEvent.cs:1271, once per battle.
+    public override MBReadOnlyList<KeyValuePair<MapEventParty, float>> GetLootGoldChances(MBReadOnlyList<MapEventParty> winnerParties)
+        => new MBList<KeyValuePair<MapEventParty, float>>(CareerLootShares.Scale(
+            base.GetLootGoldChances(winnerParties), winner => winner.Party.LeaderHero?.StringId, _careerPassives));
+
     // Creature Bandits (#692, #694): a spider or a bandit troll is not a captive. MapEvent asks this before moving a
     // defeated troop to the winner's prisoners (v1.5.3 MapEvent.cs:1855), so neither reaches a roster to be ransomed
     // or recruited.

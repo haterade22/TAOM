@@ -142,6 +142,9 @@ public class SeasonedHostsWiringTests
     public void TheModelDeclarations_BuildTheXpAndTrainingModelsOverTheSharedService()
     {
         using var container = BuildContainer();
+        // The training model also takes the career passives (TroopTraining shares the one PartyTrainingModel slot); the
+        // career module registers that service in the real container.
+        container.RegisterInstance(Substitute.For<TAOM.Features.CareerSystem.ICareerPassiveService>());
         var models = new SeasonedHostsModule().GameModels;
 
         Assert.IsInstanceOfType(models.Single(m => m.SlotType == typeof(GenericXpModel)).Create(container), typeof(TaomGenericXpModel));

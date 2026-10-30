@@ -2,6 +2,8 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
+using TAOM.Features.CareerSystem;
+using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CulturalFeats.Models;
 
@@ -9,13 +11,16 @@ public class TaomClanFinanceModel : DefaultClanFinanceModel
 {
     private readonly ICulturalFeatsService _feats;
     private readonly TAOM.Features.Enlistment.Content.IEnlistmentWagePreview _wagePreview;
+    private readonly ICareerPassiveService _careerPassives;
 
     public TaomClanFinanceModel(
         ICulturalFeatsService feats,
-        TAOM.Features.Enlistment.Content.IEnlistmentWagePreview wagePreview)
+        TAOM.Features.Enlistment.Content.IEnlistmentWagePreview wagePreview,
+        ICareerPassiveService careerPassives)
     {
         _feats = feats;
         _wagePreview = wagePreview;
+        _careerPassives = careerPassives;
     }
 
     /// <summary>
@@ -40,6 +45,7 @@ public class TaomClanFinanceModel : DefaultClanFinanceModel
     {
         var result = base.CalculateClanGoldChange(clan, includeDescriptions, applyWithdrawals, includeDetails);
         AddServiceWageLine(clan, applyWithdrawals, ref result);
+        AddCareerDailyGold(clan, ref result);
         return result;
     }
 
@@ -63,8 +69,26 @@ public class TaomClanFinanceModel : DefaultClanFinanceModel
     {
         var result = base.CalculateClanIncome(clan, includeDescriptions, applyWithdrawals, includeDetails);
         AddServiceWageLine(clan, applyWithdrawals, ref result);
+        AddCareerDailyGold(clan, ref result);
         return result;
     }
+
+    /// <summary>
+    /// Career DailyGold (#769 E11): a flat gold per day for the clan leader, on BOTH projections, and unlike the
+    /// enlistment line ABOVE the <c>applyWithdrawals</c> guard on purpose. <c>ClanVariablesCampaignBehavior.DailyTickClan</c>
+    /// pays the player with <c>CalculateClanGoldChange(applyWithdrawals: true)</c> (v1.5.5 :413), so that call is the
+    /// payment; the income tile (<c>ClanManagementVM</c>) and the map-bar tooltip are projections of the same
+    /// number, and all three must carry the term or the tooltip stops matching the gold the clan leader receives each
+    /// day. The transfer itself is silent (<c>DailyTickClan</c> passes <c>disableNotification: true</c>), but for the
+    /// player clan it then shows "Daily Gold Change: {CHANGE}" (<c>dPD5zood</c>, v1.5.5 :427-432) with the same rounded
+    /// payment, so that message reads the paid total, DailyGold included. Called last, after
+    /// every factor the base put on the number (<c>ApplyFlat</c> divides out only the factors already there) and after
+    /// the base's wage withdrawals: vanilla budgets the wages from <c>clan.Gold</c> plus the change so far (:816, :828),
+    /// so on a day the clan cannot afford them the DailyGold shows in the number but does not cover that day's unpaid
+    /// wages. It touches every clan's tick but only a clan leader with a career has a magnitude.
+    /// </summary>
+    private void AddCareerDailyGold(Clan clan, ref ExplainedNumber result)
+        => _careerPassives.ApplyFlat(clan?.Leader?.StringId, ref result, PassiveEffectType.DailyGold);
 
     /// <summary>
     /// ONE definition of the display line, shared by both projections. Duplicating it is how the

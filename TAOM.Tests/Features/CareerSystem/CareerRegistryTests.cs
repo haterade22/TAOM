@@ -29,12 +29,12 @@ public class CareerRegistryTests
     private static readonly CareerChoiceDefinition RootChoice = new CareerChoiceDefinition(
         id: "wb_root", groupId: "", type: ChoiceType.Passive,
         description: "Root", iconSprite: "icon",
-        passive: new PassiveEffect(PassiveEffectType.TroopDamage, 0.05f),
+        passives: new[] { new PassiveEffect(PassiveEffectType.TroopDamage, 0.05f) },
         mutations: null);
 
     private static readonly CareerChoiceDefinition KeystoneChoice = new CareerChoiceDefinition(
         id: "wb_brut_key", groupId: "wb_brutality", type: ChoiceType.Keystone,
-        description: "Keystone", iconSprite: "icon", passive: null, mutations: null);
+        description: "Keystone", iconSprite: "icon", passives: null, mutations: null);
 
     private static readonly CareerChoiceGroupDefinition BrutalityGroup = new CareerChoiceGroupDefinition(
         id: "wb_brutality", careerId: "warboss", tier: 1,
@@ -445,7 +445,7 @@ public class CareerRegistryTests
 
     private static CareerChoiceDefinition ChoiceIn(string id, string groupId)
         => new CareerChoiceDefinition(id: id, groupId: groupId, type: ChoiceType.Passive,
-            description: "d", iconSprite: "i", passive: null, mutations: null);
+            description: "d", iconSprite: "i", passives: null, mutations: null);
 
     private static CareerRegistry RegistryOf(IModLogger logger, List<CareerDefinition> careers,
         List<CareerChoiceDefinition> choices)

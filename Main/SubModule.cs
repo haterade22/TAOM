@@ -1089,7 +1089,7 @@ public class SubModule : MBSubModuleBase
         // charges -1/-2 regardless. Registering here (OnGameStart) puts TAOM after SandBox's
         // DefaultPrisonerRecruitmentCalculationModel in the backwards model scan, so ours resolves.
         campaignStarter.AddModel(new TaomPrisonerRecruitmentCalculationModel(
-            IoC.Resolve<TAOM.Features.PrisonerRecruitment.IPrisonerRecruitmentMoraleService>()));
+            IoC.Resolve<TAOM.Features.PrisonerRecruitment.IPrisonerRecruitmentMoraleService>(), careerPassives));
 
         // NavalTravel — PARKED 2026-06-26: TAOM_Map's navmesh isn't set up to take advantage of naval
         // travel (no naval region navmesh → AI can't route at sea; #296/#120), so the feature is disabled
@@ -1189,7 +1189,7 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomPartyTroopUpgradeModel(culturalFeats, careerPassives, IoC.Resolve<ITroopCostService>()));
         var aiPartySize = IoC.Resolve<TAOM.Features.AiPartySize.IAiPartySizeService>();
         campaignStarter.AddModel(new TaomPartySizeModel(culturalFeats, careerPassives, IoC.Resolve<ITroopWeightService>(), aiPartySize, IoC.Resolve<IModLogger>(), eyeOfSauron));
-        campaignStarter.AddModel(new TaomFoodConsumptionModel(culturalFeats, aiPartySize));
+        campaignStarter.AddModel(new TaomFoodConsumptionModel(culturalFeats, aiPartySize, careerPassives));
         campaignStarter.AddModel(new TaomSettlementLoyaltyModel(culturalFeats, IoC.Resolve<IRevoltTuningConfigProvider>()));
         campaignStarter.AddModel(new TaomSettlementFoodModel(IoC.Resolve<ISettlementFoodService>(), IoC.Resolve<ISettlementFoodConfigProvider>()));
         campaignStarter.AddModel(new TaomSettlementEconomyModel(IoC.Resolve<ISettlementEconomyService>(), IoC.Resolve<ISettlementEconomyConfigProvider>()));
@@ -1198,7 +1198,8 @@ public class SubModule : MBSubModuleBase
         campaignStarter.AddModel(new TaomSmithingModel(culturalFeats, careerPassives));
         campaignStarter.AddModel(new TaomClanFinanceModel(
             culturalFeats,
-            IoC.Resolve<Features.Enlistment.Content.IEnlistmentWagePreview>()));
+            IoC.Resolve<Features.Enlistment.Content.IEnlistmentWagePreview>(),
+            careerPassives));
         campaignStarter.AddModel(new TaomRaidModel(culturalFeats, careerPassives));
         campaignStarter.AddModel(new TaomNotableSpawnModel(culturalFeats));
     }
@@ -1269,6 +1270,7 @@ public class SubModule : MBSubModuleBase
         var careerAgentStat = IoC.Resolve<Features.CareerSystem.Abilities.ICareerAgentStatService>();
         campaignStarter.AddModel(new TaomMapVisibilityModel(careerPassives, IoC.ResolveAll<TAOM.Core.Domain.IPartySpottingContributor>()));
         campaignStarter.AddModel(new TaomInventoryCapacityModel(careerPassives));
+        campaignStarter.AddModel(new TaomPartyTradeModel(careerPassives));
         var elephantAttackService = IoC.Resolve<Features.Elephant.IElephantAttackService>();
         var spiderAttackService = IoC.Resolve<ISpiderAttackService>();
         var mumakilAttackService = IoC.Resolve<Features.Mumakil.IMumakilAttackService>();

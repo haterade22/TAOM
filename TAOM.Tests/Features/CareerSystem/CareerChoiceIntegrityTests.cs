@@ -235,8 +235,9 @@ public class CareerChoiceIntegrityTests
     }
 
     // ── #769 shipped-data invariants, read through the real provider ──
-    // Vacuously true until a career ships a fork or point levels; that is intended. They fire the
-    // day content starts using the new schema without the rest of it.
+    // Live since the Gondor pilot (C2): three careers ship forks (max_picks > 0) and point levels, and
+    // the guards below fail if that data stops reaching the provider. They fire the day content uses
+    // the new schema without the rest of it.
 
     private static CareerConfigProvider RealProvider()
     {
@@ -275,16 +276,20 @@ public class CareerChoiceIntegrityTests
         var groups = provider.LoadChoiceGroups().ToDictionary(g => g.Id, StringComparer.OrdinalIgnoreCase);
 
         var offenders = new List<string>();
+        var careersWithForks = 0;
         foreach (var career in provider.LoadCareers())
         {
             var resolved = career.ChoiceGroupIds
                 .Select(id => groups.TryGetValue(id, out var g) ? g : null)
                 .Where(g => g != null)
                 .ToList();
+            if (resolved.Any(g => g!.MaxPicks > 0)) careersWithForks++;
             if (resolved.Any(g => g!.MaxPicks > 0) && resolved.Any(g => g!.MaxPicks == 0))
                 offenders.Add(career.Id);
         }
 
+        Assert.IsTrue(careersWithForks > 0,
+            "no shipped career has a group with max_picks > 0: MaxPicks may have stopped parsing, so the mix check is vacuous");
         Assert.AreEqual(0, offenders.Count,
             "Careers mixing fork groups (max_picks > 0) with unlimited groups: " + string.Join(", ", offenders));
     }

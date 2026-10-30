@@ -34,19 +34,19 @@ A PNG at `SpriteParts/ui_taom/SpecialResources/taom_gems_icon.png` becomes sprit
 
 ```
 GUI/
-├── Brushes/                          ← Brush XML definitions (colors, fonts, states)
+├── Brushes/                          ← Brush XML definitions (colors, fonts, states); CareerSystem.xml holds the career brushes
 ├── Fonts/                            ← Custom fonts
-├── Prefabs/                          ← Gauntlet XML UI layouts
+├── PreFabs/                          ← Gauntlet XML UI layouts
 │   └── CareerSystem/
-│       ├── CareerScreen.xml          ← Main career screen prefab
-│       └── AbilityHUD.xml            ← Battle HUD for active ability
+│       └── CareerScreen.xml          ← Main career screen prefab (the battle energy bar is injected into Native's AgentStatus prefab at runtime, no prefab of its own)
 ├── SpriteData/                       ← Compiled sprite sheets (auto-generated)
 │   └── FactionMap/                   ← ⚠ NOT sprites — loose PNGs, see the trap below
 ├── SpriteParts/                      ← Source PNGs (organized by category)
 │   ├── Config.xml                    ← Sprite compiler config
-│   └── ui_taom/                      ← TAOM's sprite category
-│       ├── CareerSystem/             ← Career UI sprites
-│       │   └── career_button_placeholder.png
+│   ├── ui_taom_career_system/        ← The career screen's own sprite category
+│   │   └── CareerSystem/             ← career_button_placeholder, career_point_pip(_lit), plus/minus icons, locked_gate_*, Portraits/, Abilities/
+│   └── ui_taom/                      ← TAOM's main sprite category
+│       ├── TAOM/Encyclopedia/        ← includes clan_diamond_mask.png, the career diamond's shape
 │       ├── MapBar/                   ← Map bar icons (existing vanilla overrides)
 │       ├── SpecialResources/         ← Special resource icons
 │       │   ├── taom_gems_icon.png    ← Erebor (gemstone wheel)
@@ -238,67 +238,84 @@ internal class MyPrefab : PrefabExtensionInsertPatch
 
 ### Prefab: `CareerScreen.xml`
 
-Expandable choice panels.
+The diamond grid of #388, not the earlier expandable pip panels. The prefab declares two visual definitions, `CareerHeaderSlide` and `CareerFooterSlide` (the title bar and the Done button slide in); there is no `ExtendablePanel`, and no prefab binds `IsExpanded`, `IsLocked` or `ExecuteToggleExpand` on the group VM.
 
-**Layout:**
+**Layout** (normal mode; one fixed-width 1720 column, centred):
 ```
-┌──────────────────────────────────────────┐
-│              Career (title)               │
-├────────────┬─────────────────────────────┤
-│            │  Tier 1: [group_a] [group_b]│
-│  Portrait  │  ─────────────────────────  │
-│  Name      │  Tier 2: [group_a] [group_b]│
-│  Desc      │  ─────────────────────────  │
-│  ───────   │  Tier 3: [group_a] [group_b]│
-│  Ability   │                             │
-│  Icon      │          Free Points: 5     │
-│  Effects   │                             │
-├────────────┴─────────────────────────────┤
-│                [Done]                     │
-└──────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                       Career (title)                          │
+├──────────────────────────────────────────────────────────────┤
+│ name, description, │ portrait │ ability icon, name, effects   │  header bar
+│ root perk line     │          │                               │
+├────────────────────────────────────────┬─────────────────────┤
+│ Tier 3  (Requires Level N)             │ Free Points: N      │
+│   group name        group name         │ Next point at lvl N │
+│   ◇ ◇ ◇ ◇ ◇         ◇ ◇ ◇ ◇ ◇          │ [Retrain (G gold)]  │
+│ Tier 2  (Requires Level N)             │ ─────────────────── │
+│   ...                                  │ Active Effects      │
+│ Tier 1                                 │   keystone lines    │
+│   ...                                  │   passive lines     │
+├────────────────────────────────────────┴─────────────────────┤
+│                           [Done]                              │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 **Key features:**
-- `VisualDefinition="ExtendablePanel"` — choice groups expand 80px→750px on hover
-- `@IsTaken` / `@IsFreeToTake` / `@IsUnavailable` — distinct pip art per state: taken draws the brighter **`career_point_pip_lit`** ring (whitened + glow halo) at full opacity; available/locked draw the hollow `career_point_pip` ring at a low/very-low alpha. (Pre-2026-06-19 all three shared the hollow ring at near-identical alpha, so an increased skill didn't visibly "light up" — see the worked example below.)
-- `@IsTaken` + `ExecuteToggleChoice`: the diamond is the click target; it takes an untaken choice and refunds a taken one (no +/- buttons); `@IsForkLocked` draws the dark red overlay and `@LockReasonText` fills the tooltip line
-- `CareerSystem\locked_chains` sprite overlay on locked tiers
-- `<Standard.Background />` and `<Standard.DialogCloseButtons />` for native look
+- Fixed width: 1330 for the tier rows, 20 gap, 340 for the right column, inside the 1720 container. Do not restore `StretchToParent` (see [career-system.md](career-system.md)).
+- Each choice is a `ButtonWidget` with `Command.Click="ExecuteToggleChoice"` holding a `TaomCareerDiamondWidget` (`IsTakenState="@IsTaken"`, `IsKeystoneState="@IsKeystone"`). Its children are 78px copies of the baked sprite `TAOM\Encyclopedia\clan_diamond_mask` (category `ui_taom`, 1000x1000), tinted per tier and state: `@IsUnavailable` (dim rim), `@IsForkLocked` (dark red `#6B2E2EFF`), `@IsFreeToTake` (mid rim), `DiamondGlow` (shown by the widget while `IsTakenState`), a 70px `DiamondCentre`, and three 34px icons (`IconLocked`, `IconFree`, `IconTaken`) bound to `@IconSprite`.
+- The tooltip is the `DiamondTooltip` child (`RenderLate`, shown while the cursor is inside the diamond's rect): `@Description`, `@EffectScopeBadge` gated on `@IsKeystone`, and `@LockReasonText` gated on `@HasLockReason`.
+- The pip strip is gone. `CareerSystem\career_point_pip` and `career_point_pip_lit` are still baked into the atlas, but no prefab draws them; the worked examples above ("Adding a New Sprite") are bake history. `CareerSystem\plus_sign_icon` and `minus_sign_icon` survive only as the `CareerSystem.PlusButton` and `CareerSystem.MinusButton` brushes, which no prefab uses either.
+- Locked tiers show a text label, not an overlay: `@Tier2RequirementText` and `@Tier3RequirementText` ("Requires Level N"), gated on `@Tier2Locked` and `@Tier3Locked`. Tier 1 has neither. `CareerSystem\locked_gate_*` are baked and unused, and no `locked_chains` sprite exists.
+- The right column's Retrain button is a `ButtonWidget` (`Brush="Popup.Done.Button.NineGrid"`) with `IsVisible="@ShowRetrain"`, `IsEnabled="@CanRetrain"` and `Command.Click="ExecuteRetrain"`, whose child `TextWidget` binds `@RetrainText`. `@NextPointText` shows under the points line when `@HasNextPoint`.
+- The Active Effects column binds `@ActiveEffectsLabel`, `{KeystoneEffectLines}` and `{PassiveEffectLines}`. It lists the taken keystones' descriptions and the passives of the root choice and of every stored choice, keystones included, summed per effect type and troop class by the rule `CareerPassiveService.RefreshCache` applies to the hero's choices (each stored id once, the root when it is not stored). It shows no `attack_type_mask`: `CareerScreenVM` keys its lines on effect type and troop class only, so a Melee pip and a Ranged pip of one type sum into one line, and a masked root reads `+5% damage` in the panel against `+5% melee damage.` in the header. The counts and the cases are in the "Active Effects panel" known gap in [career-system.md](career-system.md).
+- The header bar's left column ends with the root perk line: a `TextWidget` bound to `@RootPerkDescription`, gated on `@HasRootPerk`, in the `CareerSystem.Effects.Passive` brush at font size 17, with no alignment override, so it is centred like the description above it (the brush file reserves the gold `Keystone` brush for lines that change the ability). It is the career's always-held identity perk (the root choice's description), and it has no label because a label would be a new localization key. The bar is a fixed 185 px high. A text-metrics estimate from a review puts the tallest left column at about 120 px for the Latin and Cyrillic languages; Chinese, Japanese and Korean were not measured. The in-game look at height, alignment and colour is owed. `CareerScreenPrefabBindingTests` pins the binding and its `@HasRootPerk` gate.
+- Switch mode (`@IsSwitchMode`) swaps the middle area for the career picker: a `ScrollablePanel` over `{EligibleSwitchTargets}`, gated on `@IsBrowsingTargets`, with `@NoTargetsMessage` gated on `@HasNoSwitchTargets`.
+- `<Standard.Background />` and `<Standard.DialogCloseButtons />` (`Parameter.DoneButtonAction="ExecuteClose"`) for native look.
+- `CareerScreenPrefabBindingTests` (`RequiresGame`) checks that every `@Property` and `Command.*` in the prefab resolves on the VM of its scope.
 
 ### Binding Chain
 
 ```
 CareerScreenVM
 ├── @ScreenTitle, @DoneLbl, @CareerName, @CareerDescription
-├── @CareerPortraitSprite (career portrait image)
-├── @AbilityName, @AbilitySpriteName, @AbilityLabel
-├── @FreeCareerPointsText ("Free Points: 5")
-├── @Tier1/2/3Label, @Tier1/2/3Locked
-├── {AbilityEffects} → MBBindingList<CareerAbilityEffectVM>
+├── @HasCareer, @CareerPortraitSprite (CareerSystem\Portraits\<portrait_sprite>)
+├── @AbilityName, @AbilitySpriteName (CareerSystem\Abilities\<ability template id>), @HasAbilitySprite
+├── @FreeCareerPointsText ("Free Points: 5"), @NextPointText, @HasNextPoint
+├── @ShowRetrain, @CanRetrain, @RetrainText, ExecuteRetrain()
+├── @Tier1/2/3Label, @Tier2/3Locked, @Tier2/3RequirementText
+├── @ActiveEffectsLabel
+├── {KeystoneEffectLines}, {PassiveEffectLines}, {AbilityEffects} → MBBindingList<CareerAbilityEffectVM>
 │   └── @LineText
 ├── {ChoiceGroupsTier1/2/3} → MBBindingList<CareerChoiceGroupObjectVM>
 │   ├── @GroupName
 │   └── {Choices} → MBBindingList<CareerChoiceObjectVM>
-│       ├── @Description, @IconSprite, @IsKeystone
-│       ├── @IsTaken (gold icon), @IsFreeToTake (brown icon), @IsForkLocked, @LockReasonText
+│       ├── @Description, @IconSprite, @IsKeystone, @EffectScopeBadge
+│       ├── @IsTaken, @IsFreeToTake, @IsUnavailable, @IsForkLocked
+│       ├── @LockReasonText, @HasLockReason
 │       ├── ExecuteToggleChoice() (the diamond click)
 │       └── ChoiceId (non-binding, used by parent)
+├── @IsNormalMode, @IsSwitchMode, @SwitchModeSubtitle, @NoTargetsMessage
+├── @IsBrowsingTargets, @HasNoSwitchTargets
+├── {EligibleSwitchTargets} → MBBindingList<CareerSwitchTargetVM>
+│   └── @PortraitSprite, @Name, @Description, @AbilityName, @ChooseLabel, ExecuteChoose()
 └── ExecuteClose()
 ```
+
+`@IsForkLocked` is true only for an untaken choice refused with `ForkFull`; the other lock reasons dim the diamond through `@IsUnavailable` and speak through `@LockReasonText`. Exposed by the VMs but bound by no prefab: `AbilityLabel` and the int `FreeCareerPoints` on the screen VM, `Name`, `KeystoneIconSprite` and `HasKeystoneIcon` on the choice, and `IsExpanded`, `IsLocked`, `Tier` on the group.
 
 ### Career Button on Character Developer
 
 **Status:** Verified in-game (2026-04-14). Dark steel banner sprite with "Career" text overlay.
 
-Injected via `CareerButtonPrefab.cs` → `PrefabExtensionInsertPatch` on `CharacterDeveloper` prefab's `TopPanelParent`. Uses `Brush="CareerSystem.CareerButton"` (220x93) since #378. Visibility gated by `@HasCareer` from `CharacterDeveloperCareerMixin`.
+Injected via `CareerButtonPrefab.cs` → `PrefabExtensionInsertPatch` on `CharacterDeveloper` prefab's `TopPanelParent`. A 220x93 `ButtonWidget` (`Id="TaomCareerButton"`) with `Brush="CareerSystem.CareerButton"` (Default, Hovered, Pressed and Disabled `ColorFactor` styles over the sprite `CareerSystem\career_button_placeholder`, 1024x434 in the atlas); a bare `Sprite=` would have no press state. Visibility gated by `@HasCareer`. A red disc child (`BlankWhiteCircle`, `Color="#C43B2FFF"`) shows `@UnspentPointsText` through the `CareerSystem.Badge.Text` brush while `@HasUnspentPoints`. All three bindings come from `CharacterDeveloperCareerMixin`.
 
 **Opening flow:** `Patch27` Harmony postfix on `ViewModel.ExecuteCommand` catches `"ExecuteOpenCareerScreen"` (the button's only handler: the mixin has none, #971) → calls `charDevVM.ExecuteDone()` to close Character Developer first, and vanilla's close callback plays the click sound `event:/ui/default` → then `GauntletCareerScreen.OpenCareerScreen()` creates the `CareerScreenGameState` and pushes it. The `[GameStateScreen]` attribute on `GauntletCareerScreen` properly deactivates the map bar input layer.
 
 **Critical:** Must close CharacterDeveloper BEFORE pushing career state. Without `ExecuteDone()`, the map bar global layer continues ticking input with invalid context → `IndexOutOfRangeException`.
 
-### Ability HUD in Battle
+### Ability energy bar in Battle
 
-`AbilityHUD.xml` displayed via `CareerPerkMissionBehavior` on a `GauntletLayer("CareerAbilityHUD", 50)`. Shows charge percentage and ready state via `CareerAbilityHudVM`.
+The standalone `AbilityHUD.xml` panel, `CareerAbilityHudVM` and the `GauntletLayer("CareerAbilityHUD", 50)` were retired by #382. The replacement is `CareerEnergyBarPrefab`, a `PrefabExtensionInsertPatch` (`InsertType.Child`) into Native's `AgentStatus` prefab, fed by `MissionAgentStatusCareerMixin` (`[ViewModelMixin("Tick")]` on `MissionAgentStatusVM`) and `CareerEnergyBarStateMapper`. See [career-system.md](career-system.md).
 
 ## Special Resource Map Bar
 
@@ -336,11 +353,8 @@ The hover tooltip shows:
 
 | Sprite ID | Size | Count | Used By |
 |-----------|------|-------|---------|
-| `career_{id}_portrait` | 400x200 | 50 | CareerScreen left panel |
-| ~~`{career_id}_ability`~~ | 256x256 | **DONE 2026-07-07** — all 49 enabled careers baked (named effect-icon set; see career-system.md) | CareerScreen ability section + battle HUD |
-| `CareerSystem\locked_chains` | Full tier width | 1 | Tier lock overlay |
-| `CareerSystem\plus_sign_icon` | 50x50 | 1 | Choice group add button |
-| `CareerSystem\minus_sign_icon` | 50x50 | 1 | Choice group remove button |
+| `career_{id}_portrait` | 800x400 | 21 PNGs (`ls` of `SpriteParts/ui_taom_career_system/CareerSystem/Portraits`), used by 35 of the 70 careers because new-faction careers reuse portraits; 35 careers have none | CareerScreen header bar |
+| `{career_id}_ability` | 256x256 | 49 baked (named effect-icon set from 2026-07-07; see career-system.md); the 21 new-faction careers still need one | CareerScreen header bar ability icon |
 | `taom_{resource}_icon` | 45x45 | 8 remaining | Map bar resource icons |
 
 The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom/SpecialResources/`. The remaining 8 resources need icons generated (ComfyUI at `E:\ComfyUI_windows_portable_nvidia`).
@@ -350,14 +364,17 @@ The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom
 | File | Purpose |
 |------|---------|
 | `Main/_Module/GUI/PreFabs/CareerSystem/CareerScreen.xml` | Career screen layout |
-| `Main/_Module/GUI/PreFabs/CareerSystem/AbilityHUD.xml` | Battle ability HUD |
+| `Main/_Module/GUI/Brushes/CareerSystem.xml` | Career brushes (`CareerButton`, `Badge.Text`, `Effects.Title`, `Effects.Passive`, `Effects.Keystone`; `PlusButton` and `MinusButton` are unused) |
 | `Main/_Module/GUI/TAOMSpriteData.xml` | Sprite category declaration |
 | `Main/Features/CareerSystem/UI/GauntletCareerScreen.cs` | Screen creation + lifecycle |
 | `Main/Features/CareerSystem/UI/CareerScreenVM.cs` | Career screen ViewModel (root) |
-| `Main/Features/CareerSystem/UI/CareerChoiceGroupObjectVM.cs` | Choice group VM (expandable, hover/click) |
-| `Main/Features/CareerSystem/UI/CareerChoiceObjectVM.cs` | Individual choice VM (taken/free state) |
-| `Main/Features/CareerSystem/UI/CareerAbilityEffectVM.cs` | Ability effect line item VM |
-| `Main/Features/CareerSystem/UI/CareerAbilityHudVM.cs` | Battle HUD VM |
+| `Main/Features/CareerSystem/UI/CareerChoiceGroupObjectVM.cs` | Choice group VM (group name and its choices; its expand state is bound by no prefab) |
+| `Main/Features/CareerSystem/UI/CareerChoiceObjectVM.cs` | Individual choice VM (taken, free, unavailable, fork-locked state and the lock-reason line) |
+| `Client/Features/CareerSystem/UI/TaomCareerDiamondWidget.cs` | The diamond widget: glow, tooltip and keystone tint |
+| `Main/Features/CareerSystem/UI/CareerEffectDisplayMap.cs` | Diamond icon, label and Active Effects line format per effect type |
+| `Main/Features/CareerSystem/UI/CareerSwitchTargetVM.cs` | One card of the switch-mode career picker |
+| `Main/Features/CareerSystem/UI/CareerAbilityEffectVM.cs` | Ability effect and Active Effects line item VM |
+| `Client/Features/CareerSystem/UI/CareerEnergyBarPrefab.cs`, `MissionAgentStatusCareerMixin.cs` | Battle energy bar injected into Native's `AgentStatus` prefab |
 | `Client/Features/CareerSystem/UI/CharacterDeveloperCareerMixin.cs` | Mixin for career button on CharDev |
 | `Client/Features/CareerSystem/UI/CareerButtonPrefab.cs` | Prefab injection for career button |
 | `Client/Features/SpecialResources/UI/SpecialResourceMapBarMixin.cs` | Mixin for resource on map bar |
@@ -375,8 +392,8 @@ The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom
 4. **Run the sprite generator** (`SpriteSheetGenerator.exe` — see [the bake pipeline](#the-sprite-bake-pipeline)); a loose PNG alone renders blank in the player client. Then [verify bake + render](#verifying-a-sprite-bake--render--both-are-required).
 
 ### Add a career portrait
-1. Create PNG (400x200; resize first)
-2. Place at `GUI/SpriteParts/ui_taom/CareerSystem/career_{career_id}_portrait.png`
+1. Create PNG (800x400; resize first)
+2. Place at `GUI/SpriteParts/ui_taom_career_system/CareerSystem/Portraits/career_{career_id}_portrait.png`
 3. Set `portrait_sprite="career_{career_id}_portrait"` in `taom_careers.xml`
 4. **Run the sprite generator** and [verify](#verifying-a-sprite-bake--render--both-are-required) — same as above.
 
@@ -410,6 +427,8 @@ The 3 completed resource icons (gems, caster, marks) are in `SpriteParts/ui_taom
 <!-- backlinks-end -->
 ## Changelog
 
+- 2026-10-15 (#769, root and keystone passives on the screen): The Career Screen UI section now shows the root perk line in the header bar (`@RootPerkDescription`, `@HasRootPerk`) and says the Active Effects column sums the root choice and every stored choice, keystones included. The old known gap is gone. The in-game look at the new line is owed.
+- 2026-10-14 (#769): The Career Screen UI section now describes the diamond screen as built: no `ExtendablePanel` and no pip strip, the diamond click is `ExecuteToggleChoice`, `@IsForkLocked` and `@LockReasonText` carry the fork lock, the right column holds Free Points, the next point level, Retrain and Active Effects. Binding chain rewritten from the VMs, the career button is a brush, the battle HUD panel is the energy bar, and the Key Files and Sprites Needed tables were corrected. The Active Effects gaps (keystone and root passives absent; `MountHealth` and `InventoryCapacity` print nothing) are named.
 - 2026-07-07 — All 49 career ability icons baked (see career-system.md). Two empirical bake-pipeline findings: (1) **the CLI junction pack works but can be clobbered** — a repo→install deploy fired mid-verification and silently reverted the fresh manifest+atlas to the repo's stale copies (old mtimes preserved, looks like a revert); the fix is bake-then-`sync_sprite_bake.ps1` **in the same breath**, after which any deploy copies identical files. (2) **An editor pass may rebuild only the `_tex.tpac` without re-packing** — mtime the manifest/atlas/tpac trio after any bake: all three must be newer than the newest source PNG, and the tpac must postdate the atlas it compiles. A tpac compiled from a pre-repack atlas renders the old art, not blanks.
 - 2026-06-19 — Career-ability pips now visibly light up on point-take: new `career_point_pip_lit` ring sprite (brightened + glow halo) for the taken state, widened alpha gaps on the other states, baked + committed.
 - 2026-05-31 — Decompile-verified GUI sprite-bake pipeline documented end-to-end (`SpriteSheetGenerator.exe` inputs/outputs, no `pack0.tpac` for UI atlases, `_tex.tpac` is a separate downstream texture-compile); added "Verifying a sprite (bake + render)" and "Deploying a prefab/sprite change" sections plus the consolidated gotchas table.

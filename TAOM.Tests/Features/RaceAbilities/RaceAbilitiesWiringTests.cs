@@ -8,6 +8,7 @@ using TAOM.Composition;
 using TAOM.Core.Domain;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
+using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.RaceAbilities;
 using TAOM.Features.RaceAbilities.Hooks;
 using TAOM.Tests.Infrastructure;
@@ -93,6 +94,7 @@ public class RaceAbilitiesWiringTests
         container.RegisterInstance(Substitute.For<IPathService>());
         container.RegisterInstance(Substitute.For<IRaceManager>());
         container.RegisterInstance(Substitute.For<IModLogger>());
+        container.RegisterInstance(Substitute.For<ICareerAgentStatService>());
 
         new RaceAbilitiesModule().RegisterServices(container);
 

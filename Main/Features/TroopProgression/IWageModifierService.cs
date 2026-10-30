@@ -135,6 +135,10 @@ public readonly struct RecruitmentPerkInputs
     public readonly float SwordForBarterBonus;
     public readonly float SlickNegotiatorBonus;
 
+    /// <summary>The buyer's career RecruitCost passive (#769 E11), a signed factor (negative = cheaper). One more
+    /// buyer term in the same sum, so it rides under the 1-gold floor with the perk discounts.</summary>
+    public readonly float CareerRecruitCostFactor;
+
     public RecruitmentPerkInputs(
         bool hasBuyer,
         bool tierAtLeast2 = false,
@@ -149,7 +153,8 @@ public readonly struct RecruitmentPerkInputs
         float piercerBonus = 0f,
         float frugalBonus = 0f,
         float swordForBarterBonus = 0f,
-        float slickNegotiatorBonus = 0f)
+        float slickNegotiatorBonus = 0f,
+        float careerRecruitCostFactor = 0f)
     {
         HasBuyer = hasBuyer;
         TierAtLeast2 = tierAtLeast2;
@@ -165,6 +170,7 @@ public readonly struct RecruitmentPerkInputs
         FrugalBonus = frugalBonus;
         SwordForBarterBonus = swordForBarterBonus;
         SlickNegotiatorBonus = slickNegotiatorBonus;
+        CareerRecruitCostFactor = careerRecruitCostFactor;
     }
 
     public static RecruitmentPerkInputs None => new RecruitmentPerkInputs(hasBuyer: false);

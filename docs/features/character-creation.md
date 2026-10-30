@@ -122,7 +122,7 @@ starting character on vanilla's budget:
 
 | Source | Payload now | Why |
 |--------|-------------|-----|
-| **Career stage** (`career_menu.json`, 49 entries) | `focus/skill/attr = 0`, `skills`/`attribute` **cleared** | A 6th stage vanilla doesn't have. Career still picks specialization + starting equipment; it just grants no stat bonus. Clearing `skills`/`attribute` (not just zeroing the magnitudes) makes a selected career render the same line as "No specialization" (`0 unspent Focus/Attribute Point`) — without it the engine's `GetPositiveEffectText` shows a confusing `0 Skill Level … to <skills>` on the career menu **and** the final review screen. |
+| **Career stage** (`career_menu.json`, 70 entries) | `focus/skill/attr = 0`, `skills`/`attribute` **cleared** | A 6th stage vanilla doesn't have. Career still picks specialization + starting equipment; it just grants no stat bonus. Clearing `skills`/`attribute` (not just zeroing the magnitudes) makes a selected career render the same line as "No specialization" (`0 unspent Focus/Attribute Point`); without it the engine's `GetPositiveEffectText` shows a confusing `0 Skill Level … to <skills>` on the career menu **and** the final review screen. |
 | **Culture base** (`cultures.json` `focus_to_add` / `skill_level_to_add`, 18 entries) | `0 / 0` | An on-top add vanilla doesn't have. |
 
 Result: 5 total focus, 5 total attribute points — matching vanilla. **Concentration is

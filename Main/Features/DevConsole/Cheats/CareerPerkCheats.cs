@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.Party;
-using TaleWorlds.Core;
 using TaleWorlds.Library;
-using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem;
-using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.CareerSystem.Diagnostics;
-using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.DevConsole.Cheats;
 
@@ -33,20 +29,6 @@ public static class CareerPerkCheats
         + "Lists the player's career passives with their consumers, probes the campaign numbers that\n"
         + "carry a Career line, and in a battle reads the player agent's driven properties. Every line\n"
         + "is also written to the TAOM debug log as [CareerPerks].";
-
-    // The six kinded hits plus the two kindless ones (an Invalid DamageType with none of vanilla's
-    // blunt-by-rule conditions), so a kind-only pip's zero against a kindless hit is visible.
-    private static readonly AttackTypeMask[] HitMasks =
-    {
-        AttackTypeMask.Melee,
-        AttackTypeMask.Ranged,
-        AttackTypeMask.Melee | AttackTypeMask.Cut,
-        AttackTypeMask.Melee | AttackTypeMask.Pierce,
-        AttackTypeMask.Melee | AttackTypeMask.Blunt,
-        AttackTypeMask.Ranged | AttackTypeMask.Cut,
-        AttackTypeMask.Ranged | AttackTypeMask.Pierce,
-        AttackTypeMask.Ranged | AttackTypeMask.Blunt,
-    };
 
     [CommandLineFunctionality.CommandLineArgumentFunction("career_perks", "taom")]
     public static string CareerPerks(List<string> strings) =>
@@ -79,40 +61,11 @@ public static class CareerPerkCheats
             return snapshot;
         snapshot.CareerId = data.GetCareerStringId(hero.StringId);
 
-        var passives = IoC.Resolve<ICareerPassiveService>();
-        foreach (PassiveEffectType type in Enum.GetValues(typeof(PassiveEffectType)))
-        {
-            var magnitude = passives.GetPassiveMagnitude(hero.StringId, type);
-            if (magnitude == 0f) continue;
-            snapshot.Rows.Add(new CareerPerkRow(type, magnitude, MaskedBuckets(passives, hero.StringId, type)));
-        }
+        snapshot.Rows.AddRange(CareerPerkRows.Gather(IoC.Resolve<ICareerPassiveService>(), hero.StringId));
 
         GatherProbes(snapshot, hero);
-        snapshot.Mission = GatherMission(hero);
+        snapshot.Mission = CareerPerkMissionProbe.Gather(hero);
         return snapshot;
-    }
-
-    // Damage and Resistance are mask-gated: show the effective magnitude per hit kind, collapsed
-    // to one "All" entry when every kind reads the same.
-    private static List<(AttackTypeMask, float)>? MaskedBuckets(ICareerPassiveService passives, string heroId, PassiveEffectType type)
-    {
-        if (type != PassiveEffectType.Damage && type != PassiveEffectType.Resistance)
-            return null;
-
-        var buckets = new List<(AttackTypeMask, float)>(HitMasks.Length);
-        var allSame = true;
-        float first = float.NaN;
-        foreach (var hit in HitMasks)
-        {
-            var value = passives.GetMaskedMagnitude(heroId, type, hit);
-            if (float.IsNaN(first)) first = value;
-            else if (value != first) allSame = false;
-            buckets.Add((hit, value));
-        }
-
-        if (allSame)
-            return new List<(AttackTypeMask, float)> { (AttackTypeMask.All, first) };
-        return buckets;
     }
 
     private static void GatherProbes(CareerPerkSnapshot snapshot, Hero hero)
@@ -150,6 +103,9 @@ public static class CareerPerkCheats
         Probe(snapshot, "wages", () => models.PartyWageModel.GetTotalWage(party, party.MemberRoster, true));
         Probe(snapshot, "inventory capacity", () => models.InventoryCapacityModel.CalculateInventoryCapacity(party, party.IsCurrentlyAtSea, true));
         Probe(snapshot, "hero daily healing", () => models.PartyHealingModel.GetDailyHealingHpForHeroes(party.Party, false, true));
+        Probe(snapshot, "daily food change", () => party.FoodChangeExplained);
+        Probe(snapshot, "regulars daily healing", () => party.Party.HealingRateForMemberRegularsExplained);
+        Probe(snapshot, "clan daily gold change", () => models.ClanFinanceModel.CalculateClanGoldChange(Clan.PlayerClan, true));
         try
         {
             snapshot.Probes.Add($"companion limit {models.ClanTierModel.GetCompanionLimit(Clan.PlayerClan)}");
@@ -177,48 +133,5 @@ public static class CareerPerkCheats
         {
             snapshot.Probes.Add($"{label}: {ex.GetType().Name} {ex.Message}");
         }
-    }
-
-    private static CareerPerkMissionSnapshot? GatherMission(Hero hero)
-    {
-        var mission = Mission.Current;
-        if (mission == null)
-            return null;
-
-        var block = new CareerPerkMissionSnapshot();
-        var agent = mission.MainAgent;
-        if (agent == null || !agent.IsActive() || !CareerHeroIdentityGate.IsCareerHeroAgent(agent, hero))
-            return block;
-
-        block.PlayerAgentAlive = true;
-        var props = agent.AgentDrivenProperties;
-        if (props != null)
-        {
-            block.SwingSpeedMultiplier = props.SwingSpeedMultiplier;
-            block.MaxSpeedMultiplier = props.MaxSpeedMultiplier;
-            block.DamageMultiplierBonus = props.DamageMultiplierBonus;
-            block.ReadySpeedMultiplier = props.ThrustOrRangedReadySpeedMultiplier;
-            block.ArmorEncumbrance = props.ArmorEncumbrance;
-        }
-
-        var mount = agent.MountAgent;
-        if (mount != null && mount.AgentDrivenProperties != null)
-        {
-            block.HasMount = true;
-            block.MountChargeDamage = mount.AgentDrivenProperties.MountChargeDamage;
-            block.MountSpeed = mount.AgentDrivenProperties.MountSpeed;
-            block.MountHealthLimit = mount.HealthLimit;
-        }
-
-        for (var slot = EquipmentIndex.WeaponItemBeginSlot; slot < EquipmentIndex.NumAllWeaponSlots; slot++)
-        {
-            var weapon = agent.Equipment[slot];
-            if (weapon.IsEmpty || !weapon.IsAnyConsumable()) continue;
-            block.AmmoSlots.Add($"slot {(int)slot} {weapon.Item?.StringId} {weapon.Amount}/{weapon.ModifiedMaxAmount}");
-        }
-
-        var buff = CareerAbilityBuffTracker.GetBuff(hero.StringId);
-        block.LiveBuff = buff == null ? null : ActiveBuffsFormat.Describe(buff);
-        return block;
     }
 }

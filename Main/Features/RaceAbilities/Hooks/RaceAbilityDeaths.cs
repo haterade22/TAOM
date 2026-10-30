@@ -1,5 +1,6 @@
 using System;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.CareerSystem.Hooks;
 using TAOM.Features.DreadAura.Hooks;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -99,7 +100,7 @@ public sealed class RaceAbilityDeaths
         {
             if (!DreadAgentGate.CanAffect(victim))
                 continue;
-            var drain = moraleModel.CalculateMoraleChangeToCharacter(victim, morale);
+            var drain = CareerTroopHooks.ScaleFearDrain(_runtime.CareerStats, victim, moraleModel.CalculateMoraleChangeToCharacter(victim, morale));
             if (!(drain > 0f))
                 continue;
             victim.ChangeMorale(-drain);

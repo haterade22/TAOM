@@ -1,3 +1,4 @@
+using System;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.CareerSystem.Domain;
 
@@ -74,7 +75,9 @@ public interface ICareerAgentStatService
     /// per-hit lines) so the next mission logs again. Called from the mission behavior's OnEndMission and
     /// again from its OnRemoveBehavior, so it runs on every way a mission can end (#613). Before clearing, writes
     /// the mission's per-hit summary at INFO: one line per hit combination with its hit count, multiplier range and
-    /// damage totals. The second call after a normal end finds nothing to write.</summary>
+    /// damage totals. Also writes and clears the troop counter summary (one line per leader and class, #769 E10);
+    /// the set of hooks that already reported a fault is never cleared, so each hook reports once per session.
+    /// The second call after a normal end finds nothing to write.</summary>
     void ResetDiagnostics();
 
     /// <summary>
@@ -82,19 +85,50 @@ public interface ICareerAgentStatService
     /// career passive and the attacker's <c>Damage</c> passive for the hit's delivery type
     /// (<paramref name="hitMask"/> — a melee or ranged Damage pip only fires on the matching hit),
     /// plus the <c>TroopDamage</c> passive of the attacker's party leader when the attacker is a
-    /// non-hero troop (the offensive mirror of <c>TroopResistance</c>, not mask-gated).
-    /// <paramref name="attackerHeroId"/> and <paramref name="attackerTroopLeaderHeroId"/> are
-    /// mutually exclusive — the boundary returns null for the latter when the attacker is a hero.
+    /// non-hero troop (the offensive mirror of <c>TroopResistance</c>), honouring that passive's
+    /// attack_type_mask against <paramref name="hitMask"/> and its troop_class against
+    /// <paramref name="attackerTroopClass"/> (#769 E9; None for a troop with no class, which still gets
+    /// the All-class passives). <paramref name="attackerHeroId"/> and <paramref name="attackerTroopLeaderHeroId"/>
+    /// are mutually exclusive — the boundary returns null for the latter when the attacker is a hero.
     /// </summary>
-    float CalculateDamageAmplification(string? attackerHeroId, string? attackerTroopLeaderHeroId, AttackTypeMask hitMask, float baseResult);
+    float CalculateDamageAmplification(string? attackerHeroId, string? attackerTroopLeaderHeroId, TroopClassMask attackerTroopClass, AttackTypeMask hitMask, float baseResult);
 
     /// <summary>
     /// Returns the post-reduction damage value. Applies the victim's Resistance career passive
     /// for the hit's delivery type (<paramref name="hitMask"/>) + self-buff DamageReductionBonus,
-    /// the <c>TroopResistance</c> passive of the victim's party leader (for non-hero troops), and
+    /// the <c>TroopResistance</c> passive of the victim's party leader (for non-hero troops, matched on
+    /// the hit's attack_type_mask and on <paramref name="victimTroopClass"/>, #769 E9), and
     /// any AoE ally-buff DamageReductionBonus that matches <paramref name="victimAgentIndex"/>.
     /// </summary>
-    float CalculateDamageReduction(string? victimHeroId, int? victimAgentIndex, string? troopLeaderHeroId, AttackTypeMask hitMask, float baseResult);
+    float CalculateDamageReduction(string? victimHeroId, int? victimAgentIndex, string? troopLeaderHeroId, TroopClassMask victimTroopClass, AttackTypeMask hitMask, float baseResult);
+
+    /// <summary>
+    /// #769 E10: the enemy's fear drain against a troop of <paramref name="troopClass"/> led by
+    /// <paramref name="leaderHeroId"/>, shrunk by that leader's TroopFearResistance (a magnitude of 1 or more
+    /// drains nothing). Unchanged with no leader, no positive magnitude, or a drain that is not finite.
+    /// </summary>
+    float ScaleTroopFear(string? leaderHeroId, TroopClassMask troopClass, float drain);
+
+    /// <summary>
+    /// #769 E10: the knockdown resistance of a troop led by <paramref name="leaderHeroId"/>, times
+    /// (1 + TroopKnockdownResistance). The engine multiplies the result into HealthLimit, and vanilla returns
+    /// float.MaxValue for a non-human, so a result that is not finite comes back as the input.
+    /// </summary>
+    float ScaleTroopKnockdownResistance(string? leaderHeroId, TroopClassMask troopClass, float resistance);
+
+    /// <summary>
+    /// #769 E10: whether a troop led by <paramref name="leaderHeroId"/> holds against a crush-through,
+    /// at the chance TroopCrushHold gives (clamped 0 to 1). <paramref name="roll"/> is drawn only when the
+    /// troop has the perk, so a soldier without it never advances the random stream.
+    /// </summary>
+    bool HoldsAgainstCrush(string? leaderHeroId, TroopClassMask troopClass, Func<float> roll);
+
+    /// <summary>
+    /// #769 E10: a troop-counter hook (<c>CareerTroopHooks</c>) caught an exception and handed its input back.
+    /// Logs the first fault of each <paramref name="hook"/> once, so a counter that has gone inert after a
+    /// refactor or an engine bump leaves a line in the log instead of silence. Never throws.
+    /// </summary>
+    void ReportHookFault(string hook, Exception ex);
 
     /// <summary>
     /// Returns true if the victim hero has a non-zero ShrugOff career passive.

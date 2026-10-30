@@ -3,6 +3,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
 using TAOM.Features.CareerSystem.Abilities;
+using TAOM.Features.CareerSystem.Hooks;
 using TAOM.Features.CombatMechanics;
 using TAOM.Features.CombatMechanics.Hooks;
 using TAOM.Features.CreatureSiegeRole.Hooks;
@@ -71,8 +72,13 @@ public class TaomAgentStatCalculateModel : SandboxAgentStatCalculateModel
 
     // Race Abilities: a live ability's knockdown, knock-back and dismount resistance. The engine floors a
     // soldier when the hit beats HealthLimit x (resistance - penetration) (MissionCombatMechanicsHelper).
+    // The player's career counter (#769 E10) raises it last, for the leader's own troops. The engine's weapon, charge
+    // and dismount knockdown checks all read this; Hammerhand's bashes and kicks get the counter through
+    // CombatMechanicsHooks.BuildShieldBashContext instead. TAOM's forced knockdowns never do (Sauron's overhead slam, the
+    // elephant-like creature attacks: elephant, mumakil trample and tusk swing, war ram, great elk, Animalia elk and
+    // moose; the troll brute-force ring), and the heavy-charge Branch A ignores it.
     public override float GetKnockDownResistance(Agent agent, StrikeType strikeType = StrikeType.Invalid)
-        => RaceAbilityHooks.KnockDownResistance(agent, base.GetKnockDownResistance(agent, strikeType));
+        => CareerTroopHooks.KnockDownResistance(_agentStatService, agent, RaceAbilityHooks.KnockDownResistance(agent, base.GetKnockDownResistance(agent, strikeType)));
 
     public override float GetKnockBackResistance(Agent agent)
         => RaceAbilityHooks.KnockBackResistance(agent, base.GetKnockBackResistance(agent));

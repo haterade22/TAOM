@@ -1345,3 +1345,12 @@ method, a one-caller clamp class), and kept a petition rollback whose only calle
 - **Prevent:** after deleting a member, grep every value it read and every member that fed it, and delete what
   has no reader left; before keeping code "for safety", trace its callers and show one that reaches it.
 - **Source:** [rca-enlistment-dead-surface-2026-10-26.md](../rca-enlistment-dead-surface-2026-10-26.md) F1, F4.
+### A summary states an edge contract once, and the test pins that sentence (#769 E11, 2026-10-15)
+`ICareerPassiveService.ScaleByPassive` said in one summary that a scale "not a finite number at or above zero"
+comes back untouched and that a cut of "-1 or less floors at zero". The code and its test followed the first
+sentence; two callers and two docs followed the second. So a TradePrices cut of -1.0 removed the trade penalty
+and -1.01 restored it in full.
+- **Why missed:** each sentence read correctly alone; nothing compared them, and the test pinned only one.
+- **Prevent:** state each edge case (zero, negative, past a limit, NaN) once in the summary, and give it one
+  test named for that sentence. A monotonic clamp is the default for a scale; a cliff needs a written reason.
+- **Source:** `docs/reviews/rca-career-e11-2026-10-15.md` finding 1.

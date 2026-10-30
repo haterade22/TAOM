@@ -102,8 +102,8 @@ public class CareerChoiceObjectVM : ViewModel
         {
             if (IsKeystone && !string.IsNullOrEmpty(_keystoneIconSprite))
                 return _keystoneIconSprite;
-            if (_choice.Passive != null)
-                return CareerEffectDisplayMap.IconFor(_choice.Passive.EffectType);
+            if (_choice.Passives.Count > 0)
+                return CareerEffectDisplayMap.IconFor(_choice.Passives[0].EffectType);
             return _keystoneIconSprite ?? "";
         }
     }
@@ -126,7 +126,7 @@ public class CareerChoiceObjectVM : ViewModel
     //
     // PassiveEffect choices flow through CareerPassiveService and are read by GameModel overrides
     // on every relevant calculation -- always active. Mutation (Keystone) choices are applied to
-    // a cloned AbilityTemplateData inside ExecuteAbilityEffect on V-press; the clone is discarded
+    // a cloned AbilityTemplateData inside AbilityEffectExecutor.Execute on V-press; the clone is discarded
     // once the buff window expires. See docs/features/career-system.md.
     //
     // The companion EffectScopeTooltip property was removed (Codex Review #32 + deep-review):

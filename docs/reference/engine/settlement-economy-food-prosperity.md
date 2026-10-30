@@ -146,11 +146,12 @@ which **excludes garrisons, militia, caravans, villagers, bandits**. Consequence
   size is therefore `production * 20`, which is why a village-poor high-prosperity town cannot hold
   troops. Field parties are hit far harder, losing 25%/day (:144-145).
 
-  **TAOM does not modify this path, despite appearances.** `TaomPartyHealingModel` (BattleBalance) is
-  in the GameModel registry against `DefaultPartyHealingModel`, so it looks like a TAOM-owned
-  mechanic. It overrides only `GetSurvivalChance` and `GetDailyHealingHpForHeroes`; the regulars
-  path that carries the starvation kill is untouched, so the 10%/day above is pure vanilla behaviour
-  (verified 2026-09-06).
+  **TAOM leaves the starvation kill vanilla.** `TaomPartyHealingModel` (BattleBalance) is in the
+  GameModel registry against `DefaultPartyHealingModel`. Since #769 E11 it also overrides the
+  regulars path (`GetDailyHealingForRegulars`), but only to apply the career `WoundRecovery` factor
+  to a positive healing value on the non-prisoner call: the starving party's negative value passes
+  through untouched, so the 10%/day above is still pure vanilla behaviour (it was verified before
+  the override existed, 2026-09-06; the override adds nothing to a value at or below zero).
 - **The cultural food-consumption feats do not touch garrisons.** `TaomFoodConsumptionModel` extends
   `DefaultMobilePartyFoodConsumptionModel`; its Goblin +20% / Dol Guldur +10% etc. apply only to
   **mobile field parties**. A "ravenous orc garrison eating its town dry" is not a real mechanic.

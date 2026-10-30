@@ -61,7 +61,10 @@ same file.
 ```
 TaomPrisonerRecruitmentCalculationModel : DefaultPrisonerRecruitmentCalculationModel
         │  extracts ids, single delegate, base fall-through (gamemodels.md rule 4)
-        ▼
+        │
+        ├──► GetConformityChangePerHour  ──►  ICareerPassiveService.ApplyFactor(PrisonerConversion)   (#769 E11)
+        │
+        ▼  (the morale-cost override)
 IPrisonerRecruitmentMoraleService  ──►  IAlignmentService (Execution feature)
         │                                    └─ execution/alignment.json (shared, 8 other consumers)
         └──►  IPrisonerRecruitmentSettingsProvider ──► TaomSettings (MCM)
@@ -133,7 +136,7 @@ untouched. "Captured from a hideout" and "same side, no morale cost" legitimatel
 |---|---|
 | `Main/Features/PrisonerRecruitment/PrisonerRecruitmentMoraleService.cs` | The two rules + side resolution (pure, 100% tested) |
 | `Main/Features/PrisonerRecruitment/PrisonerRecruitmentSettingsProvider.cs` | MCM over compiled defaults |
-| `Main/Features/PrisonerRecruitment/Models/TaomPrisonerRecruitmentCalculationModel.cs` | The GameModel boundary |
+| `Main/Features/PrisonerRecruitment/Models/TaomPrisonerRecruitmentCalculationModel.cs` | The GameModel boundary; also `GetConformityChangePerHour` with the recruiting leader's career `PrisonerConversion` factor (#769 E11) |
 | `Main/Features/PrisonerRecruitment/PrisonerRecruitmentIoC.cs` | Two `Reuse.Singleton` registrations |
 | `Main/_Module/ModuleData/execution/alignment.json` | Shared side data (**owned by the Execution feature — not modified by this one**) |
 | `TAOM.Tests/Features/PrisonerRecruitment/` | 31 service tests + 17 shipped-data pins |

@@ -1629,7 +1629,7 @@ The projection promised income on exactly the days none arrived. When you add a 
 existing action, copy the action's guard, do not re-derive one from the same intent. Same class:
 `TaomClanFinanceModel` overrode `CalculateClanGoldChange` but not `CalculateClanIncome`, which calls
 `CalculateClanIncomeInternal` directly and never routes through it, so the clan screen's Income tile
-and the expected-change tooltip beside it disagreed. Both now share `AddServiceWageLine`.
+and the expected-change tooltip beside it disagreed. Both now share `AddServiceWageLine`. The career `DailyGold` count (#769 E11) is added by a second shared helper, `AddCareerDailyGold`, and deliberately sits OUTSIDE that guard: the wage is paid by TAOM's own code, the career gold by the daily clan tick through `applyWithdrawals: true`.
 
 Full RCA with a "why missed" for each finding:
 [`docs/reviews/rca-enlistment-field-fixes-2026-08-11.md`](../reviews/rca-enlistment-field-fixes-2026-08-11.md).

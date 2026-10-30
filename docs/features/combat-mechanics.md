@@ -4,7 +4,7 @@
 
 Seven battle-feel mechanics layered onto the single `AgentApplyDamageModel` slot: skill-based crush-through-block, monster auto-crush-through, orc shield-crush-through, creature cleave, creature stagger immunity (unstoppable), weight-driven charge knockdown, and config-granted shield penetration, plus a per-race combat-modifier table (dwarf/elf/orc flavor) that feeds several of them. All config/MCM-toggleable; master toggle off restores exactly the pre-feature behavior. An eighth mechanic since #610 rides the `AgentStatCalculateModel` slot instead: the per-culture cavalry charge multiplier (`IChargeDamageService` + `MountChargeDamageApplier`, applied from both the campaign and the Custom Battle stat model). A ninth, Hammerhand (#895), rides the damage model again: a shield bash or kick can knock a man down (see [Hammerhand](#hammerhand-shield-bash-and-kick-knockdown-895)).
 
-**Custom Battle (#788):** the seven mechanics, Hammerhand (#895), the per-race table (its `baseHitPoints` row excepted: Custom Battle reads health from the Monster's `hit_points`) and the horse charge penetration slider run in Custom Battle too, through `TaomCustomBattleDamageModel` (see [Custom Battle](#custom-battle)). Before #788 they were campaign-only: the campaign model derives from SandBox's, which cannot run outside a campaign, and Custom Battle's only TAOM damage model carried the creature, race-ability and siege hooks and none of these. The career passives and the Refuge reduction stay campaign-only (they read heroes and parties).
+**Custom Battle (#788):** the seven mechanics, Hammerhand (#895), the per-race table (its `baseHitPoints` row excepted: Custom Battle reads health from the Monster's `hit_points`) and the horse charge penetration slider run in Custom Battle too, through `TaomCustomBattleDamageModel` (see [Custom Battle](#custom-battle)). Before #788 they were campaign-only: the campaign model derives from SandBox's, which cannot run outside a campaign, and Custom Battle's only TAOM damage model carried the creature, race-ability and siege hooks and none of these. The career passives, the career crush hold and the Refuge reduction stay campaign-only (they read heroes and parties).
 
 **Design notes:** mechanics specified as behavioral facts and implemented in TAOM's own architecture (no external code). The weight-driven charge knockdown and the race-modifier table are TAOM-original designs.
 
@@ -29,7 +29,7 @@ Thin model → `CombatMechanicsHooks` → five pure services (ADR-002/007; gamem
 
 | Override | Service | Mechanic |
 |---|---|---|
-| `DecideCrushedThrough` | `CrushThroughService` | race-ability verdict first (Stand Fast holds, Berserk forces; [race-abilities.md](race-abilities.md)) → monster auto-CTB → orc shield-CTB → skill CTB curve; `?? base` keeps the vanilla 58f path |
+| `DecideCrushedThrough` | `CrushThroughService` | race-ability verdict first (Stand Fast holds, Berserk forces; [race-abilities.md](race-abilities.md)) → monster auto-CTB → orc shield-CTB → skill CTB curve; `?? base` keeps the vanilla 58f path; campaign model only, the whole verdict then passes through `CareerTroopHooks.ApplyCrushHold` (#769 E10): a crush-through on a defending troop whose leader holds the `TroopCrushHold` pip can become a hold, and a hold is never turned into a crush |
 | `ApplyDamageAmplifications` | `RaceAbilityHooks` | a live race ability's melee or ranged damage, after the career amplification the parent model applies |
 | `CalculateRemainingMomentum` | `CreatureCombatService` | cleave momentum 0.3× for listed creatures (default zeroes momentum for ordinary weapons) |
 | `DecideWeaponCollisionReaction` | `CreatureCombatService` | force `SlicedThrough` — prevents chain-termination on Bounced/Stuck branches (shield block, axe <50% HP, shrug-off, wrong bone) |
@@ -49,7 +49,7 @@ Shared infrastructure: `RaceCombatModifiersResolver` (lazy race-key validation v
 
 Custom Battle (and the editor's test battle) installs the engine's `CustomAgentApplyDamageModel` on a `BasicGameStarter`; other game types that build one, such as the naval Custom Battle, install other models (see below). The campaign model derives from `SandboxAgentApplyDamageModel`, and registering a SandBox-derived model there would throw on the first mounted hit: `ApplyDamageReductions` reads `DefaultSkillEffects.MountedWeaponDamagePenalty`, which resolves through `Campaign.Current` (`SandboxAgentApplyDamageModel.cs:641-644`), null outside a campaign. So Custom Battle gets a twin, `TaomCustomBattleDamageModel : CustomAgentApplyDamageModel` (#788), hand-wired in `SubModule.RegisterCustomBattleModels` with `basicStarter.AddModel<AgentApplyDamageModel>`. It takes `CombatMechanicsHooks` and the two optional Signature Strikes services, resolved the way the campaign registration resolves them, and overrides the same 13 methods as the campaign model, each `base` plus the same hook in the same order (`CustomBattleDamageModelTests` compares the IL call order of the two, method by method). No feature module declares an `AgentApplyDamageModel` for Custom Battle: the module step runs after `RegisterCustomBattleModels`, the last model added wins, and a module fault latches for the session, so a module-declared twin would shadow this one or vanish. The old `TaomCustomBattleCreatureDamageModel` (declared by `CreatureBanditsModule` since #692, carrying only the creature bandit, race-ability and siege hooks) is gone; its hooks are in the twin.
 
-**Campaign-only by design:** the career damage passives (`TaomAgentApplyDamageModel` reads `HeroObject` and party leaders, and Custom Battle has no heroes or careers) and the Refuge reduction (reads the defender's party). The MCM toggles and sliders are global settings, so they apply in Custom Battle too; the race table depends on face-gen races, not on a campaign.
+**Campaign-only by design:** the career damage passives (`TaomAgentApplyDamageModel` reads `HeroObject` and party leaders, and Custom Battle has no heroes or careers), the career crush hold (`CareerTroopHooks.ApplyCrushHold`, which `CustomBattleDamageModelTests.CampaignOnly` lists) and the Refuge reduction (reads the defender's party). The MCM toggles and sliders are global settings, so they apply in Custom Battle too; the race table depends on face-gen races, not on a campaign.
 
 **Where the Custom Battle base answers differently from SandBox's**, so the same TAOM delegate lands on a different number:
 
@@ -63,7 +63,7 @@ Custom Battle (and the editor's test battle) installs the engine's `CustomAgentA
 | `CalculateRemainingMomentum`, `DecideWeaponCollisionReaction`, `GetHorseChargePenetration` | the engine's default momentum, `MissionCombatMechanicsHelper`'s reaction, 0.4 | the same | none: the cleave, slice-through and charge-penetration delegates behave as in the campaign. (`DecidePassiveAttackCollisionReaction` does differ between the bases, Bounced against a 5% chance of reaction 0 plus the Skewer perk on a fatal mounted hit, but TAOM overrides neither) |
 | `ApplyDamageReductions` | banner reductions for any character, and a naval-battle rule: minus 15% for an AI archer's arrow or bolt | banner and perk and trait reductions, only for a `CharacterObject` victim, and, for a mounted attacker not using a crossbow, the mounted-weapon riding penalty (the line that throws outside a campaign) | the creature bandit and race-ability reductions ride after either base; the campaign's mounted-attacker penalty is absent in Custom Battle |
 
-Charge knockdown reads the victim's knockdown resistance through `MissionGameModels.Current.AgentStatCalculateModel`, which in Custom Battle is `TaomCustomBattleAgentStatCalculateModel` over the Custom Battle base. The two stat models use the same formula (0.4 + 0.001 x Athletics, +0.1 mounted, +0.15 against a thrust; `CustomBattleAgentStatCalculateModel.cs:134-151` against `SandboxAgentStatCalculateModel.cs:437-455`, whose skill effect is 0.4 base and 0.001 per point), so there is no gap to measure. TAOM's synthetic creature blows (the warg, spider, elephant, mumakil, war ram, elk and troll brute-force behaviours register a pre-computed blow through `CustomAttacksUtils` into `Mission.RegisterBlow` and `Agent.HandleBlow`) ask no damage-model method in either mode, and the twin does not touch them. `NavalCustomGame` also builds a `BasicGameStarter` and installs `NavalDLCCustomAgentApplyDamageModel`, which the twin would replace; TAOM declares the Naval DLC incompatible, so this is moot unless that changes.
+Charge knockdown reads the victim's knockdown resistance through `MissionGameModels.Current.AgentStatCalculateModel`, which in Custom Battle is `TaomCustomBattleAgentStatCalculateModel` over the Custom Battle base. The two stat models use the same formula (0.4 + 0.001 x Athletics, +0.1 mounted, +0.15 against a thrust; `CustomBattleAgentStatCalculateModel.cs:134-151` against `SandboxAgentStatCalculateModel.cs:437-455`, whose skill effect is 0.4 base and 0.001 per point), so there is no gap to measure. In a campaign, `TaomAgentStatCalculateModel.GetKnockDownResistance` ends with the career knockdown counter (`CareerTroopHooks.KnockDownResistance`, `TroopKnockdownResistance`, #769 E10), so the engine's weapon, charge and dismount knockdown checks all read it, and Hammerhand, which never asks that method, takes the counter's `1 + m` as its victim resistance factor (`CombatMechanicsHooks.BuildShieldBashContext`); TAOM's forced knockdowns (Sauron's overhead slam, the struck foe and the ring, while the Nine's strikes never knock down; the elephant-like creature attacks: elephant, mumakil trample and tusk swing, war ram, great elk, Animalia elk and moose; the troll brute-force ring) set the flag without reading resistance and ignore it, and the heavy-charge Branch A ignores the resistance. TAOM's synthetic creature blows (the warg, spider, elephant, mumakil, war ram, elk and troll brute-force behaviours register a pre-computed blow through `CustomAttacksUtils` into `Mission.RegisterBlow` and `Agent.HandleBlow`) ask no damage-model method in either mode, and the twin does not touch them. `NavalCustomGame` also builds a `BasicGameStarter` and installs `NavalDLCCustomAgentApplyDamageModel`, which the twin would replace; TAOM declares the Naval DLC incompatible, so this is moot unless that changes.
 
 **Baselines that move:** the Custom Battle A/B measurements (culture doctrine, see [culture-doctrine.md](culture-doctrine.md)) and the Signature Strikes smoke ([signature-strikes.md](signature-strikes.md)) both run in Custom Battle. With #788 the crush-through, cleave, unstoppable, stagger, charge knockdown and Signature Strikes knockdown rules are live there, so any earlier Custom Battle result is a pre-#788 baseline: re-run it before comparing. The same holds for the Race Abilities Custom Battle runs ([race-abilities.md](race-abilities.md), "How to verify in game" and the 2026-10-04 test): test 1 now mixes the berserkers' forced crush-through with the orc shield crush-through, so only the `crush forced` counter isolates the ability.
 
@@ -115,12 +115,17 @@ nothing at range.
 
 `GetDefendCollisionResults` is an engine callback marked `[MBCallback(null, true)]` (multi-thread callable,
 v1.5.4), and native calls it from inside the parallel melee sweep, so `DecideCrushedThrough` may run off the
-main thread. The whole crush path (race-ability verdict, `CrushThroughService`, settings and race lookups) holds
-no TAOM state after construction and logs nothing per call; keep it that way (the thread table in
+main thread. The whole crush path (race-ability verdict, `CrushThroughService`, settings and race lookups) writes
+only the race-ability telemetry (`RaceAbilityTelemetry.Add`, `Interlocked`) and, from the career hold, the troop counter tally and the hook fault set under a lock; it logs nothing per call but a first hook fault; keep it that way (the thread table in
 `.claude/rules/harmony-patches.md`). It is not read-only: `CombatMechanicsHooks` draws `MBRandom.RandomFloat`
 (`Game.Current.RandomGenerator`, unsynchronized) for the skill roll on this multi-threaded callback. That is the
-campaign model's long-standing behaviour and, since #788, Custom Battle's too; the consequence of concurrent
-draws is unverified.
+campaign model's long-standing behaviour and, since #788, Custom Battle's too. Two concurrent draws corrupt the
+generator's XorShift state (reproduced against the installed v1.5.5 DLL, 2026-10-15); how often native runs two
+crush checks at once is unverified, and moving this draw to a locked generator is a follow-up. The campaign
+model's career hold at the end of the chain (`CareerTroopHooks.ApplyCrushHold`, #769 E10) draws its own
+`System.Random` under its own lock, never `MBRandom`, and only when the verdict is a crush-through and the
+defending troop's leader holds a `TroopCrushHold` pip for its class. On a hold it also counts the hold in the stat service's
+troop counter tally under a lock, and a first fault logs once; those, with the race-ability telemetry, are the only TAOM writes on this path.
 
 **Existing players keep their own MCM value.** MCM merges over JSON per read
 (`CombatMechanicsSettingsProvider.ShieldPenetrationEnabled`), so a profile that saved "Shield Penetration" as on stays on.
@@ -210,7 +215,9 @@ so the weapon-knockdown rule never says yes, and a kick has no weapon at all.
    means no resistance, so the man always falls, as in `ChargeKnockdownService`, while the clamped chance is above 0 (with
    `minChancePercent` 0 and no lead, 0 divided by 0 is NaN and nobody falls).
 5. divided by a live race ability's knockdown resistance factor (`RaceAbilityHooks.KnockDownResistance(victim, 1f)`: 1 with no
-   ability, 2 for +100%). A non-finite or non-positive factor counts as 1.
+   ability, 2 for +100%), first scaled by the career `TroopKnockdownResistance` counter of the victim's party leader, class
+   filtered (`1 + m`, #769 E10; the service applies it only here, after the gates above, so a declined bash is not counted).
+   A non-finite or non-positive factor counts as 1.
 6. times `kickChanceFactor` (0.5) when the attacker's hand is empty (a kick).
 7. times `playerVictimChanceFactor` (0.5) when the victim is the agent the player controls now (after a takeover, the soldier
    taken over).
@@ -324,7 +331,7 @@ MCM: "Combat Mechanics" group (GroupOrder 24), 18 members as of 2026-10-20: the 
 
 ## Dependencies
 
-`IRaceManager` (race validation), `ICareerAgentStatService` (inherited career passives; since #611 also the mount-side career bonuses on the stat model, beside the culture multiplier), `IPathService`/`IModLogger`, `FiniteFloatValidator`/`SettingClamp`, `Monster.Weight` + `RelativeSpeedLimitForCharge` from monsters.xml (Native + LOTRLOME; the warg Monster moved into LOTRLOME on 2026-08-28).
+`IRaceManager` (race validation), `ICareerAgentStatService` (inherited career passives; since #611 also the mount-side career bonuses on the stat model, beside the culture multiplier; since #769 E10 also the troop crush hold, `CareerTroopHooks.ApplyCrushHold`, campaign model only, and the knockdown counter on the stat model), `IPathService`/`IModLogger`, `FiniteFloatValidator`/`SettingClamp`, `Monster.Weight` + `RelativeSpeedLimitForCharge` from monsters.xml (Native + LOTRLOME; the warg Monster moved into LOTRLOME on 2026-08-28).
 
 ## Tests
 

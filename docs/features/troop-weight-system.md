@@ -436,17 +436,20 @@ weight, unreachable while `DefaultPartySizeLimitModel`'s leaderless floor is 20 
   renders before the model has run for that party shows the deflated limit for one frame.
   `DisplayLimit` deliberately never amplifies that fallback.
 
-### The elite tax is one of three contributors to the same `ExplainedNumber`
+### The elite tax is one of six contributors to the same `ExplainedNumber`
 
 `TaomPartySizeModel.GetPartyMemberSizeLimit`
-([`Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs:33-56`](../../Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs))
-layers three TAOM modifiers onto the single `ExplainedNumber` vanilla hands back, in this order:
+([`Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs:45-95`](../../Main/Features/CulturalFeats/Models/TaomPartySizeModel.cs))
+layers six TAOM modifiers onto the single `ExplainedNumber` vanilla hands back, in this order:
 
-| # | Line | Call | How it lands |
-|---|------|------|--------------|
-| 1 | `:40` | `ICulturalFeatsService.ApplyPartySizeFeats` (culture party-size feat) | `AddFactor`, a percentage |
-| 2 | `:44` | `ICareerPassiveService.ApplyFlat(…, PassiveEffectType.PartySize)` (career passive) | flat `Add`, authored as a body count |
-| 3 | `:51` | `ITroopWeightService.ApplyPartySizeWeightPenalty` (this feature) | result-frame subtraction of the weight surplus |
+| # | Call | How it lands |
+|---|------|--------------|
+| 1 | `ICulturalFeatsService.ApplyPartySizeFeats` (culture party-size feat) | `AddFactor`, a percentage |
+| 2 | `IAiPartySizeService.ApplyAiLordScaling` | multiplier then flat bonus |
+| 3 | `IAiPartySizeService.ApplyCaravanScaling` | result-frame flat bonus for caravans |
+| 4 | `ICareerPassiveService.ApplyFlat(party.LeaderHero…, PassiveEffectType.PartySize)` (career passive) | result-frame add authored as a body count, after the last `AddFactor` (#768) |
+| 5 | `AiPartySizeService.AddResultFrameBonus` with the Eye of Sauron host bonus | result-frame add for the hunter's host |
+| 6 | `ITroopWeightService.ApplyPartySizeWeightPenalty` (this feature) | result-frame subtraction of the weight surplus |
 
 So the elite tax **competes** with a culture bonus on the same number, and the two can cancel. On a
 Mordor, Isengard, Dol Guldur or Gundabad party the weight-2.0 uruks, wargs and black guards can make

@@ -52,13 +52,18 @@ public static class PassiveEffectConsumers
                                                //   TWO consumers on purpose (#395) — different systems, not a
                                                //   double-count. Battle was the missing one for 105 pips.
 
+        // ── Troop counters (#769 E10): CareerTroopHooks -> ICareerAgentStatService, leader's non-hero troops ──
+        PassiveEffectType.TroopFearResistance,     // the four fear drains (Dread Aura, signature strikes, race ability deaths + auras)
+        PassiveEffectType.TroopKnockdownResistance, // TaomAgentStatCalculateModel.GetKnockDownResistance (the engine's weapon, charge and dismount checks) and Hammerhand's bashes and kicks (CombatMechanicsHooks.BuildShieldBashContext); not TAOM's forced knockdowns
+        PassiveEffectType.TroopCrushHold,          // TaomCombatMechanicsModel.DecideCrushedThrough (after every other verdict)
+
         // ── Party / campaign GameModels ──
         PassiveEffectType.Health,              // TaomCharacterStatsModel.MaxHitpoints (flat add)
         PassiveEffectType.PartyMovementSpeed,  // TaomPartySpeedModel
         PassiveEffectType.PartySpottingRange,  // TaomMapVisibilityModel.GetPartySpottingRange
         PassiveEffectType.StealthBonus,        // TaomMapVisibilityModel.GetPartySpottingRatioForMainPartySeeingRange:
                                                //   READ BY THE WRONG HOOK (#614). That method is the player spotting
-                                               //   others; the player's party is never its argument, so the 49 pips
+                                               //   others; the player's party is never its argument, so the 52 pips
                                                //   are phantoms in practice. Kept here so the shipped-XML gate stays
                                                //   green until the replan; the fourth instance of the blind spot above.
         PassiveEffectType.PartySize,           // TaomPartySizeModel
@@ -72,13 +77,63 @@ public static class PassiveEffectConsumers
         PassiveEffectType.RenownGain,    // TaomBattleRewardModel
         PassiveEffectType.SmithingCostReduction, // TaomSmithingModel
 
+        // ── Campaign consumers (#769 E11): one GameModel override each ──
+        PassiveEffectType.InfluenceGain,       // TaomBattleRewardModel.CalculateInfluenceGain (a factor; 0 outside a kingdom stays 0)
+        PassiveEffectType.RecruitCost,         // TaomPartyWageModel.GetTroopRecruitmentCost, summed in WageModifierService before the 1-gold floor
+        PassiveEffectType.PrisonerConversion,  // TaomPrisonerRecruitmentCalculationModel.GetConformityChangePerHour
+        PassiveEffectType.FoodConsumption,     // TaomFoodConsumptionModel.CalculateDailyFoodConsumptionf (the number is negative)
+        PassiveEffectType.WoundRecovery,       // TaomPartyHealingModel.GetDailyHealingForRegulars (the leader's party; positive values, non-prisoner call only)
+        PassiveEffectType.DailyGold,           // TaomClanFinanceModel.CalculateClanGoldChange + CalculateClanIncome (a count, ApplyFlat)
+        PassiveEffectType.LootGold,            // TaomBattleRewardModel.GetLootGoldChances (the winner's own share, not renormalised)
+        PassiveEffectType.RaidLoot,            // TaomRaidModel.GetRaidLootMultiplier (village gold, drawn items at 0.5 x, village goods, common loot at 0.25 x)
+        PassiveEffectType.TroopTraining,       // TaomPartyTrainingModel.GetEffectiveDailyExperience (a count per troop, class-filtered)
+        PassiveEffectType.TradePrices,         // TaomPartyTradeModel.GetTradePenaltyFactor (the raw penalty, both directions)
+
         // ── Special resources (SpecialResourceService) ──
         PassiveEffectType.SpecialResourceGain,
         PassiveEffectType.SpecialResourceUpkeepModifier,
         PassiveEffectType.SpecialResourceUpgradeCostModifier,
     };
 
+    // The types whose consumer passes the hit's troop class (#769 E9, E10, E11), so a troop_class attribute means
+    // something on them: CalculateDamageAmplification / CalculateDamageReduction resolve the struck or
+    // striking agent's class and read GetTroopMagnitude, the three troop counters resolve the victim's, and
+    // TaomPartyTrainingModel resolves the class of the roster element it is asked about (TroopTraining).
+    // On any other type the attribute is ignored with a load warning, because honouring it would pretend to
+    // restrict a pip that cannot be restricted.
+    private static readonly HashSet<PassiveEffectType> ClassFilteredTypes = new HashSet<PassiveEffectType>
+    {
+        PassiveEffectType.TroopDamage,
+        PassiveEffectType.TroopResistance,
+        PassiveEffectType.TroopFearResistance,
+        PassiveEffectType.TroopKnockdownResistance,
+        PassiveEffectType.TroopCrushHold,
+        PassiveEffectType.TroopTraining,
+    };
+
+    // The types whose consumer passes the hit (#613, #769 E9), so an attack_type_mask means something on
+    // them: the hero's Damage and Resistance and the army-wide TroopDamage and TroopResistance are all read
+    // per blow with the blow's mask. The three troop counters read no hit (a fear drain, a knockdown test and
+    // a crush have none), so a mask on them, or on any other type, is ignored with a load warning: honouring
+    // it would show a restriction the runtime never applies. Not the same set as ClassFiltered: the counters
+    // are class-filtered and not mask-gated, the hero pair mask-gated and not class-filtered.
+    private static readonly HashSet<PassiveEffectType> MaskGatedTypes = new HashSet<PassiveEffectType>
+    {
+        PassiveEffectType.Damage,
+        PassiveEffectType.Resistance,
+        PassiveEffectType.TroopDamage,
+        PassiveEffectType.TroopResistance,
+    };
+
     public static bool IsConsumed(PassiveEffectType type) => Consumed.Contains(type);
+
+    public static bool IsClassFiltered(PassiveEffectType type) => ClassFilteredTypes.Contains(type);
+
+    public static IEnumerable<PassiveEffectType> ClassFiltered => ClassFilteredTypes;
+
+    public static bool IsMaskGated(PassiveEffectType type) => MaskGatedTypes.Contains(type);
+
+    public static IEnumerable<PassiveEffectType> MaskGated => MaskGatedTypes;
 
     public static IEnumerable<PassiveEffectType> All => Consumed;
 }

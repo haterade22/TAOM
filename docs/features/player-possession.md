@@ -98,6 +98,8 @@ and earned Mirkwood's package; arriving under the host's culture is the bug, not
 truth. The hero's LIVE kingdom is still used for the special-resource seed, because only the host
 knows which kingdom the joining hero landed in.
 
+`OnCareerSelected` also stamps the career's tree version (`CareerTreeVersion.Stamp`, the `career_tree_vN` hero flag), so a joiner restored this way is not read as an old save and refunded by the next `MigrateAllTreeVersions` (a version-1 career carries no flag).
+
 **Each grant is independently guarded.** A joiner losing their career because the gold grant threw
 would be a worse outcome than the bug this fixes.
 

@@ -109,6 +109,8 @@ public class WageModifierService : IWageModifierService
             sum += p.SlickNegotiatorBonus;
         }
 
+        sum += p.CareerRecruitCostFactor;
+
         return sum;
     }
 

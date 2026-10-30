@@ -532,6 +532,79 @@ public class WageModifierServiceTests
         Assert.AreEqual(400, cost);
     }
 
+    // --- CalculateRecruitmentCost: the career RecruitCost passive (#769 E11) ---
+    // The career factor is one more buyer term: it sums with the perk discounts and the mounted feats BEFORE
+    // the 1-gold floor, so a deep cut can never produce a free or negative troop. Applying it to the rebuilt
+    // number in the model instead would sit outside the floor.
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_CareerFactor_SumsWithTheBuyerPerks()
+    {
+        _costService.GetTroopRecruitmentCost(20, false).Returns(1000);
+        var perks = new RecruitmentPerkInputs(
+            hasBuyer: true, isInfantry: true, chinkInTheArmorBonus: -0.1f, careerRecruitCostFactor: -0.2f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(700, cost); // 1000 * (1 - 0.10 - 0.20)
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_CareerFactor_SumsWithTheMountedFeat()
+    {
+        _costService.GetTroopRecruitmentCost(30, false).Returns(1000);
+        var feats = new MountedCostFeatInputs(isengardMountedCostBonus: -0.15f, rohanMountedCostBonus: 0f);
+        var perks = new RecruitmentPerkInputs(hasBuyer: true, careerRecruitCostFactor: -0.10f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 30, isMounted: true, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: feats, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(1125, cost); // (1000 + 500 horse) * (1 - 0.15 - 0.10)
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_CareerFactorBeyondTheCost_StopsAtOneGold()
+    {
+        _costService.GetTroopRecruitmentCost(1, false).Returns(10);
+        var perks = new RecruitmentPerkInputs(hasBuyer: true, careerRecruitCostFactor: -5f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 1, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(1, cost);
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_CareerFactorWithNoBuyer_IsNotApplied()
+    {
+        // Vanilla prices a ransom and an upgrade with a null buyer; those must never carry a career discount.
+        _costService.GetTroopRecruitmentCost(20, false).Returns(400);
+        var perks = new RecruitmentPerkInputs(hasBuyer: false, careerRecruitCostFactor: -0.5f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(400, cost);
+    }
+
+    [TestMethod]
+    public void CalculateRecruitmentCost_CareerSurcharge_RaisesTheCost()
+    {
+        _costService.GetTroopRecruitmentCost(20, false).Returns(1000);
+        var perks = new RecruitmentPerkInputs(hasBuyer: true, careerRecruitCostFactor: 0.10f);
+
+        var cost = _sut.CalculateRecruitmentCost(
+            level: 20, isMounted: false, isMercenary: false, withoutItemCost: false,
+            mountedCostFeats: MountedCostFeatInputs.None, buyerPerks: perks, cultureText: null);
+
+        Assert.AreEqual(1100, cost);
+    }
+
     // --- CalculateHorseCost: tier lookup ---
 
     [TestMethod]

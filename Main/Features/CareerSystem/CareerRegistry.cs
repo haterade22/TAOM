@@ -242,7 +242,8 @@ public class CareerRegistry : ICareerRegistry
         foreach (var career in careers)
         {
             _careers[career.Id] = career;
-            // Root choices carry group_id="" in the data, so they are unreachable through the
+            // Root choices carry no group (the generated ones have no group_id at all, older ones
+            // group_id=""; the loader reads neither), so they are unreachable through the
             // group index and need their own. Without this a ghost root from another career
             // resolves to no owner and survives the repair, which is the entire bug.
             IndexOwner(_careerIdByRootChoiceId, ambiguousRootIds, "root choice", career.RootChoiceId, career.Id);

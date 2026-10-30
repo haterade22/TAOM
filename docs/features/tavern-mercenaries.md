@@ -63,7 +63,7 @@ originals flipped to `Mercenary`. Occupation is not cosmetic: `TaomPartyWageMode
 cost and ×1.5 wage** (`MercenaryRecruitMultiplier` / `MercenaryWageMultiplier`, lines 6-7). Flipping a
 shared line troop would have repriced it in notable recruitment and in every AI party and garrison
 fielding it (the pre-2026-10-10 `harad_noble` alone appeared in 14 party templates). The copies keep the originals at
-`Soldier` and confine the mercenary economics to the tavern.
+`Soldier` and confine the mercenary economics to the tavern. The tavern prices a troop with the player as buyer, so the career `RecruitCost` passive (#769 E11) discounts it like any recruit, under the same 1-gold floor.
 
 **Leaf copies.** The `_merc` entries carry no `<upgrade_targets>`. Because the engine walks upgrades
 from whatever root it draws, an upgrade target would let the offer drift out of the mercenary set and

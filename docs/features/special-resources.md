@@ -136,7 +136,7 @@ Three cost fields, any combination allowed per troop:
 |-------|-------------|------|
 | `upgrade_cost` | Party-screen upgrade into this troop | Patch26 (`PartyScreenLogic.UpgradeTroop`) |
 | `recruit_cost` | Recruited as a volunteer (one-time) | Patch51 gate + `OnUnitRecruitedEvent` charge |
-| `daily_upkeep` | Every daily tick the troop is in the party | `OnDailyTickHero` → `GetDailyUpkeep` |
+| `daily_upkeep` | Every daily tick the troop is in the party | `OnDailyTickHero` → `GetDailyBreakdown` |
 
 `recruit_cost` exists because the spider (a Dol Guldur volunteer) and the Harad riders are **recruits, not upgrade targets**: nothing
 upgrades into them, so `upgrade_cost` would never fire. It is kept distinct from `upgrade_cost` so a troop

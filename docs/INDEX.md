@@ -93,7 +93,8 @@ Codex, Claude, Kimi and other models use the same policy and evidence records.
 - [custom-battles](features/custom-battles.md) — TAOM factions/commanders/troops in custom battles (Patch19)
 
 ### Career & progression
-- [career-system](features/career-system.md) — 50 careers × 16 cultures, XML-driven defs, ability + passive systems, career screen UI
+- [career-system](features/career-system.md): 70 careers across 25 culture ids, XML-driven defs, ability + passive systems, career screen UI
+- [career-forks-generator](features/career-forks-generator.md): `tools/generate_career_forks.py`: writes one kingdom's forked career trees (`max_picks` groups, `tree_version`, `point_levels`) from a JSON spec, refusing to write on any rule error
 - [career-cc-selection](features/career-cc-selection.md) — CC career-selection stage + archetype-driven starting equipment
 - [troop-progression](features/troop-progression.md) — tier-by-tier upgrade rules, MaxCharacterTier 10
 - [troop-tree-revamp](features/troop-tree-revamp.md) — multi-culture troop roster authoring discipline

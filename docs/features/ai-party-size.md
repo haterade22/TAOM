@@ -89,7 +89,9 @@ One service, `IAiPartySizeService`, consumed by three models that already existe
 - **Party size** is scaled in `TaomPartySizeModel`, gated to leader-run lord parties that are not the
   main party.
 - **Food and wage relief** are applied in `TaomFoodConsumptionModel` and `TaomPartyWageModel` behind
-  the same gate, closing the morale path.
+  the same gate, closing the morale path. The leader's career `FoodConsumption` factor (#769 E11) is
+  not behind that gate: it is applied in `TaomFoodConsumptionModel` only, for any party whose leader
+  holds the passive, just before the AI relief.
 - **Garrisons** scale through a `CalculateGarrisonPartySizeLimit` override, because lords fielding
   thousands would otherwise walk over garrisons still capped near vanilla's 200.
 - **Startup gold** was re-derived at `K = 100` back when the defaults raised AI lords toward ~1,000
@@ -247,7 +249,7 @@ Asked often enough to belong here. **A new campaign is not needed.**
 |---|---|
 | The value in `TaomSettings.Instance` | Immediately, as the handle moves. MCM's `PropertyRef` setter writes the registered object by reflection, and that object is `TaomSettings.Instance`. There is no copy and no staging. |
 | The party tooltip (`PartySizeLimitExplainer`) | Immediately. It calls the model fresh, which is why the tooltip can disagree with the cap actually being enforced. |
-| The enforced cap, per party | On Done, now. `AiPartySizeSettingsWatcher` calls `IPartySizeCacheInvalidator.InvalidateAll`, which sweeps `MobileParty.All` and bumps each `MemberRoster.VersionNo`, when MCM raises `SAVE_TRIGGERED`. A career pick does the same for only the parties its hero leads, through `InvalidateLedBy` (#768). |
+| The enforced cap, per party | On Done, now. `AiPartySizeSettingsWatcher` calls `IPartySizeCacheInvalidator.InvalidateAll`, which sweeps `MobileParty.All` and bumps each `MemberRoster.VersionNo`, when MCM raises `SAVE_TRIGGERED`. `CareerPassiveService.RefreshCache` does the same after every passive refresh, for the parties led (`LeaderHero`) by a hero in the old or new passive cache, plus their army's leader party, through `InvalidateLedBy` (#768). |
 | Without that sweep | Whenever that party's roster next changed on its own. `PartyHealingBehavior`'s 6-hourly heal/starve tick catches most AI parties within a campaign day, but an idle, healthy, non-recruiting party could stay stale indefinitely. |
 | Save and reload | Always worked, and still does. `PartyBase.OnLoad` calls `InitCache()`, which resets every cached limit. |
 

@@ -154,6 +154,12 @@ Mike's pick (2026-10-04): an outline for the whole window, and a burst of sparks
   a rider's outline also reaches his horse through the engine's entity tree. The first look (2026-10-04, a packed
   line) showed the outline mostly around legs and on a few raised arms (First in-game test below).
 
+The fear drains of the race abilities (the on-death fright in `RaceAbilityDeaths` and the aura in
+`RaceAbilityTicker`, offered to the ledger after scaling so its strongest offer sees the scaled value) are scaled
+by the victim troop's career counter (#769 E10): `CareerTroopHooks.ScaleFearDrain(<career service>, victim, ...)` (the stat service from `RaceAbilityRuntime.CareerStats`) wraps the morale
+model's answer, so a player's `TroopFearResistance` pip shrinks them for that leader's own non-hero troops (see
+[career-system.md](career-system.md)).
+
 ## Engine levers
 
 Checked against the v1.5.3 decompile (`SandboxAgentStatCalculateModel`, `CustomBattleAgentStatCalculateModel`,
@@ -324,6 +330,10 @@ Each counter line reads, per ability: `trees`, `decisions` (passes off cooldown 
 `shrug-offs`, `melee hits boosted`, `ranged hits boosted`, `bonus damage`, `hits softened`, `damage prevented`,
 `stat passes`, and `fired by` with a count per trigger kind. Many `decisions` and few `waves` means the triggers
 are strict; `trees 0` means the race or culture has no soldiers here.
+
+In a campaign battle `crush forced` is an upper bound: the player's career counter `TroopCrushHold` (#769 E10) runs
+after the race verdict and can turn a forced crush into a hold for the defender's leader's own troops, and the tally
+has already counted it. Custom Battle counts are exact, because the hold is campaign only.
 
 `taom.print_race_abilities` (dev console, cheats on) prints the same in game: the gate, who is live now (active and
 spent per ability), how many soldiers are outlined, and the counters.

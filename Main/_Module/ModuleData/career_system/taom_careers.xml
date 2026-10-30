@@ -12,19 +12,22 @@
           ability_template_id="ranger_of_ithilien_ability"
           min_clan_tier="0"
           root_choice_id="ranger_of_ithilien_root"
-          keystone_icon="10003">
+          keystone_icon="10003"
+          tree_version="2" point_levels="1,5,10,15,20,25">
     <EligibleCultures>
       <Culture id="gondor" />
       <Culture id="empire_w" />
     </EligibleCultures>
+    <!-- career-forks:begin ranger_of_ithilien sha256=7f2785c5525756f0835ee9969fcff577ce71d8f72fa77307f06a46108e1f585f tree_version=2 point_levels=1,5,10,15,20,25 shape=v2-fa7cc4b309412c7f -->
     <ChoiceGroups>
-      <Group id="ranger_of_ithilien_t1_a" />
-      <Group id="ranger_of_ithilien_t1_b" />
-      <Group id="ranger_of_ithilien_t2_a" />
-      <Group id="ranger_of_ithilien_t2_b" />
-      <Group id="ranger_of_ithilien_t3_a" />
-      <Group id="ranger_of_ithilien_t3_b" />
+      <Group id="ranger_of_ithilien_f1" />
+      <Group id="ranger_of_ithilien_f2" />
+      <Group id="ranger_of_ithilien_f3" />
+      <Group id="ranger_of_ithilien_f4" />
+      <Group id="ranger_of_ithilien_f5" />
+      <Group id="ranger_of_ithilien_f6" />
     </ChoiceGroups>
+    <!-- career-forks:end ranger_of_ithilien -->
   </Career>
 
   <Career id="captain_of_osgiliath" rank1_name="{=taom_career_rank1_captain_of_osgiliath}Ohtar of the Crossing" rank2_name="{=taom_career_rank2_captain_of_osgiliath}Warden of Osgiliath" rank3_name="{=taom_career_rank3_captain_of_osgiliath}Captain of Osgiliath"
@@ -34,19 +37,22 @@
           ability_template_id="captain_of_osgiliath_ability"
           min_clan_tier="0"
           root_choice_id="captain_of_osgiliath_root"
-          keystone_icon="10004">
+          keystone_icon="10004"
+          tree_version="2" point_levels="1,5,10,15,20,25">
     <EligibleCultures>
       <Culture id="gondor" />
       <Culture id="empire_w" />
     </EligibleCultures>
+    <!-- career-forks:begin captain_of_osgiliath sha256=eddbef3eae033c3348fb9c85789fd659a09d986f83e14c2959e7ac52de66fd5b tree_version=2 point_levels=1,5,10,15,20,25 shape=v2-3f3f989769a27bf7 -->
     <ChoiceGroups>
-      <Group id="captain_of_osgiliath_t1_a" />
-      <Group id="captain_of_osgiliath_t1_b" />
-      <Group id="captain_of_osgiliath_t2_a" />
-      <Group id="captain_of_osgiliath_t2_b" />
-      <Group id="captain_of_osgiliath_t3_a" />
-      <Group id="captain_of_osgiliath_t3_b" />
+      <Group id="captain_of_osgiliath_f1" />
+      <Group id="captain_of_osgiliath_f2" />
+      <Group id="captain_of_osgiliath_f3" />
+      <Group id="captain_of_osgiliath_f4" />
+      <Group id="captain_of_osgiliath_f5" />
+      <Group id="captain_of_osgiliath_f6" />
     </ChoiceGroups>
+    <!-- career-forks:end captain_of_osgiliath -->
   </Career>
 
   <Career id="knight_of_belfalas" rank1_name="{=taom_career_rank1_knight_of_belfalas}Squire of Dol Amroth" rank2_name="{=taom_career_rank2_knight_of_belfalas}Swan-Knight" rank3_name="{=taom_career_rank3_knight_of_belfalas}Knight of the Silver Swan"
@@ -56,19 +62,22 @@
           ability_template_id="knight_of_belfalas_ability"
           min_clan_tier="0"
           root_choice_id="knight_of_belfalas_root"
-          keystone_icon="10005">
+          keystone_icon="10005"
+          tree_version="2" point_levels="1,5,10,15,20,25">
     <EligibleCultures>
       <Culture id="gondor" />
       <Culture id="empire_w" />
     </EligibleCultures>
+    <!-- career-forks:begin knight_of_belfalas sha256=5476c05bd8f188a35eff8b196aab37114adf33ad64c48683d6043bc8ee2640f2 tree_version=2 point_levels=1,5,10,15,20,25 shape=v2-345c450bedfb526e -->
     <ChoiceGroups>
-      <Group id="knight_of_belfalas_t1_a" />
-      <Group id="knight_of_belfalas_t1_b" />
-      <Group id="knight_of_belfalas_t2_a" />
-      <Group id="knight_of_belfalas_t2_b" />
-      <Group id="knight_of_belfalas_t3_a" />
-      <Group id="knight_of_belfalas_t3_b" />
+      <Group id="knight_of_belfalas_f1" />
+      <Group id="knight_of_belfalas_f2" />
+      <Group id="knight_of_belfalas_f3" />
+      <Group id="knight_of_belfalas_f4" />
+      <Group id="knight_of_belfalas_f5" />
+      <Group id="knight_of_belfalas_f6" />
     </ChoiceGroups>
+    <!-- career-forks:end knight_of_belfalas -->
   </Career>
 
   <!-- ═══════════════════════════════════════════════════════════ -->

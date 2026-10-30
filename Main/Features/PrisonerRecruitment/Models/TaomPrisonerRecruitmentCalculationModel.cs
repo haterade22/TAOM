@@ -2,16 +2,35 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.CampaignSystem.GameComponents;
 using TaleWorlds.CampaignSystem.Party;
 using TAOM.Adapters;
+using TAOM.Features.CareerSystem;
+using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.PrisonerRecruitment.Models;
 
 public class TaomPrisonerRecruitmentCalculationModel : DefaultPrisonerRecruitmentCalculationModel
 {
     private readonly IPrisonerRecruitmentMoraleService _morale;
+    private readonly ICareerPassiveService _careerPassives;
 
-    public TaomPrisonerRecruitmentCalculationModel(IPrisonerRecruitmentMoraleService morale)
+    public TaomPrisonerRecruitmentCalculationModel(IPrisonerRecruitmentMoraleService morale, ICareerPassiveService careerPassives)
     {
         _morale = morale;
+        _careerPassives = careerPassives;
+    }
+
+    /// <summary>
+    /// Career PrisonerConversion (#769 E11): the prisoner XP a recruiting party earns per hour, vanilla's answer
+    /// first (10 + Leadership * 0.05, the Leadership perks, and Promises for a bandit troop), then the leader's factor, keyed on the party's own
+    /// LeaderHero because the engine reads Leadership off the same hero. The only caller is
+    /// RecruitPrisonersCampaignBehavior.cs:100 (v1.5.5), which multiplies the rounded result by the hours elapsed and
+    /// feeds one prisoner stack per tick (the main party hourly, an AI party daily, so 24 hours at once); it passes
+    /// the recruiting party, never null.
+    /// </summary>
+    public override ExplainedNumber GetConformityChangePerHour(PartyBase party, CharacterObject troopToBoost)
+    {
+        var result = base.GetConformityChangePerHour(party, troopToBoost);
+        _careerPassives.ApplyFactor(party?.LeaderHero?.StringId, ref result, PassiveEffectType.PrisonerConversion);
+        return result;
     }
 
     /// <summary>

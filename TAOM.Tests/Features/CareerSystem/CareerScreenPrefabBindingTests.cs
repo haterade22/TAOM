@@ -67,6 +67,24 @@ public class CareerScreenPrefabBindingTests
             reached.ToList());
     }
 
+    [TestMethod]
+    public void Prefab_ShowsTheRootPerkInTheHeaderGatedOnHasRootPerk()
+    {
+        // #769: the root perk text is bound under the career description in the header bar, and an
+        // empty root hides its widget instead of leaving a blank line. The generic walk above proves
+        // both properties resolve.
+        var widgets = LoadPrefabRoot().Descendants()
+            .Where(e => (string?)e.Attribute("Text") == "@RootPerkDescription")
+            .ToList();
+
+        Assert.AreEqual(1, widgets.Count, "exactly one widget shows RootPerkDescription");
+        Assert.AreEqual("@HasRootPerk", (string?)widgets[0].Attribute("IsVisible"));
+        Assert.AreEqual(
+            "@CareerDescription",
+            (string?)widgets[0].ElementsBeforeSelf().LastOrDefault()?.Attribute("Text"),
+            "the root perk sits directly under the career description");
+    }
+
     private static void CollectScopes(XElement element, Type vmType, HashSet<Type> reached)
     {
         reached.Add(vmType);

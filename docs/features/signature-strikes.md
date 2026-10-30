@@ -159,6 +159,10 @@ SignatureStrikesMissionLogic --- StrikeContextFactory --- SignatureStrikeVerdict
                                                BattleMoraleModel + ChangeMorale
 ```
 
+The fear burst's drain is scaled by the struck troop's career counter (#769 E10): the runner wraps the
+morale model's answer in `CareerTroopHooks.ScaleFearDrain(<career service>, victim, ...)` (the stat service `SignatureStrikesMissionLogic` hands the runner), so a player's `TroopFearResistance`
+pip shrinks it for that leader's own non-hero troops (see [career-system.md](career-system.md)).
+
 ## Configuration
 
 ### Config File: `Main/_Module/ModuleData/signature_strikes/signature_strikes_config.json`

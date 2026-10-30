@@ -259,18 +259,19 @@ The check is `bestSkill + max(0, trust) * 2 + rank * 4 + Next(0..50) >= difficul
 
 ### taom_career_choices.xml
 
-<!-- engine-ref type="TAOM.Features.CareerSystem.CareerConfigProvider" file="Main/Features/CareerSystem/CareerConfigProvider.cs" lines="240-261" -->
+<!-- engine-ref type="TAOM.Features.CareerSystem.CareerConfigProvider" file="Main/Features/CareerSystem/CareerConfigProvider.cs" lines="321-408, 669-687" -->
 
 | Attribute on `<PassiveEffect>` | Type | Required | Default when absent | What it does | Read at (file:line) |
 |---|---|---|---|---|---|
-| `type` | string | yes | choice carries no passive | Which system the pip feeds; 23 distinct types ship | `CareerConfigProvider.cs:257` |
-| `magnitude` | float | no | falls back to `value`, then 0 | The size of the effect | `CareerConfigProvider.cs:258` |
-| `value` | float | no | 0 | Alias for `magnitude`; `magnitude` wins when both are present | `CareerConfigProvider.cs:258` |
-| `attack_type_mask` | enum | no | `All` | Gates `Damage` and `Resistance` to melee or ranged hits | `CareerConfigProvider.cs:261` |
-| `operation` | string | no | ignored | Read but has no effect. Removed from the parser 2026-06-25 | `CareerConfigProvider.cs:259-260` |
-| `is_percentage` | bool | no | ignored | Read but has no effect. Same removal | `CareerConfigProvider.cs:259-260` |
+| `type` | string | yes | an inert `Special` passive (it takes one of the two places, and the load gate warns) | Which system the pip feeds; 23 distinct types ship | `CareerConfigProvider.ParsePassive` |
+| `magnitude` | float | no | falls back to `value`, then 0 | The size of the effect | `CareerConfigProvider.ParsePassive` |
+| `value` | float | no | 0 | Alias for `magnitude`; `magnitude` wins when both are present | `CareerConfigProvider.ParsePassive` |
+| `attack_type_mask` | enum | no | `All` | Gates the four mask-gated types (`Damage`, `Resistance`, `TroopDamage`, `TroopResistance`) by hit kind (`Melee`, `Ranged`, or `Cut`, `Pierce`, `Blunt`, or `All`; comma or pipe separated). On any other type the loader warns and ignores it | `CareerConfigProvider.ParseAttackTypeMask` |
+| `troop_class` | string | no | `All` | Restricts the six class-filtered types (`TroopDamage`, `TroopResistance`, `TroopFearResistance`, `TroopKnockdownResistance`, `TroopCrushHold`, `TroopTraining`) to `Infantry`, `Ranged`, `Cavalry` or `All`, separated by commas or pipes. On any other type the loader warns and ignores it; an unknown name on a class-filtered type drops the passive | `CareerConfigProvider.TryParseTroopClass` |
+| `operation` | string | no | ignored | Read but has no effect. Removed from the parser 2026-06-25 | `CareerConfigProvider.ParsePassive` |
+| `is_percentage` | bool | no | ignored | Read but has no effect. Same removal | `CareerConfigProvider.ParsePassive` |
 
-The shipped file carries **1,735 `<PassiveEffect>` elements across 23 types**, of which 310 use the wrapped `<PassiveEffects><PassiveEffect/></PassiveEffects>` form, 290 use `value=` without `magnitude=`, and 1,445 still carry the dead `operation` attribute. <!-- measured: python ElementTree scan of taom_career_choices.xml counting PassiveEffect elements, distinct type values, PassiveEffects children and per-attribute presence 2026-09-05 --> Only the **first** `<PassiveEffect>` under a `<Choice>` is read (`CareerConfigProvider.cs:243`); today no choice carries a second one, so nothing is being dropped, but adding one silently would be. <!-- measured: python count of Choice elements carrying more than one PassiveEffect in taom_career_choices.xml 2026-09-05 -->
+The shipped file carries **1,810 `<PassiveEffect>` elements across 23 types**, of which 310 use the wrapped `<PassiveEffects><PassiveEffect/></PassiveEffects>` form, 290 use `value=` without `magnitude=`, and 1,520 still carry the dead `operation` attribute. <!-- measured: python ElementTree scan of taom_career_choices.xml counting PassiveEffect elements, distinct type values, PassiveEffects children and per-attribute presence 2026-10-14 --> A choice reads up to **two** `<PassiveEffect>` elements, direct children and wrapper children in document order (`CareerConfigProvider.MaxPassivesPerChoice`, `ParsePassives`); a third is named in a load warning and ignored. Today no shipped choice carries more than one. <!-- measured: python count of Choice elements with more than one PassiveEffect in taom_career_choices.xml 2026-10-14 --> `<ChoiceGroup max_picks>` (default 0, unlimited) makes a group a fork: a positive value caps how many of its choices may be held, and no shipped group sets it yet. <!-- measured: python count of ChoiceGroup elements carrying max_picks in taom_career_choices.xml 2026-10-14 --> The full attribute list, including the career-level ones, is the "Attribute reference" in [career-system](../features/career-system.md).
 
 **Magnitude scale has to match the consumer.** Almost every type is fractional, where 0.10 means plus ten percent. `PartySize`, `Health` and `CompanionLimit` are whole counts, where 2 means two more units. Authoring a whole count on a fractional type multiplies the base instead of adding to it ([career-system](../features/career-system.md), "Magnitude scale").
 
@@ -288,8 +289,8 @@ The shipped file carries **1,735 `<PassiveEffect>` elements across 23 types**, o
 | `<Resource>` | `<Tiers>` | 0 or 1 | Wrapper; absent means an empty tier list |
 | `<Tiers>` | `<Tier>` | many | `level`, `name`, `threshold`, `description`; sorted by threshold at parse time |
 | `<StartupResources>` | `<Culture>` | 22 | One culture's starting gold and influence |
-| `<Choice>` | `<PassiveEffect>` | first only | The direct form |
-| `<Choice>` | `<PassiveEffects>` | 0 or 1 | Wrapper; only its first `<PassiveEffect>` is read |
+| `<Choice>` | `<PassiveEffect>` | up to 2 | The direct form; shares the cap of two with the wrapper |
+| `<Choice>` | `<PassiveEffects>` | many | Wrapper; its `<PassiveEffect>` children count toward the same cap of two |
 
 <!-- measured: python ElementTree structure walk over troop_weights.xml, troop_resource_costs.xml, special_resources_config.xml, startup_resources_config.xml and taom_career_choices.xml 2026-09-05 -->
 
@@ -415,8 +416,8 @@ Code: No code changes needed
 | 22 `<Culture>` rows in `startup_resources_config.xml` | python ElementTree count over `startup_resources_config.xml` | 2026-09-05 |
 | 15 race entries in `race_age_config.json` | python json key count over `races` | 2026-09-05 |
 | 13 field duties, 11 interactive duties, 3 incidents; difficulties 40 to 76; `failureReward.trust` is 0 on all 13 | python json array lengths and field scan over `enlistment_duties.json` | 2026-09-05 |
-| 1,735 `<PassiveEffect>` elements, 23 distinct types, 310 wrapped, 290 using `value=` alone, 1,445 carrying `operation`, 0 choices with a second passive | python ElementTree scan over `taom_career_choices.xml` | 2026-09-05 |
-| 31 keys in `execution/alignment.json`, mixing kingdom, culture and minor clan ids | python json key listing | 2026-10-23 |
+| 2,326 `<PassiveEffect>` elements, 30 distinct types, 403 wrapped in `<PassiveEffects>`, 377 using `value=`, 1,901 carrying `operation`, 6 choices with a second passive, 9 `troop_class`, 18 `max_picks` | python ElementTree scan over `taom_career_choices.xml` | 2026-10-30 |
+| 36 keys in `execution/alignment.json`, mixing kingdom, culture and minor clan ids | python json key listing | 2026-10-30 |
 | 219 value knobs across 56 MCM groups (440 `[SettingProperty` lines) | `rg -o "\[SettingProperty" Main/Features/TaomSettings.cs \| wc -l` and `rg -o 'SettingPropertyGroup\("[^"]*"' Main/Features/TaomSettings.cs \| sort -u \| wc -l` | 2026-09-11 |
 | 14 providers, all registered `Reuse.Singleton` | `rg -n` over the fourteen IoC files named in the registration table | 2026-09-05 |
 | 0 hits for any of the fifteen filenames in the ModuleData validator; 3 files in `tools/schemas/` | `rg -n` over `tools/validate_moduledata.py` and `tools/taom_schema.py`, and `ls tools/schemas/` | 2026-09-05 |

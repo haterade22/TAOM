@@ -34,6 +34,13 @@ public static class CareerPerkReport
                     parts.Add($"{mask} {Format(row.Type, magnitude)}");
                 line += " [" + string.Join(", ", parts) + "]";
             }
+            if (row.ByClass != null && row.ByClass.Count > 0)
+            {
+                var parts = new List<string>(row.ByClass.Count);
+                foreach (var (troopClass, magnitude) in row.ByClass)
+                    parts.Add($"{ClassLabel(troopClass)} {Format(row.Type, magnitude)}");
+                line += " classes [" + string.Join(", ", parts) + "]";
+            }
             line += " -> " + CareerPerkConsumerMap.Describe(row.Type);
             lines.Add(line);
         }
@@ -67,6 +74,29 @@ public static class CareerPerkReport
 
         return lines;
     }
+
+    /// <summary>The per-class values of a class-filtered passive (#769 E9): the army-wide reading (a troop
+    /// with no class, which gets only the All-class pips), each single class, and a horse archer (Ranged and
+    /// Cavalry together). Collapsed to one All entry when all five read the same (the unfiltered case).</summary>
+    public static List<(TroopClassMask troopClass, float magnitude)> ByClass(float armyWide, float infantry, float ranged, float cavalry, float horseArcher)
+    {
+        if (armyWide == infantry && infantry == ranged && ranged == cavalry && cavalry == horseArcher)
+            return new List<(TroopClassMask, float)> { (TroopClassMask.All, armyWide) };
+        return new List<(TroopClassMask, float)>
+        {
+            (TroopClassMask.None, armyWide),
+            (TroopClassMask.Infantry, infantry),
+            (TroopClassMask.Ranged, ranged),
+            (TroopClassMask.Cavalry, cavalry),
+            (TroopClassMask.Ranged | TroopClassMask.Cavalry, horseArcher),
+        };
+    }
+
+    // None is the army-wide reading here, and Ranged|Cavalry reads as one troop, not a list.
+    private static string ClassLabel(TroopClassMask troopClass)
+        => troopClass == TroopClassMask.None ? "army-wide"
+            : troopClass == (TroopClassMask.Ranged | TroopClassMask.Cavalry) ? "Ranged+Cavalry"
+            : troopClass.ToString();
 
     private static string Format(PassiveEffectType type, float magnitude)
         => CareerPerkConsumerMap.IsFlat(type)

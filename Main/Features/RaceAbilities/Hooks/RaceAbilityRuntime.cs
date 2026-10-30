@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using BehaviorTreeWrapper;
 using TAOM.Core.Logging;
+using TAOM.Features.CareerSystem.Abilities;
 using TAOM.Features.RaceAbilities.Domain;
 using TaleWorlds.MountAndBlade;
 
@@ -23,8 +24,9 @@ public sealed class RaceAbilityRuntime
     private bool _failureLogged;
 
     public RaceAbilityRuntime(RaceAbilityService service, RaceAbilityProfileResolver resolver,
-        RaceAbilitySettingsProvider settings, IModLogger logger)
+        RaceAbilitySettingsProvider settings, IModLogger logger, ICareerAgentStatService careerStats)
     {
+        CareerStats = careerStats;
         Service = service;
         Resolver = resolver;
         Settings = settings;
@@ -44,6 +46,9 @@ public sealed class RaceAbilityRuntime
     public RaceAbilitySettingsProvider Settings { get; }
 
     public IModLogger Logger { get; }
+
+    // The player's career counters (#769 E10) the fear sites in the ticker and the deaths hand to CareerTroopHooks.
+    public ICareerAgentStatService CareerStats { get; }
 
     // The thread tripwire's reporter (MissionThreadGuard.NoteCall), made once rather than on every call.
     internal Action<string> Warn { get; }

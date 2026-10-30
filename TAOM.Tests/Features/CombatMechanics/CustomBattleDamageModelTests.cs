@@ -70,8 +70,15 @@ public class CustomBattleDamageModelTests
         ["GetHorseChargePenetration"] = "CombatMechanicsHooks.HorseChargePenetration,base",
     };
 
-    // The TAOM calls the campaign model makes that Custom Battle must not: the Refuge reduction reads a party.
-    private static readonly HashSet<string> CampaignOnly = new(StringComparer.Ordinal) { "RefugeDamageHooks.Reduce" };
+    // The TAOM calls the campaign model makes that Custom Battle must not: the Refuge reduction reads a party, and so
+    // does the career crush hold (#769 E10: a Custom Battle agent origin is not a party, so no career hero resolves),
+    // which is handed the career service through the base model's protected accessor.
+    private static readonly HashSet<string> CampaignOnly = new(StringComparer.Ordinal)
+    {
+        "RefugeDamageHooks.Reduce",
+        "CareerTroopHooks.ApplyCrushHold",
+        "TaomAgentApplyDamageModel.get_AgentStatService",
+    };
 
     private static bool _gameLoaded;
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using TaleWorlds.MountAndBlade;
@@ -33,16 +34,38 @@ public class CareerAgentStatService : ICareerAgentStatService
     // A hero's stat update can arrive on the AI thread (a formation order writes Defensiveness)
     // while a spawn runs on the main thread; the dedupe state takes a lock like the buff tracker.
     private readonly object _logGate = new object();
-    // #613 per-hit evidence: one DEBUG line per mission for each (direction, subject, hit mask, terms that fired),
-    // plus a numbers-only tally of every hit of that combination, which ResetDiagnostics writes as one INFO summary
+    // #613 per-hit evidence: one DEBUG line per mission for each (direction, subject, troop class, hit mask, terms that
+    // fired), plus a numbers-only tally of every hit of that combination, which ResetDiagnostics writes as one INFO summary
     // line each at mission end (plan 030, DECISIONS D6: the lines after the first are aggregated, never dropped).
     // The subject is a hero or party-leader id: on the reduction path the victim's hero id, else its party leader's;
-    // on the amplification path the attacker's hero id, else its troop's party leader's. A reduction victim with
-    // neither is known only by Agent.Index, which recycles, so those hits share the null subject. Guarded by
-    // _logGate (the damage path can run off the main thread); written and cleared by ResetDiagnostics, which the mission
-    // behavior calls from OnEndMission and from OnRemoveBehavior (every way a mission can end), so only a crash or a
-    // process kill mid-battle keeps the first-hit DEBUG lines but loses these counts.
-    private readonly Dictionary<(bool Reduction, string? Subject, AttackTypeMask Mask, int Terms), HitTally> _hitTallies = new();
+    // on the amplification path the attacker's hero id, else its troop's party leader's. The troop class (#769 E9) is the
+    // struck or striking troop's, None for a hero subject, so an infantry hit and a cavalry hit of one leader are
+    // told apart. A reduction victim with neither id is known only by Agent.Index, which recycles, so those hits share
+    // the null subject. Guarded by _logGate (the damage path can run off the main thread); written and cleared by
+    // ResetDiagnostics, which the mission behavior calls from OnEndMission and from OnRemoveBehavior (every way a
+    // mission can end), so only a crash or a process kill mid-battle keeps the first-hit DEBUG lines but loses these counts.
+    private readonly Dictionary<(bool Reduction, string? Subject, TroopClassMask TroopClass, AttackTypeMask Mask, int Terms), HitTally> _hitTallies = new();
+
+    // #769 E10 evidence: how often each troop counter took effect, per (leader, troop class), written as one INFO line
+    // each beside the hit summary. Numbers only, under the same lock; cleared by ResetDiagnostics.
+    private readonly Dictionary<(string Leader, TroopClassMask TroopClass), CounterTally> _counterTallies = new();
+
+    // The hooks whose first fault is already in the log (ReportHookFault); under _logGate.
+    private readonly HashSet<string> _faultedHooks = new HashSet<string>();
+
+    private sealed class CounterTally
+    {
+        public int FearScaled;
+        public int KnockdownScaled;
+        public int CrushHeld;
+    }
+
+    private enum TroopCounter
+    {
+        Fear,
+        Knockdown,
+        Crush,
+    }
 
     private sealed class HitTally
     {
@@ -98,22 +121,55 @@ public class CareerAgentStatService : ICareerAgentStatService
         {
             _lastStatLog.Clear();
             _lastMountLog.Clear();
-            if (_hitTallies.Count > 0 && _logger != null) summary = HitSummaryLines();
+            if ((_hitTallies.Count > 0 || _counterTallies.Count > 0) && _logger != null) summary = SummaryLines();
             _hitTallies.Clear();
+            _counterTallies.Clear();
         }
         if (summary == null) return;
         foreach (var line in summary) _logger!.LogInfo(line);
     }
 
-    // Called under _logGate. Amplification lines first, then reduction; within each by subject, mask and terms, so
-    // two runs of the same battle read the same.
+    // Called under _logGate: the hit summary, then the troop counter summary, each only when it has something to say.
+    private List<string> SummaryLines()
+    {
+        var lines = new List<string>();
+        if (_hitTallies.Count > 0) lines.AddRange(HitSummaryLines());
+        if (_counterTallies.Count > 0) lines.AddRange(CounterSummaryLines());
+        return lines;
+    }
+
+    // Called under _logGate. By leader, then class, so two runs of the same battle read the same.
+    private List<string> CounterSummaryLines()
+    {
+        var keys = new List<(string Leader, TroopClassMask TroopClass)>(_counterTallies.Keys);
+        keys.Sort((a, b) =>
+        {
+            int c = string.CompareOrdinal(a.Leader, b.Leader);
+            return c != 0 ? c : ((int)a.TroopClass).CompareTo((int)b.TroopClass);
+        });
+        var lines = new List<string>(keys.Count + 1)
+        {
+            $"[CareerPerks] troop counter summary for this mission: {keys.Count} combination(s)"
+        };
+        foreach (var k in keys)
+        {
+            var t = _counterTallies[k];
+            lines.Add($"[CareerPerks] troop counter summary for '{k.Leader}' [{k.TroopClass}]: " +
+                $"fear scaled={t.FearScaled} knockdown scaled={t.KnockdownScaled} crush held={t.CrushHeld}");
+        }
+        return lines;
+    }
+
+    // Called under _logGate. Amplification lines first, then reduction; within each by subject, troop class, mask and
+    // terms, so two runs of the same battle read the same.
     private List<string> HitSummaryLines()
     {
-        var keys = new List<(bool Reduction, string? Subject, AttackTypeMask Mask, int Terms)>(_hitTallies.Keys);
+        var keys = new List<(bool Reduction, string? Subject, TroopClassMask TroopClass, AttackTypeMask Mask, int Terms)>(_hitTallies.Keys);
         keys.Sort((a, b) =>
         {
             int c = a.Reduction.CompareTo(b.Reduction);
             if (c == 0) c = string.CompareOrdinal(a.Subject, b.Subject);
+            if (c == 0) c = ((int)a.TroopClass).CompareTo((int)b.TroopClass);
             if (c == 0) c = ((int)a.Mask).CompareTo((int)b.Mask);
             if (c == 0) c = a.Terms.CompareTo(b.Terms);
             return c;
@@ -134,9 +190,20 @@ public class CareerAgentStatService : ICareerAgentStatService
             var nonFinite = t.NonFinite > 0 ? $" nonFinite={t.NonFinite}" : "";
             var damage = finite > 0 ? $"damage {Num((float)t.BaseSum)} -> {Num((float)t.ResultSum)}" : "damage n/a";
             lines.Add($"[CareerPerks] hit {(k.Reduction ? "reduction" : "amp")} summary for '{k.Subject ?? "(ally-buffed agents)"}' " +
-                $"[{k.Mask}] ({TermNames(k.Reduction, k.Terms)}): hits={t.Hits} {range}{nonFinite} {damage}");
+                $"[{k.Mask}]{ClassPart(k.TroopClass)} ({TermNames(k.Reduction, k.Terms)}): hits={t.Hits} {range}{nonFinite} {damage}");
         }
         return lines;
+    }
+
+    // " class Infantry", " class Ranged+Cavalry" (a horse archer is both), and nothing for None: a hero's hit has no class,
+    // and its line reads as it did before the troop classes (#769).
+    internal static string ClassPart(TroopClassMask troopClass)
+    {
+        var names = new List<string>(3);
+        if ((troopClass & TroopClassMask.Infantry) != 0) names.Add("Infantry");
+        if ((troopClass & TroopClassMask.Ranged) != 0) names.Add("Ranged");
+        if ((troopClass & TroopClassMask.Cavalry) != 0) names.Add("Cavalry");
+        return names.Count == 0 ? "" : " class " + string.Join("+", names);
     }
 
     private static string TermNames(bool reduction, int terms)
@@ -162,11 +229,11 @@ public class CareerAgentStatService : ICareerAgentStatService
 
     // Counts the hit in its combination's tally (numbers only, no string) and returns true for the combination's
     // first hit this mission, the one whose DEBUG line is written in full.
-    private bool TallyHit(bool reduction, string? subject, AttackTypeMask hitMask, int terms, float multiplier, float baseResult, float result)
+    private bool TallyHit(bool reduction, string? subject, TroopClassMask troopClass, AttackTypeMask hitMask, int terms, float multiplier, float baseResult, float result)
     {
         lock (_logGate)
         {
-            var key = (reduction, subject, hitMask, terms);
+            var key = (reduction, subject, troopClass, hitMask, terms);
             bool first = !_hitTallies.TryGetValue(key, out var tally);
             if (first) _hitTallies[key] = tally = new HitTally();
             tally!.Hits++;
@@ -296,7 +363,7 @@ public class CareerAgentStatService : ICareerAgentStatService
         return bonus > 0f ? bonus : 0f;
     }
 
-    public float CalculateDamageAmplification(string? attackerHeroId, string? attackerTroopLeaderHeroId, AttackTypeMask hitMask, float baseResult)
+    public float CalculateDamageAmplification(string? attackerHeroId, string? attackerTroopLeaderHeroId, TroopClassMask attackerTroopClass, AttackTypeMask hitMask, float baseResult)
     {
         var result = baseResult;
         float armorPen = 0f, damage = 0f, troopDamage = 0f;
@@ -314,8 +381,9 @@ public class CareerAgentStatService : ICareerAgentStatService
 
         // TroopDamage — the attacker is a non-hero troop whose party leader took the passive. The
         // exact mirror of TroopResistance on the reduction path, and mutually exclusive with the
-        // hero Damage above (the boundary returns null here for a hero attacker). NOT mask-gated:
-        // the shipped pips carry no attack_type_mask, so it is a flat army-wide multiplier.
+        // hero Damage above (the boundary returns null here for a hero attacker). Gated on the hit's
+        // mask and the troop's class (#769 E9): the Gondor fork pips name a class, and a pip that carries
+        // neither attack_type_mask nor troop_class is still a flat army-wide multiplier.
         //
         // #395 — before this, TroopDamage's only consumer was TaomRaidModel.CalculateHitDamage,
         // i.e. how fast a village burns, so 105 pips promising "+N% troop damage" were inert in
@@ -323,7 +391,7 @@ public class CareerAgentStatService : ICareerAgentStatService
         // double-count.
         if (!string.IsNullOrEmpty(attackerTroopLeaderHeroId))
         {
-            troopDamage = _passives.GetPassiveMagnitude(attackerTroopLeaderHeroId!, PassiveEffectType.TroopDamage);
+            troopDamage = _passives.GetTroopMagnitude(attackerTroopLeaderHeroId!, PassiveEffectType.TroopDamage, attackerTroopClass, hitMask);
             if (troopDamage != 0f) result *= (1f + troopDamage);
         }
 
@@ -334,14 +402,14 @@ public class CareerAgentStatService : ICareerAgentStatService
         {
             var subject = attackerHeroId ?? attackerTroopLeaderHeroId;
             float multiplier = (1f + armorPen) * (1f + damage) * (1f + troopDamage);   // an unset term is 0, so 1
-            if (TallyHit(reduction: false, subject, hitMask, terms, multiplier, baseResult, result))
-                _logger.LogDebug($"[CareerPerks] hit amp for '{subject}' [{hitMask}]: {Num(baseResult)} -> {Num(result)} ({AmpTerms(armorPen, damage, troopDamage)})");
+            if (TallyHit(reduction: false, subject, attackerTroopClass, hitMask, terms, multiplier, baseResult, result))
+                _logger.LogDebug($"[CareerPerks] hit amp for '{subject}' [{hitMask}]{ClassPart(attackerTroopClass)}: {Num(baseResult)} -> {Num(result)} ({AmpTerms(armorPen, damage, troopDamage)})");
         }
 
         return result;
     }
 
-    public float CalculateDamageReduction(string? victimHeroId, int? victimAgentIndex, string? troopLeaderHeroId, AttackTypeMask hitMask, float baseResult)
+    public float CalculateDamageReduction(string? victimHeroId, int? victimAgentIndex, string? troopLeaderHeroId, TroopClassMask victimTroopClass, AttackTypeMask hitMask, float baseResult)
     {
         var result = baseResult;
         float resistance = 0f, selfReduction = 0f, troopResistance = 0f, allyReduction = 0f;
@@ -361,9 +429,11 @@ public class CareerAgentStatService : ICareerAgentStatService
 
         // TroopResistance — the victim is a non-hero troop whose party leader took the passive.
         // Mutually exclusive with the hero Resistance above (a hero victim has no troopLeaderHeroId).
+        // Gated on the hit's mask and the victim's class (#769 E9), so an "arrow ward" for infantry is
+        // authorable: attack_type_mask="Ranged" troop_class="Infantry".
         if (!string.IsNullOrEmpty(troopLeaderHeroId))
         {
-            troopResistance = _passives.GetPassiveMagnitude(troopLeaderHeroId!, PassiveEffectType.TroopResistance);
+            troopResistance = _passives.GetTroopMagnitude(troopLeaderHeroId!, PassiveEffectType.TroopResistance, victimTroopClass, hitMask);
             if (troopResistance != 0f) result *= (1f - troopResistance);
         }
 
@@ -379,9 +449,9 @@ public class CareerAgentStatService : ICareerAgentStatService
 
         int terms = (resistance != 0f ? 1 : 0) | (selfReduction != 0f ? 2 : 0)
             | (troopResistance != 0f ? 4 : 0) | (allyReduction != 0f ? 8 : 0);
-        if (terms != 0 && _logger != null && TallyHit(reduction: true, victimHeroId ?? troopLeaderHeroId, hitMask, terms,
+        if (terms != 0 && _logger != null && TallyHit(reduction: true, victimHeroId ?? troopLeaderHeroId, victimTroopClass, hitMask, terms,
                 ReductionMultiplier(resistance, selfReduction, troopResistance, allyReduction), baseResult, result))
-            _logger.LogDebug($"[CareerPerks] hit reduction for '{victimHeroId ?? troopLeaderHeroId ?? victimAgentIndex?.ToString()}' [{hitMask}]: {Num(baseResult)} -> {Num(result)} ({ReductionTerms(resistance, selfReduction, troopResistance, allyReduction)})");
+            _logger.LogDebug($"[CareerPerks] hit reduction for '{victimHeroId ?? troopLeaderHeroId ?? victimAgentIndex?.ToString()}' [{hitMask}]{ClassPart(victimTroopClass)}: {Num(baseResult)} -> {Num(result)} ({ReductionTerms(resistance, selfReduction, troopResistance, allyReduction)})");
 
         return result;
     }
@@ -391,6 +461,68 @@ public class CareerAgentStatService : ICareerAgentStatService
         if (string.IsNullOrEmpty(victimHeroId)) return false;
         var shrugOff = _passives.GetPassiveMagnitude(victimHeroId!, PassiveEffectType.ShrugOff);
         return shrugOff > 0f;
+    }
+
+    // #769 E10: the three troop counters. They run per morale drain, per knockdown test and per crush-through of
+    // every non-hero troop, so nothing is formatted or logged here: a counter that takes effect adds one to a
+    // numbers-only tally (CountCounter), which ResetDiagnostics writes at mission end. A missing leader, a magnitude
+    // that is not a positive number (NaN included) or an input that is not finite hands the input back uncounted, so a
+    // bad config row can never zero a drain or poison a resistance.
+    public float ScaleTroopFear(string? leaderHeroId, TroopClassMask troopClass, float drain)
+    {
+        var magnitude = TroopMagnitude(leaderHeroId, PassiveEffectType.TroopFearResistance, troopClass);
+        if (!(magnitude > 0f) || !FiniteFloatValidator.IsFinite(drain)) return drain;
+        CountCounter(leaderHeroId!, troopClass, TroopCounter.Fear);
+        return drain * (1f - Math.Min(magnitude, 1f));
+    }
+
+    public float ScaleTroopKnockdownResistance(string? leaderHeroId, TroopClassMask troopClass, float resistance)
+    {
+        var magnitude = TroopMagnitude(leaderHeroId, PassiveEffectType.TroopKnockdownResistance, troopClass);
+        if (!(magnitude > 0f) || !FiniteFloatValidator.IsFinite(magnitude)) return resistance;
+        var scaled = resistance * (1f + magnitude);
+        if (!FiniteFloatValidator.IsFinite(scaled)) return resistance;
+        CountCounter(leaderHeroId!, troopClass, TroopCounter.Knockdown);
+        return scaled;
+    }
+
+    public bool HoldsAgainstCrush(string? leaderHeroId, TroopClassMask troopClass, Func<float> roll)
+    {
+        var magnitude = TroopMagnitude(leaderHeroId, PassiveEffectType.TroopCrushHold, troopClass);
+        if (!(magnitude > 0f)) return false;
+        if (!(roll() < Math.Min(magnitude, 1f))) return false;
+        CountCounter(leaderHeroId!, troopClass, TroopCounter.Crush);
+        return true;
+    }
+
+    public void ReportHookFault(string hook, Exception ex)
+    {
+        if (_logger == null) return;
+        lock (_logGate)
+        {
+            if (!_faultedHooks.Add(hook ?? "")) return;
+        }
+        _logger.LogError($"[CareerPerks] CareerTroopHooks.{hook} failed, input kept: {ex}");
+    }
+
+    private float TroopMagnitude(string? leaderHeroId, PassiveEffectType type, TroopClassMask troopClass)
+        => string.IsNullOrEmpty(leaderHeroId) ? 0f : _passives.GetTroopMagnitude(leaderHeroId!, type, troopClass);
+
+    // Adds one to the (leader, class) tally of a counter that took effect. No logger, no evidence to keep.
+    private void CountCounter(string leaderHeroId, TroopClassMask troopClass, TroopCounter counter)
+    {
+        if (_logger == null) return;
+        lock (_logGate)
+        {
+            var key = (leaderHeroId, troopClass);
+            if (!_counterTallies.TryGetValue(key, out var tally)) _counterTallies[key] = tally = new CounterTally();
+            switch (counter)
+            {
+                case TroopCounter.Fear: tally.FearScaled++; break;
+                case TroopCounter.Knockdown: tally.KnockdownScaled++; break;
+                default: tally.CrushHeld++; break;
+            }
+        }
     }
 
     // ──────────────────────────────────────────────────────────────────────────

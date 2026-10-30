@@ -108,6 +108,13 @@ Arena stand spectators are the settlement culture's `townsman`/`townswoman` + no
 
 Aside (for future arena/crowd debugging): `CharacterSpawner.InitWithCharacter` is the UI **tableau** spawner (encyclopedia / clan / character-creation previews), NOT the arena stand crowd — the arena spectators are real `Mission.Agent`s spawned engine/scene-side. Don't chase `CharacterSpawner` for arena render bugs.
 
+## Career trees: a changed shipped tree raises `tree_version`
+
+Editing the groups or choices of a shipped career in `career_system/*.xml` without raising that career's
+`tree_version` leaves every save holding picks the new tree may not contain: saves migrate only to a higher
+version. Trees of forks come from `tools/generate_career_forks.py`. Full text:
+[career-system.md](../../docs/features/career-system.md) "Trap: when a shipped career tree changes".
+
 ## Formatting
 - 2-space indentation (per .editorconfig)
 - UTF-8, usually with no BOM. 11 of the 330 ModuleData `.xml`/`.xslt`/`.json` files do carry one

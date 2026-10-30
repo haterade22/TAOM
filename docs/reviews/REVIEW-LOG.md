@@ -14,6 +14,8 @@ Running scorecard of all reviews. **Reviews 1-99, 2026-04-05 to 2026-09-12.** 93
 | (at merge) | 2026-10-18 | Animation variety and the orc gait revision, third pass (convergence only) on the round 2 fixes | not run | agree (all nine items fixed) | 1 HIGH (a regression of round 2: the validator judged only the plateau it found) and 8 LOW or n/r | 0 | none (this pass is the check on round 2) | convergence pass; RCA `rca-animation-variety-2026-10-17.md` rows 57 to 65 |
 | (at merge) | 2026-10-18 | Animation variety and the orc gait revision, second pass on the round 1 fixes (validator frame selection, binder foreign-set guard, generator report checks, missile early return), same working tree at 4bd4f3e54 | issues-found (0 HIGH, 4 MEDIUM, 2 LOW; F6 a regression the fixes introduced) | agree (all six led to fixes) | 6 | 0 | a convergence pass added D1 to D5 and N1 to N5, all LOW except D3, which is Codex's F3 | gpt-6-astra, focused second pass; RCA `rca-animation-variety-2026-10-17.md` rows 42 to 56 |
 | (at merge) | 2026-10-18 | Animation variety (gait variety, swing probe) and the orc gait revision for #791 (restyle, validator, clip generator, binder, viewer), uncommitted working tree at 4bd4f3e54 | issues-found (0 HIGH, 2 MEDIUM, 1 LOW) | agree (all three confirmed; fixed in the working tree) | 3 (binder duplicate guard, projectile hits in the probe, the MCM step size hint) | 0 | the HIGH planted-ankle clamp and the validator's mismatched slide frames, plus 2 MEDIUM tooling findings (stale-report `-Verify`, foreign set deleted by the block rewrite), found by the Claude tooling lenses | gpt-6-astra, max; RCA `rca-animation-variety-2026-10-17.md` |
+| career-e11 | 2026-10-15 | Career forks engine #769 E11 and E11b (ten campaign passives, TaomPartyTrainingModel, TaomPartyTradeModel) | issues-found (0 P1, 0 P2, 3 P3) | agree (all three verified; X3 overturned a Claude lens claim) | 3 P3 (overflow past the NaN gate, three weak wiring pins, a wrong "no daily gold message" correction) | 0 | 0 | review-codex skill prompt, xhigh |
+| career-e8e10 | 2026-10-15 | Career forks engine #769 E8 to E10 and E13 (two-effect options, troop class filter, fear, knockdown and crush-hold troop counters, localized effect lines) | issues-found (0 P1, 1 P2, 0 P3; 5 of 6 suspects disputed) | agree (P2 reproduced against the installed MBFastRandom, fixed) | 1 P2 (the crush hold drew the shared MBRandom generator on a multi-thread callback) | 0 | 0 | review-codex skill prompt, xhigh |
 | (at merge) | 2026-10-14 | War Chronicle and Eye of Sauron review follow-ups #792 (EngineDataStore, once-per-day gate #793, `t=load` marker, `SyncDataChunker.SyncChunks`, main party guards and scan) | issues-found (0 MEDIUM or above, 4 LOW) | agree (all fixed: 5ba8d6c82, dc1c37031, d371745c7, a66b5754a) | 4 LOW | 0 | 0 | gpt-6-astra, xhigh; RCA `rca-review-followups-2026-10-14.md` |
 | (at merge) | 2026-10-14 | Eye of Sauron hunt #765 M8: review fixes `ac0a3e0c0` and decisions E06, E09, E17 | issues-found (0 HIGH, 2 MEDIUM, 2 LOW) | agree (all fixed in 2d17ceba3) | 2 MEDIUM, 2 LOW | 0 | 0 | gpt-6-astra, max; RCA `rca-eye-of-sauron-2026-10-14.md` F1 to F4 |
 | (at merge) | 2026-10-14 | War Chronicle Batch B #765: event chain, army focus, momentum award, decisions C04 and C07 | issues-found (0 HIGH, 1 MEDIUM) | agree (fixed in 8f2c9e458) | 1 MEDIUM | 0 | 0 | gpt-6-astra, max; RCA `rca-war-chronicle-events-2026-10-14.md` F1 |
@@ -5276,6 +5278,35 @@ Report `docs/reviews/deep-review-031-settings-reads-off-hot-paths-2026-10-02.md`
   2 LOW (the "capstones" label; a stale example in the clamp comment) and 3 NIT, all comment or doc
   text, all fixed (RCA C1 to C3).
 - **RCA:** `docs/reviews/rca-uruk-hai-skirt-body-2026-10-04.md`.
+
+## Review (number assigned at merge): Career forks engine, step E11 and E11b (#769), 6-lens deep review + convergence + Codex gpt-6-astra xhigh (2026-10-15)
+
+- **Scope:** ten campaign career passives, two new model slots (`TaomPartyTrainingModel`,
+  `TaomPartyTradeModel`); committed as `e91660cc9`.
+- **Deep review:** six lenses (data flow, engine, standards, completeness, design, XML): 2 MEDIUM
+  (`ScaleByPassive` cliff past -100%, the healing model over 150 lines), no CRITICAL or HIGH; a fix round
+  of 23 items and a convergence review followed. The builder brief carried named lessons for the first
+  time, and none repeated.
+- **Codex:** `xhigh` on `e91660cc9`: 0 P1, 0 P2, 3 P3, all fixed (RCA X1 to X3). X3 overturned a Claude
+  engine lens that said vanilla shows no daily gold message.
+- **RCA:** `docs/reviews/rca-career-e11-2026-10-15.md`.
+
+## Review (number assigned at merge): Career forks engine, steps E8 to E10 and E13 (#769), 8-lens deep review + convergence + Codex gpt-6-astra xhigh (2026-10-14 to 10-15)
+
+- **Scope:** two-effect options, the troop class filter, three troop counters through `CareerTroopHooks`
+  (fear at four sites, knockdown, crush hold) and the diagnostics; committed as `bce566059`.
+- **Deep review:** eight lenses in two waves of four, two refuters per MEDIUM defect: 66 findings, 5
+  MEDIUM, none CRITICAL or HIGH. A fix round, a documentation sweep with a critic pass, and a
+  four-reviewer convergence review (fix verification, regressions, engine and threading, docs and RCA
+  accuracy) followed; the convergence found 1 MEDIUM doc regression (the career-screen opening path
+  reversed by the sweep) and LOW items, all fixed. Suite: 17,467 pass, the 9 known trunk failures.
+- **Codex:** `xhigh` on `bce566059`: 1 P2, five of six suspects disputed with evidence. The P2: the
+  crush hold drew `MBRandom.RandomFloat` (`Game.Current.RandomGenerator`, unsynchronized XorShift) on
+  `GetDefendCollisionResults`, a multi-thread callback; Codex reproduced the state corruption with two
+  threads on the installed `MBFastRandom`. Fixed: the hold draws its own `System.Random` under its own
+  lock, pinned by `TheCrushHoldRoll_UsesItsOwnLockedGenerator_NeverTheEngineOne`. The older
+  `CombatMechanicsHooks` draw on the same path is a follow-up (RCA X1).
+- **RCA:** `docs/reviews/rca-career-e8e10-2026-10-14.md`.
 
 ## Review (number assigned at merge): Career forks engine, steps E4 to E7 and E12 (#769), 7-lens deep review + convergence (2026-10-14)
 

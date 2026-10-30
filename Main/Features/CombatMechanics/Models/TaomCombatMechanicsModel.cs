@@ -1,6 +1,7 @@
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TAOM.Features.CareerSystem.Abilities;
+using TAOM.Features.CareerSystem.Hooks;
 using TAOM.Features.CareerSystem.Models;
 using TAOM.Features.CombatMechanics.Hooks;
 using TAOM.Features.CreatureSiegeRole.Hooks;
@@ -69,11 +70,13 @@ public class TaomCombatMechanicsModel : TaomAgentApplyDamageModel
 
     // Race Abilities first: a defender standing fast holds against every crush-through, a raging swing breaks
     // any block; with neither live it has no opinion and the combat rules decide. The crush context (two
-    // skill lookups and a roll) is built only when the combat rules are asked.
+    // skill lookups and a roll) is built only when the combat rules are asked. The player's career counter
+    // (#769 E10) applies after the whole chain: it can turn any crush-through, a troll's included, into a hold
+    // for the leader's own troops, and never turns a hold into a crush.
     public override bool DecideCrushedThrough(Agent attackerAgent, Agent defenderAgent, float totalAttackEnergy, Agent.UsageDirection attackDirection, StrikeType strikeType, WeaponComponentData defendItem, bool isPassiveUsageHit)
-        => RaceAbilityHooks.CrushVerdict(attackerAgent, defenderAgent, strikeType, isPassiveUsageHit)
+        => CareerTroopHooks.ApplyCrushHold(AgentStatService, defenderAgent, RaceAbilityHooks.CrushVerdict(attackerAgent, defenderAgent, strikeType, isPassiveUsageHit)
            ?? _combat.CrushThrough(attackerAgent, defenderAgent, totalAttackEnergy, attackDirection, strikeType, defendItem, isPassiveUsageHit)
-           ?? base.DecideCrushedThrough(attackerAgent, defenderAgent, totalAttackEnergy, attackDirection, strikeType, defendItem, isPassiveUsageHit);
+           ?? base.DecideCrushedThrough(attackerAgent, defenderAgent, totalAttackEnergy, attackDirection, strikeType, defendItem, isPassiveUsageHit));
 
     public override float CalculateRemainingMomentum(float originalMomentum, in Blow b, in AttackCollisionData collisionData, Agent attacker, Agent victim, in MissionWeapon attackerWeapon, bool isCrushThrough)
         => _combat.CleaveMomentum(attacker, originalMomentum, in collisionData)

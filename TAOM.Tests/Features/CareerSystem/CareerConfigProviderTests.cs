@@ -142,9 +142,9 @@ public class CareerConfigProviderTests
         var root = choices[0];
         Assert.AreEqual("wb_root", root.Id);
         Assert.AreEqual(ChoiceType.Passive, root.Type);
-        Assert.IsNotNull(root.Passive);
-        Assert.AreEqual(PassiveEffectType.TroopDamage, root.Passive.EffectType);
-        Assert.AreEqual(0.05f, root.Passive.Magnitude, 0.001f);
+        Assert.AreEqual(1, root.Passives.Count);
+        Assert.AreEqual(PassiveEffectType.TroopDamage, root.Passives[0].EffectType);
+        Assert.AreEqual(0.05f, root.Passives[0].Magnitude, 0.001f);
         Assert.AreEqual(1, root.Mutations.Count);
         Assert.AreEqual("skill_scaling", root.Mutations[0].CalculatorId);
         Assert.AreEqual("Leadership", root.Mutations[0].Params["skill"]);
@@ -266,7 +266,7 @@ public class CareerConfigProviderTests
 </CareerChoices>");
 
         var choices = _provider.LoadChoices();
-        Assert.AreEqual(AttackTypeMask.Melee, choices[0].Passive.AttackTypeMask);
+        Assert.AreEqual(AttackTypeMask.Melee, choices[0].Passives[0].AttackTypeMask);
     }
 
     [TestMethod]
@@ -289,9 +289,9 @@ public class CareerConfigProviderTests
 </CareerChoices>");
 
         var choices = _provider.LoadChoices();
-        Assert.AreEqual(AttackTypeMask.Blunt, choices[0].Passive.AttackTypeMask);
-        Assert.AreEqual(AttackTypeMask.Cut, choices[1].Passive.AttackTypeMask);
-        Assert.AreEqual(AttackTypeMask.Melee | AttackTypeMask.Pierce, choices[2].Passive.AttackTypeMask);
+        Assert.AreEqual(AttackTypeMask.Blunt, choices[0].Passives[0].AttackTypeMask);
+        Assert.AreEqual(AttackTypeMask.Cut, choices[1].Passives[0].AttackTypeMask);
+        Assert.AreEqual(AttackTypeMask.Melee | AttackTypeMask.Pierce, choices[2].Passives[0].AttackTypeMask);
         _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("attack_type_mask")));
     }
 
@@ -316,9 +316,9 @@ public class CareerConfigProviderTests
 </CareerChoices>");
 
         var choices = _provider.LoadChoices();
-        Assert.AreEqual(AttackTypeMask.None, choices[0].Passive.AttackTypeMask);
-        Assert.AreEqual(AttackTypeMask.None, choices[1].Passive.AttackTypeMask);
-        Assert.AreEqual(AttackTypeMask.All, choices[2].Passive.AttackTypeMask, "no attribute keeps the All default");
+        Assert.AreEqual(AttackTypeMask.None, choices[0].Passives[0].AttackTypeMask);
+        Assert.AreEqual(AttackTypeMask.None, choices[1].Passives[0].AttackTypeMask);
+        Assert.AreEqual(AttackTypeMask.All, choices[2].Passives[0].AttackTypeMask, "no attribute keeps the All default");
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("cfire") && s.Contains("Fire")));
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("cdigit")));
     }
@@ -474,9 +474,9 @@ public class CareerConfigProviderTests
         var choices = _provider.LoadChoices();
 
         Assert.AreEqual(1, choices.Count);
-        Assert.IsNotNull(choices[0].Passive, "Nested <PassiveEffects><PassiveEffect/> must be read");
-        Assert.AreEqual(PassiveEffectType.TroopDamage, choices[0].Passive.EffectType);
-        Assert.AreEqual(0.10f, choices[0].Passive.Magnitude, 0.001f);
+        Assert.AreEqual(1, choices[0].Passives.Count, "Nested <PassiveEffects><PassiveEffect/> must be read");
+        Assert.AreEqual(PassiveEffectType.TroopDamage, choices[0].Passives[0].EffectType);
+        Assert.AreEqual(0.10f, choices[0].Passives[0].Magnitude, 0.001f);
     }
 
     [TestMethod]
@@ -491,7 +491,7 @@ public class CareerConfigProviderTests
 </CareerChoices>");
 
         var choices = _provider.LoadChoices();
-        Assert.AreEqual(0.10f, choices[0].Passive.Magnitude, 0.001f, "value= must alias magnitude=");
+        Assert.AreEqual(0.10f, choices[0].Passives[0].Magnitude, 0.001f, "value= must alias magnitude=");
     }
 
     [TestMethod]
@@ -506,7 +506,28 @@ public class CareerConfigProviderTests
 </CareerChoices>");
 
         var choices = _provider.LoadChoices();
-        Assert.AreEqual(4f, choices[0].Passive.Magnitude, 0.001f, "magnitude= takes precedence over value=");
+        Assert.AreEqual(4f, choices[0].Passives[0].Magnitude, 0.001f, "magnitude= takes precedence over value=");
+    }
+
+    [DataTestMethod]
+    [DataRow("NaN")]
+    [DataRow("Infinity")]
+    [DataRow("-Infinity")]
+    public void LoadChoices_NonFiniteMagnitude_LoadsAsZero(string authored)
+    {
+        // ScaleByPassive (#769 E11) floors a scale at zero and relies on the loader to keep a NaN or an infinity
+        // out of the cache: Math.Max(0, 1 + NaN) is NaN, which would poison every price it scales.
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""c1"" type=""Passive"" description=""test"" icon_sprite=""icon"">
+    <PassiveEffect type=""TradePrices"" magnitude=""" + authored + @""" />
+  </Choice>
+</CareerChoices>");
+
+        var choices = _provider.LoadChoices();
+
+        Assert.AreEqual(0f, choices[0].Passives[0].Magnitude);
     }
 
     [TestMethod]
@@ -523,15 +544,15 @@ public class CareerConfigProviderTests
 </CareerChoices>");
 
         var choices = _provider.LoadChoices();
-        Assert.AreEqual(PassiveEffectType.PartySize, choices[0].Passive.EffectType);
-        Assert.AreEqual(2f, choices[0].Passive.Magnitude, 0.001f);
+        Assert.AreEqual(PassiveEffectType.PartySize, choices[0].Passives[0].EffectType);
+        Assert.AreEqual(2f, choices[0].Passives[0].Magnitude, 0.001f);
     }
 
     [TestMethod]
-    public void LoadChoices_EmptyPassiveEffectsWrapper_YieldsNullPassiveNoThrow()
+    public void LoadChoices_EmptyPassiveEffectsWrapper_YieldsNoPassivesNoThrow()
     {
-        // Defensive: a wrapper with no <PassiveEffect> child (or a foreign child) must parse to a
-        // null passive without throwing — the choice is still valid, it just grants no passive.
+        // Defensive: a wrapper with no <PassiveEffect> child (or a foreign child) must parse to an
+        // empty passive list without throwing — the choice is still valid, it just grants no passive.
         WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
         WriteChoicesXml(@"<?xml version='1.0'?>
 <CareerChoices>
@@ -545,8 +566,343 @@ public class CareerConfigProviderTests
 
         var choices = _provider.LoadChoices();
         Assert.AreEqual(2, choices.Count);
-        Assert.IsNull(choices[0].Passive);
-        Assert.IsNull(choices[1].Passive);
+        Assert.AreEqual(0, choices[0].Passives.Count);
+        Assert.AreEqual(0, choices[1].Passives.Count);
+    }
+
+    // ── #769 E8: up to MaxPassivesPerChoice effects per option ──
+
+    private System.Collections.Generic.IReadOnlyList<PassiveEffect> LoadPassivesOf(string choiceBody)
+    {
+        WriteCareersXml(@"<?xml version='1.0'?><Careers max_perk_points=""30""></Careers>");
+        WriteChoicesXml(@"<?xml version='1.0'?>
+<CareerChoices>
+  <Choice id=""c1"" type=""Passive"" description=""test"" icon_sprite=""icon"">" + choiceBody + @"</Choice>
+</CareerChoices>");
+        return _provider.LoadChoices().Single().Passives;
+    }
+
+    // ── F1: a magnitude is bounded, so two accepted pips cannot sum to Infinity ──
+
+    [TestMethod]
+    [DataRow("3e38")]
+    [DataRow("-3e38")]
+    [DataRow("1e5")]
+    [DataRow("10000.5")]
+    public void LoadChoices_PassiveMagnitudeAboveTheBound_IsDroppedWithAWarning(string magnitude)
+    {
+        var passives = LoadPassivesOf(@"<PassiveEffect type=""DailyGold"" magnitude=""" + magnitude + @""" />");
+
+        Assert.AreEqual(0, passives.Count);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("c1") && s.Contains("DailyGold") && s.Contains(magnitude.TrimStart('-'))));
+    }
+
+    [TestMethod]
+    [DataRow("10000", 10000f)]
+    [DataRow("-10000", -10000f)]
+    public void LoadChoices_PassiveMagnitudeAtTheBound_Loads(string magnitude, float expected)
+    {
+        var passives = LoadPassivesOf(@"<PassiveEffect type=""DailyGold"" magnitude=""" + magnitude + @""" />");
+
+        Assert.AreEqual(1, passives.Count);
+        Assert.AreEqual(expected, passives[0].Magnitude);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("magnitude")));
+    }
+
+    [TestMethod]
+    public void LoadChoices_ValueAliasAboveTheBound_IsDroppedToo()
+    {
+        var passives = LoadPassivesOf(@"<PassiveEffects><PassiveEffect type=""DailyGold"" value=""3e38"" /></PassiveEffects>");
+
+        Assert.AreEqual(0, passives.Count);
+    }
+
+    [TestMethod]
+    public void LoadChoices_NoPassive_YieldsAnEmptyListNeverNull()
+    {
+        var passives = LoadPassivesOf("");
+
+        Assert.IsNotNull(passives);
+        Assert.AreEqual(0, passives.Count);
+    }
+
+    [TestMethod]
+    public void LoadChoices_TwoDirectPassives_BothParsedInDocumentOrder()
+    {
+        var passives = LoadPassivesOf(@"
+    <PassiveEffect type=""Damage"" magnitude=""0.10"" />
+    <PassiveEffect type=""Resistance"" magnitude=""0.05"" attack_type_mask=""Melee"" />");
+
+        Assert.AreEqual(2, passives.Count);
+        Assert.AreEqual(PassiveEffectType.Damage, passives[0].EffectType);
+        Assert.AreEqual(0.10f, passives[0].Magnitude, 0.001f);
+        Assert.AreEqual(PassiveEffectType.Resistance, passives[1].EffectType);
+        Assert.AreEqual(AttackTypeMask.Melee, passives[1].AttackTypeMask);
+    }
+
+    [TestMethod]
+    public void LoadChoices_TwoPassivesInTheWrapper_BothParsed()
+    {
+        var passives = LoadPassivesOf(@"
+    <PassiveEffects>
+      <PassiveEffect type=""Damage"" value=""0.10"" />
+      <PassiveEffect type=""Health"" value=""25"" />
+    </PassiveEffects>");
+
+        Assert.AreEqual(2, passives.Count);
+        Assert.AreEqual(PassiveEffectType.Damage, passives[0].EffectType);
+        Assert.AreEqual(PassiveEffectType.Health, passives[1].EffectType);
+        Assert.AreEqual(25f, passives[1].Magnitude, 0.001f);
+    }
+
+    [TestMethod]
+    public void LoadChoices_DirectAndWrappedPassives_AreCollectedInDocumentOrder()
+    {
+        var passives = LoadPassivesOf(@"
+    <PassiveEffects><PassiveEffect type=""Health"" value=""25"" /></PassiveEffects>
+    <PassiveEffect type=""Damage"" magnitude=""0.10"" />");
+
+        Assert.AreEqual(2, passives.Count);
+        Assert.AreEqual(PassiveEffectType.Health, passives[0].EffectType, "the wrapper came first in the document");
+        Assert.AreEqual(PassiveEffectType.Damage, passives[1].EffectType);
+    }
+
+    [TestMethod]
+    public void LoadChoices_ThirdAndLaterPassives_AreIgnoredWithOneWarningNamingTheChoice()
+    {
+        var passives = LoadPassivesOf(@"
+    <PassiveEffect type=""Damage"" magnitude=""0.10"" />
+    <PassiveEffect type=""Resistance"" magnitude=""0.05"" />
+    <PassiveEffect type=""Health"" magnitude=""25"" />
+    <PassiveEffect type=""Ammo"" magnitude=""0.2"" />");
+
+        Assert.AreEqual(CareerConfigProvider.MaxPassivesPerChoice, passives.Count);
+        Assert.AreEqual(2, CareerConfigProvider.MaxPassivesPerChoice);
+        Assert.AreEqual(PassiveEffectType.Resistance, passives[1].EffectType);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("c1") && s.Contains("ignored")));
+    }
+
+    [TestMethod]
+    public void LoadChoices_TwoPassives_NoCapWarning()
+    {
+        LoadPassivesOf(@"
+    <PassiveEffect type=""Damage"" magnitude=""0.10"" />
+    <PassiveEffect type=""Resistance"" magnitude=""0.05"" />");
+
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("choice 'c1'")));
+    }
+
+    [TestMethod]
+    public void LoadChoices_PassiveInEachOfTwoWrappers_BothParsed()
+    {
+        var passives = LoadPassivesOf(@"
+    <PassiveEffects><PassiveEffect type=""Damage"" value=""0.10"" /></PassiveEffects>
+    <PassiveEffects><PassiveEffect type=""Resistance"" value=""0.05"" /></PassiveEffects>");
+
+        Assert.AreEqual(2, passives.Count);
+        Assert.AreEqual(PassiveEffectType.Resistance, passives[1].EffectType);
+    }
+
+    [TestMethod]
+    public void LoadChoices_SecondPassiveOfAnUnconsumedType_LogsPhantomWarning()
+    {
+        LoadPassivesOf(@"
+    <PassiveEffect type=""Damage"" magnitude=""0.10"" />
+    <PassiveEffect type=""BuffDuration"" magnitude=""0.1"" />");
+
+        _logger.Received().LogWarning(Arg.Is<string>(
+            s => s.Contains("phantom") && s.Contains("c1") && s.Contains("BuffDuration")));
+    }
+
+    // ── #769 E9: troop_class ──
+
+    [DataTestMethod]
+    [DataRow("Infantry", TroopClassMask.Infantry)]
+    [DataRow("cavalry", TroopClassMask.Cavalry)]
+    [DataRow("Infantry, Ranged", TroopClassMask.Infantry | TroopClassMask.Ranged)]
+    [DataRow("Ranged|Cavalry", TroopClassMask.Ranged | TroopClassMask.Cavalry)]
+    [DataRow("Infantry | Ranged", TroopClassMask.Infantry | TroopClassMask.Ranged)]
+    [DataRow("All", TroopClassMask.All)]
+    public void LoadChoices_TroopClassOnAClassFilteredType_ParsesTheNames(string text, TroopClassMask expected)
+    {
+        var passives = LoadPassivesOf(@"<PassiveEffect type=""TroopDamage"" magnitude=""0.10"" troop_class=""" + text + @""" />");
+
+        Assert.AreEqual(1, passives.Count);
+        Assert.AreEqual(expected, passives[0].TroopClass);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("choice 'c1'")));
+    }
+
+    [TestMethod]
+    public void LoadChoices_NoTroopClass_KeepsTheAllDefault()
+    {
+        var passives = LoadPassivesOf(@"<PassiveEffect type=""TroopResistance"" magnitude=""0.10"" />");
+
+        Assert.AreEqual(TroopClassMask.All, passives[0].TroopClass);
+    }
+
+    [DataTestMethod]
+    [DataRow("Infantri")]
+    [DataRow("None")]
+    [DataRow("")]
+    [DataRow("1")]
+    [DataRow("Ranged Cavalry")]
+    public void LoadChoices_UnknownTroopClass_DropsThatPassiveAndWarnsNamingTheChoice(string text)
+    {
+        // Fail closed: a typo must never widen an infantry bonus to the whole army, so the passive is
+        // gone, not defaulted to All. The sibling passive of the same choice is untouched.
+        var passives = LoadPassivesOf(@"
+    <PassiveEffect type=""TroopDamage"" magnitude=""0.10"" troop_class=""" + text + @""" />
+    <PassiveEffect type=""Health"" magnitude=""25"" />");
+
+        Assert.AreEqual(1, passives.Count);
+        Assert.AreEqual(PassiveEffectType.Health, passives[0].EffectType);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("c1") && s.Contains("troop_class")));
+    }
+
+    [TestMethod]
+    public void LoadChoices_TroopClassOnATypeThatReadsNoClass_WarnsAndIsIgnored()
+    {
+        // Damage (the hero's own) passes no troop class, so honouring the attribute would pretend to
+        // restrict a pip it cannot restrict. The pip keeps its effect at All.
+        var passives = LoadPassivesOf(@"<PassiveEffect type=""Damage"" magnitude=""0.10"" troop_class=""Infantry"" />");
+
+        Assert.AreEqual(1, passives.Count);
+        Assert.AreEqual(TroopClassMask.All, passives[0].TroopClass);
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("c1") && s.Contains("troop_class") && s.Contains("Damage")));
+    }
+
+    [TestMethod]
+    public void LoadChoices_UnknownTroopClassOnATypeThatReadsNoClass_IsIgnoredNotDropped()
+    {
+        // The attribute means nothing on this type, so there is no reading to fail closed on; the pip keeps
+        // its effect at All and one warning explains the attribute.
+        var passives = LoadPassivesOf(@"<PassiveEffect type=""Damage"" magnitude=""0.10"" troop_class=""Infantri"" />");
+
+        Assert.AreEqual(1, passives.Count);
+        Assert.AreEqual(TroopClassMask.All, passives[0].TroopClass);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("troop_class")));
+    }
+
+    [TestMethod]
+    public void LoadChoices_TroopClassOnTheSecondPassive_ParsesPerPassive()
+    {
+        var passives = LoadPassivesOf(@"
+    <PassiveEffect type=""TroopDamage"" magnitude=""0.10"" troop_class=""Infantry"" />
+    <PassiveEffect type=""TroopResistance"" magnitude=""0.05"" troop_class=""Cavalry"" />");
+
+        Assert.AreEqual(TroopClassMask.Infantry, passives[0].TroopClass);
+        Assert.AreEqual(TroopClassMask.Cavalry, passives[1].TroopClass);
+    }
+
+    [TestMethod]
+    public void ClassFiltered_IsTheSixTroopTypesAndNoHeroType()
+    {
+        CollectionAssert.AreEquivalent(
+            new[]
+            {
+                PassiveEffectType.TroopDamage, PassiveEffectType.TroopResistance,
+                PassiveEffectType.TroopFearResistance, PassiveEffectType.TroopKnockdownResistance, PassiveEffectType.TroopCrushHold,
+                PassiveEffectType.TroopTraining,
+            },
+            PassiveEffectConsumers.ClassFiltered.ToArray());
+        Assert.IsTrue(PassiveEffectConsumers.IsClassFiltered(PassiveEffectType.TroopDamage));
+        Assert.IsFalse(PassiveEffectConsumers.IsClassFiltered(PassiveEffectType.Damage));
+    }
+
+    // ── attack_type_mask only where a consumer passes a hit ──
+
+    [TestMethod]
+    public void MaskGated_IsTheFourTypesWhoseConsumerPassesAHit()
+    {
+        CollectionAssert.AreEquivalent(
+            new[]
+            {
+                PassiveEffectType.Damage, PassiveEffectType.Resistance,
+                PassiveEffectType.TroopDamage, PassiveEffectType.TroopResistance,
+            },
+            PassiveEffectConsumers.MaskGated.ToArray());
+        Assert.IsTrue(PassiveEffectConsumers.IsMaskGated(PassiveEffectType.TroopResistance));
+        Assert.IsFalse(PassiveEffectConsumers.IsMaskGated(PassiveEffectType.TroopFearResistance));
+        Assert.IsFalse(PassiveEffectConsumers.IsMaskGated(PassiveEffectType.SwingSpeed));
+    }
+
+    [TestMethod]
+    public void MaskGated_EveryTypeIsConsumed_AndTheTroopOnesAreClassFiltered()
+    {
+        foreach (var type in PassiveEffectConsumers.MaskGated)
+            Assert.IsTrue(PassiveEffectConsumers.IsConsumed(type), type.ToString());
+        Assert.IsTrue(PassiveEffectConsumers.IsClassFiltered(PassiveEffectType.TroopDamage));
+        Assert.IsTrue(PassiveEffectConsumers.IsClassFiltered(PassiveEffectType.TroopResistance));
+    }
+
+    [DataTestMethod]
+    [DataRow("TroopFearResistance")]
+    [DataRow("TroopKnockdownResistance")]
+    [DataRow("TroopCrushHold")]
+    [DataRow("SwingSpeed")]
+    [DataRow("Health")]
+    public void LoadChoices_AttackTypeMaskOnATypeThatPassesNoHit_WarnsAndIsIgnored(string type)
+    {
+        // The counters and every other type read no hit, so a mask on them restricts nothing. Honouring it
+        // would pretend to; the pip keeps its effect at All and the warning names the choice and the type.
+        var passives = LoadPassivesOf(@"<PassiveEffect type=""" + type + @""" magnitude=""0.10"" attack_type_mask=""Ranged"" />");
+
+        Assert.AreEqual(1, passives.Count);
+        Assert.AreEqual(AttackTypeMask.All, passives[0].AttackTypeMask);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("c1") && s.Contains("attack_type_mask") && s.Contains(type)));
+    }
+
+    [TestMethod]
+    public void LoadChoices_UnparseableAttackTypeMaskOnATypeThatPassesNoHit_IsAllNotInert()
+    {
+        // The loader's "the pip is inert" reading (a None mask) holds only where a hit is matched. Where no hit
+        // is passed a None bucket still counts, so the attribute is ignored there with one warning, and the
+        // inert warning is not written.
+        var passives = LoadPassivesOf(@"<PassiveEffect type=""TroopCrushHold"" magnitude=""0.10"" attack_type_mask=""Sideways"" />");
+
+        Assert.AreEqual(AttackTypeMask.All, passives[0].AttackTypeMask);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("attack_type_mask")));
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("inert") && s.Contains("Sideways")));
+    }
+
+    [DataTestMethod]
+    [DataRow("Damage", AttackTypeMask.Ranged)]
+    [DataRow("Resistance", AttackTypeMask.Ranged)]
+    [DataRow("TroopDamage", AttackTypeMask.Ranged)]
+    [DataRow("TroopResistance", AttackTypeMask.Ranged)]
+    public void LoadChoices_AttackTypeMaskOnAMaskGatedType_IsKeptWithoutAWarning(string type, AttackTypeMask expected)
+    {
+        var passives = LoadPassivesOf(@"<PassiveEffect type=""" + type + @""" magnitude=""0.10"" attack_type_mask=""Ranged"" />");
+
+        Assert.AreEqual(expected, passives[0].AttackTypeMask);
+        _logger.DidNotReceive().LogWarning(Arg.Is<string>(s => s.Contains("choice 'c1'")));
+    }
+
+    [TestMethod]
+    public void LoadChoices_UnparseableAttackTypeMaskOnAMaskGatedType_StaysInert()
+    {
+        var passives = LoadPassivesOf(@"<PassiveEffect type=""TroopDamage"" magnitude=""0.10"" attack_type_mask=""Sideways"" />");
+
+        Assert.AreEqual(AttackTypeMask.None, passives[0].AttackTypeMask);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("Sideways") && s.Contains("inert")));
+    }
+
+    // ── the two-effect cap counts authored elements ──
+
+    [TestMethod]
+    public void LoadChoices_DroppedPassiveStillCountsTowardTheCap()
+    {
+        // The cap is on what the author wrote, not on what survived: the first element drops (its troop_class
+        // is a typo), the second parses, and the third is still ignored with the cap warning, so a dropped
+        // effect can never let a third one half-apply.
+        var passives = LoadPassivesOf(@"
+    <PassiveEffect type=""TroopDamage"" magnitude=""0.10"" troop_class=""Infantri"" />
+    <PassiveEffect type=""Resistance"" magnitude=""0.05"" />
+    <PassiveEffect type=""Health"" magnitude=""25"" />");
+
+        Assert.AreEqual(1, passives.Count);
+        Assert.AreEqual(PassiveEffectType.Resistance, passives[0].EffectType);
+        _logger.Received(1).LogWarning(Arg.Is<string>(s => s.Contains("c1") && s.Contains("holds 3") && s.Contains("ignored")));
     }
 
     // ── Phantom-bonus load-time gate (PassiveEffectConsumers) ──
@@ -581,7 +937,7 @@ public class CareerConfigProviderTests
 
         var choices = _provider.LoadChoices();
 
-        Assert.AreEqual(PassiveEffectType.Special, choices[0].Passive.EffectType);
+        Assert.AreEqual(PassiveEffectType.Special, choices[0].Passives[0].EffectType);
         _logger.Received().LogWarning(Arg.Is<string>(
             s => s.Contains("unknown") && s.Contains("c1") && s.Contains("NoSuchEffectType")));
     }

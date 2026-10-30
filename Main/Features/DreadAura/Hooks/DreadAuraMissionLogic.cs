@@ -4,6 +4,7 @@ using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TAOM.Core.Logging;
 using TAOM.Core.Validation;
+using TAOM.Features.CareerSystem.Abilities;
 
 namespace TAOM.Features.DreadAura.Hooks;
 
@@ -38,17 +39,16 @@ public sealed class DreadAuraMissionLogic : MissionLogic
         _settings = IoC.Resolve<IDreadAuraSettingsProvider>();
         _logger = IoC.Resolve<IModLogger>();
         _tracker = new DreadSourceTracker(IoC.Resolve<IDreadRegistry>());
-        _pulse = new DreadPulseRunner(_service, _settings);
+        _pulse = new DreadPulseRunner(_service, _settings, IoC.Resolve<ICareerAgentStatService>());
     }
 
     public override void OnMissionTick(float dt)
     {
         base.OnMissionTick(dt);
 
-        // Unconditional, BEFORE any enabled gate, or the clock freezes while the feature is off and
-        // strands it in warm-up when toggled back on. Finiteness checked HERE because NaN absorbs: one NaN dt poisons the accumulator for
-        // the whole mission and `NaN < WarmupSeconds` is false, silently un-gating the warm-up
-        // (csharp-architecture.md "Engine-Float Decision Gates"; Codex 2026-08-13).
+        // Unconditional, BEFORE any enabled gate, or the clock freezes while the feature is off and strands it in warm-up
+        // when toggled back on. Finiteness checked HERE because NaN absorbs: one NaN dt poisons the accumulator for the whole
+        // mission and `NaN < WarmupSeconds` is false, silently un-gating it (csharp-architecture.md "Engine-Float Decision Gates"; Codex 2026-08-13).
         if (FiniteFloatValidator.IsFinite(dt) && dt > 0f)
             _timeSinceStart += dt;
 

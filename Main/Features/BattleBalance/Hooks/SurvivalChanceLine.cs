@@ -1,3 +1,4 @@
+using System;
 using TaleWorlds.CampaignSystem.Party;
 using TAOM.Features.CareerSystem;
 using TAOM.Features.CareerSystem.Domain;
@@ -39,7 +40,8 @@ internal static class SurvivalChanceLine
         var heroId = CareerPassiveHero.ResolveId(party);
         if (heroId == null)
             return result;
-        return SurvivalChanceMath.ApplyCareerSurvival(
-            result, careerPassives.GetPassiveMagnitude(heroId, PassiveEffectType.TroopSurvival));
+        // Career TroopSurvival, capped at certain survival. ScaleByPassive floors the scale at zero, so a magnitude of -1
+        // or less never makes the chance negative.
+        return Math.Min(1f, careerPassives.ScaleByPassive(heroId, result, PassiveEffectType.TroopSurvival));
     }
 }

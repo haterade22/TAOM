@@ -299,7 +299,7 @@ public class CareerAgentStatServiceTests
     {
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
 
-        var result = _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        var result = _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
 
         Assert.AreEqual(55f, result, 0.01f);
         _logger.Received(1).LogDebug(Arg.Is<string>(s => s.StartsWith("[CareerPerks]") && s.Contains("hero1") && s.Contains("50.0") && s.Contains("55.0") && s.Contains("ArmorPenetration")));
@@ -310,7 +310,7 @@ public class CareerAgentStatServiceTests
     {
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee | AttackTypeMask.Blunt).Returns(0.10f);
 
-        var result = _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 40f);
+        var result = _sut.CalculateDamageReduction("hero1", null, null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Blunt, 40f);
 
         Assert.AreEqual(36f, result, 0.01f);
         _logger.Received(1).LogDebug(Arg.Is<string>(s => s.StartsWith("[CareerPerks]") && s.Contains("Resistance") && s.Contains("Blunt")));
@@ -319,8 +319,8 @@ public class CareerAgentStatServiceTests
     [TestMethod]
     public void CalculateDamageAmplification_NothingApplied_DoesNotLog()
     {
-        _sut.CalculateDamageAmplification(null, null, AttackTypeMask.Melee, 50f);
-        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 50f);
+        _sut.CalculateDamageAmplification(null, null, TroopClassMask.None, AttackTypeMask.Melee, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Melee, 50f);
 
         _logger.DidNotReceive().LogDebug(Arg.Any<string>());
     }
@@ -330,8 +330,8 @@ public class CareerAgentStatServiceTests
     {
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
 
-        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
-        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee | AttackTypeMask.Cut, 40f);
+        _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Cut, 40f);
 
         _logger.Received(1).LogDebug(Arg.Any<string>());
     }
@@ -340,10 +340,10 @@ public class CareerAgentStatServiceTests
     public void CalculateDamageAmplification_TroopDamageOnManyHits_ScalesEveryHitButLogsOnce()
     {
         // The case #613 made hot: every blow by a non-hero troop whose party leader holds a TroopDamage pip.
-        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(0.10f);
+        _passives.GetTroopMagnitude("lord1", PassiveEffectType.TroopDamage, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.10f);
 
         for (int i = 0; i < 50; i++)
-            Assert.AreEqual(55f, _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f), 0.01f);
+            Assert.AreEqual(55f, _sut.CalculateDamageAmplification(null, "lord1", TroopClassMask.Infantry, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f), 0.01f);
 
         _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("lord1") && s.Contains("TroopDamage")));
     }
@@ -353,8 +353,8 @@ public class CareerAgentStatServiceTests
     {
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee | AttackTypeMask.Blunt).Returns(0.10f);
 
-        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 40f);
-        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 30f);
+        _sut.CalculateDamageReduction("hero1", null, null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Blunt, 40f);
+        _sut.CalculateDamageReduction("hero1", null, null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Blunt, 30f);
 
         _logger.Received(1).LogDebug(Arg.Any<string>());
     }
@@ -366,8 +366,8 @@ public class CareerAgentStatServiceTests
         CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { DamageReductionBonus = 0.20f });
         CareerAbilityBuffTracker.SetAllyBuff(43, new ActiveBuffs { DamageReductionBonus = 0.20f });
 
-        Assert.AreEqual(40f, _sut.CalculateDamageReduction(null, 42, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f), 0.01f);
-        Assert.AreEqual(40f, _sut.CalculateDamageReduction(null, 43, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f), 0.01f);
+        Assert.AreEqual(40f, _sut.CalculateDamageReduction(null, 42, null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f), 0.01f);
+        Assert.AreEqual(40f, _sut.CalculateDamageReduction(null, 43, null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f), 0.01f);
 
         _logger.Received(1).LogDebug(Arg.Any<string>());
         _logger.Received(1).LogDebug(Arg.Is<string>(s => s.Contains("'42'") && s.Contains("ally buff reduction")));
@@ -376,13 +376,13 @@ public class CareerAgentStatServiceTests
     [TestMethod]
     public void CalculateDamageAmplification_NewMaskOrSubject_LogsAgain()
     {
-        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(0.10f);
-        _passives.GetPassiveMagnitude("lord2", PassiveEffectType.TroopDamage).Returns(0.10f);
+        _passives.GetTroopMagnitude("lord1", PassiveEffectType.TroopDamage, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.10f);
+        _passives.GetTroopMagnitude("lord2", PassiveEffectType.TroopDamage, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.10f);
 
-        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
-        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Ranged | AttackTypeMask.Pierce, 50f);
-        _sut.CalculateDamageAmplification(null, "lord2", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
-        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", TroopClassMask.Infantry, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", TroopClassMask.Infantry, AttackTypeMask.Ranged | AttackTypeMask.Pierce, 50f);
+        _sut.CalculateDamageAmplification(null, "lord2", TroopClassMask.Infantry, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", TroopClassMask.Infantry, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
 
         _logger.Received(3).LogDebug(Arg.Any<string>());
     }
@@ -391,12 +391,98 @@ public class CareerAgentStatServiceTests
     public void ResetDiagnostics_ClearsTheHitDedupe_SoTheNextBattleLogsAgain()
     {
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
-        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Melee, 50f);
 
         _sut.ResetDiagnostics();
-        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Melee, 50f);
 
         _logger.Received(2).LogDebug(Arg.Any<string>());
+    }
+
+    // #769 C4-01: the troop class is part of the combination, so an infantry hit and a cavalry hit of the same leader,
+    // mask and terms are logged and tallied apart (the check "the infantry bonus applies to infantry only" reads them).
+    [TestMethod]
+    public void CalculateDamageAmplification_InfantryAndCavalryOfOneLeader_LogAndTallySeparately()
+    {
+        _passives.GetTroopMagnitude("lord1", PassiveEffectType.TroopDamage, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.10f);
+        var mask = AttackTypeMask.Melee | AttackTypeMask.Cut;
+
+        _sut.CalculateDamageAmplification(null, "lord1", TroopClassMask.Infantry, mask, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", TroopClassMask.Cavalry, mask, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", TroopClassMask.Cavalry, mask, 50f);
+
+        _logger.Received(1).LogDebug("[CareerPerks] hit amp for 'lord1' [Melee, Cut] class Infantry: 50.0 -> 55.0 (TroopDamage +10%)");
+        _logger.Received(1).LogDebug("[CareerPerks] hit amp for 'lord1' [Melee, Cut] class Cavalry: 50.0 -> 55.0 (TroopDamage +10%)");
+        _logger.Received(2).LogDebug(Arg.Any<string>());
+
+        _sut.ResetDiagnostics();
+
+        Received.InOrder(() =>
+        {
+            _logger.LogInfo("[CareerPerks] hit summary for this mission: 2 combination(s), 3 hit(s)");
+            _logger.LogInfo("[CareerPerks] hit amp summary for 'lord1' [Melee, Cut] class Infantry (TroopDamage): hits=1 multiplier min=1.100 avg=1.100 max=1.100 damage 50.0 -> 55.0");
+            _logger.LogInfo("[CareerPerks] hit amp summary for 'lord1' [Melee, Cut] class Cavalry (TroopDamage): hits=2 multiplier min=1.100 avg=1.100 max=1.100 damage 100.0 -> 110.0");
+        });
+    }
+
+    [TestMethod]
+    public void CalculateDamageReduction_InfantryAndCavalryVictimsOfOneLeader_LogAndTallySeparately()
+    {
+        _passives.GetTroopMagnitude("lord1", PassiveEffectType.TroopResistance, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.10f);
+        var mask = AttackTypeMask.Ranged | AttackTypeMask.Pierce;
+
+        _sut.CalculateDamageReduction(null, null, "lord1", TroopClassMask.Infantry, mask, 40f);
+        _sut.CalculateDamageReduction(null, null, "lord1", TroopClassMask.Cavalry, mask, 40f);
+
+        _logger.Received(1).LogDebug("[CareerPerks] hit reduction for 'lord1' [Ranged, Pierce] class Infantry: 40.0 -> 36.0 (TroopResistance +10%)");
+        _logger.Received(1).LogDebug("[CareerPerks] hit reduction for 'lord1' [Ranged, Pierce] class Cavalry: 40.0 -> 36.0 (TroopResistance +10%)");
+
+        _sut.ResetDiagnostics();
+
+        _logger.Received(1).LogInfo("[CareerPerks] hit summary for this mission: 2 combination(s), 2 hit(s)");
+    }
+
+    // R8: one rendering for the class, "class Infantry", with a two-class troop joined by "+" (a horse archer is Ranged and
+    // Cavalry at once), and nothing at all for None, so the hero lines read as they did before #769.
+    [TestMethod]
+    public void HitLines_HorseArcherClass_IsJoinedWithAPlus()
+    {
+        _passives.GetTroopMagnitude("lord1", PassiveEffectType.TroopDamage, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.10f);
+        _passives.GetTroopMagnitude("lord1", PassiveEffectType.TroopResistance, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.10f);
+        var horseArcher = TroopClassMask.Ranged | TroopClassMask.Cavalry;
+
+        _sut.CalculateDamageAmplification(null, "lord1", horseArcher, AttackTypeMask.Ranged | AttackTypeMask.Pierce, 50f);
+        _sut.CalculateDamageReduction(null, null, "lord1", horseArcher, AttackTypeMask.Ranged | AttackTypeMask.Pierce, 40f);
+
+        _logger.Received(1).LogDebug("[CareerPerks] hit amp for 'lord1' [Ranged, Pierce] class Ranged+Cavalry: 50.0 -> 55.0 (TroopDamage +10%)");
+        _logger.Received(1).LogDebug("[CareerPerks] hit reduction for 'lord1' [Ranged, Pierce] class Ranged+Cavalry: 40.0 -> 36.0 (TroopResistance +10%)");
+
+        _sut.ResetDiagnostics();
+
+        _logger.Received(1).LogInfo("[CareerPerks] hit amp summary for 'lord1' [Ranged, Pierce] class Ranged+Cavalry (TroopDamage): hits=1 multiplier min=1.100 avg=1.100 max=1.100 damage 50.0 -> 55.0");
+        _logger.Received(1).LogInfo("[CareerPerks] hit reduction summary for 'lord1' [Ranged, Pierce] class Ranged+Cavalry (TroopResistance): hits=1 multiplier min=0.900 avg=0.900 max=0.900 damage 40.0 -> 36.0");
+    }
+
+    [DataTestMethod]
+    [DataRow(TroopClassMask.None, "")]
+    [DataRow(TroopClassMask.Infantry, " class Infantry")]
+    [DataRow(TroopClassMask.Ranged, " class Ranged")]
+    [DataRow(TroopClassMask.Cavalry, " class Cavalry")]
+    [DataRow(TroopClassMask.Infantry | TroopClassMask.Ranged, " class Infantry+Ranged")]
+    [DataRow(TroopClassMask.Ranged | TroopClassMask.Cavalry, " class Ranged+Cavalry")]
+    public void ClassPart_RendersTheClassOnce_AndNothingForNone(TroopClassMask troopClass, string expected)
+    {
+        Assert.AreEqual(expected, CareerAgentStatService.ClassPart(troopClass));
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_HeroSubject_IsTalliedUnderClassNone()
+    {
+        _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
+
+        _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+
+        _logger.Received(1).LogDebug("[CareerPerks] hit amp for 'hero1' [Melee, Cut]: 50.0 -> 55.0 (ArmorPenetration +10%)");
     }
 
     // Plan 030 amendment (DECISIONS D6): the hit lines after the first are not written, so the mission-end teardown writes
@@ -404,17 +490,17 @@ public class CareerAgentStatServiceTests
     [TestMethod]
     public void ResetDiagnostics_AfterManyHits_WritesOneSummaryPerCombination()
     {
-        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(0.10f);
-        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
-        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 40f);
-        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 10f);
+        _passives.GetTroopMagnitude("lord1", PassiveEffectType.TroopDamage, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.10f);
+        _sut.CalculateDamageAmplification(null, "lord1", TroopClassMask.Infantry, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", TroopClassMask.Infantry, AttackTypeMask.Melee | AttackTypeMask.Cut, 40f);
+        _sut.CalculateDamageAmplification(null, "lord1", TroopClassMask.Infantry, AttackTypeMask.Melee | AttackTypeMask.Cut, 10f);
 
         _sut.ResetDiagnostics();
 
         Received.InOrder(() =>
         {
             _logger.LogInfo("[CareerPerks] hit summary for this mission: 1 combination(s), 3 hit(s)");
-            _logger.LogInfo("[CareerPerks] hit amp summary for 'lord1' [Melee, Cut] (TroopDamage): hits=3 multiplier min=1.100 avg=1.100 max=1.100 damage 100.0 -> 110.0");
+            _logger.LogInfo("[CareerPerks] hit amp summary for 'lord1' [Melee, Cut] class Infantry (TroopDamage): hits=3 multiplier min=1.100 avg=1.100 max=1.100 damage 100.0 -> 110.0");
         });
         _logger.Received(2).LogInfo(Arg.Any<string>());
     }
@@ -424,9 +510,9 @@ public class CareerAgentStatServiceTests
     {
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee | AttackTypeMask.Blunt).Returns(0.10f);
         CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { DamageReductionBonus = 0.20f });
-        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 100f);
+        _sut.CalculateDamageReduction("hero1", null, null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Blunt, 100f);
         CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { DamageReductionBonus = 0.50f });
-        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee | AttackTypeMask.Blunt, 100f);
+        _sut.CalculateDamageReduction("hero1", null, null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Blunt, 100f);
 
         _sut.ResetDiagnostics();
 
@@ -438,8 +524,8 @@ public class CareerAgentStatServiceTests
     {
         CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { DamageReductionBonus = 0.20f });
         CareerAbilityBuffTracker.SetAllyBuff(43, new ActiveBuffs { DamageReductionBonus = 0.20f });
-        _sut.CalculateDamageReduction(null, 42, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
-        _sut.CalculateDamageReduction(null, 43, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageReduction(null, 42, null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageReduction(null, 43, null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
 
         _sut.ResetDiagnostics();
 
@@ -449,12 +535,12 @@ public class CareerAgentStatServiceTests
     [TestMethod]
     public void ResetDiagnostics_NonFiniteMagnitude_CountsTheHitWithoutPoisoningTheRange()
     {
-        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(float.NaN);
-        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Ranged | AttackTypeMask.Pierce, 50f);
+        _passives.GetTroopMagnitude("lord1", PassiveEffectType.TroopDamage, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(float.NaN);
+        _sut.CalculateDamageAmplification(null, "lord1", TroopClassMask.Infantry, AttackTypeMask.Ranged | AttackTypeMask.Pierce, 50f);
 
         _sut.ResetDiagnostics();
 
-        _logger.Received(1).LogInfo("[CareerPerks] hit amp summary for 'lord1' [Ranged, Pierce] (TroopDamage): hits=1 multiplier n/a nonFinite=1 damage n/a");
+        _logger.Received(1).LogInfo("[CareerPerks] hit amp summary for 'lord1' [Ranged, Pierce] class Infantry (TroopDamage): hits=1 multiplier n/a nonFinite=1 damage n/a");
     }
 
     // A hit whose base or result is not finite is counted in nonFinite and kept out of every number, so one bad hit
@@ -462,14 +548,14 @@ public class CareerAgentStatServiceTests
     [TestMethod]
     public void ResetDiagnostics_NonFiniteDamage_CountsTheHitWithoutPoisoningTheTotals()
     {
-        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopDamage).Returns(0.10f);
-        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
-        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, float.NaN);
-        _sut.CalculateDamageAmplification(null, "lord1", AttackTypeMask.Melee | AttackTypeMask.Cut, 10f);
+        _passives.GetTroopMagnitude("lord1", PassiveEffectType.TroopDamage, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.10f);
+        _sut.CalculateDamageAmplification(null, "lord1", TroopClassMask.Infantry, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification(null, "lord1", TroopClassMask.Infantry, AttackTypeMask.Melee | AttackTypeMask.Cut, float.NaN);
+        _sut.CalculateDamageAmplification(null, "lord1", TroopClassMask.Infantry, AttackTypeMask.Melee | AttackTypeMask.Cut, 10f);
 
         _sut.ResetDiagnostics();
 
-        _logger.Received(1).LogInfo("[CareerPerks] hit amp summary for 'lord1' [Melee, Cut] (TroopDamage): hits=3 multiplier min=1.100 avg=1.100 max=1.100 nonFinite=1 damage 60.0 -> 66.0");
+        _logger.Received(1).LogInfo("[CareerPerks] hit amp summary for 'lord1' [Melee, Cut] class Infantry (TroopDamage): hits=3 multiplier min=1.100 avg=1.100 max=1.100 nonFinite=1 damage 60.0 -> 66.0");
     }
 
     // The first hit of each combination is the one line written in full; its text is the pre-plan-030 format.
@@ -479,7 +565,7 @@ public class CareerAgentStatServiceTests
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee | AttackTypeMask.Cut).Returns(0.20f);
 
-        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Cut, 50f);
 
         _logger.Received(1).LogDebug("[CareerPerks] hit amp for 'hero1' [Melee, Cut]: 50.0 -> 66.0 (ArmorPenetration +10% Damage +20%)");
     }
@@ -487,19 +573,19 @@ public class CareerAgentStatServiceTests
     [TestMethod]
     public void CalculateDamageReduction_FirstHit_WritesTheUnchangedDebugLine()
     {
-        _passives.GetPassiveMagnitude("lord1", PassiveEffectType.TroopResistance).Returns(0.10f);
+        _passives.GetTroopMagnitude("lord1", PassiveEffectType.TroopResistance, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.10f);
         CareerAbilityBuffTracker.SetAllyBuff(42, new ActiveBuffs { DamageReductionBonus = 0.50f });
 
-        _sut.CalculateDamageReduction(null, 42, "lord1", AttackTypeMask.Melee | AttackTypeMask.Blunt, 40f);
+        _sut.CalculateDamageReduction(null, 42, "lord1", TroopClassMask.Infantry, AttackTypeMask.Melee | AttackTypeMask.Blunt, 40f);
 
-        _logger.Received(1).LogDebug("[CareerPerks] hit reduction for 'lord1' [Melee, Blunt]: 40.0 -> 18.0 (TroopResistance +10% ally buff reduction +50%)");
+        _logger.Received(1).LogDebug("[CareerPerks] hit reduction for 'lord1' [Melee, Blunt] class Infantry: 40.0 -> 18.0 (TroopResistance +10% ally buff reduction +50%)");
     }
 
     [TestMethod]
     public void ResetDiagnostics_NoHitsSinceTheLastReset_WritesNoSummary()
     {
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
-        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Melee, 50f);
         _sut.ResetDiagnostics();
         _logger.ClearReceivedCalls();
 
@@ -513,8 +599,8 @@ public class CareerAgentStatServiceTests
     {
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee).Returns(0.10f);
-        _sut.CalculateDamageReduction("hero1", null, null, AttackTypeMask.Melee, 10f);
-        _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, 10f);
+        _sut.CalculateDamageReduction("hero1", null, null, TroopClassMask.None, AttackTypeMask.Melee, 10f);
+        _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Melee, 10f);
 
         _sut.ResetDiagnostics();
 
@@ -533,10 +619,10 @@ public class CareerAgentStatServiceTests
     {
         var mask = AttackTypeMask.Melee | AttackTypeMask.Cut;
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.10f);
-        _sut.CalculateDamageAmplification("hero1", null, mask, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, mask, 50f);
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, mask).Returns(0.20f);
-        _sut.CalculateDamageAmplification("hero1", null, mask, 50f);
-        _sut.CalculateDamageAmplification("hero1", null, mask, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, mask, 50f);
+        _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, mask, 50f);
 
         _logger.Received(2).LogDebug(Arg.Any<string>());
         _logger.Received(1).LogDebug("[CareerPerks] hit amp for 'hero1' [Melee, Cut]: 50.0 -> 55.0 (ArmorPenetration +10%)");
@@ -565,7 +651,7 @@ public class CareerAgentStatServiceTests
         {
             go.Wait();
             for (int i = 0; i < hitsPerThread; i++)
-                _sut.CalculateDamageReduction(null, 42, null, AttackTypeMask.Melee | AttackTypeMask.Cut, 100f);
+                _sut.CalculateDamageReduction(null, 42, null, TroopClassMask.None, AttackTypeMask.Melee | AttackTypeMask.Cut, 100f);
         })).ToList();
         workers.ForEach(t => t.Start());
         go.Set();
@@ -892,7 +978,7 @@ public class CareerAgentStatServiceTests
     public void CalculateDamageAmplification_NoAttackerHeroAndNoTroopLeader_ReturnsBaseUnchanged()
     {
         var result = _sut.CalculateDamageAmplification(
-            attackerHeroId: null, attackerTroopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
+            attackerHeroId: null, attackerTroopLeaderHeroId: null, TroopClassMask.None, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(100f, result);
         _passives.DidNotReceiveWithAnyArgs().GetPassiveMagnitude(default!, default);
         _passives.DidNotReceiveWithAnyArgs().GetMaskedMagnitude(default!, default, default);
@@ -906,23 +992,23 @@ public class CareerAgentStatServiceTests
     [TestMethod]
     public void CalculateDamageAmplification_NonHeroTroopWhoseLeaderHasTroopDamage_MultipliesBase()
     {
-        _passives.GetPassiveMagnitude("leader1", PassiveEffectType.TroopDamage).Returns(0.05f);
+        _passives.GetTroopMagnitude("leader1", PassiveEffectType.TroopDamage, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.05f);
 
         var result = _sut.CalculateDamageAmplification(
-            attackerHeroId: null, attackerTroopLeaderHeroId: "leader1", AttackTypeMask.Melee, baseResult: 100f);
+            attackerHeroId: null, attackerTroopLeaderHeroId: "leader1", TroopClassMask.Infantry, AttackTypeMask.Melee, baseResult: 100f);
 
         Assert.AreEqual(105f, result, 0.01f);
     }
 
     [TestMethod]
-    public void CalculateDamageAmplification_TroopDamageIsNotMaskGated_AppliesOnRangedHitToo()
+    public void CalculateDamageAmplification_ShippedUnmaskedTroopDamage_AppliesOnRangedHitToo()
     {
-        // Unlike the hero Damage passive, TroopDamage carries no attack_type_mask in the shipped
-        // XML — it is a flat army-wide multiplier, so a ranged hit gets it just like a melee one.
-        _passives.GetPassiveMagnitude("leader1", PassiveEffectType.TroopDamage).Returns(0.08f);
+        // The shipped TroopDamage pips carry no attack_type_mask, so the passive service returns their
+        // magnitude for any hit mask and a ranged hit gets it just like a melee one.
+        _passives.GetTroopMagnitude("leader1", PassiveEffectType.TroopDamage, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.08f);
 
         var result = _sut.CalculateDamageAmplification(
-            attackerHeroId: null, attackerTroopLeaderHeroId: "leader1", AttackTypeMask.Ranged, baseResult: 100f);
+            attackerHeroId: null, attackerTroopLeaderHeroId: "leader1", TroopClassMask.Infantry, AttackTypeMask.Ranged, baseResult: 100f);
 
         Assert.AreEqual(108f, result, 0.01f);
     }
@@ -930,10 +1016,10 @@ public class CareerAgentStatServiceTests
     [TestMethod]
     public void CalculateDamageAmplification_ZeroTroopDamage_ReturnsBaseUnchanged()
     {
-        _passives.GetPassiveMagnitude("leader1", PassiveEffectType.TroopDamage).Returns(0f);
+        _passives.GetTroopMagnitude("leader1", PassiveEffectType.TroopDamage, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0f);
 
         var result = _sut.CalculateDamageAmplification(
-            attackerHeroId: null, attackerTroopLeaderHeroId: "leader1", AttackTypeMask.Melee, baseResult: 100f);
+            attackerHeroId: null, attackerTroopLeaderHeroId: "leader1", TroopClassMask.Infantry, AttackTypeMask.Melee, baseResult: 100f);
 
         Assert.AreEqual(100f, result, 0.01f);
     }
@@ -945,13 +1031,13 @@ public class CareerAgentStatServiceTests
         // covered by the Damage pip), so the two never stack on one blow. Pinned because the
         // mirror-image bug — a leader's own swings getting both — would be invisible in play.
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee).Returns(0.10f);
-        _passives.GetPassiveMagnitude(Arg.Any<string>(), PassiveEffectType.TroopDamage).Returns(0.05f);
+        _passives.GetTroopMagnitude(Arg.Any<string>(), PassiveEffectType.TroopDamage, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.05f);
 
         var result = _sut.CalculateDamageAmplification(
-            attackerHeroId: "hero1", attackerTroopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
+            attackerHeroId: "hero1", attackerTroopLeaderHeroId: null, TroopClassMask.None, AttackTypeMask.Melee, baseResult: 100f);
 
         Assert.AreEqual(110f, result, 0.01f);
-        _passives.DidNotReceive().GetPassiveMagnitude(Arg.Any<string>(), PassiveEffectType.TroopDamage);
+        _passives.DidNotReceive().GetTroopMagnitude(Arg.Any<string>(), PassiveEffectType.TroopDamage, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>());
     }
 
     [TestMethod]
@@ -959,7 +1045,7 @@ public class CareerAgentStatServiceTests
     {
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0f);
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee).Returns(0f);
-        var result = _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(100f, result);
     }
 
@@ -967,7 +1053,7 @@ public class CareerAgentStatServiceTests
     public void CalculateDamageAmplification_NonZeroArmorPen_MultipliesBase()
     {
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.25f);
-        var result = _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(125f, result, 0.01f);
     }
 
@@ -975,7 +1061,7 @@ public class CareerAgentStatServiceTests
     public void CalculateDamageAmplification_MeleeDamagePassiveOnMeleeHit_MultipliesBase()
     {
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee).Returns(0.15f);
-        var result = _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(115f, result, 0.01f);
     }
 
@@ -985,7 +1071,7 @@ public class CareerAgentStatServiceTests
         // The masked lookup returns 0 for a ranged hit when only a melee Damage pip is held; verify
         // the service forwards the hit mask and does not boost the wrong delivery type.
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Ranged).Returns(0f);
-        var result = _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Ranged, baseResult: 100f);
+        var result = _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Ranged, baseResult: 100f);
         Assert.AreEqual(100f, result, 0.01f);
     }
 
@@ -994,7 +1080,7 @@ public class CareerAgentStatServiceTests
     {
         _passives.GetPassiveMagnitude("hero1", PassiveEffectType.ArmorPenetration).Returns(0.20f);
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee).Returns(0.10f);
-        var result = _sut.CalculateDamageAmplification("hero1", null, AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageAmplification("hero1", null, TroopClassMask.None, AttackTypeMask.Melee, baseResult: 100f);
         // 100 * 1.20 * 1.10 = 132
         Assert.AreEqual(132f, result, 0.01f);
     }
@@ -1006,7 +1092,7 @@ public class CareerAgentStatServiceTests
     [TestMethod]
     public void CalculateDamageReduction_NoHeroAndNoVictim_ReturnsBaseUnchanged()
     {
-        var result = _sut.CalculateDamageReduction(victimHeroId: null, victimAgentIndex: null, troopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageReduction(victimHeroId: null, victimAgentIndex: null, troopLeaderHeroId: null, TroopClassMask.None, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(100f, result);
     }
 
@@ -1014,7 +1100,7 @@ public class CareerAgentStatServiceTests
     public void CalculateDamageReduction_HeroWithResistance_MultipliesByOneMinus()
     {
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee).Returns(0.30f);
-        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: null, troopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: null, troopLeaderHeroId: null, TroopClassMask.None, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(70f, result, 0.01f);
     }
 
@@ -1024,7 +1110,7 @@ public class CareerAgentStatServiceTests
         // A melee-masked Resistance pip must not reduce a ranged hit; the masked lookup keyed on the
         // ranged hit returns 0, so the base damage passes through unchanged.
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Ranged).Returns(0f);
-        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: null, troopLeaderHeroId: null, AttackTypeMask.Ranged, baseResult: 100f);
+        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: null, troopLeaderHeroId: null, TroopClassMask.None, AttackTypeMask.Ranged, baseResult: 100f);
         Assert.AreEqual(100f, result, 0.01f);
     }
 
@@ -1034,7 +1120,7 @@ public class CareerAgentStatServiceTests
         _passives.GetMaskedMagnitude("hero1", PassiveEffectType.Resistance, AttackTypeMask.Melee).Returns(0.10f);
         CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { DamageReductionBonus = 0.20f });
 
-        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: null, troopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: null, troopLeaderHeroId: null, TroopClassMask.None, AttackTypeMask.Melee, baseResult: 100f);
 
         // 100 * (1-0.10) * (1-0.20) = 100 * 0.9 * 0.8 = 72
         Assert.AreEqual(72f, result, 0.01f);
@@ -1045,7 +1131,7 @@ public class CareerAgentStatServiceTests
     {
         CareerAbilityBuffTracker.SetAllyBuff(99, new ActiveBuffs { DamageReductionBonus = 0.15f });
 
-        var result = _sut.CalculateDamageReduction(victimHeroId: null, victimAgentIndex: 99, troopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageReduction(victimHeroId: null, victimAgentIndex: 99, troopLeaderHeroId: null, TroopClassMask.None, AttackTypeMask.Melee, baseResult: 100f);
 
         Assert.AreEqual(85f, result, 0.01f);
     }
@@ -1059,7 +1145,7 @@ public class CareerAgentStatServiceTests
         CareerAbilityBuffTracker.SetBuff("hero1", new ActiveBuffs { DamageReductionBonus = 0.20f });
         CareerAbilityBuffTracker.SetAllyBuff(7, new ActiveBuffs { DamageReductionBonus = 0.10f });
 
-        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: 7, troopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: 7, troopLeaderHeroId: null, TroopClassMask.None, AttackTypeMask.Melee, baseResult: 100f);
 
         // 100 * (1-0.20) * (1-0.10) = 100 * 0.8 * 0.9 = 72
         Assert.AreEqual(72f, result, 0.01f);
@@ -1069,7 +1155,7 @@ public class CareerAgentStatServiceTests
     public void CalculateDamageReduction_ZeroResistanceAndZeroBuffs_ReturnsBaseUnchanged()
     {
         // No buff, no ally-buff entries; masked Resistance defaults to 0.
-        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: 7, troopLeaderHeroId: null, AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageReduction("hero1", victimAgentIndex: 7, troopLeaderHeroId: null, TroopClassMask.None, AttackTypeMask.Melee, baseResult: 100f);
         Assert.AreEqual(100f, result);
     }
 
@@ -1077,20 +1163,78 @@ public class CareerAgentStatServiceTests
     public void CalculateDamageReduction_TroopLeaderWithTroopResistance_MultipliesByOneMinus()
     {
         // A non-hero troop victim: victimHeroId is null, troopLeaderHeroId is the party leader.
-        // TroopResistance is not attack-typed, so it uses the mask-agnostic GetPassiveMagnitude.
-        _passives.GetPassiveMagnitude("leader1", PassiveEffectType.TroopResistance).Returns(0.20f);
+        // Shipped TroopResistance pips carry neither mask nor class, so any hit and troop reads the full value.
+        _passives.GetTroopMagnitude("leader1", PassiveEffectType.TroopResistance, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.20f);
 
-        var result = _sut.CalculateDamageReduction(victimHeroId: null, victimAgentIndex: null, troopLeaderHeroId: "leader1", AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageReduction(victimHeroId: null, victimAgentIndex: null, troopLeaderHeroId: "leader1", TroopClassMask.Infantry, AttackTypeMask.Melee, baseResult: 100f);
 
         Assert.AreEqual(80f, result, 0.01f);
+    }
+
+    // ── #769 E9: the troop class and the hit mask reach the passive lookup ──
+
+    [TestMethod]
+    public void CalculateDamageAmplification_TroopDamage_AsksForTheAttackersClassAndTheHitMask()
+    {
+        var hit = AttackTypeMask.Ranged | AttackTypeMask.Pierce;
+        _passives.GetTroopMagnitude("leader1", PassiveEffectType.TroopDamage, TroopClassMask.Ranged, hit).Returns(0.20f);
+
+        var result = _sut.CalculateDamageAmplification(null, "leader1", TroopClassMask.Ranged, hit, baseResult: 100f);
+
+        Assert.AreEqual(120f, result, 0.01f);
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_TroopDamage_OtherClassOrOtherHitGetsNothing()
+    {
+        // The service answers per (class, hit): only infantry hitting by melee earns the bonus here.
+        var melee = AttackTypeMask.Melee | AttackTypeMask.Cut;
+        _passives.GetTroopMagnitude("leader1", PassiveEffectType.TroopDamage, TroopClassMask.Infantry, melee).Returns(0.20f);
+
+        Assert.AreEqual(120f, _sut.CalculateDamageAmplification(null, "leader1", TroopClassMask.Infantry, melee, 100f), 0.01f);
+        Assert.AreEqual(100f, _sut.CalculateDamageAmplification(null, "leader1", TroopClassMask.Cavalry, melee, 100f), 0.01f);
+        Assert.AreEqual(100f, _sut.CalculateDamageAmplification(null, "leader1", TroopClassMask.Infantry, AttackTypeMask.Ranged | AttackTypeMask.Pierce, 100f), 0.01f);
+    }
+
+    [TestMethod]
+    public void CalculateDamageAmplification_TroopOfNoClass_StillAsksSoItGetsTheAllClassPassives()
+    {
+        _passives.GetTroopMagnitude("leader1", PassiveEffectType.TroopDamage, TroopClassMask.None, Arg.Any<AttackTypeMask?>()).Returns(0.05f);
+
+        var result = _sut.CalculateDamageAmplification(null, "leader1", TroopClassMask.None, AttackTypeMask.Melee, baseResult: 100f);
+
+        Assert.AreEqual(105f, result, 0.01f);
+    }
+
+    [TestMethod]
+    public void CalculateDamageReduction_TroopResistance_ArrowWardReducesOnlyAnInfantryManHitByAnArrow()
+    {
+        var arrow = AttackTypeMask.Ranged | AttackTypeMask.Pierce;
+        var sword = AttackTypeMask.Melee | AttackTypeMask.Cut;
+        _passives.GetTroopMagnitude("leader1", PassiveEffectType.TroopResistance, TroopClassMask.Infantry, arrow).Returns(0.25f);
+
+        Assert.AreEqual(75f, _sut.CalculateDamageReduction(null, null, "leader1", TroopClassMask.Infantry, arrow, 100f), 0.01f);
+        Assert.AreEqual(100f, _sut.CalculateDamageReduction(null, null, "leader1", TroopClassMask.Infantry, sword, 100f), 0.01f);
+        Assert.AreEqual(100f, _sut.CalculateDamageReduction(null, null, "leader1", TroopClassMask.Cavalry, arrow, 100f), 0.01f);
+    }
+
+    [TestMethod]
+    public void CalculateDamageReduction_HeroVictim_NeverAsksForTroopResistance()
+    {
+        _passives.GetTroopMagnitude(Arg.Any<string>(), PassiveEffectType.TroopResistance, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.25f);
+
+        var result = _sut.CalculateDamageReduction("hero1", null, null, TroopClassMask.None, AttackTypeMask.Melee, 100f);
+
+        Assert.AreEqual(100f, result, 0.01f);
+        _passives.DidNotReceive().GetTroopMagnitude(Arg.Any<string>(), PassiveEffectType.TroopResistance, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>());
     }
 
     [TestMethod]
     public void CalculateDamageReduction_ZeroTroopResistance_ReturnsBaseUnchanged()
     {
-        _passives.GetPassiveMagnitude("leader1", PassiveEffectType.TroopResistance).Returns(0f);
+        _passives.GetTroopMagnitude("leader1", PassiveEffectType.TroopResistance, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0f);
 
-        var result = _sut.CalculateDamageReduction(victimHeroId: null, victimAgentIndex: null, troopLeaderHeroId: "leader1", AttackTypeMask.Melee, baseResult: 100f);
+        var result = _sut.CalculateDamageReduction(victimHeroId: null, victimAgentIndex: null, troopLeaderHeroId: "leader1", TroopClassMask.Infantry, AttackTypeMask.Melee, baseResult: 100f);
 
         Assert.AreEqual(100f, result, 0.01f);
     }

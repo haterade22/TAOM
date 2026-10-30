@@ -48,7 +48,7 @@ public class CareerLifecycleServiceTests
 
     private static CareerChoiceDefinition Choice(string id) => new CareerChoiceDefinition(
         id: id, groupId: "ranger_g1", type: ChoiceType.Passive, description: id,
-        iconSprite: "", passive: null, mutations: null);
+        iconSprite: "", passives: null, mutations: null);
 
     [TestInitialize]
     public void Setup()

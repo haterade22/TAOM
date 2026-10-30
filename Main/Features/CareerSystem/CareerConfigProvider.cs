@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Xml.Linq;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
@@ -17,6 +18,16 @@ public class CareerConfigProvider : ICareerConfigProvider
     private List<CareerDefinition> _careers;
     private List<CareerChoiceGroupDefinition> _groups;
     private List<CareerChoiceDefinition> _choices;
+    // #769 E8: effects one option may carry. A third and later element is warned about and ignored.
+    public const int MaxPassivesPerChoice = 2;
+
+    /// <summary>
+    /// Largest |magnitude| a passive may carry (#769 E11). Far above every shipped value (party size 50, daily gold
+    /// 250); it exists so two accepted pips cannot sum to Infinity and a finite one cannot overflow the engine's later
+    /// float-to-int conversions (loot, raid gold). A larger one is dropped with a warning, like an unknown troop_class.
+    /// </summary>
+    public const float MaxPassiveMagnitude = 10000f;
+
     private const int DefaultRetrainGoldBase = 1000;
     private const int DefaultRetrainGoldPerLevel = 250;
     private int _maxPerkPoints = 30;
@@ -266,31 +277,7 @@ public class CareerConfigProvider : ICareerConfigProvider
                     $"CareerConfig: choice '{el.Attribute("id")?.Value}' carries group_id '{declared}'; " +
                     "ignored; membership is the enclosing ChoiceGroup.");
 
-            PassiveEffect passive = null;
-            // Two authoring schemas exist: a direct singular child <PassiveEffect ... magnitude=.../>
-            // and a plural wrapper <PassiveEffects><PassiveEffect ... value=.../></PassiveEffects>.
-            // The wrapper form (310 choices) was historically unparsed. Read it as a fallback; all
-            // wrappers carry exactly one child (verified). Direct child wins when both are present.
-            var passiveEl = el.Element("PassiveEffect") ?? el.Element("PassiveEffects")?.Element("PassiveEffect");
-            if (passiveEl != null)
-            {
-                // An unrecognized type= must surface loudly, not silently coerce to Special (inert).
-                // ParseEnum's fallback is for survival, not acceptance — mirror its case-insensitive
-                // parse here so the gate and the parse can't disagree.
-                var typeRaw = passiveEl.Attribute("type")?.Value;
-                if (typeRaw != null && !Enum.TryParse<PassiveEffectType>(typeRaw, true, out _))
-                    _logger.LogWarning(
-                        $"CareerConfig: choice '{el.Attribute("id")?.Value}' has unknown PassiveEffect " +
-                        $"type '{typeRaw}' — treated as Special (inert pip).");
-                passive = new PassiveEffect(
-                    effectType: ParseEnum<PassiveEffectType>(passiveEl, "type", PassiveEffectType.Special),
-                    // Accept value= as an alias for magnitude= (the wrapper schema uses value=).
-                    // magnitude= takes precedence when both are present.
-                    magnitude: ParseFloat(passiveEl, "magnitude", ParseFloat(passiveEl, "value", 0f)),
-                    // operation= / is_percentage= were parsed-but-never-read (the consumer chooses
-                    // additive vs multiplicative per type); dropped. attack_type_mask IS consumed.
-                    attackTypeMask: ParseAttackTypeMask(passiveEl, el.Attribute("id")?.Value));
-            }
+            var passives = ParsePassives(el, el.Attribute("id")?.Value);
 
             var mutations = new List<MutationDefinition>();
             var mutationsEl = el.Element("Mutations");
@@ -321,7 +308,7 @@ public class CareerConfigProvider : ICareerConfigProvider
                 type: ParseEnum<ChoiceType>(el, "type", ChoiceType.Passive),
                 description: el.Attribute("description")?.Value ?? "",
                 iconSprite: el.Attribute("icon_sprite")?.Value ?? "",
-                passive: passive,
+                passives: passives,
                 mutations: mutations);
         }
         catch (Exception ex)
@@ -329,6 +316,111 @@ public class CareerConfigProvider : ICareerConfigProvider
             _logger.LogError($"CareerConfig: failed to parse choice: {ex.Message}");
             return null;
         }
+    }
+
+    // #769 E8: an option's effects, in document order. Two authoring schemas exist and may be mixed: a
+    // direct child <PassiveEffect ... magnitude=.../> and a plural wrapper
+    // <PassiveEffects><PassiveEffect ... value=.../></PassiveEffects> (310 shipped choices, once
+    // unparsed). Both feed one list. Only the first MaxPassivesPerChoice AUTHORED elements are read; the
+    // rest are named in one warning and ignored, so a third effect can never half-apply. The cap counts
+    // what the author wrote, not what survived parsing: an element dropped for a bad troop_class still
+    // uses up one of the two places.
+    private List<PassiveEffect> ParsePassives(XElement choiceEl, string? choiceId)
+    {
+        var elements = PassiveElements(choiceEl).ToList();
+        if (elements.Count > MaxPassivesPerChoice)
+            _logger.LogWarning(
+                $"CareerConfig: choice '{choiceId}' holds {elements.Count} PassiveEffect " +
+                $"elements; only the first {MaxPassivesPerChoice} are read, the rest are ignored.");
+
+        var passives = new List<PassiveEffect>(MaxPassivesPerChoice);
+        foreach (var passiveEl in elements.Take(MaxPassivesPerChoice))
+        {
+            var passive = ParsePassive(passiveEl, choiceId);
+            if (passive != null)
+                passives.Add(passive);
+        }
+
+        return passives;
+    }
+
+    private static IEnumerable<XElement> PassiveElements(XElement choiceEl)
+    {
+        foreach (var child in choiceEl.Elements())
+        {
+            if (child.Name == "PassiveEffect")
+                yield return child;
+            else if (child.Name == "PassiveEffects")
+                foreach (var inner in child.Elements("PassiveEffect"))
+                    yield return inner;
+        }
+    }
+
+    // One <PassiveEffect>, or null when its troop_class cannot be read or its magnitude is out of bounds (the passive is dropped).
+    private PassiveEffect? ParsePassive(XElement passiveEl, string? choiceId)
+    {
+        // An unrecognized type= must surface loudly, not silently coerce to Special (inert).
+        // ParseEnum's fallback is for survival, not acceptance — mirror its case-insensitive
+        // parse here so the gate and the parse can't disagree.
+        var typeRaw = passiveEl.Attribute("type")?.Value;
+        if (typeRaw != null && !Enum.TryParse<PassiveEffectType>(typeRaw, true, out _))
+            _logger.LogWarning(
+                $"CareerConfig: choice '{choiceId}' has unknown PassiveEffect " +
+                $"type '{typeRaw}' — treated as Special (inert pip).");
+        var type = ParseEnum<PassiveEffectType>(passiveEl, "type", PassiveEffectType.Special);
+
+        if (!TryParseTroopClass(passiveEl, type, choiceId, out var troopClass))
+            return null;
+
+        // Accept value= as an alias for magnitude= (the wrapper schema uses value=).
+        // magnitude= takes precedence when both are present.
+        var magnitude = ParseFloat(passiveEl, "magnitude", ParseFloat(passiveEl, "value", 0f));
+        if (Math.Abs(magnitude) > MaxPassiveMagnitude)
+        {
+            _logger.LogWarning(
+                $"CareerConfig: choice '{choiceId}' has a {type} passive with magnitude '{passiveEl.Attribute("magnitude")?.Value ?? passiveEl.Attribute("value")?.Value}', " +
+                $"beyond the bound of {MaxPassiveMagnitude.ToString(CultureInfo.InvariantCulture)}; the passive is dropped.");
+            return null;
+        }
+
+        return new PassiveEffect(
+            effectType: type,
+            magnitude: magnitude,
+            // operation= / is_percentage= were parsed-but-never-read (the consumer chooses
+            // additive vs multiplicative per type); dropped. attack_type_mask IS consumed.
+            attackTypeMask: ParseAttackTypeMask(passiveEl, type, choiceId),
+            troopClass: troopClass);
+    }
+
+    // #769 E9. Absent keeps All. On a type no consumer passes a class for, the attribute is ignored
+    // with a warning (restricting a pip that cannot be restricted would be a lie). On a class-filtered
+    // type an unknown name FAILS CLOSED: false, the passive is dropped, because defaulting a typo to All
+    // would widen an infantry bonus to the whole army.
+    private bool TryParseTroopClass(XElement passiveEl, PassiveEffectType type, string? choiceId, out TroopClassMask troopClass)
+    {
+        troopClass = TroopClassMask.All;
+        var raw = passiveEl.Attribute("troop_class")?.Value;
+        if (raw == null) return true;
+
+        if (!PassiveEffectConsumers.IsClassFiltered(type))
+        {
+            _logger.LogWarning(
+                $"CareerConfig: choice '{choiceId}' has troop_class '{raw}' on a {type} passive, which reads no " +
+                $"troop class; ignored (applies to every troop). Class-filtered types: " +
+                $"{string.Join(", ", PassiveEffectConsumers.ClassFiltered)}.");
+            return true;
+        }
+
+        if (TroopClassMapper.TryParse(raw, out var parsed))
+        {
+            troopClass = parsed;
+            return true;
+        }
+
+        _logger.LogWarning(
+            $"CareerConfig: choice '{choiceId}' has an unknown troop_class '{raw}' on a {type} passive " +
+            "(names: Infantry, Ranged, Cavalry, All, separated by commas or pipes); the passive is dropped.");
+        return false;
     }
 
     // Load-time phantom-bonus gate (csharp-architecture.md "Config Providers MUST Validate").
@@ -339,10 +431,9 @@ public class CareerConfigProvider : ICareerConfigProvider
         var unconsumed = new List<string>();
         foreach (var choice in _choices)
         {
-            var passive = choice.Passive;
-            if (passive == null) continue;
-            if (!PassiveEffectConsumers.IsConsumed(passive.EffectType))
-                unconsumed.Add($"{choice.Id} (type={passive.EffectType})");
+            foreach (var passive in choice.Passives)
+                if (!PassiveEffectConsumers.IsConsumed(passive.EffectType))
+                    unconsumed.Add($"{choice.Id} (type={passive.EffectType})");
         }
 
         if (unconsumed.Count > 0)
@@ -587,11 +678,23 @@ public class CareerConfigProvider : ICareerConfigProvider
 
     // #613: the consumer branches on this string (Damage / Resistance masks), so an unknown value is
     // never coerced to the widest reading. Absent keeps All; unparseable warns and lands on None,
-    // which matches no hit, and the shipped-XML gate refuses a None mask.
-    private AttackTypeMask ParseAttackTypeMask(XElement passiveEl, string? choiceId)
+    // which matches no hit, and the shipped-XML gate refuses a None mask. On a type whose consumer passes
+    // no hit (anything outside PassiveEffectConsumers.MaskGated, the three troop counters included) the
+    // attribute is ignored with a warning, like troop_class on a non-class type: a None mask is "inert"
+    // only where a hit is matched, and a valid narrower mask would show a restriction nothing applies.
+    private AttackTypeMask ParseAttackTypeMask(XElement passiveEl, PassiveEffectType type, string? choiceId)
     {
         var raw = passiveEl.Attribute("attack_type_mask")?.Value;
         if (raw == null) return AttackTypeMask.All;
+        if (!PassiveEffectConsumers.IsMaskGated(type))
+        {
+            _logger.LogWarning(
+                $"CareerConfig: choice '{choiceId}' has attack_type_mask '{raw}' on a {type} passive, which reads " +
+                $"no hit; ignored (applies to every hit). Mask-gated types: " +
+                $"{string.Join(", ", PassiveEffectConsumers.MaskGated)}.");
+            return AttackTypeMask.All;
+        }
+
         if (AttackTypeMaskMatch.TryParse(raw, out var mask)) return mask;
         _logger.LogWarning(
             $"CareerConfig: choice '{choiceId}' has an unknown attack_type_mask '{raw}' " +

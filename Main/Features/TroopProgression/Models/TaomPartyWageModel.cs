@@ -75,11 +75,16 @@ public class TaomPartyWageModel : DefaultPartyWageModel
         return result;
     }
 
+    // FULL REPLACEMENT of DefaultPartyWageModel.GetTroopRecruitmentCost (v1.5.5): the cost is rebuilt from an int
+    // by WageModifierService.CalculateRecruitmentCost, which ends in LimitMin(1). Career RecruitCost (#769 E11) is
+    // therefore one more buyer term handed INTO that call, summed with the perk discounts before the floor; a factor
+    // applied here to the rebuilt number would sit outside it. The callers, by the buyer they pass (the player, an AI
+    // leader, the fief owner, or null): the RecruitCost row of the consumer table in docs/features/career-system.md.
     public override ExplainedNumber GetTroopRecruitmentCost(
         CharacterObject troop, Hero buyerHero, bool withoutItemCost = false)
     {
         var feats = ResolveMountedCostFeats(buyerHero?.Culture, troop.IsMounted);
-        var buyerPerks = ResolveBuyerRecruitmentPerks(buyerHero, troop);
+        var buyerPerks = ResolveBuyerRecruitmentPerks(buyerHero, troop, _careerPassives.GetPassiveMagnitude(buyerHero?.StringId, PassiveEffectType.RecruitCost));
         int cost = _wageModifiers.CalculateRecruitmentCost(
             troop.Level,
             troop.IsMounted,
@@ -158,7 +163,7 @@ public class TaomPartyWageModel : DefaultPartyWageModel
     // party, no naval scaling (their secondary environment is All). The two mercenary trade perks
     // stay Personal on the buyer. KhuzaitRecruitUpgradeFeat is intentionally NOT resolved here:
     // TAOM replaces it with the Isengard/Rohan mounted-cost feats.
-    private static RecruitmentPerkInputs ResolveBuyerRecruitmentPerks(Hero? buyerHero, CharacterObject troop)
+    private static RecruitmentPerkInputs ResolveBuyerRecruitmentPerks(Hero? buyerHero, CharacterObject troop, float careerRecruitCostFactor)
     {
         if (buyerHero == null)
             return RecruitmentPerkInputs.None;
@@ -178,7 +183,8 @@ public class TaomPartyWageModel : DefaultPartyWageModel
             piercerBonus: SecondaryPerkBonus(leader, DefaultPerks.Crossbow.Piercer),
             frugalBonus: SecondaryPerkBonus(leader, DefaultPerks.Steward.Frugal),
             swordForBarterBonus: PrimaryPerkBonus(buyerHero, DefaultPerks.Trade.SwordForBarter),
-            slickNegotiatorBonus: PrimaryPerkBonus(buyerHero, DefaultPerks.Charm.SlickNegotiator));
+            slickNegotiatorBonus: PrimaryPerkBonus(buyerHero, DefaultPerks.Charm.SlickNegotiator),
+            careerRecruitCostFactor: careerRecruitCostFactor);
     }
 
     private static float SecondaryPerkBonus(Hero? partyLeader, PerkObject perk)

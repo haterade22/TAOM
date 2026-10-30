@@ -709,6 +709,10 @@ The patch-failure notice builds "... during {PHASE} ..." and fills `{PHASE}` wit
 - **Why missed:** each key went to the translator on its own, and the check was that `{PHASE}` and `{GROUPS}` survived, not that the filled sentence reads.
 - **Prevent:** when a key's text is a fragment for another key's variable, send both to the translator together with the host sentence as context, and read the rendered sentence once per language for each fragment. Where the grammar cannot be made to agree, use one whole-sentence key per case. A hand fix goes into both the XML row and `tools/translation_cache/<lang>.json`: the translator re-translates only a row that still equals the English, so a fixed row stays fixed.
 - **Source:** `docs/reviews/rca-guarded-patch-category-apply-decisions-2026-09-24.md` finding 3.
+- **Second occurrence (#769 E9, 2026-10-14):** the career Active Effects class line was built from a line key,
+  three class nouns and a join word, and the number, sign and effect noun were glued in English order. Fixed
+  with one whole-phrase key per class set (`{EFFECT} for infantry`) and a `{VALUE}` variable in every effect
+  label. A brief that asks for localized text names this lesson (`docs/reviews/rca-career-e8e10-2026-10-14.md`).
 ### A seeded language row takes its file's own terminator, and a placement gate reads what the engine reads (plan 022, 2026-09-24)
 Plan 022 seeded three rows into the 12 `std_taom_module_strings_*.xml` files, which use `\r\r\n`. The rows ended in
 a bare LF. `translate_with_claude.py sync_missing_ids` splits on one terminator, so a trailing run of LF lines fuses

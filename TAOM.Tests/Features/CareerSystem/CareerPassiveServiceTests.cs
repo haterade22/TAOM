@@ -95,11 +95,11 @@ public class CareerPassiveServiceTests
         _registry.GetChoice("wb_brut_p1").Returns(new CareerChoiceDefinition(
             id: "wb_brut_p1", groupId: "wb_brutality", type: ChoiceType.Passive,
             description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.PartySize, 5f),
+            passives: new[] { new PassiveEffect(PassiveEffectType.PartySize, 5f) },
             mutations: null));
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
             id: "wb_root", groupId: "", type: ChoiceType.Passive,
-            description: "", iconSprite: "", passive: null, mutations: null));
+            description: "", iconSprite: "", passives: null, mutations: null));
 
         _service.RefreshCache(_dataService, _registry);
 
@@ -123,12 +123,12 @@ public class CareerPassiveServiceTests
         _registry.GetChoice("wb_brut_p1").Returns(new CareerChoiceDefinition(
             id: "wb_brut_p1", groupId: "wb_brutality", type: ChoiceType.Passive,
             description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.Damage, 0.10f),
+            passives: new[] { new PassiveEffect(PassiveEffectType.Damage, 0.10f) },
             mutations: null));
 
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
             id: "wb_root", groupId: "", type: ChoiceType.Passive,
-            description: "", iconSprite: "", passive: null, mutations: null));
+            description: "", iconSprite: "", passives: null, mutations: null));
 
         _service.RefreshCache(_dataService, _registry);
 
@@ -145,18 +145,18 @@ public class CareerPassiveServiceTests
         _registry.GetChoice("wb_brut_p1").Returns(new CareerChoiceDefinition(
             id: "wb_brut_p1", groupId: "wb_brutality", type: ChoiceType.Passive,
             description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.Damage, 0.10f),
+            passives: new[] { new PassiveEffect(PassiveEffectType.Damage, 0.10f) },
             mutations: null));
 
         _registry.GetChoice("wb_brut_p2").Returns(new CareerChoiceDefinition(
             id: "wb_brut_p2", groupId: "wb_brutality", type: ChoiceType.Passive,
             description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.Damage, 0.05f),
+            passives: new[] { new PassiveEffect(PassiveEffectType.Damage, 0.05f) },
             mutations: null));
 
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
             id: "wb_root", groupId: "", type: ChoiceType.Passive,
-            description: "", iconSprite: "", passive: null, mutations: null));
+            description: "", iconSprite: "", passives: null, mutations: null));
 
         _service.RefreshCache(_dataService, _registry);
 
@@ -172,12 +172,12 @@ public class CareerPassiveServiceTests
         _registry.GetChoice("wb_brut_p1").Returns(new CareerChoiceDefinition(
             id: "wb_brut_p1", groupId: "wb_brutality", type: ChoiceType.Passive,
             description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.Damage, 0.10f),
+            passives: new[] { new PassiveEffect(PassiveEffectType.Damage, 0.10f) },
             mutations: null));
 
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
             id: "wb_root", groupId: "", type: ChoiceType.Passive,
-            description: "", iconSprite: "", passive: null, mutations: null));
+            description: "", iconSprite: "", passives: null, mutations: null));
 
         _service.RefreshCache(_dataService, _registry);
 
@@ -199,7 +199,7 @@ public class CareerPassiveServiceTests
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
             id: "wb_root", groupId: "", type: ChoiceType.Passive,
             description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.TroopDamage, 0.05f),
+            passives: new[] { new PassiveEffect(PassiveEffectType.TroopDamage, 0.05f) },
             mutations: null));
 
         _service.RefreshCache(_dataService, _registry);
@@ -216,7 +216,7 @@ public class CareerPassiveServiceTests
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
             id: "wb_root", groupId: "", type: ChoiceType.Passive,
             description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.TroopDamage, 0.05f),
+            passives: new[] { new PassiveEffect(PassiveEffectType.TroopDamage, 0.05f) },
             mutations: null));
 
         _service.RefreshCache(_dataService, _registry);
@@ -234,11 +234,11 @@ public class CareerPassiveServiceTests
         _registry.GetChoice("wb_brut_p1").Returns(new CareerChoiceDefinition(
             id: "wb_brut_p1", groupId: "wb_brutality", type: ChoiceType.Passive,
             description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.Damage, 0.10f),
+            passives: new[] { new PassiveEffect(PassiveEffectType.Damage, 0.10f) },
             mutations: null));
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
             id: "wb_root", groupId: "", type: ChoiceType.Passive,
-            description: "", iconSprite: "", passive: null, mutations: null));
+            description: "", iconSprite: "", passives: null, mutations: null));
         _service.RefreshCache(_dataService, _registry);
 
         var result = new ExplainedNumber(100f);
@@ -256,11 +256,11 @@ public class CareerPassiveServiceTests
         _registry.GetChoice("wb_morale_flat").Returns(new CareerChoiceDefinition(
             id: "wb_morale_flat", groupId: "wb_morale", type: ChoiceType.Passive,
             description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.TroopMorale, 5f),
+            passives: new[] { new PassiveEffect(PassiveEffectType.TroopMorale, 5f) },
             mutations: null));
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
             id: "wb_root", groupId: "", type: ChoiceType.Passive,
-            description: "", iconSprite: "", passive: null, mutations: null));
+            description: "", iconSprite: "", passives: null, mutations: null));
         _service.RefreshCache(_dataService, _registry);
 
         var result = new ExplainedNumber(50f);
@@ -282,11 +282,11 @@ public class CareerPassiveServiceTests
         _registry.GetChoice("wb_party_size").Returns(new CareerChoiceDefinition(
             id: "wb_party_size", groupId: "wb_command", type: ChoiceType.Passive,
             description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.PartySize, 2f),
+            passives: new[] { new PassiveEffect(PassiveEffectType.PartySize, 2f) },
             mutations: null));
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
             id: "wb_root", groupId: "", type: ChoiceType.Passive,
-            description: "", iconSprite: "", passive: null, mutations: null));
+            description: "", iconSprite: "", passives: null, mutations: null));
         _service.RefreshCache(_dataService, _registry);
 
         var flat = new ExplainedNumber(100f);
@@ -313,11 +313,11 @@ public class CareerPassiveServiceTests
         _registry.GetChoice("wb_party_size").Returns(new CareerChoiceDefinition(
             id: "wb_party_size", groupId: "wb_command", type: ChoiceType.Passive,
             description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.PartySize, magnitude),
+            passives: new[] { new PassiveEffect(PassiveEffectType.PartySize, magnitude) },
             mutations: null));
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
             id: "wb_root", groupId: "", type: ChoiceType.Passive,
-            description: "", iconSprite: "", passive: null, mutations: null));
+            description: "", iconSprite: "", passives: null, mutations: null));
         _service.RefreshCache(_dataService, _registry);
     }
 
@@ -438,7 +438,7 @@ public class CareerPassiveServiceTests
 
     private static CareerChoiceDefinition NullRootChoice() => new CareerChoiceDefinition(
         id: "wb_root", groupId: "", type: ChoiceType.Passive,
-        description: "", iconSprite: "", passive: null, mutations: null);
+        description: "", iconSprite: "", passives: null, mutations: null);
 
     [TestMethod]
     public void GetMaskedMagnitude_MeleeMaskedDamage_AppliesToMeleeHitOnly()
@@ -447,7 +447,7 @@ public class CareerPassiveServiceTests
         _dataService.TryAddChoice("hero1", "wb_melee_dmg", 10);
         _registry.GetChoice("wb_melee_dmg").Returns(new CareerChoiceDefinition(
             id: "wb_melee_dmg", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.Damage, 0.15f, attackTypeMask: AttackTypeMask.Melee),
+            passives: new[] { new PassiveEffect(PassiveEffectType.Damage, 0.15f, attackTypeMask: AttackTypeMask.Melee) },
             mutations: null));
         _registry.GetChoice("wb_root").Returns(NullRootChoice());
         _service.RefreshCache(_dataService, _registry);
@@ -463,7 +463,7 @@ public class CareerPassiveServiceTests
         _dataService.TryAddChoice("hero1", "wb_all_dmg", 10);
         _registry.GetChoice("wb_all_dmg").Returns(new CareerChoiceDefinition(
             id: "wb_all_dmg", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.Damage, 0.10f, attackTypeMask: AttackTypeMask.All),
+            passives: new[] { new PassiveEffect(PassiveEffectType.Damage, 0.10f, attackTypeMask: AttackTypeMask.All) },
             mutations: null));
         _registry.GetChoice("wb_root").Returns(NullRootChoice());
         _service.RefreshCache(_dataService, _registry);
@@ -481,7 +481,7 @@ public class CareerPassiveServiceTests
         _dataService.TryAddChoice("hero1", "wb_blunt", 10);
         _registry.GetChoice("wb_blunt").Returns(new CareerChoiceDefinition(
             id: "wb_blunt", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.Resistance, 0.06f, attackTypeMask: AttackTypeMask.Blunt),
+            passives: new[] { new PassiveEffect(PassiveEffectType.Resistance, 0.06f, attackTypeMask: AttackTypeMask.Blunt) },
             mutations: null));
         _registry.GetChoice("wb_root").Returns(NullRootChoice());
         _service.RefreshCache(_dataService, _registry);
@@ -500,11 +500,11 @@ public class CareerPassiveServiceTests
         _dataService.TryAddChoice("hero1", "wb_ranged", 10);
         _registry.GetChoice("wb_melee").Returns(new CareerChoiceDefinition(
             id: "wb_melee", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.Damage, 0.12f, attackTypeMask: AttackTypeMask.Melee),
+            passives: new[] { new PassiveEffect(PassiveEffectType.Damage, 0.12f, attackTypeMask: AttackTypeMask.Melee) },
             mutations: null));
         _registry.GetChoice("wb_ranged").Returns(new CareerChoiceDefinition(
             id: "wb_ranged", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.Damage, 0.08f, attackTypeMask: AttackTypeMask.Ranged),
+            passives: new[] { new PassiveEffect(PassiveEffectType.Damage, 0.08f, attackTypeMask: AttackTypeMask.Ranged) },
             mutations: null));
         _registry.GetChoice("wb_root").Returns(NullRootChoice());
         _service.RefreshCache(_dataService, _registry);
@@ -526,11 +526,11 @@ public class CareerPassiveServiceTests
         _dataService.TryAddChoice("hero1", "wb_melee", 10);
         _registry.GetChoice("wb_all").Returns(new CareerChoiceDefinition(
             id: "wb_all", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.Resistance, 0.10f, attackTypeMask: AttackTypeMask.All),
+            passives: new[] { new PassiveEffect(PassiveEffectType.Resistance, 0.10f, attackTypeMask: AttackTypeMask.All) },
             mutations: null));
         _registry.GetChoice("wb_melee").Returns(new CareerChoiceDefinition(
             id: "wb_melee", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.Resistance, 0.05f, attackTypeMask: AttackTypeMask.Melee),
+            passives: new[] { new PassiveEffect(PassiveEffectType.Resistance, 0.05f, attackTypeMask: AttackTypeMask.Melee) },
             mutations: null));
         _registry.GetChoice("wb_root").Returns(NullRootChoice());
         _service.RefreshCache(_dataService, _registry);
@@ -558,11 +558,11 @@ public class CareerPassiveServiceTests
         _registry.GetChoice("wb_brut_p1").Returns(new CareerChoiceDefinition(
             id: "wb_brut_p1", groupId: "wb_brutality", type: ChoiceType.Passive,
             description: "", iconSprite: "",
-            passive: new PassiveEffect(PassiveEffectType.Damage, 0.10f),
+            passives: new[] { new PassiveEffect(PassiveEffectType.Damage, 0.10f) },
             mutations: null));
         _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
             id: "wb_root", groupId: "", type: ChoiceType.Passive,
-            description: "", iconSprite: "", passive: null, mutations: null));
+            description: "", iconSprite: "", passives: null, mutations: null));
 
         _service.RefreshCache(_dataService, _registry);
         Assert.AreEqual(0.10f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.Damage), 0.001f);
@@ -572,5 +572,537 @@ public class CareerPassiveServiceTests
         _service.RefreshCache(emptyDataService, _registry);
         Assert.AreEqual(0f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.Damage));
         Assert.IsFalse(_service.HasActivePassive("hero1", PassiveEffectType.Damage));
+    }
+
+    // ── #769 E8 + E9: several effects per option, and the troop-class bucket ──
+
+    private void GivenChoice(string id, params PassiveEffect[] passives)
+    {
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", id, 10);
+        _registry.GetChoice(id).Returns(new CareerChoiceDefinition(
+            id: id, groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
+            passives: passives, mutations: null));
+        _registry.GetChoice("wb_root").Returns(NullRootChoice());
+        _service.RefreshCache(_dataService, _registry);
+    }
+
+    private float Troop(PassiveEffectType type, TroopClassMask troopClass, AttackTypeMask? hit = null)
+        => _service.GetTroopMagnitude("hero1", type, troopClass, hit);
+
+    [TestMethod]
+    public void RefreshCache_ChoiceWithTwoPassives_AccumulatesBoth()
+    {
+        GivenChoice("wb_two",
+            new PassiveEffect(PassiveEffectType.Damage, 0.10f),
+            new PassiveEffect(PassiveEffectType.Health, 25f));
+
+        Assert.AreEqual(0.10f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.Damage), 0.001f);
+        Assert.AreEqual(25f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.Health), 0.001f);
+        Assert.IsTrue(_service.HasActivePassive("hero1", PassiveEffectType.Health));
+    }
+
+    [TestMethod]
+    public void RefreshCache_TwoPassivesOfOneType_SumIntoTheSameTotal()
+    {
+        GivenChoice("wb_two",
+            new PassiveEffect(PassiveEffectType.Damage, 0.10f, attackTypeMask: AttackTypeMask.Melee),
+            new PassiveEffect(PassiveEffectType.Damage, 0.04f, attackTypeMask: AttackTypeMask.Ranged));
+
+        Assert.AreEqual(0.14f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.Damage), 0.001f);
+        Assert.AreEqual(0.10f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee), 0.001f);
+        Assert.AreEqual(0.04f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Ranged), 0.001f);
+    }
+
+    [TestMethod]
+    public void RefreshCache_RootChoiceWithTwoPassives_AccumulatesBoth()
+    {
+        _dataService.SetCareer("hero1", "warboss");
+        _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
+            id: "wb_root", groupId: "", type: ChoiceType.Passive, description: "", iconSprite: "",
+            passives: new[]
+            {
+                new PassiveEffect(PassiveEffectType.TroopDamage, 0.05f, troopClass: TroopClassMask.Infantry),
+                new PassiveEffect(PassiveEffectType.TroopResistance, 0.03f),
+            },
+            mutations: null));
+        _service.RefreshCache(_dataService, _registry);
+
+        Assert.AreEqual(0.05f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.TroopDamage), 0.001f);
+        Assert.AreEqual(0.03f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.TroopResistance), 0.001f);
+        Assert.AreEqual(0.05f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Infantry), 0.001f);
+        Assert.AreEqual(0f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Cavalry), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetTroopMagnitude_InfantryPip_AppliesToInfantryOnly()
+    {
+        GivenChoice("wb_inf", new PassiveEffect(PassiveEffectType.TroopDamage, 0.10f, troopClass: TroopClassMask.Infantry));
+
+        Assert.AreEqual(0.10f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Infantry), 0.001f);
+        Assert.AreEqual(0f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Ranged), 0.001f);
+        Assert.AreEqual(0f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Cavalry), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetTroopMagnitude_AllClassPip_AppliesToEveryTroopIncludingOneWithNoClass()
+    {
+        GivenChoice("wb_all", new PassiveEffect(PassiveEffectType.TroopResistance, 0.08f));
+
+        foreach (var troop in new[] { TroopClassMask.Infantry, TroopClassMask.Ranged, TroopClassMask.Cavalry, TroopClassMask.All, TroopClassMask.None })
+            Assert.AreEqual(0.08f, Troop(PassiveEffectType.TroopResistance, troop), 0.001f, troop.ToString());
+    }
+
+    [TestMethod]
+    public void GetTroopMagnitude_TroopWithNoClass_ReceivesOnlyAllClassEffects()
+    {
+        GivenChoice("wb_mix",
+            new PassiveEffect(PassiveEffectType.TroopDamage, 0.10f, troopClass: TroopClassMask.Infantry),
+            new PassiveEffect(PassiveEffectType.TroopDamage, 0.02f));
+
+        Assert.AreEqual(0.02f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.None), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetTroopMagnitude_AllAndClassPips_SumForTheMatchingClass()
+    {
+        GivenChoice("wb_mix",
+            new PassiveEffect(PassiveEffectType.TroopDamage, 0.10f, troopClass: TroopClassMask.Infantry),
+            new PassiveEffect(PassiveEffectType.TroopDamage, 0.02f));
+
+        Assert.AreEqual(0.12f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Infantry), 0.001f);
+        Assert.AreEqual(0.02f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Cavalry), 0.001f);
+        // The unfiltered per-type total still sums both, whatever the class.
+        Assert.AreEqual(0.12f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.TroopDamage), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetTroopMagnitude_MultiClassTroop_MatchesAnyOfItsClasses()
+    {
+        // A horse archer is Ranged | Cavalry: a pip for either class reaches it, one for infantry does not.
+        GivenChoice("wb_a", new PassiveEffect(PassiveEffectType.TroopDamage, 0.10f, troopClass: TroopClassMask.Cavalry));
+        var horseArcher = TroopClassMask.Ranged | TroopClassMask.Cavalry;
+
+        Assert.AreEqual(0.10f, Troop(PassiveEffectType.TroopDamage, horseArcher), 0.001f);
+        Assert.AreEqual(0f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Infantry), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetTroopMagnitude_MultiClassPip_ReachesEachOfItsClassesOnce()
+    {
+        GivenChoice("wb_ir", new PassiveEffect(PassiveEffectType.TroopDamage, 0.10f, troopClass: TroopClassMask.Infantry | TroopClassMask.Ranged));
+        var skirmisher = TroopClassMask.Infantry | TroopClassMask.Ranged;
+
+        Assert.AreEqual(0.10f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Infantry), 0.001f);
+        Assert.AreEqual(0.10f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Ranged), 0.001f);
+        Assert.AreEqual(0.10f, Troop(PassiveEffectType.TroopDamage, skirmisher), 0.001f, "one bucket, counted once");
+        Assert.AreEqual(0f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Cavalry), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetTroopMagnitude_NoHitMask_IgnoresTheAttackTypeMask()
+    {
+        GivenChoice("wb_ward", new PassiveEffect(PassiveEffectType.TroopResistance, 0.20f, attackTypeMask: AttackTypeMask.Ranged));
+
+        Assert.AreEqual(0.20f, Troop(PassiveEffectType.TroopResistance, TroopClassMask.Infantry), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetTroopMagnitude_NoHitMask_StillSkipsAnUnparseableMaskPip()
+    {
+        // The loader lands an unknown attack_type_mask on None and warns "the pip is inert". No hit matches None,
+        // so a reader with no hit (the raid speed, the console) must skip it too, or the pip is inert per blow
+        // and live everywhere else.
+        GivenChoice("wb_bad",
+            new PassiveEffect(PassiveEffectType.TroopDamage, 0.10f, attackTypeMask: AttackTypeMask.None),
+            new PassiveEffect(PassiveEffectType.TroopDamage, 0.02f));
+
+        Assert.AreEqual(0.02f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Infantry), 0.001f);
+        Assert.AreEqual(0.02f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.None), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetTroopMagnitude_WithHitMask_HonoursTheAttackTypeMask_TheArrowWard()
+    {
+        // "Infantry shrug arrows": a Ranged-masked, Infantry-classed TroopResistance reaches an infantryman
+        // struck by an arrow and nothing else.
+        GivenChoice("wb_ward", new PassiveEffect(PassiveEffectType.TroopResistance, 0.20f,
+            attackTypeMask: AttackTypeMask.Ranged, troopClass: TroopClassMask.Infantry));
+        var arrow = AttackTypeMask.Ranged | AttackTypeMask.Pierce;
+        var sword = AttackTypeMask.Melee | AttackTypeMask.Cut;
+
+        Assert.AreEqual(0.20f, Troop(PassiveEffectType.TroopResistance, TroopClassMask.Infantry, arrow), 0.001f);
+        Assert.AreEqual(0f, Troop(PassiveEffectType.TroopResistance, TroopClassMask.Infantry, sword), 0.001f);
+        Assert.AreEqual(0f, Troop(PassiveEffectType.TroopResistance, TroopClassMask.Cavalry, arrow), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetTroopMagnitude_UnmaskedShippedStylePip_IsUnchangedByAHitMask()
+    {
+        // Shipped troop pips carry no attack_type_mask (All), so honouring the hit mask changes nothing for them.
+        GivenChoice("wb_flat", new PassiveEffect(PassiveEffectType.TroopDamage, 0.07f));
+
+        Assert.AreEqual(0.07f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Infantry, AttackTypeMask.Melee | AttackTypeMask.Cut), 0.001f);
+        Assert.AreEqual(0.07f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Infantry, AttackTypeMask.Ranged | AttackTypeMask.Pierce), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetMaskedMagnitude_ClassFilteredPip_StillCountsForAnyClass()
+    {
+        // The hero-facing readers (Damage / Resistance) have no troop class; they keep their meaning.
+        GivenChoice("wb_inf", new PassiveEffect(PassiveEffectType.Damage, 0.10f, troopClass: TroopClassMask.Infantry));
+
+        Assert.AreEqual(0.10f, _service.GetMaskedMagnitude("hero1", PassiveEffectType.Damage, AttackTypeMask.Melee), 0.001f);
+    }
+
+    // ── army-wide readers of a class-filtered type (TaomRaidModel's raid speed, any future ApplyFactor/ApplyFlat) ──
+
+    [TestMethod]
+    public void ApplyFactor_ClassFilteredType_ReadsTheArmyWidePipsOnly()
+    {
+        // A class-only pip ("+10% infantry damage") must not speed a raid at full magnitude: a raid has no
+        // troop class, so it reads what every troop gets, the All-class pips.
+        GivenChoice("wb_mix",
+            new PassiveEffect(PassiveEffectType.TroopDamage, 0.05f),
+            new PassiveEffect(PassiveEffectType.TroopDamage, 0.10f, troopClass: TroopClassMask.Infantry));
+
+        var result = new ExplainedNumber(100f);
+        _service.ApplyFactor("hero1", ref result, PassiveEffectType.TroopDamage);
+
+        Assert.AreEqual(105f, result.ResultNumber, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyFactor_ClassFilteredType_WithOnlyAClassPip_AddsNothing()
+    {
+        GivenChoice("wb_inf", new PassiveEffect(PassiveEffectType.TroopDamage, 0.10f, troopClass: TroopClassMask.Infantry));
+
+        var result = new ExplainedNumber(100f);
+        _service.ApplyFactor("hero1", ref result, PassiveEffectType.TroopDamage);
+
+        Assert.AreEqual(100f, result.ResultNumber, 0.01f);
+    }
+
+    [TestMethod]
+    public void ApplyFlat_ClassFilteredType_ReadsTheArmyWidePipsOnly()
+    {
+        GivenChoice("wb_mix",
+            new PassiveEffect(PassiveEffectType.TroopResistance, 4f),
+            new PassiveEffect(PassiveEffectType.TroopResistance, 9f, troopClass: TroopClassMask.Cavalry));
+
+        var result = new ExplainedNumber(100f);
+        _service.ApplyFlat("hero1", ref result, PassiveEffectType.TroopResistance);
+
+        Assert.AreEqual(104f, result.ResultNumber, 0.01f);
+    }
+
+    [TestMethod]
+    public void GetPassiveMagnitude_ClassFilteredType_StaysTheUnfilteredTotal()
+    {
+        // The unfiltered reader is unchanged: the career screen and taom.career_perks total every pip.
+        GivenChoice("wb_mix",
+            new PassiveEffect(PassiveEffectType.TroopDamage, 0.05f),
+            new PassiveEffect(PassiveEffectType.TroopDamage, 0.10f, troopClass: TroopClassMask.Infantry));
+
+        Assert.AreEqual(0.15f, _service.GetPassiveMagnitude("hero1", PassiveEffectType.TroopDamage), 0.001f);
+    }
+
+    [TestMethod]
+    public void GetTroopMagnitude_UnknownHeroTypeOrNullId_ReturnsZero()
+    {
+        GivenChoice("wb_inf", new PassiveEffect(PassiveEffectType.TroopDamage, 0.10f));
+
+        Assert.AreEqual(0f, _service.GetTroopMagnitude(null, PassiveEffectType.TroopDamage, TroopClassMask.Infantry));
+        Assert.AreEqual(0f, _service.GetTroopMagnitude("", PassiveEffectType.TroopDamage, TroopClassMask.Infantry));
+        Assert.AreEqual(0f, _service.GetTroopMagnitude("nobody", PassiveEffectType.TroopDamage, TroopClassMask.Infantry));
+        Assert.AreEqual(0f, Troop(PassiveEffectType.TroopResistance, TroopClassMask.Infantry));
+    }
+
+    [TestMethod]
+    public void GetTroopMagnitude_TakenChoiceAndRootBothAccumulate()
+    {
+        _dataService.SetCareer("hero1", "warboss");
+        _dataService.TryAddChoice("hero1", "wb_inf", 10);
+        _registry.GetChoice("wb_inf").Returns(new CareerChoiceDefinition(
+            id: "wb_inf", groupId: "g", type: ChoiceType.Passive, description: "", iconSprite: "",
+            passives: new[] { new PassiveEffect(PassiveEffectType.TroopDamage, 0.10f, troopClass: TroopClassMask.Infantry) },
+            mutations: null));
+        _registry.GetChoice("wb_root").Returns(new CareerChoiceDefinition(
+            id: "wb_root", groupId: "", type: ChoiceType.Passive, description: "", iconSprite: "",
+            passives: new[] { new PassiveEffect(PassiveEffectType.TroopDamage, 0.05f) },
+            mutations: null));
+        _service.RefreshCache(_dataService, _registry);
+
+        Assert.AreEqual(0.15f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Infantry), 0.001f);
+        Assert.AreEqual(0.05f, Troop(PassiveEffectType.TroopDamage, TroopClassMask.Cavalry), 0.001f);
+    }
+
+    // ── #769 E11: the campaign consumers' service rules ──
+
+    private void GivenPassive(PassiveEffectType type, float magnitude, TroopClassMask troopClass = TroopClassMask.All)
+        => GivenChoice("wb_e11", new PassiveEffect(type, magnitude, troopClass: troopClass));
+
+    private int CareerPerkLines(string typeName)
+        => _logger.ReceivedCalls().Count(c => c.GetMethodInfo().Name == nameof(IModLogger.LogInfo)
+            && c.GetArguments()[0] is string text && text.StartsWith("[CareerPerks] " + typeName));
+
+    [DataTestMethod]
+    [DataRow(PassiveEffectType.LootGold, 0.20f, 0.5f, 0.6f)]
+    [DataRow(PassiveEffectType.RaidLoot, 0.50f, 1.0f, 1.5f)]
+    [DataRow(PassiveEffectType.TradePrices, -0.25f, 0.2f, 0.15f)]
+    public void ScaleByPassive_HeldPassive_ScalesTheValueByOnePlusTheMagnitude(PassiveEffectType type, float magnitude, float value, float expected)
+    {
+        GivenPassive(type, magnitude);
+
+        Assert.AreEqual(expected, _service.ScaleByPassive("hero1", value, type), 0.0001f);
+    }
+
+    [TestMethod]
+    public void ScaleByPassive_NoHeroNoPassiveOrAnotherType_ReturnsTheValueUntouched()
+    {
+        GivenPassive(PassiveEffectType.LootGold, 0.20f);
+
+        Assert.AreEqual(0.5f, _service.ScaleByPassive(null, 0.5f, PassiveEffectType.LootGold));
+        Assert.AreEqual(0.5f, _service.ScaleByPassive("", 0.5f, PassiveEffectType.LootGold));
+        Assert.AreEqual(0.5f, _service.ScaleByPassive("nobody", 0.5f, PassiveEffectType.LootGold));
+        Assert.AreEqual(0.5f, _service.ScaleByPassive("hero1", 0.5f, PassiveEffectType.RaidLoot));
+    }
+
+    [TestMethod]
+    public void ScaleByPassive_MagnitudeThatCancelsTheValue_ReturnsZeroNotANegative()
+    {
+        // -100% is the floor: a trade penalty or a loot share of exactly nothing, never a sign flip.
+        GivenPassive(PassiveEffectType.TradePrices, -1f);
+
+        Assert.AreEqual(0f, _service.ScaleByPassive("hero1", 0.2f, PassiveEffectType.TradePrices));
+    }
+
+    [DataTestMethod]
+    [DataRow(-1.01f)]
+    [DataRow(-1.5f)]
+    [DataRow(-3f)]
+    public void ScaleByPassive_MagnitudeBelowMinusOne_FloorsAtZeroNotADiscountBelowBase(float magnitude)
+    {
+        // A scale below zero would turn a trade penalty into a discount below the base price (buy under base,
+        // sell over it). There is no cliff at -1: a total of -1.01 is the same full cut as -1, never the full
+        // penalty back. The loader rejects a NaN or infinite magnitude (CareerConfigProviderTests), so the
+        // service never sees one.
+        GivenPassive(PassiveEffectType.TradePrices, magnitude);
+
+        var scaled = _service.ScaleByPassive("hero1", 0.2f, PassiveEffectType.TradePrices);
+
+        Assert.AreEqual(0f, scaled);
+    }
+
+    [TestMethod]
+    public void ScaleByPassive_EventScopedType_LogsOneLineWithTheValueBeforeAndAfter()
+    {
+        GivenPassive(PassiveEffectType.LootGold, 0.20f);
+
+        _service.ScaleByPassive("hero1", 0.5f, PassiveEffectType.LootGold);
+
+        _logger.Received(1).LogInfo(Arg.Is<string>(s => s.StartsWith("[CareerPerks] LootGold +20% for 'hero1': 0.5 -> 0.6")));
+    }
+
+    [TestMethod]
+    public void ScaleByPassive_ValueThatDoesNotMove_LogsNoZeroToZeroLine()
+    {
+        GivenPassive(PassiveEffectType.LootGold, 0.20f);
+
+        _service.ScaleByPassive("hero1", 0f, PassiveEffectType.LootGold);
+
+        Assert.AreEqual(0, CareerPerkLines("LootGold"));
+    }
+
+    [TestMethod]
+    public void ScaleByPassive_PerTickType_NeverLogs()
+    {
+        // The raid step and every price quote call this many times a second.
+        GivenPassive(PassiveEffectType.RaidLoot, 0.50f);
+        GivenChoice("wb_e11b", new PassiveEffect(PassiveEffectType.TradePrices, -0.20f));
+
+        _service.ScaleByPassive("hero1", 1f, PassiveEffectType.RaidLoot);
+        _service.ScaleByPassive("hero1", 0.2f, PassiveEffectType.TradePrices);
+
+        Assert.AreEqual(0, CareerPerkLines("RaidLoot"));
+        Assert.AreEqual(0, CareerPerkLines("TradePrices"));
+    }
+
+    [TestMethod]
+    public void ApplyFactor_EventScopedTypeOverAZeroBase_LogsNoZeroToZeroLine()
+    {
+        // Vanilla pays no influence outside a kingdom, so a factor on it moves nothing: no "0 -> 0" in the log.
+        GivenPassive(PassiveEffectType.InfluenceGain, 0.20f);
+
+        var none = new ExplainedNumber(0f);
+        _service.ApplyFactor("hero1", ref none, PassiveEffectType.InfluenceGain);
+
+        Assert.AreEqual(0f, none.ResultNumber);
+        Assert.AreEqual(0, CareerPerkLines("InfluenceGain"));
+    }
+
+    [TestMethod]
+    public void ApplyFactor_EventScopedTypeOverARealBase_LogsOneLine()
+    {
+        GivenPassive(PassiveEffectType.InfluenceGain, 0.20f);
+
+        var gain = new ExplainedNumber(5f);
+        _service.ApplyFactor("hero1", ref gain, PassiveEffectType.InfluenceGain);
+
+        Assert.AreEqual(6f, gain.ResultNumber, 0.001f);
+        Assert.AreEqual(1, CareerPerkLines("InfluenceGain"));
+    }
+
+    [TestMethod]
+    public void ApplyFlat_ClassPip_AddsOnlyForATroopOfThatClass()
+    {
+        GivenChoice("wb_train",
+            new PassiveEffect(PassiveEffectType.TroopTraining, 4f),
+            new PassiveEffect(PassiveEffectType.TroopTraining, 6f, troopClass: TroopClassMask.Infantry));
+
+        var infantry = new ExplainedNumber(0f);
+        _service.ApplyFlat("hero1", ref infantry, PassiveEffectType.TroopTraining, TroopClassMask.Infantry);
+        var cavalry = new ExplainedNumber(0f);
+        _service.ApplyFlat("hero1", ref cavalry, PassiveEffectType.TroopTraining, TroopClassMask.Cavalry);
+        var classless = new ExplainedNumber(0f);
+        _service.ApplyFlat("hero1", ref classless, PassiveEffectType.TroopTraining, TroopClassMask.None);
+
+        Assert.AreEqual(10f, infantry.ResultNumber, 0.001f, "the All pip plus the infantry pip");
+        Assert.AreEqual(4f, cavalry.ResultNumber, 0.001f, "only the All pip");
+        Assert.AreEqual(4f, classless.ResultNumber, 0.001f, "a troop with no class gets the All pip and nothing narrower");
+    }
+
+    [TestMethod]
+    public void ApplyFlat_ClassFilteredTypeAfterAFactor_IsStillWorthItsLiteralCount()
+    {
+        // Same frame rule as ApplyFlat: the vanilla training perks add factors, and a "+5 experience" pip is worth 5.
+        GivenPassive(PassiveEffectType.TroopTraining, 5f);
+        var result = new ExplainedNumber(10f);
+        result.AddFactor(1f);
+
+        _service.ApplyFlat("hero1", ref result, PassiveEffectType.TroopTraining, TroopClassMask.Infantry);
+
+        Assert.AreEqual(25f, result.ResultNumber, 0.001f);
+    }
+
+    [TestMethod]
+    public void ApplyFlat_ClassFilteredTypeForNoHeroNoPassiveOrAnotherHero_IsNoOp()
+    {
+        GivenPassive(PassiveEffectType.TroopTraining, 5f);
+        var result = new ExplainedNumber(3f);
+
+        _service.ApplyFlat(null, ref result, PassiveEffectType.TroopTraining, TroopClassMask.Infantry);
+        _service.ApplyFlat("", ref result, PassiveEffectType.TroopTraining, TroopClassMask.Infantry);
+        _service.ApplyFlat("nobody", ref result, PassiveEffectType.TroopTraining, TroopClassMask.Infantry);
+        _service.ApplyFlat("hero1", ref result, PassiveEffectType.DailyGold, TroopClassMask.Infantry);
+
+        Assert.AreEqual(3f, result.ResultNumber, 0.001f);
+    }
+
+    [TestMethod]
+    public void ApplyWoundRecovery_PositiveHealing_IsRaisedByTheFactor()
+    {
+        GivenPassive(PassiveEffectType.WoundRecovery, 0.25f);
+        var healing = new ExplainedNumber(20f);
+
+        _service.ApplyWoundRecovery("hero1", isPrisoner: false, ref healing);
+
+        Assert.AreEqual(25f, healing.ResultNumber, 0.001f);
+    }
+
+    [TestMethod]
+    public void ApplyWoundRecovery_StarvingOrRaftNegativeValue_IsNotMadeWorse()
+    {
+        // Vanilla returns a NEGATIVE value for a starving party (-regulars/4) and a raft; a plus factor on it
+        // would wound the troops faster. The factor only ever speeds up a recovery.
+        GivenPassive(PassiveEffectType.WoundRecovery, 0.25f);
+        var starving = new ExplainedNumber(0f);
+        starving.Add(-12f);
+        var zero = new ExplainedNumber(0f);
+
+        _service.ApplyWoundRecovery("hero1", isPrisoner: false, ref starving);
+        _service.ApplyWoundRecovery("hero1", isPrisoner: false, ref zero);
+
+        Assert.AreEqual(-12f, starving.ResultNumber, 0.001f);
+        Assert.AreEqual(0f, zero.ResultNumber, 0.001f);
+    }
+
+    [TestMethod]
+    public void ApplyWoundRecovery_PrisonerPath_IsNeverTouched()
+    {
+        // isPrisoner true is the CAPTOR healing its prisoners (vanilla's constant +1): not the hero's own troops.
+        GivenPassive(PassiveEffectType.WoundRecovery, 0.50f);
+        var healing = new ExplainedNumber(1f);
+
+        _service.ApplyWoundRecovery("hero1", isPrisoner: true, ref healing);
+
+        Assert.AreEqual(1f, healing.ResultNumber, 0.001f);
+    }
+
+    [TestMethod]
+    public void ApplyWoundRecovery_NoHeroOrNoPassive_IsNoOp()
+    {
+        GivenPassive(PassiveEffectType.WoundRecovery, 0.50f);
+        var healing = new ExplainedNumber(10f);
+
+        _service.ApplyWoundRecovery(null, isPrisoner: false, ref healing);
+        _service.ApplyWoundRecovery("nobody", isPrisoner: false, ref healing);
+
+        Assert.AreEqual(10f, healing.ResultNumber, 0.001f);
+    }
+
+    [DataTestMethod]
+    [DataRow(-1f, 0f)]
+    [DataRow(-1.5f, 0f)]
+    [DataRow(-3f, 0f)]
+    [DataRow(-0.5f, 10f)]
+    public void ApplyWoundRecovery_TotalOfMinusOneOrLess_NeverTurnsPositiveHealingNegative(float magnitude, float expected)
+    {
+        // A fraction total is not range-checked at the loader, and vanilla puts no lower limit on the number: a
+        // total below -1 would turn a positive recovery into a daily wound. The factor is floored at -1 (no recovery).
+        GivenPassive(PassiveEffectType.WoundRecovery, magnitude);
+        var healing = new ExplainedNumber(20f);
+
+        _service.ApplyWoundRecovery("hero1", isPrisoner: false, ref healing);
+
+        Assert.AreEqual(expected, healing.ResultNumber, 0.001f);
+    }
+
+    [TestMethod]
+    public void ApplyWoundRecovery_NaNHealing_AddsNoFactor()
+    {
+        // The gate is written positive so NaN fails it: a factor on a NaN base would only spread the NaN.
+        GivenPassive(PassiveEffectType.WoundRecovery, 0.50f);
+        var healing = new ExplainedNumber(float.NaN);
+
+        _service.ApplyWoundRecovery("hero1", isPrisoner: false, ref healing);
+
+        Assert.AreEqual(0f, healing.SumOfFactors);
+    }
+
+    [TestMethod]
+    public void ApplyFlat_ClassWithANaNFactorFrame_AddsNothing()
+    {
+        // The divisor 1 + SumOfFactors is NaN, which the positive gate rejects: the base is left as it was.
+        GivenPassive(PassiveEffectType.TroopTraining, 5f);
+        var result = new ExplainedNumber(10f);
+        result.AddFactor(float.NaN);
+
+        _service.ApplyFlat("hero1", ref result, PassiveEffectType.TroopTraining, TroopClassMask.Infantry);
+
+        Assert.AreEqual(10f, result.BaseNumber);
+    }
+
+    [TestMethod]
+    public void ApplyFlat_DailyGold_AddsTheCountAfterTheFactors()
+    {
+        // The clan finance models call ApplyFlat last, outside the enlistment wage line's applyWithdrawals return.
+        GivenPassive(PassiveEffectType.DailyGold, 50f);
+        var gold = new ExplainedNumber(100f);
+        gold.AddFactor(0.5f);
+
+        _service.ApplyFlat("hero1", ref gold, PassiveEffectType.DailyGold);
+
+        Assert.AreEqual(200f, gold.ResultNumber, 0.001f, "100 * 1.5 = 150, plus exactly 50");
     }
 }

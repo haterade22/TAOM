@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.CareerSystem.Hooks;
 using TAOM.Features.DreadAura.Hooks;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
@@ -119,7 +120,7 @@ public sealed class RaceAbilityTicker
             Mission.Current.GetNearbyEnemyAgents(source.Position.AsVec2, effects.FearAuraRadius, source.Team, _scratch);
             foreach (var victim in _scratch)
                 if (DreadAgentGate.CanAffect(victim))
-                    _aura.Offer(victim, moraleModel.CalculateMoraleChangeToCharacter(victim, drain), pair.Value.Profile.AbilityId);
+                    _aura.Offer(victim, CareerTroopHooks.ScaleFearDrain(_runtime.CareerStats, victim, moraleModel.CalculateMoraleChangeToCharacter(victim, drain)), pair.Value.Profile.AbilityId);
         }
         foreach (var pair in _aura.Entries)
         {

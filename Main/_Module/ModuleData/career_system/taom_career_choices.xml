@@ -5,579 +5,271 @@
   <!-- ║ GONDOR — Ranger of Ithilien (Ranged)                            ║ -->
   <!-- ╚═══════════════════════════════════════════════════════════════════╝ -->
 
-  <Choice id="ranger_of_ithilien_root" group_id="" type="Passive"
-          description="{=taom_ranger_of_ithilien_root_desc}Ambush grants +5% ranged damage and scales duration with Bow skill."
-          icon_sprite="career_choice_ranger_of_ithilien_root">
-    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+  <!-- career-forks:begin ranger_of_ithilien sha256=55ffacc9970bda23cd69f2578612da7b3e9aaac772c806071ade70a7c8298fd4 -->
+  <Choice id="ranger_of_ithilien_root" type="Passive"
+          description="{=taom_cf_ranger_of_ithilien_root}+5% ranged damage.">
+    <PassiveEffect type="Damage" magnitude="0.05" attack_type_mask="Ranged" />
   </Choice>
 
-  <!-- T1-A: Offensive (ranged damage) -->
-  <ChoiceGroup id="ranger_of_ithilien_t1_a" display_name="{=taom_career_grp_ranger_of_ithilien_t1_a}Hunter of the Ithilien Road" career_id="ranger_of_ithilien" tier="1">
-    <Choice id="ranger_of_ithilien_t1_a_key" type="Keystone"
-            description="{=taom_roi_t1a_key}Ambush radius increased, arrows deal bonus damage from stealth."
-            icon_sprite="career_choice_roi_t1a_key">
-      <Mutations>
-        <Mutation target_id="ranger_of_ithilien_ability" property="Radius" calculator="flat" value="3" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="ranger_of_ithilien_f1" display_name="{=taom_career_grp_ranger_of_ithilien_f1}Oath of Henneth Annun" career_id="ranger_of_ithilien" tier="1" max_picks="1">
+    <Choice id="ranger_of_ithilien_f1_a" type="Passive"
+            description="{=taom_cf_ranger_of_ithilien_f1_a}+15% ranged damage.">
+      <PassiveEffect type="Damage" magnitude="0.15" attack_type_mask="Ranged" />
     </Choice>
-    <Choice id="ranger_of_ithilien_t1_a_p1" type="Passive"
-            description="{=taom_roi_t1a_p1}+8% ranged damage."
-            icon_sprite="career_choice_roi_t1a_p1">
-      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t1_a_p2" type="Passive"
-            description="{=taom_roi_t1a_p2}+5% armor penetration."
-            icon_sprite="career_choice_roi_t1a_p2">
-      <PassiveEffect type="ArmorPenetration" magnitude="0.05" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t1_a_p3" type="Passive"
-            description="{=taom_roi_t1a_p3}+7% movement speed."
-            icon_sprite="career_choice_roi_t1a_p3">
-      <PassiveEffect type="MovementSpeed" magnitude="0.07" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t1_a_p4" type="Passive"
-            description="{=taom_roi_t1a_p4}+5% battle renown gain."
-            icon_sprite="career_choice_roi_t1a_p4">
-      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    <Choice id="ranger_of_ithilien_f1_b" type="Passive"
+            description="{=taom_cf_ranger_of_ithilien_f1_b}Your ranged troops deal 8% more damage.">
+      <PassiveEffect type="TroopDamage" magnitude="0.08" troop_class="Ranged" />
     </Choice>
   </ChoiceGroup>
 
-  <!-- T1-B: Defensive (stealth/evasion) -->
-  <ChoiceGroup id="ranger_of_ithilien_t1_b" display_name="{=taom_career_grp_ranger_of_ithilien_t1_b}Watcher of Henneth Annûn" career_id="ranger_of_ithilien" tier="1">
-    <Choice id="ranger_of_ithilien_t1_b_key" type="Keystone"
-            description="{=taom_roi_t1b_key}Ambush duration extended, granting additional evasion."
-            icon_sprite="career_choice_roi_t1b_key">
-      <Mutations>
-        <Mutation target_id="ranger_of_ithilien_ability" property="Duration" calculator="flat" value="4" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="ranger_of_ithilien_f2" display_name="{=taom_career_grp_ranger_of_ithilien_f2}Steward's Ledger" career_id="ranger_of_ithilien" tier="1" max_picks="1">
+    <Choice id="ranger_of_ithilien_f2_a" type="Passive"
+            description="{=taom_cf_ranger_of_ithilien_f2_a}+25% renown, and +25% influence while you serve a kingdom.">
+      <PassiveEffect type="RenownGain" magnitude="0.25" />
+      <PassiveEffect type="InfluenceGain" magnitude="0.25" />
     </Choice>
-    <Choice id="ranger_of_ithilien_t1_b_p1" type="Passive"
-            description="{=taom_roi_t1b_p1}+5% resistance."
-            icon_sprite="career_choice_roi_t1b_p1">
-      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t1_b_p2" type="Passive"
-            description="{=taom_roi_t1b_p2}+5 max health."
-            icon_sprite="career_choice_roi_t1b_p2">
-      <PassiveEffect type="Health" magnitude="5" operation="Add" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t1_b_p3" type="Passive"
-            description="{=taom_roi_t1b_p3}+5% party spotting range."
-            icon_sprite="career_choice_roi_t1b_p3">
-      <PassiveEffect type="PartySpottingRange" magnitude="0.05" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t1_b_p4" type="Passive"
-            description="{=taom_roi_t1b_p4}+10% stealth bonus."
-            icon_sprite="career_choice_roi_t1b_p4">
-      <PassiveEffect type="StealthBonus" magnitude="0.10" operation="Add" is_percentage="true" />
+    <Choice id="ranger_of_ithilien_f2_b" type="Passive"
+            description="{=taom_cf_ranger_of_ithilien_f2_b}Your elite troops cost no daily upkeep in your realm's special resource.">
+      <PassiveEffect type="SpecialResourceUpkeepModifier" magnitude="-1" />
     </Choice>
   </ChoiceGroup>
 
-  <!-- T2-A: Utility (scouting/movement) -->
-  <ChoiceGroup id="ranger_of_ithilien_t2_a" display_name="{=taom_career_grp_ranger_of_ithilien_t2_a}Scout of North Ithilien" career_id="ranger_of_ithilien" tier="2">
-    <Choice id="ranger_of_ithilien_t2_a_key" type="Keystone"
-            description="{=taom_roi_t2a_key}Ambush charge requirement reduced, activating more frequently."
-            icon_sprite="career_choice_roi_t2a_key">
-      <Mutations>
-        <Mutation target_id="ranger_of_ithilien_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="ranger_of_ithilien_f3" display_name="{=taom_career_grp_ranger_of_ithilien_f3}Muster of the Fiefs" career_id="ranger_of_ithilien" tier="2" max_picks="1">
+    <Choice id="ranger_of_ithilien_f3_a" type="Passive"
+            description="{=taom_cf_ranger_of_ithilien_f3_a}+50 party size.">
+      <PassiveEffect type="PartySize" magnitude="50" />
     </Choice>
-    <Choice id="ranger_of_ithilien_t2_a_p1" type="Passive"
-            description="{=taom_roi_t2a_p1}+10% party spotting range."
-            icon_sprite="career_choice_roi_t2a_p1">
-      <PassiveEffect type="PartySpottingRange" magnitude="0.10" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t2_a_p2" type="Passive"
-            description="{=taom_roi_t2a_p2}+10% movement speed."
-            icon_sprite="career_choice_roi_t2a_p2">
-      <PassiveEffect type="MovementSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t2_a_p3" type="Passive"
-            description="{=taom_roi_t2a_p3}+13% stealth bonus."
-            icon_sprite="career_choice_roi_t2a_p3">
-      <PassiveEffect type="StealthBonus" magnitude="0.13" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t2_a_p4" type="Passive"
-            description="{=taom_roi_t2a_p4}+10% battle renown gain."
-            icon_sprite="career_choice_roi_t2a_p4">
-      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    <Choice id="ranger_of_ithilien_f3_b" type="Passive"
+            description="{=taom_cf_ranger_of_ithilien_f3_b}Double your realm's special resource from every source.">
+      <PassiveEffect type="SpecialResourceGain" magnitude="1" />
     </Choice>
   </ChoiceGroup>
 
-  <!-- T2-B: Specialization (archery mastery) -->
-  <ChoiceGroup id="ranger_of_ithilien_t2_b" display_name="{=taom_career_grp_ranger_of_ithilien_t2_b}Bowman of Faramir" career_id="ranger_of_ithilien" tier="2">
-    <Choice id="ranger_of_ithilien_t2_b_key" type="Keystone"
-            description="{=taom_roi_t2b_key}Ambush also increases troop ranged damage while active."
-            icon_sprite="career_choice_roi_t2b_key">
-      <Mutations>
-        <Mutation target_id="ranger_of_ithilien_ability" property="Duration" calculator="flat" value="2" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="ranger_of_ithilien_f4" display_name="{=taom_career_grp_ranger_of_ithilien_f4}Ward of the White Tower" career_id="ranger_of_ithilien" tier="2" max_picks="1">
+    <Choice id="ranger_of_ithilien_f4_a" type="Passive"
+            description="{=taom_cf_ranger_of_ithilien_f4_a}Your troops lose 60% less morale to dread and terror.">
+      <PassiveEffect type="TroopFearResistance" magnitude="0.6" />
     </Choice>
-    <Choice id="ranger_of_ithilien_t2_b_p1" type="Passive"
-            description="{=taom_roi_t2b_p1}+12% ranged damage."
-            icon_sprite="career_choice_roi_t2b_p1">
-      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
+    <Choice id="ranger_of_ithilien_f4_b" type="Passive"
+            description="{=taom_cf_ranger_of_ithilien_f4_b}Your troops' blocks hold against a crush-through half the time.">
+      <PassiveEffect type="TroopCrushHold" magnitude="0.5" />
     </Choice>
-    <Choice id="ranger_of_ithilien_t2_b_p2" type="Passive"
-            description="{=taom_roi_t2b_p2}+10% armor penetration."
-            icon_sprite="career_choice_roi_t2b_p2">
-      <PassiveEffect type="ArmorPenetration" magnitude="0.10" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t2_b_p3" type="Passive"
-            description="{=taom_roi_t2b_p3}+8 max health."
-            icon_sprite="career_choice_roi_t2b_p3">
-      <PassiveEffect type="Health" magnitude="8" operation="Add" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t2_b_p4" type="Passive"
-            description="{=taom_roi_t2b_p4}+3% troop damage."
-            icon_sprite="career_choice_roi_t2b_p4">
-      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
+    <Choice id="ranger_of_ithilien_f4_c" type="Passive"
+            description="{=taom_cf_ranger_of_ithilien_f4_c}Your troops resist knockdown from blows and light charges 50% better.">
+      <PassiveEffect type="TroopKnockdownResistance" magnitude="0.5" />
     </Choice>
   </ChoiceGroup>
 
-  <!-- T3-A: Capstone offensive -->
-  <ChoiceGroup id="ranger_of_ithilien_t3_a" display_name="{=taom_career_grp_ranger_of_ithilien_t3_a}Arrow of the Forbidden Pool" career_id="ranger_of_ithilien" tier="3">
-    <Choice id="ranger_of_ithilien_t3_a_key" type="Keystone"
-            description="{=taom_roi_t3a_key}Ambush radius greatly increased, devastating arrow volleys."
-            icon_sprite="career_choice_roi_t3a_key">
-      <Mutations>
-        <Mutation target_id="ranger_of_ithilien_ability" property="Radius" calculator="flat" value="5" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="ranger_of_ithilien_f5" display_name="{=taom_career_grp_ranger_of_ithilien_f5}Watch on the Poros" career_id="ranger_of_ithilien" tier="3" max_picks="1">
+    <Choice id="ranger_of_ithilien_f5_a" type="Passive"
+            description="{=taom_cf_ranger_of_ithilien_f5_a}Your ranged troops gain 15 experience each day.">
+      <PassiveEffect type="TroopTraining" magnitude="15" troop_class="Ranged" />
     </Choice>
-    <Choice id="ranger_of_ithilien_t3_a_p1" type="Passive"
-            description="{=taom_roi_t3a_p1}+18% ranged damage."
-            icon_sprite="career_choice_roi_t3a_p1">
-      <PassiveEffect type="Damage" magnitude="0.18" operation="Add" is_percentage="true" attack_type_mask="Ranged" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t3_a_p2" type="Passive"
-            description="{=taom_roi_t3a_p2}+15% armor penetration."
-            icon_sprite="career_choice_roi_t3a_p2">
-      <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t3_a_p3" type="Passive"
-            description="{=taom_roi_t3a_p3}+15% battle renown gain."
-            icon_sprite="career_choice_roi_t3a_p3">
-      <PassiveEffect type="RenownGain" magnitude="0.15" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t3_a_p4" type="Passive"
-            description="{=taom_roi_t3a_p4}+5% troop damage."
-            icon_sprite="career_choice_roi_t3a_p4">
-      <PassiveEffect type="TroopDamage" magnitude="0.05" operation="Add" is_percentage="true" />
+    <Choice id="ranger_of_ithilien_f5_b" type="Passive"
+            description="{=taom_cf_ranger_of_ithilien_f5_b}+20 party size, and recruits cost 30% less.">
+      <PassiveEffect type="PartySize" magnitude="20" />
+      <PassiveEffect type="RecruitCost" magnitude="-0.3" />
     </Choice>
   </ChoiceGroup>
 
-  <!-- T3-B: Capstone defensive -->
-  <ChoiceGroup id="ranger_of_ithilien_t3_b" display_name="{=taom_career_grp_ranger_of_ithilien_t3_b}Shadow of Emyn Arnen" career_id="ranger_of_ithilien" tier="3">
-    <Choice id="ranger_of_ithilien_t3_b_key" type="Keystone"
-            description="{=taom_roi_t3b_key}Ambush charge greatly reduced, becoming nearly always available."
-            icon_sprite="career_choice_roi_t3b_key">
+  <ChoiceGroup id="ranger_of_ithilien_f6" display_name="{=taom_career_grp_ranger_of_ithilien_f6}Shadow of Ithilien" career_id="ranger_of_ithilien" tier="3" max_picks="1">
+    <Choice id="ranger_of_ithilien_f6_a" type="Passive"
+            description="{=taom_cf_ranger_of_ithilien_f6_a}You take 20% less damage.">
+      <PassiveEffect type="Resistance" magnitude="0.2" />
+    </Choice>
+    <Choice id="ranger_of_ithilien_f6_b" type="Passive"
+            description="{=taom_cf_ranger_of_ithilien_f6_b}Your ranged troops take 12% less damage.">
+      <PassiveEffect type="TroopResistance" magnitude="0.12" troop_class="Ranged" />
+    </Choice>
+    <Choice id="ranger_of_ithilien_f6_c" type="Keystone"
+            description="{=taom_cf_ranger_of_ithilien_f6_c}Your Career Ability lasts 8 seconds longer and reaches 20 meters further.">
       <Mutations>
-        <Mutation target_id="ranger_of_ithilien_ability" property="CooldownReduction" calculator="flat" value="9" operation="Add" />
+        <Mutation target_id="ranger_of_ithilien_ability" property="Duration" calculator="flat" value="8" operation="Add" />
+        <Mutation target_id="ranger_of_ithilien_ability" property="Radius" calculator="flat" value="20" operation="Add" />
       </Mutations>
     </Choice>
-    <Choice id="ranger_of_ithilien_t3_b_p1" type="Passive"
-            description="{=taom_roi_t3b_p1}+15% stealth bonus."
-            icon_sprite="career_choice_roi_t3b_p1">
-      <PassiveEffect type="StealthBonus" magnitude="0.15" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t3_b_p2" type="Passive"
-            description="{=taom_roi_t3b_p2}+15% movement speed."
-            icon_sprite="career_choice_roi_t3b_p2">
-      <PassiveEffect type="MovementSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t3_b_p3" type="Passive"
-            description="{=taom_roi_t3b_p3}+9 max health."
-            icon_sprite="career_choice_roi_t3b_p3">
-      <PassiveEffect type="Health" magnitude="9" operation="Add" />
-    </Choice>
-    <Choice id="ranger_of_ithilien_t3_b_p4" type="Passive"
-            description="{=taom_roi_t3b_p4}+15% party spotting range."
-            icon_sprite="career_choice_roi_t3b_p4">
-      <PassiveEffect type="PartySpottingRange" magnitude="0.15" operation="Add" is_percentage="true" />
-    </Choice>
   </ChoiceGroup>
+  <!-- career-forks:end ranger_of_ithilien -->
 
   <!-- ╔═══════════════════════════════════════════════════════════════════╗ -->
   <!-- ║ GONDOR — Captain of Osgiliath (Melee / Maritime)                 ║ -->
   <!-- ╚═══════════════════════════════════════════════════════════════════╝ -->
 
-  <Choice id="captain_of_osgiliath_root" group_id="" type="Passive"
-          description="{=taom_cop_root_desc}Career Ability grants +5% melee damage and improves troop morale near rivers and coasts."
-          icon_sprite="career_choice_captain_of_osgiliath_root">
-    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+  <!-- career-forks:begin captain_of_osgiliath sha256=1be5ab9e7063d5e13f0d5fe48bb471e43b410fc42bb9c5176c1cd568f1dcb723 -->
+  <Choice id="captain_of_osgiliath_root" type="Passive"
+          description="{=taom_cf_captain_of_osgiliath_root}+5% melee damage.">
+    <PassiveEffect type="Damage" magnitude="0.05" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="captain_of_osgiliath_t1_a" display_name="{=taom_career_grp_captain_of_osgiliath_t1_a}Warden of the East Bank" career_id="captain_of_osgiliath" tier="1">
-    <Choice id="captain_of_osgiliath_t1_a_key" type="Keystone"
-            description="{=taom_cop_t1a_key}Career Ability radius increased, commanding wider river approaches."
-            icon_sprite="career_choice_cop_t1a_key">
-      <Mutations>
-        <Mutation target_id="captain_of_osgiliath_ability" property="Radius" calculator="flat" value="3" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="captain_of_osgiliath_f1" display_name="{=taom_career_grp_captain_of_osgiliath_f1}Oath of the Crossing" career_id="captain_of_osgiliath" tier="1" max_picks="1">
+    <Choice id="captain_of_osgiliath_f1_a" type="Passive"
+            description="{=taom_cf_captain_of_osgiliath_f1_a}+15% melee damage.">
+      <PassiveEffect type="Damage" magnitude="0.15" attack_type_mask="Melee" />
     </Choice>
-    <Choice id="captain_of_osgiliath_t1_a_p1" type="Passive"
-            description="{=taom_cop_t1a_p1}+8% melee damage."
-            icon_sprite="career_choice_cop_t1a_p1">
-      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t1_a_p2" type="Passive"
-            description="{=taom_cop_t1a_p2}+10% swing speed."
-            icon_sprite="career_choice_cop_t1a_p2">
-      <PassiveEffect type="SwingSpeed" magnitude="0.10" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t1_a_p3" type="Passive"
-            description="{=taom_cop_t1a_p3}+3% troop damage."
-            icon_sprite="career_choice_cop_t1a_p3">
-      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t1_a_p4" type="Passive"
-            description="{=taom_cop_t1a_p4}+5% battle renown gain."
-            icon_sprite="career_choice_cop_t1a_p4">
-      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    <Choice id="captain_of_osgiliath_f1_b" type="Passive"
+            description="{=taom_cf_captain_of_osgiliath_f1_b}Your infantry deal 8% more damage.">
+      <PassiveEffect type="TroopDamage" magnitude="0.08" troop_class="Infantry" />
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="captain_of_osgiliath_t1_b" display_name="{=taom_career_grp_captain_of_osgiliath_t1_b}Keeper of the Anduin Crossing" career_id="captain_of_osgiliath" tier="1">
-    <Choice id="captain_of_osgiliath_t1_b_key" type="Keystone"
-            description="{=taom_cop_t1b_key}Career Ability duration extended, holding the harbor line longer."
-            icon_sprite="career_choice_cop_t1b_key">
-      <Mutations>
-        <Mutation target_id="captain_of_osgiliath_ability" property="Duration" calculator="flat" value="4" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="captain_of_osgiliath_f2" display_name="{=taom_career_grp_captain_of_osgiliath_f2}Steward's Ledger" career_id="captain_of_osgiliath" tier="1" max_picks="1">
+    <Choice id="captain_of_osgiliath_f2_a" type="Passive"
+            description="{=taom_cf_captain_of_osgiliath_f2_a}+25% renown, and +25% influence while you serve a kingdom.">
+      <PassiveEffect type="RenownGain" magnitude="0.25" />
+      <PassiveEffect type="InfluenceGain" magnitude="0.25" />
     </Choice>
-    <Choice id="captain_of_osgiliath_t1_b_p1" type="Passive"
-            description="{=taom_cop_t1b_p1}+5% resistance."
-            icon_sprite="career_choice_cop_t1b_p1">
-      <PassiveEffect type="Resistance" magnitude="0.05" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t1_b_p2" type="Passive"
-            description="{=taom_cop_t1b_p2}+6 max health."
-            icon_sprite="career_choice_cop_t1b_p2">
-      <PassiveEffect type="Health" magnitude="6" operation="Add" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t1_b_p3" type="Passive"
-            description="{=taom_cop_t1b_p3}+5% troop morale."
-            icon_sprite="career_choice_cop_t1b_p3">
-      <PassiveEffect type="TroopMorale" magnitude="0.05" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t1_b_p4" type="Passive"
-            description="{=taom_cop_t1b_p4}-5% troop wages."
-            icon_sprite="career_choice_cop_t1b_p4">
-      <PassiveEffect type="TroopWages" magnitude="-0.05" operation="Add" is_percentage="true" />
+    <Choice id="captain_of_osgiliath_f2_b" type="Passive"
+            description="{=taom_cf_captain_of_osgiliath_f2_b}Your elite troops cost no daily upkeep in your realm's special resource.">
+      <PassiveEffect type="SpecialResourceUpkeepModifier" magnitude="-1" />
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="captain_of_osgiliath_t2_a" display_name="{=taom_career_grp_captain_of_osgiliath_t2_a}Vanguard of the Rammas" career_id="captain_of_osgiliath" tier="2">
-    <Choice id="captain_of_osgiliath_t2_a_key" type="Keystone"
-            description="{=taom_cop_t2a_key}Career Ability charge requirement reduced, allowing more frequent activation."
-            icon_sprite="career_choice_cop_t2a_key">
-      <Mutations>
-        <Mutation target_id="captain_of_osgiliath_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="captain_of_osgiliath_f3" display_name="{=taom_career_grp_captain_of_osgiliath_f3}Muster of the Fiefs" career_id="captain_of_osgiliath" tier="2" max_picks="1">
+    <Choice id="captain_of_osgiliath_f3_a" type="Passive"
+            description="{=taom_cf_captain_of_osgiliath_f3_a}+50 party size.">
+      <PassiveEffect type="PartySize" magnitude="50" />
     </Choice>
-    <Choice id="captain_of_osgiliath_t2_a_p1" type="Passive"
-            description="{=taom_cop_t2a_p1}+8% party movement speed."
-            icon_sprite="career_choice_cop_t2a_p1">
-      <PassiveEffect type="PartyMovementSpeed" magnitude="0.08" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t2_a_p2" type="Passive"
-            description="{=taom_cop_t2a_p2}+10% troop morale."
-            icon_sprite="career_choice_cop_t2a_p2">
-      <PassiveEffect type="TroopMorale" magnitude="0.10" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t2_a_p3" type="Passive"
-            description="{=taom_cop_t2a_p3}+2 party size."
-            icon_sprite="career_choice_cop_t2a_p3">
-      <PassiveEffect type="PartySize" magnitude="2" operation="Add" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t2_a_p4" type="Passive"
-            description="{=taom_cop_t2a_p4}+10% battle renown gain."
-            icon_sprite="career_choice_cop_t2a_p4">
-      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    <Choice id="captain_of_osgiliath_f3_b" type="Passive"
+            description="{=taom_cf_captain_of_osgiliath_f3_b}Double your realm's special resource from every source.">
+      <PassiveEffect type="SpecialResourceGain" magnitude="1" />
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="captain_of_osgiliath_t2_b" display_name="{=taom_career_grp_captain_of_osgiliath_t2_b}Sword of the Last Bridge" career_id="captain_of_osgiliath" tier="2">
-    <Choice id="captain_of_osgiliath_t2_b_key" type="Keystone"
-            description="{=taom_cop_t2b_key}Career Ability also boosts troop melee damage while active."
-            icon_sprite="career_choice_cop_t2b_key">
-      <Mutations>
-        <Mutation target_id="captain_of_osgiliath_ability" property="Duration" calculator="flat" value="2" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="captain_of_osgiliath_f4" display_name="{=taom_career_grp_captain_of_osgiliath_f4}Ward of the White Tower" career_id="captain_of_osgiliath" tier="2" max_picks="1">
+    <Choice id="captain_of_osgiliath_f4_a" type="Passive"
+            description="{=taom_cf_captain_of_osgiliath_f4_a}Your troops lose 60% less morale to dread and terror.">
+      <PassiveEffect type="TroopFearResistance" magnitude="0.6" />
     </Choice>
-    <Choice id="captain_of_osgiliath_t2_b_p1" type="Passive"
-            description="{=taom_cop_t2b_p1}+12% melee damage."
-            icon_sprite="career_choice_cop_t2b_p1">
-      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+    <Choice id="captain_of_osgiliath_f4_b" type="Passive"
+            description="{=taom_cf_captain_of_osgiliath_f4_b}Your troops' blocks hold against a crush-through half the time.">
+      <PassiveEffect type="TroopCrushHold" magnitude="0.5" />
     </Choice>
-    <Choice id="captain_of_osgiliath_t2_b_p2" type="Passive"
-            description="{=taom_cop_t2b_p2}+8% armor penetration."
-            icon_sprite="career_choice_cop_t2b_p2">
-      <PassiveEffect type="ArmorPenetration" magnitude="0.08" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t2_b_p3" type="Passive"
-            description="{=taom_cop_t2b_p3}+15% swing speed."
-            icon_sprite="career_choice_cop_t2b_p3">
-      <PassiveEffect type="SwingSpeed" magnitude="0.15" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t2_b_p4" type="Passive"
-            description="{=taom_cop_t2b_p4}+6 max health."
-            icon_sprite="career_choice_cop_t2b_p4">
-      <PassiveEffect type="Health" magnitude="6" operation="Add" />
+    <Choice id="captain_of_osgiliath_f4_c" type="Passive"
+            description="{=taom_cf_captain_of_osgiliath_f4_c}Your troops resist knockdown from blows and light charges 50% better.">
+      <PassiveEffect type="TroopKnockdownResistance" magnitude="0.5" />
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="captain_of_osgiliath_t3_a" display_name="{=taom_career_grp_captain_of_osgiliath_t3_a}Host of Faramir" career_id="captain_of_osgiliath" tier="3">
-    <Choice id="captain_of_osgiliath_t3_a_key" type="Keystone"
-            description="{=taom_cop_t3a_key}Career Ability grants troop resistance while active, fortifying the fleet."
-            icon_sprite="career_choice_cop_t3a_key">
-      <Mutations>
-        <Mutation target_id="captain_of_osgiliath_ability" property="Duration" calculator="flat" value="3" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="captain_of_osgiliath_f5" display_name="{=taom_career_grp_captain_of_osgiliath_f5}Tower Guard Drill" career_id="captain_of_osgiliath" tier="3" max_picks="1">
+    <Choice id="captain_of_osgiliath_f5_a" type="Passive"
+            description="{=taom_cf_captain_of_osgiliath_f5_a}Your infantry gain 15 experience each day.">
+      <PassiveEffect type="TroopTraining" magnitude="15" troop_class="Infantry" />
     </Choice>
-    <Choice id="captain_of_osgiliath_t3_a_p1" type="Passive"
-            description="{=taom_cop_t3a_p1}+15% troop morale."
-            icon_sprite="career_choice_cop_t3a_p1">
-      <PassiveEffect type="TroopMorale" magnitude="0.15" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t3_a_p2" type="Passive"
-            description="{=taom_cop_t3a_p2}+4 party size."
-            icon_sprite="career_choice_cop_t3a_p2">
-      <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t3_a_p3" type="Passive"
-            description="{=taom_cop_t3a_p3}-10% troop wages."
-            icon_sprite="career_choice_cop_t3a_p3">
-      <PassiveEffect type="TroopWages" magnitude="-0.10" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t3_a_p4" type="Passive"
-            description="{=taom_cop_t3a_p4}+10% custom resource gain."
-            icon_sprite="career_choice_cop_t3a_p4">
-      <PassiveEffect type="SpecialResourceGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    <Choice id="captain_of_osgiliath_f5_b" type="Passive"
+            description="{=taom_cf_captain_of_osgiliath_f5_b}+20 party size, and recruits cost 30% less.">
+      <PassiveEffect type="PartySize" magnitude="20" />
+      <PassiveEffect type="RecruitCost" magnitude="-0.3" />
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="captain_of_osgiliath_t3_b" display_name="{=taom_career_grp_captain_of_osgiliath_t3_b}Lord of the Dome of Stars" career_id="captain_of_osgiliath" tier="3">
-    <Choice id="captain_of_osgiliath_t3_b_key" type="Keystone"
-            description="{=taom_cop_t3b_key}Career Ability radius and duration maximized, dominating every waterway."
-            icon_sprite="career_choice_cop_t3b_key">
+  <ChoiceGroup id="captain_of_osgiliath_f6" display_name="{=taom_career_grp_captain_of_osgiliath_f6}Endurance of Westernesse" career_id="captain_of_osgiliath" tier="3" max_picks="1">
+    <Choice id="captain_of_osgiliath_f6_a" type="Passive"
+            description="{=taom_cf_captain_of_osgiliath_f6_a}You take 20% less damage.">
+      <PassiveEffect type="Resistance" magnitude="0.2" />
+    </Choice>
+    <Choice id="captain_of_osgiliath_f6_b" type="Passive"
+            description="{=taom_cf_captain_of_osgiliath_f6_b}Your infantry take 12% less damage.">
+      <PassiveEffect type="TroopResistance" magnitude="0.12" troop_class="Infantry" />
+    </Choice>
+    <Choice id="captain_of_osgiliath_f6_c" type="Keystone"
+            description="{=taom_cf_captain_of_osgiliath_f6_c}Your Career Ability lasts 8 seconds longer and reaches 20 meters further.">
       <Mutations>
-        <Mutation target_id="captain_of_osgiliath_ability" property="Radius" calculator="flat" value="5" operation="Add" />
-        <Mutation target_id="captain_of_osgiliath_ability" property="Duration" calculator="flat" value="3" operation="Add" />
+        <Mutation target_id="captain_of_osgiliath_ability" property="Duration" calculator="flat" value="8" operation="Add" />
+        <Mutation target_id="captain_of_osgiliath_ability" property="Radius" calculator="flat" value="20" operation="Add" />
       </Mutations>
     </Choice>
-    <Choice id="captain_of_osgiliath_t3_b_p1" type="Passive"
-            description="{=taom_cop_t3b_p1}+15% melee damage."
-            icon_sprite="career_choice_cop_t3b_p1">
-      <PassiveEffect type="Damage" magnitude="0.15" operation="Add" is_percentage="true" attack_type_mask="Melee" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t3_b_p2" type="Passive"
-            description="{=taom_cop_t3b_p2}+10% resistance."
-            icon_sprite="career_choice_cop_t3b_p2">
-      <PassiveEffect type="Resistance" magnitude="0.10" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t3_b_p3" type="Passive"
-            description="{=taom_cop_t3b_p3}+15% armor penetration."
-            icon_sprite="career_choice_cop_t3b_p3">
-      <PassiveEffect type="ArmorPenetration" magnitude="0.15" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="captain_of_osgiliath_t3_b_p4" type="Passive"
-            description="{=taom_cop_t3b_p4}+8 max health."
-            icon_sprite="career_choice_cop_t3b_p4">
-      <PassiveEffect type="Health" magnitude="8" operation="Add" />
-    </Choice>
   </ChoiceGroup>
+  <!-- career-forks:end captain_of_osgiliath -->
 
   <!-- ╔═══════════════════════════════════════════════════════════════════╗ -->
   <!-- ║ GONDOR — Knight of Belfalas (Cavalry / Heavy Tank)              ║ -->
   <!-- ╚═══════════════════════════════════════════════════════════════════╝ -->
 
-  <Choice id="knight_of_belfalas_root" group_id="" type="Passive"
-          description="{=taom_knight_of_belfalas_root_desc}Stampede grants +5% melee damage and scales with the force of a mounted charge."
-          icon_sprite="career_choice_knight_of_belfalas_root">
-    <PassiveEffect type="Damage" magnitude="0.05" operation="Add" is_percentage="true" attack_type_mask="Melee" />
+  <!-- career-forks:begin knight_of_belfalas sha256=aa9931013e3932508594e0f9f9224f77ded11ae7bfce651e06568de3da86d7e2 -->
+  <Choice id="knight_of_belfalas_root" type="Passive"
+          description="{=taom_cf_knight_of_belfalas_root}+5% melee damage.">
+    <PassiveEffect type="Damage" magnitude="0.05" attack_type_mask="Melee" />
   </Choice>
 
-  <ChoiceGroup id="knight_of_belfalas_t1_a" display_name="{=taom_career_grp_knight_of_belfalas_t1_a}Lancer of Dol Amroth" career_id="knight_of_belfalas" tier="1">
-    <Choice id="knight_of_belfalas_t1_a_key" type="Keystone"
-            description="{=taom_kob_t1a_key}Stampede ability radius increased, sweeping through wider enemy formations."
-            icon_sprite="career_choice_kob_t1a_key">
-      <Mutations>
-        <Mutation target_id="knight_of_belfalas_ability" property="Radius" calculator="flat" value="3" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="knight_of_belfalas_f1" display_name="{=taom_career_grp_knight_of_belfalas_f1}Oath of the Swan" career_id="knight_of_belfalas" tier="1" max_picks="1">
+    <Choice id="knight_of_belfalas_f1_a" type="Passive"
+            description="{=taom_cf_knight_of_belfalas_f1_a}Your mount's charge deals 10% more damage.">
+      <PassiveEffect type="MountChargeDamage" magnitude="0.1" />
     </Choice>
-    <Choice id="knight_of_belfalas_t1_a_p1" type="Passive"
-            description="{=taom_kob_t1a_p1}+8% melee damage."
-            icon_sprite="career_choice_kob_t1a_p1">
-      <PassiveEffect type="Damage" magnitude="0.08" operation="Add" is_percentage="true" attack_type_mask="Melee" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t1_a_p2" type="Passive"
-            description="{=taom_kob_t1a_p2}+10% horse charge damage."
-            icon_sprite="career_choice_kob_t1a_p2">
-      <PassiveEffect type="MountChargeDamage" magnitude="0.10" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t1_a_p3" type="Passive"
-            description="{=taom_kob_t1a_p3}+3% troop damage."
-            icon_sprite="career_choice_kob_t1a_p3">
-      <PassiveEffect type="TroopDamage" magnitude="0.03" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t1_a_p4" type="Passive"
-            description="{=taom_kob_t1a_p4}+5% battle renown gain."
-            icon_sprite="career_choice_kob_t1a_p4">
-      <PassiveEffect type="RenownGain" magnitude="0.05" operation="Add" is_percentage="true" />
+    <Choice id="knight_of_belfalas_f1_b" type="Passive"
+            description="{=taom_cf_knight_of_belfalas_f1_b}Your cavalry deal 8% more damage.">
+      <PassiveEffect type="TroopDamage" magnitude="0.08" troop_class="Cavalry" />
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="knight_of_belfalas_t1_b" display_name="{=taom_career_grp_knight_of_belfalas_t1_b}Warden of the Bay" career_id="knight_of_belfalas" tier="1">
-    <Choice id="knight_of_belfalas_t1_b_key" type="Keystone"
-            description="{=taom_kob_t1b_key}Stampede duration extended, maintaining the charge longer."
-            icon_sprite="career_choice_kob_t1b_key">
-      <Mutations>
-        <Mutation target_id="knight_of_belfalas_ability" property="Duration" calculator="flat" value="4" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="knight_of_belfalas_f2" display_name="{=taom_career_grp_knight_of_belfalas_f2}Steward's Ledger" career_id="knight_of_belfalas" tier="1" max_picks="1">
+    <Choice id="knight_of_belfalas_f2_a" type="Passive"
+            description="{=taom_cf_knight_of_belfalas_f2_a}+25% renown, and +25% influence while you serve a kingdom.">
+      <PassiveEffect type="RenownGain" magnitude="0.25" />
+      <PassiveEffect type="InfluenceGain" magnitude="0.25" />
     </Choice>
-    <Choice id="knight_of_belfalas_t1_b_p1" type="Passive"
-            description="{=taom_kob_t1b_p1}+8% resistance."
-            icon_sprite="career_choice_kob_t1b_p1">
-      <PassiveEffect type="Resistance" magnitude="0.08" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t1_b_p2" type="Passive"
-            description="{=taom_kob_t1b_p2}+7 max health."
-            icon_sprite="career_choice_kob_t1b_p2">
-      <PassiveEffect type="Health" magnitude="7" operation="Add" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t1_b_p3" type="Passive"
-            description="{=taom_kob_t1b_p3}+10% horse health."
-            icon_sprite="career_choice_kob_t1b_p3">
-      <PassiveEffect type="MountHealth" magnitude="0.10" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t1_b_p4" type="Passive"
-            description="{=taom_kob_t1b_p4}+10% troop resistance."
-            icon_sprite="career_choice_kob_t1b_p4">
-      <PassiveEffect type="TroopResistance" magnitude="0.10" operation="Add" is_percentage="true" />
+    <Choice id="knight_of_belfalas_f2_b" type="Passive"
+            description="{=taom_cf_knight_of_belfalas_f2_b}Your elite troops cost no daily upkeep in your realm's special resource.">
+      <PassiveEffect type="SpecialResourceUpkeepModifier" magnitude="-1" />
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="knight_of_belfalas_t2_a" display_name="{=taom_career_grp_knight_of_belfalas_t2_a}Rider of the Silver Swan" career_id="knight_of_belfalas" tier="2">
-    <Choice id="knight_of_belfalas_t2_a_key" type="Keystone"
-            description="{=taom_kob_t2a_key}Stampede charge requirement reduced for more frequent thundering charges."
-            icon_sprite="career_choice_kob_t2a_key">
-      <Mutations>
-        <Mutation target_id="knight_of_belfalas_ability" property="CooldownReduction" calculator="flat" value="6" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="knight_of_belfalas_f3" display_name="{=taom_career_grp_knight_of_belfalas_f3}Muster of the Fiefs" career_id="knight_of_belfalas" tier="2" max_picks="1">
+    <Choice id="knight_of_belfalas_f3_a" type="Passive"
+            description="{=taom_cf_knight_of_belfalas_f3_a}+50 party size.">
+      <PassiveEffect type="PartySize" magnitude="50" />
     </Choice>
-    <Choice id="knight_of_belfalas_t2_a_p1" type="Passive"
-            description="{=taom_kob_t2a_p1}+13% horse charge damage."
-            icon_sprite="career_choice_kob_t2a_p1">
-      <PassiveEffect type="MountChargeDamage" magnitude="0.13" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t2_a_p2" type="Passive"
-            description="{=taom_kob_t2a_p2}+12% melee damage."
-            icon_sprite="career_choice_kob_t2a_p2">
-      <PassiveEffect type="Damage" magnitude="0.12" operation="Add" is_percentage="true" attack_type_mask="Melee" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t2_a_p3" type="Passive"
-            description="{=taom_kob_t2a_p3}+8% movement speed."
-            icon_sprite="career_choice_kob_t2a_p3">
-      <PassiveEffect type="MovementSpeed" magnitude="0.08" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t2_a_p4" type="Passive"
-            description="{=taom_kob_t2a_p4}+10% battle renown gain."
-            icon_sprite="career_choice_kob_t2a_p4">
-      <PassiveEffect type="RenownGain" magnitude="0.10" operation="Add" is_percentage="true" />
+    <Choice id="knight_of_belfalas_f3_b" type="Passive"
+            description="{=taom_cf_knight_of_belfalas_f3_b}Double your realm's special resource from every source.">
+      <PassiveEffect type="SpecialResourceGain" magnitude="1" />
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="knight_of_belfalas_t2_b" display_name="{=taom_career_grp_knight_of_belfalas_t2_b}Shieldwall of Imrahil" career_id="knight_of_belfalas" tier="2">
-    <Choice id="knight_of_belfalas_t2_b_key" type="Keystone"
-            description="{=taom_kob_t2b_key}Stampede also boosts troop resistance while active."
-            icon_sprite="career_choice_kob_t2b_key">
-      <Mutations>
-        <Mutation target_id="knight_of_belfalas_ability" property="Duration" calculator="flat" value="2" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="knight_of_belfalas_f4" display_name="{=taom_career_grp_knight_of_belfalas_f4}Ward of the White Tower" career_id="knight_of_belfalas" tier="2" max_picks="1">
+    <Choice id="knight_of_belfalas_f4_a" type="Passive"
+            description="{=taom_cf_knight_of_belfalas_f4_a}Your troops lose 60% less morale to dread and terror.">
+      <PassiveEffect type="TroopFearResistance" magnitude="0.6" />
     </Choice>
-    <Choice id="knight_of_belfalas_t2_b_p1" type="Passive"
-            description="{=taom_kob_t2b_p1}+10% resistance."
-            icon_sprite="career_choice_kob_t2b_p1">
-      <PassiveEffect type="Resistance" magnitude="0.10" operation="Add" is_percentage="true" />
+    <Choice id="knight_of_belfalas_f4_b" type="Passive"
+            description="{=taom_cf_knight_of_belfalas_f4_b}Your troops' blocks hold against a crush-through half the time.">
+      <PassiveEffect type="TroopCrushHold" magnitude="0.5" />
     </Choice>
-    <Choice id="knight_of_belfalas_t2_b_p2" type="Passive"
-            description="{=taom_kob_t2b_p2}+8 max health."
-            icon_sprite="career_choice_kob_t2b_p2">
-      <PassiveEffect type="Health" magnitude="8" operation="Add" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t2_b_p3" type="Passive"
-            description="{=taom_kob_t2b_p3}+13% horse health."
-            icon_sprite="career_choice_kob_t2b_p3">
-      <PassiveEffect type="MountHealth" magnitude="0.13" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t2_b_p4" type="Passive"
-            description="{=taom_kob_t2b_p4}+13% troop resistance."
-            icon_sprite="career_choice_kob_t2b_p4">
-      <PassiveEffect type="TroopResistance" magnitude="0.13" operation="Add" is_percentage="true" />
+    <Choice id="knight_of_belfalas_f4_c" type="Passive"
+            description="{=taom_cf_knight_of_belfalas_f4_c}Your troops resist knockdown from blows and light charges 50% better.">
+      <PassiveEffect type="TroopKnockdownResistance" magnitude="0.5" />
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="knight_of_belfalas_t3_a" display_name="{=taom_career_grp_knight_of_belfalas_t3_a}Knight of the Swan-Prow" career_id="knight_of_belfalas" tier="3">
-    <Choice id="knight_of_belfalas_t3_a_key" type="Keystone"
-            description="{=taom_kob_t3a_key}Stampede grants troop morale while active, inspiring the host of Belfalas."
-            icon_sprite="career_choice_kob_t3a_key">
-      <Mutations>
-        <Mutation target_id="knight_of_belfalas_ability" property="Duration" calculator="flat" value="3" operation="Add" />
-      </Mutations>
+  <ChoiceGroup id="knight_of_belfalas_f5" display_name="{=taom_career_grp_knight_of_belfalas_f5}Stables of Dol Amroth" career_id="knight_of_belfalas" tier="3" max_picks="1">
+    <Choice id="knight_of_belfalas_f5_a" type="Passive"
+            description="{=taom_cf_knight_of_belfalas_f5_a}Your cavalry gain 15 experience each day.">
+      <PassiveEffect type="TroopTraining" magnitude="15" troop_class="Cavalry" />
     </Choice>
-    <Choice id="knight_of_belfalas_t3_a_p1" type="Passive"
-            description="{=taom_kob_t3a_p1}+15% troop morale."
-            icon_sprite="career_choice_kob_t3a_p1">
-      <PassiveEffect type="TroopMorale" magnitude="0.15" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t3_a_p2" type="Passive"
-            description="{=taom_kob_t3a_p2}+4 party size."
-            icon_sprite="career_choice_kob_t3a_p2">
-      <PassiveEffect type="PartySize" magnitude="4" operation="Add" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t3_a_p3" type="Passive"
-            description="{=taom_kob_t3a_p3}-10% troop upgrade cost."
-            icon_sprite="career_choice_kob_t3a_p3">
-      <PassiveEffect type="TroopUpgradeCost" magnitude="-0.10" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t3_a_p4" type="Passive"
-            description="{=taom_kob_t3a_p4}-10% custom resource upgrade cost."
-            icon_sprite="career_choice_kob_t3a_p4">
-      <PassiveEffect type="SpecialResourceUpgradeCostModifier" magnitude="-0.10" operation="Add" is_percentage="true" />
+    <Choice id="knight_of_belfalas_f5_b" type="Passive"
+            description="{=taom_cf_knight_of_belfalas_f5_b}+20 party size, and recruits cost 30% less.">
+      <PassiveEffect type="PartySize" magnitude="20" />
+      <PassiveEffect type="RecruitCost" magnitude="-0.3" />
     </Choice>
   </ChoiceGroup>
 
-  <ChoiceGroup id="knight_of_belfalas_t3_b" display_name="{=taom_career_grp_knight_of_belfalas_t3_b}Charge of Dol Amroth" career_id="knight_of_belfalas" tier="3">
-    <Choice id="knight_of_belfalas_t3_b_key" type="Keystone"
-            description="{=taom_kob_t3b_key}Stampede radius and duration maximized — the charge of Dol Amroth is unstoppable."
-            icon_sprite="career_choice_kob_t3b_key">
+  <ChoiceGroup id="knight_of_belfalas_f6" display_name="{=taom_career_grp_knight_of_belfalas_f6}The Silver Swan" career_id="knight_of_belfalas" tier="3" max_picks="1">
+    <Choice id="knight_of_belfalas_f6_a" type="Passive"
+            description="{=taom_cf_knight_of_belfalas_f6_a}You take 20% less damage.">
+      <PassiveEffect type="Resistance" magnitude="0.2" />
+    </Choice>
+    <Choice id="knight_of_belfalas_f6_b" type="Passive"
+            description="{=taom_cf_knight_of_belfalas_f6_b}Your cavalry take 12% less damage.">
+      <PassiveEffect type="TroopResistance" magnitude="0.12" troop_class="Cavalry" />
+    </Choice>
+    <Choice id="knight_of_belfalas_f6_c" type="Keystone"
+            description="{=taom_cf_knight_of_belfalas_f6_c}Your Career Ability lasts 8 seconds longer and reaches 20 meters further.">
       <Mutations>
-        <Mutation target_id="knight_of_belfalas_ability" property="Radius" calculator="flat" value="5" operation="Add" />
-        <Mutation target_id="knight_of_belfalas_ability" property="Duration" calculator="flat" value="3" operation="Add" />
+        <Mutation target_id="knight_of_belfalas_ability" property="Duration" calculator="flat" value="8" operation="Add" />
+        <Mutation target_id="knight_of_belfalas_ability" property="Radius" calculator="flat" value="20" operation="Add" />
       </Mutations>
     </Choice>
-    <Choice id="knight_of_belfalas_t3_b_p1" type="Passive"
-            description="{=taom_kob_t3b_p1}+15% resistance."
-            icon_sprite="career_choice_kob_t3b_p1">
-      <PassiveEffect type="Resistance" magnitude="0.15" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t3_b_p2" type="Passive"
-            description="{=taom_kob_t3b_p2}+9 max health."
-            icon_sprite="career_choice_kob_t3b_p2">
-      <PassiveEffect type="Health" magnitude="9" operation="Add" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t3_b_p3" type="Passive"
-            description="{=taom_kob_t3b_p3}+15% horse charge damage."
-            icon_sprite="career_choice_kob_t3b_p3">
-      <PassiveEffect type="MountChargeDamage" magnitude="0.15" operation="Add" is_percentage="true" />
-    </Choice>
-    <Choice id="knight_of_belfalas_t3_b_p4" type="Passive"
-            description="{=taom_kob_t3b_p4}+15% troop resistance."
-            icon_sprite="career_choice_kob_t3b_p4">
-      <PassiveEffect type="TroopResistance" magnitude="0.15" operation="Add" is_percentage="true" />
-    </Choice>
   </ChoiceGroup>
+  <!-- career-forks:end knight_of_belfalas -->
 
   <!-- ╔═══════════════════════════════════════════════════════════════════╗ -->
   <!-- ╔══════════════════════════════════════════════════════════════════╗ -->

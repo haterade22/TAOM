@@ -1,6 +1,8 @@
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TAOM.Features.CareerSystem.Abilities;
+using TAOM.Features.CareerSystem.Hooks;
 using TAOM.Features.DreadAura.Domain;
 
 namespace TAOM.Features.DreadAura.Hooks;
@@ -17,15 +19,17 @@ public sealed class DreadPulseRunner
 {
     private readonly IDreadAuraService _service;
     private readonly IDreadAuraSettingsProvider _settings;
+    private readonly ICareerAgentStatService _careerStats;
 
     // Reused across pulses. Every Mission.GetNearby* overload Clear()s the list it is handed, so
     // one instance field keeps the pulse allocation-free.
     private readonly MBList<Agent> _nearbyBuffer = new MBList<Agent>();
 
-    public DreadPulseRunner(IDreadAuraService service, IDreadAuraSettingsProvider settings)
+    public DreadPulseRunner(IDreadAuraService service, IDreadAuraSettingsProvider settings, ICareerAgentStatService careerStats)
     {
         _service = service;
         _settings = settings;
+        _careerStats = careerStats;
     }
 
     public void Clear() => _nearbyBuffer.Clear();
@@ -75,8 +79,9 @@ public sealed class DreadPulseRunner
             // dread at exact parity with how the engine scales kill-morale. Overriding
             // CalculateMoraleChangeToCharacter would be wrong, because the CALLER applies the sign
             // and an override would equally shrink the morale a tough troop GAINS from kills.
+            // The player's career counter shrinks it for the leader's own troops (#769 E10), after the model.
             var context = new DreadDrainContext(
-                moraleModel.CalculateMoraleChangeToCharacter(target, moralePerSecond),
+                CareerTroopHooks.ScaleFearDrain(_careerStats, target, moraleModel.CalculateMoraleChangeToCharacter(target, moralePerSecond)),
                 (target.Position.AsVec2 - sourcePosition).LengthSquared,
                 radius,
                 innerRadius,

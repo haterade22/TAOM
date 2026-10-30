@@ -52,7 +52,7 @@ only when something actually changed. Making it a GameModel lets mods retune any
 
 ## TAOM relevance + gotchas
 - **`TaomAgentStatCalculateModel`** (`Main/Features/CareerSystem/Models/TaomAgentStatCalculateModel.cs`, registered
-  `campaignStarter.AddModel<AgentStatCalculateModel>(...)` at SubModule.cs:447). It **inherits
+  `campaignStarter.AddModel<AgentStatCalculateModel>(...)` at SubModule.cs:1309). It **inherits
   `SandboxAgentStatCalculateModel`** — note: **there is no `DefaultAgentStatCalculateModel`**; the abstract base is
   `AgentStatCalculateModel` and the SandBox concrete is `SandboxAgentStatCalculateModel`, so TAOM inherits the
   most-derived *vanilla* model (keeping all SP stat logic) rather than a `Default*` (a documented exception to
@@ -61,7 +61,8 @@ only when something actually changed. Making it a GameModel lets mods retune any
     ADP) → set `ADP.MountDifficulty = ElephantConfig.MountDifficulty` for the elephant Monster (near-infinite → non-rider
     AI can't take the elephant — 1-for-1 ADOD_Beasts mount-lock).
   - `CanAgentRideMount` → `false` for an elephant Monster.
-  - `GetEffectiveMaxHealth` → `+ career Health passive` for heroes.
+  - `GetEffectiveMaxHealth` → the career `MountHealth` passive for a mount whose rider is a hero. The hero's own Health pip is not applied here: it lives in `TaomCharacterStatsModel.MaxHitpoints` (#394).
+  - `GetKnockDownResistance` → race ability resistance first, then the career knockdown counter (`CareerTroopHooks.KnockDownResistance`, #769), over `base`.
 - **One override per type → consolidation** (Phase 7 last-added-wins): the **single** `AgentStatCalculateModel` slot
   carries **both** career passives **and** the elephant lock. You cannot register two — combine them in one model (the
   career model gained the elephant branch via `IElephantAttackService`).

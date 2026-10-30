@@ -99,22 +99,6 @@ public class TaomPartyHealingModelTests
         Assert.AreEqual(expected, result, 0.001f);
     }
 
-    [TestMethod]
-    public void ApplyCareerSurvival_ZeroMagnitude_ReturnsInputUncapped()
-    {
-        // The roll skipped the career step entirely at zero, so even an out-of-range input passes through.
-        Assert.AreEqual(1.2f, SurvivalChanceMath.ApplyCareerSurvival(1.2f, 0f), 0.0001f);
-    }
-
-    [TestMethod]
-    [DataRow(0.50f, 0.10f, 0.55f)]
-    [DataRow(0.90f, 0.20f, 1.00f)]
-    [DataRow(0.80f, -0.25f, 0.60f)]
-    public void ApplyCareerSurvival_Magnitude_MultipliesAndCapsAtOne(float survival, float magnitude, float expected)
-    {
-        Assert.AreEqual(expected, SurvivalChanceMath.ApplyCareerSurvival(survival, magnitude), 0.0001f);
-    }
-
     // An enlisted player rolls survival with his own party, as a freelancer does: vanilla reads Medicine and Cheat Death off
     // that party's EffectiveSurgeon (his assigned surgeon, else himself). The old redirect to the commander's party is gone
     // (2026-10-26), so the model takes no Enlistment state.

@@ -1,6 +1,8 @@
 using TAOM.Core.Logging;
 using TAOM.Core.Validation;
 using TAOM.Features.AdvancedCombat;
+using TAOM.Features.CareerSystem.Abilities;
+using TAOM.Features.CareerSystem.Hooks;
 using TAOM.Features.DreadAura;
 using TAOM.Features.DreadAura.Hooks;
 using TaleWorlds.Core;
@@ -29,16 +31,18 @@ public sealed class SignatureStrikeRunner
     private readonly ISignatureStrikeService _service;
     private readonly IDreadRegistry _dreadRegistry;
     private readonly IModLogger _logger;
+    private readonly ICareerAgentStatService _careerStats;
     private readonly StrikeSoundPlayer _sound;
 
     // Reused across rings. Every Mission.GetNearby* overload Clear()s the list it is handed.
     private readonly MBList<Agent> _nearbyBuffer = new MBList<Agent>();
 
-    public SignatureStrikeRunner(ISignatureStrikeService service, IDreadRegistry dreadRegistry, IModLogger logger)
+    public SignatureStrikeRunner(ISignatureStrikeService service, IDreadRegistry dreadRegistry, IModLogger logger, ICareerAgentStatService careerStats)
     {
         _service = service;
         _dreadRegistry = dreadRegistry;
         _logger = logger;
+        _careerStats = careerStats;
         _sound = new StrikeSoundPlayer(logger);
     }
 
@@ -119,7 +123,7 @@ public sealed class SignatureStrikeRunner
             // while a blow on a fading agent is the crash class TakeDamage guards against.
             if (effect.FearMorale > 0f && moraleModel != null && DreadAgentGate.CanAffect(victim))
             {
-                var scaled = moraleModel.CalculateMoraleChangeToCharacter(victim, effect.FearMorale);
+                var scaled = CareerTroopHooks.ScaleFearDrain(_careerStats, victim, moraleModel.CalculateMoraleChangeToCharacter(victim, effect.FearMorale));
                 var drain = _service.ComputeFearDrain(
                     scaled, falloff, _dreadRegistry.ResolveResist(victim.Character?.Race), victim.GetMorale());
                 if (drain > 0f)

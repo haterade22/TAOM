@@ -27,7 +27,7 @@ One pure service decides everything. Three campaign models and one Harmony prefi
 | Seam | What it does |
 |---|---|
 | `TaomGenericXpModel : DefaultGenericXpModel` | `GetXpMultiplier(hero)` is base times the service's skill XP multiplier. `HeroDeveloper.AddSkillXp` (`:198-222`) asks at `:208`, after `GainRawXp` (`:224-235`) has banked the raw XP toward the level, so the multiplier speeds skills and not the hero level. |
-| `TaomPartyTrainingModel : DefaultPartyTrainingModel` | `GetEffectiveDailyExperience` and `CalculateXpGainFromBattles` call base, then add one factor to the `ExplainedNumber`. A factor of 0 is a no-op. The total is base plus flat adds times one plus the factors, so perk XP is scaled as well. |
+| `TaomPartyTrainingModel : DefaultPartyTrainingModel` | `GetEffectiveDailyExperience` and `CalculateXpGainFromBattles` call base, then add one factor to the `ExplainedNumber`. A factor of 0 is a no-op. The total is base plus flat adds times one plus the factors, so perk XP is scaled as well. The daily member then adds the career `TroopTraining` flat term (`ICareerPassiveService.ApplyFlat`, #769), after the factor because `ApplyFlat` divides out only the factors already on the number; the engine has one training slot, so this model holds both. |
 | `TaomCharacterDevelopmentModel : DefaultCharacterDevelopmentModel` | `CalculateLearningRate` calls base, then `LimitMin(service.LearningRateFloor(rate.LimitMinValue))`. On, the minimum becomes 0.05; off, the same minimum is set again. |
 | `Patch118_ProjectStewardXp` | A skipping prefix on `DefaultSkillLevelingManager.OnSettlementProjectFinished(Settlement)`: `return !service.SkipsProjectStewardXp();`. Category `Patch118_SeasonedHostsStewardXp`, applied at GameInit. |
 
@@ -87,7 +87,7 @@ All four apply without a restart and are simulation-relevant: they count toward 
 | `Main/Features/SeasonedHosts/SeasonedHostsService.cs` | Every decision, no engine type |
 | `Main/Features/SeasonedHosts/ISeasonedHostsSettingsProvider.cs`, `SeasonedHostsSettingsProvider.cs` | The four validated MCM values, one property each, cached accessor |
 | `Main/Features/SeasonedHosts/Models/TaomGenericXpModel.cs` | Skill XP multiplier |
-| `Main/Features/SeasonedHosts/Models/TaomPartyTrainingModel.cs` | Daily and battle training factor |
+| `Main/Features/SeasonedHosts/Models/TaomPartyTrainingModel.cs` | Daily and battle training factor, plus the career `TroopTraining` flat term on the daily member |
 | `Main/Features/SeasonedHosts/Models/TaomCharacterDevelopmentModel.cs` | Learning rate floor |
 | `Main/Features/SeasonedHosts/Hooks/Patch118_ProjectStewardXp.cs` | Steward XP skip |
 | `Main/Adapters/ISeasonedHostsAdapter.cs`, `SeasonedHostsAdapter.cs` | Hero and party to facts, through `IPlayerControlQuery` |
@@ -99,6 +99,7 @@ All four apply without a restart and are simulation-relevant: they count toward 
 - `IPlayerControlQuery` (CoopInterop): who drives a clan or party.
 - `ICoopSessionProvider` (CoopInterop): `ShouldDeferToHost` for the two bonuses and the patch.
 - `ISeasonedHostsAdapter` (Adapters): reads `Hero` and `MobileParty`.
+- `ICareerPassiveService` (CareerSystem): the `TroopTraining` passive on the daily training member.
 
 ## Tests
 
@@ -148,6 +149,7 @@ All four apply without a restart and are simulation-relevant: they count toward 
 
 ## Changelog
 
+- 2026-10-30: the training model also applies the career `TroopTraining` flat term (#769), merged from the career forks work.
 - 2026-10-24: first version (#890). Three campaign models, the Steward XP prefix (Patch118) and four MCM settings. Review fixes: the two bonuses defer to the co-op host, settings are four validated properties that fall back to the compiled default, the training label is gone, the registry probe is compiled, and the group order is 73.
 
 ## GitHub Issue

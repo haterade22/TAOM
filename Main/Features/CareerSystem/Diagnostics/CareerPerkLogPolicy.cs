@@ -6,7 +6,10 @@ namespace TAOM.Features.CareerSystem.Diagnostics;
 /// Which campaign passives get a <c>[CareerPerks]</c> line when they apply (#613). Only the ones
 /// that fire on an event: a battle end, an upgrade, a daily tick. The per-tick ones (party speed
 /// every frame on the map, morale, wages, spotting range) leave their "Career" line on the
-/// ExplainedNumber and are read by <c>taom.career_perks</c>.
+/// ExplainedNumber and are read by <c>taom.career_perks</c>. #769 E11 adds the two battle-end reads,
+/// <c>InfluenceGain</c> and <c>LootGold</c>; the other eight are asked per tooltip, per tick or per raid step, and
+/// <c>CareerPassiveService</c> skips a line that records no change, so vanilla's 0 influence outside a kingdom never
+/// prints "0 -> 0".
 /// </summary>
 public static class CareerPerkLogPolicy
 {
@@ -14,5 +17,7 @@ public static class CareerPerkLogPolicy
         => type == PassiveEffectType.RenownGain
         || type == PassiveEffectType.TroopUpgradeCost
         || type == PassiveEffectType.HeroHealing
-        || type == PassiveEffectType.SmithingCostReduction;
+        || type == PassiveEffectType.SmithingCostReduction
+        || type == PassiveEffectType.InfluenceGain
+        || type == PassiveEffectType.LootGold;
 }

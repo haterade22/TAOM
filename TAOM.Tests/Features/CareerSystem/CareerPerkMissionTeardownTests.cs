@@ -35,7 +35,7 @@ public class CareerPerkMissionTeardownTests
         CareerAbilityBuffTracker.ClearAll();
         _logger = Substitute.For<IModLogger>();
         _passives = Substitute.For<ICareerPassiveService>();
-        _passives.GetPassiveMagnitude(Subject, PassiveEffectType.TroopDamage).Returns(0.10f);
+        _passives.GetTroopMagnitude(Subject, PassiveEffectType.TroopDamage, Arg.Any<TroopClassMask>(), Arg.Any<AttackTypeMask?>()).Returns(0.10f);
         _stats = new CareerAgentStatService(_passives, _logger);
     }
 
@@ -54,7 +54,7 @@ public class CareerPerkMissionTeardownTests
     private void DealHits(int count)
     {
         for (int i = 0; i < count; i++)
-            _stats.CalculateDamageAmplification(null, Subject, MeleeCut, 50f);
+            _stats.CalculateDamageAmplification(null, Subject, TroopClassMask.Infantry, MeleeCut, 50f);
     }
 
     private void AssertOneSummaryOf(int hits)

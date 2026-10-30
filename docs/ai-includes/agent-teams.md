@@ -229,8 +229,10 @@ Rules:
 - Thin entry points (ADR-002): max 150 lines, delegate to services
 - No #region, no [Obsolete], no #if DEBUG
 - Do NOT edit IoC.cs or SubModule.cs — report needed registrations to lead
+- Lessons: {LESSONS} (the lead names the lesson headings and their files that apply to this task);
+  read each before the first edit, and list in your report what you did about each one
 - Docs move with the code: update the feature's docs/features/<feature-name>.md as you change it,
-  and grep docs/ for every member you delete or rename
+  and grep docs/ for every type or member you add, change, delete or rename
 - A value from config: validate its range, and compute anything derived from it in long and clamp it
 - A result message must be true on every branch of the action it reports; a saved marker has one
   writer that replaces the old one

@@ -58,7 +58,10 @@ the source module had one, which would have collided with TAOM's Patch36 prefix.
 - **Volunteers respect TAOM's recruitment stack**: sourcing goes through
   `Campaign.Current.Models.VolunteerModel.MaximumIndexHeroCanRecruitFromHero` and honours the
   alignment gate's `-1` (recruit nothing from this notable). Recruit prices run through the vanilla
-  wage model with the source's tier premium (`x (1 + 0.15*(tier-1))`) and wartime surcharge (x1.5).
+  wage model with the source's tier premium (`x (1 + 0.15*(tier-1))`) and wartime surcharge (x1.5);
+  the wage model is asked with `Hero.MainHero` as buyer, so the player's career `RecruitCost` applies
+  to the shown price (#769 E11). Goods prices read `Town.GetItemPrice(item, MobileParty.MainParty)`, so the
+  career `TradePrices` passive moves them too.
 - **Fresh save surface**: definer base `726901001` (localIds from 101), SyncData keys
   `_taomSupplyOrders` / `_taomSupplyOrderCounter`. The source module's save identity
   (841200501, other type names) is deliberately not carried.
