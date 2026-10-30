@@ -37,6 +37,7 @@ and the gate.
 | Persisted MCM defaults | json2 keeps saved values: rename (comment why), never flip a default; `check_mcm_default_flips.py` | [shaders](../features/shader-precompilation.md) |
 | Moving platforms | Agents need a navmesh riding the entity, plus physics; teleporting fails. Crew stand inside the deck | [mumakil](../features/mumakil.md) |
 | Vendored DLLs | `Main/_Module/bin/Win64_Shipping_Client/` ships no vendored binary (`TAOM.dll` is build output); never MCMv5 | [deps](../modding/module-dependencies.md) |
+| Other mods | Four mods reach TAOM members and files by name; a rename passes the build and breaks them: grep the list | [couplings](../reference/external-mod-couplings.md) |
 | Mission logic | Logic `BehaviorType` needs `: MissionLogic`; keep `AfterStart` throw-safe | [lifecycle](../reference/engine/mission-and-missionbehavior-lifecycle.md) |
 | Armory | `LOTRLOME_Armory`: a root `<action>` kills a server, a second `LOTRLOME_items/*/` shadows an id, loose `Assets/**` wins | [armory](../reference/armory-guide.md) |
 | Shield plus polearm | A shield troop never draws a polearm absent from `OneHandedPolearm`: `audit_polearm_shield_parity.py` | [pipeline](../features/weapon-xml-pipeline.md) |
@@ -50,6 +51,7 @@ and the gate.
 | Leaving a map event | Clearing `MainParty.AttachedTo` mid-event nulls the upgrade tracker; vanilla CTDs later | [guard](../features/map-event-guard.md) |
 | Menus stop time | Land on the map after timed work; a false WAIT condition hides every option; no `TickEvent` in a menu | [field camp](../features/field-camp.md) |
 | Daily tick after load | A save in an elapsed day's first half reruns that day: gate daily work on a saved day | [ticks](../reference/engine/campaign-tick-time-and-party-ai.md) |
+| Event listener order | Newest first: a listener added after the engine's runs before it on the same event | [ticks](../reference/engine/campaign-tick-time-and-party-ai.md) |
 | "Frozen" game | Can be a stuck kingdom vote waiting on an `IsKingsDecisionOver` edge: `Patch80` | [diplomacy](../features/diplomacy.md) |
 | Hero capture | Patch `Hero.CanBecomePrisoner`; denying capture grants escape; both seams share one `DeathMark` guard | [capture](../features/uncapturable-heroes.md) |
 | `Town.LastCapturedBy` | A leader-clan stamp, not participation; score sieges from `IFiefSiegeParticipationService` | [fiefs](../features/fief-granting.md) |

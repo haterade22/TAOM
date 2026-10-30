@@ -117,10 +117,10 @@ also what `bash tools/context_budget_scan.sh` reads, so the report and the gate 
 
 | Constant | Value | Covers |
 |---|---|---|
-| `ENTRY_DOCS_MAX_BYTES` / `ENTRY_DOCS_WARN_BYTES` | 24,576 / 23,000 B | CLAUDE.md plus every file it imports, together |
+| `ENTRY_DOCS_MAX_BYTES` / `ENTRY_DOCS_WARN_BYTES` | 25,600 / 23,000 B | CLAUDE.md plus every file it imports, together |
 | `ENTRY_DOC_MAX_LINES` | 200 | each entry doc (the Claude Code docs' adherence ceiling) |
 | `ENTRY_DOC_MAX_TABLE_ROW` / `ENTRY_DOC_MAX_PROSE_LINE` | 400 / 600 chars | each entry doc line; fenced code exempt |
-| `TRAP_INDEX_MAX_ROWS` / `TRAP_INDEX_MAX_ROW_CHARS` | 45 / 180 | the `## Trap index` table in orientation.md |
+| `TRAP_INDEX_MAX_ROWS` / `TRAP_INDEX_MAX_ROW_CHARS` | 47 / 180 | the `## Trap index` table in orientation.md |
 | `UNSCOPED_RULES_MAX_BYTES` / `UNSCOPED_RULES_WARN_BYTES` | 16,384 / 14,500 B | the rules without `paths:`, together |
 | `SCOPED_RULE_MAX_BYTES` | 12,288 B | each path-scoped rule; warn-only while `SCOPED_RULE_BUDGET_ENFORCE` is false |
 

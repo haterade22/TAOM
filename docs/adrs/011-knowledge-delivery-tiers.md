@@ -121,10 +121,10 @@ constants hold the current numbers; the targets below are the ceilings they ratc
 
 | Constant | Target |
 |---|---|
-| `ENTRY_DOCS_MAX_BYTES` (CLAUDE.md with its `@`-imports, read from CLAUDE.md: everything it loads at launch) | at most 24 KB |
+| `ENTRY_DOCS_MAX_BYTES` (CLAUDE.md with its `@`-imports, read from CLAUDE.md: everything it loads at launch) | at most 25 KB |
 | `ENTRY_DOC_MAX_LINES` (each entry doc) | at most 200 lines |
 | AGENTS.md alone (`tools/reviewctl.py`, already enforced) | under 8,192 bytes |
-| `TRAP_INDEX_MAX_ROWS`, `TRAP_INDEX_MAX_ROW_CHARS` | 45 rows, 180 characters |
+| `TRAP_INDEX_MAX_ROWS`, `TRAP_INDEX_MAX_ROW_CHARS` | 47 rows, 180 characters |
 | `UNSCOPED_RULES_MAX_BYTES` | at most 16 KB in total |
 | `SCOPED_RULE_MAX_BYTES` | at most 12 KB per rule |
 | MEMORY.md (reported by `scan.sh`; machine-local, so not in CI) | at most 40 lines and 4 KB |

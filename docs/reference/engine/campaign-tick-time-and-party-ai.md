@@ -206,8 +206,8 @@ or yotthani's run-to-run observation on 1.5.5.
   checked against `FiefGranting`: code that reads "who captured" inside `OnSiegeEventEnded` would still see the old owner.
 - **Garrison recruiting gates** (README:203): moved to [settlement-economy-food-prosperity.md](settlement-economy-food-prosperity.md) "Clan wage payment and garrison recruitment", beside TAOM's own reading of the same code.
 - **Listeners run newest first.** README:205: "the probe's listeners run before the game's (newest first)". TAOM verified:
-  `MbEvent.AddNonSerializedListener` puts the new record at the head of the list (v1.5.5 `MbEvent.cs`:24-30; v1.4.8 the
-  same; the v1.5.6 file is not in the partial cache) [Certain]. A listener added after the engine's own therefore runs
+  `MbEvent.AddNonSerializedListener` puts the new record at the head of the list (v1.5.6 `MbEvent.cs`:24-30, read from the
+  installed DLL on 2026-10-30; v1.5.5 and v1.4.8 the same) [Certain]. A listener added after the engine's own therefore runs
   before it on the same event.
 
 A negative result from yotthani's side: a cache for `DefaultDiplomacyModel.GetScoreOfDeclaringWar` saved nothing, at about 12
