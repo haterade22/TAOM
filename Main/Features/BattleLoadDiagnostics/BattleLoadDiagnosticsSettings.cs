@@ -115,4 +115,29 @@ public sealed class BattleLoadDiagnosticsSettings : AttributeGlobalSettings<Batt
     [SettingPropertyBool("Enable Load-Time Stamps", Order = 0, RequireRestart = false,
         HintText = "Writes the detailed load-time lines to the TAOM debug log: one [PatchApply] line per Harmony patch group with its apply time (written at game initialization), [LoadPhase] steps of TAOM's game start and game initialization, and [Lifecycle] lines timing every campaign handler of a new game, a loaded save and the session start (a line for each handler taking 10 ms or more, and a total per event). The per-type [LoadXml] lines, the patch phase totals and one [Lifecycle] dispatch line per campaign dispatch are always written. Costs a few microseconds per handler while a campaign loads and nothing during play. Default OFF.")]
     public bool EnableLoadTimeStamps { get; set; } = false;
+
+    [SettingPropertyGroup("Screen Performance")]
+    [SettingPropertyBool("Log Screen Open Times", Order = 0, RequireRestart = false,
+        HintText = "Writes one [ScreenOpen] line per screen open to taom_debug.log, naming the screen, the phase and the milliseconds it took. Use it to compare a Fast Open switch off against on. Default OFF.")]
+    public bool LogScreenOpenTimes { get; set; } = false;
+
+    [SettingPropertyGroup("Screen Performance")]
+    [SettingPropertyBool("Clan Fast Open", Order = 1, RequireRestart = false,
+        HintText = "Opens the Clan screen faster by building its parties list once instead of three times. Turning it off restores vanilla's build for this screen. Read on every open. Default ON.")]
+    public bool ClanFastOpen { get; set; } = true;
+
+    [SettingPropertyGroup("Screen Performance")]
+    [SettingPropertyBool("Inventory Fast Open", Order = 2, RequireRestart = false,
+        HintText = "Opens the Inventory and trade screen faster by skipping work the screen repeats. Turning it off restores vanilla's build for this screen. Read on every open. Default ON.")]
+    public bool InventoryFastOpen { get; set; } = true;
+
+    [SettingPropertyGroup("Screen Performance")]
+    [SettingPropertyBool("Party Fast Open", Order = 3, RequireRestart = false,
+        HintText = "Opens the Party screen faster by caching lookups the screen repeats for each troop. Turning it off restores vanilla's build for this screen. Read on every open. Default ON.")]
+    public bool PartyFastOpen { get; set; } = true;
+
+    [SettingPropertyGroup("Screen Performance")]
+    [SettingPropertyBool("Quest Log Fast Open", Order = 4, RequireRestart = false,
+        HintText = "Opens the Quest log faster by building finished quests only when you select them. Turning it off restores vanilla's build for this screen. Read on every open. Default ON.")]
+    public bool QuestLogFastOpen { get; set; } = true;
 }

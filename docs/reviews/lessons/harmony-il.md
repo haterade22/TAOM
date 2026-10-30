@@ -1350,3 +1350,15 @@ toggled AI control, opened gates and spawned mission objects straight from the c
 - **Prevent:** a console command only reads, or enqueues; the feature's mission behavior drains the queue on the main
   thread at the start of `OnMissionTick` (`StagedSiegeCommandQueue` is the model, and it works with no feature armed).
 - **Source:** [rca-staged-siege-2026-10-29.md](../rca-staged-siege-2026-10-29.md) finding 5.
+### A bool prefix that returns false does not stop the postfixes (Shadowfax Screens 2026-10-19)
+The clan fast path skipped `ClanPartiesVM.RefreshPartiesList` with a false prefix, and its comment,
+registry entry and feature doc said Refuge's postfix on that method therefore "runs only for a build
+that runs". Harmony 2.4.2 emits the postfixes after the skip label (`MethodCreator`), so every
+postfix ran on every skipped call too. It was harmless only because Refuge skips a party it already
+listed.
+- **Why missed:** the claim was reasoned from what the prefix intends, not from Harmony's emitted IL.
+- **Prevent:** when a prefix skips a method that other patches postfix, assume every postfix still runs
+  and check each one is idempotent over the unchanged state; to skip one call site without running the
+  method's postfixes, swap that call site with a transpiler instead (the fix here). Add a real-Harmony
+  test with a counting postfix on the skipped method.
+- **Source:** `docs/reviews/rca-shadowfax-screens-speed-2026-10-19.md` finding 8.

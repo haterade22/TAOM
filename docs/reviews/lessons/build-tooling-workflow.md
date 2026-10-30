@@ -4683,3 +4683,48 @@ conflicted in the registry.
   for the number (`git grep -n "Patch<N>_" $(git for-each-ref --format='%(refname)' refs/heads refs/remotes)` plus the
   registry), and renumber before the merge, not after.
 - **Source:** [rca-staged-siege-phase2-2026-10-29.md](../rca-staged-siege-phase2-2026-10-29.md) finding 3.
+### Parallel builders: pin the conventions, not only the shared API (repeat, Shadowfax Screens 2026-10-19)
+Four builders built four screens from one plan that pinned the timer API, the settings provider, the
+module and the MCM group. Each was correct against that plan, and they still diverged on six
+conventions: test category tags (five IL tests untagged in two screens), the policy for an unreadable
+setting (on in two places, off in two), one category constant (15+ repeated literals), the open line
+format, what the timer window spans (two screens included the movie load), and the wiring test setup
+(four copies, one of them leaking a facade).
+- **Why missed:** the 2026-07-02 rule covers shared sub-problems such as id normalisation; conventions
+  did not look like sub-problems, so the brief did not list them.
+- **Prevent:** the pre-dispatch checklist in `docs/ai-includes/agent-teams.md` now names conventions.
+  Before dispatch, write in the brief the failure policy, the test tags, the constant, the log formats,
+  the timing span and the wiring-test shape every sibling uses.
+- **Source:** `docs/reviews/rca-shadowfax-screens-speed-2026-10-19.md` findings 1, 2, 11, 13, 16;
+  earlier `rca-combat-mechanics-2026-07-02.md`.
+
+### Price a per-call cache with a micro-benchmark before you build it (Shadowfax Screens 2026-10-19)
+The plan called two caches "clean wins": a memo for two concept lookups per inventory row and a count
+cache for the party screen's item-category walk. Measured on the game's runtime afterwards, they saved
+about 0.7 microseconds per row and 0.1 to 1 ms per open, against a 16 ms keep rule, and carried a
+transpiler, a window protocol and about 500 lines with tests. Both were deleted.
+- **Why missed:** the plan reasoned from "vanilla repeats this work" without the cost of one repeat.
+- **Prevent:** before a cache or memo goes into a plan, time one vanilla call and one cache hit on the
+  game's runtime (a 20-line benchmark in the scratchpad) and multiply by the calls per action; keep it
+  only if the product can clear the feature's own threshold.
+- **Source:** `docs/reviews/rca-shadowfax-screens-speed-2026-10-19.md` findings 4, 5.
+
+### Merge a long-lived branch with trunk's own tools and gates, not a hand-rolled script (merge 2026-10-30)
+Two branches 373 and about 500 commits behind trunk were merged. The resolution hand-merged localization files with
+a line script (which turned `\r\r\n` into `\r\n\r\n` in 12 files, the damage `TRANSLATOR_GUIDE.md` records for
+`85cbd20c8`), hand-merged a generated file, kept trunk's translator but printed a command it rejects, and checked all
+of it with the C# suite only. Trunk had since added an orphan-row gate and a stricter translator mode.
+- **Why missed:** a branch-era habit (merge the text, run the tests) on a tree whose tooling had moved on.
+- **Prevent:** for a generated file, run its generator; for language rows, seed with
+  `translate_with_claude.py --sync-ids --seed-only --apply`; then run the full `/verify` (C# and Python suites) and
+  every gate in `.ai/verification.md` on the merged tree before the review.
+- **Source:** `docs/reviews/rca-merge-ui-speed-career-forks-2026-10-30.md` findings 1 to 4.
+
+### List every consumer of a value a merging branch adjusts (merge 2026-10-30)
+The career forks branch scaled troop knockdown resistance in `GetKnockDownResistance`. Trunk had meanwhile added
+Hammerhand, which computes bash and kick knockdowns without that method, so the career pick silently did nothing
+there. No conflict marked it.
+- **Why missed:** a conflict-free merge reads as a safe merge.
+- **Prevent:** for each quantity the branch changes (a resistance, a cost, an XP term, a model slot), grep trunk for
+  every reader added since the branch's base, not only the method the branch hooks.
+- **Source:** `docs/reviews/rca-merge-ui-speed-career-forks-2026-10-30.md` finding 5.

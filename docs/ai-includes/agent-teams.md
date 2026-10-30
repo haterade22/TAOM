@@ -367,6 +367,8 @@ When fanning a feature out to parallel builder agents against shared contracts, 
 
 **Pre-dispatch checklist:** (1) list sub-problems appearing in >=2 briefs; (2) pin one solution in the shared contracts or a shared helper; (3) after integration, run a cross-consistency review over the seams (data-flow + efficiency agents), not only per-file checks. RCA `docs/reviews/rca-combat-mechanics-2026-07-02.md` (the four CombatMechanics seam findings).
 
+**Conventions are shared sub-problems too** (second occurrence, Shadowfax Screens 2026-10-19): pin in the brief what every sibling must do the same way, not only the shared API: the failure policy for an unreadable setting or a throwing dependency, test category tags (`RequiresGame`, `RequiresGameIL`), one category constant used by module and hooks, log and detail line formats, what a timing window spans, facade and wiring-test shape. Four builders given one timer API and one settings provider still diverged on all six. RCA `docs/reviews/rca-shadowfax-screens-speed-2026-10-19.md`.
+
 ### Worktree isolation for parallel agent runs (DOC-BACKED + EMPIRICAL)
 
 **Rule:** when spawning multiple `Agent` calls in one message that may edit overlapping single-owner files (`Main/TAOM.csproj`, `TAOM.Tests/TAOM.Tests.csproj`, `Main/IoC.cs`, `Main/SubModule.cs`, `Directory.Build.props`), pass `isolation: "worktree"` on each call — each agent gets its own git worktree on a temporary branch, so the shared tree is never touched in parallel and the build-watcher cascade cannot fire.

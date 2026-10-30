@@ -95,6 +95,8 @@ public static class CoopSettingsRelevance
         // The [AnimVariety] swing alternative probe (docs/features/animation-variety.md): counts swings and hit timing, logs
         // them, changes nothing in the game.
         "EnableSwingAlternativeProbe",
+        // Shadowfax Screens: the [ScreenOpen] timer lines (docs/features/shadowfax-screens.md); log lines only.
+        "LogScreenOpenTimes",
     };
 
     /// <summary>
@@ -233,6 +235,9 @@ public static class CoopSettingsRelevance
         // with. The walk phase is the only thing they change, so a peer that differs draws different footfalls, never a different
         // fight. Applied per peer at spawn, with a draw seeded by the troop and its body seed.
         "EnableRandomStepSize", "GaitStepSizeMinFactor", "EnableRandomGaitSet",
+        // Shadowfax Screens fast-open switches: how fast this client builds its own UI screens, never what they show
+        // or the campaign state behind them.
+        "ClanFastOpen", "InventoryFastOpen", "PartyFastOpen", "QuestLogFastOpen",
         "RealmColourGondor", "RealmColourRohan", "RealmColourDunland", "RealmColourIsengard", "RealmColourMordor", "RealmColourHarad", "RealmColourUmbar", "RealmColourShaghana", "RealmColourAbanissa", "RealmColourKhand", "RealmColourRhun", "RealmColourDale", "RealmColourErebor", "RealmColourRivendell", "RealmColourLothlorien", "RealmColourMirkwood", "RealmColourLindon", "RealmColourDolGuldur", "RealmColourGundabad", "RealmColourMistyMountainOrcs", "RealmColourGoblins", "RealmColourBlueCraig", "RealmColourArthedain", "RealmColourCardolan", "RealmColourRhudaur", "RealmColourEredLuin", "RealmColourAnduinVale", "RealmColourAngaladh", "RealmColourDorwinion", "RealmColourSouthRhovanion", "RealmColourYourRealm",
     };
 

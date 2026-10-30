@@ -206,6 +206,11 @@ public class ReflectionSiteBindingTests
     // AccessTools.FieldRefAccess typed as object and read as the non-generic IDictionary (its value type is a private nested enum). A miss logs one
     // warning and every first-meeting read answers false, so the clan greetings stay off and vanilla's text stands.
     [DataRow("TaleWorlds.CampaignSystem.CampaignBehaviors.BanditInteractionsCampaignBehavior", "BanditInteractionsCampaignBehavior", "_interactedBandits", "Field", "BanditEncounterTextAdapter.cs:57")]
+    // --- Quest Log Fast Open (#854): the replay of the private PopulateQuestLog for a finished quest built on demand.
+    // A miss makes Bind return a reason, the quest log is never deferred and vanilla builds every quest at open.
+    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Quests.QuestItemVM", "QuestItemVM", "PopulateQuestLog", "Method", "QuestJournalAdapter.cs:30")]
+    // The guard check resolves QuestsVM.SetSelectedItem by name too; a miss reads as the SetSelectedItem patch not attached.
+    [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Quests.QuestsVM", "QuestsVM", "SetSelectedItem", "Method", "QuestJournalAdapter.cs:39")]
     public void ReflectionSite_ResolvesAgainstInstalledEngine(string fullName, string simpleName, string member, string kind, string source)
     {
         if (!_gameLoaded)

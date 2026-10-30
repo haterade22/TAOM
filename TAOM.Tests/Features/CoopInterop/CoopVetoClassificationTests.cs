@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.CoopInterop;
 using TAOM.Tests.Infrastructure;
+using TAOM.Features.ShadowfaxScreens.Party;
 
 namespace TAOM.Tests.Features.CoopInterop;
 
@@ -150,6 +151,18 @@ public class CoopVetoClassificationTests
             "tracker, and writes nothing to campaign state, so there is no replicated mutation to skip and nothing for " +
             "two peers to disagree about. Every other outcome (toggle off, cull unavailable, any error) returns true " +
             "and runs vanilla whole. The toggle is presentation in CoopSettingsRelevance."),
+        ["PartyCharacterVM_GetCharacterCode_ShadowfaxParty_Patch"] = new(CoopVeto.ReviewedSafe,
+            PartyFastOpenCalls.PatchCategory + ": client-side UI. Returns false only on a per-screen cache hit, handing back the " +
+            "CharacterCode vanilla built earlier for the same character, troop type and side; the code feeds a portrait " +
+            "image id and mutates no campaign state, so there is nothing replicated to skip. Under co-op the roster refresher " +
+            "calls the screen's OnReset, which rebuilds rows through the same hook, so codes stay correct for the " +
+            "current roster. The toggle is presentation."),
+        ["QuestItemVM_PopulateQuestLog_QuestLogPatch"] = new(CoopVeto.ReviewedSafe,
+            "Quest Log Fast Open (#854): client-side UI. The prefix skips QuestItemVM.PopulateQuestLog, which only adds " +
+            "QuestStageVM view models to a finished quest's list inside the QuestsVM constructor; it reads journal logs and " +
+            "writes no campaign state, so there is no replicated mutation to skip. A skipped item is built when it is " +
+            "selected, and every other outcome (toggle off, adapter unbound, replay, disarmed) returns true and runs vanilla. " +
+            "The toggle is presentation in CoopSettingsRelevance."),
         ["Patch86_HideoutAssaultBossFight"] = new(CoopVeto.ReviewedSafe,
             "Replaces MapEventHelper.GetPriorityListForHideoutMission, a pure roster-ORDERING " +
             "function for the local hideout mission: it decides which troops spawn in phase 1 and " +

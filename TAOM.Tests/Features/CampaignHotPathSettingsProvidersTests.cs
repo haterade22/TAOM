@@ -44,6 +44,7 @@ using TAOM.Features.WardensTally;
 using TAOM.Features.ReevesLedger;
 using TAOM.Features.SeasonedHosts;
 using TAOM.Features.SwornAnew;
+using TAOM.Features.ShadowfaxScreens;
 using TAOM.Features.TimeAcceleration;
 using TAOM.Features.UnderTheEaves;
 using TAOM.Features.UnlookedForAid;
@@ -94,6 +95,8 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(WarChronicleSettingsProvider))]
     // Read every campaign-map frame, from the Battle Load Diagnostics page.
     [DataRow(typeof(NameplateCullSettingsProvider))]
+    // Shadowfax Screens: read on every screen open and by each screen's timer points, from the same page.
+    [DataRow(typeof(ShadowfaxScreensSettingsProvider))]
     // #789: the Fiefs map-bar button polls the fief hub opener every frame, which reads these.
     [DataRow(typeof(FiefManagementSettingsProvider))]
     // #765 M8: the hunter's speed multiplier is read every campaign frame while a hunt runs.
@@ -188,6 +191,7 @@ public class CampaignHotPathSettingsProvidersTests
     [DataRow(typeof(ICampSettingsProvider), typeof(CampSettingsProvider))]
     [DataRow(typeof(IWarChronicleSettingsProvider), typeof(WarChronicleSettingsProvider))]
     [DataRow(typeof(INameplateCullSettingsProvider), typeof(NameplateCullSettingsProvider))]
+    [DataRow(typeof(IShadowfaxScreensSettingsProvider), typeof(ShadowfaxScreensSettingsProvider))]
     [DataRow(typeof(IFiefManagementSettingsProvider), typeof(FiefManagementSettingsProvider))]
     [DataRow(typeof(IEyeOfSauronSettings), typeof(EyeOfSauronSettingsProvider))]
     [DataRow(typeof(IWatchfulHoldsSettings), typeof(WatchfulHoldsSettingsProvider))]

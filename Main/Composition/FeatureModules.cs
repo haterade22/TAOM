@@ -94,5 +94,6 @@ internal static class FeatureModules
         new Features.TimeAcceleration.TimeAccelerationModule(),
         new Features.WardensTally.WardensTallyModule(),
         new Features.StagedSiege.StagedSiegeModule(),
+        new Features.ShadowfaxScreens.ShadowfaxScreensModule(),
     };
 }
