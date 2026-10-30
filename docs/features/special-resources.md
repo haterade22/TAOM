@@ -399,6 +399,13 @@ ends up controlling, resolving it from the character-creation culture and the li
 
 ---
 
+## Campaign reload subscriptions
+
+The global party-screen listener has one current owning behavior. Registering a
+new campaign removes the previous owner's listener, including when the previous
+campaign did not raise game over. Late cleanup cannot clear the current owner.
+See [backport scope and validation](../audits/legacy-campaign-fixes-2026-10-29.md).
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

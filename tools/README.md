@@ -2,6 +2,9 @@
 
 Data generation, rebalancing, and content pipeline scripts.
 
+Legacy campaign fixes have a [standalone boundary regression harness](tests/legacy-campaign/README.md)
+that uses PowerShell 7 and does not deploy or require game assemblies.
+
 All Python scripts support `--dry-run` (preview) and `--apply` (write). Run from the repo root.
 
 ## XML I/O convention (MANDATORY for scripts that edit ModuleData XML)

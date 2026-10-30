@@ -167,6 +167,13 @@ roster is scanned once into a small POCO list, decided, and written back.
 
 ---
 
+## Battle roster ownership
+
+Daily desertion skips a field party or garrison while its `MapEvent` is active.
+The normal daily rule resumes after the event. This follows native desertion's
+roster boundary; it is not a general fix for every stuck battle in #750.
+See [validation evidence](../audits/legacy-campaign-fixes-2026-10-29.md).
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

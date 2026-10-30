@@ -852,8 +852,15 @@ public sealed class SupplyCaravanService : ISupplyCaravanService
                 var fromVec = new CampaignVec2(from, isOnLand: true);
                 var toVec = new CampaignVec2(to, isOnLand: true);
                 var path = new NavigationPath();
+                // Match the active campaign's land-navigation rules. A native path query cannot
+                // safely infer exclusions or naval region costs from null / hard-coded defaults.
+                var models = Campaign.Current.Models;
+                var excludedTerrain = models.PartyNavigationModel
+                    .GetInvalidTerrainTypesForNavigationType(MobileParty.NavigationType.Default);
                 if (mapScene.GetPathBetweenAIFaces(
-                        fromVec.Face, toVec.Face, from, to, 0.1f, path, null, 1f, 100, 100)
+                        fromVec.Face, toVec.Face, from, to, 0.1f, path, excludedTerrain, 1f,
+                        models.MapDistanceModel.RegionSwitchCostFromLandToSea,
+                        models.MapDistanceModel.RegionSwitchCostFromSeaToLand)
                     && path.Size >= 2)
                 {
                     for (int i = 0; i < path.Size; i++)

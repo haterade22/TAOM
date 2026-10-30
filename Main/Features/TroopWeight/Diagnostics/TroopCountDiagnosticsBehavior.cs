@@ -42,6 +42,8 @@ public class TroopCountDiagnosticsBehavior : CampaignBehaviorBase
 
     public override void RegisterEvents()
     {
+        // IoC keeps this behavior as a singleton across campaign loads.
+        ScreenManager.OnPushScreen -= OnScreenPushed;
         ScreenManager.OnPushScreen += OnScreenPushed;
         _subscribed = true;
         CampaignEvents.OnGameOverEvent.AddNonSerializedListener(this, Unsubscribe);

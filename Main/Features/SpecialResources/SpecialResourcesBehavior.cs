@@ -72,25 +72,27 @@ public class SpecialResourcesBehavior : CampaignBehaviorBase
         // one (elephant/spider). The RecruitmentVM gate (Patch51) blocks confirming an unaffordable
         // cart, so this deduction never drives the balance negative for those troops.
         CampaignEvents.OnUnitRecruitedEvent.AddNonSerializedListener(this, OnUnitRecruited);
-        // Phase 9b #133 P1 — ScreenManager is static/global and outlives any campaign. New campaign
-        // in same process: a second behavior instance registers another listener; first instance's
-        // listener stays alive, calling _service.BeginPartyScreenSession() on the shared singleton
-        // service → resets _pendingSpend/_inSession for new campaign sessions, potentially
-        // cancelling legitimate spends. OnGameOverEvent is the only public lifecycle hook in
-        // v1.3.15 that fires when a campaign ends; CampaignBehaviorBase has no OnFinalize/OnGameEnd
-        // overrides. Best-effort: unsubscribe on game over. (If a player exits via main menu
-        // without "Game Over" firing, the listener is still orphaned — but the next campaign's
-        // ScreenManager.OnPushScreen += in its OWN RegisterEvents at least won't double-subscribe
-        // because the orphan listener was bound to the prior behavior instance, which is GC-eligible
-        // once its CampaignGameStarter is released.)
+        // ScreenManager outlives campaigns and holds its subscribers alive. Loading another
+        // campaign need not raise OnGameOver, so explicitly replace the previous owner.
+        if (_screenSubscriber != null)
+        {
+            ScreenManager.OnPushScreen -= _screenSubscriber.OnScreenPushed;
+            _screenSubscriber._screenManagerSubscribed = false;
+        }
+        _screenSubscriber = this;
+        _screenManagerSubscribed = true;
         ScreenManager.OnPushScreen += OnScreenPushed;
         CampaignEvents.OnGameOverEvent.AddNonSerializedListener(this, UnsubscribeScreenManager);
     }
 
-    private bool _screenManagerSubscribed = true;
+    private static SpecialResourcesBehavior _screenSubscriber;
+    private bool _screenManagerSubscribed;
 
     private void UnsubscribeScreenManager()
     {
+        // A late cleanup from the old campaign must not clear the current owner.
+        if (_screenSubscriber == this)
+            _screenSubscriber = null;
         if (!_screenManagerSubscribed) return;
         ScreenManager.OnPushScreen -= OnScreenPushed;
         _screenManagerSubscribed = false;

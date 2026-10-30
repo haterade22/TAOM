@@ -1,0 +1,165 @@
+// Managed boundary fakes. Run.ps1 injects unchanged method bodies and subscription
+// fields from the selected source tree. No game assemblies or native code are loaded.
+using System;
+using System.Reflection;
+using System.Collections.Generic;
+using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Party;
+using TaleWorlds.CampaignSystem.Settlements;
+using TaleWorlds.CampaignSystem.Roster;
+using TaleWorlds.Library;
+using TaleWorlds.Engine;
+using TaleWorlds.ScreenSystem;
+namespace TaleWorlds.ObjectSystem { public class MBObjectBase { public string StringId { get; set; } } }
+namespace TaleWorlds.Library { public class MBReadOnlyList<T> {} }
+namespace TaleWorlds.Core { public enum BattleSideEnum { Attacker, Defender } public class ItemObject {} }
+namespace TaleWorlds.CampaignSystem.MapEvents {
+ public class MapEvent {} public class RaidEventComponent {}
+ public class HideoutEventComponent { public enum HideoutBattleEndState { Ended } }
+}
+namespace TaleWorlds.CampaignSystem.Roster { public class TroopRoster { public int Count=10; } public class FlattenedTroopRoster {} }
+namespace TaleWorlds.CampaignSystem {
+ public class Kingdom : TaleWorlds.ObjectSystem.MBObjectBase {}
+ public class Clan { public Kingdom Kingdom { get; set; } public static Clan PlayerClan { get; set; } }
+ public class Hero { public Clan Clan { get; set; } }
+ public class CharacterObject {} public class CampaignGameStarter {}
+ public class IMbEvent { public void AddNonSerializedListener(object o, Action a) {} }
+ public class IMbEvent<T> { public void AddNonSerializedListener(object o, Action<T> a) {} }
+ public class IMbEvent<T,U> { public void AddNonSerializedListener(object o, Action<T,U> a) {} }
+ public class IMbEvent<T,U,V,W> { public void AddNonSerializedListener(object o, Action<T,U,V,W> a) {} }
+ public class MbEvent<T,U,V> { public void AddNonSerializedListener(object o, Action<T,U,V> a) {} }
+ public static class CampaignEvents {
+  public static IMbEvent<CampaignGameStarter> OnSessionLaunchedEvent { get { return new IMbEvent<CampaignGameStarter>(); } }
+  public static IMbEvent<Hero> DailyTickHeroEvent { get { return new IMbEvent<Hero>(); } }
+  public static IMbEvent<MapEvents.MapEvent> MapEventEnded { get { return new IMbEvent<MapEvents.MapEvent>(); } }
+  public static IMbEvent<TaleWorlds.Core.BattleSideEnum,MapEvents.RaidEventComponent> RaidCompletedEvent { get { return new IMbEvent<TaleWorlds.Core.BattleSideEnum,MapEvents.RaidEventComponent>(); } }
+  public static IMbEvent<Roster.FlattenedTroopRoster> OnPrisonerTakenEvent { get { return new IMbEvent<Roster.FlattenedTroopRoster>(); } }
+  public static IMbEvent<CampaignGameStarter> OnNewGameCreatedEvent { get { return new IMbEvent<CampaignGameStarter>(); } }
+  public static IMbEvent OnCharacterCreationIsOverEvent { get { return new IMbEvent(); } }
+  public static IMbEvent<CampaignGameStarter> OnGameLoadedEvent { get { return new IMbEvent<CampaignGameStarter>(); } }
+  public static IMbEvent<CharacterObject,TaleWorlds.Library.MBReadOnlyList<CharacterObject>,Settlements.Town,TaleWorlds.Core.ItemObject> TournamentFinished { get { return new IMbEvent<CharacterObject,TaleWorlds.Library.MBReadOnlyList<CharacterObject>,Settlements.Town,TaleWorlds.Core.ItemObject>(); } }
+  public static MbEvent<TaleWorlds.Core.BattleSideEnum,MapEvents.HideoutEventComponent,MapEvents.HideoutEventComponent.HideoutBattleEndState> OnHideoutBattleCompletedEvent { get { return new MbEvent<TaleWorlds.Core.BattleSideEnum,MapEvents.HideoutEventComponent,MapEvents.HideoutEventComponent.HideoutBattleEndState>(); } }
+  public static IMbEvent<CharacterObject,int> OnUnitRecruitedEvent { get { return new IMbEvent<CharacterObject,int>(); } }
+  public static IMbEvent OnGameOverEvent { get { return new IMbEvent(); } }
+ }
+}
+namespace TaleWorlds.CampaignSystem.Party {
+ public class MobileParty { public enum NavigationType { Default = 1 }
+  public MapEvents.MapEvent MapEvent { get; set; }
+  public bool IsLordParty { get; set; } public bool IsMainParty { get; set; }
+  public Hero LeaderHero { get; set; } public Roster.TroopRoster MemberRoster { get; set; }
+  public static MobileParty MainParty { get; set; }
+ }
+}
+namespace TaleWorlds.CampaignSystem.Settlements {
+ public class Fief { public Party.MobileParty GarrisonParty { get; set; } }
+ public class Town : Fief {}
+ public class Settlement { public Town Town; public Clan OwnerClan { get; set; } }
+}
+namespace TaleWorlds.ScreenSystem {
+ public class ScreenBase {}
+ public static class ScreenManager {
+  public delegate void OnPushScreenEvent(ScreenBase screen);
+  public static event OnPushScreenEvent OnPushScreen;
+  public static int Count { get { return OnPushScreen == null ? 0 : OnPushScreen.GetInvocationList().Length; } }
+  public static void Raise() { if(OnPushScreen!=null) OnPushScreen(new ScreenBase()); }
+  public static void Reset() { OnPushScreen=null; }
+ }
+}
+namespace TAOM.Core.Logging {
+ public interface IModLogger { void LogInfo(string message); }
+ public class NullLogger : IModLogger { public void LogInfo(string message) {} }
+}
+namespace TAOM.Features.AlignmentDesertion {
+ public interface IAlignmentDesertionService { bool IsEnabled { get; } }
+ public class TestService : IAlignmentDesertionService { public bool Enabled=true; public bool IsEnabled { get { return Enabled; } } }
+}
+namespace TAOM.Features.AlignmentDesertion.Hooks {
+ public class AlignmentDesertionBehavior {
+  private IAlignmentDesertionService _service; public int Applied;
+  public AlignmentDesertionBehavior(IAlignmentDesertionService service) { _service=service; }
+  public void OnDailyTickParty(TaleWorlds.CampaignSystem.Party.MobileParty party) /*__AlignmentDesertionBehavior.OnDailyTickParty__*/
+  public void OnDailyTickSettlement(TaleWorlds.CampaignSystem.Settlements.Settlement settlement) /*__AlignmentDesertionBehavior.OnDailyTickSettlement__*/
+  private void ApplyDesertion(TaleWorlds.CampaignSystem.Roster.TroopRoster roster,string kingdom,bool player,bool isGarrison,bool showPlayerPopup) { Applied++; roster.Count--; }
+ }
+}
+namespace TAOM.Features.SpecialResources {
+ public class SpecialResourcesBehavior {
+  /*__Fields:SpecialResourcesBehavior__*/
+  private TAOM.Core.Logging.IModLogger _logger=new TAOM.Core.Logging.NullLogger();
+  public int Calls;
+  public void RegisterEvents() /*__SpecialResourcesBehavior.RegisterEvents__*/
+  public void UnsubscribeScreenManager() /*__SpecialResourcesBehavior.UnsubscribeScreenManager__*/
+  private void OnScreenPushed(TaleWorlds.ScreenSystem.ScreenBase screen) { Calls++; }
+  private void OnSessionLaunched(TaleWorlds.CampaignSystem.CampaignGameStarter s) {}
+  private void OnDailyTickHero(TaleWorlds.CampaignSystem.Hero h) {}
+  private void OnMapEventEnded(TaleWorlds.CampaignSystem.MapEvents.MapEvent e) {}
+  private void OnRaidCompleted(TaleWorlds.Core.BattleSideEnum b,TaleWorlds.CampaignSystem.MapEvents.RaidEventComponent r) {}
+  private void OnPrisonerTaken(TaleWorlds.CampaignSystem.Roster.FlattenedTroopRoster r) {}
+  private void OnNewGameCreated(TaleWorlds.CampaignSystem.CampaignGameStarter s) {}
+  private void OnCharacterCreationIsOver() {}
+  private void OnGameLoaded(TaleWorlds.CampaignSystem.CampaignGameStarter s) {}
+  private void OnTournamentFinished(TaleWorlds.CampaignSystem.CharacterObject c,TaleWorlds.Library.MBReadOnlyList<TaleWorlds.CampaignSystem.CharacterObject> l,TaleWorlds.CampaignSystem.Settlements.Town t,TaleWorlds.Core.ItemObject i) {}
+  private void OnHideoutCompleted(TaleWorlds.Core.BattleSideEnum b,TaleWorlds.CampaignSystem.MapEvents.HideoutEventComponent h,TaleWorlds.CampaignSystem.MapEvents.HideoutEventComponent.HideoutBattleEndState s) {}
+  private void OnUnitRecruited(TaleWorlds.CampaignSystem.CharacterObject c,int n) {}
+ }
+}
+namespace TAOM.Features.TroopWeight.Diagnostics {
+ public class TroopCountDiagnosticsBehavior {
+  /*__Fields:TroopCountDiagnosticsBehavior__*/ public int Calls;
+  public void RegisterEvents() /*__TroopCountDiagnosticsBehavior.RegisterEvents__*/
+  public void Unsubscribe() /*__TroopCountDiagnosticsBehavior.Unsubscribe__*/
+  private void OnScreenPushed(TaleWorlds.ScreenSystem.ScreenBase s) { Calls++; }
+ }
+}
+public static partial class Program {
+ public static readonly List<string> Messages = new List<string>();
+ static int total, failed;
+ static void Check(string name,bool pass) { total++; if(!pass) failed++; Messages.Add((pass?"PASS ":"FAIL ")+name); }
+ static TaleWorlds.CampaignSystem.Party.MobileParty Party(bool battle) {
+  return new TaleWorlds.CampaignSystem.Party.MobileParty { IsLordParty=true, MemberRoster=new TaleWorlds.CampaignSystem.Roster.TroopRoster(), MapEvent=battle?new TaleWorlds.CampaignSystem.MapEvents.MapEvent():null, LeaderHero=new TaleWorlds.CampaignSystem.Hero { Clan=new TaleWorlds.CampaignSystem.Clan { Kingdom=new TaleWorlds.CampaignSystem.Kingdom { StringId="gondor" } } } };
+ }
+ static void ResetScreen() {
+  TaleWorlds.ScreenSystem.ScreenManager.Reset();
+  typeof(TAOM.Features.SpecialResources.SpecialResourcesBehavior).GetField("_screenSubscriber",BindingFlags.NonPublic|BindingFlags.Static)?.SetValue(null,null);
+ }
+ public static int Main() {
+  SupplyCases();
+  var service=new TAOM.Features.AlignmentDesertion.TestService();
+  var behavior=new TAOM.Features.AlignmentDesertion.Hooks.AlignmentDesertionBehavior(service);
+  var party=Party(true); behavior.OnDailyTickParty(party);
+  Check("field army in battle keeps roster",party.MemberRoster.Count==10);
+  party.MapEvent=null; behavior.OnDailyTickParty(party);
+  Check("field army desertion resumes after battle",party.MemberRoster.Count==9);
+  var garrison=Party(true);
+  var town=new TaleWorlds.CampaignSystem.Settlements.Settlement { Town=new TaleWorlds.CampaignSystem.Settlements.Town { GarrisonParty=garrison }, OwnerClan=garrison.LeaderHero.Clan };
+  behavior.OnDailyTickSettlement(town); Check("garrison in battle keeps roster",garrison.MemberRoster.Count==10);
+  garrison.MapEvent=null; behavior.OnDailyTickSettlement(town); Check("garrison desertion resumes after battle",garrison.MemberRoster.Count==9);
+  party=Party(false); behavior.OnDailyTickParty(party); Check("normal party behavior retained",party.MemberRoster.Count==9);
+  int prior=behavior.Applied; behavior.OnDailyTickParty(null); behavior.OnDailyTickSettlement(null); Check("null inputs safe",behavior.Applied==prior);
+  behavior.OnDailyTickSettlement(new TaleWorlds.CampaignSystem.Settlements.Settlement()); Check("missing town safe",behavior.Applied==prior);
+  party=Party(false);party.IsLordParty=false;behavior.OnDailyTickParty(party);Check("non-lord non-player excluded",party.MemberRoster.Count==10);
+  party=Party(false);party.LeaderHero=null;behavior.OnDailyTickParty(party);Check("no leader excluded",party.MemberRoster.Count==10);
+  party=Party(false);service.Enabled=false;behavior.OnDailyTickParty(party);Check("disabled setting honored",party.MemberRoster.Count==10);service.Enabled=true;
+  party=Party(false);party.IsLordParty=false;party.IsMainParty=true;behavior.OnDailyTickParty(party);Check("player party still deserts outside battle",party.MemberRoster.Count==9);
+  party=Party(false);party.LeaderHero.Clan=null;prior=behavior.Applied;behavior.OnDailyTickParty(party);Check("missing clan excluded",behavior.Applied==prior);
+  party=Party(false);party.LeaderHero.Clan.Kingdom=null;behavior.OnDailyTickParty(party);Check("missing kingdom excluded",behavior.Applied==prior);
+  town=new Settlement { Town=new Town() };behavior.OnDailyTickSettlement(town);Check("missing garrison excluded",behavior.Applied==prior);
+  town.Town.GarrisonParty=Party(false);town.Town.GarrisonParty.MemberRoster=null;behavior.OnDailyTickSettlement(town);Check("missing garrison roster excluded",behavior.Applied==prior);
+  town.Town.GarrisonParty=Party(false);behavior.OnDailyTickSettlement(town);Check("ownerless settlement excluded",behavior.Applied==prior);
+  town.OwnerClan=new Clan();behavior.OnDailyTickSettlement(town);Check("independent settlement excluded",behavior.Applied==prior);
+  town.OwnerClan=town.Town.GarrisonParty.LeaderHero.Clan;service.Enabled=false;behavior.OnDailyTickSettlement(town);Check("disabled setting excludes garrisons",behavior.Applied==prior);service.Enabled=true;
+  ResetScreen(); var a=new TAOM.Features.SpecialResources.SpecialResourcesBehavior();var b=new TAOM.Features.SpecialResources.SpecialResourcesBehavior();var c=new TAOM.Features.SpecialResources.SpecialResourcesBehavior();
+  a.RegisterEvents();b.RegisterEvents();c.RegisterEvents();TaleWorlds.ScreenSystem.ScreenManager.Raise();
+  Check("three campaign loads notify only current campaign",a.Calls==0 && b.Calls==0 && c.Calls==1 && TaleWorlds.ScreenSystem.ScreenManager.Count==1);
+  a.UnsubscribeScreenManager();b.UnsubscribeScreenManager();TaleWorlds.ScreenSystem.ScreenManager.Raise();Check("old cleanup preserves active owner",c.Calls==2 && TaleWorlds.ScreenSystem.ScreenManager.Count==1);
+  c.UnsubscribeScreenManager();Check("active cleanup removes subscription",TaleWorlds.ScreenSystem.ScreenManager.Count==0);
+  c.RegisterEvents();TaleWorlds.ScreenSystem.ScreenManager.Raise();c.UnsubscribeScreenManager();Check("re-register after cleanup remains removable",c.Calls==3 && TaleWorlds.ScreenSystem.ScreenManager.Count==0);
+  ResetScreen();a=new TAOM.Features.SpecialResources.SpecialResourcesBehavior();for(int i=0;i<3;i++)a.RegisterEvents();TaleWorlds.ScreenSystem.ScreenManager.Raise();Check("same campaign re-registration idempotent",a.Calls==1 && TaleWorlds.ScreenSystem.ScreenManager.Count==1);
+  ResetScreen();a=new TAOM.Features.SpecialResources.SpecialResourcesBehavior();b=new TAOM.Features.SpecialResources.SpecialResourcesBehavior();c=new TAOM.Features.SpecialResources.SpecialResourcesBehavior();a.RegisterEvents();b.RegisterEvents();a.UnsubscribeScreenManager();c.RegisterEvents();TaleWorlds.ScreenSystem.ScreenManager.Raise();Check("late old cleanup does not orphan the next campaign owner",a.Calls==0 && b.Calls==0 && c.Calls==1 && TaleWorlds.ScreenSystem.ScreenManager.Count==1);
+  ResetScreen();int unrelated=0;TaleWorlds.ScreenSystem.ScreenManager.OnPushScreen+=s=>unrelated++;for(int i=0;i<100;i++)new TAOM.Features.SpecialResources.SpecialResourcesBehavior().RegisterEvents();TaleWorlds.ScreenSystem.ScreenManager.Raise();Check("100 loads retain one current owner and unrelated handler",unrelated==1 && TaleWorlds.ScreenSystem.ScreenManager.Count==2);
+  ResetScreen();var diag=new TAOM.Features.TroopWeight.Diagnostics.TroopCountDiagnosticsBehavior();for(int i=0;i<3;i++)diag.RegisterEvents();TaleWorlds.ScreenSystem.ScreenManager.Raise();Check("diagnostics singleton not duplicated across loads",diag.Calls==1 && TaleWorlds.ScreenSystem.ScreenManager.Count==1);diag.Unsubscribe();Check("diagnostics cleanup complete",TaleWorlds.ScreenSystem.ScreenManager.Count==0);
+  ResetScreen();
+  Messages.Add("RESULT total="+total+" passed="+(total-failed)+" failed="+failed);return failed==0?0:1;
+ }
+}

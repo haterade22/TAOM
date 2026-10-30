@@ -45,6 +45,10 @@ public class AlignmentDesertionBehavior : CampaignBehaviorBase
         if (!_service.IsEnabled || party == null)
             return;
 
+        // Battle rosters belong to the map event until it ends, as in native desertion.
+        if (party.MapEvent != null)
+            return;
+
         // Only lord field parties (incl. army members, which each tick individually) and the player's
         // main party shed troops here. Caravans (companion-led, so they have a clan + kingdom),
         // villagers, militia, bandits, and garrison parties are excluded — garrisons desert via
@@ -69,6 +73,9 @@ public class AlignmentDesertionBehavior : CampaignBehaviorBase
 
         var garrison = settlement.Town?.GarrisonParty;
         if (garrison?.MemberRoster == null)
+            return;
+
+        if (garrison.MapEvent != null)
             return;
 
         var clan = settlement.OwnerClan;

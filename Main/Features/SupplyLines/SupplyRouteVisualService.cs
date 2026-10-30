@@ -278,7 +278,16 @@ public sealed class SupplyRouteVisualService : ISupplyRouteVisualService
             {
                 try
                 {
-                    mapScene.GetTerrainHeightAndNormal(new Vec2(sample.X, sample.Y), out height, out normal);
+                    var position = new Vec2(sample.X, sample.Y);
+                    // Guard and query the same live scene. Some map scenes have collision
+                    // geometry but no terrain heightmap; managed catches cannot recover the
+                    // native access violation caused by querying a null terrain pointer.
+                    if (scene.HasTerrainHeightmap)
+                        scene.GetTerrainHeightAndNormal(position, out height, out normal);
+                    else
+                        // Same land collision mask as SandBox.MapScene.GetHeightAtPoint (1.4.8).
+                        scene.GetHeightAtPoint(position,
+                            BodyFlags.Moveable | BodyFlags.OnlyCollideWithRaycast, ref height);
                 }
                 catch (Exception)
                 {

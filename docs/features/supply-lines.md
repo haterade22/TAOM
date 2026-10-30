@@ -328,6 +328,13 @@ prefab in the module so the class cannot ship again.
 
 ---
 
+## Legacy 1.4.8 native-query fixes
+
+Route queries use the active campaign's land-navigation exclusions and region
+switch costs. Arrow placement checks the live scene's terrain heightmap before
+querying it, falling back to land collision height when no heightmap exists.
+See [reproductions and validation limits](../audits/legacy-campaign-fixes-2026-10-29.md).
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

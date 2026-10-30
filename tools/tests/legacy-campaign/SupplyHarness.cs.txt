@@ -1,0 +1,119 @@
+
+namespace TaleWorlds.Library {
+ public struct Vec2 {
+  public float x, y;
+  public Vec2(float x, float y) { this.x=x; this.y=y; }
+ }
+ public struct Vec3 {
+  public float x, y, z;
+  public Vec3(float x, float y, float z) { this.x=x; this.y=y; this.z=z; }
+  public static Vec3 CrossProduct(Vec3 a,Vec3 b) { return new Vec3(a.y*b.z-a.z*b.y,a.z*b.x-a.x*b.z,a.x*b.y-a.y*b.x); }
+  public void Normalize() { var n=(float)Math.Sqrt(x*x+y*y+z*z); if(n>0) { x/=n; y/=n; z/=n; } }
+  public static Vec3 operator *(Vec3 a,float b) { return new Vec3(a.x*b,a.y*b,a.z*b); }
+ }
+ public struct Mat3 { public Vec3 u,s,f; }
+ public struct MatrixFrame { public Vec3 origin; public Mat3 rotation; public static MatrixFrame Identity { get { return new MatrixFrame(); } } }
+ public class NavigationPath {
+  public List<Vec2> Points=new List<Vec2>();
+  public int Size { get { return Points.Count; } }
+  public Vec2 this[int i] { get { return Points[i]; } }
+ }
+}
+namespace TaleWorlds.Engine {
+ [Flags] public enum BodyFlags { None=0, Moveable=16, OnlyCollideWithRaycast=128 }
+ public class Scene {
+  public bool HasTerrainHeightmap=true, ThrowHeight, CollisionHit=true;
+  public int TerrainCalls, CollisionCalls, UnsafeTerrainCalls;
+  public float Height=42;
+  public Vec3 Normal=new Vec3(0,0,1);
+  public BodyFlags Mask;
+  public void GetTerrainHeightAndNormal(Vec2 p,out float h,out Vec3 normal) {
+   TerrainCalls++; if(!HasTerrainHeightmap) UnsafeTerrainCalls++;
+   if(ThrowHeight) throw new InvalidOperationException("simulated scene transition");
+   h=Height; normal=Normal;
+  }
+  public bool GetHeightAtPoint(Vec2 p,BodyFlags mask,ref float h) {
+   CollisionCalls++; Mask=mask;
+   if(ThrowHeight) throw new InvalidOperationException("simulated collision query failure");
+   h=CollisionHit?Height:0; return CollisionHit;
+  }
+ }
+ public class GameEntity {
+  public MatrixFrame Frame; public bool Removed;
+  public void SetGlobalFrame(in MatrixFrame frame) { Frame=frame; }
+ }
+}
+namespace TaleWorlds.CampaignSystem {
+ public class Campaign {
+  public static Campaign Current { get; set; }
+  public MapSceneFake MapSceneWrapper { get; set; }
+  public GameModels Models { get; set; }
+ }
+ public struct CampaignVec2 { public int Face; public CampaignVec2(Vec2 p,bool isOnLand) { Face=isOnLand?1:0; } }
+ public class GameModels { public PartyNavigationModel PartyNavigationModel=new PartyNavigationModel(); public MapDistanceModel MapDistanceModel=new MapDistanceModel(); }
+ public class PartyNavigationModel {
+  public int[] Excluded=new[]{7,11}; public MobileParty.NavigationType Requested;
+  public int[] GetInvalidTerrainTypesForNavigationType(MobileParty.NavigationType type) { Requested=type; return Excluded; }
+ }
+ public class MapDistanceModel { public int RegionSwitchCostFromLandToSea=37, RegionSwitchCostFromSeaToLand=59; }
+ public class MapSceneFake : Scene {
+  public int Calls, Land, Sea; public int[] Excluded; public bool Found=true, ThrowPath;
+  public List<Vec2> Points=new List<Vec2>{new Vec2(0,0),new Vec2(4,5),new Vec2(8,0)};
+  public bool GetPathBetweenAIFaces(int a,int b,Vec2 from,Vec2 to,float tolerance,NavigationPath path,int[] excluded,float multiplier,int land,int sea) {
+   Calls++; Excluded=excluded; Land=land; Sea=sea;
+   if(ThrowPath) throw new InvalidOperationException("no path");
+   path.Points.AddRange(Points); return Found;
+  }
+ }
+}
+namespace TAOM.Features.SupplyLines {
+ public class SupplyCaravanService {
+  public static List<Vec2> ComputeNavPathPoints(Vec2 from,Vec2 to) /*__SupplyCaravanService.ComputeNavPathPoints__*/
+ }
+ public class SupplyRouteVisualService {
+  public class RouteEntry { public List<GameEntity> Arrows=new List<GameEntity>(); public List<RouteSample> Samples=new List<RouteSample>(); }
+  public struct RouteSample { public float X,Y,Angle; }
+  private const float ArrowScale=1;
+  private GameEntity CreateArrow(Scene scene) { return new GameEntity(); }
+  private void RemoveArrow(GameEntity arrow) { arrow.Removed=true; }
+  public void SyncArrows(Scene scene,RouteEntry entry) /*__SupplyRouteVisualService.SyncArrows__*/
+ }
+}
+public static partial class Program {
+ static Campaign NewCampaign() { return new Campaign { MapSceneWrapper=new MapSceneFake(), Models=new GameModels() }; }
+ static bool Endpoints(List<Vec2> p) { return p.Count==2 && p[0].x==0 && p[0].y==0 && p[1].x==8 && p[1].y==0; }
+ static List<Vec2> Path() { return TAOM.Features.SupplyLines.SupplyCaravanService.ComputeNavPathPoints(new Vec2(0,0),new Vec2(8,0)); }
+ static TAOM.Features.SupplyLines.SupplyRouteVisualService.RouteEntry Entry() {
+  var e=new TAOM.Features.SupplyLines.SupplyRouteVisualService.RouteEntry();
+  e.Samples.Add(new TAOM.Features.SupplyLines.SupplyRouteVisualService.RouteSample { X=2,Y=3,Angle=0 }); return e;
+ }
+ static void SupplyCases() {
+  Campaign.Current=NewCampaign(); var map=Campaign.Current.MapSceneWrapper; var models=Campaign.Current.Models;
+  var p=Path();
+  Check("route preserves native waypoints",p.Count==3 && p[1].x==4 && p[1].y==5);
+  Check("route forwards active land navigation exclusions",ReferenceEquals(map.Excluded,models.PartyNavigationModel.Excluded) && models.PartyNavigationModel.Requested==MobileParty.NavigationType.Default);
+  Check("route forwards asymmetric model region costs",map.Land==37 && map.Sea==59);
+  models.MapDistanceModel.RegionSwitchCostFromLandToSea=0; models.MapDistanceModel.RegionSwitchCostFromSeaToLand=0; Path();
+  Check("route supports non-naval zero region costs",map.Land==0 && map.Sea==0);
+  map.Found=false; Check("unreachable route falls back to endpoints",Endpoints(Path()));
+  map.Found=true; map.Points.Clear(); map.Points.Add(new Vec2(5,5)); Check("one-point route falls back to endpoints",Endpoints(Path()));
+  map.ThrowPath=true; Check("managed path failure falls back to endpoints",Endpoints(Path()));
+  Campaign.Current.MapSceneWrapper=null; Check("absent map falls back to endpoints",Endpoints(Path()));
+  Campaign.Current=null; Check("absent campaign falls back to endpoints",Endpoints(Path()));
+  Campaign.Current=NewCampaign(); map=Campaign.Current.MapSceneWrapper; map.Height=999;
+  var scene=new Scene { Height=23 }; var renderer=new TAOM.Features.SupplyLines.SupplyRouteVisualService(); var entry=Entry();
+  renderer.SyncArrows(scene,entry);
+  Check("arrow queries the active scene instead of cached wrapper",scene.TerrainCalls==1 && map.TerrainCalls==0 && entry.Arrows[0].Frame.origin.z==23);
+  Check("terrain query does not also raycast",scene.CollisionCalls==0);
+  scene=new Scene { HasTerrainHeightmap=false,Height=31 }; entry=Entry(); renderer.SyncArrows(scene,entry);
+  Check("no terrain heightmap never reaches terrain API",scene.UnsafeTerrainCalls==0 && map.TerrainCalls==0);
+  Check("no terrain heightmap uses land collision mask and height",scene.CollisionCalls==1 && (int)scene.Mask==144 && entry.Arrows[0].Frame.origin.z==31);
+  Check("collision fallback retains an upright normal",entry.Arrows[0].Frame.rotation.u.x==0 && entry.Arrows[0].Frame.rotation.u.y==0 && entry.Arrows[0].Frame.rotation.u.z==1);
+  scene.CollisionHit=false; entry=Entry(); renderer.SyncArrows(scene,entry);
+  Check("collision miss uses flat height",entry.Arrows[0].Frame.origin.z==0);
+  scene.ThrowHeight=true; entry=Entry(); renderer.SyncArrows(scene,entry);
+  Check("managed height failure keeps default frame",entry.Arrows[0].Frame.origin.z==0);
+  scene=new Scene(); entry=Entry(); renderer.SyncArrows(scene,entry); var old=entry.Arrows[0]; entry.Samples.Clear(); renderer.SyncArrows(scene,entry);
+  Check("route shrink removes obsolete arrow",entry.Arrows.Count==0 && old.Removed);
+ }
+}
