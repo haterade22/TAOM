@@ -28,8 +28,15 @@ namespace TAOM.Tests.Migration;
 /// <para>
 /// The rule is deliberately narrow. Only attributes whose name is a property of Widget-derived type
 /// on that element's widget class count; a value attribute TAOM drops or changes (a size, a brush,
-/// a visibility) is a design choice and is not checked. Elements are paired root to root and then by
-/// <c>Id</c>, and only when the clone keeps the same element type.
+/// a visibility) is a design choice and is not checked. The one non-Widget attribute that counts is
+/// <c>DataSource</c>: a clone that drops a binding the vanilla element declares loses its hover hint
+/// or panel (#1051, <c>UsedHorsesHint</c> on the troop manager popup); only its presence is checked,
+/// not its value. Elements are paired root to root and then by <c>Id</c>, and only when the clone
+/// keeps the same element type. An element with no <c>Id</c> (the popup's <c>DataSource="{..}"</c>
+/// text) and a prefab-instance tag are not checked, and a repeated <c>Id</c> pairs every vanilla
+/// occurrence with the clone's first element of that <c>Id</c> (skipped when their types differ), so
+/// the clone's later occurrences are never checked. The engine resolves a <c>DataSource</c> by the
+/// ancestor chain, not by <c>Id</c>.
 /// </para>
 /// </summary>
 [TestClass]
@@ -60,7 +67,8 @@ public class PrefabCloneWidgetReferenceTests
 
         Assert.AreEqual(0, offenders.Count,
             "TAOM prefab clones drop widget references the vanilla prefab declares; the widget's own update "
-            + "code dereferences those properties unguarded, so the clone throws where the vanilla file did not. "
+            + "code dereferences those properties unguarded, so the clone throws where the vanilla file did not "
+            + "(for a dropped DataSource, the hint or panel it feeds binds nothing). "
             + "Re-base the clone on the installed vanilla file and re-apply TAOM's edits (a clone with no TAOM edit is deleted instead):"
             + Environment.NewLine + string.Join(Environment.NewLine, offenders));
     }
@@ -141,7 +149,7 @@ public class PrefabCloneWidgetReferenceTests
 
             foreach (var attribute in vanillaElement.Attributes())
             {
-                if (!IsWidgetReferenceProperty(widgetType, attribute.Name.LocalName)) continue;
+                if (attribute.Name.LocalName != "DataSource" && !IsWidgetReferenceProperty(widgetType, attribute.Name.LocalName)) continue;
                 if (twin.Attribute(attribute.Name.LocalName) != null) continue;
                 yield return $"{where} lacks {attribute.Name.LocalName}=\"{attribute.Value}\"";
             }

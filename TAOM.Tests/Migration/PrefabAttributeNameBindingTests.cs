@@ -40,10 +40,10 @@ public class PrefabAttributeNameBindingTests
     // Vanilla ships these (type, attribute) pairs in its own prefabs, and the engine tolerates them
     // (no setter, so a caught failure, or a silent drop). The rule applied: in a shipped prefab,
     // misspellings and dotted paths that name nothing are deleted even where vanilla carries them
-    // (VertialAlignment, VerticalAlinment), and so is a dead name on an element whose type TAOM changed
-    // from vanilla's (AlwaysRefreshAll: vanilla's element is a ListPanel, TAOM's a NavigatableListPanel;
-    // vanilla still carries it at SandBox PartyTroopManagerPopUp.xml:77). Other names vanilla carries on
-    // the same widget type are allowlisted below.
+    // (VertialAlignment, VerticalAlinment), and so is AlwaysRefreshAll: no engine type has it, and TAOM's
+    // re-synced popup ListPanel drops it although vanilla still carries it at SandBox
+    // PartyTroopManagerPopUp.xml:77 (#1051). Other names vanilla carries on the same widget type are
+    // allowlisted below.
     // Paths are relative to the game's Modules folder.
     private static readonly HashSet<string> VanillaParityAllowlist = new HashSet<string>(StringComparer.Ordinal)
     {

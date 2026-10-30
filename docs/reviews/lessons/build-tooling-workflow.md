@@ -4661,3 +4661,16 @@ brace. Two pushed commits held invalid JSON, and every local run passed because 
   `git hash-object -w --path <file>` and `git update-index --cacheinfo`. Then parse `git show :<file>` before the
   commit. Never `--unidiff-zero` a structured file.
 - **Source:** [rca-feral-orcs-2026-10-29.md](../rca-feral-orcs-2026-10-29.md) finding 12.
+
+### A fix that refutes a claim sweeps the claim's words, not a file list (2026-10-29)
+The 2026-09-30 review proved that `MBGlobals.GetActionSet` does not throw on a missing action set, and listed the
+eleven files that said it did. The issue written from it (#1065) named two docs to correct, so its fix was complete
+against the issue and left the claim in nine live docs, four community guides and two test comments; a doc review of
+the same batch found them. A separate lens found four more call sites with the same dead `IsValid` check.
+- **Why missed:** a file list is one search's snapshot, and an issue body that copies it narrows the sweep to it.
+  Claims also live in code comments and tests, which a docs-only list never names.
+- **Prevent:** when a fix refutes a claim, put the claim's words in the issue (here "throws on a miss" and
+  `!...IsValid` after `GetActionSet`), grep them over `docs/`, `Main/`, `Client/` and `TAOM.Tests/` before the
+  commit, and treat each hit as fix, history (reviews, changelog archive, snapshots) or follow-up with an issue.
+  The rename-sweep lesson above is the same miss for identifiers.
+- **Source:** [rca-actionset-guard-popup-2026-10-29.md](../rca-actionset-guard-popup-2026-10-29.md) findings 2, 3 and 8.
