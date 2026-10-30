@@ -1,0 +1,15 @@
+{
+  "_doc": "Owner and culture pinned for fortifications in the LIVE TAOM_Map settlements.xml, which is unversioned. validate_moduledata.py fails SETTLEMENT_ASSIGNMENT_DRIFT when a pinned town or castle, or a village bound to it, no longer matches; tools/apply_settlement_assignments.py --apply writes them back. Villages take the culture of the fortification they are bound to.",
+  "settlements": {
+    "castle_K4": {
+      "owner": "clan_battania_8",
+      "culture": "battania",
+      "reason": "Krûk Azhanna is a Khand castle (Mike, 2026-10-30). Varyash already has it as initial_home_settlement in spclans.xslt. It was Rhûn's (clan_khuzait_1) since the #374 retag excluded it."
+    },
+    "castle_FH8": {
+      "owner": "clan_abanissa_7",
+      "culture": "abanissa",
+      "reason": "Urutúsh belongs to Abanissa, not Shaghana (Mike, 2026-10-30). clan_abanissa_7 holds castle_FH7, the nearest Abanissa fief."
+    }
+  }
+}

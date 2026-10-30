@@ -257,6 +257,7 @@ class Validator:
         issues += self._education_coverage()
         issues += self._landless_cultures()
         issues += self._settlement_economy_floor()
+        issues += self._settlement_assignment_drift()
         issues += self._fortifications_without_villages()
         issues += self._harness_family_types()
         issues += self._mounted_dwarves()
@@ -775,6 +776,72 @@ class Validator:
                     message=(f'culture "{culture}" is named in the floor spec but owns no '
                              f"settlement in the loaded world, so the floor gates nothing for it. "
                              f"Either the culture was retagged or the id is wrong."),
+                ))
+        return issues
+
+    # -- pass 4c2: pinned owner and culture still hold in the live map ------ #
+    # Mike moved castle_K4 to Khand and castle_FH8 to Abanissa on 2026-10-30 by editing the LIVE
+    # TAOM_Map settlements.xml. That file is unversioned, so a reinstall, or an editor save from a
+    # copy loaded before the edit, puts the old owner and culture back with nothing to notice it.
+    # tools/settlement_assignments.json is the single source: apply_settlement_assignments.py
+    # writes from it and this pass reads it. A village carries its own culture attribute, so a
+    # bound village is checked against its fortification's pinned culture.
+    _ASSIGNMENT_SPEC = Path(__file__).resolve().parent / "settlement_assignments.json"
+
+    def _settlement_assignment_drift(self) -> list:
+        rel = "tools/settlement_assignments.json"
+
+        def spec_issue(message, entry_id="(spec)"):
+            return Issue(severity=Severity.ERROR, code=ASSIGNMENT_DRIFT_CODE, file=rel, line=0,
+                         entry_id=entry_id, message=message)
+
+        if not self._ASSIGNMENT_SPEC.exists():
+            return [spec_issue("the committed settlement assignment spec is missing, so nothing "
+                               "guards the pinned owners and cultures in the LIVE TAOM_Map "
+                               "settlements.xml. Restore it from git rather than deleting the check.")]
+        spec = json.loads(self._ASSIGNMENT_SPEC.read_text(encoding="utf-8-sig"))
+        pins = spec.get("settlements") or {}
+        if not pins:
+            return [spec_issue("the settlement assignment spec pins nothing, so it gates nothing.")]
+        if not self.reg.settlement_economy:
+            return []  # registry unavailable (no game install); the CLI already exits 2
+
+        fix = "Re-apply with: python tools/apply_settlement_assignments.py --apply"
+        world = {r["id"]: r for r in self.reg.settlement_economy}
+        issues = []
+        for sid, pin in sorted(pins.items()):
+            missing = [k for k in ("owner", "culture", "reason") if not str(pin.get(k) or "").strip()]
+            if missing:
+                issues.append(spec_issue(f"spec entry has no {', '.join(missing)}", sid))
+                continue
+            record = world.get(sid)
+            if record is None or record["kind"] not in ("town", "castle"):
+                issues.append(spec_issue("is pinned in the spec but is not a town or castle in the "
+                                         "loaded world: the id is wrong or the fief was retired", sid))
+                continue
+            drift = []
+            if record.get("owner") != pin["owner"]:
+                drift.append(f'owner is {record.get("owner")}, pinned {pin["owner"]}')
+            if record["culture"] != pin["culture"]:
+                drift.append(f'culture is {record["culture"]}, pinned {pin["culture"]}')
+            if drift:
+                issues.append(Issue(
+                    severity=Severity.ERROR, code=ASSIGNMENT_DRIFT_CODE, file=self._LIVE_SETTLEMENTS,
+                    line=0, entry_id=sid,
+                    message=(f"{'; '.join(drift)} ({pin['reason']}). The live map is unversioned, "
+                             f"so a reinstall or an editor save from an older copy reverted it. {fix}"),
+                ))
+        for record in self.reg.settlement_economy:
+            pin = pins.get(record.get("bound") or "")
+            if record["kind"] != "village" or not pin or not pin.get("culture"):
+                continue
+            if record["culture"] != pin["culture"]:
+                issues.append(Issue(
+                    severity=Severity.ERROR, code=ASSIGNMENT_DRIFT_CODE, file=self._LIVE_SETTLEMENTS,
+                    line=0, entry_id=record["id"],
+                    message=(f'village bound to {record["bound"]} has culture {record["culture"]}, '
+                             f'but its fortification is pinned to {pin["culture"]}, so it spawns the '
+                             f"old culture's notables and villagers. {fix}"),
                 ))
         return issues
 
@@ -2427,7 +2494,10 @@ def build_settlement_economy(game_modules) -> list:
                 value = float(raw)
             except ValueError:
                 continue
-            records.append({"id": sid, "culture": culture, "kind": kind, "value": value, "bound": bound})
+            # SETTLEMENT_ASSIGNMENT_DRIFT reads it. Villages carry no owner; they follow `bound`.
+            owner = (s.get("owner") or "").replace("Faction.", "", 1) or None
+            records.append({"id": sid, "culture": culture, "kind": kind, "value": value, "bound": bound,
+                            "owner": owner})
     return records
 
 
@@ -2587,6 +2657,7 @@ def build_launchers(item_roots) -> dict:
 
 
 CREATURE_GEAR_CODE = "CREATURE_GEAR_OBTAINABLE"
+ASSIGNMENT_DRIFT_CODE = "SETTLEMENT_ASSIGNMENT_DRIFT"
 
 
 @dataclass(frozen=True)

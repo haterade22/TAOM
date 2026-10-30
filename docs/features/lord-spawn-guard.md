@@ -140,6 +140,8 @@ conversion lines.
 
 **26 of the 27 settlements were retagged to `Culture.battania`.** `castle_K4` belongs to
 `clan_khuzait_1` and stays Easterling. Variag went 0 -> 26 settlements; khuzait 136 -> 110.
+(2026-10-30: Mike moved `castle_K4` to the Variag clan `clan_battania_8`, so it and its three
+villages are `Culture.battania` too, pinned in `tools/settlement_assignments.json`.)
 
 ### What the retag activated (and why two more edits were needed)
 

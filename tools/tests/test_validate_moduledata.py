@@ -1568,6 +1568,17 @@ class SettlementEconomyRegistryTests(unittest.TestCase):
         self.assertEqual(recs["castle_village_EW7_1"]["bound"], "castle_EW7")
         self.assertIsNone(recs["castle_EW7"]["bound"])
 
+    def test_fortification_record_carries_its_owner(self):
+        # SETTLEMENT_ASSIGNMENT_DRIFT reads it; without it every pinned owner reads as reverted.
+        self._write_settlements("TAOM_Map",
+            '  <Settlement id="castle_K4" owner="Faction.clan_battania_8" culture="Culture.battania">'
+            '<Components><Town is_castle="true" prosperity="420"/></Components></Settlement>\n'
+            '  <Settlement id="castle_village_K4_1" culture="Culture.battania">'
+            '<Components><Village hearth="465" bound="Settlement.castle_K4"/></Components></Settlement>\n')
+        recs = {r["id"]: r for r in ts.build_settlement_economy(self.modules)}
+        self.assertEqual(recs["castle_K4"]["owner"], "clan_battania_8")
+        self.assertIsNone(recs["castle_village_K4_1"]["owner"])
+
     def test_decimal_prosperity_is_kept(self):
         # Town.Deserialize uses float.Parse, so 4799.5 is legal data. A `(\\d+)` regex missed it
         # entirely and the fief evaded the floor check (Codex, 2026-08-14).
@@ -1763,6 +1774,103 @@ class SettlementEconomyFloorTests(unittest.TestCase):
                              "a value AT the writer's cap must satisfy an over-cap spec")
         finally:
             spec_path.write_text(original, encoding="utf-8")
+
+
+class SettlementAssignmentDriftTests(unittest.TestCase):
+    """SETTLEMENT_ASSIGNMENT_DRIFT (2026-10-30). Mike moved castle_K4 to Khand and castle_FH8 to
+    Abanissa in the LIVE TAOM_Map settlements.xml, which is unversioned: a reinstall or an editor
+    save from an older copy puts the old owner and culture back. tools/settlement_assignments.json
+    pins them, and this pass is what notices the revert."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.md = Path(self._tmp.name) / "ModuleData"
+        self.md.mkdir(parents=True)
+        self.schemas = ts.load_schemas(SCHEMA_DIR)
+        self.spec = Path(self._tmp.name) / "settlement_assignments.json"
+        self._write_spec({"castle_K4": {"owner": "clan_battania_8", "culture": "battania",
+                                        "reason": "Khand castle"}})
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def _write_spec(self, settlements):
+        self.spec.write_text(json.dumps({"settlements": settlements}), encoding="utf-8")
+
+    @staticmethod
+    def _rec(sid, kind, culture, owner=None, bound=None):
+        return {"id": sid, "culture": culture, "kind": kind, "value": 500, "bound": bound,
+                "owner": owner}
+
+    def _world(self, owner="clan_battania_8", culture="battania", village_culture="battania"):
+        return [self._rec("castle_K4", "castle", culture, owner=owner),
+                self._rec("castle_village_K4_1", "village", village_culture, bound="castle_K4")]
+
+    def _issues(self, economy):
+        regs = ts.Registries(
+            items={"None"}, item_def_files={}, npccharacters=set(),
+            cultures={"battania", "khuzait"}, party_templates=set(),
+            settled_cultures={"battania", "khuzait"}, settlement_economy=economy)
+        validator = ts.Validator(self.md, self.schemas, regs)
+        validator._ASSIGNMENT_SPEC = self.spec
+        return [i for i in validator.run() if i.code == "SETTLEMENT_ASSIGNMENT_DRIFT"]
+
+    def test_matching_world_is_clean(self):
+        self.assertEqual(self._issues(self._world()), [])
+
+    def test_reverted_owner_is_an_error(self):
+        found = self._issues(self._world(owner="clan_khuzait_1"))
+        self.assertEqual([i.entry_id for i in found], ["castle_K4"])
+        self.assertEqual(found[0].severity, ts.Severity.ERROR)
+        self.assertIn("clan_khuzait_1", found[0].message)
+
+    def test_reverted_culture_is_an_error(self):
+        found = self._issues(self._world(culture="khuzait"))
+        self.assertEqual([i.entry_id for i in found], ["castle_K4"])
+        self.assertIn("khuzait", found[0].message)
+
+    def test_bound_village_of_another_culture_is_an_error(self):
+        # A village follows its castle's owner but carries its own culture attribute, so it can
+        # be reverted alone and spawn the old culture's headmen under the new owner.
+        found = self._issues(self._world(village_culture="khuzait"))
+        self.assertEqual([i.entry_id for i in found], ["castle_village_K4_1"])
+
+    def test_pinned_id_missing_from_the_world_is_an_error(self):
+        self._write_spec({"castle_nowhere": {"owner": "clan_x", "culture": "battania",
+                                             "reason": "typo"}})
+        found = self._issues(self._world())
+        self.assertEqual([i.entry_id for i in found], ["castle_nowhere"])
+
+    def test_missing_spec_is_an_error(self):
+        self.spec.unlink()
+        found = self._issues(self._world())
+        self.assertEqual([i.entry_id for i in found], ["(spec)"])
+
+    def test_spec_with_no_entries_is_an_error(self):
+        # An empty spec gates nothing and reads exactly like a clean run.
+        self._write_spec({})
+        found = self._issues(self._world())
+        self.assertEqual([i.entry_id for i in found], ["(spec)"])
+
+    def test_entry_without_owner_culture_or_reason_is_an_error(self):
+        self._write_spec({"castle_K4": {"owner": "clan_battania_8", "culture": "battania"}})
+        found = self._issues(self._world())
+        self.assertEqual([i.entry_id for i in found], ["castle_K4"])
+        self.assertIn("reason", found[0].message)
+
+    def test_empty_registry_is_silent(self):
+        # No install: the CLI already exits 2, so this pass must not fail every install-less run.
+        self.assertEqual(self._issues([]), [])
+
+    def test_shipped_spec_pins_each_entry_with_a_reason(self):
+        spec = json.loads((Path(ts.__file__).resolve().parent
+                           / "settlement_assignments.json").read_text(encoding="utf-8-sig"))
+        entries = spec["settlements"]
+        self.assertTrue(entries, "the shipped spec pins nothing")
+        for sid, entry in entries.items():
+            self.assertTrue(sid.startswith(("town_", "castle_")), sid)
+            for key in ("owner", "culture", "reason"):
+                self.assertTrue(str(entry.get(key) or "").strip(), f"{sid}: {key}")
 
 
 

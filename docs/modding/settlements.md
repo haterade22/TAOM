@@ -324,7 +324,7 @@ Code: No code changes needed
 
 ### Modify
 
-**1. Change who owns a fief.** Edit `owner="Faction.<clanId>"` on the fortification's `<Settlement>` tag in the live file. Never touch villages; they follow their `bound` fortification. For a planned redistribution use [`tools/Assign-SettlementOwners.py`](../../tools/Assign-SettlementOwners.py) (dry-run by default, `--apply` writes with a `.bak`) or [`tools/apply_starting_fief_spread.py`](../../tools/apply_starting_fief_spread.py), whose default run is a drift check that exits 1, which is how you notice a module reinstall reverted it.
+**1. Change who owns a fief.** Edit `owner="Faction.<clanId>"` on the fortification's `<Settlement>` tag in the live file. Never touch villages; they follow their `bound` fortification. For a planned redistribution use [`tools/Assign-SettlementOwners.py`](../../tools/Assign-SettlementOwners.py) (dry-run by default, `--apply` writes with a `.bak`) or [`tools/apply_starting_fief_spread.py`](../../tools/apply_starting_fief_spread.py), whose default run is a drift check that exits 1, which is how you notice a module reinstall reverted it. For a one-off decision, pin the fief's owner and culture in [`tools/settlement_assignments.json`](../../tools/settlement_assignments.json) and write it with [`tools/apply_settlement_assignments.py`](../../tools/apply_settlement_assignments.py) `--apply`, which also sets the culture of its bound villages; `SETTLEMENT_ASSIGNMENT_DRIFT` then catches a revert.
 
 Check: `python tools/apply_starting_fief_spread.py`
 Takes effect: new campaign only

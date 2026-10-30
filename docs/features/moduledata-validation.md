@@ -197,6 +197,33 @@ Evidence: adding a culture whose fiefs sit below the floor produced 4 errors and
 spec reports `PASS`. Pinned by `SettlementEconomyFloorTests` and `SettlementEconomyRegistryTests` in
 `tools/tests/test_validate_moduledata.py`.
 
+## Pinned settlement assignments (`SETTLEMENT_ASSIGNMENT_DRIFT`)
+
+**Severity ERROR.** Fires when a town or castle named in
+[`tools/settlement_assignments.json`](../../tools/settlement_assignments.json) has a different
+`owner` or `culture` in the live world, or when a village bound to it has a different culture.
+
+On 2026-10-30 Mike moved `castle_K4` (Krûk Azhanna) from Rhûn to Khand (`clan_battania_8`) and
+`castle_FH8` (Urutúsh) from Shaghana to Abanissa (`clan_abanissa_7`), in the **LIVE**
+`TAOM_Map/ModuleData/settlements.xml`. A reinstall, or a Modding Kit save from a copy loaded before
+the edit, writes the old values back. The spec is the single source:
+[`tools/apply_settlement_assignments.py`](../../tools/apply_settlement_assignments.py) writes from it
+(dry run by default, `--apply` writes after a backup) and this check reads it. A village carries its
+own `culture` attribute, so the check and the writer both cover the villages bound to each pinned
+fortification.
+
+| State | Result |
+|---|---|
+| Registry unavailable (no game install) | silent; the CLI already exits 2 |
+| Spec missing, or pinning nothing | **ERROR**: a deleted spec disables the gate |
+| Entry without `owner`, `culture` or `reason` | **ERROR** |
+| Pinned id that is not a town or castle in the world | **ERROR**: a typo or a retired fief covers nothing |
+
+Evidence: a dry run of the writer against the copy taken before the edit lists the 8 settlements it
+would change; against the live map it reports nothing to do. Pinned by
+`SettlementAssignmentDriftTests` and `SettlementEconomyRegistryTests` in
+`tools/tests/test_validate_moduledata.py`, and `tools/tests/test_apply_settlement_assignments.py`.
+
 ## Fortification without village (`FORTIFICATION_WITHOUT_VILLAGE`)
 
 **Severity WARNING.** Fires for a town or castle in the world the game actually builds that no

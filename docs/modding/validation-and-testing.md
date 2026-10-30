@@ -190,11 +190,15 @@ Re-run these after any Armory or map reinstall, and after Steam updates the game
 | `tools/oneoff/fix_dwarf_female_underwear_mesh.py` | any `LOTRLOME_Armory` update |
 | `tools/oneoff/fix_orphaned_tavern_conversation_actions.py` | any `LOTRLOME_Armory` update |
 | `tools/oneoff/retag_khand_to_variag.py` | any `TAOM_Map` reinstall |
+| `tools/apply_settlement_assignments.py` | any `TAOM_Map` reinstall |
 
-`SETTLEMENT_ECONOMY_FLOOR` is the one error code that watches a live module for you: it fires when a
-settlement drops below the floor in `tools/settlement_economy_floor.json`, which is exactly what a
-map reinstall causes. Re-apply with
+Two error codes watch a live module for you. `SETTLEMENT_ECONOMY_FLOOR` fires when a settlement
+drops below the floor in `tools/settlement_economy_floor.json`, which is exactly what a map
+reinstall causes. Re-apply with
 `python tools/rebalance_settlement_prosperity.py --culture-floor-file tools/settlement_economy_floor.json --apply`.
+`SETTLEMENT_ASSIGNMENT_DRIFT` fires when a fortification pinned in `tools/settlement_assignments.json`,
+or a village bound to it, has lost its owner or culture. Re-apply with
+`python tools/apply_settlement_assignments.py --apply`.
 
 ## Seven scripts with no dry run
 
