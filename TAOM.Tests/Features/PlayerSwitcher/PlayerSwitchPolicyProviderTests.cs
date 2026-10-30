@@ -39,7 +39,7 @@ public class PlayerSwitchPolicyProviderTests
 
         Assert.IsTrue(sut.Current.Enabled);
         Assert.IsTrue(sut.Current.IncludeWanderers);
-        Assert.IsFalse(sut.Current.AllowLoreLockedHeroes);
+        Assert.IsTrue(sut.Current.AllowLoreLockedHeroes, "on by default since #1067");
         Assert.IsFalse(sut.Current.TransferStartingGold);
     }
 

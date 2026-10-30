@@ -212,22 +212,23 @@ public class HeroPickerServiceTests
     // ---------- Lore-locked heroes ----------
 
     [TestMethod]
-    public void LoreLockedHeroes_AreHiddenByDefault()
+    public void LoreLockedHeroes_AreOfferedByDefault()
     {
         Given(Hero("sauron", isKingdomLeader: true, isClanLeader: true, isLoreLocked: true));
 
-        Assert.AreEqual(0, Build().TotalCount,
-            "Patch76 defers to vanilla for MainHero, so a player-controlled dark lord loses capture immunity");
+        CollectionAssert.AreEquivalent(new[] { "sauron" }, Ids(Build().RulingHouse),
+            "on by default since #1067; the setting's hint carries the capture caveat");
     }
 
     [TestMethod]
-    public void LoreLockedHeroes_AppearWhenTheOptInIsSet()
+    public void LoreLockedHeroes_AreHiddenWhenThePlayerTurnsThemOff()
     {
         Given(Hero("sauron", isKingdomLeader: true, isClanLeader: true, isLoreLocked: true));
 
-        var list = Build(new PlayerSwitchPolicy(true, true, allowLoreLockedHeroes: true, false));
+        var list = Build(new PlayerSwitchPolicy(true, true, allowLoreLockedHeroes: false, false));
 
-        CollectionAssert.AreEquivalent(new[] { "sauron" }, Ids(list.RulingHouse));
+        Assert.AreEqual(0, list.TotalCount,
+            "Patch76 defers to vanilla for MainHero, so a player-controlled dark lord loses capture immunity");
     }
 
     // ---------- Feature gating and empty states ----------
@@ -306,12 +307,102 @@ public class HeroPickerServiceTests
     }
 
     [TestMethod]
-    public void FindTakeover_AClanlessHero_IsNotTakenOver()
+    public void FindTakeover_AClanlessWanderer_ReturnsARowWithoutAClan()
     {
-        // Adoption keeps the player's own clan, whose name and banner the faction screen's skip never asks for.
+        // #1067: a named card (Gimli, Aragorn) is an explicit pick, adopted into the player's new clan.
+        // The planner routes HasClan false to AdoptIntoPlayerClan.
+        Given(Hero("aragorn", name: "Aragorn", clanId: "", isWanderer: true));
+
+        var row = Find("aragorn");
+
+        Assert.AreEqual("aragorn", row.HeroId);
+        Assert.IsFalse(row.HasClan);
+    }
+
+    [TestMethod]
+    public void FindTakeover_AClanlessWandererWithWanderersExcluded_StillReturnsARow()
+    {
+        // The wanderer list is a browse list; a card is a named pick and does not need the setting.
         Given(Hero("aragorn", clanId: "", isWanderer: true));
 
-        Assert.IsTrue(Find("aragorn").IsEmpty);
+        var row = Find("aragorn", new PlayerSwitchPolicy(true, includeWanderers: false, true, false));
+
+        Assert.AreEqual("aragorn", row.HeroId);
+    }
+
+    [TestMethod]
+    public void FindTakeover_AClanlessHeroWhoIsNoWanderer_IsNotTakenOver()
+    {
+        // Nothing marks such a hero as a pickable character; adoption is the wanderer path.
+        Given(Hero("limbo", clanId: "", isWanderer: false));
+
+        Assert.IsTrue(Find("limbo").IsEmpty);
+    }
+
+    [TestMethod]
+    public void FindTakeover_AClanlessWandererWhoIsAChild_IsNotTakenOver()
+    {
+        Given(Hero("kid", clanId: "", isWanderer: true, isChild: true));
+
+        Assert.IsTrue(Find("kid").IsEmpty);
+    }
+
+    // ---------- Across cultures (#1067) ----------
+
+    [TestMethod]
+    public void FindTakeover_AHeroOfAnotherCulture_IsFoundThroughHisOwnCulture()
+    {
+        // Haldir: a Mirkwood lord on the Lothlorien card.
+        _adapter.CultureOf("haldir").Returns("mirkwood");
+        _adapter.GetCandidates("mirkwood").Returns(new List<PickableHeroInfo>
+        {
+            Hero("haldir", name: "Haldir", culture: "mirkwood", clanId: "clan_mirkwood_3"),
+        });
+
+        var row = _sut.FindTakeover("haldir", Culture, PlayerSwitchPolicy.Default);
+
+        Assert.AreEqual("haldir", row.HeroId);
+        Assert.IsTrue(row.HasClan);
+    }
+
+    [TestMethod]
+    public void FindTakeover_WhenTheCultureLookupReturnsNull_FallsBackToTheScreensCulture()
+    {
+        _adapter.CultureOf("dain").Returns((string?)null);
+        Given(Hero("dain", isClanLeader: true));
+
+        Assert.AreEqual("dain", Find("dain").HeroId);
+    }
+
+    [TestMethod]
+    public void FindTakeover_WhenTheCultureLookupReturnsEmpty_FallsBackToTheScreensCulture()
+    {
+        _adapter.CultureOf("dain").Returns("");
+        Given(Hero("dain", isClanLeader: true));
+
+        Assert.AreEqual("dain", Find("dain").HeroId);
+    }
+
+    [TestMethod]
+    public void FindTakeover_AHeroOfAnotherCultureStillMeetsEveryOtherRule()
+    {
+        _adapter.CultureOf("kid").Returns("mirkwood");
+        _adapter.GetCandidates("mirkwood").Returns(new List<PickableHeroInfo>
+        {
+            Hero("kid", culture: "mirkwood", isChild: true),
+        });
+
+        Assert.IsTrue(Find("kid").IsEmpty);
+    }
+
+    [TestMethod]
+    public void BuildPickList_StillFiltersByTheScreensCulture()
+    {
+        // Player Switcher's own panel keeps "culture must match": it never asks for a hero's own culture.
+        Given(Hero("foreigner", culture: "mirkwood", isClanLeader: true));
+
+        Assert.AreEqual(0, Build().TotalCount);
+        _adapter.DidNotReceive().CultureOf(Arg.Any<string>());
     }
 
     [TestMethod]
@@ -364,12 +455,12 @@ public class HeroPickerServiceTests
     }
 
     [TestMethod]
-    public void FindTakeover_ALoreLockedHero_IsTakenOverOnlyWithTheOptIn()
+    public void FindTakeover_ALoreLockedHero_IsTakenOverUnlessThePlayerTurnedThemOff()
     {
         Given(Hero("sauron", isKingdomLeader: true, isClanLeader: true, isLoreLocked: true));
 
-        Assert.IsTrue(Find("sauron").IsEmpty, "Sauron and the Nine stay opt-in, as on the face-generator list");
-        Assert.AreEqual("sauron", Find("sauron", new PlayerSwitchPolicy(true, true, allowLoreLockedHeroes: true, false)).HeroId);
+        Assert.AreEqual("sauron", Find("sauron").HeroId, "on by default since #1067");
+        Assert.IsTrue(Find("sauron", new PlayerSwitchPolicy(true, true, allowLoreLockedHeroes: false, false)).IsEmpty);
     }
 
     [TestMethod]

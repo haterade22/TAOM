@@ -13,6 +13,12 @@ public interface IHeroPickerAdapter
     /// tagged with the relationships the grouping rules need.
     /// </summary>
     IReadOnlyList<PickableHeroInfo> GetCandidates(string cultureId);
+
+    /// <summary>
+    /// The culture id of the living hero with this id, or null when no such hero is alive or the hero
+    /// has no culture. A faction-screen card can name a hero of another culture than its screen (#1067).
+    /// </summary>
+    string? CultureOf(string heroId);
 }
 
 /// <summary>

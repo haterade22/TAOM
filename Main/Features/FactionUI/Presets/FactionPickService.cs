@@ -16,23 +16,35 @@ namespace TAOM.Features.FactionUI.Presets;
 /// skips the backstory menus to the career choice (Patch78) and makes the player that hero at the end
 /// (its handover, priority 1100), and when the culture stage completes the stages the hero needs none of
 /// are taken out of the list: the face generator before the narrative stage, and the banner, clan name,
-/// review and options stages after it.
+/// review and options stages after it. The hero may be of another culture than the faction screen
+/// (Haldir on Lothlorien's, #1067).
+/// <para>
+/// A clanless wanderer on a named card (Gimli, Aragorn) is adopted instead (#1067): Player Switcher
+/// adopts him into the player's new clan, so the player still names that clan and designs its banner.
+/// Only the face generator, review and options stages are taken out, and the check of the creation
+/// clan (<see cref="IPlayerIdentityAdapter.StartupClanIsDisposable"/>) is not asked, because an
+/// adoption leaves that clan with the player.
+/// </para>
 /// <para>
 /// Every other pick is copied as before (<see cref="FactionPresetService"/>, Option A): a picker-only
-/// legend, a troop, a wanderer template, a clanless companion, Sauron and the Nine unless Player
-/// Switcher allows them, or any hero while Player Switcher is off. A pick the handover would refuse at
-/// the end is copied too, since by then the stages it skipped could not be shown again.
+/// legend, a troop, a wanderer template, Sauron and the Nine when Player Switcher turns them off, or
+/// any hero while Player Switcher is off. A pick the handover would refuse at the end is copied too,
+/// since by then the stages it skipped could not be shown again.
 /// </para>
 /// </summary>
 public sealed class FactionPickService
 {
-    /// <summary>Vanilla's stages in the order vanilla adds them: the only list a takeover changes, and
+    /// <summary>Vanilla's stages in the order vanilla adds them: the only list a pick changes, and
     /// the order it puts back (pinned against the engine by FactionUIBindingTests).</summary>
     internal static readonly CharacterCreationStageKind[] EngineOrder =
         { Culture, FaceGenerator, Narrative, BannerEditor, ClanNaming, Review, Options };
 
-    private static readonly CharacterCreationStageKind[] Skipped =
+    private static readonly CharacterCreationStageKind[] TakeoverSkipped =
         { FaceGenerator, BannerEditor, ClanNaming, Review, Options };
+
+    // The player names the adopted hero's new clan and designs its banner, so those two stay.
+    private static readonly CharacterCreationStageKind[] AdoptionSkipped =
+        { FaceGenerator, Review, Options };
 
     private readonly FactionPresetService _presets;
     // Lazy on purpose: only a takeover needs the hero picker, and its adapter takes UncapturableHeroes'
@@ -44,6 +56,8 @@ public sealed class FactionPickService
     private readonly IPlayerIdentityAdapter _identity;
     private readonly IModLogger _logger;
     private HeroPickRow _takeover;
+    // The set the stage list in hand had taken out (one of the two above), null while it holds all of them.
+    private CharacterCreationStageKind[]? _skipped;
 
     public FactionPickService(
         FactionPresetService presets,
@@ -105,6 +119,7 @@ public sealed class FactionPickService
     public void ResetForNewCharacterCreation()
     {
         _takeover = default;
+        _skipped = null;
         _session.Clear();
         _presets.ResetForNewCharacterCreation();
     }
@@ -130,7 +145,7 @@ public sealed class FactionPickService
             return;
         }
 
-        if (!TrySkipStages(stages))
+        if (!TrySkipStages(stages, _takeover.HasClan ? TakeoverSkipped : AdoptionSkipped))
         {
             // The face generator shows the hero instead, and the handover still runs at the end.
             _logger.LogWarning($"[FactionUI] this character creation's stages are not vanilla's, so taking over {_takeover.Name} goes through all of them");
@@ -138,22 +153,32 @@ public sealed class FactionPickService
         }
 
         _presets.ApplyPendingLook();
-        _logger.LogInfo($"[FactionUI] taking over {_takeover.Name} ({_takeover.HeroId}): straight to the career choice");
+        if (_takeover.HasClan)
+            _logger.LogInfo($"[FactionUI] taking over {_takeover.Name} ({_takeover.HeroId}): straight to the career choice");
+        else
+            _logger.LogInfo($"[FactionUI] adopting {_takeover.Name} ({_takeover.HeroId}): the career choice, then the clan name and banner");
     }
 
-    private static bool TrySkipStages(ICharacterCreationStagesAdapter stages)
+    private bool TrySkipStages(ICharacterCreationStagesAdapter stages, CharacterCreationStageKind[] wanted)
     {
-        // Already short: the player came back to the faction screen and confirmed a takeover again.
         if (stages.HoldsRemoved)
-            return true;
+        {
+            // Already short: the player came back to the faction screen and confirmed the same kind of pick.
+            if (ReferenceEquals(_skipped, wanted))
+                return true;
+
+            // Short in another way (a takeover, then an adoption, or the reverse): whole again first.
+            RestoreStages(stages);
+        }
 
         // Only vanilla's own list, with the culture stage first: the engine opens the stage at the index
         // next, and on any other list the restore below could not rebuild the order by appending.
         if (stages.Count != EngineOrder.Length || stages.CurrentIndex != 1 || !EngineOrder.All(stages.Has))
             return false;
 
-        foreach (var kind in Skipped)
+        foreach (var kind in wanted)
             stages.Remove(kind);
+        _skipped = wanted;
         return true;
     }
 
@@ -162,9 +187,16 @@ public sealed class FactionPickService
         if (!stages.HoldsRemoved)
             return;
 
-        // The engine only appends, so the narrative stage comes out too and everything after the culture
-        // stage goes back in vanilla's order.
-        stages.Remove(Narrative);
+        // The engine only appends, so every stage after the culture stage that is still in the list comes
+        // out too (the narrative stage, and after an adoption the banner and clan name), and all of them go
+        // back in vanilla's order.
+        _skipped = null;
+        foreach (var kind in EngineOrder.Skip(1))
+        {
+            if (stages.Has(kind))
+                stages.Remove(kind);
+        }
+
         foreach (var kind in EngineOrder.Skip(1))
         {
             if (!stages.Append(kind))
@@ -185,7 +217,9 @@ public sealed class FactionPickService
                 return default;
 
             // The handover's own refusals, asked now: at the end the stages a takeover skips are gone.
-            if (!_identity.CanReassignPlayerClan || !_identity.StartupClanIsDisposable || !_identity.IsSwitchable(heroId!))
+            // An adoption (no clan) keeps the creation clan, so only a takeover asks whether it can go
+            // (HeroSwitchService applies the same rule).
+            if (!_identity.CanReassignPlayerClan || (row.HasClan && !_identity.StartupClanIsDisposable) || !_identity.IsSwitchable(heroId!))
             {
                 _logger.LogWarning($"[FactionUI] {row.Name} cannot be taken over in this campaign; copying the look instead");
                 return default;

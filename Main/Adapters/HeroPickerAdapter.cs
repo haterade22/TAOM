@@ -69,6 +69,20 @@ public class HeroPickerAdapter : IHeroPickerAdapter
         return results;
     }
 
+    public string? CultureOf(string heroId)
+    {
+        if (string.IsNullOrEmpty(heroId) || Campaign.Current == null)
+            return null;
+
+        foreach (var hero in Hero.AllAliveHeroes)
+        {
+            if (string.Equals(hero?.StringId, heroId, StringComparison.Ordinal))
+                return hero?.Culture?.StringId;
+        }
+
+        return null;
+    }
+
     /// <summary>
     /// The leader of the kingdom whose culture this is. Null for a culture with no kingdom, which
     /// is normal: 19 of TAOM's 39 cultures field no ruling house, and the group simply renders empty.

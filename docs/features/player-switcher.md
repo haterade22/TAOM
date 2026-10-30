@@ -209,14 +209,21 @@ are the honest shape of driving vanilla's chain instead of jumping over it.
 | Never the current player, a child, or a notable | Notables anchor settlement issues; vanilla asserts when one is removed holding an issue quest |
 | Placeholder names filtered | TAOM ships at least four heroes whose names contain "place holder" |
 | One hero appears once | The ruling house wins over the clan-leader list, so a ruler who also leads their clan is not listed twice |
-| Lore-locked heroes hidden by default | See below |
-| Wanderers only when the MCM knob allows | Only 20 of 39 cultures have any |
+| Lore-locked heroes offered by default | See below |
+| Wanderers only when the MCM knob allows | Only 20 of 39 cultures have any. A named card on the faction screen ignores the knob (#1067) |
 
-**Lore-locked heroes.** Sauron and the Nazgul are opt-in and default off. Both `Patch76` hooks
+**Lore-locked heroes.** Sauron and the Nazgul are offered by default since #1067 (Mike,
+2026-10-30: the faction-screen cards for them took the player into a new clan with copied gear, and
+the opt-in was the fix). The player can turn them off. Both `Patch76` hooks
 return early for `Hero.MainHero` and defer to vanilla, so a player-controlled dark lord CAN be
 captured and ransomed, which silently contradicts [uncapturable-heroes.md](uncapturable-heroes.md).
-The MCM hint text states that consequence. **Do not "fix" this by adding a `Hero.MainHero` special
-case to `Patch76`**: that would change vanilla player-captivity behaviour for everyone.
+The MCM hint text states that consequence. The setting was renamed from
+`PlayerSwitcherAllowLoreLockedHeroes` to `PlayerSwitcherAllowDarkLords` so the new default reaches
+installs that saved the old one (MCM loads a saved value by property name); a saved choice from before
+the rename is reset, and the hint says so. **Do not "fix" this by adding a `Hero.MainHero` special
+case to `Patch76`**: that would change vanilla player-captivity behaviour for everyone. The `sauron`
+race was set up for an NPC (#321: crush, cleave, knockdown resistance 3.0 in
+`combat_mechanics_config.json`); a player Sauron gets the same tuning, by decision (Mike, 2026-10-30).
 
 `HeroPickerAdapter` makes a single `Hero.AllAliveHeroes` pass with no `DeadOrDisabledHeroes` union.
 The old mod unioned the two sets to catch not-yet-spawned wanderers, but
@@ -476,7 +483,7 @@ takeover of an attached lord plays, so it is left as it is until someone wants i
 |---|---|---|
 | `EnablePlayerSwitcher` | `true` | Off means the movie never loads and the handler no-ops; a lord picked on Kysaro's faction screen (#704) is then copied, not taken over |
 | `PlayerSwitcherIncludeWanderers` | `true` | Only 20 of 39 cultures have any |
-| `PlayerSwitcherAllowLoreLockedHeroes` | `false` | Hint text states the capture caveat |
+| `PlayerSwitcherAllowDarkLords` | `true` | Renamed from `PlayerSwitcherAllowLoreLockedHeroes` (#1067), which defaulted to `false`; hint text states the capture caveat and the reset |
 | `PlayerSwitcherTransferStartingGold` | `false` | An established lord is already funded; a taken-over lord keeps their own treasury either way (on the default start) |
 
 All four are simulation-relevant for co-op under the include-by-default rule, and are counted in
@@ -496,13 +503,17 @@ All four are simulation-relevant for co-op under the include-by-default rule, an
   stage, it takes this feature's panel's place for that character creation (Mike, 2026-10-01: Kysaro's
   design): `FactionScreenLauncher` calls `IPlayerSwitchPolicyProvider.SetPickerHidden(true)`, and
   Patch77 then attaches no panel (and clears no selection). `Current` is untouched, because the faction
-  screen drives this feature's handover: a hero picked there who is a living clan member of the
-  faction's culture becomes the selection (`IHeroPickerService.FindTakeover`, the list's eligibility
-  without its leaders-only limit, since the handover promotes any member), Patch78 skips the backstory
+  screen drives this feature's handover: a hero picked there who is a living clan member becomes the
+  selection (`IHeroPickerService.FindTakeover`, the list's eligibility
+  without its leaders-only limit, since the handover promotes any member; the hero's own culture
+  decides, so a Mirkwood lord on the Lothlorien screen is found, #1067, while the Player Switcher panel
+  keeps "culture must match"). A clanless wanderer on a named card (Gimli, Aragorn) is returned with
+  `HasClan` false and the planner adopts him into the player's new clan (#1067). Patch78 skips the backstory
   to the career choice, and the 1100 handover runs as for a panel pick. FactionUI also takes the face
   generator and the four stages after the career out of that character creation (`docs/features/faction-ui.md`,
   "Taking over a hero"), and asks `CanReassignPlayerClan`, `StartupClanIsDisposable` and `IsSwitchable`
-  at pick time, since the stages it skipped cannot be shown again if the handover refuses at the end.
+  at pick time (`StartupClanIsDisposable` only for a takeover, as `HeroSwitchService` does), since the
+  stages it skipped cannot be shown again if the handover refuses at the end.
   The flag is cleared when the screen declines (toggle off, nothing playable, a failure) and on
   `SubModule.OnGameEnd`, so the next character creation offers the panel again when the screen is off.
   It is separate from the `DisableForSession` latch, which nothing in FactionUI touches. A copied pick

@@ -85,10 +85,12 @@ themed movie that throws while building falls back to vanilla's and is not tried
   UI, it should skip the character creation all of the way until the career picker, user picks the
   career and it starts the game." `FactionPickService` decides each pick. A card or list entry whose
   character is a living hero with a clan, whom Player Switcher's rules would hand over
-  (`IHeroPickerService.FindTakeover`: the faction's culture, no child or notable, Sauron and the Nine only
-  with "Allow Sauron and the Nazgul", Player Switcher on) and whose handover would not refuse (the player
+  (`IHeroPickerService.FindTakeover`: the hero's own culture, no child or notable, Sauron and the Nine only
+  with "Allow Sauron and the Nazgul" (on by default since #1067), Player Switcher on) and whose handover would not refuse (the player
   clan can be moved, the creation clan holds no other lord, the hero is switchable), becomes Player
-  Switcher's selection. When the culture stage completes, the 1060 handler's `OnStageCompleted` hands
+  Switcher's selection. The hero may be of another culture than the screen (#1067): `FindTakeover`
+  asks the adapter for the hero's own culture and uses the screen's only when that lookup finds none.
+  When the culture stage completes, the 1060 handler's `OnStageCompleted` hands
   the stage list to `FactionPickService`, which takes the face generator, banner, clan name, review and
   options stages out (through `CharacterCreationStagesAdapter`, the engine's public stage calls only)
   and shows the hero's look. `NextStage` runs the handlers before it opens the stage at its new index
@@ -99,15 +101,28 @@ themed movie that throws while building falls back to vanilla's and is not tried
   be taken over (the handover makes them the clan's leader, and the ruler when that clan rules, as for a
   ruler's child there). The FACTION button, or Previous back through the six auto-answered backstory
   menus, returns to the faction screen, which drops the takeover; the next confirm that is not one puts
-  every stage back in vanilla's order (the engine only appends, so the narrative stage is re-appended
-  with the rest). Only vanilla's seven stages, with the culture stage first, are changed: on any other
+  every stage back in vanilla's order (the engine only appends, so every stage after the culture stage
+  that is still in the list is taken out and all six are re-appended in order). Only vanilla's seven stages, with the culture stage first, are changed: on any other
   list the hero is taken over through every stage. Campaign options keep a new campaign's defaults
   (every difficulty at its easiest, Iron Man off, the life and death cycle on, as an untouched options
   screen leaves them); Iron Man and, with the Birth and Aging Options module, the life and death cycle
   can no longer be set, the rest can in the campaign's options. On the named cards, Haldir (a Mirkwood
-  lord on the Lothlorien screen) and Bolg (Misty Mountains culture on the Gundabad screen) are copied,
-  since Player Switcher takes over only heroes of the confirmed faction's culture (Mike, 2026-10-02:
-  "That is fine"), and so are Aragorn and Gimli, who have no clan.
+  lord on the Lothlorien screen) and Bolg (Misty Mountains culture on the Gundabad screen) are taken
+  over across culture (#1067; they were copied before, Mike 2026-10-02, and Mike changed that on
+  2026-10-30). Their career comes from the menu of the screen's culture and is stored under the hero's
+  id, which holds no culture, so it carries over. A later career switch is judged against the hero's own
+  culture (`CareerRegistry.IsEligible`), so once Haldir leaves a Lothlorien career he cannot pick one
+  again. The Nazgûl card is `lord_1_155`, a member of the Witch-king's clan: taking him over makes him
+  that clan's leader (Player Switcher's #550 rule), so the Witch-king stays on as a member of the
+  player's clan and his gold moves to the player (Mike, 2026-10-30: keep it).
+- **Adopting a clanless card hero (#1067).** Aragorn and Gimli have no clan. A named card whose hero is a
+  clanless wanderer is adopted: `FindTakeover` returns a row with `HasClan` false (it does not ask for
+  "Include Wanderers", which only fills the browse list) and Player Switcher plans
+  `AdoptIntoPlayerClan`. The player still names the clan and designs the banner, so only the face
+  generator, review and options stages are taken out. `StartupClanIsDisposable` is not asked, because an
+  adoption keeps the creation clan. If the player returns to the faction screen and picks the other kind
+  (takeover, then adoption, or the reverse), `FactionPickService` puts the stages back in vanilla's order
+  and then takes out the new set.
 - **Copied picks.** `FactionPresetService` keeps Kysaro's outcome (Mike, 2026-10-01) for every pick
   that is not taken over: a lord ends up on the player with name, body, race, gear and skills; a named
   card, a legend or a wanderer without the name. Mike's Option A sets when: the look and gear are
@@ -407,8 +422,13 @@ career page and into the game. Owed:
 8. Copies: a legend card (Gandalf: his kit and skill sheet), Sauron with "Allow Sauron and the Nazgul"
    off, and any lord with Enable Player Switcher off go through the face generator showing the pick, and
    end with its look, gear and skills; backing out to Custom Character puts the earlier look back and the
-   name and skills never land. Check Aragorn (a clanless companion, so copied: Faramir's kit, no helm, his
-   own sword) and the new kits of Elrond, Arwen, Haldir, Celeborn and Lurtz.
+   name and skills never land. Turning "Allow Sauron and the Nazgul" off is how Sauron's card is copied now
+   (on by default, #1067: the card takes the player into Sauron's own clan and kingdom). Aragorn and Gimli
+   are adopted, not copied (#1067): the banner and clan-name stages stay, then the player is that hero
+   with his gear and skills, and the join offer follows. Note where his party appears: the engine puts a
+   hero with no party at the gate of a town near the player clan's home (`Campaign.OnPlayerCharacterChanged`),
+   not in his own town. Haldir (Lothlorien) and Bolg (Gundabad) are
+   taken over. Check the new kits of Elrond, Arwen, Celeborn and Lurtz.
 9. Walk every stage with each Character Creation setting on and off: the camera framing on the face
    generator, backstory, review and options screens; on the DETAILS tab, the face, eye, nose and mouth
    sections lock when vanilla locks them and the eyebrow and mouth arrows step through their options;

@@ -48,7 +48,7 @@ public class PlayerSwitchPolicyProvider : IPlayerSwitchPolicyProvider
         return new PlayerSwitchPolicy(
             settings?.EnablePlayerSwitcher ?? defaults.Enabled,
             settings?.PlayerSwitcherIncludeWanderers ?? defaults.IncludeWanderers,
-            settings?.PlayerSwitcherAllowLoreLockedHeroes ?? defaults.AllowLoreLockedHeroes,
+            settings?.PlayerSwitcherAllowDarkLords ?? defaults.AllowLoreLockedHeroes,
             settings?.PlayerSwitcherTransferStartingGold ?? defaults.TransferStartingGold);
     }
 }

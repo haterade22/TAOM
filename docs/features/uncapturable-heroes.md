@@ -7,6 +7,10 @@ them in someone's dungeon, they slip away as fugitives instead: they still lose 
 lose their army, and still take days to rebuild, but nobody ever ransoms the Witch-king. A second
 seam covers the non-battle case, a hero captured because the fief he was resting in changed hands.
 
+The player character is the one exception. Both seams defer to vanilla for `Hero.MainHero`, so a
+Sauron or a Nazgûl the player has taken over can be captured. Since #1067 that is the default start
+for their faction-screen cards ([player-switcher.md](player-switcher.md) "Lore-locked heroes").
+
 **This does not make them immortal.** A hero who dies in the battle still dies. That is a deliberate
 scope decision, not an oversight, and it is restated at the bottom of this doc.
 

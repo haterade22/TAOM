@@ -697,6 +697,9 @@ no patrols or that patrol limits are 15/20/25 (`bandit-management.md`, `party-te
 - **Prevent:** list each fact the change makes false, and grep the docs for that fact's words and numbers
   (`patrol`, `10 + 5`, `15, 20`), not only for the feature's names.
 - **Source:** `docs/reviews/rca-keep-wardens-security-2026-10-26.md` finding 7.
+- **Recurred (#1067, 2026-10-30):** a default flip and a wider eligibility rule left "Opt-in only", "the
+  faction's culture" and "can never be taken prisoner" in five places, one of them a doc that never names the
+  feature (`uncapturable-heroes.md`). Source: `docs/reviews/rca-faction-cards-1067-2026-10-30.md` findings 1-5.
 
 ### A rule that takes control of the player's side leaves alone what the player commands (#1054, 2026-10-29)
 Staged Siege took control of things on the player's side three times, and each first version forgot that the player may

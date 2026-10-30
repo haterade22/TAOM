@@ -525,4 +525,188 @@ public class FactionPickServiceTests
 
         CollectionAssert.AreEqual(VanillaStages, _stages.Stages);
     }
+
+    // ---------- Adopting a clanless card hero (#1067) ----------
+
+    private const string AdoptedId = "named_companion_gimli";
+
+    private static readonly CharacterCreationStageKind?[] AfterAnAdoption =
+        { Culture, Narrative, BannerEditor, ClanNaming };
+
+    private static readonly CharacterCreationStageKind?[] AfterATakeover = { Culture, Narrative };
+
+    private RosterEntry Gimli() => new(_heroSource, "named_companion_gimli", "Gimli", isHero: false, heroId: AdoptedId);
+
+    private void GimliIsClanless()
+    {
+        var row = new HeroPickRow(AdoptedId, "Gimli", HeroPickerGroup.Wanderers, race: 3, isFemale: false, isLeader: false, hasClan: false);
+        _heroes.FindTakeover(AdoptedId, FactionCulture, Arg.Any<PlayerSwitchPolicy>()).Returns(row);
+        _identity.IsSwitchable(AdoptedId).Returns(true);
+    }
+
+    [TestMethod]
+    public void Pick_AClanlessCardHero_IsAdoptedAndSelectedForTheHandover()
+    {
+        GimliIsClanless();
+
+        _sut.Pick(Gimli(), FactionCulture);
+
+        Assert.IsTrue(_sut.IsTakeover);
+        Assert.AreEqual(AdoptedId, _session.SelectedHeroId);
+    }
+
+    [TestMethod]
+    public void Pick_AnAdoptionWhenTheCreationClanIsNotDisposable_IsStillAdopted()
+    {
+        // The refusal guards a takeover, which hands the player's clan to the lord; an adoption keeps the clan.
+        GimliIsClanless();
+        _identity.StartupClanIsDisposable.Returns(false);
+
+        _sut.Pick(Gimli(), FactionCulture);
+
+        Assert.IsTrue(_sut.IsTakeover);
+    }
+
+    [TestMethod]
+    public void Pick_AnAdoptionWhenThePlayerClanCannotBeMoved_IsCopiedInstead()
+    {
+        GimliIsClanless();
+        _identity.CanReassignPlayerClan.Returns(false);
+
+        _sut.Pick(Gimli(), FactionCulture);
+
+        Assert.IsFalse(_sut.IsTakeover);
+    }
+
+    [TestMethod]
+    public void Pick_AnAdoptedHeroWhoIsNotSwitchable_IsCopiedInstead()
+    {
+        GimliIsClanless();
+        _identity.IsSwitchable(AdoptedId).Returns(false);
+
+        _sut.Pick(Gimli(), FactionCulture);
+
+        Assert.IsFalse(_sut.IsTakeover);
+    }
+
+    [TestMethod]
+    public void Pick_ATakeoverWhenTheCreationClanIsNotDisposable_IsStillCopied()
+    {
+        // Pins the takeover side of the rule next to the adoption's.
+        _identity.StartupClanIsDisposable.Returns(false);
+
+        _sut.Pick(Card(), FactionCulture);
+
+        Assert.IsFalse(_sut.IsTakeover);
+    }
+
+    [TestMethod]
+    public void OnCultureStageCompleted_AnAdoption_TakesOutOnlyTheFaceGeneratorReviewAndOptions()
+    {
+        GimliIsClanless();
+        _sut.Pick(Gimli(), FactionCulture);
+
+        _sut.OnCultureStageCompleted(_stages);
+
+        CollectionAssert.AreEqual(AfterAnAdoption, _stages.Stages,
+            "the player still names the clan and designs the banner");
+        _appearance.Received(1).ApplyLook(_resolvedHero);
+    }
+
+    [TestMethod]
+    public void OnCultureStageCompleted_ACopyAfterAnAdoption_PutsEveryStageBackInTheEnginesOrder()
+    {
+        GimliIsClanless();
+        _sut.Pick(Gimli(), FactionCulture);
+        _sut.OnCultureStageCompleted(_stages);
+        _sut.Pick(Legend(), FactionCulture);
+
+        _sut.OnCultureStageCompleted(_stages);
+
+        CollectionAssert.AreEqual(VanillaStages, _stages.Stages, "no stage twice, vanilla's order");
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void OnCultureStageCompleted_ACopyAfterATakeover_PutsBackVanillaWithoutAWarning()
+    {
+        _sut.Pick(Card(), FactionCulture);
+        _sut.OnCultureStageCompleted(_stages);
+        _sut.Pick(Legend(), FactionCulture);
+
+        _sut.OnCultureStageCompleted(_stages);
+
+        CollectionAssert.AreEqual(VanillaStages, _stages.Stages);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void OnCultureStageCompleted_AnAdoptionAfterATakeover_RestoresThenSkipsTheAdoptionsSet()
+    {
+        GimliIsClanless();
+        _sut.Pick(Card(), FactionCulture);
+        _sut.OnCultureStageCompleted(_stages);
+        CollectionAssert.AreEqual(AfterATakeover, _stages.Stages);
+        _sut.Pick(Gimli(), FactionCulture);
+
+        _sut.OnCultureStageCompleted(_stages);
+
+        CollectionAssert.AreEqual(AfterAnAdoption, _stages.Stages);
+    }
+
+    [TestMethod]
+    public void OnCultureStageCompleted_ATakeoverAfterAnAdoption_RestoresThenSkipsTheTakeoversSet()
+    {
+        GimliIsClanless();
+        _sut.Pick(Gimli(), FactionCulture);
+        _sut.OnCultureStageCompleted(_stages);
+        _sut.Pick(Card(), FactionCulture);
+
+        _sut.OnCultureStageCompleted(_stages);
+
+        CollectionAssert.AreEqual(AfterATakeover, _stages.Stages);
+    }
+
+    [TestMethod]
+    public void OnCultureStageCompleted_AnAdoptionConfirmedAgain_StaysAsItWas()
+    {
+        GimliIsClanless();
+        _sut.Pick(Gimli(), FactionCulture);
+        _sut.OnCultureStageCompleted(_stages);
+        _sut.Pick(Gimli(), FactionCulture);
+
+        _sut.OnCultureStageCompleted(_stages);
+
+        CollectionAssert.AreEqual(AfterAnAdoption, _stages.Stages);
+    }
+
+    [TestMethod]
+    public void OnCultureStageCompleted_AnAdoptionThenATakeoverThenACopy_EndsInVanillasOrder()
+    {
+        GimliIsClanless();
+        _sut.Pick(Gimli(), FactionCulture);
+        _sut.OnCultureStageCompleted(_stages);
+        _sut.Pick(Card(), FactionCulture);
+        _sut.OnCultureStageCompleted(_stages);
+        _sut.Pick(Legend(), FactionCulture);
+
+        _sut.OnCultureStageCompleted(_stages);
+
+        CollectionAssert.AreEqual(VanillaStages, _stages.Stages);
+    }
+
+    [TestMethod]
+    public void ResetForNewCharacterCreation_AfterAnAdoption_ForgetsWhichStagesWereSkipped()
+    {
+        GimliIsClanless();
+        _sut.Pick(Gimli(), FactionCulture);
+        _sut.OnCultureStageCompleted(_stages);
+
+        _sut.ResetForNewCharacterCreation();
+        var next = new FakeStageList(VanillaStages);
+        _sut.Pick(Gimli(), FactionCulture);
+        _sut.OnCultureStageCompleted(next);
+
+        CollectionAssert.AreEqual(AfterAnAdoption, next.Stages, "the new list was whole, so the set is skipped, not mistaken for done");
+    }
 }

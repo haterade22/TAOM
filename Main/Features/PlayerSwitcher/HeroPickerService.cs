@@ -81,6 +81,12 @@ public class HeroPickerService : IHeroPickerService
         if (!policy.Enabled || string.IsNullOrEmpty(heroId) || string.IsNullOrEmpty(cultureId))
             return default;
 
+        // A card can name a hero of another culture than its screen (Haldir on Lothlorien's, #1067): the
+        // hero's own culture decides, and the screen's stands in when the lookup finds none.
+        var ownCulture = _adapter.CultureOf(heroId);
+        if (!string.IsNullOrEmpty(ownCulture))
+            cultureId = ownCulture!;
+
         var candidates = _adapter.GetCandidates(cultureId);
         if (candidates == null)
             return default;
@@ -90,9 +96,13 @@ public class HeroPickerService : IHeroPickerService
             if (!string.Equals(hero.HeroId, heroId, StringComparison.Ordinal))
                 continue;
 
-            // A clanless hero would be adopted into the player's own clan, whose name and banner the
-            // faction screen's takeover never asks for.
-            if (!IsEligible(hero, cultureId, policy) || string.IsNullOrEmpty(hero.ClanId))
+            if (!IsEligible(hero, cultureId, policy))
+                return default;
+
+            // A clanless wanderer is adopted into the player's new clan (hasClan false): the faction
+            // screen keeps the banner and clan-name stages for it. A card is an explicit pick, so
+            // policy.IncludeWanderers, which only fills the browse list, is not asked.
+            if (string.IsNullOrEmpty(hero.ClanId) && !hero.IsWanderer)
                 return default;
 
             return ToRow(hero, HeroPickerGroup.ClanLeaders);
@@ -115,7 +125,8 @@ public class HeroPickerService : IHeroPickerService
 
         // Sauron and the Nine. Patch76's two hooks both defer to vanilla when the hero is
         // Hero.MainHero, so a player-controlled dark lord silently loses the capture immunity
-        // that docs/features/uncapturable-heroes.md promises. Opt-in only.
+        // that docs/features/uncapturable-heroes.md promises. On by default since #1067; the player
+        // can turn them off.
         if (hero.IsLoreLocked && !policy.AllowLoreLockedHeroes)
             return false;
 

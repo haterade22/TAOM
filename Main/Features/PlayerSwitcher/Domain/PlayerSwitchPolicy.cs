@@ -26,7 +26,7 @@ public readonly struct PlayerSwitchPolicy
     public bool IncludeWanderers { get; }
 
     /// <summary>
-    /// Whether Sauron and the Nazgul are offered. Default off: Patch76 defers to vanilla for
+    /// Whether Sauron and the Nazgul are offered. Default on since #1067. The catch: Patch76 defers to vanilla for
     /// Hero.MainHero, so a player-controlled dark lord can be captured and ransomed, which
     /// silently contradicts docs/features/uncapturable-heroes.md.
     /// </summary>
@@ -42,7 +42,7 @@ public readonly struct PlayerSwitchPolicy
     public static PlayerSwitchPolicy Default => new PlayerSwitchPolicy(
         enabled: true,
         includeWanderers: true,
-        allowLoreLockedHeroes: false,
+        allowLoreLockedHeroes: true,
         transferStartingGold: false);
 
     /// <summary>A policy that disables the whole feature. Used when a reflection probe fails.</summary>

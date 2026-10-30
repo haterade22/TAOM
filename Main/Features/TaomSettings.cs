@@ -1901,10 +1901,12 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
         HintText = "Also lists the wanderers of your culture. A wanderer has no clan, so instead of taking over a house they are adopted into the clan you named, with the banner you designed, and you lead it. Only 20 of 39 cultures have any wanderers.")]
     public bool PlayerSwitcherIncludeWanderers { get; set; } = true;
 
+    // Renamed from PlayerSwitcherAllowLoreLockedHeroes (#1067): a default flipped under the same name
+    // would reach fresh installs only, because MCM loads the saved value by name.
     [SettingPropertyGroup("Player Switcher")]
     [SettingPropertyBool("Allow Sauron and the Nazgul", Order = 2, RequireRestart = false,
-        HintText = "Offers the lore-locked dark lords as playable, here and on the Themed Faction & Hero Picker. Off by default for a reason: TAOM's capture immunity defers to vanilla for the player character, so a player-controlled Sauron or Witch-king CAN be captured and ransomed like any other lord. Turning this on knowingly trades that lore promise for the option.")]
-    public bool PlayerSwitcherAllowLoreLockedHeroes { get; set; } = false;
+        HintText = "Offers the lore-locked dark lords as playable, here and on the Themed Faction & Hero Picker. On by default. The catch: TAOM's capture immunity defers to vanilla for the player character, so a player-controlled Sauron or Witch-king CAN be captured and ransomed like any other lord. Turn this off to keep that lore promise: this list then hides them, and a pick of one on the Themed Faction & Hero Picker only copies his look onto a new character. Saved values from before November 2026 were reset to this default; if you had chosen your own, set it again.")]
+    public bool PlayerSwitcherAllowDarkLords { get; set; } = true;
 
     [SettingPropertyGroup("Player Switcher")]
     [SettingPropertyBool("Carry Over Starting Gold", Order = 3, RequireRestart = false,
