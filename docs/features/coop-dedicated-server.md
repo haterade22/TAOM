@@ -14,6 +14,7 @@ How to stage, boot, stop and diagnose TAOM on the BannerlordCoop dedicated serve
 
 | Claim | State |
 |---|---|
+| Bannerlord v1.5.6 (current target, 2026-10-29) | **Blocked on Steam.** The client and TAOM are on v1.5.6, and Coop's `bannerlord-1.5.x` follows it (`2fab86882`, deployed to the dev install); see [v1.5.6-impact](../migration/v1.5.6-impact.md). The dedicated server app (1863440) is still the v1.5.5 build `25805354`, and co-op refuses a client whose game version differs from the server's. TaleWorlds' v1.5.6 server also moves to .NET 8, which the server repo's runtime staging (`scripts/prepare-dotnet-runtime.ps1`, `6.0.x` only) must follow. Every row below was proven on v1.5.5 |
 | Vanilla v1.5.5 server | Booted to SERVING, clients joined, battles fought, a client rejoined (2026-10-21 and 2026-10-22) |
 | TAOM, spike build | Reached SERVING on 2026-10-22 and again on 2026-10-23 (probe boots, including the skeleton package). The spike is a throwaway worktree (`taom-headless-spike`, branch `spike/headless-local`, never pushed) staged as `stage-spike` |
 | TAOM, committed build | Reached SERVING on 2026-10-23 (`0fb0e6c13`, deployed with the `bdef312b4` fix) on save `taomcoop2`: the 107-class `[ClientOnly]` line, exactly two `SKIPPED` screens, `failed=0` in OnSubModuleLoad (31 categories) and GameInit (79), autosaves every 5 minutes, 0 TAOM crash reports |
