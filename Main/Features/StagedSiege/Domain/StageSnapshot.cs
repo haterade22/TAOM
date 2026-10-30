@@ -6,12 +6,13 @@ namespace TAOM.Features.StagedSiege.Domain;
 /// </summary>
 public sealed class StageSnapshot
 {
-    private StageSnapshot(object missionToken, StagedSide playerSide, StageId stage, StagedEnd end, int capturedMask, float progress,
+    private StageSnapshot(object missionToken, StagedSide playerSide, bool hallFollows, StageId stage, StagedEnd end, int capturedMask, float progress,
         CaptureStatus status, StageZone zone, StageFrame? defenderHold, StagePoint? attackerSupport, StageFrame? attackerSpawn,
         StageFrame? defenderSpawn)
     {
         MissionToken = missionToken;
         PlayerSide = playerSide;
+        HallFollows = hallFollows;
         Stage = stage;
         End = end;
         CapturedMask = capturedMask;
@@ -28,6 +29,10 @@ public sealed class StageSnapshot
     public object MissionToken { get; }
 
     public StagedSide PlayerSide { get; }
+
+    /// <summary>The lord's hall (point E) follows the walls: a campaign siege with the player attacking.</summary>
+    public bool HallFollows { get; }
+
     public StageId Stage { get; }
     public StagedEnd End { get; }
     public bool Finished => End != StagedEnd.None;
@@ -51,6 +56,7 @@ public sealed class StageSnapshot
         return new StageSnapshot(
             token,
             machine.PlayerSide,
+            machine.HallFollows,
             stage,
             machine.End,
             machine.CapturedMask,

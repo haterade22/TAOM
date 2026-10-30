@@ -12,7 +12,7 @@ public class StageSnapshotTests
     public void Build_StageC_CarriesZoneSpawnsSupport()
     {
         var token = new object();
-        var m = new StageMachine(StagedSide.Defender);
+        var m = new StageMachine(StagedSide.Defender, true);
         m.Force(StageId.C);
 
         var s = StageSnapshot.Build(token, LinePlan(), m, 0.4f, CaptureStatus.Rising);
@@ -32,9 +32,19 @@ public class StageSnapshotTests
     }
 
     [TestMethod]
+    public void Build_CarriesHallFollows()
+    {
+        var with = StageSnapshot.Build(new object(), LinePlan(), new StageMachine(StagedSide.Attacker, true), 0f, CaptureStatus.Idle);
+        var without = StageSnapshot.Build(new object(), LinePlan(), new StageMachine(StagedSide.Attacker, false), 0f, CaptureStatus.Idle);
+
+        Assert.IsTrue(with.HallFollows);
+        Assert.IsFalse(without.HallFollows);
+    }
+
+    [TestMethod]
     public void Build_StageA_NoHoldNoSupport()
     {
-        var s = StageSnapshot.Build(new object(), LinePlan(), new StageMachine(StagedSide.Attacker), 0f, CaptureStatus.Idle);
+        var s = StageSnapshot.Build(new object(), LinePlan(), new StageMachine(StagedSide.Attacker, true), 0f, CaptureStatus.Idle);
 
         Assert.AreEqual(StageId.A, s.Stage);
         Assert.IsNull(s.DefenderHold);
@@ -46,7 +56,7 @@ public class StageSnapshotTests
     [TestMethod]
     public void Build_Finished_CarriesEnd()
     {
-        var m = new StageMachine(StagedSide.Attacker);
+        var m = new StageMachine(StagedSide.Attacker, true);
         m.Force(null);
 
         var s = StageSnapshot.Build(new object(), LinePlan(), m, 1f, CaptureStatus.Captured);

@@ -414,6 +414,114 @@ public class StagedSiegeServiceTests
         Assert.AreEqual(StagedEnd.PlayerDefeated, end);
     }
 
+    private void BecomeCustomBattle(StagedSide side)
+    {
+        _m.IsCampaignWallsAssault.Returns(false);
+        _m.IsCustomBattleSiege.Returns(true);
+        _m.PlayerSide.Returns((StagedSide?)side);
+    }
+
+    [TestMethod]
+    public void TryArm_CustomBattleSiege_ArmsAndLogsTheKind()
+    {
+        BecomeCustomBattle(StagedSide.Attacker);
+
+        Assert.IsTrue(_svc.TryArm(true));
+
+        AssertLogged("armed: scene sturgia_castle_siege_001, player Attacker, custom battle");
+    }
+
+    [TestMethod]
+    public void TryArm_CampaignWallsAssault_StillArmsWithoutTheCustomBattleNote()
+    {
+        Assert.IsTrue(_svc.TryArm(true));
+
+        AssertNotLogged("custom battle");
+    }
+
+    [TestMethod]
+    public void TryArm_NeitherKind_InertNamesTheKind()
+    {
+        _m.IsCampaignWallsAssault.Returns(false);
+        _m.IsCustomBattleSiege.Returns(false);
+
+        Assert.IsFalse(_svc.TryArm(true));
+
+        AssertLogged("inert: NotWallsAssault");
+        AssertLogged("mission kind other");
+    }
+
+    [TestMethod]
+    public void TryArm_Inert_NamesTheCustomBattleKind()
+    {
+        BecomeCustomBattle(StagedSide.Attacker);
+        _m.SceneName.Returns("some_other_scene");
+
+        Assert.IsFalse(_svc.TryArm(true));
+
+        AssertLogged("mission kind custom battle siege");
+    }
+
+    [TestMethod]
+    public void Tick_CaptureD_CustomBattleAttacker_EndAttackerWon()
+    {
+        BecomeCustomBattle(StagedSide.Attacker);
+        ArmAndSetUp();
+        for (var i = 0; i < 4; i++)
+            CaptureCurrent();
+
+        Assert.IsTrue(_svc.TryGetEnd(out var end));
+        Assert.AreEqual(StagedEnd.AttackerWon, end);
+        Assert.IsFalse(StagedSiegeSlot.SnapshotFor(_token)!.HallFollows);
+    }
+
+    [TestMethod]
+    public void AnnounceEnd_AttackerWon_AnnouncesTheVictoryExactlyOnce()
+    {
+        BecomeCustomBattle(StagedSide.Attacker);
+        ArmAndSetUp();
+        for (var i = 0; i < 4; i++)
+            CaptureCurrent();
+        Assert.IsTrue(_svc.TryGetEnd(out var end));
+
+        _svc.AnnounceEnd(end);
+        _svc.AnnounceEnd(end);
+
+        _m.Received(1).AnnounceVictory();
+    }
+
+    [TestMethod]
+    public void AnnounceEnd_EveryOtherEnd_AnnouncesNothing()
+    {
+        ArmAndSetUp();
+
+        _svc.AnnounceEnd(StagedEnd.DefenderPushedBack);
+        _svc.AnnounceEnd(StagedEnd.PlayerDefeated);
+        _svc.AnnounceEnd(StagedEnd.None);
+
+        _m.DidNotReceive().AnnounceVictory();
+    }
+
+    [TestMethod]
+    public void Tick_CaptureD_CustomBattleDefender_EndDefeated()
+    {
+        BecomeCustomBattle(StagedSide.Defender);
+        ArmAndSetUp();
+        for (var i = 0; i < 4; i++)
+            CaptureCurrent();
+
+        Assert.IsTrue(_svc.TryGetEnd(out var end));
+        Assert.AreEqual(StagedEnd.PlayerDefeated, end);
+    }
+
+    [TestMethod]
+    public void Tick_CampaignAttacker_SnapshotSaysHallFollows()
+    {
+        Arm();
+
+        Assert.IsTrue(StagedSiegeSlot.SnapshotFor(_token)!.HallFollows);
+    }
+
     [TestMethod]
     public void TryGetEnd_NotFinished_False()
     {

@@ -43,6 +43,7 @@ public sealed class StagedSiegeService
     private bool _faulted;
     private bool _setUp;
     private bool _shutdown;
+    private bool _victoryAnnounced;
     private string _verdict = "not evaluated";
 
     private float _progress;
@@ -100,7 +101,7 @@ public sealed class StagedSiegeService
         {
             var playerSide = _mission.PlayerSide;
             var verdict = StagedSiegeActivation.Decide(_mission.IsSiegeBattle, _mission.HasSallyOutController, _mission.IsClientOrReplay,
-                _mission.IsCampaignWallsAssault, enabled, playerSide.HasValue, true);
+                _mission.IsCampaignWallsAssault || _mission.IsCustomBattleSiege, enabled, playerSide.HasValue, true);
             ScenePlan scene = null!;
             if (verdict == ActivationVerdict.Armed && !_catalog.TryGetScene(_mission.SceneName, out scene))
                 verdict = ActivationVerdict.UnrecordedScene;
@@ -114,14 +115,15 @@ public sealed class StagedSiegeService
 
             _t = _catalog.Tunables;
             _scene = scene;
-            _machine = new StageMachine(playerSide!.Value);
+            // The hall follows only a campaign siege with the player attacking; a Custom Battle siege ends at D.
+            _machine = new StageMachine(playerSide!.Value, playerSide.Value == StagedSide.Attacker && _mission.IsCampaignWallsAssault);
             _cadence = new ReinforcementCadence(_t);
             _armed = true;
             // A record from an older walls fight must not be reported by the inert log of a later battle.
             StagedSiegeSlot.ClearLastEnded();
             StagedSiegeSlot.Arm(this);
             Publish();
-            Info($"armed: scene {scene.Scene}, player {playerSide.Value}");
+            Info($"armed: scene {scene.Scene}, player {playerSide.Value}" + (_mission.IsCustomBattleSiege ? ", custom battle" : string.Empty));
             return true;
         }
         catch (Exception ex)
@@ -133,7 +135,7 @@ public sealed class StagedSiegeService
 
     private void LogInert(ActivationVerdict verdict)
     {
-        var text = $"inert: {verdict} (scene {_mission.SceneName}, siege state {_mission.SiegeStateName})";
+        var text = $"inert: {verdict} (scene {_mission.SceneName}, siege state {_mission.SiegeStateName}, mission kind {MissionKind()})";
         var previous = StagedSiegeSlot.LastEnded;
         if (previous.HasValue)
         {
@@ -144,6 +146,9 @@ public sealed class StagedSiegeService
 
         Info(text);
     }
+
+    private string MissionKind() =>
+        _mission.IsCampaignWallsAssault ? "campaign walls assault" : _mission.IsCustomBattleSiege ? "custom battle siege" : "other";
 
     public void InstallTactics()
     {
@@ -508,6 +513,25 @@ public sealed class StagedSiegeService
     {
         end = _faulted || _machine == null ? StagedEnd.None : _machine.End;
         return end != StagedEnd.None;
+    }
+
+    /// <summary>
+    /// Says "battle won" once for a staged win that vanilla's BattleEndLogic stays silent about (a captured D is not a depleted
+    /// enemy). The campaign's pushed-back end and a defeat already get vanilla's own lines.
+    /// </summary>
+    public void AnnounceEnd(StagedEnd end)
+    {
+        if (_victoryAnnounced || StagedResult.For(end) != StagedResultKind.Successful)
+            return;
+        _victoryAnnounced = true;
+        try
+        {
+            _mission.AnnounceVictory();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"{Tag} victory announcement failed: {ex.GetType().Name}: {ex.Message}");
+        }
     }
 
     /// <summary>Console: capture forward to a stage (null: through D). Returns the sentence to print.</summary>

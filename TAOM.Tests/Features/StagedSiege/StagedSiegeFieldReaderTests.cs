@@ -31,7 +31,7 @@ public class StagedSiegeFieldReaderTests
 
     private void PublishAt(StagedSide player, StageId? stage, bool finished = false)
     {
-        var machine = new StageMachine(player);
+        var machine = new StageMachine(player, true);
         if (finished)
             machine.Force(null);
         else if (stage.HasValue)

@@ -4,6 +4,8 @@
 
 TAOM Custom Battle support replaces vanilla factions, commanders, and troops in the Custom Battle screen with TAOM-specific content. All TAOM cultures (Gondor, Mordor, Rohan, etc.) appear as selectable factions, their lords appear as commanders, and each formation slot defaults to the culture's own troop wherever that troop fits the slot (see "Formation-to-Troop Mapping"). A team-fix MissionBehavior prevents friendly fire bugs in both field and siege custom battles.
 
+Siege battles here can run TAOM's staged siege on a recorded scene; see [staged-siege.md](staged-siege.md), "Custom battle sieges".
+
 ## Why This Exists
 
 - **Vanilla behavior:** Custom Battle lists vanilla factions (Empire, Sturgia, Aserai, etc.) and 24 hardcoded vanilla commanders. Troop formation defaults are hardcoded per vanilla culture.

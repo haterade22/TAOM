@@ -1610,3 +1610,16 @@ would have spawned stacked on slot 0.
 - **Prevent:** a timer's `Check` answers true only while the condition is still true now; refresh the condition from the
   event that ends it (here, the first agent built for that side), not only from a periodic sample.
 - **Source:** [rca-staged-siege-2026-10-29.md](../rca-staged-siege-2026-10-29.md) finding 21.
+
+### A mission end TAOM makes through MissionEnded needs its own player cue (#1054, 2026-10-29)
+When a TAOM `MissionLogic` ends a battle by returning a result from `MissionEnded` while enemies still stand, vanilla's
+`BattleEndLogic` shows no "battle won" line, no "press Tab to view results" hint and no victory cheer: it shows them only
+for a depleted or retreating enemy (BattleEndLogic.cs:106-111, :134-143, :160-167). The mission also does not close by
+itself (Mission.cs:4850). Staged Siege hit this twice: the lord's hall win (Phase 2) and the custom battle win (Phase 3a).
+- **Why missed:** each new end path was written for its result, not for what the player sees after it.
+- **Prevent:** every TAOM-made end announces itself once, when the engine accepts the result, with vanilla's own strings
+  (`str_battle_won`, then `str_battle_won_press_tab_to_view_results` with `leave_key` set as BattleEndLogic.cs:110-111
+  does); `StagedHallMissionAdapter.AnnounceHallTaken` and `StagedSiegeMissionAdapter.AnnounceVictory` are the models.
+  Say in the feature doc how the player leaves while defenders still stand.
+- **Source:** [rca-staged-siege-phase3a-2026-10-29.md](../rca-staged-siege-phase3a-2026-10-29.md) finding 1;
+  [rca-staged-siege-phase2-2026-10-29.md](../rca-staged-siege-phase2-2026-10-29.md) finding 5.

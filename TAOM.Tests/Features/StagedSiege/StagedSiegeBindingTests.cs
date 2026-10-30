@@ -183,6 +183,19 @@ public class StagedSiegeBindingTests
 
     [TestMethod]
     [TestCategory("BindingVerification")]
+    public void CustomBattleSiegeMarker_TheSpawnHandlerTypeAndLookupStillResolve()
+    {
+        // The adapter tells a Custom Battle siege by this handler's presence, in TaleWorlds.MountAndBlade.dll.
+        var handler = typeof(TaleWorlds.MountAndBlade.MissionSpawnHandlers.CustomSiegeMissionSpawnHandler);
+        Assert.IsTrue(typeof(MissionBehavior).IsAssignableFrom(handler), "GetMissionBehavior<T> needs a MissionBehavior");
+
+        var lookup = typeof(Mission).GetMethods(AnyMember)
+            .Where(m => m.Name == "GetMissionBehavior" && m.IsGenericMethodDefinition && m.GetParameters().Length == 0).ToList();
+        Assert.AreEqual(1, lookup.Count, "GetMissionBehavior<T>() must resolve to one overload");
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
     public void TheAdapterMembers_StillResolve()
     {
         Property(typeof(Mission), "SceneName", typeof(string));

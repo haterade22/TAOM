@@ -7,8 +7,11 @@ using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
+using TaleWorlds.InputSystem;
 using TaleWorlds.Library;
+using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
+using TaleWorlds.MountAndBlade.MissionSpawnHandlers;
 using TaleWorlds.MountAndBlade.Objects;
 
 namespace TAOM.Adapters;
@@ -57,6 +60,9 @@ public sealed class StagedSiegeMissionAdapter : IStagedSiegeMissionAdapter
 
     public bool IsCampaignWallsAssault =>
         Campaign.Current != null && PlayerEncounter.EncounterSettlement?.CurrentSiegeState == Settlement.SiegeState.OnTheWalls;
+
+    public bool IsCustomBattleSiege =>
+        Campaign.Current == null && _mission.IsSiegeBattle && _mission.GetMissionBehavior<CustomSiegeMissionSpawnHandler>() != null;
 
     public string SiegeStateName
     {
@@ -373,5 +379,14 @@ public sealed class StagedSiegeMissionAdapter : IStagedSiegeMissionAdapter
         if (_probes.Count == 0)
             return "none installed";
         return string.Join("; ", _probes.Select(p => $"{p.Side} current {p.IsCurrent} {p.Status}"));
+    }
+
+    // BattleEndLogic shows these two lines only for a depleted enemy, which a captured D is not (v1.5.6 :110-111, :138), and the
+    // mission does not close by itself. Vanilla's own texts, the leave key set the way vanilla sets it.
+    public void AnnounceVictory()
+    {
+        MBInformationManager.AddQuickInformation(GameTexts.FindText("str_battle_won"));
+        GameTexts.SetVariable("leave_key", HyperlinkTexts.GetKeyHyperlinkText(HotKeyManager.GetHotKeyId("Generic", 4)));
+        MBInformationManager.AddQuickInformation(GameTexts.FindText("str_battle_won_press_tab_to_view_results"));
     }
 }

@@ -28,6 +28,9 @@ public interface IStagedSiegeMissionAdapter
     /// <summary>The campaign's siege is at the walls (not the lord's hall, and not a Custom Battle).</summary>
     bool IsCampaignWallsAssault { get; }
 
+    /// <summary>No campaign is running and the mission is a Custom Battle siege (it carries the Custom Battle spawn handler).</summary>
+    bool IsCustomBattleSiege { get; }
+
     /// <summary>The campaign siege state's name, for the log line that explains an inert battle.</summary>
     string SiegeStateName { get; }
 
@@ -78,4 +81,7 @@ public interface IStagedSiegeMissionAdapter
     int EnsureDefendBehaviors();
 
     string DescribeTactics();
+
+    /// <summary>The quick-information win line and vanilla's "press Tab" hint: BattleEndLogic shows them only for a depleted enemy.</summary>
+    void AnnounceVictory();
 }

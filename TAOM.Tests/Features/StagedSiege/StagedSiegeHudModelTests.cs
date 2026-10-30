@@ -10,9 +10,9 @@ namespace TAOM.Tests.Features.StagedSiege;
 public class StagedSiegeHudModelTests
 {
     private static StageSnapshot Snap(StagedSide side, StageId? force, float progress = 0f, CaptureStatus status = CaptureStatus.Idle,
-        bool finish = false)
+        bool finish = false, bool hall = true)
     {
-        var m = new StageMachine(side);
+        var m = new StageMachine(side, hall);
         if (finish)
             m.Force(null);
         else if (force.HasValue)
@@ -42,6 +42,28 @@ public class StagedSiegeHudModelTests
     [TestMethod]
     public void From_FinishedAttacker_Hall() =>
         Assert.AreEqual(HudObjectiveKind.Hall, StagedSiegeHudModel.From(Snap(StagedSide.Attacker, null, finish: true)).ObjectiveKind);
+
+    [TestMethod]
+    public void From_CustomBattleAttacker_StripHasNoHall()
+    {
+        var model = StagedSiegeHudModel.From(Snap(StagedSide.Attacker, StageId.B, hall: false));
+
+        Assert.AreEqual("A+ [B] C D", model.Strip);
+        Assert.AreEqual(HudObjectiveKind.Take, model.ObjectiveKind);
+    }
+
+    [TestMethod]
+    public void From_AttackerWithHall_StripEndsWithE() =>
+        Assert.AreEqual("A+ [B] C D E", StagedSiegeHudModel.From(Snap(StagedSide.Attacker, StageId.B)).Strip);
+
+    [TestMethod]
+    public void From_FinishedCustomBattleAttacker_FallenAndNoHallInStrip()
+    {
+        var model = StagedSiegeHudModel.From(Snap(StagedSide.Attacker, null, finish: true, hall: false));
+
+        Assert.AreEqual(HudObjectiveKind.Fallen, model.ObjectiveKind);
+        Assert.AreEqual("A+ B+ C+ D+", model.Strip);
+    }
 
     [TestMethod]
     public void From_FinishedDefender_Fallen() =>

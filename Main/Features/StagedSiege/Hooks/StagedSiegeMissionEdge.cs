@@ -52,10 +52,14 @@ internal sealed class StagedSiegeMissionEdge
             if (service == null || !service.TryGetEnd(out var end))
                 return false;
 
+            var kind = StagedResult.For(end);
+            if (!kind.HasValue)
+                return false;
             StopSpawners(mission);
-            missionResult = end == StagedEnd.DefenderPushedBack
-                ? MissionResult.CreateDefenderPushedBack()
+            missionResult = kind.Value == StagedResultKind.DefenderPushedBack ? MissionResult.CreateDefenderPushedBack()
+                : kind.Value == StagedResultKind.Successful ? MissionResult.CreateSuccessful(mission)
                 : MissionResult.CreateDefeated(mission);
+            service.AnnounceEnd(end);
             if (!_endLogged)
             {
                 _endLogged = true;

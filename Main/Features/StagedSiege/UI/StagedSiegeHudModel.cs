@@ -16,7 +16,7 @@ public enum HudObjectiveKind
     /// <summary>The player attacked, D fell, and the defenders have gone back to the lord's hall.</summary>
     Hall,
 
-    /// <summary>The player defended and D fell.</summary>
+    /// <summary>D fell and no hall follows: the player defended, or attacked in a Custom Battle siege and won.</summary>
     Fallen,
 
     /// <summary>The lord's hall fight: the attackers hold the player's side and point E is not yet taken.</summary>
@@ -52,7 +52,7 @@ public readonly struct StagedSiegeHudModel
 
     /// <summary>
     /// The points in order: a captured one carries a plus, the active one is bracketed, for example <c>A+ B+ [C] D E</c>. The
-    /// hall, E, appears only when the player attacks, and is bracketed once D has fallen.
+    /// hall, E, appears only when it follows (a campaign siege, player attacking), and is bracketed once D has fallen.
     /// </summary>
     public string Strip { get; }
 
@@ -60,10 +60,10 @@ public readonly struct StagedSiegeHudModel
     {
         var attacker = s.PlayerSide == StagedSide.Attacker;
         var kind = s.Finished
-            ? (attacker ? HudObjectiveKind.Hall : HudObjectiveKind.Fallen)
+            ? (s.HallFollows ? HudObjectiveKind.Hall : HudObjectiveKind.Fallen)
             : (attacker ? HudObjectiveKind.Take : HudObjectiveKind.Hold);
         var letter = (char)('A' + (int)s.Stage);
-        return new StagedSiegeHudModel(kind, letter, ToPercent(s.Progress), s.Status, BuildStrip(s, attacker));
+        return new StagedSiegeHudModel(kind, letter, ToPercent(s.Progress), s.Status, BuildStrip(s, s.HallFollows));
     }
 
     /// <summary>The lord's hall reading: every wall point is behind the player, E is the objective, and the strip says so.</summary>
@@ -74,7 +74,7 @@ public readonly struct StagedSiegeHudModel
     private static int ToPercent(float progress) =>
         float.IsNaN(progress) || float.IsInfinity(progress) ? 0 : (int)Math.Round(Math.Max(0f, Math.Min(1f, progress)) * 100f);
 
-    private static string BuildStrip(StageSnapshot s, bool attacker)
+    private static string BuildStrip(StageSnapshot s, bool hall)
     {
         var sb = new StringBuilder();
         for (var i = 0; i <= (int)StageId.D; i++)
@@ -90,7 +90,7 @@ public readonly struct StagedSiegeHudModel
                 sb.Append(letter);
         }
 
-        if (attacker)
+        if (hall)
             sb.Append(' ').Append(s.Finished ? "[" + Hall + "]" : Hall.ToString());
         return sb.ToString();
     }

@@ -33,13 +33,13 @@ public class StagePlanTests
     [TestMethod]
     public void TargetFor_RangedInStageA_FallsBackToTheZoneCentre()
     {
-        var s = StageSnapshot.Build(new object(), LinePlan(), new StageMachine(StagedSide.Attacker), 0f, CaptureStatus.Idle);
+        var s = StageSnapshot.Build(new object(), LinePlan(), new StageMachine(StagedSide.Attacker, true), 0f, CaptureStatus.Idle);
         Assert.AreEqual(s.Zone.Center, StagePlan.TargetFor(isRanged: true, TacticMode.TakePoint, s));
     }
 
     private static StageSnapshot StageC()
     {
-        var m = new StageMachine(StagedSide.Attacker);
+        var m = new StageMachine(StagedSide.Attacker, true);
         m.Force(StageId.C);
         return StageSnapshot.Build(new object(), LinePlan(), m, 0f, CaptureStatus.Idle);
     }

@@ -620,7 +620,7 @@ public class TaomSettings : AttributeGlobalSettings<TaomSettings>
 
     [SettingPropertyGroup("Battle Tactics/Staged Siege", GroupOrder = 81)]
     [SettingPropertyBool("{=taom_staged_siege_mcm_enable}Staged Sieges (Capture Points)", Order = 0, RequireRestart = false,
-        HintText = "{=taom_staged_siege_mcm_enable_hint}In a castle assault on a scene with recorded capture points, the attackers must take points A to D in order: outside the walls, the gatehouse, the courtyard and an inner point. Each captured point brings fresh troops from both armies. As the attacker, taking D sends the defenders back to the lord's hall, and taking the hall's last room (point E) wins the castle; as the defender, losing D loses the castle. Scenes without recorded points stay vanilla, and in a staged siege the Reinforcement Wave Count option does not apply. Takes effect from the next battle. Default: off.")]
+        HintText = "{=taom_staged_siege_mcm_enable_hint}In a castle assault, in the campaign or in a Custom Battle, on a scene with recorded capture points, the attackers must take points A to D in order: outside the walls, the gatehouse, the courtyard and an inner point. Each captured point brings fresh troops from both armies. In the campaign, the attacker who takes D sends the defenders back to the lord's hall, and taking the hall's last room (point E) wins the castle. In a Custom Battle, taking D wins the battle. The defender who loses D loses. Scenes without recorded points stay vanilla, and in a staged siege the Reinforcement Wave Count option does not apply. Takes effect from the next battle. Default: off.")]
     public bool EnableStagedSiege { get; set; } = false;
 
     // --- Battle Tactics / Siege Prop Diagnostics ---

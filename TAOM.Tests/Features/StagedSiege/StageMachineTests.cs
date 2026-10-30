@@ -9,7 +9,7 @@ public class StageMachineTests
 {
     private static StageMachine At(StageId target, StagedSide player = StagedSide.Attacker)
     {
-        var m = new StageMachine(player);
+        var m = new StageMachine(player, true);
         while (m.Current != target) m.Capture();
         return m;
     }
@@ -17,7 +17,7 @@ public class StageMachineTests
     [TestMethod]
     public void New_StartsAtAWithNothingCaptured()
     {
-        var m = new StageMachine(StagedSide.Attacker);
+        var m = new StageMachine(StagedSide.Attacker, true);
 
         Assert.AreEqual(StageId.A, m.Current);
         Assert.AreEqual(0, m.CapturedMask);
@@ -28,7 +28,7 @@ public class StageMachineTests
     [TestMethod]
     public void Capture_A_MovesToB_GatesStayShut()
     {
-        var m = new StageMachine(StagedSide.Attacker);
+        var m = new StageMachine(StagedSide.Attacker, true);
 
         var t = m.Capture();
 
@@ -84,6 +84,42 @@ public class StageMachineTests
     }
 
     [TestMethod]
+    public void Capture_D_AttackerWithoutHall_EndsAttackerWon()
+    {
+        var m = new StageMachine(StagedSide.Attacker, false);
+        m.Force(StageId.D);
+
+        var t = m.Capture();
+
+        Assert.AreEqual(StagedEnd.AttackerWon, t.End);
+        Assert.AreEqual(StagedEnd.AttackerWon, m.End);
+    }
+
+    [TestMethod]
+    public void Capture_D_DefenderWithoutHall_EndsPlayerDefeated()
+    {
+        var m = new StageMachine(StagedSide.Defender, false);
+        m.Force(StageId.D);
+
+        Assert.AreEqual(StagedEnd.PlayerDefeated, m.Capture().End);
+    }
+
+    [TestMethod]
+    public void Force_Null_AttackerWithoutHall_EndsAttackerWon() =>
+        Assert.AreEqual(StagedEnd.AttackerWon, new StageMachine(StagedSide.Attacker, false).Force(null).End);
+
+    [TestMethod]
+    public void Force_Null_DefenderWithoutHall_EndsPlayerDefeated() =>
+        Assert.AreEqual(StagedEnd.PlayerDefeated, new StageMachine(StagedSide.Defender, false).Force(null).End);
+
+    [TestMethod]
+    public void New_CarriesHallFollows()
+    {
+        Assert.IsTrue(new StageMachine(StagedSide.Attacker, true).HallFollows);
+        Assert.IsFalse(new StageMachine(StagedSide.Attacker, false).HallFollows);
+    }
+
+    [TestMethod]
     public void Capture_AfterEnd_ChangesNothing()
     {
         var m = At(StageId.D);
@@ -100,7 +136,7 @@ public class StageMachineTests
     [TestMethod]
     public void Capture_Mask_OnlyGrows()
     {
-        var m = new StageMachine(StagedSide.Attacker);
+        var m = new StageMachine(StagedSide.Attacker, true);
         var previous = 0;
         for (var i = 0; i < 6; i++)
         {
@@ -115,7 +151,7 @@ public class StageMachineTests
     [TestMethod]
     public void Force_CFromA_CapturesAAndB_OpensGates()
     {
-        var m = new StageMachine(StagedSide.Attacker);
+        var m = new StageMachine(StagedSide.Attacker, true);
 
         var t = m.Force(StageId.C);
 
@@ -130,7 +166,7 @@ public class StageMachineTests
     [TestMethod]
     public void Force_BFromA_GatesStayShut()
     {
-        var m = new StageMachine(StagedSide.Attacker);
+        var m = new StageMachine(StagedSide.Attacker, true);
 
         var t = m.Force(StageId.B);
 
@@ -142,7 +178,7 @@ public class StageMachineTests
     [TestMethod]
     public void Force_Null_EndsAsCaptureOfD()
     {
-        var m = new StageMachine(StagedSide.Defender);
+        var m = new StageMachine(StagedSide.Defender, true);
 
         var t = m.Force(null);
 

@@ -6,6 +6,9 @@ public enum StagedEnd
     None,
     DefenderPushedBack,
     PlayerDefeated,
+
+    /// <summary>The player attacked, D fell, and no lord's hall follows (a Custom Battle siege).</summary>
+    AttackerWon,
 }
 
 /// <summary>What a capture (or a forced jump) changed.</summary>
@@ -32,13 +35,21 @@ public readonly struct StageTransition
 
 /// <summary>
 /// The A to D progression of one siege. Capturing the current point moves to the next; capturing B opens the gates; capturing
-/// D ends the siege, in the player's favour when the player attacks and against them when the player defends.
+/// D ends the siege: against the player when the player defends; for an attacking player either pushed back to the lord's hall
+/// (<c>hallFollows</c>, a campaign siege) or won outright (a Custom Battle siege, which has no hall).
 /// </summary>
 public sealed class StageMachine
 {
-    public StageMachine(StagedSide playerSide) => PlayerSide = playerSide;
+    public StageMachine(StagedSide playerSide, bool hallFollows)
+    {
+        PlayerSide = playerSide;
+        HallFollows = hallFollows && playerSide == StagedSide.Attacker;
+    }
 
     public StagedSide PlayerSide { get; }
+
+    /// <summary>A campaign siege with the player attacking: the defenders fall back to the lord's hall once D falls.</summary>
+    public bool HallFollows { get; }
     public StageId Current { get; private set; } = StageId.A;
     public int CapturedMask { get; private set; }
     public bool GatesOpened { get; private set; }
@@ -57,7 +68,8 @@ public sealed class StageMachine
 
         if (from == StageId.D)
         {
-            End = PlayerSide == StagedSide.Attacker ? StagedEnd.DefenderPushedBack : StagedEnd.PlayerDefeated;
+            End = PlayerSide != StagedSide.Attacker ? StagedEnd.PlayerDefeated
+                : HallFollows ? StagedEnd.DefenderPushedBack : StagedEnd.AttackerWon;
             return new StageTransition(from, null, openGates, End, true);
         }
 

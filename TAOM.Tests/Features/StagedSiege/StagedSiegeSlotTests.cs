@@ -35,7 +35,7 @@ public class StagedSiegeSlotTests
     }
 
     private static StageSnapshot SnapshotOf(object token) =>
-        StageSnapshot.Build(token, StagedSiegeFixtures.LinePlan(), new StageMachine(StagedSide.Attacker), 0f, CaptureStatus.Idle);
+        StageSnapshot.Build(token, StagedSiegeFixtures.LinePlan(), new StageMachine(StagedSide.Attacker, true), 0f, CaptureStatus.Idle);
 
     [TestMethod]
     public void Publish_ArmedMission_ReadBack()
