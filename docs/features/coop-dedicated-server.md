@@ -14,7 +14,7 @@ How to stage, boot, stop and diagnose TAOM on the BannerlordCoop dedicated serve
 
 | Claim | State |
 |---|---|
-| Bannerlord v1.5.6 (current target, 2026-10-29) | **Blocked on Steam.** The client and TAOM are on v1.5.6, and Coop's `bannerlord-1.5.x` follows it (`2fab86882`, deployed to the dev install); see [v1.5.6-impact](../migration/v1.5.6-impact.md). The dedicated server app (1863440) is still the v1.5.5 build `25805354`, and co-op refuses a client whose game version differs from the server's. TaleWorlds' v1.5.6 server also moves to .NET 8, which the server repo's runtime staging (`scripts/prepare-dotnet-runtime.ps1`, `6.0.x` only) must follow. Every row below was proven on v1.5.5 |
+| Bannerlord v1.5.6 (current target) | **The server works on v1.5.6; a client join is owed.** Steam's Dedicated Server moved to v1.5.6 on 2026-10-30 (build 26320246; its starter needs .NET 8). With server PR #115 (the staging bundles the runtime the engine asks for), a vanilla stage booted to SERVING, autosaved and reloaded, with 0 exceptions. A TAOM stage of the installed v2.0.36 build (with #105's map cache) passes `ServerLoadGateTests`; its boot waits for a save made on a v1.5.6 client (the v1.5.5 `taomcoop2` predates Ered Luin and the Tharbad swap, so it would loop). The client, TAOM and Coop's `bannerlord-1.5.x` are on v1.5.6; see [v1.5.6-impact](../migration/v1.5.6-impact.md) |
 | Vanilla v1.5.5 server | Booted to SERVING, clients joined, battles fought, a client rejoined (2026-10-21 and 2026-10-22) |
 | TAOM, spike build | Reached SERVING on 2026-10-22 and again on 2026-10-23 (probe boots, including the skeleton package). The spike is a throwaway worktree (`taom-headless-spike`, branch `spike/headless-local`, never pushed) staged as `stage-spike` |
 | TAOM, committed build | Reached SERVING on 2026-10-23 (`0fb0e6c13`, deployed with the `bdef312b4` fix) on save `taomcoop2`: the 107-class `[ClientOnly]` line, exactly two `SKIPPED` screens, `failed=0` in OnSubModuleLoad (31 categories) and GameInit (79), autosaves every 5 minutes, 0 TAOM crash reports |
@@ -36,7 +36,7 @@ Stage with the server repo's script (its `-KeepSubModules` option and the rules 
    ```
    python -I <server repo>\scripts\strip_main_map.py "<game>\Modules\TAOM_Map\SceneObj\Main_map" <assets>\SceneObj\Main_map
    ```
-   It prints `verify OK` and writes `extents.json`. `<assets>\DsAssetPackages` takes the server repo's three stock packages (`core.tpac`, `pack_3.tpac`, `pack_19.tpac`, byte-identical to the vanilla set).
+   It prints `verify OK` and writes `extents.json`. `<assets>\DsAssetPackages` takes three packages copied from the client's `Modules\Native\AssetPackages` (`core.tpac`, `pack_3.tpac`, `pack_19.tpac`). Copy them from the client the server runs against: all three changed in v1.5.6, so the v1.5.5 set does not carry over.
 2. **Stage** (PowerShell 7; `-KeepSubModules` is a hashtable, so it cannot pass through `pwsh -File` arguments: put the call in a script file):
    ```
    & .\windows\run-windows.ps1 -PrepareOnly -GameRoot <game> -DedicatedServerRoot <ds app> -ModuleAssets <assets> `
@@ -45,7 +45,7 @@ Stage with the server repo's script (its `-KeepSubModules` option and the rules 
        -KeepSubModules @{ 'TAOM.Dependencies' = @('TAOM.Dependencies'); 'TAOM' = @('TAOM') }
    ```
    Check the staged `Modules\TAOM`: only the `TAOM` submodule, no `TAOM.Client.dll`, and `DsAssetPackages\taom_creature_skeletons.tpac` present.
-Once server PRs #104 and #105 are merged, step 1 and the `-KeepSubModules` argument fall away: the staging picks TAOM's submodules from its manifest and builds the map from the installed TAOM_Map (see "Distribution").
+Server PR #105 is merged (2026-10-30): the staging now builds the map from the installed TAOM_Map itself, and `<assets>` needs only the three packages (the log line is `map module 'TAOM_Map': stripped Main_map cache rebuilt`). Once #104 is merged, the `-KeepSubModules` argument falls away too: the staging picks TAOM's submodules from its manifest (see "Distribution").
 
 3. **Data directory:** `server-config.json` (`saveName`, `port` 4200, `steam`, and the same `modules` list as above), `Game Saves\<saveName>.sav`, and `eula.txt`. The save must come from a campaign started with the installed TAOM release (see "Saves" below).
 
@@ -118,9 +118,10 @@ The plan Garrett proposed (2026-10-23): BannerlordCoop publishes a Coop 1.5 buil
 
 | Change | Where | State |
 |---|---|---|
-| An extra module without a `-KeepSubModules` entry keeps the submodules the engine loads (a `DedicatedServerType` of `none`, `matchmaker` or `community` drops one; `IsNoRenderModeElement` never does) | [server PR #104](https://github.com/Bannerlord-Coop-Team/BannerlordCoop.DedicatedServer/pull/104) | Open, review requested (2026-10-23) |
-| The server map is built from the last map module's own `SceneObj\Main_map` with `strip_main_map.py`, cached and rebuilt when `navmesh.bin` or `scene.xscene` changes | [server PR #105](https://github.com/Bannerlord-Coop-Team/BannerlordCoop.DedicatedServer/pull/105) | Open, review requested; one real staging run built a byte-identical navmesh and a second reused the cache |
+| An extra module without a `-KeepSubModules` entry keeps the submodules the engine loads (a `DedicatedServerType` of `none`, `matchmaker` or `community` drops one; `IsNoRenderModeElement` never does) | [server PR #104](https://github.com/Bannerlord-Coop-Team/BannerlordCoop.DedicatedServer/pull/104) | Approved by Garrett 2026-10-23, not merged |
+| The server map is built from the last map module's own `SceneObj\Main_map` with `strip_main_map.py`, cached and rebuilt when `navmesh.bin` or `scene.xscene` changes | [server PR #105](https://github.com/Bannerlord-Coop-Team/BannerlordCoop.DedicatedServer/pull/105) | Merged 2026-10-30 (`f8d71d7`) |
 | The core `TAOM` submodule carries no client-only tag (B9) | TAOM `316072f40` | On trunk |
+| The staging bundles the .NET runtime the engine's starter names (6.0 for v1.5.5, 8.0 for v1.5.6) | [server PR #115](https://github.com/Bannerlord-Coop-Team/BannerlordCoop.DedicatedServer/pull/115) | Open, review requested (2026-10-30) |
 
 With all three, TAOM stages with only `-Modules` and `-ExtraModules`, and TAOM_Map needs no shipped server map. Two questions are open on #104: whether the release launcher should stage mod modules (today only `run-windows.ps1` does), and whether the README's Host-button sentence is stale (the Host button starts `Bannerlord.exe` on both Coop branches). The community install page draft waits for the distribution answer.
 
@@ -141,6 +142,7 @@ With all three, TAOM stages with only `-Modules` and `-ExtraModules`, and TAOM_M
 
 ## Changelog
 
+- 2026-10-30: the server runs on v1.5.6. Steam's Dedicated Server moved to v1.5.6 (.NET 8); server PR #115 makes the staging bundle the runtime the engine asks for, and a vanilla stage booted, autosaved and reloaded. The DS asset packages must come from the v1.5.6 client. #105 is merged; the TAOM stage passes the server load gates and waits for a v1.5.6 save.
 - 2026-10-23: page created. Skeleton package (`61276c182`, #972) and the audit check (`12afef4d2`) landed; the TAOM boot to SERVING is recorded for the spike build only.
 - 2026-10-23: the committed build reached SERVING and one client played (map, town, battle). Staging steps, the old-save loop, the troll animation and `UnknownSaveId` noise, and the distribution plan recorded.
 
