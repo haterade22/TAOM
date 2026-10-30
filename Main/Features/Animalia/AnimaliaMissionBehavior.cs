@@ -63,7 +63,7 @@ public class AnimaliaMissionBehavior : MissionLogic
             return;
         }
         MBActionSet set = MBActionSet.GetActionSet(actionSetId);
-        if (!set.IsValid)
+        if (!ActionSetLookup.Found(actionSetId, set.IsValid, set.GetName()))
             _logger.LogError($"[Animalia] Action set {actionSetId} not found - LOTRLOME_Armory action_sets drift? The animal will not animate correctly.");
         else if (!MBActionSet.CheckActionAnimationClipExists(set, profile.Trample))
             _logger.LogError($"[Animalia] {action} has no clip in {actionSetId} - the binding or its clip package is missing. The attack will play nothing.");

@@ -61,8 +61,8 @@ public class WarRamMissionBehavior : MissionLogic
         // ActionIndexCache resolves eagerly, so a missing action silently yields act_none and kills the
         // ram's locomotion cycle on channel 0 (the elephant "slide" class). Detect at mission start.
         // The type check alone misses a typed action whose binding or clip package is gone: that resolves
-        // to a valid index and plays nothing. So also look the set up by id (an invalid set for a missing id,
-        // as vanilla's MBGlobals.GetActionSet relies on) and ask the engine whether the action has a clip in it.
+        // to a valid index and plays nothing. So also look the set up by id (v1.5.6 returns set 0 for a missing
+        // id, so ActionSetLookup compares the name, #1065) and ask the engine whether the action has a clip in it.
         if (WarRamCombat.Profile.AnyUnresolved())
             _logger.LogError(
                 "[WarRam] One or more attack actions resolved to act_none - LOTRLOME_Armory as_war_ram / action_types drift? " +
@@ -70,7 +70,7 @@ public class WarRamMissionBehavior : MissionLogic
         else
         {
             MBActionSet ramSet = MBActionSet.GetActionSet(WarRamConfig.ActionSetId);
-            if (!ramSet.IsValid)
+            if (!ActionSetLookup.Found(WarRamConfig.ActionSetId, ramSet.IsValid, ramSet.GetName()))
                 _logger.LogError(
                     $"[WarRam] Action set {WarRamConfig.ActionSetId} not found - LOTRLOME_Armory action_sets drift? " +
                     "The ram Monster names it, so rams will not animate correctly.");

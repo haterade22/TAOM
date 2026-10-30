@@ -105,7 +105,8 @@ public class AnimaliaMountWiringTests
             var main = ActionSet(doc, m.ActionSet);
             Assert.AreEqual("as_horse", (string?)main.Attribute("base_set"), $"{m.ActionSet} must inherit the horse");
             Assert.AreEqual("horse_skeleton", (string?)main.Attribute("skeleton"), $"{m.ActionSet} must be on horse_skeleton");
-            // MobilePartyVisual asks for ActionSetCode + "_map" and MBGlobals.GetActionSet throws on a miss.
+            // MobilePartyVisual asks for ActionSetCode + "_map"; on a miss v1.5.6 returns set 0 (a human set),
+            // not an exception (#1065), so the twin must exist.
             Assert.AreEqual("as_horse_map", (string?)ActionSet(doc, m.ActionSet + "_map").Attribute("base_set"));
             Assert.AreEqual("as_horse_town_and_village", (string?)ActionSet(doc, m.ActionSet + "_town_and_village").Attribute("base_set"));
             Assert.IsTrue(main.Elements("action").Any(), $"{m.ActionSet} binds no clip of its own");

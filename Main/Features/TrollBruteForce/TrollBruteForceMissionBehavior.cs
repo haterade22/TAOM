@@ -60,7 +60,7 @@ public class TrollBruteForceMissionBehavior : MissionLogic
             foreach (var pair in TrollBruteForceConfig.ActionSetsByMonster)
             {
                 MBActionSet set = MBActionSet.GetActionSet(pair.Value);
-                if (!set.IsValid)
+                if (!ActionSetLookup.Found(pair.Value, set.IsValid, set.GetName()))
                     _logger.LogError($"[TrollBruteForce] Action set {pair.Value} ({pair.Key}) not found - " +
                         "LOTRLOME_Armory action_sets drift?");
                 else if (!MBActionSet.CheckActionAnimationClipExists(set, TrollBruteForceCombat.Action))

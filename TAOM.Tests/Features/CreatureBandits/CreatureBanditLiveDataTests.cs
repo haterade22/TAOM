@@ -51,7 +51,8 @@ public class CreatureBanditLiveDataTests
     {
         // A troll band's map icon is its leader drawn with "as_" + race + "_map" (SandBoxViewHelpers
         // GetHumanAgentPartyVisual, ActionSetCode.GenerateActionSetNameWithSuffix), a hill troll's once the cave trolls
-        // fall; MBGlobals.GetActionSet throws on a missing set, and nothing catches it on the map.
+        // fall; on a missing set v1.5.6 returns set 0 (a human set), not an exception (#1065),
+        // and what the map then draws is untested.
         var ids = XDocument.Load(LiveFile("LOTRLOME_Armory", "action_sets.xml")).Descendants("action_set")
             .Select(a => (string?)a.Attribute("id")).ToHashSet();
         foreach (var set in new[] { "as_cave_troll_map", "as_hill_troll_map" })

@@ -61,7 +61,7 @@ public class ElkMissionBehavior : MissionLogic
         else
         {
             MBActionSet elkSet = MBActionSet.GetActionSet(ElkConfig.ActionSetId);
-            if (!elkSet.IsValid)
+            if (!ActionSetLookup.Found(ElkConfig.ActionSetId, elkSet.IsValid, elkSet.GetName()))
                 _logger.LogError(
                     $"[Elk] Action set {ElkConfig.ActionSetId} not found - LOTRLOME_Armory action_sets drift? " +
                     "The elk Monster names it, so elks will not animate correctly.");
