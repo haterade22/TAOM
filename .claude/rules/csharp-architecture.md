@@ -34,6 +34,8 @@ HarmonyPatch / GameModel / CampaignBehavior   ← THIN (<150 lines, no logic)
 | Core names no client-only assembly | ADR-013: code that needs SandBox.View, Gauntlet, a ViewModelCollection or WinForms goes to TAOM.Client behind a core interface with a null; `ServerJitGateTests` fails a new core method that names one (unless its key is already in the baseline) |
 | Writers before gates | An engine flag, stat or total a plan or gate relies on lists every writer, vanilla first, with citations, and cites the line that builds it, not only its getter (`lessons/adapters-taleworlds-api.md`, Hammerhand; `ItemRoster.TotalFood` counts the herd's meat and `SellItemsAction` re-prices every unit: `docs/reviews/rca-provender-2026-10-23.md`) |
 | Server-safe startup (ADR-013) | A call in a `SubModule` hook or `ManualPatchApplicator.ApplyAll` whose callee names a client-only assembly (`ClientAssemblies.cs`) goes behind the server check in a `[MethodImpl(MethodImplOptions.NoInlining)]` helper, with a row in `SubModuleServerGuardTests`: its IL walk sees only `SubModule`'s own body, not the callee's |
+| Outcome lines | A feature proves its in-game check with `IOutcomeLog` (constructor) or `Outcomes` (static patches, pre-IoC): `Pass`/`Fail`/`Skip` with a `const string` id, plus a manifest in `tools/ingame_checks/`; an empty catch calls `Swallowed`, or carries `// swallow-ok: <reason>` when it is silent on purpose ([ingame-verdicts.md](../../docs/features/ingame-verdicts.md)) |
+| Outcome cost | Per hit, agent, tick, model query or frame, and off the main thread: an `OutcomeCounter` held in a field, never `Pass`/`Fail`/`Skip`, which write a line flushed on the calling thread; build `detail` only where the line is written |
 
 ## IoC Lifetimes
 

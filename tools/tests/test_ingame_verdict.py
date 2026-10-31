@@ -14,7 +14,7 @@ lines render OutcomeLog's line with the details BattleActionBarMissionView.cs an
 BattleActionBarService.cs pass.
 No career screen line is on disk either, so the career_* fixtures render GauntletCareerScreen.cs,
 CareerScreenChecks.cs and ViewModel_ExecuteCommand_CareerScreen_Patch.cs (CareerScreenChecksTests pins
-their [Check] lines).
+their [Check] lines). The session_summary* fixtures render OutcomeLog.cs's [Session] and [Swallowed] lines.
 """
 import io
 import os
@@ -1077,6 +1077,124 @@ class CrashReportEchoTests(unittest.TestCase):
     def test_evidence_keeps_the_line_numbers_of_the_log(self):
         code, out, _ = self.t.run(["--issue", "9102"])
         self.assertRegex(out, r"taom_debug_2026-10-30_12-57-22\.log:3  ")
+
+
+class SessionSummaryTests(unittest.TestCase):
+    """The [Session] lines (#1074). session_summary*.txt render OutcomeLog.WriteSummary's and Swallowed's
+    formats (Main/Core/Logging/OutcomeLog.cs) behind FileLogger's prefix; attach_pass.txt has no summary."""
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("970.toml")
+
+    def test_the_last_summary_line_is_printed_with_its_fields(self):
+        self.t.taom("session_summary.txt", "2026-10-30_12-57-22")
+        code, out, _ = self.t.run(["--issue", "970"])
+        self.assertEqual(code, 0, out)
+        self.assertIn("    summary (taom_debug_2026-10-30_12-57-22.log:9): reason=exit uptime_s=1864 checks_pass=2 "
+                      "checks_fail=0 swallowed=14 shield_swallowed=4 checks_skip=0 errors=0 dropped=0", out)
+        self.assertNotIn("reason=heartbeat", out)
+        self.assertNotIn("WARNING", out)
+
+    def test_the_swallowed_sites_of_the_last_summary_are_listed(self):
+        self.t.taom("session_summary.txt", "2026-10-30_12-57-22")
+        _, out, _ = self.t.run(["--issue", "970"])
+        self.assertIn("    swallowed: feature=CompanionTactics site=OOBOverlayService.Refresh n=2 "
+                      "first=InvalidOperationException", out)
+        self.assertIn("    swallowed: feature=Enlistment site=GameMenuManagerSetNextMenuPatch n=12 "
+                      "first=NullReferenceException", out)
+        self.assertNotIn("n=3", out)
+
+    def test_errors_above_zero_warn_and_leave_the_verdicts_alone(self):
+        self.t.taom("session_summary_errors.txt", "2026-10-30_12-57-22")
+        code, out, _ = self.t.run(["--issue", "970"])
+        self.assertEqual(code, 0, out)
+        self.assertEqual(verdict_of(out, "taom.battle-action-bar.attach"), "PASS")
+        self.assertIn("reason=crash", out)
+        self.assertRegex(out, r"\n    WARNING: errors=2: ")
+        self.assertNotIn("    swallowed:", out)
+
+    def test_a_session_without_a_summary_says_so(self):
+        self.t.taom("attach_pass.txt", "2026-10-30_12-57-22")
+        code, out, _ = self.t.run(["--issue", "970"])
+        self.assertEqual(code, 0, out)
+        self.assertIn("    no [Session] summary line in taom_debug_2026-10-30_12-57-22.log: ", out)
+        self.assertIn("a game still running in its first 10 minutes", out)
+
+    def test_a_swallowed_warning_after_the_last_summary_leaves_that_summary_alone(self):
+        # [Swallowed]'s fixed text names "the [Session] summary"; only FileLogger's INFO line is a summary.
+        self.t.taom("session_summary_swallowed_tail.txt", "2026-10-30_12-57-22")
+        _, out, _ = self.t.run(["--issue", "970"])
+        self.assertIn("    summary (taom_debug_2026-10-30_12-57-22.log:2): reason=heartbeat uptime_s=600 ", out)
+        self.assertRegex(out, r"\n    WARNING: errors=2: ")
+        self.assertIn("    swallowed: feature=Enlistment site=GameMenuManagerSetNextMenuPatch n=3 "
+                      "first=NullReferenceException", out)
+        self.assertNotIn("counts the repeats", out)
+
+    def test_a_log_with_only_a_swallowed_warning_has_no_summary(self):
+        self.t.taom("session_summary_swallowed_only.txt", "2026-10-30_12-57-22")
+        _, out, _ = self.t.run(["--issue", "970"])
+        self.assertIn("    no [Session] summary line in taom_debug_2026-10-30_12-57-22.log: ", out)
+        self.assertNotIn("    summary (", out)
+
+    def test_each_session_read_reports_its_own_summary(self):
+        self.t.taom("session_summary_errors.txt", "2026-10-30_12-57-22")
+        self.t.taom("attach_pass.txt", "2026-10-29_10-00-00")
+        _, out, _ = self.t.run(["--issue", "970", "--sessions", "2"])
+        first, second = out.split("  session 2:")
+        self.assertIn("errors=2", first)
+        self.assertIn("no [Session] summary line in taom_debug_2026-10-29_10-00-00.log", second)
+
+    def test_md_reports_the_summary_warning_swallowed_sites_and_absence(self):
+        self.t.taom("session_summary.txt", "2026-10-30_12-57-22")
+        _, out, _ = self.t.run(["--issue", "970", "--format", "md"])
+        self.assertIn("Session summaries:", out)
+        self.assertIn("- Session 1, `taom_debug_2026-10-30_12-57-22.log:9`: `reason=exit uptime_s=1864", out)
+        self.assertIn("  - swallowed: `feature=Enlistment site=GameMenuManagerSetNextMenuPatch n=12 "
+                      "first=NullReferenceException`", out)
+        t = Tree(self)
+        t.real_manifest("970.toml")
+        t.taom("session_summary_errors.txt", "2026-10-30_12-57-22")
+        _, out, _ = t.run(["--issue", "970", "--format", "md"])
+        self.assertIn("  - **Warning:** errors=2: ", out)
+        t = Tree(self)
+        t.real_manifest("970.toml")
+        t.taom("attach_pass.txt", "2026-10-30_12-57-22")
+        _, out, _ = t.run(["--issue", "970", "--format", "md"])
+        self.assertIn("- Session 1: no `[Session] summary` line in `taom_debug_2026-10-30_12-57-22.log`: ", out)
+
+
+class SessionSummaryEdgeTests(unittest.TestCase):
+    """Summary edge cases of #1074: a session with no TAOM log, a non-ASCII digit, the reason printed once."""
+
+    def test_a_session_with_no_taom_log_says_so_in_both_renderers(self):
+        t = Tree(self)
+        t.real_manifest("981.toml")
+        t.ds("ds_join.txt", "20261023-135846", mtime="2026-10-23 14:22:03")
+        _, out, _ = t.run(["--issue", "981", "--ds-data", str(t.ds_data)])
+        self.assertIn("    no [Session] summary line: this session has no TAOM log", out)
+        _, md, _ = t.run(["--issue", "981", "--ds-data", str(t.ds_data), "--format", "md"])
+        self.assertIn("- Session 1: no `[Session] summary` line; this session has no TAOM log", md)
+
+    def test_a_superscript_digit_in_errors_does_not_raise(self):
+        t = Tree(self)
+        t.real_manifest("970.toml")
+        dest = t.taom("session_summary_errors.txt", "2026-10-30_12-57-22")
+        dest.write_text(dest.read_text(encoding="utf-8").replace("errors=2", "errors=²"), encoding="utf-8")
+        code, out, _ = t.run(["--issue", "970"])
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("WARNING: errors", out)
+
+    def test_the_no_summary_reason_prints_once_per_report(self):
+        t = Tree(self)
+        t.real_manifest("970.toml")
+        t.taom("attach_pass.txt", "2026-10-30_12-57-22")
+        t.taom("attach_pass.txt", "2026-10-29_10-00-00")
+        _, out, _ = t.run(["--issue", "970", "--sessions", "2"])
+        self.assertEqual(out.count("a game still running in its first 10 minutes"), 1, out)
+        self.assertEqual(out.count("no [Session] summary line in taom_debug_"), 2, out)
+        _, md, _ = t.run(["--issue", "970", "--sessions", "2", "--format", "md"])
+        self.assertEqual(md.count("a game still running in its first 10 minutes"), 1, md)
 
 
 class PostTests(unittest.TestCase):
