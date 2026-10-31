@@ -150,6 +150,17 @@ public class HeroRaceWiringTests
             method + " reads Hero.DeadOrDisabledHeroes, which misses every living hero and any dead one the engine unregistered.");
     }
 
+    // #1011: the taom.race-persist checks count dead heroes from HeroRaceInfo.IsAlive. Left at its default of
+    // true, every capture reports dead=0 and every restore dead_restored=0, so neither check can pass.
+    [TestMethod]
+    public void HeroRosterAdapter_PassesIsAlive()
+    {
+        var src = RepoPaths.ReadSource("Main/Adapters/HeroRosterAdapter.cs", stripComments: true);
+
+        StringAssert.Contains(src, "new HeroRaceInfo(h.StringId, h.CharacterObject.Race, h.IsAlive)",
+            "GetAllHeroRaces must pass Hero.IsAlive into HeroRaceInfo.");
+    }
+
     // #700: the Load Game save preview (BasicCharacterTableau) reads ActionIndexCache.act_inventory_idle
     // on the cold main menu, before the game-init repair. Patch55's prefix is the only repair that
     // reaches it, and only when it runs before the prefix's early return. Dropped or moved below the
