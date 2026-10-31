@@ -1,0 +1,33 @@
+# In-game checks for #971, read by tools/ingame_verdict.py. The [Check] lines come from
+# Main/Features/CareerSystem/Hooks/Patch27_CareerSystem/ViewModel_ExecuteCommand_CareerScreen_Patch.cs (open:
+# the career button's click handler, once OpenCareerScreen returns) and
+# Main/Features/CareerSystem/UI/GauntletCareerScreen.cs (init: the end of OnInitialize); the ids are consts in
+# Main/Features/CareerSystem/UI/CareerScreenChecks.cs.
+#
+# Every pattern names a [Check] line, so a build without them is NOT REACHED here, never FAIL. The career-switch
+# dialogue also opens the screen, in switch mode, and writes no open line; RealmUI's map-bar tile opens it in
+# normal mode with no click, so it writes an init line without an open line. Init counts only mode=normal.
+issue = 971
+title = "The career button opens the career screen"
+fixed_in = "0761c01b7"   # named in the issue's fix comment
+logs = ["taom"]
+
+[[check]]
+id = "taom.career-screen.open"
+needs = "in a campaign whose hero has a career, open the character screen and click the career button"
+pass = ['\[Check\] id=taom\.career-screen\.open result=pass source=button']
+fail = ['\[Check\] id=taom\.career-screen\.open result=fail']
+
+[[check]]
+id = "taom.career-screen.init"
+needs = "the same click"
+reached = ['\[Check\] id=taom\.career-screen\.open result=pass']
+pass = ['\[Check\] id=taom\.career-screen\.init result=pass mode=normal']
+# The open pass line means the career screen was pushed and no exception reached the click handler. The init line,
+# OnInitialize's last statement, is what proves the screen finished building, so a missing init line is a FAIL.
+
+[[human]]
+claim = "the click plays one sound, not two"
+
+[[human]]
+claim = "the career screen draws its career tree"
