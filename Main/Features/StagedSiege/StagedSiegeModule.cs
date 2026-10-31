@@ -15,7 +15,8 @@ namespace TAOM.Features.StagedSiege;
 /// <see cref="PatchCategory"/>.
 ///
 /// No interface on either provider: nothing fakes them and each has one consumer (ADR-002). Both cache for the process, so a
-/// JSON edit needs a restart of the game, not a new battle. No save data: everything lives and ends inside one battle.
+/// JSON edit needs a restart of the game, not a new battle. No save data: everything lives and ends inside one battle. The one campaign
+/// behavior, <see cref="StagedSiegeCampaignLog"/>, only logs what happened to the settlement afterwards.
 /// </summary>
 internal sealed class StagedSiegeModule : TaomFeatureModule
 {
@@ -34,6 +35,12 @@ internal sealed class StagedSiegeModule : TaomFeatureModule
             resolver.Resolve<IModLogger>())),
     };
 
+    // Built once per campaign start, so the behavior's constructor clears the settlement record for a new campaign.
+    private static readonly CampaignBehaviorDecl[] CampaignLogs =
+    {
+        CampaignBehaviorDecl.Of(resolver => new StagedSiegeCampaignLog(resolver.Resolve<IModLogger>())),
+    };
+
     public override string Id => "StagedSiege";
 
     public override void RegisterServices(IRegistrator registrator)
@@ -46,4 +53,6 @@ internal sealed class StagedSiegeModule : TaomFeatureModule
     public override IReadOnlyList<PatchCategoryDecl> PatchCategories => Categories;
 
     public override IReadOnlyList<MissionBehaviorDecl> MissionBehaviors => Behaviors;
+
+    public override IReadOnlyList<CampaignBehaviorDecl> CampaignBehaviors => CampaignLogs;
 }

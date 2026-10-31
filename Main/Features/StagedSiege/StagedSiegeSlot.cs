@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TAOM.Features.StagedSiege.Domain;
 
 namespace TAOM.Features.StagedSiege;
@@ -17,6 +18,30 @@ internal static class StagedSiegeSlot
     private static volatile StagedHallService? _hall;
     private static volatile HallSnapshot? _hallSnapshot;
     private static (string Scene, StagedEnd End, DateTime Utc)? _lastEnded;
+    private static HudRecordBuilder? _hudRecord;
+    private static string? _campaignSettlement;
+
+    /// <summary>What the HUD showed during one mission: the <c>letter:kind</c> pairs and the marker letters, for the run report.</summary>
+    public sealed class HudRecord
+    {
+        public HudRecord(IReadOnlyCollection<string> pairs, IReadOnlyCollection<string> markers)
+        {
+            Pairs = pairs;
+            Markers = markers;
+        }
+
+        public IReadOnlyCollection<string> Pairs { get; }
+        public IReadOnlyCollection<string> Markers { get; }
+    }
+
+    private sealed class HudRecordBuilder
+    {
+        public HudRecordBuilder(object token) => Token = token;
+
+        public object Token { get; }
+        public readonly SortedSet<string> Pairs = new(StringComparer.Ordinal);
+        public readonly SortedSet<string> Markers = new(StringComparer.Ordinal);
+    }
 
     public static bool HasArmed => _service != null;
 
@@ -39,6 +64,8 @@ internal static class StagedSiegeSlot
         {
             _service = service;
             _snapshot = null;
+            _hudRecord = null;
+            _campaignSettlement = null;
         }
     }
 
@@ -88,6 +115,7 @@ internal static class StagedSiegeSlot
             _snapshot = null;
             _hall = null;
             _hallSnapshot = null;
+            _hudRecord = null;
         }
     }
 
@@ -99,6 +127,8 @@ internal static class StagedSiegeSlot
         {
             _hall = hall;
             _hallSnapshot = null;
+            _hudRecord = null;
+            _campaignSettlement = null;
         }
     }
 
@@ -131,6 +161,69 @@ internal static class StagedSiegeSlot
                 _hallSnapshot = null;
             }
         }
+    }
+
+    // --- the run report's records ------------------------------------------------------------------------------------
+
+    /// <summary>Records that the HUD showed this <c>letter:kind</c> pair. A new mission token starts a fresh record. Main thread.</summary>
+    public static void RecordHud(object token, string pair)
+    {
+        lock (WriteLock)
+            HudFor(token, create: true)!.Pairs.Add(pair);
+    }
+
+    /// <summary>Records that the HUD placed its marker over this point letter. Main thread.</summary>
+    public static void RecordHudMarker(object token, string letter)
+    {
+        lock (WriteLock)
+            HudFor(token, create: true)!.Markers.Add(letter);
+    }
+
+    // Caller holds WriteLock.
+    private static HudRecordBuilder? HudFor(object token, bool create)
+    {
+        var record = _hudRecord;
+        if (record != null && ReferenceEquals(record.Token, token))
+            return record;
+        return create ? _hudRecord = new HudRecordBuilder(token) : null;
+    }
+
+    /// <summary>A copy of the HUD record for <paramref name="mission"/>, or null when the HUD showed nothing for it.</summary>
+    public static HudRecord? HudFor(object? mission)
+    {
+        lock (WriteLock)
+        {
+            var record = mission == null ? null : HudFor(mission, create: false);
+            return record == null ? null : new HudRecord(new List<string>(record.Pairs), new List<string>(record.Markers));
+        }
+    }
+
+    /// <summary>
+    /// The settlement of the last staged campaign battle, until its map event ends. The walls and hall services set it at shutdown,
+    /// <c>StagedSiegeCampaignLog</c> reads it. Deliberately not cleared by <see cref="ClearArmed"/>: the hall mission's
+    /// <c>OnCreated</c> runs that between the walls fight and the hall fight.
+    /// </summary>
+    public static string? CampaignSettlementId
+    {
+        get
+        {
+            lock (WriteLock)
+                return _campaignSettlement;
+        }
+    }
+
+    public static void RecordCampaignSettlement(string settlementId)
+    {
+        if (string.IsNullOrEmpty(settlementId))
+            return;
+        lock (WriteLock)
+            _campaignSettlement = settlementId;
+    }
+
+    public static void ClearCampaignSettlement()
+    {
+        lock (WriteLock)
+            _campaignSettlement = null;
     }
 
     public static void SetLastEnded(string scene, StagedEnd end, DateTime utc)

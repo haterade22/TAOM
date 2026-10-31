@@ -2365,3 +2365,19 @@ The 1.5.x port of PR #1064 first pinned its three fixes with IL tests: call orde
 - **Why missed:** both methods need a live campaign or a native scene, so an IL test looked like the only option. The fingerprint drops local loads and branch targets, so it pins which calls happen and in what order, not which value reaches them or which way a branch goes, and the tests did not say so.
 - **Prevent:** before an IL pin, try two things. First, move the native call into a small method that takes the engine interface (`IMapScene`) and plain values, and drive it with NSubstitute (`SupplyNativeQueryTests.AddLandPath_*`). Second, stage the engine objects with `FormatterServices.GetUninitializedObject` and set the few fields the code reads (`VillageRaidReaderTests`, `AlignmentDesertionBehaviorTests.DailyTick_PartyInAMapEvent_StopsBeforeTheOwnerCheck`), and observe the first fake the code calls after the guard. Keep an IL pin only for a sealed native type, pin order rather than exact positions, and write its residual in the test comment. Prove every guard test with a copy-paste mutant and a flipped-polarity mutant, not only a deleted guard.
 - **Source:** `docs/reviews/rca-pr1064-port-2026-10-30.md` findings 2 and 6.
+
+### A run report's verdict must be earned: PASS needs an evaluated input, FAIL needs proof the code misbehaved (Staged Siege run report, 2026-10-31)
+The Staged Siege run report grades its own battle with `CHECK <id> PASS|FAIL|NOT SEEN` lines, so that an in-game test is
+judged from the log alone. Its review found five verdicts that the report would have printed without the evidence for
+them. `hud` passed when no stage was reached, because "every reached stage was shown" is true of an empty set.
+`victory_cue` failed "never ran" when vanilla's `BattleEndLogic` ended the battle first, and `refill` failed a stage that
+the reserve budget held on purpose. `faults` passed beside a logged boundary fault, because it read only the service's
+own faults. And the HUD marker letters were collected but fed no line and no check.
+- **Why missed:** the spec wrote each rule for the run its author pictured, a full staged capture, and did not ask what
+  the rule prints for an empty input, on a path where vanilla acts first, or for a hold the design makes.
+- **Prevent:** for each check, list its inputs and write the verdict for each degenerate case before the main rule.
+  Nothing evaluated is NOT SEEN. FAIL only when the evidence shows the code under test misbehaved, never when the observer
+  missed the event or the design chose the outcome (name the designed case in the evidence instead). The check covers
+  every source of what its id names. Every collected fact feeds a printed line or a check, or is deleted. Test each
+  degenerate case.
+- **Source:** [rca-staged-siege-run-report-2026-10-31.md](../rca-staged-siege-run-report-2026-10-31.md) rows 1 and 4 to 7.

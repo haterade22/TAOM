@@ -79,7 +79,7 @@ public sealed class StagedSiegeMissionBehavior : MissionLogic
             Hall = null;
             StagedSiegeSlot.ClearIf(Mission);
             StagedSiegeSlot.ClearHallIf(Mission);
-            _edge.Fault("EarlyStart", ex);
+            _edge.Fault("EarlyStart", ex, effect: StagedSiegeMissionEdge.RulesOffForMission);
         }
     }
 
@@ -92,7 +92,7 @@ public sealed class StagedSiegeMissionBehavior : MissionLogic
         }
         catch (Exception ex)
         {
-            _edge.Fault("AfterStart", ex);
+            _edge.Fault("AfterStart", ex, Service, Hall);
         }
     }
 

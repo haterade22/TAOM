@@ -12,7 +12,7 @@ namespace TAOM.Tests.Features.StagedSiege;
 
 /// <summary>Point E in the lord's hall (docs/features/staged-siege.md "The lord's hall"): arming, the capture, the end and the faults.</summary>
 [TestClass]
-public class StagedHallServiceTests
+public partial class StagedHallServiceTests
 {
     private const string Settlement = "castle_sturgia_a";
     private const string WallsScene = "sturgia_castle_siege_001";
@@ -31,6 +31,7 @@ public class StagedHallServiceTests
     {
         StagedSiegeSlot.ClearArmed();
         StagedSiegeSlot.ClearLastEnded();
+        StagedSiegeSlot.ClearCampaignSettlement();
         _now = 0f;
         _token = new object();
         _inE = new ZoneCount(0, 0);
@@ -61,6 +62,7 @@ public class StagedHallServiceTests
     {
         StagedSiegeSlot.ClearArmed();
         StagedSiegeSlot.ClearLastEnded();
+        StagedSiegeSlot.ClearCampaignSettlement();
     }
 
     [TestMethod]

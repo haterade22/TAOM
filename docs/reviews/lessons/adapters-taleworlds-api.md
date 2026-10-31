@@ -1643,3 +1643,16 @@ architect checks verified the same members.
   doc named the wrong behaviour as the one that turns panic into a rout because the brief copied a lens's claim
   unopened.
 - **Source:** [rca-fords-of-war-2026-10-31.md](../rca-fords-of-war-2026-10-31.md) findings D2, D6, D7, D17, P3, R7.
+
+### Read the raise order of two engine events before a listener depends on it (Staged Siege run report, 2026-10-31)
+`StagedSiegeCampaignLog` logged the staged settlement's map event end and then cleared its record, so it expected the
+owner change to come first. `MapEvent.FinalizeEventAux` raises `OnMapEventEnded` (MapEvent.cs:1737) and only then calls
+`Component.OnBeforeMapEventFinalize()` (:1738), which raises `SiegeCompleted` (SiegeAssaultEventComponent.cs:248) and so
+the owner change (KingdomManager.cs:260, ChangeOwnerOfSettlementAction.cs:94). The owner line would never have been
+written.
+- **Why missed:** the spec took the order from the event names ("ended" sounds last). This is the ORDER form of the
+  EFFECT lesson above, found the same day.
+- **Prevent:** when a listener's state depends on which of two events fires first, the spec quotes the raise site of
+  each, with the lines that fix the order, and says whether the chain is synchronous. A test drives the events in the
+  vanilla order.
+- **Source:** [rca-staged-siege-run-report-2026-10-31.md](../rca-staged-siege-run-report-2026-10-31.md) row 0.

@@ -31,6 +31,8 @@ public sealed class StagedSiegeMissionView : MissionView
     private StagedSiegeHudVM? _vm;
     private float _sinceRefresh = RefreshIntervalSec;
     private bool _failed;
+    private string? _loggedStrip;
+    private string? _loggedObjective;
 
     public override void OnMissionScreenTick(float dt)
     {
@@ -62,6 +64,7 @@ public sealed class StagedSiegeMissionView : MissionView
                     _vm.Refresh(snapshot);
                 else
                     _vm.Refresh(hall!);
+                LogHudChange();
             }
 
             if (snapshot != null)
@@ -106,6 +109,19 @@ public sealed class StagedSiegeMissionView : MissionView
         _movie = _layer.LoadMovie("StagedSiegeHud", _vm);
         MissionScreen.AddLayer(_layer);
         _sinceRefresh = RefreshIntervalSec;
+        _loggedStrip = null;
+        _loggedObjective = null;
+        IoC.Resolve<IModLogger>()?.LogInfo("[StagedSiege] HUD layer added");
+    }
+
+    // One line per change of the strip or the objective text, never per refresh: the progress text changes every refresh and is not logged.
+    private void LogHudChange()
+    {
+        if (_vm == null || (_vm.StripText == _loggedStrip && _vm.ObjectiveText == _loggedObjective))
+            return;
+        _loggedStrip = _vm.StripText;
+        _loggedObjective = _vm.ObjectiveText;
+        IoC.Resolve<IModLogger>()?.LogInfo("[StagedSiege] " + StagedSiegeHudRecorder.Describe(_vm.StripText, _vm.ObjectiveText));
     }
 
     private void Detach()

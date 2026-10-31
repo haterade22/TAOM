@@ -128,7 +128,9 @@ The shipped file carries the defaults and one scene, `sturgia_castle_siege_001` 
 |------|---------|
 | `Main/Features/StagedSiege/Domain/` | Pure rules: `CaptureRule`, `StageMachine`, `StagePlan`, `ReserveBudget`, `ReinforcementCadence`, `DetachmentRule`, `StageSnapshot`, `StagedSiegeActivation`, `ScenePlan`, `StagedResult` (the end to result mapping) |
 | `Main/Features/StagedSiege/StagedSiegeService.cs` | Per-mission rules runner, fault policy, S2 to S5 log lines |
-| `Main/Features/StagedSiege/StagedSiegeSlot.cs` | The armed service and the published snapshot; the armed hall service and its snapshot; the last walls end, for the inert log |
+| `Main/Features/StagedSiege/StagedSiegeSlot.cs` | The armed service and the published snapshot; the armed hall service and its snapshot; the last walls end, for the inert log; the run report's HUD record and campaign settlement record |
+| `Main/Features/StagedSiege/Domain/StagedSiegeRunReport.cs`, `StagedHallRunReport.cs`, `CheckVerdict.cs` | The run reports (walls and hall): pure fact collectors that return the report lines, plus the shared number and line formats |
+| `Main/Features/StagedSiege/StagedSiegeCampaignLog.cs` | The campaign behavior that logs the map event end and the owner change of the recorded settlement |
 | `Main/Features/StagedSiege/StagedHallService.cs`, `Domain/HallZone.cs`, `Domain/StagedHallActivation.cs`, `Domain/HallSnapshot.cs` | Point E in the lord's hall: the service, the zone, the arming decision and the HUD input |
 | `Main/Features/StagedSiege/IStagedSiegeFieldReader.cs`, `StagedSiegeFieldReader.cs` | The seam Creature Siege Role asks whether the stage plan steers a side |
 | `Main/Features/StagedSiege/StagedSiegeSceneCatalog.cs` | Loads and validates `staged_siege.json` |
@@ -137,7 +139,7 @@ The shipped file carries the defaults and one scene, `sturgia_castle_siege_001` 
 | `Main/Features/StagedSiege/Hooks/StagedSiegeCommandQueue.cs` | The console's thread-safe queue, drained on the main thread at the start of the mission tick |
 | `Main/Features/StagedSiege/Hooks/StagedSiegeSpawnSettingsPatch.cs`, `StagedSiegeSpawnFramePatch.cs`, `StagedReinforcementTimer.cs` | `Patch126_StagedSiege` and the custom timer |
 | `Main/Features/StagedSiege/Hooks/TacticStagedObjective.cs` | The stage tactic |
-| `Main/Features/StagedSiege/UI/StagedSiegeHudModel.cs`, `StagedSiegeHudVM.cs` | HUD reading (pure) and view model |
+| `Main/Features/StagedSiege/UI/StagedSiegeHudModel.cs`, `StagedSiegeHudVM.cs`, `StagedSiegeHudRecorder.cs` | HUD reading (pure), view model, and the recorder that tells the run report what the HUD showed |
 | `Main/_Module/GUI/PreFabs/StagedSiege/StagedSiegeHud.xml` | The HUD movie |
 | `Client/Features/StagedSiege/Hooks/StagedSiegeMissionView.cs` | `[DefaultView]` that owns the layer (TAOM.Client) |
 | `Main/Adapters/IStagedSiegeMissionAdapter.cs`, `StagedSiegeMissionAdapter.cs` | Every TaleWorlds call the service makes |
@@ -167,40 +169,91 @@ Other commands: `taom.staged_siege_status` says why the feature is inert or, whe
 
 ## Tests
 
-- `TAOM.Tests/Features/StagedSiege/`: pure rules (`CaptureRuleTests`, `StageMachineTests`, `StagePlanTests`, `ReserveBudgetTests`, `ReinforcementCadenceTests`, `DetachmentRuleTests`, `ScenePlanTests`, `StageSnapshotTests`, `StagedSiegeActivationTests`), the catalog and the shipped file (`StagedSiegeSceneCatalogTests`, `ShippedStagedSiegeConfigTests`), the service against a substitute adapter (`StagedSiegeServiceTests`), the slot, recorder and fragment tests, the console queue (`StagedSiegeCommandQueueTests`), the settings provider, the prefix body (`StagedSiegeSpawnSettingsPatchTests`), wiring (`StagedSiegeWiringTests`), the HUD reading and wording (`StagedSiegeHudModelTests`, `StagedSiegeHudStringsTests`), the HUD movie against its view model (`StagedSiegeHudPrefabTests`) and the engine bindings (`StagedSiegeBindingTests`, `[RequiresGame]`). The hall: `HallZoneTests`, `StagedHallActivationTests`, `StagedHallServiceTests` (a substitute adapter), the slot's hall tests, `StagedSiegeHudModelTests.FromHall_*`; the shared field: `StagedSiegeFieldReaderTests`, `CreatureSiegeRulesTests.StagedSiege`, `CreatureSiegeRoleServiceStagedSiegeTests`.
+- `TAOM.Tests/Features/StagedSiege/`: pure rules (`CaptureRuleTests`, `StageMachineTests`, `StagePlanTests`, `ReserveBudgetTests`, `ReinforcementCadenceTests`, `DetachmentRuleTests`, `ScenePlanTests`, `StageSnapshotTests`, `StagedSiegeActivationTests`), the catalog and the shipped file (`StagedSiegeSceneCatalogTests`, `ShippedStagedSiegeConfigTests`), the service against a substitute adapter (`StagedSiegeServiceTests`), the slot, recorder and fragment tests, the console queue (`StagedSiegeCommandQueueTests`), the settings provider, the prefix body (`StagedSiegeSpawnSettingsPatchTests`), wiring (`StagedSiegeWiringTests`), the HUD reading and wording (`StagedSiegeHudModelTests`, `StagedSiegeHudStringsTests`), the HUD movie against its view model (`StagedSiegeHudPrefabTests`) and the engine bindings (`StagedSiegeBindingTests`, `[RequiresGame]`). The run report: `StagedSiegeRunReportTests` and `StagedHallRunReportTests` (every check in each verdict, the line order and format, invariant culture), the report and the new log lines through the services (`StagedSiegeServiceTests.RunReport.cs`, `StagedHallServiceTests.RunReport.cs`), the slot records (`StagedSiegeSlotRecordTests`), the HUD recorder (`StagedSiegeHudRecorderTests`) and the campaign log (`StagedSiegeCampaignLogTests`, `[RequiresGame]`). The hall: `HallZoneTests`, `StagedHallActivationTests`, `StagedHallServiceTests` (a substitute adapter), the slot's hall tests, `StagedSiegeHudModelTests.FromHall_*`; the shared field: `StagedSiegeFieldReaderTests`, `CreatureSiegeRulesTests.StagedSiege`, `CreatureSiegeRoleServiceStagedSiegeTests`.
 - `TAOM.Tests/Features/CoopInterop/Missions/CoopMissionRolePolicyTests.cs` pins both co-op rows, including the view's type name in TAOM.Client.
 - Every prefab attribute and brush the HUD uses is covered by the GUI prefab gates (`EveryPrefabAttribute_NamesASettableWidgetProperty`, `EveryGuiPrefabBrush_IsDeclaredByAModule`).
+
+## Run report
+
+A test run is judged from the log alone. When a staged walls battle or an armed lord's hall fight ends, its service writes a machine-readable report through `IModLogger.LogInfo`, every line tagged `[StagedSiege]`: one `REPORT` header line, one `REPORT stage` line per stage reached (walls), one `CHECK` line per in-game check, and a `REPORT summary` line. A check line reads `[StagedSiege] CHECK <id> <PASS|FAIL|NOT SEEN>: <evidence with numbers>`. The ids are lower snake case and never change once shipped, so a grep stays valid.
+
+```
+grep "\[StagedSiege\] CHECK" taom_debug_*.log        # every verdict of the run
+grep "\[StagedSiege\] REPORT" taom_debug_*.log       # the header, the stage lines and the summary
+```
+
+**When:** at `Shutdown` (`OnEndMission` or `OnRemoveBehavior`), once, in its own try, also after a fault (the report matters most then; the `faults` check names each site and exception type). An inert service (the `inert:` and `hall inert:` lines) writes no report. Neither does a fault in `EarlyStart`, which drops the service and the hall: its line `boundary fault in EarlyStart: ...; staged rules off for this mission, vanilla continues` is the evidence. The result is handed in by `StagedSiegeMissionEdge.LogResultReady` as strings and bools (the services take no engine type, ADR-007), also to a faulted service.
+
+**How it is built:** `StagedSiegeRunReport` and `StagedHallRunReport` in `Domain/` hold no engine type, logger or clock. The service feeds them plain facts (a pass, a capture, a reinforcement and its distance to the staged frame, a softlock span, the cue, the result with both sides' survivors, the HUD record) and logs the lines they return. The per-pass work is counters and one `Stopwatch.GetTimestamp` pair; no report string is built until shutdown. Everything runs on the main thread; nothing is added to `TacticStagedObjective` (AI thread). Numbers print in the invariant culture (seconds and metres `F1`, progress and milliseconds `F2`) and an absent value prints `none`.
+
+**Walls report lines, in order:** `REPORT walls:` (scene, player side, `campaign` or `custom battle`, armed and set-up times, last pass, stage reached, `StagedEnd`, result state with victory and defeated, survivors as `active+remaining` per side), one `REPORT stage X:` per stage reached (start, end, duration, captured by `rule`, `forced` or not captured, zone peaks, progress peak, seconds Rising, Falling, Contested and Idle, reinforcements per side, the largest staged-frame distance per side, how many distances were unmeasured, both sides' counts at stage start, budget holds, softlocks; a stage jumped over by `taom.staged_siege_stage` prints `skipped`), the 14 checks, then `REPORT summary:` (checks, PASS, FAIL ids, NOT SEEN ids, passes, slowest and mean pass in ms, fault).
+
+| Check id | PASS | FAIL | NOT SEEN |
+|---|---|---|---|
+| `tactics` | the tactic installed on 1 or more teams | 0 teams | never installed (a fault first is named) |
+| `spawn_settings` | settings live True at set-up | False | no set-up |
+| `flags` | 4 flags spawned | fewer than 4 | no set-up, or the flag spawn did not return |
+| `detachment` | formed, and its largest reading never exceeded its start | a reading above the start (reinforcements joined it) | none formed (the reason text the log carries) |
+| `capture_rule` | 1 or more stages captured by the rule | | none by the rule (says how many were forced) |
+| `gates` | B captured and 1 or more gates opened | B captured and 0 opened | B not captured |
+| `reinforcement_frames` | measured samples exist and every per-side maximum is 25 m or less (`FrameToleranceMetres`: a batch spreads in ranks, 25 m still means the frame resolved) | a maximum above 25 m | no measured sample (a NaN or infinite distance counts as unmeasured and never enters a maximum) |
+| `refill` | every stage B to D that lasted at least `refillBurstSeconds` had 1 or more reinforcements for each side whose reserve was above 0 at the stage start | such a stage and side with 0, unless the reserve budget held that side on purpose (the budget rounds the cumulative allowance down, so a small reserve can get nothing for a stage; the evidence names it, for example `stage C defender held by budget`) | no stage from B on lasted that long |
+| `softlock` | a softlock occurred and every span closed in under 15 s (`SoftlockLimitSeconds`); a span still open at the end counts up to the last pass | a span of 15 s or more, or a non-finite time | no softlock occurred |
+| `ai_inward` | every reached stage C and D had an attacker zone peak of `minAttackers` or more | a C or D stage of 120 s or more (`InwardLimitSeconds`) below that peak | C not reached, or the low stages were too short to judge |
+| `end_chain` | the staged end and the result match: `DefenderPushedBack` gives `DefenderPullBack`, false, false; `AttackerWon` gives `AttackerVictory`, true, false; `PlayerDefeated` gives `AttackerVictory`, false, true (`MissionResult.cs:51-64`) | a staged end with another result, or no result | no staged end (the evidence names the result and the stage reached, so a vanilla end is readable here) |
+| `victory_cue` | `AttackerWon` and the cue ran | `AttackerWon` and the cue threw | any other end, or `AttackerWon` that never reached `MissionEnded` (vanilla's `BattleEndLogic` is earlier in the list and can end the battle in the same check) |
+| `hud` | the HUD ran and showed every reached stage letter with the right kind (`Take` for an attacking player, `Hold` for a defender) | a reached letter never shown, or a wrong kind | the HUD never ran, or no stage was reached |
+| `faults` | no fault | any fault, each with its site and exception type, marked `service` (it faulted the service) or `boundary` (the mission edge caught it around a call and the service stayed live) | |
+
+`minAttackers` and `refillBurstSeconds` come from the tunables in `staged_siege.json`. The other constants live in `StagedSiegeRunReport` with a one-line reason each.
+
+**Hall report lines:** `REPORT hall:` (settlement, area, markers, armed time, the first pass's standing counts, last pass, capture time, result), `REPORT hall zone:` (peaks, progress peak, seconds per status), the checks, `REPORT summary:` in the walls format.
+
+| Check id | PASS | FAIL | NOT SEEN |
+|---|---|---|---|
+| `hall_flag` | the flag spawned | 0 spawned | the flag spawn did not return |
+| `hall_capture` | captured by the rule | | not captured (the evidence names the result and the peaks) |
+| `hall_end` | captured and the result is `AttackerVictory`, true, false | captured with any other result or none | not captured |
+| `hall_cue` | captured and the cue ran | captured and it threw or never ran (the cue runs inside the capture itself, so a missing cue means the capture threw first) | not captured |
+| `hud` | the HUD showed `E:TakeHall`, and `E:HallTaken` after a capture | either missing | the HUD never ran |
+| `faults` | no fault | any fault, marked `service` or `boundary` as in the walls table | |
+
+**New running lines** (each existing line keeps its text): `stage X troops: attacker active a standing s remaining r, defender ...` every 5 s beside the zone line; `S3 detachment order Move -> Charge at t s` when the order changes; both sides' active and remaining appended to each `stage X captured` line; `S5 victory cue shown` once when the cue ran. The view logs `[StagedSiege] HUD layer added` and, when the strip or the objective text changes, `[StagedSiege] HUD: strip "...", objective "..."` (the progress text changes every refresh and is not logged).
+
+**What the HUD record is:** `StagedSiegeHudVM` hands each refresh's `letter:kind` pair (for example `B:Take`, `E:HallTaken`) and each marker letter placed on screen to `StagedSiegeSlot`, per mission token. Both reports print them in the `hud` evidence (`shown A:Take, B:Take; markers A, B`, or `markers none`); the markers are never a PASS or FAIL criterion, because a point can be off screen. The slot clears the record when a walls or hall service arms for a new mission, and in every mission's `OnCreated` (`ClearArmed`), after the previous report was written, so no finished mission stays referenced; the services read it when they write the report. `StagedSiegeHudRecorder` remembers the last pair and marker, so the slot's lock is taken only on a change.
+
+**Campaign log:** at `Shutdown` in a campaign (not Custom Battle) an armed walls or hall service records the encounter settlement id in the slot (a read that throws logs one warning and records nothing). `StagedSiegeCampaignLog`, a campaign behavior declared by `StagedSiegeModule`, listens (non-serialized) to `CampaignEvents.MapEventEnded` and `CampaignEvents.OnSettlementOwnerChangedEvent`. For the recorded settlement only it logs `[StagedSiege] campaign: map event at <settlement> ended, winner <side|none>, casualties attacker <n> defender <n>` (`MapEvent.WinningSide` and each side's `TroopCasualties`: every troop wounded, killed or routed on that side over the whole map event, so after a hall fight it sums the walls fight and the hall fight) and `[StagedSiege] campaign: <settlement> owner <old clan id> -> <new clan id> (<detail>)`, then clears the record after the map event line. The walls record survives the hall mission's `OnCreated` (`ClearArmed` leaves it); a later walls or hall `Arm` replaces it. A captured settlement changes owner after the map event end, in the same synchronous call chain (`MapEvent.FinalizeEventAux` raises `OnMapEventEnded` at `MapEvent.cs:1737`, then `OnBeforeMapEventFinalize` at :1738 raises `SiegeCompleted`, which ends in `ChangeOwnerOfSettlementAction.ApplyBySiege`), so the behavior remembers the settlement and the campaign time of the map event end and logs the owner change that matches both; a later change of that settlement is not logged. The new owner in that line is the kingdom leader (`KingdomManager.cs:247`), so a capture by a vassal logs the ruling clan, and the later fief vote is not logged. The module builds a new behavior at every campaign start (`FeatureModuleHooks.AddGameStartContent`), so its constructor clears the record for a new campaign. Every handler catches and logs one warning. It saves nothing; the co-op row is in [coop-interop.md](coop-interop.md).
 
 ## How to verify in game
 
 **Preconditions:** `./build.ps1` deploy, the MCM switch `Battle Tactics/Staged Siege` on, a campaign save next to a castle that uses `sturgia_castle_siege_001`. The game log is the main evidence: every line is tagged `[StagedSiege]`.
 
-1. Start an assault as the attacker. The log shows `armed: scene sturgia_castle_siege_001, player Attacker`, and a flag stands on A.
-2. Take A, then B, then C, then D. Check `stage X captured` and the HUD after each, that the gates open at B (`S4 gates opened`), and that reinforcements arrive at the recorded frames.
-3. After D, check the hall picker and the hall fight, and that casualties carry over.
-4. Lose as attacker at B and at D.
-5. Defend the same castle. Hold all four points to win; lose D to confirm the settlement falls.
-6. Load a save made mid-campaign and start a siege.
-7. Run once with the Siege Forces picker on.
-8. Attack a castle with no recorded scene. The log shows `inert: UnrecordedScene` and the siege stays vanilla.
-9. Check the HUD at every stage for both sides.
-10. Attack with trolls in the army (Mordor): in stages A, C and D their `[CreatureSiege]` role lines stop (reason `StagedSiege`) and they follow their formation; in stage B the gate-striking returns.
-11. After a captured D, enter the lord's hall: the log shows `hall armed: settlement ..., area n, markers m`, a flag stands in the last area, and the HUD reads `Take the lord's hall`.
-12. Hold at least three attackers (and three times the defenders' number) in the last area for 20 s: `hall E captured`, the message, the flag recolours, the mission ends as a win and the settlement changes owner.
-13. Enter a hall at a settlement with no recorded scene: `hall inert: WallsSceneNotRecorded` and the vanilla hall fight is unchanged.
-14. Push the defenders back, retreat from the hall, re-attack (or reload the save, or restart the game and load it): the hall still arms. Also check the "The lord's hall is taken" cue and the Tab hint at the capture, and try to leave once beside a defender (refused) and once 5 m clear of every defender (allowed).
+1. Start an assault as the attacker. The log shows `armed: scene sturgia_castle_siege_001, player Attacker`, and a flag stands on A. Evidence: the `REPORT walls:` header and `CHECK flags`.
+2. Take A, then B, then C, then D. Check `stage X captured` and the HUD after each, that the gates open at B (`S4 gates opened`), and that reinforcements arrive at the recorded frames. Evidence: `CHECK capture_rule`, `CHECK hud`, `CHECK gates`, `CHECK reinforcement_frames`, `CHECK refill`.
+3. After D, check the hall picker and the hall fight, and that casualties carry over. Evidence: `CHECK end_chain` (the pull-back result) and the hall report's checks. The picker itself is vanilla UI: no log evidence. Casualties carrying over has no CHECK id; the survivors in the `REPORT walls:` header and the `campaign: map event ... casualties` line give the numbers (those casualties are every troop wounded, killed or routed over the whole map event, so after a hall fight they include the walls fight).
+4. Lose as attacker at B and at D. No PASS check exists for a vanilla loss: `CHECK end_chain` reads NOT SEEN, and its evidence names the result and the stage reached.
+5. Defend the same castle. Hold all four points to win; lose D to confirm the settlement falls. Evidence: `CHECK hud` (`Hold`), `CHECK end_chain` (lose D), and the `campaign: ... owner` line for the fall. A win by holding is vanilla's end: `CHECK end_chain` reads NOT SEEN with the result in its evidence.
+6. Load a save made mid-campaign and start a siege. No log evidence beyond the `armed:` line: the report does not know how the campaign was loaded.
+7. Run once with the Siege Forces picker on. No log evidence: the picker belongs to Siege Forces, and no check reads it.
+8. Attack a castle with no recorded scene. The log shows `inert: UnrecordedScene` and the siege stays vanilla. No CHECK: an inert service writes no report, so the `inert:` line is the evidence.
+9. Check the HUD at every stage for both sides. Evidence: `CHECK hud` (a run as each side) and the `HUD: strip` lines. The look of the HUD has no log evidence.
+10. No CHECK id (the `[CreatureSiege]` lines are the evidence). Attack with trolls in the army (Mordor): in stages A, C and D their `[CreatureSiege]` role lines stop (reason `StagedSiege`) and they follow their formation; in stage B the gate-striking returns.
+11. After a captured D, enter the lord's hall: the log shows `hall armed: settlement ..., area n, markers m`, a flag stands in the last area, and the HUD reads `Take the lord's hall`. Evidence: `CHECK hall_flag` and the hall's `CHECK hud` (`E:TakeHall`).
+12. Hold at least three attackers (and three times the defenders' number) in the last area for 20 s: `hall E captured`, the message, the flag recolours, the mission ends as a win and the settlement changes owner. Evidence: `CHECK hall_capture`, `CHECK hall_end`, `CHECK hall_cue` (the cue ran; how it looks has no log evidence) and the `campaign: ... owner` line.
+13. Enter a hall at a settlement with no recorded scene: `hall inert: WallsSceneNotRecorded` and the vanilla hall fight is unchanged. No CHECK: an inert hall writes no report.
+14. Push the defenders back, retreat from the hall, re-attack (or reload the save, or restart the game and load it): the hall still arms. Also check the "The lord's hall is taken" cue and the Tab hint at the capture, and try to leave once beside a defender (refused) and once 5 m clear of every defender (allowed). Evidence: the `hall armed` line and a hall report prove it armed again, and `CHECK hall_cue` that the cue ran. The leave refusal is vanilla's: no log evidence.
 
-First-run log lines that settle the open questions: `S2 deployment over: settings live True` (the IL already shows the ref write on the `in` parameter reaches `Init`; this confirms it at runtime), `S2 reinforcement ... m from the staged frame` (small distances mean the zero-navmesh spawn frame resolved), `S3 detachment units` (falling while `ai False` holds means vanilla merged it back), `S4 tactics` plus the zone counts (the AI is pathing inward after B), `stage X zone` (defenders counted with nobody in the courtyard means wall troops are leaking in).
+Each of these first-run lines now has a check: `S2 deployment over: settings live True` is `CHECK spawn_settings`; `S2 reinforcement ... m from the staged frame` is `CHECK reinforcement_frames`; `S3 detachment units` is `CHECK detachment`; `S4 tactics` with the zone counts is `CHECK tactics` and `CHECK ai_inward`; `stage X zone` leaking defenders has no CHECK (read the `stage X troops` and `stage X zone` lines). The raw lines: `S2 deployment over: settings live True` (the IL already shows the ref write on the `in` parameter reaches `Init`; this confirms it at runtime), `S2 reinforcement ... m from the staged frame` (small distances mean the zero-navmesh spawn frame resolved), `S3 detachment units` (falling while `ai False` holds means vanilla merged it back), `S4 tactics` plus the zone counts (the AI is pathing inward after B), `stage X zone` (defenders counted with nobody in the courtyard means wall troops are leaking in).
 
 An unreachable step is reported with the command tried and the unmet precondition; it is not marked verified through another path.
 
 ## Checklist: custom battle (owed in game)
 
-1. Start Custom Battle, Siege, Ustokol Castle, as the attacker, and note the wall level you picked (the catalog keys only on the scene name and Custom Battle lets the player choose the level, `BannerlordMissions.cs:162-167`). Note the wall level the points were recorded at, and repeat the run at one other level to see whether the points still fit. The log shows `armed: scene sturgia_castle_siege_001, player Attacker, custom battle`, a flag on A, and a strip `[A] B C D` with no E.
-2. Take A to D (or `taom.staged_siege_stage end`). The screen shows vanilla's "battle won" line and the "press Tab to view results" hint (`StagedSiegeService.AnnounceEnd`, since vanilla shows them only for a depleted enemy), the scoreboard reads Victory, and the log shows `S5 MissionEnded returned AttackerWon`.
-3. Repeat as the defender. Lose D: the scoreboard reads Defeat (`PlayerDefeated`).
-4. Run `taom.staged_siege_record` on a scene that is not recorded yet.
-5. Start the same battle with the MCM switch off: `inert: Disabled`.
+1. Start Custom Battle, Siege, Ustokol Castle, as the attacker, and note the wall level you picked (the catalog keys only on the scene name and Custom Battle lets the player choose the level, `BannerlordMissions.cs:162-167`). Note the wall level the points were recorded at, and repeat the run at one other level to see whether the points still fit. The log shows `armed: scene sturgia_castle_siege_001, player Attacker, custom battle`, a flag on A, and a strip `[A] B C D` with no E. Evidence: the `REPORT walls:` header (`custom battle`), `CHECK flags`, and the `HUD: strip "[A] B C D"` line.
+2. Take A to D (or `taom.staged_siege_stage end`). The screen shows vanilla's "battle won" line and the "press Tab to view results" hint (`StagedSiegeService.AnnounceEnd`, since vanilla shows them only for a depleted enemy), the scoreboard reads Victory, and the log shows `S5 MissionEnded returned AttackerWon`. Evidence: `CHECK end_chain` (the scoreboard result), `CHECK victory_cue` (the cue ran; how it looks has no log evidence) and the `S5 victory cue shown` line.
+3. Repeat as the defender. Lose D: the scoreboard reads Defeat (`PlayerDefeated`). Evidence: `CHECK end_chain` (`PlayerDefeated` gives `AttackerVictory`, false, true) and `CHECK hud` (`Hold`).
+4. Run `taom.staged_siege_record` on a scene that is not recorded yet. No log evidence: the console prints its own result.
+5. Start the same battle with the MCM switch off: `inert: Disabled`. No CHECK: an inert service writes no report; the `inert:` line is the evidence.
 
 ## Findings from the first in-game run (2026-10-29)
 
@@ -224,6 +277,7 @@ Sirannon, scene `sturgia_castle_siege_001`, player attacking.
 
 ## Changelog
 
+- 2026-10-31: Run report (#1054): every staged walls battle and armed hall fight writes a header, stage lines, `CHECK` lines with PASS, FAIL or NOT SEEN and a summary when it ends, so a test run is judged from the log; new running lines (troop counts, detachment order changes, the victory cue, HUD changes); a campaign log of the map event end and owner change for the settlement the battle recorded. Not yet seen in game.
 - 2026-10-29: Phase 3a built (#1054): custom battle sieges arm on a recorded scene for either side; capturing D wins for an attacker and loses for a defender, with no lord's hall. Not yet seen in game.
 - 2026-10-29: Phase 2 deep-review fixes: point E arms from the saved siege state (a retreat, a reload and a restart no longer lose it), a player-commanded troll formation is not released for the staged plan, the win cue and a hall result log line, the MCM hint names point E. The Harmony category was renumbered from `Patch125` to `Patch126` because trunk took 125 for `Patch125_HideoutClanGuard`.
 - 2026-10-29: Phase 2 built (#1054): Creature Siege Role yields to the stage plan, and point E captures the lord's hall for a player attacker. Not yet seen in game.

@@ -19,6 +19,7 @@ public sealed class StagedSiegeHudVM : ViewModel
     private string _markerText = string.Empty;
     private float _markerOffsetX;
     private float _markerOffsetY;
+    private readonly StagedSiegeHudRecorder _recorder = new();
 
     [DataSourceProperty]
     public bool IsVisible
@@ -141,6 +142,7 @@ public sealed class StagedSiegeHudVM : ViewModel
         ObjectiveText = ObjectiveLine(model.ObjectiveKind, letter);
         ProgressText = snapshot.Finished ? string.Empty : ProgressLine(model);
         IsVisible = true;
+        _recorder.Shown(snapshot.MissionToken, letter, model.ObjectiveKind);
     }
 
     /// <summary>The lord's hall fight: point E is the objective, and the progress line goes once it is taken.</summary>
@@ -152,6 +154,7 @@ public sealed class StagedSiegeHudVM : ViewModel
         ObjectiveText = ObjectiveLine(model.ObjectiveKind, MarkerText);
         ProgressText = snapshot.Finished ? string.Empty : ProgressLine(model);
         IsVisible = true;
+        _recorder.Shown(snapshot.MissionToken, MarkerText, model.ObjectiveKind);
     }
 
     public void PlaceMarker(bool visible, float offsetX, float offsetY)
@@ -159,6 +162,7 @@ public sealed class StagedSiegeHudVM : ViewModel
         IsMarkerVisible = visible;
         MarkerOffsetX = offsetX;
         MarkerOffsetY = offsetY;
+        _recorder.Marker(visible, MarkerText);
     }
 
     private static string ObjectiveLine(HudObjectiveKind kind, string letter)

@@ -15,7 +15,7 @@ namespace TAOM.Tests.Features.StagedSiege;
 /// reconcile, the reserve gate behind the engine's timer, the end and the fault policy.
 /// </summary>
 [TestClass]
-public class StagedSiegeServiceTests
+public partial class StagedSiegeServiceTests
 {
     private const string Scene = "sturgia_castle_siege_001";
 
@@ -36,6 +36,7 @@ public class StagedSiegeServiceTests
     {
         StagedSiegeSlot.ClearArmed();
         StagedSiegeSlot.ClearLastEnded();
+        StagedSiegeSlot.ClearCampaignSettlement();
         _now = 0f;
         _token = new object();
         _log = Substitute.For<IModLogger>();
@@ -75,6 +76,7 @@ public class StagedSiegeServiceTests
     {
         StagedSiegeSlot.ClearArmed();
         StagedSiegeSlot.ClearLastEnded();
+        StagedSiegeSlot.ClearCampaignSettlement();
     }
 
     // --- helpers ---------------------------------------------------------------------------------------------------

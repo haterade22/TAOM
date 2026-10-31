@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.StagedSiege.Domain;
@@ -31,6 +32,8 @@ public sealed class StagedHallService
     private bool _faulted;
     private bool _shutdown;
     private bool _captured;
+    private StagedHallRunReport? _report;
+    private bool _reportWritten;
     private float _progress;
     private CaptureStatus _status = CaptureStatus.Idle;
     private float _nextPass = float.NegativeInfinity;
@@ -96,8 +99,12 @@ public sealed class StagedHallService
             }
 
             _armed = true;
+            _report = new StagedHallRunReport();
+            // Fed before the calls that can throw, so a fault in the flag still reports the hall and the flag spawned.
+            _report.NoteArmed(_settlement, _zone.AreaIndex, _zone.MarkerCount, _hall.Time);
             StagedSiegeSlot.ArmHall(this);
             var made = _hall.SpawnFlag(_zone.Centroid);
+            _report.NoteFlags(made);
             if (made > 0)
                 _hall.ColourFlag(StagedSide.Defender);
             Publish();
@@ -111,6 +118,12 @@ public sealed class StagedHallService
         }
     }
 
+    /// <summary>
+    /// The mission edge caught an exception around a call into this service. It goes into the run report only: the service stays
+    /// live, so this neither faults nor disarms it.
+    /// </summary>
+    public void NoteBoundaryFault(string site, Exception ex) => _report?.NoteBoundaryFault(site, ex.GetType().Name);
+
     // --- the tick ----------------------------------------------------------------------------------------------------
 
     public void Tick()
@@ -123,7 +136,9 @@ public sealed class StagedHallService
             if (float.IsNaN(now) || float.IsInfinity(now) || now < _nextPass)
                 return;
             _nextPass = now + _catalog.Tunables.ReconcileSeconds;
+            var started = Stopwatch.GetTimestamp();
             Pass(now);
+            _report?.NotePassCost((Stopwatch.GetTimestamp() - started) * 1000.0 / Stopwatch.Frequency);
         }
         catch (Exception ex)
         {
@@ -138,8 +153,11 @@ public sealed class StagedHallService
 
         // A side with nobody standing is a finished hall: BattleEndLogic ends it within seconds (a depleted side at its next
         // once-a-second check, a routed one after 3 s), and it comes first in the logic list.
-        if (_hall.CountStanding(StagedSide.Attacker) == 0 || _hall.CountStanding(StagedSide.Defender) == 0)
+        var standingAttackers = _hall.CountStanding(StagedSide.Attacker);
+        var standingDefenders = _hall.CountStanding(StagedSide.Defender);
+        if (standingAttackers == 0 || standingDefenders == 0)
         {
+            _report?.NotePassSkipped(now, standingAttackers, standingDefenders);
             Publish();
             return;
         }
@@ -148,6 +166,7 @@ public sealed class StagedHallService
         var step = CaptureRule.Step(_progress, count.Attackers, count.Defenders, dt, _catalog.Tunables);
         _progress = step.Progress;
         _status = step.Status;
+        _report?.NotePass(now, dt, standingAttackers, standingDefenders, count.Attackers, count.Defenders, step.Status, step.Progress);
         if (step.Status == CaptureStatus.Captured)
         {
             Capture(now);
@@ -165,9 +184,21 @@ public sealed class StagedHallService
     private void Capture(float now)
     {
         _captured = true;
+        _report?.NoteCaptured(now);
         _hall.ColourFlag(StagedSide.Attacker);
         _hall.StopSpawners();
-        _hall.AnnounceHallTaken();
+        try
+        {
+            _hall.AnnounceHallTaken();
+            _report?.NoteCue(true);
+        }
+        catch (Exception)
+        {
+            // Still a fault, as before the report existed: the caller's catch turns it off. The report only needs to know the cue threw.
+            _report?.NoteCue(false);
+            throw;
+        }
+
         Publish();
         Info($"hall E captured at {F(now)} s");
     }
@@ -188,6 +219,16 @@ public sealed class StagedHallService
             + $"{_status}, captured {_captured}{(_faulted ? ", FAULTED" : "")}.";
     }
 
+    /// <summary>
+    /// The mission's result as plain values, from <c>OnMissionResultReady</c>, for the run report. A faulted service still takes it.
+    /// </summary>
+    public void NoteMissionResult(string state, bool victory, bool defeated)
+    {
+        if (_report == null || _shutdown)
+            return;
+        _report.NoteMissionResult(state, victory, defeated);
+    }
+
     // --- teardown ----------------------------------------------------------------------------------------------------
 
     public void Shutdown()
@@ -196,6 +237,34 @@ public sealed class StagedHallService
             return;
         _shutdown = true;
         StagedSiegeSlot.ClearHallIf(_token);
+        RecordCampaignSettlement();
+        WriteReport();
+    }
+
+    // For StagedSiegeCampaignLog, which logs what became of this settlement once the map event ends.
+    private void RecordCampaignSettlement()
+    {
+        if (_armed)
+            StagedSiegeSlot.RecordCampaignSettlement(_settlement);
+    }
+
+    // Once, after a fault too: the report matters most then. It must never fail a mission end.
+    private void WriteReport()
+    {
+        if (_report == null || _reportWritten)
+            return;
+        _reportWritten = true;
+        try
+        {
+            var hud = StagedSiegeSlot.HudFor(_token);
+            _report.NoteHud(hud?.Pairs, hud?.Markers);
+            foreach (var line in _report.Build())
+                Info(line);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"{StagedSiegeService.Tag} run report failed: {ex.GetType().Name}: {ex.Message}");
+        }
     }
 
     private void Fault(string site, Exception ex)
@@ -203,6 +272,7 @@ public sealed class StagedHallService
         if (_faulted)
             return;
         _faulted = true;
+        _report?.NoteFault(site, ex.GetType().Name);
         try
         {
             _logger.LogError($"{StagedSiegeService.Tag} hall fault in {site}: {ex}; point E off, vanilla ends the hall");

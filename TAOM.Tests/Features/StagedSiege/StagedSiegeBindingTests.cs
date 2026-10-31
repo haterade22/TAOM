@@ -6,6 +6,8 @@ using System.Runtime.CompilerServices;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.CampaignSystem.Actions;
+using TaleWorlds.CampaignSystem.MapEvents;
 using TaleWorlds.CampaignSystem.Encounters;
 using TaleWorlds.CampaignSystem.Settlements;
 using TaleWorlds.CampaignSystem.Settlements.Locations;
@@ -29,7 +31,9 @@ namespace TAOM.Tests.Features.StagedSiege;
 /// behavior reference (a member that stops resolving fails when its method is first compiled, before any try inside it can run,
 /// and PatchShield swallows that at the patched method and skips the original: for <c>InitWithSinglePhase</c> that is no spawn
 /// phases in every battle; lessons/harmony-il.md "A patch's own try/catch cannot survive a JIT-time member-resolution failure");
-/// and the enum values the compiled code folds into literals.
+/// and the enum values the compiled code folds into literals. <c>StagedSiegeCampaignLog</c> reads the campaign side (the two events,
+/// the map event's settlement, winner and casualties, the campaign clock and the owner's clan); a member that stops resolving there
+/// fails when its handler is first compiled, which the campaign event dispatcher would turn into a campaign-wide fault.
 /// </summary>
 [TestClass]
 [TestCategory("RequiresGame")]
@@ -395,7 +399,59 @@ public class StagedSiegeBindingTests
         return count;
     }
 
+    // --- the campaign log ------------------------------------------------------------------------------------------------
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void CampaignLog_MapEventEnded_IsAnMbEventOfMapEvent()
+    {
+        var property = typeof(CampaignEvents).GetProperty("MapEventEnded", BindingFlags.Public | BindingFlags.Static);
+        Assert.IsNotNull(property, "CampaignEvents.MapEventEnded no longer resolves");
+        Assert.AreEqual(typeof(IMbEvent<MapEvent>), property!.PropertyType);
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void CampaignLog_OnSettlementOwnerChangedEvent_HasTheSixArgumentsTheHandlerTakes()
+    {
+        var property = typeof(CampaignEvents).GetProperty("OnSettlementOwnerChangedEvent", BindingFlags.Public | BindingFlags.Static);
+        Assert.IsNotNull(property, "CampaignEvents.OnSettlementOwnerChangedEvent no longer resolves");
+        Assert.AreEqual(
+            typeof(IMbEvent<Settlement, bool, Hero, Hero, Hero, ChangeOwnerOfSettlementAction.ChangeOwnerOfSettlementDetail>),
+            property!.PropertyType);
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void CampaignLog_MapEventReads_ResolveWithTheTypesTheHandlerUses()
+    {
+        AssertProperty(typeof(MapEvent), "MapEventSettlement", typeof(Settlement));
+        AssertProperty(typeof(MapEvent), "WinningSide", typeof(BattleSideEnum));
+        AssertProperty(typeof(MapEvent), "AttackerSide", typeof(MapEventSide));
+        AssertProperty(typeof(MapEvent), "DefenderSide", typeof(MapEventSide));
+
+        var casualties = typeof(MapEventSide).GetField("TroopCasualties", BindingFlags.Public | BindingFlags.Instance);
+        Assert.IsNotNull(casualties, "MapEventSide.TroopCasualties no longer resolves as a public field");
+        Assert.AreEqual(typeof(int), casualties!.FieldType);
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void CampaignLog_ClockAndOwnerClan_Resolve()
+    {
+        AssertProperty(typeof(CampaignTime), "Now", typeof(CampaignTime), BindingFlags.Public | BindingFlags.Static);
+        AssertProperty(typeof(CampaignTime), "ToMilliseconds", typeof(double));
+        AssertProperty(typeof(Hero), "Clan", typeof(Clan));
+    }
+
     // --- helpers ---------------------------------------------------------------------------------------------------------
+
+    private static void AssertProperty(Type owner, string name, Type type, BindingFlags flags = BindingFlags.Public | BindingFlags.Instance)
+    {
+        var property = owner.GetProperty(name, flags);
+        Assert.IsNotNull(property, $"{owner.Name}.{name} no longer resolves");
+        Assert.AreEqual(type, property!.PropertyType, $"{owner.Name}.{name} changed type");
+    }
 
     private static void AssertBindsByName(Type patchType, string methodName, MethodBase target)
     {

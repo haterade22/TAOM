@@ -64,6 +64,8 @@ public sealed class StagedSiegeMissionAdapter : IStagedSiegeMissionAdapter
     public bool IsCustomBattleSiege =>
         Campaign.Current == null && _mission.IsSiegeBattle && _mission.GetMissionBehavior<CustomSiegeMissionSpawnHandler>() != null;
 
+    public string EncounterSettlementId => Campaign.Current == null ? string.Empty : PlayerEncounter.EncounterSettlement?.StringId ?? string.Empty;
+
     public string SiegeStateName
     {
         get

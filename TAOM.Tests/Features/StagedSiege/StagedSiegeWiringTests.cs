@@ -73,6 +73,14 @@ public class StagedSiegeWiringTests
     }
 
     [TestMethod]
+    public void TheEarlyStartCatch_SaysTheRulesAreOffForTheMission()
+    {
+        // That catch drops the service and the hall, so no report follows: its log line is the only evidence.
+        StringAssert.Contains(RepoPaths.ReadSource("Main/Features/StagedSiege/Hooks/StagedSiegeMissionBehavior.cs", stripComments: true),
+            "_edge.Fault(\"EarlyStart\", ex, effect: StagedSiegeMissionEdge.RulesOffForMission)");
+    }
+
+    [TestMethod]
     public void TheMissionBehavior_StaysUnder150Lines()
     {
         var lines = File.ReadAllLines(RepoPaths.RepoPath("Main", "Features", "StagedSiege", "Hooks", "StagedSiegeMissionBehavior.cs")).Length;

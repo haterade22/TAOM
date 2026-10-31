@@ -34,6 +34,9 @@ public interface IStagedSiegeMissionAdapter
     /// <summary>The campaign siege state's name, for the log line that explains an inert battle.</summary>
     string SiegeStateName { get; }
 
+    /// <summary>The encounter settlement's id, for the campaign log; empty when there is none or no campaign.</summary>
+    string EncounterSettlementId { get; }
+
     /// <summary>The player's side; null when the spawn logic or its side is missing.</summary>
     StagedSide? PlayerSide { get; }
 

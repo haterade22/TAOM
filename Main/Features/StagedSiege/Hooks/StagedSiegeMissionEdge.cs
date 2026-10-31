@@ -25,8 +25,26 @@ internal sealed class StagedSiegeMissionEdge
     // The console's own adapter: built the first time a command arrives, so a battle nobody types into never makes one.
     private IStagedSiegeMissionAdapter? _commandAdapter;
 
-    public void Fault(string site, Exception ex) =>
-        _logger.LogError($"{StagedSiegeService.Tag} fault in {site}: {ex}; staged rules off, vanilla continues");
+    /// <summary>
+    /// A catch at the mission boundary. The line names its effect: after most catches the service stays live and only this call is
+    /// skipped; the <c>EarlyStart</c> catch drops the service and hall, so it passes <see cref="RulesOffForMission"/>. The service and hall
+    /// the caller holds are told, so the run report's <c>faults</c> check sees a fault that never reached them.
+    /// </summary>
+    internal const string RulesOffForMission = "staged rules off for this mission";
+
+    public void Fault(string site, Exception ex, StagedSiegeService? service = null, StagedHallService? hall = null, string effect = "this call skipped")
+    {
+        _logger.LogError($"{StagedSiegeService.Tag} boundary fault in {site}: {ex}; {effect}, vanilla continues");
+        try
+        {
+            service?.NoteBoundaryFault(site, ex);
+            hall?.NoteBoundaryFault(site, ex);
+        }
+        catch (Exception)
+        {
+            // The report is a diagnostic: never let it throw out of a catch.
+        }
+    }
 
     /// <summary>The start of <c>OnMissionTick</c>: applies the console's queued requests, if any, on the main thread.</summary>
     public void DrainCommands(StagedSiegeCommandQueue queue, StagedSiegeService? service, Mission mission)
@@ -40,7 +58,7 @@ internal sealed class StagedSiegeMissionEdge
         }
         catch (Exception ex)
         {
-            Fault("DrainCommands", ex);
+            Fault("DrainCommands", ex, service);
         }
     }
 
@@ -70,7 +88,7 @@ internal sealed class StagedSiegeMissionEdge
         }
         catch (Exception ex)
         {
-            Fault("MissionEnded", ex);
+            Fault("MissionEnded", ex, service);
             return false;
         }
     }
@@ -81,16 +99,20 @@ internal sealed class StagedSiegeMissionEdge
         {
             if (missionResult == null)
                 return;
+            // The services take plain values (ADR-007). A faulted service takes them too: its report matters most then.
+            var state = missionResult.BattleState.ToString();
+            var victory = missionResult.PlayerVictory;
+            var defeated = missionResult.PlayerDefeated;
             if (service?.IsArmed == true)
-                _logger.LogInfo($"{StagedSiegeService.Tag} S5 result ready: state {missionResult.BattleState} "
-                    + $"victory {missionResult.PlayerVictory} defeated {missionResult.PlayerDefeated}");
+                _logger.LogInfo($"{StagedSiegeService.Tag} S5 result ready: state {state} victory {victory} defeated {defeated}");
+            service?.NoteMissionResult(state, victory, defeated);
             if (hall?.IsArmed == true)
-                _logger.LogInfo($"{StagedSiegeService.Tag} hall result ready: state {missionResult.BattleState} "
-                    + $"victory {missionResult.PlayerVictory} defeated {missionResult.PlayerDefeated}");
+                _logger.LogInfo($"{StagedSiegeService.Tag} hall result ready: state {state} victory {victory} defeated {defeated}");
+            hall?.NoteMissionResult(state, victory, defeated);
         }
         catch (Exception ex)
         {
-            Fault("OnMissionResultReady", ex);
+            Fault("OnMissionResultReady", ex, service, hall);
         }
     }
 
@@ -110,7 +132,7 @@ internal sealed class StagedSiegeMissionEdge
         }
         catch (Exception ex)
         {
-            Fault("OnAgentBuild", ex);
+            Fault("OnAgentBuild", ex, service);
         }
     }
 
@@ -150,7 +172,7 @@ internal sealed class StagedSiegeMissionEdge
         }
         catch (Exception ex)
         {
-            Fault("MissionEnded (hall)", ex);
+            Fault("MissionEnded (hall)", ex, null, hall);
             return false;
         }
     }
@@ -164,7 +186,7 @@ internal sealed class StagedSiegeMissionEdge
         }
         catch (Exception ex)
         {
-            Fault("Shutdown", ex);
+            Fault("Shutdown", ex, service, hall);
         }
     }
 

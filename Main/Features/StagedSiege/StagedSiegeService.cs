@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Text;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
@@ -44,6 +45,9 @@ public sealed class StagedSiegeService
     private bool _setUp;
     private bool _shutdown;
     private bool _victoryAnnounced;
+    private StagedSiegeRunReport? _report;
+    private bool _customBattle;
+    private bool _reportWritten;
     private string _verdict = "not evaluated";
 
     private float _progress;
@@ -119,6 +123,9 @@ public sealed class StagedSiegeService
             _machine = new StageMachine(playerSide!.Value, playerSide.Value == StagedSide.Attacker && _mission.IsCampaignWallsAssault);
             _cadence = new ReinforcementCadence(_t);
             _armed = true;
+            _customBattle = _mission.IsCustomBattleSiege;
+            _report = new StagedSiegeRunReport(_t.MinAttackers, _t.RefillBurstSeconds);
+            _report.NoteArmed(scene.Scene, playerSide.Value, _customBattle, _mission.Time);
             // A record from an older walls fight must not be reported by the inert log of a later battle.
             StagedSiegeSlot.ClearLastEnded();
             StagedSiegeSlot.Arm(this);
@@ -156,13 +163,21 @@ public sealed class StagedSiegeService
             return;
         try
         {
-            Info($"S4 tactic installed on {_mission.InstallTactics()} team(s)");
+            var teams = _mission.InstallTactics();
+            _report?.NoteTacticsInstalled(teams);
+            Info($"S4 tactic installed on {teams} team(s)");
         }
         catch (Exception ex)
         {
             Fault("InstallTactics", ex);
         }
     }
+
+    /// <summary>
+    /// The mission edge caught an exception around a call into this service. It goes into the run report only: the service stays
+    /// live (the call that threw was skipped, nothing else is wrong), so this neither faults nor disarms it.
+    /// </summary>
+    public void NoteBoundaryFault(string site, Exception ex) => _report?.NoteBoundaryFault(site, ex.GetType().Name);
 
     public void NoteSpawnSettingsSwapped(string fromMethod)
     {
@@ -234,6 +249,7 @@ public sealed class StagedSiegeService
             if (!_softlockLogged[i])
                 Info($"S2 softlock release {side}: standing 0, remaining {counts.Remaining}");
             _softlockLogged[i] = true;
+            _report?.NoteSoftlockOpened(side, stage, now);
             return true;
         }
 
@@ -246,7 +262,11 @@ public sealed class StagedSiegeService
         if (!_budget.MayRelease(side, stage, counts.Remaining, _standing[i]))
         {
             if (!_heldLogged[i, (int)stage])
+            {
                 Info($"S2 budget held {side} stage {stage}: spent {spent} of {allowance}");
+                _report?.NoteBudgetHeld(side, stage);
+            }
+
             _heldLogged[i, (int)stage] = true;
             return false;
         }
@@ -273,10 +293,16 @@ public sealed class StagedSiegeService
             // until the pass would stack the batch on one slot.
             _standing[(int)side] = Math.Max(_standing[(int)side], 1);
             var stage = _machine.Current;
+            var frame = side == StagedSide.Attacker ? _scene.AttackerSpawn(stage) : _scene.DefenderSpawn(stage);
+            if (_report != null)
+            {
+                _report.NoteSoftlockClosed(side, _mission.Time);
+                _report.NoteReinforcement(side, stage, frame.HasValue ? at.DistanceXY(frame.Value.Position) : (float?)null);
+            }
+
             if (_builtLogged[(int)side, (int)stage] >= ReinforcementLogsPerStage)
                 return;
             _builtLogged[(int)side, (int)stage]++;
-            var frame = side == StagedSide.Attacker ? _scene.AttackerSpawn(stage) : _scene.DefenderSpawn(stage);
             var where = frame.HasValue
                 ? $"{F(at.DistanceXY(frame.Value.Position))} m from the staged frame"
                 : "no staged frame in stage A, vanilla spawn";
@@ -303,9 +329,15 @@ public sealed class StagedSiegeService
             if (_machine.End != StagedEnd.None || !_mission.IsDeploymentFinished)
                 return;
             if (_setUp)
+            {
+                var started = Stopwatch.GetTimestamp();
                 Pass(now);
+                _report?.NotePassCost((Stopwatch.GetTimestamp() - started) * 1000.0 / Stopwatch.Frequency);
+            }
             else
+            {
                 SetUp(now);
+            }
         }
         catch (Exception ex)
         {
@@ -324,9 +356,12 @@ public sealed class StagedSiegeService
         _defenderReserve = defender.Remaining;
         _budget = new ReserveBudget(attacker.Remaining, defender.Remaining, _t.ReserveShares, _machine.PlayerSide);
         SampleStanding();
-        Info($"S2 deployment over: settings live {_mission.SpawnSettingsAreStaged}; reserve attacker {attacker.Remaining} defender {defender.Remaining}; "
+        var settingsLive = _mission.SpawnSettingsAreStaged;
+        Info($"S2 deployment over: settings live {settingsLive}; reserve attacker {attacker.Remaining} defender {defender.Remaining}; "
             + $"active attacker {attacker.Active} defender {defender.Active}");
 
+        // Fed before the calls that can throw, so a fault halfway through still reports the set-up and the flags spawned.
+        _report?.NoteSetUp(now, settingsLive, attacker, defender);
         SetUpFlags();
         SetUpDetachment();
         LogDefendBehaviors(_mission.EnsureDefendBehaviors(), _machine.Current);
@@ -344,6 +379,7 @@ public sealed class StagedSiegeService
     {
         var zones = new[] { _scene.Zone(StageId.A), _scene.Zone(StageId.B), _scene.Zone(StageId.C), _scene.Zone(StageId.D) };
         var made = _mission.SpawnFlags(zones);
+        _report?.NoteFlags(made);
         for (var i = 0; i < zones.Length; i++)
             _mission.ColourFlag(zones[i].Id, StagedSide.Defender);
         var sb = new StringBuilder($"S2 flags: {made} spawned");
@@ -358,7 +394,9 @@ public sealed class StagedSiegeService
         var size = DetachmentRule.Size(infantry, _t.DetachmentShare, _t.DetachmentCap);
         if (size == 0)
         {
-            Info($"S3 detachment: none (defender infantry {infantry}, share {F(_t.DetachmentShare, "0.##")}, cap {_t.DetachmentCap})");
+            var reason = $"defender infantry {infantry}, share {F(_t.DetachmentShare, "0.##")}, cap {_t.DetachmentCap}";
+            _report?.NoteDetachmentNone(reason);
+            Info($"S3 detachment: none ({reason})");
             return;
         }
 
@@ -371,10 +409,13 @@ public sealed class StagedSiegeService
         if (reading.Units <= 0)
         {
             _detachmentActive = false;
-            Info($"S3 detachment: none ({_mission.DetachmentNote})");
+            var note = _mission.DetachmentNote;
+            _report?.NoteDetachmentNone(note);
+            Info($"S3 detachment: none ({note})");
             return;
         }
 
+        _report?.NoteDetachmentFormed(reading.Units);
         Info($"S3 detachment: {reading.Units} units {_mission.DetachmentNote}, driven {reading.Driven}");
     }
 
@@ -389,9 +430,10 @@ public sealed class StagedSiegeService
         var step = CaptureRule.Step(_progress, count.Attackers, count.Defenders, dt, _t);
         _progress = step.Progress;
         _status = step.Status;
+        _report?.NotePass(now, dt, stage, count.Attackers, count.Defenders, step.Status, step.Progress, _standing[0], _standing[1]);
         if (step.Status == CaptureStatus.Captured)
         {
-            Apply(_machine.Capture(), now);
+            Apply(_machine.Capture(), now, forced: false);
             return;
         }
 
@@ -403,27 +445,39 @@ public sealed class StagedSiegeService
     }
 
     // The effects of one or more captured points: flags, gates, cadence, detachment, snapshot, then the AI.
-    private void Apply(StageTransition transition, float now)
+    private void Apply(StageTransition transition, float now, bool forced)
     {
+        var attacker = _mission.ReadSpawnCounts(StagedSide.Attacker);
+        var defender = _mission.ReadSpawnCounts(StagedSide.Defender);
+        var troops = $"attacker active {attacker.Active} remaining {attacker.Remaining}, defender active {defender.Active} remaining {defender.Remaining}";
         var lastCaptured = transition.To.HasValue ? transition.To.Value - 1 : StageId.D;
         for (var captured = transition.From; captured <= lastCaptured; captured++)
         {
             _mission.ColourFlag(captured, StagedSide.Attacker);
-            Info($"stage {captured} captured at {F(now)} s; next {(captured == StageId.D ? "end" : (captured + 1).ToString())}");
+            Info($"stage {captured} captured at {F(now)} s; next {(captured == StageId.D ? "end" : (captured + 1).ToString())}; {troops}");
+            _report?.NoteStageCaptured(captured, now, forced);
         }
 
         if (transition.OpenGates)
-            Info($"S4 gates opened: {_mission.OpenGates()}");
+        {
+            var opened = _mission.OpenGates();
+            _report?.NoteGatesOpened(opened);
+            Info($"S4 gates opened: {opened}");
+        }
+
         _cadence.OnStageChanged(now);
         _progress = 0f;
         _status = CaptureStatus.Idle;
         Array.Clear(_builtLogged, 0, _builtLogged.Length);
         if (transition.From == StageId.A)
-            ReleaseDetachmentOnce();
+            ReleaseDetachmentOnce(now, "stage A captured");
+        if (transition.To.HasValue)
+            _report?.NoteStageStarted(transition.To.Value, now, attacker, defender);
         Publish();
 
         if (transition.End != StagedEnd.None)
         {
+            _report?.NoteStagedEnd(transition.End, now);
             Info($"S5 D captured: ending with {transition.End}");
             return;
         }
@@ -439,9 +493,10 @@ public sealed class StagedSiegeService
         _nextDrive = now + DriveSeconds;
 
         var reading = _mission.ReadDetachment();
+        _report?.NoteDetachmentReading(reading.Units);
         if (reading.Units <= 0)
         {
-            ReleaseDetachmentOnce();
+            ReleaseDetachmentOnce(now, "no units left");
             Info("S3 detachment: no units left, released");
             return;
         }
@@ -454,6 +509,7 @@ public sealed class StagedSiegeService
             var next = DetachmentRule.Decide(_order, near, far);
             if (next != _order)
             {
+                Info($"S3 detachment order {_order} -> {next} at {F(now)} s");
                 _order = next;
                 _mission.OrderDetachment(next, zone.Center, _scene.Detachment.Facing);
             }
@@ -467,11 +523,12 @@ public sealed class StagedSiegeService
         }
     }
 
-    private void ReleaseDetachmentOnce()
+    private void ReleaseDetachmentOnce(float time, string why)
     {
         if (!_detachmentActive)
             return;
         _detachmentActive = false;
+        _report?.NoteDetachmentReleased(time, why);
         try
         {
             _mission.ReleaseDetachment();
@@ -497,6 +554,10 @@ public sealed class StagedSiegeService
         {
             _nextZoneLog = now + LogSeconds;
             Info($"stage {stage} zone: attackers {count.Attackers} defenders {count.Defenders} progress {F(_progress, "F2")} {_status}");
+            var a = _mission.ReadSpawnCounts(StagedSide.Attacker);
+            var d = _mission.ReadSpawnCounts(StagedSide.Defender);
+            Info($"stage {stage} troops: attacker active {a.Active} standing {_standing[0]} remaining {a.Remaining}, "
+                + $"defender active {d.Active} standing {_standing[1]} remaining {d.Remaining}");
         }
 
         if (now >= _nextTacticsLog)
@@ -527,11 +588,38 @@ public sealed class StagedSiegeService
         try
         {
             _mission.AnnounceVictory();
+            _report?.NoteVictoryCue(true);
+            Info("S5 victory cue shown");
         }
         catch (Exception ex)
         {
+            _report?.NoteVictoryCue(false);
             _logger.LogWarning($"{Tag} victory announcement failed: {ex.GetType().Name}: {ex.Message}");
         }
+    }
+
+    /// <summary>
+    /// The mission's result as plain values, from <c>OnMissionResultReady</c>, for the run report. A faulted service still takes it.
+    /// The survivors are read now, because the result arrives while the agents still exist.
+    /// </summary>
+    public void NoteMissionResult(string state, bool victory, bool defeated)
+    {
+        if (_report == null || _shutdown)
+            return;
+        SpawnCounts? attacker = null;
+        SpawnCounts? defender = null;
+        try
+        {
+            attacker = _mission.ReadSpawnCounts(StagedSide.Attacker);
+            defender = _mission.ReadSpawnCounts(StagedSide.Defender);
+        }
+        catch (Exception)
+        {
+            attacker = null;
+            defender = null;
+        }
+
+        _report.NoteMissionResult(state, victory, defeated, attacker, defender);
     }
 
     /// <summary>Console: capture forward to a stage (null: through D). Returns the sentence to print.</summary>
@@ -546,7 +634,7 @@ public sealed class StagedSiegeService
             var transition = _machine.Force(target);
             if (!transition.Changed)
                 return $"no change: the siege is at stage {_machine.Current}.";
-            Apply(transition, _mission.Time);
+            Apply(transition, _mission.Time, forced: true);
             return transition.End == StagedEnd.None
                 ? $"Forced the siege from stage {transition.From} to stage {transition.To}."
                 : $"Forced the siege from stage {transition.From} through D: it ends with {transition.End}.";
@@ -596,7 +684,7 @@ public sealed class StagedSiegeService
         _shutdown = true;
         try
         {
-            ReleaseDetachmentOnce();
+            ReleaseDetachmentOnce(_lastPass, "shutdown");
             if (_armed && !_faulted && _machine.End != StagedEnd.None)
                 StagedSiegeSlot.SetLastEnded(_scene.Scene, _machine.End, DateTime.UtcNow);
             StagedSiegeSlot.ClearIf(_token);
@@ -605,6 +693,43 @@ public sealed class StagedSiegeService
         {
             _logger.LogWarning($"{Tag} shutdown failed: {ex.GetType().Name}: {ex.Message}");
         }
+
+        RecordCampaignSettlement();
+        WriteReport();
+    }
+
+    // For StagedSiegeCampaignLog: a Custom Battle has no campaign, so it records nothing.
+    private void RecordCampaignSettlement()
+    {
+        if (!_armed || _customBattle)
+            return;
+        try
+        {
+            StagedSiegeSlot.RecordCampaignSettlement(_mission.EncounterSettlementId);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"{Tag} settlement record failed: {ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    // Once, after a fault too: the report matters most then. The pure report cannot throw, but this must never fail a mission end.
+    private void WriteReport()
+    {
+        if (_report == null || _reportWritten)
+            return;
+        _reportWritten = true;
+        try
+        {
+            var hud = StagedSiegeSlot.HudFor(_token);
+            _report.NoteHud(hud?.Pairs, hud?.Markers);
+            foreach (var line in _report.Build())
+                Info(line);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"{Tag} run report failed: {ex.GetType().Name}: {ex.Message}");
+        }
     }
 
     private void Fault(string site, Exception ex)
@@ -612,6 +737,7 @@ public sealed class StagedSiegeService
         if (_faulted)
             return;
         _faulted = true;
+        _report?.NoteFault(site, ex.GetType().Name);
         try
         {
             _logger.LogError($"{Tag} fault in {site}: {ex}; staged rules off, vanilla continues");
@@ -621,7 +747,7 @@ public sealed class StagedSiegeService
             // Nothing left to report to.
         }
 
-        ReleaseDetachmentOnce();
+        ReleaseDetachmentOnce(_lastPass, "fault");
         StagedSiegeSlot.ClearIf(_token);
     }
 }
