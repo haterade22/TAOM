@@ -95,5 +95,6 @@ internal static class FeatureModules
         new Features.WardensTally.WardensTallyModule(),
         new Features.StagedSiege.StagedSiegeModule(),
         new Features.ShadowfaxScreens.ShadowfaxScreensModule(),
+        new Features.FordsOfWar.FordsOfWarModule(),
     };
 }

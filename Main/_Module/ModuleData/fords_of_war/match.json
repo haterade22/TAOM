@@ -1,0 +1,58 @@
+{
+  "countdownSeconds": 10,
+  "economy": {
+    "startingGold": 600,
+    "incomePerMinute": 120,
+    "killBountyFraction": 0.35,
+    "minKillBounty": 2,
+    "towerBounty": 300,
+    "heroKillBounty": 250,
+    "captureIncomePerMinute": 60,
+    "maxGold": 99999
+  },
+  "waves": {
+    "freeWaveIntervalSeconds": 40,
+    "maxLivePerLanePerSide": 90,
+    "maxLivePerSide": 300,
+    "maxSpawnsPerTick": 6,
+    "maxQueuedPacksPerLane": 3
+  },
+  "towers": {
+    "towerHitPoints": 8000,
+    "innerTowerHitPoints": 11000,
+    "keepHitPoints": 18000,
+    "rangedDamageFactor": 0.15,
+    "heroDamageFactor": 4,
+    "siegeDamageFactor": 3,
+    "regenPerSecond": 15,
+    "regenDelaySeconds": 20,
+    "gunnersPerTower": 2,
+    "volleyIntervalSeconds": 4,
+    "volleyMissiles": 3,
+    "fireRange": 45,
+    "attackRange": 20
+  },
+  "heroes": {
+    "maxAlivePerSide": 2,
+    "respawnBaseSeconds": 60,
+    "respawnPerMinuteSeconds": 6,
+    "buybackBaseFraction": 0.5,
+    "buybackPerMinuteFraction": 0.05
+  },
+  "lanes": {
+    "orderCooldownSeconds": 20,
+    "engageRange": 25,
+    "waypointReachRadius": 6,
+    "holdDistanceBeforeTower": 60,
+    "assaultThreshold": 40
+  },
+  "capture": {
+    "radius": 12,
+    "secondsToCapture": 20
+  },
+  "aiProfiles": {
+    "easy": { "decisionIntervalSeconds": 12, "incomeMultiplier": 0.8, "mistakeChance": 0.25, "heroReserveGold": 200 },
+    "normal": { "decisionIntervalSeconds": 8, "incomeMultiplier": 1.0, "mistakeChance": 0.1, "heroReserveGold": 300 },
+    "hard": { "decisionIntervalSeconds": 5, "incomeMultiplier": 1.2, "mistakeChance": 0.0, "heroReserveGold": 400 }
+  }
+}

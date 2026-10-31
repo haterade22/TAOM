@@ -54,6 +54,9 @@ public class ConsoleCommandBindingTests
     // to the end. A raw substring check would trip on 'target', 'budget' or 'playlist'.
     private static readonly string[] BannedNameTokens = { "dump", "list", "get" };
 
+    // Commands behind TaomConsole.RunAtMainMenu (DevConsoleGuard.CheckMainMenuCheatUsage): they start a game, so they run with none.
+    private static readonly string[] MainMenuCommands = { "fords_start" };
+
     private static readonly Regex NameShape = new Regex("^[a-z][a-z0-9_]*$", RegexOptions.Compiled);
 
     private static IEnumerable<MethodInfo> GetAttributedCommands()
@@ -211,7 +214,12 @@ public class ConsoleCommandBindingTests
                 return;
             }
 
-            Assert.AreEqual(CampaignCheats.CampaignNotStarted, result,
+            // A command that starts a game runs at the main menu, where no gate that needs Game.Current can pass, so it uses the
+            // main-menu gate: with cheat mode off (the test host's flag) that answers the vanilla cheat message instead.
+            var expected = MainMenuCommands.Contains(GetAttribute(method).Name)
+                ? CampaignCheats.CheatModeDisabled
+                : CampaignCheats.CampaignNotStarted;
+            Assert.AreEqual(expected, result,
                 $"{Describe(method)} must gate on CampaignCheats.CheckCheatUsage (or the shared "
                 + "DevConsole guard) before touching any campaign state.");
         }

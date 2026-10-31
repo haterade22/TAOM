@@ -36,6 +36,10 @@ internal static class TaomConsole
     internal static string RunInMission(List<string> args, string usage, Func<List<string>, string> body) =>
         Run(args, usage, DevConsoleGuard.CheckMissionCheatUsage, body);
 
+    /// <summary>Commands that start a game, so they run at the main menu with cheat mode on and no game yet.</summary>
+    internal static string RunAtMainMenu(List<string> args, string usage, Func<List<string>, string> body) =>
+        Run(args, usage, DevConsoleGuard.CheckMainMenuCheatUsage, body);
+
     /// <summary>Commands inspecting process-level state — config, registries, the Harmony patch table.</summary>
     internal static string RunAnywhere(List<string> args, string usage, Func<List<string>, string> body) =>
         Run(args, usage, DevConsoleGuard.CheckCheatMode, body);

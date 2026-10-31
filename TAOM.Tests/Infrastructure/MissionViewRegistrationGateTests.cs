@@ -18,7 +18,11 @@ namespace TAOM.Tests.Infrastructure;
 public class MissionViewRegistrationGateTests
 {
     // Type full name, reason. A view built by a TAOM-owned [ViewMethod] mission list (the HostReview shape) would go here.
-    private static readonly Dictionary<string, string> Allowlist = new Dictionary<string, string>();
+    private static readonly Dictionary<string, string> Allowlist = new Dictionary<string, string>
+    {
+        ["TAOM.Client.Features.FordsOfWar.FordsCommanderCameraView"] = "built by the [ViewMethod] list of the TaomFordsOfWar mission (FordsOfWarMissionViews)",
+        ["TAOM.Client.Features.FordsOfWar.FordsCommandView"] = "built by the [ViewMethod] list of the TaomFordsOfWar mission (FordsOfWarMissionViews)",
+    };
 
     [ClassInitialize]
     public static void Init(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext _) =>

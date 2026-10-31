@@ -1,0 +1,106 @@
+{
+  "factions": {
+    "gondor": {
+      "name": "{=TAOM_FOW_Faction_Gondor}Gondor",
+      "culture": "gondor",
+      "units": [
+        { "id": "levy", "troop": "gondor_ano_militia", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
+        { "id": "spears", "troop": "gondor_militia_spearman", "role": "Spear", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
+        { "id": "pikes", "troop": "gondor_ca_spearman", "role": "Spear", "packSize": 6, "level": 26, "eliteWeight": 1.0 },
+        { "id": "bowmen", "troop": "gondor_ano_bowman", "role": "Ranged", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
+        { "id": "archers", "troop": "gondor_ano_archer", "role": "Ranged", "packSize": 6, "level": 26, "eliteWeight": 1.0 },
+        { "id": "riders", "troop": "gondor_ano_mt_cavalry", "role": "Cavalry", "packSize": 5, "level": 21, "eliteWeight": 1.0 },
+        { "id": "knights", "troop": "gondor_ano_mt_knight", "role": "Cavalry", "packSize": 4, "level": 31, "eliteWeight": 1.0 },
+        { "id": "fountain_guard", "troop": "gondor_mt_fountain_guard", "role": "Infantry", "packSize": 3, "level": 46, "eliteWeight": 1.0 },
+        { "id": "guardsmen", "troop": "gondor_ano_guardsman", "role": "Infantry", "packSize": 8, "level": 21, "eliteWeight": 1.0 }
+      ],
+      "heroes": [
+        { "id": "lord_1_9", "price": 1000 },
+        { "id": "lord_1_75", "price": 900 },
+        { "id": "lord_1_34", "price": 800 }
+      ],
+      "freeWaves": [
+        { "fromMinute": 0, "units": [ { "troop": "gondor_ano_militia", "count": 5 }, { "troop": "gondor_militia_spearman", "count": 3 }, { "troop": "gondor_ano_archer_militia", "count": 2 } ] },
+        { "fromMinute": 10, "units": [ { "troop": "gondor_ano_footman", "count": 5 }, { "troop": "gondor_militia_veteran_spearman", "count": 3 }, { "troop": "gondor_ano_skirmisher", "count": 2 } ] },
+        { "fromMinute": 20, "units": [ { "troop": "gondor_ano_guardsman", "count": 5 }, { "troop": "gondor_militia_veteran_spearman", "count": 3 }, { "troop": "gondor_ano_bowman", "count": 3 } ] }
+      ]
+    },
+    "rohan": {
+      "name": "{=TAOM_FOW_Faction_Rohan}Rohan",
+      "culture": "vlandia",
+      "units": [
+        { "id": "militia", "troop": "rohan_westfold_militiaman", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
+        { "id": "axemen", "troop": "rohan_westfold_axeman", "role": "Infantry", "packSize": 8, "level": 16, "eliteWeight": 1.0 },
+        { "id": "spears", "troop": "rohan_westmarches_spearman", "role": "Spear", "packSize": 10, "level": 16, "eliteWeight": 1.0 },
+        { "id": "bowmen", "troop": "rohan_eastfold_bowman", "role": "Ranged", "packSize": 8, "level": 16, "eliteWeight": 1.0 },
+        { "id": "riders", "troop": "rohan_westemnet_veteran_rider", "role": "Cavalry", "packSize": 6, "level": 16, "eliteWeight": 1.0 },
+        { "id": "lancers", "troop": "rohan_eastemnet_eorlingas_lancer", "role": "Cavalry", "packSize": 4, "level": 26, "eliteWeight": 1.0 },
+        { "id": "horse_archers", "troop": "rohan_wold_horse_archer", "role": "HorseArcher", "packSize": 5, "level": 16, "eliteWeight": 1.0 },
+        { "id": "royal_riders", "troop": "rohan_edoras_golden_hall_supreme_rider", "role": "Cavalry", "packSize": 3, "level": 41, "eliteWeight": 1.0 },
+        { "id": "veteran_spears", "troop": "rohan_westmarches_veteran_spearman", "role": "Spear", "packSize": 6, "level": 21, "eliteWeight": 1.0 }
+      ],
+      "heroes": [
+        { "id": "lord_4_1", "price": 1000 },
+        { "id": "lord_4_3_1", "price": 900 },
+        { "id": "lord_4_16", "price": 800 }
+      ],
+      "freeWaves": [
+        { "fromMinute": 0, "units": [ { "troop": "rohan_westfold_militiaman", "count": 5 }, { "troop": "rohan_westmarches_guardsman", "count": 3 }, { "troop": "rohan_eastfold_skirmisher", "count": 2 } ] },
+        { "fromMinute": 10, "units": [ { "troop": "rohan_westfold_axeman", "count": 5 }, { "troop": "rohan_westmarches_spearman", "count": 3 }, { "troop": "rohan_eastfold_bowman", "count": 2 } ] },
+        { "fromMinute": 20, "units": [ { "troop": "rohan_westfold_veteran_axeman", "count": 5 }, { "troop": "rohan_westmarches_veteran_spearman", "count": 3 }, { "troop": "rohan_eastfold_veteran_bowman", "count": 3 } ] }
+      ]
+    },
+    "mordor": {
+      "name": "{=TAOM_FOW_Faction_Mordor}Mordor",
+      "culture": "mordor",
+      "units": [
+        { "id": "orc_fighters", "troop": "mordor_orc_fighter", "role": "Infantry", "packSize": 14, "level": 11, "eliteWeight": 1.0 },
+        { "id": "militia_spears", "troop": "mordor_militia_spearman", "role": "Spear", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
+        { "id": "morannon_spears", "troop": "morannon_spearman", "role": "Spear", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
+        { "id": "orc_hunters", "troop": "mordor_orc_hunter", "role": "Ranged", "packSize": 10, "level": 11, "eliteWeight": 1.0 },
+        { "id": "uruk_archers", "troop": "mordor_uruk_archer", "role": "Ranged", "packSize": 6, "level": 26, "eliteWeight": 1.0 },
+        { "id": "warg_raiders", "troop": "mordor_warg_raider", "role": "Cavalry", "packSize": 6, "level": 11, "eliteWeight": 1.0 },
+        { "id": "baraddur_guard", "troop": "mordor_uruk_baraddurguard", "role": "Infantry", "packSize": 3, "level": 36, "eliteWeight": 2.0 },
+        { "id": "hill_troll", "troop": "hill_troll", "role": "Siege", "packSize": 1, "level": 51, "eliteWeight": 4.0 },
+        { "id": "morannon_warriors", "troop": "morannon_warrior", "role": "Infantry", "packSize": 10, "level": 16, "eliteWeight": 1.0 },
+        { "id": "warg_ravagers", "troop": "mordor_warg_ravager", "role": "Cavalry", "packSize": 4, "level": 21, "eliteWeight": 1.0 }
+      ],
+      "heroes": [
+        { "id": "lord_1_17", "price": 2400 },
+        { "id": "lord_1_15", "price": 1600 },
+        { "id": "lord_1_48_1", "price": 1000 }
+      ],
+      "freeWaves": [
+        { "fromMinute": 0, "units": [ { "troop": "mordor_orc_fighter", "count": 6 }, { "troop": "mordor_militia_spearman", "count": 3 }, { "troop": "mordor_orc_hunter", "count": 2 } ] },
+        { "fromMinute": 10, "units": [ { "troop": "morannon_warrior", "count": 6 }, { "troop": "morannon_spearman", "count": 3 }, { "troop": "morannon_scout", "count": 2 } ] },
+        { "fromMinute": 20, "units": [ { "troop": "morannon_infantry", "count": 6 }, { "troop": "morannon_spearman", "count": 3 }, { "troop": "morannon_archer", "count": 3 } ] }
+      ]
+    },
+    "isengard": {
+      "name": "{=TAOM_FOW_Faction_Isengard}Isengard",
+      "culture": "isengard",
+      "units": [
+        { "id": "fighters", "troop": "urukhai_fighter", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
+        { "id": "militia_spears", "troop": "isengard_militia_spearman", "role": "Spear", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
+        { "id": "spearmen", "troop": "urukhai_spearman", "role": "Spear", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
+        { "id": "skirmishers", "troop": "urukhai_skirmisher", "role": "Ranged", "packSize": 8, "level": 16, "eliteWeight": 1.0 },
+        { "id": "archers", "troop": "urukhai_archer", "role": "Ranged", "packSize": 6, "level": 26, "eliteWeight": 1.0 },
+        { "id": "warg_scouts", "troop": "orc_warg_scout", "role": "Cavalry", "packSize": 6, "level": 11, "eliteWeight": 2.0 },
+        { "id": "nazg_hai", "troop": "urukhai_nazg_hai", "role": "Infantry", "packSize": 3, "level": 36, "eliteWeight": 2.0 },
+        { "id": "hill_troll", "troop": "hill_troll", "role": "Siege", "packSize": 1, "level": 51, "eliteWeight": 4.0 },
+        { "id": "warriors", "troop": "urukhai_warrior", "role": "Infantry", "packSize": 10, "level": 16, "eliteWeight": 1.0 },
+        { "id": "warg_enforcers", "troop": "orc_warg_enforcer", "role": "Cavalry", "packSize": 4, "level": 21, "eliteWeight": 2.0 }
+      ],
+      "heroes": [
+        { "id": "lord_I1_0", "price": 2000 },
+        { "id": "lord_I4_1", "price": 1000 },
+        { "id": "lord_I1_1", "price": 900 }
+      ],
+      "freeWaves": [
+        { "fromMinute": 0, "units": [ { "troop": "urukhai_fighter", "count": 5 }, { "troop": "isengard_militia_spearman", "count": 3 }, { "troop": "isengard_militia_archer", "count": 2 } ] },
+        { "fromMinute": 10, "units": [ { "troop": "urukhai_warrior", "count": 5 }, { "troop": "urukhai_spearman", "count": 3 }, { "troop": "urukhai_skirmisher", "count": 2 } ] },
+        { "fromMinute": 20, "units": [ { "troop": "urukhai_feller", "count": 5 }, { "troop": "urukhai_spearman", "count": 3 }, { "troop": "urukhai_tracker", "count": 3 } ] }
+      ]
+    }
+  }
+}

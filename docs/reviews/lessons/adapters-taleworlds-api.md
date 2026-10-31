@@ -1624,3 +1624,22 @@ itself (Mission.cs:4850). Staged Siege hit this twice: the lord's hall win (Phas
   Say in the feature doc how the player leaves while defenders still stand.
 - **Source:** [rca-staged-siege-phase3a-2026-10-29.md](../rca-staged-siege-phase3a-2026-10-29.md) finding 1;
   [rca-staged-siege-phase2-2026-10-29.md](../rca-staged-siege-phase2-2026-10-29.md) finding 5.
+
+### An engine method's EFFECT is a decompile question too: quote the line that produces the effect you rely on (Fords of War, 2026-10-31)
+Four engine calls in one feature did less than their names say. `Mission.AddCustomMissile` passes a damage bonus of
+`0f` (Mission.cs:4961), so a missile carries only its own item's damage: a tower firing `bodkin_arrows_a` hit for about
+3. `WorldPosition.IsValid` tests the 2D position and the scene pointer, not the navmesh (WorldPosition.cs:41-51), so an
+"off the navmesh" guard never fired. `MissionEquipment.SetAmountOfSlot` sets the managed count only; the engine's ammo
+change is `Agent.SetWeaponAmountInSlot` (Agent.cs:2292). `DeferredCallbackQueue.RunOrDefer` runs at once on the main
+thread, so a "parked" tower fall ran inside the native hit callback. Every call passed its binding test, and two
+architect checks verified the same members.
+- **Why missed:** a binding test pins that a member exists, and the checks were asked to verify signatures. This is the
+  EFFECT form of the COST lesson above, so the pattern is now a repeat.
+- **Prevent:** for every engine call an adapter relies on for an effect (damage, validity, ammo, thread, ordering),
+  the spec or the adapter's comment quotes the engine line that produces that effect; a reviewer who cannot find
+  that line marks the effect UNVERIFIED, not verified. A sentence about engine behaviour in a doc or comment gets the
+  same treatment (the spec also claimed the engine closes a finished mission after 30 s, which the Staged Siege lesson
+  above already disproved), and so does a mechanism relayed from a reviewer's report into a fix brief: the dread-aura
+  doc named the wrong behaviour as the one that turns panic into a rout because the brief copied a lens's claim
+  unopened.
+- **Source:** [rca-fords-of-war-2026-10-31.md](../rca-fords-of-war-2026-10-31.md) findings D2, D6, D7, D17, P3, R7.

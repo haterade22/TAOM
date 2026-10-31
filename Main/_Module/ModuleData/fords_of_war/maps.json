@@ -1,0 +1,25 @@
+{
+  "defaults": {
+    "options": { "laneCount": 3, "laneSpread": 45, "waypointStep": 12, "towerFractions": [0.36, 0.2], "keepInset": 0.04 },
+    "towerPrefab": { "prefab": "siege_barricade_a", "scale": 1.0 },
+    "keepPrefab": { "prefab": "siege_barricade_a", "scale": 1.6 },
+    "camp": { "troopId": "hill_troll", "count": 2, "reward": 250 }
+  },
+  "scenes": [
+    {
+      "scene": "taom_rohan_battle_001_forceatmo",
+      "name": "{=aom_taom_rohan_battle_001_forceatmo_name}[Rohan] Rohan Plains",
+      "layout": "generated"
+    },
+    {
+      "scene": "taom_gondor_pelennor_fields_forceatmo",
+      "name": "{=aom_taom_gondor_pelennor_fields_forceatmo_name}[Gondor] Pelennor Fields",
+      "layout": "generated"
+    },
+    {
+      "scene": "taom_mordor_battle_001_forceatmo",
+      "name": "{=aom_taom_mordor_battle_001_forceatmo_name}[Mordor] Mordor Plains I",
+      "layout": "generated"
+    }
+  ]
+}

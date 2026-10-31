@@ -1354,3 +1354,17 @@ and -1.01 restored it in full.
 - **Prevent:** state each edge case (zero, negative, past a limit, NaN) once in the summary, and give it one
   test named for that sentence. A monotonic clamp is the default for a scale; a cliff needs a written reason.
 - **Source:** `docs/reviews/rca-career-e11-2026-10-15.md` finding 1.
+
+### Expose the domain's verdict to every consumer; never re-derive it from a subset of its inputs (Fords of War, 2026-10-31)
+The Fords of War domain held the full answer each time, and a layer outside it computed a partial copy. The tower-hit
+hook rebuilt a blow from the attacker's role and dropped the side the director already held, so a tower took damage
+from its own garrison. The command panel enabled a hero button from gold alone, while the match also needs a free slot
+and a running respawn timer. Row view models kept the hero id they were created with while the offer list could
+shrink, so a row showed one hero and bought another.
+- **Why missed:** each consumer was written in a different stage from a short description of the rule, and each
+  test checked the consumer against its own copy of the rule.
+- **Prevent:** when a consumer must decide what the domain decides (can this be bought, does this blow count), the
+  domain exposes that verdict (`MatchView.HeroView.CanBuyback`, one `CheckBuyback` shared with `TryBuyback`), and the
+  consumer reads it. A hook passes every identity attribute the rule could need (side as well as role). A list-row
+  view model rebinds its identity on every refresh.
+- **Source:** [rca-fords-of-war-2026-10-31.md](../rca-fords-of-war-2026-10-31.md) findings D1, D10, D15.

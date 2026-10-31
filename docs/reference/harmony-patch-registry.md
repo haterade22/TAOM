@@ -1699,6 +1699,18 @@ Party Fast Open (#853, [shadowfax-screens.md](../features/shadowfax-screens.md) 
 **Tests:** `PartyScreenFastPathServiceTests`, `PartyFastOpenPatchShapeTests` (real Harmony around stand-ins, every prefix/finalizer pair), `PartyFastOpenBindingTests` (IL premises tagged RequiresGameIL), `ShadowfaxScreensModuleTests` (the wiring). **Not yet measured or smoked in game.**
 
 
+## Patch131_FordsOfWar
+
+**Target:** one class, `FordsTowerHitPatch` in `Main/Features/FordsOfWar/Hooks/`, category `Patch131_FordsOfWar` (the string is `FordsOfWarModule.PatchCategory`, and the module declares it for `ApplyPhase.FirstMission`). A void prefix on `DestructableComponent.OnHit(Agent attackerAgent, int inflictedDamage, Vec3 impactPosition, Vec3 impactDirection, in MissionWeapon weapon, int affectorWeaponSlotOrMissileIndex, ScriptComponentBehavior attackerScriptComponentBehavior, out bool reportDamage, out float modifiedDamage, out float fireDamage, out float modifiedFireDamage)`, a `protected internal override` (v1.5.6 installed DLL), taking `object __instance`, `Agent attackerAgent`, `ref int inflictedDamage` and `ref MissionWeapon weapon`.
+
+**Why:** a Fords of War tower is a destructible entity whose damage is a rule, not a hit: a tower takes nothing while another tower stands in front of it in its lane, ranged blows count 0.15, hero blows 4, siege troops 3. The prefix hands the blow to `IFordsTowerHitHook` (the mission director) and writes back the damage the match allows. A component that is not a registered Fords tower comes back unchanged, so every other destructible in the game is untouched, and with no match running the prefix is one volatile read. A ranged blow is a missile (the weapon is the arrow or bolt) or any weapon whose current usage is ranged, ammo or consumable.
+
+**Callers and thread:** `Mission.OnEntityHit` (Mission.cs:2247) calls `OnHit` on every script of the hit entity, reached from `Mission.MeleeHitCallback` and `Mission.MissileHitCallback`, both `[MBCallback(null, false)]` natives. Native chooses their thread and no log has shown which, so the patch is written as if it may run off the main thread: it registers no blow, spawns nothing and touches no main-thread collection. The hook takes the director's gate (never held across an engine call) and the adapters' own locks. The tower's `OnDestroyed` event fires inside the same `OnHit`, and the director's handler only enqueues the work on its `DeferredCallbackQueue` (`Enqueue`, not `RunOrDefer`, which would run it at once on the main thread, inside the hit). The next mission tick's `Drain` then marks the tower fallen, tells the match (`OnTowerDestroyed`) and fades the gunners (`KillGunners`).
+
+**Never throws:** the body sits in a try and a fault logs once and leaves the vanilla damage. The engine member reads sit in a `NoInlining` helper called inside the try.
+
+**Tests:** `FordsOfWarBindingTests` pins the target (the only declared overload, the eleven parameter names, `in MissionWeapon`, the `out` parameters), that the prefix binds by name with the damage by reference, and the category; `FordsTowerHitPatchTests` runs the prefix body. `FordsOfWarModuleTests` pins the category, its phase and that the patch names the module's constant. **ACTIVE: the module applies the category at the first mission; not yet checked in game.** The in-game check is that melee units ordered to attack a tower reduce its hit points, and that a locked tower takes none.
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

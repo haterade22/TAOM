@@ -22,7 +22,7 @@ their weapon is fear rather than a sword.
 ```
 SubModule.OnMissionBehaviorInitialize
    └── DreadAuraMissionLogic : MissionLogic      ← gate, schedule, stand down on failure
-          ├── DreadMissionGate                    ← campaign field battle / siege / sally-out only
+          ├── DreadMissionGate                    ← campaign field battle / siege / sally-out, or a Fords of War match
           ├── DreadSourceTracker                  ← who on the field projects dread
           ├── DreadPulseScheduler                 ← round-robin; which sources pulse this frame
           └── DreadPulseRunner                    ← one pulse: query, then drain each target
@@ -197,7 +197,16 @@ never touches the player or a hero, and it does not override the morale model, w
 
 `DreadMissionGate.IsEligible` is an **allowlist**, re-read every tick:
 
-- `Campaign.Current != null` excludes custom battle, main menu, multiplayer maps
+- `Campaign.Current != null` excludes custom battle, main menu, multiplayer maps. The one exception is a
+  Fords of War match ([fords-of-war build spec](fords-of-war/build-spec.md)): `FordsOfWarMission.IsActive` is
+  checked first, so that mission is admitted with no campaign (only an active network session still refuses it).
+  Outside a campaign the hero axis reads the character's own id (`DreadSourceTracker.HeroAxisId`), because a
+  Custom Battle character has no hero object and Fords heroes are NPCCharacter rows keyed by the hero id.
+  In a Fords match nothing turns a panic into a rout: the launcher leaves out `MissionAgentPanicHandler`, the
+  behavior whose `OnPreMissionTick` calls `Retreat` on a panicked agent (`FordsMissionLauncherTests` pins its
+  absence, and the engine's default behaviors do not add it). At the shipped `moraleFloor` of 10 the drain never
+  reaches the engine's 0.01 panic threshold anyway. The aura there works through the fear voice and the
+  race-ability frights. Not seen in game.
 - `!GameNetwork.IsSessionActive` excludes multiplayer
 - `CombatType == Combat` excludes arenas and tournaments (`ArenaCombat`) and conversations and
   town walkarounds (`NoCombat`)
