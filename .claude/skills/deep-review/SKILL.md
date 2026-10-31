@@ -121,6 +121,7 @@ After the core agents complete, assess whether the findings warrant additional f
 - Multiple GameModel overrides changed → launch one agent to verify all overrides are registered and don't conflict
 - Any agent reports >3 issues → launch a focused agent on just those files to determine root cause
 - Feature spans >3 features/ subdirectories → launch per-feature agents with full context of that feature
+- The change adds a mission type or a new agent spawn path → launch one agent (Lens 2 method) on every TAOM behavior and `[DefaultView]` that attaches to all missions, judged in the new context (no main agent, no team AI, late spawns, no campaign); per-file lenses cannot see this (Fords of War: a pre-existing warg formation bug became the normal path, `rca-fords-of-war-2026-10-31.md` D4)
 
 (Script tooling is no longer an expansion: the Tooling correctness lens in Step 2 covers every script under `tools/` or `.claude/hooks/`, read-only ones included.)
 

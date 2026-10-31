@@ -4752,3 +4752,14 @@ class-filtered type refused, and upkeep counted by a field the runtime calls doc
   answer is C# or data, parse that source at run time and fail with exit 2 when it cannot be found. Keep only
   design choices (units, budgets, caps, bans) in the rules file.
 - **Source:** `docs/reviews/rca-career-forks-generator-2026-10-15.md` pattern 1.
+
+### `dotnet test` is not the full suite: run the whole `/verify` before a review closes (Fords of War, 2026-10-31)
+Fords of War closed a tier 1 review on "suite 30216/0" from `dotnet test` alone. `/verify` before the commit
+then ran the Python tool tests, and `ShippedModuleStringsPinTests` refused all 81 text keys: they were
+`FOW_*`, and TAOM keys start with `taom_`, `TAOM_` or `aom_`. The rename touched 32 files after the review.
+- **Why missed:** the build and review cadence named `dotnet test` as the full suite. The Python tool tests
+  (`tools/tests`, about four minutes) hold the gates for strings, generators and docs, and only `/verify`
+  Step 2b runs them.
+- **Prevent:** before a review closes, and before any "ready to commit" claim, run the whole `/verify`, Step 2b
+  included. A new string key takes the `TAOM_<FEATURE>_` prefix.
+- **Source:** `docs/reviews/rca-fords-of-war-2026-10-31.md` row V1.

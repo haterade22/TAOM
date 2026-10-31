@@ -37,10 +37,12 @@ public class CleanIfEnemyDied : BTTask, IBTBannerlordBase, IBTWargBlackboard, IB
         return BTTaskStatus.FinishedWithTrue;
     }
 
+    // A warg that dies without raging never stored a formation (the tree is built before its rider), so a null here means
+    // "nothing to restore": the rider keeps the formation he still has.
     public static void ResetAiControlledAgent(Agent rider, Formation formation)
     {
         if (rider == null || rider.State != TaleWorlds.Core.AgentState.Active) return;
-        rider.Formation = formation;
+        if (formation != null) rider.Formation = formation;
         rider.DisableScriptedMovement();
     }
 }

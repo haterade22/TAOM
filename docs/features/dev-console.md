@@ -119,12 +119,16 @@ reached through [`TaomConsole`](../../Main/Features/DevConsole/TaomConsole.cs):
 | `TaomConsole.RunInCampaign` | campaign + cheat mode (vanilla's gate) | settlements, clans, heroes, the map |
 | `TaomConsole.RunInMission` | cheat mode + an open mission, **no campaign** | agents, spawning, scenes — works in custom battles |
 | `TaomConsole.RunAnywhere` | cheat mode only | config, registries, the Harmony patch table |
+| `TaomConsole.RunAtMainMenu` | cheat mode (`NativeConfig.CheatMode`) and **no game yet** | a command that starts a game (`taom.fords_start`) |
 
-All three answer `"Campaign was not started."` at the main menu, which is what lets the binding test
-assert a single value.
+The first three answer `"Campaign was not started."` at the main menu, which is what lets the binding test
+assert a single value. `RunAtMainMenu` is the exception: it answers `"Cheat mode is disabled!"` in the test host
+(no game, cheat flag off), so `ConsoleCommandBindingTests` carries a short list of main-menu commands that expect
+that string instead.
 
-> **Consequence worth stating once: no console command can serve the main-menu station.** `RunAnywhere`
-> is the loosest gate there is and it still refuses before a game loads, so a diagnostic that needs a
+> **Consequence worth stating once: a diagnostic cannot be a console command at the main-menu station.** `RunAnywhere`
+> is the loosest of the first three gates and it still refuses before a game loads (`RunAtMainMenu` exists, but
+> only for a command that starts a game), so a diagnostic that needs a
 > main-menu reading cannot be a console command at all — it has to be a timer or a hook. That is why
 > `taom.print_memory` is paired with `[MemSample]` (started from
 > `OnBeforeInitialModuleScreenSetAsRoot`) rather than replacing it: the sampler covers the menu, the
@@ -341,6 +345,8 @@ A feature doc pairs these commands with the observable result that proves each s
 | `taom.staged_siege_open_gates` | B | mission | The same: queues the opening of every `CastleGate` that is neither destroyed nor disabled, for testing the courtyard stages without a ram. Queued like `staged_siege_show` |
 | `taom.staged_siege_stage <A-D\|end>` | C | mission | The same: forces an armed staged siege forward to a stage (capturing each point on the way, opening the gates past B), or `end` to capture D. Refuses a backward jump. Queued like `staged_siege_show`, so the result sentence goes to the log (`[StagedSiege] console:`) |
 | `taom.staged_siege_status` | A | mission | The same ([Staged Siege](staged-siege.md)): why the feature is inert or, when armed, the stage, capture progress, detachment, spawn counts and the tactic state; in the lord's hall mission, the hall state (settlement, area, markers, progress, captured) |
+| `taom.fords_start [westFaction] [eastFaction] [aiProfile] [scene]` | B | main menu | Clicking through the three or four [Fords of War](fords-of-war/build-spec.md) prompts. Starts a match through the path the prompts end in; every argument is optional (West the first faction, East the first other one, `normal`, the first map) and a named one must exist, the reply lists the valid ids. Refused while a game is running |
+| `taom.fords_gold <amount>` | B | mission | Earning gold the slow way during a Fords of War match. Adds 1 to 99,999 gold to the human commander (the purse stops at its cap) and echoes the balance; refused when no match is running |
 | `taom.print_hud_layout [maxNodes] [layerNameFilter]` | A | cheat mode | Widget-tree dump with real on-screen rectangles (`Logs/taom_hud_layout.log`, bounded, collapsed-tree warning). Ported from the career-UX reference module's diagnostic, whose dumps found three UI bugs code reading did not (#384). Walks `ScreenManager.SortedLayers`, so **global** layers are included: a top-screen-only walk cannot see `Tooltip` or `MapBar` at all. Those two sort last, so pass a filter (`taom.print_hud_layout Tooltip`) rather than risking truncation before reaching them. A layer with no widget tree is reported rather than skipped, distinguishing a null `UIContext` from a null `Root`: that is what an unloaded movie looks like, and it is a finding, not noise |
 | `taom.print_input_state [label]` | A | cheat mode | Reading the code, which got this exact question wrong once. Alt-hover nameplates are focus-gated keyboard input; the map bar's hover hints are hit-test-gated mouse input. They fail independently, so a report of "no tooltips anywhere" needs the live state of both gates, not a decompile. Appends focus plus a per-layer table to `Logs/taom_input_state.log`, so a dump taken while tooltips work and one taken after they die can be diffed |
 | `taom.print_agent_info [name\|*]` | A | mission | Race, monster, action set, skeleton, mount/rider, spawn equipment. Pairs with `spawn_troops` |

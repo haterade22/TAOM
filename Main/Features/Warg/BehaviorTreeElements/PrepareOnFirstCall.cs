@@ -42,7 +42,12 @@ public class PrepareOnFirstCall : BTTask, IBTBannerlordBase, IBTWargBlackboard, 
             else
             {
                 Agent rider = Agent.GetValue()?.RiderAgent;
-                if (rider != null) rider.Formation = null;
+                if (rider != null)
+                {
+                    // The tree was built before the rider, so its stored formation is null for a warg spawned after the first scan.
+                    AgentsFormation.SetValue(rider.Formation);
+                    rider.Formation = null;
+                }
             }
         }
         return BTTaskStatus.FinishedWithTrue;

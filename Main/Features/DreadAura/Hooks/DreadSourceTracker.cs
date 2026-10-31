@@ -57,7 +57,8 @@ public sealed class DreadSourceTracker
         // Hero StringId is the axis that finds the Nine (the nazgul_nine hero set; see
         // DreadAuraConfig.HeroSets). `as CharacterObject` rather than a cast, because a mission
         // agent can carry a plain BasicCharacterObject outside a campaign.
-        var heroStringId = (character as CharacterObject)?.HeroObject?.StringId;
+        var campaignCharacter = character as CharacterObject;
+        var heroStringId = HeroAxisId(campaignCharacter != null, campaignCharacter?.HeroObject?.StringId, character.StringId);
 
         if (!_registry.IsDreadSource(heroStringId, character.Race))
             return;
@@ -70,6 +71,15 @@ public sealed class DreadSourceTracker
 
         _sources.Add(new DreadSource(agent, now));
     }
+
+    /// <summary>
+    /// The id the hero axis reads. A campaign agent (a <c>CharacterObject</c>) answers with its hero's id, or null for a regular
+    /// troop. Any other character is a Custom Battle row, which has no hero object: its own StringId is the hero id, because
+    /// Fords of War spawns its heroes from the NPCCharacter rows keyed by the hero id (Sauron, the Witch-King, a Nazgul). Outside
+    /// a campaign <see cref="DreadMissionGate"/> admits only Fords missions, so this fallback cannot reach another battle type.
+    /// </summary>
+    internal static string? HeroAxisId(bool isCampaignCharacter, string? campaignHeroId, string? characterId) =>
+        isCampaignCharacter ? campaignHeroId : characterId;
 
     /// <summary>
     /// Drops sources whose agent is dead or no longer the occupant of its engine slot. The engine's

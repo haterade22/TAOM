@@ -1,6 +1,8 @@
+using System;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
+using TAOM.Features.FordsOfWar;
 
 namespace TAOM.Features.DreadAura.Hooks;
 
@@ -19,15 +21,25 @@ namespace TAOM.Features.DreadAura.Hooks;
 public static class DreadMissionGate
 {
     /// <summary>
-    /// True only for a campaign field battle, siege, or sally-out.
+    /// True only for a campaign field battle, siege, or sally-out, or a Fords of War match (which runs with no campaign).
     ///
     /// This is an ALLOWLIST, deliberately. A blocklist would silently admit every mission type
     /// added by a future engine version or another mod.
     /// </summary>
-    public static bool IsEligible(Mission mission)
+    public static bool IsEligible(Mission mission) => IsEligible(mission, FordsOfWarMission.IsActive);
+
+    /// <summary>
+    /// The gate with the Fords of War test passed in, so a unit test can stand in for the engine's mission state. A Fords of War
+    /// match (a campaign-free mission of TAOM's own, build-spec section 4) is eligible with no campaign: it is checked before the
+    /// campaign requirement, and the network-session rule still applies to it.
+    /// </summary>
+    internal static bool IsEligible(Mission mission, Func<Mission, bool> isFordsMission)
     {
         if (mission == null)
             return false;
+
+        if (isFordsMission(mission))
+            return !GameNetwork.IsSessionActive;
 
         // No campaign means custom battle, the main menu, or a multiplayer map. The mission-scope
         // pieces of this feature are registered against CampaignGameStarter, so running here would

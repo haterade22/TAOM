@@ -4386,5 +4386,87 @@
 	<string id="taom_career_class_line_infantry_ranged" text="{=taom_career_class_line_infantry_ranged}{EFFECT} for infantry and ranged troops" />
 	<string id="taom_career_class_line_infantry_cavalry" text="{=taom_career_class_line_infantry_cavalry}{EFFECT} for infantry and cavalry" />
 	<string id="taom_career_class_line_ranged_cavalry" text="{=taom_career_class_line_ranged_cavalry}{EFFECT} for ranged troops and cavalry" />
+	<!-- Fords of War -->
+	<string id="TAOM_FOW_Faction_Gondor" text="{=TAOM_FOW_Faction_Gondor}Gondor" />
+	<string id="TAOM_FOW_Faction_Rohan" text="{=TAOM_FOW_Faction_Rohan}Rohan" />
+	<string id="TAOM_FOW_Faction_Mordor" text="{=TAOM_FOW_Faction_Mordor}Mordor" />
+	<string id="TAOM_FOW_Faction_Isengard" text="{=TAOM_FOW_Faction_Isengard}Isengard" />
+	<string id="TAOM_FOW_Difficulty_Easy" text="{=TAOM_FOW_Difficulty_Easy}Easy" />
+	<string id="TAOM_FOW_Difficulty_Hard" text="{=TAOM_FOW_Difficulty_Hard}Hard" />
+	<string id="TAOM_FOW_Difficulty_Normal" text="{=TAOM_FOW_Difficulty_Normal}Normal" />
+	<string id="TAOM_FOW_MenuHint" text="{=TAOM_FOW_MenuHint}Command an army across three lanes. Spend gold on troops and heroes, break the towers and destroy the enemy keep." />
+	<string id="TAOM_FOW_MenuOption" text="{=TAOM_FOW_MenuOption}Fords of War" />
+	<string id="TAOM_FOW_NoClient" text="{=TAOM_FOW_NoClient}Fords of War needs the game client and cannot start here." />
+	<string id="TAOM_FOW_NoContent" text="{=TAOM_FOW_NoContent}Fords of War has no factions or maps to play on. Check fords_of_war/factions.json and maps.json." />
+	<string id="TAOM_FOW_Prompt_Cancel" text="{=TAOM_FOW_Prompt_Cancel}Cancel" />
+	<string id="TAOM_FOW_Prompt_Choose" text="{=TAOM_FOW_Prompt_Choose}Choose" />
+	<string id="TAOM_FOW_Prompt_Difficulty_Desc" text="{=TAOM_FOW_Prompt_Difficulty_Desc}A harder enemy commander decides faster, makes fewer mistakes and earns more gold." />
+	<string id="TAOM_FOW_Prompt_Difficulty_Title" text="{=TAOM_FOW_Prompt_Difficulty_Title}Choose the Difficulty" />
+	<string id="TAOM_FOW_Prompt_EnemyFaction_Desc" text="{=TAOM_FOW_Prompt_EnemyFaction_Desc}Pick the faction the computer commands against you." />
+	<string id="TAOM_FOW_Prompt_EnemyFaction_Title" text="{=TAOM_FOW_Prompt_EnemyFaction_Title}Choose Your Enemy" />
+	<string id="TAOM_FOW_Prompt_Map_Desc" text="{=TAOM_FOW_Prompt_Map_Desc}Pick the ground the three lanes run across." />
+	<string id="TAOM_FOW_Prompt_Map_Title" text="{=TAOM_FOW_Prompt_Map_Title}Choose the Battlefield" />
+	<string id="TAOM_FOW_Prompt_YourFaction_Desc" text="{=TAOM_FOW_Prompt_YourFaction_Desc}Pick the faction whose army you will command. You give orders and spend gold; you do not fight." />
+	<string id="TAOM_FOW_Prompt_YourFaction_Title" text="{=TAOM_FOW_Prompt_YourFaction_Title}Choose Your Side" />
+	<string id="TAOM_FOW_StartFailed" text="{=TAOM_FOW_StartFailed}Fords of War could not start. The log has the reason." />
+	<string id="TAOM_FOW_Feed_EnemyCamp" text="{=TAOM_FOW_Feed_EnemyCamp}The enemy cleared a camp." />
+	<string id="TAOM_FOW_Feed_EnemyHeroBack" text="{=TAOM_FOW_Feed_EnemyHeroBack}{HERO} returns to the enemy ranks." />
+	<string id="TAOM_FOW_Feed_EnemyHeroDied" text="{=TAOM_FOW_Feed_EnemyHeroDied}{HERO} of the enemy has fallen." />
+	<string id="TAOM_FOW_Feed_EnemyHeroFielded" text="{=TAOM_FOW_Feed_EnemyHeroFielded}The enemy fields {HERO}." />
+	<string id="TAOM_FOW_Feed_EnemyKeep" text="{=TAOM_FOW_Feed_EnemyKeep}The enemy keep has fallen!" />
+	<string id="TAOM_FOW_Feed_EnemyPoint" text="{=TAOM_FOW_Feed_EnemyPoint}The enemy holds a capture point." />
+	<string id="TAOM_FOW_Feed_EnemyTower" text="{=TAOM_FOW_Feed_EnemyTower}An enemy tower has fallen." />
+	<string id="TAOM_FOW_Feed_OwnCamp" text="{=TAOM_FOW_Feed_OwnCamp}We cleared a camp." />
+	<string id="TAOM_FOW_Feed_OwnHeroBack" text="{=TAOM_FOW_Feed_OwnHeroBack}{HERO} returns to the field." />
+	<string id="TAOM_FOW_Feed_OwnHeroDied" text="{=TAOM_FOW_Feed_OwnHeroDied}{HERO} has fallen." />
+	<string id="TAOM_FOW_Feed_OwnHeroFielded" text="{=TAOM_FOW_Feed_OwnHeroFielded}{HERO} joins the army." />
+	<string id="TAOM_FOW_Feed_OwnKeep" text="{=TAOM_FOW_Feed_OwnKeep}Our keep has fallen!" />
+	<string id="TAOM_FOW_Feed_OwnPoint" text="{=TAOM_FOW_Feed_OwnPoint}We hold a capture point." />
+	<string id="TAOM_FOW_Feed_OwnTower" text="{=TAOM_FOW_Feed_OwnTower}We lost a tower." />
+	<string id="TAOM_FOW_Feed_PackBought" text="{=TAOM_FOW_Feed_PackBought}Reinforcements sent for {PRICE} gold." />
+	<string id="TAOM_FOW_Hud_Cooldown" text="{=TAOM_FOW_Hud_Cooldown}{SECONDS} s" />
+	<string id="TAOM_FOW_Hud_Forming" text="{=TAOM_FOW_Hud_Forming}The armies are forming up" />
+	<string id="TAOM_FOW_Hud_Gold" text="{=TAOM_FOW_Hud_Gold}Gold: {GOLD}" />
+	<string id="TAOM_FOW_Hud_HeroBuyback" text="{=TAOM_FOW_Hud_HeroBuyback}Buy back for {PRICE} gold" />
+	<string id="TAOM_FOW_Hud_HeroFallen" text="{=TAOM_FOW_Hud_HeroFallen}Fallen, back in {SECONDS} s" />
+	<string id="TAOM_FOW_Hud_HeroField" text="{=TAOM_FOW_Hud_HeroField}Field for {PRICE} gold" />
+	<string id="TAOM_FOW_Hud_HeroFielded" text="{=TAOM_FOW_Hud_HeroFielded}In the field" />
+	<string id="TAOM_FOW_Hud_HeroReady" text="{=TAOM_FOW_Hud_HeroReady}Ready to field" />
+	<string id="TAOM_FOW_Hud_HeroesTitle" text="{=TAOM_FOW_Hud_HeroesTitle}Heroes" />
+	<string id="TAOM_FOW_Hud_KeepEnemy" text="{=TAOM_FOW_Hud_KeepEnemy}Enemy keep" />
+	<string id="TAOM_FOW_Hud_KeepOwn" text="{=TAOM_FOW_Hud_KeepOwn}Your keep" />
+	<string id="TAOM_FOW_Hud_KeysHint" text="{=TAOM_FOW_Hud_KeysHint}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   WASD pan   Q E turn   wheel zoom" />
+	<string id="TAOM_FOW_Hud_Lane" text="{=TAOM_FOW_Hud_Lane}Lane {LANE}" />
+	<string id="TAOM_FOW_Hud_LaneCounts" text="{=TAOM_FOW_Hud_LaneCounts}{OWN} v {ENEMY}" />
+	<string id="TAOM_FOW_Hud_OrdersTitle" text="{=TAOM_FOW_Hud_OrdersTitle}Orders for lane {LANE}" />
+	<string id="TAOM_FOW_Hud_PackSize" text="{=TAOM_FOW_Hud_PackSize}Pack of {SIZE}" />
+	<string id="TAOM_FOW_Hud_PointContested" text="{=TAOM_FOW_Hud_PointContested}Contested" />
+	<string id="TAOM_FOW_Hud_PointEnemy" text="{=TAOM_FOW_Hud_PointEnemy}Point {POINT}: enemy" />
+	<string id="TAOM_FOW_Hud_PointEnemySlipping" text="{=TAOM_FOW_Hud_PointEnemySlipping}The enemy capture is slipping back: {PERCENT}%" />
+	<string id="TAOM_FOW_Hud_PointEnemyTaking" text="{=TAOM_FOW_Hud_PointEnemyTaking}The enemy is taking it: {PERCENT}%" />
+	<string id="TAOM_FOW_Hud_PointNeutral" text="{=TAOM_FOW_Hud_PointNeutral}Point {POINT}: neutral" />
+	<string id="TAOM_FOW_Hud_PointOwn" text="{=TAOM_FOW_Hud_PointOwn}Point {POINT}: yours" />
+	<string id="TAOM_FOW_Hud_PointYouSlipping" text="{=TAOM_FOW_Hud_PointYouSlipping}Your capture is slipping back: {PERCENT}%" />
+	<string id="TAOM_FOW_Hud_PointYouTaking" text="{=TAOM_FOW_Hud_PointYouTaking}You are taking it: {PERCENT}%" />
+	<string id="TAOM_FOW_Hud_PointsTitle" text="{=TAOM_FOW_Hud_PointsTitle}Capture points" />
+	<string id="TAOM_FOW_Hud_Price" text="{=TAOM_FOW_Hud_Price}{PRICE} gold" />
+	<string id="TAOM_FOW_Hud_TowersTitle" text="{=TAOM_FOW_Hud_TowersTitle}Towers" />
+	<string id="TAOM_FOW_Hud_TroopsTitle" text="{=TAOM_FOW_Hud_TroopsTitle}Troops for lane {LANE}" />
+	<string id="TAOM_FOW_Notice_HeroFielded" text="{=TAOM_FOW_Notice_HeroFielded}That hero is already in the field." />
+	<string id="TAOM_FOW_Notice_HeroLimit" text="{=TAOM_FOW_Notice_HeroLimit}You already field as many heroes as you may." />
+	<string id="TAOM_FOW_Notice_HeroNotFallen" text="{=TAOM_FOW_Notice_HeroNotFallen}That hero has not fallen." />
+	<string id="TAOM_FOW_Notice_NoHero" text="{=TAOM_FOW_Notice_NoHero}No hero you can afford is waiting." />
+	<string id="TAOM_FOW_Notice_NotEnoughGold" text="{=TAOM_FOW_Notice_NotEnoughGold}Not enough gold." />
+	<string id="TAOM_FOW_Notice_OnCooldown" text="{=TAOM_FOW_Notice_OnCooldown}That order is still cooling down." />
+	<string id="TAOM_FOW_Notice_QueueFull" text="{=TAOM_FOW_Notice_QueueFull}That lane already has packs waiting." />
+	<string id="TAOM_FOW_Notice_Unavailable" text="{=TAOM_FOW_Notice_Unavailable}That command cannot be given now." />
+	<string id="TAOM_FOW_Order_FallBack" text="{=TAOM_FOW_Order_FallBack}Fall back" />
+	<string id="TAOM_FOW_Order_Hold" text="{=TAOM_FOW_Order_Hold}Hold" />
+	<string id="TAOM_FOW_Order_Push" text="{=TAOM_FOW_Order_Push}Push" />
+	<string id="TAOM_FOW_Result_Button" text="{=TAOM_FOW_Result_Button}Return to the main menu" />
+	<string id="TAOM_FOW_Result_Defeat" text="{=TAOM_FOW_Result_Defeat}Defeat" />
+	<string id="TAOM_FOW_Result_DefeatText" text="{=TAOM_FOW_Result_DefeatText}Your keep has fallen." />
+	<string id="TAOM_FOW_Result_Victory" text="{=TAOM_FOW_Result_Victory}Victory!" />
+	<string id="TAOM_FOW_Result_VictoryText" text="{=TAOM_FOW_Result_VictoryText}The enemy keep has fallen." />
 
 </strings>
