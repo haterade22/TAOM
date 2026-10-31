@@ -436,6 +436,8 @@ public class RacePersistenceServiceTests
 
         _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("hero_corrupt")));
+        // 1011.toml fails a load on this text, because the [Check] line itself passes (the hero is skipped).
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("is outside the save")));
     }
 
     [TestMethod]
@@ -1107,13 +1109,40 @@ public class RacePersistenceServiceTests
         _outcomes.DidNotReceiveWithAnyArgs().Fail(default, default, default);
     }
 
+    // The engine calls SyncData only when the save has a record for the behavior, so a save older than
+    // RacePersistenceBehavior gets none: nothing to restore, not a lost map.
     [TestMethod]
-    public void Restore_LoadedSaveWithoutRaceData_Fails()
+    public void Restore_LoadWithNoRecord_Skips()
     {
         _sut.RestoreHeroRaces();
 
-        _outcomes.Received(1).Fail(RestoreId, "1", "reason=no-saved-data");
+        _outcomes.Received(1).Skip(RestoreId, "1", "reason=no-record");
+        _outcomes.DidNotReceiveWithAnyArgs().Fail(default, default, default);
         _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("No saved race data found")));
+    }
+
+    [TestMethod]
+    public void Restore_RecordLoadedButMapEmpty_Fails()
+    {
+        _sut.SyncRaceData(new RoundTripDataStore { IsSaving = false });
+
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Fail(RestoreId, "1", "reason=no-saved-data");
+        _outcomes.DidNotReceiveWithAnyArgs().Skip(default, default, default);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("No saved race data found")));
+    }
+
+    [TestMethod]
+    public void Restore_ResetForNewSession_ForgetsTheLoadedRecord()
+    {
+        _sut.SyncRaceData(new RoundTripDataStore { IsSaving = false });
+        _sut.ResetForNewSession();
+
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Skip(RestoreId, "1", "reason=no-record");
+        _outcomes.DidNotReceiveWithAnyArgs().Fail(default, default, default);
     }
 
     [TestMethod]
@@ -1208,8 +1237,8 @@ public class RacePersistenceServiceTests
         _sut.ResetForNewSession();
         _sut.RestoreHeroRaces();
 
-        _outcomes.Received(1).Fail(RestoreId, "1", "reason=no-saved-data");
-        _outcomes.Received(1).Fail(RestoreId, "2", "reason=no-saved-data");
+        _outcomes.Received(1).Skip(RestoreId, "1", "reason=no-record");
+        _outcomes.Received(1).Skip(RestoreId, "2", "reason=no-record");
     }
 }
 

@@ -14,11 +14,13 @@ logs = ["taom"]
 
 [[check]]
 id = "taom.race-persist.capture"
-needs = "save a running campaign in which at least one hero has died"
+needs = "save a running campaign (any TAOM campaign has a dead hero from day 0)"
 reached = ['\[Check\] id=taom\.race-persist\.capture result=pass ']
 pass = ['\[Check\] id=taom\.race-persist\.capture result=pass heroes=[0-9]+ dead=[1-9][0-9]*$']
 fail = ['\[Check\] id=taom\.race-persist\.capture result=fail']
-# A save with no dead hero yet proves nothing about dead heroes.
+# Every TAOM campaign starts with a dead hero (lord_E6_2, alive="false" in characters/heroes.xml), so a pass
+# line with dead=0 means the roster lost its dead heroes, the #1011 regression. The reader reports it as
+# NOT REACHED with the line shown; read it as a failure, not as a save that needs a hero to die first.
 absence = "not-reached"
 
 [[check]]
@@ -30,15 +32,16 @@ fail = [
   '\[Check\] id=taom\.race-persist\.restore result=fail',
   '\[WARNING\] RacePersistenceService: saved race -?[0-9]+ for hero \S+ is outside the save',
 ]
-# A load where no dead hero needed restoring proves nothing; a new campaign writes result=skip, and the
-# reader prints its reason because the reached pattern matches pass lines only.
+# A load where no dead hero needed restoring proves nothing. A new campaign, and a save older than
+# RacePersistenceBehavior (the engine gives it no SyncData), write result=skip with reason=new-campaign or
+# reason=no-record; the reader prints the reason because the reached pattern matches pass lines only.
 absence = "not-reached"
 
 [[human]]
 claim = "after the load, the dead hero's encyclopedia page shows the race you gave them, and the Race filter lists them under it"
 
 [[human]]
-claim = "a son born after his father died (on a build with the fix, after a load) shows his father's race in the encyclopedia"
+claim = "on a build with the fix, a father dies; save and load; his son born after that shows the father's race in the encyclopedia (a father who died on an older build keeps the reverted race)"
 
 [[human]]
 claim = "co-op: after a client loads a save that restores races, its Coop_client.log has no line 'Client updated managed BasicCharacterObject.Race' (the reader cannot pass on a missing line)"

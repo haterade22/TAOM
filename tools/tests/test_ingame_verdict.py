@@ -745,7 +745,7 @@ class HeroRace1011Tests(unittest.TestCase):
         self.assertEqual(code, 0, out)
         self.assertEqual(verdict_of(out, self.CAPTURE), "PASS")
         self.assertEqual(verdict_of(out, self.RESTORE), "PASS")
-        self.assertIn("a son born after his father died", out)
+        self.assertIn("his son born after that shows the father's race", out)
 
     def test_a_load_alone_passes_restore_only(self):
         code, out, _ = self.one("race_load_pass.txt")
@@ -770,6 +770,12 @@ class HeroRace1011Tests(unittest.TestCase):
         self.assertEqual(code, 4, out)
         self.assertEqual(verdict_of(out, self.RESTORE), "NOT REACHED")
         self.assertIn("skipped: reason=new-campaign", out)
+
+    def test_a_save_with_no_race_record_names_its_skip_reason(self):
+        code, out, _ = self.one("race_load_no_record.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "NOT REACHED")
+        self.assertIn("skipped: reason=no-record", out)
 
     def test_a_load_without_race_data_fails_restore(self):
         code, out, _ = self.one("race_load_no_data.txt")

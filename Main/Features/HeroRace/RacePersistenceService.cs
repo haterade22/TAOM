@@ -31,6 +31,9 @@ public class RacePersistenceService : IRacePersistenceService
     // Set by ResetForNewCampaign, cleared by a load: a new campaign's empty map is expected, so
     // RestoreHeroRaces only warns about missing race data on a loaded save.
     private bool _isNewCampaign;
+    // Set when the engine hands SyncData a load. It does so only when the save has a record for the behavior
+    // (CampaignBehaviorDataStore.LoadBehaviorData), so an empty map without it is an older save, not a lost map.
+    private bool _loadedFromRecord;
 
     // #1011 check lines (#1072). The outcome latch is once per (id, result, key) for the process, so each save and
     // each load gets its own serial as the key. Never reset them: a reused key would hide a later campaign's line.
@@ -131,6 +134,7 @@ public class RacePersistenceService : IRacePersistenceService
         _heroRaceMap = new Dictionary<string, int>();
         _raceNameLegend = "";
         _isNewCampaign = true;
+        _loadedFromRecord = false;
     }
 
     /// <summary>
@@ -143,6 +147,7 @@ public class RacePersistenceService : IRacePersistenceService
         _heroRaceMap = new Dictionary<string, int>();
         _raceNameLegend = "";
         _isNewCampaign = false;
+        _loadedFromRecord = false;
     }
 
     public void RestoreHeroRaces()
@@ -159,8 +164,11 @@ public class RacePersistenceService : IRacePersistenceService
             _logger.LogWarning("RacePersistenceService: No saved race data found. " +
                 "This is expected on first load with a pre-TAOM save — heroes will use " +
                 "their XML-defined races. Race data will be captured on next save.");
-            // Every TAOM save carries the map, so on a TAOM save this is a lost map, not a skip.
-            _outcomes.Fail(RestoreCheckId, key, "reason=no-saved-data");
+            // A save written with this behavior carries the map, so an empty one from its record is a lost map.
+            if (_loadedFromRecord)
+                _outcomes.Fail(RestoreCheckId, key, "reason=no-saved-data");
+            else
+                _outcomes.Skip(RestoreCheckId, key, "reason=no-record");
             return;
         }
 
@@ -288,6 +296,7 @@ public class RacePersistenceService : IRacePersistenceService
             _heroRaceMap = new Dictionary<string, int>();
             _raceNameLegend = "";
             _isNewCampaign = false;
+            _loadedFromRecord = true;
         }
         dataStore.SyncData("_taom_heroRaceMap", ref _heroRaceMap);
         dataStore.SyncData("_taom_raceNameLegend", ref _raceNameLegend);
