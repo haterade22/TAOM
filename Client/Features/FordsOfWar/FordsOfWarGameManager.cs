@@ -2,6 +2,7 @@ using System;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Hooks;
 using TaleWorlds.MountAndBlade;
 using TaleWorlds.MountAndBlade.CustomBattle;
@@ -24,32 +25,37 @@ public sealed class FordsOfWarGameManager : CustomGameManager
     private readonly FordsMissionLauncher _launcher;
     private readonly IFordsMenuAdapter _menu;
     private readonly IModLogger _logger;
+    private readonly FordsRunReport _report;
 
-    internal FordsOfWarGameManager(FordsMatchSetup setup, FordsMissionLauncher launcher, IFordsMenuAdapter menu, IModLogger logger)
+    internal FordsOfWarGameManager(FordsMatchSetup setup, FordsMissionLauncher launcher, IFordsMenuAdapter menu, IModLogger logger, FordsRunReport report)
     {
         _setup = setup;
         _launcher = launcher;
         _menu = menu;
         _logger = logger;
+        _report = report;
     }
 
     public override void OnLoadFinished()
     {
         base.OnLoadFinished();
+        _report.Stage("loadFinished");
         try
         {
             if (_launcher.Launch(_setup))
                 return;
 
             _logger.LogError("[FordsOfWar] the launcher opened no mission; returning to the main menu");
+            _report.Failure("B", "the launcher opened no mission");
         }
         catch (Exception ex)
         {
             _logger.LogError($"[FordsOfWar] starting the mission failed: {ex}");
+            _report.Failure("B", ex.GetType().Name + ": " + ex.Message);
         }
 
         ReturnToMainMenu(_logger);
-        FordsSetupPrompt.ShowStartFailed(_menu, _logger);
+        FordsSetupPrompt.ShowStartFailed(_menu, _logger, _report);
     }
 
     /// <summary>

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using TaleWorlds.Library;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Client.Features.FordsOfWar;
@@ -26,6 +27,7 @@ public sealed class FordsCommandVM : FordsViewModel
 
     private readonly FordsSession _session;
     private readonly Action _exit;
+    private readonly FordsRunReport? _report;
     private MatchView? _view;
     private bool _exited;
     private float _noticeSeconds;
@@ -45,10 +47,11 @@ public sealed class FordsCommandVM : FordsViewModel
     private string _resultText = string.Empty;
     private string _resultButtonText = string.Empty;
 
-    internal FordsCommandVM(FordsSession session, Action exit)
+    internal FordsCommandVM(FordsSession session, Action exit, FordsRunReport? report = null)
     {
         _session = session;
         _exit = exit;
+        _report = report;
         Lanes = new MBBindingList<FordsLaneVM>();
         Offers = new MBBindingList<FordsOfferVM>();
         Heroes = new MBBindingList<FordsHeroOfferVM>();
@@ -258,10 +261,10 @@ public sealed class FordsCommandVM : FordsViewModel
         if (_view == null || index < 0 || index >= _view.UnitOffers.Count)
             return;
 
-        Report(_session.TryBuyPack(SelectedLane, _view.UnitOffers[index].OfferId));
+        Report("BuyPack", _session.TryBuyPack(SelectedLane, _view.UnitOffers[index].OfferId));
     }
 
-    internal void SetOrder(LaneOrder order) => Report(_session.TrySetLaneOrder(SelectedLane, order));
+    internal void SetOrder(LaneOrder order) => Report("Order:" + order, _session.TrySetLaneOrder(SelectedLane, order));
 
     /// <summary>The H key: fields the first hero that is waiting and that the gold reaches, in the selected lane.</summary>
     internal void FieldFirstAffordableHero()
@@ -273,7 +276,7 @@ public sealed class FordsCommandVM : FordsViewModel
             return;
         }
 
-        Report(_session.TryBuyHero(SelectedLane, offer.HeroId));
+        Report("BuyHero", _session.TryBuyHero(SelectedLane, offer.HeroId));
     }
 
     public void ExecuteExit()
@@ -288,11 +291,12 @@ public sealed class FordsCommandVM : FordsViewModel
     private void ActOnHero(string heroId)
     {
         var fallen = _view?.Heroes.Any(h => h.HeroId == heroId && h.Side == _view.Side && h.State == HeroState.Dead) == true;
-        Report(fallen ? _session.TryBuyback(heroId) : _session.TryBuyHero(SelectedLane, heroId));
+        Report(fallen ? "Buyback" : "BuyHero", fallen ? _session.TryBuyback(heroId) : _session.TryBuyHero(SelectedLane, heroId));
     }
 
-    private void Report(CommandResult result)
+    private void Report(string action, CommandResult result)
     {
+        _report?.Command(action, result.ToString());
         Notice(FordsHudText.Refusal(result));
         Refresh();
     }
@@ -387,6 +391,8 @@ public sealed class FordsCommandVM : FordsViewModel
                 continue;
 
             Feed.Add(new FordsFeedLineVM(line));
+            if (e.Kind == MatchEventKind.PackBought && e.Side == view.Side)
+                _report?.PackBoughtLine();
             while (Feed.Count > MaxFeedLines)
                 Feed.RemoveAt(0);
         }

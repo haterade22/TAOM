@@ -28,7 +28,7 @@ internal sealed class FordsMenuAdapter : IFordsMenuAdapter
         Module.CurrentModule.AddInitialStateOption(new InitialStateOption(
             id, new TextObject(label), orderIndex, onChosen, () => (false, new TextObject("")), new TextObject(hint), isHidden));
 
-    public void Choose(string title, string description, IReadOnlyList<FordsChoice> choices, Action<string> onPicked)
+    public void Choose(string title, string description, IReadOnlyList<FordsChoice> choices, Action<string> onPicked, Action? onCancelled = null)
     {
         var elements = choices.Select(c => new InquiryElement(c.Id, new TextObject(c.Label).ToString(), null)).ToList();
         MBInformationManager.ShowMultiSelectionInquiry(new MultiSelectionInquiryData(
@@ -45,13 +45,13 @@ internal sealed class FordsMenuAdapter : IFordsMenuAdapter
                 if (chosen != null && chosen.Count > 0 && chosen[0].Identifier is string id)
                     onPicked(id);
             },
-            negativeAction: _ => { }));
+            negativeAction: _ => onCancelled?.Invoke()));
     }
 
-    public void Notify(string message) =>
+    public void Notify(string message, Action? onOk = null) =>
         InformationManager.ShowInquiry(new InquiryData(
             new TextObject(NoticeTitle).ToString(), new TextObject(message).ToString(), true, false,
-            new TextObject(OkText).ToString(), string.Empty, null, null));
+            new TextObject(OkText).ToString(), string.Empty, onOk, null));
 
     public void StartGame(MBGameManager manager) => MBGameManager.StartNewGame(manager);
 

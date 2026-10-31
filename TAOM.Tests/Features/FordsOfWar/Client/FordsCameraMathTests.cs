@@ -334,4 +334,15 @@ public class FordsCameraMathTests
     private static float Length(Vec3f v) => (float)Math.Sqrt(v.X * v.X + v.Y * v.Y + v.Z * v.Z);
 
     private static float Dot(Vec3f a, Vec3f b) => a.X * b.X + a.Y * b.Y + a.Z * b.Z;
+
+    [TestMethod]
+    public void DistanceToEdge_IsTheDistanceToTheNearestSide()
+    {
+        var square = new List<Vec3f> { new(0f, 0f, 0f), new(100f, 0f, 0f), new(100f, 100f, 0f), new(0f, 100f, 0f) };
+
+        Assert.AreEqual(0f, FordsCameraMath.DistanceToEdge(square, 100f, 40f), 1e-4f);
+        Assert.AreEqual(3f, FordsCameraMath.DistanceToEdge(square, 97f, 50f), 1e-4f);
+        Assert.AreEqual(5f, FordsCameraMath.DistanceToEdge(square, 103f, -4f), 1e-4f, "past a corner the vertex is nearest");
+        Assert.AreEqual(float.MaxValue, FordsCameraMath.DistanceToEdge(new List<Vec3f>(), 0f, 0f));
+    }
 }

@@ -120,6 +120,19 @@ public class ShippedFordsConfigTests
     }
 
     [TestMethod]
+    public void ShippedDefaults_AreGondorAgainstRohan_OnNormal_OnTheRohanPlainsMap()
+    {
+        var catalog = Load(Substitute.For<IModLogger>());
+
+        Assert.IsTrue(FordsSetupChoices.TryResolve(catalog, null, null, null, null, out var setup, out var error), error);
+
+        Assert.AreEqual("gondor", setup.WestFaction);
+        Assert.AreEqual("rohan", setup.EastFaction);
+        Assert.AreEqual("normal", setup.AiProfile);
+        Assert.AreEqual("taom_rohan_battle_001_forceatmo", setup.SceneName);
+    }
+
+    [TestMethod]
     public void ShippedMatch_LaneHoldLineIsOutsideTowerFireRange()
     {
         var shipped = Load(Substitute.For<IModLogger>()).Match;

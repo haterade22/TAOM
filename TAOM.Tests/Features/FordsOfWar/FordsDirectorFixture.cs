@@ -5,6 +5,7 @@ using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Tests.Features.FordsOfWar.Domain;
 
@@ -23,6 +24,7 @@ internal sealed class FordsDirectorFixture
     public readonly IFordsSceneAdapter Scene = Substitute.For<IFordsSceneAdapter>();
     public readonly IModLogger Logger = Substitute.For<IModLogger>();
     public readonly FordsSession Session = new();
+    public FordsRunReport Report = null!;
 
     public readonly List<(string Troop, MatchSide Side, int Lane, Vec3f Position)> Spawned = new();
     public readonly List<(TowerSlot Slot, TowerPrefab Prefab, int HitPoints)> TowersSpawned = new();
@@ -58,6 +60,9 @@ internal sealed class FordsDirectorFixture
             TowerPrefab.DefaultTower, TowerPrefab.DefaultKeep, CampDefaults.Default);
         Plan = new FordsMatchPlan(config, map, FordsMatchFixture.Factions(), "hard", lanes);
 
+        Report = new FordsRunReport(Logger);
+        Report.BeginRun("console", new FordsMatchSetup(map.SceneId, "west", "east", "hard", lanes));
+        Battlefield.CharacterExists(Arg.Any<string>()).Returns(true);
         Battlefield.Prepare(Arg.Any<int>()).Returns(true);
         Battlefield.Spawn(Arg.Any<string>(), Arg.Any<MatchSide>(), Arg.Any<int>(), Arg.Any<Vec3f>(), Arg.Any<Vec3f>())
             .Returns(call =>
@@ -88,7 +93,7 @@ internal sealed class FordsDirectorFixture
         Towers.When(t => t.SetDestroyedHandler(Arg.Any<Action<string>>()))
             .Do(call => DestroyedHandler = call.Arg<Action<string>>());
 
-        Director = new FordsMissionDirector(Plan, Battlefield, Towers, Scene, Session, Logger, new SeededFordsRandom(1));
+        Director = new FordsMissionDirector(Plan, Battlefield, Towers, Scene, Session, Logger, new SeededFordsRandom(1), Report);
     }
 
     public TowerSlot TowerSlot(string id) => TowersSpawned.Single(t => t.Slot.Id == id).Slot;

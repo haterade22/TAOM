@@ -46,6 +46,7 @@ public class PrepareOnFirstCall : BTTask, IBTBannerlordBase, IBTWargBlackboard, 
                 {
                     // The tree was built before the rider, so its stored formation is null for a warg spawned after the first scan.
                     AgentsFormation.SetValue(rider.Formation);
+                    WargRageLog.Active?.Started(rider, rider.Formation != null);
                     rider.Formation = null;
                 }
             }

@@ -28,6 +28,9 @@ internal interface IFordsBattlefieldAdapter
     /// </summary>
     void CompleteDeployment();
 
+    /// <summary>The engine's limit on live agents in one mission (the native maximum), for the run report; 0 when unknown.</summary>
+    int MaxAgents { get; }
+
     /// <summary>Spawns one unit of <paramref name="troopId"/> into the side's formation for the lane. Null when the troop cannot be built.</summary>
     FordsSpawnedAgent? Spawn(string troopId, MatchSide side, int lane, Vec3f position, Vec3f facing);
 
@@ -66,6 +69,9 @@ internal interface IFordsBattlefieldAdapter
 
     /// <summary>The display name of an NPCCharacter; the id itself when it is unknown.</summary>
     string CharacterName(string characterId);
+
+    /// <summary>True when the game has a troop or hero with this NPCCharacter id (the preflight of a match's rosters).</summary>
+    bool CharacterExists(string characterId);
 
     /// <summary>Forgets every handle (mission end).</summary>
     void Clear();

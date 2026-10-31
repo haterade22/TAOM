@@ -41,6 +41,7 @@ public class CleanIfEnemyDied : BTTask, IBTBannerlordBase, IBTWargBlackboard, IB
     // "nothing to restore": the rider keeps the formation he still has.
     public static void ResetAiControlledAgent(Agent rider, Formation formation)
     {
+        WargRageLog.Active?.Ended(rider, formation);
         if (rider == null || rider.State != TaleWorlds.Core.AgentState.Active) return;
         if (formation != null) rider.Formation = formation;
         rider.DisableScriptedMovement();

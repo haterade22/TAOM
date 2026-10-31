@@ -13,13 +13,16 @@ internal static class FordsOfWarCommands
     /// <summary>The most gold one <c>taom.fords_gold</c> call adds; the purse is capped at MaxGold anyway.</summary>
     internal const int MaxGrant = 99999;
 
+    /// <summary>The reply of <c>taom.fords_gold</c> when no match fills the session.</summary>
+    internal const string NoMatchReply = "No Fords of War match is running.";
+
     /// <summary>Starts a match without the prompts: <c>[west] [east] [aiProfile] [scene]</c>, each optional.</summary>
     internal static string Start(IReadOnlyList<string> args, FordsConfigCatalog catalog, FordsSetupPrompt prompt)
     {
         if (!FordsSetupChoices.TryResolve(catalog, Arg(args, 0), Arg(args, 1), Arg(args, 2), Arg(args, 3), out var setup, out var error))
             return error;
 
-        if (!prompt.Start(setup))
+        if (!prompt.Start(setup, "console"))
             return "Fords of War could not start (no TAOM.Client, or the load failed); the log and the main menu notice say why.";
 
         return $"Starting Fords of War: {setup.WestFaction} against {setup.EastFaction} on {setup.SceneName}, AI profile {setup.AiProfile}, {setup.LaneCount} lanes.";
@@ -29,7 +32,7 @@ internal static class FordsOfWarCommands
     internal static string Gold(IReadOnlyList<string> args, FordsSession session)
     {
         if (!session.IsActive)
-            return "No Fords of War match is running.";
+            return NoMatchReply;
 
         if (!DevConsoleArgs.TryParseCount(args.Count > 0 ? args[0] : "", 1, MaxGrant, out var amount, out var error))
             return error;

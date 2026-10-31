@@ -14,7 +14,6 @@ internal sealed record FordsMatchPlan(FordsMatchConfig Config, MapEntry Map,
     IReadOnlyDictionary<MatchSide, FactionCatalog> Factions, string AiProfile, int LaneCount)
 {
     private const int MinLanes = 1;
-    private const int MaxLanes = 4;
     private const string FallbackProfile = "normal";
 
     /// <summary>Null, with one error logged, when the scene or either faction is not in the config.</summary>
@@ -39,7 +38,7 @@ internal sealed record FordsMatchPlan(FordsMatchConfig Config, MapEntry Map,
         }
 
         var config = catalog.Match;
-        var lanes = Math.Max(MinLanes, Math.Min(MaxLanes, setup.LaneCount));
+        var lanes = Math.Max(MinLanes, Math.Min(LaneStreams.MaxLanes, setup.LaneCount));
         var profile = config.AiProfiles.ContainsKey(setup.AiProfile) ? setup.AiProfile : FallbackProfile;
         var factions = new Dictionary<MatchSide, FactionCatalog> { [MatchSide.West] = west, [MatchSide.East] = east };
         return new FordsMatchPlan(config, map with { Options = map.Options with { LaneCount = lanes } }, factions, profile, lanes);

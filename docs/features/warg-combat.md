@@ -109,6 +109,7 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 | `Main/Features/Warg/WargConfig.cs` | Constants |
 | `Main/Features/Warg/WargRiderHandManager.cs` | Player hand positioning on warg mane |
 | `Main/Features/Warg/WargIoC.cs` | Registers IWargAttackService |
+| `Main/Features/Warg/WargRageLog.cs` | Counts and logs each rage episode for the Fords of War run report (start, restored formation, returned, stranded, superseded); holds no engine type in a signature (`WargRageLogTests` gates that). Fed from `PrepareOnFirstCall` (rage start), `CleanIfEnemyDied.ResetAiControlledAgent` (rage end and warg death) and the telemetry logic (the 1 Hz watch) |
 | `Main/Features/Warg/BehaviorTreeElements/` | 15 BT nodes (decorators, tasks, listeners) |
 
 ## Dependencies
@@ -163,6 +164,17 @@ LOTRLOME_Armory (XML: monster, items, animations, sounds)
 |---|---|---|
 | The mission's first callback that returns early (once per mission, on the thread that raised it) | `[BehaviorTree] OnAgentRemoved had no tree listener, so it returned before building arguments or parking a replay; every such skip this mission is counted in the mission-end summary.` | the callback's name |
 | Mission end (`OnEndMissionInternal`) | `[BehaviorTree] Mission end: 3 callbacks skipped with no tree listener (OnAgentRemoved 2, OnAgentHit 1); 1 parked off-thread for the mission tick.` | total skips; per callback with a nonzero count, in the class's callback order; replays parked off the main thread for the next mission tick. With no skip the parenthesis is left out. |
+
+`WargRageLog` writes INFO lines prefixed `[Warg][Rage]` to the same log, one per episode event (`WargRageLog.Write`; `WargRageLogTests` pins the logic, not each literal):
+
+| When | Line body |
+|---|---|
+| A rage starts | `start episode=N formationKnown=<known>`, where `<known>` is `True` or `False` |
+| The rage's end is seen | `end episode=N outcome=<outcome>`, where `<outcome>` is `restored`, `null-formation` or `rider-inactive` |
+| The rider is back in its formation | `returned episode=N s=<seconds>` |
+| Given up after 60 mission seconds | `not-returned episode=N s=<seconds>` |
+| Rider left on foot with no formation | `stranded episode=N` |
+| A second rage began before the first returned | `superseded episode=N` |
 
 ## Changelog
 

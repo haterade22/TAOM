@@ -9,6 +9,7 @@ using TaleWorlds.ObjectSystem;
 using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Adapters;
@@ -65,6 +66,7 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
     private Action<string>? _onDestroyed;
     private ItemObject? _volleyItem;
     private float _volleySpeed;
+    private int _volleyThrust;
     private bool _volleyLookedUp;
 
     public FordsTowerAdapter(Mission mission, IModLogger logger, float fireRange)
@@ -184,15 +186,16 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
         tower.Gunners.Clear();
     }
 
-    public bool Fire(string towerId, Vec3f target, int missiles)
+    public int Fire(string towerId, Vec3f target, int missiles)
     {
         var tower = Find(towerId);
         var shooter = tower?.Gunners.Find(IsLive);
         var item = VolleyItem();
         if (tower == null || shooter == null || item == null || missiles <= 0)
-            return false;
+            return 0;
 
         var origin = FordsTowerGeometry.VolleyOrigin(tower.Slot);
+        var added = 0;
         for (var i = 0; i < missiles; i++)
         {
             var aimAt = target + new Vec3f(Spread(), Spread(), 0f);
@@ -206,9 +209,10 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
             var weapon = new MissionWeapon(item, null, null, 1);
             _mission.AddCustomMissile(shooter, weapon, FordsEngine.ToVec3(origin), direction, orientation, _volleySpeed, _volleySpeed,
                 false, tower.Component);
+            added++;
         }
 
-        return true;
+        return added;
     }
 
     public string? TowerIdOf(object? component)
@@ -263,6 +267,11 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
         }
     }
 
+    public FordsVolleyItemInfo? VolleyItemInfo() =>
+        VolleyItem() == null ? null : new FordsVolleyItemInfo(VolleyItemId, _volleyThrust, _volleySpeed, FordsTowerGeometry.Reach(_volleySpeed));
+
+    public float? HitPoints(string towerId) => Find(towerId)?.Component.HitPoint;
+
     private Tower? Find(string towerId)
     {
         lock (_gate)
@@ -273,7 +282,8 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
 
     private float Spread() => ((float)_spread.NextDouble() * 2f - 1f) * VolleySpread;
 
-    // Looked up at the first volley: that is when the item's own numbers are read, logged once, and checked against the fire range.
+    // Looked up at match start through VolleyItemInfo, or at the first volley when that has not run: the item's own numbers are read,
+    // logged once, and checked against the fire range.
     private ItemObject? VolleyItem()
     {
         if (_volleyLookedUp)
@@ -289,7 +299,8 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
 
         var probe = new MissionWeapon(_volleyItem, null, null, 1);
         _volleySpeed = probe.GetModifiedMissileSpeedForCurrentUsage();
-        _logger.LogInfo($"[FordsOfWar] tower volley item '{VolleyItemId}': thrust damage {probe.GetModifiedThrustDamageForCurrentUsage()}, missile speed {_volleySpeed}");
+        _volleyThrust = probe.GetModifiedThrustDamageForCurrentUsage();
+        _logger.LogInfo($"[FordsOfWar] tower volley item '{VolleyItemId}': thrust damage {_volleyThrust}, missile speed {_volleySpeed}");
         if (FordsTowerGeometry.Reach(_volleySpeed) < _fireRange)
             _logger.LogWarning($"[FordsOfWar] the volley javelin '{VolleyItemId}' reaches {FordsTowerGeometry.Reach(_volleySpeed):0.#} m at 45 degrees (missile speed {_volleySpeed}), short of the {_fireRange:0.#} m fire range");
         return _volleyItem;

@@ -48,6 +48,8 @@ internal sealed partial class FordsMatch
 
     private MatchSide? _winner;
 
+    internal MatchPhase Phase => _clock.Phase;
+
     public FordsMatch(FordsMatchConfig config, MapLayout layout, IReadOnlyDictionary<MatchSide, FactionCatalog> factions,
         IReadOnlyList<CommanderSlot> slots, IFordsRandom random)
     {
@@ -221,14 +223,14 @@ internal sealed partial class FordsMatch
     /// respawn timer. A killer that died earlier still counts while it is in the bounded death record. Unknown victims,
     /// unknown killers and kills within a side pay nothing; a victim is handled once.
     /// </summary>
-    public void OnUnitKilled(AgentKey victim, AgentKey? killer)
+    public KillCredit OnUnitKilled(AgentKey victim, AgentKey? killer)
     {
         if (!_units.TryGetValue(victim, out var dead))
-            return;
+            return KillCredit.Unregistered;
 
         _units.Remove(victim);
         if (_clock.Phase == MatchPhase.Ended)
-            return;
+            return KillCredit.AfterEnd;
 
         if (dead.HeroId != null && _heroes.OnDied(dead.Side, dead.HeroId, _clock.Elapsed, _clock.Minute))
             _pendingEvents.Add(new MatchEvent(MatchEventKind.HeroDied, dead.Side, dead.HeroId, 0));
@@ -238,11 +240,14 @@ internal sealed partial class FordsMatch
         var killerSlot = -1;
         var killerKnown = killer is { } key && TryFindKiller(key, out killerSide, out killerSlot);
         _recentDeaths.Record(victim, dead.Side, dead.OwnerSlot);
-        if (!killerKnown || killerSide == dead.Side)
-            return;
+        if (!killerKnown)
+            return KillCredit.KillerUnknown;
+        if (killerSide == dead.Side)
+            return KillCredit.SameSide;
 
         var bounty = dead.HeroId != null ? _bounty.HeroKillBounty : _bounty.KillBounty(dead.Value);
         _ledger.Earn(killerSlot, bounty);
+        return KillCredit.Paid;
     }
 
     /// <summary>A living registered unit, else one from the bounded record of recent deaths (the killer died first).</summary>
@@ -288,14 +293,24 @@ internal sealed partial class FordsMatch
     /// The tower hit hook: the damage the entity should really take. An unknown id comes back unchanged; a locked or
     /// destroyed tower takes 0. Applied damage is mirrored into the rules and restarts the tower's regeneration delay.
     /// </summary>
-    public int AdjustTowerDamage(TowerHit hit)
+    public int AdjustTowerDamage(TowerHit hit) => AdjustTowerDamage(hit, out _);
+
+    /// <summary>Same as <see cref="AdjustTowerDamage(TowerHit)"/>, and says which branch of the table decided.</summary>
+    public int AdjustTowerDamage(TowerHit hit, out TowerDamageReason reason)
     {
         if (hit == null)
+        {
+            reason = TowerDamageReason.RawZero;
             return 0;
-        if (!IsTower(hit.TowerId))
-            return hit.RawDamage;
+        }
 
-        var effective = _damage.Effective(hit);
+        if (!IsTower(hit.TowerId))
+        {
+            reason = TowerDamageReason.UnknownTower;
+            return hit.RawDamage;
+        }
+
+        var effective = _damage.Decide(hit, out reason);
         if (effective > 0)
         {
             _chain.ApplyDamage(hit.TowerId, effective);

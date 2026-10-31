@@ -10,6 +10,7 @@ using TAOM.Composition;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Hooks;
 using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
@@ -89,6 +90,7 @@ public class FordsOfWarModuleTests
 
         AssertSingleton<FordsConfigCatalog>(container);
         AssertSingleton<FordsSession>(container);
+        AssertSingleton<FordsRunReport>(container);
         AssertSingleton<FordsSetupPrompt>(container);
         AssertSingleton<FordsMenuEntry>(container);
         AssertSingleton<FordsMissionLauncher>(container);

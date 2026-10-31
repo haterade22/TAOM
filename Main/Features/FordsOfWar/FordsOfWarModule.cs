@@ -3,6 +3,7 @@ using DryIoc;
 using TAOM.Adapters;
 using TAOM.Composition;
 using TAOM.Core.Logging;
+using TAOM.Features.FordsOfWar.Diagnostics;
 
 namespace TAOM.Features.FordsOfWar;
 
@@ -31,6 +32,7 @@ internal sealed class FordsOfWarModule : TaomFeatureModule
     {
         registrator.Register<FordsConfigCatalog>(Reuse.Singleton);
         registrator.Register<FordsSession>(Reuse.Singleton);
+        registrator.Register<FordsRunReport>(Reuse.Singleton);
         registrator.Register<IFordsMenuAdapter, FordsMenuAdapter>(Reuse.Singleton);
         registrator.Register<IFordsOfWarGameManagerFactory, NullFordsOfWarGameManagerFactory>(Reuse.Singleton);
         registrator.Register<FordsSetupPrompt>(Reuse.Singleton);

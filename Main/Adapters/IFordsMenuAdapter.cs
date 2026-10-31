@@ -18,11 +18,14 @@ internal interface IFordsMenuAdapter
     /// <summary>Adds a main-menu option. <paramref name="isHidden"/> is asked each time the menu draws.</summary>
     void AddOption(string id, string label, string hint, int orderIndex, Func<bool> isHidden, Action onChosen);
 
-    /// <summary>Shows a one-of-many prompt with a Choose and a Cancel button; <paramref name="onPicked"/> runs only on Choose.</summary>
-    void Choose(string title, string description, IReadOnlyList<FordsChoice> choices, Action<string> onPicked);
+    /// <summary>
+    /// Shows a one-of-many prompt with a Choose and a Cancel button; <paramref name="onPicked"/> runs only on Choose and
+    /// <paramref name="onCancelled"/> (when given) on Cancel.
+    /// </summary>
+    void Choose(string title, string description, IReadOnlyList<FordsChoice> choices, Action<string> onPicked, Action? onCancelled = null);
 
-    /// <summary>Shows a notice the player closes.</summary>
-    void Notify(string message);
+    /// <summary>Shows a notice the player closes; <paramref name="onOk"/> (when given) runs when they press Ok.</summary>
+    void Notify(string message, Action? onOk = null);
 
     /// <summary>Starts loading the game: <c>MBGameManager.StartNewGame</c>.</summary>
     void StartGame(MBGameManager manager);
