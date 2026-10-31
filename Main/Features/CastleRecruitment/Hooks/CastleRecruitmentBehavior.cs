@@ -12,8 +12,8 @@ namespace TAOM.Features.CastleRecruitment.Hooks;
 
 /// <summary>
 /// Player-facing + maintenance half of Castle Recruitment (the AI scoring gate is the Patch42 transpiler).
-/// Thin event router (ADR-002): engine glue is in <see cref="CastleNotableMaintainer"/> and
-/// <see cref="CastleAiRecruitDispatcher"/>; all decisions come from <see cref="ICastleRecruitmentService"/>.
+/// Thin event router (ADR-002): engine glue is in <see cref="CastleNotableMaintainer"/>, <see cref="CastleRecruitObserver"/>
+/// (the #918 check) and <see cref="CastleAiRecruitDispatcher"/>; all decisions come from <see cref="ICastleRecruitmentService"/>.
 ///
 /// Responsibilities:
 /// 1. Register a "Recruit troops" option on the vanilla "castle" game menu (opens the vanilla
@@ -51,6 +51,7 @@ public class CastleRecruitmentBehavior : CampaignBehaviorBase
         CampaignEvents.DailyTickSettlementEvent.AddNonSerializedListener(this, OnDailyTickSettlement);
         CampaignEvents.CanHaveCampaignIssuesEvent.AddNonSerializedListener(this, OnCanHaveCampaignIssues);
         CampaignEvents.HourlyTickPartyEvent.AddNonSerializedListener(this, OnHourlyTickParty);
+        new CastleRecruitObserver(_service).Register(this);
     }
 
     public override void SyncData(IDataStore dataStore)
