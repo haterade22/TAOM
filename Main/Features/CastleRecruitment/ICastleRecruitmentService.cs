@@ -23,20 +23,19 @@ public interface ICastleRecruitmentService
     /// A true answer counts <c>taom.castle-recruit.ai-blocked</c> (a counter: this is a model query).</summary>
     bool BlocksAiRecruitAtCastle(bool sellerInCastle, bool buyerIsPlayer);
 
-    /// <summary>Who took a volunteer in one OnTroopRecruited event: <see cref="CastleRecruitKind.None"/> unless the
-    /// settlement is a castle and a notable was the source, then a null recruiter is a garrison, the main hero is
-    /// the player, and anyone else is an AI lord.</summary>
-    CastleRecruitKind ClassifyCastleRecruit(bool settlementIsCastle, bool hasSource, bool recruiterIsNull, bool recruiterIsPlayer);
+    /// <summary>True when one OnTroopRecruited event is an AI lord taking a castle notable's volunteer: the
+    /// settlement is a castle, a notable was the source, and the recruiter is neither null (a garrison) nor the main hero.</summary>
+    bool IsAiCastleRecruit(bool settlementIsCastle, bool hasSource, bool recruiterIsNull, bool recruiterIsPlayer);
 
     /// <summary>Zeroes the #918 day tally at a campaign start or load, so counts never carry between saves.</summary>
     void BeginCastleRecruitDays();
 
-    /// <summary>Tallies one classified recruit; only an AI lord's counts. An AI recruit while AI castle recruitment is off writes a fail
+    /// <summary>Tallies one AI lord's castle recruit. While AI castle recruitment is off it also writes a fail
     /// line at once (key <c>ai-&lt;day&gt;</c>) naming the castle, the lord, the notable and the troop.</summary>
-    void NoteCastleRecruit(CastleRecruitKind kind, int day, string? settlementId, string? recruiterId, string? sourceId, string? troopId);
+    void NoteCastleRecruit(int day, string? settlementId, string? recruiterId, string? sourceId, string? troopId);
 
     /// <summary>The day's line: skip <c>reason=toggle-on</c> while AI castle recruitment is on, else fail when
-    /// an AI lord recruited at a castle that day, else pass; then starts a new day. Key: the campaign day.</summary>
+    /// an AI lord recruited at a castle since the previous daily tick, else pass; then starts a new day. Key: the campaign day.</summary>
     void ReportCastleRecruitDay(int day);
 
     /// <summary>Target notable headcount per castle, distributed round-robin across the four

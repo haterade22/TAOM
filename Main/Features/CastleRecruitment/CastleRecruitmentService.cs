@@ -54,14 +54,8 @@ public class CastleRecruitmentService : ICastleRecruitmentService
         return blocks;
     }
 
-    public CastleRecruitKind ClassifyCastleRecruit(bool settlementIsCastle, bool hasSource, bool recruiterIsNull, bool recruiterIsPlayer)
-    {
-        if (!settlementIsCastle || !hasSource)
-            return CastleRecruitKind.None;
-        if (recruiterIsNull)
-            return CastleRecruitKind.Garrison;
-        return recruiterIsPlayer ? CastleRecruitKind.Player : CastleRecruitKind.Ai;
-    }
+    public bool IsAiCastleRecruit(bool settlementIsCastle, bool hasSource, bool recruiterIsNull, bool recruiterIsPlayer)
+        => settlementIsCastle && hasSource && !recruiterIsNull && !recruiterIsPlayer;
 
     public void BeginCastleRecruitDays()
     {
@@ -69,23 +63,20 @@ public class CastleRecruitmentService : ICastleRecruitmentService
         _dayAiRecruits = 0;
     }
 
-    public void NoteCastleRecruit(CastleRecruitKind kind, int day, string? settlementId, string? recruiterId, string? sourceId, string? troopId)
+    public void NoteCastleRecruit(int day, string? settlementId, string? recruiterId, string? sourceId, string? troopId)
     {
-        switch (kind)
+        if (IsAiEnabled)
         {
-            case CastleRecruitKind.Ai when IsAiEnabled:
-                _aiRecruited.Pass();
-                break;
-            case CastleRecruitKind.Ai:
-                _aiRecruited.Fail();
-                _dayAiRecruits++;
-                // At once, so a recruit after the day's last line that is followed by an exit, a crash or a load
-                // is still in the log, with the castle and the lord the daily counts cannot name.
-                var dayText = N(day);
-                _outcomes.Fail(AiOffCheckId, "ai-" + dayText, "day=" + dayText + " event=ai-recruit settlement=" + Id(settlementId)
-                    + " recruiter=" + Id(recruiterId) + " source=" + Id(sourceId) + " troop=" + Id(troopId));
-                break;
+            _aiRecruited.Pass();
+            return;
         }
+        _aiRecruited.Fail();
+        _dayAiRecruits++;
+        // At once, so a recruit after the day's last line that is followed by an exit, a crash or a load
+        // is still in the log, with the castle and the lord the daily counts cannot name.
+        var dayText = N(day);
+        _outcomes.Fail(AiOffCheckId, "ai-" + dayText, "day=" + dayText + " event=ai-recruit settlement=" + Id(settlementId)
+            + " recruiter=" + Id(recruiterId) + " source=" + Id(sourceId) + " troop=" + Id(troopId));
     }
 
     public void ReportCastleRecruitDay(int day)

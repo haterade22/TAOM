@@ -273,15 +273,15 @@ public class CastleRecruitmentServiceTests
     }
 
     [TestMethod]
-    [DataRow(false, true, false, false, CastleRecruitKind.None, DisplayName = "not a castle")]
-    [DataRow(true, false, false, false, CastleRecruitKind.None, DisplayName = "no notable: a mercenary or prisoner")]
-    [DataRow(true, true, true, false, CastleRecruitKind.Garrison, DisplayName = "no recruiter")]
-    [DataRow(true, true, false, true, CastleRecruitKind.Player, DisplayName = "the main hero")]
-    [DataRow(true, true, false, false, CastleRecruitKind.Ai, DisplayName = "an AI lord")]
-    public void ClassifyCastleRecruit_TruthTable(bool isCastle, bool hasSource, bool recruiterIsNull, bool recruiterIsPlayer,
-        CastleRecruitKind expected)
+    [DataRow(false, true, false, false, false, DisplayName = "not a castle")]
+    [DataRow(true, false, false, false, false, DisplayName = "no notable: a mercenary or prisoner")]
+    [DataRow(true, true, true, false, false, DisplayName = "no recruiter: a garrison")]
+    [DataRow(true, true, false, true, false, DisplayName = "the main hero")]
+    [DataRow(true, true, false, false, true, DisplayName = "an AI lord")]
+    public void IsAiCastleRecruit_TruthTable(bool isCastle, bool hasSource, bool recruiterIsNull, bool recruiterIsPlayer,
+        bool expected)
     {
-        Assert.AreEqual(expected, _sut.ClassifyCastleRecruit(isCastle, hasSource, recruiterIsNull, recruiterIsPlayer));
+        Assert.AreEqual(expected, _sut.IsAiCastleRecruit(isCastle, hasSource, recruiterIsNull, recruiterIsPlayer));
     }
 
     [TestMethod]
@@ -290,7 +290,6 @@ public class CastleRecruitmentServiceTests
         _settings.IsAiEnabled.Returns(false);
         _sut.BlocksAiRecruitAtCastle(sellerInCastle: true, buyerIsPlayer: false);
         _sut.BlocksAiRecruitAtCastle(sellerInCastle: true, buyerIsPlayer: false);
-        _sut.NoteCastleRecruit(CastleRecruitKind.Player, 41, "castle_x", "main_hero", "notable_x", "troop_x");
 
         _sut.ReportCastleRecruitDay(41);
 
@@ -306,7 +305,7 @@ public class CastleRecruitmentServiceTests
         _settings.IsAiEnabled.Returns(false);
         _sut.BlocksAiRecruitAtCastle(sellerInCastle: true, buyerIsPlayer: false);
 
-        _sut.NoteCastleRecruit(CastleRecruitKind.Ai, 42, "castle_x", "lord_x", "notable_x", "troop_x");
+        _sut.NoteCastleRecruit(42, "castle_x", "lord_x", "notable_x", "troop_x");
         var atOnce = CheckLines();
         _sut.ReportCastleRecruitDay(42);
 
@@ -325,7 +324,7 @@ public class CastleRecruitmentServiceTests
     [TestMethod]
     public void NoteCastleRecruit_AiWhileOn_WritesNoLine_CountsAPass_AndTheDaySkips()
     {
-        _sut.NoteCastleRecruit(CastleRecruitKind.Ai, 43, "castle_x", "lord_x", "notable_x", "troop_x");
+        _sut.NoteCastleRecruit(43, "castle_x", "lord_x", "notable_x", "troop_x");
         Assert.AreEqual(0, CheckLines().Length);
 
         _sut.ReportCastleRecruitDay(43);
@@ -355,8 +354,7 @@ public class CastleRecruitmentServiceTests
     {
         _settings.IsAiEnabled.Returns(false);
         _sut.BlocksAiRecruitAtCastle(sellerInCastle: true, buyerIsPlayer: false);
-        _sut.NoteCastleRecruit(CastleRecruitKind.Ai, 10, "castle_x", "lord_x", "notable_x", "troop_x");
-        _sut.NoteCastleRecruit(CastleRecruitKind.Garrison, 10, "castle_x", null, "notable_x", "troop_x");
+        _sut.NoteCastleRecruit(10, "castle_x", "lord_x", "notable_x", "troop_x");
         _sut.ReportCastleRecruitDay(10);
         _sut.BlocksAiRecruitAtCastle(sellerInCastle: true, buyerIsPlayer: false);
         _sut.BlocksAiRecruitAtCastle(sellerInCastle: true, buyerIsPlayer: false);
@@ -385,8 +383,6 @@ public class CastleRecruitmentServiceTests
     {
         _settings.IsAiEnabled.Returns(false);
         _sut.BlocksAiRecruitAtCastle(sellerInCastle: true, buyerIsPlayer: false);
-        _sut.NoteCastleRecruit(CastleRecruitKind.Player, 1, "castle_x", "main_hero", "notable_x", "troop_x");
-        _sut.NoteCastleRecruit(CastleRecruitKind.Garrison, 1, "castle_x", null, "notable_x", "troop_x");
 
         _sut.BeginCastleRecruitDays();
         _sut.ReportCastleRecruitDay(2);
@@ -398,26 +394,11 @@ public class CastleRecruitmentServiceTests
     }
 
     [TestMethod]
-    public void NoteCastleRecruit_None_DoesNothing()
-    {
-        _settings.IsAiEnabled.Returns(false);
-
-        _sut.NoteCastleRecruit(CastleRecruitKind.None, 3, "town_x", "lord_x", null, "troop_x");
-        _sut.ReportCastleRecruitDay(3);
-
-        Assert.AreEqual(0, Recruited.Passes + Recruited.Fails);
-        CollectionAssert.AreEqual(new[]
-        {
-            AiOff + "result=pass day=3 blocked=0 ai_recruits=0",
-        }, CheckLines());
-    }
-
-    [TestMethod]
     public void NoteCastleRecruit_NullIds_WriteNone()
     {
         _settings.IsAiEnabled.Returns(false);
 
-        _sut.NoteCastleRecruit(CastleRecruitKind.Ai, 4, null, null, null, null);
+        _sut.NoteCastleRecruit(4, null, null, null, null);
 
         CollectionAssert.AreEqual(new[]
         {
@@ -429,7 +410,7 @@ public class CastleRecruitmentServiceTests
     public void ToggleFlippedOnAfterAViolation_TheAtOnceFailStands_AndTheDaySkips()
     {
         _settings.IsAiEnabled.Returns(false);
-        _sut.NoteCastleRecruit(CastleRecruitKind.Ai, 6, "castle_x", "lord_x", "notable_x", "troop_x");
+        _sut.NoteCastleRecruit(6, "castle_x", "lord_x", "notable_x", "troop_x");
         _settings.IsAiEnabled.Returns(true);
 
         _sut.ReportCastleRecruitDay(6);

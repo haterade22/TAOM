@@ -1,11 +1,12 @@
 # In-game checks for #918, read by tools/ingame_verdict.py. The lines come from
 # Main/Features/CastleRecruitment/CastleRecruitmentService.cs: ReportCastleRecruitDay writes a
 # "[Check] id=taom.castle-recruit.ai-off" line at each DailyTickEvent, keyed by the campaign day (pass, fail,
-# or skip with reason=toggle-on), and NoteCastleRecruit writes a fail line at once when an AI lord takes a castle notable's
-# volunteer while AI castle recruitment is off. blocked= counts that day's castle-rule answers of -1 to
-# VolunteerModel.MaximumIndexHeroCanRecruitFromHero, so a day with blocked=0 proves nothing and does not count.
-# Garrisons recruit through GarrisonRecruitmentCampaignBehavior, which raises no recruit event, and the player's
-# recruit screen raises OnUnitRecruitedEvent instead, so neither reaches this check; both are [[human]] items.
+# or skip with reason=toggle-on), and NoteCastleRecruit writes a fail line at once when an AI lord takes a castle
+# notable's volunteer while AI castle recruitment is off. blocked= counts the answers of -1 that the castle rule gave
+# to VolunteerModel.MaximumIndexHeroCanRecruitFromHero since the previous daily tick,
+# so a line with blocked=0 proves nothing and does not count.
+# Garrisons recruit through GarrisonRecruitmentCampaignBehavior, which raises no recruit event, so they never reach
+# this check; the player's recruit screen is the one [[human]] item.
 issue = 918
 title = "AI Recruits From Castles off stops AI lords recruiting castle volunteers"
 fixed_in = "0d3f2bc88"   # named in the issue's merge comment of 2026-10-21
@@ -13,7 +14,7 @@ logs = ["taom"]
 
 [[check]]
 id = "taom.castle-recruit.ai-off"
-needs = "Castle Recruitment on, AI Recruits From Castles off. Launch the game fresh and load the save once; restart the game before a retry, because a reload in the same game process can drop the lines of the day the engine reruns. PASS needs three days that each show blocked=1 or more"
+needs = "Castle Recruitment on, AI Recruits From Castles off. Launch the game fresh and load the save once; restart the game before a retry, because after a reload in the same game process the lines of every day that process already logged are dropped, and the engine reruns the saved day when the save was made in its first half. PASS needs three days that each show blocked=1 or more"
 reached = ['\[Check\] id=taom\.castle-recruit\.ai-off result=pass day=\d+ blocked=[1-9]']
 pass = ['\[Check\] id=taom\.castle-recruit\.ai-off result=pass day=\d+ blocked=[1-9]']
 min = 3
@@ -24,5 +25,6 @@ absence = "not-reached"
 [[human]]
 claim = "at a castle of your own alignment whose notables are not hostile to you, you can still recruit their volunteers from the castle's Recruit troops menu"
 
-[[human]]
-claim = "at a castle with garrison auto-recruitment on, a food surplus and no siege, the garrison still grows from its notables' volunteers over a few days"
+# No garrison item: the garrison grows every day from GetBasicTroopForTown troops and from bound villages' notables,
+# so a person cannot see the castle rule work or fail there. GarrisonAutoRecruit_UsesTheGarrisonQuery_InInstalledEngine
+# pins that it asks MaximumIndexGarrisonCanRecruitFromHero, never the hero query this rule answers.
