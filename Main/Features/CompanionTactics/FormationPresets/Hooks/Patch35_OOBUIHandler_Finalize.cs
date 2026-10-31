@@ -1,5 +1,7 @@
+using System;
 using HarmonyLib;
 using TaleWorlds.MountAndBlade.GauntletUI.Mission.Singleplayer;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.CompanionTactics.FormationPresets.Hooks;
 
@@ -22,6 +24,9 @@ public static class Patch35_OOBUIHandler_Finalize
             _overlay ??= IoC.Resolve<IOOBOverlayService>();
             _overlay?.Detach();
         }
-        catch { }
+        catch (Exception ex)
+        {
+            Outcomes.Swallowed("CompanionTactics", "Patch35_OOBUIHandler_Finalize.Postfix", ex);
+        }
     }
 }

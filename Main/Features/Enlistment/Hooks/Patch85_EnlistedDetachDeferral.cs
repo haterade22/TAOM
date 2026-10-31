@@ -88,7 +88,7 @@ public static class Patch85_EnlistedDetachDeferral
                     $"[Enlistment] deferred army leave failed at FinalizeBattle, leaving it to the " +
                     $"reconciler's no-battle sweep: {ex}");
             }
-            catch { /* never throw out of a postfix */ }
+            catch { /* swallow-ok: the logger itself threw; never throw out of a postfix */ }
         }
     }
 

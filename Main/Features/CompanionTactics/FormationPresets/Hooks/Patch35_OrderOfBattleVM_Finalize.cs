@@ -1,5 +1,7 @@
+using System;
 using HarmonyLib;
 using TaleWorlds.MountAndBlade.ViewModelCollection.OrderOfBattle;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.CompanionTactics.FormationPresets.Hooks;
 
@@ -22,6 +24,9 @@ public static class Patch35_OrderOfBattleVM_Finalize
             _tracker ??= IoC.Resolve<IOrderOfBattleVMTracker>();
             _tracker?.ClearCurrent();
         }
-        catch { }
+        catch (Exception ex)
+        {
+            Outcomes.Swallowed("CompanionTactics", "Patch35_OrderOfBattleVM_Finalize.Prefix", ex);
+        }
     }
 }

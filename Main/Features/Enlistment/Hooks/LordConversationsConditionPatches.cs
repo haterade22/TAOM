@@ -2,6 +2,7 @@ using System;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem.CampaignBehaviors;
 using TaleWorlds.Localization;
+using TAOM.Core.Logging;
 
 namespace TAOM.Features.Enlistment.Hooks;
 
@@ -26,8 +27,9 @@ internal static class LordConversationsConditionGate
             _query = _query ?? IoC.Resolve<IEnlistmentStateQuery>();
             return _query.IsEnlisted;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Outcomes.Swallowed("Enlistment", "LordConversationsConditionGate.ShouldSuppress", ex);
             return false; // fail open — vanilla behavior
         }
     }
