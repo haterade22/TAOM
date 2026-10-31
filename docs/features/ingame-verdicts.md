@@ -39,8 +39,9 @@ The reader has to tell "it failed" from "nobody played it" from "this build pred
 - **Read:** `tools/ingame_verdict.py`, with one TOML manifest per issue in `tools/ingame_checks/`.
   Evidence counts only from a session whose `[BuildStamp]` sha contains the manifest's `fixed_in`
   commit (`git merge-base --is-ancestor`).
-- **Run:** `/verify` Step 6 and `/release` Phase 5 run `python tools/ingame_verdict.py --owed`.
-  Both report and never block.
+- **Run:** `/verify` Step 6 and `/release` Phase 5 run
+  `python tools/ingame_verdict.py --owed --sessions 10`, so a two-session check such as #1011 can
+  pass. Both report and never block.
 
 ### Component Diagram
 
@@ -123,7 +124,8 @@ running.
 2. `python tools/ingame_verdict.py --owed`: every issue labelled `triage-needs-ingame` that has a
    manifest, plus a `no manifest:` list.
 3. `--sessions 2` for a save made in one session and loaded in the next; `--ds-data` and
-   `--ds-engine` for a dedicated server.
+   `--ds-engine` for a dedicated server. More sessions never hide a newer result: per check the
+   newest PASS or FAIL wins.
 
 An unreachable step is reported with the command tried and the unmet precondition. Never mark it
 verified through another path.
@@ -138,16 +140,18 @@ verified through another path.
   says what to do next time. A `result=skip` line gives the feature's own reason (for example
   `reason=toggle-on`).
 - An issue is PASS when every check is, FAIL when any check is, else NOT REACHED. Exit codes: 0 all
-  PASS, 1 any FAIL, 4 otherwise or nothing judged, 2 a bad argument or manifest, 3 `git` or `gh`
-  failed.
+  PASS, 1 any FAIL, 4 otherwise or nothing judged, 2 a bad argument or manifest, 3 `git` missing or
+  `gh` failed; a build sha `git` cannot compare leaves that session NOT REACHED.
 - **The session block:** each TAOM log's last `[Session] summary` line, for example
   `reason=exit uptime_s=1864 checks_pass=2 checks_fail=0 swallowed=14 shield_swallowed=4 checks_skip=0 errors=0 dropped=0`.
-  `reason=heartbeat` as the last one means the process ended without an exit or crash summary.
+  `reason=heartbeat` as the last one means the game is still running, or the process ended without
+  an exit or crash summary (a debugger stop, a native crash or a kill).
   `errors=` above 0 prints a WARNING: an outcome-log call wrote nothing (usually a check id that
   breaks the id pattern), so a `[Check]` line may be missing. Each `swallowed:` line names a site
   whose exceptions were caught, with its count and first exception type. "no [Session] summary
-  line" means a build from before #1071, or a process that ended within 10 minutes of loading
-  without a save, exit or crash summary. None of this changes a verdict.
+  line" means a build from before #1071, a game still running in its first 10 minutes, or a process
+  that ended within 10 minutes of loading without a save, exit or crash summary. None of this
+  changes a verdict.
 
 ## How to add a check
 

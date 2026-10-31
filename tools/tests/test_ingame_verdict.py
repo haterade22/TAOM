@@ -1119,6 +1119,23 @@ class SessionSummaryTests(unittest.TestCase):
         code, out, _ = self.t.run(["--issue", "970"])
         self.assertEqual(code, 0, out)
         self.assertIn("    no [Session] summary line in taom_debug_2026-10-30_12-57-22.log: ", out)
+        self.assertIn("a game still running in its first 10 minutes", out)
+
+    def test_a_swallowed_warning_after_the_last_summary_leaves_that_summary_alone(self):
+        # [Swallowed]'s fixed text names "the [Session] summary"; only FileLogger's INFO line is a summary.
+        self.t.taom("session_summary_swallowed_tail.txt", "2026-10-30_12-57-22")
+        _, out, _ = self.t.run(["--issue", "970"])
+        self.assertIn("    summary (taom_debug_2026-10-30_12-57-22.log:2): reason=heartbeat uptime_s=600 ", out)
+        self.assertRegex(out, r"\n    WARNING: errors=2: ")
+        self.assertIn("    swallowed: feature=Enlistment site=GameMenuManagerSetNextMenuPatch n=3 "
+                      "first=NullReferenceException", out)
+        self.assertNotIn("counts the repeats", out)
+
+    def test_a_log_with_only_a_swallowed_warning_has_no_summary(self):
+        self.t.taom("session_summary_swallowed_only.txt", "2026-10-30_12-57-22")
+        _, out, _ = self.t.run(["--issue", "970"])
+        self.assertIn("    no [Session] summary line in taom_debug_2026-10-30_12-57-22.log: ", out)
+        self.assertNotIn("    summary (", out)
 
     def test_each_session_read_reports_its_own_summary(self):
         self.t.taom("session_summary_errors.txt", "2026-10-30_12-57-22")

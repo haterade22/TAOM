@@ -129,20 +129,24 @@ If it prints `CHANGELOG.md` outside a `/release` run, flag it: the entry belongs
 ## Step 6: Owed in-game verdicts (information only)
 
 ```bash
-python tools/ingame_verdict.py --owed 2>&1
+python tools/ingame_verdict.py --owed --sessions 10 2>&1
 ```
 
-It asks `gh` for the issues labelled `triage-needs-ingame`, reads the newest game session's logs
+It asks `gh` for the issues labelled `triage-needs-ingame`, reads the ten newest game sessions' logs
 against each one that has a `tools/ingame_checks/<issue>.toml`, and prints a verdict per check
 ([ingame-verdicts.md](../../../docs/features/ingame-verdicts.md)). Report each issue's verdict,
 every FAIL with its reason, the session's `summary` line and any `WARNING: errors=` line. Give the
 `no manifest:` list as a count only.
 
 This step never fails verify and never changes "Ready for commit". NOT REACHED (exit 4) is the
-normal state before anyone has played the build. A FAIL (exit 1) is a regression in a shipped fix
-for Mike to see, not a defect of this tree. Exit 3 (`gh` or `git` failed or is missing; the message
-says which) is NOT RUN. Exit 2 is a malformed manifest, which Step 2b's `test_ingame_verdict` also
-fails on. Never pass `--post` here: it comments on public issues.
+normal state before anyone has played the build. A FAIL (exit 1) is evidence against the logged
+build named in the output; whether it touches this tree is for investigation and Mike. Exit 3 (`git`
+missing or `gh` failed; the message says which) is NOT RUN; a build sha `git` cannot compare leaves
+that session NOT REACHED. Ten sessions let a two-session check such as #1011 pass, and per check the
+newest PASS or FAIL wins. #981 also needs `--ds-data` and `--ds-engine`, so after a staged-server
+run re-run it with those flags (the doc's "How to verify in game"). Exit 2 is a malformed manifest,
+which Step 2b's `test_ingame_verdict` also fails on. Never pass `--post` here: it comments on public
+issues.
 
 ## Output Format
 

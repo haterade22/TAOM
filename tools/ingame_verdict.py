@@ -96,12 +96,15 @@ BUILD_STAMP = re.compile(r"\[BuildStamp\] TAOM=\S+ build\.\S*?\+([0-9a-f]{7,40})
 # (the last 500 TAOM lines among them) as "[CrashReport] " + line, so the log holds a second copy of them.
 CRASH_ECHO = re.compile(r"^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[[A-Z]+\] \[CrashReport\] ")
 SHUTDOWN = "[Shutdown] clean module unload"
-# OutcomeLog.WriteSummary (#1071): the summary line, then one line per counter and one per swallowed site.
-SESSION_SUMMARY = re.compile(r"\[Session\] summary (.*)$")
-SESSION_SWALLOWED = re.compile(r"\[Session\] swallowed (feature=\S+ site=\S+ n=\S+ first=\S+)")
+# OutcomeLog.WriteSummary (#1071): the summary line, then one line per counter and one per swallowed site, each
+# written by LogInfo. Both are anchored to FileLogger's INFO prefix, because the fixed text of every [Swallowed]
+# WARNING names "the [Session] summary" too.
+INFO_LINE = r"^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[INFO\] "
+SESSION_SUMMARY = re.compile(INFO_LINE + r"\[Session\] summary (reason=.*)$")
+SESSION_SWALLOWED = re.compile(INFO_LINE + r"\[Session\] swallowed (feature=\S+ site=\S+ n=\S+ first=\S+)")
 SUMMARY_FIELD = re.compile(r"(\S+?)=(\S*)")
-NO_SUMMARY_WHY = ("a build from before #1071, or a process that ended within 10 minutes of loading "
-                  "without a save, exit or crash summary")
+NO_SUMMARY_WHY = ("a build from before #1071, a game still running in its first 10 minutes, or a process that "
+                  "ended within 10 minutes of loading without a save, exit or crash summary")
 ERRORS_WHY = ("outcome-log calls that wrote nothing, such as a check id that breaks the id pattern, "
               "so a [Check] line may be missing from this session")
 
