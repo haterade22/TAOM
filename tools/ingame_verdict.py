@@ -52,6 +52,11 @@ session's name stamp. --session PATH takes its kind from the file: a taom_debug 
 Win64_Shipping_Server is taom-ds, any other taom; a manifest whose logs do not name that kind is
 NOT REACHED with a note.
 
+Per session read, each TAOM log's last [Session] summary line (OutcomeLog, #1071) is printed with its
+fields, a WARNING when its errors= is above 0 (an outcome-log call wrote nothing, so a [Check] line
+may be missing), and the [Session] swallowed sites written after it; a log with no summary line is
+named. None of it changes a verdict or the exit code (#1074).
+
 --post comments the markdown report on each issue (gh issue comment N --body-file -) after
 replacing the user-profile path with %USERPROFILE%. The repository is public, so an agent posts
 only on Mike's word. Nothing here edits labels or closes an issue.
@@ -91,6 +96,14 @@ BUILD_STAMP = re.compile(r"\[BuildStamp\] TAOM=\S+ build\.\S*?\+([0-9a-f]{7,40})
 # (the last 500 TAOM lines among them) as "[CrashReport] " + line, so the log holds a second copy of them.
 CRASH_ECHO = re.compile(r"^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[[A-Z]+\] \[CrashReport\] ")
 SHUTDOWN = "[Shutdown] clean module unload"
+# OutcomeLog.WriteSummary (#1071): the summary line, then one line per counter and one per swallowed site.
+SESSION_SUMMARY = re.compile(r"\[Session\] summary (.*)$")
+SESSION_SWALLOWED = re.compile(r"\[Session\] swallowed (feature=\S+ site=\S+ n=\S+ first=\S+)")
+SUMMARY_FIELD = re.compile(r"(\S+?)=(\S*)")
+NO_SUMMARY_WHY = ("a build from before #1071, or a process that ended within 10 minutes of loading "
+                  "without a save, exit or crash summary")
+ERRORS_WHY = ("outcome-log calls that wrote nothing, such as a check id that breaks the id pattern, "
+              "so a [Check] line may be missing from this session")
 
 LOG_KINDS = ("taom", "taom-ds", "diag", "rgl", "coop-client", "coop-server", "ds")
 TAOM_KINDS = ("taom", "taom-ds")
@@ -346,6 +359,33 @@ class Session:
         self.missing = []
         self.bound = False
         self.build = ""
+        self.summaries = []  # [(TAOM log, Summary or None)]
+
+
+class Summary:
+    """The last [Session] summary line of one TAOM log and the swallowed sites written after it."""
+
+    def __init__(self, number, text, swallowed):
+        self.number = number
+        self.text = text
+        self.swallowed = swallowed
+        fields = dict(SUMMARY_FIELD.findall(text))
+        self.errors = int(fields["errors"]) if fields.get("errors", "").isdigit() else 0
+
+
+def read_summary(log):
+    """The log's last [Session] summary, else None. Only its own block counts: every summary repeats
+    the process totals, so an earlier block's swallowed lines are older counts of the same sites."""
+    last = None
+    for i, (n, text) in enumerate(log.lines):
+        m = SESSION_SUMMARY.search(text)
+        if m:
+            last = (i, n, m.group(1).strip())
+    if last is None:
+        return None
+    i, n, text = last
+    swallowed = [m.group(1) for _, t in log.lines[i + 1:] for m in [SESSION_SWALLOWED.search(t)] if m]
+    return Summary(n, text, swallowed)
 
 
 class Result:
@@ -430,6 +470,7 @@ def make_session(kind, path, manifest, found, reader):
                 if part:
                     s.logs.append(LogFile(other, p, part))
     s.missing = [k for k in manifest.logs if not any(log.kind == k for log in s.logs)]
+    s.summaries = [(log, read_summary(log)) for log in s.logs if log.kind in TAOM_KINDS]
     return s
 
 
@@ -616,6 +657,16 @@ def render_text(report):
             out.append(f"    also read: {', '.join(joined)}")
         if s.missing:
             out.append(f"    not found for this session: {', '.join(s.missing)}")
+        if not s.summaries:
+            out.append("    no [Session] summary line: this session has no TAOM log")
+        for log, sm in s.summaries:
+            if sm is None:
+                out.append(f"    no [Session] summary line in {log.name}: {NO_SUMMARY_WHY}")
+                continue
+            out.append(f"    summary ({log.name}:{sm.number}): {sm.text}")
+            if sm.errors:
+                out.append(f"    WARNING: errors={sm.errors}: {ERRORS_WHY}")
+            out += [f"    swallowed: {site}" for site in sm.swallowed]
         out += [f"    note: {n}" for n in s.notes]
     for c in m.checks:
         r = report.results[c.id]
@@ -635,6 +686,25 @@ def cell(text):
     return str(text).replace("|", "\\|").replace("\n", " ")
 
 
+def summaries_md(sessions):
+    def code(text):
+        return "`" + text.replace("`", "'") + "`"
+
+    out = ["Session summaries:", ""]
+    for i, s in enumerate(sessions, 1):
+        if not s.summaries:
+            out.append(f"- Session {i}: no `[Session] summary` line; this session has no TAOM log")
+        for log, sm in s.summaries:
+            if sm is None:
+                out.append(f"- Session {i}: no `[Session] summary` line in {code(log.name)}: {NO_SUMMARY_WHY}")
+                continue
+            out.append(f"- Session {i}, {code(f'{log.name}:{sm.number}')}: {code(sm.text)}")
+            if sm.errors:
+                out.append(f"  - **Warning:** errors={sm.errors}: {ERRORS_WHY}")
+            out += [f"  - swallowed: {code(site)}" for site in sm.swallowed]
+    return out + [""]
+
+
 def render_md(report):
     m = report.manifest
     out = [f"### In-game verdict for #{m.issue}: {report.verdict}", "",
@@ -649,6 +719,7 @@ def render_md(report):
             notes = ([f"not found for this session: {', '.join(s.missing)}"] if s.missing else []) + s.notes
             out.append(f"| {i} ({session_span(s)}) | {logs} | {cell(state)} | {cell('; '.join(notes) or '-')} |")
         out.append("")
+        out += summaries_md(report.sessions)
     out += ["| Check | Verdict | Session | Reason |", "|---|---|---|---|"]
     for c in m.checks:
         r = report.results[c.id]

@@ -110,6 +110,14 @@ headers, player-facing framing (what changed for them, not which class was refac
 explicit ⚠️ line whenever MCM-persisted settings mean **existing players keep old values** and must
 reset them by hand.
 
+First, before writing a line of either note, run `python tools/ingame_verdict.py --owed` and read
+its output ([ingame-verdicts.md](../../../docs/features/ingame-verdicts.md)). It never blocks the
+release. A FAIL (exit 1) is a shipped fix that a play session shows broken: name it to Mike before
+Phase 6, because holding the release for it is his call. Exit 3 (`gh` or `git` failed) means the
+testers' checklist says the verdicts are missing. Every owed check that is not PASS goes into the
+testers' checklist below, one line each: the issue, the check id, its verdict and its `needs`
+text, FAIL lines first. They are developer text, so they stay out of the Discord note.
+
 Source the content from the section Phase 4 just wrote into `CHANGELOG.md`. It runs to thousands
 of lines, so list it first: `awk '/^## v/{n++} n==1 && /^###/' CHANGELOG.md` prints its group and
 subject lines only. Open the bodies you need (`git show -s --format=%b <sha>`), and grep the
@@ -117,7 +125,8 @@ section for `MCM` before writing the persisted-settings line.
 
 Then the testers' checklist, for the testing channel only (issue titles are developer text, so they
 stay out of the Discord note): `python tools/ingame_ledger.py --since <previous tag> --format md`
-into `docs/releases/vX.Y.Z-testers.md`, under a first line naming the release. Stage it with the
+into `docs/releases/vX.Y.Z-testers.md`, under a first line naming the release, followed by an
+"Owed checks not PASS" section with the verdict lines from the run above. Stage it with the
 release note in Phase 6. A tester who confirms a check closes the loop: remove the label from that
 issue.
 

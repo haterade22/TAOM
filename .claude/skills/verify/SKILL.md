@@ -126,6 +126,24 @@ git diff --name-only HEAD -- CHANGELOG.md
 
 If it prints `CHANGELOG.md` outside a `/release` run, flag it: the entry belongs in the commit body.
 
+## Step 6: Owed in-game verdicts (information only)
+
+```bash
+python tools/ingame_verdict.py --owed 2>&1
+```
+
+It asks `gh` for the issues labelled `triage-needs-ingame`, reads the newest game session's logs
+against each one that has a `tools/ingame_checks/<issue>.toml`, and prints a verdict per check
+([ingame-verdicts.md](../../../docs/features/ingame-verdicts.md)). Report each issue's verdict,
+every FAIL with its reason, the session's `summary` line and any `WARNING: errors=` line. Give the
+`no manifest:` list as a count only.
+
+This step never fails verify and never changes "Ready for commit". NOT REACHED (exit 4) is the
+normal state before anyone has played the build. A FAIL (exit 1) is a regression in a shipped fix
+for Mike to see, not a defect of this tree. Exit 3 (`gh` or `git` failed or is missing; the message
+says which) is NOT RUN. Exit 2 is a malformed manifest, which Step 2b's `test_ingame_verdict` also
+fails on. Never pass `--post` here: it comments on public issues.
+
 ## Output Format
 
 Produce a concise verification report:
@@ -141,6 +159,7 @@ API snapshot: [REPRODUCES/DRIFT/NOT RUN]
 Uncommitted: [X files modified, Y staged, Z untracked]
 TODOs:      [X in Main/]
 CHANGELOG:  [Untouched/HAND-EDITED]
+In-game:    [I issues judged: P PASS, F FAIL, N NOT REACHED / NOT RUN (gh)] (information only)
 
 Ready for commit: [YES/NO]
 
