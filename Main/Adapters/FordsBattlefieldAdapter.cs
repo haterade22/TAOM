@@ -20,8 +20,6 @@ namespace TAOM.Adapters;
 /// </summary>
 internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
 {
-    private const int MaxLanes = 4;
-
     private readonly Mission _mission;
     private readonly FordsAgentRegistry _registry;
     private readonly Func<string, object?> _towerEntity;
@@ -37,9 +35,11 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
         _logger = logger;
     }
 
+    public int MaxAgents => DefaultBattleMissionAgentSpawnLogic.MaxNumberOfAgentsForMission;
+
     public bool Prepare(int laneCount)
     {
-        if (laneCount < 1 || laneCount > MaxLanes)
+        if (laneCount < 1 || laneCount > LaneStreams.MaxLanes)
             return false;
 
         _formations.Clear();
@@ -170,6 +170,8 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
         var name = FordsEngine.Character(characterId)?.Name?.ToString();
         return string.IsNullOrEmpty(name) ? characterId : FordsEngine.DisplayName(name!);
     }
+
+    public bool CharacterExists(string characterId) => FordsEngine.Character(characterId) != null;
 
     public void Clear()
     {

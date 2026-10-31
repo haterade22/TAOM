@@ -149,6 +149,21 @@ public class ClientSubModuleTests
         logger.Received(1).LogWarning(NSubstitute.Arg.Is<string>(m => m.Contains("filtering failed")));
     }
 
+    // Module.cs 536-549 and 790-798: every return to the main menu runs OnBeforeInitialModuleScreenSetAsRoot on every submodule.
+    // The Fords final verdict pass rides on it, through MainMenuStep so a fault never throws into the engine's tick.
+    [TestMethod]
+    public void OnBeforeInitialModuleScreenSetAsRoot_RunsTheFordsFinalPassThroughMainMenuStep()
+    {
+        var source = Collapse(RepoPaths.ReadSource("Client/ClientSubModule.cs", stripComments: true));
+
+        var start = source.IndexOf("protected override void OnBeforeInitialModuleScreenSetAsRoot()", StringComparison.Ordinal);
+        Assert.AreNotEqual(-1, start, "ClientSubModule has no OnBeforeInitialModuleScreenSetAsRoot override.");
+        var body = source.Substring(start);
+        var baseCall = body.IndexOf("base.OnBeforeInitialModuleScreenSetAsRoot();", StringComparison.Ordinal);
+        var step = body.IndexOf("MainMenuStep.Run(\"fords of war final report\", () => IoC.Resolve<FordsRunReport>().MainMenuReturned(),", StringComparison.Ordinal);
+        Assert.IsTrue(baseCall >= 0 && step > baseCall, "the base call comes first, then the guarded final pass");
+    }
+
     private static string Collapse(string source) => Regex.Replace(source, @"\s+", " ");
 
     // Each move batch (B4a to B5) adds its rows here. This is the container round trip: DryIoc's

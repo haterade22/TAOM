@@ -20,7 +20,6 @@ internal readonly record struct FordsMarker(string Tag, Vec3f Position, float Ya
 /// </summary>
 internal static class FordsTagLayoutReader
 {
-    private const int MaxLanes = 4;
     private const int KeepOrder = 99;
 
     private static readonly Regex LaneTag = new(@"^fow_lane_(\d+)_(\d+)$", RegexOptions.Compiled);
@@ -92,8 +91,8 @@ internal static class FordsTagLayoutReader
     {
         if (lanePoints.Count == 0)
             return "no fow_lane_<lane>_<n> waypoints found";
-        if (lanePoints.Count > MaxLanes)
-            return $"{lanePoints.Count} lanes found, at most {MaxLanes} are supported";
+        if (lanePoints.Count > LaneStreams.MaxLanes)
+            return $"{lanePoints.Count} lanes found, at most {LaneStreams.MaxLanes} are supported";
 
         var expected = 0;
         foreach (var pair in lanePoints)

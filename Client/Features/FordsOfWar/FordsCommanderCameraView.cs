@@ -6,6 +6,7 @@ using TaleWorlds.MountAndBlade.View.MissionViews;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Client.Features.FordsOfWar;
@@ -16,24 +17,22 @@ namespace TAOM.Client.Features.FordsOfWar;
 /// <see cref="UpdateOverridenCamera"/> answers true, so this view owns the frame and finishes it as the tail of the vanilla
 /// <c>UpdateCamera</c> does: the camera frame, the vertical field of view, <c>SceneView.SetCamera</c> and <c>Mission.SetCameraFrame</c>
 /// (audio and level of detail). WASD or the arrows pan relative to the yaw, Q and E turn, the wheel zooms, the right button drags to
-/// turn and tilt, Shift doubles the pan. The arithmetic is <see cref="FordsCameraMath"/>. Built by the mission's <c>[ViewMethod]</c>
-/// list (<see cref="FordsOfWarMissionViews"/>), not as a <c>[DefaultView]</c>. Any fault latches the view off and hands the camera back.
+/// turn and tilt, Shift doubles the pan. The arithmetic is <see cref="FordsCameraMath"/>. Built by the mission's <c>[ViewMethod]</c> list
+/// (<see cref="FordsOfWarMissionViews"/>), not a <c>[DefaultView]</c>. A fault latches the view off and hands the camera back.
 /// </summary>
 public sealed class FordsCommanderCameraView : MissionView
 {
-    private const float NearPlane = 0.1f;
-    private const float FarPlane = 12500f;
+    private const float NearPlane = 0.1f, FarPlane = 12500f;
     private const float ScrollNotch = 120f;
     private const float GroundFollowPerSecond = 6f;
     private const float DegreesToRadians = (float)(Math.PI / 180.0);
 
+    private FordsCameraProbe? _probe;
     private FordsSession? _session;
     private FordsCameraState _state;
     private Vec2 _lastPointer;
     private float _groundZ;
-    private bool _started;
-    private bool _dragging;
-    private bool _failed;
+    private bool _started, _dragging, _failed;
 
     public override void OnMissionScreenTick(float dt)
     {
@@ -41,9 +40,8 @@ public sealed class FordsCommanderCameraView : MissionView
         MissionScreen?.SuppressSpectatorCyclingThisFrame();
     }
 
-    // The escape menu offers Photo Mode, and this view list has no photo-mode view, the only code that turns it off again.
-    // MissionScreen.IsPhotoModeAllowed asks every view, and the menu item reads disabled when one says no.
-    public override bool IsPhotoModeAllowed() => false;
+    // The escape menu offers Photo Mode and no view here turns it off again; every view is asked, and one "no" disables the item.
+    public override bool IsPhotoModeAllowed() => Probe().PhotoVetoed();
 
     public override bool UpdateOverridenCamera(float dt)
     {
@@ -60,17 +58,25 @@ public sealed class FordsCommanderCameraView : MissionView
             if (!_started)
                 Begin(_session);
 
-            _state = FordsCameraMath.Step(_state, ReadInput(), dt, _session.BoundaryPolygon);
+            var before = _state;
+            var input = ReadInput();
+            var boundary = _session.BoundaryPolygon;
+            _state = FordsCameraMath.Step(before, input, dt, boundary);
             Apply(dt);
+            Probe().Frame(before, input, _state, dt, boundary);
             return true;
         }
         catch (Exception ex)
         {
             _failed = true;
+            Probe().Failed();
             IoC.Resolve<IModLogger>()?.LogError($"[FordsOfWar] commander camera failed, vanilla camera restored: {ex}");
             return false;
         }
     }
+
+    private FordsCameraProbe Probe() =>
+        _probe ??= new(IoC.Resolve<FordsRunReport>(), (x, y) => Mission.IsPositionInsideBoundaries(new Vec2(x, y)));
 
     private void Begin(FordsSession session)
     {
@@ -89,8 +95,7 @@ public sealed class FordsCommanderCameraView : MissionView
 
         // The pointer is visible all mission, so the drag is read from its position, not from the raw mouse delta. The button
         // reads down only while the cursor is on the scene (MouseOnMe), so a click on the panel never starts a drag.
-        var dragX = 0f;
-        var dragY = 0f;
+        float dragX = 0f, dragY = 0f;
         if (Input.IsKeyDown(InputKey.RightMouseButton))
         {
             var pointer = Input.GetMousePositionPixel();

@@ -73,8 +73,11 @@ public class FordsClientWiringTests
         container.Register<IFordsOfWarGameManagerFactory, NullFordsOfWarGameManagerFactory>(Reuse.Singleton);
         container.RegisterInstance(Substitute.For<IModLogger>());
         container.RegisterInstance(Substitute.For<IFordsMenuAdapter>());
+        var report = new TAOM.Features.FordsOfWar.Diagnostics.FordsRunReport(Substitute.For<IModLogger>());
+        container.RegisterInstance(report);
         container.RegisterInstance(new FordsMissionLauncher(
-            new FordsConfigCatalog(Substitute.For<IPathService>(), Substitute.For<IModLogger>()), new FordsSession(), Substitute.For<IModLogger>()));
+            new FordsConfigCatalog(Substitute.For<IPathService>(), Substitute.For<IModLogger>()), new FordsSession(), Substitute.For<IModLogger>(),
+            report));
         ClientComposition.Current = new TaomClientComposition();
 
         ClientComposition.Apply(container);
@@ -89,8 +92,29 @@ public class FordsClientWiringTests
 
         var load = src.IndexOf("public override void OnLoadFinished()", StringComparison.Ordinal);
         var back = src.IndexOf("ReturnToMainMenu(_logger);", load, StringComparison.Ordinal);
-        var notice = src.IndexOf("FordsSetupPrompt.ShowStartFailed(_menu, _logger);", load, StringComparison.Ordinal);
+        var notice = src.IndexOf("FordsSetupPrompt.ShowStartFailed(_menu, _logger, _report);", load, StringComparison.Ordinal);
         Assert.IsTrue(load >= 0 && back > load && notice > back, "one tail serves a launch that returned false and one that threw");
+    }
+
+    [TestMethod]
+    public void TheGameManager_ReportsTheLoadStageAndBothLoadFailuresAsRouteB()
+    {
+        var src = Source("FordsOfWarGameManager.cs");
+
+        StringAssert.Contains(src, "_report.Stage(\"loadFinished\");");
+        StringAssert.Contains(src, "_report.Failure(\"B\", \"the launcher opened no mission\");");
+        StringAssert.Contains(src, "_report.Failure(\"B\", ex.GetType().Name + \": \" + ex.Message);");
+    }
+
+    [TestMethod]
+    public void TheCommandView_ReportsThePanelThePauseAndTheExitButton()
+    {
+        var src = Source("FordsCommandView.cs");
+
+        StringAssert.Contains(src, "_report?.PanelAttached();");
+        StringAssert.Contains(src, "_report?.Paused(MBCommon.IsPaused);");
+        StringAssert.Contains(src, "_report?.EndGameRequested(\"button\");");
+        StringAssert.Contains(src, "new FordsCommandVM(_session!, ExitClicked, _report)");
     }
 
     [TestMethod]
@@ -155,6 +179,17 @@ public class FordsClientWiringTests
     }
 
     [TestMethod]
+    public void TheCameraView_FeedsTheProbeEachFrame_AndAsksItWhetherPhotoModeIsVetoed()
+    {
+        var src = Source("FordsCommanderCameraView.cs");
+
+        StringAssert.Contains(src, "Probe().Frame(");
+        StringAssert.Contains(src, "Probe().PhotoVetoed()");
+        StringAssert.Contains(src, "Probe().Failed()");
+        Assert.AreEqual(1, src.Split(new[] { "_session.BoundaryPolygon" }, StringSplitOptions.None).Length - 1, "read once per frame, passed to Step and the probe");
+    }
+
+    [TestMethod]
     public void TheCameraView_OwnsTheFrameTheWayTheVanillaTailDoes()
     {
         var src = Source("FordsCommanderCameraView.cs");
@@ -175,6 +210,7 @@ public class FordsClientWiringTests
     {
         // Built without its constructor: a MissionView is never constructed in the test host.
         var view = FormatterServices.GetUninitializedObject(typeof(FordsCommanderCameraView));
+        typeof(FordsCommanderCameraView).GetField("_probe", BindingFlags.NonPublic | BindingFlags.Instance)!.SetValue(view, new FordsCameraProbe(null, (_, _) => false));
         var allowed = typeof(FordsCommanderCameraView).GetMethod("IsPhotoModeAllowed", BindingFlags.Public | BindingFlags.Instance)!;
 
         Assert.IsFalse((bool)allowed.Invoke(view, null)!, "the escape menu would offer Photo Mode and nothing in the Fords view list ends it");

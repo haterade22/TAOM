@@ -40,7 +40,7 @@ public static class FordsTowerHitPatch
     public static void Prefix(object __instance, Agent attackerAgent, ref int inflictedDamage, ref MissionWeapon weapon)
     {
         var hook = Volatile.Read(ref _hook);
-        if (hook == null || inflictedDamage <= 0)
+        if (hook == null)
             return;
 
         bool empty;
@@ -55,7 +55,19 @@ public static class FordsTowerHitPatch
             return;
         }
 
-        Run(hook, __instance, attackerAgent, empty, ranged, ref inflictedDamage);
+        Dispatch(hook, __instance, attackerAgent, empty, ranged, ref inflictedDamage);
+    }
+
+    // A zero-damage blow is only counted (with its real ranged class); anything else goes to the table.
+    internal static void Dispatch(IFordsTowerHitHook hook, object component, object? attacker, bool weaponEmpty, bool ranged, ref int damage)
+    {
+        if (damage <= 0)
+        {
+            Note(hook, component, attacker, false, ranged);
+            return;
+        }
+
+        Run(hook, component, attacker, weaponEmpty, ranged, ref damage);
     }
 
     /// <summary>
@@ -66,11 +78,27 @@ public static class FordsTowerHitPatch
     internal static void Run(IFordsTowerHitHook hook, object component, object? attacker, bool weaponEmpty, bool ranged, ref int damage)
     {
         if (weaponEmpty)
+        {
+            Note(hook, component, attacker, true, ranged);
             return;
+        }
 
         try
         {
             damage = hook.AdjustTowerDamage(component, attacker, ranged, damage);
+        }
+        catch (Exception ex)
+        {
+            LogFault(ex);
+        }
+    }
+
+    // Counts a blow the table does not decide; a fault logs once and changes nothing.
+    private static void Note(IFordsTowerHitHook hook, object component, object? attacker, bool weaponless, bool ranged)
+    {
+        try
+        {
+            hook.NoteUnappliedBlow(component, attacker, weaponless, ranged);
         }
         catch (Exception ex)
         {

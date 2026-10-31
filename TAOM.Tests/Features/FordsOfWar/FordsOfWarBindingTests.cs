@@ -270,6 +270,62 @@ public class FordsOfWarBindingTests
         Assert.IsTrue(Enum.IsDefined(typeof(BodyFlags), "CommonCollisionExcludeFlags"));
     }
 
+    // --- the diagnostics seams -----------------------------------------------------------------------------------------
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheDiagnosticsSeams_StillResolve()
+    {
+        var added = typeof(TaleWorlds.MountAndBlade.Source.Missions.MissionOptionsComponent).GetEvent("OnOptionsAdded");
+        Assert.IsNotNull(added, "MissionOptionsComponent.OnOptionsAdded is gone");
+        Assert.AreEqual(typeof(TaleWorlds.MountAndBlade.Source.Missions.OnMissionAddOptionsDelegate), added!.EventHandlerType);
+        var invoke = added.EventHandlerType!.GetMethod("Invoke")!;
+        Assert.AreEqual(typeof(void), invoke.ReturnType);
+        Assert.AreEqual(0, invoke.GetParameters().Length);
+
+        Method(typeof(MissionLogic), "OnMissionResultReady", typeof(void), typeof(MissionResult));
+        Member(typeof(MissionResult), "PlayerVictory", typeof(bool));
+
+        var hit = typeof(MissionBehavior).GetMethod("OnAgentHit", AnyMember);
+        Assert.IsNotNull(hit, "MissionBehavior.OnAgentHit is gone");
+        CollectionAssert.AreEqual(
+            new[] { typeof(Agent), typeof(Agent), typeof(MissionWeapon).MakeByRefType(), typeof(Blow).MakeByRefType(), typeof(AttackCollisionData).MakeByRefType() },
+            hit!.GetParameters().Select(p => p.ParameterType).ToArray());
+
+        Member(typeof(Agent), "CurrentMortalityState", typeof(Agent.MortalityState));
+        Member(typeof(Agent), "MountAgent", typeof(Agent));
+        Member(typeof(Agent), "IsHuman", typeof(bool));
+        Member(typeof(Agent), "MovementVelocity", typeof(Vec2));
+        Member(typeof(Agent), "MovementDirectionAsAngle", typeof(float));
+        Method(typeof(Vec2), "RotateCCW", typeof(void), typeof(float));
+
+        Member(typeof(AttackCollisionData), "BaseMagnitude", typeof(float));
+        Member(typeof(AttackCollisionData), "MissileTotalDamage", typeof(float));
+        Member(typeof(AttackCollisionData), "MissileStartingBaseSpeed", typeof(float));
+        Member(typeof(AttackCollisionData), "MissileVelocity", typeof(Vec3));
+        Member(typeof(AttackCollisionData), "AttackBlockedWithShield", typeof(bool));
+        Member(typeof(Blow), "IsMissile", typeof(bool));
+        Member(typeof(Blow), "InflictedDamage", typeof(int));
+        Member(typeof(Blow), "AbsorbedByArmor", typeof(float));
+        Member(typeof(Blow), "VictimBodyPart", typeof(BoneBodyPartType));
+        Method(typeof(AgentStatCalculateModel), "GetWeaponDamageMultiplier", typeof(float), typeof(Agent), typeof(WeaponComponentData));
+
+        Method(typeof(Mission), "IsPositionInsideBoundaries", typeof(bool), typeof(Vec2));
+        foreach (var list in new[] { "AllAgents", "Agents" })
+        {
+            var counted = typeof(Mission).GetProperty(list, AnyMember)?.PropertyType.GetProperty("Count");
+            Assert.IsNotNull(counted, $"Mission.{list} no longer has a Count");
+            Assert.AreEqual(typeof(int), counted!.PropertyType);
+        }
+
+        Member(typeof(Formation), "CurrentPosition", typeof(Vec2));
+        Member(typeof(Formation), "Width", typeof(float));
+        Member(typeof(DestructableComponent), "HitPoint", typeof(float));
+
+        var inquiry = typeof(InquiryData).GetConstructors().Single(c => c.GetParameters().Length >= 7);
+        Assert.AreEqual(typeof(Action), inquiry.GetParameters()[6].ParameterType, "the 7th InquiryData argument is the affirmative action");
+    }
+
     // --- helpers -------------------------------------------------------------------------------------------------------
 
     private static PropertyInfo Property(Type type, string name, Type expected)
@@ -279,6 +335,18 @@ public class FordsOfWarBindingTests
         Assert.AreEqual(expected, property!.PropertyType, $"{type.Name}.{name} changed type");
         Assert.IsNotNull(property.GetGetMethod(true), $"{type.Name}.{name} lost its getter");
         return property;
+    }
+
+    private static void Member(Type type, string name, Type expected)
+    {
+        var property = type.GetProperty(name, AnyMember);
+        if (property != null)
+        {
+            Assert.AreEqual(expected, property.PropertyType, $"{type.Name}.{name} changed type");
+            return;
+        }
+
+        Field(type, name, expected);
     }
 
     private static void Field(Type type, string name, Type expected)

@@ -1,4 +1,5 @@
 using TAOM.Adapters;
+using TAOM.Features.FordsOfWar.Diagnostics;
 
 namespace TAOM.Features.FordsOfWar;
 
@@ -18,12 +19,14 @@ internal sealed class FordsMenuEntry
     private readonly IFordsMenuAdapter _menu;
     private readonly FordsConfigCatalog _catalog;
     private readonly FordsSetupPrompt _prompt;
+    private readonly FordsRunReport _report;
 
-    public FordsMenuEntry(IFordsMenuAdapter menu, FordsConfigCatalog catalog, FordsSetupPrompt prompt)
+    public FordsMenuEntry(IFordsMenuAdapter menu, FordsConfigCatalog catalog, FordsSetupPrompt prompt, FordsRunReport report)
     {
         _menu = menu;
         _catalog = catalog;
         _prompt = prompt;
+        _report = report;
     }
 
     public void Install()
@@ -31,6 +34,12 @@ internal sealed class FordsMenuEntry
         if (_menu.HasOption(OptionId))
             return;
 
-        _menu.AddOption(OptionId, Label, Hint, OrderIndex, () => !FordsSetupChoices.HasContent(_catalog), _prompt.Begin);
+        _menu.AddOption(OptionId, Label, Hint, OrderIndex, () =>
+        {
+            var hidden = !FordsSetupChoices.HasContent(_catalog);
+            _report.MenuPolled(hidden);
+            return hidden;
+        }, _prompt.Begin);
+        _report.MenuInstalled(FordsSetupChoices.HasContent(_catalog), _catalog.Factions.Count, _catalog.Maps.Count);
     }
 }

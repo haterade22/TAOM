@@ -1,6 +1,7 @@
 using System;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.FordsOfWar.Diagnostics;
 
 namespace TAOM.Features.FordsOfWar;
 
@@ -15,21 +16,31 @@ internal sealed class FordsMissionExit
 {
     private readonly IFordsMenuAdapter _menu;
     private readonly IModLogger _logger;
+    private readonly FordsRunReport _report;
     private readonly FordsExitClock _clock = new();
+    private bool _failureReported;
 
-    public FordsMissionExit(IFordsMenuAdapter menu, IModLogger logger)
+    public FordsMissionExit(IFordsMenuAdapter menu, IModLogger logger, FordsRunReport report)
     {
         _menu = menu;
         _logger = logger;
+        _report = report;
     }
 
     /// <summary>One mission tick. <paramref name="dt"/> is mission time, so a paused engine adds nothing.</summary>
     public void Tick(float dt, bool failedStart, bool matchEnded)
     {
+        if (failedStart && !_failureReported)
+        {
+            _failureReported = true;
+            _report.Failure("A", "AfterStart could not start the match; the ERROR line above names the cause");
+        }
+
         var reason = _clock.Tick(dt, failedStart, matchEnded);
         if (reason == FordsExit.None)
             return;
 
+        _report.ExitDue(reason.ToString());
         try
         {
             _menu.EndGame();
@@ -40,7 +51,8 @@ internal sealed class FordsMissionExit
             return;
         }
 
+        _report.EndGameRequested("auto");
         if (reason == FordsExit.AfterFailedStart)
-            FordsSetupPrompt.ShowStartFailed(_menu, _logger);
+            FordsSetupPrompt.ShowStartFailed(_menu, _logger, _report);
     }
 }

@@ -424,4 +424,41 @@ public class FordsMatchTests
         Assert.IsTrue(match.IsTower(FordsTestLayout.EastKeep));
         Assert.IsFalse(match.IsTower("barricade_17"));
     }
+
+    [TestMethod]
+    public void AdjustTowerDamage_WithReason_ReturnsWhatTheOldOverloadReturns()
+    {
+        var a = Create();
+        var b = Create();
+        var hit = new TowerHit(FordsTestLayout.EastOuter0, true, UnitRole.Ranged, 100);
+
+        var withReason = a.AdjustTowerDamage(hit, out var reason);
+
+        Assert.AreEqual(b.AdjustTowerDamage(hit), withReason);
+        Assert.AreEqual(TowerDamageReason.Applied, reason);
+    }
+
+    [TestMethod]
+    public void AdjustTowerDamage_UnknownTower_ReturnsRawWithUnknownTowerReason()
+    {
+        var match = Create();
+
+        var damage = match.AdjustTowerDamage(new TowerHit("barricade_17", true, UnitRole.Hero, 77), out var reason);
+        match.AdjustTowerDamage(null!, out var nullReason);
+
+        Assert.AreEqual(77, damage);
+        Assert.AreEqual(TowerDamageReason.UnknownTower, reason);
+        Assert.AreEqual(TowerDamageReason.RawZero, nullReason);
+    }
+
+    [TestMethod]
+    public void Phase_FollowsTheClock()
+    {
+        var match = Create(Config(c => c with { CountdownSeconds = 10f }));
+        Assert.AreEqual(MatchPhase.Countdown, match.Phase);
+
+        match.Tick(Snap(11f));
+
+        Assert.AreEqual(MatchPhase.Live, match.Phase);
+    }
 }

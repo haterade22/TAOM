@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Features.FordsOfWar;
@@ -21,13 +23,16 @@ internal sealed class FordsSetupPrompt
     private readonly IFordsMenuAdapter _menu;
     private readonly IFordsOfWarGameManagerFactory _factory;
     private readonly IModLogger _logger;
+    private readonly FordsRunReport _report;
 
-    public FordsSetupPrompt(FordsConfigCatalog catalog, IFordsMenuAdapter menu, IFordsOfWarGameManagerFactory factory, IModLogger logger)
+    public FordsSetupPrompt(FordsConfigCatalog catalog, IFordsMenuAdapter menu, IFordsOfWarGameManagerFactory factory, IModLogger logger,
+        FordsRunReport report)
     {
         _catalog = catalog;
         _menu = menu;
         _factory = factory;
         _logger = logger;
+        _report = report;
     }
 
     /// <summary>Asks the questions in order and starts the match with the answers.</summary>
@@ -35,15 +40,16 @@ internal sealed class FordsSetupPrompt
     {
         try
         {
+            _report.MenuClicked();
             if (!FordsSetupChoices.HasContent(_catalog))
             {
                 _menu.Notify(NoContentMessage);
                 return;
             }
 
-            _menu.Choose("{=TAOM_FOW_Prompt_YourFaction_Title}Choose Your Side",
+            Ask("faction", "{=TAOM_FOW_Prompt_YourFaction_Title}Choose Your Side",
                 "{=TAOM_FOW_Prompt_YourFaction_Desc}Pick the faction whose army you will command. You give orders and spend gold; you do not fight.",
-                FordsSetupChoices.Factions(_catalog), west => AskEnemy(west));
+                FordsSetupChoices.Factions(_catalog), AskEnemy);
         }
         catch (Exception ex)
         {
@@ -52,18 +58,21 @@ internal sealed class FordsSetupPrompt
     }
 
     /// <summary>Starts a match from a finished setup. False, with the player told why, when no game manager could be built.</summary>
-    public bool Start(FordsMatchSetup setup)
+    public bool Start(FordsMatchSetup setup, string trigger = "menu")
     {
         try
         {
+            _report.BeginRun(trigger, setup);
             var manager = _factory.Create(setup);
             if (manager == null)
             {
                 _logger.LogWarning("[FordsOfWar] the game manager factory returned null (no TAOM.Client); the match cannot start");
                 _menu.Notify(NoClientMessage);
+                _report.Failure("C", "the game manager factory returned null");
                 return false;
             }
 
+            _report.Stage("startNewGame");
             _menu.StartGame(manager);
             return true;
         }
@@ -78,25 +87,38 @@ internal sealed class FordsSetupPrompt
     /// Shows the start-failed notice and never throws. The mission exit after a failed start and the client's game manager after a
     /// failed load come here, so the player sees the same notice the main menu shows when the prompts fail.
     /// </summary>
-    internal static void ShowStartFailed(IFordsMenuAdapter menu, IModLogger logger)
+    internal static void ShowStartFailed(IFordsMenuAdapter menu, IModLogger logger, FordsRunReport report)
     {
         try
         {
-            menu.Notify(StartFailedMessage);
+            menu.Notify(StartFailedMessage, report.NoticeAcknowledged);
+            report.NoticeRequested(true);
         }
         catch (Exception ex)
         {
             logger.LogWarning($"[FordsOfWar] the start-failed notice could not be shown: {ex.Message}");
+            report.NoticeRequested(false);
         }
     }
 
+    /// <summary>Shows one prompt and marks it shown, answered or cancelled in the run report; the answer goes to <paramref name="next"/>.</summary>
+    private void Ask(string step, string title, string description, IReadOnlyList<FordsChoice> choices, Action<string> next)
+    {
+        _report.PromptShown(step);
+        _menu.Choose(title, description, choices, picked =>
+        {
+            _report.PromptAnswered(step);
+            next(picked);
+        }, onCancelled: () => _report.PromptCancelled(step));
+    }
+
     private void AskEnemy(string west) =>
-        Guarded(() => _menu.Choose("{=TAOM_FOW_Prompt_EnemyFaction_Title}Choose Your Enemy",
+        Guarded(() => Ask("enemy", "{=TAOM_FOW_Prompt_EnemyFaction_Title}Choose Your Enemy",
             "{=TAOM_FOW_Prompt_EnemyFaction_Desc}Pick the faction the computer commands against you.",
             FordsSetupChoices.Factions(_catalog), east => AskDifficulty(west, east)));
 
     private void AskDifficulty(string west, string east) =>
-        Guarded(() => _menu.Choose("{=TAOM_FOW_Prompt_Difficulty_Title}Choose the Difficulty",
+        Guarded(() => Ask("difficulty", "{=TAOM_FOW_Prompt_Difficulty_Title}Choose the Difficulty",
             "{=TAOM_FOW_Prompt_Difficulty_Desc}A harder enemy commander decides faster, makes fewer mistakes and earns more gold.",
             FordsSetupChoices.Difficulties(_catalog.Match.AiProfiles), profile => AskMap(west, east, profile)));
 
@@ -105,7 +127,7 @@ internal sealed class FordsSetupPrompt
         {
             if (_catalog.Maps.Count > 1)
             {
-                _menu.Choose("{=TAOM_FOW_Prompt_Map_Title}Choose the Battlefield",
+                Ask("map", "{=TAOM_FOW_Prompt_Map_Title}Choose the Battlefield",
                     "{=TAOM_FOW_Prompt_Map_Desc}Pick the ground the three lanes run across.",
                     FordsSetupChoices.Maps(_catalog), scene => Finish(west, east, profile, scene));
                 return;
@@ -142,6 +164,7 @@ internal sealed class FordsSetupPrompt
     private void Fault(Exception ex)
     {
         _logger.LogError($"[FordsOfWar] the start flow failed: {ex}");
+        _report.Failure("C", ex.GetType().Name + ": " + ex.Message);
         try
         {
             _menu.Notify(StartFailedMessage);

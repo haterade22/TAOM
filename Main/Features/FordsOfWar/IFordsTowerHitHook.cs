@@ -12,4 +12,12 @@ internal interface IFordsTowerHitHook
     /// <paramref name="inflictedDamage"/> back unchanged; a locked or fallen tower gets 0. Never throws.
     /// </summary>
     int AdjustTowerDamage(object component, object? attacker, bool ranged, int inflictedDamage);
+
+    /// <summary>
+    /// A blow on <paramref name="component"/> the patch will not hand to <see cref="AdjustTowerDamage"/>: raw damage of zero or less,
+    /// or no weapon (<paramref name="weaponless"/>). Counts it for the run report and changes nothing. Never throws; may be called
+    /// from any thread. <paramref name="ranged"/> is whether the weapon is a missile, thrown or shot weapon, as for
+    /// <see cref="AdjustTowerDamage"/>.
+    /// </summary>
+    void NoteUnappliedBlow(object component, object? attacker, bool weaponless, bool ranged);
 }

@@ -21,6 +21,9 @@ internal sealed class FakeFordsMenu : IFordsMenuAdapter
 
     public FakeFordsMenu(params string[] answers) => _answers = new Queue<string>(answers);
 
+    private Action? _lastCancel;
+    private Action? _lastOk;
+
     public List<Prompt> Prompts { get; } = new();
     public List<string> Messages { get; } = new();
     public List<MBGameManager> Started { get; } = new();
@@ -30,20 +33,48 @@ internal sealed class FakeFordsMenu : IFordsMenuAdapter
 
     public bool HasOption(string id) => Options.ContainsKey(id);
 
+    public bool ChooseThrows { get; set; }
+
+    public bool NotifyThrows { get; set; }
+
+    /// <summary>Queues more answers, for a second pass through the prompts.</summary>
+    public void Enqueue(params string[] answers)
+    {
+        foreach (var answer in answers)
+            _answers.Enqueue(answer);
+    }
+
     public void AddOption(string id, string label, string hint, int orderIndex, Func<bool> isHidden, Action onChosen)
     {
         AddCalls++;
         Options[id] = new Option(id, label, hint, orderIndex, isHidden, onChosen);
     }
 
-    public void Choose(string title, string description, IReadOnlyList<FordsChoice> choices, Action<string> onPicked)
+    public void Choose(string title, string description, IReadOnlyList<FordsChoice> choices, Action<string> onPicked, Action? onCancelled = null)
     {
+        if (ChooseThrows)
+            throw new InvalidOperationException("the menu could not show the prompt");
+
         Prompts.Add(new Prompt(title, description, choices));
+        _lastCancel = onCancelled;
         if (_answers.Count > 0)
             onPicked(_answers.Dequeue());
     }
 
-    public void Notify(string message) => Messages.Add(message);
+    public void Notify(string message, Action? onOk = null)
+    {
+        if (NotifyThrows)
+            throw new InvalidOperationException("the menu could not show the notice");
+
+        Messages.Add(message);
+        _lastOk = onOk;
+    }
+
+    /// <summary>The player presses Cancel on the newest prompt.</summary>
+    public void Cancel() => _lastCancel?.Invoke();
+
+    /// <summary>The player presses Ok on the newest notice.</summary>
+    public void Acknowledge() => _lastOk?.Invoke();
 
     public void StartGame(MBGameManager manager) => Started.Add(manager);
 

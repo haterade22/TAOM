@@ -1,5 +1,6 @@
 using System;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Adapters;
@@ -34,12 +35,21 @@ internal interface IFordsTowerAdapter
 
     /// <summary>
     /// Looses <paramref name="missiles"/> javelins from above the tower toward a ground point, each owned by a living gunner of
-    /// that tower, at the javelin's own missile speed. False when the tower has no living gunner or the javelin item is missing.
+    /// that tower, at the javelin's own missile speed. Returns how many missiles were added: 0 when the tower has no living gunner,
+    /// the javelin item is missing or the target position is not finite. A target out of reach is still aimed at 45 degrees and counts.
     /// </summary>
-    bool Fire(string towerId, Vec3f target, int missiles);
+    int Fire(string towerId, Vec3f target, int missiles);
 
     /// <summary>The tower id of a destructible component (passed as object); null when it is not one of ours.</summary>
     string? TowerIdOf(object? component);
+
+    /// <summary>
+    /// The volley javelin as the engine resolved it (looking it up logs its numbers once); null when the item does not exist.
+    /// </summary>
+    FordsVolleyItemInfo? VolleyItemInfo();
+
+    /// <summary>The entity's current hit points; null for an unknown tower.</summary>
+    float? HitPoints(string towerId);
 
     /// <summary>Forgets every handle (mission end). The entities go with the scene.</summary>
     void Clear();

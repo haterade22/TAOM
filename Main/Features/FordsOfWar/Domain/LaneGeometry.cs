@@ -101,6 +101,33 @@ internal static class LaneGeometry
         return PointAt(path, attacker == MatchSide.West ? towerArc - distance : towerArc + distance);
     }
 
+    /// <summary>
+    /// The unit ground direction (West to East) of the lane segment closest to <paramref name="point"/>; the zero vector for a lane
+    /// with no length.
+    /// </summary>
+    public static Vec3f DirectionAt(IReadOnlyList<Vec3f> path, Vec3f point)
+    {
+        if (path.Count < 2)
+            return default;
+
+        var arc = ArcPosition(path, point);
+        var walked = 0f;
+        var direction = default(Vec3f);
+        for (var i = 1; i < path.Count; i++)
+        {
+            var dx = path[i].X - path[i - 1].X;
+            var dy = path[i].Y - path[i - 1].Y;
+            var length = (float)Math.Sqrt(dx * dx + dy * dy);
+            if (length > 0f)
+                direction = new Vec3f(dx / length, dy / length, 0f);
+            walked += length;
+            if (arc <= walked && length > 0f)
+                break;
+        }
+
+        return direction;
+    }
+
     /// <summary>The point <paramref name="arc"/> metres along the lane from its West end, clamped to the lane.</summary>
     public static Vec3f PointAt(IReadOnlyList<Vec3f> path, float arc)
     {

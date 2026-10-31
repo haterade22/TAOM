@@ -72,7 +72,7 @@
 1 Main/Features/FieldCamp/Hooks/FieldCampMenuController.cs
 1 Main/Features/FieldCamp/Hooks/PartyNameplateCampIconPatch.cs
 1 Main/Features/FieldCommission/Hooks/Patch71_HeroResetEquipmentsGuard.cs
-1 Main/Features/FordsOfWar/Hooks/FordsOfWarMissionLogic.cs
+1 Main/Features/FordsOfWar/Hooks/FordsMissionResults.cs
 1 Main/Features/FordsOfWar/Hooks/FordsTowerHitPatch.cs
 2 Main/Features/HeroRace/Hooks/CharacterTableau_OnTick_ResidencyCensus_Patch.cs
 3 Main/Features/HeroRace/Hooks/GauntletSceneNotification_OpenScene_Guard_Patch.cs

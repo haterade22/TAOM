@@ -9,6 +9,7 @@ using TaleWorlds.MountAndBlade.Source.Missions;
 using TaleWorlds.MountAndBlade.Source.Missions.Handlers.Logic;
 using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Hooks;
 using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
@@ -31,6 +32,7 @@ public class FordsMissionLauncherTests
         typeof(MissionBoundaryPlacer),
         typeof(MissionOptionsComponent),
         typeof(FordsOfWarMissionLogic),
+        typeof(FordsTelemetryLogic),
     };
 
     private static CustomBattleCombatant Combatant(BattleSideEnum side) =>
@@ -57,12 +59,13 @@ public class FordsMissionLauncherTests
     }
 
     [TestMethod]
-    public void BehaviorTypes_EndWithTheFordsLogic_AndOpenWithTheCombatantsLogic()
+    public void BehaviorTypes_EndWithTheFordsLogicThenTelemetry_AndOpenWithTheCombatantsLogic()
     {
         var types = FordsMissionLauncher.BehaviorTypes();
 
         Assert.AreEqual(typeof(MissionCombatantsLogic), types[0], "the teams must exist before any later behavior starts");
-        Assert.AreEqual(typeof(FordsOfWarMissionLogic), types[types.Count - 1], "the match starts after the boundary placers have run");
+        Assert.AreEqual(typeof(FordsOfWarMissionLogic), types[types.Count - 2], "the match starts after the boundary placers have run");
+        Assert.AreEqual(typeof(FordsTelemetryLogic), types[types.Count - 1], "last in the list means first to tick: the mission clock leads the director");
     }
 
     [TestMethod]
@@ -70,7 +73,8 @@ public class FordsMissionLauncherTests
     {
         var logger = Substitute.For<IModLogger>();
         var launcher = new FordsMissionLauncher(
-            FordsConfigCatalog.FromTexts(null, FordsConfigFixtures.Factions, FordsConfigFixtures.Maps, logger), new FordsSession(), logger);
+            FordsConfigCatalog.FromTexts(null, FordsConfigFixtures.Factions, FordsConfigFixtures.Maps, logger), new FordsSession(), logger,
+            new FordsRunReport(logger));
 
         var behaviors = launcher.CreateBehaviors(
             new FordsMatchSetup("taom_rohan_battle_001_forceatmo", "gondor", "mordor", "normal", 3),
@@ -84,7 +88,8 @@ public class FordsMissionLauncherTests
     {
         var logger = Substitute.For<IModLogger>();
         var launcher = new FordsMissionLauncher(
-            FordsConfigCatalog.FromTexts(null, FordsConfigFixtures.Factions, FordsConfigFixtures.Maps, logger), new FordsSession(), logger);
+            FordsConfigCatalog.FromTexts(null, FordsConfigFixtures.Factions, FordsConfigFixtures.Maps, logger), new FordsSession(), logger,
+            new FordsRunReport(logger));
 
         var ammo = launcher.CreateBehaviors(new FordsMatchSetup("s", "gondor", "mordor", "normal", 3),
             Combatant(BattleSideEnum.Defender), Combatant(BattleSideEnum.Attacker)).OfType<AmmoSupplyLogic>().Single();

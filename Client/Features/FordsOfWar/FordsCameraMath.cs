@@ -140,6 +140,21 @@ internal static class FordsCameraMath
         return inside;
     }
 
+    /// <summary>The distance on the ground plane from the point to the nearest polygon edge; <see cref="float.MaxValue"/> for a polygon with no edge.</summary>
+    internal static float DistanceToEdge(IReadOnlyList<Vec3f> polygon, float x, float y)
+    {
+        var best = float.MaxValue;
+        for (var i = 0; i < polygon.Count; i++)
+        {
+            var (px, py) = NearestOnSegment(polygon[i], polygon[(i + 1) % polygon.Count], x, y);
+            var d = (px - x) * (px - x) + (py - y) * (py - y);
+            if (d < best)
+                best = d;
+        }
+
+        return best == float.MaxValue ? best : (float)Math.Sqrt(best);
+    }
+
     private static (float X, float Y) NearestOnSegment(Vec3f a, Vec3f b, float x, float y)
     {
         var abx = b.X - a.X;

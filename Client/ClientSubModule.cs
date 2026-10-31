@@ -2,6 +2,8 @@ using Bannerlord.UIExtenderEx;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TAOM.Composition;
+using TAOM.Core.Logging;
+using TAOM.Features.FordsOfWar.Diagnostics;
 
 namespace TAOM.Client;
 
@@ -41,5 +43,14 @@ public sealed class ClientSubModule : MBSubModuleBase
         _uiExtender = UIExtender.Create(UiExtenderModuleName);
         ClientUiExtensions.Register(_uiExtender, typeof(ClientSubModule).Assembly);
         _uiExtender.Enable();
+    }
+
+    // Module.cs 536-549 and 790-798: every return to the main menu (a game ends and the global state stack is empty) runs this on every
+    // submodule, and the first boot runs it too, where MainMenuReturned finds no closed run and does nothing. Fords of War writes its
+    // final verdict pass here. MainMenuStep keeps a fault from throwing into the engine's tick. IoC.Configure ran in OnSubModuleLoad.
+    protected override void OnBeforeInitialModuleScreenSetAsRoot()
+    {
+        base.OnBeforeInitialModuleScreenSetAsRoot();
+        MainMenuStep.Run("fords of war final report", () => IoC.Resolve<FordsRunReport>().MainMenuReturned(), () => IoC.Resolve<IModLogger>());
     }
 }

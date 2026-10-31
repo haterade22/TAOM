@@ -151,3 +151,75 @@ per-file lenses cannot see this by design; the Step 2c sweep found it.
    effect the feature relies on, quote the line that produces that effect.
 
 No feedback memory: every rule above lives in the repo.
+
+## Addendum: the self-diagnosing logging change (2026-10-31)
+
+After the merge (47bf2fdc9), Mike asked for logging that judges each in-game check by itself. The change
+adds `Main/Features/FordsOfWar/Diagnostics/` (a run report and 16 verdict rules), the engine seams that feed
+it, `Main/Features/Warg/WargRageLog.cs` and TAOM.Client seams. It was designed by an architect, attacked by a
+critic, revised, built in four Sonnet stages, checked for conformance by an architect, then reviewed by
+`/deep-review` at tier 1 in two waves plus a Step 2b adversarial review and a Step 2c root-cause agent. Codex
+did not run (a paid call; no word from Mike for this change).
+
+### Conformance check during the build
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| K1 | MED | A prompt fault after an earlier run was charged to that closed run. | Wrong owner of late evidence | The builders tested each member alone, not a second run. | Fixed; scenario S5 drives the session tail. |
+| K2 | MED | A console start that failed on route C wrote its final pass before its console record existed. | Order of producers | Tests called the members in an order the engine never uses. | Fixed; the harness calls in the engine's order. |
+| K3 | LOW | Four small items: the frame histogram was not reset per run, the warg log kept the ended mission, one string per volley hit, check 1 let a newer good flow hide a fault. | Per-run state and cost | Checked against the design only. | Fixed in wave 1. |
+
+### Wave 1 (Lens 2 twice, Lens 5 twice)
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| L1 | HIGH | Check 7 read a hero's lane from its spawn position, but every generated lane starts at the same base point and `NearestLane` gives ties to lane 0, so correct lane 1 and 2 spawns FAILed. | Geometry assumed, never run through the real generator | The critique proposed the position check (text against text); the test used a layout with parallel lanes 50 m apart. | Fixed; the wave 2 fix then deleted the comparison as a tautology (row N6). Harness scenario S1 runs the real generator. |
+| L2 | MED | The warg return time was wall-clock, judged on mission time: a pause of 60 s failed a working return. | Clock mismatch | Hand-set timestamps in tests. | Fixed (mission clock); scenario S3 pauses. |
+| L3 | MED | A rage whose reset never ran (rider killed or thrown off a living warg) stayed open forever: check 12 could PASS while a rider lost his formation, and tracking stopped at 100 open episodes. | Producer path the rule could not see | Counts were hand-set; nobody traced every exit of an episode. | Fixed: `stranded` after two looks in a row, and `riderInactive`. (A separate slip, a second rage that dropped a waiting episode, is row N6's `superseded`.) |
+| L4 | MED | Check 4 `inside` FAILed a camera parked on the boundary: the clamp puts it exactly on the edge and the native inside test is strict. | Engine semantics against our own clamp | Probe tests covered flags only. | Fixed: outside only beyond 0.5 m of the edge; scenario S4. |
+| L5 | MED | A match started from the menu that failed on route B or C produced no FAIL in any row. | Missing FAIL branch | No test judged a failed start. | Fixed: check 3 `started`. |
+| L6 | LOW | 16 smaller items: a dropped tower still PASSed; the hero link had no side filter; the hold settle used a fixed 10 s; the Patch131 note lost `ranged`; a warg count looked up offer ids in a troop-id table; a route C run got a stale final pass; a dead `cancel` branch; a warning stamped with the old run; check 15 had no close bound; late session evidence was never judged; `installed` was recorded before the option existed; two weak test pins; an optional parameter; a wrong tick-order comment; shielded hits in medians; paused frames counted; three doc errors. | Mixed | Mostly hand-built evidence. | All fixed in wave 1. |
+
+### Wave 2 (Lens 1, 3, 4, 6; Step 2b; Step 2c)
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| N1 | CRIT | `WargRageLog` held the sealed `Agent` and `Formation` in a class with decision logic (ADR-007), which forced its tests into `RequiresGame`. | ADR-007 | Wave 1 runs Lens 2 and 5 only; the standards lens runs in wave 2 by design. | Fixed: object handles, slot check, a reflection gate that fails on any TaleWorlds type in its signatures. |
+| N2 | MED | The camera probe got the report through a swallowed `IoC.Resolve`, so no unit test reached the camera evidence. | Locator in a helper | Builders copied a view pattern into a non-boundary class. | Fixed: constructor injection; probe tests added. |
+| N3 | MED | The doc said to read the last final pass, but its own steps need three runs. | Doc against procedure | Written per run, read per session. | Fixed in the doc. |
+| N4 | MED | Check 16 judged TAOM's config cap, not the engine agent limit, while the doc said it judged the agent count. | Rule against its claim | Nobody compared the rule with the doc sentence. | Fixed: an `agents` part against the engine limit. |
+| N5 | MED | Check 11 could not FAIL when the towers never fired or no hit was read. | Missing FAIL branch | Only the happy path was tested. | Fixed: two FAIL rules; `Fire` returns the missiles it added. |
+| N6 | MED | Five more false verdicts from the root-cause read: check 15 exit in wall time; the check 7 lane comparison was a tautology after L1; the check 8 front rank spreads across the lane; the check 12 return ignored formation depth; a second rage dropped a waiting episode. | Producer-made evidence never judged | See the pattern below. | Fixed in wave 2. |
+| N7 | LOW | 13 smaller items from Lens 1, 3 and 4 (a refused order logged every tick, a double lock, bare layout numbers, file names, comments, a purity gate that let three forms of `TaleWorlds` through, an inert sleep, a notice part that could only pass, a human comparison a test can make, missing telemetry and `Ended` tests, a hold FAIL that named no tower). | Mixed | | Fixed in wave 2. |
+
+Lens 6 proposed 12 improvements, all applied (four behaviour-changing ones with Mike's approval): reuse
+`MissionPerf.FrameStats`, one tower damage reason enum, the blow counts as a `[class, reason]` grid, one run
+clock, first spawn per lane, one `Ask` helper, and six smaller items (warg counts as one evidence type, an unread
+field, one reply constant, one late-pass helper, one start rule, and an accurate volley log comment).
+
+### Root-cause pattern
+
+**No verdict rule was ever judged on evidence its real producers made, in the engine's call order, with its
+clocks and geometry.** Stage S1 built and tested all 16 rules before any producer existed, on hand-built
+records, and wrote those tests after the code. The critique reviewed text against text: two of its fixes
+(the lane from position, the strict inside test) became false FAILs. This is the fourth time the category has
+shipped (testing-qa lessons #960, #925 and #1037 were fakes of adapters; here the hand-built object was the
+feature's own record, so none of them applied).
+
+### Preventive actions
+
+1. **Harness (done):** a test-side scenario harness drives the real report, director, generator, placement,
+   probe, exit clock and camera maths, with faithful fakes, in the engine's per-frame order, then judges. Five
+   scenarios (clean match, one fault per row, pause and hitch, camera edge, session tail) and a contract
+   table that ties every verdict part to the scenario that fails it, or marks it pass-only.
+2. **Lesson** (`lessons/testing-qa.md`): judge a self-check rule only on evidence its real producers made.
+3. **Lens 4 check 9** gains one clause for self-check verdicts.
+
+FOLLOW-UP: a warg rider who leaves a living warg mid-rage never gets his formation back; check 12 now reports it as `stranded` (no issue: creating an issue needs the maintainer's word).
+FOLLOW-UP: after a lane loses its towers, its hold point before the keep can sit inside a neighbouring lane's inner tower range on maps with 300 to 500 m between the bases; check 8 now names the tower (no issue: creating an issue needs the maintainer's word).
+FOLLOW-UP: the AI commander rebuilds its full read model every tick and uses it once every 5 to 12 s (pre-existing; no issue: creating an issue needs the maintainer's word).
+FOLLOW-UP: the Fords verdict rows move onto the shared `[Check]` line, whose API (#1071) landed on trunk while this change was in review (#1069).
+
+UNVERIFIED until the first game run: whether the engine's `MissileTotalDamage` equals the volley item's thrust
+damage (check 11 FAILs with both numbers if not), and whether a missing keep prefab provokes a route A start
+failure for item 15.

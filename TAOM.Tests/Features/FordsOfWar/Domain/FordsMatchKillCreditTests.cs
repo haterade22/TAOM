@@ -1,3 +1,4 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.FordsOfWar.Domain;
 using static TAOM.Tests.Features.FordsOfWar.Domain.FordsMatchFixture;
@@ -82,5 +83,31 @@ public class FordsMatchKillCreditTests
         }
 
         return match;
+    }
+
+    [TestMethod]
+    [DataRow("Unregistered")]
+    [DataRow("AfterEnd")]
+    [DataRow("KillerUnknown")]
+    [DataRow("SameSide")]
+    [DataRow("Paid")]
+    public void OnUnitKilled_ReturnsTheCredit(string scenario)
+    {
+        var expected = (KillCredit)Enum.Parse(typeof(KillCredit), scenario);
+        var match = Create();
+        match.RegisterUnit(1, Unit(10, MatchSide.West, WestSlot));
+        match.RegisterUnit(2, Unit(11, MatchSide.West, WestSlot));
+        match.RegisterUnit(3, Unit(20, MatchSide.East, EastSlot));
+        AgentKey victim = Key(10);
+        AgentKey? killer = Key(20);
+        switch (scenario)
+        {
+            case "Unregistered": victim = Key(999); break;
+            case "AfterEnd": match.OnTowerDestroyed(FordsTestLayout.EastKeep, null); match.OnTowerDestroyed(FordsTestLayout.WestKeep, null); break;
+            case "KillerUnknown": killer = null; break;
+            case "SameSide": killer = Key(11); break;
+        }
+
+        Assert.AreEqual(expected, match.OnUnitKilled(victim, killer));
     }
 }

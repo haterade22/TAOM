@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TaleWorlds.MountAndBlade;
@@ -39,6 +40,7 @@ public class FordsTowerHitPatchTests
     {
         var damage = 40;
         var weapon = default(MissionWeapon);
+        Assert.IsFalse(FordsTowerHitPatch.HasHook, "no earlier test left a hook installed");
 
         FordsTowerHitPatch.Prefix(new object(), null!, ref damage, ref weapon);
 
@@ -95,6 +97,82 @@ public class FordsTowerHitPatchTests
         FordsTowerHitPatch.Run(hook, new object(), null, false, false, ref damage);
 
         Assert.AreEqual(40, damage);
+    }
+
+    [TestMethod]
+    public void ZeroDamage_CallsNoteUnappliedBlow()
+    {
+        var hook = Install(() => 7);
+        var component = new object();
+        var damage = 0;
+        var weapon = default(MissionWeapon);
+
+        FordsTowerHitPatch.Prefix(component, null!, ref damage, ref weapon);
+
+        Assert.AreEqual(0, damage);
+        hook.Received(1).NoteUnappliedBlow(component, null, false, false);
+        hook.DidNotReceiveWithAnyArgs().AdjustTowerDamage(default!, default, default, default);
+    }
+
+    [TestMethod]
+    public void Dispatch_ZeroDamageRangedBlow_PassesRangedToNote()
+    {
+        var hook = Substitute.For<IFordsTowerHitHook>();
+        var component = new object();
+        var damage = 0;
+
+        FordsTowerHitPatch.Dispatch(hook, component, null, false, true, ref damage);
+
+        Assert.AreEqual(0, damage);
+        hook.Received(1).NoteUnappliedBlow(component, null, false, true);
+        hook.DidNotReceiveWithAnyArgs().AdjustTowerDamage(default!, default, default, default);
+    }
+
+    [TestMethod]
+    public void Weaponless_CallsNote_AndLeavesDamage()
+    {
+        var hook = Substitute.For<IFordsTowerHitHook>();
+        var component = new object();
+        var attacker = new object();
+        var damage = 40;
+
+        FordsTowerHitPatch.Run(hook, component, attacker, true, false, ref damage);
+
+        Assert.AreEqual(40, damage);
+        hook.Received(1).NoteUnappliedBlow(component, attacker, true, false);
+    }
+
+    [TestMethod]
+    public void WeaponlessRanged_PassesRangedToNote()
+    {
+        var hook = Substitute.For<IFordsTowerHitHook>();
+        var component = new object();
+        var damage = 40;
+
+        FordsTowerHitPatch.Run(hook, component, null, true, true, ref damage);
+
+        hook.Received(1).NoteUnappliedBlow(component, null, true, true);
+    }
+
+    [TestMethod]
+    public void NoteThrows_LogsFaultOnce()
+    {
+        var latch = typeof(FordsTowerHitPatch).GetField("_faultLogged", BindingFlags.NonPublic | BindingFlags.Static);
+        Assert.IsNotNull(latch, "the patch's _faultLogged latch moved: update this test");
+        latch!.SetValue(null, 0);
+        var hook = Substitute.For<IFordsTowerHitHook>();
+        hook.When(h => h.NoteUnappliedBlow(Arg.Any<object>(), Arg.Any<object?>(), Arg.Any<bool>(), Arg.Any<bool>()))
+            .Do(_ => throw new InvalidOperationException("boom"));
+        var damage = 40;
+
+        FordsTowerHitPatch.Run(hook, new object(), null, true, false, ref damage);
+        Assert.AreEqual(1, (int)latch.GetValue(null)!, "the first fault sets the latch");
+        FordsTowerHitPatch.Run(hook, new object(), null, true, false, ref damage);
+
+        Assert.AreEqual(40, damage);
+        Assert.AreEqual(1, (int)latch.GetValue(null)!);
+        hook.Received(2).NoteUnappliedBlow(Arg.Any<object>(), Arg.Any<object?>(), true, false);
+        latch.SetValue(null, 0);
     }
 
     [TestMethod]

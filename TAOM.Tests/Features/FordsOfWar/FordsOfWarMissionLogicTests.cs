@@ -7,6 +7,7 @@ using TaleWorlds.MountAndBlade;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Hooks;
 using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
@@ -23,7 +24,7 @@ public class FordsOfWarMissionLogicTests
     private static FordsOfWarMissionLogic Logic(string scene, IModLogger logger, FordsMissionExit? exit = null) =>
         new(new FordsMatchSetup(scene, "gondor", "mordor", "normal", 3),
             FordsConfigCatalog.FromTexts(null, FordsConfigFixtures.Factions, FordsConfigFixtures.Maps, logger),
-            new FordsSession(), logger, exit);
+            new FordsSession(), logger, new FordsRunReport(logger), exit);
 
     [TestMethod]
     public void TheLogic_IsAMissionLogic_SoCheckMissionEndedPollsIt()
@@ -48,6 +49,17 @@ public class FordsOfWarMissionLogicTests
 
         Assert.IsFalse(logic.MissionEnded(ref result));
         Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void MissionEnded_TakesItsResultFromFordsMissionResults()
+    {
+        var source = RepoPaths.ReadSource("Main/Features/FordsOfWar/Hooks/FordsOfWarMissionLogic.cs", stripComments: true);
+
+        StringAssert.Contains(source, "missionResult = FordsMissionResults.For(Mission, ");
+        Assert.IsFalse(source.Contains("ResultFor("), "the result factory lives in FordsMissionResults");
+        var fallback = FordsMissionResults.For(null!, false);
+        Assert.IsNotNull(fallback, "a mission with no teams still yields a result");
     }
 
     [TestMethod]
@@ -78,7 +90,7 @@ public class FordsOfWarMissionLogicTests
     {
         var menu = Substitute.For<IFordsMenuAdapter>();
         var logger = Substitute.For<IModLogger>();
-        var logic = Logic("no_such_scene", logger, new FordsMissionExit(menu, logger));
+        var logic = Logic("no_such_scene", logger, new FordsMissionExit(menu, logger, new FordsRunReport(logger)));
         logic.AfterStart();
 
         logic.OnMissionTick(2f);
@@ -86,7 +98,7 @@ public class FordsOfWarMissionLogicTests
         logic.OnMissionTick(1.5f);
 
         menu.Received(1).EndGame();
-        menu.Received(1).Notify(FordsSetupPrompt.StartFailedMessage);
+        menu.Received(1).Notify(FordsSetupPrompt.StartFailedMessage, Arg.Any<System.Action?>());
     }
 
     [TestMethod]
@@ -94,7 +106,7 @@ public class FordsOfWarMissionLogicTests
     {
         var menu = Substitute.For<IFordsMenuAdapter>();
         var logger = Substitute.For<IModLogger>();
-        var logic = Logic("taom_rohan_battle_001_forceatmo", logger, new FordsMissionExit(menu, logger));
+        var logic = Logic("taom_rohan_battle_001_forceatmo", logger, new FordsMissionExit(menu, logger, new FordsRunReport(logger)));
 
         logic.OnMissionTick(100f);
 

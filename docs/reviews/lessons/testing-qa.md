@@ -2381,3 +2381,17 @@ own faults. And the HUD marker letters were collected but fed no line and no che
   every source of what its id names. Every collected fact feeds a printed line or a check, or is deleted. Test each
   degenerate case.
 - **Source:** [rca-staged-siege-run-report-2026-10-31.md](../rca-staged-siege-run-report-2026-10-31.md) rows 1 and 4 to 7.
+
+### Judge a self-check rule only on evidence its real producers made (Fords of War logging, 2026-10-31)
+The Fords of War run report shipped 16 verdict rules whose tests built evidence records by hand. Reviews then
+found 13 false verdicts in one wave: a hero lane read at a base point every lane shares, wall-clock time judged
+on mission time, a strict native inside test against a clamp that parks on the edge, failed starts with no FAIL
+anywhere, a lane comparison that compared the request with itself.
+- **Why missed:** all rules were built and tested before any producer existed, on hand-built records written
+  after the code, so each record had the shape the rule expected. This is the fourth recurrence of the
+  hand-built-input category (#960, #925, #1037 were fakes of adapters; here it was the feature's own record).
+- **Prevent:** a self-check part needs one scenario where working producers, driven in the engine's call order
+  through the real generator, clamp and clocks, PASS it, and one injected fault that FAILs it; a branch no
+  scenario reaches is deleted; a hand-built evidence record proves only the rule's arithmetic. Build such a
+  feature in vertical slices (rule, producer seam and scenario together), not all rules first.
+- **Source:** `docs/reviews/rca-fords-of-war-2026-10-31.md`, addendum, root-cause pattern.
