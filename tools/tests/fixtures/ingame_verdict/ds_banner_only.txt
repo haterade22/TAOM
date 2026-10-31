@@ -1,0 +1,2 @@
+14:30:05.100  server is READY when you see:  [DedicatedServer] SERVING
+14:31:40.200  [DedicatedServer] loading... tick=4000 state=GameLoadingState

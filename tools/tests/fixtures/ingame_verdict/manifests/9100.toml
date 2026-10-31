@@ -1,0 +1,4 @@
+# Fixture: not TOML (an unclosed array).
+issue = 9100
+fixed_in = "40385aa5b"
+logs = ["taom"

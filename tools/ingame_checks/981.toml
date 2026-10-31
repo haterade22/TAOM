@@ -1,0 +1,72 @@
+# In-game checks for #981, read by tools/ingame_verdict.py. Each boot below is its own dedicated
+# server session, so run the reader with --sessions 3 --ds-data <server data> --ds-engine <stage>\engine.
+# Every pattern is matched against one log line; the texts come from:
+#   [ServerSettings]       Main/Features/ServerSettings/ServerSettingsReport.cs (BootLine), ServerSettingsReader.cs, ServerSettingsModule.cs
+#   [SettingsFingerprint]  Main/Features/CoopInterop/SettingsFingerprintLog.cs
+#   [TickProfiler]         Main/Features/MissionPerf/HitchProbeLines.cs (ProbeOffLine)
+#   [DedicatedServer]      BannerlordCoop.DedicatedServer CoopServerHost.cs (SERVING)
+# A client join is none of the issue's six items, so it is not judged here; a join check needs its own
+# issue and manifest that also reads the client taom log, where [Possession] lines are written.
+issue = 981
+title = "Co-op: in-game checks for the B8 server settings file"
+fixed_in = "13fb30f9c"   # B8, named in the issue
+logs = ["taom-ds", "ds"]
+
+[[check]]
+id = "taom.server-settings.no-file"
+needs = "item 1: delete taom-server-settings.json from the server data folder, then boot the staged server"
+reached = ['\[ServerSettings\] TAOM server settings .*: no file at ']
+pass = [
+  '\[ServerSettings\] TAOM server settings .*: no file at .* \(BANNERLORD_USER_DIR\), every setting is at its server default',
+  '\[ServerSettings\] wrote an empty template to ',
+]
+
+[[check]]
+id = "taom.server-settings.one-key"
+needs = 'item 2: put { "CastleNotablesPerCastle": 4 } in the file and boot again'
+reached = ['\[ServerSettings\] (set )?CastleNotablesPerCastle = 4 ']
+pass = [
+  '\[ServerSettings\] TAOM server settings .*: loaded 1 key\(s\) from .*, 0 reverted, 0 unknown',
+  '\[ServerSettings\] set CastleNotablesPerCastle = 4 \(server default 3\)',
+]
+
+[[check]]
+id = "taom.server-settings.bad-value"
+needs = 'item 3: put { "CastleNotablesPerCastle": -5 } in the file and boot again'
+reached = ['\[ServerSettings\] (set )?CastleNotablesPerCastle = -5 ']
+pass = [
+  '\[WARNING\] \[ServerSettings\] CastleNotablesPerCastle = -5 .*; kept the server default 3',
+  '\[WARNING\] \[ServerSettings\] 1 value\(s\) reverted to their server defaults',
+  # The boot continues: the server reaches SERVING (the launcher banner names SERVING too, without this text).
+  '\[DedicatedServer\] SERVING .*coop server up',
+]
+# No fail pattern: a -5 boot that stops fails by its missing SERVING line, and a FATAL or LOAD TIMEOUT
+# line would also match a later boot that never had the bad value.
+
+[[check]]
+id = "taom.server-settings.fingerprint"
+needs = "item 4: any server boot that reaches SERVING"
+reached = ['\[DedicatedServer\] SERVING .*coop server up']
+pass = ['\[SettingsFingerprint\] global=\S+ over [1-9][0-9]* simulation-relevant setting']
+fail = ['\[SettingsFingerprint\] could not read any of the ']
+
+[[check]]
+id = "taom.server-settings.hitch-probe-off"
+needs = "item 5: a server boot with no settings file (item 1's boot) that loads the campaign"
+# Judged on the no-file boot only: a later file may set EnableHitchProbe, and its install line is then right.
+# A no-file boot that installs the probe has no "probe off" line, so it fails by absence, but only once the
+# server reached SERVING (every reached pattern must match): a boot that stopped earlier is NOT REACHED.
+reached = [
+  '\[ServerSettings\] TAOM server settings .*: no file at ',
+  '\[DedicatedServer\] SERVING .*coop server up',
+]
+pass = [
+  '\[ServerSettings\] TAOM server settings .*: no file at ',
+  '\[TickProfiler\] probe off: ',
+]
+
+[[human]]
+claim = "item 1: taom-server-settings.defaults.json sits next to the template"
+
+[[human]]
+claim = "item 6: on a client, the TAOM MCM page opens and saves as before"

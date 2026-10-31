@@ -1,0 +1,2 @@
+   at TaleWorlds.MountAndBlade.Module.OnApplicationTick_Patch2(Module this, Single dt)
+   at TaleWorlds.DotNet.Managed.ApplicationTick_Patch1(Single dt)

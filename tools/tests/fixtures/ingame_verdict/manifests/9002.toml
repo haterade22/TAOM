@@ -1,0 +1,11 @@
+# Fixture: the attach check with absence = not-reached, and its id for a [Check] skip line.
+issue = 9002
+fixed_in = "40385aa5b"
+logs = ["taom"]
+
+[[check]]
+id = "taom.battle-action-bar.attach"
+needs = "a field battle with the bar on"
+reached = ['\[BattleActionBar\] screen init: MissionScreen=set .*enabled=True']
+pass = ['\[BattleActionBar\] mission init \S+ layer attached']
+absence = "not-reached"
