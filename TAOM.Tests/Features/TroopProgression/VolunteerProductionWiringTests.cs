@@ -28,6 +28,7 @@ public class VolunteerProductionWiringTests
         // Core services IoC.cs owns.
         container.RegisterInstance(Substitute.For<IModLogger>());
         container.RegisterInstance(Substitute.For<IPathService>());
+        container.RegisterInstance(Substitute.For<IOutcomeLog>());
         TroopProgressionIoC.RegisterTroopProgressionFeature(container);
         CulturalFeatsIoC.RegisterCulturalFeatsFeature(container);
         CastleRecruitmentIoC.RegisterCastleRecruitmentFeature(container);

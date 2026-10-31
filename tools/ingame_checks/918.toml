@@ -1,0 +1,28 @@
+# In-game checks for #918, read by tools/ingame_verdict.py. The lines come from
+# Main/Features/CastleRecruitment/CastleRecruitmentService.cs: ReportCastleRecruitDay writes a
+# "[Check] id=taom.castle-recruit.ai-off" line at each DailyTickEvent, keyed by the campaign day (pass, fail,
+# or skip with reason=toggle-on), and NoteCastleRecruit writes a fail line at once when an AI lord takes a castle notable's
+# volunteer while AI castle recruitment is off. blocked= counts that day's castle-rule answers of -1 to
+# VolunteerModel.MaximumIndexHeroCanRecruitFromHero, so a day with blocked=0 proves nothing and does not count.
+# Garrisons recruit through GarrisonRecruitmentCampaignBehavior, which raises no recruit event, and the player's
+# recruit screen raises OnUnitRecruitedEvent instead, so neither reaches this check; both are [[human]] items.
+issue = 918
+title = "AI Recruits From Castles off stops AI lords recruiting castle volunteers"
+fixed_in = "0d3f2bc88"   # named in the issue's merge comment of 2026-10-21
+logs = ["taom"]
+
+[[check]]
+id = "taom.castle-recruit.ai-off"
+needs = "Castle Recruitment on, AI Recruits From Castles off. Launch the game fresh and load the save once; restart the game before a retry, because a reload in the same game process can drop the lines of the day the engine reruns. PASS needs three days that each show blocked=1 or more"
+reached = ['\[Check\] id=taom\.castle-recruit\.ai-off result=pass day=\d+ blocked=[1-9]']
+pass = ['\[Check\] id=taom\.castle-recruit\.ai-off result=pass day=\d+ blocked=[1-9]']
+min = 3
+fail = ['\[Check\] id=taom\.castle-recruit\.ai-off result=fail']
+# One or two days with a blocked recruit is too short a run, not a failure.
+absence = "not-reached"
+
+[[human]]
+claim = "at a castle of your own alignment whose notables are not hostile to you, you can still recruit their volunteers from the castle's Recruit troops menu"
+
+[[human]]
+claim = "at a castle with garrison auto-recruitment on, a food surplus and no siege, the garrison still grows from its notables' volunteers over a few days"

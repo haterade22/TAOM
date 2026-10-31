@@ -276,6 +276,12 @@ class RepoManifestGateTests(unittest.TestCase):
             "taom.server-settings.no-file", "taom.server-settings.one-key", "taom.server-settings.bad-value",
             "taom.server-settings.fingerprint", "taom.server-settings.hitch-probe-off"])
 
+    def test_918_holds_only_the_ai_off_check(self):
+        # The design's garrison-kept check is not here: vanilla garrisons recruit without a recruit event.
+        m = iv.load_manifest(TOOLS / "ingame_checks" / "918.toml", 918)
+        self.assertEqual([c.id for c in m.checks], ["taom.castle-recruit.ai-off"])
+        self.assertEqual(iv.named_check_ids(m), {"taom.castle-recruit.ai-off"})
+
     def test_every_fixed_in_is_a_commit_in_this_clone(self):
         rc, shallow = iv.run_command(["git", "-C", str(REPO), "rev-parse", "--is-shallow-repository"])
         if rc != 0:
@@ -714,6 +720,52 @@ class ServerSettings981Tests(unittest.TestCase):
         self.assertEqual(code, 4)
         self.assertIn("no TAOM log", out)
         self.assertEqual(verdict_of(out, "taom.server-settings.fingerprint"), "NOT REACHED")
+
+
+class CastleRecruit918Tests(unittest.TestCase):
+    """The real #918 manifest over the day lines CastleRecruitmentService writes. The fixtures render the
+    exact strings the C# tests in CastleRecruitmentServiceTests assert; no such line is on disk yet."""
+
+    CHECK = "taom.castle-recruit.ai-off"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("918.toml")
+
+    def judge(self, fixture):
+        self.t.taom(fixture, "2026-10-30_12-57-22")
+        return self.t.run(["--issue", "918"])
+
+    def test_three_days_with_a_blocked_recruit_pass(self):
+        code, out, _ = self.judge("castle_ai_off_pass.txt")
+        self.assertEqual(code, 0, out)
+        self.assertEqual(verdict_of(out, self.CHECK), "PASS")
+        self.assertIn("at a castle of your own alignment whose notables are not hostile to you", out)
+
+    def test_an_ai_recruit_while_off_fails(self):
+        code, out, _ = self.judge("castle_ai_off_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.CHECK), "FAIL")
+
+    def test_two_days_is_too_short_a_run(self):
+        code, out, _ = self.judge("castle_ai_off_two_days.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.CHECK), "NOT REACHED")
+        self.assertIn("2 of the 3", out)
+        # A reload in one process can drop a rerun day, so the tester is told to restart before a retry.
+        self.assertIn("restart the game before a retry", out)
+
+    def test_days_with_no_blocked_query_prove_nothing(self):
+        # Three pass lines with blocked=0: no AI lord tried a castle, so the run tested nothing.
+        code, out, _ = self.judge("castle_ai_off_no_blocks.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.CHECK), "NOT REACHED")
+
+    def test_toggle_on_days_are_skipped(self):
+        code, out, _ = self.judge("castle_toggle_on.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.CHECK), "NOT REACHED")
+        self.assertIn("skipped: reason=toggle-on", out)
 
 
 class CrashReportEchoTests(unittest.TestCase):
