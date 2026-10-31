@@ -2,7 +2,7 @@
 # A catch is silent when its body neither logs, rethrows, calls Outcomes.Swallowed nor carries a
 # "// swallow-ok: <reason>" comment. Counts only fall: fix a catch, then lower its line in the same commit.
 # Format: <count> <repo-relative path>, sorted by path (ordinal), counts of 1 or more.
-# Files: 155. Silent catches: 218.
+# Files: 154. Silent catches: 217.
 1 Client/Features/ManyHammers/Hooks/ManyHammersCalls.cs
 1 Main/Features/AdvancedCombat/Hooks/Agent_CheckToDropFlaggedItem_Guard_Patch.cs
 1 Main/Features/AnimationVariety/Hooks/AnimVarietyMissionBehavior.cs
@@ -45,7 +45,6 @@
 1 Main/Features/CharacterSelection/Patches/RefreshCharacterEntityAuxPatch.cs
 1 Main/Features/CompanionTactics/BattleActionBar/Hooks/Patch35_Formation_SetMovementOrder.cs
 1 Main/Features/CompanionTactics/FormationPresets/Hooks/FormationPresetCampaignBehavior.cs
-1 Main/Features/CompanionTactics/FormationPresets/Hooks/Patch35_OrderOfBattleVM_Finalize.cs
 1 Main/Features/CompanionTactics/Roles/Hooks/Patch35_OOBHeroItem_GetCaptainTooltip.cs
 1 Main/Features/CompanionTactics/Roles/Hooks/Patch35_PartyCharacterVM_RefreshValues.cs
 1 Main/Features/CoopInterop/Hooks/CoopRecruitAttributionPatch.cs

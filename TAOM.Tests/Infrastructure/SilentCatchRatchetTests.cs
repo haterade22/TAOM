@@ -197,6 +197,7 @@ public class SilentCatchRatchetTests
     [DataRow("Main/Features/HeroRace/Hooks/CharacterSpawner_InitWithCharacter_Patch.cs", "HeroRace", "CharacterSpawner_InitWithCharacter_Patch.Prefix", "return true;")]
     [DataRow("Main/Features/CompanionTactics/FormationPresets/Hooks/Patch35_OOBUIHandler_Tick.cs", "CompanionTactics", "Patch35_OOBUIHandler_Tick.Postfix", "(none)")]
     [DataRow("Main/Features/CompanionTactics/FormationPresets/Hooks/Patch35_OOBUIHandler_Finalize.cs", "CompanionTactics", "Patch35_OOBUIHandler_Finalize.Postfix", "(none)")]
+    [DataRow("Main/Features/CompanionTactics/FormationPresets/Hooks/Patch35_OrderOfBattleVM_Finalize.cs", "CompanionTactics", "Patch35_OrderOfBattleVM_Finalize.Prefix", "(none)")]
     [DataRow("Main/Features/CompanionTactics/FormationPresets/Hooks/Patch35_OrderOfBattleVM_Ctor.cs", "CompanionTactics", "Patch35_OrderOfBattleVM_Ctor.Postfix", "(none)")]
     [DataRow("Main/Features/CompanionTactics/Roles/Hooks/Patch35_OOBHeroItem_RefreshValues.cs", "CompanionTactics", "Patch35_OOBHeroItem_RefreshValues.Postfix", "(none)")]
     [DataRow("Main/Features/CompanionTactics/FormationPresets/OOBOverlayService.cs", "CompanionTactics", "OOBOverlayService.OnTick", "return;")]
@@ -264,6 +265,15 @@ public class SilentCatchRatchetTests
     [DataRow("try { } catch (Exception ex) { Debug.Print(\"x\"); }", 1, 0, 0)]
     [DataRow("try { } catch (Exception ex) { Fail(\"x\"); }", 1, 0, 0)]
     [DataRow("try { } catch (Exception ex) { return RethrowStackPreserver.PreserveForRethrow(ex, null); }", 1, 0, 0)]
+    [DataRow("try { Work(); } catch { try { Cleanup(); } catch { /* swallow-ok: optional cleanup */ } }", 2, 1, 0)]
+    [DataRow("try { Work(); } catch { try { Cleanup(); } catch { Log(\"x\"); } }", 2, 1, 0)]
+    [DataRow("try { } catch { var lastReport = 0; }", 1, 1, 0)]
+    [DataRow("try { } catch { var logger = fallbackLogger; }", 1, 1, 0)]
+    [DataRow("try { } catch { _cachedRecord = null; }", 1, 1, 0)]
+    [DataRow("try { } catch (Exception ex) { Report(ex); }", 1, 0, 0)]
+    [DataRow("try { } catch (Exception ex) { RecordFault(ex); }", 1, 0, 0)]
+    [DataRow("try { } catch (Exception ex) { Logger.Warn(ex.Message); }", 1, 0, 0)]
+    [DataRow("var s = $\"{(1 /* } \" */ + 2)}\"; try { Work(); } catch { }", 1, 1, 0)]
     public void Scan_CountsCatchesSilentAndUnparsed(string source, int parsed, int silent, int unparsed)
     {
         var catches = SilentCatchScan.Catches(source);
@@ -318,6 +328,8 @@ public class SilentCatchRatchetTests
     [DataRow("Main/Features/X/Thing.cs", "static class Patch12_Thing { }", true)]
     [DataRow("Main/Features/X/Thing.cs", "class Thing_Patch { }", true)]
     [DataRow("Main/Features/X/Thing.cs", "static class ThingPatches { }", true)]
+    [DataRow("Main/Features/X/Thing.cs", "[HarmonyPatchCategory(\"x\"), HarmonyPatch(typeof(A), \"M\")]\nclass Thing { }", true)]
+    [DataRow("Main/Features/X/Thing.cs", "[global::HarmonyLib.HarmonyPatch(typeof(A), \"M\")]\nclass Thing { }", true)]
     [DataRow("Main/Features/X/Thing.cs", "[HarmonyPatchCategory(\"x\")]\nclass Thing { }", false)]
     [DataRow("Main/Features/X/Thing.cs", "class HarmonyPatchInspector { }", false)]
     [DataRow("Main/Features/X/Thing.cs", "class PatchCategoryIndex { }", false)]

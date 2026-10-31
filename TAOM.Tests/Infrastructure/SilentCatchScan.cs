@@ -62,12 +62,13 @@ internal static class SilentCatchScan
 {
     /// <summary>
     /// A body holding one of these is not silent. The survey's list (#1069 design section 2) plus the TAOM
-    /// helpers that log or hand the exception back. <c>Fail(</c> also matches the tactic status setters
+    /// helpers that log or hand the exception back. <c>Report</c> and <c>Record</c> count as calls and a logger
+    /// as a member access, so <c>lastReport</c> or <c>var logger = x</c> clear nothing. <c>Fail(</c> also matches the tactic status setters
     /// (<c>TaomBehaviorBase</c>, <c>TaomTacticBase</c>, <c>TacticStagedObjective</c>), which do not log: an
     /// accepted undercount.
     /// </summary>
     private static readonly Regex Tokens = new(
-        @"\bLog\w*\s*\(|Logger\b|\bDiagLog\b|Fault\s*\(|\bNote\w*\s*\(|Report|Record|Console\.Write|problems\.Add"
+        @"\bLog\w*\s*\(|\w*Logger\s*\??\.|\bDiagLog\b|Fault\s*\(|\bNote\w*\s*\(|\bReport\w*\s*\(|\bRecord\w*\s*\(|Console\.Write|problems\.Add"
         + @"|Debug\.Print\s*\(|\bSwallowed\s*\(|\bFail\s*\(|\bStandDown\s*\(|\.Error\s*\(|\bHandBack\s*\("
         + @"|\bPreserveForRethrow\s*\(",
         RegexOptions.Compiled | RegexOptions.CultureInvariant);
@@ -79,7 +80,7 @@ internal static class SilentCatchScan
     private static readonly Regex SwallowOk = new(@"(//|/\*)[ \t]*swallow-ok:[ \t]*[^\s*/]", RegexOptions.Compiled);
 
     private static readonly Regex HarmonyPatchAttribute =
-        new(@"\[\s*(HarmonyLib\.)?HarmonyPatch\b(?!Category)", RegexOptions.Compiled);
+        new(@"\[[^\]]*?(?<![\w.])(global::)?(HarmonyLib\.)?HarmonyPatch\b(?!Category)", RegexOptions.Compiled);
 
     // Starts with Patch and a digit, or ends with Patch or Patches: HarmonyPatchInspector and
     // PatchCategoryIndex are console and index code, not patches.
@@ -109,20 +110,33 @@ internal static class SilentCatchScan
     {
         var code = masks.Code;
         var result = new List<CatchBlock>();
+        var found = new List<(Match Keyword, int BodyStart, int BodyEnd)>();
         foreach (Match m in CatchKeyword.Matches(code))
         {
+            var start = FindBody(code, m.Index + m.Length);
+            found.Add((m, start, start < 0 ? -1 : MatchClose(code, start, '{', '}')));
+        }
+
+        foreach (var (m, bodyStart, bodyEnd) in found)
+        {
             var line = 1 + CountNewlines(code, m.Index);
-            var bodyStart = FindBody(code, m.Index + m.Length);
-            var bodyEnd = bodyStart < 0 ? -1 : MatchClose(code, bodyStart, '{', '}');
             if (bodyEnd < 0)
             {
                 result.Add(new CatchBlock(line, m.Index, -1, -1, parsed: false, silent: false));
                 continue;
             }
 
-            var body = code.Substring(bodyStart, bodyEnd - bodyStart + 1);
-            var span = masks.CommentVisible.Substring(m.Index, bodyEnd - m.Index + 1);
-            var silent = !Tokens.IsMatch(body) && !Throw.IsMatch(body) && !SwallowOk.IsMatch(span);
+            // A log call or swallow-ok marker inside a nested catch belongs to that catch, not to this one.
+            var body = code.Substring(bodyStart, bodyEnd - bodyStart + 1).ToCharArray();
+            var span = masks.CommentVisible.Substring(m.Index, bodyEnd - m.Index + 1).ToCharArray();
+            foreach (var nested in found.Where(n => n.BodyEnd > 0 && n.Keyword.Index > bodyStart && n.BodyEnd < bodyEnd))
+            {
+                Blank(body, nested.Keyword.Index - bodyStart, nested.BodyEnd - bodyStart + 1);
+                Blank(span, nested.Keyword.Index - m.Index, nested.BodyEnd - m.Index + 1);
+            }
+
+            var bodyText = new string(body);
+            var silent = !Tokens.IsMatch(bodyText) && !Throw.IsMatch(bodyText) && !SwallowOk.IsMatch(new string(span));
             result.Add(new CatchBlock(line, m.Index, bodyStart, bodyEnd, parsed: true, silent));
         }
 
@@ -309,7 +323,14 @@ internal static class SilentCatchScan
                 continue;
             }
 
-            if (c == '(' || c == '[' || c == '{')
+            if (c == '/' && i + 1 < s.Length && s[i + 1] == '*')
+            {
+                var close = s.IndexOf("*/", i + 2, System.StringComparison.Ordinal);
+                i = close < 0 ? s.Length : close + 2;
+                continue;
+            }
+
+            if (c == '('|| c == '[' || c == '{')
                 depth++;
             else if (c == ')' || c == ']')
                 depth--;
