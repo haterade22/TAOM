@@ -1,3 +1,5 @@
+using TAOM.Core.Logging;
+
 namespace TAOM.Features.CompanionTactics.BattleActionBar;
 
 /// <summary>
@@ -19,5 +21,22 @@ internal static class BattleActionBarChecks
         if (!fieldBattle || attachedOnce) return AttachEnd.None;
         if (enabledBattleTickSeen) return AttachEnd.FailNeverAttached;
         return endedInBattle && !enabledAtEnd ? AttachEnd.SkipSettingOff : AttachEnd.None;
+    }
+
+    // The two verdict mappings live here so a test can pin which result each case writes. A null log writes nothing.
+    internal static void RecordAttach(IOutcomeLog? log, string key, bool movieLoaded)
+    {
+        if (movieLoaded)
+            log?.Pass(AttachId, key, "mission=" + key);
+        else
+            log?.Fail(AttachId, key, "reason=movie-not-loaded mission=" + key);
+    }
+
+    internal static void RecordEnd(IOutcomeLog? log, string key, AttachEnd end)
+    {
+        if (end == AttachEnd.FailNeverAttached)
+            log?.Fail(AttachId, key, "reason=never-attached mission=" + key);
+        else if (end == AttachEnd.SkipSettingOff)
+            log?.Skip(AttachId, key, "reason=setting-off mission=" + key);
     }
 }

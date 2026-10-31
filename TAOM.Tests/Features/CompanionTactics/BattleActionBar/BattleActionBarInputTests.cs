@@ -133,9 +133,7 @@ public class BattleActionBarInputTests
     {
         // GauntletLayer.LoadMovie does not throw for a missing prefab, so "layer attached" alone proves nothing.
         var attach = Between(ViewSource, "private void TryAttachLayer", "public override void OnMissionScreenTick");
-        StringAssert.Contains(attach, "Movie?.IsLoaded == true");
-        StringAssert.Contains(attach, "BattleActionBarChecks.AttachId");
-        StringAssert.Contains(attach, "\"reason=movie-not-loaded mission=\"");
+        StringAssert.Contains(attach, "BattleActionBarChecks.RecordAttach(_outcomes, _missionKey, _movie.Movie?.IsLoaded == true)");
         StringAssert.Contains(attach, "\"reason=exception mission=\"");
     }
 
@@ -145,8 +143,7 @@ public class BattleActionBarInputTests
         var finalize = Between(ViewSource, "public override void OnMissionScreenFinalize", "private void DetachLayer");
         var classify = finalize.IndexOf("ClassifyAtEnd(", StringComparison.Ordinal);
         Assert.IsTrue(classify >= 0, "the end-of-mission verdict is missing");
-        StringAssert.Contains(finalize, "\"reason=never-attached mission=\"");
-        StringAssert.Contains(finalize, "\"reason=setting-off mission=\"");
+        StringAssert.Contains(finalize, "BattleActionBarChecks.RecordEnd(_outcomes, _missionKey, end)");
     }
 
     [TestMethod]

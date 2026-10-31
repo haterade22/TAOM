@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
 using TAOM.Core.Logging;
 using TAOM.Features.CompanionTactics.BattleActionBar;
 
@@ -41,4 +42,59 @@ public class BattleActionBarChecksTests
         bool endedInBattle, bool enabledAtEnd, object expected) =>
         Assert.AreEqual(expected, BattleActionBarChecks.ClassifyAtEnd(fieldBattle, attachedOnce, enabledBattleTickSeen,
             endedInBattle, enabledAtEnd));
+
+    [TestMethod]
+    public void RecordAttach_LoadedMovie_WritesPassOnly()
+    {
+        var log = Substitute.For<IOutcomeLog>();
+        BattleActionBarChecks.RecordAttach(log, "7", movieLoaded: true);
+        log.Received(1).Pass("taom.battle-action-bar.attach", "7", "mission=7");
+        log.DidNotReceiveWithAnyArgs().Fail(default!, default!, default!);
+        log.DidNotReceiveWithAnyArgs().Skip(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void RecordAttach_MovieNotLoaded_WritesFailOnly()
+    {
+        var log = Substitute.For<IOutcomeLog>();
+        BattleActionBarChecks.RecordAttach(log, "7", movieLoaded: false);
+        log.Received(1).Fail("taom.battle-action-bar.attach", "7", "reason=movie-not-loaded mission=7");
+        log.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
+        log.DidNotReceiveWithAnyArgs().Skip(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void RecordEnd_NeverAttached_WritesFailOnly()
+    {
+        var log = Substitute.For<IOutcomeLog>();
+        BattleActionBarChecks.RecordEnd(log, "7", BattleActionBarChecks.AttachEnd.FailNeverAttached);
+        log.Received(1).Fail("taom.battle-action-bar.attach", "7", "reason=never-attached mission=7");
+        log.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
+        log.DidNotReceiveWithAnyArgs().Skip(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void RecordEnd_SettingOff_WritesSkipOnly()
+    {
+        var log = Substitute.For<IOutcomeLog>();
+        BattleActionBarChecks.RecordEnd(log, "7", BattleActionBarChecks.AttachEnd.SkipSettingOff);
+        log.Received(1).Skip("taom.battle-action-bar.attach", "7", "reason=setting-off mission=7");
+        log.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
+        log.DidNotReceiveWithAnyArgs().Fail(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void RecordEnd_None_WritesNothing()
+    {
+        var log = Substitute.For<IOutcomeLog>();
+        BattleActionBarChecks.RecordEnd(log, "7", BattleActionBarChecks.AttachEnd.None);
+        Assert.IsFalse(log.ReceivedCalls().GetEnumerator().MoveNext());
+    }
+
+    [TestMethod]
+    public void NullLog_WritesNothingAndDoesNotThrow()
+    {
+        BattleActionBarChecks.RecordAttach(null, "7", true);
+        BattleActionBarChecks.RecordEnd(null, "7", BattleActionBarChecks.AttachEnd.FailNeverAttached);
+    }
 }

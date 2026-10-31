@@ -86,10 +86,7 @@ public sealed class BattleActionBarMissionView : MissionView
             _logger?.LogInfo("[BattleActionBar] mission init — layer attached");
             _attachedOnce = true;
             // LoadMovie does not throw for a missing prefab (WidgetFactory.GetCustomType returns null), so check it loaded.
-            if (_movie.Movie?.IsLoaded == true)
-                _outcomes?.Pass(BattleActionBarChecks.AttachId, _missionKey, "mission=" + _missionKey);
-            else
-                _outcomes?.Fail(BattleActionBarChecks.AttachId, _missionKey, "reason=movie-not-loaded mission=" + _missionKey);
+            BattleActionBarChecks.RecordAttach(_outcomes, _missionKey, _movie.Movie?.IsLoaded == true);
         }
         catch (System.Exception ex)
         {
@@ -135,10 +132,7 @@ public sealed class BattleActionBarMissionView : MissionView
         // MissionScreen calls this from Mission.EndMissionInternal before the mission is over, so its mode is still set.
         var end = BattleActionBarChecks.ClassifyAtEnd(_fieldBattle, _attachedOnce, _enabledBattleTick,
             endedInBattle: Mission?.Mode == MissionMode.Battle, enabledAtEnd: _settings?.ShowBattleActionBar == true);
-        if (end == BattleActionBarChecks.AttachEnd.FailNeverAttached)
-            _outcomes?.Fail(BattleActionBarChecks.AttachId, _missionKey, "reason=never-attached mission=" + _missionKey);
-        else if (end == BattleActionBarChecks.AttachEnd.SkipSettingOff)
-            _outcomes?.Skip(BattleActionBarChecks.AttachId, _missionKey, "reason=setting-off mission=" + _missionKey);
+        BattleActionBarChecks.RecordEnd(_outcomes, _missionKey, end);
 
         if (_isInitialized)
         {

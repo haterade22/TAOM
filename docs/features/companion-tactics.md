@@ -295,7 +295,7 @@ A preset is a named copy of the Order of Battle layout: the formation type of ea
 - **In-game check owed** (turn `Show Battle Action Bar` on first): in a field battle press Begin battle, select a
   formation with polearms, shields or cavalry, press Esc and click Brace for Cavalry, Pike Wall, Testudo, Line Charge
   or Skirmish; then `python tools/ingame_verdict.py --issue 970` reads the session log (#1072). The view writes
-  `[Check] id=taom.battle-action-bar.attach` once per mission: `result=pass` when the layer is added and its movie
+  `[Check] id=taom.battle-action-bar.attach`, at most one line per result per mission: `result=pass` when the layer is added and its movie
   loaded; `result=fail` with `reason=exception`, `reason=movie-not-loaded`, or at mission end `reason=never-attached`
   (Battle mode reached with the setting on, and no attach); `result=skip reason=setting-off` when the battle was
   fought with the setting off. A view the engine did not register (the original #970 bug) never ticks or finalizes,
