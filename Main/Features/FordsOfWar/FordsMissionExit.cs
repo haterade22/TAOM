@@ -33,7 +33,7 @@ internal sealed class FordsMissionExit
         if (failedStart && !_failureReported)
         {
             _failureReported = true;
-            _report.Failure("A", "AfterStart could not start the match; the ERROR line above names the cause");
+            _report.Failure("A", "the match could not start; the ERROR line above names the cause");
         }
 
         var reason = _clock.Tick(dt, failedStart, matchEnded);

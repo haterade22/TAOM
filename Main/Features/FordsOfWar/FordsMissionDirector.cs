@@ -97,7 +97,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
 
     /// <summary>
     /// Builds the layout, the towers and the match, and fills the session. False, with an error logged and nothing left
-    /// running, when the scene cannot host a match. Call once, from the mission's <c>AfterStart</c>.
+    /// running, when the scene cannot host a match. Call once, from the first mission tick (never inside <c>AfterStart</c>: see <c>FordsOfWarMissionLogic</c>).
     /// </summary>
     public bool Start()
     {

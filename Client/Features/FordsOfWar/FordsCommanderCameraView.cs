@@ -76,7 +76,8 @@ public sealed class FordsCommanderCameraView : MissionView
     }
 
     private FordsCameraProbe Probe() =>
-        _probe ??= new(IoC.Resolve<FordsRunReport>(), (x, y) => Mission.IsPositionInsideBoundaries(new Vec2(x, y)));
+        _probe ??= new(IoC.Resolve<FordsRunReport>(), (x, y) => Mission.IsPositionInsideBoundaries(new Vec2(x, y)),
+            (x, y) => Mission.Scene == null ? (float.NaN, float.NaN) : (FordsEngine.TerrainAt(Mission.Scene, x, y), FordsEngine.GroundAt(Mission.Scene, x, y)));
 
     private void Begin(FordsSession session)
     {
@@ -141,5 +142,6 @@ public sealed class FordsCommanderCameraView : MissionView
         MissionScreen.SceneView.SetCamera(camera);
         var listener = origin;
         Mission.SetCameraFrame(ref frame, 65f / MissionScreen.CameraViewAngle, ref listener);
+        Probe().Pose(_state, _groundZ, dt);
     }
 }

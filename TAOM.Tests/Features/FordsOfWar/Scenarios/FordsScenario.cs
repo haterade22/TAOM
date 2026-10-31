@@ -230,7 +230,7 @@ internal sealed class FordsScenario
         return ConfigTweak == null ? tuned : ConfigTweak(tuned);
     }
 
-    /// <summary>The mission's AfterStart: resolve the plan, build the director over the adapters and start it. A failed start is route A.</summary>
+    /// <summary>Stands for the first mission tick's start: resolve the plan, build the director over the adapters and start it. A failed start is route A.</summary>
     public void BeginMission()
     {
         var setup = Factory.LastSetup ?? throw new InvalidOperationException("no setup reached the game manager factory");

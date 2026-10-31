@@ -377,7 +377,7 @@ public class FordsRunReportTests
     {
         StartedRun();
 
-        _report.Failure("A", "AfterStart could not start the match");
+        _report.Failure("A", "the match could not start");
 
         Assert.IsFalse(_report.Run!.Closed);
         Assert.AreEqual(0, Verdicts("1").Count);

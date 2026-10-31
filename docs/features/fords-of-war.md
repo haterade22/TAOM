@@ -360,7 +360,7 @@ checks below name log lines.
    hero ids (for example `lord_1_17`) resolve in a Custom Game. Report: `check=03` (every troop and hero id checked against this game, spawns and spawn failures by troop; a recorded start failure with no match started FAILs its `started` part, for the menu routes too).
 4. Wait out the 10 s countdown. Towers and keeps appear on both sides in 3 lanes, free waves march and
    fight, and your gold rises on kills. The camera pans (WASD), rotates (Q, E, right mouse drag) and
-   zooms (wheel) and stays inside the playable area. Report: `check=04` (countdown end, towers built against expected, first spawn per lane, march gain per lane, deaths, kill gold, camera pan, rotate and zoom, inside the engine's boundary, camera ownership). Towers built are counted against the layout before unplaceable ones are dropped, so a dropped tower FAILs. A camera resting on the boundary edge counts as inside; it reads outside only when the engine says so and the camera is over 0.5 m from the edge.
+   zooms (wheel) and stays inside the playable area. Report: `check=04` (countdown end, towers built against expected, first spawn per lane, march gain per lane, deaths, kill gold, camera pan, rotate and zoom, inside the engine's boundary, camera ownership). Towers built are counted against the layout before unplaceable ones are dropped, so a dropped tower FAILs. A camera resting on the boundary edge counts as inside; it reads outside only when the engine says so and the camera is over 0.5 m from the edge. The battlefield is lit and exactly three dark boxes show (gold bar top centre, towers top left, deck bottom centre), each hugging its content; a box that reaches a screen edge is the stretch-in-cover layout fault.
 5. Open the escape menu. Photo Mode reads disabled ("Photo mode isn't allowed."), and the Options entry
    opens the options screen. Report: `check=05` (pause edges, Photo Mode vetoes, Options requests and wiring).
 6. Run `taom.fords_gold 5000`. The console prints "Added 5000 gold. You now hold ..." and the panel's gold
@@ -445,11 +445,16 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
 - **The AI does not steer to capture points.** It buys and orders by lane threat and assault state only.
 - **Translations.** The `TAOM_FOW_` texts are English in all 12 languages until the translation backlog,
   issue #763.
-- **Greybox scene owed.** The Kit scene from the greybox spec is not built; the three shipped maps use a
-  generated layout and their boundary and navmesh have not been checked in game.
-- **Not checked in game at all:** every item under "How to verify in game". The volley's damage and
-  speed, the warg formation fix, the start-failed notice and melee damage to the barricade are the open
-  engine questions.
+- **Greybox scene owed.** The Kit scene from the greybox spec is not built. On the Rohan field scene the generated
+  layout fits badly: in the first match 34 path points were dropped, 3 of 14 towers were not built, and West lanes 0
+  and 1 gained only 11 and 27 m. A dedicated three-lane scene is the next step.
+- **AI melee never strikes a tower (the match at 16:54 on 2026-10-31, after both fixes, which started once; log `taom_debug_2026-10-31_16-54-08.log`; check 9 FAIL).** Enemy melee spent 1,030 unit-seconds within 20 m of
+  a tower and no blow of any kind reached one, so no tower can fall yet. This answers the build-spec open question 3.
+- **Matches on 2026-10-31 (Rohan field scene):** checks 3, 11 (volley damage matches the engine formula,
+  median ratio 1.000 over 14 hits) and 13 PASS; check 16 PASSES its cap and agent-limit parts; the camera parts of
+  check 4 PASS. Not yet seen: warg rage (12), heroes (7), keep fall and exits (14), a provoked failed start (15). The
+  match first ran its start twice and rendered black; both are fixed (see the RCA, rows G1 and G2), and the
+  `[FordsOfWar][Camera] pose` lines log the camera's position, ground and view direction for the first 30 s.
 
 ## Performance
 

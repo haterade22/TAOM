@@ -13,12 +13,11 @@
 
         <!-- Gold and clock, top centre. -->
         <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="14" DoNotAcceptEvents="true">
+                HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="8"
+                Sprite="BlankWhiteSquare_9" Color="#000000A0" DoNotAcceptEvents="true">
           <Children>
-            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                    Sprite="BlankWhiteSquare_9" Color="#000000A0" DoNotAcceptEvents="true"
-                    MarginLeft="-16" MarginRight="-16" MarginTop="-6" MarginBottom="-6" />
             <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       MarginLeft="16" MarginRight="16" MarginTop="6" MarginBottom="6"
                        StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
               <Children>
                 <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="40"
@@ -40,12 +39,11 @@
 
         <!-- Towers, top left: both keeps, then one row of bars per lane (West's inner tower to East's inner tower). -->
         <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="14" MarginTop="14" DoNotAcceptEvents="true">
+                HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="4" MarginTop="8"
+                Sprite="BlankWhiteSquare_9" Color="#000000A0" DoNotAcceptEvents="true">
           <Children>
-            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                    Sprite="BlankWhiteSquare_9" Color="#000000A0" DoNotAcceptEvents="true"
-                    MarginLeft="-10" MarginRight="-10" MarginTop="-6" MarginBottom="-6" />
             <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       MarginLeft="10" MarginRight="10" MarginTop="6" MarginBottom="6"
                        StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
               <Children>
                 <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="4"
@@ -161,12 +159,11 @@
 
         <!-- Command deck, bottom centre: lanes, troop packs, heroes, orders, key hint. -->
         <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="14" DoNotAcceptEvents="true">
+                HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="6"
+                Sprite="BlankWhiteSquare_9" Color="#000000B0" DoNotAcceptEvents="true">
           <Children>
-            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                    Sprite="BlankWhiteSquare_9" Color="#000000B0" DoNotAcceptEvents="true"
-                    MarginLeft="-12" MarginRight="-12" MarginTop="-8" MarginBottom="-8" />
             <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       MarginLeft="12" MarginRight="12" MarginTop="8" MarginBottom="8"
                        StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
               <Children>
 

@@ -72,12 +72,34 @@ public class FordsOfWarMissionLogicTests
     }
 
     [TestMethod]
+    public void AfterStart_StartsNothing_TheFirstTickStartsTheMatchOnce()
+    {
+        // Spawning inside the engine's AfterStart loop let DualWield's SpawnAgent postfix add a behavior to the list the loop
+        // walks; the mission load then ran twice (rca-fords-of-war-2026-10-31.md, "Found in game").
+        var logger = Substitute.For<IModLogger>();
+        var logic = Logic("no_such_scene", logger);
+        MissionResult? result = null;
+
+        logic.AfterStart();
+
+        logger.DidNotReceive().LogError(Arg.Any<string>());
+        Assert.IsFalse(logic.MissionEnded(ref result), "AfterStart only marks the start as due");
+
+        logic.OnMissionTick(0.1f);
+        logic.OnMissionTick(0.1f);
+
+        logger.Received(1).LogError(Arg.Is<string>(m => m.Contains("no_such_scene")));
+        Assert.IsTrue(logic.MissionEnded(ref result));
+    }
+
+    [TestMethod]
     public void AfterStart_UnknownScene_LogsAnErrorAndEndsTheMissionThroughMissionEnded()
     {
         var logger = Substitute.For<IModLogger>();
         var logic = Logic("no_such_scene", logger);
 
         logic.AfterStart();
+        logic.OnMissionTick(0.1f);
         MissionResult? result = null;
 
         logger.Received().LogError(Arg.Is<string>(m => m.Contains("no_such_scene")));

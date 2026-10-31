@@ -147,6 +147,21 @@ deployment plan and the weather model, which a mod can supply) still makes the e
 does a throw from a behaviour's `OnMissionScreenPreLoad`, which `MissionState.LoadMission` calls before `AfterStart`. Keeping every `AfterStart`
 throw-safe stays the rule: the guard saves the battle, not the behaviour's setup.
 
+**Never spawn an agent inside `AfterStart`.** The engine runs the behaviours' `AfterStart` with
+`foreach (MissionBehavior missionBehavior2 in MissionBehaviors)` (Mission.cs:3833-3836, v1.5.6), and
+`AddMissionBehavior` appends to that same list (Mission.cs:4682, v1.5.6). An agent spawned inside the loop runs every
+`SpawnAgent` hook, and a hook that adds a behaviour on the first spawn changes the list mid-loop: DualWield's
+`SpawnAgent` postfix calls `AddMissionBehavior` once the mode is a combat mode, and `MissionCombatantsLogic.AfterStart`
+sets Battle (MissionCombatantsLogic.cs:242, v1.5.6) before later behaviours run. The throw comes from the enumerator's
+`MoveNext`, outside every call the guard wraps, so the engine loads the mission again on the same mission object:
+the initialize and early-start calls ran twice, and `AfterStart` ran twice for the behaviours up to the one that spawned, and the second pass fails with "Number of teams is not 0" and "An element with the
+same name already exists". The engine also walks `MissionBehaviors` with `foreach` in `EarlyStart` (3827), `OnAfterMissionLoadingFinished` (3850),
+`OnAgentCreated` (4080) and `OnAgentBuild` (4375, 4389) (all v1.5.6), so never spawn from a callback the engine
+dispatches with `foreach`; `OnMissionTick` is an index loop (3751-3754). Vanilla battles spawn troops from mission
+ticks. Spawn on the first mission tick instead
+(Fords of War, 2026-10-31: `FordsOfWarMissionLogic` marks its start as due in `AfterStart` and starts on the first
+`OnMissionTick`).
+
 ## ⚠️ The `: MissionLogic` gotcha (confirmed at the source)
 
 If a behavior is `: MissionBehavior` and **manually** returns `BehaviorType => MissionBehaviorType.Logic` **without**

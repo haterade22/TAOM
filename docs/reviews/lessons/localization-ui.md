@@ -1227,6 +1227,7 @@ its parent's hover, so it needs no size at all.
 - **Prevent:** use vanilla's shape (`Inventory.xml:471-475`): one `TextWidget` with a size-less `HintWidget` child. A test asserts
   that no inserted element is `StretchToParent` and that the `HintWidget` has no size policy.
 - **Source:** `/deep-review` of #866; `DecisionOptionFiefCountPrefabTests`.
+- **Recurred (Fords of War, 2026-10-31):** three panel boxes with a `StretchToParent` background child grew to the full screen and stacked to near black over the whole battle scene. A lesson alone did not stop the third occurrence, so the rule is now a gate: `GauntletStretchInCoverRatchetTests` fails on any new `StretchToParent` child of a `CoverChildren` parent without a max size in any prefab file under `Main/_Module/GUI` (prefab inserts built in C# keep their own tests), counts the five older files down, and exempts grid parents and parents with a max size (`rca-fords-of-war-2026-10-31.md` row G2).
 
 ### A hover target lies inside every ancestor's rectangle: Gauntlet hit-tests by containment (Loremaster's Line, 2026-10-23)
 `EventManager.CollectEnableWidgetsAt` (v1.5.5 EventManager.cs:880-901) descends into a child only when the

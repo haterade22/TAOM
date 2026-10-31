@@ -38,7 +38,7 @@ and the gate.
 | Moving platforms | Agents need a navmesh riding the entity, plus physics; teleporting fails. Crew stand inside the deck | [mumakil](../features/mumakil.md) |
 | Vendored DLLs | `Main/_Module/bin/Win64_Shipping_Client/` ships no vendored binary (`TAOM.dll` is build output); never MCMv5 | [deps](../modding/module-dependencies.md) |
 | Other mods | Four mods reach TAOM members and files by name; a rename passes the build and breaks them: grep the list | [couplings](../reference/external-mod-couplings.md) |
-| Mission logic | Logic `BehaviorType` needs `: MissionLogic`; keep `AfterStart` throw-safe | [lifecycle](../reference/engine/mission-and-missionbehavior-lifecycle.md) |
+| Mission logic | Logic `BehaviorType` needs `: MissionLogic`; no throw and no spawn in `AfterStart` | [lifecycle](../reference/engine/mission-and-missionbehavior-lifecycle.md) |
 | Armory | `LOTRLOME_Armory`: a root `<action>` kills a server, a second `LOTRLOME_items/*/` shadows an id, loose `Assets/**` wins | [armory](../reference/armory-guide.md) |
 | Shield plus polearm | A shield troop never draws a polearm absent from `OneHandedPolearm`: `audit_polearm_shield_parity.py` | [pipeline](../features/weapon-xml-pipeline.md) |
 | Co-op gating | Co-op loaded, peer authority, dedicated server, "a human player's party": four questions; server X.Instance is never null | [co-op](../features/coop-interop.md) |

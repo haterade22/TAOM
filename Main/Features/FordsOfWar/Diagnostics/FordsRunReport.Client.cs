@@ -81,6 +81,13 @@ internal sealed partial class FordsRunReport
             Info("Camera", "first photo veto");
     }
 
+    /// <summary>One camera pose line; the probe sends at most seven per run (the first frame, then every 5 s to 30 s).</summary>
+    internal void CameraPose(string body)
+    {
+        if (_run != null)
+            Info("Camera", "pose " + body);
+    }
+
     /// <summary>Hot: one compare per frame; counts a false-to-true edge and logs edges.</summary>
     internal void Paused(bool paused)
     {

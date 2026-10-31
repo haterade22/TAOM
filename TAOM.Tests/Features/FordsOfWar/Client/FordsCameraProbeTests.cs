@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NSubstitute;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Client.Features.FordsOfWar;
@@ -18,6 +19,42 @@ public class FordsCameraProbeTests
 
     private static FordsCameraInput Input(float pan = 0f, float right = 0f, float rotate = 0f, float zoom = 0f, float dragX = 0f, float dragY = 0f) =>
         new FordsCameraInput(pan, right, rotate, zoom, dragX, dragY, false);
+
+    [TestMethod]
+    public void Pose_LogsAtTheFirstFrame_ThenEveryFiveSeconds_SevenLinesInAll()
+    {
+        var logger = Substitute.For<IModLogger>();
+        var report = new FordsRunReport(logger);
+        report.BeginRun("menu", new FordsMatchSetup("scene_a", "gondor", "mordor", "hard", 2));
+        var probe = new FordsCameraProbe(report, (_, _) => true, (_, _) => (10f, 12f));
+
+        for (var i = 0; i < 400; i++)
+            probe.Pose(State(x: 5f, y: 6f, height: 45f), 10f, 0.1f);
+
+        var poses = logger.ReceivedCalls().Where(c => c.GetMethodInfo().Name == nameof(IModLogger.LogInfo))
+            .Select(c => (string)c.GetArguments()[0]!).Where(m => m.Contains("[Camera]") && m.Contains(" pose ")).ToList();
+        Assert.AreEqual(7, poses.Count, "at 0, 5, 10, 15, 20, 25 and 30 s");
+        StringAssert.Contains(poses[0], "z=55.0");
+        StringAssert.Contains(poses[0], "terrain=10.0");
+        StringAssert.Contains(poses[0], "ground=12.0");
+    }
+
+    [TestMethod]
+    public void Pose_ANaNStep_DoesNotLogTheRemainingLinesOnConsecutiveFrames()
+    {
+        var logger = Substitute.For<IModLogger>();
+        var report = new FordsRunReport(logger);
+        report.BeginRun("menu", new FordsMatchSetup("scene_a", "gondor", "mordor", "hard", 2));
+        var probe = new FordsCameraProbe(report, (_, _) => true, (_, _) => (10f, 12f));
+
+        probe.Pose(State(), 10f, 0.1f);
+        for (var i = 0; i < 20; i++)
+            probe.Pose(State(), 10f, float.NaN);
+
+        var poses = logger.ReceivedCalls().Where(c => c.GetMethodInfo().Name == nameof(IModLogger.LogInfo))
+            .Select(c => (string)c.GetArguments()[0]!).Where(m => m.Contains("[Camera]") && m.Contains(" pose ")).ToList();
+        Assert.AreEqual(1, poses.Count, "a NaN clock never passes the gate");
+    }
 
     [TestMethod]
     public void Flags_PanWithMovement()

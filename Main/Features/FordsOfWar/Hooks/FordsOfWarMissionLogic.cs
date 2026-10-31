@@ -9,15 +9,13 @@ namespace TAOM.Features.FordsOfWar.Hooks;
 
 /// <summary>
 /// The mission boundary of Fords of War (build-spec section 4): builds the three adapters and the <see cref="FordsMissionDirector"/>
-/// in <c>AfterStart</c>, ticks it, forwards agent removals, and ends the mission once a keep has fallen. Everything else is the
-/// director. The launcher adds this logic to the mission it opens, so there is no behavior declaration. MUST be <c>: MissionLogic</c>
-/// (rca-looter-battle-nre-2026-05-24.md). It never spawns <c>Game.Current.PlayerTroop</c> and never gives an agent the Player
-/// controller: the mission keeps no main agent.
-///
-/// <c>AfterStart</c> runs after the combatants logic created the two teams and the boundary placer added <c>walk_area</c>. Each override
-/// sits in a try: an exception leaving a start callback restarts the mission load every frame (#699). A match that cannot start logs
-/// an error and ends the mission through <c>MissionEnded</c>, which the engine polls every 0.1 s (Mission.cs:4819-4883). Nothing
-/// closes a mission ended that way, so the tick also drives <see cref="FordsMissionExit"/>: the way back works without the panel.
+/// on the first mission tick, ticks it, forwards agent removals, and ends the mission once a keep has fallen. MUST be
+/// <c>: MissionLogic</c> (rca-looter-battle-nre-2026-05-24.md). It never spawns <c>Game.Current.PlayerTroop</c> nor gives an agent the
+/// Player controller. <c>AfterStart</c> only marks the start as due: the engine calls it inside a <c>foreach</c> over the mission
+/// behaviors, and an agent spawned there lets a <c>SpawnAgent</c> hook add a behavior to that list (DualWield does), which throws and
+/// loads the mission again (rca-fords-of-war-2026-10-31.md). Each override sits in a try (#699). A match that cannot start ends the
+/// mission through <c>MissionEnded</c>, polled every 0.1 s (Mission.cs:4819-4883); nothing closes a mission ended that way, so the
+/// tick also drives <see cref="FordsMissionExit"/>.
 /// </summary>
 public sealed class FordsOfWarMissionLogic : MissionLogic
 {
@@ -30,6 +28,7 @@ public sealed class FordsOfWarMissionLogic : MissionLogic
     private readonly Diagnostics.FordsRunReport _report;
     private readonly FordsMissionExit _exit;
     private FordsMissionDirector? _director;
+    private bool _startDue;
     private bool _failed;
     private int _faults;
 
@@ -46,6 +45,11 @@ public sealed class FordsOfWarMissionLogic : MissionLogic
     public override void AfterStart()
     {
         base.AfterStart();
+        _startDue = true;
+    }
+
+    private void StartMatch()
+    {
         try
         {
             var plan = FordsMatchPlan.Resolve(_setup, _catalog, _logger);
@@ -72,12 +76,18 @@ public sealed class FordsOfWarMissionLogic : MissionLogic
         catch (Exception ex)
         {
             _failed = true;
-            Fault("AfterStart", ex);
+            Fault("StartMatch", ex);
         }
     }
 
     public override void OnMissionTick(float dt)
     {
+        if (_startDue)
+        {
+            _startDue = false;
+            StartMatch();
+        }
+
         try
         {
             _director?.Tick(dt);
