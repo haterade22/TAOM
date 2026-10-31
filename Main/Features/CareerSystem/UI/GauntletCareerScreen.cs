@@ -108,6 +108,7 @@ public class GauntletCareerScreen : ScreenBase, IGameStateListener
         _gauntletLayer.InputRestrictions.SetInputRestrictions();
         AddLayer(_gauntletLayer);
         ScreenManager.TrySetFocus(_gauntletLayer);
+        Outcomes.Pass(CareerScreenChecks.InitId, CareerScreenChecks.Mode(_isSwitchMode), CareerScreenChecks.InitDetail(_isSwitchMode));
     }
 
     private void OnChooseSwitchTarget(string newCareerId)

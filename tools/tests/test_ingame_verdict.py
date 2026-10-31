@@ -9,7 +9,9 @@ runner, so no test calls the real git or gh. The fixture lines are scrubbed copi
 lines. The only [ServerSettings] lines on disk come from a .dirty build (a staged server log of
 2026-10-23), which the shipped #981 manifest leaves NOT REACHED, and no "layer attached" or probe
 install line is on disk, so those fixtures render the format strings of ServerSettingsReport.cs,
-ServerSettingsReader.cs, HitchProbeLines.cs and BattleActionBarMissionView.cs.
+ServerSettingsReader.cs, HitchProbeLines.cs and BattleActionBarMissionView.cs. No career screen line is
+on disk either, so the career_* fixtures render GauntletCareerScreen.cs, CareerScreenChecks.cs and
+ViewModel_ExecuteCommand_CareerScreen_Patch.cs (CareerScreenChecksTests pins their [Check] lines).
 """
 import io
 import os
@@ -275,6 +277,12 @@ class RepoManifestGateTests(unittest.TestCase):
         self.assertEqual([c.id for c in m.checks], [
             "taom.server-settings.no-file", "taom.server-settings.one-key", "taom.server-settings.bad-value",
             "taom.server-settings.fingerprint", "taom.server-settings.hitch-probe-off"])
+
+    def test_971_names_the_open_and_init_checks(self):
+        m = iv.load_manifest(TOOLS / "ingame_checks" / "971.toml", 971)
+        ids = ["taom.career-screen.open", "taom.career-screen.init"]
+        self.assertEqual([c.id for c in m.checks], ids)
+        self.assertEqual(iv.named_check_ids(m), set(ids))
 
     def test_every_fixed_in_is_a_commit_in_this_clone(self):
         rc, shallow = iv.run_command(["git", "-C", str(REPO), "rev-parse", "--is-shallow-repository"])
@@ -714,6 +722,64 @@ class ServerSettings981Tests(unittest.TestCase):
         self.assertEqual(code, 4)
         self.assertIn("no TAOM log", out)
         self.assertEqual(verdict_of(out, "taom.server-settings.fingerprint"), "NOT REACHED")
+
+
+class Issue971Tests(unittest.TestCase):
+    """The real #971 manifest: the career button opens the career screen, which initialises."""
+
+    OPEN = "taom.career-screen.open"
+    INIT = "taom.career-screen.init"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("971.toml")
+
+    def judge(self, fixture):
+        self.t.taom(fixture, "2026-10-31_14-00-00")
+        return self.t.run(["--issue", "971"])
+
+    def test_a_click_that_opens_and_initialises_passes_both(self):
+        code, out, _ = self.judge("career_open_pass.txt")
+        self.assertEqual(code, 0, out)
+        self.assertEqual(verdict_of(out, self.OPEN), "PASS")
+        self.assertEqual(verdict_of(out, self.INIT), "PASS")
+        self.assertIn("the click plays one sound, not two", out)
+        self.assertIn("the career screen draws its career tree, and Escape closes it", out)
+
+    def test_a_click_that_throws_fails_open_and_leaves_init_not_reached(self):
+        code, out, _ = self.judge("career_open_threw.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.OPEN), "FAIL")
+        self.assertIn("reason=NullReferenceException", out)
+        self.assertEqual(verdict_of(out, self.INIT), "NOT REACHED")
+
+    def test_a_click_that_leaves_another_screen_on_top_fails_open(self):
+        code, out, _ = self.judge("career_open_not_on_top.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.OPEN), "FAIL")
+        self.assertIn("reason=not-on-top", out)
+
+    def test_an_open_with_no_init_line_fails_init(self):
+        code, out, _ = self.judge("career_open_no_init.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.OPEN), "PASS")
+        self.assertEqual(verdict_of(out, self.INIT), "FAIL")
+        self.assertRegex(out, r"FAIL\s+taom\.career-screen\.init\b.*\n\s+reached, but")
+
+    def test_a_dialogue_career_switch_alone_is_not_reached(self):
+        # The switch mode init line is not the button's; the dialogue writes no open line.
+        code, out, _ = self.judge("career_switch_only.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.OPEN), "NOT REACHED")
+        self.assertEqual(verdict_of(out, self.INIT), "NOT REACHED")
+
+    def test_a_build_before_the_check_lines_is_not_reached(self):
+        # It has the fix and its CareerSystem lines, but no [Check] line, so it must not read as a FAIL.
+        code, out, _ = self.judge("career_pre_checks.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.OPEN), "NOT REACHED")
+        self.assertEqual(verdict_of(out, self.INIT), "NOT REACHED")
+        self.assertIn("no line matched", out)
 
 
 class CrashReportEchoTests(unittest.TestCase):

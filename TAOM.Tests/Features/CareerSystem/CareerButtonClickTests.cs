@@ -1,5 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using HarmonyLib;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.CareerSystem.Hooks.Patch27_CareerSystem;
@@ -23,6 +26,9 @@ public class CareerButtonClickTests
 {
     private const string CommandName = "ExecuteOpenCareerScreen";
     private const string PlayUiSound = "call UISoundsHelper::PlayUISound(String)";
+    private const string PassCall = "call Outcomes::Pass(String,String,String)";
+    private const string FailCall = "call Outcomes::Fail(String,String,String)";
+    private const string TopScreen = "call ScreenManager::get_TopScreen()";
     private static bool _gameLoaded;
 
     [ClassInitialize]
@@ -83,6 +89,65 @@ public class CareerButtonClickTests
         Assert.IsNull(handler, "The mixin's " + CommandName + " is never added to the view model; Patch27 handles the click.");
     }
 
+    [TestMethod]
+    public void Patch27Postfix_GuardsTheCloseAndTheOpen_AndItsCatchFailsThenRethrows()
+    {
+        // #971 (#1072): a click that throws writes its open fail line, and the exception still propagates as before.
+        RequireGame();
+        var postfix = Postfix();
+        var clauses = postfix.GetMethodBody()!.ExceptionHandlingClauses;
+        Assert.AreEqual(1, clauses.Count, "The postfix must have exactly one try/catch.");
+        var clause = clauses[0];
+        Assert.AreEqual(ExceptionHandlingClauseOptions.Clause, clause.Flags);
+        Assert.AreEqual(typeof(Exception), clause.CatchType);
+
+        var guarded = Fingerprint(postfix, clause.TryOffset, clause.TryLength);
+        var close = guarded.IndexOf("callvirt CharacterDeveloperVM::ExecuteDone()");
+        var open = guarded.IndexOf("call GauntletCareerScreen::OpenCareerScreen(Boolean)");
+        Assert.IsTrue(close >= 0 && open > close, "The try must hold the close, then the open: " + string.Join(" | ", guarded));
+
+        var handler = Fingerprint(postfix, clause.HandlerOffset, clause.HandlerLength);
+        CollectionAssert.Contains(handler, FailCall, string.Join(" | ", handler));
+        var ops = IlCallScanner.ExtractOpCodes(Slice(postfix, clause.HandlerOffset, clause.HandlerLength)).ToList();
+        CollectionAssert.Contains(ops, OpCodes.Rethrow, "The catch must rethrow with throw;");
+        CollectionAssert.DoesNotContain(ops, OpCodes.Throw, "throw ex; loses the stack trace; use throw;");
+    }
+
+    [TestMethod]
+    public void Patch27Postfix_ReportsTheOpenAfterTheTry_FromTheTopScreen()
+    {
+        // OpenCareerScreen can return with no screen pushed (no main hero), so the pass reads the top screen.
+        RequireGame();
+        var postfix = Postfix();
+        var tokens = Fingerprint(postfix);
+        var open = tokens.IndexOf("call GauntletCareerScreen::OpenCareerScreen(Boolean)");
+        var top = tokens.IndexOf(TopScreen);
+        var pass = tokens.IndexOf(PassCall);
+        Assert.IsTrue(open >= 0 && top > open, "The top screen is read after the open: " + string.Join(" | ", tokens));
+        Assert.IsTrue(pass > top, "The pass follows the top screen test: " + string.Join(" | ", tokens));
+        CollectionAssert.Contains(tokens, "ldstr \"taom.career-screen.open\"");
+        CollectionAssert.Contains(tokens, "ldstr \"source=button\"");
+
+        var clause = postfix.GetMethodBody()!.ExceptionHandlingClauses[0];
+        CollectionAssert.DoesNotContain(Fingerprint(postfix, clause.TryOffset, clause.TryLength), PassCall,
+            "The pass belongs after the try, once the open returned.");
+    }
+
+    [TestMethod]
+    public void CareerScreenOnInitialize_ReportsInitAfterTheFocus()
+    {
+        RequireGame();
+        var init = AccessTools.Method(typeof(GauntletCareerScreen), "OnInitialize");
+        Assert.IsNotNull(init, "GauntletCareerScreen.OnInitialize is gone.");
+        Assert.AreEqual(typeof(GauntletCareerScreen), init!.DeclaringType);
+        var tokens = Fingerprint(init);
+
+        var focus = tokens.IndexOf("call ScreenManager::TrySetFocus(ScreenLayer)");
+        var pass = tokens.IndexOf(PassCall);
+        Assert.IsTrue(focus >= 0 && pass > focus, "The init line is the last thing OnInitialize does: " + string.Join(" | ", tokens));
+        CollectionAssert.Contains(tokens, "ldstr \"taom.career-screen.init\"");
+    }
+
     private static MethodInfo Postfix()
     {
         var postfix = AccessTools.Method(typeof(ViewModel_ExecuteCommand_CareerScreen_Patch), "Postfix");
@@ -90,6 +155,17 @@ public class CareerButtonClickTests
         return postfix!;
     }
 
-    private static System.Collections.Generic.List<string> Fingerprint(MethodInfo method) =>
+    private static List<string> Fingerprint(MethodInfo method) =>
         IlCallScanner.Fingerprint(method, method.GetMethodBody()!.GetILAsByteArray()!).ToList();
+
+    // One try or handler block of the body, so a pin can say which side of the catch a call is on.
+    private static List<string> Fingerprint(MethodInfo method, int offset, int length) =>
+        IlCallScanner.Fingerprint(method, Slice(method, offset, length)).ToList();
+
+    private static byte[] Slice(MethodInfo method, int offset, int length)
+    {
+        var slice = new byte[length];
+        Array.Copy(method.GetMethodBody()!.GetILAsByteArray()!, offset, slice, 0, length);
+        return slice;
+    }
 }
