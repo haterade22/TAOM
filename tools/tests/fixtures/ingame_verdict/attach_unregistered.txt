@@ -1,0 +1,4 @@
+[2026-10-30 12:57:23] [INFO] [Client] composition applied: TAOM.Client.TaomClientComposition (client=v2.0.0.0 build.20261030-175615Z+2434d62aa33776fae18839632e30781bcbbde5e4, core=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4)
+[2026-10-30 12:57:23] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-10-30 13:09:25] [INFO] [BattleActionBar] screen init: MissionScreen=NULL mode=Deployment enabled=True
+[2026-10-30 13:28:27] [INFO] [Shutdown] clean module unload

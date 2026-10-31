@@ -17,17 +17,20 @@ public sealed class BattleActionBarService : IBattleActionBarService
     private readonly IFormationCompositionAnalyzer _analyzer;
     private readonly ITroopStanceManager _stances;
     private readonly TAOM.Core.Logging.IModLogger _logger;
+    private readonly TAOM.Core.Logging.IOutcomeLog _outcomes;
 
     public BattleActionBarService(
         ICompanionTacticsSettingsProvider settings,
         IFormationCompositionAnalyzer analyzer,
         ITroopStanceManager stances,
-        TAOM.Core.Logging.IModLogger logger)
+        TAOM.Core.Logging.IModLogger logger,
+        TAOM.Core.Logging.IOutcomeLog outcomes)
     {
         _settings = settings;
         _analyzer = analyzer;
         _stances = stances;
         _logger = logger;
+        _outcomes = outcomes;
     }
 
     public IReadOnlyList<BattleAction> GetActionsForFormation(IFormationAdapter formation)
@@ -65,10 +68,10 @@ public sealed class BattleActionBarService : IBattleActionBarService
         {
             actions.Add(new BattleAction(
                 "action_brace", "Brace for Cavalry", ActionCategory.Polearm,
-                () => Guarded(() => _stances.SetStance(formationIndex, TroopStance.BracedForCavalry))));
+                () => Guarded(formationIndex, TroopStance.BracedForCavalry)));
             actions.Add(new BattleAction(
                 "action_pike_wall", "Pike Wall", ActionCategory.Polearm,
-                () => Guarded(() => _stances.SetStance(formationIndex, TroopStance.PikeWall))));
+                () => Guarded(formationIndex, TroopStance.PikeWall)));
         }
 
         if (composition.HasShields)
@@ -78,25 +81,29 @@ public sealed class BattleActionBarService : IBattleActionBarService
                 () => { /* Display-only. */ }));
             actions.Add(new BattleAction(
                 "action_testudo", "Testudo", ActionCategory.Shield,
-                () => Guarded(() => _stances.SetStance(formationIndex, TroopStance.Testudo))));
+                () => Guarded(formationIndex, TroopStance.Testudo)));
         }
 
         if (composition.HasCavalry)
         {
             actions.Add(new BattleAction(
                 "action_charge", "Line Charge", ActionCategory.Cavalry,
-                () => Guarded(() => _stances.SetStance(formationIndex, TroopStance.LineCharge))));
+                () => Guarded(formationIndex, TroopStance.LineCharge)));
             actions.Add(new BattleAction(
                 "action_skirmish", "Skirmish", ActionCategory.Cavalry,
-                () => Guarded(() => _stances.SetStance(formationIndex, TroopStance.Skirmish))));
+                () => Guarded(formationIndex, TroopStance.Skirmish)));
         }
 
         return actions;
     }
 
-    // A click can arrive after the setting turned off mid-battle; record nothing then.
-    private void Guarded(Action record)
+    // A click can arrive after the setting turned off mid-battle; record nothing then. The [Check] line (#1072) says a
+    // click reached the stance, once per stance for the process.
+    private void Guarded(int formationIndex, TroopStance stance)
     {
-        if (_settings.ShowBattleActionBar) record();
+        if (!_settings.ShowBattleActionBar) return;
+        _stances.SetStance(formationIndex, stance);
+        _outcomes.Pass(BattleActionBarChecks.StanceId, stance.ToString(),
+            "stance=" + stance + " formation=" + formationIndex.ToString(System.Globalization.CultureInfo.InvariantCulture));
     }
 }

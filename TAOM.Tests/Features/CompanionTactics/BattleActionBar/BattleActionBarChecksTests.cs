@@ -1,0 +1,100 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+using TAOM.Core.Logging;
+using TAOM.Features.CompanionTactics.BattleActionBar;
+
+namespace TAOM.Tests.Features.CompanionTactics.BattleActionBar;
+
+/// <summary>
+/// The #970 [Check] ids that tools/ingame_checks/970.toml reads, and the attach check's verdict at mission end (#1072):
+/// it fails only when Battle mode was reached with the setting on, since the attach runs only on a Battle-mode tick.
+/// </summary>
+[TestClass]
+public class BattleActionBarChecksTests
+{
+    [TestMethod]
+    public void Ids_AreTheManifestIds()
+    {
+        Assert.AreEqual("taom.battle-action-bar.attach", BattleActionBarChecks.AttachId);
+        Assert.AreEqual("taom.battle-action-bar.stance", BattleActionBarChecks.StanceId);
+        Assert.IsTrue(OutcomeLog.IsValidId(BattleActionBarChecks.AttachId));
+        Assert.IsTrue(OutcomeLog.IsValidId(BattleActionBarChecks.StanceId));
+    }
+
+    [DataTestMethod]
+    // Not a field battle: the bar never attaches there.
+    [DataRow(false, false, true, true, true, BattleActionBarChecks.AttachEnd.None)]
+    // Attached: its own line was written.
+    [DataRow(true, true, true, true, true, BattleActionBarChecks.AttachEnd.None)]
+    // A Battle tick saw the setting on, then it was turned off.
+    [DataRow(true, false, true, false, false, BattleActionBarChecks.AttachEnd.FailNeverAttached)]
+    // Ended in Battle with the setting on, and no Battle tick saw it on: a registered view ticks whenever the screen
+    // is active, so this is a setting turned on in the final frames. An unregistered view never finalizes; its
+    // NULL screen init line is what 970.toml fails on.
+    [DataRow(true, false, false, true, true, BattleActionBarChecks.AttachEnd.None)]
+    // Fought with the setting off.
+    [DataRow(true, false, false, true, false, BattleActionBarChecks.AttachEnd.SkipSettingOff)]
+    // Ended in deployment: proves nothing, setting on or off.
+    [DataRow(true, false, false, false, true, BattleActionBarChecks.AttachEnd.None)]
+    [DataRow(true, false, false, false, false, BattleActionBarChecks.AttachEnd.None)]
+    // expected is object: a public test method cannot take the internal enum as a parameter.
+    public void ClassifyAtEnd_TruthTable(bool fieldBattle, bool attachedOnce, bool enabledBattleTickSeen,
+        bool endedInBattle, bool enabledAtEnd, object expected) =>
+        Assert.AreEqual(expected, BattleActionBarChecks.ClassifyAtEnd(fieldBattle, attachedOnce, enabledBattleTickSeen,
+            endedInBattle, enabledAtEnd));
+
+    [TestMethod]
+    public void RecordAttach_LoadedMovie_WritesPassOnly()
+    {
+        var log = Substitute.For<IOutcomeLog>();
+        BattleActionBarChecks.RecordAttach(log, "7", movieLoaded: true);
+        log.Received(1).Pass("taom.battle-action-bar.attach", "7", "mission=7");
+        log.DidNotReceiveWithAnyArgs().Fail(default!, default!, default!);
+        log.DidNotReceiveWithAnyArgs().Skip(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void RecordAttach_MovieNotLoaded_WritesFailOnly()
+    {
+        var log = Substitute.For<IOutcomeLog>();
+        BattleActionBarChecks.RecordAttach(log, "7", movieLoaded: false);
+        log.Received(1).Fail("taom.battle-action-bar.attach", "7", "reason=movie-not-loaded mission=7");
+        log.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
+        log.DidNotReceiveWithAnyArgs().Skip(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void RecordEnd_NeverAttached_WritesFailOnly()
+    {
+        var log = Substitute.For<IOutcomeLog>();
+        BattleActionBarChecks.RecordEnd(log, "7", BattleActionBarChecks.AttachEnd.FailNeverAttached);
+        log.Received(1).Fail("taom.battle-action-bar.attach", "7", "reason=never-attached mission=7");
+        log.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
+        log.DidNotReceiveWithAnyArgs().Skip(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void RecordEnd_SettingOff_WritesSkipOnly()
+    {
+        var log = Substitute.For<IOutcomeLog>();
+        BattleActionBarChecks.RecordEnd(log, "7", BattleActionBarChecks.AttachEnd.SkipSettingOff);
+        log.Received(1).Skip("taom.battle-action-bar.attach", "7", "reason=setting-off mission=7");
+        log.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
+        log.DidNotReceiveWithAnyArgs().Fail(default!, default!, default!);
+    }
+
+    [TestMethod]
+    public void RecordEnd_None_WritesNothing()
+    {
+        var log = Substitute.For<IOutcomeLog>();
+        BattleActionBarChecks.RecordEnd(log, "7", BattleActionBarChecks.AttachEnd.None);
+        Assert.IsFalse(log.ReceivedCalls().GetEnumerator().MoveNext());
+    }
+
+    [TestMethod]
+    public void NullLog_WritesNothingAndDoesNotThrow()
+    {
+        BattleActionBarChecks.RecordAttach(null, "7", true);
+        BattleActionBarChecks.RecordEnd(null, "7", BattleActionBarChecks.AttachEnd.FailNeverAttached);
+    }
+}
