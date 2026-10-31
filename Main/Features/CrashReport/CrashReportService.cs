@@ -30,6 +30,7 @@ public sealed class CrashReportService : ICrashReportService
     private readonly CrashBundleWriter _bundleWriter;
     private readonly IButterLibExceptionHandlerAdapter _butterLib;
     private readonly CrashBundleThrottle _throttle;
+    private readonly IOutcomeLog _outcomes;
 
     [ThreadStatic] private static bool _handling;
 
@@ -53,7 +54,8 @@ public sealed class CrashReportService : ICrashReportService
         JsonCrashReportRenderer jsonRenderer,
         CrashBundleWriter bundleWriter,
         IButterLibExceptionHandlerAdapter butterLib,
-        CrashBundleThrottle throttle)
+        CrashBundleThrottle throttle,
+        IOutcomeLog outcomes)
     {
         _logger = logger;
         _identity = identity;
@@ -73,6 +75,7 @@ public sealed class CrashReportService : ICrashReportService
         _bundleWriter = bundleWriter;
         _butterLib = butterLib;
         _throttle = throttle;
+        _outcomes = outcomes;
     }
 
     public string? HandleException(Exception exception, string originatingPatchTarget, bool offMainThread = false)
@@ -120,6 +123,11 @@ public sealed class CrashReportService : ICrashReportService
                 }
                 return null;
             }
+
+            // #1071: the session summary, before ComposeContext collects the log tail, so both the TAOM tail in
+            // report.txt and the bundle's taom_debug.log contain the totals. Only for an admitted crash: a crash
+            // every frame would otherwise write one per frame.
+            _outcomes.WriteSummary("crash");
 
             // Reduced-capture mode for off-main-thread captures (Codex review #46 MED-03).
             // AppDomainExceptionHook and Native2ManagedBridge pass offMainThread when the throw

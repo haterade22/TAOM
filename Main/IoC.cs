@@ -268,6 +268,7 @@ public static class IoC
     private static void RegisterLoggingServices(IContainer container)
     {
         container.Register<IModLogger, FileLogger>(Reuse.Singleton);
+        container.Register<IOutcomeLog, OutcomeLog>(Reuse.Singleton);
     }
 
     public static T Resolve<T>()

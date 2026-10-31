@@ -9,7 +9,8 @@ namespace TAOM.Core.Logging;
 /// for the life of its owner (a screen, or a behavior built per campaign). A call site that fails once usually fails every time, so
 /// the latch keeps the file to one line per site; a different site still logs. A guarded hover function returns an empty result,
 /// because a throw escapes the engine's hover and command dispatch uncaught; <c>InvokeWithLog</c> prints it to the engine log and
-/// rethrows.
+/// rethrows. Every throw also goes to <see cref="Outcomes.Swallowed"/>, which writes one WARNING per site for the process and
+/// counts the repeats in the [Session] summary (#1071).
 /// </summary>
 internal sealed class ScreenFaultLog
 {
@@ -79,6 +80,7 @@ internal sealed class ScreenFaultLog
 
     internal void LogOnce(string site, Exception ex)
     {
+        Outcomes.Swallowed(_feature, site, ex); // every throw, so the session summary counts the repeats (#1071)
         if (!_logged.Add(site))
             return;
         _logger.LogError($"[{_feature}] {site} threw. This line is logged once and later calls still run. Root cause: {ex}");
