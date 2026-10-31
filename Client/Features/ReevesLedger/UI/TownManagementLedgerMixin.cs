@@ -49,7 +49,7 @@ internal class TownManagementLedgerMixin : BaseViewModelMixin<TownManagementVM>
         {
             // The constructor runs inside the view model's own: a throw here would take the whole window down.
             _enabled = false;
-            _faults?.LogOnce("constructor", ex);
+            _faults?.LogOnce("ledger constructor", ex);
         }
     }
 

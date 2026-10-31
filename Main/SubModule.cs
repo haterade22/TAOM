@@ -121,6 +121,11 @@ public class SubModule : MBSubModuleBase
         try { Core.Logging.EarlyLogBridge.Connect(IoC.Resolve<IModLogger>()); }
         catch { /* the early-log flush must never stop the mod loading */ }
 
+        // #1071: the [Check] and [Session] facade for static patches, and the exit summary on ProcessExit.
+        try { Core.Logging.Outcomes.Initialize(IoC.Resolve<Core.Logging.IOutcomeLog>()); }
+        catch { /* outcome logging must never stop the mod loading */ }
+        Core.Logging.Outcomes.SummariseOnProcessExit();
+
         // First, because the engine starts compiling its shaders about six seconds after TAOM loads
         // (docs/features/shader-compile-notice.md); stopped at the first main menu. The window is TAOM.Client's
         // (ADR-013), resolved here after IoC.Configure has applied the client composition.
@@ -2283,6 +2288,7 @@ public class SubModule : MBSubModuleBase
 
     protected override void OnApplicationTick(float dt)
     {
+        Core.Logging.Outcomes.Tick(); // the 10-minute [Session] heartbeat: one clock compare per tick
         _timeAccelerationService?.OnTick();
         _factionUiTicker?.Tick(dt);
 
@@ -2316,6 +2322,7 @@ public class SubModule : MBSubModuleBase
         // without this line now means the process died, and one ending with it means it did not.
         //
         // Note the limit: this fires on module unload, so it covers quit-to-desktop, not a power cut.
+        Core.Logging.Outcomes.WriteSummary("exit"); // #1071: the session summary, just before the marker; never throws
         try { IoC.Resolve<IModLogger>().LogInfo("[Shutdown] clean module unload"); }
         catch { /* shutdown diagnostics must never be the thing that breaks shutdown */ }
 

@@ -88,4 +88,31 @@ public class ScreenFaultLogTests
 
         _logger.Received(1).LogError(Arg.Is<string>(m => m.Contains("the reserve moved")));
     }
+
+    // #1071: the ERROR line is latched per screen, so the repeats were never counted; Outcomes.Swallowed counts each throw.
+    [TestMethod]
+    public void EveryThrow_IsCountedInTheSessionSummary_AndTheErrorLineStaysLatched()
+    {
+        var outcomeLogger = Substitute.For<IModLogger>();
+        OutcomesTests.ResetFacade();
+        try
+        {
+            Outcomes.Initialize(new OutcomeLog(outcomeLogger, new TAOM.Tests.Features.LoadTimeStamps.FakeStampClock(), () => 0));
+
+            for (var i = 0; i < 5; i++)
+                _sut.Run("refresh", () => throw new InvalidOperationException("boom"));
+            Assert.IsFalse(_sut.Condition("offer", () => throw new NullReferenceException()));
+            _sut.LogOnce("step", "the reserve moved");
+            Outcomes.WriteSummary("save");
+
+            _logger.Received(1).LogError(Arg.Is<string>(m => m.Contains("refresh") && m.Contains("boom")));
+            outcomeLogger.Received(1).LogInfo(Arg.Is<string>(m => m.Contains(" swallowed=6 ")));
+            outcomeLogger.Received(1).LogInfo("[Session] swallowed feature=Probe site=refresh n=5 first=InvalidOperationException");
+            outcomeLogger.Received(1).LogInfo("[Session] swallowed feature=Probe site=offer n=1 first=NullReferenceException");
+        }
+        finally
+        {
+            OutcomesTests.ResetFacade();
+        }
+    }
 }

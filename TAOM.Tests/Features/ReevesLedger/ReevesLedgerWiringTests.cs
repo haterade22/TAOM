@@ -103,6 +103,19 @@ public class ReevesLedgerWiringTests
     }
 
     [TestMethod]
+    public void TheTwoMixins_NameTheirFaultSitesApart()
+    {
+        // Both fault logs report as "ReevesLedger", and the session summary counts swallowed throws per (feature, site)
+        // for the process (#1071): a site name both mixins use would merge their counts and their one WARNING line.
+        var sites = MixinFiles.Select(file => Regex.Matches(Mixin(file), @"_faults[!?]?\.(?:Run|Lines|Text|Condition|LogOnce)\(""([^""]+)""")
+            .Cast<Match>().Select(m => m.Groups[1].Value).ToArray()).ToArray();
+
+        Assert.IsTrue(sites.All(s => s.Length > 0), "each mixin names at least one literal site");
+        CollectionAssert.AreEqual(Array.Empty<string>(), sites[0].Intersect(sites[1]).ToArray(),
+            "a site name shared by the two mixins");
+    }
+
+    [TestMethod]
     public void ThePatrolRow_IsGatedByTheServiceRule_NotByIsTown()
     {
         // #992: a castle with a patrol, or one the patrol model allows, shows the row too.
