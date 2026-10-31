@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using TAOM.Core.Logging;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TaleWorlds.Core;
 using TaleWorlds.Localization;
 using TaleWorlds.MountAndBlade;
@@ -37,17 +38,20 @@ internal sealed class FordsMissionLauncher
         typeof(MissionBoundaryPlacer),
         typeof(MissionOptionsComponent),
         typeof(FordsOfWarMissionLogic),
+        typeof(FordsTelemetryLogic),
     };
 
     private readonly FordsConfigCatalog _catalog;
     private readonly FordsSession _session;
     private readonly IModLogger _logger;
+    private readonly FordsRunReport _report;
 
-    public FordsMissionLauncher(FordsConfigCatalog catalog, FordsSession session, IModLogger logger)
+    public FordsMissionLauncher(FordsConfigCatalog catalog, FordsSession session, IModLogger logger, FordsRunReport report)
     {
         _catalog = catalog;
         _session = session;
         _logger = logger;
+        _report = report;
     }
 
     /// <summary>The behavior types <see cref="CreateBehaviors"/> builds, in order. The combatants logic comes first so the teams exist for every later behavior.</summary>
@@ -78,6 +82,7 @@ internal sealed class FordsMissionLauncher
             var westCombatant = Combatant("{=!}Fords of War, West", westCulture, WestSide, false);
             var eastCombatant = Combatant("{=!}Fords of War, East", eastCulture, EastSide, sameCulture);
 
+            _report.Stage("launching", "scene=" + map.SceneId);
             MissionState.OpenNew(FordsOfWarMission.MissionName, Record(map.SceneId), _ => CreateBehaviors(setup, westCombatant, eastCombatant));
             return true;
         }
@@ -98,7 +103,8 @@ internal sealed class FordsMissionLauncher
             new MissionHardBorderPlacer(),
             new MissionBoundaryPlacer(),
             new MissionOptionsComponent(),
-            new FordsOfWarMissionLogic(setup, _catalog, _session, _logger),
+            new FordsOfWarMissionLogic(setup, _catalog, _session, _logger, _report),
+            new FordsTelemetryLogic(_report),
         };
 
     private static MissionInitializerRecord Record(string scene) =>

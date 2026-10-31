@@ -115,7 +115,7 @@ internal static class FordsMapsReader
 
         var path = label + ".options";
         return new LayoutOptions(
-            s.Int(o, path, "laneCount", baseline.LaneCount, 3, 4),
+            s.Int(o, path, "laneCount", baseline.LaneCount, 3, LaneStreams.MaxLanes),
             s.Float(o, path, "laneSpread", baseline.LaneSpread, 5f, 300f),
             s.Float(o, path, "waypointStep", baseline.WaypointStep, 2f, 100f),
             ReadFractions(o, path, baseline.TowerFractions, s),

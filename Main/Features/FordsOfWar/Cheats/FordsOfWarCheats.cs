@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System;
 using TaleWorlds.Library;
 using TAOM.Features.DevConsole;
+using TAOM.Features.FordsOfWar.Diagnostics;
 
 namespace TAOM.Features.FordsOfWar.Cheats;
 
@@ -23,11 +25,41 @@ public static class FordsOfWarCheats
         + "Adds gold (1 to 99,999) to your commander during a Fords of War match. The purse stops at its cap.";
 
     [CommandLineFunctionality.CommandLineArgumentFunction("fords_start", "taom")]
-    public static string FordsStart(List<string> strings) =>
-        TaomConsole.RunAtMainMenu(strings, StartUsage, args =>
-            FordsOfWarCommands.Start(args, IoC.Resolve<FordsConfigCatalog>(), IoC.Resolve<FordsSetupPrompt>()));
+    public static string FordsStart(List<string> strings)
+    {
+        var ran = false;
+        var reply = TaomConsole.RunAtMainMenu(strings, StartUsage, args =>
+        {
+            ran = true;
+            return FordsOfWarCommands.Start(args, IoC.Resolve<FordsConfigCatalog>(), IoC.Resolve<FordsSetupPrompt>());
+        });
+        Record("fords_start", strings, ran, reply);
+        return reply;
+    }
 
     [CommandLineFunctionality.CommandLineArgumentFunction("fords_gold", "taom")]
-    public static string FordsGold(List<string> strings) =>
-        TaomConsole.RunInMission(strings, GoldUsage, args => FordsOfWarCommands.Gold(args, IoC.Resolve<FordsSession>()));
+    public static string FordsGold(List<string> strings)
+    {
+        var ran = false;
+        var reply = TaomConsole.RunInMission(strings, GoldUsage, args =>
+        {
+            ran = true;
+            return FordsOfWarCommands.Gold(args, IoC.Resolve<FordsSession>());
+        });
+        Record("fords_gold", strings, ran, reply);
+        return reply;
+    }
+
+    // The run report keeps the console call as evidence; it is never allowed to change the reply or throw into the console.
+    private static void Record(string command, List<string> args, bool ran, string reply)
+    {
+        try
+        {
+            IoC.Resolve<FordsRunReport>().ConsoleCommand(command, args, ran, reply);
+        }
+        catch (Exception)
+        {
+            // No container yet (a test host) or a faulted report: the command itself already ran.
+        }
+    }
 }

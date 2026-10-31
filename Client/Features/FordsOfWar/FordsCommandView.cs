@@ -7,6 +7,7 @@ using TaleWorlds.MountAndBlade.View.MissionViews;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Diagnostics;
 
 namespace TAOM.Client.Features.FordsOfWar;
 
@@ -31,6 +32,7 @@ public sealed class FordsCommandView : MissionView
     private GauntletLayer? _layer;
     private GauntletMovieIdentifier? _movie;
     private FordsCommandVM? _vm;
+    private FordsRunReport? _report;
     private float _sinceRefresh = RefreshIntervalSec;
     private bool _failed;
 
@@ -53,6 +55,7 @@ public sealed class FordsCommandView : MissionView
                 return;
 
             _vm.Tick(dt, MBCommon.IsPaused);
+            _report?.Paused(MBCommon.IsPaused);
             if (!_vm.IsResultVisible)
                 FordsCommandHotkeys.Read(Input, _vm);
 
@@ -79,12 +82,20 @@ public sealed class FordsCommandView : MissionView
 
     private void Attach()
     {
-        _vm = new FordsCommandVM(_session!, () => FordsOfWarGameManager.ReturnToMainMenu(IoC.Resolve<IModLogger>()));
+        _report = IoC.Resolve<FordsRunReport>();
+        _vm = new FordsCommandVM(_session!, ExitClicked, _report);
         _layer = new GauntletLayer("GauntletLayer", LayerOrder, false);
         _layer.InputRestrictions.SetInputRestrictions(true, InputUsageMask.Mouse);
         _movie = _layer.LoadMovie("FordsCommand", _vm);
         MissionScreen.AddLayer(_layer);
         _vm.Refresh();
+        _report?.PanelAttached();
+    }
+
+    private void ExitClicked()
+    {
+        _report?.EndGameRequested("button");
+        FordsOfWarGameManager.ReturnToMainMenu(IoC.Resolve<IModLogger>());
     }
 
     // Detach with no way to throw out of a screen callback; a failure here is only logged.

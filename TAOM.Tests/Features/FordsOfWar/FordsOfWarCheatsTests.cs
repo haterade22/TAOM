@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TaleWorlds.CampaignSystem;
@@ -11,7 +12,9 @@ using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar;
 using TAOM.Features.FordsOfWar.Cheats;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Domain;
+using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
 using static TAOM.Tests.Features.FordsOfWar.Domain.FordsMatchFixture;
 
@@ -49,6 +52,32 @@ public class FordsOfWarCheatsTests
     }
 
     [TestMethod]
+    public void BothCommands_RecordTheirCallThroughTheReport()
+    {
+        var source = Regex.Replace(RepoPaths.ReadSource("Main/Features/FordsOfWar/Cheats/FordsOfWarCheats.cs", stripComments: true), @"\s+", " ");
+
+        var startGate = source.IndexOf("TaomConsole.RunAtMainMenu(", StringComparison.Ordinal);
+        var startRecord = source.IndexOf("Record(\"fords_start\", strings, ran, reply);", StringComparison.Ordinal);
+        var goldGate = source.IndexOf("TaomConsole.RunInMission(", StringComparison.Ordinal);
+        var goldRecord = source.IndexOf("Record(\"fords_gold\", strings, ran, reply);", StringComparison.Ordinal);
+        Assert.IsTrue(startGate >= 0 && startRecord > startGate, "fords_start records after the gate ran");
+        Assert.IsTrue(goldGate >= 0 && goldRecord > goldGate, "fords_gold records after the gate ran");
+        StringAssert.Contains(source, "IoC.Resolve<FordsRunReport>().ConsoleCommand(command, args, ran, reply);");
+        Assert.AreEqual("No Fords of War match is running.", FordsOfWarCommands.NoMatchReply, "the reply bytes are unchanged");
+    }
+
+    [TestMethod]
+    public void FordsGold_TheRealReply_StartsWithTheGrantPrefixTheVerdictsRead()
+    {
+        var session = new FordsSession();
+        session.Fill(new object(), Create(), WestSlot, Substitute.For<IFordsBattlefieldAdapter>(), default, default, new List<Vec3f>());
+
+        var reply = FordsOfWarCommands.Gold(new List<string> { "100" }, session);
+
+        Assert.IsTrue(reply.StartsWith(FordsVerdicts.GrantPrefix, StringComparison.Ordinal), reply);
+    }
+
+    [TestMethod]
     public void FordsGold_WithNoGame_ReturnsTheGateMessageAndDoesNotThrow()
     {
         var result = (string)Command("fords_gold").Invoke(null, new object[] { new List<string> { "100" } })!;
@@ -73,7 +102,7 @@ public class FordsOfWarCheatsTests
         factory.Create(Arg.Any<FordsMatchSetup>()).Returns(StubGameManager.Create());
         var menu = new FakeFordsMenu();
 
-        var reply = FordsOfWarCommands.Start(new List<string>(), catalog, new FordsSetupPrompt(catalog, menu, factory, logger));
+        var reply = FordsOfWarCommands.Start(new List<string>(), catalog, new FordsSetupPrompt(catalog, menu, factory, logger, new FordsRunReport(logger)));
 
         StringAssert.Contains(reply, "gondor");
         StringAssert.Contains(reply, "mordor");
@@ -91,7 +120,7 @@ public class FordsOfWarCheatsTests
         factory.Create(Arg.Any<FordsMatchSetup>()).Returns(StubGameManager.Create());
 
         FordsOfWarCommands.Start(new List<string> { "mordor", "gondor", "hard", "taom_rohan_battle_001_forceatmo" }, catalog,
-            new FordsSetupPrompt(catalog, new FakeFordsMenu(), factory, logger));
+            new FordsSetupPrompt(catalog, new FakeFordsMenu(), factory, logger, new FordsRunReport(logger)));
 
         factory.Received(1).Create(new FordsMatchSetup("taom_rohan_battle_001_forceatmo", "mordor", "gondor", "hard", 3));
     }
@@ -104,7 +133,7 @@ public class FordsOfWarCheatsTests
         var factory = Substitute.For<IFordsOfWarGameManagerFactory>();
 
         var reply = FordsOfWarCommands.Start(new List<string> { "narnia" }, catalog,
-            new FordsSetupPrompt(catalog, new FakeFordsMenu(), factory, logger));
+            new FordsSetupPrompt(catalog, new FakeFordsMenu(), factory, logger, new FordsRunReport(logger)));
 
         StringAssert.Contains(reply, "narnia");
         factory.DidNotReceiveWithAnyArgs().Create(null!);
@@ -118,7 +147,8 @@ public class FordsOfWarCheatsTests
         var factory = Substitute.For<IFordsOfWarGameManagerFactory>();
         factory.Create(Arg.Any<FordsMatchSetup>()).Returns((MBGameManager?)null);
 
-        var reply = FordsOfWarCommands.Start(new List<string>(), catalog, new FordsSetupPrompt(catalog, new FakeFordsMenu(), factory, logger));
+        var reply = FordsOfWarCommands.Start(new List<string>(), catalog,
+            new FordsSetupPrompt(catalog, new FakeFordsMenu(), factory, logger, new FordsRunReport(logger)));
 
         StringAssert.Contains(reply, "could not");
     }

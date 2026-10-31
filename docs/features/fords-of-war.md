@@ -71,10 +71,10 @@ what the numbers mean, how to check it in game and where to change it.
   `IFordsTowerHitHook` (the director) and writes back the damage the match allows. A component that is
   not a registered Fords tower passes through untouched, and the prefix never throws. A blow with no
   weapon (a kick, a mount's charge) is left alone. Own-side hits give 0 damage.
-- **Launcher and mission logic.** `FordsMissionLauncher` opens the mission with seven behaviors, in
+- **Launcher and mission logic.** `FordsMissionLauncher` opens the mission with eight behaviors, in
   order: `MissionCombatantsLogic` (`NoTeamAI`, two `CustomBattleCombatant`s, no player agent),
   `AgentHumanAILogic`, `AmmoSupplyLogic` (both sides), `MissionHardBorderPlacer`,
-  `MissionBoundaryPlacer`, `MissionOptionsComponent` and `FordsOfWarMissionLogic`. Left out on purpose:
+  `MissionBoundaryPlacer`, `MissionOptionsComponent`, `FordsOfWarMissionLogic` and `FordsTelemetryLogic` (last: it feeds the self-check report). Left out on purpose:
   the default spawn logic, `BattleEndLogic`, deployment controllers, the morale and panic logics,
   `AgentVictoryLogic`, `BattleMissionStarterLogic` and `MissionBoundaryCrossingHandler`.
   `FordsOfWarMissionLogic` is a `MissionLogic` under 150 lines; its tick also drives `FordsMissionExit`,
@@ -261,7 +261,7 @@ F8.
 | `Main/Features/FordsOfWar/FordsOfWarModule.cs` | Feature module: registrations, `Patch131_FordsOfWar`, main-menu option on the MainMenu phase |
 | `Main/Features/FordsOfWar/FordsMissionDirector.cs` | Per-mission orchestrator; applies effects through the adapters |
 | `Main/Features/FordsOfWar/FordsSession.cs` | The one command and view surface for the client |
-| `Main/Features/FordsOfWar/Hooks/FordsMissionLauncher.cs` | Opens the mission with the seven behaviors |
+| `Main/Features/FordsOfWar/Hooks/FordsMissionLauncher.cs` | Opens the mission with the eight behaviors |
 | `Main/Features/FordsOfWar/Hooks/FordsOfWarMissionLogic.cs` | `MissionLogic`: start, tick, removals, `MissionEnded` |
 | `Main/Features/FordsOfWar/Hooks/FordsTowerHitPatch.cs` | Patch131, prefix on `DestructableComponent.OnHit` |
 | `Main/Features/FordsOfWar/FordsMissionExit.cs`, `FordsExitClock.cs` | Automatic return to the main menu: 25 s after the result, 3 s after a failed start |
@@ -277,6 +277,12 @@ F8.
 | `Client/Features/FordsOfWar/FordsCommandView.cs`, `FordsCommandVM.cs`, `FordsCommandHotkeys.cs`, `FordsHudText.cs` | Command panel, hotkeys and every player-facing line |
 | `Main/_Module/GUI/PreFabs/FordsOfWar/FordsCommand.xml` | Panel prefab (movie `FordsCommand`) |
 | `Main/_Module/ModuleData/fords_of_war/match.json`, `factions.json`, `maps.json` | Configuration |
+| `Main/Features/FordsOfWar/Diagnostics/` | The self-check report (`FordsRunReport`), the verdicts and the evidence classes |
+| `Main/Features/FordsOfWar/Hooks/FordsTelemetryLogic.cs`, `Hooks/FordsMissionResults.cs` | Mission behavior that feeds the report; the result hand-off |
+| `Main/Features/FordsOfWar/FordsFieldProbe.cs`, `Main/Adapters/FordsVolleyHits.cs` | Field measurements and volley hit records for the report |
+| `Main/Features/Warg/WargRageLog.cs` | Warg rage start and restore records the report reads |
+| `Client/Features/FordsOfWar/FordsCameraProbe.cs` | Camera evidence from the client (the view resolves the report and passes it in) |
+| `Client/ClientSubModule.OnBeforeInitialModuleScreenSetAsRoot` | The final report pass when the main menu is back |
 | `docs/features/fords-of-war/build-spec.md`, `greybox-scene-spec.md` | Build contract; Kit scene spec |
 
 ## Dependencies
@@ -301,15 +307,11 @@ F8.
 
 ## Tests
 
-`TAOM.Tests/Features/FordsOfWar/` holds 62 test classes (`grep -c "\[TestClass\]"` over the folder).
-The run `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --no-build --filter
-"FullyQualifiedName~Fords"` reported, on 2026-10-31:
-
-> Passed!  - Failed:     0, Passed:   974, Skipped:     0, Total:   974, Duration: 1 s - TAOM.Tests.dll (net472)
-
-The filter is by name, so it can also pick up tests outside the folder whose names contain "Fords"
-(the Dread Aura gate tests are two). It used the existing build (`--no-build`), so it says nothing about
-a build made after that. The main classes:
+`TAOM.Tests/Features/FordsOfWar/` holds the mode's tests. Run them with `dotnet test TAOM.Tests
+-p:DisableModuleCopy=true -p:ModuleId= --filter "FullyQualifiedName~Fords"`; the filter is by name, so it
+also picks up a few tests outside the folder whose names contain "Fords" (the Dread Aura gate tests). The
+counts change with every stage, so this page quotes none: run the filter and read its last line. The main
+classes:
 
 - `Domain/FordsDomainPurityTests.cs`: the purity gate (no `using TaleWorlds`, no `TAOM.Adapters` under `Domain/`).
 - `Domain/FordsMatchTests.cs`, `FordsMatchScenarioTests.cs`, `FordsMatchSpawnFailureTests.cs`,
@@ -328,6 +330,8 @@ a build made after that. The main classes:
 - `FordsOfWarModuleTests.cs`, `FordsEntryPointLineCountTests.cs` (ADR-002 line caps),
   `Client/FordsClientWiringTests.cs`, `Client/FordsCommandVMTests.cs`, `Client/FordsCommandPrefabTests.cs`,
   `Client/FordsCameraMathTests.cs`, `Client/FordsHudStringsTests.cs`.
+- `Diagnostics/` (the report, verdicts, evidence, log lines and report file), `FordsVerifyDocTests` (each checklist item names its `check=NN` row), and beside it the tests for the telemetry logic (`FordsTelemetryLogicTests`: the mission clock, the untimed first frame, the 1 Hz warg watch and the warg counts pushed before the closing pass; the options component, the warg log's activation, the 30 s agent-count window and `OnAgentHit` need a live mission and are not driven), the field probe, the volley hits and the camera probe (`Client/FordsCameraProbeTests.cs`, with a real `FordsRunReport`). `Main/Features/Warg/WargRageLog.cs` is tested in `TAOM.Tests/Features/Warg/WargRageLogTests.cs`; a reflection test there fails if the class names a TaleWorlds type in a signature.
+- `Scenarios/` (the scenario harness): `FordsScenario` drives the real report, director and match, lane generator, spawn placement, field probe, exit clock and camera maths with faithful fakes, in the engine's per-frame order, then judges. `FordsScenarioTests` runs five scenarios (a clean three-lane match with no FAIL, one injected fault per row, a pause and a hitch, the camera pushed into the edge, the session tail after a finished run). `FordsVerdictContractTests` holds one row per verdict part (52) with the scenario that passes it and the fault that fails it, or `PassOnly`, and fails when the table and the parts `Judge` emits differ. The telemetry and mission logics are mirrored in the harness (they need a live mission), and the volley-hit reader is fed through the report, not driven (it takes engine structs).
 - Shared tests this mode touches: `MissionViewRegistrationGateTests.Allowlist` (the two views built by
   the mission's `[ViewMethod]` list), `ClientSubModuleTests` (the exact client registrations) and
   `ConsoleCommandBindingTests.MainMenuCommands`.
@@ -342,49 +346,51 @@ console commands need cheat mode: `taom.fords_start` is refused while a game is 
 mode is off, and `taom.fords_gold` is refused when no match is running. Keep the game log open: the
 checks below name log lines.
 
+**Self-check report.** Each match gets `Logs\fords_report_<log timestamp>_run<n>.json` beside `taom_debug_<same timestamp>.log`, written at its first verdict pass; the `[FordsOfWar][Run]` line at the start prints both absolute paths. A start that fails at the main menu writes `final=1` at once. The log gets one `[FordsOfWar][Verdict] check=NN result=PASS|FAIL|PARTIAL|NOT_SEEN` row per step below, with each part's own result, the numbers, the rule and what only you can judge. Rows marked `final=0` are written at the result, at mission end and at a start failure; the `final=1` block is written when the main menu is back (and again when you acknowledge the start-failed notice, and once more at the next match start when a run still owes a pass, for example a start-failed notice that was never acknowledged: that late block carries the notice FAIL). When one run has several `final=1` blocks, read its newest. Each run writes its own `final=1` block and its own JSON, and every row carries `run=<n>`. Do not read "the last `final=1` block": read the full match's block for items 3 to 14 and 16, the failed start's block for item 15, and take items 1 and 2 as session-wide (their rows count every menu flow and console start of the session). A `[FordsOfWar][Summary]` line every 30 s of mission time keeps the progress if the game crashes.
+
 1. Look at the main menu. A "Fords of War" entry shows with its hint. Click it: your faction, enemy faction
    and difficulty prompts appear, then a map prompt (three maps are listed). Cancel one prompt and
-   confirm the flow ends with no match.
+   confirm the flow ends with no match. Report: `check=01` (option installed, the engine's visibility poll, prompts shown and answered per step, a cancel or abandoned flow seen; any menu flow that ended in a fault FAILs, even when a later flow was fine). Drawn on screen is yours to judge.
 2. Run `taom.fords_start gondor mordor hard`. Observable: the console prints "Starting Fords of War:
    gondor against mordor on taom_rohan_battle_001_forceatmo, AI profile hard, 3 lanes." and the match
    loads. An unknown argument prints the list of valid ids. Run `taom.fords_start` with no arguments for
-   the defaults (West gondor, East rohan, `normal`, the Rohan Plains map).
+   the defaults (West gondor, East rohan, `normal`, the Rohan Plains map). Report: `check=02` (a named start that reached the match, an unknown argument's reply, the no-argument start and the setup it resolved; `ShippedFordsConfigTests` pins the shipped defaults, so the row does not ask you to compare them).
 3. In the log, find `[FordsOfWar] match started on <scene>: 3 lane(s), ... AI profile <id>`. Confirm there
    is no `could not spawn '<id>'` line once the first waves and any bought hero are out: that proves the
-   hero ids (for example `lord_1_17`) resolve in a Custom Game.
+   hero ids (for example `lord_1_17`) resolve in a Custom Game. Report: `check=03` (every troop and hero id checked against this game, spawns and spawn failures by troop; a recorded start failure with no match started FAILs its `started` part, for the menu routes too).
 4. Wait out the 10 s countdown. Towers and keeps appear on both sides in 3 lanes, free waves march and
    fight, and your gold rises on kills. The camera pans (WASD), rotates (Q, E, right mouse drag) and
-   zooms (wheel) and stays inside the playable area.
+   zooms (wheel) and stays inside the playable area. Report: `check=04` (countdown end, towers built against expected, first spawn per lane, march gain per lane, deaths, kill gold, camera pan, rotate and zoom, inside the engine's boundary, camera ownership). Towers built are counted against the layout before unplaceable ones are dropped, so a dropped tower FAILs. A camera resting on the boundary edge counts as inside; it reads outside only when the engine says so and the camera is over 0.5 m from the edge.
 5. Open the escape menu. Photo Mode reads disabled ("Photo mode isn't allowed."), and the Options entry
-   opens the options screen.
+   opens the options screen. Report: `check=05` (pause edges, Photo Mode vetoes, Options requests and wiring).
 6. Run `taom.fords_gold 5000`. The console prints "Added 5000 gold. You now hold ..." and the panel's gold
    matches. Buy a pack with F1 to F8 or the buttons; the gold drops by the pack price and a feed line
-   appears.
+   appears. Report: `check=06` (the gold command's reply, pack purchases, feed lines).
 7. Press H (or click a hero card) to field the most affordable hero, for Mordor Sauron at 2400. The hero
-   spawns in the selected lane. Kill it, then check the respawn timer on its card and the buyback button.
+   spawns in the selected lane. Kill it, then check the respawn timer on its card and the buyback button. Report: `check=07` (a fielded hero has a spawned mark of the same hero and side within 5 mission seconds, with the requested lane in the `[Hero]` line; death; respawn spawned within 1.5 mission seconds; buyback results). The row no longer compares the lane the engine put the hero in with the one asked for, because the adapter read that lane back from the formation it had just placed the hero in, so the two could never differ. Leaving the match more than 5 mission seconds after a fielding with no spawn mark reads FAIL. A hero bought in the last 5 s before the winner is named is excused, because the clock ended before the spawn ran: it neither fails the part nor takes away the pass of the heroes that did spawn, and a part with only excused purchases reads NOT_SEEN.
 8. Set a lane to Hold (X), then Push (Z) and Fall back (C). The order buttons show a cooldown; the lane
-   forms up about 60 m before the enemy tower and does not stand inside tower fire.
+   forms up about 60 m before the enemy tower and does not stand inside tower fire. Report: `check=08` (accepted Push, Hold and Fall back orders, held lanes against tower fire range, the keep-to-keep distance as `baseDistance`). A hold sample counts only once the lane's front unit (the one farthest from its keep) is within 10 m of the hold point measured along the lane's axis (the direction of the path segment at the hold point), so a wide line formation whose middle stands at the point is settled and a lane still walking back from a tower is not judged. A FAIL names the nearest standing enemy tower whose fire range covered the lane (`West1 in fire of <tower id>`, and `tower=<id>` in the per-lane numbers).
 9. Send melee units at an outer tower. Check the log and the tower bar: whether melee AI damages the barricade
-   at all is still open (build-spec check 3). A tower behind another takes no damage until the outer one falls.
+   at all is still open (build-spec check 3). A tower behind another takes no damage until the outer one falls. Report: `check=09` (blows per tower by attacker class and reason, locked blows, melee near towers, engine against rules hit points).
 10. Stand a side's own units next to its own tower and watch its bar: towers take no damage from their own
-    side (gunners, defenders shooting across it).
-11. At the first tower volley, find the log line `tower volley item 'western_javelin_2_t3': thrust damage N,
+    side (gunners, defenders shooting across it). Report: `check=10` (own-side blows and hit-point drift). NOT_SEEN is expected when nothing strikes its own tower.
+11. At match start, find the log line `tower volley item 'western_javelin_2_t3': thrust damage N,
     missile speed S`. Check that an unarmoured attacker hit in the torso near launch speed loses about
     N x (1 + 0.0006 x the gunner's Throwing skill) hit points. Armour, a leg hit, a non-human body and
     race damage reductions lower it; a head or neck hit doubles it; the impact speed scales it by
     (relative impact speed / launch speed) squared, so an attacker walking into the volley takes more.
-    Check also that no warning says the reach is below the fire range.
+    Check also that no warning says the reach is below the fire range. Report: `check=11` (item N and S, reach against fire range, per-hit magnitude against N x multiplier x (impact speed / S) squared). The `hits` part also FAILs when the towers asked to fire at least 10 times and not one missile was added (`launched` counts missiles the adapter added, 0 when the aim skipped them all), and when 20 or more missiles flew and no hit was seen; the row prints the hits it filtered out, by reason. The hit reader takes engine structs, so only your run proves it.
 12. Field a Mordor or Isengard warg rider (`warg_raiders`, `warg_enforcers`) and watch a raging warg: it
-    returns to its lane formation instead of wandering off.
+    returns to its lane formation instead of wandering off. Report: `check=12` (rage starts, formations restored, riders back in formation within 60 s of mission time, riders left on foot with no formation to return to, called `stranded`, which FAIL the restored part). A rider counts as back when it is within max(15 m, half the formation's width + 5 m) plus the formation's depth of the formation's front-middle, so a rider at the rear of a deep formation is not read as lost. A rider whose rage restarted before it returned is counted as `superseded` (in the row's numbers and a `[Warg][Rage]` log line): its first reset already counted toward `restored`, and only its return goes unjudged. The `[Warg][Rage]` lines in the log show each episode (start, end, returned, not-returned, stranded, superseded).
 13. Look at the capture-point row under the lane bars in the top-left panel: it shows owner and capture
-    progress in percent, and a contested mark when both sides stand on the point.
+    progress in percent, and a contested mark when both sides stand on the point. Report: `check=13` (captures, contested time, nearest approach per point).
 14. Destroy a keep (use `taom.fords_gold` and a hero or siege unit to speed it up). The result panel
-    appears; do nothing and the game returns to the main menu after 25 s, or click its button to leave at once.
+    appears; do nothing and the game returns to the main menu after 25 s, or click its button to leave at once. Report: `check=14` (keep fall, result, the way out and its timings, main menu back).
 15. If a start can be made to fail (the log names the reason, such as a keep that cannot be built): the game
     returns to the main menu 3 s after the failure and shows the start-failed notice. Nobody has seen that
-    notice appear over the main menu yet; if no failure can be provoked, report this step as unreachable.
-16. Let a 30-minute match run with `[MissionPerf]` logging on. The agent count stays under the cap and
-    the frame time stays playable (build-spec check 6).
+    notice appear over the main menu yet; if no failure can be provoked, report this step as unreachable. UNVERIFIED candidate for provoking route A: temporarily set a nonexistent keep prefab name in `maps.json` (nobody has tried it; restore the file afterwards). On the run where you provoke the failure on purpose, check 3 reads FAIL (its `started` part: a failure was recorded and the match never started), and that is the expected result there. Report: `check=15` (failure route, 3 s exit, notice requested and acknowledged, whether it was still up over the main menu). On route A the exit is timed in mission seconds, because a pause stops mission time and must not fail a working exit: it passes when the exit came due within 8 mission seconds of the failure and the mission closed within 15 s (wall time) of the end-game call. The `notice` part FAILs when the notice was requested and never acknowledged by the time the next run begins, or when the notice request itself reported failure. Check 3 reads FAIL on that run, as said above.
+16. Let a 30-minute match run. The agent count stays under the cap and
+    the frame time stays playable (build-spec check 6). Report: `check=16` (`cap`: peak live units per side against TAOM's config cap, `maxLivePerSide` plus the hero allowance; `agents`: the peak of all agents in the mission against the engine's agent limit, which the match records at its start through the battlefield adapter, PASS only with at least 60 s of live play; live seconds against 1800; frame times as numbers, no budget set).
 
 Report any unreachable step with the command tried and the unmet precondition, and never mark it verified
 through another path.
@@ -454,10 +460,13 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
   a second; Hold now has one stable target.
 - The tower hit prefix reads one volatile field first, so a mission with no Fords match costs a null check.
 - Panel lists are updated in place, so a button under the cursor survives the refresh (about four a second).
-- Agent count and frame time over 30 minutes are unmeasured: read `[MissionPerf]` lines in the check above.
+- Agent count is judged by `check=16`, against TAOM's config cap and the engine's agent limit; frame times are reported per 30 s window with no budget set.
 
 ## Changelog
 
+- 2026-10-31: self-check review fixes: the warg rage log, the run's own mission clock, the verdict rules
+  of checks 7, 8, 11, 12, 15 and 16, and the scenario tests that drive the real report.
+- 2026-10-31: self-check report: per-step verdict rows and a JSON report per run.
 - 2026-10-31: first build. The mode starts from the main menu or `taom.fords_start`, runs a 3-lane
   tower-and-keep match for four factions (Gondor, Rohan, Mordor, Isengard) on a generated layout over three
   existing field scenes, with a commander camera, a command panel, heroes with respawn and buyback, capture

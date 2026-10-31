@@ -1,3 +1,4 @@
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.FordsOfWar.Domain;
 
@@ -152,5 +153,53 @@ public class TowerDamageRulesTests
         var hit = new TowerHit(FordsTestLayout.EastOuter0, true, UnitRole.Ranged, 200, null);
 
         Assert.AreEqual(30, rules.Effective(hit));
+    }
+
+    [TestMethod]
+    [DataRow("raw", "RawZero")]
+    [DataRow("unknown", "UnknownTower")]
+    [DataRow("destroyed", "Destroyed")]
+    [DataRow("locked", "Locked")]
+    [DataRow("own", "OwnSide")]
+    [DataRow("applied", "Applied")]
+    public void Decide_ReturnsTheReasonOfEachBranch(string scenario, string expectedName)
+    {
+        var expected = (TowerDamageReason)Enum.Parse(typeof(TowerDamageReason), expectedName);
+        var (rules, chain) = Setup();
+        chain.OnDestroyed(FordsTestLayout.EastOuter0);
+        var hit = scenario switch
+        {
+            "raw" => new TowerHit(FordsTestLayout.EastInner0, false, UnitRole.Infantry, 0),
+            "unknown" => new TowerHit("barricade_17", false, UnitRole.Infantry, 10),
+            "destroyed" => new TowerHit(FordsTestLayout.EastOuter0, false, UnitRole.Infantry, 10),
+            "locked" => new TowerHit(FordsTestLayout.EastKeep, false, UnitRole.Infantry, 10),
+            "own" => new TowerHit(FordsTestLayout.EastInner0, false, UnitRole.Infantry, 10, MatchSide.East),
+            _ => new TowerHit(FordsTestLayout.EastInner0, false, UnitRole.Infantry, 10, MatchSide.West),
+        };
+
+        var damage = rules.Decide(hit, out var reason);
+
+        Assert.AreEqual(expected, reason);
+        Assert.AreEqual(expected == TowerDamageReason.Applied ? 10 : 0, damage);
+    }
+
+    [TestMethod]
+    public void Effective_EqualsDecide_ForEveryExistingCase()
+    {
+        var (rules, chain) = Setup();
+        chain.OnDestroyed(FordsTestLayout.EastOuter0);
+        var hits = new[]
+        {
+            new TowerHit(FordsTestLayout.EastInner0, false, UnitRole.Infantry, 0),
+            new TowerHit("barricade_17", false, UnitRole.Infantry, 10),
+            new TowerHit(FordsTestLayout.EastOuter0, false, UnitRole.Infantry, 10),
+            new TowerHit(FordsTestLayout.EastKeep, true, UnitRole.Hero, 10),
+            new TowerHit(FordsTestLayout.EastInner0, true, UnitRole.Hero, 77, MatchSide.East),
+            new TowerHit(FordsTestLayout.EastInner0, true, UnitRole.Siege, 77, MatchSide.West),
+            new TowerHit(FordsTestLayout.EastInner0, false, UnitRole.Infantry, 3),
+        };
+
+        foreach (var hit in hits)
+            Assert.AreEqual(rules.Decide(hit, out _), rules.Effective(hit));
     }
 }

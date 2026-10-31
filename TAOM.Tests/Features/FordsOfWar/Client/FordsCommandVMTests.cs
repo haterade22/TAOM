@@ -4,7 +4,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using TAOM.Adapters;
 using TAOM.Client.Features.FordsOfWar;
+using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Tests.Features.FordsOfWar.Domain;
 using static TAOM.Tests.Features.FordsOfWar.Domain.FordsMatchFixture;
@@ -38,6 +40,71 @@ public class FordsCommandVMTests
     }
 
     private static FordsMatchConfig WithGold(int gold) => Config(c => c with { Economy = c.Economy with { StartingGold = gold } });
+
+    private static readonly FordsMatchSetup ReportSetup = new("scene_a", "gondor", "mordor", "hard", 2);
+
+    private static FordsRunReport NewReport()
+    {
+        var report = new FordsRunReport(Substitute.For<IModLogger>());
+        report.BeginRun("menu", ReportSetup);
+        return report;
+    }
+
+    private static int Seen(FordsRunReport report, string key) =>
+        report.Run!.Client.Commands.TryGetValue(key, out var n) ? n : 0;
+
+    [TestMethod]
+    public void Commands_ReportActionAndResult()
+    {
+        var report = NewReport();
+        var session = Session(out var match);
+        var vm = new FordsCommandVM(session, () => _exits++, report);
+        vm.Refresh();
+
+        vm.BuyOffer(0);
+        vm.SetOrder(LaneOrder.Hold);
+        vm.FieldFirstAffordableHero();
+        var spawn = match.Tick(Snap(1f)).Spawns.Single(s => s.IsHero);
+        match.RegisterUnit(spawn.RequestId, Unit(50, MatchSide.West, WestSlot, role: UnitRole.Hero, heroId: "hero_a"));
+        match.OnUnitKilled(Key(50), null);
+        vm.Refresh();
+        vm.Heroes[0].ExecuteAct();
+
+        Assert.AreEqual(1, Seen(report, "BuyPack:Ok"));
+        Assert.AreEqual(1, Seen(report, "Order:Hold:Ok"));
+        Assert.AreEqual(1, Seen(report, "BuyHero:Ok"));
+        Assert.AreEqual(1, Seen(report, "Buyback:NotEnoughGold"));
+    }
+
+    [TestMethod]
+    public void OwnPackBoughtFeedLine_IsReported()
+    {
+        var report = NewReport();
+        var session = Session(out _);
+        session.PushEvents(new[]
+        {
+            new MatchEvent(MatchEventKind.PackBought, MatchSide.East, "inf", 100),
+            new MatchEvent(MatchEventKind.PackBought, MatchSide.West, "inf", 100),
+        });
+        var vm = new FordsCommandVM(session, () => _exits++, report);
+
+        vm.Refresh();
+
+        Assert.AreEqual(1, report.Run!.Client.PackBoughtLines);
+    }
+
+    [TestMethod]
+    public void NullReport_ChangesNothing()
+    {
+        var session = Session(out _);
+        var vm = new FordsCommandVM(session, () => _exits++, null);
+        vm.Refresh();
+
+        vm.BuyOffer(0);
+
+        Assert.AreEqual(900, session.GetView()!.Gold);
+        Assert.AreEqual(string.Empty, vm.NoticeText);
+    }
 
     [TestMethod]
     public void Refresh_WithNoMatch_HidesThePanel()

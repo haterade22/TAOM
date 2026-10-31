@@ -27,18 +27,20 @@ public sealed class FordsOfWarMissionLogic : MissionLogic
     private readonly FordsConfigCatalog _catalog;
     private readonly FordsSession _session;
     private readonly IModLogger _logger;
+    private readonly Diagnostics.FordsRunReport _report;
     private readonly FordsMissionExit _exit;
     private FordsMissionDirector? _director;
     private bool _failed;
     private int _faults;
 
-    internal FordsOfWarMissionLogic(FordsMatchSetup setup, FordsConfigCatalog catalog, FordsSession session, IModLogger logger, FordsMissionExit? exit = null)
+    internal FordsOfWarMissionLogic(FordsMatchSetup setup, FordsConfigCatalog catalog, FordsSession session, IModLogger logger, Diagnostics.FordsRunReport report, FordsMissionExit? exit = null)
     {
         _setup = setup;
         _catalog = catalog;
         _session = session;
         _logger = logger;
-        _exit = exit ?? new FordsMissionExit(new FordsMenuAdapter(), logger);
+        _report = report;
+        _exit = exit ?? new FordsMissionExit(new FordsMenuAdapter(), logger, report);
     }
 
     public override void AfterStart()
@@ -56,7 +58,7 @@ public sealed class FordsOfWarMissionLogic : MissionLogic
             var towers = new FordsTowerAdapter(Mission, _logger, plan.Config.Towers.FireRange);
             var battlefield = new FordsBattlefieldAdapter(Mission, new FordsAgentRegistry(), towers.EntityOf, _logger);
             var director = new FordsMissionDirector(plan, battlefield, towers, new FordsSceneAdapter(Mission, _logger), _session,
-                _logger, new SeededFordsRandom(Environment.TickCount));
+                _logger, new SeededFordsRandom(Environment.TickCount), _report);
             _failed = !director.Start();
             if (_failed)
             {
@@ -106,7 +108,7 @@ public sealed class FordsOfWarMissionLogic : MissionLogic
         if (!_failed && _director?.Winner is not { })
             return false;
 
-        missionResult = ResultFor(!_failed && _director?.Winner == MatchSide.West);
+        missionResult = FordsMissionResults.For(Mission, !_failed && _director?.Winner == MatchSide.West);
         return true;
     }
 
@@ -126,18 +128,6 @@ public sealed class FordsOfWarMissionLogic : MissionLogic
         catch (Exception ex)
         {
             Fault("OnEndMission", ex);
-        }
-    }
-
-    private MissionResult ResultFor(bool playerWon)
-    {
-        try
-        {
-            return playerWon ? MissionResult.CreateSuccessful(Mission) : MissionResult.CreateDefeated(Mission);
-        }
-        catch (Exception)
-        {
-            return new MissionResult(); // the factories read the player's team, which a mission that never got its teams lacks
         }
     }
 
