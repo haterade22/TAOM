@@ -69,7 +69,7 @@ public class RacePersistenceBehaviorTests
         if (source == null)
             Assert.Inconclusive("RacePersistenceBehavior.cs not found — run from repo root");
 
-        StringAssert.Contains(source, "CampaignEvents.OnBeforeSaveEvent.AddNonSerializedListener(this, _service.CaptureHeroRaces)",
+        StringAssert.Contains(source, "CampaignEvents.OnBeforeSaveEvent.AddNonSerializedListener(this, _service.CaptureHeroRacesForSave)",
             "OnBeforeSave must capture races so the save snapshot includes the latest live race state. " +
             "Cross-feature contract with CharacterCreation (#171): newly-set race IDs from CC must reach the saved snapshot.");
 
@@ -112,6 +112,15 @@ public class RacePersistenceBehaviorTests
         _sut.OnSessionLaunched();
 
         CollectionAssert.AreEqual(new[] { "restore", "capture" }, callOrder);
+    }
+
+    // #1011: the taom.race-persist.capture line proves a save; the load's re-capture must not write it.
+    [TestMethod]
+    public void OnSessionLaunched_DoesNotWriteTheSaveCheck()
+    {
+        _sut.OnSessionLaunched();
+
+        _service.DidNotReceive().CaptureHeroRacesForSave();
     }
 
     [TestMethod]

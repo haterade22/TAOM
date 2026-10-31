@@ -6,11 +6,14 @@ public readonly struct HeroRaceInfo
 {
     public string StringId { get; }
     public int Race { get; }
+    // Hero.IsAlive (#1011): a disabled hero counts as alive. The race-persist check lines count the dead.
+    public bool IsAlive { get; }
 
-    public HeroRaceInfo(string stringId, int race)
+    public HeroRaceInfo(string stringId, int race, bool isAlive = true)
     {
         StringId = stringId;
         Race = race;
+        IsAlive = isAlive;
     }
 }
 

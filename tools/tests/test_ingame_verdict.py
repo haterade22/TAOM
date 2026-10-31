@@ -276,6 +276,13 @@ class RepoManifestGateTests(unittest.TestCase):
             "taom.server-settings.no-file", "taom.server-settings.one-key", "taom.server-settings.bad-value",
             "taom.server-settings.fingerprint", "taom.server-settings.hitch-probe-off"])
 
+    def test_1011_names_two_checks_and_no_posthumous(self):
+        # The posthumous-son check has no line: the template call runs before the son exists and cannot fail.
+        m = iv.load_manifest(TOOLS / "ingame_checks" / "1011.toml", 1011)
+        ids = ["taom.race-persist.capture", "taom.race-persist.restore"]
+        self.assertEqual([c.id for c in m.checks], ids)
+        self.assertEqual(iv.named_check_ids(m), set(ids))
+
     def test_every_fixed_in_is_a_commit_in_this_clone(self):
         rc, shallow = iv.run_command(["git", "-C", str(REPO), "rev-parse", "--is-shallow-repository"])
         if rc != 0:
@@ -714,6 +721,76 @@ class ServerSettings981Tests(unittest.TestCase):
         self.assertEqual(code, 4)
         self.assertIn("no TAOM log", out)
         self.assertEqual(verdict_of(out, "taom.server-settings.fingerprint"), "NOT REACHED")
+
+
+class HeroRace1011Tests(unittest.TestCase):
+    """The real #1011 manifest. The fixtures render the [Check] lines RacePersistenceService writes through
+    IOutcomeLog (OutcomeLog.Record) and the legend warning text in RestoreHeroRaces; none is on disk yet."""
+
+    CAPTURE = "taom.race-persist.capture"
+    RESTORE = "taom.race-persist.restore"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("1011.toml")
+
+    def one(self, fixture):
+        self.t.taom(fixture, "2026-10-31_12-00-00")
+        return self.t.run(["--issue", "1011"])
+
+    def test_a_save_then_its_load_pass_both_checks(self):
+        self.t.taom("race_save.txt", "2026-10-31_12-00-00")
+        self.t.taom("race_load_pass.txt", "2026-10-31_13-00-00")
+        code, out, _ = self.t.run(["--issue", "1011", "--sessions", "2"])
+        self.assertEqual(code, 0, out)
+        self.assertEqual(verdict_of(out, self.CAPTURE), "PASS")
+        self.assertEqual(verdict_of(out, self.RESTORE), "PASS")
+        self.assertIn("a son born after his father died", out)
+
+    def test_a_load_alone_passes_restore_only(self):
+        code, out, _ = self.one("race_load_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "PASS")
+        self.assertEqual(verdict_of(out, self.CAPTURE), "NOT REACHED")
+
+    def test_a_read_back_mismatch_fails_restore(self):
+        code, out, _ = self.one("race_load_mismatch.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "FAIL")
+        self.assertIn("first=lord_1_1:4->0", out)
+
+    def test_a_load_with_no_dead_hero_restored_is_not_reached(self):
+        code, out, _ = self.one("race_load_no_dead.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "NOT REACHED")
+        self.assertIn("reached, but", out)
+
+    def test_a_new_campaign_names_its_skip_reason(self):
+        code, out, _ = self.one("race_new_campaign.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "NOT REACHED")
+        self.assertIn("skipped: reason=new-campaign", out)
+
+    def test_a_load_without_race_data_fails_restore(self):
+        code, out, _ = self.one("race_load_no_data.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "FAIL")
+
+    def test_a_refused_capture_fails_capture(self):
+        code, out, _ = self.one("race_capture_refused.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.CAPTURE), "FAIL")
+
+    def test_a_save_with_no_dead_hero_is_not_reached(self):
+        code, out, _ = self.one("race_capture_no_dead.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.CAPTURE), "NOT REACHED")
+        self.assertIn("reached, but", out)
+
+    def test_a_corrupt_legend_warning_fails_restore_despite_its_pass_line(self):
+        code, out, _ = self.one("race_legend_corrupt.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "FAIL")
 
 
 class CrashReportEchoTests(unittest.TestCase):
