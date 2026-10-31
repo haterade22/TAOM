@@ -3,7 +3,7 @@
 # then this block ran last in session-start.sh and got what that hook's other checks left of one 10 s registration).
 # yotthani's repos change every day, and TAOM adopts from them. The last reviewed SHAs live in
 # docs/reviews/upstream-watch.json. The check needs the network: tools/upstream_watch.py makes one GitHub read per
-# watched repo and caches a live answer for 20 hours, so a session start pays the network at most once a day; a
+# watched repo and one per watched release (UPSTREAM RELEASE lines) and caches a live answer for 20 hours, so a session start pays the network at most once a day; a
 # failure is not cached and is retried at the next session start.
 # Time budget: registered for 10 s; it never runs past 9 s from its first command (8.5 s, plus the 0.5 s kill grace).
 # The tool gets what is left as `timeout` and as `--budget`, so each gh call is shortened to fit; under 1 s left it is

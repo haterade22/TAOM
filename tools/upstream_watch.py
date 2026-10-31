@@ -31,16 +31,30 @@ COMMANDS
       Moves `reviewed` after a review lands. S must be 40 hex characters and PATH an existing file
       inside this repo (stored as a forward-slash relative path).
       The JSON is rewritten with stable formatting (two-space indent, key order kept, LF).
+  seen --repo R --tag T [--date D]
+      Records that the release T of a `releases` entry has been taken into its record.
+
+RELEASES (optional `releases` list in the state file): repos whose published releases change what
+TAOM documents, such as the BannerlordCoop version each Bannerlord and TAOM version needs
+(docs/features/coop-interop.md). Each entry names `repo`, the last `seen` release tag, `seen_on` and
+the `record` that lists it. `status` reads the latest published release with ONE `gh api
+repos/R/releases/latest` call per entry (a pre-release or a draft is not "latest", so neither ever
+triggers it), cached and budgeted like the commit compare. `status --brief` prints one
+`UPSTREAM RELEASE:` line when the tag differs from `seen`; full `status` prints a release row
+(`seen` against `latest`) for every entry. A tag that is not a plain tag (letters, digits and
+`._+/-`, not starting with `-`) is never printed: it is that entry's problem in the NOTE line. A repo with no published release answers 404: that entry's problem, reported in the NOTE
+line. A failure of gh as a whole stops the release reads too.
 
 CACHE: E:/Temp/taom-upstream-watch/cache.json, or the TAOM_UPSTREAM_CACHE environment variable.
 
 EXIT CODES
   status --brief: always 0.
-  status: 0 every repo current, 1 some repo ahead, 2 unreadable state file, 3 unchecked or an
-          unexpected error (the traceback goes to stderr). Ahead wins: when one repo is ahead and
-          another unchecked the exit is 1, and the NOTE line names the unchecked one.
+  status: 0 every repo current, 1 some repo ahead or a new release, 2 unreadable state file, 3
+          unchecked or an unexpected error (the traceback goes to stderr). Ahead wins: when one repo
+          is ahead (or has a new release) and another unchecked the exit is 1, and the NOTE line
+          names the unchecked one.
   areas: 0 written, 2 usage or unknown repo or unreadable state or an unwritable --out, 3 git failed.
-  advance: 0 rewritten, 2 invalid input (the file is left untouched).
+  advance, seen: 0 rewritten, 2 invalid input (the file is left untouched).
 
 Tests: tools/tests/test_upstream_watch.py. Stdlib only; GitHub is read through the gh CLI and never
 written.
@@ -65,6 +79,10 @@ SHA_RE = re.compile(r"[0-9a-f]{40}")
 DATE_RE = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
 REPO_RE = re.compile(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+")
 REQUIRED_FIELDS = ("repo", "reviewed", "reviewed_on", "record", "feature_paths")
+RELEASE_FIELDS = ("repo", "seen", "seen_on", "record")
+# A release tag is printed into a command the banner tells the reader to run, so only plain tags pass: no shell
+# metacharacters, no leading dash, no control or bidi characters.
+TAG_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._+/-]{0,99}")
 
 
 class StateError(Exception):
@@ -108,7 +126,34 @@ def load_state(path):
         paths = entry["feature_paths"]
         if not isinstance(paths, list) or not all(isinstance(p, str) for p in paths):
             raise StateError("%s: `feature_paths` must be a list of strings" % name)
+    _check_releases_state(data)
     return data
+
+
+def _check_releases_state(data):
+    if "releases" not in data:
+        return
+    if not isinstance(data["releases"], list):
+        raise StateError("state file `releases` must be a list")
+    seen = set()
+    for entry in data["releases"]:
+        if not isinstance(entry, dict):
+            raise StateError("state file release entry is not an object")
+        for field in RELEASE_FIELDS:
+            if field not in entry:
+                raise StateError("state file release entry lacks `%s`" % field)
+        name = entry["repo"]
+        if not isinstance(name, str) or not REPO_RE.fullmatch(name):
+            raise StateError("state file has a bad release repo name: %r" % (name,))
+        if name in seen:
+            raise StateError("state file lists the releases of %s twice" % name)
+        seen.add(name)
+        if not isinstance(entry["seen"], str) or not TAG_RE.fullmatch(entry["seen"]):
+            raise StateError("%s: release `seen` must be a tag without spaces" % name)
+        if not isinstance(entry["seen_on"], str) or not DATE_RE.fullmatch(entry["seen_on"]):
+            raise StateError("%s: release `seen_on` must be YYYY-MM-DD" % name)
+        if not isinstance(entry["record"], str) or not entry["record"]:
+            raise StateError("%s: release `record` must be a non-empty string" % name)
 
 
 # ---- runners (injected in tests) -------------------------------------------------------------
@@ -159,12 +204,10 @@ class RepoProblem(Exception):
     """gh answered, and the answer is about this one repo (gone, or the reviewed SHA is): go on."""
 
 
-def gh_compare(entry, gh, timeout):
-    """One compare call. Returns (ahead, head) or raises GhProblem or RepoProblem with the reason."""
-    # page=2 of a one-per-page compare omits the 300-file patch list (11 KB instead of 1.25 MB) and
-    # keeps ahead_by and the permalink. The call must stay a bare GET: any -f, -F or --input makes
-    # gh POST.
-    endpoint = "repos/%s/compare/%s...HEAD?per_page=1&page=2" % (entry["repo"], entry["reviewed"])
+def _gh_get(endpoint, repo, gh, timeout, gone):
+    """One bare GET through gh. Returns the parsed JSON, or raises GhProblem (gh as a whole) or
+    RepoProblem (a 404 or 422 about this one repo; `gone` says what that means for the caller)."""
+    # The call must stay a bare GET: any -f, -F or --input makes gh POST.
     try:
         rc, out, err = gh(["api", endpoint], timeout)
     except FileNotFoundError:
@@ -177,18 +220,43 @@ def gh_compare(entry, gh, timeout):
         text = (err or "").strip()
         first = text.splitlines()[0][:80] if text else "exit %d" % rc
         if "(HTTP 404)" in text or "(HTTP 422)" in text:
-            raise RepoProblem("%s: %s; the reviewed SHA or the repo is gone upstream (re-seed it with advance), "
-                              "or this gh login lost access to the repo" % (entry["repo"], first))
+            raise RepoProblem("%s: %s; %s" % (repo, first, gone))
         if rc == 4 or "gh auth login" in text or "authentication" in text.lower():
             raise GhProblem("gh not logged in")
         raise GhProblem("offline or gh error: %s" % first)
     try:
-        body = json.loads(out)
+        return json.loads(out)
+    except (TypeError, ValueError):
+        raise GhProblem("unexpected gh answer")
+
+
+def gh_compare(entry, gh, timeout):
+    """One compare call. Returns (ahead, head) or raises GhProblem or RepoProblem with the reason."""
+    # page=2 of a one-per-page compare omits the 300-file patch list (11 KB instead of 1.25 MB) and
+    # keeps ahead_by and the permalink.
+    endpoint = "repos/%s/compare/%s...HEAD?per_page=1&page=2" % (entry["repo"], entry["reviewed"])
+    body = _gh_get(endpoint, entry["repo"], gh, timeout,
+                   "the reviewed SHA or the repo is gone upstream (re-seed it with advance), "
+                   "or this gh login lost access to the repo")
+    try:
         ahead = int(body["ahead_by"])
-    except (ValueError, KeyError, TypeError):
+    except (KeyError, TypeError, ValueError):
         raise GhProblem("unexpected gh answer")
     m = re.search(r"\.\.\.[^:/]+:([0-9a-f]+)$", str(body.get("permalink_url", "")))
     return ahead, (m.group(1) if m else "")
+
+
+def gh_latest_release(entry, gh, timeout):
+    """One latest-release read. Returns the tag, or raises GhProblem or RepoProblem with the reason."""
+    name = "%s release" % entry["repo"]
+    body = _gh_get("repos/%s/releases/latest" % entry["repo"], name, gh, timeout,
+                   "no published release, or the repo is gone or this gh login lost access to it")
+    tag = body.get("tag_name") if isinstance(body, dict) else None
+    if not isinstance(tag, str):
+        raise GhProblem("unexpected gh answer")
+    if not TAG_RE.fullmatch(tag):
+        raise RepoProblem("%s: the latest release tag is not a plain tag; read the release page by hand" % name)
+    return tag
 
 
 def _usable(cached, entry):
@@ -203,13 +271,14 @@ def _usable(cached, entry):
     return cached
 
 
-def check_repos(entries, cache, max_age_hours, gh, now, on_live=None, budget_left=None):
+def check_repos(entries, cache, max_age_hours, gh, now, on_live=None, budget_left=None, shared=None):
     """Returns (results, reasons). A result: repo, entry, ahead, head, source.
 
     on_live() runs after each live answer (the caller saves the cache there). budget_left() is the
-    seconds left of the overall deadline, or None for no deadline."""
+    seconds left of the overall deadline, or None for no deadline. `shared`, when given, is a dict
+    whose "stopped" key carries a systemic gh failure into the release reads that follow."""
     results, reasons = [], []
-    stopped = False
+    stopped = bool(shared and shared.get("stopped"))
     for entry in entries:
         cached = _usable(cache.get(entry["repo"]), entry)
         if cached is not None and 0 <= now - cached["checked_at"] < max_age_hours * 3600:
@@ -240,11 +309,78 @@ def check_repos(entries, cache, max_age_hours, gh, now, on_live=None, budget_lef
                     continue
         if cached is not None:
             results.append(_result(entry, cached["ahead"], cached.get("head", ""), "stale cache"))
+    if shared is not None:
+        shared["stopped"] = stopped
     return results, reasons
 
 
 def _result(entry, ahead, head, source):
     return {"repo": entry["repo"], "entry": entry, "ahead": ahead, "head": head, "source": source}
+
+
+def _release_key(entry):
+    return "release:" + entry["repo"]
+
+
+def _usable_release(cached):
+    """A release cache entry counts only when its tag is a tag and its time is a number."""
+    if not isinstance(cached, dict):
+        return None
+    tag, at = cached.get("tag"), cached.get("checked_at")
+    if not isinstance(tag, str) or not TAG_RE.fullmatch(tag):
+        return None
+    if isinstance(at, bool) or not isinstance(at, (int, float)):
+        return None
+    return cached
+
+
+def check_releases(entries, cache, max_age_hours, gh, now, on_live=None, budget_left=None, shared=None):
+    """Returns (results, reasons). A result: repo, entry, tag, new, source. Same cache, budget and
+    stop rules as check_repos; the cached tag is judged against the entry's current `seen`."""
+    results, reasons = [], []
+    stopped = bool(shared and shared.get("stopped"))
+    for entry in entries:
+        cached = _usable_release(cache.get(_release_key(entry)))
+        if cached is not None and 0 <= now - cached["checked_at"] < max_age_hours * 3600:
+            results.append(_release_result(entry, cached["tag"], "cache"))
+            continue
+        if not stopped:
+            left = budget_left() if budget_left is not None else None
+            if left is not None and left < 0.5:
+                stopped = True
+                reasons.append("time budget spent")
+            else:
+                timeout = GH_TIMEOUT if left is None else min(GH_TIMEOUT, left - 0.3)
+                try:
+                    tag = gh_latest_release(entry, gh, timeout)
+                except RepoProblem as e:
+                    reasons.append(str(e))
+                    continue
+                except GhProblem as e:
+                    stopped = True
+                    reasons.append("%s release: %s" % (entry["repo"], e))
+                else:
+                    cache[_release_key(entry)] = {"checked_at": now, "tag": tag}
+                    if on_live is not None:
+                        on_live()
+                    results.append(_release_result(entry, tag, "live"))
+                    continue
+        if cached is not None:
+            results.append(_release_result(entry, cached["tag"], "stale cache"))
+    if shared is not None:
+        shared["stopped"] = stopped
+    return results, reasons
+
+
+def _release_result(entry, tag, source):
+    return {"repo": entry["repo"], "entry": entry, "tag": tag, "new": tag != entry["seen"], "source": source}
+
+
+def release_line(result):
+    e = result["entry"]
+    return ("UPSTREAM RELEASE: %s published %s (last seen %s on %s; record %s); update the record, then run "
+            "python tools/upstream_watch.py seen --repo %s --tag %s" % (
+                result["repo"], result["tag"], e["seen"], e["seen_on"], e["record"], result["repo"], result["tag"]))
 
 
 def ahead_line(result):
@@ -272,11 +408,17 @@ def run_status(state_path, cache_path, brief, max_age_hours, gh, clock, out, bud
         out.write("upstream_watch: %s\n" % e)
         return 2
     cache = load_cache(cache_path)
+    shared = {"stopped": False}
     try:
+        now = clock()
+        budget_left = None if deadline is None else (lambda: deadline - monotonic())
         results, reasons = check_repos(
-            state["repos"], cache, max_age_hours, gh, clock(),
-            on_live=lambda: save_cache(cache_path, cache),
-            budget_left=None if deadline is None else (lambda: deadline - monotonic()))
+            state["repos"], cache, max_age_hours, gh, now,
+            on_live=lambda: save_cache(cache_path, cache), budget_left=budget_left, shared=shared)
+        releases, release_reasons = check_releases(
+            state.get("releases", []), cache, max_age_hours, gh, now,
+            on_live=lambda: save_cache(cache_path, cache), budget_left=budget_left, shared=shared)
+        reasons += release_reasons
     except Exception as e:  # fail-open: a banner must never break session start
         if not brief:
             traceback.print_exc()
@@ -286,6 +428,9 @@ def run_status(state_path, cache_path, brief, max_age_hours, gh, clock, out, bud
         for r in results:
             if r["ahead"] > 0:
                 out.write(ahead_line(r) + "\n")
+        for r in releases:
+            if r["new"]:
+                out.write(release_line(r) + "\n")
         if reasons:
             out.write(note_line(reasons) + "\n")
         return 0
@@ -293,9 +438,13 @@ def run_status(state_path, cache_path, brief, max_age_hours, gh, clock, out, bud
         e = r["entry"]
         out.write("%s  reviewed %s (%s)  head %s  ahead %d  [%s]\n" % (
             r["repo"], e["reviewed"][:7], e["reviewed_on"], r["head"] or "?", r["ahead"], r["source"]))
+    for r in releases:
+        e = r["entry"]
+        out.write("%s  release seen %s (%s)  latest %s  [%s]\n" % (
+            r["repo"], e["seen"], e["seen_on"], r["tag"], r["source"]))
     if reasons:
         out.write(note_line(reasons) + "\n")
-    if any(r["ahead"] > 0 for r in results):
+    if any(r["ahead"] > 0 for r in results) or any(r["new"] for r in releases):
         return 1
     return 3 if reasons else 0
 
@@ -484,11 +633,42 @@ def run_advance(state_path, repo, sha, record, date, root):
     entry["reviewed"] = sha
     entry["reviewed_on"] = date
     entry["record"] = os.path.relpath(os.path.abspath(found), os.path.abspath(root)).replace("\\", "/")
+    _write_state(state_path, data)
+    return 0
+
+
+def _write_state(state_path, data):
     tmp = state_path + ".tmp"
     with open(tmp, "w", encoding="utf-8", newline="\n") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
         f.write("\n")
     os.replace(tmp, state_path)
+
+
+def run_seen(state_path, repo, tag, date):
+    def fail(msg):
+        sys.stderr.write("upstream_watch: %s\n" % msg)
+        return 2
+
+    tag = (tag or "").strip()
+    if not TAG_RE.fullmatch(tag):
+        return fail("--tag must be a release tag without spaces")
+    if not DATE_RE.fullmatch(date or ""):
+        return fail("--date must be YYYY-MM-DD")
+    try:
+        datetime.date.fromisoformat(date)
+    except ValueError:
+        return fail("--date is not a calendar date")
+    try:
+        data = load_state(state_path)
+    except StateError as e:
+        return fail(str(e))
+    entry = next((e for e in data.get("releases", []) if e["repo"] == repo), None)
+    if entry is None:
+        return fail("%s has no `releases` entry in the state file" % repo)
+    entry["seen"] = tag
+    entry["seen_on"] = date
+    _write_state(state_path, data)
     return 0
 
 
@@ -511,6 +691,10 @@ def build_parser():
     v.add_argument("--sha", required=True)
     v.add_argument("--record", required=True)
     v.add_argument("--date")
+    n = sub.add_parser("seen", help="record that a release has been taken into its record")
+    n.add_argument("--repo", required=True)
+    n.add_argument("--tag", required=True)
+    n.add_argument("--date")
     return p
 
 
@@ -525,6 +709,8 @@ def main(argv=None):
     if args.cmd == "areas":
         return run_areas(args.state, args.repo, args.clone_dir, args.out, real_git, sys.stdout)
     date = args.date or datetime.date.today().isoformat()
+    if args.cmd == "seen":
+        return run_seen(args.state, args.repo, args.tag, date)
     return run_advance(args.state, args.repo, args.sha, args.record, date, REPO_ROOT)
 
 

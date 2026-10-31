@@ -52,6 +52,29 @@ still stands.
 **Never enable two co-op mods together** — both transpile the same campaign types and each ships its
 own `0Harmony`.
 
+### BannerlordCoop versions and the Bannerlord they need
+
+Coop's join check refuses a client whose game version or module list differs from the server's, so a TAOM
+co-op session needs the Coop build for the Bannerlord version TAOM targets. Coop's released line and its
+Bannerlord v1.5 port are separate branches of [Bannerlord-Coop-Team/BannerlordCoop](https://github.com/Bannerlord-Coop-Team/BannerlordCoop):
+
+| Coop build | Branch | Bannerlord | Works with current TAOM (v1.5.6) | Where |
+|---|---|---|---|---|
+| v0.1.7 (released 2026-10-30) | `development` | v1.4.8 (`<GameVersion>` in `source/Coop/Coop.csproj`) | No | GitHub release and ModDB; the Coop team's ModDB "Headless Server" is the v1.4.8 dedicated server |
+| v0.1.6 (released 2026-10-06) | `development` | v1.4.8 | No | as above |
+| `bannerlord-1.5.x` (not released) | `bannerlord-1.5.x` | v1.5.6 since 2026-10-29 (`2fab86882`) | Yes | built from source; TAOM's dev install runs it |
+
+The v1.5 branch split from `development` on 2026-10-03 (`5f4d63cc0`), so the features `development` gained since
+(v0.1.7's siege fixes, ransom, emissaries, child education and the rest) reach v1.5.6 only through a merge of
+`development` into `bannerlord-1.5.x`; that merge was started on 2026-10-30. The co-op dedicated server for
+v1.5.6 is [coop-dedicated-server.md](coop-dedicated-server.md).
+
+**Tracking:** `docs/reviews/upstream-watch.json` lists this repo under `releases`, so the session-start banner
+prints an `UPSTREAM RELEASE:` line when the tag of Coop's latest full release differs from the one recorded. The
+check reads GitHub at most once every 20 hours, at session start only, and a pre-release (a first v1.5 build
+published as one, for example) never triggers it. Then update this table and run
+`python tools/upstream_watch.py seen --repo Bannerlord-Coop-Team/BannerlordCoop --tag <tag>`.
+
 ## Where the code lives
 
 | File | Role |

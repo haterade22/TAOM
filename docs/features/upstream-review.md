@@ -31,7 +31,9 @@ maintainer's word.
 - `tools/upstream_watch.py status`: the GitHub compare from `reviewed` to the head (page 2 of the response, which carries
   the count without the file list). The answer is cached outside the repo for 20 hours, so a session start pays a live
   read at most once a day. `--brief` is the hook's mode: one `UPSTREAM AHEAD` line per repo with new commits, nothing when
-  all are current, an `UNCHECKED` note when gh is missing, logged out, offline or slow.
+  all are current, an `UNCHECKED` note when gh is missing, logged out, offline or slow. Repos under `releases` get one
+  latest-release read each and an `UPSTREAM RELEASE` line when the tag differs from the recorded `seen` (today
+  BannerlordCoop, recorded in [coop-interop.md](coop-interop.md)); `seen` records the new tag.
 - `.claude/hooks/upstream-watch.sh` runs the check in a SessionStart registration of its own (10 s, the maintainer's
   request of 2026-10-16; SessionStart hooks run in parallel), with a deadline of 8.5 s from its first command, so a slow
   GitHub can cost the upstream line but never the drift banners.
@@ -47,8 +49,8 @@ maintainer's word.
 | File | Purpose |
 |---|---|
 | `docs/reviews/upstream-watch.json` | The watched repos and their last reviewed SHAs |
-| `tools/upstream_watch.py` | `status`, `areas`, `advance` ([tools/README.md](../../tools/README.md)) |
-| `.claude/hooks/upstream-watch.sh` | The `UPSTREAM AHEAD` SessionStart hook, registered in `.claude/settings.json` ([hooks catalog](../reference/hooks-catalog.md)) |
+| `tools/upstream_watch.py` | `status`, `areas`, `advance`, `seen` ([tools/README.md](../../tools/README.md)) |
+| `.claude/hooks/upstream-watch.sh` | The `UPSTREAM AHEAD` and `UPSTREAM RELEASE` SessionStart hook, registered in `.claude/settings.json` ([hooks catalog](../reference/hooks-catalog.md)) |
 | `.claude/skills/upstream-review/SKILL.md` | The review procedure and its gates |
 
 ## Tests

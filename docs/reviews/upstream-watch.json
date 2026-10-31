@@ -25,5 +25,13 @@
       "record": "docs/reviews/adopt-yotthani-2026-10-29.md",
       "feature_paths": []
     }
+  ],
+  "releases": [
+    {
+      "repo": "Bannerlord-Coop-Team/BannerlordCoop",
+      "seen": "v0.1.7",
+      "seen_on": "2026-10-30",
+      "record": "docs/features/coop-interop.md"
+    }
   ]
 }

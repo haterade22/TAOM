@@ -23,8 +23,10 @@ issues need the maintainer's word for this run; the main checkout is never touch
 
 1. `python tools/upstream_watch.py status --max-age-hours 0` (a live check, never the banner's cache). Exit 0: nothing new,
    report that and stop. Exit 3: UNCHECKED (gh missing, logged out, offline): report the reason and stop. Exit 2: the
-   state file or the arguments are bad: report the message and stop. Exit 1: go on, and report any repo the NOTE line
-   names as unchecked (ahead wins over unchecked in the exit code).
+   state file or the arguments are bad: report the message and stop. Exit 1: a repo row shows `ahead` above 0, or a
+   release row shows a `latest` other than its `seen` (handle that by the paragraph on `UPSTREAM RELEASE` at the end;
+   it is not a review). Report any repo the NOTE line names as unchecked (ahead wins over unchecked in the exit code).
+   Step 2 and P2 run only for repos that are ahead.
 2. Per repo that is ahead: `python tools/upstream_watch.py areas --repo <r> --clone-dir <scratch>/up/<name> --out
    <scratch>/areas-<name>.md`. The brief's Range line holds the **pinned head** (full 40-hex SHA): every reader cites it,
    and P7's `advance` takes it. Nothing in the blobless clone is ever checked out, built or run. A WARNING that a
@@ -104,3 +106,5 @@ from the TAOM checkout and confirm that it invokes the skill and writes the repo
 `timeout` and `--no-session-persistence` as in the repo's headless recipe
 (`.claude/skills/improve/references/run-protocol.md`). Then schedule that exact command with Windows Task Scheduler.
 Without it, the `UPSTREAM AHEAD` session-start banner (checked at most once a day) is the trigger.
+
+**An `UPSTREAM RELEASE:` line (or, in full `status`, a release row whose `latest` differs from `seen`)** is not a review: a repo under `releases` in the state file published a new release. Update the record the line names (for Bannerlord-Coop-Team/BannerlordCoop, the version table in `docs/features/coop-interop.md`: the release's branch, its `<GameVersion>`, and whether current TAOM can run it), then run the `seen` command the line prints, and commit both together.
