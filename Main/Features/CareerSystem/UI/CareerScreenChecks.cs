@@ -16,7 +16,8 @@ internal static class CareerScreenChecks
 
     internal static string OpenFailDetail(string reason) => "source=button reason=" + reason;
 
-    // The dialogue's career switch opens the screen in switch mode; only the button opens it in normal mode.
+    // The dialogue's career switch opens the screen in switch mode. The button and RealmUI's map-bar tile open it in
+    // normal mode, and only the button writes the open line.
     internal static string Mode(bool switchMode) => switchMode ? "switch" : "normal";
 
     internal static string InitDetail(bool switchMode) => "mode=" + Mode(switchMode);

@@ -5,7 +5,8 @@
 # Main/Features/CareerSystem/UI/CareerScreenChecks.cs.
 #
 # Every pattern names a [Check] line, so a build without them is NOT REACHED here, never FAIL. The career-switch
-# dialogue also opens the screen, in switch mode, and writes no open line; init counts only mode=normal.
+# dialogue also opens the screen, in switch mode, and writes no open line; RealmUI's map-bar tile opens it in
+# normal mode with no click, so it writes an init line without an open line. Init counts only mode=normal.
 issue = 971
 title = "The career button opens the career screen"
 fixed_in = "0761c01b7"   # named in the issue's fix comment

@@ -151,6 +151,10 @@ public class CareerButtonClickTests
         var pass = tokens.IndexOf(PassCall);
         Assert.IsTrue(focus >= 0 && pass > focus, "The init line is the last thing OnInitialize does: " + string.Join(" | ", tokens));
         CollectionAssert.Contains(tokens, "ldstr \"taom.career-screen.init\"");
+        var mode = tokens.IndexOf("call CareerScreenChecks::Mode(Boolean)");
+        var detail = tokens.IndexOf("call CareerScreenChecks::InitDetail(Boolean)");
+        Assert.IsTrue(mode >= 0 && mode < pass, "The latch key comes from Mode: " + string.Join(" | ", tokens));
+        Assert.IsTrue(detail >= 0 && detail < pass, "The detail comes from InitDetail: " + string.Join(" | ", tokens));
     }
 
     private static MethodInfo Postfix()
