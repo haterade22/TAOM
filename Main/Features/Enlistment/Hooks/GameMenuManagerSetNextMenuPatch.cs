@@ -35,7 +35,7 @@ public static class GameMenuManagerSetNextMenuPatch
             {
                 _faultLogged = true;
                 try { IoC.Resolve<IModLogger>().LogError($"[Enlistment] SetNextMenu prefix failed (failing open): {ex.Message}"); }
-                catch { /* fail open — never break menu transitions */ }
+                catch { /* swallow-ok: the logger itself threw; the prefix still fails open */ }
             }
         }
     }

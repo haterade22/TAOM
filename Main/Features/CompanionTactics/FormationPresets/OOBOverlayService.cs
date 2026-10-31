@@ -87,7 +87,7 @@ public sealed class OOBOverlayService : IOOBOverlayService
 
         bool isActive;
         try { isActive = (bool)_isActiveField.GetValue(handler); }
-        catch { return; }
+        catch (System.Exception ex) { Outcomes.Swallowed("CompanionTactics", "OOBOverlayService.OnTick", ex); return; }
 
         if (isActive && !_wasActive) Attach(handler);
         else if (!isActive && _wasActive) Detach();

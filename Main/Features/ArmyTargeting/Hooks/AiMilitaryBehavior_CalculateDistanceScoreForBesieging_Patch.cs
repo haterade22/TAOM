@@ -105,8 +105,9 @@ public static class AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch
                 _logger.LogDebug($"ArmyTargeting: border proximity floor {floor:F2} applied for {factionId} -> {settlementId} at {normalizedDistance:F2} town gaps");
             }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Outcomes.Swallowed("ArmyTargeting", "AiMilitaryBehavior_CalculateDistanceScoreForBesieging_Patch.Postfix", ex);
             // IoC not initialized or feature not started — degrade gracefully
         }
     }

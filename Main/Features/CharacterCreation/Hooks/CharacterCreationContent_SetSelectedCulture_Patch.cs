@@ -29,7 +29,7 @@ public static class CharacterCreationContent_SetSelectedCulture_Patch
         }
         catch (Exception ex)
         {
-            try { IoC.Resolve<IModLogger>()?.LogWarning($"[Patch29-CCBodyProperties] failed: {ex.Message}"); } catch { }
+            try { IoC.Resolve<IModLogger>()?.LogWarning($"[Patch29-CCBodyProperties] failed: {ex.Message}"); } catch { /* swallow-ok: the logger itself threw */ }
         }
     }
 }
