@@ -9,7 +9,12 @@ runner, so no test calls the real git or gh. The fixture lines are scrubbed copi
 lines. The only [ServerSettings] lines on disk come from a .dirty build (a staged server log of
 2026-10-23), which the shipped #981 manifest leaves NOT REACHED, and no "layer attached" or probe
 install line is on disk, so those fixtures render the format strings of ServerSettingsReport.cs,
-ServerSettingsReader.cs, HitchProbeLines.cs and BattleActionBarMissionView.cs.
+ServerSettingsReader.cs, HitchProbeLines.cs and BattleActionBarMissionView.cs. The #970 [Check]
+lines render OutcomeLog's line with the details BattleActionBarMissionView.cs and
+BattleActionBarService.cs pass.
+No career screen line is on disk either, so the career_* fixtures render GauntletCareerScreen.cs,
+CareerScreenChecks.cs and ViewModel_ExecuteCommand_CareerScreen_Patch.cs (CareerScreenChecksTests pins
+their [Check] lines).
 """
 import io
 import os
@@ -231,14 +236,79 @@ class ManifestTests(unittest.TestCase):
         self.assertEqual(iv.named_check_ids(m), {"taom.battle-action-bar.attach"})
 
 
-def taom_source_text():
-    chunks = []
-    for folder in ("Main", "Client", "Dependencies"):
-        for p in (REPO / folder).rglob("*.cs"):
-            if "\\obj\\" in str(p) or "/obj/" in str(p) or "\\bin\\" in str(p) or "/bin/" in str(p):
-                continue
-            chunks.append(p.read_text(encoding="utf-8", errors="replace"))
-    return "\n".join(chunks)
+# One C# token at a time, leftmost first: a // or /* */ comment, a verbatim or regular string, or a char literal.
+# A "//" inside a string is eaten by the string, so it opens no comment, and '"' opens no string. An interpolated
+# string's text between its holes reads as regular strings, which hold "{" or "}" and so never equal a check id.
+# Raw string literals need C# 11; the repo builds C# 10 (Directory.Build.props LangVersion).
+CS_TOKEN = re.compile(r"""//[^\n]*|/\*.*?\*/|@"(?:[^"]|"")*"|"(?:\\.|[^"\\\n])*"|'(?:\\.|[^'\\\n])+'""", re.S)
+
+
+def cs_string_literals(text):
+    """The values of the string literals in C# source, outside comments."""
+    values = set()
+    for m in CS_TOKEN.finditer(text):
+        token = m.group(0)
+        if token.startswith('@"'):
+            values.add(token[2:-1].replace('""', '"'))
+        elif token.startswith('"'):
+            values.add(token[1:-1])
+    return values
+
+
+def taom_source_files():
+    # Main and Client only: a [Check] line goes through IOutcomeLog, which lives in Main, and TAOM.Dependencies
+    # cannot reference Main. Build output (obj, bin) is skipped.
+    for folder in ("Main", "Client"):
+        for p in sorted((REPO / folder).rglob("*.cs")):
+            if not {"obj", "bin"} & set(p.relative_to(REPO).parts):
+                yield p
+
+
+def taom_source_literals():
+    values = set()
+    for p in taom_source_files():
+        values |= cs_string_literals(p.read_text(encoding="utf-8", errors="replace"))
+    return values
+
+
+class CsLiteralTests(unittest.TestCase):
+    """The gate's C# lexer: a [Check] id counts only as a string literal outside a comment."""
+
+    SAMPLE = r'''internal const string A = "taom.a.code";
+// "taom.b.line-comment"
+/// <c>"taom.c.doc-comment"</c>
+/* "taom.d.block"
+   still "taom.e.block" */
+Foo(); // "taom.f.trailing"
+var u = "http://x"; Bar("taom.g.after-url");
+var q = '"'; // "taom.h.after-char"
+Log($"{(a ? "x" : "y")} n={n}"); Baz("taom.i.after-interp");
+var v = @"C:\dir\"; Qux(@"taom.j.verbatim");
+var s = "taom.k.inside // not a comment";
+var w = "prefix taom.l.sub";
+var e = "a\"b"; Q("taom.m.after-escape");
+var c = '\''; R("taom.n.after-escaped-char");
+'''
+
+    def test_a_check_id_counts_only_as_a_literal_outside_comments(self):
+        literals = cs_string_literals(self.SAMPLE)
+        for found in ("taom.a.code", "taom.g.after-url", "taom.i.after-interp", "taom.j.verbatim",
+                      "taom.m.after-escape", "taom.n.after-escaped-char", "taom.k.inside // not a comment"):
+            with self.subTest(found=found):
+                self.assertIn(found, literals)
+        # The old gate ('"' + id + '"' anywhere in the text) accepted b to f and h.
+        for absent in ("taom.b.line-comment", "taom.c.doc-comment", "taom.d.block", "taom.e.block",
+                       "taom.f.trailing", "taom.h.after-char", "taom.k.inside", "taom.l.sub"):
+            with self.subTest(absent=absent):
+                self.assertNotIn(absent, literals)
+
+    def test_the_gate_reads_main_and_client_only(self):
+        files = list(taom_source_files())
+        self.assertTrue(files)
+        for p in files:
+            parts = p.relative_to(REPO).parts
+            self.assertIn(parts[0], {"Main", "Client"}, p)
+            self.assertFalse({"obj", "bin"} & set(parts), p)
 
 
 class RepoManifestGateTests(unittest.TestCase):
@@ -256,18 +326,26 @@ class RepoManifestGateTests(unittest.TestCase):
                     self.assertIsInstance(p, re.Pattern)
 
     def test_every_named_check_id_appears_in_a_taom_source_file(self):
-        source = None
+        literals = None
         for m in self.manifests():
             for check_id in sorted(iv.named_check_ids(m)):
-                source = source if source is not None else taom_source_text()
-                # The id is a const string literal (design 3b rule 5); a mention in a comment does not count.
-                self.assertIn(f'"{check_id}"', source,
-                              f"#{m.issue} names [Check] id={check_id}, which no TAOM source emits as a string literal")
+                literals = literals if literals is not None else taom_source_literals()
+                # The id is a string literal in code (design 3b rule 5); a mention in a comment does not count.
+                # assertTrue, not assertIn: the message would print every literal in the repo.
+                self.assertTrue(check_id in literals,
+                                f"#{m.issue} names [Check] id={check_id}, which no .cs file under Main or Client "
+                                "holds as a string literal outside a comment")
 
-    def test_970_attach_names_no_check_line_yet(self):
+    def test_970_names_the_attach_and_stance_checks(self):
         m = iv.load_manifest(TOOLS / "ingame_checks" / "970.toml", 970)
-        self.assertEqual([c.id for c in m.checks], ["taom.battle-action-bar.attach"])
-        self.assertEqual(iv.named_check_ids(m), set())
+        self.assertEqual([c.id for c in m.checks], ["taom.battle-action-bar.attach", "taom.battle-action-bar.stance"])
+        self.assertEqual(iv.named_check_ids(m), {"taom.battle-action-bar.attach", "taom.battle-action-bar.stance"})
+        attach = m.checks[0]
+        self.assertEqual(attach.absence, "not-reached")
+        # [BattleLoad] lines need their own player toggle, so a scope on them would leave sessions NOT REACHED.
+        self.assertIsNone(attach.scope)
+        # "layer attached" is also written when the movie did not load, so it cannot pass the check.
+        self.assertFalse([p for p in attach.passes if "layer attached" in p.pattern])
 
     def test_981_holds_only_the_issue_s_server_items(self):
         # #981 closes when its six items pass; a client join is none of them.
@@ -275,6 +353,25 @@ class RepoManifestGateTests(unittest.TestCase):
         self.assertEqual([c.id for c in m.checks], [
             "taom.server-settings.no-file", "taom.server-settings.one-key", "taom.server-settings.bad-value",
             "taom.server-settings.fingerprint", "taom.server-settings.hitch-probe-off"])
+
+    def test_918_holds_only_the_ai_off_check(self):
+        # The design's garrison-kept check is not here: vanilla garrisons recruit without a recruit event.
+        m = iv.load_manifest(TOOLS / "ingame_checks" / "918.toml", 918)
+        self.assertEqual([c.id for c in m.checks], ["taom.castle-recruit.ai-off"])
+        self.assertEqual(iv.named_check_ids(m), {"taom.castle-recruit.ai-off"})
+
+    def test_971_names_the_open_and_init_checks(self):
+        m = iv.load_manifest(TOOLS / "ingame_checks" / "971.toml", 971)
+        ids = ["taom.career-screen.open", "taom.career-screen.init"]
+        self.assertEqual([c.id for c in m.checks], ids)
+        self.assertEqual(iv.named_check_ids(m), set(ids))
+
+    def test_1011_names_two_checks_and_no_posthumous(self):
+        # The posthumous-son check has no line: the template call runs before the son exists and cannot fail.
+        m = iv.load_manifest(TOOLS / "ingame_checks" / "1011.toml", 1011)
+        ids = ["taom.race-persist.capture", "taom.race-persist.restore"]
+        self.assertEqual([c.id for c in m.checks], ids)
+        self.assertEqual(iv.named_check_ids(m), set(ids))
 
     def test_every_fixed_in_is_a_commit_in_this_clone(self):
         rc, shallow = iv.run_command(["git", "-C", str(REPO), "rev-parse", "--is-shallow-repository"])
@@ -306,7 +403,8 @@ class VerdictRuleTests(unittest.TestCase):
         code, out, _ = self.t.run(["--issue", "970"])
         self.assertEqual(code, 0, out)
         self.assertEqual(verdict_of(out, "taom.battle-action-bar.attach"), "PASS")
-        self.assertRegex(out, r"taom_debug_2026-10-30_12-57-22\.log:\d+  .*layer attached")
+        self.assertEqual(verdict_of(out, "taom.battle-action-bar.stance"), "PASS")
+        self.assertRegex(out, r"taom_debug_2026-10-30_12-57-22\.log:\d+  .*\[Check\] id=taom\.battle-action-bar\.attach result=pass")
         self.assertIn("still owed by a person", out)
         self.assertIn("with Esc open, a bar button highlights on click", out)
         self.assertIn("a ground click with the order menu open gives a move order", out)
@@ -341,6 +439,53 @@ class VerdictRuleTests(unittest.TestCase):
         code, out, _ = self.t.run(["--issue", "970"])
         self.assertEqual(code, 0, out)
         self.assertEqual(verdict_of(out, "taom.battle-action-bar.attach"), "PASS")
+
+    def test_970_never_attached_fails_after_an_earlier_pass(self):
+        # Battle 1 attached and took a click; battle 2 reached Battle mode with the setting on and never attached.
+        self.t.taom("attach_never.txt", "2026-10-30_12-57-22")
+        code, out, _ = self.t.run(["--issue", "970"])
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, "taom.battle-action-bar.attach"), "FAIL")
+        self.assertIn("reason=never-attached", out)
+        self.assertEqual(verdict_of(out, "taom.battle-action-bar.stance"), "PASS")
+
+    def test_970_a_movie_that_did_not_load_fails_beside_layer_attached(self):
+        self.t.taom("attach_movie_not_loaded.txt", "2026-10-30_12-57-22")
+        code, out, _ = self.t.run(["--issue", "970"])
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, "taom.battle-action-bar.attach"), "FAIL")
+        self.assertIn("reason=movie-not-loaded", out)
+
+    def test_970_setting_off_is_not_reached_with_its_reason(self):
+        self.t.taom("attach_setting_off.txt", "2026-10-30_12-57-22")
+        code, out, _ = self.t.run(["--issue", "970"])
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, "taom.battle-action-bar.attach"), "NOT REACHED")
+        self.assertIn("skipped: reason=setting-off mission=1", out)
+
+    def test_970_an_unregistered_view_fails_on_its_null_screen_init(self):
+        # Only RegisterView sets MissionScreen and ticks or finalizes the view, so an unregistered one writes no
+        # end line: its NULL screen init line is the only evidence.
+        self.t.taom("attach_unregistered.txt", "2026-10-30_12-57-22")
+        code, out, _ = self.t.run(["--issue", "970"])
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, "taom.battle-action-bar.attach"), "FAIL")
+        self.assertIn("MissionScreen=NULL", out)
+
+    def test_970_a_build_before_1072_is_not_reached(self):
+        # Only the legacy "layer attached" line: that build writes no [Check] line, and the legacy line cannot pass.
+        self.t.taom("attach_legacy_only.txt", "2026-10-30_12-57-22")
+        code, out, _ = self.t.run(["--issue", "970"])
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, "taom.battle-action-bar.attach"), "NOT REACHED")
+        self.assertIn("absence = not-reached", out)
+
+    def test_970_attach_without_a_stance_click_is_not_reached(self):
+        self.t.taom("attach_pass_no_stance.txt", "2026-10-30_12-57-22")
+        code, out, _ = self.t.run(["--issue", "970"])
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, "taom.battle-action-bar.attach"), "PASS")
+        self.assertEqual(verdict_of(out, "taom.battle-action-bar.stance"), "NOT REACHED")
 
     def test_970_does_not_need_battle_load_diagnostics(self):
         # [BattleLoad] lines are written only while that player toggle is on; the attach lines are not.
@@ -716,6 +861,202 @@ class ServerSettings981Tests(unittest.TestCase):
         self.assertEqual(verdict_of(out, "taom.server-settings.fingerprint"), "NOT REACHED")
 
 
+class CastleRecruit918Tests(unittest.TestCase):
+    """The real #918 manifest over the day lines CastleRecruitmentService writes. The fixtures render the
+    exact strings the C# tests in CastleRecruitmentServiceTests assert; no such line is on disk yet."""
+
+    CHECK = "taom.castle-recruit.ai-off"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("918.toml")
+
+    def judge(self, fixture):
+        self.t.taom(fixture, "2026-10-30_12-57-22")
+        return self.t.run(["--issue", "918"])
+
+    def test_three_days_with_a_blocked_recruit_pass(self):
+        code, out, _ = self.judge("castle_ai_off_pass.txt")
+        self.assertEqual(code, 0, out)
+        self.assertEqual(verdict_of(out, self.CHECK), "PASS")
+        self.assertIn("at a castle of your own alignment whose notables are not hostile to you", out)
+
+    def test_an_ai_recruit_while_off_fails(self):
+        code, out, _ = self.judge("castle_ai_off_fail.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.CHECK), "FAIL")
+
+    def test_two_days_is_too_short_a_run(self):
+        code, out, _ = self.judge("castle_ai_off_two_days.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.CHECK), "NOT REACHED")
+        self.assertIn("2 of the 3", out)
+        # A reload in one process can drop a rerun day, so the tester is told to restart before a retry.
+        self.assertIn("restart the game before a retry", out)
+
+    def test_days_with_no_blocked_query_prove_nothing(self):
+        # Three pass lines with blocked=0: no AI lord tried a castle, so the run tested nothing.
+        code, out, _ = self.judge("castle_ai_off_no_blocks.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.CHECK), "NOT REACHED")
+
+    def test_toggle_on_days_are_skipped(self):
+        code, out, _ = self.judge("castle_toggle_on.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.CHECK), "NOT REACHED")
+        self.assertIn("skipped: reason=toggle-on", out)
+
+
+class Issue971Tests(unittest.TestCase):
+    """The real #971 manifest: the career button opens the career screen, which initialises."""
+
+    OPEN = "taom.career-screen.open"
+    INIT = "taom.career-screen.init"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("971.toml")
+
+    def judge(self, fixture):
+        self.t.taom(fixture, "2026-10-31_14-00-00")
+        return self.t.run(["--issue", "971"])
+
+    def test_a_click_that_opens_and_initialises_passes_both(self):
+        code, out, _ = self.judge("career_open_pass.txt")
+        self.assertEqual(code, 0, out)
+        self.assertEqual(verdict_of(out, self.OPEN), "PASS")
+        self.assertEqual(verdict_of(out, self.INIT), "PASS")
+        self.assertIn("the click plays one sound, not two", out)
+        self.assertIn("- the career screen draws its career tree\n", out)
+
+    def test_a_click_that_throws_fails_open_and_leaves_init_not_reached(self):
+        code, out, _ = self.judge("career_open_threw.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.OPEN), "FAIL")
+        self.assertIn("reason=NullReferenceException", out)
+        self.assertEqual(verdict_of(out, self.INIT), "NOT REACHED")
+
+    def test_a_click_that_leaves_another_screen_on_top_fails_open(self):
+        code, out, _ = self.judge("career_open_not_on_top.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.OPEN), "FAIL")
+        self.assertIn("reason=not-on-top", out)
+
+    def test_an_open_with_no_init_line_fails_init(self):
+        code, out, _ = self.judge("career_open_no_init.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.OPEN), "PASS")
+        self.assertEqual(verdict_of(out, self.INIT), "FAIL")
+        self.assertRegex(out, r"FAIL\s+taom\.career-screen\.init\b.*\n\s+reached, but")
+
+    def test_a_dialogue_career_switch_alone_is_not_reached(self):
+        # The switch mode init line is not the button's; the dialogue writes no open line.
+        code, out, _ = self.judge("career_switch_only.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.OPEN), "NOT REACHED")
+        self.assertEqual(verdict_of(out, self.INIT), "NOT REACHED")
+
+    def test_a_build_before_the_check_lines_is_not_reached(self):
+        # It has the fix and its CareerSystem lines, but no [Check] line, so it must not read as a FAIL.
+        code, out, _ = self.judge("career_pre_checks.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.OPEN), "NOT REACHED")
+        self.assertEqual(verdict_of(out, self.INIT), "NOT REACHED")
+        self.assertIn("no line matched", out)
+
+
+class HeroRace1011Tests(unittest.TestCase):
+    """The real #1011 manifest. The fixtures render the [Check] lines RacePersistenceService writes through
+    IOutcomeLog (OutcomeLog.Record) and the legend warning text in RestoreHeroRaces; none is on disk yet."""
+
+    CAPTURE = "taom.race-persist.capture"
+    RESTORE = "taom.race-persist.restore"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("1011.toml")
+
+    def one(self, fixture):
+        self.t.taom(fixture, "2026-10-31_12-00-00")
+        return self.t.run(["--issue", "1011"])
+
+    def test_a_save_then_its_load_pass_both_checks(self):
+        self.t.taom("race_save.txt", "2026-10-31_12-00-00")
+        self.t.taom("race_load_pass.txt", "2026-10-31_13-00-00")
+        code, out, _ = self.t.run(["--issue", "1011", "--sessions", "2"])
+        self.assertEqual(code, 0, out)
+        self.assertEqual(verdict_of(out, self.CAPTURE), "PASS")
+        self.assertEqual(verdict_of(out, self.RESTORE), "PASS")
+        self.assertIn("his son born after that shows the father's race", out)
+
+    def test_a_load_alone_passes_restore_only(self):
+        code, out, _ = self.one("race_load_pass.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "PASS")
+        self.assertEqual(verdict_of(out, self.CAPTURE), "NOT REACHED")
+
+    def test_a_read_back_mismatch_fails_restore(self):
+        code, out, _ = self.one("race_load_mismatch.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "FAIL")
+        self.assertIn("first=lord_1_1:4->0", out)
+
+    def test_a_load_with_no_dead_hero_restored_is_not_reached(self):
+        code, out, _ = self.one("race_load_no_dead.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "NOT REACHED")
+        self.assertIn("reached, but", out)
+
+    def test_a_new_campaign_names_its_skip_reason(self):
+        code, out, _ = self.one("race_new_campaign.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "NOT REACHED")
+        self.assertIn("skipped: reason=new-campaign", out)
+
+    def test_a_save_with_no_race_record_names_its_skip_reason(self):
+        code, out, _ = self.one("race_load_no_record.txt")
+        self.assertEqual(code, 4, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "NOT REACHED")
+        self.assertIn("skipped: reason=no-record", out)
+
+    def test_a_load_without_race_data_fails_restore(self):
+        code, out, _ = self.one("race_load_no_data.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "FAIL")
+
+    def test_a_refused_capture_fails_capture(self):
+        code, out, _ = self.one("race_capture_refused.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.CAPTURE), "FAIL")
+
+    def test_a_save_with_no_dead_hero_fails_capture(self):
+        code, out, _ = self.one("race_capture_no_dead.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.CAPTURE), "FAIL")
+
+    def test_a_later_dead_zero_save_fails_despite_an_earlier_pass_in_the_session(self):
+        code, out, _ = self.one("race_capture_mixed.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.CAPTURE), "FAIL")
+
+    def test_a_load_that_saw_no_dead_hero_fails_restore(self):
+        code, out, _ = self.one("race_load_no_dead_seen.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "FAIL")
+
+    def test_a_regressed_load_fails_even_after_an_older_session_passed(self):
+        self.t.taom("race_load_pass.txt", "2026-10-31_12-00-00")
+        self.t.taom("race_load_no_dead_seen.txt", "2026-10-31_13-00-00")
+        code, out, _ = self.t.run(["--issue", "1011", "--sessions", "2"])
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "FAIL")
+
+    def test_a_corrupt_legend_warning_fails_restore_despite_its_pass_line(self):
+        code, out, _ = self.one("race_legend_corrupt.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "FAIL")
+
+
 class CrashReportEchoTests(unittest.TestCase):
     """A crash report writes the last log lines back into the log behind "[CrashReport] "."""
 
@@ -856,13 +1197,14 @@ class ArgumentTests(unittest.TestCase):
         self.assertIn("needs: item 1: delete taom-server-settings.json", out)
 
     def test_stdout_that_cannot_encode_a_line_does_not_crash(self):
-        # The evidence line holds an em dash; a console code page that lacks it must not end the run.
-        self.t.real_manifest("970.toml")
-        self.t.taom("attach_pass.txt", "2026-10-30_12-57-22")
+        # The evidence line holds an em dash; a console code page that lacks it must not end the run. 9006 passes on
+        # the legacy "layer attached" line, which still carries one.
+        self.t.manifest("9006.toml")
+        self.t.taom("attach_dirty.txt", "2026-10-30_12-57-22")
         raw = io.BytesIO()
         stdout = io.TextIOWrapper(raw, encoding="ascii")
         with mock.patch.object(iv.sys, "stdout", stdout):
-            code = iv.main(["--issue", "970", "--game", str(self.t.game)], runner=FakeRunner(),
+            code = iv.main(["--issue", "9006", "--game", str(self.t.game)], runner=FakeRunner(),
                            err=io.StringIO(), checks_dir=self.t.checks, rgl_dir=self.t.rgl, repo=REPO)
             stdout.flush()
         self.assertEqual(code, 0)

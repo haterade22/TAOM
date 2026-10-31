@@ -18,6 +18,7 @@ public class RacePersistenceServiceTests
     private IRaceManager _raceManager;
     private IModLogger _logger;
     private INazgulRegistry _nazgul;
+    private IOutcomeLog _outcomes;
 
     [TestInitialize]
     public void Setup()
@@ -27,6 +28,7 @@ public class RacePersistenceServiceTests
         _logger = Substitute.For<IModLogger>();
         // #644: no hero is a wraith unless a test says so, so every pre-#644 test runs unchanged.
         _nazgul = Substitute.For<INazgulRegistry>();
+        _outcomes = Substitute.For<IOutcomeLog>();
         // Phase 9b #171 — IRaceManager injected for validate-before-restore. Default-stub valid for
         // any non-zero so existing tests pass unchanged; specific tests override IsValidRaceId.
         _raceManager.IsValidRaceId(Arg.Any<int>()).Returns(true);
@@ -39,7 +41,7 @@ public class RacePersistenceServiceTests
         _raceManager.GetRaceIdFromName("human").Returns(0);
         _raceManager.GetRaceIdFromName("dwarf").Returns(1);
         _raceManager.GetRaceIdFromName("elf").Returns(2);
-        _sut = new RacePersistenceService(_heroRosterAdapter, _raceManager, _logger, _nazgul);
+        _sut = new RacePersistenceService(_heroRosterAdapter, _raceManager, _logger, _nazgul, _outcomes);
     }
 
     [TestMethod]
@@ -434,6 +436,8 @@ public class RacePersistenceServiceTests
 
         _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
         _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("hero_corrupt")));
+        // 1011.toml fails a load on this text, because the [Check] line itself passes (the hero is skipped).
+        _logger.Received().LogWarning(Arg.Is<string>(s => s.Contains("is outside the save")));
     }
 
     [TestMethod]
@@ -757,7 +761,7 @@ public class RacePersistenceServiceTests
         freshRaceManager.GetRaceIdFromName("dwarf").Returns(4);
         freshRaceManager.GetRaceIdFromName("elf").Returns(7);
         var freshService = new RacePersistenceService(freshAdapter, freshRaceManager, Substitute.For<IModLogger>(),
-            Substitute.For<INazgulRegistry>());
+            Substitute.For<INazgulRegistry>(), Substitute.For<IOutcomeLog>());
         var loadingStore = new RoundTripDataStore
         {
             IsSaving = false,
@@ -1020,6 +1024,247 @@ public class RacePersistenceServiceTests
         _sut.RestoreHeroRaces();
 
         _heroRosterAdapter.Received(1).SetHeroRace("hero_dead_elf", 2);
+    }
+
+    // --- #1011 check lines (#1072): taom.race-persist.capture and taom.race-persist.restore ---
+
+    private const string CaptureId = "taom.race-persist.capture";
+    private const string RestoreId = "taom.race-persist.restore";
+
+    private static List<HeroRaceInfo> Roster(params HeroRaceInfo[] heroes) => new(heroes);
+
+    // Loads the map through the session-launch capture, which writes no check line.
+    private void CaptureMap(params HeroRaceInfo[] heroes)
+    {
+        _heroRosterAdapter.GetAllHeroRaces().Returns(Roster(heroes));
+        _sut.CaptureHeroRaces();
+    }
+
+    [TestMethod]
+    public void CaptureHeroRacesForSave_PassesHeroAndDeadCounts()
+    {
+        _heroRosterAdapter.GetAllHeroRaces().Returns(Roster(
+            new HeroRaceInfo("a", 0), new HeroRaceInfo("dead_elf", 2, false), new HeroRaceInfo("dead_dwarf", 1, false)));
+
+        _sut.CaptureHeroRacesForSave();
+
+        _outcomes.Received(1).Pass(CaptureId, "1", "heroes=3 dead=2");
+        Assert.AreEqual(3, _sut.CapturedRaceCount);
+    }
+
+    [TestMethod]
+    public void CaptureHeroRacesForSave_DuplicateId_CountsTheFirstOnly()
+    {
+        _heroRosterAdapter.GetAllHeroRaces().Returns(Roster(new HeroRaceInfo("x", 1, false), new HeroRaceInfo("x", 2)));
+
+        _sut.CaptureHeroRacesForSave();
+
+        _outcomes.Received(1).Pass(CaptureId, "1", "heroes=1 dead=1");
+    }
+
+    [TestMethod]
+    public void CaptureHeroRacesForSave_EachSaveHasItsOwnKey()
+    {
+        _heroRosterAdapter.GetAllHeroRaces().Returns(Roster(new HeroRaceInfo("a", 0)));
+
+        _sut.CaptureHeroRacesForSave();
+        _sut.CaptureHeroRacesForSave();
+
+        _outcomes.Received(1).Pass(CaptureId, "1", "heroes=1 dead=0");
+        _outcomes.Received(1).Pass(CaptureId, "2", "heroes=1 dead=0");
+    }
+
+    [TestMethod]
+    public void CaptureHeroRacesForSave_DegenerateRaceTable_Fails()
+    {
+        _heroRosterAdapter.GetAllHeroRaces().Returns(Roster(new HeroRaceInfo("a", 0), new HeroRaceInfo("b", 1)));
+        _sut.CaptureHeroRacesForSave();
+        _raceManager.GetOrderedRaceNames().Returns(new[] { "human" });
+
+        _sut.CaptureHeroRacesForSave();
+
+        _outcomes.Received(1).Fail(CaptureId, "2", "reason=race-table races=1 kept=2");
+        _outcomes.DidNotReceive().Pass(CaptureId, "2", Arg.Any<string>());
+        Assert.AreEqual(2, _sut.CapturedRaceCount);
+    }
+
+    [TestMethod]
+    public void CaptureHeroRaces_WritesNoCheckLine()
+    {
+        CaptureMap(new HeroRaceInfo("a", 0), new HeroRaceInfo("dead", 1, false));
+
+        _outcomes.DidNotReceiveWithAnyArgs().Pass(default, default, default);
+        _outcomes.DidNotReceiveWithAnyArgs().Fail(default, default, default);
+        _outcomes.DidNotReceiveWithAnyArgs().Skip(default, default, default);
+    }
+
+    [TestMethod]
+    public void Restore_NewCampaign_Skips()
+    {
+        _sut.ResetForNewCampaign();
+
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Skip(RestoreId, "1", "reason=new-campaign");
+        _outcomes.DidNotReceiveWithAnyArgs().Fail(default, default, default);
+    }
+
+    // The engine calls SyncData only when the save has a record for the behavior, so a save older than
+    // RacePersistenceBehavior gets none: nothing to restore, not a lost map.
+    [TestMethod]
+    public void Restore_LoadWithNoRecord_Skips()
+    {
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Skip(RestoreId, "1", "reason=no-record");
+        _outcomes.DidNotReceiveWithAnyArgs().Fail(default, default, default);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("No saved race data found")));
+    }
+
+    [TestMethod]
+    public void Restore_RecordLoadedButMapEmpty_Fails()
+    {
+        _sut.SyncRaceData(new RoundTripDataStore { IsSaving = false });
+
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Fail(RestoreId, "1", "reason=no-saved-data");
+        _outcomes.DidNotReceiveWithAnyArgs().Skip(default, default, default);
+        _logger.Received(1).LogWarning(Arg.Is<string>(m => m.Contains("No saved race data found")));
+    }
+
+    [TestMethod]
+    public void Restore_ResetForNewSession_ForgetsTheLoadedRecord()
+    {
+        _sut.SyncRaceData(new RoundTripDataStore { IsSaving = false });
+        _sut.ResetForNewSession();
+
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Skip(RestoreId, "1", "reason=no-record");
+        _outcomes.DidNotReceiveWithAnyArgs().Fail(default, default, default);
+    }
+
+    [TestMethod]
+    public void Restore_DeadHeroRestored_ReadBackAgrees_Passes()
+    {
+        CaptureMap(new HeroRaceInfo("dead_dwarf", 1, false), new HeroRaceInfo("elf", 2));
+        _heroRosterAdapter.GetAllHeroRaces().Returns(
+            Roster(new HeroRaceInfo("dead_dwarf", 0, false), new HeroRaceInfo("elf", 0)),
+            Roster(new HeroRaceInfo("dead_dwarf", 1, false), new HeroRaceInfo("elf", 2)));
+
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Pass(RestoreId, "1", "restored=2 dead_restored=1 dead_seen=1 wraiths=0 skipped=0 mismatch=0 saved=2");
+        _outcomes.DidNotReceiveWithAnyArgs().Fail(default, default, default);
+    }
+
+    [TestMethod]
+    public void Restore_ReadBackDisagrees_Fails()
+    {
+        CaptureMap(new HeroRaceInfo("dead_dwarf", 1, false), new HeroRaceInfo("elf", 2));
+        _heroRosterAdapter.GetAllHeroRaces().Returns(
+            Roster(new HeroRaceInfo("dead_dwarf", 0, false), new HeroRaceInfo("elf", 0)),
+            Roster(new HeroRaceInfo("dead_dwarf", 0, false), new HeroRaceInfo("elf", 2)));
+
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Fail(RestoreId, "1",
+            "mismatch=1 first=dead_dwarf:1->0 restored=2 dead_restored=1 dead_seen=1 wraiths=0 skipped=0 saved=2");
+        _outcomes.DidNotReceiveWithAnyArgs().Pass(default, default, default);
+    }
+
+    // #330: on the legend path the saved int indexes the save-time names, so the comparison uses the current id.
+    [TestMethod]
+    public void Restore_LegendShift_ComparesTheTranslatedId()
+    {
+        CaptureMap(new HeroRaceInfo("d", 1));
+        _raceManager.GetRaceIdFromName("dwarf").Returns(4);
+        _heroRosterAdapter.GetAllHeroRaces().Returns(Roster(new HeroRaceInfo("d", 0)), Roster(new HeroRaceInfo("d", 4)));
+
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Pass(RestoreId, "1", "restored=1 dead_restored=0 dead_seen=0 wraiths=0 skipped=0 mismatch=0 saved=1");
+    }
+
+    [TestMethod]
+    public void Restore_WraithAndRemovedRace_AreCountedNotCompared()
+    {
+        _raceManager.GetOrderedRaceNames().Returns(new[] { "human", "dwarf", "elf", "gone" });
+        CaptureMap(new HeroRaceInfo("wraith", 1), new HeroRaceInfo("lost", 3));
+        _nazgul.IsWraith("wraith").Returns(true);
+        _heroRosterAdapter.GetAllHeroRaces().Returns(
+            Roster(new HeroRaceInfo("wraith", 0), new HeroRaceInfo("lost", 0)),
+            Roster(new HeroRaceInfo("wraith", 0), new HeroRaceInfo("lost", 0)));
+
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Pass(RestoreId, "1", "restored=0 dead_restored=0 dead_seen=0 wraiths=1 skipped=1 mismatch=0 saved=2");
+    }
+
+    [TestMethod]
+    public void Restore_UnchangedHero_IsStillCompared()
+    {
+        CaptureMap(new HeroRaceInfo("elf", 2));
+        _heroRosterAdapter.GetAllHeroRaces().Returns(Roster(new HeroRaceInfo("elf", 2)), Roster(new HeroRaceInfo("elf", 0)));
+
+        _sut.RestoreHeroRaces();
+
+        _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
+        _outcomes.Received(1).Fail(RestoreId, "1",
+            "mismatch=1 first=elf:2->0 restored=0 dead_restored=0 dead_seen=0 wraiths=0 skipped=0 saved=1");
+    }
+
+    // SetHeroRace reaches the first hero with the id (Hero.FindFirst), so the read-back compares that one.
+    [TestMethod]
+    public void Restore_DuplicateId_ReadBackUsesTheFirstOccurrence()
+    {
+        CaptureMap(new HeroRaceInfo("x", 1));
+        _heroRosterAdapter.GetAllHeroRaces().Returns(
+            Roster(new HeroRaceInfo("x", 0)),
+            Roster(new HeroRaceInfo("x", 1), new HeroRaceInfo("x", 5)));
+
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Pass(RestoreId, "1", "restored=1 dead_restored=0 dead_seen=0 wraiths=0 skipped=0 mismatch=0 saved=1");
+    }
+
+    // dead_seen counts every dead hero the roster holds, mapped or not, so a load with nothing to restore can
+    // still tell "no dead hero needed restoring" from "the roster has no dead heroes" (the #1011 regression).
+    [TestMethod]
+    public void Restore_DeadHeroesInTheRoster_AreCountedWhetherOrNotTheyNeededRestoring()
+    {
+        CaptureMap(new HeroRaceInfo("elf", 2));
+        _heroRosterAdapter.GetAllHeroRaces().Returns(
+            Roster(new HeroRaceInfo("elf", 2), new HeroRaceInfo("dead_a", 1, false), new HeroRaceInfo("dead_b", 0, false)),
+            Roster(new HeroRaceInfo("elf", 2), new HeroRaceInfo("dead_a", 1, false), new HeroRaceInfo("dead_b", 0, false)));
+
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Pass(RestoreId, "1", "restored=0 dead_restored=0 dead_seen=2 wraiths=0 skipped=0 mismatch=0 saved=1");
+    }
+
+    [TestMethod]
+    public void Restore_RosterWithoutDeadHeroes_ReportsDeadSeenZero()
+    {
+        CaptureMap(new HeroRaceInfo("elf", 2));
+        _heroRosterAdapter.GetAllHeroRaces().Returns(Roster(new HeroRaceInfo("elf", 2)), Roster(new HeroRaceInfo("elf", 2)));
+
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Pass(RestoreId, "1", "restored=0 dead_restored=0 dead_seen=0 wraiths=0 skipped=0 mismatch=0 saved=1");
+    }
+
+    // The latch is once per (id, result, key) for the process, so the load serial never resets.
+    [TestMethod]
+    public void Restore_EachLoadHasItsOwnKey()
+    {
+        _sut.RestoreHeroRaces();
+        _sut.ResetForNewSession();
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Skip(RestoreId, "1", "reason=no-record");
+        _outcomes.Received(1).Skip(RestoreId, "2", "reason=no-record");
     }
 }
 

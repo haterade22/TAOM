@@ -1,0 +1,3 @@
+[2026-10-31 13:00:40] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-10-31 13:00:40] [INFO] [Check] id=taom.race-persist.restore result=pass restored=12 dead_restored=0 dead_seen=212 wraiths=9 skipped=0 mismatch=0 saved=1834
+[2026-10-31 13:00:40] [INFO] [Shutdown] clean module unload
