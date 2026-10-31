@@ -1,0 +1,4 @@
+[2026-10-21 12:10:01] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-10-21 12:22:05] [INFO] [SaveLoad] seq=1 t=+0ms phase=SaveBegin name='save007'
+[2026-10-21 12:22:08] [INFO] [SaveLoad] seq=2 t=+2659ms phase=SaveCompleted result=Success
+[2026-10-21 12:30:00] [INFO] [Shutdown] clean module unload

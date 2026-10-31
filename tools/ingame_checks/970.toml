@@ -1,0 +1,35 @@
+# In-game checks for #970, read by tools/ingame_verdict.py. The lines come from
+# Client/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs: "screen init" in
+# OnMissionScreenInitialize (field battles only), "mission init ... layer attached" and "layer attach failed"
+# in TryAttachLayer, which runs on the first Battle-mode tick.
+#
+# A later phase of #1069 adds the [Check] lines: an attach check over
+# "[Check] id=taom.battle-action-bar.attach result=pass|fail|skip", and a stance check once a stance
+# button logs its outcome. No source emits either today, so this manifest does not name them yet.
+issue = 970
+title = "Battle action bar attaches in a field battle"
+fixed_in = "40385aa5b"   # the second of the two fix commits the issue names (d96f349f1, 40385aa5b)
+logs = ["taom"]
+
+[[check]]
+id = "taom.battle-action-bar.attach"
+needs = "a field battle with Show Battle Action Bar on (Battle Tactics, Battle Action Bar; off by default); press Begin battle"
+reached = ['\[BattleActionBar\] screen init: MissionScreen=set .*enabled=True']
+pass = ['\[BattleActionBar\] mission init \S+ layer attached']
+fail = ['\[BattleActionBar\] layer attach failed']
+# A battle that ends, crashes or has the bar turned off while still in deployment logs "screen init" and never
+# tries the attach, and no line marks the end of deployment; so the missing attach line proves nothing and only
+# "layer attach failed" is a FAIL, until a later phase logs result=fail reason=never-attached.
+absence = "not-reached"
+
+[[human]]
+claim = "after Begin battle, attack, block and mouse-look work while the bar shows"
+
+[[human]]
+claim = "with Esc open, a bar button highlights on click"
+
+[[human]]
+claim = "a ground click with the order menu open gives a move order"
+
+[[human]]
+claim = "turning the setting off mid-battle removes the bar, and turning it on again shows it once"

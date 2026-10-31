@@ -1,0 +1,9 @@
+[2026-10-30 12:57:23] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-10-30 13:09:13] [INFO] [BattleLoad] seq=5 t=+54585ms phase=MissionOpenNew mission='Battle' scene='battle_terrain_r' side=Defender
+[2026-10-30 13:09:58] [INFO] [BattleActionBar] mission init - layer attached
+[2026-10-30 13:10:00] [INFO] [Check] id=taom.fixture.days result=pass day=101
+[2026-10-30 13:10:20] [INFO] [Check] id=taom.fixture.days result=pass day=102
+[2026-10-30 13:10:30] [ERROR] [CrashReport] TAOM tail (last 3):
+[2026-10-30 13:10:30] [ERROR] [CrashReport]   [2026-10-30 13:09:13] [INFO] [BattleLoad] seq=5 t=+54585ms phase=MissionOpenNew mission='Battle' scene='battle_terrain_r' side=Defender
+[2026-10-30 13:10:30] [ERROR] [CrashReport]   [2026-10-30 13:09:58] [INFO] [BattleActionBar] mission init - layer attached
+[2026-10-30 13:10:30] [ERROR] [CrashReport]   [2026-10-30 13:10:20] [INFO] [Check] id=taom.fixture.days result=pass day=102

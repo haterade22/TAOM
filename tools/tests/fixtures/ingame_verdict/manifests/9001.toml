@@ -1,0 +1,20 @@
+# Fixture: a save in one session and its load in the next (session pairing).
+issue = 9001
+title = "Fixture: save, then load in a later session"
+fixed_in = "40385aa5b"
+logs = ["taom"]
+
+[[check]]
+id = "taom.fixture.save"
+needs = "save the campaign"
+reached = ['\[SaveLoad\] .*phase=SaveBegin ']
+pass = ['\[SaveLoad\] .*phase=SaveCompleted result=Success']
+
+[[check]]
+id = "taom.fixture.load"
+needs = "load that save in a later session"
+reached = ['\[SaveLoad\] .*phase=LoadRequested ']
+pass = ['\[SaveLoad\] .*phase=GameLoaded ']
+
+[[human]]
+claim = "the loaded campaign looks right"

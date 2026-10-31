@@ -1,0 +1,10 @@
+[2026-10-30 12:57:23] [INFO] [Client] composition applied: TAOM.Client.TaomClientComposition (client=v2.0.0.0 build.20261030-175615Z+2434d62aa33776fae18839632e30781bcbbde5e4, core=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4)
+[2026-10-30 12:57:23] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4.dirty TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4.dirty (pair OK)
+[2026-10-30 13:05:10] [INFO] [BattleLoad] seq=2 t=+2320ms phase=MissionOpenNew mission='TownCenter' scene='taom_gondor_town_minas_tirith_forceatmo' encountered='Minas Tirith' side=Attacker main=1 enemy=0 | RaidSpawn mapEvent=<null>
+[2026-10-30 13:05:11] [INFO] [BattleLoad] seq=3 t=+3243ms phase=MissionOpenNewDone mission='TownCenter' created=True
+[2026-10-30 13:09:13] [INFO] [BattleLoad] seq=5 t=+54585ms phase=MissionOpenNew mission='Battle' scene='battle_terrain_r' encountered='Corsairs of Umbar' side=Defender main=1 enemy=24
+[2026-10-30 13:09:13] [INFO] [BattleLoad] seq=6 t=+55343ms phase=MissionOpenNewDone mission='Battle' created=True
+[2026-10-30 13:09:25] [INFO] [BattleActionBar] screen init: MissionScreen=set mode=Deployment enabled=True
+[2026-10-30 13:09:58] [INFO] [BattleActionBar] mission init — layer attached
+[2026-10-30 13:28:22] [INFO] [MemSample] privMB=10137 wsMB=6058 heapMB=281 sysCommitUsedMB=100135 sysCommitLimitMB=128662 availPhysMB=17641 memLoad=72%
+[2026-10-30 13:28:27] [INFO] [Shutdown] clean module unload

@@ -1,0 +1,6 @@
+[2026-10-23 14:30:11] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261023-174722Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261023-174722Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-10-23 14:30:13] [INFO] [ServerSettings] TAOM server settings (MCM is not loaded on a dedicated server): loaded 1 key(s) from C:\Users\tester\CoopDS\data-play\taom-server-settings.json (BANNERLORD_USER_DIR), 0 reverted, 0 unknown
+[2026-10-23 14:30:13] [INFO] [ServerSettings] set CastleNotablesPerCastle = 4 (server default 3)
+[2026-10-23 14:35:40] [INFO] [TickProfiler] probe off: 'Enable Hitch Probe' and 'Enable Tick Profiler' are off at game start (or MCM was not ready); no probe patches installed, no hitch lines this session
+[2026-10-23 14:35:40] [INFO] [SettingsFingerprint] global=4f1c2a9b7d3e over 212 simulation-relevant setting(s). Compare this line with the other peer's — a difference means the two campaigns will compute different outcomes, and nothing else will say so. A match means these settings agree, not that the two installs are equivalent.
+[2026-10-23 14:35:40] [INFO] [SettingsFingerprint]   TaomSettings = 9c0e11d2 (180)

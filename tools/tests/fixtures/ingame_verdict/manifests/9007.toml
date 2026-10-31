@@ -1,0 +1,13 @@
+# Fixture: the #970 attach check with absence = "fail", so a reached line alone is a FAIL (rule 3).
+issue = 9007
+fixed_in = "40385aa5b"
+logs = ["taom"]
+
+[[check]]
+id = "taom.battle-action-bar.attach"
+needs = "a field battle with the bar on"
+scope = 'phase=MissionOpenNew mission='
+reached = ['\[BattleActionBar\] screen init: MissionScreen=set .*enabled=True']
+pass = ['\[BattleActionBar\] mission init \S+ layer attached']
+fail = ['\[BattleActionBar\] layer attach failed']
+absence = "fail"

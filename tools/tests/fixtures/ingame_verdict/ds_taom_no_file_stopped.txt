@@ -1,0 +1,3 @@
+[2026-10-23 13:58:50] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261023-174722Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261023-174722Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-10-23 13:58:52] [INFO] [ServerSettings] TAOM server settings (MCM is not loaded on a dedicated server): no file at C:\Users\tester\CoopDS\data-play\taom-server-settings.json (BANNERLORD_USER_DIR), every setting is at its server default
+[2026-10-23 13:58:52] [INFO] [ServerSettings] wrote an empty template to C:\Users\tester\CoopDS\data-play\taom-server-settings.json

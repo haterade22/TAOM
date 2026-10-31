@@ -1,0 +1,3 @@
+[2026-10-23 14:09:49] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261023-174722Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261023-174722Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
+[2026-10-23 14:21:58] [INFO] [MemSample] privMB=10137 wsMB=6058 heapMB=281 sysCommitUsedMB=100135 sysCommitLimitMB=128662 availPhysMB=17641 memLoad=72%
+[2026-10-23 14:22:19] [INFO] [Shutdown] clean module unload

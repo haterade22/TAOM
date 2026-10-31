@@ -1,0 +1,10 @@
+# Fixture: a .dirty build counts because allow_dirty is set.
+issue = 9006
+fixed_in = "40385aa5b"
+logs = ["taom"]
+allow_dirty = true
+
+[[check]]
+id = "taom.fixture.attach"
+needs = "a field battle with the bar on"
+pass = ['\[BattleActionBar\] mission init \S+ layer attached']
