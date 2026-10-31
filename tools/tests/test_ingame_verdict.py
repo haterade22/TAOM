@@ -1164,6 +1164,39 @@ class SessionSummaryTests(unittest.TestCase):
         self.assertIn("- Session 1: no `[Session] summary` line in `taom_debug_2026-10-30_12-57-22.log`: ", out)
 
 
+class SessionSummaryEdgeTests(unittest.TestCase):
+    """Summary edge cases of #1074: a session with no TAOM log, a non-ASCII digit, the reason printed once."""
+
+    def test_a_session_with_no_taom_log_says_so_in_both_renderers(self):
+        t = Tree(self)
+        t.real_manifest("981.toml")
+        t.ds("ds_join.txt", "20261023-135846", mtime="2026-10-23 14:22:03")
+        _, out, _ = t.run(["--issue", "981", "--ds-data", str(t.ds_data)])
+        self.assertIn("    no [Session] summary line: this session has no TAOM log", out)
+        _, md, _ = t.run(["--issue", "981", "--ds-data", str(t.ds_data), "--format", "md"])
+        self.assertIn("- Session 1: no `[Session] summary` line; this session has no TAOM log", md)
+
+    def test_a_superscript_digit_in_errors_does_not_raise(self):
+        t = Tree(self)
+        t.real_manifest("970.toml")
+        dest = t.taom("session_summary_errors.txt", "2026-10-30_12-57-22")
+        dest.write_text(dest.read_text(encoding="utf-8").replace("errors=2", "errors=²"), encoding="utf-8")
+        code, out, _ = t.run(["--issue", "970"])
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("WARNING: errors", out)
+
+    def test_the_no_summary_reason_prints_once_per_report(self):
+        t = Tree(self)
+        t.real_manifest("970.toml")
+        t.taom("attach_pass.txt", "2026-10-30_12-57-22")
+        t.taom("attach_pass.txt", "2026-10-29_10-00-00")
+        _, out, _ = t.run(["--issue", "970", "--sessions", "2"])
+        self.assertEqual(out.count("a game still running in its first 10 minutes"), 1, out)
+        self.assertEqual(out.count("no [Session] summary line in taom_debug_"), 2, out)
+        _, md, _ = t.run(["--issue", "970", "--sessions", "2", "--format", "md"])
+        self.assertEqual(md.count("a game still running in its first 10 minutes"), 1, md)
+
+
 class PostTests(unittest.TestCase):
     def setUp(self):
         self.t = Tree(self)

@@ -97,8 +97,9 @@ BUILD_STAMP = re.compile(r"\[BuildStamp\] TAOM=\S+ build\.\S*?\+([0-9a-f]{7,40})
 CRASH_ECHO = re.compile(r"^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[[A-Z]+\] \[CrashReport\] ")
 SHUTDOWN = "[Shutdown] clean module unload"
 # OutcomeLog.WriteSummary (#1071): the summary line, then one line per counter and one per swallowed site, each
-# written by LogInfo. Both are anchored to FileLogger's INFO prefix, because the fixed text of every [Swallowed]
-# WARNING names "the [Session] summary" too.
+# written by LogInfo. Both are anchored to FileLogger's INFO prefix as a second guard against a quoted payload:
+# a [CrashReport] echo is dropped before matching, and the fixed text of a [Swallowed] WARNING already fails
+# "summary (reason=" because it says "summary counts".
 INFO_LINE = r"^\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\] \[INFO\] "
 SESSION_SUMMARY = re.compile(INFO_LINE + r"\[Session\] summary (reason=.*)$")
 SESSION_SWALLOWED = re.compile(INFO_LINE + r"\[Session\] swallowed (feature=\S+ site=\S+ n=\S+ first=\S+)")
@@ -373,7 +374,7 @@ class Summary:
         self.text = text
         self.swallowed = swallowed
         fields = dict(SUMMARY_FIELD.findall(text))
-        self.errors = int(fields["errors"]) if fields.get("errors", "").isdigit() else 0
+        self.errors = int(fields["errors"]) if fields.get("errors", "").isdecimal() else 0
 
 
 def read_summary(log):
@@ -646,7 +647,17 @@ def session_span(s):
     return f"{s.start:%Y-%m-%d %H:%M:%S} to {s.end:%H:%M:%S}"
 
 
-def render_text(report):
+def no_summary_reason(said):
+    """The full reason the first time a run needs it, then a pointer, so --owed does not repeat it per session."""
+    if said is None:
+        return NO_SUMMARY_WHY
+    if NO_SUMMARY_WHY in said:
+        return "same reason as above"
+    said.add(NO_SUMMARY_WHY)
+    return NO_SUMMARY_WHY
+
+
+def render_text(report, said=None):
     m = report.manifest
     out = [f"#{m.issue}{' ' + m.title if m.title else ''}: {report.verdict}",
            f"  fixed_in {m.fixed_in}; logs: {', '.join(m.logs)}; sessions read: {len(report.sessions)}"]
@@ -664,7 +675,7 @@ def render_text(report):
             out.append("    no [Session] summary line: this session has no TAOM log")
         for log, sm in s.summaries:
             if sm is None:
-                out.append(f"    no [Session] summary line in {log.name}: {NO_SUMMARY_WHY}")
+                out.append(f"    no [Session] summary line in {log.name}: {no_summary_reason(said)}")
                 continue
             out.append(f"    summary ({log.name}:{sm.number}): {sm.text}")
             if sm.errors:
@@ -689,7 +700,7 @@ def cell(text):
     return str(text).replace("|", "\\|").replace("\n", " ")
 
 
-def summaries_md(sessions):
+def summaries_md(sessions, said=None):
     def code(text):
         return "`" + text.replace("`", "'") + "`"
 
@@ -699,7 +710,7 @@ def summaries_md(sessions):
             out.append(f"- Session {i}: no `[Session] summary` line; this session has no TAOM log")
         for log, sm in s.summaries:
             if sm is None:
-                out.append(f"- Session {i}: no `[Session] summary` line in {code(log.name)}: {NO_SUMMARY_WHY}")
+                out.append(f"- Session {i}: no `[Session] summary` line in {code(log.name)}: {no_summary_reason(said)}")
                 continue
             out.append(f"- Session {i}, {code(f'{log.name}:{sm.number}')}: {code(sm.text)}")
             if sm.errors:
@@ -708,7 +719,7 @@ def summaries_md(sessions):
     return out + [""]
 
 
-def render_md(report):
+def render_md(report, said=None):
     m = report.manifest
     out = [f"### In-game verdict for #{m.issue}: {report.verdict}", "",
            f"Read by `tools/ingame_verdict.py`; evidence counts only from a build that contains `{m.fixed_in}`.", ""]
@@ -722,7 +733,7 @@ def render_md(report):
             notes = ([f"not found for this session: {', '.join(s.missing)}"] if s.missing else []) + s.notes
             out.append(f"| {i} ({session_span(s)}) | {logs} | {cell(state)} | {cell('; '.join(notes) or '-')} |")
         out.append("")
-        out += summaries_md(report.sessions)
+        out += summaries_md(report.sessions, said)
     out += ["| Check | Verdict | Session | Reason |", "|---|---|---|---|"]
     for c in m.checks:
         r = report.results[c.id]
@@ -804,7 +815,8 @@ def main(argv=None, runner=run_command, out=None, err=None, checks_dir=CHECKS_DI
     if out is sys.stdout and hasattr(out, "reconfigure"):
         out.reconfigure(errors="backslashreplace")
     render = render_md if args.format == "md" else render_text
-    out.write("\n".join(render(r) for r in reports))
+    said = set()
+    out.write("\n".join(render(r, said) for r in reports))
     if no_manifest:
         out.write("no manifest: " + ", ".join(f"#{n}" for n in sorted(set(no_manifest), reverse=True)) + "\n")
     if not reports:

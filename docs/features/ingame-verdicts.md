@@ -3,7 +3,8 @@
 ## Overview
 
 TAOM writes a `[Check]` line when a feature does what it was built to do in a real game, and a
-`[Session]` summary that counts those lines, hot-path counters and swallowed exceptions.
+`[Session]` summary that reports the totals of the outcome calls (a repeated call adds to the
+total but writes no second line), hot-path counters and swallowed exceptions.
 `tools/ingame_verdict.py` reads a play session's logs against one manifest per issue and gives each
 owed in-game check a verdict: PASS, FAIL or NOT REACHED, with the log lines that prove it. A person
 is needed only for what a log cannot show, such as how a screen looks.
@@ -35,7 +36,9 @@ The reader has to tell "it failed" from "nobody played it" from "this build pred
   `exit` (`SubModule.OnSubModuleUnloaded`, and `AppDomain.ProcessExit` through
   `Outcomes.SummariseOnProcessExit`), `crash` (`CrashReportService`) and `heartbeat` (every 10
   minutes of real time from `OnApplicationTick`, so a debugger stop or a native crash still leaves a
-  summary at most 10 minutes old). An exit summary is written once per process.
+  summary at most one interval older than the last application tick). The first heartbeat comes 10
+  minutes after the module loads, and none is written while the main thread hangs. An exit summary
+  is written once per process.
 - **Read:** `tools/ingame_verdict.py`, with one TOML manifest per issue in `tools/ingame_checks/`.
   Evidence counts only from a session whose `[BuildStamp]` sha contains the manifest's `fixed_in`
   commit (`git merge-base --is-ancestor`).
@@ -115,17 +118,20 @@ for a battle check with `absence = "not-reached"`, `918.toml` for a daily check 
 
 ## How to verify in game
 
-**Preconditions:** a build deployed from a commit that contains the fix, a game session played
-far enough to reach the check (each check's `needs` says how), then the game closed or left
-running.
+**Preconditions:** a build deployed from a commit that contains the fix (`fixed_in`) with no
+uncommitted changes (a `.dirty` build counts only when the manifest sets `allow_dirty`), a game
+session played far enough to reach the check (each check's `needs` says how), then the game closed
+or left running.
 
 1. `python tools/ingame_verdict.py --issue <N>`: the verdict per check, the reason, up to three
    evidence lines as `file:line  text`, and the session's `summary` line.
 2. `python tools/ingame_verdict.py --owed`: every issue labelled `triage-needs-ingame` that has a
    manifest, plus a `no manifest:` list.
 3. `--sessions 2` for a save made in one session and loaded in the next; `--ds-data` and
-   `--ds-engine` for a dedicated server. More sessions never hide a newer result: per check the
-   newest PASS or FAIL wins.
+   `--ds-engine` for a dedicated server: #981 needs both, `--ds-data` the server data folder (its
+   `logs\` folder holds `coop-server-*.log` and `Coop_server.log`) and `--ds-engine` the staged
+   engine folder (`bin\Win64_Shipping_Server\Logs` holds its TAOM logs). More sessions never hide a newer result: per
+   check the newest PASS or FAIL wins.
 
 An unreachable step is reported with the command tried and the unmet precondition. Never mark it
 verified through another path.
@@ -166,8 +172,12 @@ verified through another path.
    where the path ran but the feature was off, so NOT REACHED can say why. Write the fail branch
    too: a check that can only pass proves little.
 3. **Test it** with a fake `IOutcomeLog`: one test per pass, fail and skip branch.
-4. **The manifest:** `tools/ingame_checks/<issue>.toml` with `fixed_in` set to the commit that
-   ships the lines, the `[Check]` pattern with each dot escaped (`id=taom\.castle-recruit\.ai-off`),
+4. **The manifest:** `tools/ingame_checks/<issue>.toml` with `fixed_in` set to the fix commit the
+   issue names (the manifest ships with the emitter, so the emitter's own sha is not known yet;
+   `970.toml` names `40385aa5b`, not the later commit that added its `[Check]` lines). A build
+   between the fix and the emitter writes no `[Check]` line, so every `reached` pattern must be a
+   `[Check]` line, or the check sets `absence = "not-reached"`; otherwise `absence` defaults to
+   `fail` and such a build gets a false FAIL. Then the `[Check]` pattern with each dot escaped (`id=taom\.castle-recruit\.ai-off`),
    a `needs` a tester can follow, and `[[human]]` items for what a log cannot show. Pick
    `absence = "not-reached"` when a session can end (deployment, a crash, a kill) before the pass
    line is due.
@@ -190,8 +200,8 @@ an `OutcomeCounter` in a field (`_aiBlocked = outcomes.Counter(AiBlockedCounterI
 feature and site for the process, with the root cause, then a count that the summary reports as
 `[Session] swallowed feature=<f> site=<s> n=<n> first=<type>`. The fallback behaviour of the catch
 stays as it was. A catch that is silent on purpose carries `// swallow-ok: <reason>` instead; the
-ratchet test that enforces the pair, `SilentCatchRatchetTests`, comes with #1073 (open on
-2026-10-31).
+ratchet test that enforces the pair is `SilentCatchRatchetTests` (#1073, closed and on trunk
+since 2026-10-31).
 
 ## Changelog
 

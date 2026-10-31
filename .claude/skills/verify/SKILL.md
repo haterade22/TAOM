@@ -135,7 +135,8 @@ python tools/ingame_verdict.py --owed --sessions 10 2>&1
 It asks `gh` for the issues labelled `triage-needs-ingame`, reads the ten newest game sessions' logs
 against each one that has a `tools/ingame_checks/<issue>.toml`, and prints a verdict per check
 ([ingame-verdicts.md](../../../docs/features/ingame-verdicts.md)). Report each issue's verdict,
-every FAIL with its reason, the session's `summary` line and any `WARNING: errors=` line. Give the
+every FAIL with its reason, the newest session's `summary` line once and each `WARNING: errors=`
+line once. Give the
 `no manifest:` list as a count only.
 
 This step never fails verify and never changes "Ready for commit". NOT REACHED (exit 4) is the
