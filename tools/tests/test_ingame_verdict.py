@@ -441,6 +441,15 @@ class VerdictRuleTests(unittest.TestCase):
         self.assertEqual(verdict_of(out, "taom.battle-action-bar.attach"), "NOT REACHED")
         self.assertIn("skipped: reason=setting-off mission=1", out)
 
+    def test_970_an_unregistered_view_fails_on_its_null_screen_init(self):
+        # Only RegisterView sets MissionScreen and ticks or finalizes the view, so an unregistered one writes no
+        # end line: its NULL screen init line is the only evidence.
+        self.t.taom("attach_unregistered.txt", "2026-10-30_12-57-22")
+        code, out, _ = self.t.run(["--issue", "970"])
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, "taom.battle-action-bar.attach"), "FAIL")
+        self.assertIn("MissionScreen=NULL", out)
+
     def test_970_a_build_before_1072_is_not_reached(self):
         # Only the legacy "layer attached" line: that build writes no [Check] line, and the legacy line cannot pass.
         self.t.taom("attach_legacy_only.txt", "2026-10-30_12-57-22")

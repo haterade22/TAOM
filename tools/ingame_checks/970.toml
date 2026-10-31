@@ -20,10 +20,12 @@ pass = ['\[Check\] id=taom\.battle-action-bar\.attach result=pass']
 fail = [
   '\[Check\] id=taom\.battle-action-bar\.attach result=fail',
   '\[BattleActionBar\] layer attach failed',
+  '\[BattleActionBar\] screen init: MissionScreen=NULL',
 ]
 # A battle that ends in deployment, or a session that ends by a crash or a kill before the mission ends, writes no
 # end line, so a missing pass line proves nothing. The view itself writes result=fail reason=never-attached when the
-# mission reached Battle mode with the setting on and the bar never attached.
+# mission reached Battle mode with the setting on and the bar never attached. A view the engine did not register
+# never ticks or finalizes, so it writes no [Check] line: it shows up as "screen init: MissionScreen=NULL".
 absence = "not-reached"
 
 [[check]]

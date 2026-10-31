@@ -298,7 +298,8 @@ A preset is a named copy of the Order of Battle layout: the formation type of ea
   `[Check] id=taom.battle-action-bar.attach` once per mission: `result=pass` when the layer is added and its movie
   loaded; `result=fail` with `reason=exception`, `reason=movie-not-loaded`, or at mission end `reason=never-attached`
   (Battle mode reached with the setting on, and no attach); `result=skip reason=setting-off` when the battle was
-  fought with the setting off. A stance click writes `[Check] id=taom.battle-action-bar.stance result=pass`, once per
+  fought with the setting off. A view the engine did not register (the original #970 bug) never ticks or finalizes,
+  so it writes no `[Check]` line; the reader fails it on `[BattleActionBar] screen init: MissionScreen=NULL`. A stance click writes `[Check] id=taom.battle-action-bar.stance result=pass`, once per
   stance per game session. Still for a person: after Begin battle the cursor is hidden, left-click attacks, right-click
   blocks and the camera follows the mouse; a ground click with the order menu open gives a move order; the clicked
   button highlights; turning the setting off mid-battle removes the bar and turning it on again shows it once.

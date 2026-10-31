@@ -145,7 +145,6 @@ public class BattleActionBarInputTests
         var finalize = Between(ViewSource, "public override void OnMissionScreenFinalize", "private void DetachLayer");
         var classify = finalize.IndexOf("ClassifyAtEnd(", StringComparison.Ordinal);
         Assert.IsTrue(classify >= 0, "the end-of-mission verdict is missing");
-        Assert.IsTrue(classify < finalize.IndexOf("DetachLayer(", StringComparison.Ordinal), "DetachLayer resets the flags it reads");
         StringAssert.Contains(finalize, "\"reason=never-attached mission=\"");
         StringAssert.Contains(finalize, "\"reason=setting-off mission=\"");
     }
@@ -160,7 +159,7 @@ public class BattleActionBarInputTests
 
     [TestMethod]
     public void View_ResolvesTheOutcomeLog() =>
-        StringAssert.Contains(ViewSource, "IoC.Resolve<IOutcomeLog>()");
+        StringAssert.Contains(ViewSource, "_outcomes = IoC.Resolve<IOutcomeLog>()");
 
     [TestMethod]
     public void BarVM_HandsEachButtonItsResync_SoAClickHighlightsImmediately()

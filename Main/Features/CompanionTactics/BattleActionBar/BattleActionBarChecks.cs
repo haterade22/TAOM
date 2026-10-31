@@ -17,7 +17,7 @@ internal static class BattleActionBarChecks
         bool endedInBattle, bool enabledAtEnd)
     {
         if (!fieldBattle || attachedOnce) return AttachEnd.None;
-        if (enabledBattleTickSeen || (endedInBattle && enabledAtEnd)) return AttachEnd.FailNeverAttached;
-        return endedInBattle ? AttachEnd.SkipSettingOff : AttachEnd.None;
+        if (enabledBattleTickSeen) return AttachEnd.FailNeverAttached;
+        return endedInBattle && !enabledAtEnd ? AttachEnd.SkipSettingOff : AttachEnd.None;
     }
 }

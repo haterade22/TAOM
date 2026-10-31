@@ -27,8 +27,10 @@ public class BattleActionBarChecksTests
     [DataRow(true, true, true, true, true, BattleActionBarChecks.AttachEnd.None)]
     // A Battle tick saw the setting on, then it was turned off.
     [DataRow(true, false, true, false, false, BattleActionBarChecks.AttachEnd.FailNeverAttached)]
-    // Ended in Battle with the setting on, and no tick saw it: the view never ticked.
-    [DataRow(true, false, false, true, true, BattleActionBarChecks.AttachEnd.FailNeverAttached)]
+    // Ended in Battle with the setting on, and no Battle tick saw it on: a registered view ticks whenever the screen
+    // is active, so this is a setting turned on in the final frames. An unregistered view never finalizes; its
+    // NULL screen init line is what 970.toml fails on.
+    [DataRow(true, false, false, true, true, BattleActionBarChecks.AttachEnd.None)]
     // Fought with the setting off.
     [DataRow(true, false, false, true, false, BattleActionBarChecks.AttachEnd.SkipSettingOff)]
     // Ended in deployment: proves nothing, setting on or off.
