@@ -1155,7 +1155,7 @@ public class RacePersistenceServiceTests
 
         _sut.RestoreHeroRaces();
 
-        _outcomes.Received(1).Pass(RestoreId, "1", "restored=2 dead_restored=1 wraiths=0 skipped=0 mismatch=0 saved=2");
+        _outcomes.Received(1).Pass(RestoreId, "1", "restored=2 dead_restored=1 dead_seen=1 wraiths=0 skipped=0 mismatch=0 saved=2");
         _outcomes.DidNotReceiveWithAnyArgs().Fail(default, default, default);
     }
 
@@ -1170,7 +1170,7 @@ public class RacePersistenceServiceTests
         _sut.RestoreHeroRaces();
 
         _outcomes.Received(1).Fail(RestoreId, "1",
-            "mismatch=1 first=dead_dwarf:1->0 restored=2 dead_restored=1 wraiths=0 skipped=0 saved=2");
+            "mismatch=1 first=dead_dwarf:1->0 restored=2 dead_restored=1 dead_seen=1 wraiths=0 skipped=0 saved=2");
         _outcomes.DidNotReceiveWithAnyArgs().Pass(default, default, default);
     }
 
@@ -1184,7 +1184,7 @@ public class RacePersistenceServiceTests
 
         _sut.RestoreHeroRaces();
 
-        _outcomes.Received(1).Pass(RestoreId, "1", "restored=1 dead_restored=0 wraiths=0 skipped=0 mismatch=0 saved=1");
+        _outcomes.Received(1).Pass(RestoreId, "1", "restored=1 dead_restored=0 dead_seen=0 wraiths=0 skipped=0 mismatch=0 saved=1");
     }
 
     [TestMethod]
@@ -1199,7 +1199,7 @@ public class RacePersistenceServiceTests
 
         _sut.RestoreHeroRaces();
 
-        _outcomes.Received(1).Pass(RestoreId, "1", "restored=0 dead_restored=0 wraiths=1 skipped=1 mismatch=0 saved=2");
+        _outcomes.Received(1).Pass(RestoreId, "1", "restored=0 dead_restored=0 dead_seen=0 wraiths=1 skipped=1 mismatch=0 saved=2");
     }
 
     [TestMethod]
@@ -1212,7 +1212,7 @@ public class RacePersistenceServiceTests
 
         _heroRosterAdapter.DidNotReceive().SetHeroRace(Arg.Any<string>(), Arg.Any<int>());
         _outcomes.Received(1).Fail(RestoreId, "1",
-            "mismatch=1 first=elf:2->0 restored=0 dead_restored=0 wraiths=0 skipped=0 saved=1");
+            "mismatch=1 first=elf:2->0 restored=0 dead_restored=0 dead_seen=0 wraiths=0 skipped=0 saved=1");
     }
 
     // SetHeroRace reaches the first hero with the id (Hero.FindFirst), so the read-back compares that one.
@@ -1226,7 +1226,33 @@ public class RacePersistenceServiceTests
 
         _sut.RestoreHeroRaces();
 
-        _outcomes.Received(1).Pass(RestoreId, "1", "restored=1 dead_restored=0 wraiths=0 skipped=0 mismatch=0 saved=1");
+        _outcomes.Received(1).Pass(RestoreId, "1", "restored=1 dead_restored=0 dead_seen=0 wraiths=0 skipped=0 mismatch=0 saved=1");
+    }
+
+    // dead_seen counts every dead hero the roster holds, mapped or not, so a load with nothing to restore can
+    // still tell "no dead hero needed restoring" from "the roster has no dead heroes" (the #1011 regression).
+    [TestMethod]
+    public void Restore_DeadHeroesInTheRoster_AreCountedWhetherOrNotTheyNeededRestoring()
+    {
+        CaptureMap(new HeroRaceInfo("elf", 2));
+        _heroRosterAdapter.GetAllHeroRaces().Returns(
+            Roster(new HeroRaceInfo("elf", 2), new HeroRaceInfo("dead_a", 1, false), new HeroRaceInfo("dead_b", 0, false)),
+            Roster(new HeroRaceInfo("elf", 2), new HeroRaceInfo("dead_a", 1, false), new HeroRaceInfo("dead_b", 0, false)));
+
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Pass(RestoreId, "1", "restored=0 dead_restored=0 dead_seen=2 wraiths=0 skipped=0 mismatch=0 saved=1");
+    }
+
+    [TestMethod]
+    public void Restore_RosterWithoutDeadHeroes_ReportsDeadSeenZero()
+    {
+        CaptureMap(new HeroRaceInfo("elf", 2));
+        _heroRosterAdapter.GetAllHeroRaces().Returns(Roster(new HeroRaceInfo("elf", 2)), Roster(new HeroRaceInfo("elf", 2)));
+
+        _sut.RestoreHeroRaces();
+
+        _outcomes.Received(1).Pass(RestoreId, "1", "restored=0 dead_restored=0 dead_seen=0 wraiths=0 skipped=0 mismatch=0 saved=1");
     }
 
     // The latch is once per (id, result, key) for the process, so the load serial never resets.

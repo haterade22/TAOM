@@ -787,11 +787,27 @@ class HeroRace1011Tests(unittest.TestCase):
         self.assertEqual(code, 1, out)
         self.assertEqual(verdict_of(out, self.CAPTURE), "FAIL")
 
-    def test_a_save_with_no_dead_hero_is_not_reached(self):
+    def test_a_save_with_no_dead_hero_fails_capture(self):
         code, out, _ = self.one("race_capture_no_dead.txt")
-        self.assertEqual(code, 4, out)
-        self.assertEqual(verdict_of(out, self.CAPTURE), "NOT REACHED")
-        self.assertIn("reached, but", out)
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.CAPTURE), "FAIL")
+
+    def test_a_later_dead_zero_save_fails_despite_an_earlier_pass_in_the_session(self):
+        code, out, _ = self.one("race_capture_mixed.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.CAPTURE), "FAIL")
+
+    def test_a_load_that_saw_no_dead_hero_fails_restore(self):
+        code, out, _ = self.one("race_load_no_dead_seen.txt")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "FAIL")
+
+    def test_a_regressed_load_fails_even_after_an_older_session_passed(self):
+        self.t.taom("race_load_pass.txt", "2026-10-31_12-00-00")
+        self.t.taom("race_load_no_dead_seen.txt", "2026-10-31_13-00-00")
+        code, out, _ = self.t.run(["--issue", "1011", "--sessions", "2"])
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verdict_of(out, self.RESTORE), "FAIL")
 
     def test_a_corrupt_legend_warning_fails_restore_despite_its_pass_line(self):
         code, out, _ = self.one("race_legend_corrupt.txt")

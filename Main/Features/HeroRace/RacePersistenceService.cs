@@ -176,6 +176,7 @@ public class RacePersistenceService : IRacePersistenceService
         var skippedInvalid = 0;
         var keptWraiths = 0;
         var deadRestored = 0;
+        var deadSeen = 0;
         // The race each map hero should have once the restore is done; wraiths and invalid races have none.
         var expected = new Dictionary<string, int>(StringComparer.Ordinal);
         var heroes = _heroRosterAdapter.GetAllHeroRaces();
@@ -185,6 +186,8 @@ public class RacePersistenceService : IRacePersistenceService
 
         foreach (var hero in heroes)
         {
+            if (!hero.IsAlive)
+                deadSeen++;
             if (!_heroRaceMap.TryGetValue(hero.StringId, out var savedRace))
                 continue;
 
@@ -257,8 +260,8 @@ public class RacePersistenceService : IRacePersistenceService
             _logger.LogInfo($"RacePersistenceService: kept the XML race for {keptWraiths} Ringwraiths (#644).");
         _logger.LogInfo($"RacePersistenceService: Restored race for {restoredCount} heroes.");
 
-        var counts = string.Format(Invariant, "restored={0} dead_restored={1} wraiths={2} skipped={3}",
-            restoredCount, deadRestored, keptWraiths, skippedInvalid);
+        var counts = string.Format(Invariant, "restored={0} dead_restored={1} dead_seen={2} wraiths={3} skipped={4}",
+            restoredCount, deadRestored, deadSeen, keptWraiths, skippedInvalid);
         var saved = _heroRaceMap.Count.ToString(Invariant);
         var mismatches = CountMismatches(expected, out var first);
         if (mismatches == 0)

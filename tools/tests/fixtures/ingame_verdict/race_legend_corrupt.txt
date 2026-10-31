@@ -1,4 +1,4 @@
 [2026-10-31 13:00:40] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
 [2026-10-31 13:00:40] [WARNING] RacePersistenceService: saved race 17 for hero 'lord_1_1' is outside the save's 15-entry race legend (corrupt save data?); falling back to current XML race.
-[2026-10-31 13:00:40] [INFO] [Check] id=taom.race-persist.restore result=pass restored=36 dead_restored=2 wraiths=9 skipped=1 mismatch=0 saved=1834
+[2026-10-31 13:00:40] [INFO] [Check] id=taom.race-persist.restore result=pass restored=36 dead_restored=2 dead_seen=214 wraiths=9 skipped=1 mismatch=0 saved=1834
 [2026-10-31 13:00:40] [INFO] [Shutdown] clean module unload

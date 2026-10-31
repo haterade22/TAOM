@@ -17,22 +17,28 @@ id = "taom.race-persist.capture"
 needs = "save a running campaign (any TAOM campaign has a dead hero from day 0)"
 reached = ['\[Check\] id=taom\.race-persist\.capture result=pass ']
 pass = ['\[Check\] id=taom\.race-persist\.capture result=pass heroes=[0-9]+ dead=[1-9][0-9]*$']
-fail = ['\[Check\] id=taom\.race-persist\.capture result=fail']
+fail = [
+  '\[Check\] id=taom\.race-persist\.capture result=fail',
+  '\[Check\] id=taom\.race-persist\.capture result=pass heroes=[0-9]+ dead=0$',
+]
 # Every TAOM campaign starts with a dead hero (lord_E6_2, alive="false" in characters/heroes.xml), so a pass
-# line with dead=0 means the roster lost its dead heroes, the #1011 regression. The reader reports it as
-# NOT REACHED with the line shown; read it as a failure, not as a save that needs a hero to die first.
+# line with dead=0 means the roster lost its dead heroes, the #1011 regression. It fails the check, and a
+# fail pattern wins over a pass line from another save in the same session.
 absence = "not-reached"
 
 [[check]]
 id = "taom.race-persist.restore"
 needs = "on a build with the fix: change a hero's race (for example the player's child), let them die, save, then load that save"
 reached = ['\[Check\] id=taom\.race-persist\.restore result=pass ']
-pass = ['\[Check\] id=taom\.race-persist\.restore result=pass restored=[0-9]+ dead_restored=[1-9][0-9]* wraiths=[0-9]+ skipped=[0-9]+ mismatch=0 saved=[0-9]+$']
+pass = ['\[Check\] id=taom\.race-persist\.restore result=pass restored=[0-9]+ dead_restored=[1-9][0-9]* dead_seen=[0-9]+ wraiths=[0-9]+ skipped=[0-9]+ mismatch=0 saved=[0-9]+$']
 fail = [
   '\[Check\] id=taom\.race-persist\.restore result=fail',
+  '\[Check\] id=taom\.race-persist\.restore result=pass restored=[0-9]+ dead_restored=[0-9]+ dead_seen=0 ',
   '\[WARNING\] RacePersistenceService: saved race -?[0-9]+ for hero \S+ is outside the save',
 ]
-# A load where no dead hero needed restoring proves nothing. A new campaign, and a save older than
+# A load where no dead hero needed restoring proves nothing, unless the roster held no dead hero at all
+# (dead_seen=0, the same regression seen from the load side): that fails, so a load-only session cannot
+# leave an older session's pass standing. A new campaign, and a save older than
 # RacePersistenceBehavior (the engine gives it no SyncData), write result=skip with reason=new-campaign or
 # reason=no-record; the reader prints the reason because the reached pattern matches pass lines only.
 absence = "not-reached"
