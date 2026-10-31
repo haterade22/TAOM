@@ -4,6 +4,8 @@
 [2026-10-30 13:09:13] [INFO] [BattleLoad] seq=6 t=+55343ms phase=MissionOpenNewDone mission='Battle' created=True
 [2026-10-30 13:09:25] [INFO] [BattleActionBar] screen init: MissionScreen=set mode=Deployment enabled=True
 [2026-10-30 13:09:58] [INFO] [BattleActionBar] mission init — layer attached
+[2026-10-30 13:09:58] [INFO] [Check] id=taom.battle-action-bar.attach result=pass mission=1
+[2026-10-30 13:12:41] [INFO] [Check] id=taom.battle-action-bar.stance result=pass stance=PikeWall formation=0
 [2026-10-30 13:20:13] [INFO] [BattleLoad] seq=9 t=+54585ms phase=MissionOpenNew mission='Battle' scene='battle_terrain_r' encountered='Corsairs of Umbar' side=Defender main=1 enemy=24
 [2026-10-30 13:20:13] [INFO] [BattleLoad] seq=10 t=+55343ms phase=MissionOpenNewDone mission='Battle' created=True
 [2026-10-30 13:20:25] [INFO] [BattleActionBar] screen init: MissionScreen=set mode=Deployment enabled=True

@@ -26,10 +26,20 @@ public sealed class BattleActionBarMissionView : MissionView
 {
     private const float RefreshIntervalSec = 0.5f;
 
+    // The [Check] key (#1072): counts every mission screen of the process. Main thread only.
+    private static int _missionSerial;
+
     private ICompanionTacticsSettingsProvider? _settings;
     private IBattleActionBarService? _service;
     private ITroopStanceManager? _stances;
     private IModLogger? _logger;
+    private IOutcomeLog? _outcomes;
+
+    // Per mission (the engine builds a new view for each): the attach check's verdict at OnMissionScreenFinalize.
+    private string _missionKey = "";
+    private bool _fieldBattle;
+    private bool _attachedOnce;
+    private bool _enabledBattleTick;
 
     private GauntletLayer? _layer;
     private GauntletMovieIdentifier? _movie;
@@ -45,6 +55,9 @@ public sealed class BattleActionBarMissionView : MissionView
         _service = IoC.Resolve<IBattleActionBarService>();
         _stances = IoC.Resolve<ITroopStanceManager>();
         _logger = IoC.Resolve<IModLogger>();
+        _outcomes = IoC.Resolve<IOutcomeLog>();
+        _missionKey = (++_missionSerial).ToString(System.Globalization.CultureInfo.InvariantCulture);
+        _fieldBattle = Mission.IsFieldBattle;
 
         if (Mission.IsFieldBattle)
         {
@@ -71,10 +84,18 @@ public sealed class BattleActionBarMissionView : MissionView
             MissionScreen.AddLayer(_layer);
             _isInitialized = true;
             _logger?.LogInfo("[BattleActionBar] mission init — layer attached");
+            _attachedOnce = true;
+            // LoadMovie does not throw for a missing prefab (WidgetFactory.GetCustomType returns null), so check it loaded.
+            if (_movie.Movie?.IsLoaded == true)
+                _outcomes?.Pass(BattleActionBarChecks.AttachId, _missionKey, "mission=" + _missionKey);
+            else
+                _outcomes?.Fail(BattleActionBarChecks.AttachId, _missionKey, "reason=movie-not-loaded mission=" + _missionKey);
         }
         catch (System.Exception ex)
         {
             _logger?.LogError($"[BattleActionBar] layer attach failed: {ex.Message}");
+            _outcomes?.Fail(BattleActionBarChecks.AttachId, _missionKey,
+                "reason=exception mission=" + _missionKey + " type=" + ex.GetType().Name + " message=" + ex.Message);
         }
     }
 
@@ -92,6 +113,7 @@ public sealed class BattleActionBarMissionView : MissionView
         }
         if (!_isInitialized)
         {
+            if (Mission.Mode == MissionMode.Battle) _enabledBattleTick = true;
             // Mode is Deployment at screen init in a field battle (DeploymentHandler.cs:41): attach on the first Battle tick.
             if (_attachAttempted || !ShouldAttach(true, Mission.IsFieldBattle, Mission.Mode)) return;
             _attachAttempted = true;
@@ -110,6 +132,14 @@ public sealed class BattleActionBarMissionView : MissionView
 
     public override void OnMissionScreenFinalize()
     {
+        // MissionScreen calls this from Mission.EndMissionInternal before the mission is over, so its mode is still set.
+        var end = BattleActionBarChecks.ClassifyAtEnd(_fieldBattle, _attachedOnce, _enabledBattleTick,
+            endedInBattle: Mission?.Mode == MissionMode.Battle, enabledAtEnd: _settings?.ShowBattleActionBar == true);
+        if (end == BattleActionBarChecks.AttachEnd.FailNeverAttached)
+            _outcomes?.Fail(BattleActionBarChecks.AttachId, _missionKey, "reason=never-attached mission=" + _missionKey);
+        else if (end == BattleActionBarChecks.AttachEnd.SkipSettingOff)
+            _outcomes?.Skip(BattleActionBarChecks.AttachId, _missionKey, "reason=setting-off mission=" + _missionKey);
+
         if (_isInitialized)
         {
             _stances?.ClearAllStances();

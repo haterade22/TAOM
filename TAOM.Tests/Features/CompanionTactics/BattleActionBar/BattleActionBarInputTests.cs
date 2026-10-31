@@ -106,7 +106,8 @@ public class BattleActionBarInputTests
         var analyzer = Substitute.For<IFormationCompositionAnalyzer>();
         analyzer.Analyze(Arg.Any<IFormationAdapter>()).Returns(new FormationComposition(false, true, false, false, false, false));
         var stances = Substitute.For<ITroopStanceManager>();
-        var sut = new BattleActionBarService(settings, analyzer, stances, Substitute.For<IModLogger>());
+        var outcomes = Substitute.For<IOutcomeLog>();
+        var sut = new BattleActionBarService(settings, analyzer, stances, Substitute.For<IModLogger>(), outcomes);
         var formation = Substitute.For<IFormationAdapter>();
         formation.FormationIndex.Returns(2);
 
@@ -115,7 +116,51 @@ public class BattleActionBarInputTests
         brace.Execute();
 
         stances.DidNotReceiveWithAnyArgs().SetStance(default, default);
+        outcomes.DidNotReceiveWithAnyArgs().Pass(default!, default!, default!);
     }
+
+    private static string Between(string src, string from, string to)
+    {
+        var start = src.IndexOf(from, StringComparison.Ordinal);
+        Assert.IsTrue(start >= 0, from);
+        var end = src.IndexOf(to, start, StringComparison.Ordinal);
+        Assert.IsTrue(end > start, to);
+        return src.Substring(start, end - start);
+    }
+
+    [TestMethod]
+    public void View_AttachCheck_PassesOnlyForALoadedMovie()
+    {
+        // GauntletLayer.LoadMovie does not throw for a missing prefab, so "layer attached" alone proves nothing.
+        var attach = Between(ViewSource, "private void TryAttachLayer", "public override void OnMissionScreenTick");
+        StringAssert.Contains(attach, "Movie?.IsLoaded == true");
+        StringAssert.Contains(attach, "BattleActionBarChecks.AttachId");
+        StringAssert.Contains(attach, "\"reason=movie-not-loaded mission=\"");
+        StringAssert.Contains(attach, "\"reason=exception mission=\"");
+    }
+
+    [TestMethod]
+    public void View_EndOfMission_ClassifiesBeforeDetaching()
+    {
+        var finalize = Between(ViewSource, "public override void OnMissionScreenFinalize", "private void DetachLayer");
+        var classify = finalize.IndexOf("ClassifyAtEnd(", StringComparison.Ordinal);
+        Assert.IsTrue(classify >= 0, "the end-of-mission verdict is missing");
+        Assert.IsTrue(classify < finalize.IndexOf("DetachLayer(", StringComparison.Ordinal), "DetachLayer resets the flags it reads");
+        StringAssert.Contains(finalize, "\"reason=never-attached mission=\"");
+        StringAssert.Contains(finalize, "\"reason=setting-off mission=\"");
+    }
+
+    [TestMethod]
+    public void View_Tick_WritesNoOutcomeLine()
+    {
+        // Per frame: a bool store at most, never a line.
+        var tick = Between(ViewSource, "public override void OnMissionScreenTick", "public override void OnMissionScreenFinalize");
+        Assert.IsFalse(tick.Contains("_outcomes"), "the tick writes an outcome");
+    }
+
+    [TestMethod]
+    public void View_ResolvesTheOutcomeLog() =>
+        StringAssert.Contains(ViewSource, "IoC.Resolve<IOutcomeLog>()");
 
     [TestMethod]
     public void BarVM_HandsEachButtonItsResync_SoAClickHighlightsImmediately()

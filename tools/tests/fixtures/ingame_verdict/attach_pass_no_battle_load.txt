@@ -2,5 +2,7 @@
 [2026-10-30 12:57:23] [INFO] [BuildStamp] TAOM=v2.0.0.0 build.20261030-175608Z+2434d62aa33776fae18839632e30781bcbbde5e4 TAOM.Dependencies=v0.1.0.0 build.20261030-175606Z+2434d62aa33776fae18839632e30781bcbbde5e4 (pair OK)
 [2026-10-30 13:09:25] [INFO] [BattleActionBar] screen init: MissionScreen=set mode=Deployment enabled=True
 [2026-10-30 13:09:58] [INFO] [BattleActionBar] mission init — layer attached
+[2026-10-30 13:09:58] [INFO] [Check] id=taom.battle-action-bar.attach result=pass mission=1
+[2026-10-30 13:12:41] [INFO] [Check] id=taom.battle-action-bar.stance result=pass stance=PikeWall formation=0
 [2026-10-30 13:28:22] [INFO] [MemSample] privMB=10137 wsMB=6058 heapMB=281 sysCommitUsedMB=100135 sysCommitLimitMB=128662 availPhysMB=17641 memLoad=72%
 [2026-10-30 13:28:27] [INFO] [Shutdown] clean module unload

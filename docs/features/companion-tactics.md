@@ -292,10 +292,16 @@ A preset is a named copy of the Order of Battle layout: the formation type of ea
   view shows a cursor, such as the Esc menu. Make it usable when stances do something: for example show the cursor on the
   bar's layer while the order menu is open, as vanilla deployment does.
 - **Known, LOW:** a sally-out sortie is not a field battle for the bar (`Mission.IsFieldBattle`); not changed here.
-- **In-game check owed** (turn `Show Battle Action Bar` on first): the log shows `[BattleActionBar] screen init` at load;
-  after Begin battle the cursor is hidden, left-click attacks, right-click blocks and the camera follows the mouse; a ground
-  click with the order menu open gives a move order; with Esc open, clicking a bar button highlights it; turning the
-  setting off mid-battle removes the bar and turning it on again shows it once.
+- **In-game check owed** (turn `Show Battle Action Bar` on first): in a field battle press Begin battle, select a
+  formation with polearms, shields or cavalry, press Esc and click Brace for Cavalry, Pike Wall, Testudo, Line Charge
+  or Skirmish; then `python tools/ingame_verdict.py --issue 970` reads the session log (#1072). The view writes
+  `[Check] id=taom.battle-action-bar.attach` once per mission: `result=pass` when the layer is added and its movie
+  loaded; `result=fail` with `reason=exception`, `reason=movie-not-loaded`, or at mission end `reason=never-attached`
+  (Battle mode reached with the setting on, and no attach); `result=skip reason=setting-off` when the battle was
+  fought with the setting off. A stance click writes `[Check] id=taom.battle-action-bar.stance result=pass`, once per
+  stance per game session. Still for a person: after Begin battle the cursor is hidden, left-click attacks, right-click
+  blocks and the camera follows the mouse; a ground click with the order menu open gives a move order; the clicked
+  button highlights; turning the setting off mid-battle removes the bar and turning it on again shows it once.
 
 ---
 

@@ -1,13 +1,12 @@
 # In-game checks for #970, read by tools/ingame_verdict.py. The lines come from
 # Client/Features/CompanionTactics/BattleActionBar/Hooks/BattleActionBarMissionView.cs: "screen init" in
-# OnMissionScreenInitialize (field battles only), "mission init ... layer attached" and "layer attach failed"
-# in TryAttachLayer, which runs on the first Battle-mode tick.
-#
-# A later phase of #1069 adds the [Check] lines: an attach check over
-# "[Check] id=taom.battle-action-bar.attach result=pass|fail|skip", and a stance check once a stance
-# button logs its outcome. No source emits either today, so this manifest does not name them yet.
+# OnMissionScreenInitialize (field battles only) and "layer attach failed" in TryAttachLayer, plus the
+# taom.battle-action-bar.attach [Check] lines (#1072): pass or fail in TryAttachLayer, which runs on the first
+# Battle-mode tick, and fail reason=never-attached or skip reason=setting-off in OnMissionScreenFinalize.
+# taom.battle-action-bar.stance comes from the stance actions in
+# Main/Features/CompanionTactics/BattleActionBar/BattleActionBarService.cs.
 issue = 970
-title = "Battle action bar attaches in a field battle"
+title = "Battle action bar attaches in a field battle and takes a stance click"
 fixed_in = "40385aa5b"   # the second of the two fix commits the issue names (d96f349f1, 40385aa5b)
 logs = ["taom"]
 
@@ -15,11 +14,23 @@ logs = ["taom"]
 id = "taom.battle-action-bar.attach"
 needs = "a field battle with Show Battle Action Bar on (Battle Tactics, Battle Action Bar; off by default); press Begin battle"
 reached = ['\[BattleActionBar\] screen init: MissionScreen=set .*enabled=True']
-pass = ['\[BattleActionBar\] mission init \S+ layer attached']
-fail = ['\[BattleActionBar\] layer attach failed']
-# A battle that ends, crashes or has the bar turned off while still in deployment logs "screen init" and never
-# tries the attach, and no line marks the end of deployment; so the missing attach line proves nothing and only
-# "layer attach failed" is a FAIL, until a later phase logs result=fail reason=never-attached.
+# Only the [Check] line passes: "layer attached" is also written when the bar's movie failed to load. A build from
+# before #1072 writes no [Check] line, so its battles are NOT REACHED here.
+pass = ['\[Check\] id=taom\.battle-action-bar\.attach result=pass']
+fail = [
+  '\[Check\] id=taom\.battle-action-bar\.attach result=fail',
+  '\[BattleActionBar\] layer attach failed',
+]
+# A battle that ends in deployment, or a session that ends by a crash or a kill before the mission ends, writes no
+# end line, so a missing pass line proves nothing. The view itself writes result=fail reason=never-attached when the
+# mission reached Battle mode with the setting on and the bar never attached.
+absence = "not-reached"
+
+[[check]]
+id = "taom.battle-action-bar.stance"
+needs = "in that battle, select a formation with polearms, shields or cavalry (keys 1 to 8), press Esc and click Brace for Cavalry, Pike Wall, Testudo, Line Charge or Skirmish (Hold Fire, Free Fire, Volley Fire and Shield Wall record nothing)"
+reached = ['\[Check\] id=taom\.battle-action-bar\.attach result=pass']
+pass = ['\[Check\] id=taom\.battle-action-bar\.stance result=pass']
 absence = "not-reached"
 
 [[human]]
@@ -33,3 +44,6 @@ claim = "a ground click with the order menu open gives a move order"
 
 [[human]]
 claim = "turning the setting off mid-battle removes the bar, and turning it on again shows it once"
+
+[[human]]
+claim = "the bar is drawn and readable once a formation is selected, with buttons that fit its troops"
