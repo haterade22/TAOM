@@ -4,6 +4,7 @@ using BehaviorTreeWrapper.AbstractDecoratorsListeners;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
+using TAOM.Core.Logging;
 
 namespace BehaviorTreeWrapper;
 
@@ -53,20 +54,29 @@ public class BehaviorTreeBannerlordWrapper : IDisposable
         var logic = CurrentMissionLogic;
         if (logic == null)
         {
-            InformationManager.DisplayMessage(new InformationMessage("Error adding a tree: no current MissionLogic"));
+            const string message = "Error adding a tree: no current MissionLogic";
+            InformationManager.DisplayMessage(new InformationMessage(message));
+            Outcomes.Swallowed("BehaviorTreeWrapper", "BehaviorTreeBannerlordWrapper.AddBehaviorTree.NoMissionLogic",
+                new InvalidOperationException(message));
             return null;
         }
         var agent = (Agent)args[0];
         if (logic.trees.TryGetValue(agent, out _))
         {
-            InformationManager.DisplayMessage(new InformationMessage("Error adding a tree to " + agent.Name + " as it already exists"));
+            var message = "Error adding a tree to " + agent.Name + " as it already exists";
+            InformationManager.DisplayMessage(new InformationMessage(message));
+            Outcomes.Swallowed("BehaviorTreeWrapper", "BehaviorTreeBannerlordWrapper.AddBehaviorTree.DuplicateTree",
+                new InvalidOperationException(message));
         }
         try
         {
             var behaviorTree = BTRegister.Build(treeName, args);
             if (behaviorTree == null)
             {
-                InformationManager.DisplayMessage(new InformationMessage("Error building a tree with name " + treeName));
+                var message = "Error building a tree with name " + treeName;
+                InformationManager.DisplayMessage(new InformationMessage(message));
+                Outcomes.Swallowed("BehaviorTreeWrapper", "BehaviorTreeBannerlordWrapper.AddBehaviorTree.UnknownTree",
+                    new InvalidOperationException(message));
                 return null;
             }
             logic.trees[agent] = behaviorTree;
@@ -74,6 +84,7 @@ public class BehaviorTreeBannerlordWrapper : IDisposable
         }
         catch (Exception ex)
         {
+            Outcomes.Swallowed("BehaviorTreeWrapper", "BehaviorTreeBannerlordWrapper.AddBehaviorTree.BuildThrew", ex);
             InformationManager.DisplayMessage(new InformationMessage("Error building a tree " + treeName + " for " + agent.Name + ". Message " + ex.Message));
             return null;
         }

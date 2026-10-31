@@ -42,7 +42,8 @@ public static class FaceGenVM_Refresh_RaceFilter_Patch
     private static ICultureRaceFilterService ResolveFilterService()
     {
         if (_filterService != null) return _filterService;
-        try { _filterService = IoC.Resolve<ICultureRaceFilterService>(); } catch { /* IoC not ready */ }
+        try { _filterService = IoC.Resolve<ICultureRaceFilterService>(); }
+        catch (Exception ex) { Outcomes.Swallowed("CharacterCreation", "FaceGenVM_Refresh_RaceFilter_Patch.ResolveFilterService", ex); }
         return _filterService;
     }
 
@@ -52,7 +53,7 @@ public static class FaceGenVM_Refresh_RaceFilter_Patch
     {
         if (_playerSwitchSession != null) return _playerSwitchSession;
         try { _playerSwitchSession = IoC.Resolve<TAOM.Features.PlayerSwitcher.IPlayerSwitchSession>(); }
-        catch { /* IoC not ready */ }
+        catch (Exception ex) { Outcomes.Swallowed("CharacterCreation", "FaceGenVM_Refresh_RaceFilter_Patch.ResolvePlayerSwitchSession", ex); }
         return _playerSwitchSession;
     }
 
@@ -62,14 +63,15 @@ public static class FaceGenVM_Refresh_RaceFilter_Patch
     {
         if (_factionPresets != null) return _factionPresets;
         try { _factionPresets = IoC.Resolve<TAOM.Features.FactionUI.Presets.FactionPresetService>(); }
-        catch { /* IoC not ready */ }
+        catch (Exception ex) { Outcomes.Swallowed("CharacterCreation", "FaceGenVM_Refresh_RaceFilter_Patch.ResolveFactionPresets", ex); }
         return _factionPresets;
     }
 
     private static IModLogger ResolveLogger()
     {
         if (_logger != null) return _logger;
-        try { _logger = IoC.Resolve<IModLogger>(); } catch { /* IoC not ready */ }
+        try { _logger = IoC.Resolve<IModLogger>(); }
+        catch (Exception ex) { Outcomes.Swallowed("CharacterCreation", "FaceGenVM_Refresh_RaceFilter_Patch.ResolveLogger", ex); }
         return _logger;
     }
 }

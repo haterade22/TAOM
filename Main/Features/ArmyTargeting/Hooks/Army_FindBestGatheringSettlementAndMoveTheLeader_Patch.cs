@@ -1,5 +1,6 @@
 using System;
 using HarmonyLib;
+using TAOM.Core.Logging;
 using TAOM.Dependencies.Foundation;
 using TAOM.Features.ArmyTargeting.Diagnostics;
 using Helpers;
@@ -71,9 +72,10 @@ public static class Army_FindBestGatheringSettlementAndMoveTheLeader_Patch
             _diagnostics ??= IoC.Resolve<ISiegeGatheringDiagnosticsService>();
             _diagnostics?.Record(SiegeGatheringFailureInfo.FromArmy(__instance, focusSettlement));
         }
-        catch
+        catch (Exception ex)
         {
             // IoC not ready / diagnostics failure must never re-throw out of a Finalizer.
+            Outcomes.Swallowed("ArmyTargeting", "Army_FindBestGatheringSettlementAndMoveTheLeader_Patch.Finalizer", ex);
         }
 
         return null; // swallow: the map tick continues, no CTD
@@ -105,8 +107,9 @@ public static class Army_FindBestGatheringSettlementAndMoveTheLeader_Patch
                 objectiveMissing: army.AiBehaviorObject == null,
                 fallbackMissing: () => SettlementHelper.FindNearestFortificationToMobileParty(leader, leader.NavigationCapability) == null);
         }
-        catch
+        catch (Exception ex)
         {
+            Outcomes.Swallowed("ArmyTargeting", "Army_FindBestGatheringSettlementAndMoveTheLeader_Patch.ReachedKnownDeadEnd", ex);
             return false;
         }
     }

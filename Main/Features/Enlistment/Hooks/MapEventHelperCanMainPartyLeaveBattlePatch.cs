@@ -61,7 +61,7 @@ public static class MapEventHelperCanMainPartyLeaveBattlePatch
             {
                 _faultLogged = true;
                 try { IoC.Resolve<IModLogger>().LogError($"[Enlistment] CanMainPartyLeaveBattleCommonCondition postfix failed (failing open): {ex.Message}"); }
-                catch { /* fail open — never break the encounter menu */ }
+                catch { /* swallow-ok: the logger itself threw; the postfix still fails open */ }
             }
         }
     }
