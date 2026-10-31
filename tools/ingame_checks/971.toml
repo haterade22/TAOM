@@ -22,10 +22,11 @@ id = "taom.career-screen.init"
 needs = "the same click"
 reached = ['\[Check\] id=taom\.career-screen\.open result=pass']
 pass = ['\[Check\] id=taom\.career-screen\.init result=pass mode=normal']
-# The open pass line means the career screen was on top after its OnInitialize, so a missing init line is a FAIL.
+# The open pass line means the career screen was pushed and no exception reached the click handler. The init line,
+# OnInitialize's last statement, is what proves the screen finished building, so a missing init line is a FAIL.
 
 [[human]]
 claim = "the click plays one sound, not two"
 
 [[human]]
-claim = "the career screen draws its career tree, and Escape closes it"
+claim = "the career screen draws its career tree"

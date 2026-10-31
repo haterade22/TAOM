@@ -35,7 +35,7 @@ public static class ViewModel_ExecuteCommand_CareerScreen_Patch
                 throw;
             }
 
-            // OpenCareerScreen pushes the screen and runs its OnInitialize before it returns.
+            // OpenCareerScreen pushes the screen before it returns; only the init line proves OnInitialize finished.
             if (ScreenManager.TopScreen is GauntletCareerScreen)
                 Outcomes.Pass(CareerScreenChecks.OpenId, "", CareerScreenChecks.OpenPassDetail);
             else

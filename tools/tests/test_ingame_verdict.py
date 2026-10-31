@@ -744,7 +744,7 @@ class Issue971Tests(unittest.TestCase):
         self.assertEqual(verdict_of(out, self.OPEN), "PASS")
         self.assertEqual(verdict_of(out, self.INIT), "PASS")
         self.assertIn("the click plays one sound, not two", out)
-        self.assertIn("the career screen draws its career tree, and Escape closes it", out)
+        self.assertIn("- the career screen draws its career tree\n", out)
 
     def test_a_click_that_throws_fails_open_and_leaves_init_not_reached(self):
         code, out, _ = self.judge("career_open_threw.txt")

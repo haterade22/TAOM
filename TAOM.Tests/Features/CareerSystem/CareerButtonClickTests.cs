@@ -125,6 +125,11 @@ public class CareerButtonClickTests
         var pass = tokens.IndexOf(PassCall);
         Assert.IsTrue(open >= 0 && top > open, "The top screen is read after the open: " + string.Join(" | ", tokens));
         Assert.IsTrue(pass > top, "The pass follows the top screen test: " + string.Join(" | ", tokens));
+        // The fingerprint drops type operands, so the `is GauntletCareerScreen` test is read from the type tokens.
+        CollectionAssert.Contains(IlCallScanner.ExtractReferencedMembers(postfix, postfix.GetMethodBody()!.GetILAsByteArray()!)
+            .OfType<Type>().ToList(), typeof(GauntletCareerScreen), "The pass must test the top screen's type, not just that one exists.");
+        // The catch handler comes before the after-try code in IL, so the last fail is the not-on-top one.
+        Assert.IsTrue(tokens.LastIndexOf(FailCall) > top, "A top screen that is not the career screen must fail: " + string.Join(" | ", tokens));
         CollectionAssert.Contains(tokens, "ldstr \"taom.career-screen.open\"");
         CollectionAssert.Contains(tokens, "ldstr \"source=button\"");
 
