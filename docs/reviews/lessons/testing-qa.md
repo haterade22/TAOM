@@ -2426,3 +2426,12 @@ The C6 fix labelled own-side blows first on the zero-damage branch of the Fords 
 - **Why missed:** the test covered the case that triggered the fix and fed the other branches inputs that could not collide with the new label.
 - **Prevent:** when a fix adds a label for one branch of a classifier, test the precedence with inputs that reach every branch (here an own-side attacker on a locked and on a fallen tower), not only the case that triggered the fix.
 - **Source:** `docs/reviews/rca-fords-of-war-2026-10-31.md`, re-review addendum, row C9.
+### A state with entry and stay bands needs entry inside stay on every path into it (Fords of War, 2026-11-01)
+The Fords lane siege entered when the lead was within 45 m or past the tower, and stayed while the lead was within 60 m.
+A lead past the tower and more than 60 m away entered, failed the stay test on the next tick and re-entered, so the
+order alternated every frame; after a first fix, the past-the-tower path still entered at the 60 m stay line itself.
+- **Why missed:** every test entered the state at one point (10 m from the tower), so only one of the paths into the
+  state was tested, and the hysteresis test moved the counts, never the distance.
+- **Prevent:** for each condition that can start the state, test entry and the next tick at the stay boundary, on
+  either side of it, and assert the decision does not change; write the entry test as a strict subset of the stay test.
+- **Source:** `docs/reviews/rca-fords-of-war-2026-10-31.md`, balance addendum, rows S1 and S3.

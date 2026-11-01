@@ -315,10 +315,14 @@ public class FordsMatchTests
         Assert.AreEqual(1, later.Volleys.Count);
     }
 
+    // The regen tests below prove the mechanic with round timings: they pin 15/s after 20 s, not the shipped balance.
+    private static FordsMatchConfig OldRegen() =>
+        Config(c => c with { Towers = c.Towers with { RegenPerSecond = 15f, RegenDelaySeconds = 20f } });
+
     [TestMethod]
     public void Tick_DamagedTower_RegeneratesAfterTheDelayAndReportsTheHeal()
     {
-        var match = Create();
+        var match = Create(OldRegen());
         match.AdjustTowerDamage(new TowerHit(FordsTestLayout.EastOuter0, false, UnitRole.Infantry, 100));
 
         var quiet = match.Tick(Snap(15f));
@@ -334,7 +338,7 @@ public class FordsMatchTests
     [TestMethod]
     public void AdjustTowerDamage_HitFromTheTowersOwnSide_ChangesNothingAndLeavesTheRegenClockAlone()
     {
-        var match = Create();
+        var match = Create(OldRegen());
         match.AdjustTowerDamage(new TowerHit(FordsTestLayout.EastOuter0, false, UnitRole.Infantry, 100));
         match.Tick(Snap(15f));
 

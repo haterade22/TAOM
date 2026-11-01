@@ -29,9 +29,12 @@ public class LaneMarchRulesTests
         float towerDistance = float.MaxValue,
         bool towerLocked = false,
         float? leadX = null,
-        float centerTowerDistance = float.MaxValue) =>
+        float centerTowerDistance = float.MaxValue,
+        int nearAttackers = -1,
+        int nearDefenders = -1) =>
         new(side, lane, order, live, center ?? new Vec3f(100f, 0f, 0f), nearestEnemy, towerId, towerDistance, towerLocked,
-            leadX == null ? null : new Vec3f(leadX.Value, lane * 50f, 0f), leadX ?? 0f, leadX == null ? 0 : 7, centerTowerDistance);
+            leadX == null ? null : new Vec3f(leadX.Value, lane * 50f, 0f), leadX ?? 0f, leadX == null ? 0 : 7, centerTowerDistance,
+            nearAttackers, nearDefenders);
 
     // 1. No units
 
@@ -739,6 +742,223 @@ public class LaneMarchRulesTests
         Assert.AreEqual(new Vec3f(250f, 0f, 0f), d.Lead);
         Assert.AreEqual(250f, d.LeadArc, 1e-3f);
         Assert.AreEqual(9, d.LeadCount);
+    }
+
+    // 5. Siege: local strength at the tower decides between the defenders and the tower
+
+    private static LaneSituation Siege(int attackers, int defenders, float towerDistance = 10f, float nearestEnemy = 5f,
+        MatchSide side = MatchSide.West, int lane = 0, LaneOrder order = LaneOrder.Push, bool locked = false,
+        string? tower = null) =>
+        Situation(side: side, lane: lane, order: order, nearestEnemy: nearestEnemy, towerId: tower ?? FordsTestLayout.EastOuter0,
+            towerDistance: towerDistance, towerLocked: locked, nearAttackers: attackers, nearDefenders: defenders);
+
+    private static readonly LaneCommand AttackOuter0 = LaneCommand.AttackTower(FordsTestLayout.EastOuter0);
+
+    [TestMethod]
+    public void Decide_LocalSuperiorityAtTheTowerWithAnEnemyNear_AttacksTheTower()
+    {
+        var (rules, _) = Setup();
+
+        var d = rules.Evaluate(Siege(30, 20));
+
+        Assert.AreEqual(AttackOuter0, d.Command);
+        Assert.IsTrue(d.Siege);
+    }
+
+    [TestMethod]
+    public void Decide_NoDefendersAndOneAttacker_Enters()
+    {
+        var (rules, _) = Setup();
+
+        Assert.AreEqual(AttackOuter0, rules.Decide(Siege(1, 0)));
+    }
+
+    [TestMethod]
+    public void Decide_RatioBelowOnePointFive_Charges()
+    {
+        var (rules, _) = Setup();
+
+        Assert.AreEqual(LaneCommand.Charge, rules.Decide(Siege(29, 20)));
+    }
+
+    [TestMethod]
+    public void Decide_LeadFiftyMetersFromTheTowerNotPastIt_Charges()
+    {
+        var (rules, _) = Setup();
+
+        Assert.AreEqual(LaneCommand.Charge, rules.Decide(Siege(30, 20, towerDistance: 50f)));
+    }
+
+    [TestMethod]
+    public void Decide_HoldFallBackAndLockedTower_NoSiege()
+    {
+        var (rules, _) = Setup();
+
+        Assert.IsFalse(rules.Evaluate(Siege(30, 20, order: LaneOrder.Hold)).Siege);
+        Assert.IsFalse(rules.Evaluate(Siege(30, 20, order: LaneOrder.FallBack)).Siege);
+        var locked = rules.Evaluate(Siege(30, 20, locked: true));
+        Assert.IsFalse(locked.Siege);
+        Assert.AreEqual(LaneCommand.Charge, locked.Command);
+    }
+
+    [TestMethod]
+    public void Decide_SiegeHysteresis_StaysAtParityLeavesBelowAndNeedsTheFullRatioToReturn()
+    {
+        var (rules, _) = Setup();
+
+        Assert.AreEqual(AttackOuter0, rules.Decide(Siege(30, 20)));
+        Assert.AreEqual(AttackOuter0, rules.Decide(Siege(22, 20)));
+        Assert.AreEqual(AttackOuter0, rules.Decide(Siege(20, 20)));
+        Assert.AreEqual(LaneCommand.Charge, rules.Decide(Siege(19, 20)));
+        Assert.AreEqual(LaneCommand.Charge, rules.Decide(Siege(25, 20)));
+        Assert.AreEqual(AttackOuter0, rules.Decide(Siege(30, 20)));
+    }
+
+    [TestMethod]
+    public void Decide_LeadPastTheTowerBeyondTheStayDistance_DoesNotEnterSoTheCommandIsStable()
+    {
+        var (rules, _) = Setup();
+        var past = Situation(towerId: FordsTestLayout.EastOuter0, towerDistance: 70f, leadX: 710f, nearestEnemy: 10f,
+            nearAttackers: 12, nearDefenders: 4);
+
+        var first = rules.Decide(past);
+        var second = rules.Decide(past);
+        var third = rules.Decide(past);
+
+        Assert.AreEqual(first, second);
+        Assert.AreEqual(second, third);
+    }
+
+    private static LaneSituation PastLeadAt(float d, MatchSide side = MatchSide.West, string tower = FordsTestLayout.EastOuter0,
+        float leadX = 710f) =>
+        Situation(side: side, towerId: tower, towerDistance: d, leadX: leadX, nearestEnemy: 10f, nearAttackers: 12, nearDefenders: 4);
+
+    [TestMethod]
+    public void Decide_PastLeadHoveringAtTheStayLine_GivesTheSameCommandOnEachCrossing()
+    {
+        var (rules, _) = Setup();
+
+        var first = rules.Decide(PastLeadAt(59.9f));
+
+        Assert.AreEqual(first, rules.Decide(PastLeadAt(60.1f)));
+        Assert.AreEqual(first, rules.Decide(PastLeadAt(59.9f)));
+    }
+
+    [TestMethod]
+    public void Decide_PastLeadFiftyMetersFromTheTowerWithAnEnemyNear_DoesNotEnter()
+    {
+        var (rules, _) = Setup();
+
+        var d = rules.Evaluate(PastLeadAt(50f));
+
+        Assert.IsFalse(d.Siege);
+        Assert.AreEqual(LaneCommand.Charge, d.Command);
+    }
+
+    [TestMethod]
+    public void Decide_LeadNotPastTheTowerThirtyMetersAway_EntersOnBothSides()
+    {
+        var (rules, _) = Setup();
+
+        Assert.IsTrue(rules.Evaluate(PastLeadAt(30f, leadX: 610f)).Siege);
+        Assert.IsTrue(rules.Evaluate(PastLeadAt(30f, MatchSide.East, FordsTestLayout.WestOuter0, leadX: 390f)).Siege);
+    }
+
+    [TestMethod]
+    public void Decide_NaNTowerDistance_NeverEntersAndNeverStaysInASiege()
+    {
+        var (rules, _) = Setup();
+
+        Assert.IsFalse(rules.Evaluate(Siege(30, 20, towerDistance: float.NaN)).Siege);
+        rules.Decide(Siege(30, 20));
+        Assert.IsFalse(rules.Evaluate(Siege(30, 20, towerDistance: float.NaN)).Siege);
+    }
+
+    [TestMethod]
+    public void Decide_FireRangeAboveSixty_TheStayDistanceFollowsIt()
+    {
+        var layout = FordsTestLayout.Create();
+        var towers = Config.Towers with { FireRange = 80f };
+        var chain = new TowerChain(layout, towers);
+        var rules = new LaneMarchRules(Config.Lanes, towers, layout, chain);
+
+        rules.Decide(Siege(30, 20));
+
+        Assert.AreEqual(AttackOuter0, rules.Decide(Siege(30, 20, towerDistance: 70f)));
+        Assert.AreEqual(LaneCommand.Charge, rules.Decide(Siege(30, 20, towerDistance: 96f)));
+    }
+
+    [TestMethod]
+    public void Decide_SiegeLeadBeyondSixtyMeters_Leaves()
+    {
+        var (rules, _) = Setup();
+
+        rules.Decide(Siege(30, 20));
+
+        Assert.AreEqual(LaneCommand.Charge, rules.Decide(Siege(30, 20, towerDistance: 61f)));
+    }
+
+    [TestMethod]
+    public void Decide_SiegeIsKeptPerSideAndLane()
+    {
+        var (rules, _) = Setup();
+        rules.Decide(Siege(30, 20, lane: 0));
+
+        Assert.AreEqual(LaneCommand.Charge, rules.Decide(Siege(22, 20, lane: 1)));
+        Assert.AreEqual(LaneCommand.Charge, rules.Decide(Siege(22, 20, side: MatchSide.East, tower: FordsTestLayout.EastOuter0)));
+        Assert.AreEqual(AttackOuter0, rules.Decide(Siege(22, 20, lane: 0)));
+    }
+
+    [TestMethod]
+    public void Decide_TargetTowerFalls_ClearsTheSiege()
+    {
+        var (rules, chain) = Setup();
+        rules.Decide(Siege(30, 20));
+
+        chain.ApplyDamage(FordsTestLayout.EastOuter0, int.MaxValue);
+
+        Assert.IsFalse(rules.Evaluate(Siege(30, 20)).Siege);
+        Assert.IsFalse(rules.Evaluate(Siege(22, 20, tower: FordsTestLayout.EastOuter0)).Siege);
+    }
+
+    [TestMethod]
+    public void Decide_TargetTowerChanges_NeedsTheFullRatioAgainstTheNewTower()
+    {
+        var (rules, _) = Setup();
+        rules.Decide(Siege(30, 20));
+
+        Assert.AreEqual(LaneCommand.Charge, rules.Decide(Siege(22, 20, tower: FordsTestLayout.EastInner0)));
+    }
+
+    [TestMethod]
+    public void Decide_WholeLaneStrongButFewNearTheTower_Charges()
+    {
+        var (rules, _) = Setup();
+
+        Assert.AreEqual(LaneCommand.Charge, rules.Decide(Siege(13, 18)));
+    }
+
+    [TestMethod]
+    public void Decide_UnknownCounts_NeverStartASiege()
+    {
+        var (rules, _) = Setup();
+
+        var d = rules.Evaluate(Siege(-1, -1));
+
+        Assert.AreEqual(LaneCommand.Charge, d.Command);
+        Assert.IsFalse(d.Siege);
+    }
+
+    [TestMethod]
+    public void Decide_SameCountsOnEitherSide_GiveTheSameDecision()
+    {
+        var (rules, _) = Setup();
+
+        var west = rules.Evaluate(Siege(30, 20, side: MatchSide.West));
+        var east = rules.Evaluate(Siege(30, 20, side: MatchSide.East));
+
+        Assert.AreEqual(west.Command, east.Command);
+        Assert.AreEqual(west.Siege, east.Siege);
     }
 }
 

@@ -13,6 +13,15 @@ public class LaneDecisionTests
         LaneCommand.MoveTo(new Vec3f(400f, 0f, 0f)));
 
     [TestMethod]
+    public void ToLogBody_KnownLocalCounts_AppendNearAndSiege()
+    {
+        var decision = March() with { NearAttackers = 30, NearDefenders = 20, Siege = true };
+
+        StringAssert.EndsWith(decision.ToLogBody(), " near=30/20 siege=true");
+        StringAssert.EndsWith((decision with { Siege = false }).ToLogBody(), " near=30/20 siege=false");
+    }
+
+    [TestMethod]
     public void ToLogBody_MarchingLane_NamesEveryField()
     {
         Assert.AreEqual(

@@ -351,10 +351,58 @@ A tier 1 re-review of the floor and the C1-C8 fixes by the data-flow and engine-
 | C11 | LOW | No scenario ran a floored blow through check 9's drift rule (the scenario's thrust parameter had no caller). | Test gap | The floor's tests stopped at the rules and the patch. | Fixed: a floored-strike scenario. |
 | C12 | LOW | The trace could not show whether one attack lands two contacts, each now floored, or which thread runs a melee hit. | Missing evidence | The probe was built to classify blows, not attacks. | Fixed: the TowerMelee trace carries the attacker's agent index and the managed thread id (`agent=<index> thr=<thread id>`); the second proof run `20261101-112404` answered both: all 76 traced melee blows ran on managed thread 39, the script-tick main thread, and no attacker struck the same tower twice within 0.6 s with rising attack progress (scope: the 76 traced blows; the trace is capped per tower). |
 
-Open for the maintainer: the floor replaces only a zero, so a weak shaft thrust with raw 1 to 7 takes less than a floored zero (about 8): in run 103348, tower_west_0_0 took raw 1, 5 and 7 blows at face value beside 66 floored ones. The patch also floors the rare zero swing from a weapon with thrust damage (1 of 129), because `OnHit` carries no strike type. A max(raw, floor) rule would remove the inversion but also raise weak swings, which the maintainer's decision keeps as the engine computes them; a smaller factor (0.05 gives about 2 for a 40-thrust lance) is the other lever. Tower balance stays his call.
+Open for the maintainer: the floor replaces only a zero, so a weak shaft thrust with raw 1 to 7 takes less than a floored zero (about 8): in run 103348, tower_west_0_0 took raw 1, 5 and 7 blows at face value beside 66 floored ones. The patch also floors the rare zero swing from a weapon with thrust damage (1 of 129), because `OnHit` carries no strike type. A max(raw, floor) rule would remove the inversion but also raise weak swings, which the maintainer's decision keeps as the engine computes them; a smaller factor (0.05 gives about 2 for a 40-thrust lance) is the other lever. Decided (Mike, 2026-11-01, on Claude's recommendation): keep the floor as built. The inversion touched 3 of 69 melee blows on the most-hit tower, a max(raw, floor) rule would raise swings against the decision, and a smaller factor would weaken spear assaults again.
 
 FOLLOW-UP: `FordsMissionDirector.AdjustTowerDamage` calls the report's `TowerBlow` after the rules changed their hit points, with no fault guard; if the report throws, the patch keeps the engine's raw value, so a floored blow would take about 8 in the rules and 0 in the engine, which check 9's drift rule would flag (no issue: the maintainer chose no GitHub issues for Fords of War).
 
 Codex disputed 57 of the suspects in its two prompts with code evidence; those are recorded in `docs/reviews/REVIEW-LOG.md`.
 
 FOLLOW-UP: a tagged layout whose inner tower marker comes before its outer one can reject a layout that a different fitting order would keep; no shipped scene uses tagged layouts (no issue: hypothetical, the maintainer chose no GitHub issues for Fords of War).
+## Addendum: tower balance and the lane siege rule (2026-11-01)
+
+Mike asked for Claude's recommendation on tower balance ("Proceed with your recommendation"). Two independent analyses
+of the run evidence and a reconciler set towers to 1200, 1600 and 2800 hit points with regeneration of 1 per second after
+45 s. The 2700 s unattended match `E:/Temp/fords-runs/20261101-123312` still felled no tower: the busiest outer tower
+took 815 hit points in 45 minutes and healed 659. Config alone could not make towers fall.
+
+### Root cause: a lane at an enemy tower always charges
+
+An architect diagnosed the stalemate from that run, and a second architect tried to refute the diagnosis.
+`LaneMarchRules` checked the Charge branch (any enemy within 25 m of the lead) before the AttackTower branch, and
+defenders spawn behind their tower and walk out through it, so a lead group at an enemy tower always had an enemy in
+range. West received no AttackTower command in runs 081305, 103348, 112404 and 123312. In run 123312, lane 1, from
+mt 485 to 565, West had 56 to 67 live units against East's 23 to 37, but at the tower it was about 13 against 18, and
+every sample was Charge. The lane-wide ratio was the wrong measure; the challenger's local count at the tower was kept.
+
+**Fix (the siege rule):** under Push, when the lead is within `towers.fireRange` of the lane's next enemy tower and the
+units of the side's lanes that target that tower outnumber the tower owner's units within fire range of it by 1.5 to 1,
+the lane attacks the tower; it keeps attacking while it is not outnumbered there and its lead stays within fire range
+plus 15 m. The rule applies to the player's lanes as to the AI's, as the maintainer's design gives both sides the same
+orders. The `[LaneState]` line carries `near=<attackers>/<defenders> siege=<true|false>`.
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| S1 | HIGH | Siege entry accepted a lead past the tower at any distance (the lane-arc reach test), while staying needed 60 m, so the command alternated AttackTower and Charge every tick; the engine's 0.5 s AttackEntity timer restarts with each order, so no unit would ever be sent at the tower. | Entry and exit bands that disagree | Every siege test entered at 10 m, so no test reached the arc path into the state. | Fixed: entry implies stay. Lesson in `lessons/testing-qa.md`. |
+| S2 | MEDIUM | Attackers were counted from every lane of the side, so a neighbouring lane's wave passing within 45 m of this lane's target could start a siege this lane could not win. | Wrong population for a count | The rule was written as "the side's units near the tower" without asking which units the order moves. | Fixed: only lanes whose next target is that tower count, so the keep counts every converging lane. |
+| S3 | MEDIUM | After S1's fix, a lead past its tower could still enter at the 60 m stay line itself and flip the order on each crossing. | Entry and exit bands that disagree | The first fix closed the band for one path into the state, not for the arc path. | Fixed: a siege starts only within the fire range, which leaves a 15 m band on every path. |
+| S4 | LOW | The entry rule was stated four ways across the code, the feature doc and the build spec; the doc claimed unit behaviour (archers stop, 18 m) that the decompile does not support; the stay distance was a constant unrelated to `towers.fireRange`; two lines of dead code; no parity test. | Documentation and tests | The doc was written from the brief before the engine lens read the AI scorer. | Fixed text from the decompile (the engine favours a unit's current behaviour 1.2 times), stay = fire range + 15 m, dead lines removed, a parity row. |
+
+**Tower hit points:** the challenger showed that 1200 hit points must not ship: a human-led group of 15 units in contact,
+at the measured 4.7 to 5.9 hit points per second per unit, would fell such a tower in about 16 s. Hit points went back to
+8000, 11000 and 18000, the default Claude stated while the maintainer's human target is open (a group of 15 units
+should need about 2 minutes on an outer tower). Regeneration stays at 1 per second after 45 s: at 15 per second after
+20 s every lull healed all the damage an assault had done (Healed equalled Applied on every tower not under attack at the
+end of runs 075050, 081305, 095058 and 112404).
+
+**Validation:** run `E:/Temp/fords-runs/20261101-143718` (2700 s, AI on both sides, 8000, 11000 and 18000 hit points, regeneration 1 per second after 45 s) started sieges on four of six streams (29 samples at 5 s, the lead a median of 3 to 28 m from the tower). No stream flipped: the most AttackTower commands any stream received in 45 minutes was 18. Contact rose from 1.1 % of flagged unit-seconds in run 123312 to 5.1 %, 8.3 % and 22.0 % on the sieging streams, West received AttackTower commands for the first time, and the most-hit tower took 4,210 hit points (the earlier best was 1,276) and fell to 5,014 of 8,000. No tower fell, and the verdicts were 7 PASS and 0 FAIL with no exception.
+
+**Lane 2 contact:** an investigation of why units ordered at lane 2 towers made almost no contact (0 to 4 contact
+unit-seconds against 1,826 flagged unit-seconds over five runs) found the same root cause, plus AttackTower orders that
+the lane-arc reach test gave while the lead stood 26 to 236 m away inside another lane's area. Contact is measured from
+the tower entity origin, and the tower geometry does not explain the gap.
+
+FOLLOW-UP: the existing in-reach AttackTower branch still fires by lane arc at any distance, and lane leads drift into a neighbouring lane's area in about two thirds of mid-field samples (no issue: the maintainer chose no GitHub issues for Fords of War).
+FOLLOW-UP: `UnitsNear` runs about 12 times per mission frame and the own-side calls go through LINQ `NextTargetOf`; measure before optimising (no issue: the maintainer chose no GitHub issues for Fords of War).
+FOLLOW-UP: check 9's ladder does not split tower blows by attacker class, so a ranged lane's damage cannot be told from melee contact (no issue: the maintainer chose no GitHub issues for Fords of War).
+FOLLOW-UP: the hard AI profile's `incomeMultiplier` 1.2 gives the AI more gold than a human commander, which the maintainer's design (same shop, no extra powers) does not allow for; the maintainer decides (no issue: the maintainer chose no GitHub issues for Fords of War).
+FOLLOW-UP: with the siege rule, towers at 8000 hit points still stand after 45 minutes of AI against AI; the next levers are AI concentration of force (`lanes.assaultThreshold`, so one lane gets the bought packs and heroes) and the maintainer's target for a human-led assault, which sets the shipping hit points (no issue: the maintainer chose no GitHub issues for Fords of War).

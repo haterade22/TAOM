@@ -7,7 +7,9 @@ namespace TAOM.Tests.Features.FordsOfWar.Domain;
 [TestClass]
 public class TowerRegenTests
 {
-    private static readonly FordsTowerConfig Config = FordsMatchConfig.Default.Towers;
+    // These tests prove the regen mechanic with round timings, so they pin their own rate (15/s) and delay (20 s)
+    // rather than follow the shipped balance numbers.
+    private static readonly FordsTowerConfig Config = FordsMatchConfig.Default.Towers with { RegenPerSecond = 15f, RegenDelaySeconds = 20f };
 
     private static (TowerRegen regen, TowerChain chain) Setup(FordsTowerConfig? config = null)
     {

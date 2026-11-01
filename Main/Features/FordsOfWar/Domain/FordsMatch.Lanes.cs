@@ -47,8 +47,41 @@ internal sealed partial class FordsMatch
         var distance = target == null ? float.MaxValue : from.Distance2D(target.Position);
         var centerDistance = target == null ? float.MaxValue : center.Distance2D(target.Position);
         var enemy = lead is { } found ? NearestEnemyFrom(side, found.Position, seen.NearestEnemyDistance) : seen.NearestEnemyDistance;
+        var attackers = target == null ? -1 : UnitsNear(side, true, target);
+        var defenders = target == null ? -1 : UnitsNear(side, false, target);
+
         return new LaneSituation(side, lane, order, seen.LiveUnits, center, enemy, target?.Id, distance,
-            target == null || _chain.IsLocked(target.Id), lead?.Position, lead?.Arc ?? 0f, lead?.Count ?? 0, centerDistance);
+            target == null || _chain.IsLocked(target.Id), lead?.Position, lead?.Arc ?? 0f, lead?.Count ?? 0, centerDistance,
+            attackers, defenders);
+    }
+
+    /// <summary>
+    /// How many units are within the tower FireRange of <paramref name="tower"/>: the side's own units from lanes whose next enemy
+    /// target is this same tower (<paramref name="own"/>, so a neighbouring lane's wave walking past does not count), or the other
+    /// side's units from every lane. -1 when a lane of either side reported no positions (not known).
+    /// </summary>
+    private int UnitsNear(MatchSide side, bool own, TowerSlot tower)
+    {
+        var count = 0;
+        foreach (var lane in _seenLanes.Values)
+        {
+            if (lane.UnitPositions == null)
+                return -1;
+
+            if ((lane.Side == side) != own)
+                continue;
+
+            if (own && NextTargetOf(MatchSides.Opponent(side), lane.Lane)?.Id != tower.Id)
+                continue;
+
+            foreach (var position in lane.UnitPositions)
+            {
+                if (position.Distance2D(tower.Position) <= _config.Towers.FireRange)
+                    count++;
+            }
+        }
+
+        return count;
     }
 
     /// <summary>

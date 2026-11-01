@@ -9,7 +9,8 @@ namespace TAOM.Features.FordsOfWar.Domain;
 /// </summary>
 internal sealed record LaneDecision(MatchSide Side, int Lane, LaneBranch Branch, LaneOrder Order, int LiveUnits, Vec3f? Center,
     Vec3f? Lead, float LeadArc, int LeadCount, float NearestEnemyDistance, string? NextEnemyTowerId, float NextEnemyTowerDistance,
-    float CenterTowerDistance, bool Locked, int WaypointIndex, LaneCommand Command)
+    float CenterTowerDistance, bool Locked, int WaypointIndex, LaneCommand Command,
+    int NearAttackers = -1, int NearDefenders = -1, bool Siege = false)
 {
     /// <summary>
     /// The run-log text of this decision (side and lane are the caller's prefix): invariant culture, one decimal, a dash for
@@ -23,7 +24,13 @@ internal sealed record LaneDecision(MatchSide Side, int Lane, LaneBranch Branch,
         + " towerDist=" + Distance(NextEnemyTowerDistance) + " centerTowerDist=" + Distance(CenterTowerDistance)
         + " locked=" + (Locked ? "true" : "false")
         + " wp=" + (WaypointIndex < 0 ? "-" : WaypointIndex.ToString(CultureInfo.InvariantCulture))
-        + " target=" + Target();
+        + " target=" + Target() + Near();
+
+    /// <summary>The local counts at the target tower and the siege state; empty when the counts are not known, so older lines read as before.</summary>
+    private string Near() => NearAttackers < 0 || NearDefenders < 0
+        ? ""
+        : " near=" + NearAttackers.ToString(CultureInfo.InvariantCulture) + "/" + NearDefenders.ToString(CultureInfo.InvariantCulture)
+            + " siege=" + (Siege ? "true" : "false");
 
     /// <summary>The point a move or hold goes to, or the tower id an attack is aimed at, so target= reads the same on every line.</summary>
     private string Target() => Command.Kind switch

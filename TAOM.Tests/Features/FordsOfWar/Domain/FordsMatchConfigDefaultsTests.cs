@@ -44,8 +44,8 @@ public class FordsMatchConfigDefaultsTests
         Assert.AreEqual(0.15f, C.Towers.RangedDamageFactor);
         Assert.AreEqual(4f, C.Towers.HeroDamageFactor);
         Assert.AreEqual(3f, C.Towers.SiegeDamageFactor);
-        Assert.AreEqual(15f, C.Towers.RegenPerSecond);
-        Assert.AreEqual(20f, C.Towers.RegenDelaySeconds);
+        Assert.AreEqual(1f, C.Towers.RegenPerSecond);
+        Assert.AreEqual(45f, C.Towers.RegenDelaySeconds);
         Assert.AreEqual(2, C.Towers.GunnersPerTower);
         Assert.AreEqual(4f, C.Towers.VolleyIntervalSeconds);
         Assert.AreEqual(3, C.Towers.VolleyMissiles);

@@ -32,6 +32,85 @@ public class FordsMatchLaneTests
         match.LastDecisions.Single(d => d.Side == side && d.Lane == lane);
 
     [TestMethod]
+    public void Tick_LocalSuperiorityAtTheEnemyTowerWithDefendersNear_AttacksTheTowerAndLogsTheCounts()
+    {
+        var match = Create();
+        var west = LaneOf(MatchSide.West, 0, Units(630f, 30));
+        var east = LaneOf(MatchSide.East, 0, Units(640f, 20), 5f);
+
+        var effects = match.Tick(Snap(1f, new[] { west, east }));
+
+        Assert.AreEqual(LaneCommand.AttackTower(FordsTestLayout.EastOuter0), WestLane0(effects));
+        var decision = DecisionOf(match, MatchSide.West, 0);
+        Assert.IsTrue(decision.Siege);
+        StringAssert.Contains(decision.ToLogBody(), "near=30/20 siege=true");
+    }
+
+    [TestMethod]
+    public void Tick_LaneTotalIsLargeButOnlyAFewAreNearTheTower_Charges()
+    {
+        var match = Create();
+        var west = LaneOf(MatchSide.West, 1, Join(Units(630f, 13, 50f), Units(300f, 47, 50f)));
+        var east = LaneOf(MatchSide.East, 1, Units(640f, 18, 50f), 5f);
+
+        match.Tick(Snap(1f, new[] { west, east }));
+
+        var decision = DecisionOf(match, MatchSide.West, 1);
+        Assert.AreEqual(LaneBranch.Charge, decision.Branch);
+        Assert.IsFalse(decision.Siege);
+        StringAssert.Contains(decision.ToLogBody(), "near=13/18 siege=false");
+    }
+
+    [TestMethod]
+    public void Tick_NeighbouringLanesWaveStandsNearTheTower_DoesNotCountAsAttackers()
+    {
+        var match = Create();
+        var west0 = LaneOf(MatchSide.West, 0, Units(630f, 3), 10f);
+        var west1 = LaneOf(MatchSide.West, 1, Units(630f, 10, 20f));
+        var east0 = LaneOf(MatchSide.East, 0, Units(640f, 4), 10f);
+
+        match.Tick(Snap(1f, new[] { west0, west1, east0 }));
+
+        var decision = DecisionOf(match, MatchSide.West, 0);
+        Assert.AreEqual(LaneBranch.Charge, decision.Branch);
+        Assert.IsFalse(decision.Siege);
+        StringAssert.Contains(decision.ToLogBody(), "near=3/4 siege=false");
+    }
+
+    [TestMethod]
+    public void Tick_EveryEastTowerGone_BothWestLanesCountTowardsTheKeepSiege()
+    {
+        var match = Create();
+        foreach (var id in new[] { FordsTestLayout.EastOuter0, FordsTestLayout.EastInner0, FordsTestLayout.EastOuter1, FordsTestLayout.EastInner1 })
+            match.OnTowerDestroyed(id, null);
+
+        var west0 = LaneOf(MatchSide.West, 0, Units(950f, 10), 5f);
+        var west1 = LaneOf(MatchSide.West, 1, Units(950f, 10, 50f), 5f);
+        var east0 = LaneOf(MatchSide.East, 0, Units(960f, 3, 25f), 5f);
+
+        match.Tick(Snap(1f, new[] { west0, west1, east0 }));
+
+        foreach (var lane in new[] { 0, 1 })
+        {
+            var decision = DecisionOf(match, MatchSide.West, lane);
+            Assert.AreEqual(FordsTestLayout.EastKeep, decision.NextEnemyTowerId);
+            StringAssert.Contains(decision.ToLogBody(), "near=20/3");
+        }
+    }
+
+    [TestMethod]
+    public void Tick_SameSuperiorityForTheEastLane_AlsoAttacksTheTower()
+    {
+        var match = Create();
+        var east = LaneOf(MatchSide.East, 0, Units(370f, 30));
+        var west = LaneOf(MatchSide.West, 0, Units(360f, 20), 5f);
+
+        match.Tick(Snap(1f, new[] { west, east }));
+
+        Assert.AreEqual(LaneCommand.AttackTower(FordsTestLayout.WestOuter0), DecisionOf(match, MatchSide.East, 0).Command);
+    }
+
+    [TestMethod]
     public void Tick_LeadWithinAttackRangeWhileStragglersFarBack_IssuesAttackTower()
     {
         var match = Create();

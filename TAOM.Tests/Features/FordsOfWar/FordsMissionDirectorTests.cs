@@ -417,7 +417,8 @@ public class FordsMissionDirectorTests
     [TestMethod]
     public void Tick_RegeneratedHitPoints_AreMirroredOntoTheTowerEntity()
     {
-        var f = Started();
+        // Pins a 20 s regen delay: the test proves the heal reaches the entity, not the shipped balance.
+        var f = Started(c => c with { Towers = c.Towers with { RegenPerSecond = 15f, RegenDelaySeconds = 20f } });
         f.ReportsTowerId(EastOuterLane0);
         f.Director.AdjustTowerDamage(new object(), null, false, 100, 0);
 

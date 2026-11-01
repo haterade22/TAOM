@@ -164,13 +164,13 @@ per record. Names are camelCase.
 | `towers.rangedDamageFactor` | float | Multiplier on ranged hits | 0.15 |
 | `towers.heroDamageFactor` | float | Multiplier on hero hits | 4 |
 | `towers.siegeDamageFactor` | float | Multiplier on hits from the Siege role | 3 |
-| `towers.regenPerSecond` | float | Hit points regained per second | 15 |
-| `towers.regenDelaySeconds` | float | Seconds without damage before regeneration starts | 20 |
+| `towers.regenPerSecond` | float | Hit points regained per second | 1 |
+| `towers.regenDelaySeconds` | float | Seconds without damage before regeneration starts | 45 |
 | `towers.gunnersPerTower` | int | Invulnerable archers garrisoning each tower | 2 |
 | `towers.volleyIntervalSeconds` | float | Seconds between scripted volleys | 4 |
 | `towers.volleyMissiles` | int | Javelins per volley | 3 |
-| `towers.fireRange` | float | Metres: the nearest enemy inside it is a target (heroes first) | 45 |
-| `towers.attackRange` | float | Metres, formation center to tower, at which a lane attacks it | 20 |
+| `towers.fireRange` | float | Metres: the nearest enemy inside it is a target (heroes first). Also the siege radius: the unit count, the entry distance, and the stay distance plus 15 m | 45 |
+| `towers.attackRange` | float | Metres, formation center to tower, at which a lane attacks it; under Push an unguarded tower is attacked from the fire range | 20 |
 | `towers.thrustFloorFactor` | float | Share (0 to 1) of the weapon's thrust damage that a melee blow the engine zeroed takes; 0 turns the floor off | 0.2 |
 | `heroes.maxAlivePerSide` | int | Heroes alive at once per side | 2 |
 | `heroes.respawnBaseSeconds` | float | Respawn delay at minute 0 | 60 |
@@ -178,7 +178,7 @@ per record. Names are camelCase.
 | `heroes.buybackBaseFraction` | float | Buyback price as a fraction of the hero price at minute 0 | 0.5 |
 | `heroes.buybackPerMinuteFraction` | float | Added to that fraction per match minute | 0.05 |
 | `lanes.orderCooldownSeconds` | float | Cooldown between lane order changes | 20 |
-| `lanes.engageRange` | float | Metres: enemies inside it make the lane charge | 25 |
+| `lanes.engageRange` | float | Metres: enemies inside it make the lane charge, unless it is sieging (an enemy inside it no longer always makes a sieging lane charge) | 25 |
 | `lanes.waypointReachRadius` | float | Metres at which a waypoint counts as reached | 6 |
 | `lanes.holdDistanceBeforeTower` | float | Metres of lane before the next enemy tower where a Hold order stands; on a lane over about 428 m the lane midpoint is nearer its own base and is used instead (see Lane rules) | 60 |
 | `lanes.leadBand` | float | Metres (1 to 300): the lead group is the units within this distance, on either side, of the lane's front line (its k-th most advanced unit, see Lane rules); a bad value reverts to 25 with one warning | 25 |
@@ -231,7 +231,7 @@ A file may override one profile or add a new name; a new profile starts from nor
 | Ranged factor 0.15 | Ranged hits are scaled down so archers do not strip a tower (spec section 3.4: ranged x `RangedDamageFactor`) |
 | Thrust floor 0.2 | Vanilla multiplies a thrust's base magnitude by 0.1 (Pierce on an object) and, for a shaft hit, by 0.15, then truncates to an int, so most spear and lance thrusts reached the tower as 0. The floor gives a blow that arrives as 0 from a weapon with thrust damage a fifth of that thrust damage (about 8 hit points per blow in run `20261101-103348`), which the maintainer chose on 2026-11-01 |
 | Hero factor 4, siege factor 3 | Heroes and the Siege role (the trolls) are the units that hurt towers; the factors multiply, so a hero archer gets both |
-| Tower regen 15/s after 20 s without damage | Regeneration starts only after a quiet period and never above the maximum |
+| Tower regen 1/s after 45 s without damage | Regeneration starts only after a quiet period and never above the maximum. At 15 per second after 20 s every lull healed all the damage an assault did (run 20261101-123312 and earlier), so damage now carries over from one assault to the next |
 | 2 gunners per tower, volley of 3 javelins every 4 s, fire range 45 m | The garrison: scripted volleys at the nearest enemy in range, heroes first |
 | Hold distance 60 m, fire range 45 m | A lane gathering at its hold line must stand out of tower fire: 45 m plus 15 m of formation depth. It was 35 m, inside the tower's reach. `ShippedMatch_LaneHoldLineIsOutsideTowerFireRange` pins the relation. The hold point is never closer than 60 m to the tower: on a lane under about 428 m it is exactly 60 m short of the tower, on a longer lane it is the midpoint, which is farther |
 | Attack range 20 m | Measured from the formation center to the tower; 6 m was too small for a center |
@@ -294,6 +294,7 @@ of every unit. Fresh waves spawn at the base into the same formation, so the mea
 - **Forward-only march.** A waypoint counts as reached when `LeadArc >= arc(waypoint) - lanes.waypointReachRadius` (East
   mirrors it). Per side and lane the rules keep the waypoint index and never step it backward while the lane marches. The
   index resets on Fall back, Hold, Charge, an `AttackTower` command and an empty lane.
+- **Siege.** Entry: under Push, the lead is within `towers.fireRange` of the lane's next enemy tower, and the units of the side's lanes that target that tower and stand within fire range of it number at least 1.5 times the tower owner's units there (defenders count from every lane, so a neighbouring lane's wave walking past does not start a siege). Exit: the defenders there outnumber those units, or the lead is more than 15 m beyond the fire range; the lane then needs the full 1.5 to 1 again, and entry is tighter than the exit line so a lead hovering at it does not flip the order. A siege outranks Charge and, for an unguarded tower, also March between 20 and 45 m. It clears when the tower falls or the target changes, and the player's lanes follow the same rule as the AI's. What units do: units already fighting keep fighting unless they are more than about 30 m from the tower (the engine favours a unit's current behaviour); the others strike the tower, and a unit walking to it does not stop for an enemy until it is within about 8 m. The lane's archers stop shooting at units; those carrying a melee weapon walk in and strike the tower. These follow from the engine's AI scoring and still need a game run to confirm. The lane state log line shows `near=<attackers>/<defenders> siege=<true|false>`.
 - **Bounded Hold.** A held lane forms up `lanes.holdDistanceBeforeTower` (60 m) of lane before the enemy tower, or at the lane
   midpoint when that is nearer its own base, and at the midpoint when the next target is a keep. The point is snapped to the path
   vertex on the holder's own side, so a hold target is always a vertex of the navmesh-fitted path. With towers at 0.36 and 0.64 of
@@ -302,7 +303,7 @@ of every unit. Fresh waves spawn at the base into the same formation, so the mea
   45 m fire range on any realistic lane.
 - **Decision trace.** `FordsMatch.LastDecisions` holds one `LaneDecision` per lane and side each tick (empty on a countdown or
   ended tick). Its `ToLogBody()` renders `order= live= branch= center=(x,y) lead=(x,y) leadArc= leadCount= enemy= tower=
-  towerDist= centerTowerDist= locked= wp= target=(x,y)` in invariant culture with one decimal and `-` for an absent or non-finite
+  towerDist= centerTowerDist= locked= wp= target=(x,y) near=<attackers>/<defenders> siege=<true|false>` in invariant culture with one decimal and `-` for an absent or non-finite
   value (`towerDist` is from the lead, `centerTowerDist` from the centre); on an `AttackTower` decision `target=` is the tower id.
   The director appends `cmd=` (the kind of the command it last sent the engine) and `sent=` (that command's target: a point, an
   AttackTower's tower id, or `-`), in one format for every line. The rules' own request is already in the body (`branch=`,

@@ -6,7 +6,8 @@ namespace TAOM.Features.FordsOfWar.Domain;
 
 /// <summary>
 /// What a lane formation does next. The checks run in this order and the first that applies wins: no units, fall back,
-/// enemy within engage range (charge), next enemy tower in reach and open (attack it, unless holding), hold, march on.
+/// siege (under Push, lead within fire range of the next enemy tower and local attackers there outnumber its defenders 1.5 to 1: attack the tower), enemy within
+/// engage range (charge), next enemy tower in reach and open (attack it, unless holding), hold, march on.
 /// A tower is in reach when the lead is within attack range of it or has come level with it along the lane, so a lead that
 /// was carried past a standing tower (by a charge, say) attacks it instead of marching on.
 /// Hold has one target that does not depend on where the formation stands, so a held lane is given the same order every tick.
@@ -20,6 +21,20 @@ internal sealed class LaneMarchRules
     private readonly TowerChain _chain;
     private readonly Dictionary<int, LanePath> _paths;
     private readonly Dictionary<(MatchSide, int), int> _marchIndex = new();
+    private readonly Dictionary<(MatchSide, int), string> _siege = new();
+
+    /// <summary>Attackers per defender near the target tower that starts a siege.</summary>
+    internal const float SiegeEnterRatio = 1.5f;
+
+    /// <summary>Attackers per defender near the target tower below which a siege ends.</summary>
+    internal const float SiegeStayRatio = 1.0f;
+
+    /// <summary>
+    /// A siege starts with the lead within the tower's FireRange of the target tower and lasts while the lead is within
+    /// FireRange plus this margin of it. The gap between the two radii keeps a lead hovering at the exit line from flipping the
+    /// command every tick.
+    /// </summary>
+    internal const float SiegeStayMargin = 15f;
 
     public LaneMarchRules(FordsLaneConfig lanes, FordsTowerConfig towers, MapLayout layout, TowerChain chain)
     {
@@ -49,12 +64,19 @@ internal sealed class LaneMarchRules
         var branch = LaneBranch.None;
         var command = LaneCommand.None;
         var waypoint = -1;
+        var siege = false;
         if (s.LiveUnits > 0 && s.Center != null)
         {
+            siege = UpdateSiege(s);
             if (s.Order == LaneOrder.FallBack)
             {
                 branch = LaneBranch.FallBack;
                 command = FallBack(s, path);
+            }
+            else if (siege)
+            {
+                branch = LaneBranch.AttackTower;
+                command = LaneCommand.AttackTower(s.NextEnemyTowerId!);
             }
             else if (s.NearestEnemyDistance <= _lanes.EngageRange)
             {
@@ -79,12 +101,52 @@ internal sealed class LaneMarchRules
             }
         }
 
+        if (!siege)
+            _siege.Remove((s.Side, s.Lane));
+
         if (branch != LaneBranch.March)
             _marchIndex.Remove((s.Side, s.Lane));
 
         return new LaneDecision(s.Side, s.Lane, branch, s.Order, s.LiveUnits, s.Center, lead, leadArc, leadCount,
             s.NearestEnemyDistance, s.NextEnemyTowerId, s.NextEnemyTowerDistance, s.CenterTowerDistance, s.NextEnemyTowerLocked,
-            waypoint, command);
+            waypoint, command, s.NearAttackers, s.NearDefenders, siege);
+    }
+
+    /// <summary>
+    /// Whether the lane is besieging its next enemy tower. Only under Push, with an open tower and known local counts. It starts
+    /// when the lead is within the tower's FireRange of the target tower and the attackers near it are at least SiegeEnterRatio
+    /// times the defenders; it lasts while attackers match defenders (SiegeStayRatio) and the lead is within FireRange +
+    /// SiegeStayMargin of the tower. A NaN distance fails both. Entry is tighter than stay, so a lead hovering at the stay line
+    /// cannot flip the command. A siege that just ended needs the full entry ratio on a later tick. The state is per (side, lane)
+    /// and drops when the target tower changes.
+    /// </summary>
+    private bool UpdateSiege(LaneSituation s)
+    {
+        var key = (s.Side, s.Lane);
+        var id = s.NextEnemyTowerId;
+        if (s.Order != LaneOrder.Push || id == null || s.NextEnemyTowerLocked || _chain.IsDestroyed(id)
+            || s.NearAttackers < 1 || s.NearDefenders < 0)
+        {
+            _siege.Remove(key);
+            return false;
+        }
+
+        var withinStay = s.NextEnemyTowerDistance <= _towers.FireRange + SiegeStayMargin;
+        if (_siege.TryGetValue(key, out var held) && held == id)
+        {
+            if (s.NearAttackers >= SiegeStayRatio * s.NearDefenders && withinStay)
+                return true;
+
+            _siege.Remove(key);
+            return false;
+        }
+
+        _siege.Remove(key);
+        if (!(s.NextEnemyTowerDistance <= _towers.FireRange) || s.NearAttackers < SiegeEnterRatio * s.NearDefenders)
+            return false;
+
+        _siege[key] = id;
+        return true;
     }
 
     /// <summary>

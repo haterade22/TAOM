@@ -155,19 +155,23 @@ path index, next waypoint toward the enemy for a side, point at a distance befor
 
 `LaneSituation(MatchSide Side, int Lane, LaneOrder Order, int LiveUnits, Vec3f? Center,
 float NearestEnemyDistance, string? NextEnemyTowerId, float NextEnemyTowerDistance, bool NextEnemyTowerLocked)`,
-plus the lead group the match measures on the lane path (`Lead`, `LeadArc`, `LeadCount`, `CenterTowerDistance`).
+plus the lead group the match measures on the lane path (`Lead`, `LeadArc`, `LeadCount`, `CenterTowerDistance`) and the local counts
+`NearAttackers` and `NearDefenders` (units within the tower `FireRange` of the next enemy tower; attackers only from lanes whose next
+target is that tower; -1 when not known).
 `NearestEnemyDistance` and `NextEnemyTowerDistance` are measured from the lead; without unit positions the lead is the center.
 `LaneCommand` kinds: `MoveTo(Vec3f)`, `Charge`, `AttackTower(string towerId)`, `HoldAt(Vec3f)`,
 `None`. Decision order:
 1. No units: `None`.
 2. `FallBack`: `MoveTo` the waypoint nearest the side's own outermost living tower.
-3. Enemy units within `EngageRange` of the lead: `Charge`.
-4. Next enemy tower within `AttackRange` of the lead and not locked: `AttackTower` (unless order is Hold).
-5. `Hold`: `HoldAt` the one stable point `HoldDistanceBeforeTower` before the next enemy tower on
+3. Siege (under Push, open target tower, known counts): `AttackTower` when `NearAttackers >= 1.5 * NearDefenders` and the lead is within
+   `FireRange` of the tower; once started it lasts while `NearAttackers >= NearDefenders` and the lead stays within `FireRange + 15 m`.
+4. Enemy units within `EngageRange` of the lead: `Charge`.
+5. Next enemy tower within `AttackRange` of the lead (or the lead level with or past it) and not locked: `AttackTower` (unless order is Hold).
+6. `Hold`: `HoldAt` the one stable point `HoldDistanceBeforeTower` before the next enemy tower on
    the lane path, but never past the lane midpoint (a keep target holds at the midpoint), snapped to the path vertex on
    the holder's own side; wherever the formation stands (a lane short of it advances to it, a lane past it
    falls back to it). With no next enemy tower or no path for the lane: `None`.
-6. Otherwise `MoveTo` the next waypoint toward the enemy.
+7. Otherwise `MoveTo` the next waypoint toward the enemy.
 
 The lead group is the units within `LeadBand` metres (`lanes.leadBand`, 25) of the most advanced unit's arc position along
 the lane path; the lead is their mean position. A waypoint counts as reached when the lead's arc is within
@@ -313,7 +317,7 @@ Default numbers (all tunable): starting gold 600, income 120 per minute, bounty 
 minimum bounty 2, tower bounty 300, hero kill bounty 250, capture income 60 per minute per point,
 max gold 99,999; free wave every 40 s; caps 90 live per lane per side, 300 per side, 6 spawns per
 tick, 3 queued packs per lane; tower 8,000 hp, inner tower 11,000, keep 18,000, ranged factor 0.15,
-hero factor 4, siege factor 3, regen 15 per s after 20 s, 2 gunners per tower, a volley of 3 javelins every
+hero factor 4, siege factor 3, regen 1 per s after 45 s, 2 gunners per tower, a volley of 3 javelins every
 4 s, fire range 45 m, attack range 20 m (formation center to tower; was 6 m, too small for a center, changed 2026-10-30); heroes 2 alive per side, respawn 60 s + 6 s per minute,
 buyback 0.5 + 0.05 per minute of price; lane order cooldown 20 s, engage range 25 m, waypoint radius
 6 m, hold distance 60 m (fire range 45 m plus 15 m for formation depth), assault threshold 40; capture radius 12 m, 20 s to capture; AI easy (12 s,
