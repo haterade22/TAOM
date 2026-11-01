@@ -15,7 +15,7 @@ internal sealed record FordsMatchConfig(FordsEconomyConfig Economy, FordsWaveCon
         new FordsWaveConfig(40f, 90, 300, 6, 3),
         new FordsTowerConfig(8000, 11000, 18000, 0.15f, 4f, 3f, 15f, 20f, 2, 4f, 3, 45f, 20f),
         new FordsHeroConfig(2, 60f, 6f, 0.5f, 0.05f),
-        new FordsLaneConfig(20f, 25f, 6f, 60f, 40),
+        new FordsLaneConfig(20f, 25f, 6f, 60f, 40, 25f),
         new FordsCaptureConfig(12f, 20f),
         new Dictionary<string, FordsAiProfile>
         {

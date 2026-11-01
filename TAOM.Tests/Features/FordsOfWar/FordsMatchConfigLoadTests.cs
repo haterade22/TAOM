@@ -150,6 +150,33 @@ public class FordsMatchConfigLoadTests
     }
 
     [TestMethod]
+    public void Match_LeadBandOverride_IsRead()
+    {
+        var config = Load("{ 'lanes': { 'leadBand': 40 } }");
+
+        Assert.AreEqual(40f, config.Lanes.LeadBand);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void Match_LeadBandBelowOneMetre_RevertsWithWarningNamingTheKey()
+    {
+        var config = Load("{ 'lanes': { 'leadBand': 0.5 } }");
+
+        Assert.AreEqual(25f, config.Lanes.LeadBand);
+        AssertOneWarningNaming("lanes.leadBand");
+    }
+
+    [TestMethod]
+    public void Match_LeadBandAboveTheLaneScale_Reverts()
+    {
+        var config = Load("{ 'lanes': { 'leadBand': 500 } }");
+
+        Assert.AreEqual(25f, config.Lanes.LeadBand);
+        AssertOneWarningNaming("lanes.leadBand");
+    }
+
+    [TestMethod]
     public void Match_GroupNotAnObject_KeepsThatGroupsDefaultsWithOneWarning()
     {
         var config = Load("{ 'lanes': 7, 'capture': { 'radius': 15 } }");

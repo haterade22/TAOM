@@ -44,6 +44,8 @@ internal sealed partial class FordsRunReport
         long applied = 0;
         int towersWest = 0;
         int towersEast = 0;
+        string commands;
+        string alarmed;
         lock (_sync)
         {
             if (run.Perf.Windows.Count < WindowCap)
@@ -67,6 +69,9 @@ internal sealed partial class FordsRunReport
                         towersEast++;
                 }
             }
+
+            commands = FordsVerdicts.CommandCounts(run);
+            alarmed = FordsVerdicts.AlarmShares(run);
         }
 
         var phase = run.Closed || run.End.Winner != null ? "Ended" : run.Live ? "Live" : "Countdown";
@@ -77,7 +82,7 @@ internal sealed partial class FordsRunReport
             + " blows=" + blows + " applied=" + applied + " missiles=" + run.Volley.Launched + " volleyHits=" + run.Volley.HitsSeen
             + " agentsAll=" + agentsAll + " agentsActive=" + agentsActive + " frames=" + window.Frames
             + " avgMs=" + FordsLogLine.F3(window.AvgMs) + " p95Ms=" + FordsLogLine.F3(window.P95Ms) + " maxMs=" + FordsLogLine.F3(window.MaxMs)
-            + " checks=" + new string(checks));
+            + " cmds=" + commands + " alarmed=" + alarmed + " checks=" + new string(checks));
     });
 
     /// <summary>
@@ -214,8 +219,8 @@ internal sealed partial class FordsRunReport
             return;
 
         var stream = LaneOf(run, side, lane);
-        if (given && stream != null)
-            stream.LastCommand = kind.ToString();
+        if (stream != null)
+            CountCommand(run, stream, kind.ToString(), given);
 
         var n = NextOrdinal(run, FordsLogCategory.LaneCommand);
         if (n <= LaneSampleCap)
@@ -223,8 +228,120 @@ internal sealed partial class FordsRunReport
         CappedLine(FordsLogCategory.LaneCommand, n);
     });
 
-    /// <summary>Any thread. Counts the blow in the tower's integer-indexed array and logs the first few.</summary>
-    internal void TowerBlow(string towerId, TowerBlowClass cls, TowerDamageReason reason, int raw, bool sideUnknown)
+    /// <summary>Counts one command by kind and outcome, past the log cap; a given one is also the stream's last command and its first of that kind.</summary>
+    private static void CountCommand(FordsRunEvidence run, FordsLaneEvidence stream, string kind, bool given)
+    {
+        var counts = given ? stream.CommandsGiven : stream.CommandsRefused;
+        counts[kind] = Count(counts, kind) + 1;
+        if (!given)
+            return;
+
+        stream.LastCommand = kind;
+        if (!stream.FirstGivenMt.ContainsKey(kind))
+            stream.FirstGivenMt[kind] = run.Mt;
+    }
+
+    /// <summary>A command the adapter refused because its target is off the navmesh. The director calls it once per newly refused command; the first one per stream is logged.</summary>
+    internal void OffNavmesh(MatchSide side, int lane, float x, float y) => Guard(nameof(OffNavmesh), () =>
+    {
+        var run = _run;
+        var stream = run == null ? null : LaneOf(run, side, lane);
+        if (stream == null)
+            return;
+
+        stream.OffNavmesh++;
+        stream.LastOffNavmeshMt = run!.Mt;
+        if (stream.FirstOffNavmeshX != null)
+            return;
+
+        stream.FirstOffNavmeshX = x;
+        stream.FirstOffNavmeshY = y;
+        Info("Lane", "offNavmesh side=" + side + " lane=" + lane + " x=" + FordsLogLine.F1(x) + " y=" + FordsLogLine.F1(y));
+    });
+
+    /// <summary>True when the stream's <see cref="LaneState"/> line is due: at least <c>LaneStateSeconds</c> mission seconds since its last.</summary>
+    internal bool LaneStateDue(MatchSide side, int lane, double missionTime)
+    {
+        var run = _run;
+        var stream = run == null ? null : LaneOf(run, side, lane);
+        return stream != null && missionTime - stream.LastStateMt >= LaneStateSeconds;
+    }
+
+    /// <summary>Writes the stream's state line, at most once per <c>LaneStateSeconds</c> mission seconds; <paramref name="body"/> comes from <see cref="FordsLaneStateLine"/>.</summary>
+    internal void LaneState(MatchSide side, int lane, double missionTime, string body) => Guard(nameof(LaneState), () =>
+    {
+        var run = _run;
+        var stream = run == null ? null : LaneOf(run, side, lane);
+        if (stream == null || !LaneStateDue(side, lane, missionTime))
+            return;
+
+        stream.LastStateMt = missionTime;
+        Info("LaneState", "side=" + side + " lane=" + lane + " " + body);
+    });
+
+    /// <summary>The layout the match started on: one log line and the run's layout evidence, which check 4 judges.</summary>
+    internal void Layout(FordsLayoutFacts facts) => Guard(nameof(Layout), () =>
+    {
+        var run = _run;
+        if (run == null)
+            return;
+
+        lock (_sync)
+        {
+            run.Start.Layout = new FordsLayoutEvidence
+            {
+                Reported = true, Scene = facts.Scene, LaneWaypoints = new List<int>(facts.LaneWaypoints),
+                BuiltTowerIds = new List<string>(facts.BuiltTowerIds), MissingTowerIds = new List<string>(facts.MissingTowerIds),
+                KeepOpenWest = facts.KeepOpenWest, KeepOpenEast = facts.KeepOpenEast,
+            };
+        }
+
+        Info("Layout", facts.Describe());
+    });
+
+    /// <summary>Set by the director at match start (and cleared at its shutdown): maps an engine agent to the tower it garrisons.</summary>
+    internal void BindGunnerLookup(Func<object?, string?>? lookup) => _gunnerOf = lookup;
+
+    /// <summary>Set by the director beside <see cref="BindGunnerLookup"/>: the side, and the lane of a lane unit, of an engine agent; null for an agent it does not know.</summary>
+    internal void BindAttackerLookup(Func<object?, FordsAttacker?>? lookup) => _attackerOf = lookup;
+
+    /// <summary>
+    /// Any thread. A melee or missile hit landed on <paramref name="victim"/>: counted on the tower whose gunner it is, if it is one, and
+    /// only when <paramref name="attacker"/> is a known enemy of that tower's owner (a gunner also soaks stray blows from its own side).
+    /// </summary>
+    internal void GunnerHit(object? victim, object? attacker, bool ranged)
+    {
+        var run = _run;
+        var lookup = _gunnerOf;
+        var who = _attackerOf;
+        if (run == null || lookup == null || who == null || victim == null)
+            return;
+
+        var towerId = lookup(victim);
+        if (string.IsNullOrEmpty(towerId) || who(attacker) is not { } enemy)
+            return;
+
+        lock (_sync)
+        {
+            if (!run.Towers.TryGetValue(towerId!, out var tower) || tower.Owner == enemy.Side.ToString())
+                return;
+
+            if (ranged)
+                tower.GunnerBlowsRanged++;
+            else
+                tower.GunnerBlowsMelee++;
+            tower.GunnerBlowsBySide[(int)enemy.Side]++;
+            var stream = LaneOf(run, enemy.Side, enemy.Lane);
+            if (stream != null && stream.CurrentAttackTarget == towerId)
+                stream.GunnerBlows++;
+        }
+    }
+
+    /// <summary>
+    /// Any thread. Counts the blow in the tower's integer-indexed array, by the side and stream that struck it, with the damage the rules
+    /// applied and, for a melee blow, its raw damage; logs the first few. <paramref name="attacker"/> is null when its side is unknown.
+    /// </summary>
+    internal void TowerBlow(string towerId, TowerBlowClass cls, TowerDamageReason reason, int raw, int applied, FordsAttacker? attacker)
     {
         var run = _run;
         if (run == null)
@@ -236,8 +353,23 @@ internal sealed partial class FordsRunReport
             if (run.Towers.TryGetValue(towerId, out var tower))
             {
                 tower.Blows[(int)cls, (int)reason]++;
-                if (sideUnknown && reason == TowerDamageReason.Applied)
+                if (attacker == null && reason == TowerDamageReason.Applied)
                     tower.SideUnknownApplied++;
+                if (reason == TowerDamageReason.Applied)
+                    tower.AppliedDamage[(int)cls] += applied;
+                if (cls == TowerBlowClass.Melee && reason != TowerDamageReason.Weaponless)
+                    CountMeleeRaw(tower, raw);
+                if (attacker is { } by)
+                {
+                    tower.BlowsBySide[(int)by.Side]++;
+                    var stream = LaneOf(run, by.Side, by.Lane);
+                    if (stream != null && stream.CurrentAttackTarget == towerId)
+                    {
+                        stream.TowerBlows++;
+                        if (reason == TowerDamageReason.Applied)
+                            stream.AppliedBlows++;
+                    }
+                }
             }
 
             n = NextOrdinal(run, FordsLogCategory.TowerBlow);
@@ -246,6 +378,90 @@ internal sealed partial class FordsRunReport
         if (n <= TowerSampleCap)
             Trace("Tower", "blow tower=" + towerId + " class=" + cls + " outcome=" + reason + " raw=" + raw);
         CappedLine(FordsLogCategory.TowerBlow, n);
+    }
+
+    private static void CountMeleeRaw(FordsTowerEvidence tower, int raw)
+    {
+        if (tower.MeleeRaw.TryGetValue(raw, out var seen))
+            tower.MeleeRaw[raw] = seen + 1;
+        else if (tower.MeleeRaw.Count < FordsTowerEvidence.MaxRawValues)
+            tower.MeleeRaw[raw] = 1;
+        else
+            tower.MeleeRawOverflow++;
+    }
+
+    /// <summary>Main thread. Regeneration gave a standing tower hit points back.</summary>
+    internal void TowerHealed(string towerId, int amount) => Guard(nameof(TowerHealed), () =>
+    {
+        var run = _run;
+        if (run == null)
+            return;
+
+        lock (_sync)
+        {
+            if (run.Towers.TryGetValue(towerId, out var tower))
+                tower.HealedTotal += amount;
+        }
+    });
+
+    /// <summary>Main thread, at every 1 Hz look: the hit points the rules hold for a standing tower; the lowest is kept.</summary>
+    internal void TowerRulesHp(string towerId, int rulesHp) => Guard(nameof(TowerRulesHp), () =>
+    {
+        var run = _run;
+        if (run == null)
+            return;
+
+        lock (_sync)
+        {
+            if (run.Towers.TryGetValue(towerId, out var tower) && (tower.MinRulesHp == null || rulesHp < tower.MinRulesHp))
+                tower.MinRulesHp = rulesHp;
+        }
+    });
+
+    /// <summary>The tower and keep numbers the match plays with, once at match start: no other line states them.</summary>
+    internal void TowerConfig(FordsTowerConfig config) => Guard(nameof(TowerConfig), () =>
+    {
+        var run = _run;
+        if (run == null)
+            return;
+
+        var text = "towerHp=" + config.TowerHitPoints + " innerHp=" + config.InnerTowerHitPoints + " keepHp=" + config.KeepHitPoints
+            + " regenPerSecond=" + FordsLogLine.F3(config.RegenPerSecond) + " regenDelaySeconds=" + FordsLogLine.F1(config.RegenDelaySeconds)
+            + " rangedFactor=" + FordsLogLine.F3(config.RangedDamageFactor) + " heroFactor=" + FordsLogLine.F3(config.HeroDamageFactor)
+            + " siegeFactor=" + FordsLogLine.F3(config.SiegeDamageFactor);
+        run.Start.TowerConfig = text;
+        Info("Tower", "config " + text);
+    });
+
+    /// <summary>The hook that hears TAOM's CrashReport finalizers swallow an exception is in place for this run, so a count of zero means none were swallowed by them.</summary>
+    internal void ExceptionsWatched() => Guard(nameof(ExceptionsWatched), () =>
+    {
+        var run = _run;
+        if (run != null)
+            run.Exceptions.Watching = true;
+    });
+
+    /// <summary>Any thread. One of TAOM's CrashReport finalizers swallowed an exception since the mission started; the count and the first one's type and site are kept.</summary>
+    internal void ExceptionSwallowed(string type, string site)
+    {
+        var run = _run;
+        if (run == null || run.Closed)
+            return;
+
+        int n;
+        lock (_sync)
+        {
+            n = ++run.Exceptions.Count;
+            if (n == 1)
+            {
+                run.Exceptions.FirstType = type;
+                run.Exceptions.FirstSite = site;
+                run.Exceptions.FirstMt = run.Mt;
+            }
+        }
+
+        if (n <= ExceptionLineCap)
+            Warn("Exceptions", "swallowed type=" + type + " site=" + FordsLogLine.Q(site) + " count=" + n);
     }
 
     internal void TowerHealth(string towerId, int rulesHp, float engineHp) => Guard(nameof(TowerHealth), () =>
@@ -352,8 +568,10 @@ internal sealed partial class FordsRunReport
         MergeLanes(run, sample, dt);
         foreach (var t in sample.Towers)
         {
-            if (run.Towers.TryGetValue(t.TowerId, out var tower))
-                tower.MeleeNearUnitSeconds += t.EnemyMeleeInRange * dt;
+            if (!run.Towers.TryGetValue(t.TowerId, out var tower))
+                continue;
+
+            tower.MeleeNearUnitSeconds += t.EnemyMeleeInRange * dt;
         }
 
         foreach (var p in sample.Points)
@@ -384,13 +602,61 @@ internal sealed partial class FordsRunReport
         return lane >= 0 && lane < lanes && index < run.Lanes.Count ? run.Lanes[index] : null;
     }
 
-    private static void MergeLanes(FordsRunEvidence run, FordsFieldSample sample, double dt)
+    /// <summary>
+    /// One look at a stream: judged only while its applied command is a MoveTo at a standing enemy tower. A look with most of its units
+    /// past the tower extends the run; any other look ends it. The second look in a row is the failure, logged once per stream.
+    /// </summary>
+    private void JudgeMarch(FordsRunEvidence run, FordsLaneEvidence lane, FordsLaneSample look)
+    {
+        if (look.MarchTower == null)
+        {
+            lane.PastRun = 0;
+            return;
+        }
+
+        lane.MarchSamples++;
+        if (!FordsMarchWatch.MostPast(look.MarchPast, look.Live))
+        {
+            lane.PastRun = 0;
+            return;
+        }
+
+        lane.PastSamples++;
+        lane.PastRun++;
+        lane.MaxPastRun = Math.Max(lane.MaxPastRun, lane.PastRun);
+        var share = look.MarchPast / (double)look.Live;
+        if (share > lane.MaxPastShare)
+        {
+            lane.MaxPastShare = share;
+            lane.PastTower = look.MarchTower;
+        }
+
+        if (lane.PastRun != FordsMarchWatch.ConsecutiveLooks || lane.FirstPastMt != null)
+            return;
+
+        lane.FirstPastMt = run.Mt;
+        Warn("Lane", "bypass side=" + look.Side + " lane=" + look.Lane + " tower=" + look.MarchTower + " past=" + look.MarchPast + "/" + look.Live);
+    }
+
+    private void MergeLanes(FordsRunEvidence run, FordsFieldSample sample, double dt)
     {
         foreach (var l in sample.Lanes)
         {
             var lane = LaneOf(run, l.Side, l.Lane);
             if (lane == null)
                 continue;
+
+            lane.UnitSeconds += l.Live * dt;
+            lane.AlarmedUnitSeconds += l.Alarmed * dt;
+            lane.CurrentAttackTarget = l.AttackTarget;
+            JudgeMarch(run, lane, l);
+            if (l.AttackTarget != null)
+            {
+                lane.AttackTarget = l.AttackTarget;
+                lane.AttackUnitSeconds += l.Live * dt;
+                lane.AttackFlaggedUnitSeconds += l.Flagged * dt;
+                lane.AttackContactUnitSeconds += l.Contact * dt;
+            }
 
             if (l.Live > 0)
             {

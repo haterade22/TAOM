@@ -4,7 +4,7 @@ using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Tests.Features.FordsOfWar.Domain;
 
-/// <summary>Walking a lane polyline: progress, nearest waypoint, the next waypoint toward the enemy.</summary>
+/// <summary>Walking a lane polyline: length, progress, nearest waypoint, points along the arc.</summary>
 [TestClass]
 public class LaneGeometryTests
 {
@@ -70,105 +70,6 @@ public class LaneGeometryTests
     public void NearestIndex_EmptyPath_ReturnsMinusOne()
     {
         Assert.AreEqual(-1, LaneGeometry.NearestIndex(new List<Vec3f>(), new Vec3f(0, 0, 0)));
-    }
-
-    [TestMethod]
-    public void NextWaypoint_WestSoldierBetweenWaypoints_ReturnsTheOneAhead()
-    {
-        var next = LaneGeometry.NextWaypoint(Straight, MatchSide.West, new Vec3f(3, 0, 0), 2f);
-
-        Assert.AreEqual(new Vec3f(10, 0, 0), next);
-    }
-
-    [TestMethod]
-    public void NextWaypoint_WestSoldierWithinReachOfTheNext_SkipsToTheOneAfter()
-    {
-        var next = LaneGeometry.NextWaypoint(Straight, MatchSide.West, new Vec3f(9, 0, 0), 2f);
-
-        Assert.AreEqual(new Vec3f(20, 0, 0), next);
-    }
-
-    [TestMethod]
-    public void NextWaypoint_WestSoldierStandingOnAWaypoint_ReturnsTheNextOne()
-    {
-        var next = LaneGeometry.NextWaypoint(Straight, MatchSide.West, new Vec3f(10, 0, 0), 1f);
-
-        Assert.AreEqual(new Vec3f(20, 0, 0), next);
-    }
-
-    [TestMethod]
-    public void NextWaypoint_EastSoldier_MarchesTowardLowerIndices()
-    {
-        var next = LaneGeometry.NextWaypoint(Straight, MatchSide.East, new Vec3f(97, 0, 0), 2f);
-
-        Assert.AreEqual(new Vec3f(90, 0, 0), next);
-    }
-
-    [TestMethod]
-    public void NextWaypoint_EastSoldierWithinReach_SkipsOne()
-    {
-        var next = LaneGeometry.NextWaypoint(Straight, MatchSide.East, new Vec3f(91, 0, 0), 2f);
-
-        Assert.AreEqual(new Vec3f(80, 0, 0), next);
-    }
-
-    [TestMethod]
-    public void NextWaypoint_WestSoldierAtTheEnemyBase_ClampsToTheLastWaypoint()
-    {
-        var next = LaneGeometry.NextWaypoint(Straight, MatchSide.West, new Vec3f(100, 0, 0), 6f);
-
-        Assert.AreEqual(new Vec3f(100, 0, 0), next);
-    }
-
-    [TestMethod]
-    public void NextWaypoint_EastSoldierAtTheEnemyBase_ClampsToTheFirstWaypoint()
-    {
-        var next = LaneGeometry.NextWaypoint(Straight, MatchSide.East, new Vec3f(0, 0, 0), 6f);
-
-        Assert.AreEqual(new Vec3f(0, 0, 0), next);
-    }
-
-    [TestMethod]
-    public void NextWaypoint_OffLaneSoldier_UsesProjectionNotRawDistance()
-    {
-        var next = LaneGeometry.NextWaypoint(Straight, MatchSide.West, new Vec3f(24, 30, 0), 2f);
-
-        Assert.AreEqual(new Vec3f(30, 0, 0), next);
-    }
-
-    [TestMethod]
-    public void NextWaypoint_EmptyPath_ReturnsTheGivenPosition()
-    {
-        var p = new Vec3f(4, 5, 6);
-
-        Assert.AreEqual(p, LaneGeometry.NextWaypoint(new List<Vec3f>(), MatchSide.West, p, 2f));
-    }
-
-    [TestMethod]
-    public void PointBeforeTower_West_IsOnTheWestSideOfTheTower()
-    {
-        var p = LaneGeometry.PointBeforeTower(Straight, new Vec3f(80, 0, 0), MatchSide.West, 35f);
-
-        Assert.AreEqual(45f, p.X, 1e-3f);
-        Assert.AreEqual(0f, p.Y, 1e-3f);
-    }
-
-    [TestMethod]
-    public void PointBeforeTower_East_IsOnTheEastSideOfTheTower()
-    {
-        var p = LaneGeometry.PointBeforeTower(Straight, new Vec3f(20, 0, 0), MatchSide.East, 35f);
-
-        Assert.AreEqual(55f, p.X, 1e-3f);
-    }
-
-    [TestMethod]
-    public void PointBeforeTower_DistanceLongerThanLane_ClampsToTheLaneEnd()
-    {
-        var west = LaneGeometry.PointBeforeTower(Straight, new Vec3f(20, 0, 0), MatchSide.West, 80f);
-        var east = LaneGeometry.PointBeforeTower(Straight, new Vec3f(80, 0, 0), MatchSide.East, 80f);
-
-        Assert.AreEqual(new Vec3f(0, 0, 0), west);
-        Assert.AreEqual(new Vec3f(100, 0, 0), east);
     }
 
     [TestMethod]

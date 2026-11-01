@@ -27,6 +27,8 @@ internal sealed partial class FordsRunReport
     private const int VolleySampleCap = 10;
     private const int LaneSampleCap = 30;
     private const int PauseSampleCap = 20;
+    private const double LaneStateSeconds = 5.0;
+    private const int ExceptionLineCap = 5;
 
     private static readonly int[] Caps = { TowerSampleCap, VolleySampleCap, LaneSampleCap, PauseSampleCap };
 
@@ -46,6 +48,8 @@ internal sealed partial class FordsRunReport
     private int _liveWest;
     private int _liveEast;
     private int _backlog;
+    private volatile Func<object?, string?>? _gunnerOf;
+    private volatile Func<object?, FordsAttacker?>? _attackerOf;
 
     public FordsRunReport(IModLogger logger)
         : this(logger, SystemClock())

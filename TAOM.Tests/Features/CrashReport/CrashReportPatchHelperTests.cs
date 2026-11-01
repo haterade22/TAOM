@@ -76,6 +76,63 @@ public class CrashReportPatchHelperTests
         StringAssert.Contains(RethrowProbe.TraceAfterHarmonyRethrow(innerResult!), nameof(RethrowProbe.ThrowAtTheSite));
     }
 
+    [TestMethod]
+    public void HandleAndSwallow_WhenTheServiceCaptures_RaisesSwallowedWithTheExceptionAndTheOrigin()
+    {
+        RecordingCrashService.Install();
+        var ex = RethrowProbe.CaughtFromTheSite();
+        var seen = new System.Collections.Generic.List<(Exception Exception, string Origin)>();
+        Action<Exception, string> handler = (e, origin) => seen.Add((e, origin));
+        CrashReportPatchHelper.Swallowed += handler;
+        try
+        {
+            CrashReportPatchHelper.HandleAndSwallow(ex, "taom-006.test");
+        }
+        finally
+        {
+            CrashReportPatchHelper.Swallowed -= handler;
+        }
+
+        Assert.AreEqual(1, seen.Count);
+        Assert.AreSame(ex, seen[0].Exception);
+        Assert.AreEqual("taom-006.test", seen[0].Origin);
+    }
+
+    [TestMethod]
+    public void HandleAndSwallow_WhenItHandsTheExceptionBack_RaisesNothing()
+    {
+        var ex = RethrowProbe.CaughtFromTheSite();
+        var raised = 0;
+        Action<Exception, string> handler = (_, _) => raised++;
+        CrashReportPatchHelper.Swallowed += handler;
+        try
+        {
+            Assert.AreSame(ex, CrashReportPatchHelper.HandleAndSwallow(ex, "taom-006.test"), "no service is installed, so it is handed back");
+        }
+        finally
+        {
+            CrashReportPatchHelper.Swallowed -= handler;
+        }
+
+        Assert.AreEqual(0, raised);
+    }
+
+    [TestMethod]
+    public void HandleAndSwallow_ASubscriberThatThrows_DoesNotTurnTheSwallowIntoAHandBack()
+    {
+        RecordingCrashService.Install();
+        Action<Exception, string> handler = (_, _) => throw new InvalidOperationException("a broken listener");
+        CrashReportPatchHelper.Swallowed += handler;
+        try
+        {
+            Assert.IsNull(CrashReportPatchHelper.HandleAndSwallow(RethrowProbe.CaughtFromTheSite(), "taom-006.test"));
+        }
+        finally
+        {
+            CrashReportPatchHelper.Swallowed -= handler;
+        }
+    }
+
     [TestCleanup]
     public void DropTheInstalledService() => CrashReportPatchHelper.ResetForUnload();
 }

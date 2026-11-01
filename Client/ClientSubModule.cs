@@ -1,8 +1,10 @@
+using System;
 using Bannerlord.UIExtenderEx;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 using TAOM.Composition;
 using TAOM.Core.Logging;
+using TAOM.Features.FordsOfWar.Autorun;
 using TAOM.Features.FordsOfWar.Diagnostics;
 
 namespace TAOM.Client;
@@ -22,6 +24,9 @@ public sealed class ClientSubModule : MBSubModuleBase
     private const string UiExtenderModuleName = "TAOM";
 
     private UIExtender? _uiExtender;
+    private FordsAutorunDriver? _autorun;
+    private bool _autorunResolved;
+    private bool _autorunFaulted;
 
     public ClientSubModule()
     {
@@ -52,5 +57,38 @@ public sealed class ClientSubModule : MBSubModuleBase
     {
         base.OnBeforeInitialModuleScreenSetAsRoot();
         MainMenuStep.Run("fords of war final report", () => IoC.Resolve<FordsRunReport>().MainMenuReturned(), () => IoC.Resolve<IModLogger>());
+    }
+
+    // The Fords of War autorun (docs/features/fords-of-war.md): unarmed, which is every player session, this is one bool and one null
+    // check per tick. The plan is resolved on the first tick (IoC.Configure ran in OnSubModuleLoad) and the driver only when it is armed,
+    // so an unarmed session never builds the config catalog. A fault is logged once.
+    protected override void OnApplicationTick(float dt)
+    {
+        base.OnApplicationTick(dt);
+        try
+        {
+            if (!_autorunResolved)
+            {
+                _autorunResolved = true;
+                _autorun = FordsAutorunStart.Driver(IoC.Resolve<FordsAutorunPlan>(), IoC.Resolve<FordsAutorunDriver>, IoC.Resolve<IModLogger>());
+            }
+
+            _autorun?.Tick(dt);
+        }
+        catch (Exception ex)
+        {
+            if (_autorunFaulted)
+                return;
+
+            _autorunFaulted = true;
+            try
+            {
+                IoC.Resolve<IModLogger>().LogError($"[FordsOfWar][Autorun] the autorun tick failed (further failures are not logged): {ex}");
+            }
+            catch
+            {
+                // swallow-ok: the logger itself failed; this runs in the engine's tick, which must not throw.
+            }
+        }
     }
 }

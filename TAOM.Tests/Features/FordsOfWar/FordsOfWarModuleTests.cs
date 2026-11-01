@@ -10,6 +10,7 @@ using TAOM.Composition;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Autorun;
 using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Hooks;
 using TAOM.Tests.Infrastructure;
@@ -96,6 +97,41 @@ public class FordsOfWarModuleTests
         AssertSingleton<FordsMissionLauncher>(container);
         AssertSingleton<IFordsMenuAdapter>(container);
         AssertSingleton<IFordsOfWarGameManagerFactory>(container);
+        AssertSingleton<FordsAutorunPlan>(container);
+        AssertSingleton<IFordsAutorunHost>(container);
+        AssertSingleton<FordsAutorunDriver>(container);
+    }
+
+    [TestMethod]
+    public void RegisterServices_TheDefaultAutorunHostIsTheNullOne_AndAClientRegistrationReplacesIt()
+    {
+        var container = Registered();
+
+        Assert.IsInstanceOfType(container.Resolve<IFordsAutorunHost>(), typeof(NullFordsAutorunHost));
+
+        var client = Substitute.For<IFordsAutorunHost>();
+        container.RegisterInstance(client, ifAlreadyRegistered: IfAlreadyRegistered.Replace);
+        Assert.AreSame(client, container.Resolve<IFordsAutorunHost>());
+    }
+
+    [TestMethod]
+    public void RegisterServices_PlanAndHost_ResolveWithoutBuildingTheCatalogUntilTheDriverIsResolved()
+    {
+        // An unarmed player session resolves the plan and never the driver, so it never builds the config catalog the driver takes.
+        var container = Registered();
+        var catalogsBuilt = 0;
+        container.RegisterDelegate(_ =>
+        {
+            catalogsBuilt++;
+            return new FordsConfigCatalog(Substitute.For<IPathService>(), Substitute.For<IModLogger>());
+        }, Reuse.Singleton, ifAlreadyRegistered: IfAlreadyRegistered.Replace);
+
+        container.Resolve<FordsAutorunPlan>();
+        container.Resolve<IFordsAutorunHost>();
+        Assert.AreEqual(0, catalogsBuilt);
+
+        container.Resolve<FordsAutorunDriver>();
+        Assert.AreEqual(1, catalogsBuilt);
     }
 
     [TestMethod]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TAOM.Client.Features.FordsOfWar;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Tests.Features.FordsOfWar.Scenarios;
@@ -50,6 +51,8 @@ internal static class FordsScenarios
         "frozen" => With(sc => sc.Field.Frozen = true, 80),
         "killer-unknown" => KillerUnknown(),
         "hp-drift" => HpDrift(),
+        "exception-swallowed" => ExceptionSwallowed(),
+        "bypass-march" => BypassMarch(),
         "towers-dead" => TowersDead(),
         "item-missing" => With(sc => sc.Towers.Item = null, 3),
         "hold-in-fire" => HoldInFire(),
@@ -394,6 +397,34 @@ internal static class FordsScenarios
         return sc;
     }
 
+    /// <summary>An exception one of TAOM's CrashReport finalizers swallowed since the mission started: the hook the telemetry logic subscribes to raised it.</summary>
+    private static FordsScenario ExceptionSwallowed()
+    {
+        var sc = Started();
+        sc.Seconds(5);
+        sc.Report.ExceptionSwallowed("IndexOutOfRangeException", "Patch37.Tick");
+        return sc;
+    }
+
+    /// <summary>
+    /// A stream that marched with most of its units more than 10 m past the next standing tower on two looks in a row. The looks are
+    /// fed to the report directly: the real rules attack a tower their lead has passed, so only a rules fault could produce them.
+    /// </summary>
+    private static FordsScenario BypassMarch()
+    {
+        var sc = Started();
+        sc.Seconds(5);
+        for (var look = 0; look < 2; look++)
+        {
+            sc.Report.MissionTick(1f, 1.0);
+            sc.Report.Field(new FordsFieldSample(
+                new[] { new FordsLaneSample(MatchSide.West, 0, 10, 100f, false, 0, -1f, null, 0, null, 0, 0, "tower_east_0_0", 8) },
+                new FordsTowerSample[0], new FordsPointSample[0], 0, 10, 0));
+        }
+
+        return sc;
+    }
+
     private static FordsScenario TowersDead()
     {
         var sc = new FordsScenario();
@@ -406,7 +437,8 @@ internal static class FordsScenarios
     private static FordsScenario HoldInFire()
     {
         var sc = new FordsScenario();
-        sc.ConfigTweak = c => c with { Towers = c.Towers with { FireRange = 80f } };
+        // A held lane forms up at the lane midpoint now, so the fault needs a fire range that reaches that far.
+        sc.ConfigTweak = c => c with { Towers = c.Towers with { FireRange = 150f } };
         sc.Field.SpawnFails = (_, side, _) => side == MatchSide.East;
         sc.InstallMenu();
         sc.StartFromMenu();

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using TAOM.Features.FordsOfWar.Domain;
 
@@ -113,6 +114,56 @@ internal static partial class FordsVerdicts
     }
 
     private static string Join(IEnumerable<string> items) => string.Join(", ", items);
+
+    private static string StreamName(FordsLaneEvidence lane) => lane.Side.Substring(0, 1) + lane.Lane;
+
+    private static int Total(Dictionary<string, int> counts)
+    {
+        var total = 0;
+        foreach (var n in counts.Values)
+            total += n;
+        return total;
+    }
+
+    /// <summary>
+    /// Every lane command of every stream that had one, compact: "W0:M/H/C/A!R" is West lane 0's MoveTo, HoldAt, Charge and AttackTower
+    /// commands given and the commands refused in all; "-" when no command was ever sent.
+    /// </summary>
+    internal static string CommandCounts(FordsRunEvidence run)
+    {
+        var parts = new List<string>();
+        foreach (var lane in run.Lanes)
+        {
+            var refused = Total(lane.CommandsRefused);
+            if (Total(lane.CommandsGiven) + refused == 0)
+                continue;
+
+            parts.Add(StreamName(lane) + ":" + Count(lane.CommandsGiven, nameof(LaneCommandKind.MoveTo)) + "/"
+                + Count(lane.CommandsGiven, nameof(LaneCommandKind.HoldAt)) + "/" + Count(lane.CommandsGiven, nameof(LaneCommandKind.Charge)) + "/"
+                + Count(lane.CommandsGiven, nameof(LaneCommandKind.AttackTower)) + "!" + refused);
+        }
+
+        return parts.Count == 0 ? "-" : string.Join(" ", parts);
+    }
+
+    /// <summary>The share of each stream's live unit-seconds that the engine held alarmed, "W0:1.00 E1:0.25"; "-" before any live unit was seen.</summary>
+    internal static string AlarmShares(FordsRunEvidence run)
+    {
+        var parts = run.Lanes.Where(l => l.UnitSeconds > 0.0)
+            .Select(l => StreamName(l) + ":" + (l.AlarmedUnitSeconds / l.UnitSeconds).ToString("F2", System.Globalization.CultureInfo.InvariantCulture));
+        var text = string.Join(" ", parts);
+        return text == "" ? "-" : text;
+    }
+
+    private static int AttackOrders(FordsLaneEvidence lane) => Count(lane.CommandsGiven, nameof(LaneCommandKind.AttackTower));
+
+    /// <summary>The AttackTower commands given, in all and by stream: "5 (W1:1 E1:4)", just "0" when none.</summary>
+    private static string AttackTowerGiven(FordsRunEvidence run)
+    {
+        var streams = run.Lanes.Where(l => AttackOrders(l) > 0).ToList();
+        var total = streams.Sum(AttackOrders);
+        return total + (streams.Count == 0 ? "" : " (" + string.Join(" ", streams.Select(l => StreamName(l) + ":" + AttackOrders(l))) + ")");
+    }
 
     private static string Pairs(IReadOnlyDictionary<string, int> map)
     {

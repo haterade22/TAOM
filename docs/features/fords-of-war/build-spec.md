@@ -154,17 +154,26 @@ path index, next waypoint toward the enemy for a side, point at a distance befor
 | `AiCommander` | Below. |
 
 `LaneSituation(MatchSide Side, int Lane, LaneOrder Order, int LiveUnits, Vec3f? Center,
-float NearestEnemyDistance, string? NextEnemyTowerId, float NextEnemyTowerDistance, bool NextEnemyTowerLocked)`.
+float NearestEnemyDistance, string? NextEnemyTowerId, float NextEnemyTowerDistance, bool NextEnemyTowerLocked)`,
+plus the lead group the match measures on the lane path (`Lead`, `LeadArc`, `LeadCount`, `CenterTowerDistance`).
+`NearestEnemyDistance` and `NextEnemyTowerDistance` are measured from the lead; without unit positions the lead is the center.
 `LaneCommand` kinds: `MoveTo(Vec3f)`, `Charge`, `AttackTower(string towerId)`, `HoldAt(Vec3f)`,
 `None`. Decision order:
 1. No units: `None`.
 2. `FallBack`: `MoveTo` the waypoint nearest the side's own outermost living tower.
-3. Enemy units within `EngageRange` of the center: `Charge`.
-4. Next enemy tower within `AttackRange` and not locked: `AttackTower` (unless order is Hold).
+3. Enemy units within `EngageRange` of the lead: `Charge`.
+4. Next enemy tower within `AttackRange` of the lead and not locked: `AttackTower` (unless order is Hold).
 5. `Hold`: `HoldAt` the one stable point `HoldDistanceBeforeTower` before the next enemy tower on
-   the lane path, wherever the formation stands (a lane short of it advances to it, a lane past it
+   the lane path, but never past the lane midpoint (a keep target holds at the midpoint), snapped to the path vertex on
+   the holder's own side; wherever the formation stands (a lane short of it advances to it, a lane past it
    falls back to it). With no next enemy tower or no path for the lane: `None`.
 6. Otherwise `MoveTo` the next waypoint toward the enemy.
+
+The lead group is the units within `LeadBand` metres (`lanes.leadBand`, 25) of the most advanced unit's arc position along
+the lane path; the lead is their mean position. A waypoint counts as reached when the lead's arc is within
+`WaypointReachRadius` of it, and the rules keep a forward-only waypoint index per side and lane (reset on any branch other than
+the march). `LaneMarchRules.Evaluate` returns a `LaneDecision` (branch, counts, centre, lead, distances, waypoint index,
+command); `Decide` is its command.
 The engine layer applies a command only when it differs from the last one applied to that formation.
 
 ### 3.5 The match aggregate
@@ -1085,6 +1094,26 @@ names (the spec sentences were edited in place too).
   synchronous failure of the call is caught and logged. (d) The "Three callers" sentence in the game manager bullet listed two and now says two:
   the result panel's button (`FordsCommandView.cs:82`) and the `OnLoadFinished` tail (`FordsOfWarGameManager.cs:51`); `FordsMissionExit` calls
   the menu adapter's `EndGame`, not `ReturnToMainMenu`.
+
+### Autorun, diagnostics, lane rules and layout fitter batch (2026-10-31)
+
+Four builders worked in parallel; the main session then wired the planner into the director.
+
+- Autorun. `FordsAutorunPlan` is registered in `FordsOfWarModule`; the driver is not, because it needs the client host. `Client/Features/FordsOfWar/FordsAutorunHost.CreateDriver()` builds it by hand and returns null when the plan is unarmed, so a player session resolves nothing; `ClientSubModule.OnApplicationTick` ticks it. The arm file needs an absolute `out=`, and the `force_attack` key was left out. Done reasons are `final`, `start_refused`, `start_failed`, `never_live`, `wall_limit` and `final_timeout`. `tools/run_fords_autorun.py` launches the game, and after the first run stalled on the engine's "Mod change detected" dialog it clicks OK on exactly that dialog, fails on a dialog titled like a crash and leaves any other alone. A 45 s probe run completed the chain with reason `final`.
+- Diagnostics. Lane commands are counted uncapped per stream (`CommandsGiven`, `CommandsRefused`, `FirstGivenMt`) and off-navmesh refusals are counted in the director. Lane units spawn alarmed (`isAlarmed = true`); gunners do not. The probe records alarmed share, enemy melee contact within 4 m of a tower and the part flagged `AttackEntity`. Gunner blows come from `OnMeleeHit` and `OnMissileHit` (`IFordsTowerAdapter.TowerIdOfGunner` is new). `[LaneState]` is throttled to 5 mission seconds per stream, the `[Layout]` line feeds a new `layout` part in check 04 (53 contract rows), and `maps.json` lists Rohan Plains II first.
+- Lane rules. The centre rule of the first build is replaced by the lead group, a forward-only march ratchet and a Hold bounded at the lane midpoint (section 3.4). `LaneMarchRules.Evaluate` returns a `LaneDecision` and `FordsMatch.LastDecisions` holds one per lane and side. `lanes.leadBand` (25, range 1 to 300) is new in `match.json`. Five hold tests moved their expected point to the midpoint, and the hold-in-fire scenario fault needed a fire range of 150 (it was 80) to still put the hold line in fire.
+- Layout fitter. Ring search (2, 4, 8, 12 m, eight bearings), a tower slide of up to 30 m along the fitted lane, along-axis base settling, a per-lane segment check and `FordsLayoutPlanner` (spread x1, x0.7, x0.5, then the short axis when the aspect ratio is under 1.25). `FordsLayoutFit` moved to its own file and gained `Lanes`, `DroppedTowers`, `MovedTowers`, `Rejected` and `Reason`. `IFordsSceneAdapter` gained a `TryGetBasePoints(inset, shortSide, ...)` overload.
+- Planner rule change (main session). The builder's planner rejected a layout that missed the limits (10% dropped, no tower moved over 30 m, 5% bad segments). Now only the fitter rejects, when a lane loses every tower of one side; a layout that merely misses the limits is played as the best-scoring attempt with one warning. `FordsMissionDirector.PlanLayout` runs the planner and logs every attempt, and `Start` refuses only on a rejected fit. The `[LaneState]` line prints the rules' `LaneDecision` followed by `cmd=` and `applied=`.
+
+### Review-fix batch (2026-10-31)
+
+A deep review of the batch above (base `d4fb51a50`, reviewed head `4821f64e9`) produced two HIGH, eight MEDIUM and 37 LOW findings. Four builders fixed them in separate worktrees; the main session decided the open design points and merged. Check 03 gained an `exceptions` part and check 09 a `bypass` part (55 contract rows, scenario faults `exception-swallowed` and `bypass-march`).
+
+- Lanes builder. `LaneGeometry.LeadGroup` took the single most advanced unit as the front, so one runaway unit led a 44-unit lane past a standing tower. The front is now the advance of the k-th most advanced unit, k = min(n, max(3, ceil(n / 10))), computed with integer arithmetic `(n+9)/10` because `Math.Ceiling(0.1 * 30)` is 4 on doubles; the lead group is every unit within `leadBand` on both sides of that line. Each lane's path becomes a `LanePath` float-array table once, built in the `LaneMarchRules` constructor, and `LaneMarchRules.LeadOf` serves `FordsMatch.SituationOf`. `LaneSnapshot` lost its Lead fields, `LaneGeometry` lost `WaypointIndex`, `LeadGroup`, `HoldPoint`, `NextWaypoint` and `PointBeforeTower`, and `LaneMarchRules.Decide` became a test-only extension. Tower arcs are projected each tick rather than cached.
+- Diagnostics builder. `[LaneState]` carries `cmd=` (the kind the director sent) and `sent=` (its target); `_applied` stays as the change-detection key that `FordsFieldProbe` reads. The swallowed-exception seam is a static event `CrashReportPatchHelper.Swallowed` rather than `IOutcomeLog`, because `OutcomeLog` exposes no readable count and the helper is the one place every Harmony finalizer swallow passes; the telemetry meter subscribes per mission and unsubscribes at its end, and check 03 `exceptions` passes only when the hook was in place and the count is zero. The per-tower any-unit contact counters were removed in favour of the per-stream ladder measured at each order's own target, with gunner blows counted only from known enemies of the tower's owner. Melee raw damage is a value-to-count histogram (256 distinct values, overflow counted) so the median is exact. `bypass` FAILs on any one marching decision with the lead level with or past the tower (0 m counts as past). `FordsTelemetryLogic` was brought under 150 lines by moving logic into `FordsTelemetryMeter`, and the line-count test now sums every file of a partial class.
+- Autorun builder. The driver is registered next to the plan in `FordsOfWarModule` with `NullFordsAutorunHost`, the client replaces the host, and `FordsAutorunStart.Driver` (new, beyond the finding text) builds the driver only when the plan is armed so the rule is testable. `exit_stalled` is a new done reason, bounded by the driver's own wall clock because `FordsRunReport.Wall` is private and zeroed at first use. The launcher's crash marker is an `[ERROR] [CrashReport]` line, not any `[CrashReport]` line, because healthy runs log INFO lines with that prefix; the swallowed exception in run `20261031-220826` produced a full ERROR block inside its start and end window, so the new `judge()` would have failed it. A game that had to be killed fails the run, but a stopped lingering `Watchdog.exe` alone does not. `FordsAutorunDriver.cs` is 152 lines and is not an ADR-002 entry point, so it was not split.
+- Layout builder. The rule that a lane may not lose every tower of one side is shared (`FordsLayoutFitter.EmptiedGroups`) between the fitter and the director's post-build check instead of copied; `TowerChain` was not used because it counts a lane that never had a tower as lost, which is right for keep locking and wrong for a refusal. Camps are derived as dropped in the planner (`candidate.Camps.Count - fit.Layout.Camps.Count`), so `FordsLayoutFit` did not change. Timing text is formatted in `FordsLayoutFitLines.Timing` so it is testable without a clock. `IFordsSceneAdapter` lost its three-argument `TryGetBasePoints`.
+- Main session. Lens 6's damage-stage hook replaced the stage ceiling plan for the regeneration exception: `FordsTowerAdapter` sets `DestructableComponent.OnCalculateDestructionStateIndex` (a public `Func<int,int,int,int>` the engine consults after its own stage loop) so the shown stage never moves backward, leaving the domain and the balance unchanged; the field is pinned in `TheTowerAdapterMembers_StillResolve`. For the runaway lead the main session chose the level-or-past reach test (the tower is in reach when the lead's arc is level with or past the tower's) over a march cap, so a lead carried past a tower attacks it without a limit on how far a lane may march. The two earlier builder entries above still describe the first build; where they differ (the autorun host's `CreateDriver`, `applied=` in the `[LaneState]` line, a lead of one unit) this entry supersedes them. A later fix pass (2026-11-01) also replaced the `bypass` measure described in the diagnostics entry: it no longer reads the rules' lead, the probe counts the stream's own units more than 10 m past the next standing enemy tower, and the part fails on two looks in a row with more than half past. The per-stream ladder counts only blows on the tower the stream is ordered at.
 
 ## Self-check logging
 

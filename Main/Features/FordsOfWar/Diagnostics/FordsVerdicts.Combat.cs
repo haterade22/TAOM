@@ -10,6 +10,62 @@ internal static partial class FordsVerdicts
     private static string BlowsByReason(FordsRunEvidence run, TowerBlowClass? cls) =>
         string.Join(" ", Enum.GetNames(typeof(TowerDamageReason)).Select((n, i) => n + "=" + Blows(run, cls, (TowerDamageReason)i)));
 
+    /// <summary>The ladder per stream that was ordered at a tower: orders given, unit-seconds under the order, flagged, in contact with that tower, then its blows and the ones that took hit points.</summary>
+    private static string Ladder(FordsRunEvidence run)
+    {
+        var rows = run.Lanes.Where(l => AttackOrders(l) > 0).Select(l => "ladder " + StreamName(l) + ">" + (l.AttackTarget ?? "-") + " orders=" + AttackOrders(l)
+            + " underS=" + N(l.AttackUnitSeconds) + " flaggedS=" + N(l.AttackFlaggedUnitSeconds) + " contactS=" + N(l.AttackContactUnitSeconds)
+            + " towerBlows=" + l.TowerBlows + " gunnerBlows=" + l.GunnerBlows + " applied=" + l.AppliedBlows).ToList();
+        return rows.Count == 0 ? "ladder -" : string.Join(" ; ", rows);
+    }
+
+    /// <summary>For each tower that was struck: the lowest hit points the rules held, what regeneration gave back, the damage applied by class and the melee raw damage.</summary>
+    private static string TowerHealth(FordsRunEvidence run)
+    {
+        var rows = new List<string>();
+        foreach (var pair in run.Towers)
+        {
+            var tower = pair.Value;
+            long struck = 0;
+            foreach (var n in tower.Blows)
+                struck += n;
+            if (struck == 0)
+                continue;
+
+            var applied = string.Join(",", Enum.GetNames(typeof(TowerBlowClass)).Select((name, i) => new { name, damage = tower.AppliedDamage[i] })
+                .Where(x => x.damage > 0).Select(x => x.name + ":" + x.damage));
+            var raw = tower.MeleeRawSummary();
+            rows.Add(pair.Key + ":minHp=" + (tower.MinRulesHp?.ToString() ?? "-") + " healed=" + tower.HealedTotal + " applied=" + (applied == "" ? "-" : applied)
+                + " meleeRaw=n" + raw.Count + "/min" + raw.Min + "/med" + N(raw.Median) + "/max" + raw.Max);
+        }
+
+        return rows.Count == 0 ? "towerHealth -" : "towerHealth " + string.Join(" ", rows);
+    }
+
+    /// <summary>
+    /// Fails when a stream marched with more than half its units past the next standing enemy tower on two looks in a row. The numbers
+    /// are the looks judged and the failing ones, and for a failure the worst stream (most failing looks, then the largest share).
+    /// </summary>
+    private static (FordsResult, string) Bypass(FordsRunEvidence run)
+    {
+        var judged = run.Lanes.Sum(l => l.MarchSamples);
+        var failing = run.Lanes.Sum(l => l.PastSamples);
+        var numbers = "samplesJudged=" + judged + " failingSamples=" + failing;
+        var failed = run.Lanes.Where(l => l.MaxPastRun >= FordsMarchWatch.ConsecutiveLooks)
+            .OrderByDescending(l => l.PastSamples).ThenByDescending(l => l.MaxPastShare).ToList();
+        if (failed.Count > 0)
+        {
+            var worst = failed[0];
+            numbers += " worst=" + StreamName(worst) + " past " + worst.PastTower + ": " + N(worst.MaxPastShare * 100.0) + "% of its units, "
+                + worst.MaxPastRun + " looks in a row, from mt=" + (worst.FirstPastMt == null ? "-" : N(worst.FirstPastMt.Value));
+            if (failed.Count > 1)
+                numbers += " also=" + string.Join(",", failed.Skip(1).Select(StreamName));
+            return (FordsResult.Fail, numbers);
+        }
+
+        return (judged > 0 ? FordsResult.Pass : FordsResult.NotSeen, numbers);
+    }
+
     private static FordsVerdictRow Check09(FordsRunEvidence run)
     {
         var locked = Blows(run, null, TowerDamageReason.Locked);
@@ -19,14 +75,19 @@ internal static partial class FordsVerdicts
         var meleeApplied = Blows(run, TowerBlowClass.Melee, TowerDamageReason.Applied);
         var nearSeconds = run.Towers.Values.Sum(t => t.MeleeNearUnitSeconds);
         var melee = meleeApplied > 0 ? FordsResult.Pass : nearSeconds >= 30.0 ? FordsResult.Fail : FordsResult.NotSeen;
+        var (bypass, bypassNumbers) = Bypass(run);
 
         var drifted = string.Join(",", run.Towers.Where(p => p.Value.DriftFlagged).Select(p => p.Key));
         return Row(9, new[]
         {
             Part("lock", lockResult, "locked=" + locked + (drift ? " drift(" + drifted + ")" : "")),
             Part("melee", melee, "applied=" + meleeApplied + " nearUnitSeconds=" + N(nearSeconds)),
-        }, "melee blows " + BlowsByReason(run, TowerBlowClass.Melee) + " | all blows " + BlowsByReason(run, null),
-            "A blow on a locked tower took nothing, engine and rules hit points never differed by more than 1 on two samples in a row, and melee landed once enemies stood at a tower for 30 unit-seconds.",
+            Part("bypass", bypass, bypassNumbers),
+        }, "attackTowerGiven=" + AttackTowerGiven(run) + " nativeTowerBlows=" + Blows(run, null, null)
+            + " gunnerBlows=" + run.Towers.Values.Sum(t => t.GunnerBlowsMelee) + " melee/" + run.Towers.Values.Sum(t => t.GunnerBlowsRanged) + " ranged"
+            + " | " + Ladder(run) + " | " + TowerHealth(run)
+            + " | melee blows " + BlowsByReason(run, TowerBlowClass.Melee) + " | all blows " + BlowsByReason(run, null),
+            "A blow on a locked tower took nothing, engine and rules hit points never differed by more than 1 on two samples in a row, melee landed once enemies stood at a tower for 30 unit-seconds, and no marching stream had more than half its units more than 10 m past the next standing enemy tower on two looks in a row (the looks are the 1 Hz field probe, measured from the units, not from the rules' lead). The ladder names, per stream ordered at a tower, the broken link: units under the order, flagged AttackEntity, within 4 m of that tower, blows on the tower against blows on its gunners, and the blows that took hit points.",
             "The tower bar moves when it is struck.");
     }
 

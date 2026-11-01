@@ -40,4 +40,22 @@ public class FordsLogLineTests
     {
         Assert.AreEqual("[FordsOfWar][Stage] run=0 w=0.000 mt=0.0", FordsLogLine.Of("Stage", 0, 0, 0, ""));
     }
+
+    [TestMethod]
+    public void Point_NaNInfinityAndMissing_PrintADash_AndAFinitePointPrintsOneDecimal()
+    {
+        Assert.AreEqual("(1.5,-2.0)", FordsLogLine.Point(new TAOM.Features.FordsOfWar.Domain.Vec3f(1.5f, -2f, 0f)));
+        Assert.AreEqual("-", FordsLogLine.Point(null));
+        Assert.AreEqual("-", FordsLogLine.Point(new TAOM.Features.FordsOfWar.Domain.Vec3f(float.NaN, 1f, 0f)));
+        Assert.AreEqual("-", FordsLogLine.Point(new TAOM.Features.FordsOfWar.Domain.Vec3f(1f, float.PositiveInfinity, 0f)));
+    }
+
+    [TestMethod]
+    public void Distance_NoTowerNaNAndInfinity_PrintADash_AndAFiniteOneDecimal()
+    {
+        Assert.AreEqual("84.3", FordsLogLine.Distance(84.26f));
+        Assert.AreEqual("-", FordsLogLine.Distance(float.MaxValue), "float.MaxValue is the rules' 'nothing there'");
+        Assert.AreEqual("-", FordsLogLine.Distance(float.NaN));
+        Assert.AreEqual("-", FordsLogLine.Distance(float.PositiveInfinity));
+    }
 }

@@ -179,7 +179,7 @@ public class FordsMissionDirectorReportTests
     {
         var f = Started();
         var spawnOne = typeof(FordsMissionDirector).GetMethod("SpawnOne", BindingFlags.NonPublic | BindingFlags.Instance)!;
-        var request = new SpawnRequest(1, MatchSide.West, 99, "footman", 1, FordsMissionDirector.HumanSlotId, UnitRole.Infantry, false);
+        var request = new SpawnRequest(1, MatchSide.West, 99, "footman", 1, FordsMissionDirector.WestSlotId, UnitRole.Infantry, false);
 
         var spawned = (bool)spawnOne.Invoke(f.Director, new object[] { request })!;
 

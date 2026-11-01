@@ -77,7 +77,8 @@ internal static class FordsMatchConfigReader
         s.Float(g, "lanes", "engageRange", d.EngageRange, 1f, 300f),
         s.Float(g, "lanes", "waypointReachRadius", d.WaypointReachRadius, 0.5f, 100f),
         s.Float(g, "lanes", "holdDistanceBeforeTower", d.HoldDistanceBeforeTower, 0f, 300f),
-        s.Int(g, "lanes", "assaultThreshold", d.AssaultThreshold, 1, MaxCount));
+        s.Int(g, "lanes", "assaultThreshold", d.AssaultThreshold, 1, MaxCount),
+        s.Float(g, "lanes", "leadBand", d.LeadBand, 1f, 300f));
 
     private static FordsCaptureConfig ReadCapture(JObject? g, FordsCaptureConfig d, FordsConfigScope s) => new(
         s.Float(g, "capture", "radius", d.Radius, 1f, 200f),

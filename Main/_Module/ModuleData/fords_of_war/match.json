@@ -44,7 +44,8 @@
     "engageRange": 25,
     "waypointReachRadius": 6,
     "holdDistanceBeforeTower": 60,
-    "assaultThreshold": 40
+    "assaultThreshold": 40,
+    "leadBand": 25
   },
   "capture": {
     "radius": 12,

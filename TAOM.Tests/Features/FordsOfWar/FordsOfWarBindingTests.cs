@@ -110,6 +110,7 @@ public class FordsOfWarBindingTests
         var hitPoint = Property(typeof(DestructableComponent), "HitPoint", typeof(float));
         Assert.IsNotNull(hitPoint.GetSetMethod(true), "DestructableComponent.HitPoint lost its setter");
         Property(typeof(DestructableComponent), "IsDestroyed", typeof(bool));
+        Field(typeof(DestructableComponent), "OnCalculateDestructionStateIndex", typeof(Func<int, int, int, int>));
 
         var destroyed = typeof(DestructableComponent).GetEvent("OnDestroyed", AnyMember);
         Assert.IsNotNull(destroyed, "DestructableComponent.OnDestroyed no longer resolves");

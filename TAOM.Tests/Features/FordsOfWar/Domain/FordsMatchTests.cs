@@ -271,7 +271,7 @@ public class FordsMatchTests
 
         var command = effects.Commands.Single().Command;
         Assert.AreEqual(LaneCommandKind.HoldAt, command.Kind);
-        Assert.AreEqual(580f, command.Target.X, 1e-2f);
+        Assert.AreEqual(500f, command.Target.X, 1e-2f);
     }
 
     [TestMethod]

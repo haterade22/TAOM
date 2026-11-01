@@ -196,4 +196,171 @@ public class FordsFieldProbeTests
         Assert.IsFalse(b.Contested);
         Assert.IsTrue(b.NearestApproach > 100f);
     }
+
+    private void AlarmedUnit(int key, MatchSide side, int lane, float x, float y, bool alarmed, bool attackingEntity, UnitRole role = UnitRole.Infantry)
+    {
+        var k = new AgentKey(key);
+        _units.Add(new FordsUnitSample(k, side, lane, new Vec3f(x, y, 0f), alarmed, attackingEntity));
+        _records[k] = new UnitRecord(k, side, lane, 1, 10, role, null);
+    }
+
+    [TestMethod]
+    public void Alarmed_IsCountedPerLane_OfTheLiveUnits()
+    {
+        AlarmedUnit(1, MatchSide.West, 0, 100f, 0f, true, false);
+        AlarmedUnit(2, MatchSide.West, 0, 110f, 0f, false, false);
+        AlarmedUnit(3, MatchSide.West, 0, 120f, 0f, true, false);
+        AlarmedUnit(4, MatchSide.East, 1, 900f, 50f, false, false);
+
+        var sample = Sample();
+
+        Assert.AreEqual(2, LaneOf(sample, MatchSide.West, 0).Alarmed);
+        Assert.AreEqual(3, LaneOf(sample, MatchSide.West, 0).Live);
+        Assert.AreEqual(0, LaneOf(sample, MatchSide.East, 1).Alarmed);
+        Assert.AreEqual(0, LaneOf(sample, MatchSide.West, 1).Alarmed);
+    }
+
+    private static void Attack(Dictionary<(MatchSide, int), LaneCommand> applied, MatchSide side, int lane, string towerId) =>
+        applied[(side, lane)] = LaneCommand.AttackTower(towerId);
+
+    [TestMethod]
+    public void AttackLadder_FlaggedAndNearUnits_AreCountedAtTheTowerTheStreamWasOrderedAt()
+    {
+        // tower_east_0_0 stands at (640, 0); contact is 4 m.
+        Attack(_applied, MatchSide.West, 0, FordsTestLayout.EastOuter0);
+        AlarmedUnit(1, MatchSide.West, 0, 638f, 0f, true, true);
+        AlarmedUnit(2, MatchSide.West, 0, 636.5f, 0f, true, false);
+        AlarmedUnit(3, MatchSide.West, 0, 633f, 0f, true, true);
+        AlarmedUnit(4, MatchSide.West, 1, 650f, 0f, true, true);
+
+        var lane = LaneOf(Sample(), MatchSide.West, 0);
+
+        Assert.AreEqual(FordsTestLayout.EastOuter0, lane.AttackTarget);
+        Assert.AreEqual(3, lane.Live, "every live unit of the stream is under the order");
+        Assert.AreEqual(2, lane.Flagged, "the units whose combat flags carry AttackEntity");
+        Assert.AreEqual(2, lane.Contact, "2 m and 3.5 m are in contact; 7 m is not");
+        Assert.IsNull(LaneOf(Sample(), MatchSide.West, 1).AttackTarget, "the other lane was given no AttackTower order");
+    }
+
+    [TestMethod]
+    public void AttackLadder_UnitsStandingAtALockedOtherTower_CountZeroContactForAStreamOrderedAtThisOne()
+    {
+        // The stream is ordered at tower_east_0_0 (640, 0) but its units stand at tower_east_1_0 (640, 50), another tower.
+        Attack(_applied, MatchSide.West, 0, FordsTestLayout.EastOuter0);
+        AlarmedUnit(1, MatchSide.West, 0, 640f, 49f, true, false);
+        AlarmedUnit(2, MatchSide.West, 0, 641f, 51f, true, false);
+
+        var lane = LaneOf(Sample(), MatchSide.West, 0);
+
+        Assert.AreEqual(0, lane.Contact, "contact is measured to the order's own target");
+        Assert.AreEqual(0, lane.Flagged);
+    }
+
+    [TestMethod]
+    public void AttackLadder_ContactIgnoresRangedUnits_AndAFallenTargetHasNoLadder()
+    {
+        Attack(_applied, MatchSide.West, 0, FordsTestLayout.EastOuter0);
+        AlarmedUnit(1, MatchSide.West, 0, 639f, 0f, true, true, UnitRole.Ranged);
+        AlarmedUnit(2, MatchSide.West, 0, 639f, 0f, true, true, UnitRole.Cavalry);
+
+        Assert.AreEqual(1, LaneOf(Sample(), MatchSide.West, 0).Contact, "only the cavalry, a melee role");
+
+        _fallen.Add(FordsTestLayout.EastOuter0);
+        var after = LaneOf(Sample(), MatchSide.West, 0);
+        Assert.IsNull(after.AttackTarget, "a tower that fell is no longer a target");
+        Assert.AreEqual(0, after.Contact);
+    }
+
+    [TestMethod]
+    public void AttackLadder_AnAttackTowerOrderAtAnUnknownTower_HasNoTarget()
+    {
+        Attack(_applied, MatchSide.West, 0, "tower_nowhere");
+        AlarmedUnit(1, MatchSide.West, 0, 639f, 0f, true, true);
+
+        Assert.IsNull(LaneOf(Sample(), MatchSide.West, 0).AttackTarget);
+    }
+
+    private static void March(Dictionary<(MatchSide, int), LaneCommand> applied, MatchSide side, int lane) =>
+        applied[(side, lane)] = LaneCommand.MoveTo(new Vec3f(500f, lane * 50f, 0f));
+
+    [TestMethod]
+    public void MarchWatch_AWestStreamMarching_CountsTheUnitsMoreThan10MetresPastItsNextEnemyTowerAlongTheLane()
+    {
+        // tower_east_0_0 stands at x 640 (arc 640): 650 m is the line.
+        March(_applied, MatchSide.West, 0);
+        Unit(1, MatchSide.West, 0, 700f, 0f);
+        Unit(2, MatchSide.West, 0, 650f, 0f);
+        Unit(3, MatchSide.West, 0, 649f, 0f);
+        Unit(4, MatchSide.West, 0, 400f, 0f);
+
+        var lane = LaneOf(Sample(), MatchSide.West, 0);
+
+        Assert.AreEqual(FordsTestLayout.EastOuter0, lane.MarchTower);
+        Assert.AreEqual(2, lane.MarchPast, "700 and 650 are past; 649 and 400 are not");
+        Assert.AreEqual(4, lane.Live);
+    }
+
+    [TestMethod]
+    public void MarchWatch_AnEastStreamMarching_MirrorsTheLine()
+    {
+        // tower_west_0_0 stands at x 360: 350 m is the line for a stream walking toward lower arcs.
+        March(_applied, MatchSide.East, 0);
+        Unit(1, MatchSide.East, 0, 300f, 0f);
+        Unit(2, MatchSide.East, 0, 350f, 0f);
+        Unit(3, MatchSide.East, 0, 351f, 0f);
+        Unit(4, MatchSide.East, 0, 900f, 0f);
+
+        var lane = LaneOf(Sample(), MatchSide.East, 0);
+
+        Assert.AreEqual(FordsTestLayout.WestOuter0, lane.MarchTower);
+        Assert.AreEqual(2, lane.MarchPast);
+    }
+
+    [TestMethod]
+    public void MarchWatch_TheNextTowerFalls_TheMeasureMovesToTheNextOneAndThenTheKeep()
+    {
+        March(_applied, MatchSide.West, 0);
+        Unit(1, MatchSide.West, 0, 700f, 0f);
+        Unit(2, MatchSide.West, 0, 975f, 0f);
+
+        _fallen.Add(FordsTestLayout.EastOuter0);
+        var inner = LaneOf(Sample(), MatchSide.West, 0);
+        Assert.AreEqual(FordsTestLayout.EastInner0, inner.MarchTower, "the inner tower at x 800 is next");
+        Assert.AreEqual(1, inner.MarchPast, "700 is short of 810; 975 is past it");
+
+        _fallen.Add(FordsTestLayout.EastInner0);
+        var keep = LaneOf(Sample(), MatchSide.West, 0);
+        Assert.AreEqual(FordsTestLayout.EastKeep, keep.MarchTower);
+        Assert.AreEqual(1, keep.MarchPast, "the keep at x 960: 975 is past 970");
+    }
+
+    [TestMethod]
+    public void MarchWatch_AStreamNotMarching_OrWithNoTowerLeft_HasNoMarchTower()
+    {
+        Unit(1, MatchSide.West, 0, 700f, 0f);
+        Unit(2, MatchSide.West, 1, 700f, 50f);
+        Unit(3, MatchSide.East, 0, 300f, 0f);
+        _applied[(MatchSide.West, 0)] = LaneCommand.HoldAt(new Vec3f(560f, 0f, 0f));
+        Attack(_applied, MatchSide.West, 1, FordsTestLayout.EastOuter1);
+        March(_applied, MatchSide.East, 0);
+        foreach (var tower in _layout.Towers.Where(t => t.Owner == MatchSide.West))
+            _fallen.Add(tower.Id);
+
+        var sample = Sample();
+
+        Assert.IsNull(LaneOf(sample, MatchSide.West, 0).MarchTower, "a hold is not a march");
+        Assert.IsNull(LaneOf(sample, MatchSide.West, 1).MarchTower, "an attack is not a march");
+        Assert.IsNull(LaneOf(sample, MatchSide.East, 0).MarchTower, "West has no standing tower or keep left for East to march on");
+        Assert.AreEqual(0, LaneOf(sample, MatchSide.West, 0).MarchPast);
+    }
+
+    [TestMethod]
+    public void MarchWatch_AUnitWithNoReadablePosition_IsNeverPast()
+    {
+        March(_applied, MatchSide.East, 0);
+        Unit(1, MatchSide.East, 0, float.NaN, float.NaN);
+        Unit(2, MatchSide.East, 0, 300f, 0f);
+
+        Assert.AreEqual(1, LaneOf(Sample(), MatchSide.East, 0).MarchPast);
+    }
 }

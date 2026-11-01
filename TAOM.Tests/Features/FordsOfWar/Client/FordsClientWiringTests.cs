@@ -12,6 +12,8 @@ using TAOM.Composition;
 using TAOM.Core.Infrastructure;
 using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Autorun;
+using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Hooks;
 using TAOM.Tests.Infrastructure;
 using TAOM.Tests.Migration;
@@ -42,6 +44,7 @@ public class FordsClientWiringTests
     [DataTestMethod]
     [DataRow("FordsOfWarGameManager")]
     [DataRow("FordsOfWarGameManagerFactory")]
+    [DataRow("FordsAutorunHost")]
     [DataRow("FordsOfWarMissionViews")]
     [DataRow("FordsCommanderCameraView")]
     [DataRow("FordsCommandView")]
@@ -83,6 +86,54 @@ public class FordsClientWiringTests
         ClientComposition.Apply(container);
 
         Assert.IsInstanceOfType(container.Resolve<IFordsOfWarGameManagerFactory>(), typeof(FordsOfWarGameManagerFactory));
+    }
+
+    [TestMethod]
+    public void Apply_OverCoresNullAutorunHost_ResolvesTheClientHost()
+    {
+        var container = new Container();
+        var logger = Substitute.For<IModLogger>();
+        container.Register<IFordsAutorunHost, NullFordsAutorunHost>(Reuse.Singleton);
+        container.RegisterInstance(logger);
+        container.RegisterInstance(FordsAutorunPlan.Resolve(_ => "arm.txt", _ => true, _ => "out=E:\\out"));
+        container.RegisterInstance(new FordsSetupPrompt(new FordsConfigCatalog(Substitute.For<IPathService>(), logger),
+            Substitute.For<IFordsMenuAdapter>(), Substitute.For<IFordsOfWarGameManagerFactory>(), logger, new FordsRunReport(logger)));
+        ClientComposition.Current = new TaomClientComposition();
+
+        ClientComposition.Apply(container);
+
+        Assert.IsInstanceOfType(container.Resolve<IFordsAutorunHost>(), typeof(FordsAutorunHost));
+    }
+
+    [TestMethod]
+    public void AutorunHostSource_TakingItsPartsByConstructor_ResolvesNothingItselfAndHasNoDriverFactory()
+    {
+        var src = Source("FordsAutorunHost.cs");
+
+        Assert.IsFalse(src.Contains("IoC."), "the host takes its plan, prompt and logger by constructor");
+        Assert.IsFalse(src.Contains("CreateDriver"), "the driver is a core registration the client builds only for an armed plan");
+    }
+
+    [TestMethod]
+    public void ClientSubModuleSource_AnArmedPlan_BuildsTheDriverOnlyThroughTheStartHelper()
+    {
+        var src = RepoPaths.ReadSource("Client/ClientSubModule.cs", stripComments: true);
+
+        StringAssert.Contains(src, "FordsAutorunStart.Driver(IoC.Resolve<FordsAutorunPlan>(), IoC.Resolve<FordsAutorunDriver>, IoC.Resolve<IModLogger>())");
+        Assert.AreEqual(1, System.Text.RegularExpressions.Regex.Matches(src, "IoC\\.Resolve<FordsAutorunDriver>").Count);
+        Assert.IsFalse(src.Contains("FordsAutorunHost"), "the submodule does not name the host");
+    }
+
+    [TestMethod]
+    public void ClientSubModuleSource_AnAutorunFault_GuardsTheLoggerResolveInItsCatch()
+    {
+        var src = RepoPaths.ReadSource("Client/ClientSubModule.cs", stripComments: true);
+
+        var catchAt = src.IndexOf("catch (Exception ex)", StringComparison.Ordinal);
+        var resolveAt = src.IndexOf("IoC.Resolve<IModLogger>().LogError", catchAt, StringComparison.Ordinal);
+        var tryAt = src.IndexOf("try", catchAt, StringComparison.Ordinal);
+        Assert.IsTrue(catchAt >= 0 && resolveAt > catchAt, "the catch logs the fault");
+        Assert.IsTrue(tryAt > catchAt && tryAt < resolveAt, "a failing logger resolve must not escape the catch into the engine tick");
     }
 
     [TestMethod]

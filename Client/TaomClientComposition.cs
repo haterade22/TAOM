@@ -13,6 +13,7 @@ using TAOM.Features.CustomBattles;
 using TAOM.Features.LinesOfDescent.UI;
 using TAOM.Features.FieldCamp;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Autorun;
 using TAOM.Features.FiefManagement;
 using TAOM.Features.HallOfFire;
 using TAOM.Features.HostReview;
@@ -46,6 +47,7 @@ internal sealed class TaomClientComposition : IClientComposition
         registrator.Register<IShaderPrecompileGameManagerFactory, ShaderPrecompileGameManagerFactory>(Reuse.Singleton);
         registrator.Register<IShaderCompileNoticeWindowHost, ShaderCompileNoticeWindowHost>(Reuse.Singleton);
         registrator.Register<IFordsOfWarGameManagerFactory, FordsOfWarGameManagerFactory>(Reuse.Singleton);
+        registrator.Register<IFordsAutorunHost, FordsAutorunHost>(Reuse.Singleton);
         registrator.Register<ICampVisualService, CampVisualService>(Reuse.Singleton);
         registrator.Register<IRefugeVisualService, RefugeVisualService>(Reuse.Singleton);
         registrator.Register<ISupplyRouteVisualService, SupplyRouteVisualService>(Reuse.Singleton);

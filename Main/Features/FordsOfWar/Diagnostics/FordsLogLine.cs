@@ -1,4 +1,5 @@
 using System.Globalization;
+using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Features.FordsOfWar.Diagnostics;
 
@@ -17,4 +18,13 @@ internal static class FordsLogLine
     internal static string F1(double v) => v.ToString("F1", CultureInfo.InvariantCulture);
 
     internal static string F3(double v) => v.ToString("F3", CultureInfo.InvariantCulture);
+
+    /// <summary>A ground point as "(x,y)" with one decimal; a dash for no point or a coordinate that is not a finite number.</summary>
+    internal static string Point(Vec3f? point) =>
+        point is { } p && IsFinite(p.X) && IsFinite(p.Y) ? "(" + F1(p.X) + "," + F1(p.Y) + ")" : "-";
+
+    /// <summary>A distance in metres with one decimal. A dash for "nothing there": float.MaxValue is what the rules use for no enemy or tower, and NaN or infinity is never a distance.</summary>
+    internal static string Distance(float metres) => IsFinite(metres) && metres < float.MaxValue ? F1(metres) : "-";
+
+    private static bool IsFinite(float v) => !float.IsNaN(v) && !float.IsInfinity(v);
 }

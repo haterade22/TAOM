@@ -7,11 +7,11 @@ namespace TAOM.Features.FordsOfWar;
 
 /// <summary>
 /// A <see cref="FordsMatchSetup"/> resolved against the shipped config: the match numbers, the map entry (its layout options
-/// carry the chosen lane count), the two faction catalogs and the AI profile id the East slot will use. The director takes the
-/// plan, so it never reads a file.
+/// carry the chosen lane count), the two faction catalogs and the AI profile id the East slot will use (the West slot too when
+/// <see cref="WestAi"/>). The director takes the plan, so it never reads a file.
 /// </summary>
 internal sealed record FordsMatchPlan(FordsMatchConfig Config, MapEntry Map,
-    IReadOnlyDictionary<MatchSide, FactionCatalog> Factions, string AiProfile, int LaneCount)
+    IReadOnlyDictionary<MatchSide, FactionCatalog> Factions, string AiProfile, int LaneCount, bool WestAi = false)
 {
     private const int MinLanes = 1;
     private const string FallbackProfile = "normal";
@@ -41,6 +41,6 @@ internal sealed record FordsMatchPlan(FordsMatchConfig Config, MapEntry Map,
         var lanes = Math.Max(MinLanes, Math.Min(LaneStreams.MaxLanes, setup.LaneCount));
         var profile = config.AiProfiles.ContainsKey(setup.AiProfile) ? setup.AiProfile : FallbackProfile;
         var factions = new Dictionary<MatchSide, FactionCatalog> { [MatchSide.West] = west, [MatchSide.East] = east };
-        return new FordsMatchPlan(config, map with { Options = map.Options with { LaneCount = lanes } }, factions, profile, lanes);
+        return new FordsMatchPlan(config, map with { Options = map.Options with { LaneCount = lanes } }, factions, profile, lanes, setup.WestAi);
     }
 }

@@ -2395,3 +2395,15 @@ anywhere, a lane comparison that compared the request with itself.
   scenario reaches is deleted; a hand-built evidence record proves only the rule's arithmetic. Build such a
   feature in vertical slices (rule, producer seam and scenario together), not all rules first.
 - **Source:** `docs/reviews/rca-fords-of-war-2026-10-31.md`, addendum, root-cause pattern.
+
+### A self-check fails on a swallowed exception, and its ladder follows the causal target (Fords of War, 2026-10-31)
+An unattended Fords match threw `IndexOutOfRangeException` inside the engine; TAOM's CrashReport swallowed it, the
+self-check still read `fail=0` and the launcher printed PASS. In the same runs, check 9 counted "contact" near any
+standing tower and gunner hits from either side, so it could not say which link of the melee-on-tower chain broke,
+and the lane rule's front was the single furthest unit, which the clustered test positions never exposed.
+- **Why missed:** each number was the easiest one to compute (any exception left to another subsystem, any unit
+  near any tower, the maximum of a group), and each was tested on hand-built, well-behaved positions.
+- **Prevent:** a self-check run FAILs when an exception is swallowed while it is live, and an unattended launcher
+  fails on the same evidence; a diagnostic ladder counts each step against the stream's own target (ordered,
+  flagged, at the target, struck, applied); a group statistic gets a test with one lone outlier.
+- **Source:** `docs/reviews/rca-fords-of-war-2026-10-31.md`, night addendum, rows R1, R4, R5 and U2.

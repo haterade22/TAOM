@@ -120,7 +120,7 @@ public class ShippedFordsConfigTests
     }
 
     [TestMethod]
-    public void ShippedDefaults_AreGondorAgainstRohan_OnNormal_OnTheRohanPlainsMap()
+    public void ShippedDefaults_AreGondorAgainstRohan_OnNormal_OnTheRohanPlainsIIMap()
     {
         var catalog = Load(Substitute.For<IModLogger>());
 
@@ -129,7 +129,7 @@ public class ShippedFordsConfigTests
         Assert.AreEqual("gondor", setup.WestFaction);
         Assert.AreEqual("rohan", setup.EastFaction);
         Assert.AreEqual("normal", setup.AiProfile);
-        Assert.AreEqual("taom_rohan_battle_001_forceatmo", setup.SceneName);
+        Assert.AreEqual("taom_rohan_battle_002_forceatmo", setup.SceneName, "the first scene listed in maps.json");
     }
 
     [TestMethod]
@@ -187,7 +187,7 @@ public class ShippedFordsConfigTests
         Assert.AreEqual(5, ((JObject)json["waves"]!).Count);
         Assert.AreEqual(13, ((JObject)json["towers"]!).Count);
         Assert.AreEqual(5, ((JObject)json["heroes"]!).Count);
-        Assert.AreEqual(5, ((JObject)json["lanes"]!).Count);
+        Assert.AreEqual(6, ((JObject)json["lanes"]!).Count);
         Assert.AreEqual(2, ((JObject)json["capture"]!).Count);
         Assert.IsNotNull(json["countdownSeconds"]);
         foreach (var profile in new[] { "easy", "normal", "hard" })
@@ -446,7 +446,7 @@ public class ShippedFordsConfigTests
             .ToDictionary(s => (string)s.Attribute("id")!, StringComparer.OrdinalIgnoreCase);
         var catalog = Load(Substitute.For<IModLogger>());
 
-        Assert.IsTrue(catalog.Maps.Count >= 2 && catalog.Maps.Count <= 3, "two or three scenes");
+        Assert.IsTrue(catalog.Maps.Count >= 2 && catalog.Maps.Count <= 4, "two to four scenes");
         foreach (var map in catalog.Maps)
         {
             Assert.IsTrue(scenes.TryGetValue(map.SceneId, out var scene), map.SceneId + " is not a custom_battle_scenes.xml row");
@@ -454,6 +454,20 @@ public class ShippedFordsConfigTests
             Assert.AreEqual(MapLayoutMode.Generated, map.Layout, map.SceneId);
             Assert.AreEqual((string)scene.Attribute("name")!, map.DisplayName, map.SceneId + ": the row's own key and default");
         }
+    }
+
+    [TestMethod]
+    public void ShippedMaps_ListRohanPlainsIIFirst_ThenPelennorMordorAndRohanPlainsLast()
+    {
+        // The first scene is the default of a console start with no scene argument (FordsSetupChoices) and of a one-scene menu.
+        var catalog = Load(Substitute.For<IModLogger>());
+
+        CollectionAssert.AreEqual(new[]
+        {
+            "taom_rohan_battle_002_forceatmo", "taom_gondor_pelennor_fields_forceatmo", "taom_mordor_battle_001_forceatmo", "taom_rohan_battle_001_forceatmo",
+        }, catalog.Maps.Select(m => m.SceneId).ToList());
+        Assert.AreEqual("{=aom_taom_rohan_battle_002_forceatmo_name}[Rohan] Rohan Plains II", catalog.Maps[0].DisplayName);
+        Assert.AreEqual(MapLayoutMode.Generated, catalog.Maps[0].Layout);
     }
 
     [TestMethod]

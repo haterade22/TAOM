@@ -43,8 +43,10 @@ public class FordsScenarioTests
     [DataRow(3, "started")]
     [DataRow(3, "ids")]
     [DataRow(3, "spawn")]
+    [DataRow(3, "exceptions")]
     [DataRow(4, "countdown")]
     [DataRow(4, "towers")]
+    [DataRow(4, "layout")]
     [DataRow(4, "waves")]
     [DataRow(4, "march")]
     [DataRow(4, "fight")]
@@ -66,6 +68,7 @@ public class FordsScenarioTests
     [DataRow(8, "hold")]
     [DataRow(9, "lock")]
     [DataRow(9, "melee")]
+    [DataRow(9, "bypass")]
     [DataRow(10, "ownSide")]
     [DataRow(11, "item")]
     [DataRow(11, "hits")]
@@ -123,10 +126,13 @@ public class FordsScenarioTests
 
     [DataTestMethod]
     [DataRow("tower-dropped", 4, "towers")]
+    [DataRow("tower-dropped", 4, "layout")]
     [DataRow("route-b", 3, "started")]
     [DataRow("route-c", 3, "started")]
     [DataRow("spawn-null", 3, "spawn")]
     [DataRow("hp-drift", 9, "lock")]
+    [DataRow("exception-swallowed", 3, "exceptions")]
+    [DataRow("bypass-march", 9, "bypass")]
     [DataRow("warg-stranded", 12, "restored")]
     [DataRow("warg-not-returned", 12, "returned")]
     [DataRow("exit-slow", 14, "exit")]
@@ -204,6 +210,108 @@ public class FordsScenarioTests
         Assert.AreEqual(FordsResult.Pass, sc.Result(2, "unknown"));
         Assert.AreEqual(FordsResult.Pass, sc.Result(2, "defaults"), sc.Numbers(2, "defaults"));
         Assert.AreEqual(2, sc.Report.Session.RunsBegun);
+    }
+
+    // --- the check 9 chain --------------------------------------------------------------------------------------------
+
+    [TestMethod]
+    public void S1_Check9Info_ShowsTheAttackTowerOrdersThatWereGiven_AndTheNativeBlows()
+    {
+        var sc = FordsScenarios.Get("S1");
+
+        var info = sc.Rows.Single(r => r.Check == 9).Info;
+
+        StringAssert.Matches(info, new System.Text.RegularExpressions.Regex(@"attackTowerGiven=[1-9]\d* \("));
+        StringAssert.Matches(info, new System.Text.RegularExpressions.Regex(@"nativeTowerBlows=[1-9]"));
+        StringAssert.Contains(info, "gunnerBlows=0 melee/0 ranged");
+    }
+
+    [TestMethod]
+    public void S1_EveryLaneUnitWasSpawnedAlarmed_AndTheLogSaysSo()
+    {
+        var sc = FordsScenarios.Get("S1");
+
+        StringAssert.Contains(sc.Rows.Single(r => r.Check == 4).Info, "alarmed=W0:1.00 W1:1.00 W2:1.00 E0:1.00 E1:1.00 E2:1.00");
+        Assert.IsTrue(sc.Logger.Lines.Any(l => l.Contains("[Summary]") && l.Contains(" alarmed=W0:1.00")));
+    }
+
+    [TestMethod]
+    public void S1_TheLaneCommandsAreCountedPastTheLogCap_AndTheSummaryCarriesThem()
+    {
+        var sc = FordsScenarios.Get("S1");
+
+        var given = sc.Report.Run!.Lanes.Sum(l => l.CommandsGiven.Values.Sum());
+        Assert.IsTrue(given > 30, "a 30 minute match gives more than the 30 logged commands: " + given);
+        Assert.AreEqual(30, sc.Logger.Lines.Count(l => l.Contains("[FordsOfWar][Lane] ") && l.Contains("cmd=")));
+        Assert.IsTrue(sc.Logger.Lines.Any(l => l.Contains("[Summary]") && System.Text.RegularExpressions.Regex.IsMatch(l, @" cmds=\S+:\d+/\d+/\d+/\d+!\d+")));
+    }
+
+    [TestMethod]
+    public void S1_ThrottledLaneStateLinesRunForEveryStream_FiveMissionSecondsApart()
+    {
+        var sc = FordsScenarios.Get("S1");
+
+        var west0 = sc.Logger.Lines.Where(l => l.Contains("[FordsOfWar][LaneState]") && l.Contains("side=West lane=0 ")).ToList();
+        Assert.IsTrue(west0.Count > 100, "a 30 minute match at one line per 5 s: " + west0.Count);
+        Assert.IsTrue(west0.Count <= 1830 / 5 + 1);
+        Assert.AreEqual(6, sc.Report.Run!.Lanes.Count(l => sc.Logger.Lines.Any(x => x.Contains("[FordsOfWar][LaneState]")
+            && x.Contains("side=" + l.Side + " lane=" + l.Lane + " "))));
+    }
+
+    [TestMethod]
+    public void S1_TheLayoutLine_NamesNoMissingTowerAndNoOpenKeep()
+    {
+        var sc = FordsScenarios.Get("S1");
+
+        // The summary line; the planner's attempt and per-lane fit lines share the [Layout] category.
+        var lines = sc.Logger.Lines.Where(l => l.Contains("[FordsOfWar][Layout]") && l.Contains(" missing=")).ToList();
+        Assert.AreEqual(1, lines.Count);
+        StringAssert.Contains(lines[0], "missing=-");
+        StringAssert.Contains(lines[0], "keepOpenAtStart=West:false,East:false");
+    }
+
+    [TestMethod]
+    public void TowerDropped_TheLayoutLineAndCheck4Layout_NameTheTowerTheFitterLost()
+    {
+        var sc = FordsScenarios.Get("tower-dropped");
+
+        var line = sc.Logger.Lines.Single(l => l.Contains("[FordsOfWar][Layout]") && l.Contains(" missing="));
+        StringAssert.Matches(line, new System.Text.RegularExpressions.Regex(@"missing=tower_\w+"));
+        StringAssert.Matches(sc.Numbers(4, "layout"), new System.Text.RegularExpressions.Regex(@"missing=tower_\w+"));
+    }
+
+    [TestMethod]
+    public void GunnerHit_ThroughTheDirectorsLookups_CountsOnItsTowerAndOnTheStreamOrderedAtThatTower()
+    {
+        var sc = FordsScenarios.Started();
+        sc.Seconds(10);
+        var tower = sc.Towers.Entities.First(e => e.Gunners.Count > 0 && e.Slot.Kind == TAOM.Features.FordsOfWar.Domain.TowerKind.Tower);
+        var enemy = sc.Field.Alive.First(u => u.Side != tower.Slot.Owner);
+        sc.Report.Field(new TAOM.Features.FordsOfWar.Diagnostics.FordsFieldSample(
+            new[] { new TAOM.Features.FordsOfWar.Diagnostics.FordsLaneSample(enemy.Side, enemy.Lane, 10, 100f, false, 0, -1f, null, 0, tower.Slot.Id, 0, 0) },
+            new TAOM.Features.FordsOfWar.Diagnostics.FordsTowerSample[0], new TAOM.Features.FordsOfWar.Diagnostics.FordsPointSample[0], 0, 10, 0));
+
+        sc.Report.GunnerHit(tower.Gunners[0], enemy.Handle, false);
+        sc.Report.GunnerHit(tower.Gunners[0], enemy.Handle, true);
+        sc.Report.GunnerHit(tower.Gunners[1], enemy.Handle, true);
+        sc.Report.GunnerHit(tower.Gunners[1], new object(), true);
+        sc.Report.GunnerHit(new object(), enemy.Handle, false);
+
+        var evidence = sc.Report.Run!.Towers[tower.Slot.Id];
+        Assert.AreEqual(1, evidence.GunnerBlowsMelee);
+        Assert.AreEqual(2, evidence.GunnerBlowsRanged);
+        var stream = sc.Report.Run.Lanes.Single(l => l.Side == enemy.Side.ToString() && l.Lane == enemy.Lane);
+        Assert.AreEqual(3, stream.GunnerBlows);
+    }
+
+    [TestMethod]
+    public void AnUnalarmedSpawn_ShowsAsAZeroAlarmShare()
+    {
+        var sc = FordsScenarios.Started(s => s.Field.Unalarmed = true);
+
+        sc.Seconds(40);
+
+        StringAssert.Contains(sc.Rows.Single(r => r.Check == 4).Info, "alarmed=W0:0.00");
     }
 
     [TestMethod]

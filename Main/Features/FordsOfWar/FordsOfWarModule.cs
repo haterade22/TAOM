@@ -3,6 +3,7 @@ using DryIoc;
 using TAOM.Adapters;
 using TAOM.Composition;
 using TAOM.Core.Logging;
+using TAOM.Features.FordsOfWar.Autorun;
 using TAOM.Features.FordsOfWar.Diagnostics;
 
 namespace TAOM.Features.FordsOfWar;
@@ -38,6 +39,9 @@ internal sealed class FordsOfWarModule : TaomFeatureModule
         registrator.Register<FordsSetupPrompt>(Reuse.Singleton);
         registrator.Register<FordsMenuEntry>(Reuse.Singleton);
         registrator.Register<Hooks.FordsMissionLauncher>(Reuse.Singleton);
+        registrator.RegisterDelegate(_ => FordsAutorunPlan.Resolve(), Reuse.Singleton);
+        registrator.Register<IFordsAutorunHost, NullFordsAutorunHost>(Reuse.Singleton);
+        registrator.Register<FordsAutorunDriver>(Reuse.Singleton);
     }
 
     public override IReadOnlyList<PatchCategoryDecl> PatchCategories => Categories;

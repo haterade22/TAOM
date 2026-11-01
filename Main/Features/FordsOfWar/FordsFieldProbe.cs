@@ -11,11 +11,18 @@ namespace TAOM.Features.FordsOfWar;
 /// the hold point, measured along the lane's axis) stands inside a tower's fire and which tower covers it, how many enemy melee units
 /// stand at each tower and how close anyone came to each capture point. Engine-free (it reads the units the battlefield adapter
 /// already measured) but outside the pure diagnostics folder because it reads <see cref="FordsUnitSample"/>. Distances are 2D. No
-/// LINQ and no allocation per unit.
+/// LINQ and no allocation per unit. It also counts, per stream, the units the engine holds alarmed and, for a stream whose applied
+/// command is an AttackTower order at a standing tower, the units flagged to attack an entity and the melee ones in contact (within
+/// 4 m) with that tower, so a stream's ladder is measured at the tower it was ordered at and no other. For a stream whose applied
+/// command is a MoveTo it also counts the units whose arc along the lane is more than 10 m past the stream's next standing enemy tower,
+/// measured from the units themselves and not from the rules' lead, so check 9's <c>bypass</c> part can fail on a fault in the rules.
 /// </summary>
 internal static class FordsFieldProbe
 {
     private const float HoldArrivalMetres = 10f;
+
+    /// <summary>An enemy melee unit this close to the tower it was ordered at is in contact: near enough to swing at it.</summary>
+    private const float ContactMetres = 4f;
 
     internal static FordsFieldSample Sample(IReadOnlyList<FordsUnitSample> units, IReadOnlyDictionary<AgentKey, UnitRecord> records,
         MapLayout layout, HashSet<string> fallen, IReadOnlyDictionary<(MatchSide, int), LaneCommand> applied,
@@ -32,22 +39,15 @@ internal static class FordsFieldProbe
         var holdAxis = new Vec3f[streams];
         var coverDistance = new float[streams];
         var coverIndex = new int[streams];
+        var alarmed = new int[streams];
+        var attack = new AttackTally(streams);
+        var march = new MarchTally(streams);
         for (var i = 0; i < streams; i++)
         {
             holdFront[i] = float.MaxValue;
             holdFrontToPoint[i] = float.MaxValue;
             coverDistance[i] = float.MaxValue;
             coverIndex[i] = -1;
-        }
-
-        foreach (var pair in applied)
-        {
-            var (side, lane) = pair.Key;
-            if (pair.Value.Kind == LaneCommandKind.HoldAt && lane >= 0 && lane < lanes)
-            {
-                holdAt[LaneStreams.Index(side, lane, lanes)] = pair.Value.Target;
-                holdAxis[LaneStreams.Index(side, lane, lanes)] = AxisAt(layout, lane, pair.Value.Target);
-            }
         }
 
         var keeps = new Vec3f[LaneStreams.Sides];
@@ -58,6 +58,28 @@ internal static class FordsFieldProbe
                 keeps[(int)slot.Owner] = slot.Position;
             if (!fallen.Contains(slot.Id))
                 standing.Add(slot);
+        }
+
+        foreach (var pair in applied)
+        {
+            var (side, lane) = pair.Key;
+            if (lane < 0 || lane >= lanes)
+                continue;
+
+            var stream = LaneStreams.Index(side, lane, lanes);
+            if (pair.Value.Kind == LaneCommandKind.HoldAt)
+            {
+                holdAt[stream] = pair.Value.Target;
+                holdAxis[stream] = AxisAt(layout, lane, pair.Value.Target);
+            }
+            else if (pair.Value.Kind == LaneCommandKind.AttackTower)
+            {
+                attack.Index[stream] = IndexOf(standing, pair.Value.TowerId);
+            }
+            else if (pair.Value.Kind == LaneCommandKind.MoveTo)
+            {
+                march.Aim(stream, layout, lane, side, standing);
+            }
         }
 
         var meleeNear = new int[standing.Count];
@@ -84,6 +106,7 @@ internal static class FordsFieldProbe
                 var d = unit.Position.Distance2D(tower.Position);
                 if (melee && d <= facts.AttackRange)
                     meleeNear[t]++;
+
                 if (!counted)
                     continue;
                 if (d <= facts.FireRange)
@@ -103,8 +126,21 @@ internal static class FordsFieldProbe
             if (counted)
             {
                 live[stream]++;
+                if (unit.Alarmed)
+                    alarmed[stream]++;
                 if (inRange)
                     inFire[stream]++;
+                if (attack.Index[stream] is var target and >= 0)
+                {
+                    if (unit.AttackingEntity)
+                        attack.Flagged[stream]++;
+                    if (melee && unit.Position.Distance2D(standing[target].Position) <= ContactMetres)
+                        attack.Contact[stream]++;
+                }
+
+                if (march.IsPast(stream, unit))
+                    march.Past[stream]++;
+
                 var away = unit.Position.Distance2D(keeps[side]);
                 if (away > front[stream])
                 {
@@ -122,8 +158,104 @@ internal static class FordsFieldProbe
             }
         }
 
-        return new FordsFieldSample(LanesOf(lanes, live, inFire, front, holdFront, holdFrontToPoint, applied, standing, coverIndex),
+        return new FordsFieldSample(LanesOf(lanes, live, inFire, front, holdFront, holdFrontToPoint, applied, standing, coverIndex, alarmed, attack, march),
             TowersOf(standing, meleeNear), PointsOf(points, nearest, view), liveBySide[0], liveBySide[1], backlog);
+    }
+
+    /// <summary>Per stream marching on a standing enemy tower: the tower, its arc along the lane and the lane's path, and how many units stand past it.</summary>
+    private sealed class MarchTally
+    {
+        private readonly TowerSlot?[] _tower;
+        private readonly float[] _arc;
+        private readonly IReadOnlyList<Vec3f>?[] _path;
+
+        public MarchTally(int streams)
+        {
+            _tower = new TowerSlot?[streams];
+            _arc = new float[streams];
+            _path = new IReadOnlyList<Vec3f>?[streams];
+            Past = new int[streams];
+        }
+
+        public int[] Past { get; }
+
+        public string? TowerId(int stream) => _tower[stream]?.Id;
+
+        /// <summary>
+        /// Picks the stream's next standing enemy tower: the outermost standing tower of the other side in this lane, else that side's
+        /// keep. A stream with no tower left, or whose lane has no path, is not judged.
+        /// </summary>
+        public void Aim(int stream, MapLayout layout, int lane, MatchSide side, List<TowerSlot> standing)
+        {
+            TowerSlot? next = null;
+            TowerSlot? keep = null;
+            foreach (var slot in standing)
+            {
+                if (slot.Owner == side)
+                    continue;
+                if (slot.Kind == TowerKind.Keep)
+                    keep = slot;
+                else if (slot.Lane == lane && (next == null || slot.Order < next.Order))
+                    next = slot;
+            }
+
+            next ??= keep;
+            var path = PathOf(layout, lane);
+            if (next == null || path == null || path.Count < 2)
+                return;
+
+            _tower[stream] = next;
+            _path[stream] = path;
+            _arc[stream] = LaneGeometry.ArcPosition(path, next.Position);
+        }
+
+        public bool IsPast(int stream, FordsUnitSample unit)
+        {
+            var path = _path[stream];
+            if (path == null || float.IsNaN(unit.Position.X) || float.IsNaN(unit.Position.Y))
+                return false;
+
+            return FordsMarchWatch.IsPast(unit.Side, LaneGeometry.ArcPosition(path, unit.Position), _arc[stream]);
+        }
+
+        private static IReadOnlyList<Vec3f>? PathOf(MapLayout layout, int lane)
+        {
+            foreach (var candidate in layout.Lanes)
+            {
+                if (candidate.Index == lane)
+                    return candidate.Path;
+            }
+
+            return null;
+        }
+    }
+
+    /// <summary>Per stream: the index in the standing list of the tower its AttackTower order names (-1 for none), and the counts measured at it.</summary>
+    private sealed class AttackTally
+    {
+        public AttackTally(int streams)
+        {
+            Index = new int[streams];
+            Flagged = new int[streams];
+            Contact = new int[streams];
+            for (var i = 0; i < streams; i++)
+                Index[i] = -1;
+        }
+
+        public int[] Index { get; }
+        public int[] Flagged { get; }
+        public int[] Contact { get; }
+    }
+
+    private static int IndexOf(List<TowerSlot> standing, string? towerId)
+    {
+        for (var t = 0; t < standing.Count; t++)
+        {
+            if (standing[t].Id == towerId)
+                return t;
+        }
+
+        return -1;
     }
 
     private static bool IsMelee(UnitRole role) => role == UnitRole.Infantry || role == UnitRole.Spear || role == UnitRole.Cavalry;
@@ -151,7 +283,8 @@ internal static class FordsFieldProbe
     }
 
     private static List<FordsLaneSample> LanesOf(int lanes, int[] live, int[] inFire, float[] front, float[] holdFront, float[] holdFrontToPoint,
-        IReadOnlyDictionary<(MatchSide, int), LaneCommand> applied, List<TowerSlot> standing, int[] coverIndex)
+        IReadOnlyDictionary<(MatchSide, int), LaneCommand> applied, List<TowerSlot> standing, int[] coverIndex, int[] alarmed, AttackTally attack,
+        MarchTally march)
     {
         var result = new List<FordsLaneSample>(live.Length);
         for (var side = 0; side < LaneStreams.Sides; side++)
@@ -164,7 +297,9 @@ internal static class FordsFieldProbe
                 var settled = holding && holdFrontToPoint[stream] <= HoldArrivalMetres;
                 var hold = settled && holdFront[stream] != float.MaxValue ? holdFront[stream] : -1f;
                 var cover = coverIndex[stream] >= 0 ? standing[coverIndex[stream]].Id : null;
-                result.Add(new FordsLaneSample((MatchSide)side, lane, live[stream], front[stream], settled, inFire[stream], hold, cover));
+                var target = attack.Index[stream] >= 0 ? standing[attack.Index[stream]].Id : null;
+                result.Add(new FordsLaneSample((MatchSide)side, lane, live[stream], front[stream], settled, inFire[stream], hold, cover, alarmed[stream],
+                    target, attack.Flagged[stream], attack.Contact[stream], march.TowerId(stream), march.Past[stream]));
             }
         }
 

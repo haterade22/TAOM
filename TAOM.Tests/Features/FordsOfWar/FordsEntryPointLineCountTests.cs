@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Tests.Infrastructure;
 
@@ -9,12 +10,17 @@ namespace TAOM.Tests.Features.FordsOfWar;
 public class FordsEntryPointLineCountTests
 {
     [TestMethod]
-    public void EveryHooksFile_StaysUnder150Lines()
+    public void EveryHooksClass_StaysUnder150Lines_CountingEveryFileOfAPartialClass()
     {
         var files = Directory.GetFiles(RepoPaths.RepoPath("Main", "Features", "FordsOfWar", "Hooks"), "*.cs");
         Assert.IsTrue(files.Length >= 3, "FordsOfWarMissionLogic, FordsTowerHitPatch and FordsMissionLauncher");
-        foreach (var file in files)
-            Assert.IsTrue(File.ReadAllLines(file).Length < 150, "ADR-002: " + Path.GetFileName(file) + " is 150 lines or more");
+        var classes = files.GroupBy(f => Path.GetFileName(f).Split('.')[0]).ToList();
+        Assert.IsTrue(classes.Any(c => c.Count() > 1), "FordsTelemetryLogic keeps its gunner overrides in a second file, and this test must see both");
+        foreach (var group in classes)
+        {
+            var lines = group.Sum(f => File.ReadAllLines(f).Length);
+            Assert.IsTrue(lines < 150, "ADR-002: " + group.Key + " is " + lines + " lines over " + group.Count() + " file(s)");
+        }
     }
 
     [DataTestMethod]

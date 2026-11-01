@@ -1,0 +1,642 @@
+#!/usr/bin/env python3
+"""tools/run_fords_autorun.py: the pure helpers and the machine access around them, with the machine patched out.
+
+Run:  python -m unittest tools.tests.test_run_fords_autorun
+
+The launcher itself starts the real game and is not run here.
+"""
+import json
+import os
+import struct
+import subprocess
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+from types import SimpleNamespace
+from unittest import mock
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+import run_fords_autorun as r  # noqa: E402
+
+
+class ArmTextTests(unittest.TestCase):
+    def test_only_out_gives_out_and_quit(self):
+        self.assertEqual(r.arm_text(r"E:\x"), "out=E:\\x\nquit=1\n")
+
+    def test_west_ai_adds_its_key_only_when_set(self):
+        self.assertIn("west_ai=1\n", r.arm_text(r"E:\x", west_ai=True))
+        self.assertNotIn("west_ai", r.arm_text(r"E:\x"))
+
+    def test_every_choice_is_written_in_key_value_lines(self):
+        text = r.arm_text(r"E:\x", west="gondor", east="mordor", ai="hard", scene="s", live_seconds=90,
+                          live_wait_seconds=300, wall_limit_seconds=900)
+        self.assertEqual(text.splitlines(), ["west=gondor", "east=mordor", "ai=hard", "scene=s", "live_seconds=90",
+                                             "live_wait_seconds=300", "wall_limit_seconds=900", "out=E:\\x", "quit=1"])
+
+    def test_lines_use_lf_only(self):
+        self.assertNotIn("\r", r.arm_text(r"E:\x", west="gondor"))
+
+    def test_quit_can_be_switched_off(self):
+        self.assertIn("quit=0\n", r.arm_text(r"E:\x", quit_when_done=False))
+
+    def test_blank_choice_is_left_out(self):
+        self.assertNotIn("west=", r.arm_text(r"E:\x", west=""))
+
+
+class SafelyExitedTests(unittest.TestCase):
+    def test_zero_becomes_one_and_crlf_is_kept(self):
+        data = b"a = 1\r\nsafely_exited = 0\r\nb = 2\r\n"
+        new, changed = r.rewrite_safely_exited(data)
+        self.assertTrue(changed)
+        self.assertEqual(new, b"a = 1\r\nsafely_exited = 1\r\nb = 2\r\n")
+
+    def test_already_one_is_unchanged(self):
+        data = b"safely_exited = 1\r\n"
+        new, changed = r.rewrite_safely_exited(data)
+        self.assertFalse(changed)
+        self.assertEqual(new, data)
+
+    def test_absent_line_is_unchanged(self):
+        data = b"other = 0\n"
+        self.assertEqual(r.rewrite_safely_exited(data), (data, False))
+
+
+class CrashScanTests(unittest.TestCase):
+    def test_rgl_marker(self):
+        self.assertTrue(r.rgl_crashed("x\nUnhandled Exception Code: 0xC0000005\ny"))
+        self.assertFalse(r.rgl_crashed("all quiet"))
+
+    def test_watchdog_marker(self):
+        self.assertTrue(r.watchdog_crashed("[x] Crash occurred at 12:00"))
+        self.assertFalse(r.watchdog_crashed("Watching process 100"))
+
+
+class WatchdogTokenTests(unittest.TestCase):
+    def test_matches_the_pid_token(self):
+        self.assertTrue(r.watchdog_targets_pid(r"Watchdog.exe -p 1234 -x", 1234))
+
+    def test_matches_at_the_end_and_when_quoted(self):
+        self.assertTrue(r.watchdog_targets_pid(r"Watchdog.exe -p 1234", 1234))
+        self.assertTrue(r.watchdog_targets_pid('Watchdog.exe -p "1234" -x', 1234))
+
+    def test_a_longer_number_is_another_process(self):
+        self.assertFalse(r.watchdog_targets_pid(r"Watchdog.exe -p 12345", 1234))
+        self.assertFalse(r.watchdog_targets_pid(r"Watchdog.exe -p 51234", 1234))
+
+    def test_another_flag_is_not_a_pid_token(self):
+        self.assertFalse(r.watchdog_targets_pid(r"Watchdog.exe -pp 1234", 1234))
+
+    def test_empty_command_line(self):
+        self.assertFalse(r.watchdog_targets_pid(None, 1234))
+        self.assertFalse(r.watchdog_targets_pid("", 1234))
+
+
+class NewestLogTests(unittest.TestCase):
+    def test_picks_the_newest_created_after_the_start(self):
+        logs = [("a.log", 90.0), ("b.log", 120.0), ("c.log", 150.0)]
+        self.assertEqual(r.pick_newest_log(logs, started_epoch=100.0), "c.log")
+
+    def test_ignores_logs_older_than_the_start_minus_slack(self):
+        logs = [("old.log", 90.0), ("edge.log", 98.5)]
+        self.assertEqual(r.pick_newest_log(logs, started_epoch=100.0), "edge.log")
+        self.assertIsNone(r.pick_newest_log([("old.log", 90.0)], started_epoch=100.0))
+
+    def test_no_logs(self):
+        self.assertIsNone(r.pick_newest_log([], started_epoch=100.0))
+
+
+class DoneFileTests(unittest.TestCase):
+    def test_parses_values_with_spaces_and_equals(self):
+        text = "reason=final\r\nrun=1\r\nfinal_total=pass=3 fail=2 partial=6 notseen=5\r\nreport=E:\\a=b\\r.json\r\n"
+        done = r.parse_done(text)
+        self.assertEqual(done["reason"], "final")
+        self.assertEqual(done["final_total"], "pass=3 fail=2 partial=6 notseen=5")
+        self.assertEqual(done["report"], "E:\\a=b\\r.json")
+
+    def test_skips_lines_without_a_key(self):
+        self.assertEqual(r.parse_done("junk\n=x\nreason=final\n"), {"reason": "final"})
+
+
+class VerdictLinesTests(unittest.TestCase):
+    def test_only_the_final_pass_lines(self):
+        log = "\n".join([
+            "[FordsOfWar][Verdict] run=1 w=1 mt=1 final=0 check=01 result=pass",
+            "[FordsOfWar][Verdict] run=1 w=2 mt=2 final=1 check=01 result=pass",
+            "[FordsOfWar][Verdict] run=1 w=2 mt=2 final=1 total pass=3 fail=2 partial=6 notseen=5 report=\"x\"",
+            "[FordsOfWar][Stage] run=1 final=1",
+        ])
+        lines = r.final_verdict_lines(log)
+        self.assertEqual(len(lines), 2)
+        self.assertTrue(all("final=1" in line for line in lines))
+
+
+class ShaderListTests(unittest.TestCase):
+    @staticmethod
+    def blob(build, modules):
+        b, m = build.encode("ascii"), modules.encode("ascii")
+        return struct.pack("<II", 1, len(b)) + b + struct.pack("<I", len(m)) + m + b"records"
+
+    def test_reads_build_and_module_list(self):
+        self.assertEqual(r.read_shader_list(self.blob("125053", "Native;TAOM")), ("125053", "Native;TAOM"))
+
+    def test_unparsable_data_is_none(self):
+        self.assertIsNone(r.read_shader_list(b"\x01"))
+
+    def test_expected_list_is_ordinally_sorted_and_matches_the_f5_list(self):
+        self.assertEqual(r.expected_shader_list(r.launch_modules()),
+                         "BirthAndDeath;CustomBattle;DualWield;DualWield_TAOM;LOTRLOME_Armory;Native;SandBoxCore;Sandbox;"
+                         "StoryMode;TAOM;TAOM.Dependencies;TAOM_Map")
+
+
+class LaunchArgumentTests(unittest.TestCase):
+    F5_LIST = ["TAOM.Dependencies", "Native", "SandBoxCore", "CustomBattle", "Sandbox", "StoryMode", "BirthAndDeath",
+               "LOTRLOME_Armory", "DualWield", "TAOM_Map", "TAOM", "DualWield_TAOM"]
+
+    def test_module_list_is_read_from_the_launch_settings_and_equals_the_f5_list(self):
+        self.assertEqual(r.launch_modules(), self.F5_LIST)
+
+    def test_module_argument_is_the_f5_list(self):
+        self.assertEqual(r.modules_arg(r.launch_modules()),
+                         "_MODULES_*TAOM.Dependencies*Native*SandBoxCore*CustomBattle*Sandbox*StoryMode*BirthAndDeath*"
+                         "LOTRLOME_Armory*DualWield*TAOM_Map*TAOM*DualWield_TAOM*_MODULES_")
+
+    def test_the_module_id_placeholder_becomes_taom(self):
+        settings = {"profiles": {"Bannerlord": {"commandLineArgs": "/singleplayer _MODULES_*Native*$(ModuleId)*X*_MODULES_"}}}
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "launchSettings.json"
+            path.write_text(json.dumps(settings), encoding="utf-8")
+            self.assertEqual(r.launch_modules(path), ["Native", "TAOM", "X"])
+
+    def test_a_settings_file_without_the_profile_raises(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "launchSettings.json"
+            path.write_text(json.dumps({"profiles": {}}), encoding="utf-8")
+            with self.assertRaises(ValueError):
+                r.launch_modules(path)
+
+
+class JudgeTests(unittest.TestCase):
+    DONE = {"reason": "final", "started": "2026-10-31T22:08:36.9869565-05:00", "ended": "2026-10-31T22:19:19.7622814-05:00"}
+
+    def test_final_reason_with_a_final_report_passes(self):
+        self.assertEqual(r.judge({"reason": "final"}, {"final": True})[0], 0)
+
+    def test_other_reasons_fail(self):
+        for reason in ("start_refused", "never_live", "wall_limit", "final_timeout", "start_failed"):
+            self.assertEqual(r.judge({"reason": reason}, {"final": True})[0], 1, reason)
+
+    def test_missing_done_or_report_fails(self):
+        self.assertEqual(r.judge({}, None)[0], 1)
+        self.assertEqual(r.judge({"reason": "final"}, None)[0], 1)
+        self.assertEqual(r.judge({"reason": "final"}, {"final": False})[0], 1)
+
+    def test_a_fail_row_in_the_report_fails_the_run(self):
+        report = {"final": True, "verdicts": [{"Check": 3, "Result": "Pass"}, {"Check": 9, "Result": "Fail", "Title": "Melee"}]}
+        code, why = r.judge({"reason": "final"}, report)
+        self.assertEqual(code, 1)
+        self.assertIn("check 9", why)
+
+    def test_pass_partial_and_notseen_rows_do_not_fail_the_run(self):
+        report = {"final": True, "verdicts": [{"Check": 1, "Result": "Partial"}, {"Check": 2, "Result": "NotSeen"},
+                                              {"Check": 3, "Result": "Pass"}]}
+        self.assertEqual(r.judge({"reason": "final"}, report)[0], 0)
+
+    def test_a_crash_report_block_inside_the_run_fails_it(self):
+        log = ("[2026-10-31 22:08:40] [INFO] [CrashReport] main thread id 3 recorded at Subscribe()\n"
+               "[2026-10-31 22:17:23] [ERROR] [CrashReport] TAOM CrashReport captured 2026-11-01 03:17:23.756 UTC\n")
+        code, why = r.judge(self.DONE, {"final": True}, log)
+        self.assertEqual(code, 1)
+        self.assertIn("22:17:23", why)
+
+    def test_startup_crash_report_lines_below_error_level_do_not_fail_the_run(self):
+        log = ("[2026-10-31 22:08:40] [INFO] [CrashReport] main thread id 3 recorded at Subscribe()\n"
+               "[2026-10-31 22:08:40] [WARNING] [CrashReport] Native2Managed: target not found, skipped: X\n")
+        self.assertEqual(r.judge(self.DONE, {"final": True}, log)[0], 0)
+
+    def test_a_crash_report_block_after_the_done_time_is_not_this_runs_failure(self):
+        log = "[2026-10-31 22:19:25] [ERROR] [CrashReport] TAOM CrashReport captured at shutdown\n"
+        self.assertEqual(r.judge(self.DONE, {"final": True}, log)[0], 0)
+
+    def test_a_crash_report_block_before_the_start_is_not_this_runs_failure(self):
+        log = "[2026-10-31 22:00:01] [ERROR] [CrashReport] TAOM CrashReport captured at boot\n"
+        self.assertEqual(r.judge(self.DONE, {"final": True}, log)[0], 0)
+
+    def test_unparsable_times_count_every_crash_report_block(self):
+        log = "[2026-10-31 22:17:23] [ERROR] [CrashReport] TAOM CrashReport captured\n"
+        self.assertEqual(r.judge({"reason": "final"}, {"final": True}, log)[0], 1)
+
+
+class FinalVerdictTests(unittest.TestCase):
+    PASSED = (0, "reason=final, report final=true")
+
+    def test_a_clean_exit_keeps_the_judged_result(self):
+        self.assertEqual(r.final_verdict(self.PASSED, None, False), self.PASSED)
+
+    def test_a_crash_after_the_done_file_fails_a_passing_run(self):
+        code, why = r.final_verdict(self.PASSED, "rgl_log_1.txt reports a crash", False)
+        self.assertEqual(code, 1)
+        self.assertIn("rgl_log_1.txt", why)
+
+    def test_a_kill_after_the_done_file_fails_a_passing_run(self):
+        code, why = r.final_verdict(self.PASSED, None, True)
+        self.assertEqual(code, 1)
+        self.assertIn("killed", why)
+
+    def test_an_already_failed_run_keeps_its_own_reason(self):
+        failed = (1, "reason=never_live")
+        self.assertEqual(r.final_verdict(failed, "crash", True), failed)
+
+
+class DialogActionTests(unittest.TestCase):
+    # The engine's notice as seen on 2026-10-31 (title, the static text, the button).
+    NOTICE = ["OK", "", "A change in your active mods was detected. Deleting the runtime shader cache to avoid rendering issues."]
+
+    def test_the_mod_change_notice_is_dismissed(self):
+        self.assertEqual(r.dialog_action("Mod change detected", self.NOTICE), "dismiss")
+
+    def test_the_title_alone_is_not_enough(self):
+        self.assertEqual(r.dialog_action("Mod change detected", ["OK", "Something else"]), "leave")
+
+    def test_a_crash_title_fails_the_run(self):
+        self.assertEqual(r.dialog_action("Bannerlord Crash Report", ["Send", "Close"]), "fail")
+        self.assertEqual(r.dialog_action("Fatal error", []), "fail")
+
+    def test_any_other_dialog_is_left_alone(self):
+        self.assertEqual(r.dialog_action("Safe Mode", ["Yes", "No"]), "leave")
+        self.assertEqual(r.dialog_action("", []), "leave")
+
+
+class PowershellTests(unittest.TestCase):
+    def test_a_non_zero_exit_raises_instead_of_returning_empty_output(self):
+        failed = SimpleNamespace(returncode=1, stdout="", stderr="boom")
+        with mock.patch.object(r.subprocess, "run", return_value=failed):
+            with self.assertRaises(OSError):
+                r.powershell("Get-Date")
+
+    def test_a_zero_exit_returns_stripped_output(self):
+        done = SimpleNamespace(returncode=0, stdout="  hello \n", stderr="")
+        with mock.patch.object(r.subprocess, "run", return_value=done):
+            self.assertEqual(r.powershell("Get-Date"), "hello")
+
+
+class PreflightTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.game = Path(self.tmp.name)
+        exe_dir = self.game / "bin" / "Win64_Shipping_Client"
+        exe_dir.mkdir(parents=True)
+        (exe_dir / "Bannerlord.exe").write_bytes(b"")
+
+    def test_nothing_running_and_the_exe_present_is_go(self):
+        with mock.patch.object(r, "list_processes", return_value=[]):
+            self.assertEqual(r.preflight(self.game), [])
+
+    def test_a_running_bannerlord_refuses(self):
+        running = [{"pid": 7, "name": "Bannerlord.exe", "path": "x", "cmd": "", "created": ""}]
+        with mock.patch.object(r, "list_processes", return_value=running):
+            problems = r.preflight(self.game)
+        self.assertEqual(len(problems), 1)
+        self.assertIn("pid 7", problems[0])
+
+    def test_a_watchdog_from_the_game_folder_refuses(self):
+        running = [{"pid": 8, "name": "Watchdog.exe", "path": str(self.game / "bin" / "Watchdog.exe"), "cmd": "", "created": ""}]
+        with mock.patch.object(r, "list_processes", return_value=running):
+            self.assertEqual(len(r.preflight(self.game)), 1)
+
+    def test_a_missing_exe_refuses(self):
+        (self.game / "bin" / "Win64_Shipping_Client" / "Bannerlord.exe").unlink()
+        with mock.patch.object(r, "list_processes", return_value=[]):
+            self.assertIn("missing", r.preflight(self.game)[0])
+
+    def test_a_process_listing_that_fails_refuses_instead_of_passing(self):
+        with mock.patch.object(r, "list_processes", side_effect=OSError("powershell exited 1")):
+            problems = r.preflight(self.game)
+        self.assertEqual(len(problems), 1)
+        self.assertIn("could not list", problems[0])
+
+    def test_a_process_listing_that_is_not_json_refuses(self):
+        with mock.patch.object(r, "list_processes", side_effect=ValueError("bad json")):
+            self.assertIn("could not list", r.preflight(self.game)[0])
+
+
+class StopOwnTreeTests(unittest.TestCase):
+    @staticmethod
+    def proc(running=True, pid=100):
+        proc = mock.Mock()
+        proc.pid = pid
+        proc.poll.return_value = None if running else 0
+        return proc
+
+    def test_a_running_game_is_killed_through_its_popen_handle(self):
+        proc = self.proc()
+        with mock.patch.object(r, "list_processes", return_value=[]), mock.patch.object(r, "kill_pid") as kill_pid:
+            killed = r.stop_own_tree(proc, lambda _: None)
+        self.assertTrue(killed)
+        proc.kill.assert_called_once_with()
+        proc.wait.assert_called_once_with(30)
+        kill_pid.assert_not_called()
+
+    def test_an_exited_game_is_not_killed(self):
+        proc = self.proc(running=False)
+        with mock.patch.object(r, "list_processes", return_value=[]):
+            self.assertFalse(r.stop_own_tree(proc, lambda _: None))
+        proc.kill.assert_not_called()
+
+    def test_only_the_watchdog_that_watches_this_pid_is_killed(self):
+        proc = self.proc(running=False, pid=100)
+        dogs = [{"pid": 11, "name": "Watchdog.exe", "cmd": "Watchdog.exe -p 100 -x"},
+                {"pid": 12, "name": "Watchdog.exe", "cmd": "Watchdog.exe -p 1000"}]
+        with mock.patch.object(r, "list_processes", return_value=dogs), mock.patch.object(r, "kill_pid") as kill_pid:
+            killed = r.stop_own_tree(proc, lambda _: None)
+        self.assertTrue(killed)
+        kill_pid.assert_called_once_with(11)
+
+    def test_a_watchdog_listing_that_fails_does_not_hide_the_game_kill(self):
+        proc = self.proc()
+        said = []
+        with mock.patch.object(r, "list_processes", side_effect=OSError("boom")):
+            killed = r.stop_own_tree(proc, said.append)
+        self.assertTrue(killed)
+        proc.kill.assert_called_once_with()
+        self.assertTrue(any("watchdog" in line.lower() for line in said))
+
+    def test_a_game_that_ignores_the_kill_wait_is_reported_not_raised(self):
+        proc = self.proc()
+        proc.wait.side_effect = subprocess.TimeoutExpired("x", 30)
+        with mock.patch.object(r, "list_processes", return_value=[]):
+            self.assertTrue(r.stop_own_tree(proc, lambda _: None))
+
+
+class ResetSafelyExitedTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.path = Path(self.tmp.name) / "engine_config.txt"
+        self.said = []
+
+    def test_zero_is_rewritten_to_one(self):
+        self.path.write_bytes(b"a = 1\r\nsafely_exited = 0\r\n")
+        r.reset_safely_exited(self.path, self.said.append)
+        self.assertEqual(self.path.read_bytes(), b"a = 1\r\nsafely_exited = 1\r\n")
+        self.assertIn("was 0", self.said[0])
+
+    def test_one_is_reported_as_already_one(self):
+        self.path.write_bytes(b"safely_exited = 1\r\n")
+        r.reset_safely_exited(self.path, self.said.append)
+        self.assertIn("already 1", self.said[0])
+
+    def test_an_absent_key_is_reported_not_called_already_one(self):
+        self.path.write_bytes(b"other = 0\r\n")
+        r.reset_safely_exited(self.path, self.said.append)
+        self.assertIn("key not found", self.said[0])
+        self.assertNotIn("already 1", self.said[0])
+
+    def test_an_unreadable_file_is_reported(self):
+        r.reset_safely_exited(self.path, self.said.append)
+        self.assertIn("not readable", self.said[0])
+
+    def test_a_failed_write_is_reported_not_raised(self):
+        self.path.write_bytes(b"safely_exited = 0\r\n")
+        with mock.patch.object(Path, "write_bytes", side_effect=OSError("locked")):
+            r.reset_safely_exited(self.path, self.said.append)
+        self.assertIn("not written", self.said[0])
+
+
+class WatchTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.folder = Path(self.tmp.name)
+        self.said = []
+        patches = [mock.patch.object(r.time, "sleep"), mock.patch.object(r, "handle_dialogs", return_value=None),
+                   mock.patch.object(r, "scan_crash", return_value=None)]
+        for patcher in patches:
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
+    @staticmethod
+    def proc(returncode=None):
+        proc = mock.Mock()
+        proc.pid = 100
+        proc.poll.return_value = returncode
+        proc.returncode = returncode
+        return proc
+
+    def test_the_done_file_ends_the_watch(self):
+        (self.folder / r.DONE_FILE).write_text("reason=final\n", encoding="utf-8")
+        self.assertEqual(r.watch(self.proc(), self.folder, 100, self.said.append), "done")
+
+    def test_a_game_that_exits_without_a_done_file_is_a_failure_text(self):
+        result = r.watch(self.proc(returncode=3), self.folder, 100, self.said.append)
+        self.assertIn("exited (code 3)", result)
+
+    def test_a_crash_dialog_ends_the_watch(self):
+        with mock.patch.object(r, "handle_dialogs", return_value="crash dialog 'Problem'"):
+            result = r.watch(self.proc(), self.folder, 100, self.said.append)
+        self.assertEqual(result, "crash: crash dialog 'Problem'")
+
+    def test_a_crash_marker_in_the_engine_logs_ends_the_watch(self):
+        with mock.patch.object(r, "scan_crash", return_value="rgl_log_100.txt reports a crash"):
+            result = r.watch(self.proc(), self.folder, 100, self.said.append)
+        self.assertEqual(result, "crash: rgl_log_100.txt reports a crash")
+
+    def test_a_deadline_in_the_past_times_out(self):
+        result = r.watch(self.proc(), self.folder, -10 * 3600, self.said.append)
+        self.assertTrue(result.startswith("timeout"))
+
+    def test_a_status_file_that_never_changes_stalls(self):
+        (self.folder / r.STATUS_FILE).write_text("phase=Live\n", encoding="utf-8")
+        clock = iter(range(0, 10**6, 100))
+        with mock.patch.object(r.time, "time", side_effect=lambda: float(next(clock))):
+            result = r.watch(self.proc(), self.folder, 10**6, self.said.append)
+        self.assertTrue(result.startswith("stall"))
+
+
+class CollectTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        root = Path(self.tmp.name)
+        self.folder = root / "run"
+        self.folder.mkdir()
+        self.bin_dir = root / "bin"
+        (self.bin_dir / "Logs").mkdir(parents=True)
+        self.engine_logs = root / "engine"
+        self.engine_logs.mkdir()
+        patcher = mock.patch.object(r, "LOGS_DIR", str(self.engine_logs))
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        self.said = []
+
+    def test_the_done_files_log_and_report_are_copied_and_the_report_is_parsed(self):
+        log = self.bin_dir / "Logs" / "taom_debug_2026-10-31_22-08-35.log"
+        report = self.bin_dir / "Logs" / "fords_report_2026-10-31_22-08-35_run1.json"
+        log.write_text("line\n", encoding="utf-8")
+        report.write_text(json.dumps({"final": True}), encoding="utf-8")
+        (self.engine_logs / "rgl_log_100.txt").write_text("ok", encoding="utf-8")
+        done = {"log": str(log), "report": str(report)}
+
+        log_copy, report_json = r.collect(self.folder, self.bin_dir, done, 0.0, 100, self.said.append)
+
+        self.assertEqual(report_json, {"final": True})
+        self.assertEqual(log_copy, self.folder / log.name)
+        self.assertTrue((self.folder / "rgl_log_100.txt").is_file())
+
+    def test_without_a_done_log_the_newest_log_after_the_start_is_used(self):
+        log = self.bin_dir / "Logs" / "taom_debug_2026-10-31_22-08-35.log"
+        log.write_text("line\n", encoding="utf-8")
+
+        log_copy, report_json = r.collect(self.folder, self.bin_dir, {}, 0.0, 100, self.said.append)
+
+        self.assertEqual(log_copy, self.folder / log.name)
+        self.assertIsNone(report_json)
+
+    def test_nothing_to_copy_returns_none_and_says_so(self):
+        log_copy, report_json = r.collect(self.folder, self.bin_dir, {}, 10**12, 100, self.said.append)
+
+        self.assertIsNone(log_copy)
+        self.assertIsNone(report_json)
+        self.assertTrue(any(line.startswith("no log file") for line in self.said))
+
+    def test_an_unreadable_report_json_is_reported(self):
+        report = self.bin_dir / "Logs" / "fords_report_x_run1.json"
+        report.write_text("{not json", encoding="utf-8")
+
+        _, report_json = r.collect(self.folder, self.bin_dir, {"report": str(report)}, 0.0, 100, self.said.append)
+
+        self.assertIsNone(report_json)
+        self.assertTrue(any("unreadable" in line for line in self.said))
+
+
+class HandleDialogsTests(unittest.TestCase):
+    NOTICE = ["OK", "", "A change in your active mods was detected. Deleting the runtime shader cache."]
+
+    @staticmethod
+    def dialogs(*rows):
+        return mock.patch.object(r, "game_dialogs", return_value=list(rows))
+
+    def test_the_notice_is_dismissed_through_its_ok_button(self):
+        said = []
+        with self.dialogs((5, "Mod change detected", self.NOTICE, {"OK": 1})), \
+                mock.patch.object(r, "click_button", return_value=True) as click:
+            self.assertIsNone(r.handle_dialogs(100, set(), said.append))
+        click.assert_called_once_with(5, 1)
+        self.assertEqual(len(said), 1)
+
+    def test_a_dismissed_window_is_logged_once_even_if_it_lingers(self):
+        said, seen = [], set()
+        with self.dialogs((5, "Mod change detected", self.NOTICE, {"OK": 1})), mock.patch.object(r, "click_button", return_value=True):
+            r.handle_dialogs(100, seen, said.append)
+            r.handle_dialogs(100, seen, said.append)
+            r.handle_dialogs(100, seen, said.append)
+        self.assertEqual(len(said), 1)
+
+    def test_a_click_that_found_no_button_is_not_logged_as_dismissed(self):
+        said = []
+        with self.dialogs((5, "Mod change detected", self.NOTICE, {"OK": 1})), mock.patch.object(r, "click_button", return_value=False):
+            r.handle_dialogs(100, set(), said.append)
+        self.assertEqual(said, [])
+
+    def test_a_crash_dialog_returns_its_text_and_is_not_clicked(self):
+        with self.dialogs((6, "Bannerlord Crash Report", ["Send", "Close"], {"Close": 2})), \
+                mock.patch.object(r, "click_button") as click:
+            result = r.handle_dialogs(100, set(), lambda _: None)
+        self.assertIn("Bannerlord Crash Report", result)
+        click.assert_not_called()
+
+    def test_any_other_dialog_is_logged_once_and_never_clicked(self):
+        said, seen = [], set()
+        with self.dialogs((7, "Safe Mode", ["Yes", "No"], {"Yes": 1})), mock.patch.object(r, "click_button") as click:
+            r.handle_dialogs(100, seen, said.append)
+            r.handle_dialogs(100, seen, said.append)
+        self.assertEqual(len(said), 1)
+        click.assert_not_called()
+
+    def test_a_dialog_enumeration_failure_is_reported_not_raised(self):
+        said = []
+        with mock.patch.object(r, "game_dialogs", side_effect=OSError("no user32")):
+            self.assertIsNone(r.handle_dialogs(100, set(), said.append))
+        self.assertIn("dialog check failed", said[0])
+
+
+class ClickButtonTests(unittest.TestCase):
+    def test_the_click_is_a_posted_wm_command_with_the_control_id_and_button_handle(self):
+        user32 = mock.Mock()
+        user32.GetDlgItem.return_value = 77
+        user32.PostMessageW.return_value = 1
+        with mock.patch.object(r, "_user32", return_value=user32):
+            self.assertTrue(r.click_button(5, 1))
+        user32.PostMessageW.assert_called_once_with(5, 0x0111, 1, 77)
+
+    def test_the_click_never_sends_a_blocking_message_or_activates_the_window(self):
+        user32 = mock.Mock()
+        user32.GetDlgItem.return_value = 77
+        user32.PostMessageW.return_value = 1
+        with mock.patch.object(r, "_user32", return_value=user32):
+            r.click_button(5, 1)
+        user32.SendMessageW.assert_not_called()
+        user32.SetForegroundWindow.assert_not_called()
+
+    def test_a_missing_button_posts_nothing(self):
+        user32 = mock.Mock()
+        user32.GetDlgItem.return_value = 0
+        with mock.patch.object(r, "_user32", return_value=user32):
+            self.assertFalse(r.click_button(5, 1))
+        user32.PostMessageW.assert_not_called()
+
+
+class LauncherInputTests(unittest.TestCase):
+    def test_non_positive_wall_limit_and_live_seconds_are_rejected(self):
+        parser = r.build_parser()
+        for flag in ("--wall-limit", "--live-seconds"):
+            for value in ("0", "-5", "nan"):
+                with self.assertRaises(SystemExit, msg=f"{flag} {value}"), mock.patch("sys.stderr"):
+                    parser.parse_args([flag, value])
+
+    def test_the_documented_command_line_still_parses(self):
+        args = r.build_parser().parse_args(["--scene", "s", "--west", "w", "--east", "e", "--ai", "a", "--live-seconds", "90",
+                                            "--wall-limit", "300", "--west-ai", "--runs", "2", "--runs-root", "x", "--dry-run"])
+        self.assertEqual((args.live_seconds, args.wall_limit, args.runs, args.west_ai, args.dry_run), (90.0, 300.0, 2, True, True))
+
+    def test_the_runs_root_is_resolved_to_an_absolute_path(self):
+        args = r.build_parser().parse_args(["--runs-root", "relative-runs"])
+        self.assertTrue(Path(r.resolved_runs_root(args)).is_absolute())
+
+    def test_the_arm_file_always_carries_the_runners_wall_limit(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            args = r.build_parser().parse_args([])
+            arm, wall_limit = r.write_arm_file(Path(tmp), args)
+            text = arm.read_text(encoding="utf-8")
+        self.assertEqual(wall_limit, r.DEFAULT_WALL_LIMIT_SECONDS)
+        self.assertIn(f"wall_limit_seconds={r.DEFAULT_WALL_LIMIT_SECONDS}\n", text)
+
+    def test_an_explicit_wall_limit_is_the_one_written_and_returned(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            args = r.build_parser().parse_args(["--wall-limit", "900"])
+            arm, wall_limit = r.write_arm_file(Path(tmp), args)
+            text = arm.read_text(encoding="utf-8")
+        self.assertEqual(wall_limit, 900.0)
+        self.assertIn("wall_limit_seconds=900.0\n", text)
+
+    def test_the_arm_file_is_written_with_lf_line_ends(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            args = r.build_parser().parse_args(["--west", "gondor"])
+            arm, _ = r.write_arm_file(Path(tmp), args)
+            self.assertNotIn(b"\r", arm.read_bytes())
+
+
+class SafeWatchTests(unittest.TestCase):
+    def test_a_runner_error_in_watch_is_turned_into_a_failure_reason(self):
+        with mock.patch.object(r, "watch", side_effect=RuntimeError("boom")):
+            self.assertEqual(r.safe_watch(mock.Mock(), Path("."), 10, lambda _: None), "runner error: RuntimeError: boom")
+
+    def test_a_normal_watch_result_passes_through(self):
+        with mock.patch.object(r, "watch", return_value="done"):
+            self.assertEqual(r.safe_watch(mock.Mock(), Path("."), 10, lambda _: None), "done")
+
+
+if __name__ == "__main__":
+    unittest.main()

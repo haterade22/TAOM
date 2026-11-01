@@ -88,6 +88,9 @@ internal static partial class FordsVerdicts
         var ids = !started ? FordsResult.NotSeen : s.MissingIds.Count > 0 ? FordsResult.Fail : FordsResult.Pass;
         var spawn = run.Spawn.Failed > 0 ? FordsResult.Fail : run.Spawn.Spawned > 0 ? FordsResult.Pass : FordsResult.NotSeen;
         var heroes = run.Heroes.Count(h => h.Kind == "spawned");
+        var e = run.Exceptions;
+        var exceptions = e.Count > 0 ? FordsResult.Fail : e.Watching ? FordsResult.Pass : FordsResult.NotSeen;
+        var exceptionNumbers = e.Count > 0 ? "swallowed=" + e.Count + " first=" + e.FirstType + "@" + e.FirstSite + " mt=" + N(e.FirstMt ?? 0.0) : "swallowed=0";
 
         var info = "idsChecked=" + s.IdsChecked + " missing=" + s.MissingIds.Count + (s.MissingIds.Count > 0 ? "(" + Join(s.MissingIds) + ")" : "")
             + " spawned=" + run.Spawn.Spawned + " failed=" + run.Spawn.Failed + (run.Spawn.Failed > 0 ? "(" + Pairs(run.Spawn.FailedByTroop) + ")" : "")
@@ -98,8 +101,9 @@ internal static partial class FordsVerdicts
             Part("started", startedPart, startedNumbers),
             Part("ids", ids, "checked=" + s.IdsChecked + " missing=" + s.MissingIds.Count),
             Part("spawn", spawn, "spawned=" + run.Spawn.Spawned + " failed=" + run.Spawn.Failed),
+            Part("exceptions", exceptions, exceptionNumbers),
         }, info,
-            "The match started (a recorded start failure with no matchStarted fails; a route A failure is expected on the run where check 15 was provoked on purpose), every troop and hero id resolves in this game (checked even for a hero never bought), and no spawn failed.",
+            "The match started (a recorded start failure with no matchStarted fails; a route A failure is expected on the run where check 15 was provoked on purpose), every troop and hero id resolves in this game (checked even for a hero never bought), no spawn failed, and no exception was swallowed by TAOM's CrashReport finalizers since the mission started (the count is zero only when the hook was in place; other Harmony finalizers are not heard).",
             "-");
     }
 }

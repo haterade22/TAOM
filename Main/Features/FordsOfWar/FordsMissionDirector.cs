@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using BehaviorTreeWrapper;
 using TAOM.Adapters;
@@ -25,8 +26,8 @@ namespace TAOM.Features.FordsOfWar;
 /// </summary>
 internal sealed class FordsMissionDirector : IFordsTowerHitHook
 {
-    internal const int HumanSlotId = 1;
-    internal const int AiSlotId = 2;
+    internal const int WestSlotId = 1;
+    internal const int EastSlotId = 2;
 
     private const float CorpseFadeSeconds = 4f;
     private const float InsetFraction = 0.1f;
@@ -55,6 +56,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     private readonly object _gate = new();
     private readonly Dictionary<AgentKey, UnitRecord> _units = new();
     private readonly Dictionary<(MatchSide, int), LaneCommand> _applied = new();
+    private readonly Dictionary<(MatchSide, int), LaneCommand> _sent = new();
     private readonly Dictionary<(MatchSide, int), LaneCommand> _refused = new();
     private readonly Dictionary<(MatchSide, int), int> _ranks = new();
     private readonly List<PendingSpawn> _backlog = new();
@@ -68,6 +70,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     private double _probeAt;
     private int _probes;
     private bool _liveStamped;
+    private Vec3f? _firstRefused;
     private volatile bool _started;
     private volatile bool _shutDown;
 
@@ -104,25 +107,38 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         if (_started)
             return true;
 
-        var layout = BuildLayout();
-        if (layout == null)
+        var planTimer = Stopwatch.StartNew();
+        if (!PlanLayout(out var fit, out var expectedIds))
             return false;
 
-        var expected = layout.Towers.Count;
-        var fit = _scene.Fit(layout);
-        layout = fit.Layout;
-        if (fit.Moved + fit.Dropped + fit.Unfixed > 0)
-            _logger.LogInfo($"[FordsOfWar] layout fitted to the scene: {fit.Moved} point(s) moved onto the navmesh, {fit.Dropped} dropped, {fit.Unfixed} left on bad ground");
+        var planTime = planTimer.Elapsed;
 
+        if (fit.Rejected)
+        {
+            _logger.LogError($"[FordsOfWar] the layout for {_plan.Map.SceneId} was refused: {fit.Reason}");
+            return false;
+        }
+
+        var layout = fit.Layout;
+        var expected = expectedIds.Count;
         if (!_battlefield.Prepare(layout.Lanes.Count))
         {
             _logger.LogError("[FordsOfWar] the mission has no West and East teams (or too many lanes); the match cannot start");
             return false;
         }
 
+        var towerTimer = Stopwatch.StartNew();
         var built = BuildTowers(layout);
+        _logger.LogInfo(FordsLayoutFitLines.Timing(planTime, towerTimer.Elapsed));
         if (built == null)
             return false;
+
+        var emptied = FordsLayoutFitter.EmptiedGroups(layout.Towers, built, "could not be built");
+        if (emptied.Length > 0)
+        {
+            _logger.LogError($"[FordsOfWar] the layout for {_plan.Map.SceneId} was refused after the towers were built: {emptied}");
+            return false;
+        }
 
         layout = layout with { Towers = built };
         _battlefield.SetCorpseFadeOutSeconds(CorpseFadeSeconds);
@@ -134,13 +150,17 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         }
 
         ReportMatchStart(layout, built, expected);
+        ReportLayout(layout, expectedIds, match);
+        _report.BindGunnerLookup(_towers.TowerIdOfGunner);
+        _report.BindAttackerLookup(Attacker);
 
         _towers.SetDestroyedHandler(OnTowerDestroyed);
         SpawnGunners(built);
         _battlefield.CompleteDeployment();
         FillSession(layout, match);
         _started = true;
-        _logger.LogInfo($"[FordsOfWar] match started on {layout.SceneName}: {layout.Lanes.Count} lane(s), {built.Count} tower(s) and keep(s), AI profile {_plan.AiProfile}");
+        _logger.LogInfo($"[FordsOfWar] match started on {layout.SceneName}: {layout.Lanes.Count} lane(s), {built.Count} tower(s) and keep(s), AI profile {_plan.AiProfile}"
+            + (_plan.WestAi ? "; an AI commands both sides" : ""));
         _report.Stage("matchStarted");
         return true;
     }
@@ -173,6 +193,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
 
         ApplyEffects(effects);
         Probe(match, samples);
+        ReportLaneStates(match);
     }
 
     /// <summary>The engine removed an agent (killed, knocked out, routed or deleted). May run off the main thread.</summary>
@@ -206,7 +227,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         if (towerId == null)
             return inflictedDamage;
 
-        var side = AttackerOf(attacker, out var record);
+        var who = AttackerOf(attacker, out var record);
         int applied;
         TowerDamageReason reason;
         lock (_gate)
@@ -214,10 +235,10 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             if (_match == null)
                 return inflictedDamage;
 
-            applied = _match.AdjustTowerDamage(new TowerHit(towerId, ranged, record?.Role ?? UnitRole.Infantry, inflictedDamage, side), out reason);
+            applied = _match.AdjustTowerDamage(new TowerHit(towerId, ranged, record?.Role ?? UnitRole.Infantry, inflictedDamage, who?.Side), out reason);
         }
 
-        _report.TowerBlow(towerId, ClassOf(record, ranged), reason, inflictedDamage, side == null);
+        _report.TowerBlow(towerId, ClassOf(record, ranged), reason, inflictedDamage, applied, who);
         return applied;
     }
 
@@ -230,15 +251,16 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         if (towerId == null)
             return;
 
-        var side = AttackerOf(attacker, out var record);
-        _report.TowerBlow(towerId, ClassOf(record, ranged), weaponless ? TowerDamageReason.Weaponless : TowerDamageReason.RawZero, 0, side == null);
+        var who = AttackerOf(attacker, out var record);
+        _report.TowerBlow(towerId, ClassOf(record, ranged), weaponless ? TowerDamageReason.Weaponless : TowerDamageReason.RawZero, 0, 0, who);
     }
 
     /// <summary>
-    /// The side of an attacker and its unit record, when it has one. The adapter lookups run outside this class's gate, which is
-    /// never held across an adapter call. An attacker with no unit record, such as a tower gunner, still has a team.
+    /// The side of an attacker (and its lane, when it is a lane unit) and its unit record, when it has one. The adapter lookups run
+    /// outside this class's gate, which is never held across an adapter call. An attacker with no unit record, such as a tower
+    /// gunner, still has a team.
     /// </summary>
-    private MatchSide? AttackerOf(object? attacker, out UnitRecord? record)
+    private FordsAttacker? AttackerOf(object? attacker, out UnitRecord? record)
     {
         AgentKey attackerKey = default;
         var hasKey = attacker != null && _battlefield.TryGetKey(attacker, out attackerKey);
@@ -249,8 +271,11 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
                 _units.TryGetValue(attackerKey, out record);
         }
 
-        return record?.Side ?? (attacker != null ? _battlefield.SideOf(attacker) : null);
+        var side = record?.Side ?? (attacker != null ? _battlefield.SideOf(attacker) : null);
+        return side is { } known ? new FordsAttacker(known, record?.Lane ?? -1) : null;
     }
+
+    private FordsAttacker? Attacker(object? agent) => AttackerOf(agent, out _);
 
     private static TowerBlowClass ClassOf(UnitRecord? record, bool ranged)
     {
@@ -278,6 +303,8 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             return;
 
         _shutDown = true;
+        _report.BindGunnerLookup(null);
+        _report.BindAttackerLookup(null);
         _session.Clear();
         _towers.Clear();
         _battlefield.Clear();
@@ -290,24 +317,70 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         }
     }
 
-    private MapLayout? BuildLayout()
+    /// <summary>
+    /// The layout to play, fitted to the scene, and the tower ids it named before the fit. A tagged layout is fitted as authored; a
+    /// generated one goes through <see cref="FordsLayoutPlanner"/> (narrower spreads, then the other axis of a near-square
+    /// boundary) and the best attempt is kept, with a warning when none met the limits. False only when no layout could be built.
+    /// </summary>
+    private bool PlanLayout(out FordsLayoutFit fit, out IReadOnlyList<string> expectedIds)
     {
         var map = _plan.Map;
+        MapLayout? candidate = null;
+        fit = default;
+        IReadOnlyList<FordsLayoutAttempt> attempts = Array.Empty<FordsLayoutAttempt>();
         if (map.Layout == MapLayoutMode.Tags)
         {
             if (_scene.TryReadTaggedLayout(map.SceneId, map.Camp, out var tagged, out var problem))
-                return tagged;
-
-            _logger.LogWarning($"[FordsOfWar] scene {map.SceneId} asks for a tagged layout but {problem}; generating the layout from the boundary instead");
+            {
+                candidate = tagged;
+                fit = _scene.Fit(tagged);
+            }
+            else
+            {
+                _logger.LogWarning($"[FordsOfWar] scene {map.SceneId} asks for a tagged layout but {problem}; generating the layout from the boundary instead");
+            }
         }
 
-        if (!_scene.TryGetBasePoints(InsetFraction, out var west, out var east))
+        if (candidate == null)
         {
-            _logger.LogError($"[FordsOfWar] scene {map.SceneId} has no usable boundary for the bases; the match cannot start");
-            return null;
+            var bases = new Dictionary<FordsBaseAxis, (Vec3f West, Vec3f East)?>();
+            var plan = FordsLayoutPlanner.Plan((factor, axis) => Generate(map, factor, axis, bases), _scene.Fit,
+                FordsBaseFinder.AspectRatio(_scene.BoundaryPolygon()));
+            attempts = plan.Attempts;
+            if (plan.Chosen is not { } chosen)
+            {
+                _logger.LogError($"[FordsOfWar] scene {map.SceneId} has no usable boundary for the bases; the match cannot start");
+                expectedIds = Array.Empty<string>();
+                return false;
+            }
+
+            if (!plan.Passed && !chosen.Fit.Rejected)
+                _logger.LogWarning($"[FordsOfWar] {plan.Summary}; playing the best attempt: {chosen.Summary}");
+            candidate = chosen.Candidate;
+            fit = chosen.Fit;
         }
 
-        var generated = LaneLayoutGenerator.Generate(map.SceneId, west, east, map.Options);
+        expectedIds = candidate.Towers.Select(t => t.Id).ToList();
+        foreach (var line in FordsLayoutFitLines.Of(attempts, fit))
+            _logger.LogInfo(line);
+        return true;
+    }
+
+    /// <summary>One generated candidate: the bases for the axis (found once per axis and cached), the lanes at the spread factor.</summary>
+    private MapLayout? Generate(MapEntry map, float spreadFactor, FordsBaseAxis axis, Dictionary<FordsBaseAxis, (Vec3f West, Vec3f East)?> bases)
+    {
+        if (!bases.TryGetValue(axis, out var found))
+        {
+            var ok = _scene.TryGetBasePoints(InsetFraction, axis == FordsBaseAxis.Short, out var west, out var east);
+            found = ok ? (west, east) : null;
+            bases[axis] = found;
+        }
+
+        if (found is not { } points)
+            return null;
+
+        var options = map.Options with { LaneSpread = map.Options.LaneSpread * spreadFactor };
+        var generated = LaneLayoutGenerator.Generate(map.SceneId, points.West, points.East, options);
         var camps = generated.Camps.Select(c => c with { TroopId = map.Camp.TroopId, Count = map.Camp.Count, Reward = map.Camp.Reward }).ToList();
         return generated with { Camps = camps };
     }
@@ -343,8 +416,8 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         var lanes = layout.Lanes.Select(l => l.Index).ToList();
         var slots = new List<CommanderSlot>
         {
-            new(HumanSlotId, MatchSide.West, true, null, lanes),
-            new(AiSlotId, MatchSide.East, false, _plan.AiProfile, lanes),
+            new(WestSlotId, MatchSide.West, !_plan.WestAi, _plan.WestAi ? _plan.AiProfile : null, lanes),
+            new(EastSlotId, MatchSide.East, false, _plan.AiProfile, lanes),
         };
         return new FordsMatch(_plan.Config, layout, _plan.Factions, slots, _random);
     }
@@ -375,7 +448,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         var enemyKeep = layout.Towers.First(t => t.Kind == TowerKind.Keep && t.Owner == MatchSide.East);
         var march = FordsTowerGeometry.MarchDirection(keep);
         var start = keep.Position - march * CameraSetback + new Vec3f(0f, 0f, CameraHeight);
-        _session.Fill(_gate, match, HumanSlotId, _battlefield, start, enemyKeep.Position, _scene.BoundaryPolygon());
+        _session.Fill(_gate, match, WestSlotId, _battlefield, start, enemyKeep.Position, _scene.BoundaryPolygon());
     }
 
     private bool IsHero(AgentKey key) => _units.TryGetValue(key, out var record) && record.Role == UnitRole.Hero;
@@ -392,7 +465,10 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             ApplyCommand(command);
 
         foreach (var heal in effects.Heals)
+        {
             _towers.Heal(heal.TowerId, heal.Amount);
+            _report.TowerHealed(heal.TowerId, heal.Amount);
+        }
 
         foreach (var volley in effects.Volleys)
         {
@@ -457,9 +533,22 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         _report.Preflight(ids.Count, missing);
         var config = _plan.Config;
         _report.VolleyItem(_towers.VolleyItemInfo(), config.Towers.FireRange);
+        _report.TowerConfig(config.Towers);
         _facts = new FordsMatchFacts(config.Towers.FireRange, config.Towers.AttackRange, config.Capture.Radius, layout.Lanes.Count,
             config.Waves.MaxLivePerSide, config.Heroes.MaxAlivePerSide, KeepDistance(built), _battlefield.MaxAgents);
         _report.MatchStarted(_facts, built, expected);
+    }
+
+    /// <summary>
+    /// The layout line and check 4's layout part: which towers the layout named and the engine did not build, and whether either keep
+    /// could already be damaged (read from the match's tower chain through the human slot's view).
+    /// </summary>
+    private void ReportLayout(MapLayout layout, IReadOnlyList<string> expectedIds, FordsMatch match)
+    {
+        MatchView view;
+        lock (_gate)
+            view = match.GetView(WestSlotId);
+        _report.Layout(FordsLayoutFacts.Of(layout, expectedIds, view));
     }
 
     /// <summary>The ground distance between the two keeps, the base-to-base distance; 0 when a keep is missing.</summary>
@@ -485,8 +574,8 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     }
 
     /// <summary>
-    /// Once per mission second hands the report a look at the field (taken under the gate, merged outside it); every fifth look also
-    /// compares each standing tower's rules hit points with its entity's.
+    /// Once per mission second hands the report a look at the field (taken under the gate, merged outside it) and the rules' hit points
+    /// of each standing tower; every fifth look also compares them with the entity's.
     /// </summary>
     private void Probe(FordsMatch match, IReadOnlyList<FordsUnitSample> samples)
     {
@@ -500,27 +589,66 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         FordsFieldSample sample;
         lock (_gate)
         {
-            view = match.GetView(HumanSlotId);
+            view = match.GetView(WestSlotId);
             sample = FordsFieldProbe.Sample(samples, _units, _layout, _fallen, _applied, view, facts, BacklogUnits());
         }
 
         _report.Field(sample);
-        if (++_probes % 5 != 0)
-            return;
-
+        var compare = ++_probes % 5 == 0;
         foreach (var lane in view.Lanes)
         {
             foreach (var tower in lane.Towers)
-                ReportTowerHealth(tower);
+                ReportTowerHealth(tower, compare);
         }
 
         foreach (var keep in view.Keeps)
-            ReportTowerHealth(keep);
+            ReportTowerHealth(keep, compare);
     }
 
-    private void ReportTowerHealth(MatchView.TowerView tower)
+    /// <summary>
+    /// Every tick asks the report whether a stream's state line is due (every 5 mission seconds) and builds its text only then, so a
+    /// tick that writes nothing costs one comparison per stream. A stream the rules have not decided yet writes nothing.
+    /// </summary>
+    private void ReportLaneStates(FordsMatch match)
+    {
+        var facts = _facts;
+        if (facts == null)
+            return;
+
+        var now = _report.MissionSeconds;
+        for (var s = 0; s < LaneStreams.Sides; s++)
+        {
+            var side = (MatchSide)s;
+            for (var lane = 0; lane < facts.Lanes; lane++)
+            {
+                if (!_report.LaneStateDue(side, lane, now))
+                    continue;
+
+                string? text = null;
+                lock (_gate)
+                {
+                    var decision = match.LastDecisions.FirstOrDefault(d => d.Side == side && d.Lane == lane);
+                    if (decision != null)
+                    {
+                        _sent.TryGetValue((side, lane), out var sent);
+                        text = FordsLaneStateLine.Format(new FordsLaneStateFacts(sent, decision));
+                    }
+                }
+
+                if (text != null)
+                    _report.LaneState(side, lane, now, text);
+            }
+        }
+    }
+
+    /// <summary>Every look records the rules' hit points of a standing tower; every fifth also compares them with its entity's.</summary>
+    private void ReportTowerHealth(MatchView.TowerView tower, bool compare)
     {
         if (tower.Destroyed)
+            return;
+
+        _report.TowerRulesHp(tower.Id, tower.HitPoints);
+        if (!compare)
             return;
 
         var engine = _towers.HitPoints(tower.Id);
@@ -618,62 +746,96 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             return;
 
         // Recorded only once an order was given. A Move the adapter skips (target off the navmesh) falls back to the nearest
-        // waypoint of the lane's own path; when even that is skipped the command is tried again on the next tick.
-        var given = true;
-        switch (command.Command.Kind)
+        // waypoint of the lane's own path; when even that is skipped the command is tried again on the next tick. Either way the
+        // refused target is counted off the navmesh once per command: a command that went through the fallback is recorded as
+        // applied and never sent again, and one refused outright is counted only the first time.
+        _firstRefused = null;
+        var sent = Send(command);
+        var counted = _refused.TryGetValue(key, out var lastRefused) && lastRefused == command.Command;
+        if (sent == null)
         {
-            case LaneCommandKind.MoveTo:
-            case LaneCommandKind.HoldAt:
-                given = MoveOrNearestWaypoint(command, command.Command.Target);
-                break;
-            case LaneCommandKind.Charge:
-                _battlefield.Charge(command.Side, command.Lane);
-                break;
-            case LaneCommandKind.AttackTower:
-                given = AttackTower(command);
-                break;
-        }
-
-        if (!given)
-        {
-            if (_refused.TryGetValue(key, out var lastRefused) && lastRefused == command.Command)
+            if (counted)
                 return;
 
             _refused[key] = command.Command;
+            ReportOffNavmesh(command);
             _report.LaneCommand(command.Side, command.Lane, command.Command.Kind, false);
             return;
         }
 
         _refused.Remove(key);
+        if (!counted)
+            ReportOffNavmesh(command);
         _report.LaneCommand(command.Side, command.Lane, command.Command.Kind, true);
         _applied[key] = command.Command;
+        _sent[key] = sent;
     }
 
-    private bool AttackTower(FormationCommand command)
+    private void ReportOffNavmesh(FormationCommand command)
+    {
+        if (_firstRefused is { } refusedAt)
+            _report.OffNavmesh(command.Side, command.Lane, refusedAt.X, refusedAt.Y);
+    }
+
+    /// <summary>The command the engine was actually given, which differs from the rules' when a fallback was used; null when nothing could be sent.</summary>
+    private LaneCommand? Send(FormationCommand command)
+    {
+        var wanted = command.Command;
+        switch (wanted.Kind)
+        {
+            case LaneCommandKind.MoveTo:
+            case LaneCommandKind.HoldAt:
+                return MoveOrNearestWaypoint(command, wanted.Target) is { } point ? wanted with { Target = point } : null;
+            case LaneCommandKind.Charge:
+                _battlefield.Charge(command.Side, command.Lane);
+                return wanted;
+            case LaneCommandKind.AttackTower:
+                return AttackTower(command);
+            default:
+                return wanted;
+        }
+    }
+
+    private LaneCommand? AttackTower(FormationCommand command)
     {
         var towerId = command.Command.TowerId ?? string.Empty;
         if (_battlefield.AttackTower(command.Side, command.Lane, towerId))
-            return true;
+            return command.Command;
 
         // No live entity to attack (it fell between ticks): walk to where it stood.
         var slot = _layout.Towers.FirstOrDefault(t => t.Id == towerId);
-        return slot == null || MoveOrNearestWaypoint(command, slot.Position);
+        if (slot == null)
+            return LaneCommand.None;
+
+        return MoveOrNearestWaypoint(command, slot.Position) is { } point ? LaneCommand.MoveTo(point) : null;
     }
 
     /// <summary>
-    /// The interior path points were checked walkable at setup, so the nearest one to a skipped target is a safe place to send the
+    /// The point the lane was sent to: the target, else the lane path's waypoint nearest it, null when both were refused. The
+    /// interior path points were checked walkable at setup, so the nearest one to a skipped target is a safe place to send the
     /// lane. The fitter keeps a lane's two ends even off the navmesh: for such an end both Moves fail and the lane keeps its last order.
     /// </summary>
-    private bool MoveOrNearestWaypoint(FormationCommand command, Vec3f target)
+    private Vec3f? MoveOrNearestWaypoint(FormationCommand command, Vec3f target)
+    {
+        if (Move(command, target))
+            return target;
+
+        var lane = _layout.Lanes.FirstOrDefault(l => l.Index == command.Lane);
+        if (lane == null || lane.Path.Count == 0)
+            return null;
+
+        var waypoint = lane.Path[LaneGeometry.NearestIndex(lane.Path, target)];
+        return Move(command, waypoint) ? waypoint : null;
+    }
+
+    /// <summary>The adapter refuses a Move only when its target is off the navmesh; the first target refused for a command is kept for the report.</summary>
+    private bool Move(FormationCommand command, Vec3f target)
     {
         if (_battlefield.Move(command.Side, command.Lane, target))
             return true;
 
-        var lane = _layout.Lanes.FirstOrDefault(l => l.Index == command.Lane);
-        if (lane == null || lane.Path.Count == 0)
-            return false;
-
-        return _battlefield.Move(command.Side, command.Lane, lane.Path[LaneGeometry.NearestIndex(lane.Path, target)]);
+        _firstRefused ??= target;
+        return false;
     }
 
     // Always parked, even on the main thread: the engine reports a fall from inside its native hit callback, and KillGunners fades agents out.

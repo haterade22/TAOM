@@ -70,6 +70,9 @@ internal sealed class FaithfulBattlefield : IFordsBattlefieldAdapter
     public bool Frozen;
     public bool KillerUnknown;
     public bool DoubleSpawns;
+
+    /// <summary>The real adapter spawns every lane unit alarmed; set this to play a spawn that does not.</summary>
+    public bool Unalarmed;
     public int ReportedMaxAgents;
 
     /// <summary>Set by the scenario: the engine's removal callback, which the mission logic forwards to the director.</summary>
@@ -143,7 +146,8 @@ internal sealed class FaithfulBattlefield : IFordsBattlefieldAdapter
     }
 
     public IReadOnlyList<FordsUnitSample> SampleUnits() =>
-        Alive.Where(u => u.Registered).Select(u => new FordsUnitSample(u.Key, u.Side, u.Lane, u.Position)).ToList();
+        Alive.Where(u => u.Registered).Select(u => new FordsUnitSample(u.Key, u.Side, u.Lane, u.Position, !Unalarmed,
+            FormationOf(u.Side, u.Lane).Kind == OrderKind.AttackTower)).ToList();
 
     public Vec3f? PositionOf(AgentKey key) => Find(key)?.Position;
 
@@ -455,6 +459,19 @@ internal sealed class FaithfulTowers : IFordsTowerAdapter
         return null;
     }
 
+    public string? TowerIdOfGunner(object? agent)
+    {
+        if (agent == null)
+            return null;
+        foreach (var pair in _entities)
+        {
+            if (pair.Value.Gunners.Contains(agent))
+                return pair.Key;
+        }
+
+        return null;
+    }
+
     public FordsVolleyItemInfo? VolleyItemInfo() => Item;
 
     public float? HitPoints(string towerId) => _entities.TryGetValue(towerId, out var e) ? e.Hp : null;
@@ -491,7 +508,7 @@ internal sealed class FaithfulScene : IFordsSceneAdapter
         new(0f, -150f, 0f), new(1000f, -150f, 0f), new(1000f, 150f, 0f), new(0f, 150f, 0f),
     };
 
-    public bool TryGetBasePoints(float insetFraction, out Vec3f westBase, out Vec3f eastBase)
+    public bool TryGetBasePoints(float insetFraction, bool shortSide, out Vec3f westBase, out Vec3f eastBase)
     {
         westBase = new Vec3f(0f, 0f, 0f);
         eastBase = new Vec3f(1000f, 0f, 0f);

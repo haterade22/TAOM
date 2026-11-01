@@ -44,64 +44,6 @@ internal static class LaneGeometry
     }
 
     /// <summary>
-    /// The waypoint a unit of <paramref name="side"/> should walk to: the first one ahead of its projection on the lane
-    /// (toward the enemy base), or the one after that when it is already within <paramref name="reachRadius"/>.
-    /// Clamps at the enemy end of the lane.
-    /// </summary>
-    public static Vec3f NextWaypoint(IReadOnlyList<Vec3f> path, MatchSide side, Vec3f position, float reachRadius)
-    {
-        if (path.Count == 0)
-            return position;
-
-        var arcs = Arcs(path);
-        var s = ArcPosition(path, position);
-        var last = path.Count - 1;
-        int index;
-        if (side == MatchSide.West)
-        {
-            index = last;
-            for (var i = 0; i < path.Count; i++)
-            {
-                if (arcs[i] > s + Epsilon)
-                {
-                    index = i;
-                    break;
-                }
-            }
-
-            if (index < last && path[index].Distance2D(position) <= reachRadius)
-                index++;
-        }
-        else
-        {
-            index = 0;
-            for (var i = last; i >= 0; i--)
-            {
-                if (arcs[i] < s - Epsilon)
-                {
-                    index = i;
-                    break;
-                }
-            }
-
-            if (index > 0 && path[index].Distance2D(position) <= reachRadius)
-                index--;
-        }
-
-        return path[index];
-    }
-
-    /// <summary>
-    /// The lane point <paramref name="distance"/> metres of lane before a tower, seen from the side that attacks it:
-    /// West attackers come from lower arc positions, East attackers from higher ones. Clamps at the lane ends.
-    /// </summary>
-    public static Vec3f PointBeforeTower(IReadOnlyList<Vec3f> path, Vec3f tower, MatchSide attacker, float distance)
-    {
-        var towerArc = ArcPosition(path, tower);
-        return PointAt(path, attacker == MatchSide.West ? towerArc - distance : towerArc + distance);
-    }
-
-    /// <summary>
     /// The unit ground direction (West to East) of the lane segment closest to <paramref name="point"/>; the zero vector for a lane
     /// with no length.
     /// </summary>
@@ -148,16 +90,8 @@ internal static class LaneGeometry
         return path[path.Count - 1];
     }
 
-    private static float[] Arcs(IReadOnlyList<Vec3f> path)
-    {
-        var arcs = new float[path.Count];
-        for (var i = 1; i < path.Count; i++)
-            arcs[i] = arcs[i - 1] + path[i].Distance2D(path[i - 1]);
-        return arcs;
-    }
-
     /// <summary>Arc length from the West end to the closest point of the lane; the first segment wins a tie.</summary>
-    private static float ArcPosition(IReadOnlyList<Vec3f> path, Vec3f point)
+    public static float ArcPosition(IReadOnlyList<Vec3f> path, Vec3f point)
     {
         if (path.Count < 2)
             return 0f;

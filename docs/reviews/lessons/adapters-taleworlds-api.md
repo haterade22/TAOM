@@ -1656,3 +1656,17 @@ written.
   each, with the lines that fix the order, and says whether the chain is synchronous. A test drives the events in the
   vanilla order.
 - **Source:** [rca-staged-siege-run-report-2026-10-31.md](../rca-staged-siege-run-report-2026-10-31.md) row 0.
+
+### Never drive a one-way engine state backward through a setter that allows it (Fords of War towers, 2026-10-31)
+Fords tower regeneration raised `DestructableComponent.HitPoint` on a damaged tower. The engine derives the shown
+damage stage from `HitPoint` on every hit (`CalculateNextDestructionLevel`), so a healed tower computed stage 0 and
+`ReplaceEntityWithBrokenEntity` read `_destructionStates[-1]` after it had hidden the model and turned its physics
+off. The exception was swallowed and the tower stayed invisible and unhittable.
+- **Why missed:** the setter is public and takes any value, so the adapter treated `HitPoint` as plain data. The
+  stage swap is one-way (debris is detached and thrown), which only the method bodies show. This is the EFFECT form
+  of this file's member-name lesson, the third time in this feature (RCA rows D2, D6).
+- **Prevent:** before a TAOM write raises or resets an engine value, read every engine method that reads it and
+  name the state it drives; if that state only moves one way, use the engine's own hook (here the public
+  `OnCalculateDestructionStateIndex`, which `CastleGate` uses) or do not write. Rule: `.claude/rules/adapters.md`
+  "A destructible's shown stage must only move forward".
+- **Source:** [rca-fords-of-war-2026-10-31.md](../rca-fords-of-war-2026-10-31.md), night addendum, row R2.

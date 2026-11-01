@@ -114,12 +114,42 @@ public class FordsRunReportTests
     }
 
     [TestMethod]
+    public void BeginRun_TheSetupText_SaysWhetherAnAiPlaysTheWestSideToo()
+    {
+        _report.BeginRun("autorun", Setup with { WestAi = true });
+        StringAssert.EndsWith(_report.Run!.Setup, " west_ai=1");
+
+        _report.BeginRun("menu", Setup);
+        StringAssert.EndsWith(_report.Run!.Setup, " west_ai=0");
+    }
+
+    [TestMethod]
+    public void ConsoleCommand_AfterAnAutorunBegan_IsNotBoundToTheAutorunRun()
+    {
+        _report.BeginRun("autorun", Setup);
+
+        _report.ConsoleCommand("fords_gold", new[] { "100" }, true, "No match");
+
+        Assert.AreEqual(0, _report.Session.Console.Last().Run, "only taom.fords_start parks its run for the record that follows");
+    }
+
+    [TestMethod]
+    public void ConsoleCommand_AfterAConsoleStartBegan_IsBoundToThatRun()
+    {
+        var number = _report.BeginRun("console", Setup);
+
+        _report.ConsoleCommand("fords_start", new string[0], true, "Starting");
+
+        Assert.AreEqual(number, _report.Session.Console.Last().Run);
+    }
+
+    [TestMethod]
     public void BeginRun_ResetsEveryPerRunCounterAndCap()
     {
         StartedRun();
         _report.Stage("live");
         for (var i = 0; i < 15; i++)
-            _report.TowerBlow("east_outer_0", TowerBlowClass.Melee, TowerDamageReason.Applied, 5, false);
+            _report.TowerBlow("east_outer_0", TowerBlowClass.Melee, TowerDamageReason.Applied, 5, 5, new FordsAttacker(MatchSide.West));
         _report.CameraFrame(true, false, false, true, false, false);
         _report.Paused(true);
         _report.OptionsRequested();
@@ -419,7 +449,7 @@ public class FordsRunReportTests
             {
                 while (!Volatile.Read(ref stop))
                 {
-                    _report.TowerBlow("east_outer_0", TowerBlowClass.Ranged, TowerDamageReason.Applied, 7, i == 0);
+                    _report.TowerBlow("east_outer_0", TowerBlowClass.Ranged, TowerDamageReason.Applied, 7, 7, i == 0 ? null : new FordsAttacker(MatchSide.West));
                     _report.VolleyHit(hit);
                 }
             }
@@ -476,9 +506,9 @@ public class FordsRunReportTests
         StartedRun();
 
         for (var i = 0; i < 12; i++)
-            _report.TowerBlow("east_outer_0", TowerBlowClass.Hero, TowerDamageReason.Locked, 9, false);
-        _report.TowerBlow("east_outer_0", TowerBlowClass.Melee, TowerDamageReason.Applied, 9, true);
-        _report.TowerBlow("not_a_tower", TowerBlowClass.Melee, TowerDamageReason.Applied, 9, false);
+            _report.TowerBlow("east_outer_0", TowerBlowClass.Hero, TowerDamageReason.Locked, 9, 0, new FordsAttacker(MatchSide.West));
+        _report.TowerBlow("east_outer_0", TowerBlowClass.Melee, TowerDamageReason.Applied, 9, 9, null);
+        _report.TowerBlow("not_a_tower", TowerBlowClass.Melee, TowerDamageReason.Applied, 9, 9, new FordsAttacker(MatchSide.West));
 
         var tower = _report.Run!.Towers["east_outer_0"];
         Assert.AreEqual(12, tower.Blows[(int)TowerBlowClass.Hero, (int)TowerDamageReason.Locked]);
@@ -682,8 +712,8 @@ public class FordsRunReportTests
         StartedRun();
 
         foreach (TowerDamageReason reason in Enum.GetValues(typeof(TowerDamageReason)))
-            _report.TowerBlow("east_outer_0", TowerBlowClass.Ranged, reason, 3, false);
-        _report.TowerBlow("east_outer_0", TowerBlowClass.Ranged, TowerDamageReason.Weaponless, 0, false);
+            _report.TowerBlow("east_outer_0", TowerBlowClass.Ranged, reason, 3, 0, new FordsAttacker(MatchSide.West));
+        _report.TowerBlow("east_outer_0", TowerBlowClass.Ranged, TowerDamageReason.Weaponless, 0, 0, new FordsAttacker(MatchSide.West));
 
         var blows = _report.Run!.Towers["east_outer_0"].Blows;
         Assert.AreEqual(Enum.GetValues(typeof(TowerBlowClass)).Length, blows.GetLength(0));
@@ -697,7 +727,7 @@ public class FordsRunReportTests
     public void TheJson_WritesTheBlowTableAsRowsOfReasonsWithALegendFromTheEnums()
     {
         StartedRun();
-        _report.TowerBlow("east_outer_0", TowerBlowClass.Hero, TowerDamageReason.Weaponless, 0, false);
+        _report.TowerBlow("east_outer_0", TowerBlowClass.Hero, TowerDamageReason.Weaponless, 0, 0, new FordsAttacker(MatchSide.West));
         _report.Winner(MatchSide.West);
 
         var json = JObject.Parse(File.ReadAllText(ReportPath(1)));

@@ -76,6 +76,18 @@ in the Kit with no code.
   `SetFrame`); vanilla machines are static or engine-moved (siege tower). The seats re-pin occupants each tick.
 - **Vanilla templates to copy:** `SiegeWeapon` subclasses (ballista/mangonel/ram/tower) — decompile the closest one
   for the operate/crew pattern when authoring a TAOM machine.
+- **`DestructableComponent` damage stages: the engine does not keep them forward (v1.5.6).** A prefab with
+  `DestructionStates` (for example `siege_barricade_a`, four states) shows stage `k` once `HitPoint` falls to
+  `MaxHitPoint x (N-k)/N`. Each hit recomputes the stage from `HitPoint` (`CalculateNextDestructionLevel`), and
+  `SetDestructionLevel` swaps in `_destructionStates[stage - 1]`. Nothing in the engine stops the recomputed stage
+  from being smaller than the one on show. A heal that lands on a smaller stage above 0 steps the object back to an
+  earlier model with no exception. Index 0 is the case that throws: once a heal lifts `HitPoint` above the first
+  line, `MaxHitPoint x (N-1)/N`, the swap reads `_destructionStates[-1]` and throws `IndexOutOfRangeException`
+  after it has already hidden the current model and turned its physics off, so the object stays invisible and
+  cannot be hit. Never raise `HitPoint` on a damaged destructible without the public hook
+  `OnCalculateDestructionStateIndex` (`Func<int,int,int,int>`, consulted after the stage loop; `CastleGate` uses
+  it) returning `Math.Max(shownStage, index)`, so the shown stage only moves forward. Found in Fords of War tower
+  regeneration ([RCA](../../reviews/rca-fords-of-war-2026-10-31.md), row R2).
 
 ## The native boundary
 `UsableMachine`/`StandingPoint` are **managed** `ScriptComponentBehavior`s (the operate-logic + AI assignment are

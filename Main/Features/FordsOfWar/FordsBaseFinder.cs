@@ -8,19 +8,126 @@ namespace TAOM.Features.FordsOfWar;
 /// Finds the two base points of a generated layout from the playable polygon of a scene. The polygon's tightest enclosing
 /// rectangle (turned in 1 degree steps) gives the long axis; each base sits on that axis through the rectangle's center,
 /// <c>insetFraction</c> of the length in from its end. West is the end with the lower X (the lower Y on a tie), so the same
-/// scene always gives the same sides. Pure: the scene adapter reads the polygon and checks the points against the navmesh.
+/// scene always gives the same sides. A near-square polygon has no clear long axis, so the rectangle's other axis can be asked
+/// for as well. A base that stands off the navmesh is settled by <see cref="SettleAlongAxis"/>. Pure: the scene adapter reads
+/// the polygon and checks the points against the navmesh.
 /// </summary>
 internal static class FordsBaseFinder
 {
     private const float MinLength = 1e-3f;
+    private const int ScanSteps = 32;
+    private const int BisectSteps = 10;
+    private const float EdgeMargin = 4f;
 
-    public static bool TryFind(IReadOnlyList<Vec3f> polygon, float insetFraction, out Vec3f west, out Vec3f east)
+    /// <summary>The two bases; <paramref name="shortSide"/> puts them on the rectangle's shorter axis instead of its longer one.</summary>
+    public static bool TryFind(IReadOnlyList<Vec3f> polygon, float insetFraction, bool shortSide, out Vec3f west, out Vec3f east)
     {
         west = default;
         east = default;
         if (polygon.Count < 3)
             return false;
 
+        var bestAngle = TightestAngle(polygon);
+        Extents(polygon, bestAngle, out var loU, out var hiU, out var loV, out var hiV);
+        var radians = bestAngle * Math.PI / 180d;
+        var ux = (float)Math.Cos(radians);
+        var uy = (float)Math.Sin(radians);
+        var longU = hiU - loU >= hiV - loV;
+        var alongU = longU != shortSide;
+        var length = alongU ? hiU - loU : hiV - loV;
+        if (!(length > MinLength))
+            return false;
+
+        var (ax, ay) = EastwardAxis(alongU, ux, uy);
+        var centerU = (loU + hiU) / 2f;
+        var centerV = (loV + hiV) / 2f;
+        var cx = centerU * ux - centerV * uy;
+        var cy = centerU * uy + centerV * ux;
+        var reach = length * (0.5f - Math.Max(0f, Math.Min(0.49f, insetFraction)));
+        var z = Average(polygon);
+        west = new Vec3f(cx - ax * reach, cy - ay * reach, z);
+        east = new Vec3f(cx + ax * reach, cy + ay * reach, z);
+        return true;
+    }
+
+    /// <summary>Long side over short side of the polygon's tightest rectangle; <see cref="float.MaxValue"/> when there is none.</summary>
+    public static float AspectRatio(IReadOnlyList<Vec3f> polygon)
+    {
+        if (polygon.Count < 3)
+            return float.MaxValue;
+
+        Extents(polygon, TightestAngle(polygon), out var loU, out var hiU, out var loV, out var hiV);
+        var longSide = Math.Max(hiU - loU, hiV - loV);
+        var shortSide = Math.Min(hiU - loU, hiV - loV);
+        return longSide > MinLength && shortSide > MinLength ? longSide / shortSide : float.MaxValue;
+    }
+
+    /// <summary>
+    /// Moves a base that stands off the navmesh along the axis toward the other base, never off the axis line: a scan in 1/32
+    /// steps finds the first walkable spot, a bisection finds the edge of the ground, and a 4 m step back in keeps the base from
+    /// sitting on the edge. Returns true with the point itself when it is already walkable, false with the point unchanged when
+    /// nothing along the axis is.
+    /// </summary>
+    public static bool SettleAlongAxis(Vec3f from, Vec3f toward, Func<Vec3f, bool> walkable, out Vec3f settled)
+    {
+        settled = from;
+        if (walkable(from))
+            return true;
+
+        var low = 0f;
+        var high = -1f;
+        for (var step = 1; step <= ScanSteps; step++)
+        {
+            var t = step / (float)ScanSteps;
+            if (walkable(Vec3f.Lerp(from, toward, t)))
+            {
+                high = t;
+                break;
+            }
+
+            low = t;
+        }
+
+        if (high < 0f)
+            return false;
+
+        for (var i = 0; i < BisectSteps; i++)
+        {
+            var middle = (low + high) / 2f;
+            if (walkable(Vec3f.Lerp(from, toward, middle)))
+                high = middle;
+            else
+                low = middle;
+        }
+
+        var length = from.Distance2D(toward);
+        if (length > MinLength)
+        {
+            var inside = Math.Min(1f, high + EdgeMargin / length);
+            if (walkable(Vec3f.Lerp(from, toward, inside)))
+                high = inside;
+        }
+
+        settled = Vec3f.Lerp(from, toward, high);
+        return true;
+    }
+
+    /// <summary>
+    /// The unit direction the bases sit on, from West to East: the rectangle's u axis, or its v axis (u turned a quarter turn) when
+    /// the other side is the one asked for, turned to point toward higher X, or higher Y on a tie.
+    /// </summary>
+    private static (float X, float Y) EastwardAxis(bool alongU, float ux, float uy)
+    {
+        var ax = alongU ? ux : -uy;
+        var ay = alongU ? uy : ux;
+        if (ax < -1e-6f || (Math.Abs(ax) <= 1e-6f && ay < 0f))
+            return (-ax, -ay);
+
+        return (ax, ay);
+    }
+
+    private static int TightestAngle(IReadOnlyList<Vec3f> polygon)
+    {
         var bestArea = float.MaxValue;
         var bestAngle = 0;
         for (var degrees = 0; degrees < 90; degrees++)
@@ -34,33 +141,7 @@ internal static class FordsBaseFinder
             }
         }
 
-        Extents(polygon, bestAngle, out var loU, out var hiU, out var loV, out var hiV);
-        var radians = bestAngle * Math.PI / 180d;
-        var ux = (float)Math.Cos(radians);
-        var uy = (float)Math.Sin(radians);
-        var longU = hiU - loU >= hiV - loV;
-        var length = longU ? hiU - loU : hiV - loV;
-        if (!(length > MinLength))
-            return false;
-
-        // The axis is the rectangle's u axis, or its v axis (u turned a quarter turn) when that side is longer.
-        var ax = longU ? ux : -uy;
-        var ay = longU ? uy : ux;
-        if (ax < -1e-6f || (Math.Abs(ax) <= 1e-6f && ay < 0f))
-        {
-            ax = -ax;
-            ay = -ay;
-        }
-
-        var centerU = (loU + hiU) / 2f;
-        var centerV = (loV + hiV) / 2f;
-        var cx = centerU * ux - centerV * uy;
-        var cy = centerU * uy + centerV * ux;
-        var reach = length * (0.5f - Math.Max(0f, Math.Min(0.49f, insetFraction)));
-        var z = Average(polygon);
-        west = new Vec3f(cx - ax * reach, cy - ay * reach, z);
-        east = new Vec3f(cx + ax * reach, cy + ay * reach, z);
-        return true;
+        return bestAngle;
     }
 
     private static void Extents(IReadOnlyList<Vec3f> polygon, int degrees, out float minU, out float maxU, out float minV, out float maxV)

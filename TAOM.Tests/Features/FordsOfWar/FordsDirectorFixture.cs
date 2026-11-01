@@ -73,11 +73,11 @@ internal sealed class FordsDirectorFixture
         Battlefield.SampleUnits().Returns(_ => Samples);
         Battlefield.Move(Arg.Any<MatchSide>(), Arg.Any<int>(), Arg.Any<Vec3f>()).Returns(true);
 
-        Scene.TryGetBasePoints(Arg.Any<float>(), out Arg.Any<Vec3f>(), out Arg.Any<Vec3f>())
+        Scene.TryGetBasePoints(Arg.Any<float>(), Arg.Any<bool>(), out Arg.Any<Vec3f>(), out Arg.Any<Vec3f>())
             .Returns(call =>
             {
-                call[1] = new Vec3f(0f, 0f, 0f);
-                call[2] = new Vec3f(1000f, 0f, 0f);
+                call[2] = new Vec3f(0f, 0f, 0f);
+                call[3] = new Vec3f(1000f, 0f, 0f);
                 return true;
             });
         Scene.BoundaryPolygon().Returns(new List<Vec3f> { new(0f, -100f, 0f), new(1000f, -100f, 0f), new(1000f, 100f, 0f) });

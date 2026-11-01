@@ -16,9 +16,11 @@ namespace TAOM.Features.FordsOfWar.Hooks;
 /// field first, so a mission with no Fords match costs a null check.
 ///
 /// Callers and thread: <c>OnEntityHit</c> is reached from <c>Mission.MeleeHitCallback</c> and <c>Mission.MissileHitCallback</c>, both
-/// <c>[MBCallback(null, false)]</c> natives. Native chooses their thread and no log has shown which, so this runs as if it may be off
-/// the main thread (harmony-patches.md "Which thread runs your target"): it registers no blow, spawns nothing and touches no main-thread
-/// collection; the hook takes the director's gate and the adapters' own locks. Harmony binds the parameters by NAME, pinned by
+/// <c>[MBCallback(null, false)]</c> natives. Native chooses their thread. One log (2026-10-31 22:17, taom_debug_2026-10-31_22-08-35.log lines
+/// 4863 and 4881-4896) shows <c>MissileHitCallback</c> reaching <c>OnHit_Patch1</c> on managed thread 39, the thread that log's
+/// TickProfiler names as the script-tick main thread (line 383), so a missile hit has been seen on the main thread. No melee hit has been
+/// logged, so this still runs as if it may be off the main thread (harmony-patches.md "Which thread runs your target"): it registers no
+/// blow, spawns nothing and touches no main-thread collection; the hook takes the director's gate and the adapters' own locks. Harmony binds the parameters by NAME, pinned by
 /// <c>FordsOfWarBindingTests</c>. The body never throws: a fault logs once and leaves the vanilla damage.
 /// </summary>
 [HarmonyPatch(typeof(DestructableComponent), "OnHit")]

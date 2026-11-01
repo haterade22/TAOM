@@ -7,7 +7,7 @@ using TAOM.Features.FordsOfWar.Domain;
 namespace TAOM.Features.FordsOfWar;
 
 /// <summary>
-/// Turns one tick's unit samples into the <see cref="MatchSnapshot"/> the match consumes: per (side, lane) count and center,
+/// Turns one tick's unit samples into the <see cref="MatchSnapshot"/> the match consumes: per (side, lane) count, center and unit positions,
 /// the nearest enemy to each center, the enemies in fire range of every standing tower, and the unit counts inside every
 /// capture radius. Pure: the adapters measure, this only counts, so the rules never see an engine type.
 /// </summary>
@@ -40,7 +40,7 @@ internal static class FordsSnapshotBuilder
             var center = new Vec3f(members.Average(m => m.Position.X), members.Average(m => m.Position.Y),
                 members.Average(m => m.Position.Z));
             lanes.Add(new LaneSnapshot(group.Key.Side, group.Key.Lane, members.Count, center,
-                NearestEnemy(samples, group.Key.Side, center)));
+                NearestEnemy(samples, group.Key.Side, center), members.ConvertAll(m => m.Position)));
         }
 
         return lanes;

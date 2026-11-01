@@ -36,6 +36,19 @@ public class FordsSnapshotBuilderTests
     }
 
     [TestMethod]
+    public void Build_LaneUnits_ReportsEachUnitsPositionForTheLeadMeasure()
+    {
+        var snapshot = Build(new[]
+        {
+            Sample(1, MatchSide.West, 0, 0f, 0f), Sample(2, MatchSide.West, 0, 10f, 4f), Sample(3, MatchSide.West, 1, 99f, 0f),
+            Sample(4, MatchSide.East, 0, 50f, 0f),
+        });
+
+        var lane = snapshot.Lanes.Single(l => l.Side == MatchSide.West && l.Lane == 0);
+        CollectionAssert.AreEquivalent(new[] { new Vec3f(0f, 0f, 0f), new Vec3f(10f, 4f, 0f) }, lane.UnitPositions!.ToList());
+    }
+
+    [TestMethod]
     public void Build_EnemyAcrossTheLane_ReportsNearestEnemyDistanceFromTheCenter()
     {
         var snapshot = Build(new[]

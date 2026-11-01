@@ -231,6 +231,82 @@ failure for item 15.
 | G1 | HIGH | The mission start ran twice. `FordsOfWarMissionLogic.AfterStart` spawned the tower gunners inside the engine's `foreach` over the mission behaviors; DualWield's `SpawnAgent` postfix added its behavior on that first spawn (the mode was already Battle, set by `MissionCombatantsLogic.AfterStart`), so `MoveNext` threw outside every call the start guard wraps, and the engine loaded the mission again on the same mission object. the initialize and early-start calls ran twice, and `AfterStart` ran twice for the behaviors up to the one that spawned: towers and gunners were built twice, TAOM behaviors were added twice (creatures got "a tree ... already exists"), the combatants logic and the boundary placer failed ("Number of teams is not 0", "An element with the same name already exists"), and the scene showed black. Proof: TAOM log line 489 and the behavior list (DualWield at index 70, added once, between the two passes); DualWield's own log, `ADDED (mode=Battle)` at 15:39:37.614 between `OnMissionBehaviorInitialize` mode StartUp and mode Battle. | Spawning inside an engine loop | Every review read TAOM code only; no lens asked what the other installed modules (DualWield is in the load order) hook on the start path, and the engine doc warned about throws in `AfterStart`, not about mutating the list it walks. | Fixed: `AfterStart` marks the start as due and the first `OnMissionTick` starts the match (test `AfterStart_StartsNothing_TheFirstTickStartsTheMatchOnce`). The rule is in `mission-and-missionbehavior-lifecycle.md` ("Never spawn an agent inside `AfterStart`") and the orientation trap index. |
 | G2 | HIGH | The scene rendered black under the command panel. Three panel boxes were `CoverChildren` with a `StretchToParent` background child; Gauntlet measures each child against the parent's whole space (`DefaultLayout.MeasureChildren`), so each box grew to the full screen and its 63 to 69 % black stacked over the scene (about 4 % left); the bottom deck drew from the top left. Proof: the camera pose lines put the camera 47.6 m above the terrain looking 46 degrees down, the scene reported ReadyToRender, and the fixed prefab shows the battlefield. | Repeat offender (third time: `lessons/localization-ui.md` lines 139 (#388) and 1221 (#866)) | The lesson existed but no gate did; the prefab review checked bindings and events, not sizing. | Fixed: each box paints its own background, with positive margins inside. `FordsCommandPrefabTests` pins the Fords prefab, and `GauntletStretchInCoverRatchetTests` pins every prefab file under `Main/_Module/GUI` (five older files are counted and may only fall; grid parents are exempt; proven RED on the old Fords prefab). |
 
-FOLLOW-UP: AI melee never strikes a tower: in the 16:54 match on 2026-10-31 (after both fixes, which started once) enemy melee spent 1,030 unit-seconds within 20 m of a tower and no blow of any kind reached one (check 9 FAIL), so no tower can fall yet (no issue: the maintainer chose no GitHub issues for Fords of War).
-FOLLOW-UP: the generated layout fits the Rohan field scene badly (34 path points dropped, 3 of 14 towers not built, West lanes 0 and 1 gained 11 and 27 m); the maintainer plans a dedicated three-lane scene (no issue: the maintainer chose no GitHub issues for Fords of War).
+Resolved overnight (see the next addendum): AI melee now strikes towers (check 9 PASS in every unattended match;
+731 native tower blows in the first 600 s run), and the layout fitter plus Rohan Plains II as the default scene
+remove the bad fit (0 points dropped, 14 of 14 towers built).
 FOLLOW-UP: five older TAOM prefabs hold the stretch-in-cover pattern (MomentumView, CareerScreen, BattleActionBar, PreBuildCharacterSelection, StagedSiegeHud); triage each, then lower its count in the ratchet (no issue: outside this feature, and the maintainer decides the work).
+
+## Addendum: check 9, unattended runs and the second review (2026-10-31 night)
+
+Mike asked for the work to continue overnight with full authority. A research workflow (four readers and a
+critic) found that the 16:54 match could not prove "no AttackTower was ever given": the lane-command log stops
+after 30 lines and the report kept only the last command per lane. It found three causes that each explain
+"units just sitting": the lane rules measured from the mean of every unit, which each new wave pulled back to
+the base; every lane unit spawned with `isAlarmed=false` (vanilla battles spawn alarmed); and the fitter dropped
+middle-lane points and three towers on Rohan Plains I, which left `keep_west` open. Four builders then added an
+env-armed autorun with a launcher (learned from ArmorySim's direct launch, not integrated), diagnostics for every
+link of the melee-on-tower chain, a lead-group lane rule and a layout fitter with a retry planner. Four
+unattended matches ran on the desktop with nobody at the keyboard.
+
+| Run | Setup | Result |
+|---|---|---|
+| `E:/Temp/fords-runs/20261031-215310` | first launch | stalled 10 min on the engine's "Mod change detected" notice (row U1) |
+| `20261031-220826` | 600 s, East AI against a passive West | 5 PASS, 0 FAIL; check 9 PASS (731 native tower blows, AttackTower given 7 times) |
+| `20261031-222418` | 1800 s, AI on both sides (`west_ai`) | 7 PASS, 0 FAIL; checks 7 and 16 PASS; no tower fell |
+| `20261031-225939` | 1800 s, both AI, deployed `match.json` lowered to 1200/1600/2400 HP and no regeneration | 7 PASS, 0 FAIL; no tower fell; the run could not prove which numbers loaded (row R3) |
+| `20261101-075050` | 900 s, both AI, the fixed build | 6 PASS, 0 FAIL; check 3 `exceptions` and check 9 `bypass` PASS; single-unit leads fell from 325 of 2155 lines to 14 of 1074; lowest tower HP 6781 of 8000, so no damage stage was reached |
+| `20261101-081305` | 1500 s, both AI, the fixed build, deployed `match.json` lowered to 2000/2400/3200 HP with regeneration on (logged by the `[Tower] config` line) | 6 PASS, 0 FAIL, 0 swallowed exceptions; `tower_west_0_0` fell to 1195 HP (below the 1500 HP stage line) and regeneration healed 1276 HP in total, so it was struck again after healing: the row R2 sequence, now without the exception |
+
+### Found by the unattended runs
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| U1 | MED | The first unattended start stalled before the graphics device: the engine shows a blocking "Mod change detected" notice (one OK button) whenever the shader cache was built for another module list. | Engine UI on the unattended path | The autorun research read ArmorySim's shader-list guard as a time cost only ("not a blocking dialog"); nobody looked for dialogs owned by the game process. | Fixed: the launcher clicks OK on exactly that notice, fails on a crash-titled dialog and logs any other dialog once. |
+| U2 | MED | The 600 s run threw `IndexOutOfRangeException` inside the engine (row R2) and still ended `fail=0`; the launcher printed PASS. | Self-check blind to swallowed exceptions | No verdict and no launcher rule read TAOM's CrashReport output. | Row R4. |
+
+### /deep-review of the batch (wave 1: Lens 5 twice, Lens 2, Tooling; wave 2: Lens 1, 3, 4, 6)
+
+Codex did not run (a paid call; "full authority" did not name it). Every finding below was re-read against the
+code or the engine decompile before it entered this table.
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| R1 | HIGH | `LaneGeometry.LeadGroup` took the single most advanced unit as the front, so one runaway unit led a 44-unit lane past a standing tower: 32 % of East samples had the lead more than 20 m past the next standing tower, 303 of 2172 lines had `leadCount=1`. | A group statistic from one extreme sample | The builder's tests used clustered formations; no test put a lone unit ahead of its lane. | Fix: the front is the k-th most advanced unit (k = min(n, max(3, ceil(n/10)))), the lead group lies within the band on both sides of it, and a lead level with or past the next standing tower attacks it. A march cap was rejected (it could park a lane 22 m short of attack range). |
+| R2 | HIGH | Tower regeneration raised `DestructableComponent.HitPoint` over a damage-stage line; the next hit set stage 0 and the engine read `_destructionStates[-1]` after hiding the model and turning its physics off. | Engine state machine driven backward through a public setter | `FordsTowerAdapter.Heal` predates this batch; alarmed lanes made tower blows land for the first time, and no test or rule knew the setter drives a one-way state. Third case of the "engine effect inferred from a member name" pattern (D2, D6). | Fix: the adapter sets `OnCalculateDestructionStateIndex` so the shown stage never moves backward; a binding test pins the field. Engine note in `usable-machines.md`, one rule in `.claude/rules/adapters.md`, a lesson. A domain heal ceiling was rejected (it would have changed balance). |
+| R3 | MED | The report kept no tower hit points, no damage totals and no effective tower config, so "no tower fell in 30 minutes" could not be split into too little damage, regeneration, or a config that did not load. | Diagnostics one link short | The diagnostics brief named the blow chain, not the hit-point chain. | Fix: lowest rules HP, damage per attacker class, regeneration healed and a melee raw-damage summary per tower; one line with the effective tower config at match start. |
+| R4 | MED | A swallowed engine exception passed the self-check and the launcher (row U2). | Self-check blind to swallowed exceptions | See U2. | Fix: check 03 gains an `exceptions` part fed through the CrashReport seam; the launcher fails on a `[CrashReport]` block inside the run or on any FAIL row. |
+| R5 | MED | Check 9's info counted "contact" near any standing tower (locked towers, the keep, fights with the garrison) and gunner hits from either side, so it could not name the broken link. | Diagnostics that count proximity, not cause | The counters were designed from the research text, before any run produced them. | Fix: a per-stream ladder keyed on the stream's own AttackTower target (given, flagged, at the target, tower blows against gunner blows, applied); a `bypass` part fails when a lane marches past a standing tower. |
+| R6 | MED | `[LaneState] applied=` could never show the nearest-waypoint fallback it was documented to show. | Record of the request, not the effect | `_applied` is the change-detection key; the line reused it. | Fix: a separate sent-target record; one line format. |
+| R7 | MED | Launcher: the dialog click had never run in a launcher run, preflight failed open when the process query failed, a creation-time check duplicated what the Popen handle guarantees, and exit 0 could hide a crash at quit. | Unattended harness trusting exit codes | Python written before its tests; the guard functions had no tests. | Fix: PostMessage click logged once, fail-closed preflight, kill through the Popen handle, crash scan after the done file; tests for every guard. |
+| R8 | MED | `FordsTelemetryLogic` grew to 175 lines across a partial split, which the per-file ADR-002 gate cannot see. | Gate measures files, rule measures classes | The split was made to stay under the per-file gate. | Fix: the gate sums the files of a partial class; the class is back under 150. |
+| R9 | MED | The autorun host resolved its services itself instead of the null-host pattern the module already uses. | Locator in a host | The builder believed a Client type could not be registered from Main. | Fix: null host in the module, the Client host in `TaomClientComposition`, the driver resolved only when armed. |
+| R10 | MED | The doc's hold arithmetic was backwards in three places, and the doc did not reflect the two full matches. | Doc written before the evidence | The doc pass ran before the runs. | Fixed in the doc pass after the fixes. |
+| R11 | LOW | 37 smaller items: off-navmesh counted twice per tick, a lane's last tower dropped by a failed build, camps scored by the planner though unused, a quoted `out=` threw, `west_ai` missing from the setup record, an unread `ArmPath`, `final_timeout` overwriting the outcome, an unbounded Live phase after an outside EndGame, a dead "not armed" branch, an autorun run parked for the console, an unguarded logger in a catch, contradictory limits accepted silently, six launcher guards, the module list copied by hand, two write guards, a silent catch, an invisible BOM literal, enum names as strings, disagreeing log helpers, comments and slot names, dead geometry helpers and overloads, test names, the lead stored on the engine snapshot, a duplicated flag, slide distance, the lead loop's cost (0.45 ms per tick at 240 units in the Debug build), list allocation, planner timing, a comment on gunner hits, and four missing tests. | Mixed | | Fixed in the fix pass (the list with the proof of each is in the commit). |
+
+### Root-cause patterns
+
+1. **A rule or a report built on a convenient sample.** R1 used the single furthest unit, R5 used any unit near
+   any tower, R3 kept a difference instead of the values. Each was the easiest number to compute, and each was
+   tested on clustered, hand-built positions. The real runs supplied the outliers.
+2. **Engine state that only moves one way, written through a setter that allows both.** R2 repeats D2 and D6: a
+   member's name (`HitPoint`) was trusted to describe all of its effects.
+3. **An unattended harness that trusts the process and its own exit code.** U1, U2, R4 and R7: the first run
+   stalled on a dialog nobody looked for, a swallowed engine exception passed, preflight failed open.
+
+### Preventive actions
+
+1. **Rule:** `.claude/rules/adapters.md` "A destructible's shown stage must only move forward", with the engine note in
+   `docs/reference/engine/usable-machines.md`.
+2. **Lessons:** `lessons/adapters-taleworlds-api.md` (R2), `lessons/testing-qa.md` (a self-check fails on a
+   swallowed exception and keys its ladder on the causal target; test group statistics with a lone outlier).
+3. **Gates:** the ADR-002 line gate sums partial classes (R8); check 03 `exceptions` and the launcher crash rule
+   (R4); check 09 `bypass` (R1).
+4. **Process:** an unattended match on the desktop is now the proof before a Fords merge
+   (`python tools/run_fords_autorun.py --west-ai`), and its folder is cited in the commit.
+
+FOLLOW-UP: AI melee spends many swings on the invulnerable tower gunners (1,075 melee blows in the 600 s run), and an invulnerable victim's blow carries zero damage, so forwarding it needs TAOM-computed damage; the choice (forward, move the gunners, or keep) is the maintainer's (no issue: the maintainer chose no GitHub issues for Fords of War).
+FOLLOW-UP: most melee blows that reach a tower do zero raw damage (124 of 142 in the third run); the R3 raw-damage summary will show why on the next run (no issue: the maintainer chose no GitHub issues for Fords of War).
+FOLLOW-UP: no tower fell in two 30-minute AI matches, so check 14 (keep, result, exit) is still unseen; tower balance is the maintainer's call, and the R3 evidence gives the numbers (no issue: the maintainer chose no GitHub issues for Fords of War).
+FOLLOW-UP: a crash in an unattended run loses its dump, because the watchdog asks a human before it writes one and the launcher stops the game (no issue: the maintainer chose no GitHub issues for Fords of War).
+FOLLOW-UP: the layout planner's limits (10 % dropped, 5 % bad segments) are unmeasured; set them from the attempt lines of the four scenes (no issue: the maintainer chose no GitHub issues for Fords of War).
+FOLLOW-UP: `FordsSnapshotBuilder` still groups with LINQ (about 36 KB per tick at 240 units); a bucketed builder brings it to about 4 KB (no issue: pre-existing code, the maintainer chose no GitHub issues for Fords of War).

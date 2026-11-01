@@ -251,6 +251,7 @@ internal sealed class FordsScenario
         Director = director;
         Report.OptionsWired(true);
         Report.PanelAttached();
+        Report.ExceptionsWatched();
         Probe = new FordsCameraProbe(Report, StrictInside);
         Camera = FordsCameraMath.Start(Session.CameraStart, Session.CameraLookAt, 0f);
         Subject = null;
@@ -436,7 +437,7 @@ internal sealed class FordsScenario
     {
         var field = typeof(FordsMissionDirector).GetField("_match", BindingFlags.NonPublic | BindingFlags.Instance)!;
         var match = (FordsMatch)field.GetValue(Director)!;
-        return match.TryBuyHero(FordsMissionDirector.AiSlotId, lane, heroId);
+        return match.TryBuyHero(FordsMissionDirector.EastSlotId, lane, heroId);
     }
 
     /// <summary>A blow on a tower through the real hit patch's dispatch; the entity then takes what the hook returned.</summary>

@@ -94,6 +94,7 @@ internal sealed partial class FordsMatch
     public MatchEffects Tick(MatchSnapshot snapshot)
     {
         var effects = new MatchEffects();
+        _decisions = Array.Empty<LaneDecision>();
         if (_clock.Phase == MatchPhase.Ended)
             return Finish(effects);
 
@@ -428,30 +429,6 @@ internal sealed partial class FordsMatch
                 TrySetLaneOrder(slot, action.Lane, action.Order);
                 break;
         }
-    }
-
-    private void IssueLaneCommands(MatchEffects effects)
-    {
-        foreach (var lane in _layout.Lanes)
-        {
-            foreach (var side in Sides)
-            {
-                if (!_seenLanes.TryGetValue((side, lane.Index), out var seen) || seen.LiveUnits <= 0 || seen.Center is not { } center)
-                    continue;
-
-                var command = _march.Decide(SituationOf(side, lane.Index, seen, center));
-                if (command.Kind != LaneCommandKind.None)
-                    effects.Commands.Add(new FormationCommand(side, lane.Index, command));
-            }
-        }
-    }
-
-    private LaneSituation SituationOf(MatchSide side, int lane, LaneSnapshot seen, Vec3f center)
-    {
-        var target = NextTargetOf(MatchSides.Opponent(side), lane);
-        var distance = target == null ? float.MaxValue : center.Distance2D(target.Position);
-        return new LaneSituation(side, lane, _orders.Order(side, lane), seen.LiveUnits, center, seen.NearestEnemyDistance,
-            target?.Id, distance, target == null || _chain.IsLocked(target.Id));
     }
 
     /// <summary>The standing tower nearest the middle of the lane; the standing keep once the lane's towers are gone.</summary>

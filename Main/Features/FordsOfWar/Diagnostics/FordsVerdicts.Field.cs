@@ -20,6 +20,7 @@ internal static partial class FordsVerdicts
         var towers = started == null ? FordsResult.NotSeen
             : s.TowersBuilt == s.TowersExpected && s.KeepsBuilt == 2 ? FordsResult.Pass : FordsResult.Fail;
 
+        var (layout, layoutNumbers) = Layout(run, started);
         var (waves, wavesNumbers) = Waves(run, live);
         var (march, marchNumbers) = March(run);
 
@@ -34,12 +35,14 @@ internal static partial class FordsVerdicts
 
         var info = "firstSpawnMt=" + string.Join(",", run.Lanes.Select(l => l.FirstSpawnMt == null ? "-" : N(l.FirstSpawnMt.Value)))
             + " liveSeconds=" + N(run.Perf.LiveSeconds) + " deaths=" + run.Kills.DeathsWest + "/" + run.Kills.DeathsEast
-            + " owned=" + c.OwnedFrames + " insideSamples=" + c.InsideSamples + " outsideSamples=" + c.OutsideSamples;
+            + " owned=" + c.OwnedFrames + " insideSamples=" + c.InsideSamples + " outsideSamples=" + c.OutsideSamples
+            + " alarmed=" + AlarmShares(run);
 
         return Row(4, new[]
         {
             Part("countdown", countdown, countdownNumbers),
             Part("towers", towers, "built=" + s.TowersBuilt + " expected=" + s.TowersExpected + " keeps=" + s.KeepsBuilt),
+            Part("layout", layout, layoutNumbers),
             Part("waves", waves, wavesNumbers),
             Part("march", march, marchNumbers),
             Part("fight", fight, "deathsWest=" + run.Kills.DeathsWest + " deathsEast=" + run.Kills.DeathsEast),
@@ -50,7 +53,7 @@ internal static partial class FordsVerdicts
             Part("inside", inside, "inside=" + c.InsideSamples + " maxOutsideRun=" + c.MaxOutsideRun),
             Part("ownership", ownership, "owned=" + c.OwnedFrames + " failed=" + c.CameraFailed),
         }, info,
-            "Each part needs positive evidence; pan, rotate and zoom fail only when input over the whole run never changed the camera, and the boundary is the engine's own.",
+            "Each part needs positive evidence; pan, rotate and zoom fail only when input over the whole run never changed the camera, and the boundary is the engine's own; layout fails on a tower the layout named and the match did not build, or a keep that could be damaged at the start.",
             "The towers and keeps are drawn, the camera feels right, and the edge was pushed.");
     }
 
@@ -60,6 +63,24 @@ internal static partial class FordsVerdicts
         if (inputFrames > 0 && changedFrames > 0)
             return FordsResult.Pass;
         return inputFrames >= 30 && changedFrames == 0 ? FordsResult.Fail : FordsResult.NotSeen;
+    }
+
+    /// <summary>The layout the match started on: every tower the layout named was built, and neither keep could be damaged yet. Fails naming the ids.</summary>
+    private static (FordsResult, string) Layout(FordsRunEvidence run, FordsStageMark? started)
+    {
+        var layout = run.Start.Layout;
+        if (started == null || !layout.Reported)
+            return (FordsResult.NotSeen, "");
+
+        var open = new List<string>();
+        if (layout.KeepOpenWest)
+            open.Add("West");
+        if (layout.KeepOpenEast)
+            open.Add("East");
+
+        var numbers = "missing=" + (layout.MissingTowerIds.Count == 0 ? "-" : string.Join(",", layout.MissingTowerIds))
+            + " keepOpen=" + (open.Count == 0 ? "-" : string.Join(",", open));
+        return (layout.MissingTowerIds.Count > 0 || open.Count > 0 ? FordsResult.Fail : FordsResult.Pass, numbers);
     }
 
     private static (FordsResult, string) Waves(FordsRunEvidence run, FordsStageMark? live)
@@ -221,6 +242,6 @@ internal static partial class FordsVerdicts
             Part("hold", holdResult, "settledSamples=" + run.Lanes.Sum(l => l.HoldSamples) + (inFireBy == "" ? "" : " " + inFireBy)),
         }, "fireRange=" + N(fire) + " baseDistance=" + N(run.Facts?.BaseDistance ?? 0f) + " holdFront " + (perLane == "" ? "-" : perLane),
             "Push, Hold and Fall back were each accepted once, and no held lane that had reached its hold point (its front unit within 10 m of it along the lane's axis) stood inside tower fire range for two samples in a row; a failing lane names the tower that covered it.",
-            "The cooldown is drawn on the buttons, and the lane forms up about 60 m before the tower.");
+            "The cooldown is drawn on the buttons, and a held lane forms up 60 m before the enemy tower or at the lane's midpoint, whichever is nearer its own base.");
     }
 }

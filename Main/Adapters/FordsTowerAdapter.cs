@@ -62,6 +62,7 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
     private readonly object _gate = new();
     private readonly Dictionary<string, Tower> _towers = new();
     private readonly Dictionary<object, string> _byComponent = new(ReferenceComparer.Instance);
+    private readonly Dictionary<object, string> _byGunner = new(ReferenceComparer.Instance);
     private readonly Random _spread = new(12345);
     private Action<string>? _onDestroyed;
     private ItemObject? _volleyItem;
@@ -102,6 +103,9 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
             component.DestroyOnAnyHit = false;
             component.MaxHitPoint = hitPoints;
             component.HitPoint = hitPoints;
+            // Regeneration raises the hit points, and the engine would then recompute a lower stage than the one on show.
+            var stage = new FordsTowerStage();
+            component.OnCalculateDestructionStateIndex = (index, _, _) => stage.Advance(index);
             component.OnDestroyed += HandleDestroyed;
             lock (_gate)
             {
@@ -161,6 +165,8 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
                 var hold = new WorldPosition(scene, UIntPtr.Zero, position, false);
                 agent.SetScriptedPositionAndDirection(ref hold, direction.RotationInRadians, false, Agent.AIScriptedFrameFlags.ConsiderRotation);
                 tower.Gunners.Add(agent);
+                lock (_gate)
+                    _byGunner[agent] = slot.Id;
             }
             catch (Exception ex)
             {
@@ -181,6 +187,12 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
         {
             if (IsLive(gunner))
                 gunner.FadeOut(true, true);
+        }
+
+        lock (_gate)
+        {
+            foreach (var gunner in tower.Gunners)
+                _byGunner.Remove(gunner);
         }
 
         tower.Gunners.Clear();
@@ -224,12 +236,22 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
             return _byComponent.TryGetValue(component, out var id) ? id : null;
     }
 
+    public string? TowerIdOfGunner(object? agent)
+    {
+        if (agent == null)
+            return null;
+
+        lock (_gate)
+            return _byGunner.TryGetValue(agent, out var id) ? id : null;
+    }
+
     public void Clear()
     {
         lock (_gate)
         {
             _towers.Clear();
             _byComponent.Clear();
+            _byGunner.Clear();
         }
     }
 

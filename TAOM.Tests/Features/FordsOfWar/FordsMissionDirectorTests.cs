@@ -79,7 +79,7 @@ public class FordsMissionDirectorTests
 
         Assert.IsTrue(f.Session.IsActive);
         Assert.AreEqual(MatchSide.West, f.Session.GetView()!.Side);
-        Assert.AreEqual(FordsMissionDirector.HumanSlotId, f.Session.GetView()!.Slot);
+        Assert.AreEqual(FordsMissionDirector.WestSlotId, f.Session.GetView()!.Slot);
         var keep = f.TowerSlot("keep_west");
         Assert.IsTrue(f.Session.CameraStart.Z > keep.Position.Z + 20f);
         Assert.IsTrue(f.Session.CameraStart.X < f.Session.CameraLookAt.X);
@@ -114,7 +114,7 @@ public class FordsMissionDirectorTests
     public void Start_SceneGivesNoBasePoints_ReturnsFalse()
     {
         var f = FordsDirectorFixture.Create();
-        f.Scene.TryGetBasePoints(Arg.Any<float>(), out Arg.Any<Vec3f>(), out Arg.Any<Vec3f>()).Returns(false);
+        f.Scene.TryGetBasePoints(Arg.Any<float>(), Arg.Any<bool>(), out Arg.Any<Vec3f>(), out Arg.Any<Vec3f>()).Returns(false);
 
         Assert.IsFalse(f.Director.Start());
 
@@ -160,7 +160,7 @@ public class FordsMissionDirectorTests
 
         Assert.AreEqual(authored.Towers.Count, f.TowersSpawned.Count);
         f.Battlefield.Received(1).Prepare(2);
-        f.Scene.DidNotReceive().TryGetBasePoints(Arg.Any<float>(), out Arg.Any<Vec3f>(), out Arg.Any<Vec3f>());
+        f.Scene.DidNotReceive().TryGetBasePoints(Arg.Any<float>(), Arg.Any<bool>(), out Arg.Any<Vec3f>(), out Arg.Any<Vec3f>());
     }
 
     [TestMethod]

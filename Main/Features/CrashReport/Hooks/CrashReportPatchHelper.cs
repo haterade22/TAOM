@@ -54,10 +54,22 @@ internal static class CrashReportPatchHelper
             var svc = ResolveService();
             if (svc == null) return HandBack(exception);     // unreachable: let vanilla handle it
             svc.HandleException(exception, originatingPatchTarget, offMainThread);
+            RaiseSwallowed(exception, originatingPatchTarget);
             return null;                                      // swallow: game keeps ticking
         }
         catch { return HandBack(exception); }
         finally { _onPatchStack = false; }
+    }
+
+    // Raised on the thread that threw, once per exception the finalizer swallowed (the bundle may have been throttled, the
+    // exception is swallowed all the same). A feature that must know whether its run swallowed anything, such as the Fords of War
+    // run report, subscribes for the run and unsubscribes at its end. A listener that throws never turns the swallow into a hand-back.
+    internal static event Action<Exception, string>? Swallowed;
+
+    private static void RaiseSwallowed(Exception exception, string originatingPatchTarget)
+    {
+        try { Swallowed?.Invoke(exception, originatingPatchTarget); }
+        catch { /* swallow-ok: a listener failed; the exception stays swallowed */ }
     }
 
     // TEMPORARY #699 follow-up diagnostic (silent reload loop investigation). Names every

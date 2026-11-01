@@ -143,7 +143,7 @@ internal sealed partial class FordsRunReport
 
             var number = ++Session.RunsBegun;
             var setupText = "scene=" + setup.SceneName + " west=" + setup.WestFaction + " east=" + setup.EastFaction
-                + " ai=" + setup.AiProfile + " lanes=" + setup.LaneCount;
+                + " ai=" + setup.AiProfile + " lanes=" + setup.LaneCount + " west_ai=" + (setup.WestAi ? 1 : 0);
             var run = new FordsRunEvidence { Run = number, Trigger = trigger, Setup = setupText, Started = DateTime.Now.ToString("o") };
             _file = FordsReportFile.For(Logger.LogFilePath);
 
@@ -169,7 +169,7 @@ internal sealed partial class FordsRunReport
                     open.Run = number;
                 }
             }
-            else
+            else if (trigger == "console")
             {
                 _parkedRun = number;
                 _parkedSetup = setupText;

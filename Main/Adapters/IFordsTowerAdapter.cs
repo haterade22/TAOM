@@ -44,6 +44,12 @@ internal interface IFordsTowerAdapter
     string? TowerIdOf(object? component);
 
     /// <summary>
+    /// The id of the tower an engine agent (passed as object) garrisons; null for any other agent and once the garrison is gone.
+    /// Safe from the engine's hit callback threads.
+    /// </summary>
+    string? TowerIdOfGunner(object? agent);
+
+    /// <summary>
     /// The volley javelin as the engine resolved it (looking it up logs its numbers once); null when the item does not exist.
     /// </summary>
     FordsVolleyItemInfo? VolleyItemInfo();

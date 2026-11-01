@@ -169,7 +169,8 @@ per record. Names are camelCase.
 | `lanes.orderCooldownSeconds` | float | Cooldown between lane order changes | 20 |
 | `lanes.engageRange` | float | Metres: enemies inside it make the lane charge | 25 |
 | `lanes.waypointReachRadius` | float | Metres at which a waypoint counts as reached | 6 |
-| `lanes.holdDistanceBeforeTower` | float | Metres before the next enemy tower where a Hold order stands | 60 |
+| `lanes.holdDistanceBeforeTower` | float | Metres of lane before the next enemy tower where a Hold order stands; on a lane over about 428 m the lane midpoint is nearer its own base and is used instead (see Lane rules) | 60 |
+| `lanes.leadBand` | float | Metres (1 to 300): the lead group is the units within this distance, on either side, of the lane's front line (its k-th most advanced unit, see Lane rules); a bad value reverts to 25 with one warning | 25 |
 | `lanes.assaultThreshold` | int | Live units the AI gathers in its assault lane before it pushes | 40 |
 | `capture.radius` | float | Metres around a capture point that count units | 12 |
 | `capture.secondsToCapture` | float | Seconds for one side alone to take a point | 20 |
@@ -220,11 +221,11 @@ A file may override one profile or add a new name; a new profile starts from nor
 | Hero factor 4, siege factor 3 | Heroes and the Siege role (the trolls) are the units that hurt towers; the factors multiply, so a hero archer gets both |
 | Tower regen 15/s after 20 s without damage | Regeneration starts only after a quiet period and never above the maximum |
 | 2 gunners per tower, volley of 3 javelins every 4 s, fire range 45 m | The garrison: scripted volleys at the nearest enemy in range, heroes first |
-| Hold distance 60 m, fire range 45 m | A lane gathering at its hold line must stand out of tower fire: 45 m plus 15 m of formation depth. It was 35 m, inside the tower's reach. `ShippedMatch_LaneHoldLineIsOutsideTowerFireRange` pins the relation |
+| Hold distance 60 m, fire range 45 m | A lane gathering at its hold line must stand out of tower fire: 45 m plus 15 m of formation depth. It was 35 m, inside the tower's reach. `ShippedMatch_LaneHoldLineIsOutsideTowerFireRange` pins the relation. The hold point is never closer than 60 m to the tower: on a lane under about 428 m it is exactly 60 m short of the tower, on a longer lane it is the midpoint, which is farther |
 | Attack range 20 m | Measured from the formation center to the tower; 6 m was too small for a center |
 | 2 heroes alive per side, respawn 60 s + 6 s per minute | Heroes decide fights, so the count is capped and a death costs time that grows with the match; buyback is 0.5 + 0.05 per minute of the price |
 | Starting gold 600, income 120 per minute, bounty fraction 0.35 | Starting values; kills pay the owner of the killing unit, towers and heroes pay a flat larger bounty |
-| Free wave every 40 s, caps 90 per lane, 300 per side, 6 spawns per tick | The caps are meant to keep a 30-minute match under the agent cap (not yet measured; see the checks below) |
+| Free wave every 40 s, caps 90 per lane, 300 per side, 6 spawns per tick | Measured 2026-10-31 in `20261031-222418` (1800 s, both sides AI): peak live West 241 and East 159 against the per-side cap of 302, peak agents 454 of 2040, frame average 11.2 ms, p95 17.7 ms (checks 7 and 16 PASS) |
 | Order cooldown 20 s | Setting the standing order again returns Ok and costs no cooldown |
 | Capture 12 m radius, 20 s, 60 gold per minute per point | Starting values |
 | Countdown 10 s | Seconds before the match goes live |
@@ -233,9 +234,11 @@ A file may override one profile or add a new name; a new profile starts from nor
 **Layout options** (shipped default): `laneCount` 3, `laneSpread` 45, `waypointStep` 12, `towerFractions`
 0.36 and 0.2, `keepInset` 0.04.
 
-**Maps** (all `"layout": "generated"`, three lanes): `taom_rohan_battle_001_forceatmo` (the default),
-`taom_gondor_pelennor_fields_forceatmo` and `taom_mordor_battle_001_forceatmo`. Nobody has checked their
-boundary size or navmesh in game. Tower and keep prefab `siege_barricade_a`, scale 1.0 and 1.6 (the 1.6
+**Maps** (all `"layout": "generated"`, three lanes, in this order): `taom_rohan_battle_002_forceatmo` (Rohan Plains II, the
+default: the first entry is the scene of a `taom.fords_start` with no scene argument),
+`taom_gondor_pelennor_fields_forceatmo`, `taom_mordor_battle_001_forceatmo` and `taom_rohan_battle_001_forceatmo`
+(Rohan Plains I, last). Rohan Plains II is the scene the 2026-10-31 fit result below was measured on; the other three have no
+recorded in-game fit since the fitter was rewritten. Tower and keep prefab `siege_barricade_a`, scale 1.0 and 1.6 (the 1.6
 is a placeholder, not measured). Neutral camp default: 2 `hill_troll` for a reward of 250.
 
 **Factions** (offers / heroes with price):
@@ -252,12 +255,176 @@ prices and pack sizes are first guesses for the balance pass. `cave_troll` is no
 `troop_weights.xml` is commented out. Decks are ordered so that the two dearest offers fall within F1 to
 F8.
 
+## Lane rules
+
+`LaneMarchRules` decides each lane's command every tick, for both sides, from the lane's **lead group** rather than the mean
+of every unit. Fresh waves spawn at the base into the same formation, so the mean falls behind the front after every spawn.
+
+- **Lead group.** A lane's front line is the advance (arc position along the lane path, counted from the unit's own base) of its
+  k-th most advanced unit, where n is the number of readable positions and k = min(n, max(3, ceil(n / 10))), so one or two runaways
+  cannot drag the lane past a standing tower. The lead group is every unit whose advance lies within `lanes.leadBand` (25 m) of that
+  front line, on either side. `LaneSituation.Lead` is their mean position, `LeadArc` their mean arc and `LeadCount` their number.
+  `LaneMarchRules.LeadOf` computes it for `FordsMatch.SituationOf` (`FordsMatch.Lanes.cs`); the snapshot builder only passes each
+  unit's position. A snapshot without positions falls back to the centre. `LanePath` turns each lane's polyline once, when the match
+  is built, into per-segment float arrays (start, direction, length, squared length, arc at start) and an arc per vertex; the arc
+  position, the lead group, the waypoint index and the hold point read them and give the same numbers as `LaneGeometry.ArcPosition`.
+- **What reads the lead.** The `towers.attackRange` test, the level-or-past test below, the `lanes.engageRange` test (nearest
+  enemy, measured from the lead) and the march waypoint. A lane whose lead is within 20 m of its next open enemy tower attacks it
+  even when stragglers trail.
+- **Tower in reach.** The next enemy tower counts as in reach when the lead is within `towers.attackRange` of it, or when the lead's
+  arc is level with or past the tower's arc (West: lead arc at or above the tower's; East: at or below). A lead carried past a
+  standing tower, by a Charge for example, therefore attacks it once no enemy is within engage range, instead of marching on. There
+  is no march cap. A locked tower, a Hold order and a lane without a path never attack. Check 9's `bypass` part does not read the
+  rules' lead: at each 1 Hz look the field probe counts, for a stream whose applied command is a MoveTo and that has a next standing
+  enemy tower (the outermost standing tower of the other side in its lane, else that side's keep), the units whose arc along the
+  lane is more than 10 m past that tower (West: unit arc at or above the tower's plus 10; East: at or below its minus 10). It FAILs
+  when more than half of a marching stream's units are past the tower on two looks in a row.
+- **Forward-only march.** A waypoint counts as reached when `LeadArc >= arc(waypoint) - lanes.waypointReachRadius` (East
+  mirrors it). Per side and lane the rules keep the waypoint index and never step it backward while the lane marches. The
+  index resets on Fall back, Hold, Charge, an `AttackTower` command and an empty lane.
+- **Bounded Hold.** A held lane forms up `lanes.holdDistanceBeforeTower` (60 m) of lane before the enemy tower, or at the lane
+  midpoint when that is nearer its own base, and at the midpoint when the next target is a keep. The point is snapped to the path
+  vertex on the holder's own side, so a hold target is always a vertex of the navmesh-fitted path. With towers at 0.36 and 0.64 of
+  the lane, the tower stands 0.14 of the lane beyond the midpoint, so the midpoint applies only to lanes over about 428 m
+  (0.14 x 428 = 60); a shorter lane holds 60 m before the tower. Either way the hold stays 60 m or more from the tower, outside its
+  45 m fire range on any realistic lane.
+- **Decision trace.** `FordsMatch.LastDecisions` holds one `LaneDecision` per lane and side each tick (empty on a countdown or
+  ended tick). Its `ToLogBody()` renders `order= live= branch= center=(x,y) lead=(x,y) leadArc= leadCount= enemy= tower=
+  towerDist= centerTowerDist= locked= wp= target=(x,y)` in invariant culture with one decimal and `-` for an absent or non-finite
+  value (`towerDist` is from the lead, `centerTowerDist` from the centre); on an `AttackTower` decision `target=` is the tower id.
+  The director appends `cmd=` (the kind of the command it last sent the engine) and `sent=` (that command's target: a point, an
+  AttackTower's tower id, or `-`), in one format for every line. The rules' own request is already in the body (`branch=`,
+  `target=`), so a refused move that fell back to the nearest waypoint, or an AttackTower that became a Move to where the tower
+  stood, reads as `branch=AttackTower ... cmd=MoveTo sent=(x,y)`. The line is a `[FordsOfWar][LaneState]` line, at most once per
+  5 mission seconds per side and lane; a stream with no decision yet writes none.
+
+## Layout fitting
+
+A generated layout is fitted to the scene before it is played (`FordsLayoutFitter`, `FordsLayoutPlanner`, run by
+`FordsMissionDirector.PlanLayout`).
+
+- **Ring search.** A lane waypoint, lane end, keep, capture point or camp that stands off the navmesh is searched for in rings
+  of 2, 4, 8 and 12 m at eight bearings, the two directions across the lane first. A lane waypoint may not cross a
+  neighbouring lane's original line, nor come closer to it than half its original gap.
+- **Tower slide.** A tower on bad ground slides along the fitted lane up to 30 m, toward its own base first, and keeps its id.
+  The logged and judged distance is the arc offset along the lane (10, 20 or 30 m), not the straight line, so a bend in the lane
+  cannot shorten it. A tower that finds no spot is dropped.
+- **Rejection rule.** One rule, `FordsLayoutFitter.EmptiedGroups`, refuses a layout in two places. If a lane loses every tower of
+  one side in the fit, the fit is rejected and the director refuses to start, with one error line naming the tower ids (`the layout
+  for <scene> was refused: ...`), because that keep would stand open. If the same happens while the towers are built (every tower
+  of one side in a lane failed to spawn), the director refuses after `BuildTowers` with one error line (`the layout for <scene> was
+  refused after the towers were built: lane 0 has no tower left for East (tower_east_0_0, tower_east_0_1 could not be built)`) and
+  starts nothing. Losing only some towers of a lane is a warning. These are the only cases that stop a match.
+- **Bases.** The scene adapter has one `TryGetBasePoints(insetFraction, shortSide, ...)`; the director passes `axis == FordsBaseAxis.Short`. A base off the navmesh is moved along the base-to-base axis (a scan, then a bisection to the edge of the ground,
+  then 4 m back in), never toward the polygon centre. The log shows `base side=West raw=(x, y) settled=(x, y) moved=N m`.
+- **Segment check.** Each pair of consecutive kept lane points counts as blocked when the engine finds no clear navmesh line
+  and no walking path of at most 1.4 times the straight distance plus 10 m.
+- **Planner ladder.** The planner tries lane spread x1, x0.7 and x0.5 on the long axis, then the same three on the short axis
+  when the boundary's long side is under 1.25 times its short side. An attempt passes with at most 10% of items dropped (lane
+  waypoints, towers and capture points; camps are fitted but not counted, because no match spawns them), no tower moved over 30 m
+  and at most 5% blocked segments (`FordsLayoutLimits`). Dropped camps show on the attempt line as `camps dropped n/m (not
+  counted)`. The score is 1000 when rejected, plus 100 per whole dropped fraction, 10 per far-moved tower and 100 per whole
+  bad-segment fraction (named constants in `FordsLayoutPlanner`). The first passing attempt wins.
+- **Play the best attempt.** When no attempt passes, the director plays the lowest-scoring one and logs one warning
+  (`... playing the best attempt: ...`). Only a rejected fit stops the match. The limits are a judgement call, not measured in
+  game.
+- **Log lines.** `[FordsOfWar][Layout]` lines: one `attempt` line per planner attempt (spread, axis, dropped, far moves, bad
+  segments, pass or fail), one `lane=` line per lane (`waypoints kept moved dropped maxGap badSegments`), one `tower <id> slid
+  <m> m` line per slid tower, `dropped towers:` when any fell, the `base` lines, and at match start the report's own
+  `[Layout]` line (scene, both bases, waypoints per lane, built and missing tower ids, `keepOpenAtStart` per side). Right after the
+  towers are built (also when the start is then refused) one `[FordsOfWar][Layout] timing plan=<ms> ms towers=<ms> ms` line gives
+  the cost of planning (generate, fit and retries) and of spawning the tower entities.
+
+**2026-10-31 result** on `taom_rohan_battle_002_forceatmo`: the planner's first attempt passed. 0 of 168 items dropped, 0 bad
+segments of 145, 1 point moved, all 14 towers and both keeps built, bases settled without moving. Rohan Plains I, which failed
+before the fitter was rewritten (34 path points dropped, 3 of 14 towers lost), has no in-game run since; an offline replay on
+its decoded navmesh passed only on the short axis at spread x0.7.
+
+## Unattended runs (autorun)
+
+One match can play itself with nobody at the keyboard, so a build can be judged from its self-check report. It never runs for
+players: only the environment variable `TAOM_FORDS_AUTORUN` arms it, there is no file fallback, and an unarmed session costs one
+bool and one null check per application tick.
+
+- **What arms it.** `TAOM_FORDS_AUTORUN` holds the absolute path of a UTF-8 `key=value` arm file. A set variable pointing at a
+  missing file or a file without a usable `out=` logs one `[FordsOfWar][Autorun] not armed: ...` warning and stays off.
+- **Arm file keys** (case-insensitive, `#` comments, last duplicate wins; an unknown key or bad number logs a warning and uses
+  the default): `west`, `east`, `ai`, `west_ai` (`1` puts an AI commander on the West side too, so both sides play; default 0), `scene` (optional, resolved like `taom.fords_start`), `live_seconds` (mission seconds
+  before the match is ended, default 600), `live_wait_seconds` (wall seconds to go live, default 600), `wall_limit_seconds`
+  (wall seconds after the start at which the match is ended whatever the mission clock says, default 2400), `out` (required,
+  absolute folder for the status and done files) and `quit` (`1` quits the game at the end). A quoted `out=` value, or one holding
+  `<`, `>` or `|`, leaves the plan unarmed with the "needs an absolute out=<folder>" problem. A `live_seconds` at or above
+  `wall_limit_seconds` is accepted with a warning (the wall limit then ends the match first). The `armed plan=` line ends with
+  `arm=<path of the arm file>`, and the run's setup text and JSON carry `west_ai=0|1`.
+- **Wiring.** `FordsOfWarModule` registers `FordsAutorunPlan` and `FordsAutorunDriver`, with core's `NullFordsAutorunHost` as the
+  host (it never starts a match). `TAOM.Client` replaces the host in `TaomClientComposition` with `FordsAutorunHost` (plan, setup
+  prompt, logger), the way it replaces `IFordsOfWarGameManagerFactory`. `ClientSubModule` resolves the plan on the first
+  application tick and calls `FordsAutorunStart.Driver`, which resolves the driver only when the plan is armed, so an unarmed
+  session never builds `FordsConfigCatalog`. A set `TAOM_FORDS_AUTORUN` that cannot arm the run logs one `[FordsOfWar][Autorun]
+  not armed: <why>` warning from there.
+- **Phases.** `FordsAutorunDriver` is ticked from `ClientSubModule.OnApplicationTick` with wall time. It waits until the main menu
+  has been up for 4 s (hiding any inquiry meanwhile), starts the match through `FordsSetupPrompt.Start` with trigger `autorun`,
+  waits for it to go live, and after `live_seconds` of mission time (or the wall limit) with no winner and no end requested it
+  ends the match through the result panel's exit path (`FordsOfWarGameManager.ReturnToMainMenu`). The report writes its final=0
+  pass at mission end and the final=1 pass on the menu return. The driver then writes `fords_autorun_done.txt` once and quits
+  when `quit=1`. It rewrites `fords_autorun_status.txt` every 5 s and logs `[FordsOfWar][Autorun]` phase lines plus a
+  `clock wall= mt= live= ratio=` line every 30 s (ratio is mission seconds per wall second).
+- **Done file.** Keys `reason`, `run`, `report`, `log`, `live_seconds`, `wall_seconds`, `final_passes`, `final_total`, `started`,
+  `ended`. Reasons: `final` (the only success), `start_refused`, `start_failed`, `never_live`, `wall_limit` (the report is still
+  collected but the launcher scores it a failure), `final_timeout` (no final=1 pass within 120 s) and `exit_stalled` (an EndGame
+  that someone else requested never closed the mission, 120 wall seconds after the driver saw it; no final=1 pass is waited for). A
+  reason that follows an earlier outcome keeps both, for example `never_live+final_timeout`. The launcher fails every reason but
+  `final`.
+- **Launcher.** `python tools/run_fords_autorun.py --live-seconds 120` (also `--scene`, `--west`, `--east`, `--ai`, `--west-ai`,
+  `--wall-limit`, `--runs`, `--runs-root`, `--dry-run`) writes the arm file, starts `Bannerlord.exe` directly with the module list of
+  the F5 profile and the variable set, polls every 5 s, scans the engine logs for a crash and copies the results into
+  `<runs-root>/<yyyyMMdd-HHmmss>/` (default `E:/Temp/fords-runs`; `--runs-root` is resolved to an absolute path): `arm.txt`,
+  `runner_log.txt`, `runner_status.txt`, `fords_autorun_done.txt`, the newest `taom_debug_*.log`, the `fords_report_*_run1.json` and
+  the engine logs. It prints the verdict rows. `--wall-limit` and `--live-seconds` must be positive; the arm file always carries the
+  runner's wall limit (2400 s by default) and is written with LF. The deployed `TAOM.dll` must contain the autorun: look for
+  `[FordsOfWar][Autorun] armed plan=` and `[BuildStamp]` in the new log.
+- **Pass rule.** The launcher exits 0 only when the done reason is `final`, the JSON says `final=true`, no verdict row is FAIL, the
+  copied TAOM log holds no `[ERROR] [CrashReport]` line stamped between the done file's `started` and `ended` times (a swallowed
+  engine exception prints a full ERROR block even when every in-game check passes; the INFO and WARNING startup lines are
+  ignored), the game then exited by itself within 120 s and no rgl or watchdog crash marker appeared after the done file. It logs
+  the game's exit code. A runner error inside the watch loop becomes a failure reason, and the game is still stopped and the
+  evidence still collected.
+- **Safety.** The module list is read from `Main/Properties/launchSettings.json` (profile `Bannerlord`, `$(ModuleId)` read as
+  `TAOM`). The preflight fails closed: it refuses to start while any `Bannerlord.exe` or the game folder's `Watchdog.exe` runs, and
+  also when it cannot list the processes. The game is killed through its `Popen` handle (`proc.kill()`, then wait 30 s); the only
+  other process stopped is a `Watchdog.exe` whose command line holds `-p <pid>`.
+- **The mod-change dialog.** The first launcher run stalled because the engine shows a blocking dialog, "Mod change detected" ("A
+  change in your active mods was detected. Deleting the runtime shader cache to avoid rendering issues.", one OK button),
+  whenever the shader cache was built for a different module list; it appears before the graphics device starts. The launcher
+  posts `WM_COMMAND` with the OK button's control id (the button handle as lParam) to exactly that dialog: no activation, no wait,
+  one log line per window, and the post is repeated on each poll while the window lingers. It fails the run on a dialog whose
+  title names a crash, and logs any other dialog without touching it.
+- **Crash dump lost (follow-up, no code).** When the game crashes, `Watchdog.exe` asks a human what to do with the dump and the
+  launcher kills it, so the dump is lost; the copied `rgl_log` and `watchdog_log` files are the only native evidence of an
+  unattended crash. Starting the game under a watchdog configuration that saves the dump without a prompt is not done.
+- **`StopGameOnFocusLost`.** `BannerlordConfig.txt` has `StopGameOnFocusLost=True` on the desktop, and the launcher only logs
+  it. It did not pause the mission in the probe run below (mission time ran at ratio 1.00 to wall time); the `clock` line
+  shows the ratio on every run, and `wall_limit_seconds` is the backstop if a run ever stalls.
+
+**2026-10-31 result.** A 45-second probe run (`E:/Temp/fords-runs/probe-20261031-220442`) completed the whole chain: armed, main
+menu, start, live, end through the autorun limit, a final=1 report, a done file with `reason=final`, and the game quit by itself.
+Full unattended matches, 2026-10-31 (folders under `E:/Temp/fords-runs/`):
+
+| Run | Setup | Result |
+|---|---|---|
+| `20261031-220826` | 600 s, East AI against a passive West | 5 PASS, 0 FAIL; check 9 PASS with 731 native tower blows |
+| `20261031-222418` | 1800 s, both sides AI (`west_ai`) | 7 PASS, 0 FAIL; checks 7 and 16 PASS (peak live West 241 and East 159 against a cap of 302, peak agents 454 of 2040, frame average 11.2 ms, p95 17.7 ms); no tower fell, check 14 not seen |
+| `20261031-225939` | 1800 s, both sides AI, deployed tower hit points lowered for a test | no tower fell; the run could not prove which numbers had loaded, which the `[Tower] config` line now settles |
+
+Both of the first two runs logged one engine exception from tower regeneration (regeneration raised a tower's hit points across a
+damage stage; see Known limitations for the fix), which the earlier launcher let pass.
+
 ## Key Files
 
 | File | Purpose |
 |---|---|
 | `Main/Features/FordsOfWar/Domain/FordsMatch.cs` (+ `.View.cs`, `.SpawnFailures.cs`) | The aggregate: `Tick`, the `Try*` command API, kill credit, spawn-failure refunds, `GetView` |
-| `Main/Features/FordsOfWar/Domain/` (rule classes) | `GoldLedger`, `BountyRules`, `WaveScheduler`, `TowerChain`, `TowerDamageRules`, `TowerRegen`, `TowerFireRules`, `HeroRoster`, `LaneOrderBook`, `LaneMarchRules`, `CapturePointRules`, `CampRules`, `MatchClock`, `AiCommander`, `LaneLayoutGenerator`, `LaneGeometry`, `TroopPricing` |
+| `Main/Features/FordsOfWar/Domain/` (rule classes) | `GoldLedger`, `BountyRules`, `WaveScheduler`, `TowerChain`, `TowerDamageRules`, `TowerRegen`, `TowerFireRules`, `HeroRoster`, `LaneOrderBook`, `LaneMarchRules`, `LanePath`, `CapturePointRules`, `CampRules`, `MatchClock`, `AiCommander`, `LaneLayoutGenerator`, `LaneGeometry`, `TroopPricing` |
 | `Main/Features/FordsOfWar/FordsOfWarModule.cs` | Feature module: registrations, `Patch131_FordsOfWar`, main-menu option on the MainMenu phase |
 | `Main/Features/FordsOfWar/FordsMissionDirector.cs` | Per-mission orchestrator; applies effects through the adapters |
 | `Main/Features/FordsOfWar/FordsSession.cs` | The one command and view surface for the client |
@@ -268,9 +435,10 @@ F8.
 | `Main/Features/FordsOfWar/FordsMenuEntry.cs`, `FordsSetupPrompt.cs`, `FordsSetupChoices.cs` | Main-menu option `TaomFordsOfWar` and the start prompts |
 | `Main/Features/FordsOfWar/FordsOfWarCommands.cs`, `Cheats/FordsOfWarCheats.cs` | Console commands `taom.fords_start` and `taom.fords_gold` |
 | `Main/Features/FordsOfWar/Config/` | `FordsConfigCatalog` and the three readers |
-| `Main/Features/FordsOfWar/FordsMatchPlan.cs`, `FordsSnapshotBuilder.cs`, `FordsLayoutFitter.cs`, `FordsTagLayoutReader.cs`, `FordsBaseFinder.cs`, `FordsTowerGeometry.cs`, `FordsSpawnPlacement.cs` | Pure helpers around the director |
+| `Main/Features/FordsOfWar/Autorun/`, `Client/Features/FordsOfWar/FordsAutorunHost.cs`, `tools/run_fords_autorun.py` | The unattended run: plan, arm file, driver and its pure rules, status and done files; the launcher |
+| `Main/Features/FordsOfWar/FordsMatchPlan.cs`, `FordsSnapshotBuilder.cs`, `FordsLayoutFitter.cs`, `FordsLayoutPlanner.cs`, `FordsLayoutFit.cs`, `FordsTagLayoutReader.cs`, `FordsBaseFinder.cs`, `FordsTowerGeometry.cs`, `FordsSpawnPlacement.cs` | Pure helpers around the director |
 | `Main/Features/FordsOfWar/IFordsOfWarGameManagerFactory.cs`, `NullFordsOfWarGameManagerFactory.cs` | Core factory interface and null default (ADR-013) |
-| `Main/Adapters/IFordsBattlefieldAdapter.cs`, `IFordsTowerAdapter.cs`, `IFordsSceneAdapter.cs`, `IFordsMenuAdapter.cs` (+ impls), `FordsAgentRegistry.cs`, `FordsEngine.cs` | Adapters and engine helpers |
+| `Main/Adapters/IFordsBattlefieldAdapter.cs`, `IFordsTowerAdapter.cs`, `IFordsSceneAdapter.cs`, `IFordsMenuAdapter.cs` (+ impls), `FordsAgentRegistry.cs`, `FordsEngine.cs`, `FordsTowerStage.cs` (the shown tower stage only moves forward) | Adapters and engine helpers |
 | `Client/Features/FordsOfWar/FordsOfWarGameManager.cs`, `FordsOfWarGameManagerFactory.cs` | Client game manager and factory |
 | `Client/Features/FordsOfWar/FordsOfWarMissionViews.cs` | `[ViewMethod]` list for the mission |
 | `Client/Features/FordsOfWar/FordsCommanderCameraView.cs`, `FordsCameraMath.cs` | Commander camera |
@@ -331,7 +499,18 @@ classes:
   `Client/FordsClientWiringTests.cs`, `Client/FordsCommandVMTests.cs`, `Client/FordsCommandPrefabTests.cs`,
   `Client/FordsCameraMathTests.cs`, `Client/FordsHudStringsTests.cs`.
 - `Diagnostics/` (the report, verdicts, evidence, log lines and report file), `FordsVerifyDocTests` (each checklist item names its `check=NN` row), and beside it the tests for the telemetry logic (`FordsTelemetryLogicTests`: the mission clock, the untimed first frame, the 1 Hz warg watch and the warg counts pushed before the closing pass; the options component, the warg log's activation, the 30 s agent-count window and `OnAgentHit` need a live mission and are not driven), the field probe, the volley hits and the camera probe (`Client/FordsCameraProbeTests.cs`, with a real `FordsRunReport`). `Main/Features/Warg/WargRageLog.cs` is tested in `TAOM.Tests/Features/Warg/WargRageLogTests.cs`; a reflection test there fails if the class names a TaleWorlds type in a signature.
-- `Scenarios/` (the scenario harness): `FordsScenario` drives the real report, director and match, lane generator, spawn placement, field probe, exit clock and camera maths with faithful fakes, in the engine's per-frame order, then judges. `FordsScenarioTests` runs five scenarios (a clean three-lane match with no FAIL, one injected fault per row, a pause and a hitch, the camera pushed into the edge, the session tail after a finished run). `FordsVerdictContractTests` holds one row per verdict part (52) with the scenario that passes it and the fault that fails it, or `PassOnly`, and fails when the table and the parts `Judge` emits differ. The telemetry and mission logics are mirrored in the harness (they need a live mission), and the volley-hit reader is fed through the report, not driven (it takes engine structs).
+- Review-fix batch (2026-10-31): `Domain/LanePathTests` (the path table equals `LaneGeometry.ArcPosition` over vertices, ties, a
+  zero-length segment and the ends; the k-th unit front), `Domain/FordsMatchLaneTests` and `LaneMarchRulesTests` (a lead past a
+  standing tower attacks it, West and East; 43 units at the tower and one 60 m past still lead from the main body), `Domain/LaneDecisionTests`,
+  `Diagnostics/FordsMarchWatchTests` (the `bypass` arithmetic: 10 m past, more than half), `FordsFieldProbeTests` (the units past the next tower, West and East), `FordsLaneStateLineTests` (`cmd=` and `sent=`),
+  `FordsLayoutFitLinesTests` (the timing line), `FordsVerdictDiagnosticsTests` and `FordsRunReportDiagnosticsTests` (the check 9
+  ladder, tower health, the check 3 `exceptions` part), `FordsTowerStageTests` (the stage only advances),
+  `FordsMissionDirectorLayoutTests` (the post-build refusal and the timing line), `FordsMissionDirectorDiagnosticsTests`,
+  `FordsLayoutPlannerTests`, and under `Autorun/` `FordsAutorunPlanTests`, `FordsAutorunDriverTests`, `FordsAutorunBeatTests` and
+  `FordsAutorunStartTests`. The telemetry logic is now an entry point over `FordsTelemetryMeter`, and `FordsEntryPointLineCountTests`
+  sums every file of a partial class. The launcher has Python tests: `python -m unittest tools.tests.test_run_fords_autorun`
+  (arm text, judge and final verdict, preflight, stop-own-tree, watch, collect, dialog handling, input checks).
+- `Scenarios/` (the scenario harness): `FordsScenario` drives the real report, director and match, lane generator, spawn placement, field probe, exit clock and camera maths with faithful fakes, in the engine's per-frame order, then judges. `FordsScenarioTests` runs five scenarios (a clean three-lane match with no FAIL, one injected fault per row, a pause and a hitch, the camera pushed into the edge, the session tail after a finished run). `FordsVerdictContractTests` holds one row per verdict part (55) with the scenario that passes it and the fault that fails it, or `PassOnly`, and fails when the table and the parts `Judge` emits differ. The telemetry and mission logics are mirrored in the harness (they need a live mission), and the volley-hit reader is fed through the report, not driven (it takes engine structs).
 - Shared tests this mode touches: `MissionViewRegistrationGateTests.Allowlist` (the two views built by
   the mission's `[ViewMethod]` list), `ClientSubModuleTests` (the exact client registrations) and
   `ConsoleCommandBindingTests.MainMenuCommands`.
@@ -348,19 +527,21 @@ checks below name log lines.
 
 **Self-check report.** Each match gets `Logs\fords_report_<log timestamp>_run<n>.json` beside `taom_debug_<same timestamp>.log`, written at its first verdict pass; the `[FordsOfWar][Run]` line at the start prints both absolute paths. A start that fails at the main menu writes `final=1` at once. The log gets one `[FordsOfWar][Verdict] check=NN result=PASS|FAIL|PARTIAL|NOT_SEEN` row per step below, with each part's own result, the numbers, the rule and what only you can judge. Rows marked `final=0` are written at the result, at mission end and at a start failure; the `final=1` block is written when the main menu is back (and again when you acknowledge the start-failed notice, and once more at the next match start when a run still owes a pass, for example a start-failed notice that was never acknowledged: that late block carries the notice FAIL). When one run has several `final=1` blocks, read its newest. Each run writes its own `final=1` block and its own JSON, and every row carries `run=<n>`. Do not read "the last `final=1` block": read the full match's block for items 3 to 14 and 16, the failed start's block for item 15, and take items 1 and 2 as session-wide (their rows count every menu flow and console start of the session). A `[FordsOfWar][Summary]` line every 30 s of mission time keeps the progress if the game crashes.
 
+**Evidence for the lane chain.** The JSON and the log answer each link of "units reach a tower and strike it" apart. Lane commands are counted uncapped per stream and kind (`CommandsGiven`, `CommandsRefused`, `FirstGivenMt`; the log still prints only the first 30 `[Lane]` lines), and the `[Summary]` line carries them as `cmds=W0:40/1/1/0!0 E1:...` (MoveTo/HoldAt/Charge/AttackTower given, then refusals) beside `alarmed=W0:1.00 ...` (the share of alarmed lane units; lane units now spawn alarmed as vanilla battle spawns do, gunners do not). A command whose target was off the navmesh is counted in `OffNavmesh` once per command, with the refused target, whether the nearest-waypoint fallback then took the order (the command is recorded as applied and never sent again) or nothing could be sent (it is retried each tick but counted only the first time); the first is logged once per stream as `[Lane] offNavmesh`. `[FordsOfWar][LaneState]` lines (see Lane rules) show the rules' decision beside what was applied. Per stream ordered at a tower, the whole ladder is measured at that order's own target: `AttackUnitSeconds` (live unit-seconds under the order), `AttackFlaggedUnitSeconds` (those whose combat flags carry `AttackEntity`) and `AttackContactUnitSeconds` (melee units within 4 m of that tower), then `TowerBlows`, `AppliedBlows` (the ones that took hit points) and `GunnerBlows`. The 1 Hz look sets each stream's current target from its applied command and clears it when the look sees no AttackTower order; a blow on any other tower, or on another tower's gunners, or while the stream has no such order, is counted on that tower's own totals and not on the stream's ladder (a one second lag after an order changes is accepted). A blow on an invulnerable gunner is taken from `OnMeleeHit` and `OnMissileHit`: an unblocked melee blow on a gunner arrives cancelled with zero damage and never reaches `OnAgentHit`, a blow the gunner blocks still does with zero damage, and a missile vanishes on the gunner (`MissileCollisionReaction.BecomeInvisible`) while `OnMissileHit` still fires. It is counted per tower (`GunnerBlowsMelee`, `GunnerBlowsRanged`) and per stream only when the attacker is a known enemy of the tower's owner and the stream is ordered at that tower. A weaponless blow (a kick, a mount's charge) is counted by its reason but stays out of the melee raw-damage summary. Per tower the JSON also keeps the lowest rules hit points seen at the 1 Hz looks (`MinRulesHp`), the damage applied per attacker class (`AppliedDamage`), the hit points regeneration gave back (`HealedTotal`), blows by attacker side (`BlowsBySide`) and a histogram of every melee blow's raw damage (`MeleeRaw`: count, minimum, median, maximum), so a `RawZero` outcome can be told from a small number. At match start one `[FordsOfWar][Tower] config` line states the effective tower, inner tower and keep hit points, regeneration per second and delay, and the ranged, hero and siege factors, so a run proves which numbers loaded. At match start the `[Layout]` line and check 4's `layout` part report the fit (see Layout fitting).
+
 1. Look at the main menu. A "Fords of War" entry shows with its hint. Click it: your faction, enemy faction
-   and difficulty prompts appear, then a map prompt (three maps are listed). Cancel one prompt and
+   and difficulty prompts appear, then a map prompt (four maps are listed, Rohan Plains II first). Cancel one prompt and
    confirm the flow ends with no match. Report: `check=01` (option installed, the engine's visibility poll, prompts shown and answered per step, a cancel or abandoned flow seen; any menu flow that ended in a fault FAILs, even when a later flow was fine). Drawn on screen is yours to judge.
 2. Run `taom.fords_start gondor mordor hard`. Observable: the console prints "Starting Fords of War:
-   gondor against mordor on taom_rohan_battle_001_forceatmo, AI profile hard, 3 lanes." and the match
+   gondor against mordor on taom_rohan_battle_002_forceatmo, AI profile hard, 3 lanes." and the match
    loads. An unknown argument prints the list of valid ids. Run `taom.fords_start` with no arguments for
-   the defaults (West gondor, East rohan, `normal`, the Rohan Plains map). Report: `check=02` (a named start that reached the match, an unknown argument's reply, the no-argument start and the setup it resolved; `ShippedFordsConfigTests` pins the shipped defaults, so the row does not ask you to compare them).
+   the defaults (West gondor, East rohan, `normal`, the first scene in `maps.json`, Rohan Plains II). Report: `check=02` (a named start that reached the match, an unknown argument's reply, the no-argument start and the setup it resolved; `ShippedFordsConfigTests` pins the shipped defaults, so the row does not ask you to compare them).
 3. In the log, find `[FordsOfWar] match started on <scene>: 3 lane(s), ... AI profile <id>`. Confirm there
    is no `could not spawn '<id>'` line once the first waves and any bought hero are out: that proves the
-   hero ids (for example `lord_1_17`) resolve in a Custom Game. Report: `check=03` (every troop and hero id checked against this game, spawns and spawn failures by troop; a recorded start failure with no match started FAILs its `started` part, for the menu routes too).
+   hero ids (for example `lord_1_17`) resolve in a Custom Game. Report: `check=03` (every troop and hero id checked against this game, spawns and spawn failures by troop; a recorded start failure with no match started FAILs its `started` part, for the menu routes too; an `exceptions` part FAILs, naming the first type and site, when an exception was swallowed by TAOM's CrashReport finalizers since the mission started, because the mission telemetry listens to `CrashReportPatchHelper.Swallowed` (other Harmony finalizers, such as `PatchShield` and `Patch50`, are not heard), and it passes only when that listener was in place and none did).
 4. Wait out the 10 s countdown. Towers and keeps appear on both sides in 3 lanes, free waves march and
    fight, and your gold rises on kills. The camera pans (WASD), rotates (Q, E, right mouse drag) and
-   zooms (wheel) and stays inside the playable area. Report: `check=04` (countdown end, towers built against expected, first spawn per lane, march gain per lane, deaths, kill gold, camera pan, rotate and zoom, inside the engine's boundary, camera ownership). Towers built are counted against the layout before unplaceable ones are dropped, so a dropped tower FAILs. A camera resting on the boundary edge counts as inside; it reads outside only when the engine says so and the camera is over 0.5 m from the edge. The battlefield is lit and exactly three dark boxes show (gold bar top centre, towers top left, deck bottom centre), each hugging its content; a box that reaches a screen edge is the stretch-in-cover layout fault.
+   zooms (wheel) and stays inside the playable area. Report: `check=04` (countdown end, towers built against expected, first spawn per lane, march gain per lane, deaths, kill gold, camera pan, rotate and zoom, inside the engine's boundary, camera ownership, and a `layout` part that FAILs on a missing tower or a keep open at the start and names the ids, for example `missing=tower_west_1_0 keepOpen=West`). Towers built are counted against the layout before unplaceable ones are dropped, so a dropped tower FAILs. A camera resting on the boundary edge counts as inside; it reads outside only when the engine says so and the camera is over 0.5 m from the edge. The battlefield is lit and exactly three dark boxes show (gold bar top centre, towers top left, deck bottom centre), each hugging its content; a box that reaches a screen edge is the stretch-in-cover layout fault.
 5. Open the escape menu. Photo Mode reads disabled ("Photo mode isn't allowed."), and the Options entry
    opens the options screen. Report: `check=05` (pause edges, Photo Mode vetoes, Options requests and wiring).
 6. Run `taom.fords_gold 5000`. The console prints "Added 5000 gold. You now hold ..." and the panel's gold
@@ -369,9 +550,9 @@ checks below name log lines.
 7. Press H (or click a hero card) to field the most affordable hero, for Mordor Sauron at 2400. The hero
    spawns in the selected lane. Kill it, then check the respawn timer on its card and the buyback button. Report: `check=07` (a fielded hero has a spawned mark of the same hero and side within 5 mission seconds, with the requested lane in the `[Hero]` line; death; respawn spawned within 1.5 mission seconds; buyback results). The row no longer compares the lane the engine put the hero in with the one asked for, because the adapter read that lane back from the formation it had just placed the hero in, so the two could never differ. Leaving the match more than 5 mission seconds after a fielding with no spawn mark reads FAIL. A hero bought in the last 5 s before the winner is named is excused, because the clock ended before the spawn ran: it neither fails the part nor takes away the pass of the heroes that did spawn, and a part with only excused purchases reads NOT_SEEN.
 8. Set a lane to Hold (X), then Push (Z) and Fall back (C). The order buttons show a cooldown; the lane
-   forms up about 60 m before the enemy tower and does not stand inside tower fire. Report: `check=08` (accepted Push, Hold and Fall back orders, held lanes against tower fire range, the keep-to-keep distance as `baseDistance`). A hold sample counts only once the lane's front unit (the one farthest from its keep) is within 10 m of the hold point measured along the lane's axis (the direction of the path segment at the hold point), so a wide line formation whose middle stands at the point is settled and a lane still walking back from a tower is not judged. A FAIL names the nearest standing enemy tower whose fire range covered the lane (`West1 in fire of <tower id>`, and `tower=<id>` in the per-lane numbers).
-9. Send melee units at an outer tower. Check the log and the tower bar: whether melee AI damages the barricade
-   at all is still open (build-spec check 3). A tower behind another takes no damage until the outer one falls. Report: `check=09` (blows per tower by attacker class and reason, locked blows, melee near towers, engine against rules hit points).
+   forms up 60 m before the enemy tower, or at the lane midpoint on a lane over about 428 m, and does not stand inside tower fire
+   (the hold is at least 60 m from the tower, outside the 45 m fire range, so check 8 does not fail on a short lane by design). Report: `check=08` (accepted Push, Hold and Fall back orders, held lanes against tower fire range, the keep-to-keep distance as `baseDistance`). A hold sample counts only once the lane's front unit (the one farthest from its keep) is within 10 m of the hold point measured along the lane's axis (the direction of the path segment at the hold point), so a wide line formation whose middle stands at the point is settled and a lane still walking back from a tower is not judged. A FAIL names the nearest standing enemy tower whose fire range covered the lane (`West1 in fire of <tower id>`, and `tower=<id>` in the per-lane numbers).
+9. Send melee units at an outer tower. Check the log and the tower bar. The row's info reads `attackTowerGiven=N (W1:1 E1:4) nativeTowerBlows=Z gunnerBlows=A melee/B ranged | ladder W1>tower_east_1_0 orders= underS= flaggedS= contactS= towerBlows= gunnerBlows= applied= | towerHealth <tower id>:minHp= healed= applied=Melee:..,Ranged:.. meleeRaw=nN/minA/medB/maxC | melee blows ... | all blows ...`. Read the ladder left to right per stream and stop at the first zero: `orders` 0 means the rules never ordered the strike; `underS` above 0 and `contactS` 0 means the units never stood within 4 m of the tower they were ordered at (a locked or another tower does not count); contact above 0 and `flaggedS` 0 means the `AttackEntity` flag never reached them; flagged above 0, `towerBlows` 0 and `gunnerBlows` above 0 means they swing at the gunners; `towerBlows` above 0 and `applied` 0 means the rules took nothing (read the outcome counts and `meleeRaw`); all zero after flagged means the engine does not swing at a bare `DestructableComponent`. Every number in the ladder counts only blows on the tower the stream was ordered at. The `bypass` part reads `samplesJudged=N failingSamples=M`: a look is judged when a stream's applied command is a MoveTo with a next standing enemy tower, and failing when more than half its units stand more than 10 m past that tower along the lane (West: unit arc at or above the tower's plus 10; East: at or below its minus 10). It FAILs when one stream has two failing looks in a row, naming the worst stream (most failing looks, then the largest share), the tower, the share, the run length and the mission time of the second look (`worst=E0 past tower_west_0_0: 83.3% of its units, 2 looks in a row, from mt=612.5`, with `also=` for other failing streams); it passes once a stream was judged and none failed, and is NOT_SEEN while none was judged. The pass rule of the other parts is unchanged. A tower behind another takes no damage until the outer one falls. Report: `check=09` (blows per tower by attacker class and reason, locked blows, melee near towers, engine against rules hit points, the per-stream ladder and the `bypass` part).
 10. Stand a side's own units next to its own tower and watch its bar: towers take no damage from their own
     side (gunners, defenders shooting across it). Report: `check=10` (own-side blows and hit-point drift). NOT_SEEN is expected when nothing strikes its own tower.
 11. At match start, find the log line `tower volley item 'western_javelin_2_t3': thrust damage N,
@@ -445,16 +626,30 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
 - **The AI does not steer to capture points.** It buys and orders by lane threat and assault state only.
 - **Translations.** The `TAOM_FOW_` texts are English in all 12 languages until the translation backlog,
   issue #763.
-- **Greybox scene owed.** The Kit scene from the greybox spec is not built. On the Rohan field scene the generated
-  layout fits badly: in the first match 34 path points were dropped, 3 of 14 towers were not built, and West lanes 0
-  and 1 gained only 11 and 27 m. A dedicated three-lane scene is the next step.
-- **AI melee never strikes a tower (the match at 16:54 on 2026-10-31, after both fixes, which started once; log `taom_debug_2026-10-31_16-54-08.log`; check 9 FAIL).** Enemy melee spent 1,030 unit-seconds within 20 m of
-  a tower and no blow of any kind reached one, so no tower can fall yet. This answers the build-spec open question 3.
-- **Matches on 2026-10-31 (Rohan field scene):** checks 3, 11 (volley damage matches the engine formula,
-  median ratio 1.000 over 14 hits) and 13 PASS; check 16 PASSES its cap and agent-limit parts; the camera parts of
-  check 4 PASS. Not yet seen: warg rage (12), heroes (7), keep fall and exits (14), a provoked failed start (15). The
-  match first ran its start twice and rendered black; both are fixed (see the RCA, rows G1 and G2), and the
-  `[FordsOfWar][Camera] pose` lines log the camera's position, ground and view direction for the first 30 s.
+- **Greybox scene owed.** The Kit scene from the greybox spec is not built. The generated layout now fits Rohan Plains II cleanly
+  (2026-10-31: 0 of 168 items dropped, all 14 towers built), but Rohan Plains I, Pelennor and Mordor have no in-game fit run since the
+  fitter was rewritten, and the planner limits (10% dropped, 30 m tower move, 5% bad segments) are untested in game. A dedicated
+  three-lane scene remains the long-term step.
+- **Check 9 is resolved.** The unattended 600 s match `20261031-220826` (East AI against a passive West) passed check 9 with 731
+  native tower blows, which answers build-spec open question 3: melee AI does damage the barricade. The earlier FAIL (the 16:54
+  match, 1,030 unit-seconds near a tower and no blow) came before the lane rules were rewritten.
+- **No tower fell in a 30-minute AI match, so check 14 is unseen.** In `20261031-222418` and `20261031-225939` (1800 s, both
+  sides AI) no tower fell and no keep fell. Gunners absorb melee: a share of the blows land on the invulnerable gunners
+  (`GunnerBlowsMelee`) instead of the tower. Most melee blows on a tower do zero raw damage (`RawZero`; read `meleeRaw` in the check 9
+  info). Tower balance (hit points, regeneration, the damage factors) is the maintainer's call. Run `20261031-225939` lowered the
+  deployed tower hit points for a test but could not prove which numbers loaded; the `[Tower] config` line now does.
+- **Regeneration against the damage stage.** Regeneration raises a tower's hit points, and the engine recomputes the stage from
+  them, which once read `_destructionStates[-1]` and threw (seen in runs `20261031-220826` and `20261031-222418`, one exception
+  each). `FordsTowerAdapter` now sets `DestructableComponent.OnCalculateDestructionStateIndex` so the shown stage only moves forward
+  (`FordsTowerStage`). Owed in game: a heal between two hits on a staged tower with no exception, and the check 3 `exceptions` part
+  on a real swallowed finalizer exception.
+- **A crash dump is lost in unattended runs.** See the Crash dump bullet under Unattended runs.
+- **Matches on 2026-10-31:** the first Rohan field scene matches (before the lane rules and layout fitter above were rewritten)
+  passed checks 3, 11 (volley damage matches the engine formula, median ratio 1.000 over 14 hits) and 13, check 16's cap and
+  agent-limit parts and the camera parts of check 4; the 1800 s match `20261031-222418` also passed checks 7 (heroes seen) and 16.
+  Not yet seen: warg rage (12), keep fall and exits (14), a provoked failed start (15). The match first ran its start twice and
+  rendered black; both are fixed (see the RCA, rows G1 and G2), and the `[FordsOfWar][Camera] pose` lines log the camera's
+  position, ground and view direction for the first 30 s.
 
 ## Performance
 
@@ -465,10 +660,25 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
   a second; Hold now has one stable target.
 - The tower hit prefix reads one volatile field first, so a mission with no Fords match costs a null check.
 - Panel lists are updated in place, so a button under the cursor survives the refresh (about four a second).
+- Each lane's path is turned into a float-array table once at match start (`LanePath`), because the lead group costs about 0.45 ms
+  per tick at 240 units when it walks the polyline points each time (measured in a Debug build before the table).
 - Agent count is judged by `check=16`, against TAOM's config cap and the engine's agent limit; frame times are reported per 30 s window with no budget set.
 
 ## Changelog
 
+- 2026-11-01: last review findings: check 9's ladder counts blows only on the stream's ordered tower; `bypass` is measured from the
+  units at the 1 Hz probe (more than half past the next tower by more than 10 m on two looks in a row) instead of the rules' lead;
+  an off-navmesh target is counted once per command even when the waypoint fallback took the order; a weaponless blow stays out of
+  the melee raw summary; check 3 `exceptions` names the CrashReport finalizers it hears; gunner hit wording corrected; the telemetry
+  meter no longer subscribes twice when a mission reruns `AfterStart`.
+- 2026-10-31: review-fix batch: the lead group is a k-th unit front with a band on both sides, and a lead level with or past a
+  standing tower attacks it (no march cap); `LanePath` table; one `[LaneState]` format with `cmd=` and `sent=`; check 3
+  `exceptions`, check 9 per-stream ladder and `bypass`, per-tower hit point evidence and the `[Tower] config` line; tower stage
+  hook against the regeneration exception; layout fit refusal after `BuildTowers`, camps out of the planner share, slide distance
+  as arc offset, timing line; autorun `west_ai`, `exit_stalled`, host registered through the client composition; launcher fails on
+  a FAIL row or a `[CrashReport]` error block, posts the dialog click, fails closed, kills through its process handle; docs: hold
+  arithmetic corrected (the midpoint applies to lanes over about 428 m).
+- 2026-10-31: unattended autorun and `tools/run_fords_autorun.py`; lane rules with a lead group, a forward-only march and a bounded Hold; a layout fitter with a planner ladder; uncapped lane command counts, `[LaneState]` and `[Layout]` lines, tower contact and gunner blow evidence; Rohan Plains II first in `maps.json`.
 - 2026-10-31: self-check review fixes: the warg rage log, the run's own mission clock, the verdict rules
   of checks 7, 8, 11, 12, 15 and 16, and the scenario tests that drive the real report.
 - 2026-10-31: self-check report: per-step verdict rows and a JSON report per run.

@@ -255,6 +255,7 @@ public class FordsVerdictTests
 
         Mark(run, "matchStarted", 0);
         run.Spawn.Spawned = 5;
+        run.Exceptions.Watching = true;
         Assert.AreEqual(FordsResult.Pass, Result(run, 3));
 
         run.Start.MissingIds.Add("hero_x");
@@ -684,6 +685,7 @@ public class FordsVerdictTests
         var t = Tower(run, "t1");
         Assert.AreEqual(FordsResult.NotSeen, Result(run, 9));
 
+        run.Lanes.Add(new FordsLaneEvidence { Side = "West", Lane = 0, MarchSamples = 5 });
         Blow(t, TowerBlowClass.Melee, TowerDamageReason.Locked);
         Blow(t, TowerBlowClass.Melee, TowerDamageReason.Applied, 3);
         Assert.AreEqual(FordsResult.Pass, Result(run, 9));

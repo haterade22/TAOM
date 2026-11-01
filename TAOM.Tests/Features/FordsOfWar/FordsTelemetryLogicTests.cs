@@ -7,6 +7,7 @@ using NSubstitute;
 using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar;
 using TAOM.Features.FordsOfWar.Diagnostics;
+using TAOM.Features.FordsOfWar.Domain;
 using TAOM.Features.FordsOfWar.Hooks;
 using TAOM.Features.Warg;
 using TAOM.Tests.Migration;
@@ -46,7 +47,9 @@ public class FordsTelemetryLogicTests
     [TestCleanup]
     public void Clear() => WargRageLog.Deactivate(Warg());
 
-    private WargRageLog? Warg() => (WargRageLog?)Field(typeof(FordsTelemetryLogic), "_warg").GetValue(_logic);
+    private FordsTelemetryMeter Meter() => (FordsTelemetryMeter)Field(typeof(FordsTelemetryLogic), "_meter").GetValue(_logic)!;
+
+    private WargRageLog? Warg() => (WargRageLog?)Field(typeof(FordsTelemetryMeter), "_warg").GetValue(Meter());
 
     private static FieldInfo Field(Type type, string name) =>
         type.GetField(name, BindingFlags.NonPublic | BindingFlags.Instance)!;
@@ -96,7 +99,7 @@ public class FordsTelemetryLogicTests
                 watches++;
             return view;
         });
-        Field(typeof(FordsTelemetryLogic), "_warg").SetValue(_logic, warg);
+        Field(typeof(FordsTelemetryMeter), "_warg").SetValue(Meter(), warg);
         var rider = new object();
         warg.Started(rider, true);
         warg.Ended(rider, new object());
@@ -145,5 +148,129 @@ public class FordsTelemetryLogicTests
 
         Assert.IsTrue(_report.Run!.Closed);
         Assert.IsFalse(_lines.Any(l => l.StartsWith("ERROR")), string.Join("\n", _lines.Where(l => l.StartsWith("ERROR"))));
+    }
+
+    [TestMethod]
+    public void WatchExceptions_AnExceptionAFinalizerSwallows_IsCountedOnTheRunWithItsTypeAndSite_UntilTheWatchStops()
+    {
+        var meter = new FordsTelemetryMeter(_report);
+        TAOM.Tests.Features.CrashReport.RecordingCrashService.Install();
+        try
+        {
+            meter.WatchExceptions();
+            Assert.IsTrue(_report.Run!.Exceptions.Watching);
+
+            TAOM.Features.CrashReport.Hooks.CrashReportPatchHelper.HandleAndSwallow(new InvalidOperationException("boom"), "taom-006.test");
+            meter.StopWatchingExceptions();
+            TAOM.Features.CrashReport.Hooks.CrashReportPatchHelper.HandleAndSwallow(new InvalidOperationException("later"), "taom-006.later");
+
+            Assert.AreEqual(1, _report.Run.Exceptions.Count);
+            Assert.AreEqual("InvalidOperationException", _report.Run.Exceptions.FirstType);
+            Assert.AreEqual("taom-006.test", _report.Run.Exceptions.FirstSite);
+        }
+        finally
+        {
+            meter.StopWatchingExceptions();
+            TAOM.Features.CrashReport.Hooks.CrashReportPatchHelper.ResetForUnload();
+        }
+    }
+
+    [TestMethod]
+    public void WatchExceptions_ArmedTwiceOnOneMeter_CountsASwallowedExceptionOnce()
+    {
+        var meter = new FordsTelemetryMeter(_report);
+        TAOM.Tests.Features.CrashReport.RecordingCrashService.Install();
+        try
+        {
+            meter.WatchExceptions();
+            meter.WatchExceptions();
+
+            TAOM.Features.CrashReport.Hooks.CrashReportPatchHelper.HandleAndSwallow(new InvalidOperationException("boom"), "taom-006.test");
+
+            Assert.AreEqual(1, _report.Run!.Exceptions.Count, "a reloaded mission reruns AfterStart; one swallow is still one");
+        }
+        finally
+        {
+            meter.StopWatchingExceptions();
+            TAOM.Features.CrashReport.Hooks.CrashReportPatchHelper.ResetForUnload();
+        }
+    }
+
+    [TestMethod]
+    public void WatchExceptions_AnExceptionHandedBack_IsNotCounted()
+    {
+        var meter = new FordsTelemetryMeter(_report);
+        TAOM.Features.CrashReport.Hooks.CrashReportPatchHelper.ResetForUnload();
+        try
+        {
+            meter.WatchExceptions();
+
+            TAOM.Features.CrashReport.Hooks.CrashReportPatchHelper.HandleAndSwallow(new InvalidOperationException("boom"), "taom-006.test");
+
+            Assert.AreEqual(0, _report.Run!.Exceptions.Count, "no capture service is installed, so the finalizer hands the exception back to the engine");
+        }
+        finally
+        {
+            meter.StopWatchingExceptions();
+        }
+    }
+
+    private static TaleWorlds.MountAndBlade.Agent FakeAgent() =>
+        (TaleWorlds.MountAndBlade.Agent)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(TaleWorlds.MountAndBlade.Agent));
+
+    private void WithTowers()
+    {
+        _report.MatchStarted(new FordsMatchFacts(60f, 8f, 12f, 2, 150, 200), new List<TowerSlot>
+        {
+            new("tower_east_0_0", MatchSide.East, 0, 0, TowerKind.Tower, new Vec3f(600, 0, 0), 0f),
+        }, 1);
+    }
+
+    /// <summary>The towers are East's, so every attacker that is not the gunner is a West unit.</summary>
+    private void BindEnemy(TaleWorlds.MountAndBlade.Agent gunner)
+    {
+        _report.BindGunnerLookup(a => ReferenceEquals(a, gunner) ? "tower_east_0_0" : null);
+        _report.BindAttackerLookup(a => ReferenceEquals(a, gunner) ? null : new FordsAttacker(MatchSide.West, 0));
+    }
+
+    [TestMethod]
+    public void OnMeleeHit_AVictimThatIsATowerGunner_CountsAMeleeBlowOnItsTower_EvenWhenTheBlowWasCancelled()
+    {
+        WithTowers();
+        var gunner = FakeAgent();
+        BindEnemy(gunner);
+
+        _logic.OnMeleeHit(FakeAgent(), gunner, true, default);
+        _logic.OnMeleeHit(FakeAgent(), FakeAgent(), false, default);
+
+        Assert.AreEqual(1, _report.Run!.Towers["tower_east_0_0"].GunnerBlowsMelee, "an invulnerable gunner's blow arrives cancelled");
+        Assert.AreEqual(0, _report.Run.Towers["tower_east_0_0"].GunnerBlowsRanged);
+    }
+
+    [TestMethod]
+    public void OnMissileHit_AVictimThatIsATowerGunner_CountsARangedBlowOnItsTower()
+    {
+        WithTowers();
+        var gunner = FakeAgent();
+        BindEnemy(gunner);
+
+        _logic.OnMissileHit(FakeAgent(), gunner, false, default);
+
+        Assert.AreEqual(1, _report.Run!.Towers["tower_east_0_0"].GunnerBlowsRanged);
+        Assert.AreEqual(0, _report.Run.Towers["tower_east_0_0"].GunnerBlowsMelee);
+    }
+
+    [TestMethod]
+    public void OnMeleeHit_AndOnMissileHit_WithNoVictim_CountNothingAndDoNotThrow()
+    {
+        WithTowers();
+        _report.BindGunnerLookup(_ => "tower_east_0_0");
+        _report.BindAttackerLookup(_ => new FordsAttacker(MatchSide.West, 0));
+
+        _logic.OnMeleeHit(FakeAgent(), null!, false, default);
+        _logic.OnMissileHit(null!, null!, false, default);
+
+        Assert.AreEqual(0, _report.Run!.Towers["tower_east_0_0"].GunnerBlowsMelee);
+        Assert.AreEqual(0, _report.Run.Towers["tower_east_0_0"].GunnerBlowsRanged);
     }
 }

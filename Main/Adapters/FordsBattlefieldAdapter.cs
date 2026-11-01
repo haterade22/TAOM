@@ -81,7 +81,8 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
             // BasicBattleAgentOrigin carries no banner, so the build data's own copy is null: give the unit its team's.
             var data = _mission.GetAgentBuildDataToSpawnTroop(new BasicBattleAgentOrigin(character), side == MatchSide.West, false,
                 mounted, false, 0, -1, ground, direction).Formation(formation).Banner(FordsEngine.TeamOf(_mission, side)?.Banner);
-            var agent = _mission.SpawnTroopWithAgentBuildData(data, false, true);
+            // Alarmed, as vanilla field battles spawn their troops (MissionBattleSideSpawnContext): an unalarmed unit may not fight.
+            var agent = _mission.SpawnTroopWithAgentBuildData(data, true, true);
             return new FordsSpawnedAgent(_registry.Register(agent, side, lane), character.Level, mounted);
         }
         catch (Exception ex)
@@ -99,7 +100,8 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
         {
             var agent = (Agent)entry.Agent;
             if (IsLive(agent) && FordsEngine.FinitePosition(agent.Position) is { } position)
-                samples.Add(new FordsUnitSample(entry.Key, entry.Side, entry.Lane, position));
+                samples.Add(new FordsUnitSample(entry.Key, entry.Side, entry.Lane, position, agent.IsAlarmed(),
+                    (agent.GetScriptedCombatFlags() & Agent.AISpecialCombatModeFlags.AttackEntity) != 0));
         }
 
         return samples;

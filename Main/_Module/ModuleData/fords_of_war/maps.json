@@ -7,8 +7,8 @@
   },
   "scenes": [
     {
-      "scene": "taom_rohan_battle_001_forceatmo",
-      "name": "{=aom_taom_rohan_battle_001_forceatmo_name}[Rohan] Rohan Plains",
+      "scene": "taom_rohan_battle_002_forceatmo",
+      "name": "{=aom_taom_rohan_battle_002_forceatmo_name}[Rohan] Rohan Plains II",
       "layout": "generated"
     },
     {
@@ -19,6 +19,11 @@
     {
       "scene": "taom_mordor_battle_001_forceatmo",
       "name": "{=aom_taom_mordor_battle_001_forceatmo_name}[Mordor] Mordor Plains I",
+      "layout": "generated"
+    },
+    {
+      "scene": "taom_rohan_battle_001_forceatmo",
+      "name": "{=aom_taom_rohan_battle_001_forceatmo_name}[Rohan] Rohan Plains",
       "layout": "generated"
     }
   ]
