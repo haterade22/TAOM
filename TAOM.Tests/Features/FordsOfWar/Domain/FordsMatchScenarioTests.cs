@@ -340,7 +340,7 @@ public class FordsMatchScenarioTests
         match.Tick(Snap(5f));
         Assert.AreEqual(LaneOrder.Hold, match.GetView(EastSlot).Lanes[0].Order);
 
-        var strong = new[] { Live(MatchSide.East, 0, 45) };
+        var strong = new[] { Live(MatchSide.East, 0, 75) };
         match.Tick(Snap(25f, strong));
 
         Assert.AreEqual(LaneOrder.Push, match.GetView(EastSlot).Lanes[0].Order);

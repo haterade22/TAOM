@@ -389,12 +389,14 @@ orders. The `[LaneState]` line carries `near=<attackers>/<defenders> siege=<true
 
 **Tower hit points:** the challenger showed that 1200 hit points must not ship: a human-led group of 15 units in contact,
 at the measured 4.7 to 5.9 hit points per second per unit, would fell such a tower in about 16 s. Hit points went back to
-8000, 11000 and 18000, the default Claude stated while the maintainer's human target is open (a group of 15 units
-should need about 2 minutes on an outer tower). Regeneration stays at 1 per second after 45 s: at 15 per second after
+8000, 11000 and 18000, which the maintainer confirmed on 2026-11-01 as the target for a human-led assault (a group of
+15 units should need about 2 minutes on an outer tower). Regeneration stays at 1 per second after 45 s: at 15 per second after
 20 s every lull healed all the damage an assault had done (Healed equalled Applied on every tower not under attack at the
 end of runs 075050, 081305, 095058 and 112404).
 
 **Validation:** run `E:/Temp/fords-runs/20261101-143718` (2700 s, AI on both sides, 8000, 11000 and 18000 hit points, regeneration 1 per second after 45 s) started sieges on four of six streams (29 samples at 5 s, the lead a median of 3 to 28 m from the tower). No stream flipped: the most AttackTower commands any stream received in 45 minutes was 18. Contact rose from 1.1 % of flagged unit-seconds in run 123312 to 5.1 %, 8.3 % and 22.0 % on the sieging streams, West received AttackTower commands for the first time, and the most-hit tower took 4,210 hit points (the earlier best was 1,276) and fell to 5,014 of 8,000. No tower fell, and the verdicts were 7 PASS and 0 FAIL with no exception.
+
+**Concentration:** with the AI's `lanes.assaultThreshold` raised from 40 to 70, run `E:/Temp/fords-runs/20261101-152949` (otherwise the same as run 143718) gave East 50 siege samples (17 before) and 1,204 contact unit-seconds on lane 0 (7 before); `tower_west_2_0` took 7,076 hit points and fell to 1,750 of 8,000, but no tower fell. West never sieged although its lanes held 59 to 74 live units and stayed on Push in 94 to 99 % of samples, so the higher threshold did not stall the AI; its units near the East towers never reached 1.5 times the defenders there. The threshold is 70 from this change on.
 
 **Lane 2 contact:** an investigation of why units ordered at lane 2 towers made almost no contact (0 to 4 contact
 unit-seconds against 1,826 flagged unit-seconds over five runs) found the same root cause, plus AttackTower orders that
@@ -405,4 +407,4 @@ FOLLOW-UP: the existing in-reach AttackTower branch still fires by lane arc at a
 FOLLOW-UP: `UnitsNear` runs about 12 times per mission frame and the own-side calls go through LINQ `NextTargetOf`; measure before optimising (no issue: the maintainer chose no GitHub issues for Fords of War).
 FOLLOW-UP: check 9's ladder does not split tower blows by attacker class, so a ranged lane's damage cannot be told from melee contact (no issue: the maintainer chose no GitHub issues for Fords of War).
 FOLLOW-UP: the hard AI profile's `incomeMultiplier` 1.2 gives the AI more gold than a human commander, which the maintainer's design (same shop, no extra powers) does not allow for; the maintainer decides (no issue: the maintainer chose no GitHub issues for Fords of War).
-FOLLOW-UP: with the siege rule, towers at 8000 hit points still stand after 45 minutes of AI against AI; the next levers are AI concentration of force (`lanes.assaultThreshold`, so one lane gets the bought packs and heroes) and the maintainer's target for a human-led assault, which sets the shipping hit points (no issue: the maintainer chose no GitHub issues for Fords of War).
+FOLLOW-UP: with the siege rule and `lanes.assaultThreshold` 70, a 45-minute AI match brought one outer tower to 1,750 of 8,000 hit points but felled none, and West (Gondor) never sieged; why one faction cannot win the ground at a tower, and whether an AI-against-AI match should reach a keep at all, stay open (no issue: the maintainer chose no GitHub issues for Fords of War).

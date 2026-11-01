@@ -66,7 +66,7 @@ public class FordsMatchConfigDefaultsTests
         Assert.AreEqual(25f, C.Lanes.EngageRange);
         Assert.AreEqual(6f, C.Lanes.WaypointReachRadius);
         Assert.AreEqual(60f, C.Lanes.HoldDistanceBeforeTower);
-        Assert.AreEqual(40, C.Lanes.AssaultThreshold);
+        Assert.AreEqual(70, C.Lanes.AssaultThreshold);
         Assert.AreEqual(25f, C.Lanes.LeadBand);
         Assert.AreEqual(12f, C.Capture.Radius);
         Assert.AreEqual(20f, C.Capture.SecondsToCapture);

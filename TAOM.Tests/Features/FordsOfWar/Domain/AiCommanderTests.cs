@@ -117,7 +117,7 @@ public class AiCommanderTests
     [TestMethod]
     public void Decide_AssaultLaneAtTheThreshold_StopsBuyingThere()
     {
-        var match = Create(slots: Slots("slow"));
+        var match = Create(Threshold40(), Slots("slow"));
         match.TrySetLaneOrder(EastSlot, 0, LaneOrder.Hold);
         match.Tick(Snap(25f, new[] { Live(MatchSide.East, 0, 40) }));
 
@@ -257,9 +257,12 @@ public class AiCommanderTests
     }
 
     /// <summary>East lane 0 is the assault lane (no threat, best ratio). Orders are applied the way the match would.</summary>
+    // The threshold tests below count units against 40 (35 percent of it is 14), so they pin it instead of the shipped default.
+    private static FordsMatchConfig Threshold40() => Config(c => c with { Lanes = c.Lanes with { AssaultThreshold = 40 } });
+
     private static (FordsMatch Match, AiCommander Ai) PushedAtTheThreshold()
     {
-        var match = Create(slots: Slots("slow"));
+        var match = Create(Threshold40(), Slots("slow"));
         match.TrySetLaneOrder(EastSlot, 0, LaneOrder.Hold);
         match.Tick(Snap(25f, new[] { Live(MatchSide.East, 0, 40) }));
         var ai = Ai();

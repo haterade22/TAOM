@@ -182,7 +182,7 @@ per record. Names are camelCase.
 | `lanes.waypointReachRadius` | float | Metres at which a waypoint counts as reached | 6 |
 | `lanes.holdDistanceBeforeTower` | float | Metres of lane before the next enemy tower where a Hold order stands; on a lane over about 428 m the lane midpoint is nearer its own base and is used instead (see Lane rules) | 60 |
 | `lanes.leadBand` | float | Metres (1 to 300): the lead group is the units within this distance, on either side, of the lane's front line (its k-th most advanced unit, see Lane rules); a bad value reverts to 25 with one warning | 25 |
-| `lanes.assaultThreshold` | int | Live units the AI gathers in its assault lane before it pushes | 40 |
+| `lanes.assaultThreshold` | int | Live units the AI gathers in its assault lane before it pushes; 70 since 2026-11-01, when a 45-minute AI match at 40 never got enough units to a tower and one at 70 did (runs 20261101-143718 and -152949) | 70 |
 | `capture.radius` | float | Metres around a capture point that count units | 12 |
 | `capture.secondsToCapture` | float | Seconds for one side alone to take a point | 20 |
 | `aiProfiles.<id>.decisionIntervalSeconds` | float | Seconds between AI decisions | easy 12, normal 8, hard 5 |
@@ -227,7 +227,7 @@ A file may override one profile or add a new name; a new profile starts from nor
 
 | Value | Why |
 |---|---|
-| Towers 8000, inner 11000, keep 18000 hit points | Starting values for the balance pass; the inner tower and the keep are tougher than the outer tower |
+| Towers 8000, inner 11000, keep 18000 hit points | Set from a human-led assault, the maintainer's target (2026-11-01): a group of 15 units in contact should need about 2 minutes on an outer tower, and units in contact deal about 5 hit points per second each (runs 20261101-103348 and -112404). AI-versus-AI runs do not set it: at 1200 hit points no tower fell either (run 20261101-123312). The inner tower and the keep are tougher than the outer tower |
 | Ranged factor 0.15 | Ranged hits are scaled down so archers do not strip a tower (spec section 3.4: ranged x `RangedDamageFactor`) |
 | Thrust floor 0.2 | Vanilla multiplies a thrust's base magnitude by 0.1 (Pierce on an object) and, for a shaft hit, by 0.15, then truncates to an int, so most spear and lance thrusts reached the tower as 0. The floor gives a blow that arrives as 0 from a weapon with thrust damage a fifth of that thrust damage (about 8 hit points per blow in run `20261101-103348`), which the maintainer chose on 2026-11-01 |
 | Hero factor 4, siege factor 3 | Heroes and the Siege role (the trolls) are the units that hurt towers; the factors multiply, so a hero archer gets both |
