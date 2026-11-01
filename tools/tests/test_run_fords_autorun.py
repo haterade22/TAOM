@@ -215,9 +215,12 @@ class JudgeTests(unittest.TestCase):
                "[2026-10-31 22:08:40] [WARNING] [CrashReport] Native2Managed: target not found, skipped: X\n")
         self.assertEqual(r.judge(self.DONE, {"final": True}, log)[0], 0)
 
-    def test_a_crash_report_block_after_the_done_time_is_not_this_runs_failure(self):
+    def test_a_crash_report_block_after_the_done_time_still_fails_the_run(self):
+        # The driver writes the done file before it quits, so a quit-time capture comes after `ended` (Codex review 2026-11-01, F1).
         log = "[2026-10-31 22:19:25] [ERROR] [CrashReport] TAOM CrashReport captured at shutdown\n"
-        self.assertEqual(r.judge(self.DONE, {"final": True}, log)[0], 0)
+        code, why = r.judge(self.DONE, {"final": True}, log)
+        self.assertEqual(code, 1)
+        self.assertIn("22:19:25", why)
 
     def test_a_crash_report_block_before_the_start_is_not_this_runs_failure(self):
         log = "[2026-10-31 22:00:01] [ERROR] [CrashReport] TAOM CrashReport captured at boot\n"
@@ -233,6 +236,17 @@ class FinalVerdictTests(unittest.TestCase):
 
     def test_a_clean_exit_keeps_the_judged_result(self):
         self.assertEqual(r.final_verdict(self.PASSED, None, False), self.PASSED)
+        self.assertEqual(r.final_verdict(self.PASSED, None, False, 0), self.PASSED)
+
+    def test_the_normal_exit_code_after_quit_keeps_the_judged_result(self):
+        # Bannerlord exits with -1 (4294967295 as a Windows exit code) after its own QuitGame, clean unload line present.
+        self.assertEqual(r.final_verdict(self.PASSED, None, False, 4294967295), self.PASSED)
+        self.assertEqual(r.final_verdict(self.PASSED, None, False, -1), self.PASSED)
+
+    def test_an_abnormal_exit_code_fails_a_passing_run(self):
+        code, why = r.final_verdict(self.PASSED, None, False, 3221225477)
+        self.assertEqual(code, 1)
+        self.assertIn("0xC0000005", why)
 
     def test_a_crash_after_the_done_file_fails_a_passing_run(self):
         code, why = r.final_verdict(self.PASSED, "rgl_log_1.txt reports a crash", False)
@@ -246,7 +260,7 @@ class FinalVerdictTests(unittest.TestCase):
 
     def test_an_already_failed_run_keeps_its_own_reason(self):
         failed = (1, "reason=never_live")
-        self.assertEqual(r.final_verdict(failed, "crash", True), failed)
+        self.assertEqual(r.final_verdict(failed, "crash", True, 3221225477), failed)
 
 
 class DialogActionTests(unittest.TestCase):
@@ -320,6 +334,133 @@ class PreflightTests(unittest.TestCase):
     def test_a_process_listing_that_is_not_json_refuses(self):
         with mock.patch.object(r, "list_processes", side_effect=ValueError("bad json")):
             self.assertIn("could not list", r.preflight(self.game)[0])
+
+
+class IdleGateTests(unittest.TestCase):
+    def test_a_disabled_gate_passes_whatever_the_idle_time(self):
+        self.assertTrue(r.idle_ok(0, 0))
+        self.assertTrue(r.idle_ok(None, 0))
+
+    def test_idle_at_or_past_the_required_minutes_passes(self):
+        self.assertTrue(r.idle_ok(600, 10))
+        self.assertTrue(r.idle_ok(601.5, 10))
+
+    def test_idle_short_of_the_required_minutes_fails(self):
+        self.assertFalse(r.idle_ok(599.9, 10))
+        self.assertFalse(r.idle_ok(0, 10))
+
+    def test_an_unknown_idle_time_fails_closed_when_the_gate_is_on(self):
+        self.assertFalse(r.idle_ok(None, 10))
+
+    def test_tick_delta_is_plain_subtraction_without_a_wrap(self):
+        self.assertEqual(r.tick_delta_ms(5000, 2000), 3000)
+        self.assertEqual(r.tick_delta_ms(2000, 2000), 0)
+
+    def test_tick_delta_survives_the_32_bit_tick_count_wrap(self):
+        self.assertEqual(r.tick_delta_ms(1000, 0xFFFFFC18), 1000 + 1000)
+        self.assertEqual(r.tick_delta_ms(0, 0xFFFFFFFF), 1)
+
+    def test_the_idle_text_names_the_state_and_the_requirement(self):
+        self.assertEqual(r.idle_state_text(1234.4, 10), "input 1234 s ago; the gate needs 600 s: ok")
+        self.assertEqual(r.idle_state_text(30, 10), "input 30 s ago; the gate needs 600 s: NOT idle")
+        self.assertEqual(r.idle_state_text(30, 0), "input 30 s ago; the gate is off (--require-idle-minutes 0)")
+        self.assertIn("unreadable", r.idle_state_text(None, 10))
+
+    def _libs(self, last_input_tick, now_tick, accepted=True):
+        user32 = mock.Mock()
+        kernel32 = mock.Mock()
+        seen = {}
+
+        def get_last_input_info(pointer):
+            info = pointer._obj
+            seen["cb_size"] = info.cbSize
+            info.dwTime = last_input_tick
+            return 1 if accepted else 0
+
+        user32.GetLastInputInfo.side_effect = get_last_input_info
+        kernel32.GetTickCount.return_value = now_tick
+        return user32, kernel32, seen
+
+    def test_seconds_since_last_input_is_the_tick_difference_in_seconds(self):
+        user32, kernel32, seen = self._libs(last_input_tick=10_000, now_tick=25_500)
+        with mock.patch.object(r, "_input_libs", return_value=(user32, kernel32)):
+            self.assertEqual(r.seconds_since_last_input(), 15.5)
+        self.assertEqual(seen["cb_size"], 8)
+
+    def test_seconds_since_last_input_handles_the_tick_wrap(self):
+        user32, kernel32, _ = self._libs(last_input_tick=0xFFFFFC18, now_tick=1000)
+        with mock.patch.object(r, "_input_libs", return_value=(user32, kernel32)):
+            self.assertEqual(r.seconds_since_last_input(), 2.0)
+
+    def test_a_refused_query_raises_instead_of_reading_as_idle(self):
+        user32, kernel32, _ = self._libs(last_input_tick=0, now_tick=0, accepted=False)
+        with mock.patch.object(r, "_input_libs", return_value=(user32, kernel32)):
+            with self.assertRaises(OSError):
+                r.seconds_since_last_input()
+
+    def test_the_input_libs_declare_their_argument_and_return_types(self):
+        if sys.platform != "win32":
+            self.skipTest("user32 and kernel32 exist on Windows only")
+        user32, kernel32 = r._input_libs()
+        self.assertIsNotNone(user32.GetLastInputInfo.argtypes)
+        self.assertIsNotNone(user32.GetLastInputInfo.restype)
+        self.assertEqual(list(kernel32.GetTickCount.argtypes), [])
+        self.assertIsNotNone(kernel32.GetTickCount.restype)
+
+    def test_the_machine_reading_is_a_plausible_number_on_windows(self):
+        if sys.platform != "win32":
+            self.skipTest("user32 and kernel32 exist on Windows only")
+        value = r.seconds_since_last_input()
+        self.assertGreaterEqual(value, 0)
+        self.assertLess(value, 60 * 60 * 24 * 60)
+
+
+class PreflightIdleTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.game = Path(self.tmp.name)
+        exe_dir = self.game / "bin" / "Win64_Shipping_Client"
+        exe_dir.mkdir(parents=True)
+        (exe_dir / "Bannerlord.exe").write_bytes(b"")
+
+    def test_recent_input_refuses_with_the_reason_and_the_override(self):
+        with mock.patch.object(r, "list_processes", return_value=[]), \
+                mock.patch.object(r, "seconds_since_last_input", return_value=42.0):
+            problems = r.preflight(self.game, 10)
+        self.assertEqual(len(problems), 1)
+        self.assertIn("the PC had input 42 s ago", problems[0])
+        self.assertIn("the idle gate needs 600 s", problems[0])
+        self.assertIn("--require-idle-minutes 0", problems[0])
+        self.assertIn("maintainer has said yes", problems[0])
+
+    def test_enough_idle_time_is_go(self):
+        with mock.patch.object(r, "list_processes", return_value=[]), \
+                mock.patch.object(r, "seconds_since_last_input", return_value=601.0):
+            self.assertEqual(r.preflight(self.game, 10), [])
+
+    def test_a_disabled_gate_never_reads_the_input_clock(self):
+        with mock.patch.object(r, "list_processes", return_value=[]), \
+                mock.patch.object(r, "seconds_since_last_input", side_effect=AssertionError("must not be read")):
+            self.assertEqual(r.preflight(self.game, 0), [])
+
+    def test_an_unreadable_input_clock_refuses_instead_of_passing(self):
+        with mock.patch.object(r, "list_processes", return_value=[]), \
+                mock.patch.object(r, "seconds_since_last_input", side_effect=OSError("no desktop")):
+            problems = r.preflight(self.game, 10)
+        self.assertEqual(len(problems), 1)
+        self.assertIn("could not read the input idle time", problems[0])
+
+    def test_a_running_game_and_recent_input_both_show(self):
+        running = [{"pid": 7, "name": "Bannerlord.exe", "path": "x", "cmd": "", "created": ""}]
+        with mock.patch.object(r, "list_processes", return_value=running), \
+                mock.patch.object(r, "seconds_since_last_input", return_value=5.0):
+            self.assertEqual(len(r.preflight(self.game, 10)), 2)
+
+    def test_the_idle_refusal_survives_a_failed_process_listing(self):
+        with mock.patch.object(r, "list_processes", side_effect=OSError("powershell exited 1")), \
+                mock.patch.object(r, "seconds_since_last_input", return_value=5.0):
+            self.assertEqual(len(r.preflight(self.game, 10)), 2)
 
 
 class StopOwnTreeTests(unittest.TestCase):
@@ -600,6 +741,18 @@ class LauncherInputTests(unittest.TestCase):
         args = r.build_parser().parse_args(["--scene", "s", "--west", "w", "--east", "e", "--ai", "a", "--live-seconds", "90",
                                             "--wall-limit", "300", "--west-ai", "--runs", "2", "--runs-root", "x", "--dry-run"])
         self.assertEqual((args.live_seconds, args.wall_limit, args.runs, args.west_ai, args.dry_run), (90.0, 300.0, 2, True, True))
+
+    def test_the_idle_gate_defaults_to_ten_minutes_and_can_be_switched_off(self):
+        parser = r.build_parser()
+        self.assertEqual(parser.parse_args([]).require_idle_minutes, 10)
+        self.assertEqual(parser.parse_args(["--require-idle-minutes", "0"]).require_idle_minutes, 0)
+        self.assertEqual(parser.parse_args(["--require-idle-minutes", "2.5"]).require_idle_minutes, 2.5)
+
+    def test_a_negative_or_non_finite_idle_requirement_is_rejected(self):
+        parser = r.build_parser()
+        for value in ("-1", "nan", "inf"):
+            with self.assertRaises(SystemExit, msg=value), mock.patch("sys.stderr"):
+                parser.parse_args(["--require-idle-minutes", value])
 
     def test_the_runs_root_is_resolved_to_an_absolute_path(self):
         args = r.build_parser().parse_args(["--runs-root", "relative-runs"])

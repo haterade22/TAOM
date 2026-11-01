@@ -56,6 +56,7 @@ instructions: follow its phases in order.
 | Before overriding, patching or adapting a TaleWorlds type | `pwsh tools/taom-src.ps1 path <Type>` | always |
 | Before any commit touching C# or XML/XSLT, repo or live install | `/deep-review` | every such commit; skip only config and docs |
 | Before claiming done | `/verify` | always |
+| In-game evidence owed for a change (a check NOT_SEEN, mission or engine code changed) | `/game-run` | no Bannerlord running and 10 min idle, else ask once |
 | "Let's merge", "ready to PR" | `/ship` | runs `/verify`, `/deep-review`, `/review-codex`, then issue and docs |
 | Versioning a build for players | `/release` | after `/ship`, never instead of it |
 | Game updated, or the GAME VERSION DRIFT banner | `/engine-bump` | before any build or test |

@@ -2,7 +2,8 @@
 """Run one Fords of War match in the real game with nobody at the keyboard, then collect the self-check report.
 
 Run:  python tools/run_fords_autorun.py [--scene S] [--west W] [--east E] [--ai A] [--live-seconds N]
-                                        [--wall-limit N] [--west-ai] [--runs N] [--runs-root DIR] [--dry-run]
+                                        [--wall-limit N] [--west-ai] [--runs N] [--runs-root DIR]
+                                        [--require-idle-minutes N] [--dry-run]
 Test: python -m unittest tools.tests.test_run_fords_autorun
 
 How it works. TAOM's client submodule polls an autorun driver from OnApplicationTick (docs/features/fords-of-war.md, "Autorun").
@@ -14,7 +15,10 @@ This tool launches Bannerlord.exe directly with the module list of Mike's F5 pro
 folder (TAOM prunes them: 20 reports, about 30 logs).
 
 It refuses to start while Bannerlord.exe or the game folder's Watchdog.exe already runs, and it refuses when it cannot list the
-running processes. It never kills anything but the Bannerlord.exe it started (through its Popen handle) and a Watchdog.exe whose
+running processes. It also refuses to start while the PC has had keyboard or mouse input within the last --require-idle-minutes
+(default 10; 0 disables the gate): the run takes the screen and the GPU, so it only starts unasked on an idle PC (the maintainer's
+rule of 2026-11-01, docs/reference/unattended-game-runs.md). The input age comes from user32 GetLastInputInfo against kernel32
+GetTickCount; an unreadable age refuses too. Input this tool posts to the game's dialog does not count as user input. It never kills anything but the Bannerlord.exe it started (through its Popen handle) and a Watchdog.exe whose
 command line holds "-p <that pid>". It resets "safely_exited = 0" to 1 in engine_config.txt before the start and after any kill,
 because a killed game leaves 0 and the next start then stops at a Safe Mode window. It does not touch BannerlordConfig.txt (it only
 logs StopGameOnFocusLost) or the shader cache.
@@ -26,9 +30,10 @@ logged once per window. Its OK only lets the engine rebuild the cache. A dialog 
 any other dialog is logged once and left alone.
 
 Exit code: 0 when the done file says reason=final, the JSON report says final=true with no FAIL row, the TAOM log holds no
-[CrashReport] error block between the run's start and its done time, and the game then exited by itself without a crash marker;
+[CrashReport] error block from the run's start to the end of the log (a quit-time capture counts), and the game then exited by
+itself with code 0 or -1 and no crash marker;
 1 for anything else (preflight refused, crash, kill, timeout, stall, start_refused, never_live, wall_limit, ...). --dry-run prints
-the plan and the preflight, starts nothing.
+the plan, the idle state and the preflight, starts nothing.
 """
 import argparse
 import json
@@ -48,6 +53,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _gamedir import DEFAULT_GAME_ROOT, game_dir  # noqa: E402
 
 ENV_VAR = "TAOM_FORDS_AUTORUN"
+DEFAULT_IDLE_MINUTES = 10.0
 LAUNCH_SETTINGS = Path(__file__).resolve().parent.parent / "Main" / "Properties" / "launchSettings.json"
 RUNS_ROOT = r"E:\Temp\fords-runs"
 LOGS_DIR = r"C:\ProgramData\Mount and Blade II Bannerlord\logs"
@@ -64,6 +70,7 @@ LOG_SLACK_SECONDS = 2
 MOD_CHANGE_TITLE = "Mod change detected"
 MOD_CHANGE_TEXT = "A change in your active mods was detected"
 CRASH_TITLE = re.compile(r"problem|crash|fatal|exception", re.IGNORECASE)
+NORMAL_EXIT_CODES = (0, -1, 4294967295)
 CRASH_REPORT_LINE = re.compile(r"^\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})\] \[ERROR\] \[CrashReport\]")
 WM_COMMAND = 0x0111
 PROCESS_LISTING_ERRORS = (OSError, ValueError, subprocess.TimeoutExpired)
@@ -200,23 +207,24 @@ def local_time(iso_text):
         return None
 
 
-def crash_report_line(log_text, started, ended):
-    """The first [ERROR] [CrashReport] line of the TAOM log stamped between the run's start and its done time, else None.
-    The INFO and WARNING [CrashReport] lines are startup notes. A bound that does not parse is open."""
-    first, last = local_time(started), local_time(ended)
+def crash_report_line(log_text, started):
+    """The first [ERROR] [CrashReport] line of the TAOM log stamped at or after the run's start, else None. There is no upper
+    bound: the driver writes the done file before it quits, so a capture during the quit comes after the done time and still
+    belongs to this run. The INFO and WARNING [CrashReport] lines are startup notes. A start that does not parse is open."""
+    first = local_time(started)
     for line in (log_text or "").splitlines():
         match = CRASH_REPORT_LINE.match(line)
         if match is None:
             continue
         when = datetime.strptime(match.group(1), "%Y-%m-%d %H:%M:%S")
-        if (first is None or when >= first) and (last is None or when <= last):
+        if first is None or when >= first:
             return line
     return None
 
 
 def judge(done, report_json, log_text=None):
     """(exit code, why). Success is reason=final, a JSON report that says final=true with no FAIL row, and no [CrashReport] error
-    block in the TAOM log between the run's start and its done time (a swallowed engine exception passes every in-game check)."""
+    block in the TAOM log from the run's start to its end (a swallowed engine exception passes every in-game check)."""
     if not done:
         return 1, "no done file"
     reason = done.get("reason", "")
@@ -230,15 +238,16 @@ def judge(done, report_json, log_text=None):
     if failed:
         names = ", ".join(f"check {int(row.get('Check', 0))} {row.get('Title', '')}".strip() for row in failed)
         return 1, f"the report has FAIL rows: {names}"
-    block = crash_report_line(log_text, done.get("started"), done.get("ended"))
+    block = crash_report_line(log_text, done.get("started"))
     if block is not None:
         return 1, "the TAOM log holds a CrashReport block during the run: " + block[:200]
     return 0, "reason=final, report final=true, no FAIL row, no CrashReport block"
 
 
-def final_verdict(judged, crash, killed):
-    """(exit code, why) after the game has ended: a passing run still fails when a crash marker showed up after the done file or the
-    game had to be killed because it did not exit by itself."""
+def final_verdict(judged, crash, killed, exit_code=None):
+    """(exit code, why) after the game has ended: a passing run still fails when a crash marker showed up after the done file, the
+    game had to be killed because it did not exit by itself, or it exited with a code other than 0 or -1 (Bannerlord's normal
+    code after its own quit, 4294967295 as a Windows exit code)."""
     code, _ = judged
     if code != 0:
         return judged
@@ -246,13 +255,55 @@ def final_verdict(judged, crash, killed):
         return 1, "crash after the done file: " + crash
     if killed:
         return 1, "the game did not exit by itself after the done file and was killed"
+    if exit_code is not None and exit_code not in NORMAL_EXIT_CODES:
+        return 1, f"the game exited with code 0x{exit_code & 0xFFFFFFFF:08X} after the done file"
     return judged
+
+
+def idle_ok(idle_seconds, required_minutes):
+    """True when the PC has been idle long enough. A gate of 0 minutes is off. An unknown idle time (None) fails a gate that is on."""
+    if required_minutes <= 0:
+        return True
+    if idle_seconds is None:
+        return False
+    return idle_seconds >= required_minutes * 60
+
+
+def tick_delta_ms(now_tick, last_tick):
+    """now minus last for two 32-bit millisecond tick counts (GetTickCount wraps every 49.7 days)."""
+    return (now_tick - last_tick) & 0xFFFFFFFF
+
+
+def idle_state_text(idle_seconds, required_minutes):
+    """One line for --dry-run and the runner log: the input age against the gate."""
+    if required_minutes <= 0:
+        gate = "the gate is off (--require-idle-minutes 0)"
+    elif idle_seconds is None:
+        gate = f"the gate needs {required_minutes * 60:g} s: NOT idle (an unreadable age fails closed)"
+    else:
+        gate = f"the gate needs {required_minutes * 60:g} s: " + ("ok" if idle_ok(idle_seconds, required_minutes) else "NOT idle")
+    if idle_seconds is None:
+        return "input age unreadable; " + gate
+    return f"input {idle_seconds:.0f} s ago; " + gate
+
+
+def idle_refusal(idle_seconds, required_minutes):
+    """The preflight reason for an idle gate that does not pass."""
+    return (f"the PC had input {idle_seconds:.0f} s ago; the idle gate needs {required_minutes * 60:g} s; "
+            "rerun with --require-idle-minutes 0 when the maintainer has said yes")
 
 
 def positive_seconds(text):
     value = float(text)
     if math.isnan(value) or math.isinf(value) or value <= 0:
         raise argparse.ArgumentTypeError(f"'{text}' is not a positive number of seconds")
+    return value
+
+
+def non_negative_minutes(text):
+    value = float(text)
+    if math.isnan(value) or math.isinf(value) or value < 0:
+        raise argparse.ArgumentTypeError(f"'{text}' is not a number of minutes (0 or more)")
     return value
 
 
@@ -318,6 +369,44 @@ def _user32():
     user32.PostMessageW.argtypes = [wintypes.HWND, wintypes.UINT, wintypes.WPARAM, wintypes.LPARAM]
     user32.PostMessageW.restype = wintypes.BOOL
     return user32
+
+
+def _input_libs():
+    """(user32, kernel32) with explicit argtypes and restypes for the two calls the idle gate makes."""
+    import ctypes
+    from ctypes import wintypes
+    user32 = ctypes.WinDLL("user32", use_last_error=True)
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    user32.GetLastInputInfo.argtypes = [ctypes.c_void_p]
+    user32.GetLastInputInfo.restype = wintypes.BOOL
+    kernel32.GetTickCount.argtypes = []
+    kernel32.GetTickCount.restype = wintypes.DWORD
+    return user32, kernel32
+
+
+def seconds_since_last_input():
+    """Seconds since the last keyboard or mouse input of the interactive session (GetLastInputInfo.dwTime against GetTickCount, both
+    32-bit tick counts, so the difference is taken modulo 2**32). Raises OSError when the query is refused: never read as idle."""
+    import ctypes
+    from ctypes import wintypes
+
+    class LastInputInfo(ctypes.Structure):
+        _fields_ = [("cbSize", wintypes.UINT), ("dwTime", wintypes.DWORD)]
+
+    user32, kernel32 = _input_libs()
+    info = LastInputInfo()
+    info.cbSize = ctypes.sizeof(LastInputInfo)
+    if not user32.GetLastInputInfo(ctypes.byref(info)):
+        raise OSError(f"GetLastInputInfo failed (error {ctypes.get_last_error()})")
+    return tick_delta_ms(kernel32.GetTickCount(), info.dwTime) / 1000.0
+
+
+def current_idle_seconds():
+    """(idle seconds or None, error text or None): seconds_since_last_input() with its failure turned into a value."""
+    try:
+        return seconds_since_last_input(), None
+    except (OSError, AttributeError, ValueError) as error:
+        return None, f"{type(error).__name__}: {error}"
 
 
 def game_dialogs(pid):
@@ -400,9 +489,16 @@ class Runner:
             handle.write(line + "\n")
 
 
-def preflight(game):
-    """A list of reasons to refuse; empty means go. A process listing that fails refuses too: not knowing is not a go."""
+def preflight(game, require_idle_minutes=0):
+    """A list of reasons to refuse; empty means go. A process listing or an input age that cannot be read refuses too: not knowing
+    is not a go. require_idle_minutes is the idle gate (0 is off; the command line defaults it to DEFAULT_IDLE_MINUTES)."""
     problems = []
+    if require_idle_minutes > 0:
+        idle, error = current_idle_seconds()
+        if idle is None:
+            problems.append(f"could not read the input idle time ({error}); refusing to start blind")
+        elif not idle_ok(idle, require_idle_minutes):
+            problems.append(idle_refusal(idle, require_idle_minutes))
     exe = Path(game) / "bin" / "Win64_Shipping_Client" / "Bannerlord.exe"
     if not exe.is_file():
         problems.append(f"{exe} is missing (set BANNERLORD_GAME_DIR)")
@@ -596,7 +692,7 @@ def run_once(args, game, modules):
     say(f"run folder {folder}")
     docs = my_documents()
     engine_config, bin_dir = inspect_environment(docs, game, modules, say)
-    problems = preflight(game)
+    problems = preflight(game, args.require_idle_minutes)
     if problems:
         say("preflight refused: " + "; ".join(problems))
         return 1
@@ -628,7 +724,7 @@ def run_once(args, game, modules):
     show_results(done_text, log_copy, report_json, say)
     log_text = log_copy.read_text(encoding="utf-8", errors="replace") if log_copy is not None else None
     judged = judge(done, report_json, log_text) if reason == "done" else (1, reason)
-    code, why = final_verdict(judged, crash, game_alive)
+    code, why = final_verdict(judged, crash, game_alive, None if killed else proc.returncode)
     (folder / "runner_status.txt").write_text(f"stop_reason={why}\nrunner_killed={killed}\nexit_code={code}\n", encoding="utf-8")
     say(("PASS: " if code == 0 else "FAIL: ") + why)
     return code
@@ -646,7 +742,10 @@ def build_parser():
     parser.add_argument("--west-ai", action="store_true", help="an AI commands the West side too, so both sides attack")
     parser.add_argument("--runs", type=int, default=1, help="how many matches to run, one game process each")
     parser.add_argument("--runs-root", default=RUNS_ROOT, help="folder that holds one subfolder per run")
-    parser.add_argument("--dry-run", action="store_true", help="print the plan and the preflight, start nothing")
+    parser.add_argument("--require-idle-minutes", type=non_negative_minutes, default=DEFAULT_IDLE_MINUTES,
+                        help=f"refuse to start unless the PC has had no keyboard or mouse input for this many minutes "
+                             f"(default {DEFAULT_IDLE_MINUTES:g}; 0 disables the gate, only when the maintainer has said yes)")
+    parser.add_argument("--dry-run", action="store_true", help="print the plan, the idle state and the preflight, start nothing")
     return parser
 
 
@@ -663,7 +762,9 @@ def main(argv=None):
         print("game:", game)
         print("args:", modules_arg(modules))
         print("arm file would hold:\n" + arm_text_for(resolved_runs_root(args) / "<yyyyMMdd-HHmmss>", args)[0])
-        problems = preflight(game)
+        idle, error = current_idle_seconds()
+        print("idle:", idle_state_text(idle, args.require_idle_minutes) + (f" ({error})" if error else ""))
+        problems = preflight(game, args.require_idle_minutes)
         print("preflight:", "; ".join(problems) if problems else "ok")
         return 1 if problems else 0
 

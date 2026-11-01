@@ -344,7 +344,8 @@ its decoded navmesh passed only on the short axis at spread x0.7.
 
 One match can play itself with nobody at the keyboard, so a build can be judged from its self-check report. It never runs for
 players: only the environment variable `TAOM_FORDS_AUTORUN` arms it, there is no file fallback, and an unarmed session costs one
-bool and one null check per application tick.
+bool and one null check per application tick. The standing runbook (the idle gate, the launch recipe, how to judge a run) is
+[unattended-game-runs.md](../reference/unattended-game-runs.md).
 
 - **What arms it.** `TAOM_FORDS_AUTORUN` holds the absolute path of a UTF-8 `key=value` arm file. A set variable pointing at a
   missing file or a file without a usable `out=` logs one `[FordsOfWar][Autorun] not armed: ...` warning and stays off.
