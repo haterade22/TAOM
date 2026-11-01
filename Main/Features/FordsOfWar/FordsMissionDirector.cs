@@ -100,13 +100,28 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
 
     /// <summary>
     /// Builds the layout, the towers and the match, and fills the session. False, with an error logged and nothing left
-    /// running, when the scene cannot host a match. Call once, from the first mission tick (never inside <c>AfterStart</c>: see <c>FordsOfWarMissionLogic</c>).
+    /// running, when the scene cannot host a match. An exception shuts the partly started director down before it propagates, so
+    /// nothing it bound (the report's lookups, the session) outlives it. Call once, from the first mission tick (never inside
+    /// <c>AfterStart</c>: see <c>FordsOfWarMissionLogic</c>).
     /// </summary>
     public bool Start()
     {
         if (_started)
             return true;
 
+        try
+        {
+            return StartCore();
+        }
+        catch
+        {
+            Shutdown();
+            throw;
+        }
+    }
+
+    private bool StartCore()
+    {
         var planTimer = Stopwatch.StartNew();
         if (!PlanLayout(out var fit, out var expectedIds))
             return false;
@@ -152,6 +167,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         ReportMatchStart(layout, built, expected);
         ReportLayout(layout, expectedIds, match);
         _report.BindGunnerLookup(_towers.TowerIdOfGunner);
+        _report.BindTowerLookup(_towers.TowerIdOf);
         _report.BindAttackerLookup(Attacker);
 
         _towers.SetDestroyedHandler(OnTowerDestroyed);
@@ -218,7 +234,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         });
     }
 
-    public int AdjustTowerDamage(object component, object? attacker, bool ranged, int inflictedDamage)
+    public int AdjustTowerDamage(object component, object? attacker, bool ranged, int inflictedDamage, int thrustDamage)
     {
         if (!_started)
             return inflictedDamage;
@@ -235,7 +251,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             if (_match == null)
                 return inflictedDamage;
 
-            applied = _match.AdjustTowerDamage(new TowerHit(towerId, ranged, record?.Role ?? UnitRole.Infantry, inflictedDamage, who?.Side), out reason);
+            applied = _match.AdjustTowerDamage(new TowerHit(towerId, ranged, record?.Role ?? UnitRole.Infantry, inflictedDamage, who?.Side, thrustDamage), out reason);
         }
 
         _report.TowerBlow(towerId, ClassOf(record, ranged), reason, inflictedDamage, applied, who);
@@ -252,7 +268,16 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             return;
 
         var who = AttackerOf(attacker, out var record);
-        _report.TowerBlow(towerId, ClassOf(record, ranged), weaponless ? TowerDamageReason.Weaponless : TowerDamageReason.RawZero, 0, 0, who);
+        var reason = TowerDamageReason.Weaponless;
+        if (!weaponless)
+        {
+            // The table says whether a zero-damage blow came from the tower's own side or from anyone else. The query changes nothing,
+            // so this method keeps the interface's promise by construction.
+            lock (_gate)
+                reason = _match?.ReasonFor(new TowerHit(towerId, ranged, record?.Role ?? UnitRole.Infantry, 0, who?.Side)) ?? TowerDamageReason.RawZero;
+        }
+
+        _report.TowerBlow(towerId, ClassOf(record, ranged), reason, 0, 0, who);
     }
 
     /// <summary>
@@ -304,6 +329,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
 
         _shutDown = true;
         _report.BindGunnerLookup(null);
+        _report.BindTowerLookup(null);
         _report.BindAttackerLookup(null);
         _session.Clear();
         _towers.Clear();

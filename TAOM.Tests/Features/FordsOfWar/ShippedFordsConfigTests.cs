@@ -185,7 +185,8 @@ public class ShippedFordsConfigTests
             Assert.IsNotNull(json[group] as JObject, group);
         Assert.AreEqual(8, ((JObject)json["economy"]!).Count);
         Assert.AreEqual(5, ((JObject)json["waves"]!).Count);
-        Assert.AreEqual(13, ((JObject)json["towers"]!).Count);
+        Assert.AreEqual(14, ((JObject)json["towers"]!).Count);
+        Assert.AreEqual(0.2, (double)json["towers"]!["thrustFloorFactor"]!, 1e-9);
         Assert.AreEqual(5, ((JObject)json["heroes"]!).Count);
         Assert.AreEqual(6, ((JObject)json["lanes"]!).Count);
         Assert.AreEqual(2, ((JObject)json["capture"]!).Count);

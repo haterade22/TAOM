@@ -418,7 +418,7 @@ public class FordsMissionDirectorDiagnosticsTests
         f.Director.Tick(1f);
         f.Report.MissionTick(1f, 1.0);
 
-        var applied = f.Director.AdjustTowerDamage(new object(), attacker, false, 40);
+        var applied = f.Director.AdjustTowerDamage(new object(), attacker, false, 40, 0);
 
         var tower = f.Report.Run!.Towers[EastOuterLane0];
         Assert.AreEqual(1, tower.BlowsBySide[(int)MatchSide.West]);
@@ -432,7 +432,7 @@ public class FordsMissionDirectorDiagnosticsTests
         var f = FordsDirectorFixture.Create(c => c with { Towers = c.Towers with { RegenPerSecond = 50f, RegenDelaySeconds = 0f } });
         f.Towers.TowerIdOf(Arg.Any<object?>()).Returns(EastOuterLane0);
         Assert.IsTrue(f.Director.Start());
-        f.Director.AdjustTowerDamage(new object(), null, true, 100);
+        f.Director.AdjustTowerDamage(new object(), null, true, 100, 0);
 
         for (var i = 0; i < 5; i++)
         {
@@ -450,7 +450,7 @@ public class FordsMissionDirectorDiagnosticsTests
         var f = FordsDirectorFixture.Create();
         f.Towers.TowerIdOf(Arg.Any<object?>()).Returns(EastOuterLane0);
         Assert.IsTrue(f.Director.Start());
-        f.Director.AdjustTowerDamage(new object(), null, true, 100);
+        f.Director.AdjustTowerDamage(new object(), null, true, 100, 0);
 
         f.Report.MissionTick(1f, 1.0);
         f.Director.Tick(1f);

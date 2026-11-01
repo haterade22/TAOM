@@ -27,6 +27,8 @@ internal sealed partial class FordsRunReport
     private const int VolleySampleCap = 10;
     private const int LaneSampleCap = 30;
     private const int PauseSampleCap = 20;
+    private const int ProbeZeroCap = 40;
+    private const int ProbeHitCap = 10;
     private const double LaneStateSeconds = 5.0;
     private const int ExceptionLineCap = 5;
 

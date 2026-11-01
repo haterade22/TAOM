@@ -19,7 +19,10 @@ internal static partial class FordsVerdicts
         return rows.Count == 0 ? "ladder -" : string.Join(" ; ", rows);
     }
 
-    /// <summary>For each tower that was struck: the lowest hit points the rules held, what regeneration gave back, the damage applied by class and the melee raw damage.</summary>
+    /// <summary>
+    /// For each tower that was struck: the lowest hit points the rules held, what regeneration gave back, the damage applied by class,
+    /// the melee raw damage, the blows the thrust damage floor turned into damage with their total (floored=N/D) and the top probe keys.
+    /// </summary>
     private static string TowerHealth(FordsRunEvidence run)
     {
         var rows = new List<string>();
@@ -35,8 +38,10 @@ internal static partial class FordsVerdicts
             var applied = string.Join(",", Enum.GetNames(typeof(TowerBlowClass)).Select((name, i) => new { name, damage = tower.AppliedDamage[i] })
                 .Where(x => x.damage > 0).Select(x => x.name + ":" + x.damage));
             var raw = tower.MeleeRawSummary();
+            var probe = string.Join(",", tower.MeleeProbe.OrderByDescending(x => x.Value).ThenBy(x => x.Key, StringComparer.Ordinal).Take(3)
+                .Select(x => x.Key + ":" + x.Value));
             rows.Add(pair.Key + ":minHp=" + (tower.MinRulesHp?.ToString() ?? "-") + " healed=" + tower.HealedTotal + " applied=" + (applied == "" ? "-" : applied)
-                + " meleeRaw=n" + raw.Count + "/min" + raw.Min + "/med" + N(raw.Median) + "/max" + raw.Max);
+                + " meleeRaw=n" + raw.Count + "/min" + raw.Min + "/med" + N(raw.Median) + "/max" + raw.Max + " floored=" + tower.FlooredBlows + "/" + tower.FlooredDamage + (probe == "" ? "" : " probe=" + probe));
         }
 
         return rows.Count == 0 ? "towerHealth -" : "towerHealth " + string.Join(" ", rows);
@@ -102,7 +107,7 @@ internal static partial class FordsVerdicts
         {
             Part("ownSide", result, "ownSide=" + own),
         }, "sideUnknownApplied=" + sideUnknown,
-            "A blow from a tower's own side took nothing and no tower's hit points drifted; not seen is expected when nothing strikes its own tower.",
+            "Passes when at least one blow from a tower's own side was counted as taking nothing (the count includes own-side blows whose raw damage the engine had already zeroed, and own-side blows on locked or fallen towers) and no tower's hit points drifted; not seen is expected when nothing strikes its own tower.",
             "-");
     }
 

@@ -179,6 +179,13 @@ internal sealed class FordsTowerEvidence
     public string Kind = "";
     public long[,] Blows = new long[BlowClasses, BlowReasons];
     public long SideUnknownApplied;
+
+    /// <summary>Blows on this tower so far, which caps its trace lines; not part of the report.</summary>
+    [JsonIgnore] public int BlowsSampled;
+
+    /// <summary>Melee probe blows on this tower so far that did no damage and that did some, which cap its probe trace lines; not part of the report.</summary>
+    [JsonIgnore] public int ProbeZeroSampled;
+    [JsonIgnore] public int ProbeHitSampled;
     public int DriftRun;
     public int MaxDrift;
     public bool DriftFlagged;
@@ -202,10 +209,22 @@ internal sealed class FordsTowerEvidence
 
     /// <summary>
     /// The raw damage of every melee blow before the rules decided (so a zero can be told from a small number), as raw value to
-    /// count. Values past <see cref="MaxRawValues"/> distinct ones are counted in <see cref="MeleeRawOverflow"/> and left out of the summary.
+    /// count. A blow with no weapon and one from the tower's own side are left out.
+    /// Values past <see cref="MaxRawValues"/> distinct ones are counted in <see cref="MeleeRawOverflow"/> and left out of the summary.
     /// </summary>
     public SortedDictionary<int, int> MeleeRaw = new();
     public int MeleeRawOverflow;
+
+    /// <summary>
+    /// Blows the thrust damage floor turned into damage (the engine's raw damage was 0 and the rules applied some), and the damage
+    /// they applied after the other factors. Also counted in <see cref="Blows"/> and <see cref="AppliedDamage"/>; the engine's raw
+    /// damage stays 0 in <see cref="MeleeRaw"/> and <see cref="MeleeProbe"/>.
+    /// </summary>
+    public long FlooredBlows;
+    public long FlooredDamage;
+
+    /// <summary>Melee blows that struck the tower's own body, by <c>FordsRunReport.MeleeProbeKey</c> (an attacker on the tower owner's side is left out, one whose side is unknown is counted): why a raw damage is what it is.</summary>
+    public SortedDictionary<string, int> MeleeProbe = new();
 
     internal const int MaxRawValues = 256;
 

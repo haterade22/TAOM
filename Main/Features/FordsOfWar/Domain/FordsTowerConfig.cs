@@ -4,4 +4,4 @@ namespace TAOM.Features.FordsOfWar.Domain;
 internal sealed record FordsTowerConfig(int TowerHitPoints, int InnerTowerHitPoints, int KeepHitPoints,
     float RangedDamageFactor, float HeroDamageFactor, float SiegeDamageFactor, float RegenPerSecond,
     float RegenDelaySeconds, int GunnersPerTower, float VolleyIntervalSeconds, int VolleyMissiles,
-    float FireRange, float AttackRange);
+    float FireRange, float AttackRange, float ThrustFloorFactor);

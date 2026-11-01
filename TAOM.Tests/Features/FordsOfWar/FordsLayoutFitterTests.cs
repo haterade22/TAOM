@@ -267,4 +267,53 @@ public class FordsLayoutFitterTests
         Assert.AreEqual(3, fit.Lanes.Count);
         Assert.IsTrue(fit.Lanes.All(s => s.BadSegments == 0));
     }
+
+    private static MapLayout CloseFractions() =>
+        LaneLayoutGenerator.Generate("proof", new Vec3f(0f, 0f, 0f), new Vec3f(1000f, 0f, 0f),
+            new LayoutOptions(TowerFractions: new[] { 0.36f, 0.355f }));
+
+    [TestMethod]
+    public void Fit_CloseTowerFractions_ASlidOuterTowerStaysOutwardOfTheInnerOne()
+    {
+        var original = CloseFractions();
+        var hole = original.Towers.Single(t => t.Id == "tower_west_1_0").Position;
+
+        var fit = FordsLayoutFitter.Fit(original, p => p, p => p.Distance2D(hole) > 1f, (a, b) => true);
+
+        var outer = fit.Layout.Towers.Single(t => t.Id == "tower_west_1_0");
+        var inner = fit.Layout.Towers.Single(t => t.Id == "tower_west_1_1");
+        Assert.IsTrue(outer.Position.X >= inner.Position.X + 10f, $"outer x {outer.Position.X} must be 10 m outward of inner x {inner.Position.X}");
+        var chain = new TowerChain(fit.Layout, FordsMatchConfig.Default.Towers);
+        Assert.IsFalse(chain.IsLocked(outer.Id), "the physically foremost tower is the one the chain opens");
+        Assert.IsTrue(chain.IsLocked(inner.Id));
+        Assert.AreEqual(1, fit.MovedTowers.Count(m => m.Id == outer.Id));
+    }
+
+    [TestMethod]
+    public void Fit_CloseTowerFractions_NoSlideThatKeepsTheOrder_DropsTheTowerWithoutRejecting()
+    {
+        var original = CloseFractions();
+        var hole = original.Towers.Single(t => t.Id == "tower_west_1_0").Position;
+        // Everything from the hole outward (toward the enemy) for 35 m is blocked, so every slide that would keep the order fails.
+        bool Walkable(Vec3f p) => p.Distance2D(hole) > 1f && (p.Distance2D(hole) > 35f || p.X < hole.X);
+
+        var fit = FordsLayoutFitter.Fit(original, p => p, Walkable, (a, b) => true);
+
+        CollectionAssert.Contains(fit.DroppedTowers.ToList(), "tower_west_1_0");
+        Assert.IsFalse(fit.Rejected, "the inner tower still guards the lane");
+        Assert.IsTrue(fit.Layout.Towers.Any(t => t.Id == "tower_west_1_1"));
+    }
+
+    [TestMethod]
+    public void Fit_CloseTowerFractions_AnEastTowerSlidingTheOtherWayAlsoKeepsItsOrder()
+    {
+        var original = CloseFractions();
+        var hole = original.Towers.Single(t => t.Id == "tower_east_1_0").Position;
+
+        var fit = FordsLayoutFitter.Fit(original, p => p, p => p.Distance2D(hole) > 1f, (a, b) => true);
+
+        var outer = fit.Layout.Towers.Single(t => t.Id == "tower_east_1_0");
+        var inner = fit.Layout.Towers.Single(t => t.Id == "tower_east_1_1");
+        Assert.IsTrue(outer.Position.X <= inner.Position.X - 10f, $"outer x {outer.Position.X} must be 10 m outward (lower x) of inner x {inner.Position.X}");
+    }
 }

@@ -3,9 +3,13 @@ using System;
 namespace TAOM.Features.FordsOfWar.Domain;
 
 /// <summary>
-/// The tower damage table. A locked, destroyed or unknown tower takes nothing, and neither does a tower hit by its own side
-/// (the engine does not filter those blows in single player). Otherwise the factors for ranged hits,
+/// The tower damage table. A blow from the tower's own side takes nothing whatever the tower's state (the engine does not
+/// filter those blows in single player), then locked, destroyed and unknown towers take nothing. Otherwise the factors for ranged hits,
 /// hero attackers and siege units multiply (a hero archer gets both), rounded to the nearest point, never below 1.
+/// Vanilla multiplies a melee blow's base magnitude on an object (built from speed and weight, not the weapon's damage stat) by the
+/// entity factor (Pierce 0.1) and, for a thrust that hits with the shaft, by 0.15, then truncates to an int. The floor raises any
+/// non-ranged blow that arrives as 0 from a weapon with thrust damage, because OnHit carries no strike type (in practice thrusts, and
+/// rarely a zero swing from a weapon that has thrust damage) to <c>ThrustFloorFactor</c> of that thrust damage, then it runs the same table.
 /// </summary>
 internal sealed class TowerDamageRules
 {
@@ -23,7 +27,16 @@ internal sealed class TowerDamageRules
     /// <summary>The damage the tower takes, and which branch of the table decided it.</summary>
     public int Decide(TowerHit hit, out TowerDamageReason reason)
     {
-        if (hit.RawDamage <= 0)
+        // The engine's destructible never reads a side, so friendly fire (gunners shooting across their own tower) arrives here.
+        // It is labelled before the tower's state so a blow on a locked or fallen tower is never counted as Locked or Destroyed.
+        if (IsOwnSide(hit))
+        {
+            reason = TowerDamageReason.OwnSide;
+            return 0;
+        }
+
+        var raw = FlooredRaw(hit);
+        if (raw <= 0)
         {
             reason = TowerDamageReason.RawZero;
             return 0;
@@ -47,13 +60,6 @@ internal sealed class TowerDamageRules
             return 0;
         }
 
-        // The engine's destructible never reads a side, so friendly fire (gunners shooting across their own tower) arrives here.
-        if (hit.AttackerSide is { } side && _chain.Slot(hit.TowerId)?.Owner == side)
-        {
-            reason = TowerDamageReason.OwnSide;
-            return 0;
-        }
-
         double factor = 1.0;
         if (hit.Ranged)
             factor *= _config.RangedDamageFactor;
@@ -62,8 +68,16 @@ internal sealed class TowerDamageRules
         if (hit.AttackerRole == UnitRole.Siege)
             factor *= _config.SiegeDamageFactor;
 
-        var scaled = (int)Math.Round(hit.RawDamage * factor, MidpointRounding.AwayFromZero);
+        var scaled = (int)Math.Round(raw * factor, MidpointRounding.AwayFromZero);
         reason = TowerDamageReason.Applied;
         return Math.Max(1, scaled);
     }
+
+    // The engine's raw damage, or for a zero melee blow from a weapon with thrust damage the floor (0 when the factor is 0).
+    private int FlooredRaw(TowerHit hit) =>
+        hit.RawDamage > 0 || hit.Ranged || hit.ThrustDamage <= 0
+            ? hit.RawDamage
+            : (int)Math.Round(hit.ThrustDamage * _config.ThrustFloorFactor, MidpointRounding.AwayFromZero);
+
+    private bool IsOwnSide(TowerHit hit) => hit.AttackerSide is { } side && _chain.Slot(hit.TowerId)?.Owner == side;
 }

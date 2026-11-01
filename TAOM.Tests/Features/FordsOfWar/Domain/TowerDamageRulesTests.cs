@@ -202,4 +202,163 @@ public class TowerDamageRulesTests
         foreach (var hit in hits)
             Assert.AreEqual(rules.Decide(hit, out _), rules.Effective(hit));
     }
+
+    [TestMethod]
+    public void Decide_ZeroRawFromTheTowersOwnSide_IsOwnSideNotRawZero()
+    {
+        var (rules, _) = Setup();
+
+        var damage = rules.Decide(new TowerHit(FordsTestLayout.EastOuter0, false, UnitRole.Infantry, 0, MatchSide.East), out var reason);
+
+        Assert.AreEqual(0, damage);
+        Assert.AreEqual(TowerDamageReason.OwnSide, reason);
+    }
+
+    [TestMethod]
+    public void Decide_ZeroRawFromTheOtherSideOrAnUnknownOne_IsStillRawZero()
+    {
+        var (rules, _) = Setup();
+
+        rules.Decide(new TowerHit(FordsTestLayout.EastOuter0, false, UnitRole.Infantry, 0, MatchSide.West), out var fromWest);
+        rules.Decide(new TowerHit(FordsTestLayout.EastOuter0, false, UnitRole.Infantry, 0, null), out var unknown);
+
+        Assert.AreEqual(TowerDamageReason.RawZero, fromWest);
+        Assert.AreEqual(TowerDamageReason.RawZero, unknown);
+    }
+
+    private static TowerHit Thrust(string id, int raw, int thrust, bool ranged = false, MatchSide? side = null, UnitRole role = UnitRole.Infantry) =>
+        new(id, ranged, role, raw, side, thrust);
+
+    [TestMethod]
+    public void Decide_ZeroMeleeThrustWithThrustDamage_AppliesTheFlooredDamage()
+    {
+        var (rules, _) = Setup();
+
+        var damage = rules.Decide(Thrust(FordsTestLayout.EastOuter0, 0, 50, side: MatchSide.West), out var reason);
+
+        Assert.AreEqual(10, damage, "round(50 x 0.2)");
+        Assert.AreEqual(TowerDamageReason.Applied, reason);
+    }
+
+    [TestMethod]
+    public void Decide_FlooredBlowFromTheTowersOwnSide_IsOwnSide()
+    {
+        var (rules, _) = Setup();
+
+        var damage = rules.Decide(Thrust(FordsTestLayout.EastOuter0, 0, 50, side: MatchSide.East), out var reason);
+
+        Assert.AreEqual(0, damage);
+        Assert.AreEqual(TowerDamageReason.OwnSide, reason);
+    }
+
+    [TestMethod]
+    public void Decide_FlooredBlowOnALockedTower_IsLocked()
+    {
+        var (rules, _) = Setup();
+
+        var damage = rules.Decide(Thrust(FordsTestLayout.EastInner0, 0, 50, side: MatchSide.West), out var reason);
+
+        Assert.AreEqual(0, damage);
+        Assert.AreEqual(TowerDamageReason.Locked, reason);
+    }
+
+    [TestMethod]
+    public void Decide_OwnSidePositiveBlowOnALockedTower_IsOwnSide()
+    {
+        var (rules, _) = Setup();
+
+        var damage = rules.Decide(Thrust(FordsTestLayout.EastInner0, 30, 0, side: MatchSide.East), out var reason);
+
+        Assert.AreEqual(0, damage);
+        Assert.AreEqual(TowerDamageReason.OwnSide, reason);
+    }
+
+    [TestMethod]
+    public void Decide_OwnSideFlooredBlowOnALockedTower_IsOwnSide()
+    {
+        var (rules, _) = Setup();
+
+        var damage = rules.Decide(Thrust(FordsTestLayout.EastInner0, 0, 40, side: MatchSide.East), out var reason);
+
+        Assert.AreEqual(0, damage);
+        Assert.AreEqual(TowerDamageReason.OwnSide, reason);
+    }
+
+    [TestMethod]
+    public void Decide_OwnSidePositiveBlowOnADestroyedTower_IsOwnSide()
+    {
+        var (rules, chain) = Setup();
+        chain.OnDestroyed(FordsTestLayout.EastOuter0);
+
+        var damage = rules.Decide(Thrust(FordsTestLayout.EastOuter0, 30, 0, side: MatchSide.East), out var reason);
+
+        Assert.AreEqual(0, damage);
+        Assert.AreEqual(TowerDamageReason.OwnSide, reason);
+    }
+
+    [TestMethod]
+    public void Decide_EnemyPositiveBlowOnALockedTower_StaysLocked()
+    {
+        var (rules, _) = Setup();
+
+        var damage = rules.Decide(Thrust(FordsTestLayout.EastInner0, 30, 0, side: MatchSide.West), out var reason);
+
+        Assert.AreEqual(0, damage);
+        Assert.AreEqual(TowerDamageReason.Locked, reason);
+    }
+
+    [TestMethod]
+    public void Decide_ZeroMissileBlow_StaysRawZeroWhateverTheThrustDamage()
+    {
+        var (rules, _) = Setup();
+
+        var damage = rules.Decide(Thrust(FordsTestLayout.EastOuter0, 0, 50, ranged: true, side: MatchSide.West), out var reason);
+
+        Assert.AreEqual(0, damage);
+        Assert.AreEqual(TowerDamageReason.RawZero, reason);
+    }
+
+    [TestMethod]
+    public void Decide_FactorZero_LeavesAZeroThrustRawZero()
+    {
+        var config = Config with { ThrustFloorFactor = 0f };
+        var chain = new TowerChain(FordsTestLayout.Create(), config);
+        var rules = new TowerDamageRules(config, chain);
+
+        var damage = rules.Decide(Thrust(FordsTestLayout.EastOuter0, 0, 50, side: MatchSide.West), out var reason);
+
+        Assert.AreEqual(0, damage);
+        Assert.AreEqual(TowerDamageReason.RawZero, reason);
+    }
+
+    [TestMethod]
+    public void Decide_ZeroThrustWithNoThrustDamage_StaysRawZero()
+    {
+        var (rules, _) = Setup();
+
+        rules.Decide(Thrust(FordsTestLayout.EastOuter0, 0, 0, side: MatchSide.West), out var reason);
+
+        Assert.AreEqual(TowerDamageReason.RawZero, reason);
+    }
+
+    [TestMethod]
+    public void Decide_ABlowWithRawDamage_IsNotFloored()
+    {
+        var (rules, _) = Setup();
+
+        var damage = rules.Decide(Thrust(FordsTestLayout.EastOuter0, 40, 500, side: MatchSide.West), out var reason);
+
+        Assert.AreEqual(40, damage, "the floor replaces a zero, it never adds to a real blow");
+        Assert.AreEqual(TowerDamageReason.Applied, reason);
+    }
+
+    [TestMethod]
+    public void Decide_FlooredBlowFromAHero_StillTakesTheHeroFactor()
+    {
+        var (rules, _) = Setup();
+
+        var damage = rules.Decide(Thrust(FordsTestLayout.EastOuter0, 0, 50, side: MatchSide.West, role: UnitRole.Hero), out _);
+
+        Assert.AreEqual(40, damage, "10 x heroDamageFactor 4: the floored value runs the normal table");
+    }
 }

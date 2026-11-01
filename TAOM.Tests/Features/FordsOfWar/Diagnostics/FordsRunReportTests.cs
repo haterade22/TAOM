@@ -134,6 +134,39 @@ public class FordsRunReportTests
     }
 
     [TestMethod]
+    public void Check06_GoldGrantOfAnEarlierRun_IsNotCountedForTheNextRun()
+    {
+        _report.BeginRun("menu", Setup);
+        _report.Stage("live");
+        _report.ConsoleCommand("fords_gold", new[] { "100" }, true, "Added 100 gold. You now hold 700.");
+        _report.MissionClosed();
+        _report.MainMenuReturned();
+
+        _report.BeginRun("menu", Setup);
+        _report.Stage("live");
+        _report.PanelAttached();
+        _report.Command("BuyPack", "Ok");
+        _report.PackBoughtLine();
+
+        var row = FordsVerdicts.Judge(_report.Session, _report.Run!)[5];
+
+        Assert.AreEqual(6, row.Check);
+        Assert.AreEqual(FordsResult.NotSeen, row.Parts.Single(p => p.Name == "grant").Result, "run 2 never granted gold");
+    }
+
+    [TestMethod]
+    public void Check06_GoldGrantOfTheSameRun_StillPasses()
+    {
+        _report.BeginRun("menu", Setup);
+        _report.Stage("live");
+        _report.ConsoleCommand("fords_gold", new[] { "100" }, true, "Added 100 gold. You now hold 700.");
+
+        var row = FordsVerdicts.Judge(_report.Session, _report.Run!)[5];
+
+        Assert.AreEqual(FordsResult.Pass, row.Parts.Single(p => p.Name == "grant").Result);
+    }
+
+    [TestMethod]
     public void ConsoleCommand_AfterAConsoleStartBegan_IsBoundToThatRun()
     {
         var number = _report.BeginRun("console", Setup);
@@ -707,6 +740,22 @@ public class FordsRunReportTests
     }
 
     [TestMethod]
+    public void TowerBlow_TraceCapIsPerTower_SoASecondTowerStillGetsItsFirstTen()
+    {
+        StartedRun();
+
+        for (var i = 0; i < 14; i++)
+            _report.TowerBlow("east_outer_0", TowerBlowClass.Melee, TowerDamageReason.Applied, 5, 5, new FordsAttacker(MatchSide.West));
+        for (var i = 0; i < 14; i++)
+            _report.TowerBlow("keep_east", TowerBlowClass.Melee, TowerDamageReason.Locked, 5, 0, new FordsAttacker(MatchSide.West));
+
+        Assert.AreEqual(10, _log.Lines.Count(l => l.StartsWith("DEBUG") && l.Contains("blow tower=east_outer_0")));
+        Assert.AreEqual(10, _log.Lines.Count(l => l.StartsWith("DEBUG") && l.Contains("blow tower=keep_east")));
+        Assert.AreEqual(1, _log.Lines.Count(l => l.Contains("tower=east_outer_0") && l.Contains("capped after 10")));
+        Assert.AreEqual(1, _log.Lines.Count(l => l.Contains("tower=keep_east") && l.Contains("capped after 10")));
+    }
+
+    [TestMethod]
     public void TowerBlow_ACountedBlowOfEveryReason_LandsInItsOwnCell()
     {
         StartedRun();
@@ -879,5 +928,178 @@ public class FordsRunReportTests
 
         Assert.AreEqual(1, constructors.Length);
         Assert.AreEqual(1, constructors[0].GetParameters().Length);
+    }
+
+    [DataTestMethod]
+    [DataRow(1, 1, false, false, false, false, false, 0.24f, 0, "T/Pierce/tip0/pas0/alt0/arm0/mnt0/b<1")]
+    [DataRow(1, 1, false, true, false, false, false, 0f, 0, "T/Pierce/tip0/pas1/alt0/arm0/mnt0/b0")]
+    [DataRow(0, 0, false, false, false, false, false, 9.6f, 12, "S/Cut/tip0/pas0/alt0/arm0/mnt0/hit")]
+    [DataRow(0, 2, false, false, true, true, false, 1f, 0, "S/Blunt/tip0/pas0/alt1/arm1/mnt0/b>=1")]
+    [DataRow(1, 1, true, false, false, false, false, 16.6f, 16, "T/Pierce/tip1/pas0/alt0/arm0/mnt0/hit")]
+    [DataRow(0, -1, false, false, false, false, false, 0f, 0, "S/Invalid/tip0/pas0/alt0/arm0/mnt0/b0")]
+    [DataRow(0, 7, false, false, false, false, false, 2.5f, 0, "S/Invalid/tip0/pas0/alt0/arm0/mnt0/b>=1")]
+    [DataRow(1, 1, false, false, false, false, true, 0.24f, 0, "T/Pierce/tip0/pas0/alt0/arm0/mnt1/b<1")]
+    [DataRow(1, 1, false, false, false, false, false, float.NaN, 0, "T/Pierce/tip0/pas0/alt0/arm0/mnt0/bNaN")]
+    [DataRow(1, 1, false, false, false, false, false, -1f, 0, "T/Pierce/tip0/pas0/alt0/arm0/mnt0/bNaN")]
+    public void MeleeProbeKey_NamesTheStrikeTheFlagsAndTheBaseMagnitudeBucket(int strike, int damageType, bool tip, bool passive,
+        bool alternative, bool armBone, bool mounted, float baseMagnitude, int raw, string expected) =>
+        Assert.AreEqual(expected, FordsRunReport.MeleeProbeKey(strike, damageType, tip, passive, alternative, armBone, mounted, baseMagnitude, raw));
+
+    private const string ZeroKey = "T/Pierce/tip0/pas0/alt0/arm0/mnt0/b<1";
+    private const string HitKey = "S/Cut/tip0/pas0/alt0/arm0/mnt0/hit";
+
+    private void BindProbe(object enemy, object friend)
+    {
+        _report.BindTowerLookup(c => c is string id ? id : null);
+        _report.BindAttackerLookup(a => ReferenceEquals(a, enemy) ? new FordsAttacker(MatchSide.West, 0)
+            : ReferenceEquals(a, friend) ? new FordsAttacker(MatchSide.East, 0) : null);
+    }
+
+    /// <summary>What the probe hook does: count the blow, and trace a line only when the report says it is within the cap.</summary>
+    private bool Probe(string tower, object attacker, string key, string line)
+    {
+        var traced = _report.TowerMeleeProbe(tower, attacker, key);
+        if (traced)
+            _report.TraceTowerMelee(line);
+        return traced;
+    }
+
+    [TestMethod]
+    public void BindTowerLookup_IsAskedThroughProbeTowerId_AndIsGoneOnceCleared()
+    {
+        StartedRun();
+        Assert.IsNull(_report.ProbeTowerId("east_outer_0"), "nothing is bound yet");
+
+        _report.BindTowerLookup(c => c as string);
+        Assert.AreEqual("east_outer_0", _report.ProbeTowerId("east_outer_0"));
+        Assert.IsNull(_report.ProbeTowerId(null));
+
+        _report.BindTowerLookup(null);
+        Assert.IsNull(_report.ProbeTowerId("east_outer_0"));
+    }
+
+    [TestMethod]
+    public void TowerMeleeProbe_CountsTheKeyOnTheTower_SkipsTheOwnersSide_AndATowerTheRunDoesNotKnow()
+    {
+        StartedRun();
+        var enemy = new object();
+        var friend = new object();
+        BindProbe(enemy, friend);
+
+        Probe("east_outer_0", enemy, ZeroKey, "tower=east_outer_0 key=zero");
+        Probe("east_outer_0", enemy, ZeroKey, "tower=east_outer_0 key=zero");
+        Probe("east_outer_0", enemy, HitKey, "tower=east_outer_0 key=hit");
+        Probe("east_outer_0", new object(), ZeroKey, "tower=east_outer_0 key=unknownside");
+        Probe("east_outer_0", friend, ZeroKey, "tower=east_outer_0 key=friend");
+        Probe("not_a_tower", enemy, ZeroKey, "tower=not_a_tower key=zero");
+
+        var probe = _report.Run!.Towers["east_outer_0"].MeleeProbe;
+        Assert.AreEqual(3, probe[ZeroKey], "two from the enemy and one from an attacker whose side is unknown; the owner's own side is left out");
+        Assert.AreEqual(1, probe[HitKey]);
+        Assert.AreEqual(2, probe.Count);
+        Assert.AreEqual(0, _log.Lines.Count(l => l.Contains("key=friend") || l.Contains("not_a_tower")));
+    }
+
+    [TestMethod]
+    public void TowerMeleeProbe_TracesTheFirstFortyZeroBlowsAndTheFirstTenDamagingOnes_PerTower_ButCountsEveryOne()
+    {
+        StartedRun();
+        var enemy = new object();
+        BindProbe(enemy, new object());
+
+        for (var i = 0; i < 50; i++)
+            Probe("east_outer_0", enemy, ZeroKey, "tower=east_outer_0 key=" + ZeroKey + " n=" + i);
+        for (var i = 0; i < 15; i++)
+            Probe("east_outer_0", enemy, HitKey, "tower=east_outer_0 key=" + HitKey + " n=" + i);
+        for (var i = 0; i < 50; i++)
+            Probe("keep_east", enemy, ZeroKey, "tower=keep_east key=" + ZeroKey + " n=" + i);
+        for (var i = 0; i < 15; i++)
+            Probe("keep_east", enemy, HitKey, "tower=keep_east key=" + HitKey + " n=" + i);
+
+        foreach (var tower in new[] { "east_outer_0", "keep_east" })
+        {
+            Assert.AreEqual(40, _log.Lines.Count(l => l.StartsWith("DEBUG") && l.Contains("[FordsOfWar][TowerMelee]") && l.Contains("tower=" + tower + " key=" + ZeroKey)), tower);
+            Assert.AreEqual(10, _log.Lines.Count(l => l.StartsWith("DEBUG") && l.Contains("[FordsOfWar][TowerMelee]") && l.Contains("tower=" + tower + " key=" + HitKey)), tower);
+            Assert.AreEqual(50, _report.Run!.Towers[tower].MeleeProbe[ZeroKey], tower);
+            Assert.AreEqual(15, _report.Run.Towers[tower].MeleeProbe[HitKey], tower);
+            Assert.AreEqual(1, _log.Lines.Count(l => l.Contains("tower=" + tower) && l.Contains("category=TowerProbeZero") && l.Contains("capped after 40")), tower);
+            Assert.AreEqual(1, _log.Lines.Count(l => l.Contains("tower=" + tower) && l.Contains("category=TowerProbeHit") && l.Contains("capped after 10")), tower);
+        }
+
+        _report.BeginRun("menu", Setup);
+        _report.MatchStarted(Facts, Towers(), 3);
+        Probe("east_outer_0", enemy, ZeroKey, "tower=east_outer_0 key=again");
+        Assert.AreEqual(1, _log.Lines.Count(l => l.Contains("key=again")), "a new run traces again");
+    }
+
+    [TestMethod]
+    public void TowerMeleeProbe_ReportsNoTraceOncePastTheCap_SoTheCallerBuildsNoLine()
+    {
+        StartedRun();
+        var enemy = new object();
+        BindProbe(enemy, new object());
+
+        var traced = Enumerable.Range(0, 12).Select(_ => _report.TowerMeleeProbe("east_outer_0", enemy, HitKey)).ToList();
+
+        Assert.AreEqual(10, traced.Count(t => t));
+        Assert.IsTrue(traced.Take(10).All(t => t), "the first ten are traced");
+        Assert.IsFalse(traced[10] || traced[11]);
+        Assert.AreEqual(12, _report.Run!.Towers["east_outer_0"].MeleeProbe[HitKey], "past the cap a blow is still counted");
+    }
+
+    [TestMethod]
+    public void TowerMeleeProbe_ATowerThatHasFallen_IsNotCountedOrTraced()
+    {
+        StartedRun();
+        var enemy = new object();
+        BindProbe(enemy, new object());
+        Assert.IsTrue(_report.TowerMeleeProbe("east_outer_0", enemy, ZeroKey));
+
+        _report.TowerFell("east_outer_0", false);
+
+        Assert.IsFalse(_report.TowerMeleeProbe("east_outer_0", enemy, ZeroKey), "the rubble is not a tower any more");
+        Assert.AreEqual(1, _report.Run!.Towers["east_outer_0"].MeleeProbe[ZeroKey]);
+        Assert.IsTrue(_report.TowerMeleeProbe("keep_east", enemy, ZeroKey), "another tower is still counted");
+    }
+
+    [TestMethod]
+    public void TowerMeleeProbe_BeforeAnyRun_DoesNothing()
+    {
+        Assert.IsFalse(_report.TowerMeleeProbe("east_outer_0", new object(), ZeroKey));
+
+        Assert.IsNull(_report.Run);
+        Assert.AreEqual(0, _log.Lines.Count);
+    }
+
+    [TestMethod]
+    public void TheJson_WritesTheMeleeProbeCountsOfEachTower()
+    {
+        StartedRun();
+        var enemy = new object();
+        BindProbe(enemy, new object());
+        Probe("east_outer_0", enemy, ZeroKey, "tower=east_outer_0");
+        Probe("east_outer_0", enemy, ZeroKey, "tower=east_outer_0");
+        _report.Winner(MatchSide.West);
+
+        var json = JObject.Parse(File.ReadAllText(ReportPath(1)));
+
+        Assert.AreEqual(2, (int)json["evidence"]!["Towers"]!["east_outer_0"]!["MeleeProbe"]![ZeroKey]!);
+    }
+
+    [TestMethod]
+    public void TowerBlow_AnAppliedBlowWithNoEngineDamage_IsCountedAsFloored_AndKeepsItsZeroInTheRawSummary()
+    {
+        StartedRun();
+
+        _report.TowerBlow("east_outer_0", TowerBlowClass.Melee, TowerDamageReason.Applied, 0, 10, new FordsAttacker(MatchSide.West));
+        _report.TowerBlow("east_outer_0", TowerBlowClass.Melee, TowerDamageReason.Applied, 0, 40, new FordsAttacker(MatchSide.West));
+        _report.TowerBlow("east_outer_0", TowerBlowClass.Melee, TowerDamageReason.Applied, 9, 9, new FordsAttacker(MatchSide.West));
+        _report.TowerBlow("east_outer_0", TowerBlowClass.Melee, TowerDamageReason.Locked, 0, 0, new FordsAttacker(MatchSide.West));
+
+        var tower = _report.Run!.Towers["east_outer_0"];
+        Assert.AreEqual(2L, tower.FlooredBlows);
+        Assert.AreEqual(50L, tower.FlooredDamage);
+        Assert.AreEqual(3, tower.MeleeRaw[0], "the engine's own raw damage is what the summary reads");
+        Assert.AreEqual(59L, tower.AppliedDamage[(int)TowerBlowClass.Melee]);
     }
 }

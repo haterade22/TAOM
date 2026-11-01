@@ -51,6 +51,8 @@ internal static class FordsScenarios
         "frozen" => With(sc => sc.Field.Frozen = true, 80),
         "killer-unknown" => KillerUnknown(),
         "hp-drift" => HpDrift(),
+        "floored-blow" => FlooredBlow(engineTakesRaw: false),
+        "floored-blow-lost" => FlooredBlow(engineTakesRaw: true),
         "exception-swallowed" => ExceptionSwallowed(),
         "bypass-march" => BypassMarch(),
         "towers-dead" => TowersDead(),
@@ -396,6 +398,22 @@ internal static class FordsScenarios
         sc.Seconds(40);
         return sc;
     }
+
+    /// <summary>
+    /// An enemy melee strike whose raw damage the engine truncated to 0, from a weapon with 40 thrust damage, on an unlocked outer tower.
+    /// <paramref name="engineTakesRaw"/> makes the fake engine ignore the patch's result, so the floored blow never reaches its hit points.
+    /// </summary>
+    private static FordsScenario FlooredBlow(bool engineTakesRaw)
+    {
+        var sc = Started(s => s.Towers.TakesRawDamage = engineTakesRaw);
+        sc.Seconds(10);
+        var west = sc.Field.Alive.First(u => u.Side == MatchSide.West);
+        sc.StrikeTower("tower_east_0_0", west.Handle, ranged: false, 0, thrust: FlooredThrust);
+        sc.Seconds(12);
+        return sc;
+    }
+
+    internal const int FlooredThrust = 40;
 
     /// <summary>An exception one of TAOM's CrashReport finalizers swallowed since the mission started: the hook the telemetry logic subscribes to raised it.</summary>
     private static FordsScenario ExceptionSwallowed()

@@ -42,6 +42,11 @@ VERDICT: CLEAN / ISSUES FOUND
 ### Lessons From Prior Reviews (87 reviews, 193+ bugs found), distilled
 
 **What Codex does especially well (2026-09-01 memory-diagnostics review: 4/4 HIGH real, 0 false positives).**
+- **Reproduces each finding against the production sources, and finds the cap or scope two components each half-enforce** (2026-11-01,
+  Fords of War, two `ultra` reviews, 5 of 5 MEDIUM real, 0 false positives, 57 suspects disputed with code): the wave scheduler and the
+  director backlog each enforced a lane cap on live units, so pending requests pushed a lane to 91 of 90, and check 06 counted a gold
+  command from another run. Both had passed two Claude waves. For a cap or budget, ask which component holds the pending
+  requests and whether the other component reads them; for a per-run verdict, ask which records are session-wide.
 - **Traces precedence through merge and tick-order chains to the consumer** (2026-10-27, engine bump v1.5.6, 3 of 3 real, 0 false
   positives): where three Claude readers repeated that the first-loaded GameText variation wins, Codex followed the XML merge
   (matched by `@id`, the later module overwrites the earlier) to the row the game reads, and later traced `HandleMouse` through the
@@ -209,6 +214,10 @@ an area with prior history. Convention: add each new essay to the top of the tra
 archive the 6th-oldest, harvest durable patterns into `docs/reviews/lessons/<category>.md`.
 
 **Look harder here — what a scoped per-feature pass structurally misses (Codex's edge):**
+- **A remedy that depends on how the real process behaves** (2026-11-01, Fords of War: a Codex miss that Claude caught against in-game
+  runs). Codex told the unattended launcher to fail on a nonzero exit code; Bannerlord exits -1 (4294967295) after a normal
+  `QuitGame`, so that remedy would fail every run. When a finding's fix hinges on an exit code, a log line or a timing of the live
+  game, ask the reviewer to name the run it observed, and check the claim against a real run before applying it.
 - **Input routing: read the full click handler, not only the predicate a patch targets** (2026-10-27, engine bump v1.5.6: a
   Codex miss the engine-compatibility lens caught). Codex did not reach the click route, so it missed
   that `HandleMouse` sends every Left Ctrl click on a party or settlement to the parley handler, so a Ctrl + Space turbo click stopped

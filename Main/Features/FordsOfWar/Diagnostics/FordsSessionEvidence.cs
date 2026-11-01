@@ -39,6 +39,7 @@ internal sealed class FordsConsoleRecord
     public bool Ran;
     public string Reply = "";
     public int Run;
+    public int ActiveRun;                                     // the run that was current when the command ran; Run is only the run a start command created
     public string Setup = "";
     public bool MatchLive;
     public bool MatchStarted;

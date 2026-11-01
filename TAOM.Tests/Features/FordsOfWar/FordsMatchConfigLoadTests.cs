@@ -150,6 +150,25 @@ public class FordsMatchConfigLoadTests
     }
 
     [TestMethod]
+    public void Match_ThrustFloorFactor_ZeroDisablesAndOneIsTheLimit()
+    {
+        Assert.AreEqual(0f, Load("{ 'towers': { 'thrustFloorFactor': 0 } }").Towers.ThrustFloorFactor);
+        Assert.AreEqual(1f, Load("{ 'towers': { 'thrustFloorFactor': 1 } }").Towers.ThrustFloorFactor);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [DataTestMethod]
+    [DataRow("1.5")]
+    [DataRow("-0.1")]
+    public void Match_ThrustFloorFactorOutsideZeroToOne_RevertsWithWarningNamingTheKey(string value)
+    {
+        var config = Load("{ 'towers': { 'thrustFloorFactor': " + value + " } }");
+
+        Assert.AreEqual(0.2f, config.Towers.ThrustFloorFactor);
+        AssertOneWarningNaming("towers.thrustFloorFactor");
+    }
+
+    [TestMethod]
     public void Match_LeadBandOverride_IsRead()
     {
         var config = Load("{ 'lanes': { 'leadBand': 40 } }");

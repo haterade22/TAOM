@@ -2407,3 +2407,22 @@ and the lane rule's front was the single furthest unit, which the clustered test
   fails on the same evidence; a diagnostic ladder counts each step against the stream's own target (ordered,
   flagged, at the target, struck, applied); a group statistic gets a test with one lone outlier.
 - **Source:** `docs/reviews/rca-fords-of-war-2026-10-31.md`, night addendum, rows R1, R4, R5 and U2.
+
+### An invariant enforced by two components needs one owner of the pending state (Fords of War, 2026-11-01)
+The Fords wave scheduler and the director's spawn backlog each enforced the 90-unit lane cap on the live units they
+could see. Requests that sat in the backlog counted for neither, so with a hero spawn taking budget a lane reached
+91 of 90. In the same review, a layout fitter checked walkability per tower and never the chain order, and check 06
+read a session-wide gold record for a per-run verdict. Each was reproduced by a failing test before the fix.
+- **Why missed:** each component was correct on its own view, and the tests fed each one hand-built, well-ordered
+  input (one component at a time, shipped tower fractions, one run per session).
+- **Prevent:** give a cap or quota one owner of the pending state, and test the two components together with a
+  backlog full of outstanding requests; test an ordering invariant with inputs that sit close together; stamp a
+  record with its run before a per-run check reads it.
+- **Source:** `docs/reviews/REVIEW-LOG.md` entry "Fords of War night batch and whole feature" (B-F1, A-F2, B-F3);
+  tests `FordsMatchLaneReserveTests`, `FordsLayoutFitterTests` and `FordsRunReportTests`.
+
+### A fix that labels one branch of a classifier needs a precedence test through every branch (Fords of War, 2026-11-01)
+The C6 fix labelled own-side blows first on the zero-damage branch of the Fords tower classifier. Positive blows on a locked or fallen tower still got Locked or Destroyed, so check 9's lock part could pass on own-side blows alone (in one run, 34 of its 38 Locked blows came from the tower's own side, mostly its archers). The precedence test used attackers with no side for the locked and destroyed rows, so it never reached the own-side case.
+- **Why missed:** the test covered the case that triggered the fix and fed the other branches inputs that could not collide with the new label.
+- **Prevent:** when a fix adds a label for one branch of a classifier, test the precedence with inputs that reach every branch (here an own-side attacker on a locked and on a fallen tower), not only the case that triggered the fix.
+- **Source:** `docs/reviews/rca-fords-of-war-2026-10-31.md`, re-review addendum, row C9.

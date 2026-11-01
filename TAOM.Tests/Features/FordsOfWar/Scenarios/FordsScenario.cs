@@ -441,10 +441,10 @@ internal sealed class FordsScenario
     }
 
     /// <summary>A blow on a tower through the real hit patch's dispatch; the entity then takes what the hook returned.</summary>
-    public int StrikeTower(string towerId, object? attacker, bool ranged, int raw, bool weaponless = false)
+    public int StrikeTower(string towerId, object? attacker, bool ranged, int raw, bool weaponless = false, int thrust = 0)
     {
         var damage = raw;
-        FordsTowerHitPatch.Dispatch(Director!, Towers.Of(towerId).Component, attacker, weaponless, ranged, ref damage);
+        FordsTowerHitPatch.Dispatch(Director!, Towers.Of(towerId).Component, attacker, weaponless, ranged, thrust, ref damage);
         Towers.Damage(towerId, damage, raw);
         return damage;
     }

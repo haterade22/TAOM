@@ -105,6 +105,7 @@ internal sealed partial class FordsRunReport
             Ran = ran,
             Reply = reply,
             Run = _parkedRun,
+            ActiveRun = run?.Run ?? 0,
             Setup = _parkedSetup,
             MatchLive = run != null && run.Live && !run.Closed,
         };

@@ -51,6 +51,7 @@ public class FordsMatchConfigDefaultsTests
         Assert.AreEqual(3, C.Towers.VolleyMissiles);
         Assert.AreEqual(45f, C.Towers.FireRange);
         Assert.AreEqual(20f, C.Towers.AttackRange);
+        Assert.AreEqual(0.2f, C.Towers.ThrustFloorFactor);
     }
 
     [TestMethod]

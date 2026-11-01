@@ -276,4 +276,48 @@ public class FordsVerdictDiagnosticsTests
 
         StringAssert.Contains(Row(run, 4).Info, "alarmed=W0:1.00 E1:0.25");
     }
+
+    [TestMethod]
+    public void Check09_Info_NamesTheTopMeleeProbeKeysOfEachStruckTower_MostCommonFirst()
+    {
+        var run = Run();
+        var tower = Tower(run, "t1");
+        tower.Blows[(int)TowerBlowClass.Melee, (int)TowerDamageReason.RawZero] = 9;
+        tower.MeleeProbe["S/Cut/tip0/pas0/alt0/arm0/hit"] = 2;
+        tower.MeleeProbe["T/Pierce/tip0/pas0/alt0/arm0/b<1"] = 7;
+        tower.MeleeProbe["T/Pierce/tip0/pas1/alt0/arm0/b0"] = 5;
+        tower.MeleeProbe["S/Blunt/tip0/pas0/alt0/arm0/hit"] = 1;
+        tower.MeleeProbe["T/Cut/tip0/pas0/alt0/arm0/b0"] = 1;
+
+        var info = Row(run, 9).Info;
+
+        StringAssert.Contains(info, "probe=T/Pierce/tip0/pas0/alt0/arm0/b<1:7,T/Pierce/tip0/pas1/alt0/arm0/b0:5,S/Cut/tip0/pas0/alt0/arm0/hit:2");
+        Assert.IsFalse(info.Contains("S/Blunt"), "only the top three keys are named");
+    }
+
+    [TestMethod]
+    public void Check09_Info_AStruckTowerWithNoProbeBlow_HasNoProbeColumn_AndTheVerdictIsUnchanged()
+    {
+        var run = Run();
+        var tower = Tower(run, "t1");
+        tower.Blows[(int)TowerBlowClass.Melee, (int)TowerDamageReason.Applied] = 1;
+
+        var info = Row(run, 9).Info;
+
+        Assert.IsFalse(info.Contains("probe="));
+    }
+
+    [TestMethod]
+    public void Check09_Info_NamesTheFlooredBlowsAndTheirDamageOfEachStruckTower()
+    {
+        var run = Run();
+        var tower = Tower(run, "t1");
+        tower.Blows[(int)TowerBlowClass.Melee, (int)TowerDamageReason.Applied] = 4;
+        tower.FlooredBlows = 3;
+        tower.FlooredDamage = 30;
+
+        var info = Row(run, 9).Info;
+
+        StringAssert.Contains(info, "floored=3/30");
+    }
 }

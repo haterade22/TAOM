@@ -100,7 +100,7 @@ public class FordsMissionDirectorReportTests
         // The tower table is bound by the time Start returns, which is before the mission logic installs Patch131.
         Assert.AreEqual(14, f.Report.Run!.Towers.Count);
         f.ReportsTowerId(EastOuterLane0);
-        f.Director.AdjustTowerDamage(new object(), null, false, 100);
+        f.Director.AdjustTowerDamage(new object(), null, false, 100, 0);
         Assert.AreEqual(1, Blows(f, EastOuterLane0, TowerBlowClass.Other, TowerDamageReason.Applied));
     }
 
@@ -238,11 +238,11 @@ public class FordsMissionDirectorReportTests
     {
         var f = Started(RichPlayers);
         f.ReportsTowerId(EastInnerLane0);
-        Assert.AreEqual(0, f.Director.AdjustTowerDamage(new object(), null, false, 100), "locked behind the outer tower");
+        Assert.AreEqual(0, f.Director.AdjustTowerDamage(new object(), null, false, 100, 0), "locked behind the outer tower");
         Assert.AreEqual(1, Blows(f, EastInnerLane0, TowerBlowClass.Other, TowerDamageReason.Locked));
 
         f.ReportsTowerId(EastOuterLane0);
-        Assert.AreEqual(15, f.Director.AdjustTowerDamage(new object(), null, true, 100));
+        Assert.AreEqual(15, f.Director.AdjustTowerDamage(new object(), null, true, 100, 0));
         Assert.AreEqual(1, Blows(f, EastOuterLane0, TowerBlowClass.Other, TowerDamageReason.Applied));
 
         Assert.AreEqual(CommandResult.Ok, f.Session.TryBuyHero(0, FordsMatchFixtureHero));
@@ -253,7 +253,7 @@ public class FordsMissionDirectorReportTests
             call[1] = new AgentKey(1);
             return true;
         });
-        Assert.AreEqual(400, f.Director.AdjustTowerDamage(new object(), attacker, false, 100));
+        Assert.AreEqual(400, f.Director.AdjustTowerDamage(new object(), attacker, false, 100, 0));
         Assert.AreEqual(1, Blows(f, EastOuterLane0, TowerBlowClass.Hero, TowerDamageReason.Applied));
     }
 
@@ -388,5 +388,117 @@ public class FordsMissionDirectorReportTests
 
         Assert.AreEqual(2, f.Report.Run.Volley.Launched);
         Assert.IsTrue(f.Report.Run.Volley.NoGunnerOrItem >= 1);
+    }
+
+    [TestMethod]
+    public void NoteUnappliedBlow_ZeroRawFromTheTowersOwnSide_ReportsOwnSideAndTheOtherSideRawZero()
+    {
+        var f = Started();
+        f.ReportsTowerId(EastOuterLane0);
+        var friend = new object();
+        var enemy = new object();
+        f.Battlefield.SideOf(friend).Returns(MatchSide.East);
+        f.Battlefield.SideOf(enemy).Returns(MatchSide.West);
+
+        f.Director.NoteUnappliedBlow(new object(), friend, false, false);
+        f.Director.NoteUnappliedBlow(new object(), enemy, false, false);
+        f.Director.NoteUnappliedBlow(new object(), friend, true, false);
+
+        Assert.AreEqual(1, Blows(f, EastOuterLane0, TowerBlowClass.Other, TowerDamageReason.OwnSide));
+        Assert.AreEqual(1, Blows(f, EastOuterLane0, TowerBlowClass.Other, TowerDamageReason.RawZero));
+        Assert.AreEqual(1, Blows(f, EastOuterLane0, TowerBlowClass.Other, TowerDamageReason.Weaponless));
+    }
+
+    [TestMethod]
+    public void Start_BindsTheTowerLookupToTheAdapter_AndShutdownClearsIt()
+    {
+        var f = Started();
+        var component = new object();
+        f.Towers.TowerIdOf(component).Returns(EastOuterLane0);
+
+        Assert.AreEqual(EastOuterLane0, f.Report.ProbeTowerId(component));
+
+        f.Director.Shutdown();
+
+        Assert.IsNull(f.Report.ProbeTowerId(component));
+    }
+
+    [TestMethod]
+    public void Start_ThrowingAfterTheReportBindings_ShutsTheDirectorDown()
+    {
+        var f = FordsDirectorFixture.Create();
+        var component = new object();
+        f.Towers.TowerIdOf(component).Returns(EastOuterLane0);
+        f.Battlefield.When(b => b.CompleteDeployment()).Do(_ => throw new System.InvalidOperationException("deployment callback failed"));
+
+        Assert.ThrowsException<System.InvalidOperationException>(() => f.Director.Start());
+
+        Assert.IsNull(f.Report.ProbeTowerId(component), "the failed director must not stay rooted through the report's lookups");
+        Assert.IsFalse(f.Session.IsActive);
+        f.Towers.Received(1).Clear();
+        f.Battlefield.Received(1).Clear();
+    }
+
+    [TestMethod]
+    public void Start_ThrowingAfterTheSessionIsFilled_ClearsTheSession()
+    {
+        var f = FordsDirectorFixture.Create();
+        f.Logger.When(l => l.LogInfo(Arg.Is<string>(m => m.Contains("match started"))))
+            .Do(_ => throw new System.InvalidOperationException("log failed"));
+
+        Assert.ThrowsException<System.InvalidOperationException>(() => f.Director.Start());
+
+        Assert.IsFalse(f.Session.IsActive);
+    }
+
+    [TestMethod]
+    public void AdjustTowerDamage_ZeroMeleeThrustWithThrustDamage_AppliesTheFloorAndCountsIt()
+    {
+        var f = Started();
+        f.ReportsTowerId(EastOuterLane0);
+        var enemy = new object();
+        f.Battlefield.SideOf(enemy).Returns(MatchSide.West);
+
+        var applied = f.Director.AdjustTowerDamage(new object(), enemy, false, 0, 50);
+
+        Assert.AreEqual(10, applied, "round(50 x thrustFloorFactor 0.2)");
+        Assert.AreEqual(1, Blows(f, EastOuterLane0, TowerBlowClass.Other, TowerDamageReason.Applied));
+        var tower = f.Report.Run!.Towers[EastOuterLane0];
+        Assert.AreEqual(1L, tower.FlooredBlows);
+        Assert.AreEqual(10L, tower.FlooredDamage);
+    }
+
+    [TestMethod]
+    public void AdjustTowerDamage_FlooredBlowOwnSideOrLocked_TakesNothingAndIsNotCountedAsFloored()
+    {
+        var f = Started();
+        var friend = new object();
+        var enemy = new object();
+        f.Battlefield.SideOf(friend).Returns(MatchSide.East);
+        f.Battlefield.SideOf(enemy).Returns(MatchSide.West);
+
+        f.ReportsTowerId(EastOuterLane0);
+        Assert.AreEqual(0, f.Director.AdjustTowerDamage(new object(), friend, false, 0, 50));
+        f.ReportsTowerId(EastInnerLane0);
+        Assert.AreEqual(0, f.Director.AdjustTowerDamage(new object(), enemy, false, 0, 50));
+
+        Assert.AreEqual(1, Blows(f, EastOuterLane0, TowerBlowClass.Other, TowerDamageReason.OwnSide));
+        Assert.AreEqual(1, Blows(f, EastInnerLane0, TowerBlowClass.Other, TowerDamageReason.Locked));
+        Assert.AreEqual(0L, f.Report.Run!.Towers[EastOuterLane0].FlooredBlows);
+        Assert.AreEqual(0L, f.Report.Run.Towers[EastInnerLane0].FlooredBlows);
+    }
+
+    [TestMethod]
+    public void AdjustTowerDamage_FactorZero_LeavesAZeroThrustRawZeroAndUncounted()
+    {
+        var f = Started(c => c with { Towers = c.Towers with { ThrustFloorFactor = 0f } });
+        f.ReportsTowerId(EastOuterLane0);
+        var enemy = new object();
+        f.Battlefield.SideOf(enemy).Returns(MatchSide.West);
+
+        Assert.AreEqual(0, f.Director.AdjustTowerDamage(new object(), enemy, false, 0, 50));
+
+        Assert.AreEqual(1, Blows(f, EastOuterLane0, TowerBlowClass.Other, TowerDamageReason.RawZero));
+        Assert.AreEqual(0L, f.Report.Run!.Towers[EastOuterLane0].FlooredBlows);
     }
 }

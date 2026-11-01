@@ -20,12 +20,14 @@ internal sealed partial class FordsTelemetryLogic : MissionLogic
 
     private readonly FordsRunReport _report;
     private readonly FordsTelemetryMeter _meter;
+    private readonly FordsTowerProbe _probe;
     private int _faults;
 
     internal FordsTelemetryLogic(FordsRunReport report)
     {
         _report = report;
         _meter = new FordsTelemetryMeter(report);
+        _probe = new FordsTowerProbe(report, Fault);
     }
 
     public override void AfterStart()

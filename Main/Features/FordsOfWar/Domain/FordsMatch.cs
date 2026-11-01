@@ -299,6 +299,26 @@ internal sealed partial class FordsMatch
     /// <summary>Same as <see cref="AdjustTowerDamage(TowerHit)"/>, and says which branch of the table decided.</summary>
     public int AdjustTowerDamage(TowerHit hit, out TowerDamageReason reason)
     {
+        var effective = Judge(hit, out reason);
+        if (effective > 0)
+        {
+            _chain.ApplyDamage(hit.TowerId, effective);
+            _regen.NotifyDamaged(hit.TowerId);
+        }
+
+        return effective;
+    }
+
+    /// <summary>Which branch of the damage table a blow takes. Reads the match and changes nothing: no hit points, no regeneration clock.</summary>
+    public TowerDamageReason ReasonFor(TowerHit hit)
+    {
+        Judge(hit, out var reason);
+        return reason;
+    }
+
+    // The table's verdict with no side effect: the damage the tower would take, and the branch that decided.
+    private int Judge(TowerHit hit, out TowerDamageReason reason)
+    {
         if (hit == null)
         {
             reason = TowerDamageReason.RawZero;
@@ -311,14 +331,7 @@ internal sealed partial class FordsMatch
             return hit.RawDamage;
         }
 
-        var effective = _damage.Decide(hit, out reason);
-        if (effective > 0)
-        {
-            _chain.ApplyDamage(hit.TowerId, effective);
-            _regen.NotifyDamaged(hit.TowerId);
-        }
-
-        return effective;
+        return _damage.Decide(hit, out reason);
     }
 
     private MatchEffects Finish(MatchEffects effects)
@@ -350,6 +363,11 @@ internal sealed partial class FordsMatch
 
     private int LiveInLane(MatchSide side, int lane) =>
         _seenLanes.TryGetValue((side, lane), out var seen) ? seen.LiveUnits : 0;
+
+    /// <summary>What the scheduler measures room against: the live units plus the ordinary units issued but not yet spawned.</summary>
+    private int CommittedInLane(MatchSide side, int lane) => LiveInLane(side, lane) + ReservedInLane(side, lane);
+
+    private int CommittedOnSide(MatchSide side) => LiveOnSide(side) + ReservedOnSide(side);
 
     private int LiveOnSide(MatchSide side) => _seenLiveBySide.TryGetValue(side, out var live) ? live : 0;
 
@@ -388,9 +406,10 @@ internal sealed partial class FordsMatch
     {
         effects.Spawns.AddRange(_pendingSpawns);
         _pendingSpawns.Clear();
-        foreach (var request in _waves.Tick(dt, _clock.Minute, LiveInLane, LiveOnSide))
+        foreach (var request in _waves.Tick(dt, _clock.Minute, CommittedInLane, CommittedOnSide))
         {
             effects.Spawns.Add(request);
+            Reserve(request);
             if (_waves.TakePackOffer(request.RequestId) is { } bought)
                 TrackCharge(request, 0, bought);
         }

@@ -195,9 +195,9 @@ public class FordsVerdictTests
 
     // Check 2
 
-    private static FordsConsoleRecord Cmd(string command, string[] args, bool ran, string reply, int run = 0, bool started = false, string failure = "")
+    private static FordsConsoleRecord Cmd(string command, string[] args, bool ran, string reply, int run = 0, bool started = false, string failure = "", int activeRun = 0)
     {
-        var r = new FordsConsoleRecord { Command = command, Ran = ran, Reply = reply, Run = run, MatchStarted = started, Failure = failure };
+        var r = new FordsConsoleRecord { Command = command, Ran = ran, Reply = reply, Run = run, MatchStarted = started, Failure = failure, ActiveRun = activeRun };
         r.Args.AddRange(args);
         return r;
     }
@@ -479,13 +479,13 @@ public class FordsVerdictTests
     {
         var s = new FordsSessionEvidence();
         var run = Run();
-        s.Console.Add(Cmd("fords_gold", new[] { "500" }, true, "Added 500 gold. You now hold 1500."));
+        s.Console.Add(Cmd("fords_gold", new[] { "500" }, true, "Added 500 gold. You now hold 1500.", activeRun: 1));
         run.Client.Commands["BuyPack:Ok"] = 2;
         run.Client.PackBoughtLines = 2;
         Assert.AreEqual(FordsResult.Pass, Row(s, run, 6).Result);
 
         var idle = new FordsSessionEvidence();
-        idle.Console.Add(Cmd("fords_gold", new[] { "500" }, true, FordsOfWarCommands.NoMatchReply));
+        idle.Console.Add(Cmd("fords_gold", new[] { "500" }, true, FordsOfWarCommands.NoMatchReply, activeRun: 1));
         Assert.AreEqual(FordsResult.NotSeen, PartOf(Row(idle, run, 6), "grant"), "no match was live for that call");
 
         idle.Console[0].MatchLive = true;
@@ -723,6 +723,14 @@ public class FordsVerdictTests
 
         t.DriftFlagged = true;
         Assert.AreEqual(FordsResult.Fail, Result(run, 10));
+    }
+
+    [TestMethod]
+    public void Check10_Rule_SaysOwnSideAlsoCountsBlowsTheEngineHadAlreadyZeroed()
+    {
+        var rule = Row(new FordsSessionEvidence(), Run(), 10).Rule;
+
+        StringAssert.Contains(rule, "raw damage the engine had already zeroed");
     }
 
     // Check 11

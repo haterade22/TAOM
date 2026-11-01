@@ -152,6 +152,33 @@ public class FordsScenarioTests
     }
 
     [TestMethod]
+    public void S2_AFlooredBlowOnAnUnlockedEnemyTower_TakesHitPointsInRulesAndEngineAndRaisesNoDrift()
+    {
+        var sc = FordsScenarios.Get("floored-blow");
+        var towers = TAOM.Features.FordsOfWar.Domain.FordsMatchConfig.Default.Towers;
+        var floor = (int)System.Math.Round(FordsScenarios.FlooredThrust * towers.ThrustFloorFactor, System.MidpointRounding.AwayFromZero);
+        var tower = sc.Report.Run!.Towers["tower_east_0_0"];
+
+        Assert.IsTrue(floor > 0, "the configured floor raises a 40 thrust blow");
+        var max = (int)sc.Towers.Of("tower_east_0_0").Max;
+        Assert.AreEqual(max - floor, tower.MinRulesHp, "the rules lost the floored amount");
+        Assert.AreEqual((float)(max - floor), sc.Towers.HitPoints("tower_east_0_0"), "the fake engine lost the same amount");
+        Assert.AreEqual(1L, tower.FlooredBlows);
+        Assert.AreEqual((long)floor, tower.FlooredDamage);
+        Assert.IsFalse(tower.DriftFlagged);
+        Assert.AreNotEqual(FordsResult.Fail, sc.Result(9, "lock"), sc.Numbers(9, "lock"));
+    }
+
+    [TestMethod]
+    public void S2_AFlooredBlowThatNeverReachedTheEngine_IsFlaggedAsDrift()
+    {
+        var sc = FordsScenarios.Get("floored-blow-lost");
+
+        Assert.IsTrue(sc.Report.Run!.Towers["tower_east_0_0"].DriftFlagged);
+        Assert.AreEqual(FordsResult.Fail, sc.Result(9, "lock"), sc.Numbers(9, "lock"));
+    }
+
+    [TestMethod]
     public void S2_ARouteAFailure_IsFailedByTheStartedPartAndPassedByTheFailurePart()
     {
         var sc = FordsScenarios.Get("route-a-slow-close");

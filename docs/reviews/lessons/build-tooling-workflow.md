@@ -4763,3 +4763,16 @@ then ran the Python tool tests, and `ShippedModuleStringsPinTests` refused all 8
 - **Prevent:** before a review closes, and before any "ready to commit" claim, run the whole `/verify`, Step 2b
   included. A new string key takes the `TAOM_<FEATURE>_` prefix.
 - **Source:** `docs/reviews/rca-fords-of-war-2026-10-31.md` row V1.
+
+### An unattended harness judges the process exit and the log tail, not only the done file (Fords of War, 2026-11-01)
+The unattended Fords launcher took the match's done file as the end of the run. A crash at quit came after that file
+was written, the CrashReport scan stopped at its `ended` time and the exit code was only logged, so the run passed.
+Codex's remedy, fail on any nonzero exit, was wrong too: Bannerlord exits -1 (4294967295) after a normal `QuitGame`
+with the clean-unload line present, so it would have failed every run.
+- **Why missed:** the done file is the easiest signal to read and it is written by the code under test; the normal
+  exit code of the live game was visible only in real runs.
+- **Prevent:** judge the run by the process exit code and by the log from the run start to the end of the file.
+  Learn the game's normal exit code from real runs before gating on it (accept 0 and 0xFFFFFFFF, fail on any other
+  code), and scan for an ERROR CrashReport block past the done time.
+- **Source:** `docs/reviews/REVIEW-LOG.md` entry "Fords of War night batch and whole feature" (A-F1); fixed in
+  `8d883051e`.

@@ -30,7 +30,8 @@
     "volleyIntervalSeconds": 4,
     "volleyMissiles": 3,
     "fireRange": 45,
-    "attackRange": 20
+    "attackRange": 20,
+    "thrustFloorFactor": 0.2
   },
   "heroes": {
     "maxAlivePerSide": 2,

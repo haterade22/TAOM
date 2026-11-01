@@ -10,7 +10,9 @@ namespace TAOM.Features.FordsOfWar;
 /// (<see cref="FordsLayoutFit"/>). A point on a bad spot is searched for in rings of 2, 4, 8 and 12 m at eight bearings,
 /// perpendicular to the lane first. A lane waypoint must also stay on its own side of the neighbouring lanes and at least half
 /// of its original gap away from them, so lanes never collapse onto each other. A tower slides along its own lane
-/// (10, 20 then 30 m either way) and keeps its id. Keeps and the two ends of a lane are never dropped (a match cannot run
+/// (10, 20 then 30 m either way, never past a
+/// neighbour of its own side and lane: the chain locks by <c>Order</c>, so the outer tower stays at least 10 m outward of the inner one)
+/// and keeps its id. Keeps and the two ends of a lane are never dropped (a match cannot run
 /// without them): they stay on the ground at their own spot and are counted as unfixed. A tower that finds no spot is dropped,
 /// unless it was its side's last one in that lane: then the fit is rejected, because the enemy would start with an open keep.
 /// Pure: the scene adapter supplies the ground snap, the navmesh test and the optional segment test as delegates.
@@ -22,6 +24,9 @@ internal static class FordsLayoutFitter
     private static readonly float[] Bearings = { 90f, 270f, 45f, 315f, 135f, 225f, 0f, 180f };
 
     private static readonly float[] SlideArcs = { 10f, 20f, 30f };
+
+    /// <summary>The least a slid tower keeps between itself and each other tower of its own side and lane, measured outward along the lane.</summary>
+    private const float SlideSeparation = 10f;
 
     public static FordsLayoutFit Fit(MapLayout layout, Func<Vec3f, Vec3f> snap, Func<Vec3f, bool> walkable,
         Func<Vec3f, Vec3f, bool>? segmentClear = null)
@@ -64,6 +69,7 @@ internal static class FordsLayoutFitter
         private readonly List<FordsLaneFitStats> _stats = new();
         private readonly List<string> _droppedTowers = new();
         private readonly List<FordsTowerMove> _movedTowers = new();
+        private readonly Dictionary<string, Vec3f?> _spots = new();
         private int _moved;
         private int _dropped;
         private int _unfixed;
@@ -185,6 +191,7 @@ internal static class FordsLayoutFitter
                     spot = slid;
                 }
 
+                _spots[tower.Id] = spot;
                 placed.Add((tower, spot));
             }
 
@@ -205,7 +212,10 @@ internal static class FordsLayoutFitter
             return towers;
         }
 
-        /// <summary>The tower's own spot when walkable, else the first walkable spot sliding along its fitted lane; false when none.</summary>
+        /// <summary>
+        /// The tower's own spot when walkable, else the first walkable spot sliding along its fitted lane that keeps the chain order
+        /// (see <see cref="KeepsChainOrder"/>); false when none.
+        /// </summary>
         private bool TrySlide(TowerSlot tower, out Vec3f spot)
         {
             spot = _snap(tower.Position);
@@ -222,7 +232,7 @@ internal static class FordsLayoutFitter
             foreach (var offset in SlideOffsets(towardOwnBase))
             {
                 var candidate = _snap(LaneGeometry.PointAt(lane.Path, Math.Max(0f, Math.Min(length, arc + offset))));
-                if (!_walkable(candidate))
+                if (!_walkable(candidate) || !KeepsChainOrder(tower, candidate, lane.Path, length, -towardOwnBase))
                     continue;
 
                 spot = candidate;
@@ -232,6 +242,38 @@ internal static class FordsLayoutFitter
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Whether a tower at <paramref name="candidate"/> still lies outward (<paramref name="outward"/> is +1 or -1 along the lane) of
+        /// every tower of its side and lane with a higher <c>Order</c>, and inward of every one with a lower, by at least
+        /// <see cref="SlideSeparation"/>. A neighbour already fitted counts where it stands, one not yet fitted where the layout put it,
+        /// and one that was dropped not at all.
+        /// </summary>
+        private bool KeepsChainOrder(TowerSlot tower, Vec3f candidate, IReadOnlyList<Vec3f> path, float length, float outward)
+        {
+            var own = outward * LaneGeometry.Progress(path, candidate) * length;
+            foreach (var other in _layout.Towers)
+            {
+                if (other.Id == tower.Id || other.Kind != TowerKind.Tower || other.Owner != tower.Owner || other.Lane != tower.Lane)
+                    continue;
+
+                Vec3f there = other.Position;
+                if (_spots.TryGetValue(other.Id, out var fitted))
+                {
+                    if (fitted is not { } kept)
+                        continue;
+
+                    there = kept;
+                }
+
+                var theirs = outward * LaneGeometry.Progress(path, there) * length;
+                var gap = other.Order > tower.Order ? own - theirs : theirs - own;
+                if (gap < SlideSeparation)
+                    return false;
+            }
+
+            return true;
         }
 
         /// <summary>The lane itself at the tower's own arc, then 10, 20 and 30 m toward its own base first and toward the enemy second.</summary>

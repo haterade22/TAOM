@@ -304,9 +304,57 @@ code or the engine decompile before it entered this table.
 4. **Process:** an unattended match on the desktop is now the proof before a Fords merge
    (`python tools/run_fords_autorun.py --west-ai`), and its folder is cited in the commit.
 
-FOLLOW-UP: AI melee spends many swings on the invulnerable tower gunners (1,075 melee blows in the 600 s run), and an invulnerable victim's blow carries zero damage, so forwarding it needs TAOM-computed damage; the choice (forward, move the gunners, or keep) is the maintainer's (no issue: the maintainer chose no GitHub issues for Fords of War).
-FOLLOW-UP: most melee blows that reach a tower do zero raw damage (124 of 142 in the third run); the R3 raw-damage summary will show why on the next run (no issue: the maintainer chose no GitHub issues for Fords of War).
+FOLLOW-UP: AI melee spends many swings on the invulnerable tower gunners (1,075 melee blows in the 600 s run); the maintainer decided on 2026-11-01 to build real tower structures on the map with unkillable bowmen up on the tower, which needs the scene work and tagged gunner spots the layout reader can read (no issue: the maintainer chose no GitHub issues for Fords of War).
+Resolved (2026-11-01, next addendum): most melee blows on a tower did zero raw damage because vanilla scales a thrust on an object to almost nothing; a thrust damage floor now applies.
 FOLLOW-UP: no tower fell in two 30-minute AI matches, so check 14 (keep, result, exit) is still unseen; tower balance is the maintainer's call, and the R3 evidence gives the numbers (no issue: the maintainer chose no GitHub issues for Fords of War).
 FOLLOW-UP: a crash in an unattended run loses its dump, because the watchdog asks a human before it writes one and the launcher stops the game (no issue: the maintainer chose no GitHub issues for Fords of War).
 FOLLOW-UP: the layout planner's limits (10 % dropped, 5 % bad segments) are unmeasured; set them from the attempt lines of the four scenes (no issue: the maintainer chose no GitHub issues for Fords of War).
 FOLLOW-UP: `FordsSnapshotBuilder` still groups with LINQ (about 36 KB per tick at 240 units); a bucketed builder brings it to about 4 KB (no issue: pre-existing code, the maintainer chose no GitHub issues for Fords of War).
+
+## Addendum: Codex reviews and the zero-damage melee investigation (2026-11-01)
+
+Mike authorized two Codex reviews (gpt-6-astra, `ultra`): review A on the night batch (`d4fb51a50..c2c3a6f28`) and
+review B on the whole feature (`c2c3a6f28`), which had never had a Codex pass. He also asked for `/investigate` on
+the zero-damage melee blows. Codex found five MEDIUM defects and no HIGH; every one was confirmed by a failing test
+before its fix. The investigation found vanilla behaviour, and Mike chose a design answer.
+
+### Root cause of the zero-damage melee blows
+
+A probe on `MissionBehavior.OnRegisterBlow` classified every melee blow on a tower in the unattended match
+`E:/Temp/fords-runs/20261101-095058`: 111 Cut swings all landed damage, and all 78 zero blows were Pierce thrusts that
+did not hit with the tip (44 with a magnitude under 1, 34 with a magnitude of exactly 0, mostly riders and lancers at
+the start of their animation). Vanilla v1.5.6 scales a melee blow on an object by `GetEntityDamageMultiplier`
+(Pierce 0.1), a non-tip thrust by `NonTipThrustHitDamageMultiplier` (0.15), and truncates to an int
+(`MissionCombatMechanicsHelper`, lines 204-205, 420-448, 691-695). No TAOM model can zero these blows (the damage
+model runs only on a positive value). Decision (Mike, 2026-11-01): a thrust damage floor for Fords towers, a share
+(`towers.thrustFloorFactor`, 0.2) of the weapon's thrust damage, through the normal tower rules.
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| C1 | MEDIUM | The launcher passed a run that crashed at quit: the exit code was only logged, and the CrashReport scan stopped at the done time, which the driver writes before it quits. | Harness judges the done file, not the process | The tooling lens and the fix builder treated the done file as the end of the run. Codex's remedy ("fail on nonzero") was itself wrong: Bannerlord exits -1 after a normal quit. | Fixed in `8d883051e`: exit 0 and -1 pass, any other code fails, the scan runs to the end of the log. Lesson in `lessons/build-tooling-workflow.md`. |
+| C2 | MEDIUM | A tower slide could put the outer tower behind the locked inner tower when tower fractions are close. | Invariant never checked | The fitter checked walkability per tower, never the order the chain depends on; no close-fraction test. | Fixed: a slide keeps chain order with 10 m separation (`FordsLayoutFitterTests`). |
+| C3 | MEDIUM | Spawn backlog did not reserve lane capacity: a lane reached 91 of 90. | Two components, one invariant | The scheduler and the director each enforced the cap on their own view (live units) without the pending requests. | Fixed: the match reserves issued ordinary units until they spawn or fail (`FordsMatchLaneReserveTests`). Lesson in `lessons/testing-qa.md`. |
+| C4 | MEDIUM | An exception during the match start left the director's report bindings and session alive. | Cleanup on the success path only | The logic shut down on a false return, not on a throw. | Fixed: `Start` shuts down on a throw and rethrows (`FordsMissionDirectorReportTests`). |
+| C5 | MEDIUM | Check 06 passed on a gold command from an earlier match in the same process. | Session record read by a per-run check | Console records carry the parked run, normally 0. | Fixed: `FordsConsoleRecord.ActiveRun`, check 06 filters by it. |
+| C6 | MEDIUM | The zero-damage measure counted kicks and own-side blows as RawZero, and `meleeRaw` mixed own-side blows into check 9. | Measurement contamination | The first probe was built from the research text before any run. | Fixed: weaponless and own-side blows are classified first and left out of `meleeRaw`. |
+| C7 | MEDIUM | The probe's comment said it saw a blow before vanilla scaled it; `BaseMagnitude` is already scaled. | Engine effect inferred from a name | Written from the research summary. | Fixed comment and test row (Lens 2). |
+| C8 | LOW | Nine smaller items from Lens 5 and Lens 2: a NaN magnitude bucket, a trace built before its cap, a count-only path through the damage method, a dead weaponless branch, probe counts on a fallen tower, stale comments, two missing tests, per-run trace caps, no mounted bit in the probe key. | Mixed | | Fixed in the same batch. |
+
+### Re-review of the floor (Lens 5, Lens 2)
+
+A tier 1 re-review of the floor and the C1-C8 fixes by the data-flow and engine-compatibility lenses. The proof run `E:/Temp/fords-runs/20261101-103348` (900 s, AI on both sides) floored 129 blows for 1,020 hit points, labelled none of its 264 melee blows RawZero (228 applied, 8 on locked towers, 28 from the tower's own side), and ended with 6 PASS and 0 FAIL verdicts. A second 900 s run on the fixed build (`20261101-112404`) floored 38 blows for 266 hit points, again left no melee blow RawZero, and its check 9 lock part passed on 13 enemy blows on locked towers, own-side blows now apart.
+
+| # | Sev | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|
+| C9 | MEDIUM | Own-side blows on locked or fallen towers were labelled Locked or Destroyed, so check 9's lock part could pass on own-side blows alone (in run 103348, 34 of its 38 Locked blows came from the tower's own side, mostly its archers), and meleeRaw still held own-side blows (C6 was incomplete). | Classification order | The C6 fix put own side first only on the zero branch, and the precedence test used attackers with no side for the locked and destroyed rows. | Fixed: own side is the first label; TowerDamageRulesTests rows with an own-side attacker on a locked and on a fallen tower. Lesson in `lessons/testing-qa.md`. |
+| C10 | LOW | The docs and comments said the floor reaches "a thrust that missed with the tip" and that the engine deals "0.15 x 0.1 of the weapon's damage". The floor reaches any zero melee blow from a weapon with thrust damage, and the factors multiply the blow's base magnitude. | Engine effect inferred from a summary (as C7) | Written from the research summary, not the decompile lines. | Fixed text, which cites the helper's lines. |
+| C11 | LOW | No scenario ran a floored blow through check 9's drift rule (the scenario's thrust parameter had no caller). | Test gap | The floor's tests stopped at the rules and the patch. | Fixed: a floored-strike scenario. |
+| C12 | LOW | The trace could not show whether one attack lands two contacts, each now floored, or which thread runs a melee hit. | Missing evidence | The probe was built to classify blows, not attacks. | Fixed: the TowerMelee trace carries the attacker's agent index and the managed thread id (`agent=<index> thr=<thread id>`); the second proof run `20261101-112404` answered both: all 76 traced melee blows ran on managed thread 39, the script-tick main thread, and no attacker struck the same tower twice within 0.6 s with rising attack progress (scope: the 76 traced blows; the trace is capped per tower). |
+
+Open for the maintainer: the floor replaces only a zero, so a weak shaft thrust with raw 1 to 7 takes less than a floored zero (about 8): in run 103348, tower_west_0_0 took raw 1, 5 and 7 blows at face value beside 66 floored ones. The patch also floors the rare zero swing from a weapon with thrust damage (1 of 129), because `OnHit` carries no strike type. A max(raw, floor) rule would remove the inversion but also raise weak swings, which the maintainer's decision keeps as the engine computes them; a smaller factor (0.05 gives about 2 for a 40-thrust lance) is the other lever. Tower balance stays his call.
+
+FOLLOW-UP: `FordsMissionDirector.AdjustTowerDamage` calls the report's `TowerBlow` after the rules changed their hit points, with no fault guard; if the report throws, the patch keeps the engine's raw value, so a floored blow would take about 8 in the rules and 0 in the engine, which check 9's drift rule would flag (no issue: the maintainer chose no GitHub issues for Fords of War).
+
+Codex disputed 57 of the suspects in its two prompts with code evidence; those are recorded in `docs/reviews/REVIEW-LOG.md`.
+
+FOLLOW-UP: a tagged layout whose inner tower marker comes before its outer one can reject a layout that a different fitting order would keep; no shipped scene uses tagged layouts (no issue: hypothetical, the maintainer chose no GitHub issues for Fords of War).

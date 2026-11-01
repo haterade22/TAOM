@@ -419,7 +419,7 @@ public class FordsMissionDirectorTests
     {
         var f = Started();
         f.ReportsTowerId(EastOuterLane0);
-        f.Director.AdjustTowerDamage(new object(), null, false, 100);
+        f.Director.AdjustTowerDamage(new object(), null, false, 100, 0);
 
         f.Director.Tick(10f);
         f.Director.Tick(10f);
@@ -488,12 +488,12 @@ public class FordsMissionDirectorTests
     {
         var f = Started();
         f.ReportsTowerId(EastInnerLane0);
-        Assert.AreEqual(0, f.Director.AdjustTowerDamage(new object(), null, false, 100), "the inner tower is locked behind the outer one");
+        Assert.AreEqual(0, f.Director.AdjustTowerDamage(new object(), null, false, 100, 0), "the inner tower is locked behind the outer one");
 
         f.DestroyedHandler!(EastOuterLane0);
         f.Director.Tick(1f);
 
-        Assert.AreEqual(100, f.Director.AdjustTowerDamage(new object(), null, false, 100));
+        Assert.AreEqual(100, f.Director.AdjustTowerDamage(new object(), null, false, 100, 0));
         f.Towers.Received(1).KillGunners(EastOuterLane0);
         Assert.AreEqual(900, f.Session.GetView()!.Gold);
         var fell = f.Session.DrainEvents().Single(e => e.Kind == MatchEventKind.TowerDestroyed);
@@ -509,7 +509,7 @@ public class FordsMissionDirectorTests
         f.DestroyedHandler!(EastOuterLane0);
 
         f.Towers.DidNotReceive().KillGunners(Arg.Any<string>());
-        Assert.AreEqual(0, f.Director.AdjustTowerDamage(new object(), null, false, 100), "the inner tower unlocks on the tick, not in the hit callback");
+        Assert.AreEqual(0, f.Director.AdjustTowerDamage(new object(), null, false, 100, 0), "the inner tower unlocks on the tick, not in the hit callback");
         f.Director.Tick(1f);
         f.Towers.Received(1).KillGunners(EastOuterLane0);
     }
@@ -547,7 +547,7 @@ public class FordsMissionDirectorTests
         var f = Started();
         f.ReportsTowerId(EastOuterLane0);
 
-        Assert.AreEqual(15, f.Director.AdjustTowerDamage(new object(), null, true, 100));
+        Assert.AreEqual(15, f.Director.AdjustTowerDamage(new object(), null, true, 100, 0));
     }
 
     [TestMethod]
@@ -565,7 +565,7 @@ public class FordsMissionDirectorTests
         });
         f.ReportsTowerId(EastOuterLane0);
 
-        Assert.AreEqual(400, f.Director.AdjustTowerDamage(new object(), attacker, false, 100));
+        Assert.AreEqual(400, f.Director.AdjustTowerDamage(new object(), attacker, false, 100, 0));
     }
 
     [TestMethod]
@@ -582,7 +582,7 @@ public class FordsMissionDirectorTests
         });
         f.ReportsTowerId(WestOuterLane0);
 
-        Assert.AreEqual(0, f.Director.AdjustTowerDamage(new object(), attacker, false, 100));
+        Assert.AreEqual(0, f.Director.AdjustTowerDamage(new object(), attacker, false, 100, 0));
         f.Battlefield.DidNotReceive().SideOf(Arg.Any<object?>());
     }
 
@@ -594,7 +594,7 @@ public class FordsMissionDirectorTests
         f.Battlefield.SideOf(gunner).Returns(MatchSide.West);
         f.ReportsTowerId(WestOuterLane0);
 
-        Assert.AreEqual(0, f.Director.AdjustTowerDamage(new object(), gunner, true, 100));
+        Assert.AreEqual(0, f.Director.AdjustTowerDamage(new object(), gunner, true, 100, 0));
     }
 
     [TestMethod]
@@ -605,7 +605,7 @@ public class FordsMissionDirectorTests
         f.Battlefield.SideOf(gunner).Returns(MatchSide.East);
         f.ReportsTowerId(WestOuterLane0);
 
-        Assert.AreEqual(15, f.Director.AdjustTowerDamage(new object(), gunner, true, 100));
+        Assert.AreEqual(15, f.Director.AdjustTowerDamage(new object(), gunner, true, 100, 0));
     }
 
     [TestMethod]
@@ -615,7 +615,7 @@ public class FordsMissionDirectorTests
         f.Battlefield.SideOf(Arg.Any<object?>()).Returns((MatchSide?)null);
         f.ReportsTowerId(WestOuterLane0);
 
-        Assert.AreEqual(15, f.Director.AdjustTowerDamage(new object(), new object(), true, 100));
+        Assert.AreEqual(15, f.Director.AdjustTowerDamage(new object(), new object(), true, 100, 0));
     }
 
     [TestMethod]
@@ -624,7 +624,7 @@ public class FordsMissionDirectorTests
         var f = Started();
         f.ReportsTowerId(null);
 
-        Assert.AreEqual(77, f.Director.AdjustTowerDamage(new object(), null, true, 77));
+        Assert.AreEqual(77, f.Director.AdjustTowerDamage(new object(), null, true, 77, 0));
     }
 
     [TestMethod]
@@ -633,7 +633,7 @@ public class FordsMissionDirectorTests
         var f = FordsDirectorFixture.Create();
         f.ReportsTowerId(EastOuterLane0);
 
-        Assert.AreEqual(55, f.Director.AdjustTowerDamage(new object(), null, false, 55));
+        Assert.AreEqual(55, f.Director.AdjustTowerDamage(new object(), null, false, 55, 0));
     }
 
     [TestMethod]
@@ -678,5 +678,33 @@ public class FordsMissionDirectorTests
         f.Battlefield.ClearReceivedCalls();
         f.Director.Tick(1f);
         f.Battlefield.DidNotReceiveWithAnyArgs().SampleUnits();
+    }
+
+    [TestMethod]
+    public void Tick_AHeroTakingThePerTickSpawnBudget_NeverLetsALanePastItsCap()
+    {
+        const int laneCap = 12;
+        var f = Started(c => c with
+        {
+            Economy = c.Economy with { StartingGold = 5000 },
+            Waves = c.Waves with { MaxLivePerLanePerSide = laneCap, MaxLivePerSide = 300, MaxSpawnsPerTick = 4 },
+        });
+        f.Battlefield.SampleUnits().Returns(_ => f.Spawned
+            .Select((s, i) => new FordsUnitSample(new AgentKey(i + 1), s.Side, s.Lane, s.Position)).ToList());
+        for (var packs = 0; packs < 3; packs++)
+            Assert.AreEqual(CommandResult.Ok, f.Session.TryBuyPack(0, FordsMatchFixture.Footmen.OfferId));
+        Assert.AreEqual(CommandResult.Ok, f.Session.TryBuyHero(0, FordsMatchFixture.HeroA.HeroId));
+        Assert.AreEqual(CommandResult.Ok, f.Session.TryBuyHero(0, FordsMatchFixture.HeroB.HeroId));
+
+        var mostInLane = 0;
+        for (var tick = 0; tick < 30; tick++)
+        {
+            f.Director.Tick(1f);
+            mostInLane = System.Math.Max(mostInLane, f.Spawned.Count(s => s.Side == MatchSide.West && s.Lane == 0));
+        }
+
+        // The two heroes spawn on the first tick and take 2 of its 4 spawns; once they are live the scheduler counts them, so the
+        // footmen can fill only what is left. Counting only live units, the leftover of each tick's request would push past the cap.
+        Assert.AreEqual(laneCap, mostInLane, "the lane filled to its cap and no further");
     }
 }

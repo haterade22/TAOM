@@ -432,6 +432,23 @@ public class FordsRunReportDiagnosticsTests
     }
 
     [TestMethod]
+    public void TowerBlow_AnOwnSideMeleeBlow_IsCountedButLeftOutOfTheRawDamageSummary()
+    {
+        var by = new FordsAttacker(MatchSide.West, 0);
+        _report.TowerBlow("east_outer_0", TowerBlowClass.Melee, TowerDamageReason.OwnSide, 0, 0, new FordsAttacker(MatchSide.East, 0));
+        _report.TowerBlow("east_outer_0", TowerBlowClass.Melee, TowerDamageReason.OwnSide, 25, 0, new FordsAttacker(MatchSide.East, 0));
+        _report.TowerBlow("east_outer_0", TowerBlowClass.Melee, TowerDamageReason.Applied, 12, 12, by);
+
+        var tower = _report.Run!.Towers["east_outer_0"];
+        var summary = tower.MeleeRawSummary();
+
+        Assert.AreEqual(2, tower.Blows[(int)TowerBlowClass.Melee, (int)TowerDamageReason.OwnSide], "the blows are still counted by their reason");
+        Assert.AreEqual(1, summary.Count, "friendly blows are not the enemy's melee damage");
+        Assert.AreEqual(12, summary.Min);
+        Assert.AreEqual(12, summary.Max);
+    }
+
+    [TestMethod]
     public void TowerBlow_MeleeRawDamage_WithNoMeleeBlow_SummarizesToZeroes()
     {
         var summary = _report.Run!.Towers["east_outer_0"].MeleeRawSummary();
@@ -466,13 +483,14 @@ public class FordsRunReportDiagnosticsTests
     [TestMethod]
     public void TowerConfig_LogsTheEffectiveNumbersOnce_AndKeepsThemOnTheRun()
     {
-        var config = FordsMatchConfig.Default.Towers with { TowerHitPoints = 800000, RegenPerSecond = 2.5f, RegenDelaySeconds = 30f };
+        var config = FordsMatchConfig.Default.Towers with { TowerHitPoints = 800000, RegenPerSecond = 2.5f, RegenDelaySeconds = 30f, ThrustFloorFactor = 0.3f };
 
         _report.TowerConfig(config);
 
         var line = Lines("Tower").Single(l => l.Contains(" config "));
         StringAssert.Contains(line, "towerHp=800000 innerHp=" + config.InnerTowerHitPoints + " keepHp=" + config.KeepHitPoints);
         StringAssert.Contains(line, "regenPerSecond=2.500 regenDelaySeconds=30.0");
+        StringAssert.Contains(line, "thrustFloor=0.300");
         StringAssert.Contains(line, "rangedFactor=" + config.RangedDamageFactor.ToString("F3", System.Globalization.CultureInfo.InvariantCulture));
         StringAssert.Contains(line, "heroFactor=");
         StringAssert.Contains(line, "siegeFactor=");

@@ -135,7 +135,7 @@ internal static partial class FordsVerdicts
 
     private static FordsVerdictRow Check06(FordsSessionEvidence session, FordsRunEvidence run)
     {
-        var gold = session.Console.Where(r => r.Command == "fords_gold").ToList();
+        var gold = session.Console.Where(r => r.Command == "fords_gold" && r.ActiveRun == run.Run).ToList();
         var index = gold.FindLastIndex(r => r.Ran && (r.Reply.StartsWith(GrantPrefix, System.StringComparison.Ordinal)
             || (r.MatchLive && r.Reply == FordsOfWarCommands.NoMatchReply)));
         var grant = index < 0 ? FordsResult.NotSeen

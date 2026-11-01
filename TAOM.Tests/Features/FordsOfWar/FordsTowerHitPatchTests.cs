@@ -29,7 +29,7 @@ public class FordsTowerHitPatchTests
     private IFordsTowerHitHook Install(Func<int> damage)
     {
         var hook = Substitute.For<IFordsTowerHitHook>();
-        hook.AdjustTowerDamage(Arg.Any<object>(), Arg.Any<object?>(), Arg.Any<bool>(), Arg.Any<int>()).Returns(_ => damage());
+        hook.AdjustTowerDamage(Arg.Any<object>(), Arg.Any<object?>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<int>()).Returns(_ => damage());
         FordsTowerHitPatch.Install(hook);
         _installed = hook;
         return hook;
@@ -57,50 +57,95 @@ public class FordsTowerHitPatchTests
         FordsTowerHitPatch.Prefix(new object(), null!, ref damage, ref weapon);
 
         Assert.AreEqual(40, damage);
-        hook.DidNotReceiveWithAnyArgs().AdjustTowerDamage(default!, default, default, default);
+        hook.DidNotReceiveWithAnyArgs().AdjustTowerDamage(default!, default, default, default, default);
     }
 
     [TestMethod]
-    public void Run_ArmedBlow_WritesBackTheHooksDamageAndPassesTheCallersThrough()
+    public void Dispatch_ArmedBlow_WritesBackTheHooksDamageAndPassesTheCallersThrough()
     {
         var hook = Substitute.For<IFordsTowerHitHook>();
         var component = new object();
         var attacker = new object();
-        hook.AdjustTowerDamage(component, attacker, true, 40).Returns(7);
+        hook.AdjustTowerDamage(component, attacker, true, 40, 12).Returns(7);
         var damage = 40;
 
-        FordsTowerHitPatch.Run(hook, component, attacker, false, true, ref damage);
+        FordsTowerHitPatch.Dispatch(hook, component, attacker, false, true, 12, ref damage);
 
         Assert.AreEqual(7, damage);
     }
 
     [TestMethod]
-    public void Run_UnarmedBlow_LeavesTheDamageWithoutAskingTheHook()
+    public void Dispatch_HookThrows_LeavesTheDamageAndDoesNotThrow()
     {
         var hook = Substitute.For<IFordsTowerHitHook>();
-        var damage = 40;
-
-        FordsTowerHitPatch.Run(hook, new object(), null, true, false, ref damage);
-
-        Assert.AreEqual(40, damage);
-        hook.DidNotReceiveWithAnyArgs().AdjustTowerDamage(default!, default, default, default);
-    }
-
-    [TestMethod]
-    public void Run_HookThrows_LeavesTheDamageAndDoesNotThrow()
-    {
-        var hook = Substitute.For<IFordsTowerHitHook>();
-        hook.AdjustTowerDamage(Arg.Any<object>(), Arg.Any<object?>(), Arg.Any<bool>(), Arg.Any<int>())
+        hook.AdjustTowerDamage(Arg.Any<object>(), Arg.Any<object?>(), Arg.Any<bool>(), Arg.Any<int>(), Arg.Any<int>())
             .Returns(_ => throw new InvalidOperationException("boom"));
         var damage = 40;
 
-        FordsTowerHitPatch.Run(hook, new object(), null, false, false, ref damage);
+        FordsTowerHitPatch.Dispatch(hook, new object(), null, false, false, 0, ref damage);
 
         Assert.AreEqual(40, damage);
     }
 
     [TestMethod]
-    public void ZeroDamage_CallsNoteUnappliedBlow()
+    public void Dispatch_ZeroMeleeBlowWithThrustDamage_AsksTheHookForTheFlooredDamage()
+    {
+        var hook = Substitute.For<IFordsTowerHitHook>();
+        var component = new object();
+        var attacker = new object();
+        hook.AdjustTowerDamage(component, attacker, false, 0, 50).Returns(10);
+        var damage = 0;
+
+        FordsTowerHitPatch.Dispatch(hook, component, attacker, false, false, 50, ref damage);
+
+        Assert.AreEqual(10, damage);
+        hook.DidNotReceiveWithAnyArgs().NoteUnappliedBlow(default!, default, default, default);
+    }
+
+    [TestMethod]
+    public void Dispatch_ZeroRangedBlowWithThrustDamage_IsOnlyNoted()
+    {
+        var hook = Substitute.For<IFordsTowerHitHook>();
+        var component = new object();
+        var damage = 0;
+
+        FordsTowerHitPatch.Dispatch(hook, component, null, false, true, 50, ref damage);
+
+        Assert.AreEqual(0, damage);
+        hook.Received(1).NoteUnappliedBlow(component, null, false, true);
+        hook.DidNotReceiveWithAnyArgs().AdjustTowerDamage(default!, default, default, default, default);
+    }
+
+    [TestMethod]
+    public void Dispatch_ZeroMeleeBlowWithNoThrustDamage_IsOnlyNoted()
+    {
+        var hook = Substitute.For<IFordsTowerHitHook>();
+        var component = new object();
+        var damage = 0;
+
+        FordsTowerHitPatch.Dispatch(hook, component, null, false, false, 0, ref damage);
+
+        Assert.AreEqual(0, damage);
+        hook.Received(1).NoteUnappliedBlow(component, null, false, false);
+        hook.DidNotReceiveWithAnyArgs().AdjustTowerDamage(default!, default, default, default, default);
+    }
+
+    [TestMethod]
+    public void Dispatch_ZeroBlowWithNoWeaponAndThrustDamage_StaysWeaponless()
+    {
+        var hook = Substitute.For<IFordsTowerHitHook>();
+        var component = new object();
+        var damage = 0;
+
+        FordsTowerHitPatch.Dispatch(hook, component, null, true, false, 50, ref damage);
+
+        Assert.AreEqual(0, damage);
+        hook.Received(1).NoteUnappliedBlow(component, null, true, false);
+        hook.DidNotReceiveWithAnyArgs().AdjustTowerDamage(default!, default, default, default, default);
+    }
+
+    [TestMethod]
+    public void ZeroDamage_WithNoWeapon_CallsNoteUnappliedBlowAsWeaponless()
     {
         var hook = Install(() => 7);
         var component = new object();
@@ -110,8 +155,8 @@ public class FordsTowerHitPatchTests
         FordsTowerHitPatch.Prefix(component, null!, ref damage, ref weapon);
 
         Assert.AreEqual(0, damage);
-        hook.Received(1).NoteUnappliedBlow(component, null, false, false);
-        hook.DidNotReceiveWithAnyArgs().AdjustTowerDamage(default!, default, default, default);
+        hook.Received(1).NoteUnappliedBlow(component, null, true, false);
+        hook.DidNotReceiveWithAnyArgs().AdjustTowerDamage(default!, default, default, default, default);
     }
 
     [TestMethod]
@@ -121,11 +166,11 @@ public class FordsTowerHitPatchTests
         var component = new object();
         var damage = 0;
 
-        FordsTowerHitPatch.Dispatch(hook, component, null, false, true, ref damage);
+        FordsTowerHitPatch.Dispatch(hook, component, null, false, true, 0, ref damage);
 
         Assert.AreEqual(0, damage);
         hook.Received(1).NoteUnappliedBlow(component, null, false, true);
-        hook.DidNotReceiveWithAnyArgs().AdjustTowerDamage(default!, default, default, default);
+        hook.DidNotReceiveWithAnyArgs().AdjustTowerDamage(default!, default, default, default, default);
     }
 
     [TestMethod]
@@ -136,7 +181,7 @@ public class FordsTowerHitPatchTests
         var attacker = new object();
         var damage = 40;
 
-        FordsTowerHitPatch.Run(hook, component, attacker, true, false, ref damage);
+        FordsTowerHitPatch.Dispatch(hook, component, attacker, true, false, 0, ref damage);
 
         Assert.AreEqual(40, damage);
         hook.Received(1).NoteUnappliedBlow(component, attacker, true, false);
@@ -149,7 +194,7 @@ public class FordsTowerHitPatchTests
         var component = new object();
         var damage = 40;
 
-        FordsTowerHitPatch.Run(hook, component, null, true, true, ref damage);
+        FordsTowerHitPatch.Dispatch(hook, component, null, true, true, 0, ref damage);
 
         hook.Received(1).NoteUnappliedBlow(component, null, true, true);
     }
@@ -165,9 +210,9 @@ public class FordsTowerHitPatchTests
             .Do(_ => throw new InvalidOperationException("boom"));
         var damage = 40;
 
-        FordsTowerHitPatch.Run(hook, new object(), null, true, false, ref damage);
+        FordsTowerHitPatch.Dispatch(hook, new object(), null, true, false, 0, ref damage);
         Assert.AreEqual(1, (int)latch.GetValue(null)!, "the first fault sets the latch");
-        FordsTowerHitPatch.Run(hook, new object(), null, true, false, ref damage);
+        FordsTowerHitPatch.Dispatch(hook, new object(), null, true, false, 0, ref damage);
 
         Assert.AreEqual(40, damage);
         Assert.AreEqual(1, (int)latch.GetValue(null)!);
@@ -194,5 +239,21 @@ public class FordsTowerHitPatchTests
         FordsTowerHitPatch.Uninstall(hook);
 
         Assert.IsFalse(FordsTowerHitPatch.HasHook);
+    }
+
+    [TestMethod]
+    public void Dispatch_ZeroDamageWithNoWeapon_IsWeaponlessNotRawZero()
+    {
+        var hook = Substitute.For<IFordsTowerHitHook>();
+        var component = new object();
+        var attacker = new object();
+        var damage = 0;
+
+        FordsTowerHitPatch.Dispatch(hook, component, attacker, true, false, 0, ref damage);
+
+        Assert.AreEqual(0, damage);
+        hook.Received(1).NoteUnappliedBlow(component, attacker, true, false);
+        hook.DidNotReceive().NoteUnappliedBlow(Arg.Any<object>(), Arg.Any<object?>(), Arg.Is<bool>(weaponless => !weaponless), Arg.Any<bool>());
+        hook.DidNotReceiveWithAnyArgs().AdjustTowerDamage(default!, default, default, default, default);
     }
 }

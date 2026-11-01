@@ -439,6 +439,31 @@ public class FordsMatchTests
     }
 
     [TestMethod]
+    public void ReasonFor_NamesTheBranchTheTableTakes_WithoutTouchingHitPointsOrTheRegenClock()
+    {
+        var match = Create();
+        var viewBefore = Tower(match.GetView(WestSlot), FordsTestLayout.EastOuter0).HitPoints;
+
+        var applied = match.ReasonFor(new TowerHit(FordsTestLayout.EastOuter0, false, UnitRole.Infantry, 100, MatchSide.West));
+        var own = match.ReasonFor(new TowerHit(FordsTestLayout.EastOuter0, false, UnitRole.Infantry, 100, MatchSide.East));
+        var locked = match.ReasonFor(new TowerHit(FordsTestLayout.EastInner0, false, UnitRole.Infantry, 100, MatchSide.West));
+        var zeroOwn = match.ReasonFor(new TowerHit(FordsTestLayout.EastOuter0, false, UnitRole.Infantry, 0, MatchSide.East));
+        var zeroEnemy = match.ReasonFor(new TowerHit(FordsTestLayout.EastOuter0, false, UnitRole.Infantry, 0, MatchSide.West));
+        var unknown = match.ReasonFor(new TowerHit("barricade_17", false, UnitRole.Infantry, 0));
+        var none = match.ReasonFor(null!);
+
+        Assert.AreEqual(TowerDamageReason.Applied, applied);
+        Assert.AreEqual(TowerDamageReason.OwnSide, own);
+        Assert.AreEqual(TowerDamageReason.Locked, locked);
+        Assert.AreEqual(TowerDamageReason.OwnSide, zeroOwn);
+        Assert.AreEqual(TowerDamageReason.RawZero, zeroEnemy);
+        Assert.AreEqual(TowerDamageReason.UnknownTower, unknown);
+        Assert.AreEqual(TowerDamageReason.RawZero, none);
+        Assert.AreEqual(viewBefore, Tower(match.GetView(WestSlot), FordsTestLayout.EastOuter0).HitPoints, "a query that would have applied 100 took nothing");
+        Assert.AreEqual(0, match.Tick(Snap(30f)).Heals.Count, "and started no regeneration clock");
+    }
+
+    [TestMethod]
     public void AdjustTowerDamage_UnknownTower_ReturnsRawWithUnknownTowerReason()
     {
         var match = Create();

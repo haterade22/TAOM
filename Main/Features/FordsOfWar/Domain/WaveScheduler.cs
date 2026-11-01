@@ -95,11 +95,11 @@ internal sealed class WaveScheduler
     }
 
     /// <summary>
-    /// Advances the free-wave timers and returns what to spawn now. <paramref name="liveInLane"/> and
-    /// <paramref name="liveOnSide"/> read the live unit counts at the start of the tick; units emitted by this call are
-    /// counted on top by the scheduler itself.
+    /// Advances the free-wave timers and returns what to spawn now. <paramref name="committedInLane"/> and
+    /// <paramref name="committedOnSide"/> read the units that hold room at the start of the tick, the live ones plus the ordinary
+    /// ones already issued but not yet spawned; units emitted by this call are counted on top by the scheduler itself.
     /// </summary>
-    public IReadOnlyList<SpawnRequest> Tick(float dt, float minute, Func<MatchSide, int, int> liveInLane, Func<MatchSide, int> liveOnSide)
+    public IReadOnlyList<SpawnRequest> Tick(float dt, float minute, Func<MatchSide, int, int> committedInLane, Func<MatchSide, int> committedOnSide)
     {
         var requests = new List<SpawnRequest>();
         if (_streams.Length == 0)
@@ -116,8 +116,8 @@ internal sealed class WaveScheduler
             var side = SideOf(index);
             var lane = LaneOf(index);
             var room = Math.Min(
-                _config.MaxLivePerLanePerSide - liveInLane(side, lane) - emittedInLane[index],
-                _config.MaxLivePerSide - liveOnSide(side) - emittedBySide[side]);
+                _config.MaxLivePerLanePerSide - committedInLane(side, lane) - emittedInLane[index],
+                _config.MaxLivePerSide - committedOnSide(side) - emittedBySide[side]);
             room = Math.Min(room, budget);
             if (room <= 0)
                 continue;

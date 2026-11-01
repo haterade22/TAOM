@@ -347,17 +347,25 @@ internal sealed partial class FordsRunReport
         if (run == null)
             return;
 
-        int n;
+        var sampled = 0;
         lock (_sync)
         {
             if (run.Towers.TryGetValue(towerId, out var tower))
             {
+                sampled = ++tower.BlowsSampled;
                 tower.Blows[(int)cls, (int)reason]++;
                 if (attacker == null && reason == TowerDamageReason.Applied)
                     tower.SideUnknownApplied++;
                 if (reason == TowerDamageReason.Applied)
                     tower.AppliedDamage[(int)cls] += applied;
-                if (cls == TowerBlowClass.Melee && reason != TowerDamageReason.Weaponless)
+                if (reason == TowerDamageReason.Applied && raw <= 0)
+                {
+                    // The engine's raw damage was 0 and the rules still applied some: the thrust damage floor.
+                    tower.FlooredBlows++;
+                    tower.FlooredDamage += applied;
+                }
+
+                if (cls == TowerBlowClass.Melee && reason != TowerDamageReason.Weaponless && reason != TowerDamageReason.OwnSide)
                     CountMeleeRaw(tower, raw);
                 if (attacker is { } by)
                 {
@@ -372,12 +380,14 @@ internal sealed partial class FordsRunReport
                 }
             }
 
-            n = NextOrdinal(run, FordsLogCategory.TowerBlow);
+            NextOrdinal(run, FordsLogCategory.TowerBlow);
         }
 
-        if (n <= TowerSampleCap)
-            Trace("Tower", "blow tower=" + towerId + " class=" + cls + " outcome=" + reason + " raw=" + raw);
-        CappedLine(FordsLogCategory.TowerBlow, n);
+        if (sampled is > 0 and <= TowerSampleCap)
+            Trace("Tower", "blow tower=" + towerId + " class=" + cls + " outcome=" + reason + " raw=" + raw
+                + (reason == TowerDamageReason.Applied && raw <= 0 ? " floored=" + applied : ""));
+        else if (sampled == TowerSampleCap + 1)
+            Info("Log", "category=TowerBlow tower=" + towerId + " capped after " + TowerSampleCap + "; counting only");
     }
 
     private static void CountMeleeRaw(FordsTowerEvidence tower, int raw)
@@ -428,7 +438,7 @@ internal sealed partial class FordsRunReport
         var text = "towerHp=" + config.TowerHitPoints + " innerHp=" + config.InnerTowerHitPoints + " keepHp=" + config.KeepHitPoints
             + " regenPerSecond=" + FordsLogLine.F3(config.RegenPerSecond) + " regenDelaySeconds=" + FordsLogLine.F1(config.RegenDelaySeconds)
             + " rangedFactor=" + FordsLogLine.F3(config.RangedDamageFactor) + " heroFactor=" + FordsLogLine.F3(config.HeroDamageFactor)
-            + " siegeFactor=" + FordsLogLine.F3(config.SiegeDamageFactor);
+            + " siegeFactor=" + FordsLogLine.F3(config.SiegeDamageFactor) + " thrustFloor=" + FordsLogLine.F3(config.ThrustFloorFactor);
         run.Start.TowerConfig = text;
         Info("Tower", "config " + text);
     });
