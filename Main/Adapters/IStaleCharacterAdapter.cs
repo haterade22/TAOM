@@ -5,8 +5,9 @@ namespace TAOM.Adapters;
 
 /// <summary>
 /// Engine boundary for <see cref="TAOM.Features.StaleCharacterRepair.IStaleCharacterRepairService"/>.
-/// Everything crosses as string ids, counts and a <see cref="StubRepairOutcome"/> (ADR-007:
-/// <c>CharacterObject</c>, <c>MBCharacterSkills</c> and <c>MBBodyProperty</c> never leave the adapter).
+/// Everything crosses as string ids, counts, a <see cref="StubRepairOutcome"/> and
+/// <see cref="IHeroCharacterStateAdapter"/> (ADR-007: <c>CharacterObject</c>, <c>MBCharacterSkills</c> and
+/// <c>MBBodyProperty</c> never leave the adapter).
 ///
 /// <para>A "stale character" is one the save restored under an id that current ModuleData no longer
 /// defines. <c>CharacterObject</c> persists exactly two fields (<c>_heroObject</c> and
@@ -29,6 +30,12 @@ public interface IStaleCharacterAdapter
     /// Idempotent: a field that is already set is left alone.
     /// </summary>
     StubRepairOutcome TryMakeInert(string characterId);
+
+    /// <summary>
+    /// Every alive, dead or disabled hero whose <c>CharacterObject</c> is hollow. Empty on a healthy load, and empty
+    /// when the campaign is not available yet.
+    /// </summary>
+    IReadOnlyList<IHeroCharacterStateAdapter> FindHollowHeroCharacters();
 
     /// <summary>
     /// Queues a player-visible notice naming <paramref name="repairedCount"/>, shown once the

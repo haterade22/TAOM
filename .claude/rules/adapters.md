@@ -65,6 +65,14 @@ steps the object back to an earlier model, and one that lifts `HitPoint` above t
 engine reads `_destructionStates[-1]` after hiding the model and the object stays invisible and unhittable
 ([engine note](../../docs/reference/engine/usable-machines.md), Fords of War tower regeneration, 2026-10-31).
 
+## A hero's character can be hollow (MANDATORY before reading a raw character field)
+
+`IsRegistered` is saved, so a hero can keep a `CharacterObject` that XML never reaches, while XML builds a new twin of its
+id. `CharacterObject.Culture` and `Name` answer from the hero and hide the nulls until `FillFrom` copies them onto a clone.
+Read the raw culture through `BasicCharacterObject` and the raw name through its field (`Name` is virtual, so a cast does
+not help), and before calling a repair done, trace every member the protected method reads after the first throw
+([repair](../../docs/features/stale-character-repair.md), #1076).
+
 ## Relations and party-screen writes (MANDATORY)
 
 - **Relations live on the owner the active DiplomacyModel returns** (`GetHeroesForEffectiveRelation`): his clan leader

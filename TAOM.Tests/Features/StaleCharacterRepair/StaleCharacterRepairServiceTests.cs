@@ -28,7 +28,7 @@ public class StaleCharacterRepairServiceTests
     {
         _adapter = Substitute.For<IStaleCharacterAdapter>();
         _logger = Substitute.For<IModLogger>();
-        _sut = new StaleCharacterRepairService(_adapter, _logger);
+        _sut = new StaleCharacterRepairService(_adapter, _logger, Substitute.For<IOutcomeLog>());
     }
 
     private void Stale(params string[] ids)

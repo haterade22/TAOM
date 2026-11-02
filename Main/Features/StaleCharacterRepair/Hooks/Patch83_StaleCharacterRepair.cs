@@ -36,6 +36,8 @@ public static class Patch83_StaleCharacterRepair
 {
     private static IStaleCharacterRepairService _service;
 
+    internal static IStaleCharacterRepairService Service => _service;
+
     public static void Initialize(IStaleCharacterRepairService service) => _service = service;
 
     // Cleared on module unload like every other patch holding a static injected reference, so a
@@ -48,7 +50,11 @@ public static class Patch83_StaleCharacterRepair
         // No IoC fallback: SubModule.Initialize runs on the statement before the category is
         // applied, so a null here means the wiring itself regressed. A lazy resolve would mask
         // that as a working save load instead of a silent no-op anyone can find.
-        try { _service?.RepairStaleCharacters(); }
+        try
+        {
+            _service?.RepairStaleCharacters();
+            _service?.ReportHollowHeroCharacters();
+        }
         catch { /* never block a save load over a repair */ }
     }
 }

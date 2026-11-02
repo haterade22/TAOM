@@ -946,7 +946,7 @@ Applied from `SubModule.cs` in the standard `OnGameInitializationFinished` batch
 
 ## Patch83_StaleCharacterRepair
 
-**Target:** `MBObjectManager.PreAfterLoad()` (public instance, parameterless, Postfix)
+**Target:** `MBObjectManager.PreAfterLoad()` (public instance, parameterless, Postfix) + `HeroCreator.DeliverOffSpring(Hero, Hero, bool)` (public static, void Prefix with `out bool __state` and a void Finalizer, `Patch83_OffspringParentRepair`, crash bundle 3fbdc0c5, #1076, 2026-11-02: repairs a hollow parent before the birth clones it; shares the method with `Patch13_RaceAge`'s transpiler, which still reads the original IL; applied at `OnSubModuleLoad`, so PatchShield now attaches `ShieldFinalizerWithResult` on a process's first game where it used to attach from the second, the frame suffix in single player is `_Patch3`, and a recurrence hashes to a new crash signature; [doc](../features/stale-character-repair.md))
 
 **Feature:** StaleCharacterRepair, `Main/Features/StaleCharacterRepair/Hooks/Patch83_StaleCharacterRepair.cs`. **Status:** ACTIVE (crash bundle 065939b6, 2026-09-05).
 

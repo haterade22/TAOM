@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using TaleWorlds.CampaignSystem;
@@ -32,7 +33,7 @@ namespace TAOM.Adapters;
 /// skipped. <c>PartyCharacterVM.cs:1113</c> reads <c>.Length</c> with no guard, so a stale troop in
 /// any roster crashes the party screen.</item>
 /// <item><c>BodyPropertyRange</c> — <c>BasicCharacterObject.cs:221</c> reads <c>.HairTags</c> on
-/// agent spawn. Repaired exactly the way vanilla repairs it at <c>BasicCharacterObject.cs:472-474</c>.</item>
+/// agent spawn. Repaired exactly the way vanilla repairs it at <c>BasicCharacterObject.cs:477-481</c>.</item>
 /// <item><c>_basicName</c> — <c>Name</c> returns it directly and <c>ToString()</c> calls
 /// <c>Name.ToString()</c>.</item>
 /// </list>
@@ -67,7 +68,7 @@ public class StaleCharacterAdapter : IStaleCharacterAdapter
     // The objects the CURRENT sweep found, so the repair writes to the object the scan actually
     // saw rather than round-tripping through a StringId. GetObject<T> resolves the FIRST assignable
     // type record's match, which is not guaranteed to be the same instance the scan collected.
-    // Cleared at the start of every scan, so it never outlives one sweep.
+    // Cleared at the start of every scan, so it holds them until the next scan.
     private readonly Dictionary<string, BasicCharacterObject> _found =
         new Dictionary<string, BasicCharacterObject>(StringComparer.Ordinal);
 
@@ -111,7 +112,7 @@ public class StaleCharacterAdapter : IStaleCharacterAdapter
     // True when any repairable field is missing. Checked per field rather than inferring the whole
     // stub from one of them, so a partially-repaired object (another mod, an interrupted sweep) is
     // still finished off.
-    private static bool IsStale(BasicCharacterObject character) =>
+    internal static bool IsStale(BasicCharacterObject character) =>
         character.GetDefaultCharacterSkills() == null
         || character.BodyPropertyRange == null
         || character.Name == null
@@ -145,12 +146,22 @@ public class StaleCharacterAdapter : IStaleCharacterAdapter
         return found;
     }
 
+    public IReadOnlyList<IHeroCharacterStateAdapter> FindHollowHeroCharacters()
+    {
+        var campaign = Campaign.Current;
+        if (campaign == null) return new List<IHeroCharacterStateAdapter>();
+
+        // The lists, not Hero.FindAll: a hollow character is unregistered, so Campaign.Characters never holds it.
+        return campaign.AliveHeroes.Concat(campaign.DeadOrDisabledHeroes)
+            .Select(hero => new HeroCharacterStateAdapter(hero))
+            .Where(hero => hero.IsCharacterHollow)
+            .ToList<IHeroCharacterStateAdapter>();
+    }
+
     public StubRepairOutcome TryMakeInert(string characterId)
     {
         // One cause, reported once, by the service — not blamed on the player's save data.
-        if (DefaultSkillsField == null || BasicNameField == null
-            || BodyPropertyRangeSetter == null || UpgradeTargetsSetter == null)
-            return StubRepairOutcome.BindingUnavailable;
+        if (!BindingsResolved) return StubRepairOutcome.BindingUnavailable;
 
         if (string.IsNullOrEmpty(characterId)) return StubRepairOutcome.NotResolved;
 
@@ -165,31 +176,7 @@ public class StaleCharacterAdapter : IStaleCharacterAdapter
             // empty one would silently zero a troop's stats.
             if (!IsStale(character)) return StubRepairOutcome.AlreadyHealthy;
 
-            if (character.GetDefaultCharacterSkills() == null)
-                DefaultSkillsField.SetValue(character, new MBCharacterSkills());
-
-            if (character.BodyPropertyRange == null)
-            {
-                // Vanilla's own fallback, verbatim (BasicCharacterObject.cs:472-474). Registered,
-                // unlike the skill set, because that is what vanilla does here and MBBodyProperty
-                // is resolved by id elsewhere. Note the consequence: a default BodyProperties is
-                // age 0, so this troop renders as a child if it ever spawns. That is the shipped
-                // vanilla behaviour for a face-less character and is preferable to a hard crash.
-                var range = MBObjectManager.Instance?.RegisterPresumedObject(
-                    new MBBodyProperty(character.StringId));
-                if (range != null)
-                {
-                    range.Init(default(BodyProperties), default(BodyProperties));
-                    BodyPropertyRangeSetter.Invoke(character, new object[] { range });
-                }
-            }
-
-            if (character.Name == null)
-                BasicNameField.SetValue(character, new TextObject(character.StringId));
-
-            if (character is CharacterObject troop && troop.UpgradeTargets == null)
-                UpgradeTargetsSetter.Invoke(troop, new object[] { new CharacterObject[0] });
-
+            FillNullFields(character);
             return StubRepairOutcome.Repaired;
         }
         catch (Exception ex)
@@ -197,5 +184,41 @@ public class StaleCharacterAdapter : IStaleCharacterAdapter
             _logger.LogError($"StaleCharacterAdapter: failed to repair '{characterId}': {ex.Message}");
             return StubRepairOutcome.Failed;
         }
+    }
+
+    // Through the field: CharacterObject.Name answers with the hero's name on a hero.
+    internal static bool IsBasicNameNull(BasicCharacterObject character) =>
+        BasicNameField?.GetValue(character) == null;
+
+    internal static bool BindingsResolved =>
+        DefaultSkillsField != null && BasicNameField != null
+        && BodyPropertyRangeSetter != null && UpgradeTargetsSetter != null;
+
+    internal static void FillNullFields(BasicCharacterObject character)
+    {
+        if (character.GetDefaultCharacterSkills() == null)
+            DefaultSkillsField.SetValue(character, new MBCharacterSkills());
+
+        if (character.BodyPropertyRange == null)
+        {
+            // Vanilla's own fallback, verbatim (BasicCharacterObject.cs:477-481). Registered,
+            // unlike the skill set, because that is what vanilla does here and MBBodyProperty
+            // is resolved by id elsewhere. Note the consequence: a default BodyProperties is
+            // age 0, so this troop renders as a child if it ever spawns. That is the shipped
+            // vanilla behaviour for a face-less character and is preferable to a hard crash.
+            var range = MBObjectManager.Instance?.RegisterPresumedObject(
+                new MBBodyProperty(character.StringId));
+            if (range != null)
+            {
+                range.Init(default(BodyProperties), default(BodyProperties));
+                BodyPropertyRangeSetter.Invoke(character, new object[] { range });
+            }
+        }
+
+        if (IsBasicNameNull(character))
+            BasicNameField.SetValue(character, new TextObject(character.StringId));
+
+        if (character is CharacterObject troop && troop.UpgradeTargets == null)
+            UpgradeTargetsSetter.Invoke(troop, new object[] { new CharacterObject[0] });
     }
 }

@@ -83,7 +83,7 @@ One manifest per issue, UTF-8, read with `tomllib`. Patterns are regexes in TOML
 
 ### Current Values
 
-Manifests on trunk: `918.toml`, `970.toml`, `971.toml`, `981.toml`, `1011.toml`. Read `970.toml`
+Manifests on trunk: `918.toml`, `970.toml`, `971.toml`, `981.toml`, `1011.toml`, `1076.toml`. Read `970.toml`
 for a battle check with `absence = "not-reached"`, `918.toml` for a daily check with `min = 3`.
 
 ## Key Files
@@ -111,7 +111,8 @@ for a battle check with `absence = "not-reached"`, `918.toml` for a daily check 
 - `TAOM.Tests/Core/Logging/OutcomeLogTests.cs`, `OutcomesTests.cs`, `OutcomeSeamsTests.cs`: the
   latch, the 256-key cap, counters across threads, the summary contents, the four seams.
 - Feature emitters, each with a fake `IOutcomeLog`: `CastleRecruitmentServiceTests.cs`,
-  `RacePersistenceServiceTests.cs`, `BattleActionBarChecksTests.cs`, `CareerScreenChecksTests.cs`.
+  `RacePersistenceServiceTests.cs`, `BattleActionBarChecksTests.cs`, `CareerScreenChecksTests.cs`,
+  `StaleCharacterParentRepairTests.cs`.
 - `tools/tests/test_ingame_verdict.py`: the verdict rules, build binding, session pairing, the
   `[Session]` summary report, and `RepoManifestGateTests`, which loads every manifest and fails a
   `[Check]` id that no `.cs` file under `Main` or `Client` holds as a string literal.

@@ -1,0 +1,31 @@
+# In-game checks for #1076, read by tools/ingame_verdict.py. Both [Check] lines come from
+# Main/Features/StaleCharacterRepair/StaleCharacterRepairService.cs: parent-repair from RepairOffspringParent, before
+# the birth runs, and parent-birth from ReportBirthAfterRepair, called by the Finalizer in
+# Hooks/Patch83_OffspringParentRepair.cs. The census warning comes from ReportHollowHeroCharacters. A healthy game
+# writes none of them, so NOT REACHED is the normal verdict: this manifest judges only a game that has the bad state.
+issue = 1076
+title = "A birth from a hero with a hollow character does not crash"
+fixed_in = "50e74c760"   # the commit before the fix: the manifest ships with the emitter, so its own sha is not known
+logs = ["taom"]
+
+[[check]]
+id = "taom.stale-character.parent-repair"
+needs = "a game where a birth has a hollow parent: the [StaleCharacterRepair] census line at load names such a hero. The bundle's save is not available; the RCA gives a way to build this state"
+reached = ['\[Check\] id=taom\.stale-character\.parent-repair result=']
+pass = ['\[Check\] id=taom\.stale-character\.parent-repair result=pass hero=\S+ ']
+fail = ['\[Check\] id=taom\.stale-character\.parent-repair result=fail']
+# A build between fixed_in and the emitter writes no [Check] line, and a session can end before the birth.
+absence = "not-reached"
+
+[[check]]
+id = "taom.stale-character.parent-birth"
+needs = "the same birth"
+reached = ['\[Check\] id=taom\.stale-character\.parent-repair result=pass']
+pass = ['\[Check\] id=taom\.stale-character\.parent-birth result=pass child=\S+']
+fail = ['\[Check\] id=taom\.stale-character\.parent-birth result=fail']
+# The repair line is written before the birth runs, so the Finalizer's line is the one that says how the birth ended.
+# A fail wins over a pass from another birth in the same session. A repair with neither line means the process died
+# inside the birth: the absence default, FAIL.
+
+[[human]]
+claim = "the child appears in the parent's clan with the parent's race and a normal age and face, also after a save and a load"

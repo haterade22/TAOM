@@ -40,6 +40,8 @@ public class ReflectionSiteBindingTests
     // --- EquipPresets / inventory (InventoryScreenAdapter.cs) ---
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Inventory.SPInventoryVM", "SPInventoryVM", "_currentCharacter", "Field", "InventoryScreenAdapter.cs:29")]
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Inventory.SPInventoryVM", "SPInventoryVM", "_inventoryLogic", "Field", "InventoryScreenAdapter.cs:32")]
+    // --- A hollow parent takes its registered XML twin as origin (HeroCharacterStateAdapter.cs, #1076) ---
+    [DataRow("TaleWorlds.CampaignSystem.CharacterObject", "CharacterObject", "_originCharacter", "Field", "HeroCharacterStateAdapter.cs:13")]
     // --- QuickActions panel refresh after a batch transfer (InventoryVMAdapter.cs, #917) ---
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Inventory.SPInventoryVM", "SPInventoryVM", "UpdateRightCharacter", "Method", "InventoryVMAdapter.cs:29")]
     [DataRow("TaleWorlds.CampaignSystem.ViewModelCollection.Inventory.SPInventoryVM", "SPInventoryVM", "RefreshInformationValues", "Method", "InventoryVMAdapter.cs:30")]

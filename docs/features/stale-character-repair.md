@@ -1,6 +1,6 @@
 # Stale Character Repair
 
-**Status:** implemented 2026-09-06 · **Patch category:** `Patch83_StaleCharacterRepair` · **Code:** `Main/Features/StaleCharacterRepair/`, `Main/Adapters/StaleCharacterAdapter.cs` · **Crash bundle:** `065939b6` (2026-09-05, engine v1.4.8)
+**Status:** implemented 2026-09-06, hollow parents added 2026-11-02 (#1076) · **Patch category:** `Patch83_StaleCharacterRepair` · **Code:** `Main/Features/StaleCharacterRepair/`, `Main/Adapters/StaleCharacterAdapter.cs`, `Main/Adapters/HeroCharacterStateAdapter.cs` · **Crash bundles:** `065939b6` (2026-09-05, engine v1.4.8), `3fbdc0c5` (2026-11-02, engine v1.5.6)
 
 ## Overview
 
@@ -76,7 +76,7 @@ skills NRE is not *the* bug, it is merely the first null the load path happens t
 |---|---|---|---|
 | `DefaultCharacterSkills` | null | `BasicCharacterObject.cs:292`, the shipped crash | yes, `new MBCharacterSkills()` |
 | `UpgradeTargets` | **null** (auto-property *initializer* at `CharacterObject.cs:314`, skipped by `GetUninitializedObject`) | `PartyCharacterVM.cs:1113` reads `.Length`, which crashes the party screen | yes, empty array |
-| `BodyPropertyRange` | null | `BasicCharacterObject.cs:221` reads `.HairTags` on agent spawn | yes, mirroring vanilla's own fallback at `:472-474` |
+| `BodyPropertyRange` | null | `BasicCharacterObject.cs:221` reads `.HairTags` on agent spawn | yes, mirroring vanilla's own fallback at `:477-481` |
 | `_basicName` | null | `Name` returns it; `ToString()` calls `Name.ToString()` | yes, a `TextObject` of the StringId |
 | `_culture` | null | any `character.Culture.StringId` | **no, deliberately** |
 | `Level` | 1 (from `Init()`) | wrong `Tier` → wrong `GetPower()` → wrong party strength | **no, unknowable** |
@@ -149,7 +149,7 @@ which registers. The repair deliberately does not, and this was checked rather t
   benefit. Vanilla registers only because `Deserialize` needs `skill_template` cross-references to
   resolve by id; the repair needs nothing of the sort.
 
-`MBBodyProperty` **is** registered, because vanilla registers it at `BasicCharacterObject.cs:472-474`
+`MBBodyProperty` **is** registered, because vanilla registers it at `BasicCharacterObject.cs:477-481`
 and that type genuinely is resolved by id elsewhere. Note the consequence, which is a known TAOM
 trap: a default `BodyProperties` is age 0, so a repaired troop renders as a child if it ever spawns.
 That is shipped vanilla behaviour for a face-less character and is preferable to a hard crash.
@@ -203,34 +203,99 @@ about the actual cause.
 | `Main/Features/StaleCharacterRepair/StaleCharacterRepairService.cs` | Sweep orchestration, the five-outcome report, the id cap, the notice trigger |
 | `Main/Features/StaleCharacterRepair/Domain/StubRepairOutcome.cs` | The five outcomes |
 | `Main/Adapters/StaleCharacterAdapter.cs` | Engine boundary: the scan, the four field writes, the deferred notice |
+| `Main/Features/StaleCharacterRepair/Hooks/Patch83_OffspringParentRepair.cs` | Prefix and Finalizer on `HeroCreator.DeliverOffSpring`: repair both parents, report how the birth ended |
+| `Main/Adapters/HeroCharacterStateAdapter.cs` | One hero's character: the raw culture, the census facts, the repair |
 
-Reading needs no reflection (`GetDefaultCharacterSkills()`, `BodyPropertyRange`, `Name` and
-`UpgradeTargets` are all public getters). Writing does: three of the four have `protected`/`private`
+`IsStale` reads public getters (`GetDefaultCharacterSkills()`, `BodyPropertyRange`, `Name` and
+`UpgradeTargets`), and the raw name goes through its field, because `Name` answers from the hero on a hero. Writing does: three of the four have `protected`/`private`
 setters. All four `MemberInfo`s are resolved once in a static initialiser, never per character.
 
 The adapter keeps the objects the current sweep found in a private map, so the repair writes to the
 object the scan actually saw rather than round-tripping through a `StringId`.
 `MBObjectManager.GetObject<T>` resolves the *first* assignable type record's match, which is not
-guaranteed to be the same instance. The map is cleared at the start of every scan, so it never
-outlives one sweep.
+guaranteed to be the same instance. The map is cleared at the start of every scan, so it holds those objects
+until the next scan.
 
 ## Tests
 
 | Suite | Covers |
 |---|---|
 | `StaleCharacterRepairServiceTests` (19) | healthy-load silence, null adapter result, single and multiple repairs, ids in the report, all five outcomes including the two that used to be mis-reported, a throwing repair, a throwing scan, a throwing logger, a throwing notice, notice-only-when-repaired, and the id-cap and blank-id policies |
-| `Patch83StaleCharacterRepairBindingTests` (11) | the target and its arity, all four reflected members and their types, `MBCharacterSkills`/`MBBodyProperty` construction, `RegisterPresumedObject`, the category string, and the presence of `ResetForUnload` |
+| `StaleCharacterParentRepairTests` | the census and the birth repair: healthy silence, each outcome, a throwing adapter, a throwing `DescribeState`, the state from before the write, the birth line |
+| `HeroCharacterStateAdapterTests` | the gate, each repair branch, the census facts and the engine's real copy, on objects built with no constructor, as a save builds them |
+| `Patch83HooksHarmonyTests` | the Prefix and Finalizer pair through real Harmony on the real target, a finished birth, a thrown birth, and the load postfix's order |
+| `HollowParent1076Tests` (`tools/tests/test_ingame_verdict.py`) | the real manifest against fixture logs: a finished birth, a throw, a throw on a second birth, a killed process, a healthy game |
+| `Patch83StaleCharacterRepairBindingTests` | the birth target and its parameter names, `_originCharacter`, the target and its arity, all four reflected members and their types, `MBCharacterSkills`/`MBBodyProperty` construction, `RegisterPresumedObject`, the category string, and the presence of `ResetForUnload` |
 
 The binding suite matters more than usual because **every** binding here fails quietly. A renamed
 target means Harmony throws at category-apply time, which `SubModule` now catches and logs (it
 previously would have aborted the remaining module init); a renamed field means `AccessTools`
 returns null and every repair returns `BindingUnavailable`.
 
-Behaviour cannot be proven in unit tests: constructing a save-restored `CharacterObject` with null
-fields needs a live campaign. The service tests cover the decision logic against a substituted
-adapter instead.
+Behaviour of the four-field sweep has unit tests only through a substituted adapter. The hollow-parent adapter runs
+in tests on objects built with no constructor, as a save builds them, and the birth seam runs through real Harmony. None
+of this has run in a real campaign.
+
+## A hero's character with a null raw culture (bundle `3fbdc0c5`)
+
+Added 2026-11-02 after a childbirth crash on v1.5.6. The trigger is a hero's `CharacterObject`
+whose raw `BasicCharacterObject._culture` is null. Nothing shows it while the character stays a hero, because
+`CharacterObject.Culture` returns `HeroObject.Culture`.
+
+| # | Where | What it does |
+|---|---|---|
+| 1 | `PregnancyCampaignBehavior.CheckOffspringToDeliver:168` | calls `HeroCreator.DeliverOffSpring` |
+| 2 | `HeroCreator.cs:265` and `:288` | `CreateHero` clones the same-sex parent through `CharacterObject.CreateFrom` |
+| 3 | `BasicCharacterObject.FillFrom:195` | copies the raw `_culture` onto the clone |
+| 4 | `Hero.cs:2323` | `SetInitialValuesFromCharacter` reads `StealthEquipments` before `HeroObject` is set |
+| 5 | `CharacterObject.cs:150` | `Culture.DefaultStealthEquipmentRoster` on a null culture throws |
+
+**A hollow character is the state that fits.** The bundle's lord, `lord_MM15_6`, is defined in ModuleData at the crash
+build, and this session's engine log has no `Null object reference found` line. A save can still keep a hollow
+character for a defined id: an earlier load unregisters it, `IsRegistered` is saved, and later loads build a new twin
+from XML while the hero keeps the hollow object, which no registered-list sweep sees. A hollow character has more than
+one null: a clone of it next throws at `Helpers.CharacterHelper.cs:48` on the body range. The bundle states no value for
+the field, step 5 is an inference from the frames, and what first made this save's character hollow is unverified: see
+[the RCA](../reviews/rca-offspring-parent-culture-2026-11-02.md).
+
+**Two seams, both in category `Patch83_StaleCharacterRepair`:**
+
+- **Census at load**, in the `PreAfterLoad` postfix: one WARNING naming each affected hero with the facts that
+  separate the candidate origins. It writes nothing itself. It runs after `SandBoxManager.OnCampaignStart`
+  (`Campaign.cs:1434`), so a generated hero's character has already copied its origin's culture. It is silent on a
+  healthy load. Coop's culture getter postfix fills the raw culture on a read, so a character whose only null is the culture reads
+  healthy under co-op; a hollow one still shows through its other null fields.
+- **Repair at the birth**, `Patch83_OffspringParentRepair`, a Prefix on `DeliverOffSpring`, for both parents:
+  - **With a healthy registered character of the same id:** it sets `_originCharacter` to that twin and calls the
+    engine's `InitializeHeroCharacterOnAfterLoad`, which copies culture, body range, race, skills and equipment
+    together. `_originCharacter` is saved, so for a hero in the hero lists `SandBoxManager.cs:401-403` repeats the copy
+    on every later load, and the child's origin is the twin too. **Trade-off:** this writes one saved field, on a
+    character that is already broken, and pulls the twin into the save, as any XML template used as an origin is. The
+    hero reads as generated for `IsOriginalCharacter` and the load copy. It stays unregistered, so `Hero.FindFirst`,
+    `Hero.FindAll` and `CharacterObject.All` still do not see it.
+  - **With no twin:** it takes the saved `Hero.Culture`, then the hero's clan, and fills the other null fields inert as
+    above. This does not break the rule that `_culture` is not invented: a hero's own saved culture is the true value,
+    and a hero with neither source is left alone and reported. The child's race is then the hollow parent's default.
+
+  The repair runs at the point of use because what first made the character hollow is unverified, so the repair must
+  not depend on it, and this saved-field write runs only where the game would crash. Both parents are repaired because
+  `DefaultHeroCreationModel.cs:155` reads the same-sex parent's body range and `:170` the mother's race. Once proof
+  exists that hollow characters occur only at load, a repair in the census walk could replace the Prefix and heal every
+  read (#1076). Coop's merge to 1.5.x replaces its call with its own birth path, so this seam stops being reached there.
+
+The check `taom.stale-character.parent-repair` writes `pass` or `fail`, with the state from before the write. The
+repair runs before the birth, so its line proves nothing about the birth: the Finalizer writes
+`taom.stale-character.parent-birth` as `pass` or `fail` by how the birth ended, and a fail wins over another birth's pass
+in `tools/ingame_checks/1076.toml`. A repair with neither line means the process died inside the birth, which is a FAIL.
 
 ## Verification not yet done
+
+**The parent-repair repair (bundle `3fbdc0c5`, #1076)** has unit and binding tests only. The player's save is not
+available (Mike, 2026-11-02). The proof needs an affected game, or the state built by hand from the RCA's steps: expect
+no crash at the birth, the census line, and the `parent-repair` and `parent-birth` `[Check]` lines
+(`tools/ingame_checks/1076.toml`). A healthy game writes none of them.
+
+**The original repair (bundle `065939b6`):**
 
 The repair is proven against the engine bindings and its own logic, not against the crashing save.
 Confirming it end to end needs the player's `saveauto2` (or any save reproducing bundle

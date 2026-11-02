@@ -384,6 +384,42 @@ class RepoManifestGateTests(unittest.TestCase):
             self.assertEqual(rc, 0, f"#{m.issue} fixed_in {m.fixed_in} is not a commit in this clone")
 
 
+class HollowParent1076Tests(unittest.TestCase):
+    """The real #1076 manifest: the repair line is written before the birth runs, so only the birth line proves it."""
+
+    REPAIR = "taom.stale-character.parent-repair"
+    BIRTH = "taom.stale-character.parent-birth"
+
+    def setUp(self):
+        self.t = Tree(self)
+        self.t.real_manifest("1076.toml")
+
+    def judge(self, fixture):
+        self.t.taom(fixture, "2026-11-02_11-42-07")
+        code, out, _ = self.t.run(["--issue", "1076"])
+        return code, verdict_of(out, self.REPAIR), verdict_of(out, self.BIRTH), out
+
+    def test_a_finished_birth_passes(self):
+        code, repair, birth, out = self.judge("hollow_parent_birth_finished.txt")
+        self.assertEqual((code, repair, birth), (0, "PASS", "PASS"), out)
+
+    def test_a_birth_that_threw_fails(self):
+        code, repair, birth, out = self.judge("hollow_parent_birth_threw.txt")
+        self.assertEqual((code, repair, birth), (1, "PASS", "FAIL"), out)
+
+    def test_a_throw_on_a_second_birth_is_not_hidden_by_a_first_that_finished(self):
+        code, _, birth, out = self.judge("hollow_parent_second_birth_threw.txt")
+        self.assertEqual((code, birth), (1, "FAIL"), out)
+
+    def test_a_process_killed_after_the_repair_fails(self):
+        code, repair, birth, out = self.judge("hollow_parent_process_killed.txt")
+        self.assertEqual((code, repair, birth), (1, "PASS", "FAIL"), out)
+
+    def test_a_healthy_game_is_not_reached(self):
+        code, repair, birth, out = self.judge("hollow_parent_healthy_game.txt")
+        self.assertEqual((code, repair, birth), (4, "NOT REACHED", "NOT REACHED"), out)
+
+
 class VerdictRuleTests(unittest.TestCase):
     """Rules 1 to 4 over the real #970 manifest, one fixture each."""
 

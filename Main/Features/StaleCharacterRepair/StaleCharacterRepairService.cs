@@ -61,13 +61,76 @@ public class StaleCharacterRepairService : IStaleCharacterRepairService
     // sample keeps the line readable while the count carries the true scale.
     internal const int MaxNamedIds = 20;
 
+    public const string ParentRepairCheckId = "taom.stale-character.parent-repair";
+    public const string BirthCompletedCheckId = "taom.stale-character.parent-birth";
+
     private readonly IStaleCharacterAdapter _adapter;
     private readonly IModLogger _logger;
+    private readonly IOutcomeLog _outcomes;
 
-    public StaleCharacterRepairService(IStaleCharacterAdapter adapter, IModLogger logger)
+    public StaleCharacterRepairService(IStaleCharacterAdapter adapter, IModLogger logger, IOutcomeLog outcomes)
     {
         _adapter = adapter;
         _logger = logger;
+        _outcomes = outcomes;
+    }
+
+    public void ReportHollowHeroCharacters()
+    {
+        try
+        {
+            var heroes = _adapter.FindHollowHeroCharacters();
+            if (heroes.Count == 0) return;
+
+            SafeWarn(
+                $"census: {heroes.Count} hero(es) have a hollow character. Cloning one throws in the engine; the " +
+                $"birth seam repairs a parent just before that (crash bundle 3fbdc0c5). " +
+                $"{Describe(heroes.Select(DescribeOrFallback).ToList())}");
+        }
+        catch (Exception ex)
+        {
+            _outcomes.Swallowed("StaleCharacterRepair", nameof(ReportHollowHeroCharacters), ex);
+        }
+    }
+
+    public bool RepairOffspringParent(IHeroCharacterStateAdapter parent)
+    {
+        try
+        {
+            if (!parent.IsCharacterHollow) return false;
+
+            var state = DescribeOrFallback(parent);
+            if (!parent.TryRepairCharacter())
+            {
+                _outcomes.Fail(ParentRepairCheckId, parent.HeroId, state);
+                return false;
+            }
+
+            _outcomes.Pass(ParentRepairCheckId, parent.HeroId, state);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _outcomes.Swallowed("StaleCharacterRepair", nameof(RepairOffspringParent), ex);
+            _outcomes.Fail(ParentRepairCheckId, parent.HeroId, $"hero={parent.HeroId} threw={ex.GetType().Name}");
+            return false;
+        }
+    }
+
+    public void ReportBirthAfterRepair(string childId, Exception failure)
+    {
+        if (failure == null) _outcomes.Pass(BirthCompletedCheckId, childId, $"child={childId}");
+        else _outcomes.Fail(BirthCompletedCheckId, string.Empty, $"threw={failure.GetType().Name}");
+    }
+
+    private string DescribeOrFallback(IHeroCharacterStateAdapter hero)
+    {
+        try { return hero.DescribeState(); }
+        catch (Exception ex)
+        {
+            _outcomes.Swallowed("StaleCharacterRepair", "DescribeState", ex);
+            return $"hero={hero.HeroId} state=unavailable";
+        }
     }
 
     public int RepairStaleCharacters()
