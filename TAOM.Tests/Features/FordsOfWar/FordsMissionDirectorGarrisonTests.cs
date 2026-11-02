@@ -61,6 +61,18 @@ public class FordsMissionDirectorGarrisonTests
     }
 
     [TestMethod]
+    public void Tick_AnyMap_RunsTheBattlefieldHousekeepingEveryThreeSeconds()
+    {
+        var f = FordsDirectorFixture.Create();
+        Assert.IsTrue(f.Director.Start());
+
+        for (var i = 0; i < 7; i++)
+            f.Director.Tick(1f);
+
+        f.Battlefield.Received(2).Housekeep();
+    }
+
+    [TestMethod]
     public void Start_MapDeclaringLaneBars_PassesThemToTheBattlefield()
     {
         var bars = new LaneFaceBars(new[] { 1, 2 });

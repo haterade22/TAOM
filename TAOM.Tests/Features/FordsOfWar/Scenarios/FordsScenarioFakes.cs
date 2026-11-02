@@ -113,6 +113,10 @@ internal sealed class FaithfulBattlefield : IFordsBattlefieldAdapter
     {
     }
 
+    public void Housekeep()
+    {
+    }
+
     public void SetCorpseFadeOutSeconds(float seconds)
     {
     }

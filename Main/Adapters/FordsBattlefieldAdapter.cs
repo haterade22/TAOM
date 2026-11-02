@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
 using TaleWorlds.Library;
@@ -22,7 +23,13 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
 {
     private readonly Mission _mission;
     private readonly FordsAgentRegistry _registry;
+    private const string HorseMonster = "horse";
+    private const int HousekeepPassesPerLine = 10;
+
     private LaneFaceBars? _laneBars;
+    private int _thrownTopUps;
+    private int _horsesRemoved;
+    private int _housekeepPasses;
     private readonly Func<string, object?> _towerEntity;
     private readonly IModLogger _logger;
     private readonly Dictionary<(MatchSide, int), Formation> _formations = new();
@@ -59,6 +66,40 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
     }
 
     public void SetLaneBars(LaneFaceBars? bars) => _laneBars = bars;
+
+    public void Housekeep()
+    {
+        foreach (var entry in _registry.Snapshot())
+        {
+            var agent = (Agent)entry.Agent;
+            if (!IsLive(agent))
+                continue;
+
+            for (var slot = EquipmentIndex.WeaponItemBeginSlot; slot < EquipmentIndex.NumAllWeaponSlots; slot++)
+            {
+                var weapon = agent.Equipment[slot];
+                if (!weapon.IsEmpty && weapon.IsAnyConsumable() && !weapon.IsAnyAmmo() && weapon.Amount < weapon.ModifiedMaxAmount)
+                {
+                    agent.SetWeaponAmountInSlot(slot, weapon.ModifiedMaxAmount, false);
+                    _thrownTopUps++;
+                }
+            }
+        }
+
+        // A copy: removing a mount changes the engine's list. Horses only: a riderless warg or other creature fights on.
+        foreach (var pair in _mission.MountsWithoutRiders.ToList())
+        {
+            var mount = pair.Key;
+            if (mount.IsActive() && mount.Monster?.StringId == HorseMonster)
+            {
+                mount.FadeOut(true, false);
+                _horsesRemoved++;
+            }
+        }
+
+        if (++_housekeepPasses % HousekeepPassesPerLine == 0)
+            _logger.LogInfo($"[FordsOfWar][Housekeep] thrownTopUps={_thrownTopUps} horsesRemoved={_horsesRemoved} (totals)");
+    }
 
     public void SetCorpseFadeOutSeconds(float seconds) => _mission.SetMissionCorpseFadeOutTimeInSeconds(seconds);
 

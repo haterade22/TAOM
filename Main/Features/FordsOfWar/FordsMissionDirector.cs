@@ -72,8 +72,12 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     private bool _liveStamped;
     private bool _sceneAuthored;
     private double _garrisonLookAt;
+    private float _housekeepIn = HousekeepSeconds;
     private Vec3f? _firstRefused;
     private const double GarrisonLookSeconds = 30.0;
+
+    // The engine's AmmoSupplyLogic also runs on 3 s.
+    private const float HousekeepSeconds = 3f;
 
     private volatile bool _started;
     private volatile bool _shutDown;
@@ -195,6 +199,13 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         var match = _match;
         if (!_started || _shutDown || match == null || _winner != null)
             return;
+
+        _housekeepIn -= dt;
+        if (_housekeepIn <= 0f)
+        {
+            _housekeepIn = HousekeepSeconds;
+            _battlefield.Housekeep();
+        }
 
         var samples = _battlefield.SampleUnits();
         MatchEffects effects;

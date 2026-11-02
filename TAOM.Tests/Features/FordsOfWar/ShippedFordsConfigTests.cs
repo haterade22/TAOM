@@ -93,6 +93,17 @@ public class ShippedFordsConfigTests
     }
 
     [TestMethod]
+    public void TowerArrow_IsAShippedItemThatDealsDamage_AndNeverSells()
+    {
+        var item = System.Xml.Linq.XDocument.Load(ConfigFile("fords_items.xml")).Descendants("Item").Single(i => (string)i.Attribute("id") == "fow_tower_arrow");
+
+        Assert.AreEqual("Arrows", (string)item.Attribute("Type"));
+        Assert.AreEqual("false", (string)item.Attribute("is_merchandise"));
+        Assert.IsTrue((int)item.Descendants("Weapon").Single().Attribute("thrust_damage") > 0);
+        Assert.IsTrue((int)item.Descendants("Weapon").Single().Attribute("missile_speed") >= 28);
+    }
+
+    [TestMethod]
     public void ShippedFiles_Exist()
     {
         foreach (var name in new[] { "match.json", "factions.json", "maps.json" })

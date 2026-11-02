@@ -1390,5 +1390,12 @@
         <GameType value="CampaignStoryMode"/>
       </IncludedGameTypes>
     </XmlNode>
+    <!-- Fords of War only: the tower arrow never reaches a campaign, so it can never sell. -->
+    <XmlNode>
+      <XmlName id="Items" path="fords_of_war/fords_items"/>
+      <IncludedGameTypes>
+        <GameType value="CustomGame"/>
+      </IncludedGameTypes>
+    </XmlNode>
   </Xmls>
 </Module>

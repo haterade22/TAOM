@@ -30,6 +30,7 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
     /// itself with no bonus (<c>OnAgentShootMissile</c>), so a javelin hits as a thrown javelin does.
     /// </summary>
     internal const string VolleyItemId = "western_javelin_2_t3";
+    internal const string TowerArrowItemId = "fow_tower_arrow";
 
     private const float VolleySpread = 1.5f;
     private const string FallParticle = "psys_game_wooden_barricade_destruction";
@@ -74,6 +75,9 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
     private Action<string>? _onDestroyed;
     private ItemObject? _volleyItem;
     private float _volleySpeed;
+    private ItemObject? _arrowItem;
+    private bool _arrowLookedUp;
+    private float _arrowSpeed;
     private int _volleyThrust;
     private bool _volleyLookedUp;
 
@@ -303,15 +307,18 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
         for (var i = 0; i < missiles; i++)
         {
             var aimAt = target + new Vec3f(Spread(), Spread(), 0f);
-            if (FordsTowerGeometry.AimDirection(origin, aimAt, _volleySpeed) is not { } aim)
+            // Every second missile of a volley is an arrow, when the item loaded.
+            var arrow = i % 2 == 1 ? TowerArrow() : null;
+            var speed = arrow != null ? _arrowSpeed : _volleySpeed;
+            if (FordsTowerGeometry.AimDirection(origin, aimAt, speed) is not { } aim)
                 continue;
 
             var direction = FordsEngine.ToVec3(aim);
             var orientation = Mat3.Identity;
             orientation.f = direction;
             orientation.Orthonormalize();
-            var weapon = new MissionWeapon(item, null, null, 1);
-            _mission.AddCustomMissile(shooter, weapon, FordsEngine.ToVec3(origin), direction, orientation, _volleySpeed, _volleySpeed,
+            var weapon = new MissionWeapon(arrow ?? item, null, null, 1);
+            _mission.AddCustomMissile(shooter, weapon, FordsEngine.ToVec3(origin), direction, orientation, speed, speed,
                 false, tower.Component);
             added++;
         }
@@ -436,6 +443,25 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
 
     // Looked up at match start through VolleyItemInfo, or at the first volley when that has not run: the item's own numbers are read,
     // logged once, and checked against the fire range.
+    private ItemObject? TowerArrow()
+    {
+        if (_arrowLookedUp)
+            return _arrowItem;
+
+        _arrowLookedUp = true;
+        _arrowItem = MBObjectManager.Instance?.GetObject<ItemObject>(TowerArrowItemId);
+        if (_arrowItem == null)
+        {
+            _logger.LogWarning($"[FordsOfWar] the tower arrow item '{TowerArrowItemId}' does not exist; towers fire javelins only");
+            return null;
+        }
+
+        var probe = new MissionWeapon(_arrowItem, null, null, 1);
+        _arrowSpeed = probe.GetModifiedMissileSpeedForCurrentUsage();
+        _logger.LogInfo($"[FordsOfWar] tower arrow item '{TowerArrowItemId}': thrust damage {probe.GetModifiedThrustDamageForCurrentUsage()}, missile speed {_arrowSpeed}");
+        return _arrowItem;
+    }
+
     private ItemObject? VolleyItem()
     {
         if (_volleyLookedUp)
