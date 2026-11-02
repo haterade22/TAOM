@@ -248,4 +248,26 @@ public class FordsMapsLoadTests
         Assert.AreEqual(0, catalog.Maps.Count);
         AssertOneWarningNaming("'scenes'");
     }
+
+    [TestMethod]
+    public void Maps_TowerHalfWidth_ReadsPerScene_AndDefaultsToZero()
+    {
+        var catalog = Load(Scenes("[ { 'scene': 'a', 'layout': 'tags', 'towerHalfWidth': 5.5 }, { 'scene': 'b' } ]"));
+
+        Assert.AreEqual(5.5f, catalog.Maps[0].TowerHalfWidth);
+        Assert.AreEqual(0f, catalog.Maps[1].TowerHalfWidth);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [DataTestMethod]
+    [DataRow("-1")]
+    [DataRow("51")]
+    [DataRow("'wide'")]
+    public void Maps_TowerHalfWidthOutOfRangeOrNotANumber_RevertsWithOneWarning(string value)
+    {
+        var catalog = Load(Scenes("[ { 'scene': 'a', 'towerHalfWidth': " + value + " } ]"));
+
+        Assert.AreEqual(0f, catalog.Maps[0].TowerHalfWidth);
+        AssertOneWarningNaming("towerHalfWidth");
+    }
 }

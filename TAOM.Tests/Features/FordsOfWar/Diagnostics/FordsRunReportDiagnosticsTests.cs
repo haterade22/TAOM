@@ -592,4 +592,22 @@ public class FordsRunReportDiagnosticsTests
         Assert.IsTrue(layout.KeepOpenEast);
         Assert.IsFalse(layout.KeepOpenWest);
     }
+
+    [TestMethod]
+    public void Field_ContactSecondsOfAStreamOrderedAtATower_AreAlsoKeptOnThatTower()
+    {
+        StartedRun();
+        FordsFieldSample Sample(string? target, int contact) => new(
+            new[] { new FordsLaneSample(MatchSide.West, 0, 10, 100f, false, 0, -1f, null, 0, target, 0, contact) },
+            new FordsTowerSample[0], new FordsPointSample[0], 10, 0, 0);
+
+        _report.MissionTick(1f, 5.0);
+        _report.Field(Sample("east_outer_0", 3));
+        _report.MissionTick(2f, 5.0);
+        _report.Field(Sample("east_outer_0", 4));
+        _report.MissionTick(3f, 5.0);
+        _report.Field(Sample(null, 9));
+
+        Assert.AreEqual(8.0, _report.Run!.Towers["east_outer_0"].ContactUnitSeconds, 1e-6, "only the looks at which the stream was ordered at it");
+    }
 }

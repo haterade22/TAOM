@@ -256,4 +256,14 @@ public class FordsTowerHitPatchTests
         hook.DidNotReceive().NoteUnappliedBlow(Arg.Any<object>(), Arg.Any<object?>(), Arg.Is<bool>(weaponless => !weaponless), Arg.Any<bool>());
         hook.DidNotReceiveWithAnyArgs().AdjustTowerDamage(default!, default, default, default, default);
     }
+
+    [TestMethod]
+    public void TowerComponent_DoesNotOverrideOnHit()
+    {
+        // The hit patch is on DestructableComponent.OnHit; an override would bypass the prefix for a runtime-attached tower.
+        var onHit = typeof(TAOM.Adapters.FordsTowerComponent).GetMethod("OnHit",
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+
+        Assert.IsNull(onHit, "FordsTowerComponent must inherit OnHit so Patch131 fires for it");
+    }
 }

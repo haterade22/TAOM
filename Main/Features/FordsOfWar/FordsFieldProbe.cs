@@ -13,16 +13,13 @@ namespace TAOM.Features.FordsOfWar;
 /// already measured) but outside the pure diagnostics folder because it reads <see cref="FordsUnitSample"/>. Distances are 2D. No
 /// LINQ and no allocation per unit. It also counts, per stream, the units the engine holds alarmed and, for a stream whose applied
 /// command is an AttackTower order at a standing tower, the units flagged to attack an entity and the melee ones in contact (within
-/// 4 m) with that tower, so a stream's ladder is measured at the tower it was ordered at and no other. For a stream whose applied
+/// <see cref="FordsMatchFacts.ContactMetres"/>, 4 m for a barricade) with that tower, so a stream's ladder is measured at the tower it was ordered at and no other. For a stream whose applied
 /// command is a MoveTo it also counts the units whose arc along the lane is more than 10 m past the stream's next standing enemy tower,
 /// measured from the units themselves and not from the rules' lead, so check 9's <c>bypass</c> part can fail on a fault in the rules.
 /// </summary>
 internal static class FordsFieldProbe
 {
     private const float HoldArrivalMetres = 10f;
-
-    /// <summary>An enemy melee unit this close to the tower it was ordered at is in contact: near enough to swing at it.</summary>
-    private const float ContactMetres = 4f;
 
     internal static FordsFieldSample Sample(IReadOnlyList<FordsUnitSample> units, IReadOnlyDictionary<AgentKey, UnitRecord> records,
         MapLayout layout, HashSet<string> fallen, IReadOnlyDictionary<(MatchSide, int), LaneCommand> applied,
@@ -134,7 +131,7 @@ internal static class FordsFieldProbe
                 {
                     if (unit.AttackingEntity)
                         attack.Flagged[stream]++;
-                    if (melee && unit.Position.Distance2D(standing[target].Position) <= ContactMetres)
+                    if (melee && unit.Position.Distance2D(standing[target].Position) <= facts.ContactMetres)
                         attack.Contact[stream]++;
                 }
 

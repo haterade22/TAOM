@@ -203,6 +203,7 @@ A file may override one profile or add a new name; a new profile starts from nor
 | `scenes[].name` | string | Display name, a `{=KEY}default` string |
 | `scenes[].layout` | string | `generated` (from the scene boundary) or `tags` (read the markers of a hand-built scene); an unknown value skips the scene |
 | `scenes[].options`, `towerPrefab`, `keepPrefab`, `camp` | object | Optional per-scene overrides of the defaults |
+| `scenes[].towerHalfWidth` | number, 0 to 50 | Default 0. Set only for a tags scene whose towers are real entities with a body: the half width of a tower in metres. Melee contact with a tower then counts within that plus 2.5 m (4 m without it), the tower entity gets a damage component at match start instead of a barricade, the fitter keeps it where it stands, and the map has no ground garrison. Out of range or not a number reverts to 0 with one warning |
 
 ### Config File: `factions.json`
 

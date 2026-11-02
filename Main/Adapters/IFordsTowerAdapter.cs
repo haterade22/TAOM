@@ -20,6 +20,9 @@ internal interface IFordsTowerAdapter
     /// <summary>Adds hit points to a standing tower (the regeneration the rules computed).</summary>
     void Heal(string towerId, int amount);
 
+    /// <summary>Logs what the engine did to a tower that just fell (is its entity still visible, does it still have physics). Main thread, after the fall was handled.</summary>
+    void LogFall(string towerId);
+
     /// <summary>Called with the tower id when a tower entity's hit points reach zero. May run off the main thread.</summary>
     void SetDestroyedHandler(Action<string> onDestroyed);
 

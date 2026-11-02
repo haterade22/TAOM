@@ -316,4 +316,35 @@ public class FordsLayoutFitterTests
         var inner = fit.Layout.Towers.Single(t => t.Id == "tower_east_1_1");
         Assert.IsTrue(outer.Position.X <= inner.Position.X - 10f, $"outer x {outer.Position.X} must be 10 m outward (lower x) of inner x {inner.Position.X}");
     }
+
+    [TestMethod]
+    public void Fit_AuthoredTower_KeepsItsSpot_EvenOffTheNavmesh()
+    {
+        var layout = Generated();
+        var sideTower = layout.Towers.First(t => t.Kind == TowerKind.Tower && Math.Abs(t.Position.Y) > 30f);
+        layout = layout with { Towers = layout.Towers.Select(t => t.Id == sideTower.Id ? t with { Authored = true } : t).ToList() };
+
+        var fit = FordsLayoutFitter.Fit(layout, Ground, NotIn(sideTower.Position, 3f));
+
+        var kept = fit.Layout.Towers.Single(t => t.Id == sideTower.Id);
+        Assert.AreEqual(sideTower.Position.X, kept.Position.X);
+        Assert.AreEqual(sideTower.Position.Y, kept.Position.Y);
+        Assert.IsTrue(kept.Authored);
+    }
+
+    [TestMethod]
+    public void Fit_AuthoredTower_CountsNoMoveAndNoDrop()
+    {
+        var layout = Generated();
+        var sideTower = layout.Towers.First(t => t.Kind == TowerKind.Tower && Math.Abs(t.Position.Y) > 30f);
+        layout = layout with { Towers = layout.Towers.Select(t => t.Id == sideTower.Id ? t with { Authored = true } : t).ToList() };
+
+        var fit = FordsLayoutFitter.Fit(layout, Ground, NotIn(sideTower.Position, 3f));
+
+        Assert.AreEqual(0, fit.Moved);
+        Assert.AreEqual(0, fit.Dropped);
+        Assert.AreEqual(0, fit.MovedTowers.Count);
+        Assert.AreEqual(0, fit.DroppedTowers.Count);
+        Assert.IsFalse(fit.Rejected);
+    }
 }

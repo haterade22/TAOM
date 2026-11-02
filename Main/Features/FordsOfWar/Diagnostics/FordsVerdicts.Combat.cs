@@ -21,7 +21,7 @@ internal static partial class FordsVerdicts
 
     /// <summary>
     /// For each tower that was struck: the lowest hit points the rules held, what regeneration gave back, the damage applied by class,
-    /// the melee raw damage, the blows the thrust damage floor turned into damage with their total (floored=N/D) and the top probe keys.
+    /// the melee raw damage, the damage per contact second (applied damage over the melee unit-seconds in contact, when any), the blows the thrust damage floor turned into damage with their total (floored=N/D) and the top probe keys.
     /// </summary>
     private static string TowerHealth(FordsRunEvidence run)
     {
@@ -40,8 +40,9 @@ internal static partial class FordsVerdicts
             var raw = tower.MeleeRawSummary();
             var probe = string.Join(",", tower.MeleeProbe.OrderByDescending(x => x.Value).ThenBy(x => x.Key, StringComparer.Ordinal).Take(3)
                 .Select(x => x.Key + ":" + x.Value));
+            var perContact = tower.ContactUnitSeconds > 0.0 ? " dmgPerContactS=" + N(tower.AppliedDamage.Sum() / tower.ContactUnitSeconds) : "";
             rows.Add(pair.Key + ":minHp=" + (tower.MinRulesHp?.ToString() ?? "-") + " healed=" + tower.HealedTotal + " applied=" + (applied == "" ? "-" : applied)
-                + " meleeRaw=n" + raw.Count + "/min" + raw.Min + "/med" + N(raw.Median) + "/max" + raw.Max + " floored=" + tower.FlooredBlows + "/" + tower.FlooredDamage + (probe == "" ? "" : " probe=" + probe));
+                + " meleeRaw=n" + raw.Count + "/min" + raw.Min + "/med" + N(raw.Median) + "/max" + raw.Max + " floored=" + tower.FlooredBlows + "/" + tower.FlooredDamage + perContact + (probe == "" ? "" : " probe=" + probe));
         }
 
         return rows.Count == 0 ? "towerHealth -" : "towerHealth " + string.Join(" ", rows);

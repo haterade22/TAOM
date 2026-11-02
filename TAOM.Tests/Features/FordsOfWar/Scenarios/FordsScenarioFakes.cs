@@ -406,6 +406,10 @@ internal sealed class FaithfulTowers : IFordsTowerAdapter
 
     public void SetDestroyedHandler(Action<string> onDestroyed) => _destroyed = onDestroyed;
 
+    public void LogFall(string towerId)
+    {
+    }
+
     public int SpawnGunners(TowerSlot slot, string troopId, int count)
     {
         for (var i = 0; i < count; i++)

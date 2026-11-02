@@ -85,7 +85,8 @@ internal static class FordsMapsReader
             ReadOptions(s.Group(scene, "options", label), d.Options, label, s),
             ReadPrefab(s.Group(scene, "towerPrefab", label), d.Tower, label + ".towerPrefab", s),
             ReadPrefab(s.Group(scene, "keepPrefab", label), d.Keep, label + ".keepPrefab", s),
-            ReadCamp(s.Group(scene, "camp", label), d.Camp, label + ".camp", s));
+            ReadCamp(s.Group(scene, "camp", label), d.Camp, label + ".camp", s),
+            s.Float(scene, label, "towerHalfWidth", 0f, 0f, 50f));
     }
 
     private static bool TryReadMode(JToken? token, out MapLayoutMode mode, out string why)

@@ -569,4 +569,21 @@ public class ShippedFordsConfigTests
             }
         }
     }
+
+    [TestMethod]
+    public void ShippedMaps_Fords01_DeclaresItsTowerHalfWidth()
+    {
+        var catalog = Load(Substitute.For<IModLogger>());
+
+        Assert.AreEqual(5.5f, catalog.Maps.Single(m => m.SceneId == "taom_fords_01").TowerHalfWidth);
+    }
+
+    [TestMethod]
+    public void ShippedMaps_GeneratedScenes_HaveNoRealTowerKeys()
+    {
+        var catalog = Load(Substitute.For<IModLogger>());
+
+        foreach (var map in catalog.Maps.Where(m => m.Layout == MapLayoutMode.Generated))
+            Assert.AreEqual(0f, map.TowerHalfWidth, map.SceneId);
+    }
 }

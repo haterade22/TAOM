@@ -186,4 +186,25 @@ public class FordsTagLayoutReaderTests
 
         StringAssert.Contains(problem, "fow_tower_east_");
     }
+
+    [TestMethod]
+    public void TryRead_TowerMarkerWithABody_IsAuthored()
+    {
+        var markers = TwoLanes();
+        markers[markers.FindIndex(m => m.Tag == "fow_tower_west_0_0")] =
+            new FordsMarker("fow_tower_west_0_0", new Vec3f(120f, 0f, 1f), 0f, HasBody: true);
+
+        Assert.IsTrue(Read(markers, out var layout, out var problem), problem);
+
+        Assert.IsTrue(layout.Towers.Single(t => t.Id == "tower_west_0_0").Authored);
+        Assert.IsFalse(layout.Towers.Single(t => t.Id == "tower_west_1_0").Authored, "the other markers stay empty");
+    }
+
+    [TestMethod]
+    public void TryRead_EmptyTowerMarker_IsNotAuthored()
+    {
+        Assert.IsTrue(Read(TwoLanes(), out var layout, out var problem), problem);
+
+        Assert.IsTrue(layout.Towers.All(t => !t.Authored));
+    }
 }

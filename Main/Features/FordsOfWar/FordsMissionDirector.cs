@@ -456,6 +456,11 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         if (count <= 0)
             return;
 
+        // A real tower stands in a hole in the navmesh and its top is 25 m up: ground gunners beside it would shoot nothing worth a
+        // test. Its garrison is a later slice.
+        if (_plan.Map.TowerHalfWidth > 0f)
+            return;
+
         foreach (var side in new[] { MatchSide.West, MatchSide.East })
         {
             var troop = _plan.Factions[side].Units.FirstOrDefault(u => u.Role == UnitRole.Ranged)?.TroopId;
@@ -563,7 +568,8 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         _report.VolleyItem(_towers.VolleyItemInfo(), config.Towers.FireRange);
         _report.TowerConfig(config.Towers);
         _facts = new FordsMatchFacts(config.Towers.FireRange, config.Towers.AttackRange, config.Capture.Radius, layout.Lanes.Count,
-            config.Waves.MaxLivePerSide, config.Heroes.MaxAlivePerSide, KeepDistance(built), _battlefield.MaxAgents);
+            config.Waves.MaxLivePerSide, config.Heroes.MaxAlivePerSide, KeepDistance(built), _battlefield.MaxAgents,
+            FordsTowerGeometry.ContactMetres(_plan.Map.TowerHalfWidth));
         _report.MatchStarted(_facts, built, expected);
     }
 
@@ -880,6 +886,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             }
 
             _towers.KillGunners(towerId);
+            _towers.LogFall(towerId);
             _report.TowerFell(towerId, _layout.Towers.FirstOrDefault(t => t.Id == towerId)?.Kind == TowerKind.Keep);
         });
 }

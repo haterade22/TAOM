@@ -363,4 +363,17 @@ public class FordsFieldProbeTests
 
         Assert.AreEqual(1, LaneOf(Sample(), MatchSide.East, 0).MarchPast);
     }
+
+    [TestMethod]
+    public void Contact_UsesTheMapsContactMetres()
+    {
+        // tower_east_0_0 stands at (640, 0): 6 m away is outside the default 4 m but inside a real tower's 8 m.
+        Attack(_applied, MatchSide.West, 0, FordsTestLayout.EastOuter0);
+        AlarmedUnit(1, MatchSide.West, 0, 634f, 0f, true, true);
+
+        Assert.AreEqual(0, LaneOf(Sample(), MatchSide.West, 0).Contact, "the default contact is 4 m");
+
+        var wide = FordsFieldProbe.Sample(_units, _records, _layout, _fallen, _applied, View(), Facts with { ContactMetres = 8f }, 0);
+        Assert.AreEqual(1, LaneOf(wide, MatchSide.West, 0).Contact);
+    }
 }

@@ -37,14 +37,14 @@ internal sealed class FordsDirectorFixture
     private int _nextKey;
 
     public static FordsDirectorFixture Create(Func<FordsMatchConfig, FordsMatchConfig>? tweak = null,
-        MapLayoutMode mode = MapLayoutMode.Generated, int lanes = 3)
+        MapLayoutMode mode = MapLayoutMode.Generated, int lanes = 3, float towerHalfWidth = 0f)
     {
         var fixture = new FordsDirectorFixture();
-        fixture.Build(tweak, mode, lanes);
+        fixture.Build(tweak, mode, lanes, towerHalfWidth);
         return fixture;
     }
 
-    private void Build(Func<FordsMatchConfig, FordsMatchConfig>? tweak, MapLayoutMode mode, int lanes)
+    private void Build(Func<FordsMatchConfig, FordsMatchConfig>? tweak, MapLayoutMode mode, int lanes, float towerHalfWidth)
     {
         var d = FordsMatchConfig.Default;
         var config = d with
@@ -57,7 +57,7 @@ internal sealed class FordsDirectorFixture
             config = tweak(config);
 
         var map = new MapEntry("test_scene", "Test", mode, new LayoutOptions(LaneCount: lanes),
-            TowerPrefab.DefaultTower, TowerPrefab.DefaultKeep, CampDefaults.Default);
+            TowerPrefab.DefaultTower, TowerPrefab.DefaultKeep, CampDefaults.Default, towerHalfWidth);
         Plan = new FordsMatchPlan(config, map, FordsMatchFixture.Factions(), "hard", lanes);
 
         Report = new FordsRunReport(Logger);

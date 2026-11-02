@@ -320,4 +320,23 @@ public class FordsVerdictDiagnosticsTests
 
         StringAssert.Contains(info, "floored=3/30");
     }
+
+    [TestMethod]
+    public void Check09_Info_ATowerRowCarriesTheDamagePerContactSecond()
+    {
+        var run = Run();
+        var tower = Tower(run, "t1");
+        tower.AppliedDamage[(int)TowerBlowClass.Melee] = 300;
+        tower.AppliedDamage[(int)TowerBlowClass.Ranged] = 100;
+        tower.Blows[(int)TowerBlowClass.Melee, (int)TowerDamageReason.Applied] = 4;
+        tower.ContactUnitSeconds = 80.0;
+        var other = Tower(run, "t2");
+        other.Blows[(int)TowerBlowClass.Melee, (int)TowerDamageReason.Applied] = 1;
+
+        var info = Row(run, 9).Info;
+
+        StringAssert.Contains(info, "t1:minHp=-");
+        StringAssert.Contains(info, "dmgPerContactS=5.0");
+        Assert.AreEqual(1, System.Text.RegularExpressions.Regex.Matches(info, "dmgPerContactS=").Count, "a tower with no contact seconds prints none");
+    }
 }

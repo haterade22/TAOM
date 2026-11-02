@@ -7,8 +7,8 @@ using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Features.FordsOfWar;
 
-/// <summary>A scene entity carrying a Fords of War tag: the tag text, where it stands, and its yaw in the ground plane (radians).</summary>
-internal readonly record struct FordsMarker(string Tag, Vec3f Position, float Yaw);
+/// <summary>A scene entity carrying a Fords of War tag: the tag text, where it stands, its yaw in the ground plane (radians), and whether it has a body (children or physics) of its own.</summary>
+internal readonly record struct FordsMarker(string Tag, Vec3f Position, float Yaw, bool HasBody = false);
 
 /// <summary>
 /// Builds a <see cref="MapLayout"/> from the tagged entities of an authored scene (greybox-scene-spec.md): <c>fow_lane_&lt;lane&gt;_&lt;n&gt;</c>,
@@ -54,12 +54,12 @@ internal static class FordsTagLayoutReader
                 var lane = Number(m, 2);
                 var order = Number(m, 3);
                 towers.Add(new TowerSlot($"tower_{m.Groups[1].Value}_{lane}_{order}", side, lane, order, TowerKind.Tower,
-                    marker.Position, marker.Yaw));
+                    marker.Position, marker.Yaw, marker.HasBody));
             }
             else if ((m = KeepTag.Match(tag)).Success)
             {
                 var side = m.Groups[1].Value == "west" ? MatchSide.West : MatchSide.East;
-                towers.Add(new TowerSlot($"keep_{m.Groups[1].Value}", side, -1, KeepOrder, TowerKind.Keep, marker.Position, marker.Yaw));
+                towers.Add(new TowerSlot($"keep_{m.Groups[1].Value}", side, -1, KeepOrder, TowerKind.Keep, marker.Position, marker.Yaw, marker.HasBody));
             }
             else if ((m = CaptureTag.Match(tag)).Success)
             {

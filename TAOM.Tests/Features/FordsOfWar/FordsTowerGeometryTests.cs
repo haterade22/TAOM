@@ -138,4 +138,16 @@ public class FordsTowerGeometryTests
         var t = flat / (speed * horizontal);
         return speed * aim.Z * t - 0.5f * FordsTowerGeometry.Gravity * t * t;
     }
+
+    [TestMethod]
+    public void ContactMetres_NoHalfWidth_IsTheGeneratedBarricadesFour()
+    {
+        Assert.AreEqual(4f, FordsTowerGeometry.ContactMetres(0f));
+    }
+
+    [TestMethod]
+    public void ContactMetres_ARealTower_IsItsHalfWidthPlusTwoAndAHalf()
+    {
+        Assert.AreEqual(8f, FordsTowerGeometry.ContactMetres(5.5f), 0.001f);
+    }
 }

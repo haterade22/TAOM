@@ -21,6 +21,18 @@ internal static class FordsTowerGeometry
     private const float GunnerSpacing = 1.2f;
     private const float QuarterTurn = (float)(Math.PI / 4d);
 
+    /// <summary>The distance a generated barricade's melee attacker stands within to count as in contact with it.</summary>
+    public const float BarricadeContactMetres = 4f;
+
+    private const float ContactReach = 2.5f;
+
+    /// <summary>
+    /// How close to a tower's origin (2D) a melee unit counts as in contact with it: the barricade's 4 m, or for a real tower of
+    /// <paramref name="towerHalfWidth"/> metres half width (the walls start that far from the origin) that plus a sword's reach.
+    /// </summary>
+    public static float ContactMetres(float towerHalfWidth) =>
+        towerHalfWidth > 0f ? towerHalfWidth + ContactReach : BarricadeContactMetres;
+
     public static Vec3f MarchDirection(TowerSlot slot) =>
         new((float)Math.Cos(slot.Yaw), (float)Math.Sin(slot.Yaw), 0f);
 

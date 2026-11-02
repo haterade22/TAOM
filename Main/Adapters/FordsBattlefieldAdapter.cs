@@ -25,6 +25,7 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
     private readonly Func<string, object?> _towerEntity;
     private readonly IModLogger _logger;
     private readonly Dictionary<(MatchSide, int), Formation> _formations = new();
+    private readonly HashSet<(MatchSide, int, string)> _orderLogged = new();
     private bool _unplaceableLogged;
 
     public FordsBattlefieldAdapter(Mission mission, FordsAgentRegistry registry, Func<string, object?> towerEntity, IModLogger logger)
@@ -183,7 +184,21 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
             return false;
 
         formation.SetMovementOrder(MovementOrder.MovementOrderAttackEntity(entity, true));
+        if (entity.GetFirstScriptOfType<FordsTowerComponent>() != null && _orderLogged.Add((side, lane, towerId)))
+            LogOrder(side, lane, towerId, entity, formation);
         return true;
+    }
+
+    private void LogOrder(MatchSide side, int lane, string towerId, GameEntity entity, Formation formation)
+    {
+        try
+        {
+            _logger.LogInfo("[FordsOfWar][Tower] " + FordsTowerOrderProbe.Describe(_mission.Scene, entity, formation, towerId, side, lane));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning($"[FordsOfWar][Tower] order probe of {towerId} failed ({ex.GetType().Name}: {ex.Message})");
+        }
     }
 
     public string CharacterName(string characterId)
@@ -198,6 +213,7 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
     {
         _registry.Clear();
         _formations.Clear();
+        _orderLogged.Clear();
     }
 
     private static bool IsLive(Agent agent) => agent.IsActive() && AgentSlotIdentity.IsCurrentOccupant(agent);

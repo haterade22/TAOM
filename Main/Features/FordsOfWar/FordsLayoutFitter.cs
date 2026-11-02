@@ -12,7 +12,7 @@ namespace TAOM.Features.FordsOfWar;
 /// of its original gap away from them, so lanes never collapse onto each other. A tower slides along its own lane
 /// (10, 20 then 30 m either way, never past a
 /// neighbour of its own side and lane: the chain locks by <c>Order</c>, so the outer tower stays at least 10 m outward of the inner one)
-/// and keeps its id. Keeps and the two ends of a lane are never dropped (a match cannot run
+/// and keeps its id; an authored tower (the scene's own entity) stays where it stands, counted as neither moved nor dropped. Keeps and the two ends of a lane are never dropped (a match cannot run
 /// without them): they stay on the ground at their own spot and are counted as unfixed. A tower that finds no spot is dropped,
 /// unless it was its side's last one in that lane: then the fit is rejected, because the enemy would start with an open keep.
 /// Pure: the scene adapter supplies the ground snap, the navmesh test and the optional segment test as delegates.
@@ -185,6 +185,11 @@ internal static class FordsLayoutFitter
                 {
                     _unfixed += Free(tower.Position, out var keepSpot) ? 0 : 1;
                     spot = keepSpot;
+                }
+                else if (tower.Authored)
+                {
+                    // A tower the scene built stands in a hole in the ground navmesh by design; sliding it would put a barricade beside it.
+                    spot = tower.Position;
                 }
                 else if (TrySlide(tower, out var slid))
                 {

@@ -364,4 +364,40 @@ public class FordsOfWarBindingTests
         Assert.AreEqual(returns, method!.ReturnType, $"{type.Name}.{name} changed its return type");
         return method;
     }
+
+    // --- the runtime-attached tower component ------------------------------------------------------------------------
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheTowerComponentMembers_StillResolve()
+    {
+        Method(typeof(GameEntity), "CreateAndAddScriptComponent", typeof(void), typeof(string), typeof(bool));
+        Assert.IsNotNull(typeof(GameEntityPhysicsExtensions).GetMethod("HasBody", new[] { typeof(GameEntity) }),
+            "GameEntity has no HasBody member: the extension GameEntityPhysicsExtensions.HasBody(GameEntity) is what the scene adapter calls");
+        Method(typeof(GameEntity), "GetVisibilityExcludeParents", typeof(bool));
+        Method(typeof(GameEntity), "IsVisibleIncludeParents", typeof(bool));
+        Method(typeof(GameEntity), "GetChild", typeof(GameEntity), typeof(int));
+        Property(typeof(GameEntity), "ChildCount", typeof(int));
+        Property(typeof(GameEntity), "BodyFlag", typeof(BodyFlags));
+        Field(typeof(DestructableComponent), "DestructionStates", typeof(string));
+        Field(typeof(DestructableComponent), "ReferenceEntityTag", typeof(string));
+        Field(typeof(DestructableComponent), "HeavyHitParticlesTag", typeof(string));
+        Field(typeof(DestructableComponent), "ParticleEffectOnDestroy", typeof(string));
+        Field(typeof(DestructableComponent), "SoundEffectOnDestroy", typeof(string));
+        Field(typeof(DestructableComponent), "SoundAndParticleEffectHeightOffset", typeof(float));
+        Method(typeof(Scene), "GetNavMeshFaceIndex", typeof(void), typeof(PathFaceRecord).MakeByRefType(), typeof(Vec3), typeof(bool));
+        Method(typeof(Scene), "DoesPathExistBetweenFaces", typeof(bool), typeof(int), typeof(int), typeof(bool));
+    }
+
+    [TestMethod]
+    [TestCategory("BindingVerification")]
+    public void TheTowerComponent_IsPublicWithAPublicParameterlessConstructor_AndASubclassOfTheDestructable()
+    {
+        var type = typeof(TAOM.Adapters.FordsTowerComponent);
+
+        Assert.IsTrue(type.IsPublic, "the Kit and the script factory resolve components by public type");
+        Assert.IsTrue(typeof(DestructableComponent).IsAssignableFrom(type));
+        Assert.IsNotNull(type.GetConstructor(Type.EmptyTypes), "the engine builds a script component with no arguments");
+        Assert.AreEqual("FordsTowerComponent", nameof(TAOM.Adapters.FordsTowerComponent));
+    }
 }

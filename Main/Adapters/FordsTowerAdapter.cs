@@ -31,6 +31,9 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
     internal const string VolleyItemId = "western_javelin_2_t3";
 
     private const float VolleySpread = 1.5f;
+    private const string FallParticle = "psys_game_wooden_barricade_destruction";
+    private const string FallSound = "event:/mission/siege/siegetower/break";
+    private const float DefaultFallHeight = 10f;
 
     private sealed class Tower
     {
@@ -90,7 +93,8 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
     {
         try
         {
-            var entity = Adopt(slot) ?? Instantiate(slot, prefab);
+            // An authored tower is the scene's own entity: it gets the component or the match refuses it, never a barricade beside it.
+            var entity = Adopt(slot) ?? (slot.Authored ? AttachAuthored(slot) : Instantiate(slot, prefab));
             var component = entity?.GetFirstScriptOfType<DestructableComponent>();
             if (entity == null || component == null)
             {
@@ -107,6 +111,12 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
             var stage = new FordsTowerStage();
             component.OnCalculateDestructionStateIndex = (index, _, _) => stage.Advance(index);
             component.OnDestroyed += HandleDestroyed;
+            if (component is FordsTowerComponent)
+            {
+                SetFallEffects(entity, component);
+                _logger.LogInfo("[FordsOfWar][Tower] " + FordsTowerLines.Attached(slot.Id, entity.Name, entity.ChildCount, hitPoints));
+            }
+
             lock (_gate)
             {
                 _towers[slot.Id] = new Tower(slot, entity, component);
@@ -119,6 +129,26 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
         {
             _logger.LogError($"[FordsOfWar] tower {slot.Id} could not be built ({ex.GetType().Name}: {ex.Message})");
             return false;
+        }
+    }
+
+    public void LogFall(string towerId)
+    {
+        var tower = Find(towerId);
+        if (tower == null || tower.Component is not FordsTowerComponent)
+            return;
+
+        try
+        {
+            var root = tower.Entity;
+            var child = root.ChildCount > 0 ? root.GetChild(0) : null;
+            _logger.LogInfo("[FordsOfWar][Tower] " + FordsTowerLines.Fell(towerId, root.GetVisibilityExcludeParents(),
+                child?.GetVisibilityExcludeParents() ?? false, root.PhysicsDescBodyFlag != BodyFlags.None,
+                child != null && child.PhysicsDescBodyFlag != BodyFlags.None));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"[FordsOfWar] the fall read-back of {towerId} failed ({ex.GetType().Name}: {ex.Message})");
         }
     }
 
@@ -257,10 +287,48 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
 
     private GameEntity? Adopt(TowerSlot slot)
     {
-        var side = slot.Owner == MatchSide.West ? "west" : "east";
-        var tag = slot.Kind == TowerKind.Keep ? $"fow_keep_{side}" : $"fow_tower_{side}_{slot.Lane}_{slot.Order}";
-        var marked = _mission.Scene.FindEntityWithTag(tag);
+        var marked = _mission.Scene.FindEntityWithTag(TagOf(slot));
         return marked != null && marked.GetFirstScriptOfType<DestructableComponent>() != null ? marked : null;
+    }
+
+    private static string TagOf(TowerSlot slot)
+    {
+        var side = slot.Owner == MatchSide.West ? "west" : "east";
+        return slot.Kind == TowerKind.Keep ? $"fow_keep_{side}" : $"fow_tower_{side}_{slot.Lane}_{slot.Order}";
+    }
+
+    /// <summary>Puts a <see cref="FordsTowerComponent"/> on the tagged entity of a tower the scene built; null (after a log line) when there is none or the engine refused the script.</summary>
+    private GameEntity? AttachAuthored(TowerSlot slot)
+    {
+        var marked = _mission.Scene.FindEntityWithTag(TagOf(slot));
+        if (marked == null)
+        {
+            _logger.LogError($"[FordsOfWar][Tower] {slot.Id} is authored but no entity carries the tag {TagOf(slot)}");
+            return null;
+        }
+
+        marked.CreateAndAddScriptComponent(nameof(FordsTowerComponent), true);
+        if (marked.GetFirstScriptOfType<FordsTowerComponent>() != null)
+            return marked;
+
+        _logger.LogError($"[FordsOfWar][Tower] the engine did not attach {nameof(FordsTowerComponent)} to {marked.Name} for {slot.Id}");
+        return null;
+    }
+
+    // Splinters and a siege tower's break sound: the closest engine assets found to a tower falling, until a stone one is named.
+    private static void SetFallEffects(GameEntity entity, DestructableComponent component)
+    {
+        component.ParticleEffectOnDestroy = FallParticle;
+        component.SoundEffectOnDestroy = FallSound;
+        try
+        {
+            var (low, high) = entity.ComputeGlobalPhysicsBoundingBoxMinMax();
+            component.SoundAndParticleEffectHeightOffset = Math.Max(0f, (high.z - low.z) / 2f);
+        }
+        catch (Exception)
+        {
+            component.SoundAndParticleEffectHeightOffset = DefaultFallHeight;
+        }
     }
 
     private GameEntity? Instantiate(TowerSlot slot, TowerPrefab prefab)

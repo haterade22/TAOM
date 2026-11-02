@@ -666,6 +666,8 @@ internal sealed partial class FordsRunReport
                 lane.AttackUnitSeconds += l.Live * dt;
                 lane.AttackFlaggedUnitSeconds += l.Flagged * dt;
                 lane.AttackContactUnitSeconds += l.Contact * dt;
+                if (run.Towers.TryGetValue(l.AttackTarget, out var target))
+                    target.ContactUnitSeconds += l.Contact * dt;
             }
 
             if (l.Live > 0)

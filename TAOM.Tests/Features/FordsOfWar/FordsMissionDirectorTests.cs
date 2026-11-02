@@ -73,6 +73,38 @@ public class FordsMissionDirectorTests
     }
 
     [TestMethod]
+    public void Start_RealTowerMap_GivesNoGroundGarrison()
+    {
+        var f = FordsDirectorFixture.Create(towerHalfWidth: 5.5f);
+
+        Assert.IsTrue(f.Director.Start());
+
+        f.Towers.DidNotReceive().SpawnGunners(Arg.Any<TowerSlot>(), Arg.Any<string>(), Arg.Any<int>());
+    }
+
+    [TestMethod]
+    public void Start_GeneratedMap_KeepsItsGarrison()
+    {
+        var f = FordsDirectorFixture.Create(towerHalfWidth: 0f);
+
+        Assert.IsTrue(f.Director.Start());
+
+        f.Towers.Received(14).SpawnGunners(Arg.Any<TowerSlot>(), "archer", 2);
+    }
+
+    [TestMethod]
+    public void TowerDestroyed_ReadsTheFallBackOnTheNextTick()
+    {
+        var f = Started();
+
+        f.DestroyedHandler!(EastOuterLane0);
+        f.Towers.DidNotReceive().LogFall(Arg.Any<string>());
+        f.Director.Tick(1f);
+
+        f.Towers.Received(1).LogFall(EastOuterLane0);
+    }
+
+    [TestMethod]
     public void Start_FillsTheSessionWithTheWestSlotAndTheCameraAboveTheWestKeep()
     {
         var f = Started();

@@ -192,6 +192,9 @@ internal sealed class FordsTowerEvidence
     public bool DriftFlagged;
     public double MeleeNearUnitSeconds;
 
+    /// <summary>Melee unit-seconds within contact range of this tower, over the looks at which a stream was ordered at it; the divisor of the damage per contact second.</summary>
+    public double ContactUnitSeconds;
+
     /// <summary>Blows by an enemy whose victim was one of this tower's gunners (they take no damage, so they never reach <see cref="Blows"/>).</summary>
     public long GunnerBlowsMelee;
     public long GunnerBlowsRanged;

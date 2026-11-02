@@ -100,8 +100,10 @@ internal sealed class FordsSceneAdapter : IFordsSceneAdapter
                     continue;
 
                 var frame = entity.GetGlobalFrame();
+                // A marker that is a built tower has children or a body of its own; a greybox marker is an empty entity.
+                var hasBody = entity.ChildCount > 0 || entity.HasBody();
                 foreach (var tag in tags)
-                    markers.Add(new FordsMarker(tag, FordsEngine.ToVec3f(frame.origin), FordsEngine.YawOf(frame.rotation.f)));
+                    markers.Add(new FordsMarker(tag, FordsEngine.ToVec3f(frame.origin), FordsEngine.YawOf(frame.rotation.f), hasBody));
             }
         }
         catch (Exception ex)

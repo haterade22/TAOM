@@ -62,6 +62,19 @@ public class FordsMissionDirectorReportTests
     }
 
     [TestMethod]
+    public void Start_TheFactsCarryTheContactMeasureOfTheMapsTowers()
+    {
+        var generated = FordsDirectorFixture.Create();
+        var real = FordsDirectorFixture.Create(towerHalfWidth: 5.5f);
+
+        Assert.IsTrue(generated.Director.Start());
+        Assert.IsTrue(real.Director.Start());
+
+        Assert.AreEqual(4f, generated.Report.Run!.Facts!.ContactMetres);
+        Assert.AreEqual(8f, real.Report.Run!.Facts!.ContactMetres, 0.001f);
+    }
+
+    [TestMethod]
     public void Start_TheFactsCarryTheDistanceBetweenTheTwoKeeps()
     {
         var f = Started();
