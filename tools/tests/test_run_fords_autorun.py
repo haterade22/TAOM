@@ -791,5 +791,28 @@ class SafeWatchTests(unittest.TestCase):
             self.assertEqual(r.safe_watch(mock.Mock(), Path("."), 10, lambda _: None), "done")
 
 
+class WaitAfterCrashTests(unittest.TestCase):
+    class Proc:
+        def __init__(self, polls):
+            self.polls = polls
+
+        def poll(self):
+            return self.polls.pop(0) if self.polls else None
+
+    def test_waits_until_the_game_ends(self):
+        said = []
+        self.assertTrue(r.wait_after_crash(self.Proc([None, None, 0]), 60, said.append, sleep=lambda _: None))
+        self.assertIn("answer", said[0])
+
+    def test_gives_up_after_the_limit(self):
+        clock = iter(range(0, 1000, 10))
+        self.assertFalse(r.wait_after_crash(self.Proc([]), 30, lambda _: None, sleep=lambda _: None, now=lambda: next(clock)))
+
+    def test_zero_seconds_does_not_wait(self):
+        said = []
+        self.assertFalse(r.wait_after_crash(self.Proc([None]), 0, said.append))
+        self.assertEqual([], said)
+
+
 if __name__ == "__main__":
     unittest.main()

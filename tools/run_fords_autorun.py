@@ -636,6 +636,20 @@ def safe_watch(proc, folder, wall_limit, say):
         return f"runner error: {type(error).__name__}: {error}"
 
 
+def wait_after_crash(proc, seconds, say, sleep=time.sleep, now=time.time):
+    """True when the crashed game ended by itself within the limit. The Watchdog holds the process and asks a person about a dump (a WPF
+    window no script can press), and killing the game loses the dump, so with --keep-on-crash the launcher waits. 0 keeps the old behaviour."""
+    if seconds <= 0:
+        return False
+    say(f"crash: waiting up to {seconds:g} s; answer the dump dialog on screen, then the game ends")
+    deadline = now() + seconds
+    while now() < deadline:
+        if proc.poll() is not None:
+            return True
+        sleep(POLL_SECONDS)
+    return False
+
+
 def collect(folder, bin_dir, done, started, pid, say):
     """Copies the TAOM log, the JSON report and the engine logs into the run folder. Returns (log copy, report json)."""
     log = Path(done["log"]) if done.get("log", "none") != "none" else None
@@ -704,6 +718,8 @@ def run_once(args, game, modules):
     say(f"started Bannerlord.exe pid {proc.pid}")
     reason = safe_watch(proc, folder, wall_limit, say)
     say("watch ended: " + reason)
+    if reason.startswith("crash"):
+        wait_after_crash(proc, args.keep_on_crash, say)
     if reason == "done":
         try:
             proc.wait(EXIT_GRACE_SECONDS)
@@ -739,6 +755,9 @@ def build_parser():
     parser.add_argument("--live-seconds", type=positive_seconds, help="mission seconds before the autorun ends the match (game default 600)")
     parser.add_argument("--wall-limit", type=positive_seconds,
                         help=f"wall seconds after the start before the match is ended (default {DEFAULT_WALL_LIMIT_SECONDS:g})")
+    parser.add_argument("--keep-on-crash", type=non_negative_minutes, default=0,
+                        help="after a crash wait this many seconds for a person to answer the dump dialog before stopping the game "
+                             "(default 0: stop at once, which loses the dump)")
     parser.add_argument("--west-ai", action="store_true", help="an AI commands the West side too, so both sides attack")
     parser.add_argument("--runs", type=int, default=1, help="how many matches to run, one game process each")
     parser.add_argument("--runs-root", default=RUNS_ROOT, help="folder that holds one subfolder per run")
