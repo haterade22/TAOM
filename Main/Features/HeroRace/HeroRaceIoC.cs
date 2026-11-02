@@ -1,4 +1,5 @@
 using DryIoc;
+using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.HeroRace.Hooks;
 
@@ -24,6 +25,15 @@ public static class HeroRaceIoC
         CharacterTableau_RefreshCharacterTableau_PositionPatch.Initialize(
             tableauPositionService,
             container.Resolve<IModLogger>());
+
+        // Inventory icons of race-shaped armour (Patch132). Reads the third surface of the same
+        // store, so the tuning console and the save path cover it without a second owner.
+        ItemThumbnailCache_GetItemPoseAndCamera_RacePatch.Initialize(
+            container.Resolve<IRacePositionStore>(),
+            container.Resolve<IModLogger>());
+
+        // The tuner's icon redraw. TAOM.Client replaces this null with the real cache clear (ADR-013).
+        container.Register<IThumbnailCacheAdapter, NullThumbnailCacheAdapter>(Reuse.Singleton);
 
         container.Register<IOnFaceGenGetBaseMonsterFromRace, EyeHeightAdjustmentHook>(Reuse.Singleton);
 
