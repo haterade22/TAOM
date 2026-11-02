@@ -107,6 +107,25 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
         return samples;
     }
 
+    public IReadOnlyList<FordsFaceSample> SampleFaces()
+    {
+        var registered = _registry.Snapshot();
+        var samples = new List<FordsFaceSample>(registered.Count);
+        foreach (var entry in registered)
+        {
+            var agent = (Agent)entry.Agent;
+            if (!IsLive(agent) || FordsEngine.FinitePosition(agent.Position) is not { } position)
+                continue;
+
+            var terrain = FordsEngine.TerrainAt(_mission.Scene, position.X, position.Y);
+            var navZ = new WorldPosition(_mission.Scene, agent.Position).GetNavMeshZ();
+            samples.Add(new FordsFaceSample(entry.Side, entry.Lane, agent.GetCurrentNavigationFaceId(), agent.HasMount,
+                position.Z - terrain, navZ - position.Z));
+        }
+
+        return samples;
+    }
+
     public Vec3f? PositionOf(AgentKey key)
     {
         if (!_registry.TryGetAgent(key, out var found, out _, out _))

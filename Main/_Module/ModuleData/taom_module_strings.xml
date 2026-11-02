@@ -4391,6 +4391,7 @@
 	<string id="TAOM_FOW_Faction_Rohan" text="{=TAOM_FOW_Faction_Rohan}Rohan" />
 	<string id="TAOM_FOW_Faction_Mordor" text="{=TAOM_FOW_Faction_Mordor}Mordor" />
 	<string id="TAOM_FOW_Faction_Isengard" text="{=TAOM_FOW_Faction_Isengard}Isengard" />
+	<string id="TAOM_FOW_Map_Fords01" text="{=TAOM_FOW_Map_Fords01}[Fords] Fords of War" />
 	<string id="TAOM_FOW_Difficulty_Easy" text="{=TAOM_FOW_Difficulty_Easy}Easy" />
 	<string id="TAOM_FOW_Difficulty_Hard" text="{=TAOM_FOW_Difficulty_Hard}Hard" />
 	<string id="TAOM_FOW_Difficulty_Normal" text="{=TAOM_FOW_Difficulty_Normal}Normal" />

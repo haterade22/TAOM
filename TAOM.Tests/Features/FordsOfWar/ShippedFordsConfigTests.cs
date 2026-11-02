@@ -447,18 +447,17 @@ public class ShippedFordsConfigTests
             .ToDictionary(s => (string)s.Attribute("id")!, StringComparer.OrdinalIgnoreCase);
         var catalog = Load(Substitute.For<IModLogger>());
 
-        Assert.IsTrue(catalog.Maps.Count >= 2 && catalog.Maps.Count <= 4, "two to four scenes");
-        foreach (var map in catalog.Maps)
+        Assert.IsTrue(catalog.Maps.Count >= 2 && catalog.Maps.Count <= 5, "two to five scenes");
+        foreach (var map in catalog.Maps.Where(m => m.Layout == MapLayoutMode.Generated))
         {
             Assert.IsTrue(scenes.TryGetValue(map.SceneId, out var scene), map.SceneId + " is not a custom_battle_scenes.xml row");
             Assert.AreNotEqual("true", (string?)scene.Attribute("is_siege_map"), map.SceneId + " is a siege scene");
-            Assert.AreEqual(MapLayoutMode.Generated, map.Layout, map.SceneId);
             Assert.AreEqual((string)scene.Attribute("name")!, map.DisplayName, map.SceneId + ": the row's own key and default");
         }
     }
 
     [TestMethod]
-    public void ShippedMaps_ListRohanPlainsIIFirst_ThenPelennorMordorAndRohanPlainsLast()
+    public void ShippedMaps_ListRohanPlainsIIFirst_ThenPelennorMordorRohanPlainsAndFordsLast()
     {
         // The first scene is the default of a console start with no scene argument (FordsSetupChoices) and of a one-scene menu.
         var catalog = Load(Substitute.For<IModLogger>());
@@ -466,9 +465,48 @@ public class ShippedFordsConfigTests
         CollectionAssert.AreEqual(new[]
         {
             "taom_rohan_battle_002_forceatmo", "taom_gondor_pelennor_fields_forceatmo", "taom_mordor_battle_001_forceatmo", "taom_rohan_battle_001_forceatmo",
+            "taom_fords_01",
         }, catalog.Maps.Select(m => m.SceneId).ToList());
         Assert.AreEqual("{=aom_taom_rohan_battle_002_forceatmo_name}[Rohan] Rohan Plains II", catalog.Maps[0].DisplayName);
         Assert.AreEqual(MapLayoutMode.Generated, catalog.Maps[0].Layout);
+    }
+
+    [TestMethod]
+    public void ShippedMaps_Fords01_IsATagsMapAndNotTheDefault()
+    {
+        var catalog = Load(Substitute.For<IModLogger>());
+
+        var fords = catalog.Maps.Single(m => m.SceneId == "taom_fords_01");
+        Assert.AreEqual(MapLayoutMode.Tags, fords.Layout);
+        Assert.AreEqual("{=TAOM_FOW_Map_Fords01}[Fords] Fords of War", fords.DisplayName);
+        Assert.AreSame(fords, catalog.Maps[catalog.Maps.Count - 1], "last, so Rohan Plains II stays the default");
+        Assert.AreNotEqual("taom_fords_01", catalog.Maps[0].SceneId);
+    }
+
+    [TestMethod]
+    public void EveryShippedMapName_HasARegisteredKey()
+    {
+        var catalog = Load(Substitute.For<IModLogger>());
+        var english = XDocument.Load(Path.Combine(ModuleData, "taom_module_strings.xml")).Descendants("string")
+            .ToDictionary(s => (string)s.Attribute("id")!, s => (string)s.Attribute("text")!);
+        var vanilla = XDocument.Load(Path.Combine(ModuleData, "custom_battle_scenes.xml")).Descendants("Scene")
+            .Select(x => (string)x.Attribute("id")!).ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var languageFiles = Directory.GetDirectories(Path.Combine(ModuleData, "Languages"))
+            .Select(d => Directory.GetFiles(d, "std_taom_module_strings_*.xml").Single()).ToList();
+
+        // A Custom Battle scene keeps the name its custom_battle_scenes.xml row gives it; a scene outside that list names itself with a TAOM_FOW_Map key.
+        foreach (var map in catalog.Maps.Where(m => !vanilla.Contains(m.SceneId)))
+        {
+            Assert.IsTrue(map.DisplayName.StartsWith("{=TAOM_FOW_Map_"), map.SceneId + ": " + map.DisplayName);
+            var key = map.DisplayName.Substring(2, map.DisplayName.IndexOf('}') - 2);
+            Assert.IsTrue(english.TryGetValue(key, out var row), key + " is not registered in taom_module_strings.xml");
+            Assert.AreEqual(map.DisplayName, row, key + ": the registered English must equal the JSON default");
+            foreach (var file in languageFiles)
+            {
+                var ids = XDocument.Load(file).Descendants("string").Select(x => (string?)x.Attribute("id")).ToHashSet();
+                Assert.IsTrue(ids.Contains(key), key + " has no row in " + Path.GetFileName(file));
+            }
+        }
     }
 
     [TestMethod]

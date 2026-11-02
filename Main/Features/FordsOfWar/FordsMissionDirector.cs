@@ -70,6 +70,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     private double _probeAt;
     private int _probes;
     private bool _liveStamped;
+    private bool _sceneAuthored;
     private Vec3f? _firstRefused;
     private volatile bool _started;
     private volatile bool _shutDown;
@@ -359,6 +360,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             if (_scene.TryReadTaggedLayout(map.SceneId, map.Camp, out var tagged, out var problem))
             {
                 candidate = tagged;
+                _sceneAuthored = true;
                 fit = _scene.Fit(tagged);
             }
             else
@@ -620,6 +622,9 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         }
 
         _report.Field(sample);
+        if (_sceneAuthored)
+            _report.Faces(_battlefield.SampleFaces());
+
         var compare = ++_probes % 5 == 0;
         foreach (var lane in view.Lanes)
         {

@@ -7547,6 +7547,8 @@
 
     <string id="TAOM_FOW_Result_VictoryText" text="The enemy keep has fallen." />
 
+    <string id="TAOM_FOW_Map_Fords01" text="[Fords] Fords of War" />
+
   </strings>
 
 </base>

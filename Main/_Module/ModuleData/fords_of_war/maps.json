@@ -25,6 +25,11 @@
       "scene": "taom_rohan_battle_001_forceatmo",
       "name": "{=aom_taom_rohan_battle_001_forceatmo_name}[Rohan] Rohan Plains",
       "layout": "generated"
+    },
+    {
+      "scene": "taom_fords_01",
+      "name": "{=TAOM_FOW_Map_Fords01}[Fords] Fords of War",
+      "layout": "tags"
     }
   ]
 }

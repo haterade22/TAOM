@@ -37,6 +37,12 @@ internal interface IFordsBattlefieldAdapter
     /// <summary>Every live unit this adapter spawned, with its place. Dead, fading and stale handles are left out.</summary>
     IReadOnlyList<FordsUnitSample> SampleUnits();
 
+    /// <summary>
+    /// Every live unit's footing: its navigation face group, whether it rides, its height over the terrain and under the navmesh.
+    /// Main thread. Info only; the director asks for it once a second on a map whose layout the scene authored.
+    /// </summary>
+    IReadOnlyList<FordsFaceSample> SampleFaces();
+
     /// <summary>Where a unit stands now; null when it is gone.</summary>
     Vec3f? PositionOf(AgentKey key);
 

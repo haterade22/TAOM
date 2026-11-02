@@ -33,6 +33,7 @@ internal sealed class FordsRunEvidence
     public FordsOptionsEvidence Options = new();
     public FordsClientEvidence Client = new();
     public FordsWargEvidence Warg = new();
+    public FordsFaceEvidence Faces = new();
     public FordsExceptionEvidence Exceptions = new();
     public int[] Logged = new int[(int)FordsLogCategory.Count];
     public bool Live;

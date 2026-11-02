@@ -149,6 +149,8 @@ internal sealed class FaithfulBattlefield : IFordsBattlefieldAdapter
         Alive.Where(u => u.Registered).Select(u => new FordsUnitSample(u.Key, u.Side, u.Lane, u.Position, !Unalarmed,
             FormationOf(u.Side, u.Lane).Kind == OrderKind.AttackTower)).ToList();
 
+    public IReadOnlyList<FordsFaceSample> SampleFaces() => new List<FordsFaceSample>();
+
     public Vec3f? PositionOf(AgentKey key) => Find(key)?.Position;
 
     public bool TryGetKey(object? agent, out AgentKey key)
