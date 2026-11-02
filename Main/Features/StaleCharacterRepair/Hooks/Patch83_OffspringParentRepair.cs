@@ -32,6 +32,6 @@ public static class Patch83_OffspringParentRepair
     public static void Finalizer(Exception __exception, Hero __result, bool __state)
     {
         if (__state)
-            Patch83_StaleCharacterRepair.Service?.ReportBirthAfterRepair(__result?.StringId ?? "none", __exception);
+            Patch83_StaleCharacterRepair.Service?.ReportBirthAfterRepair(__result?.StringId, __exception);
     }
 }

@@ -272,7 +272,9 @@ the field, step 5 is an inference from the frames, and what first made this save
     on every later load, and the child's origin is the twin too. **Trade-off:** this writes one saved field, on a
     character that is already broken, and pulls the twin into the save, as any XML template used as an origin is. The
     hero reads as generated for `IsOriginalCharacter` and the load copy. It stays unregistered, so `Hero.FindFirst`,
-    `Hero.FindAll` and `CharacterObject.All` still do not see it.
+    `Hero.FindAll` and `CharacterObject.All` still do not see it. **Race:** a registered generated hero keeps its race,
+    because `RacePersistenceService` reaches it and restored that race at session launch. An unregistered hollow
+    character takes the twin's, because its own is the unsaved default.
   - **With no twin:** it takes the saved `Hero.Culture`, then the hero's clan, and fills the other null fields inert as
     above. This does not break the rule that `_culture` is not invented: a hero's own saved culture is the true value,
     and a hero with neither source is left alone and reported. The child's race is then the hollow parent's default.

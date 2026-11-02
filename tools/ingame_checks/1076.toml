@@ -25,7 +25,9 @@ pass = ['\[Check\] id=taom\.stale-character\.parent-birth result=pass child=\S+'
 fail = ['\[Check\] id=taom\.stale-character\.parent-birth result=fail']
 # The repair line is written before the birth runs, so the Finalizer's line is the one that says how the birth ended.
 # A fail wins over a pass from another birth in the same session. A repair with neither line means the process died
-# inside the birth: the absence default, FAIL.
+# inside the birth: the absence default, FAIL. Known limit: this pass is not paired per birth, so a hard kill inside a
+# second repaired birth in one process reads as PASS after an earlier birth finished. A managed throw writes its fail
+# line, so only a kill hides, and pairing would need a per-attempt id (RCA, Codex F2).
 
 [[human]]
 claim = "the child appears in the parent's clan with the parent's race and a normal age and face, also after a save and a load"

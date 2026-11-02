@@ -158,6 +158,24 @@ public class HeroCharacterStateAdapterTests
     }
 
     [TestMethod]
+    public void TryRepairCharacter_RegisteredHeroWithARestoredRace_KeepsThatRaceAndTakesTheRest()
+    {
+        // RacePersistenceService reaches a registered character and restored this race at session launch. The twin's
+        // race would replace it mid-session, and the next save would capture the wrong one (Codex F1, #1076).
+        var twin = RegisterTwin(TwinCulture, race: 4);
+        var child = _objects!.RegisterObject(new CharacterObject { StringId = "CharacterObject_77" });
+        AccessTools.Field(typeof(CharacterObject), "_originCharacter").SetValue(child, Hollow());
+        child.Race = 7;
+
+        Assert.IsTrue(new HeroCharacterStateAdapter(HeroOf(child, HeroCulture)).TryRepairCharacter());
+
+        Assert.AreEqual(7, child.Race);
+        Assert.AreSame(twin, child.OriginalCharacter);
+        Assert.AreSame(TwinCulture, ((BasicCharacterObject)child).Culture);
+        Assert.IsNotNull(child.BodyPropertyRange);
+    }
+
+    [TestMethod]
     public void TryRepairCharacter_TheRegisteredObjectIsTheHerosOwn_DoesNotAdoptItself()
     {
         var own = _objects!.RegisterObject(new CharacterObject { StringId = Id });

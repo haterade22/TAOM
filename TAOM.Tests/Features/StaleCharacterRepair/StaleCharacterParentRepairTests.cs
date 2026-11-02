@@ -145,10 +145,20 @@ public class StaleCharacterParentRepairTests
     [TestMethod]
     public void ReportBirthAfterRepair_Failure_WritesFailAndNoPass()
     {
-        _sut.ReportBirthAfterRepair("none", new NullReferenceException());
+        _sut.ReportBirthAfterRepair(null!, new NullReferenceException());
 
         _outcomes.Received(1).Fail(StaleCharacterRepairService.BirthCompletedCheckId, string.Empty,
             "threw=NullReferenceException");
+        _outcomes.DidNotReceive().Pass(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+    }
+
+    [TestMethod]
+    public void ReportBirthAfterRepair_NoChildAndNoFailure_WritesFailAndNoPass()
+    {
+        // PatchShield can swallow a missing-API exception before this Finalizer runs, and the target then returns null.
+        _sut.ReportBirthAfterRepair(null!, null!);
+
+        _outcomes.Received(1).Fail(StaleCharacterRepairService.BirthCompletedCheckId, string.Empty, "threw=none");
         _outcomes.DidNotReceive().Pass(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 

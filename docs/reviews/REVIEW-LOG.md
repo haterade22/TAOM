@@ -5582,3 +5582,24 @@ Scope: review A covered the night batch `d4fb51a50..c2c3a6f28` (unattended game 
 **Where Claude caught what Codex got wrong:** the A-F1 remedy. The normal exit code of -1 after `QuitGame` is visible only in in-game runs, which Codex could not make. Observations kept from the reports: the ladder is sampled at 1 Hz; the probe reads `_applied` (the request), not `_sent`; capture income depends on tick size (pinned by a test); there is no `OnRemoveBehavior` fallback cleanup; native obligations remain (overlapping destruction callbacks, quit during a stalled teardown, worst-case planning time, other scenes).
 
 **Metrics:** not recomputed here; the Metrics block above stopped tracking new reviews well before this one. Five real findings, 0 false positives, 0 missed bugs by Codex that Claude found afterwards.
+
+## Review (number assigned at merge): hollow parent repair (#1076), tier-1 deep review (two waves, convergence pass) and one Codex gpt-6-astra `ultra` pass, 2026-11-02
+
+**Scope:** commit `1165a00de`, a Prefix and Finalizer on `HeroCreator.DeliverOffSpring` and a load census, for player crash bundle `3fbdc0c5`. Prompt: `docs/reviews/codex-adversarial-hollow-parent-2026-11-02.prompt.md`. Report: `docs/reviews/raw/codex-adversarial-hollow-parent-2026-11-02.md` (git-ignored). RCA: `docs/reviews/rca-offspring-parent-culture-2026-11-02.md`.
+
+| # | Codex | Verified | Agree? | Reason |
+|---|---|---|---|---|
+| F1 | HIGH | MEDIUM | Yes, lower | The race overwrite is real: `HeroRosterAdapter` reaches a registered character, and `RacePersistenceService` restores its race before the birth. It needs a hollow origin and a deliberately changed race |
+| F2 | MEDIUM | LOW | Yes, not fixed | Real, but only a hard kill hides, because a managed throw writes its fail line. Pairing needs a per-attempt id, so the simplicity criterion rejects it. The limit is in the manifest |
+| O3 | MEDIUM observation | LOW | Yes, the `child=none` half | A null child read as a passed birth. The rest of O3 and O2 have no known case |
+
+| # | Bug | Category | Why missed | Preventive action |
+|---|-----|----------|-----------|-------------------|
+| F1 | A load-time engine copy, called during a birth, overwrote a restored race | Stale state / lifecycle | Lens 5 accepted the edge; nobody listed which copied fields TAOM owns | Race kept for a registered character; test; `lessons/state-lifecycle-save.md` |
+| O3 | A display fallback reached the pass branch | Logic error | "none" was written for the log, not for the decision | A birth with no child writes fail; test |
+
+**What Codex did especially well:** it tried to break the diagnosis and strengthened it, with a probe that reproduced the report's `IlOffset` 124 only with a null raw culture.
+
+**Where Claude caught what Codex got wrong:** no false positives. Claude rated all three findings lower after verifying them, and the two lenses' partial-repair finding came before Codex read the code.
+
+**Metrics:** not recomputed here. Three real items, 0 false positives. The fixes were not re-reviewed by Codex, because Mike approved one pass.

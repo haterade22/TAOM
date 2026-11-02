@@ -46,7 +46,19 @@ public sealed class HeroCharacterStateAdapter : IHeroCharacterStateAdapter
     {
         var character = _hero.CharacterObject;
         var twin = FindRegisteredTwin(character);
-        if (IsHealthyOrigin(twin, character) && TryAdoptOrigin(character, twin)) return true;
+        if (IsHealthyOrigin(twin, character))
+        {
+            // RacePersistenceService reaches only a registered character, and it restored this race at session launch.
+            // An unregistered hollow character's race is the unsaved default, so the twin's is the true one.
+            var isRegistered = ReferenceEquals(
+                MBObjectManager.Instance?.GetObject<CharacterObject>(character.StringId), character);
+            var race = character.Race;
+            if (TryAdoptOrigin(character, twin))
+            {
+                if (isRegistered) character.Race = race;
+                return true;
+            }
+        }
 
         var raw = (BasicCharacterObject)character;
         var culture = raw.Culture ?? _hero.Culture ?? _hero.Clan?.Culture;

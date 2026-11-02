@@ -214,6 +214,9 @@ an area with prior history. Convention: add each new essay to the top of the tra
 archive the 6th-oldest, harvest durable patterns into `docs/reviews/lessons/<category>.md`.
 
 **Look harder here — what a scoped per-feature pass structurally misses (Codex's edge):**
+- **A load-time engine method called at another time** (2026-11-02, hollow parent repair #1076, a Codex catch). At load a later system puts
+  back what the method overwrites; `InitializeHeroCharacterOnAfterLoad` during a birth runs after `RacePersistenceService` has finished, so it
+  replaced a restored race. List each field such a call writes, and who else writes that field, and in what order.
 - **A remedy that depends on how the real process behaves** (2026-11-01, Fords of War: a Codex miss that Claude caught against in-game
   runs). Codex told the unattended launcher to fail on a nonzero exit code; Bannerlord exits -1 (4294967295) after a normal
   `QuitGame`, so that remedy would fail every run. When a finding's fix hinges on an exit code, a log line or a timing of the live

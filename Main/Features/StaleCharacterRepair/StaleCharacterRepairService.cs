@@ -119,8 +119,10 @@ public class StaleCharacterRepairService : IStaleCharacterRepairService
 
     public void ReportBirthAfterRepair(string childId, Exception failure)
     {
-        if (failure == null) _outcomes.Pass(BirthCompletedCheckId, childId, $"child={childId}");
-        else _outcomes.Fail(BirthCompletedCheckId, string.Empty, $"threw={failure.GetType().Name}");
+        if (failure == null && !string.IsNullOrEmpty(childId))
+            _outcomes.Pass(BirthCompletedCheckId, childId, $"child={childId}");
+        else
+            _outcomes.Fail(BirthCompletedCheckId, string.Empty, $"threw={failure?.GetType().Name ?? "none"}");
     }
 
     private string DescribeOrFallback(IHeroCharacterStateAdapter hero)

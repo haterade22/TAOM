@@ -1295,3 +1295,10 @@ A stack names the first null, not the only one. The first repair for bundle `3fb
 - **Why missed:** the service's own comment and the feature doc's "Why the repair covers four fields, not one" record this shape from September. The author read them and still stopped at the field the stack named.
 - **Prevent:** before calling a repair of a save-restored object done, read every member the protected method reads after the throw, with the object in its worst possible state. Copy from the registered twin with the engine's own method where one exists. A `[Check]` written before the protected work proves the repair ran, not that the work finished: report how the work ended with a second line from a void Finalizer, which also sees a throw.
 - **Source:** [rca-offspring-parent-culture-2026-11-02.md](../rca-offspring-parent-culture-2026-11-02.md).
+
+### An engine copy from a template overwrites every field another system restored
+
+`InitializeHeroCharacterOnAfterLoad` is safe at load because `RacePersistenceService` runs after it and puts each saved race back. The same call during a birth runs after that restore, so it replaced a registered generated hero's race with the template's, and the next save captured the wrong one (Codex F1, #1076; a Claude data-flow lens had seen the edge and accepted it).
+- **Why missed:** the engine's own copy looked safer than a hand copy, so nobody listed which copied fields TAOM owns.
+- **Prevent:** before calling a load-time engine method at another time, list each field it writes and name who else writes that field, and in what order. Restore what the later writer owns.
+- **Source:** [rca-offspring-parent-culture-2026-11-02.md](../rca-offspring-parent-culture-2026-11-02.md).

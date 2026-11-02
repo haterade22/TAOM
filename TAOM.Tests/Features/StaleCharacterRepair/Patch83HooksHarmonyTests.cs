@@ -109,7 +109,7 @@ public class Patch83HooksHarmonyTests
         Assert.ThrowsException<NullReferenceException>(
             () => HeroCreator.DeliverOffSpring(NamedHero("mother"), NamedHero("father"), false));
 
-        _service.Received(1).ReportBirthAfterRepair("none", Arg.Any<NullReferenceException>());
+        _service.Received(1).ReportBirthAfterRepair(null!, Arg.Any<NullReferenceException>());
     }
 
     [TestMethod]

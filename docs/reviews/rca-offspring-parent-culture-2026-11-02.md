@@ -40,7 +40,9 @@ The null is `Culture` at `CharacterObject.cs:150`, by elimination:
 - `lord_MM5_6` has the same culture and the same equipment templates, and its birth succeeded 33 s earlier, so
   the culture's stealth roster is healthy.
 
-No line in the bundle states the field's value.
+No line in the bundle states the field's value. Codex's read-only probe against the installed DLLs adds strong support:
+`report.json` records `IlOffset` 124 for the getter, and the probe reproduced offset 124 with a null raw culture and no
+throw with a non-null one (CLR 4, Windows PowerShell 5). This is its run, not repeated here.
 
 ## The hollow character
 
@@ -132,6 +134,22 @@ fields, not one" records from September, in the same feature.
   line for a small win.
 - **A rendered-line test with a real `OutcomeLog` (lens 4):** `HollowParent1076Tests` uses hand-written lines. The format
   is `OutcomeLog`'s own and has its own tests.
+
+## Codex review of `1165a00de`
+
+One `gpt-6-astra` pass at `ultra`, approved by Mike for this commit: `docs/reviews/raw/codex-adversarial-hollow-parent-2026-11-02.md`.
+It found no healthy hero the gate misreads and no serialization problem from the shared `StringId`.
+
+| # | Codex | Verified | Bug | Category | Why missed | Preventive action |
+|---|---|---|---|---|---|---|
+| F1 | HIGH | MEDIUM | Adoption copied the twin's race over the race `RacePersistenceService` had restored on a registered generated hero, and the next save captured the wrong one. It needs a hollow origin and a deliberately changed race | Stale state / lifecycle | Lens 5 saw this edge and accepted it as too small to guard. The author treated the engine's copy as all or nothing and did not ask which copied field another system owns | The race is kept for a registered character; regression test; lesson below |
+| O3 | MEDIUM observation | LOW | A missing-API exception PatchShield swallows before the Finalizer leaves a null child, and `child=none` read as a passed birth | Logic error | The author wrote "none" as a display fallback, and it reached the pass branch | A birth with no child writes fail; regression test |
+| F2 | MEDIUM | LOW, not fixed | `parent-birth` is not paired per birth, so a hard kill inside a second repaired birth in one process reads as PASS | Verdict proves less than it claims | One session verdict covers many births | Simplicity criterion: a managed throw already writes a fail, and pairing needs a per-attempt id. The limit is written in the manifest |
+
+Not a defect: a competing prefix could skip this repair (O3), and a reused id could select another character (O2). Neither has a known case.
+
+**Not re-reviewed:** a CRITICAL or HIGH fix would normally get a further Codex pass, but Mike approved one pass, so the two
+fixes above are proven by their tests and `/verify`.
 
 ## Proof still owed (#1076)
 
