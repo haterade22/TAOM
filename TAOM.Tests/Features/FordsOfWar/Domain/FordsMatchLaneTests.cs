@@ -168,6 +168,45 @@ public class FordsMatchLaneTests
     }
 
     [TestMethod]
+    public void Tick_EnemyOfANeighbouringLaneNearTheLead_DoesNotCharge()
+    {
+        var match = Create();
+        var west = LaneOf(MatchSide.West, 0, Units(300f, 10), nearestEnemy: 10f);
+        var ownLane = LaneOf(MatchSide.East, 0, Units(30f, 5), nearestEnemy: 10f);
+        var neighbour = LaneOf(MatchSide.East, 1, Units(305f, 5, 10f), nearestEnemy: 10f);
+
+        var effects = match.Tick(Snap(1f, new[] { west, ownLane, neighbour }));
+
+        Assert.AreNotEqual(LaneCommand.Charge, WestLane0(effects));
+    }
+
+    [TestMethod]
+    public void Tick_OnlyTheNeighbouringLaneHasEnemies_DoesNotCharge()
+    {
+        var match = Create();
+        var west = LaneOf(MatchSide.West, 0, Units(300f, 10), nearestEnemy: 10f);
+        var neighbour = LaneOf(MatchSide.East, 1, Units(305f, 5, 10f), nearestEnemy: 10f);
+
+        var effects = match.Tick(Snap(1f, new[] { west, neighbour }));
+
+        Assert.AreNotEqual(LaneCommand.Charge, WestLane0(effects));
+    }
+
+    [TestMethod]
+    public void Tick_LaneTargetingTheKeep_ChargesEnemiesOfAnyLane()
+    {
+        var match = Create();
+        foreach (var id in new[] { FordsTestLayout.EastOuter0, FordsTestLayout.EastInner0 })
+            match.OnTowerDestroyed(id, null);
+        var west = LaneOf(MatchSide.West, 0, Units(300f, 2), nearestEnemy: 10f);
+        var neighbour = LaneOf(MatchSide.East, 1, Units(305f, 5, 10f), nearestEnemy: 10f);
+
+        var effects = match.Tick(Snap(1f, new[] { west, neighbour }));
+
+        Assert.AreEqual(LaneCommand.Charge, WestLane0(effects));
+    }
+
+    [TestMethod]
     public void Tick_EnemyNearTheLeadButFarFromTheCenter_Charges()
     {
         var match = Create();

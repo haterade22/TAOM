@@ -30,7 +30,7 @@ public class FordsTowerLinesTests
     [TestMethod]
     public void Fell_ReadsBackVisibilityAndPhysicsOfRootAndChild()
     {
-        Assert.AreEqual("fell id=tower_west_1_0 rootVisible=False childVisible=False rootPhysics=False childPhysics=True",
-            FordsTowerLines.Fell("tower_west_1_0", false, false, false, true));
+        Assert.AreEqual("fell id=tower_west_1_0 rootVisible=False childVisible=False",
+            FordsTowerLines.Fell("tower_west_1_0", false, false));
     }
 }

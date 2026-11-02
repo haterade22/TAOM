@@ -250,10 +250,10 @@ A file may override one profile or add a new name; a new profile starts from nor
 **Maps** (three lanes, in this order): `taom_rohan_battle_002_forceatmo` (Rohan Plains II, the
 default: the first entry is the scene of a `taom.fords_start` with no scene argument),
 `taom_gondor_pelennor_fields_forceatmo`, `taom_mordor_battle_001_forceatmo` and `taom_rohan_battle_001_forceatmo`
-(Rohan Plains I), all `"layout": "generated"`, then `taom_fords_01` (`"layout": "tags"`, named by the key
+(Rohan Plains I), all `"layout": "generated"`, then `taom_fords_01_forceatmo` (`"layout": "tags"`, named by the key
 `TAOM_FOW_Map_Fords01`, "[Fords] Fords of War", last so it never becomes the default). Rohan Plains II is the scene the
 2026-10-31 fit result below was measured on; the other three generated maps have no recorded in-game fit since the fitter was
-rewritten. On `taom_fords_01` the director also logs two info lines every 30 mission seconds, fed by a 1 Hz look and read by
+rewritten. On `taom_fords_01_forceatmo` the director also logs two info lines every 30 mission seconds, fed by a 1 Hz look and read by
 no verdict: `[Ground] units=<n> aboveTerrain=min/med/max belowNav=min/med/max offNavMoves=<n>` (how high units stand over the
 terrain and under the navmesh) and one `[Lane] faces <stream> own= shared= foreign= top= off= foot= mounted=` line per stream
 (unit-seconds by navigation face group: 0 shared, lane n is group n + 1, 4 tower tops). The German to Turkish names of the

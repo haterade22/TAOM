@@ -476,7 +476,7 @@ public class ShippedFordsConfigTests
         CollectionAssert.AreEqual(new[]
         {
             "taom_rohan_battle_002_forceatmo", "taom_gondor_pelennor_fields_forceatmo", "taom_mordor_battle_001_forceatmo", "taom_rohan_battle_001_forceatmo",
-            "taom_fords_01",
+            "taom_fords_01_forceatmo",
         }, catalog.Maps.Select(m => m.SceneId).ToList());
         Assert.AreEqual("{=aom_taom_rohan_battle_002_forceatmo_name}[Rohan] Rohan Plains II", catalog.Maps[0].DisplayName);
         Assert.AreEqual(MapLayoutMode.Generated, catalog.Maps[0].Layout);
@@ -487,11 +487,11 @@ public class ShippedFordsConfigTests
     {
         var catalog = Load(Substitute.For<IModLogger>());
 
-        var fords = catalog.Maps.Single(m => m.SceneId == "taom_fords_01");
+        var fords = catalog.Maps.Single(m => m.SceneId == "taom_fords_01_forceatmo");
         Assert.AreEqual(MapLayoutMode.Tags, fords.Layout);
         Assert.AreEqual("{=TAOM_FOW_Map_Fords01}[Fords] Fords of War", fords.DisplayName);
         Assert.AreSame(fords, catalog.Maps[catalog.Maps.Count - 1], "last, so Rohan Plains II stays the default");
-        Assert.AreNotEqual("taom_fords_01", catalog.Maps[0].SceneId);
+        Assert.AreNotEqual("taom_fords_01_forceatmo", catalog.Maps[0].SceneId);
     }
 
     [TestMethod]
@@ -586,7 +586,7 @@ public class ShippedFordsConfigTests
     {
         var catalog = Load(Substitute.For<IModLogger>());
 
-        Assert.AreEqual(5.5f, catalog.Maps.Single(m => m.SceneId == "taom_fords_01").TowerHalfWidth);
+        Assert.AreEqual(5.5f, catalog.Maps.Single(m => m.SceneId == "taom_fords_01_forceatmo").TowerHalfWidth);
     }
 
     [TestMethod]

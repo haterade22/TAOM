@@ -16,7 +16,7 @@ namespace TAOM.Tests.Features.FordsOfWar.Diagnostics;
 [TestClass]
 public class FordsFaceCensusTests
 {
-    private static readonly FordsMatchSetup Setup = new("taom_fords_01", "gondor", "mordor", "hard", 3);
+    private static readonly FordsMatchSetup Setup = new("taom_fords_01_forceatmo", "gondor", "mordor", "hard", 3);
     private static readonly FordsMatchFacts Facts = new(60f, 8f, 12f, 3, 150, 200);
 
     private ScenarioLogger _log = null!;

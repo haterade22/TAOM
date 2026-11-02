@@ -27,7 +27,7 @@
       "layout": "generated"
     },
     {
-      "scene": "taom_fords_01",
+      "scene": "taom_fords_01_forceatmo",
       "name": "{=TAOM_FOW_Map_Fords01}[Fords] Fords of War",
       "layout": "tags",
       "towerHalfWidth": 5.5,

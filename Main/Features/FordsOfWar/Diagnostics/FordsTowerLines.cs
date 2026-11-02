@@ -26,6 +26,6 @@ internal static class FordsTowerLines
         + "," + FordsLogLine.F1(position.Z) + ") face=" + (faceGroup < 0 ? "none" : faceGroup.ToString(System.Globalization.CultureInfo.InvariantCulture))
         + " pathExists=" + pathExists;
 
-    public static string Fell(string id, bool rootVisible, bool childVisible, bool rootPhysics, bool childPhysics) =>
-        "fell id=" + id + " rootVisible=" + rootVisible + " childVisible=" + childVisible + " rootPhysics=" + rootPhysics + " childPhysics=" + childPhysics;
+    public static string Fell(string id, bool rootVisible, bool childVisible) =>
+        "fell id=" + id + " rootVisible=" + rootVisible + " childVisible=" + childVisible;
 }

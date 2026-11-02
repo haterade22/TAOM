@@ -46,7 +46,9 @@ internal sealed partial class FordsMatch
         var from = lead?.Position ?? center;
         var distance = target == null ? float.MaxValue : from.Distance2D(target.Position);
         var centerDistance = target == null ? float.MaxValue : center.Distance2D(target.Position);
-        var enemy = lead is { } found ? NearestEnemyFrom(side, found.Position, seen.NearestEnemyDistance) : seen.NearestEnemyDistance;
+        // A lane fights its own lane's enemies: a neighbour's wave across the gap must not pull it out of its lane. At the keep the lanes meet.
+        var anyLane = target == null || target.Kind == TowerKind.Keep;
+        var enemy = lead is { } found ? NearestEnemyFrom(side, lane, anyLane, found.Position, seen.NearestEnemyDistance) : seen.NearestEnemyDistance;
         var attackers = target == null ? -1 : UnitsNear(side, true, target);
         var defenders = target == null ? -1 : UnitsNear(side, false, target);
 
@@ -85,10 +87,11 @@ internal sealed partial class FordsMatch
     }
 
     /// <summary>
-    /// Distance from <paramref name="point"/> to the nearest unit of the other side, from the unit positions of this tick's lanes.
+    /// Distance from <paramref name="point"/> to the nearest unit of the other side in <paramref name="ownLane"/> (every lane when
+    /// <paramref name="anyLane"/>), from the unit positions of this tick's lanes.
     /// <paramref name="fallback"/> (the engine's centre-based figure) stands in when no enemy position was reported.
     /// </summary>
-    private float NearestEnemyFrom(MatchSide side, Vec3f point, float fallback)
+    private float NearestEnemyFrom(MatchSide side, int ownLane, bool anyLane, Vec3f point, float fallback)
     {
         var best = float.MaxValue;
         var any = false;
@@ -98,6 +101,9 @@ internal sealed partial class FordsMatch
                 continue;
 
             any = true;
+            if (!anyLane && lane.Lane != ownLane)
+                continue;
+
             foreach (var position in lane.UnitPositions)
             {
                 var distance = position.Distance2D(point);

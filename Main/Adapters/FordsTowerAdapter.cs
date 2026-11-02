@@ -150,9 +150,8 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
         {
             var root = tower.Entity;
             var child = root.ChildCount > 0 ? root.GetChild(0) : null;
-            _logger.LogInfo("[FordsOfWar][Tower] " + FordsTowerLines.Fell(towerId, root.GetVisibilityExcludeParents(),
-                child?.GetVisibilityExcludeParents() ?? false, root.PhysicsDescBodyFlag != BodyFlags.None,
-                child != null && child.PhysicsDescBodyFlag != BodyFlags.None));
+            // Include parents: the engine hides only the root, and that hides the children. It also turns physics off with children, which no flag here reads.
+            _logger.LogInfo("[FordsOfWar][Tower] " + FordsTowerLines.Fell(towerId, root.IsVisibleIncludeParents(), child?.IsVisibleIncludeParents() ?? false));
         }
         catch (Exception ex)
         {
