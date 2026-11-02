@@ -207,4 +207,49 @@ public class FordsTagLayoutReaderTests
 
         Assert.IsTrue(layout.Towers.All(t => !t.Authored));
     }
+    [TestMethod]
+    public void TryRead_GunnerMarkers_AttachToTheirTowerInOrder_AndFaceTheEnemyKeep()
+    {
+        var markers = TwoLanes();
+        markers.Add(new FordsMarker("fow_gunner_west_0_0_1", new Vec3f(122f, 0f, 40f), 0f));
+        markers.Add(new FordsMarker("fow_gunner_west_0_0_0", new Vec3f(118f, 0f, 40f), 0f));
+
+        Assert.IsTrue(Read(markers, out var layout, out var problem), problem);
+
+        var tower = layout.Towers.Single(t => t.Id == "tower_west_0_0");
+        Assert.AreEqual(2, tower.GunnerSpots!.Count);
+        Assert.AreEqual(118f, tower.GunnerSpots[0].X);
+        Assert.AreEqual(40f, tower.GunnerSpots[1].Z);
+        var keep = layout.Towers.Single(t => t.Id == "keep_east");
+        var expected = (float)System.Math.Atan2(keep.Position.Y - tower.Position.Y, keep.Position.X - tower.Position.X);
+        Assert.AreEqual(expected, tower.Yaw, 1e-4f);
+    }
+
+    [TestMethod]
+    public void TryRead_GunnerMarkerForAMissingTower_IsAProblem()
+    {
+        var markers = TwoLanes();
+        markers.Add(Marker("fow_gunner_west_0_7_0", 1f, 1f));
+
+        Assert.IsFalse(Read(markers, out _, out var problem));
+        StringAssert.Contains(problem, "fow_gunner_west_0_7");
+    }
+
+    [TestMethod]
+    public void TryRead_GunnerNumbersWithAGap_IsAProblem()
+    {
+        var markers = TwoLanes();
+        markers.Add(Marker("fow_gunner_west_0_0_1", 1f, 1f));
+
+        Assert.IsFalse(Read(markers, out _, out var problem));
+        StringAssert.Contains(problem, "fow_gunner_west_0_0_0");
+    }
+
+    [TestMethod]
+    public void TryRead_NoGunnerMarkers_LeavesNoSpots()
+    {
+        Assert.IsTrue(Read(TwoLanes(), out var layout, out var problem), problem);
+
+        Assert.IsTrue(layout.Towers.All(t => t.GunnerSpots == null));
+    }
 }

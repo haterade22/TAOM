@@ -270,4 +270,35 @@ public class FordsMapsLoadTests
         Assert.AreEqual(0f, catalog.Maps[0].TowerHalfWidth);
         AssertOneWarningNaming("towerHalfWidth");
     }
+    [TestMethod]
+    public void Maps_LaneFaceIds_AreRead_AndAbsentMeansNoBars()
+    {
+        var catalog = Load(Scenes("[ { 'scene': 'a', 'layout': 'tags', 'laneFaceIds': [1, 2, 3] }, { 'scene': 'b' } ]"));
+
+        CollectionAssert.AreEqual(new[] { 2, 3 }, catalog.Maps[0].LaneBars!.BarsFor(0).ToArray());
+        Assert.IsNull(catalog.Maps[1].LaneBars);
+        _logger.DidNotReceive().LogWarning(Arg.Any<string>());
+    }
+
+    [DataTestMethod]
+    [DataRow("[1, 1, 3]")]
+    [DataRow("[0, 2, 3]")]
+    [DataRow("[1, 'two', 3]")]
+    [DataRow("'lanes'")]
+    public void Maps_BadLaneFaceIds_MeanNoBarsWithOneWarning(string value)
+    {
+        var catalog = Load(Scenes("[ { 'scene': 'a', 'layout': 'tags', 'laneFaceIds': " + value + " } ]"));
+
+        Assert.IsNull(catalog.Maps[0].LaneBars);
+        AssertOneWarningNaming("laneFaceIds");
+    }
+
+    [TestMethod]
+    public void Maps_LaneFaceIdsOverTheListBudget_MeanNoBarsWithOneWarning()
+    {
+        var catalog = Load(Scenes("[ { 'scene': 'a', 'layout': 'tags', 'laneFaceIds': [1, 2, 3, 5] } ]"));
+
+        Assert.IsNull(catalog.Maps[0].LaneBars);
+        AssertOneWarningNaming("laneFaceIds");
+    }
 }

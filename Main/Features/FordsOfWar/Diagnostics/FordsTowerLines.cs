@@ -1,3 +1,4 @@
+using System;
 using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Features.FordsOfWar.Diagnostics;
@@ -8,6 +9,14 @@ namespace TAOM.Features.FordsOfWar.Diagnostics;
 /// </summary>
 internal static class FordsTowerLines
 {
+    /// <summary>One bowman placed on a tower top: where the marker says and where the engine put him.</summary>
+    public static string GarrisonSpawned(string id, int n, Vec3f spot, float agentZ, int faceGroup) =>
+        FormattableString.Invariant($"spawned tower={id} n={n} at=({spot.X:F1},{spot.Y:F1},{spot.Z:F1}) z={agentZ:F2} face={faceGroup}");
+
+    /// <summary>A look at every bowman: how many still stand within 1.5 m of the spot and 2 m of its height, the worst offsets, and on which navmesh ids.</summary>
+    public static string GarrisonLook(int held, int total, float maxDrift, float maxDz, string faces, string worst) =>
+        FormattableString.Invariant($"look held={held}/{total} maxDrift={maxDrift:F2} maxDz={maxDz:F2} faces={faces} worst={worst}");
+
     public static string Attached(string id, string entity, int children, int hitPoints) =>
         "attached id=" + id + " entity=" + entity + " children=" + children + " hp=" + hitPoints;
 

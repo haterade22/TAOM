@@ -20,6 +20,9 @@ internal interface IFordsBattlefieldAdapter
     /// </summary>
     bool Prepare(int laneCount);
 
+    /// <summary>The navmesh ids each lane's units may not walk on, applied at spawn (null: no bars). Set before the first spawn.</summary>
+    void SetLaneBars(LaneFaceBars? bars);
+
     void SetCorpseFadeOutSeconds(float seconds);
 
     /// <summary>

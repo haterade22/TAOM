@@ -24,6 +24,7 @@ internal static class FordsTagLayoutReader
 
     private static readonly Regex LaneTag = new(@"^fow_lane_(\d+)_(\d+)$", RegexOptions.Compiled);
     private static readonly Regex TowerTag = new(@"^fow_tower_(west|east)_(\d+)_(\d+)$", RegexOptions.Compiled);
+    private static readonly Regex GunnerTag = new(@"^fow_gunner_(west|east)_(\d+)_(\d+)_(\d+)$", RegexOptions.Compiled);
     private static readonly Regex KeepTag = new(@"^fow_keep_(west|east)$", RegexOptions.Compiled);
     private static readonly Regex CaptureTag = new(@"^fow_capture_(\d+)$", RegexOptions.Compiled);
     private static readonly Regex CampTag = new(@"^fow_camp_(\d+)$", RegexOptions.Compiled);
@@ -36,6 +37,7 @@ internal static class FordsTagLayoutReader
         var towers = new List<TowerSlot>();
         var points = new SortedDictionary<int, CapturePointSlot>();
         var camps = new SortedDictionary<int, CampSlot>();
+        var gunners = new Dictionary<(string Side, int Lane, int Order), SortedDictionary<int, Vec3f>>();
 
         foreach (var marker in markers)
         {
@@ -56,6 +58,13 @@ internal static class FordsTagLayoutReader
                 towers.Add(new TowerSlot($"tower_{m.Groups[1].Value}_{lane}_{order}", side, lane, order, TowerKind.Tower,
                     marker.Position, marker.Yaw, marker.HasBody));
             }
+            else if ((m = GunnerTag.Match(tag)).Success)
+            {
+                var key = (m.Groups[1].Value, Number(m, 2), Number(m, 3));
+                if (!gunners.TryGetValue(key, out var spots))
+                    gunners[key] = spots = new SortedDictionary<int, Vec3f>();
+                spots[Number(m, 4)] = marker.Position;
+            }
             else if ((m = KeepTag.Match(tag)).Success)
             {
                 var side = m.Groups[1].Value == "west" ? MatchSide.West : MatchSide.East;
@@ -74,7 +83,7 @@ internal static class FordsTagLayoutReader
         }
 
         var lanes = new List<LaneLayout>();
-        var issue = CheckLanes(lanePoints, lanes) ?? CheckTowers(towers, lanes.Count);
+        var issue = CheckLanes(lanePoints, lanes) ?? CheckTowers(towers, lanes.Count) ?? AttachGunners(towers, gunners);
         if (issue != null)
         {
             problem = issue;
@@ -114,6 +123,33 @@ internal static class FordsTagLayoutReader
 
             lanes.Add(new LaneLayout(lane, path.Values.ToList()));
             expected++;
+        }
+
+        return null;
+    }
+
+    // A tower with spots faces the enemy keep: the entity's own rotation says nothing about the march (all towers of a scene may share one).
+    private static string? AttachGunners(List<TowerSlot> towers, Dictionary<(string Side, int Lane, int Order), SortedDictionary<int, Vec3f>> gunners)
+    {
+        foreach (var pair in gunners)
+        {
+            var (side, lane, order) = pair.Key;
+            var index = towers.FindIndex(t => t.Id == $"tower_{side}_{lane}_{order}");
+            if (index < 0)
+                return $"fow_gunner_{side}_{lane}_{order}_* names a tower the scene does not have";
+
+            var expected = 0;
+            foreach (var n in pair.Value.Keys)
+            {
+                if (n != expected)
+                    return $"fow_gunner_{side}_{lane}_{order}_{expected} is missing (spots must be numbered from 0 without gaps)";
+                expected++;
+            }
+
+            var slot = towers[index];
+            var enemyKeep = towers.First(t => t.Kind == TowerKind.Keep && t.Owner != slot.Owner);
+            var yaw = (float)Math.Atan2(enemyKeep.Position.Y - slot.Position.Y, enemyKeep.Position.X - slot.Position.X);
+            towers[index] = slot with { GunnerSpots = pair.Value.Values.ToList(), Yaw = yaw };
         }
 
         return null;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using TaleWorlds.Core;
 using TaleWorlds.Engine;
@@ -58,6 +59,9 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
 
         int IEqualityComparer<object>.GetHashCode(object obj) => RuntimeHelpers.GetHashCode(obj);
     }
+
+    private const float GarrisonHoldMetres = 1.5f;
+    private const float GarrisonHoldHeight = 2f;
 
     private readonly Mission _mission;
     private readonly IModLogger _logger;
@@ -175,12 +179,13 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
         var scene = _mission.Scene;
         var facing = FordsTowerGeometry.MarchDirection(slot);
         var direction = new Vec2(facing.X, facing.Y);
+        var spots = slot.GunnerSpots;
         for (var i = 0; i < count; i++)
         {
             try
             {
-                var spot = FordsTowerGeometry.GunnerPosition(slot, i, count);
-                var position = new Vec3(spot.X, spot.Y, FordsEngine.TerrainAt(scene, spot.X, spot.Y), -1f);
+                var spot = spots != null ? spots[i] : FordsTowerGeometry.GunnerPosition(slot, i, count);
+                var position = new Vec3(spot.X, spot.Y, spots != null ? spot.Z : FordsEngine.TerrainAt(scene, spot.X, spot.Y), -1f);
                 var data = new AgentBuildData(character)
                     .Team(team)
                     .Banner(team.Banner)
@@ -193,8 +198,18 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
                 var agent = _mission.SpawnTroopWithAgentBuildData(data, false, true);
                 agent.SetMortalityState(Agent.MortalityState.Invulnerable);
                 var hold = new WorldPosition(scene, UIntPtr.Zero, position, false);
-                agent.SetScriptedPositionAndDirection(ref hold, direction.RotationInRadians, false, Agent.AIScriptedFrameFlags.ConsiderRotation);
+                var flags = Agent.AIScriptedFrameFlags.ConsiderRotation;
+                if (spots != null)
+                {
+                    // A bowman must never walk off a small island. Once: the limit is a stat, and the engine re-reads it.
+                    agent.SetMaximumSpeedLimit(0f, false);
+                    flags |= Agent.AIScriptedFrameFlags.NoAttack;
+                }
+
+                agent.SetScriptedPositionAndDirection(ref hold, direction.RotationInRadians, false, flags);
                 tower.Gunners.Add(agent);
+                if (spots != null)
+                    _logger.LogInfo("[FordsOfWar][Garrison] " + FordsTowerLines.GarrisonSpawned(slot.Id, i, spot, agent.Position.Z, agent.GetCurrentNavigationFaceId()));
                 lock (_gate)
                     _byGunner[agent] = slot.Id;
             }
@@ -228,7 +243,47 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
         tower.Gunners.Clear();
     }
 
-    public int Fire(string towerId, Vec3f target, int missiles)
+    public void LogGarrison()
+    {
+        List<Tower> towers;
+        lock (_gate)
+            towers = _towers.Values.Where(t => t.Slot.GunnerSpots != null).ToList();
+
+        var total = 0;
+        var held = 0;
+        var maxDrift = 0f;
+        var maxDz = 0f;
+        var worst = "-";
+        var faces = new SortedDictionary<int, int>();
+        foreach (var tower in towers)
+        {
+            for (var i = 0; i < tower.Gunners.Count; i++)
+            {
+                var gunner = tower.Gunners[i];
+                if (!IsLive(gunner) || i >= tower.Slot.GunnerSpots!.Count)
+                    continue;
+
+                total++;
+                var spot = tower.Slot.GunnerSpots[i];
+                var at = gunner.Position;
+                var drift = new Vec2(at.x - spot.X, at.y - spot.Y).Length;
+                var dz = Math.Abs(at.z - spot.Z);
+                if (drift <= GarrisonHoldMetres && dz <= GarrisonHoldHeight)
+                    held++;
+                if (drift + dz > maxDrift + maxDz)
+                    worst = tower.Slot.Id + "/" + i;
+                maxDrift = Math.Max(maxDrift, drift);
+                maxDz = Math.Max(maxDz, dz);
+                var face = gunner.GetCurrentNavigationFaceId();
+                faces[face] = faces.TryGetValue(face, out var n) ? n + 1 : 1;
+            }
+        }
+
+        var byFace = string.Join(",", faces.Select(p => p.Key + ":" + p.Value));
+        _logger.LogInfo("[FordsOfWar][Garrison] " + FordsTowerLines.GarrisonLook(held, total, maxDrift, maxDz, byFace, worst));
+    }
+
+    public int Fire(string towerId, Vec3f target, int missiles, float towerHalfWidth = 0f)
     {
         var tower = Find(towerId);
         var shooter = tower?.Gunners.Find(IsLive);
@@ -237,6 +292,13 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
             return 0;
 
         var origin = FordsTowerGeometry.VolleyOrigin(tower.Slot);
+        if (tower.Slot.GunnerSpots is { Count: > 0 } spots)
+        {
+            if (FordsTowerGeometry.VolleyOriginFromSpot(spots[0], tower.Slot.Position, target, towerHalfWidth) is not { } clear)
+                return 0;
+            origin = clear;
+        }
+
         var added = 0;
         for (var i = 0; i < missiles; i++)
         {

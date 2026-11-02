@@ -7,7 +7,8 @@ namespace TAOM.Features.FordsOfWar;
 /// <paramref name="Options"/> feed <see cref="LaneLayoutGenerator"/>; <paramref name="Tower"/> and <paramref name="Keep"/>
 /// name the prefab and scale per <see cref="TowerKind"/>. <paramref name="TowerHalfWidth"/> is the half width in metres of the real
 /// towers a tags scene built itself (0 for a generated layout): it sets how close a melee unit must stand to be in contact
-/// (<see cref="FordsTowerGeometry.ContactMetres"/>), and a map that declares it gets no ground garrison.
+/// (<see cref="FordsTowerGeometry.ContactMetres"/>), and a map that declares it gets no ground garrison. <paramref name="LaneBars"/>
+/// keeps each lane's units off the other lanes' navmesh ids (null: no bars).
 /// </summary>
 internal sealed record MapEntry(string SceneId, string DisplayName, MapLayoutMode Layout, LayoutOptions Options,
-    TowerPrefab Tower, TowerPrefab Keep, CampDefaults Camp, float TowerHalfWidth = 0f);
+    TowerPrefab Tower, TowerPrefab Keep, CampDefaults Camp, float TowerHalfWidth = 0f, LaneFaceBars? LaneBars = null);

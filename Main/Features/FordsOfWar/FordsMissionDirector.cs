@@ -71,7 +71,10 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     private int _probes;
     private bool _liveStamped;
     private bool _sceneAuthored;
+    private double _garrisonLookAt;
     private Vec3f? _firstRefused;
+    private const double GarrisonLookSeconds = 30.0;
+
     private volatile bool _started;
     private volatile bool _shutDown;
 
@@ -142,6 +145,8 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             _logger.LogError("[FordsOfWar] the mission has no West and East teams (or too many lanes); the match cannot start");
             return false;
         }
+
+        _battlefield.SetLaneBars(LaneBarsFor(layout));
 
         var towerTimer = Stopwatch.StartNew();
         var built = BuildTowers(layout);
@@ -450,15 +455,29 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         return new FordsMatch(_plan.Config, layout, _plan.Factions, slots, _random);
     }
 
+    private LaneFaceBars? LaneBarsFor(MapLayout layout)
+    {
+        var bars = _plan.Map.LaneBars;
+        if (bars == null)
+            return null;
+
+        if (bars.LaneCount != layout.Lanes.Count)
+        {
+            _logger.LogWarning($"[FordsOfWar] laneFaceIds names {bars.LaneCount} lane(s) and the layout has {layout.Lanes.Count}; no lane bars");
+            return null;
+        }
+
+        for (var lane = 0; lane < bars.LaneCount; lane++)
+            _logger.LogInfo($"[FordsOfWar][Lane] bars lane={lane} faces=[{string.Join(",", bars.BarsFor(lane))}] sets={bars.RegisteredSets}");
+        return bars;
+    }
+
     private void SpawnGunners(IReadOnlyList<TowerSlot> towers)
     {
+        // A real tower's garrison is its scene's bowman spots, however many: ground gunners would only soak melee blows at its foot.
+        var realTowers = _plan.Map.TowerHalfWidth > 0f;
         var count = _plan.Config.Towers.GunnersPerTower;
-        if (count <= 0)
-            return;
-
-        // A real tower stands in a hole in the navmesh and its top is 25 m up: ground gunners beside it would shoot nothing worth a
-        // test. Its garrison is a later slice.
-        if (_plan.Map.TowerHalfWidth > 0f)
+        if (count <= 0 && !realTowers)
             return;
 
         foreach (var side in new[] { MatchSide.West, MatchSide.East })
@@ -471,7 +490,12 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             }
 
             foreach (var tower in towers.Where(t => t.Owner == side))
-                _towers.SpawnGunners(tower, troop, count);
+            {
+                if (!realTowers)
+                    _towers.SpawnGunners(tower, troop, count);
+                else if (tower.GunnerSpots is { Count: > 0 } spots)
+                    _towers.SpawnGunners(tower, troop, spots.Count);
+            }
         }
     }
 
@@ -506,7 +530,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         foreach (var volley in effects.Volleys)
         {
             var target = _battlefield.PositionOf(volley.Target);
-            _report.Volley(target != null, target is { } at ? _towers.Fire(volley.TowerId, at, volley.Missiles) : 0);
+            _report.Volley(target != null, target is { } at ? _towers.Fire(volley.TowerId, at, volley.Missiles, _plan.Map.TowerHalfWidth) : 0);
         }
 
         if (effects.Events.Count > 0)
@@ -630,6 +654,12 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         _report.Field(sample);
         if (_sceneAuthored)
             _report.Faces(_battlefield.SampleFaces());
+
+        if (_plan.Map.TowerHalfWidth > 0f && now >= _garrisonLookAt)
+        {
+            _garrisonLookAt = now + GarrisonLookSeconds;
+            _towers.LogGarrison();
+        }
 
         var compare = ++_probes % 5 == 0;
         foreach (var lane in view.Lanes)

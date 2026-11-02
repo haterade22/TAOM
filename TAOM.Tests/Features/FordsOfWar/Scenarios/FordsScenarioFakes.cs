@@ -109,6 +109,10 @@ internal sealed class FaithfulBattlefield : IFordsBattlefieldAdapter
 
     public bool Prepare(int laneCount) => true;
 
+    public void SetLaneBars(LaneFaceBars? bars)
+    {
+    }
+
     public void SetCorpseFadeOutSeconds(float seconds)
     {
     }
@@ -431,7 +435,11 @@ internal sealed class FaithfulTowers : IFordsTowerAdapter
         e.Gunners.Clear();
     }
 
-    public int Fire(string towerId, Vec3f target, int missiles)
+    public void LogGarrison()
+    {
+    }
+
+    public int Fire(string towerId, Vec3f target, int missiles, float towerHalfWidth = 0f)
     {
         if (NeverFires || Item == null || !_entities.TryGetValue(towerId, out var e) || e.Gunners.Count == 0)
             return 0;

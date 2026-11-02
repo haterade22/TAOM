@@ -150,4 +150,26 @@ public class FordsTowerGeometryTests
     {
         Assert.AreEqual(8f, FordsTowerGeometry.ContactMetres(5.5f), 0.001f);
     }
+    [TestMethod]
+    public void VolleyOriginFromSpot_ClearsTheWallTowardTheTarget_AboveTheSpot()
+    {
+        var origin = FordsTowerGeometry.VolleyOriginFromSpot(new Vec3f(101f, 200f, 40f), new Vec3f(100f, 200f, 16f), new Vec3f(150f, 200f, 16f), 5.5f);
+
+        Assert.IsNotNull(origin);
+        Assert.AreEqual(100f + 5.5f * 1.414f + 0.5f, origin.Value.X, 0.01f);
+        Assert.AreEqual(200f, origin.Value.Y, 0.01f);
+        Assert.AreEqual(41.5f, origin.Value.Z, 0.01f);
+    }
+
+    [TestMethod]
+    public void VolleyOriginFromSpot_NaNTarget_ReturnsNull()
+    {
+        Assert.IsNull(FordsTowerGeometry.VolleyOriginFromSpot(new Vec3f(101f, 200f, 40f), new Vec3f(100f, 200f, 16f), new Vec3f(float.NaN, 200f, 16f), 5.5f));
+    }
+
+    [TestMethod]
+    public void VolleyOriginFromSpot_TargetAtTheTowerCentre_ReturnsNull()
+    {
+        Assert.IsNull(FordsTowerGeometry.VolleyOriginFromSpot(new Vec3f(101f, 200f, 40f), new Vec3f(100f, 200f, 16f), new Vec3f(100f, 200f, 16f), 5.5f));
+    }
 }

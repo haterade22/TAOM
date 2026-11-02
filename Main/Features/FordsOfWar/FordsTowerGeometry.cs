@@ -25,6 +25,9 @@ internal static class FordsTowerGeometry
     public const float BarricadeContactMetres = 4f;
 
     private const float ContactReach = 2.5f;
+    private const float WallCornerFactor = 1.414f;
+    private const float WallClearance = 0.5f;
+    private const float SpotVolleyHeight = 1.5f;
 
     /// <summary>
     /// How close to a tower's origin (2D) a melee unit counts as in contact with it: the barricade's 4 m, or for a real tower of
@@ -46,6 +49,22 @@ internal static class FordsTowerGeometry
     }
 
     public static Vec3f VolleyOrigin(TowerSlot slot) => slot.Position + new Vec3f(0f, 0f, VolleyOriginHeight);
+
+    /// <summary>
+    /// Where a volley from a bowman's spot leaves: 1.5 m above the spot, outside the walls on the side of the target, so the missile
+    /// cannot strike its own tower on the way down. Null when a number is not finite or the target stands at the tower's centre.
+    /// </summary>
+    public static Vec3f? VolleyOriginFromSpot(Vec3f spot, Vec3f towerCentre, Vec3f target, float towerHalfWidth)
+    {
+        var dx = target.X - towerCentre.X;
+        var dy = target.Y - towerCentre.Y;
+        var flat = (float)Math.Sqrt(dx * dx + dy * dy);
+        if (!(flat > 1e-3f) || !FiniteFloatValidator.IsFinite(flat) || !FiniteFloatValidator.IsFinite(spot.Z) || !FiniteFloatValidator.IsFinite(towerHalfWidth))
+            return null;
+
+        var clear = towerHalfWidth * WallCornerFactor + WallClearance;
+        return new Vec3f(towerCentre.X + dx / flat * clear, towerCentre.Y + dy / flat * clear, spot.Z + SpotVolleyHeight);
+    }
 
     /// <summary>The ground distance a missile of <paramref name="speed"/> flies at 45 degrees from level ground: speed squared over gravity. Zero for a speed that is not above zero.</summary>
     public static float Reach(float speed) => speed > 0f ? speed * speed / Gravity : 0f;

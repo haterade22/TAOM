@@ -22,6 +22,7 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
 {
     private readonly Mission _mission;
     private readonly FordsAgentRegistry _registry;
+    private LaneFaceBars? _laneBars;
     private readonly Func<string, object?> _towerEntity;
     private readonly IModLogger _logger;
     private readonly Dictionary<(MatchSide, int), Formation> _formations = new();
@@ -57,6 +58,8 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
         return true;
     }
 
+    public void SetLaneBars(LaneFaceBars? bars) => _laneBars = bars;
+
     public void SetCorpseFadeOutSeconds(float seconds) => _mission.SetMissionCorpseFadeOutTimeInSeconds(seconds);
 
     public void CompleteDeployment() => _mission.OnInitialSpawnCompleted();
@@ -84,6 +87,16 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
                 mounted, false, 0, -1, ground, direction).Formation(formation).Banner(FordsEngine.TeamOf(_mission, side)?.Banner);
             // Alarmed, as vanilla field battles spawn their troops (MissionBattleSideSpawnContext): an unalarmed unit may not fight.
             var agent = _mission.SpawnTroopWithAgentBuildData(data, true, true);
+            if (_laneBars != null)
+            {
+                // Same order on every agent of a lane: the engine keeps one exclusion set per exact ordered list.
+                foreach (var face in _laneBars.BarsFor(lane))
+                {
+                    agent.SetAgentExcludeStateForFaceGroupId(face, true);
+                    agent.MountAgent?.SetAgentExcludeStateForFaceGroupId(face, true);
+                }
+            }
+
             return new FordsSpawnedAgent(_registry.Register(agent, side, lane), character.Level, mounted);
         }
         catch (Exception ex)

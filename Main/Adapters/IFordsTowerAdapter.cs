@@ -27,7 +27,8 @@ internal interface IFordsTowerAdapter
     void SetDestroyedHandler(Action<string> onDestroyed);
 
     /// <summary>
-    /// Spawns <paramref name="count"/> invulnerable archers of the slot's side behind the tower, held in place. Returns how many
+    /// Spawns <paramref name="count"/> invulnerable archers of the slot's side, held in place: on the slot's <c>GunnerSpots</c> when it has
+    /// them (at the marker's height), else behind the tower. Returns how many
     /// stand. Archers are not Fords units: they have no key, no formation and no bounty. Their quivers are topped up by the
     /// mission's <c>AmmoSupplyLogic</c> (AI agents of a listed side), so nothing here refills them.
     /// </summary>
@@ -41,7 +42,10 @@ internal interface IFordsTowerAdapter
     /// that tower, at the javelin's own missile speed. Returns how many missiles were added: 0 when the tower has no living gunner,
     /// the javelin item is missing or the target position is not finite. A target out of reach is still aimed at 45 degrees and counts.
     /// </summary>
-    int Fire(string towerId, Vec3f target, int missiles);
+    int Fire(string towerId, Vec3f target, int missiles, float towerHalfWidth = 0f);
+
+    /// <summary>Logs one <c>[Garrison] look</c> line: are the bowmen on the tower tops still on their spots. Main thread.</summary>
+    void LogGarrison();
 
     /// <summary>The tower id of a destructible component (passed as object); null when it is not one of ours.</summary>
     string? TowerIdOf(object? component);

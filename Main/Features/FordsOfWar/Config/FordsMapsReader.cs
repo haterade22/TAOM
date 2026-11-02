@@ -86,7 +86,44 @@ internal static class FordsMapsReader
             ReadPrefab(s.Group(scene, "towerPrefab", label), d.Tower, label + ".towerPrefab", s),
             ReadPrefab(s.Group(scene, "keepPrefab", label), d.Keep, label + ".keepPrefab", s),
             ReadCamp(s.Group(scene, "camp", label), d.Camp, label + ".camp", s),
-            s.Float(scene, label, "towerHalfWidth", 0f, 0f, 50f));
+            s.Float(scene, label, "towerHalfWidth", 0f, 0f, 50f),
+            ReadLaneBars(scene["laneFaceIds"], label, s));
+    }
+
+    private static LaneFaceBars? ReadLaneBars(JToken? token, string label, FordsConfigScope s)
+    {
+        if (token == null)
+            return null;
+
+        var ids = new List<int>();
+        if (token is JArray array)
+        {
+            foreach (var item in array)
+            {
+                if (item.Type != JTokenType.Integer || item.Value<long>() <= 0 || item.Value<long>() > int.MaxValue || ids.Contains(item.Value<int>()))
+                {
+                    s.Warn($"{label}.laneFaceIds needs distinct positive integers; this map has no lane bars");
+                    return null;
+                }
+
+                ids.Add(item.Value<int>());
+            }
+        }
+
+        if (ids.Count == 0)
+        {
+            s.Warn($"{label}.laneFaceIds needs a list of navmesh ids, one per lane; this map has no lane bars");
+            return null;
+        }
+
+        var bars = new LaneFaceBars(ids);
+        if (bars.RegisteredSets > LaneFaceBars.MaxSets)
+        {
+            s.Warn($"{label}.laneFaceIds needs {bars.RegisteredSets} exclusion lists and the engine holds {LaneFaceBars.MaxSets}; this map has no lane bars");
+            return null;
+        }
+
+        return bars;
     }
 
     private static bool TryReadMode(JToken? token, out MapLayoutMode mode, out string why)
