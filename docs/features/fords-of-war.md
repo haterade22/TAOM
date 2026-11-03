@@ -258,7 +258,7 @@ no verdict: `[Ground] units=<n> aboveTerrain=min/med/max belowNav=min/med/max of
 terrain and under the navmesh) and one `[Lane] faces <stream> own= shared= foreign= top= off= foot= mounted=` line per stream
 (unit-seconds by navigation face group: 0 shared, lane n is group n + 1, 4 tower tops). The German to Turkish names of the
 new map are English seeds until the Fords translations owed to #763 are run. Tower and keep prefab `siege_barricade_a`, scale 1.0 and 1.6 (the 1.6
-is a placeholder, not measured). Neutral camp default: 2 `hill_troll` for a reward of 250.
+is a placeholder, not measured). Neutral camp default: 2 `fow_hill_troll` for a reward of 250.
 
 **Factions** (offers / heroes with price):
 
@@ -318,12 +318,29 @@ of every unit. Fresh waves spawn at the base into the same formation, so the mea
   stood, reads as `branch=AttackTower ... cmd=MoveTo sent=(x,y)`. The line is a `[FordsOfWar][LaneState]` line, at most once per
   5 mission seconds per side and lane; a stream with no decision yet writes none.
 
+## The roster
+
+`fords_of_war/fords_troops.xml` holds the mode's own troops: one `fow_<campaign id>` copy of each of the 51 troops `factions.json` and
+`maps.json` name. A balance edit there can never reach a campaign, because `SubModule.xml` loads the file for CustomGame only. A script
+made the copies once on 2026-11-02, so the file is now the source and nothing regenerates it. At that date every copy had the same armour,
+weapons and skills as its campaign troop.
+
+- **Tune here:** `<skills>` and `<Equipments>` in `fords_troops.xml`; `packSize`, `price`, `level` and `eliteWeight` in `factions.json`. A test
+  holds an offer's `level` equal to the copy's `level`. `eliteWeight` no longer follows the campaign's `troop_weights.xml`.
+- **What a copy keeps:** troll, warg and race mechanics read the agent's race and monster, not its troop id (checked across `Main/` on
+  2026-11-02), so a copy keeps its abilities. `TroopWeightService` only reads party rosters, so the mode never used `troop_weights.xml`.
+- **What differs:** `is_obsolete="true"` keeps a copy out of the Custom Battle picker (`ArmyCompositionGroupVM` lists `IsSoldier && !IsObsolete`,
+  and Custom Battle loads CustomGame data too). No copy has upgrade targets, because nothing levels up in a match.
+- **Names:** a copy keeps its campaign troop's `{=key}`, so the translation follows. A new name needs a new key.
+- **Heroes** are not copied: `factions.json` still names the campaign's lords, whose signature abilities key on their ids.
+- **Gates:** `ShippedFordsRosterTests`. `validate_moduledata.py` checks the copies' item references, because it scans every ModuleData XML file.
+
 ## Camps and the Seize order
 
 **Camps.** Every `CampSlot` that survives the layout fit becomes a neutral camp when the match starts (`FordsMissionDirector.SpawnCamps`,
 after the gunners). `FordsCampAdapter` puts the creatures on a third team with `BattleSideEnum.None`, hostile to West and East by
 `Team.SetIsEnemyOf` in both directions, so West and East stay the mission's only two battle sides. Each camp is one formation of that
-team (at most eight camps). The default camp is 2 `hill_troll` for a reward of 250 (`maps.json` `defaults.camp`).
+team (at most eight camps). The default camp is 2 `fow_hill_troll` for a reward of 250 (`maps.json` `defaults.camp`).
 
 - **Staying home.** The creatures stand at the camp's centre under a Move order. When any lane unit of either side comes within
   `CampRules.AlertRange` (20 m) of the centre, `CampRules.UpdateAlerts` issues a `CampOrder` and the formation charges. When no unit is
@@ -739,6 +756,7 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
 
 ## Changelog
 
+- 2026-11-02: the mode has its own roster, `fords_troops.xml`, loaded for CustomGame only.
 - 2026-11-02: neutral camps spawn, with a ring, and pay when cleared; the Seize order for lanes, used by person and AI; the hand-built map
   with real towers, bowmen, lane IDs and housekeeping; lanes charge only their own lane's foes; towers fire arrows and javelins.
 - 2026-11-01: last review findings: check 9's ladder counts blows only on the stream's ordered tower; `bypass` is measured from the

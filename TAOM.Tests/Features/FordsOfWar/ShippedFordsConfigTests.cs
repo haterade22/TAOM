@@ -40,7 +40,8 @@ public class ShippedFordsConfigTests
     {
         var all = new Dictionary<string, XElement>(StringComparer.Ordinal);
         var files = Directory.GetFiles(Path.Combine(ModuleData, "troops"), "*.xml")
-            .Concat(Directory.GetFiles(Path.Combine(ModuleData, "characters"), "*.xml"));
+            .Concat(Directory.GetFiles(Path.Combine(ModuleData, "characters"), "*.xml"))
+            .Concat(new[] { ConfigFile("fords_troops.xml") });
         foreach (var file in files)
         {
             foreach (var npc in XDocument.Load(file).Descendants("NPCCharacter"))
@@ -70,10 +71,6 @@ public class ShippedFordsConfigTests
 
         return ids;
     }
-
-    private static Dictionary<string, float> TroopWeights() =>
-        XDocument.Load(Path.Combine(ModuleData, "TroopWeights", "troop_weights.xml")).Descendants("TroopWeight")
-            .ToDictionary(w => (string)w.Attribute("id")!, w => (float)w.Attribute("weight")!);
 
     private static IEnumerable<string> AllTroopIds(FordsConfigCatalog catalog)
     {
@@ -235,8 +232,6 @@ public class ShippedFordsConfigTests
                 missing.Add(id + " (missing)");
             else if ((string?)npc.Attribute("is_hero") == "true")
                 missing.Add(id + " (is a hero)");
-            else if ((string?)npc.Attribute("is_obsolete") == "true")
-                missing.Add(id + " (obsolete)");
         }
 
         Assert.AreEqual(0, missing.Count, "Troop ids that are not usable NPCCharacters: " + string.Join(", ", missing));
@@ -343,7 +338,7 @@ public class ShippedFordsConfigTests
             Assert.IsTrue(catalog.TryGetFaction(id, out var faction));
             var siege = faction.Units.Where(u => u.Role == UnitRole.Siege).ToList();
             Assert.AreEqual(1, siege.Count, id);
-            Assert.AreEqual("hill_troll", siege[0].TroopId, id);
+            Assert.AreEqual("fow_hill_troll", siege[0].TroopId, id);
         }
     }
 
@@ -417,10 +412,9 @@ public class ShippedFordsConfigTests
     }
 
     [TestMethod]
-    public void ShippedFactions_LevelEliteWeightAndPriceAgreeWithTheDataAndTroopPricing()
+    public void ShippedFactions_LevelRoleAndPriceAgreeWithTheRosterAndTroopPricing()
     {
         var npcs = NpcCharacters();
-        var weights = TroopWeights();
         var json = JObject.Parse(File.ReadAllText(ConfigFile("factions.json")));
         var problems = new List<string>();
 
@@ -437,8 +431,6 @@ public class ShippedFordsConfigTests
 
                 if (level != int.Parse((string)npcs[troop].Attribute("level")!))
                     problems.Add(label + ": level differs from the troop file");
-                if (weight != (weights.TryGetValue(troop, out var w) ? w : 1f))
-                    problems.Add(label + ": eliteWeight differs from troop_weights.xml");
                 var mounted = role == UnitRole.Cavalry || role == UnitRole.HorseArcher;
                 if (mounted != ((string?)npcs[troop].Attribute("default_group") is "Cavalry" or "HorseArcher"))
                     problems.Add(label + ": role mounted flag differs from default_group");
