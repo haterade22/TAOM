@@ -1104,5 +1104,43 @@ class CostTests(Base):
         self.assertEqual(code, 0)
 
 
+class ExcludeSessionTests(Base):
+    def _two_sessions(self):
+        self.env.write("keep.jsonl", [tool_use("t1", "Bash", session="keep", command="ls")])
+        self.env.write("keep/subagents/agent-a1.jsonl", [tool_use("t2", "Bash", session="keep", command="ls")])
+        self.env.write("skip.jsonl", [tool_use("t3", "Bash", session="skip", command="ls")])
+        self.env.write("skip/subagents/agent-a2.jsonl", [tool_use("t4", "Bash", session="skip", command="ls")])
+        self.env.write("skip/subagents/workflows/wf_1/agent-a3.jsonl",
+                       [tool_use("t5", "Bash", session="skip", command="ls")])
+
+    def _files(self):
+        s = self.env.signals()["sessions"]
+        return s["main_files"], s["subagent_files"]
+
+    def test_without_the_flag_every_session_counts(self):
+        self._two_sessions()
+        code, _ = self.env.run()
+        self.assertEqual(code, 0)
+        self.assertEqual(self._files(), (2, 3))
+
+    def test_excluded_session_loses_its_main_subagent_and_workflow_transcripts(self):
+        self._two_sessions()
+        code, _ = self.env.run("--exclude-session", "skip")
+        self.assertEqual(code, 0)
+        self.assertEqual(self._files(), (1, 1))
+
+    def test_excluding_every_session_reads_as_unchecked_not_as_clean(self):
+        self._two_sessions()
+        code, out = self.env.run("--exclude-session", "skip", "--exclude-session", "keep")
+        self.assertEqual(code, 3)
+        self.assertIn("UNCHECKED", out)
+
+    def test_report_names_what_it_left_out(self):
+        self._two_sessions()
+        self.env.run("--exclude-session", "skip")
+        self.assertEqual(self.env.signals()["window"]["excluded_sessions"], ["skip"])
+        self.assertRegex(self.env.report(), r"Excluded sessions.*skip")
+
+
 if __name__ == "__main__":
     unittest.main()

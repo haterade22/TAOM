@@ -734,9 +734,12 @@ def scan_file(stats, path, since_str, agent=None):
     commit_usage(stats, calls, agent, path.stem)
 
 
-def discover(transcripts, since_dt):
-    """Return (main, subagent) transcript paths whose mtime is not older than the window."""
+def discover(transcripts, since_dt, excluded=()):
+    """Return (main, subagent) transcript paths whose mtime is not older than the window.
+
+    A session in `excluded` loses its main transcript and everything under its folder."""
     cutoff = (since_dt - timedelta(days=1)).timestamp()
+    skip = set(excluded)
 
     def fresh(p):
         try:
@@ -744,9 +747,10 @@ def discover(transcripts, since_dt):
         except OSError:
             return False
 
-    main = sorted(p for p in transcripts.glob("*.jsonl") if fresh(p))
+    main = sorted(p for p in transcripts.glob("*.jsonl") if fresh(p) and p.stem not in skip)
     # `**` because a workflow's agents sit one level down, in subagents/workflows/<run>/.
-    sub = sorted(p for p in transcripts.glob("*/subagents/**/agent-*.jsonl") if fresh(p))
+    sub = sorted(p for p in transcripts.glob("*/subagents/**/agent-*.jsonl")
+                 if fresh(p) and p.relative_to(transcripts).parts[0] not in skip)
     return main, sub
 
 
@@ -1051,7 +1055,8 @@ def build_signals(stats, args, since, today, main, sub):
     used = set(stats.skills) | set(stats.slash_commands)
     runaways = sorted(stats.runaways, key=lambda r: -r["length"])[:n]
     return {
-        "window": {"since": since.isoformat(), "newest": stats.newest_date, "today": today.isoformat()},
+        "window": {"since": since.isoformat(), "newest": stats.newest_date, "today": today.isoformat(),
+                   "excluded_sessions": list(args.exclude_session)},
         "sessions": {"main_files": len(main), "subagent_files": len(sub), "records": stats.records,
                      "parse_failures": stats.parse_failures, "compactions": stats.compactions},
         "hook_denies": top_groups(stats.denies, n, ("hook", "event", "tool")),
@@ -1101,7 +1106,8 @@ def render(sig):
     L += table(["Measure", "Value"], [
         ["Main transcripts", s["main_files"]], ["Subagent transcripts", s["subagent_files"]],
         ["Records parsed", s["records"]], ["Parse failures", s["parse_failures"]],
-        ["Compactions", s["compactions"]]])
+        ["Compactions", s["compactions"]],
+        ["Excluded sessions", ", ".join(w["excluded_sessions"]) or "none"]])
     L += ["## 2. Hook outcomes", "", "### Denies", ""]
     L += table(["Hook", "Event", "Tool", "Count", "Sessions", "Last seen", "Sample reason"],
                [[r["hook"], r["event"], r["tool"], r["count"], r["sessions"], r["last_seen"], r["sample"]]
@@ -1275,6 +1281,8 @@ def parse_args(argv):
     p.add_argument("--memory", type=Path, default=home / "memory")
     p.add_argument("--out", type=Path, default=None)
     p.add_argument("--top", type=int, default=20)
+    p.add_argument("--exclude-session", action="append", default=[], metavar="ID",
+                   help="leave this session's transcripts out, for work that would distort a comparison (repeatable)")
     return p.parse_args(argv)
 
 
@@ -1303,7 +1311,8 @@ def main(argv=None):
         return 2
 
     stats = Stats()
-    main_files, sub_files = discover(args.transcripts, datetime.combine(since, datetime.min.time()))
+    main_files, sub_files = discover(args.transcripts, datetime.combine(since, datetime.min.time()),
+                                     args.exclude_session)
     for path in main_files + sub_files:
         try:
             scan_file(stats, path, since.isoformat(), agent_type(path) if path in sub_files else None)
