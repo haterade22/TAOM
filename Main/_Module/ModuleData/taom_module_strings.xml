@@ -4500,6 +4500,7 @@
 	<string id="TAOM_FOW_Hud_UpgradeDone" text="{=TAOM_FOW_Hud_UpgradeDone}Complete" />
 	<string id="TAOM_FOW_Hud_UpgradeLess" text="{=TAOM_FOW_Hud_UpgradeLess}Level {LEVEL} of {MAX}: -{PERCENT}%" />
 	<string id="TAOM_FOW_Hud_UpgradeMore" text="{=TAOM_FOW_Hud_UpgradeMore}Level {LEVEL} of {MAX}: +{PERCENT}%" />
+	<string id="TAOM_FOW_Hud_UpgradeNone" text="{=TAOM_FOW_Hud_UpgradeNone}Level 0 of {MAX}" />
 	<string id="TAOM_FOW_Hud_UpgradeNext" text="{=TAOM_FOW_Hud_UpgradeNext}Next level: {PRICE} gold" />
 	<string id="TAOM_FOW_Hud_UpgradesTitle" text="{=TAOM_FOW_Hud_UpgradesTitle}Upgrades" />
 	<string id="TAOM_FOW_Notice_UpgradeComplete" text="{=TAOM_FOW_Notice_UpgradeComplete}That upgrade is complete." />

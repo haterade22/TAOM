@@ -76,6 +76,9 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     private double _probeAt;
     private int _probes;
     private bool _liveStamped;
+    private readonly FordsTroopTally _tally = new();
+    // Kept after a death: the killer may already be dead when its victim's death arrives.
+    private readonly Dictionary<AgentKey, string> _troopOf = new();
     private bool _sceneAuthored;
     private double _garrisonLookAt;
     private float _housekeepIn = HousekeepSeconds;
@@ -265,8 +268,39 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             }
 
             if (record != null && credit is { } paid)
+            {
                 _report.Death(record.Side, paid);
+                TallyDeath(victim, killer, record.Value);
+            }
         });
+    }
+
+    private void TallyDeath(AgentKey victim, AgentKey? killer, int value)
+    {
+        lock (_gate)
+        {
+            if (!_troopOf.TryGetValue(victim, out var troop))
+                return;
+
+            string? killerTroop = null;
+            if (killer is { } key)
+                _troopOf.TryGetValue(key, out killerTroop);
+            _tally.Death(troop, killerTroop, value);
+        }
+    }
+
+    private void LogBalance()
+    {
+        lock (_gate)
+        {
+            foreach (var line in _tally.Lines())
+                _logger.LogInfo("[FordsOfWar][Balance] " + line);
+            if (_match == null)
+                return;
+
+            foreach (var gold in _match.GoldTotals())
+                _logger.LogInfo($"[FordsOfWar][Balance] side={gold.Side} slot={gold.Slot} earned={gold.Earned} spent={gold.Spent} left={gold.Left}");
+        }
     }
 
     private void OnCampUnitGone(string campId, AgentKey? killer)
@@ -373,6 +407,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             return;
 
         _shutDown = true;
+        LogBalance();
         var upgradeHits = FordsUpgradeHooks.Counts;
         _logger.LogInfo($"[FordsOfWar][Upgrade] blows raised={upgradeHits.Raised} lowered={upgradeHits.Lowered} (totals)");
         FordsUpgradeHooks.Clear();
@@ -878,6 +913,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         {
             _units[spawned.Key] = record;
             _match?.RegisterUnit(request.RequestId, record);
+            _troopOf[record.Key] = request.TroopId;
         }
 
         _report.Spawned(request.Side, request.Lane, request.TroopId);

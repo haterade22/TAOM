@@ -7731,6 +7731,8 @@
 
     <string id="TAOM_FOW_Upgrade_Siegecraft" text="Siegecraft" />
 
+    <string id="TAOM_FOW_Hud_UpgradeNone" text="Level 0 of {MAX}" />
+
 
   </strings>
 

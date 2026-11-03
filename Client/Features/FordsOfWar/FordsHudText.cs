@@ -32,6 +32,9 @@ internal static class FordsHudText
 
     internal static string UpgradeStatus(UpgradeEffect effect, float stepPerLevel, int level, int maxLevel)
     {
+        if (level == 0)
+            return new TextObject("{=TAOM_FOW_Hud_UpgradeNone}Level 0 of {MAX}").SetTextVariable("MAX", maxLevel).ToString();
+
         var raises = effect == UpgradeEffect.MeleeDamage || effect == UpgradeEffect.MissileDamage || effect == UpgradeEffect.SiegeDamage;
         return new TextObject(raises ? "{=TAOM_FOW_Hud_UpgradeMore}Level {LEVEL} of {MAX}: +{PERCENT}%" : "{=TAOM_FOW_Hud_UpgradeLess}Level {LEVEL} of {MAX}: -{PERCENT}%")
             .SetTextVariable("LEVEL", level).SetTextVariable("MAX", maxLevel).SetTextVariable("PERCENT", (int)System.Math.Round(stepPerLevel * level * 100f)).ToString();

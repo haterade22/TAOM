@@ -35,7 +35,7 @@ public class FordsUpgradePanelTests
         Assert.AreEqual(6, vm.Upgrades.Count);
         Assert.AreEqual("Melee damage", vm.Upgrades[0].Name);
         StringAssert.Contains(vm.Upgrades[0].ActionText, "300");
-        StringAssert.Contains(vm.Upgrades[0].StatusText, "0");
+        Assert.AreEqual("Level 0 of 3", vm.Upgrades[0].StatusText);
         Assert.IsTrue(vm.Upgrades[0].CanBuy);
         Assert.AreEqual("Shift+F6", vm.Upgrades[5].KeyText);
     }
