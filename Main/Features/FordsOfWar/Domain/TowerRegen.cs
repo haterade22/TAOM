@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace TAOM.Features.FordsOfWar.Domain;
 
 /// <summary>
-/// Towers regain RegenPerSecond hit points once RegenDelaySeconds have passed with no damage. Fractions carry over
+/// Towers regain RegenPerSecond hit points, times their owner's feat, once RegenDelaySeconds have passed with no damage. Fractions carry over
 /// between ticks. Heals go into the <see cref="TowerChain"/> and come back as a list so the engine layer can mirror them.
 /// </summary>
 internal sealed class TowerRegen
@@ -18,9 +18,11 @@ internal sealed class TowerRegen
     private readonly FordsTowerConfig _config;
     private readonly TowerChain _chain;
     private readonly Dictionary<string, Quiet> _quiet = new();
+    private readonly IReadOnlyDictionary<MatchSide, FactionFeats> _feats;
 
-    public TowerRegen(FordsTowerConfig config, TowerChain chain)
+    public TowerRegen(FordsTowerConfig config, TowerChain chain, IReadOnlyDictionary<MatchSide, FactionFeats>? feats = null)
     {
+        _feats = feats ?? new Dictionary<MatchSide, FactionFeats>();
         _config = config;
         _chain = chain;
         foreach (var id in chain.Ids)
@@ -59,7 +61,7 @@ internal sealed class TowerRegen
             if (regenSeconds <= 0f)
                 continue;
 
-            q.Carry += regenSeconds * (double)_config.RegenPerSecond;
+            q.Carry += regenSeconds * (double)_config.RegenPerSecond * RateOf(pair.Key);
             var whole = (int)Math.Floor(q.Carry);
             if (whole <= 0)
                 continue;
@@ -72,4 +74,7 @@ internal sealed class TowerRegen
 
         return heals;
     }
+
+    private float RateOf(string towerId) =>
+        _chain.Slot(towerId) is { } slot && _feats.TryGetValue(slot.Owner, out var feats) ? feats.TowerRegen : 1f;
 }

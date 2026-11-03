@@ -353,6 +353,199 @@
           ]
         }
       ]
+    },
+    "rivendell": {
+      "name": "{=TAOM_FOW_Faction_Rivendell}Rivendell",
+      "culture": "rivendell",
+      "aiBuyCycle": ["swordguard", "marksmen", "swordguard", "marksmen", "blademasters", "marksmen", "lancers", "golden_flower"],
+      "feats": { "towerRange": 1.5, "heroSlotBonus": 1, "unitCapBonus": -150 },
+      "traits": [
+        { "text": "{=TAOM_FOW_Trait_Rivendell_Sight}Far Sight: your towers fire 50% further than any other.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Rivendell_Heroes}All three heroes may fight at once.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Rivendell_Few}Only 150 troops in the field, and only five kinds.", "strength": false }
+      ],
+      "units": [
+        { "id": "swordguard", "troop": "fow_imladris_swordguard", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
+        { "id": "marksmen", "troop": "fow_imladris_marksman", "role": "Ranged", "packSize": 4, "level": 36, "eliteWeight": 1.0 },
+        { "id": "blademasters", "troop": "fow_imladris_blademaster", "role": "Infantry", "packSize": 3, "level": 41, "eliteWeight": 1.0 },
+        { "id": "lancers", "troop": "fow_noldorin_lancer", "role": "Cavalry", "packSize": 2, "level": 46, "eliteWeight": 1.0 },
+        { "id": "golden_flower", "troop": "fow_rivendell_knight_golden_flower", "role": "Infantry", "packSize": 2, "level": 51, "eliteWeight": 1.0 }
+      ],
+      "heroes": [
+        { "id": "lord_R1_1", "price": 2400 },
+        { "id": "lord_R2_1", "price": 1800 },
+        { "id": "lord_R1_3", "price": 1000 }
+      ],
+      "freeWaves": [
+        {
+          "fromMinute": 0,
+          "units": [
+            { "troop": "fow_imladris_recruit", "count": 3 },
+            { "troop": "fow_rivendell_militia_archer", "count": 2 }
+          ]
+        },
+        {
+          "fromMinute": 10,
+          "units": [
+            { "troop": "fow_imladris_infantry", "count": 3 },
+            { "troop": "fow_imladris_bowman", "count": 2 }
+          ]
+        },
+        {
+          "fromMinute": 20,
+          "units": [
+            { "troop": "fow_imladris_swordguard", "count": 3 },
+            { "troop": "fow_imladris_archer", "count": 2 }
+          ]
+        }
+      ]
+    },
+    "erebor": {
+      "name": "{=TAOM_FOW_Faction_Erebor}Erebor",
+      "culture": "erebor",
+      "aiBuyCycle": ["miners", "fighters", "miners", "mattocks", "rams", "fighters", "bowmen", "shield_guard", "legionaries", "royal_wardens"],
+      "feats": { "income": 1.4, "towerRegen": 4, "waveInterval": 1.25 },
+      "traits": [
+        { "text": "{=TAOM_FOW_Trait_Erebor_Gold}Mountain Gold: 40% more income.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Erebor_Stonewrights}Stonewrights: your towers mend 4 times as fast.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Erebor_Slow}Free waves come a quarter later, with few bows and no horses.", "strength": false }
+      ],
+      "units": [
+        { "id": "miners", "troop": "fow_erebor_reg_miner", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
+        { "id": "bowmen", "troop": "fow_erebor_reg_bowman", "role": "Ranged", "packSize": 5, "level": 26, "eliteWeight": 1.0 },
+        { "id": "rams", "troop": "fow_ironpass_ram_rider", "role": "Cavalry", "packSize": 4, "level": 21, "eliteWeight": 1.0 },
+        { "id": "fighters", "troop": "fow_erebor_reg_fighter", "role": "Infantry", "packSize": 6, "level": 26, "eliteWeight": 1.2 },
+        { "id": "mattocks", "troop": "fow_erebor_reg_mattock_warrior", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.2 },
+        { "id": "shield_guard", "troop": "fow_erebor_noble_shield_guard", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.2 },
+        { "id": "legionaries", "troop": "fow_erebor_oathsworn_legionary", "role": "Infantry", "packSize": 3, "level": 41, "eliteWeight": 1.2 },
+        { "id": "royal_wardens", "troop": "fow_erebor_noble_royal_warden", "role": "Infantry", "packSize": 3, "level": 46, "eliteWeight": 1.2 }
+      ],
+      "heroes": [
+        { "id": "lord_E1_1", "price": 2000 },
+        { "id": "lord_E1_2", "price": 1200 },
+        { "id": "lord_E1_5", "price": 900 }
+      ],
+      "freeWaves": [
+        {
+          "fromMinute": 0,
+          "units": [
+            { "troop": "fow_erebor_reg_miner", "count": 5 },
+            { "troop": "fow_erebor_militia_spearman", "count": 3 },
+            { "troop": "fow_erebor_militia_archer", "count": 2 }
+          ]
+        },
+        {
+          "fromMinute": 10,
+          "units": [
+            { "troop": "fow_erebor_reg_militia", "count": 5 },
+            { "troop": "fow_erebor_militia_veteran_spearman", "count": 3 },
+            { "troop": "fow_erebor_militia_veteran_archer", "count": 2 }
+          ]
+        },
+        {
+          "fromMinute": 20,
+          "units": [
+            { "troop": "fow_erebor_reg_company", "count": 5 },
+            { "troop": "fow_erebor_militia_veteran_spearman", "count": 3 },
+            { "troop": "fow_erebor_reg_skirmisher", "count": 2 }
+          ]
+        }
+      ]
+    },
+    "harad": {
+      "name": "{=TAOM_FOW_Faction_Harad}Harad",
+      "culture": "aserai",
+      "aiBuyCycle": ["levies", "bowmen", "footmen", "levies", "serpent_archers", "camel_riders", "serpent_guard", "lancers"],
+      "feats": { "towerHitPoints": 0.85 },
+      "traits": [
+        { "text": "{=TAOM_FOW_Trait_Harad_Beasts}Call a war elephant or a mûmak every 2 minutes.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Harad_Towers}Towers have 15% fewer hit points.", "strength": false },
+        { "text": "{=TAOM_FOW_Trait_Harad_Cost}A fallen beast is a heavy loss of gold.", "strength": false }
+      ],
+      "units": [
+        { "id": "levies", "troop": "fow_harad_reg_levy", "role": "Infantry", "packSize": 12, "level": 6, "eliteWeight": 1.0 },
+        { "id": "militia_spears", "troop": "fow_harad_militia_spearman", "role": "Spear", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
+        { "id": "bowmen", "troop": "fow_harad_reg_bowman", "role": "Ranged", "packSize": 10, "level": 16, "eliteWeight": 1.0 },
+        { "id": "footmen", "troop": "fow_harad_serp_footman", "role": "Infantry", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
+        { "id": "camel_riders", "troop": "fow_harad_pz_camel_rider", "role": "Cavalry", "packSize": 5, "level": 21, "eliteWeight": 1.0 },
+        { "id": "serpent_archers", "troop": "fow_harad_serp_archer", "role": "Ranged", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
+        { "id": "serpent_guard", "troop": "fow_harad_serp_guard", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
+        { "id": "lancers", "troop": "fow_harad_serp_lancer", "role": "Cavalry", "packSize": 3, "level": 36, "eliteWeight": 1.0 }
+      ],
+      "creatures": {
+        "cooldownSeconds": 120,
+        "units": [
+          { "id": "war_elephant", "troop": "fow_harad_elephant_rider", "role": "Cavalry", "packSize": 1, "level": 51, "eliteWeight": 2.0 },
+          { "id": "mumak", "troop": "fow_harad_mumakil_rider", "role": "Cavalry", "packSize": 1, "level": 51, "eliteWeight": 4.0 }
+        ]
+      },
+      "heroes": [
+        { "id": "lord_A9_u", "price": 1400 },
+        { "id": "lord_3_3_1", "price": 1000 },
+        { "id": "lord_A9_l", "price": 800 }
+      ],
+      "freeWaves": [
+        {
+          "fromMinute": 0,
+          "units": [
+            { "troop": "fow_harad_reg_levy", "count": 5 },
+            { "troop": "fow_harad_militia_spearman", "count": 3 },
+            { "troop": "fow_harad_militia_archer", "count": 2 }
+          ]
+        },
+        {
+          "fromMinute": 10,
+          "units": [
+            { "troop": "fow_harad_reg_militia", "count": 5 },
+            { "troop": "fow_harad_militia_veteran_spearman", "count": 3 },
+            { "troop": "fow_harad_militia_veteran_archer", "count": 2 }
+          ]
+        },
+        {
+          "fromMinute": 20,
+          "units": [
+            { "troop": "fow_harad_reg_warrior", "count": 5 },
+            { "troop": "fow_harad_militia_veteran_spearman", "count": 3 },
+            { "troop": "fow_harad_reg_bowman", "count": 3 }
+          ]
+        }
+      ]
+    },
+    "gundabad": {
+      "name": "{=TAOM_FOW_Faction_Gundabad}Gundabad",
+      "culture": "gundabad",
+      "aiBuyCycle": ["snagas", "hunters", "brawlers", "snagas", "impalers", "ravagers", "hunters", "archers", "wolf_riders", "bone_breakers"],
+      "feats": { "waveInterval": 0.5, "towerHitPoints": 0.7 },
+      "traits": [
+        { "text": "{=TAOM_FOW_Trait_Gundabad_Waves}Free waves come twice as often.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Gundabad_Cheap}Packs cost a quarter less.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Gundabad_Fade}Free waves never improve, and towers have 30% fewer hit points.", "strength": false }
+      ],
+      "units": [
+        { "id": "snagas", "troop": "fow_gundabad_snaga", "role": "Infantry", "packSize": 16, "level": 11, "eliteWeight": 0.75 },
+        { "id": "hunters", "troop": "fow_gundabad_hunter", "role": "Ranged", "packSize": 12, "level": 11, "eliteWeight": 0.75 },
+        { "id": "brawlers", "troop": "fow_gundabad_grunt", "role": "Infantry", "packSize": 12, "level": 16, "eliteWeight": 0.75 },
+        { "id": "impalers", "troop": "fow_gundabad_guard", "role": "Spear", "packSize": 10, "level": 21, "eliteWeight": 0.75 },
+        { "id": "ravagers", "troop": "fow_gundabad_brute", "role": "Infantry", "packSize": 8, "level": 26, "eliteWeight": 0.75 },
+        { "id": "archers", "troop": "fow_gundabad_archer", "role": "Ranged", "packSize": 6, "level": 26, "eliteWeight": 0.75 },
+        { "id": "wolf_riders", "troop": "fow_gundabad_warg_tamer", "role": "Cavalry", "packSize": 4, "level": 31, "eliteWeight": 0.75 },
+        { "id": "bone_breakers", "troop": "fow_gundabad_berserker", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 0.75 }
+      ],
+      "heroes": [
+        { "id": "lord_G1_1", "price": 1400 },
+        { "id": "lord_G1_2", "price": 1000 },
+        { "id": "lord_G1_3", "price": 800 }
+      ],
+      "freeWaves": [
+        {
+          "fromMinute": 0,
+          "units": [
+            { "troop": "fow_gundabad_snaga", "count": 6 },
+            { "troop": "fow_gundabad_militia_spearman", "count": 3 },
+            { "troop": "fow_gundabad_hunter", "count": 3 }
+          ]
+        }
+      ]
     }
   }
 }

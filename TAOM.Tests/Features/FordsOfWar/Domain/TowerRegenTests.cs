@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.FordsOfWar.Domain;
 
@@ -22,6 +23,21 @@ public class TowerRegenTests
     {
         chain.ApplyDamage(id, amount);
         regen.NotifyDamaged(id);
+    }
+
+    [TestMethod]
+    public void Tick_AFactionWithFasterRegen_MendsOnlyItsOwnTowersFaster()
+    {
+        var feats = new Dictionary<MatchSide, FactionFeats> { [MatchSide.West] = new() { TowerRegen = 4f } };
+        var chain = new TowerChain(FordsTestLayout.Create(), Config, feats);
+        var regen = new TowerRegen(Config, chain, feats);
+        Hurt(regen, chain, FordsTestLayout.WestOuter0, 1000);
+        Hurt(regen, chain, FordsTestLayout.EastOuter0, 1000);
+
+        regen.Tick(21f);
+
+        Assert.AreEqual(Config.TowerHitPoints - 1000 + 60, chain.HitPoints(FordsTestLayout.WestOuter0));
+        Assert.AreEqual(Config.TowerHitPoints - 1000 + 15, chain.HitPoints(FordsTestLayout.EastOuter0));
     }
 
     [TestMethod]

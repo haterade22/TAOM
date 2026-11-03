@@ -124,11 +124,14 @@ internal static class FordsFactionsReader
             return fallback;
         }
 
-        var cap = 0;
-        if (o["unitCapBonus"] != null && !FordsConfigScope.TryInt(o["unitCapBonus"], -1000, 1000, out cap, out var capWhy))
+        int Bonus(string key)
         {
-            s.Warn($"faction '{faction}' feat 'unitCapBonus' {capWhy}; using 0");
-            cap = 0;
+            if (o[key] == null)
+                return 0;
+            if (FordsConfigScope.TryInt(o[key], -1000, 1000, out var value, out var why))
+                return value;
+            s.Warn($"faction '{faction}' feat '{key}' {why}; using 0");
+            return 0;
         }
 
         return new FactionFeats
@@ -136,10 +139,12 @@ internal static class FordsFactionsReader
             TowerFireRate = Factor("towerFireRate", 1f),
             TowerRange = Factor("towerRange", 1f),
             TowerHitPoints = Factor("towerHitPoints", 1f),
+            TowerRegen = Factor("towerRegen", 1f),
             DamageToTowers = Factor("damageToTowers", 1f),
             MountedDamageToTowers = Factor("mountedDamageToTowers", 1f),
             WaveInterval = Factor("waveInterval", 1f),
-            UnitCapBonus = cap,
+            UnitCapBonus = Bonus("unitCapBonus"),
+            HeroSlotBonus = Bonus("heroSlotBonus"),
             Income = Factor("income", 1f),
             Bounty = Factor("bounty", 1f),
         };

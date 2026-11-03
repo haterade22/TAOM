@@ -327,12 +327,16 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 |---|---|---|---|---|
 | Rohan | The best cavalry: six of eight offers are riders | Weak foot and archers (skills x0.7); riders hurt towers little | `mountedDamageToTowers` 0.35, `towerFireRate` 1.3 (Sentries) | None yet |
 | Gondor | Every regional specialist; strong towers | Only two offers are always there | `towerHitPoints` 1.4 (Stone) | Call of the Regions |
-| Mordor | Most bodies: huge cheap orc packs and a larger army | Orcs very weak (skills x0.6); elites cost a lot | `unitCapBonus` 100, `waveInterval` 0.75 | Creature call |
-| Isengard | Heavy Uruk-hai; tower killers; waves that grow every 5 minutes | Fewer troops; only warg riders for cavalry | `damageToTowers` 1.5, `unitCapBonus` -50 | None yet |
+| Mordor | Most bodies: huge cheap orc packs and a larger army | Orcs very weak (skills x0.75); elites cost a lot | `unitCapBonus` 100, `waveInterval` 0.75 | Creature call |
+| Isengard | Heavy Uruk-hai; tower killers; waves that grow every 5 minutes | Fewer troops; only warg riders for cavalry | `damageToTowers` 1.15, `unitCapBonus` -50 | None yet |
+| Rivendell | Holds at range, then strikes with a few elites and all three heroes | 150 troops and only five offers: a horde floods it | `towerRange` 1.5 (Far Sight), `heroSlotBonus` 1, `unitCapBonus` -150 | None yet |
+| Erebor | Survives ten minutes, then outspends everyone; the heaviest armour | Slow free waves, few bows, war rams for its only cavalry | `income` 1.4 (Mountain Gold), `towerRegen` 4 (Stonewrights), `waveInterval` 1.25 | None yet |
+| Harad | Saves gold for one great beast at a time, then guards it | Weaker towers; a fallen beast is a heavy loss of gold | `towerHitPoints` 0.85 | Creature call: a war elephant or a mumak on a 120 s timer |
+| Gundabad | Ends the match early with cheap packs and constant waves | One tier of free waves that never improves; the weakest towers | `waveInterval` 0.5, `towerHitPoints` 0.7 | None yet |
 
 - **Feats** (`FactionFeats`): `towerFireRate` (0 keeps towers silent), `towerRange` (every rule that reads a tower's fire range uses it, and a lane on Hold stands back by the extra reach), `towerHitPoints`, `damageToTowers`, `mountedDamageToTowers` (0 means no damage at all, reason
   `FactionFeat`), `waveInterval`, `unitCapBonus` (the lane cap rises by this over the lane count), `income`, `bounty`. Each factor is relative to 1. A new feat is one
-  property, one line in the reader and one use in a rule.
+  property, one line in the reader and one use in a rule. `towerRegen` scales how fast towers mend after the quiet delay, and `heroSlotBonus` adds to the side's limit of heroes alive.
 - **AI buying** (`aiBuyCycle`, `AiCommander`): a repeating list the AI buys in, so a faction plays to its identity. An entry is an offer id, or a role name for the dearest offer of
   that role the gold reaches, which suits Gondor's rotating bands. The AI saves up when the next entry costs too much. Mordor buys orc packs most of the time; Rohan keeps some foot to take towers.
 - **Traits** (`factions.json` `traits`): the lines that tell the player a faction's strengths and weaknesses. The panel shows them during the countdown.

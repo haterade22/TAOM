@@ -17,6 +17,9 @@ internal sealed record FactionFeats
     /// <summary>Hit points of this faction's towers and keep.</summary>
     public float TowerHitPoints { get; init; } = 1f;
 
+    /// <summary>How fast this faction's towers and keep mend once the quiet delay has passed.</summary>
+    public float TowerRegen { get; init; } = 1f;
+
     /// <summary>Damage this faction's units deal to enemy towers and keeps.</summary>
     public float DamageToTowers { get; init; } = 1f;
 
@@ -28,6 +31,9 @@ internal sealed record FactionFeats
 
     /// <summary>Units this faction may field above the side cap; the lane cap rises by this over the number of lanes.</summary>
     public int UnitCapBonus { get; init; }
+
+    /// <summary>Heroes this faction may have alive above the side limit.</summary>
+    public int HeroSlotBonus { get; init; }
 
     /// <summary>This faction's passive income.</summary>
     public float Income { get; init; } = 1f;

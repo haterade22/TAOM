@@ -71,9 +71,9 @@ internal sealed partial class FordsMatch
         var feats = factions.ToDictionary(f => f.Key, f => f.Value.FeatsOrNone);
         _chain = new TowerChain(layout, config.Towers, feats);
         _damage = new TowerDamageRules(config.Towers, _chain, feats);
-        _regen = new TowerRegen(config.Towers, _chain);
+        _regen = new TowerRegen(config.Towers, _chain, feats);
         _fire = new TowerFireRules(config.Towers, _chain, feats);
-        _heroes = new HeroRoster(config.Heroes);
+        _heroes = new HeroRoster(config.Heroes, feats);
         _orders = new LaneOrderBook(config.Lanes);
         _march = new LaneMarchRules(config.Lanes, config.Towers, layout, _chain);
         _capture = new CapturePointRules(config.Capture, config.Economy, layout.CapturePoints);
@@ -266,7 +266,7 @@ internal sealed partial class FordsMatch
         if (hero.OwnerSlot != slot)
             return CommandResult.LaneNotOwned;
 
-        return _heroes.AliveCount(owner.Side) >= _config.Heroes.MaxAlivePerSide ? CommandResult.HeroLimit : CommandResult.Ok;
+        return _heroes.AliveCount(owner.Side) >= _heroes.MaxAlive(owner.Side) ? CommandResult.HeroLimit : CommandResult.Ok;
     }
 
     public CommandResult TrySetLaneOrder(int slot, int lane, LaneOrder order)

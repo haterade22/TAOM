@@ -18,6 +18,10 @@ internal static class FordsFactionStyle
             case "rohan": return "#E8B93FFF";
             case "mordor": return "#E5512FFF";
             case "isengard": return "#C4D0B8FF";
+            case "rivendell": return "#7FE0C8FF";
+            case "erebor": return "#E0925AFF";
+            case "harad": return "#D8567AFF";
+            case "gundabad": return "#C08CE0FF";
             default: return DefaultAccent;
         }
     }

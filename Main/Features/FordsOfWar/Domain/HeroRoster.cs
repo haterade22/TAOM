@@ -5,7 +5,7 @@ using System.Linq;
 namespace TAOM.Features.FordsOfWar.Domain;
 
 /// <summary>
-/// The heroes each side has fielded. At most MaxAlivePerSide may be alive at once; a dead hero keeps its entry and comes
+/// The heroes each side has fielded. At most MaxAlivePerSide, plus the side's feat, may be alive at once; a dead hero keeps its entry and comes
 /// back when its timer ends (or the owner buys it back), as soon as the side is under the limit. Respawn delay and
 /// buyback price grow with the match minute. Gold is not handled here: the match charges the owner.
 /// </summary>
@@ -13,11 +13,16 @@ internal sealed class HeroRoster
 {
     private readonly FordsHeroConfig _config;
     private readonly List<HeroEntry> _entries = new();
+    private readonly IReadOnlyDictionary<MatchSide, FactionFeats> _feats;
 
-    public HeroRoster(FordsHeroConfig config)
+    public HeroRoster(FordsHeroConfig config, IReadOnlyDictionary<MatchSide, FactionFeats>? feats = null)
     {
         _config = config;
+        _feats = feats ?? new Dictionary<MatchSide, FactionFeats>();
     }
+
+    /// <summary>How many heroes this side may have alive at once.</summary>
+    public int MaxAlive(MatchSide side) => _config.MaxAlivePerSide + (_feats.TryGetValue(side, out var feats) ? feats.HeroSlotBonus : 0);
 
     /// <summary>Every hero ever fielded, both sides, in the order they were fielded.</summary>
     public IReadOnlyList<HeroEntry> Heroes => _entries;
@@ -32,7 +37,7 @@ internal sealed class HeroRoster
     {
         if (Get(side, heroId) != null)
             return CommandResult.HeroAlreadyFielded;
-        if (AliveCount(side) >= _config.MaxAlivePerSide)
+        if (AliveCount(side) >= MaxAlive(side))
             return CommandResult.HeroLimit;
 
         _entries.Add(new HeroEntry(side, heroId, ownerSlot, lane, price, HeroState.Alive, 0f));
@@ -111,7 +116,7 @@ internal sealed class HeroRoster
         {
             var hero = _entries[index];
             // A paid buyback already holds its slot; only a natural respawn needs a free one.
-            if (!hero.BuybackPending && AliveCount(hero.Side) >= _config.MaxAlivePerSide)
+            if (!hero.BuybackPending && AliveCount(hero.Side) >= MaxAlive(hero.Side))
                 continue;
 
             _entries[index] = hero with { State = HeroState.Alive, BuybackPending = false };

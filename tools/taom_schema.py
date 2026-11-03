@@ -1167,6 +1167,10 @@ class Validator:
             "compositing), and taom_mumakil carries its war-platform there, so equipping "
             "one would delete the howdah"
         ),
+        "fow_harad_mumakil_rider": (
+            "the Fords of War copy of harad_mumakil_rider, for the same reason: a HorseHarness "
+            "would delete the howdah that taom_mumakil carries in its <AdditionalMeshes>"
+        ),
         "taom_spider_creature": (
             "OPEN GAP rather than a design choice: no spider HorseHarness item has ever "
             "been authored, so there is nothing to equip. The rider sits on the spider "

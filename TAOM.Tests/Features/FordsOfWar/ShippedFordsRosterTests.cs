@@ -180,6 +180,65 @@ public class ShippedFordsRosterTests
         Assert.IsTrue(factions.Where(f => f.FactionId != "gondor").All(f => f.FeatsOrNone.TowerHitPoints < gondor.TowerHitPoints), "Gondor's towers are toughest");
     }
 
+    private static FactionCatalog Shipped(string id)
+    {
+        Assert.IsTrue(Catalog().TryGetFaction(id, out var faction), id);
+        return faction;
+    }
+
+    [TestMethod]
+    public void FarSight_GivesRivendellTheLongestTowers_AndTheFewestTroopsAndKinds()
+    {
+        var others = Catalog().Factions.Where(f => f.FactionId != "rivendell").ToList();
+        var rivendell = Shipped("rivendell");
+
+        Assert.IsTrue(others.All(f => f.FeatsOrNone.TowerRange < rivendell.FeatsOrNone.TowerRange), "longest towers");
+        Assert.IsTrue(others.All(f => f.FeatsOrNone.UnitCapBonus > rivendell.FeatsOrNone.UnitCapBonus), "fewest troops");
+        Assert.IsTrue(others.All(f => f.Units.Count + (f.Rotation == null ? 0 : 4) > rivendell.Units.Count), "fewest kinds on show");
+        Assert.AreEqual(rivendell.Heroes.Count, FordsMatchConfig.Default.Heroes.MaxAlivePerSide + rivendell.FeatsOrNone.HeroSlotBonus, "all its heroes may fight at once");
+    }
+
+    [TestMethod]
+    public void MountainGold_GivesEreborTheMostIncome_AndTheFastestMending_ButTheSlowestWaves()
+    {
+        var others = Catalog().Factions.Where(f => f.FactionId != "erebor").ToList();
+        var erebor = Shipped("erebor").FeatsOrNone;
+
+        Assert.IsTrue(others.All(f => f.FeatsOrNone.Income < erebor.Income));
+        Assert.IsTrue(others.All(f => f.FeatsOrNone.TowerRegen < erebor.TowerRegen));
+        Assert.IsTrue(others.All(f => f.FeatsOrNone.WaveInterval < erebor.WaveInterval));
+    }
+
+    [TestMethod]
+    public void Harad_CallsOneGreatBeastAtATime_OnItsOwnLongTimer()
+    {
+        var harad = Shipped("harad");
+
+        Assert.AreEqual(120f, harad.Creatures!.CooldownSeconds);
+        CollectionAssert.AreEquivalent(new[] { "fow_harad_elephant_rider", "fow_harad_mumakil_rider" }, harad.Creatures.Offers.Select(o => o.TroopId).ToArray());
+        Assert.IsTrue(harad.Creatures.Offers.All(o => o.PackSize == 1), "one beast at a time");
+    }
+
+    [TestMethod]
+    public void Gundabad_RushesEarly_AndFades()
+    {
+        var others = Catalog().Factions.Where(f => f.FactionId != "gundabad").ToList();
+        var gundabad = Shipped("gundabad");
+
+        Assert.IsTrue(others.All(f => f.FeatsOrNone.WaveInterval > gundabad.FeatsOrNone.WaveInterval), "the fastest waves");
+        Assert.IsTrue(others.All(f => f.FeatsOrNone.TowerHitPoints > gundabad.FeatsOrNone.TowerHitPoints), "the weakest towers");
+        Assert.AreEqual(1, gundabad.FreeWaves.Count, "its free waves never improve");
+    }
+
+    [TestMethod]
+    public void EveryShippedFaction_HasItsOwnAccentColour()
+    {
+        var accents = Catalog().Factions.Select(f => TAOM.Client.Features.FordsOfWar.FordsFactionStyle.Accent(f.FactionId)).ToList();
+
+        Assert.AreEqual(accents.Count, accents.Distinct().Count());
+        Assert.IsFalse(accents.Contains(TAOM.Client.Features.FordsOfWar.FordsFactionStyle.Accent("not_a_faction")));
+    }
+
     [TestMethod]
     public void TheAiBuyCycles_ShowEachFactionsIdentity()
     {

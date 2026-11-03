@@ -75,6 +75,15 @@ public class FactionIdentityTests
     }
 
     [TestMethod]
+    public void HeroSlotBonus_ShowsInTheFactionsFreeSlots()
+    {
+        var match = Match(new FactionFeats { HeroSlotBonus = 1 });
+
+        Assert.AreEqual(Config().Heroes.MaxAlivePerSide + 1, match.GetView(WestSlot).HeroSlotsFree);
+        Assert.AreEqual(Config().Heroes.MaxAlivePerSide, Match().GetView(WestSlot).HeroSlotsFree);
+    }
+
+    [TestMethod]
     public void TowerFireRate_FasterOwnerFiresMoreVolleys()
     {
         var match = Match(new FactionFeats { TowerFireRate = 2f });

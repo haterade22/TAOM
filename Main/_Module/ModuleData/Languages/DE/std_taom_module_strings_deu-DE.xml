@@ -7385,6 +7385,38 @@
 
     <string id="TAOM_FOW_Trait_Rohan_Sentries" text="Sentries keep watch: your towers fire 30% faster." />
 
+    <string id="TAOM_FOW_Faction_Erebor" text="Erebor" />
+
+    <string id="TAOM_FOW_Faction_Gundabad" text="Gundabad" />
+
+    <string id="TAOM_FOW_Faction_Harad" text="Harad" />
+
+    <string id="TAOM_FOW_Faction_Rivendell" text="Rivendell" />
+
+    <string id="TAOM_FOW_Trait_Erebor_Gold" text="Mountain Gold: 40% more income." />
+
+    <string id="TAOM_FOW_Trait_Erebor_Slow" text="Free waves come a quarter later, with few bows and no horses." />
+
+    <string id="TAOM_FOW_Trait_Erebor_Stonewrights" text="Stonewrights: your towers mend 4 times as fast." />
+
+    <string id="TAOM_FOW_Trait_Gundabad_Cheap" text="Packs cost a quarter less." />
+
+    <string id="TAOM_FOW_Trait_Gundabad_Fade" text="Free waves never improve, and towers have 30% fewer hit points." />
+
+    <string id="TAOM_FOW_Trait_Gundabad_Waves" text="Free waves come twice as often." />
+
+    <string id="TAOM_FOW_Trait_Harad_Beasts" text="Call a war elephant or a mûmak every 2 minutes." />
+
+    <string id="TAOM_FOW_Trait_Harad_Cost" text="A fallen beast is a heavy loss of gold." />
+
+    <string id="TAOM_FOW_Trait_Harad_Towers" text="Towers have 15% fewer hit points." />
+
+    <string id="TAOM_FOW_Trait_Rivendell_Few" text="Only 150 troops in the field, and only five kinds." />
+
+    <string id="TAOM_FOW_Trait_Rivendell_Heroes" text="All three heroes may fight at once." />
+
+    <string id="TAOM_FOW_Trait_Rivendell_Sight" text="Far Sight: your towers fire 50% further than any other." />
+
   </strings>
 
 </base>

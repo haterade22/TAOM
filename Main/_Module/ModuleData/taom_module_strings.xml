@@ -4495,6 +4495,22 @@
 	<string id="TAOM_FOW_Region_Osgiliath" text="{=TAOM_FOW_Region_Osgiliath}Osgiliath" />
 	<string id="TAOM_FOW_Trait_Rohan_Riders" text="{=TAOM_FOW_Trait_Rohan_Riders}The finest cavalry in Middle-earth." />
 	<string id="TAOM_FOW_Trait_Rohan_Charge" text="{=TAOM_FOW_Trait_Rohan_Charge}Riders deal about a third of the damage to towers." />
+	<string id="TAOM_FOW_Faction_Erebor" text="{=TAOM_FOW_Faction_Erebor}Erebor" />
+	<string id="TAOM_FOW_Faction_Gundabad" text="{=TAOM_FOW_Faction_Gundabad}Gundabad" />
+	<string id="TAOM_FOW_Faction_Harad" text="{=TAOM_FOW_Faction_Harad}Harad" />
+	<string id="TAOM_FOW_Faction_Rivendell" text="{=TAOM_FOW_Faction_Rivendell}Rivendell" />
+	<string id="TAOM_FOW_Trait_Erebor_Gold" text="{=TAOM_FOW_Trait_Erebor_Gold}Mountain Gold: 40% more income." />
+	<string id="TAOM_FOW_Trait_Erebor_Slow" text="{=TAOM_FOW_Trait_Erebor_Slow}Free waves come a quarter later, with few bows and no horses." />
+	<string id="TAOM_FOW_Trait_Erebor_Stonewrights" text="{=TAOM_FOW_Trait_Erebor_Stonewrights}Stonewrights: your towers mend 4 times as fast." />
+	<string id="TAOM_FOW_Trait_Gundabad_Cheap" text="{=TAOM_FOW_Trait_Gundabad_Cheap}Packs cost a quarter less." />
+	<string id="TAOM_FOW_Trait_Gundabad_Fade" text="{=TAOM_FOW_Trait_Gundabad_Fade}Free waves never improve, and towers have 30% fewer hit points." />
+	<string id="TAOM_FOW_Trait_Gundabad_Waves" text="{=TAOM_FOW_Trait_Gundabad_Waves}Free waves come twice as often." />
+	<string id="TAOM_FOW_Trait_Harad_Beasts" text="{=TAOM_FOW_Trait_Harad_Beasts}Call a war elephant or a mûmak every 2 minutes." />
+	<string id="TAOM_FOW_Trait_Harad_Cost" text="{=TAOM_FOW_Trait_Harad_Cost}A fallen beast is a heavy loss of gold." />
+	<string id="TAOM_FOW_Trait_Harad_Towers" text="{=TAOM_FOW_Trait_Harad_Towers}Towers have 15% fewer hit points." />
+	<string id="TAOM_FOW_Trait_Rivendell_Few" text="{=TAOM_FOW_Trait_Rivendell_Few}Only 150 troops in the field, and only five kinds." />
+	<string id="TAOM_FOW_Trait_Rivendell_Heroes" text="{=TAOM_FOW_Trait_Rivendell_Heroes}All three heroes may fight at once." />
+	<string id="TAOM_FOW_Trait_Rivendell_Sight" text="{=TAOM_FOW_Trait_Rivendell_Sight}Far Sight: your towers fire 50% further than any other." />
 	<string id="TAOM_FOW_Trait_Rohan_Sentries" text="{=TAOM_FOW_Trait_Rohan_Sentries}Sentries keep watch: your towers fire 30% faster." />
 	<string id="TAOM_FOW_Trait_Rohan_Foot" text="{=TAOM_FOW_Trait_Rohan_Foot}Weak foot soldiers and archers." />
 	<string id="TAOM_FOW_Trait_Mordor_Horde" text="{=TAOM_FOW_Trait_Mordor_Horde}100 more troops in the field, and free waves come a quarter sooner." />

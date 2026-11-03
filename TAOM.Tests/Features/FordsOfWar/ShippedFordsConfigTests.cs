@@ -23,7 +23,7 @@ namespace TAOM.Tests.Features.FordsOfWar;
 [TestClass]
 public class ShippedFordsConfigTests
 {
-    private static readonly string[] ExpectedFactions = { "gondor", "rohan", "mordor", "isengard" };
+    private static readonly string[] ExpectedFactions = { "gondor", "rohan", "mordor", "isengard", "rivendell", "erebor", "harad", "gundabad" };
 
     private static string ModuleData => RepoPaths.RepoPath("Main", "_Module", "ModuleData");
 
@@ -204,7 +204,7 @@ public class ShippedFordsConfigTests
     }
 
     [TestMethod]
-    public void ShippedFactions_AreTheFourTheSpecNames()
+    public void ShippedFactions_AreTheEightDesigned()
     {
         var catalog = Load(Substitute.For<IModLogger>());
 
@@ -305,12 +305,12 @@ public class ShippedFordsConfigTests
     }
 
     [TestMethod]
-    public void ShippedFactions_EachShowsSixToEightOffers_ForTheEightBuyKeys_AndTwoOrThreeHeroes()
+    public void ShippedFactions_EachShowsFiveToEightOffers_ForTheEightBuyKeys_AndTwoOrThreeHeroes()
     {
         foreach (var faction in Load(Substitute.For<IModLogger>()).Factions)
         {
             var shown = faction.Units.Count + (faction.Rotation?.Regions.Max(r => r.Units.Count) ?? 0);
-            Assert.IsTrue(shown >= 6 && shown <= 8, $"{faction.FactionId}: {shown} unit offers");
+            Assert.IsTrue(shown >= 5 && shown <= 8, $"{faction.FactionId}: {shown} unit offers");
             Assert.IsTrue(faction.Heroes.Count >= 2 && faction.Heroes.Count <= 3, $"{faction.FactionId}: {faction.Heroes.Count} heroes");
         }
     }

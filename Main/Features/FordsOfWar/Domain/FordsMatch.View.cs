@@ -48,7 +48,7 @@ internal sealed partial class FordsMatch
         var assaultThreshold = _config.Lanes.AssaultThreshold * laneCap / _config.Waves.MaxLivePerLanePerSide;
 
         return new MatchView(slot, side, _clock.Phase, elapsed, gold, assaultThreshold,
-            commander == null ? 0 : Math.Max(0, _config.Heroes.MaxAlivePerSide - _heroes.AliveCount(side)),
+            commander == null ? 0 : Math.Max(0, _heroes.MaxAlive(side) - _heroes.AliveCount(side)),
             commander == null ? new List<int>() : commander.Lanes.ToList(),
             lanes, keeps, heroes, unitOffers, heroOffers, points, _winner, faction?.FactionId ?? "", faction?.Traits,
             commander == null ? null : RegionViewOf(side, gold), commander == null ? null : CreatureViewOf(slot, side, gold),

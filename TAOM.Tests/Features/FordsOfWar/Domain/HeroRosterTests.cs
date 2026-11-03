@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAOM.Features.FordsOfWar.Domain;
@@ -197,6 +198,21 @@ public class HeroRosterTests
         Assert.IsTrue(r.IsHero);
         Assert.AreEqual(HeroState.Alive, roster.Get(MatchSide.East, "witch_king")!.State);
         Assert.AreEqual(0, roster.DueRespawns(61f, NextId).Count);
+    }
+
+    [TestMethod]
+    public void TryField_AFactionWithABonusSlot_MayFieldOneMore_AndTheOtherSideMayNot()
+    {
+        var feats = new Dictionary<MatchSide, FactionFeats> { [MatchSide.West] = new() { HeroSlotBonus = 1 } };
+        var roster = new HeroRoster(Config with { MaxAlivePerSide = 2 }, feats);
+
+        foreach (var hero in new[] { "a", "b", "c" })
+            Assert.AreEqual(CommandResult.Ok, roster.TryField(MatchSide.West, hero, 1, 0, 100));
+        Assert.AreEqual(CommandResult.HeroLimit, roster.TryField(MatchSide.West, "d", 1, 0, 100));
+
+        roster.TryField(MatchSide.East, "a", 2, 0, 100);
+        roster.TryField(MatchSide.East, "b", 2, 0, 100);
+        Assert.AreEqual(CommandResult.HeroLimit, roster.TryField(MatchSide.East, "c", 2, 0, 100));
     }
 
     [TestMethod]
