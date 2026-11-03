@@ -9,18 +9,6 @@ paths:
 
 Full guide: `docs/ai-includes/architecture.md`
 
-## Layer Stack
-
-```
-HarmonyPatch / GameModel / CampaignBehavior   ← THIN (<150 lines, no logic)
-                    │ delegates to
-              Service (IXxxService)            ← ALL business logic here
-                    │ uses
-              Adapter (IXxxAdapter)            ← wraps sealed TaleWorlds types
-                    │ wraps
-         TaleWorlds Engine (Hero, Agent…)      ← sealed, never cross boundary
-```
-
 ## Non-Negotiable Rules
 
 | Rule | Detail |
@@ -44,63 +32,15 @@ HarmonyPatch / GameModel / CampaignBehavior   ← THIN (<150 lines, no logic)
 | `Reuse.Singleton` | Services, engines, caches |
 | `Reuse.Transient` | Hooks, stateless helpers |
 
-## Test Coverage Requirements (ADR-008)
+## Test Coverage
 
-| Component | Required | Notes |
-|-----------|----------|-------|
-| Services | 100% | Must be mockable via constructor injection |
-| Engines | 100% | Pure functions — easy to test |
-| Hooks | 80%+ | Use `NSubstitute` mocks for adapters |
-| Entry Points | Not required | Harmony/GameModel — test via game |
+Every decision path in a service or engine has a test, judged by the two-edit test. No coverage percentage is measured or claimed.
 
-## Entity State Matrix (MANDATORY for OnGameLoaded behaviors)
+## Entity State Matrix (load-path mutations)
 
-Any `CampaignBehaviorBase` that **mutates Hero/Settlement/Clan state on load** must enumerate all possible entity states before writing the mutation code. Build a state matrix:
+A `CampaignBehaviorBase` that changes Hero, Settlement or Clan state on load lists every state first (idle in settlement, in the player party on the map, in the party in a settlement, dead or disabled, prisoner, fugitive) and says mutate or skip, with a reason. A destructive load-path action needs stricter guards than its new-game twin; check idempotence before copying a sibling.
 
-| State | Key Properties | Should mutate? |
-|-------|---------------|----------------|
-| (each possible state) | (property values) | Yes/No + why |
-
-**Why:** Review #23 found a HIGH bug where `EnsureCompanionsPlaced()` teleported recruited companions out of the player's party on load because the "skip if already placed" check didn't account for traveling-with-party state. The state matrix would have caught this at design time.
-
-**Rule:** If your OnGameLoaded handler calls `ChangeState`, `EnterSettlementAction`, `SetHeroRace`, or any other state-mutating action on a Hero, enumerate:
-- Unrecruited / idle in settlement
-- Recruited / in player party (traveling on map)
-- Recruited / in player party (visiting settlement)
-- Dead / disabled
-- Prisoner
-- Fugitive
-
-Skip any state where mutation would corrupt the entity.
-
-**Idempotent vs destructive:** Before copying a behavior pattern from another feature, ask: "Is this operation idempotent?" Injecting a banner color twice is harmless. Moving a Hero between locations is destructive. Destructive load-path operations need stricter guards than their new-game counterparts.
-
-## Config Providers MUST Validate (MANDATORY for user-editable JSON/XML, MCM settings, AND editor-visible fields on engine-discovered classes)
-
-Any provider or boundary class that exposes user-editable values must validate semantic constraints after deserialization or before consumption, not just syntax. Parse success is NOT validation success. This rule covers **three** source categories, all functionally identical (user-editable, untrusted, flow into comparisons + native engine calls):
-
-1. **JSON/XML config files** under `Main/_Module/ModuleData/` (the original case — RevoltTuning, EditorCacheRebuild config).
-2. **MCM settings** exposed via the in-game settings UI (e.g., `TaomSettings.RebuildDistanceCacheAction` lambda parameters).
-3. **Editor-visible fields** on engine-discovered classes — public instance fields with `[EditableScriptComponentVariable]` on `ScriptComponentBehavior` subclasses, public fields on `GameModel` subclasses that the editor surfaces, equivalent attributes on `CampaignBehaviorBase` that the engine reads. **The map author / player edits these directly in the scene/campaign editor — they're config in every functional sense even though there's no JSON file.**
-
-**Rule:** Before any comparison, range check, or pass-through to a native engine call, the consumer (loader for category 1, boundary class for categories 2 and 3) must:
-1. Range-check every numeric field against its engine-valid bounds
-2. Enforce ordering invariants between related fields (e.g., warning-threshold ≥ trigger-threshold)
-3. Reject sign flips on fields whose meaning is directional (penalties must be ≤ 0; bonuses must be ≥ 0)
-4. **For every `float`/`double` field: reject `NaN` and `±Infinity` BEFORE the range check.** IEEE-754 NaN comparisons always return `false`, so `value < min || value > max` evaluates `false` for NaN and the bad value sneaks through. Use `TAOM.Core.Validation.FiniteFloatValidator.IsFinite[InRange|AtMost|AtLeast]` — never write bare `< min || > max` checks on floats. **This bug has shipped three times** (Career cooldown review #31 — NaN cooldown made ability "always ready"; EditorCacheRebuild review #38 — NaN smoke-test tolerance silently disabled the parallel-safety gate; scene-scripts CS_Road 2026-05-13 — NaN `Width` / `ElevationOffset` / `RepeatU`/`RepeatV` flowed through to native `Mesh.AddTriangle` because the rule was only documented for category 1 and the script-author didn't classify editor fields as config).
-5. Log a warning and fall back to the compiled default for any field that fails — never silently apply a bad value
-6. Emit a summary warning when any reversion occurred so the user knows to look at prior warnings
-7. **When a value is settable from BOTH JSON and MCM, enforce the same range/ordering invariants at BOTH surfaces (or centralize the clamp).** Two entry points validated by different authors drift: CombatMechanics (2026-07-02) — the JSON provider enforced `autoKnockdownWeightRatio ≥ neutralWeightRatio` (Branch A below neutral would auto-floor ordinary horse charges), but the MCM slider clamped to a bare `[2,30]`, so slider values 2–5 recreated exactly the state the JSON invariant existed to prevent. Fix pattern: the settings provider derives its clamp floor from the validated config (`Math.Max(sliderMin, ceil(neutral))`), and the MCM hint documents the floor.
-8. **A string handed to a native call is bounded at load** to the engine's buffer and the character set its own data uses, reverting with a warning (Race Ability glow, 2026-10-04: a particle-effect name went into a 64-byte `strcpy_s`; `docs/reviews/rca-race-ability-glow-2026-10-04.md` G1).
-9. **A provider read on a hot path (per hit, per frame, per agent update, per campaign tick) takes the MCM object once** in a private lazy `Settings` accessor, reads through it, and joins `HotPathSettingsProvidersTests` (mission) or `CampaignHotPathSettingsProvidersTests` (campaign) in the same commit, because nothing else points a new provider at those gates (`lessons/misc.md`).
-
-**Why:** Review #25 (RevoltTuning) found a HIGH bug where the provider logged "Loaded" success for any parseable file. A plausible user edit like a sign-flipped penalty `1.0` (should be `-1.0`) would silently flip the feature from "soften revolts" to "accelerate revolts" with no warning. Syntax-error tests (missing file, malformed JSON) did not cover this class of failure.
-
-**Especially validate any string field the CONSUMER branches on.** If a template/service does `switch (value)` / `if (value == "X")` with an `else`/default fallback, an unrecognized value (a typo) silently takes the default and changes mechanics — the field is "parsed-but-unresolvable" (the M1 trap). Validate the field against the known set at load and SKIP+warn on an unknown non-empty value; allow empty only if empty is the explicit, intended default. Example (Codex review #61): `LotrIssueConfigProvider` passed Combat `variant` through unvalidated, and `CombatLotrIssue` routed any unknown value to its DefeatRaids `else` branch, so `variant="CaptureLord"` (typo) silently became a different quest. Fixed with a `ValidCombatVariants` gate + per-value tests.
-
-**Test requirement:** Tests must cover semantically-invalid-but-parseable values for every validated field — not just missing-file and malformed-JSON cases. One test per validation rule.
-
-**Doc requirement:** When documenting "edit this file to retune," state the reload scope explicitly. `Reuse.Singleton` providers (the TAOM default) cache for the entire Bannerlord process: changes require a full application restart, not a new campaign or save-load. Never claim "next game load" without cross-checking the DryIoc lifetime. Never flip a compiled MCM default under an unchanged name: MCM persists per property and loads the saved value over the default, so the new value would reach fresh installs only. Rename the setting (comment why) and the new default reaches every player; `python tools/check_mcm_default_flips.py` checks it (#1017). The renamed setting's `HintText` tells the player their saved value was reset to the new default and to set their own again (RCA `docs/reviews/rca-bandit-scaling-mcm-2026-09-11.md`).
+**Config Providers MUST Validate:** config files, MCM settings and editor-visible fields validate at load, not only parse ([config-providers.md](config-providers.md)).
 
 ## Singleton Services Holding Per-Campaign State MUST Have a Session-Reset Story (MANDATORY)
 
@@ -133,107 +73,22 @@ campaign in one process and a load-with-same-ids explicitly.
 `OnSessionLaunched` reset this rule first prescribed ran after the momentum behavior had already
 read the stale War of the Ring phase (#764, `docs/reviews/rca-wotr-session-reset-2026-10-08.md`).
 
-## Engine-Float Decision Gates: NaN Must FAIL the Gate (MANDATORY — the runtime sibling of the config rule above)
+## Engine-Float Decision Gates: NaN Must FAIL the Gate (MANDATORY, the runtime sibling of the config rule in config-providers.md)
 
-The rule above protects floats at LOAD time. It does nothing for floats the ENGINE hands in at RUNTIME — momentum, velocity, damage, resistance, health, distance — which arrive per hit/per tick and can be NaN when native state is corrupt. Every NaN comparison returns `false`, so the safety of a gate depends entirely on its polarity:
+Every NaN comparison is false, so a gate's polarity decides.
 
-```csharp
-// ❌ WRONG — inverted early-exit: NaN <= 0f is false, so NaN PASSES into the active branch
-if (momentumRemaining <= 0f) return false;
-/* ... proceed to force SlicedThrough with NaN momentum ... */
+1. **Config float:** reject non-finite at load with `FiniteFloatValidator`.
+2. **Engine float at a decision gate:** write a positive requirement, `if (!(x > 0f)) return`, and return null from a `bool?` service so vanilla decides.
+3. **Float-to-int cast:** check finiteness and range at the cast, because NaN and Infinity cast to `int.MinValue`, then gate the value, not arithmetic on it.
+4. **A new input into an old calculation:** re-audit every downstream gate and guard the service's exit. A moved gate is a new gate.
 
-// ✅ RIGHT — positive requirement: NaN > 0f is false, so NaN fails the gate
-if (!(momentumRemaining > 0f)) return false;
-
-// ✅ RIGHT — owned-verdict services defer to vanilla on garbage, never emit a verdict computed from NaN
-if (float.IsNaN(speedFactor) || float.IsNaN(context.VictimKnockDownResistance)) return null;
-```
-
-**A moved, extracted or reordered gate is a new gate:** it gets its NaN test in the same commit, whichever polarity it keeps; when parity keeps an inverted form, the test pins that NaN behaviour and the comment says it is deliberate ([testing-qa](../../docs/reviews/lessons/testing-qa.md), plan 015 twice).
-
-**Third category — float→int CASTS feeding an integer guard.** `(int)float.NaN` and `(int)float.PositiveInfinity` are BOTH `int.MinValue` (net472/x64), and `int.MinValue - 1` underflows (unchecked) to `int.MaxValue`. So an integer guard computed AFTER a subtraction reads a poisoned input as the largest possible budget:
-
-```csharp
-// ❌ WRONG — (int)NaN == int.MinValue; int.MinValue-1 wraps to int.MaxValue, so the guard passes
-int maxReducible = baseLimit - 1;
-if (maxReducible <= 0) return 0;      // never fires for a poisoned baseLimit
-
-// ✅ RIGHT — validate finiteness AT the cast, and gate the value itself, not the arithmetic after it
-if (!FiniteFloatValidator.IsFinite(limit.ResultNumber)) return;
-int baseLimit = (int)limit.ResultNumber;
-...
-if (baseLimit < 2) return 0;          // subtraction unreachable for degenerate values
-```
-
-**Rule:** validate finiteness at the cast site, and write the integer gate as a positive requirement on the value itself rather than on arithmetic derived from it. Ask of every float→int cast: *what int does this produce for NaN/±Inf, and does that value defeat a guard downstream?* One regression test per cast, asserting the degenerate input yields the safe result. Finite inputs overflow the cast as well: `(int)Math.Ceiling(balance / -net)` with a net below the balance's float resolution is a finite quotient past `int.MaxValue`, and the cast is again `int.MinValue` (SpecialResources countdown, Codex review 95, 2026-09-11). Range-check the double before the cast, and refuse the calculation when its input could not change the stored value.
-
-**Why:** 5th instance of the NaN-gate bug class (TroopWeight party-size penalty, 2026-07-17 — `(int)limit.ResultNumber` poisoned `_lastBaseLimit` and defeated `ComputeSizePenalty`'s clamp; a NaN would have made the shed planner trim a party's entire non-hero roster). Verified empirically on net472: `ComputeSizePenalty(10, 200, (int)NaN)` returned 190, not 0. Each of the five recurrences happened because the rule's scope was one category narrower than the bug — **when touching a method, gate every float→decision path in it, not only the lines you added.** RCA: `docs/reviews/rca-troopweight-result-frame-2026-07-17.md`.
-
-**Rule:** for every decision gate on an engine-sourced float, write the gate as a **positive requirement** to proceed (or add an explicit `float.IsNaN` guard), and for `bool?` fall-through services return `null` on non-finite input so vanilla decides instead of an owned true/false computed from garbage. Add one NaN unit test per gate.
-
-**Fourth category, a NEW INPUT invalidating an EXISTING gate (provenance change).** The three
-categories above all ask what you do when you *write* a gate. This one fires when you write no gate at
-all. A gate can be correct when authored and become unsafe later because the set of values reaching it
-changed, and the defective line never appears in your diff:
-
-```csharp
-// Correct for years: every input was an int or a provider-validated finite config float.
-if (delta == 0f) return;
-
-// Then a change adds ONE new term sourced from the ENGINE, validated by nobody:
-delta += snapshot.Prosperity * config.HinterlandFoodPerProsperity;   // Town.Prosperity can be NaN
-// `NaN == 0f` is false, so the untouched gate now forwards NaN into the engine's ExplainedNumber.
-```
-
-**Rule:** when you introduce a new value into an existing calculation, ask *what validation the old
-inputs enjoyed that this one does not*, and re-audit every gate downstream of it against the new
-provenance. Reviewing only the lines you wrote is structurally insufficient here, because the bug is in
-a line you did not write. Also gate the service's own EXIT (`if (!FiniteFloatValidator.IsFinite(result))`)
-so no future input can poison an engine number regardless of which term produced it.
-
-**Why:** the NaN-gate bug class has now shipped SIX times. Career cooldown #31, EditorCacheRebuild #38 and CS_Road 2026-05-13 were all CONFIG floats, which produced the loader rule. CombatMechanics 2026-07-02 was ENGINE floats: `momentumRemaining <= 0f` passed NaN and could force cleave chains, and a NaN charge velocity became an owned `false` suppressing knockdowns vanilla would grant. TroopWeight 2026-07-17 was a float→int CAST, the third category above. SettlementFood #546 (2026-09-06) was a PROVENANCE CHANGE, the fourth: an engine-sourced `Town.Prosperity` added to a calculation whose pre-existing `delta == 0f` gate had only ever seen validated inputs, and whose NaN would have left `Town.FoodStocks` permanently NaN inside a `[SaveableProperty]`, because vanilla's own `< 0f` and `> cap` clamps are both false for NaN. Each recurrence happened because the rule's scope was one category narrower than the bug. Four categories are now named: config floats at load, engine floats at runtime decision gates, float→int casts feeding integer guards, and a new input changing the provenance reaching an existing gate. **If a 7th instance appears in a category this section doesn't name, widen the scope again rather than patching the instance.** Enforced at review time by `/deep-review` Agent 5 rule 4b. RCAs: `docs/reviews/rca-combat-mechanics-2026-07-02.md`, `docs/reviews/rca-troopweight-result-frame-2026-07-17.md`, `docs/reviews/rca-settlement-food-2026-09-06.md`. Note `float.IsFinite` does NOT exist on .NET Framework 4.7.2; use `TAOM.Core.Validation.FiniteFloatValidator`.
+One NaN test per gate. When you touch a method, gate every float decision path in it, not only the lines you added. `float.IsFinite` does not exist on net472. Reviewed by lens 5 rule 4b. RCAs: `rca-combat-mechanics-2026-07-02.md`, `rca-troopweight-result-frame-2026-07-17.md`, `rca-settlement-food-2026-09-06.md`.
 
 ## Lookup Functions With Fallbacks: Validate Before Lookup (MANDATORY)
 
-When a lookup function MAY return a "default" or "fallback" value for invalid input (with a warning log, sentinel value, or coerced default), the caller MUST validate the input's validity BEFORE the lookup whenever the result is used as a comparison key in a security/correctness decision. The fallback exists for *logging-and-survival*, NOT for *acceptance*.
+A lookup that returns a default for unknown input (`RaceManager.GetRaceNameFromId` returns human) resolves names for logs; it does not validate. When a decision depends on the result, check validity first (`IsValidRaceId`) and treat invalid as not allowed. Test: the lookup returns its fallback and the caller rejects the input. `MBObjectManager.GetObject<T>` returns null for a missing id, so null-check it instead.
 
-**The trap:** the fallback masks invalid input as a "valid-looking" value that happens to match the allow-list, causing silent acceptance of state the caller would have rejected if it had known the input was invalid.
-
-**The rule:** if a lookup function can return a fallback, treat that lookup as "best-effort name resolution for diagnostic output" and add an explicit validity gate before any decision logic depends on the result.
-
-```csharp
-// ❌ WRONG — invalid IDs silently coerced to "human" sneak past allow-list when culture allows "human"
-var raceName = _raceManager.GetRaceNameFromId(faceGenRaceId);  // returns "human" for unknown IDs
-bool allowed = cultureData.Races.Any(r => r == raceName);
-if (allowed) {
-    PreserveValue(faceGenRaceId);  // ← invalid integer preserved
-}
-
-// ✅ RIGHT — validate the input BEFORE the lookup, treat invalid as "not allowed"
-bool valid = _raceManager.IsValidRaceId(faceGenRaceId);
-var raceName = valid ? _raceManager.GetRaceNameFromId(faceGenRaceId) : null;
-bool allowed = valid && cultureData.Races.Any(r => r == raceName);
-```
-
-**Why this rule exists:** Codex Review #33 (CharacterCreation race-filter, 2026-05-06). `RaceManager.GetRaceNameFromId` (RaceManager.cs:126-131) returns `"human"` as fallback for unknown IDs. `SetPlayerRace` accepted that fallback name, checked it against the culture's allow-list, and for cultures that allow `human` (Mordor, vanilla cultures, Isengard, Gundabad, Dol Guldur — i.e., most cultures) preserved the original junk integer. `Hero.CharacterObject.Race` accepts arbitrary integers; downstream engine calls would silently receive a corrupt race ID for a Mordor save.
-
-**Applies to:** any lookup function whose XML doc, log line, or implementation says "defaults to X for unknown input" (`GetRaceNameFromId`, `GetCultureData` returning a default culture, `GetItemFromId` returning a default item, `MBObjectManager.GetObject<T>` for missing IDs, etc.). When in doubt, read the function body — if it logs a warning and returns a value, that value is fallback, not validation.
-
-**How to apply:** every `GetXxxFromId` / `LookupXxx` style function should be paired with an `IsValidXxxId` / `ContainsXxx` validator on the same interface. If the validator doesn't exist, the lookup function is effectively unsafe for security decisions and the caller must add validation by some other means (e.g., comparing the returned name against a sentinel default).
-
-**Test requirement:** when fixing a finding of this class, add a regression test where the lookup returns the fallback value and assert the caller rejects the input. Example: `SetPlayerRace_InvalidFaceGenRaceId_DoesNotPreserve_FallsBackToCultureDefault` ([CharacterCreationContentServiceTests.cs](../../TAOM.Tests/Features/CharacterCreation/CharacterCreationContentServiceTests.cs)).
-
-**Sibling rule:** see "Config Providers MUST Validate" above for the input-validation rule at the LOADER side; this rule is the input-validation rule at the CONSUMER side. Both are needed because the loader's validation may be downstream of mid-process state mutation (e.g., a save-load that brought in junk race IDs from a prior mod version).
-
-## One Engine Type for Many Config Variants: Audit EVERY Type-Keyed Engine Path (MANDATORY)
-
-When a generic template instantiates **one** engine type for **many** logical config variants (the LotrIssues pattern: 27 Combat configs all become `typeof(CombatLotrIssue)`; 14 Deliver → `typeof(DeliverGoodsLotrIssue)`), the engine's `GetType()`-keyed bookkeeping treats all those variants as a SINGLE object. Before shipping such a feature — and when reviewing one — you MUST enumerate **every** engine code path that branches on `instance.GetType()` for that base type and confirm the collapsed-to-one-type behavior is acceptable for each. Finding ONE such path and stopping is the exact miss this rule prevents.
-
-**How to enumerate:** decompile the engine base type + its manager/behavior and grep for `GetType()`, `.GetType() ==`, `IssueType`, `is <Type>`, and any `Dictionary<Type,...>` keyed on the runtime type. For `IssueBase` the set is (v1.4.6): **(1) spawn over-representation score** + **(2) per-settlement/clan "already has this type" zero-out** + **(3) accept gate** (`CheckPreconditions` → `IssueQuestCanBeDuplicated`, default `false`) + **(4) cooldown** (keyed on `type.Name`) + **(5) despawn**. Each is independent; (1)/(2)/(4) only throttle *spawning* (acceptable, documented as a limitation), but (3) is a HARD accept-block — the player could hold at most ONE active quest per template across all configs until `IssueQuestCanBeDuplicated => true` is overridden.
-
-**Why this rule exists:** Codex review #61 (2026-06-20). The 5-agent deep-review's lifecycle agent read `IssueBase.CheckPreconditions` for the per-type spawn saturation but traced only the over-representation SCORE and stopped — it missed the SEPARATE hard accept-gate **in the same method**. One method, two type-keyed mechanisms; the soft one was found, the hard one shipped. Pinned by `LotrIssueTemplateInvariantsTests` (asserts `IssueQuestCanBeDuplicated == true` for all 3 templates) and the deep-review skill's per-type check. RCA: `docs/reviews/rca-lotr-issues-wave0-2026-06-17.md` (Codex pass section).
-
-**Test requirement:** for each engine type-keyed behavior you deliberately opt into (e.g. `IssueQuestCanBeDuplicated => true`), add a reflection/invariant test pinning the override so a refactor can't silently restore the breaking default.
+One engine type for many config variants: enumerate every `GetType`-keyed engine path first ([issue-and-quest-system.md](../../docs/reference/engine/issue-and-quest-system.md)).
 
 ## File Layout
 
@@ -266,19 +121,4 @@ Two facts about `TaleWorlds.MountAndBlade.Agent` shape every mission-time featur
    `Agent` or `IAgentAdapter` across frames and trust `IsActive()` alone; gate every held handle with
    `AgentSlotIdentity.IsCurrentOccupant(agent)` before it touches native state. The adapter cache is
    keyed by object and evicted for you; a restore closure, a shadow list, a machine's target agent are not.
-2. **Single-player ticks agents on an asynchronous AI thread, and TWParallel workers under that.**
-   `AgentComponent.OnTick`, `TickAsAI`, `Team.Tick`, `TeamAI`, `Formation.SetMovementOrder` from the AI,
-   `Formation.GetOrderPositionOfUnit` for AI units (worker pool), and `MBSubModuleBase.AfterAsyncTickTick`
-   all run off the main thread, overlapping every main-thread view, UI and input tick after
-   `Mission.OnTick` returns. Mission logic that registers blows, plays actions, spawns or fades agents, or
-   touches a collection an engine callback writes belongs in `MissionBehavior.OnMissionTick` (creature
-   trees: `BehaviorTreeMissionLogic`). A store reachable from a patch on any of those engine methods takes
-   a lock, or is a concurrent collection written under one and read without it. **No engine callback is main-thread by contract.** Native raises `OnAgentRemoved` (and through
-   it every `AgentComponent.OnAgentRemoved`), `OnAgentDeleted`, `OnAgentHit`, `OnAgentShootMissile`,
-   `OnAgentDismount` and `OnAgentAlarmedStateChanged` on the thread it chooses; `OnAgentPanicked`,
-   `OnObjectUsed` and `OnObjectStoppedBeingUsed` have managed routes from the asynchronous tick. The
-   callbacks observed off the main thread are the table in `harmony-patches.md` ("Which thread runs
-   your target"). A behavior or component that owns main-thread
-   collections routes the write through `DeferredCallbackQueue.RunOrDefer`, which runs it inline on the
-   main thread and parks it for the next `OnMissionTick` anywhere else, or uses a concurrent collection
-   or a lock when order does not matter. `MissionThreadGuard.NoteCall` is the tripwire; wire it into any new native write.
+2. **No engine callback is main-thread by contract.** Agent ticks, `Team.Tick`, `TeamAI`, AI `Formation.SetMovementOrder`, `Formation.GetOrderPositionOfUnit` (worker pool) and `AfterAsyncTickTick` run off the main thread and overlap views and UI. Blows, spawns and fades belong in `OnMissionTick`. A store reachable from a patch on any of those takes a lock. A collection an engine callback writes goes through `DeferredCallbackQueue.RunOrDefer`, or a lock when order does not matter. Wire `MissionThreadGuard.NoteCall` into a new native write. Table: [mission-frame-threads-and-native-costs.md](../../docs/reference/engine/mission-frame-threads-and-native-costs.md) "Which thread runs your target".

@@ -23,10 +23,6 @@ A `[ViewCreatorModule]` class may hold only `[ViewMethod]` static methods: the e
 
 A `ConversationTag` subclass anywhere in TAOM.dll must be concrete, non-generic, public-parameterless and carry a unique `StringId`: the `ConversationManager` constructor instantiates every one at each campaign start and load, so one bad tag breaks every campaign. No shared base class. The gate is `EveryTaomConversationTag_IsInstantiableAndUnique` (`TAOM.Tests/Infrastructure/Localization/LiegeTitleOverrideTests.cs`).
 
-## Anti-Patterns
+## Renames, moves and deletes
 
-- Business logic in Harmony patches (must delegate)
-- Sealed types crossing service boundaries (use adapters)
-- Regular null checks on computed TaleWorlds properties (use `?.` — see adapters.md)
-- Multiple responsibilities in one service (split it)
-- A local fear effect that drains morale below 0.01 with nothing said: each rout spreads a morale loss to up to 10 allies, from the whole formation when fewer stand within 4 m. Floor the morale, or say in the feature doc that its routs spread ([lesson](../../docs/reviews/lessons/adapters-taleworlds-api.md))
+After a rename, move or delete, grep the old identifier across `docs/` and `CLAUDE.md` too: update living docs, leave RCAs and CHANGELOG. The code graph holds no docs.

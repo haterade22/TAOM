@@ -2,19 +2,12 @@
 paths:
   - "Main/_Module/ModuleData/**/*.xml"
   - "Main/_Module/ModuleData/**/*.json"
-  - "Main/_Module/ModuleData/characters/**"
-  - "Main/_Module/ModuleData/factionmap/**"
 ---
 
 # XML Data File Rules
 
-## File Types
-- **XSLT transforms** (`*.xslt`) — Modify vanilla XML at load time (see xslt.md rule)
-- **New entity XML** (`characters/*.xml`, `taom_*.xml`) — Entities not in vanilla
-- **JSON config** (`factionmap/*.json`) — Feature-specific data
-
 ## Culture NPC Naming Convention
-Each culture has 26 notable NPCs in `characters/npcs_{culture}.xml`:
+Each culture has at least the base 26 notable NPCs in `characters/npcs_{culture}.xml`:
 - `spc_notable_{culture}_0` through `_4b` — Merchants (10)
 - `spc_notable_{culture}_5/_6/_7` — Preachers (3)
 - `spc_notable_{culture}_8/_9` — Artisans (2)
@@ -37,37 +30,26 @@ Culture XML attributes (`merchant_notary`, `artisan_notary`, etc.) must referenc
 A `<Kingdom>` `name` is the bare realm name (`Erebor`, `Ered Luin`); "Kingdom of X" goes in `title` and on the faction card only. Gate: `KingdomNameTests`. To rename one, follow [recipe-add-a-kingdom.md](../../docs/modding/recipe-add-a-kingdom.md) "Gotchas" (generator, language rows and translation cache together).
 
 ## Region Codes
-Settlement prefixes, measured from the live map in [id-cheatsheet](../../docs/modding/id-cheatsheet.md) "Region prefixes": A=Khand and Harad (Aserai-mapped), AN=Arthedain, CA=Cardolan, DG=Dol Guldur, E=Erebor, EL=Ered Luin, EN=Dunland, ES=Mordor, EW=Gondor, FH=Far Harad, G=Gundabad, GBC=Blue Craig, GT=Goblin-town, I=Isengard, K=Khand (Variag), L=Lothlorien, LN=Lindon, M=Mirkwood, MM=Misty Mountains, R=Rivendell, RH=Rhudaur, RU=Rhun, S=Dale, U=Umbar, V=Rohan
-
-**Lord/hero id region prefixes** (`lord_<CODE><clanN>_<lordN>`) differ from settlement codes for the new orc kingdoms: Misty Mountain Orcs lords use `MM`, **Goblin lords use `GB`** (settlements use `GT`), **Blue Craig lords use `BC`** (settlements use `GBC`), Lindon lords use `LN`; Arthedain, Cardolan, Rhudaur and Ered Luin use one code for both (`AN`, `CA`, `RH`, `EL`). A settlement code and a lord code are independent id-spaces.
+Settlement and lord id prefixes: [id-cheatsheet](../../docs/modding/id-cheatsheet.md) Region prefixes. They are independent id spaces.
 
 ## Config ID Cross-Reference (MANDATORY)
 
 After writing ANY XML/JSON config containing culture, kingdom, or settlement IDs, cross-reference EVERY ID against this table before moving on.
 
-> **This section shipped a bug on 2026-07-16 because its own `paths:` excluded the file that broke it.** BannerBearers keyed a culture map on `rohan`/`dale`/`khand`/`dunland`/`harad`/`rhun` — the exact six names the "Common mistake" line below names as WRONG — in `banner_bearers_config.json`. The rule said "ANY XML/JSON config" while the glob was `**/*.xml`, so it never loaded for the `.json` file (58 of TAOM's 59 ModuleData JSON configs were outside the trigger). Fixed by adding `**/*.json`. **Prose scope and glob scope must agree**: if a rule says it governs a file type, its `paths:` must actually match that file type. When keying a config on entity ids, also ship a test asserting every KEY resolves — a dead dictionary key is silent at every layer. See `docs/reviews/rca-banner-bearers-2026-07-16.md`.
+When keying a config on entity ids, ship a test asserting every key resolves: a dead dictionary key is silent at every layer.
 
 ### Culture StringIds (runtime values)
 
 | Type | StringIds | Note |
 |------|-----------|------|
-| **Custom cultures** | `gondor`, `mordor`, `erebor`, `rivendell`, `lothlorien`, `mirkwood`, `isengard`, `gundabad`, `dolguldur`, `umbar`, `goblin`, `mistymountainorcs`, `bluecraig`, `lindon`, `shaghana`, `abanissa`, `arthedain`, `cardolan`, `rhudaur`, `eredluin` | Use LOTR names; the `is_main_culture` ids in `taom_spcultures.xml` |
+| **Custom cultures** | the `is_main_culture` ids in `taom_spcultures.xml` | Check one with `mcp__taom-moduledata__culture_exists` |
 | **XSLT cultures** | `vlandia` (Rohan), `empire` (Dunland), `aserai` (Harad), `khuzait` (Easterlings), `sturgia` (Dale), `battania` (Khand) | Use vanilla engine IDs |
 
 **Common mistake:** Writing lore names for XSLT cultures. `rohan` is WRONG — use `vlandia`. `dunland` is WRONG — use `empire`. `harad`/`rhun`/`dale`/`khand` are WRONG — use `aserai`/`khuzait`/`sturgia`/`battania`.
 
 ### Checklist
 
-| Step | What to check |
-|------|---------------|
-| 1 | Every `culture=` attribute uses a StringId from the table above |
-| 2 | Every `kingdom=` attribute uses a kingdom ID from [id-cheatsheet.md](../../docs/modding/id-cheatsheet.md) |
-| 3 | Every `settlement=` attribute exists in `settlements.xml` |
-| 4 | Every `troop=` attribute exists in `troops/troops_{culture}.xml` |
-
-### Why this matters
-
-This exact bug pattern has been caught in 5+ Codex reviews. Custom cultures happen to use LOTR names as StringIds, which makes it easy to assume ALL cultures do — but XSLT cultures inherit vanilla engine IDs.
+XML ids: `UNKNOWN_CULTURE`, `BROKEN_TROOP_REF`, `BROKEN_FACTION_REF`. `kingdom=`, `settlement=` and every JSON key: no validator pass reads them, so check by hand and ship a key test.
 
 ## EquipmentRosters Schema (MANDATORY for `equipmentsets/*.xml`)
 
@@ -80,23 +62,11 @@ The standalone `<EquipmentRosters>` pattern (used by `Main/_Module/ModuleData/eq
 
 Without `equipmentType="Civilian"` on a civilian roster, the engine treats it as battle equipment regardless of the roster ID containing `_civ_` / `_civ_equipment`. There is NO `equipmentType="Battle"` in vanilla (verified zero matches across SandBoxCore) — battle is the implicit default.
 
-**The `<EquipmentRoster>` element itself also needs `culture="Culture.<id>"`** (1.4.3+ — mirror vanilla; see [docs/migration/templates/equipment-rosters.md](../../docs/migration/templates/equipment-rosters.md) attribute table). The engine logs `EquipmentRoster with id: <id> don't have culture definition` once per roster at load when it's absent. Non-fatal — the roster still loads, and code-driven lookups (e.g. `child_education_equipments_*` resolved by `EducationCampaignBehavior`) key off the id, not the resolved culture — but it's per-roster log noise and a template gap. For the `_<culture>`-suffixed education/child/wanderer rosters the value is the id's final token (`Culture.gundabad`). This bit `taom_education_equipment_templates.xml`: **980** rosters shipped without it (fixed 2026-06-22 via `tools/add_education_roster_cultures.py`; the orc-culture set added in #267 inherited the omission). When you author or mirror a standalone roster, set BOTH the roster `culture=` AND each civilian `<EquipmentSet equipmentType="Civilian">`.
+A standalone `<EquipmentRoster>` also carries `culture=Culture.<id>`, or the engine logs a line per roster at load. It is non-fatal: code lookups key off the id.
 
-**Why this matters:** Encyclopedia portraits, settlement-walk views, dialog scenes, and random equipment selection at hero spawn all key off this attribute, not off the roster ID. A misclassified civilian roster manifests as the wrong outfit in non-combat contexts — exactly the Faramir/Boromir bug pattern (memory: feedback_equipmenttype_civilian_required.md).
+**Why this matters:** Encyclopedia portraits, settlement-walk views, dialog scenes, and random equipment selection at hero spawn all key off this attribute, not off the roster ID. A misclassified civilian roster manifests as the wrong outfit in non-combat contexts: exactly the Faramir/Boromir bug pattern.
 
-**Catch list before commit** — when editing any `taom_equipment_sets_*.xml`:
-1. Grep for `<EquipmentRoster id="[^"]*_civ` matches in the file.
-2. Verify each match's next `<EquipmentSet>` line has `equipmentType="Civilian"`.
-3. Quick validator:
-   ```powershell
-   Get-ChildItem Main\_Module\ModuleData\equipmentsets\taom_equipment_sets_*.xml | ForEach-Object {
-     $x = [xml](Get-Content $_.FullName -Raw)
-     $civ = $x.SelectNodes('//EquipmentRoster[contains(@id, ''_civ'')]/EquipmentSet')
-     $t = ($civ | Where-Object { $_.equipmentType -eq 'Civilian' }).Count
-     Write-Host "$($_.Name): $t/$($civ.Count) civilian sets tagged"
-   }
-   ```
-   Should report N/N for every file.
+Gate: `MISSING_CIVILIAN_TYPE`, a warning the commit hook does not show, so run `python tools/validate_moduledata.py` and read the warnings.
 
 **This rule is for the STANDALONE roster pattern only.** Inline equipment under `<NPCCharacter><Equipments>...</Equipments>` (in `characters/*.xml` and `troops/troops_*.xml`) uses a different attribute (`civilian="true"` on `<EquipmentRoster>`) — that pattern is governed separately and is NOT affected by this rule.
 
@@ -117,15 +87,5 @@ version. Trees of forks come from `tools/generate_career_forks.py`. Full text:
 
 ## Formatting
 - 2-space indentation (per .editorconfig)
-- UTF-8, usually with no BOM. 11 of the 330 ModuleData `.xml`/`.xslt`/`.json` files do carry one
-  (`taom_partyTemplates.xml`, `spclans.xslt`, `spkingdoms.xslt`, six `troops/troops_*.xml`,
-  `module_sounds.xml`, `lotr_dwarf_voice_def.xml`), so round-trip the bytes instead of normalising.
-- **Line endings are not uniform: detect, never assume.** Terminators vary by file type and by line
-  (plain CRLF, doubled CR `\r\r\n`, LF, and files carrying two shapes), and a type's shape can change
-  between commits, so measure the file in front of you. The doubling concentrates in
-  `Languages/**/std_taom_*.xml`; the per-type table is in the guide linked below.
-  `\r?\n` does not rescue you: against a doubled file it matches the `\r\n` and leaves a stray `\r`
-  on every line, and `splitlines(keepends=True)` turns each doubled terminator into a phantom blank
-  line. Capture each file's own terminator and re-emit it verbatim. Detail:
-  [docs/localization/TRANSLATOR_GUIDE.md](../../docs/localization/TRANSLATOR_GUIDE.md) "Line endings
-  and encoding".
+- UTF-8, usually with no BOM, but some files carry one, so round-trip the bytes instead of normalising.
+- **Line endings are not uniform.** Capture each file's own terminator and re-emit it verbatim; `\r?\n` does not rescue a doubled file. Detail: [TRANSLATOR_GUIDE.md](../../docs/localization/TRANSLATOR_GUIDE.md) Line endings and encoding.
