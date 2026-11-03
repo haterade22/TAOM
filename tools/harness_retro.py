@@ -22,7 +22,7 @@ import re
 import sys
 import tempfile
 from collections import Counter, defaultdict
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 TOOLS_DIR = Path(__file__).resolve().parent
@@ -49,6 +49,23 @@ TOP_TRANSCRIPTS = 5
 MODEL_FAMILIES = ("sonnet", "opus", "haiku", "fable")
 CACHE_BREAK_TOKENS = 100_000   # one request that writes more than this to the cache re-sent the prompt
 UNATTRIBUTED = "subagents (unattributed)"
+# USD per million tokens: input, output, cache read, 5-minute write, 1-hour write. Input, output and
+# cache read are the API list rates in Claude Code's bundled claude-api skill (cached 2026-10-06); the
+# writes are 1.25x and 2x of input. A subscription weighs tokens by rates it does not publish, so these
+# dollars show relative size and are not a bill. A model missing here is reported, never guessed.
+LIST_PRICES = {
+    "claude-opus-5-5": (4, 20, 0.2, 5, 8),
+    "claude-opus-5": (5, 25, 0.5, 6.25, 10),
+    "claude-sonnet-5-5": (2, 10, 0.2, 2.5, 4),
+    "claude-sonnet-5": (2, 10, 0.2, 2.5, 4),
+    "claude-fable-5-1": (10, 50, 0.25, 12.5, 20),
+    "claude-haiku-5-5": (0.1, 0.5, 0.01, 0.125, 0.2),
+    "claude-haiku-4-5-20251001": (1, 5, 0.1, 1.25, 2),
+}
+CONTEXT_BUCKETS = ((200_000, "under 200k"), (300_000, "200k to 300k"), (500_000, "300k to 500k"),
+                   (None, "500k and over"))
+REVIEW_AGENT = "deep-reviewer"
+REVIEW_RUN_GAP_SECONDS = 3600   # lenses of one session further apart than this are separate review runs
 
 HOOK_DENY_RE = re.compile(r"^(PreToolUse|PostToolUse):(\S+) hook error: \[([^\]]+)\](.*)", re.S)
 CLASSIFIER_PREFIX = "Permission for this action was denied by the Claude Code auto mode classifier"
@@ -266,6 +283,13 @@ class Stats:
         # docs/reference/provenance-register.md).
         self.by_agent_model = defaultdict(lambda: [0, 0, 0, 0, 0])  # (agent, model) -> requests, in, out, read, create
         self.file_tokens = []                                       # (agent, file stem, total tokens)
+        # agent -> requests, USD input, output, cache read, cache write; context tokens, tool calls;
+        # thinking tokens and the output of the requests that report thinking.
+        self.cost = defaultdict(lambda: [0, 0.0, 0.0, 0.0, 0.0, 0, 0, 0, 0])
+        self.unpriced = Counter()
+        self.main_context = defaultdict(lambda: [0, 0.0])    # bucket -> requests, USD
+        self.rebuilds = defaultdict(lambda: [0, 0, 0.0])     # (who, idle gap) -> events, tokens, USD
+        self.lenses = []                                     # (session, start, USD, requests, peak context)
 
 
 def add_output(table, key, size):
@@ -339,6 +363,98 @@ def commit_usage(stats, calls, agent, stem=""):
             stats.cache_breaks += 1
     if spent:
         stats.file_tokens.append((label, stem, spent))
+
+
+def note_request(details, key, r, ts):
+    """Keep what the cost section needs of one API request, whose records each hold one content block:
+    its first timestamp, its 1-hour cache writes, its thinking count and its distinct tool calls."""
+    msg = r["message"]
+    usage = msg["usage"]
+    d = details.setdefault(key, {"ts": ts, "one_hour": 0, "thinking": None, "tools": set()})
+    split = usage.get("cache_creation")
+    if isinstance(split, dict):
+        d["one_hour"] = max(d["one_hour"], _num(split.get("ephemeral_1h_input_tokens")))
+    extra = usage.get("output_tokens_details")
+    if isinstance(extra, dict) and "thinking_tokens" in extra:
+        d["thinking"] = max(d["thinking"] or 0, _num(extra["thinking_tokens"]))
+    blocks = msg.get("content")
+    for b in blocks if isinstance(blocks, list) else []:
+        if isinstance(b, dict) and b.get("type") == "tool_use":
+            d["tools"].add(str(b.get("id")))
+
+
+def request_cost(model, usage, one_hour):
+    """(input, output, cache read, cache write) in USD, or None for a model with no list price."""
+    p = LIST_PRICES.get(model.split("[")[0])
+    if p is None:
+        return None
+    inp, out, read, create = usage
+    return (inp * p[0] / 1e6, out * p[1] / 1e6, read * p[2] / 1e6,
+            ((create - one_hour) * p[3] + one_hour * p[4]) / 1e6)
+
+
+def parse_time(ts):
+    try:
+        t = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return t if t.tzinfo else t.replace(tzinfo=timezone.utc)
+
+
+def idle_bucket(first, gap):
+    if first:
+        return "first request"
+    if not gap or gap <= 300:
+        return "under 5 min"
+    return "5 min to 1 h" if gap <= 3600 else "over 1 h"
+
+
+def commit_cost(stats, calls, details, agent, path):
+    """Add one file's requests to the cost section. Runs before commit_usage, whose seen set says which
+    are new. A repeated request (a resumed session) adds nothing but still moves the idle clock."""
+    who = agent or "main"
+    prev = None
+    start = None
+    lens = [0.0, 0, 0]   # USD, requests, peak context
+    for key, (usage, _skill, _final, model) in calls.items():
+        d = details[key]
+        t = parse_time(d["ts"])
+        gap = (t - prev).total_seconds() if t and prev else None
+        first = prev is None
+        prev = t or prev
+        if key in stats.seen_requests or model == "<synthetic>" or not any(usage):
+            continue
+        priced = request_cost(model, usage, d["one_hour"])
+        if priced is None:
+            stats.unpriced[model or "(unknown)"] += 1
+            priced = (0.0, 0.0, 0.0, 0.0)
+        spent = sum(priced)
+        context = usage[0] + usage[2] + usage[3]
+        row = stats.cost[who]
+        row[0] += 1
+        for i in range(4):
+            row[i + 1] += priced[i]
+        row[5] += context
+        row[6] += len(d["tools"])
+        if d["thinking"] is not None:
+            row[7] += d["thinking"]
+            row[8] += usage[1]
+        if not agent:
+            bucket = stats.main_context[next(lb for lim, lb in CONTEXT_BUCKETS if lim is None or context < lim)]
+            bucket[0] += 1
+            bucket[1] += spent
+        if usage[3] > CACHE_BREAK_TOKENS:
+            rebuild = stats.rebuilds[("subagent" if agent else "main", idle_bucket(first, gap))]
+            rebuild[0] += 1
+            rebuild[1] += usage[3]
+            rebuild[2] += priced[3]
+        start = start or t
+        lens[0] += spent
+        lens[1] += 1
+        lens[2] = max(lens[2], context)
+    if agent == REVIEW_AGENT and lens[1] and start:
+        session = path.parts[path.parts.index("subagents") - 1]
+        stats.lenses.append((session, start, lens[0], lens[1], lens[2]))
 
 
 def agent_type(path):
@@ -519,6 +635,7 @@ def handle_assistant(stats, r, tools, count):
 def scan_file(stats, path, since_str, agent=None):
     tools = {}
     calls = {}        # request key -> ((in, out, read, create), skill, final), the max-output record wins
+    details = {}      # request key -> what the cost section needs (note_request)
     skill = None      # the skill invoked most recently in this file, until a person types again
     last_ts = None
     # [key, sid, set of assistant message ids]. A run grows by MESSAGES, not by results: parallel
@@ -562,6 +679,7 @@ def scan_file(stats, path, since_str, agent=None):
             if rtype == "assistant":
                 got = read_usage(r)
                 if got:
+                    note_request(details, got[0], r, ts)
                     prev = calls.get(got[0])
                     final = got[2] or (prev is not None and prev[2])
                     if prev is None or got[1][1] >= prev[0][1]:
@@ -612,6 +730,7 @@ def scan_file(stats, path, since_str, agent=None):
                         if key is not None:
                             run = [key, sid, {msg_id}]
     flush()
+    commit_cost(stats, calls, details, agent, path)
     commit_usage(stats, calls, agent, path.stem)
 
 
@@ -626,7 +745,8 @@ def discover(transcripts, since_dt):
             return False
 
     main = sorted(p for p in transcripts.glob("*.jsonl") if fresh(p))
-    sub = sorted(p for p in transcripts.glob("*/subagents/agent-*.jsonl") if fresh(p))
+    # `**` because a workflow's agents sit one level down, in subagents/workflows/<run>/.
+    sub = sorted(p for p in transcripts.glob("*/subagents/**/agent-*.jsonl") if fresh(p))
     return main, sub
 
 
@@ -838,6 +958,59 @@ def token_agents(stats, n, repo):
             "overrides": model_overrides(stats, repo)}
 
 
+def nearest_rank(values, p):
+    ordered = sorted(values)
+    return ordered[min(len(ordered) - 1, int(len(ordered) * p))] if ordered else 0
+
+
+def review_runs(stats):
+    """Group the review lenses into runs: same session, each lens within the gap of the one before."""
+    runs = []     # [session, last start, lenses, USD]
+    for session, start, spent, _requests, _peak in sorted(stats.lenses, key=lambda x: x[:2]):
+        if not runs or runs[-1][0] != session or (start - runs[-1][1]).total_seconds() > REVIEW_RUN_GAP_SECONDS:
+            runs.append([session, start, 0, 0.0])
+        runs[-1][1] = start
+        runs[-1][2] += 1
+        runs[-1][3] += spent
+    sizes = [r[2] for r in runs]
+    run_costs = [r[3] for r in runs]
+    lens_costs = [x[2] for x in stats.lenses]
+    requests = [x[3] for x in stats.lenses]
+    peaks = [x[4] for x in stats.lenses]
+    return {"runs": len(runs), "lenses": len(stats.lenses),
+            "lenses_per_run_p50": nearest_rank(sizes, 0.5), "lenses_per_run_p90": nearest_rank(sizes, 0.9),
+            "lenses_per_run_max": max(sizes, default=0),
+            "run_cost_p50": round(nearest_rank(run_costs, 0.5), 2), "run_cost_p90": round(nearest_rank(run_costs, 0.9), 2),
+            "run_cost_max": round(max(run_costs, default=0), 2),
+            "lens_cost_p50": round(nearest_rank(lens_costs, 0.5), 2), "lens_cost_p90": round(nearest_rank(lens_costs, 0.9), 2),
+            "lens_requests_p50": nearest_rank(requests, 0.5), "lens_requests_p90": nearest_rank(requests, 0.9),
+            "lens_peak_context_p50": nearest_rank(peaks, 0.5), "lens_peak_context_p90": nearest_rank(peaks, 0.9)}
+
+
+def cost_summary(stats):
+    """Section 11: where the usage goes, at list prices."""
+    def spent(v):
+        return sum(v[1:5])
+    total = sum(spent(v) for v in stats.cost.values())
+    rows = [{"agent": redact(k), "requests": v[0], "cost": round(spent(v), 4),
+             "share": round(spent(v) / total, 4) if total else 0,
+             "input": round(v[1], 4), "output": round(v[2], 4), "cache_read": round(v[3], 4),
+             "cache_write": round(v[4], 4), "mean_context": v[5] // v[0],
+             "tool_calls_per_request": round(v[6] / v[0], 2),
+             "thinking_share": round(v[7] / v[8], 4) if v[8] else None}
+            for k, v in sorted(stats.cost.items(), key=lambda kv: (-spent(kv[1]), kv[0]))]
+    main = stats.cost.get("main")
+    main_total = spent(main) if main else 0
+    buckets = [{"bucket": label, "requests": stats.main_context[label][0], "cost": round(stats.main_context[label][1], 4),
+                "share": round(stats.main_context[label][1] / main_total, 4) if main_total else 0}
+               for _limit, label in CONTEXT_BUCKETS]
+    rebuilds = [{"who": who, "gap": gap, "events": v[0], "mean_tokens": v[1] // v[0], "cost": round(v[2], 4)}
+                for (who, gap), v in sorted(stats.rebuilds.items(), key=lambda kv: -kv[1][2])]
+    return {"total": round(total, 4), "unpriced": dict(stats.unpriced), "by_agent": rows,
+            "main_context": {"mean": main[5] // main[0] if main else 0, "buckets": buckets},
+            "cache_rebuilds": rebuilds, "review_runs": review_runs(stats)}
+
+
 def family_of(model):
     low = str(model).lower()
     return next((f for f in MODEL_FAMILIES if f in low), None)
@@ -903,6 +1076,7 @@ def build_signals(stats, args, since, today, main, sub):
         "memory": memory_health(args.memory, today),
         "output_size": output_size(stats, n),
         "tokens": dict(token_summary(stats, 5), **token_agents(stats, n, args.repo)),
+        "cost": cost_summary(stats),
     }
 
 
@@ -1032,7 +1206,50 @@ def render(sig):
         L += table(["Transcript", "Tokens"], [[r["transcript"], r["tokens"]] for r in t["transcripts"]])
         L += render_growth(t.get("growth") or {}, "agent", "Token growth since the previous run",
                            "of cache creation plus output")
+    L += render_cost(sig["cost"])
     return "\n".join(L) + "\n"
+
+
+def render_cost(c):
+    L = ["## 11. Cost at list prices", ""]
+    if not c["total"] and not c["unpriced"]:
+        return L + ["no priced requests in the window.", ""]
+    L += ["A proxy for relative size, not a bill: a subscription weighs tokens by rates it does not publish. "
+          "Total $%.2f." % c["total"], ""]
+    if c["unpriced"]:
+        L += ["No list price for these models, so they count as $0: %s." % ", ".join(
+            "%s (%d requests)" % kv for kv in sorted(c["unpriced"].items())), ""]
+    L += ["### By agent", "",
+          "Mean context is the tokens each request sends, so one request re-reads about that many. Thinking "
+          "share covers only the requests that report it.", ""]
+    L += table(["Agent", "Requests", "USD", "Share", "Output", "Cache read", "Cache write", "Mean context",
+                "Tool calls per request", "Thinking share"],
+               [[r["agent"], r["requests"], "%.2f" % r["cost"], "%.1f%%" % (100 * r["share"]), "%.2f" % r["output"],
+                 "%.2f" % r["cache_read"], "%.2f" % r["cache_write"], r["mean_context"], r["tool_calls_per_request"],
+                 "n/a" if r["thinking_share"] is None else "%.0f%%" % (100 * r["thinking_share"])]
+                for r in c["by_agent"]])
+    m = c["main_context"]
+    L += ["### Main session by context size", "", "Mean context %d tokens." % m["mean"], ""]
+    L += table(["Context", "Requests", "USD", "Share of main"],
+               [[b["bucket"], b["requests"], "%.2f" % b["cost"], "%.1f%%" % (100 * b["share"])] for b in m["buckets"]])
+    L += ["### Cache rebuilds", "",
+          "One request writing more than %d tokens to the cache, by the idle gap before it. A gap past the cache "
+          "lifetime (1 hour for main sessions, 5 minutes for subagents) writes the whole context again." %
+          CACHE_BREAK_TOKENS, ""]
+    L += table(["Who", "Idle gap", "Events", "Mean tokens", "USD"],
+               [[r["who"], r["gap"], r["events"], r["mean_tokens"], "%.2f" % r["cost"]] for r in c["cache_rebuilds"]])
+    r = c["review_runs"]
+    L += ["### Review runs", "",
+          "`%s` transcripts of one session, each started within %d minutes of the one before, are one run." % (
+              REVIEW_AGENT, REVIEW_RUN_GAP_SECONDS // 60), ""]
+    L += table(["Measure", "p50", "p90", "Max"],
+               [["Lenses per run (%d runs, %d lenses)" % (r["runs"], r["lenses"]), r["lenses_per_run_p50"],
+                 r["lenses_per_run_p90"], r["lenses_per_run_max"]],
+                ["USD per run", r["run_cost_p50"], r["run_cost_p90"], r["run_cost_max"]],
+                ["USD per lens", r["lens_cost_p50"], r["lens_cost_p90"], ""],
+                ["Requests per lens", r["lens_requests_p50"], r["lens_requests_p90"], ""],
+                ["Peak context per lens", r["lens_peak_context_p50"], r["lens_peak_context_p90"], ""]])
+    return L
 
 
 def render_growth(g, label, heading, unit):
@@ -1126,6 +1343,8 @@ def main(argv=None):
     tk = sig["tokens"]
     print("tokens: %s" % ("no usage data" if not tk["requests"] else "%d requests, %.1f%% cache read, %d cache breaks" % (
         tk["requests"], 100 * tk["cache_read_share"], tk["cache_breaks"])))
+    print("cost: $%.2f at list prices, %d review runs, %d models unpriced" % (
+        sig["cost"]["total"], sig["cost"]["review_runs"]["runs"], len(sig["cost"]["unpriced"])))
     print("memory: %s bytes, %s lines, %d stale cards" % (
         sig["memory"]["memory_md_bytes"], sig["memory"]["memory_md_lines"], len(sig["memory"]["stale_cards"])))
     if g["baseline"]:

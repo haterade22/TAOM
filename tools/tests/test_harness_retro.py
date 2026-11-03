@@ -901,5 +901,208 @@ class MemoryTests(Base):
         self.assertNotIn("fresh-card.md", names)
 
 
+OPUS = "claude-opus-5-5"
+MILLION = 1_000_000
+
+
+def request(req, ts=TS, model=OPUS, inp=0, out=0, read=0, create=0, one_hour=None, thinking=None, tools=(),
+            session="s1"):
+    """One assistant record of API request `req`, shaped like a real transcript line."""
+    usage = {"input_tokens": inp, "output_tokens": out, "cache_read_input_tokens": read,
+             "cache_creation_input_tokens": create}
+    if one_hour is not None:
+        usage["cache_creation"] = {"ephemeral_1h_input_tokens": one_hour,
+                                   "ephemeral_5m_input_tokens": create - one_hour}
+    if thinking is not None:
+        usage["output_tokens_details"] = {"thinking_tokens": thinking}
+    content = [{"type": "tool_use", "id": t, "name": "Read", "input": {}} for t in tools]
+    return rec("assistant", session, ts, uuid="u_" + req, requestId=req,
+               message={"id": "msg_" + req, "model": model, "usage": usage, "content": content,
+                        "stop_reason": "tool_use"})
+
+
+class CostTests(Base):
+    def subagent(self, name, kind, records, session="sess"):
+        self.env.write("%s/subagents/agent-%s.jsonl" % (session, name), records)
+        (self.env.tr / session / "subagents" / ("agent-%s.meta.json" % name)).write_text(
+            json.dumps({"agentType": kind}), encoding="utf-8")
+
+    def cost(self):
+        self.env.run()
+        return self.env.signals()["cost"]
+
+    def row(self, agent="main"):
+        return next(r for r in self.cost()["by_agent"] if r["agent"] == agent)
+
+    def test_each_token_class_is_priced_at_its_own_rate(self):
+        self.env.write("a.jsonl", [request("r1", inp=MILLION, out=MILLION, read=MILLION,
+                                           create=MILLION, one_hour=MILLION)])
+        r = self.row()
+        self.assertAlmostEqual(r["input"], 4.0)
+        self.assertAlmostEqual(r["output"], 20.0)
+        self.assertAlmostEqual(r["cache_read"], 0.2)
+        self.assertAlmostEqual(r["cache_write"], 8.0)
+        self.assertAlmostEqual(r["cost"], 32.2)
+
+    def test_five_minute_write_costs_less_than_one_hour(self):
+        self.env.write("a.jsonl", [request("r1", create=MILLION, one_hour=0)])
+        self.assertAlmostEqual(self.row()["cache_write"], 5.0)
+
+    def test_write_with_no_ttl_split_is_priced_as_five_minute(self):
+        self.env.write("a.jsonl", [request("r1", create=MILLION)])
+        self.assertAlmostEqual(self.row()["cache_write"], 5.0)
+
+    def test_one_m_model_suffix_is_priced_as_its_model(self):
+        self.env.write("a.jsonl", [request("r1", model=OPUS + "[1m]", out=MILLION)])
+        self.assertAlmostEqual(self.row()["output"], 20.0)
+
+    def test_sonnet_has_its_own_rates(self):
+        self.env.write("a.jsonl", [request("r1", model="claude-sonnet-5-5", out=MILLION, read=MILLION)])
+        r = self.row()
+        self.assertAlmostEqual(r["output"], 10.0)
+        self.assertAlmostEqual(r["cache_read"], 0.2)
+
+    def test_unknown_model_is_reported_not_priced_or_guessed(self):
+        self.env.write("a.jsonl", [request("r1", model="claude-future-9", out=MILLION)])
+        c = self.cost()
+        self.assertEqual(c["unpriced"], {"claude-future-9": 1})
+        self.assertEqual(c["total"], 0)
+        self.assertEqual(c["by_agent"][0]["requests"], 1)
+
+    def test_synthetic_and_all_zero_requests_are_not_counted(self):
+        self.env.write("a.jsonl", [request("r1", model="<synthetic>", out=5), request("r2")])
+        self.assertEqual(self.cost()["by_agent"], [])
+
+    def test_request_written_in_several_records_counts_once_with_all_its_tool_calls(self):
+        self.env.write("a.jsonl", [request("r1", out=10, tools=("t1",)), request("r1", out=20, tools=("t2",)),
+                                   request("r1", out=20, tools=("t2",))])
+        r = self.row()
+        self.assertEqual(r["requests"], 1)
+        self.assertEqual(r["tool_calls_per_request"], 2.0)
+        self.assertAlmostEqual(r["output"], 20 * 20 / MILLION)
+
+    def test_request_seen_in_two_files_counts_once(self):
+        self.env.write("a.jsonl", [request("r1", out=MILLION)])
+        self.env.write("b.jsonl", [request("r1", out=MILLION)])
+        self.assertAlmostEqual(self.cost()["total"], 20.0)
+
+    def test_request_before_the_window_is_excluded(self):
+        self.env.write("a.jsonl", [request("old", ts=OLD_TS, out=MILLION), request("new", out=1)])
+        self.assertEqual(self.row()["requests"], 1)
+
+    def test_rows_are_per_agent_and_sorted_by_cost_with_shares(self):
+        self.env.write("a.jsonl", [request("r1", out=MILLION, tools=("t1",))])
+        self.subagent("a", "deep-reviewer", [request("r2", out=3 * MILLION, tools=("t2", "t3"))])
+        rows = self.cost()["by_agent"]
+        self.assertEqual([r["agent"] for r in rows], ["deep-reviewer", "main"])
+        self.assertEqual(rows[0]["tool_calls_per_request"], 2.0)
+        self.assertEqual(rows[1]["tool_calls_per_request"], 1.0)
+        self.assertEqual(rows[0]["share"], 0.75)
+
+    def test_mean_context_counts_input_read_and_write(self):
+        self.env.write("a.jsonl", [request("r1", inp=10, read=100, create=90),
+                                   request("r2", read=400)])
+        self.assertEqual(self.row()["mean_context"], 300)
+
+    def test_thinking_share_uses_only_requests_that_report_thinking(self):
+        self.env.write("a.jsonl", [request("r1", out=1000, thinking=750), request("r2", out=9000)])
+        self.assertEqual(self.row()["thinking_share"], 0.75)
+
+    def test_thinking_share_is_none_when_no_request_reports_it(self):
+        self.env.write("a.jsonl", [request("r1", out=1000)])
+        self.assertIsNone(self.row()["thinking_share"])
+
+    def test_main_context_buckets_and_their_edges(self):
+        sizes = (199_999, 200_000, 300_000, 500_000)
+        self.env.write("a.jsonl", [request("r%d" % s, read=s) for s in sizes])
+        self.subagent("a", "implementer", [request("sub", read=900_000)])
+        m = self.cost()["main_context"]
+        self.assertEqual([(b["bucket"], b["requests"]) for b in m["buckets"]],
+                         [("under 200k", 1), ("200k to 300k", 1), ("300k to 500k", 1), ("500k and over", 1)])
+        self.assertEqual(m["mean"], sum(sizes) // 4)
+        self.assertAlmostEqual(sum(b["share"] for b in m["buckets"]), 1.0, places=3)
+
+    def test_cache_rebuilds_are_split_by_who_and_idle_gap(self):
+        def at(minutes):
+            return (hr.datetime(2026, 10, 10, 12) + hr.timedelta(minutes=minutes)).isoformat() + "Z"
+        self.env.write("a.jsonl", [
+            request("r1", ts=at(0), create=200_000),            # first request of the file
+            request("r2", ts=at(1), create=120_000),            # under 5 minutes
+            request("r3", ts=at(11), create=150_000),           # 5 minutes to 1 hour
+            request("r4", ts=at(131), create=450_000, one_hour=450_000),  # over 1 hour
+            request("r5", ts=at(132), create=100_000),          # not above the break threshold
+        ])
+        self.subagent("a", "implementer", [request("s1", ts=at(0), read=1), request("s2", ts=at(10), create=200_000)])
+        rows = {(r["who"], r["gap"]): r for r in self.cost()["cache_rebuilds"]}
+        self.assertEqual(set(rows), {("main", "first request"), ("main", "under 5 min"), ("main", "5 min to 1 h"),
+                                     ("main", "over 1 h"), ("subagent", "5 min to 1 h")})
+        self.assertEqual(rows["main", "over 1 h"]["events"], 1)
+        self.assertEqual(rows["main", "over 1 h"]["mean_tokens"], 450_000)
+        self.assertAlmostEqual(rows["main", "over 1 h"]["cost"], 3.6)
+
+    def test_review_runs_split_by_session_and_a_one_hour_gap(self):
+        def at(minutes):
+            return (hr.datetime(2026, 10, 10, 12) + hr.timedelta(minutes=minutes)).isoformat() + "Z"
+
+        def lens(name, minutes, session="sess"):
+            self.subagent(name, "deep-reviewer", [request(name + "1", ts=at(minutes), out=MILLION, read=100),
+                                                  request(name + "2", ts=at(minutes + 1), read=500)], session)
+        lens("a", 0)
+        lens("b", 50)     # within an hour of the previous lens: same run
+        lens("c", 200)    # a new run
+        lens("d", 0, "other")
+        self.subagent("e", "implementer", [request("impl", ts=at(0), out=MILLION)])
+        r = self.cost()["review_runs"]
+        self.assertEqual(r["runs"], 3)
+        self.assertEqual(r["lenses"], 4)
+        self.assertEqual(r["lenses_per_run_max"], 2)
+        self.assertAlmostEqual(r["run_cost_max"], 40.0, places=2)
+        self.assertEqual(r["lens_requests_p50"], 2)
+        self.assertEqual(r["lens_peak_context_p50"], 500)
+
+    def test_workflow_subagent_transcripts_are_scanned(self):
+        self.subagent("w", "implementer", [request("r1", out=MILLION)])
+        nested = self.env.tr / "sess" / "subagents" / "workflows" / "wf_1"
+        nested.mkdir(parents=True)
+        (nested / "agent-n.jsonl").write_text(json.dumps(request("r2", out=MILLION)) + "\n", encoding="utf-8")
+        (nested / "agent-n.meta.json").write_text(json.dumps({"agentType": "Explore"}), encoding="utf-8")
+        c = self.cost()
+        self.assertEqual(self.env.signals()["sessions"]["subagent_files"], 2)
+        self.assertEqual({r["agent"] for r in c["by_agent"]}, {"implementer", "Explore"})
+
+    def test_lens_in_a_workflow_folder_belongs_to_its_session(self):
+        self.subagent("a", "deep-reviewer", [request("r1", out=1)])
+        nested = self.env.tr / "sess" / "subagents" / "workflows" / "wf_1"
+        nested.mkdir(parents=True)
+        (nested / "agent-n.jsonl").write_text(json.dumps(request("r2", out=1)) + "\n", encoding="utf-8")
+        (nested / "agent-n.meta.json").write_text(json.dumps({"agentType": "deep-reviewer"}), encoding="utf-8")
+        r = self.cost()["review_runs"]
+        self.assertEqual((r["runs"], r["lenses"]), (1, 2))
+
+    def test_no_review_runs_is_zero_not_an_error(self):
+        self.env.write("a.jsonl", [request("r1", out=1)])
+        self.assertEqual(self.cost()["review_runs"]["runs"], 0)
+
+    def test_report_names_the_proxy_and_shows_the_tables(self):
+        self.env.write("a.jsonl", [request("r1", out=MILLION, read=250_000, tools=("t1",), thinking=5)])
+        self.env.run()
+        text = self.env.report()
+        self.assertIn("## 11. Cost at list prices", text)
+        self.assertIn("proxy", text)
+        self.assertIn("| main |", text)
+        self.assertIn("200k to 300k", text)
+
+    def test_no_usage_data_reads_as_that_in_the_report(self):
+        self.env.write("a.jsonl", [human("hello")])
+        self.env.run()
+        self.assertEqual(self.env.signals()["cost"]["total"], 0)
+        self.assertIn("no priced requests in the window", self.env.report())
+
+    def test_unparseable_timestamp_does_not_break_the_run(self):
+        self.env.write("a.jsonl", [request("r1", ts="not-a-time", create=200_000)])
+        code, _ = self.env.run(since=None)
+        self.assertEqual(code, 0)
+
+
 if __name__ == "__main__":
     unittest.main()
