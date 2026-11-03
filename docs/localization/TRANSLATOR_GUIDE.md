@@ -489,7 +489,7 @@ The translator script applies overrides BEFORE consulting the cache or API, so t
 **Option A: GitHub Pull Request (preferred)**
 - Fork the repository
 - Edit only your translation files in `Languages/{LANG}/`
-- Open a PR targeting the active branch (currently `bannerlord-1.4.5`)
+- Open a PR targeting `bannerlord-1.5.x`
 
 **Option B: Send Files Directly**
 - Zip your translated XML files (preserve the `<MODULE>/Languages/<LANG>/` folder structure so they drop into the right place)

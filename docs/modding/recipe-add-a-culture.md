@@ -256,7 +256,7 @@ templates; 98 education-equipment and 13 enlistment rosters; 55 character-creati
 14. Remove the culture from every `documentedExceptions` list in `TAOM.Tests/` that names it.
 
 Check: `python tools/validate_moduledata.py` then `python tools/validate_all_troop_refs.py` then
-`dotnet test TAOM.Tests --filter CulturePartyTemplate`
+`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter CulturePartyTemplate`
 Takes effect: full game restart, then a new campaign. The `<XmlNode>` registry is built once per
 process (`Module.cs:246`, `:1026-1033`), so a newly registered file is invisible until Bannerlord is
 restarted; the lords, clans, kingdoms and settlements then seed at world generation, because

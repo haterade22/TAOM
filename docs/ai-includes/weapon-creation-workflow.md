@@ -248,9 +248,10 @@ Available `WeaponDescription` categories: `OneHandedSword`, `TwoHandedSword`, `O
 `TwoHandedPolearm_Bracing`, `TwoHandedPolearm_Pike`, `OneHandedBastardSword`, `Mace`, `TwoHandedMace`,
 `Javelin`.
 
-> **Brace + couch-lance:** register the long shafts + thrust-capable heads under
-> `TwoHandedPolearm_Couchable` and `TwoHandedPolearm_Bracing` (and the longest shaft under
-> `TwoHandedPolearm_Pike`) in addition to `TwoHandedPolearm`. Short spears go in `TwoHandedPolearm` only.
+> **Polearm registration:** spear and lance pieces go in `OneHandedPolearm` first
+> (`tools/register_one_handed_polearms.py`), then `TwoHandedPolearm`, `TwoHandedPolearm_Bracing` and,
+> for anything that couches, `TwoHandedPolearm_Couchable`. The longest shaft also goes in
+> `TwoHandedPolearm_Pike`.
 
 ## Step J — File 3: register in `crafting_templates.xslt`
 

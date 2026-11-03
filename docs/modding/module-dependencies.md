@@ -729,7 +729,7 @@ The three runtime pins, lines 70-72, and the Unsafe pin with its comment, lines 
     lines 138-157 of that doc: launch, confirm only `TAOM` and `TAOM.Dependencies` are needed,
     confirm a **Mod Options** tab exists and a changed value persists.
 
-Check: `dotnet test TAOM.Tests --filter BundledDependencyManifest`
+Check: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter BundledDependencyManifest`
 Takes effect: full game restart
 Code: Code changes required in `Dependencies/SubModule.cs` and `Dependencies/TAOM.Dependencies.csproj`
 
@@ -763,7 +763,7 @@ Code: Code changes required in `Dependencies/SubModule.cs` and `Dependencies/TAO
    the deploy into the game install; add `-p:ModuleId=` to skip all three copy targets
    ([agent-operating-manual.md](../ai-includes/agent-operating-manual.md) lines 49-51).
 
-Check: `dotnet test TAOM.Tests --filter DependenciesPairing`, and for a ButterLib update also
+Check: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter DependenciesPairing`, and for a ButterLib update also
 `--settings TAOM.Tests/binding-gate.runsettings --filter FullyQualifiedName~ButterLibDistanceMatrixBindingTests` (TAOM switches a ButterLib subsystem off by name, #740)
 Takes effect: full game restart
 Code: No code changes needed
@@ -792,7 +792,7 @@ Code: No code changes needed
    not read it (first engine table).
 8. **Never ship a binary under `_Module/bin/` without its notice paragraph** ([provenance rule](../../.claude/rules/provenance.md)).
 
-Check: `dotnet test TAOM.Tests --filter BundledDependencyManifest`
+Check: `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter BundledDependencyManifest`
 Takes effect: full game restart
 Code: No code changes needed
 

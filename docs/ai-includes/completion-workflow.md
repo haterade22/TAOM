@@ -79,48 +79,21 @@ Every completed feature MUST have a documentation file at `docs/features/<featur
 
 **Rule:** If a future session needs to understand a feature, the doc should contain enough detail that ZERO decompilation, code reading, or re-analysis is needed for the conceptual understanding. Code reading is only for the current state of the implementation.
 
-### Completion Workflow (MANDATORY — every feature, no exceptions)
+### Completion Workflow
 
-Before closing out any feature or fix, run this FULL sequence:
+Before closing out a feature or fix, run this sequence. `/ship` runs it for you.
 
-```
-Phase 1: BUILD & INTERNAL REVIEW
-  1. /verify                        — build + tests pass
-  2. /deep-review [feature]         : sized by risk tier (its SKILL.md "Risk tier"): tier 1 runs Codex at ultra
-                                      plus the Data flow and Engine lenses, tier 2 Codex at xhigh plus Data flow,
-                                      each with XML or Tooling where in scope; a second wave only after a
-                                      CRITICAL or HIGH; tier 3 (docs) is lint and a read. Then it applies every
-                                      better way it found to the changed code
-  3. Fix all confirmed findings (HIGH must fix in-session)
+1. `/verify`: build and tests pass.
+2. `/deep-review [feature]`: its "Risk tier" sets the lenses, the waves and the Codex level. Codex is a
+   paid call and runs only on the maintainer's word ([shared policy](../../.ai/policy.md#paid-dispatch-authority)).
+3. Fix confirmed findings. Fix a HIGH in session, or record its deferral.
+4. Re-review a fix only as `/deep-review` "Fix-loop guidance" says.
+5. `/verify` again: the final build and tests pass.
+6. Close out: close the GitHub issue with full details, write or update `docs/features/<name>.md`, and
+   write the commit body as the changelog entry (`/release` generates `CHANGELOG.md`).
 
-Phase 2: CODEX ADVERSARIAL REVIEW (Claude dispatches directly, no user terminal step)
-  4. /review-codex                  — writes prompt to docs/reviews/codex-adversarial-{feature}-{date}.prompt.md
-                                      AND dispatches via `codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < prompt.md > output.md 2>&1`
-                                      (run_in_background; the session picks the level for the change, `ultra` is only the ceiling)
-                                      AND tells the user once: the level chosen, why, and the expected window
-  5. (harness notifies on completion — Claude auto-resumes; no /review-codex re-invocation needed)
-  6. Verify each Codex finding by reading TAOM source + decompiling vanilla targets — implement confirmed fixes
-
-Phase 3: SELF-REVIEW (review our OWN fixes)
-  7. /review-codex                  — second pass, same auto-dispatch flow against the post-fix diff, its effort sized
-                                      to the fixes (a few focused fixes: usually `high`)
-  8. (harness notifies on completion)
-  9. Verify findings on our fixes, implement confirmed fixes
-
-Phase 4: CLOSE OUT
-  10. /verify                       — final build + tests pass
-  11. Create/close GitHub issue with full details
-        ↑ Issue must exist BEFORE the closing commit, not after.
-          Codex review #28 caught us creating issue #92 retroactively for
-          b7e7188. No hook enforces issue creation; discipline is on the
-          author. Pattern: open the issue
-          when starting the work, reference it in commit messages, close
-          it with the final commit.
-  12. Write/update docs/features/<name>.md
-  13. Write the commit body as the changelog entry (/release generates CHANGELOG.md)
-```
-
-**Do not skip any phase.** Phase 2 catches bugs Claude misses (43 found in codebase review). Phase 3 catches bugs in our fixes (already caught IsFemale field targeting wrong type, shaghana/abanissa alignment mismatch). Each phase exists because the previous one proved insufficient.
+The issue exists before the closing commit: open it when the work starts, reference it in commit
+messages, and close it with the final commit. No hook enforces this.
 
 **Process docs:** `docs/reviews/REVIEW-GUIDE.md` (prompt templates), `docs/reviews/REVIEW-LOG.md` (scoring history)
 

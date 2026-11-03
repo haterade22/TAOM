@@ -46,7 +46,7 @@ Gather context before forming any hypothesis.
    CTD with no managed culprit, or a freeze: run `/native-crash-triage` to name the site and read it as C
    (its hang section covers a freeze), then come back here with that site as the symptom.
 
-2. **Read the code.** Trace from symptom back. Use `Grep`/`find_symbol` (Serena MCP) to find references; `Read` to understand logic.
+2. **Read the code.** Trace from symptom back. Use `Grep` to find references; `Read` to understand logic.
 
 2a. **Map the failing type's neighbourhood from the code graph (mandatory when the trace or symptom names a TAOM type, #677).** `python tools/graphify_taom.py refresh --if-stale` (background when stale), then `python tools/graphify_taom.py explain "<Type>"` for what it inherits, injects and calls, and `python tools/graphify_taom.py affected "<Type>" --depth 2` for everything that reaches it. That is the candidate list for Phase 3's pattern match. It is a lead list: open each file before it shapes a hypothesis. Engine types are not in the graph (use `pwsh tools/taom-src.ps1 path <Type>`), and neither is XML.
 
@@ -162,9 +162,9 @@ Once root cause is confirmed:
 
 4. **Build + tests.**
    ```bash
-   ./build.ps1 -RunTests
+   dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=
    ```
-   No build errors. No test regressions. Paste the output.
+   No build errors. No test regressions. Paste the output. Use `./build.ps1` only when a game check follows, and never while Bannerlord runs.
 
 5. **Blast-radius gate.** If the fix touches >5 files, `AskUserQuestion`:
    ```

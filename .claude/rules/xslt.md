@@ -10,6 +10,8 @@ paths:
 - Where a vanilla file exists in both modules, **SandBoxCore/ModuleData/** is authoritative: SandBox's
   copy can use element names the engine ignores. Example: SandBoxCore `spcultures.xml` uses
   `<notable_templates>` (engine reads), SandBox uses `<notable_and_wanderer_templates>` (engine ignores).
+- TAOM's other stylesheets are live under `<game>/Modules/{TAOM_Map,LOTRLOME_Armory}/ModuleData`, in no
+  checkout. `python tools/check_external_xslt.py` reaches them.
 - Most inputs exist in only one module. Transform and diff against this file (checked against the
   v1.5.4 install, 2026-10-08):
 

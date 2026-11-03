@@ -182,7 +182,7 @@ Warnings to treat as blocking for your change: `RANGED_LADDER_INVERSION`, `RANGE
 `CROSS_CULTURE_ARMOUR_INVERSION`, `ARMOUR_CLASS_TABLE_DRIFT`, `INCONSISTENT_ARMOUR_SLOT`. Compare the
 warning list before and after your edit; a new one is yours to fix or to report.
 
-The C# test suite (`dotnet test TAOM.Tests`) also reads troop and kit data (pools, enlistment kits,
+The C# test suite (`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`) also reads troop and kit data (pools, enlistment kits,
 shipped-data coverage). If your change touches troops, ask Mike to run it; a tree replacement left six
 of its tests red.
 

@@ -46,7 +46,7 @@ Never put counts nothing computes, incident narratives, or copies of another tie
 
 ## Skills
 
-The skill list is not re-sent after `/compact`; this index is. A SKILL.md is executable
+A SKILL.md is executable
 instructions: follow its phases in order.
 
 | When | Invoke | Gate |
@@ -71,6 +71,7 @@ instructions: follow its phases in order.
 | Patch, model or reflection bindings after an engine or patch change | the binding gate: `docs/reference/taleworlds-api-snapshot/README.md` | |
 | An architectural decision | `docs/adrs/000-template.md` | |
 | External repo, article or skill to adopt; UPSTREAM AHEAD banner, "review yotthani" | `/adopt-external`; `/upstream-review` | security-vet first |
+| A pull request from an outside contributor | `/review-outside-pr` | security review before any checkout or build |
 | After editing hooks, settings, MCP config or CLAUDE.md | `/security-scan` | skip for routine feature edits |
 | HARNESS RETRO DUE banner; "did that rule help" | `/harness-retro` | |
 | Repo-wide audit, "what next", handoff plans; execute, review, merge or resume a plans backlog | `/improve` | merge, push, issues and paid calls only on the maintainer's word |
@@ -103,7 +104,7 @@ the one-line note before each spawn are in `.claude/rules/model-effort-selection
 
 ## MCP and shell
 
-- Symbols: Serena. Item, troop and culture refs: the `taom-moduledata` MCP, or
+- Symbols: Grep. Item, troop and culture refs: the `taom-moduledata` MCP, or
   `python tools/validate_moduledata.py`. Files across modules: Read and Grep. Issues: the `gh` CLI.
 - MCP write tools bypass every PreToolUse gate (Serena's are denied): git goes through Bash, files
   through Edit and Write ([MCP servers](docs/reference/mcp-servers.md)).

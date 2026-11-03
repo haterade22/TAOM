@@ -25,7 +25,7 @@ TAOM is a single Bannerlord mod, so team compositions are based on **directory o
 | Role | Owns | Build/Verify Command |
 |------|------|---------------------|
 | Feature Dev | `Main/Features/{Name}/` | `dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=` |
-| Test Dev | `TAOM.Tests/` | `dotnet test TAOM.Tests` |
+| Test Dev | `TAOM.Tests/` | `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` |
 | XML/XSLT Dev | `Main/_Module/ModuleData/` | N/A (validated at runtime) |
 | TaleWorlds Researcher | Read-only (decompile DLLs) | `pwsh tools/taom-src.ps1 path <Type>` (ilspycmd fallback) |
 | Reviewer | Read-only | N/A |
@@ -59,7 +59,7 @@ pop a stash, stage explicit paths, reconstruct shared files in the index) are in
 
 ### Build Artifacts
 - **Never run `./build.ps1` from two agents simultaneously** — build output goes to `out/` and will conflict
-- Use `dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=` or `dotnet test TAOM.Tests` for isolated compilation during development
+- Use `dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=` or `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` for isolated compilation during development
 
 ---
 
@@ -88,7 +88,7 @@ registrations to the lead via message. Build with: dotnet build TAOM.sln -p:Disa
 You are a Test Developer for the TAOM Bannerlord mod. Read docs/ai-includes/tdd-enforcement.md
 and docs/ai-includes/testing-guide.md first. Your scope is TAOM.Tests/Features/PartySpeed/ only.
 Use MSTest + NSubstitute. Mock all adapters. 100% service/engine coverage required (ADR-008).
-Run tests with: dotnet test TAOM.Tests
+Run tests with: dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=
 ```
 
 ### 2. Research + Implementation
@@ -238,7 +238,7 @@ Rules:
   writer that replaces the old one
 
 Build: dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=
-Test: dotnet test TAOM.Tests
+Test: dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=
 ```
 
 ### TaleWorlds Researcher
@@ -306,7 +306,7 @@ Report findings to lead via message. You are read-only — do NOT edit files.
 
 | Problem | Solution |
 |---------|----------|
-| **Build contention** | Only one agent runs `./build.ps1` at a time. Use `dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=` or `dotnet test TAOM.Tests` for isolated compilation. |
+| **Build contention** | Only one agent runs `./build.ps1` at a time. Use `dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=` or `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` for isolated compilation. |
 | **IoC.cs conflicts** | Lead owns this file. Teammates report needed registrations via message to lead. |
 | **Adapter file conflicts** | Coordinate new adapter creation through lead. Only one agent adds to `Main/Adapters/` at a time. |
 | **Permission prompts** | Each teammate gets its own permission prompts in its own context. |

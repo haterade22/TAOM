@@ -1,6 +1,6 @@
 ---
 name: localize
-description: Propagate new player-facing text through TAOM's 12-language localization pipeline — wrap with {=KEY}, register the string, run the Claude translation tool, validate. Use after adding UI text or XSLT strings.
+description: Use after adding player-facing text in C#, data XML or XSLT. Wraps with {=KEY}, registers, seeds the 12 languages, validates. The paid translator runs only on the maintainer's word.
 argument-hint: [c#|xml-file|xslt]
 ---
 
@@ -11,7 +11,7 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 ## Case A — new C# text shown to the player
 1. Wrap the string: `new TextObject("{=taom_my_feature_label}My Feature")` (always `{=KEY}default` form).
 2. Register it: `python tools/harvest_literal_loc_keys.py --apply` lifts the default out of the literal into `taom_module_strings.xml` (or the feature's own file). Idempotent, so a hand-tuned row survives.
-3. Propagate: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply` (one language per run: repeat for each of BR CNs CNt DE FR IT JP KO PL RU SP TR; overrides in `tools/translation_overrides/<lang>.json` always win). **`--sync-ids` is not optional for a new key**: the translator substitutes by id, so without a seeded row the translation is paid for and discarded. When translation is deferred, seed the rows without the paid translate phase: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --seed-only --apply`, run per language. Without `--module TAOM` the module defaults to `all` and the run also writes the live Armory's language files (#1056).
+3. Seed: `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --seed-only --apply` (one language per run: repeat for each of BR CNs CNt DE FR IT JP KO PL RU SP TR; overrides in `tools/translation_overrides/<lang>.json` always win). **`--sync-ids` is not optional for a new key**: the translator substitutes by id, so without a seeded row the translation is paid for and discarded. Add a row to backlog issue #763 (source issue, keys, module), and close the feature issue once only translation remains; an issue body edit needs no ask. The paid run is the same command without `--seed-only`, and it needs the maintainer's word. Without `--module TAOM` the module defaults to `all` and the run also writes the live Armory's language files (#1056).
 
 ## Case B — new SOURCE XML file containing in-game text
 1. Add its row to `tools/_loc_sources.py` (the one ordered table the translator, template and name generators read; `tools/tests/test_loc_sources.py` fails until it matches the files).
@@ -28,7 +28,7 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 1. `git status` the source files first: the generator reads the working tree, other sessions' edits included.
 2. `python tools/generate_name_localization_strings.py --apply` (one pass; `--check` and `tools/tests` fail while a source is ahead of its generated file).
 3. A hero, NPC or culture key that two sites share with different English needs its own key first (`EveryNameKey_InTheNameGeneratorsSources_HasOneEnglishDefault`). Heroes' `text=` is saved with the hero, so give **both** sites new keys and retire the old one, or old saves show the other hero's text.
-4. `python tools/translate_with_claude.py --lang <L> --module TAOM --sync-ids --apply`, once per language.
+4. Seed per language, and add the #763 row, as in Case A step 3.
 5. A new kingdom, clan, culture or town name also needs its BR and IT grammar tag: `python tools/generate_name_tags.py --write`, then `python tools/name_tags.py --lang all --apply` ([name-grammar-tags.md](../../../docs/features/name-grammar-tags.md)).
 
 ## Tools
@@ -37,7 +37,7 @@ Get new player-facing text into all 12 supported languages (BR, CNs, CNt, DE, FR
 - `tools/translation_status.sh` — coverage report.
 
 ## Validate
-`dotnet test TAOM.Tests --filter "Infrastructure.Localization"`:
+`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter "Infrastructure.Localization"`:
 - `LanguageDataXmlTests`: one LanguageFile per English source in every language (`LanguageManifests_EveryEnglishSource_HasExactlyOneLanguageFile`), well-formed XML, no missing files.
 - `VanillaKeyOverrideTests` (LiveInstall): no TAOM language row replaces a vanilla key's translation outside its allowlist.
 - `LanguageTextIntegrityTests`: decoding damage and wrong-writing-system words (any non-Latin, non-CJK, non-Cyrillic letter, e.g. Devanagari, counts as foreign) in the rows and the cache.

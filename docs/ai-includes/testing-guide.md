@@ -659,7 +659,7 @@ public class CultureBonusServiceTests
 dotnet test
 
 # Run specific test project
-dotnet test TAOM.Tests/TAOM.Tests.csproj
+dotnet test TAOM.Tests/TAOM.Tests.csproj -p:DisableModuleCopy=true -p:ModuleId=
 
 # Run with verbose output
 dotnet test -v normal

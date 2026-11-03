@@ -834,9 +834,10 @@ public class ContextCapture_Patch
     }
 
     /// <summary>
-    /// Postfix: CRITICAL - Always cleanup thread-local storage.
+    /// Finalizer: CRITICAL - Always cleanup thread-local storage.
+    /// A Postfix does not run when the original throws.
     /// </summary>
-    public static void Postfix()
+    public static void Finalizer()
     {
         // MUST set to null to prevent data leaking to unrelated operations
         _currentContext = null;
@@ -879,7 +880,7 @@ public class ContextConsumer_Patch
 
 ### Critical Rules
 
-1. **Always Cleanup in Postfix**: Set thread-static fields to `null` in Postfix to prevent data leaking across unrelated operations
+1. **Always Cleanup in a Finalizer**: Set thread-static fields to `null` in a finalizer, never a Postfix: a Postfix does not run when the original throws, so state leaks across unrelated operations
 2. **Null Safety**: Consumer patches MUST check for null context before use
 3. **Thread Isolation**: `[ThreadStatic]` ensures each thread has its own copy (safe for parallel execution)
 4. **Minimal Scope**: Only use when patches MUST coordinate; prefer simpler patterns when possible

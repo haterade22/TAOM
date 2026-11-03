@@ -57,7 +57,7 @@ ALWAYS decompile the target method with `ilspycmd` (`pwsh tools/taom-src.ps1 pat
 - Patches are **thin entry points**: delegate ALL logic to a service, directly or through an `IOnXxx` hook interface when the patch needs a narrow seam or a test fake
 - Entry point files MUST be <150 lines (ADR-002)
 - Resolve services from IoC container, never instantiate directly
-- Use thread-local state pattern for multi-patch coordination
+- A prefix and finalizer on one method share `__state`. Patches on two different methods of one call chain share a `[ThreadStatic]`, cleared in a finalizer, never a Postfix
 
 ## Patch Organization
 - Place in `Main/Features/{FeatureName}/Hooks/`; a patch that names a TAOM.Client type goes in

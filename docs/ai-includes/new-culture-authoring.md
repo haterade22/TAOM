@@ -12,7 +12,7 @@ If you're creating a **net-new culture entry in `taom_spcultures.xml`** (the und
 1. **Armor**: enumerate Solus's mesh IDs from `.tpac` → write generator script → emit XML files → register `<culture>/` folder in `LOTRLOME_Armory/SubModule.xml`.
 2. **Troops**: lore-research → tier design on paper → write generator script → emit `troops_<culture>.xml` → register in `Main/_Module/SubModule.xml`.
 3. **Wire** the culture in `spcultures.xslt` (every CultureObject template/troop attribute), `taom_partyTemplates.xml` (9 standard templates), `VolunteerRecruitmentService.cs` (culture + optional settlement/clan pools), and add tests.
-4. **Validate** via `tools/validate_all_troop_refs.py`, then `/verify` → `/deep-review` → `/review-codex` → RCA + commit.
+4. **Validate** via `tools/validate_all_troop_refs.py`, then `/verify` → `/deep-review` → RCA + commit. `/review-codex` runs only when the maintainer asks for it (paid).
 5. **Expect 5–10 iteration commits** after the initial ship (renames, equipment swaps, balance tuning, settlement-specific recruitment, color schemes). That's normal — the first ship is a draft.
 
 ---
@@ -322,7 +322,7 @@ with open('Main/_Module/ModuleData/troops/troops_<culture>.xml') as f:
 
 # 3. C# compile + tests.
 dotnet build Main --no-restore
-dotnet test TAOM.Tests --no-build --filter "<Culture>Culture|<Culture>Settlement|<Culture>Clan"
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --no-build --filter "<Culture>Culture|<Culture>Settlement|<Culture>Clan"
 ```
 
 ---
@@ -333,9 +333,9 @@ dotnet test TAOM.Tests --no-build --filter "<Culture>Culture|<Culture>Settlement
 /verify quick           # build + git status
 /deep-review <culture>  # XML is code: Completeness, Data Flow, Design, XML Integrity (+ Standards, API Compat, Efficiency if C# changed)
                         # Fix all HIGH findings in-session (per .claude/skills/deep-review)
-/review-codex <culture> # Codex adversarial review in the background; its effort (and run time) sized to the change
-                        # Auto-resume on notification; verify each finding by reading source
 ```
+
+`/review-codex <culture>` is a paid call and runs only when the maintainer asks for it. Verify each finding by reading source.
 
 **Phase 3e RCA is mandatory** for every confirmed Codex finding (any severity, including LOW). Write to `docs/reviews/rca-<culture>-<date>.md`. Pattern: finding, why missed, preventive action, repeat-offender check.
 
@@ -377,7 +377,7 @@ After every iteration, re-run:
 ```bash
 python tools/generate_<culture>_troops.py --apply
 python tools/validate_all_troop_refs.py
-dotnet test TAOM.Tests --no-build --filter "<Culture>Culture"
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --no-build --filter "<Culture>Culture"
 ```
 
 Each iteration that touches the `VolunteerRecruitmentService` pool **must update the corresponding tests** — the roll-index → troop mapping is sensitive to entry order + cumulative weights. Failing to update tests after a pool change is the most common iteration regression.
