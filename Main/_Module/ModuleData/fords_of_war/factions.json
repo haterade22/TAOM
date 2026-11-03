@@ -239,7 +239,7 @@
         { "text": "{=TAOM_FOW_Trait_Mordor_Orcs}Orcs are very weak. Uruks and Numenoreans cost a lot.", "strength": false }
       ],
       "units": [
-        { "id": "orc_rabble", "troop": "fow_mordor_orc_recruit", "role": "Infantry", "packSize": 24, "level": 1, "eliteWeight": 1.0 },
+        { "id": "orc_rabble", "troop": "fow_mordor_orc_fighter", "role": "Infantry", "packSize": 24, "level": 11, "eliteWeight": 0.6 },
         { "id": "orc_impalers", "troop": "fow_mordor_orc_impaler", "role": "Spear", "packSize": 16, "level": 16, "eliteWeight": 0.6 },
         { "id": "orc_hunters", "troop": "fow_mordor_orc_hunter", "role": "Ranged", "packSize": 16, "level": 11, "eliteWeight": 0.6 },
         { "id": "uruk_warriors", "troop": "fow_mordor_uruk_warrior", "role": "Infantry", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
@@ -266,15 +266,15 @@
         {
           "fromMinute": 0,
           "units": [
-            { "troop": "fow_mordor_orc_recruit", "count": 10 },
-            { "troop": "fow_mordor_orc_lackey", "count": 4 },
+            { "troop": "fow_mordor_orc_fighter", "count": 10 },
+            { "troop": "fow_mordor_orc_impaler", "count": 4 },
             { "troop": "fow_mordor_orc_hunter", "count": 3 }
           ]
         },
         {
           "fromMinute": 10,
           "units": [
-            { "troop": "fow_mordor_orc_fighter", "count": 10 },
+            { "troop": "fow_mordor_orc_warrior", "count": 10 },
             { "troop": "fow_mordor_orc_impaler", "count": 4 },
             { "troop": "fow_mordor_orc_hunter", "count": 3 }
           ]
@@ -363,18 +363,18 @@
       "culture": "rivendell",
       "aiBuyCycle": ["swordguard", "marksmen", "up:missile_damage", "swordguard", "marksmen", "blademasters", "up:melee_armour", "marksmen", "lancers", "golden_flower"],
       "upgradeCost": { "missile_damage": 0.85, "melee_armour": 0.85 },
-      "feats": { "towerRange": 1.5, "heroSlotBonus": 1, "unitCapBonus": -150 },
+      "feats": { "towerRange": 1.5, "heroSlotBonus": 1, "unitCapBonus": -150, "waveInterval": 1.5 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Elves_FarSight}Far Sight: elven towers fire 50% further than any others.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Rivendell_Heroes}All three heroes may fight at once.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Elves_Few}Only 150 troops in the field, and only five kinds.", "strength": false }
       ],
       "units": [
-        { "id": "swordguard", "troop": "fow_imladris_swordguard", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
-        { "id": "marksmen", "troop": "fow_imladris_marksman", "role": "Ranged", "packSize": 4, "level": 36, "eliteWeight": 1.0 },
-        { "id": "blademasters", "troop": "fow_imladris_blademaster", "role": "Infantry", "packSize": 3, "level": 41, "eliteWeight": 1.0 },
-        { "id": "lancers", "troop": "fow_noldorin_lancer", "role": "Cavalry", "packSize": 2, "level": 46, "eliteWeight": 1.0 },
-        { "id": "golden_flower", "troop": "fow_rivendell_knight_golden_flower", "role": "Infantry", "packSize": 2, "level": 51, "eliteWeight": 1.0 }
+        { "id": "swordguard", "troop": "fow_imladris_swordguard", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.25 },
+        { "id": "marksmen", "troop": "fow_imladris_marksman", "role": "Ranged", "packSize": 4, "level": 36, "eliteWeight": 1.25 },
+        { "id": "blademasters", "troop": "fow_imladris_blademaster", "role": "Infantry", "packSize": 3, "level": 41, "eliteWeight": 1.25 },
+        { "id": "lancers", "troop": "fow_noldorin_lancer", "role": "Cavalry", "packSize": 2, "level": 46, "eliteWeight": 1.25 },
+        { "id": "golden_flower", "troop": "fow_rivendell_knight_golden_flower", "role": "Infantry", "packSize": 2, "level": 51, "eliteWeight": 1.25 }
       ],
       "heroes": [
         { "id": "lord_R1_1", "price": 2400 },
@@ -385,22 +385,22 @@
         {
           "fromMinute": 0,
           "units": [
-            { "troop": "fow_imladris_recruit", "count": 3 },
-            { "troop": "fow_rivendell_militia_archer", "count": 2 }
+            { "troop": "fow_imladris_recruit", "count": 2 },
+            { "troop": "fow_rivendell_militia_archer", "count": 1 }
           ]
         },
         {
           "fromMinute": 10,
           "units": [
-            { "troop": "fow_imladris_infantry", "count": 3 },
-            { "troop": "fow_imladris_bowman", "count": 2 }
+            { "troop": "fow_imladris_infantry", "count": 2 },
+            { "troop": "fow_imladris_bowman", "count": 1 }
           ]
         },
         {
           "fromMinute": 20,
           "units": [
-            { "troop": "fow_imladris_swordguard", "count": 3 },
-            { "troop": "fow_imladris_archer", "count": 2 }
+            { "troop": "fow_imladris_swordguard", "count": 2 },
+            { "troop": "fow_imladris_archer", "count": 1 }
           ]
         }
       ]

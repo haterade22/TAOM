@@ -199,6 +199,7 @@ public class ShippedFordsRosterTests
             Assert.IsTrue(others.All(f => f.FeatsOrNone.UnitCapBonus > elf.FeatsOrNone.UnitCapBonus), elf.FactionId + " fewest troops");
             Assert.IsTrue(others.All(f => f.Units.Count + (f.Rotation == null ? 0 : 4) > elf.Units.Count), elf.FactionId + " fewest kinds on show");
             Assert.IsTrue(elf.Units.All(o => o.PackSize <= 5), elf.FactionId + " a low count per troop");
+            Assert.IsTrue(elf.FreeWaves.All(w => w.Units.Sum(u => u.Count) <= 5), elf.FactionId + " a small free wave");
         }
 
         var rivendell = Shipped("rivendell");
@@ -248,7 +249,7 @@ public class ShippedFordsRosterTests
 
         Assert.IsTrue(others.All(f => f.FeatsOrNone.Income < erebor.Income));
         Assert.IsTrue(others.All(f => f.FeatsOrNone.TowerRegen < erebor.TowerRegen));
-        Assert.IsTrue(others.All(f => f.FeatsOrNone.WaveInterval < erebor.WaveInterval));
+        Assert.IsTrue(others.Where(f => f.FeatsOrNone.TowerRange <= 1f).All(f => f.FeatsOrNone.WaveInterval < erebor.WaveInterval), "the slowest waves but for the elves' few");
     }
 
     [TestMethod]
@@ -309,6 +310,18 @@ public class ShippedFordsRosterTests
             Assert.AreEqual(defaults[i].StepPerLevel, shipped[i].StepPerLevel, 0.0001f);
             CollectionAssert.AreEqual(defaults[i].Prices.ToArray(), shipped[i].Prices.ToArray());
         }
+    }
+
+    [TestMethod]
+    public void Rivendell_HasTheSmallestFreeWaves_AndMordorsOrcsCanHurtArmour()
+    {
+        var rivendell = Shipped("rivendell");
+        var mordor = Shipped("mordor");
+
+        Assert.IsTrue(rivendell.FreeWaves.All(w => w.Units.Sum(u => u.Count) == 3), "evidence: 2027 orcs fell to Rivendell's free waves");
+        Assert.AreEqual(1.5f, rivendell.FeatsOrNone.WaveInterval);
+        CollectionAssert.DoesNotContain(mordor.FreeWaves.SelectMany(w => w.Units).Select(u => u.TroopId).ToList(), "fow_mordor_orc_recruit", "an L1 orc's blow does nothing to armour");
+        Assert.AreEqual("fow_mordor_orc_fighter", mordor.Units.Single(o => o.OfferId == "orc_rabble").TroopId);
     }
 
     [TestMethod]
