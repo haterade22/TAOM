@@ -2,10 +2,12 @@
 # The full-history scan of 2,735 commits found 19 generic-api-key matches and no real secret:
 # save-data key constants ("_taom_fire_and_tribute_v1"), localization ids that contain "key"
 # in translation caches and feature docs, and a variable in vendored BCL code.
+# Added 2026-11-02: the test constant HitKey = "S/Cut/tip0/pas0/alt0/arm0/mnt0/hit", a probe key.
 # Format: <commit>:<file>:<rule>:<line>. Add a line only after reading the match.
 066dcaf01ed6ac62a561097d09e067a2a8069fa7:Dependencies/ThirdParty/Harmony/System.Buffers/TlsOverPerCoreLockedStacksArrayPool.cs:generic-api-key:303
 0bd6abf330bbe8a605fdfef459ecdbb36aa8614d:tools/translation_cache/it.json:generic-api-key:5905
 0bd6abf330bbe8a605fdfef459ecdbb36aa8614d:tools/translation_cache/pl.json:generic-api-key:5913
+1bb0c4b0aa205882ca9f81e9aee4f91adaca153d:TAOM.Tests/Features/FordsOfWar/Diagnostics/FordsRunReportTests.cs:generic-api-key:949
 203f7b1adc71417d93f1272488b53cde98c373e7:tools/translation_cache/fr.json:generic-api-key:3832
 203f7b1adc71417d93f1272488b53cde98c373e7:tools/translation_cache/it.json:generic-api-key:3677
 203f7b1adc71417d93f1272488b53cde98c373e7:tools/translation_cache/it.json:generic-api-key:4267

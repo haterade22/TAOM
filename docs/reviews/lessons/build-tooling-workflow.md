@@ -4532,6 +4532,18 @@ run from a subfolder or outside the repo reported "no leaks" with exit 0.
   file that a CR-intolerant tool reads.
 - **Source:** `docs/reviews/rca-quality-gates-2026-10-26.md` findings 1 to 4, 6 and 11 (#1020).
 
+### Compare a repo path from the disk without case
+
+The Gauntlet stretch gate looked up a path from `Directory.EnumerateFiles` in a literal baseline with
+an ordinal comparer. Git tracks `GUI/PreFabs`, the main checkout holds `GUI/Prefabs`, and the worktrees
+hold `GUI/PreFabs`, so the gate passed in a worktree and failed on the main checkout with five false
+offenders. `core.ignorecase` is true, so `git status` shows nothing.
+- **Why missed:** the state list in the lesson above names line endings, new and deleted files, a
+  non-ASCII path, a subfolder, a missing tool and an empty input, but not path case.
+- **Prevent:** a key built from a disk path compares with `OrdinalIgnoreCase`. Run a new path-keyed
+  gate on the main checkout as well as in a worktree.
+- **Source:** [rca-gauntlet-ratchet-case-2026-11-03.md](../rca-gauntlet-ratchet-case-2026-11-03.md) finding 1.
+
 ### A gate checked only against the case it was written for misses the history it guards (#1017, 2026-10-26)
 
 The first `check_mcm_default_flips.py` compared the settings against one release tag, so every flip that had shipped earlier was invisible, and it compared constant defaults as text, so a changed constant passed. Rebuilt to compare against every reachable release tag and to resolve constants, it found nine more settings.

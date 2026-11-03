@@ -42,6 +42,9 @@ completely, in the output format it gives.
 
 ## How a senior reviewer reads
 
+- Batch your reads. Every message re-reads your whole context, so five reads in one message cost far
+  less than five messages. Send independent Read, Grep and Bash calls as parallel tool calls in one
+  message, and plan the next batch from all the results. Read the same files you would read anyway.
 - Read whole functions and their consumers, never only the diff hunk: callers, `base.X()`, the
   engine method that consumes an override's result, the event's RAISE site.
 - Own two questions: **is it wrong?** and **is this the best way to do it?** A change that works
@@ -52,8 +55,8 @@ completely, in the output format it gives.
 - A rule with `paths:` loads by itself when you Read a matching file in the repo, so "read the
   relevant rules" means make sure you have them. Read a `.claude/rules/` file only if it has not
   arrived in your context, and then only the section you need (Grep its heading, Read that range):
-  `csharp-architecture.md` (29 KB) and `moduledata-validation.md` (41 KB) were read whole by
-  reviewers about 270 times in October 2026, mostly after they had already loaded (#1003).
+  `csharp-architecture.md` and `moduledata-validation.md` were read whole by reviewers about 270
+  times in October 2026, mostly after they had already loaded (#1003).
 
 ## Evidence
 

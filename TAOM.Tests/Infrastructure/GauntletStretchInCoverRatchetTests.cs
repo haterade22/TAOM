@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -21,7 +22,8 @@ public class GauntletStretchInCoverRatchetTests
 {
     private static readonly string[] Grammar = { "Prefab", "Window", "Children", "ItemTemplate" };
 
-    private static readonly Dictionary<string, int> Known = new()
+    // Ignore case: git tracks the folder as PreFabs, and a checkout can hold it on disk as Prefabs.
+    private static readonly Dictionary<string, int> Known = new(StringComparer.OrdinalIgnoreCase)
     {
         ["Main/_Module/GUI/PreFabs/MomentumView/MomentumView.xml"] = 5,
         ["Main/_Module/GUI/PreFabs/CareerSystem/CareerScreen.xml"] = 3,
@@ -36,7 +38,7 @@ public class GauntletStretchInCoverRatchetTests
         var root = RepoPaths.RepoPath("Main", "_Module", "GUI");
         var repo = RepoPaths.RepoPath();
         var failures = new List<string>();
-        var seen = new HashSet<string>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var scanned = 0;
         foreach (var file in Directory.EnumerateFiles(root, "*.xml", SearchOption.AllDirectories))
         {

@@ -25,7 +25,7 @@ executes it.
 `→ fast-reader (Haiku/low): repo-wide search`.
 
 **Mechanics:** an agent definition sets `model:` and `effort:`; a spawn overrides them with the
-Agent tool's `model` and `effort` parameters (pass both, since effort precedence is undocumented).
-Never pass either to `deep-reviewer`, which pins Opus 5.5 at max for `/deep-review`. Built-in
+Agent tool's `model` and `effort` parameters. Never pass `model` to `deep-reviewer`, and pass its
+`effort` only as `/deep-review`'s tier rule says. Built-in
 agents (Explore, Plan, general-purpose) carry no tier and run on the main session's model: name a
 `model` on every such spawn.
