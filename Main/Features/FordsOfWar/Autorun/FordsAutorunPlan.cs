@@ -45,6 +45,9 @@ internal sealed class FordsAutorunPlan
     /// <summary>Wall seconds after the start at which the match is ended whatever the mission clock says.</summary>
     public double WallLimitSeconds { get; internal init; } = DefaultWallLimitSeconds;
 
+    /// <summary>Live seconds at which to save a picture of the screen into the out folder, in rising order; none by default.</summary>
+    public IReadOnlyList<double> ScreenshotSeconds { get; internal init; } = Array.Empty<double>();
+
     /// <summary>The folder the done and status files are written to.</summary>
     public string OutFolder { get; internal init; } = "";
 

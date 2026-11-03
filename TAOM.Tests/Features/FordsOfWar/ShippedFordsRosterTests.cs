@@ -5,6 +5,11 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
+using TAOM.Core.Infrastructure;
+using TAOM.Core.Logging;
+using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Tests.Features.FordsOfWar;
 
@@ -85,6 +90,69 @@ public class ShippedFordsRosterTests
             var id = (string)troop.Attribute("id")!;
             Assert.IsNotNull(troop.Element("face"), id);
             Assert.IsTrue(troop.Descendants("EquipmentRoster").Any(), id);
+        }
+    }
+
+    private static FordsConfigCatalog Catalog()
+    {
+        var paths = Substitute.For<IPathService>();
+        paths.ModuleDataPath.Returns(Path.Combine(ModuleRoot, "ModuleData"));
+        return new FordsConfigCatalog(paths, Substitute.For<IModLogger>());
+    }
+
+    [TestMethod]
+    public void EveryFaction_HasFeatsAndSaysWhatItIsGoodAndBadAt()
+    {
+        foreach (var faction in Catalog().Factions)
+        {
+            Assert.IsNotNull(faction.Feats, faction.FactionId);
+            Assert.IsTrue(faction.Traits!.Any(t => t.Strength), faction.FactionId + " strength");
+            Assert.IsTrue(faction.Traits!.Any(t => !t.Strength), faction.FactionId + " weakness");
+        }
+    }
+
+    [TestMethod]
+    public void Rohan_IsMostlyRiders_AndItsRidersBarelyHurtTowers()
+    {
+        Assert.IsTrue(Catalog().TryGetFaction("rohan", out var rohan));
+
+        var mounted = rohan.Units.Count(u => u.Role == UnitRole.Cavalry || u.Role == UnitRole.HorseArcher);
+
+        Assert.IsTrue(mounted > rohan.Units.Count / 2, $"{mounted} of {rohan.Units.Count}");
+        Assert.IsTrue(rohan.Feats!.MountedDamageToTowers < 1f);
+    }
+
+    [TestMethod]
+    public void Gondor_RotatesRegionsOfFourOffers_EverySlotFixed_OnAThirtySecondTimer()
+    {
+        Assert.IsTrue(Catalog().TryGetFaction("gondor", out var gondor));
+
+        var rotation = gondor.Rotation!;
+
+        Assert.AreEqual(30f, rotation.Seconds);
+        Assert.IsTrue(rotation.CallFee > 0);
+        Assert.IsTrue(rotation.Regions.Count >= 8, rotation.Regions.Count + " regions");
+        foreach (var region in rotation.Regions)
+            Assert.AreEqual(4, region.Units.Count, region.Id);
+    }
+
+    [TestMethod]
+    public void Mordor_CallsCreaturesOnAThirtySecondTimer_AndAtMostOneOfThemPerKey()
+    {
+        Assert.IsTrue(Catalog().TryGetFaction("mordor", out var mordor));
+
+        Assert.AreEqual(30f, mordor.Creatures!.CooldownSeconds);
+        Assert.IsTrue(mordor.Creatures.Offers.Count > 0 && mordor.Creatures.Offers.Count <= 4);
+        Assert.IsTrue(mordor.Feats!.UnitCapBonus > 0);
+    }
+
+    [TestMethod]
+    public void OfferIds_AreUniqueInAFaction_SoABuyAlwaysFindsItsOffer()
+    {
+        foreach (var faction in Catalog().Factions)
+        {
+            var repeats = faction.AllOffers.GroupBy(o => o.OfferId).Where(g => g.Count() > 1).Select(g => g.Key).ToArray();
+            CollectionAssert.AreEqual(Array.Empty<string>(), repeats, faction.FactionId);
         }
     }
 

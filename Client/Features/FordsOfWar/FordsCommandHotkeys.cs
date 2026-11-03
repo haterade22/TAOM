@@ -37,5 +37,15 @@ internal static class FordsCommandHotkeys
             vm.SetOrder(LaneOrder.FallBack);
         if (input.IsKeyPressed(InputKey.V))
             vm.SetOrder(LaneOrder.Seize);
+        if (input.IsKeyPressed(InputKey.R))
+            vm.ToggleRegionPicker();
+        if (input.IsKeyPressed(InputKey.G))
+            vm.CallCreature(0);
+        if (input.IsKeyPressed(InputKey.B))
+            vm.CallCreature(1);
+        if (input.IsKeyPressed(InputKey.N))
+            vm.CallCreature(2);
+        if (input.IsKeyPressed(InputKey.M))
+            vm.CallCreature(3);
     }
 }

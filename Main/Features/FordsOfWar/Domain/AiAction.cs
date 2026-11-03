@@ -13,4 +13,6 @@ internal sealed record AiAction(AiActionKind Kind, int Lane, string Id, LaneOrde
     public static AiAction Buyback(string heroId) => new(AiActionKind.Buyback, -1, heroId);
 
     public static AiAction SetOrder(int lane, LaneOrder order) => new(AiActionKind.SetOrder, lane, "", order);
+
+    public static AiAction CallCreature(int lane, string offerId) => new(AiActionKind.CallCreature, lane, offerId);
 }

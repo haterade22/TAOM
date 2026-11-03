@@ -12,4 +12,9 @@ public sealed class FordsFeedLineVM : FordsViewModel
 
     [DataSourceProperty]
     public string Text { get; }
+
+    private float _age;
+
+    /// <summary>Adds to the line's age and returns it.</summary>
+    internal float Age(float dt) => _age += dt;
 }

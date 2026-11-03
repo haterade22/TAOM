@@ -14,6 +14,7 @@ internal sealed partial class FordsMatch
     {
         _slotsById.TryGetValue(slot, out var commander);
         var side = commander?.Side ?? MatchSide.West;
+        _factions.TryGetValue(side, out var faction);
         var gold = _ledger.Balance(slot);
         var elapsed = _clock.Elapsed;
 
@@ -46,7 +47,29 @@ internal sealed partial class FordsMatch
         return new MatchView(slot, side, _clock.Phase, elapsed, gold, _config.Lanes.AssaultThreshold,
             commander == null ? 0 : Math.Max(0, _config.Heroes.MaxAlivePerSide - _heroes.AliveCount(side)),
             commander == null ? new List<int>() : commander.Lanes.ToList(),
-            lanes, keeps, heroes, unitOffers, heroOffers, points, _winner);
+            lanes, keeps, heroes, unitOffers, heroOffers, points, _winner, faction?.FactionId ?? "", faction?.Traits,
+            commander == null ? null : RegionViewOf(side, gold), commander == null ? null : CreatureViewOf(slot, side, gold),
+            (int)Math.Round(_config.Economy.IncomePerMinute * (faction?.FeatsOrNone.Income ?? 1f)), faction?.Name ?? "",
+            _layout.Camps.Select(c => new MatchView.CampView(c.Id, _camps.Alive(c.Id), c.Reward)).ToList(), _config.Lanes.OrderCooldownSeconds);
+    }
+
+    private MatchView.RegionView? RegionViewOf(MatchSide side, int gold)
+    {
+        if (!_decks.TryGetValue(side, out var deck))
+            return null;
+
+        return new MatchView.RegionView(deck.Current.Id, deck.Current.Name, deck.SecondsLeft, deck.TotalSeconds, deck.Next.Id, deck.Next.Name, deck.CallFee,
+            gold >= deck.CallFee, deck.Regions.Select(r => new MatchView.RegionChoiceView(r.Id, r.Name)).ToList());
+    }
+
+    private MatchView.CreatureCallView? CreatureViewOf(int slot, MatchSide side, int gold)
+    {
+        if (!_factions.TryGetValue(side, out var faction) || faction.Creatures == null)
+            return null;
+
+        var offers = faction.Creatures.Offers.Where(o => !_lostPacks.Contains((side, o.OfferId)))
+            .Select(o => new MatchView.UnitOfferView(o.OfferId, o.TroopId, o.Role, o.PackSize, o.PackPrice, gold >= o.PackPrice)).ToList();
+        return new MatchView.CreatureCallView(CreatureCooldownLeft(slot), faction.Creatures.CooldownSeconds, offers);
     }
 
     private MatchView.LaneView LaneViewOf(MatchSide side, int lane, CommanderSlot? commander, float now)

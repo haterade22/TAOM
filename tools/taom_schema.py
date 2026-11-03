@@ -1192,6 +1192,10 @@ class Validator:
             "the goblin mountain spider rider's second rung, same open gap as "
             "taom_spider_creature. Delete with the base entry"
         ),
+        "fow_goblin_spider_rider": (
+            "Fords of War's copy of goblin_spider_rider, same open gap as taom_spider_creature. "
+            "Delete with the base entry"
+        ),
         # Creature Bandits (#692): harnessless BY DESIGN, unlike the Spider Rider rows above. Patch93 passes this
         # troop's HorseHarness slot to Mission.SpawnMonster, which equips it on the riderless spider (v1.5.3
         # Mission.cs:4448-4456), so a harness would saddle every wild spider. The fallback husk (swap declined)

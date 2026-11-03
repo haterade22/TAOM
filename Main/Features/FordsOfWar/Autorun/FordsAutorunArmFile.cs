@@ -15,6 +15,7 @@ internal static class FordsAutorunArmFile
         double liveSeconds = FordsAutorunPlan.DefaultLiveSeconds, liveWait = FordsAutorunPlan.DefaultLiveWaitSeconds, wallLimit = FordsAutorunPlan.DefaultWallLimitSeconds;
         var quit = false;
         var westAi = false;
+        var screenshots = new List<double>();
 
         foreach (var raw in text.TrimStart('\uFEFF').Split('\n'))
         {
@@ -43,6 +44,7 @@ internal static class FordsAutorunArmFile
                 case "wall_limit_seconds": wallLimit = Seconds(key, value, wallLimit, warnings); break;
                 case "quit": quit = Flag(key, value, quit, warnings); break;
                 case "west_ai": westAi = Flag(key, value, westAi, warnings); break;
+                case "screenshots": screenshots = SecondsList(key, value, warnings); break;
                 default: warnings.Add("unknown key '" + key + "' ignored"); break;
             }
         }
@@ -57,7 +59,7 @@ internal static class FordsAutorunArmFile
         return new FordsAutorunPlan
         {
             Armed = true, Warnings = warnings, ArmPath = path, West = west, East = east, Ai = ai, Scene = scene, OutFolder = outFolder!,
-            LiveSeconds = liveSeconds, LiveWaitSeconds = liveWait, WallLimitSeconds = wallLimit, QuitWhenDone = quit, WestAi = westAi,
+            LiveSeconds = liveSeconds, LiveWaitSeconds = liveWait, WallLimitSeconds = wallLimit, QuitWhenDone = quit, WestAi = westAi, ScreenshotSeconds = screenshots,
         };
     }
 
@@ -81,6 +83,21 @@ internal static class FordsAutorunArmFile
 
         warnings.Add(key + "='" + value + "' is not a positive number; using " + FordsAutorunPlan.Num(fallback));
         return fallback;
+    }
+
+    private static List<double> SecondsList(string key, string value, List<string> warnings)
+    {
+        var seconds = new List<double>();
+        foreach (var part in value.Split(','))
+        {
+            if (double.TryParse(part.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out var number) && number > 0.0 && !double.IsInfinity(number))
+                seconds.Add(number);
+            else
+                warnings.Add(key + " ignored '" + part + "': not a positive number");
+        }
+
+        seconds.Sort();
+        return seconds;
     }
 
     private static bool Flag(string key, string value, bool fallback, List<string> warnings)

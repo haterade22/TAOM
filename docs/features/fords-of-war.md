@@ -318,12 +318,36 @@ of every unit. Fresh waves spawn at the base into the same formation, so the mea
   stood, reads as `branch=AttackTower ... cmd=MoveTo sent=(x,y)`. The line is a `[FordsOfWar][LaneState]` line, at most once per
   5 mission seconds per side and lane; a stream with no decision yet writes none.
 
+## Factions
+
+Each faction plays differently, in four ways: which troops it offers, a skill factor on its copies, its feats, and sometimes a mechanic. Everything
+is data in `factions.json` and `fords_troops.xml`. The numbers below are first values, not measured balance.
+
+| Faction | Strength | Weakness | Feats | Mechanic |
+|---|---|---|---|---|
+| Rohan | The best cavalry: six of eight offers are riders | Weak foot and archers (skills x0.7); riders hurt towers little | `mountedDamageToTowers` 0.25, `towerFireRate` 0.75 | None yet |
+| Gondor | Every regional specialist; strong towers | Only two offers are always there | `towerFireRate` 1.25, `towerHitPoints` 1.2 | Call of the Regions |
+| Mordor | Most bodies: huge cheap orc packs and a larger army | Orcs very weak (skills x0.6); elites cost a lot | `unitCapBonus` 100, `waveInterval` 0.75 | Creature call |
+| Isengard | Heavy Uruk-hai; tower killers; waves that grow every 5 minutes | Fewer troops; only warg riders for cavalry | `damageToTowers` 1.5, `unitCapBonus` -50 | None yet |
+
+- **Feats** (`FactionFeats`): `towerFireRate` (0 keeps towers silent), `towerHitPoints`, `damageToTowers`, `mountedDamageToTowers` (0 means no damage at all, reason
+  `FactionFeat`), `waveInterval`, `unitCapBonus` (the lane cap rises by this over the lane count), `income`, `bounty`. Each factor is relative to 1. A new feat is one
+  property, one line in the reader and one use in a rule.
+- **Traits** (`factions.json` `traits`): the lines that tell the player a faction's strengths and weaknesses. The panel shows them during the countdown.
+- **Call of the Regions** (`rotation`, `RegionDeck`): a band of four offers from one region fills buy slots F3 to F6 for `seconds` (30), then the next region's band
+  takes the same slots. Slots never move. The deck is shuffled: each region comes once per cycle, and a new cycle never starts with the region just shown. The panel
+  names the next region. `callFee` (150 gold) shows a chosen region at once and restarts the timer (key R opens the list). The region already showing costs nothing.
+  The AI buys from whatever is showing and does not pay the fee.
+- **Creature call** (`creatures`, `FordsMatch.TryCallCreature`): the commander picks a creature (keys G, B, N, M) and pays for it, which queues it in the selected lane like
+  a bought pack and starts one shared timer of `cooldownSeconds` (30). The list starts with warg riders, goblin spider riders, a hill troll and an armored cave troll. The spider
+  is the ridden one: a free-roaming spider only works as a campaign bandit today (`creature-bandits.md`). The AI calls the dearest creature its gold reaches whenever the timer is ready.
+
 ## The roster
 
-`fords_of_war/fords_troops.xml` holds the mode's own troops: one `fow_<campaign id>` copy of each of the 51 troops `factions.json` and
-`maps.json` name. A balance edit there can never reach a campaign, because `SubModule.xml` loads the file for CustomGame only. A script
-made the copies once on 2026-11-02, so the file is now the source and nothing regenerates it. At that date every copy had the same armour,
-weapons and skills as its campaign troop.
+`fords_of_war/fords_troops.xml` holds the mode's own troops: one `fow_<campaign id>` copy of each troop `factions.json` and `maps.json` name. A balance edit there can never
+reach a campaign, because `SubModule.xml` loads the file for CustomGame only. A script made the copies on 2026-11-02, so the file is now the source and nothing regenerates it.
+That script took each faction's offers from low or high campaign troops, multiplied skills by faction (Rohan riders up, Rohan foot and Mordor orcs down, Uruks and Numenoreans
+up), and took the spear off the King's Riders so they fight with sword and shield.
 
 - **Tune here:** `<skills>` and `<Equipments>` in `fords_troops.xml`; `packSize`, `price`, `level` and `eliteWeight` in `factions.json`. A test
   holds an offer's `level` equal to the copy's `level`. `eliteWeight` no longer follows the campaign's `troop_weights.xml`.
@@ -332,8 +356,27 @@ weapons and skills as its campaign troop.
 - **What differs:** `is_obsolete="true"` keeps a copy out of the Custom Battle picker (`ArmyCompositionGroupVM` lists `IsSoldier && !IsObsolete`,
   and Custom Battle loads CustomGame data too). No copy has upgrade targets, because nothing levels up in a match.
 - **Names:** a copy keeps its campaign troop's `{=key}`, so the translation follows. A new name needs a new key.
-- **Heroes** are not copied: `factions.json` still names the campaign's lords, whose signature abilities key on their ids.
+- **Heroes** are not copied: `factions.json` still names the campaign's lords.
 - **Gates:** `ShippedFordsRosterTests`. `validate_moduledata.py` checks the copies' item references, because it scans every ModuleData XML file.
+
+## The command panel
+
+`FordsCommand.xml` follows the research in `docs/features/fords-of-war/hud-research.md`. The middle of the screen stays clear and state sits at the edges.
+
+| Zone | Holds | Why |
+|---|---|---|
+| Top strip, centre | Faction name, both keeps' bars with hit points, the clock | Slim and always visible; a bar reads faster than a number |
+| Battle board, bottom left | One row per lane that also selects it: tower bars from West's inner to East's inner, order, unit counts. Then capture points and camps | One place for the state of the battle; the row scopes the buy grid and the orders |
+| Command deck, bottom centre | The faction's mechanic row, gold and income, a fixed 4 by 2 buy grid (F1 to F8), 2 by 2 orders (Z X C V) | Slots never move, so key position equals button position |
+| Heroes, bottom right | One button per hero: state and what it costs | High value and rarely pressed |
+| Feed, top right | At most 4 lines, each gone after 12 s, each with its own backing | News must read over the battle and leave |
+| Intro, centre | During the countdown: the faction, its traits and the keys | A player learns the faction before the first decision |
+
+Every button has a key letter on its face and a dimmed disabled state; a price turns red when the gold does not reach it; an order on cooldown shows the seconds and a shade that
+drains. A faction changes only the accent colour and name, never the layout, so muscle memory carries over (`FordsFactionStyle`).
+
+**A Gauntlet trap:** a child with `StretchToParent` inside a `CoverChildren` parent makes that parent fill the screen. A visibility binding on a widget with its own `DataSource` reads that
+data source, so a list's visibility goes on a wrapper.
 
 ## Camps and the Seize order
 
@@ -757,6 +800,8 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
 ## Changelog
 
 - 2026-11-02: the mode has its own roster, `fords_troops.xml`, loaded for CustomGame only.
+- 2026-11-02: four factions that play differently: feats, traits, Gondor's Call of the Regions with a fee, Mordor's creature call, rosters built for each. New command panel. The
+  autorun can save pictures of the screen.
 - 2026-11-02: neutral camps spawn, with a ring, and pay when cleared; the Seize order for lanes, used by person and AI; the hand-built map
   with real towers, bowmen, lane IDs and housekeeping; lanes charge only their own lane's foes; towers fire arrows and javelins.
 - 2026-11-01: last review findings: check 9's ladder counts blows only on the stream's ordered tower; `bypass` is measured from the

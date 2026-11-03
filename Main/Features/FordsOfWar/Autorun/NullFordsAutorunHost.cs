@@ -20,6 +20,10 @@ internal sealed class NullFordsAutorunHost : IFordsAutorunHost
     {
     }
 
+    public void TakeScreenshot(string name)
+    {
+    }
+
     public void Quit()
     {
     }

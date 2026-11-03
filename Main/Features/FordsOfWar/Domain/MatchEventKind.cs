@@ -10,4 +10,6 @@ internal enum MatchEventKind
     PointCaptured,
     CampCleared,
     PackBought,
+    RegionCalled,
+    CreatureCalled,
 }

@@ -8,7 +8,9 @@ namespace TAOM.Features.FordsOfWar;
 
 /// <summary>
 /// factions.json: <c>factions</c> is an object keyed by faction id, each with a display <c>name</c> (a <c>{=TAOM_FOW_...}English</c>
-/// key), a <c>culture</c> id, <c>units</c>, <c>heroes</c> and <c>freeWaves</c>. A unit offer names its price outright, or a
+/// key), a <c>culture</c> id, <c>units</c>, <c>heroes</c> and <c>freeWaves</c>, and optionally <c>feats</c> (factors that change the rules for
+/// this faction), <c>traits</c> (the lines that tell a player about them), <c>rotation</c> (regions whose bands show in turn) and <c>creatures</c>
+/// (a call on a shared timer). A unit offer names its price outright, or a
 /// <c>level</c> (and optional <c>eliteWeight</c>) that <see cref="TroopPricing"/> turns into one; a cavalry or horse archer role
 /// prices as mounted. A bad entry is skipped with one warning that names the faction and the entry; a faction left with no unit
 /// offer is skipped. Whether a troop or hero id exists is not checked here (the shipped-config test does it).
@@ -83,8 +85,127 @@ internal static class FordsFactionsReader
         }
 
         name = FordsConfigScope.Text(f["name"]) ?? id;
-        faction = new FactionCatalog(id, culture, units, ReadHeroes(id, f["heroes"], s), ReadFreeWaves(id, f["freeWaves"], s));
+        faction = new FactionCatalog(id, culture, units, ReadHeroes(id, f["heroes"], s), ReadFreeWaves(id, f["freeWaves"], s),
+            ReadFeats(id, f["feats"], s), ReadTraits(id, f["traits"], s), ReadRotation(id, f["rotation"], s), ReadCreatures(id, f["creatures"], s), name);
         return true;
+    }
+
+    private static FactionFeats? ReadFeats(string faction, JToken? token, FordsConfigScope s)
+    {
+        if (token == null)
+            return null;
+        if (!(token is JObject o))
+        {
+            s.Warn($"faction '{faction}': 'feats' is not an object; ignored");
+            return null;
+        }
+
+        float Factor(string key, float fallback)
+        {
+            if (o[key] == null)
+                return fallback;
+            if (FordsConfigScope.TryFloat(o[key], 0f, 100f, out var value, out var why))
+                return value;
+            s.Warn($"faction '{faction}' feat '{key}' {why}; using {fallback}");
+            return fallback;
+        }
+
+        var cap = 0;
+        if (o["unitCapBonus"] != null && !FordsConfigScope.TryInt(o["unitCapBonus"], -1000, 1000, out cap, out var capWhy))
+        {
+            s.Warn($"faction '{faction}' feat 'unitCapBonus' {capWhy}; using 0");
+            cap = 0;
+        }
+
+        return new FactionFeats
+        {
+            TowerFireRate = Factor("towerFireRate", 1f),
+            TowerHitPoints = Factor("towerHitPoints", 1f),
+            DamageToTowers = Factor("damageToTowers", 1f),
+            MountedDamageToTowers = Factor("mountedDamageToTowers", 1f),
+            WaveInterval = Factor("waveInterval", 1f),
+            UnitCapBonus = cap,
+            Income = Factor("income", 1f),
+            Bounty = Factor("bounty", 1f),
+        };
+    }
+
+    private static List<FactionTrait>? ReadTraits(string faction, JToken? token, FordsConfigScope s)
+    {
+        if (token == null)
+            return null;
+        if (!(token is JArray array))
+        {
+            s.Warn($"faction '{faction}': 'traits' is not an array; ignored");
+            return null;
+        }
+
+        var traits = new List<FactionTrait>();
+        foreach (var entry in array)
+        {
+            var text = FordsConfigScope.Text(entry["text"]);
+            if (text == null)
+            {
+                s.Warn($"faction '{faction}': a trait has no 'text'; skipped");
+                continue;
+            }
+
+            traits.Add(new FactionTrait(text, entry["strength"]?.Type == JTokenType.Boolean && (bool)entry["strength"]!));
+        }
+
+        return traits;
+    }
+
+    private static OfferRotation? ReadRotation(string faction, JToken? token, FordsConfigScope s)
+    {
+        if (token == null)
+            return null;
+        if (!(token is JObject o) || !(o["regions"] is JArray array))
+        {
+            s.Warn($"faction '{faction}': 'rotation' needs a 'regions' array; ignored");
+            return null;
+        }
+
+        if (!FordsConfigScope.TryFloat(o["seconds"], 1f, 3600f, out var seconds, out var secondsWhy)
+            || !FordsConfigScope.TryInt(o["callFee"], 0, MaxPrice, out var fee, out secondsWhy))
+        {
+            s.Warn($"faction '{faction}': 'rotation' ignored ({secondsWhy})");
+            return null;
+        }
+
+        var regions = new List<RegionBand>();
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var entry in array)
+        {
+            var id = FordsConfigScope.Text(entry["id"]);
+            if (id == null || !seen.Add(id))
+            {
+                s.Warn($"faction '{faction}': a region has no 'id' or repeats one; skipped");
+                continue;
+            }
+
+            var units = ReadUnits($"{faction}/{id}", entry["units"], s);
+            if (units.Count > 0)
+                regions.Add(new RegionBand(id, FordsConfigScope.Text(entry["name"]) ?? id, units));
+            else
+                s.Warn($"faction '{faction}': region '{id}' skipped (no valid unit offers)");
+        }
+
+        return regions.Count == 0 ? null : new OfferRotation(seconds, fee, regions);
+    }
+
+    private static CreatureCall? ReadCreatures(string faction, JToken? token, FordsConfigScope s)
+    {
+        if (token == null)
+            return null;
+        if (!(token is JObject o) || !FordsConfigScope.TryFloat(o["cooldownSeconds"], 1f, 3600f, out var cooldown, out var why))
+        {
+            s.Warn($"faction '{faction}': 'creatures' needs an object with 'cooldownSeconds'; ignored");
+            return null;
+        }
+
+        var units = ReadUnits($"{faction}/creatures", o["units"], s);
+        return units.Count == 0 ? null : new CreatureCall(cooldown, units);
     }
 
     private static List<UnitOffer> ReadUnits(string faction, JToken? token, FordsConfigScope s)
@@ -291,7 +412,16 @@ internal static class FordsFactionsReader
                 continue;
             }
 
-            result.Add(new UnitCount(troop, count));
+            UnitRole? role = null;
+            if (entry["role"] != null)
+            {
+                if (TryReadRole(entry["role"], out var parsed, out var roleWhy))
+                    role = parsed;
+                else
+                    s.Warn($"{path}.units[{i}] role ignored ({roleWhy})");
+            }
+
+            result.Add(new UnitCount(troop, count, role));
         }
 
         return result;

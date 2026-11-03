@@ -15,11 +15,12 @@ namespace TAOM.Client.Features.FordsOfWar;
 /// timer. The result button is the panel's only way out; the automatic return to the menu is the mission logic's. All text comes
 /// from <see cref="FordsHudText"/>.
 /// </summary>
-public sealed class FordsCommandVM : FordsViewModel
+public sealed partial class FordsCommandVM : FordsViewModel
 {
     internal const int LaneHotkeys = 4;
     internal const int OfferHotkeys = 8;
-    internal const int MaxFeedLines = 6;
+    internal const int MaxFeedLines = 4;
+    internal const float FeedLineSeconds = 12f;
     private const float NoticeSeconds = 4f;
 
     private static readonly LaneOrder[] OrderRows = { LaneOrder.Push, LaneOrder.Hold, LaneOrder.FallBack, LaneOrder.Seize };
@@ -56,7 +57,6 @@ public sealed class FordsCommandVM : FordsViewModel
         Offers = new MBBindingList<FordsOfferVM>();
         Heroes = new MBBindingList<FordsHeroOfferVM>();
         Orders = new MBBindingList<FordsOrderVM>();
-        LaneBars = new MBBindingList<FordsLaneBarVM>();
         Feed = new MBBindingList<FordsFeedLineVM>();
         Points = new MBBindingList<FordsPointVM>();
         OwnKeep = new FordsTowerBarVM();
@@ -179,9 +179,6 @@ public sealed class FordsCommandVM : FordsViewModel
     public MBBindingList<FordsOrderVM> Orders { get; }
 
     [DataSourceProperty]
-    public MBBindingList<FordsLaneBarVM> LaneBars { get; }
-
-    [DataSourceProperty]
     public MBBindingList<FordsFeedLineVM> Feed { get; }
 
     [DataSourceProperty]
@@ -217,12 +214,16 @@ public sealed class FordsCommandVM : FordsViewModel
         IsVisible = true;
         KeepSelectedLaneOwned(view);
         GoldText = FordsHudText.Gold(view.Gold);
-        ClockText = view.Phase == MatchPhase.Countdown ? FordsHudText.Forming() : Clock(view.Elapsed);
+        ClockText = Clock(view.Elapsed);
         TroopsTitle = FordsHudText.TroopsTitle(SelectedLane + 1);
         OrdersTitle = FordsHudText.OrdersTitle(SelectedLane + 1);
         HeroesTitle = FordsHudText.HeroesTitle();
         TowersTitle = FordsHudText.TowersTitle();
         KeysHint = FordsHudText.KeysHint();
+        RefreshIdentity(view);
+        RefreshRegion(view);
+        RefreshCreatures(view);
+        RefreshCamps(view);
         RefreshLanes(view);
         RefreshOffers(view);
         RefreshHeroes(view);
@@ -239,7 +240,11 @@ public sealed class FordsCommandVM : FordsViewModel
     /// </summary>
     internal void Tick(float dt, bool enginePaused = false)
     {
-        if (enginePaused || _noticeSeconds <= 0f)
+        if (enginePaused)
+            return;
+
+        AgeFeed(dt);
+        if (_noticeSeconds <= 0f)
             return;
 
         _noticeSeconds -= dt;
@@ -320,7 +325,7 @@ public sealed class FordsCommandVM : FordsViewModel
         var owned = view.Lanes.Where(l => l.Owned).ToList();
         Sync(Lanes, owned.Count, _ => new FordsLaneVM(SelectLane));
         for (var i = 0; i < owned.Count; i++)
-            Lanes[i].Update(owned[i], owned[i].Index == SelectedLane);
+            Lanes[i].Update(owned[i], owned[i].Index == SelectedLane, view.Side);
     }
 
     private void RefreshOffers(MatchView view)
@@ -356,15 +361,11 @@ public sealed class FordsCommandVM : FordsViewModel
     {
         var lane = view.Lanes.FirstOrDefault(l => l.Index == SelectedLane);
         foreach (var order in Orders)
-            order.Update(lane?.Order ?? LaneOrder.Push, lane?.CooldownLeft ?? 0f, IsLive(view));
+            order.Update(lane?.Order ?? LaneOrder.Push, lane?.CooldownLeft ?? 0f, IsLive(view), view.OrderCooldownSeconds);
     }
 
     private void RefreshTowers(MatchView view)
     {
-        Sync(LaneBars, view.Lanes.Count, _ => new FordsLaneBarVM());
-        for (var i = 0; i < view.Lanes.Count; i++)
-            LaneBars[i].Update(view.Lanes[i], view.Side);
-
         var own = view.Keeps.FirstOrDefault(k => k.Owner == view.Side);
         var enemy = view.Keeps.FirstOrDefault(k => k.Owner != view.Side);
         if (own != null)
@@ -385,7 +386,8 @@ public sealed class FordsCommandVM : FordsViewModel
     {
         foreach (var e in _session.DrainEvents())
         {
-            var needsName = e.Kind == MatchEventKind.HeroFielded || e.Kind == MatchEventKind.HeroDied || e.Kind == MatchEventKind.HeroRespawned;
+            var needsName = e.Kind == MatchEventKind.HeroFielded || e.Kind == MatchEventKind.HeroDied || e.Kind == MatchEventKind.HeroRespawned
+                || e.Kind == MatchEventKind.CreatureCalled;
             var line = FordsHudText.Feed(e, view.Side, needsName ? NameOf(e.Subject) : e.Subject);
             if (line == null)
                 continue;
@@ -395,6 +397,16 @@ public sealed class FordsCommandVM : FordsViewModel
                 _report?.PackBoughtLine();
             while (Feed.Count > MaxFeedLines)
                 Feed.RemoveAt(0);
+        }
+    }
+
+    /// <summary>A feed line leaves after a while, so old news does not sit over the battle.</summary>
+    private void AgeFeed(float dt)
+    {
+        for (var i = Feed.Count - 1; i >= 0; i--)
+        {
+            if (Feed[i].Age(dt) >= FeedLineSeconds)
+                Feed.RemoveAt(i);
         }
     }
 

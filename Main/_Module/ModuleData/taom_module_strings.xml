@@ -4436,7 +4436,7 @@
 	<string id="TAOM_FOW_Hud_HeroesTitle" text="{=TAOM_FOW_Hud_HeroesTitle}Heroes" />
 	<string id="TAOM_FOW_Hud_KeepEnemy" text="{=TAOM_FOW_Hud_KeepEnemy}Enemy keep" />
 	<string id="TAOM_FOW_Hud_KeepOwn" text="{=TAOM_FOW_Hud_KeepOwn}Your keep" />
-	<string id="TAOM_FOW_Hud_KeysHint" text="{=TAOM_FOW_Hud_KeysHint}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   WASD pan   Q E turn   wheel zoom" />
+	<string id="TAOM_FOW_Hud_KeysHint" text="{=TAOM_FOW_Hud_KeysHint}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   WASD pan   Q E turn   wheel zoom" />
 	<string id="TAOM_FOW_Hud_Lane" text="{=TAOM_FOW_Hud_Lane}Lane {LANE}" />
 	<string id="TAOM_FOW_Hud_LaneCounts" text="{=TAOM_FOW_Hud_LaneCounts}{OWN} v {ENEMY}" />
 	<string id="TAOM_FOW_Hud_OrdersTitle" text="{=TAOM_FOW_Hud_OrdersTitle}Orders for lane {LANE}" />
@@ -4464,6 +4464,44 @@
 	<string id="TAOM_FOW_Notice_Unavailable" text="{=TAOM_FOW_Notice_Unavailable}That command cannot be given now." />
 	<string id="TAOM_FOW_Order_FallBack" text="{=TAOM_FOW_Order_FallBack}Fall back" />
 	<string id="TAOM_FOW_Order_Seize" text="{=TAOM_FOW_Order_Seize}Seize" />
+	<string id="TAOM_FOW_Hud_Income" text="{=TAOM_FOW_Hud_Income}+{GOLD} a minute" />
+	<string id="TAOM_FOW_Hud_YouCommand" text="{=TAOM_FOW_Hud_YouCommand}You command {FACTION}" />
+	<string id="TAOM_FOW_Hud_Seconds" text="{=TAOM_FOW_Hud_Seconds}{SECONDS} s" />
+	<string id="TAOM_FOW_Hud_RegionNext" text="{=TAOM_FOW_Hud_RegionNext}Next: {REGION}" />
+	<string id="TAOM_FOW_Hud_RegionCall" text="{=TAOM_FOW_Hud_RegionCall}R  Call a region: {PRICE} gold" />
+	<string id="TAOM_FOW_Hud_CreatureTitle" text="{=TAOM_FOW_Hud_CreatureTitle}Call a creature" />
+	<string id="TAOM_FOW_Hud_CreatureReady" text="{=TAOM_FOW_Hud_CreatureReady}Ready" />
+	<string id="TAOM_FOW_Hud_CreaturePack" text="{=TAOM_FOW_Hud_CreaturePack}{NAME} x{SIZE}" />
+	<string id="TAOM_FOW_Hud_CampAlive" text="{=TAOM_FOW_Hud_CampAlive}Camp {CAMP}: {COUNT} left, pays {GOLD}" />
+	<string id="TAOM_FOW_Hud_CampCleared" text="{=TAOM_FOW_Hud_CampCleared}Camp {CAMP}: cleared" />
+	<string id="TAOM_FOW_Feed_OwnRegion" text="{=TAOM_FOW_Feed_OwnRegion}{REGION} answers our call." />
+	<string id="TAOM_FOW_Feed_EnemyRegion" text="{=TAOM_FOW_Feed_EnemyRegion}The enemy calls on {REGION}." />
+	<string id="TAOM_FOW_Feed_OwnCreature" text="{=TAOM_FOW_Feed_OwnCreature}{HERO} comes at our call." />
+	<string id="TAOM_FOW_Feed_EnemyCreature" text="{=TAOM_FOW_Feed_EnemyCreature}The enemy calls in {HERO}." />
+	<string id="TAOM_FOW_Trait_Gondor_Regions" text="{=TAOM_FOW_Trait_Gondor_Regions}A new region answers the call every 30 seconds. Pay to call one by name." />
+	<string id="TAOM_FOW_Trait_Gondor_Stone" text="{=TAOM_FOW_Trait_Gondor_Stone}Towers have 20% more hit points and fire 25% faster." />
+	<string id="TAOM_FOW_Trait_Gondor_Core" text="{=TAOM_FOW_Trait_Gondor_Core}Only militia are always at hand." />
+	<string id="TAOM_FOW_Region_Anorien" text="{=TAOM_FOW_Region_Anorien}Anórien" />
+	<string id="TAOM_FOW_Region_Lossarnach" text="{=TAOM_FOW_Region_Lossarnach}Lossarnach" />
+	<string id="TAOM_FOW_Region_DolAmroth" text="{=TAOM_FOW_Region_DolAmroth}Dol Amroth" />
+	<string id="TAOM_FOW_Region_Blackroot" text="{=TAOM_FOW_Region_Blackroot}Blackroot Vale" />
+	<string id="TAOM_FOW_Region_Ithilien" text="{=TAOM_FOW_Region_Ithilien}Ithilien" />
+	<string id="TAOM_FOW_Region_MinasTirith" text="{=TAOM_FOW_Region_MinasTirith}Minas Tirith" />
+	<string id="TAOM_FOW_Region_PinnathGelin" text="{=TAOM_FOW_Region_PinnathGelin}Pinnath Gelin" />
+	<string id="TAOM_FOW_Region_Tolfalas" text="{=TAOM_FOW_Region_Tolfalas}Tolfalas" />
+	<string id="TAOM_FOW_Region_Pelargir" text="{=TAOM_FOW_Region_Pelargir}Pelargir" />
+	<string id="TAOM_FOW_Region_Serelond" text="{=TAOM_FOW_Region_Serelond}Serelond" />
+	<string id="TAOM_FOW_Region_Lamedon" text="{=TAOM_FOW_Region_Lamedon}Lamedon" />
+	<string id="TAOM_FOW_Region_Osgiliath" text="{=TAOM_FOW_Region_Osgiliath}Osgiliath" />
+	<string id="TAOM_FOW_Trait_Rohan_Riders" text="{=TAOM_FOW_Trait_Rohan_Riders}The finest cavalry in Middle-earth." />
+	<string id="TAOM_FOW_Trait_Rohan_Towers" text="{=TAOM_FOW_Trait_Rohan_Towers}Riders deal a quarter of the damage to towers, and your own towers fire slower." />
+	<string id="TAOM_FOW_Trait_Rohan_Foot" text="{=TAOM_FOW_Trait_Rohan_Foot}Weak foot soldiers and archers." />
+	<string id="TAOM_FOW_Trait_Mordor_Horde" text="{=TAOM_FOW_Trait_Mordor_Horde}100 more troops in the field, and free waves come a quarter sooner." />
+	<string id="TAOM_FOW_Trait_Mordor_Beasts" text="{=TAOM_FOW_Trait_Mordor_Beasts}Call a creature to battle every 30 seconds." />
+	<string id="TAOM_FOW_Trait_Mordor_Orcs" text="{=TAOM_FOW_Trait_Mordor_Orcs}Orcs are very weak. Uruks and Numenoreans cost a lot." />
+	<string id="TAOM_FOW_Trait_Isengard_Siege" text="{=TAOM_FOW_Trait_Isengard_Siege}Your units deal 50% more damage to towers." />
+	<string id="TAOM_FOW_Trait_Isengard_Waves" text="{=TAOM_FOW_Trait_Isengard_Waves}Free waves grow stronger every 5 minutes." />
+	<string id="TAOM_FOW_Trait_Isengard_Few" text="{=TAOM_FOW_Trait_Isengard_Few}50 fewer troops in the field, and only warg riders for cavalry." />
 	<string id="TAOM_FOW_Order_Hold" text="{=TAOM_FOW_Order_Hold}Hold" />
 	<string id="TAOM_FOW_Order_Push" text="{=TAOM_FOW_Order_Push}Push" />
 	<string id="TAOM_FOW_Result_Button" text="{=TAOM_FOW_Result_Button}Return to the main menu" />

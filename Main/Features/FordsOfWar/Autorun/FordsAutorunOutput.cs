@@ -34,6 +34,20 @@ internal sealed class FordsAutorunOutput
     }
 
     /// <summary>A file write that fails is logged, not thrown: the done file is the last thing the run does and the quit must still follow.</summary>
+    /// <summary>Saves a picture of the screen. A failure is logged and the run goes on.</summary>
+    internal void Screenshot(string name)
+    {
+        try
+        {
+            _host.TakeScreenshot(name);
+            Info("screenshot " + name);
+        }
+        catch (Exception ex)
+        {
+            Warn("screenshot " + name + " failed (" + ex.GetType().Name + ": " + ex.Message + ")");
+        }
+    }
+
     internal void Write(string name, string text)
     {
         try

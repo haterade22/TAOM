@@ -60,6 +60,7 @@ internal sealed class AiCommander
         gold -= Defend(view, lanes, gold, actions);
         var assault = PickAssaultLane(lanes);
         gold -= FieldHeroes(view, lanes, assault, gold, actions);
+        gold -= CallCreature(view, lanes, assault, gold, actions);
         SetOrders(view, lanes, assault, actions);
         BuildAssault(view, assault, gold, actions);
         return actions;
@@ -87,6 +88,20 @@ internal sealed class AiCommander
 
         actions.Add(AiAction.BuyPack(worst.Index, pack.OfferId));
         return pack.Price;
+    }
+
+    /// <summary>The dearest creature the gold reaches, into the assault lane, whenever the shared timer is ready. Returns the gold planned.</summary>
+    private static int CallCreature(MatchView view, List<MatchView.LaneView> lanes, MatchView.LaneView? assault, int gold, List<AiAction> actions)
+    {
+        if (view.Creatures == null || view.Creatures.CooldownLeft > 0f)
+            return 0;
+
+        var offer = view.Creatures.Offers.Where(o => o.Price <= gold).OrderByDescending(o => o.Price).ThenBy(o => o.OfferId, StringComparer.Ordinal).FirstOrDefault();
+        if (offer == null)
+            return 0;
+
+        actions.Add(AiAction.CallCreature((assault ?? lanes[0]).Index, offer.OfferId));
+        return offer.Price;
     }
 
     /// <summary>The lane we are not losing with the best own-to-enemy ratio; the lowest index wins a tie.</summary>

@@ -56,7 +56,7 @@ internal sealed class WaveScheduler
         _laneOwner = laneOwner;
         _streams = new Stream[_laneCount * 2];
         for (var i = 0; i < _streams.Length; i++)
-            _streams[i] = new Stream { Timer = config.FreeWaveIntervalSeconds };
+            _streams[i] = new Stream { Timer = IntervalOf(SideOf(i)) };
     }
 
     /// <summary>The next spawn request id. Hero respawns draw from the same counter so ids never repeat.</summary>
@@ -115,9 +115,10 @@ internal sealed class WaveScheduler
             var index = (_cursor + n) % _streams.Length;
             var side = SideOf(index);
             var lane = LaneOf(index);
+            var bonus = FeatsOf(side).UnitCapBonus;
             var room = Math.Min(
-                _config.MaxLivePerLanePerSide - committedInLane(side, lane) - emittedInLane[index],
-                _config.MaxLivePerSide - committedOnSide(side) - emittedBySide[side]);
+                _config.MaxLivePerLanePerSide + bonus / _laneCount - committedInLane(side, lane) - emittedInLane[index],
+                _config.MaxLivePerSide + bonus - committedOnSide(side) - emittedBySide[side]);
             room = Math.Min(room, budget);
             if (room <= 0)
                 continue;
@@ -132,14 +133,21 @@ internal sealed class WaveScheduler
         return requests;
     }
 
+    private FactionFeats FeatsOf(MatchSide side) => _factions.TryGetValue(side, out var faction) ? faction.FeatsOrNone : FactionFeats.None;
+
+    private float IntervalOf(MatchSide side) => _config.FreeWaveIntervalSeconds * FeatsOf(side).WaveInterval;
+
     private void AdvanceTimers(float dt, float minute)
     {
-        var interval = _config.FreeWaveIntervalSeconds;
-        if (interval <= 0f || dt <= 0f)
+        if (dt <= 0f)
             return;
 
         for (var index = 0; index < _streams.Length; index++)
         {
+            var interval = IntervalOf(SideOf(index));
+            if (interval <= 0f)
+                continue;
+
             var stream = _streams[index];
             stream.Timer += dt;
             if (stream.Timer < interval)
@@ -168,7 +176,7 @@ internal sealed class WaveScheduler
 
         foreach (var unit in tier.Units.Where(u => u.Count > 0))
         {
-            var role = faction.Units.FirstOrDefault(o => o.TroopId == unit.TroopId)?.Role ?? UnitRole.Infantry;
+            var role = unit.Role ?? faction.AllOffers.FirstOrDefault(o => o.TroopId == unit.TroopId)?.Role ?? UnitRole.Infantry;
             stream.FreeWave.Add(new Batch(unit.TroopId, role, unit.Count, -1));
         }
     }

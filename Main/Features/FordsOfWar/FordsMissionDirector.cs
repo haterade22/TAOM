@@ -459,7 +459,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     /// <summary>Builds every tower entity; the layout's list without the ones that could not be made, or null when a keep failed.</summary>
     private List<TowerSlot>? BuildTowers(MapLayout layout)
     {
-        var chain = new TowerChain(layout, _plan.Config.Towers);
+        var chain = new TowerChain(layout, _plan.Config.Towers, _plan.Factions.ToDictionary(f => f.Key, f => f.Value.FeatsOrNone));
         var built = new List<TowerSlot>();
         foreach (var slot in layout.Towers)
         {
@@ -656,7 +656,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         var seen = new HashSet<string>(StringComparer.Ordinal);
         foreach (var faction in _plan.Factions.Values)
         {
-            foreach (var unit in faction.Units)
+            foreach (var unit in faction.AllOffers)
                 AddId(ids, seen, unit.TroopId);
             foreach (var hero in faction.Heroes)
                 AddId(ids, seen, hero.HeroId);
@@ -880,7 +880,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         if (request.IsHero)
             return _plan.Factions[request.Side].Heroes.FirstOrDefault(h => h.HeroId == request.TroopId)?.Price ?? 0;
 
-        var offer = _plan.Factions[request.Side].Units.FirstOrDefault(u => u.TroopId == request.TroopId);
+        var offer = _plan.Factions[request.Side].AllOffers.FirstOrDefault(u => u.TroopId == request.TroopId);
         if (offer != null && offer.PackSize > 0)
             return Math.Max(1, offer.PackPrice / offer.PackSize);
 

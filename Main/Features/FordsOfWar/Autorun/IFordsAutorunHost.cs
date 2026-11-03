@@ -25,6 +25,9 @@ internal interface IFordsAutorunHost
     /// </summary>
     void WriteFile(string name, string text);
 
+    /// <summary>Saves a picture of the screen under this name in the plan's out folder. The engine writes 24-bit BMP data whatever the name says.</summary>
+    void TakeScreenshot(string name);
+
     /// <summary>Asks the engine to shut down.</summary>
     void Quit();
 }

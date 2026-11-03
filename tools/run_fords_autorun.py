@@ -45,6 +45,7 @@ import struct
 import subprocess
 import sys
 import time
+import zlib
 from datetime import datetime
 from pathlib import Path
 
@@ -96,19 +97,19 @@ def modules_arg(modules):
 
 
 def arm_text(out, west=None, east=None, ai=None, scene=None, live_seconds=None, live_wait_seconds=None, wall_limit_seconds=None,
-             quit_when_done=True, west_ai=False):
+             quit_when_done=True, west_ai=False, screenshots=None):
     """The arm file the in-game FordsAutorunPlan parses: UTF-8 key=value lines, LF. Unset choices are left out (the game defaults them).
     west_ai puts an AI commander on the West side too, so both sides play."""
     pairs = [("west", west), ("east", east), ("ai", ai), ("scene", scene), ("live_seconds", live_seconds),
              ("live_wait_seconds", live_wait_seconds), ("wall_limit_seconds", wall_limit_seconds),
-             ("out", out), ("quit", 1 if quit_when_done else 0), ("west_ai", 1 if west_ai else None)]
+             ("out", out), ("quit", 1 if quit_when_done else 0), ("west_ai", 1 if west_ai else None), ("screenshots", screenshots)]
     return "".join(f"{key}={value}\n" for key, value in pairs if value is not None and str(value) != "")
 
 
 def arm_text_for(out, args):
     """(arm file text, wall limit). The runner's wall limit is always written, so the game and this tool never disagree on it."""
     wall_limit = args.wall_limit if args.wall_limit else DEFAULT_WALL_LIMIT_SECONDS
-    text = arm_text(str(out), args.west, args.east, args.ai, args.scene, args.live_seconds, None, wall_limit, west_ai=args.west_ai)
+    text = arm_text(str(out), args.west, args.east, args.ai, args.scene, args.live_seconds, None, wall_limit, west_ai=args.west_ai, screenshots=getattr(args, "screenshots", None))
     return text, wall_limit
 
 
@@ -650,6 +651,44 @@ def wait_after_crash(proc, seconds, say, sleep=time.sleep, now=time.time):
     return False
 
 
+def png_chunk(tag, data):
+    return struct.pack(">I", len(data)) + tag + data + struct.pack(">I", zlib.crc32(tag + data) & 0xFFFFFFFF)
+
+
+def bmp_to_png(raw):
+    """PNG bytes of an uncompressed 24-bit BMP, the format the engine's TakeScreenshot writes; None for anything else."""
+    if raw[:2] != b"BM" or struct.unpack_from("<H", raw, 28)[0] != 24:
+        return None
+    offset = struct.unpack_from("<I", raw, 10)[0]
+    width, height = struct.unpack_from("<ii", raw, 18)
+    stride = ((width * 24 + 31) // 32) * 4
+    rows = []
+    for y in range(abs(height)):
+        index = abs(height) - 1 - y if height > 0 else y
+        line = raw[offset + index * stride:offset + index * stride + width * 3]
+        rgb = bytearray(line)
+        rgb[0::3], rgb[2::3] = line[2::3], line[0::3]
+        rows.append(b"\0" + bytes(rgb))
+    header = struct.pack(">IIBBBBB", width, abs(height), 8, 2, 0, 0, 0)
+    return b"\x89PNG\r\n\x1a\n" + png_chunk(b"IHDR", header) + png_chunk(b"IDAT", zlib.compress(b"".join(rows), 6)) + png_chunk(b"IEND", b"")
+
+
+def convert_screenshots(folder, say):
+    """Turns each hud_*.bmp in the run folder into a PNG a reader can open, and removes the BMP. Returns how many it converted."""
+    converted = 0
+    for path in sorted(Path(folder).glob("hud_*.bmp")):
+        png = bmp_to_png(path.read_bytes())
+        if png is None:
+            say("screenshot not converted, not a 24-bit BMP: " + path.name)
+            continue
+        path.with_suffix(".png").write_bytes(png)
+        path.unlink()
+        converted += 1
+    if converted:
+        say(f"screenshots: {converted} PNG file(s) in {folder}")
+    return converted
+
+
 def collect(folder, bin_dir, done, started, pid, say):
     """Copies the TAOM log, the JSON report and the engine logs into the run folder. Returns (log copy, report json)."""
     log = Path(done["log"]) if done.get("log", "none") != "none" else None
@@ -737,6 +776,7 @@ def run_once(args, game, modules):
     done_text = done_path.read_text(encoding="utf-8") if done_path.is_file() else ""
     done = parse_done(done_text)
     log_copy, report_json = collect(folder, bin_dir, done, started, proc.pid, say)
+    convert_screenshots(folder, say)
     show_results(done_text, log_copy, report_json, say)
     log_text = log_copy.read_text(encoding="utf-8", errors="replace") if log_copy is not None else None
     judged = judge(done, report_json, log_text) if reason == "done" else (1, reason)
@@ -758,6 +798,7 @@ def build_parser():
     parser.add_argument("--keep-on-crash", type=non_negative_minutes, default=0,
                         help="after a crash wait this many seconds for a person to answer the dump dialog before stopping the game "
                              "(default 0: stop at once, which loses the dump)")
+    parser.add_argument("--screenshots", help="live seconds at which the game saves a picture of the screen into the run folder, comma separated")
     parser.add_argument("--west-ai", action="store_true", help="an AI commands the West side too, so both sides attack")
     parser.add_argument("--runs", type=int, default=1, help="how many matches to run, one game process each")
     parser.add_argument("--runs-root", default=RUNS_ROOT, help="folder that holds one subfolder per run")

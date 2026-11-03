@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using TaleWorlds.Library;
 using TAOM.Features.FordsOfWar.Domain;
 
@@ -17,6 +18,7 @@ public sealed class FordsLaneVM : FordsViewModel
     internal FordsLaneVM(Action<int> onSelect)
     {
         _onSelect = onSelect;
+        Towers = new MBBindingList<FordsTowerBarVM>();
     }
 
     /// <summary>The lane this row selects; each refresh rebinds it along with the label.</summary>
@@ -57,10 +59,21 @@ public sealed class FordsLaneVM : FordsViewModel
         private set => Set(ref _isSelected, value, nameof(IsSelected));
     }
 
+    /// <summary>The lane's towers from West's inner one to East's inner one, the way the lane runs.</summary>
+    [DataSourceProperty]
+    public MBBindingList<FordsTowerBarVM> Towers { get; }
+
     public void ExecuteSelect() => _onSelect(Lane);
 
-    internal void Update(MatchView.LaneView lane, bool selected)
+    internal void Update(MatchView.LaneView lane, bool selected, MatchSide own)
     {
+        var ordered = lane.Towers.Where(t => t.Owner == MatchSide.West).OrderByDescending(t => t.Order)
+            .Concat(lane.Towers.Where(t => t.Owner == MatchSide.East).OrderBy(t => t.Order))
+            .ToList();
+        FordsCommandVM.Sync(Towers, ordered.Count, _ => new FordsTowerBarVM());
+        for (var i = 0; i < ordered.Count; i++)
+            Towers[i].Update(ordered[i], own, string.Empty);
+
         Lane = lane.Index;
         Title = FordsHudText.Lane(lane.Index + 1);
         KeyText = lane.Index < FordsCommandVM.LaneHotkeys ? (lane.Index + 1).ToString() : string.Empty;

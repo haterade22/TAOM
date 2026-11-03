@@ -41,6 +41,14 @@ public class FordsCommandHotkeysTests
     }
 
     [TestMethod]
+    public void Read_TheCallKeys_DoNothingForAFactionWithoutThem()
+    {
+        FordsCommandHotkeys.Read(Pressed(InputKey.R, InputKey.G, InputKey.B, InputKey.N, InputKey.M), _vm);
+
+        Assert.IsFalse(_vm.IsRegionPickerVisible);
+    }
+
+    [TestMethod]
     public void Read_SecondLaneKey_SelectsTheSecondLane()
     {
         FordsCommandHotkeys.Read(Pressed(InputKey.D2), _vm);

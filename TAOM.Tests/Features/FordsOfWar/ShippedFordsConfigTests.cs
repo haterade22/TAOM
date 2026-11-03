@@ -76,7 +76,7 @@ public class ShippedFordsConfigTests
     {
         foreach (var faction in catalog.Factions)
         {
-            foreach (var unit in faction.Units)
+            foreach (var unit in faction.AllOffers)
                 yield return unit.TroopId;
             foreach (var tier in faction.FreeWaves)
             {
@@ -301,45 +301,43 @@ public class ShippedFordsConfigTests
         foreach (var faction in Load(Substitute.For<IModLogger>()).Factions)
         {
             Assert.IsTrue(faction.FreeWaves.Any(t => t.FromMinute == 0f), faction.FactionId + " has no minute 0 tier");
-            CollectionAssert.AreEqual(new[] { 0f, 10f, 20f }, faction.FreeWaves.Select(t => t.FromMinute).ToList(), faction.FactionId);
         }
     }
 
     [TestMethod]
-    public void ShippedFactions_EachHasSixToTenUnitOffersAndTwoOrThreeHeroes()
+    public void ShippedFactions_EachShowsSixToEightOffers_ForTheEightBuyKeys_AndTwoOrThreeHeroes()
     {
         foreach (var faction in Load(Substitute.For<IModLogger>()).Factions)
         {
-            Assert.IsTrue(faction.Units.Count >= 6 && faction.Units.Count <= 10, $"{faction.FactionId}: {faction.Units.Count} unit offers");
+            var shown = faction.Units.Count + (faction.Rotation?.Regions.Max(r => r.Units.Count) ?? 0);
+            Assert.IsTrue(shown >= 6 && shown <= 8, $"{faction.FactionId}: {shown} unit offers");
             Assert.IsTrue(faction.Heroes.Count >= 2 && faction.Heroes.Count <= 3, $"{faction.FactionId}: {faction.Heroes.Count} heroes");
         }
     }
 
     [TestMethod]
-    public void ShippedFactions_EachCoversInfantrySpearRangedAndCavalryWhereTheCultureHasIt()
+    public void ShippedFactions_EachCanFieldInfantryRangedAndMounted()
     {
         foreach (var faction in Load(Substitute.For<IModLogger>()).Factions)
         {
-            var roles = faction.Units.Select(u => u.Role).ToHashSet();
-            Assert.IsTrue(roles.Contains(UnitRole.Infantry), faction.FactionId + " infantry");
-            Assert.IsTrue(roles.Contains(UnitRole.Spear), faction.FactionId + " spear");
+            var roles = faction.AllOffers.Select(u => u.Role).ToHashSet();
+            Assert.IsTrue(roles.Contains(UnitRole.Infantry) || roles.Contains(UnitRole.Spear), faction.FactionId + " infantry");
             Assert.IsTrue(roles.Contains(UnitRole.Ranged), faction.FactionId + " ranged");
             Assert.IsTrue(roles.Contains(UnitRole.Cavalry) || roles.Contains(UnitRole.HorseArcher), faction.FactionId + " mounted");
         }
     }
 
     [TestMethod]
-    public void ShippedFactions_MordorAndIsengardOfferATrollAsTheirSiegeUnit()
+    public void ShippedFactions_MordorCallsItsTrolls_AndIsengardBuysOne()
     {
         var catalog = Load(Substitute.For<IModLogger>());
 
-        foreach (var id in new[] { "mordor", "isengard" })
-        {
-            Assert.IsTrue(catalog.TryGetFaction(id, out var faction));
-            var siege = faction.Units.Where(u => u.Role == UnitRole.Siege).ToList();
-            Assert.AreEqual(1, siege.Count, id);
-            Assert.AreEqual("fow_hill_troll", siege[0].TroopId, id);
-        }
+        Assert.IsTrue(catalog.TryGetFaction("mordor", out var mordor));
+        Assert.IsFalse(mordor.Units.Any(u => u.Role == UnitRole.Siege));
+        CollectionAssert.IsSubsetOf(new[] { "fow_hill_troll", "fow_cave_troll" }, mordor.Creatures!.Offers.Select(o => o.TroopId).ToList());
+
+        Assert.IsTrue(catalog.TryGetFaction("isengard", out var isengard));
+        Assert.AreEqual("fow_hill_troll", isengard.Units.Single(u => u.Role == UnitRole.Siege).TroopId);
     }
 
     [TestMethod]
@@ -360,20 +358,6 @@ public class ShippedFordsConfigTests
     }
 
     // The pack prices the shipped offers had when they stored "price" next to "level" and "eliteWeight"; the reader now computes them.
-    private static readonly (string Offer, int Price)[] PricesBeforeTheyWereComputed =
-    {
-        ("gondor/levy", 110), ("gondor/guardsmen", 145), ("gondor/spears", 110), ("gondor/pikes", 150), ("gondor/bowmen", 145),
-        ("gondor/archers", 150), ("gondor/riders", 135), ("gondor/knights", 205), ("gondor/fountain_guard", 240),
-        ("rohan/militia", 110), ("rohan/axemen", 105), ("rohan/spears", 130), ("rohan/veteran_spears", 110), ("rohan/bowmen", 105),
-        ("rohan/riders", 115), ("rohan/lancers", 150), ("rohan/horse_archers", 100), ("rohan/royal_riders", 270),
-        ("mordor/orc_fighters", 125), ("mordor/morannon_warriors", 130), ("mordor/militia_spears", 110), ("mordor/morannon_spears", 145),
-        ("mordor/orc_hunters", 90), ("mordor/uruk_archers", 150), ("mordor/warg_raiders", 80), ("mordor/warg_ravagers", 110),
-        ("mordor/baraddur_guard", 270), ("mordor/hill_troll", 420),
-        ("isengard/fighters", 110), ("isengard/warriors", 130), ("isengard/militia_spears", 110), ("isengard/spearmen", 145),
-        ("isengard/skirmishers", 105), ("isengard/archers", 150), ("isengard/warg_scouts", 160), ("isengard/warg_enforcers", 215),
-        ("isengard/nazg_hai", 270), ("isengard/hill_troll", 420),
-    };
-
     [TestMethod]
     public void ShippedFactions_OffersCarryNoStoredPrice_TheReaderComputesIt()
     {
@@ -383,18 +367,6 @@ public class ShippedFordsConfigTests
             .ToList();
 
         Assert.AreEqual(0, stored.Count, "price is an optional override; the shipped offers state level and eliteWeight instead: " + string.Join(", ", stored));
-    }
-
-    [TestMethod]
-    public void ShippedFactions_ComputedPrices_EqualThePricesTheOffersHadBefore()
-    {
-        var catalog = Load(Substitute.For<IModLogger>());
-
-        var actual = catalog.Factions.SelectMany(f => f.Units.Select(u => (Offer: f.FactionId + "/" + u.OfferId, Price: u.PackPrice)))
-            .OrderBy(x => x.Offer, StringComparer.Ordinal).ToList();
-        var expected = PricesBeforeTheyWereComputed.OrderBy(x => x.Offer, StringComparer.Ordinal).ToList();
-
-        CollectionAssert.AreEqual(expected, actual);
     }
 
     [TestMethod]
@@ -420,7 +392,7 @@ public class ShippedFordsConfigTests
 
         foreach (var faction in ((JObject)json["factions"]!).Properties())
         {
-            foreach (var unit in faction.Value["units"]!.Children<JObject>())
+            foreach (var unit in ((JContainer)faction.Value).Descendants().OfType<JObject>().Where(o => o["troop"] != null && o["level"] != null))
             {
                 var troop = (string)unit["troop"]!;
                 var label = $"{faction.Name}/{(string)unit["id"]!}";

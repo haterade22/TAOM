@@ -89,6 +89,18 @@ internal sealed class FordsSession
             return _match?.TryBuyback(_humanSlot, heroId) ?? CommandResult.NotLive;
     }
 
+    public CommandResult TryCallRegion(string regionId)
+    {
+        lock (_gate)
+            return _match?.TryCallRegion(_humanSlot, regionId) ?? CommandResult.NotLive;
+    }
+
+    public CommandResult TryCallCreature(int lane, string offerId)
+    {
+        lock (_gate)
+            return _match?.TryCallCreature(_humanSlot, lane, offerId) ?? CommandResult.NotLive;
+    }
+
     public CommandResult TrySetLaneOrder(int lane, LaneOrder order)
     {
         lock (_gate)

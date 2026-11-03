@@ -18,6 +18,16 @@ public class FordsAutorunPlanTests
     }
 
     [TestMethod]
+    public void Screenshots_AreReadInRisingOrder_AndABadOneWarns()
+    {
+        var plan = Resolve("out=E:\\x\nscreenshots=90, 30,nope");
+
+        CollectionAssert.AreEqual(new[] { 30.0, 90.0 }, plan.ScreenshotSeconds.ToList());
+        Assert.IsTrue(plan.Warnings.Any(w => w.Contains("nope")));
+        Assert.AreEqual(0, Resolve("out=E:\\x").ScreenshotSeconds.Count);
+    }
+
+    [TestMethod]
     public void Resolve_EnvVariableUnset_IsUnarmedWithNoProblem()
     {
         var plan = Resolve("out=E:\\x", env: null);

@@ -13,6 +13,7 @@ namespace TAOM.Features.FordsOfWar.Autorun;
 internal sealed class FordsAutorunDriver
 {
     internal const double FinalWaitSeconds = 120.0;
+    private const double CountdownShotSeconds = 4.0;
 
     private enum Phase { Off, WaitMenu, WaitLive, Live, WaitFinal, Done }
 
@@ -31,6 +32,8 @@ internal sealed class FordsAutorunDriver
     private double _phaseStart;
     private double _startWall;
     private double? _endGameSeenWall;
+    private int _nextScreenshot;
+    private bool _countdownShot;
 
     public FordsAutorunDriver(FordsAutorunPlan plan, FordsRunReport report, FordsConfigCatalog catalog, IFordsAutorunHost host, IModLogger logger)
     {
@@ -84,6 +87,13 @@ internal sealed class FordsAutorunDriver
 
     private void WaitLive()
     {
+        // The countdown's picture, a few seconds into it, so a run also shows what the player sees before the match goes live.
+        if (!_countdownShot && _plan.ScreenshotSeconds.Count > 0 && _report.MissionSeconds >= CountdownShotSeconds)
+        {
+            _countdownShot = true;
+            _out.Screenshot("hud_countdown.bmp");
+        }
+
         switch (FordsAutorunRules.AfterTheStart(_report.Run, _wall - _phaseStart, _plan.LiveWaitSeconds))
         {
             case FordsAutorunRules.AfterStart.GoLive: Enter(Phase.Live); break;
@@ -99,6 +109,7 @@ internal sealed class FordsAutorunDriver
             _out.Info(clock);
 
         var run = _report.Run;
+        TakeDueScreenshots(run?.Perf.LiveSeconds ?? 0.0);
         if (run?.End.EndGameWall != null && _endGameSeenWall == null)
             _endGameSeenWall = _wall;
 
@@ -109,6 +120,17 @@ internal sealed class FordsAutorunDriver
             case FordsAutorunRules.WhileLive.WallLimit: EndMatch("AutorunWallLimit", "wall_limit"); break;
             case FordsAutorunRules.WhileLive.LiveLimit: EndMatch("AutorunLimit", null); break;
             case FordsAutorunRules.WhileLive.ExitStalled: Finish("exit_stalled"); break;
+        }
+    }
+
+    private void TakeDueScreenshots(double live)
+    {
+        var shots = _plan.ScreenshotSeconds;
+        while (_nextScreenshot < shots.Count && live >= shots[_nextScreenshot])
+        {
+            var name = "hud_" + FordsAutorunDone.F1(shots[_nextScreenshot]).Replace('.', '_') + ".bmp";
+            _nextScreenshot++;
+            _out.Screenshot(name);
         }
     }
 

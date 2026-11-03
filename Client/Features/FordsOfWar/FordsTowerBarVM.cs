@@ -13,6 +13,8 @@ public sealed class FordsTowerBarVM : FordsViewModel
     /// <summary>The width in pixels of a full bar; the prefab's track is this wide.</summary>
     public const float FullWidth = 44f;
 
+    private const float WideBarFactor = 5f;
+
     internal const string OwnColor = "#4F8FE0FF";
     private const string OwnLockedColor = "#2F527FFF";
     internal const string EnemyColor = "#D04A3AFF";
@@ -23,6 +25,7 @@ public sealed class FordsTowerBarVM : FordsViewModel
     private string _hitPointsText = string.Empty;
     private string _fillColor = GoneColor;
     private float _fillWidth;
+    private float _wideFillWidth;
 
     internal string TowerId { get; private set; } = string.Empty;
 
@@ -60,6 +63,14 @@ public sealed class FordsTowerBarVM : FordsViewModel
         private set => Set(ref _fillWidth, value, nameof(FillWidth));
     }
 
+    /// <summary>The fill of the keep's longer bar on the top strip.</summary>
+    [DataSourceProperty]
+    public float WideFillWidth
+    {
+        get => _wideFillWidth;
+        private set => Set(ref _wideFillWidth, value, nameof(WideFillWidth));
+    }
+
     internal void Update(MatchView.TowerView tower, MatchSide own, string label)
     {
         TowerId = tower.Id;
@@ -71,6 +82,7 @@ public sealed class FordsTowerBarVM : FordsViewModel
         FillWidth = tower.Destroyed || tower.MaxHitPoints <= 0
             ? 0f
             : Math.Max(1f, (float)Math.Round(FullWidth * Math.Min(1f, (float)tower.HitPoints / tower.MaxHitPoints)));
+        WideFillWidth = FillWidth * WideBarFactor;
         FillColor = tower.Destroyed ? GoneColor : IsOwn ? (IsLocked ? OwnLockedColor : OwnColor) : (IsLocked ? EnemyLockedColor : EnemyColor);
     }
 }

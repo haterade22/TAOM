@@ -1,119 +1,215 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Prefab>
   <Window>
-    <!-- Fords of War command panel (build-spec 6), bound to FordsCommandVM. The player has no agent, so this is the whole
-         interface: gold and clock on top, the towers and capture points top-left, the event feed top-right, and at the bottom the lane buttons, the
-         troop packs, the heroes and the three lane orders. Every widget except a button ignores events, so the right mouse drag
-         and the wheel reach the camera view; the layer shows the cursor for the whole mission (FordsCommandView). No static text
-         is written here: every Text is a binding, so each line is a registered TAOM_FOW_ key (FordsHudStringsTests). The movie root
-         carries no DataSource (a root DataSource is never read). -->
+    <!-- Fords of War command panel, bound to FordsCommandVM. The player has no agent, so this is the whole interface. The layout keeps the
+         middle of the screen clear and sets state at the edges: keeps and clock on a slim top strip, the battle board bottom left (one row per
+         lane that also selects it), the command deck bottom centre (gold, the faction's mechanic, a fixed 4 by 2 buy grid, 2 by 2 orders), the
+         heroes bottom right, and the feed top right. Buy slots never move: a rotation changes what is in a slot, not where it is. Every widget
+         except a button ignores events, so the right mouse drag and the wheel reach the camera view; the layer shows the cursor for the whole
+         mission (FordsCommandView). No static text is written here: every Text is a binding, so each line is a registered TAOM_FOW_ key
+         (FordsHudStringsTests). The movie root carries no DataSource (a root DataSource is never read). -->
     <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
             DoNotAcceptEvents="true" IsVisible="@IsVisible">
       <Children>
 
-        <!-- Gold and clock, top centre. -->
+        <!-- Top strip, centre: our keep, the clock, their keep. -->
         <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="8"
-                Sprite="BlankWhiteSquare_9" Color="#000000A0" DoNotAcceptEvents="true">
+                HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="4"
+                Sprite="BlankWhiteSquare_9" Color="#0B0D10D8" DoNotAcceptEvents="true">
           <Children>
             <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                       MarginLeft="16" MarginRight="16" MarginTop="6" MarginBottom="6"
+                       MarginLeft="14" MarginRight="14" MarginTop="4" MarginBottom="6"
                        StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
               <Children>
-                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="40"
-                            Brush="Tooltip.Text" Brush.FontSize="28" Brush.FontColor="#FFD700FF"
-                            Text="@GoldText" DoNotAcceptEvents="true" />
-                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                            Brush="Tooltip.Text" Brush.FontSize="28" Brush.FontColor="#FFFFFFFF"
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="18" VerticalAlignment="Center"
+                            Brush="Tooltip.Text" Brush.FontSize="22" Brush.FontColor="@AccentColor"
+                            Text="@FactionName" DoNotAcceptEvents="true" />
+                <ListPanel DataSource="{OwnKeep}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center"
+                           StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                  <Children>
+                    <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                               StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+                      <Children>
+                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="8"
+                                    Brush="Tooltip.Text" Brush.FontSize="14" Brush.FontColor="#FFFFFFFF"
+                                    Text="@Label" DoNotAcceptEvents="true" />
+                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                    Brush="Tooltip.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                    Text="@HitPointsText" DoNotAcceptEvents="true" />
+                      </Children>
+                    </ListPanel>
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="220" SuggestedHeight="10" MarginTop="2"
+                            Sprite="BlankWhiteSquare_9" Color="#000000C0" DoNotAcceptEvents="true">
+                      <Children>
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="@WideFillWidth"
+                                HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="@FillColor" DoNotAcceptEvents="true" />
+                      </Children>
+                    </Widget>
+                  </Children>
+                </ListPanel>
+                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="110" VerticalAlignment="Center"
+                            Brush="Tooltip.Text" Brush.FontSize="26" Brush.FontColor="#FFFFFFFF" Brush.TextHorizontalAlignment="Center"
                             Text="@ClockText" DoNotAcceptEvents="true" />
+                <ListPanel DataSource="{EnemyKeep}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center"
+                           StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                  <Children>
+                    <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right"
+                               StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+                      <Children>
+                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="8"
+                                    Brush="Tooltip.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                    Text="@HitPointsText" DoNotAcceptEvents="true" />
+                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                    Brush="Tooltip.Text" Brush.FontSize="14" Brush.FontColor="#FFFFFFFF"
+                                    Text="@Label" DoNotAcceptEvents="true" />
+                      </Children>
+                    </ListPanel>
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="220" SuggestedHeight="10" MarginTop="2"
+                            Sprite="BlankWhiteSquare_9" Color="#000000C0" DoNotAcceptEvents="true">
+                      <Children>
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="@WideFillWidth"
+                                HorizontalAlignment="Right" Sprite="BlankWhiteSquare_9" Color="@FillColor" DoNotAcceptEvents="true" />
+                      </Children>
+                    </Widget>
+                  </Children>
+                </ListPanel>
               </Children>
             </ListPanel>
           </Children>
         </Widget>
 
-        <!-- The last refusal, under the bar. -->
+        <!-- The last refusal, under the strip. -->
         <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                    HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="64"
-                    Brush="Tooltip.Text" Brush.FontSize="20" Brush.FontColor="#FF9A7AFF"
+                    HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="56"
+                    Brush="Tooltip.Text" Brush.FontSize="22" Brush.FontColor="#FF9A7AFF"
                     Text="@NoticeText" DoNotAcceptEvents="true" />
 
-        <!-- Towers, top left: both keeps, then one row of bars per lane (West's inner tower to East's inner tower). -->
+        <!-- Event feed, top right. Each line has its own backing, so it reads over the battle. -->
+        <ListPanel DataSource="{Feed}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                   HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="8" MarginTop="8"
+                   StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+          <ItemTemplate>
+            <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right" MarginBottom="2"
+                    Sprite="BlankWhiteSquare_9" Color="#0B0D10B8" DoNotAcceptEvents="true">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                            MarginLeft="8" MarginRight="8" MarginTop="2" MarginBottom="2"
+                            Brush="Tooltip.Text" Brush.FontSize="16" Brush.FontColor="#FFFFFFFF"
+                            Text="@Text" DoNotAcceptEvents="true" />
+              </Children>
+            </Widget>
+          </ItemTemplate>
+        </ListPanel>
+
+        <!-- What this faction is, while the armies form up. -->
         <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="4" MarginTop="8"
-                Sprite="BlankWhiteSquare_9" Color="#000000A0" DoNotAcceptEvents="true">
+                HorizontalAlignment="Center" VerticalAlignment="Center" MarginBottom="120"
+                Sprite="BlankWhiteSquare_9" Color="#0B0D10E8" IsVisible="@IsIntroVisible" DoNotAcceptEvents="true">
           <Children>
             <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                       MarginLeft="10" MarginRight="10" MarginTop="6" MarginBottom="6"
+                       MarginLeft="26" MarginRight="26" MarginTop="16" MarginBottom="16"
                        StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
               <Children>
-                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="4"
-                            Brush="Tooltip.Text" Brush.FontSize="20" Brush.FontColor="#FFD700FF"
-                            Text="@TowersTitle" DoNotAcceptEvents="true" />
-                <ListPanel DataSource="{OwnKeep}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                           StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
-                  <Children>
-                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="110"
-                                Brush="Tooltip.Text" Brush.FontSize="16" Brush.FontColor="#FFFFFFFF"
-                                Text="@Label" DoNotAcceptEvents="true" />
-                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="44" SuggestedHeight="10"
-                            VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#000000C0" DoNotAcceptEvents="true">
-                      <Children>
-                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="@FillWidth"
-                                HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="@FillColor" DoNotAcceptEvents="true" />
-                      </Children>
-                    </Widget>
-                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginLeft="8"
-                                Brush="Tooltip.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
-                                Text="@HitPointsText" DoNotAcceptEvents="true" />
-                  </Children>
-                </ListPanel>
-                <ListPanel DataSource="{EnemyKeep}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                           StackLayout.LayoutMethod="HorizontalLeftToRight" MarginBottom="6" DoNotAcceptEvents="true">
-                  <Children>
-                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="110"
-                                Brush="Tooltip.Text" Brush.FontSize="16" Brush.FontColor="#FFFFFFFF"
-                                Text="@Label" DoNotAcceptEvents="true" />
-                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="44" SuggestedHeight="10"
-                            VerticalAlignment="Center" Sprite="BlankWhiteSquare_9" Color="#000000C0" DoNotAcceptEvents="true">
-                      <Children>
-                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="@FillWidth"
-                                HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="@FillColor" DoNotAcceptEvents="true" />
-                      </Children>
-                    </Widget>
-                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginLeft="8"
-                                Brush="Tooltip.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
-                                Text="@HitPointsText" DoNotAcceptEvents="true" />
-                  </Children>
-                </ListPanel>
-                <ListPanel DataSource="{LaneBars}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                           StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="4"
+                            Brush="Tooltip.Text" Brush.FontSize="34" Brush.FontColor="@AccentColor"
+                            Text="@IntroTitle" DoNotAcceptEvents="true" />
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center" MarginBottom="10"
+                            Brush="Tooltip.Text" Brush.FontSize="17" Brush.FontColor="#CCCCCCFF"
+                            Text="@FormingText" DoNotAcceptEvents="true" />
+                <ListPanel DataSource="{IntroTraits}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center"
+                           MarginBottom="12" StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
                   <ItemTemplate>
-                    <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                    <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="3"
                                StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
                       <Children>
-                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="110"
-                                    Brush="Tooltip.Text" Brush.FontSize="16" Brush.FontColor="#CCCCCCFF"
-                                    Text="@Title" DoNotAcceptEvents="true" />
-                        <ListPanel DataSource="{Towers}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                                   StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
-                          <ItemTemplate>
-                            <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="44" SuggestedHeight="10"
-                                    MarginLeft="2" MarginRight="2" VerticalAlignment="Center"
-                                    Sprite="BlankWhiteSquare_9" Color="#000000C0" DoNotAcceptEvents="true">
-                              <Children>
-                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="@FillWidth"
-                                        HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="@FillColor" DoNotAcceptEvents="true" />
-                              </Children>
-                            </Widget>
-                          </ItemTemplate>
-                        </ListPanel>
+                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="24"
+                                    Brush="Tooltip.Text" Brush.FontSize="20" Brush.FontColor="@SignColor"
+                                    Text="@SignText" DoNotAcceptEvents="true" />
+                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                    Brush="Tooltip.Text" Brush.FontSize="20" Brush.FontColor="#FFFFFFFF"
+                                    Text="@Text" DoNotAcceptEvents="true" />
                       </Children>
                     </ListPanel>
                   </ItemTemplate>
                 </ListPanel>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center"
+                            Brush="Tooltip.Text" Brush.FontSize="15" Brush.FontColor="#AAAAAAFF"
+                            Text="@KeysHint" DoNotAcceptEvents="true" />
+              </Children>
+            </ListPanel>
+          </Children>
+        </Widget>
+
+        <!-- Battle board, bottom left: one row per lane (click or number key selects it), then the capture points and camps. -->
+        <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                HorizontalAlignment="Left" VerticalAlignment="Bottom" MarginLeft="6" MarginBottom="6"
+                Sprite="BlankWhiteSquare_9" Color="#0B0D10D8" DoNotAcceptEvents="true">
+          <Children>
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+              <Children>
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="306" SuggestedHeight="2"
+                        Sprite="BlankWhiteSquare_9" Color="@AccentColor" DoNotAcceptEvents="true" />
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       MarginLeft="8" MarginRight="8" MarginTop="6" MarginBottom="6"
+                       StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="3"
+                            Brush="Tooltip.Text" Brush.FontSize="15" Brush.FontColor="@AccentColor"
+                            Text="@TowersTitle" DoNotAcceptEvents="true" />
+                <ListPanel DataSource="{Lanes}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                           StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                  <ItemTemplate>
+                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                  SuggestedWidth="290" SuggestedHeight="46" MarginBottom="2"
+                                  Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteSelect">
+                      <Children>
+                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                Sprite="BlankWhiteSquare_9" Color="#FFD70030" IsVisible="@IsSelected" DoNotAcceptEvents="true" />
+                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="28"
+                                    Brush="Popup.Button.Text" Brush.FontSize="22" Brush.FontColor="#FFD700FF"
+                                    Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center"
+                                    Text="@KeyText" DoNotAcceptEvents="true" />
+                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                   MarginLeft="32" VerticalAlignment="Center"
+                                   StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                          <Children>
+                            <ListPanel DataSource="{Towers}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="4"
+                                       StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+                              <ItemTemplate>
+                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="44" SuggestedHeight="10"
+                                        MarginLeft="2" MarginRight="10" VerticalAlignment="Center"
+                                        Sprite="BlankWhiteSquare_9" Color="#000000C0" DoNotAcceptEvents="true">
+                                  <Children>
+                                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="@FillWidth"
+                                            HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="@FillColor" DoNotAcceptEvents="true" />
+                                  </Children>
+                                </Widget>
+                              </ItemTemplate>
+                            </ListPanel>
+                            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                       StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+                              <Children>
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="10"
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#FFF0C8FF"
+                                            Text="@Title" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="10"
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#FFD700FF"
+                                            Text="@OrderText" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#FFFFFFFF"
+                                            Text="@CountsText" DoNotAcceptEvents="true" />
+                              </Children>
+                            </ListPanel>
+                          </Children>
+                        </ListPanel>
+                      </Children>
+                    </ButtonWidget>
+                  </ItemTemplate>
+                </ListPanel>
                 <!-- Capture points, read only: the holder with a colour swatch, who is taking it and how far, and a contested mark. -->
-                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginTop="6" MarginBottom="2"
-                            Brush="Tooltip.Text" Brush.FontSize="20" Brush.FontColor="#FFD700FF"
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginTop="4" MarginBottom="1"
+                            Brush="Tooltip.Text" Brush.FontSize="15" Brush.FontColor="@AccentColor"
                             Text="@PointsTitle" DoNotAcceptEvents="true" />
                 <ListPanel DataSource="{Points}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                            StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
@@ -125,177 +221,300 @@
                                 MarginRight="6" VerticalAlignment="Center"
                                 Sprite="BlankWhiteSquare_9" Color="@OwnerColor" DoNotAcceptEvents="true" />
                         <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                                    Brush="Tooltip.Text" Brush.FontSize="16" Brush.FontColor="#FFFFFFFF"
+                                    Brush="Tooltip.Text" Brush.FontSize="14" Brush.FontColor="#FFFFFFFF"
                                     Text="@Title" DoNotAcceptEvents="true" />
                         <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginLeft="8"
-                                    Brush="Tooltip.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                    Brush="Tooltip.Text" Brush.FontSize="13" Brush.FontColor="#CCCCCCFF"
                                     Text="@StatusText" DoNotAcceptEvents="true" />
                         <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginLeft="8"
-                                    Brush="Tooltip.Text" Brush.FontSize="14" Brush.FontColor="#FF9A7AFF"
+                                    Brush="Tooltip.Text" Brush.FontSize="13" Brush.FontColor="#FF9A7AFF"
                                     Text="@ContestedText" DoNotAcceptEvents="true" />
                       </Children>
                     </ListPanel>
                   </ItemTemplate>
                 </ListPanel>
+                <ListPanel DataSource="{Camps}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginTop="2"
+                           StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                  <ItemTemplate>
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                Brush="Tooltip.Text" Brush.FontSize="14" Brush.FontColor="@TextColor"
+                                Text="@Text" DoNotAcceptEvents="true" />
+                  </ItemTemplate>
+                </ListPanel>
+              </Children>
+            </ListPanel>
               </Children>
             </ListPanel>
           </Children>
         </Widget>
 
-        <!-- Event feed, top right. -->
+        <!-- Command deck, bottom centre. -->
         <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="14" MarginTop="14" DoNotAcceptEvents="true">
+                HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="6"
+                Sprite="BlankWhiteSquare_9" Color="#0B0D10D8" DoNotAcceptEvents="true">
           <Children>
-            <ListPanel DataSource="{Feed}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                        StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
-              <ItemTemplate>
-                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Right"
-                            MarginBottom="2" Brush="Tooltip.Text" Brush.FontSize="18" Brush.FontColor="#FFFFFFFF"
-                            Text="@Text" DoNotAcceptEvents="true" />
-              </ItemTemplate>
+              <Children>
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="830" SuggestedHeight="2"
+                        Sprite="BlankWhiteSquare_9" Color="@AccentColor" DoNotAcceptEvents="true" />
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       MarginLeft="10" MarginRight="10" MarginTop="6" MarginBottom="8"
+                       StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+              <Children>
+
+                <!-- Gondor: the region on call, its timer, the next one, and the fee to call one by name. -->
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="5" IsVisible="@IsRegionVisible"
+                           StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+                  <Children>
+                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="250" VerticalAlignment="Center"
+                                Brush="Tooltip.Text" Brush.FontSize="19" Brush.FontColor="@AccentColor"
+                                Text="@RegionName" DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="120" SuggestedHeight="8" VerticalAlignment="Center"
+                            Sprite="BlankWhiteSquare_9" Color="#000000C0" DoNotAcceptEvents="true">
+                      <Children>
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="@RegionFillWidth"
+                                HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="@AccentColor" DoNotAcceptEvents="true" />
+                      </Children>
+                    </Widget>
+                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="46" VerticalAlignment="Center" MarginLeft="6"
+                                Brush="Tooltip.Text" Brush.FontSize="15" Brush.FontColor="#FFFFFFFF"
+                                Text="@RegionSeconds" DoNotAcceptEvents="true" />
+                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="170" VerticalAlignment="Center"
+                                Brush="Tooltip.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                Text="@NextRegionText" DoNotAcceptEvents="true" />
+                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                  SuggestedWidth="196" SuggestedHeight="28" IsEnabled="@CanCallRegion"
+                                  Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteToggleRegionPicker">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                    Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#FFF0C8FF"
+                                    Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center"
+                                    Text="@CallRegionText" DoNotAcceptEvents="true" />
+                      </Children>
+                    </ButtonWidget>
+                  </Children>
+                </ListPanel>
+                <!-- A wrapper carries the visibility: on the list itself the binding would read the list's own data source. -->
+                <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="5" IsVisible="@IsRegionPickerVisible" DoNotAcceptEvents="true">
+                  <Children>
+                <GridWidget DataSource="{RegionChoices}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                            DefaultCellWidth="198" DefaultCellHeight="30" ColumnCount="4" LayoutImp="GridLayout" DoNotAcceptEvents="true">
+                  <ItemTemplate>
+                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                  SuggestedWidth="194" SuggestedHeight="27" IsEnabled="@CanCall"
+                                  Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteCall">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                    Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#FFF0C8FF"
+                                    Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center"
+                                    Text="@Name" DoNotAcceptEvents="true" />
+                      </Children>
+                    </ButtonWidget>
+                  </ItemTemplate>
+                </GridWidget>
+                  </Children>
+                </Widget>
+
+                <!-- Mordor: the creature call and its shared timer. -->
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="3" IsVisible="@IsCreatureVisible"
+                           StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+                  <Children>
+                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="250" VerticalAlignment="Center"
+                                Brush="Tooltip.Text" Brush.FontSize="19" Brush.FontColor="@AccentColor"
+                                Text="@CreatureTitle" DoNotAcceptEvents="true" />
+                    <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="120" SuggestedHeight="8" VerticalAlignment="Center"
+                            Sprite="BlankWhiteSquare_9" Color="#000000C0" DoNotAcceptEvents="true">
+                      <Children>
+                        <Widget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="@CreatureFillWidth"
+                                HorizontalAlignment="Left" Sprite="BlankWhiteSquare_9" Color="@AccentColor" DoNotAcceptEvents="true" />
+                      </Children>
+                    </Widget>
+                    <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="90" VerticalAlignment="Center" MarginLeft="6"
+                                Brush="Tooltip.Text" Brush.FontSize="15" Brush.FontColor="#FFFFFFFF"
+                                Text="@CreatureSeconds" DoNotAcceptEvents="true" />
+                  </Children>
+                </ListPanel>
+                <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="5" IsVisible="@IsCreatureVisible" DoNotAcceptEvents="true">
+                  <Children>
+                <ListPanel DataSource="{Creatures}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                           StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+                  <ItemTemplate>
+                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                  SuggestedWidth="196" SuggestedHeight="40" MarginRight="2" IsEnabled="@CanCall"
+                                  Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteCall">
+                      <Children>
+                        <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="StretchToParent" SuggestedWidth="24"
+                                    Brush="Popup.Button.Text" Brush.FontSize="15" Brush.FontColor="#FFD700FF"
+                                    Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center"
+                                    Text="@KeyText" DoNotAcceptEvents="true" />
+                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="26" MarginRight="4" VerticalAlignment="Center"
+                                   StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                          <Children>
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                        Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#FFF0C8FF"
+                                        Text="@Name" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                        Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="@PriceColor"
+                                        Text="@PriceText" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ListPanel>
+                      </Children>
+                    </ButtonWidget>
+                  </ItemTemplate>
+                </ListPanel>
+                  </Children>
+                </Widget>
+
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                           StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+                  <Children>
+                    <!-- Gold and the troops for the selected lane: F1 to F8, in slots that never move. -->
+                    <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="10"
+                               StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                      <Children>
+                        <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="3"
+                                   StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+                          <Children>
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="8" VerticalAlignment="Center"
+                                        Brush="Tooltip.Text" Brush.FontSize="24" Brush.FontColor="#FFD700FF"
+                                        Text="@GoldText" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="20" VerticalAlignment="Center"
+                                        Brush="Tooltip.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
+                                        Text="@IncomeText" DoNotAcceptEvents="true" />
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center"
+                                        Brush="Tooltip.Text" Brush.FontSize="15" Brush.FontColor="@AccentColor"
+                                        Text="@TroopsTitle" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ListPanel>
+                        <GridWidget DataSource="{Offers}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                    DefaultCellWidth="150" DefaultCellHeight="62" ColumnCount="4" LayoutImp="GridLayout" DoNotAcceptEvents="true">
+                          <ItemTemplate>
+                            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                          SuggestedWidth="147" SuggestedHeight="59" IsEnabled="@CanAfford"
+                                          Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteBuy">
+                              <Children>
+                                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="40" SuggestedHeight="40"
+                                        MarginLeft="3" MarginTop="16" Sprite="@IconSprite" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginLeft="5" MarginTop="2"
+                                            Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="#FFD700FF"
+                                            Text="@KeyText" DoNotAcceptEvents="true" />
+                                <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren" MarginLeft="42" MarginRight="3" VerticalAlignment="Center"
+                                           StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                                  <Children>
+                                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                                Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="#FFF0C8FF"
+                                                Text="@Name" DoNotAcceptEvents="true" />
+                                    <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                               StackLayout.LayoutMethod="HorizontalLeftToRight" DoNotAcceptEvents="true">
+                                      <Children>
+                                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginRight="6"
+                                                    Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="#FFFFFFFF"
+                                                    Text="@PackText" DoNotAcceptEvents="true" />
+                                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                                    Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="@PriceColor"
+                                                    Text="@PriceText" DoNotAcceptEvents="true" />
+                                      </Children>
+                                    </ListPanel>
+                                  </Children>
+                                </ListPanel>
+                              </Children>
+                            </ButtonWidget>
+                          </ItemTemplate>
+                        </GridWidget>
+                      </Children>
+                    </ListPanel>
+
+                    <!-- Orders for the selected lane. A cooldown fills the button from the bottom and drains as it runs. -->
+                    <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                               StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                      <Children>
+                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="6" MarginTop="6"
+                                    Brush="Tooltip.Text" Brush.FontSize="15" Brush.FontColor="@AccentColor"
+                                    Text="@OrdersTitle" DoNotAcceptEvents="true" />
+                        <GridWidget DataSource="{Orders}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                    DefaultCellWidth="100" DefaultCellHeight="62" ColumnCount="2" LayoutImp="GridLayout" DoNotAcceptEvents="true">
+                          <ItemTemplate>
+                            <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                          SuggestedWidth="97" SuggestedHeight="59" IsEnabled="@CanSet"
+                                          Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteSet">
+                              <Children>
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                        Sprite="BlankWhiteSquare_9" Color="#FFD70030" IsVisible="@IsActive" DoNotAcceptEvents="true" />
+                                <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="Fixed" SuggestedHeight="@CooldownHeight" VerticalAlignment="Bottom"
+                                        Sprite="BlankWhiteSquare_9" Color="#000000A0" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                            Brush="Popup.Button.Text" Brush.FontSize="16" Brush.FontColor="#FFF0C8FF"
+                                            Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center"
+                                            Text="@Text" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                            HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="6" MarginTop="2"
+                                            Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="#FFD700FF"
+                                            Text="@KeyText" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                            HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="6" MarginTop="2"
+                                            Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="#FF9A7AFF"
+                                            Text="@CooldownText" DoNotAcceptEvents="true" />
+                              </Children>
+                            </ButtonWidget>
+                          </ItemTemplate>
+                        </GridWidget>
+                      </Children>
+                    </ListPanel>
+                  </Children>
+                </ListPanel>
+              </Children>
+            </ListPanel>
+              </Children>
             </ListPanel>
           </Children>
         </Widget>
 
-        <!-- Command deck, bottom centre: lanes, troop packs, heroes, orders, key hint. -->
+        <!-- Heroes, bottom right. -->
         <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                HorizontalAlignment="Center" VerticalAlignment="Bottom" MarginBottom="6"
-                Sprite="BlankWhiteSquare_9" Color="#000000B0" DoNotAcceptEvents="true">
+                HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="6" MarginBottom="6"
+                Sprite="BlankWhiteSquare_9" Color="#0B0D10D8" DoNotAcceptEvents="true">
           <Children>
             <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                       MarginLeft="12" MarginRight="12" MarginTop="8" MarginBottom="8"
                        StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
               <Children>
-
-                <ListPanel DataSource="{Lanes}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                           StackLayout.LayoutMethod="HorizontalLeftToRight" MarginBottom="6" DoNotAcceptEvents="true">
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="276" SuggestedHeight="2"
+                        Sprite="BlankWhiteSquare_9" Color="@AccentColor" DoNotAcceptEvents="true" />
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       MarginLeft="8" MarginRight="8" MarginTop="6" MarginBottom="6"
+                       StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+              <Children>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="3"
+                            Brush="Tooltip.Text" Brush.FontSize="15" Brush.FontColor="@AccentColor"
+                            Text="@HeroesTitle" DoNotAcceptEvents="true" />
+                <ListPanel DataSource="{Heroes}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                           StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
                   <ItemTemplate>
                     <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
-                                  SuggestedWidth="190" SuggestedHeight="52" MarginRight="4"
-                                  Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteSelect">
-                      <Children>
-                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                Sprite="BlankWhiteSquare_9" Color="#FFD70055" IsVisible="@IsSelected" DoNotAcceptEvents="true" />
-                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                   VerticalAlignment="Center" StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
-                          <Children>
-                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                        Brush="Popup.Button.Text" Brush.FontSize="18" Brush.FontColor="#FFF0C8FF"
-                                        Brush.TextHorizontalAlignment="Center" Text="@Title" DoNotAcceptEvents="true" />
-                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                        Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#FFFFFFFF"
-                                        Brush.TextHorizontalAlignment="Center" Text="@CountsText" DoNotAcceptEvents="true" />
-                          </Children>
-                        </ListPanel>
-                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                                    HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="8" MarginTop="4"
-                                    Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#FFD700FF"
-                                    Text="@KeyText" DoNotAcceptEvents="true" />
-                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                                    HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="8" MarginTop="4"
-                                    Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#CCCCCCFF"
-                                    Text="@OrderText" DoNotAcceptEvents="true" />
-                      </Children>
-                    </ButtonWidget>
-                  </ItemTemplate>
-                </ListPanel>
-
-                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="2"
-                            Brush="Tooltip.Text" Brush.FontSize="16" Brush.FontColor="#FFD700FF"
-                            Text="@TroopsTitle" DoNotAcceptEvents="true" />
-                <ListPanel DataSource="{Offers}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                           StackLayout.LayoutMethod="HorizontalLeftToRight" MarginBottom="6" DoNotAcceptEvents="true">
-                  <ItemTemplate>
-                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
-                                  SuggestedWidth="124" SuggestedHeight="84" MarginRight="3"
-                                  IsEnabled="@CanAfford" Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteBuy">
+                                  SuggestedWidth="260" SuggestedHeight="52" MarginBottom="2"
+                                  IsEnabled="@CanAct" Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteAct">
                       <Children>
                         <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                   VerticalAlignment="Center" MarginLeft="6" MarginRight="6"
+                                   VerticalAlignment="Center" MarginLeft="8" MarginRight="8"
                                    StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
                           <Children>
                             <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                         Brush="Popup.Button.Text" Brush.FontSize="15" Brush.FontColor="#FFF0C8FF"
-                                        Brush.TextHorizontalAlignment="Center" Text="@Name" DoNotAcceptEvents="true" />
-                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                        Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="#FFFFFFFF"
-                                        Brush.TextHorizontalAlignment="Center" Text="@PackText" DoNotAcceptEvents="true" />
-                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                        Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#FFD700FF"
-                                        Brush.TextHorizontalAlignment="Center" Text="@PriceText" DoNotAcceptEvents="true" />
-                          </Children>
-                        </ListPanel>
-                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                                    HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="6" MarginTop="3"
-                                    Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="#FFD700FF"
-                                    Text="@KeyText" DoNotAcceptEvents="true" />
-                      </Children>
-                    </ButtonWidget>
-                  </ItemTemplate>
-                </ListPanel>
-
-                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="2"
-                            Brush="Tooltip.Text" Brush.FontSize="16" Brush.FontColor="#FFD700FF"
-                            Text="@HeroesTitle" DoNotAcceptEvents="true" />
-                <ListPanel DataSource="{Heroes}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                           StackLayout.LayoutMethod="HorizontalLeftToRight" MarginBottom="6" DoNotAcceptEvents="true">
-                  <ItemTemplate>
-                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
-                                  SuggestedWidth="300" SuggestedHeight="58" MarginRight="4"
-                                  IsEnabled="@CanAct" Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteAct">
-                      <Children>
-                        <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                   VerticalAlignment="Center" MarginLeft="10" MarginRight="10"
-                                   StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
-                          <Children>
-                            <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                        Brush="Popup.Button.Text" Brush.FontSize="16" Brush.FontColor="#FFF0C8FF"
-                                        Brush.TextHorizontalAlignment="Center" Text="@Name" DoNotAcceptEvents="true" />
+                                        Text="@Name" DoNotAcceptEvents="true" />
                             <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
                                         Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="#CCCCCCFF"
-                                        Brush.TextHorizontalAlignment="Center" Text="@StatusText" DoNotAcceptEvents="true" />
+                                        Text="@StatusText" DoNotAcceptEvents="true" />
                             <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
-                                        Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#FFD700FF"
-                                        Brush.TextHorizontalAlignment="Center" Text="@ActionText" DoNotAcceptEvents="true" />
+                                        Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="#FFD700FF"
+                                        Text="@ActionText" DoNotAcceptEvents="true" />
                           </Children>
                         </ListPanel>
                       </Children>
                     </ButtonWidget>
                   </ItemTemplate>
                 </ListPanel>
-
-                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="2"
-                            Brush="Tooltip.Text" Brush.FontSize="16" Brush.FontColor="#FFD700FF"
-                            Text="@OrdersTitle" DoNotAcceptEvents="true" />
-                <ListPanel DataSource="{Orders}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                           StackLayout.LayoutMethod="HorizontalLeftToRight" MarginBottom="4" DoNotAcceptEvents="true">
-                  <ItemTemplate>
-                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
-                                  SuggestedWidth="200" SuggestedHeight="44" MarginRight="4"
-                                  IsEnabled="@CanSet" Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteSet">
-                      <Children>
-                        <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                Sprite="BlankWhiteSquare_9" Color="#FFD70055" IsVisible="@IsActive" DoNotAcceptEvents="true" />
-                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                                    Brush="Popup.Button.Text" Brush.FontSize="18" Brush.FontColor="#FFF0C8FF"
-                                    Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center"
-                                    Text="@Text" DoNotAcceptEvents="true" />
-                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                                    HorizontalAlignment="Left" VerticalAlignment="Top" MarginLeft="8" MarginTop="3"
-                                    Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="#FFD700FF"
-                                    Text="@KeyText" DoNotAcceptEvents="true" />
-                        <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                                    HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="8" MarginTop="3"
-                                    Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="#FF9A7AFF"
-                                    Text="@CooldownText" DoNotAcceptEvents="true" />
-                      </Children>
-                    </ButtonWidget>
-                  </ItemTemplate>
-                </ListPanel>
-
-                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" HorizontalAlignment="Center"
-                            Brush="Tooltip.Text" Brush.FontSize="13" Brush.FontColor="#AAAAAAFF"
-                            Text="@KeysHint" DoNotAcceptEvents="true" />
+              </Children>
+            </ListPanel>
               </Children>
             </ListPanel>
           </Children>

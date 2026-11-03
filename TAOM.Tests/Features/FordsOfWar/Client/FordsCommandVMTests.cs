@@ -303,7 +303,7 @@ public class FordsCommandVMTests
         var picked = -1;
         var row = new FordsLaneVM(lane => picked = lane);
 
-        row.Update(new MatchView.LaneView(2, true, LaneOrder.Push, 0f, 3, 4, 0, new List<MatchView.TowerView>()), false);
+        row.Update(new MatchView.LaneView(2, true, LaneOrder.Push, 0f, 3, 4, 0, new List<MatchView.TowerView>()), false, MatchSide.West);
         row.ExecuteSelect();
 
         Assert.AreEqual(2, picked, "Update relabels the row (Lane 3), so the click must act on lane index 2");
@@ -585,9 +585,9 @@ public class FordsCommandVMTests
     {
         var vm = Panel(Session(out _));
 
-        Assert.AreEqual(2, vm.LaneBars.Count);
-        Assert.AreEqual("Lane 1", vm.LaneBars[0].Title);
-        var towers = vm.LaneBars[0].Towers;
+        Assert.AreEqual(2, vm.Lanes.Count);
+        Assert.AreEqual("Lane 1", vm.Lanes[0].Title);
+        var towers = vm.Lanes[0].Towers;
         Assert.AreEqual(4, towers.Count);
         CollectionAssert.AreEqual(
             new[] { FordsTestLayout.WestInner0, FordsTestLayout.WestOuter0, FordsTestLayout.EastOuter0, FordsTestLayout.EastInner0 },
@@ -606,7 +606,7 @@ public class FordsCommandVMTests
 
         vm.Refresh();
 
-        var bar = vm.LaneBars[0].Towers.Single(t => t.TowerId == FordsTestLayout.EastOuter0);
+        var bar = vm.Lanes[0].Towers.Single(t => t.TowerId == FordsTestLayout.EastOuter0);
         Assert.AreEqual((float)System.Math.Round(FordsTowerBarVM.FullWidth * 0.75f), bar.FillWidth);
         Assert.IsFalse(bar.IsDestroyed);
     }
@@ -620,7 +620,7 @@ public class FordsCommandVMTests
 
         vm.Refresh();
 
-        var bar = vm.LaneBars[0].Towers.Single(t => t.TowerId == FordsTestLayout.WestOuter0);
+        var bar = vm.Lanes[0].Towers.Single(t => t.TowerId == FordsTestLayout.WestOuter0);
         Assert.AreEqual(0f, bar.FillWidth);
         Assert.IsTrue(bar.IsDestroyed);
     }
@@ -630,8 +630,8 @@ public class FordsCommandVMTests
     {
         var vm = Panel(Session(out _));
 
-        var inner = vm.LaneBars[0].Towers.Single(t => t.TowerId == FordsTestLayout.EastInner0);
-        var outer = vm.LaneBars[0].Towers.Single(t => t.TowerId == FordsTestLayout.EastOuter0);
+        var inner = vm.Lanes[0].Towers.Single(t => t.TowerId == FordsTestLayout.EastInner0);
+        var outer = vm.Lanes[0].Towers.Single(t => t.TowerId == FordsTestLayout.EastOuter0);
 
         Assert.IsTrue(inner.IsLocked);
         Assert.IsFalse(outer.IsLocked);
@@ -683,15 +683,15 @@ public class FordsCommandVMTests
     }
 
     [TestMethod]
-    public void Refresh_KeepsTheLatestSixFeedLines()
+    public void Refresh_KeepsTheLatestFourFeedLines()
     {
         var session = Session(out _);
         session.PushEvents(Enumerable.Range(0, 9).Select(i => new MatchEvent(MatchEventKind.PointCaptured, MatchSide.West, "point_" + i, 0)));
         session.PushEvents(new[] { new MatchEvent(MatchEventKind.CampCleared, MatchSide.East, "camp_east_0", 250) });
         var vm = Panel(session);
 
-        Assert.AreEqual(6, vm.Feed.Count);
-        Assert.AreEqual("The enemy cleared a camp.", vm.Feed[5].Text);
+        Assert.AreEqual(4, vm.Feed.Count);
+        Assert.AreEqual("The enemy cleared a camp.", vm.Feed[3].Text);
     }
 
     [TestMethod]
@@ -925,12 +925,12 @@ public class FordsCommandVMTests
     }
 
     [TestMethod]
-    public void Refresh_DuringTheCountdown_ShowsTheFormingUpLineInsteadOfTheClock()
+    public void Refresh_DuringTheCountdown_TheClockStaysAtZero_AndTheIntroSaysTheArmiesAreForming()
     {
-        var session = Session(out _, Config(c => c with { CountdownSeconds = 10f }));
-        var vm = Panel(session);
+        var vm = FactionPanel(out _, traits: new List<FactionTrait> { new("{=a}Good at this", true) }, config: Config(c => c with { CountdownSeconds = 30f }));
 
-        Assert.AreEqual("The armies are forming up", vm.ClockText);
+        Assert.AreEqual("00:00", vm.ClockText);
+        Assert.AreEqual("The armies are forming up", vm.FormingText);
     }
 
     [TestMethod]
@@ -1065,14 +1065,14 @@ public class FordsCommandVMTests
         var vm = Panel(session);
         var offer = vm.Offers[0];
         var lane = vm.Lanes[0];
-        var tower = vm.LaneBars[0].Towers[0];
+        var tower = vm.Lanes[0].Towers[0];
 
         vm.Refresh();
         vm.Refresh();
 
         Assert.AreSame(offer, vm.Offers[0]);
         Assert.AreSame(lane, vm.Lanes[0]);
-        Assert.AreSame(tower, vm.LaneBars[0].Towers[0]);
+        Assert.AreSame(tower, vm.Lanes[0].Towers[0]);
     }
 
     [TestMethod]
@@ -1085,5 +1085,210 @@ public class FordsCommandVMTests
         vm.Refresh();
 
         Assert.IsFalse(vm.IsVisible);
+    }
+
+    // What differs by faction.
+
+    private static readonly OfferRotation PanelRotation = new(30f, 150, new List<RegionBand>
+    {
+        new("r1", "{=x}Region One", new List<UnitOffer> { new("r1_a", "r1_troop", UnitRole.Infantry, 5, 50) }),
+        new("r2", "{=y}Region Two", new List<UnitOffer> { new("r2_a", "r2_troop", UnitRole.Ranged, 5, 60) }),
+        new("r3", "{=z}Region Three", new List<UnitOffer> { new("r3_a", "r3_troop", UnitRole.Cavalry, 5, 70) }),
+    });
+
+    private static readonly CreatureCall PanelBeasts = new(30f, new List<UnitOffer>
+    {
+        new("wargs", "warg", UnitRole.Cavalry, 3, 90),
+        new("troll", "troll", UnitRole.Siege, 1, 200),
+    });
+
+    private static FordsCommandVM FactionPanel(out FordsMatch match, OfferRotation? rotation = null, CreatureCall? creatures = null, IReadOnlyList<FactionTrait>? traits = null, FordsMatchConfig? config = null)
+    {
+        var factions = Factions().ToDictionary(e => e.Key, e => e.Value);
+        factions[MatchSide.West] = factions[MatchSide.West] with { Rotation = rotation, Creatures = creatures, Traits = traits, Name = "{=g}Gondor" };
+        match = new FordsMatch(config ?? Config(), Layout(), factions, Slots(), new SeededFordsRandom(7));
+        var battlefield = Substitute.For<IFordsBattlefieldAdapter>();
+        battlefield.CharacterName(Arg.Any<string>()).Returns(call => "Name_" + call.Arg<string>());
+        var session = new FordsSession();
+        session.Fill(new object(), match, WestSlot, battlefield, new Vec3f(0f, 25f, 45f), new Vec3f(1000f, 25f, 0f), new List<Vec3f>());
+        var vm = new FordsCommandVM(session, () => { });
+        vm.Refresh();
+        return vm;
+    }
+
+    [TestMethod]
+    public void Refresh_AFactionWithNoMechanic_HidesBothRows()
+    {
+        var vm = FactionPanel(out _);
+
+        Assert.IsFalse(vm.IsRegionVisible);
+        Assert.IsFalse(vm.IsCreatureVisible);
+        Assert.AreEqual("Gondor", vm.FactionName);
+        Assert.AreEqual(FordsFactionStyle.Accent("gondor"), vm.AccentColor);
+    }
+
+    [TestMethod]
+    public void Refresh_TheRegionRow_NamesTheRegionTheNextOneAndTheFee()
+    {
+        var vm = FactionPanel(out var match, PanelRotation);
+        var view = match.GetView(WestSlot);
+
+        Assert.IsTrue(vm.IsRegionVisible);
+        StringAssert.Contains(vm.NextRegionText, new TaleWorlds.Localization.TextObject(view.Region!.NextName).ToString());
+        StringAssert.Contains(vm.CallRegionText, "150");
+        Assert.AreEqual(FordsCommandVM.TimerBarWidth, vm.RegionFillWidth);
+        Assert.AreEqual("30 s", vm.RegionSeconds);
+    }
+
+    [TestMethod]
+    public void Refresh_TheRegionBar_DrainsWithTheTimer()
+    {
+        var vm = FactionPanel(out var match, PanelRotation);
+
+        match.Tick(Snap(15f));
+        vm.Refresh();
+
+        Assert.AreEqual(FordsCommandVM.TimerBarWidth / 2f, vm.RegionFillWidth, 1f);
+        Assert.AreEqual("15 s", vm.RegionSeconds);
+    }
+
+    [TestMethod]
+    public void TheRegionPicker_ListsTheOtherRegions_AndAChoicePaysAndCloses()
+    {
+        var vm = FactionPanel(out var match, PanelRotation);
+        var gold = match.GetView(WestSlot).Gold;
+        var current = match.GetView(WestSlot).Region!.Id;
+
+        vm.ExecuteToggleRegionPicker();
+
+        Assert.IsTrue(vm.IsRegionPickerVisible);
+        Assert.AreEqual(2, vm.RegionChoices.Count);
+        Assert.IsFalse(vm.RegionChoices.Any(c => c.RegionId == current));
+
+        var choice = vm.RegionChoices[0];
+        var target = choice.RegionId;
+        choice.ExecuteCall();
+
+        Assert.IsFalse(vm.IsRegionPickerVisible);
+        Assert.AreEqual(target, match.GetView(WestSlot).Region!.Id);
+        Assert.AreEqual(gold - 150, match.GetView(WestSlot).Gold);
+    }
+
+    [TestMethod]
+    public void Refresh_TheCreatureRow_ListsEachCreatureWithItsKeyAndPrice()
+    {
+        var vm = FactionPanel(out _, creatures: PanelBeasts);
+
+        Assert.IsTrue(vm.IsCreatureVisible);
+        Assert.AreEqual(2, vm.Creatures.Count);
+        Assert.AreEqual("G", vm.Creatures[0].KeyText);
+        Assert.AreEqual("B", vm.Creatures[1].KeyText);
+        StringAssert.Contains(vm.Creatures[0].Name, "Name_warg");
+        StringAssert.Contains(vm.Creatures[1].PriceText, "200");
+        Assert.AreEqual("Ready", vm.CreatureSeconds);
+    }
+
+    [TestMethod]
+    public void CallCreature_PaysAndStartsTheTimerOnEveryButton()
+    {
+        var vm = FactionPanel(out var match, creatures: PanelBeasts);
+        var gold = match.GetView(WestSlot).Gold;
+        vm.SelectLane(1);
+
+        vm.CallCreature(0);
+
+        Assert.AreEqual(gold - 90, match.GetView(WestSlot).Gold);
+        Assert.AreEqual("30 s", vm.CreatureSeconds);
+        Assert.IsTrue(vm.Creatures.All(c => !c.CanCall));
+        Assert.AreEqual(0f, vm.CreatureFillWidth);
+    }
+
+    [TestMethod]
+    public void CallCreature_PastTheRow_IsIgnored()
+    {
+        var vm = FactionPanel(out var match, creatures: PanelBeasts);
+        var gold = match.GetView(WestSlot).Gold;
+
+        vm.CallCreature(3);
+
+        Assert.AreEqual(gold, match.GetView(WestSlot).Gold);
+    }
+
+    [TestMethod]
+    public void Refresh_DuringTheCountdown_IntroducesTheFaction_AndNotAfter()
+    {
+        var traits = new List<FactionTrait> { new("{=a}Good at this", true), new("{=b}Bad at that", false) };
+        var vm = FactionPanel(out var match, traits: traits, config: Config(c => c with { CountdownSeconds = 30f }));
+
+        Assert.IsTrue(vm.IsIntroVisible);
+        Assert.AreEqual("You command Gondor", vm.IntroTitle);
+        Assert.AreEqual("+", vm.IntroTraits[0].SignText);
+        Assert.AreEqual("Bad at that", vm.IntroTraits[1].Text);
+        Assert.AreEqual("-", vm.IntroTraits[1].SignText);
+
+        match.Tick(Snap(31f));
+        vm.Refresh();
+
+        Assert.IsFalse(vm.IsIntroVisible);
+    }
+
+    [TestMethod]
+    public void Refresh_ListsTheCamps_AndAClearedOneSaysSo()
+    {
+        var factions = Factions();
+        var layout = Layout() with { Camps = new List<CampSlot> { new("camp_0", new Vec3f(300f, 25f, 0f), "wolf", 1, 250) } };
+        var match = new FordsMatch(Config(), layout, factions, Slots(), new SeededFordsRandom(7));
+        var session = new FordsSession();
+        session.Fill(new object(), match, WestSlot, Substitute.For<IFordsBattlefieldAdapter>(), new Vec3f(0f, 25f, 45f), new Vec3f(1000f, 25f, 0f), new List<Vec3f>());
+        var vm = new FordsCommandVM(session, () => { });
+        vm.Refresh();
+
+        StringAssert.Contains(vm.Camps[0].Text, "1 left");
+        StringAssert.Contains(vm.Camps[0].Text, "250");
+
+        match.OnCampUnitKilled("camp_0", null);
+        vm.Refresh();
+
+        StringAssert.Contains(vm.Camps[0].Text, "cleared");
+    }
+
+    [TestMethod]
+    public void Tick_AnOldFeedLine_Leaves()
+    {
+        var session = Session(out _);
+        session.PushEvents(new[] { new MatchEvent(MatchEventKind.CampCleared, MatchSide.East, "camp_east_0", 250) });
+        var vm = Panel(session);
+        Assert.AreEqual(1, vm.Feed.Count);
+
+        vm.Tick(FordsCommandVM.FeedLineSeconds - 1f);
+        Assert.AreEqual(1, vm.Feed.Count);
+
+        vm.Tick(2f);
+        Assert.AreEqual(0, vm.Feed.Count);
+    }
+
+    [TestMethod]
+    public void Refresh_AnOrderCooldown_ShadesTheButtonInProportion()
+    {
+        var vm = FactionPanel(out var match, config: Config(c => c with { Lanes = c.Lanes with { OrderCooldownSeconds = 20f } }));
+
+        vm.SetOrder(LaneOrder.Hold);
+        var push = vm.Orders.Single(o => o.Text == "Push");
+
+        Assert.AreEqual(FordsOrderVM.ButtonHeight, push.CooldownHeight, 1f);
+
+        match.Tick(Snap(10f));
+        vm.Refresh();
+
+        Assert.AreEqual(FordsOrderVM.ButtonHeight / 2f, push.CooldownHeight, 1f);
+    }
+
+    [TestMethod]
+    public void Refresh_AnOffer_ShowsTheIconOfItsRole_AndARedPriceWhenItCostsTooMuch()
+    {
+        var vm = Panel(Session(out _));
+
+        Assert.IsTrue(vm.Offers.All(o => o.IconSprite.StartsWith(@"General\TroopTypeIcons\", System.StringComparison.Ordinal)));
+        Assert.AreEqual(FordsFactionStyle.PriceColor(true), vm.Offers[0].PriceColor);
     }
 }

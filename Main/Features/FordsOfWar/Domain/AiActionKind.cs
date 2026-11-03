@@ -6,4 +6,5 @@ internal enum AiActionKind
     BuyHero,
     Buyback,
     SetOrder,
+    CallCreature,
 }

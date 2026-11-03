@@ -12,6 +12,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import zlib
 from pathlib import Path
 from types import SimpleNamespace
 from unittest import mock
@@ -812,6 +813,53 @@ class WaitAfterCrashTests(unittest.TestCase):
         said = []
         self.assertFalse(r.wait_after_crash(self.Proc([None]), 0, said.append))
         self.assertEqual([], said)
+
+
+class ScreenshotConversionTests(unittest.TestCase):
+    @staticmethod
+    def bmp(width, height, pixels):
+        """A bottom-up 24-bit BMP. pixels are (b, g, r) tuples, bottom row first."""
+        stride = ((width * 24 + 31) // 32) * 4
+        body = bytearray()
+        for y in range(height):
+            row = bytearray()
+            for x in range(width):
+                row += bytes(pixels[y * width + x])
+            row += b"\0" * (stride - len(row))
+            body += row
+        header = b"BM" + struct.pack("<IHHI", 54 + len(body), 0, 0, 54) + struct.pack("<IiiHHIIiiII", 40, width, height, 1, 24, 0, len(body), 0, 0, 0, 0)
+        return bytes(header) + bytes(body)
+
+    def test_a_small_picture_becomes_a_png_with_red_and_blue_swapped_and_the_top_row_first(self):
+        raw = self.bmp(2, 2, [(1, 2, 3), (4, 5, 6), (7, 8, 9), (10, 11, 12)])
+
+        png = r.bmp_to_png(raw)
+
+        self.assertEqual(b"\x89PNG\r\n\x1a\n", png[:8])
+        data_start = png.index(b"IDAT") + 4
+        size = struct.unpack(">I", png[data_start - 8:data_start - 4])[0]
+        rows = zlib.decompress(png[data_start:data_start + size])
+        self.assertEqual(bytes([0, 9, 8, 7, 12, 11, 10, 0, 3, 2, 1, 6, 5, 4]), rows)
+
+    def test_anything_but_a_24_bit_bmp_is_refused(self):
+        self.assertIsNone(r.bmp_to_png(b"not a picture" + b"\0" * 60))
+
+    def test_the_run_folder_gets_pngs_and_loses_the_bmps(self):
+        with tempfile.TemporaryDirectory() as folder:
+            shot = Path(folder) / "hud_5_0.bmp"
+            shot.write_bytes(self.bmp(1, 1, [(1, 2, 3)]))
+            (Path(folder) / "hud_bad.bmp").write_bytes(b"nope" + b"\0" * 60)
+            said = []
+
+            self.assertEqual(1, r.convert_screenshots(folder, said.append))
+
+            self.assertTrue((Path(folder) / "hud_5_0.png").is_file())
+            self.assertFalse(shot.exists())
+            self.assertTrue((Path(folder) / "hud_bad.bmp").exists(), "a file it cannot read is left for a person")
+            self.assertTrue(any("hud_bad" in line for line in said))
+
+    def test_screenshots_reach_the_arm_file(self):
+        self.assertIn("screenshots=8,45", r.arm_text("E:/x", screenshots="8,45"))
 
 
 if __name__ == "__main__":

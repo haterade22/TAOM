@@ -35,6 +35,8 @@ internal sealed partial class FordsMatch
     private readonly LaneMarchRules _march;
     private readonly CapturePointRules _capture;
     private readonly CampRules _camps;
+    private readonly Dictionary<MatchSide, RegionDeck> _decks = new();
+    private readonly Dictionary<int, float> _creatureReadyAt = new();
     private readonly SeizeRules _seize;
     private readonly WaveScheduler _waves;
 
@@ -63,10 +65,11 @@ internal sealed partial class FordsMatch
         _clock = new MatchClock(config.CountdownSeconds);
         _ledger = new GoldLedger(config.Economy, slots.Select(s => s.Id));
         _bounty = new BountyRules(config.Economy);
-        _chain = new TowerChain(layout, config.Towers);
-        _damage = new TowerDamageRules(config.Towers, _chain);
+        var feats = factions.ToDictionary(f => f.Key, f => f.Value.FeatsOrNone);
+        _chain = new TowerChain(layout, config.Towers, feats);
+        _damage = new TowerDamageRules(config.Towers, _chain, feats);
         _regen = new TowerRegen(config.Towers, _chain);
-        _fire = new TowerFireRules(config.Towers, _chain);
+        _fire = new TowerFireRules(config.Towers, _chain, feats);
         _heroes = new HeroRoster(config.Heroes);
         _orders = new LaneOrderBook(config.Lanes);
         _march = new LaneMarchRules(config.Lanes, config.Towers, layout, _chain);
@@ -74,6 +77,11 @@ internal sealed partial class FordsMatch
         _camps = new CampRules(layout, LaneOwner);
         _seize = new SeizeRules(layout, _camps, _capture);
         _waves = new WaveScheduler(config.Waves, factions, layout.Lanes.Count, LaneOwner);
+        foreach (var faction in factions)
+        {
+            if (faction.Value.Rotation is { Regions.Count: > 0 } rotation)
+                _decks[faction.Key] = new RegionDeck(rotation, random);
+        }
 
         foreach (var slot in slots)
         {
@@ -114,6 +122,8 @@ internal sealed partial class FordsMatch
 
         Observe(snapshot);
         PayPassiveIncome(dt);
+        foreach (var deck in _decks.Values)
+            deck.Tick(dt);
         RunCapture(dt, snapshot);
         effects.CampOrders.AddRange(_camps.UpdateAlerts(snapshot.Lanes));
         effects.Heals.AddRange(_regen.Tick(dt));
@@ -144,6 +154,55 @@ internal sealed partial class FordsMatch
         _pendingEvents.Add(new MatchEvent(MatchEventKind.PackBought, owner.Side, offer.OfferId, offer.PackPrice));
         return CommandResult.Ok;
     }
+
+    /// <summary>Shows the named region of the slot's rotation now, for its fee. The region already showing costs nothing.</summary>
+    public CommandResult TryCallRegion(int slot, string regionId)
+    {
+        if (!_slotsById.TryGetValue(slot, out var owner))
+            return CommandResult.LaneNotOwned;
+        if (!_decks.TryGetValue(owner.Side, out var deck) || deck.Regions.All(r => r.Id != regionId))
+            return CommandResult.UnknownOffer;
+        if (_clock.Phase == MatchPhase.Ended)
+            return CommandResult.NotLive;
+        if (deck.Current.Id == regionId)
+            return CommandResult.Ok;
+        if (!_ledger.TrySpend(slot, deck.CallFee))
+            return CommandResult.NotEnoughGold;
+
+        deck.Call(regionId);
+        _pendingEvents.Add(new MatchEvent(MatchEventKind.RegionCalled, owner.Side, deck.Current.Name, deck.CallFee));
+        return CommandResult.Ok;
+    }
+
+    /// <summary>Calls a creature into the lane: pays for it, queues it like a bought pack, and starts the slot's shared timer.</summary>
+    public CommandResult TryCallCreature(int slot, int lane, string offerId)
+    {
+        var gate = CheckLane(slot, lane, out var owner);
+        if (gate != CommandResult.Ok)
+            return gate;
+
+        var side = owner!.Side;
+        var call = _factions.TryGetValue(side, out var faction) ? faction.Creatures : null;
+        var offer = call?.Offers.FirstOrDefault(o => o.OfferId == offerId && !_lostPacks.Contains((side, o.OfferId)));
+        if (offer == null)
+            return CommandResult.UnknownOffer;
+        if (CreatureCooldownLeft(slot) > 0f)
+            return CommandResult.OnCooldown;
+        if (_ledger.Balance(slot) < offer.PackPrice)
+            return CommandResult.NotEnoughGold;
+
+        var queued = _waves.TryQueuePack(side, lane, slot, offer);
+        if (queued != CommandResult.Ok)
+            return queued;
+
+        _ledger.TrySpend(slot, offer.PackPrice);
+        _creatureReadyAt[slot] = _clock.Elapsed + call!.CooldownSeconds;
+        _pendingEvents.Add(new MatchEvent(MatchEventKind.CreatureCalled, side, offer.TroopId, offer.PackPrice));
+        return CommandResult.Ok;
+    }
+
+    private float CreatureCooldownLeft(int slot) =>
+        _creatureReadyAt.TryGetValue(slot, out var readyAt) ? Math.Max(0f, readyAt - _clock.Elapsed) : 0f;
 
     public CommandResult TryBuyHero(int slot, int lane, string heroId)
     {
@@ -267,7 +326,8 @@ internal sealed partial class FordsMatch
             return KillCredit.SameSide;
 
         var bounty = dead.HeroId != null ? _bounty.HeroKillBounty : _bounty.KillBounty(dead.Value);
-        _ledger.Earn(killerSlot, bounty);
+        var factor = _factions.TryGetValue(killerSide, out var killerFaction) ? killerFaction.FeatsOrNone.Bounty : 1f;
+        _ledger.Earn(killerSlot, (int)Math.Round(bounty * factor, MidpointRounding.AwayFromZero));
         return KillCredit.Paid;
     }
 
@@ -419,6 +479,8 @@ internal sealed partial class FordsMatch
         foreach (var slot in _slots)
         {
             var multiplier = _profiles.TryGetValue(slot.Id, out var profile) ? profile.IncomeMultiplier : 1f;
+            if (_factions.TryGetValue(slot.Side, out var faction))
+                multiplier *= faction.FeatsOrNone.Income;
             var carry = _incomeCarry[slot.Id] + (double)_config.Economy.IncomePerMinute * multiplier * dt / 60d;
             var whole = (int)Math.Floor(carry + 1e-6);
             _incomeCarry[slot.Id] = Math.Max(0d, carry - whole);
@@ -490,6 +552,9 @@ internal sealed partial class FordsMatch
             case AiActionKind.SetOrder:
                 TrySetLaneOrder(slot, action.Lane, action.Order);
                 break;
+            case AiActionKind.CallCreature:
+                TryCallCreature(slot, action.Lane, action.Id);
+                break;
         }
     }
 
@@ -547,7 +612,8 @@ internal sealed partial class FordsMatch
     /// <summary>The side's pack offers, without the ones whose spawn failed (see <see cref="OnSpawnFailed"/>).</summary>
     private IReadOnlyList<UnitOffer> UnitOffersOf(MatchSide side) =>
         _factions.TryGetValue(side, out var faction)
-            ? faction.Units.Where(o => !_lostPacks.Contains((side, o.OfferId))).ToList()
+            ? faction.Units.Concat(_decks.TryGetValue(side, out var deck) ? deck.Current.Units : Array.Empty<UnitOffer>())
+                .Where(o => !_lostPacks.Contains((side, o.OfferId))).ToList()
             : Array.Empty<UnitOffer>();
 
     /// <summary>The side's hero offers, without the heroes whose spawn failed (see <see cref="OnSpawnFailed"/>).</summary>

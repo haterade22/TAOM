@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace TAOM.Features.FordsOfWar.Domain;
 
@@ -15,11 +16,13 @@ internal sealed class TowerDamageRules
 {
     private readonly FordsTowerConfig _config;
     private readonly TowerChain _chain;
+    private readonly IReadOnlyDictionary<MatchSide, FactionFeats> _feats;
 
-    public TowerDamageRules(FordsTowerConfig config, TowerChain chain)
+    public TowerDamageRules(FordsTowerConfig config, TowerChain chain, IReadOnlyDictionary<MatchSide, FactionFeats>? feats = null)
     {
         _config = config;
         _chain = chain;
+        _feats = feats ?? new Dictionary<MatchSide, FactionFeats>();
     }
 
     public int Effective(TowerHit hit) => Decide(hit, out _);
@@ -60,7 +63,14 @@ internal sealed class TowerDamageRules
             return 0;
         }
 
-        double factor = 1.0;
+        var feat = FeatFactor(hit);
+        if (feat <= 0.0)
+        {
+            reason = TowerDamageReason.FactionFeat;
+            return 0;
+        }
+
+        double factor = feat;
         if (hit.Ranged)
             factor *= _config.RangedDamageFactor;
         if (hit.AttackerRole == UnitRole.Hero)
@@ -71,6 +81,15 @@ internal sealed class TowerDamageRules
         var scaled = (int)Math.Round(raw * factor, MidpointRounding.AwayFromZero);
         reason = TowerDamageReason.Applied;
         return Math.Max(1, scaled);
+    }
+
+    private double FeatFactor(TowerHit hit)
+    {
+        if (!(hit.AttackerSide is { } side) || !_feats.TryGetValue(side, out var feats))
+            return 1.0;
+
+        var mounted = hit.AttackerRole == UnitRole.Cavalry || hit.AttackerRole == UnitRole.HorseArcher;
+        return feats.DamageToTowers * (mounted ? feats.MountedDamageToTowers : 1f);
     }
 
     // The engine's raw damage, or for a zero melee blow from a weapon with thrust damage the floor (0 when the factor is 0).

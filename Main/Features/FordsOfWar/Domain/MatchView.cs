@@ -15,10 +15,24 @@ internal sealed record MatchView(int Slot, MatchSide Side, MatchPhase Phase, flo
     int HeroSlotsFree, IReadOnlyList<int> OwnedLanes, IReadOnlyList<MatchView.LaneView> Lanes,
     IReadOnlyList<MatchView.TowerView> Keeps, IReadOnlyList<MatchView.HeroView> Heroes,
     IReadOnlyList<MatchView.UnitOfferView> UnitOffers, IReadOnlyList<MatchView.HeroOfferView> HeroOffers,
-    IReadOnlyList<MatchView.CapturePointView> CapturePoints, MatchSide? Winner)
+    IReadOnlyList<MatchView.CapturePointView> CapturePoints, MatchSide? Winner, string FactionId = "",
+    IReadOnlyList<FactionTrait>? Traits = null, MatchView.RegionView? Region = null, MatchView.CreatureCallView? Creatures = null,
+    int IncomePerMinute = 0, string FactionName = "", IReadOnlyList<MatchView.CampView>? Camps = null, float OrderCooldownSeconds = 0f)
 {
     internal sealed record LaneView(int Index, bool Owned, LaneOrder Order, float CooldownLeft, int OwnLive, int EnemyLive,
         int Threat, IReadOnlyList<TowerView> Towers, bool CanSeize = false);
+
+    /// <summary>Gondor's rotation as the panel shows it. CanAffordCall is the gold test only.</summary>
+    internal sealed record RegionView(string Id, string Name, float SecondsLeft, float TotalSeconds, string NextId, string NextName, int CallFee,
+        bool CanAffordCall, IReadOnlyList<RegionChoiceView> Choices);
+
+    internal sealed record RegionChoiceView(string Id, string Name);
+
+    /// <summary>The creature call as the panel and the AI read it: the shared timer and what each creature costs.</summary>
+    internal sealed record CreatureCallView(float CooldownLeft, float CooldownTotal, IReadOnlyList<UnitOfferView> Offers);
+
+    /// <summary>A neutral camp as the board shows it: creatures left and what clearing it pays.</summary>
+    internal sealed record CampView(string Id, int Alive, int Reward);
 
     internal sealed record TowerView(string Id, MatchSide Owner, int Lane, int Order, TowerKind Kind, int HitPoints,
         int MaxHitPoints, bool Locked, bool Destroyed);

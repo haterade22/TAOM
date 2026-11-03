@@ -30,6 +30,10 @@ messages, which are not user input, so a run does not reset the clock it is gate
 in a window no script can press. Killing the game then loses the dump, so with a value above 0 the launcher waits up to that long for the
 game to end. The default 0 stops the game at once. Pass it whenever someone may be near the PC.
 
+`--screenshots 8,45,65` saves a picture of the screen at those live seconds, plus one during the countdown, through the engine's
+`Utilities.TakeScreenshot`. The picture holds the UI, so a session can read the panel itself. The engine writes 24-bit BMP data whatever the file is called, so the launcher
+turns each `hud_*.bmp` into a PNG in the run folder when the match ends. Static review cannot see a Gauntlet layout: use this for any change to a prefab.
+
 ## Why not headless
 
 Single player cannot run without the client. A dedicated server does not load `TAOM.Client`, and the Fords start needs the client

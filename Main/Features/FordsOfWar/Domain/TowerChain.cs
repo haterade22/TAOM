@@ -30,7 +30,8 @@ internal sealed class TowerChain
     private readonly List<string> _ids = new();
     private readonly HashSet<int> _lanes = new();
 
-    public TowerChain(MapLayout layout, FordsTowerConfig config)
+    /// <param name="feats">Each side's feats, for its towers' hit points; null for none.</param>
+    public TowerChain(MapLayout layout, FordsTowerConfig config, IReadOnlyDictionary<MatchSide, FactionFeats>? feats = null)
     {
         foreach (var lane in layout.Lanes)
             _lanes.Add(lane.Index);
@@ -40,7 +41,8 @@ internal sealed class TowerChain
             if (_states.ContainsKey(slot.Id))
                 continue;
 
-            _states[slot.Id] = new TowerState(slot, MaxFor(slot, config));
+            var factor = feats != null && feats.TryGetValue(slot.Owner, out var own) ? own.TowerHitPoints : 1f;
+            _states[slot.Id] = new TowerState(slot, Math.Max(1, (int)Math.Round(MaxFor(slot, config) * factor, MidpointRounding.AwayFromZero)));
             _ids.Add(slot.Id);
             if (slot.Kind == TowerKind.Tower)
                 _lanes.Add(slot.Lane);

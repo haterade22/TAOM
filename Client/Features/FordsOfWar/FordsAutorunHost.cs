@@ -54,5 +54,11 @@ internal sealed class FordsAutorunHost : IFordsAutorunHost
             File.Move(tmp, path);
     }
 
+    public void TakeScreenshot(string name)
+    {
+        Directory.CreateDirectory(_outFolder);
+        TaleWorlds.Engine.Utilities.TakeScreenshot(Path.Combine(_outFolder, name));
+    }
+
     public void Quit() => TaleWorlds.Engine.Utilities.QuitGame();
 }

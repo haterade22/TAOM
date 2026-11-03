@@ -24,7 +24,7 @@ public class FordsCommandPrefabTests
     private static readonly Type[] ViewModels =
     {
         typeof(FordsCommandVM), typeof(FordsLaneVM), typeof(FordsOfferVM), typeof(FordsHeroOfferVM), typeof(FordsOrderVM),
-        typeof(FordsLaneBarVM), typeof(FordsTowerBarVM), typeof(FordsFeedLineVM), typeof(FordsPointVM),
+        typeof(FordsTowerBarVM), typeof(FordsFeedLineVM), typeof(FordsPointVM), typeof(FordsTraitVM), typeof(FordsRegionChoiceVM), typeof(FordsCreatureVM), typeof(FordsCampVM),
     };
 
     private static XElement Document() =>
@@ -155,7 +155,7 @@ public class FordsCommandPrefabTests
     public void EveryCommand_IsAPublicParameterlessMethodOfItsViewModel()
     {
         var commands = typeof(FordsCommandVM).GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly).Where(m => m.Name.StartsWith("Execute", StringComparison.Ordinal)).Select(m => m.Name)
-            .Concat(new[] { "ExecuteSelect", "ExecuteBuy", "ExecuteAct", "ExecuteSet" });
+            .Concat(new[] { "ExecuteSelect", "ExecuteBuy", "ExecuteAct", "ExecuteSet", "ExecuteCall" });
         var used = Root().DescendantsAndSelf().Attributes().Where(a => a.Name.LocalName.StartsWith("Command.", StringComparison.Ordinal))
             .Select(a => a.Value).Distinct().ToList();
 

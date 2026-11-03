@@ -13,6 +13,8 @@ public sealed class FordsOfferVM : FordsViewModel
     private string _priceText = string.Empty;
     private string _keyText = string.Empty;
     private bool _canAfford;
+    private string _iconSprite = string.Empty;
+    private string _priceColor = FordsFactionStyle.PriceColor(true);
 
     internal FordsOfferVM(int index, Action<int> onBuy)
     {
@@ -57,6 +59,20 @@ public sealed class FordsOfferVM : FordsViewModel
         private set => Set(ref _canAfford, value, nameof(CanAfford));
     }
 
+    [DataSourceProperty]
+    public string IconSprite
+    {
+        get => _iconSprite;
+        private set => Set(ref _iconSprite, value, nameof(IconSprite));
+    }
+
+    [DataSourceProperty]
+    public string PriceColor
+    {
+        get => _priceColor;
+        private set => Set(ref _priceColor, value, nameof(PriceColor));
+    }
+
     public void ExecuteBuy() => _onBuy(Index);
 
     internal void Update(MatchView.UnitOfferView offer, string name, bool live)
@@ -66,5 +82,7 @@ public sealed class FordsOfferVM : FordsViewModel
         PriceText = FordsHudText.Price(offer.Price);
         KeyText = Index < FordsCommandVM.OfferHotkeys ? "F" + (Index + 1) : string.Empty;
         CanAfford = live && offer.CanAfford;
+        IconSprite = FordsFactionStyle.RoleIcon(offer.Role);
+        PriceColor = FordsFactionStyle.PriceColor(offer.CanAfford);
     }
 }

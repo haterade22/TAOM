@@ -33,6 +33,10 @@ public class FordsAutorunDriverTests
         public FordsMatchSetup? Setup;
         public readonly Dictionary<string, string> Files = new();
 
+        public readonly List<string> Screenshots = new();
+
+        public void TakeScreenshot(string name) => Screenshots.Add(name);
+
         public bool AtMainMenu => AtMenu;
 
         public bool HideAnyInquiry()
@@ -143,6 +147,35 @@ public class FordsAutorunDriverTests
 
     private Dictionary<string, string> Done() =>
         _host.Files[DoneFile].Split('\n').Where(l => l.Contains('=')).ToDictionary(l => l.Substring(0, l.IndexOf('=')).Trim(), l => l.Substring(l.IndexOf('=') + 1).Trim('\r'));
+
+    [TestMethod]
+    public void Tick_ALiveMatch_TakesEachScreenshotOnceWhenItsSecondComes()
+    {
+        var driver = Driver("screenshots=5,20\n");
+        StartAndGoLive(driver);
+
+        Mission(10.0);
+        Tick(driver, 1.0);
+
+        CollectionAssert.AreEqual(new[] { "hud_5_0.bmp" }, _host.Screenshots);
+
+        Mission(15.0);
+        Tick(driver, 2.0);
+
+        CollectionAssert.AreEqual(new[] { "hud_5_0.bmp", "hud_20_0.bmp" }, _host.Screenshots);
+    }
+
+    [TestMethod]
+    public void Tick_DuringTheCountdown_TakesOnePictureWhenAnyAreAsked()
+    {
+        var driver = Driver("screenshots=5\n");
+        Tick(driver, 5.0);
+        Mission(5.0);
+
+        Tick(driver, 2.0);
+
+        CollectionAssert.AreEqual(new[] { "hud_countdown.bmp" }, _host.Screenshots);
+    }
 
     [TestMethod]
     public void Tick_Unarmed_NeverTouchesTheHost()

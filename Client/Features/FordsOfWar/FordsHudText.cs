@@ -13,6 +13,34 @@ internal static class FordsHudText
 {
     internal static string Gold(int gold) => new TextObject("{=TAOM_FOW_Hud_Gold}Gold: {GOLD}").SetTextVariable("GOLD", gold).ToString();
 
+    internal static string Income(int perMinute) =>
+        new TextObject("{=TAOM_FOW_Hud_Income}+{GOLD} a minute").SetTextVariable("GOLD", perMinute).ToString();
+
+    internal static string YouCommand(string faction) =>
+        new TextObject("{=TAOM_FOW_Hud_YouCommand}You command {FACTION}").SetTextVariable("FACTION", faction).ToString();
+
+    internal static string Seconds(int seconds) =>
+        new TextObject("{=TAOM_FOW_Hud_Seconds}{SECONDS} s").SetTextVariable("SECONDS", seconds).ToString();
+
+    internal static string RegionNext(string region) =>
+        new TextObject("{=TAOM_FOW_Hud_RegionNext}Next: {REGION}").SetTextVariable("REGION", region).ToString();
+
+    internal static string RegionCall(int fee) =>
+        new TextObject("{=TAOM_FOW_Hud_RegionCall}R  Call a region: {PRICE} gold").SetTextVariable("PRICE", fee).ToString();
+
+    internal static string CreatureTitle() => new TextObject("{=TAOM_FOW_Hud_CreatureTitle}Call a creature").ToString();
+
+    internal static string CreatureReady() => new TextObject("{=TAOM_FOW_Hud_CreatureReady}Ready").ToString();
+
+    internal static string CreaturePack(string name, int size) =>
+        new TextObject("{=TAOM_FOW_Hud_CreaturePack}{NAME} x{SIZE}").SetTextVariable("NAME", name).SetTextVariable("SIZE", size).ToString();
+
+    internal static string CampAlive(int number, int alive, int reward) =>
+        new TextObject("{=TAOM_FOW_Hud_CampAlive}Camp {CAMP}: {COUNT} left, pays {GOLD}").SetTextVariable("CAMP", number).SetTextVariable("COUNT", alive).SetTextVariable("GOLD", reward).ToString();
+
+    internal static string CampCleared(int number) =>
+        new TextObject("{=TAOM_FOW_Hud_CampCleared}Camp {CAMP}: cleared").SetTextVariable("CAMP", number).ToString();
+
     internal static string Forming() => new TextObject("{=TAOM_FOW_Hud_Forming}The armies are forming up").ToString();
 
     internal static string Lane(int lane) => new TextObject("{=TAOM_FOW_Hud_Lane}Lane {LANE}").SetTextVariable("LANE", lane).ToString();
@@ -53,7 +81,7 @@ internal static class FordsHudText
     internal static string PointContested() => new TextObject("{=TAOM_FOW_Hud_PointContested}Contested").ToString();
 
     internal static string KeysHint() =>
-        new TextObject("{=TAOM_FOW_Hud_KeysHint}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   WASD pan   Q E turn   wheel zoom").ToString();
+        new TextObject("{=TAOM_FOW_Hud_KeysHint}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   WASD pan   Q E turn   wheel zoom").ToString();
 
     internal static string PackSize(int size) => new TextObject("{=TAOM_FOW_Hud_PackSize}Pack of {SIZE}").SetTextVariable("SIZE", size).ToString();
 
@@ -156,6 +184,11 @@ internal static class FordsHudText
             case MatchEventKind.CampCleared:
                 return mine ? new TextObject("{=TAOM_FOW_Feed_OwnCamp}We cleared a camp.").ToString()
                             : new TextObject("{=TAOM_FOW_Feed_EnemyCamp}The enemy cleared a camp.").ToString();
+            case MatchEventKind.RegionCalled:
+                return new TextObject(mine ? "{=TAOM_FOW_Feed_OwnRegion}{REGION} answers our call." : "{=TAOM_FOW_Feed_EnemyRegion}The enemy calls on {REGION}.")
+                    .SetTextVariable("REGION", new TextObject(subjectName).ToString()).ToString();
+            case MatchEventKind.CreatureCalled:
+                return Named(mine ? "{=TAOM_FOW_Feed_OwnCreature}{HERO} comes at our call." : "{=TAOM_FOW_Feed_EnemyCreature}The enemy calls in {HERO}.", subjectName);
             case MatchEventKind.PackBought:
                 return mine ? new TextObject("{=TAOM_FOW_Feed_PackBought}Reinforcements sent for {PRICE} gold.").SetTextVariable("PRICE", e.Amount).ToString() : null;
             default:

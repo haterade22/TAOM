@@ -13,4 +13,5 @@ internal enum TowerDamageReason
     Locked,
     OwnSide,
     Weaponless,
+    FactionFeat,
 }
