@@ -137,7 +137,8 @@ internal sealed class LaneMarchRules
             return false;
         }
 
-        var withinStay = s.NextEnemyTowerDistance <= _towers.FireRange + SiegeStayMargin;
+        var range = _chain.FireRange(id);
+        var withinStay = s.NextEnemyTowerDistance <= range + SiegeStayMargin;
         if (_siege.TryGetValue(key, out var held) && held == id)
         {
             if (s.NearAttackers >= SiegeStayRatio * s.NearDefenders && withinStay)
@@ -148,7 +149,7 @@ internal sealed class LaneMarchRules
         }
 
         _siege.Remove(key);
-        if (!(s.NextEnemyTowerDistance <= _towers.FireRange) || s.NearAttackers < SiegeEnterRatio * s.NearDefenders)
+        if (!(s.NextEnemyTowerDistance <= range) || s.NearAttackers < SiegeEnterRatio * s.NearDefenders)
             return false;
 
         _siege[key] = id;
@@ -218,7 +219,7 @@ internal sealed class LaneMarchRules
     }
 
     /// <summary>
-    /// Hold HoldDistanceBeforeTower short of the next enemy tower, but never past the lane midpoint and at the midpoint when the
+    /// Hold HoldDistanceBeforeTower short of the next enemy tower, plus what that tower reaches past the base range (a lane on Hold has no answer to fire), but never past the lane midpoint and at the midpoint when the
     /// next target is a keep (a lane that lost its towers must not hold on the enemy's doorstep): a lane short of the point
     /// advances to it, a lane past it falls back to it. The point is a path vertex on the holder's side. With no next enemy
     /// tower or no path for the lane there is no point to hold, so no command.
@@ -229,6 +230,7 @@ internal sealed class LaneMarchRules
         if (tower == null || path == null)
             return LaneCommand.None;
 
-        return LaneCommand.HoldAt(path.HoldPoint(tower.Position, s.Side, _lanes.HoldDistanceBeforeTower, tower.Kind == TowerKind.Keep));
+        var distance = _lanes.HoldDistanceBeforeTower + _chain.FireRange(tower.Id) - _towers.FireRange;
+        return LaneCommand.HoldAt(path.HoldPoint(tower.Position, s.Side, distance, tower.Kind == TowerKind.Keep));
     }
 }

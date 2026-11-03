@@ -59,7 +59,7 @@ public sealed class FordsOfWarMissionLogic : MissionLogic
                 return;
             }
 
-            var towers = new FordsTowerAdapter(Mission, _logger, plan.Config.Towers.FireRange);
+            var towers = new FordsTowerAdapter(Mission, _logger, plan.LongestFireRange);
             var battlefield = new FordsBattlefieldAdapter(Mission, new FordsAgentRegistry(), towers.EntityOf, _logger);
             var director = new FordsMissionDirector(plan, battlefield, towers, battlefield.NewCampAdapter(), new FordsSceneAdapter(Mission, _logger), _session,
                 _logger, new SeededFordsRandom(Environment.TickCount), _report);

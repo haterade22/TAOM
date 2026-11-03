@@ -44,7 +44,10 @@ internal sealed partial class FordsMatch
             .Select(p => new MatchView.CapturePointView(p.PointId, p.Owner, p.Capturer, p.Progress, p.Contested, p.Rising))
             .ToList();
 
-        return new MatchView(slot, side, _clock.Phase, elapsed, gold, _config.Lanes.AssaultThreshold,
+        var laneCap = _config.Waves.MaxLivePerLanePerSide + (faction?.FeatsOrNone.UnitCapBonus ?? 0) / Math.Max(1, _layout.Lanes.Count);
+        var assaultThreshold = _config.Lanes.AssaultThreshold * laneCap / _config.Waves.MaxLivePerLanePerSide;
+
+        return new MatchView(slot, side, _clock.Phase, elapsed, gold, assaultThreshold,
             commander == null ? 0 : Math.Max(0, _config.Heroes.MaxAlivePerSide - _heroes.AliveCount(side)),
             commander == null ? new List<int>() : commander.Lanes.ToList(),
             lanes, keeps, heroes, unitOffers, heroOffers, points, _winner, faction?.FactionId ?? "", faction?.Traits,

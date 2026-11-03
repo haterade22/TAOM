@@ -4479,7 +4479,7 @@
 	<string id="TAOM_FOW_Feed_OwnCreature" text="{=TAOM_FOW_Feed_OwnCreature}{HERO} comes at our call." />
 	<string id="TAOM_FOW_Feed_EnemyCreature" text="{=TAOM_FOW_Feed_EnemyCreature}The enemy calls in {HERO}." />
 	<string id="TAOM_FOW_Trait_Gondor_Regions" text="{=TAOM_FOW_Trait_Gondor_Regions}A new region answers the call every 30 seconds. Pay to call one by name." />
-	<string id="TAOM_FOW_Trait_Gondor_Stone" text="{=TAOM_FOW_Trait_Gondor_Stone}Towers have 20% more hit points and fire 25% faster." />
+	<string id="TAOM_FOW_Trait_Gondor_Walls" text="{=TAOM_FOW_Trait_Gondor_Walls}Towers have 40% more hit points." />
 	<string id="TAOM_FOW_Trait_Gondor_Core" text="{=TAOM_FOW_Trait_Gondor_Core}Only militia are always at hand." />
 	<string id="TAOM_FOW_Region_Anorien" text="{=TAOM_FOW_Region_Anorien}Anórien" />
 	<string id="TAOM_FOW_Region_Lossarnach" text="{=TAOM_FOW_Region_Lossarnach}Lossarnach" />
@@ -4494,7 +4494,8 @@
 	<string id="TAOM_FOW_Region_Lamedon" text="{=TAOM_FOW_Region_Lamedon}Lamedon" />
 	<string id="TAOM_FOW_Region_Osgiliath" text="{=TAOM_FOW_Region_Osgiliath}Osgiliath" />
 	<string id="TAOM_FOW_Trait_Rohan_Riders" text="{=TAOM_FOW_Trait_Rohan_Riders}The finest cavalry in Middle-earth." />
-	<string id="TAOM_FOW_Trait_Rohan_Towers" text="{=TAOM_FOW_Trait_Rohan_Towers}Riders deal about a third of the damage to towers, and your own towers fire slower." />
+	<string id="TAOM_FOW_Trait_Rohan_Charge" text="{=TAOM_FOW_Trait_Rohan_Charge}Riders deal about a third of the damage to towers." />
+	<string id="TAOM_FOW_Trait_Rohan_Sentries" text="{=TAOM_FOW_Trait_Rohan_Sentries}Sentries keep watch: your towers fire 30% faster." />
 	<string id="TAOM_FOW_Trait_Rohan_Foot" text="{=TAOM_FOW_Trait_Rohan_Foot}Weak foot soldiers and archers." />
 	<string id="TAOM_FOW_Trait_Mordor_Horde" text="{=TAOM_FOW_Trait_Mordor_Horde}100 more troops in the field, and free waves come a quarter sooner." />
 	<string id="TAOM_FOW_Trait_Mordor_Beasts" text="{=TAOM_FOW_Trait_Mordor_Beasts}Call a creature to battle every 30 seconds." />

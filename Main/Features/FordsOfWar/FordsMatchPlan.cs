@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar.Domain;
 
@@ -15,6 +16,9 @@ internal sealed record FordsMatchPlan(FordsMatchConfig Config, MapEntry Map,
 {
     private const int MinLanes = 1;
     private const string FallbackProfile = "normal";
+
+    /// <summary>The fire range of the side whose towers reach furthest: the volley items must reach this.</summary>
+    public float LongestFireRange => Config.Towers.FireRange * Factions.Values.Max(f => f.FeatsOrNone.TowerRange);
 
     /// <summary>Null, with one error logged, when the scene or either faction is not in the config.</summary>
     public static FordsMatchPlan? Resolve(FordsMatchSetup setup, FordsConfigCatalog catalog, IModLogger logger)

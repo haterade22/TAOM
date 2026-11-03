@@ -11,6 +11,9 @@ internal sealed record FactionFeats
     /// <summary>Volleys per second of this faction's towers.</summary>
     public float TowerFireRate { get; init; } = 1f;
 
+    /// <summary>How far this faction's towers and keep fire.</summary>
+    public float TowerRange { get; init; } = 1f;
+
     /// <summary>Hit points of this faction's towers and keep.</summary>
     public float TowerHitPoints { get; init; } = 1f;
 

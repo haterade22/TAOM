@@ -6,7 +6,7 @@ namespace TAOM.Features.FordsOfWar.Domain;
 /// The read model for one commander slot, for the command panel and for the AI. Lanes lists every lane (Owned marks the
 /// ones this slot commands); Keeps and Heroes cover both sides. OwnLive and EnemyLive come from the last tick's snapshot.
 /// Threat is how many enemies stand in reach of the lane's outermost standing own tower (the enemy lane count once no
-/// tower is left). AssaultThreshold and HeroSlotsFree carry the config numbers the AI plans with. A hero's RespawnTotal is
+/// tower is left). AssaultThreshold (the config's share of this faction's lane cap) and HeroSlotsFree carry the numbers the AI plans with. A hero's RespawnTotal is
 /// the full respawn delay it died with, so a panel or the AI can tell a fresh death from one about to end.
 /// A hero's CanBuyback is true when the viewing slot's own dead hero passes every buyback rule but gold: the timer still
 /// runs, no buyback is paid yet, and the side is under its alive limit.

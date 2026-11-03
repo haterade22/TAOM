@@ -54,6 +54,9 @@ internal sealed partial class FordsMatch
 
     internal MatchPhase Phase => _clock.Phase;
 
+    /// <summary>How far this tower fires, which its owner's feats decide.</summary>
+    public float FireRange(string towerId) => _chain.FireRange(towerId);
+
     public FordsMatch(FordsMatchConfig config, MapLayout layout, IReadOnlyDictionary<MatchSide, FactionCatalog> factions,
         IReadOnlyList<CommanderSlot> slots, IFordsRandom random)
     {

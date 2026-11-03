@@ -5,7 +5,7 @@ using System.Linq;
 namespace TAOM.Features.FordsOfWar.Domain;
 
 /// <summary>
-/// The scripted volleys. A ready tower with an enemy inside FireRange fires at the nearest hero if one is in range,
+/// The scripted volleys. A ready tower with an enemy inside its own fire range fires at the nearest hero if one is in range,
 /// otherwise at the nearest enemy, then waits VolleyIntervalSeconds. Destroyed and unknown towers never fire;
 /// a locked tower still does.
 /// </summary>
@@ -43,7 +43,7 @@ internal sealed class TowerFireRules
             if (rate <= 0f)
                 continue;
 
-            var target = PickTarget(entry.EnemiesInRange);
+            var target = PickTarget(entry.EnemiesInRange, _chain.FireRange(entry.TowerId));
             if (target == null)
                 continue;
 
@@ -57,13 +57,13 @@ internal sealed class TowerFireRules
     private float RateOf(string towerId) =>
         _chain.Slot(towerId) is { } slot && _feats.TryGetValue(slot.Owner, out var feats) ? feats.TowerFireRate : 1f;
 
-    private TargetCandidate? PickTarget(IReadOnlyList<TargetCandidate> enemies)
+    private static TargetCandidate? PickTarget(IReadOnlyList<TargetCandidate> enemies, float range)
     {
         TargetCandidate? bestHero = null;
         TargetCandidate? bestAny = null;
         foreach (var e in enemies)
         {
-            if (e.Distance > _config.FireRange)
+            if (e.Distance > range)
                 continue;
             if (bestAny == null || e.Distance < bestAny.Distance)
                 bestAny = e;

@@ -106,7 +106,7 @@ internal static class FordsFieldProbe
 
                 if (!counted)
                     continue;
-                if (d <= facts.FireRange)
+                if (d <= facts.FireRangeOf(tower.Owner))
                 {
                     inRange = true;
                     if (d < coverDistance[stream])

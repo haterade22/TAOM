@@ -15,13 +15,13 @@ internal static class FordsSnapshotBuilder
 {
     public static MatchSnapshot Build(float dt, IReadOnlyList<FordsUnitSample> samples, Func<AgentKey, bool> isHero,
         IReadOnlyList<TowerSlot> standingTowers, IReadOnlyList<CapturePointSlot> points,
-        FordsTowerConfig towers, FordsCaptureConfig capture)
+        FordsTowerConfig towers, FordsCaptureConfig capture, Func<TowerSlot, float>? fireRange = null)
     {
         return new MatchSnapshot
         {
             Dt = dt,
             Lanes = BuildLanes(samples),
-            TowerTargets = BuildTowerTargets(samples, isHero, standingTowers, towers.FireRange),
+            TowerTargets = BuildTowerTargets(samples, isHero, standingTowers, fireRange ?? (_ => towers.FireRange)),
             Capture = BuildCapture(samples, points, capture.Radius),
             LiveBySide = new Dictionary<MatchSide, int>
             {
@@ -63,11 +63,12 @@ internal static class FordsSnapshotBuilder
     }
 
     private static List<TowerTargets> BuildTowerTargets(IReadOnlyList<FordsUnitSample> samples, Func<AgentKey, bool> isHero,
-        IReadOnlyList<TowerSlot> standingTowers, float fireRange)
+        IReadOnlyList<TowerSlot> standingTowers, Func<TowerSlot, float> fireRange)
     {
         var result = new List<TowerTargets>();
         foreach (var tower in standingTowers)
         {
+            var range = fireRange(tower);
             var candidates = new List<TargetCandidate>();
             foreach (var sample in samples)
             {
@@ -75,7 +76,7 @@ internal static class FordsSnapshotBuilder
                     continue;
 
                 var distance = sample.Position.Distance2D(tower.Position);
-                if (distance <= fireRange)
+                if (distance <= range)
                     candidates.Add(new TargetCandidate(sample.Key, distance, isHero(sample.Key)));
             }
 

@@ -170,6 +170,17 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
+    public void Sentries_GiveRohanTheFastestTowers_AndStoneGivesGondorTheToughest()
+    {
+        var factions = Catalog().Factions.ToList();
+        var rohan = factions.Single(f => f.FactionId == "rohan").FeatsOrNone;
+        var gondor = factions.Single(f => f.FactionId == "gondor").FeatsOrNone;
+
+        Assert.IsTrue(factions.Where(f => f.FactionId != "rohan").All(f => f.FeatsOrNone.TowerFireRate < rohan.TowerFireRate), "Rohan's towers fire fastest");
+        Assert.IsTrue(factions.Where(f => f.FactionId != "gondor").All(f => f.FeatsOrNone.TowerHitPoints < gondor.TowerHitPoints), "Gondor's towers are toughest");
+    }
+
+    [TestMethod]
     public void TheAiBuyCycles_ShowEachFactionsIdentity()
     {
         var catalog = Catalog();

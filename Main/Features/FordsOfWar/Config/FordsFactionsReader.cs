@@ -134,6 +134,7 @@ internal static class FordsFactionsReader
         return new FactionFeats
         {
             TowerFireRate = Factor("towerFireRate", 1f),
+            TowerRange = Factor("towerRange", 1f),
             TowerHitPoints = Factor("towerHitPoints", 1f),
             DamageToTowers = Factor("damageToTowers", 1f),
             MountedDamageToTowers = Factor("mountedDamageToTowers", 1f),

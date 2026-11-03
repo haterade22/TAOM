@@ -325,12 +325,12 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 
 | Faction | Strength | Weakness | Feats | Mechanic |
 |---|---|---|---|---|
-| Rohan | The best cavalry: six of eight offers are riders | Weak foot and archers (skills x0.7); riders hurt towers little | `mountedDamageToTowers` 0.25, `towerFireRate` 0.75 | None yet |
-| Gondor | Every regional specialist; strong towers | Only two offers are always there | `towerFireRate` 1.25, `towerHitPoints` 1.2 | Call of the Regions |
+| Rohan | The best cavalry: six of eight offers are riders | Weak foot and archers (skills x0.7); riders hurt towers little | `mountedDamageToTowers` 0.35, `towerFireRate` 1.3 (Sentries) | None yet |
+| Gondor | Every regional specialist; strong towers | Only two offers are always there | `towerHitPoints` 1.4 (Stone) | Call of the Regions |
 | Mordor | Most bodies: huge cheap orc packs and a larger army | Orcs very weak (skills x0.6); elites cost a lot | `unitCapBonus` 100, `waveInterval` 0.75 | Creature call |
 | Isengard | Heavy Uruk-hai; tower killers; waves that grow every 5 minutes | Fewer troops; only warg riders for cavalry | `damageToTowers` 1.5, `unitCapBonus` -50 | None yet |
 
-- **Feats** (`FactionFeats`): `towerFireRate` (0 keeps towers silent), `towerHitPoints`, `damageToTowers`, `mountedDamageToTowers` (0 means no damage at all, reason
+- **Feats** (`FactionFeats`): `towerFireRate` (0 keeps towers silent), `towerRange` (every rule that reads a tower's fire range uses it, and a lane on Hold stands back by the extra reach), `towerHitPoints`, `damageToTowers`, `mountedDamageToTowers` (0 means no damage at all, reason
   `FactionFeat`), `waveInterval`, `unitCapBonus` (the lane cap rises by this over the lane count), `income`, `bounty`. Each factor is relative to 1. A new feat is one
   property, one line in the reader and one use in a rule.
 - **AI buying** (`aiBuyCycle`, `AiCommander`): a repeating list the AI buys in, so a faction plays to its identity. An entry is an offer id, or a role name for the dearest offer of

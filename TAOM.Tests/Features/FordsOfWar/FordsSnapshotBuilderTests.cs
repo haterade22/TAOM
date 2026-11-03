@@ -81,6 +81,20 @@ public class FordsSnapshotBuilderTests
     }
 
     [TestMethod]
+    public void Build_ATowerWithALongerRange_SeesAnEnemyPastTheBaseRange()
+    {
+        var past = Towers.FireRange * 1.25f;
+        var samples = new[] { Sample(1, MatchSide.East, 0, past, 0f) };
+        var towers = new List<TowerSlot> { WestTower(0f, 0f) };
+
+        var plain = FordsSnapshotBuilder.Build(0.5f, samples, _ => false, towers, new List<CapturePointSlot>(), Towers, Capture);
+        var longer = FordsSnapshotBuilder.Build(0.5f, samples, _ => false, towers, new List<CapturePointSlot>(), Towers, Capture, _ => Towers.FireRange * 1.5f);
+
+        Assert.AreEqual(0, plain.TowerTargets.Count);
+        Assert.AreEqual(1, longer.TowerTargets.Single().EnemiesInRange.Count);
+    }
+
+    [TestMethod]
     public void Build_Samples_CountLiveUnitsPerSide()
     {
         var snapshot = Build(new[]

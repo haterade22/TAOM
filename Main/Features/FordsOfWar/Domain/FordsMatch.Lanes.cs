@@ -78,7 +78,7 @@ internal sealed partial class FordsMatch
     }
 
     /// <summary>
-    /// How many units are within the tower FireRange of <paramref name="tower"/>: the side's own units from lanes whose next enemy
+    /// How many units are within the fire range of <paramref name="tower"/>: the side's own units from lanes whose next enemy
     /// target is this same tower (<paramref name="own"/>, so a neighbouring lane's wave walking past does not count), or the other
     /// side's units from every lane. -1 when a lane of either side reported no positions (not known).
     /// </summary>
@@ -98,7 +98,7 @@ internal sealed partial class FordsMatch
 
             foreach (var position in lane.UnitPositions)
             {
-                if (position.Distance2D(tower.Position) <= _config.Towers.FireRange)
+                if (position.Distance2D(tower.Position) <= _chain.FireRange(tower.Id))
                     count++;
             }
         }

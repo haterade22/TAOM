@@ -29,10 +29,19 @@ internal sealed class TowerChain
     private readonly Dictionary<string, TowerState> _states = new();
     private readonly List<string> _ids = new();
     private readonly HashSet<int> _lanes = new();
+    private readonly Dictionary<MatchSide, float> _fireRanges = new();
+    private readonly float _baseFireRange;
 
-    /// <param name="feats">Each side's feats, for its towers' hit points; null for none.</param>
+    /// <param name="feats">Each side's feats, for its towers' hit points and range; null for none.</param>
     public TowerChain(MapLayout layout, FordsTowerConfig config, IReadOnlyDictionary<MatchSide, FactionFeats>? feats = null)
     {
+        _baseFireRange = config.FireRange;
+        if (feats != null)
+        {
+            foreach (var side in feats)
+                _fireRanges[side.Key] = config.FireRange * side.Value.TowerRange;
+        }
+
         foreach (var lane in layout.Lanes)
             _lanes.Add(lane.Index);
 
@@ -54,6 +63,10 @@ internal sealed class TowerChain
     public bool IsTower(string towerId) => _states.ContainsKey(towerId);
 
     public TowerSlot? Slot(string towerId) => _states.TryGetValue(towerId, out var s) ? s.Slot : null;
+
+    /// <summary>How far this tower fires, which its owner's feats decide. An unknown tower has the base range.</summary>
+    public float FireRange(string towerId) =>
+        _states.TryGetValue(towerId, out var s) && _fireRanges.TryGetValue(s.Slot.Owner, out var range) ? range : _baseFireRange;
 
     public int MaxHitPoints(string towerId) => _states.TryGetValue(towerId, out var s) ? s.MaxHitPoints : 0;
 

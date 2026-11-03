@@ -220,7 +220,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         lock (_gate)
         {
             var snapshot = FordsSnapshotBuilder.Build(dt, samples, IsHero, StandingTowers(), _layout.CapturePoints,
-                _plan.Config.Towers, _plan.Config.Capture);
+                _plan.Config.Towers, _plan.Config.Capture, t => match.FireRange(t.Id));
             effects = match.Tick(snapshot);
             phase = match.Phase;
         }
@@ -670,12 +670,13 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         var missing = ids.Where(id => !_battlefield.CharacterExists(id)).ToList();
         _report.Preflight(ids.Count, missing);
         var config = _plan.Config;
-        _report.VolleyItem(_towers.VolleyItemInfo(), config.Towers.FireRange);
+        _report.VolleyItem(_towers.VolleyItemInfo(), _plan.LongestFireRange);
         _report.TowerConfig(config.Towers);
         _facts = new FordsMatchFacts(config.Towers.FireRange, config.Towers.AttackRange, config.Capture.Radius, layout.Lanes.Count,
             config.Waves.MaxLivePerSide, config.Heroes.MaxAlivePerSide, KeepDistance(built), _battlefield.MaxAgents,
             FordsTowerGeometry.ContactMetres(_plan.Map.TowerHalfWidth),
-            _plan.Factions[MatchSide.West].FeatsOrNone.UnitCapBonus, _plan.Factions[MatchSide.East].FeatsOrNone.UnitCapBonus);
+            _plan.Factions[MatchSide.West].FeatsOrNone.UnitCapBonus, _plan.Factions[MatchSide.East].FeatsOrNone.UnitCapBonus,
+            _plan.Factions[MatchSide.West].FeatsOrNone.TowerRange, _plan.Factions[MatchSide.East].FeatsOrNone.TowerRange);
         _report.MatchStarted(_facts, built, expected);
     }
 

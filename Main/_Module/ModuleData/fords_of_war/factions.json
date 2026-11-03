@@ -4,10 +4,10 @@
       "name": "{=TAOM_FOW_Faction_Gondor}Gondor",
       "culture": "gondor",
       "aiBuyCycle": ["Infantry", "Ranged", "Spear", "Cavalry", "Infantry", "Ranged"],
-      "feats": { "towerFireRate": 1.25, "towerHitPoints": 1.2 },
+      "feats": { "towerHitPoints": 1.4 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Gondor_Regions}A new region answers the call every 30 seconds. Pay to call one by name.", "strength": true },
-        { "text": "{=TAOM_FOW_Trait_Gondor_Stone}Towers have 20% more hit points and fire 25% faster.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Gondor_Walls}Towers have 40% more hit points.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Gondor_Core}Only militia are always at hand.", "strength": false }
       ],
       "units": [
@@ -176,10 +176,11 @@
       "name": "{=TAOM_FOW_Faction_Rohan}Rohan",
       "culture": "vlandia",
       "aiBuyCycle": ["spear_riders", "militia", "lancers", "yeomen", "sword_riders", "militia", "horse_archers", "kings_knights", "militia", "riders_of_rohan"],
-      "feats": { "mountedDamageToTowers": 0.35, "towerFireRate": 0.9 },
+      "feats": { "mountedDamageToTowers": 0.35, "towerFireRate": 1.3 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Rohan_Riders}The finest cavalry in Middle-earth.", "strength": true },
-        { "text": "{=TAOM_FOW_Trait_Rohan_Towers}Riders deal about a third of the damage to towers, and your own towers fire slower.", "strength": false },
+        { "text": "{=TAOM_FOW_Trait_Rohan_Sentries}Sentries keep watch: your towers fire 30% faster.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Rohan_Charge}Riders deal about a third of the damage to towers.", "strength": false },
         { "text": "{=TAOM_FOW_Trait_Rohan_Foot}Weak foot soldiers and archers.", "strength": false }
       ],
       "units": [

@@ -7239,7 +7239,6 @@
 
     <string id="TAOM_FOW_Trait_Gondor_Regions" text="A new region answers the call every 30 seconds. Pay to call one by name." />
 
-    <string id="TAOM_FOW_Trait_Gondor_Stone" text="Towers have 20% more hit points and fire 25% faster." />
 
     <string id="TAOM_FOW_Trait_Gondor_Core" text="Only militia are always at hand." />
 
@@ -7269,7 +7268,6 @@
 
     <string id="TAOM_FOW_Trait_Rohan_Riders" text="The finest cavalry in Middle-earth." />
 
-    <string id="TAOM_FOW_Trait_Rohan_Towers" text="Riders deal about a third of the damage to towers, and your own towers fire slower." />
 
     <string id="TAOM_FOW_Trait_Rohan_Foot" text="Weak foot soldiers and archers." />
 
@@ -7284,6 +7282,12 @@
     <string id="TAOM_FOW_Trait_Isengard_Waves" text="Free waves grow stronger every 5 minutes." />
 
     <string id="TAOM_FOW_Trait_Isengard_Few" text="50 fewer troops in the field, and only warg riders for cavalry." />
+
+    <string id="TAOM_FOW_Trait_Gondor_Walls" text="Towers have 40% more hit points." />
+
+    <string id="TAOM_FOW_Trait_Rohan_Charge" text="Riders deal about a third of the damage to towers." />
+
+    <string id="TAOM_FOW_Trait_Rohan_Sentries" text="Sentries keep watch: your towers fire 30% faster." />
 
   </strings>
 
