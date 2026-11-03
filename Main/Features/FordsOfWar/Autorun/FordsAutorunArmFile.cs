@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using TAOM.Features.FordsOfWar.Domain;
 
 namespace TAOM.Features.FordsOfWar.Autorun;
 
@@ -15,6 +16,7 @@ internal static class FordsAutorunArmFile
         double liveSeconds = FordsAutorunPlan.DefaultLiveSeconds, liveWait = FordsAutorunPlan.DefaultLiveWaitSeconds, wallLimit = FordsAutorunPlan.DefaultWallLimitSeconds;
         var quit = false;
         var westAi = false;
+        var speed = 1;
         var screenshots = new List<double>();
 
         foreach (var raw in text.TrimStart('\uFEFF').Split('\n'))
@@ -44,6 +46,7 @@ internal static class FordsAutorunArmFile
                 case "wall_limit_seconds": wallLimit = Seconds(key, value, wallLimit, warnings); break;
                 case "quit": quit = Flag(key, value, quit, warnings); break;
                 case "west_ai": westAi = Flag(key, value, westAi, warnings); break;
+                case "speed": speed = Speed(key, value, speed, warnings); break;
                 case "screenshots": screenshots = SecondsList(key, value, warnings); break;
                 default: warnings.Add("unknown key '" + key + "' ignored"); break;
             }
@@ -59,7 +62,7 @@ internal static class FordsAutorunArmFile
         return new FordsAutorunPlan
         {
             Armed = true, Warnings = warnings, ArmPath = path, West = west, East = east, Ai = ai, Scene = scene, OutFolder = outFolder!,
-            LiveSeconds = liveSeconds, LiveWaitSeconds = liveWait, WallLimitSeconds = wallLimit, QuitWhenDone = quit, WestAi = westAi, ScreenshotSeconds = screenshots,
+            LiveSeconds = liveSeconds, LiveWaitSeconds = liveWait, WallLimitSeconds = wallLimit, QuitWhenDone = quit, WestAi = westAi, ScreenshotSeconds = screenshots, Speed = speed,
         };
     }
 
@@ -82,6 +85,15 @@ internal static class FordsAutorunArmFile
             return seconds;
 
         warnings.Add(key + "='" + value + "' is not a positive number; using " + FordsAutorunPlan.Num(fallback));
+        return fallback;
+    }
+
+    private static int Speed(string key, string value, int fallback, List<string> warnings)
+    {
+        if (int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var speed) && FordsGameSpeed.IsLevel(speed))
+            return speed;
+
+        warnings.Add(key + "='" + value + "' is not 1, 2, 4 or 10; using " + fallback);
         return fallback;
     }
 

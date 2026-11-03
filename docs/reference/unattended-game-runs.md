@@ -30,6 +30,8 @@ messages, which are not user input, so a run does not reset the clock it is gate
 in a window no script can press. Killing the game then loses the dump, so with a value above 0 the launcher waits up to that long for the
 game to end. The default 0 stops the game at once. Pass it whenever someone may be near the PC.
 
+`--speed 10` runs the match at that speed from the first frame (1, 2, 4 or 10). `--live-seconds` stays in mission seconds, so a 900-second match at 10x takes about 90 seconds after the load. Read [balance-log.md](../features/fords-of-war/balance-log.md) before you compare a fast match with a normal one.
+
 `--screenshots 8,45,65` saves a picture of the screen at those live seconds, plus one during the countdown, through the engine's
 `Utilities.TakeScreenshot`. The picture holds the UI, so a session can read the panel itself. The engine writes 24-bit BMP data whatever the file is called, so the launcher
 turns each `hud_*.bmp` into a PNG in the run folder when the match ends. Static review cannot see a Gauntlet layout: use this for any change to a prefab.
@@ -76,7 +78,7 @@ per application tick. The full key list and the wiring are in [fords-of-war.md](
 | Part | Content |
 |---|---|
 | Env var | `TAOM_FORDS_AUTORUN` = absolute path of a UTF-8 `key=value` arm file (LF) |
-| Arm keys | `out` (required, absolute folder), `quit`, `west`, `east`, `ai`, `west_ai`, `scene`, `live_seconds`, `live_wait_seconds`, `wall_limit_seconds` |
+| Arm keys | `out` (required, absolute folder), `quit`, `west`, `east`, `ai`, `west_ai`, `speed`, `scene`, `live_seconds`, `live_wait_seconds`, `wall_limit_seconds` |
 | Phases | Wait until the main menu has been up for 4 s (hiding any inquiry), start the match, wait for live, end it after `live_seconds` of mission time or at the wall limit, wait for the final=1 report pass, write the done file, quit |
 | Status | `fords_autorun_status.txt` rewritten every 5 s |
 | Done file | `fords_autorun_done.txt`: `reason`, `run`, `report`, `log`, `live_seconds`, `wall_seconds`, `final_passes`, `final_total`, `started`, `ended` |

@@ -14,6 +14,7 @@ public sealed partial class FordsCommandVM
 {
     private bool _isUpgradesVisible = true;
     private string _enemyFactionName = string.Empty;
+    private string _speedText = string.Empty;
     /// <summary>The width in pixels of the region and creature timer bars; the prefab's tracks are this wide.</summary>
     internal const float TimerBarWidth = 120f;
 
@@ -38,6 +39,16 @@ public sealed partial class FordsCommandVM
     private string _creatureTitle = string.Empty;
     private string _creatureSeconds = string.Empty;
     private float _creatureFillWidth;
+
+    /// <summary>The speed the view applies to the mission each frame.</summary>
+    internal FordsGameSpeed Speed { get; } = new();
+
+    [DataSourceProperty]
+    public string SpeedText
+    {
+        get => _speedText;
+        private set => Set(ref _speedText, value, nameof(SpeedText));
+    }
 
     [DataSourceProperty]
     public string EnemyFactionName
@@ -211,6 +222,14 @@ public sealed partial class FordsCommandVM
 
     internal void ToggleUpgrades() => IsUpgradesVisible = !IsUpgradesVisible;
 
+    public void ExecuteCycleSpeed() => CycleSpeed();
+
+    internal void CycleSpeed()
+    {
+        Speed.Cycle();
+        SpeedText = FordsHudText.SpeedButton(Speed.Current);
+    }
+
     /// <summary>The row's key or click: buys that track's next level for the whole army.</summary>
     internal void BuyUpgrade(int index)
     {
@@ -242,6 +261,7 @@ public sealed partial class FordsCommandVM
         FactionName = view.FactionName.Length == 0 ? string.Empty : new TextObject(view.FactionName).ToString();
         EnemyFactionName = view.EnemyFactionName.Length == 0 ? string.Empty : new TextObject(view.EnemyFactionName).ToString();
         AccentColor = FordsFactionStyle.Accent(view.FactionId);
+        SpeedText = FordsHudText.SpeedButton(Speed.Current);
         IncomeText = view.IncomePerMinute > 0 ? FordsHudText.Income(view.IncomePerMinute) : string.Empty;
 
         var traits = view.Traits;

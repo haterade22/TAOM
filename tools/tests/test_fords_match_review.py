@@ -35,7 +35,7 @@ def facts(**changes):
         "gold": {"West": {"earned": 5000, "spent": 5000, "left": 100}, "East": {"earned": 5000, "spent": 5000, "left": 100}},
         "troops": {}, "faction_of": {}, "upgrades": {"West": ["a"], "East": ["a"]}, "heroes": {"West": 1, "East": 1},
         "poison": {}, "poison_factions": [], "creatures": {}, "free_troops": set(), "spawned": {}, "esc_pauses": 0, "shader_compiles": 0,
-        "perf": {"avg": 5.0, "p95": 8.0}, "errors": [], "warnings": 0, "wargs": 0, "riderless_others": "-",
+        "perf": {"avg": 5.0, "p95": 8.0}, "errors": [], "warnings": 0, "wargs": 0, "riderless_others": "-", "speed": 1,
     }
     base.update(changes)
     return base
@@ -69,6 +69,11 @@ class ParseLogTests(unittest.TestCase):
     def test_the_last_housekeep_line_gives_wargs_and_other_mounts(self):
         self.assertEqual(self.parsed["wargs"], 42)
         self.assertEqual(self.parsed["riderless_others"], "spider:4")
+
+    def test_the_fastest_speed_of_the_match_is_read(self):
+        self.assertEqual(self.parsed["speed"], 1)
+        parsed = r.parse_log("[FordsOfWar][Speed] speed=4 mt=10.0\n[FordsOfWar][Speed] speed=10 mt=20.0\n[FordsOfWar][Speed] speed=1 mt=30.0\n")
+        self.assertEqual(parsed["speed"], 10)
 
     def test_pauses_errors_and_warnings_are_counted(self):
         self.assertEqual(self.parsed["esc_pauses"], 1)
@@ -117,6 +122,11 @@ class FindingTests(unittest.TestCase):
         self.assertIn("BALANCE", found)
         self.assertIn("rivendell", found)
         self.assertIn("6.0", found)
+
+    def test_a_match_at_more_than_normal_speed_is_named_first_so_nobody_reads_it_as_a_normal_one(self):
+        self.assertIn("SPEED", r.findings(facts(speed=10))[0])
+        self.assertIn("10x", r.findings(facts(speed=10))[0])
+        self.assertNotIn("SPEED", text(r.findings(facts())))
 
     def test_a_tower_swing_is_flagged(self):
         self.assertIn("towers", text(r.findings(facts(towers_lost={"West": 0, "East": 4}))))

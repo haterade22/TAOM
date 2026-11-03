@@ -60,6 +60,9 @@ internal sealed class FordsAutorunPlan
     /// <summary>An AI commands the West side too (it is the human slot otherwise), so an unattended match plays both sides.</summary>
     public bool WestAi { get; internal init; }
 
+    /// <summary>The match speed from the first frame: 1, 2, 4 or 10.</summary>
+    public int Speed { get; internal init; } = 1;
+
     /// <summary>The plan the running game uses: the real environment and file system.</summary>
     internal static FordsAutorunPlan Resolve() =>
         Resolve(Environment.GetEnvironmentVariable, File.Exists, path => File.ReadAllText(path, Encoding.UTF8));
@@ -91,7 +94,7 @@ internal sealed class FordsAutorunPlan
     internal string Describe() =>
         "west=" + (West ?? "-") + " east=" + (East ?? "-") + " ai=" + (Ai ?? "-") + " scene=" + (Scene ?? "-")
         + " live_seconds=" + Num(LiveSeconds) + " live_wait_seconds=" + Num(LiveWaitSeconds) + " wall_limit_seconds=" + Num(WallLimitSeconds)
-        + " out=" + OutFolder + " quit=" + (QuitWhenDone ? 1 : 0) + " west_ai=" + (WestAi ? 1 : 0) + " arm=" + ArmPath;
+        + " out=" + OutFolder + " quit=" + (QuitWhenDone ? 1 : 0) + " west_ai=" + (WestAi ? 1 : 0) + " speed=" + Speed + " arm=" + ArmPath;
 
     internal static string Num(double value) => value.ToString("0.###", CultureInfo.InvariantCulture);
 

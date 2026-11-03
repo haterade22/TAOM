@@ -41,6 +41,15 @@ public class FordsCommandHotkeysTests
     }
 
     [TestMethod]
+    public void Read_TheSpeedKey_MovesToTheNextSpeed_AndThePanelSaysSo()
+    {
+        FordsCommandHotkeys.Read(Pressed(InputKey.T), _vm);
+
+        Assert.AreEqual(2, _vm.Speed.Current);
+        StringAssert.Contains(_vm.SpeedText, "2x");
+    }
+
+    [TestMethod]
     public void Read_TheCallKeys_DoNothingForAFactionWithoutThem()
     {
         FordsCommandHotkeys.Read(Pressed(InputKey.R, InputKey.G, InputKey.B, InputKey.N, InputKey.M), _vm);
