@@ -674,7 +674,8 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         _report.TowerConfig(config.Towers);
         _facts = new FordsMatchFacts(config.Towers.FireRange, config.Towers.AttackRange, config.Capture.Radius, layout.Lanes.Count,
             config.Waves.MaxLivePerSide, config.Heroes.MaxAlivePerSide, KeepDistance(built), _battlefield.MaxAgents,
-            FordsTowerGeometry.ContactMetres(_plan.Map.TowerHalfWidth));
+            FordsTowerGeometry.ContactMetres(_plan.Map.TowerHalfWidth),
+            _plan.Factions[MatchSide.West].FeatsOrNone.UnitCapBonus, _plan.Factions[MatchSide.East].FeatsOrNone.UnitCapBonus);
         _report.MatchStarted(_facts, built, expected);
     }
 

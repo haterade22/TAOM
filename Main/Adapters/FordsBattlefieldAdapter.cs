@@ -29,6 +29,7 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
     private LaneFaceBars? _laneBars;
     private int _thrownTopUps;
     private int _horsesRemoved;
+    private int _horsesSpared;
     private int _housekeepPasses;
     private readonly Func<string, object?> _towerEntity;
     private readonly IModLogger _logger;
@@ -89,19 +90,50 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
             }
         }
 
-        // A copy: removing a mount changes the engine's list. Horses only: a riderless warg or other creature fights on.
-        foreach (var pair in _mission.MountsWithoutRiders.ToList())
-        {
-            var mount = pair.Key;
-            if (mount.IsActive() && mount.Monster?.StringId == HorseMonster)
-            {
-                mount.FadeOut(true, false);
-                _horsesRemoved++;
-            }
-        }
+        RemoveRiderlessHorses();
 
         if (++_housekeepPasses % HousekeepPassesPerLine == 0)
-            _logger.LogInfo($"[FordsOfWar][Housekeep] thrownTopUps={_thrownTopUps} horsesRemoved={_horsesRemoved} (totals)");
+            _logger.LogInfo($"[FordsOfWar][Housekeep] thrownTopUps={_thrownTopUps} horsesRemoved={_horsesRemoved} horsesSpared={_horsesSpared} (totals)");
+    }
+
+    /// <summary>
+    /// Horses only: a riderless warg or other creature fights on. See <see cref="RiderlessHorseRule"/> for why a horse a soldier holds or has chosen stays;
+    /// horsesSpared counts how often that guard held one back. The soft fade is the call vanilla makes for the same job (SpawningBehaviorBase).
+    /// </summary>
+    private void RemoveRiderlessHorses()
+    {
+        // A copy: removing a mount changes the engine's list.
+        var candidates = _mission.MountsWithoutRiders
+            .Where(p => p.Key.IsActive() && p.Key.RiderAgent == null && p.Key.Monster?.StringId == HorseMonster && p.Value.ElapsedSeconds >= RiderlessHorseRule.WaitSeconds)
+            .ToList();
+        if (candidates.Count == 0)
+            return;
+
+        var claimed = new HashSet<int>();
+        foreach (var agent in _mission.Agents)
+        {
+            if (!agent.IsActive() || !agent.IsHuman)
+                continue;
+
+            if (agent.MountAgent is { } held)
+                claimed.Add(held.Index);
+            var chosen = agent.GetSelectedMountIndex();
+            if (chosen >= 0)
+                claimed.Add(chosen);
+        }
+
+        foreach (var pair in candidates)
+        {
+            if (RiderlessHorseRule.MayFade(pair.Value.ElapsedSeconds, claimed.Contains(pair.Key.Index)))
+            {
+                pair.Key.FadeOut(false, false);
+                _horsesRemoved++;
+            }
+            else
+            {
+                _horsesSpared++;
+            }
+        }
     }
 
     public void SetCorpseFadeOutSeconds(float seconds) => _mission.SetMissionCorpseFadeOutTimeInSeconds(seconds);

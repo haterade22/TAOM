@@ -63,7 +63,7 @@ and the gate.
 | Unsaved tpac | No `.rdc`: skipped (`check_rdc_entries.py`). A build reverts a Kit save, not its `.rdc`: repo it first | [banners](../reference/banner-icon-generation.md) |
 | Horse-skeleton mounts | Engine actions only (`act_horse_kick`); a HorseHarness per Horse slot unless `_HARNESSLESS_BY_DESIGN` | [war ram](../features/war-ram.md) |
 | Mount size | A Monster with `taom_body_length` overrides every item's `body_length`: resize on the Monster | [monster size](../features/monster-size.md) |
-| Riderless creatures | Soldiers ignore a riderless `Mountable` agent; unmount only one built with a weapon state | [creature bandits](../features/creature-bandits.md) |
+| Riderless creatures | Soldiers ignore a riderless `Mountable` with no weapon state; fading a mount a soldier holds or chose CTDs | [bandits](../features/creature-bandits.md) |
 | Animation | Engine skeleton: engine frames, rest pose at frame 0, list order; own skeleton: retarget the clips too | [skeleton](../reference/bannerlord-skeleton-authoring.md) |
 | Kit clip rename | Corrupts the clip: keep the name, close the Kit, `rename_anim_clip_tpac.py`. A rope-flagged copy lacking `{clip}_weapon` CTDs | [tools](../../tools/README.md) |
 | New race rigs | LOD0 head/eye/mouth: 101 morphs, eyes following their sockets; release/blocked codes: vanilla or self-keyed clip. Else CTD | [troll](../features/troll-race.md) |

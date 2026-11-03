@@ -1053,6 +1053,21 @@ public class FordsVerdictTests
     }
 
     [TestMethod]
+    public void Check16_AFactionWithACapBonus_IsJudgedAgainstItsOwnCap()
+    {
+        var run = Run();
+        run.Facts = run.Facts! with { CapBonusEast = 100 };
+        run.Perf.LiveSeconds = 600;
+        run.Perf.PeakLiveEast = 351;
+
+        Assert.AreEqual(FordsResult.Pass, PartOf(Row(new FordsSessionEvidence(), run, 16), "cap"), "inside East's larger cap");
+
+        run.Perf.PeakLiveWest = 351;
+
+        Assert.AreEqual(FordsResult.Fail, PartOf(Row(new FordsSessionEvidence(), run, 16), "cap"), "West has no bonus");
+    }
+
+    [TestMethod]
     public void Check16_UnderAMinute_IsNotSeen()
     {
         var run = Run();

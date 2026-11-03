@@ -430,7 +430,9 @@ the mode's noon fallback.
   groups and the tower-top group by `Agent.SetAgentExcludeStateForFaceGroupId`, which leaves room for five sets (the engine's limit is six).
   Cross paths and rings use group 0, which nobody is barred from. Not sealed yet: a run still logs up to 8% of unit time on a foreign group.
 - **Housekeeping.** Every 3 s `IFordsBattlefieldAdapter.Housekeep` refills thrown weapons and fades riderless horses. Other riderless creatures
-  stay. The engine's `AmmoSupplyLogic` refills arrows and bolts. Neither is a map feature, so both run on every map.
+  stay. The engine's `AmmoSupplyLogic` refills arrows and bolts. Neither is a map feature, so both run on every map. A horse fades only after 20 s with no rider and
+  only when no soldier holds it or has chosen it (`RiderlessHorseRule`), because the engine's fade does not unlink a rider from its mount. The `[Housekeep]` line's
+  `horsesSpared` counts how often that guard held a horse back.
 
 ## Layout fitting
 
@@ -799,6 +801,7 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
 
 ## Changelog
 
+- 2026-11-02: fixed a native crash at `TaleWorlds.Native.dll+0x6E5BCD`, about once in seven long matches: housekeeping faded a horse a soldier still held.
 - 2026-11-02: the mode has its own roster, `fords_troops.xml`, loaded for CustomGame only.
 - 2026-11-02: four factions that play differently: feats, traits, Gondor's Call of the Regions with a fee, Mordor's creature call, rosters built for each. New command panel. The
   autorun can save pictures of the screen.

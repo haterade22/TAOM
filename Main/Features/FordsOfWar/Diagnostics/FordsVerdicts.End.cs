@@ -103,8 +103,10 @@ internal static partial class FordsVerdicts
         var capNumbers = "liveSeconds=" + N(live);
         if (facts != null)
         {
-            capNumbers = "cap=" + cap + " peakWest=" + p.PeakLiveWest + " peakEast=" + p.PeakLiveEast + " peakMt=" + N(p.PeakLiveMt) + " peakBacklog=" + run.Spawn.PeakBacklog;
-            if (p.PeakLiveWest > cap || p.PeakLiveEast > cap)
+            var capWest = cap + facts.CapBonusWest;
+            var capEast = cap + facts.CapBonusEast;
+            capNumbers = "cap=" + (capWest == capEast ? capWest.ToString() : capWest + "/" + capEast) + " peakWest=" + p.PeakLiveWest + " peakEast=" + p.PeakLiveEast + " peakMt=" + N(p.PeakLiveMt) + " peakBacklog=" + run.Spawn.PeakBacklog;
+            if (p.PeakLiveWest > capWest || p.PeakLiveEast > capEast)
                 capResult = FordsResult.Fail;
             else if (live >= 60.0)
                 capResult = FordsResult.Pass;

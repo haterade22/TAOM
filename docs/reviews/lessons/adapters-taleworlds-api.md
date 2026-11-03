@@ -1670,3 +1670,13 @@ off. The exception was swallowed and the tower stayed invisible and unhittable.
   `OnCalculateDestructionStateIndex`, which `CastleGate` uses) or do not write. Rule: `.claude/rules/adapters.md`
   "A destructible's shown stage must only move forward".
 - **Source:** [rca-fords-of-war-2026-10-31.md](../rca-fords-of-war-2026-10-31.md), night addendum, row R2.
+
+### Agent.FadeOut does not unlink a rider, so never fade a mount a soldier holds or has chosen
+
+Native `FUN_1805EFC10` (v1.5.6) unlinks rider and mount on state 5, the kill path, and does not on state 2, the path `IMBAgent.FadeOut` takes. A rider left holding the faded mount reads it on its next parallel update (`Agent.ParallelUpdateCachedAndFormationValuesForAIAgent`, `MountAgent?.WalkingSpeedLimitOfMountable`) and crashes at `TaleWorlds.Native.dll+0x6E5BCD`. `Mission.MountsWithoutRiders` does not make a horse safe: a dump showed a rider whose `_cachedMountAgent` was the horse while the horse's `_cachedRiderAgent` was null. Vanilla's only cleanup (`SpawningBehaviorBase`) waits 30 s and uses `FadeOut(false, false)`.
+
+**Why missed:** the housekeeping pass read the riderless list as the proof that nobody was on the horse, and no unit test can reach native state. The crash came once in seven long matches with no managed error, and the launcher killed the game before it could write a dump, so it stayed unnamed for a day.
+
+**Prevent:** `RiderlessHorseRule`. A native crash in an unattended run needs `--keep-on-crash` from the first run, so that a dump exists.
+
+**Source:** crash bundle 2026-11-03_03.04.08, run 20261102-201444, Fords of War.
