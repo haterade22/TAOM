@@ -138,6 +138,10 @@ no stamp and reports MISSING until the first `refresh`.
 - [ADR-011](./011-knowledge-delivery-tiers.md): Knowledge Delivery Tiers. The gate is tier 1; the
   AGENTS.md row is tier 2.
 
+### Amendment (2026-11-03): session-start refresh, and `/research`
+
+Since 2026-10-26 (#995), `session-start.sh` starts `refresh --if-stale --detach` when the graph is stale, under the wrapper's lock. Point-of-use refresh stays. This supersedes the rejection in Alternative 2, which ruled out a background refresh at session start. In Decision 4, the `/research` skill was retired, so the fixed point "`/research` step 6" no longer exists.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

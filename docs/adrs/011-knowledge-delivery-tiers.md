@@ -253,6 +253,18 @@ Applied in stop-anywhere phases, each ending green:
   the mod-knowledge surface under `docs/`; this ADR decides how that knowledge, and the harness's
   own, is delivered into an agent's context.
 
+### Amendment (2026-11-03): facts that changed
+
+The original rows above stay as the record of the decision. These facts have moved since:
+
+- **Live record:** the delivery facts (what subagents load, what survives compaction, what an import costs) now live in `.claude/rules/harness-facts.md`, which carries each fact's source and date. The tables above are a snapshot of 2026-09-23.
+- **Memory in subagents:** the docs say no subagent loads auto memory, but `MEMORY.md` reached all 2,232 sampled subagent spawns (measured 2026-11-02). Every memory line therefore costs every spawn, not only the main session.
+- **Skill list:** the skill-description listing is rebuilt and re-sent after compaction from Claude Code v2.1.304.
+- **CI:** the GitHub Actions workflows left on 2026-10-05 (`c8d69a0dc`). `--drift-only` runs in the Claude commit hook, so a commit made outside Claude meets no budget check until a pre-commit hook lands. The Budgets text above that names `doc-budget.yml` is history.
+- **Scoped rule size:** `SCOPED_RULE_MAX_BYTES` (at most 12 KB per rule) is a target that `lint_docs.py` reports; it is not enforced while `SCOPED_RULE_BUDGET_ENFORCE` is False.
+- **The `@AGENTS.md` import:** it stays because Claude Code reads AGENTS.md natively (v2.1.277 and later) only when no CLAUDE.md exists at or above the working directory.
+- **`omitClaudeMd`:** the field exists since v2.1.271 and no TAOM agent sets it. The reason to reject it is no longer the installed version: custom agents need the invariants in the preamble, and shrinking the preamble helps every agent.
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
