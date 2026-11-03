@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.CareerSystem.Hooks;
 using TAOM.Features.DreadAura.Hooks;
+using TAOM.Features.FordsOfWar;
 using TaleWorlds.Core;
 using TaleWorlds.Library;
 using TaleWorlds.MountAndBlade;
@@ -49,7 +50,8 @@ public sealed class RaceAbilityTicker
 
         _due.Clear();
         _runtime.Waves.Flush(now, _due);
-        if (_due.Count > 0 && _runtime.Settings.Messages)
+        // Fords of War has no player agent and an ability fires every few seconds: the lines would only cover its battle board.
+        if (_due.Count > 0 && _runtime.Settings.Messages && !FordsOfWarMission.IsActive(Mission.Current))
             foreach (var wave in _due)
                 InformationManager.DisplayMessage(new InformationMessage(
                     RaceAbilityNames.Wave(wave.AbilityId, wave.Soldiers, wave.PlayerSide).ToString(),

@@ -7269,7 +7269,7 @@
 
     <string id="TAOM_FOW_Trait_Rohan_Riders" text="The finest cavalry in Middle-earth." />
 
-    <string id="TAOM_FOW_Trait_Rohan_Towers" text="Riders deal a quarter of the damage to towers, and your own towers fire slower." />
+    <string id="TAOM_FOW_Trait_Rohan_Towers" text="Riders deal about a third of the damage to towers, and your own towers fire slower." />
 
     <string id="TAOM_FOW_Trait_Rohan_Foot" text="Weak foot soldiers and archers." />
 
@@ -7279,7 +7279,7 @@
 
     <string id="TAOM_FOW_Trait_Mordor_Orcs" text="Orcs are very weak. Uruks and Numenoreans cost a lot." />
 
-    <string id="TAOM_FOW_Trait_Isengard_Siege" text="Your units deal 50% more damage to towers." />
+    <string id="TAOM_FOW_Trait_Isengard_Siege" text="Your units deal 15% more damage to towers." />
 
     <string id="TAOM_FOW_Trait_Isengard_Waves" text="Free waves grow stronger every 5 minutes." />
 

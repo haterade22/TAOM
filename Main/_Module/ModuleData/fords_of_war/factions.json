@@ -174,10 +174,10 @@
     "rohan": {
       "name": "{=TAOM_FOW_Faction_Rohan}Rohan",
       "culture": "vlandia",
-      "feats": { "mountedDamageToTowers": 0.25, "towerFireRate": 0.75 },
+      "feats": { "mountedDamageToTowers": 0.35, "towerFireRate": 0.9 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Rohan_Riders}The finest cavalry in Middle-earth.", "strength": true },
-        { "text": "{=TAOM_FOW_Trait_Rohan_Towers}Riders deal a quarter of the damage to towers, and your own towers fire slower.", "strength": false },
+        { "text": "{=TAOM_FOW_Trait_Rohan_Towers}Riders deal about a third of the damage to towers, and your own towers fire slower.", "strength": false },
         { "text": "{=TAOM_FOW_Trait_Rohan_Foot}Weak foot soldiers and archers.", "strength": false }
       ],
       "units": [
@@ -285,19 +285,19 @@
     "isengard": {
       "name": "{=TAOM_FOW_Faction_Isengard}Isengard",
       "culture": "isengard",
-      "feats": { "damageToTowers": 1.5, "unitCapBonus": -50 },
+      "feats": { "damageToTowers": 1.15, "unitCapBonus": -50 },
       "traits": [
-        { "text": "{=TAOM_FOW_Trait_Isengard_Siege}Your units deal 50% more damage to towers.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Isengard_Siege}Your units deal 15% more damage to towers.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Isengard_Waves}Free waves grow stronger every 5 minutes.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Isengard_Few}50 fewer troops in the field, and only warg riders for cavalry.", "strength": false }
       ],
       "units": [
-        { "id": "fighters", "troop": "fow_urukhai_fighter", "role": "Infantry", "packSize": 10, "level": 11, "eliteWeight": 1.0 },
-        { "id": "spearmen", "troop": "fow_urukhai_spearman", "role": "Spear", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
-        { "id": "pikemen", "troop": "fow_urukhai_pikeman", "role": "Spear", "packSize": 6, "level": 26, "eliteWeight": 1.0 },
-        { "id": "crossbowmen", "troop": "fow_urukhai_crossbowman", "role": "Ranged", "packSize": 6, "level": 26, "eliteWeight": 1.0 },
-        { "id": "white_hand", "troop": "fow_urukhai_veteraninfantry", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
-        { "id": "berserkers", "troop": "fow_urukhai_berserker", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
+        { "id": "fighters", "troop": "fow_urukhai_fighter", "role": "Infantry", "packSize": 10, "level": 11, "eliteWeight": 1.25 },
+        { "id": "spearmen", "troop": "fow_urukhai_spearman", "role": "Spear", "packSize": 8, "level": 21, "eliteWeight": 1.25 },
+        { "id": "pikemen", "troop": "fow_urukhai_pikeman", "role": "Spear", "packSize": 6, "level": 26, "eliteWeight": 1.25 },
+        { "id": "crossbowmen", "troop": "fow_urukhai_crossbowman", "role": "Ranged", "packSize": 6, "level": 26, "eliteWeight": 1.25 },
+        { "id": "white_hand", "troop": "fow_urukhai_veteraninfantry", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.25 },
+        { "id": "berserkers", "troop": "fow_urukhai_berserker", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.25 },
         { "id": "warg_riders", "troop": "fow_orc_warg_enforcer", "role": "Cavalry", "packSize": 4, "level": 21, "eliteWeight": 2.0 },
         { "id": "hill_troll", "troop": "fow_hill_troll", "role": "Siege", "packSize": 1, "level": 51, "eliteWeight": 4.0 }
       ],

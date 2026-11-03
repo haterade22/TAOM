@@ -3122,13 +3122,13 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="54" />
-      <skill id="OneHanded" value="66" />
-      <skill id="TwoHanded" value="69" />
-      <skill id="Polearm" value="84" />
-      <skill id="Throwing" value="33" />
+      <skill id="Athletics" value="68" />
+      <skill id="OneHanded" value="82" />
+      <skill id="TwoHanded" value="86" />
+      <skill id="Polearm" value="105" />
+      <skill id="Throwing" value="41" />
       <skill id="Riding" value="1" />
-      <skill id="Bow" value="9" />
+      <skill id="Bow" value="11" />
       <skill id="Crossbow" value="1" />
     </skills>
     <Equipments>
@@ -3270,11 +3270,11 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="26" />
-      <skill id="OneHanded" value="36" />
-      <skill id="TwoHanded" value="36" />
-      <skill id="Polearm" value="39" />
-      <skill id="Throwing" value="15" />
+      <skill id="Athletics" value="32" />
+      <skill id="OneHanded" value="45" />
+      <skill id="TwoHanded" value="45" />
+      <skill id="Polearm" value="49" />
+      <skill id="Throwing" value="19" />
       <skill id="Riding" value="1" />
       <skill id="Bow" value="1" />
       <skill id="Crossbow" value="1" />
@@ -3305,13 +3305,13 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="27" />
-      <skill id="OneHanded" value="18" />
-      <skill id="Bow" value="21" />
-      <skill id="Throwing" value="15" />
+      <skill id="Athletics" value="34" />
+      <skill id="OneHanded" value="22" />
+      <skill id="Bow" value="26" />
+      <skill id="Throwing" value="19" />
       <skill id="Riding" value="1" />
-      <skill id="TwoHanded" value="14" />
-      <skill id="Polearm" value="14" />
+      <skill id="TwoHanded" value="18" />
+      <skill id="Polearm" value="18" />
       <skill id="Crossbow" value="1" />
     </skills>
     <Equipments>
@@ -3340,11 +3340,11 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="45" />
-      <skill id="OneHanded" value="54" />
-      <skill id="TwoHanded" value="54" />
-      <skill id="Polearm" value="54" />
-      <skill id="Throwing" value="21" />
+      <skill id="Athletics" value="56" />
+      <skill id="OneHanded" value="68" />
+      <skill id="TwoHanded" value="68" />
+      <skill id="Polearm" value="68" />
+      <skill id="Throwing" value="26" />
       <skill id="Riding" value="1" />
       <skill id="Bow" value="1" />
       <skill id="Crossbow" value="1" />
@@ -3375,12 +3375,12 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="17" />
-      <skill id="OneHanded" value="17" />
-      <skill id="TwoHanded" value="14" />
-      <skill id="Polearm" value="14" />
+      <skill id="Athletics" value="21" />
+      <skill id="OneHanded" value="21" />
+      <skill id="TwoHanded" value="18" />
+      <skill id="Polearm" value="18" />
       <skill id="Bow" value="1" />
-      <skill id="Throwing" value="9" />
+      <skill id="Throwing" value="11" />
       <skill id="Riding" value="1" />
       <skill id="Crossbow" value="1" />
     </skills>
@@ -3409,12 +3409,12 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="12" />
-      <skill id="OneHanded" value="15" />
-      <skill id="TwoHanded" value="12" />
-      <skill id="Polearm" value="9" />
+      <skill id="Athletics" value="15" />
+      <skill id="OneHanded" value="19" />
+      <skill id="TwoHanded" value="15" />
+      <skill id="Polearm" value="11" />
       <skill id="Bow" value="1" />
-      <skill id="Throwing" value="9" />
+      <skill id="Throwing" value="11" />
       <skill id="Riding" value="1" />
       <skill id="Crossbow" value="1" />
     </skills>
@@ -3441,14 +3441,14 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="48" />
-      <skill id="OneHanded" value="42" />
-      <skill id="Bow" value="39" />
-      <skill id="Throwing" value="21" />
-      <skill id="Riding" value="6" />
-      <skill id="TwoHanded" value="30" />
-      <skill id="Polearm" value="24" />
-      <skill id="Crossbow" value="12" />
+      <skill id="Athletics" value="60" />
+      <skill id="OneHanded" value="52" />
+      <skill id="Bow" value="49" />
+      <skill id="Throwing" value="26" />
+      <skill id="Riding" value="8" />
+      <skill id="TwoHanded" value="38" />
+      <skill id="Polearm" value="30" />
+      <skill id="Crossbow" value="15" />
     </skills>
     <Equipments>
       <EquipmentRoster>
@@ -3477,11 +3477,11 @@
       <face_key_template value="BodyProperty.fighter_orc_mordor" />
     </face>
     <skills>
-      <skill id="Athletics" value="45" />
-      <skill id="OneHanded" value="54" />
-      <skill id="TwoHanded" value="54" />
-      <skill id="Polearm" value="54" />
-      <skill id="Throwing" value="21" />
+      <skill id="Athletics" value="56" />
+      <skill id="OneHanded" value="68" />
+      <skill id="TwoHanded" value="68" />
+      <skill id="Polearm" value="68" />
+      <skill id="Throwing" value="26" />
       <skill id="Riding" value="1" />
       <skill id="Bow" value="1" />
       <skill id="Crossbow" value="1" />
