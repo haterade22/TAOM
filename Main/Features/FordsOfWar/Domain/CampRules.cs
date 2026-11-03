@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TAOM.Features.FordsOfWar.Domain;
 
 /// <summary>
-/// Neutral camps: how many units each still has, and who is paid when the last one falls. The reward goes to the slot
-/// of the clearing side that owns the lane nearest the camp. A camp is cleared once and does not come back.
+/// Neutral camps: how many units each still has, whether they are out fighting, and who is paid when the last one falls. The
+/// reward goes to the slot of the clearing side that owns the lane nearest the camp. A camp is cleared once and does not come back.
 /// </summary>
 internal sealed class CampRules
 {
@@ -24,7 +25,14 @@ internal sealed class CampRules
         public int Alive { get; set; }
         public bool Active { get; }
         public bool Cleared { get; set; }
+        public bool Alerted { get; set; }
     }
+
+    /// <summary>How far the ring round a camp reaches from its centre, in metres.</summary>
+    internal const float Radius = 15f;
+
+    /// <summary>A unit this close to a camp's centre brings its creatures out; they go home when no unit is left this close.</summary>
+    internal const float AlertRange = 20f;
 
     private readonly Func<MatchSide, int, int> _laneOwner;
     private readonly Dictionary<string, Camp> _camps = new();
@@ -41,6 +49,29 @@ internal sealed class CampRules
     public int Alive(string campId) => _camps.TryGetValue(campId, out var camp) ? camp.Alive : 0;
 
     public bool IsCleared(string campId) => _camps.TryGetValue(campId, out var camp) && camp.Cleared;
+
+    /// <summary>Whether the camp has units left to fight.</summary>
+    public bool IsOpen(string campId) => _camps.TryGetValue(campId, out var camp) && camp.Active && !camp.Cleared;
+
+    /// <summary>The camps whose creatures change between out and home, given where every lane's units stand.</summary>
+    public IReadOnlyList<CampOrder> UpdateAlerts(IReadOnlyList<LaneSnapshot> lanes)
+    {
+        var orders = new List<CampOrder>();
+        foreach (var camp in _camps.Values)
+        {
+            if (!camp.Active || camp.Cleared)
+                continue;
+
+            var alerted = lanes.Any(lane => HasUnitNear(lane, camp.Slot.Position));
+            if (alerted != camp.Alerted)
+            {
+                camp.Alerted = alerted;
+                orders.Add(new CampOrder(camp.Slot.Id, alerted));
+            }
+        }
+
+        return orders;
+    }
 
     /// <summary>The lane closest to the camp (a tie goes to the lower index); -1 for an unknown camp or a map without lanes.</summary>
     public int NearestLane(string campId) => _camps.TryGetValue(campId, out var camp) ? camp.NearestLane : -1;
@@ -63,6 +94,14 @@ internal sealed class CampRules
             return new CampCleared(campId, killerSide, -1, 0);
 
         return new CampCleared(campId, killerSide, _laneOwner(killerSide.Value, camp.NearestLane), camp.Slot.Reward);
+    }
+
+    private static bool HasUnitNear(LaneSnapshot lane, Vec3f point)
+    {
+        if (lane.UnitPositions != null)
+            return lane.UnitPositions.Any(p => p.Distance2D(point) <= AlertRange);
+
+        return lane.LiveUnits > 0 && lane.Center is { } center && center.Distance2D(point) <= AlertRange;
     }
 
     private static int FindNearestLane(MapLayout layout, Vec3f position)

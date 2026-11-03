@@ -46,6 +46,9 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
 
     public int MaxAgents => DefaultBattleMissionAgentSpawnLogic.MaxNumberOfAgentsForMission;
 
+    /// <summary>The camps of this mission. They share the registry, which names the unit that killed a creature.</summary>
+    public FordsCampAdapter NewCampAdapter() => new(_mission, _registry, _logger);
+
     public bool Prepare(int laneCount)
     {
         if (laneCount < 1 || laneCount > LaneStreams.MaxLanes)

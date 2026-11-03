@@ -35,5 +35,7 @@ internal static class FordsCommandHotkeys
             vm.SetOrder(LaneOrder.Hold);
         if (input.IsKeyPressed(InputKey.C))
             vm.SetOrder(LaneOrder.FallBack);
+        if (input.IsKeyPressed(InputKey.V))
+            vm.SetOrder(LaneOrder.Seize);
     }
 }

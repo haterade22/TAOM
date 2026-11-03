@@ -34,6 +34,10 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     private const float CameraHeight = 45f;
     private const float CameraSetback = 25f;
     private const string RemovedSite = "FordsMissionDirector.OnAgentRemoved";
+    private const string CampRemovedSite = "FordsMissionDirector.OnCampUnitGone";
+
+    /// <summary>How far from a camp's centre its creatures start, so they do not stand inside each other.</summary>
+    private const float CampSpreadMeters = 3f;
 
     private sealed class PendingSpawn
     {
@@ -46,6 +50,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     private readonly FordsMatchPlan _plan;
     private readonly IFordsBattlefieldAdapter _battlefield;
     private readonly IFordsTowerAdapter _towers;
+    private readonly IFordsCampAdapter _camps;
     private readonly IFordsSceneAdapter _scene;
     private readonly FordsSession _session;
     private readonly IModLogger _logger;
@@ -83,11 +88,12 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     private volatile bool _shutDown;
 
     public FordsMissionDirector(FordsMatchPlan plan, IFordsBattlefieldAdapter battlefield, IFordsTowerAdapter towers,
-        IFordsSceneAdapter scene, FordsSession session, IModLogger logger, IFordsRandom random, FordsRunReport report)
+        IFordsCampAdapter camps, IFordsSceneAdapter scene, FordsSession session, IModLogger logger, IFordsRandom random, FordsRunReport report)
     {
         _plan = plan;
         _battlefield = battlefield;
         _towers = towers;
+        _camps = camps;
         _scene = scene;
         _session = session;
         _logger = logger;
@@ -182,6 +188,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
 
         _towers.SetDestroyedHandler(OnTowerDestroyed);
         SpawnGunners(built);
+        SpawnCamps(layout, match);
         _battlefield.CompleteDeployment();
         FillSession(layout, match);
         _started = true;
@@ -232,7 +239,16 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     /// <summary>The engine removed an agent (killed, knocked out, routed or deleted). May run off the main thread.</summary>
     public void OnAgentRemoved(object affected, object? affector, bool killed)
     {
-        if (!_started || !_battlefield.TryRemoveUnit(affected, affector, killed, out var victim, out var killer))
+        if (!_started)
+            return;
+
+        if (_camps.TryRemove(affected, affector, killed, out var campId, out var campKiller))
+        {
+            _deferred.RunOrDefer(CampRemovedSite, () => OnCampUnitGone(campId, campKiller));
+            return;
+        }
+
+        if (!_battlefield.TryRemoveUnit(affected, affector, killed, out var victim, out var killer))
             return;
 
         _deferred.RunOrDefer(RemovedSite, () =>
@@ -249,6 +265,16 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             if (record != null && credit is { } paid)
                 _report.Death(record.Side, paid);
         });
+    }
+
+    private void OnCampUnitGone(string campId, AgentKey? killer)
+    {
+        CampCleared? cleared;
+        lock (_gate)
+            cleared = _match?.OnCampUnitKilled(campId, killer);
+
+        if (cleared != null)
+            _logger.LogInfo($"[FordsOfWar][Camp] {campId} cleared by {cleared.Side?.ToString() ?? "nobody"}: slot {cleared.Slot} paid {cleared.Reward}");
     }
 
     public int AdjustTowerDamage(object component, object? attacker, bool ranged, int inflictedDamage, int thrustDamage)
@@ -350,6 +376,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         _report.BindAttackerLookup(null);
         _session.Clear();
         _towers.Clear();
+        _camps.Clear();
         _battlefield.Clear();
         _deferred.Clear();
         lock (_gate)
@@ -483,6 +510,42 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         return bars;
     }
 
+    /// <summary>
+    /// Each camp's ring and creatures. A creature that cannot be made counts as gone, so a camp missing some can still be cleared and
+    /// one missing all of them is cleared from the start, which no lane will try to seize.
+    /// </summary>
+    private void SpawnCamps(MapLayout layout, FordsMatch match)
+    {
+        if (layout.Camps.Count == 0)
+            return;
+
+        var prepared = _camps.Prepare();
+        if (!prepared)
+            _logger.LogWarning("[FordsOfWar][Camp] the neutral team could not be made; the map plays without camps");
+
+        foreach (var camp in layout.Camps)
+        {
+            var spawned = 0;
+            for (var i = 0; i < camp.Count; i++)
+            {
+                var angle = i * 2f * (float)Math.PI / camp.Count;
+                var spot = new Vec3f(camp.Position.X + CampSpreadMeters * (float)Math.Cos(angle), camp.Position.Y + CampSpreadMeters * (float)Math.Sin(angle), camp.Position.Z);
+                if (prepared && _camps.Spawn(camp.Id, camp.TroopId, spot))
+                    spawned++;
+                else
+                    match.OnCampUnitKilled(camp.Id, null);
+            }
+
+            if (spawned > 0)
+            {
+                _camps.AddRing(camp.Id, camp.Position, CampRules.Radius);
+                _camps.SetAlerted(camp.Id, camp.Position, false);
+            }
+
+            _logger.LogInfo($"[FordsOfWar][Camp] {camp.Id}: {spawned} of {camp.Count} {camp.TroopId} at ({camp.Position.X:F0}, {camp.Position.Y:F0}), ring {(spawned > 0 ? CampRules.Radius : 0f):F0} m, reward {camp.Reward}");
+        }
+    }
+
     private void SpawnGunners(IReadOnlyList<TowerSlot> towers)
     {
         // A real tower's garrison is its scene's bowman spots, however many: ground gunners would only soak melee blows at its foot.
@@ -531,6 +594,13 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
 
         foreach (var command in effects.Commands)
             ApplyCommand(command);
+
+        foreach (var order in effects.CampOrders)
+        {
+            var home = _layout.Camps.FirstOrDefault(c => c.Id == order.CampId)?.Position ?? default;
+            _camps.SetAlerted(order.CampId, home, order.Alerted);
+            _logger.LogInfo($"[FordsOfWar][Camp] {order.CampId} {(order.Alerted ? "alerted: creatures go out" : "quiet: creatures go home")}");
+        }
 
         foreach (var heal in effects.Heals)
         {

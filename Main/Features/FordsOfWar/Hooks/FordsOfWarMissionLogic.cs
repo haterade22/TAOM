@@ -61,7 +61,7 @@ public sealed class FordsOfWarMissionLogic : MissionLogic
 
             var towers = new FordsTowerAdapter(Mission, _logger, plan.Config.Towers.FireRange);
             var battlefield = new FordsBattlefieldAdapter(Mission, new FordsAgentRegistry(), towers.EntityOf, _logger);
-            var director = new FordsMissionDirector(plan, battlefield, towers, new FordsSceneAdapter(Mission, _logger), _session,
+            var director = new FordsMissionDirector(plan, battlefield, towers, battlefield.NewCampAdapter(), new FordsSceneAdapter(Mission, _logger), _session,
                 _logger, new SeededFordsRandom(Environment.TickCount), _report);
             _failed = !director.Start();
             if (_failed)

@@ -61,7 +61,8 @@ internal sealed partial class FordsMatch
             .ToList();
 
         return new MatchView.LaneView(lane, commander != null && commander.Lanes.Contains(lane), _orders.Order(side, lane),
-            _orders.CooldownLeft(side, lane, now), LiveInLane(side, lane), LiveInLane(enemy, lane), ThreatOn(side, lane), towers);
+            _orders.CooldownLeft(side, lane, now), LiveInLane(side, lane), LiveInLane(enemy, lane), ThreatOn(side, lane), towers,
+            _seize.HasOpen(side, lane));
     }
 
     private MatchView.TowerView TowerViewOf(TowerSlot slot) =>

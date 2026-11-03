@@ -15,6 +15,9 @@ internal sealed partial class FordsMatch
 
     private void IssueLaneCommands(MatchEffects effects)
     {
+        foreach (var (side, lane) in _seize.TakeFinished())
+            _orders.Release(side, lane);
+
         var decisions = new List<LaneDecision>();
         foreach (var lane in _layout.Lanes)
         {
@@ -47,14 +50,31 @@ internal sealed partial class FordsMatch
         var distance = target == null ? float.MaxValue : from.Distance2D(target.Position);
         var centerDistance = target == null ? float.MaxValue : center.Distance2D(target.Position);
         // A lane fights its own lane's enemies: a neighbour's wave across the gap must not pull it out of its lane. At the keep the lanes meet.
-        var anyLane = target == null || target.Kind == TowerKind.Keep;
+        var seize = order == LaneOrder.Seize ? _seize.TargetOf(side, lane) : null;
+        var anyLane = target == null || target.Kind == TowerKind.Keep || seize != null;
         var enemy = lead is { } found ? NearestEnemyFrom(side, lane, anyLane, found.Position, seen.NearestEnemyDistance) : seen.NearestEnemyDistance;
         var attackers = target == null ? -1 : UnitsNear(side, true, target);
         var defenders = target == null ? -1 : UnitsNear(side, false, target);
 
         return new LaneSituation(side, lane, order, seen.LiveUnits, center, enemy, target?.Id, distance,
             target == null || _chain.IsLocked(target.Id), lead?.Position, lead?.Arc ?? 0f, lead?.Count ?? 0, centerDistance,
-            attackers, defenders);
+            attackers, defenders, seize, seize == null ? float.MaxValue : NearestUnitTo(seize.Position, seen, center));
+    }
+
+    private static float NearestUnitTo(Vec3f point, LaneSnapshot lane, Vec3f center)
+    {
+        if (lane.UnitPositions == null || lane.UnitPositions.Count == 0)
+            return center.Distance2D(point);
+
+        var best = float.MaxValue;
+        foreach (var position in lane.UnitPositions)
+        {
+            var distance = position.Distance2D(point);
+            if (distance < best)
+                best = distance;
+        }
+
+        return best;
     }
 
     /// <summary>

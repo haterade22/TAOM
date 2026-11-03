@@ -22,8 +22,8 @@ public sealed class FordsCommandVM : FordsViewModel
     internal const int MaxFeedLines = 6;
     private const float NoticeSeconds = 4f;
 
-    private static readonly LaneOrder[] OrderRows = { LaneOrder.Push, LaneOrder.Hold, LaneOrder.FallBack };
-    private static readonly string[] OrderKeys = { "Z", "X", "C" };
+    private static readonly LaneOrder[] OrderRows = { LaneOrder.Push, LaneOrder.Hold, LaneOrder.FallBack, LaneOrder.Seize };
+    private static readonly string[] OrderKeys = { "Z", "X", "C", "V" };
 
     private readonly FordsSession _session;
     private readonly Action _exit;

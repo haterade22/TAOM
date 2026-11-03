@@ -17,6 +17,9 @@ internal sealed class AiCommander
     /// <summary>An assault pushes on until the lane holds less than this fraction of AssaultThreshold.</summary>
     private const float ReleaseFraction = 0.35f;
 
+    /// <summary>A lane smaller than this does not go off to seize an objective: two creatures would eat it.</summary>
+    private const int SeizeMinUnits = 12;
+
     /// <summary>A hero is bought back only with more than this share of its respawn delay left (and above the floor).</summary>
     private const float BuybackMinLeftFraction = 0.25f;
 
@@ -134,12 +137,22 @@ internal sealed class AiCommander
     /// <summary>
     /// Hold while the assault lane builds up, Push otherwise. Reaching the threshold latches the assault for that lane: it
     /// keeps Push until the lane's own count drops below <see cref="ReleaseFraction"/> of the threshold or the tower it was
-    /// sent at falls. Only flips Push and Hold, and only off cooldown.
+    /// sent at falls. One lane outside the assault at a time seizes an open objective when no enemy is at its tower; the match
+    /// returns it to Push once the objective is held, and it breaks off early when the enemy outnumbers it at its tower. Never
+    /// overrides Fall back, and only off cooldown.
     /// </summary>
     private void SetOrders(MatchView view, List<MatchView.LaneView> lanes, MatchView.LaneView? assault, List<AiAction> actions)
     {
+        var seizing = lanes.Any(l => l.Order == LaneOrder.Seize);
         foreach (var lane in lanes)
         {
+            if (lane.Order == LaneOrder.Seize)
+            {
+                if (lane.Threat > lane.OwnLive && lane.CooldownLeft <= 0f)
+                    actions.Add(AiAction.SetOrder(lane.Index, LaneOrder.Push));
+                continue;
+            }
+
             if (_assaultTargets.TryGetValue(lane.Index, out var target) && ShouldRelease(view, lane, target))
                 _assaultTargets.Remove(lane.Index);
 
@@ -149,6 +162,13 @@ internal sealed class AiCommander
 
             var building = isAssault && lane.OwnLive < view.AssaultThreshold && !_assaultTargets.ContainsKey(lane.Index);
             var wanted = building ? LaneOrder.Hold : LaneOrder.Push;
+            if (!seizing && !isAssault && !_assaultTargets.ContainsKey(lane.Index) && lane.CanSeize && lane.Threat <= 0
+                && lane.OwnLive >= SeizeMinUnits && lane.Order != LaneOrder.FallBack && lane.CooldownLeft <= 0f)
+            {
+                wanted = LaneOrder.Seize;
+                seizing = true;
+            }
+
             if (lane.Order != wanted && lane.Order != LaneOrder.FallBack && lane.CooldownLeft <= 0f)
                 actions.Add(AiAction.SetOrder(lane.Index, wanted));
         }

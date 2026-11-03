@@ -238,7 +238,7 @@ internal sealed class FordsScenario
         Plan = resolved with { Config = Tuned(resolved.Config), AiProfile = "idle" };
         Field.ReportedMaxAgents = MaxAgents;
 
-        var director = new FordsMissionDirector(Plan, Field, Towers, Scene, Session, Logger, new SeededFordsRandom(7), Report);
+        var director = new FordsMissionDirector(Plan, Field, Towers, new FaithfulCamps(), Scene, Session, Logger, new SeededFordsRandom(7), Report);
         Exit = new FordsMissionExit(Menu, Logger, Report);
         EndGamesBefore = Menu.EndGames;
         Failed = !director.Start();

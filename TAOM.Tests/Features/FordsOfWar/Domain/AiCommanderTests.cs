@@ -400,4 +400,72 @@ public class AiCommanderTests
 
         CollectionAssert.AreEqual(new[] { "hero_a", "hero_a" }, chosen);
     }
+
+    // Seize: the same order a person gives, from the same view.
+
+    private static FordsMatch SeizeMatch()
+    {
+        var layout = Layout() with { Camps = new List<CampSlot> { new("camp_0", new Vec3f(300f, 25f, 0f), "wolf", 2, 250) } };
+        return new FordsMatch(Threshold40(), layout, Factions(), Slots("slow"), new SeededFordsRandom(7));
+    }
+
+    private static List<AiAction> SeizeOrders(List<AiAction> actions) =>
+        actions.Where(a => a.Kind == AiActionKind.SetOrder && a.Order == LaneOrder.Seize).ToList();
+
+    [TestMethod]
+    public void Decide_OpenObjectiveAndAFreeLane_SeizesWithThatLane()
+    {
+        var match = SeizeMatch();
+        match.Tick(Snap(0.5f, new[] { Live(MatchSide.East, 0, 20), Live(MatchSide.East, 1, 20) }));
+
+        var actions = Ai().Decide(match.GetView(EastSlot), 5f).ToList();
+
+        var seize = SeizeOrders(actions).Single();
+        Assert.AreEqual(1, seize.Lane, "lane 0 is the assault lane, lane 1 is free");
+    }
+
+    [TestMethod]
+    public void Decide_FreeLaneTooSmall_DoesNotSeize()
+    {
+        var match = SeizeMatch();
+        match.Tick(Snap(0.5f, new[] { Live(MatchSide.East, 0, 20), Live(MatchSide.East, 1, 3) }));
+
+        Assert.AreEqual(0, SeizeOrders(Ai().Decide(match.GetView(EastSlot), 5f).ToList()).Count);
+    }
+
+    [TestMethod]
+    public void Decide_FreeLaneUnderPressure_DoesNotSeize()
+    {
+        var match = SeizeMatch();
+        match.Tick(Snap(0.5f, new[] { Live(MatchSide.East, 0, 20), Live(MatchSide.East, 1, 20) },
+            new[] { Threat(FordsTestLayout.EastOuter1, 2) }));
+
+        Assert.AreEqual(0, SeizeOrders(Ai().Decide(match.GetView(EastSlot), 5f).ToList()).Count);
+    }
+
+    [TestMethod]
+    public void Decide_ALaneAlreadySeizing_IsLeftAloneAndNoSecondLaneStarts()
+    {
+        var match = SeizeMatch();
+        match.TrySetLaneOrder(EastSlot, 1, LaneOrder.Seize);
+        match.Tick(Snap(25f, new[] { Live(MatchSide.East, 0, 20), Live(MatchSide.East, 1, 20) }));
+
+        var actions = Ai().Decide(match.GetView(EastSlot), 30f).ToList();
+
+        Assert.IsFalse(actions.Any(a => a.Kind == AiActionKind.SetOrder && a.Lane == 1));
+        Assert.AreEqual(0, SeizeOrders(actions).Count);
+    }
+
+    [TestMethod]
+    public void Decide_ASeizingLaneOutnumberedAtItsTower_GoesBackToPush()
+    {
+        var match = SeizeMatch();
+        match.TrySetLaneOrder(EastSlot, 1, LaneOrder.Seize);
+        match.Tick(Snap(25f, new[] { Live(MatchSide.East, 0, 20), Live(MatchSide.East, 1, 5) },
+            new[] { Threat(FordsTestLayout.EastOuter1, 8) }));
+
+        var actions = Ai().Decide(match.GetView(EastSlot), 30f).ToList();
+
+        Assert.IsTrue(actions.Any(a => a.Kind == AiActionKind.SetOrder && a.Lane == 1 && a.Order == LaneOrder.Push));
+    }
 }

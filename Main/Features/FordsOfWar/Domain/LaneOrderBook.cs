@@ -24,6 +24,9 @@ internal sealed class LaneOrderBook
     public float CooldownLeft(MatchSide side, int lane, float now) =>
         _readyAt.TryGetValue((side, lane), out var readyAt) ? Math.Max(0f, readyAt - now) : 0f;
 
+    /// <summary>The lane goes back to Push by itself (it holds what it seized). The cooldown of the order it had keeps running.</summary>
+    public void Release(MatchSide side, int lane) => _orders[(side, lane)] = LaneOrder.Push;
+
     /// <summary>Re-issuing the standing order is a free no-op; a real change costs the cooldown.</summary>
     public CommandResult TrySet(MatchSide side, int lane, LaneOrder order, float now)
     {

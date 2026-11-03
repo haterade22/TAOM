@@ -322,14 +322,14 @@ public class FordsCommandVMTests
     }
 
     [TestMethod]
-    public void Refresh_ListsThreeOrdersWithTheirKeys_PushStanding()
+    public void Refresh_ListsFourOrdersWithTheirKeys_PushStanding()
     {
         var vm = Panel(Session(out _));
 
-        Assert.AreEqual(3, vm.Orders.Count);
-        CollectionAssert.AreEqual(new[] { "Push", "Hold", "Fall back" }, vm.Orders.Select(o => o.Text).ToArray());
-        CollectionAssert.AreEqual(new[] { "Z", "X", "C" }, vm.Orders.Select(o => o.KeyText).ToArray());
-        CollectionAssert.AreEqual(new[] { true, false, false }, vm.Orders.Select(o => o.IsActive).ToArray());
+        Assert.AreEqual(4, vm.Orders.Count);
+        CollectionAssert.AreEqual(new[] { "Push", "Hold", "Fall back", "Seize" }, vm.Orders.Select(o => o.Text).ToArray());
+        CollectionAssert.AreEqual(new[] { "Z", "X", "C", "V" }, vm.Orders.Select(o => o.KeyText).ToArray());
+        CollectionAssert.AreEqual(new[] { true, false, false, false }, vm.Orders.Select(o => o.IsActive).ToArray());
         Assert.IsTrue(vm.Orders.All(o => o.CooldownText.Length == 0), "no cooldown before the first change");
     }
 

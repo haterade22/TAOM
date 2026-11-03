@@ -34,6 +34,8 @@ internal sealed partial class FordsMatch
     private readonly LaneOrderBook _orders;
     private readonly LaneMarchRules _march;
     private readonly CapturePointRules _capture;
+    private readonly CampRules _camps;
+    private readonly SeizeRules _seize;
     private readonly WaveScheduler _waves;
 
     private readonly Dictionary<AgentKey, UnitRecord> _units = new();
@@ -69,6 +71,8 @@ internal sealed partial class FordsMatch
         _orders = new LaneOrderBook(config.Lanes);
         _march = new LaneMarchRules(config.Lanes, config.Towers, layout, _chain);
         _capture = new CapturePointRules(config.Capture, config.Economy, layout.CapturePoints);
+        _camps = new CampRules(layout, LaneOwner);
+        _seize = new SeizeRules(layout, _camps, _capture);
         _waves = new WaveScheduler(config.Waves, factions, layout.Lanes.Count, LaneOwner);
 
         foreach (var slot in slots)
@@ -88,7 +92,7 @@ internal sealed partial class FordsMatch
 
     /// <summary>
     /// Advances the match by <see cref="MatchSnapshot.Dt"/>. Order: clock (a countdown only counts down), passive income,
-    /// capture points, tower regeneration, spawns (bought heroes, waves, hero respawns), tower volleys, AI decisions,
+    /// capture points, camps, tower regeneration, spawns (bought heroes, waves, hero respawns), tower volleys, AI decisions,
     /// lane commands. Once a keep has fallen the tick only reports the winner and the last events.
     /// </summary>
     public MatchEffects Tick(MatchSnapshot snapshot)
@@ -111,6 +115,7 @@ internal sealed partial class FordsMatch
         Observe(snapshot);
         PayPassiveIncome(dt);
         RunCapture(dt, snapshot);
+        effects.CampOrders.AddRange(_camps.UpdateAlerts(snapshot.Lanes));
         effects.Heals.AddRange(_regen.Tick(dt));
         SpawnUnits(dt, effects);
         effects.Volleys.AddRange(_fire.Tick(dt, snapshot.TowerTargets));
@@ -205,7 +210,22 @@ internal sealed partial class FordsMatch
     public CommandResult TrySetLaneOrder(int slot, int lane, LaneOrder order)
     {
         var gate = CheckLane(slot, lane, out var owner);
-        return gate != CommandResult.Ok ? gate : _orders.TrySet(owner!.Side, lane, order, _clock.Elapsed);
+        if (gate != CommandResult.Ok)
+            return gate;
+
+        var side = owner!.Side;
+        if (order == LaneOrder.Seize && _orders.Order(side, lane) != LaneOrder.Seize && !_seize.HasOpen(side, lane))
+            return CommandResult.NothingToSeize;
+
+        var result = _orders.TrySet(side, lane, order, _clock.Elapsed);
+        if (result != CommandResult.Ok)
+            return result;
+
+        if (order == LaneOrder.Seize)
+            _seize.Start(side, lane, _seenLanes.TryGetValue((side, lane), out var seen) ? seen.Center : null);
+        else
+            _seize.Stop(side, lane);
+        return CommandResult.Ok;
     }
 
     /// <summary>Adds gold to a slot outside the economy (the dev console's grant); the purse still stops at MaxGold. Returns what was added.</summary>
@@ -249,6 +269,29 @@ internal sealed partial class FordsMatch
         var bounty = dead.HeroId != null ? _bounty.HeroKillBounty : _bounty.KillBounty(dead.Value);
         _ledger.Earn(killerSlot, bounty);
         return KillCredit.Paid;
+    }
+
+    /// <summary>
+    /// A camp's creature is gone. When it was the last one the camp is cleared: the killer's side is paid and hears of it (a killer
+    /// the match does not know pays nobody). Returns the cleared camp, null while units are left and after the match.
+    /// </summary>
+    public CampCleared? OnCampUnitKilled(string campId, AgentKey? killer)
+    {
+        if (_clock.Phase == MatchPhase.Ended)
+            return null;
+
+        MatchSide? side = null;
+        if (killer is { } key && TryFindKiller(key, out var found, out _))
+            side = found;
+
+        var cleared = _camps.OnUnitKilled(campId, side);
+        if (cleared?.Side is { } paid && cleared.Slot >= 0)
+        {
+            _ledger.Earn(cleared.Slot, cleared.Reward);
+            _pendingEvents.Add(new MatchEvent(MatchEventKind.CampCleared, paid, campId, cleared.Reward));
+        }
+
+        return cleared;
     }
 
     /// <summary>A living registered unit, else one from the bounded record of recent deaths (the killer died first).</summary>

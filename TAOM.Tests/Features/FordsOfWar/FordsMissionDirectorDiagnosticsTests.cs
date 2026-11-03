@@ -363,7 +363,7 @@ public class FordsMissionDirectorDiagnosticsTests
     public void Start_APlanWithWestAi_GivesTheWestSlotAnAiCommander_AndSaysSo()
     {
         var f = FordsDirectorFixture.Create();
-        var director = new FordsMissionDirector(f.Plan with { WestAi = true }, f.Battlefield, f.Towers, f.Scene, f.Session, f.Logger,
+        var director = new FordsMissionDirector(f.Plan with { WestAi = true }, f.Battlefield, f.Towers, f.Camps, f.Scene, f.Session, f.Logger,
             new SeededFordsRandom(1), f.Report);
 
         Assert.IsTrue(director.Start());

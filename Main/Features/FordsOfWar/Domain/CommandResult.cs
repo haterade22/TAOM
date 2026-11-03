@@ -14,4 +14,5 @@ internal enum CommandResult
     HeroNotDead,
     OnCooldown,
     NotLive,
+    NothingToSeize,
 }

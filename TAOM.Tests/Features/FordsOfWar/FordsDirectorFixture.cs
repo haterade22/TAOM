@@ -21,6 +21,7 @@ internal sealed class FordsDirectorFixture
 {
     public readonly IFordsBattlefieldAdapter Battlefield = Substitute.For<IFordsBattlefieldAdapter>();
     public readonly IFordsTowerAdapter Towers = Substitute.For<IFordsTowerAdapter>();
+    public readonly IFordsCampAdapter Camps = Substitute.For<IFordsCampAdapter>();
     public readonly IFordsSceneAdapter Scene = Substitute.For<IFordsSceneAdapter>();
     public readonly IModLogger Logger = Substitute.For<IModLogger>();
     public readonly FordsSession Session = new();
@@ -93,7 +94,10 @@ internal sealed class FordsDirectorFixture
         Towers.When(t => t.SetDestroyedHandler(Arg.Any<Action<string>>()))
             .Do(call => DestroyedHandler = call.Arg<Action<string>>());
 
-        Director = new FordsMissionDirector(Plan, Battlefield, Towers, Scene, Session, Logger, new SeededFordsRandom(1), Report);
+        Camps.Prepare().Returns(true);
+        Camps.Spawn(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<Vec3f>()).Returns(true);
+
+        Director = new FordsMissionDirector(Plan, Battlefield, Towers, Camps, Scene, Session, Logger, new SeededFordsRandom(1), Report);
     }
 
     public TowerSlot TowerSlot(string id) => TowersSpawned.Single(t => t.Slot.Id == id).Slot;

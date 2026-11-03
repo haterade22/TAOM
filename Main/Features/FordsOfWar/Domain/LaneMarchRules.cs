@@ -7,7 +7,8 @@ namespace TAOM.Features.FordsOfWar.Domain;
 /// <summary>
 /// What a lane formation does next. The checks run in this order and the first that applies wins: no units, fall back,
 /// siege (under Push, lead within fire range of the next enemy tower and local attackers there outnumber its defenders 1.5 to 1: attack the tower), enemy within
-/// engage range (charge), next enemy tower in reach and open (attack it, unless holding), hold, march on.
+/// engage range (charge), seize (go to the objective, and charge at a camp once a unit is in its alert range), next enemy tower in
+/// reach and open (attack it, unless holding), hold, march on.
 /// A tower is in reach when the lead is within attack range of it or has come level with it along the lane, so a lead that
 /// was carried past a standing tower (by a charge, say) attacks it instead of marching on.
 /// Hold has one target that does not depend on where the formation stands, so a held lane is given the same order every tick.
@@ -83,6 +84,11 @@ internal sealed class LaneMarchRules
                 branch = LaneBranch.Charge;
                 command = LaneCommand.Charge;
             }
+            else if (s.Order == LaneOrder.Seize && s.Seize != null)
+            {
+                branch = LaneBranch.Seize;
+                command = s.Seize.IsCamp && s.SeizeDistance <= CampRules.AlertRange ? LaneCommand.Charge : LaneCommand.HoldAt(s.Seize.Position);
+            }
             else if (s.Order != LaneOrder.Hold && s.NextEnemyTowerId != null && !s.NextEnemyTowerLocked
                 && TowerInReach(s, path, leadArc))
             {
@@ -109,7 +115,7 @@ internal sealed class LaneMarchRules
 
         return new LaneDecision(s.Side, s.Lane, branch, s.Order, s.LiveUnits, s.Center, lead, leadArc, leadCount,
             s.NearestEnemyDistance, s.NextEnemyTowerId, s.NextEnemyTowerDistance, s.CenterTowerDistance, s.NextEnemyTowerLocked,
-            waypoint, command, s.NearAttackers, s.NearDefenders, siege);
+            waypoint, command, s.NearAttackers, s.NearDefenders, siege, s.Seize?.Id);
     }
 
     /// <summary>

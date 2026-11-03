@@ -18,5 +18,7 @@ internal sealed class MatchEffects
 
     public List<TowerHeal> Heals { get; } = new();
 
+    public List<CampOrder> CampOrders { get; } = new();
+
     public MatchSide? Winner { get; set; }
 }

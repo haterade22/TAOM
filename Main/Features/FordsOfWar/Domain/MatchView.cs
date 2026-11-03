@@ -18,7 +18,7 @@ internal sealed record MatchView(int Slot, MatchSide Side, MatchPhase Phase, flo
     IReadOnlyList<MatchView.CapturePointView> CapturePoints, MatchSide? Winner)
 {
     internal sealed record LaneView(int Index, bool Owned, LaneOrder Order, float CooldownLeft, int OwnLive, int EnemyLive,
-        int Threat, IReadOnlyList<TowerView> Towers);
+        int Threat, IReadOnlyList<TowerView> Towers, bool CanSeize = false);
 
     internal sealed record TowerView(string Id, MatchSide Owner, int Lane, int Order, TowerKind Kind, int HitPoints,
         int MaxHitPoints, bool Locked, bool Destroyed);

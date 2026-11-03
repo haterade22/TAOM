@@ -318,6 +318,60 @@ of every unit. Fresh waves spawn at the base into the same formation, so the mea
   stood, reads as `branch=AttackTower ... cmd=MoveTo sent=(x,y)`. The line is a `[FordsOfWar][LaneState]` line, at most once per
   5 mission seconds per side and lane; a stream with no decision yet writes none.
 
+## Camps and the Seize order
+
+**Camps.** Every `CampSlot` that survives the layout fit becomes a neutral camp when the match starts (`FordsMissionDirector.SpawnCamps`,
+after the gunners). `FordsCampAdapter` puts the creatures on a third team with `BattleSideEnum.None`, hostile to West and East by
+`Team.SetIsEnemyOf` in both directions, so West and East stay the mission's only two battle sides. Each camp is one formation of that
+team (at most eight camps). The default camp is 2 `hill_troll` for a reward of 250 (`maps.json` `defaults.camp`).
+
+- **Staying home.** The creatures stand at the camp's centre under a Move order. When any lane unit of either side comes within
+  `CampRules.AlertRange` (20 m) of the centre, `CampRules.UpdateAlerts` issues a `CampOrder` and the formation charges. When no unit is
+  left in that range, the formation walks home. The order is sent only when it changes, and each change writes a `[FordsOfWar][Camp]` line.
+- **The ring.** `FordsCampAdapter.AddRing` draws `map_circle_decal`, the decal the campaign map draws round a party, at
+  `CampRules.Radius` (15 m). A camp whose creatures could not be made gets no ring.
+- **The reward.** `FordsMatch.OnCampUnitKilled` counts each creature's death. The last one clears the camp, pays the reward to the slot of
+  the killer's side that owns the lane nearest the camp, and raises `MatchEventKind.CampCleared`. A killer the match does not know (a
+  creature that fell for another reason) clears the camp and pays nobody. A cleared camp does not come back.
+- **A creature that cannot be made** counts as already dead, so a camp missing all of them is cleared at the start and no lane seizes it.
+
+**Seize** is the fourth lane order (key V, `LaneOrder.Seize`), with the same 20 s cooldown as the others. `SeizeRules` holds the logic.
+
+- **What is open.** A camp with creatures left, or a capture point the side does not own. An objective is open to the two lanes nearest
+  to it (`LanesPerObjective`), because lane bars keep a lane off its neighbour's ground, so it cannot walk across a lane to a far
+  objective. A Seize with nothing open is refused (`CommandResult.NothingToSeize`) and costs no cooldown.
+- **What the lane does.** The objective is the open one nearest the lane's centre when the order is given, and it stays until it is held,
+  so a lane does not turn round on the way. The lane holds at the objective (`LaneBranch.Seize`, a `HoldAt` command). At a camp it charges
+  once one of its units is inside the alert range. Under Seize an enemy of any lane within `lanes.engageRange` draws a Charge, because the
+  objective lies between lanes. It does not break off to attack a tower and never sieges, because a siege needs Push.
+- **Back to Push.** When the side owns the point, or the camp is cleared by anyone, `IssueLaneCommands` returns the lane to Push by
+  `LaneOrderBook.Release`. The cooldown of the Seize order keeps running. Any other order given by hand drops the objective.
+- **The AI uses the same order** from the same view (`MatchView.LaneView.CanSeize`). One lane at a time seizes: a lane outside the assault,
+  with no enemy at its tower (`Threat` 0) and at least `AiCommander.SeizeMinUnits` (12) units. It leaves a seizing lane alone unless the
+  enemy outnumbers that lane at its tower; then it orders Push.
+- **Decision trace.** A seizing lane's `[LaneState]` line ends with `seize=<objective id>`.
+
+## The hand-built map
+
+`taom_fords_01_forceatmo` in the live `TAOM_Map` is the first map built for this mode (`"layout": "tags"`). It is unversioned: a fix there
+reverts on reinstall. The `forceatmo` part of the name makes Patch16 keep the scene's own atmosphere; on any other name the mission uses
+the mode's noon fallback.
+
+- **Real towers.** With `towerHalfWidth` above 0 the mode builds no prefab: `TowerSlot.Authored` marks the tower as the scene's own, and
+  `FordsTowerComponent : DestructableComponent` is attached to the tagged entity at runtime. A unit counts as in contact at half width plus
+  2.5 m. On a fall the engine hides the root, which hides the children, and turns physics off with the children; the fall line in the log
+  reads `IsVisibleIncludeParents`, because each child's own flag stays true.
+- **Bowmen.** `fow_gunner_<side>_<lane>_<order>_<n>` tags are the bowman spots on a tower top (`TowerSlot.GunnerSpots`). A bowman cannot be
+  hurt, has speed limit 0, holds his spot under a scripted order and fires the tower's volley from a point outside the tower's walls
+  (`VolleyOriginFromSpot`).
+- **The volley.** Every second missile is the arrow `fow_tower_arrow` (`fords_items.xml`, registered for CustomGame only), the others are the
+  gunner's volley item. `AddCustomMissile` needs an owner agent, so a tower with no living bowman fires nothing.
+- **Lane IDs.** `laneFaceIds` lists one navmesh face group per lane. `LaneFaceBars` bars each lane's units and mounts from the other lanes'
+  groups and the tower-top group by `Agent.SetAgentExcludeStateForFaceGroupId`, which leaves room for five sets (the engine's limit is six).
+  Cross paths and rings use group 0, which nobody is barred from. Not sealed yet: a run still logs up to 8% of unit time on a foreign group.
+- **Housekeeping.** Every 3 s `IFordsBattlefieldAdapter.Housekeep` refills thrown weapons and fades riderless horses. Other riderless creatures
+  stay. The engine's `AmmoSupplyLogic` refills arrows and bolts. Neither is a map feature, so both run on every map.
+
 ## Layout fitting
 
 A generated layout is fitted to the scene before it is played (`FordsLayoutFitter`, `FordsLayoutPlanner`, run by
@@ -341,7 +395,7 @@ A generated layout is fitted to the scene before it is played (`FordsLayoutFitte
   and no walking path of at most 1.4 times the straight distance plus 10 m.
 - **Planner ladder.** The planner tries lane spread x1, x0.7 and x0.5 on the long axis, then the same three on the short axis
   when the boundary's long side is under 1.25 times its short side. An attempt passes with at most 10% of items dropped (lane
-  waypoints, towers and capture points; camps are fitted but not counted, because no match spawns them), no tower moved over 30 m
+  waypoints, towers and capture points; camps are fitted but not counted, because a map plays without them), no tower moved over 30 m
   and at most 5% blocked segments (`FordsLayoutLimits`). Dropped camps show on the attempt line as `camps dropped n/m (not
   counted)`. The score is 1000 when rejected, plus 100 per whole dropped fraction, 10 per far-moved tower and 100 per whole
   bad-segment fraction (named constants in `FordsLayoutPlanner`). The first passing attempt wins.
@@ -642,9 +696,7 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
   engine's default mission behaviors do not add it, and at the shipped `moraleFloor` of 10 the drain never
   reaches the engine's 0.01 panic threshold anyway. The aura still works through the fear voice
   (`fearVoiceChancePerPulse`) and race-ability frights. The no-rout claim was not seen in game.
-- **Neutral camps are a later phase.** `CampRules` and the camp slots exist in the domain, but the aggregate
-  does not call them and nothing spawns camps (a third team is needed; research the team-count limit first).
-- **The AI does not steer to capture points.** It buys and orders by lane threat and assault state only.
+- **A camp's ring is the map decal.** Its look on the ground is unconfirmed until someone sees it in game.
 - **Translations.** The `TAOM_FOW_` texts are English in all 12 languages until the translation backlog,
   issue #763.
 - **Greybox scene owed.** The Kit scene from the greybox spec is not built. The generated layout now fits Rohan Plains II cleanly
@@ -687,6 +739,8 @@ or the setup flow, registered in `taom_module_strings.xml` and seeded in English
 
 ## Changelog
 
+- 2026-11-02: neutral camps spawn, with a ring, and pay when cleared; the Seize order for lanes, used by person and AI; the hand-built map
+  with real towers, bowmen, lane IDs and housekeeping; lanes charge only their own lane's foes; towers fire arrows and javelins.
 - 2026-11-01: last review findings: check 9's ladder counts blows only on the stream's ordered tower; `bypass` is measured from the
   units at the 1 Hz probe (more than half past the next tower by more than 10 m on two looks in a row) instead of the rules' lead;
   an off-navmesh target is counted once per command even when the waypoint fallback took the order; a weaponless blow stays out of

@@ -53,7 +53,7 @@ internal static class FordsHudText
     internal static string PointContested() => new TextObject("{=TAOM_FOW_Hud_PointContested}Contested").ToString();
 
     internal static string KeysHint() =>
-        new TextObject("{=TAOM_FOW_Hud_KeysHint}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   WASD pan   Q E turn   wheel zoom").ToString();
+        new TextObject("{=TAOM_FOW_Hud_KeysHint}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   WASD pan   Q E turn   wheel zoom").ToString();
 
     internal static string PackSize(int size) => new TextObject("{=TAOM_FOW_Hud_PackSize}Pack of {SIZE}").SetTextVariable("SIZE", size).ToString();
 
@@ -87,6 +87,8 @@ internal static class FordsHudText
                 return new TextObject("{=TAOM_FOW_Order_Hold}Hold").ToString();
             case LaneOrder.FallBack:
                 return new TextObject("{=TAOM_FOW_Order_FallBack}Fall back").ToString();
+            case LaneOrder.Seize:
+                return new TextObject("{=TAOM_FOW_Order_Seize}Seize").ToString();
             default:
                 return new TextObject("{=TAOM_FOW_Order_Push}Push").ToString();
         }
@@ -109,6 +111,8 @@ internal static class FordsHudText
                 return new TextObject("{=TAOM_FOW_Notice_HeroFielded}That hero is already in the field.").ToString();
             case CommandResult.HeroNotDead:
                 return new TextObject("{=TAOM_FOW_Notice_HeroNotFallen}That hero has not fallen.").ToString();
+            case CommandResult.NothingToSeize:
+                return new TextObject("{=TAOM_FOW_Notice_NothingToSeize}Nothing is left to seize here.").ToString();
             case CommandResult.OnCooldown:
                 return new TextObject("{=TAOM_FOW_Notice_OnCooldown}That order is still cooling down.").ToString();
             default:

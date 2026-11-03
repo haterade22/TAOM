@@ -364,6 +364,33 @@ internal sealed class FaithfulBattlefield : IFordsBattlefieldAdapter
 /// The towers as the engine holds them: each entity has maximum and current hit points that only the damage the rules applied (and
 /// the heals they asked for) change, falls at zero through the destroyed handler, and a gunner garrison that fires when it lives.
 /// </summary>
+/// <summary>Camps with nothing to simulate: every creature can be made, none ever dies, no agent is one.</summary>
+internal sealed class FaithfulCamps : IFordsCampAdapter
+{
+    public bool Prepare() => true;
+
+    public bool Spawn(string campId, string troopId, Vec3f position) => true;
+
+    public void AddRing(string campId, Vec3f position, float radius)
+    {
+    }
+
+    public void SetAlerted(string campId, Vec3f home, bool alerted)
+    {
+    }
+
+    public bool TryRemove(object affected, object? affector, bool killed, out string campId, out AgentKey? killer)
+    {
+        campId = string.Empty;
+        killer = null;
+        return false;
+    }
+
+    public void Clear()
+    {
+    }
+}
+
 internal sealed class FaithfulTowers : IFordsTowerAdapter
 {
     internal sealed class Entity

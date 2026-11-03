@@ -4436,7 +4436,7 @@
 	<string id="TAOM_FOW_Hud_HeroesTitle" text="{=TAOM_FOW_Hud_HeroesTitle}Heroes" />
 	<string id="TAOM_FOW_Hud_KeepEnemy" text="{=TAOM_FOW_Hud_KeepEnemy}Enemy keep" />
 	<string id="TAOM_FOW_Hud_KeepOwn" text="{=TAOM_FOW_Hud_KeepOwn}Your keep" />
-	<string id="TAOM_FOW_Hud_KeysHint" text="{=TAOM_FOW_Hud_KeysHint}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   WASD pan   Q E turn   wheel zoom" />
+	<string id="TAOM_FOW_Hud_KeysHint" text="{=TAOM_FOW_Hud_KeysHint}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   WASD pan   Q E turn   wheel zoom" />
 	<string id="TAOM_FOW_Hud_Lane" text="{=TAOM_FOW_Hud_Lane}Lane {LANE}" />
 	<string id="TAOM_FOW_Hud_LaneCounts" text="{=TAOM_FOW_Hud_LaneCounts}{OWN} v {ENEMY}" />
 	<string id="TAOM_FOW_Hud_OrdersTitle" text="{=TAOM_FOW_Hud_OrdersTitle}Orders for lane {LANE}" />
@@ -4459,9 +4459,11 @@
 	<string id="TAOM_FOW_Notice_NoHero" text="{=TAOM_FOW_Notice_NoHero}No hero you can afford is waiting." />
 	<string id="TAOM_FOW_Notice_NotEnoughGold" text="{=TAOM_FOW_Notice_NotEnoughGold}Not enough gold." />
 	<string id="TAOM_FOW_Notice_OnCooldown" text="{=TAOM_FOW_Notice_OnCooldown}That order is still cooling down." />
+	<string id="TAOM_FOW_Notice_NothingToSeize" text="{=TAOM_FOW_Notice_NothingToSeize}Nothing is left to seize here." />
 	<string id="TAOM_FOW_Notice_QueueFull" text="{=TAOM_FOW_Notice_QueueFull}That lane already has packs waiting." />
 	<string id="TAOM_FOW_Notice_Unavailable" text="{=TAOM_FOW_Notice_Unavailable}That command cannot be given now." />
 	<string id="TAOM_FOW_Order_FallBack" text="{=TAOM_FOW_Order_FallBack}Fall back" />
+	<string id="TAOM_FOW_Order_Seize" text="{=TAOM_FOW_Order_Seize}Seize" />
 	<string id="TAOM_FOW_Order_Hold" text="{=TAOM_FOW_Order_Hold}Hold" />
 	<string id="TAOM_FOW_Order_Push" text="{=TAOM_FOW_Order_Push}Push" />
 	<string id="TAOM_FOW_Result_Button" text="{=TAOM_FOW_Result_Button}Return to the main menu" />

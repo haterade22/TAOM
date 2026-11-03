@@ -7145,7 +7145,7 @@
 
     <string id="TAOM_FOW_Hud_KeepOwn" text="Your keep" />
 
-    <string id="TAOM_FOW_Hud_KeysHint" text="1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   WASD pan   Q E turn   wheel zoom" />
+    <string id="TAOM_FOW_Hud_KeysHint" text="1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   WASD pan   Q E turn   wheel zoom" />
 
     <string id="TAOM_FOW_Hud_Lane" text="Lane {LANE}" />
 
@@ -7212,6 +7212,10 @@
     <string id="TAOM_FOW_Result_VictoryText" text="The enemy keep has fallen." />
 
     <string id="TAOM_FOW_Map_Fords01" text="[Fords] Fords of War" />
+
+    <string id="TAOM_FOW_Notice_NothingToSeize" text="Nothing is left to seize here." />
+
+    <string id="TAOM_FOW_Order_Seize" text="Seize" />
 
   </strings>
 

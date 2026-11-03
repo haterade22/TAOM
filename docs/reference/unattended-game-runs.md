@@ -26,6 +26,10 @@ folder's `Watchdog.exe` runs, and while `--require-idle-minutes` (default 10) of
 that session. `--dry-run` prints the idle state without starting anything. The launcher answers the game's dialogs with posted
 messages, which are not user input, so a run does not reset the clock it is gated on.
 
+`--keep-on-crash <seconds>` makes the launcher wait after a crash, because the Watchdog holds the process and asks a person about a dump
+in a window no script can press. Killing the game then loses the dump, so with a value above 0 the launcher waits up to that long for the
+game to end. The default 0 stops the game at once. Pass it whenever someone may be near the PC.
+
 ## Why not headless
 
 Single player cannot run without the client. A dedicated server does not load `TAOM.Client`, and the Fords start needs the client

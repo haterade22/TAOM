@@ -9,4 +9,5 @@ internal enum LaneBranch
     AttackTower,
     Hold,
     March,
+    Seize,
 }

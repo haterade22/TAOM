@@ -6,4 +6,5 @@ internal enum LaneOrder
     Push,
     Hold,
     FallBack,
+    Seize,
 }

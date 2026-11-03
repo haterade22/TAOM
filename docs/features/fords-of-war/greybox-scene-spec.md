@@ -45,12 +45,14 @@ Place each tower beside its lane, not across it, so troops can reach it from two
 | Tag | Where |
 |---|---|
 | `fow_capture_<n>` | Capture points, one on each cross path between neighbour lanes |
-| `fow_camp_<n>` | Neutral camp positions between lanes (used in phase 3) |
+| `fow_camp_<n>` | Neutral camp centres between lanes, on navmesh. The mode spawns the creatures and draws a 15 m ring there |
+| `fow_gunner_<side>_<lane>_<order>_<n>` | Bowman spots on a real tower's top |
 
 ## Navmesh
 
 The navmesh must cover every lane, every cross path, the bases, and a ring of at least 4 m around
-each structure, so attackers can surround it. No navmesh on top of structures. Check that a unit can
+each structure, so attackers can surround it. No navmesh on top of structures, except a real tower's top for its bowmen, on a face
+group of its own that no lane walks. Check that a unit can
 walk from each base to the other base along each lane.
 
 ## Hand-off
