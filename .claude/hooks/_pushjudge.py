@@ -25,6 +25,12 @@ push.default=matching, from -c or from git's own config. A --force-if-includes p
 too, a deliberate over-block: --force-i alone is no forced push (git rejects a non-fast-forward).
 The #680 review read the value options by the same prefix rule (--e is --exec and takes a value),
 on top of the bash judge's table, so no word takes a value that did not before.
+Known gaps: HEAD, no refspec and push.default resolve against the hook's own directory (the session's
+directory: the main tree unless an earlier Bash cd moved it, #690), not the directory a push names, so
+a push run in a worktree or under -C is judged against that directory's branch and config. And
+push.default=matching given any other way (--config-env, the GIT_CONFIG_* variables),
+push.default=upstream with a trunk as the upstream, remote.<name>.push and remote.<name>.mirror are
+not read.
 """
 import re
 import subprocess
@@ -82,7 +88,7 @@ def git_out(args):
     """`git <args> 2>/dev/null` as $( ) gives it: trailing newlines and NUL dropped, empty on any
     failure. Asked in the hook's own directory: the session's directory, the main tree unless an
     earlier Bash cd moved it (#690), even for a push run in a worktree or under -C (a known gap,
-    hooks-catalog.md)."""
+    listed in the module docstring)."""
     try:
         r = subprocess.run(["git"] + args, stdout=subprocess.PIPE,
                            stderr=subprocess.DEVNULL, stdin=subprocess.DEVNULL, timeout=2)

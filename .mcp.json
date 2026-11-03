@@ -1,20 +1,5 @@
 {
   "mcpServers": {
-    "serena": {
-      "type": "stdio",
-      "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/oraios/serena@7a2968335f2198b966864de1ce3655c8e485a653",
-        "serena",
-        "start-mcp-server",
-        "--context",
-        "ide-assistant",
-        "--project",
-        "E:/repos/TAOM"
-      ],
-      "env": {}
-    },
     "ilspy": {
       "type": "stdio",
       "command": "python",

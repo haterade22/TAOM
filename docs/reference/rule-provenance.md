@@ -130,6 +130,19 @@ CLAUDE.md's closing note to run `/reload-plugins` after adding or changing a ski
 rather than moved: no session had verified it, and the documentation read for ADR-011 did not
 mention it. Re-add it with a source if it proves needed.
 
+## harness-facts.md stories and counts (2026-11-03 trim)
+
+The dated observations behind `harness-facts.md` rows moved here; the rows keep the fact, the
+source and the instruction.
+
+| Row | Observation |
+|---|---|
+| Subagents load `MEMORY.md` | On 2026-11-02, every subagent transcript of `e--repos-TAOM` was read: `MEMORY.md` was in the `instructions` file list and the rendered text of all 2,232 subagent spawns that had that record, against the docs. The cause stays unknown. |
+| Idle compaction | The harness retro of 2026-11-02 (`harness_retro.py` section 11) found 74 main-session rewrites of about 430K tokens after an idle hour between 2026-10-24 and 2026-11-02 ($254.83). Most ran on builds older than 2.1.314, the first with idle compaction in the VS Code panel. Re-measure in the retro after 2026-11-10. |
+| Stop output reaches Claude only as JSON | On 2026-09-23 `suggest-compact.sh` printed about 18 times in one session and none arrived. On 2026-09-29 `check-polearm-shield-parity.sh` was found to have reported to stderr on exit 0 since 2026-08-20, so no one saw a report (`tools/test_hooks.sh` 7k). |
+| PreToolUse decisions nest in `hookSpecificOutput` | On 2026-09-23 nine TAOM gates printed a top-level `permissionDecision`, which Claude Code ignores, and a live commit the label gate had denied ran anyway. Fixed in #647. |
+| An `ask` prompts even in bypass mode | On 2026-09-26 the maintainer saw a confirm-gate prompt from a plan 027 review agent in a bypass session. A reviewer the night before had stalled for nine hours, most likely the same way. |
+
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
 
 ## Referenced by

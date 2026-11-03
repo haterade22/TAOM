@@ -4,7 +4,7 @@
 
 One read-only pass over `docs/` (plus the files CLAUDE.md loads, `AGENTS.md`, `.claude/rules/`, and
 the shipped ModuleData configs) that reports **doc rot**: the class of defect where the code moved
-and the prose did not. Pure stdlib, no game install required. Checks 5 to 8 below **block** a
+and the prose did not. Pure stdlib, no game install required. Checks 5 to 10 below **block** a
 commit through `.claude/hooks/check-doc-config-drift.sh` (the GitHub workflow that also ran them on
 every push was removed on 2026-10-05); the others are advisory.
 
@@ -26,7 +26,7 @@ fact:
   `project_doc_max_bytes` — so every Codex review ran without them. Now the eager-load budget check.
 - **CLAUDE.md regrew from 28 KB to 49 KB in six weeks, past its own cap,** because the only gate was
   a Claude PreToolUse hook and commits made from the IDE never run it. Now the ADR-011 context
-  budget (check 7), enforced by the commit hook (#647).
+  budget (check 7), enforced for Claude's commits by `check-doc-config-drift.sh`, and for no other committer since CI left on 2026-10-05.
 
 The fourth lesson is about the linter itself and is the reason the "what counts as a finding"
 section below is so specific: **a check that is wrong every time is a deleted check.** The
@@ -47,6 +47,7 @@ skip the whole report — including the six checks that were correct.
 | 7 | **Context budget** ([ADR-011](../adrs/011-knowledge-delivery-tiers.md)) | **yes** (except `size-warn`) | everything CLAUDE.md loads at launch (its `@`-imports, read from CLAUDE.md itself), the orientation.md trap index, and the rules without `paths:`. These load into every session and every custom agent spawn, so bytes here are a per-turn tax. An oversized path-scoped rule warns until the path-rule diet |
 | 8 | **RCA FOLLOW-UP owner** ([#984](https://github.com/haterade22/TAOM/issues/984)) | **yes** | a newly written line of `docs/reviews/rca-*.md` with an uppercase `FOLLOW-UP` (or `FOLLOW-UPS`) and neither an issue reference (`#<number>` or an `/issues/<number>` URL) nor a stated reason (`no issue: <reason>`, `no issue filed, <reason>`, `none is filed because <reason>`). See "Check 8" below |
 | 9 | **Git diff failed** ([#987](https://github.com/haterade22/TAOM/issues/987)) | **yes** | the new-lines checks (dashes, check 8) could not diff because the diff failed on a resolvable base, which means repository damage (a broken index or a missing object; a mistyped `--dash-base` exits 2 instead). Reported once under its own heading and `git_diff_failed:` counter; it used to read as zero findings |
+| 10 | **Feature doc verify section** | **yes** | a new docs/features/*.md with no `## How to verify in game` section that has a body |
 
 **Why 3b exists (2026-08-09).** `docs/features/enlistment.md` had **51 lines** of a live-session
 record sitting below its `backlinks-start` marker, and the regeneration was already armed — today's
@@ -56,7 +57,7 @@ pass then destroyed **50 lines of `REVIEW-LOG.md`** (Review 84's entire record) 
 reason, which had to be restored from `HEAD` — the bug demonstrating itself mid-fix is the reason
 this is a check and not a note.
 
-`--fail-on-drift` gates on **5 to 9**; checks 1-4 never block. Within 7, only hard violations
+`--fail-on-drift` gates on **5 to 10**; checks 1-4 never block. Within 7, only hard violations
 gate; a `size-warn` finding is report-only by design. `--drift-only` runs just the gating checks
 (about 0.2 s against the full run's 9 s) and is what the commit hook calls, with `--staged`.
 
@@ -126,7 +127,7 @@ also what `bash tools/context_budget_scan.sh` reads, so the report and the gate 
 
 The entry docs are CLAUDE.md and its `@`-imports, followed four hops the way Claude Code follows
 them, with imports inside code ignored. Bytes are counted with CRLF folded to LF, so a Windows
-checkout and CI agree. Two findings exist so a check cannot be switched off in silence: an import
+checkout and any other agree. Two findings exist so a check cannot be switched off in silence: an import
 that resolves to no file (`import-missing`), and a trap index that is no longer imported or has
 lost its heading (`trap-index-missing`). Both gate. The import scan reads Markdown as Claude Code
 does (a fence closes only with a run of its own character at least as long; a code span may
@@ -214,7 +215,7 @@ python tools/lint_docs.py --summary        # --- delimited, grep-friendly counts
 python tools/lint_docs.py --quick          # dead links only (fastest; tight loops)
 python tools/lint_docs.py --report docs/reviews/doc-lint-$(date +%F).md   # atomic .tmp+rename
 python tools/lint_docs.py --fail-on-dead   # exit 1 on any dead link
-python tools/lint_docs.py --fail-on-drift  # exit 1 on checks 5 to 9 (gating checks, with the full report)
+python tools/lint_docs.py --fail-on-drift  # exit 1 on checks 5 to 10 (gating checks, with the full report)
 python tools/lint_docs.py --drift-only     # only the gating checks, and gate on them
 python tools/lint_docs.py --drift-only --staged   # the commit hook's mode: check 8 reads the index
 python tools/lint_docs.py --drift-only --staged --dash-base HEAD~1   # what the hook runs for an amend
@@ -249,8 +250,7 @@ before treating it as an all-clear.
 Python 3.9+ stdlib (`argparse`, `json`, `re`, `pathlib`, `urllib.parse`, `dataclasses`), plus PyYAML
 when installed, to parse rule frontmatter for check 7; without it a `frontmatter-unchecked` note
 says the parse was skipped.
-`Path.is_relative_to` sets the 3.9 floor. No game install, no network, no third-party packages —
-which is why this is one of the few TAOM gates that can run in CI unchanged.
+`Path.is_relative_to` sets the 3.9 floor. No game install, no network, no third-party packages.
 
 ## Tests
 

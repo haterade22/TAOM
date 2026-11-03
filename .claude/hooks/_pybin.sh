@@ -79,7 +79,7 @@ taom_pybin_is_safe() {
 #
 # The bound is per candidate, and a run tries at most four (the TAOM_PYBIN pin, then python,
 # python3 and py), so the worst case must stay under the smallest registered timeout, which is
-# 5s for most registrations. `-k 0.2 0.8` means a SIGTERM-ignoring candidate costs at most
+# 5 s (the freeze registrations). `-k 0.2 0.8` means a SIGTERM-ignoring candidate costs at most
 # 1.0s, so 4 x 1.0 = 4.0s < 5s. -k is essential:
 # without it GNU timeout sends SIGTERM then WAITS forever on a process that ignores it,
 # which is precisely the hazard being guarded against. Empty stdin so the probe cannot
@@ -200,7 +200,7 @@ taom_hook_segments() {
     local out rc
     if [ -n "${PYBIN:-}" ]; then
         # Bounded inside the gate (hook-authoring.md, "a timeout is a kill"): a reader that overruns is cut
-        # off at 20 s of the 30 s registration and the sed split answers. TAOM_READER_TIMEOUT only shortens
+        # off at 20 s and the sed split answers. TAOM_READER_TIMEOUT only shortens
         # it for tests/test_hooks.sh.
         out=$(printf '%s' "$INPUT" | timeout -k 1 "${TAOM_READER_TIMEOUT:-20}" "$PYBIN" "$TAOM_HOOKS_DIR/_shellwords.py" commands --blind 2>/dev/null)
         rc=$?

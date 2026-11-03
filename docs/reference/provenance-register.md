@@ -7,15 +7,7 @@ make a checker accept a new third-party name is to write a row here, which force
 question to be answered. **That checker does not exist yet**; for now this file is kept current by
 hand, in the same commit as the code it describes.
 
-**The rule this file exists to serve:** name the source and state its license. A bare unattributed
-mention is a violation, and so is an unnamed euphemism ("the donor mod", "the upstream pack"). This
-reverses an earlier standing rule that said TAOM documentation must not name other mods, recorded at
-[`docs/changelog-archive/CHANGELOG-2026-H1.md:2258-2270`](../changelog-archive/CHANGELOG-2026-H1.md).
-That rule produced a partial de-naming pass and no enforcement, and it left the repo documenting that
-something had been taken while making it impossible to check under what terms. One exception: a
-source the maintainer chooses not to name, from which TAOM copies nothing, gets no row and no
-mention anywhere in the repo. Full rule:
-[`.claude/rules/provenance.md`](../../.claude/rules/provenance.md).
+The rule: [`.claude/rules/provenance.md`](../../.claude/rules/provenance.md).
 
 **This file does not ship.** It carries `uncleared` rows, which are a working list of open questions,
 and publishing an open question is not the same as discharging a notice obligation. The shipped
@@ -25,7 +17,7 @@ and contains **only** `cleared` rows.
 
 ## Vocabulary
 
-**Derivation** (closed set, enforced by the checker):
+**Derivation** (closed set, no checker yet):
 
 | Value | Means |
 |---|---|
@@ -47,7 +39,7 @@ the source publishes one instead of a licence.
 identified, not yet confirmed or recorded) · `uncleared` (we do not know the terms) · `removed` (the
 derivation no longer exists in TAOM).
 
-**Tokens** are the strings the checker matches on. They must be backticked. Nothing outside backticks
+**Tokens** are the strings a future checker would match. They must be backticked. Nothing outside backticks
 is ever treated as a token, which is what keeps the bare word "Alliance" from matching vanilla
 `AllianceCampaignBehavior` or the French lore string "Dernière Alliance".
 
@@ -61,7 +53,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | TpacTool | `TpacTool` `szszss/TpacTool` | MIT | behavioural-port | `tools/tpac_skeleton_scan.py` `tools/tpac_clipinfo.py` | cleared |
 | TpacTool (ShortJake fork) | `ShortJake/TpacTool` | MIT | interop-only | the `tools/*.ps1` tpac tools load its v0.5.1 `TpacTool.Lib.dll` at run time (`-TpacBin` / `-TpacToolBin`); never shipped, nothing derived (see the TpacTool detail) | cleared |
 | NVIDIA SkillSpector | `SkillSpector` `NVIDIA/SkillSpector` | Apache-2.0 | behavioural-port | `tools/audit_claude_config.py` | cleared |
-| ECC (Everything Claude Code) | `affaan-m/ECC` `everything-claude-code` `AgentShield` | MIT | behavioural-port | `tools/audit_claude_config.py`; `.claude/skills/{context-budget,build-fix,verify}/**`; `.claude/hooks/{config-protection,mcp-health-check,mcp-health-mark,block-dangerous-git}.sh`; `tools/blender/harness.py` (`stance_height`) (context-save, context-restore, skill-stocktake and agent-introspection-debugging removed 2026-10-08: [skill usage audit](../reviews/skill-usage-audit-2026-10-08.md)) | cleared |
+| ECC (Everything Claude Code) | `affaan-m/ECC` `everything-claude-code` `AgentShield` | MIT | behavioural-port | `tools/audit_claude_config.py`; `.claude/skills/verify/**`; `.claude/hooks/{config-protection,block-dangerous-git}.sh`; `tools/blender/harness.py` (`stance_height`) (context-budget and build-fix removed; history in git; context-save, context-restore, skill-stocktake and agent-introspection-debugging removed 2026-10-08: [skill usage audit](../reviews/skill-usage-audit-2026-10-08.md)) | cleared |
 | graphify | `graphify` `graphifyy` `Graphify-Labs` `safishamsi/graphify` | Apache-2.0 (MIT when ported, see detail) | behavioural-port | `tools/doc_graph.py` `tools/graph_query.py`; `tools/graphify_taom.py` runs the CLI (interop-only, see detail) | cleared |
 | MinHook | `MinHook` `MinHook.x64.dll` | BSD-2-Clause | redistributed | (removed 2026-10-05) `Main/_Module/bin/Win64_Shipping_Client/MinHook.x64.dll` `Dependencies/NativeSkinFixes.NativeHooks/MinHook/**` | removed |
 | Lib.Harmony | `0Harmony.dll` `Lib.Harmony` | MIT | redistributed | (build-acquired, `Dependencies/TAOM.Dependencies.csproj` PackageReference) | cleared |
@@ -125,7 +117,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 
 <!-- provenance-register-end -->
 
-TAOM's own and predecessor modules. The checker skips these entirely.
+TAOM's own and predecessor modules. A future checker would skip these entirely.
 
 <!-- taom-owned-start -->
 `TAOM` `TAOM_Map` `TAOM_Online` `TAOM.Dependencies` `TAOM.NativeSkinFixes`
@@ -135,8 +127,8 @@ TAOM's own and predecessor modules. The checker skips these entirely.
 `TAOM.NativeSkinFixes` stays in that list because history docs still name it; the DLL itself was removed on 2026-10-05.
 
 Vanilla TaleWorlds module ids (`Native`, `SandBox`, `SandBoxCore`, `StoryMode`, `CustomBattle`,
-`BirthAndDeath`, `Multiplayer`, `NavalDLC`) are engine facts, not project policy, and live as a
-constant in the checker rather than here.
+`BirthAndDeath`, `Multiplayer`, `NavalDLC`) are engine facts, not project policy, and would live as a
+constant in that checker rather than here.
 
 ---
 
@@ -221,8 +213,8 @@ Upstream: https://github.com/affaan-m/ECC (formerly `affaan-m/everything-claude-
 Ideas and procedures re-expressed in TAOM's own words and code across four reviews (early 2026, the
 2026-04-26 ecosystem review, 2026-05-29, 2026-09-29); no ECC file was copied or installed. The
 config scanner is a calibrated subset of AgentShield's categories. The file itself names ECC in
-`audit_claude_config.py`, the `context-budget` skill, `block-dangerous-git.sh` and `harness.py`; the early-2026
-ports (`build-fix`, `verify`, `config-protection.sh`, `mcp-health-check.sh`, `mcp-health-mark.sh`) carry
+`audit_claude_config.py`, `block-dangerous-git.sh` and `harness.py`; the early-2026
+ports (`verify`, `config-protection.sh`, and two MCP health hooks since deleted) carry
 no attribution line, and their record is the "Everything-Claude-Code Cherry-Pick" entry in
 `docs/changelog-archive/CHANGELOG-2026-H1.md`. Harness tooling only: none of it ships to players, so no
 `THIRD-PARTY-LICENSES.txt` entry is owed. Adoption records:
@@ -583,7 +575,7 @@ classes, then the captains, then the hero troops. Nothing was copied, and TAOM's
 model flows where the HoN code sets the class selector by reflection. The new files
 (`Main/Features/CompanionTactics/FormationPresets/FormationPresetLayout.cs`, `OOBPresetApplier.cs`,
 `IOOBPresetApplier.cs`, `Models/PresetApplyResult.cs`), the Save and Load paths of `UI/OOBButtonsVM.cs` and their
-tests are TAOM's own code. Row 76's `Main/Features/CompanionTactics/**` pattern covers them too: they are a
+tests are TAOM's own code. The Yotthani HoN mods row's `Main/Features/CompanionTactics/**` pattern covers them too: they are a
 behavioural port, not verbatim, under the same MIT terms.
 
 ### TAOM_Promoted / RF_Promoted (UNCLEARED)
@@ -773,7 +765,7 @@ slot; neither derives anything from it.
 4. Pick the narrowest true `Derivation`. If you read the source while implementing, it is not
    `clean-room`, regardless of how much you changed.
 5. `Covers` lists the concrete TAOM paths, not a feature name. Every file matched by a glob must name
-   its source in a header or link this register, which the checker enforces.
+   its source in a header or link this register; nothing checks this yet.
 6. Add a detail section if the row needs more than the table can hold.
 7. For a brand new adoption, run `/adopt-external` first. Its security and license pass is the front
    door; this register is where its answer gets written down.

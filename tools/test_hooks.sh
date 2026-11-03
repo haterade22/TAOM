@@ -169,7 +169,7 @@ head2 "3. registered timeout vs measured slow path"
 # DISCOVERED, not hardcoded. This check first shipped with a four-name array while the
 # CHANGELOG, the RCA and hook-authoring.md all claimed it caught "any hook running an
 # external tool with no inner bound". A confident instruction that outlives its truth is
-# the exact shape of the hooks-catalog.md sentence that caused the original outage, so
+# the exact shape of the old catalog sentence ("use the python3 fallback") that caused the original outage, so
 # the list is derived from the hooks themselves and cannot rot.
 TOOL_HOOKS=$(grep -lE '"\$PY(BIN)?" +[^ ]*tools/[A-Za-z0-9_]+\.py|tools/[A-Za-z0-9_]+\.py' .claude/hooks/*.sh 2>/dev/null              | xargs -r grep -lE '\$\{?PY' 2>/dev/null || true)
 if [[ -z "$TOOL_HOOKS" ]]; then
@@ -239,7 +239,7 @@ def frontmatter(txt):
     return None
 
 # Allowlists: harness-facts.md "Skill load semantics" and "Agent (subagent) load semantics".
-# Both pages were truncated when read (2026-10-26), so a documented key may be missing.
+# Source: claude-directory, Frontmatter fields by file (2026-11-03).
 SKILL_KEYS = {'name', 'description', 'when_to_use', 'argument-hint', 'arguments',
               'disable-model-invocation', 'user-invocable', 'allowed-tools', 'disallowed-tools',
               'model', 'effort', 'context', 'agent', 'background', 'hooks', 'paths', 'shell',
@@ -299,8 +299,7 @@ for p in (list(root.glob('.claude/skills/*/SKILL.md'))
 
     # Claude Code silently ignores an unrecognised frontmatter key, so a typo such as
     # `disable-model-invocaton` or `allowed_tools` turns a setting off with no error.
-    # Rules are not checked: harness-facts.md says Claude Code reads only `paths` there,
-    # and 8 rules carry a `description` that is documentation for readers.
+    # Rules are not checked: harness-facts.md says Claude Code reads only `paths` there.
     # The kind is the first part of the path under .claude, never the file or folder name: a
     # future .claude/rules/agents/ folder holds rules.
     kind = p.relative_to(root / '.claude').parts[0]
@@ -575,12 +574,12 @@ else
             [[ "$name" == mark-verification-run.sh ]] && triggers+=('cd /x\npwsh ./build.ps1 -RunTests')
         else
             # Each gate's own word (maintainer decision D39): validate-push.sh filters on
-            # `push`, block-no-verify.sh on `no-verify`, the five commit gates on `commit`,
+            # `push`, block-no-verify.sh on `no-ver`, `commit` and `hooksPath`, the commit gates on `commit`,
             # and the two confirm gates on `git`; a `git commit` row reaches the last two sets.
             case "$name" in
                 # validate-push.sh finds `push` by token, so `git -C <dir> push` is its trigger too.
                 validate-push.sh)   triggers=('cd /x\ngit push origin x' 'cd /x\ngit -C /y push origin x') ;;
-                block-no-verify.sh) triggers=('cd /x\ngit commit --no-verify -m x') ;;
+                block-no-verify.sh) triggers=('cd /x\ngit commit --no-verify -m x' 'cd /x\ngit commit -n -m x' 'cd /x\ngit -c core.hooksPath=/y status') ;;
                 check-graphify-usage.sh) triggers=('cd /x\ngraphify update /y' 'echo a; graphify extract .') ;;
                 # Its trigger is length, not a word: a long command must reach the parser.
                 check-bash-length.sh) triggers=("cd /x\\necho $(printf 'x%.0s' {1..6000})") ;;
@@ -1033,6 +1032,17 @@ for case in "allow|escaped|$FZ_NATIVE/漢/sub/a.cs" "allow|raw|$FZ_NATIVE/漢/su
         bad "freeze [$enc] expected $expect, got $got for ${path#"$FZ_NATIVE"/}: $(printf '%s' "$OUT" | head -c 120)"
     fi
 done
+# A memory card and a session scratchpad are not code the freeze protects: allowed outside the boundary.
+for path in "$FZ_NATIVE/.claude/projects/e--repos-TAOM/memory/MEMORY.md" "$FZ_NATIVE/scratchpad/notes.txt"; do
+    payload=$("$HPY" -X utf8 -c 'import json,sys; print(json.dumps({"tool_name":"Write","tool_input":{"file_path":sys.argv[1]},"hook_event_name":"PreToolUse"}))' "$path")
+    OUT=$(printf '%s' "$payload" | timeout -k 2 10 env CLAUDE_PROJECT_DIR="$FZ" bash .claude/skills/freeze/check-freeze.sh 2>/dev/null)
+    got=$(decision_of "$OUT")
+    if [[ "$got" == allow ]]; then
+        ok "freeze allows ${path#"$FZ_NATIVE"/} outside the boundary"
+    else
+        bad "freeze expected allow, got $got for ${path#"$FZ_NATIVE"/}: $(printf '%s' "$OUT" | head -c 120)"
+    fi
+done
 rm -rf "$FZ"
 
 # ---------------------------------------------------------------------------
@@ -1250,39 +1260,6 @@ EOF"
 fi
 
 # ---------------------------------------------------------------------------
-head2 "7. check-deep-review: the Stop reminder mutes only after a logged deep-reviewer run"
-# The mute greps a line log-agent.sh writes, and the two hooks share nothing else. Until
-# 2026-09-18 the mute matched lens names the writer never logs, so it never fired. Drive the
-# real writer and the real reader together, both directions: a rename or a format change on
-# either side must fail here instead of silently re-arming or permanently muting the reminder.
-CDR_REPO="$SANDBOX/cdr-repo"
-mkdir -p "$CDR_REPO/.claude/logs" "$CDR_REPO/Main"
-git -C "$CDR_REPO" init -q 2>/dev/null
-printf 'class Foo {}\n' > "$CDR_REPO/Main/Foo.cs"
-cdr_log() {
-    printf '{"agent_type":"%s","agent_id":"t"}' "$1" \
-        | CLAUDE_PROJECT_DIR="$CDR_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/log-agent.sh" >/dev/null 2>&1
-}
-cdr_reminds() {
-    rm -f "$CDR_REPO/.claude/logs/.deep-review-reminded"
-    printf '%s' '{"hook_event_name":"Stop","session_id":"t","stop_hook_active":false}' \
-        | CLAUDE_PROJECT_DIR="$CDR_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/check-deep-review.sh" 2>/dev/null \
-        | grep -q '"decision":"block".*/deep-review'
-}
-cdr_log Explore
-if cdr_reminds; then
-    ok "reminds on a dirty .cs when no deep-reviewer run is logged"
-else
-    bad "check-deep-review.sh stayed silent on a dirty .cs with no deep-reviewer run logged"
-fi
-cdr_log deep-reviewer
-if cdr_reminds; then
-    bad "check-deep-review.sh still reminds after log-agent.sh logged a deep-reviewer run: the writer's line format and the mute's pattern no longer agree"
-else
-    ok "a deep-reviewer run logged by log-agent.sh mutes the reminder"
-fi
-
-# ---------------------------------------------------------------------------
 head2 "7a. Stop reminders reach Claude: one JSON block per streak, never bare stderr"
 # Claude Code sends a Stop hook's exit-0 stderr and its plain stdout to the debug log only. The
 # four reminders wrote there until plan 011 and none ever arrived. The Stop channel TAOM uses is
@@ -1332,8 +1309,8 @@ for pair in '0|{"stop_hook_active":true}' '0|{"stop_hook_active": true}' \
     [[ "$got" == "$want" ]] && ok "taom_stop_hook_active $want for $js" || bad "taom_stop_hook_active returned $got, expected $want, for $js"
 done
 
-# Each hook against a sandbox repo that triggers all four: a tracked, modified .cs, an untagged
-# version, an untouched CHANGELOG, no build marker, no logged review.
+# Each Stop hook against a sandbox repo that triggers it: a tracked, modified .cs and no build
+# marker.
 STOP_REPO="$SANDBOX/stop-repo"
 mkdir -p "$STOP_REPO/.claude/logs" "$STOP_REPO/Main/_Module"
 git -C "$STOP_REPO" init -q 2>/dev/null
@@ -1385,10 +1362,6 @@ stop_condition() {  # hook clear|set
             "$HPY" -c 'import json; print(json.dumps({"tool_name":"PowerShell","tool_input":{"command":"dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId="},"hook_event_name":"PostToolUse"}))' \
                 | CLAUDE_PROJECT_DIR="$STOP_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/mark-verification-run.sh" >/dev/null 2>&1 ;;
         check-verification-evidence.sh:set) touch -d "@$((now + 3))" "$STOP_REPO/Main/Foo.cs" ;;
-        check-deep-review.sh:clear)          git -C "$STOP_REPO" checkout -q -- Main/Foo.cs ;;
-        check-deep-review.sh:set)            printf 'class Foo { int x; }\n' > "$STOP_REPO/Main/Foo.cs" ;;
-        check-version-tagged.sh:clear)       git -C "$STOP_REPO" tag v9.9.9 ;;
-        check-version-tagged.sh:set)         git -C "$STOP_REPO" tag -d v9.9.9 >/dev/null 2>&1 ;;
         *) return 2 ;;
     esac
     return 0
@@ -1420,27 +1393,31 @@ for name in $STOP_HOOKS; do
     stop_condition "$name" set
     stop_expect "$name" "$STOP_LIVE" block "reminds on the next streak after one that ended in the continuation"
 done
-# A deep-reviewer run logged by the real writer ends the deep-review streak and clears its marker.
-printf 'class Foo { int y; }\n' > "$STOP_REPO/Main/Foo.cs"
-rm -f "$STOP_REPO"/.claude/logs/.*-reminded "$STOP_REPO/.claude/logs/agent-audit.log"
-stop_expect check-deep-review.sh "$STOP_LIVE" block "reminds before a review is logged"
-printf '{"agent_type":"deep-reviewer","agent_id":"t"}' \
-    | CLAUDE_PROJECT_DIR="$STOP_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/log-agent.sh" >/dev/null 2>&1
-stop_expect check-deep-review.sh "$STOP_LIVE" silent "is silent after log-agent.sh logs a deep-reviewer run"
-[[ -f "$STOP_REPO/.claude/logs/.deep-review-reminded" ]] \
-    && bad "check-deep-review.sh kept .deep-review-reminded after a logged review: the next streak stays muted" \
-    || ok "check-deep-review.sh clears its streak marker when a review is logged"
-rm -f "$STOP_REPO/.claude/logs/agent-audit.log"
+# A session that entered a worktree sends that worktree as the payload cwd, while CLAUDE_PROJECT_DIR
+# stays at the main checkout. The hook judges the cwd's tree and keeps its markers under the project:
+# dirty C# only in the second worktree reminds when the payload names it, and is silent without it.
+git -C "$STOP_REPO" checkout -q -- Main/Foo.cs
+rm -f "$STOP_REPO"/.claude/logs/.*-reminded "$STOP_REPO/.claude/logs/.verification-ran"
+STOP_WT="$SANDBOX/stop-wt"
+git -C "$STOP_REPO" worktree add -q --detach "$STOP_WT" 2>/dev/null
+printf 'class Foo { int w; }\n' > "$STOP_WT/Main/Foo.cs"
+STOP_WT_M=$(cygpath -m "$STOP_WT" 2>/dev/null || echo "$STOP_WT")
+stop_expect check-verification-evidence.sh "$STOP_LIVE" silent "ignores dirty C# in a second worktree the payload does not name"
+stop_expect check-verification-evidence.sh \
+    "{\"hook_event_name\":\"Stop\",\"session_id\":\"t\",\"cwd\":\"$STOP_WT_M\",\"stop_hook_active\":false}" \
+    block "reminds for dirty C# in the worktree the payload cwd names"
+git -C "$STOP_REPO" worktree remove --force "$STOP_WT" 2>/dev/null
+rm -f "$STOP_REPO"/.claude/logs/.*-reminded
 
 # ---------------------------------------------------------------------------
 head2 "7b. check-claude-files-tracked: denies with a valid decision, inside its registration"
 # Until #647 it asked git two or three times per file, took 6 s against a 5 s registration,
-# and the harness killed it on every commit. A sandbox repo with one untracked and one
-# gitignored harness file must be denied, fast, and a clean tree allowed.
+# and the harness killed it on every commit. A sandbox repo with gitignored harness files must be
+# denied, fast, and a clean tree allowed; an untracked file that is not ignored is no finding.
 CFT_REPO="$SANDBOX/cft-repo"
 mkdir -p "$CFT_REPO/.claude/skills/demo" "$CFT_REPO/.claude/hooks/bin"
 git -C "$CFT_REPO" init -q 2>/dev/null
-printf 'bin/\n' > "$CFT_REPO/.gitignore"
+printf 'bin/\nSKILL.md\n_helper.py\nrun.js\n' > "$CFT_REPO/.gitignore"
 printf '# demo\n' > "$CFT_REPO/.claude/skills/demo/SKILL.md"
 printf 'echo hi\n' > "$CFT_REPO/.claude/hooks/bin/check.sh"
 printf 'x = 1\n' > "$CFT_REPO/.claude/hooks/_helper.py"
@@ -1449,12 +1426,12 @@ cft_run() {
         | CLAUDE_PROJECT_DIR="$CFT_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/check-claude-files-tracked.sh" 2>/dev/null
 }
 S=$(date +%s%N); OUT=$(cft_run); MS=$(( ($(date +%s%N) - S) / 1000000 ))
-if [[ "$(decision_of "$OUT")" == deny ]] && grep -q 'SKILL.md (untracked' <<< "$OUT" && grep -q 'check.sh (gitignored' <<< "$OUT" && grep -q '_helper.py (untracked' <<< "$OUT"; then
-    ok "denies an untracked and a gitignored harness file, a .py helper included, in ${MS}ms"
+if [[ "$(decision_of "$OUT")" == deny ]] && grep -q 'SKILL.md (gitignored' <<< "$OUT" && grep -q 'check.sh (gitignored' <<< "$OUT" && grep -q '_helper.py (gitignored' <<< "$OUT"; then
+    ok "denies gitignored harness files, a .py helper included, in ${MS}ms"
 else
     bad "check-claude-files-tracked did not deny both files with a valid decision: $(printf '%s' "$OUT" | head -c 160)"
 fi
-git -C "$CFT_REPO" add .claude/skills/demo/SKILL.md .claude/hooks/_helper.py 2>/dev/null
+git -C "$CFT_REPO" add -f .claude/skills/demo/SKILL.md .claude/hooks/_helper.py 2>/dev/null
 rm -rf "$CFT_REPO/.claude/hooks/bin"
 OUT=$(cft_run)
 if [[ "$(decision_of "$OUT")" == allow ]]; then
@@ -1462,24 +1439,35 @@ if [[ "$(decision_of "$OUT")" == allow ]]; then
 else
     bad "check-claude-files-tracked still objects to a clean tree: $(printf '%s' "$OUT" | head -c 160)"
 fi
-# A Workflow script is a .js file (.claude/skills/improve/workflows): one left untracked never ships,
+# A new file that is untracked and not ignored is the normal state before `git add x && git commit`:
+# the hook runs before the add, so it is not a finding.
+printf '# new\n' > "$CFT_REPO/.claude/skills/demo/new.md"
+OUT=$(cft_run)
+if [[ "$(decision_of "$OUT")" == allow ]]; then
+    ok "an untracked, not ignored harness file is allowed"
+else
+    bad "check-claude-files-tracked objected to an untracked file that is not ignored: $(printf '%s' "$OUT" | head -c 160)"
+fi
+rm -f "$CFT_REPO/.claude/skills/demo/new.md"
+# A Workflow script is a .js file (.claude/skills/improve/workflows): one left ignored never ships,
 # and the extension filter once named only md, sh, py, json and yaml.
 mkdir -p "$CFT_REPO/.claude/skills/demo/workflows"
 printf 'export const meta = {}\n' > "$CFT_REPO/.claude/skills/demo/workflows/run.js"
 OUT=$(cft_run)
-if [[ "$(decision_of "$OUT")" == deny ]] && grep -q 'run.js (untracked' <<< "$OUT"; then
-    ok "denies an untracked Workflow script (.js) under .claude/skills"
+if [[ "$(decision_of "$OUT")" == deny ]] && grep -q 'run.js (gitignored' <<< "$OUT"; then
+    ok "denies a gitignored Workflow script (.js) under .claude/skills"
 else
-    bad "check-claude-files-tracked let an untracked .js Workflow script through: $(printf '%s' "$OUT" | head -c 160)"
+    bad "check-claude-files-tracked let a gitignored .js Workflow script through: $(printf '%s' "$OUT" | head -c 160)"
 fi
-git -C "$CFT_REPO" add .claude/skills/demo/workflows/run.js 2>/dev/null
+git -C "$CFT_REPO" add -f .claude/skills/demo/workflows/run.js 2>/dev/null
 # A commit in another worktree is checked in THAT repository (2026-10-16). The registration runs this
 # script from the project root, which stays where the session started after it enters a worktree, so
-# another session's untracked skill in the main checkout denied every worktree commit. The repository
+# another session's ignored skill in the main checkout denied every worktree commit. The repository
 # is the one `git -C` or an earlier `cd` names, then the payload's cwd, then the project root.
 CFT_WT="$SANDBOX/cft-worktree"
 mkdir -p "$CFT_WT" "$CFT_REPO/.claude/skills/other"
 git -C "$CFT_WT" init -q 2>/dev/null
+printf 'SKILL.md\n' > "$CFT_WT/.git/info/exclude"
 printf '# another session\n' > "$CFT_REPO/.claude/skills/other/SKILL.md"
 CFT_WT_M=$(cygpath -m "$CFT_WT" 2>/dev/null || echo "$CFT_WT")
 cft_payload() {   # $1 the command, $2 the payload cwd or ""; neither holds a quote or a backslash
@@ -1489,7 +1477,7 @@ cft_payload() {   # $1 the command, $2 the payload cwd or ""; neither holds a qu
         | CLAUDE_PROJECT_DIR="$CFT_REPO" timeout -k 2 10 bash "$REPO/.claude/hooks/check-claude-files-tracked.sh" 2>/dev/null
 }
 OUT=$(cft_payload "git commit -m x" "")
-[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'other/SKILL.md (untracked' <<< "$OUT" \
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'other/SKILL.md (gitignored' <<< "$OUT" \
     && ok "no cwd and no named directory: the project root is checked, as before" \
     || bad "a commit with no cwd did not check the project root: $(printf '%s' "$OUT" | head -c 160)"
 OUT=$(cft_payload "git commit -m x" "$CFT_WT_M")
@@ -1513,18 +1501,18 @@ OUT=$(cft_payload "cd $CFT_WT_M/nowhere && git commit -m x" "")
 mkdir -p "$CFT_REPO/sub" "$CFT_WT/sub"
 CFT_REPO_M=$(cygpath -m "$CFT_REPO" 2>/dev/null || echo "$CFT_REPO")
 OUT=$(cft_payload "git commit -m x" "$CFT_REPO_M/sub")
-[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'other/SKILL.md (untracked' <<< "$OUT" \
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'other/SKILL.md (gitignored' <<< "$OUT" \
     && ok "a cwd in a subdirectory is judged at the repository's top level" \
     || bad "a commit from a subdirectory passed unchecked: $(printf '%s' "$OUT" | head -c 160)"
 OUT=$(cft_payload "cd sub && git commit -m x" "$CFT_REPO_M")
-[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'other/SKILL.md (untracked' <<< "$OUT" \
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'other/SKILL.md (gitignored' <<< "$OUT" \
     && ok "cd <subdirectory> && git commit is judged at the repository's top level" \
     || bad "cd <subdirectory> && git commit passed unchecked: $(printf '%s' "$OUT" | head -c 160)"
 mkdir -p "$CFT_WT/.claude/skills/wt"; printf '# wt\n' > "$CFT_WT/.claude/skills/wt/SKILL.md"
 OUT=$(cft_payload "git commit -m x" "$CFT_WT_M")
-[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'wt/SKILL.md (untracked' <<< "$OUT" \
-    && ok "an untracked skill in the worktree itself still denies its commit" \
-    || bad "an untracked skill in the worktree did not deny: $(printf '%s' "$OUT" | head -c 160)"
+[[ "$(decision_of "$OUT")" == deny ]] && grep -q 'wt/SKILL.md (gitignored' <<< "$OUT" \
+    && ok "an ignored skill in the worktree itself still denies its commit" \
+    || bad "an ignored skill in the worktree did not deny: $(printf '%s' "$OUT" | head -c 160)"
 # The resolver itself (_pybin.sh taom_git_repo_dir over _shellwords.py git-repo), which every git
 # gate that reads the repository goes through. It answers a work tree's top level, in git's form.
 top_of() { git -C "$1" rev-parse --show-toplevel 2>/dev/null; }
@@ -2377,12 +2365,31 @@ G7E_ROWS=(
   "block-no-verify.sh|PowerShell|S|rc=2 allow|git commit --no-verify -m \"x\""
   "block-no-verify.sh|PowerShell|S|rc=2 allow|GIT commit --no-verify -m x"
   "block-no-verify.sh|PowerShell|S|rc=2 allow|& 'C:\\Program Files\\Git\\cmd\\git.exe' push --no-verify origin feature"
-  # A known gap, pinned (see Out of scope): the raw prefilter never sees the text no-verify here.
-  "block-no-verify.sh|PowerShell|S|rc=0 allow|git commit --no-verif''y -m x"
+  "block-no-verify.sh|PowerShell|S|rc=2 allow|git commit --no-verif''y -m x"
   "block-no-verify.sh|PowerShell|S|rc=2 allow|git status; git commit ${BT}${NL}  --no-verify -m x"
   "block-no-verify.sh|PowerShell|S|rc=0 allow|npm publish --no-verify"
   "block-no-verify.sh|Bash|S|rc=2 allow|GIT commit --no-verify -m x"
   "block-no-verify.sh|Bash|S|rc=2 allow|git commit --no-verify -m x"
+  # Every spelling that skips commit-msg: git expands --no-veri, -n is the short form, and a
+  # one-call hooksPath points git away from .githooks.
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit --no-veri -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit -nm x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git commit -m x -n"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -C /tmp commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|timeout 60 git commit -n -m x"
+  "block-no-verify.sh|PowerShell|S|rc=2 allow|git commit -n -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -c core.hooksPath=/dev/null commit -m x"
+  "block-no-verify.sh|Bash|S|rc=2 allow|git -c CORE.HOOKSPATH=/dev/null commit -m x"
+  # Look-alikes stay allowed: a dry run, another flag, a message, another command.
+  "block-no-verify.sh|Bash|S|rc=0 allow|git push -n origin feature"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit --no-verbose -m x"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -m \"add the -n flag\""
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit -m x"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git log -n 5 commit"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git commit-tree -n x"
+  "block-no-verify.sh|Bash|S|rc=0 allow|git config --get core.hooksPath"
+  "block-no-verify.sh|Bash|S|rc=0 allow|grep -n commit file"
   # block-dangerous-git.sh confirms (ask) a command that can destroy work
   "block-dangerous-git.sh|PowerShell|S|rc=0 ask|git reset --hard"
   "block-dangerous-git.sh|PowerShell|S|rc=0 ask|& git reset --hard HEAD~1"
@@ -2609,12 +2616,13 @@ done
 G7E_CFT="$SANDBOX/g7e-cft"
 mkdir -p "$G7E_CFT/.claude/skills/demo"
 git -C "$G7E_CFT" init -q 2>/dev/null
+printf 'SKILL.md\n' > "$G7E_CFT/.git/info/exclude"
 printf '# demo\n' > "$G7E_CFT/.claude/skills/demo/SKILL.md"
 got=$(g7e_verdict check-claude-files-tracked.sh PowerShell "$G7E_CFT" "git commit -m @'${NL}docs: x${NL}'@")
 if [[ "$got" == "rc=0 deny" ]]; then
-    ok "check-claude-files-tracked denies a PowerShell here-string commit over an untracked skill"
+    ok "check-claude-files-tracked denies a PowerShell here-string commit over a gitignored skill"
 else
-    bad "check-claude-files-tracked answered '$got' to a PowerShell commit over an untracked skill; expected 'rc=0 deny'"
+    bad "check-claude-files-tracked answered '$got' to a PowerShell commit over a gitignored skill; expected 'rc=0 deny'"
 fi
 
 # The reader's failure fallback (_pybin.sh taom_hook_command): a gate that cannot run _shellwords.py
@@ -2844,10 +2852,10 @@ head2 "7g. config-protection blocks ADR and config edits whatever the path spell
 CP_CASES=(
   '2|E:\repos\TAOM\docs\adrs\012-graphify-code-graph-in-the-workflow.md'
   '2|E:/repos/TAOM/docs/adrs/010-knowledge-base-architecture.md'
-  '2|/e/repos/TAOM/docs/adrs/README.md'
+  '0|/e/repos/TAOM/docs/adrs/README.md'
   '2|docs/adrs/011-knowledge-delivery-tiers.md'
   '2|docs\adrs\011-knowledge-delivery-tiers.md'
-  '2|E:\repos\TAOM\Docs\ADRs\012-Graphify.MD'
+  '2|E:\repos\TAOM\Docs\ADRs\012-Graphify-Code-Graph-In-The-Workflow.MD'
   '2|E:\repos\TAOM\.claude\settings.json'
   '2|E:\repos\TAOM\.claude\Settings.Local.json'
   '2|E:\repos\TAOM\Directory.Build.props'
@@ -2875,6 +2883,19 @@ for entry in "${CP_CASES[@]}"; do
     [[ "$got" == "$want" ]] && ok "config-protection rc=$got for: $path" \
         || bad "config-protection expected rc=$want, got $got for: $path"
 done
+# A new ADR is written from the template (CLAUDE.md): an absolute path to an ADR that does not exist
+# yet is allowed, and the same path blocks once the file exists. A relative path counts as existing.
+CP_NEWADR="$SANDBOX/cp-adrs/docs/adrs/099-new.md"
+mkdir -p "$(dirname "$CP_NEWADR")"
+rm -f "$CP_NEWADR"
+cp_run "$CP_NEWADR" "taom-hooktest-$$"; got=$?
+[[ $got -eq 0 ]] && ok "config-protection: an absolute path to a missing ADR is allowed" \
+    || bad "config-protection blocked a new ADR in a sandbox path (rc=$got)"
+: > "$CP_NEWADR"
+cp_run "$CP_NEWADR" "taom-hooktest-$$"; got=$?
+[[ $got -eq 2 ]] && ok "config-protection: the same ADR blocks once it exists" \
+    || bad "config-protection let an existing sandbox ADR through (rc=$got)"
+rm -rf "$SANDBOX/cp-adrs"
 # The override is per session (2026-10-16). Its name carries the payload's session_id (every hook's
 # input), else CLAUDE_CODE_SESSION_ID, else CLAUDE_SESSION_ID. Until then it read only CLAUDE_SESSION_ID,
 # which the harness does not set, so the name was always ...-none and one file unlocked every session.
@@ -3396,7 +3417,7 @@ fi
 rm -f "$UP"/docs/reviews/harness-retro-*.md
 : > "$UP/docs/reviews/harness-retro-2020-01-01.md"
 : > "$UP/docs/reviews/harness-retro-$(date -d '-10 days' +%F).md"
-if grep -q "^HARNESS RETRO DUE: last retro $(date -d '-10 days' +%F) (10 days ago); run /harness-retro\.$" <<< "$(ss_retro)"; then
+if grep -q "^HARNESS RETRO DUE: last retro $(date -d '-10 days' +%F) (10 days ago)\. Tell Mike once in your first reply and ask whether to run /harness-retro\.$" <<< "$(ss_retro)"; then
     ok "retro cadence: the newest of two records, ten days old, gives the DUE line with its day count"
 else
     bad "retro cadence: a ten-day-old newest record gave no DUE line with '10 days ago'"
@@ -3452,6 +3473,41 @@ if grep -q 'worktree count UNCHECKED this session (git worktree list exited 3)' 
 else
     bad "worktree banner: a failing git worktree list printed no UNCHECKED note"
 fi
+# The core.hooksPath banner: a fake git answers `config core.hooksPath` with FAKE_HP. A value that
+# names a folder holding commit-msg (relative to the project root, where the hook has cd'd) is
+# silent; an unset value or a folder without commit-msg prints the NOTE.
+mkdir -p "$UP/fakebin-hp" "$UP/.githooks"
+cat > "$UP/fakebin-hp/git" <<FAKE
+#!/bin/sh
+if [ "\$1" = "config" ] && [ "\$2" = "core.hooksPath" ]; then
+  [ -n "\$FAKE_HP" ] && { echo "\$FAKE_HP"; exit 0; }
+  exit 1
+fi
+exec "$REAL_GIT" "\$@"
+FAKE
+chmod +x "$UP/fakebin-hp/git" 2>/dev/null
+ss_hp() {   # $1 the fake's core.hooksPath value; stdout of session-start.sh in $UP
+    printf '{"source":"startup"}' | timeout -k 2 20 env CLAUDE_PROJECT_DIR="$UP" TAOM_PYBIN="$UPPY" \
+        PATH="$UP/fakebin-hp:$PATH" FAKE_HP="$1" \
+        bash "$UP/.claude/hooks/session-start.sh" 2>/dev/null
+}
+: > "$UP/.githooks/commit-msg"
+if grep -q '^NOTE: core.hooksPath does not name .githooks, so commit-msg is NOT running\. Run: git config core.hooksPath .githooks$' <<< "$(ss_hp "")"; then
+    ok "hooksPath banner: an unset core.hooksPath prints the NOTE"
+else
+    bad "hooksPath banner: an unset core.hooksPath printed no NOTE"
+fi
+if grep -q '^NOTE: core.hooksPath' <<< "$(ss_hp .githooks)"; then
+    bad "hooksPath banner: .githooks holding commit-msg still printed the NOTE"
+else
+    ok "hooksPath banner: .githooks holding commit-msg, nothing printed"
+fi
+if grep -q '^NOTE: core.hooksPath' <<< "$(ss_hp .nohooks)"; then
+    ok "hooksPath banner: a folder without commit-msg prints the NOTE"
+else
+    bad "hooksPath banner: a folder without commit-msg printed no NOTE"
+fi
+rm -rf "$UP/fakebin-hp" "$UP/.githooks"
 
 # ---------------------------------------------------------------------------
 head2 "7l2. detect-docs-gaps finds the gaps and finishes well inside its 10 s registration"

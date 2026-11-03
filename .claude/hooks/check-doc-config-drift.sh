@@ -145,7 +145,7 @@ done
 # is what a plain commit records. It takes about 0.2 s; the full run adds 8 s of report-only checks
 # (orphans, dead links) that never gate.
 #
-# Inner bound, below the 30s registered timeout. A harness kill discards this hook's
+# Inner bound of 20 s. A harness kill discards this hook's
 # output, which reads as a clean pass; this gate was dead from 2026-08-31 when it ran at
 # a 5s registration against a measured 7.8s runtime. Keep the overrun inside the hook.
 LINT_ARGS=(--drift-only --staged)

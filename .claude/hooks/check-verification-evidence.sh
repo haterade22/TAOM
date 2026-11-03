@@ -3,13 +3,20 @@
 # since the last source edit. Enforces the "verification before done" half of
 # .claude/rules/evidence-over-claims.md.
 #
+# Why it stays: with no CI, this is the only automatic nudge before a done claim.
+#
 # Channel: one JSON {"decision":"block","reason":...} on stdout per unbuilt streak, through
 # _stop_reminder.sh, the Stop channel TAOM uses (exit-0 stderr goes to the debug log;
 # until plan 011 this hook wrote there and nothing arrived). Silent when stop_hook_active is
 # true, which only withholds the reminder: the marker still clears when a build ran during that
 # continuation, or the next streak would stay muted. Detection reads git state; stdin is read
-# only for that flag. Always exits 0, and any
+# for that flag and for the payload's cwd. Always exits 0, and any
 # internal failure exits 0 with no output (fail open).
+#
+# Which tree: the payload's cwd, when it resolves to a work tree (a session that entered a
+# worktree edits there, while CLAUDE_PROJECT_DIR stays at the main checkout). Otherwise the project.
+# The markers stay under CLAUDE_PROJECT_DIR/.claude/logs by absolute path, because
+# mark-verification-run.sh writes them there.
 #
 # Signal: a dirty *.cs file is NEWER than .claude/logs/.verification-ran (touched
 # by mark-verification-run.sh when dotnet build/test or build.ps1 runs). If the
@@ -29,8 +36,22 @@ INPUT=$(cat)
 # under CLAUDE_PROJECT_DIR, and tools/test_hooks.sh runs this hook against sandboxes.
 cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || exit 0
 
-MARKER=".claude/logs/.verification-ran"
-REMINDED=".claude/logs/.verification-reminded"
+LOGS="$(pwd)/.claude/logs"
+MARKER="$LOGS/.verification-ran"
+REMINDED="$LOGS/.verification-reminded"
+
+# Judge the work tree the session is in. The cwd is read from the raw payload (no Python on every
+# turn): a JSON string, so a Windows path arrives with doubled backslashes. An escaped copy of the
+# key inside last_assistant_message cannot match, because the closing quote must follow the key.
+CWD_RE='"cwd"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"'
+if [[ "$INPUT" =~ $CWD_RE ]]; then
+  SL=/
+  PAYLOAD_CWD=${BASH_REMATCH[1]}
+  PAYLOAD_CWD=${PAYLOAD_CWD//\\\\/$SL}
+  PAYLOAD_CWD=${PAYLOAD_CWD//\\\//$SL}
+  PAYLOAD_TREE=$(git -C "$PAYLOAD_CWD" rev-parse --show-toplevel 2>/dev/null)
+  [[ -n "$PAYLOAD_TREE" ]] && cd "$PAYLOAD_TREE" 2>/dev/null
+fi
 
 CHANGED=$(git diff --name-only 2>/dev/null)
 STAGED=$(git diff --cached --name-only 2>/dev/null)
@@ -60,7 +81,7 @@ if [[ $NEEDS_REMINDER -eq 1 ]]; then
   if [[ ! -f "$REMINDED" ]]; then
     taom_stop_hook_active "$INPUT" && exit 0
     taom_stop_block "check-verification-evidence: a C# file in this tree changed after the last recorded build or test (nothing newer in .claude/logs/.verification-ran). Before calling the work done, run dotnet build Main/TAOM.csproj -p:DisableModuleCopy=true -p:ModuleId= or dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= and read the output (.claude/rules/evidence-over-claims.md); a subagent's report does not count. If the changed files belong to another session, or you are not claiming the work is done, say so in one line. This fires once per unbuilt streak."
-    mkdir -p .claude/logs 2>/dev/null
+    mkdir -p "$LOGS" 2>/dev/null
     touch "$REMINDED" 2>/dev/null || true
   fi
 else

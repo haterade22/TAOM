@@ -4,26 +4,6 @@
     "pr": "",
     "sessionUrl": false
   },
-  "permissions": {
-    "deny": [
-      "mcp__serena__create_text_file",
-      "mcp__serena__replace_content",
-      "mcp__serena__replace_in_files",
-      "mcp__serena__delete_lines",
-      "mcp__serena__replace_lines",
-      "mcp__serena__insert_at_line",
-      "mcp__serena__replace_symbol_body",
-      "mcp__serena__insert_after_symbol",
-      "mcp__serena__insert_before_symbol",
-      "mcp__serena__rename_symbol",
-      "mcp__serena__safe_delete_symbol",
-      "mcp__serena__execute_shell_command",
-      "mcp__serena__jet_brains_move",
-      "mcp__serena__jet_brains_safe_delete",
-      "mcp__serena__jet_brains_rename",
-      "mcp__serena__jet_brains_inline_symbol"
-    ]
-  },
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "1",
@@ -129,16 +109,6 @@
             "timeout": 30
           }
         ]
-      },
-      {
-        "matcher": "mcp__.*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/mcp-health-check.sh",
-            "timeout": 5
-          }
-        ]
       }
     ],
     "PostToolUse": [
@@ -176,46 +146,12 @@
     ],
     "PostToolUseFailure": [
       {
-        "matcher": "mcp__.*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/mcp-health-mark.sh",
-            "timeout": 5
-          }
-        ]
-      },
-      {
         "matcher": "Bash|PowerShell",
         "hooks": [
           {
             "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/mark-verification-run.sh",
             "timeout": 5
-          }
-        ]
-      }
-    ],
-    "PreCompact": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/pre-compact.sh",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "PostCompact": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post-compact.sh",
-            "timeout": 10
           }
         ]
       }
@@ -238,29 +174,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-deep-review.sh",
-            "timeout": 10
-          },
-          {
-            "type": "command",
             "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-verification-evidence.sh",
-            "timeout": 10
-          },
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-version-tagged.sh",
-            "timeout": 10
-          }
-        ]
-      }
-    ],
-    "SessionEnd": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/session-stop.sh",
             "timeout": 10
           }
         ]

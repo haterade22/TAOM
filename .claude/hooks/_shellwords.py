@@ -33,9 +33,22 @@ It writes UTF-8 with LF line ends and exits 0; an unknown mode exits 2. PowerShe
 follow (an unclosed quote, here-string, block comment or ${) comes back unchanged, which is how
 every gate read a command before plan 027.
 
+The PowerShell forms to_posix() resolves: here-strings, '' and "" quoting, backtick escapes and
+continuations, # and <# #> comments, { } and ( ) as statement breaks, the & call and . call
+operators, an assignment `$r = git ...`, ${name}, the typographic quotes, and a string or variable
+that opens a statement, which is a value PowerShell prints and reads as `echo <value>`.
+tools/tests/test_shellwords.py pins each form to the argument lists PowerShell 7's own parser gave.
+The rename of a git named by a path or in capitals also reaches heredoc body text, so a body line
+such as `Git reset --hard is gated` can draw an extra confirm: a known over-block, on the safe side.
+
 Not read, by design: a $(...) inside a double-quoted PowerShell string stays text, a $variable is
 never expanded, and PowerShell's comma array syntax stays inside one word. A string or variable that
 opens a PowerShell statement is a value it prints, never a command, so it reads as `echo <value>`.
+Also not read by the commit and confirm gates: a gated word spelled with an escape inside it
+(`--no-verif''y`), which the raw prefilter cannot see, and git run through another command, such as
+`& ("git") commit ...`, `Start-Process git -ArgumentList ...`, `pwsh -c "git commit ..."` or
+`Invoke-Expression 'git reset --hard'`. validate-push.sh also judges the raw command, so it still
+refuses such a force push. Deliberate obfuscation is out of scope.
 """
 import codecs
 import json
