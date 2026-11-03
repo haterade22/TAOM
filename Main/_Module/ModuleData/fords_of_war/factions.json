@@ -3,7 +3,7 @@
     "gondor": {
       "name": "{=TAOM_FOW_Faction_Gondor}Gondor",
       "culture": "gondor",
-      "aiBuyCycle": ["Infantry", "Ranged", "up:fortify", "Spear", "hero", "Cavalry", "up:melee_armour", "Infantry", "Ranged", "up:missile_damage"],
+      "aiBuyCycle": ["Infantry", "Ranged", "up:fortify", "Spear", "Cavalry", "up:melee_armour", "Infantry", "Ranged", "up:missile_damage"],
       "upgradeCost": { "fortify": 0.75 },
       "feats": { "towerHitPoints": 1.4 },
       "traits": [
@@ -176,7 +176,7 @@
     "rohan": {
       "name": "{=TAOM_FOW_Faction_Rohan}Rohan",
       "culture": "vlandia",
-      "aiBuyCycle": ["spear_riders", "militia", "up:melee_damage", "lancers", "yeomen", "hero", "sword_riders", "up:melee_armour", "militia", "horse_archers", "kings_knights", "up:melee_damage", "militia", "riders_of_rohan"],
+      "aiBuyCycle": ["spear_riders", "militia", "up:melee_damage", "lancers", "yeomen", "sword_riders", "up:melee_armour", "militia", "horse_archers", "kings_knights", "up:melee_damage", "militia", "riders_of_rohan"],
       "upgradeCost": { "melee_damage": 0.75, "siegecraft": 1.25 },
       "feats": { "mountedDamageToTowers": 0.35, "towerFireRate": 1.3 },
       "traits": [
@@ -230,7 +230,7 @@
     "mordor": {
       "name": "{=TAOM_FOW_Faction_Mordor}Mordor",
       "culture": "mordor",
-      "aiBuyCycle": ["orc_rabble", "orc_rabble", "orc_impalers", "beast:warg_pack", "orc_hunters", "orc_rabble", "uruk_warriors", "up:melee_damage", "hero", "orc_rabble", "orc_hunters", "beast:hill_troll", "orc_rabble", "uruk_crossbows", "orc_rabble", "orc_impalers", "up:melee_armour", "baraddur_guard", "orc_rabble", "beast:cave_troll", "num_knights", "orc_rabble", "temple_guard"],
+      "aiBuyCycle": ["orc_rabble", "orc_rabble", "orc_impalers", "beast:warg_pack", "orc_hunters", "orc_rabble", "uruk_warriors", "up:melee_damage", "orc_rabble", "orc_hunters", "beast:hill_troll", "orc_rabble", "uruk_crossbows", "orc_rabble", "orc_impalers", "up:melee_armour", "baraddur_guard", "orc_rabble", "beast:cave_troll", "num_knights", "orc_rabble", "temple_guard"],
       "upgradeCost": { "melee_damage": 0.85, "melee_armour": 1.25, "missile_armour": 1.25 },
       "feats": { "unitCapBonus": 100, "waveInterval": 0.75 },
       "traits": [
@@ -292,7 +292,7 @@
     "isengard": {
       "name": "{=TAOM_FOW_Faction_Isengard}Isengard",
       "culture": "isengard",
-      "aiBuyCycle": ["fighters", "spearmen", "up:siegecraft", "crossbowmen", "pikemen", "hero", "white_hand", "up:melee_damage", "crossbowmen", "berserkers", "up:siegecraft", "warg_riders", "fighters", "hill_troll"],
+      "aiBuyCycle": ["fighters", "spearmen", "up:siegecraft", "crossbowmen", "pikemen", "white_hand", "up:melee_damage", "crossbowmen", "berserkers", "up:siegecraft", "warg_riders", "fighters", "hill_troll"],
       "upgradeCost": { "siegecraft": 0.75, "melee_damage": 0.85 },
       "feats": { "damageToTowers": 1.15, "unitCapBonus": -50 },
       "traits": [
@@ -361,7 +361,7 @@
     "rivendell": {
       "name": "{=TAOM_FOW_Faction_Rivendell}Rivendell",
       "culture": "rivendell",
-      "aiBuyCycle": ["swordguard", "marksmen", "up:missile_damage", "swordguard", "hero", "marksmen", "blademasters", "up:melee_armour", "marksmen", "lancers", "golden_flower"],
+      "aiBuyCycle": ["swordguard", "marksmen", "up:missile_damage", "swordguard", "marksmen", "blademasters", "up:melee_armour", "marksmen", "lancers", "golden_flower"],
       "upgradeCost": { "missile_damage": 0.85, "melee_armour": 0.85 },
       "feats": { "towerRange": 1.5, "heroSlotBonus": 1, "unitCapBonus": -150, "waveInterval": 1.5 },
       "traits": [
@@ -408,7 +408,7 @@
     "erebor": {
       "name": "{=TAOM_FOW_Faction_Erebor}Erebor",
       "culture": "erebor",
-      "aiBuyCycle": ["miners", "fighters", "up:melee_armour", "miners", "mattocks", "hero", "rams", "fighters", "up:missile_armour", "bowmen", "shield_guard", "up:melee_armour", "legionaries", "royal_wardens"],
+      "aiBuyCycle": ["miners", "fighters", "up:melee_armour", "miners", "mattocks", "rams", "fighters", "up:missile_armour", "bowmen", "shield_guard", "up:melee_armour", "legionaries", "royal_wardens"],
       "upgradeCost": { "melee_armour": 0.75, "missile_armour": 0.75, "missile_damage": 1.25 },
       "feats": { "income": 1.4, "towerRegen": 4, "waveInterval": 1.25 },
       "traits": [
@@ -461,7 +461,7 @@
     "harad": {
       "name": "{=TAOM_FOW_Faction_Harad}Harad",
       "culture": "aserai",
-      "aiBuyCycle": ["levies", "bowmen", "up:siegecraft", "footmen", "beast:war_elephant", "hero", "levies", "serpent_archers", "up:melee_armour", "camel_riders", "serpent_guard", "beast:mumak", "lancers"],
+      "aiBuyCycle": ["levies", "bowmen", "up:siegecraft", "footmen", "beast:war_elephant", "levies", "serpent_archers", "up:melee_armour", "camel_riders", "serpent_guard", "beast:mumak", "lancers"],
       "upgradeCost": { "siegecraft": 0.75 },
       "feats": { "towerHitPoints": 0.85, "poisonPerSecond": 3, "poisonSeconds": 8 },
       "traits": [
@@ -522,7 +522,7 @@
     "gundabad": {
       "name": "{=TAOM_FOW_Faction_Gundabad}Gundabad",
       "culture": "gundabad",
-      "aiBuyCycle": ["snagas", "hunters", "brawlers", "snagas", "hero", "impalers", "up:melee_damage", "ravagers", "hunters", "archers", "wolf_riders", "bone_breakers"],
+      "aiBuyCycle": ["snagas", "hunters", "brawlers", "snagas", "impalers", "up:melee_damage", "ravagers", "hunters", "archers", "wolf_riders", "bone_breakers"],
       "upgradeCost": { "melee_damage": 1.25, "missile_damage": 1.25, "melee_armour": 1.25, "missile_armour": 1.25, "siegecraft": 1.25, "fortify": 1.25 },
       "feats": { "waveInterval": 0.5, "towerHitPoints": 0.7 },
       "traits": [
@@ -559,7 +559,7 @@
     "dale": {
       "name": "{=TAOM_FOW_Faction_Dale}Dale",
       "culture": "sturgia",
-      "aiBuyCycle": ["bowmen", "pikes", "up:missile_damage", "longbows", "militia", "hero", "crossbows", "up:siegecraft", "longbows", "hearthguard", "black_arrows", "up:missile_damage", "riders", "black_arrows"],
+      "aiBuyCycle": ["bowmen", "pikes", "up:missile_damage", "longbows", "militia", "crossbows", "up:siegecraft", "longbows", "hearthguard", "black_arrows", "up:missile_damage", "riders", "black_arrows"],
       "upgradeCost": { "missile_damage": 0.75, "melee_armour": 1.25 },
       "feats": { "rangedDamageToTowers": 4 },
       "traits": [
@@ -612,7 +612,7 @@
     "dolguldur": {
       "name": "{=TAOM_FOW_Faction_DolGuldur}Dol Guldur",
       "culture": "dolguldur",
-      "aiBuyCycle": ["foul", "hunters", "beast:fell_wargs", "crawlers", "up:melee_damage", "fighters", "hero", "beast:spider_riders", "warg_riders", "fellbows", "up:missile_armour", "beast:fell_wargs", "fell_fangs", "shadow_guard"],
+      "aiBuyCycle": ["foul", "hunters", "beast:fell_wargs", "crawlers", "up:melee_damage", "fighters", "beast:spider_riders", "warg_riders", "fellbows", "up:missile_armour", "beast:fell_wargs", "fell_fangs", "shadow_guard"],
       "upgradeCost": { "melee_damage": 0.85 },
       "feats": { "enemyTowerFireRate": 0.75, "income": 0.85, "poisonPerSecond": 2, "poisonSeconds": 6 },
       "traits": [
@@ -673,7 +673,7 @@
     "easterlings": {
       "name": "{=TAOM_FOW_Faction_Easterlings}Easterlings",
       "culture": "khuzait",
-      "aiBuyCycle": ["levy", "archers", "up:melee_armour", "halberds", "horse_archers", "hero", "iron_legion", "up:melee_damage", "cataphracts", "archers", "up:missile_damage", "dragon_guard", "obsidian_knights"],
+      "aiBuyCycle": ["levy", "archers", "up:melee_armour", "halberds", "horse_archers", "iron_legion", "up:melee_damage", "cataphracts", "archers", "up:missile_damage", "dragon_guard", "obsidian_knights"],
       "upgradeCost": { "melee_damage": 0.9, "missile_damage": 0.9, "melee_armour": 0.9, "missile_armour": 0.9, "siegecraft": 0.9, "fortify": 0.9 },
       "feats": { "orderCooldown": 0.5, "towerFireRate": 0.85 },
       "traits": [
@@ -726,7 +726,7 @@
     "umbar": {
       "name": "{=TAOM_FOW_Faction_Umbar}Umbar",
       "culture": "umbar",
-      "aiBuyCycle": ["recruits", "bowmen", "up:melee_damage", "footmen", "hero", "halberdiers", "rangers", "up:missile_damage", "guards", "knights"],
+      "aiBuyCycle": ["recruits", "bowmen", "up:melee_damage", "footmen", "halberdiers", "rangers", "up:missile_damage", "guards", "knights"],
       "upgradeCost": { "melee_damage": 0.9, "fortify": 1.25 },
       "feats": { "campReward": 3, "captureIncome": 2, "bounty": 1.25, "income": 0.8 },
       "traits": [
@@ -779,7 +779,7 @@
     "mirkwood": {
       "name": "{=TAOM_FOW_Faction_Mirkwood}Mirkwood",
       "culture": "mirkwood",
-      "aiBuyCycle": ["sentinels", "silvan_levy", "up:missile_damage", "sentinels", "hero", "borderwardens", "up:missile_armour", "silvan_levy", "elk_riders", "borderwardens", "up:missile_damage", "thingols_heirs"],
+      "aiBuyCycle": ["sentinels", "silvan_levy", "up:missile_damage", "sentinels", "borderwardens", "up:missile_armour", "silvan_levy", "elk_riders", "borderwardens", "up:missile_damage", "thingols_heirs"],
       "upgradeCost": { "missile_damage": 0.75, "missile_armour": 0.85 },
       "feats": { "towerRange": 1.5, "unitCapBonus": -150 },
       "traits": [

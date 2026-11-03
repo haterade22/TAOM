@@ -7393,6 +7393,8 @@
 
     <string id="TAOM_FOW_Trait_DolGuldur_Venom" text="Venomed arrows: a struck soldier loses 2 hit points a second for 6 seconds, through any armour." />
 
+    <string id="TAOM_FOW_Hud_HeroesNext" text="Heroes: next in {TIME}" />
+
 
   </strings>
 

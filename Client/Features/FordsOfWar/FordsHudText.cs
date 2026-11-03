@@ -70,7 +70,9 @@ internal static class FordsHudText
     internal static string OrdersTitle(int lane) =>
         new TextObject("{=TAOM_FOW_Hud_OrdersTitle}Orders for lane {LANE}").SetTextVariable("LANE", lane).ToString();
 
-    internal static string HeroesTitle() => new TextObject("{=TAOM_FOW_Hud_HeroesTitle}Heroes").ToString();
+    internal static string HeroesTitle(string? nextFreeHero) => nextFreeHero == null
+        ? new TextObject("{=TAOM_FOW_Hud_HeroesTitle}Heroes").ToString()
+        : new TextObject("{=TAOM_FOW_Hud_HeroesNext}Heroes: next in {TIME}").SetTextVariable("TIME", nextFreeHero).ToString();
 
     internal static string TowersTitle() => new TextObject("{=TAOM_FOW_Hud_TowersTitle}Towers").ToString();
 

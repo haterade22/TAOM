@@ -4434,6 +4434,7 @@
 	<string id="TAOM_FOW_Hud_HeroFielded" text="{=TAOM_FOW_Hud_HeroFielded}In the field" />
 	<string id="TAOM_FOW_Hud_HeroReady" text="{=TAOM_FOW_Hud_HeroReady}Ready to field" />
 	<string id="TAOM_FOW_Hud_HeroesTitle" text="{=TAOM_FOW_Hud_HeroesTitle}Heroes" />
+	<string id="TAOM_FOW_Hud_HeroesNext" text="{=TAOM_FOW_Hud_HeroesNext}Heroes: next in {TIME}" />
 	<string id="TAOM_FOW_Hud_KeepEnemy" text="{=TAOM_FOW_Hud_KeepEnemy}Enemy keep" />
 	<string id="TAOM_FOW_Hud_KeepOwn" text="{=TAOM_FOW_Hud_KeepOwn}Your keep" />
 	<string id="TAOM_FOW_Hud_Lane" text="{=TAOM_FOW_Hud_Lane}Lane {LANE}" />

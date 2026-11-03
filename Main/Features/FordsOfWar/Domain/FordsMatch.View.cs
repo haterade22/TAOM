@@ -53,7 +53,7 @@ internal sealed partial class FordsMatch
             lanes, keeps, heroes, unitOffers, heroOffers, points, _winner, faction?.FactionId ?? "", faction?.Traits,
             commander == null ? null : RegionViewOf(side, gold), commander == null ? null : CreatureViewOf(slot, side, gold),
             (int)Math.Round(_config.Economy.IncomePerMinute * (faction?.FeatsOrNone.Income ?? 1f)), faction?.Name ?? "",
-            _layout.Camps.Select(c => new MatchView.CampView(c.Id, _camps.Alive(c.Id), CampRewardFor(side, c.Reward))).ToList(), _orders.CooldownOf(side), faction?.AiBuyCycle, UpgradeViewsOf(side, gold), _factions.TryGetValue(MatchSides.Opponent(side), out var enemy) ? enemy.Name : "");
+            _layout.Camps.Select(c => new MatchView.CampView(c.Id, _camps.Alive(c.Id), CampRewardFor(side, c.Reward))).ToList(), _orders.CooldownOf(side), faction?.AiBuyCycle, UpgradeViewsOf(side, gold), _factions.TryGetValue(MatchSides.Opponent(side), out var enemy) ? enemy.Name : "", commander == null ? null : NextFreeHeroIn(side));
     }
 
     private MatchView.RegionView? RegionViewOf(MatchSide side, int gold)

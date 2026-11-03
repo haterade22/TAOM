@@ -223,7 +223,7 @@ internal sealed class FordsScenario
             Economy = c.Economy with { StartingGold = 5000 },
             Waves = c.Waves with { MaxSpawnsPerTick = 6, FreeWaveIntervalSeconds = 120f },
             Towers = c.Towers with { TowerHitPoints = 800000, InnerTowerHitPoints = 1100000, KeepHitPoints = 1800000 },
-            Heroes = c.Heroes with { MaxAlivePerSide = 3 },
+            Heroes = c.Heroes with { MaxAlivePerSide = 3, FreeArrivalSeconds = 0f },
             Capture = c.Capture with { Radius = 30f, SecondsToCapture = 5f },
             AiProfiles = profiles,
         };

@@ -33,9 +33,9 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 **Changed:**
 
-- A `hero` entry in every faction's `aiBuyCycle` makes the AI save for its cheapest hero.
+- Each side's next hero now comes free every 5 minutes (Mike's rule, `heroes.freeArrivalSeconds`). An hour earlier a `hero` entry in `aiBuyCycle` made the AI save for one; the free arrival replaced it, because saving took gold from units and a bought hero took the slot.
 - The AI calls a creature only from a `beast:` entry. Mordor and Dol Guldur now name theirs, as Harad did. The automatic call is gone.
-- Upgrades, beasts and heroes in the cycle no longer wait for a free place in the assault lane.
+- Upgrades and beasts in the cycle no longer wait for a free place in the assault lane.
 - Mordor's creature prices drop: wargs 2.0 to 1.5, hill troll 4.0 to 2.5, cave troll 5.0 to 3.0 `eliteWeight`.
 - The balance line now says where each side's gold came from and what it paid for.
 

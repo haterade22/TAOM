@@ -103,6 +103,18 @@ public class FordsScenarioTests
     }
 
     [TestMethod]
+    public void AFreeHero_ReachesTheFieldForBothSides_ThroughTheDirector()
+    {
+        var heroes = FordsScenarios.Get("FreeHeroes").Report.Run!.Heroes;
+
+        foreach (var side in new[] { "West", "East" })
+        {
+            Assert.AreEqual(1, heroes.Count(h => h.Side == side && h.Kind == "fielded"), side);
+            Assert.AreEqual(1, heroes.Count(h => h.Side == side && h.Kind == "spawned"), side);
+        }
+    }
+
+    [TestMethod]
     public void S1_EastFieldsTheSameHeroId_AndWestsMarkStillLinksToWestsSpawn()
     {
         var sc = FordsScenarios.Get("S1");

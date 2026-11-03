@@ -217,7 +217,7 @@ public sealed partial class FordsCommandVM : FordsViewModel
         ClockText = Clock(view.Elapsed);
         TroopsTitle = FordsHudText.TroopsTitle(SelectedLane + 1);
         OrdersTitle = FordsHudText.OrdersTitle(SelectedLane + 1);
-        HeroesTitle = FordsHudText.HeroesTitle();
+        HeroesTitle = FordsHudText.HeroesTitle(view.NextFreeHeroIn is { } nextHero ? Clock(nextHero) : null);
         TowersTitle = FordsHudText.TowersTitle();
         KeysHint = FordsHudText.KeysHint();
         RefreshIdentity(view);

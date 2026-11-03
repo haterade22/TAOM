@@ -38,7 +38,8 @@
     "respawnBaseSeconds": 60,
     "respawnPerMinuteSeconds": 6,
     "buybackBaseFraction": 0.5,
-    "buybackPerMinuteFraction": 0.05
+    "buybackPerMinuteFraction": 0.05,
+    "freeArrivalSeconds": 300
   },
   "lanes": {
     "orderCooldownSeconds": 20,

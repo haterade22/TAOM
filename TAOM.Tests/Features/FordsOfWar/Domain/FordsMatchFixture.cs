@@ -5,8 +5,8 @@ using TAOM.Features.FordsOfWar.Domain;
 namespace TAOM.Tests.Features.FordsOfWar.Domain;
 
 /// <summary>
-/// Builds small, exact matches for the aggregate and AI tests: the two-lane test map, gold 1000 each, no passive income
-/// and no free waves unless a test turns them on, and no countdown. Slot 1 is West (human), slot 2 is East (AI "hard").
+/// Builds small, exact matches for the aggregate and AI tests: the two-lane test map, gold 1000 each, no passive income,
+/// no free waves and no free heroes unless a test turns them on, and no countdown. Slot 1 is West (human), slot 2 is East (AI "hard").
 /// </summary>
 internal static class FordsMatchFixture
 {
@@ -30,6 +30,7 @@ internal static class FordsMatchFixture
             CountdownSeconds = 0f,
             Economy = d.Economy with { StartingGold = 1000, IncomePerMinute = 0 },
             Waves = d.Waves with { FreeWaveIntervalSeconds = 0f, MaxSpawnsPerTick = 1000 },
+            Heroes = d.Heroes with { FreeArrivalSeconds = 0f },
             AiProfiles = new Dictionary<string, FordsAiProfile>
             {
                 ["hard"] = new("hard", 5f, 1.2f, 0f, 400),

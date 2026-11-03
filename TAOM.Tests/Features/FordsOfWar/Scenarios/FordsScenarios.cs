@@ -31,6 +31,7 @@ internal static class FordsScenarios
     private static FordsScenario Build(string name) => name switch
     {
         "S1" => Clean(),
+        "FreeHeroes" => FreeHeroes(),
         "S3-warg" => PausedWargReturn(),
         "S3-exit" => PausedRouteA(),
         "S4" => CameraAtTheEdge(),
@@ -450,6 +451,13 @@ internal static class FordsScenarios
         sc.Field.MeleeRawDamage = 0;
         sc.Towers.NeverFires = true;
         return Run(sc, 260);
+    }
+
+    private static FordsScenario FreeHeroes()
+    {
+        var sc = new FordsScenario();
+        sc.ConfigTweak = c => c with { Heroes = c.Heroes with { FreeArrivalSeconds = 20f } };
+        return Run(sc, 30);
     }
 
     private static FordsScenario HoldInFire()

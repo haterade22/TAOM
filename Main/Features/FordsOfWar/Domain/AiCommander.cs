@@ -9,8 +9,8 @@ namespace TAOM.Features.FordsOfWar.Domain;
 /// <see cref="AiAction"/>s that the match applies through the human Try* methods. Every DecisionIntervalSeconds it
 /// defends the worst threatened lane with the cheapest spear or infantry pack, buys back or fields heroes when gold
 /// beats price plus HeroReserveGold, then builds its best lane on Hold with the dearest pack it can pay until the lane
-/// holds AssaultThreshold units, and pushes. A faction's buy cycle also names its upgrades, its beasts and when to save
-/// for a hero; a creature comes only from there. MistakeChance skips a whole decision. Gold it plans to spend is tracked
+/// holds AssaultThreshold units, and pushes. A faction's buy cycle also names its upgrades and its beasts; a creature
+/// comes only from there. MistakeChance skips a whole decision. Gold it plans to spend is tracked
 /// locally, so one decision never asks for more than the slot owns.
 /// </summary>
 internal sealed class AiCommander
@@ -31,7 +31,6 @@ internal sealed class AiCommander
     private readonly Dictionary<int, string> _assaultTargets = new();
     private const string UpgradeEntry = "up:";
     private const string BeastEntry = "beast:";
-    private const string HeroEntry = "hero";
 
     private float _nextDecisionAt;
     private int _buyIndex;
@@ -181,8 +180,8 @@ internal sealed class AiCommander
     }
 
     /// <summary>
-    /// The upgrade, beast or hero when the cycle's next entry names one, with its price: moves past an upgrade at its top level, a beast whose timer still runs,
-    /// and a hero with no slot free or none left to field. Null when the next entry is a pack. A hero entry names the cheapest, since the richer path is <see cref="FieldHeroes"/>.
+    /// The upgrade or beast when the cycle's next entry names one, with its price: moves past an upgrade at its top level and a beast whose timer still runs.
+    /// Null when the next entry is a pack.
     /// </summary>
     private (int Price, AiAction Action)? SpecialDue(MatchView view, int lane, IReadOnlyList<string> cycle)
     {
@@ -202,12 +201,6 @@ internal sealed class AiCommander
                 var beast = view.Creatures is { CooldownLeft: <= 0f } call ? call.Offers.FirstOrDefault(o => o.OfferId == id) : null;
                 if (beast != null)
                     return (beast.Price, AiAction.CallCreature(lane, beast.OfferId));
-            }
-            else if (entry == HeroEntry)
-            {
-                var hero = view.HeroSlotsFree > 0 ? view.HeroOffers.Where(h => !h.Fielded).OrderBy(h => h.Price).ThenBy(h => h.HeroId, StringComparer.Ordinal).FirstOrDefault() : null;
-                if (hero != null)
-                    return (hero.Price, AiAction.BuyHero(lane, hero.HeroId));
             }
             else
             {
@@ -266,7 +259,7 @@ internal sealed class AiCommander
     /// <summary>
     /// One pack for the assault lane. A faction with a buy cycle buys its next entry, and saves up when that costs more than the gold: a horde keeps
     /// buying cheap packs and a cavalry army keeps some foot, where the dearest offer alone would do neither. Without a cycle it buys the dearest it can afford.
-    /// An upgrade, beast or hero still comes while the lane is full: a small faction's lane fills early, and its gold would sit unspent.
+    /// An upgrade or beast still comes while the lane is full: a small faction's lane fills early, and its gold would sit unspent.
     /// </summary>
     private void BuildAssault(MatchView view, MatchView.LaneView? assault, int gold, List<AiAction> actions)
     {

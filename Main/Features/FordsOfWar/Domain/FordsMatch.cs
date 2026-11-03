@@ -106,7 +106,7 @@ internal sealed partial class FordsMatch
 
     /// <summary>
     /// Advances the match by <see cref="MatchSnapshot.Dt"/>. Order: clock (a countdown only counts down), passive income,
-    /// capture points, camps, tower regeneration, spawns (bought heroes, waves, hero respawns), tower volleys, AI decisions,
+    /// capture points, camps, tower regeneration, spawns (free and bought heroes, waves, hero respawns), tower volleys, AI decisions,
     /// lane commands. Once a keep has fallen the tick only reports the winner and the last events.
     /// </summary>
     public MatchEffects Tick(MatchSnapshot snapshot)
@@ -228,10 +228,7 @@ internal sealed partial class FordsMatch
             return fielded;
 
         _ledger.TrySpend(slot, offer.Price, GoldUse.Heroes);
-        var request = _heroes.Get(owner.Side, offer.HeroId)!.ToSpawnRequest(_waves.NextRequestId());
-        _pendingSpawns.Add(request);
-        TrackCharge(request, offer.Price, null);
-        _pendingEvents.Add(new MatchEvent(MatchEventKind.HeroFielded, owner.Side, offer.HeroId, offer.Price));
+        QueueFieldedHero(owner.Side, offer, offer.Price);
         return CommandResult.Ok;
     }
 
@@ -521,6 +518,7 @@ internal sealed partial class FordsMatch
 
     private void SpawnUnits(float dt, MatchEffects effects)
     {
+        RunHeroArrivals();
         effects.Spawns.AddRange(_pendingSpawns);
         _pendingSpawns.Clear();
         foreach (var request in _waves.Tick(dt, _clock.Minute, CommittedInLane, CommittedOnSide))

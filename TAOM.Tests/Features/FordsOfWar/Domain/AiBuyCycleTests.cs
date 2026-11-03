@@ -142,42 +142,11 @@ public class AiBuyCycleTests
     }
 
     [TestMethod]
-    public void Decide_AHeroEntry_FieldsTheCheapestHero_WhenTheGoldReaches()
+    public void Decide_TheAssaultLaneIsFull_BuysNoPack()
     {
-        var actions = Decisions(Match(new[] { "hero" }, HeroB.Price), 1);
+        var actions = Decisions(FullLaneMatch(new[] { Offers[0].OfferId }), 1);
 
-        Assert.AreEqual(HeroB.HeroId, actions.Single(a => a.Kind == AiActionKind.BuyHero).Id);
-    }
-
-    [TestMethod]
-    public void Decide_AHeroThatCostsTooMuch_SavesForIt_AndBuysNoPack()
-    {
-        var actions = Decisions(Match(new[] { "hero", Offers[0].OfferId }, HeroB.Price - 1), 1);
-
-        Assert.AreEqual(0, actions.Count(a => a.Kind == AiActionKind.BuyHero || a.Kind == AiActionKind.BuyPack));
-    }
-
-    [TestMethod]
-    public void Decide_AHeroEntry_WithNoHeroLeftToField_MovesOn()
-    {
-        var match = Match(new[] { "hero", Offers[0].OfferId });
-        match.TryBuyHero(EastSlot, 0, HeroA.HeroId);
-        match.TryBuyHero(EastSlot, 0, HeroB.HeroId);
-
-        var actions = Decisions(match, 1);
-
-        Assert.AreEqual(0, actions.Count(a => a.Kind == AiActionKind.BuyHero));
-        Assert.AreEqual(Offers[0].OfferId, actions.Single(a => a.Kind == AiActionKind.BuyPack).Id);
-    }
-
-    [TestMethod]
-    public void Decide_TheAssaultLaneIsFull_StillFieldsTheHeroDue_ButBuysNoPack()
-    {
-        var hero = Decisions(FullLaneMatch(new[] { "hero" }), 1);
-        var pack = Decisions(FullLaneMatch(new[] { Offers[0].OfferId }), 1);
-
-        Assert.AreEqual(1, hero.Count(a => a.Kind == AiActionKind.BuyHero));
-        Assert.AreEqual(0, pack.Count(a => a.Kind == AiActionKind.BuyPack));
+        Assert.AreEqual(0, actions.Count(a => a.Kind == AiActionKind.BuyPack));
     }
 
     private static FordsMatch FullLaneMatch(IReadOnlyList<string> cycle)
