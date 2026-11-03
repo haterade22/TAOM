@@ -19,7 +19,8 @@ authorizes no `/ship`, no fixes and no extra paid reviewers.
   rule fires for a file outside the repo (the live Armory, TAOM_Map, the Modding Kit); the skill for
   that work carries its traps ([rules catalog](docs/reference/rules-catalog.md)).
 - **On invoke:** a skill's body. After `/compact` only its first ~5,000 tokens come back.
-- **Memory:** MEMORY.md loads in the main session only, on this machine only, never in a subagent.
+- **Memory:** MEMORY.md loads on this machine only, in the main session and, against the docs, in
+  subagents too ([harness facts](.claude/rules/harness-facts.md)): keep it small.
 - **Hooks** reach you only as SessionStart output, a deny reason, exit-2 stderr, a Stop hook's
   block reason or `additionalContext` beside a tool result (an ask reason goes to the user); follow
   the instruction in the message

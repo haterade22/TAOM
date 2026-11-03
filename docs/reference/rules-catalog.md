@@ -33,13 +33,14 @@ _(7 rules; `python tools/lint_docs.py --context-budget-json` gives their sizes. 
 | `adapters.md` | Adapter pattern, research-first |
 | `csharp-architecture.md` | Layer stack, IoC lifetimes, non-negotiable rules, stale-file re-read, mission-scope agent handles and threads |
 | `csharp-patterns.md` | Hook, Strategy and GameModel patterns, quick reference |
+| `data-scripts.md` | Scripts under `tools/`: the XML I/O convention, backups, dry run, parse before write; model the deserializer when reading what a troop carries |
 | `external-skill-ports.md` | Authoring a skill from scratch, and the per-field checklist for porting one from an external suite |
 | `gamemodels.md` | GameModel override pattern, base-class rules, registration |
 | `gui-ui.md` | Sprite verification, UIExtenderEx safety, ViewModel bindings |
 | `harmony-patches.md` | Patch types, thin entry points, thread-local state, the shared deferred `MovementOrder` category |
 | `harness-facts.md` | Verified Claude Code load semantics, hook lifecycle and visibility, frontmatter schema, with sources |
 | `hook-authoring.md` | Hook conventions: sibling-mirroring, the two-stage git-commit matcher, amend handling, fail open but never silent, timeouts, prove a gate live, log rotation |
-| `moduledata-validation.md` | Run `python tools/validate_moduledata.py` before committing ModuleData; schemas are the source of truth; the XML I/O convention for data-writing scripts |
+| `moduledata-validation.md` | Run `python tools/validate_moduledata.py` before committing ModuleData; the gate per file kind; the codes are in [moduledata-validator-codes.md](moduledata-validator-codes.md) |
 | `native-cpp-ports.md` | The 6-point C++ port audit (hot-path logging, SEH specificity, offsets, atomics, SRWLock, C++ review) |
 | `provenance.md` | Name the third-party source and state its license; the derivation vocabulary; the register as the record |
 | `tests.md` | TDD, naming, AAA pattern, coverage |
