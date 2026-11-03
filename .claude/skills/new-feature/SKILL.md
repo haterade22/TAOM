@@ -10,6 +10,8 @@ Create a new feature module following TAOM architecture from @docs/ai-includes/a
 
 ## Feature Name: `$ARGUMENTS`
 
+A feature adopted from another mod gets a Tolkien-flavoured TAOM name, never the source mod's, for its folder and MCM group too. Grep for clashes first (Mike, 2026-10-18).
+
 ## Map what the feature touches first (mandatory, #677)
 
 Before the first file, run `python tools/graphify_taom.py refresh --if-stale` (background when stale, about 2.5 minutes), then for every existing TAOM service, adapter, interface or GameModel the feature will call, extend or change: `python tools/graphify_taom.py explain "<Type>"` (what it injects and calls) and `python tools/graphify_taom.py affected "<Type>" --depth 2` (who depends on it). A type with many dependents is one to extend, not modify. On "Ambiguous", rerun with the repo-relative `.cs` path it lists; on no result for a type name, retry with its file path before concluding nothing uses it (an IoC registration shows as a file import). graphify reads no XML: data refs go through the taom-moduledata MCP or `python tools/validate_moduledata.py`.
@@ -37,10 +39,10 @@ Create the following files under `Main/Features/$ARGUMENTS/`:
 - Only create if wrapping a new sealed TaleWorlds type not already adapted
 
 ### 5. Tests (MANDATORY — TDD)
-Follow @docs/ai-includes/tdd-enforcement.md
+Follow .claude/rules/tests.md (it loads when you open a test).
 
 Create under `TAOM.Tests/Features/$ARGUMENTS/`:
-- `{FeatureName}ServiceTests.cs` — 100% service coverage
+- `{FeatureName}ServiceTests.cs`: one test per behaviour and guard, judged by the two-edit test
 - Use MSTest + NSubstitute
 - Naming: `MethodName_StateUnderTest_ExpectedBehavior`
 - Write tests FIRST (RED), then implement (GREEN), then refactor

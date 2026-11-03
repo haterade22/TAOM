@@ -73,6 +73,8 @@ changes; any of those is a STOP. Never open the worktree in VS Code or start a C
 
 ## Phase 3: `/verify`, then `/deep-review`
 
+Build and tests run contributor code on this machine, and `.ai/policy.md` retains that prohibition. So step 1 needs Mike's word for this PR (his rule, 2026-11-03). Without it, report build and tests NOT RUN and continue at step 2.
+
 1. Run `/verify` with `E:/repos/taom-pr-<N>` as the working directory for every command. A build or
    test failure goes in the report with its output; do not fix it on the contributor's branch.
 2. Run `/deep-review` with this scope: "PR #<N> in worktree `E:/repos/taom-pr-<N>`, changed files:

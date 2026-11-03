@@ -1,6 +1,6 @@
 ---
 name: armory-audit
-description: Use after any Armory sync, art drop, or "ARMORY ART DRIFT" at session start. Audits every mesh and body ref, joins breakage to troops, commits the report.
+description: Use after any Armory sync, art drop, or "ARMORY ART DRIFT" at session start. Audits every mesh and body ref, joins breakage to troops, writes the report.
 argument-hint: [check|regen]
 ---
 
@@ -69,10 +69,10 @@ with `regen`, and `git diff docs/audits/armory-ref-audit.md` is the change log.
 Then regenerate the armour acquisition class table, which the game reads to gate markets, loot and
 the armoury: `python tools/generate_armour_classes.py --check`, and if it is stale, `--apply`.
 
-## Step 4: commit the audit files and the class table
+## Step 4: the commit
 
-`docs/audits/armory-ref-audit.md`, `docs/reference/armory-catalogue/catalogue.tsv` and, when step 3
-regenerated it, `Main/_Module/ModuleData/armour_acquisition/armour_classes.xml` go in the same commit as
+When the maintainer asks for the commit, these files go in one commit: `docs/audits/armory-ref-audit.md`, `docs/reference/armory-catalogue/catalogue.tsv` and, when step 3
+regenerated it, `Main/_Module/ModuleData/armour_acquisition/armour_classes.xml`, together with
 the ref repair. The Armory XML itself is unversioned here; say in the commit body which files changed
 in the live install.
 
