@@ -14,7 +14,7 @@ This tool launches Bannerlord.exe directly with the module list of Mike's F5 pro
 "Bannerlord"), watches for the done file and for crashes, then copies the newest TAOM log and the JSON report it names into the run
 folder (TAOM prunes them: 20 reports, about 30 logs).
 
-It refuses to start while Bannerlord.exe or the game folder's Watchdog.exe already runs (--allow-open-kit passes only the Watchdog of an open Modding Kit), and it refuses when it cannot list the
+It refuses to start while Bannerlord.exe or the game folder's Watchdog.exe already runs, which includes an open Modding Kit, and it refuses when it cannot list the
 running processes. It also refuses to start while the PC has had keyboard or mouse input within the last --require-idle-minutes
 (default 10; 0 disables the gate): the run takes the screen and the GPU, so it only starts unasked on an idle PC (the maintainer's
 rule of 2026-11-01, docs/reference/unattended-game-runs.md). The input age comes from user32 GetLastInputInfo against kernel32
@@ -502,7 +502,7 @@ def watches_the_kit(proc, running):
                and watchdog_targets_pid(proc.get("cmd") or "", other["pid"]) for other in running)
 
 
-def preflight(game, require_idle_minutes=0, allow_open_kit=False):
+def preflight(game, require_idle_minutes=0):
     """A list of reasons to refuse; empty means go. A process listing or an input age that cannot be read refuses too: not knowing
     is not a go. require_idle_minutes is the idle gate (0 is off; the command line defaults it to DEFAULT_IDLE_MINUTES)."""
     problems = []
@@ -526,10 +526,10 @@ def preflight(game, require_idle_minutes=0, allow_open_kit=False):
             continue
         path = (proc.get("path") or "").lower()
         if proc["name"].lower() == "bannerlord.exe" or path.startswith(prefix):
-            if not watches_the_kit(proc, running):
+            if watches_the_kit(proc, running):
+                problems.append(f"the Modding Kit is open (its {proc['name']} pid {proc['pid']}): it shares the shader cache, and starting a game beside it can crash either one")
+            else:
                 problems.append(f"{proc['name']} pid {proc['pid']} is already running")
-            elif not allow_open_kit:
-                problems.append(f"the Modding Kit is open (its {proc['name']} pid {proc['pid']}); rerun with --allow-open-kit when the maintainer has said yes")
     return problems
 
 
@@ -762,7 +762,7 @@ def run_once(args, game, modules):
     say(f"run folder {folder}")
     docs = my_documents()
     engine_config, bin_dir = inspect_environment(docs, game, modules, say)
-    problems = preflight(game, args.require_idle_minutes, args.allow_open_kit)
+    problems = preflight(game, args.require_idle_minutes)
     if problems:
         say("preflight refused: " + "; ".join(problems))
         return 1
@@ -822,8 +822,6 @@ def build_parser():
     parser.add_argument("--require-idle-minutes", type=non_negative_minutes, default=DEFAULT_IDLE_MINUTES,
                         help=f"refuse to start unless the PC has had no keyboard or mouse input for this many minutes "
                              f"(default {DEFAULT_IDLE_MINUTES:g}; 0 disables the gate, only when the maintainer has said yes)")
-    parser.add_argument("--allow-open-kit", action="store_true",
-                        help="start beside an open Modding Kit, which otherwise refuses; only when the maintainer has said yes")
     parser.add_argument("--dry-run", action="store_true", help="print the plan, the idle state and the preflight, start nothing")
     return parser
 
@@ -843,7 +841,7 @@ def main(argv=None):
         print("arm file would hold:\n" + arm_text_for(resolved_runs_root(args) / "<yyyyMMdd-HHmmss>", args)[0])
         idle, error = current_idle_seconds()
         print("idle:", idle_state_text(idle, args.require_idle_minutes) + (f" ({error})" if error else ""))
-        problems = preflight(game, args.require_idle_minutes, args.allow_open_kit)
+        problems = preflight(game, args.require_idle_minutes)
         print("preflight:", "; ".join(problems) if problems else "ok")
         return 1 if problems else 0
 

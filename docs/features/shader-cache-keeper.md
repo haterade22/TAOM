@@ -90,6 +90,7 @@ When the engine does rebuild, [shader-compile-notice.md](shader-compile-notice.m
   `0x0784`). The Modding Kit shares the cache folder **and the game's build number** (125053 on v1.5.6, read from
   the cache a v1.5.6 Kit session wrote, 2026-10-27; 124170 on v1.5.5), so a Kit cache whose module list matches a
   later game start is kept, as the engine itself keeps any cache whose lists match.
+- **The Kit and the game running at once** (2026-11-03): each start with a different module list deletes or rewrites the cache the other is using, and every such match compiled about 1,550 shaders. A game and a Kit each crashed within minutes of the other starting ([unattended runs](../reference/unattended-game-runs.md)). Close the Kit before a match.
 - **The first start with the keeper** has no noted signature, so it trusts today's files for the cached list.
 
 ## Key Files

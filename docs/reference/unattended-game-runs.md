@@ -23,7 +23,7 @@ Otherwise the session asks once. Every run is reported afterwards: the run folde
 folder's `Watchdog.exe` runs, and while `--require-idle-minutes` (default 10) of input silence has not passed. The idle age is
 `GetLastInputInfo` against `GetTickCount` (32-bit ticks, so the difference wraps correctly); an age it cannot read refuses too.
 `--require-idle-minutes 0` switches the gate off, and a session passes it only after the maintainer has said yes for that run or
-that session. `--allow-open-kit`, on the same terms, passes only the Watchdog of an open Modding Kit: never a running game or that game's Watchdog. `--dry-run` prints the idle state without starting anything. The launcher answers the game's dialogs with posted
+that session. An open Modding Kit also refuses, with no override. The Kit and the game share one shader cache, and an engine that starts with another module list deletes it. On 2026-11-03 a match started beside the Kit and the Kit crashed 14 s later (`+0x14C7F7` in its `Win64_Shipping_wEditor` DLL), and the Kit started beside a match and the game crashed about 3 minutes later on its next missing shader (`+0x1FF7FA`). Two crashes with this timing, not yet a proof; 20 matches with the Kit closed had no crash. `--dry-run` prints the idle state without starting anything. The launcher answers the game's dialogs with posted
 messages, which are not user input, so a run does not reset the clock it is gated on.
 
 `--keep-on-crash <seconds>` makes the launcher wait after a crash, because the Watchdog holds the process and asks a person about a dump
