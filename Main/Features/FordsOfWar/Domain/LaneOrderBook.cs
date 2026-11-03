@@ -10,13 +10,19 @@ namespace TAOM.Features.FordsOfWar.Domain;
 internal sealed class LaneOrderBook
 {
     private readonly FordsLaneConfig _config;
+    private readonly IReadOnlyDictionary<MatchSide, FactionFeats> _feats;
     private readonly Dictionary<(MatchSide, int), LaneOrder> _orders = new();
     private readonly Dictionary<(MatchSide, int), float> _readyAt = new();
 
-    public LaneOrderBook(FordsLaneConfig config)
+    public LaneOrderBook(FordsLaneConfig config, IReadOnlyDictionary<MatchSide, FactionFeats>? feats = null)
     {
         _config = config;
+        _feats = feats ?? new Dictionary<MatchSide, FactionFeats>();
     }
+
+    /// <summary>The time a real change of order costs this side.</summary>
+    public float CooldownOf(MatchSide side) =>
+        _config.OrderCooldownSeconds * (_feats.TryGetValue(side, out var feats) ? feats.OrderCooldown : 1f);
 
     public LaneOrder Order(MatchSide side, int lane) =>
         _orders.TryGetValue((side, lane), out var order) ? order : LaneOrder.Push;
@@ -36,7 +42,7 @@ internal sealed class LaneOrderBook
             return CommandResult.OnCooldown;
 
         _orders[(side, lane)] = order;
-        _readyAt[(side, lane)] = now + _config.OrderCooldownSeconds;
+        _readyAt[(side, lane)] = now + CooldownOf(side);
         return CommandResult.Ok;
     }
 }

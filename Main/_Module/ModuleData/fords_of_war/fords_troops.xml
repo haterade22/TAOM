@@ -13657,4 +13657,5165 @@
         </Equipments>
     </NPCCharacter>
 
+    <NPCCharacter
+        id="fow_aux_basic"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="6"
+        name="{=aom_aux_basic_name}[Umbar] Auxiliary Recruit"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.umbar">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="43" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="38" />
+            <skill
+                id="TwoHanded"
+                value="28" />
+            <skill
+                id="Polearm"
+                value="23" />
+            <skill
+                id="Bow"
+                value="5" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="10" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_sword_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.small_flat_heater_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_hr_st_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_hr_st_chest_inf_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_hr_st_grvs_light_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_hr_st_bracer_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_sword_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.small_flat_heater_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_hr_st_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_hr_st_chest_inf_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_hr_st_grvs_light_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_hr_st_bracer_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_sword_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.small_flat_heater_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_hr_st_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_hr_st_chest_inf_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_hr_st_grvs_light_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_hr_st_bracer_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_sword_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.small_flat_heater_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_hr_st_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_hr_st_chest_inf_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_hr_st_grvs_light_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_hr_st_bracer_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="umbar_troop_civilian_template_t1" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dale_black_arrow_marksman"
+        is_obsolete="true"
+        default_group="Ranged"
+        level="31"
+        name="{=aom_dale_black_arrow_marksman_name}[Dale] Dalian Barding"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="120" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="112" />
+            <skill id="Polearm" value="125" />
+            <skill id="Bow" value="237" />
+            <skill id="Crossbow" value="57" />
+            <skill id="Throwing" value="55" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t6" />
+                <equipment slot="Item1" id="Item.barbed_arrows" />
+                <equipment slot="Item2" id="Item.dale_sword_a" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a04" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t6" />
+                <equipment slot="Item1" id="Item.barbed_arrows" />
+                <equipment slot="Item2" id="Item.dale_sword_a" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a04" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_a04" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_a04" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a04" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_a04" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a04" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dale_bowman"
+        is_obsolete="true"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_dale_bowman_name}[Dale] Dalian Yeoman"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="90" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="75" />
+            <skill id="TwoHanded" value="67" />
+            <skill id="Polearm" value="95" />
+            <skill id="Bow" value="105" />
+            <skill id="Crossbow" value="41" />
+            <skill id="Throwing" value="25" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t3" />
+                <equipment slot="Item1" id="Item.default_arrows" />
+                <equipment slot="Item2" id="Item.dale_sword_b" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_a01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t3" />
+                <equipment slot="Item1" id="Item.default_arrows" />
+                <equipment slot="Item2" id="Item.dale_sword_b" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_a01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dale_lake_town_hearthguard"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_dale_lake_town_hearthguard_name}[Dale] Lake-Town Hearthguard"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="125" />
+            <skill id="Riding" value="15" />
+            <skill id="OneHanded" value="176" />
+            <skill id="TwoHanded" value="166" />
+            <skill id="Polearm" value="195" />
+            <skill id="Bow" value="37" />
+            <skill id="Crossbow" value="32" />
+            <skill id="Throwing" value="75" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.dale_poleaxe_a" />
+                <equipment slot="Item1" id="Item.dale_sword_a" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b04" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b04" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b04" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b04" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b03" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.dale_poleaxe_a" />
+                <equipment slot="Item1" id="Item.dale_sword_a" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b04" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b04" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b04" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b04" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b03" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dale_longbowman"
+        is_obsolete="true"
+        default_group="Ranged"
+        level="21"
+        name="{=aom_dale_longbowman_name}[Dale] Dalian Bowman"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="105" />
+            <skill id="TwoHanded" value="77" />
+            <skill id="Polearm" value="95" />
+            <skill id="Bow" value="154" />
+            <skill id="Crossbow" value="46" />
+            <skill id="Throwing" value="35" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t4" />
+                <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+                <equipment slot="Item2" id="Item.dale_sword_b" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a06" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_a02" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_a02" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a02" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_a02" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t4" />
+                <equipment slot="Item1" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item2" id="Item.dale_sword_a" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a06" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_a02" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_a02" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a02" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_a02" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dale_man_at_arms"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_dale_man_at_arms_name}[Dale] Dalian Militia"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="85" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="71" />
+            <skill id="TwoHanded" value="73" />
+            <skill id="Polearm" value="90" />
+            <skill id="Bow" value="27" />
+            <skill id="Crossbow" value="22" />
+            <skill id="Throwing" value="25" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.dale_sword_b" />
+                <equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+                <equipment slot="Item2" id="Item.dale_spear_b" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_a01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_a01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_a01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_a01" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_a01" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.dale_sword_b" />
+                <equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+                <equipment slot="Item2" id="Item.dale_war_axe_a" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_b01" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b01" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dale_militia"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_dale_militia_name}[Dale] Lake-Town Militia"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="53" />
+            <skill id="Riding" value="0" />
+            <skill id="OneHanded" value="49" />
+            <skill id="TwoHanded" value="50" />
+            <skill id="Polearm" value="71" />
+            <skill id="Bow" value="22" />
+            <skill id="Crossbow" value="17" />
+            <skill id="Throwing" value="15" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.dale_sword_c" />
+                <equipment slot="Item1" id="Item.wm_dale_shield_a08" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.dale_spear_a" />
+                <equipment slot="Item1" id="Item.wm_dale_shield_a08" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dale_militia_archer"
+        is_obsolete="true"
+        default_group="Ranged"
+        level="6"
+        name="{=aom_dale_militia_archer_name}[Dale] Militia Archer"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="105" />
+            <skill id="TwoHanded" value="77" />
+            <skill id="Polearm" value="95" />
+            <skill id="Bow" value="44" />
+            <skill id="Crossbow" value="46" />
+            <skill id="Throwing" value="35" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t1" />
+                <equipment slot="Item1" id="Item.default_arrows" />
+                <equipment slot="Item2" id="Item.dale_sword_c" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_a01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_a01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_a01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_a01" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_a01" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dale_militia_spearman"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="6"
+        name="{=aom_dale_militia_spearman_name}[Dale] Militia Spearman"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="86" />
+            <skill id="TwoHanded" value="92" />
+            <skill id="Polearm" value="128" />
+            <skill id="Bow" value="27" />
+            <skill id="Crossbow" value="22" />
+            <skill id="Throwing" value="45" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.dale_spear_a" />
+               <equipment slot="Item1" id="Item.dale_sword_c" />
+                <equipment slot="Item2" id="Item.wm_dale_shield_a08" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_a01" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_a01" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_a01" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dale_militia_veteran_archer"
+        is_obsolete="true"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_dale_militia_veteran_archer_name}[Dale] Veteran Militia Archer"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="115" />
+            <skill id="Riding" value="20" />
+            <skill id="OneHanded" value="120" />
+            <skill id="TwoHanded" value="92" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="105" />
+            <skill id="Crossbow" value="63" />
+            <skill id="Throwing" value="50" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_dale_bow_t3" />
+                <equipment slot="Item1" id="Item.bodkin_arrows_a" />
+                <equipment slot="Item2" id="Item.dale_sword_b" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_b01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_b01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_b01" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b01" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dale_militia_veteran_spearman"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_dale_militia_veteran_spearman_name}[Dale] Veteran Militia Spearman"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="115" />
+            <skill id="Riding" value="20" />
+            <skill id="OneHanded" value="98" />
+            <skill id="TwoHanded" value="103" />
+            <skill id="Polearm" value="139" />
+            <skill id="Bow" value="42" />
+            <skill id="Crossbow" value="37" />
+            <skill id="Throwing" value="60" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.dale_winged_spear_b" />  
+              <equipment slot="Item1" id="Item.wm_dale_shield_a08" />
+                <equipment slot="Item2" id="Item.dale_sword_b" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_infrantry_b01" />
+                <equipment slot="Body" id="Item.sk_dale_chest_infrantry_b01" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_infrantry_b01" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_infrantry_b01" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_infrantry_b01" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dale_recruit"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="6"
+        name="{=aom_dale_recruit_name}[Dale] Lake-Town Peasant"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="38" />
+            <skill id="Riding" value="0" />
+            <skill id="OneHanded" value="25" />
+            <skill id="TwoHanded" value="22" />
+            <skill id="Polearm" value="40" />
+            <skill id="Bow" value="17" />
+            <skill id="Crossbow" value="12" />
+            <skill id="Throwing" value="5" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.dale_sword_c" />
+                <equipment slot="Item1" id="Item.wm_dale_shield_a06" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.dale_spear_a" />
+                <equipment slot="Item1" id="Item.wm_dale_shield_a06" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_a01" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_a01" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dale_royal_cavalier"
+        is_obsolete="true"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_dale_royal_cavalier_name}[Dale] Dalian Cavalry"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="105" />
+            <skill id="Riding" value="110" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="54" />
+            <skill id="Polearm" value="128" />
+            <skill id="Bow" value="37" />
+            <skill id="Crossbow" value="27" />
+            <skill id="Throwing" value="25" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.dale_winged_spear_a" />
+                <equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+                <equipment slot="Item2" id="Item.dale_sword_a" />
+                <equipment slot="Horse" id="Item.charger" />
+                <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a02" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_a02" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a02" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a02" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a02" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.dale_winged_spear_a" />
+                <equipment slot="Item1" id="Item.wm_dale_shield_a03" />
+                <equipment slot="Item2" id="Item.dale_sword_a" />
+                <equipment slot="Horse" id="Item.charger" />
+                <equipment slot="HorseHarness" id="Item.chain_horse_harness" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_chivlary_a02" />
+                <equipment slot="Body" id="Item.sk_dale_chest_chivalry_a02" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_chivlary_a02" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_chivlary_a02" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_chivlary_a02" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dale_royal_crossbowman"
+        is_obsolete="true"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_dale_royal_crossbowman_name}[Dale] Dalian Master Crossbowman"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="110" />
+            <skill id="Riding" value="10" />
+            <skill id="OneHanded" value="145" />
+            <skill id="TwoHanded" value="97" />
+            <skill id="Polearm" value="115" />
+            <skill id="Bow" value="52" />
+            <skill id="Crossbow" value="198" />
+            <skill id="Throwing" value="45" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_t5" />
+                <equipment slot="Item1" id="Item.bolt_c" />
+                <equipment slot="Item2" id="Item.dale_sword_a" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a09" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_b03" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_b03" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b03" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_b03" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b03" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_dale_xbow_t5" />
+                <equipment slot="Item1" id="Item.bolt_d" />
+                <equipment slot="Item2" id="Item.dale_sword_a" />
+                <equipment slot="Item3" id="Item.wm_dale_shield_a09" />
+                <equipment slot="Head" id="Item.sk_dale_helmet_archer_b03" />
+                <equipment slot="Body" id="Item.sk_dale_chest_archer_b03" />
+                <equipment slot="Gloves" id="Item.sk_dale_gauntlet_archer_b03" />
+                <equipment slot="Leg" id="Item.sk_dale_boots_archer_b03" />
+                <equipment slot="Cape" id="Item.sk_dale_shoulder_archer_b03" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dale_spearman"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_dale_spearman_name}[Dale] Lake-Town Pikeman"
+        occupation="Soldier"
+        culture="Culture.sturgia">
+        <face>
+            <face_key_template value="BodyProperty.fighter_sturgia" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="5" />
+            <skill id="OneHanded" value="86" />
+            <skill id="TwoHanded" value="92" />
+            <skill id="Polearm" value="128" />
+            <skill id="Bow" value="27" />
+            <skill id="Crossbow" value="22" />
+            <skill id="Throwing" value="45" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.dale_winged_spear_a" />
+                <equipment slot="Item1" id="Item.dale_sword_a" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b02" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b02" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b02" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b02" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.dale_winged_spear_a" />
+                <equipment slot="Item1" id="Item.dale_sword_a" />
+                <equipment slot="Head" id="Item.sk_dale_lake_town_helmet_mariner_b02" />
+                <equipment slot="Body" id="Item.sk_dale_lake_town_chest_mariner_b02" />
+                <equipment slot="Gloves" id="Item.sk_dale_lake_town_bracers_mariner_b02" />
+                <equipment slot="Leg" id="Item.sk_dale_lake_town_boots_mariner_b02" />
+                <equipment slot="Cape" id="Item.sk_dale_lake_town_shoulder_mariner_b01" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_fell_warg_rider"
+        is_obsolete="true"
+        race="dg_uruk"
+        default_group="Cavalry"
+        level="36"
+        name="{=aom_dg_fell_warg_rider_name}[Dol Guldur] Fell Ravager"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dolguldur" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="162" />
+            <skill
+                id="Riding"
+                value="265" />
+            <skill
+                id="OneHanded"
+                value="285" />
+            <skill
+                id="TwoHanded"
+                value="155" />
+            <skill
+                id="Polearm"
+                value="318" />
+            <skill
+                id="Bow"
+                value="40" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="70" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_b" />
+                <equipment slot="Item1" id="Item.wm_gundabad_shield_a03" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_spear_b" />
+                <equipment slot="Head" id="Item.sk_dg_uruk_helmet_elite_g" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_elite_c" />
+                <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_c" />
+                <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_elite_e" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_elite_e" />
+                <equipment slot="Horse" id="Item.fell_warg" />
+                <equipment slot="HorseHarness" id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_goblin_archer"
+        is_obsolete="true"
+        race="goblin"
+        default_group="Ranged"
+        level="21"
+        name="{=aom_dg_goblin_archer_name}[Dol Guldur] Goblin Archer"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_goblin" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="107" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="115" />
+            <skill
+                id="TwoHanded"
+                value="90" />
+            <skill
+                id="Polearm"
+                value="88" />
+            <skill
+                id="Bow"
+                value="110" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="50" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_mace_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_mace_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_f" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_mace_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_g" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_mace_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_h" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_c" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.sm_dg_khml_2h_mace_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.sm_dg_khml_2h_mace_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_goblin_crawler"
+        is_obsolete="true"
+        race="goblin"
+        default_group="Infantry"
+        level="6"
+        name="{=aom_dg_goblin_crawler_name}[Dol Guldur] Goblin Crawler"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_goblin" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="45" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="43" />
+            <skill
+                id="TwoHanded"
+                value="46" />
+            <skill
+                id="Polearm"
+                value="43" />
+            <skill
+                id="Bow"
+                value="0" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="20" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_axe_a03" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_axe_a01" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_d" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_goblin_hunter"
+        is_obsolete="true"
+        race="goblin"
+        default_group="Ranged"
+        level="11"
+        name="{=aom_dg_goblin_hunter_name}[Dol Guldur] Goblin Hunter"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_goblin" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="62" />
+            <skill
+                id="Riding"
+                value="5" />
+            <skill
+                id="OneHanded"
+                value="45" />
+            <skill
+                id="TwoHanded"
+                value="50" />
+            <skill
+                id="Polearm"
+                value="48" />
+            <skill
+                id="Bow"
+                value="35" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="30" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t2" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t2" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t2" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_2h_mace_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_light_c" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t2" />
+                <equipment
+                    slot="Item1"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item2"
+                    id="Item.steppe_arrows" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_1h_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_light_d" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_d" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_goblin_impaler"
+        is_obsolete="true"
+        race="goblin"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_dg_goblin_impaler_name}[Dol Guldur] Goblin Impaler"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_goblin" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="107" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="140" />
+            <skill
+                id="TwoHanded"
+                value="135" />
+            <skill
+                id="Polearm"
+                value="148" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="5" />
+            <skill
+                id="Throwing"
+                value="60" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dg_khml_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dg_khml_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_f" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dg_khml_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dg_khml_2h_axe_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dg_khml_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_c" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_med_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_c" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_goblin_skirmisher"
+        is_obsolete="true"
+        race="goblin"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_dg_goblin_skirmisher_name}[Dol Guldur] Goblin Skirmisher"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_goblin" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="92" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="105" />
+            <skill
+                id="TwoHanded"
+                value="110" />
+            <skill
+                id="Polearm"
+                value="113" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="5" />
+            <skill
+                id="Throwing"
+                value="40" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dg_khml_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dg_khml_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dg_khml_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dg_khml_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_f" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_sword_a03" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dg_khml_2h_axe_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dg_khml_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_c" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_c" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_2h_mace_a04" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_d" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_2h_mace_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_e" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_e" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_khamul_shadow_guard"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="46"
+        name="{=aom_dg_khamul_shadow_guard_name}[Dol Guldur] Khamûl's Shadow-Guard"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="187" />
+            <skill id="Riding" value="35" />
+            <skill id="OneHanded" value="345" />
+            <skill id="TwoHanded" value="335" />
+            <skill id="Polearm" value="348" />
+            <skill id="Bow" value="35" />
+            <skill id="Crossbow" value="25" />
+            <skill id="Throwing" value="110" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_mace_a" />
+                <equipment slot="Item1" id="Item.sm_dg_khml_shield_heavy_a" />
+                <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_elite_a" />
+                <equipment slot="Body" id="Item.sk_dg_khml_plate_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_mace_b" />
+                <equipment slot="Item1" id="Item.sm_dg_khml_shield_heavy_b" />
+                <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_elite_b" />
+                <equipment slot="Body" id="Item.sk_dg_khml_plate_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_mace_a" />
+                <equipment slot="Item1" id="Item.sm_dg_khml_shield_heavy_a" />
+                <equipment slot="Head" id="Item.sk_dg_khml_helmet_inf_elite_c" />
+                <equipment slot="Body" id="Item.sk_dg_khml_plate_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_dg_khml_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_khml_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_dg_khml_grvs_plate_elite_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_orc_archer"
+        is_obsolete="true"
+        race="orc"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_dg_orc_archer_name}[Dol Guldur] Orc Archer"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dolguldur" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="117" />
+            <skill
+                id="Riding"
+                value="15" />
+            <skill
+                id="OneHanded"
+                value="155" />
+            <skill
+                id="TwoHanded"
+                value="110" />
+            <skill
+                id="Polearm"
+                value="108" />
+            <skill
+                id="Bow"
+                value="150" />
+            <skill
+                id="Crossbow"
+                value="30" />
+            <skill
+                id="Throwing"
+                value="60" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t5" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_2h_mace_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t5" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_2h_mace_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_f" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t5" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_2h_mace_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_f" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t5" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_2h_mace_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_f" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t5" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_2h_mace_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_f" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t5" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.sm_dg_khml_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_b" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t5" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.sm_dg_khml_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_c" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_c" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_c" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t5" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.sm_dg_khml_spear_a" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_d" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_d" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_d" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_d" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_dolguldur_bow_t5" />
+                <equipment
+                    slot="Item1"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item2"
+                    id="Item.bodkin_arrows_c" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_dol_goldur_2h_mace_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_heavy_e" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_heavy_e" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_heavy_e" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_heavy_e" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_orc_gnasher"
+        is_obsolete="true"
+        race="orc"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_dg_orc_gnasher_name}[Dol Guldur] Orc Gnasher"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dolguldur" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="60" />
+            <skill
+                id="Riding"
+                value="5" />
+            <skill
+                id="OneHanded"
+                value="75" />
+            <skill
+                id="TwoHanded"
+                value="80" />
+            <skill
+                id="Polearm"
+                value="88" />
+            <skill
+                id="Bow"
+                value="5" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="30" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a04" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_light_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_light_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_light_c" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_light_d" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_d" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_orc_recruit"
+        is_obsolete="true"
+        race="orc"
+        default_group="Infantry"
+        level="6"
+        name="{=aom_dg_orc_recruit_name}[Dol Guldur] Orc Recruit"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dolguldur" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="45" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="43" />
+            <skill
+                id="TwoHanded"
+                value="43" />
+            <skill
+                id="Polearm"
+                value="46" />
+            <skill
+                id="Bow"
+                value="0" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="20" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a01" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a02" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a03" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_halberd_a04" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_light_d" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_orc_warrior"
+        is_obsolete="true"
+        race="orc"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_dg_orc_warrior_name}[Dol Guldur] Orc Warrior"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dolguldur" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="92" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="105" />
+            <skill
+                id="TwoHanded"
+                value="110" />
+            <skill
+                id="Polearm"
+                value="113" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="5" />
+            <skill
+                id="Throwing"
+                value="40" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dg_khml_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dg_khml_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_b" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dg_khml_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_c" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_c" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_c" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_c" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.sm_dg_khml_spear_a" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_d" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_d" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_dol_goldur_1h_sword_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_gundabad_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_dg_uruk_helmet_med_e" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_dg_uruk_chest_med_e" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_dg_uruk_bracer_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_dg_uruk_boots_med_b" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_uruk_fell_archer"
+        is_obsolete="true"
+        race="dg_uruk"
+        default_group="Ranged"
+        level="31"
+        name="{=aom_dg_uruk_fell_archer_name}[Dol Guldur] Uruk Fell Archer"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dolguldur" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="127" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="180" />
+            <skill
+                id="TwoHanded"
+                value="135" />
+            <skill
+                id="Polearm"
+                value="148" />
+            <skill
+                id="Bow"
+                value="185" />
+            <skill
+                id="Crossbow"
+                value="35" />
+            <skill
+                id="Throwing"
+                value="70" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_dolguldur_bow_t6" />
+                <equipment slot="Item1" id="Item.piercing_arrows" />
+                <equipment slot="Item2" id="Item.piercing_arrows" />
+                <equipment slot="Item3" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_f" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_e" />
+                <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_elite_cape_d" />
+                <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_e" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_d" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_uruk_fell_fang"
+        is_obsolete="true"
+        race="dg_uruk"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_dg_uruk_fell_fang_name}[Dol Guldur] Uruk Fell Fang"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dolguldur" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="132" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="245" />
+            <skill
+                id="TwoHanded"
+                value="253" />
+            <skill
+                id="Polearm"
+                value="235" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="15" />
+            <skill
+                id="Throwing"
+                value="90" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_dol_goldur_2h_mace_a02" />
+                <equipment slot="Head" id="Item.sk_dg_uruk_helmet_heavy_a" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_uruk_foul"
+        is_obsolete="true"
+        race="dg_uruk"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_dg_uruk_foul_name}[Dol Guldur] Uruk Foul"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dolguldur" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="60" />
+            <skill
+                id="Riding"
+                value="5" />
+            <skill
+                id="OneHanded"
+                value="75" />
+            <skill
+                id="TwoHanded"
+                value="80" />
+            <skill
+                id="Polearm"
+                value="88" />
+            <skill
+                id="Bow"
+                value="5" />
+            <skill
+                id="Crossbow"
+                value="0" />
+            <skill
+                id="Throwing"
+                value="30" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_dol_goldur_1h_sword_a03" />
+                <equipment slot="Head" id="Item.sk_dg_uruk_helmet_light_a" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_light_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_uruk_veteran_warrior"
+        is_obsolete="true"
+        race="dg_uruk"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_dg_uruk_veteran_warrior_name}[Dol Guldur] Uruk Warrior"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dolguldur" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="107" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="140" />
+            <skill
+                id="TwoHanded"
+                value="135" />
+            <skill
+                id="Polearm"
+                value="148" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="5" />
+            <skill
+                id="Throwing"
+                value="60" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item1" id="Item.wm_gundabad_shield_a01" />
+                <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_a" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_a" />
+                <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_a" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dg_warg_raider"
+        is_obsolete="true"
+        race="dg_uruk"
+        default_group="Cavalry"
+        level="21"
+        name="{=aom_dg_warg_raider_name}[Dol Guldur] Warg Rider"
+        occupation="Soldier"
+        culture="Culture.dolguldur">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_dolguldur" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="112" />
+            <skill
+                id="Riding"
+                value="115" />
+            <skill
+                id="OneHanded"
+                value="130" />
+            <skill
+                id="TwoHanded"
+                value="85" />
+            <skill
+                id="Polearm"
+                value="163" />
+            <skill
+                id="Bow"
+                value="20" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="40" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_dg_khml_1h_sword_a" />
+                <equipment slot="Item1" id="Item.wm_gundabad_shield_a02" />
+                <equipment slot="Item2" id="Item.sm_dg_khml_spear_a" />
+                <equipment slot="Head" id="Item.sk_dg_uruk_helmet_med_g" />
+                <equipment slot="Body" id="Item.sk_dg_uruk_chest_med_c" />
+                <equipment slot="Cape" id="Item.sk_dg_uruk_pauldron_med_a" />
+                <equipment slot="Gloves" id="Item.sk_dg_uruk_bracer_med_c" />
+                <equipment slot="Leg" id="Item.sk_dg_uruk_boots_med_c" />
+                <equipment slot="Horse" id="Item.warg_brown" />
+                <equipment slot="HorseHarness" id="Item.warg_saddle" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dragon_wrath_infantry"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_dragon_wrath_infantry_name}[Rhûn] Dragon-Wrath Infantry"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="145" />
+            <skill id="Riding" value="48" />
+            <skill id="OneHanded" value="270" />
+            <skill id="TwoHanded" value="250" />
+            <skill id="Polearm" value="290" />
+            <skill id="Bow" value="20" />
+            <skill id="Crossbow" value="15" />
+            <skill id="Throwing" value="85" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_drag_1h_mace_b" />
+                <equipment slot="Item1" id="Item.sm_rh_drag_shield_heavy_a" />
+                <equipment slot="Item2" id="Item.sm_rh_drag_spear_a" />
+                <equipment slot="Head" id="Item.sk_rh_drag_helmet_inf_med_b" />
+                <equipment slot="Body" id="Item.sk_rh_drag_hplate_heavy_a" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_cape_hplate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_hplate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_hplate_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_drag_1h_mace_b" />
+                <equipment slot="Item1" id="Item.sm_rh_drag_shield_heavy_b" />
+                <equipment slot="Item2" id="Item.sm_rh_drag_spear_a" />
+                <equipment slot="Head" id="Item.sk_rh_drag_helmet_inf_med_c" />
+                <equipment slot="Body" id="Item.sk_rh_drag_hplate_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_cape_hplate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_hplate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_hplate_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_dragon_wrath_obsidian_knight"
+        is_obsolete="true"
+        default_group="Cavalry"
+        level="46"
+        name="{=aom_dragon_wrath_obsidian_knight_name}[Rhûn] Dragon-Wrath Obsidian Knight"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="190" />
+            <skill id="Riding" value="378" />
+            <skill id="OneHanded" value="340" />
+            <skill id="TwoHanded" value="210" />
+            <skill id="Polearm" value="385" />
+            <skill id="Bow" value="45" />
+            <skill id="Crossbow" value="30" />
+            <skill id="Throwing" value="75" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_drag_spear_b" />
+                <equipment slot="Item1" id="Item.sm_rh_drag_shield_cav_heavy_a" />
+                <equipment slot="Item2" id="Item.sm_rh_drag_1h_mace_b" />
+                <equipment slot="Head" id="Item.sk_rh_drag_helmet_cav_elite_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_drag_spear_b" />
+                <equipment slot="Item1" id="Item.sm_rh_drag_shield_cav_heavy_a" />
+                <equipment slot="Item2" id="Item.sm_rh_drag_1h_mace_b" />
+                <equipment slot="Head" id="Item.sk_rh_drag_helmet_cav_elite_b" />
+                <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_pauldron_plate_heavy_b" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_elite_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_drag_spear_b" />
+                <equipment slot="Item1" id="Item.sm_rh_drag_shield_cav_heavy_a" />
+                <equipment slot="Item2" id="Item.sm_rh_drag_1h_mace_b" />
+                <equipment slot="Head" id="Item.sk_rh_drag_helmet_cav_elite_c" />
+                <equipment slot="Body" id="Item.sk_rh_drag_plate_heavy_b" />
+                <equipment slot="Cape" id="Item.sk_rh_drag_cape_plate_heavy_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_drag_bracer_plate_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_drag_grvs_plate_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+            <equipment slot="Horse" id="Item.t3_aserai_horse" />
+            <equipment slot="HorseHarness" id="Item.sk_rh_khml_barding_b" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_easterling_archer_new"
+        is_obsolete="true"
+        default_group="Ranged"
+        level="21"
+        name="{=aom_easterling_archer_new_name}[Rhûn] Easterling Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="33" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="85" />
+            <skill id="Bow" value="130" />
+            <skill id="Crossbow" value="20" />
+            <skill id="Throwing" value="35" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_t4" />
+                <equipment slot="Item1" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_c" />
+                <equipment slot="Body" id="Item.sk_rh_loke_chest_med_c" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_med_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_easterling_bowman"
+        is_obsolete="true"
+        default_group="Ranged"
+        level="11"
+        name="{=aom_easterling_bowman_name}[Rhûn] Easterling Bowman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="55" />
+            <skill id="Riding" value="28" />
+            <skill id="OneHanded" value="30" />
+            <skill id="TwoHanded" value="25" />
+            <skill id="Polearm" value="45" />
+            <skill id="Bow" value="55" />
+            <skill id="Crossbow" value="5" />
+            <skill id="Throwing" value="15" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+                <equipment slot="Item1" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chainmail_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_easterling_footman_new"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_easterling_footman_new_name}[Rhûn] Easterling Footman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="85" />
+            <skill id="Riding" value="33" />
+            <skill id="OneHanded" value="90" />
+            <skill id="TwoHanded" value="85" />
+            <skill id="Polearm" value="110" />
+            <skill id="Bow" value="5" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="25" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+                <equipment slot="Item1" id="Item.desert_round_shield" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_b" />
+                <equipment slot="Body" id="Item.sk_rh_loke_chest_light_c" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_light_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_easterling_halberdier_new"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_easterling_halberdier_new_name}[Rhûn] Easterling Halberdier"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="33" />
+            <skill id="OneHanded" value="110" />
+            <skill id="TwoHanded" value="110" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="5" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="45" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.wm_harad_spear_a02" />
+                <equipment slot="Item1" id="Item.aserai_sword_5_t4" />
+                <equipment slot="Item2" id="Item.desert_round_shield" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_c" />
+                <equipment slot="Body" id="Item.sk_rh_loke_chest_med_d" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_med_b" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_med_b" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_easterling_militia"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_easterling_militia_name}[Rhûn] Easterling Militia"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="53" />
+            <skill id="Riding" value="28" />
+            <skill id="OneHanded" value="60" />
+            <skill id="TwoHanded" value="55" />
+            <skill id="Polearm" value="85" />
+            <skill id="Bow" value="0" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="15" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+                <equipment slot="Item1" id="Item.desert_round_shield" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chainmail_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_easterling_recruit"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="6"
+        name="{=aom_easterling_recruit_name}[Rhûn] Easterling Recruit"
+        occupation="Soldier"
+        is_basic_troop="false"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="38" />
+            <skill id="Riding" value="23" />
+            <skill id="OneHanded" value="28" />
+            <skill id="TwoHanded" value="18" />
+            <skill id="Polearm" value="43" />
+            <skill id="Bow" value="0" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="5" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.aserai_sword_3_t3" />
+                <equipment slot="Item1" id="Item.desert_round_shield" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_light_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_tunic_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_easterling_skirmisher_new"
+        is_obsolete="true"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_easterling_skirmisher_new_name}[Rhûn] Easterling Skirmisher"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="90" />
+            <skill id="Riding" value="33" />
+            <skill id="OneHanded" value="70" />
+            <skill id="TwoHanded" value="45" />
+            <skill id="Polearm" value="60" />
+            <skill id="Bow" value="85" />
+            <skill id="Crossbow" value="15" />
+            <skill id="Throwing" value="25" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_t3" />
+                <equipment slot="Item1" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_c" />
+                <equipment slot="Body" id="Item.sk_rh_loke_chest_light_d" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_light_b" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_b" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_far_rhun_cataphract"
+        is_obsolete="true"
+        default_group="Cavalry"
+        level="26"
+        name="{=aom_far_rhun_cataphract_name}[Rhûn] Far-Rhun Kataphract"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="120" />
+            <skill id="Riding" value="178" />
+            <skill id="OneHanded" value="170" />
+            <skill id="TwoHanded" value="80" />
+            <skill id="Polearm" value="210" />
+            <skill id="Bow" value="20" />
+            <skill id="Crossbow" value="10" />
+            <skill id="Throwing" value="35" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.khuzait_lance_2_t4" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
+                <equipment slot="Item2" id="Item.khuzait_sword_4_t4" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_c" />
+                <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_heavy_b" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_b" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+            <equipment slot="Horse" id="Item.t3_aserai_horse" />
+            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_5_c" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_far_rhun_iron_legionary"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_far_rhun_iron_legionary_name}[Rhûn] Far-Rhun Iron Legionary"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="125" />
+            <skill id="Riding" value="43" />
+            <skill id="OneHanded" value="230" />
+            <skill id="TwoHanded" value="210" />
+            <skill id="Polearm" value="250" />
+            <skill id="Bow" value="15" />
+            <skill id="Crossbow" value="10" />
+            <skill id="Throwing" value="75" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.sm_rh_loke_1h_sword_b" />
+                <equipment slot="Item1" id="Item.sm_rh_loke_shield_med_a" />
+                <equipment slot="Item2" id="Item.eastern_javelin_3_t4" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_elite_a" />
+                <equipment slot="Body" id="Item.sk_rh_loke_chest_heavy_d" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_heavy_b" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_b" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_b" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_kharaghul_horse_archer"
+        is_obsolete="true"
+        default_group="HorseArcher"
+        level="26"
+        name="{=aom_kharaghul_horse_archer_name}[Rhûn] Kharaghûl Horse Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="130" />
+            <skill id="Riding" value="218" />
+            <skill id="OneHanded" value="140" />
+            <skill id="TwoHanded" value="75" />
+            <skill id="Polearm" value="125" />
+            <skill id="Bow" value="170" />
+            <skill id="Crossbow" value="15" />
+            <skill id="Throwing" value="50" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_t5" />
+                <equipment slot="Item1" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item2" id="Item.bodkin_arrows_b" />
+                <equipment slot="Item3" id="Item.khuzait_sword_3_t3" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_heavy_c" />
+                <equipment slot="Body" id="Item.sk_rh_loke_chest_med_d" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_med_c" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_heavy_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_heavy_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+            <equipment slot="Horse" id="Item.t3_aserai_horse" />
+            <equipment slot="HorseHarness" id="Item.lrd_horse_armour_4" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_mirkwood_borderwardens"
+        is_obsolete="true"
+        race="elf"
+        default_group="Ranged"
+        level="46"
+        name="{=aom_mirkwood_borderwardens_name}[Mirkwood] Silvan Borderwarden"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="210" />
+            <skill
+                id="Riding"
+                value="45" />
+            <skill
+                id="OneHanded"
+                value="310" />
+            <skill
+                id="TwoHanded"
+                value="280" />
+            <skill
+                id="Polearm"
+                value="305" />
+            <skill
+                id="Bow"
+                value="468" />
+            <skill
+                id="Crossbow"
+                value="132" />
+            <skill
+                id="Throwing"
+                value="140" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_mirkwood_bow_t9" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_arrow_a02" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_mirkwood_arrow_a01" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t3_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_silver" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces_silver" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_silver" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_mirkwood_militia_archer"
+        is_obsolete="true"
+        race="elf"
+        default_group="Ranged"
+        level="11"
+        name="{=aom_mk_militia_archer}[Mirkwood] Militia Archer"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="140" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="140" />
+            <skill
+                id="TwoHanded"
+                value="95" />
+            <skill
+                id="Polearm"
+                value="100" />
+            <skill
+                id="Bow"
+                value="138" />
+            <skill
+                id="Crossbow"
+                value="96" />
+            <skill
+                id="Throwing"
+                value="90" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_mirkwood_bow_t2" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_arrow_a01" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t1_helmet_gold_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mirkwood_body" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_mirkwood_bow_t2" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_arrow_a01" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_mirkwood_bow_t2" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_arrow_a02" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t1_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mirkwood_bow_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_arrow_a01" />
+                <equipment
+                    slot="Body"
+                    id="Item.mirkwood_body" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mirkwood_boots" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_mirkwood_militia_spearman"
+        is_obsolete="true"
+        race="elf"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_mk_militia_spear}[Mirkwood] Militia Spearman"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="140" />
+            <skill
+                id="Riding"
+                value="20" />
+            <skill
+                id="OneHanded"
+                value="150" />
+            <skill
+                id="TwoHanded"
+                value="140" />
+            <skill
+                id="Polearm"
+                value="175" />
+            <skill
+                id="Bow"
+                value="65" />
+            <skill
+                id="Crossbow"
+                value="60" />
+            <skill
+                id="Throwing"
+                value="100" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t1_helmet_gold_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mirkwood_body" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mirkwood_boots" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a02" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t1_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a03" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a01" />
+                <equipment
+                    slot="Body"
+                    id="Item.mirkwood_body" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mirkwood_boots" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_mirkwood_militia_veteran_archer"
+        is_obsolete="true"
+        race="elf"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_mk_militia_vet_archer}[Mirkwood] Militia Veteran Archer"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="155" />
+            <skill
+                id="Riding"
+                value="35" />
+            <skill
+                id="OneHanded"
+                value="155" />
+            <skill
+                id="TwoHanded"
+                value="110" />
+            <skill
+                id="Polearm"
+                value="115" />
+            <skill
+                id="Bow"
+                value="174" />
+            <skill
+                id="Crossbow"
+                value="114" />
+            <skill
+                id="Throwing"
+                value="105" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_mirkwood_bow_t3" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_arrow_a02" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t2_helmet_gold_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_mirkwood_bow_t3" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_arrow_a01" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t2_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_bronze" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_bronze" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_bronze" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_mirkwood_bow_t3" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_arrow_a02" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_mirkwood_bow_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_arrow_a01" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_mirkwood_militia_veteran_spearman"
+        is_obsolete="true"
+        race="elf"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_mk_militia_vet_spear}[Mirkwood] Militia Veteran Spearman"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="155" />
+            <skill
+                id="Riding"
+                value="35" />
+            <skill
+                id="OneHanded"
+                value="165" />
+            <skill
+                id="TwoHanded"
+                value="155" />
+            <skill
+                id="Polearm"
+                value="190" />
+            <skill
+                id="Bow"
+                value="80" />
+            <skill
+                id="Crossbow"
+                value="75" />
+            <skill
+                id="Throwing"
+                value="115" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a02" />
+                <equipment
+                    slot="Item2"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t2_helmet_gold_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t2_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_bronze" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_bronze" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_bronze" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf2_t2_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+            <EquipmentRoster
+                civilian="true">
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a01" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_mirkwood_recruit"
+        is_obsolete="true"
+        race="elf"
+        default_group="Infantry"
+        level="36"
+        name="{=aom_mirkwood_recruit_name}[Mirkwood] Silvan Levy"
+        occupation="Soldier"
+        is_basic_troop="true"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="185" />
+            <skill
+                id="Riding"
+                value="35" />
+            <skill
+                id="OneHanded"
+                value="310" />
+            <skill
+                id="TwoHanded"
+                value="280" />
+            <skill
+                id="Polearm"
+                value="305" />
+            <skill
+                id="Bow"
+                value="80" />
+            <skill
+                id="Crossbow"
+                value="75" />
+            <skill
+                id="Throwing"
+                value="140" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t1_helmet_gold_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_mirkwood_rochenlas"
+        is_obsolete="true"
+        race="elf"
+        default_group="Cavalry"
+        level="41"
+        name="{=aom_mirkwood_rochenlas_name}[Mirkwood] Mirkwood Róchenlas"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="215" />
+            <skill
+                id="Riding"
+                value="325" />
+            <skill
+                id="OneHanded"
+                value="350" />
+            <skill
+                id="TwoHanded"
+                value="280" />
+            <skill
+                id="Polearm"
+                value="370" />
+            <skill
+                id="Bow"
+                value="100" />
+            <skill
+                id="Crossbow"
+                value="85" />
+            <skill
+                id="Throwing"
+                value="140" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.mirkwood_spear_a02" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_shield_a01" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf2_t3_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_silver" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces_silver" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_silver" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+            <equipment
+                slot="Horse"
+                id="Item.taom_animalia_elk_a" />
+            <equipment
+                slot="HorseHarness"
+                id="Item.taom_elk_saddle_a" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_mirkwood_sentinels"
+        is_obsolete="true"
+        race="elf"
+        default_group="Ranged"
+        level="41"
+        name="{=aom_mirkwood_sentinels_name}[Mirkwood] Silvan Sentinels"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="195" />
+            <skill
+                id="Riding"
+                value="40" />
+            <skill
+                id="OneHanded"
+                value="310" />
+            <skill
+                id="TwoHanded"
+                value="280" />
+            <skill
+                id="Polearm"
+                value="305" />
+            <skill
+                id="Bow"
+                value="444" />
+            <skill
+                id="Crossbow"
+                value="126" />
+            <skill
+                id="Throwing"
+                value="140" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_mirkwood_bow_t8" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_arrow_a01" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_mirkwood_arrow_a02" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t2_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_silver" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces_silver" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_silver" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_mirkwood_thingolheir"
+        is_obsolete="true"
+        race="elf"
+        default_group="Ranged"
+        level="51"
+        name="{=aom_mirkwood_thingolheir_name}[Mirkwood] Thingol's Heirs"
+        occupation="Soldier"
+        culture="Culture.mirkwood">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_mirkwood" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="225" />
+            <skill
+                id="Riding"
+                value="45" />
+            <skill
+                id="OneHanded"
+                value="310" />
+            <skill
+                id="TwoHanded"
+                value="280" />
+            <skill
+                id="Polearm"
+                value="305" />
+            <skill
+                id="Bow"
+                value="492" />
+            <skill
+                id="Crossbow"
+                value="138" />
+            <skill
+                id="Throwing"
+                value="140" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_mirkwood_bow_t10" />
+                <equipment
+                    slot="Item1"
+                    id="Item.wm_mirkwood_arrow_a03" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_mirkwood_arrow_a02" />
+                <equipment
+                    slot="Item3"
+                    id="Item.mirkwood_sword_a01" />
+                <equipment
+                    slot="Head"
+                    id="Item.mkwd_inf1_t4_helmet_silver_hc" />
+                <equipment
+                    slot="Body"
+                    id="Item.mkwd_inf3_chest_silver" />
+                <equipment
+                    slot="Cape"
+                    id="Item.mkwd_inf3_pauldrons_silver" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.mkwd_inf3_vambraces_silver" />
+                <equipment
+                    slot="Leg"
+                    id="Item.mkwd_inf3_greaves_silver" />
+            </EquipmentRoster>
+            <EquipmentSet
+                id="aserai_troop_civilian_template_t3"
+                equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_rhun_militia_archer"
+        is_obsolete="true"
+        default_group="Ranged"
+        level="11"
+        name="{=aom_rhun_mil_arch_name}[Rhûn] Militia Archer"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="33" />
+            <skill id="OneHanded" value="100" />
+            <skill id="TwoHanded" value="65" />
+            <skill id="Polearm" value="85" />
+            <skill id="Bow" value="55" />
+            <skill id="Crossbow" value="20" />
+            <skill id="Throwing" value="35" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+                <equipment slot="Item1" id="Item.default_arrows" />
+                <equipment slot="Item2" id="Item.aserai_sword_3_t3" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chainmail_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.ladder_rhun_new_bow_t2" />
+                <equipment slot="Item1" id="Item.default_arrows" />
+                <equipment slot="Item2" id="Item.aserai_sword_3_t3" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_b" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chainmail_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_rhun_militia_spearman"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_rhun_mil_spear_name}[Rhûn] Militia Spearman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="100" />
+            <skill id="Riding" value="33" />
+            <skill id="OneHanded" value="110" />
+            <skill id="TwoHanded" value="110" />
+            <skill id="Polearm" value="160" />
+            <skill id="Bow" value="5" />
+            <skill id="Crossbow" value="0" />
+            <skill id="Throwing" value="45" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.eastern_spear_3_t3" />
+                <equipment slot="Item1" id="Item.desert_round_shield" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_a" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chainmail_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.desert_round_shield" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_b" />
+                <equipment slot="Body" id="Item.sk_rh_drag_chainmail_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_boots_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_rhun_militia_veteran_spearman"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_rhun_mil_vspear_name}[Rhûn] Militia Veteran Spearman"
+        occupation="Soldier"
+        culture="Culture.khuzait">
+        <face>
+            <face_key_template value="BodyProperty.fighter_rhun" />
+        </face>
+        <skills>
+            <skill id="Athletics" value="115" />
+            <skill id="Riding" value="48" />
+            <skill id="OneHanded" value="125" />
+            <skill id="TwoHanded" value="125" />
+            <skill id="Polearm" value="175" />
+            <skill id="Bow" value="20" />
+            <skill id="Crossbow" value="15" />
+            <skill id="Throwing" value="60" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment slot="Item0" id="Item.eastern_spear_4_t4" />
+                <equipment slot="Item1" id="Item.desert_round_shield" />
+                <equipment slot="Item2" id="Item.aserai_sword_3_t3" />
+                <equipment slot="Head" id="Item.sk_rh_loke_helmet_east_med_c" />
+                <equipment slot="Body" id="Item.sk_rh_loke_chest_light_c" />
+                <equipment slot="Cape" id="Item.sk_rh_loke_pauldron_light_a" />
+                <equipment slot="Gloves" id="Item.sk_rh_loke_bracer_light_a" />
+                <equipment slot="Leg" id="Item.sk_rh_loke_grvs_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="aserai_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_umbar_elite"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="11"
+        name="{=aom_umbar_elite_name}[Umbar] Adûnaim Recruits"
+        occupation="Soldier"
+        culture="Culture.umbar">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="58" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="70" />
+            <skill
+                id="TwoHanded"
+                value="70" />
+            <skill
+                id="Polearm"
+                value="60" />
+            <skill
+                id="Bow"
+                value="10" />
+            <skill
+                id="Crossbow"
+                value="5" />
+            <skill
+                id="Throwing"
+                value="20" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_sword_a07" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_round_sparring_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_hr_st_helmet_light_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_hr_st_pauld_inf_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_hr_st_chest_inf_chest_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_hr_st_grvs_light_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_hr_st_bracer_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_sword_a07" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_round_sparring_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_hr_st_helmet_light_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_hr_st_pauld_inf_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_hr_st_chest_inf_chest_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_hr_st_grvs_light_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_hr_st_bracer_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_sword_a07" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_round_sparring_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_hr_st_helmet_light_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_hr_st_pauld_inf_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_hr_st_chest_inf_chest_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_hr_st_grvs_light_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_hr_st_bracer_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_sword_a07" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_round_sparring_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_hr_st_helmet_light_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_hr_st_pauld_inf_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_hr_st_chest_inf_chest_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_hr_st_grvs_light_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_hr_st_bracer_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="umbar_troop_civilian_template_t1" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_umbar_elite_root0"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="16"
+        name="{=aom_umbar_elite_root0_name}[Umbar] Adûnaim Footmen"
+        occupation="Soldier"
+        culture="Culture.umbar">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="90" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="100" />
+            <skill
+                id="TwoHanded"
+                value="95" />
+            <skill
+                id="Polearm"
+                value="90" />
+            <skill
+                id="Bow"
+                value="15" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="30" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_lamedon_bastard_heavy" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_round_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_lamedon_bastard_heavy" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_round_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_lamedon_bastard_heavy" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_round_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_lamedon_bastard_heavy" />
+                <equipment
+                    slot="Item1"
+                    id="Item.northern_round_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+            </EquipmentRoster>
+            <EquipmentSet id="umbar_troop_civilian_template_t2" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_umbar_elite_root00"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_umbar_elite_root00_name}[Umbar] Rozadan Footmen"
+        occupation="Soldier"
+        culture="Culture.umbar">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="135" />
+            <skill
+                id="TwoHanded"
+                value="115" />
+            <skill
+                id="Polearm"
+                value="130" />
+            <skill
+                id="Bow"
+                value="15" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="50" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.desert_round_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.desert_round_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.desert_round_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.desert_round_shield" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentSet id="umbar_troop_civilian_template_t2" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_umbar_elite_root0000"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="31"
+        name="{=aom_umbar_elite_root0000_name}[Umbar] Naru n'Aru Royal Guard"
+        occupation="Soldier"
+        culture="Culture.umbar">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="130" />
+            <skill
+                id="Riding"
+                value="10" />
+            <skill
+                id="OneHanded"
+                value="240" />
+            <skill
+                id="TwoHanded"
+                value="215" />
+            <skill
+                id="Polearm"
+                value="235" />
+            <skill
+                id="Bow"
+                value="25" />
+            <skill
+                id="Crossbow"
+                value="20" />
+            <skill
+                id="Throwing"
+                value="80" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.viking_round_shield" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_swan_knight_swordb" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_num_hood_light_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sm_md_num_inf_pauld_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sm_md_num_inf_chest_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_num_inf_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sm_md_num_grvs_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.viking_round_shield" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_swan_knight_swordb" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_num_hood_light_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sm_md_num_inf_pauld_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sm_md_num_inf_chest_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_num_inf_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sm_md_num_grvs_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.viking_round_shield" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_swan_knight_swordb" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_num_hood_light_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sm_md_num_inf_pauld_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sm_md_num_inf_chest_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_num_inf_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sm_md_num_grvs_light_a" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.viking_round_shield" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_swan_knight_swordb" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_num_hood_light_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sm_md_num_inf_pauld_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sm_md_num_inf_chest_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_num_inf_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sm_md_num_grvs_light_a" />
+            </EquipmentRoster>
+            <EquipmentSet id="umbar_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_umbar_elite_root0001"
+        is_obsolete="true"
+        default_group="Cavalry"
+        level="31"
+        name="{=aom_umbar_elite_root0001_name}[Umbar] Naru n'Aru Royal Knights"
+        occupation="Soldier"
+        culture="Culture.umbar">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="140" />
+            <skill
+                id="Riding"
+                value="195" />
+            <skill
+                id="OneHanded"
+                value="230" />
+            <skill
+                id="TwoHanded"
+                value="170" />
+            <skill
+                id="Polearm"
+                value="250" />
+            <skill
+                id="Bow"
+                value="35" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="70" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.viking_round_shield" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_swan_knight_swordb" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_num_cav_helmet_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sm_md_num_cav_pauld_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sm_md_num_cav_chest_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_num_inf_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sm_md_num_grvs_light_a" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_battania" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.gondor_horse_armor_2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.viking_round_shield" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_swan_knight_swordb" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_num_cav_helmet_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sm_md_num_cav_pauld_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sm_md_num_cav_chest_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_num_inf_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sm_md_num_grvs_light_a" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_battania" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.gondor_horse_armor_2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.viking_round_shield" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_swan_knight_swordb" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_num_cav_helmet_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sm_md_num_cav_pauld_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sm_md_num_cav_chest_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_num_inf_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sm_md_num_grvs_light_a" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_battania" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.gondor_horse_armor_2" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.wm_gondor_spear_b" />
+                <equipment
+                    slot="Item1"
+                    id="Item.viking_round_shield" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_swan_knight_swordb" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_md_num_cav_helmet_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sm_md_num_cav_pauld_med_a" />
+                <equipment
+                    slot="Body"
+                    id="Item.sm_md_num_cav_chest_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_md_num_inf_bracer_med_a" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sm_md_num_grvs_light_a" />
+                <equipment
+                    slot="Horse"
+                    id="Item.noble_horse_battania" />
+                <equipment
+                    slot="HorseHarness"
+                    id="Item.gondor_horse_armor_2" />
+            </EquipmentRoster>
+            <EquipmentSet id="umbar_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_umbar_elite_root01"
+        is_obsolete="true"
+        default_group="Infantry"
+        level="21"
+        name="{=aom_umbar_elite_root01_name}[Umbar] Rozadan Halberdiers"
+        occupation="Soldier"
+        culture="Culture.umbar">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="120" />
+            <skill
+                id="TwoHanded"
+                value="115" />
+            <skill
+                id="Polearm"
+                value="145" />
+            <skill
+                id="Bow"
+                value="15" />
+            <skill
+                id="Crossbow"
+                value="10" />
+            <skill
+                id="Throwing"
+                value="50" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_pike_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_pike_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_pike_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.isengard_pike_b" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentSet id="umbar_troop_civilian_template_t2" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_umbar_elite_root1"
+        is_obsolete="true"
+        default_group="Ranged"
+        level="16"
+        name="{=aom_umbar_elite_root1_name}[Umbar] Adûnaim Bowmen"
+        occupation="Soldier"
+        culture="Culture.umbar">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="95" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="80" />
+            <skill
+                id="TwoHanded"
+                value="70" />
+            <skill
+                id="Polearm"
+                value="60" />
+            <skill
+                id="Bow"
+                value="85" />
+            <skill
+                id="Crossbow"
+                value="25" />
+            <skill
+                id="Throwing"
+                value="30" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_umbar_bow_t3" />
+                <equipment
+                    slot="Item1"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gondor_sword_a07" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_hr_st_helmet_med_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_hr_st_chest_inf_chest_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_hr_st_grvs_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_hr_st_pauld_inf_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_hr_st_bracer_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_umbar_bow_t3" />
+                <equipment
+                    slot="Item1"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gondor_sword_a07" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_hr_st_helmet_med_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_hr_st_chest_inf_chest_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_hr_st_grvs_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_hr_st_pauld_inf_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_hr_st_bracer_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_umbar_bow_t3" />
+                <equipment
+                    slot="Item1"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gondor_sword_a07" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_hr_st_helmet_med_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_hr_st_chest_inf_chest_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_hr_st_grvs_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_hr_st_pauld_inf_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_hr_st_bracer_med_b" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_umbar_bow_t3" />
+                <equipment
+                    slot="Item1"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gondor_sword_a07" />
+                <equipment
+                    slot="Head"
+                    id="Item.sk_hr_st_helmet_med_b" />
+                <equipment
+                    slot="Body"
+                    id="Item.sk_hr_st_chest_inf_chest_med_b" />
+                <equipment
+                    slot="Leg"
+                    id="Item.sk_hr_st_grvs_med_a" />
+                <equipment
+                    slot="Cape"
+                    id="Item.sk_hr_st_pauld_inf_med_a" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.sk_hr_st_bracer_med_b" />
+            </EquipmentRoster>
+            <EquipmentSet id="umbar_troop_civilian_template_t2" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_umbar_elite_root10"
+        is_obsolete="true"
+        default_group="Ranged"
+        level="21"
+        name="{=aom_umbar_elite_root10_name}[Umbar] Rozadan Bowmen"
+        occupation="Soldier"
+        culture="Culture.umbar">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="105" />
+            <skill
+                id="Riding"
+                value="0" />
+            <skill
+                id="OneHanded"
+                value="110" />
+            <skill
+                id="TwoHanded"
+                value="70" />
+            <skill
+                id="Polearm"
+                value="70" />
+            <skill
+                id="Bow"
+                value="130" />
+            <skill
+                id="Crossbow"
+                value="30" />
+            <skill
+                id="Throwing"
+                value="40" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_umbar_bow_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gondor_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_umbar_bow_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gondor_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_umbar_bow_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gondor_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_umbar_bow_t4" />
+                <equipment
+                    slot="Item1"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.arrow_emp_1_a" />
+                <equipment
+                    slot="Item3"
+                    id="Item.wm_gondor_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentSet id="umbar_troop_civilian_template_t2" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
+    <NPCCharacter
+        id="fow_umbar_elite_root101"
+        is_obsolete="true"
+        default_group="Ranged"
+        level="26"
+        name="{=aom_umbar_elite_root101_name}[Umbar] Beruthiel's Rangers"
+        occupation="Soldier"
+        culture="Culture.umbar">
+        <face>
+            <face_key_template
+                value="BodyProperty.fighter_haradrim" />
+        </face>
+        <skills>
+            <skill
+                id="Athletics"
+                value="115" />
+            <skill
+                id="Riding"
+                value="5" />
+            <skill
+                id="OneHanded"
+                value="150" />
+            <skill
+                id="TwoHanded"
+                value="90" />
+            <skill
+                id="Polearm"
+                value="90" />
+            <skill
+                id="Bow"
+                value="130" />
+            <skill
+                id="Crossbow"
+                value="170" />
+            <skill
+                id="Throwing"
+                value="50" />
+        </skills>
+        <Equipments>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_umbar_xbow_t5" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_iron_bolt_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gondor_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_umbar_xbow_t5" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_iron_bolt_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gondor_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_umbar_xbow_t5" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_iron_bolt_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gondor_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentRoster>
+                <equipment
+                    slot="Item0"
+                    id="Item.ladder_umbar_xbow_t5" />
+                <equipment
+                    slot="Item1"
+                    id="Item.sm_dwarf_iron_bolt_a" />
+                <equipment
+                    slot="Item2"
+                    id="Item.wm_gondor_sword_a03" />
+                <equipment
+                    slot="Head"
+                    id="Item.brass_aserai_helmet_b_open" />
+                <equipment
+                    slot="Body"
+                    id="Item.aserai_scale_armor_on_chain" />
+                <equipment
+                    slot="Gloves"
+                    id="Item.rough_tied_bracers" />
+                <equipment
+                    slot="Leg"
+                    id="Item.strapped_mail_chausses" />
+            </EquipmentRoster>
+            <EquipmentSet id="umbar_troop_civilian_template_t3" equipmentType="Civilian" />
+        </Equipments>
+    </NPCCharacter>
+
 </NPCCharacters>

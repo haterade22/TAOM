@@ -22,6 +22,11 @@ internal static class FordsFactionStyle
             case "erebor": return "#E0925AFF";
             case "harad": return "#D8567AFF";
             case "gundabad": return "#C08CE0FF";
+            case "dale": return "#E8E0A0FF";
+            case "dolguldur": return "#8A9A5BFF";
+            case "easterlings": return "#B7A17AFF";
+            case "umbar": return "#4F9FD8FF";
+            case "mirkwood": return "#9BD15CFF";
             default: return DefaultAccent;
         }
     }

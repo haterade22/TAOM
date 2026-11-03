@@ -7411,11 +7411,49 @@
 
     <string id="TAOM_FOW_Trait_Harad_Towers" text="Towers have 15% fewer hit points." />
 
-    <string id="TAOM_FOW_Trait_Rivendell_Few" text="Only 150 troops in the field, and only five kinds." />
 
     <string id="TAOM_FOW_Trait_Rivendell_Heroes" text="All three heroes may fight at once." />
 
-    <string id="TAOM_FOW_Trait_Rivendell_Sight" text="Far Sight: your towers fire 50% further than any other." />
+    <string id="TAOM_FOW_Faction_Dale" text="Dale" />
+
+    <string id="TAOM_FOW_Faction_DolGuldur" text="Dol Guldur" />
+
+    <string id="TAOM_FOW_Faction_Easterlings" text="Easterlings" />
+
+    <string id="TAOM_FOW_Faction_Mirkwood" text="Mirkwood" />
+
+    <string id="TAOM_FOW_Faction_Umbar" text="Umbar" />
+
+    <string id="TAOM_FOW_Trait_Dale_Arrows" text="Black Arrows: your archers deal 4 times the damage to towers." />
+
+    <string id="TAOM_FOW_Trait_Dale_Bows" text="Four kinds of archers on offer." />
+
+    <string id="TAOM_FOW_Trait_Dale_Melee" text="Weak foot soldiers, and few riders." />
+
+    <string id="TAOM_FOW_Trait_DolGuldur_Beasts" text="Call a spider or a fell warg every 45 seconds." />
+
+    <string id="TAOM_FOW_Trait_DolGuldur_Poor" text="15% less income." />
+
+    <string id="TAOM_FOW_Trait_DolGuldur_Shadow" text="The Shadow: enemy towers fire a quarter slower." />
+
+    <string id="TAOM_FOW_Trait_Easterlings_Army" text="Horse archers and iron legions in one army." />
+
+    <string id="TAOM_FOW_Trait_Easterlings_Discipline" text="Discipline: new orders are ready twice as fast." />
+
+    <string id="TAOM_FOW_Trait_Easterlings_Towers" text="Towers fire 15% slower." />
+
+    <string id="TAOM_FOW_Trait_Elves_FarSight" text="Far Sight: elven towers fire 50% further than any others." />
+
+    <string id="TAOM_FOW_Trait_Elves_Few" text="Only 150 troops in the field, and only five kinds." />
+
+    <string id="TAOM_FOW_Trait_Mirkwood_Archers" text="The finest archers in Middle-earth." />
+
+    <string id="TAOM_FOW_Trait_Umbar_Bounty" text="Kills pay a quarter more." />
+
+    <string id="TAOM_FOW_Trait_Umbar_Plunder" text="Plunder: camps pay 3 times as much and capture points twice as much." />
+
+    <string id="TAOM_FOW_Trait_Umbar_Poor" text="20% less income, and no troop above the middle ranks." />
+
 
   </strings>
 

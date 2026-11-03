@@ -74,7 +74,7 @@ internal sealed partial class FordsMatch
         _regen = new TowerRegen(config.Towers, _chain, feats);
         _fire = new TowerFireRules(config.Towers, _chain, feats);
         _heroes = new HeroRoster(config.Heroes, feats);
-        _orders = new LaneOrderBook(config.Lanes);
+        _orders = new LaneOrderBook(config.Lanes, feats);
         _march = new LaneMarchRules(config.Lanes, config.Towers, layout, _chain);
         _capture = new CapturePointRules(config.Capture, config.Economy, layout.CapturePoints);
         _camps = new CampRules(layout, LaneOwner);
@@ -338,6 +338,9 @@ internal sealed partial class FordsMatch
     /// A camp's creature is gone. When it was the last one the camp is cleared: the killer's side is paid and hears of it (a killer
     /// the match does not know pays nobody). Returns the cleared camp, null while units are left and after the match.
     /// </summary>
+    private int CampRewardFor(MatchSide side, int reward) =>
+        _factions.TryGetValue(side, out var faction) ? (int)Math.Round(reward * faction.FeatsOrNone.CampReward, MidpointRounding.AwayFromZero) : reward;
+
     public CampCleared? OnCampUnitKilled(string campId, AgentKey? killer)
     {
         if (_clock.Phase == MatchPhase.Ended)
@@ -350,8 +353,9 @@ internal sealed partial class FordsMatch
         var cleared = _camps.OnUnitKilled(campId, side);
         if (cleared?.Side is { } paid && cleared.Slot >= 0)
         {
-            _ledger.Earn(cleared.Slot, cleared.Reward);
-            _pendingEvents.Add(new MatchEvent(MatchEventKind.CampCleared, paid, campId, cleared.Reward));
+            var reward = CampRewardFor(paid, cleared.Reward);
+            _ledger.Earn(cleared.Slot, reward);
+            _pendingEvents.Add(new MatchEvent(MatchEventKind.CampCleared, paid, campId, reward));
         }
 
         return cleared;
@@ -499,7 +503,7 @@ internal sealed partial class FordsMatch
 
         foreach (var side in Sides)
         {
-            var income = _capture.CollectIncome(side, dt);
+            var income = _capture.CollectIncome(side, dt, _factions.TryGetValue(side, out var faction) ? faction.FeatsOrNone.CaptureIncome : 1f);
             if (income <= 0)
                 continue;
 

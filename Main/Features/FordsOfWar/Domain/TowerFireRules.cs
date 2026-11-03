@@ -54,8 +54,14 @@ internal sealed class TowerFireRules
         return volleys;
     }
 
-    private float RateOf(string towerId) =>
-        _chain.Slot(towerId) is { } slot && _feats.TryGetValue(slot.Owner, out var feats) ? feats.TowerFireRate : 1f;
+    private float RateOf(string towerId)
+    {
+        if (!(_chain.Slot(towerId) is { } slot))
+            return 1f;
+
+        var own = _feats.TryGetValue(slot.Owner, out var feats) ? feats.TowerFireRate : 1f;
+        return _feats.TryGetValue(MatchSides.Opponent(slot.Owner), out var enemy) ? own * enemy.EnemyTowerFireRate : own;
+    }
 
     private static TargetCandidate? PickTarget(IReadOnlyList<TargetCandidate> enemies, float range)
     {

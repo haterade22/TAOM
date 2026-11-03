@@ -23,7 +23,7 @@ namespace TAOM.Tests.Features.FordsOfWar;
 [TestClass]
 public class ShippedFordsConfigTests
 {
-    private static readonly string[] ExpectedFactions = { "gondor", "rohan", "mordor", "isengard", "rivendell", "erebor", "harad", "gundabad" };
+    private static readonly string[] ExpectedFactions = { "gondor", "rohan", "mordor", "isengard", "rivendell", "erebor", "harad", "gundabad", "dale", "dolguldur", "easterlings", "umbar", "mirkwood" };
 
     private static string ModuleData => RepoPaths.RepoPath("Main", "_Module", "ModuleData");
 
@@ -204,7 +204,7 @@ public class ShippedFordsConfigTests
     }
 
     [TestMethod]
-    public void ShippedFactions_AreTheEightDesigned()
+    public void ShippedFactions_AreTheThirteenDesigned()
     {
         var catalog = Load(Substitute.For<IModLogger>());
 

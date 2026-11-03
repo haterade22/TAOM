@@ -333,10 +333,15 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 | Erebor | Survives ten minutes, then outspends everyone; the heaviest armour | Slow free waves, few bows, war rams for its only cavalry | `income` 1.4 (Mountain Gold), `towerRegen` 4 (Stonewrights), `waveInterval` 1.25 | None yet |
 | Harad | Saves gold for one great beast at a time, then guards it | Weaker towers; a fallen beast is a heavy loss of gold | `towerHitPoints` 0.85 | Creature call: a war elephant or a mumak on a 120 s timer |
 | Gundabad | Ends the match early with cheap packs and constant waves | One tier of free waves that never improves; the weakest towers | `waveInterval` 0.5, `towerHitPoints` 0.7 | None yet |
+| Dale | Breaks towers from range with four kinds of archers | Weak melee (skills x0.75), few riders | `rangedDamageToTowers` 4 (Black Arrows) | None yet |
+| Dol Guldur | Walks under slowed towers; calls spiders and fell wargs | Less income | `enemyTowerFireRate` 0.75 (The Shadow), `income` 0.85 | Creature call on a 45 s timer |
+| Easterlings | Answers the enemy fastest with a mixed army of horse archers and iron legions | Weaker tower fire | `orderCooldown` 0.5 (Discipline), `towerFireRate` 0.85 | None yet |
+| Umbar | Gets rich from the map: raids camps and holds capture points | Less income; no troop above level 31 | `campReward` 3, `captureIncome` 2 (Plunder), `bounty` 1.25, `income` 0.8 | None yet |
+| Mirkwood | Holds at range with the finest archers (skills x1.2) | 150 troops and only five offers; elk riders are its only cavalry | `towerRange` 1.5 (Far Sight), `unitCapBonus` -150 | None yet |
 
 - **Feats** (`FactionFeats`): `towerFireRate` (0 keeps towers silent), `towerRange` (every rule that reads a tower's fire range uses it, and a lane on Hold stands back by the extra reach), `towerHitPoints`, `damageToTowers`, `mountedDamageToTowers` (0 means no damage at all, reason
   `FactionFeat`), `waveInterval`, `unitCapBonus` (the lane cap rises by this over the lane count), `income`, `bounty`. Each factor is relative to 1. A new feat is one
-  property, one line in the reader and one use in a rule. `towerRegen` scales how fast towers mend after the quiet delay, and `heroSlotBonus` adds to the side's limit of heroes alive.
+  property, one line in the reader and one use in a rule. `towerRegen` scales how fast towers mend after the quiet delay, and `heroSlotBonus` adds to the side's limit of heroes alive. `rangedDamageToTowers` scales the side's missiles, on top of the shared `rangedDamageFactor`. `enemyTowerFireRate` scales the volleys of the other side's towers. `orderCooldown` scales the time before a lane takes a new order. `campReward` and `captureIncome` scale the gold from camps and capture points.
 - **AI buying** (`aiBuyCycle`, `AiCommander`): a repeating list the AI buys in, so a faction plays to its identity. An entry is an offer id, or a role name for the dearest offer of
   that role the gold reaches, which suits Gondor's rotating bands. The AI saves up when the next entry costs too much. Mordor buys orc packs most of the time; Rohan keeps some foot to take towers.
 - **Traits** (`factions.json` `traits`): the lines that tell the player a faction's strengths and weaknesses. The panel shows them during the countdown.

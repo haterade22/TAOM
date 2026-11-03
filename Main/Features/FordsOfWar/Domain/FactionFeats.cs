@@ -14,6 +14,9 @@ internal sealed record FactionFeats
     /// <summary>How far this faction's towers and keep fire.</summary>
     public float TowerRange { get; init; } = 1f;
 
+    /// <summary>A further factor on the volleys per second of the enemy's towers: this faction slows them.</summary>
+    public float EnemyTowerFireRate { get; init; } = 1f;
+
     /// <summary>Hit points of this faction's towers and keep.</summary>
     public float TowerHitPoints { get; init; } = 1f;
 
@@ -26,6 +29,9 @@ internal sealed record FactionFeats
     /// <summary>A further factor on that damage for its cavalry and horse archers.</summary>
     public float MountedDamageToTowers { get; init; } = 1f;
 
+    /// <summary>A further factor on the damage of this faction's missiles.</summary>
+    public float RangedDamageToTowers { get; init; } = 1f;
+
     /// <summary>The time between this faction's free waves.</summary>
     public float WaveInterval { get; init; } = 1f;
 
@@ -37,6 +43,15 @@ internal sealed record FactionFeats
 
     /// <summary>This faction's passive income.</summary>
     public float Income { get; init; } = 1f;
+
+    /// <summary>The time before a lane of this faction can take a new order.</summary>
+    public float OrderCooldown { get; init; } = 1f;
+
+    /// <summary>The gold a camp pays when this faction clears it.</summary>
+    public float CampReward { get; init; } = 1f;
+
+    /// <summary>The gold this faction's capture points pay.</summary>
+    public float CaptureIncome { get; init; } = 1f;
 
     /// <summary>The gold this faction's kills pay.</summary>
     public float Bounty { get; init; } = 1f;

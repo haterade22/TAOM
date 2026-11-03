@@ -187,15 +187,55 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
-    public void FarSight_GivesRivendellTheLongestTowers_AndTheFewestTroopsAndKinds()
+    public void FarSight_GivesTheElvesTheLongestTowers_AndTheFewestTroopsKindsAndSmallestPacks()
     {
-        var others = Catalog().Factions.Where(f => f.FactionId != "rivendell").ToList();
-        var rivendell = Shipped("rivendell");
+        var elves = new[] { "rivendell", "mirkwood" };
+        var others = Catalog().Factions.Where(f => !elves.Contains(f.FactionId)).ToList();
+        foreach (var elf in elves.Select(Shipped))
+        {
+            Assert.IsTrue(others.All(f => f.FeatsOrNone.TowerRange < elf.FeatsOrNone.TowerRange), elf.FactionId + " longest towers");
+            Assert.IsTrue(others.All(f => f.FeatsOrNone.UnitCapBonus > elf.FeatsOrNone.UnitCapBonus), elf.FactionId + " fewest troops");
+            Assert.IsTrue(others.All(f => f.Units.Count + (f.Rotation == null ? 0 : 4) > elf.Units.Count), elf.FactionId + " fewest kinds on show");
+            Assert.IsTrue(elf.Units.All(o => o.PackSize <= 5), elf.FactionId + " a low count per troop");
+        }
 
-        Assert.IsTrue(others.All(f => f.FeatsOrNone.TowerRange < rivendell.FeatsOrNone.TowerRange), "longest towers");
-        Assert.IsTrue(others.All(f => f.FeatsOrNone.UnitCapBonus > rivendell.FeatsOrNone.UnitCapBonus), "fewest troops");
-        Assert.IsTrue(others.All(f => f.Units.Count + (f.Rotation == null ? 0 : 4) > rivendell.Units.Count), "fewest kinds on show");
+        var rivendell = Shipped("rivendell");
         Assert.AreEqual(rivendell.Heroes.Count, FordsMatchConfig.Default.Heroes.MaxAlivePerSide + rivendell.FeatsOrNone.HeroSlotBonus, "all its heroes may fight at once");
+    }
+
+    [TestMethod]
+    public void Dale_AloneHurtsTowersFromRange()
+    {
+        var dale = Shipped("dale").FeatsOrNone;
+
+        Assert.IsTrue(Catalog().Factions.Where(f => f.FactionId != "dale").All(f => f.FeatsOrNone.RangedDamageToTowers < dale.RangedDamageToTowers));
+    }
+
+    [TestMethod]
+    public void DolGuldur_AloneSlowsTheEnemysTowers_AndCallsSpiders()
+    {
+        var dolguldur = Shipped("dolguldur");
+
+        Assert.IsTrue(Catalog().Factions.Where(f => f.FactionId != "dolguldur").All(f => f.FeatsOrNone.EnemyTowerFireRate > dolguldur.FeatsOrNone.EnemyTowerFireRate));
+        CollectionAssert.Contains(dolguldur.Creatures!.Offers.Select(o => o.TroopId).ToList(), "fow_goblin_spider_rider");
+    }
+
+    [TestMethod]
+    public void Easterlings_AloneAnswerOrdersFaster()
+    {
+        var easterlings = Shipped("easterlings").FeatsOrNone;
+
+        Assert.IsTrue(Catalog().Factions.Where(f => f.FactionId != "easterlings").All(f => f.FeatsOrNone.OrderCooldown > easterlings.OrderCooldown));
+    }
+
+    [TestMethod]
+    public void Umbar_AloneGetsRichFromTheMap()
+    {
+        var others = Catalog().Factions.Where(f => f.FactionId != "umbar").ToList();
+        var umbar = Shipped("umbar").FeatsOrNone;
+
+        Assert.IsTrue(others.All(f => f.FeatsOrNone.CampReward < umbar.CampReward));
+        Assert.IsTrue(others.All(f => f.FeatsOrNone.CaptureIncome < umbar.CaptureIncome));
     }
 
     [TestMethod]

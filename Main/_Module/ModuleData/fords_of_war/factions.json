@@ -360,9 +360,9 @@
       "aiBuyCycle": ["swordguard", "marksmen", "swordguard", "marksmen", "blademasters", "marksmen", "lancers", "golden_flower"],
       "feats": { "towerRange": 1.5, "heroSlotBonus": 1, "unitCapBonus": -150 },
       "traits": [
-        { "text": "{=TAOM_FOW_Trait_Rivendell_Sight}Far Sight: your towers fire 50% further than any other.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Elves_FarSight}Far Sight: elven towers fire 50% further than any others.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Rivendell_Heroes}All three heroes may fight at once.", "strength": true },
-        { "text": "{=TAOM_FOW_Trait_Rivendell_Few}Only 150 troops in the field, and only five kinds.", "strength": false }
+        { "text": "{=TAOM_FOW_Trait_Elves_Few}Only 150 troops in the field, and only five kinds.", "strength": false }
       ],
       "units": [
         { "id": "swordguard", "troop": "fow_imladris_swordguard", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
@@ -543,6 +543,267 @@
             { "troop": "fow_gundabad_snaga", "count": 6 },
             { "troop": "fow_gundabad_militia_spearman", "count": 3 },
             { "troop": "fow_gundabad_hunter", "count": 3 }
+          ]
+        }
+      ]
+    },
+    "dale": {
+      "name": "{=TAOM_FOW_Faction_Dale}Dale",
+      "culture": "sturgia",
+      "aiBuyCycle": ["bowmen", "pikes", "longbows", "militia", "crossbows", "longbows", "hearthguard", "black_arrows", "riders", "black_arrows"],
+      "feats": { "rangedDamageToTowers": 4 },
+      "traits": [
+        { "text": "{=TAOM_FOW_Trait_Dale_Arrows}Black Arrows: your archers deal 4 times the damage to towers.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Dale_Bows}Four kinds of archers on offer.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Dale_Melee}Weak foot soldiers, and few riders.", "strength": false }
+      ],
+      "units": [
+        { "id": "militia", "troop": "fow_dale_militia", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
+        { "id": "bowmen", "troop": "fow_dale_bowman", "role": "Ranged", "packSize": 10, "level": 16, "eliteWeight": 1.0 },
+        { "id": "pikes", "troop": "fow_dale_spearman", "role": "Spear", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
+        { "id": "longbows", "troop": "fow_dale_longbowman", "role": "Ranged", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
+        { "id": "riders", "troop": "fow_dale_royal_cavalier", "role": "Cavalry", "packSize": 5, "level": 21, "eliteWeight": 1.0 },
+        { "id": "crossbows", "troop": "fow_dale_royal_crossbowman", "role": "Ranged", "packSize": 6, "level": 26, "eliteWeight": 1.0 },
+        { "id": "black_arrows", "troop": "fow_dale_black_arrow_marksman", "role": "Ranged", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
+        { "id": "hearthguard", "troop": "fow_dale_lake_town_hearthguard", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 }
+      ],
+      "heroes": [
+        { "id": "lord_2_7_1", "price": 1400 },
+        { "id": "lord_S9_u", "price": 1000 },
+        { "id": "lord_S9_l", "price": 800 }
+      ],
+      "freeWaves": [
+        {
+          "fromMinute": 0,
+          "units": [
+            { "troop": "fow_dale_recruit", "count": 3 },
+            { "troop": "fow_dale_militia_spearman", "count": 3 },
+            { "troop": "fow_dale_militia_archer", "count": 4 }
+          ]
+        },
+        {
+          "fromMinute": 10,
+          "units": [
+            { "troop": "fow_dale_militia", "count": 3 },
+            { "troop": "fow_dale_militia_veteran_spearman", "count": 3 },
+            { "troop": "fow_dale_militia_veteran_archer", "count": 4 }
+          ]
+        },
+        {
+          "fromMinute": 20,
+          "units": [
+            { "troop": "fow_dale_man_at_arms", "count": 3 },
+            { "troop": "fow_dale_spearman", "count": 3 },
+            { "troop": "fow_dale_bowman", "count": 4 }
+          ]
+        }
+      ]
+    },
+    "dolguldur": {
+      "name": "{=TAOM_FOW_Faction_DolGuldur}Dol Guldur",
+      "culture": "dolguldur",
+      "aiBuyCycle": ["foul", "hunters", "crawlers", "fighters", "warg_riders", "fellbows", "fell_fangs", "shadow_guard"],
+      "feats": { "enemyTowerFireRate": 0.75, "income": 0.85 },
+      "traits": [
+        { "text": "{=TAOM_FOW_Trait_DolGuldur_Shadow}The Shadow: enemy towers fire a quarter slower.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_DolGuldur_Beasts}Call a spider or a fell warg every 45 seconds.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_DolGuldur_Poor}15% less income.", "strength": false }
+      ],
+      "units": [
+        { "id": "crawlers", "troop": "fow_dg_goblin_crawler", "role": "Infantry", "packSize": 16, "level": 6, "eliteWeight": 1.0 },
+        { "id": "foul", "troop": "fow_dg_uruk_foul", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
+        { "id": "hunters", "troop": "fow_dg_goblin_archer", "role": "Ranged", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
+        { "id": "fighters", "troop": "fow_dg_uruk_veteran_warrior", "role": "Infantry", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
+        { "id": "warg_riders", "troop": "fow_dg_warg_raider", "role": "Cavalry", "packSize": 5, "level": 21, "eliteWeight": 1.0 },
+        { "id": "fellbows", "troop": "fow_dg_uruk_fell_archer", "role": "Ranged", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
+        { "id": "fell_fangs", "troop": "fow_dg_uruk_fell_fang", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
+        { "id": "shadow_guard", "troop": "fow_dg_khamul_shadow_guard", "role": "Infantry", "packSize": 3, "level": 46, "eliteWeight": 1.25 }
+      ],
+      "creatures": {
+        "cooldownSeconds": 45,
+        "units": [
+          { "id": "spider_riders", "troop": "fow_goblin_spider_rider", "role": "Cavalry", "packSize": 3, "level": 21, "eliteWeight": 2.5 },
+          { "id": "fell_wargs", "troop": "fow_dg_fell_warg_rider", "role": "Cavalry", "packSize": 3, "level": 36, "eliteWeight": 2.0 }
+        ]
+      },
+      "heroes": [
+        { "id": "lord_D1_2", "price": 1400 },
+        { "id": "lord_D1_4", "price": 1000 },
+        { "id": "lord_D1_5", "price": 800 }
+      ],
+      "freeWaves": [
+        {
+          "fromMinute": 0,
+          "units": [
+            { "troop": "fow_dg_goblin_crawler", "count": 5 },
+            { "troop": "fow_dg_orc_recruit", "count": 3 },
+            { "troop": "fow_dg_goblin_hunter", "count": 2 }
+          ]
+        },
+        {
+          "fromMinute": 10,
+          "units": [
+            { "troop": "fow_dg_orc_gnasher", "count": 5 },
+            { "troop": "fow_dg_goblin_skirmisher", "count": 3 },
+            { "troop": "fow_dg_goblin_archer", "count": 2 }
+          ]
+        },
+        {
+          "fromMinute": 20,
+          "units": [
+            { "troop": "fow_dg_orc_warrior", "count": 5 },
+            { "troop": "fow_dg_goblin_impaler", "count": 3 },
+            { "troop": "fow_dg_orc_archer", "count": 2 }
+          ]
+        }
+      ]
+    },
+    "easterlings": {
+      "name": "{=TAOM_FOW_Faction_Easterlings}Easterlings",
+      "culture": "khuzait",
+      "aiBuyCycle": ["levy", "archers", "halberds", "horse_archers", "iron_legion", "cataphracts", "archers", "dragon_guard", "obsidian_knights"],
+      "feats": { "orderCooldown": 0.5, "towerFireRate": 0.85 },
+      "traits": [
+        { "text": "{=TAOM_FOW_Trait_Easterlings_Discipline}Discipline: new orders are ready twice as fast.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Easterlings_Army}Horse archers and iron legions in one army.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Easterlings_Towers}Towers fire 15% slower.", "strength": false }
+      ],
+      "units": [
+        { "id": "levy", "troop": "fow_easterling_militia", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
+        { "id": "halberds", "troop": "fow_easterling_halberdier_new", "role": "Spear", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
+        { "id": "archers", "troop": "fow_easterling_archer_new", "role": "Ranged", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
+        { "id": "horse_archers", "troop": "fow_kharaghul_horse_archer", "role": "HorseArcher", "packSize": 4, "level": 26, "eliteWeight": 1.0 },
+        { "id": "cataphracts", "troop": "fow_far_rhun_cataphract", "role": "Cavalry", "packSize": 4, "level": 26, "eliteWeight": 1.0 },
+        { "id": "iron_legion", "troop": "fow_far_rhun_iron_legionary", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
+        { "id": "dragon_guard", "troop": "fow_dragon_wrath_infantry", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.0 },
+        { "id": "obsidian_knights", "troop": "fow_dragon_wrath_obsidian_knight", "role": "Cavalry", "packSize": 2, "level": 46, "eliteWeight": 1.0 }
+      ],
+      "heroes": [
+        { "id": "lord_K8_u", "price": 1400 },
+        { "id": "lord_K9_l", "price": 1000 },
+        { "id": "lord_6_25", "price": 800 }
+      ],
+      "freeWaves": [
+        {
+          "fromMinute": 0,
+          "units": [
+            { "troop": "fow_easterling_recruit", "count": 5 },
+            { "troop": "fow_rhun_militia_spearman", "count": 3 },
+            { "troop": "fow_rhun_militia_archer", "count": 2 }
+          ]
+        },
+        {
+          "fromMinute": 10,
+          "units": [
+            { "troop": "fow_easterling_militia", "count": 5 },
+            { "troop": "fow_rhun_militia_veteran_spearman", "count": 3 },
+            { "troop": "fow_easterling_bowman", "count": 2 }
+          ]
+        },
+        {
+          "fromMinute": 20,
+          "units": [
+            { "troop": "fow_easterling_footman_new", "count": 5 },
+            { "troop": "fow_easterling_halberdier_new", "count": 3 },
+            { "troop": "fow_easterling_skirmisher_new", "count": 2 }
+          ]
+        }
+      ]
+    },
+    "umbar": {
+      "name": "{=TAOM_FOW_Faction_Umbar}Umbar",
+      "culture": "umbar",
+      "aiBuyCycle": ["recruits", "bowmen", "footmen", "halberdiers", "rangers", "guards", "knights"],
+      "feats": { "campReward": 3, "captureIncome": 2, "bounty": 1.25, "income": 0.8 },
+      "traits": [
+        { "text": "{=TAOM_FOW_Trait_Umbar_Plunder}Plunder: camps pay 3 times as much and capture points twice as much.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Umbar_Bounty}Kills pay a quarter more.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Umbar_Poor}20% less income, and no troop above the middle ranks.", "strength": false }
+      ],
+      "units": [
+        { "id": "auxiliaries", "troop": "fow_aux_basic", "role": "Infantry", "packSize": 12, "level": 6, "eliteWeight": 1.0 },
+        { "id": "recruits", "troop": "fow_umbar_elite", "role": "Infantry", "packSize": 12, "level": 11, "eliteWeight": 1.0 },
+        { "id": "halberdiers", "troop": "fow_umbar_elite_root01", "role": "Spear", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
+        { "id": "footmen", "troop": "fow_umbar_elite_root00", "role": "Infantry", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
+        { "id": "bowmen", "troop": "fow_umbar_elite_root10", "role": "Ranged", "packSize": 8, "level": 21, "eliteWeight": 1.0 },
+        { "id": "rangers", "troop": "fow_umbar_elite_root101", "role": "Ranged", "packSize": 6, "level": 26, "eliteWeight": 1.0 },
+        { "id": "guards", "troop": "fow_umbar_elite_root0000", "role": "Infantry", "packSize": 5, "level": 31, "eliteWeight": 1.0 },
+        { "id": "knights", "troop": "fow_umbar_elite_root0001", "role": "Cavalry", "packSize": 3, "level": 31, "eliteWeight": 1.0 }
+      ],
+      "heroes": [
+        { "id": "lord_U1_1", "price": 1400 },
+        { "id": "lord_U2_1", "price": 1000 },
+        { "id": "lord_U3_1", "price": 800 }
+      ],
+      "freeWaves": [
+        {
+          "fromMinute": 0,
+          "units": [
+            { "troop": "fow_aux_basic", "count": 5 },
+            { "troop": "fow_umbar_elite", "count": 3 },
+            { "troop": "fow_umbar_elite_root1", "count": 2 }
+          ]
+        },
+        {
+          "fromMinute": 10,
+          "units": [
+            { "troop": "fow_umbar_elite", "count": 5 },
+            { "troop": "fow_umbar_elite_root0", "count": 3 },
+            { "troop": "fow_umbar_elite_root1", "count": 2 }
+          ]
+        },
+        {
+          "fromMinute": 20,
+          "units": [
+            { "troop": "fow_umbar_elite_root0", "count": 5 },
+            { "troop": "fow_umbar_elite_root01", "count": 3 },
+            { "troop": "fow_umbar_elite_root10", "count": 2 }
+          ]
+        }
+      ]
+    },
+    "mirkwood": {
+      "name": "{=TAOM_FOW_Faction_Mirkwood}Mirkwood",
+      "culture": "mirkwood",
+      "aiBuyCycle": ["sentinels", "silvan_levy", "sentinels", "borderwardens", "silvan_levy", "elk_riders", "borderwardens", "thingols_heirs"],
+      "feats": { "towerRange": 1.5, "unitCapBonus": -150 },
+      "traits": [
+        { "text": "{=TAOM_FOW_Trait_Elves_FarSight}Far Sight: elven towers fire 50% further than any others.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Mirkwood_Archers}The finest archers in Middle-earth.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Elves_Few}Only 150 troops in the field, and only five kinds.", "strength": false }
+      ],
+      "units": [
+        { "id": "silvan_levy", "troop": "fow_mirkwood_recruit", "role": "Infantry", "packSize": 4, "level": 36, "eliteWeight": 1.0 },
+        { "id": "sentinels", "troop": "fow_mirkwood_sentinels", "role": "Ranged", "packSize": 3, "level": 41, "eliteWeight": 1.0 },
+        { "id": "elk_riders", "troop": "fow_mirkwood_rochenlas", "role": "Cavalry", "packSize": 2, "level": 41, "eliteWeight": 1.0 },
+        { "id": "borderwardens", "troop": "fow_mirkwood_borderwardens", "role": "Ranged", "packSize": 3, "level": 46, "eliteWeight": 1.0 },
+        { "id": "thingols_heirs", "troop": "fow_mirkwood_thingolheir", "role": "Ranged", "packSize": 2, "level": 51, "eliteWeight": 1.0 }
+      ],
+      "heroes": [
+        { "id": "lord_M1_1", "price": 2200 },
+        { "id": "lord_M1_11", "price": 1600 },
+        { "id": "lord_M1_3", "price": 900 }
+      ],
+      "freeWaves": [
+        {
+          "fromMinute": 0,
+          "units": [
+            { "troop": "fow_mirkwood_militia_spearman", "count": 2 },
+            { "troop": "fow_mirkwood_militia_archer", "count": 3 }
+          ]
+        },
+        {
+          "fromMinute": 10,
+          "units": [
+            { "troop": "fow_mirkwood_militia_veteran_spearman", "count": 2 },
+            { "troop": "fow_mirkwood_militia_veteran_archer", "count": 3 }
+          ]
+        },
+        {
+          "fromMinute": 20,
+          "units": [
+            { "troop": "fow_mirkwood_recruit", "count": 2 },
+            { "troop": "fow_mirkwood_militia_veteran_archer", "count": 3 }
           ]
         }
       ]

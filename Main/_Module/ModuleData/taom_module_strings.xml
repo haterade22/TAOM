@@ -4495,6 +4495,26 @@
 	<string id="TAOM_FOW_Region_Osgiliath" text="{=TAOM_FOW_Region_Osgiliath}Osgiliath" />
 	<string id="TAOM_FOW_Trait_Rohan_Riders" text="{=TAOM_FOW_Trait_Rohan_Riders}The finest cavalry in Middle-earth." />
 	<string id="TAOM_FOW_Trait_Rohan_Charge" text="{=TAOM_FOW_Trait_Rohan_Charge}Riders deal about a third of the damage to towers." />
+	<string id="TAOM_FOW_Faction_Dale" text="{=TAOM_FOW_Faction_Dale}Dale" />
+	<string id="TAOM_FOW_Faction_DolGuldur" text="{=TAOM_FOW_Faction_DolGuldur}Dol Guldur" />
+	<string id="TAOM_FOW_Faction_Easterlings" text="{=TAOM_FOW_Faction_Easterlings}Easterlings" />
+	<string id="TAOM_FOW_Faction_Mirkwood" text="{=TAOM_FOW_Faction_Mirkwood}Mirkwood" />
+	<string id="TAOM_FOW_Faction_Umbar" text="{=TAOM_FOW_Faction_Umbar}Umbar" />
+	<string id="TAOM_FOW_Trait_Dale_Arrows" text="{=TAOM_FOW_Trait_Dale_Arrows}Black Arrows: your archers deal 4 times the damage to towers." />
+	<string id="TAOM_FOW_Trait_Dale_Bows" text="{=TAOM_FOW_Trait_Dale_Bows}Four kinds of archers on offer." />
+	<string id="TAOM_FOW_Trait_Dale_Melee" text="{=TAOM_FOW_Trait_Dale_Melee}Weak foot soldiers, and few riders." />
+	<string id="TAOM_FOW_Trait_DolGuldur_Beasts" text="{=TAOM_FOW_Trait_DolGuldur_Beasts}Call a spider or a fell warg every 45 seconds." />
+	<string id="TAOM_FOW_Trait_DolGuldur_Poor" text="{=TAOM_FOW_Trait_DolGuldur_Poor}15% less income." />
+	<string id="TAOM_FOW_Trait_DolGuldur_Shadow" text="{=TAOM_FOW_Trait_DolGuldur_Shadow}The Shadow: enemy towers fire a quarter slower." />
+	<string id="TAOM_FOW_Trait_Easterlings_Army" text="{=TAOM_FOW_Trait_Easterlings_Army}Horse archers and iron legions in one army." />
+	<string id="TAOM_FOW_Trait_Easterlings_Discipline" text="{=TAOM_FOW_Trait_Easterlings_Discipline}Discipline: new orders are ready twice as fast." />
+	<string id="TAOM_FOW_Trait_Easterlings_Towers" text="{=TAOM_FOW_Trait_Easterlings_Towers}Towers fire 15% slower." />
+	<string id="TAOM_FOW_Trait_Elves_FarSight" text="{=TAOM_FOW_Trait_Elves_FarSight}Far Sight: elven towers fire 50% further than any others." />
+	<string id="TAOM_FOW_Trait_Elves_Few" text="{=TAOM_FOW_Trait_Elves_Few}Only 150 troops in the field, and only five kinds." />
+	<string id="TAOM_FOW_Trait_Mirkwood_Archers" text="{=TAOM_FOW_Trait_Mirkwood_Archers}The finest archers in Middle-earth." />
+	<string id="TAOM_FOW_Trait_Umbar_Bounty" text="{=TAOM_FOW_Trait_Umbar_Bounty}Kills pay a quarter more." />
+	<string id="TAOM_FOW_Trait_Umbar_Plunder" text="{=TAOM_FOW_Trait_Umbar_Plunder}Plunder: camps pay 3 times as much and capture points twice as much." />
+	<string id="TAOM_FOW_Trait_Umbar_Poor" text="{=TAOM_FOW_Trait_Umbar_Poor}20% less income, and no troop above the middle ranks." />
 	<string id="TAOM_FOW_Faction_Erebor" text="{=TAOM_FOW_Faction_Erebor}Erebor" />
 	<string id="TAOM_FOW_Faction_Gundabad" text="{=TAOM_FOW_Faction_Gundabad}Gundabad" />
 	<string id="TAOM_FOW_Faction_Harad" text="{=TAOM_FOW_Faction_Harad}Harad" />
@@ -4508,9 +4528,7 @@
 	<string id="TAOM_FOW_Trait_Harad_Beasts" text="{=TAOM_FOW_Trait_Harad_Beasts}Call a war elephant or a mûmak every 2 minutes." />
 	<string id="TAOM_FOW_Trait_Harad_Cost" text="{=TAOM_FOW_Trait_Harad_Cost}A fallen beast is a heavy loss of gold." />
 	<string id="TAOM_FOW_Trait_Harad_Towers" text="{=TAOM_FOW_Trait_Harad_Towers}Towers have 15% fewer hit points." />
-	<string id="TAOM_FOW_Trait_Rivendell_Few" text="{=TAOM_FOW_Trait_Rivendell_Few}Only 150 troops in the field, and only five kinds." />
 	<string id="TAOM_FOW_Trait_Rivendell_Heroes" text="{=TAOM_FOW_Trait_Rivendell_Heroes}All three heroes may fight at once." />
-	<string id="TAOM_FOW_Trait_Rivendell_Sight" text="{=TAOM_FOW_Trait_Rivendell_Sight}Far Sight: your towers fire 50% further than any other." />
 	<string id="TAOM_FOW_Trait_Rohan_Sentries" text="{=TAOM_FOW_Trait_Rohan_Sentries}Sentries keep watch: your towers fire 30% faster." />
 	<string id="TAOM_FOW_Trait_Rohan_Foot" text="{=TAOM_FOW_Trait_Rohan_Foot}Weak foot soldiers and archers." />
 	<string id="TAOM_FOW_Trait_Mordor_Horde" text="{=TAOM_FOW_Trait_Mordor_Horde}100 more troops in the field, and free waves come a quarter sooner." />

@@ -89,7 +89,7 @@ internal sealed class TowerDamageRules
             return 1.0;
 
         var mounted = hit.AttackerRole == UnitRole.Cavalry || hit.AttackerRole == UnitRole.HorseArcher;
-        return feats.DamageToTowers * (mounted ? feats.MountedDamageToTowers : 1f);
+        return feats.DamageToTowers * (mounted ? feats.MountedDamageToTowers : 1f) * (hit.Ranged ? feats.RangedDamageToTowers : 1f);
     }
 
     // The engine's raw damage, or for a zero melee blow from a weapon with thrust damage the floor (0 when the factor is 0).

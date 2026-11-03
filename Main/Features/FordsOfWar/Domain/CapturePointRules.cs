@@ -74,13 +74,13 @@ internal sealed class CapturePointRules
     /// The whole gold the side's owned points earned over <paramref name="dt"/> seconds. The fraction carries to the
     /// next call, so a short tick does not lose income.
     /// </summary>
-    public int CollectIncome(MatchSide side, float dt)
+    public int CollectIncome(MatchSide side, float dt, float factor = 1f)
     {
         if (dt <= 0f)
             return 0;
 
         var owned = OwnedBy(side);
-        var total = _incomeRemainder[side] + (double)owned * _economy.CaptureIncomePerMinute * dt / 60d;
+        var total = _incomeRemainder[side] + (double)owned * _economy.CaptureIncomePerMinute * factor * dt / 60d;
         var whole = (int)Math.Floor(total + 1e-6);
         _incomeRemainder[side] = Math.Max(0d, total - whole);
         return whole;
