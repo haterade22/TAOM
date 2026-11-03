@@ -7233,7 +7233,6 @@
 
     <string id="TAOM_FOW_Hud_KeepOwn" text="Your keep" />
 
-    <string id="TAOM_FOW_Hud_KeysHint" text="1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   WASD pan   Q E turn   wheel zoom" />
 
     <string id="TAOM_FOW_Hud_Lane" text="Lane {LANE}" />
 
@@ -7453,6 +7452,36 @@
     <string id="TAOM_FOW_Trait_Umbar_Plunder" text="Plunder: camps pay 3 times as much and capture points twice as much." />
 
     <string id="TAOM_FOW_Trait_Umbar_Poor" text="20% less income, and no troop above the middle ranks." />
+
+    <string id="TAOM_FOW_Feed_EnemyUpgrade" text="The enemy upgrades: {NAME}." />
+
+    <string id="TAOM_FOW_Feed_OwnUpgrade" text="Upgrade bought: {NAME}." />
+
+    <string id="TAOM_FOW_Hud_KeysHintUpgrades" text="1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   WASD pan   Q E turn   wheel zoom" />
+
+    <string id="TAOM_FOW_Hud_UpgradeDone" text="Complete" />
+
+    <string id="TAOM_FOW_Hud_UpgradeLess" text="Level {LEVEL} of {MAX}: -{PERCENT}%" />
+
+    <string id="TAOM_FOW_Hud_UpgradeMore" text="Level {LEVEL} of {MAX}: +{PERCENT}%" />
+
+    <string id="TAOM_FOW_Hud_UpgradeNext" text="Next level: {PRICE} gold" />
+
+    <string id="TAOM_FOW_Hud_UpgradesTitle" text="Upgrades" />
+
+    <string id="TAOM_FOW_Notice_UpgradeComplete" text="That upgrade is complete." />
+
+    <string id="TAOM_FOW_Upgrade_Fortify" text="Fortify" />
+
+    <string id="TAOM_FOW_Upgrade_MeleeArmour" text="Melee armour" />
+
+    <string id="TAOM_FOW_Upgrade_MeleeDamage" text="Melee damage" />
+
+    <string id="TAOM_FOW_Upgrade_MissileArmour" text="Missile armour" />
+
+    <string id="TAOM_FOW_Upgrade_MissileDamage" text="Missile damage" />
+
+    <string id="TAOM_FOW_Upgrade_Siegecraft" text="Siegecraft" />
 
 
   </strings>

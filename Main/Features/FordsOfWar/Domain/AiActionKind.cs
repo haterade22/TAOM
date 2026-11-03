@@ -7,4 +7,5 @@ internal enum AiActionKind
     Buyback,
     SetOrder,
     CallCreature,
+    BuyUpgrade,
 }

@@ -52,6 +52,14 @@
     "radius": 12,
     "secondsToCapture": 20
   },
+  "upgrades": [
+    { "id": "melee_damage", "name": "{=TAOM_FOW_Upgrade_MeleeDamage}Melee damage", "effect": "MeleeDamage", "step": 0.1, "prices": [300, 600, 1000] },
+    { "id": "missile_damage", "name": "{=TAOM_FOW_Upgrade_MissileDamage}Missile damage", "effect": "MissileDamage", "step": 0.1, "prices": [300, 600, 1000] },
+    { "id": "melee_armour", "name": "{=TAOM_FOW_Upgrade_MeleeArmour}Melee armour", "effect": "MeleeArmour", "step": 0.08, "prices": [300, 600, 1000] },
+    { "id": "missile_armour", "name": "{=TAOM_FOW_Upgrade_MissileArmour}Missile armour", "effect": "MissileArmour", "step": 0.08, "prices": [300, 600, 1000] },
+    { "id": "siegecraft", "name": "{=TAOM_FOW_Upgrade_Siegecraft}Siegecraft", "effect": "SiegeDamage", "step": 0.15, "prices": [300, 600, 1000] },
+    { "id": "fortify", "name": "{=TAOM_FOW_Upgrade_Fortify}Fortify", "effect": "Fortify", "step": 0.1, "prices": [300, 600, 1000] }
+  ],
   "aiProfiles": {
     "easy": { "decisionIntervalSeconds": 12, "incomeMultiplier": 0.8, "mistakeChance": 0.25, "heroReserveGold": 200 },
     "normal": { "decisionIntervalSeconds": 8, "incomeMultiplier": 1.0, "mistakeChance": 0.1, "heroReserveGold": 300 },

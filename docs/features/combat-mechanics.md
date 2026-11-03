@@ -51,6 +51,8 @@ Custom Battle (and the editor's test battle) installs the engine's `CustomAgentA
 
 **Campaign-only by design:** the career damage passives (`TaomAgentApplyDamageModel` reads `HeroObject` and party leaders, and Custom Battle has no heroes or careers), the career crush hold (`CareerTroopHooks.ApplyCrushHold`, which `CustomBattleDamageModelTests.CampaignOnly` lists) and the Refuge reduction (reads the defender's party). The MCM toggles and sliders are global settings, so they apply in Custom Battle too; the race table depends on face-gen races, not on a campaign.
 
+**Custom Battle only:** the Fords of War army upgrades (`FordsUpgradeHooks`), the last step of the amplification and reduction overrides. They are inert in every other battle, and the twin test names them in `TwinOnly`.
+
 **Where the Custom Battle base answers differently from SandBox's**, so the same TAOM delegate lands on a different number:
 
 | Method | Custom Battle base | SandBox base | Effect on TAOM's delegate |

@@ -164,6 +164,7 @@ public class ShippedFordsRosterTests
             Assert.IsTrue(faction.AiBuyCycle is { Count: > 0 }, faction.FactionId + " has no buy cycle");
             var known = new HashSet<string>(faction.Units.Select(o => o.OfferId));
             known.UnionWith(faction.AllOffers.Where(o => faction.Creatures?.Offers.Contains(o) != true).Select(o => o.Role.ToString()));
+            known.UnionWith(FordsMatchConfig.Default.UpgradesOrDefault.Select(t => "up:" + t.Id));
             var unknown = faction.AiBuyCycle!.Where(e => !known.Contains(e)).ToArray();
             CollectionAssert.AreEqual(Array.Empty<string>(), unknown, faction.FactionId);
         }
@@ -277,6 +278,34 @@ public class ShippedFordsRosterTests
 
         Assert.AreEqual(accents.Count, accents.Distinct().Count());
         Assert.IsFalse(accents.Contains(TAOM.Client.Features.FordsOfWar.FordsFactionStyle.Accent("not_a_faction")));
+    }
+
+    [TestMethod]
+    public void EveryFaction_BuysUpgrades_AndPricesOnlyRealOnes()
+    {
+        var tracks = FordsMatchConfig.Default.UpgradesOrDefault.Select(t => t.Id).ToList();
+        foreach (var faction in Catalog().Factions)
+        {
+            Assert.IsTrue(faction.AiBuyCycle!.Any(e => e.StartsWith("up:", StringComparison.Ordinal)), faction.FactionId + " never buys an upgrade");
+            Assert.IsTrue(faction.UpgradeCost is { Count: > 0 }, faction.FactionId + " has no upgrade prices of its own");
+            CollectionAssert.AreEqual(Array.Empty<string>(), faction.UpgradeCost!.Keys.Except(tracks).ToArray(), faction.FactionId);
+        }
+    }
+
+    [TestMethod]
+    public void TheShippedUpgrades_AreTheDefaults()
+    {
+        var shipped = Catalog().Match.UpgradesOrDefault;
+        var defaults = FordsMatchConfig.Default.UpgradesOrDefault;
+
+        CollectionAssert.AreEqual(defaults.Select(t => t.Id).ToArray(), shipped.Select(t => t.Id).ToArray());
+        for (var i = 0; i < defaults.Count; i++)
+        {
+            Assert.AreEqual(defaults[i].Name, shipped[i].Name);
+            Assert.AreEqual(defaults[i].Effect, shipped[i].Effect);
+            Assert.AreEqual(defaults[i].StepPerLevel, shipped[i].StepPerLevel, 0.0001f);
+            CollectionAssert.AreEqual(defaults[i].Prices.ToArray(), shipped[i].Prices.ToArray());
+        }
     }
 
     [TestMethod]

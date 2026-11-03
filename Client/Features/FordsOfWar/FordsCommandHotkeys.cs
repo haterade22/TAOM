@@ -5,7 +5,7 @@ namespace TAOM.Client.Features.FordsOfWar;
 
 /// <summary>
 /// The command panel's key table, read from the scene layer's input context each frame (the panel layer is not a focus layer):
-/// 1 to 4 pick a lane, F1 to F8 buy a pack, H fields the first affordable hero, Z Push, X Hold, C Fall back. Ctrl or Alt held
+/// 1 to 4 pick a lane, F1 to F8 buy a pack, Shift+F1 to F6 buy an upgrade, U shows or hides the upgrades, H fields the first affordable hero, Z Push, X Hold, C Fall back. Ctrl or Alt held
 /// leaves every key to the game's own shortcuts. Kept out of <see cref="FordsCommandView"/> to hold it under the ADR-002 cap.
 /// </summary>
 internal static class FordsCommandHotkeys
@@ -23,10 +23,17 @@ internal static class FordsCommandHotkeys
 
         for (var offer = 0; offer < FordsCommandVM.OfferHotkeys; offer++)
         {
-            if (input.IsKeyPressed(InputKey.F1 + offer))
+            if (!input.IsKeyPressed(InputKey.F1 + offer))
+                continue;
+
+            if (input.IsShiftDown())
+                vm.BuyUpgrade(offer);
+            else
                 vm.BuyOffer(offer);
         }
 
+        if (input.IsKeyPressed(InputKey.U))
+            vm.ToggleUpgrades();
         if (input.IsKeyPressed(InputKey.H))
             vm.FieldFirstAffordableHero();
         if (input.IsKeyPressed(InputKey.Z))

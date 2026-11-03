@@ -101,6 +101,12 @@ internal sealed class FordsSession
             return _match?.TryCallCreature(_humanSlot, lane, offerId) ?? CommandResult.NotLive;
     }
 
+    public CommandResult TryBuyUpgrade(string trackId)
+    {
+        lock (_gate)
+            return _match?.TryBuyUpgrade(_humanSlot, trackId) ?? CommandResult.NotLive;
+    }
+
     public CommandResult TrySetLaneOrder(int lane, LaneOrder order)
     {
         lock (_gate)

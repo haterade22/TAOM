@@ -12,4 +12,5 @@ internal enum MatchEventKind
     PackBought,
     RegionCalled,
     CreatureCalled,
+    UpgradeBought,
 }

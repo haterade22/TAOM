@@ -23,7 +23,7 @@ public class FordsCommandPrefabTests
 
     private static readonly Type[] ViewModels =
     {
-        typeof(FordsCommandVM), typeof(FordsLaneVM), typeof(FordsOfferVM), typeof(FordsHeroOfferVM), typeof(FordsOrderVM),
+        typeof(FordsUpgradeVM), typeof(FordsCommandVM), typeof(FordsLaneVM), typeof(FordsOfferVM), typeof(FordsHeroOfferVM), typeof(FordsOrderVM),
         typeof(FordsTowerBarVM), typeof(FordsFeedLineVM), typeof(FordsPointVM), typeof(FordsTraitVM), typeof(FordsRegionChoiceVM), typeof(FordsCreatureVM), typeof(FordsCampVM),
     };
 

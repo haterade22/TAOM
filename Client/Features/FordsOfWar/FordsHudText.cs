@@ -28,6 +28,19 @@ internal static class FordsHudText
     internal static string RegionCall(int fee) =>
         new TextObject("{=TAOM_FOW_Hud_RegionCall}R  Call a region: {PRICE} gold").SetTextVariable("PRICE", fee).ToString();
 
+    internal static string UpgradesTitle() => new TextObject("{=TAOM_FOW_Hud_UpgradesTitle}Upgrades").ToString();
+
+    internal static string UpgradeStatus(UpgradeEffect effect, float stepPerLevel, int level, int maxLevel)
+    {
+        var raises = effect == UpgradeEffect.MeleeDamage || effect == UpgradeEffect.MissileDamage || effect == UpgradeEffect.SiegeDamage;
+        return new TextObject(raises ? "{=TAOM_FOW_Hud_UpgradeMore}Level {LEVEL} of {MAX}: +{PERCENT}%" : "{=TAOM_FOW_Hud_UpgradeLess}Level {LEVEL} of {MAX}: -{PERCENT}%")
+            .SetTextVariable("LEVEL", level).SetTextVariable("MAX", maxLevel).SetTextVariable("PERCENT", (int)System.Math.Round(stepPerLevel * level * 100f)).ToString();
+    }
+
+    internal static string UpgradeNext(int price) => new TextObject("{=TAOM_FOW_Hud_UpgradeNext}Next level: {PRICE} gold").SetTextVariable("PRICE", price).ToString();
+
+    internal static string UpgradeDone() => new TextObject("{=TAOM_FOW_Hud_UpgradeDone}Complete").ToString();
+
     internal static string CreatureTitle() => new TextObject("{=TAOM_FOW_Hud_CreatureTitle}Call a creature").ToString();
 
     internal static string CreatureReady() => new TextObject("{=TAOM_FOW_Hud_CreatureReady}Ready").ToString();
@@ -81,7 +94,7 @@ internal static class FordsHudText
     internal static string PointContested() => new TextObject("{=TAOM_FOW_Hud_PointContested}Contested").ToString();
 
     internal static string KeysHint() =>
-        new TextObject("{=TAOM_FOW_Hud_KeysHint}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   WASD pan   Q E turn   wheel zoom").ToString();
+        new TextObject("{=TAOM_FOW_Hud_KeysHintUpgrades}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   WASD pan   Q E turn   wheel zoom").ToString();
 
     internal static string PackSize(int size) => new TextObject("{=TAOM_FOW_Hud_PackSize}Pack of {SIZE}").SetTextVariable("SIZE", size).ToString();
 
@@ -141,6 +154,8 @@ internal static class FordsHudText
                 return new TextObject("{=TAOM_FOW_Notice_HeroNotFallen}That hero has not fallen.").ToString();
             case CommandResult.NothingToSeize:
                 return new TextObject("{=TAOM_FOW_Notice_NothingToSeize}Nothing is left to seize here.").ToString();
+            case CommandResult.UpgradeComplete:
+                return new TextObject("{=TAOM_FOW_Notice_UpgradeComplete}That upgrade is complete.").ToString();
             case CommandResult.OnCooldown:
                 return new TextObject("{=TAOM_FOW_Notice_OnCooldown}That order is still cooling down.").ToString();
             default:
@@ -187,6 +202,9 @@ internal static class FordsHudText
             case MatchEventKind.RegionCalled:
                 return new TextObject(mine ? "{=TAOM_FOW_Feed_OwnRegion}{REGION} answers our call." : "{=TAOM_FOW_Feed_EnemyRegion}The enemy calls on {REGION}.")
                     .SetTextVariable("REGION", new TextObject(subjectName).ToString()).ToString();
+            case MatchEventKind.UpgradeBought:
+                return new TextObject(mine ? "{=TAOM_FOW_Feed_OwnUpgrade}Upgrade bought: {NAME}." : "{=TAOM_FOW_Feed_EnemyUpgrade}The enemy upgrades: {NAME}.")
+                    .SetTextVariable("NAME", new TextObject(subjectName).ToString()).ToString();
             case MatchEventKind.CreatureCalled:
                 return Named(mine ? "{=TAOM_FOW_Feed_OwnCreature}{HERO} comes at our call." : "{=TAOM_FOW_Feed_EnemyCreature}The enemy calls in {HERO}.", subjectName);
             case MatchEventKind.PackBought:

@@ -17,12 +17,14 @@ internal sealed class TowerDamageRules
     private readonly FordsTowerConfig _config;
     private readonly TowerChain _chain;
     private readonly IReadOnlyDictionary<MatchSide, FactionFeats> _feats;
+    private readonly UpgradeBook? _upgrades;
 
-    public TowerDamageRules(FordsTowerConfig config, TowerChain chain, IReadOnlyDictionary<MatchSide, FactionFeats>? feats = null)
+    public TowerDamageRules(FordsTowerConfig config, TowerChain chain, IReadOnlyDictionary<MatchSide, FactionFeats>? feats = null, UpgradeBook? upgrades = null)
     {
         _config = config;
         _chain = chain;
         _feats = feats ?? new Dictionary<MatchSide, FactionFeats>();
+        _upgrades = upgrades;
     }
 
     public int Effective(TowerHit hit) => Decide(hit, out _);
@@ -70,7 +72,7 @@ internal sealed class TowerDamageRules
             return 0;
         }
 
-        double factor = feat;
+        double factor = feat * UpgradeFactor(hit);
         if (hit.Ranged)
             factor *= _config.RangedDamageFactor;
         if (hit.AttackerRole == UnitRole.Hero)
@@ -81,6 +83,17 @@ internal sealed class TowerDamageRules
         var scaled = (int)Math.Round(raw * factor, MidpointRounding.AwayFromZero);
         reason = TowerDamageReason.Applied;
         return Math.Max(1, scaled);
+    }
+
+    // The attacker's siegecraft and the tower owner's fortify.
+    private double UpgradeFactor(TowerHit hit)
+    {
+        if (_upgrades == null)
+            return 1.0;
+
+        var attack = hit.AttackerSide is { } side ? _upgrades.Factor(side, UpgradeEffect.SiegeDamage) : 1f;
+        var defence = _chain.Slot(hit.TowerId) is { } slot ? _upgrades.Factor(slot.Owner, UpgradeEffect.Fortify) : 1f;
+        return attack * defence;
     }
 
     private double FeatFactor(TowerHit hit)

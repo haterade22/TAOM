@@ -28,6 +28,8 @@ internal sealed class AiCommander
     private readonly FordsAiProfile _profile;
     private readonly IFordsRandom _random;
     private readonly Dictionary<int, string> _assaultTargets = new();
+    private const string UpgradeEntry = "up:";
+
     private float _nextDecisionAt;
     private int _buyIndex;
 
@@ -190,6 +192,26 @@ internal sealed class AiCommander
         }
     }
 
+    /// <summary>The upgrade when the cycle's next entry names one, moving past any at its top level; null when the next entry is a pack.</summary>
+    private MatchView.UpgradeView? UpgradeDue(MatchView view, IReadOnlyList<string> cycle)
+    {
+        for (var step = 0; step < cycle.Count; step++)
+        {
+            var entry = cycle[_buyIndex % cycle.Count];
+            if (!entry.StartsWith(UpgradeEntry, StringComparison.Ordinal))
+                return null;
+
+            var id = entry.Substring(UpgradeEntry.Length);
+            var upgrade = view.Upgrades?.FirstOrDefault(u => u.Id == id);
+            if (upgrade?.NextPrice != null)
+                return upgrade;
+
+            _buyIndex++;
+        }
+
+        return null;
+    }
+
     /// <summary>The next entry that has something on show, moving the place in the cycle past any that has not (a rotating faction's role may be absent for a while).</summary>
     private MatchView.UnitOfferView? NextInCycle(MatchView view, IReadOnlyList<string> cycle, int gold)
     {
@@ -244,6 +266,17 @@ internal sealed class AiCommander
 
         if (view.AiBuyCycle is { Count: > 0 } cycle)
         {
+            if (UpgradeDue(view, cycle) is { } upgrade)
+            {
+                if (upgrade.NextPrice <= gold)
+                {
+                    actions.Add(AiAction.BuyUpgrade(upgrade.Id));
+                    _buyIndex++;
+                }
+
+                return;
+            }
+
             var next = NextInCycle(view, cycle, gold);
             if (next != null && next.Price <= gold)
             {

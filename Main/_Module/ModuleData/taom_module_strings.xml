@@ -4436,7 +4436,6 @@
 	<string id="TAOM_FOW_Hud_HeroesTitle" text="{=TAOM_FOW_Hud_HeroesTitle}Heroes" />
 	<string id="TAOM_FOW_Hud_KeepEnemy" text="{=TAOM_FOW_Hud_KeepEnemy}Enemy keep" />
 	<string id="TAOM_FOW_Hud_KeepOwn" text="{=TAOM_FOW_Hud_KeepOwn}Your keep" />
-	<string id="TAOM_FOW_Hud_KeysHint" text="{=TAOM_FOW_Hud_KeysHint}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   WASD pan   Q E turn   wheel zoom" />
 	<string id="TAOM_FOW_Hud_Lane" text="{=TAOM_FOW_Hud_Lane}Lane {LANE}" />
 	<string id="TAOM_FOW_Hud_LaneCounts" text="{=TAOM_FOW_Hud_LaneCounts}{OWN} v {ENEMY}" />
 	<string id="TAOM_FOW_Hud_OrdersTitle" text="{=TAOM_FOW_Hud_OrdersTitle}Orders for lane {LANE}" />
@@ -4495,6 +4494,21 @@
 	<string id="TAOM_FOW_Region_Osgiliath" text="{=TAOM_FOW_Region_Osgiliath}Osgiliath" />
 	<string id="TAOM_FOW_Trait_Rohan_Riders" text="{=TAOM_FOW_Trait_Rohan_Riders}The finest cavalry in Middle-earth." />
 	<string id="TAOM_FOW_Trait_Rohan_Charge" text="{=TAOM_FOW_Trait_Rohan_Charge}Riders deal about a third of the damage to towers." />
+	<string id="TAOM_FOW_Feed_EnemyUpgrade" text="{=TAOM_FOW_Feed_EnemyUpgrade}The enemy upgrades: {NAME}." />
+	<string id="TAOM_FOW_Feed_OwnUpgrade" text="{=TAOM_FOW_Feed_OwnUpgrade}Upgrade bought: {NAME}." />
+	<string id="TAOM_FOW_Hud_KeysHintUpgrades" text="{=TAOM_FOW_Hud_KeysHintUpgrades}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   WASD pan   Q E turn   wheel zoom" />
+	<string id="TAOM_FOW_Hud_UpgradeDone" text="{=TAOM_FOW_Hud_UpgradeDone}Complete" />
+	<string id="TAOM_FOW_Hud_UpgradeLess" text="{=TAOM_FOW_Hud_UpgradeLess}Level {LEVEL} of {MAX}: -{PERCENT}%" />
+	<string id="TAOM_FOW_Hud_UpgradeMore" text="{=TAOM_FOW_Hud_UpgradeMore}Level {LEVEL} of {MAX}: +{PERCENT}%" />
+	<string id="TAOM_FOW_Hud_UpgradeNext" text="{=TAOM_FOW_Hud_UpgradeNext}Next level: {PRICE} gold" />
+	<string id="TAOM_FOW_Hud_UpgradesTitle" text="{=TAOM_FOW_Hud_UpgradesTitle}Upgrades" />
+	<string id="TAOM_FOW_Notice_UpgradeComplete" text="{=TAOM_FOW_Notice_UpgradeComplete}That upgrade is complete." />
+	<string id="TAOM_FOW_Upgrade_Fortify" text="{=TAOM_FOW_Upgrade_Fortify}Fortify" />
+	<string id="TAOM_FOW_Upgrade_MeleeArmour" text="{=TAOM_FOW_Upgrade_MeleeArmour}Melee armour" />
+	<string id="TAOM_FOW_Upgrade_MeleeDamage" text="{=TAOM_FOW_Upgrade_MeleeDamage}Melee damage" />
+	<string id="TAOM_FOW_Upgrade_MissileArmour" text="{=TAOM_FOW_Upgrade_MissileArmour}Missile armour" />
+	<string id="TAOM_FOW_Upgrade_MissileDamage" text="{=TAOM_FOW_Upgrade_MissileDamage}Missile damage" />
+	<string id="TAOM_FOW_Upgrade_Siegecraft" text="{=TAOM_FOW_Upgrade_Siegecraft}Siegecraft" />
 	<string id="TAOM_FOW_Faction_Dale" text="{=TAOM_FOW_Faction_Dale}Dale" />
 	<string id="TAOM_FOW_Faction_DolGuldur" text="{=TAOM_FOW_Faction_DolGuldur}Dol Guldur" />
 	<string id="TAOM_FOW_Faction_Easterlings" text="{=TAOM_FOW_Faction_Easterlings}Easterlings" />

@@ -18,7 +18,7 @@ internal sealed record MatchView(int Slot, MatchSide Side, MatchPhase Phase, flo
     IReadOnlyList<MatchView.CapturePointView> CapturePoints, MatchSide? Winner, string FactionId = "",
     IReadOnlyList<FactionTrait>? Traits = null, MatchView.RegionView? Region = null, MatchView.CreatureCallView? Creatures = null,
     int IncomePerMinute = 0, string FactionName = "", IReadOnlyList<MatchView.CampView>? Camps = null, float OrderCooldownSeconds = 0f,
-    IReadOnlyList<string>? AiBuyCycle = null)
+    IReadOnlyList<string>? AiBuyCycle = null, IReadOnlyList<MatchView.UpgradeView>? Upgrades = null)
 {
     internal sealed record LaneView(int Index, bool Owned, LaneOrder Order, float CooldownLeft, int OwnLive, int EnemyLive,
         int Threat, IReadOnlyList<TowerView> Towers, bool CanSeize = false);
@@ -44,6 +44,9 @@ internal sealed record MatchView(int Slot, MatchSide Side, MatchPhase Phase, flo
     internal sealed record UnitOfferView(string OfferId, string TroopId, UnitRole Role, int PackSize, int Price, bool CanAfford);
 
     internal sealed record HeroOfferView(string HeroId, int Price, bool CanAfford, bool Fielded);
+
+    /// <summary>One upgrade track as this side stands on it. NextPrice is null at the top level.</summary>
+    internal sealed record UpgradeView(string Id, string Name, UpgradeEffect Effect, float StepPerLevel, int Level, int MaxLevel, int? NextPrice, bool CanAfford);
 
     internal sealed record CapturePointView(string PointId, MatchSide? Owner, MatchSide? Capturer, float Progress, bool Contested, bool Rising);
 }

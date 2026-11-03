@@ -470,6 +470,60 @@
           </Children>
         </Widget>
 
+        <!-- Upgrades, on the right above the heroes. U shows or hides it. A wrapper carries the visibility: on the list itself the binding would read the list's own data source. -->
+        <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="6" MarginBottom="212"
+                Sprite="BlankWhiteSquare_9" Color="#0B0D10D8" IsVisible="@IsUpgradesVisible" DoNotAcceptEvents="true">
+          <Children>
+            <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+              <Children>
+                <Widget WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="276" SuggestedHeight="2"
+                        Sprite="BlankWhiteSquare_9" Color="@AccentColor" DoNotAcceptEvents="true" />
+                <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                           MarginLeft="8" MarginRight="8" MarginTop="6" MarginBottom="6"
+                           StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                  <Children>
+                    <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginBottom="3"
+                                Brush="Tooltip.Text" Brush.FontSize="15" Brush.FontColor="@AccentColor"
+                                Text="@UpgradesTitle" DoNotAcceptEvents="true" />
+                    <ListPanel DataSource="{Upgrades}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                               StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                      <ItemTemplate>
+                        <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed"
+                                      SuggestedWidth="260" SuggestedHeight="52" MarginBottom="2"
+                                      IsEnabled="@CanBuy" Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteBuy">
+                          <Children>
+                            <ListPanel WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                       VerticalAlignment="Center" MarginLeft="8" MarginRight="8"
+                                       StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                              <Children>
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="15" Brush.FontColor="#FFF0C8FF"
+                                            Text="@Name" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="#CCCCCCFF"
+                                            Text="@StatusText" DoNotAcceptEvents="true" />
+                                <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                            Brush="Popup.Button.Text" Brush.FontSize="13" Brush.FontColor="@ActionColor"
+                                            Text="@ActionText" DoNotAcceptEvents="true" />
+                              </Children>
+                            </ListPanel>
+                            <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                                        HorizontalAlignment="Right" VerticalAlignment="Top" MarginRight="6" MarginTop="3"
+                                        Brush="Popup.Button.Text" Brush.FontSize="11" Brush.FontColor="#E8C050FF"
+                                        Text="@KeyText" DoNotAcceptEvents="true" />
+                          </Children>
+                        </ButtonWidget>
+                      </ItemTemplate>
+                    </ListPanel>
+                  </Children>
+                </ListPanel>
+              </Children>
+            </ListPanel>
+          </Children>
+        </Widget>
+
         <!-- Heroes, bottom right. -->
         <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                 HorizontalAlignment="Right" VerticalAlignment="Bottom" MarginRight="6" MarginBottom="6"

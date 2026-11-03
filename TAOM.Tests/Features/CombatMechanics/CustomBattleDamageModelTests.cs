@@ -55,8 +55,8 @@ public class CustomBattleDamageModelTests
     // same calls in the same order apart from CampaignOnly, so the twin test below compares the two.
     private static readonly Dictionary<string, string> ExpectedCallOrder = new()
     {
-        ["ApplyDamageReductions"] = "base,CreatureBanditDamage.Reduce,RaceAbilityHooks.ReduceDamage",
-        ["ApplyDamageAmplifications"] = "base,RaceAbilityHooks.AmplifyDamage",
+        ["ApplyDamageReductions"] = "base,CreatureBanditDamage.Reduce,RaceAbilityHooks.ReduceDamage,FordsUpgradeHooks.Reduce",
+        ["ApplyDamageAmplifications"] = "base,RaceAbilityHooks.AmplifyDamage,FordsUpgradeHooks.Amplify",
         ["ApplyDamageScaling"] = "base,CreatureSiegeHooks.ScaleGateDamage",
         ["DecideCrushedThrough"] = "RaceAbilityHooks.CrushVerdict,CombatMechanicsHooks.CrushThrough,base",
         ["CalculateRemainingMomentum"] = "CombatMechanicsHooks.CleaveMomentum,base",
@@ -78,6 +78,13 @@ public class CustomBattleDamageModelTests
         "RefugeDamageHooks.Reduce",
         "CareerTroopHooks.ApplyCrushHold",
         "TaomAgentApplyDamageModel.get_AgentStatService",
+    };
+
+    // Only the twin makes these: Fords of War is a Custom Game mode, so its army upgrades can never run in a campaign.
+    private static readonly HashSet<string> TwinOnly = new(StringComparer.Ordinal)
+    {
+        "FordsUpgradeHooks.Amplify",
+        "FordsUpgradeHooks.Reduce",
     };
 
     private static bool _gameLoaded;
@@ -280,7 +287,7 @@ public class CustomBattleDamageModelTests
 
         var campaign = CallSequence(Campaign, name).Where(call => !CampaignOnly.Contains(call));
 
-        Assert.AreEqual(string.Join(",", campaign), string.Join(",", CallSequence(Twin, name)),
+        Assert.AreEqual(string.Join(",", campaign), string.Join(",", CallSequence(Twin, name).Where(call => !TwinOnly.Contains(call))),
             $"{name}: the twin must mirror the campaign model's calls and their order");
     }
 

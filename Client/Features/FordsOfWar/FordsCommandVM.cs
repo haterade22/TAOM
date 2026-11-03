@@ -223,6 +223,7 @@ public sealed partial class FordsCommandVM : FordsViewModel
         RefreshIdentity(view);
         RefreshRegion(view);
         RefreshCreatures(view);
+        RefreshUpgrades(view);
         RefreshCamps(view);
         RefreshLanes(view);
         RefreshOffers(view);

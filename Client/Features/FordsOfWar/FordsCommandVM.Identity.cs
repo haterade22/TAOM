@@ -12,6 +12,7 @@ namespace TAOM.Client.Features.FordsOfWar;
 /// </summary>
 public sealed partial class FordsCommandVM
 {
+    private bool _isUpgradesVisible = true;
     /// <summary>The width in pixels of the region and creature timer bars; the prefab's tracks are this wide.</summary>
     internal const float TimerBarWidth = 120f;
 
@@ -84,6 +85,19 @@ public sealed partial class FordsCommandVM
 
     [DataSourceProperty]
     public MBBindingList<FordsCampVM> Camps { get; } = new();
+
+    [DataSourceProperty]
+    public MBBindingList<FordsUpgradeVM> Upgrades { get; } = new();
+
+    [DataSourceProperty]
+    public bool IsUpgradesVisible
+    {
+        get => _isUpgradesVisible;
+        private set => Set(ref _isUpgradesVisible, value, nameof(IsUpgradesVisible));
+    }
+
+    [DataSourceProperty]
+    public string UpgradesTitle => FordsHudText.UpgradesTitle();
 
     [DataSourceProperty]
     public bool IsRegionVisible
@@ -187,6 +201,18 @@ public sealed partial class FordsCommandVM
         Refresh();
     }
 
+    internal void ToggleUpgrades() => IsUpgradesVisible = !IsUpgradesVisible;
+
+    /// <summary>The row's key or click: buys that track's next level for the whole army.</summary>
+    internal void BuyUpgrade(int index)
+    {
+        var upgrades = _view?.Upgrades;
+        if (upgrades == null || index < 0 || index >= upgrades.Count)
+            return;
+
+        Report("BuyUpgrade", _session.TryBuyUpgrade(upgrades[index].Id));
+    }
+
     /// <summary>The row's creature key: calls that creature into the selected lane.</summary>
     internal void CallCreature(int index)
     {
@@ -262,6 +288,14 @@ public sealed partial class FordsCommandVM
         CreatureFillWidth = ready ? TimerBarWidth : TimerBarWidth - Fill(call.CooldownLeft, call.CooldownTotal);
         for (var i = 0; i < count; i++)
             Creatures[i].Update(call.Offers[i], NameOf(call.Offers[i].TroopId), live && ready);
+    }
+
+    private void RefreshUpgrades(MatchView view)
+    {
+        var upgrades = view.Upgrades ?? Array.Empty<MatchView.UpgradeView>();
+        Sync(Upgrades, upgrades.Count, i => new FordsUpgradeVM(i, BuyUpgrade));
+        for (var i = 0; i < upgrades.Count; i++)
+            Upgrades[i].Update(upgrades[i], view.Phase != MatchPhase.Ended);
     }
 
     private void RefreshCamps(MatchView view)

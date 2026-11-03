@@ -86,8 +86,30 @@ internal static class FordsFactionsReader
 
         name = FordsConfigScope.Text(f["name"]) ?? id;
         faction = new FactionCatalog(id, culture, units, ReadHeroes(id, f["heroes"], s), ReadFreeWaves(id, f["freeWaves"], s),
-            ReadFeats(id, f["feats"], s), ReadTraits(id, f["traits"], s), ReadRotation(id, f["rotation"], s), ReadCreatures(id, f["creatures"], s), name, ReadBuyCycle(id, f["aiBuyCycle"], s));
+            ReadFeats(id, f["feats"], s), ReadTraits(id, f["traits"], s), ReadRotation(id, f["rotation"], s), ReadCreatures(id, f["creatures"], s), name, ReadBuyCycle(id, f["aiBuyCycle"], s), ReadUpgradeCost(id, f["upgradeCost"], s));
         return true;
+    }
+
+    private static Dictionary<string, float>? ReadUpgradeCost(string faction, JToken? token, FordsConfigScope s)
+    {
+        if (token == null)
+            return null;
+        if (!(token is JObject o))
+        {
+            s.Warn($"faction '{faction}': 'upgradeCost' is not an object; ignored");
+            return null;
+        }
+
+        var costs = new Dictionary<string, float>();
+        foreach (var property in o.Properties())
+        {
+            if (FordsConfigScope.TryFloat(property.Value, 0.01f, 100f, out var value, out var why))
+                costs[property.Name] = value;
+            else
+                s.Warn($"faction '{faction}' upgradeCost '{property.Name}' {why}; ignored");
+        }
+
+        return costs;
     }
 
     private static List<string>? ReadBuyCycle(string faction, JToken? token, FordsConfigScope s)

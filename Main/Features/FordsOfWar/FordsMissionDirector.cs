@@ -8,6 +8,7 @@ using TAOM.Core.Logging;
 using TAOM.Features.AdvancedCombat;
 using TAOM.Features.FordsOfWar.Diagnostics;
 using TAOM.Features.FordsOfWar.Domain;
+using TAOM.Features.FordsOfWar.Hooks;
 
 namespace TAOM.Features.FordsOfWar;
 
@@ -222,6 +223,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             var snapshot = FordsSnapshotBuilder.Build(dt, samples, IsHero, StandingTowers(), _layout.CapturePoints,
                 _plan.Config.Towers, _plan.Config.Capture, t => match.FireRange(t.Id));
             effects = match.Tick(snapshot);
+            FordsUpgradeHooks.Set(match.CombatUpgrades(MatchSide.West), match.CombatUpgrades(MatchSide.East));
             phase = match.Phase;
         }
 
@@ -371,6 +373,9 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
             return;
 
         _shutDown = true;
+        var upgradeHits = FordsUpgradeHooks.Counts;
+        _logger.LogInfo($"[FordsOfWar][Upgrade] blows raised={upgradeHits.Raised} lowered={upgradeHits.Lowered} (totals)");
+        FordsUpgradeHooks.Clear();
         _report.BindGunnerLookup(null);
         _report.BindTowerLookup(null);
         _report.BindAttackerLookup(null);
@@ -646,6 +651,9 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
                 break;
             case MatchEventKind.PointCaptured:
                 _report.PointCaptured(e.Subject);
+                break;
+            case MatchEventKind.UpgradeBought:
+                _logger.LogInfo($"[FordsOfWar][Upgrade] side={e.Side} track={e.Subject} price={e.Amount}");
                 break;
         }
     }

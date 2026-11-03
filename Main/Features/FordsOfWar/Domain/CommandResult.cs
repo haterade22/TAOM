@@ -15,4 +15,5 @@ internal enum CommandResult
     OnCooldown,
     NotLive,
     NothingToSeize,
+    UpgradeComplete,
 }

@@ -28,6 +28,7 @@ internal sealed partial class FordsMatch
     private readonly BountyRules _bounty;
     private readonly TowerChain _chain;
     private readonly TowerDamageRules _damage;
+    private readonly UpgradeBook _upgrades;
     private readonly TowerRegen _regen;
     private readonly TowerFireRules _fire;
     private readonly HeroRoster _heroes;
@@ -70,7 +71,8 @@ internal sealed partial class FordsMatch
         _bounty = new BountyRules(config.Economy);
         var feats = factions.ToDictionary(f => f.Key, f => f.Value.FeatsOrNone);
         _chain = new TowerChain(layout, config.Towers, feats);
-        _damage = new TowerDamageRules(config.Towers, _chain, feats);
+        _upgrades = new UpgradeBook(config.UpgradesOrDefault, factions);
+        _damage = new TowerDamageRules(config.Towers, _chain, feats, _upgrades);
         _regen = new TowerRegen(config.Towers, _chain, feats);
         _fire = new TowerFireRules(config.Towers, _chain, feats);
         _heroes = new HeroRoster(config.Heroes, feats);
@@ -561,6 +563,9 @@ internal sealed partial class FordsMatch
                 break;
             case AiActionKind.CallCreature:
                 TryCallCreature(slot, action.Lane, action.Id);
+                break;
+            case AiActionKind.BuyUpgrade:
+                TryBuyUpgrade(slot, action.Id);
                 break;
         }
     }
