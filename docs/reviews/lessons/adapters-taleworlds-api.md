@@ -1677,6 +1677,6 @@ Native `FUN_1805EFC10` (v1.5.6) unlinks rider and mount on state 5, the kill pat
 
 **Why missed:** the housekeeping pass read the riderless list as the proof that nobody was on the horse, and no unit test can reach native state. The crash came once in seven long matches with no managed error, and the launcher killed the game before it could write a dump, so it stayed unnamed for a day.
 
-**Prevent:** `RiderlessHorseRule`. A native crash in an unattended run needs `--keep-on-crash` from the first run, so that a dump exists.
+**Prevent:** `RiderlessMountRule`. A native crash in an unattended run needs `--keep-on-crash` from the first run, so that a dump exists.
 
 **Source:** crash bundle 2026-11-03_03.04.08, run 20261102-201444, Fords of War.

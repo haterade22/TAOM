@@ -23,14 +23,15 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
 {
     private readonly Mission _mission;
     private readonly FordsAgentRegistry _registry;
-    private const string HorseMonster = "horse";
     private const int HousekeepPassesPerLine = 10;
 
     private LaneFaceBars? _laneBars;
     private int _thrownTopUps;
     private int _horsesRemoved;
     private int _horsesSpared;
-    private int _riderlessOthersPeak;
+    private int _wargsRemoved;
+    private int _wargsSpared;
+    private readonly Dictionary<string, int> _riderlessOthersPeak = new();
     private int _housekeepPasses;
     private readonly Func<string, object?> _towerEntity;
     private readonly IModLogger _logger;
@@ -91,24 +92,29 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
             }
         }
 
-        RemoveRiderlessHorses();
+        RemoveRiderlessMounts();
 
         if (++_housekeepPasses % HousekeepPassesPerLine == 0)
-            _logger.LogInfo($"[FordsOfWar][Housekeep] thrownTopUps={_thrownTopUps} horsesRemoved={_horsesRemoved} horsesSpared={_horsesSpared} (totals) riderlessOthersPeak={_riderlessOthersPeak}");
+            _logger.LogInfo($"[FordsOfWar][Housekeep] thrownTopUps={_thrownTopUps} horsesRemoved={_horsesRemoved} horsesSpared={_horsesSpared} wargsRemoved={_wargsRemoved} wargsSpared={_wargsSpared} (totals) riderlessOthersPeak={(_riderlessOthersPeak.Count == 0 ? "-" : string.Join(",", _riderlessOthersPeak.Select(p => p.Key + ":" + p.Value)))}");
     }
 
     /// <summary>
-    /// Horses only, by decision. A riderless warg or other creature stays, although a warg with no rider only sleeps (WargBehaviorTree), so riderlessOthersPeak
-    /// logs the most that stood at once. See <see cref="RiderlessHorseRule"/> for why a horse a soldier holds or has chosen stays; horsesSpared counts how often that guard held one back. The soft fade is the call vanilla makes for the same job (SpawningBehaviorBase).
+    /// Horses and wargs, which only run around the field with no rider. A warg in a rage keeps its rider, so an empty one has lost it. Other riderless mounts stay, and the Housekeep line
+    /// names the most of each kind that stood at once. See <see cref="RiderlessMountRule"/> for why a mount a soldier holds or has chosen stays; the spared counts say how often that guard
+    /// held one back. The soft fade is the call vanilla makes for the same job (SpawningBehaviorBase).
     /// </summary>
-    private void RemoveRiderlessHorses()
+    private void RemoveRiderlessMounts()
     {
-        _riderlessOthersPeak = Math.Max(_riderlessOthersPeak,
-            _mission.MountsWithoutRiders.Count(p => p.Key.IsActive() && p.Key.RiderAgent == null && p.Key.Monster?.StringId != HorseMonster));
+        foreach (var kind in _mission.MountsWithoutRiders
+                     .Where(p => p.Key.IsActive() && p.Key.RiderAgent == null && !RiderlessMountRule.IsSwept(p.Key.Monster?.StringId))
+                     .GroupBy(p => p.Key.Monster?.StringId ?? "?"))
+        {
+            _riderlessOthersPeak[kind.Key] = Math.Max(_riderlessOthersPeak.TryGetValue(kind.Key, out var peak) ? peak : 0, kind.Count());
+        }
 
         // A copy: removing a mount changes the engine's list.
         var candidates = _mission.MountsWithoutRiders
-            .Where(p => p.Key.IsActive() && p.Key.RiderAgent == null && p.Key.Monster?.StringId == HorseMonster && p.Value.ElapsedSeconds >= RiderlessHorseRule.WaitSeconds)
+            .Where(p => p.Key.IsActive() && p.Key.RiderAgent == null && RiderlessMountRule.IsSwept(p.Key.Monster?.StringId) && p.Value.ElapsedSeconds >= RiderlessMountRule.WaitSeconds)
             .ToList();
         if (candidates.Count == 0)
             return;
@@ -128,10 +134,18 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
 
         foreach (var pair in candidates)
         {
-            if (RiderlessHorseRule.MayFade(pair.Value.ElapsedSeconds, claimed.Contains(pair.Key.Index)))
+            var warg = RiderlessMountRule.IsWarg(pair.Key.Monster?.StringId);
+            if (RiderlessMountRule.MayFade(pair.Value.ElapsedSeconds, claimed.Contains(pair.Key.Index)))
             {
                 pair.Key.FadeOut(false, false);
-                _horsesRemoved++;
+                if (warg)
+                    _wargsRemoved++;
+                else
+                    _horsesRemoved++;
+            }
+            else if (warg)
+            {
+                _wargsSpared++;
             }
             else
             {

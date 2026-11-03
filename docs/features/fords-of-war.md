@@ -445,8 +445,9 @@ the mode's noon fallback.
   Cross paths and rings use group 0, which nobody is barred from. Not sealed yet: a run still logs up to 8% of unit time on a foreign group.
 - **Housekeeping.** Every 3 s `IFordsBattlefieldAdapter.Housekeep` refills thrown weapons and fades riderless horses. Other riderless creatures
   stay. The engine's `AmmoSupplyLogic` refills arrows and bolts. Neither is a map feature, so both run on every map. A horse fades only after 20 s with no rider and
-  only when no soldier holds it or has chosen it (`RiderlessHorseRule`), because the engine's fade does not unlink a rider from its mount. The `[Housekeep]` line's
-  `horsesSpared` counts how often that guard held a horse back.
+  only when no soldier holds it or has chosen it (`RiderlessMountRule`), because the engine's fade does not unlink a rider from its mount. The `[Housekeep]` line's
+  `horsesSpared` counts how often that guard held a horse back. Riderless wargs go the same way (`wargsRemoved`, `wargsSpared`). Other riderless mounts stay, and `riderlessOthersPeak` names the most of each kind that stood at once.
+  At the end of a match the `[FordsOfWar][Balance]` lines give each troop's kills, deaths and the gold value of both, and each commander's gold earned, spent and left.
 
 ## Layout fitting
 
