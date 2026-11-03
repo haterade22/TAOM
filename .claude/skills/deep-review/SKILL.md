@@ -11,7 +11,7 @@ Scale the review to the risk of the change (Step 2 "Risk tier", Mike 2026-10-22)
 
 Run this AFTER completing a feature or fix, BEFORE closing out.
 
-**Every reviewer is the most senior role available** (Mike, 2026-09-18). Every lens runs as `subagent_type: deep-reviewer` (`.claude/agents/deep-reviewer.md`: Opus 5.5, `claude-opus-5-5`, at `effort: max`, read-only). **Never pass `model` on these Agent calls:** a per-invocation `model` overrides the definition's (`.claude/rules/harness-facts.md`), which would quietly downgrade the reviewer.
+**Every reviewer is the most senior role available** (Mike, 2026-09-18). Every lens runs as `subagent_type: deep-reviewer` (`.claude/agents/deep-reviewer.md`: Opus 5.5, `claude-opus-5-5`, at `effort: max`, read-only). **Never pass `model` on these Agent calls:** a per-invocation `model` overrides the definition's (`.claude/rules/harness-facts.md`), which would quietly downgrade the reviewer. **Effort follows the tier (Mike, 2026-11-03, #1078):** a tier 1 first-wave lens and an adversarial escalation take the definition's `max`, so pass nothing; a tier 2 first-wave lens and every second-wave lens pass `effort: "high"`. On one diff, `high` cost 30% of `max` and found the shared MED and the same LOW items, but missed one MED that only `max` found.
 
 **The review does not stop at a report.** Two lenses (Agent 3 Efficiency, Agent 6 Design & Elegance) propose better ways to do what the change does; Step 4 applies them. The reviewers stay read-only; the orchestrator applies, after every lens has reported.
 
@@ -70,10 +70,10 @@ Pick the highest tier any file in scope reaches, and say the tier and why in one
 | Tier | The change touches | Codex (Step 0) | Claude lenses, one wave |
 |---|---|---|---|
 | 1 | A Harmony patch, a GameModel, save data or a save definer, co-op authority or sync, DI timing or composition, native or engine calls, a mission or campaign tick, live `TAOM_Map` or Armory data | `ultra` | 5 Data flow, 2 Engine compatibility, plus 7 XML for XML and Tooling for scripts |
-| 2 | Moves between assemblies, build and deploy targets, release tooling, gates and tests, UI that reads game state | `xhigh` | 5 Data flow, plus 7 XML for XML and Tooling for scripts |
+| 2 | Moves between assemblies, build and deploy targets, release tooling, gates and tests, UI that reads game state | `xhigh` | 5 Data flow, plus 7 XML for XML and Tooling for scripts, at `effort: "high"` |
 | 3 | Docs, comments, harness text only | none | none: `python tools/lint_docs.py --fail-on-drift` and a read |
 
-**Second wave:** only when the first wave or Codex reports a CRITICAL or HIGH. It runs the remaining lenses in scope from the table below on the files involved, with those findings in SCOPE NOTES. A finding at MEDIUM or below is fixed and verified with tests, not re-reviewed. Lens 1 Standards, 3 Efficiency, 4 Completeness and 6 Design run only in a second wave or when Mike asks for a full review: on 2026-10-22 they found mostly naming, citation and comment items that the fix pass and `/verify` catch. Step 3e RCA still applies to every confirmed finding.
+**Second wave:** only when the first wave or Codex reports a CRITICAL or HIGH. It runs the remaining lenses in scope from the table below on the files involved, at `effort: "high"`, with those findings in SCOPE NOTES. A finding at MEDIUM or below is fixed and verified with tests, not re-reviewed. Lens 1 Standards, 3 Efficiency, 4 Completeness and 6 Design run only in a second wave or when Mike asks for a full review: on 2026-10-22 they found mostly naming, citation and comment items that the fix pass and `/verify` catch. Step 3e RCA still applies to every confirmed finding.
 
 ### Which lenses run (their domains)
 
