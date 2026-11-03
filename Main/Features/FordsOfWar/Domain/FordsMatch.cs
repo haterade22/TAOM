@@ -29,6 +29,7 @@ internal sealed partial class FordsMatch
     private readonly TowerChain _chain;
     private readonly TowerDamageRules _damage;
     private readonly UpgradeBook _upgrades;
+    private readonly PoisonRules _poison = new();
     private readonly TowerRegen _regen;
     private readonly TowerFireRules _fire;
     private readonly HeroRoster _heroes;
@@ -132,6 +133,7 @@ internal sealed partial class FordsMatch
         RunCapture(dt, snapshot);
         effects.CampOrders.AddRange(_camps.UpdateAlerts(snapshot.Lanes));
         effects.Heals.AddRange(_regen.Tick(dt));
+        effects.PoisonTicks.AddRange(_poison.Tick(dt));
         SpawnUnits(dt, effects);
         effects.Volleys.AddRange(_fire.Tick(dt, snapshot.TowerTargets));
         RunAi();
@@ -314,6 +316,7 @@ internal sealed partial class FordsMatch
             return KillCredit.Unregistered;
 
         _units.Remove(victim);
+        _poison.Forget(victim);
         if (_clock.Phase == MatchPhase.Ended)
             return KillCredit.AfterEnd;
 

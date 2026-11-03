@@ -4544,6 +4544,8 @@
 	<string id="TAOM_FOW_Trait_Harad_Cost" text="{=TAOM_FOW_Trait_Harad_Cost}A fallen beast is a heavy loss of gold." />
 	<string id="TAOM_FOW_Trait_Harad_Towers" text="{=TAOM_FOW_Trait_Harad_Towers}Towers have 15% fewer hit points." />
 	<string id="TAOM_FOW_Trait_Rivendell_Heroes" text="{=TAOM_FOW_Trait_Rivendell_Heroes}All three heroes may fight at once." />
+	<string id="TAOM_FOW_Trait_Harad_Poison" text="{=TAOM_FOW_Trait_Harad_Poison}Poisoned arrows: a struck soldier loses 3 hit points a second for 8 seconds, through any armour." />
+	<string id="TAOM_FOW_Trait_DolGuldur_Venom" text="{=TAOM_FOW_Trait_DolGuldur_Venom}Venomed arrows: a struck soldier loses 2 hit points a second for 6 seconds, through any armour." />
 	<string id="TAOM_FOW_Trait_Rohan_Sentries" text="{=TAOM_FOW_Trait_Rohan_Sentries}Sentries keep watch: your towers fire 30% faster." />
 	<string id="TAOM_FOW_Trait_Rohan_Foot" text="{=TAOM_FOW_Trait_Rohan_Foot}Weak foot soldiers and archers." />
 	<string id="TAOM_FOW_Trait_Mordor_Horde" text="{=TAOM_FOW_Trait_Mordor_Horde}100 more troops in the field, and free waves come a quarter sooner." />

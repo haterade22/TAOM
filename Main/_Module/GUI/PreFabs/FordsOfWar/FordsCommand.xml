@@ -12,7 +12,7 @@
             DoNotAcceptEvents="true" IsVisible="@IsVisible">
       <Children>
 
-        <!-- Top strip, centre: our keep, the clock, their keep. -->
+        <!-- Top strip, centre: who we are, our keep, the clock, their keep, who we face. -->
         <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
                 HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="4"
                 Sprite="BlankWhiteSquare_9" Color="#0B0D10D8" DoNotAcceptEvents="true">
@@ -73,6 +73,9 @@
                     </Widget>
                   </Children>
                 </ListPanel>
+                <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" MarginLeft="18" VerticalAlignment="Center"
+                            Brush="Tooltip.Text" Brush.FontSize="22" Brush.FontColor="#E5533DFF"
+                            Text="@EnemyFactionName" DoNotAcceptEvents="true" />
               </Children>
             </ListPanel>
           </Children>

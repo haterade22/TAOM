@@ -234,6 +234,39 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
         return samples;
     }
 
+    public void ApplyPoison(AgentKey victim, AgentKey attacker, int damage)
+    {
+        if (!_registry.TryGetAgent(victim, out var found, out _, out _))
+            return;
+
+        var agent = (Agent)found;
+        if (!IsLive(agent) || agent.CurrentMortalityState != Agent.MortalityState.Mortal)
+            return;
+
+        if (agent.Health > damage)
+        {
+            agent.Health -= damage;
+            return;
+        }
+
+        // Owner -1 lets the engine credit the last blow, which is what Agent.Die does when the shooter has gone.
+        var owner = _registry.TryGetAgent(attacker, out var shooter, out _, out _) && IsLive((Agent)shooter) ? ((Agent)shooter).Index : -1;
+        var blow = new Blow(owner)
+        {
+            DamageType = DamageTypes.Pierce,
+            BoneIndex = agent.Monster.HeadLookDirectionBoneIndex,
+            GlobalPosition = agent.Position,
+            BaseMagnitude = damage,
+            InflictedDamage = damage,
+            SwingDirection = agent.LookDirection,
+            DamageCalculated = true,
+        };
+        blow.GlobalPosition.z += agent.GetEyeGlobalHeight();
+        blow.WeaponRecord.FillAsMeleeBlow(null, null, -1, -1);
+        blow.Direction = blow.SwingDirection;
+        agent.Die(blow);
+    }
+
     public Vec3f? PositionOf(AgentKey key)
     {
         if (!_registry.TryGetAgent(key, out var found, out _, out _))

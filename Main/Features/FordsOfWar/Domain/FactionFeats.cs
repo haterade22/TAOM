@@ -53,6 +53,12 @@ internal sealed record FactionFeats
     /// <summary>The gold this faction's capture points pay.</summary>
     public float CaptureIncome { get; init; } = 1f;
 
+    /// <summary>Hit points a second that this faction's arrows and bolts take through any armour; 0 for no poison.</summary>
+    public float PoisonPerSecond { get; init; }
+
+    /// <summary>How long that poison lasts after the last hit.</summary>
+    public float PoisonSeconds { get; init; }
+
     /// <summary>The gold this faction's kills pay.</summary>
     public float Bounty { get; init; } = 1f;
 }

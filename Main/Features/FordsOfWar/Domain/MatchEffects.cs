@@ -20,5 +20,7 @@ internal sealed class MatchEffects
 
     public List<CampOrder> CampOrders { get; } = new();
 
+    public List<PoisonTick> PoisonTicks { get; } = new();
+
     public MatchSide? Winner { get; set; }
 }

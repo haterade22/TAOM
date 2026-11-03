@@ -7485,6 +7485,10 @@
 
     <string id="TAOM_FOW_Hud_UpgradeNone" text="Level 0 of {MAX}" />
 
+    <string id="TAOM_FOW_Trait_Harad_Poison" text="Poisoned arrows: a struck soldier loses 3 hit points a second for 8 seconds, through any armour." />
+
+    <string id="TAOM_FOW_Trait_DolGuldur_Venom" text="Venomed arrows: a struck soldier loses 2 hit points a second for 6 seconds, through any armour." />
+
 
   </strings>
 

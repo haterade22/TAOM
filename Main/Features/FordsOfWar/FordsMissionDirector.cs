@@ -35,6 +35,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     private const float CameraHeight = 45f;
     private const float CameraSetback = 25f;
     private const string RemovedSite = "FordsMissionDirector.OnAgentRemoved";
+    private const string ArrowHitSite = "FordsMissionDirector.OnArrowHit";
     private const string CampRemovedSite = "FordsMissionDirector.OnCampUnitGone";
 
     /// <summary>How far from a camp's centre its creatures start, so they do not stand inside each other.</summary>
@@ -241,6 +242,19 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         ReportLaneStates(match);
     }
 
+    /// <summary>An arrow or bolt struck an agent. May run off the main thread.</summary>
+    public void OnArrowHit(object affected, object? affector)
+    {
+        if (!_started || !_battlefield.TryGetKey(affected, out var victim) || !_battlefield.TryGetKey(affector, out var attacker))
+            return;
+
+        _deferred.RunOrDefer(ArrowHitSite, () =>
+        {
+            lock (_gate)
+                _match?.OnArrowHit(victim, attacker);
+        });
+    }
+
     /// <summary>The engine removed an agent (killed, knocked out, routed or deleted). May run off the main thread.</summary>
     public void OnAgentRemoved(object affected, object? affector, bool killed)
     {
@@ -293,6 +307,12 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
     {
         lock (_gate)
         {
+            foreach (var side in new[] { MatchSide.West, MatchSide.East })
+            {
+                if (_match?.PoisonTotals(side) is { Doses: > 0 } poison)
+                    _logger.LogInfo($"[FordsOfWar][Balance] poison side={side} doses={poison.Doses} damage={poison.Damage}");
+            }
+
             foreach (var line in _tally.Lines())
                 _logger.LogInfo("[FordsOfWar][Balance] " + line);
             if (_match == null)
@@ -634,6 +654,9 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
 
         foreach (var command in effects.Commands)
             ApplyCommand(command);
+
+        foreach (var poison in effects.PoisonTicks)
+            _battlefield.ApplyPoison(poison.Victim, poison.Attacker, poison.Damage);
 
         foreach (var order in effects.CampOrders)
         {

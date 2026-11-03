@@ -13,6 +13,7 @@ namespace TAOM.Client.Features.FordsOfWar;
 public sealed partial class FordsCommandVM
 {
     private bool _isUpgradesVisible = true;
+    private string _enemyFactionName = string.Empty;
     /// <summary>The width in pixels of the region and creature timer bars; the prefab's tracks are this wide.</summary>
     internal const float TimerBarWidth = 120f;
 
@@ -37,6 +38,13 @@ public sealed partial class FordsCommandVM
     private string _creatureTitle = string.Empty;
     private string _creatureSeconds = string.Empty;
     private float _creatureFillWidth;
+
+    [DataSourceProperty]
+    public string EnemyFactionName
+    {
+        get => _enemyFactionName;
+        private set => Set(ref _enemyFactionName, value, nameof(EnemyFactionName));
+    }
 
     [DataSourceProperty]
     public string FactionName
@@ -232,6 +240,7 @@ public sealed partial class FordsCommandVM
     private void RefreshIdentity(MatchView view)
     {
         FactionName = view.FactionName.Length == 0 ? string.Empty : new TextObject(view.FactionName).ToString();
+        EnemyFactionName = view.EnemyFactionName.Length == 0 ? string.Empty : new TextObject(view.EnemyFactionName).ToString();
         AccentColor = FordsFactionStyle.Accent(view.FactionId);
         IncomeText = view.IncomePerMinute > 0 ? FordsHudText.Income(view.IncomePerMinute) : string.Empty;
 

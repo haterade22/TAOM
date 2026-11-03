@@ -14,6 +14,9 @@ internal sealed record FordsSpawnedAgent(AgentKey Key, int Level, bool Mounted);
 /// </summary>
 internal interface IFordsBattlefieldAdapter
 {
+    /// <summary>Takes poison damage off a live mortal unit, through any armour. A lethal dose kills it with the attacker as the killer, when the attacker still lives. Main thread only.</summary>
+    void ApplyPoison(AgentKey victim, AgentKey attacker, int damage);
+
     /// <summary>
     /// Finds the West team (the player's) and the East team (the player's enemy) and the formation of every lane on both.
     /// False when the mission has no such pair or more lanes than the four default formation classes.

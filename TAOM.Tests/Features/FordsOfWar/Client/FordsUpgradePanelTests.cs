@@ -99,6 +99,23 @@ public class FordsUpgradePanelTests
     }
 
     [TestMethod]
+    public void Refresh_NamesTheEnemyFaction_ForTheTopStrip()
+    {
+        var factions = Factions().ToDictionary(e => e.Key, e => e.Value);
+        factions[MatchSide.West] = factions[MatchSide.West] with { Name = "{=g}Gondor" };
+        factions[MatchSide.East] = factions[MatchSide.East] with { Name = "{=m}Mordor" };
+        var match = new FordsMatch(Config(), Layout(), factions, Slots(), new SeededFordsRandom(7));
+        var session = new FordsSession();
+        session.Fill(new object(), match, WestSlot, Substitute.For<IFordsBattlefieldAdapter>(), new Vec3f(0f, 25f, 45f), new Vec3f(1000f, 25f, 0f), new List<Vec3f>());
+        var vm = new FordsCommandVM(session, () => { });
+
+        vm.Refresh();
+
+        Assert.AreEqual("Gondor", vm.FactionName);
+        Assert.AreEqual("Mordor", vm.EnemyFactionName);
+    }
+
+    [TestMethod]
     public void ToggleUpgrades_HidesAndShowsThePanel()
     {
         var vm = Panel(out _);

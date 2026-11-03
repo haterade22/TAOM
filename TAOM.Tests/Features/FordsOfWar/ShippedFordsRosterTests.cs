@@ -325,6 +325,16 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
+    public void OnlyHaradAndDolGuldur_PoisonTheirArrows_AndHaradsIsTheStronger()
+    {
+        var poisoners = Catalog().Factions.Where(f => f.FeatsOrNone.PoisonPerSecond > 0f).Select(f => f.FactionId).ToArray();
+
+        CollectionAssert.AreEquivalent(new[] { "harad", "dolguldur" }, poisoners);
+        Assert.IsTrue(Shipped("harad").FeatsOrNone.PoisonPerSecond > Shipped("dolguldur").FeatsOrNone.PoisonPerSecond);
+        Assert.IsTrue(Shipped("harad").FeatsOrNone.PoisonSeconds > 0f);
+    }
+
+    [TestMethod]
     public void TheAiBuyCycles_ShowEachFactionsIdentity()
     {
         var catalog = Catalog();

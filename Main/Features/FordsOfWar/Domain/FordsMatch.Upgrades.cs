@@ -24,6 +24,19 @@ internal sealed partial class FordsMatch
         return CommandResult.Ok;
     }
 
+    /// <summary>An arrow or bolt struck a unit. A registered attacker of a faction with poison poisons a registered enemy; a tower gunner and a mount are not registered units.</summary>
+    public void OnArrowHit(AgentKey victim, AgentKey attacker)
+    {
+        if (!_units.TryGetValue(attacker, out var shooter) || !_units.TryGetValue(victim, out var target) || shooter.Side == target.Side)
+            return;
+
+        if (_factions.TryGetValue(shooter.Side, out var faction) && faction.FeatsOrNone is { PoisonPerSecond: > 0f, PoisonSeconds: > 0f } feats)
+            _poison.Apply(victim, attacker, shooter.Side, feats.PoisonPerSecond, feats.PoisonSeconds);
+    }
+
+    /// <summary>The poison doses each side landed and the damage they did, for the log at the end of a match.</summary>
+    public (int Doses, long Damage) PoisonTotals(MatchSide side) => _poison.Totals(side);
+
     /// <summary>Every commander's gold so far, for the log at the end of a match.</summary>
     public IEnumerable<(MatchSide Side, int Slot, long Earned, long Spent, int Left)> GoldTotals() =>
         _slots.Select(s => (s.Side, s.Id, _ledger.Earned(s.Id), _ledger.Spent(s.Id), _ledger.Balance(s.Id)));

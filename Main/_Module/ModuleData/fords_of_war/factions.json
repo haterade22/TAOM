@@ -463,9 +463,10 @@
       "culture": "aserai",
       "aiBuyCycle": ["levies", "bowmen", "up:siegecraft", "footmen", "beast:war_elephant", "levies", "serpent_archers", "up:melee_armour", "camel_riders", "serpent_guard", "beast:mumak", "lancers"],
       "upgradeCost": { "siegecraft": 0.75 },
-      "feats": { "towerHitPoints": 0.85 },
+      "feats": { "towerHitPoints": 0.85, "poisonPerSecond": 3, "poisonSeconds": 8 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Harad_Beasts}Call a war elephant or a mûmak every 2 minutes.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_Harad_Poison}Poisoned arrows: a struck soldier loses 3 hit points a second for 8 seconds, through any armour.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_Harad_Towers}Towers have 15% fewer hit points.", "strength": false },
         { "text": "{=TAOM_FOW_Trait_Harad_Cost}A fallen beast is a heavy loss of gold.", "strength": false }
       ],
@@ -613,10 +614,11 @@
       "culture": "dolguldur",
       "aiBuyCycle": ["foul", "hunters", "crawlers", "up:melee_damage", "fighters", "warg_riders", "fellbows", "up:missile_armour", "fell_fangs", "shadow_guard"],
       "upgradeCost": { "melee_damage": 0.85 },
-      "feats": { "enemyTowerFireRate": 0.75, "income": 0.85 },
+      "feats": { "enemyTowerFireRate": 0.75, "income": 0.85, "poisonPerSecond": 2, "poisonSeconds": 6 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_DolGuldur_Shadow}The Shadow: enemy towers fire a quarter slower.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_DolGuldur_Beasts}Call a spider or a fell warg every 45 seconds.", "strength": true },
+        { "text": "{=TAOM_FOW_Trait_DolGuldur_Venom}Venomed arrows: a struck soldier loses 2 hit points a second for 6 seconds, through any armour.", "strength": true },
         { "text": "{=TAOM_FOW_Trait_DolGuldur_Poor}15% less income.", "strength": false }
       ],
       "units": [

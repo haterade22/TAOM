@@ -162,6 +162,8 @@ internal static class FordsFactionsReader
             TowerRange = Factor("towerRange", 1f),
             TowerHitPoints = Factor("towerHitPoints", 1f),
             TowerRegen = Factor("towerRegen", 1f),
+            PoisonPerSecond = Factor("poisonPerSecond", 0f),
+            PoisonSeconds = Factor("poisonSeconds", 0f),
             EnemyTowerFireRate = Factor("enemyTowerFireRate", 1f),
             RangedDamageToTowers = Factor("rangedDamageToTowers", 1f),
             OrderCooldown = Factor("orderCooldown", 1f),

@@ -8,14 +8,12 @@ using TaleWorlds.MountAndBlade;
 namespace TAOM.Features.FordsOfWar.Hooks;
 
 /// <summary>
-/// The mission boundary of Fords of War (build-spec section 4): builds the three adapters and the <see cref="FordsMissionDirector"/>
-/// on the first mission tick, ticks it, forwards agent removals, and ends the mission once a keep has fallen. MUST be
-/// <c>: MissionLogic</c> (rca-looter-battle-nre-2026-05-24.md). It never spawns <c>Game.Current.PlayerTroop</c> nor gives an agent the
-/// Player controller. <c>AfterStart</c> only marks the start as due: the engine calls it inside a <c>foreach</c> over the mission
-/// behaviors, and an agent spawned there lets a <c>SpawnAgent</c> hook add a behavior to that list (DualWield does), which throws and
-/// loads the mission again (rca-fords-of-war-2026-10-31.md). Each override sits in a try (#699). A match that cannot start ends the
-/// mission through <c>MissionEnded</c>, polled every 0.1 s (Mission.cs:4819-4883); nothing closes a mission ended that way, so the
-/// tick also drives <see cref="FordsMissionExit"/>.
+/// The mission boundary of Fords of War (build-spec section 4): builds the three adapters and the <see cref="FordsMissionDirector"/> on the first mission tick, ticks it,
+/// forwards arrow hits and agent removals, and ends the mission once a keep has fallen. MUST be <c>: MissionLogic</c> (rca-looter-battle-nre-2026-05-24.md). It never spawns
+/// <c>Game.Current.PlayerTroop</c> nor gives an agent the Player controller. <c>AfterStart</c> only marks the start as due: the engine calls it inside a <c>foreach</c> over the
+/// mission behaviors, and an agent spawned there lets a <c>SpawnAgent</c> hook add a behavior to that list (DualWield does), which throws and loads the mission again
+/// (rca-fords-of-war-2026-10-31.md). Each override sits in a try (#699). A match that cannot start ends the mission through <c>MissionEnded</c>, polled every 0.1 s
+/// (Mission.cs:4819-4883); nothing closes a mission ended that way, so the tick also drives <see cref="FordsMissionExit"/>.
 /// </summary>
 public sealed class FordsOfWarMissionLogic : MissionLogic
 {
@@ -99,6 +97,8 @@ public sealed class FordsOfWarMissionLogic : MissionLogic
 
         _exit.Tick(dt, _failed, _director?.Winner is { });
     }
+
+    public override void OnAgentHit(Agent affected, Agent affector, in MissionWeapon weapon, in Blow blow, in AttackCollisionData data) => FordsArrowHits.Report(_director, affected, affector, in weapon, in blow, in data);
 
     public override void OnAgentRemoved(Agent affectedAgent, Agent affectorAgent, AgentState agentState, KillingBlow blow)
     {

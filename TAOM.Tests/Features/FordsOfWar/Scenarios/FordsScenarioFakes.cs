@@ -159,6 +159,8 @@ internal sealed class FaithfulBattlefield : IFordsBattlefieldAdapter
 
     public IReadOnlyList<FordsFaceSample> SampleFaces() => new List<FordsFaceSample>();
 
+    public void ApplyPoison(AgentKey victim, AgentKey attacker, int damage) { }
+
     public Vec3f? PositionOf(AgentKey key) => Find(key)?.Position;
 
     public bool TryGetKey(object? agent, out AgentKey key)
