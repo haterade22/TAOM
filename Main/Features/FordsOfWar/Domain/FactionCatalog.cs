@@ -6,7 +6,7 @@ namespace TAOM.Features.FordsOfWar.Domain;
 internal sealed record FactionCatalog(string FactionId, string CultureId,
     IReadOnlyList<UnitOffer> Units, IReadOnlyList<HeroOffer> Heroes, IReadOnlyList<FreeWaveTier> FreeWaves,
     FactionFeats? Feats = null, IReadOnlyList<FactionTrait>? Traits = null, OfferRotation? Rotation = null, CreatureCall? Creatures = null,
-    string Name = "")
+    string Name = "", IReadOnlyList<string>? AiBuyCycle = null)
 {
     public FactionFeats FeatsOrNone => Feats ?? FactionFeats.None;
 

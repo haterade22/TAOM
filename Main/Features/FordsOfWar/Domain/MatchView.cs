@@ -17,7 +17,8 @@ internal sealed record MatchView(int Slot, MatchSide Side, MatchPhase Phase, flo
     IReadOnlyList<MatchView.UnitOfferView> UnitOffers, IReadOnlyList<MatchView.HeroOfferView> HeroOffers,
     IReadOnlyList<MatchView.CapturePointView> CapturePoints, MatchSide? Winner, string FactionId = "",
     IReadOnlyList<FactionTrait>? Traits = null, MatchView.RegionView? Region = null, MatchView.CreatureCallView? Creatures = null,
-    int IncomePerMinute = 0, string FactionName = "", IReadOnlyList<MatchView.CampView>? Camps = null, float OrderCooldownSeconds = 0f)
+    int IncomePerMinute = 0, string FactionName = "", IReadOnlyList<MatchView.CampView>? Camps = null, float OrderCooldownSeconds = 0f,
+    IReadOnlyList<string>? AiBuyCycle = null)
 {
     internal sealed record LaneView(int Index, bool Owned, LaneOrder Order, float CooldownLeft, int OwnLive, int EnemyLive,
         int Threat, IReadOnlyList<TowerView> Towers, bool CanSeize = false);

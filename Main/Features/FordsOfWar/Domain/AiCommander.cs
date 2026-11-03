@@ -29,6 +29,7 @@ internal sealed class AiCommander
     private readonly IFordsRandom _random;
     private readonly Dictionary<int, string> _assaultTargets = new();
     private float _nextDecisionAt;
+    private int _buyIndex;
 
     public AiCommander(int slot, FordsAiProfile profile, IFordsRandom random)
     {
@@ -189,6 +190,33 @@ internal sealed class AiCommander
         }
     }
 
+    /// <summary>The next entry that has something on show, moving the place in the cycle past any that has not (a rotating faction's role may be absent for a while).</summary>
+    private MatchView.UnitOfferView? NextInCycle(MatchView view, IReadOnlyList<string> cycle, int gold)
+    {
+        for (var step = 0; step < cycle.Count; step++)
+        {
+            var offer = OfferFor(view, cycle[(_buyIndex + step) % cycle.Count], gold);
+            if (offer != null)
+            {
+                _buyIndex += step;
+                return offer;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>An entry is an offer id, or a role name: the dearest of that role the gold reaches, else the cheapest of it, to save for.</summary>
+    private static MatchView.UnitOfferView? OfferFor(MatchView view, string entry, int gold)
+    {
+        var exact = view.UnitOffers.FirstOrDefault(o => o.OfferId == entry);
+        if (exact != null)
+            return exact;
+
+        var ofRole = view.UnitOffers.Where(o => o.Role.ToString() == entry).OrderByDescending(o => o.Price).ThenBy(o => o.OfferId, StringComparer.Ordinal).ToList();
+        return ofRole.FirstOrDefault(o => o.Price <= gold) ?? ofRole.LastOrDefault();
+    }
+
     private static bool ShouldRelease(MatchView view, MatchView.LaneView lane, string targetTowerId)
     {
         if (lane.OwnLive < view.AssaultThreshold * ReleaseFraction)
@@ -205,10 +233,26 @@ internal sealed class AiCommander
             .Select(t => t.Id)
             .FirstOrDefault() ?? string.Empty;
 
-    private static void BuildAssault(MatchView view, MatchView.LaneView? assault, int gold, List<AiAction> actions)
+    /// <summary>
+    /// One pack for the assault lane. A faction with a buy cycle buys its next entry, and saves up when that costs more than the gold: a horde keeps
+    /// buying cheap packs and a cavalry army keeps some foot, where the dearest offer alone would do neither. Without a cycle it buys the dearest it can afford.
+    /// </summary>
+    private void BuildAssault(MatchView view, MatchView.LaneView? assault, int gold, List<AiAction> actions)
     {
         if (assault == null || assault.OwnLive >= view.AssaultThreshold)
             return;
+
+        if (view.AiBuyCycle is { Count: > 0 } cycle)
+        {
+            var next = NextInCycle(view, cycle, gold);
+            if (next != null && next.Price <= gold)
+            {
+                actions.Add(AiAction.BuyPack(assault.Index, next.OfferId));
+                _buyIndex++;
+            }
+
+            return;
+        }
 
         var pack = view.UnitOffers
             .Where(o => o.Role != UnitRole.Hero && o.Price <= gold)

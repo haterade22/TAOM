@@ -86,8 +86,22 @@ internal static class FordsFactionsReader
 
         name = FordsConfigScope.Text(f["name"]) ?? id;
         faction = new FactionCatalog(id, culture, units, ReadHeroes(id, f["heroes"], s), ReadFreeWaves(id, f["freeWaves"], s),
-            ReadFeats(id, f["feats"], s), ReadTraits(id, f["traits"], s), ReadRotation(id, f["rotation"], s), ReadCreatures(id, f["creatures"], s), name);
+            ReadFeats(id, f["feats"], s), ReadTraits(id, f["traits"], s), ReadRotation(id, f["rotation"], s), ReadCreatures(id, f["creatures"], s), name, ReadBuyCycle(id, f["aiBuyCycle"], s));
         return true;
+    }
+
+    private static List<string>? ReadBuyCycle(string faction, JToken? token, FordsConfigScope s)
+    {
+        if (token == null)
+            return null;
+        if (!(token is JArray array))
+        {
+            s.Warn($"faction '{faction}': 'aiBuyCycle' is not an array; ignored");
+            return null;
+        }
+
+        var cycle = array.Select(FordsConfigScope.Text).Where(e => e != null).Select(e => e!).ToList();
+        return cycle.Count == 0 ? null : cycle;
     }
 
     private static FactionFeats? ReadFeats(string faction, JToken? token, FordsConfigScope s)

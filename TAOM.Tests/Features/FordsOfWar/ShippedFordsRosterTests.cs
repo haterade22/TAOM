@@ -157,6 +157,30 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
+    public void EveryAiBuyCycleEntry_IsAnOfferOrARoleTheFactionCanShow()
+    {
+        foreach (var faction in Catalog().Factions)
+        {
+            Assert.IsTrue(faction.AiBuyCycle is { Count: > 0 }, faction.FactionId + " has no buy cycle");
+            var known = new HashSet<string>(faction.Units.Select(o => o.OfferId));
+            known.UnionWith(faction.AllOffers.Where(o => faction.Creatures?.Offers.Contains(o) != true).Select(o => o.Role.ToString()));
+            var unknown = faction.AiBuyCycle!.Where(e => !known.Contains(e)).ToArray();
+            CollectionAssert.AreEqual(Array.Empty<string>(), unknown, faction.FactionId);
+        }
+    }
+
+    [TestMethod]
+    public void TheAiBuyCycles_ShowEachFactionsIdentity()
+    {
+        var catalog = Catalog();
+        Assert.IsTrue(catalog.TryGetFaction("mordor", out var mordor));
+        Assert.IsTrue(catalog.TryGetFaction("rohan", out var rohan));
+
+        Assert.IsTrue(mordor.AiBuyCycle!.Count(e => e == "orc_rabble") * 3 >= mordor.AiBuyCycle.Count, "a horde buys cheap packs most often");
+        Assert.IsTrue(rohan.AiBuyCycle!.Count(e => e == "militia" || e == "yeomen") >= 2, "Rohan keeps some foot to take towers");
+    }
+
+    [TestMethod]
     public void SubModule_LoadsTheRosterForCustomGameOnly()
     {
         var node = XDocument.Load(Path.Combine(ModuleRoot, "SubModule.xml")).Descendants("XmlNode")

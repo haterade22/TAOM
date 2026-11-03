@@ -3,6 +3,7 @@
     "gondor": {
       "name": "{=TAOM_FOW_Faction_Gondor}Gondor",
       "culture": "gondor",
+      "aiBuyCycle": ["Infantry", "Ranged", "Spear", "Cavalry", "Infantry", "Ranged"],
       "feats": { "towerFireRate": 1.25, "towerHitPoints": 1.2 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Gondor_Regions}A new region answers the call every 30 seconds. Pay to call one by name.", "strength": true },
@@ -174,6 +175,7 @@
     "rohan": {
       "name": "{=TAOM_FOW_Faction_Rohan}Rohan",
       "culture": "vlandia",
+      "aiBuyCycle": ["spear_riders", "militia", "lancers", "yeomen", "sword_riders", "militia", "horse_archers", "kings_knights", "militia", "riders_of_rohan"],
       "feats": { "mountedDamageToTowers": 0.35, "towerFireRate": 0.9 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Rohan_Riders}The finest cavalry in Middle-earth.", "strength": true },
@@ -225,6 +227,7 @@
     "mordor": {
       "name": "{=TAOM_FOW_Faction_Mordor}Mordor",
       "culture": "mordor",
+      "aiBuyCycle": ["orc_rabble", "orc_rabble", "orc_impalers", "orc_hunters", "orc_rabble", "uruk_warriors", "orc_rabble", "orc_hunters", "uruk_crossbows", "orc_rabble", "orc_impalers", "baraddur_guard", "orc_rabble", "num_knights", "orc_rabble", "temple_guard"],
       "feats": { "unitCapBonus": 100, "waveInterval": 0.75 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Mordor_Horde}100 more troops in the field, and free waves come a quarter sooner.", "strength": true },
@@ -285,6 +288,7 @@
     "isengard": {
       "name": "{=TAOM_FOW_Faction_Isengard}Isengard",
       "culture": "isengard",
+      "aiBuyCycle": ["fighters", "spearmen", "crossbowmen", "pikemen", "white_hand", "crossbowmen", "berserkers", "warg_riders", "fighters", "hill_troll"],
       "feats": { "damageToTowers": 1.15, "unitCapBonus": -50 },
       "traits": [
         { "text": "{=TAOM_FOW_Trait_Isengard_Siege}Your units deal 15% more damage to towers.", "strength": true },

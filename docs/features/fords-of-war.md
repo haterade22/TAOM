@@ -333,6 +333,8 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 - **Feats** (`FactionFeats`): `towerFireRate` (0 keeps towers silent), `towerHitPoints`, `damageToTowers`, `mountedDamageToTowers` (0 means no damage at all, reason
   `FactionFeat`), `waveInterval`, `unitCapBonus` (the lane cap rises by this over the lane count), `income`, `bounty`. Each factor is relative to 1. A new feat is one
   property, one line in the reader and one use in a rule.
+- **AI buying** (`aiBuyCycle`, `AiCommander`): a repeating list the AI buys in, so a faction plays to its identity. An entry is an offer id, or a role name for the dearest offer of
+  that role the gold reaches, which suits Gondor's rotating bands. The AI saves up when the next entry costs too much. Mordor buys orc packs most of the time; Rohan keeps some foot to take towers.
 - **Traits** (`factions.json` `traits`): the lines that tell the player a faction's strengths and weaknesses. The panel shows them during the countdown.
 - **Call of the Regions** (`rotation`, `RegionDeck`): a band of four offers from one region fills buy slots F3 to F6 for `seconds` (30), then the next region's band
   takes the same slots. Slots never move. The deck is shuffled: each region comes once per cycle, and a new cycle never starts with the region just shown. The panel
