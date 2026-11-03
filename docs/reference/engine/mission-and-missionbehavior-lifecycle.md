@@ -162,6 +162,19 @@ ticks. Spawn on the first mission tick instead
 (Fords of War, 2026-10-31: `FordsOfWarMissionLogic` marks its start as due in `AfterStart` and starts on the first
 `OnMissionTick`).
 
+### A custom siege mission must answer two engine questions (v1.5.6)
+
+Leaving vanilla's spawn logic out of a mission's list breaks two engine paths whose call sites name neither it nor the removed behaviors. This section is read from the decompile for the Long Defeat spike (#1079), and no game run has shown it yet.
+
+- **Team power.** `TeamQuerySystem` takes `GetMissionBehavior<IBattlePowerCalculationLogic>()` with no null check (TeamQuerySystem.cs:132, :454-470). `TacticDefendCastle.ManageFormationCounts` (:276-278) and `TacticBreachWalls` (:26) read it on the first team AI tick, on the asynchronous AI thread, outside every mission logic's try. Vanilla's `BattlePowerCalculationLogic` does not help, because it reads `IMissionAgentSpawnLogic` (:38-42). A behavior must implement the interface. A real running total keeps vanilla's retreat: a new `TacticBreachWalls` takes its start from `RemainingPowerRatio` (:26, reached through `ManageFormationCounts` :460-463; :596 runs only if it first saw no enemy), so each wave starts at 1.0 and retreats when the ratio falls under the lane threshold (:34-45, :120), about a 40 percent drop with every lane closed. `Retreating` is one-way (:484-487). The spike returns a large constant, so power never orders that retreat or `TacticDefendCastle`'s sally (:136), and the spike cannot show that retreat.
+- **Player deployment.** `GeneralsAndCaptainsAssignmentLogic.OnBattleSideSpawned` (:49-51) asks `BattleInitializationModel.CanPlayerSideDeployWithOrderOfBattle`, and `CustomBattleInitializationModel` (:42) reads `DefaultBattleMissionAgentSpawnLogic` with no null check. Leave that logic out, or wrap the call in `BattleInitializationModel.SetBypassPlayerDeployment`, a static that must be set back. `AssignPlayerRoleInTeamMissionController` sets the order owner by itself, so the order bar does not need it.
+
+Three more engine facts for a mission that fights in waves:
+
+- **A breach of 100 attackers or fewer leaves its engines.** `TacticBreachWalls.DetermineCurrentLanes` calls `StopUsingAllMachines` and keeps one lane when `InitialUnitCount` is at most 100 (:544-553, :558-572). It counts when the tactic first sees an enemy, so a tactic that first ticks on a partial spawn batch latches that for good, and `Team.ResetTactic` keeps the same object: give each wave a new `TacticBreachWalls`. `StopUsingAllMachines` also clears `ForcedUse` on every engine of the side (TacticComponent.cs:534-540), and for towers and rams only `SiegeWeapon.OnInit` and a player's order set it back, so a new tactic alone does not restore it: call `SetForcedUse(true)` before the reset.
+- **A destroyed machine leaves `ActiveMissionObjects`.** `Mission.OnObjectDisabled` disables a `UsableMachine` in the same call (Mission.cs:3060), so a list read from the active objects cannot show a destroyed gate, tower or ram. Take the list once.
+- **Vanilla's undo of a destroyed gate** is `CastleGate.OnMissionReset` (protected internal, :341-348). It restores the hit points, the door references and the tick. It does not close the navmesh that `OnDestroyed` opened: `SetAutoOpenState(false)` does that. It does not remake the gate's detachment, which `UsableMachine.Disable` destroyed (:659-661).
+
 ## ⚠️ The `: MissionLogic` gotcha (confirmed at the source)
 
 If a behavior is `: MissionBehavior` and **manually** returns `BehaviorType => MissionBehaviorType.Logic` **without**

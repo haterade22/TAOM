@@ -192,6 +192,7 @@ public class ClientSubModuleTests
             typeof(TAOM.Features.ShaderCompileNotice.IShaderCompileNoticeWindowHost),
             typeof(TAOM.Features.FordsOfWar.IFordsOfWarGameManagerFactory),
             typeof(TAOM.Features.FordsOfWar.Autorun.IFordsAutorunHost),
+            typeof(TAOM.Features.LongDefeat.ILongDefeatGameManagerFactory),
             typeof(TAOM.Features.SupplyLines.ISupplyRouteVisualService),
             typeof(TAOM.Features.FieldCamp.ICampVisualService),
             typeof(TAOM.Features.Refuge.IRefugeVisualService),

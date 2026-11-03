@@ -55,7 +55,7 @@ public class ConsoleCommandBindingTests
     private static readonly string[] BannedNameTokens = { "dump", "list", "get" };
 
     // Commands behind TaomConsole.RunAtMainMenu (DevConsoleGuard.CheckMainMenuCheatUsage): they start a game, so they run with none.
-    private static readonly string[] MainMenuCommands = { "fords_start" };
+    private static readonly string[] MainMenuCommands = { "fords_start", "ld_start" };
 
     private static readonly Regex NameShape = new Regex("^[a-z][a-z0-9_]*$", RegexOptions.Compiled);
 

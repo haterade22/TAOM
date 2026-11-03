@@ -130,3 +130,5 @@ ArmorySim 0.2 is the maintainer's standalone tool and stays standalone: nothing 
 Today the in-game driver plays only a Fords of War match, so `/game-run` serves Fords checks and any change a Fords match exercises
 (mission start, agents, formations, destructibles). A general scenario driver, one that arms other in-game checks the same way, is planned
 separately and is not built; until it exists, a check outside Fords still needs a person to play it.
+The Long Defeat spike (#1079) has its own wrapper, `tools/run_long_defeat_spike.py`, under this same permission and gate; `/game-run` does not
+drive it yet.

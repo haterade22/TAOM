@@ -2435,3 +2435,11 @@ order alternated every frame; after a first fix, the past-the-tower path still e
 - **Prevent:** for each condition that can start the state, test entry and the next tick at the stay boundary, on
   either side of it, and assert the decision does not change; write the entry test as a strict subset of the stay test.
 - **Source:** `docs/reviews/rca-fords-of-war-2026-10-31.md`, balance addendum, rows S1 and S3.
+
+### A spike's log line must report what the engine did, and its PASS must need that line
+
+The Long Defeat spike printed `[S4] repaired` for whatever `RepairGate` touched, including a healthy second gate, and `[S7] after` from the object it had just assigned. Its wrapper wrote `reason=final` for a run that hit the time limit, and then exited 0 as PASS with zero waves cleared.
+
+- **Why missed:** the code that makes a change and the code that reports it were written together, so the report restated the request. The wrapper dropped the Fords report checks because a spike has no JSON, and nothing took their place. The same rule had been written the week before for the Staged Siege report.
+- **Prevent:** read the reported value back from the engine's own state after the change, and put the failure in the label (`NOT repaired`), so a substring check cannot pass it. When a gate drops a check, name what replaces it. Tie each string a tool looks for to the source that writes it.
+- **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 3, 5, 10 and 18.

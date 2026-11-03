@@ -1680,3 +1680,19 @@ Native `FUN_1805EFC10` (v1.5.6) unlinks rider and mount on state 5, the kill pat
 **Prevent:** `RiderlessMountRule`. A native crash in an unattended run needs `--keep-on-crash` from the first run, so that a dump exists.
 
 **Source:** crash bundle 2026-11-03_03.04.08, run 20261102-201444, Fords of War.
+
+### Trace every reader of a vanilla behavior before you leave it out of a mission's list
+
+The Long Defeat spike copied vanilla's custom siege list without the spawn logic, on the claim that the AI reads none of the removed types. A grep of the named classes agreed. `TeamQuerySystem` reads `IBattlePowerCalculationLogic` by interface with no null check, and vanilla's own implementation reads the spawn logic. `GeneralsAndCaptainsAssignmentLogic` asks a game model that reads the spawn logic. `SiegeDeploymentHandler` was the only subscriber that set deployed engines' hit points. Both reads threw at 0.5 s into the mission, one of them on the AI thread outside every catch.
+
+- **Why missed:** the check asked whether named classes mention named types. The engine couples behaviors through interfaces looked up by type, through game models and through events, none of which that grep sees. Fords of War's recipe looked like proof, but it runs no team AI, so it never reached these paths.
+- **Prevent:** for each behavior removed from a vanilla list, grep the whole engine for the type and for each interface it implements, then for each subscriber of each event it raises or handles. Follow game models too. Name what you checked, and treat a sibling mission as evidence only for the paths it runs. The two known answers are in [the lifecycle doc](../../reference/engine/mission-and-missionbehavior-lifecycle.md).
+- **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 1, 2 and 11.
+
+### Trace the branch before you state why an engine value matters
+
+I chose a constant team power for the right result and gave a false reason: that a running total starts wave 2 near half, from `TacticBreachWalls.cs:596`. That branch needs the tactic's indicators still null, and a new tactic has already built them from `RemainingPowerRatio` (:26) on the way there. So a running total starts each wave at 1.0. I told the maintainer the false reason and wrote it into a comment and an engine doc.
+
+- **Why missed:** the line says what I expected, and I did not trace how control reaches it. The behaviour I wanted was right, so nothing failed.
+- **Prevent:** before writing "X happens because of line N", trace the path into line N from the call in question. A reason in a standing engine doc outlives the code it was written for, so it gets the same proof as the code.
+- **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), row 14.
