@@ -165,6 +165,7 @@ public class ShippedFordsRosterTests
             var known = new HashSet<string>(faction.Units.Select(o => o.OfferId));
             known.UnionWith(faction.AllOffers.Where(o => faction.Creatures?.Offers.Contains(o) != true).Select(o => o.Role.ToString()));
             known.UnionWith(FordsMatchConfig.Default.UpgradesOrDefault.Select(t => "up:" + t.Id));
+            known.UnionWith((faction.Creatures?.Offers ?? new List<UnitOffer>()).Select(o => "beast:" + o.OfferId));
             var unknown = faction.AiBuyCycle!.Where(e => !known.Contains(e)).ToArray();
             CollectionAssert.AreEqual(Array.Empty<string>(), unknown, faction.FactionId);
         }
@@ -258,6 +259,8 @@ public class ShippedFordsRosterTests
         Assert.AreEqual(120f, harad.Creatures!.CooldownSeconds);
         CollectionAssert.AreEquivalent(new[] { "fow_harad_elephant_rider", "fow_harad_mumakil_rider" }, harad.Creatures.Offers.Select(o => o.TroopId).ToArray());
         Assert.IsTrue(harad.Creatures.Offers.All(o => o.PackSize == 1), "one beast at a time");
+        Assert.AreEqual(1000, harad.Creatures.Offers.Single(o => o.TroopId == "fow_harad_mumakil_rider").PackPrice, "a player stacks gold to 1000 for a mumak");
+        CollectionAssert.Contains(harad.AiBuyCycle!.ToList(), "beast:mumak");
     }
 
     [TestMethod]

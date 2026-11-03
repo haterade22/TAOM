@@ -331,7 +331,7 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
 | Isengard | Heavy Uruk-hai; tower killers; waves that grow every 5 minutes | Fewer troops; only warg riders for cavalry | `damageToTowers` 1.15, `unitCapBonus` -50 | None yet |
 | Rivendell | Holds at range, then strikes with a few elites and all three heroes | 150 troops and only five offers: a horde floods it | `towerRange` 1.5 (Far Sight), `heroSlotBonus` 1, `unitCapBonus` -150 | None yet |
 | Erebor | Survives ten minutes, then outspends everyone; the heaviest armour | Slow free waves, few bows, war rams for its only cavalry | `income` 1.4 (Mountain Gold), `towerRegen` 4 (Stonewrights), `waveInterval` 1.25 | None yet |
-| Harad | Saves gold for one great beast at a time, then guards it | Weaker towers; a fallen beast is a heavy loss of gold | `towerHitPoints` 0.85 | Creature call: a war elephant or a mumak on a 120 s timer |
+| Harad | Saves gold for one great beast at a time, then guards it | Weaker towers; a fallen beast is a heavy loss of gold | `towerHitPoints` 0.85 | Creature call on a 120 s timer: a war elephant (315 gold) or a mumak (1000 gold). `beast:<offer>` entries in its `aiBuyCycle` make the AI save for them |
 | Gundabad | Ends the match early with cheap packs and constant waves | One tier of free waves that never improves; the weakest towers | `waveInterval` 0.5, `towerHitPoints` 0.7 | None yet |
 | Dale | Breaks towers from range with four kinds of archers | Weak melee (skills x0.75), few riders | `rangedDamageToTowers` 4 (Black Arrows) | None yet |
 | Dol Guldur | Walks under slowed towers; calls spiders and fell wargs | Less income | `enemyTowerFireRate` 0.75 (The Shadow), `income` 0.85 | Creature call on a 45 s timer |

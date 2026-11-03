@@ -87,6 +87,67 @@ public class AiBuyCycleTests
         Assert.AreEqual(first, BoughtOver(match, 1).Single());
     }
 
+    private static FordsMatch BeastMatch(IReadOnlyList<string> cycle, int gold)
+    {
+        var factions = Factions().ToDictionary(e => e.Key, e => e.Value);
+        var beasts = new CreatureCall(120f, new List<UnitOffer> { new("elephant", "t_elephant", UnitRole.Cavalry, 1, 300), new("mumak", "t_mumak", UnitRole.Cavalry, 1, 1000) });
+        factions[MatchSide.East] = factions[MatchSide.East] with { AiBuyCycle = cycle, Creatures = beasts };
+        return new FordsMatch(Config(c => c with { Economy = c.Economy with { StartingGold = gold } }), Layout(), factions, Slots("slow"), new SeededFordsRandom(7));
+    }
+
+    private static List<AiAction> Decisions(FordsMatch match, int count)
+    {
+        var ai = new AiCommander(EastSlot, Hard, new SeededFordsRandom(3));
+        var actions = new List<AiAction>();
+        for (var i = 1; i <= count; i++)
+            actions.AddRange(ai.Decide(match.GetView(EastSlot), i * 10f));
+        return actions;
+    }
+
+    [TestMethod]
+    public void Decide_ABeastEntry_CallsThatBeast_WhenTheGoldReaches()
+    {
+        var calls = Decisions(BeastMatch(new[] { "beast:mumak" }, 1000), 1).Where(a => a.Kind == AiActionKind.CallCreature).ToList();
+
+        Assert.AreEqual("mumak", calls.Single().Id);
+    }
+
+    [TestMethod]
+    public void Decide_ABeastThatCostsTooMuch_SavesForIt_AndSpendsNothingElse()
+    {
+        var actions = Decisions(BeastMatch(new[] { "beast:mumak", Offers[0].OfferId }, 999), 1);
+
+        Assert.AreEqual(0, actions.Count(a => a.Kind == AiActionKind.CallCreature || a.Kind == AiActionKind.BuyPack));
+    }
+
+    [TestMethod]
+    public void Decide_ABeastOnCooldown_IsSkipped()
+    {
+        var match = BeastMatch(new[] { "beast:mumak", Offers[0].OfferId }, 5000);
+        Assert.AreEqual(CommandResult.Ok, match.TryCallCreature(EastSlot, 0, "elephant"));
+
+        var actions = Decisions(match, 1);
+
+        Assert.AreEqual(0, actions.Count(a => a.Kind == AiActionKind.CallCreature));
+        Assert.AreEqual(Offers[0].OfferId, actions.Single(a => a.Kind == AiActionKind.BuyPack).Id);
+    }
+
+    [TestMethod]
+    public void Decide_WithoutABeastEntry_CallsTheDearestBeastTheGoldReaches()
+    {
+        var calls = Decisions(BeastMatch(new[] { Offers[0].OfferId }, 500), 1).Where(a => a.Kind == AiActionKind.CallCreature).ToList();
+
+        Assert.AreEqual("elephant", calls.Single().Id);
+    }
+
+    [TestMethod]
+    public void Decide_WithABeastEntry_MakesNoOtherCall_SoTheGoldIsNotSpentOnTheCheapestBeast()
+    {
+        var actions = Decisions(BeastMatch(new[] { "beast:mumak" }, 500), 1);
+
+        Assert.AreEqual(0, actions.Count(a => a.Kind == AiActionKind.CallCreature));
+    }
+
     [TestMethod]
     public void GetView_CarriesTheCycle()
     {

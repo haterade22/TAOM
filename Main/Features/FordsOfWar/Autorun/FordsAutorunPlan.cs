@@ -15,6 +15,10 @@ namespace TAOM.Features.FordsOfWar.Autorun;
 internal sealed class FordsAutorunPlan
 {
     internal const string EnvVar = "TAOM_FORDS_AUTORUN";
+
+    /// <summary>The launcher set the arm variable for this process, so nobody is at the keyboard.</summary>
+    internal static bool ArmedInThisProcess => !string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(EnvVar));
+
     internal const double DefaultLiveSeconds = 600.0;
     internal const double DefaultLiveWaitSeconds = 600.0;
     internal const double DefaultWallLimitSeconds = 2400.0;

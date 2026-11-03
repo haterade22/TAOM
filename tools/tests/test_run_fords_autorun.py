@@ -321,6 +321,38 @@ class PreflightTests(unittest.TestCase):
         with mock.patch.object(r, "list_processes", return_value=running):
             self.assertEqual(len(r.preflight(self.game)), 1)
 
+    def _kit_and_dog(self, target=54052):
+        kit = {"pid": 54052, "name": r.KIT_PROCESS, "path": str(self.game / "bin" / "Win64_Shipping_wEditor" / r.KIT_PROCESS), "cmd": "", "created": ""}
+        dog = {"pid": 24000, "name": "Watchdog.exe", "path": str(self.game / "bin" / "Watchdog.exe"), "cmd": f"Watchdog.exe -p {target} -dd x", "created": ""}
+        return [kit, dog]
+
+    def test_an_open_kit_refuses_by_default_and_names_the_flag(self):
+        with mock.patch.object(r, "list_processes", return_value=self._kit_and_dog()):
+            problems = r.preflight(self.game)
+        self.assertEqual(len(problems), 1)
+        self.assertIn("--allow-open-kit", problems[0])
+
+    def test_the_flag_starts_beside_an_open_kit(self):
+        with mock.patch.object(r, "list_processes", return_value=self._kit_and_dog()):
+            self.assertEqual(r.preflight(self.game, allow_open_kit=True), [])
+
+    def test_the_flag_still_refuses_a_running_game(self):
+        running = self._kit_and_dog() + [{"pid": 7, "name": "Bannerlord.exe", "path": "x", "cmd": "", "created": ""}]
+        with mock.patch.object(r, "list_processes", return_value=running):
+            self.assertEqual(len(r.preflight(self.game, allow_open_kit=True)), 1)
+
+    def test_the_flag_still_refuses_a_watchdog_of_anything_but_the_kit(self):
+        with mock.patch.object(r, "list_processes", return_value=self._kit_and_dog(target=999)):
+            problems = r.preflight(self.game, allow_open_kit=True)
+        self.assertEqual(len(problems), 1)
+        self.assertIn("pid 24000", problems[0])
+
+    def test_the_games_own_launcher_is_not_the_kit(self):
+        launcher = {"pid": 54052, "name": r.KIT_PROCESS, "path": str(self.game / "bin" / "Win64_Shipping_Client" / r.KIT_PROCESS), "cmd": "", "created": ""}
+        dog = {"pid": 24000, "name": "Watchdog.exe", "path": str(self.game / "bin" / "Watchdog.exe"), "cmd": "Watchdog.exe -p 54052", "created": ""}
+        with mock.patch.object(r, "list_processes", return_value=[launcher, dog]):
+            self.assertEqual(len(r.preflight(self.game, allow_open_kit=True)), 1)
+
     def test_a_missing_exe_refuses(self):
         (self.game / "bin" / "Win64_Shipping_Client" / "Bannerlord.exe").unlink()
         with mock.patch.object(r, "list_processes", return_value=[]):

@@ -23,7 +23,7 @@ Otherwise the session asks once. Every run is reported afterwards: the run folde
 folder's `Watchdog.exe` runs, and while `--require-idle-minutes` (default 10) of input silence has not passed. The idle age is
 `GetLastInputInfo` against `GetTickCount` (32-bit ticks, so the difference wraps correctly); an age it cannot read refuses too.
 `--require-idle-minutes 0` switches the gate off, and a session passes it only after the maintainer has said yes for that run or
-that session. `--dry-run` prints the idle state without starting anything. The launcher answers the game's dialogs with posted
+that session. `--allow-open-kit`, on the same terms, passes only the Watchdog of an open Modding Kit: never a running game or that game's Watchdog. `--dry-run` prints the idle state without starting anything. The launcher answers the game's dialogs with posted
 messages, which are not user input, so a run does not reset the clock it is gated on.
 
 `--keep-on-crash <seconds>` makes the launcher wait after a crash, because the Watchdog holds the process and asks a person about a dump
@@ -59,7 +59,7 @@ A boot to the main menu takes about 20 to 80 s, longer when the shader cache is 
 | File | What the launcher does | Why it matters |
 |---|---|---|
 | `<MyDocuments>/Mount and Blade II Bannerlord/Configs/engine_config.txt` | Rewrites `safely_exited = 0` to `1` before the start and after any kill (bytes and CRLF otherwise untouched) | A killed game leaves `0`, and the next start stops at a Safe Mode window. `MyDocuments` is OneDrive-redirected on this PC, so the launcher asks PowerShell for the real folder |
-| `Configs/BannerlordConfig.txt` | Reads only; logs `StopGameOnFocusLost` | In the runs so far mission time ran at ratio 1.00 to wall time although it is `True`; the `[Autorun] clock` lines show the ratio on every run |
+| `Configs/BannerlordConfig.txt` | Reads only; logs `StopGameOnFocusLost`. An armed run ignores it: `FordsCommandView` declines the Escape menu that a lost focus opens, and that menu would pause the mission until someone closed it. The value itself stays untouched, because the engine saves the config when the game closes | In the runs so far mission time ran at ratio 1.00 to wall time although it is `True`; the `[Autorun] clock` lines show the ratio on every run |
 | `C:/ProgramData/Mount and Blade II Bannerlord/Shaders/CoreShaders/D3D11/shader_mapping.bin` | Reads only; logs whether its module list matches | A cache built for another module list makes the engine show a blocking "Mod change detected" notice before the graphics device starts. The first launch stalled 10 minutes on it. The launcher posts `WM_COMMAND` for that dialog's OK button; its OK only lets the engine rebuild the cache |
 | `Modules/TAOM` in the game folder | Not touched by the launcher; whatever is deployed there is what runs | `build.ps1` from a checkout deploys that checkout and replaces the maintainer's own deploy; his next F5 redeploys trunk. Check the `[BuildStamp]` line in the run's log |
 | `bin/Win64_Shipping_Client/Logs/taom_debug_*.log` and `fords_report_*_run1.json` | Copies the newest | TAOM prunes about 30 logs and 20 reports |

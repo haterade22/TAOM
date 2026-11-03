@@ -29,6 +29,7 @@ internal sealed class AiCommander
     private readonly IFordsRandom _random;
     private readonly Dictionary<int, string> _assaultTargets = new();
     private const string UpgradeEntry = "up:";
+    private const string BeastEntry = "beast:";
 
     private float _nextDecisionAt;
     private int _buyIndex;
@@ -97,6 +98,10 @@ internal sealed class AiCommander
     private static int CallCreature(MatchView view, List<MatchView.LaneView> lanes, MatchView.LaneView? assault, int gold, List<AiAction> actions)
     {
         if (view.Creatures == null || view.Creatures.CooldownLeft > 0f)
+            return 0;
+
+        // A faction whose buy order names its beasts saves for them there; a call here would spend that gold on the cheapest one each time.
+        if (view.AiBuyCycle?.Any(e => e.StartsWith(BeastEntry, StringComparison.Ordinal)) == true)
             return 0;
 
         var offer = view.Creatures.Offers.Where(o => o.Price <= gold).OrderByDescending(o => o.Price).ThenBy(o => o.OfferId, StringComparer.Ordinal).FirstOrDefault();
@@ -192,24 +197,37 @@ internal sealed class AiCommander
         }
     }
 
-    /// <summary>The upgrade when the cycle's next entry names one, moving past any at its top level; null when the next entry is a pack.</summary>
-    private MatchView.UpgradeView? UpgradeDue(MatchView view, IReadOnlyList<string> cycle)
+    /// <summary>
+    /// The upgrade or beast when the cycle's next entry names one, moving past an upgrade at its top level and a beast whose timer still runs. Both are null when the next entry is a pack.
+    /// </summary>
+    private (MatchView.UpgradeView? Upgrade, MatchView.UnitOfferView? Beast) SpecialDue(MatchView view, IReadOnlyList<string> cycle)
     {
         for (var step = 0; step < cycle.Count; step++)
         {
             var entry = cycle[_buyIndex % cycle.Count];
-            if (!entry.StartsWith(UpgradeEntry, StringComparison.Ordinal))
-                return null;
-
-            var id = entry.Substring(UpgradeEntry.Length);
-            var upgrade = view.Upgrades?.FirstOrDefault(u => u.Id == id);
-            if (upgrade?.NextPrice != null)
-                return upgrade;
+            if (entry.StartsWith(UpgradeEntry, StringComparison.Ordinal))
+            {
+                var id = entry.Substring(UpgradeEntry.Length);
+                var upgrade = view.Upgrades?.FirstOrDefault(u => u.Id == id);
+                if (upgrade?.NextPrice != null)
+                    return (upgrade, null);
+            }
+            else if (entry.StartsWith(BeastEntry, StringComparison.Ordinal))
+            {
+                var id = entry.Substring(BeastEntry.Length);
+                var beast = view.Creatures is { CooldownLeft: <= 0f } call ? call.Offers.FirstOrDefault(o => o.OfferId == id) : null;
+                if (beast != null)
+                    return (null, beast);
+            }
+            else
+            {
+                return (null, null);
+            }
 
             _buyIndex++;
         }
 
-        return null;
+        return (null, null);
     }
 
     /// <summary>The next entry that has something on show, moving the place in the cycle past any that has not (a rotating faction's role may be absent for a while).</summary>
@@ -266,11 +284,12 @@ internal sealed class AiCommander
 
         if (view.AiBuyCycle is { Count: > 0 } cycle)
         {
-            if (UpgradeDue(view, cycle) is { } upgrade)
+            var (upgrade, beast) = SpecialDue(view, cycle);
+            if (upgrade != null || beast != null)
             {
-                if (upgrade.NextPrice <= gold)
+                if ((upgrade?.NextPrice ?? beast!.Price) <= gold)
                 {
-                    actions.Add(AiAction.BuyUpgrade(upgrade.Id));
+                    actions.Add(upgrade != null ? AiAction.BuyUpgrade(upgrade.Id) : AiAction.CallCreature(assault.Index, beast!.OfferId));
                     _buyIndex++;
                 }
 

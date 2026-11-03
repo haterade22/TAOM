@@ -28,6 +28,27 @@ public class FordsAutorunPlanTests
     }
 
     [TestMethod]
+    public void ArmedInThisProcess_FollowsTheArmVariable_AndABlankOneIsUnarmed()
+    {
+        var before = Environment.GetEnvironmentVariable(FordsAutorunPlan.EnvVar);
+        try
+        {
+            Environment.SetEnvironmentVariable(FordsAutorunPlan.EnvVar, "some/arm.txt");
+            Assert.IsTrue(FordsAutorunPlan.ArmedInThisProcess);
+
+            Environment.SetEnvironmentVariable(FordsAutorunPlan.EnvVar, "  ");
+            Assert.IsFalse(FordsAutorunPlan.ArmedInThisProcess);
+
+            Environment.SetEnvironmentVariable(FordsAutorunPlan.EnvVar, null);
+            Assert.IsFalse(FordsAutorunPlan.ArmedInThisProcess);
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable(FordsAutorunPlan.EnvVar, before);
+        }
+    }
+
+    [TestMethod]
     public void Resolve_EnvVariableUnset_IsUnarmedWithNoProblem()
     {
         var plan = Resolve("out=E:\\x", env: null);

@@ -7,6 +7,7 @@ using TaleWorlds.MountAndBlade.View.MissionViews;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
 using TAOM.Features.FordsOfWar;
+using TAOM.Features.FordsOfWar.Autorun;
 using TAOM.Features.FordsOfWar.Diagnostics;
 
 namespace TAOM.Client.Features.FordsOfWar;
@@ -35,6 +36,12 @@ public sealed class FordsCommandView : MissionView
     private FordsRunReport? _report;
     private float _sinceRefresh = RefreshIntervalSec;
     private bool _failed;
+
+    /// <summary>
+    /// A lost focus opens the Escape menu, which pauses the mission until someone closes it. In an unattended run nobody will, so an armed run says no.
+    /// The player's own StopGameOnFocusLost stays as it is: the engine saves that config when the game closes.
+    /// </summary>
+    public override bool IsOpeningEscapeMenuOnFocusChangeAllowed() => !FordsAutorunPlan.ArmedInThisProcess && base.IsOpeningEscapeMenuOnFocusChangeAllowed();
 
     public override void OnMissionScreenTick(float dt)
     {

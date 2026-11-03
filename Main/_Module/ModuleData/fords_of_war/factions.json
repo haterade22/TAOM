@@ -461,7 +461,7 @@
     "harad": {
       "name": "{=TAOM_FOW_Faction_Harad}Harad",
       "culture": "aserai",
-      "aiBuyCycle": ["levies", "bowmen", "up:siegecraft", "footmen", "levies", "serpent_archers", "up:melee_armour", "camel_riders", "serpent_guard", "lancers"],
+      "aiBuyCycle": ["levies", "bowmen", "up:siegecraft", "footmen", "beast:war_elephant", "levies", "serpent_archers", "up:melee_armour", "camel_riders", "serpent_guard", "beast:mumak", "lancers"],
       "upgradeCost": { "siegecraft": 0.75 },
       "feats": { "towerHitPoints": 0.85 },
       "traits": [
@@ -483,7 +483,7 @@
         "cooldownSeconds": 120,
         "units": [
           { "id": "war_elephant", "troop": "fow_harad_elephant_rider", "role": "Cavalry", "packSize": 1, "level": 51, "eliteWeight": 2.0 },
-          { "id": "mumak", "troop": "fow_harad_mumakil_rider", "role": "Cavalry", "packSize": 1, "level": 51, "eliteWeight": 4.0 }
+          { "id": "mumak", "troop": "fow_harad_mumakil_rider", "role": "Cavalry", "packSize": 1, "level": 51, "eliteWeight": 6.35 }
         ]
       },
       "heroes": [
