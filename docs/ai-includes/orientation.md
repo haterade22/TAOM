@@ -20,7 +20,9 @@ CLAUDE.md imports it ([ADR-011](../adrs/011-knowledge-delivery-tiers.md)).
   validated. 12 languages, all AI first drafts; `tools/translation_overrides/<lang>.json` wins
   ([TRANSLATOR_GUIDE.md](../localization/TRANSLATOR_GUIDE.md)).
 - **Lessons:** the evidence archive per subsystem is `docs/reviews/lessons/<category>.md`
-  ([index](../reviews/LESSONS-LEARNED.md)); append after every review or RCA.
+  ([index](../reviews/LESSONS-LEARNED.md)). Before touching a subsystem, list its headings with
+  `grep -n '^### '`, read the entries that apply, and name them in the brief or your one-line plan.
+  Append after every review or RCA.
 
 ## Trap index
 
@@ -39,13 +41,13 @@ and the gate.
 | Vendored DLLs | `Main/_Module/bin/Win64_Shipping_Client/` ships no vendored binary (`TAOM.dll` is build output); never MCMv5 | [deps](../modding/module-dependencies.md) |
 | Other mods | Four mods reach TAOM members and files by name; a rename passes the build and breaks them: grep the list | [couplings](../reference/external-mod-couplings.md) |
 | Mission logic | Logic `BehaviorType` needs `: MissionLogic`; no throw and no spawn in `AfterStart` | [lifecycle](../reference/engine/mission-and-missionbehavior-lifecycle.md) |
-| Armory | `LOTRLOME_Armory`: a root `<action>` kills a server, a second `LOTRLOME_items/*/` shadows an id, loose `Assets/**` wins | [armory](../reference/armory-guide.md) |
+| Armory | `LOTRLOME_Armory`: a root `<action>` kills a server, a second `LOTRLOME_items/*/` merges into an id, loose `Assets/**` wins | [armory](../reference/armory-guide.md) |
 | Shield plus polearm | A shield troop never draws a polearm absent from `OneHandedPolearm`: `audit_polearm_shield_parity.py` | [pipeline](../features/weapon-xml-pipeline.md) |
 | Co-op gating | Co-op loaded, peer authority, dedicated server, "a human player's party": four questions; server X.Instance is never null | [co-op](../features/coop-interop.md) |
 | Server stop | A hard-killed launcher leaves its engine on UDP 4200: end both, or the next boot exits 3 | [server](../features/coop-dedicated-server.md) |
 | Console commands | Route through `TaomConsole`; a wrongly shaped command throws in unguarded startup discovery | [console](../features/dev-console.md) |
 | Landless cultures | A culture owning no settlement CTDs the daily clan tick: `Patch65`, `LANDLESS_CULTURE` | [spawn guard](../features/lord-spawn-guard.md) |
-| Culture ids | `empire` is Dunland, `battania` Khand; troops may carry another culture: read both from the data | [lesson](../reviews/lessons/data-content-cultures.md) |
+| Culture ids | `empire` is Dunland, `battania` Khand; troops may carry another culture: read both from the data | [ids](../modding/id-cheatsheet.md) |
 | NPCCharacter `<face>` | Missing: toddler; copied key: twin lords; a lady on a template: her own hair tag. Gates in the doc | [body properties](../modding/body-properties.md) |
 | Enlisted service | Only `DischargeService` ends it; parked, or visible in the commander's settlement, is legitimate | [enlistment](../features/enlistment.md) |
 | Leaving a map event | Clearing `MainParty.AttachedTo` mid-event nulls the upgrade tracker; vanilla CTDs later | [guard](../features/map-event-guard.md) |
