@@ -319,7 +319,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
                 return;
 
             foreach (var gold in _match.GoldTotals())
-                _logger.LogInfo($"[FordsOfWar][Balance] side={gold.Side} slot={gold.Slot} earned={gold.Earned} spent={gold.Spent} left={gold.Left}");
+                _logger.LogInfo($"[FordsOfWar][Balance] side={gold.Side} slot={gold.Slot} earned={gold.Earned} spent={gold.Spent} left={gold.Left} {gold.Breakdown}");
         }
     }
 

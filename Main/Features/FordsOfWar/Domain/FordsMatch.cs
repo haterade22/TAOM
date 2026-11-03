@@ -157,7 +157,7 @@ internal sealed partial class FordsMatch
         if (queued != CommandResult.Ok)
             return queued;
 
-        _ledger.TrySpend(slot, offer.PackPrice);
+        _ledger.TrySpend(slot, offer.PackPrice, GoldUse.Units);
         _pendingEvents.Add(new MatchEvent(MatchEventKind.PackBought, owner.Side, offer.OfferId, offer.PackPrice));
         return CommandResult.Ok;
     }
@@ -173,7 +173,7 @@ internal sealed partial class FordsMatch
             return CommandResult.NotLive;
         if (deck.Current.Id == regionId)
             return CommandResult.Ok;
-        if (!_ledger.TrySpend(slot, deck.CallFee))
+        if (!_ledger.TrySpend(slot, deck.CallFee, GoldUse.Regions))
             return CommandResult.NotEnoughGold;
 
         deck.Call(regionId);
@@ -202,7 +202,7 @@ internal sealed partial class FordsMatch
         if (queued != CommandResult.Ok)
             return queued;
 
-        _ledger.TrySpend(slot, offer.PackPrice);
+        _ledger.TrySpend(slot, offer.PackPrice, GoldUse.Creatures);
         _creatureReadyAt[slot] = _clock.Elapsed + call!.CooldownSeconds;
         _pendingEvents.Add(new MatchEvent(MatchEventKind.CreatureCalled, side, offer.TroopId, offer.PackPrice));
         return CommandResult.Ok;
@@ -227,7 +227,7 @@ internal sealed partial class FordsMatch
         if (fielded != CommandResult.Ok)
             return fielded;
 
-        _ledger.TrySpend(slot, offer.Price);
+        _ledger.TrySpend(slot, offer.Price, GoldUse.Heroes);
         var request = _heroes.Get(owner.Side, offer.HeroId)!.ToSpawnRequest(_waves.NextRequestId());
         _pendingSpawns.Add(request);
         TrackCharge(request, offer.Price, null);
@@ -248,7 +248,7 @@ internal sealed partial class FordsMatch
         var result = _heroes.TryBuyback(owner.Side, heroId, _clock.Elapsed);
         if (result == CommandResult.Ok)
         {
-            _ledger.TrySpend(slot, price);
+            _ledger.TrySpend(slot, price, GoldUse.Heroes);
             _buybackPaid[(owner.Side, heroId)] = price;
         }
 
@@ -295,7 +295,7 @@ internal sealed partial class FordsMatch
     }
 
     /// <summary>Adds gold to a slot outside the economy (the dev console's grant); the purse still stops at MaxGold. Returns what was added.</summary>
-    public int GrantGold(int slot, int amount) => _ledger.Earn(slot, amount);
+    public int GrantGold(int slot, int amount) => _ledger.Earn(slot, amount, GoldSource.Granted);
 
     /// <summary>The engine layer calls this once per spawned agent. The request id lets the match see when a charged request is fully out.</summary>
     public void RegisterUnit(int requestId, UnitRecord unit)
@@ -335,7 +335,7 @@ internal sealed partial class FordsMatch
 
         var bounty = dead.HeroId != null ? _bounty.HeroKillBounty : _bounty.KillBounty(dead.Value);
         var factor = _factions.TryGetValue(killerSide, out var killerFaction) ? killerFaction.FeatsOrNone.Bounty : 1f;
-        _ledger.Earn(killerSlot, (int)Math.Round(bounty * factor, MidpointRounding.AwayFromZero));
+        _ledger.Earn(killerSlot, (int)Math.Round(bounty * factor, MidpointRounding.AwayFromZero), GoldSource.Bounty);
         return KillCredit.Paid;
     }
 
@@ -359,7 +359,7 @@ internal sealed partial class FordsMatch
         if (cleared?.Side is { } paid && cleared.Slot >= 0)
         {
             var reward = CampRewardFor(paid, cleared.Reward);
-            _ledger.Earn(cleared.Slot, reward);
+            _ledger.Earn(cleared.Slot, reward, GoldSource.Camps);
             _pendingEvents.Add(new MatchEvent(MatchEventKind.CampCleared, paid, campId, reward));
         }
 
@@ -401,7 +401,7 @@ internal sealed partial class FordsMatch
 
         var share = _bounty.TowerBountyPerSlot(SlotsOf(scorer).Count);
         foreach (var commander in SlotsOf(scorer))
-            _ledger.Earn(commander.Id, share);
+            _ledger.Earn(commander.Id, share, GoldSource.Towers);
         _pendingEvents.Add(new MatchEvent(MatchEventKind.TowerDestroyed, slot.Owner, towerId, share));
     }
 
@@ -497,7 +497,7 @@ internal sealed partial class FordsMatch
             var whole = (int)Math.Floor(carry + 1e-6);
             _incomeCarry[slot.Id] = Math.Max(0d, carry - whole);
             if (whole > 0)
-                _ledger.Earn(slot.Id, whole);
+                _ledger.Earn(slot.Id, whole, GoldSource.Income);
         }
     }
 
@@ -515,7 +515,7 @@ internal sealed partial class FordsMatch
             // An uneven split hands the remainder out one gold at a time, first slot first.
             var slots = SlotsOf(side);
             for (var i = 0; i < slots.Count; i++)
-                _ledger.Earn(slots[i].Id, income / slots.Count + (i < income % slots.Count ? 1 : 0));
+                _ledger.Earn(slots[i].Id, income / slots.Count + (i < income % slots.Count ? 1 : 0), GoldSource.Captures);
         }
     }
 

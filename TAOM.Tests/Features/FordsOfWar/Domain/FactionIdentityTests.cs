@@ -371,25 +371,24 @@ public class FactionIdentityTests
     }
 
     [TestMethod]
-    public void TheAi_CallsItsDearestAffordableCreature_WhenTheTimerIsReady()
+    public void GoldTotals_SayWhatEachPurchasePaidFor()
     {
-        var factions = Factions().ToDictionary(e => e.Key, e => e.Value);
-        factions[MatchSide.East] = factions[MatchSide.East] with { Creatures = Beasts };
-        var match = new FordsMatch(Config(c => c with { Economy = c.Economy with { StartingGold = 5000 } }), Layout(), factions, Slots("slow"), new SeededFordsRandom(7));
-        match.Tick(Snap(0.5f));
+        var match = Match(creatures: Beasts);
 
-        var ai = new AiCommander(EastSlot, new FordsAiProfile("hard", 5f, 1.2f, 0f, 400), new SeededFordsRandom(3));
-        var actions = ai.Decide(match.GetView(EastSlot), 5f);
+        match.TryCallCreature(WestSlot, 0, "wargs");
+        match.TryBuyHero(WestSlot, 0, HeroB.HeroId);
 
-        var call = actions.Single(a => a.Kind == AiActionKind.CallCreature);
-        Assert.AreEqual("troll_call", call.Id);
+        var text = match.GoldTotals().Single(g => g.Slot == WestSlot).Breakdown;
+        StringAssert.Contains(text, "creatures=" + Warg.PackPrice);
+        StringAssert.Contains(text, "heroes=" + HeroB.Price);
+        StringAssert.Contains(text, "units=0");
     }
 
     [TestMethod]
     public void TheAi_DoesNotCallWhileTheTimerRuns()
     {
         var factions = Factions().ToDictionary(e => e.Key, e => e.Value);
-        factions[MatchSide.East] = factions[MatchSide.East] with { Creatures = Beasts };
+        factions[MatchSide.East] = factions[MatchSide.East] with { Creatures = Beasts, AiBuyCycle = new[] { "beast:troll_call" } };
         var match = new FordsMatch(Config(c => c with { Economy = c.Economy with { StartingGold = 5000 } }), Layout(), factions, Slots("slow"), new SeededFordsRandom(7));
         match.TryCallCreature(EastSlot, 0, "wargs");
         match.Tick(Snap(0.5f));

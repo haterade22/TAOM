@@ -9,7 +9,8 @@ namespace TAOM.Features.FordsOfWar.Domain;
 /// <see cref="AiAction"/>s that the match applies through the human Try* methods. Every DecisionIntervalSeconds it
 /// defends the worst threatened lane with the cheapest spear or infantry pack, buys back or fields heroes when gold
 /// beats price plus HeroReserveGold, then builds its best lane on Hold with the dearest pack it can pay until the lane
-/// holds AssaultThreshold units, and pushes. MistakeChance skips a whole decision. Gold it plans to spend is tracked
+/// holds AssaultThreshold units, and pushes. A faction's buy cycle also names its upgrades, its beasts and when to save
+/// for a hero; a creature comes only from there. MistakeChance skips a whole decision. Gold it plans to spend is tracked
 /// locally, so one decision never asks for more than the slot owns.
 /// </summary>
 internal sealed class AiCommander
@@ -30,6 +31,7 @@ internal sealed class AiCommander
     private readonly Dictionary<int, string> _assaultTargets = new();
     private const string UpgradeEntry = "up:";
     private const string BeastEntry = "beast:";
+    private const string HeroEntry = "hero";
 
     private float _nextDecisionAt;
     private int _buyIndex;
@@ -64,7 +66,6 @@ internal sealed class AiCommander
         gold -= Defend(view, lanes, gold, actions);
         var assault = PickAssaultLane(lanes);
         gold -= FieldHeroes(view, lanes, assault, gold, actions);
-        gold -= CallCreature(view, lanes, assault, gold, actions);
         SetOrders(view, lanes, assault, actions);
         BuildAssault(view, assault, gold, actions);
         return actions;
@@ -92,24 +93,6 @@ internal sealed class AiCommander
 
         actions.Add(AiAction.BuyPack(worst.Index, pack.OfferId));
         return pack.Price;
-    }
-
-    /// <summary>The dearest creature the gold reaches, into the assault lane, whenever the shared timer is ready. Returns the gold planned.</summary>
-    private static int CallCreature(MatchView view, List<MatchView.LaneView> lanes, MatchView.LaneView? assault, int gold, List<AiAction> actions)
-    {
-        if (view.Creatures == null || view.Creatures.CooldownLeft > 0f)
-            return 0;
-
-        // A faction whose buy order names its beasts saves for them there; a call here would spend that gold on the cheapest one each time.
-        if (view.AiBuyCycle?.Any(e => e.StartsWith(BeastEntry, StringComparison.Ordinal)) == true)
-            return 0;
-
-        var offer = view.Creatures.Offers.Where(o => o.Price <= gold).OrderByDescending(o => o.Price).ThenBy(o => o.OfferId, StringComparer.Ordinal).FirstOrDefault();
-        if (offer == null)
-            return 0;
-
-        actions.Add(AiAction.CallCreature((assault ?? lanes[0]).Index, offer.OfferId));
-        return offer.Price;
     }
 
     /// <summary>The lane we are not losing with the best own-to-enemy ratio; the lowest index wins a tie.</summary>
@@ -198,9 +181,10 @@ internal sealed class AiCommander
     }
 
     /// <summary>
-    /// The upgrade or beast when the cycle's next entry names one, moving past an upgrade at its top level and a beast whose timer still runs. Both are null when the next entry is a pack.
+    /// The upgrade, beast or hero when the cycle's next entry names one, with its price: moves past an upgrade at its top level, a beast whose timer still runs,
+    /// and a hero with no slot free or none left to field. Null when the next entry is a pack. A hero entry names the cheapest, since the richer path is <see cref="FieldHeroes"/>.
     /// </summary>
-    private (MatchView.UpgradeView? Upgrade, MatchView.UnitOfferView? Beast) SpecialDue(MatchView view, IReadOnlyList<string> cycle)
+    private (int Price, AiAction Action)? SpecialDue(MatchView view, int lane, IReadOnlyList<string> cycle)
     {
         for (var step = 0; step < cycle.Count; step++)
         {
@@ -209,25 +193,31 @@ internal sealed class AiCommander
             {
                 var id = entry.Substring(UpgradeEntry.Length);
                 var upgrade = view.Upgrades?.FirstOrDefault(u => u.Id == id);
-                if (upgrade?.NextPrice != null)
-                    return (upgrade, null);
+                if (upgrade?.NextPrice is { } price)
+                    return (price, AiAction.BuyUpgrade(upgrade.Id));
             }
             else if (entry.StartsWith(BeastEntry, StringComparison.Ordinal))
             {
                 var id = entry.Substring(BeastEntry.Length);
                 var beast = view.Creatures is { CooldownLeft: <= 0f } call ? call.Offers.FirstOrDefault(o => o.OfferId == id) : null;
                 if (beast != null)
-                    return (null, beast);
+                    return (beast.Price, AiAction.CallCreature(lane, beast.OfferId));
+            }
+            else if (entry == HeroEntry)
+            {
+                var hero = view.HeroSlotsFree > 0 ? view.HeroOffers.Where(h => !h.Fielded).OrderBy(h => h.Price).ThenBy(h => h.HeroId, StringComparer.Ordinal).FirstOrDefault() : null;
+                if (hero != null)
+                    return (hero.Price, AiAction.BuyHero(lane, hero.HeroId));
             }
             else
             {
-                return (null, null);
+                return null;
             }
 
             _buyIndex++;
         }
 
-        return (null, null);
+        return null;
     }
 
     /// <summary>The next entry that has something on show, moving the place in the cycle past any that has not (a rotating faction's role may be absent for a while).</summary>
@@ -276,25 +266,28 @@ internal sealed class AiCommander
     /// <summary>
     /// One pack for the assault lane. A faction with a buy cycle buys its next entry, and saves up when that costs more than the gold: a horde keeps
     /// buying cheap packs and a cavalry army keeps some foot, where the dearest offer alone would do neither. Without a cycle it buys the dearest it can afford.
+    /// An upgrade, beast or hero still comes while the lane is full: a small faction's lane fills early, and its gold would sit unspent.
     /// </summary>
     private void BuildAssault(MatchView view, MatchView.LaneView? assault, int gold, List<AiAction> actions)
     {
-        if (assault == null || assault.OwnLive >= view.AssaultThreshold)
+        if (assault == null)
             return;
 
         if (view.AiBuyCycle is { Count: > 0 } cycle)
         {
-            var (upgrade, beast) = SpecialDue(view, cycle);
-            if (upgrade != null || beast != null)
+            if (SpecialDue(view, assault.Index, cycle) is { } due)
             {
-                if ((upgrade?.NextPrice ?? beast!.Price) <= gold)
+                if (due.Price <= gold)
                 {
-                    actions.Add(upgrade != null ? AiAction.BuyUpgrade(upgrade.Id) : AiAction.CallCreature(assault.Index, beast!.OfferId));
+                    actions.Add(due.Action);
                     _buyIndex++;
                 }
 
                 return;
             }
+
+            if (assault.OwnLive >= view.AssaultThreshold)
+                return;
 
             var next = NextInCycle(view, cycle, gold);
             if (next != null && next.Price <= gold)
@@ -305,6 +298,9 @@ internal sealed class AiCommander
 
             return;
         }
+
+        if (assault.OwnLive >= view.AssaultThreshold)
+            return;
 
         var pack = view.UnitOffers
             .Where(o => o.Role != UnitRole.Hero && o.Price <= gold)

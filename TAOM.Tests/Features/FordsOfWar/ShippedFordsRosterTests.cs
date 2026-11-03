@@ -166,6 +166,7 @@ public class ShippedFordsRosterTests
             known.UnionWith(faction.AllOffers.Where(o => faction.Creatures?.Offers.Contains(o) != true).Select(o => o.Role.ToString()));
             known.UnionWith(FordsMatchConfig.Default.UpgradesOrDefault.Select(t => "up:" + t.Id));
             known.UnionWith((faction.Creatures?.Offers ?? new List<UnitOffer>()).Select(o => "beast:" + o.OfferId));
+            known.Add("hero");
             var unknown = faction.AiBuyCycle!.Where(e => !known.Contains(e)).ToArray();
             CollectionAssert.AreEqual(Array.Empty<string>(), unknown, faction.FactionId);
         }
@@ -282,6 +283,19 @@ public class ShippedFordsRosterTests
 
         Assert.AreEqual(accents.Count, accents.Distinct().Count());
         Assert.IsFalse(accents.Contains(TAOM.Client.Features.FordsOfWar.FordsFactionStyle.Accent("not_a_faction")));
+    }
+
+    [TestMethod]
+    public void EveryFaction_NamesItsBeastsAndAHeroInItsBuyOrder_OrTheAiNeverBuysThem()
+    {
+        foreach (var faction in Catalog().Factions)
+        {
+            var offers = faction.Creatures?.Offers.Select(o => o.OfferId).ToList() ?? new List<string>();
+            var beasts = faction.AiBuyCycle!.Where(e => e.StartsWith("beast:", StringComparison.Ordinal)).Select(e => e.Substring("beast:".Length)).ToList();
+            CollectionAssert.AreEqual(Array.Empty<string>(), beasts.Except(offers).ToArray(), faction.FactionId + " names a beast it cannot call");
+            Assert.AreEqual(offers.Count > 0, beasts.Count > 0, faction.FactionId + " has creatures its AI never calls");
+            CollectionAssert.Contains(faction.AiBuyCycle!.ToList(), "hero", faction.FactionId + " never saves for a hero");
+        }
     }
 
     [TestMethod]

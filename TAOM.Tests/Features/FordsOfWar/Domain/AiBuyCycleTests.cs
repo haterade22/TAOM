@@ -133,11 +133,59 @@ public class AiBuyCycleTests
     }
 
     [TestMethod]
-    public void Decide_WithoutABeastEntry_CallsTheDearestBeastTheGoldReaches()
+    public void Decide_WithoutABeastEntry_CallsNoBeast_SoItsGoldReachesTheBuyOrder()
     {
-        var calls = Decisions(BeastMatch(new[] { Offers[0].OfferId }, 500), 1).Where(a => a.Kind == AiActionKind.CallCreature).ToList();
+        var actions = Decisions(BeastMatch(new[] { Offers[0].OfferId }, 5000), 1);
 
-        Assert.AreEqual("elephant", calls.Single().Id);
+        Assert.AreEqual(0, actions.Count(a => a.Kind == AiActionKind.CallCreature));
+        Assert.AreEqual(1, actions.Count(a => a.Kind == AiActionKind.BuyPack));
+    }
+
+    [TestMethod]
+    public void Decide_AHeroEntry_FieldsTheCheapestHero_WhenTheGoldReaches()
+    {
+        var actions = Decisions(Match(new[] { "hero" }, HeroB.Price), 1);
+
+        Assert.AreEqual(HeroB.HeroId, actions.Single(a => a.Kind == AiActionKind.BuyHero).Id);
+    }
+
+    [TestMethod]
+    public void Decide_AHeroThatCostsTooMuch_SavesForIt_AndBuysNoPack()
+    {
+        var actions = Decisions(Match(new[] { "hero", Offers[0].OfferId }, HeroB.Price - 1), 1);
+
+        Assert.AreEqual(0, actions.Count(a => a.Kind == AiActionKind.BuyHero || a.Kind == AiActionKind.BuyPack));
+    }
+
+    [TestMethod]
+    public void Decide_AHeroEntry_WithNoHeroLeftToField_MovesOn()
+    {
+        var match = Match(new[] { "hero", Offers[0].OfferId });
+        match.TryBuyHero(EastSlot, 0, HeroA.HeroId);
+        match.TryBuyHero(EastSlot, 0, HeroB.HeroId);
+
+        var actions = Decisions(match, 1);
+
+        Assert.AreEqual(0, actions.Count(a => a.Kind == AiActionKind.BuyHero));
+        Assert.AreEqual(Offers[0].OfferId, actions.Single(a => a.Kind == AiActionKind.BuyPack).Id);
+    }
+
+    [TestMethod]
+    public void Decide_TheAssaultLaneIsFull_StillFieldsTheHeroDue_ButBuysNoPack()
+    {
+        var hero = Decisions(FullLaneMatch(new[] { "hero" }), 1);
+        var pack = Decisions(FullLaneMatch(new[] { Offers[0].OfferId }), 1);
+
+        Assert.AreEqual(1, hero.Count(a => a.Kind == AiActionKind.BuyHero));
+        Assert.AreEqual(0, pack.Count(a => a.Kind == AiActionKind.BuyPack));
+    }
+
+    private static FordsMatch FullLaneMatch(IReadOnlyList<string> cycle)
+    {
+        var factions = Factions().ToDictionary(e => e.Key, e => e.Value);
+        factions[MatchSide.East] = factions[MatchSide.East] with { AiBuyCycle = cycle };
+        var config = Config(c => c with { Economy = c.Economy with { StartingGold = 5000 }, Lanes = c.Lanes with { AssaultThreshold = 0 } });
+        return new FordsMatch(config, Layout(), factions, Slots("slow"), new SeededFordsRandom(7));
     }
 
     [TestMethod]

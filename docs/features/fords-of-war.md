@@ -347,7 +347,7 @@ is data in `factions.json` and `fords_troops.xml`. The numbers below are first v
   damage, melee armour, missile armour, siegecraft and fortify. The damage and armour tracks work per blow in `TaomCustomBattleDamageModel`, so a level reaches the units already on the field with no stat refresh. Tower gunners gain nothing from the damage tracks.
   A faction's `upgradeCost` scales its prices. An `aiBuyCycle` entry `up:<track>` makes the AI save for that upgrade. Proof in a run: `[FordsOfWar][Upgrade]` lines, one per purchase and one with the blow totals at the end.
 - **AI buying** (`aiBuyCycle`, `AiCommander`): a repeating list the AI buys in, so a faction plays to its identity. An entry is an offer id, or a role name for the dearest offer of
-  that role the gold reaches, which suits Gondor's rotating bands. The AI saves up when the next entry costs too much. Mordor buys orc packs most of the time; Rohan keeps some foot to take towers.
+  that role the gold reaches, which suits Gondor's rotating bands. `up:<track>` names an upgrade, `beast:<offer>` a creature and `hero` the cheapest hero it can still field. The AI saves up when the next entry costs too much. It calls a creature only from this list, and a gate makes every creature faction name one, because an automatic call on the timer once took most of Mordor's gold. An upgrade, beast or hero still comes while the assault lane is full, so a small faction's gold does not sit unspent. Mordor buys orc packs most of the time; Rohan keeps some foot to take towers.
 - **Traits** (`factions.json` `traits`): the lines that tell the player a faction's strengths and weaknesses. The panel shows them during the countdown.
 - **Call of the Regions** (`rotation`, `RegionDeck`): a band of four offers from one region fills buy slots F3 to F6 for `seconds` (30), then the next region's band
   takes the same slots. Slots never move. The deck is shuffled: each region comes once per cycle, and a new cycle never starts with the region just shown. The panel
@@ -730,6 +730,8 @@ Report any unreachable step with the command tried and the unmet precondition, a
 through another path.
 
 ## How to tune or extend
+
+After every match, run `python tools/fords_match_review.py <run folder>`, read its findings, and add the result to [balance-log.md](fords-of-war/balance-log.md). The `side=` line of `[FordsOfWar][Balance]` says where each commander's gold came from and what it paid for.
 
 **Change a number.** Edit `match.json`: no code change. Mind the pinned relations: `lanes.holdDistanceBeforeTower`
 must stay above `towers.fireRange`, the readers bound each value (tower fractions 0.01 to 0.49, lane count 3 or 4).

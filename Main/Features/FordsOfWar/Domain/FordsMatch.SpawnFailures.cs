@@ -62,7 +62,7 @@ internal sealed partial class FordsMatch
         var request = charge.Request;
         if (request.IsHero)
         {
-            _ledger.Earn(request.OwnerSlot, charge.HeroPaid);
+            _ledger.Earn(request.OwnerSlot, charge.HeroPaid, GoldSource.Refund);
             _heroes.Remove(request.Side, request.TroopId);
             _lostHeroes.Add((request.Side, request.TroopId));
             return;
@@ -73,7 +73,7 @@ internal sealed partial class FordsMatch
             return;
 
         var lost = Math.Max(0, Math.Min(unspawned, charge.Unregistered));
-        _ledger.Earn(request.OwnerSlot, (int)((long)pack.PackPrice * lost / pack.PackSize));
+        _ledger.Earn(request.OwnerSlot, (int)((long)pack.PackPrice * lost / pack.PackSize), GoldSource.Refund);
         _lostPacks.Add((request.Side, pack.OfferId));
     }
 

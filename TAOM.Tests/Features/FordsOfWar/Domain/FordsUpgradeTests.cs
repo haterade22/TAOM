@@ -200,6 +200,17 @@ public class FordsUpgradeTests
     }
 
     [TestMethod]
+    public void Decide_TheAssaultLaneIsFull_StillBuysTheUpgradeDue()
+    {
+        var factions = Factions().ToDictionary(e => e.Key, e => e.Value);
+        factions[MatchSide.East] = factions[MatchSide.East] with { AiBuyCycle = new[] { "up:" + Melee } };
+        var config = Config(c => c with { Economy = c.Economy with { StartingGold = 5000 }, Lanes = c.Lanes with { AssaultThreshold = 0 } });
+        var match = new FordsMatch(config, Layout(), factions, Slots("slow"), new SeededFordsRandom(7));
+
+        Assert.AreEqual(Melee, Decide(match, 1).Single(a => a.Kind == AiActionKind.BuyUpgrade).Id);
+    }
+
+    [TestMethod]
     public void Decide_AnUpgradeThatCostsTooMuch_SavesForIt()
     {
         var match = Match(gold: 299, eastCycle: new[] { "up:" + Melee, Factions()[MatchSide.East].Units[0].OfferId });

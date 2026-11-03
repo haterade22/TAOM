@@ -106,6 +106,24 @@ public class GoldLedgerTests
     }
 
     [TestMethod]
+    public void Breakdown_NamesWhereTheGoldCameFrom_AndWhatItPaidFor_ForThatSlotOnly()
+    {
+        var l = Ledger();
+
+        l.Earn(1, 50, GoldSource.Bounty);
+        l.Earn(1, 20, GoldSource.Income);
+        l.Earn(2, 7, GoldSource.Bounty);
+        l.TrySpend(1, 30, GoldUse.Creatures);
+        l.TrySpend(1, 99999, GoldUse.Heroes);
+
+        var text = l.Breakdown(1);
+        StringAssert.Contains(text, "income=20");
+        StringAssert.Contains(text, "bounty=50");
+        StringAssert.Contains(text, "creatures=30");
+        StringAssert.Contains(text, "heroes=0", "a refused purchase pays for nothing");
+    }
+
+    [TestMethod]
     public void Slots_AreIndependent()
     {
         var l = Ledger();

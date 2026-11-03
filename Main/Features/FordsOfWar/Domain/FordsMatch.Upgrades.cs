@@ -16,7 +16,7 @@ internal sealed partial class FordsMatch
             return CommandResult.UnknownOffer;
         if (!(_upgrades.NextPrice(owner.Side, trackId) is { } price))
             return CommandResult.UpgradeComplete;
-        if (!_ledger.TrySpend(slot, price))
+        if (!_ledger.TrySpend(slot, price, GoldUse.Upgrades))
             return CommandResult.NotEnoughGold;
 
         _upgrades.TryRaise(owner.Side, trackId);
@@ -38,8 +38,8 @@ internal sealed partial class FordsMatch
     public (int Doses, long Damage) PoisonTotals(MatchSide side) => _poison.Totals(side);
 
     /// <summary>Every commander's gold so far, for the log at the end of a match.</summary>
-    public IEnumerable<(MatchSide Side, int Slot, long Earned, long Spent, int Left)> GoldTotals() =>
-        _slots.Select(s => (s.Side, s.Id, _ledger.Earned(s.Id), _ledger.Spent(s.Id), _ledger.Balance(s.Id)));
+    public IEnumerable<(MatchSide Side, int Slot, long Earned, long Spent, int Left, string Breakdown)> GoldTotals() =>
+        _slots.Select(s => (s.Side, s.Id, _ledger.Earned(s.Id), _ledger.Spent(s.Id), _ledger.Balance(s.Id), _ledger.Breakdown(s.Id)));
 
     /// <summary>What this side's upgrades do to the blows of its agents and the blows they take.</summary>
     public CombatUpgradeFactors CombatUpgrades(MatchSide side) => _upgrades.CombatFactors(side);
