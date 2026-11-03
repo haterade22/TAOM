@@ -13,12 +13,12 @@ this document.
 
 ### GitHub Issues — Create for ALL Work
 
-Every feature, bug fix, crash fix, or system change MUST have a GitHub issue. No exceptions.
+Every feature, bug fix, crash fix or system change gets a GitHub issue before implementation, unless the maintainer waives it for that work. Creating one is public: without a standing word for this work, ask once. A waiver or decline goes in the commit body.
 
 **When to create:**
 - Starting a new feature → create issue BEFORE implementation
 - Fixing a bug/crash → create issue documenting the problem FIRST
-- Completing a fix that was done without an issue → create issue retroactively with full details
+- Work done without an issue → ask the maintainer whether to file one retroactively
 
 **Issue content — be exhaustive:**
 
@@ -39,7 +39,7 @@ For **features**, the issue body MUST include:
 The file list (Files changed, or Implementation for a feature) names every shipped file and no
 "(planned)" row, and the Solution or Design and the Testing sections describe what ships, not the plan. A body written before the build is a plan, even when it was correct then.
 
-**Lifecycle:**
+**Lifecycle:** editing a body or adding a progress comment needs no ask (Mike, 2026-10-16); run `python tools/check_public_text.py` on the text first.
 - Label issues appropriately (`bug`, `feature`, `crash`, `enhancement`)
 - Reference the issue number in commits when possible
 - **Close the issue** with `gh issue close` when the work is complete and verified
@@ -60,20 +60,7 @@ The file list (Files changed, or Implementation for a feature) names every shipp
 
 Every completed feature MUST have a documentation file at `docs/features/<feature-name>.md`. This is the **knowledge base** that prevents future sessions from re-analyzing solved problems.
 
-**Use template:** `docs/features/TEMPLATE.md`
-
-**Sections required:**
-- Overview — what it does in 2-3 sentences
-- Why This Exists — the problem it solves, with specific examples
-- Architecture — design challenge, solution approach, component diagram
-- Configuration — config files, data formats, current values
-- Key Files — table of all files with their purpose
-- Dependencies — what it relies on
-- Tests — test file locations and coverage summary
-- How to verify in game: preconditions, then each `taom.*` command or UI action with the result
-  that proves it. `tools/lint_docs.py` blocks the commit of a new feature doc without this heading
-- How-To — common operations (e.g., "How to add a new X")
-- Performance — any optimization notes (if applicable)
+**Use template:** `docs/features/TEMPLATE.md`; `tools/lint_docs.py` blocks a new doc without `## How to verify in game`.
 
 **Existing examples:** `docs/features/race-age-system.md`, `docs/features/offspring-race-inheritance.md`
 

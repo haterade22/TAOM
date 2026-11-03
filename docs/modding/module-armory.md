@@ -111,6 +111,8 @@ The string you type into `mesh=` is the name inside the tpac, not the file name 
 
 What exists is inventoried, not remembered. `docs/reference/armory-catalogue/catalogue.tsv` is 4,843 lines joining every packaged mesh to the XML that names it, regenerated from the live install by `python tools/generate_armory_catalogue.py`.
 
+A resize pass never renames an editor-owned texture, case included; a rename is its own request (Mike, 2026-09-13).
+
 ### A texture's canvas shape proves nothing, and the copy on your disk may be a year old
 
 UV coordinates are normalized, so the canvas aspect of a texture carries no information about whether it is correct. A 2048x1024 sheet and a 1024x1024 sheet can hold the identical layout and map identically; a square sheet and a square sheet can hold entirely different ones. "This should be 1Kx1K, not 1Kx512" is therefore never a finding on its own, and neither is the shape a resize pass leaves behind, because every pass here preserves aspect.

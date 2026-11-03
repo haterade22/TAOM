@@ -11,8 +11,8 @@ untrusted PR code on the personal self-hosted workstation.
 | `contract` | `python tools/reviewctl.py lint` |
 | `reviewctl-tests` | `python -m unittest tools.tests.test_reviewctl tools.tests.test_ai_documentation -v` |
 | `python-tests` | `python -m unittest discover -s tools/tests -t .` |
-| `managed-build` | After an authorized `dotnet restore TAOM.sln`: `dotnet build TAOM.sln -c Release --no-restore -p:DisableModuleCopy=true -p:ModuleId=` |
-| `managed-tests` | Only after the above solution build at this SHA: `dotnet test TAOM.Tests -c Release --no-build -p:DisableModuleCopy=true -p:ModuleId= --verbosity normal` |
+| `managed-build` | After an authorized `dotnet restore TAOM.sln`: `dotnet build TAOM.sln --no-restore -p:DisableModuleCopy=true -p:ModuleId=` |
+| `managed-tests` | Only after the above solution build at this SHA: `dotnet test TAOM.Tests --no-build -p:DisableModuleCopy=true -p:ModuleId= --verbosity normal` |
 | `mcm-defaults` | `python tools/check_mcm_default_flips.py`: exit 1 when an MCM setting's default changed under an unchanged name since any release tag reachable from HEAD (rename it, or allowlist `Class.Name` with from, to and reason; a stale entry fails). |
 | `api-snapshot` | After a Debug build of the tests (`dotnet build TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`): `pwsh -NoProfile -File tools/snapshot_api_surface.ps1 -Check`. It reflects over `TAOM.Tests/bin/Debug/net472/TAOM.dll` whenever that exists, so a Release-only build leaves it reading a stale assembly. Exit 1 (`DRIFT:`) when a patch target or GameModel base changed and `docs/reference/taleworlds-api-snapshot/` was not regenerated; needs the game install. |
 | `loc-orphans` | `python tools/check_orphan_loc_rows.py`: exit 1 when a registered `taom_*` row in TAOM's English strings files has no C# literal, ModuleData reader, declared composed family (`tools/loc_composed_families.json`) or reasoned allowlist entry (`tools/loc_orphan_allowlist.json`), or when a declaration matches nothing or a later row for the same vanilla key shadows an earlier one; exit 2 on an unreadable file. It skips ids not starting `taom_` (including the dotted `str_key_name.*` rows) and scans all of `Main/_Module`, GUI prefabs included. |
@@ -42,6 +42,12 @@ An unfiltered run executes the tests tagged `RequiresGame` on stubs and fails.
 The three commands leave out the tests tagged `RequiresGame` (the unit step),
 `RequiresGameIL` (the gate) and `LiveInstall` (both), so it is partial evidence.
 Missing prerequisites mean not run, not passed.
+Symptoms of an untagged test that needs the game: in a RefAsm run it fails with a `NullReferenceException` from a `TaleWorlds` frame (a TaleWorlds attribute
+constructor run by `GetCustomAttributes` included), a `TypeInitializationException` wrapping one, a `FileNotFoundException` for a module assembly (`SandBox*`,
+`StoryMode*`, `TaleWorlds.MountAndBlade.View`) or a game-bin dependency (`System.Management`, `Steamworks.NET`, `GalaxyCSharp`, `StbSharp`), or a
+`ReflectionTypeLoadException` from `Assembly.GetTypes()` on TAOM's assembly (the test output does not print its `LoaderExceptions`). Tag the test; never catch the
+exception. `EnsureLoaded()` returns true on the stub `refasm-game` folder, so an `if (!EnsureLoaded()) Assert.Inconclusive` guard does not keep a test off the stubs.
+`RequiresGame` removes a test only from the unit step, and `RequiresGameIL` only from the gate.
 
 Capture test totals, failures and skips. Empty discovery is not success. The
 Python tool tests (`/verify` Step 2b) treat fewer than 2,500 discovered tests as broken; record skips affecting the
@@ -93,7 +99,7 @@ The standard-library validator checks record structure, SHA, check IDs, pass
 status, zero exit code and a nonempty command/evidence reference. It cannot prove
 execution, inspect linked CI logs, enforce command ordering, authenticate identities,
 or validate claimed coverage. The maintainer must inspect those records. Use exact
-commands and attach logs/CI run links, environment versions, external artifact
+commands and attach logs, environment versions, external artifact
 hashes, discovery totals and skips. Keep any private logs in ignored artifacts;
 redact before sharing. Never present manual inspections as process exit codes.
 

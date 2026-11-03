@@ -10,7 +10,7 @@ TAOM's data lives in three roots, and only one of them is in git.
 
 | Root | What it holds | How the engine finds it |
 |---|---|---|
-| `Main/_Module/ModuleData/` (repo) | troops, characters, cultures, party templates, equipment sets, strings | 100 `<XmlName>` rows in `Main/_Module/SubModule.xml`, every one naming a single file <!-- measured: grep -c '<XmlName' Main/_Module/SubModule.xml 2026-09-05 --> |
+| `Main/_Module/ModuleData/` (repo) | troops, characters, cultures, party templates, equipment sets, strings | `<XmlName>` rows in `Main/_Module/SubModule.xml`, every one naming a single file <!-- measured: grep -c '<XmlName' Main/_Module/SubModule.xml 2026-09-05 --> |
 | `LOTRLOME_Armory/ModuleData/` (game install) | items, crafting pieces, crafting templates, weapon descriptions, monsters, module sounds; `skins.xml` and `action_sets.xml` come in through `project.mbproj` `<file>` rows (lines 3 and 4) instead, see [submodule-and-registration](submodule-and-registration.md) | 33 `<XmlName>` rows: 21 `Items` rows, of which 18 name a FOLDER (`LOTRLOME_items/<culture>`) and 3 name a single file (`LOTRAOM_horses`, `LOTRAOM_weapons`, `LOTRAOM_shields`), plus 8 `Monsters` rows and one row each for `CraftingPieces`, `CraftingTemplates`, `WeaponDescriptions` and `ModuleSounds` <!-- measured: rg -o '<XmlName id="[A-Za-z]*"' "$BANNERLORD_GAME_DIR/Modules/LOTRLOME_Armory/SubModule.xml" \| sort \| uniq -c; a loop testing each Items path with -d and -f against "$BANNERLORD_GAME_DIR/Modules/LOTRLOME_Armory/ModuleData/" 2026-09-05 --> |
 | `TAOM_Map/ModuleData/` (game install) | `settlements.xml`, `settlements.xslt`, 12 `Languages/<LANG>/loc_settlements.xml`; beside them sit `project.mbproj`, `DistanceCaches/`, 16 Kit stub XML files of 197 to 326 bytes and two copies of SandBox music files that no row in either manifest names, all itemised in [file-catalogue](file-catalogue.md) <!-- measured: ls "$BANNERLORD_GAME_DIR/Modules/TAOM_Map/ModuleData/Languages/"*/loc_settlements.xml \| wc -l; ls "$BANNERLORD_GAME_DIR/Modules/TAOM_Map/ModuleData/" (23 entries); wc -c on the 16 stubs; rg -c 'MusicTracks\|MusicInstruments\|settlement_track' on TAOM_Map/SubModule.xml and its project.mbproj (no hits) 2026-09-05 --> | `<XmlName id="Settlements" path="settlements"/>` at `TAOM_Map/SubModule.xml:73` |
 
@@ -20,7 +20,7 @@ Three consequences of that split:
 
 - **The repo copy of `settlements.xml` is a stale shadow.** `Main/_Module/ModuleData/settlements.xml` exists (1,023,041 bytes) but no `<XmlName>` row in `Main/_Module/SubModule.xml` names it, so an edit there never reaches the game. Edit `TAOM_Map/ModuleData/settlements.xml`. Source: [xslt-moduledata lessons](../reviews/lessons/xslt-moduledata.md) "TAOM_Map settlements.xml is external and live". <!-- measured: ls -la Main/_Module/ModuleData/settlements.xml; grep -n Settlements Main/_Module/SubModule.xml 2026-09-05 -->
 - **The build deploys the repo tree verbatim.** `TAOM.csproj`'s `CopyModule` target "recurses `_Module` verbatim and deploys whatever it finds", so whatever sits under `Main/_Module/ModuleData/` lands in the install's `TAOM/ModuleData/` on the next build, backup sidecars included. Source: [module-backup-sweep](../reference/module-backup-sweep.md) lines 43-49.
-- **Only the repo root has an automatic gate.** The commit hook runs the validator when a staged path matches `Main/_Module/ModuleData/*.xml` (`.claude/hooks/check-moduledata-validation.sh:71`). The two live modules are not in git, so an edit there stages nothing and gates nothing; run `python tools/validate_moduledata.py` yourself. The 2026-09-01 Armory cleanup found 212 `BROKEN_ITEM_REF` from three deleted shields for exactly this reason: "The Armory is untracked, so the commit hook that would have caught it never fires" ([rca-armoury-keyforce-cleanup-2026-09-01](../reviews/rca-armoury-keyforce-cleanup-2026-09-01.md) row 1).
+- **Only the repo root has an automatic gate.** The commit hook runs the validator when a staged path matches `Main/_Module/ModuleData/*.xml` or `*.xslt` (`check-moduledata-validation.sh`). The two live modules are not in git, so an edit there stages nothing and gates nothing; run `python tools/validate_moduledata.py` yourself. The 2026-09-01 Armory cleanup found 212 `BROKEN_ITEM_REF` from three deleted shields for exactly this reason: "The Armory is untracked, so the commit hook that would have caught it never fires" ([rca-armoury-keyforce-cleanup-2026-09-01](../reviews/rca-armoury-keyforce-cleanup-2026-09-01.md) row 1).
 
 ## The `*.xml` glob: why a backup's name is load-bearing
 
@@ -33,7 +33,7 @@ The rule that follows is the one from [module-backup-sweep](../reference/module-
 | `action_sets.xml.bak-wargabsorb-20260828` | No. Last extension is not `.xml` |
 | `action_sets.bak.xml` | Yes, parsed as real data, duplicating every id in the file |
 
-A duplicated id is not an error the engine reports. It silently shadows one of the two definitions ([armory-guide](../reference/armory-guide.md) line 21), and which one wins is not something you can see from the file. `python tools/validate_moduledata.py` reports the case as `DUPLICATE_ITEM_DEF` (warning) for Armory items and `DUPLICATE_{NPC,CULTURE,ROSTER}_ID` (error) for repo files ([moduledata-validation rule](../../.claude/rules/moduledata-validation.md) code table).
+A duplicated id is not an error the engine reports. Files under one `XmlName` merge before objects are built, and a later element with the same key merges into the earlier one attribute by attribute, so the loaded item is a blend ([armory-guide](../reference/armory-guide.md)). `python tools/validate_moduledata.py` reports the case as `DUPLICATE_ITEM_DEF` (warning) for Armory items and `DUPLICATE_{NPC,CULTURE,ROSTER}_ID` (error) for repo files ([moduledata-validation rule](../../.claude/rules/moduledata-validation.md) code table).
 
 Sidecar names TAOM's tools write, and the sweep recognises, all put the suffix after the real extension: `.bak`, `.bak<N>`, `.bak-<topic>`, `.bak_<topic>`, `.backup`, `.orig`, `.prev`, `.old`, `.tmp`, `.transplanted-<date>` (module-backup-sweep.md lines 32-36; the regex is `tools/sweep_module_backups.ps1:93-99`). Two more facts about them:
 
@@ -153,14 +153,14 @@ Every Modify recipe in the file chapters is this recipe with a different value. 
 ```
 
 1. **Find the live copy** (first section). This one is a repo file, deployed by the build; an Armory or TAOM_Map file is edited in place in the install.
-2. **Make the sidecar first:** copy `troops_gondor.xml` to `troops_gondor.xml.bak-<topic>-<yyyymmdd>` in the same folder. Suffix after `.xml`, never before.
+2. **Sidecar:** a repo file has git history, so make no sidecar. A live-module file: copy it to `<file>.xml.bak-<topic>-<yyyymmdd>` in the same folder, suffix after `.xml`, never before.
 3. **Change one value.** Append ` TEST` to the display text after the closing brace: `[Gondor] Lossarnach Lumberman TEST`. Leave `{=aom_gondor_loss_lumberman_name}` and `id=` untouched (the id is a save key; the brace text is the localisation key). No language file carries that key, so the inline text is what every language shows. <!-- measured: grep -rl aom_gondor_loss_lumberman_name Main/_Module/ModuleData/Languages/ | wc -l 2026-09-05 --> The engine reads `name` at `BasicCharacterObject.cs:318`. A numeric alternative is `level`, read at `BasicCharacterObject.cs:487-488` and shown as "Level" in the village recruit tooltip (`RecruitVolunteerTroopVM.cs:356`); keep it inside the same tier (tier is a function of level, see [troops](troops.md)) so you are testing loading and not the upgrade ladder.
 4. **Save without changing bytes:** same encoding, same line endings. For a repo file, `git diff --stat Main/_Module/ModuleData/troops/troops_gondor.xml` must report one changed line.
 5. **Parse it:** the smoke test above, on the file you edited.
 6. **Validate it:** `python tools/validate_moduledata.py`. On 2026-09-05 the shipped data reported `0 error(s), 94 warning(s)`, all `INCONSISTENT_ARMOUR_SLOT`; anything new in that summary is yours. <!-- measured: python tools/validate_moduledata.py 2026-09-05 -->
 7. **Build if it is a repo file** (`./build.ps1`), so the edit is deployed. Skip for a live-module file.
 8. **Close Bannerlord completely, start it again,** and load a save or start a campaign (troops re-read on both, `SandBoxManager.cs:362`). Open the Encyclopedia's units page, or a Gondor village's recruit menu, and find `[Gondor] Lossarnach Lumberman TEST`. Seeing it is the proof; a green validator is not.
-9. **Revert:** undo the one line (or copy the sidecar back), rebuild if a repo file, and keep the sidecar until the real edit is verified. Sweep sidecars before any release.
+9. **Revert:** revert with git for a repo file; copy the sidecar back for a live file. Rebuild if a repo file, and keep any sidecar until the real edit is verified. Sweep sidecars before any release.
 
 Check: `python tools/validate_moduledata.py`
 Takes effect: full game restart
@@ -179,14 +179,14 @@ Code: No code changes needed
 
 ## Gotchas: what fails silently and what crashes
 
-- **A backup ending in `.xml` inside a folder registration is data.** Every id in it exists twice and the engine shadows one without a message. `MBObjectManager.cs:903`; [module-backup-sweep](../reference/module-backup-sweep.md) lines 62-71.
+- **A backup ending in `.xml` inside a folder registration is data.** Every id in it exists twice and the engine merges the two entries attribute by attribute without a message. `MBObjectManager.cs:903`; [module-backup-sweep](../reference/module-backup-sweep.md) lines 62-71.
 - **A new file in a registered folder is invisible until a full restart, and every validator says PASS.** The 2026-06-30 naked-until-restart incident. [moduledata-validation rule](../../.claude/rules/moduledata-validation.md) "PASS ≠ in-game loaded" (line 156); [data-content-cultures lessons](../reviews/lessons/data-content-cultures.md).
 - **`--` inside a comment crashes the loader with no file and line;** a parser rejects it with one. [xslt-moduledata lessons](../reviews/lessons/xslt-moduledata.md) "Smoke-test every new/modified ModuleData XML".
 - **A comment inside a `<Culture>` list container throws during load.** `CultureObject.cs:371-373` and the sibling loops through line 509; `MBObjectManager.cs:1499-1503`.
 - **A `.bak` XML makes `grep -r` lie.** A recursive search over a live folder returns values from the sidecar. [xslt-moduledata lessons](../reviews/lessons/xslt-moduledata.md) "grep -r over a live ModuleData folder reads .bak files".
 - **A normalising editor turns a one-line edit into a whole-file rewrite** and, on the 133 doubled-CR files, a `\r?\n` regex matches nothing and reports "nothing to do". [xslt-moduledata lessons](../reviews/lessons/xslt-moduledata.md) "Line endings vary file by file"; [tools/README.md](../../tools/README.md) "XML I/O convention".
 - **The repo `settlements.xml` accepts edits and does nothing.** It is not registered. [xslt-moduledata lessons](../reviews/lessons/xslt-moduledata.md) "TAOM_Map settlements.xml is external and live".
-- **A live-module edit gets no commit hook.** `.claude/hooks/check-moduledata-validation.sh:71` matches repo paths only; the Armory and TAOM_Map are untracked. [rca-armoury-keyforce-cleanup-2026-09-01](../reviews/rca-armoury-keyforce-cleanup-2026-09-01.md) row 1.
+- **A live-module edit gets no commit hook.** `check-moduledata-validation.sh` matches staged `Main/_Module/ModuleData/*.xml` or `*.xslt` paths only; the Armory and TAOM_Map are untracked. [rca-armoury-keyforce-cleanup-2026-09-01](../reviews/rca-armoury-keyforce-cleanup-2026-09-01.md) row 1.
 - **A renamed id is a dangling save reference and stale prose.** `MBObjectBase.cs:11-12`; [xslt-moduledata lessons](../reviews/lessons/xslt-moduledata.md) "After renaming any entity".
 - **A wrong-case reference finds nothing.** The registry is a default-comparer `Dictionary<string, T>`. `MBObjectManager.cs:75,100`.
 - **Sidecars in `Main/_Module/` are invisible to git and redeployed by every build.** `.gitignore:24`; [module-backup-sweep](../reference/module-backup-sweep.md) lines 43-56.
@@ -198,7 +198,7 @@ All measured 2026-09-05 from the repo root (`$BANNERLORD_GAME_DIR` is the game i
 
 | Number | Command |
 |---|---|
-| 100 `<XmlName>` rows in TAOM's `SubModule.xml`, none naming a folder | `grep -c '<XmlName' Main/_Module/SubModule.xml`, then a loop testing each `path=` value with `-d` against `Main/_Module/ModuleData/` (no directory hits) |
+| `<XmlName>` rows in TAOM's `SubModule.xml`, none naming a folder | `grep -c '<XmlName' Main/_Module/SubModule.xml`, then a loop testing each `path=` value with `-d` against `Main/_Module/ModuleData/` (no directory hits) |
 | 33 `<XmlName>` rows in the Armory's `SubModule.xml`: 21 `Items` (18 folders, 3 files), 8 `Monsters`, 4 single rows | `rg -o '<XmlName id="[A-Za-z]*"' "$BANNERLORD_GAME_DIR/Modules/LOTRLOME_Armory/SubModule.xml" \| sort \| uniq -c`, then a loop testing each `Items` path with `-d` and `-f` against `ModuleData/` |
 | 10 files in vanilla's `items` folder | `ls "$BANNERLORD_GAME_DIR/Modules/SandBoxCore/ModuleData/items" \| wc -l` |
 | 1,023,041 bytes, repo `settlements.xml`; 0 `Settlements` rows in the repo `SubModule.xml` | `ls -la Main/_Module/ModuleData/settlements.xml; grep -n Settlements Main/_Module/SubModule.xml` |

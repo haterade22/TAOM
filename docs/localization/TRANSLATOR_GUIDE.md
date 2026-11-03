@@ -4,7 +4,7 @@ This guide is for anyone translating TAOM (Tales From the Age of Men) into anoth
 
 ## Overview
 
-TAOM ships with translatable strings across **three modules** and **twenty-three TAOM file types** (13 pre-existing, 4 added 2026-09-17 for troop/lord/clan/kingdom names, 5 added 2026-10-01 for the data text below, 1 added 2026-10-26 for Bandit Voices). Total, measured 2026-10-02: ~21,850 strings per language (TAOM 15,997 keys, TAOM_Map 1,241 rows, Armory 4,611 rows).
+TAOM ships with translatable strings across **three modules** and **twenty-three TAOM file types** (13 pre-existing, 4 added 2026-09-17 for troop/lord/clan/kingdom names, 5 added 2026-10-01 for the data text below, 1 added 2026-10-26 for Bandit Voices).
 
 ### TAOM module (23 files, 15,997 keys measured 2026-10-02, plus 80 added 2026-10-26)
 
@@ -190,7 +190,7 @@ Most Tolkien names should stay in their original form unless there is an establi
 
 ### Option A — AI first-draft pipeline (Recommended)
 
-The repo includes a Claude-powered translation pipeline that produces high-quality first-draft translations across all 27 files per language. You then review and refine.
+The repo includes a Claude-powered translation pipeline that produces high-quality first-draft translations across every file per language. You then review and refine.
 
 **Prereqs:**
 - `pip install anthropic`
@@ -204,7 +204,7 @@ The repo includes a Claude-powered translation pipeline that produces high-quali
 # Preview cost and counts (no API calls):
 python tools/translate_with_claude.py --lang PL --dry-run
 
-# Run full translation across all 8 TAOM files + TAOM_Map + Armory:
+# Run full translation across the TAOM files, TAOM_Map and Armory:
 python tools/translate_with_claude.py --lang PL --apply
 
 # Translate just one module:
@@ -305,10 +305,10 @@ as a run with nothing to do.
 
 | Gate | Where | What it matches on |
 |------|-------|--------------------|
-| **Discovery** | `_diff_files`, `tools/translate_with_claude.py:296-306` | Returns an entry only when `cur_text == eng_text`, meaning the target row still literally holds the English string. (An id the target file does not declare at all also qualifies, because `cur_text` defaults to the English: `tgt_map.get(sid, eng_text)` at `:303`.) A row that already holds a translation is never returned, so it never reaches the overrides, the cache, or the API. `_diff_against_settlement_source` (`:309-326`) filters the TAOM_Map settlement keys the same way. |
-| **Cache** | `main()`, `tools/translate_with_claude.py:883` | `elif e.string_id in cache` matches on `string_id` alone. So on the occasions a row does reach discovery (a file just reset by `generate_translation_template.py --apply`, or an entry whose translation failed validation and fell back to English), the cache answers with the translation of the OLD English. |
+| **Discovery** | `_diff_files` in `tools/translate_with_claude.py` | Returns an entry only when `cur_text == eng_text`, meaning the target row still literally holds the English string. (An id the target file does not declare at all also qualifies, because `cur_text` defaults to the English: `tgt_map.get(sid, eng_text)`.) A row that already holds a translation is never returned, so it never reaches the overrides, the cache, or the API. `_diff_against_settlement_source` (`:309-326`) filters the TAOM_Map settlement keys the same way. |
+| **Cache** | `main()` in `tools/translate_with_claude.py` | `elif e.string_id in cache` matches on `string_id` alone. So on the occasions a row does reach discovery (a file just reset by `generate_translation_template.py --apply`, or an entry whose translation failed validation and fell back to English), the cache answers with the translation of the OLD English. |
 
-**`--sync-ids` does not close this.** `sync_missing_ids` (`:711-754`) computes
+**`--sync-ids` does not close this.** `sync_missing_ids` computes
 `missing = [sid for sid in src_map if sid not in tgt_map]`, so it appends only the keys a
 per-language file lacks entirely. A key that is present but stale is not missing. For the same
 reason it never removes a key: when a generator RENAMES its ids, every language keeps the dead rows,
@@ -543,48 +543,25 @@ Kingdom/culture/clan/lord/hero descriptions injected via XSLT transformation. He
 
 Small UI surface for the Messenger feature.
 
-### Settlement Names (TAOM_Map, ~1,102)
+### Settlement Names (TAOM_Map)
 
 Town, castle, and village names + descriptions. Keys follow `Settlements.Settlement.name.<id>` and `Settlements.Settlement.text.<id>`.
 
-### Armory Equipment (~2,782 across 19 files)
+### Armory Equipment
 
 Armor, weapon, shield, and crafting piece names organized by owning culture.
 
 ---
 
-## Current Coverage (as of 2026-05-24)
+## Current Coverage
 
-The AI pipeline has produced first-draft translations across all 12 supported languages. PL is included: an earlier note describing it as community-hand-translated was wrong and had excluded it from every run until 2026-08-25, when its 4,009-entry backlog was cleared.
-
-| Lang | TAOM | TAOM_Map | Armory | XSLT (Encyclopedia) |
-|------|------|----------|--------|---------------------|
-| RU   | 99%  | 99%      | 92%    | 99.9%               |
-| SP   | 97%  | 65%      | 87%    | 97%                 |
-| DE   | 97%  | 65%      | 82%    | 97%                 |
-| FR   | 97%  | 53%      | 92%    | 100%                |
-| IT   | 97%  | 65%      | 88%    | 94%                 |
-| BR   | 96%  | 65%      | 86%    | 94%                 |
-| JP   | 99%  | 97%      | 92%    | 100%                |
-| KO   | 99%  | 95%      | 91%    | 100%                |
-| TR   | 94%  | 64%      | 84%    | 97%                 |
-| CNs  | 99%  | 98%      | 89%    | 100%                |
-| CNt  | 99%  | 100%     | 91%    | 99.9%               |
-| PL   | see note | see note | see note | see note |
-
-**PL, added 2026-08-25.** PL was excluded from every translator run until 2026-08-25, on the
-mistaken belief that it was hand-translated. Its backlog was cleared that day: 5,033 entries
-written across all three modules, 4,009 of them needing an LLM pass, 0 failures, $7.26.
-No percentage is quoted for PL because the figures above were measured on 2026-05-24 by a
-method this pass could not reproduce (the external modules ship no EN reference file to diff
-against), and a number derived a different way does not belong in the same column as the
-others. The whole table predates the 2026-08-25 runs and is due a re-measure.
-
-Untranslated entries fall back to English text — the game stays valid, just shows English where translation wasn't available.
+Untranslated entries fall back to English text; the game stays valid, just shows English where translation wasn't available. For current numbers run `python tools/check_external_loc_coverage.py`.
 
 ---
 
 ## Known Limitations
+
+Owed translations go in #763's table; the paid run needs the maintainer's word; close a feature issue once only translation remains (Mike, 2026-10-19).
 
 - **Career choice/group display names** (e.g. specific tier choice names in the career screen) currently fall back to internal IDs. Adding display names requires schema additions.
 - **`CareerButtonPrefab` "Career" label** — embedded directly in a prefab XML and not currently routed through the localization system.
@@ -595,33 +572,6 @@ Untranslated entries fall back to English text — the game stays valid, just sh
 
 ---
 
-## Questions?
-
-Open an issue on GitHub or reach out on the mod's Discord channel.
-
----
-
-<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
-
-## Referenced by
-
-- [docs/ai-includes/orientation.md](../ai-includes/orientation.md)
-- [docs/ai-includes/weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md)
-- [docs/features/localization.md](../features/localization.md)
-- [docs/features/oaths-of-service.md](../features/oaths-of-service.md)
-- [docs/features/war-chronicle.md](../features/war-chronicle.md)
-- [docs/INDEX.md](../INDEX.md)
-- [docs/modding/editing-safely.md](../modding/editing-safely.md)
-- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
-- [docs/modding/lords-and-heroes.md](../modding/lords-and-heroes.md)
-- [docs/modding/recipe-new-mod-from-zero.md](../modding/recipe-new-mod-from-zero.md)
-- [docs/modding/strings-and-localization.md](../modding/strings-and-localization.md)
-- [docs/modding/wanderers-and-named-companions.md](../modding/wanderers-and-named-companions.md)
-- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
-- [docs/reference/localization-map.md](../reference/localization-map.md)
-- [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
-
-<!-- backlinks-end -->
 ## Adding a new strings file to the pipeline (order matters)
 
 Registering a key in a source XML is only half the job — a key that is not wired into the
@@ -659,3 +609,34 @@ validation. Four vanilla-derived strings with nested gender conditionals
 on every language that had not cached them. They are English-only overrides now and have a language row
 in Portuguese only (`kept-vanilla-key-rows.txt`), so they no longer reach the translator. Check the
 failed-ID list before treating exit 1 as a problem with your own strings.
+
+---
+
+## Questions?
+
+Open an issue on GitHub or reach out on the mod's Discord channel.
+
+---
+
+<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->
+
+## Referenced by
+
+- [docs/ai-includes/orientation.md](../ai-includes/orientation.md)
+- [docs/ai-includes/weapon-creation-workflow.md](../ai-includes/weapon-creation-workflow.md)
+- [docs/features/localization.md](../features/localization.md)
+- [docs/features/oaths-of-service.md](../features/oaths-of-service.md)
+- [docs/features/war-chronicle.md](../features/war-chronicle.md)
+- [docs/INDEX.md](../INDEX.md)
+- [docs/modding/editing-safely.md](../modding/editing-safely.md)
+- [docs/modding/file-catalogue.md](../modding/file-catalogue.md)
+- [docs/modding/lords-and-heroes.md](../modding/lords-and-heroes.md)
+- [docs/modding/recipe-new-mod-from-zero.md](../modding/recipe-new-mod-from-zero.md)
+- [docs/modding/strings-and-localization.md](../modding/strings-and-localization.md)
+- [docs/modding/wanderers-and-named-companions.md](../modding/wanderers-and-named-companions.md)
+- [docs/reference/doc-lookup.md](../reference/doc-lookup.md)
+- [docs/reference/localization-map.md](../reference/localization-map.md)
+- [docs/reviews/lessons/xslt-moduledata.md](../reviews/lessons/xslt-moduledata.md)
+
+<!-- backlinks-end -->
+

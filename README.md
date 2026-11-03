@@ -74,10 +74,10 @@ TAOM/
 │   ├── adrs/                 # Architecture Decision Records
 │   ├── features/             # Feature documentation
 │   └── migration/            # Bannerlord version-migration tracking
-├── tools/                    # Rebalancing + localization scripts
+├── tools/                    # Validators, generators and asset pipelines (tools/README.md)
 ├── .ai/                      # Shared AI policy, roles, scope and review packets
 ├── .agents/skills/           # Codex-discoverable TAOM workflow instructions
-├── .claude/                  # Claude Code config (skills, agents, rules, hooks, memory)
+├── .claude/                  # Claude Code config (skills, agents, rules, hooks)
 ├── .codex/                   # Codex configuration and onboarding pointer
 ├── CLAUDE.md                 # Shared AGENTS.md import + Claude-specific workflows
 ├── AGENTS.md                 # Provider-neutral AI instruction entry point
@@ -95,13 +95,7 @@ All mod logic follows one pattern:
 Services never touch TaleWorlds sealed types directly — they work through adapter interfaces, which
 keeps business logic fully unit-testable.
 
-**Non-negotiable rules:**
-
-- TDD mandatory (red → green → refactor)
-- Entry points under 150 lines — delegate to services
-- No `#region`, no `[Obsolete]`, no `#if DEBUG` (except IoC registration)
-- Adapter pattern for any TaleWorlds sealed type
-- Research TaleWorlds internals before implementing — never guess signatures
+The rules are in [AGENTS.md](AGENTS.md): test first, thin entry points, adapters for sealed types, no `#region`, `[Obsolete]` or `#if` outside IoC.cs, and research before guessing.
 
 See the [Architecture Decision Records](docs/adrs/) for the full set of design constraints.
 
@@ -157,9 +151,7 @@ TAOM is developed with a structured, AI-assisted engineering pipeline.
 - **Codex** (OpenAI) runs as an *independent adversarial reviewer* — it shares no session context
   with Claude, so it provides a genuine second opinion. Review
   instructions live in [AGENTS.md](AGENTS.md).
-- **Mandatory completion workflow** — every C# feature passes a 4-phase gate before merge:
-  build + internal `/deep-review` → Codex adversarial review → self-review of the fixes →
-  closeout (issue, feature doc, commit body as the changelog entry).
+- **Completion workflow:** build and tests, then an internal `/deep-review`, then closeout (issue, feature doc, commit body as the changelog entry). The maintainer can add a Codex review, which is paid and runs only on his word.
 
 ## Installing to Play (non-developers)
 
@@ -177,11 +169,7 @@ existing saves are not supported.
 Pull requests go to `bannerlord-1.5.x`, or `bannerlord-1.4.5` for 1.4.8 bug fixes. [CONTRIBUTING.md](CONTRIBUTING.md) covers the route, what a
 PR needs and the checks every PR goes through.
 
-1. Read [AGENTS.md](AGENTS.md) for coding standards and conventions
-2. Write tests first — TDD is mandatory
-3. Use the adapter pattern for any TaleWorlds sealed type
-4. Keep Harmony patches and entry points thin (< 150 lines); delegate to services
-5. Research TaleWorlds behavior before implementing — decompile, don't guess
+Read [AGENTS.md](AGENTS.md) for the coding rules.
 
 ## License
 

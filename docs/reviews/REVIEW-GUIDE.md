@@ -2,59 +2,15 @@
 
 How to write effective prompts, what to verify, and what we've learned.
 
-## Status: Full codebase review complete (2026-04-05/06)
+## Process
 
-**25/25 features reviewed** across 16 Codex reviews and 5 waves. 41 bugs found, 37 fixed, 4 deferred. Prompt evolved v1→v6 with accuracy improving from 33% to 81%.
-
-| Metric | v1 (start) | v6 (final) |
-|--------|-----------|------------|
-| Codex accuracy | 33% | 81% |
-| False positive rate | 50% | 9% |
-| Miss rate | 75% | 15% |
-| Prompt iterations | 1 | 6 |
-
-## Process Overview
-
-```
-1. Choose feature to review (highest risk-per-line-of-code)
-2. Gather file list + identify vanilla targets to decompile
-3. Write prompt using template below
-4. Dispatch: /review-codex Phase 2e (Claude runs codex exec in the background at a reasoning effort sized to the change)
-5. Retrieve: the harness notifies; read docs/reviews/raw/codex-adversarial-{feature}-{date}.md
-6. Claude critically reviews Codex output against actual source
-7. Implement confirmed fixes
-8. Log results in REVIEW-LOG.md
-```
-
-**Critical rule:** Claude ALWAYS reviews the Codex output. Codex findings are hypotheses, not facts. Every finding must be verified against source code before implementing.
+The dispatch and verification process is the `/review-codex` skill (`.claude/skills/review-codex/SKILL.md`).
 
 ## Artifact retention (2026-07-12)
 
-Raw Codex stdout transcripts (2–4 MB each) land in **`docs/reviews/raw/`, which is gitignored** — they stay on disk for local reference but never enter git. The **committed** durable record per review is: the `*.prompt.md` (reusable dispatch artifact), the `rca-*.md` (incident analysis), the `REVIEW-LOG.md` entry (scoring history), and any `LESSONS-LEARNED.md` entries (cross-feature rules). The `/review-codex`, `/codex-verify`, and `/deep-review` skills write to `raw/` automatically. Historical raw transcripts (through 2026-07-11) were untracked and moved to `raw/` in the same change; links from older RCAs point at `raw/...` and resolve on-disk but not in a fresh clone — the committed distillate is the durable record.
+Raw Codex stdout transcripts (2 to 4 MB each) land in **`docs/reviews/raw/`, which is gitignored**; they stay on disk for local reference but never enter git. The **committed** durable record per review is: the `*.prompt.md` (reusable dispatch artifact), the `rca-*.md` (incident analysis), the `REVIEW-LOG.md` entry (scoring history), and any `lessons/<category>.md` entries (cross-feature rules). The `/review-codex` and `/deep-review` skills write to `raw/` automatically. Historical raw transcripts (through 2026-07-11) were untracked and moved to `raw/` in the same change; links from older RCAs point at `raw/...` and resolve on-disk but not in a fresh clone; the committed distillate is the durable record.
 
 ---
-
-## Repeatable Process
-
-### End-to-end workflow:
-
-```
-Step 1: WRITE PROMPT (Claude Code or manual)
-  Use the v6 template below. Customize sections for the feature.
-  For features with prior internal review, add Known Suspects section.
-
-Step 2: DISPATCH TO CODEX (Claude runs it; /review-codex Phase 2e)
-  codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < prompt > output, in the background.
-  The session picks <level> for the change (review-codex "Reasoning effort is the session's call").
-  Output: docs/reviews/raw/codex-adversarial-{feature}-{date}.md
-
-Step 3: VERIFY OUTPUT (Claude Code)
-  /review-codex docs/reviews/raw/codex-adversarial-{feature}-{date}.md
-  The skill reads the review, verifies every finding against source code,
-  implements confirmed fixes, and updates REVIEW-LOG.md.
-```
-
-**Key:** Claude writes the prompt (Step 1) and dispatches it through `/review-codex` Phase 2e at an effort sized to the change (Step 2). Step 3 is the `/review-codex` skill which encapsulates ALL lessons from 18 reviews into a repeatable verification workflow. Any new Claude Code session can invoke it without needing prior context.
 
 ## Advanced Pattern: Known Suspects
 
@@ -77,13 +33,6 @@ Quality gate: add "Section N skips any suspect or says 'could not verify'" to en
 
 This pattern produced the highest-quality Codex output in our review history because it forces deep reading of specific code paths instead of surface scanning.
 
-## Prompt Formatting Note
-
-**Avoid indented continuation lines** in Codex prompts. Leading whitespace gets backslash-escaped, triggering a confirmation prompt. Use flat formatting:
-- No leading spaces on lines inside sections
-- Use `--` or blank lines as visual separators instead of indentation
-- Lists use `a)` `b)` `c)` at the start of the line, not indented under a header
-
 ## Prompt Template (v6)
 
 ```
@@ -91,11 +40,7 @@ Adversarial review of {FeatureName}.
 
 {1-2 sentences: what the feature does, its risk profile, what's already good}
 
-TAOM ID CHEATSHEET (prevents false positives from ID confusion):
-Kingdom StringIds: empire_w=Gondor, empire_s=Mordor, empire=Dunland, vlandia=Rohan, battania=Khand, aserai=Harad, khuzait=Easterlings, sturgia=Dale/North, erebor=Erebor, rivendell=Rivendell, lothlorien=Lothlorien, mirkwood=Mirkwood, isengard=Isengard, gundabad=Gundabad, dolguldur=DolGuldur, umbar=Umbar, shaghana=Shaghana, abanissa=Abanissa
-Culture StringIds (custom): gondor, mordor, erebor, rivendell, lothlorien, mirkwood, isengard, gundabad, dolguldur, umbar
-Culture StringIds (XSLT/vanilla): vlandia (Rohan), empire (Dunland), empire_s (Mordor-region), empire_w (Gondor-region), battania (Dunland-alt), aserai (Harad), khuzait (Easterlings), sturgia (Dale)
-NOTE: Kingdom IDs and Culture IDs differ! "rohan" is NOT a valid ID. Rohan's kingdom=vlandia, culture=vlandia. Config keys must use the runtime StringId.
+TAOM ID CHEATSHEET: paste the block from .claude/skills/review-codex/references/prompt-fixed.md, the only copy.
 
 READ FIRST (required context):
 - docs/features/{feature-name}.md
@@ -178,13 +123,13 @@ SUCCESSES to repeat:
 - Vanilla reimplementation diff caught fertility formula drift (RaceAge)
 - Garrison wage gate found by comparing TAOM vs vanilla IsGarrison (TroopProgression)
 FAILURES to avoid:
-- Codex assumed empire=Rohan (it is Dunland). Use the ID cheatsheet above.
+- Codex assumed empire=Rohan (it is Dunland). Use the ID cheatsheet.
 - Codex skipped transpiler IL verification despite being focus #1 (BannerColor)
 - Codex flagged characterObject.IsMounted as bug -- vanilla uses same check (CulturalFeats)
 
 DO NOT flag architecture/pattern compliance {if feature is well-architected}.
 
-Output to: docs/reviews/codex-adversarial-{feature}-{date}.md
+Return the full report as your final message; never write the output path.
 ```
 
 ---
@@ -327,76 +272,11 @@ Track these to prevent repeats. Each entry: what went wrong, which review, how t
 
 ---
 
-## Real Bugs Found (by source)
-
-Track which review source (Codex vs. Claude) found each real bug.
-
-### Found by Codex, confirmed by Claude (37 bugs across 17 reviews)
-
-Top categories of bugs Codex caught:
-| Category | Count | Examples |
-|----------|-------|---------|
-| Config ID mismatches | 7 | rohan→vlandia, dol_guldur→dolguldur, missing kingdoms |
-| Missing vanilla gates | 4 | Garrison IsGarrison check, terrain forest gate |
-| Stale state / lifecycle | 5 | MissionAdapter cache, shader latch, FirstAttack flag, load-path teleport |
-| Dead/no-op code | 4 | Unique color sentinel, dead comesOfAge values, unused _logger field |
-| Convention violations | 3 | EffectBonus 0.75 vs -0.25, headcount vs wage share |
-| Logic gaps | 3 | Child gender not enforced, honor bypass, turbo stuck |
-| Missing vanilla side effects | 2 | ModifyMenuCharacters, stale horse placeholder |
-| Other | 9 | Various |
-
-### Found by Claude, missed by Codex (6 bugs -- all in reviews 1-2 with v1-v2 prompts)
-| Bug | Feature | Why missed |
-|-----|---------|-----------|
-| Forest speed unconditional | CulturalFeats | Didn't decompile vanilla |
-| Caravan EffectBonus convention | CulturalFeats | Didn't check cross-feat consistency |
-| Fail-safe `?? true` defaults | BannerColorPersistence | Didn't compare patterns across patches |
-| `GetUniqueIconColor` complete no-op | BannerColorPersistence | Only caught one branch |
-| Layer limit transpiler `?? true` | BannerColorPersistence | Skipped transpiler analysis |
-| Stale horse placeholder | CharacterCreation | Partially identified by Codex, full fix by Claude |
-
-**Note:** After v4 prompt improvements, Claude's miss-rate advantage dropped to zero. Reviews 4-16 had 0 bugs missed by Codex that Claude caught independently.
-
-### False positives by Codex (4 total -- all in reviews 1-2 with v1-v2 prompts)
-| Claim | Feature | Why wrong |
-|-------|---------|-----------|
-| `characterObject.IsMounted` should be `upgradeTarget` | CulturalFeats | Vanilla uses same check |
-| Global drift guard is a "regression" | BannerColorPersistence | Intentional for LOTR |
-| Global clan color scope is a "regression" | BannerColorPersistence | Same design intent |
-| Phase-1 war pairs wrong | Diplomacy | Assumed empire=Rohan, it's Dunland |
-
-**Note:** After v4+, Codex produced 0 false positives across 12 reviews.
-
----
-
-## Feature Risk Assessment
-
-Use this to prioritize which feature to review next.
-
-| Factor | Weight | How to assess |
-|--------|--------|--------------|
-| **Recency** | High | Newest code has least testing in the wild |
-| **Harmony surface area** | High | More patched classes = more vanilla-divergence risk |
-| **Transpilers** | Very High | IL modification is the most fragile patch type |
-| **Math complexity** | Medium | Multi-factor calculations with stacking multipliers |
-| **Config-driven** | Medium | Typos in config silently produce wrong behavior |
-| **Existing test coverage** | Inverse | Low coverage = higher review value |
-| **Architecture maturity** | Inverse | Well-architected features have fewer pattern bugs (focus on logic instead) |
-
----
-
 ## Post-Review Checklist
 
-After receiving Codex output, Claude must:
+The checks run in `/review-codex` Phase 3b. The one it lacks:
 
-- [ ] Read every file Codex references — verify claims against actual code
-- [ ] For each HIGH/CRITICAL finding: decompile vanilla target and compare
-- [ ] Check for convention inconsistencies Codex missed (cross-file patterns)
-- [ ] Check for fail-safe/default value consistency across the feature's patches
-- [ ] Check for no-op code paths (feature that does nothing in all cases)
 - [ ] Cross-config coverage: when feature X reads from config A and config B, verify every entry in A has a corresponding entry in B (e.g., every CC culture in cultures.json has at least one career in taom_careers.xml). Review #24 found a crash from this gap.
-- [ ] Verify any proposed remediation actually fixes the issue
-- [ ] Log results in REVIEW-LOG.md
 
 ---
 

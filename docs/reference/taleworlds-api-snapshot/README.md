@@ -16,15 +16,10 @@ The v1.3.15 → v1.4.5 migration completed its code stages but the formal runtim
 |------|------------|
 | [`reflection-sites.md`](./reflection-sites.md) | Authoritative catalogue of every reflection touchpoint, grouped by gated / runtime-dynamic / internal. Data source for `ReflectionSiteBindingTests`. |
 | [`gamemodel-bases.md`](./gamemodel-bases.md) | Auto-generated: each `Taom*Model`, its `Default*Model` base, and the exact signature of every overridden method, as of the pinned version. |
-| [`patch-targets.md`](./patch-targets.md) | Auto-generated: each `[HarmonyPatch]` / `TargetMethod` class and the engine method it patches, resolved as Harmony resolves it. The file's `Patches:` header line holds the current count (343 on 2026-10-27). A `TargetMethods()` class is recorded by its first target only (#1038). |
+| [`patch-targets.md`](./patch-targets.md) | Auto-generated: each `[HarmonyPatch]` / `TargetMethod` class and the engine method it patches, resolved as Harmony resolves it. The file's `Patches:` header line holds the current count. A `TargetMethods()` class is recorded by its first target only (#1038). |
 | [`../../../tools/snapshot_api_surface.ps1`](../../../tools/snapshot_api_surface.ps1) | Regenerates the two auto-generated files from the installed DLLs. Auto-derives the type list from `TAOM.dll` and `TAOM.Client.dll`. |
 
-> **The generator is PowerShell 7 only, and now says so.** It uses the null-coalescing `??` operator
-> and an em dash inside a double-quoted `throw`, both of which Windows PowerShell 5.1 rejects at PARSE
-> time. Without a version declaration it failed with ten cascading parser errors naming neither the
-> version nor the cause (observed 2026-09-06 on a machine with no `pwsh`). A `#requires -Version 7.0`
-> line was added that day, so 5.1 now reports one clear message instead. The shebang alone does not
-> cover this: on Windows the script runs under whichever host invoked it, and 5.1 is still the default.
+> **The generator is PowerShell 7 only.** Windows PowerShell 5.1 stops at its `#requires` line.
 >
 > **Regenerating is the only way to keep these files honest.** On 2026-09-06 `patch-targets.md` was
 > found **21 rows stale** (194 committed against 220 real) because patches had been added across
@@ -39,8 +34,8 @@ Runs under `dotnet test`, no game launch. TAOM.Tests references the installed `T
 | Test class | Covers | Granularity |
 |------------|--------|-------------|
 | `HarmonyPatchBindingTests` | Every `[HarmonyPatch]` / `TargetMethod` target, resolved as Harmony does at `PatchAll` (count: `patch-targets.md` header). | one assertion accumulating all failures |
-| `GameModelOverrideBindingTests` | Every GameModel: registered in `SubModule.cs`, override ≥1 base virtual, no shadow-without-`override` (count: `gamemodel-bases.md` header, 68 on 2026-10-27). | 2 tests |
-| `ReflectionSiteBindingTests` | The auxiliary static-engine reflection members (74 at v1.5.5) from `reflection-sites.md` Category B. | one `[DataRow]` per site |
+| `GameModelOverrideBindingTests` | Every GameModel: registered in `SubModule.cs`, override ≥1 base virtual, no shadow-without-`override` (count: `gamemodel-bases.md` header). | 2 tests |
+| `ReflectionSiteBindingTests` | The auxiliary static-engine reflection members from `reflection-sites.md` Category B. | one `[DataRow]` per site |
 | `ViewModelMixinBindingTests` | Every UIExtenderEx `[ViewModelMixin("Method")]` names one non-abstract method on its target view model. | one assertion accumulating all failures |
 
 > **First run (2026-05-28) caught a real defect.** `HeroViewModel_FillFrom_Patch` used a name-only `[HarmonyPatch(typeof(HeroViewModel), "FillFrom")]`. `HeroViewModel` inherits two more `FillFrom` overloads from `CharacterViewModel`, so Harmony's `AccessTools.Method` resolution found 3 candidates and threw `AmbiguousMatchException` — the postfix silently never applied in v1.4.5 (hero-portrait clan colors broken). Fixed by pinning argument types. This is exactly the gap the compiler and the BUTR analyzer miss.

@@ -9,7 +9,9 @@ for deletion. Harness² found that edits made without evidence made the harness 
 ## When
 
 - The SessionStart banner prints `HARNESS RETRO DUE` (seven or more days since the newest
-  `docs/reviews/harness-retro-*.md`, or none exists).
+  `docs/reviews/harness-retro-*.md`, or none exists). The banner tells the session to say so to Mike
+  once, in its first reply, and ask whether to run `/harness-retro`; do not start one unasked. A
+  short record with no proposals silences the banner for another seven days.
 - Mike asks what the harness keeps getting wrong.
 
 A retro is advisory work. It edits no harness file until Mike approves a proposal, and git,
@@ -51,6 +53,8 @@ The same requests are also split by agent type and model (`main` or the subagent
 definition in `.claude/agents/` sets `model:` but the requests ran on another family). Each
 agent's share of cache creation plus output is compared with the previous run: the console lines
 `token growth:` (5 points or more) and `model overrides:` (#1008).
+
+Section 11 prices the usage at list rates (a proxy for relative size): by agent, by main-session context size, cache rebuilds by idle gap, and review runs. Compare it with the last retro's numbers by hand.
 
 Also run `python tools/analyze_reviews.py --summary --no-plot` for the reviewer accuracy that
 `REVIEW-LOG.md` already tracks (`--no-plot` leaves the committed `progress.png` alone).

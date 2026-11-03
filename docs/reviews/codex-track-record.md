@@ -3,12 +3,19 @@
 > Moved out of `AGENTS.md` 2026-07-18 so the actual TAOM review *rules* fit under Codex's
 > `project_doc_max_bytes` cap. This is the full historical catch-log: every rolling essay plus
 > the complete "bugs Codex misses / false positives Codex produces / what Codex does well /
-> run-mode caveats" catalog across 84 reviews / 186+ bugs. `AGENTS.md` keeps a distilled
-> operative summary and points here. Convention (unchanged): after each review, add the new
-> essay to the top here, archive the 6th-oldest to `agents-md-review-lessons-archive.md`, and
-> harvest durable patterns into `docs/reviews/lessons/<category>.md`.
+> run-mode caveats" catalog. `AGENTS.md` keeps a distilled
+> operative summary and points here. This file is frozen (2026-11-03): add no new essay. A new
+> false-positive pattern or missed category gets one line in `.ai/review-reference.md`, and durable
+> patterns go into `docs/reviews/lessons/<category>.md`.
 
-### Lessons From Prior Reviews (84 reviews, 186+ bugs found)
+### Lessons From Prior Reviews
+
+**Catalog entries copied from `.ai/review-reference.md` (Codex misses that a Claude lens caught).**
+- **Every syntax that guards a throwing getter** (2026-10-14, review follow-ups #792: a Codex miss a
+  later Claude docs audit caught). Codex showed the `PartyBase.MainParty` scan missed `!= null`, the
+  reversed and the `is` forms, but not `?.`; seven `PartyBase.MainParty?.` reads in two adapters
+  stayed. When a scan bans a guard on a getter that throws, list `?.` and `??` among the forms.
+- **State that one screen event sets and another clears** (2026-10-08, yotthani adoption: a Codex miss that a convergence lens caught). A pending map-view release keyed on a layer reference survived Save/Load (itself a cover) into the next campaign's new map screen. Name as suspects the paths that replace the object without the clearing event (load, exit to menu, new campaign), and check ordering claims about Harmony priorities against equal priorities and `HarmonyBefore`.
 
 **Rolling essay log (newest 5; full history: `docs/reviews/agents-md-review-lessons-archive.md`).** Convention (2026-07-12): after each review cycle, add the new `Last updated:` essay at the top of this list, move the 6th-oldest to the archive file, and harvest any durable pattern into the catalog below (+ `docs/reviews/lessons/<category>.md`). The catalog is the operative reviewer guidance; essays are worked examples.
 

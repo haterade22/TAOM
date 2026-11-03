@@ -1,11 +1,11 @@
 # Creature Mount Authoring — the complete workflow
 
 How to take a non-humanoid creature from raw assets to a **rideable, battle-stable mount** in
-TAOM on Bannerlord **1.5.2** (the workflow was proven on 1.4.5 → 1.4.6; see "The engine-bump
+TAOM (the workflow was proven on 1.4.5 → 1.4.6; see "The engine-bump
 protocol" near the end). Distilled from the two campaigns that proved every step the hard way:
 the **war elephant** (2026-06-03 → 06-10, upstream-pack port) and the **giant spider**
 (2026-06-04 → 06-12, custom skeleton + custom clips — the maximal case). The warg
-(Alliance.Wargs) is the always-on reference implementation: when in doubt, do what the warg does.
+(in the Armory) is the always-on reference implementation: when in doubt, do what the warg does.
 
 **Architecture in one line:** a creature mount is a vanilla cavalry spawn — a rider TROOP with a
 Horse-slot ITEM whose `HorseComponent` names a `Monster`; the engine does all mount work
@@ -176,9 +176,9 @@ then know these requirements BEFORE replacing, and run the gate AFTER.
 | 1 | **The Skeleton resource** — a mesh/geo re-export ships **mesh-only**, dropping `<creature>_skeleton` | `CreateAgentSkeleton("<creature>_skeleton")` → null → **RIDERLESS mount** (graceful, NO crash — easy to miss) | the skeleton must exist as a `type=Skeleton` resource in a **live (non-`.backup`) loose tpac**, exactly like the working elephant (`elephant_skeleton` **bundled with the mesh** in live loose `mesh/adod_elephant_geo.tpac`) | **Re-BUNDLE it into the new mesh tpac**: `tools/tpac_skeleton_inject.py <new_mesh.tpac> <backup_with_skeleton.tpac> <skel_name> <out.tpac>` → skeleton + meshes in ONE tpac (the proven structure). Do NOT use `tpac_skeleton_extract.py` (a STANDALONE skeleton-only tpac CRASHED the engine — recursive worker-thread native AV; spider 2026-06-14). Do NOT rename the action_set's `skeleton=` to a mesh name; do NOT fully revert (the backup's un-split mesh re-hits #4). RCA: spider 2026-06-13/14 |
 | 2 | **The `quad_movement` tag** on a measured-gait clip (Kit recompile loses it) | `Skeleton.TickAnimations` AV (`+0x10`) on the FIRST mission tick, every mount context | byte-scan each `monster_usage_movements`-bound clip's deployed `_anm.tpac` for `quad_movement` | byte-graft the tag from a tagged sibling (spider.md "How-to"), or re-tag in the Kit |
 | 3 | **A binding target** (a rename orphans an `animation="X"`) | degenerate record → AV / null when resolved | every `animation=` in `as_<c>` + children + the rider partial must resolve to a real resource in a deployed tpac | re-point the binding to the correct existing clip; never bind a name no tpac carries |
-| 4 | ~~**The mesh split**~~ **— RETIRED (corrected 2026-06-13): there is NO per-mesh bone limit** | — | **The only bone cap is `Skeleton.MaxBoneCount = 64` (engine code), a SKELETON-total cap, not per-mesh. Author skeletons ≤63. A single mesh skins the whole skeleton — proven: elephant 59 active bones / chariot 54, both one mesh, both render.** | **Never split a body for bone count.** Keep the whole body in ONE mesh. Split a mesh ONLY for a genuinely separate sub-mesh — e.g. the warg's `warg_low_fur` is split so the FUR can cloth-simulate independently (cloth-driven, not bone-driven). A fully-disjoint full-body `<AdditionalMeshes>` mesh may not render (chariot 2nd horse). See `feedback_no_40_bone_per_mesh_limit` |
-| 5 | **HorseHarness on the mount** suppresses the Horse item's `<AdditionalMeshes>` | always-render parts (a chariot's cart) vanish the moment a harness is equipped | native mount-compositing drops Horse-item AdditionalMeshes when the HorseHarness slot is filled (chariot 2026-06-13: barding dropped the cart) | put anything that must ALWAYS render (vehicle/cart/reins) in the **base mesh**, not `<AdditionalMeshes>`; leave only optional geometry (mane) as an AdditionalMesh. See `feedback_custom_mount_harness_rules` |
-| 6 | **Custom-skeleton harness** shipped as a standalone FBX | **Kit CRASHES on import** (native, no rgl_log) when the harness skin uses bones outside the stock horse skeleton (`B`-set, cart bones) and Type=horse is picked | the editor binds a standalone `_notused` harness to the built-in horse skeleton, which lacks the custom bones | build the harness mesh INSIDE the creature FBX that defines the skeleton (where `chariot_horse_harness_imperial_b` lives); the HorseHarness item references it by metamesh name. `family_type` on the Horse item + harness must match. See `feedback_custom_mount_harness_rules` |
+| 4 | ~~**The mesh split**~~ **retired (corrected 2026-06-13)** | none | there is no per-mesh bone limit; the only cap is `Skeleton.MaxBoneCount = 64`, a skeleton-total cap | never split a body for bone count; split a mesh only for a separate sub-mesh such as the warg's `warg_low_fur` (cloth-driven). See [lessons/animation-skeleton.md](../reviews/lessons/animation-skeleton.md) |
+| 5 | **HorseHarness on the mount** suppresses the Horse item's `<AdditionalMeshes>` | always-render parts (a chariot's cart) vanish the moment a harness is equipped | native mount-compositing drops Horse-item AdditionalMeshes when the HorseHarness slot is filled (chariot 2026-06-13: barding dropped the cart) | put anything that must ALWAYS render (vehicle/cart/reins) in the **base mesh**, not `<AdditionalMeshes>`; leave only optional geometry (mane) as an AdditionalMesh. See [lessons/animation-skeleton.md](../reviews/lessons/animation-skeleton.md) |
+| 6 | **Custom-skeleton harness** shipped as a standalone FBX | **Kit CRASHES on import** (native, no rgl_log) when the harness skin uses bones outside the stock horse skeleton (`B`-set, cart bones) and Type=horse is picked | the editor binds a standalone `_notused` harness to the built-in horse skeleton, which lacks the custom bones | build the harness mesh INSIDE the creature FBX that defines the skeleton (where `chariot_horse_harness_imperial_b` lives); the HorseHarness item references it by metamesh name. `family_type` on the Horse item + harness must match. See [lessons/animation-skeleton.md](../reviews/lessons/animation-skeleton.md) |
 
 | 7 | **Editor-assigned materials.** An FBX carries only the material slots the DCC tool assigned; anything bound in the editor lives in the compiled tpac alone and does not survive a re-import | two symptoms that look unrelated: every colour variant renders as the base material, and the creature is absent in the world while a close-up UI preview looks correct, because the lost bindings sit one per LOD | diff the mesh-to-material bindings against the donor tpac before trusting the import. Resolve every 16-byte guid inside each mesh item against the material items in the tree, then compare the two sets per mesh | re-assign in the Modding Kit, per mesh per LOD. **Patching it from files needs the checksum recomputed:** adding a binding grows the item's metadata, and the item checksum is xxHash64 (seed 0) over the int64 metadata length plus the metadata (known since 2026-09-17, `tools/tpac_clone_metamesh.py`); the 2026-08-29 warg fix predates that and was made in the Kit. Warg 2026-08-29, [lotrlome-warg-changes.md](../reference/lotrlome-warg-changes.md) section 12 |
 | 7b | **Colour variants through `<Materials>` on the Horse item need a `horse_body` sub-mesh tag.** `MountVisualCreator.SetMaterialProperties` (TaleWorlds.MountAndBlade.View) applies the chosen material with `SetMaterialToSubMeshesWithTag(mat, "horse_body")` on the BASE mesh and hands `AdditionalMeshes` only a colour factor | a `<Materials>` block on a creature authored without the tag does nothing, silently, and an `<AdditionalMeshes>` half never recolours either way (the spider, 2026-09-17: 0 `horse_body` hits in its tpac; Byak0's `warg_low` carries 3, which is why `warg_dark` works) | count `horse_body` in the mesh tpac before writing the block | tag the sub-meshes in the Kit, or clone the proven mesh per skin from files with `tools/tpac_clone_metamesh.py` (same-length name + material swap, fresh GUIDs, geometry verbatim, own tpac, and BOTH tpac hashes recomputed: the per-segment field is xxHash64 (seed 0) of the decompressed payload and the item checksum is xxHash64 of the sized metadata; then open the module in the Modding Kit and save so it cooks `RuntimeDataCache/<package GUID>.rdc`, because the client renders only cached packages and skips the rest with nothing in the log; the spider's `spider_variants_geo.tpac`), or have the artist ship one whole mesh per skin (the spider since 2026-09-29: KEYforce's `sk_spiders_a_geo.tpac`, four skins on one skeleton, which retired the clones). See [lotrlome-spider-mount-changes.md](../reference/lotrlome-spider-mount-changes.md) |
@@ -194,16 +194,15 @@ in-place** (zero net root travel).
 ### MANDATORY post-deploy gate (run after every tpac/FBX replace, BEFORE battle-testing)
 
 ```
-python tools/verify_mount_assets.py <spider|elephant>
+python tools/verify_mount_assets.py <creature>   # a key of the tool's CREATURES map
 ```
 
 It statically checks all of #1–#3 (skeleton present in a live loose tpac, every measured-gait
 clip tagged, no phantom bindings) and exits non-zero on any FAIL. **PASS is necessary but not
-sufficient** — it cannot see #4 (mesh bone-palette) or in-game behavior, so a PASS still requires
+sufficient**, it cannot see in-game behavior, so a PASS still requires
 an **in-game spawn-with-rider check** (the mount must appear *with* its rider, not a lone rider).
 It cannot see #8 either: dump the skeleton and compare Bodies and Constraints to a known-good compile. And before ANY tool rewrites a tpac, make it re-serialise the file unmodified and prove the output is byte-identical to the input; a writer that invents a field the parser skipped corrupts every file it touches (see the 2026-08-31 TOC-size defect). It also cannot see #7: **diff the mesh-to-material bindings against the donor yourself after every re-import**, because a missing binding is not an error to any tool in this repo. Add a new creature to the tool's `CREATURES` config. Skeleton/tag/binding internals:
-`tools/tpac_skeleton_scan.py` + `docs/tools/spider-skeleton-tpac-tools.md`. Lesson memory:
-`feedback-mesh-reexport-drops-skeleton-resource`.
+`tools/tpac_skeleton_scan.py` + `docs/tools/spider-skeleton-tpac-tools.md`. Lessons: `docs/reviews/lessons/animation-skeleton.md`.
 
 ---
 
@@ -251,7 +250,7 @@ actually drives before declaring a transfer complete.
 | Requirement | Rule | Failure mode if violated |
 |---|---|---|
 | Skeleton bone count | **≤ 63 bones** (engine cap is `Skeleton.MaxBoneCount = 64`; author ≤63 for a 1-bone safety margin) | import failure / corrupt rig |
-| ~~Per-mesh bone palette~~ | **NO per-mesh bone limit (corrected 2026-06-13).** A single mesh skins the whole skeleton — elephant 59 active bones / chariot 54, one mesh each, both render. Do NOT split a body for bone count. Split a mesh ONLY for a genuinely separate sub-mesh (the warg splits `warg_low_fur` so the FUR cloth-simulates independently — cloth-driven, not bone-driven). | — (the old ~40 cap was a misdiagnosis; see `feedback_no_40_bone_per_mesh_limit`) |
+| ~~Per-mesh bone palette~~ | **NO per-mesh bone limit (corrected 2026-06-13).** A single mesh skins the whole skeleton, elephant 59 active bones / chariot 54, one mesh each, both render. Do NOT split a body for bone count. Split a mesh ONLY for a genuinely separate sub-mesh (the warg splits `warg_low_fur` so the FUR cloth-simulates independently, cloth-driven, not bone-driven). |, (the old ~40 cap was a misdiagnosis; see `docs/reviews/lessons/animation-skeleton.md`) |
 | Physics | bodies + joints transplanted onto the final skeleton in the same tpac | ragdoll-less corpses, collision holes |
 | Hit capsules | fitted to the skinned mesh once skeleton and mesh are final: `tools/blender/export_skin_for_capsules.py`, then `tools/skeleton_hit_capsules.py fit` and `patch --apply`, then a Kit load (`docs/reference/bannerlord-skeleton-authoring.md` "Hit capsules") | blows and arrows pass through the creature: the Kit's default capsule is a rod a ninth as wide as it is long (elephant 2026-09-18: 48% of the skin hittable, the neck not at all) |
 | Movement clips | authored **IN-PLACE** (zero net root travel) — the engine translates the agent | double-speed slide if root motion baked (verified vs warg 2026-06-03) |
@@ -285,11 +284,11 @@ trip it — which is why the bug hides until the creature becomes a mount.
   inventory** (byte-scan the tpacs), never by name plausibility — a binding to a nonexistent
   animation compiles into a **degenerate record** that AVs when dereferenced (the
   `an_spi_attack_back` phantom, 2026-06-11). Sweep script pattern: scan candidate names against
-  the module's tpacs + Alliance.Wargs packs + vanilla `Native/.../animation_clips.tpac`.
+  the module's tpacs + vanilla `Native/.../animation_clips.tpac`.
 
 ## Phase 2 — Monster XML (`Monsters/<file>.xml`, engine-registered via SubModule `<Xmls>`)
 
-Copy the warg's shape (`Alliance.Wargs/ModuleData/Monsters/LOTR/lotr_monster_warg.xml`), then:
+Copy the warg's shape (`LOTRLOME_Armory/ModuleData/Monsters/LOTR/lotr_monster_warg.xml`), then:
 
 | Field | Value | Why (campaign evidence) |
 |---|---|---|
@@ -321,14 +320,14 @@ exceptions.** Measured across all 94 `<Monster>` definitions in the install:
 | `camel_unmountable`, `mule_unmountable` | Native (inherit `camel`/`mule`) | 2 / 1 — inherited | no | 0 | 12 — inherited |
 | `chariot` | LOTRLOME_Armory | 4 | yes | 12 | 12 |
 | `spider` | LOTRLOME_Armory | 1 | yes | **5** | 5 |
-| `warg` | Alliance.Wargs | 1 | yes | **5** | 5 |
+| `warg` | LOTRLOME_Armory | 1 | yes | **5** | 5 |
 | `taom_war_elephant`, `taom_mumakil` | LOTRLOME_Armory | 10 | yes | **0** | 0 |
 
 TAOM breaks the pairing on four mounts. Rideability here is **declared, not inferred**: the
 `<Horse monster="Monster.X">` items in
 `LOTRLOME_Armory/ModuleData/LOTRLOME_items/LOTRAOM_horses.xml` (`spider_mount_a`,
 `taom_war_elephant`, `taom_mumakil`, `taom_chariot_a`) and
-`Alliance.Wargs/ModuleData/Items/LOTR/lotr_warg.xml` (3 warg items). The zero-rein shape is
+the same file's three warg items (now in the Armory). The zero-rein shape is
 upstream, not a TAOM authoring slip — ADOD_Beasts's own `elephant` Monster
 (`ADOD_Beasts/ModuleData/adod_beasts.xml`) is likewise `Mountable` with zero rein attributes.
 
@@ -346,8 +345,8 @@ campaign") — but that predates this native change.
 elephant's five missing rein attributes, but as five unlabelled rows among 57 attribute-presence
 divergences, with no severity; `mumakil` is not in that presence comparison at all (Section A
 compares spider vs warg vs elephant). If you add a rein rule, add it **repo-side**: the live Monster
-files are in the unversioned `LOTRLOME_Armory` / `Alliance.Wargs` dependency modules, so a fix made
-only there is silently reverted by a module reinstall (CLAUDE.md, "A fix in a dependency module").
+files are in the unversioned `LOTRLOME_Armory` module, so a fix made
+only there is silently reverted by a module reinstall (orientation.md, "Unversioned modules").
 
 **Authoring rule going forward:** a new `Mountable` monster declares all twelve, or inherits them
 via `base_monster`. Shipping fewer is a deliberate deviation — record it here and battle-test the
@@ -396,7 +395,7 @@ The native dispatch is **TYPE-driven**. Declare, exactly:
    **It MUST sit at the TOP of the file** — `base_set` inheritance snapshots at definition time,
    so the partial must precede every race set or riders inherit nothing (the goblin
    "thrust-loop", 2026-06-11). The engine merges same-id sets across modules
-   (Alliance.Wargs' own file leads with exactly such a partial).
+   (the Armory's warg file leads with exactly such a partial).
 4. **Registration truth:** native animation XML loads ONLY via `project.mbproj` `<file>` entries
    with the standard ids (`soln_action_sets` / `soln_action_types` / `soln_monster_usage_sets`)
    → the module-root `action_sets.xml` / `action_types.xml` / `monster_usage_sets.xml` are live;
@@ -456,7 +455,7 @@ monster leaves null native entries → spawn AV.
 | Instrument | What it catches |
 |---|---|
 | `python tools/audit_mount_parity.py` | ANY divergence from warg/elephant/horse across Monster XML, usage sets, action types, action-set binding coverage, rider partial — the tool that found 5 of the spider's 7 deltas in one pass. **Extend its `FILES`/`MOUNTS` maps for each new creature** |
-| Animation-target sweep | every `animation=` in your sets byte-scanned against the real tpac inventories (module + Alliance.Wargs packs + vanilla `animation_clips.tpac`) — phantoms compile into degenerate records |
+| Animation-target sweep | every `animation=` in your sets byte-scanned against the real tpac inventories (module + vanilla `animation_clips.tpac`), phantoms compile into degenerate records |
 | The probe battery (`RunSpiderMountDiagnostics` pattern) | one-shot in-game probes: skeleton × set × usage spawn tests, engine-binding name resolution (compiled truth vs XML-on-disk), rider-partial inheritance per race set |
 | Control battles | warg-only (the known-good baseline), then the new creature; on a crash, bisect single-variable — and expect ≥2 independent causes (the spider had FIVE) |
 | Native crash triage | Event Log fault offsets (no debugger needed) discriminate crash sites across runs; VS mixed-mode (Managed .NET Framework + Native) gives faulting registers; pdata function bounds + rip-relative string scan + E8 caller-chain naming — the technique that named `set_attack_entity` and `monster_usage.cpp` |
@@ -479,7 +478,7 @@ invariant under Phase 2, still unverified). Keep the previous decompile as
 
 1. Non-humanoid mounts ARE viable — the "never make creatures mounts" verdict was reversed
    2026-06-11 (`quad_movement` was the real killer, not the mount architecture).
-2. ~~Per-mesh bone palette → split meshes~~ — **RETIRED: no per-mesh bone limit (corrected 06-13). Keep the body in one mesh; the only cap is the 64-bone skeleton. See `feedback_no_40_bone_per_mesh_limit`.**
+2. ~~Per-mesh bone palette → split meshes~~, **RETIRED: no per-mesh bone limit (corrected 06-13). Keep the body in one mesh; the only cap is the 64-bone skeleton. See `docs/reviews/lessons/animation-skeleton.md`.**
 3. Per-pace `direction="none"` reference row or ÷0 (spider 06-04).
 4. `quad_movement` + step points on gait clips or universal mount-context AV (THE root cause,
    06-10/11).

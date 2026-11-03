@@ -70,9 +70,9 @@ LOTRLOME_Armory already ships **`hill_troll`** (since 2026-09-24 `skeleton="trol
 `hill_troll_a_*` meshes and a standalone `as_hill_troll_warrior`; before that `troll_skeleton` and
 `mordor_hill_troll`) and **`cave_troll`** (`skeleton="human_skeleton"`, mesh `lotr_troll_body`), both
 `monster_usage="human"`; the cave troll's action set has `base_set="as_human_warrior"` (it *inherits*
-human clips for free), the hill troll's is a filled copy of it. TAOM has a
-`cave_troll` troop + `BodyProperty.fighter_cave_troll`, currently **disabled** (2026-05-14) — that is the
-ready-made template for the race data (see [troll-race.md](../features/troll-race.md)).
+human clips for free), the hill troll's is a filled copy of it. TAOM's
+`cave_troll` troop and `BodyProperty.fighter_cave_troll` ship today (see [troll-race.md](../features/troll-race.md)); they are the
+ready-made template for the race data.
 
 **Direction (updated 2026-06-14): the SHIPPING troll is `cave_troll` on `human_skeleton`** (inherits the
 full human set via `base_set`), confirmed in battle. There are **two ways** to give a humanoid race custom
@@ -100,7 +100,7 @@ movement — pick by how different the motion must be:
 
 > **Asset gate:** authored animation FBXs are exported to a NON-Armory staging folder
 > (`E:\LOTRAOMAssets\troll_clips_to_import\`); the user imports them into LOTRLOME_Armory + Kit-compiles
-> themselves (see memory `feedback-keep-new-anims-out-of-armory`). Never write new FBXs into the Armory.
+> themselves. Never write new FBXs into the Armory.
 
 > **Source clips from a bought pack (2026-09-17):** the Fab "Cave Troll Lightweight" pack is a second
 > clip source beside the human library. `tools/oneoff/ue_export_cave_troll.py` exports its
@@ -250,8 +250,7 @@ retargeted and swapped in. (`troll_walk_forward` +
 ## Proven prototype (2026-06-13)
 - ARP enabled on Blender 5.1.2 (167 ops). Imported the 28-bone `human_skeleton` + a real action.
 - Built + corrected the human→troll FK map; `arp.retarget` baked **198 fcurves** onto the troll `rig`.
-- Troll deforms (`hand.l` Δ1.55, `foot.l` Δ1.23 across the cycle). Saved to
-  `E:\LOTRAOMAssets\troll_anim_WORK_20260613.blend` (`troll_rig_01.blend` untouched).
+- Troll deforms (`hand.l` Δ1.55, `foot.l` Δ1.23 across the cycle); `troll_rig_01.blend` untouched.
 
 ## Reusable assets
 
@@ -267,7 +266,6 @@ retargeted and swapped in. (`troll_walk_forward` +
 - `tools/blender/arp_retarget.py` — retarget driver (import source, build+correct map, bake, save .bmap).
 - `tools/blender/bannerlord_human_to_troll.bmap` — the saved bone map.
 - `E:\LOTRAOMAssets\Auto-Rig Pro v3.78.10\auto_rig_pro.zip` — installable ARP package.
-- `E:\LOTRAOMAssets\troll_anim_WORK_20260613.blend` — the proven prototype scene.
 
 ## Hand-off checklist
 1. Install + enable ARP (zip above). 2. Source the human clips (Kit export). 3. Run `arp_retarget.py`

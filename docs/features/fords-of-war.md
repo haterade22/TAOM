@@ -12,6 +12,8 @@ The full build contract, with every signature and the stage-by-stage Deviations,
 [fords-of-war/build-spec.md](fords-of-war/build-spec.md). This page is the maintainer's map: what exists,
 what the numbers mean, how to check it in game and where to change it.
 
+Mike, 2026-11-03: balance values, roster picks and test plans are the agent's to decide and report; merge and push still need his word.
+
 ## Why This Exists
 
 - **Vanilla behavior:** Bannerlord battles are one field and one player agent. The commander screens

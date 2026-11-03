@@ -6,11 +6,14 @@
 runtime: Harmony, UIExtenderEx, ButterLib and MCM, plus the helper DLLs those four bring with them
 (`Dependencies/_Module/THIRD-PARTY-LICENSES.txt`). It registers no game data at all: its manifest has
 no `<Xmls>` block, only seven `<SubModule>` entries that boot other people's classes out of its own
-`bin/` folder (`Dependencies/_Module/SubModule.xml:85-236`). A player needs only `TAOM` and
-`TAOM.Dependencies` ticked in the launcher; the standalone `Bannerlord.Harmony`,
+`bin/` folder (`Dependencies/_Module/SubModule.xml:85-236`). Of the library modules a player ticks only
+`TAOM.Dependencies`, beside `TAOM`, `TAOM_Map` and `LOTRLOME_Armory`; the standalone `Bannerlord.Harmony`,
 `Bannerlord.ButterLib`, `Bannerlord.UIExtenderEx` and `Bannerlord.MBOptionScreen` modules are not
 required and should be uninstalled (`Dependencies/_Module/SubModule.xml:124-126`,
 [dr3-maintenance.md](../migration/dr3-maintenance.md) line 297).
+
+Add no new `DependedModule` row to a TAOM `SubModule.xml`, and open no issue proposing one, because the Modding Kit
+force-loads every module a row names (Mike, 2026-09-21). The rows #371 added stay. No test enforces this.
 
 This chapter is a concept chapter: it explains what the four libraries are, why they are packaged
 this way, the version pairing that a release must keep intact, the vendored-DLL allowlist, the
@@ -21,23 +24,23 @@ in [load-order-and-dependencies](load-order-and-dependencies.md); the other modu
 
 ## The four libraries in plain words
 
-- **Harmony** (`0Harmony.dll`, NuGet package `Lib.Harmony 2.4.2`, MIT, Andreas Pardeike) lets a mod
+- **Harmony** (`0Harmony.dll`, NuGet package `Lib.Harmony`, MIT, Andreas Pardeike) lets a mod
   change what a method inside the game's own compiled code does without editing the game. A mod
   attaches a "prefix" that runs before the engine method or a "postfix" that runs after it.
   Everything in TAOM that alters vanilla behaviour goes through it
   (`Dependencies/_Module/THIRD-PARTY-LICENSES.txt:8-11`, `Dependencies/TAOM.Dependencies.csproj:70`).
   Harmony has no SubModule class of its own; the runtime loads `0Harmony.dll` the first time any
   code touches a `HarmonyLib` type (`Dependencies/_Module/SubModule.xml:142-146`).
-- **UIExtenderEx** (`Bannerlord.UIExtenderEx.dll`, NuGet `Bannerlord.UIExtenderEx 2.13.2`, MIT, BUTR)
+- **UIExtenderEx** (`Bannerlord.UIExtenderEx.dll`, NuGet `Bannerlord.UIExtenderEx`, MIT, BUTR)
   does the same job for the game's screens: it injects widgets and view-model properties into
   TaleWorlds' Gauntlet UI instead of replacing whole screens
   (`Dependencies/_Module/THIRD-PARTY-LICENSES.txt:13-16`, `Dependencies/TAOM.Dependencies.csproj:71`).
 - **ButterLib** (`Bannerlord.ButterLib.dll` plus one `Bannerlord.ButterLib.Implementation.1.4.N.dll`
-  per game build, ButterLib 2.11.0, MIT, BUTR) is BUTR's shared utility layer: a dependency-injection
+  per game build, MIT, BUTR) is BUTR's shared utility layer: a dependency-injection
   container, logging through Serilog, and a crash-report renderer. It is not on NuGet as a runtime
   package; the DLLs are copied by hand from Steam Workshop item `2859232415`
   (`Dependencies/_Module/THIRD-PARTY-LICENSES.txt:18-21`, [dr3-maintenance.md](../migration/dr3-maintenance.md) lines 48-55).
-- **MCM**, the Mod Configuration Menu (NuGet `Bannerlord.MCM 5.12.3` for the API in `MCMv5.dll`, and
+- **MCM**, the Mod Configuration Menu (NuGet `Bannerlord.MCM` for the API in `MCMv5.dll`, and
   the vendored `Bannerlord.MBOptionScreen.v1.4.N.dll` set plus `MCM.UI.Adapter.MCMv5.dll` for the
   screen, 5.12.3, MIT, BUTR) is the in-game **Mod Options** tab. It turns a C# settings class into
   sliders and checkboxes. MCM the library is a `TAOM.Dependencies` concern; the `Main/Features/Mcm/`
@@ -160,8 +163,8 @@ under the #371 comment at lines 11-20, and the mirror is at line 31 with `versio
 the `/release` gate (`.claude/skills/release/SKILL.md`) reads.
 <!-- measured: rg -n 'TAOM.Dependencies' Main/_Module/SubModule.xml 2026-10-14 -->
 
-Two facts about the numbers. Both `<Version>` values read `v2.0.34` today
-(`Dependencies/_Module/SubModule.xml:6`, `Main/_Module/SubModule.xml:6`); the Dependencies one moves only
+Two facts about the numbers. Both `<Version>` values sit at line 6
+(`Dependencies/_Module/SubModule.xml`, `Main/_Module/SubModule.xml`); the Dependencies one moves only
 when its assembly changes, so the two are not required to match
 ([release-process.md](../reference/release-process.md) line 152). The engine target is pinned separately: `NativeConstraint_MatchesPinnedGameVersion` asserts that
 Main's `<DependedModuleMetadata id="Native" version="v1.5.6.*" />` equals
@@ -181,13 +184,11 @@ The three NuGet DLLs (`0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll`
 folder at all; they arrive at build time and the live module's `bin/Win64_Shipping_Client/` holds 42
 files, the same count as its `bin/Win64_Shipping_Server/` mirror.
 <!-- measured: ls "<game>/Modules/TAOM.Dependencies/bin/Win64_Shipping_Client" | wc -l; ls ".../bin/Win64_Shipping_Server" | wc -l 2026-09-05 -->
-The vendored set is 6 `Bannerlord.ButterLib.Implementation.1.4.N.dll` and 6
-`Bannerlord.MBOptionScreen.v1.4.N.dll` files (`1.4.0` through `1.4.5`) plus the 6 `BUTR.CrashReport*`
-files. <!-- measured: ls Dependencies/_Module/bin/Win64_Shipping_Client | rg -c 'ButterLib\.Implementation\.1\.4\.[0-9]+\.dll' (and the MBOptionScreen and BUTR.CrashReport patterns) 2026-09-05 -->
-Their versions, read from the files: `Bannerlord.ButterLib.dll` FileVersion `2.11.0.0`,
-`MCM.UI.Adapter.MCMv5.dll` `5.12.3.0`, `Bannerlord.ModuleLoader.Bannerlord.MBOptionScreen.dll`
-`1.0.1.50`, `BUTR.CrashReport.dll` `14.0.0.99`.
-<!-- measured: [Diagnostics.FileVersionInfo]::GetVersionInfo(<dll>).FileVersion over the four files 2026-09-05; the MCM.UI.Adapter.MCMv5.dll value re-read 2026-10-03 -->
+The vendored set is the `Bannerlord.ButterLib.Implementation.1.4.N.dll` and `Bannerlord.MBOptionScreen.v1.4.N.dll`
+files, one per game build, plus the `BUTR.CrashReport*` files (`ls Dependencies/_Module/bin/Win64_Shipping_Client`).
+Package versions are in `Dependencies/TAOM.Dependencies.csproj`; the notice file
+`Dependencies/_Module/THIRD-PARTY-LICENSES.txt` names each binary family's version. Read a DLL's own version with
+`[Diagnostics.FileVersionInfo]::GetVersionInfo(<dll>).FileVersion`.
 
 The `.gitignore` is what makes this folder committable. The top-level `bin/` rule matches everywhere,
 so lines 44-45 un-ignore the two parent folders, line 51 re-ignores everything inside
@@ -223,7 +224,7 @@ of that DLL read assembly version `4.0.4.1` today.
 that module's `THIRD-PARTY-LICENSES.txt` ([provenance rule](../../.claude/rules/provenance.md), the
 "Redistributing a binary means reproducing its notice" row). The register rows for this module are
 Lib.Harmony, the BUTR stack, .NET Foundation, Serilog and BetaDeps
-([provenance-register.md](../reference/provenance-register.md) lines 63-66 and 77). The notice file
+([provenance-register.md](../reference/provenance-register.md), the rows of those names). The notice file
 names each binary family with its exact version, holder, licence and upstream URL, then the full MIT
 and Apache-2.0 texts, then a closing paragraph scoping what is TAOM's own work
 (`Dependencies/_Module/THIRD-PARTY-LICENSES.txt`, 124 lines). <!-- measured: wc -l Dependencies/_Module/THIRD-PARTY-LICENSES.txt 2026-09-05 -->
@@ -274,9 +275,7 @@ Each stub declares the standard BUTR id, `<DefaultModule value="true"/>`,
 `<DependedModule Id="TAOM.Dependencies"/>` so the real DLLs construct first, and one `<SubModule>`
 pointing at `TAOM.Dependencies.AliasStubSubModule` (`Stubs/Bannerlord.Harmony/_Module/SubModule.xml:42-72`).
 
-**The v99 version rule.** Stub versions are `v2.4.99.0` (Harmony), `v2.13.99.0` (UIExtenderEx),
-`v2.11.99.0` (ButterLib) and `v5.12.99.0` (MBOptionScreen).
-<!-- measured: rg -n '<Version value=' Stubs/*/_Module/SubModule.xml 2026-09-05 -->
+**The v99 version rule.** Each stub is the shipped minor plus `.99.0`.
 `X.Y` is the minor of the version actually shipped (the csproj pin for the three NuGet packages, the
 vendored DLL's own FileVersion for ButterLib) and `.99.0` satisfies any reasonable `vX.Y.*` lower
 bound a third-party mod declares, without claiming a major jump. A minor bump needs a stub edit; a
@@ -748,17 +747,14 @@ Code: Code changes required in `Dependencies/SubModule.cs` and `Dependencies/TAO
    on a half-finished refresh (`BundledDependencyManifestTests.cs:154-183`).
 3. **Engine bump**: set Main's `<DependedModuleMetadata id="Native" version="v<new>.*" />` and
    `.claude/pinned-game-version.txt` together, and re-check the Workshop impl set. On this machine the
-   ButterLib and MBOptionScreen Workshop folders each hold 9 versioned DLLs, `1.4.0` through `1.4.8`,
-   while the vendored set stops at `1.4.5`; the meta-loader picks the highest suffix at or below the
-   running engine, so TAOM on 1.4.8 is running the `1.4.5` implementations.
+   ButterLib and MBOptionScreen Workshop folders each hold 9 versioned DLLs, `1.4.0` through `1.4.8`.
    <!-- measured: ls "<workshop>/2859232415/bin/Win64_Shipping_Client" | rg -c 'ButterLib\.Implementation\.1\.4\.[0-9]+\.dll' and the 2859238197 MBOptionScreen pattern 2026-09-05 -->
    The `/engine-bump` skill is the named workflow for this and is not run from this chapter.
 4. Update `Dependencies/_Module/THIRD-PARTY-LICENSES.txt` so every heading names the version now
    shipped.
-5. If the Dependencies assembly changed, bump `Dependencies/_Module/SubModule.xml:6` and
-   bump the matching `<DependedModule Id="TAOM.Dependencies" />` and
-   `<DependedModuleMetadata id="TAOM.Dependencies" ... version="v2.0.Y" />` rows in
-   `Main/_Module/SubModule.xml`, then cut the release with `/release`.
+5. If the Dependencies assembly changed, bump `Dependencies/_Module/SubModule.xml:6` and the `version` of
+   `<DependedModuleMetadata id="TAOM.Dependencies">` in `Main/_Module/SubModule.xml`, then cut the release with
+   `/release`. The `<DependedModule Id="TAOM.Dependencies" />` row carries no version.
 6. Build with the game closed and run the smoke test. `-p:DisableModuleCopy=true` alone does not stop
    the deploy into the game install; add `-p:ModuleId=` to skip all three copy targets
    ([agent-operating-manual.md](../ai-includes/agent-operating-manual.md) lines 49-51).
@@ -819,10 +815,6 @@ Code: No code changes needed
   `Modules/TAOM.Dependencies/` and nowhere under `Dependencies/`; no build step or doc in the repo
   produces them. A fresh clone plus build gives a TAOM.Dependencies with no MCM artwork.
   <!-- measured: ls "<game>/Modules/TAOM.Dependencies"; ls ".../ModuleData/Languages" | wc -l; ls ".../ModuleData/Languages_MCM" | wc -l 2026-09-05 -->
-- **The vendored implementation set is three builds behind the Workshop.** Both Workshop folders hold
-  `1.4.6`, `1.4.7` and `1.4.8`; TAOM vendors through `1.4.5`. [dr3-maintenance.md](../migration/dr3-maintenance.md)
-  line 160 records the 2026-08-10 check as "MCM is clean" at `1.4.5`, which is no longer true of the
-  MBOptionScreen folder either (the Workshop listing on this machine).
 - **`SubModuleInfo` probes `bin\Win64_Shipping_Client` no matter which build runs**, while the load
   uses `bin/<Common.ConfigName>/`, the process's working-directory name. A dedicated server or editor
   build needs the mirrored folders (`SubModuleInfo.cs:54`; `Module.cs:1044`; `Common.cs:37`).
@@ -850,7 +842,7 @@ Code: No code changes needed
 - **[dr3-maintenance.md](../migration/dr3-maintenance.md) line 236 still says the Foundation classes
   came from BetaDeps "via clean-room rewrite".** The provenance register retracts that: the headers
   say "Ports BetaDeps.Foundation.X", the derivation is `behavioural-port`, status `uncleared`
-  ([provenance-register.md](../reference/provenance-register.md) lines 330-343). The shipped notice
+  ([provenance-register.md](../reference/provenance-register.md), its BetaDeps section). The shipped notice
   uses the corrected wording (`Dependencies/_Module/THIRD-PARTY-LICENSES.txt:107-118`).
 
 ## Numbers in this chapter
@@ -879,7 +871,7 @@ were added (a later manifest edit moves them again).
 | 42 / 42 | live `bin/Win64_Shipping_Client` / `bin/Win64_Shipping_Server` file counts | `ls "<game>/Modules/TAOM.Dependencies/bin/Win64_Shipping_Client" \| wc -l` (and `_Server`) |
 | 6 / 6 / 6 | vendored `ButterLib.Implementation.1.4.N` / `MBOptionScreen.v1.4.N` / `BUTR.CrashReport*` DLLs | `ls Dependencies/_Module/bin/Win64_Shipping_Client \| rg -c '<pattern>'` |
 | 9 / 9 | Workshop `Implementation.1.4.N` / `MBOptionScreen.v1.4.N` DLLs (`1.4.0` to `1.4.8`) | `ls "<workshop>/261550/2859232415/bin/Win64_Shipping_Client" \| rg -c 'ButterLib\.Implementation\.1\.4\.[0-9]+\.dll'` (and `2859238197`) |
-| 2 | files in the Main vendored allowlist | `git ls-files Main/_Module/bin \| wc -l` |
+| 0 | files tracked under `Main/_Module/bin` | `git ls-files Main/_Module/bin \| wc -l` |
 | 13 | `!` allow patterns at `.gitignore:52-64` | `sed -n '52,64p' .gitignore \| rg -c '^!'` |
 | 16 | `.cs` files in `Dependencies/Foundation/` | `ls Dependencies/Foundation/*.cs \| wc -l` |
 | 17 | simple names in `RedirectedSimpleNames` | `sed -n '39,98p' Dependencies/SubModule.cs \| rg -c '^\s*"[^"]+",'` |

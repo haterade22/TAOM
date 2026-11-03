@@ -2,11 +2,11 @@
 
 Data generation, rebalancing, and content pipeline scripts.
 
-All Python scripts support `--dry-run` (preview) and `--apply` (write). Run from the repo root.
+Run from the repo root. A script that writes outside the repo defaults to a dry run and needs an explicit `--apply` or `--write`; see each row.
 
 ## XML I/O convention (MANDATORY for scripts that edit ModuleData XML)
 
-Bannerlord ModuleData XML is UTF-8 (some files with a BOM, e.g. `TAOM_Map/settlements.xml`; most repo files without) and CRLF. To edit byte-faithfully:
+Bannerlord ModuleData XML is UTF-8, some files with a BOM, and its line endings vary by file. To edit byte-faithfully:
 
 ```python
 had_bom = path.read_bytes().startswith(b"\xef\xbb\xbf")   # detect

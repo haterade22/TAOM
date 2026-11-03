@@ -101,6 +101,14 @@ Enforcement is `check_ai_dashes` in `tools/lint_docs.py`, scoped to lines added 
 
 ---
 
+## vanilla-data-comparison.md
+
+### Where the incidents behind this rule are written up
+
+- The 2026-05-28 battle crashes after the v1.4.5 bump (stale `scene_name` references, a missing `battle_terrain_extended` scene): [scene-reference-audit.md](scene-reference-audit.md).
+- The 2026-05-31 stale GUI prefab clones (every Party-screen troop thumbnail stuck on the loading spinner): [rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md](../reviews/rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md), method in [gui-prefab-clones.md](gui-prefab-clones.md).
+- The 2026-08-03 structurally illegal `action_sets.xml` and unreachable settlement entrances, and the 2026-08-04 landless Variag culture (campaign crash `099f650c`): [data-content-cultures.md](../reviews/lessons/data-content-cultures.md) and [lord-spawn-guard.md](../features/lord-spawn-guard.md).
+
 ## 2026-09-23 compression (ADR-011)
 
 The always-load set went from seven rules (about 51 KB) to six (about 12 KB), and

@@ -7,7 +7,7 @@
 
 ## Load convention
 
-A rule with `paths:` loads when Claude reads a matching file in the repo; a rule without it loads in
+A rule with `paths:` loads when Claude reads, writes or edits a matching file in the repo; a rule without it loads in
 every session and subagent. The details and their sources (never for a file outside the repo, the
 `/compact` behaviour, a frontmatter that fails to parse) are in `.claude/rules/harness-facts.md`
 "Rule loader (memory) semantics" and "Context loading".
@@ -26,12 +26,13 @@ _(7 rules; `python tools/lint_docs.py --context-budget-json` gives their sizes. 
 | `think-before-coding.md` | State load-bearing assumptions before the first edit and ask when one is uncertain; don't ask on trivial work; make the goal testable; reuse-before-write ladder. |
 | `working-discipline.md` | Autonomous-loop stewardship (continue established work, never stop to ask permission) and edit-scope discipline, including during a review gate. |
 
-## Path-scoped rules (load when a matching file is read)
+## Path-scoped rules (load when a matching file is read, written or edited)
 
 | Rule | Content |
 |------|---------|
 | `adapters.md` | Adapter pattern, research-first |
-| `csharp-architecture.md` | Layer stack, IoC lifetimes, non-negotiable rules, stale-file re-read, mission-scope agent handles and threads |
+| `config-providers.md` | Config files, MCM settings and editor-visible fields validate semantics at load, not only syntax; NaN and range checks, both-surface MCM clamps, reload scope |
+| `csharp-architecture.md` | Non-negotiable rules, IoC lifetimes, entity state matrix, session reset, float gates, lookup fallbacks, mission-scope agent handles and threads |
 | `csharp-patterns.md` | Hook, Strategy and GameModel patterns, quick reference |
 | `data-scripts.md` | Scripts under `tools/`: the XML I/O convention, backups, dry run, parse before write; model the deserializer when reading what a troop carries |
 | `external-skill-ports.md` | Authoring a skill from scratch, and the per-field checklist for porting one from an external suite |

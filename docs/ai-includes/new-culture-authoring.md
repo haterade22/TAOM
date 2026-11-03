@@ -7,12 +7,14 @@ End-to-end repeatable process for adding (or substantially revising) a TAOM cult
 
 If you're creating a **net-new culture entry in `taom_spcultures.xml`** (the underlying Culture object), read [`docs/cultures.md`](../cultures.md) FIRST — that covers the ~80 culture attributes / 16 NPC files / equipment rosters needed for the culture itself. This guide picks up after the culture definition exists, with the visible-in-game troops + armor flow.
 
+**Promoting a borrowing kingdom, or cloning a realm's data:** start from `tools/promote_borrowed_cultures.py` and [recipe-add-a-culture](../modding/recipe-add-a-culture.md), then use Phases 1-3 here only for new armour and troops.
+
 ## TL;DR
 
 1. **Armor**: enumerate Solus's mesh IDs from `.tpac` → write generator script → emit XML files → register `<culture>/` folder in `LOTRLOME_Armory/SubModule.xml`.
 2. **Troops**: lore-research → tier design on paper → write generator script → emit `troops_<culture>.xml` → register in `Main/_Module/SubModule.xml`.
-3. **Wire** the culture in `spcultures.xslt` (every CultureObject template/troop attribute), `taom_partyTemplates.xml` (9 standard templates), `VolunteerRecruitmentService.cs` (culture + optional settlement/clan pools), and add tests.
-4. **Validate** via `tools/validate_all_troop_refs.py`, then `/verify` → `/deep-review` → RCA + commit. `/review-codex` runs only when the maintainer asks for it (paid).
+3. **Wire** the culture in `spcultures.xslt` (every CultureObject template/troop attribute), `taom_partyTemplates.xml` (12 standard templates), `VolunteerRecruitmentService.cs` (culture + optional settlement/clan pools), and add tests.
+4. **Validate** via `python tools/validate_moduledata.py` (read its warnings), then `/verify` → `/deep-review` → RCA + commit. `/review-codex` runs only when the maintainer asks for it (paid).
 5. **Expect 5–10 iteration commits** after the initial ship (renames, equipment swaps, balance tuning, settlement-specific recruitment, color schemes). That's normal — the first ship is a draft.
 
 ---
@@ -22,7 +24,7 @@ If you're creating a **net-new culture entry in `taom_spcultures.xml`** (the und
 Before starting, confirm all of these. Skipping any forces a rework later.
 
 - [ ] **Solus's `.tpac` packs** are at `<armory>/Assets/<culture>_kingdom/sr_<culture>_kingdom_{boots,chests,gauntlets,helmets,shoulders}_geo.tpac`. Verify the 5 files exist before promising a delivery date.
-- [ ] **Culture ID decision**. Check `~/.claude/projects/.../memory/kingdom-culture-mapping.md`:
+- [ ] **Culture ID decision**. Check `.claude/rules/xml-data.md` Culture StringIds and [id-cheatsheet](../modding/id-cheatsheet.md):
   - Custom culture (`gondor`, `erebor`, etc.) — adds rows in `taom_spcultures.xml`.
   - XSLT passthrough culture (vanilla `vlandia`, `sturgia`, `empire`, `aserai`, `khuzait`, `battania`) — rename via `spcultures.xslt`. Dale uses `sturgia`; Rohan uses `vlandia`; Khand uses `battania`; etc.
 - [ ] **Tier cap decision**. Dale stops at level 31 (engine tier 6); Gondor runs to level 51 (tier 10); TAOM's `MaxCharacterTier` is 10. Pick before authoring skill curves. Armour power is a separate decision: the kingdom's chest cap in `rebalance_armor.KINGDOM_CAPS` (#583), which the restat applies to every item by its lowest wearer's band.
@@ -104,7 +106,7 @@ Register the new folder in `LOTRLOME_Armory/SubModule.xml`:
 
 **Smoke test**: `python -c "import xml.etree.ElementTree as ET; ET.parse('<armory>/.../<culture>/head_armors.xml')"` — fast well-formedness check before booting the game.
 
-> ⚠ Well-formedness ≠ loaded in-engine. A NEW armor XML file (and a NEW `<XmlName id="Items">` folder registration) only takes effect after a full game **RESTART** — Bannerlord registers the item directory at process launch and globs it (`GetFiles("*.xml")`) at campaign start, with no hot-reload. `validate_all_troop_refs.py` / `validate_moduledata.py` passing does NOT prove the engine loaded the new files; restart + visually confirm troops are clothed in-game (naked-with-green-validator = new-file-not-loaded-until-restart). See `.claude/rules/moduledata-validation.md` ("PASS ≠ in-game loaded").
+> ⚠ Well-formedness ≠ loaded in-engine. A NEW armor XML file (and a NEW `<XmlName id="Items">` folder registration) only takes effect after a full game **RESTART**, Bannerlord registers the item directory at process launch and globs it (`GetFiles("*.xml")`) at campaign start, with no hot-reload. `validate_moduledata.py` passing does NOT prove the engine loaded the new files; restart + visually confirm troops are clothed in-game (naked-with-green-validator = new-file-not-loaded-until-restart). See `.claude/rules/moduledata-validation.md` ("PASS ≠ in-game loaded").
 
 ---
 
@@ -166,20 +168,7 @@ Clone [`tools/generate_dale_troops.py`](../../tools/generate_dale_troops.py). Th
   - Each takes a literal `a01`..`b04` suffix string and returns the 5-slot armor dict.
 - **`build_troops()`** — `troops.append(Troop(...))` per troop. Group by branch with section comments.
 
-**Equipment cross-reference** — every weapon/horse/shield ID must exist in vanilla or LOTRAOM. Quick verification:
-
-```bash
-python -c "
-import re, glob
-all_ids = set()
-for base in ['<game>/Modules/SandBoxCore/ModuleData',
-             '<game>/Modules/Native/ModuleData',
-             '<game>/Modules/LOTRLOME_Armory/ModuleData']:
-    for p in glob.glob(f'{base}/**/*.xml', recursive=True):
-        all_ids.update(re.findall(r'id=\"([a-zA-Z][a-zA-Z0-9_]+)\"', open(p, encoding='utf-8').read()))
-# Then grep your troop XML for Item.xxx refs and intersect with all_ids
-"
-```
+**Equipment cross-reference**, every weapon/horse/shield ID must exist in vanilla or LOTRAOM: `python tools/validate_moduledata.py` reports the unresolved ones (read its warnings).
 
 Codex caught a P2 on Dale where `lowland_yew_bow` is actually **stronger** than `lowland_longbow` in vanilla stats, but the generator placed yew at T5 and longbow at T6 — upgrading a Yeoman to a Bowman gave them a worse bow. **Always cross-reference vanilla weapon stats** (`difficulty`, `damage`, `accuracy`) when picking tier-ordered weapons.
 
@@ -208,7 +197,7 @@ Register in `Main/_Module/SubModule.xml` next to similar cultures:
 
 ## Phase 3: Tree wiring
 
-### 3a. Culture XSLT binding (MANDATORY — read `feedback_xslt_passthrough_unintended_inheritance` memory)
+### 3a. Culture XSLT binding (MANDATORY)
 
 For XSLT-passthrough cultures, the existing culture block in `spcultures.xslt` will preserve every vanilla attribute via `<xsl:apply-templates select="@*"/>` — including ones you don't want. Enumerate **every** CultureObject template/troop attribute the engine reads and explicitly classify each as BIND or PASSTHROUGH.
 
@@ -305,22 +294,13 @@ Add `InitializeXxxCulture()`, optionally `InitializeXxxSettlements()`, optionall
 
 Run these in order. Any FAIL blocks commit.
 
-> ⚠ These prove refs resolve **on disk**, not that the engine loaded new files. A new-culture ship writes brand-new armor XML files AND a new `<XmlName id="Items">` folder registration — both take effect only after a full game **RESTART** (Bannerlord registers the item directory at launch, globs it at campaign start, no hot-reload). A green `validate_all_troop_refs.py` with naked troops in-game = new-file-not-loaded-until-restart, not a data defect. Restart + visually confirm clothed before commit. See `.claude/rules/moduledata-validation.md`.
+> ⚠ These prove refs resolve **on disk**, not that the engine loaded new files. A new-culture ship writes brand-new armor XML files AND a new `<XmlName id="Items">` folder registration, both take effect only after a full game **RESTART** (Bannerlord registers the item directory at launch, globs it at campaign start, no hot-reload). A green `validate_moduledata.py` with naked troops in-game = new-file-not-loaded-until-restart, not a data defect. Restart + visually confirm clothed before commit. See `.claude/rules/moduledata-validation.md`.
 
 ```bash
-# 1. Underwear-bug gate — every sk_<culture>_* armor ref resolves.
-python tools/validate_all_troop_refs.py
-# Add your culture to the list in main() if it's new.
+# 1. Every armor, weapon, horse and shield ref resolves. Read the warnings.
+python tools/validate_moduledata.py
 
-# 2. Non-armor refs (weapons, horses, shields).
-python -c "
-import re
-with open('Main/_Module/ModuleData/troops/troops_<culture>.xml') as f:
-    refs = set(re.findall(r'Item\.([a-zA-Z][a-zA-Z0-9_]+)', f.read()))
-# ... cross-reference with vanilla + LOTRAOM ID set (see Phase 2c)
-"
-
-# 3. C# compile + tests.
+# 2. C# compile + tests.
 dotnet build Main --no-restore
 dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --no-build --filter "<Culture>Culture|<Culture>Settlement|<Culture>Clan"
 ```
@@ -347,7 +327,7 @@ Dale shipped with 3 Codex findings on the first pass:
 | 2 | P2 | `lowland_yew_bow` > `lowland_longbow` (stat inversion at T5/T6) | Assumed weapon names imply tier order |
 | 3 | P3 | Cavalry skill curve 40% under Rohan, not "10% under" as commented | Wrote comment from intent, not measured value |
 
-Each is now a memory entry; expect Codex to catch similar patterns on your next culture.
+Expect Codex to catch similar patterns on your next culture.
 
 ### Build environment gotcha
 
@@ -376,7 +356,7 @@ After every iteration, re-run:
 
 ```bash
 python tools/generate_<culture>_troops.py --apply
-python tools/validate_all_troop_refs.py
+python tools/validate_moduledata.py
 dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --no-build --filter "<Culture>Culture"
 ```
 
@@ -386,16 +366,7 @@ Each iteration that touches the `VolunteerRecruitmentService` pool **must update
 
 ## Patterns codified during Dale iteration
 
-These all became feedback-memory entries — read them before authoring:
-
-- `feedback_xslt_passthrough_unintended_inheritance.md` — enumerate every CultureObject attribute; passthrough silently inherits vanilla bindings you didn't want.
-- `feedback_enumerate_from_source_of_truth.md` — extending a config? enumerate from the upstream source, not the existing config rows.
-- `feedback_classify_by_grep_not_by_assumption.md` — unfamiliar IDs (kingdom? culture? clan?) — grep before classifying.
-- `feedback_multi_folder_id_uniqueness.md` — canonical-folder table for armor-item prefixes; check before authoring a new item to avoid duplicate-ID warnings.
-- `feedback_verify_troop_ids_against_canonical_xml.md` — user-spec troop name → ID conversion needs canonical XML grep, not sibling-naming inference.
-- `feedback_xml_grep_wrapper_offset.md` — `grep -c "<NPCCharacter"` overcounts by 1 because `<NPCCharacters>` wrapper matches.
-
-And the patterns visible in the Dale generator code (clone these explicitly for your next culture):
+The patterns visible in the Dale generator code (clone these explicitly for your next culture):
 
 - Per-mesh-class explicit-suffix armor helpers (`chivalry_armor_explicit`, `infantry_armor_explicit`, `archer_armor_explicit`, `lake_town_armor_explicit`).
 - Per-line color discipline (`a` = bronze, `b` = silver — same shape, different paint).
@@ -422,10 +393,9 @@ And the patterns visible in the Dale generator code (clone these explicitly for 
 | **Crown guard** | `Main/_Module/ModuleData/crown_guard/crown_guard_cultures.json` and `CrownGuardMap.Default()` | modified when the culture rules a kingdom (+ a row; gated by `ShippedConfig_KeysEqualTheKingdomCultures`) |
 | **Hall of Fire** | `Main/_Module/ModuleData/hall_of_fire/hall_of_fire.json` and `HallOfFireMap.Default()` | modified when the culture owns a settlement (+ a row; gated by `ShippedConfig_EveryConversionTargetCultureHasARowOrIsVanilla`, `ShippedConfig_EqualsTheBuiltInDefault` and the live `EveryCultureOwningANonHideoutSettlement_HasARowOrIsVanilla`) |
 | **Culture wiring** | `Main/_Module/ModuleData/spcultures.xslt` | modified (Culture[@id='X'] block — ~9 military attrs minimum) |
-| **Party templates** | `Main/_Module/ModuleData/taom_partyTemplates.xml` | modified (+9 templates) |
+| **Party templates** | `Main/_Module/ModuleData/taom_partyTemplates.xml` | modified (+12 templates) |
 | **Recruitment** | `Main/Features/TroopProgression/VolunteerRecruitmentService.cs` | modified (+ `InitializeXxxCulture` minimum) |
 | **Tests** | `TAOM.Tests/Features/TroopProgression/VolunteerRecruitmentServiceTests.cs` | modified (+ low/high/fallthrough tests) |
-| **Validator** | `tools/validate_all_troop_refs.py` | modified (add culture to list in main()) |
 | **Feature doc** | `docs/features/<culture>.md` | new |
 | **RCA (if any Codex findings)** | `docs/reviews/rca-<culture>-<date>.md` | new |
 
