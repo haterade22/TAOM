@@ -98,8 +98,10 @@ internal static class FordsHudText
 
     internal static string PointContested() => new TextObject("{=TAOM_FOW_Hud_PointContested}Contested").ToString();
 
+    internal static string SpeedButton(int speed) => new TextObject("{=TAOM_FOW_Hud_SpeedButton}Speed {SPEED}x").SetTextVariable("SPEED", speed).ToString();
+
     internal static string KeysHint() =>
-        new TextObject("{=TAOM_FOW_Hud_KeysHintUpgrades}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   WASD pan   Q E turn   wheel zoom").ToString();
+        new TextObject("{=TAOM_FOW_Hud_KeysHintSpeed}1-4 lane   F1-F8 troops   H hero   Z Push   X Hold   C Fall back   V Seize   R region   G B N M creatures   U upgrades   T speed   WASD pan   Q E turn   wheel zoom").ToString();
 
     internal static string PackSize(int size) => new TextObject("{=TAOM_FOW_Hud_PackSize}Pack of {SIZE}").SetTextVariable("SIZE", size).ToString();
 

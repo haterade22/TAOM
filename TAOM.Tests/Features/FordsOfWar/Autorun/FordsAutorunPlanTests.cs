@@ -58,6 +58,16 @@ public class FordsAutorunPlanTests
     }
 
     [TestMethod]
+    public void Resolve_SpeedKey_SetsTheMatchSpeed_AndAnythingButALevelWarnsAndStaysAtOne()
+    {
+        Assert.AreEqual(10, Resolve("out=E:\\x\nspeed=10").Speed);
+        Assert.AreEqual(1, Resolve("out=E:\\x").Speed);
+        var bad = Resolve("out=E:\\x\nspeed=3");
+        Assert.AreEqual(1, bad.Speed);
+        Assert.IsTrue(bad.Warnings.Any(w => w.Contains("speed")), string.Join("; ", bad.Warnings));
+    }
+
+    [TestMethod]
     public void Resolve_WestAiKey_PutsAnAiOnTheWestSide_AndItIsOffByDefault()
     {
         Assert.IsTrue(Resolve("out=E:\\x\nwest_ai=1").WestAi);

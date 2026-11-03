@@ -2,7 +2,7 @@
 """Run one Fords of War match in the real game with nobody at the keyboard, then collect the self-check report.
 
 Run:  python tools/run_fords_autorun.py [--scene S] [--west W] [--east E] [--ai A] [--live-seconds N]
-                                        [--wall-limit N] [--west-ai] [--runs N] [--runs-root DIR]
+                                        [--wall-limit N] [--west-ai] [--speed 1|2|4|10] [--runs N] [--runs-root DIR]
                                         [--require-idle-minutes N] [--dry-run]
 Test: python -m unittest tools.tests.test_run_fords_autorun
 
@@ -97,19 +97,20 @@ def modules_arg(modules):
 
 
 def arm_text(out, west=None, east=None, ai=None, scene=None, live_seconds=None, live_wait_seconds=None, wall_limit_seconds=None,
-             quit_when_done=True, west_ai=False, screenshots=None):
+             quit_when_done=True, west_ai=False, screenshots=None, speed=None):
     """The arm file the in-game FordsAutorunPlan parses: UTF-8 key=value lines, LF. Unset choices are left out (the game defaults them).
-    west_ai puts an AI commander on the West side too, so both sides play."""
+    west_ai puts an AI commander on the West side too, so both sides play. speed is the match speed from the first frame."""
     pairs = [("west", west), ("east", east), ("ai", ai), ("scene", scene), ("live_seconds", live_seconds),
              ("live_wait_seconds", live_wait_seconds), ("wall_limit_seconds", wall_limit_seconds),
-             ("out", out), ("quit", 1 if quit_when_done else 0), ("west_ai", 1 if west_ai else None), ("screenshots", screenshots)]
+             ("out", out), ("quit", 1 if quit_when_done else 0), ("west_ai", 1 if west_ai else None), ("screenshots", screenshots), ("speed", speed)]
     return "".join(f"{key}={value}\n" for key, value in pairs if value is not None and str(value) != "")
 
 
 def arm_text_for(out, args):
     """(arm file text, wall limit). The runner's wall limit is always written, so the game and this tool never disagree on it."""
     wall_limit = args.wall_limit if args.wall_limit else DEFAULT_WALL_LIMIT_SECONDS
-    text = arm_text(str(out), args.west, args.east, args.ai, args.scene, args.live_seconds, None, wall_limit, west_ai=args.west_ai, screenshots=getattr(args, "screenshots", None))
+    text = arm_text(str(out), args.west, args.east, args.ai, args.scene, args.live_seconds, None, wall_limit, west_ai=args.west_ai, screenshots=getattr(args, "screenshots", None),
+                    speed=getattr(args, "speed", None))
     return text, wall_limit
 
 
@@ -817,6 +818,7 @@ def build_parser():
                              "(default 0: stop at once, which loses the dump)")
     parser.add_argument("--screenshots", help="live seconds at which the game saves a picture of the screen into the run folder, comma separated")
     parser.add_argument("--west-ai", action="store_true", help="an AI commands the West side too, so both sides attack")
+    parser.add_argument("--speed", type=int, choices=[1, 2, 4, 10], help="the match speed from the first frame (default 1); live_seconds stay mission seconds, so 10 ends a match in about a tenth of the time")
     parser.add_argument("--runs", type=int, default=1, help="how many matches to run, one game process each")
     parser.add_argument("--runs-root", default=RUNS_ROOT, help="folder that holds one subfolder per run")
     parser.add_argument("--require-idle-minutes", type=non_negative_minutes, default=DEFAULT_IDLE_MINUTES,

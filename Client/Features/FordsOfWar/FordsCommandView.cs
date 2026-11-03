@@ -36,6 +36,7 @@ public sealed class FordsCommandView : MissionView
     private FordsRunReport? _report;
     private float _sinceRefresh = RefreshIntervalSec;
     private bool _failed;
+    private FordsMissionSpeed? _speed;
 
     /// <summary>
     /// A lost focus opens the Escape menu, which pauses the mission until someone closes it. In an unattended run nobody will, so an armed run says no.
@@ -62,6 +63,7 @@ public sealed class FordsCommandView : MissionView
                 return;
 
             _vm.Tick(dt, MBCommon.IsPaused);
+            _speed?.Apply(Mission, _vm.Speed, dt);
             _report?.Paused(MBCommon.IsPaused);
             if (!_vm.IsResultVisible)
                 FordsCommandHotkeys.Read(Input, _vm);
@@ -95,6 +97,10 @@ public sealed class FordsCommandView : MissionView
         _layer.InputRestrictions.SetInputRestrictions(true, InputUsageMask.Mouse);
         _movie = _layer.LoadMovie("FordsCommand", _vm);
         MissionScreen.AddLayer(_layer);
+        _speed = new FordsMissionSpeed(IoC.Resolve<IModLogger>());
+        var plan = FordsAutorunPlan.Resolve();
+        if (plan.Armed)
+            _vm.Speed.Set(plan.Speed);
         _vm.Refresh();
         _report?.PanelAttached();
     }
@@ -118,6 +124,8 @@ public sealed class FordsCommandView : MissionView
                 MissionScreen?.RemoveLayer(_layer);
             }
 
+            if (Mission != null)
+                FordsMissionSpeed.Stop(Mission);
             _vm?.OnFinalize();
         }
         catch (Exception ex)

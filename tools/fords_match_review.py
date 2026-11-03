@@ -5,7 +5,7 @@
 
 A run folder is what tools/run_fords_autorun.py wrote (E:/Temp/fords-runs/<stamp>). It prints the match as a table, then one line per
 finding, and writes the same text to review.md in the folder. The findings flag a number that needs a person's reading: they name no
-fix, and one match proves little. It reads the log's [FordsOfWar] lines, the report's evidence and factions.json, and changes nothing else.
+fix, and one match proves little. It reads the log's [FordsOfWar] lines, the report's evidence and factions.json, and writes nothing else.
 """
 import glob
 import json
@@ -38,13 +38,14 @@ GOLD = re.compile(r"\[Balance\] side=(\w+) slot=\d+ (earned=\d+ spent=\d+ left=\
 POISON = re.compile(r"\[Balance\] poison side=(\w+) doses=(\d+) damage=(\d+)")
 UPGRADE = re.compile(r"\[Upgrade\] side=(\w+) track=(?:\{=[^}]*\})?(.+?) price=\d+")
 HOUSEKEEP = re.compile(r"\[Housekeep\] .*?wargsRemoved=(\d+) .*?riderlessOthersPeak=(\S+)")
+SPEED = re.compile(r"\[Speed\] speed=(\d+)")
 
 
 def parse_log(text):
     """What the [FordsOfWar] lines of one match's log say. The last Summary and Housekeep lines stand for the match."""
     facts = {
         "mt": 0.0, "deaths": dict.fromkeys(SIDES, 0), "towers_lost": dict.fromkeys(SIDES, 0), "troops": {}, "gold": {}, "poison": {},
-        "upgrades": {side: [] for side in SIDES}, "wargs": 0, "riderless_others": "-", "esc_pauses": 0, "errors": [], "other_errors": 0, "warnings": 0,
+        "upgrades": {side: [] for side in SIDES}, "wargs": 0, "riderless_others": "-", "esc_pauses": 0, "errors": [], "other_errors": 0, "warnings": 0, "speed": 1,
     }
     for line in text.splitlines():
         if (found := SUMMARY.search(line)):
@@ -62,6 +63,8 @@ def parse_log(text):
         elif (found := HOUSEKEEP.search(line)):
             facts["wargs"] = int(found[1])
             facts["riderless_others"] = found[2]
+        elif (found := SPEED.search(line)):
+            facts["speed"] = max(facts["speed"], int(found[1]))
         elif "[EscMenu]" in line and "paused=true" in line:
             facts["esc_pauses"] += 1
         elif "[ERROR]" in line:
@@ -103,6 +106,8 @@ def _name(facts, side):
 
 def _health_findings(facts):
     found = []
+    if facts["speed"] > 1:
+        found.append(f"SPEED: this match ran at up to {facts['speed']}x; do not read its numbers against a normal-speed match without saying so")
     if facts["crashed"]:
         found.append(f"CRASH: the game died at {facts['mt']:.0f} s ({facts['reason']}); run /native-crash-triage before reading the rest")
     elif facts["mt"] < FULL_MATCH_SECONDS:

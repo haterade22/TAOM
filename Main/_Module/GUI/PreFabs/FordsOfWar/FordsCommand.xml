@@ -47,9 +47,23 @@
                     </Widget>
                   </Children>
                 </ListPanel>
-                <TextWidget WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="110" VerticalAlignment="Center"
-                            Brush="Tooltip.Text" Brush.FontSize="26" Brush.FontColor="#FFFFFFFF" Brush.TextHorizontalAlignment="Center"
-                            Text="@ClockText" DoNotAcceptEvents="true" />
+                <ListPanel WidthSizePolicy="Fixed" HeightSizePolicy="CoverChildren" SuggestedWidth="110" VerticalAlignment="Center"
+                           StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
+                  <Children>
+                    <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="CoverChildren"
+                                Brush="Tooltip.Text" Brush.FontSize="26" Brush.FontColor="#FFFFFFFF" Brush.TextHorizontalAlignment="Center"
+                                Text="@ClockText" DoNotAcceptEvents="true" />
+                    <ButtonWidget DoNotPassEventsToChildren="true" WidthSizePolicy="Fixed" HeightSizePolicy="Fixed" SuggestedWidth="100" SuggestedHeight="24"
+                                  HorizontalAlignment="Center" Brush="ButtonBrush2" UpdateChildrenStates="true" Command.Click="ExecuteCycleSpeed">
+                      <Children>
+                        <TextWidget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
+                                    Brush="Popup.Button.Text" Brush.FontSize="14" Brush.FontColor="#FFFFFFFF"
+                                    Brush.TextHorizontalAlignment="Center" Brush.TextVerticalAlignment="Center"
+                                    Text="@SpeedText" DoNotAcceptEvents="true" />
+                      </Children>
+                    </ButtonWidget>
+                  </Children>
+                </ListPanel>
                 <ListPanel DataSource="{EnemyKeep}" WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren" VerticalAlignment="Center"
                            StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
                   <Children>
