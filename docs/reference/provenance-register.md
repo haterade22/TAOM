@@ -121,6 +121,7 @@ is ever treated as a token, which is what keeps the bare word "Alliance" from ma
 | ShellCheck | `ShellCheck` `koalaman/shellcheck` | GPL-3.0 | interop-only | `tools/tests/test_shell_lint_gate.py` runs the installed tool (see detail) | cleared |
 | Gitleaks | `Gitleaks` `gitleaks/gitleaks` | MIT | interop-only | `/security-scan` runs the installed tool; `.gitleaksignore` (see detail) | cleared |
 | Ruff | `Ruff` `astral-sh/ruff` | MIT | interop-only | `ruff.toml`, `tools/tests/test_python_lint_gate.py` (see detail) | cleared |
+| Headroom | `headroom` `headroomlabs-ai/headroom` `headroom-ai` | Apache-2.0 | comparison-only | (none: measured and not adopted; see detail) | cleared |
 
 <!-- provenance-register-end -->
 
@@ -935,6 +936,14 @@ Code transcripts, which became section 9 of `tools/harness_retro.py`. No rtk cod
 copied, so no Apache-2.0 notice is carried. The rtk v1.0.1 binary was run once, offline, on
 2026-10-23 to measure it (Mike's explicit trial decision): checksum-verified, never initialised,
 never in a hook or on PATH, then deleted. Record: [`docs/reviews/adopt-rtk-2026-10-23.md`](../reviews/adopt-rtk-2026-10-23.md).
+
+### Headroom
+
+Upstream: https://github.com/headroomlabs-ai/headroom, `main` at `7e0094d`. TAOM took nothing from it:
+no code, text or idea, so no Apache-2.0 notice is carried. The 0.42.0 wheel and its Kompress model were
+run offline on 2026-11-03 to measure it (Mike's explicit trial decision): in an isolated venv, never
+wrapped around Claude Code, never in a hook or an MCP entry, then deleted. Record:
+[`docs/reviews/adopt-headroom-2026-11-03.md`](../reviews/adopt-headroom-2026-11-03.md).
 
 ### context-mode
 
