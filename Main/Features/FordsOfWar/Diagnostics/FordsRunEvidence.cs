@@ -267,6 +267,9 @@ internal sealed class FordsVolleyEvidence
     public FordsVolleyItemInfo? Item;
     public bool ItemReported;
     public bool ReachShort;
+    public FordsVolleyItemInfo? Arrow;
+    public bool ArrowReported;
+    public bool ArrowReachShort;
     public int Launched;
     public int NoGunnerOrItem;
     public int NoTarget;

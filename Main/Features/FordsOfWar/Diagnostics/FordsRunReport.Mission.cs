@@ -157,6 +157,23 @@ internal sealed partial class FordsRunReport
                 + " reach=" + FordsLogLine.F1(item.Reach) + " fireRange=" + FordsLogLine.F1(fireRange) + " reachShort=" + v.ReachShort);
     });
 
+    internal void ArrowItem(FordsVolleyItemInfo? item, float fireRange) => Guard(nameof(ArrowItem), () =>
+    {
+        var run = _run;
+        if (run == null)
+            return;
+
+        var v = run.Volley;
+        v.ArrowReported = true;
+        v.Arrow = item;
+        v.ArrowReachShort = item != null && item.Reach < fireRange;
+        if (item == null)
+            Warn("Volley", "arrow none fireRange=" + FordsLogLine.F1(fireRange));
+        else
+            Info("Volley", "arrow id=" + FordsLogLine.Q(item.ItemId) + " thrust=" + item.Thrust + " speed=" + FordsLogLine.F1(item.Speed)
+                + " reach=" + FordsLogLine.F1(item.Reach) + " fireRange=" + FordsLogLine.F1(fireRange) + " reachShort=" + v.ArrowReachShort);
+    });
+
     internal void Spawned(MatchSide side, int lane, string troopId) => Guard(nameof(Spawned), () =>
     {
         var run = _run;

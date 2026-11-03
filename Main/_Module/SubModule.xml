@@ -1390,14 +1390,14 @@
         <GameType value="CampaignStoryMode"/>
       </IncludedGameTypes>
     </XmlNode>
-    <!-- Fords of War only: the tower arrow never reaches a campaign, so it can never sell. -->
+    <!-- Custom Game only, so every Custom Battle loads it: the tower arrow never reaches a campaign, so it can never sell. -->
     <XmlNode>
       <XmlName id="Items" path="fords_of_war/fords_items"/>
       <IncludedGameTypes>
         <GameType value="CustomGame"/>
       </IncludedGameTypes>
     </XmlNode>
-    <!-- Fords of War only: the mode's own troops, so a balance edit can never reach a campaign. -->
+    <!-- Custom Game only, so every Custom Battle loads them and is_obsolete hides them there: the mode's own troops, so a balance edit can never reach a campaign. -->
     <XmlNode>
       <XmlName id="NPCCharacters" path="fords_of_war/fords_troops"/>
       <IncludedGameTypes>

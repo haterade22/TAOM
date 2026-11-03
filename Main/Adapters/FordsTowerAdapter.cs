@@ -78,6 +78,7 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
     private ItemObject? _arrowItem;
     private bool _arrowLookedUp;
     private float _arrowSpeed;
+    private int _arrowThrust;
     private int _volleyThrust;
     private bool _volleyLookedUp;
 
@@ -428,6 +429,9 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
     public FordsVolleyItemInfo? VolleyItemInfo() =>
         VolleyItem() == null ? null : new FordsVolleyItemInfo(VolleyItemId, _volleyThrust, _volleySpeed, FordsTowerGeometry.Reach(_volleySpeed));
 
+    public FordsVolleyItemInfo? ArrowItemInfo() =>
+        TowerArrow() == null ? null : new FordsVolleyItemInfo(TowerArrowItemId, _arrowThrust, _arrowSpeed, FordsTowerGeometry.Reach(_arrowSpeed));
+
     public float? HitPoints(string towerId) => Find(towerId)?.Component.HitPoint;
 
     private Tower? Find(string towerId)
@@ -440,7 +444,7 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
 
     private float Spread() => ((float)_spread.NextDouble() * 2f - 1f) * VolleySpread;
 
-    // Looked up at match start through VolleyItemInfo, or at the first volley when that has not run: the item's own numbers are read,
+    // Looked up at match start through ArrowItemInfo, or at the first volley when that has not run: the item's own numbers are read,
     // logged once, and checked against the fire range.
     private ItemObject? TowerArrow()
     {
@@ -457,7 +461,10 @@ internal sealed class FordsTowerAdapter : IFordsTowerAdapter
 
         var probe = new MissionWeapon(_arrowItem, null, null, 1);
         _arrowSpeed = probe.GetModifiedMissileSpeedForCurrentUsage();
-        _logger.LogInfo($"[FordsOfWar] tower arrow item '{TowerArrowItemId}': thrust damage {probe.GetModifiedThrustDamageForCurrentUsage()}, missile speed {_arrowSpeed}");
+        _arrowThrust = probe.GetModifiedThrustDamageForCurrentUsage();
+        _logger.LogInfo($"[FordsOfWar] tower arrow item '{TowerArrowItemId}': thrust damage {_arrowThrust}, missile speed {_arrowSpeed}");
+        if (FordsTowerGeometry.Reach(_arrowSpeed) < _fireRange)
+            _logger.LogWarning($"[FordsOfWar] the tower arrow '{TowerArrowItemId}' reaches {FordsTowerGeometry.Reach(_arrowSpeed):0.#} m at 45 degrees (missile speed {_arrowSpeed}), short of the fire range {_fireRange:0.#} m");
         return _arrowItem;
     }
 

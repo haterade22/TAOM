@@ -38,7 +38,7 @@ internal static class FordsVolleyHits
             return null;
         if (affector == null)
             filtered = "noAffector";
-        else if (weapon.Item?.StringId != FordsTowerAdapter.VolleyItemId)
+        else if (weapon.Item?.StringId != FordsTowerAdapter.VolleyItemId && weapon.Item?.StringId != FordsTowerAdapter.TowerArrowItemId)
             filtered = "otherItem";
         else if (affector.CurrentMortalityState != Agent.MortalityState.Invulnerable)
             filtered = "notGunner";
@@ -51,6 +51,6 @@ internal static class FordsVolleyHits
         var impact = mounted ? -1f : (v.ToVec3() - data.MissileVelocity).Length; // MissionCombatMechanicsHelper.cs:717
         var multiplier = MissionGameModels.Current.AgentStatCalculateModel.GetWeaponDamageMultiplier(affector!, weapon.CurrentUsageItem);
         return new FordsVolleyHit(data.BaseMagnitude, blow.InflictedDamage, blow.AbsorbedByArmor, data.MissileTotalDamage,
-            data.MissileStartingBaseSpeed, impact, multiplier, PartName(blow.VictimBodyPart), data.AttackBlockedWithShield, mounted, affected.IsHuman);
+            data.MissileStartingBaseSpeed, impact, multiplier, PartName(blow.VictimBodyPart), data.AttackBlockedWithShield, mounted, affected.IsHuman, weapon.Item!.StringId);
     }
 }

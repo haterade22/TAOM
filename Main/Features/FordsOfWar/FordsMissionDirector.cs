@@ -671,6 +671,7 @@ internal sealed class FordsMissionDirector : IFordsTowerHitHook
         _report.Preflight(ids.Count, missing);
         var config = _plan.Config;
         _report.VolleyItem(_towers.VolleyItemInfo(), _plan.LongestFireRange);
+        _report.ArrowItem(_towers.ArrowItemInfo(), _plan.LongestFireRange);
         _report.TowerConfig(config.Towers);
         _facts = new FordsMatchFacts(config.Towers.FireRange, config.Towers.AttackRange, config.Capture.Radius, layout.Lanes.Count,
             config.Waves.MaxLivePerSide, config.Heroes.MaxAlivePerSide, KeepDistance(built), _battlefield.MaxAgents,

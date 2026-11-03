@@ -30,6 +30,7 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
     private int _thrownTopUps;
     private int _horsesRemoved;
     private int _horsesSpared;
+    private int _riderlessOthersPeak;
     private int _housekeepPasses;
     private readonly Func<string, object?> _towerEntity;
     private readonly IModLogger _logger;
@@ -93,15 +94,18 @@ internal sealed class FordsBattlefieldAdapter : IFordsBattlefieldAdapter
         RemoveRiderlessHorses();
 
         if (++_housekeepPasses % HousekeepPassesPerLine == 0)
-            _logger.LogInfo($"[FordsOfWar][Housekeep] thrownTopUps={_thrownTopUps} horsesRemoved={_horsesRemoved} horsesSpared={_horsesSpared} (totals)");
+            _logger.LogInfo($"[FordsOfWar][Housekeep] thrownTopUps={_thrownTopUps} horsesRemoved={_horsesRemoved} horsesSpared={_horsesSpared} (totals) riderlessOthersPeak={_riderlessOthersPeak}");
     }
 
     /// <summary>
-    /// Horses only: a riderless warg or other creature fights on. See <see cref="RiderlessHorseRule"/> for why a horse a soldier holds or has chosen stays;
-    /// horsesSpared counts how often that guard held one back. The soft fade is the call vanilla makes for the same job (SpawningBehaviorBase).
+    /// Horses only, by decision. A riderless warg or other creature stays, although a warg with no rider only sleeps (WargBehaviorTree), so riderlessOthersPeak
+    /// logs the most that stood at once. See <see cref="RiderlessHorseRule"/> for why a horse a soldier holds or has chosen stays; horsesSpared counts how often that guard held one back. The soft fade is the call vanilla makes for the same job (SpawningBehaviorBase).
     /// </summary>
     private void RemoveRiderlessHorses()
     {
+        _riderlessOthersPeak = Math.Max(_riderlessOthersPeak,
+            _mission.MountsWithoutRiders.Count(p => p.Key.IsActive() && p.Key.RiderAgent == null && p.Key.Monster?.StringId != HorseMonster));
+
         // A copy: removing a mount changes the engine's list.
         var candidates = _mission.MountsWithoutRiders
             .Where(p => p.Key.IsActive() && p.Key.RiderAgent == null && p.Key.Monster?.StringId == HorseMonster && p.Value.ElapsedSeconds >= RiderlessHorseRule.WaitSeconds)

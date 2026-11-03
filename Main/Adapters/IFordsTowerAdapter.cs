@@ -38,8 +38,8 @@ internal interface IFordsTowerAdapter
     void KillGunners(string towerId);
 
     /// <summary>
-    /// Looses <paramref name="missiles"/> javelins from above the tower toward a ground point, each owned by a living gunner of
-    /// that tower, at the javelin's own missile speed. Returns how many missiles were added: 0 when the tower has no living gunner,
+    /// Looses <paramref name="missiles"/> missiles from above the tower toward a ground point, each owned by a living gunner of
+    /// that tower, at the missile's own speed: every second one is an arrow, when that item exists, and the rest are javelins. Returns how many missiles were added: 0 when the tower has no living gunner,
     /// the javelin item is missing or the target position is not finite. A target out of reach is still aimed at 45 degrees and counts.
     /// </summary>
     int Fire(string towerId, Vec3f target, int missiles, float towerHalfWidth = 0f);
@@ -60,6 +60,11 @@ internal interface IFordsTowerAdapter
     /// The volley javelin as the engine resolved it (looking it up logs its numbers once); null when the item does not exist.
     /// </summary>
     FordsVolleyItemInfo? VolleyItemInfo();
+
+    /// <summary>
+    /// The tower arrow as the engine resolved it (looking it up logs its numbers once); null when the item does not exist.
+    /// </summary>
+    FordsVolleyItemInfo? ArrowItemInfo();
 
     /// <summary>The entity's current hit points; null for an unknown tower.</summary>
     float? HitPoints(string towerId);

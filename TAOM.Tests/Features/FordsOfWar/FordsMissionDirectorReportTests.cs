@@ -144,6 +144,20 @@ public class FordsMissionDirectorReportTests
         Assert.IsFalse(f.Report.Run.Volley.ReachShort);
     }
 
+    [TestMethod]
+    public void Start_ReportsTheArrowItem_AndAShortReachAgainstTheFireRange()
+    {
+        var f = FordsDirectorFixture.Create();
+        var arrow = new FordsVolleyItemInfo("fow_tower_arrow", 20, 35f, 1f);
+        f.Towers.ArrowItemInfo().Returns(arrow);
+
+        Assert.IsTrue(f.Director.Start());
+
+        Assert.AreSame(arrow, f.Report.Run!.Volley.Arrow);
+        Assert.IsTrue(f.Report.Run.Volley.ArrowReported);
+        Assert.IsTrue(f.Report.Run.Volley.ArrowReachShort);
+    }
+
     // --- the tick ------------------------------------------------------------------------------------------------------
 
     [TestMethod]

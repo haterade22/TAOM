@@ -192,6 +192,17 @@ public class ShippedFordsRosterTests
     }
 
     [TestMethod]
+    public void SubModule_LoadsTheTowerArrowForCustomGameOnly()
+    {
+        var node = XDocument.Load(Path.Combine(ModuleRoot, "SubModule.xml")).Descendants("XmlNode")
+            .Single(n => (string?)n.Element("XmlName")?.Attribute("path") == "fords_of_war/fords_items");
+
+        Assert.AreEqual("Items", (string)node.Element("XmlName")!.Attribute("id")!);
+        CollectionAssert.AreEqual(new[] { "CustomGame" },
+            node.Descendants("GameType").Select(g => (string)g.Attribute("value")!).ToArray());
+    }
+
+    [TestMethod]
     public void SubModule_LoadsTheRosterForCustomGameOnly()
     {
         var node = XDocument.Load(Path.Combine(ModuleRoot, "SubModule.xml")).Descendants("XmlNode")

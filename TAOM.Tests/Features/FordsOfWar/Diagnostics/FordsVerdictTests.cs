@@ -750,6 +750,53 @@ public class FordsVerdictTests
         return run;
     }
 
+    private static FordsVolleyHit ArrowHit(float launch = 35f, float total = 20f) =>
+        new(20f * 0.81f, 12, 3f, total, launch, launch * 0.9f, 1f, "Chest", false, false, true, "fow_tower_arrow");
+
+    private static FordsRunEvidence ArrowRun(params FordsVolleyHit[] hits)
+    {
+        var run = VolleyRun(Hit(50), Hit(42, 1.1f), Hit(33, 0.9f));
+        run.Volley.ArrowReported = true;
+        run.Volley.Arrow = new FordsVolleyItemInfo("fow_tower_arrow", 20, 35f, 90f);
+        run.Volley.Hits.AddRange(hits);
+        return run;
+    }
+
+    [TestMethod]
+    public void Check11_ArrowsAndJavelins_AreEachJudgedOnTheirOwnNumbers()
+    {
+        var row = Row(new FordsSessionEvidence(), ArrowRun(ArrowHit(), ArrowHit(), ArrowHit()), 11);
+
+        Assert.AreEqual(FordsResult.Pass, row.Result, row.Parts.Last().Numbers);
+        StringAssert.Contains(row.Parts.Single(p => p.Name == "arrow").Numbers, "medianR=1.000");
+        StringAssert.Contains(row.Info, "arrowPerBodyPart Chest:inflicted=12.0");
+    }
+
+    [TestMethod]
+    public void Check11_AnArrowLaunchedAtTheWrongSpeed_Fails()
+    {
+        var row = Row(new FordsSessionEvidence(), ArrowRun(ArrowHit(launch: 20f)), 11);
+
+        Assert.AreEqual(FordsResult.Fail, row.Parts.Single(p => p.Name == "arrow").Result);
+    }
+
+    [TestMethod]
+    public void Check11_TheArrowItemIsMissing_Fails()
+    {
+        var run = VolleyRun(Hit(50), Hit(42, 1.1f), Hit(33, 0.9f));
+        run.Volley.ArrowReported = true;
+
+        Assert.AreEqual(FordsResult.Fail, Row(new FordsSessionEvidence(), run, 11).Parts.Single(p => p.Name == "arrow").Result);
+    }
+
+    [TestMethod]
+    public void Check11_NoArrowHitsYet_IsNotSeen()
+    {
+        var row = Row(new FordsSessionEvidence(), ArrowRun(), 11);
+
+        Assert.AreEqual(FordsResult.NotSeen, row.Parts.Single(p => p.Name == "arrow").Result);
+    }
+
     [TestMethod]
     public void Check11_RatioIsOne_ForASyntheticEngineHit()
     {

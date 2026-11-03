@@ -142,43 +142,22 @@ internal static partial class FordsVerdicts
         var itemResult = v.ItemReported && item == null || v.ReachShort ? FordsResult.Fail
             : item != null ? FordsResult.Pass : FordsResult.NotSeen;
 
-        var ratios = new List<double>();
-        FordsVolleyHit? worst = null;
-        var worstGap = 0.0;
-        var mismatch = false;
-        if (item != null)
-        {
-            foreach (var hit in v.Hits)
-            {
-                if (TryRatio(hit, item, out var r))
-                    ratios.Add(r);
-                var gap = Math.Max(Math.Abs(hit.MissileTotalDamage - item.Thrust), Math.Abs(hit.LaunchSpeed - item.Speed));
-                if (gap > 0.5)
-                {
-                    mismatch = true;
-                    if (gap > worstGap)
-                    {
-                        worstGap = gap;
-                        worst = hit;
-                    }
-                }
-            }
-        }
-
-        var median = ratios.Count >= 3 ? Median(new List<double>(ratios)) : 0.0;
+        var arrowId = v.Arrow?.ItemId;
+        var javelins = v.Hits.Where(h => h.ItemId != arrowId).ToList();
+        var (qualifying, median, worst) = JudgeHits(item, javelins);
         var hitsResult = FordsResult.NotSeen;
-        var hitsNumbers = "qualifying=" + ratios.Count + " launched=" + v.Launched + " noGunner=" + v.NoGunnerOrItem + " noTarget=" + v.NoTarget + " seen=" + v.HitsSeen
+        var hitsNumbers = "qualifying=" + qualifying + " launched=" + v.Launched + " noGunner=" + v.NoGunnerOrItem + " noTarget=" + v.NoTarget + " seen=" + v.HitsSeen
             + (v.Filtered.Count == 0 ? "" : " filtered(" + Pairs(v.Filtered) + ")");
-        if (mismatch)
+        if (worst != null)
         {
             hitsResult = FordsResult.Fail;
             hitsNumbers = "mismatch totalDamage=" + N3(worst!.MissileTotalDamage) + " launchSpeed=" + N3(worst.LaunchSpeed) + " expected N="
                 + item!.Thrust + " S=" + N3(item.Speed) + "; a missile magnitude or damage model override also changes r";
         }
-        else if (ratios.Count >= 3)
+        else if (qualifying >= 3)
         {
             hitsResult = median >= 0.8 && median <= 1.2 ? FordsResult.Pass : FordsResult.Fail;
-            hitsNumbers = "qualifying=" + ratios.Count + " medianR=" + N3(median)
+            hitsNumbers = "qualifying=" + qualifying + " medianR=" + N3(median)
                 + (hitsResult == FordsResult.Fail ? "; a missile magnitude or damage model override also changes r" : "");
         }
         else if (v.Launched == 0 && v.NoGunnerOrItem + v.NoTarget >= 10)
@@ -192,16 +171,67 @@ internal static partial class FordsVerdicts
             hitsNumbers += "; missiles flew and none struck anyone";
         }
 
-        var byPart = string.Join(" ", v.Hits.Where(h => !h.Shielded).GroupBy(h => h.BodyPart).Select(g =>
-            g.Key + ":inflicted=" + N(MedianOf(g.Select(h => (double)h.Inflicted))) + ",absorbed=" + N(MedianOf(g.Select(h => (double)h.AbsorbedByArmor)))));
-
-        return Row(11, new[]
+        var parts = new List<FordsPart>
         {
             Part("item", itemResult, item == null ? "reported=" + v.ItemReported : "id=" + item.ItemId + " N=" + item.Thrust + " S=" + N3(item.Speed) + " reach=" + N(item.Reach) + " reachShort=" + v.ReachShort),
             Part("hits", hitsResult, hitsNumbers),
-        }, "perBodyPart " + (byPart == "" ? "-" : byPart),
-            "The item resolved with a reach past the fire range, and the median ratio of the engine's magnitude to N x multiplier x (impact speed / S) squared over unshielded, unmounted human hits is within 20 percent of 1; it fails when the towers asked to fire 10 times and no missile was added, or when 20 missiles flew and no hit was seen.",
+        };
+        var arrows = v.Hits.Where(h => arrowId != null && h.ItemId == arrowId).ToList();
+        if (v.ArrowReported)
+            parts.Add(ArrowPart(v, arrows));
+
+        return Row(11, parts.ToArray(), "perBodyPart " + ByPart(javelins) + (arrowId == null ? "" : " arrowPerBodyPart " + ByPart(arrows)),
+            "The javelin and the arrow each resolved with a reach past the fire range, and for each the median ratio of the engine's magnitude to its own N x multiplier x (impact speed / S) squared over unshielded, unmounted human hits is within 20 percent of 1; it fails when the towers asked to fire 10 times and no missile was added, or when 20 missiles flew and no hit was seen.",
             "The hit points lost look right on armoured and leg hits.");
+    }
+
+    /// <summary>The hits of one item against that item's own numbers: how many qualify for the ratio, their median, and the hit furthest from the item, if any differs.</summary>
+    private static (int Qualifying, double Median, FordsVolleyHit? Worst) JudgeHits(FordsVolleyItemInfo? item, IReadOnlyList<FordsVolleyHit> hits)
+    {
+        var ratios = new List<double>();
+        FordsVolleyHit? worst = null;
+        var worstGap = 0.5;
+        if (item != null)
+        {
+            foreach (var hit in hits)
+            {
+                if (TryRatio(hit, item, out var r))
+                    ratios.Add(r);
+                var gap = Math.Max(Math.Abs(hit.MissileTotalDamage - item.Thrust), Math.Abs(hit.LaunchSpeed - item.Speed));
+                if (gap > worstGap)
+                {
+                    worstGap = gap;
+                    worst = hit;
+                }
+            }
+        }
+
+        return (ratios.Count, ratios.Count >= 3 ? Median(ratios) : 0.0, worst);
+    }
+
+    private static FordsPart ArrowPart(FordsVolleyEvidence v, IReadOnlyList<FordsVolleyHit> arrows)
+    {
+        if (v.Arrow is not { } arrow)
+            return Part("arrow", FordsResult.Fail, "the tower arrow item does not exist; towers fire javelins only");
+
+        var (qualifying, median, worst) = JudgeHits(arrow, arrows);
+        var numbers = "id=" + arrow.ItemId + " N=" + arrow.Thrust + " S=" + N3(arrow.Speed) + " reach=" + N(arrow.Reach) + " reachShort=" + v.ArrowReachShort
+            + " seen=" + arrows.Count + " qualifying=" + qualifying;
+        if (v.ArrowReachShort)
+            return Part("arrow", FordsResult.Fail, numbers);
+        if (worst != null)
+            return Part("arrow", FordsResult.Fail, numbers + " mismatch totalDamage=" + N3(worst.MissileTotalDamage) + " launchSpeed=" + N3(worst.LaunchSpeed));
+        if (qualifying < 3)
+            return Part("arrow", FordsResult.NotSeen, numbers);
+
+        return Part("arrow", median >= 0.8 && median <= 1.2 ? FordsResult.Pass : FordsResult.Fail, numbers + " medianR=" + N3(median));
+    }
+
+    private static string ByPart(IEnumerable<FordsVolleyHit> hits)
+    {
+        var text = string.Join(" ", hits.Where(h => !h.Shielded).GroupBy(h => h.BodyPart).Select(g =>
+            g.Key + ":inflicted=" + N(MedianOf(g.Select(h => (double)h.Inflicted))) + ",absorbed=" + N(MedianOf(g.Select(h => (double)h.AbsorbedByArmor)))));
+        return text == "" ? "-" : text;
     }
 
     private static double MedianOf(IEnumerable<double> values) => Median(values.ToList());

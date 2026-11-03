@@ -409,6 +409,7 @@ internal sealed class FaithfulTowers : IFordsTowerAdapter
 
     public Func<TowerSlot, bool>? BuildFails;
     public FordsVolleyItemInfo? Item = new("western_javelin_2_t3", 30, 40f, 80f);
+    public FordsVolleyItemInfo? Arrow = new("fow_tower_arrow", 20, 35f, 80f);
     public bool NeverFires;
     public bool TakesRawDamage;
     public int Missiles;
@@ -477,7 +478,7 @@ internal sealed class FaithfulTowers : IFordsTowerAdapter
 
         Missiles += missiles;
         for (var i = 0; i < missiles; i++)
-            PendingHits.Add(HitFor(Item));
+            PendingHits.Add(HitFor(i % 2 == 1 && Arrow != null ? Arrow : Item));
         return missiles;
     }
 
@@ -488,7 +489,7 @@ internal sealed class FaithfulTowers : IFordsTowerAdapter
         var impact = item.Speed * 0.9f;
         var magnitude = item.Thrust * multiplier * 0.9f * 0.9f;
         return new FordsVolleyHit(magnitude, (int)(magnitude * 0.8f), magnitude * 0.2f, item.Thrust, item.Speed, impact, multiplier, "Torso",
-            false, false, true);
+            false, false, true, item.ItemId);
     }
 
     public string? TowerIdOf(object? component)
@@ -518,6 +519,8 @@ internal sealed class FaithfulTowers : IFordsTowerAdapter
     }
 
     public FordsVolleyItemInfo? VolleyItemInfo() => Item;
+
+    public FordsVolleyItemInfo? ArrowItemInfo() => Arrow;
 
     public float? HitPoints(string towerId) => _entities.TryGetValue(towerId, out var e) ? e.Hp : null;
 
