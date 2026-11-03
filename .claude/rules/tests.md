@@ -20,7 +20,8 @@ method must be named `test_*` or it never runs; the naming, framework and layout
 
 A gate (a test that lints or audits the repo) is proven on the states it will meet, not the one it
 was written in: a fresh checkout (`git check-attr text eol` on every file its tool reads), an
-untracked new file, a deleted one, a non-ASCII path, a run from a subfolder, a missing tool, and an
+untracked new file, a deleted one, a non-ASCII path, a folder whose case on disk differs from git's
+(so a path key compares with `OrdinalIgnoreCase`), a run from a subfolder, a missing tool, and an
 empty input that must not read as a pass (lesson in `docs/reviews/lessons/build-tooling-workflow.md`).
 
 ## Naming Convention
