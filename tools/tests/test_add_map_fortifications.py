@@ -145,6 +145,23 @@ class CheckTests(unittest.TestCase):
         self.assertTrue(any("no <Settlement> row" in f for f in found))
         self.assertTrue(any("no loc row" in f for f in found))
 
+    def test_every_scene_the_row_writes_must_have_a_scene_xscene(self):
+        written = {"empire_town_c", "arena_empire_a", "empire_house_c_tavern_a", "empire_castle_keep_a_l1_interior",
+                   "empire_castle_keep_a_l2_interior", "empire_castle_keep_a_l3_interior",
+                   "empire_dungeon_stealth", "empire_house_d_interior_house"}
+        self.assertEqual(amf.check([self.FORT], self.master, self.scene, self.loc, scene_folders=written), [])
+        found = amf.check([self.FORT], self.master, self.scene, self.loc, scene_folders=written - {"arena_empire_a"})
+        self.assertEqual(found, ["town_X5: scene arena_empire_a has no scene.xscene in any module"])
+
+    def test_a_castle_is_not_asked_for_town_only_scenes(self):
+        castle = amf.Fort("castle_X6", "Keep", "clan_x_1", "arthedain", "castle", "taom_gondor_castle_001_forceatmo", 800, "a")
+        have = {"taom_gondor_castle_001_forceatmo", "empire_castle_keep_a_l1_interior", "empire_castle_keep_a_l2_interior",
+                "empire_castle_keep_a_l3_interior", "empire_dungeon_stealth"}
+        scene = entity("castle_X6", "10, 20, 0", children=GATE("1, 0, 0"))
+        master = amf.fort_block(castle, ("10", "20"), (11.0, 20.0), "\n")
+        loc = {"DE": '<string id="Settlements.Settlement.name.castle_X6" text="Keep" />'}
+        self.assertEqual([f for f in amf.check([castle], master, scene, loc, scene_folders=have) if "no scene.xscene" in f], [])
+
     def test_a_missing_entity_is_named(self):
         found = amf.check([self.FORT], self.master, "", self.loc)
         self.assertTrue(any("no entity in scene.xscene" in f for f in found))

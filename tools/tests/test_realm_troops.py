@@ -71,6 +71,10 @@ class RealmDesignTests(unittest.TestCase):
         errors = self._probe_errors(["dale_great_axe_a", "wm_dale_shield_a06"])
         self.assertTrue(any("shield and a two-handed" in e for e in errors), errors)
 
+    def test_a_named_weapon_fails_the_self_check(self):
+        errors = self._probe_errors(["anduril", "sk_shield_round_a"])
+        self.assertTrue(any("NAMED_WEAPON_ON_TROOP" in e for e in errors), errors)
+
     def test_a_shield_with_a_one_handed_weapon_passes_that_rule(self):
         errors = self._probe_errors(["gondor_sword_a", "sk_shield_round_a"])
         self.assertFalse(any("shield and a two-handed" in e for e in errors), errors)
@@ -377,7 +381,7 @@ class RohanRealmTests(unittest.TestCase):
             if t.horse:
                 self.assertIn(t.group, ("Cavalry", "HorseArcher"), t.id)
 
-    def test_the_horse_archers_ride_and_shoot_from_the_ladder(self):
+    def test_the_horse_archers_ride_at_the_riding_band(self):
         archers = [t for t in built(gsrt) if t.role == "horsearcher"]
         self.assertEqual(len(archers), 3)
         for t in archers:

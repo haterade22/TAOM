@@ -1033,6 +1033,17 @@ class RebalanceToolTests(unittest.TestCase):
         self.assertTrue((self.report_dir / "REPORT.html").exists())
         self.assertFalse((self.report_dir / "docs" / "ranged-troops.html").exists())
 
+    def test_a_bare_run_leaves_the_tracked_copy_alone(self):
+        from unittest import mock
+        tracked = self.report_dir / "tracked" / "ranged-troops.html"
+        argv = ["--game-modules", str(self.modules), "--moduledata", str(self.md),
+                "--spec", str(self.spec_path), "--report-dir", str(self.report_dir)]
+        with mock.patch.object(self.rr, "DOCS_HTML", tracked):
+            self.assertEqual(self.rr.main(argv), 0)
+            self.assertFalse(tracked.exists())
+            self.assertEqual(self.rr.main([*argv, "--docs-html", str(tracked)]), 0)
+            self.assertTrue(tracked.exists())
+
     def test_apply_refuses_while_the_ladder_items_do_not_exist(self):
         before = self.troop_file.read_bytes()
         self.assertEqual(self._run("--apply"), 2)

@@ -880,10 +880,10 @@ def replace_name_pools(block, target, names):
     return block
 
 # Tokens that must survive the blanket source->target rename because they name a real Armory item,
-# body property, sub-culture or skill-set that exists only under the SOURCE culture's name. Renaming
+# body property or skill-set that exists only under the SOURCE culture's name. Renaming
 # one produces a reference to something nobody has authored — the failure mode that shipped six
 # careers pointing at non-existent particle systems earlier today.
-PROTECT_PREFIXES = ["Item.", "BodyProperty.", "SkillSet.", "Culture.%s_raiders"]
+PROTECT_PREFIXES = ["Item.", "BodyProperty.", "SkillSet."]
 
 # (filename, close tag, how to pull the source's blocks out)
 SHARED_FILES = [
@@ -1003,7 +1003,6 @@ def transform(text, target, cfg, id_map=None):
     sentinels, guarded = {}, text
     protect = []
     for pref in PROTECT_PREFIXES:
-        pref = pref % src if "%s" in pref else pref
         protect += re.findall(re.escape(pref) + r"[A-Za-z0-9_]*" + re.escape(src) + r"[A-Za-z0-9_]*", guarded)
     for i, tok in enumerate(sorted(set(protect), key=len, reverse=True)):
         s = f"\x00P{i}\x00"
