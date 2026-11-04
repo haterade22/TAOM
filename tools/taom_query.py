@@ -32,6 +32,11 @@ _PREFIXES = {
 # doesn't silently fall back to an all-prefix search (deep-review 2026-05-31).
 _KIND_ALIASES = {"npccharacter": "troop"}
 
+# The shipped-troop-id baseline describes the repo's own troops (validate_moduledata.py applies it
+# only to the repo's ModuleData), so validate() passes it for that tree alone.
+_REPO_MODULEDATA = Path(__file__).resolve().parent.parent / "Main" / "_Module" / "ModuleData"
+_SHIPPED_TROOP_IDS = Path(__file__).resolve().parent / "shipped_troop_ids.txt"
+
 
 class ModuleDataQuery:
     """Granular queries over the injected registries + the ModuleData tree."""
@@ -117,7 +122,8 @@ class ModuleDataQuery:
 
     # -- validation ------------------------------------------------------- #
     def validate(self, codes=None) -> dict:
-        issues = ts.Validator(self.moduledata, self.schemas, self.reg).run()
+        baseline = _SHIPPED_TROOP_IDS if self.moduledata.resolve() == _REPO_MODULEDATA.resolve() else None
+        issues = ts.Validator(self.moduledata, self.schemas, self.reg, shipped_troop_ids_file=baseline).run()
         if codes:
             wanted = set(codes)
             issues = [i for i in issues if i.code in wanted]

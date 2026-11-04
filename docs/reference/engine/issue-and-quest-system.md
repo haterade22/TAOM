@@ -235,6 +235,16 @@ IssuesCampaignBehavior.OnSettlementDailyTick (saturation check, towns 1-3 / vill
 6. **No per-issue-type frequency knob in `IssueModel`** — to change which issues spawn, add/remove behaviors, don't
    subclass the model.
 
+## One engine type for many config variants: audit every type-keyed path
+
+When a generic template instantiates **one** engine type for **many** logical config variants (the LotrIssues pattern: 27 Combat configs all become `typeof(CombatLotrIssue)`; 14 Deliver → `typeof(DeliverGoodsLotrIssue)`), the engine's `GetType()`-keyed bookkeeping treats all those variants as a SINGLE object. Before shipping such a feature: and when reviewing one: you MUST enumerate **every** engine code path that branches on `instance.GetType()` for that base type and confirm the collapsed-to-one-type behavior is acceptable for each. Finding ONE such path and stopping is the exact miss this rule prevents.
+
+**How to enumerate:** decompile the engine base type + its manager/behavior and grep for `GetType()`, `.GetType() ==`, `IssueType`, `is <Type>`, and any `Dictionary<Type,...>` keyed on the runtime type. For `IssueBase` the set is (read on v1.4.6, still the set on v1.5.6): **(1) spawn over-representation score** + **(2) per-settlement/clan "already has this type" zero-out** + **(3) accept gate** (`CheckPreconditions` → `IssueQuestCanBeDuplicated`, default `false`) + **(4) cooldown** (keyed on `type.Name`) + **(5) despawn**. Each is independent; (1)/(2)/(4) only throttle *spawning* (acceptable, documented as a limitation), but (3) is a HARD accept-block: the player could hold at most ONE active quest per template across all configs until `IssueQuestCanBeDuplicated => true` is overridden.
+
+**Why this rule exists:** Codex review #61 (2026-06-20). The 5-agent deep-review's lifecycle agent read `IssueBase.CheckPreconditions` for the per-type spawn saturation but traced only the over-representation SCORE and stopped: it missed the SEPARATE hard accept-gate **in the same method**. One method, two type-keyed mechanisms; the soft one was found, the hard one shipped. Pinned by `LotrIssueTemplateInvariantsTests` (asserts `IssueQuestCanBeDuplicated == true` for all 3 templates) and the deep-review skill's per-type check. RCA: `docs/reviews/rca-lotr-issues-wave0-2026-06-17.md` (Codex pass section).
+
+**Test requirement:** for each engine type-keyed behavior you deliberately opt into (e.g. `IssueQuestCanBeDuplicated => true`), add a reflection/invariant test pinning the override so a refactor can't silently restore the breaking default.
+
 ---
 
 *Engine reference for Bannerlord v1.4.5. Citations are decompiled `TaleWorlds.*` source under `E:\Decompiled_Bannerlord\`

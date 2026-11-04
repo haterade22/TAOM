@@ -233,8 +233,11 @@ class Validator:
     # TAOM's own files, and applying them to a foreign module would report
     # defects against a repo this validator does not own.
     def __init__(self, moduledata, schemas: list, registries: Registries, extra_ref_roots=None,
-                 game_modules=None):
+                 game_modules=None, shipped_troop_ids_file=None):
         self.moduledata = Path(moduledata)
+        # TROOP_ID_REMOVED runs only when the caller names the baseline file; a scratch
+        # ModuleData in a test has no shipped ids to lose.
+        self.shipped_troop_ids_file = shipped_troop_ids_file
         # The install's Modules folder for the install-priced passes (MELEE_LADDER_INVERSION).
         # None falls back to the tool's own default install.
         self.game_modules = Path(game_modules) if game_modules else None
@@ -263,6 +266,9 @@ class Validator:
         issues += self._mounted_dwarves()
         issues += self._creature_gear_obtainable()
         issues += self._armour_slot_coverage()
+        issues += self._weapon_slot_coverage()
+        issues += self._townsfolk_without_battle_roster()
+        issues += self._troop_ids_removed()
         issues += self._upgrade_skill_regressions()
         issues += self._upgrade_armour_regressions()
         issues += self._cross_culture_armour_inversions()
@@ -1272,6 +1278,166 @@ class Validator:
                                 f"every battle set or in none"
                             ),
                         ))
+        return issues
+
+    # ----------------------------------------------------------------- #
+    # INCONSISTENT_WEAPON_SLOT                                            #
+    # ----------------------------------------------------------------- #
+    # The weapon half of the cross-set rule (`.claude/rules/troops.md`). Slots Item0 to Item3
+    # draw from independently chosen battle sets, so three things ship a half-kit: a launcher in
+    # a slot of some sets only (#529: a working archer 5% of the time), ammo at two indices or
+    # missing from a set, and no slot that holds a weapon in every set (a draw can leave the
+    # troop unarmed). Troop-level <equipment> lies over every set, as the deserializer does
+    # (data-scripts.md). Heroes are exempt: the engine hands them one fixed kit. The launcher
+    # and ammo halves need the install's item index and are skipped without it.
+    _WEAPON_SLOTS = ("Item0", "Item1", "Item2", "Item3")
+    _EQUIP_TAG_RE = re.compile(r"<equipment\b([^>]*?)/?>", re.S)
+    _EQUIP_ID_RE = re.compile(r"""\bid=["'](?:Item\.)?([^"']*)["']""")
+    _AMMO_TYPES = ("Arrows", "Bolts")
+
+    def _battle_kits(self, body: str) -> list:
+        """Each battle roster of an NPC body as slot -> item id, troop-level rows laid over."""
+        def rows(text):
+            out = {}
+            for tag in self._EQUIP_TAG_RE.finditer(text):
+                slot = self._SLOT_ANY_QUOTE_RE.search(tag.group(1))
+                item = self._EQUIP_ID_RE.search(tag.group(1))
+                if slot and item:
+                    out[slot.group(1)] = item.group(1)
+            return out
+
+        loose = rows(self._INLINE_ROSTER_RE.sub("", body))
+        kits = []
+        for r in self._INLINE_ROSTER_RE.finditer(body):
+            if self._CIVILIAN_ATTR_RE.search(r.group(1) or ""):
+                continue
+            kit = rows(r.group(2) or "")
+            kit.update(loose)
+            kits.append({slot: item for slot, item in kit.items() if item})   # an empty id clears the slot
+        return kits
+
+    def _weapon_slot_coverage(self) -> list:
+        launchers = getattr(self.reg, "launchers", None) or {}
+        trade = getattr(self.reg, "item_trade", None) or {}
+        issues = []
+        for path in self._xml_files():
+            if not path.name.startswith("troops_"):
+                continue
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), self._read(path))
+            rel = self._rel(path)
+            for m in self._NPC_BLOCK_RE.finditer(text):
+                attrs, body = m.group(1), m.group(2) or ""
+                if re.search(r"""\bis_hero\s*=\s*["']true["']""", attrs, re.I):
+                    continue
+                kits = [{s: v for s, v in k.items() if s in self._WEAPON_SLOTS}
+                        for k in self._battle_kits(body)]
+                if len(kits) < 2 or not any(kits):
+                    continue
+                idm = re.search(r'\bid="([A-Za-z0-9_.\-]+)"', attrs)
+                entry_id = idm.group(1) if idm else "(unnamed)"
+                line = _lineno(text, m.start())
+
+                def warn(message):
+                    issues.append(Issue(severity=Severity.WARNING, code="INCONSISTENT_WEAPON_SLOT",
+                                        file=rel, line=line, entry_id=entry_id, message=message))
+
+                if not set.intersection(*[set(k) for k in kits]):
+                    warn(f"no weapon slot index is filled in every battle set ({len(kits)} sets), so a "
+                         f"slot-by-slot draw can leave this troop with no weapon. Put a weapon in one "
+                         f"slot index of every set")
+                if launchers:
+                    for slot in self._WEAPON_SLOTS:
+                        has = [k.get(slot) in launchers for k in kits]
+                        if any(has) and not all(has):
+                            warn(f'slot "{slot}" holds a launcher in {sum(has)} of {len(has)} battle sets. '
+                                 f"Slots draw independently, so the troop can spawn with a bow it never "
+                                 f"draws or ammo and no bow. Put the launcher in that slot of every set")
+                if trade:
+                    ammo = [frozenset(s for s, v in k.items()
+                                      if getattr(trade.get(v), "item_type", "") in self._AMMO_TYPES)
+                            for k in kits]
+                    if any(ammo) and (not all(ammo) or len(set(ammo)) > 1):
+                        warn(f"ammo is not at one fixed slot index in every battle set "
+                             f"({sum(1 for a in ammo if a)} of {len(ammo)} sets carry any). "
+                             f"Slots draw independently, so a draw can pair a bow with no arrows. Put the "
+                             f"ammo at one index of every set")
+        return issues
+
+    # ----------------------------------------------------------------- #
+    # TOWNSFOLK_WITHOUT_BATTLE_ROSTER                                     #
+    # ----------------------------------------------------------------- #
+    # Arena spectators are the settlement culture's townsfolk and notables, spawned with BATTLE
+    # equipment according to #295's in-game log; the spawner was not found in managed code. A
+    # character whose inline Equipments hold civilian rosters only has no battle set, so
+    # GetRandomEquipmentElements returns an empty kit (naked); a fixed-equipment spawn would throw.
+    # It stands naked in the stands while the town walk looks fine. Repair:
+    # tools/add_townsfolk_battle_rosters.py --apply.
+    def _townsfolk_without_battle_roster(self) -> list:
+        issues = []
+        for path in self._xml_files():
+            rel = self._rel(path)
+            if not fnmatch.fnmatch(rel, "characters/npcs_*.xml"):
+                continue
+            text = _COMMENT_RE.sub(lambda m: "\n" * m.group(0).count("\n"), self._read(path))
+            for m in self._NPC_BLOCK_RE.finditer(text):
+                attrs, body = m.group(1), m.group(2) or ""
+                rosters = list(self._INLINE_ROSTER_RE.finditer(body))
+                if not rosters or any(not self._CIVILIAN_ATTR_RE.search(r.group(1) or "")
+                                      for r in rosters):
+                    continue
+                idm = re.search(r'\bid="([A-Za-z0-9_.\-]+)"', attrs)
+                issues.append(Issue(
+                    severity=Severity.WARNING, code="TOWNSFOLK_WITHOUT_BATTLE_ROSTER",
+                    file=rel, line=_lineno(text, m.start()),
+                    entry_id=idm.group(1) if idm else "(unnamed)",
+                    message=("only civilian equipment rosters, so the arena stands spawn this character "
+                             "with an empty battle kit and naked. Add a plain <EquipmentRoster> beside "
+                             "the civilian one: python tools/add_townsfolk_battle_rosters.py --apply")))
+        return issues
+
+    # ----------------------------------------------------------------- #
+    # TROOP_ID_REMOVED                                                    #
+    # ----------------------------------------------------------------- #
+    # A save holding a troop that no longer exists keeps a hollow CharacterObject whose null
+    # UpgradeTargets the engine's daily ticks read unguarded (#670). Twice a tree replacement broke
+    # it with no gate to say so. tools/shipped_troop_ids.txt is the newest release tag's troop ids
+    # (/release regenerates it); an id absent from the troops files fails unless the file's
+    # [exceptions] section names it with a reason. Off unless the caller names the file.
+    _TROOP_ID_RE = re.compile(r'<NPCCharacter\b[^>]*?\bid="([A-Za-z0-9_.\-]+)"', re.S)
+
+    def _troop_ids_removed(self) -> list:
+        path = self.shipped_troop_ids_file
+        if path is None:
+            return []
+        path = Path(path)
+        if not path.is_file():
+            return [Issue(severity=Severity.ERROR, code="TROOP_ID_REMOVED", file=path.name, line=0,
+                          entry_id="(baseline)",
+                          message=f"{path} is missing, so no shipped troop id was checked. Restore it "
+                                  f"or regenerate: python tools/validate_moduledata.py "
+                                  f"--regenerate-shipped-troop-ids")]
+        shipped, exceptions = read_shipped_troop_ids(path)
+        if not shipped:
+            return [Issue(severity=Severity.ERROR, code="TROOP_ID_REMOVED", file=path.name, line=0,
+                          entry_id="(baseline)",
+                          message=f"{path} lists no shipped troop id (emptied, or [exceptions] sits above "
+                                  f"the ids), so none was checked. Restore it or regenerate: "
+                                  f"python tools/validate_moduledata.py --regenerate-shipped-troop-ids")]
+        present = set()
+        for xml in self._xml_files():
+            if fnmatch.fnmatch(self._rel(xml), "troops/troops_*.xml"):
+                present |= set(self._TROOP_ID_RE.findall(
+                    _COMMENT_RE.sub("", self._read(xml))))
+        issues = []
+        for tid in shipped:
+            if tid in present or exceptions.get(tid, "").strip():
+                continue
+            issues.append(Issue(
+                severity=Severity.ERROR, code="TROOP_ID_REMOVED", file=path.name, line=0, entry_id=tid,
+                message=(f'shipped troop id "{tid}" is gone from the troops files, so a save holding it '
+                         f"keeps a hollow CharacterObject (#670). Restore the id and retire the troop "
+                         f"by removing it from every upgrade_targets, or record a deliberate break "
+                         f"under [exceptions] in {path.name} as `id | reason`")))
         return issues
 
     def _mounted_rosters(self) -> dict:
@@ -2676,6 +2842,7 @@ class ItemTrade:
     pieces: tuple
     file: str
     line: int
+    item_type: str = ""    # the Item's Type= (Arrows, Bolts, Bow, ...); "" for a CraftedItem
 
 
 _TRADE_ITEM_RE = re.compile(r"<(Item|CraftedItem)\b([^>]*?)(?:/>|>(.*?)</\1>)", re.S)
@@ -2684,6 +2851,41 @@ _PIECE_REF_RE = re.compile(r"""<Piece\b[^>]*?\bid\s*=\s*["']([^"']+)["']""")
 _CRAFTING_PIECE_RE = re.compile(r"<CraftingPiece\b([^>]*?)/?>", re.S)
 _HIDDEN_ATTR_RE = re.compile(r"""\bis_hidden\s*=\s*["']([^"']*)["']""")
 _ID_ATTR_RE = re.compile(r"""\bid\s*=\s*["']([^"']+)["']""")
+
+
+def read_shipped_troop_ids(path) -> tuple:
+    """(baseline ids in file order, {id: reason}) from tools/shipped_troop_ids.txt. One id per
+    line; `#` starts a comment; after a line `[exceptions]` each row is `id | reason`. A row with
+    no reason is read as an empty reason, which the gate does not honour."""
+    ids, exceptions, in_exceptions = [], {}, False
+    for raw in Path(path).read_text(encoding="utf-8-sig").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line == "[exceptions]":
+            in_exceptions = True
+        elif in_exceptions:
+            tid, _, reason = line.partition("|")
+            exceptions[tid.strip()] = reason.strip()
+        else:
+            ids.append(line)
+    return ids, exceptions
+
+
+def write_shipped_troop_ids(path, tag: str, ids, exceptions: dict) -> None:
+    """Rewrite the baseline from `ids` (the release tag's troop ids). Every exception is kept: it
+    records a decision, and one whose id left the baseline is inert, not wrong. LF endings, no BOM."""
+    ids = sorted(set(ids))
+    lines = [
+        f"# Troop ids shipped in {tag}: the baseline of the TROOP_ID_REMOVED gate.",
+        "# Regenerate after a release: python tools/validate_moduledata.py --regenerate-shipped-troop-ids",
+        "# One id per line. [exceptions] rows are `id | reason` for a break the maintainer accepted.",
+        f"# tag: {tag}",
+        *ids,
+        "[exceptions]",
+        *[f"{tid} | {why}" for tid, why in sorted(exceptions.items())],
+    ]
+    Path(path).write_bytes(("\n".join(lines) + "\n").encode("utf-8"))
 
 
 def build_item_trade(item_roots) -> tuple:
@@ -2716,7 +2918,8 @@ def build_item_trade(item_roots) -> tuple:
                     trade[idm.group(1)] = ItemTrade(
                         merchandise=not merch or not merch.group(1) or merch.group(1) == "true",
                         pieces=tuple(_PIECE_REF_RE.findall(m.group(3) or "")),
-                        file=xml.as_posix(), line=_lineno(text, m.start()))
+                        file=xml.as_posix(), line=_lineno(text, m.start()),
+                        item_type=(_ATTR_TYPE_RE.search(m.group(2)) or [None, ""])[1])
             elif kind == "CraftingPieces":
                 for m in _CRAFTING_PIECE_RE.finditer(text):
                     idm = _ID_ATTR_RE.search(m.group(1))

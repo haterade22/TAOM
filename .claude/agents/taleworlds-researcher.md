@@ -8,10 +8,6 @@ tools:
   - Read
   - Grep
   - Glob
-disallowedTools:
-  - Write
-  - Edit
-  - NotebookEdit
 ---
 
 # TaleWorlds Researcher Agent

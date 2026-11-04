@@ -13,7 +13,7 @@ and exemption rules) so the three doc tools agree on what a "link" is.
 
 Scope (and explicit non-goals — keep this tight):
   - Nodes are `.md` files only. Docs may *link to* `.cs`, but source code is never
-    a node — Serena owns the C# symbol graph.
+    a node: tools/graphify_taom.py owns the C# code graph.
   - Not a game-data graph — tools/taom_schema.py + the taom-moduledata MCP own
     item/troop/culture references.
   - No LLM calls, no embeddings, no inferred/semantic edges — edges are literal

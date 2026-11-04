@@ -1,7 +1,7 @@
 # Release Process — module versions and git tags
 
 > How a TAOM build gets a version, why that version must be a git tag, and how to turn a player's
-> crash report back into a commit. Skill: `/release`. Guard: `.claude/hooks/check-version-tagged.sh`.
+> crash report back into a commit. Skill: `/release`. Guard: `.claude/hooks/session-start.sh`, whose banner appears at the next startup.
 
 ## Why this exists
 
@@ -74,13 +74,15 @@ build of a tree with uncommitted changes to its inputs appends `.dirty` after th
 
 Use `/release`. It runs the sequence below and fails closed on the #371 pairing check.
 
+Releases ship from `bannerlord-1.5.x` only; never port or list a 1.4.5 port as owed (Mike, 2026-10-06). TAOM ships Debug builds on purpose because crash reports need every frame; make no Release build without a measured player-facing gain (Mike, 2026-09-30).
+
 1. Tree clean (`git status --porcelain` empty; if another session's edits are present, stop, because `build.ps1` compiles and deploys every file in the tree, committed or not; git refuses a second worktree on a branch that is already checked out, so only the Phase 8 build moves to a detached worktree of the tag),
    on the release branch (`bannerlord-1.5.x`, the only release line), current version
    already tagged, and the target version in no tag (`git tag -l 'v*'`) and in no release channel: read the
    `<Version>` of every `E:\LOTRAOM_Releases\<channel>\Modules\TAOM\SubModule.xml`, because a channel can
    hold an untagged build of a number git has never seen (see "A number a channel carried before git
    did" below).
-2. `./build.ps1 -RunTests` green — no release on an unrun build.
+2. `/verify` green (non-deploying): no release on an unrun build.
 3. `pwsh tools/sweep_module_backups.ps1` reports 0 files. If it does not, run it with `-Apply`:
    backup sidecars must not ship, because `.bak` breaks the Cloudflare distribution. The first run
    found 781 of them, 937 MB. See [module-backup-sweep](module-backup-sweep.md).
@@ -91,7 +93,7 @@ Use `/release`. It runs the sequence below and fails closed on the #371 pairing 
    commit carries the CURRENT version the same way (`<type>: vX.Y.Z - <description>`, user rule
    2026-09-13, hook `check-commit-subject-version.sh`), so between releases
    `git log --grep 'vX.Y.Z - '` lists the commits a build reporting that `TaomVersion` can contain.
-8. Confirm `git rev-parse <release commit>^` prints the commit step 5 ended at (if not, stop and ask), then `git tag -a vX.Y.Z <release commit> -m "…"`, tagging the step 7 commit by SHA, then `git push origin <release branch> vX.Y.Z`.
+8. Confirm `git rev-parse <release commit>^` prints the commit step 5 ended at (if not, stop and ask), then `git tag -a vX.Y.Z <release commit> -m "…"`, tagging the step 7 commit by SHA, then `git push origin <release branch> vX.Y.Z`. Then reseed the `TROOP_ID_REMOVED` baseline from the new tag: `python tools/validate_moduledata.py --regenerate-shipped-troop-ids vX.Y.Z` reads the tag's troop files with `git show`, never today's tree. If `tools/shipped_troop_ids.txt` changed, commit it on its own. Skipping the step raises no error and leaves the new troops unbaselined.
 9. Build at the tag and gate the DLLs (the skill's Phase 8). Run `./build.ps1` in the main checkout only when `git status --porcelain` is empty and `HEAD` is the tag's commit; otherwise build a clean worktree of the tag (`git worktree add ../taom-release-vX.Y.Z vX.Y.Z`, `./build.ps1` there, then `git worktree remove ../taom-release-vX.Y.Z`). Then `python tools/package_release.py --source "<game>/Modules" --dest <out> --game-root "<game>" --require-build vX.Y.Z --dry-run` must print `build stamp OK`. Any later deploying build of a dirty tree (`./build.ps1`, or any build without `-p:DisableModuleCopy=true -p:ModuleId=`) replaces the gated DLLs and the module's ModuleData in the install: after the v2.0.34 gate passed, one made the installed `TAOM.dll` `+18a4e402...dirty`. So repeat the dry run right before Mike packages. Mike packages through the Modding Kit editor; Claude never writes a package with this command. The packages and the release folders are his (2026-10-27): unless he asks, Claude does not inspect or gate on `E:\LOTRAOM_Releases\<channel>\Modules`, proves the stamps on the DLLs the tag build deployed (`/release` Phase 8 step 3), and hands him the package checks as a list. Once his package exists in `E:\LOTRAOM_Releases\<channel>\Modules\`, offer the same dry run with `--source` pointing there and `--game-root "<game>"`; it also refuses an untracked TAOM file there (never `AssetPackages/pack0.tpac`, which holds the TAOM UI in a channel folder). ShaderCacheKeeper ships beside the modules: build and test it at the tag (`python Native/ShaderCacheKeeper/build.py`, then `pwsh -File Native/ShaderCacheKeeper/test/run_tests.ps1`), copy `out/xinput9_1_0.dll` to `E:\LOTRAOM_Releases\<channel>\bin\Win64_Shipping_Client\` before the launcher manifest is generated, and record its SHA-256 in the release note; testing channel first ([shader-cache-keeper.md](../features/shader-cache-keeper.md)). When his package carries `TAOM_Map`, add the `FORTS` ids it holds to `RELEASED` in `tools/add_map_fortifications.py` (the one-line command is in the comment above the set), so `add_map_fortifications.py --check` judges only the batch no release carries yet.
    The gate reads every `bin/<platform>/` copy of `TAOM.dll`, `TAOM.Client.dll` and
    `TAOM.Dependencies.dll`, refuses a `TAOM.Client.dll` in a `bin/Win64_Shipping_Server/` (ADR-013), and
@@ -201,7 +203,7 @@ must print nothing.
 **TAOM and TAOM_Map ship the Feral Orcs together, or neither does** (#1063). The `feral_orcs` bandit clan is in the TAOM build's `characters/clans.xml`; its 23 dens `hideout_feral_1` to `hideout_feral_23` exist only in the live `TAOM_Map/ModuleData/settlements.xml` (2026-10-29), and no release channel's map package had them that day. A clan whose culture owns no hideout threw `KeyNotFoundException` on every new game until `Patch125_HideoutClanGuard`; with the guard the clan raids nothing and logs one warning, so a mismatched pair no longer crashes but ships a faction with no dens. Check each channel before publishing: `grep -c 'id="feral_orcs"' E:/LOTRAOM_Releases/<channel>/Modules/TAOM/ModuleData/characters/clans.xml` and `grep -c '<Settlement id="hideout_feral_' E:/LOTRAOM_Releases/<channel>/Modules/TAOM_Map/ModuleData/settlements.xml` must print 1 and 23, or 0 and 0.
 
 **Step 8 is the one that gets skipped**, which is why
-[`check-version-tagged.sh`](../../.claude/hooks/check-version-tagged.sh) reminds at turn end
+[`session-start.sh`](../../.claude/hooks/session-start.sh) prints a banner at the next startup
 whenever the version in `SubModule.xml` has no tag pointing at any commit. That single condition
 catches both a bump committed without a tag and a version that never entered git.
 
@@ -282,9 +284,9 @@ commit shipped under the name.
 (gated on reading `<Version>` back out at that commit, backdated to the commit's author date). It is
 a second-generation instance of the same failure, not a leftover from the original sweep: the bump
 was a bare `fix(module)` commit rather than a `/release` run, so Phase 1's "current version is
-already tagged" pre-flight never executed. `check-version-tagged.sh` did catch it 60 seconds later,
-then muted itself per-version and stayed silent for 33 commits. `session-start.sh` now re-asserts the
-check every startup so a single missed warning cannot go quiet again.
+already tagged" pre-flight never executed. A Stop reminder did catch it 60 seconds later,
+then muted itself per-version and stayed silent for 33 commits. `session-start.sh` re-asserts the
+check at every startup so a single missed warning cannot go quiet again.
 
 `v2.0.19` was skipped outright and exists in no commit and no tag.
 

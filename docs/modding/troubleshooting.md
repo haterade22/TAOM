@@ -136,7 +136,7 @@ python tools/validate_mesh_refs.py           # any mesh, body_name or art change
 python tools/audit_polearm_shield_parity.py  # any weapon or roster change
 python tools/check_external_xslt.py          # only if an .xslt changed
 python tools/audit_mbproj_registration.py    # only if you added a file
-# then: ask a developer for `dotnet test TAOM.Tests` if you touched
+# then: ask a developer for `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` if you touched
 # cultures, party templates or lords
 # then: full game restart, new campaign, in-game smoke
 ```

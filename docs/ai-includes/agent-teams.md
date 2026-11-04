@@ -1,6 +1,6 @@
-# Agent Teams Guide
+# Spawning parallel agents
 
-How to use Claude Code Agent Teams for parallel work on the TAOM project.
+How to spawn parallel agents on the TAOM project, and the Agent Teams feature behind them.
 
 ---
 
@@ -15,22 +15,6 @@ Key concepts:
 - **Mailbox messaging** — agents communicate via `SendMessage` (DMs) or `broadcast`
 
 Teams are enabled via the env var `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in `~/.claude/settings.json`.
-
----
-
-## TAOM Team Compositions
-
-TAOM is a single Bannerlord mod, so team compositions are based on **directory ownership** within the mod, not separate components.
-
-| Role | Owns | Build/Verify Command |
-|------|------|---------------------|
-| Feature Dev | `Main/Features/{Name}/` | `dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=` |
-| Test Dev | `TAOM.Tests/` | `dotnet test TAOM.Tests` |
-| XML/XSLT Dev | `Main/_Module/ModuleData/` | N/A (validated at runtime) |
-| TaleWorlds Researcher | Read-only (decompile DLLs) | `pwsh tools/taom-src.ps1 path <Type>` (ilspycmd fallback) |
-| Reviewer | Read-only | N/A |
-
-Typical team size: **2-3 teammates** plus the lead. More than 4 rarely helps for a single-mod project.
 
 ---
 
@@ -59,96 +43,7 @@ pop a stash, stage explicit paths, reconstruct shared files in the index) are in
 
 ### Build Artifacts
 - **Never run `./build.ps1` from two agents simultaneously** — build output goes to `out/` and will conflict
-- Use `dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=` or `dotnet test TAOM.Tests` for isolated compilation during development
-
----
-
-## Best Use Cases
-
-### 1. New Feature + Tests in Parallel
-
-**Scenario:** Adding a new feature like `PartySpeed` or `CombatBonus`.
-
-| Agent | Task |
-|-------|------|
-| Feature Dev | Implements `Main/Features/NewFeature/` (hooks, services, engines) |
-| Test Dev | Writes tests in `TAOM.Tests/Features/NewFeature/` |
-| Lead | Coordinates, integrates `IoC.cs` registrations, runs final build |
-
-**Spawn prompt (Feature Dev):**
-```
-You are a Feature Developer for the TAOM Bannerlord mod. Read docs/ai-includes/architecture.md
-and docs/ai-includes/tdd-enforcement.md first. Your scope is Main/Features/PartySpeed/ only.
-Follow the adapter pattern (ADR-007). Do NOT edit IoC.cs or SubModule.cs — report needed
-registrations to the lead via message. Build with: dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=
-```
-
-**Spawn prompt (Test Dev):**
-```
-You are a Test Developer for the TAOM Bannerlord mod. Read docs/ai-includes/tdd-enforcement.md
-and docs/ai-includes/testing-guide.md first. Your scope is TAOM.Tests/Features/PartySpeed/ only.
-Use MSTest + NSubstitute. Mock all adapters. 100% service/engine coverage required (ADR-008).
-Run tests with: dotnet test TAOM.Tests
-```
-
-### 2. Research + Implementation
-
-**Scenario:** Implementing a feature that depends on undocumented TaleWorlds behavior.
-
-| Agent | Task |
-|-------|------|
-| Researcher | Decompiles TaleWorlds DLLs, documents findings, reports via message |
-| Feature Dev | Waits for research, then implements against verified APIs |
-
-**Spawn prompt (Researcher):**
-```
-You are a TaleWorlds Researcher for the TAOM Bannerlord mod. Read
-docs/ai-includes/agent-operating-manual.md + taleworlds-research-guide.md first; you cannot
-invoke skills (recommend them instead). Use `pwsh tools/taom-src.ps1 path <Type>` (primary;
-ilspycmd fallback) to decompile the v1.4.5 DLLs. Your job is to:
-1. Decompile the requested classes
-2. Document method signatures, null handling, event timing
-3. Report findings to the lead via message
-Do NOT write any mod code. Read-only research only.
-```
-
-### 3. C# + XML/XSLT in Parallel
-
-**Scenario:** Adding a new game mechanic that needs both C# service code and XML configuration/XSLT transforms.
-
-| Agent | Task |
-|-------|------|
-| Feature Dev | Implements C# services in `Main/Features/` |
-| XML Dev | Creates/modifies XSLT in `Main/_Module/ModuleData/` |
-
-**Spawn prompt (XML/XSLT Dev):**
-```
-You are an XML/XSLT Developer for the TAOM Bannerlord mod. Your scope is
-Main/_Module/ModuleData/ only. You work on XSLT transformations (spkingdoms.xslt,
-spcultures.xslt, etc.) and XML configuration files. Do NOT edit C# files.
-```
-
-### 4. Multi-Aspect Code Review
-
-**Scenario:** Reviewing a large PR or feature for quality.
-
-| Agent | Task |
-|-------|------|
-| Architecture Reviewer | Checks ADR compliance, layer violations, adapter pattern |
-| Test Reviewer | Checks test coverage, test quality, mocking patterns |
-| Security Reviewer | Checks OWASP top 10, input validation, injection risks |
-
-All reviewers are **read-only** — they report findings to the lead via message.
-
-### 5. Parallel Independent Features
-
-**Scenario:** Two unrelated features being developed simultaneously.
-
-| Agent | Task |
-|-------|------|
-| Feature Dev A | `Main/Features/PartySpeed/` + `TAOM.Tests/Features/PartySpeed/` |
-| Feature Dev B | `Main/Features/CombatBonus/` + `TAOM.Tests/Features/CombatBonus/` |
-| Lead | Coordinates, integrates IoC.cs, runs final build |
+- Use `dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=` or `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=` for isolated compilation during development
 
 ---
 
@@ -163,48 +58,12 @@ When an orchestrator dispatches fresh subagents to implement and then review wor
 
 This composes with the `Workflow` tool: a `pipeline()` can implement in stage 1, run spec-compliance review in stage 2, and code-quality review in stage 3 — each item flows through without a barrier. The `parallel()` adversarial-verify pattern in the Workflow docs is the fan-out form of step 3 above.
 
----
+### Workflow script gotchas
 
-## When NOT to Use Agent Teams
-
-| Scenario | Use Team? | Why |
-|----------|-----------|-----|
-| Single-file bug fix | No | Overhead exceeds benefit |
-| Sequential A-then-B task | No | No parallelism opportunity |
-| Multiple agents editing same file | No | Merge conflicts |
-| Quick XML tweak | No | Trivial change |
-| Single feature + its tests | Maybe | Only if feature and tests can truly proceed in parallel |
-| Two independent features + tests | **Yes** | Natural parallelism |
-| Research-heavy feature implementation | **Yes** | Researcher + implementer pattern |
-
-**Rule of thumb:** If the work fits in one directory and takes less than ~15 minutes of agent time, just do it in the main session.
-
----
-
-## Integration with TAOM Rules
-
-All AGENTS.md "Always" rules apply to **every teammate equally**:
-
-| Rule | Team Impact |
-|------|-------------|
-| **TDD Mandatory** | Both Feature Dev and Test Dev follow RED-GREEN-REFACTOR. Coordinate who writes the failing test first. |
-| **Adapter Pattern** | Feature Dev creating new adapters must coordinate with lead before modifying `Main/Adapters/` |
-| **Research First** | Researcher agent uses `ilspycmd` and reports findings via message; implementer waits before coding against unverified APIs |
-| **No #region / [Obsolete] / #if DEBUG** | Every teammate follows these — no exceptions |
-| **Thin Entry Points** | Patches stay under 150 lines — teammate creating patches must self-enforce |
-
----
-
-## Task Sizing Guidelines
-
-| Size | Example | Verdict |
-|------|---------|---------|
-| Too small | "Rename a variable", "Fix a typo" | Just do it in main session |
-| Good (15-60 min) | "Implement PartySpeed service + tests" | One teammate task |
-| Good | "Research how TaleWorlds handles X" | One researcher task |
-| Too large | "Implement entire race system" | Break into 3-6 sub-tasks |
-
-Target: **3-6 tasks per teammate per session**. Fewer means the tasks are too large; more means they should be consolidated.
+- **`parallel()` and `pipeline()` take functions, not promises.** `parallel([agent(a), agent(b)])` throws "expects an array of functions"; write `parallel([() => agent(a), () => agent(b)])`, and do the same for a `parallel` nested inside a `pipeline()` stage. The agents that already ran keep their results in the run journal (`workflowProgress[]` and the output file), so a thunk bug costs the aggregation, not the finders' work.
+- **`run_in_background` is not a Workflow parameter.** The tool always runs in the background and notifies on completion; passing it is an input validation error.
+- **Resume is cheap.** Edit the persisted script file (the launch result names its path) and call `Workflow({scriptPath, resumeFromRunId})`: unchanged `agent()` calls return their cached results and only the fixed stages rerun.
+- **Keep the refute lens in a find-then-verify run.** One verifier to confirm and one to refute split a contested finding and filtered the false positives in the run that taught this (2026-06-25).
 
 ---
 
@@ -218,7 +77,7 @@ You are a Feature Developer for the TAOM Bannerlord mod.
 
 Read these docs first:
 - docs/ai-includes/architecture.md (layer architecture)
-- docs/ai-includes/tdd-enforcement.md (TDD workflow)
+- .claude/rules/tests.md (TDD workflow; it loads when you open a test)
 - docs/ai-includes/patterns.md (design patterns)
 
 Your scope: Main/Features/{FEATURE_NAME}/ only.
@@ -227,7 +86,7 @@ Test scope: TAOM.Tests/Features/{FEATURE_NAME}/ only.
 Rules:
 - Follow adapter pattern (ADR-007): use ICareerHeroAdapter etc, never Hero directly
 - Thin entry points (ADR-002): max 150 lines, delegate to services
-- No #region, no [Obsolete], no #if DEBUG
+- No #region, no [Obsolete], no #if outside IoC.cs
 - Do NOT edit IoC.cs or SubModule.cs — report needed registrations to lead
 - Lessons: {LESSONS} (the lead names the lesson headings and their files that apply to this task);
   read each before the first edit, and list in your report what you did about each one
@@ -238,107 +97,8 @@ Rules:
   writer that replaces the old one
 
 Build: dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=
-Test: dotnet test TAOM.Tests
+Test: dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=
 ```
-
-### TaleWorlds Researcher
-```
-You are a TaleWorlds Researcher for the TAOM Bannerlord mod.
-
-Read docs/ai-includes/agent-operating-manual.md AND docs/ai-includes/taleworlds-research-guide.md first.
-You cannot invoke skills or spawn agents — recommend them in your report.
-
-Your job: decompile TaleWorlds v1.4.5 DLLs and document findings.
-Primary tool: pwsh tools/taom-src.ps1 path <FullTypeName>   (cache-aware; prints a .cs path to grep)
-Fallback: ilspycmd "%BANNERLORD_GAME_DIR%\bin\Win64_Shipping_Client\{DLL}" -t "Namespace.Class"
-
-Key DLLs:
-- TaleWorlds.CampaignSystem.dll (campaign logic, diplomacy)
-- TaleWorlds.CampaignSystem.ViewModelCollection.dll (UI ViewModels)
-- TaleWorlds.Core.dll (core game types)
-- TaleWorlds.MountAndBlade.dll (battle/mission logic)
-
-Report findings to lead via message. Include:
-- Method signatures
-- Null handling (TextObject.Empty vs null?)
-- Event timing (when fired vs when state changes)
-- Collection safety (ToList() copies needed?)
-
-Do NOT write mod code. Read-only research only.
-```
-
-### Code Reviewer
-```
-You are a Code Reviewer for the TAOM Bannerlord mod.
-
-Read these docs first:
-- docs/ai-includes/architecture.md
-- docs/ai-includes/code-quality.md
-- docs/adrs/README.md
-
-Review scope: {FILES_OR_DIRECTORIES}
-
-Check for:
-- ADR compliance (thin entry points, adapter pattern, no #region, etc.)
-- Test coverage (100% for services/engines per ADR-008)
-- Security (OWASP top 10, no command injection, no XSS)
-- Architecture violations (sealed types leaking through interfaces)
-
-Report findings to lead via message. You are read-only — do NOT edit files.
-```
-
----
-
-## Windows-Specific Notes
-
-- **In-process mode** is the default on Windows (tmux/iTerm2 split-pane mode is not available)
-- To be explicit, use CLI flag: `claude --teammate-mode in-process`
-- **Keyboard shortcuts:**
-  - `Shift+Up/Down` — cycle through teammate views
-  - `Enter` — view a teammate's full session
-  - `Escape` — interrupt a teammate's current turn
-  - `Ctrl+T` — toggle the shared task list
-  - `Shift+Tab` — cycle focus between teammates
-
----
-
-## Troubleshooting
-
-| Problem | Solution |
-|---------|----------|
-| **Build contention** | Only one agent runs `./build.ps1` at a time. Use `dotnet build TAOM.sln -p:DisableModuleCopy=true -p:ModuleId=` or `dotnet test TAOM.Tests` for isolated compilation. |
-| **IoC.cs conflicts** | Lead owns this file. Teammates report needed registrations via message to lead. |
-| **Adapter file conflicts** | Coordinate new adapter creation through lead. Only one agent adds to `Main/Adapters/` at a time. |
-| **Permission prompts** | Each teammate gets its own permission prompts in its own context. |
-| **Teammate appears stuck** | Send a message to the teammate. Idle status is normal — it means they're waiting for input. |
-| **Which agents were used?** | Check `.claude/logs/agent-audit.log` — the `log-agent.sh` SubagentStart hook logs every agent invocation with timestamp and type. |
-| **SubModule.cs conflicts** | Lead owns this file. If a feature needs new behavior registrations, report to lead. |
-
----
-
-## Limitations
-
-- **No session resumption** — if a teammate crashes, its context is lost (the `pre-compact.sh` hook helps the lead session recover by dumping modified file lists before context compaction)
-- **No file locking** — agents can overwrite each other's changes if ownership isn't respected
-- **No nested teams** — a teammate cannot spawn its own team
-- **One team per session** — the lead manages one team at a time
-- **Cost scales linearly** — each teammate uses its own context window and API tokens
-- **Experimental feature** — behavior may change between Claude Code versions
-
----
-
-## Cost Considerations
-
-Agent teams multiply token usage. Use this decision framework:
-
-| Question | If Yes | If No |
-|----------|--------|-------|
-| Can the work be parallelized? | Consider teams | Don't use teams |
-| Will it save significant wall-clock time? | Worth the cost | Probably not |
-| Are there 2+ truly independent work streams? | Good candidate | Do sequentially |
-| Is the task complex enough to justify setup? | Use teams | Main session is fine |
-
-**General guideline:** If you'd otherwise spend 30+ minutes on sequential work that has 2+ independent tracks, teams are worth the cost.
 
 ---
 
@@ -359,9 +119,10 @@ the original sources. RCAs: `rca-herorace-patch72-2026-08-21.md`, `rca-yotthani-
 > these fire only when spawning parallel agents, so they belong here, not in the every-turn load.
 > harness-facts keeps a one-row pointer. This is the section its pointers cite.
 
+
 ### Parallel-port build watcher (EMPIRICAL: TAOM 2026-05-06)
 
-An external watcher auto-comments a feature's csproj includes + `SubModule.cs`/`IoC.cs` integration (`// TEMP-SMARTCAVALRY-EXCLUDE` markers) after ANY build failure mentioning it, without distinguishing which parallel port actually broke — cascading across features. **Prevention: pass `isolation: "worktree"` on parallel Agent calls that may edit single-owner files** (see "Worktree isolation" below). RCA `docs/reviews/rca-companiontactics-2026-05-06.md` (~2 hours lost).
+An external watcher auto-comments a feature's csproj includes + `SubModule.cs`/`IoC.cs` integration (`// TEMP-SMARTCAVALRY-EXCLUDE` markers) after ANY build failure mentioning it, without distinguishing which parallel port actually broke, cascading across features. **Prevention: give each parallel builder that may edit single-owner files its own worktree** (see "Worktree isolation" below). RCA `docs/reviews/rca-companiontactics-2026-05-06.md` (~2 hours lost).
 
 ### Parallel builder briefs: shared sub-problems get ONE prescribed solution (EMPIRICAL: TAOM 2026-07-02, CombatMechanics)
 
@@ -371,24 +132,29 @@ When fanning a feature out to parallel builder agents against shared contracts, 
 
 **Conventions are shared sub-problems too** (second occurrence, Shadowfax Screens 2026-10-19): pin in the brief what every sibling must do the same way, not only the shared API: the failure policy for an unreadable setting or a throwing dependency, test category tags (`RequiresGame`, `RequiresGameIL`), one category constant used by module and hooks, log and detail line formats, what a timing window spans, facade and wiring-test shape. Four builders given one timer API and one settings provider still diverged on all six. RCA `docs/reviews/rca-shadowfax-screens-speed-2026-10-19.md`.
 
-### Worktree isolation for parallel agent runs (DOC-BACKED + EMPIRICAL)
+### Budget: fan-out width and checkers
 
-**Rule:** when spawning multiple `Agent` calls in one message that may edit overlapping single-owner files (`Main/TAOM.csproj`, `TAOM.Tests/TAOM.Tests.csproj`, `Main/IoC.cs`, `Main/SubModule.cs`, `Directory.Build.props`), pass `isolation: "worktree"` on each call — each agent gets its own git worktree on a temporary branch, so the shared tree is never touched in parallel and the build-watcher cascade cannot fire.
+Fan-out width exhausts the session limit: spawn at most four builders at once (CLAUDE.md "Subagents"). One checker over the integrated result replaces a verifier per file; per-file verifiers multiply the spend and still miss the seams between files.
+
+### Worktree isolation for parallel agent runs
+
+**Rule:** when several agents may edit overlapping single-owner files (`Main/TAOM.csproj`, `TAOM.Tests/TAOM.Tests.csproj`, `Main/IoC.cs`, `Main/SubModule.cs`, `Directory.Build.props`), give each parallel builder its own worktree: `git worktree add -b <branch> E:/repos/taom-<name> <commit>`. Pass the absolute path in the brief and `cd` into it in every Bash call. Put the area rules in the brief too, because path rules do not fire in a sibling worktree. The shared tree is then never touched in parallel, so the build-watcher cascade cannot fire.
+
+**`isolation: "worktree"`:** it refused on 2026-10-31 when the session cwd spelled `e:` while git reported `E:`. A refused run can leave locked worktrees under `.claude/worktrees`, so check there after a refusal.
 
 **When to apply:** always for parallel edits to the files above, "parallel ports"/"multiple features in flight" requests, or parallel feature scaffolding (`feature-builder`, `/new-feature`).
 **When NOT needed:** read-only agents (`Explore`, research `Plan`); a single Agent call; agents on provably disjoint feature folders that don't touch csproj/IoC/SubModule (rare — audit the file set before assuming).
-**After they return:** merge each worktree branch's diff back sequentially; prune stale checkouts under `.claude/worktrees/` once merged/abandoned (4 forgotten trees cost 22 GB by 2026-07-11).
+**After they return:** merge each worktree branch's diff back sequentially, then remove the worktrees and their branches once merged or abandoned (4 forgotten trees cost 22 GB by 2026-07-11).
 
 ---
 
 ## Related Guides
 
-- [architecture.md](./architecture.md) — Layer architecture and patterns
-- [tdd-enforcement.md](./tdd-enforcement.md) — TDD workflow
-- [patterns.md](./patterns.md) — Design patterns (Hook, Strategy, Builder)
+- [architecture.md](./architecture.md): Overview, client seam and folders
+- [patterns.md](./patterns.md): Thread-local and cache patterns
 - [taleworlds-research-guide.md](./taleworlds-research-guide.md) — Decompilation workflow
-- [code-quality.md](./code-quality.md) — Clean code principles
-- [testing-guide.md](./testing-guide.md) — Testing patterns
+- [code-quality.md](./code-quality.md): The nullable ratchet
+- [testing-guide.md](./testing-guide.md): Shipped-data tests
 
 ---
 

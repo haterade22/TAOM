@@ -5,6 +5,7 @@
     "troops/troops_*.xml",
     "test_riders/*.xml",
     "characters/*.xml",
+    "fords_of_war/*.xml",
     "named_companions/*.xml",
     "taom_wanderers.xml",
     "taom_education_character_templates.xml"

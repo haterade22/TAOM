@@ -1,11 +1,11 @@
 #!/bin/bash
 # SessionStart hook: upstream review drift, in a registration of its own (2026-10-16, the maintainer's request; until
-# then this block ran last in session-start.sh and got what that hook's other checks left of one 10 s registration).
+# then this block ran last in session-start.sh and got what that hook's other checks left).
 # yotthani's repos change every day, and TAOM adopts from them. The last reviewed SHAs live in
 # docs/reviews/upstream-watch.json. The check needs the network: tools/upstream_watch.py makes one GitHub read per
 # watched repo and one per watched release (UPSTREAM RELEASE lines) and caches a live answer for 20 hours, so a session start pays the network at most once a day; a
 # failure is not cached and is retried at the next session start.
-# Time budget: registered for 10 s; it never runs past 9 s from its first command (8.5 s, plus the 0.5 s kill grace).
+# Time budget: it never runs past 9 s from its first command (8.5 s, plus the 0.5 s kill grace).
 # The tool gets what is left as `timeout` and as `--budget`, so each gh call is shortened to fit; under 1 s left it is
 # not run at all.
 # Fail-open, never silent: gh missing, logged out, offline or slow, a crash or a spent budget prints an UNCHECKED note,

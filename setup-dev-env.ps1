@@ -21,5 +21,9 @@ if (-not (Test-Path $exePath) -and -not (Test-Path $storeExePath)) {
 
 Write-Host "`nEnvironment variable BANNERLORD_GAME_DIR has been set to:" -ForegroundColor Green
 Write-Host $bannerlordPath -ForegroundColor Green
+# Turn on the repo's git hooks (commit subject, doc budgets, staged ModuleData): there is no CI
+git -C $PSScriptRoot config core.hooksPath .githooks
+Write-Host "`nGit hooks are on for this clone (core.hooksPath = .githooks)." -ForegroundColor Green
+
 Write-Host "`nPlease restart your IDE/terminal for the changes to take effect." -ForegroundColor Yellow
 Write-Host "You can now build the mod project." -ForegroundColor Green

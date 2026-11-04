@@ -10,10 +10,10 @@ paths:
 # Adapter Pattern Rules (ADR-007)
 
 ## Core Principle
-Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter interfaces.
+Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter interfaces. Gate: `ServiceSignatureGateTests`.
 
 ## Creating New Adapters
-1. **Research first** — Decompile the TaleWorlds class with `ilspycmd` before creating the adapter interface
+1. **Research first:** read the type with `pwsh tools/taom-src.ps1 path <Type>` before creating the adapter interface.
 2. **Interface in `Main/Adapters/`** — `I{TypeName}Adapter.cs` with only the properties/methods the feature needs
 3. **Implementation in `Main/Adapters/`** — `{TypeName}Adapter.cs` wrapping the sealed type
 4. **Recursive wrapping** — If the sealed type exposes other sealed types, wrap those too
@@ -24,7 +24,7 @@ Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter
 - Use null-conditional operators (`?.`) for computed properties accessing nested objects
 - Cache expensive property lookups where appropriate
 
-**A computed getter throws BEFORE your `!= null` guard can run — guard the inner object, not the result.** Decompile the getter body first: a property defined as `X => A.B` (e.g. `PartyBase.Culture => MapFaction.Culture`, PartyBase.cs:255) dereferences `A` with no guard, so `if (party.Culture != null)` NREs inside the getter when `MapFaction` is null. Write `party.MapFaction?.Culture` instead. Distinguish computed getters (throw) from plain `[SaveableField]` fields (`Hero.Culture`, `Settlement.Culture` — safe once the parent is non-null) by reading the member definition, not by assuming. When several models resolve the same value, funnel them through one null-safe chokepoint (e.g. `CultureFeatAdapter.ResolvePartyCulture`) and never resolve inline — a future inline `?? party.Culture` fallback silently reintroduces the crash. This shipped as a campaign-map NRE: issue #281, RCA `docs/reviews/rca-culturefeat-partyculture-nre-2026-06-15.md`. Note that copying a vanilla helper verbatim (`PartyBaseHelper.HasFeat`) inherits its unstated preconditions — TAOM hit the NRE because it calls the helper on far more parties than vanilla does.
+**A computed getter throws before your `!= null` guard runs: guard the inner object.** `PartyBase.Culture => MapFaction.Culture` (v1.5.6 PartyBase.cs:256) NREs when `MapFaction` is null, so write `party.MapFaction?.Culture`. Read the member definition to tell a computed getter from a saved field. Several models resolving one value go through one null-safe chokepoint (`CultureFeatAdapter.ResolvePartyCulture`). A vanilla helper copied verbatim keeps its unstated preconditions (`rca-culturefeat-partyculture-nre-2026-06-15.md`).
 
 **The campaign statics are computed getters too.** `Hero.MainHero` (`CharacterObject.PlayerCharacter.HeroObject`) and `MobileParty.MainParty` (`Campaign.Current.MainParty`) throw with no campaign, which is every Custom Battle, so `Hero.MainHero?.` guards nothing there. Code a mission can reach reads `CharacterObject.PlayerCharacter?.HeroObject` (or `(Game.Current?.PlayerTroop as CharacterObject)?.HeroObject`, which also survives no Game) and `Campaign.Current?.MainParty`, or returns on `Campaign.Current == null` first (#97, #699). `PartyBase.MainParty` is the inverse case: it returns null only without a campaign, and with one it reads `Campaign.Current.MainParty.Party` (v1.5.5 `PartyBase.cs:209-219`), so it throws, `?.` included, while the stored main party is null. Check `Campaign.Current?.MainParty` and read `Campaign.Current?.MainParty?.Party`; `MainPartyNullCheckScanTests` fails a null comparison, `is null`, `??` or `?.` on the getter written directly or inside any number of its own parentheses, and passes a call argument (`Find (PartyBase.MainParty)?.X`); it cannot see a check through a local alias (`var p = PartyBase.MainParty; if (p == null)`), so review for that form, and it blanks comments but not strings, so a string holding the check fails it (#792).
 
@@ -34,19 +34,7 @@ Services NEVER accept sealed TaleWorlds types directly. Always wrap with adapter
 
 ## Modifier-Preserving Overloads (MANDATORY for inventory/equipment adapters)
 
-TaleWorlds' inventory and equipment APIs frequently expose **two parallel overloads**: a simpler `(ItemObject, int)` form and a richer `(EquipmentElement, int)` form. The simpler form internally calls `new EquipmentElement(item)` — discarding any `ItemModifier` (durability state, quality prefix like "Sharp"/"Damaged", cosmetic item, quest-item flag). When the adapter touches a slot that vanilla treats as `EquipmentElement`-shaped, **the richer overload is the correct API surface.**
-
-**Examples of the parallel-overload pattern in v1.4.5:**
-- `ItemRoster.AddToCounts(ItemObject, int)` ↔ `ItemRoster.AddToCounts(EquipmentElement, int)`
-- `Equipment[EquipmentIndex] = ?` accepts only `EquipmentElement` — already lossless if you pass the captured element through
-- `EquipmentHelper.AssignHeroEquipmentFromEquipment` takes `Equipment` directly — preserves modifier
-- `ItemRoster.AddToCounts(ItemRosterElement)` and `Add(ItemRosterElement)` carry full element
-
-**Rule:** Before calling a `(ItemObject, ...)` overload, search for the parallel `(EquipmentElement, ...)` form. If it exists, prefer it. Update the adapter's internal data to carry the full `EquipmentElement` (not bare `ItemObject` or `string` ID).
-
-The adapter interface boundary stays ADR-007 compliant — services see opaque snapshot tokens that internally carry the full element. See `Main/Adapters/PartyMountInventoryAdapter.cs` + `Main/Features/SiegeDismount/Models/MountSnapshot.cs` for the canonical pattern.
-
-**Anti-pattern (do NOT ship):** documenting "modifier/quality/cosmetic is lost on round-trip" as a known limitation in the feature doc without first verifying the limitation is inherent in the API. Codex review #34 (SiegeDismount, 2026-05-06) caught exactly this — the modifier-preserving overload existed; the adapter just used the wrong one.
+**Modifier-preserving overloads.** Before calling a `(ItemObject, ...)` overload, search for the `(EquipmentElement, ...)` form (v1.5.6 `ItemRoster.AddToCounts` has both, ItemRoster.cs:185,194). Prefer it and carry the full element in the adapter's data; services see opaque tokens (`PartyMountInventoryAdapter`, `MountSnapshot`). Never document a lost modifier as a limitation before checking the API.
 
 ## Agent handles: identity is the object, liveness is the slot (MANDATORY)
 

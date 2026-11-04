@@ -2,23 +2,26 @@
 
 > LOTRLOME_Armory item layout, canonical-folder-per-prefix table, Gondor prefixes, CC facegen action_sets. Extracted from CLAUDE.md 2026-07-18. Authoring workflow: `docs/features/troop-tree-revamp.md`.
 
+The Armory ships to players at the next editor package, and "unversioned" means untracked by git, not unshipped.
+Never edit, commit or push `E:\repos\lotraom-assets`; Mike syncs it himself. Name the live file you changed in your report (Mike, 2026-09-22).
+
 
 | Item | Details |
 |------|---------|
-| **Armory dependency** | `LOTRLOME_Armory` (NOT `Armory_2` — it will be deleted) |
+| **Armory dependency** | `LOTRLOME_Armory` |
 | **Item definitions** | `E:\Steam\steamapps\common\Mount & Blade II Bannerlord\Modules\LOTRLOME_Armory\ModuleData\LOTRLOME_items\<folder>\` |
 | **Item files per folder** | `body_armors.xml`, `head_armors.xml`, `leg_armors.xml`, `shoulder_armors.xml`, `arm_armors.xml`; `harad/` also holds `weapons.xml` (KEYforce's Harad regular weapons, #805) |
 | **Global items** | `LOTRLOME_items\LOTRAOM_weapons.xml`, `LOTRAOM_shields.xml`, `LOTRAOM_horses.xml` |
 | **Shield rule** | `item_usage="hand_shield"` (centre-grip) MUST pair with `ForceAttachOffHandPrimaryItemBone="true"`; `item_usage="shield"` (forearm-strapped) with `ForceAttachOffHandSecondaryItemBone="true"`. Never both. `body_name` is the `bo_cap_*` capsule, `shield_body_name` the full `bo_*` body. Two entries look mistyped and must NOT be corrected — see [armory-shield-audit.md](armory-shield-audit.md) |
 | **Harness rule** | Every `Type="HorseHarness"` MUST carry `<Armor family_type="N">` matching its mount's `Monster.family_type` (1 horse/warg/spider/war ram, 4 chariot, 10 elephant/mûmakil). A missing attribute deserializes to **0 = human**, and the inventory screen then refuses the harness on every mount **with no error message** (`SPInventoryVM.IsItemEquipmentPossible`, v1.4.7 `:4112`) while stripping any pre-placed one on the next transfer (`:3923`). Mount-side authority is the monsters XML only, and `family_type` on `<Horse>` is never parsed. Enforced by `python tools/validate_moduledata.py` (`MISSING_HARNESS_FAMILY_TYPE` / `HARNESS_FAMILY_MISMATCH`). Separately, **every `Horse` slot REQUIRES a `HorseHarness` slot in the same set** (`MOUNT_WITHOUT_HARNESS`). The harness is not always armour: on the war ram it is the saddle, since `sk_eb_goat_a`/`_b` are bare pelts, so an empty slot spawns the rider on bare hide. No attribute records which mounts carry their own seat, so exceptions are argued in `_HARNESSLESS_BY_DESIGN` rather than assumed. |
 | **Gondor prefixes** | **17 regional tokens**, all `sk_gd_<region>_` in `gondor/`: `ano` Anórien (49 items), `dol` Dol Amroth (33), `pin` Pinnath Gelin (32), `los` Lossarnach (26), `lam` Lamedon (24), `sere` Serelond (22), `lin` Linhir (22), `vale` Blackroot Vale (20), `osg` Osgiliath (17), `anf` Anfalas (13), `cair` Cair Andros (11), `mns` Minas Tirith (11), `lon` Lond-Galen (10), `har` Harondor (9), `bel` Belfalas (7), `ith` Minas Ithil (6), `leb` Lebennin (6). Counts verified 2026-08-04; this row listed only 5 of the 17 until then. Ten further head-armor ids are named/unique rather than regional (`imrahil_helmet`, `gondor_king_crown`, `ithilien_hood*`, `angbor_helmet`, `forlong_helmet`, `hirluin_helmet`, `golasgil_helment`). **The five named-lord helmets in that list are DEAD as of 2026-08-28**: their meshes were deleted AND their item definitions went with them (corrected 2026-09-01, this row previously said the definitions survive; grepping all of `LOTRLOME_items/` for those five prefixes returns nothing), so referencing one is a hard `BROKEN_ITEM_REF` rather than a naked mesh. The lords are dressed from their regions instead. `golasgil_helment`'s misspelling was load-bearing only while its mesh matched, so treat it now as a dead id, not a name to preserve. See "Deleted on 2026-08-28" below |
-| **KEYforce spec drops** | `E:\repos\lotraom-assets\tools\<culture>_armors_and_troops.txt` — per-culture item lists + unit progression specs |
+| **KEYforce spec drops** | `E:\repos\lotraom-assets\tools\<culture>_armors_and_troops.md`: per-culture item lists + unit progression specs |
 | **CC facegen action_sets** | LIVE at `E:\Steam\...\LOTRLOME_Armory\ModuleData\action_sets.xml`; tracked snapshot `docs/reference/lotrlome-armory-snapshot/`. Every TAOM race id needs full-surface `as_<race>_facegen` + `_female_facegen` (copy `as_dwarf_facegen`; slim entries break post-parent CC). See [character-creation.md](../../docs/features/character-creation.md) |
-| **action_sets structure** | Every `<action>` MUST be nested inside an `<action_set>` — `<action_sets>` accepts only `<action_set>` children (`<game>/XmlSchemas/soln_action_sets.xsd`, byte-identical in the game and dedicated-server installs). A root-level `<action>` is structurally illegal, but the game client **loads it silently**: build 1.4.7.117484 tolerates the file, while build 117131 — which the dedicated-server engine ships — throws `KeyNotFoundException` in `MBObjectManager.MergeElements` at schema path `/action_sets/action` and dies on boot. Both build numbers are as reported in the 2026-08-03 co-op field report; the installed client's `Version.xml` carries only `v1.4.7`, so they are not locally verifiable. Note the XSD is *not* the enforcement point — it never declares `base_set`, which every shipped file uses heavily, so the client clearly does not validate against it; the invariant is enforced by the loader's merge path. Guard: `python tools/audit_action_set_parity.py` exits non-zero on any root-level `<action>`. Fixer for the 2026-08-03 case (twelve self-closing `as_<race>_female_villager_in_aserai_tavern` sets orphaning 168 elements): `tools/oneoff/fix_orphaned_tavern_conversation_actions.py`, which repairs the LIVE file and the tracked snapshot together. Fuller action-set tooling: [lotrlome-armory-snapshot/README.md](lotrlome-armory-snapshot/README.md) |
+| **action_sets structure** | Every `<action>` MUST be nested inside an `<action_set>`: `<action_sets>` accepts only `<action_set>` children (`<game>/XmlSchemas/soln_action_sets.xsd`, byte-identical in the game and dedicated-server installs). A root-level `<action>` is structurally illegal, but the game client **loads it silently**: build 1.4.7.117484 tolerates the file, while build 117131, which the dedicated-server engine ships: throws `KeyNotFoundException` in `MBObjectManager.MergeElements` at schema path `/action_sets/action` and dies on boot. Both build numbers are as reported in the 2026-08-03 co-op field report; the installed client's `Version.xml` carries only `v1.4.7`, so they are not locally verifiable. Note the XSD is *not* the enforcement point: it never declares `base_set`, which every shipped file uses heavily, so the client clearly does not validate against it; the invariant is enforced by the loader's merge path. Guard: `python tools/audit_action_set_parity.py` exits non-zero on any root-level `<action>`. Fixer for the 2026-08-03 case (twelve self-closing `as_<race>_female_villager_in_aserai_tavern` sets orphaning 168 elements): `tools/oneoff/fix_orphaned_tavern_conversation_actions.py`, which repairs the LIVE file and the tracked snapshot together. The generator is not the suspect: `tools/generate_race_civilian_action_sets.py` bounds its output with `TAOM-CIVILIAN-COVERAGE:START/END` markers and emits no `_in_aserai_tavern` sets, so a broken tavern set was hand-authored. "It loads in game" is evidence about one engine build, so a structural defect needs the audit, not a play session. Run the audit before committing any `action_sets.xml` edit. Fuller action-set tooling: [lotrlome-armory-snapshot/README.md](lotrlome-armory-snapshot/README.md) |
 
 ### Armory folder canonical home per item-id prefix
 
-**MANDATORY: before authoring a new item, grep ALL `LOTRLOME_items/*/` subfolders for the prefix.** The first folder that already contains items with that prefix is the canonical home. Adding items to a different folder creates runtime duplicate-ID warnings (engine silently shadows one entry). Even when the spec file is named after culture X, the canonical folder may be a sub-culture (e.g., dwarf items live in `iron_hills/`, not `erebor/`).
+**MANDATORY: before authoring a new item, grep ALL `LOTRLOME_items/*/` subfolders for the prefix.** The first folder that already contains items with that prefix is the canonical home. Adding items to a different folder duplicates the id (the engine merges the two entries attribute by attribute, so a mix of both definitions loads with no message; `DUPLICATE_ITEM_DEF` flags it). Even when the spec file is named after culture X, the canonical folder may be a sub-culture (e.g., dwarf items live in `iron_hills/`, not `erebor/`).
 
 | Item prefix | Canonical folder | Notes |
 |-------------|------------------|-------|
@@ -34,67 +37,33 @@
 | `sk_dwarf_dain_*` | `erebor/` | Dain's set |
 | `sk_rh_loke_*`, `sk_rh_drag_*` | `rhun/` | Loke-Rim + Dragon-Wrath |
 
-**Validation:** When adding/changing equipment, always verify item IDs exist in Armory. Characters appear in underwear when items are missing. Run `python tools/validate_all_troop_refs.py` to cross-check every `sk_*/ar_*/clo_urukscout_*/urukscout_*` reference across all 7 troop XML files in one pass.
+**Validation:** When adding/changing equipment, always verify item IDs exist in Armory. Characters appear in underwear when items are missing. Run `python tools/validate_moduledata.py`; its `BROKEN_ITEM_REF` covers every troop file.
 
 ## Two asset trees, and why a clean validator run can lie
 
-> **Corrected 2026-09-01, with engine evidence: the Armory has no cooked tree, and loose wins
-> anyway.** There is no `LOTRLOME_Armory/AssetPackages/` directory at all: 0 cooked packs against
-> 4,364 loose `Assets/**/*.tpac`. The engine's own log says which tree it took:
->
-> ```
-> [10:26:27.435] Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...
-> [10:26:31.396] Loading packages $BASE/Modules/TAOM_Map/Assets...
-> [10:26:33.079] Loading packages $BASE/Modules/TAOM/Assets...
-> ```
->
-> The second and third lines are the important ones. **TAOM and TAOM_Map ship BOTH trees**
-> (5 cooked vs 120 loose, and 6 vs 3,210), and the engine names `Assets` for each. So loose
-> `Assets/` does not merely fill in when packs are absent: it takes precedence over a cooked tree
-> that exists. That is stronger than what this page used to claim, and it is engine output rather
-> than inference.
->
-> Consequences: for the Armory the stale-pack trap below is **unreachable**, and `Assets/` is the
-> single source of truth. `SandBoxCore` and `SandBox` ship no packs either. The two-tree section
-> still describes the authoring-vs-cooked distinction correctly; what it got wrong was which one
-> the running game reads.
->
-> **The dedicated server reads a third folder.** The co-op server engine loads `<module>/DsAssetPackages/*.tpac` for every loaded module (`Rgl.dll` `get_asset_path_for_module`). It stages the Armory's ModuleData but not its art, so creature skeletons come from `Main/_Module/DsAssetPackages/taom_creature_skeletons.tpac`, copied unchanged from the tree the client loads. After an Armory art sync, `audit_armory_refs.py` runs `build_ds_skeleton_pack.py --check` and warns on drift.
->
-> **Re-confirmed 2026-09-26: the Armory now ships BOTH trees, and loose still wins.** A cook
-> wrote `AssetPackages/pack0-9.tpac` at 07:36; the 08:41 game session still logged
-> `Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...`. The live `Assets/` folder is
-> the single source of truth (Mike, 2026-09-26). The tools had preferred a cooked tree
-> wherever one existed, so from 07:36 they read the stale packs: the hill troll hammer,
-> imported at 11:39, reported `MISSING_COLLISION_BODY`, which would have blocked the commit hook.
->
-> Two consequences, both now handled in the tools:
-> - `validate_mesh_refs.tpac_paths_for_modules` scans a module's loose `Assets/**` whenever it
->   has one and falls back to cooked packs only for a module with no loose tree (Native);
->   `validate_moduledata.py` and `audit_armory_refs.py` call it rather than choosing a tree
->   themselves. Before the first fix its default module list resolved to Native alone,
->   which reported thousands of false `MISSING_MESH`.
-> - `audit_deleted_mesh_impact.py` no longer exits 2 on the absent `AssetPackages`. With no
->   cooked side to diff against it derives "gone" from the reference side instead, which is
->   a narrower question: it cannot see art deleted while nothing referenced it.
-
-The Armory carries the same art twice, and they can disagree:
+The game loads a module's loose `Assets/**/*.tpac` whenever the module has an `Assets/` folder, and ignores cooked
+`AssetPackages/pack*.tpac` while it exists. The engine log names `Assets` for each module
+(`Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...`). The Armory has held both trees since 2026-09-26.
+TAOM and TAOM_Map ship both; `SandBoxCore` and `SandBox` ship no packs. The live `Assets/` folder is the single
+source of truth (Mike, 2026-09-26). The dated evidence is in
+[armoury-mesh-cleanup](../features/armoury-mesh-cleanup.md) "Asset-tree evidence".
 
 | Tree | What it is | Read by |
 |---|---|---|
-| `AssetPackages/pack0-9.tpac` | the **cooked** packs; the game ignores them while `Assets/` exists (above) | only `tools/audit_deleted_mesh_impact.py`, which diffs them against `Assets/`; no validator resolves refs against them since 2026-09-26 |
+| `AssetPackages/pack0-9.tpac` | the **cooked** packs; the game ignores them while `Assets/` exists | only `tools/audit_deleted_mesh_impact.py`, which diffs them against `Assets/`; no validator resolves refs against them |
 | `Assets/**/*.tpac` | the **authoring** tree, one tpac per asset, and what the game loads | `tools/validate_mesh_refs.py`, `tools/audit_deleted_mesh_impact.py` |
 
-Packs are rebuilt only on an explicit re-cook, so they go stale, but the game does not read
-them while `Assets/` exists. **Art deleted from `Assets/` is broken in-game at once, whatever a
-stale pack still holds, and art imported after the last cook renders at once.** The hill troll
-hammer, imported at 11:39 on 2026-09-26, was in the troll's hand in the 12:18 battle although
-the 07:36 packs do not hold it. A stale pack misleads only a tool that reads it: until
-2026-09-26 `validate_mesh_refs.py` did, so it could `PASS` over art already gone from
-`Assets/`, and it reported the new hammer's body as missing. It now reads `Assets/` first, so a
-`PASS` is against the tree the game loads. The packs matter only for a module with no `Assets/`
-tree, which loads them instead (Native does). The 2026-08-28 case, from when the tools read the
-packs: [`docs/features/armoury-mesh-cleanup.md`](../features/armoury-mesh-cleanup.md).
+Packs are rebuilt only on an explicit re-cook, so they go stale, but the game does not read them while `Assets/`
+exists. **Art deleted from `Assets/` is broken in-game at once, whatever a stale pack still holds, and art imported
+after the last cook renders at once.**
+
+- **Validators read `Assets/`.** `validate_mesh_refs.tpac_paths_for_modules` scans a module's loose `Assets/**`
+  whenever it has one and falls back to cooked packs only for a module with no loose tree (Native).
+  `validate_moduledata.py` and `audit_armory_refs.py` call it rather than choosing a tree themselves, so a `PASS` is
+  against the tree the game loads.
+- **`audit_deleted_mesh_impact.py` has no cooked side to diff** when `AssetPackages` is absent. It derives "gone"
+  from the reference side instead, which cannot see art deleted while nothing referenced it.
+- **The dedicated server reads a third folder.** The co-op server engine loads `<module>/DsAssetPackages/*.tpac` for every loaded module (`Rgl.dll` `get_asset_path_for_module`). It stages the Armory's ModuleData but not its art, so creature skeletons come from `Main/_Module/DsAssetPackages/taom_creature_skeletons.tpac`, copied unchanged from the tree the client loads. After an Armory art sync, `audit_armory_refs.py` runs `build_ds_skeleton_pack.py --check` and warns on drift.
 
 ## Item and piece names need a Languages row
 
@@ -188,7 +157,7 @@ at a time, and installs only what verifies.
 - **Authoring and proof.** `tools/blender/add_mesh_lods.py` writes the levels;
   `audit_fbx_lods.py --diff <old> <new>` proves nothing else moved, bind pose included (a Blender
   export rewrites the file's axis system, so raw bind matrices always differ; compare relative
-  to a reference bone). `audit_fbx_lods.py --check` fails once a reinstall reverts a pass.
+  to a reference bone).
 - **Known defect: `sk_dwarf_beard_a_10`.** The FBX is fine, but `SK_Dwarf_Beards_geo.tpac`
   registers that metamesh with `_beard_a` replaced by eight NUL bytes, so the engine logs
   `Meta mesh with name sk_dwarf_beard_a_10 cannot be found!` and a dwarf who rolls beard 10 has

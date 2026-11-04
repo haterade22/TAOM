@@ -14,9 +14,9 @@ authorizes no `/ship`, no fixes and no extra paid reviewers.
 - **Always**, in every session, every custom or general-purpose subagent, and again after
   `/compact`: this file, its two imports, and the rules in `.claude/rules/` that have no `paths:`.
   The Explore and Plan agents get none of it.
-- **On access**, in a session or a subagent: a rule with `paths:` loads when a matching file inside
-  this repo is read, written or edited, and drops at `/compact` until the next matching access. No
-  rule fires for a file outside the repo (the live Armory, TAOM_Map, the Modding Kit); the skill for
+- **On access**, in a session or a subagent: a rule with `paths:` loads when a matching file in
+  this checkout is read, written or edited, and drops at `/compact` until the next matching access. No
+  rule fires outside this checkout (a sibling worktree, the live Armory, TAOM_Map, the Modding Kit); the skill for
   that work carries its traps ([rules catalog](docs/reference/rules-catalog.md)).
 - **On invoke:** a skill's body. After `/compact` only its first ~5,000 tokens come back.
 - **Memory:** MEMORY.md loads on this machine only, in the main session and, against the docs, in
@@ -43,10 +43,12 @@ Pick the narrowest trigger that fires every time the fact is needed:
    deleted once pushed.
 
 Never put counts nothing computes, incident narratives, or copies of another tier's text into 2 or 3.
+A count in a feature doc or generated header that the code can change names the command that prints
+it, or gives its date.
 
 ## Skills
 
-The skill list is not re-sent after `/compact`; this index is. A SKILL.md is executable
+A SKILL.md is executable
 instructions: follow its phases in order.
 
 | When | Invoke | Gate |
@@ -58,7 +60,7 @@ instructions: follow its phases in order.
 | Before any commit touching C# or XML/XSLT, repo or live install | `/deep-review` | every such commit; skip only config and docs |
 | Before claiming done | `/verify` | always |
 | In-game evidence owed for a change (a check NOT_SEEN, mission or engine code changed) | `/game-run` | no Bannerlord running and 10 min idle, else ask once |
-| "Let's merge", "ready to PR" | `/ship` | runs `/verify`, `/deep-review`, `/review-codex`, then issue and docs |
+| "Let's merge", "ready to PR" | `/ship` | runs `/verify` and `/deep-review`, `/review-codex` on his go-ahead, then issue and docs |
 | Versioning a build for players | `/release` | after `/ship`, never instead of it |
 | Game updated, or the GAME VERSION DRIFT banner | `/engine-bump` | before any build or test |
 | Armory sync or art drop, or the ARMORY ART DRIFT banner | `/armory-audit` | before any battle or tournament smoke |
@@ -66,11 +68,12 @@ instructions: follow its phases in order.
 | Custom static prop (camp, landmark) without the Kit | `docs/reference/tpac-static-prop-authoring.md` | once told "do it" |
 | Tripo AI FBX to a prop or map icon | `/prep-tripo-prop` | once told "do it" |
 | New feature | `/new-feature`, then offer `/freeze` | once told "do it" |
-| Culture, armor, lord skills | `new-culture-authoring.md`, `lord-skills-authoring.md` (`docs/ai-includes/`); `docs/features/troop-tree-revamp.md` | |
+| Culture, armor, weapons, lord skills | `new-culture-authoring.md`, `lord-skills-authoring.md`, `weapon-creation-workflow.md` (`docs/ai-includes/`); `docs/features/troop-tree-revamp.md` | |
 | New player-facing text | `/localize` | always |
 | Patch, model or reflection bindings after an engine or patch change | the binding gate: `docs/reference/taleworlds-api-snapshot/README.md` | |
 | An architectural decision | `docs/adrs/000-template.md` | |
 | External repo, article or skill to adopt; UPSTREAM AHEAD banner, "review yotthani" | `/adopt-external`; `/upstream-review` | security-vet first |
+| A pull request from an outside contributor | `/review-outside-pr` | security review before any checkout or build |
 | After editing hooks, settings, MCP config or CLAUDE.md | `/security-scan` | skip for routine feature edits |
 | HARNESS RETRO DUE banner; "did that rule help" | `/harness-retro` | |
 | Repo-wide audit, "what next", handoff plans; execute, review, merge or resume a plans backlog | `/improve` | merge, push, issues and paid calls only on the maintainer's word |
@@ -84,13 +87,11 @@ instructions: follow its phases in order.
   come from `pwsh tools/taom-src.ps1 path <Type>`; builds use
   `dotnet … -p:DisableModuleCopy=true -p:ModuleId=`, never `./build.ps1`. Explore and Plan also need
   the relevant rules in the prompt, or [agent-operating-manual.md](docs/ai-includes/agent-operating-manual.md).
-- Parallel builders that may touch single-owner files get `isolation: "worktree"`; a sub-problem
-  shared by two briefs gets one pinned solution. Fan out at most four wide, with one checker.
+- Parallel builders that may touch single-owner files get a sibling worktree, made as `agent-teams.md`
+  says; a sub-problem shared by two briefs gets one pinned solution. Fan out at most four wide, with one checker.
   Review ordering and spawn templates: [agent-teams.md](docs/ai-includes/agent-teams.md).
 - Agents: `taleworlds-researcher`, `feature-builder`, `deep-reviewer` (the `/deep-review` lenses;
-  Opus 5.5 at max effort is set in its definition, so never pass `model`), `debugger` (tooling and
-  scripts; TAOM C# goes to `/investigate`), `error-detective` (several bugs, one root),
-  `refactoring-specialist` (tests green before and after); tiers `fast-reader`, `implementer`,
+  Opus 5.5 at max effort is set in its definition, so never pass `model`); tiers `fast-reader`, `implementer`,
   `architect` (below).
 - In the VS Code panel, Stop and Escape end only the turn; background subagents keep running until
   stopped from the agent map. A stopped subagent's progress is on disk, not in its report.
@@ -103,11 +104,11 @@ the one-line note before each spawn are in `.claude/rules/model-effort-selection
 
 ## MCP and shell
 
-- Symbols: Serena. Item, troop and culture refs: the `taom-moduledata` MCP, or
+- Symbols: Grep. Item, troop and culture refs: the `taom-moduledata` MCP, or
   `python tools/validate_moduledata.py`. Files across modules: Read and Grep. Issues: the `gh` CLI.
-- MCP write tools bypass every PreToolUse gate (Serena's are denied): git goes through Bash, files
+- MCP write tools bypass every PreToolUse gate: git goes through Bash, files
   through Edit and Write ([MCP servers](docs/reference/mcp-servers.md)).
 - The Bash tool halves `\\`, and a command over 7,500 characters fails (`check-bash-length.sh`):
   write scripts with the Write tool. Never spell
-  `python3` (a Store alias that hangs); use `python`. The PowerShell tool:
+  `python3` (a Store alias that hangs); use `python`. Never `sed -i` a CRLF file. The PowerShell tool:
   [powershell-tool.md](docs/reference/powershell-tool.md).

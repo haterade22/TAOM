@@ -143,7 +143,7 @@ FOR-MIKE.md, and look for the shared cause before any plan is amended.
    FOR-MIKE.md. A residual LOW in a record or doc (not code, not a gate) you may fix yourself without a
    round.
 4. **Behaviour-changing proposals** are never applied unattended; they go to DECISIONS.md or FOR-MIKE.md.
-5. **A gate change** (hook, validator, CI step): the lead or fix pass runs a differential sweep of the
+5. **A gate change** (hook, validator): the lead or fix pass runs a differential sweep of the
    old gate (`git show <base>:<path>`) against the new, over a corpus seeded from the fix's own mechanism,
    under both the Bash and PowerShell tool names, and reports every command the old gate refused and the
    new one allows; then a live probe ([run-protocol.md](run-protocol.md) "Live probe"). Prefer the root
@@ -165,16 +165,6 @@ FOR-MIKE.md, and look for the shared cause before any plan is amended.
   tagged second review (`review.js`, the item's `tag`), so a branch gets one second review, not one per
   decision.
 - A follow-up that moves an anchor a dependent plan relies on re-anchors that plan (RE-CUT).
-
-## Commit gates in worktrees
-
-Several commit gates `cd` to the project directory, so a commit made in a worktree is judged by the main
-checkout's index and files (`check-claude-files-tracked.sh`, `check-doc-config-drift.sh`,
-`check-commit-subject-version.sh`). The symptom is a denial naming a file the branch never touched, or
-another session's staged file. Report the hook's text and wait until the main checkout is clean, then
-commit the worktree's own explicit paths. Never `--no-verify`, and never stage, stash or edit another
-session's files. Recommend a plan that makes the gates judge the committing repository; until one exists
-it is a FOR-MIKE item.
 
 ## Reconcile (`reconcile`, and phase 1 of a new run)
 

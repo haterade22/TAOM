@@ -903,5 +903,179 @@ class CliTests(unittest.TestCase):
         self.assertEqual(run_cli("bogus", b"{}").returncode, 2)
 
 
+class BypassTests(unittest.TestCase):
+    """What block-no-verify.sh refuses: the command read as bash reads it, so quoting and grouping
+    cannot hide a flag, and a message that names a flag is never read as one."""
+
+    REFUSED = (
+        ("git commit --no-verify -m x", "--no-verify"),
+        ("git commit --no-veri -m x", "--no-verify"),
+        ("git push --no-verify origin feature", "--no-verify"),
+        ("git merge --no-verify side", "--no-verify"),
+        ("(git commit --no-verify -m x)", "--no-verify"),
+        ("true;git commit --no-verify -m x", "--no-verify"),
+        ("cd /x&&git commit --no-verify -m x", "--no-verify"),
+        ('bash -c "git commit --no-verify -m x"', "--no-verify"),
+        ('bash -lc "cd /x && git commit --no-verify"', "--no-verify"),
+        ("bash -c 'cd /x\ngit commit --no-verify -m y'", "--no-verify"),
+        ("bash <<EOF\ngit commit --no-verify -m x\nEOF", "--no-verify"),
+        ("exec git commit --no-verify -m x", "--no-verify"),
+        ("printf x | xargs git commit --no-verify -m", "--no-verify"),
+        ("sudo git push --no-verify origin", "--no-verify"),
+        ("sudo -u bob git commit --no-verify -m x", "--no-verify"),
+        ("doas git commit --no-verify -m x", "--no-verify"),
+        ('eval "cd /x && git commit --no-verify -m x"', "--no-verify"),
+        ('sudo bash -c "cd /x && git commit --no-verify -m y"', "--no-verify"),
+        ('pwsh -c "git status; git commit --no-verify -m y"', "--no-verify"),
+        ('pwsh -NoProfile -Command "git commit --no-verify -m y"', "--no-verify"),
+        ('cmd /c "git status & git commit --no-verify -m y"', "--no-verify"),
+        ("exec git commit -n -m x", "git commit -n"),
+        ("( exec git commit -n -m x )", "git commit -n"),
+        ("{ exec git commit -n -m x; }", "git commit -n"),
+        ("X=1 exec git commit -n -m x", "git commit -n"),
+        ("time exec git commit -n -m x", "git commit -n"),
+        ('bash -c "exec git commit -n -m x"', "git commit -n"),
+        ('pwsh -NoProfile -ExecutionPolicy Bypass -Command "git commit --no-verify -m x"', "--no-verify"),
+        ('powershell -ExecutionPolicy Bypass -c "git commit --no-verify"', "--no-verify"),
+        ("watch -n 5 git commit -n -m x", "git commit -n"),
+        ('cmd /d /s /c "git commit --no-verify"', "--no-verify"),
+        ("eval C:/Git/bin/git.exe commit -n -m x", "git commit -n"),
+        ('pwsh -c "C:/Git/cmd/git.exe commit --no-verify -m x"', "--no-verify"),
+        ("cmd /c C:/Git/cmd/git.exe commit --no-verify -m x", "--no-verify"),
+        ("eval ./git commit -n -m x", "git commit -n"),
+        ("eval \"'git' commit -n\"", "git commit -n"),
+        ("git -C /x commit -n -m y\ncat <<'EOF' | tee o\nit's\nEOF", "git commit -n"),
+        ("git -c \"core.hooksPath=/d\" commit -m y\ncat <<'EOF' | tee o\nit's\nEOF", "-c core.hooksPath"),
+        ("git --config-env=core.hooksPath=X commit -m y\ncat <<'EOF' | tee o\nit's\nEOF", "-c core.hooksPath"),
+        ("(git commit -n -m y)\ncat <<'EOF' | tee o\nit's\nEOF", "git commit -n"),
+        ("cat <<'EOF' | tee o\nit's\nEOF\ngit -C . commit -n -m y", "git commit -n"),
+        ("cat <<'EOF' # note\nit's\nEOF\ngit commit --no-verify -m x", "--no-verify"),
+        ("cat <<'EOF' | tee /dev/null\nit's\nEOF\ngit commit --no-verify -m x", "--no-verify"),
+        ("python - <<'EOF' > o.txt\nit's\nEOF\ngit commit -n -m x", "git commit -n"),
+        ("sudo git commit -n -m x", "git commit -n"),
+        ("eval git commit -n -m x", "git commit -n"),
+        ("git commit -m fix#12 --no-verify", "--no-verify"),
+        ("git commit -m fix#12 -n", "git commit -n"),
+        ("git commit -m x docs/a#b.md --no-verify", "--no-verify"),
+        ("git -c user.name=a#b commit --no-verify -m x", "--no-verify"),
+        ("git push origin HEAD#x --no-verify", "--no-verify"),
+        ('git commit -m "a"#b -n', "git commit -n"),
+        ("git -C dir#1 commit -n -m x", "git commit -n"),
+        ("git --attr-source HEAD commit -n -m x", "git commit -n"),
+        ("git commit -n -m x # a comment", "git commit -n"),
+        ("git commit -n -m x", "git commit -n"),
+        ("git commit -nm x", "git commit -n"),
+        ("git commit -an -m x", "git commit -n"),
+        ("git commit -m x -n", "git commit -n"),
+        ('git commit "-n" -m x', "git commit -n"),
+        ("git commit '-n' -m x", "git commit -n"),
+        ('git commit -"n" -m x', "git commit -n"),
+        ('git commit -m x "-n"', "git commit -n"),
+        ("(git commit -n -m x)", "git commit -n"),
+        ("bash -c 'git commit -n -m x'", "git commit -n"),
+        ("git -P commit -n -m x", "git commit -n"),
+        ("git --no-optional-locks commit -n -m x", "git commit -n"),
+        ("git --namespace=x commit -n -m x", "git commit -n"),
+        ('git -C "E:/a b" commit -n -m x', "git commit -n"),
+        ('git -c "user.name=a b" commit -n -m x', "git commit -n"),
+        ("timeout 60 git commit -n -m x", "git commit -n"),
+        ("git -c core.hooksPath=/dev/null commit -m x", "-c core.hooksPath"),
+        ("git -c CORE.HOOKSPATH=/dev/null commit -m x", "-c core.hooksPath"),
+        ('git -c "core.hooksPath=/dev/null" commit -m x', "-c core.hooksPath"),
+        ("git -c 'core.hooksPath=/dev/null' commit -m x", "-c core.hooksPath"),
+        ("git --config-env=core.hooksPath=V commit -m x", "-c core.hooksPath"),
+        ("git --config-env core.hooksPath=V commit -m x", "-c core.hooksPath"),
+        ("git -c core.hooksPath=/y status", "-c core.hooksPath"),
+    )
+    ALLOWED = (
+        "git commit -m x",
+        "git commit --no-verbose -m x",
+        "git commit -mn",
+        "git commit -uno -m x",
+        "git commit -Sn -m x",
+        "git commit -m -n",
+        "git commit --message -n",
+        "git commit -m x -- -n",
+        'git commit -m "add the -n flag"',
+        'git commit -m "docs; git commit -n is refused"',
+        'git commit -m "block --no-verify in the gate"',
+        "git commit -F - <<EOF\ngit commit -n is now refused\nEOF",
+        'git commit -m "$(cat <<EOF\ngit commit --no-verify is refused\nEOF\n)"',
+        "git push -n origin feature",
+        "git log -n 5 commit",
+        "git commit-tree -n x",
+        "git log --grep=--no-verify",
+        "git grep --no-verify",
+        "git config --get core.hooksPath",
+        "grep --no-verify a.txt; git status",
+        "grep -n commit file",
+        "git commit -m x # --no-verify",
+        "git commit -m x # -n",
+        "# git commit --no-verify",
+        "echo git commit --no-verify",
+        "grep -rn x git --no-verify",
+        'sudo git commit -m "the -n flag"',
+        "eval \"git commit -m 'the -n flag'\"",
+        "pwsh -File tools/taom-src.ps1 path Hero",
+        "eval echo --no-verify",
+        "",
+    )
+
+    def test_each_bypass_is_named(self):
+        for command, want in self.REFUSED:
+            with self.subTest(command=command):
+                self.assertEqual(sw.bypass(command, "Bash"), want)
+
+    def test_look_alikes_pass(self):
+        for command in self.ALLOWED:
+            with self.subTest(command=command):
+                self.assertEqual(sw.bypass(command, "Bash"), "")
+
+    def test_powershell_reads_the_same(self):
+        for command, want in (("git commit -n -m x", "git commit -n"),
+                              ("GIT commit --no-verify -m 'x'", "--no-verify"),
+                              ("git commit --no-verif''y -m x", "--no-verify"),
+                              ("& 'C:\\Program Files\\Git\\cmd\\git.exe' push --no-verify origin", "--no-verify"),
+                              ('git -c "core.hooksPath=x" commit -m y', "-c core.hooksPath"),
+                              ("git commit -m 'the -n flag'", ""),
+                              ("npm publish --no-verify", "")):
+            with self.subTest(command=command):
+                self.assertEqual(sw.bypass(command, "PowerShell"), want)
+
+    def test_a_command_too_long_to_read_raises_so_the_gate_reads_the_raw_text(self):
+        padding = "a" * (sw.REPO_SCAN_MAX + 10)
+        with self.assertRaises(ValueError):
+            sw.bypass(f"git commit -m {padding}", "Bash")
+        with self.assertRaises(ValueError):
+            sw.bypass("git commit -m x " + "<<EOF " * (sw.HEREDOC_MAX_OPENERS + 1), "Bash")
+        payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": f"git commit -m {padding}"}}).encode()
+        self.assertNotEqual(run_cli("bypass", payload).returncode, 0)
+
+    def test_a_tokenizer_fault_with_no_flag_read_raises_for_the_raw_text(self):
+        """A heredoc opener with text after it is not stripped, and an apostrophe in its body then
+        ends the read. The reader reads each line alone first, so a flag it can still see is named
+        (REFUSED); with none, the hook judges the raw text, because what it could not read may hold one."""
+        with self.assertRaises(ValueError):
+            sw.bypass("cat <<'EOF' | tee o\nit's\nEOF\necho done", "Bash")
+
+    def test_a_hash_inside_a_word_is_no_comment_for_any_gate(self):
+        """shlex ends a word at any #; bash starts a comment only at a # that starts a word."""
+        self.assertEqual(sw.command_tokens("git commit -m fix#12 -n\necho hi"),
+                         ["git", "commit", "-m", "fix#12", "-n", "\n", "echo", "hi"])
+        self.assertEqual(sw.command_tokens("git status # the -n flag\necho hi"),
+                         ["git", "status", "\n", "echo", "hi"])
+        self.assertEqual(sw.command_tokens("echo 'a # b' \"c # d\" e\\ #f"), ["echo", "a # b", "c # d", "e #f"])
+        self.assertEqual(sw.commit_plan("git commit -m fix#12 --amend", "Bash"), (True, []))
+        self.assertEqual(sw.commit_plan("git commit -m fix#12 -- a.md", "Bash"), (False, ["a.md"]))
+        self.assertEqual(sw.git_call_dirs("git -C a#b commit -m x", "Bash", ""), ["a#b"])
+
+    def test_the_mode_prints_the_answer_and_exits_0(self):
+        payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": "git commit -n -m x"}}).encode()
+        result = run_cli("bypass", payload)
+        self.assertEqual((result.returncode, result.stdout.strip()), (0, b"git commit -n"))
+        result = run_cli("bypass", b"not json")
+        self.assertEqual((result.returncode, result.stdout.strip()), (0, b""))
+
+
 if __name__ == "__main__":
     unittest.main()

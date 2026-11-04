@@ -64,7 +64,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # PowerShell tool `timeout` is the Windows timeout.exe and stays the command, so it does not mark.
 SEGMENTS=""
 if [ -n "$PYBIN" ]; then
-  # Bounded to 3 s of the 5 s registration (a kill cannot speak). A reader that fails or overruns (rc 124)
+  # Bounded to 3 s (a kill cannot speak). A reader that fails or overruns (rc 124)
   # leaves no segments, so nothing marks: the Stop reminder nags once, the safe direction.
   SEGMENTS=$(printf '%s' "$INPUT" | timeout -k 1 "${TAOM_READER_TIMEOUT:-3}" "$PYBIN" "$TAOM_HOOKS_DIR/_shellwords.py" commands 2>/dev/null)
   RC=$?

@@ -148,7 +148,7 @@ Path-scoped rules do not load for files outside the main checkout, so read the r
 ${HOOK_SUITE(it)}
 ${it.note ? `ORCHESTRATOR NOTE (binding; it overrides your contract and the standing rules where it says so):\n${it.note}\n` : ''}`
 
-const RETURN = 'Return the structured result: the status, base_before, the commit (the branch HEAD after your last commit; empty if you committed nothing), what you did in order, the files changed, the RED evidence (the failing test output you saw before the fix), the final full-suite totals line, any stop reason, deviations from the contract with why, and what is owed (in-game checks, CI runs, maintainer decisions). Set blocked_on to step0 when your contract\'s Step 0 check failed, to maintainer when you stopped on a choice only the maintainer can make, and to none otherwise (a failing test, a stale plan and a broken environment are none).'
+const RETURN = 'Return the structured result: the status, base_before, the commit (the branch HEAD after your last commit; empty if you committed nothing), what you did in order, the files changed, the RED evidence (the failing test output you saw before the fix), the final full-suite totals line, any stop reason, deviations from the contract with why, and what is owed (in-game checks, the no-game replay, maintainer decisions). Set blocked_on to step0 when your contract\'s Step 0 check failed, to maintainer when you stopped on a choice only the maintainer can make, and to none otherwise (a failing test, a stale plan and a broken environment are none).'
 
 const planPrompt = it => `ROLE: the EXECUTOR for improve ${refOf(it)}. You implement it exactly, verify it, and commit it on its own branch.
 ${workspace(it)}

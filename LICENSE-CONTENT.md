@@ -42,7 +42,7 @@ XML"), which left files claimed by two clauses at once. It is now split by path.
 | `Stubs/**` | Build stubs |
 | `tools/**` except the image outputs listed below | Python, PowerShell, and shell tooling |
 | `build.ps1`, `setup-dev-env.ps1`, `Directory.Build.props`, `*.sln`, `*.csproj`, `*.vcxproj` | Build configuration |
-| `.claude/**`, `.github/**`, `.vscode/**`, `.codex/**`, `.serena/**` | Development harness |
+| `.claude/**`, `.github/**`, `.vscode/**`, `.codex/**` | Development harness |
 
 ### CC BY-NC-SA 4.0 (content)
 

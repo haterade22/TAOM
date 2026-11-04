@@ -28,9 +28,6 @@
 # deliberately not reported. It is pre-existing, it is a roster decision rather than a data one,
 # and surfacing it on every edit would be permanent noise.
 
-# Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever.
-source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
-
 INPUT=$(cat)
 
 # Parse the edited path: jq preferred, grep fallback. Mirrors log-agent.sh: jq is NOT on PATH in
@@ -44,11 +41,6 @@ else
 fi
 
 [[ -z "$FILE_PATH" ]] && exit 0
-
-# Resolve repo-relative paths against the project, not the cwd the hook happens to inherit
-# (log-agent.sh convention). Without this the hook is wrong in a git worktree.
-ROOT="${CLAUDE_PROJECT_DIR:-$(pwd)}"
-cd "$ROOT" 2>/dev/null || exit 0
 
 # --- relevance filter (cheap; the audit itself costs ~1.5s, so only pay it when it can matter) ---
 # Three ways an edit can introduce or fix this defect: the registration (weapon_descriptions.xslt),
@@ -68,14 +60,25 @@ case "$FILE_PATH" in
 esac
 [[ -z "$RELEVANT" ]] && exit 0
 
+# Resolve a safe Python interpreter. Never a Microsoft Store alias: those hang forever. Sourced
+# only now, so an edit that cannot matter starts no Python probe.
+source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
+
+# Run the audit in the work tree that holds the edited file, so an edit in a worktree is judged
+# against that worktree's rosters. A live Armory or TAOM_Map file is in no work tree of this
+# project: fall back to the project directory.
+ROOT=$(git -C "$(dirname "${FILE_PATH//\\//}")" rev-parse --show-toplevel 2>/dev/null)
+[[ -n "$ROOT" ]] || ROOT="${CLAUDE_PROJECT_DIR:-$(pwd)}"
+cd "$ROOT" 2>/dev/null || exit 0
+
 TOOL="tools/audit_polearm_shield_parity.py"
 # -v2 since 2026-09-29: a mute written before then records a report sent to stderr, which Claude
 # never saw, so it must not silence the same finding set now that reports arrive.
 STATE=".claude/logs/.polearm-gate-reported-v2"
 
 # Report only when the finding set CHANGES, so a burst of roster edits does not re-nag while a
-# known finding stands, but a NEW regression speaks immediately. Mirrors check-deep-review.sh's
-# already-handled early-exit, adapted to content rather than recency.
+# known finding stands, but a NEW regression speaks immediately. The early exit is keyed on the
+# content of the finding set, not on recency.
 report_once() {
     local body="$1"
     local hash
@@ -111,7 +114,7 @@ if [[ ! -f "$TOOL" ]]; then
     report_once "polearm/shield gate did not run: $TOOL is absent from this tree (it landed on trunk 2026-08-20). A shield paired with a weapon the AI will not draw is silent in game."
 fi
 
-# Inner bound, below the 20s registered timeout. The audit measured 2.9s on 2026-08-31,
+# Inner bound of 15 s. The audit measured 2.9s on 2026-08-31,
 # but it was registered at 5s, so a cold cache or a busy machine could push it past the
 # harness kill. A kill discards output, and for THIS hook silence is read as "no findings"
 # (see the CONTRACT above), so the overrun has to be caught here where it can still speak.
@@ -135,7 +138,7 @@ reverts it. Background: docs/reference/doc-lookup.md, 'Confirm a troop will actu
 elif [[ $STATUS -ne 0 ]]; then
     report_once "polearm/shield gate errored (exit $STATUS). First line: $(printf '%s\n' "$OUTPUT" | head -1)"
 elif printf '%s\n' "$OUTPUT" | grep -q '^SKIP:'; then
-    report_once "polearm/shield gate could not run: $(printf '%s\n' "$OUTPUT" | grep '^SKIP:' | head -1). This check needs the game install; it is not covered by CI."
+    report_once "polearm/shield gate could not run: $(printf '%s\n' "$OUTPUT" | grep '^SKIP:' | head -1). This check needs the game install; nothing else runs it."
 fi
 
 # PASS. Drop the mute so a future regression is reported rather than swallowed as a repeat.

@@ -1477,3 +1477,9 @@ str_team_ai_tactic_text doesn't exist!". Culture Doctrine added its rows, but `D
 - **Prevent:** `EveryConcreteTacticComponentInTaom_HasASergeantPopupRow` now covers every concrete `TacticComponent` in
   TAOM.dll; add the `str_team_ai_tactic_text.<TypeName>` row in `taom_module_strings.xml` with any new tactic.
 - **Source:** [rca-staged-siege-2026-10-29.md](../rca-staged-siege-2026-10-29.md) finding 4.
+
+### A rule written from a crash states the engine version it was checked against (2026-09-04)
+The old gui-ui rule said that adding to `MapInfoVM.SecondaryInfoItems` threw an `IndexOutOfRangeException` in `GauntletMapBarGlobalLayer.HandlePanelSwitchingInput` through hardcoded positional indexing. That does not reproduce on the installed v1.4.8: the method holds six `IsGameKeyReleased` branches dispatching to `MapNavigationExtensions.Open*` and never touches `SecondaryInfoItems`, which appears only in `MapInfoVM` across every 1.4.5, 1.4.7 and 1.4.8 dump on the desktop. The claim was read as fact and nearly drove a rewrite of a working feature (five hand-built change-notifying properties, the `IntValue` and `FloatValue` coupling behind `MapBarCustomValueTextWidget`'s value flash, the item layout, the gamepad navigation scope). The exception the comment at the top of `GauntletCareerScreen.cs` refers to was never re-verified after the engine bump and may have come from another mechanism or an older version.
+- **Why missed:** a crash explanation was promoted to a rule without a decompile on the then-installed engine.
+- **Prevent:** state the engine version you verified against when writing a rule from a crash; `/investigate` finds a real root cause for the `GauntletCareerScreen` comment if it matters.
+- **Source:** the "Discouraged, on ownership grounds" paragraph in `.claude/rules/gui-ui.md`, which keeps the shape of the hazard and the dormant-in-practice finding.

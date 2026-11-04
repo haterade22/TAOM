@@ -11,24 +11,25 @@ one to update when something new comes in. The governing rule is
 [`.claude/rules/provenance.md`](../../.claude/rules/provenance.md): name the source, state its
 license.
 
-**Counts were taken from `git ls-files` on 2026-08-25 and will drift. Recount before relying on
-them.**
-
 ## TAOM-authored content (CC BY-NC-SA 4.0)
 
 All 2D and 3D art in the directories below is made by the project, hand-authored or AI-assisted and
 then worked by hand. None of it is extracted from another game.
 
-| Directory | Files | What |
-|---|---|---|
-| `Main/_Module/GUI/SpriteParts/` | 1,023 | UI sprite art |
-| `Main/_Module/GUI/SpriteData/` | 227 | Sprite atlases and metadata, generated from the above |
-| `Main/_Module/Assets/` | 121 | Banner icons, Gauntlet UI assets, main map textures |
-| `Main/_Module/AssetSources/` | 86 | Layered art sources (52 PNG, 34 PSD) |
-| `tools/factionmap_output/` | 98 images | The Middle-earth world map renders |
-| `tools/runes/` | 6 images | Rune art |
-| `Main/_Module/ModuleData/` | 346 | Troops, cultures, items, settlements, lore strings |
-| `docs/` | 722 | Lore and project writing, 9 diagrams |
+| Directory | What |
+|---|---|
+| `Main/_Module/GUI/SpriteParts/` | UI sprite art |
+| `Main/_Module/GUI/SpriteData/` | Sprite atlases and metadata, generated from the above |
+| `Main/_Module/Assets/` | Banner icons, Gauntlet UI assets, main map textures |
+| `Main/_Module/AssetSources/` | Layered art sources |
+| `tools/factionmap_output/` | The Middle-earth world map renders |
+| `tools/runes/` | Rune art |
+| `Main/_Module/ModuleData/` | Troops, cultures, items, settlements, lore strings |
+| `docs/` | Lore and project writing, diagrams |
+
+**Not covered by this table:** `Main/_Module/ModuleData/FactionUI/**` and every other path that a
+third-party row of [provenance-register.md](provenance-register.md) names, such as the Kysaro rows.
+The register decides.
 
 The `LOTR` appearing in some directory names is thematic, not a source.
 
@@ -75,12 +76,8 @@ Audio (`Main/_Module/ModuleSounds/`) and fonts (`Main/_Module/GUI/Fonts/`) are t
 from the CC grant, and carry rows in [provenance-register.md](provenance-register.md) plus notices
 in [THIRD-PARTY-LICENSES.txt](../../Main/_Module/THIRD-PARTY-LICENSES.txt).
 
-The register also carries the two uncleared software rows that any credible claimant would look at
-first, both predating this file and both already tracked there: **NativeSkinFixes** (a verbatim C++
-port with no identified upstream; removed from the 1.5 line on 2026-10-05, so its row there is
-`removed`, while the 1.4.8 builds still ship it parked) and **BetaDeps** (a behavioural port, license
-`UNKNOWN`). Neither is what the August 2026 "stolen code" comments referred to, since those named
-nothing at all. Both are real work items, and the register is where their status lives.
+Uncleared software and data rows are listed by status in the register; read that column rather than
+a list here.
 
 ## Related
 

@@ -58,5 +58,4 @@ If this ADR affects existing code, how should it be migrated?
 
 - Links to relevant documentation, discussions, or external resources
 
-<!-- After writing an ADR: save it as the next free three-digit number in docs/adrs/ (013 at the time of writing),
-add a row to docs/adrs/README.md, and amend any ADR it changes or supersedes. -->
+<!-- After writing an ADR: save it as the next free three-digit number in docs/adrs/, add a row to docs/adrs/README.md, and amend any ADR it changes or supersedes. -->

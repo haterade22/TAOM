@@ -336,6 +336,14 @@ Rebuild Now. The write is atomic and leaves the previous cache as `.prev`
 487,578 pairs, phase 2 287.93 s over 421 neighbour pairs, smoke test passed.
 <!-- measured: cat ModuleData/DistanceCaches/last_rebuild_report.json 2026-09-05 -->
 
+**File layout** (little-endian; `NavigationCache.Serialize`, `NavigationCache.cs:505-535`, walked against the
+live `.bin` on 2026-11-03). Two `UInt32` CRCs (the scene XML and the navmesh), then an `Int32` record count.
+Each record is a .NET string id, a `bool` IsPortUsed, an `Int32` pair count, then that many pairs of string
+id, `bool` and `Single` distance, in no distance order. Then an `Int32` count and that many neighbour pairs
+(two strings each), then an `Int32` count and that many face rows (`Int32` face id, string id, `bool`). The
+`All` navigation type adds a `Single` land ratio per pair.
+<!-- measured: a Python struct walk of the live settlements_distance_cache_Default.bin, 2026-11-03: 1265 records ending at byte 16,472,122, then 1,122 neighbour pairs and 8,846 face rows ending at byte 16,674,733, the file size; 1,249 of the 1,264 records with more than one pair are not sorted by distance -->
+
 `SettlementPositionScript.OnInit` decides how many caches to read:
 `GetMapIsNavalDLC() || (!GetMapIsSandBox() && ModuleHelper.IsModuleActive("NavalDLC"))`
 (`SandBox__SandBox.View.cs:17322`). Both flags are case-insensitive compares of the winning map

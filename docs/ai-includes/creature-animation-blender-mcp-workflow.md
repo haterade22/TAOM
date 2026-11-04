@@ -13,7 +13,7 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
 > **Hard boundary:** Blender → `.tpac` compile is **Modding-Kit-GUI-only**. This workflow produces
 > refined clips + **Kit-ready FBX**; it cannot compile or in-game-test them. Movement clips then MUST
 > be tagged `quad_movement` at Kit compile (see [`spider.md`](../features/spider.md) "How-to") or the
-> game AVs at `Skeleton.TickAnimations` ([[feedback-quad-movement-tag-required-for-gait-clips]]).
+> game AVs at `Skeleton.TickAnimations` ().
 
 ## 1. Environment & toolkit
 
@@ -24,6 +24,8 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
 > [`tools/tpac_clipinfo.py`](../../tools/tpac_clipinfo.py), and
 > [`tools/patch_quad_movement.py`](../../tools/patch_quad_movement.py). The `E:\LOTRAOMAssets\…`
 > paths cited below are the original authoring-workspace locations (kept for provenance) — prefer the repo copies.
+>
+> `creature_anim_ops.py` still has `primary_bone_axis='X'`; use `'Y'` per the export recipe.
 
 - **Blender 5.1.2** — the **slotted-action API**: `Action.fcurves` is GONE. Fcurves live under
   `action.layers[].strips[].channelbags[].fcurves`. Author keys via `pose_bone.keyframe_insert`
@@ -52,7 +54,7 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
   | `export_clip_fbx(name,out)` | Kit-ready armature-only FBX |
 - **Clip-range parser:** `tpac_clipinfo.py` reads per-clip `_anm.tpac` Source1/Source2 + flags
   (the upstream pack packs many gaits into one long source FBX; this recovers the per-clip frame ranges).
-- **quad_movement byte-graft patcher:** `_chariot_refine\patch_quad_movement.py` — parse-based; grafts
+- **quad_movement byte-graft patcher:** `tools/patch_quad_movement.py`, parse-based; grafts
   the `quad_movement` ClipUsages + step-points meta tail from a tagged donor clip onto an untagged
   movement clip, preserving the target's own head/timing (the offset-level recipe lives in
   [`spider.md`](../features/spider.md) "How-to"). `montage.ps1` is deprecated — use `harness.montage`.
@@ -64,7 +66,7 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
 
 - **In-place authoring.** Locomotion clips have **zero net root forward travel**; the engine supplies
   translation. Verify `analyze_gait → rootY_net ≈ 0`. Baked forward root motion double-speeds + slides.
-  ([[feedback-movement-anims-in-place-engine-driven]])
+  ()
 - **No foot float on amplitude edits.** Reducing a leg's swing toward its *mean* lifts the planted
   foot (floats). Always anchor reductions to the **planted-frame pose** weighted by foot height
   (`damp_leg_lift`) so stance frames are untouched.
@@ -113,8 +115,7 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
    BEFORE battle-testing, run `python tools/verify_mount_assets.py <creature>`. A Kit re-export can
    silently drop the **`<creature>_skeleton` resource** (mesh-only re-export → `CreateAgentSkeleton`
    null → RIDERLESS mount, no crash), drop **`quad_movement`** on a measured-gait clip (TickAnimations
-   AV), or orphan a **binding** — the gate catches all three. Full requirements + the four failure
-   modes: [`creature-mount-authoring.md`](./creature-mount-authoring.md) → "REPLACING FBX / TPAC
+   AV), or orphan a **binding**, the gate catches all three. Full requirements: [`creature-mount-authoring.md`](./creature-mount-authoring.md) → "REPLACING FBX / TPAC
    FILES". (spider rework 2026-06-13 shipped mesh-only → riderless until the audit caught it.)
 
 ## 4. Rider-animation system (how mounted riders work)
@@ -167,26 +168,6 @@ rider-animation system, and fixed the chariot's untagged gait clips. Companion t
    block pointing at the new `rider_<mount>_*` clips — and reference it from the mount's monster/action
    set (the warg's `action_sets_warg.xml` is the template).
 
-## 5. Results — how it turned out (2026-06-12/13)
-
-| Area | Status | Evidence |
-|---|---|---|
-| **Elephant locomotion** | **DONE** — 7 Kit-ready FBX (walk/run/trot/walk_backwards/turn_L/R/idle) | `E:\LOTRAOMAssets\Elephant\clips_refine_20260612\` + README_HANDOFF; export round-trip verified |
-| ↳ walk | pace → 4-beat lateral sequence; front lift 1.02→0.48 (grounded); in-place | `CMP_walk_src_vs_refined.png` |
-| ↳ run | upstream-pack diagonal trot → natural fast amble (lateral, no suspension) | metrics + strip |
-| **Spider idle** | **DONE** — walk-in-place bug → settled braced stance; perfect loop (0°), in-place, breathing | `_spider_refine\renders\STRIP_idleW_*` |
-| Spider walk/run | deferred (functions in-game; per-leg skew is a hard retarget issue) | `spi_*_src` kept |
-| **Rider system** | **mapped + composite technique established**; spider warg-reuse fit problem shown | viewport composite at spider `chest_m` |
-| Spider rider clips | **not authored** — clear path documented (§4a) | — |
-| Elephant rider clips | **not improved** — dedicated clips located; assess via composite next | — |
-| **Chariot gait clips** | **DONE** — 2 of 24 clips (`chariot_gait_walkfast`/`walkbackfast`) shipped without `quad_movement` (the doc falsely claimed all tagged); byte-grafted the tag + step points from tagged siblings, verified | `_chariot_refine\patch_quad_movement.py`; `*.bak-untagged` |
-| Chariot wheels / rider | already-fine, untouched | wheels rotate (720° baked spin); 5 rider clips + XSLT injection clean |
-
-**Net:** the *creature* side landed concretely (elephant locomotion shipped to FBX; spider idle fixed
-+ verified). The *rider* side is the larger remaining investment — fully understood, with a working
-verification method and a step-by-step authoring path, but the per-clip re-posing + binding is not
-done. Nothing here is Kit-compiled or in-game-tested (GUI-only).
-
 ## 6. Remaining work (clear next steps)
 1. Spider rider: fix composite facing → re-pose `idle/stand/walk/gallop/attack` for the `chest_m` seat
    → export `rider_spider_*` → author `act_spider_*` rider partial + rebind the spider off warg rows.
@@ -210,23 +191,21 @@ done. Nothing here is Kit-compiled or in-game-tested (GUI-only).
   [`tools/patch_quad_movement.py`](../../tools/patch_quad_movement.py) (quad_movement byte-graft patcher).
 - Work scenes: `elephant_refine_WORK_20260612.blend`, `spider_anim_WORK_20260612.blend`,
   rider composite WIP. Pristine backups in each `_backups\`.
-- Running log: `E:\LOTRAOMAssets\_anim_refine_NOTES_2026-06-12.md`. Memory:
-  `project-elephant-animation-refine-inflight`.
+- Running log: `E:\LOTRAOMAssets\_anim_refine_NOTES_2026-06-12.md`.
 
 ## 8. Lessons / pitfalls (transferable)
 
-Each links its backing memory; the session's meta-lesson is last.
+The session's meta-lesson is last.
 
 - **In-place authoring** — locomotion clips have zero net root forward travel; the engine translates.
-  Baked root motion double-speeds + slides. [[feedback-movement-anims-in-place-engine-driven]]
+  Baked root motion double-speeds + slides.
 - **`quad_movement` is mandatory on movement clips** — an untagged gait AVs at `Skeleton.TickAnimations`
   on the first mount tick in a *live mission* (never in preview/detached). Fix = the byte-graft (recipe
   in [`spider.md`](../features/spider.md) "How-to"; parse-based patcher in §1).
-  [[feedback-quad-movement-tag-required-for-gait-clips]]
 - **Blender 5.1.2 slotted-action API** — `Action.fcurves` is gone (layers/strips/channelbags; author via
   `pose_bone.keyframe_insert`); FBX I/O needs a VIEW_3D `temp_override`. The Kit-export recipe is fixed
   (armature-only, `primary_bone_axis=Y, forward=-Y, up=Z`, no leaf bones, baked, take = scene name,
-  armature `<skel>_notused`). [[feedback-blender-512-slotted-action-api]]
+  armature `<skel>_notused`).
 - **Phase is float-safe; amplitude is not** — re-phasing (`phase_shift_bones`) preserves each foot's
   trajectory; amplitude reductions must anchor to the planted-foot pose (`damp_leg_lift`) or the stance
   foot floats.
@@ -234,11 +213,11 @@ Each links its backing memory; the session's meta-lesson is last.
   in-place, loop seam) turns "looks off" into numbers; pair it with the render→montage→Read visual loop.
 - **Rider = the human skeleton, verified by compositing** — author rider poses on the 28-bone
   `human_skeleton`, parent to the mount's `rider_sit_bone`, and verify the *meshed* fit via
-  `orc_rider.fbx` (§4a). [[feedback-rider-animation-on-mount-composite-verify]]
+  `orc_rider.fbx` (§4a).
 - **META-LESSON — re-verify a port's documented completeness.** `chariot.md` *claimed* the upstream pack authored
   *all* clips with `quad_movement`; an independent `tpac_clipinfo` re-check found 2 gait clips were
   untagged. A port's own doc asserting a property holds for *all* elements is a CLAIM to verify against
-  the artifacts, not a fact. [[feedback-ported-data-upstream-bugs-vanilla-baseline]]
+  the artifacts, not a fact.
 - **Stale-tool watch** — `tools/blender/creature_anim_ops.py` still has `primary_bone_axis='X'`; audit a
   tool's defaults before reusing it.
 - **Never judge a direction from gameplay footage or a screenshot** (the Yotthani handoff (`docs/reviews/adopt-yotthani-animation-handoff-2026-09-18.md`)).

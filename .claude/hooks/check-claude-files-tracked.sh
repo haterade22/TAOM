@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # check-claude-files-tracked.sh
 # PreToolUse (Bash and PowerShell) hook: when `git commit` is about to run, check whether
-# any file under .claude/skills/, .claude/agents/, or .claude/rules/ exists
+# any file under .claude/skills/, .claude/agents/, .claude/rules/ or .claude/hooks/ exists
 # on disk but is gitignored. If so, refuse to commit — the file would silently
 # not be shipped, defeating its purpose.
 #
@@ -60,29 +60,26 @@ esac
 COMMIT_REPO=$(taom_git_repo_dir commit) || { taom_deny_multi_repo check-claude-files-tracked; exit 0; }
 cd "$COMMIT_REPO" 2>/dev/null || { echo '{}'; exit 0; }
 
-# Two bulk queries answer for every protected file at once. Until #647 this asked git two or
+# One bulk query answers for every protected file at once. Until #647 this asked git two or
 # three times per file (about 200 files), took 6 s against its 5 s registration, and the
 # harness killed it on every commit, which reads as a pass (Codex review 2026-09-23).
 #   --others --ignored --exclude-standard: untracked AND gitignored (a tracked file is never
-#     "ignored"), so it will not commit;
-#   --others --exclude-standard: untracked and not ignored, i.e. created and never staged (a
-#     staged new file is in the index and is not listed).
-# Bounded under the registered 5 s, and an overrun asks rather than passing in silence.
+#     "ignored"), so it will not commit.
+# A file that is untracked and not ignored is not asked about: `git add x && git commit` runs this
+# hook before the add, so an unstaged new file is normal at this point.
+# Bounded at 3 s inside the hook, and an overrun asks rather than passing in silence.
 DIRS=(.claude/skills .claude/agents .claude/rules .claude/hooks)
 IGNORED=$(timeout -k 1 3 git ls-files --others --ignored --exclude-standard -- "${DIRS[@]}" 2>/dev/null)
 RC1=$?
-UNTRACKED=$(timeout -k 1 3 git ls-files --others --exclude-standard -- "${DIRS[@]}" 2>/dev/null)
-RC2=$?
-if [[ $RC1 -eq 124 || $RC2 -eq 124 ]]; then
-    printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"[check-claude-files-tracked] git ls-files overran its 3 s budget, so this commit is UNCHECKED for untracked or gitignored files under .claude/. This is NOT a pass. Run: git ls-files --others -- .claude/skills .claude/agents .claude/rules .claude/hooks"}}'
+if [[ $RC1 -eq 124 ]]; then
+    printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"[check-claude-files-tracked] git ls-files overran its 3 s budget, so this commit is UNCHECKED for gitignored files under .claude/. This is NOT a pass. Run: git ls-files --others --ignored --exclude-standard -- .claude/skills .claude/agents .claude/rules .claude/hooks"}}'
     exit 0
 fi
 
 # The kinds of file the harness ships; js covers the /improve Workflow scripts
-# (.claude/skills/improve/workflows), which an untracked copy would silently leave behind.
+# (.claude/skills/improve/workflows), which an ignored copy would silently leave behind.
 PROBLEMS=$(
     { printf '%s\n' "$IGNORED" | sed '/^$/d; s/$/ (gitignored: will not commit)/'
-      printf '%s\n' "$UNTRACKED" | sed '/^$/d; s/$/ (untracked and unstaged)/'
     } | grep -E '\.(md|sh|py|js|json|ya?ml) \(' | sed 's/^/  - /'
 )
 
@@ -94,7 +91,7 @@ fi
 MSG="[check-claude-files-tracked] These files exist under .claude/ in $(pwd) but will NOT be committed:
 ${PROBLEMS}
 
-A gitignored file silently breaks any skill or hook that depends on it (the original /freeze regression: bin/check-freeze.sh excluded by .gitignore's bin/ pattern). Either: (a) move the file out of the gitignored path with a descriptive directory name, (b) git add the untracked file, or (c) explicitly delete it if it's not meant to ship."
+A gitignored file silently breaks any skill or hook that depends on it (the original /freeze regression: bin/check-freeze.sh excluded by .gitignore's bin/ pattern). Either: (a) move the file out of the gitignored path with a descriptive directory name, (b) force-add it with git add -f if the ignore rule is wrong for it, or (c) explicitly delete it if it's not meant to ship."
 
 # JSON-encode the reason as a whole (paths may hold quotes, backslashes or newlines).
 REASON_JSON=$(printf '%s' "$MSG" | "$PYBIN" -c 'import sys, json; sys.stdout.write(json.dumps(sys.stdin.read()))' 2>/dev/null)

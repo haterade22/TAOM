@@ -44,12 +44,13 @@ troop's own Bow/Crossbow skill comes from the same cell. A raw bow on a troop br
    `upgrade_targets` and keep the entry in the file; rename display names only. Why: a save holding
    a deleted troop keeps a hollow character that engine daily ticks read (#670). Two KEYforce drops
    deleted troops (`gondor_ring_peasant`, then 25 Harad troops) and Mike had to accept saves breaking.
+   Gate: `TROOP_ID_REMOVED` (`tools/shipped_troop_ids.txt`).
 3. **Fill each armour slot in every battle set of a troop, or in none.** The engine draws each slot
    from an independently chosen set, so a slot filled in one set and empty in another ships
    combinations nobody authored (`INCONSISTENT_ARMOUR_SLOT`). The same goes for weapons: if any
    battle set has a bow in a slot, every battle set has a bow in that slot, with arrows at one fixed
-   slot index. Keep at least one weapon in the same slot in every set. Pair `Horse` and
-   `HorseHarness` consistently.
+   slot index. Keep at least one weapon in the same slot in every set
+   (`INCONSISTENT_WEAPON_SLOT`). Pair `Horse` and `HorseHarness` consistently.
 4. **Troop bows and crossbows must be ladder cells.** Put `ladder_<line>_<bow|xbow>_t<tier>` for the
    troop's line and engine tier, never a raw bow, and never hand-set Bow/Crossbow skill. Why: your
    Harad longbows (`hr_st_longbow_light/med/heavy`) out-shot the tier-7 Serpent marksman on lower
@@ -147,30 +148,23 @@ given `--report -`.
 
 ## 5. Checks to run before every commit
 
-TAOM's commit hooks and gates run only inside TAOM's own Claude Code setup, and its CI was removed on
-2026-10-05. A plain `git commit` from your tools runs none of them, and a Harad tree replacement plus the next
-commit reached trunk with red gates for five days. Run these yourself, from the TAOM repo root, with the game
-install present. A check that prints SKIPPED has not passed.
+TAOM's CI was removed on 2026-10-05. The repo's git hooks (`.githooks/commit-msg`, `pre-commit` and
+`pre-merge-commit`) run on a plain `git commit` once the clone sets `git config core.hooksPath .githooks`; set
+it once per clone. Without it nothing runs on your commit, and a Harad tree replacement plus the next commit
+reached trunk with red gates for five days. The hooks run a subset, so run these yourself too, from the TAOM
+repo root, with the game install present. A check that prints SKIPPED has not passed; the script reports it as NOT RUN.
 
 ```
-python tools/validate_moduledata.py                 # read the warnings as well as the errors
-python tools/generate_career_kits.py --verify
-python tools/generate_name_localization_strings.py --check
-python tools/generate_armour_classes.py --check     # exit 1 stale, 2 no Armory; fix with --apply
-python tools/audit_polearm_shield_parity.py
-python tools/generate_ranged_ladder_items.py --verify
-python tools/restat_ranged_donors.py --verify
-python tools/generate_starter_kit.py --verify
-python tools/audit_armory_refs.py --report -         # meshes, collision bodies, dead item ids
-python tools/check_rdc_entries.py                    # a listed package needs a Modding Kit save
-python tools/register_armory_names.py --check        # first: new {=KEY} names need a Languages row; fix with --apply --prefix <your ids>
-python tools/check_external_loc_coverage.py          # then, after any name or language edit
-# --apply raises the untranslated count by N rows per language: run its --update-baseline in the same
-# change. Translating those rows is a separate paid run.
-python tools/check_generator_item_refs.py
-python tools/validate_xml_schemas.py <files you touched>
-python tools/check_external_xslt.py                  # after any XSLT edit
+python tools/data_gates.py --all
 ```
+
+It prints PASS, FAIL or NOT RUN for each gate, and the dotnet rows print NOT RUN with their command (ask Mike for those, below). It covers what this list held before: `validate_moduledata.py` (read the warnings as well as the errors), the career-kit, name-localization, armour-class, ranged-ladder-item, donor and starter-kit generator checks, `audit_polearm_shield_parity.py`, `audit_armory_refs.py --report -` (meshes, collision bodies, dead item ids), `check_rdc_entries.py` (a listed package needs a Modding Kit save), `register_armory_names.py --check`, `check_external_loc_coverage.py`, `check_generator_item_refs.py`, `validate_xml_schemas.py` and `check_external_xslt.py`. A plain `python tools/data_gates.py` runs only the gates for the files git shows as changed; name a live Armory file you edited on its command line.
+
+Order and baselines:
+
+- `register_armory_names.py --check` comes first: new `{=KEY}` names need a Languages row; fix with `--apply --prefix <your ids>`.
+- `check_external_loc_coverage.py` comes after any name or language edit. `--apply` raises the untranslated count by N rows per language: run its `--update-baseline` in the same change. Translating those rows is a separate paid run.
+- `generate_armour_classes.py --check` exits 1 when stale and 2 with no Armory; fix a stale one with `--apply`.
 
 `generate_ranged_ladder_items.py --verify` and `generate_starter_kit.py --verify` check the live Armory
 only. `restat_ranged_donors.py --verify` also checks the lotraom-assets mirror; drift reported only in its
@@ -179,10 +173,11 @@ only. `restat_ranged_donors.py --verify` also checks the lotraom-assets mirror; 
 
 Warnings to treat as blocking for your change: `RANGED_LADDER_INVERSION`, `RANGED_DAMAGE_CEILING`,
 `MELEE_LADDER_INVERSION`, `ARMOUR_MESH_TIER_LADDER`, `UPGRADE_ARMOUR_REGRESSION`,
-`CROSS_CULTURE_ARMOUR_INVERSION`, `ARMOUR_CLASS_TABLE_DRIFT`, `INCONSISTENT_ARMOUR_SLOT`. Compare the
+`CROSS_CULTURE_ARMOUR_INVERSION`, `ARMOUR_CLASS_TABLE_DRIFT`, `INCONSISTENT_ARMOUR_SLOT`,
+`INCONSISTENT_WEAPON_SLOT`. Compare the
 warning list before and after your edit; a new one is yours to fix or to report.
 
-The C# test suite (`dotnet test TAOM.Tests`) also reads troop and kit data (pools, enlistment kits,
+The C# test suite (`dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId=`) also reads troop and kit data (pools, enlistment kits,
 shipped-data coverage). If your change touches troops, ask Mike to run it; a tree replacement left six
 of its tests red.
 

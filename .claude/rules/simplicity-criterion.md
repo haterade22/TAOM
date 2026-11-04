@@ -1,7 +1,3 @@
----
-description: Keep-or-reject matrix for a change. A tiny gain with added complexity is rejected; a deletion that holds parity always wins.
----
-
 # The simplicity criterion
 
 Judge a change on two axes at once: how much it helps, and how much complexity it adds.
@@ -17,6 +13,3 @@ Judge a change on two axes at once: how much it helps, and how much complexity i
 
 To apply it, to your own change or inside a review: state the win in one sentence, state the cost in
 one sentence, match the table. A **Reject** does not ship, however correct or idiomatic.
-
-This asks whether code is redundant. `/improve`'s deletion test asks a different question (is an
-abstraction shallow?); don't conflate them.

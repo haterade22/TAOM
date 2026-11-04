@@ -10,6 +10,7 @@ skill requirement a new character cannot meet, an uruk career dressed in orc arm
 kingdom's uruk line), a ranged career handed a bow it does not use, a hero's or a civilian set's
 item counted as troop gear, and a rewrite that touches the mounts or the file's line endings.
 """
+import io
 import os
 import sys
 import tempfile
@@ -357,6 +358,29 @@ class TestMain(unittest.TestCase):
                         mock.patch("builtins.print") as printed:
                     self.assertEqual(ck.main(), 2)
                     self.assertTrue(any(c.args and c.args[0] == "ERROR:" for c in printed.call_args_list))
+
+
+class TestEntry(unittest.TestCase):
+    """Python exits 1 for an uncaught exception, the code --verify uses for real drift."""
+
+    def test_a_crash_exits_3_with_the_traceback_on_stderr(self):
+        for argv in (["generate_career_kits.py"], ["generate_career_kits.py", "--verify"]):
+            err = io.StringIO()
+            with self.subTest(argv=argv), mock.patch.object(sys, "argv", argv), \
+                    mock.patch.object(ck, "load_sources", side_effect=RuntimeError("boom")), \
+                    mock.patch.object(sys, "stderr", err):
+                self.assertEqual(ck.entry(), 3)
+            self.assertIn("RuntimeError: boom", err.getvalue())
+
+    def test_real_drift_under_verify_still_exits_1(self):
+        with mock.patch.object(sys, "argv", ["generate_career_kits.py", "--verify"]), \
+                mock.patch.object(ck, "load_sources", return_value=mock.Mock(failures=[])), \
+                mock.patch.object(ck, "derive_kits", return_value={}), \
+                mock.patch.object(ck.gk, "read_xml", return_value=("", False)), \
+                mock.patch.object(ck, "apply_kits", return_value=("", 0)), \
+                mock.patch.object(ck, "verify", return_value=["x Item0: file a, rule b"]), \
+                mock.patch("builtins.print"):
+            self.assertEqual(ck.entry(), 1)
 
 
 class TestEredLuinCareerRosters(unittest.TestCase):
