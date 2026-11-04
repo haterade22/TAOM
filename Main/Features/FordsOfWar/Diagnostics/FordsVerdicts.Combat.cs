@@ -15,7 +15,7 @@ internal static partial class FordsVerdicts
     {
         var rows = run.Lanes.Where(l => AttackOrders(l) > 0).Select(l => "ladder " + StreamName(l) + ">" + (l.AttackTarget ?? "-") + " orders=" + AttackOrders(l)
             + " underS=" + N(l.AttackUnitSeconds) + " flaggedS=" + N(l.AttackFlaggedUnitSeconds) + " contactS=" + N(l.AttackContactUnitSeconds)
-            + " towerBlows=" + l.TowerBlows + " gunnerBlows=" + l.GunnerBlows + " applied=" + l.AppliedBlows).ToList();
+            + " towerBlows=" + l.TowerBlows + " melee=" + l.MeleeTowerBlows + " gunnerBlows=" + l.GunnerBlows + " applied=" + l.AppliedBlows).ToList();
         return rows.Count == 0 ? "ladder -" : string.Join(" ; ", rows);
     }
 

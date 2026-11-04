@@ -12,6 +12,21 @@ public class AiCommanderTests
 {
     private static readonly FordsAiProfile Hard = new("hard", 5f, 1.2f, 0f, 400);
 
+    [TestMethod]
+    public void IsDue_IsFalseBeforeTheInterval_TrueAtIt_AndFalseAgainAfterADecision()
+    {
+        var ai = Ai();
+        Assert.IsFalse(ai.IsDue(4.9f));
+        Assert.IsTrue(ai.IsDue(5f));
+
+        ai.Decide(FordsMatchViewForIsDue(), 5f);
+
+        Assert.IsFalse(ai.IsDue(9f));
+        Assert.IsTrue(ai.IsDue(10f));
+    }
+
+    private static MatchView FordsMatchViewForIsDue() => FordsMatchFixture.Create().GetView(FordsMatchFixture.EastSlot);
+
     private static AiCommander Ai(FordsAiProfile? profile = null, int seed = 3) =>
         new(EastSlot, profile ?? Hard, new SeededFordsRandom(seed));
 

@@ -128,11 +128,12 @@ public class FordsVerdictDiagnosticsTests
         west1.TowerBlows = 15;
         west1.AppliedBlows = 12;
         west1.GunnerBlows = 4;
+        west1.MeleeTowerBlows = 9;
         run.Lanes[0].AttackUnitSeconds = 50.0;
 
         var info = Row(run, 9).Info;
 
-        StringAssert.Contains(info, "ladder W1>tower_east_1_0 orders=2 underS=120.0 flaggedS=100.0 contactS=40.5 towerBlows=15 gunnerBlows=4 applied=12");
+        StringAssert.Contains(info, "ladder W1>tower_east_1_0 orders=2 underS=120.0 flaggedS=100.0 contactS=40.5 towerBlows=15 melee=9 gunnerBlows=4 applied=12");
         Assert.IsFalse(info.Contains("W0>"), "a stream that was never ordered at a tower has no ladder row");
     }
 

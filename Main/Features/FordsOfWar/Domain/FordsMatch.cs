@@ -568,6 +568,9 @@ internal sealed partial class FordsMatch
     {
         foreach (var (slot, ai) in _ais)
         {
+            if (!ai.IsDue(_clock.Elapsed))
+                continue;
+
             foreach (var action in ai.Decide(GetView(slot), _clock.Elapsed))
                 Apply(slot, action);
         }

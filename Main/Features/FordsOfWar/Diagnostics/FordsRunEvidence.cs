@@ -139,6 +139,7 @@ internal sealed class FordsLaneEvidence
     public double AttackFlaggedUnitSeconds;
     public double AttackContactUnitSeconds;
     public long TowerBlows;
+    public long MeleeTowerBlows;
     public long AppliedBlows;
     public long GunnerBlows;
 

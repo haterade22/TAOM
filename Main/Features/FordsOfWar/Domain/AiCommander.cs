@@ -46,6 +46,9 @@ internal sealed class AiCommander
 
     public int Slot { get; }
 
+    /// <summary>Whether <see cref="Decide"/> would act now: building its view costs lists on every frame, and it acts every few seconds.</summary>
+    public bool IsDue(float now) => now >= _nextDecisionAt;
+
     public IReadOnlyList<AiAction> Decide(MatchView view, float now)
     {
         var actions = new List<AiAction>();
