@@ -116,6 +116,19 @@ class Machinery(unittest.TestCase):
             with self.subTest(career=row[2]):
                 self.assertEqual(effects.findall(built), effects.findall(source))
 
+    def test_a_clone_shows_its_sources_ability_icon(self):
+        for row in eredluin_rows():
+            career = ic.build("eredluin", *row, *self.files)[0]
+            with self.subTest(career=row[2]):
+                self.assertIn(f'ability_sprite="{row[0]}_ability"', career)
+
+    def test_a_clone_of_a_clone_keeps_the_original_sources_ability_icon(self):
+        # Blue Craig clones Goblin-town's Troll-Driver, which already shows Gundabad's icon.
+        row = next(r for r in ic.targets_for("bluecraig") if r[0] == "goblin_troll_driver")
+        career = ic.build("bluecraig", *row, *self.files)[0]
+        self.assertEqual(career.count("ability_sprite="), 1)
+        self.assertIn('ability_sprite="cave_troll_master_ability"', career)
+
     def test_generated_ered_luin_text_has_no_em_or_en_dash(self):
         for row in eredluin_rows():
             out = "\n".join(ic.build("eredluin", *row, *self.files))

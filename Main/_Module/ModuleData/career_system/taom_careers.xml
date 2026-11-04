@@ -1138,6 +1138,7 @@
           description="{=taom_career_goblin_troll_driver_desc}A brutal orc chieftain of Goblin-town who commands cave trolls in battle, driving them forward with whip and cunning."
           portrait_sprite="career_cave_troll_master_portrait"
           ability_template_id="goblin_troll_driver_ability"
+          ability_sprite="cave_troll_master_ability"
           min_clan_tier="0"
           root_choice_id="goblin_troll_driver_root"
           keystone_icon="22000">
@@ -1159,6 +1160,7 @@
           description="{=taom_career_goblin_tunnel_stalker_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows."
           portrait_sprite="career_goblin_sniper_portrait"
           ability_template_id="goblin_tunnel_stalker_ability"
+          ability_sprite="goblin_sniper_ability"
           min_clan_tier="0"
           root_choice_id="goblin_tunnel_stalker_root"
           keystone_icon="22001">
@@ -1180,6 +1182,7 @@
           description="{=taom_career_goblin_warg_master_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Misty Mountains."
           portrait_sprite="career_warg_pack_leader_portrait"
           ability_template_id="goblin_warg_master_ability"
+          ability_sprite="warg_pack_leader_ability"
           min_clan_tier="0"
           root_choice_id="goblin_warg_master_root"
           keystone_icon="22002">
@@ -1201,6 +1204,7 @@
           description="{=taom_career_misty_troll_goad_desc}A brutal orc chieftain of Moria who commands cave trolls in battle, driving them forward with whip and cunning."
           portrait_sprite="career_cave_troll_master_portrait"
           ability_template_id="misty_troll_goad_ability"
+          ability_sprite="cave_troll_master_ability"
           min_clan_tier="0"
           root_choice_id="misty_troll_goad_root"
           keystone_icon="22000">
@@ -1222,6 +1226,7 @@
           description="{=taom_career_misty_deep_marksman_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows."
           portrait_sprite="career_goblin_sniper_portrait"
           ability_template_id="misty_deep_marksman_ability"
+          ability_sprite="goblin_sniper_ability"
           min_clan_tier="0"
           root_choice_id="misty_deep_marksman_root"
           keystone_icon="22001">
@@ -1243,6 +1248,7 @@
           description="{=taom_career_misty_warg_chieftain_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Misty Mountains."
           portrait_sprite="career_warg_pack_leader_portrait"
           ability_template_id="misty_warg_chieftain_ability"
+          ability_sprite="warg_pack_leader_ability"
           min_clan_tier="0"
           root_choice_id="misty_warg_chieftain_root"
           keystone_icon="22002">
@@ -1264,6 +1270,7 @@
           description="{=taom_career_craig_pit_driver_desc}A brutal orc chieftain of Blue Craig who commands cave trolls in battle, driving them forward with whip and cunning."
           portrait_sprite="career_cave_troll_master_portrait"
           ability_template_id="craig_pit_driver_ability"
+          ability_sprite="cave_troll_master_ability"
           min_clan_tier="0"
           root_choice_id="craig_pit_driver_root"
           keystone_icon="22000">
@@ -1285,6 +1292,7 @@
           description="{=taom_career_craig_crag_stalker_desc}A spiteful goblin marksman who lurks in the mountain crags, picking off targets with poisoned darts and crude bows."
           portrait_sprite="career_goblin_sniper_portrait"
           ability_template_id="craig_crag_stalker_ability"
+          ability_sprite="goblin_sniper_ability"
           min_clan_tier="0"
           root_choice_id="craig_crag_stalker_root"
           keystone_icon="22001">
@@ -1306,6 +1314,7 @@
           description="{=taom_career_craig_warg_master_desc}A feared orc alpha who rides the largest warg of the pack, leading savage hunts through the Ered Luin."
           portrait_sprite="career_warg_pack_leader_portrait"
           ability_template_id="craig_warg_master_ability"
+          ability_sprite="warg_pack_leader_ability"
           min_clan_tier="0"
           root_choice_id="craig_warg_master_root"
           keystone_icon="22002">
@@ -1327,6 +1336,7 @@
           description="{=taom_career_falathrim_blade_dancer_desc}A graceful elven warrior who weaves through battle like flowing water, striking with ancient blades forged in the First Age."
           portrait_sprite="career_blade_dancer_portrait"
           ability_template_id="falathrim_blade_dancer_ability"
+          ability_sprite="blade_dancer_ability"
           min_clan_tier="0"
           root_choice_id="falathrim_blade_dancer_root"
           keystone_icon="15000">
@@ -1348,6 +1358,7 @@
           description="{=taom_career_falathrim_sentinel_desc}A peerless marksman of Mithlond whose arrows fly true across vast distances, guided by centuries of practice."
           portrait_sprite="career_elven_archer_portrait"
           ability_template_id="falathrim_sentinel_ability"
+          ability_sprite="elven_archer_ability"
           min_clan_tier="0"
           root_choice_id="falathrim_sentinel_root"
           keystone_icon="15001">
@@ -1369,6 +1380,7 @@
           description="{=taom_career_falathrim_mariner_desc}A mounted warrior of Cirdan's household who rides to war on swift elven steeds, a beacon of hope against the shadow."
           portrait_sprite="career_rivendell_knight_portrait"
           ability_template_id="falathrim_mariner_ability"
+          ability_sprite="rivendell_knight_ability"
           min_clan_tier="0"
           root_choice_id="falathrim_mariner_root"
           keystone_icon="15002">
@@ -1390,6 +1402,7 @@
           description="{=taom_career_shaghana_zajana_tribesman_desc}A warrior of the Zajâna desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades."
           portrait_sprite="career_tribesman_of_jelut_portrait"
           ability_template_id="shaghana_zajana_tribesman_ability"
+          ability_sprite="tribesman_of_jelut_ability"
           min_clan_tier="0"
           root_choice_id="shaghana_zajana_tribesman_root"
           keystone_icon="13000">
@@ -1411,6 +1424,7 @@
           description="{=taom_career_shaghana_chatak_javelineer_desc}A fast-moving skirmisher of Chatâk who screens cavalry with a hail of javelins before withdrawing beyond reach of retaliation."
           portrait_sprite="career_pezarsani_javelineer_portrait"
           ability_template_id="shaghana_chatak_javelineer_ability"
+          ability_sprite="pezarsani_javelineer_ability"
           min_clan_tier="0"
           root_choice_id="shaghana_chatak_javelineer_root"
           keystone_icon="13001">
@@ -1432,6 +1446,7 @@
           description="{=taom_career_shaghana_beast_rider_desc}A fearsome rider of the Far Harad who drives great beasts into the enemy, breaking lines with shock and primal terror."
           portrait_sprite="career_mahud_beast_rider_portrait"
           ability_template_id="shaghana_beast_rider_ability"
+          ability_sprite="mahud_beast_rider_ability"
           min_clan_tier="0"
           root_choice_id="shaghana_beast_rider_root"
           keystone_icon="25015">
@@ -1453,6 +1468,7 @@
           description="{=taom_career_abanissa_house_guard_desc}A warrior of the Damudûr desert tribes whose attrition-warfare tactics grind enemies down with relentless pressure and poisoned blades."
           portrait_sprite="career_tribesman_of_jelut_portrait"
           ability_template_id="abanissa_house_guard_ability"
+          ability_sprite="tribesman_of_jelut_ability"
           min_clan_tier="0"
           root_choice_id="abanissa_house_guard_root"
           keystone_icon="13000">
@@ -1474,6 +1490,7 @@
           description="{=taom_career_abanissa_jiret_javelineer_desc}A fast-moving skirmisher of Jîret who screens cavalry with a hail of javelins before withdrawing beyond reach of retaliation."
           portrait_sprite="career_pezarsani_javelineer_portrait"
           ability_template_id="abanissa_jiret_javelineer_ability"
+          ability_sprite="pezarsani_javelineer_ability"
           min_clan_tier="0"
           root_choice_id="abanissa_jiret_javelineer_root"
           keystone_icon="13001">
@@ -1495,6 +1512,7 @@
           description="{=taom_career_abanissa_ivory_rider_desc}A fearsome rider of the Far Harad who drives great beasts into the enemy, breaking lines with shock and primal terror."
           portrait_sprite="career_mahud_beast_rider_portrait"
           ability_template_id="abanissa_ivory_rider_ability"
+          ability_sprite="mahud_beast_rider_ability"
           min_clan_tier="0"
           root_choice_id="abanissa_ivory_rider_root"
           keystone_icon="25015">
@@ -1516,6 +1534,7 @@
           description="{=taom_career_ranger_of_the_north_desc}An elite scout who strikes from the wilds of Eriador, ambushing the servants of Angmar with deadly precision."
           portrait_sprite="career_ranger_of_ithilien_portrait"
           ability_template_id="ranger_of_the_north_ability"
+          ability_sprite="ranger_of_ithilien_ability"
           min_clan_tier="0"
           root_choice_id="ranger_of_the_north_root"
           keystone_icon="10003">
@@ -1537,6 +1556,7 @@
           description="{=taom_career_warden_of_fornost_desc}A battle-hardened infantry officer who holds the walls of Fornost against the hosts of Angmar, forging order from chaos when the North Downs burn. The Warden holds the line where others would break, rallying soldiers through sheer force of will."
           portrait_sprite="career_captain_of_osgiliath_portrait"
           ability_template_id="warden_of_fornost_ability"
+          ability_sprite="captain_of_osgiliath_ability"
           min_clan_tier="0"
           root_choice_id="warden_of_fornost_root"
           keystone_icon="10004">
@@ -1558,6 +1578,7 @@
           description="{=taom_career_knight_of_arthedain_desc}An armored champion of the North-kingdom, whose thundering charge has broken countless enemy formations. The Knight of Arthedain combines Arthedain discipline with Fornost's proud cavalry tradition, becoming an immovable wall of steel."
           portrait_sprite="career_knight_of_belfalas_portrait"
           ability_template_id="knight_of_arthedain_ability"
+          ability_sprite="knight_of_belfalas_ability"
           min_clan_tier="0"
           root_choice_id="knight_of_arthedain_root"
           keystone_icon="10005">
@@ -1579,6 +1600,7 @@
           description="{=taom_career_bowman_of_minhiriath_desc}An elite scout who strikes from the river country of Minhiriath, ambushing raiders from Dunland with deadly precision."
           portrait_sprite="career_ranger_of_ithilien_portrait"
           ability_template_id="bowman_of_minhiriath_ability"
+          ability_sprite="ranger_of_ithilien_ability"
           min_clan_tier="0"
           root_choice_id="bowman_of_minhiriath_root"
           keystone_icon="10003">
@@ -1600,6 +1622,7 @@
           description="{=taom_career_warden_of_tyrn_gorthad_desc}A battle-hardened infantry officer who keeps the barrows of Tyrn Gorthad and the walls of Caras Gorthad, forging order from chaos when the downs burn. The Warden holds the line where others would break, rallying soldiers through sheer force of will."
           portrait_sprite="career_captain_of_osgiliath_portrait"
           ability_template_id="warden_of_tyrn_gorthad_ability"
+          ability_sprite="captain_of_osgiliath_ability"
           min_clan_tier="0"
           root_choice_id="warden_of_tyrn_gorthad_root"
           keystone_icon="10004">
@@ -1621,6 +1644,7 @@
           description="{=taom_career_knight_of_cardolan_desc}An armored champion of the southern kingdom, whose thundering charge has broken countless enemy formations. The Knight of Cardolan combines Cardolan discipline with Caras Gorthad's proud cavalry tradition, becoming an immovable wall of steel."
           portrait_sprite="career_knight_of_belfalas_portrait"
           ability_template_id="knight_of_cardolan_ability"
+          ability_sprite="knight_of_belfalas_ability"
           min_clan_tier="0"
           root_choice_id="knight_of_cardolan_root"
           keystone_icon="10005">
@@ -1642,6 +1666,7 @@
           description="{=taom_career_ranger_of_the_angle_desc}An elite scout who strikes from the fells of the Angle, ambushing orcs and trolls from the mountains with deadly precision."
           portrait_sprite="career_ranger_of_ithilien_portrait"
           ability_template_id="ranger_of_the_angle_ability"
+          ability_sprite="ranger_of_ithilien_ability"
           min_clan_tier="0"
           root_choice_id="ranger_of_the_angle_root"
           keystone_icon="10003">
@@ -1663,6 +1688,7 @@
           description="{=taom_career_captain_of_cameth_brin_desc}A battle-hardened infantry officer who holds the tower of Cameth Brin against the mountains, forging order from chaos when the fells burn. The Captain holds the line where others would break, rallying soldiers through sheer force of will."
           portrait_sprite="career_captain_of_osgiliath_portrait"
           ability_template_id="captain_of_cameth_brin_ability"
+          ability_sprite="captain_of_osgiliath_ability"
           min_clan_tier="0"
           root_choice_id="captain_of_cameth_brin_root"
           keystone_icon="10004">
@@ -1684,6 +1710,7 @@
           description="{=taom_career_rider_of_the_fells_desc}An armored champion of the hill kingdom, whose thundering charge has broken countless enemy formations. The Rider of the Fells combines Rhudaur discipline with Cameth Brin's proud cavalry tradition, becoming an immovable wall of steel."
           portrait_sprite="career_knight_of_belfalas_portrait"
           ability_template_id="rider_of_the_fells_ability"
+          ability_sprite="knight_of_belfalas_ability"
           min_clan_tier="0"
           root_choice_id="rider_of_the_fells_root"
           keystone_icon="10005">
@@ -1705,6 +1732,7 @@
           description="{=taom_career_warden_of_thorins_halls_desc}An elite dwarven warrior in heavy mail of Blue Mountain iron who holds the gates of Thorin's Halls against goblin and orc alike."
           portrait_sprite="career_ironguard_portrait"
           ability_template_id="warden_of_thorins_halls_ability"
+          ability_sprite="ironguard_ability"
           min_clan_tier="0"
           root_choice_id="warden_of_thorins_halls_root"
           keystone_icon="24019">
@@ -1726,6 +1754,7 @@
           description="{=taom_career_hewer_of_belegost_desc}A Broadbeam hewer of Belegost who swings a great mattock in both hands, breaking shields and the orcs behind them."
           portrait_sprite="career_ironguard_portrait"
           ability_template_id="hewer_of_belegost_ability"
+          ability_sprite="ironguard_ability"
           min_clan_tier="0"
           root_choice_id="hewer_of_belegost_root"
           keystone_icon="24019">
@@ -1747,6 +1776,7 @@
           description="{=taom_career_nogrod_arbalester_desc}A Firebeard engineer-warrior of Nogrod who wields masterwork crossbows of great stopping power, each bolt forged in the furnaces of the Blue Mountains."
           portrait_sprite="career_crossbow_master_portrait"
           ability_template_id="nogrod_arbalester_ability"
+          ability_sprite="crossbow_master_ability"
           min_clan_tier="0"
           root_choice_id="nogrod_arbalester_root"
           keystone_icon="24020">
@@ -1768,6 +1798,7 @@
           description="{=taom_career_axe_warden_of_beorns_hall_desc}A broad-shouldered axeman of the House of Beorn who holds the fords and passes of the Vales against goblin and wolf alike."
           portrait_sprite="career_dale_guardsman_portrait"
           ability_template_id="axe_warden_of_beorns_hall_ability"
+          ability_sprite="dale_guardsman_ability"
           min_clan_tier="0"
           root_choice_id="axe_warden_of_beorns_hall_root"
           keystone_icon="27000">
@@ -1789,6 +1820,7 @@
           description="{=taom_career_archer_of_eastbank_desc}A Woodman bowman of the Vales who shoots from the eaves of Mirkwood and the banks of the Gladden, carrying on a tradition of unerring marksmanship."
           portrait_sprite="career_dale_marksman_portrait"
           ability_template_id="archer_of_eastbank_ability"
+          ability_sprite="dale_marksman_ability"
           min_clan_tier="0"
           root_choice_id="archer_of_eastbank_root"
           keystone_icon="27001">
@@ -1810,6 +1842,7 @@
           description="{=taom_career_rider_of_the_vales_desc}A mounted patrol of the Vales who rides the Old Ford road and the foot of the Misty Mountains, safeguarding farms and caravans from goblin raiders."
           portrait_sprite="career_dale_outrider_portrait"
           ability_template_id="rider_of_the_vales_ability"
+          ability_sprite="dale_outrider_ability"
           min_clan_tier="0"
           root_choice_id="rider_of_the_vales_root"
           keystone_icon="27500">
@@ -1831,6 +1864,7 @@
           description="{=taom_career_warden_of_the_forest_gate_desc}A stalwart guardian of the Forest Gate who holds the narrow way under the trees against orc, wolf and spider with shield and spear."
           portrait_sprite="career_dale_guardsman_portrait"
           ability_template_id="warden_of_the_forest_gate_ability"
+          ability_sprite="dale_guardsman_ability"
           min_clan_tier="0"
           root_choice_id="warden_of_the_forest_gate_root"
           keystone_icon="27000">
@@ -1852,6 +1886,7 @@
           description="{=taom_career_hewer_of_ironwood_hall_desc}An Ironwood hewer of Angáladh who swings a great axe in both hands, splitting shields and the orcs behind them."
           portrait_sprite="career_dale_guardsman_portrait"
           ability_template_id="hewer_of_ironwood_hall_ability"
+          ability_sprite="dale_guardsman_ability"
           min_clan_tier="0"
           root_choice_id="hewer_of_ironwood_hall_root"
           keystone_icon="27000">
@@ -1873,6 +1908,7 @@
           description="{=taom_career_woodward_of_the_forest_road_desc}A woodward bowman of western Mirkwood who shoots from the platforms of the Forest Gate and the trees of the road, carrying on a tradition of unerring marksmanship."
           portrait_sprite="career_dale_marksman_portrait"
           ability_template_id="woodward_of_the_forest_road_ability"
+          ability_sprite="dale_marksman_ability"
           min_clan_tier="0"
           root_choice_id="woodward_of_the_forest_road_root"
           keystone_icon="27001">
@@ -1894,6 +1930,7 @@
           description="{=taom_career_spear_warden_of_vinewatch_desc}A stalwart guardian of Vinewatch who holds the vineyard roads and the walls above the Redwater against raiders and bandits with shield and spear."
           portrait_sprite="career_dale_guardsman_portrait"
           ability_template_id="spear_warden_of_vinewatch_ability"
+          ability_sprite="dale_guardsman_ability"
           min_clan_tier="0"
           root_choice_id="spear_warden_of_vinewatch_root"
           keystone_icon="27000">
@@ -1915,6 +1952,7 @@
           description="{=taom_career_bowman_of_redwater_desc}A bowman of the Redwater who shoots from the walls of Seagate and the reed-beds of the river, carrying on a tradition of unerring marksmanship."
           portrait_sprite="career_dale_marksman_portrait"
           ability_template_id="bowman_of_redwater_ability"
+          ability_sprite="dale_marksman_ability"
           min_clan_tier="0"
           root_choice_id="bowman_of_redwater_root"
           keystone_icon="27001">
@@ -1936,6 +1974,7 @@
           description="{=taom_career_river_rider_of_seagate_desc}A mounted patrol of the Redwater shore who rides the vineyard ways and the road to Seagate, safeguarding wine caravans from raiders out of the east."
           portrait_sprite="career_dale_outrider_portrait"
           ability_template_id="river_rider_of_seagate_ability"
+          ability_sprite="dale_outrider_ability"
           min_clan_tier="0"
           root_choice_id="river_rider_of_seagate_root"
           keystone_icon="27500">
@@ -1957,6 +1996,7 @@
           description="{=taom_career_rider_of_vidugard_desc}A Northman horse-lord of the plains south of Mirkwood who rides with the thunder of generations of herdsmen, inspiring allies with a warcry that rolls across the grass and scattering enemies under the hooves of heavy cavalry."
           portrait_sprite="career_eotheod_windrider_portrait"
           ability_template_id="rider_of_vidugard_ability"
+          ability_sprite="eotheod_windrider_ability"
           min_clan_tier="0"
           root_choice_id="rider_of_vidugard_root"
           keystone_icon="21005">
@@ -1978,6 +2018,7 @@
           description="{=taom_career_marksman_of_westmark_desc}A heavy archer of the Westmark garrison who has mastered the art of loosing light, high-velocity arrows with lethal precision, capable of penetrating armour at distances that leave enemies no safe quarter."
           portrait_sprite="career_marksman_of_aldburg_portrait"
           ability_template_id="marksman_of_westmark_ability"
+          ability_sprite="marksman_of_aldburg_ability"
           min_clan_tier="0"
           root_choice_id="marksman_of_westmark_root"
           keystone_icon="21004">
@@ -1999,6 +2040,7 @@
           description="{=taom_career_warden_of_wainwatch_desc}A grizzled spear-warden of Wainwatch who patrols the eastern plain on foot and by pony, guarding the realm's eastern flank against the Wainriders through endurance, local knowledge and a tenacious grip on contested ground."
           portrait_sprite="career_watchman_of_stangard_portrait"
           ability_template_id="warden_of_wainwatch_ability"
+          ability_sprite="watchman_of_stangard_ability"
           min_clan_tier="0"
           root_choice_id="warden_of_wainwatch_root"
           keystone_icon="21006">

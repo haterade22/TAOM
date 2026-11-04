@@ -813,6 +813,13 @@ def build(culture, src_id, src_abbr, new_id, new_abbr, display, careers, abiliti
         return retext(rename(block, src_id, src_abbr, new_id, new_abbr), culture, new_id)
 
     career = fix(career)
+    # The clone shows its source's ability icon: no CareerSystem\Abilities sprite is authored for a
+    # clone's own template id. A source that is itself a clone already carries the original's.
+    if 'ability_sprite="' not in career:
+        career, n = re.subn(r'\n([ \t]*)ability_template_id="[^"]*"',
+                            rf'\g<0>\n\g<1>ability_sprite="{src_id}_ability"', career, count=1)
+        if n != 1:
+            raise SystemExit(f"{src_id}: expected one ability_template_id to follow with ability_sprite")
     # Repoint eligibility at the target culture. The source is single-culture, so a plain replace is
     # unambiguous; assert that rather than trust it.
     elig = ELIGIBILITY_SRC[culture]

@@ -176,7 +176,8 @@ public class CareerConfigProvider : ICareerConfigProvider
                         rank3Name: el.Attribute("rank3_name")?.Value ?? "",
                         keystoneIcon: el.Attribute("keystone_icon")?.Value ?? "",
                         pointLevels: ParsePointLevels(el),
-                        treeVersion: ParseIntAtLeast(el, "tree_version", 1, 1, $"career '{el.Attribute("id")?.Value}'"));
+                        treeVersion: ParseIntAtLeast(el, "tree_version", 1, 1, $"career '{el.Attribute("id")?.Value}'"),
+                        abilitySprite: el.Attribute("ability_sprite")?.Value ?? "");
 
                     // Issue #380 — no fallback glyph by design (the reference module's culture
                     // fallback regressed Rivendell to its clan-sigil ring). Missing attr =

@@ -168,8 +168,8 @@ public class CareerScreenVM : ViewModel
         AbilityName = abilityTemplate != null
             ? new TextObject(abilityTemplate.DisplayName).ToString()
             : new TextObject(career.AbilityTemplateId).ToString();
-        AbilitySpriteName = $"CareerSystem\\Abilities\\{career.AbilityTemplateId}";
-        HasAbilitySprite = !string.IsNullOrEmpty(career.AbilityTemplateId);
+        AbilitySpriteName = $"CareerSystem\\Abilities\\{career.AbilitySprite}";
+        HasAbilitySprite = !string.IsNullOrEmpty(career.AbilitySprite);
 
         FreeCareerPoints = _registry.GetUnspentPoints(career, _heroLevel, _dataService.GetChoiceCount(_heroStringId));
         FreeCareerPointsText = new TextObject("{=taom_career_free_points}Free Points: {COUNT}")
