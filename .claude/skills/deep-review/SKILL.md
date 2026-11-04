@@ -94,7 +94,7 @@ Decide from the Step 1 split, within the tier above. A lens in scope that the ti
 
 ### Waves of four
 
-**At most four agents in flight.** Launch a wave, let every agent in it report, then launch the next. A subagent that hits the usage limit returns nothing, so a wave boundary caps what a limit can cost (memory `agent-budget-discipline`; on 2026-09-18 a six-wide review lost three agents that way). Fill the first wave with the tier's lenses; a second wave, when the tier rule calls for one, takes the others in order. A later wave's prompts may carry the earlier waves' CRITICAL and HIGH findings, so the design lens does not polish code about to be restructured. There is no limit on the total, only on what is in flight.
+**At most four agents in flight.** Launch a wave, let every agent in it report, then launch the next. A subagent that hits the usage limit returns nothing, so a wave boundary caps what a limit can cost ([agent-teams.md](../../../docs/ai-includes/agent-teams.md) "Budget"; on 2026-09-18 a six-wide review lost three agents that way). Fill the first wave with the tier's lenses; a second wave, when the tier rule calls for one, takes the others in order. A later wave's prompts may carry the earlier waves' CRITICAL and HIGH findings, so the design lens does not polish code about to be restructured. There is no limit on the total, only on what is in flight.
 
 ### The spawn prompt
 
@@ -114,7 +114,7 @@ Add only what the lens cannot know. The agent definition already carries the ope
 
 ## Step 2c: Adaptive Expansion (always evaluate)
 
-After the core agents complete, assess whether the findings warrant additional focused agents. There is NO upper limit on the total. Every additional agent is a `deep-reviewer` too, launched in waves of four like the core set. Before spawning one, ask whether an existing gate script answers its question: a deterministic check run once beats an agent re-deriving it (memory `agent-budget-discipline`).
+After the core agents complete, assess whether the findings warrant additional focused agents. There is NO upper limit on the total. Every additional agent is a `deep-reviewer` too, launched in waves of four like the core set. Before spawning one, ask whether an existing gate script answers its question: a deterministic check run once beats an agent re-deriving it ([agent-teams.md](../../../docs/ai-includes/agent-teams.md) "Budget").
 
 **Launch additional agents when:**
 - Agent 5 (Data Flow) finds gaps → launch per-gap investigation agents to trace the full chain and propose fixes
