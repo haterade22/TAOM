@@ -21,11 +21,7 @@ The v1.3.15 → v1.4.5 migration completed its code stages but the formal runtim
 
 > **The generator is PowerShell 7 only.** Windows PowerShell 5.1 stops at its `#requires` line.
 >
-> **Regenerating is the only way to keep these files honest.** On 2026-09-06 `patch-targets.md` was
-> found **21 rows stale** (194 committed against 220 real) because patches had been added across
-> several features without a regeneration. Hand-editing a row works and is format-checkable, but it
-> cannot find rows nobody knew were missing. Run the generator after any patch or GameModel change,
-> not only after an engine bump.
+> `/verify` Step 2d runs `-Check` and fails on drift; regenerate and commit with the change.
 
 ## The gate (`TAOM.Tests/Migration/`)
 
@@ -81,7 +77,7 @@ In short: the analyzer is compile-time existence checking against referenced met
 
 ## Maintenance
 
-After a Bannerlord version bump, or any patch or GameModel change, refresh the snapshot and run the gate as described in "Running the gate" above.
+`/verify` Step 2d runs `-Check` and fails on drift; regenerate and commit with the change.
 
 ## External references
 

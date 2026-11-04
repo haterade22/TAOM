@@ -1141,6 +1141,105 @@ class ExcludeSessionTests(Base):
         self.assertEqual(self.env.signals()["window"]["excluded_sessions"], ["skip"])
         self.assertRegex(self.env.report(), r"Excluded sessions.*skip")
 
+    def test_an_unknown_id_warns_and_is_not_recorded_as_excluded(self):
+        self._two_sessions()
+        code, out = self.env.run("--exclude-session", "skip", "--exclude-session", "sk1p")
+        self.assertEqual(code, 0)
+        self.assertRegex(out, r"warning: --exclude-session sk1p matches no transcript")
+        self.assertEqual(out.count("matches no transcript"), 1, "only the unknown id warns")
+        self.assertEqual(self.env.signals()["window"]["excluded_sessions"], ["skip"])
+        self.assertNotRegex(self.env.report(), r"Excluded sessions.*sk1p")
+
+
+class BannerVersionRuleTests(Base):
+    def banner(self, text, session):
+        return attachment(session=session, type="hook_success", hookEvent="SessionStart",
+                          hookName="SessionStart:startup", content="=== TAOM ===\n" + text + "\n")
+
+    def test_banner_table_pairs_printing_invocation_and_direct_command(self):
+        self.env.write("s1.jsonl", [
+            self.banner("HARNESS RETRO DUE: last retro 2026-10-21", "s1"),
+            tool_use("t1", "Skill", session="s1", skill="harness-retro")])
+        self.env.write("s2.jsonl", [
+            self.banner("HARNESS RETRO DUE: last retro 2026-10-21", "s2"),
+            human("<command-name>/harness-retro</command-name>", session="s2"),
+            tool_use("t2", "Bash", session="s2", command="python tools/harness_retro.py --since 2026-10-01")])
+        self.env.write("s3.jsonl", [self.banner("GAME VERSION DRIFT: installed x", "s3")])
+        self.env.run()
+        rows = {r["banner"]: r for r in self.env.signals()["banners"]}
+        retro = rows["HARNESS RETRO DUE"]
+        self.assertEqual((retro["skill"], retro["sessions_printing"], retro["invocations"],
+                          retro["direct_sessions"]), ("harness-retro", 2, 2, 1))
+        drift = rows["GAME VERSION DRIFT"]
+        self.assertEqual((drift["sessions_printing"], drift["invocations"], drift["direct_sessions"]), (1, 0, 0))
+        self.assertEqual(rows["ARMORY ART DRIFT"]["sessions_printing"], 0)
+        self.assertIn("## 7. Usage", self.env.report())
+        self.assertIn("HARNESS RETRO DUE", self.env.report())
+
+    def test_a_command_that_only_names_the_script_is_not_a_direct_run(self):
+        self.env.write("s1.jsonl", [
+            tool_use("t1", "Bash", session="s1", command="git diff tools/harness_retro.py"),
+            tool_use("t2", "Bash", session="s1", command="git status -- tools/tests/test_harness_retro.py"),
+            tool_use("t3", "Bash", session="s1", command="grep -n BANNERS tools/harness_retro.py")])
+        self.env.write("s2.jsonl", [
+            tool_use("t4", "Bash", session="s2", command="cd /x && python -B tools/harness_retro.py --top 5")])
+        self.env.write("s3.jsonl", [
+            tool_use("t5", "Bash", session="s3", command="ls && ./tools/audit_armory_refs.py")])
+        self.env.run()
+        rows = {r["banner"]: r["direct_sessions"] for r in self.env.signals()["banners"]}
+        self.assertEqual((rows["HARNESS RETRO DUE"], rows["ARMORY ART DRIFT"]), (1, 1))
+
+    def test_a_test_module_named_after_the_script_is_not_a_direct_run(self):
+        """`harness_retro.py` ends `test_harness_retro.py`, so an unanchored pattern counted the test run."""
+        scripts = {"GAME VERSION DRIFT": "native_archive.py", "ARMORY ART DRIFT": "audit_armory_refs.py",
+                   "UPSTREAM AHEAD": "upstream_watch.py", "HARNESS RETRO DUE": "harness_retro.py"}
+        for banner, _skill, rx in hr.BANNERS:
+            script = scripts[banner]
+            self.assertTrue(hr.command_runs_script(f"python -B tools/{script}", rx), script)
+            self.assertTrue(hr.command_runs_script(f"python -B tools\\\\{script}", rx), script)
+            self.assertTrue(hr.command_runs_script(f"./tools/{script}", rx), script)
+            self.assertFalse(hr.command_runs_script(f"python tools/tests/test_{script}", rx), script)
+
+    def test_a_banner_outside_session_start_output_is_not_counted(self):
+        self.env.write("s1.jsonl", [attachment(session="s1", type="hook_success", hookEvent="PostToolUse",
+                                               content="HARNESS RETRO DUE")])
+        self.env.run()
+        self.assertEqual({r["banner"]: r["sessions_printing"] for r in self.env.signals()["banners"]}
+                         ["HARNESS RETRO DUE"], 0)
+
+    def test_versions_are_listed_with_their_session_counts(self):
+        self.env.write("a.jsonl", [rec("user", "s1", message={"content": "hi"}, version="2.1.301"),
+                                   rec("user", "s2", message={"content": "hi"}, version="2.1.314")])
+        self.env.write("b.jsonl", [rec("user", "s3", message={"content": "hi"}, version="2.1.314"),
+                                   rec("user", "s3", message={"content": "again"}, version="2.1.314")])
+        self.env.run()
+        sig = self.env.signals()
+        self.assertEqual(sig["versions"], [{"version": "2.1.301", "sessions": 1},
+                                           {"version": "2.1.314", "sessions": 2}])
+        self.assertIn("| 2.1.314 | 2 |", self.env.report())
+
+    def test_versions_sort_numerically(self):
+        self.env.write("a.jsonl", [rec("user", "s1", message={"content": "x"}, version="2.1.9"),
+                                   rec("user", "s2", message={"content": "x"}, version="2.1.100")])
+        self.env.run()
+        self.assertEqual([v["version"] for v in self.env.signals()["versions"]], ["2.1.9", "2.1.100"])
+
+    def test_rule_files_loaded_come_from_instructions_and_nested_memory(self):
+        files = [{"path": "e:\\repos\\TAOM\\CLAUDE.md", "type": "Project"},
+                 {"path": "e:\\repos\\TAOM\\.claude\\rules\\output-style.md", "type": "Project"}]
+        self.env.write("s1.jsonl", [
+            attachment(session="s1", type="instructions", files=files),
+            attachment(session="s1", type="nested_memory",
+                       path="e:\\repos\\TAOM\\.claude\\rules\\xml-data.md",
+                       content={"path": "e:\\repos\\TAOM\\.claude\\rules\\xml-data.md", "content": "x"})])
+        self.env.write("s1/subagents/agent-1.jsonl", [
+            attachment(session="s1", type="instructions", files=files)])
+        self.env.run()
+        rules = {r["rule"]: r for r in self.env.signals()["rules_loaded"]}
+        self.assertEqual((rules["output-style.md"]["sessions"], rules["output-style.md"]["subagents"]), (1, 1))
+        self.assertEqual((rules["xml-data.md"]["sessions"], rules["xml-data.md"]["subagents"]), (1, 0))
+        self.assertNotIn("CLAUDE.md", rules)
+
 
 if __name__ == "__main__":
     unittest.main()
