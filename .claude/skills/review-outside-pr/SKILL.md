@@ -53,7 +53,7 @@ gh pr view <N> --json number,title,author,baseRefName,headRefName,headRepository
    - file writes or deletes outside the game's own save and config folders
    - encoded or compressed blobs, long hex or base64 strings, minified code
    - a new `PackageReference` or package source (supply chain)
-   - hidden or bidirectional Unicode: `grep -nP '[\x{200B}-\x{200F}\x{202A}-\x{202E}\x{2066}-\x{2069}\x{FEFF}]' "<scratchpad>/pr-<N>.diff"`
+   - hidden or bidirectional Unicode: `LC_ALL=C.UTF-8 grep -nP '[\x{200B}-\x{200F}\x{202A}-\x{202E}\x{2066}-\x{2069}\x{FEFF}]' "<scratchpad>/pr-<N>.diff"`. Exit 1 means none found; exit 2 means the check did not run, which is a STOP
    - a change whose code does more than the PR description says
 5. Write the Phase 1 verdict: PASS, or STOP with each finding as `file:line`, what it does, and why
    it is a risk. On STOP, go to Phase 4 with no checkout.
@@ -72,6 +72,8 @@ The audit tool comes from this checkout (trusted), not the PR. Keep only finding
 changes; any of those is a STOP. Never open the worktree in VS Code or start a Claude session in it.
 
 ## Phase 3: `/verify`, then `/deep-review`
+
+Build and tests run contributor code on this machine, and `.ai/policy.md` retains that prohibition. So step 1 needs Mike's word for this PR (his rule, 2026-11-03). Without it, report build and tests NOT RUN and continue at step 2.
 
 1. Run `/verify` with `E:/repos/taom-pr-<N>` as the working directory for every command. A build or
    test failure goes in the report with its output; do not fix it on the contributor's branch.

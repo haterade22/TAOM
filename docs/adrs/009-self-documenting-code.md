@@ -330,6 +330,15 @@ private float CalculateDailyFoodConsumption(IPartyAdapter party) =>
 - [ADR-002](./002-thin-entry-points.md): Thin entry points force simple, readable code
 - [ADR-003](./003-no-regions.md): Proper decomposition over organizational markers
 
+### Amendment (2026-11-03): comments and summaries
+
+Rules 1 and 2 stated absolutes that the codebase does not follow and that other rules contradict (a `swallow-ok` marker is a required comment). Review lens 9a applies a keep-list instead, and the rules now say the same:
+
+1. A comment stays only on the keep-list: a licence or attribution; behaviour forced by the engine or a vendor, naming that constraint; a public contract doc; a marker a gate reads (`swallow-ok`). Any other comment becomes a name, a test or nothing.
+2. A summary is one sentence by default. It may run longer only to record an engine fact, a line citation or why a gate exists.
+
+Rule 3 and the Decision are unchanged. Nothing gates either rule; review applies them (lens 9a in `.claude/skills/deep-review/lenses/1-standards.md`).
+
 ---
 
 <!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->

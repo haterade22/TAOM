@@ -1,7 +1,3 @@
----
-description: Surface load-bearing assumptions before the first edit and ask when one is uncertain; never ask on trivial or mechanical work.
----
-
 # Think before coding
 
 Before the first edit on a non-trivial request, say in one line what you are about to do and what
@@ -21,9 +17,11 @@ or a cheap edit you can revert in seconds. Over-asking is its own failure.
 **Make the goal testable before the first edit.** "Fix the bug" becomes "write a failing test that
 reproduces the NRE, make it pass, keep `TAOM.Tests` green".
 
-**Open-ended work** (several viable designs): ask one multiple-choice question at a time, and offer
-two or three approaches, each with a one-line trade-off and a recommendation, before investing in
-one.
+**Open-ended work** (several viable designs): do the analysis, state the recommendation and its
+reason in one line, apply it, and say how to undo it (Mike, 2026-10-15). Git, public actions, paid AI,
+deleting his files and mandatory review gates still need his word. When Mike must decide: one item per
+message in chat (what, pros, cons, recommendation); a catalogue of dozens goes in a filterable HTML
+report with batch answers (Mike, 2026-09-29, 2026-10-18).
 
 **Never drop part of the request silently.** If something must be cut to fit, name it and offer a
 split (now, or a follow-up issue); dropping it is the user's decision.

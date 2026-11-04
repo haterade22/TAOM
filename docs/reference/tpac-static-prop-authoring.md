@@ -79,7 +79,7 @@ GUID repeats, and every package is structurally sound. It cannot see whether the
    which acts through the normal map's green axis, and TAOM's props use flat 8x8 normal maps (step 3), where it is
    invisible. A prop with a real normal map built from this recipe would show it. **To settle it:** read one vanilla
    skinned mesh's stored QTangent and its tangent `w` and compare the sign of `q.w` (TAOM notes that vanilla head
-   packages do not open in TpacTool 0.4.0, so use a body or armour mesh in `core_game.tpac` or another readable
+   packages do not open in TpacTool 0.4.0 (measured on 0.4.0; not re-tested on the v0.5.1 the tools load now), so use a body or armour mesh in `core_game.tpac` or another readable
    vanilla package). Until then do not copy either side's sign into a prop that has a real normal map.
 6. **UV is not flipped.** tpac UV is top-down, the same as glTF. The note "tpac is bottom-up" in older material is
    about image rows, not the UV convention. A flip mirrors the texture on the model and only shows in game.

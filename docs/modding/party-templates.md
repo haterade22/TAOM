@@ -70,6 +70,8 @@ being built ([lord-party-templates.md](../features/lord-party-templates.md)). A 
 must stay unbound by every clan and culture, so it is a third place to grep before calling a
 template dead.
 
+**A clan template id is a convention, never a derivation.** The clan row is per clan, not per culture. The binding is `default_party_template` in `characters/clans.xml` or `spclans.xslt`, so those two files and `lord_party_templates/lord_party_templates.json` are what you grep to prove a clan template is reachable, not the culture files. Most ids embed the clan id minus its `clan_` prefix (`clan_erebor_1` binds `kingdom_hero_party_erebor_erebor_1_template`), but Gondor's clans embed a fief instead and the clan id appears nowhere in them (`clan_empire_west_9` binds `kingdom_hero_party_gondor_blackroot_vale_template`). The leading token names the roster's culture, which is not always the clan's: the `Culture.bluecraig` clans bind `..._goblin_bluecraig_N_template`, and those stacks really are `goblin_*` troops. The `Culture.mistymountainorcs` clans keep `..._mistymountainorcs_mistymountainorcs_N_template` while their stacks are `goblin_*` too, because renaming a bound template id breaks `clans.xml`. Computing an id instead of grepping also hides dead data (see the gotchas below).
+
 ## Attributes
 
 <!-- engine-table type="TaleWorlds.CampaignSystem.Party.PartyTemplateObject" file="Campaign/TaleWorlds.CampaignSystem/TaleWorlds.CampaignSystem.Party/PartyTemplateObject.cs" method="Deserialize" inert="" -->

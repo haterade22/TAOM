@@ -51,15 +51,18 @@ Adapted from [garrytan/gstack/freeze](https://github.com/garrytan/gstack/tree/ma
 
 ```bash
 FREEZE_INPUT="<user-provided-path>"
-# Resolve relative paths against the project root
-if [[ "$FREEZE_INPUT" != /* && "$FREEZE_INPUT" != [A-Za-z]:* ]]; then
-    FREEZE_DIR="$(cd "$FREEZE_INPUT" 2>/dev/null && pwd)"
-else
-    FREEZE_DIR="$(cd "$FREEZE_INPUT" 2>/dev/null && pwd)"
-fi
+# Resolve a relative path against the root of the checkout you are working in. In a worktree
+# that is the worktree, not CLAUDE_PROJECT_DIR (which stays at the folder the session started in).
+ROOT="$(git rev-parse --show-toplevel)"
+case "$FREEZE_INPUT" in
+    /* | [A-Za-z]:* ) FREEZE_DIR="$FREEZE_INPUT" ;;
+    *) FREEZE_DIR="$ROOT/$FREEZE_INPUT" ;;
+esac
+FREEZE_DIR="${FREEZE_DIR%/}"
 
-if [[ -z "$FREEZE_DIR" || ! -d "$FREEZE_DIR" ]]; then
-    echo "Could not resolve '$FREEZE_INPUT' to a directory."
+# Only the parent has to exist: /new-feature suggests freezing a folder it is about to create.
+if [[ ! -d "$(dirname "$FREEZE_DIR")" ]]; then
+    echo "No such parent: $FREEZE_DIR"
     exit 1
 fi
 
@@ -92,9 +95,12 @@ The hook is silent on success and verbose only when blocking, so freeze adds zer
 | Edit | Blocked outside boundary |
 | Write | Blocked outside boundary |
 | NotebookEdit | Blocked outside boundary |
+| Edit or Write to a memory card (`.claude/projects/*/memory/`) or a session scratchpad (`scratchpad/`) | Always allowed, whatever the boundary: neither is code the freeze protects |
 | Read, Glob, Grep | Always allowed (read-only) |
 | Bash | Always allowed — `sed`, `tee`, `>` etc. can still bypass freeze. **This is not a security boundary.** |
-| MCP server tools | Not checked by freeze; their write and edit tools are denied outright (`docs/reference/mcp-servers.md`), except Serena's memory tools. Use Edit/Write for changes you want freeze-protected. |
+| MCP server tools | Not checked by freeze; a server with write tools gets them denied in `.claude/settings.json` before it is enabled (`docs/reference/mcp-servers.md`). Use Edit/Write for changes you want freeze-protected. |
+
+In a worktree, a relative path resolves against that worktree's root, so `Main/Features/X/` locks the worktree's copy and not the main checkout's.
 
 ## Example session
 

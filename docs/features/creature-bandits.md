@@ -60,7 +60,9 @@ troop needs, in order, without a formation, and then makes it an enemy the engin
 - **Targetable (route A).** The engine only lets soldiers target an enemy, and it takes a riderless mount's side from
   its missing rider. `Patch93_CreatureBanditWeaponState` creates the creature with a native weapon state (which the
   soldiers' target scorer reads unchecked), and `CreatureRouteAUnmount` clears `Mountable` after the team is set.
-  The full chain is in the roadmap's "Targeting" section.
+  The full chain is in the roadmap's "Targeting" section. Fading a mount a soldier holds or has chosen
+  crashes, because the engine's fade does not unlink the rider. `RiderlessMountRule` is the guard
+  ([Fords of War](fords-of-war.md)).
 - **Stays in the fight.** `Patch93_CreatureBanditNoPanic` (the riderless mount's hit panic) and
   `Patch93_CreatureBanditNoRout` (the edge fade-out) keep it fighting, and the morale route to panic is refused in
   the morale models' `CanPanicDueToMorale` (`TaomBattleMoraleModel`, `TaomCustomBattleMoraleModel`).

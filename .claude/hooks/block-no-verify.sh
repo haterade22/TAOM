@@ -1,6 +1,8 @@
 #!/bin/bash
 
-# PreToolUse (Bash and PowerShell): refuse any git command carrying --no-verify.
+# PreToolUse (Bash and PowerShell): refuse every spelling that skips the commit-msg hook: --no-verify
+# (git expands --no-veri), `git commit -n`, and a one-call `-c core.hooksPath`. `git push -n` is a dry
+# run and stays allowed. tools/test_hooks.sh 7e pins each form.
 #
 # WHY THIS IS NOT ALSO A BUILD GATE
 # This shipped as check-build-before-commit.sh and ran `dotnet build` before every
@@ -25,15 +27,15 @@
 
 INPUT=$(cat)
 
-# Prefilter: the block below needs `--no-verify` in the command, and Claude Code never escapes
-# an ASCII letter, so a raw payload without the text `no-verify` cannot concern this gate.
+# Prefilter: the block below needs `--no-veri`, `commit` or a hooksPath key in the command, and Claude
+# Code never escapes an ASCII letter, so a raw payload without one of those cannot concern this gate.
 # Exiting here skips the _pybin.sh probe and the parse (two Python starts) on every Bash call
 # that does not carry the flag, other git calls included. Match the raw text, never a token
 # regex: a newline before a command arrives as \n. tools/test_hooks.sh 4c checks it.
 # Never skip on an escape: JSON writes a letter either literally or as a \u escape,
 # so a payload holding any \u takes the full parse, and the raw test is safe
 # whatever writes the payload.
-[[ "$INPUT" == *no-verify* || "$INPUT" == *'\u'* ]] || exit 0
+[[ "$INPUT" == *no-ver* || "$INPUT" == *commit* || "$INPUT" == *[Hh][Oo][Oo][Kk][Ss][Pp][Aa][Tt][Hh]* || "$INPUT" == *'\u'* ]] || exit 0
 
 # Resolve a safe Python (never a Microsoft Store alias — those hang forever).
 source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
@@ -41,9 +43,24 @@ source "$(dirname "${BASH_SOURCE[0]}")/_pybin.sh"
 # Fail open, but never fail silent: for a gate, no output reads as "nothing to report".
 taom_pybin_degraded "block-no-verify" "the --no-verify ban" jq && { echo '{}'; exit 0; }
 
-# The command as POSIX-shell text (plan 027): _pybin.sh taom_hook_command hands a PowerShell
-# command back as the Bash text of the same command and names git `git` wherever it is the
-# command (`GIT`, `git.exe`, a path). Without Python it reads the raw command with jq, as Bash text.
+refuse() {
+  echo "BLOCKED: $1 is not allowed. Fix what is making the hook fail instead of bypassing it." >&2
+  exit 2
+}
+
+# One Python run reads the whole command (_shellwords.py bypass), the way bash reads it: past quotes,
+# subshells, a glued separator, a `bash -c` script and every global option, and never taking a message
+# for a flag. Bounded inside the gate (hook-authoring.md, "a timeout is a kill").
+if [[ -n "${PYBIN:-}" ]]; then
+  if REASON=$(printf '%s' "$INPUT" | timeout -k 1 "${TAOM_READER_TIMEOUT:-20}" "$PYBIN" "$TAOM_HOOKS_DIR/_shellwords.py" bypass 2>/dev/null); then
+    [[ -n "$REASON" ]] && refuse "$REASON"
+    exit 0
+  fi
+  echo "block-no-verify: _shellwords.py bypass failed, so the command is read as raw text" >&2
+fi
+
+# No reader: the raw text, as this gate read it before the reader. It over-blocks a message that names
+# a flag, which is the safe direction here, and misses a quoted flag.
 COMMAND=$(taom_hook_command posix block-no-verify)
 
 # Fail-open: nothing to inspect -> allow.
@@ -52,9 +69,14 @@ COMMAND=$(taom_hook_command posix block-no-verify)
 # Only git commands. --no-verify means something else entirely to other tools.
 [[ ! "$COMMAND" =~ (^|[[:space:]])git([[:space:]]|$) ]] && exit 0
 
-if [[ "$COMMAND" =~ --no-verify ]]; then
-  echo "BLOCKED: --no-verify is not allowed. Fix what is making the hook fail instead of bypassing it." >&2
-  exit 2
-fi
+# --no-veri is the shortest spelling git accepts: --no-ver is ambiguous with --no-verbose.
+[[ "$COMMAND" =~ --no-veri ]] && refuse "--no-verify"
+# A config key is case-insensitive.
+[[ "${COMMAND,,}" =~ (^|[[:space:]])-c[[:space:]]+core\.hookspath= ]] && refuse "-c core.hooksPath"
+# Quoted spans first, so a message that mentions -n is never read as the flag. A word holding a
+# separator or a line end ends the call, so the -n of a later `git log -n 1` or `tail -n 3` is not read.
+BARE=$(printf '%s' "$COMMAND" | sed -E "s/\"[^\"]*\"//g; s/'[^']*'//g")
+BARE=${BARE//$'\n'/ ; }
+[[ "$BARE" =~ (^|[[:space:]])git[[:space:]]+commit([[:space:]]+[^-\;\&\|][^[:space:]]*|[[:space:]]+-[^[:space:]]*)*[[:space:]]+-[a-zA-Z]*n[a-zA-Z]*([[:space:]]|$) ]] && refuse "git commit -n"
 
 exit 0

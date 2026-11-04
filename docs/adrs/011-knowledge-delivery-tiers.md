@@ -127,7 +127,7 @@ constants hold the current numbers; the targets below are the ceilings they ratc
 | `TRAP_INDEX_MAX_ROWS`, `TRAP_INDEX_MAX_ROW_CHARS` | 47 rows, 180 characters |
 | `UNSCOPED_RULES_MAX_BYTES` | at most 16 KB in total |
 | `SCOPED_RULE_MAX_BYTES` | at most 12 KB per rule |
-| MEMORY.md (reported by `scan.sh`; machine-local, so not in CI) | at most 40 lines and 4 KB |
+| MEMORY.md (reported by `tools/context_budget_scan.sh`; machine-local, so no commit gate reads it) | at most 40 lines and 4 KB |
 
 An import that resolves to no file, a trap index that is no longer imported or has lost its
 heading, and a rule whose frontmatter does not parse (Claude Code loads it everywhere) are
@@ -252,6 +252,18 @@ Applied in stop-anywhere phases, each ending green:
 - [ADR-010](./010-knowledge-base-architecture.md): Knowledge-Base Architecture. ADR-010 organises
   the mod-knowledge surface under `docs/`; this ADR decides how that knowledge, and the harness's
   own, is delivered into an agent's context.
+
+### Amendment (2026-11-03): facts that changed
+
+The original rows above stay as the record of the decision. These facts have moved since:
+
+- **Live record:** the delivery facts (what subagents load, what survives compaction, what an import costs) now live in `.claude/rules/harness-facts.md`, which carries each fact's source and date. The tables above are a snapshot of 2026-09-23.
+- **Memory in subagents:** the docs say no subagent loads auto memory, but `MEMORY.md` reached all 2,232 sampled subagent spawns (measured 2026-11-02). Every memory line therefore costs every spawn, not only the main session.
+- **Skill list:** the skill-description listing is rebuilt and re-sent after compaction from Claude Code v2.1.304.
+- **CI:** the GitHub Actions workflows left on 2026-10-05 (`c8d69a0dc`). `--drift-only` now runs from `.githooks/pre-commit` for every committer whose clone sets `core.hooksPath`, beside the Claude commit hook until the two are compared. The Budgets text above that names `doc-budget.yml` is history.
+- **Scoped rule size:** `SCOPED_RULE_MAX_BYTES` (at most 12 KB per rule) is a ceiling that `lint_docs.py` reports; a rule over it fails `--fail-on-drift` only when it is larger than its HEAD copy (the staged copy under `--staged`), so the cap stops growth without forcing a diet.
+- **The `@AGENTS.md` import:** it stays because Claude Code reads AGENTS.md natively (v2.1.277 and later) only when no CLAUDE.md exists at or above the working directory.
+- **`omitClaudeMd`:** the field exists since v2.1.271 and no TAOM agent sets it. The reason to reject it is no longer the installed version: custom agents need the invariants in the preamble, and shrinking the preamble helps every agent.
 
 ---
 

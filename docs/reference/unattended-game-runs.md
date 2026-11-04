@@ -106,8 +106,8 @@ about the change under test.
   idle gate is why a person is not in the middle of something else.
 - **The deploy replaces the maintainer's.** Building from a worktree changes what `Modules/TAOM` holds. Say which build you deployed in the report.
 - **Logs are pruned.** The launcher copies them out; the folder under `E:/Temp/fords-runs` is the record.
-- **A crash loses its dump.** `Watchdog.exe` asks a human what to do with it, and the launcher kills it, so only the copied `rgl_log` and
-  `watchdog_log` survive. Starting under a watchdog setting that saves the dump silently is not done.
+- **A crash loses its dump at the default.** With `--keep-on-crash 0` the launcher kills `Watchdog.exe`, so only the copied `rgl_log` and
+  `watchdog_log` survive. A value above 0 waits for a person to answer the dialog. Starting under a watchdog setting that saves the dump silently is not done.
 - **A killed game leaves `safely_exited = 0`.** The launcher resets it; if a session aborts the launcher by hand, check the value before the next start.
 - **One game at a time.** The preflight refuses while a game runs, including the maintainer's.
 

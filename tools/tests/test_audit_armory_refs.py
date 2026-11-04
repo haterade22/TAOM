@@ -23,6 +23,7 @@ import os
 import sys
 import unittest
 from pathlib import Path
+from unittest import mock
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -147,6 +148,71 @@ class GeneratorChecks(unittest.TestCase):
         tools = Path(aa.__file__).resolve().parent
         for argv in aa.GENERATOR_VERIFIES:
             self.assertTrue((tools / argv[0]).is_file(), argv[0])
+
+
+class CompanionChecks(unittest.TestCase):
+    """The audit folds the checks that used to be run by hand into its verdict (a reinstall reverts
+    the troll gear lock, the orc locomotion rows and the FBX LOD passes, and the audit alone read CLEAN)."""
+
+    def _clean(self):
+        s = ReportAndExitCode()._summary([])
+        s.catalogue["delete"] = []
+        s.unreferenced_new = []
+        return s
+
+    def test_the_named_companions_include_every_hand_run_check(self):
+        scripts = {argv[0]: argv for argv in aa.COMPANION_CHECKS}
+        for name in ("wire_hill_troll_race.py", "register_armory_names.py", "bind_orc_goblin_locomotion.py",
+                     "audit_fbx_lods.py", "validate_moduledata.py"):
+            self.assertIn(name, scripts)
+        tail = scripts["validate_moduledata.py"]
+        self.assertIn("COLLISION_BODY_BORROWED", tail)
+        self.assertIn("CREATURE_GEAR_OBTAINABLE", tail)
+
+    def test_every_companion_names_a_script_that_exists(self):
+        tools = Path(aa.__file__).resolve().parent
+        for argv in aa.COMPANION_CHECKS:
+            self.assertTrue((tools / argv[0]).is_file(), argv[0])
+
+    def test_a_failing_companion_makes_the_verdict_broken(self):
+        s = self._clean()
+        s.companion_checks = [("wire_hill_troll_race.py --check", 1, "an unkeyed troll clip")]
+        self.assertEqual(aa.exit_code(s), 1)
+        text = aa.render_report(s, when="2026-09-15", head="abc1234")
+        self.assertIn("BROKEN", text)
+        self.assertIn("an unkeyed troll clip", text)
+
+    def test_passing_companions_leave_the_verdict_clean(self):
+        s = self._clean()
+        s.companion_checks = [("audit_fbx_lods.py --check", 0, "OK")]
+        self.assertEqual(aa.exit_code(s), 0)
+        self.assertIn("audit_fbx_lods.py --check", aa.render_report(s, when="2026-09-15", head="abc1234"))
+
+    def test_a_companion_that_reports_drift_and_gaps_shows_both(self):
+        out = "/x/lod-audit.md:\nDRIFT: the committed report does not reproduce\nGAPS: 2 shipped chains lack a level"
+        done = mock.Mock(returncode=1, stdout="", stderr=out)
+        with mock.patch.object(aa.subprocess, "run", return_value=done):
+            got = aa.run_companion_checks(Path(aa.__file__).resolve().parent.parent)
+        _, status, detail = got[0]
+        self.assertEqual(status, 1)
+        self.assertIn("DRIFT", detail)
+        self.assertIn("GAPS: 2 shipped chains", detail)
+
+    def test_a_skipped_companion_has_not_passed(self):
+        self.assertEqual(aa.companion_status(0, "check_race: SKIPPED, no install"), 2)
+        self.assertEqual(aa.companion_status(0, "OK"), 0)
+        self.assertEqual(aa.companion_status(1, "OK"), 1)
+
+    def test_a_companion_that_exits_two_did_not_run_rather_than_failed(self):
+        self.assertEqual(aa.companion_status(2, ""), 2)
+        self.assertEqual(aa.companion_status(3, ""), 1)
+        text = aa.render_report(self._with_companion(2), when="2026-09-15", head="abc1234")
+        self.assertIn("NOT PASSED", text)
+
+    def _with_companion(self, status):
+        s = self._clean()
+        s.companion_checks = [("wire_hill_troll_race.py --check", status, "the game is running")]
+        return s
 
 
 if __name__ == "__main__":

@@ -58,6 +58,20 @@ The two fail differently, and the difference is worth knowing before triaging on
 `OneHandedSword` declares exactly one `<WeaponDescription>`, so for swords there is no second
 description to fall through to: a no-match is unregistration, not a mis-flagged weapon.
 
+**Gate 2 is first match.** A `<CraftedItem>` with no inline `<Weapon>` takes all its usages from description matching, and
+`GenerateCraftedItem` walks the crafting template's `<WeaponDescriptions>` in the template's own order, not the
+stylesheet's. A description applies once every piece of the item, blade and handle alike, is in its `<AvailablePieces>`,
+so registering only the blade does nothing. The first description that applies becomes the primary usage and the later
+ones become alternates. Vanilla opens the `TwoHandedPolearm` template's list with `OneHandedPolearm`, which is what makes a
+registered spear one-handed-primary with two-handed as the alternate; placing `TwoHandedPolearm` earlier in
+`weapon_descriptions.xslt` changes nothing, only membership matters. The usage-set flags (`requires_no_shield` and the
+others) live in `Native/ModuleData/item_usage_sets.xml`, not in `weapon_descriptions.xml`. A weapon registered under three
+of the four polearm descriptions and missing `OneHandedPolearm` gets a `requires_no_shield` primary, so check which
+descriptions a new weapon is absent from, never which it is present in. That a shield troop then never draws it rests on
+native AI code that the decompiled managed source does not show; confirm it in game. Register through
+`tools/register_one_handed_polearms.py` or by hand, and run `tools/audit_polearm_shield_parity.py` after any weapon
+generator.
+
 `weapon_descriptions.xslt` (step 4) is the forgiving one. `WeaponDescription.Deserialize`
 (`WeaponDescription.cs:49-59`) resolves each `<AvailablePiece>` through `MBObjectManager.GetObject`
 and skips a null, so a stale id there is inert. Vanilla leans on that tolerance sparingly: of the

@@ -1,7 +1,3 @@
----
-description: How every reply opens (scrutiny and a confidence tag) and how produced prose reads (no AI-writing tells).
----
-
 # Output style
 
 ## Part 1: chat replies
@@ -10,8 +6,9 @@ description: How every reply opens (scrutiny and a confidence tag) and how produ
 useful thing: the shaky assumption, the missing constraint or file, the question whose answer
 changes the work. It must be load-bearing: don't manufacture disagreement, and on trivial or
 already-specified work state what you are doing and proceed (`think-before-coding.md`). When the
-user is simply right, say so plainly; factual confirmation is not the banned reflex
-(`evidence-over-claims.md`).
+user is simply right, say so plainly; factual confirmation is not the banned reflex. Banned openers:
+"You're absolutely right!", "Great point!", "Excellent catch!". Say what you verified and what you are
+changing instead.
 
 **Open every response with a confidence tag.**
 
@@ -35,9 +32,7 @@ code comments or chat. It applies to new writing. The fix for AI-sounding prose 
 more specific and concrete.
 
 **No em or en dash** (U+2014, U+2013; AGENTS.md "Human prose" lists the substitutes), the loudest
-single tell. If no substitute reads well, restructure the sentence. In an unquoted YAML
-`description:`, `: ` starts a mapping and breaks the file: use a comma or parentheses there, then
-run `bash tools/test_hooks.sh`. Hyphens (`--RunTests`, `v1.4.8`, `kebab-case`) are fine.
+single tell. If no substitute reads well, restructure the sentence. Hyphens (`--RunTests`, `v1.4.8`, `kebab-case`) are fine.
 
 Exempt: code spans and blocks, URLs and link targets, verbatim quotes from outside TAOM (mark the line
 `<!-- lint-allow-dash -->`), and existing prose you are not rewriting. `python tools/lint_docs.py`

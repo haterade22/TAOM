@@ -4,9 +4,10 @@
 
 One read-only pass over `docs/` (plus the files CLAUDE.md loads, `AGENTS.md`, `.claude/rules/`, and
 the shipped ModuleData configs) that reports **doc rot**: the class of defect where the code moved
-and the prose did not. Pure stdlib, no game install required. Checks 5 to 8 below **block** a
-commit through `.claude/hooks/check-doc-config-drift.sh` (the GitHub workflow that also ran them on
-every push was removed on 2026-10-05); the others are advisory.
+and the prose did not. Pure stdlib, no game install required. Checks 5 to 11 below **block** a
+commit through `.githooks/pre-commit` and, for Claude's commits, `.claude/hooks/check-doc-config-drift.sh`
+(the GitHub workflow that also ran them on every push was removed on 2026-10-05); the others are
+advisory.
 
 Run `python tools/lint_docs.py` directly. Backs [ADR-010](../adrs/010-knowledge-base-architecture.md).
 Sibling validators: [moduledata-validation.md](moduledata-validation.md) (game data),
@@ -26,7 +27,7 @@ fact:
   `project_doc_max_bytes` — so every Codex review ran without them. Now the eager-load budget check.
 - **CLAUDE.md regrew from 28 KB to 49 KB in six weeks, past its own cap,** because the only gate was
   a Claude PreToolUse hook and commits made from the IDE never run it. Now the ADR-011 context
-  budget (check 7), enforced by the commit hook (#647).
+  budget (check 7), enforced for every committer whose clone sets `core.hooksPath` by `.githooks/pre-commit` (2026-11-03), and for Claude's commits by `check-doc-config-drift.sh` too until the two are compared.
 
 The fourth lesson is about the linter itself and is the reason the "what counts as a finding"
 section below is so specific: **a check that is wrong every time is a deleted check.** The
@@ -44,9 +45,11 @@ skip the whole report — including the six checks that were correct.
 | 4 | **Missing feature docs** | no | a `Main/Features/<X>/` with no `docs/features/<x>.md`. PascalCase→kebab plus a fuzzy match (exact, `-system` suffix, prefix, substring either way) — the same algorithm as `.claude/hooks/detect-docs-gaps.sh` |
 | 5 | **Config-example drift** | **yes** | a `docs/features/*.md` ```json block labelled with a config path whose values disagree with the shipped `Main/_Module/ModuleData/**/*.json`, or a doc key the shipped config no longer has. Shared keys only, so a partial example is fine; an unparseable (annotated) block is skipped rather than guessed at |
 | 6 | **Version mismatch** | **yes** | the `Target: Bannerlord X` line (AGENTS.md, or CLAUDE.md) or a `(vX snapshot)` header in `docs/reference/taleworlds-api-snapshot/{gamemodel-bases,patch-targets}.md` disagreeing with `.claude/pinned-game-version.txt`. No `Target:` line in either file is itself a finding, so moving the line cannot switch the check off |
-| 7 | **Context budget** ([ADR-011](../adrs/011-knowledge-delivery-tiers.md)) | **yes** (except `size-warn`) | everything CLAUDE.md loads at launch (its `@`-imports, read from CLAUDE.md itself), the orientation.md trap index, and the rules without `paths:`. These load into every session and every custom agent spawn, so bytes here are a per-turn tax. An oversized path-scoped rule warns until the path-rule diet |
+| 7 | **Context budget** ([ADR-011](../adrs/011-knowledge-delivery-tiers.md)) | **yes** (except `size-warn`) | everything CLAUDE.md loads at launch (its `@`-imports, read from CLAUDE.md itself), the orientation.md trap index, and the rules without `paths:`. These load into every session and every custom agent spawn, so bytes here are a per-turn tax. An oversized path-scoped rule warns, and it gates only when a commit grows it past its copy at the base (`scoped-rule-size`) |
 | 8 | **RCA FOLLOW-UP owner** ([#984](https://github.com/haterade22/TAOM/issues/984)) | **yes** | a newly written line of `docs/reviews/rca-*.md` with an uppercase `FOLLOW-UP` (or `FOLLOW-UPS`) and neither an issue reference (`#<number>` or an `/issues/<number>` URL) nor a stated reason (`no issue: <reason>`, `no issue filed, <reason>`, `none is filed because <reason>`). See "Check 8" below |
 | 9 | **Git diff failed** ([#987](https://github.com/haterade22/TAOM/issues/987)) | **yes** | the new-lines checks (dashes, check 8) could not diff because the diff failed on a resolvable base, which means repository damage (a broken index or a missing object; a mistyped `--dash-base` exits 2 instead). Reported once under its own heading and `git_diff_failed:` counter; it used to read as zero findings |
+| 10 | **Feature doc verify section** | **yes** | a new docs/features/*.md with no `## How to verify in game` section that has a body |
+| 11 | **Rule text drift** | **yes** | in `.claude/rules/`, `.claude/agents/`, `.claude/skills/` and `docs/ai-includes/`: a `feedback_` or `feedback-` token (`dead-memory-ref`, a machine-local memory file); in `.claude/rules/`, a backticked `...Service`, `...Adapter`, `...Factory`, `...Provider`, `...Tests` or `...Hook` name outside code fences that no tracked `.cs` or `tools/**/*.py` file contains (`rule-symbol`; mark an example line `<!-- illustrative-name -->`; `docs/adrs/` is listed report-only); a `dotnet test` or `dotnet build` of a TAOM target without `-p:ModuleId=` in the command, a line continuation read whole, in `docs/modding`, `docs/reference`, `docs/ai-includes`, `.claude/rules`, `.claude/agents` and `.claude/skills` (`unflagged-dotnet`). Under `--staged` or `--only-paths` it judges only the files the commit records, as it records them |
 
 **Why 3b exists (2026-08-09).** `docs/features/enlistment.md` had **51 lines** of a live-session
 record sitting below its `backlinks-start` marker, and the regeneration was already armed — today's
@@ -56,9 +59,22 @@ pass then destroyed **50 lines of `REVIEW-LOG.md`** (Review 84's entire record) 
 reason, which had to be restored from `HEAD` — the bug demonstrating itself mid-fix is the reason
 this is a check and not a note.
 
-`--fail-on-drift` gates on **5 to 9**; checks 1-4 never block. Within 7, only hard violations
+`--fail-on-drift` gates on **5 to 11**; checks 1-4 never block. Within 7, only hard violations
 gate; a `size-warn` finding is report-only by design. `--drift-only` runs just the gating checks
-(about 0.2 s against the full run's 9 s) and is what the commit hook calls, with `--staged`.
+(about 1.2 s against the full run's 9 s) and is what the commit hooks call, with `--staged`.
+
+Under `--staged` or `--only-paths` every gating check judges the tree the commit records
+(`CommitView`, read through one `git cat-file --batch`), so another session's unstaged edit cannot
+refuse a commit, and a staged breach cannot pass behind a clean working copy. Under `--only-paths`
+that tree is the named working copies on top of HEAD. Checks 7's path-rule size and 11 judge only the
+files the commit changes. The hooks' trigger lists keep a commit the checks cannot concern away from
+them, and they cover every folder check 11 scans (`tools/test_hooks.sh` 5d and
+`tools/tests/test_githooks_pre_commit.py`).
+
+`.githooks/pre-merge-commit` adds `--clean-merge`: git writes `MERGE_HEAD` only after that hook, so a
+doc the merged branch holds would read as new, and check 10 is skipped there. A conflicted merge runs
+`pre-commit` at its later `git commit`, with `MERGE_HEAD` in place. A crash inside the linter exits 3,
+which the hooks report as "could not judge", because exit 1 means a finding.
 
 ### Check 8: the RCA FOLLOW-UP owner
 
@@ -122,11 +138,11 @@ also what `bash tools/context_budget_scan.sh` reads, so the report and the gate 
 | `ENTRY_DOC_MAX_TABLE_ROW` / `ENTRY_DOC_MAX_PROSE_LINE` | 400 / 600 chars | each entry doc line; fenced code exempt |
 | `TRAP_INDEX_MAX_ROWS` / `TRAP_INDEX_MAX_ROW_CHARS` | 47 / 180 | the `## Trap index` table in orientation.md |
 | `UNSCOPED_RULES_MAX_BYTES` / `UNSCOPED_RULES_WARN_BYTES` | 16,384 / 14,500 B | the rules without `paths:`, together |
-| `SCOPED_RULE_MAX_BYTES` | 12,288 B | each path-scoped rule; warn-only while `SCOPED_RULE_BUDGET_ENFORCE` is false |
+| `SCOPED_RULE_MAX_BYTES` | 12,288 B | each path-scoped rule; over it, `size-warn`, unless the rule is larger than its HEAD copy (the staged copy under `--staged`), which fails `--fail-on-drift` |
 
 The entry docs are CLAUDE.md and its `@`-imports, followed four hops the way Claude Code follows
 them, with imports inside code ignored. Bytes are counted with CRLF folded to LF, so a Windows
-checkout and CI agree. Two findings exist so a check cannot be switched off in silence: an import
+checkout and any other agree. Two findings exist so a check cannot be switched off in silence: an import
 that resolves to no file (`import-missing`), and a trap index that is no longer imported or has
 lost its heading (`trap-index-missing`). Both gate. The import scan reads Markdown as Claude Code
 does (a fence closes only with a run of its own character at least as long; a code span may
@@ -214,7 +230,7 @@ python tools/lint_docs.py --summary        # --- delimited, grep-friendly counts
 python tools/lint_docs.py --quick          # dead links only (fastest; tight loops)
 python tools/lint_docs.py --report docs/reviews/doc-lint-$(date +%F).md   # atomic .tmp+rename
 python tools/lint_docs.py --fail-on-dead   # exit 1 on any dead link
-python tools/lint_docs.py --fail-on-drift  # exit 1 on checks 5 to 9 (gating checks, with the full report)
+python tools/lint_docs.py --fail-on-drift  # exit 1 on checks 5 to 11 (gating checks, with the full report)
 python tools/lint_docs.py --drift-only     # only the gating checks, and gate on them
 python tools/lint_docs.py --drift-only --staged   # the commit hook's mode: check 8 reads the index
 python tools/lint_docs.py --drift-only --staged --dash-base HEAD~1   # what the hook runs for an amend
@@ -240,6 +256,7 @@ before treating it as an all-clear.
 |---|---|
 | `tools/lint_docs.py` | the linter: every check above, stdlib only |
 | `tools/tests/test_lint_docs.py` | unit tests over synthetic repo trees, including the exit codes the gates act on |
+| `tools/tests/test_lint_rule_drift.py` | tests for check 11 and for `--followups` (every RCA `FOLLOW-UP` line that cites no issue number, with the count last; report only) |
 | `.claude/hooks/check-doc-config-drift.sh` | pre-commit gate; runs `--drift-only --staged` (plus `--dash-base HEAD~1` for an amend and `--only-paths` for a path commit) when a commit stages or names a file the gating checks read, an RCA included, and quotes every `## ` section of the report except `size-warn` lines (`tools/test_hooks.sh` 5d pins that list to the entry docs and to the RCA glob) |
 | `.claude/pinned-game-version.txt` | the pin checks 2 and 6 read |
 | `.claude/hooks/detect-docs-gaps.sh` | SessionStart sibling of check 4; shares the slug algorithm |
@@ -249,8 +266,7 @@ before treating it as an all-clear.
 Python 3.9+ stdlib (`argparse`, `json`, `re`, `pathlib`, `urllib.parse`, `dataclasses`), plus PyYAML
 when installed, to parse rule frontmatter for check 7; without it a `frontmatter-unchecked` note
 says the parse was skipped.
-`Path.is_relative_to` sets the 3.9 floor. No game install, no network, no third-party packages —
-which is why this is one of the few TAOM gates that can run in CI unchanged.
+`Path.is_relative_to` sets the 3.9 floor. No game install, no network, no third-party packages.
 
 ## Tests
 

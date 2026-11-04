@@ -13,12 +13,12 @@ this document.
 
 ### GitHub Issues — Create for ALL Work
 
-Every feature, bug fix, crash fix, or system change MUST have a GitHub issue. No exceptions.
+Every feature, bug fix, crash fix or system change gets a GitHub issue before implementation, unless the maintainer waives it for that work. Creating one is public: without a standing word for this work, ask once. A waiver or decline goes in the commit body.
 
 **When to create:**
 - Starting a new feature → create issue BEFORE implementation
 - Fixing a bug/crash → create issue documenting the problem FIRST
-- Completing a fix that was done without an issue → create issue retroactively with full details
+- Work done without an issue → ask the maintainer whether to file one retroactively
 
 **Issue content — be exhaustive:**
 
@@ -39,14 +39,11 @@ For **features**, the issue body MUST include:
 The file list (Files changed, or Implementation for a feature) names every shipped file and no
 "(planned)" row, and the Solution or Design and the Testing sections describe what ships, not the plan. A body written before the build is a plan, even when it was correct then.
 
-**Lifecycle:**
+**Lifecycle:** editing a body or adding a progress comment needs no ask (Mike, 2026-10-16); run `python tools/check_public_text.py` on the text first.
 - Label issues appropriately (`bug`, `feature`, `crash`, `enhancement`)
 - Reference the issue number in commits when possible
 - **Close the issue** with `gh issue close` when the work is complete and verified
-- A closing keyword in a commit body closes only the number that follows it: `Closes #1036, #1037,
-  #1040` closed #1036 alone on push (2026-10-27). Write the keyword before each number
-  (`Closes #1036, closes #1037`), or close the rest with `gh issue close`, and check every issue's
-  state after the push.
+- A closing keyword closes only the number after it; `tools/check_commit_msg.py` refuses `Closes #1, #2`. Check every issue's state after the push.
 - If an in-game check is still owed at close, label the closed issue `triage-needs-ingame`, and
   remove the label once the check is done; a decision still owed is `triage-blocked-decision`.
   Before you add the label, write the check as steps in the feature doc's `## How to verify in game`
@@ -60,67 +57,27 @@ The file list (Files changed, or Implementation for a feature) names every shipp
 
 Every completed feature MUST have a documentation file at `docs/features/<feature-name>.md`. This is the **knowledge base** that prevents future sessions from re-analyzing solved problems.
 
-**Use template:** `docs/features/TEMPLATE.md`
-
-**Sections required:**
-- Overview — what it does in 2-3 sentences
-- Why This Exists — the problem it solves, with specific examples
-- Architecture — design challenge, solution approach, component diagram
-- Configuration — config files, data formats, current values
-- Key Files — table of all files with their purpose
-- Dependencies — what it relies on
-- Tests — test file locations and coverage summary
-- How to verify in game: preconditions, then each `taom.*` command or UI action with the result
-  that proves it. `tools/lint_docs.py` blocks the commit of a new feature doc without this heading
-- How-To — common operations (e.g., "How to add a new X")
-- Performance — any optimization notes (if applicable)
+**Use template:** `docs/features/TEMPLATE.md`; `tools/lint_docs.py` blocks a new doc without `## How to verify in game`.
 
 **Existing examples:** `docs/features/race-age-system.md`, `docs/features/offspring-race-inheritance.md`
 
 **Rule:** If a future session needs to understand a feature, the doc should contain enough detail that ZERO decompilation, code reading, or re-analysis is needed for the conceptual understanding. Code reading is only for the current state of the implementation.
 
-### Completion Workflow (MANDATORY — every feature, no exceptions)
+### Completion Workflow
 
-Before closing out any feature or fix, run this FULL sequence:
+Before closing out a feature or fix, run this sequence. `/ship` runs it for you.
 
-```
-Phase 1: BUILD & INTERNAL REVIEW
-  1. /verify                        — build + tests pass
-  2. /deep-review [feature]         : sized by risk tier (its SKILL.md "Risk tier"): tier 1 runs Codex at ultra
-                                      plus the Data flow and Engine lenses, tier 2 Codex at xhigh plus Data flow,
-                                      each with XML or Tooling where in scope; a second wave only after a
-                                      CRITICAL or HIGH; tier 3 (docs) is lint and a read. Then it applies every
-                                      better way it found to the changed code
-  3. Fix all confirmed findings (HIGH must fix in-session)
+1. `/verify`: build and tests pass.
+2. `/deep-review [feature]`: its "Risk tier" sets the lenses, the waves and the Codex level. Codex is a
+   paid call and runs only on the maintainer's word ([shared policy](../../.ai/policy.md#paid-dispatch-authority)).
+3. Fix confirmed findings. Fix a HIGH in session, or record its deferral.
+4. Re-review a fix only as `/deep-review` "Fix-loop guidance" says.
+5. `/verify` again: the final build and tests pass.
+6. Close out: close the GitHub issue with full details, write or update `docs/features/<name>.md`, and
+   write the commit body as the changelog entry (`/release` generates `CHANGELOG.md`).
 
-Phase 2: CODEX ADVERSARIAL REVIEW (Claude dispatches directly, no user terminal step)
-  4. /review-codex                  — writes prompt to docs/reviews/codex-adversarial-{feature}-{date}.prompt.md
-                                      AND dispatches via `codex exec -c model_reasoning_effort="<level>" -c project_doc_max_bytes=65536 - < prompt.md > output.md 2>&1`
-                                      (run_in_background; the session picks the level for the change, `ultra` is only the ceiling)
-                                      AND tells the user once: the level chosen, why, and the expected window
-  5. (harness notifies on completion — Claude auto-resumes; no /review-codex re-invocation needed)
-  6. Verify each Codex finding by reading TAOM source + decompiling vanilla targets — implement confirmed fixes
-
-Phase 3: SELF-REVIEW (review our OWN fixes)
-  7. /review-codex                  — second pass, same auto-dispatch flow against the post-fix diff, its effort sized
-                                      to the fixes (a few focused fixes: usually `high`)
-  8. (harness notifies on completion)
-  9. Verify findings on our fixes, implement confirmed fixes
-
-Phase 4: CLOSE OUT
-  10. /verify                       — final build + tests pass
-  11. Create/close GitHub issue with full details
-        ↑ Issue must exist BEFORE the closing commit, not after.
-          Codex review #28 caught us creating issue #92 retroactively for
-          b7e7188. No hook enforces issue creation; discipline is on the
-          author. Pattern: open the issue
-          when starting the work, reference it in commit messages, close
-          it with the final commit.
-  12. Write/update docs/features/<name>.md
-  13. Write the commit body as the changelog entry (/release generates CHANGELOG.md)
-```
-
-**Do not skip any phase.** Phase 2 catches bugs Claude misses (43 found in codebase review). Phase 3 catches bugs in our fixes (already caught IsFemale field targeting wrong type, shaghana/abanissa alignment mismatch). Each phase exists because the previous one proved insufficient.
+The issue exists before the closing commit: open it when the work starts, reference it in commit
+messages, and close it with the final commit. No hook enforces this.
 
 **Process docs:** `docs/reviews/REVIEW-GUIDE.md` (prompt templates), `docs/reviews/REVIEW-LOG.md` (scoring history)
 

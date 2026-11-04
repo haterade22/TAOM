@@ -43,9 +43,10 @@ def find_shellcheck():
 
 
 def shell_scripts(root):
-    """Every .sh git lists under `root`, tracked or untracked and not ignored, that exists on disk."""
+    """Every .sh and git hook git lists under `root`, tracked or untracked and not ignored, that exists
+    on disk."""
     out = subprocess.run(["git", "ls-files", "-z", "--cached", "--others", "--exclude-standard",
-                          "--", "*.sh"], cwd=str(root), capture_output=True, check=True,
+                          "--", "*.sh", ".githooks/*"], cwd=str(root), capture_output=True, check=True,
                          timeout=60).stdout.decode("utf-8")
     return sorted({p for p in out.split("\0") if p and (Path(root) / p).is_file()})
 

@@ -78,7 +78,7 @@ grep -aoE "(bo_)?wm_<culture>_ws_[a-z0-9_]+" \
 - `body_name` = `bo_` + the exact mesh id. (`wm_dale_ws_sword_a01_blade` → `bo_wm_dale_ws_sword_a01_blade`.)
 - Non-blade pieces (guard/handle/pommel) carry **no** `body_name` attribute at all.
 - If a head/blade is **missing** its `bo_` twin in the tpac (common for newly-imported polearm heads),
-  either (a) temporarily reuse a same-shaped existing `bo_` mesh so it loads, or (b) author the
+  either (a) author the twin now with `tools/blender/add_collision_body.py`, or use a vanilla body or a same-kit body (any other borrow fails `COLLISION_BODY_BORROWED` without a `_SHARED_BODY_BY_DESIGN` row); or (b) author the
   predicted `bo_<meshid>` name now and wait for the artist to deliver it. Until the `bo_` exists,
   that piece won't collide correctly in-game.
 - **A borrowed `bo_` is a placeholder with a deadline.** The borrowed name resolves, so every
@@ -107,17 +107,7 @@ grep -aoE "(bo_)?wm_<culture>_ws_[a-z0-9_]+" \
 
 ## Step E — Map the faction to a culture id
 
-LOTR factions map onto vanilla or TAOM-custom culture StringIds (see CLAUDE.md / memory
-`kingdom-culture-mapping`). The `culture="Culture.<id>"` on the assembled item (Step K) uses this id.
-
-| LOTR faction | culture id | | LOTR faction | culture id |
-|---|---|---|---|---|
-| Gondor | `gondor` | | Rohan | `vlandia` |
-| Mordor | `mordor` | | Dunland | `empire` |
-| Erebor | `erebor` | | Khand | `battania` |
-| Rivendell / Lothlórien / Mirkwood | `rivendell` / `lothlorien` / `mirkwood` | | Harad | `aserai` |
-| Isengard / Gundabad / Dol Guldur | `isengard` / `gundabad` / `dolguldur` | | Easterlings (Rhûn) | `khuzait` |
-| Umbar | `umbar` | | **Dale / Barding** | **`sturgia`** |
+Culture ids: `.claude/rules/xml-data.md` Culture StringIds. Remember Dale is `sturgia`, Rohan `vlandia`, Khand `battania`. The `culture="Culture.<id>"` on the assembled item (Step K) uses this id.
 
 ## Step F — Decide the piece taxonomy
 
@@ -224,7 +214,7 @@ would advertise a stat the animation set cannot deliver.
 | `body_name` | `bo_` + mesh (blades only). |
 | `physics_material` | `metal_weapon` or `wood_weapon`. |
 | `excluded_item_usage_features` | Removes tokens from the composed animation-set name (`:`-separated, unioned across all pieces in the weapon). `swing` on a thrust-only head (spears); `thrust` on a swing-only head **whose description carries a `thrust` token** (maces — not axes). Full mechanism + token table: [item-usage-features.md](../reference/item-usage-features.md). |
-| `damage_type` | `Pierce` \| `Cut` \| `Blunt`. `damage_factor` ≈ 2.0–3.5 for tier 2–4. |
+| `damage_type` | `Pierce` \| `Cut` \| `Blunt`. `damage_factor` ≈ 2.0 to 3.5 for tier 2 to 4. A hand value is a placeholder for a troop weapon; `tools/fix_melee_ladder.py` and `tools/restat_melee_blades.py` place it. |
 | `armor_bonus` (Guard) | small bonus, e.g. 4–5. |
 | `<Material id>` | `Iron2`–`Iron6`, `Wood`. |
 
@@ -248,9 +238,10 @@ Available `WeaponDescription` categories: `OneHandedSword`, `TwoHandedSword`, `O
 `TwoHandedPolearm_Bracing`, `TwoHandedPolearm_Pike`, `OneHandedBastardSword`, `Mace`, `TwoHandedMace`,
 `Javelin`.
 
-> **Brace + couch-lance:** register the long shafts + thrust-capable heads under
-> `TwoHandedPolearm_Couchable` and `TwoHandedPolearm_Bracing` (and the longest shaft under
-> `TwoHandedPolearm_Pike`) in addition to `TwoHandedPolearm`. Short spears go in `TwoHandedPolearm` only.
+> **Polearm registration:** spear and lance pieces go in `OneHandedPolearm` first
+> (`tools/register_one_handed_polearms.py`), then `TwoHandedPolearm`, `TwoHandedPolearm_Bracing` and,
+> for anything that couches, `TwoHandedPolearm_Couchable`. The longest shaft also goes in
+> `TwoHandedPolearm_Pike`.
 
 ## Step J — File 3: register in `crafting_templates.xslt`
 
@@ -307,9 +298,9 @@ The 'weapon_length' attribute is invalid - The value '210.04' is invalid accordi
 datatype 'http://www.w3.org/2001/XMLSchema:unsignedInt' - '210.04' is not a valid UInt32 value.
 ```
 
-So `weapon_length="210"` ✔ , `weapon_length="210.04"` �’✘ . This applies to `weapon_length`,
+So `weapon_length=210` is valid, `weapon_length=210.04` is not. This applies to `weapon_length`,
 `thrust_speed`, `speed_rating`, `missile_speed`, `accuracy`, `thrust_damage`, `ammo_limit`, and
-shield stats (`body_armor`, `hit_points`, etc.).
+shield stats (`body_armor`, `hit_points`, etc.). Gate: `python tools/validate_xml_schemas.py <files>`.
 
 **Contrast:** crafting-piece **`length` / `blade_length` / `blade_width` ARE float** — decimals are
 fine there (Step G). The integer rule is specific to single-piece `<Item>` weapon stats. *(Verified
@@ -323,7 +314,7 @@ loc files live outside the TAOM repo); see [`localize`](../localization/TRANSLAT
 
 ## Step N — File-handling discipline (CRLF / UTF-8 / idempotency)
 
-- All four files are **CRLF + UTF-8**. Hand-editing with an LF tool silently mismatches anchors —
+- Detect each file's terminator and BOM, and re-emit them (`data-scripts.md`). Hand-editing with an LF tool silently mismatches anchors , 
   prefer a script that reads with `newline=''` (preserves CRLF) or an editor that keeps line endings.
 - Never **duplicate** an existing `id` — the engine silently shadows one entry.
 - In the XSLTs, always insert **before** `<xsl:apply-templates select="@*|node()"/>`.
@@ -331,13 +322,21 @@ loc files live outside the TAOM repo); see [`localize`](../localization/TRANSLAT
 
 ## Step W — Validate (before launching the game)
 
-Parse + cross-check with a short script:
-1. **Well-formed** — `xml.etree.ElementTree.parse()` succeeds on all four files (XSLTs are XML too).
-2. **Reference integrity** — every `<Piece id>` (File 4) and every `AvailablePiece`/`UsablePiece`
-   (Files 2-3) resolves to a `<CraftingPiece id>` defined in File 1.
-3. **Mesh existence** — every `mesh=` and `body_name=` resolves to a real string in the tpac (Step C).
-   Pending artist `bo_` meshes are the expected exception.
-4. **Datatype** — no decimals on single-piece `<Item>` weapon stats (Step L).
+Run the tools; do not write a script. Together they check that the files are well-formed and that every
+`mesh=` and `body_name=` resolves to a real string in the tpac (Step C; pending artist `bo_` meshes are the
+expected exception):
+
+```
+python tools/validate_moduledata.py
+python tools/validate_mesh_refs.py --scan-bodies
+python tools/audit_armory_refs.py --report -
+python tools/audit_polearm_shield_parity.py
+python tools/validate_xml_schemas.py <files>
+python tools/check_external_xslt.py
+```
+
+`python tools/data_gates.py <the live files you edited>` runs these and the other gates for those files.
+No gate in the table reads these two, so check them by hand: every `<Piece id>` (File 4) and every `AvailablePiece`/`UsablePiece` (Files 2-3) resolves to a `<CraftingPiece id>` defined in File 1, and single-piece `<Item>` weapon stats carry no decimals (Step L).
 
 ## Step X — In-game smoke test (authoritative)
 
@@ -379,7 +378,6 @@ ships as a downloadable Release zip. Export tuned offsets to JSON and patch them
 - [weapon-xml-pipeline.md](../features/weapon-xml-pipeline.md) — automated alternative for self-contained weapons
 - [item-equipment-model.md](../reference/engine/item-equipment-model.md) — engine `ItemObject`/`ItemComponent`/`Equipment` model
 - [armory-guide.md](../reference/armory-guide.md): canonical-folder table per item-ID prefix
-- memory `kingdom-culture-mapping` — full LOTR-faction → culture-id table
 
 ---
 

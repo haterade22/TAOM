@@ -10,8 +10,7 @@ A deterministic, offline security scan of TAOM's Claude Code configuration surfa
 
 ## When to use
 
-- Before a release / `/ship`, or periodically.
-- After adding or editing a hook, an MCP server, a permission grant, or a config file.
+- After editing hooks, settings, MCP config or CLAUDE.md (the CLAUDE.md skill row).
 - Whenever you've pulled in external config (the `/adopt-external` flow ends here).
 - **To vet a foreign skill before adopting it** — point `--root` at it and pass `--external` (see below).
 
@@ -20,7 +19,7 @@ A deterministic, offline security scan of TAOM's Claude Code configuration surfa
 ```bash
 python tools/audit_claude_config.py            # human report, all severities
 python tools/audit_claude_config.py --min HIGH # only HIGH+CRITICAL
-python tools/audit_claude_config.py --json      # machine output (CI)
+python tools/audit_claude_config.py --json      # machine output
 python tools/audit_claude_config.py --root <dir> --external   # vet an untrusted/foreign tree
 python tools/audit_claude_config.py --no-repo-secrets           # config surface only (faster)
 python tools/audit_claude_config.py --user                      # this machine's user scope
@@ -30,14 +29,14 @@ python tools/audit_claude_config.py --user                      # this machine's
 user skills, agents, rules, hooks and commands, every `MEMORY.md`, the MCP servers in `~/.claude.json`
 (top level and per project; only those server maps are scanned, and nothing else from the file is
 printed), and every installed plugin's folder, once, vetted at `--external` severity (any project can
-enable a plugin; TAOM's own settings enable seven). A plugin your user settings enable but whose folder
+enable a plugin; TAOM's settings list eight, all off). A plugin your user settings enable but whose folder
 is gone is `user-plugin-missing`; an absent or unreadable `~/.claude.json` is `user-config-absent`.
 `--external` vets the whole foreign tree (a plugin repo, a marketplace, one skill folder) except `.git`
 and `node_modules`; exit **3** (`UNCHECKED`) means no config was found to scan, which is not a pass.
 
 **Two scopes, one run.** Every layer runs over the config surface (about 110 files). The `secrets` rules additionally run over every git-tracked text file under 2 MB (about 4,200 files, roughly 2.5s), because a credential is far more likely to be pasted into a `.ps1`, a C# const, or a doc than into `settings.json`. The other layers stay scoped to the config surface on purpose: they are calibrated for it, and turning `excessive-agency` loose on 4,000 game-data files would bury a real finding in advisory noise. The sweep needs a git work tree; without one it reports an INFO note instead of silently passing.
 
-Exit code: **2** if any CRITICAL finding (CI gate), 3 if nothing was collected (`UNCHECKED`), 1 on usage error, 0 otherwise.
+Exit code: **2** if any CRITICAL finding, 3 if nothing was collected (`UNCHECKED`), 1 on usage error, 0 otherwise.
 
 **Optional dependency:** `pip install yara-python` enables the clean-room YARA signature layer (webshell / malware / C2 / cryptominer / hacktool IOCs). Without it the scan still runs and the layer is skipped with an INFO note — the auditor is never blocked by a missing dep.
 

@@ -94,6 +94,14 @@ miss that method at the next engine bump. Fix it with `pwsh tools/snapshot_api_s
 commit the result with the change. Any other failure (no `pwsh`, no game install) is NOT RUN, not a
 pass.
 
+## Step 2e: Data gates
+
+```bash
+python tools/data_gates.py
+```
+
+Runs the gates for the ModuleData, Armory and tool files the working tree changed, and prints PASS, FAIL or NOT RUN for each. Name any live Armory or `TAOM_Map` file edited this session on its command line. Report the counts; a FAIL blocks, and a NOT RUN (no install, SKIPPED, the dotnet rows) has not passed. No match is "no gate reads the changed files", not a pass of anything.
+
 ## Step 3: Git Status
 
 ```bash
@@ -107,14 +115,6 @@ Report:
 - Files staged
 - Untracked files
 
-## Step 4: TODO/FIXME Scan
-
-```bash
-grep -rE 'TODO|FIXME' Main/ --include='*.cs' | wc -l
-```
-
-Report count.
-
 ## Step 5: CHANGELOG.md untouched
 
 Only `/release` writes `CHANGELOG.md` (generated from commit bodies). Check that this work did
@@ -124,7 +124,30 @@ not edit it by hand:
 git diff --name-only HEAD -- CHANGELOG.md
 ```
 
+When a review base is known (a branch or worktree), also check the branch range, which catches a hand edit that is already committed:
+
+```bash
+git diff --name-only <base> -- CHANGELOG.md
+```
+
 If it prints `CHANGELOG.md` outside a `/release` run, flag it: the entry belongs in the commit body.
+
+## Step 5b: Gates silenced (read the hits)
+
+```bash
+git diff HEAD -U0 | grep -nE '^-\s*\[TestMethod|^\+\s*\[Ignore|^\+.*(_BY_DESIGN|_EXEMPT|exempt_troops|KNOWN_FAILURES|shellcheck disable=|noqa|NuGetAuditSuppress|ruff: noqa)'
+git ls-files --others --exclude-standard | xargs -r grep -nE '\[Ignore|_BY_DESIGN|_EXEMPT|exempt_troops|KNOWN_FAILURES|shellcheck disable=|noqa|NuGetAuditSuppress'
+```
+
+With a review base known, diff against `<base>` instead of `HEAD`. Read every hit: a silenced check needs a stated reason in the entry or the commit body, and a weakened `Assert` is not caught by the pattern. List the unexplained ones under Issues. Information only; the hits are not a count to gate on.
+
+## Step 5c: Provenance
+
+```bash
+python tools/check_provenance.py
+```
+
+Every miss goes under Issues: a register Derivation or Status outside its closed set, a shipped non-TAOM binary with no `redistributed` row, or an adoption record the register does not name. A zero does not prove intent ([provenance.md](../../rules/provenance.md)).
 
 ## Step 6: Owed in-game verdicts (information only)
 
@@ -149,6 +172,14 @@ run re-run it with those flags (the doc's "How to verify in game"). Exit 2 is a 
 which Step 2b's `test_ingame_verdict` also fails on. Never pass `--post` here: it comments on public
 issues.
 
+## Step 7: Unfiled RCA follow-ups (information only)
+
+```bash
+python tools/lint_docs.py --followups | tail -n 1
+```
+
+Prints the count of `FOLLOW-UP` lines in `docs/reviews/rca-*.md` that cite no issue number, which the commit gate lets through with `no issue: <reason>`. Report the count and never file them: the maintainer decides in batches (`python tools/lint_docs.py --followups` lists each line with its RCA).
+
 ## Output Format
 
 Produce a concise verification report:
@@ -161,9 +192,11 @@ Tests:      [X/Y passed, Z failed]
 Tool tests: [N ran, F failed, S skipped]
 Canary:     [TRIPPED (expected)/NOT TRIPPED (verify FAILS)]
 API snapshot: [REPRODUCES/DRIFT/NOT RUN]
+Data gates: [P PASS, F FAIL, N NOT RUN]
 Uncommitted: [X files modified, Y staged, Z untracked]
-TODOs:      [X in Main/]
 CHANGELOG:  [Untouched/HAND-EDITED]
+Provenance: [N misses]
+Follow-ups: [N unfiled RCA FOLLOW-UP lines]
 In-game:    [I issues judged: P PASS, F FAIL, N NOT REACHED / NOT RUN (gh)] (information only)
 
 Ready for commit: [YES/NO]

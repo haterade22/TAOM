@@ -203,6 +203,10 @@ Phased rollout, independent commits, stop-anywhere:
 
 A `tools/search_docs.py` (Karpathy's "naive search engine") is **deferred indefinitely**. `Grep` over `docs/` is fast enough; revisit if a real bottleneck emerges. Note: Phase 5's `graph_query.py` is **not** this — it does graph topology, not full-text search.
 
+### Amendment (2026-11-03): the three skills are gone
+
+`/lint-docs`, `/knowledge-compile` and `/doc-graph` were removed on 2026-10-08 (commit `8b1083127`), so phases 2, 4 and 5 above are no longer delivered as skills. The scripts stay and are run directly: `tools/lint_docs.py`, `tools/compile_research.py`, and `tools/doc_graph.py` with `tools/graph_query.py`.
+
 ## References
 
 - Karpathy, "LLM Knowledge Bases" — the source pattern (raw → compiled wiki → Q&A → linting → search → finetune)

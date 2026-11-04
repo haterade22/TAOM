@@ -60,7 +60,7 @@ Three folders exist only in the install copy, never in the repo <!-- measured: l
 
 ## How build.ps1 deploys it, and what deployment deletes
 
-[`build.ps1`](../../build.ps1) is 43 lines and copies nothing itself. <!-- measured: cat -n build.ps1 2026-09-05 --> It reads the user-scope environment variable `BANNERLORD_GAME_DIR` and exits 1 if it is unset (`build.ps1:11-15`), runs `dotnet restore TAOM.sln` (`build.ps1:20`), `dotnet build TAOM.sln -c $Configuration --no-restore` (`build.ps1:27`), and with `-RunTests` runs `dotnet test TAOM.Tests -c $Configuration --no-build` (`build.ps1:37`). Every copy into the game install is MSBuild, from the `Bannerlord.BuildResources` 1.1.0.129 package (`Main/TAOM.csproj:95`) and from six targets across `Main/TAOM.csproj` and `Client/TAOM.Client.csproj`.
+[`build.ps1`](../../build.ps1) is 43 lines and copies nothing itself. <!-- measured: cat -n build.ps1 2026-09-05 --> It reads the user-scope environment variable `BANNERLORD_GAME_DIR` and exits 1 if it is unset (`build.ps1:11-15`), runs `dotnet restore TAOM.sln` (`build.ps1:20`), `dotnet build TAOM.sln -c $Configuration --no-restore` (`build.ps1:27`), and with `-RunTests` runs `dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= -c $Configuration --no-build` (`build.ps1:37`). Every copy into the game install is MSBuild, from the `Bannerlord.BuildResources` 1.1.0.129 package (`Main/TAOM.csproj:95`) and from six targets across `Main/TAOM.csproj` and `Client/TAOM.Client.csproj`.
 
 **The package's four copy targets** (`Basic.targets` in the package's `build/` folder):
 

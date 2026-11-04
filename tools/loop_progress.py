@@ -130,7 +130,8 @@ def write_state(path, state):
 
 
 def main(argv=None):
-    ap = argparse.ArgumentParser(description="Count consecutive loop ticks with no file progress.")
+    ap = argparse.ArgumentParser(description="Count consecutive loop ticks with no file progress. "
+                                             "A tick that only watches CI or the loop's own job skips this call.")
     ap.add_argument("--state", required=True, help="JSON state file (kept between ticks)")
     ap.add_argument("--repo", default=".", help="git repository to fingerprint (default: cwd)")
     ap.add_argument("--watch-path", action="append", default=[],

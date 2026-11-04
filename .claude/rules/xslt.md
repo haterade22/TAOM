@@ -1,7 +1,6 @@
 ---
 paths:
   - "**/*.xslt"
-  - "Main/_Module/ModuleData/*.xslt"
 ---
 
 # XSLT Transformation Rules
@@ -10,14 +9,17 @@ paths:
 - Where a vanilla file exists in both modules, **SandBoxCore/ModuleData/** is authoritative: SandBox's
   copy can use element names the engine ignores. Example: SandBoxCore `spcultures.xml` uses
   `<notable_templates>` (engine reads), SandBox uses `<notable_and_wanderer_templates>` (engine ignores).
+- TAOM's other stylesheets are live under `<game>/Modules/{TAOM_Map,LOTRLOME_Armory}/ModuleData`, in no
+  checkout. `python tools/check_external_xslt.py` reaches them.
 - Most inputs exist in only one module. Transform and diff against this file (checked against the
-  v1.5.4 install, 2026-10-08):
+  v1.5.6 install, 2026-11-03):
 
 | Stylesheet | Vanilla input |
 |---|---|
 | `spcultures.xslt` | `SandBoxCore/ModuleData/spcultures.xml` |
 | `spkingdoms.xslt`, `spclans.xslt`, `lords.xslt`, `heroes.xslt`, `module_strings.xslt` | `SandBox/ModuleData/` file of the same name (SandBoxCore has none) |
 | `lord_template_rosters.xslt` | `SandBoxCore/ModuleData/sandboxcore_equipment_sets.xml` **and** `SandBox/ModuleData/sandbox_equipment_sets.xml` (it strips SandBox's noble teen templates); gate: `LordTemplateRosterTests` |
+| `action_strings.xslt`, `comment_strings.xslt`, `custom_battle/*.xslt` | not mapped: find the input in the stylesheet before diffing |
 
 ## Passthrough Requirements (CRITICAL)
 - Always pass through ALL vanilla attributes: `<xsl:apply-templates select="@*"/>`
@@ -31,10 +33,6 @@ The rules above cover one direction: passthrough protects you from DROPPING a va
 The other direction is the one that keeps shipping. **An attribute your block never names is not
 "unchanged", it is INHERITED, and what it inherits is Calradia.** Nothing in the file looks wrong,
 because the wrong value is not in the file.
-
-Instances: Dale 2026-05-26, Rohan, Khand 2026-08-04 (#374), settlement patrols 2026-08-12. The last
-one shipped nine town-owning cultures fielding vanilla patrols, villagers, militia, rebels and
-caravans, four of them because the block simply never mentioned `settlement_patrol_template_level_*`.
 
 **Before editing ANY `Culture[@id=...]` template, including a one-attribute repoint:** enumerate
 every attribute the deserializer reads (`pwsh tools/taom-src.ps1 path TaleWorlds.CampaignSystem.CultureObject`,
@@ -87,9 +85,3 @@ Every XSLT file must include the identity transform template to copy unmatched n
   </xsl:copy>
 </xsl:template>
 ```
-
-## Common Mistakes to Avoid
-- Overly broad `xsl:template match` that catches unintended elements
-- Hardcoding attribute values that should be passed through from vanilla
-- Missing `xsl:output` declaration
-- Forgetting to handle child elements when overriding a parent

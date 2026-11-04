@@ -357,6 +357,45 @@ class BindPoseTests(unittest.TestCase):
         self.assertAlmostEqual(offset, 0.5, places=6)
 
 
+class CheckTests(unittest.TestCase):
+    STATS = {"module": "LOTRLOME_Armory", "fbx": 1, "with_meshes": 1, "chains": 1}
+
+    def problems(self, meshes, committed=None):
+        s = afl.classify(afl.build_chains("dale/boots.fbx", meshes), ClassifyTests.CATALOGUE, set())
+        text = afl.render(s, self.STATS)
+        return afl.check_problems(text if committed is None else committed, text, s)
+
+    def test_a_used_chain_missing_lod3_fails_even_when_the_report_reproduces(self):
+        got = self.problems([mesh("sk_boots_a")] + [mesh("sk_boots_a.lod%d" % n) for n in (1, 2, 4, 5)])
+        self.assertEqual(len(got), 1)
+        self.assertIn("sk_boots_a", got[0])
+        self.assertIn("3", got[0])
+
+    def test_a_used_lod0_only_chain_fails(self):
+        self.assertEqual(len(self.problems([mesh("sk_boots_a")])), 1)
+
+    def test_a_complete_chain_with_a_reproducing_report_passes(self):
+        got = self.problems([mesh("sk_boots_a")] + [mesh("sk_boots_a.lod%d" % n) for n in range(1, 6)])
+        self.assertEqual(got, [])
+
+    def test_a_used_chain_with_no_lod0_fails(self):
+        """sk_boots_a ships, an item names it, and it holds LOD1 to LOD5 only: a naming defect that
+        is also a gap, which the defects section alone would let through."""
+        got = self.problems([mesh("sk_boots_a.lod%d" % n) for n in range(1, 6)])
+        self.assertEqual(len(got), 1)
+        self.assertIn("GAPS", got[0])
+        self.assertIn("sk_boots_a", got[0])
+
+    def test_an_unused_chain_with_no_lod0_still_passes(self):
+        self.assertEqual(self.problems([mesh("sk_boots_b.lod%d" % n) for n in range(1, 6)]), [])
+
+    def test_a_drifted_report_still_fails(self):
+        got = self.problems([mesh("sk_boots_a")] + [mesh("sk_boots_a.lod%d" % n) for n in range(1, 6)],
+                            committed="old\n")
+        self.assertEqual(len(got), 1)
+        self.assertIn("DRIFT", got[0])
+
+
 class DriftTests(unittest.TestCase):
     def test_same_text_is_no_drift_whatever_the_line_endings(self):
         self.assertFalse(afl.drifted("a\nb\n", "a\r\nb\r\n"))
@@ -366,6 +405,16 @@ class DriftTests(unittest.TestCase):
 
     def test_missing_report_is_drift(self):
         self.assertTrue(afl.drifted(None, "a\n"))
+
+    FOOTER = ("\n<!-- backlinks-start auto-generated; edit lint_docs.py / build_backlinks.py to change -->\n"
+              "- [x](./x.md)\n\n<!-- backlinks-end -->\n")
+
+    def test_a_backlinks_footer_on_the_committed_report_is_no_drift(self):
+        self.assertFalse(afl.drifted("a\nb\n" + self.FOOTER, "a\nb\n"))
+        self.assertFalse(afl.drifted("a\r\nb\r\n" + self.FOOTER.replace("\n", "\r\n"), "a\nb\n"))
+
+    def test_a_changed_body_above_the_footer_is_still_drift(self):
+        self.assertTrue(afl.drifted("a\nc\n" + self.FOOTER, "a\nb\n"))
 
 
 class DiffTests(unittest.TestCase):

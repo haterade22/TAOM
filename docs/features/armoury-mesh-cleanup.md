@@ -246,6 +246,29 @@ done (`.claude/rules/moduledata-validation.md`).
 - Audit re-run: the decision set fell from 45 to exactly the 4 deliberately left
 - Zero remaining definitions or references to any Erebor colour variant, in either copy
 
+## Asset-tree evidence
+
+Moved from the armory guide, which states the current rule. Corrected 2026-09-01, with engine evidence: the
+Armory had no cooked tree, and loose won anyway. There was no `LOTRLOME_Armory/AssetPackages/` directory: 0 cooked
+packs against 4,364 loose `Assets/**/*.tpac`. The engine's own log said which tree it took:
+
+```
+[10:26:27.435] Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...
+[10:26:31.396] Loading packages $BASE/Modules/TAOM_Map/Assets...
+[10:26:33.079] Loading packages $BASE/Modules/TAOM/Assets...
+```
+
+TAOM and TAOM_Map shipped BOTH trees (5 cooked vs 120 loose, and 6 vs 3,210), and the engine named `Assets` for
+each, so loose `Assets/` takes precedence over a cooked tree that exists.
+
+Re-confirmed 2026-09-26: the Armory then shipped BOTH trees, and loose still won. A cook wrote
+`AssetPackages/pack0-9.tpac` at 07:36; the 08:41 game session still logged
+`Loading packages $BASE/Modules/LOTRLOME_Armory/Assets...`. The tools had preferred a cooked tree wherever one
+existed, so from 07:36 they read the stale packs: the hill troll hammer, imported at 11:39, reported
+`MISSING_COLLISION_BODY`, which would have blocked the commit hook. The hammer was in the troll's hand in the
+12:18 battle although the 07:36 packs do not hold it. Before the first fix the tools' default module list resolved
+to Native alone, which reported thousands of false `MISSING_MESH`.
+
 ## Related
 
 - [mesh-ref-validation.md](./mesh-ref-validation.md): the forward validator this complements

@@ -1,7 +1,6 @@
 ---
 name: upstream-review
-description: Use on the UPSTREAM AHEAD banner, or when asked to review yotthani's repos again, check what the watched upstream repos changed, or run the daily upstream review.
-argument-hint: [--report-only]
+description: Use on the UPSTREAM AHEAD banner, or when asked to review yotthani's repos again or check what the watched upstream repos changed.
 ---
 
 # Upstream review (watched repos, delta since the last review)
@@ -13,11 +12,10 @@ reviewed SHAs are in [`docs/reviews/upstream-watch.json`](../../../docs/reviews/
 `tools/upstream_watch.py` ([tools/README.md](../../../tools/README.md)). A one-off source goes through `/adopt-external`,
 whose security pass applies here too.
 
+ArmorySim (`E:\Tools\ArmorySim-0.1\ArmorySim.exe`) stays a standalone tool: never port, vendor or wire it into TAOM (Mike, 2026-10-18). Its proposals are yotthani's claims: check each against our data before any change.
+
 **Gates:** AGENTS.md "Paid AI dispatch", "Untrusted input" and "Git and commits" apply unchanged; push, merge and public
 issues need the maintainer's word for this run; the main checkout is never touched (other sessions work there).
-
-**`--report-only`** (the unattended daily run): P1 and P2 only, then write the report to
-`E:\Temp\taom-upstream-watch\reports\<date>.md` and stop. No worktree, no repo edit.
 
 ## P1. Detect
 
@@ -71,7 +69,7 @@ of each item's commit body: credit the author with the pinned head.
   author, repo, path@pinned-head and lines, the evidence kind and the engine version, and the source's own qualifier in the
   same sentence; TAOM's own reading is tagged as such.
 - The record `docs/reviews/adopt-<author>-<date>.md` in the shape of the last one; the provenance register's pass and
-  Covers columns; the adoption history line in `docs/ai-includes/external-repo-adoption.md`.
+  Covers columns; the entry in `docs/reviews/adoption-history.md`.
 - Doc review: three finders (fidelity to source, consistency with TAOM code and docs, routing), then one Opus verifier;
   fix every confirmed item and record it in the record's "The doc review". Before merge, grep the batch for every name the
   code review renamed or deleted.
@@ -97,14 +95,5 @@ committed in the same commit as the record (the state file must never name an un
 - A backslash path goes through the Edit tool, never a non-raw script string (a `\f` became a form feed).
 - A copied figure takes its source tag in the same edit; the author's pronouns are not stated: use the name.
 - Trunk moves during a review: rebase and re-verify on the merged tree before the push.
-
-## Unattended daily run (UNVERIFIED; the maintainer sets it up)
-
-OS configuration is the maintainer's, so this skill never creates the task. A headless run of this skill has not been
-proven. Before scheduling one, run it once by hand with `claude -p "/upstream-review --report-only"`
-from the TAOM checkout and confirm that it invokes the skill and writes the report. Pick the permission mode, a
-`timeout` and `--no-session-persistence` as in the repo's headless recipe
-(`.claude/skills/improve/references/run-protocol.md`). Then schedule that exact command with Windows Task Scheduler.
-Without it, the `UPSTREAM AHEAD` session-start banner (checked at most once a day) is the trigger.
 
 **An `UPSTREAM RELEASE:` line (or, in full `status`, a release row whose `latest` differs from `seen`)** is not a review: a repo under `releases` in the state file published a new release. Update the record the line names (for Bannerlord-Coop-Team/BannerlordCoop, the version table in `docs/features/coop-interop.md`: the release's branch, its `<GameVersion>`, and whether current TAOM can run it), then run the `seen` command the line prints, and commit both together.

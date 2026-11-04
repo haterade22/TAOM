@@ -58,6 +58,15 @@ completely, in the output format it gives.
   `csharp-architecture.md` and `moduledata-validation.md` were read whole by reviewers about 270
   times in October 2026, mostly after they had already loaded (#1003).
 
+## Intentional exceptions (the maintainer's decisions: do not file these)
+
+- Debug builds ship on purpose, because crash reports need every frame. No Release finding without a measured player-facing gain (2026-09-30).
+- No naval DLC: a naval-only path is out of scope in one line, unless vanilla CampaignSystem itself runs that branch (2026-10-20).
+- Desktop only: no finding or skip shaped around the laptop's partial install. A crash on any partial install is still a bug (2026-09-18).
+- No port to `bannerlord-1.4.5` is owed or recommended (2026-10-06).
+- No new `DependedModule` row on a TAOM `SubModule.xml`, and no issue proposing one (2026-09-21).
+- The `TAOM.dll` original-work line in `THIRD-PARTY-LICENSES.txt` is settled wording (2026-10-05).
+
 ## Evidence
 
 Every finding carries `file:line` and the read that proves it. A claim you could not verify

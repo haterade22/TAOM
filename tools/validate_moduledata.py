@@ -11,55 +11,7 @@ are the source of truth; this CLI just wires registries to the engine and
 prints a severity-classified report. See tools/taom_schema.py for the engine
 and docs/features/moduledata-validation.md for the full design.
 
-Checks (each maps to a recurring TAOM bug class):
-  BROKEN_ITEM_REF            missing equipment item  -> "underwear bug"
-  BROKEN_TROOP_REF           upgrade_target/culture points at a deleted troop
-  UNKNOWN_CULTURE            stale culture rename / "rohan" instead of "vlandia"
-  DUPLICATE_NPC_ID           same NPCCharacter id defined twice in TAOM
-  MISSING_CIVILIAN_TYPE      civilian roster missing equipmentType="Civilian"
-  DUPLICATE_ITEM_DEF         same Armory item id defined in >1 LOTRLOME_items folder
-  DUPLICATE_CULTURE_ID       same Culture id defined twice in taom_spcultures.xml
-  DUPLICATE_ROSTER_ID        same EquipmentRoster id defined twice
-  INVALID_ENUM               default_group not Infantry/Ranged/Cavalry/HorseArcher
-  BROKEN_PARTY_TEMPLATE_REF  PartyTemplate.* points at an undefined template (warning)
-  BROKEN_BODY_PROPERTY_REF   face_key_template points at an undefined BodyProperty -> null face
-  BROKEN_FACTION_REF         Faction.X (settlement owner=, Hero faction=) names a clan no
-                             <Faction id> defines -> the object loads ownerless (clans.xml plus
-                             vanilla spclans.xml, minus the rows spclans.xslt strips;
-                             Faction.neutral is allowed; needs the install)
-  MISSING_HARNESS_FAMILY_TYPE  HorseHarness with no <Armor family_type> -> silently unequippable
-  HARNESS_FAMILY_MISMATCH    Horse + HorseHarness in one set disagree on family type
-  MOUNTED_DWARF              race="dwarf" tagged Cavalry/HorseArcher, or handed a mount
-                             -> dwarf spawns inside the horse mesh (misaligned rider bone)
-  GENERATOR_RETIRED_ITEM_REF a data generator under tools/ would WRITE an item id the
-                             live install does not define (warning; needs the install;
-                             the generator list and the walk live in
-                             check_generator_item_refs.py)
-  ARMOUR_CLASS_TABLE_DRIFT   the armour acquisition class table no longer matches the live
-                             Armory and troop rosters, or could not be verified against it this
-                             run (warning; needs the install; re-run
-                             generate_armour_classes.py --apply)
-  ARMOUR_ACQUISITION_REF     a LotrIssue culture / reward_item / item_source, an armour
-                             acquisition named weapon or upgrade metal, a ladder weapon
-                             pick, ladder piece, lord's material or rung quest, or a
-                             marketplace <Culture> / armour_from / <Stock from> that nothing
-                             defines, or a <Stock match> that finds no item (needs the install)
-  MISSING_COLLISION_BODY     an item or crafting piece whose body_name / holster body /
-                             collision body names a PhysicsShape no loaded tpac ships.
-                             PreloadHelper.WaitForMeshesToBeLoaded polls that name forever:
-                             the #352 / #599 infinite mission load (needs the install;
-                             the tpac scan lives in validate_mesh_refs.py)
-  MISSING_VISUAL_MESH        same for a mesh / holster_mesh: an invisible item (warning)
-  SKILL_TEMPLATE_MISMATCH    an inline <skills> row beside a skill_template that differs from
-                             the SkillSet, or a template with rows naming no SkillSet. Since
-                             1.5.2 the row wins in game while the SkillSet and every tool
-                             say otherwise (#626; needs the install; detection lives in
-                             sync_lord_inline_skills.py, which also repairs it)
-  SCHEMA_INVALID             a file the repo module registers breaks the engine's own XSD
-                             for its id, or a SubModule.xml registration loads nothing. The
-                             engine only logs the former and loads the file anyway (repo
-                             module only; the XSD layer lives in validate_xml_schemas.py;
-                             one warning when lxml or <game>/XmlSchemas is absent)
+Every code and its repair: docs/reference/moduledata-validator-codes.md.
 
 Usage:
   python tools/validate_moduledata.py [--json report.json] [--warnings-as-errors]
@@ -89,6 +41,7 @@ try:
     REPO_ROOT = Path(__file__).resolve().parent.parent
     MODULEDATA = REPO_ROOT / "Main" / "_Module" / "ModuleData"
     SCHEMA_DIR = Path(__file__).resolve().parent / "schemas"
+    SHIPPED_TROOP_IDS = Path(__file__).resolve().parent / "shipped_troop_ids.txt"
 
     # The commit hook runs this with no --game-modules, so the default is what it
     # gets. A wrong one left BROKEN_ITEM_REF and BROKEN_TROOP_REF unable to fire
@@ -731,6 +684,32 @@ def slot_rejection_issues(game_modules, moduledata) -> list:
     return issues
 
 
+def regenerate_shipped_troop_ids(tag: str = "") -> int:
+    """Rewrite tools/shipped_troop_ids.txt from a release tag's troop files, read with `git show`
+    so today's tree never leaks in. No tag means the newest tag reachable from HEAD. The
+    [exceptions] section is kept as it stands."""
+    import subprocess
+
+    def git(*args):
+        return subprocess.run(["git", "-C", str(REPO_ROOT), *args], capture_output=True, check=True).stdout
+
+    tag = tag or git("describe", "--tags", "--abbrev=0").decode("utf-8").strip()
+    folder = "Main/_Module/ModuleData/troops/"
+    names = [n for n in git("ls-tree", "--name-only", tag, folder).decode("utf-8").split()
+             if re.search(r"/troops_[^/]*\.xml$", n)]
+    ids = set()
+    for name in names:
+        text = re.sub(r"<!--.*?-->", "", git("show", f"{tag}:{name}").decode("utf-8-sig", "ignore"), flags=re.S)
+        ids |= set(re.findall(r'<NPCCharacter\b[^>]*?\bid="([^"]+)"', text))
+    if not ids:
+        print(f"ERROR: no troop ids found in {tag}:{folder}", file=sys.stderr)
+        return 2
+    exceptions = ts.read_shipped_troop_ids(SHIPPED_TROOP_IDS)[1] if SHIPPED_TROOP_IDS.is_file() else {}
+    ts.write_shipped_troop_ids(SHIPPED_TROOP_IDS, tag, ids, exceptions)
+    print(f"Wrote {len(ids)} troop ids from {tag} ({len(names)} files) to {SHIPPED_TROOP_IDS}")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -744,7 +723,13 @@ def main() -> int:
                     help="Exit non-zero if any WARNING is found, not just ERROR")
     ap.add_argument("--code", action="append", default=None,
                     help="Only report this issue code (repeatable)")
+    ap.add_argument("--regenerate-shipped-troop-ids", nargs="?", const="", metavar="TAG", default=None,
+                    help="Rewrite tools/shipped_troop_ids.txt (the TROOP_ID_REMOVED baseline) from a "
+                         "release tag's troop files (default: the newest tag reachable from HEAD), then exit")
     args = ap.parse_args()
+
+    if args.regenerate_shipped_troop_ids is not None:
+        return regenerate_shipped_troop_ids(args.regenerate_shipped_troop_ids)
 
     moduledata = Path(args.moduledata)
     game_modules = Path(args.game_modules)
@@ -780,8 +765,10 @@ def main() -> int:
 
     extra_roots = build_extra_ref_roots(game_modules)
 
+    # The baseline describes the repo's own troops; a --moduledata elsewhere has no shipped ids to lose.
+    shipped_ids = SHIPPED_TROOP_IDS if moduledata.resolve() == MODULEDATA.resolve() else None
     validator = ts.Validator(moduledata, schemas, registries, extra_ref_roots=extra_roots,
-                            game_modules=game_modules)
+                            game_modules=game_modules, shipped_troop_ids_file=shipped_ids)
     for root in validator.extra_ref_roots:
         print(f"Also sweeping refs in: {root}", file=sys.stderr)
     # Never let a vanished root pass as a clean run. Silence here would revert the

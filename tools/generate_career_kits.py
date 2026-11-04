@@ -37,6 +37,7 @@ import glob
 import os
 import re
 import sys
+import traceback
 import xml.etree.ElementTree as ET
 from collections import defaultdict
 from pathlib import Path
@@ -342,5 +343,18 @@ def main() -> int:
     return 0
 
 
+def entry() -> int:
+    """main() with a crash turned into exit 3. Python exits 1 for an uncaught exception, the code
+    --verify uses for real drift, so a bug in the generator would read as drift. 3 is its own code:
+    the traceback goes to stderr. argparse's SystemExit passes through."""
+    try:
+        return main()
+    except Exception:  # noqa: BLE001 - any crash is reported, never mistaken for drift
+        traceback.print_exc()
+        print("ERROR: tools/generate_career_kits.py crashed (traceback above); no verdict was reached, "
+              "exit 3.", file=sys.stderr)
+        return 3
+
+
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(entry())

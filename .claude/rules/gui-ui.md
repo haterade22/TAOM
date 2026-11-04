@@ -22,41 +22,19 @@ in game: empty, many and long-text states, disabled reasons, a way out, consiste
 
 Before writing ANY `Sprite="X"` in XML or `GetSprite("X")` in C#:
 
-1. **Read `Main/_Module/GUI/TAOMSpriteData.xml`** — find the `<Name>` entry for your sprite
-2. **Use the EXACT registered name** — sprite ID = filename without extension, prefixed by subfolder path using backslashes
-3. **Do NOT add module prefixes** — a PNG at `SpriteParts/ui_taom/CareerSystem/foo.png` is `CareerSystem\foo`, NOT `TAOM\CareerSystem\foo`
-4. **Verify the PNG exists** — check `GUI/SpriteParts/ui_taom/<subfolder>/` before referencing
+Use the exact registered name, with no module prefix: a PNG at `SpriteParts/ui_taom/CareerSystem/foo.png` is `CareerSystem\foo`, NOT `TAOM\CareerSystem\foo`. Find the `<Name>` in `Main/_Module/GUI/TAOMSpriteData.xml`. Gate for `Sprite=` in a prefab or PrefabExtension: `PrefabSpriteTests` (vanilla and runtime sprites count). `GetSprite("X")` in C# is not gated, so check that name by hand.
 
 **Why:** Sprite="TAOM\CareerSystem\career_button_placeholder" failed silently (blank button, no crash, no log) because the registered name was "CareerSystem\career_button_placeholder". This class of bug is invisible without in-game testing.
 
-**The same rule applies to `Brush="X"` (added 2026-08-05).** `BrushFactory.GetBrush(name)` returns
-null SILENTLY for an unregistered name (verified `BrushFactory.cs:934-940`, installed v1.4.7) —
-the widget renders with default styling, no crash, no log. Before writing any `Brush="X"`, run
-`PrefabExtensionBrushTests` rather than grepping (SandBoxCore declares the `CustomBattle.*` brushes TAOM's custom battle prefabs use, and a
-brush in one of the vanilla brush files TAOM replaces whole is never loaded, so a grep finds names
-the engine never sees). The vanilla `"<X>.Text"` naming pattern is NOT auto-derived: each `.Text`
-brush is its own declaration. Shipped instances of this bug: `ButtonBrush1.Text` (AbilityHUD,
-PresetsOverlay), `CharacterDeveloper.SkillNameText`/`.DescriptionText` (CareerScreen.xml; all
-since repointed, see `docs/reviews/rca-career-ux-arc-2026-08-05.md` finding #3).
-
-**Gate:** `PrefabExtensionBrushTests` fails a brush-typed attribute (`Brush`, `IconBrush`, ...) in a PrefabExtension that no module in TAOM's DependedModule set declares (#989); `EveryGuiPrefabBrush_IsDeclaredByAModule` does the same for every literal brush in `Main/_Module/GUI/PreFabs/**/*.xml`, allowing only `Naval.Map.Party.Nameplate.Ship.Banner.Frame` (a NavalDLC brush) and skipping the `MarinerTroopBrush` attribute (`PartyUpgradeButtonWidget.MarinerTroopBrush` is a `BrushWidget` that takes a child widget Id, not a brush name); `EveryGuiPrefabBrushProperty_NamesABrushProperty` fails a `Brush.<Property>` attribute, in GUI prefab XML and in PrefabExtension sources, whose first segment after `Brush.` is not a public property of `TaleWorlds.GauntletUI.Brush`, compared case-sensitively (Gauntlet drops an unknown name silently); `EveryPrefabAttribute_NamesASettableWidgetProperty` fails any other attribute that is not an exact-case public property with a public setter on the element's resolved widget type (a prefab tag resolves to its prefab's root widget), so a misspelt `VertialAlignment` fails; the same test fails a `VisualDefinition` attribute other than `Name`, `TransitionDuration`, `EaseType`, `EaseFunction` and `DelayOnBegin` (the engine reads only those) and a `VisualState` attribute that is not `State` or a public settable property of `TaleWorlds.GauntletUI.VisualState`. In a shipped prefab, delete it: players have never seen it applied. In markup you are writing, fix the name and look in game.
+**Brushes and attributes.** Gauntlet drops an unknown `Brush=`, `Brush.<Property>` or widget attribute silently. Run `PrefabExtensionBrushTests`, not a grep (a brush in a vanilla file TAOM replaces whole never loads). Gates: `EveryGuiPrefabBrush_IsDeclaredByAModule`, `EveryGuiPrefabBrushProperty_NamesABrushProperty`, `EveryPrefabAttribute_NamesASettableWidgetProperty`. In a shipped prefab delete a failing attribute: players never saw it apply. In new markup fix it and look in game.
 
 ### Adding a NEW sprite (not just referencing an existing one)
 
-The 4 steps above are for *referencing* a sprite that's already baked. **Adding a new sprite PNG is a different, multi-step process** — a loose PNG + a hand-added `TAOMSpriteData.xml` entry alone renders **BLANK** in the player client (no error, no log). Follow the canonical workflow in [docs/features/gui-sprite-system.md](../../docs/features/gui-sprite-system.md) ("The sprite-bake pipeline" + "Adding a New Sprite" + "Verifying a sprite"):
-
-1. Drop the PNG at a sane size (`feedback_sprite_dimensions`). Do NOT hand-edit the manifest — the generator overwrites it.
-2. **Run the sprite generator** (`bin/Win64_Shipping_wEditor/TaleWorlds.TwoDimension.SpriteSheetGenerator.exe`). It writes `AssetSources/GauntletUI/<cat>_<n>.png` + rewrites `GUI/<Module>SpriteData.xml`; the editor's downstream texture-compile pass then builds `Assets/GauntletUI/<cat>_<n>_tex.tpac` (the generator binary does not write the `.tpac` itself). **There is NO `pack0.tpac` for UI sprites.**
-   **The generator binary moved on 2026-08-10 — spot-check the first sheet you regenerate after this bump.** It lives in the Modding Kit build, which jumped three engine versions in one update (`TaleWorlds.Library.GameVersion` `v1.4.5.114928` → `v1.4.8.119303`); `SpriteSheetGenerator.exe` and its `.Library.dll` were both rewritten with it. Neither binary stamps a usable version (`FileVersion 1.0.0.0`), so the only signal for which engine build you are baking with is `bin/Win64_Shipping_wEditor/Version.xml`. Anything regenerated from here on comes out of a different generator than every sheet baked before — don't assume byte-parity with the committed atlas; verify the bake per step 3.
-3. **Verify BOTH** (they fail independently): the **bake** (crop the sprite's `SheetX/Y` rect out of the regenerated sheet: pixels present?) AND the **render** (in-game: widget big enough + `Color` alpha high enough; **baked ≠ visible**: a thin sprite at ~22px / 27% alpha is invisible). Static review (incl. `/deep-review` + Codex) cannot certify a sprite renders, so say so in the commit's `Not-tested:` trailer.
-
-Memory: `feedback_sprite_atlas_baked_regen_required` (the career-pip case — baked correctly yet blank because the prefab drew it too small/faint).
+A loose PNG plus a hand-added manifest entry renders blank. Run the bake pipeline in [gui-sprite-system.md](../../docs/features/gui-sprite-system.md), verify both the bake and the in-game render, and say so in the `Not-tested:` trailer.
 
 ## GUI Prefab Clones Go Stale Across Engine Versions (MANDATORY)
 
-TAOM ships full `<Prefab>` **clones** of many vanilla prefabs (party screen, custom-battle, encyclopedia, nameplates — ~32 of 48 TAOM GUI prefabs). Vanilla **renames widget attributes between versions**; a clone frozen at an older version keeps the obsolete attribute, the engine silently ignores it, and the widget mis-renders or never renders — **no log, no crash, only visible in-game.**
-
-Before editing a clone (or after a Bannerlord version bump), **diff it against installed vanilla** and consult the v1.4.5 rename table + fix procedure in [`.claude/rules/vanilla-data-comparison.md`](./vanilla-data-comparison.md) ("GUI prefab clones" section). The canonical example: v1.4.5 renamed `ImageTypeCode` → `TextureProviderName` on `ImageIdentifierWidget`/`MaskedTextureWidget`; TAOM's stale clones left every Party-screen troop thumbnail stuck on the loading spinner (RCA `docs/reviews/rca-party-troop-thumbnail-stale-prefab-clone-2026-05-31.md`, memory `feedback_gui_prefab_clones_stale_across_versions.md`). **Rendering ≠ live** — only the running game confirms a prefab renders.
+TAOM ships full `<Prefab>` clones of many vanilla prefabs. Vanilla renames widget attributes between versions; a stale clone keeps the old one and the widget silently mis-renders. A prefab clone goes stale across versions: diff it against installed vanilla before editing and after an engine bump; gates and method in [gui-prefab-clones.md](../../docs/reference/gui-prefab-clones.md). Only the running game confirms a prefab renders.
 
 A clone can also stop consuming an engine signal with every attribute still valid: moving the `Sprite` off the widget the engine writes `Color` / `AlphaFactor` / `ColorFactor` to (vanilla's `SettlementNameplateItemWidget`) leaves those writes with nothing to draw, because `Widget.Render` never passes them to children. TAOM's nameplate redesign lost relation colour and plate transparency this way for five months (#591). When a clone re-parents visuals, list what the engine writes on the original element and make a custom container widget consume it: `docs/features/settlement-nameplate-relation.md`.
 
@@ -89,42 +67,13 @@ mapInfo.SecondaryInfoItems.Add(new MapInfoItemVM(...))
 ```
 A mod mutating a vanilla ViewModel collection it does not own can have its addition dropped without warning: `MapInfoVM.CreateItems()` calls `OnFinalize()` on every item, `Clear()`s both `PrimaryInfoItems` and `SecondaryInfoItems`, and re-adds only vanilla's nine. Anything a mixin added is gone. In v1.4.8 and v1.5.5 that method is called from exactly one site, the constructor (`MapInfoVM.cs:138`), before any mixin exists, so the hazard is real in shape but dormant in practice. If you add anyway, do it on every refresh behind `Contains`, so a rebuilt list gets the item back, and remove it when it no longer applies, as `SpecialResourceMapBarMixin` does (#958, #977). Never skip the first refresh: `MapBarVM.Initialize` runs it before the view loads and the next one comes 2 s later.
 
-**Correction, 2026-09-04.** This section used to assert that adding to `SecondaryInfoItems` caused an `IndexOutOfRangeException` in vanilla's `GauntletMapBarGlobalLayer.HandlePanelSwitchingInput` via hardcoded positional indexing. **That does not reproduce against the installed v1.4.8.** The method contains no reference to `SecondaryInfoItems` and no positional indexing of anything: it is six `inputContext.IsGameKeyReleased(N)` branches dispatching to `MapNavigationExtensions.Open*`. A sweep of every 1.4.5 / 1.4.7 / 1.4.8 dump on this machine finds `SecondaryInfoItems` in `MapInfoVM` only.
-
-The claim cost a session: it was read as fact and nearly drove a full rewrite of a working feature (hand-reproducing five change-notifying properties, the `IntValue`/`FloatValue` coupling behind `MapBarCustomValueTextWidget`'s value flash, the item layout and the gamepad nav scope) to fix a defect that does not exist on this engine. The `IndexOutOfRangeException` referenced by the comment at the top of `GauntletCareerScreen.cs` was never re-verified after the engine bump and may have come from a different mechanism or an older version; run `/investigate` if that crash needs a real root cause. **State the engine version you verified against when writing a rule from a crash.**
-
 ## Custom GauntletLayer Input Wiring (MANDATORY)
 
 When adding a custom `GauntletLayer` overlay that contains interactive widgets (buttons, click bindings, drag handles) to **either** a `ScreenBase` (via Harmony postfix on `OnInitialize`) **or** a `MissionScreen` (via `MissionView.OnMissionScreenInitialize`, `MissionLogic` overlay attach, or any other feature-overlay attach path), the layer MUST call `_layer.InputRestrictions.SetInputRestrictions(...)` after construction or it paints but never registers with the screen's input dispatcher — mouse clicks pass through. Pair with `_layer.InputRestrictions.ResetInputRestrictions()` in the teardown path before `RemoveLayer`.
 
 **In a battle, pass `(false, InputUsageMask.MouseButtons)`, never the parameterless call** (#970). The defaults are a visible cursor and all input: a visible cursor stops vanilla attack and block (`MissionMainAgentController` runs them only while it is hidden) and turns the camera into an edge scroll. Put `DoNotAcceptEvents="true"` on every non-button widget of the prefab, because any widget that accepts events wins the mouse buttons from the scene layer. Note that with the cursor hidden the engine pins it to the screen centre, so a battle overlay button can be clicked only while another view shows a cursor (the Esc menu).
 
-The v1.4.5 input dispatcher does NOT distinguish between `ScreenBase` and `MissionScreen` hosts for this purpose. Both require explicit input registration. Display-only overlays with zero interactive widgets (no `ButtonWidget`, no `Command.Click`, no `AcceptEvents`) are the only exception; verify with grep before claiming it. (The CareerSystem `AbilityHUD` was the canonical display-only example until #382 retired it — the career energy bar now rides inside Native's AgentStatus movie via PrefabExtension, which needs no input wiring at all.)
-
-**Correct pattern (ScreenBase overlay via Harmony):**
-```csharp
-[HarmonyPostfix]
-[HarmonyPatch(typeof(GauntletInventoryScreen), "OnInitialize")]
-public static void OnInitialize_Postfix(GauntletInventoryScreen __instance)
-{
-    _layer = new GauntletLayer("GauntletLayer", zOrder, true);
-    _layer.InputRestrictions.SetInputRestrictions();        // ← REQUIRED
-    _layer.LoadMovie(prefabName, dataSourceVm);
-    __instance.AddLayer(_layer);
-}
-
-[HarmonyPrefix]
-[HarmonyPatch(typeof(GauntletInventoryScreen), "OnFinalize")]
-public static void OnFinalize_Prefix(GauntletInventoryScreen __instance)
-{
-    if (_layer != null)
-    {
-        _layer.InputRestrictions.ResetInputRestrictions();  // ← REQUIRED before Remove
-        __instance.RemoveLayer(_layer);
-        _layer = null;
-    }
-}
-```
+The input dispatcher does not distinguish between `ScreenBase` and `MissionScreen` hosts for this purpose. Both require explicit input registration. Display-only overlays with zero interactive widgets (no `ButtonWidget`, no `Command.Click`, no `AcceptEvents`) are the only exception; verify with grep before claiming it.
 
 **Correct pattern (MissionScreen overlay via MissionView):**
 ```csharp
@@ -150,17 +99,11 @@ public override void OnMissionScreenFinalize()
 }
 ```
 
-**Do NOT** also set `IsFocusLayer = true` on a parasitic overlay — that steals Esc/Tab/hotkey focus from the live vanilla screen underneath. `IsFocusLayer = true` is appropriate ONLY for full-screen replacements (`GauntletCareerScreen`, `GauntletFiefManagementScreen`), where the layer IS the screen. For overlays, the parent widget in the prefab should have `DoNotAcceptEvents="true"` so non-button areas pass clicks through to vanilla.
+A `ScreenBase` overlay does the same in an `OnInitialize` postfix and an `OnFinalize` prefix, with the parameterless call.
 
-**Why:** Two shipping bugs in 6 days:
-1. **EquipPresets "Presets" inventory button** (2026-05-19, #202) — `ScreenBase` overlay missing `SetInputRestrictions()`. Click was a silent no-op. RCA: `docs/reviews/rca-equippresets-presets-button-silent-2026-05-19.md`.
-2. **CompanionTactics OOB "Assign Heroes" + "Presets" + BattleActionBar mouse clicks** (2026-05-25, #225) — two `MissionScreen` overlays with the same defect. RCA: `docs/reviews/rca-companiontactics-overlay-input-2026-05-25.md`.
+**Do NOT** also set `IsFocusLayer = true` on a parasitic overlay, which steals Esc/Tab/hotkey focus from the live vanilla screen underneath. `IsFocusLayer = true` is appropriate ONLY for full-screen replacements (`GauntletCareerScreen`, `GauntletFiefManagementScreen`), where the layer IS the screen. For overlays, the parent widget in the prefab should have `DoNotAcceptEvents="true"` so non-button areas pass clicks through to vanilla.
 
-Bug #2 shipped past the rule written for bug #1 because the original rule scoped to ScreenBase only — that scoping was based on the wrong inference that `BattleActionBar` "worked" without `SetInputRestrictions()`. It didn't work; only the hotkey path worked, which masked the broken mouse path. **Lesson: when classifying a sibling as a working precedent, verify it works via the SAME input path you care about. A working alternative input path is not evidence the broken path also works.**
-
-Feedback memory: `feedback_gauntlet_overlay_input_wiring.md`. **Rendering ≠ live.**
-
-**Verification:** `taom-src` confirmed `GauntletLayer.InputRestrictions` is `TaleWorlds.ScreenSystem.InputRestrictions` (defined on base class `ScreenLayer`), and `SetInputRestrictions(bool isMouseVisible = true, InputUsageMask mask = InputUsageMask.All)` has both defaults supplied — parameterless call is valid in v1.4.5.
+A sibling that works by hotkey is no proof its mouse path works (`rca-companiontactics-overlay-input-2026-05-25.md`).
 
 ## TaleWorlds VM property setters: verify no-op early returns (MANDATORY)
 
@@ -188,7 +131,7 @@ If the setter is guarded, **mutating the underlying collection then re-setting t
 
 **Do NOT** use the indirection of `prop = -1; prop = 0;` — many setters fire downstream callbacks (`_onChange.Invoke(this)`) that crash on the intermediate sentinel value (e.g., `OnCharacterSelection` dereferences `selector.SelectedItem.Character`, which is null at index -1).
 
-**When this rule applies:** Any C# file that mutates TaleWorlds VM properties post-construction (filter patches, refresh hooks, mid-mission UI updates). Decompile the setter via `ilspycmd` against the installed v1.4.5 DLL before writing the assignment. The guard on `_setter` is invisible at the call site.
+**When this rule applies:** any C# that mutates TaleWorlds VM properties after construction (filter patches, refresh hooks, mid-mission UI updates). Read the setter with `taom-src` first; the guard is invisible at the call site.
 
 ## TaleWorlds VM property notification: prefer public setter over reflected field+notify (MANDATORY)
 

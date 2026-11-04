@@ -32,6 +32,8 @@ characters to players. Full contract: [`docs/reference/release-process.md`](../.
    `grep -o '<Version value="[^"]*"' /e/LOTRAOM_Releases/*/Modules/TAOM/SubModule.xml`. A channel holding an
    untagged build of that number means a tester's crash report naming it is not your commit: take the next number
    (it happened with v2.0.31 and v2.0.33, both renumbered after the fact).
+   This grep is the one read-only exception to the rule that the release folders are Mike's (his word,
+   2026-11-03): read the version string and nothing else in a channel folder.
 5. `git grep -l taom_test_ -- Main/_Module` prints nothing. Custom-Battle test riders show in every player's
    Custom Battle picker; delete them (with their SubModule node and their ladder and recruitment exemptions)
    before a release. The Animalia ones (#646) were removed for v2.0.31.
@@ -73,12 +75,10 @@ Outside the repo, set the same `v2.0.X` in the live `<game>/Modules/TAOM_Map/Sub
 `<game>/Modules/LOTRLOME_Armory/SubModule.xml` too. Both modules are unversioned (no git), and the release
 note tells players all four modules read the release number. The gate below checks only the two repo files.
 
-**The #371 gate — do not skip.** After editing, read both files back and assert the two `v2.0.Y`
-values are byte-identical:
+**The #371 gate: do not skip.** After editing, run the pairing test; red stops the release:
 
 ```bash
-grep -o '<Version value="[^"]*"' Dependencies/_Module/SubModule.xml | head -1
-grep -o 'id="TAOM.Dependencies"[^>]*version="[^"]*"' Main/_Module/SubModule.xml
+dotnet test TAOM.Tests -p:DisableModuleCopy=true -p:ModuleId= --filter DependenciesPairing_MainMetadataEqualsDependenciesVersion
 ```
 
 BUTR/BLSE launchers read `DependedModuleMetadatas`; the vanilla launcher does not. A mismatch lets a
@@ -171,6 +171,10 @@ git ls-remote --tags origin | grep vX.Y.Z          # expect the ref and its ^{} 
 git describe --tags --match 'v[0-9]*' <release commit sha>   # expect vX.Y.Z
 ```
 
+Then reseed the `TROOP_ID_REMOVED` baseline from the new tag, which reads the tag's troop files with `git show`, never
+today's tree: `python tools/validate_moduledata.py --regenerate-shipped-troop-ids vX.Y.Z`. If
+`tools/shipped_troop_ids.txt` changed, commit it on its own (its `[exceptions]` section is kept as it stands).
+
 ## Phase 8: Build and package at the tag
 
 The Phase 2 build ran before the release commit existed, so its DLL carries the parent commit's SHA.
@@ -196,49 +200,7 @@ Rebuild at the tag before anything ships.
    lists is left out of the copy, whatever the module. Once Mike's test shows the game uses a
    Kit-built sack, TAOM's and the Armory's may ship; TAOM_Map's never does. Read them with
    [release-process.md](../../../docs/reference/release-process.md) step 9.
-   It proves the DLLs, and it also refuses a TAOM file the tag does not track. Deploys never
-   delete, so the install also holds files from every earlier deploy. Before packaging, prune only
-   what neither the tag nor its build owns:
-   - **`<game>/Modules/TAOM/` outside `bin/`:** remove what `Main/_Module/` does not hold at the
-     tag (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module`). Compare paths
-     case-insensitively, as Windows resolves them: the tag spells `GUI/PreFabs/`, the install
-     `GUI/Prefabs/`, and an exact comparison deletes every live prefab. Leave
-     `RuntimeDataCache*` alone: the packager already excludes it unless `--keep-rdc` asks for it.
-     `AssetPackages/pack0.tpac` is what packaging TAOM in the editor writes. In the dev install
-     (it has loose `Assets/`) it is a leftover: delete it. In an editor-published channel folder (no
-     loose `Assets/`) it is the packed TAOM UI: never delete it, and the check knows the difference.
-     The other tpacs there are git-tracked (field camp and refuge prefabs) and stay.
-     A leftover test-troop file (a `taom_test_` id under `ModuleData/`) is one of these; the packager
-     refuses it, dry runs included, so the step 2 dry run fails until it is pruned. So does any
-     other untracked TAOM file; the message names the folder checked: delete the file there, or
-     commit it first if it is Kit output the repo has not taken yet.
-   - **Shader sources:** the same dry run refuses a shader in a planned module's
-     `Shaders/D3D11/shader_compile_report.log` that has no complete source in the package (a `taom_`
-     shader needs all six `.rs` pass files under `TAOM/Shaders/Sources`, so deploy a build first), and
-     a report that is missing (the Armory must ship one: run the Modding Kit's module shader compile),
-     unreadable or short of its `Total variants` trailer. `--game-root` names the install holding
-     `Shaders/Sources`; a channel folder has no such parent, so always pass it.
-   - **`<game>/Modules/TAOM.Dependencies/` outside `bin/`:** prune nothing. MCM's UI assets
-     (`AssetPackages/`, `EmAssetPackages/`, `GUI/`, `ModuleData/Languages*/`) exist in the install
-     only, and no build step recreates them
-     ([module-dependencies.md](../../../docs/modding/module-dependencies.md), "Five folders").
-   - **`bin/<platform>/` of both modules:** keep a file whose name the tag tracks under
-     `_Module/bin/` (`git ls-tree -r --name-only vX.Y.Z -- Main/_Module/bin Dependencies/_Module/bin`:
-     none for TAOM from the NativeSkinFixes removal on, 2 on earlier tags; 44 for TAOM.Dependencies)
-     or the tag's build writes. The build writes
-     `TAOM.dll`, `TAOM.pdb`, `DryIoc.dll`, `Newtonsoft.Json.dll` and
-     `System.Runtime.CompilerServices.Unsafe.dll` into TAOM (plus `TAOM.Client.dll` and
-     `TAOM.Client.pdb` into its `Win64_Shipping_Client` and `Win64_Shipping_wEditor`, never
-     `_Server`: the server mirror excludes them; Game Pass is not supported, so no
-     `Gaming.Desktop.x64_Shipping_Client` bin is built or shipped, and the gate refuses a channel
-     folder that still holds one: delete it first), and `TAOM.Dependencies.dll`,
-     `TAOM.Dependencies.pdb`, `0Harmony.dll`, `Bannerlord.UIExtenderEx.dll`, `MCMv5.dll` and
-     `System.Runtime.CompilerServices.Unsafe.dll` into TAOM.Dependencies. That is each project's
-     `bin/Debug/net472/` output, every runtime DLL its packages bring in (the other packages are
-     compile-only or carry none). The build then mirrors `Win64_Shipping_Client` into `_Server` for
-     both modules, and into `_wEditor` for TAOM only. Remove any other file; `.pdb`, `.exp` and `.lib` may stay, since the packager
-     never ships them. A retired binary such as `BehaviorTreeWrapper.dll` would otherwise ship; the
-     packager refuses the names in `RETIRED_BINARIES` (`tools/package_release.py`), dry runs included.
+   Prune per [release-process.md](../../../docs/reference/release-process.md) step 9; the dry run refuses what remains.
 3. Package: **Mike packages through the Modding Kit editor, not Claude** (2026-09-28). Stop after the
    prune and hand over; never write a package with the command above. When he says the packages and
    release folders are his for this release (as on 2026-10-27), stop after step 1 and prove the
