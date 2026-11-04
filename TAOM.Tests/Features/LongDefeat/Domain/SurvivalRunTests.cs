@@ -510,7 +510,7 @@ public class SurvivalRunTests
         var run = InFighting(Plan(options: new RunOptions { StopAfterWaves = 1 }));
         var before = run.Gold;
 
-        var fx = run.Tick(Snap(attackers: 0));
+        run.Tick(Snap(attackers: 0));
 
         Assert.AreEqual(RunPhase.Ended, run.Phase);
         Assert.AreEqual(RunEndReason.TargetReached, run.Result!.Reason);
@@ -527,7 +527,7 @@ public class SurvivalRunTests
         var run = Begun();
         run.Tick(Snap(dt: 10f));
 
-        var fx = run.Tick(Snap(defenders: 0));
+        run.Tick(Snap(defenders: 0));
 
         Assert.AreEqual(RunEndReason.DefendersDead, run.Result!.Reason);
         Assert.AreEqual(RunPhase.Ended, run.Phase);

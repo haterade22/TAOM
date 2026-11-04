@@ -1729,3 +1729,11 @@ My first read-back compared each soldier with his class's own frame, and I wrote
 - **Why missed:** I wrote the sentence from the reason for the fix, and I kept the old log text because it still compiled.
 - **Prevent:** before a verdict line lands, write down what a pass does not prove, and put that sentence beside the line in the feature doc. When a code path changes, re-read every log line that names a value from the old path. Run the two-edit test on a source pin: reintroduce the regression, then change only the internals, and see each result.
 - **Source:** [rca-long-defeat-spike-2026-11-03.md](../rca-long-defeat-spike-2026-11-03.md), rows 24, 25, 28 and 29.
+
+### A mode that copies a sibling's views must copy what they refuse (Long Defeat, 2026-11-04)
+
+The Long Defeat copied Fords of War's HUD and panel but not `IsPhotoModeAllowed() => false` in `FordsCommanderCameraView`. The Escape menu offers Photo Mode unless a view says no, and the only exit lives in `CreatePhotoModeView`, which this mission leaves out. One click locked the player out of the run. The spike had met the same class of miss with the focus-lost Escape guard.
+
+- **Why missed:** the plan listed what each copied class does. A veto does nothing visible, so a list of what a class does never names it.
+- **Prevent:** when a mode copies a sibling, run `grep -n "public override bool" <sibling's view files>` and account for each override in the plan: copied, not needed and why, or changed.
+- **Source:** [rca-long-defeat-phase1-2026-11-04.md](../rca-long-defeat-phase1-2026-11-04.md), row 1.

@@ -48,6 +48,19 @@ Rows 5, 7, 8 and 15 share a second cause: the fake stood in for the engine at th
 
 Row 16 and row 9 share a third: I judged a run by its verdict, not by what its numbers said. The first run passed at 2 waves, and nothing in that verdict said that the keep was out of reach or that the table climbed too fast.
 
+## Why each lens missed these
+
+Most rows have no earlier miss: this review was the first read of the code by anyone but its builders. Four rows show the limits of the tiers.
+
+- **Data flow, first wave (rows 8 and 15):** it traced what the run does, and the domain's keep rule was tested and correct. Whether a test crosses the seam is the Completeness lens's question, and the tier rule runs that lens only in a second wave. That wave ran only because of row 1.
+- **Engine compatibility, first wave (row 19):** row 19 did not exist yet. A fix pass made it, and the checker after that pass caught it by reading the engine's hit test. Without that checker, the tier rule would have left a MEDIUM's fix unreviewed.
+- **Completeness (row 9):** it found the risk 5 answer because it reads the plan against the logs. No first-wave lens has that in its remit.
+- **No lens can find row 16:** a balance problem shows only in a long run. The first full rehearsal found it, after the first wave had reported.
+
+**Feedback to codify:** none new. "A verdict must be earned" and "evidence over claims" already cover these, and I name their repeat in the root cause.
+
+**The convergence pass:** one `deep-reviewer` read every applied improvement for behaviour parity, and read the installed engine for the HIGH fix. It found no behaviour defect and two LOW leftovers, a stale comment and two dead test locals, both fixed. It traced the veto from `MissionScreen.IsPhotoModeAllowed` through `GetIsPhotoModeDisabled` to the disabled button, by reading only. Tier 1 also asks for Codex, and that stays owed on Mike's word.
+
 ## Proof
 
 - **Tests, on the tree this RCA is committed with:** `dotnet test` 32,341 passed, 9 skipped; `python -m unittest discover -s tools/tests -t .` 7,157 OK, 11 skipped; the canary tripped; the API snapshot reproduces; `lint_docs.py --fail-on-drift` exit 0.

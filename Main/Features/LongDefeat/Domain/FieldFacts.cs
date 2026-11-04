@@ -27,7 +27,7 @@ internal sealed record LdSpawnReport(IReadOnlyList<LdPoint> Points, int Far, int
 /// <summary>
 /// One look at the field. Standing counts live humans that are not running away; Fleeing counts the ones that are. The keep
 /// counts are only meaningful when the read asked for them. <c>MainBody</c> is 0 with no player agent, otherwise a number the
-/// adapter changes whenever the player's body changes, so the run never keys on an engine agent index. The last four are
+/// adapter changes whenever the player's body changes, so the run never keys on an engine agent index. The last three are
 /// diagnostics only: defenders running away, and how many of each side stand at or above the wall line.
 /// </summary>
 internal readonly record struct LdReading(
