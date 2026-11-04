@@ -97,6 +97,10 @@ What each match showed, and what changed because of it. `python tools/fords_matc
 
 **To check on the next Rivendell and Mordor match:** Mordor buys upgrades and uruks, both sides field heroes, Rivendell's unspent gold falls, and the creature trade improves.
 
+### The hard AI's income (2026-11-04)
+
+**Changed:** the hard profile's `incomeMultiplier` went from 1.2 to 1.0, on Mike's word: the design says the same shop and no extra powers. Hard keeps its edge in 5 s decisions, no skipped decisions and its gold reserve. Every match above with a hard AI had the old income, so read those numbers again when a new match has run.
+
 ### Which speed gives balance numbers
 
 **Seen:** the same pair and rules ran twice at each of 1x, 4x and 10x (the table above). The first 1x match ran one build before the others; the only Fords code between them is the speed itself. 10x fell outside the 1x range in both matches: Mordor lost about 1,330 units against 1,471 and 1,512, Rivendell lost 4 and 5 towers against 2 and 3, and Rivendell's gold trade was 1.6 and 1.9 against 3.5 and 3.1. 10x also changed what the AI bought: 99 and 135 swordguards against 65 and 84 at 1x, and I read that as more lanes under threat, since a threatened lane buys the cheapest infantry pack. 4x stayed close: 1,544 and 1,549 units, 2 towers lost each time, gold trade 2.7 and 3.1. Mordor's tower damage at 4x read low, about 21,000 against 25,898 and 34,866.

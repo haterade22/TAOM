@@ -31,7 +31,8 @@ public interface ICareerQuestService
     /// over after a death or retirement). Vanilla cancels every other quest then, but not a special quest,
     /// and the stale one keeps reading the former hero's skill, so it is cancelled. False outside
     /// single-player (a co-op session, a co-op mod TAOM cannot probe, a dedicated server), at session
-    /// launch while a co-op module is enabled, and for the lord's gear ladder, whose quests are not careers.
+    /// launch while a co-op module is enabled, and for a quest with no definition. A ladder quest counts: its
+    /// kills credit only the current hero, so a former hero's could never finish.
     /// </summary>
     bool IsFormerPlayerHeroQuest(string questDefId, string ownerHeroId, string mainHeroId, bool atSessionLaunch);
 

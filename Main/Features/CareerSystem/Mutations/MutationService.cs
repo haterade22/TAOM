@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using TAOM.Adapters;
 using TAOM.Core.Logging;
+using TAOM.Core.Validation;
 using TAOM.Features.CareerSystem.Domain;
 
 namespace TAOM.Features.CareerSystem.Mutations;
@@ -89,6 +90,12 @@ public class MutationService : IMutationService
         var currentValue = (float)prop.GetValue(target);
         var calculatedValue = _calculatorRegistry.Calculate(
             mutation.CalculatorId, currentValue, hero, new MutationParams(mutation.Params));
+
+        if (!FiniteFloatValidator.IsFinite(calculatedValue))
+        {
+            _logger.LogWarning($"Mutation: '{mutation.CalculatorId}' gave a non-finite '{mutation.PropertyName}'; the value stays {currentValue}");
+            return;
+        }
 
         // The calculator already handles the operation (flat adds, multiply multiplies, etc.)
         // So the calculated value IS the final value.

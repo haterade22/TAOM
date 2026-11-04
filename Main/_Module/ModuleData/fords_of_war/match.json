@@ -69,6 +69,6 @@
   "aiProfiles": {
     "easy": { "decisionIntervalSeconds": 12, "incomeMultiplier": 0.8, "mistakeChance": 0.25, "heroReserveGold": 600 },
     "normal": { "decisionIntervalSeconds": 8, "incomeMultiplier": 1.0, "mistakeChance": 0.1, "heroReserveGold": 800 },
-    "hard": { "decisionIntervalSeconds": 5, "incomeMultiplier": 1.2, "mistakeChance": 0.0, "heroReserveGold": 1000 }
+    "hard": { "decisionIntervalSeconds": 5, "incomeMultiplier": 1.0, "mistakeChance": 0.0, "heroReserveGold": 1000 }
   }
 }

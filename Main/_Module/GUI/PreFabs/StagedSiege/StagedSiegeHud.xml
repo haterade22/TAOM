@@ -9,12 +9,11 @@
             DoNotAcceptEvents="true" IsVisible="@IsVisible">
       <Children>
         <Widget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
-                HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="60" DoNotAcceptEvents="true">
+                HorizontalAlignment="Center" VerticalAlignment="Top" MarginTop="52" DoNotAcceptEvents="true"
+                Sprite="BlankWhiteSquare_9" Color="#00000099">
           <Children>
-            <Widget WidthSizePolicy="StretchToParent" HeightSizePolicy="StretchToParent"
-                    Sprite="BlankWhiteSquare_9" Color="#00000099" DoNotAcceptEvents="true"
-                    MarginLeft="-14" MarginRight="-14" MarginTop="-8" MarginBottom="-8" />
             <ListPanel WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
+                       MarginLeft="14" MarginRight="14" MarginTop="8" MarginBottom="8"
                        StackLayout.LayoutMethod="VerticalTopToBottom" DoNotAcceptEvents="true">
               <Children>
                 <TextWidget WidthSizePolicy="CoverChildren" HeightSizePolicy="CoverChildren"
